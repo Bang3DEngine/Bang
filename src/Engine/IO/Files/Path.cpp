@@ -8,6 +8,7 @@
 #include <sys/types.h>
 
 #include "Bang/List.h"
+#include "Bang/Paths.h"
 #include "Bang/Array.h"
 
 USING_NAMESPACE_BANG
@@ -175,6 +176,11 @@ String Path::GetName() const
         else { break; }
     }
     return name;
+}
+
+bool Path::IsAbsolute() const
+{
+    return GetAbsolute().BeginsWith("/");
 }
 
 String Path::GetNameExt() const

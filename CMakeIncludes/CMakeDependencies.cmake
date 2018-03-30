@@ -47,6 +47,10 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
     # SNDFILE Dependency ============================
     message("Looking for dependency sndfile...")
     find_library(SNDFILE_LIBRARY "sndfile")
+
+    # SNDIO Dependency ============================
+    message("Looking for dependency sndio...")
+    find_library(SNDIO_LIBRARY "sndio")
 # =================================================
 
 if (${BUILD_SHARED_LIBS})
@@ -110,12 +114,14 @@ else ()
 endif()
 
 # Common libs
+message("SADJKDSADSAKHADSJHADSHKDSAJkjadshlsakhdsadjhkhdsgladshfjdsafhgdshfjkgfdsgjhfdsghjfdsbfdsklgfdshjfdahskafdsjhl ${SNDIO_LIBRARY}")
 set(ALL_DEPENDENCIES_LIB_FILES
     ${ALL_DEPENDENCIES_LIB_FILES}
     ${DL_LIBRARY}
     ${ZLIB_LIBRARY}
     ${OPENGL_LIBRARIES}
     ${SNDFILE_LIBRARY}
+    ${SNDIO_LIBRARY}
 )
 
 #=================================================================

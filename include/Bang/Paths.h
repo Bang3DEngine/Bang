@@ -15,6 +15,7 @@ public:
     void InitPaths(const Path &engineRootPath);
 
     static Path GetHome();
+    static Path GetExecutableDir();
     static Path GetExecutablePath();
     static const Path& GetEngineDir();
     static Path GetEngineAssetsDir();
@@ -35,6 +36,7 @@ public:
 
     static void SetEngineRoot(const Path &engineRootDir);
 
+    static Path GetResolvedPath(const Path &path);
     static void SortPathsByName(List<Path> *paths);
     static void SortPathsByExtension(List<Path> *paths);
     static void FilterByExtension(List<Path> *paths,

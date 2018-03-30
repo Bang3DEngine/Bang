@@ -35,6 +35,7 @@ public:
     bool IsFile() const;
     bool Exists() const;
 
+
     List<Path> GetFiles(FindFlags findFlags = FindFlag::Default,
                         const Array<String> &extensions = {}) const;
     List<Path> GetSubDirectories(FindFlags findFlags) const;
@@ -44,6 +45,7 @@ public:
 
     Path GetDirectory() const;
     String GetName() const;
+    bool IsAbsolute() const;
     String GetNameExt() const;
     String GetExtension() const;
     Array<String> GetExtensions() const;

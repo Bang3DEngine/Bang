@@ -18,7 +18,7 @@ endif()
 # CMakeBuildType
 if (NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
-    message(warning "No CMAKE_BUILD_TYPE specified. Assuming 'Release'.")
+    message(WARNING "No CMAKE_BUILD_TYPE specified. Assuming 'Release'.")
 else()
     if ( NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    AND
          NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Release")  AND

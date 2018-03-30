@@ -27,22 +27,15 @@ void Paths::InitPaths(const Path &engineRootPath)
     c_engineRoot = Path::Empty;
     if (!engineRootPath.IsEmpty()) { Paths::SetEngineRoot(engineRootPath); }
 
-    if (!GetEngineAssetsDir().IsDir()) // Try some other directories
-    {
-        Paths::SetEngineRoot( Paths::GetExecutablePath().GetDirectory() );
-    }
-    if (!GetEngineAssetsDir().IsDir()) // Try some other directories
-    {
-        Paths::SetEngineRoot( Paths::GetExecutablePath().GetDirectory().GetDirectory() );
-    }
-
     if (GetEngineAssetsDir().IsDir())
     {
         Debug_Log("Picking as Paths Bang Root: '" << GetEngineDir() << "'");
     }
     else
     {
-        Debug_Log("Could not find the Bang root directory!");
+        Debug_Error("Could not find the Bang root directory! Current set to: '" <<
+                    GetEngineDir());
+        Application::Exit(1, true);
     }
 }
 
@@ -52,6 +45,11 @@ Path Paths::GetHome()
     struct passwd *pw = getpwuid(getuid());
     homePath = Path(pw->pw_dir);
     return homePath;
+}
+
+Path Paths::GetExecutableDir()
+{
+    return Paths::GetExecutablePath().GetDirectory();
 }
 
 Path Paths::GetExecutablePath()
@@ -141,6 +139,28 @@ bool Paths::IsEnginePath(const Path &path)
 void Paths::SetEngineRoot(const Path &engineRootDir)
 {
     Paths::GetInstance()->c_engineRoot = engineRootDir;
+}
+
+Path Paths::GetResolvedPath(const Path &path_)
+{
+    Path path = path_;
+    if (!path.IsAbsolute()) { path = Paths::GetExecutableDir().Append(path); }
+
+    List<String> pathParts = path.GetAbsolute().Split<List>('/');
+    pathParts.RemoveAll(".");
+
+    bool skipNext = false;
+    List<String> resolvedPathParts;
+    for (auto it = pathParts.RBegin(); it != pathParts.REnd(); ++it)
+    {
+        const String &pathPart = *it;
+        if (skipNext)  { skipNext = false;  continue; }
+
+        if (pathPart == "..") { skipNext = true; }
+        else { resolvedPathParts.PushFront(pathPart); }
+    }
+    Path resolvedPath = Path( String::Join(resolvedPathParts, "/") );
+    return resolvedPath;
 }
 
 void Paths::SortPathsByName(List<Path> *paths)

@@ -1,6 +1,9 @@
 .deps
 .libs
 autom4te.cache
+/Makefile.in
+/aclocal.m4
+/configure
 /sdl2-ttf-install/
 /Makefile
 /SDL2_ttf.pc

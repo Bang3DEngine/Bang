@@ -2,3 +2,8 @@
 .libs
 autom4te.cache
 /sdl2-ttf-install/
+/Makefile
+/SDL2_ttf.pc
+/glfont
+/libtool
+/showfont

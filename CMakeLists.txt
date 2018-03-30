@@ -292,7 +292,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeDependencies.cmake) # Depen
 link_libraries(${ALL_DEPENDENCIES_LIB_FILES}) # Link the dependencies
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES})
-add_dependencies(BangEngineObjects BuildThirdParty)
 
 if (${BUILD_SHARED_LIBS})
     add_library(BangLib SHARED $<TARGET_OBJECTS:BangEngineObjects>)

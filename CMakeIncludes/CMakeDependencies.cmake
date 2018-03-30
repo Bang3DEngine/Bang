@@ -114,7 +114,6 @@ else ()
 endif()
 
 # Common libs
-message("SADJKDSADSAKHADSJHADSHKDSAJkjadshlsakhdsadjhkhdsgladshfjdsafhgdshfjkgfdsgjhfdsghjfdsbfdsklgfdshjfdahskafdsjhl ${SNDIO_LIBRARY}")
 set(ALL_DEPENDENCIES_LIB_FILES
     ${ALL_DEPENDENCIES_LIB_FILES}
     ${DL_LIBRARY}

@@ -1,0 +1,6 @@
+config.mk
+!/builds/
+!Makefile
+!modules.cfg
+/freetype-install/
+autom4te.cache

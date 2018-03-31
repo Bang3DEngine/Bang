@@ -1,0 +1,43 @@
+language: cpp
+
+compiler:
+- g++
+
+env:
+  global:
+   - secure: "UE4WwdpYWcHbXy5zGvSItWYOjbzLMac5ponHULHlZmojyqyY0lr36dQ2AINdM0dcq6XpNz45AwoVcTC/pGlm/s7zGvxKbyUWd4QzfRHJMtLcRU7GztTBI3PXAXPdd6a0fL62te0ZD6mCm/LO1gnqDBLZV/gkt55u94VCxfogexeZHjmD/fBds+YlmJ6q9lMGhYKLOPS70C6tGxUq5INZ4/ncjjtUSRMNB6VzsEIIhktgncJyg4SRvXs5hwEVcl/spWnyNtt4HaJp3ah3wmHDA6PI8iEJsQ9eMUlYWx+fYLl2pNZV/s8ebOpvRsXHADC36Z3RYdVbMABHL0VKxszXEgiQtOv+xguTtS6MZqfoeNIQ/KeWCKU5Y+FoNRzZuTS2Go3Ju92xCwx177WJDldtlcRanrmjRp00lRDZF5bHBsUJixMWP1mzqrV+Zg+DYykQ/Er82CiMKTqZTZI5RbpNkxU/Del5oiz3QlymEz3RWUTipoegybMWUsqGS8UCyO50rpz0gw2TA5wl6QAG286zOYgx0zlVpDPKZTyfuveU6dYUtvrO9jqIar7wMs2of1YZ37HUomwEF8WWAp6CQsWTPG4ZJTbiuFvzC9X7ZoABsqScLOrGecqsp4x2SyEfRzn/l/z3D52ILnisQIhRUVXDE51CYJIMorNcNvqAgbtia6w="
+
+dist: trusty
+sudo: required
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+      - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+      - sudo apt-get update -qq
+
+install:
+- sudo apt-get update
+- sudo apt-get -y install cmake make autoconf automake libtool git autogen build-essential libglew-dev libglu1-mesa-dev zlib1g-dev libsndfile-dev libsndio-dev libfreetype6-dev libopenal-dev libsdl2-dev libsdl2-ttf-dev libassimp-dev
+- sudo apt-get -y install -qq g++-5
+- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+
+addons:
+  coverity_scan:
+    project:
+      name: "Bang3DEngine/Bang"
+      description: "Description"
+    notification_email: ""
+    build_command_prepend: ""
+    build_command: "./scripts/fullCompile.sh Debug"
+    branch_pattern: coverity_scan
+
+script:
+- git clone --recurse-submodules https://github.com/Bang3DEngine/BangEditor
+- cd BangEditor
+- mkdir -p build && cd build && cmake -DCMAKE_BUILD_SHARED_LIBS=ON  -DCMAKE_BUILD_TYPE=Debug   .. && make -j6 && cd ..
+- mkdir -p build && cd build && cmake -DCMAKE_BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release .. && make -j6 && cd ..

@@ -70,6 +70,7 @@ set(OPENAL_LIB_OUTPUT  "${OPENAL_LIB_OUTPUT_DIR}/${OPENAL_LIB_OUTPUT_NAME}")
 
 # SDL2
 set(SDL2_DIR "${CMAKE_CURRENT_LIST_DIR}/SDL2-2.0.8")
+set(SDL2_INSTALL_DIR "${SDL2_DIR}/sdl2-install")
 set(SDL2_INCLUDE_DIR "${SDL2_DIR}/include")
 set(SDL2_LIB_OUTPUT_DIR  "${SDL2_DIR}/build")
 set(SDL2_LIB_OUTPUT_NAME "libSDL2.a")
@@ -203,11 +204,12 @@ add_custom_command(
   OUTPUT ${SDL2_LIB_OUTPUT}
   COMMAND
       cd ${SDL2_DIR} &&
-      mkdir -p sdl2-install &&
+      mkdir -p ${SDL2_INSTALL_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DSDL_STATIC_PIC=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_DIR}/sdl2-install -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
-      make -j${NUM_COMPILE_THREADS}
+      cmake -DSDL_STATIC_PIC=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR} -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================
@@ -221,11 +223,13 @@ add_custom_command(
   OUTPUT ${SDL2TTF_LIB_OUTPUT}
   COMMAND
       export PATH=$ENV{PATH}:${SDL2TTF_INSTALL_DIR} &&
+      # export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && 
+      cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&
       sh autogen.sh &&
       ./configure --with-freetype-prefix=${FREETYPE_INSTALL_DIR} --prefix=${SDL2TTF_INSTALL_DIR} --enable-static=yes --with-pic &&
-      make -j${NUM_COMPILE_THREADS} && 
+      make VERBOSE=1 -j${NUM_COMPILE_THREADS} && 
       make install
   DEPENDS ${SDL2_LIB_OUTPUT} ${FREETYPE_LIB_OUTPUT}
   VERBATIM

@@ -1,6 +1,12 @@
 !/Makefile
 /tmp/
 /doc/
+<<<<<<< Updated upstream
 /bin/
 /glew.pc
 /lib/
+=======
+/bin
+/glew.pc
+/lib
+>>>>>>> Stashed changes

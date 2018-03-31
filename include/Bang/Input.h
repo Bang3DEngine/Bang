@@ -115,10 +115,8 @@ public:
     static void LockMouseMovement(bool lock);
     static bool IsLockMouseMovement();
 
-    static void SetMousePositionWindow(int globalMousePosX,  int globalMousePosY);
-    static void SetMousePositionWindow(const Vector2i &globalMousePosition);
-    static void SetMousePosition(int globalMousePosX,  int globalMousePosY);
-    static void SetMousePosition(const Vector2i &globalMousePosition);
+    static void SetMousePositionWindow(int windowMousePosX,  int windowMousePosY);
+    static void SetMousePositionWindow(const Vector2i &windowMousePosition);
     static Vector2i GetMousePosition();
     static Vector2  GetMousePositionNDC();
     static Vector2i GetMousePositionWindow();

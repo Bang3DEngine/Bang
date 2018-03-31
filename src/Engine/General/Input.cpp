@@ -1,5 +1,7 @@
 #include "Bang/Input.h"
 
+#include BANG_SDL2_INCLUDE(SDL.h)
+
 #include "Bang/GL.h"
 #include "Bang/Time.h"
 #include "Bang/Window.h"
@@ -10,6 +12,7 @@ USING_NAMESPACE_BANG
 Input::Input()
 {
     Input::StartTextInput();
+    SDL_CaptureMouse(SDL_TRUE);
 }
 
 Input::~Input()
@@ -449,26 +452,16 @@ bool Input::IsLockMouseMovement()
     return inp->m_lockMouseMovement;
 }
 
-void Input::SetMousePositionWindow(int globalMousePosX, int globalMousePosY)
+void Input::SetMousePositionWindow(int windowMousePosX, int windowMousePosY)
 {
-    Window *win = Window::GetActive(); ASSERT(win);
-    Input::SetMousePosition(win->GetInsidePosition().x + globalMousePosX,
-                            win->GetInsidePosition().y + globalMousePosY);
+    Window *window = Window::GetActive();
+    SDL_WarpMouseInWindow(window->GetSDLWindow(),
+                          windowMousePosX,  windowMousePosY);
 }
 
-void Input::SetMousePositionWindow(const Vector2i &globalMousePosition)
+void Input::SetMousePositionWindow(const Vector2i &windowMousePosition)
 {
-    Input::SetMousePositionWindow(globalMousePosition.x, globalMousePosition.y);
-}
-
-void Input::SetMousePosition(int globalMousePosX, int globalMousePosY)
-{
-    SDL_WarpMouseGlobal(globalMousePosX, globalMousePosY);
-}
-
-void Input::SetMousePosition(const Vector2i &globalMousePosition)
-{
-    Input::SetMousePosition(globalMousePosition.x, globalMousePosition.y);
+    Input::SetMousePositionWindow(windowMousePosition.x, windowMousePosition.y);
 }
 
 Vector2i Input::GetMousePosition()
@@ -484,21 +477,9 @@ Vector2 Input::GetMousePositionNDC()
 Vector2i Input::GetMousePositionWindow()
 {
     Window *win = Window::GetActive();
-
     Vector2i pos;
-    if (Input::IsMouseInsideWindow())
-    {
-        SDL_GetMouseState(&pos.x, &pos.y);
-        pos.y = (win->GetHeight()-1) - pos.y; // Invert Y
-    }
-    else
-    {
-        SDL_GetGlobalMouseState(&pos.x, &pos.y);
-        pos -= win->GetPosition();
-        pos.y = (win->GetHeight()-1) - pos.y; // Invert Y
-        pos.y += win->GetTitleBarHeight();
-    }
-
+    SDL_GetMouseState(&pos.x, &pos.y);
+    pos.y = (win->GetHeight()-1) - pos.y; // Invert Y
     return pos;
 }
 

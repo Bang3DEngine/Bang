@@ -107,12 +107,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     GameObject *cube = GameObjectFactory::CreateGameObjectNamed("Cube");
     MeshRenderer *mr = cube->AddComponent<MeshRenderer>();
     mr->SetMesh(MeshFactory::GetCube().Get());
-
-    RH<Texture2D> texture =
-            Resources::Load<Texture2D>(Paths::GetEngineAssetsDir()
-                                       .Append("Images/LogoBang_B_512.png"));
-    mr->GetMaterial()->SetTexture(texture.Get());
-    mr->GetMaterial()->SetDiffuseColor(Color::White);
+    mr->GetMaterial()->SetDiffuseColor(Color::Orange);
 
     GameObject *sphere = GameObjectFactory::CreateGameObjectNamed("Sphere-Child");
     sphere->GetTransform()->SetLocalPosition(Vector3(1,1,1));

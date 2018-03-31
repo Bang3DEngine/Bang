@@ -223,7 +223,7 @@ add_custom_command(
   OUTPUT ${SDL2TTF_LIB_OUTPUT}
   COMMAND
       export PATH=$ENV{PATH}:${SDL2TTF_INSTALL_DIR} &&
-      # export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && 
+      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && 
       cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&

@@ -34,6 +34,7 @@ project(Bang C CXX)
 set(BANG_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(BANG_SRC_DIR ${BANG_DIR}/src)
 set(BANG_ENGINE_SRC_DIR ${BANG_SRC_DIR}/Engine)
+set(BANG_ENGINE_INCLUDE_DIR ${BANG_DIR}/include)
 
 # Output params
 message("Bang ======================================")
@@ -79,24 +80,14 @@ endif()
 #=================================================================
 
 #=================================================================
-# Includes =======================================================
-#=================================================================
-SET(BANG_INCLUDE_DIR_BANG_DIR ${BANG_DIR}/include)
-SET(BANG_INCLUDE_DIR ${BANG_INCLUDE_DIR_BANG_DIR}/Bang)
-include_directories(${BANG_INCLUDE_DIR_BANG_DIR})
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
 # Add misc files =================================================
 #=================================================================
 file(GLOB_RECURSE OTHER_FILES "[^.]*.frag" "[^.]*.vert"
                               "[^.]*.png" "[^.]*.svg" "[^.]*.bmat"
                               "[^.]*.glsl" "[^.]*.txt" "[^.]*.cmake"
                               "[^.]*.md"
-                              "${BANG_INCLUDE_DIR}/*.h"
-                              "${BANG_INCLUDE_DIR}/*.tcc")
+                              "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
+                              "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
 add_misc_files("${OTHER_FILES}")
 #=================================================================
 #=================================================================
@@ -289,7 +280,6 @@ ${OTHER_FILES}
 #=================================================================
 
 include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeDependencies.cmake) # Dependencies
-link_libraries(${ALL_DEPENDENCIES_LIB_FILES}) # Link the dependencies
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES})
 
@@ -302,6 +292,9 @@ else()
     add_dependencies(BangEngineObjects BuildThirdParty)
 endif()
 
+include_directories(${BANG_ENGINE_INCLUDE_DIR})
+message("TARGET INCLUDE DIRS: ${BANG_ENGINE_INCLUDE_DIRS}" )
+target_link_libraries(BangLib  ${ALL_DEPENDENCIES_LIB_FILES})
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
 #=================================================================
 #=================================================================

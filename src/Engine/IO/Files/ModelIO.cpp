@@ -353,7 +353,8 @@ String ModelIO::GetExtensionIdFromExtension(const String &extension)
 aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
                                     const Array<Mesh*> &sceneMeshes)
 {
-    aiNode *goNode = new aiNode( gameObject->GetName() );
+    aiNode *goNode = new aiNode();
+    goNode->mName = gameObject->GetName();
     goNode->mNumChildren = gameObject->GetChildren().Size();
 
     // Count number of meshes

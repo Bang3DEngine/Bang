@@ -149,14 +149,14 @@ Path Paths::GetResolvedPath(const Path &path_)
     List<String> pathParts = path.GetAbsolute().Split<List>('/');
     pathParts.RemoveAll(".");
 
-    bool skipNext = false;
+    int skipNext = 0;
     List<String> resolvedPathParts;
     for (auto it = pathParts.RBegin(); it != pathParts.REnd(); ++it)
     {
         const String &pathPart = *it;
-        if (skipNext)  { skipNext = false;  continue; }
+        if (skipNext > 0)  { --skipNext;  continue; }
 
-        if (pathPart == "..") { skipNext = true; }
+        if (pathPart == "..") { ++skipNext; }
         else { resolvedPathParts.PushFront(pathPart); }
     }
     Path resolvedPath = Path( String::Join(resolvedPathParts, "/") );

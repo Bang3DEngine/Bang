@@ -48,6 +48,10 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
     # SNDFILE Dependency ============================
     message("Looking for dependency sndfile...")
     find_library(SNDFILE_LIBRARY "sndfile")
+
+    # SNDIO Dependency ============================
+    message("Looking for dependency sndio...")
+    find_library(SNDIO_LIBRARY "sndio")
 # =================================================
 
 if (${BUILD_SHARED_LIBS})
@@ -75,10 +79,6 @@ if (${BUILD_SHARED_LIBS})
     # ASSIMP Dependency ============================
     message("Looking for dependency assimp...")
     find_library(ASSIMP_LIBRARY "assimp")
-
-    # SNDIO Dependency ============================
-    message("Looking for dependency sndio...")
-    find_library(SNDIO_LIBRARY "sndio")
 
     # SDL2 Dependency ============================
     find_package(SDL2 REQUIRED)

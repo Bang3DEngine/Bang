@@ -24,7 +24,6 @@ before_install:
 - sudo apt-get update -qq
 - git clone https://github.com/Bang3DEngine/Bang
 - cd Bang
-- git checkout TravisFix
 
 install:
 - sudo apt-get update

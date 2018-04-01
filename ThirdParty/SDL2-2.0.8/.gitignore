@@ -1,2 +1,7 @@
+<<<<<<< Updated upstream
 sdl2-install
 /build/
+=======
+/sdl2-install
+/build
+>>>>>>> Stashed changes

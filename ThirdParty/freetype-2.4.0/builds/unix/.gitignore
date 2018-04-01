@@ -14,3 +14,4 @@ libtool
 ltmain.sh
 unix-cc.mk
 unix-def.mk
+install-sh

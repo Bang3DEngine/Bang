@@ -47,17 +47,19 @@ set(GLEW_LIB_OUTPUT  "${GLEW_LIB_OUTPUT_DIR}/${GLEW_LIB_OUTPUT_NAME}")
 
 # JPEG
 set(JPEG_DIR "${CMAKE_CURRENT_LIST_DIR}/libjpeg-turbo")
+set(JPEG_INSTALL_DIR "${JPEG_DIR}/jpeg-install")
 set(JPEG_INCLUDE_DIR_0 "${JPEG_DIR}")
 set(JPEG_INCLUDE_DIR_1 "${JPEG_DIR}/build")
-set(JPEG_LIB_OUTPUT_DIR  "${JPEG_DIR}/build")
+set(JPEG_LIB_OUTPUT_DIR  "${JPEG_INSTALL_DIR}/lib")
 set(JPEG_LIB_OUTPUT_NAME "libturbojpeg.a")
 set(JPEG_LIB_OUTPUT  "${JPEG_LIB_OUTPUT_DIR}/${JPEG_LIB_OUTPUT_NAME}")
 
 # PNG
 set(PNG_DIR "${CMAKE_CURRENT_LIST_DIR}/libpng-1.6.34")
+set(PNG_INSTALL_DIR "${PNG_DIR}/png-install")
 set(PNG_INCLUDE_DIR_0 "${PNG_DIR}")
 set(PNG_INCLUDE_DIR_1 "${PNG_DIR}/build")
-set(PNG_LIB_OUTPUT_DIR  "${PNG_DIR}/build")
+set(PNG_LIB_OUTPUT_DIR  "${PNG_INSTALL_DIR}/lib")
 set(PNG_LIB_OUTPUT_NAME "libpng.a")
 set(PNG_LIB_OUTPUT  "${PNG_LIB_OUTPUT_DIR}/${PNG_LIB_OUTPUT_NAME}")
 
@@ -70,6 +72,7 @@ set(OPENAL_LIB_OUTPUT  "${OPENAL_LIB_OUTPUT_DIR}/${OPENAL_LIB_OUTPUT_NAME}")
 
 # SDL2
 set(SDL2_DIR "${CMAKE_CURRENT_LIST_DIR}/SDL2-2.0.8")
+set(SDL2_INSTALL_DIR "${SDL2_DIR}/sdl2-install")
 set(SDL2_INCLUDE_DIR "${SDL2_DIR}/include")
 set(SDL2_LIB_OUTPUT_DIR  "${SDL2_DIR}/build")
 set(SDL2_LIB_OUTPUT_NAME "libSDL2.a")
@@ -150,8 +153,10 @@ add_custom_command(
       cd ${JPEG_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF -DREQUIRE_SIMD=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE .. &&
-      make -j${NUM_COMPILE_THREADS}
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake -DCMAKE_INSTALL_PREFIX=${JPEG_INSTALL_DIR}  -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF -DREQUIRE_SIMD=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================
@@ -167,8 +172,10 @@ add_custom_command(
       cd ${PNG_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-fPIC" .. &&
-      make -j${NUM_COMPILE_THREADS}
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake -DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR} -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-fPIC" .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================
@@ -203,11 +210,12 @@ add_custom_command(
   OUTPUT ${SDL2_LIB_OUTPUT}
   COMMAND
       cd ${SDL2_DIR} &&
-      mkdir -p sdl2-install &&
+      mkdir -p ${SDL2_INSTALL_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DSDL_STATIC_PIC=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_DIR}/sdl2-install -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
-      make -j${NUM_COMPILE_THREADS}
+      cmake -DSDL_STATIC_PIC=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR} -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================
@@ -221,11 +229,13 @@ add_custom_command(
   OUTPUT ${SDL2TTF_LIB_OUTPUT}
   COMMAND
       export PATH=$ENV{PATH}:${SDL2TTF_INSTALL_DIR} &&
+      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && 
+      cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&
       sh autogen.sh &&
       ./configure --with-freetype-prefix=${FREETYPE_INSTALL_DIR} --prefix=${SDL2TTF_INSTALL_DIR} --enable-static=yes --with-pic &&
-      make -j${NUM_COMPILE_THREADS} && 
+      make VERBOSE=1 -j${NUM_COMPILE_THREADS} && 
       make install
   DEPENDS ${SDL2_LIB_OUTPUT} ${FREETYPE_LIB_OUTPUT}
   VERBATIM
@@ -244,7 +254,6 @@ set(ALL_DEPENDENCIES_STATIC_TARGETS
     ${OPENAL_LIB_OUTPUT}
     ${SDL2_LIB_OUTPUT}
     ${SDL2TTF_LIB_OUTPUT}
-    ${SNDIO_LIB_OUTPUT}
     ${GLEW_LIB_OUTPUT}
     ${FREETYPE_LIB_OUTPUT} # Must go after sdl2ttf
 

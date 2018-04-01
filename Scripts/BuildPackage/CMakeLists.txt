@@ -40,7 +40,7 @@ project(BuildPackageBang C CXX)
 #=================================================================
 set(BANG_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 if (NOT DEFINED PKG_DIRECTORY)
-    set(PKG_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/BangPackage")
+    set(PKG_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Bang")
 endif()
 message("PKG_DIRECTORY: ${PKG_DIRECTORY}")
 set(LIBRARY_OUTPUT_DIRECTORY "${PKG_DIRECTORY}/Libraries")

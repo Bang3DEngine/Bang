@@ -1,0 +1,47 @@
+# C++ objects and libs
+*.cbp
+*.trace
+build*/
+*.user*
+*.refl.h
+res/EngineAssets/tmp
+*refactor-cpp-class-name.sh
+tmp
+*.exe
+**.slo
+**.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+*.cfg
+.donePreprocess
+callgrind.*
+nohup.out
+bin/*
+cov-int
+Bang.tgz
+
+# Visual Studio
+*.vcxproj.filters
+*.vcxproj.user
+*.db
+*.opendb
+*.swp
+.vs/*
+
+# CMake
+*CMakeCache.txt
+*CMakeFiles/*
+objs*/*
+build/*
+cmake_install.cmake
+Makefile
+
+# QtCreator
+*.autosave
+

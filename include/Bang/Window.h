@@ -82,7 +82,6 @@ public:
 
     SDL_Window *GetSDLWindow() const;
     uint GetSDLWindowID() const;
-    uint GetTitleBarHeight() const;
     Window *GetParentWindow() const;
     const List<Window*>& GetChildren() const;
 
@@ -103,7 +102,6 @@ private:
     Input          *m_input         = nullptr;
     SceneManager   *m_sceneManager  = nullptr;
 
-    int m_titleBarHeight = 0;
     Vector2i m_minSize = Vector2i::Zero;
     Vector2i m_maxSize = Vector2i(4096);
     Vector2i m_prevSize = Vector2i::Zero;

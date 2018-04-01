@@ -96,8 +96,6 @@ void Window::MakeCurrent()
 
 bool Window::MainLoopIteration()
 {
-    RetrieveTitleBarHeight();
-
     Window::SetActive(this);
     GetInput()->ProcessEnqueuedEvents();
 
@@ -312,7 +310,7 @@ Vector2i Window::GetPosition() const
 
 Vector2i Window::GetInsidePosition() const
 {
-    return GetPosition() + Vector2i(0, GetTitleBarHeight());
+    return GetPosition();
 }
 
 bool Window::IsBlockedByChildren() const
@@ -370,11 +368,6 @@ uint Window::GetSDLWindowID() const
     return SDL_GetWindowID(m_sdlWindow);
 }
 
-uint Window::GetTitleBarHeight() const
-{
-    return m_titleBarHeight;
-}
-
 Window *Window::GetParentWindow() const
 {
     return p_parent;
@@ -410,17 +403,6 @@ void Window::SetParent(Window *parentWindow)
             p_parent->SetResizable(false);
             p_parent->p_children.PushBack(this);
         }
-    }
-}
-
-void Window::RetrieveTitleBarHeight()
-{
-    if(Input::IsMouseInsideWindow())
-    {
-        Vector2i localCoords, globalCoords;
-        SDL_GetMouseState(&localCoords.x, &localCoords.y);
-        SDL_GetGlobalMouseState(&globalCoords.x, &globalCoords.y);
-        m_titleBarHeight = globalCoords.y - GetPosition().y - localCoords.y;
     }
 }
 

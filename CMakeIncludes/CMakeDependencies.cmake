@@ -42,6 +42,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
     include_directories(${OPENGL_INCLUDE_DIRS})
 
     # ZLIB Dependency ============================
+    message("Looking for dependency zlib...")
     find_package(ZLIB REQUIRED "zlib")
 
     # SNDFILE Dependency ============================
@@ -56,7 +57,6 @@ if (${BUILD_SHARED_LIBS})
     message("Looking for dependency GLEW...")
     find_package(GLEW REQUIRED)
     include_directories(${GLEW_INCLUDE_DIRS})
-    link_libraries(${GLEW_LIBRARIES})
 
     # OpenAL Dependency ============================
     find_package(OpenAL REQUIRED)
@@ -114,12 +114,17 @@ else ()
     include(${CMAKE_CURRENT_LIST_DIR}/../ThirdParty/CMakeLists.txt)
 endif()
 
+if (DEFINED FROM_TRAVIS)
+    add_definitions(-DFROM_TRAVIS=${FROM_TRAVIS})
+endif()
+
 # Common libs
 set(ALL_DEPENDENCIES_LIB_FILES
     ${ALL_DEPENDENCIES_LIB_FILES}
     ${DL_LIBRARY}
     ${ZLIB_LIBRARY}
     ${OPENGL_LIBRARIES}
+    ${SNDIO_LIBRARY}
     ${SNDFILE_LIBRARY}
 )
 

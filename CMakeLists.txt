@@ -90,7 +90,8 @@ file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
-                              "CMakeIncludes/[^.]*.cmake"
+                              "${BANG_DIR}/CMakeIncludes/[^.]*.cmake"
+                              "${BANG_DIR}/ThirdParty/CMakeLists.txt"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
 add_misc_files("${OTHER_FILES}")
@@ -298,7 +299,6 @@ else()
 endif()
 
 include_directories(${BANG_ENGINE_INCLUDE_DIR})
-message("TARGET INCLUDE DIRS: ${BANG_ENGINE_INCLUDE_DIRS}" )
 target_link_libraries(BangLib  ${ALL_DEPENDENCIES_LIB_FILES})
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
 #=================================================================

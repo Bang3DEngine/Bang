@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+
 cd SDL2-2.0.8
 rm -rf build
 rm -rf sdl2-install
@@ -24,11 +26,11 @@ make distclean
 cd ..
 
 cd libjpeg-turbo
-rm -rf build
+rm -rf build jpeg-install
 cd ..
 
 cd libpng-1.6.34
-rm -rf build
+rm -rf build png-install
 cd ..
 
 cd openal-soft

@@ -8,9 +8,11 @@
 #include <iostream>
 
 #include <assimp/scene.h>
-#include <assimp/Exporter.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#ifndef FROM_TRAVIS
+#include <assimp/Exporter.hpp>
+#endif
 
 #include "Bang/Path.h"
 #include "Bang/Mesh.h"
@@ -248,6 +250,7 @@ void ModelIO::ImportMeshRaw(
 void ModelIO::ExportModel(const GameObject *rootGameObject,
                           const Path &meshExportPath)
 {
+#ifndef FROM_TRAVIS
     Assimp::Exporter exporter;
     aiScene scene;
 
@@ -293,6 +296,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     Array<Material*> sceneMaterialsArray(sceneMaterials.Begin(), sceneMaterials.End());
 
     // Create materials
+#ifndef FROM_TRAVIS
     scene.mNumMaterials = sceneMaterialsArray.Size();
     scene.mMaterials = new aiMaterial*[scene.mNumMaterials];
     for (int i = 0; i < scene.mNumMaterials; ++i)
@@ -301,6 +305,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         aiMaterial *aMaterial = MaterialToAiMaterial(material);;
         scene.mMaterials[i] = aMaterial;
     }
+#endif
 
     // Create meshes
     scene.mNumMeshes = sceneMeshesArray.Size();
@@ -333,10 +338,12 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         Debug_Error("Error exporting to " << meshExportPath << ": " <<
                     exporter.GetErrorString());
     }
+#endif
 }
 
 String ModelIO::GetExtensionIdFromExtension(const String &extension)
 {
+#ifndef FROM_TRAVIS
     Assimp::Exporter exporter;
     for (int i = 0; i < exporter.GetExportFormatCount(); ++i)
     {
@@ -347,6 +354,7 @@ String ModelIO::GetExtensionIdFromExtension(const String &extension)
         }
     }
     Debug_Error("Can't export mesh to extension '" << extension << "'");
+#endif
     return 0;
 }
 
@@ -430,6 +438,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
 
 aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
 {
+#ifndef FROM_TRAVIS
     aiMaterial *aMaterial = new aiMaterial();
     // aMaterial->mNumProperties = 1;
     // aMaterial->mProperties = new aiMaterialProperty*[aMaterial->mNumProperties];
@@ -440,6 +449,9 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
     aMaterial->mProperties[0]->mKey = AI_MATKEY_COLOR_DIFFUSE;
     aMaterial->mProperties[0]->*/
     return aMaterial;
+#else
+    return nullptr;
+#endif
 }
 
 void ModelIO::ImportMesh(aiMesh *aMesh,

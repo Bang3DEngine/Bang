@@ -47,17 +47,19 @@ set(GLEW_LIB_OUTPUT  "${GLEW_LIB_OUTPUT_DIR}/${GLEW_LIB_OUTPUT_NAME}")
 
 # JPEG
 set(JPEG_DIR "${CMAKE_CURRENT_LIST_DIR}/libjpeg-turbo")
+set(JPEG_INSTALL_DIR "${JPEG_DIR}/jpeg-install")
 set(JPEG_INCLUDE_DIR_0 "${JPEG_DIR}")
 set(JPEG_INCLUDE_DIR_1 "${JPEG_DIR}/build")
-set(JPEG_LIB_OUTPUT_DIR  "${JPEG_DIR}/build")
+set(JPEG_LIB_OUTPUT_DIR  "${JPEG_INSTALL_DIR}/lib")
 set(JPEG_LIB_OUTPUT_NAME "libturbojpeg.a")
 set(JPEG_LIB_OUTPUT  "${JPEG_LIB_OUTPUT_DIR}/${JPEG_LIB_OUTPUT_NAME}")
 
 # PNG
 set(PNG_DIR "${CMAKE_CURRENT_LIST_DIR}/libpng-1.6.34")
+set(PNG_INSTALL_DIR "${PNG_DIR}/png-install")
 set(PNG_INCLUDE_DIR_0 "${PNG_DIR}")
 set(PNG_INCLUDE_DIR_1 "${PNG_DIR}/build")
-set(PNG_LIB_OUTPUT_DIR  "${PNG_DIR}/build")
+set(PNG_LIB_OUTPUT_DIR  "${PNG_INSTALL_DIR}/lib")
 set(PNG_LIB_OUTPUT_NAME "libpng.a")
 set(PNG_LIB_OUTPUT  "${PNG_LIB_OUTPUT_DIR}/${PNG_LIB_OUTPUT_NAME}")
 
@@ -151,8 +153,10 @@ add_custom_command(
       cd ${JPEG_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF -DREQUIRE_SIMD=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE .. &&
-      make -j${NUM_COMPILE_THREADS}
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake -DCMAKE_INSTALL_PREFIX=${JPEG_INSTALL_DIR}  -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF -DREQUIRE_SIMD=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================
@@ -168,8 +172,10 @@ add_custom_command(
       cd ${PNG_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-fPIC" .. &&
-      make -j${NUM_COMPILE_THREADS}
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake -DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR} -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-fPIC" .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install
   VERBATIM
 )
 #=================================================================

@@ -36,12 +36,13 @@ addons:
     project:
       name: "Bang3DEngine/Bang"
       description: "Description"
-    notification_email: ""
+    notification_email: victorantondominguez@gmail.com
     build_command_prepend: "mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=ON -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Release .."
     build_command: "make VERBOSE=1 -j6"
     branch_pattern: coverity_scan
 
 script:
+- if [ "${COVERITY_SCAN_BRANCH}" == 1 ] ; then exit 0 ; fi
 # - rm -rf build && mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=OFF -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Debug   .. && make VERBOSE=1 -j6 && cd ..
 - rm -rf build && mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=OFF -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Release .. && make VERBOSE=1 -j6 && cd ..
 - sudo apt-get -y install libglew-dev libfreetype6-dev libopenal-dev libsdl2-dev libsdl2-ttf-dev libassimp-dev

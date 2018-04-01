@@ -5,7 +5,7 @@ compiler:
 
 env:
   global:
-   - secure: "UE4WwdpYWcHbXy5zGvSItWYOjbzLMac5ponHULHlZmojyqyY0lr36dQ2AINdM0dcq6XpNz45AwoVcTC/pGlm/s7zGvxKbyUWd4QzfRHJMtLcRU7GztTBI3PXAXPdd6a0fL62te0ZD6mCm/LO1gnqDBLZV/gkt55u94VCxfogexeZHjmD/fBds+YlmJ6q9lMGhYKLOPS70C6tGxUq5INZ4/ncjjtUSRMNB6VzsEIIhktgncJyg4SRvXs5hwEVcl/spWnyNtt4HaJp3ah3wmHDA6PI8iEJsQ9eMUlYWx+fYLl2pNZV/s8ebOpvRsXHADC36Z3RYdVbMABHL0VKxszXEgiQtOv+xguTtS6MZqfoeNIQ/KeWCKU5Y+FoNRzZuTS2Go3Ju92xCwx177WJDldtlcRanrmjRp00lRDZF5bHBsUJixMWP1mzqrV+Zg+DYykQ/Er82CiMKTqZTZI5RbpNkxU/Del5oiz3QlymEz3RWUTipoegybMWUsqGS8UCyO50rpz0gw2TA5wl6QAG286zOYgx0zlVpDPKZTyfuveU6dYUtvrO9jqIar7wMs2of1YZ37HUomwEF8WWAp6CQsWTPG4ZJTbiuFvzC9X7ZoABsqScLOrGecqsp4x2SyEfRzn/l/z3D52ILnisQIhRUVXDE51CYJIMorNcNvqAgbtia6w="
+   - secure: "B9LUVx8lPlb15tyMJx9rageSXPK9bu57QGneuzrwxUmQOMIST2K/FI3jtz5qN6MNIwhVqhvFDfdyU+jAHLkYFjZ7LUiGsglU895ouz/LgWhNZVsA7JuUNVB6+rDqC0XdFoNWHAha2lHjOrDAA6vk0xQy7heltUGCromMgsvfYAsxnvFG6rmzWrObrcx7DYc2f+gucL03FUQgdJS7wQl6fMuDyn2tHArk9k/d27Cb0LUrUtLmgRj0CWbiVV6GvnSa/UX3WRvmcJkLM/k8CZ5UOi7J5R9mJMuqYVgddHpu2tAch/8B4WzthqhuyMpovPFidQdBxHM33AMN1ekKS+qE3X+AujxU/yxhpw5gF6tyB9DRw9gKLyY9cLVLX+uot3SClaAXTLROKcVx598oWZhYMT6FnA8MVG3lRMXvs+tDu57RccmZzDQLSmT4YqcsiR0MQtRtNIpe83WtUsU0CyYF0cteiTtIi227uisfsk8H4v61iYGfUCyKtDGWz48rQexdp8djLsuFe58AxoGNd+s6c3k0WxgDz/Sh8M5ths2eV5n1AuQjZ4Rgl26bupoIvs+99+/mhfQbi4YD1VX93wVlq6trnonJcD5fbGjsoW37XoW0iyuAuFPnMjM9oQw8uzep3Fi/CLHNpvXJxce4sQPRu08YtNqJsNCiRFi4/B0nBsQ="
 
 matrix:
   include:
@@ -37,8 +37,8 @@ addons:
       name: "Bang3DEngine/Bang"
       description: "Description"
     notification_email: ""
-    build_command_prepend: ""
-    build_command: "mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=ON -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Release .. && make VERBOSE=1 -j6"
+    build_command_prepend: "mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=ON -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Release .."
+    build_command: "make VERBOSE=1 -j6"
     branch_pattern: coverity_scan
 
 script:

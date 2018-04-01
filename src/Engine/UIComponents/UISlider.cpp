@@ -67,9 +67,11 @@ void UISlider::SetValue(float value)
     if (value != GetValue())
     {
         float clampedValue = Math::Clamp(value, GetMinValue(), GetMaxValue());
-        m_value = clampedValue;
+        float fullRangeValue = clampedValue;
 
-        GetInputNumber()->SetValue( GetValue() );
+        // Set and then retrieve the value from the input text...
+        GetInputNumber()->SetValue( fullRangeValue );
+        m_value = GetInputNumber()->GetValue();
 
         EventEmitter<IValueChangedListener>::PropagateToListeners(
                     &IValueChangedListener::OnValueChanged, this);

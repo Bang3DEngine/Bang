@@ -25,8 +25,10 @@ public:
     void OnUpdate() override;
 
     void SetValue(float v);
+    void SetDecimalPlaces(uint decimalPlaces);
 
     float GetValue() const;
+    uint GetDecimalPlaces() const;
     UIInputText* GetInputText() const;
 
     bool HasFocus() const;
@@ -38,6 +40,7 @@ public:
 private:
     float m_value = 0.0f;
     bool m_hasFocus = false;
+    uint m_decimalPlaces = 3;
     UIInputText *p_inputText = nullptr;
 
     void UpdateValueFromText();

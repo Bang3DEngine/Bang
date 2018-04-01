@@ -40,18 +40,35 @@ void UIInputNumber::OnUpdate()
 
 void UIInputNumber::SetValue(float v)
 {
-    m_value = v;
+    const uint dPlacesMult = Math::Pow(10u, GetDecimalPlaces());
+    m_value = SCAST<float>(Math::Round(v * dPlacesMult)) / dPlacesMult;
 
     if (!HasFocus())
     {
-        String vStr = String::ToString(v, 3);
+        String vStr = String::ToString(v, GetDecimalPlaces());
         GetInputText()->GetText()->SetContent(vStr);
     }
+}
+
+void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
+{
+    m_decimalPlaces = decimalPlaces;
+
+    String allowedChars = "1234567890";
+    if (GetDecimalPlaces() > 0) { allowedChars += ",."; }
+    GetInputText()->SetAllowedCharacters(allowedChars);
+
+    SetValue( GetValue() );
 }
 
 float UIInputNumber::GetValue() const
 {
     return m_value;
+}
+
+uint UIInputNumber::GetDecimalPlaces() const
+{
+    return m_decimalPlaces;
 }
 
 void UIInputNumber::OnFocusTaken(IFocusable *focusable)

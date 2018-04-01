@@ -61,7 +61,7 @@ void PostProcessEffect::SetType(PostProcessEffect::Type type) { m_type = type; }
 void PostProcessEffect::SetPriority(int priority) { m_priority = priority; }
 void PostProcessEffect::SetPostProcessShader(Shader *postProcessShader)
 {
-    ASSERT(postProcessShader);
+    if (!postProcessShader) { return; }
     if (postProcessShader == p_postProcessShader.Get()) { return; }
 
     p_postProcessShader = Resources::Create<Shader>();

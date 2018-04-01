@@ -107,20 +107,17 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     GameObject *cube = GameObjectFactory::CreateGameObjectNamed("Cube");
     MeshRenderer *mr = cube->AddComponent<MeshRenderer>();
     mr->SetMesh(MeshFactory::GetCube().Get());
-    mr->GetMaterial()->SetDiffuseColor(Color::Orange);
 
     GameObject *sphere = GameObjectFactory::CreateGameObjectNamed("Sphere-Child");
     sphere->GetTransform()->SetLocalPosition(Vector3(1,1,1));
     sphere->GetTransform()->SetLocalScale( Vector3(0.3f) );
     MeshRenderer *mr2 = sphere->AddComponent<MeshRenderer>();
     mr2->SetMesh(MeshFactory::GetSphere().Get());
-    mr2->GetMaterial()->SetDiffuseColor(Color::Green);
 
     GameObject *cube2 = GameObjectFactory::CreateGameObjectNamed("Cube-Sphere-Child");
     cube2->GetTransform()->SetLocalPosition(Vector3(4,0,0));
     MeshRenderer *mr3 = cube2->AddComponent<MeshRenderer>();
     mr3->SetMesh(MeshFactory::GetCube().Get());
-    mr3->GetMaterial()->SetDiffuseColor(Color::Purple);
 
     GameObject *lightGo = GameObjectFactory::CreateGameObjectNamed("Light");
     PointLight *pl = lightGo->AddComponent<PointLight>();

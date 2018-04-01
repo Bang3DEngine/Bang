@@ -27,7 +27,7 @@ void UISlider::OnUpdate()
 
     if (GetHandleFocusable()->IsBeingPressed())
     {
-        GetHandleRenderer()->SetTint( m_pressedColor );
+        GetHandleRenderer()->SetTint( GetPressedColor() );
 
         GameObject *guide = GetGuideRenderer()->GetGameObject();
         float mouseLocalX = guide->GetRectTransform()->
@@ -41,96 +41,62 @@ void UISlider::OnUpdate()
     else
     {
         GetHandleRenderer()->SetTint( GetHandleFocusable()->IsMouseOver() ?
-                                       m_overColor : m_idleColor);
+                                       GetOverColor() : GetIdleColor());
     }
 }
 
 void UISlider::OnValueChanged(Object *object)
 {
     ASSERT(object == GetInputNumber());
+    IValueChangedListener::SetReceiveEvents(false);
     SetValue( GetInputNumber()->GetValue() );
+    UpdateSliderHandlerFromInputNumberValue();
+    EventEmitter<IValueChangedListener>::PropagateToListeners(
+                &IValueChangedListener::OnValueChanged, this);
+    IValueChangedListener::SetReceiveEvents(true);
 }
 
-void UISlider::UpdateSliderHandlerFromValue()
+void UISlider::UpdateSliderHandlerFromInputNumberValue()
 {
-    GetHandleRectTransform()->SetAnchors( Vector2(GetValuePercent() * 2.0f - 1.0f,
-                                                  0) );
+    GetHandleRectTransform()->SetAnchors(
+                Vector2(GetValuePercent() * 2.0f - 1.0f, 0) );
 }
 
 RectTransform *UISlider::GetHandleRectTransform() const
 {
-    return p_handleRenderer->GetGameObject()->GetRectTransform();
+    return GetHandleRenderer()->GetGameObject()->GetRectTransform();
 }
 
 void UISlider::SetValue(float value)
 {
-    if (value != GetValue())
-    {
-        float clampedValue = Math::Clamp(value, GetMinValue(), GetMaxValue());
-        float fullRangeValue = clampedValue;
-
-        // Set and then retrieve the value from the input text...
-        GetInputNumber()->SetValue( fullRangeValue );
-        m_value = GetInputNumber()->GetValue();
-
-        EventEmitter<IValueChangedListener>::PropagateToListeners(
-                    &IValueChangedListener::OnValueChanged, this);
-        UpdateSliderHandlerFromValue();
-    }
-}
-
-void UISlider::SetMinValue(float minValue)
-{
-    if (minValue != GetMinValue())
-    {
-        m_minValue = minValue;
-        if (GetMaxValue() < GetMinValue()) { SetMaxValue(GetMinValue()); }
-        if (GetValue() < GetMinValue()) { SetValue(GetMinValue()); }
-        UpdateSliderHandlerFromValue();
-    }
-}
-
-void UISlider::SetMaxValue(float maxValue)
-{
-    if (maxValue != GetMaxValue())
-    {
-        m_maxValue = maxValue;
-        if (GetMinValue() > GetMaxValue()) { SetMinValue(GetMaxValue()); }
-        if (GetValue() > GetMaxValue()) { SetValue(GetMaxValue()); }
-        UpdateSliderHandlerFromValue();
-    }
+    GetInputNumber()->SetValue(value);
 }
 
 void UISlider::SetMinMaxValues(float minValue, float maxValue)
 {
-    SetMinValue(minValue);
-    SetMaxValue(maxValue);
+    GetInputNumber()->SetMinMaxValues(minValue, maxValue);
 }
 
 void UISlider::SetValuePercent(float percent)
 {
-    SetValue( GetMinValue() + (GetMaxValue()-GetMinValue()) * percent);
+    const float minVal = GetInputNumber()->GetMinValue();
+    const float maxVal = GetInputNumber()->GetMaxValue();
+    SetValue( minVal + (maxVal - minVal) * percent);
+    UpdateSliderHandlerFromInputNumberValue();
 }
 
 float UISlider::GetValue() const
 {
-    return m_value;
-}
-
-float UISlider::GetMinValue() const
-{
-    return m_minValue;
-}
-
-float UISlider::GetMaxValue() const
-{
-    return m_maxValue;
+    return GetInputNumber()->GetValue();
 }
 
 float UISlider::GetValuePercent() const
 {
-    float range = GetMaxValue() - GetMinValue();
-    float percent = (range != 0.0f) ? ((GetValue() - GetMinValue()) / range) : 0.0f;
+    const float minValue = GetInputNumber()->GetMinValue();
+    const float maxValue = GetInputNumber()->GetMaxValue();
+    const float range = (maxValue - minValue);
+    const float percent = (range != 0.0f) ?
+                            ((GetValue() - minValue) / range) : 0.0f;
     ASSERT(percent >= 0.0f && percent <= 1.0f);
     return percent;
 }
@@ -223,7 +189,8 @@ UISlider *UISlider::CreateInto(GameObject *go)
     slider->p_handleFocusable = handleFocusable;
     slider->p_inputNumber = inputNumber;
 
-    slider->UpdateSliderHandlerFromValue();
+    slider->GetInputNumber()->SetMinMaxValues(0.0f, 100.0f);
+    slider->UpdateSliderHandlerFromInputNumberValue();
 
     sliderContainer->SetParent(go);
     inputNumber->GetGameObject()->SetParent(go);

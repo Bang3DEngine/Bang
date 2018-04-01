@@ -25,11 +25,15 @@ public:
     void OnUpdate() override;
 
     void SetValue(float v);
+    void SetMinMaxValues(float min, float max);
     void SetDecimalPlaces(uint decimalPlaces);
 
     float GetValue() const;
     uint GetDecimalPlaces() const;
     UIInputText* GetInputText() const;
+    float GetMinValue() const;
+    float GetMaxValue() const;
+    const Vector2 &GetMinMaxValues() const;
 
     bool HasFocus() const;
 
@@ -38,12 +42,15 @@ public:
     virtual void OnFocusLost(IFocusable *focusable) override;
 
 private:
-    float m_value = 0.0f;
-    bool m_hasFocus = false;
-    uint m_decimalPlaces = 3;
+    float m_value            = 0.0f;
+    bool m_hasFocus          = false;
+    uint m_decimalPlaces     = 3;
     UIInputText *p_inputText = nullptr;
+    Vector2 m_minMaxValues   = Vector2(Math::NegativeInfinity<float>(),
+                                       Math::Infinity<float>());
 
     void UpdateValueFromText();
+    void ChangeTextColorBasedOnMinMax();
 
     // IValueChangedListener
     void OnValueChanged(Object*) override;

@@ -21,14 +21,10 @@ class UISlider : public Component,
 
 public:
     void SetValue(float value);
-    void SetMinValue(float minValue);
-    void SetMaxValue(float maxValue);
     void SetMinMaxValues(float minValue, float maxValue);
     void SetValuePercent(float percent);
 
     float GetValue() const;
-    float GetMinValue() const;
-    float GetMaxValue() const;
     float GetValuePercent() const;
 
     UIInputNumber *GetInputNumber() const;
@@ -42,18 +38,14 @@ public:
     const Color& GetPressedColor() const;
 
 private:
-    float m_value = 0.0f;
-    float m_minValue = -1.0f;
-    float m_maxValue =  1.0f;
-
-    Color m_idleColor = Color::Gray;
-    Color m_overColor = Color::VeryLightBlue;
+    Color m_idleColor    = Color::Gray;
+    Color m_overColor    = Color::VeryLightBlue;
     Color m_pressedColor = Color::Blue;
 
-    UIImageRenderer *p_guideRenderer = nullptr;
+    UIImageRenderer *p_guideRenderer  = nullptr;
     UIImageRenderer *p_handleRenderer = nullptr;
-    UIFocusable *p_handleFocusable = nullptr;
-    UIInputNumber *p_inputNumber = nullptr;
+    UIFocusable *p_handleFocusable    = nullptr;
+    UIInputNumber *p_inputNumber      = nullptr;
 
 	UISlider();
     virtual ~UISlider();
@@ -64,7 +56,7 @@ private:
     // IValueChangedListener
     void OnValueChanged(Object *object) override;
 
-    void UpdateSliderHandlerFromValue();
+    void UpdateSliderHandlerFromInputNumberValue();
     RectTransform *GetHandleRectTransform() const;
 
     static UISlider* CreateInto(GameObject *go);

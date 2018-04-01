@@ -1,5 +1,6 @@
 #include "Bang/UIInputNumber.h"
 
+#include "Bang/Debug.h"
 #include "Bang/Input.h"
 #include "Bang/UICanvas.h"
 #include "Bang/GameObject.h"
@@ -40,21 +41,39 @@ void UIInputNumber::OnUpdate()
 
 void UIInputNumber::SetValue(float v)
 {
-    const uint dPlacesMult = Math::Pow(10u, GetDecimalPlaces());
-    m_value = SCAST<float>(Math::Round(v * dPlacesMult)) / dPlacesMult;
+    const float clampedValue = Math::Clamp(v, GetMinValue(), GetMaxValue());
+    const uint placesMult = Math::Pow(10u, GetDecimalPlaces());
+    const float finalValue = SCAST<float>(
+                      Math::Round(clampedValue * placesMult) ) / placesMult;
+
+    if (finalValue != GetValue())
+    {
+        m_value = finalValue;
+        EventEmitter<IValueChangedListener>::
+           PropagateToListeners(&IValueChangedListener::OnValueChanged, this);
+    }
 
     if (!HasFocus())
     {
-        String vStr = String::ToString(v, GetDecimalPlaces());
+        String vStr = String::ToString(GetValue(), GetDecimalPlaces());
         GetInputText()->GetText()->SetContent(vStr);
     }
+    ChangeTextColorBasedOnMinMax();
+}
+
+void UIInputNumber::SetMinMaxValues(float min, float max)
+{
+    if (max < min) { Debug_Warn("Max and min are swapped! Correcting them..."); }
+
+    m_minMaxValues = Vector2(Math::Min(min, max), Math::Max(min, max));
+    SetValue( GetValue() );
 }
 
 void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
 {
     m_decimalPlaces = decimalPlaces;
 
-    String allowedChars = "1234567890";
+    String allowedChars = "0123456789+-";
     if (GetDecimalPlaces() > 0) { allowedChars += ",."; }
     GetInputText()->SetAllowedCharacters(allowedChars);
 
@@ -81,30 +100,49 @@ void UIInputNumber::OnFocusLost(IFocusable *focusable)
 {
     IFocusListener::OnFocusLost(focusable);
     m_hasFocus = false;
-    SetValue( GetValue() );
+    SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );
 }
 
 void UIInputNumber::UpdateValueFromText()
 {
     const String &content = GetInputText()->GetText()->GetContent();
     float value = 0.0f;
-    if (!content.IsEmpty())
-    {
-        std::istringstream iss(content);
-        iss >> value;
-    }
-
+    if (!content.IsEmpty()) { std::istringstream iss(content); iss >> value; }
     SetValue(value);
 }
 
+void UIInputNumber::ChangeTextColorBasedOnMinMax()
+{
+    // Colorize text based on the textValue
+    // (which can be different from GetValue())
+    float textValue = String::ToFloat(GetInputText()->GetText()->GetContent());
+    bool isOutOfRange = (textValue < GetMinValue() || textValue > GetMaxValue());
+    Color textColor = isOutOfRange ? Color::Red : Color::Black;
+    GetInputText()->GetText()->SetTextColor(textColor);
+}
+
 UIInputText *UIInputNumber::GetInputText() const { return p_inputText; }
+
+float UIInputNumber::GetMinValue() const
+{
+    return GetMinMaxValues()[0];
+}
+
+float UIInputNumber::GetMaxValue() const
+{
+    return GetMinMaxValues()[1];
+}
+
+const Vector2 &UIInputNumber::GetMinMaxValues() const
+{
+    return m_minMaxValues;
+}
 bool UIInputNumber::HasFocus() const { return m_hasFocus; }
 
-void UIInputNumber::OnValueChanged(Object*)
+void UIInputNumber::OnValueChanged(Object *object)
 {
+    ASSERT(object == GetInputText());
     UpdateValueFromText();
-    EventEmitter<IValueChangedListener>::
-            PropagateToListeners(&IValueChangedListener::OnValueChanged, this);
 }
 
 UIInputNumber *UIInputNumber::CreateInto(GameObject *go)

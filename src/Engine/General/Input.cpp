@@ -12,7 +12,6 @@ USING_NAMESPACE_BANG
 Input::Input()
 {
     Input::StartTextInput();
-    SDL_CaptureMouse(SDL_TRUE);
 }
 
 Input::~Input()

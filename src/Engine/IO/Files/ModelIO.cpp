@@ -296,7 +296,6 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     Array<Material*> sceneMaterialsArray(sceneMaterials.Begin(), sceneMaterials.End());
 
     // Create materials
-#ifndef FROM_TRAVIS
     scene.mNumMaterials = sceneMaterialsArray.Size();
     scene.mMaterials = new aiMaterial*[scene.mNumMaterials];
     for (int i = 0; i < scene.mNumMaterials; ++i)
@@ -305,7 +304,6 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         aiMaterial *aMaterial = MaterialToAiMaterial(material);;
         scene.mMaterials[i] = aMaterial;
     }
-#endif
 
     // Create meshes
     scene.mNumMeshes = sceneMeshesArray.Size();

@@ -57,6 +57,11 @@ RH<Material> MaterialFactory::GetUIImage()
     return MaterialFactory::Load("Materials/UI/G_UIImageRenderer.bmat");
 }
 
+RH<Material> MaterialFactory::GetUIImageInvY()
+{
+    return MaterialFactory::Load("Materials/UI/G_UIImageRendererInv.bmat");
+}
+
 RH<Material> MaterialFactory::GetRenderTextureToViewport()
 {
     return MaterialFactory::Load("Materials/RenderTextureToViewport.bmat");
@@ -65,7 +70,11 @@ RH<Material> MaterialFactory::GetRenderTextureToViewport()
 RH<Material> MaterialFactory::Load(const String &matEnginePath)
 {
     MaterialFactory *mf = MaterialFactory::GetActive();
-    mf->m_cache.Add(matEnginePath, Resources::Load<Material>(EPATH(matEnginePath)));
+    if (!mf->m_cache.ContainsKey(matEnginePath))
+    {
+        mf->m_cache.Add(matEnginePath,
+                        Resources::Load<Material>(EPATH(matEnginePath)));
+    }
     return mf->m_cache.Get(matEnginePath);
 }
 

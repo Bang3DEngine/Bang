@@ -14,6 +14,8 @@ RH<Texture2D> IconManager::GetCheckIcon()
 { return GetIconTexture("Check"); }
 RH<Texture2D> IconManager::GetAudioIcon()
 { return GetIconTexture("Audio"); }
+RH<Texture2D> IconManager::GetCircleIcon()
+{ return GetIconTexture("Circle"); }
 RH<Texture2D> IconManager::GetSunIcon()
 { return GetIconTexture("Sun"); }
 RH<Texture2D> IconManager::GetLightBulbIcon()
@@ -36,7 +38,7 @@ RH<Texture2D> IconManager::GetIconTexture(const String &filename,
         iconTex.Get()->GenerateMipMaps();
         iconTex.Get()->SetAlphaCutoff(0.5f);
         iconTex.Get()->SetFilterMode(GL::FilterMode::Trilinear_LL);
-        iconTex.Get()->SetWrapMode(GL::WrapMode::ClampToEdge);
+        iconTex.Get()->SetWrapMode(GL::WrapMode::Repeat);
         GL::Bind(iconTex.Get()->GetGLBindTarget(), prevId);
 
         Resources::SetPermanent(iconTex.Get(), true);

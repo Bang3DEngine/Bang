@@ -35,11 +35,13 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
     sp->Set("B_Model",          matrices->model,    false);
+    sp->Set("B_ModelInv",       matrices->modelInv,    false);
     sp->Set("B_Normal",         matrices->normal,   false);
     sp->Set("B_View",           matrices->view,     false);
     sp->Set("B_Projection",     matrices->proj,     false);
     sp->Set("B_ProjectionView", matrices->projView, false);
     sp->Set("B_PVM",            matrices->pvm,      false);
+    sp->Set("B_PVMInv",         matrices->pvmInv,      false);
 
     sp->Set("B_AmbientLight", Settings::GetAmbientLight(), false);
 
@@ -65,6 +67,7 @@ void GLUniforms::SetModelMatrix(const Matrix4 &model)
     if (model != matrices->model)
     {
         matrices->model = model;
+        matrices->modelInv = model.Inversed();
         UpdatePVMMatrix();
     }
 
@@ -120,6 +123,7 @@ void GLUniforms::UpdatePVMMatrix()
     }
     matrices->projView = projViewMatrix;
     matrices->pvm = pvmMatrix;
+    matrices->pvmInv = matrices->pvm.Inversed();
 }
 
 void GLUniforms::SetViewProjMode(GL::ViewProjMode viewProjMode)

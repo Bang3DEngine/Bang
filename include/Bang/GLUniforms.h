@@ -18,6 +18,7 @@ public:
     struct MatrixUniforms
     {
         Matrix4 model;
+        Matrix4 modelInv;
         Matrix4 normal;
         Matrix4 view;
         Matrix4 viewInv;
@@ -25,6 +26,7 @@ public:
         Matrix4 projInv;
         Matrix4 projView;
         Matrix4 pvm;
+        Matrix4 pvmInv;
     };
 
     struct CameraUniforms

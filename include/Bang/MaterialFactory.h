@@ -23,6 +23,7 @@ public:
 
     static RH<Material> GetUIText();
     static RH<Material> GetUIImage();
+    static RH<Material> GetUIImageInvY();
 
     static RH<Material> GetRenderTextureToViewport();
 

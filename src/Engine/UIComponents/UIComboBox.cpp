@@ -7,11 +7,14 @@
 #include "Bang/UILabel.h"
 #include "Bang/Material.h"
 #include "Bang/UICanvas.h"
+#include "Bang/Resources.h"
+#include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/IconManager.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/UILayoutIgnorer.h"
@@ -135,9 +138,13 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     currentItemText->SetHorizontalAlign(HorizontalAlignment::Right);
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
+    bg->SetImageTexture( Resources::Load<Texture2D>(
+                                        EPATH("Images/RRect_9s.png")).Get() );
+    bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
+    downArrowIcon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     downArrowIcon->SetImageTexture( IconManager::GetDownArrowIcon().Get() );
     downArrowIcon->SetTint( Color::Black );
 
@@ -148,13 +155,18 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     UIList *list = GameObjectFactory::CreateUIList(false);
     GameObject *listGo = list->GetGameObject();
     list->SetWideSelectionMode(true);
+    list->GetDirLayout()->SetPaddings(3);
     list->SetSelectionCallback([comboBox](GameObject *item, UIList::Action action)
     {
         comboBox->OnListSelectionCallback(item, action);
     });
     listGo->SetEnabled(false);
 
+
     UIImageRenderer *listBG = listGo->AddComponent<UIImageRenderer>();
+    listBG->SetImageTexture( Resources::Load<Texture2D>(
+                                                EPATH("Images/RRect_9s.png")).Get() );
+    listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
 
     listGo->AddComponent<UILayoutIgnorer>();

@@ -14,6 +14,7 @@ public:
     static RH<Texture2D> GetDownArrowIcon();
     static RH<Texture2D> GetCheckIcon();
     static RH<Texture2D> GetAudioIcon();
+    static RH<Texture2D> GetCircleIcon();
     static RH<Texture2D> GetSunIcon();
     static RH<Texture2D> GetLightBulbIcon();
 

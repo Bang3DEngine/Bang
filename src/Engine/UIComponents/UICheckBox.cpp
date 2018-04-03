@@ -1,9 +1,12 @@
 #include "Bang/UICheckBox.h"
 
+#include "Bang/Material.h"
+#include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/IconManager.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/UIVerticalLayout.h"
@@ -73,6 +76,7 @@ IFocusable *UICheckBox::GetFocusable() const
     return p_focusable;
 }
 
+#include "Bang/XMLNode.h"
 UICheckBox *UICheckBox::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
@@ -92,6 +96,9 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *checkBoxBgImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkBoxImg = checkBoxBgImgGo->AddComponent<UIImageRenderer>();
+    checkBoxImg->SetImageTexture( Resources::Load<Texture2D>(
+                                        EPATH("Images/RRect_9s.png")).Get() );
+    checkBoxImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     checkBoxImg->SetTint(UICheckBox::IdleColor);
 
     UIFocusable *focusable = checkBoxBgImgGo->AddComponent<UIFocusable>();
@@ -107,6 +114,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *checkImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkImg = checkImgGo->AddComponent<UIImageRenderer>();
+    checkImg->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     checkImg->SetImageTexture( IconManager::GetCheckIcon().Get() );
     checkImg->SetTint(Color::Black);
 

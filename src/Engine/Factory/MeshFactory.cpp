@@ -14,6 +14,8 @@ RH<Mesh> MeshFactory::GetPlane()
 { return MeshFactory::GetMesh("Meshes/Plane.obj"); }
 RH<Mesh> MeshFactory::GetUIPlane()
 { return MeshFactory::GetMesh("Meshes/UIPlane.obj"); }
+RH<Mesh> MeshFactory::GetUIPlane3x3()
+{ return MeshFactory::GetMesh("Meshes/UIPlane3x3.obj"); }
 RH<Mesh> MeshFactory::GetCube()
 { return MeshFactory::GetMesh("Meshes/Cube.obj"); }
 RH<Mesh> MeshFactory::GetSphere()

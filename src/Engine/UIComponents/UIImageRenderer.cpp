@@ -9,6 +9,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/RectTransform.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UILayoutManager.h"
 
@@ -17,7 +18,7 @@ USING_NAMESPACE_BANG
 UIImageRenderer::UIImageRenderer()
 {
     SetMaterial(MaterialFactory::GetUIImage().Get());
-    p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane() );
+    SetMode(Mode::TEXTURE);
 }
 
 UIImageRenderer::~UIImageRenderer()
@@ -27,6 +28,14 @@ UIImageRenderer::~UIImageRenderer()
 void UIImageRenderer::OnRender()
 {
     UIRenderer::OnRender();
+
+    if (GetMaterial() && GetMaterial()->GetShaderProgram())
+    {
+        GetMaterial()->GetShaderProgram()->Set("B_ImageMode",
+                                               SCAST<int>( GetMode() ));
+        GetMaterial()->GetShaderProgram()->Set("B_Slice9BorderStrokePx",
+                                               Vector2(GetSlice9BorderStrokePx()));
+    }
 
     if (GetTint().a > 0.0f)
     {
@@ -63,6 +72,34 @@ void UIImageRenderer::SetTint(const Color &tint)
     }
 }
 
+void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
+{
+    if (mode != GetMode())
+    {
+        m_mode = mode;
+        switch (GetMode())
+        {
+            case Mode::TEXTURE:
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane() );
+            break;
+
+            case Mode::SLICE_9:
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane3x3() );
+            break;
+        }
+    }
+}
+
+void UIImageRenderer::SetSlice9BorderStrokePx(const Vector2i& slice9borderStrokePx)
+{
+    m_slice9BorderStrokePx = slice9borderStrokePx;
+}
+
+UIImageRenderer::Mode UIImageRenderer::GetMode() const
+{
+    return m_mode;
+}
+
 const Color &UIImageRenderer::GetTint() const
 {
     return m_tint;
@@ -71,6 +108,11 @@ const Color &UIImageRenderer::GetTint() const
 Texture2D *UIImageRenderer::GetImageTexture() const
 {
     return p_imageTexture.Get();
+}
+
+const Vector2i& UIImageRenderer::GetSlice9BorderStrokePx() const
+{
+    return m_slice9BorderStrokePx;
 }
 
 void UIImageRenderer::OnTransformChanged()
@@ -98,7 +140,8 @@ void UIImageRenderer::ImportXML(const XMLNode &xmlInfo)
 
     if (xmlInfo.Contains("Image"))
     {
-        RH<Texture2D> tex = Resources::Load<Texture2D>(xmlInfo.Get<GUID>("Image"));
+        RH<Texture2D> tex = Resources::Load<Texture2D>(
+                                            xmlInfo.Get<GUID>("Image"));
         SetImageTexture(tex.Get());
     }
 
@@ -114,3 +157,4 @@ void UIImageRenderer::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("Image", imgTex ? imgTex->GetGUID() : GUID::Empty());
     xmlInfo->Set("Tint", GetTint());
 }
+

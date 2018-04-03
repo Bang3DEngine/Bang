@@ -9,6 +9,7 @@
 #include "Bang/UILabel.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Material.h"
+#include "Bang/Resources.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIFocusable.h"
@@ -24,8 +25,8 @@
 USING_NAMESPACE_BANG
 
 const Vector2i UIInputText::LookAheadOffsetPx = Vector2i(5);
-const int UIInputText::MarginX = 2;
-const int UIInputText::MarginY = 0;
+const int UIInputText::MarginX = 5;
+const int UIInputText::MarginY = 2;
 
 UIInputText::UIInputText()
 {
@@ -368,6 +369,9 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     UIInputText *inputText = go->AddComponent<UIInputText>();
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
+    bg->SetImageTexture( Resources::Load<Texture2D>(
+                                        EPATH("Images/RRect_9s.png")).Get() );
+    bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
     inputText->p_background = bg;
 
@@ -378,6 +382,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
     scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(Vector2::Zero);
     scrollArea->GetMask()->SetMasking(true);
+    scrollArea->GetBackground()->SetTint(Color::Zero);
     inputText->p_scrollArea = scrollArea;
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();

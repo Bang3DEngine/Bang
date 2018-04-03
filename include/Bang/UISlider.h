@@ -38,7 +38,7 @@ public:
     const Color& GetPressedColor() const;
 
 private:
-    Color m_idleColor    = Color::Gray;
+    Color m_idleColor    = Color::White;
     Color m_overColor    = Color::VeryLightBlue;
     Color m_pressedColor = Color::Blue;
 

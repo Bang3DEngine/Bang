@@ -1,12 +1,16 @@
 #include "Bang/UIButton.h"
 
 #include "Bang/Input.h"
+#include "Bang/Paths.h"
 #include "Bang/Cursor.h"
 #include "Bang/UILabel.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/GameObjectFactory.h"
@@ -133,10 +137,11 @@ UIButton* UIButton::CreateInto(GameObject *go)
     UIButton *button = go->AddComponent<UIButton>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
-    hl->SetPaddingBot(3);
-    hl->SetPaddingTop(3);
-    hl->SetPaddingRight(3);
-    hl->SetPaddingLeft (3);
+    constexpr int BTN_PADDING = 3;
+    hl->SetPaddingBot(BTN_PADDING);
+    hl->SetPaddingTop(BTN_PADDING);
+    hl->SetPaddingRight(BTN_PADDING);
+    hl->SetPaddingLeft (BTN_PADDING);
     hl->SetSpacing(0);
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();
@@ -144,6 +149,9 @@ UIButton* UIButton::CreateInto(GameObject *go)
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
+    bgImg->SetImageTexture( Resources::Load<Texture2D>(
+                                        EPATH("Images/RRect_9s.png")).Get() );
+    bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bgImg->SetTint(Color::White);
 
     UIFocusable *btn = go->AddComponent<UIFocusable>();
@@ -155,6 +163,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
     label->SetFocusEnabled(false);
 
     UIImageRenderer *icon = GameObjectFactory::CreateUIImage();
+    icon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
 
     GameObject *iconGo = icon->GetGameObject();
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();

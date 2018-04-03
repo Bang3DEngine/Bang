@@ -145,6 +145,8 @@ void Material::CloneInto(ICloneable *clone) const
 {
     Material *matClone = Cast<Material*>(clone);
 
+    matClone->SetUvOffset(GetUvOffset());
+    matClone->SetUvMultiply(GetUvMultiply());
     matClone->SetShaderProgram(GetShaderProgram());
     matClone->SetDiffuseColor(GetDiffuseColor());
     matClone->SetReceivesLighting(GetReceivesLighting());
@@ -169,7 +171,6 @@ void Material::Import(const Path &materialFilepath)
     ImportXMLFromFile(materialFilepath);
 }
 
-#include "Bang/Debug.h"
 void Material::ImportXML(const XMLNode &xml)
 {
     Asset::ImportXML(xml);
@@ -187,7 +188,7 @@ void Material::ImportXML(const XMLNode &xml)
     { SetReceivesLighting(xml.Get<bool>("ReceivesLighting")); }
 
     if (xml.Contains("UvOffset"))
-    { SetUvMultiply(xml.Get<Vector2>("UvOffset")); }
+    { SetUvOffset(xml.Get<Vector2>("UvOffset")); }
 
     if (xml.Contains("UvMultiply"))
     { SetUvMultiply(xml.Get<Vector2>("UvMultiply")); }

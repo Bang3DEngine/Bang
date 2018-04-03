@@ -1,9 +1,11 @@
 uniform mat4 B_Model;
+uniform mat4 B_ModelInv;
 uniform mat4 B_Normal;
 uniform mat4 B_View;
 uniform mat4 B_Projection;
 uniform mat4 B_ProjectionView;
 uniform mat4 B_PVM;
+uniform mat4 B_PVMInv;
 
 uniform float B_Camera_ZNear;
 uniform float B_Camera_ZFar;
@@ -48,8 +50,9 @@ float B_LinearizeDepth(float d)
                   d * (B_Camera_ZFar - B_Camera_ZNear));
 }
 
-#ifdef BANG_FRAGMENT
 vec2 B_GetViewportStep() { return 1.0 / B_Viewport_Size; }
+
+#ifdef BANG_FRAGMENT
 vec2 B_GetViewportPos() { return gl_FragCoord.xy - B_Viewport_MinPos; }
 vec2 B_GetViewportUv() { return B_GetViewportPos() / B_Viewport_Size; }
 #endif

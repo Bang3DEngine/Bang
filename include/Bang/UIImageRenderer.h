@@ -14,6 +14,12 @@ class UIImageRenderer : public UIRenderer
     COMPONENT(UIImageRenderer)
 
 public:
+    enum class Mode
+    {
+        TEXTURE = 0,
+        SLICE_9 = 1
+    };
+
     UIImageRenderer();
     virtual ~UIImageRenderer();
 
@@ -23,9 +29,13 @@ public:
     void SetImageTexture(const Path &imagePath);
     void SetImageTexture(Texture2D* imageTexture);
     void SetTint(const Color& tint);
+    void SetMode(Mode mode);
+    void SetSlice9BorderStrokePx(const Vector2i& slice9borderStrokePx);
 
+    Mode GetMode() const;
     const Color& GetTint() const;
     Texture2D *GetImageTexture() const;
+    const Vector2i& GetSlice9BorderStrokePx() const;
 
     // ITransformListener
     virtual void OnTransformChanged() override;
@@ -44,6 +54,8 @@ private:
     RH<Mesh> p_quadMesh;
     Color m_tint = Color::White;
     RH<Texture2D> p_imageTexture;
+    Mode m_mode = Undef<Mode>();
+    Vector2i m_slice9BorderStrokePx = Vector2i(8);
 };
 
 NAMESPACE_BANG_END

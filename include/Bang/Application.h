@@ -58,6 +58,7 @@ private:
     int m_exitCode = 0;
     bool m_forcedExit = false;
 
+    void InitBeforeLoop();
     virtual Paths* CreatePaths();
     virtual Settings* CreateSettings();
     virtual SceneManager* CreateSceneManager() const;

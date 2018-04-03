@@ -289,14 +289,16 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeDependencies.cmake) # Depen
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES})
 
+set(GENERATED_LIB_NAME "")
 if (${BUILD_SHARED_LIBS})
     add_library(BangLib SHARED $<TARGET_OBJECTS:BangEngineObjects>)
-    set_target_properties(BangLib PROPERTIES OUTPUT_NAME bang_shared)
+    set(GENERATED_LIB_NAME "bang_shared")
 else()
     add_library(BangLib STATIC $<TARGET_OBJECTS:BangEngineObjects>)
-    set_target_properties(BangLib PROPERTIES OUTPUT_NAME bang_static)
     add_dependencies(BangEngineObjects BuildThirdParty)
+    set(GENERATED_LIB_NAME "bang_static")
 endif()
+set_target_properties(BangLib PROPERTIES OUTPUT_NAME ${GENERATED_LIB_NAME})
 
 include_directories(${BANG_ENGINE_INCLUDE_DIR})
 target_link_libraries(BangLib  ${ALL_DEPENDENCIES_LIB_FILES})

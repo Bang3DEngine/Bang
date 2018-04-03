@@ -46,6 +46,7 @@ public:
     void Restore();
     void Minimize();
     void MoveToFront();
+    void SetIcon(const Path &iconPath);
     void SetBordered(bool bordered);
     void SetMinSize(int minSizeX, int minSizeY);
     void SetMaxSize(int maxSizeX, int maxSizeY);

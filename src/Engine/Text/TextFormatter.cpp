@@ -64,7 +64,7 @@ TextFormatter::SplitCharRectsInLines(const String &content,
     const float lineSkip = font->GetLineSkip(fontSize);
     for (int i = 0; i < content.Size(); ++i)
     {
-        const int charAdvX = GetCharAdvanceX(content, font, fontSize, i);
+        const float charAdvX = GetCharAdvanceX(content, font, fontSize, i);
         if (wrapping)
         {
             // Split the input char positions into the needed lines.
@@ -79,12 +79,12 @@ TextFormatter::SplitCharRectsInLines(const String &content,
                 // We have arrived to a space.
                 // Does the following word (after this space) still fits in
                 // the current line?
-                int tmpAdvX = penPosition.x + charAdvX;
+                float tmpAdvX = penPosition.x + charAdvX;
                 for (int j = i+1; j < content.Size(); ++j)
                 {
                     if (content[j] == ' ') { break; }
-                    const int jCharAdvX = GetCharAdvanceX(content, font,
-                                                          fontSize, j);
+                    const float jCharAdvX = GetCharAdvanceX(content, font,
+                                                            fontSize, j);
                     if (tmpAdvX + jCharAdvX > limitsRect.GetMax().x)
                     {
                         lineBreak = true;
@@ -225,19 +225,17 @@ AARectf TextFormatter::GetCharRect(char c, const Font *font, int fontSize)
     return AARectf(charMin, charMax);
 }
 
-int TextFormatter::GetCharAdvanceX(const String &content,
-                                   const Font *font,
-                                   int fontSize,
-                                   int currentCharIndex)
+float TextFormatter::GetCharAdvanceX(const String &content,
+                                     const Font *font,
+                                     int fontSize,
+                                     int currentCharIndex)
 {
-    int advance = 0;
+    float advance = 0;
     if (currentCharIndex < content.Size()-1)
     {
-        /*
         advance = font->GetKerning(fontSize,
                                    content[currentCharIndex],
                                    content[currentCharIndex + 1]);
-        */
     }
 
     if (advance <= 0)
@@ -247,7 +245,7 @@ int TextFormatter::GetCharAdvanceX(const String &content,
         advance = charMetrics.advance;
     }
 
-    return advance + 1;
+    return advance;
 }
 
 Vector2 FindMinCoord(const Array<TextFormatter::CharRect> &rects)

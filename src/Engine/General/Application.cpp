@@ -15,6 +15,7 @@
 #include "Bang/Settings.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
+#include "Bang/IconManager.h"
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
 #include "Bang/SceneManager.h"
@@ -68,8 +69,12 @@ Application::~Application()
 #ifdef GPROF
 #include <gperftools/profiler.h>
 #endif
-void InitProfiling()
+void Application::InitBeforeLoop()
 {
+    GetWindowManager()->GetTopWindow()->SetIcon(
+                IconManager::GetBangB512Icon().Get()->GetResourceFilepath() );
+    Debug_Peek(IconManager::GetBangB512Icon().Get()->GetResourceFilepath());
+
     #ifdef GPROF
     Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");
     Debug_Log("Writing profiling information to: '" << profileOutFile << "'");
@@ -91,7 +96,7 @@ void StopProfiling()
 
 int Application::MainLoop()
 {
-    InitProfiling();
+    InitBeforeLoop();
     Time::SetDeltaTimeReferenceToNow();
 
     bool exit = false;

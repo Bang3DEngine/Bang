@@ -6,6 +6,10 @@
 
 USING_NAMESPACE_BANG
 
+RH<Texture2D> IconManager::GetBangB64Icon()
+{ return GetIconTexture("LogoBang_B_64"); }
+RH<Texture2D> IconManager::GetBangB512Icon()
+{ return GetIconTexture("LogoBang_B_512"); }
 RH<Texture2D> IconManager::GetRightArrowIcon()
 { return GetIconTexture("RightArrow"); }
 RH<Texture2D> IconManager::GetDownArrowIcon()

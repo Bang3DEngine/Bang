@@ -10,6 +10,8 @@ FORWARD class Texture2D;
 class IconManager
 {
 public:
+    static RH<Texture2D> GetBangB64Icon();
+    static RH<Texture2D> GetBangB512Icon();
     static RH<Texture2D> GetRightArrowIcon();
     static RH<Texture2D> GetDownArrowIcon();
     static RH<Texture2D> GetCheckIcon();

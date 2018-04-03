@@ -205,6 +205,38 @@ void Window::MoveToFront()
     for (Window *childWindow : p_children) { childWindow->MoveToFront(); }
 }
 
+void SDL_PutPixel32(SDL_Surface *surface, int x, int y, Uint32 color)
+{
+    if( SDL_MUSTLOCK(surface) ) { SDL_LockSurface(surface); }
+    Uint8 * pixel = (Uint8*)surface->pixels;
+    pixel += (y * surface->pitch) + (x * sizeof(Uint32));
+    *((Uint32*)pixel) = color;
+    if( SDL_MUSTLOCK(surface) ) { SDL_UnlockSurface(surface); }
+}
+
+void Window::SetIcon(const Path &iconPath)
+{
+    constexpr Uint32 RM = 0xff, GM = 0xff00, BM = 0xff0000, AM = 0xff000000;
+    RH<Texture2D> tex = Resources::Load<Texture2D>(iconPath);
+    Imageb img = tex.Get()->ToImage<Byte>();
+    SDL_Surface *icon = SDL_CreateRGBSurface(SDL_SWSURFACE,
+                                             img.GetWidth(),
+                                             img.GetHeight(),
+                                             32, RM, GM, BM, AM);
+    for (int y = 0; y < img.GetHeight(); ++y)
+    {
+        for (int x = 0; x < img.GetWidth(); ++x)
+        {
+            const Color color = img.GetPixel(x,y);
+            const Vector4i ci( Vector4::Round( color.ToVector4() * 255.0f ) );
+            PutPixel32(icon, x, y, SDL_MapRGBA(icon->format,
+                                               ci[0], ci[1], ci[2], ci[3]));
+        }
+    }
+    SDL_SetWindowIcon(GetSDLWindow(), icon);
+    SDL_FreeSurface( icon );
+}
+
 void Window::SetBordered(bool bordered)
 {
     SDL_SetWindowBordered(GetSDLWindow(), Cast<SDL_bool>(bordered));

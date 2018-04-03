@@ -22,6 +22,7 @@
 #include "Bang/UIScrollPanel.h"
 #include "Bang/WindowManager.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIVerticalLayout.h"
@@ -501,6 +502,7 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();
     iconLE->SetMinSize( Vector2i(45) );
     UIImageRenderer *icon = iconGo->AddComponent<UIImageRenderer>();
+    icon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     icon->SetImageTexture( EPATH("Icons/Warn.png"));
     icon->GetImageTexture()->SetFilterMode( GL::FilterMode::Bilinear );
 

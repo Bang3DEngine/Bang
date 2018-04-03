@@ -156,7 +156,7 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
     UIInputText *inputText = go->GetComponent<UIInputText>();
     inputText->SetAllowedCharacters("0123456789.,-+");
     inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::Left);
-    inputText->GetText()->SetTextSize(9);
+    inputText->GetText()->SetTextSize(12);
 
     inputNumber->p_inputText = inputText;
 

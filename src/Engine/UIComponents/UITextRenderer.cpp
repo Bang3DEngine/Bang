@@ -25,7 +25,7 @@ UITextRenderer::UITextRenderer() : UIRenderer()
     p_mesh = Resources::Create<Mesh>();
     SetMaterial(MaterialFactory::GetUIText().Get());
 
-    RH<Font> font = Resources::Load<Font>(EPATH("Fonts/Roboto.ttf"));
+    RH<Font> font = Resources::Load<Font>(EPATH("Fonts/Ubuntu.ttf"));
     SetFont(font.Get());
     SetContent("");
     SetTextSize(20.0f);

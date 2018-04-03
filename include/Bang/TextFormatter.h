@@ -62,10 +62,10 @@ private:
     static AARectf GetCharRect(char c,
                              const Font *font,
                              int fontSize);
-    static int GetCharAdvanceX(const String &content,
-                               const Font *font,
-                               int fontSize,
-                               int currentCharIndex);
+    static float GetCharAdvanceX(const String &content,
+                                 const Font *font,
+                                 int fontSize,
+                                 int currentCharIndex);
 };
 
 inline std::ostream& operator<<(std::ostream &os,

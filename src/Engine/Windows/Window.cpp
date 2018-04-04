@@ -229,8 +229,8 @@ void Window::SetIcon(const Path &iconPath)
         {
             const Color color = img.GetPixel(x,y);
             const Vector4i ci( Vector4::Round( color.ToVector4() * 255.0f ) );
-            PutPixel32(icon, x, y, SDL_MapRGBA(icon->format,
-                                               ci[0], ci[1], ci[2], ci[3]));
+            SDL_PutPixel32(icon, x, y, SDL_MapRGBA(icon->format,
+                                                   ci[0], ci[1], ci[2], ci[3]));
         }
     }
     SDL_SetWindowIcon(GetSDLWindow(), icon);

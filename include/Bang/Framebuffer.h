@@ -23,6 +23,9 @@ public:
     void SetReadBuffer(GL::Attachment attachment) const;
     void SetAttachmentTexture(Texture2D *tex, GL::Attachment attachment);
 
+    void Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,
+              const AARect &ndcRect = AARect::NDCRect,
+              GL::BufferBit bufferBit = GL::BufferBit::Color);
     Color ReadColor(int x, int y, GL::Attachment attachment) const;
     void Resize(int width, int height);
 

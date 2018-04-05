@@ -66,15 +66,8 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
 
 void GBuffer::PrepareColorReadBuffer(const AARect &readNDCRect)
 {
-    PushDrawAttachments();
-    SetReadBuffer(AttColor);
-    SetDrawBuffers({AttColorRead});
-    AARect rf (readNDCRect * 0.5f + 0.5f);
-    AARecti r ( AARect(Vector2::Floor(rf.GetMin()),
-                   Vector2::Ceil(rf.GetMax())) * GetSize() );
-    GL::BlitFramebuffer(r, r, GL::FilterMode::Nearest,
-                        GL::BufferBit::Color);
-    PopDrawAttachments();
+    Blit(GBuffer::AttColor, {GBuffer::AttColorRead},
+         readNDCRect, GL::BufferBit::Color);
 }
 
 void GBuffer::SetAllDrawBuffers() const

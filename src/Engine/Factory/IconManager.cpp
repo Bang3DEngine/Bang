@@ -10,6 +10,8 @@ RH<Texture2D> IconManager::GetBangB64Icon()
 { return GetIconTexture("LogoBang_B_64"); }
 RH<Texture2D> IconManager::GetBangB512Icon()
 { return GetIconTexture("LogoBang_B_512"); }
+RH<Texture2D> IconManager::GetBangB2048Icon()
+{ return GetIconTexture("LogoBang_B_2048"); }
 RH<Texture2D> IconManager::GetRightArrowIcon()
 { return GetIconTexture("RightArrow"); }
 RH<Texture2D> IconManager::GetDownArrowIcon()
@@ -24,6 +26,8 @@ RH<Texture2D> IconManager::GetSunIcon()
 { return GetIconTexture("Sun"); }
 RH<Texture2D> IconManager::GetLightBulbIcon()
 { return GetIconTexture("LightBulb"); }
+RH<Texture2D> IconManager::GetWarningIcon()
+{ return GetIconTexture("Warn"); }
 
 RH<Texture2D> IconManager::GetIconTexture(const String &filename,
                                           const Path &dir)

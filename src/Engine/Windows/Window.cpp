@@ -72,10 +72,10 @@ void Window::Create(uint flags)
         Debug_Error("Glew init error: " << glewGetErrorString(glewError));
     }
 
-    m_input               = new Input();
-    m_resources           = CreateResources();
-    m_sceneManager        = CreateSceneManager();
-    m_gEngine             = new GEngine();
+    m_input        = new Input();
+    m_resources    = CreateResources();
+    m_sceneManager = CreateSceneManager();
+    m_gEngine      = new GEngine();
 
     m_sceneManager->Init();
     m_gEngine->Init();

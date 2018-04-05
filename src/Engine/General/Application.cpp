@@ -73,7 +73,6 @@ void Application::InitBeforeLoop()
 {
     GetWindowManager()->GetTopWindow()->SetIcon(
                 IconManager::GetBangB512Icon().Get()->GetResourceFilepath() );
-    Debug_Peek(IconManager::GetBangB512Icon().Get()->GetResourceFilepath());
 
     #ifdef GPROF
     Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");

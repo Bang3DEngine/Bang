@@ -12,7 +12,8 @@ void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
 {
     bool addVersion = !shaderSourceCode->BeginsWith("#version");
     CodePreprocessor::PreprocessCode(shaderSourceCode,
-                                     {EPATH("Shaders/Include")});
+                                     {EPATH("Shaders"),
+                                      EPATH("Shaders/Include")});
 
     String &code = *shaderSourceCode;
     if (addVersion)

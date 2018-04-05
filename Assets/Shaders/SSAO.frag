@@ -2,11 +2,10 @@
 
 #define MAX_RANDOM_OFFSETS 32
 
-uniform float B_SSAORadius = 1.0f;
-
+uniform float B_SSAORadius    = 1.0f;
+uniform float B_SSAOIntensity = 1.0f;
 uniform vec2 B_RandomRotationsUvMultiply;
 uniform sampler2D B_RandomRotations;
-
 uniform int B_NumRandomOffsets;
 uniform vec3 B_RandomHemisphereOffsetsArray[MAX_RANDOM_OFFSETS];
 
@@ -27,14 +26,15 @@ void main()
     randomRot.xy = (randomRot.xy * 2.0f - 1.0f); // Map (0,1) to (-1,1)
 
     // Create basis to orient offset to normal, and rotated with randomRot
+    // Tangent facing normal hemisphere
     vec3 tangent = normalize(randomRot - normal * dot(randomRot, normal));
-    vec3 bitangent = cross(normal, tangent);
-    mat3 fromWorldToNormal = mat3(tangent, bitangent, normal);
+    vec3 bitangent = cross(normal, tangent); // Bitangent by cross
+    mat3 fromWorldToNormal = mat3(tangent, bitangent, normal); // Basis to rotate
 
-    float occlusionSum = 0.0;
+    float occlusionSum   = 0.0;
     float totalOcclusion = 0.0;
-    float SSAORadius   = B_SSAORadius * (1.0f + depth);
-    float SSAORadiusSQ = (SSAORadius * SSAORadius);
+    float SSAORadius     = B_SSAORadius * (1.0f + 1.0f / (depth*depth));
+    float SSAORadiusSQ   = (SSAORadius * SSAORadius);
     for (int i = 0; i < B_NumRandomOffsets; ++i) // Sample around!
     {
         // Get random hemisphere offset
@@ -63,7 +63,7 @@ void main()
         float distanceFactor = length(randomOffsetLocal);
         // float distanceFactor = distance(sampleWorldPos, worldPos) / SSAORadius;
         distanceFactor = ( (1.0 / pow((distanceFactor + 0.1), 2) ) ) / 10.0;
-        float Bias       = 0.0001; // 0.000001;
+        float Bias       = 0.0; // 0.0001 / (depth*depth); // 0.000001;
         float occluded   = step(Bias, deltaDepth); // smoothstep(Bias, 1.0, deltaDepth); // step(Bias, deltaDepth);
         float occlusionApport = distanceFactor * occluded * isInsideSphere;
 
@@ -71,7 +71,7 @@ void main()
         totalOcclusion += distanceFactor;
     }
     float occlusion = (occlusionSum / totalOcclusion);
-    // occlusion = pow(occlusion, 2);
+    occlusion = pow(occlusion, 1.0/B_SSAOIntensity);
 
     B_GIn_Color = vec4( vec3(occlusion), 1 );
 }

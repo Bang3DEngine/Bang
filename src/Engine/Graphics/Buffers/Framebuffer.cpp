@@ -99,6 +99,28 @@ void Framebuffer::SetAttachmentTexture(Texture2D* tex,
     GL::Bind(GL::BindTarget::Framebuffer, prevId);
 }
 
+void Framebuffer::Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,
+                       const AARect &readNDCRect,
+                       GL::BufferBit bufferBit)
+{
+    GLId prevFBDrawId = GL::GetBoundId(GL::BindTarget::DrawFramebuffer);
+    GLId prevFBReadId = GL::GetBoundId(GL::BindTarget::ReadFramebuffer);
+
+    Bind();
+    PushDrawAttachments();
+    SetReadBuffer(srcAttachment);
+    SetDrawBuffers({dstAttachment});
+    AARect rf ( readNDCRect * 0.5f + 0.5f );
+    AARecti r ( AARect(Vector2::Floor(rf.GetMin()),
+                       Vector2::Ceil(rf.GetMax())) * GetSize() );
+    GL::BlitFramebuffer(r, r, GL::FilterMode::Nearest, bufferBit);
+    PopDrawAttachments();
+
+    // Restore
+    GL::Bind(GL::BindTarget::DrawFramebuffer, prevFBDrawId);
+    GL::Bind(GL::BindTarget::ReadFramebuffer, prevFBReadId);
+}
+
 GL::Attachment Framebuffer::GetCurrentReadAttachment() const
 {
     return m_currentReadAttachment;

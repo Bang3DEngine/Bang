@@ -4,6 +4,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/Time.h"
+#include "Bang/Debug.h"
 #include "Bang/Window.h"
 #include "Bang/Application.h"
 
@@ -223,7 +224,7 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         break;
 
         case SDL_TEXTINPUT:
-            m_inputText = String(event.text.text);
+            m_inputText += String(event.text.text);
         break;
 
         case SDL_MOUSEBUTTONDOWN:

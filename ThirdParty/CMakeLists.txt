@@ -1,4 +1,4 @@
-#=================================================================
+
 # CMake options ==================================================
 #=================================================================
 cmake_minimum_required(VERSION 2.8)
@@ -102,7 +102,44 @@ add_custom_command(
             -DASSIMP_BUILD_TESTS=OFF
             -DASSIMP_BUILD_SAMPLES=OFF
             -DASSIMP_NO_EXPORT=OFF
-            -BUILD_FRAMEWORK=OFF
+            -DASSIMP_BUILD_OFF_IMPORTER=OFF
+            -DASSIMP_BUILD_OGRE_IMPORTER=OFF
+            -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF
+            -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF
+            -DASSIMP_BUILD_Q3D_IMPORTER=OFF
+            -DASSIMP_BUILD_RAW_IMPORTER=OFF
+            -DASSIMP_BUILD_SMD_IMPORTER=OFF
+            -DASSIMP_BUILD_SIB_IMPORTER=OFF
+            -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF
+            # -DASSIMP_BUILD_3MF_IMPORTER=OFF
+            -DASSIMP_BUILD_AC_IMPORTER=OFF
+            -DASSIMP_BUILD_AMF_IMPORTER=OFF
+            -DASSIMP_BUILD_ASE_IMPORTER=OFF
+            -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF
+            -DASSIMP_BUILD_ASSXML_IMPORTER=OFF
+            -DASSIMP_BUILD_B3D_IMPORTER=OFF
+            -DASSIMP_BUILD_COB_IMPORTER=OFF
+            -DASSIMP_BUILD_CSM_IMPORTER=OFF
+            -DASSIMP_BUILD_DFX_IMPORTER=OFF
+            -DASSIMP_BUILD_GLTF_IMPORTER=OFF
+            -DASSIMP_BUILD_HMP_IMPORTER=OFF
+            -DASSIMP_BUILD_IFC_IMPORTER=OFF
+            -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF
+            -DASSIMP_BUILD_IRR_IMPORTER=OFF
+            -DASSIMP_BUILD_LWO_IMPORTER=OFF
+            -DASSIMP_BUILD_LWS_IMPORTER=OFF
+            -DASSIMP_BUILD_MD2_IMPORTER=OFF
+            -DASSIMP_BUILD_MD3_IMPORTER=OFF
+            -DASSIMP_BUILD_MD5_IMPORTER=OFF
+            -DASSIMP_BUILD_MDL_IMPORTER=OFF
+            -DASSIMP_BUILD_MMD_IMPORTER=OFF
+            -DASSIMP_BUILD_MS3D_IMPORTER=OFF
+            -DASSIMP_BUILD_NDO_IMPORTER=OFF
+            -DASSIMP_BUILD_NDF_IMPORTER=OFF
+            -DASSIMP_BUILD_X3D_IMPORTER=OFF
+            -DASSIMP_BUILD_XGL_IMPORTER=OFF
+            -DASSIMP_BUILD_X_IMPORTER=OFF
+            -DBUILD_FRAMEWORK=OFF
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF .. &&
       make -j${NUM_COMPILE_THREADS}
       VERBATIM
@@ -213,7 +250,7 @@ add_custom_command(
       mkdir -p ${SDL2_INSTALL_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake -DSDL_STATIC_PIC=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR} -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
+      cmake -DSDL_STATIC_PIC=ON -DSNDIO=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR} -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC .. &&
       make -j${NUM_COMPILE_THREADS} &&
       make install
   VERBATIM
@@ -256,7 +293,6 @@ set(ALL_DEPENDENCIES_STATIC_TARGETS
     ${SDL2TTF_LIB_OUTPUT}
     ${GLEW_LIB_OUTPUT}
     ${FREETYPE_LIB_OUTPUT} # Must go after sdl2ttf
-
 )
 
 set(ALL_DEPENDENCIES_STATIC_LIB_FILES
@@ -295,6 +331,30 @@ include_directories(
 # Add BuildThirdParty target =====================================
 #=================================================================
 add_custom_target(BuildThirdParty ALL DEPENDS ${ALL_DEPENDENCIES_STATIC_TARGETS})
+#=================================================================
+#=================================================================
+#=================================================================
+
+#=================================================================
+# Copy all libraries to LIBRARY_OUTPUT_PATH ======================
+#=================================================================
+set(ALL_NEW_OUTPUT_LIB_PATHS "")
+
+foreach(OUTPUT_LIB_PATH ${ALL_DEPENDENCIES_STATIC_LIB_FILES})
+    get_filename_component(OUTPUT_LIB_NAME ${OUTPUT_LIB_PATH} NAME)
+    set(NEW_OUTPUT_LIB_PATH "${LIBRARY_OUTPUT_PATH}/${OUTPUT_LIB_NAME}")
+    add_custom_command(
+      OUTPUT ${NEW_OUTPUT_LIB_PATH}
+      COMMAND
+        ${CMAKE_COMMAND} -E copy ${OUTPUT_LIB_PATH} ${NEW_OUTPUT_LIB_PATH}
+      DEPENDS ${OUTPUT_LIB_PATH}
+      VERBATIM
+    )
+    list(APPEND ALL_NEW_OUTPUT_LIB_PATHS ${NEW_OUTPUT_LIB_PATH})
+
+endforeach()
+
+add_custom_target(CopyThirdPartyLibraries ALL DEPENDS BuildThirdParty DEPENDS ${ALL_NEW_OUTPUT_LIB_PATHS})
 #=================================================================
 #=================================================================
 #=================================================================

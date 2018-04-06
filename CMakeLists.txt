@@ -21,6 +21,7 @@ set(BANG_BUILT ON)
 #=================================================================
 # Check input params =============================================
 #=================================================================
+message("CMAKE_CURRENT_LIST_DIR: " ${CMAKE_CURRENT_LIST_DIR})
 include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
 #=================================================================
 #=================================================================
@@ -31,10 +32,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeCheckInputParams.cmake REQU
 #=================================================================
 project(Bang C CXX)
 
-set(BANG_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(BANG_SRC_DIR ${BANG_DIR}/src)
+set(BANG_ENGINE_ROOT ${CMAKE_CURRENT_LIST_DIR})
+set(BANG_SRC_DIR ${BANG_ENGINE_ROOT}/src)
 set(BANG_ENGINE_SRC_DIR ${BANG_SRC_DIR}/Engine)
-set(BANG_ENGINE_INCLUDE_DIR ${BANG_DIR}/include)
+set(BANG_ENGINE_INCLUDE_DIR ${BANG_ENGINE_ROOT}/include)
+set(BANG_ENGINE_LIBRARIES_DIR ${BANG_ENGINE_ROOT}/Libraries)
+set(LIBRARY_OUTPUT_PATH ${BANG_ENGINE_LIBRARIES_DIR})
 
 # Output params
 message("Bang ======================================")
@@ -44,9 +47,10 @@ message("BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS})
 message("EXECUTABLE_OUTPUT_PATH: " ${EXECUTABLE_OUTPUT_PATH})
 message("LIBRARY_OUTPUT_PATH: " ${LIBRARY_OUTPUT_PATH})
 message("PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR})
-message("BANG_DIR: " ${BANG_DIR})
+message("BANG_ENGINE_ROOT: " ${BANG_ENGINE_ROOT})
 message("BANG_SRC_DIR: " ${BANG_SRC_DIR})
 message("BANG_ENGINE_SRC_DIR: " ${BANG_ENGINE_SRC_DIR})
+message("BANG_ENGINE_LIBRARIES_DIR: " ${BANG_ENGINE_LIBRARIES_DIR})
 message("===========================================")
 #=================================================================
 #=================================================================
@@ -55,14 +59,7 @@ message("===========================================")
 #=================================================================
 # CMake includes =================================================
 #=================================================================
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeMacros.cmake)       # Macros
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
-# Flags ==========================================================
-#=================================================================
+include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeMacros.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeFlags.cmake)
 #=================================================================
 #=================================================================
@@ -82,7 +79,7 @@ endif()
 #=================================================================
 # Add misc files =================================================
 #=================================================================
-set(BANG_ENGINE_ASSETS_DIR "${BANG_DIR}/Assets")
+set(BANG_ENGINE_ASSETS_DIR "${BANG_ENGINE_ROOT}/Assets")
 file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
@@ -90,8 +87,9 @@ file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
-                              "${BANG_DIR}/CMakeIncludes/[^.]*.cmake"
-                              "${BANG_DIR}/ThirdParty/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/CMakeIncludes/[^.]*.cmake"
+                              "${BANG_ENGINE_ROOT}/ThirdParty/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Build/CMakeLists.txt"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
 add_misc_files("${OTHER_FILES}")
@@ -289,13 +287,13 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeDependencies.cmake) # Depen
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES})
 
+message("BUILD SHARED LIBS: ${BUILD_SHARED_LIBS}")
 set(GENERATED_LIB_NAME "")
 if (${BUILD_SHARED_LIBS})
     add_library(BangLib SHARED $<TARGET_OBJECTS:BangEngineObjects>)
     set(GENERATED_LIB_NAME "bang_shared")
 else()
     add_library(BangLib STATIC $<TARGET_OBJECTS:BangEngineObjects>)
-    add_dependencies(BangEngineObjects BuildThirdParty)
     set(GENERATED_LIB_NAME "bang_static")
 endif()
 set_target_properties(BangLib PROPERTIES OUTPUT_NAME ${GENERATED_LIB_NAME})

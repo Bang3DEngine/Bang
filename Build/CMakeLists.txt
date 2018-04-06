@@ -17,10 +17,12 @@ set(BANG_PKG_BUILT ON)
 #=================================================================
 #=================================================================
 
+set(BANG_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+
 #=================================================================
 # Check input params =============================================
 #=================================================================
-include(${CMAKE_CURRENT_LIST_DIR}/../../CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
+include(${BANG_ROOT}/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
 #=================================================================
 #=================================================================
 #=================================================================
@@ -28,7 +30,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../CMakeIncludes/CMakeCheckInputParams.cmak
 #=================================================================
 # Compile Bang library ===========================================
 #=================================================================
-include(${CMAKE_CURRENT_LIST_DIR}/../../CMakeLists.txt) # Compile Bang into lib
+include(${BANG_ROOT}/CMakeLists.txt) # Compile Bang into lib
 #=================================================================
 #=================================================================
 #=================================================================
@@ -38,7 +40,6 @@ project(BuildPackageBang C CXX)
 #=================================================================
 # Set variables ==================================================
 #=================================================================
-set(BANG_ROOT ${CMAKE_CURRENT_LIST_DIR}/../..)
 if (NOT DEFINED PKG_DIRECTORY)
     set(PKG_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Bang")
 endif()
@@ -97,10 +98,27 @@ add_custom_command(
   COMMENT "Copying ${ENGINE_INCLUDE_DIR_SRC} to ${ENGINE_INCLUDE_DIR_DST}..."
   VERBATIM
  )
+
+# Copy Libraries
+set(ENGINE_LIBRARIES_DIR_NAME "Libraries")
+set(ENGINE_LIBRARIES_DIR_SRC "${LIBRARY_OUTPUT_PATH}")
+set(ENGINE_LIBRARIES_DIR_DST "${PKG_DIRECTORY}/${ENGINE_LIBRARIES_DIR_NAME}")
+add_custom_command(
+  OUTPUT COPY_LIBRARIES_DIR_BANG_PKG
+  COMMAND
+  ${CMAKE_COMMAND} -E copy_directory ${ENGINE_LIBRARIES_DIR_SRC} ${ENGINE_LIBRARIES_DIR_DST}
+  WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
+  COMMENT "Copying ${ENGINE_LIBRARIES_DIR_SRC} to ${ENGINE_LIBRARIES_DIR_DST}..."
+  VERBATIM
+)
+
 add_custom_target(COPY_DIRS ALL DEPENDS
+    BangLib
     CREATE_PKG_DIRS
     COPY_ASSETS_DIR_BANG_PKG
-    COPY_INCLUDE_DIR_BANG_PKG)
+    COPY_INCLUDE_DIR_BANG_PKG
+    COPY_LIBRARIES_DIR_BANG_PKG
+)
 #=================================================================
 #=================================================================
 #=================================================================

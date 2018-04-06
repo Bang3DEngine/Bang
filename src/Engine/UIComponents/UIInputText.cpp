@@ -82,6 +82,8 @@ void UIInputText::UpdateCursorRenderer()
                                      -1.0f + MarginsNDC, 1.0f - MarginsNDC);
     maxPointLocalNDC.y = Math::Clamp(maxPointLocalNDC.y,
                                      -1.0f + MarginsNDC, 1.0f - MarginsNDC);
+    minPointLocalNDC = Vector2::Min(minPointLocalNDC, maxPointLocalNDC);
+    maxPointLocalNDC = Vector2::Max(minPointLocalNDC, maxPointLocalNDC);
 
     RectTransform *cRT = p_cursor->GetGameObject()->GetRectTransform();
     cRT->SetAnchors(minPointLocalNDC, maxPointLocalNDC);

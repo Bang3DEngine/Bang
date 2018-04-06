@@ -298,6 +298,12 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh)
         Debug_Log("Level " << level << ": " << vertexClusterIndices.Size() << "/" << mesh->GetVertexCount());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
+
+        if (vertexClusterIndices.Size() == mesh->GetVertexCount())
+        {
+            // This was the max level, going further makes no sense
+            break;
+        }
     }
     return simplifiedMeshesArray;
 }

@@ -69,6 +69,11 @@ Path Paths::GetEngineAssetsDir()
     return Paths::GetEngineDir().Append("Assets");
 }
 
+Path Paths::GetEngineBuildDir()
+{
+    return Paths::GetEngineDir().Append("Build");
+}
+
 Path Paths::GetEngineLibrariesDir(BinType binaryType)
 {
     return GetEngineDir().

@@ -19,6 +19,7 @@ public:
     static Path GetExecutablePath();
     static const Path& GetEngineDir();
     static Path GetEngineAssetsDir();
+    static Path GetEngineBuildDir();
     static Path GetEngineResourcesDir();
     static Path GetEngineLibrariesDir(BinType binaryType);
     static bool IsEnginePath(const Path &path);

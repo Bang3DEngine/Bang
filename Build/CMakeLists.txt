@@ -112,12 +112,12 @@ add_custom_command(
   VERBATIM
 )
 
-add_custom_target(COPY_DIRS ALL DEPENDS
-    BangLib
-    CREATE_PKG_DIRS
-    COPY_ASSETS_DIR_BANG_PKG
-    COPY_INCLUDE_DIR_BANG_PKG
-    COPY_LIBRARIES_DIR_BANG_PKG
+add_custom_target(COPY_DIRS ALL
+    DEPENDS BangLib
+    DEPENDS CREATE_PKG_DIRS
+    DEPENDS COPY_ASSETS_DIR_BANG_PKG
+    DEPENDS COPY_INCLUDE_DIR_BANG_PKG
+    DEPENDS COPY_LIBRARIES_DIR_BANG_PKG
 )
 #=================================================================
 #=================================================================

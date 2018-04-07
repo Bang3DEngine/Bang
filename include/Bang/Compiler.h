@@ -22,9 +22,9 @@ public:
         List<Path> includePaths;
         List<Path> libDirs;
         List<String> libraries;
-        OutputType outputMode;
         List<String> flags;
         Path outputFile;
+        OutputType outputMode = OutputType::Executable;
     };
 
     struct Result

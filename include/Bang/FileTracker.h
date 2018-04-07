@@ -27,18 +27,18 @@ public:
     void UnTrackPath(const Path &path);
     void Clear();
 
-    void Update();
-    void ForceCheckNow();
+    void Update(bool forceCheckNow);
+
     void SetCheckFrequencySeconds(float checkFrequencySeconds);
 
-    bool NeedsCheck() const;
     float GetCheckFrequencySeconds() const;
 
 private:
     Map<Path, uint64_t> m_pathsToTrackToModificationTime;
-
-    uint64_t m_lastCheckTime = 0.0;
     float m_checkFrequencySeconds = 5.0f;
+    uint64_t m_lastCheckTime = 0.0;
+
+    bool NeedsCheck() const;
 };
 
 NAMESPACE_BANG_END

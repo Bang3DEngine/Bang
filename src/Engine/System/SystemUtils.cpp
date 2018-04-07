@@ -14,6 +14,7 @@ void SystemUtils::System(const String &command,
     SystemProcess process;
     process.Start(command, argsList);
     process.WaitUntilFinished();
+    Debug_DLog("System: '" << command << " " << String::Join(argsList, " ") << "'");
 
     String out = process.ReadStandardOutput() + process.ReadStandardError();
     if (output) { *output = out; }

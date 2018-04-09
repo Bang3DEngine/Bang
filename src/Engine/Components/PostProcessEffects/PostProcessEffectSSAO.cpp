@@ -18,8 +18,6 @@ USING_NAMESPACE_BANG
 
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
-    Random::SetSeed(123456);
-
     m_ssaoFB = new Framebuffer();
     m_ssaoFB->CreateAttachment(GL::Attachment::Color0,
                                GL::ColorFormat::RGB10_A2_UByte);

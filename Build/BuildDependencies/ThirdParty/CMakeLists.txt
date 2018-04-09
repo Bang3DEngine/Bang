@@ -130,6 +130,8 @@ add_custom_command(
             -DASSIMP_BUILD_ZLIB=OFF
             -DASSIMP_BUILD_TESTS=OFF
             -DASSIMP_BUILD_SAMPLES=OFF
+            -DASSIMP_ASAN=OFF
+            -DASSIMP_UBSAN=OFF
             -DASSIMP_NO_EXPORT=OFF
             -DASSIMP_BUILD_OFF_IMPORTER=OFF
             -DASSIMP_BUILD_OGRE_IMPORTER=OFF

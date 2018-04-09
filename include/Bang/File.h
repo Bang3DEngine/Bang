@@ -27,6 +27,7 @@ public:
     static bool DuplicateDir(const Path &fromDirpath,
                              const Path &toDirpath,
                              bool overwrite = true);
+    static void AddExecutablePermission(const Path &path);
 
     static String GetContents(const Path &filepath);
     static void Write(const Path &filepath, const String &contents);

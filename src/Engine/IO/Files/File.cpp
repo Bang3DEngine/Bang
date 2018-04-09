@@ -4,9 +4,9 @@
 #include <fstream>
 #include <iostream>
 
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "Bang/List.h"
 #include "Bang/Array.h"
@@ -77,6 +77,11 @@ bool File::DuplicateDir(const Path &fromDirpath,
         if (!ok) { return false; }
     }
     return true;
+}
+
+void File::AddExecutablePermission(const Path &path)
+{
+    chmod(path.GetAbsolute().ToCString(), S_IRUSR | S_IXUSR);
 }
 
 bool File::Remove(const Path &path)

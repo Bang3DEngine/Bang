@@ -3,6 +3,11 @@
 #include BANG_SDL2_INCLUDE(SDL.h)
 #include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
 
+#ifdef __linux__
+#include <signal.h>
+#include <unistd.h>
+#endif
+
 #include "Bang/Debug.h"
 #include "Bang/Window.h"
 #include "Bang/Application.h"
@@ -23,9 +28,25 @@ WindowManager::~WindowManager()
     SDL_Quit();
 }
 
+#ifdef __linux__
+void SignalHandler(int signal)
+{
+    Debug_Log("Received SIGINT");
+    Application::Exit(1, true);
+}
+#endif
+
 void WindowManager::Init()
 {
-    if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) { Debug_Error("Failed to init SDL"); }
+    if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0 )
+    {
+        Debug_Error("Failed to init SDL");
+    }
+
+    #ifdef __linux__
+    signal(SIGINT,  SignalHandler);
+    #endif
+
     if ( TTF_Init() )
     {
         Debug_Error("Could not init FreeType library: Error(" <<

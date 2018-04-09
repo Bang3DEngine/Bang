@@ -18,13 +18,21 @@ public:
 
     struct Job
     {
-        List<Path> inputFiles; // cpp or objects
         List<Path> includePaths;
         List<Path> libDirs;
         List<String> libraries;
         List<String> flags;
         Path outputFile;
         OutputType outputMode = OutputType::Executable;
+
+        void AddInputFile(const Path &path);
+        void AddInputFiles(const Array<Path> &paths);
+        void AddInputFile(const String &path);
+        void AddInputFiles(const Array<String> &paths);
+        const List<String>& GetInputFiles() const;
+
+    private:
+        List<String> inputFiles; // cpp or objects
     };
 
     struct Result

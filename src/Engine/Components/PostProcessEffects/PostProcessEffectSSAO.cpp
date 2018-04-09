@@ -18,6 +18,8 @@ USING_NAMESPACE_BANG
 
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
+    Random::SetSeed(123456);
+
     m_ssaoFB = new Framebuffer();
     m_ssaoFB->CreateAttachment(GL::Attachment::Color0,
                                GL::ColorFormat::RGB10_A2_UByte);
@@ -26,7 +28,7 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
 
     SetBlurRadius(1);
     SetSSAORadius(1);
-    SetNumRandomRotations(8);
+    SetNumRandomAxes(8);
     SetNumRandomSamples(16);
 
     m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0)->
@@ -78,14 +80,14 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             p_ssaoShaderProgram.Get()->Bind(); // Bind shader
 
             // Bind random textures and set uniforms
-            Vector2 randomRotsUvMult ((Vector2(GL::GetViewportSize()) /
-                         Vector2(m_randomRotationsTexture.Get()->GetSize())) );
+            Vector2 randomAxesUvMult ((Vector2(GL::GetViewportSize()) /
+                         Vector2(m_randomAxesTexture.Get()->GetSize())) );
             p_ssaoShaderProgram.Get()->Set("B_SSAOIntensity", GetSSAOIntensity());
             p_ssaoShaderProgram.Get()->Set("B_SSAORadius", GetSSAORadius());
-            p_ssaoShaderProgram.Get()->Set("B_RandomRotationsUvMultiply",
-                                           randomRotsUvMult);
-            p_ssaoShaderProgram.Get()->Set("B_RandomRotations",
-                                           m_randomRotationsTexture.Get());
+            p_ssaoShaderProgram.Get()->Set("B_RandomAxesUvMultiply",
+                                           randomAxesUvMult);
+            p_ssaoShaderProgram.Get()->Set("B_RandomAxes",
+                                           m_randomAxesTexture.Get());
             p_ssaoShaderProgram.Get()->Set("B_NumRandomOffsets",
                                            GetNumRandomSamples() );
             p_ssaoShaderProgram.Get()->Set("B_RandomHemisphereOffsetsArray",
@@ -191,28 +193,26 @@ void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
             int j = (i > GetNumRandomSamples()/2) ? 1 : 0;
             Vector3 randV = Vector3::Zero;
             randV[j] = Random::GetRange(-1.0f, 1.0f);
-            randV.z  = Random::GetRange( 0.0f, 1.0f);
+            randV.z  = Random::GetRange( 0.2f, 1.0f);
             randV = randV.NormalizedSafe();
-            m_randomHemisphereOffsets.PushBack(randV);
-        }
 
-        // Scale exponentially close to zero, so that there are more closer
-        // samples (and consequently have greater weight)
-        for (int i = 0; i < GetNumRandomSamples(); ++i)
-        {
+            // Scale exponentially close to zero, so that there are more closer
+            // samples (and consequently have greater weight)
             float scale = i / SCAST<float>( GetNumRandomSamples() );
             scale = Math::Lerp(0.1f, 1.0f, scale * scale);
-            m_randomHemisphereOffsets[i] *= scale;
+            randV *= scale;
+
+            m_randomHemisphereOffsets.PushBack(randV);
         }
     }
 }
 
-void PostProcessEffectSSAO::SetNumRandomRotations(int numRotations)
+void PostProcessEffectSSAO::SetNumRandomAxes(int numAxes)
 {
-    if (numRotations != GetNumRandomRotations())
+    if (numAxes != GetNumRandomAxes())
     {
-        m_numRotations = numRotations;
-        GenerateRandomRotationsTexture( GetNumRandomRotations() );
+        m_numAxes = numAxes;
+        GenerateRandomAxesTexture( GetNumRandomAxes() );
     }
 }
 
@@ -242,9 +242,9 @@ float PostProcessEffectSSAO::GetSSAOIntensity() const
     return m_ssaoIntensity;
 }
 
-int PostProcessEffectSSAO::GetNumRandomRotations() const
+int PostProcessEffectSSAO::GetNumRandomAxes() const
 {
-    return m_numRotations;
+    return m_numAxes;
 }
 
 bool PostProcessEffectSSAO::GetBilateralBlurEnabled() const
@@ -267,25 +267,25 @@ Texture2D* PostProcessEffectSSAO::GetSSAOTexture() const
     return m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0);
 }
 
-void PostProcessEffectSSAO::GenerateRandomRotationsTexture(int numRotations)
+void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
 {
-    // Generate random rotation vectors
+    // Generate random axes vectors
     Array<Vector3> randomValuesInOrthogonalPlanes;
-    for (int i = 0; i < numRotations; ++i)
+    for (int i = 0; i < numAxes; ++i)
     {
-        Vector3 randomRotationVector(Random::GetRange(0.0f, 1.0f),
-                                     Random::GetRange(0.0f, 1.0f),
-                                     Random::GetRange(0.0f, 0.0f));
-        randomValuesInOrthogonalPlanes.PushBack(randomRotationVector);
+        Vector3 randomAxesVector(Random::GetRange(0.0f, 1.0f),
+                                 Random::GetRange(0.0f, 1.0f),
+                                 Random::GetRange(0.0f, 1.0f));
+        randomValuesInOrthogonalPlanes.PushBack(randomAxesVector);
     }
 
-    const int imgSize = Math::Ceil( Math::Sqrt( float(numRotations) ) );
+    const int imgSize = Math::Ceil( Math::Sqrt( float(numAxes) ) );
     ASSERT(imgSize > 0);
 
     // Create an image with the random vectors
     Imageb randomsImg;
     randomsImg.Create(imgSize, imgSize);
-    for (int i = 0; i < numRotations; ++i)
+    for (int i = 0; i < numAxes; ++i)
     {
         const int x = i % imgSize;
         const int y = i / imgSize;
@@ -294,9 +294,9 @@ void PostProcessEffectSSAO::GenerateRandomRotationsTexture(int numRotations)
     }
 
     // Now create the texture from the image!
-    m_randomRotationsTexture = Resources::Create<Texture2D>();
-    m_randomRotationsTexture.Get()->Resize(imgSize, imgSize);
-    m_randomRotationsTexture.Get()->Import(randomsImg);
-    m_randomRotationsTexture.Get()->SetWrapMode(GL::WrapMode::Repeat);
-    m_randomRotationsTexture.Get()->SetFilterMode(GL::FilterMode::Bilinear);
+    m_randomAxesTexture = Resources::Create<Texture2D>();
+    m_randomAxesTexture.Get()->Resize(imgSize, imgSize);
+    m_randomAxesTexture.Get()->Import(randomsImg);
+    m_randomAxesTexture.Get()->SetWrapMode(GL::WrapMode::Repeat);
+    m_randomAxesTexture.Get()->SetFilterMode(GL::FilterMode::Bilinear);
 }

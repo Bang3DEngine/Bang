@@ -290,7 +290,7 @@ Image<T> Image<T>::LoadFromData(int width, int height,
 {
     Image<T> img(width, height);
     img.m_pixels = rgbaByteData;
-    ASSERT(rgbaByteData.Size() == (img.GetWidth() * img.GetHeight() * 4));
+    ASSERT(int(rgbaByteData.Size()) == (img.GetWidth() * img.GetHeight() * 4));
     return img;
 }
 

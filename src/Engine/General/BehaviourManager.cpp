@@ -22,8 +22,11 @@ BehaviourManager::~BehaviourManager()
 Behaviour *BehaviourManager::CreateBehaviourInstance(const String &behaviourName,
                                                      Library *behavioursLib)
 {
-    if (!behavioursLib) { return nullptr; }
-    if (!behavioursLib->IsLoaded()) { behavioursLib->Load(); }
+    if (!behavioursLib)
+    { Debug_Error("No current behavioursLib..."); return nullptr; }
+
+    if (!behavioursLib->IsLoaded())
+    { Debug_Error("No loaded behavioursLib..."); behavioursLib->Load(); }
 
     String errorString = "";
     if (behavioursLib->IsLoaded())
@@ -101,6 +104,21 @@ void BehaviourManager::SetBehavioursLibrary(const Path &libPath)
 
 void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
 {
-    if (GetBehavioursLibrary()) { delete GetBehavioursLibrary(); }
+    if (GetBehavioursLibrary())
+    {
+        delete GetBehavioursLibrary();
+    }
+
     m_behavioursLibrary = behavioursLibrary;
+
+    if (GetBehavioursLibrary())
+    {
+        Debug_DLog("Going to load BehavioursLibrary " <<
+                   GetBehavioursLibrary()->GetLibraryPath());
+
+        if(!GetBehavioursLibrary()->Load())
+        {
+            Debug_Error(GetBehavioursLibrary()->GetErrorString());
+        }
+    }
 }

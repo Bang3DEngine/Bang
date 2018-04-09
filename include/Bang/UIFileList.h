@@ -38,7 +38,7 @@ public:
 private:
     Path m_currentPath;
     Array<String> m_fileExtensions;
-    UIFileListItem *p_selectedItem;
+    UIFileListItem *p_selectedItem = nullptr;
     List<PathCallback> m_fileAcceptedCallback;
     List<PathCallback> m_pathChangedCallback;
     bool m_showOnlyDirectories = false;

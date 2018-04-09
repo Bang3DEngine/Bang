@@ -22,7 +22,7 @@ public:
     void SetSSAOIntensity(float ssaoIntensity);
     void SetBlurRadius(int blurRadius);
     void SetNumRandomSamples(int numRandomSamples);
-    void SetNumRandomRotations(int numRotations);
+    void SetNumRandomAxes(int numAxes);
     void SetBilateralBlurEnabled(bool bilateralBlurEnabled);
     void SetFBSize(const Vector2 &fbSize);
 
@@ -30,7 +30,7 @@ public:
     float GetSSAORadius() const;
     float GetSSAOIntensity() const;
     int GetNumRandomSamples() const;
-    int GetNumRandomRotations() const;
+    int GetNumRandomAxes() const;
     bool GetBilateralBlurEnabled() const;
     const Vector2 &GetFBSize() const;
     Texture2D* GetSSAOTexture() const;
@@ -39,14 +39,14 @@ private:
     float m_ssaoIntensity = 1.0f;
     float m_ssaoRadius = -1;
     int m_blurRadius = -1;
-    int m_numRotations = -1;
+    int m_numAxes = -1;
     int m_numRandomOffsetsHemisphere = -1;
     bool m_bilateralBlurEnabled = true;
     Vector2 m_fbSize = Vector2::One;
 
     Array<float> m_blurKernel;
     Array<Vector3> m_randomHemisphereOffsets;
-    RH<Texture2D> m_randomRotationsTexture;
+    RH<Texture2D> m_randomAxesTexture;
 
     Framebuffer *m_ssaoFB = nullptr;
     RH<ShaderProgram> p_ssaoShaderProgram;
@@ -54,7 +54,7 @@ private:
     RH<ShaderProgram> p_blurYShaderProgram;
     RH<ShaderProgram> p_applySSAOShaderProgram;
 
-    void GenerateRandomRotationsTexture(int numRotations);
+    void GenerateRandomAxesTexture(int numAxes);
 
 	PostProcessEffectSSAO();
 	virtual ~PostProcessEffectSSAO();

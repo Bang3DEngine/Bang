@@ -50,6 +50,7 @@ private:
                                        Math::Infinity<float>());
 
     void UpdateValueFromText();
+    void UpdateTextFromValue();
     void ChangeTextColorBasedOnMinMax();
 
     // IValueChangedListener

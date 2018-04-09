@@ -23,6 +23,7 @@ public:
     static Array<String> GetSourceFileExtensions();
     static Array<String> GetVertexShaderExtensions();
     static Array<String> GetFragmentShaderExtensions();
+    static Array<String> GetSharedLibraryFileExtensions();
 
     static String GetDefaultBehaviourHeaderExtension();
     static String GetDefaultBehaviourSourceExtension();

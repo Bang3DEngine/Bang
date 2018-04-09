@@ -36,6 +36,16 @@ void UIInputNumber::OnUpdate()
         {
             UICanvas::GetActive(this)->SetFocus(nullptr);
         }
+
+
+        float increment = 0.0f;
+        if (Input::GetKeyDownRepeat(Key::Up))   { increment =  1.0f; }
+        if (Input::GetKeyDownRepeat(Key::Down)) { increment = -1.0f; }
+        if (increment != 0.0f)
+        {
+            SetValue( GetValue() + increment );
+            UpdateTextFromValue();
+        }
     }
 }
 
@@ -53,11 +63,7 @@ void UIInputNumber::SetValue(float v)
            PropagateToListeners(&IValueChangedListener::OnValueChanged, this);
     }
 
-    if (!HasFocus())
-    {
-        String vStr = String::ToString(GetValue(), GetDecimalPlaces());
-        GetInputText()->GetText()->SetContent(vStr);
-    }
+    if (!HasFocus()) { UpdateTextFromValue(); }
     ChangeTextColorBasedOnMinMax();
 }
 
@@ -109,6 +115,12 @@ void UIInputNumber::UpdateValueFromText()
     float value = 0.0f;
     if (!content.IsEmpty()) { std::istringstream iss(content); iss >> value; }
     SetValue(value);
+}
+
+void UIInputNumber::UpdateTextFromValue()
+{
+    String vStr = String::ToString(GetValue(), GetDecimalPlaces());
+    GetInputText()->GetText()->SetContent(vStr);
 }
 
 void UIInputNumber::ChangeTextColorBasedOnMinMax()

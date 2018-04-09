@@ -3,6 +3,7 @@
 #=================================================================
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_VERBOSE_MAKEFILE on)
+project(Bang C CXX)
 #=================================================================
 #=================================================================
 #=================================================================
@@ -22,7 +23,6 @@ set(BANG_BUILT ON)
 # Check input params =============================================
 #=================================================================
 message("CMAKE_CURRENT_LIST_DIR: " ${CMAKE_CURRENT_LIST_DIR})
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
 #=================================================================
 #=================================================================
 #=================================================================
@@ -30,40 +30,28 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeCheckInputParams.cmake REQU
 #=================================================================
 # General variables ==============================================
 #=================================================================
-project(Bang C CXX)
-
-set(BANG_ENGINE_ROOT ${CMAKE_CURRENT_LIST_DIR})
-set(BANG_SRC_DIR ${BANG_ENGINE_ROOT}/src)
-set(BANG_ENGINE_SRC_DIR ${BANG_SRC_DIR}/Engine)
-set(BANG_ENGINE_INCLUDE_DIR ${BANG_ENGINE_ROOT}/include)
+set(BANG_ENGINE_ROOT          ${CMAKE_CURRENT_LIST_DIR})
+set(BANG_SRC_DIR              ${BANG_ENGINE_ROOT}/src)
+set(BANG_ENGINE_SRC_DIR       ${BANG_SRC_DIR}/Engine)
+set(BANG_ENGINE_INCLUDE_DIR   ${BANG_ENGINE_ROOT}/include)
 set(BANG_ENGINE_LIBRARIES_DIR ${BANG_ENGINE_ROOT}/Libraries)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if (NOT DEFINED ${LIBRARY_OUTPUT_PATH})
-    set(LIBRARY_OUTPUT_PATH ${BANG_ENGINE_LIBRARIES_DIR})
-endif()
+include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
+include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
 
 # Output params
 message("Bang ======================================")
-message("CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
-message("BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS})
-message("EXECUTABLE_OUTPUT_PATH: " ${EXECUTABLE_OUTPUT_PATH})
-message("LIBRARY_OUTPUT_PATH: " ${LIBRARY_OUTPUT_PATH})
-message("PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR})
-message("BANG_ENGINE_ROOT: " ${BANG_ENGINE_ROOT})
-message("BANG_SRC_DIR: " ${BANG_SRC_DIR})
-message("BANG_ENGINE_SRC_DIR: " ${BANG_ENGINE_SRC_DIR})
-message("BANG_ENGINE_LIBRARIES_DIR: " ${BANG_ENGINE_LIBRARIES_DIR})
+message("CMAKE_BUILD_TYPE:          ${CMAKE_BUILD_TYPE}")
+message("CMAKE_BINARY_DIR:          ${CMAKE_BINARY_DIR}")
+message("BUILD_SHARED_LIBS:         ${BUILD_SHARED_LIBS}")
+message("EXECUTABLE_OUTPUT_PATH:    ${EXECUTABLE_OUTPUT_PATH}")
+message("PROJECT_SOURCE_DIR:        ${PROJECT_SOURCE_DIR}")
+message("BANG_ENGINE_ROOT:          ${BANG_ENGINE_ROOT}")
+message("BANG_SRC_DIR:              ${BANG_SRC_DIR}")
+message("BANG_ENGINE_SRC_DIR:       ${BANG_ENGINE_SRC_DIR}")
+message("BANG_ENGINE_LIBRARIES_DIR: ${BANG_ENGINE_LIBRARIES_DIR}")
 message("===========================================")
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
-# CMake includes =================================================
-#=================================================================
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeMacros.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeFlags.cmake)
 #=================================================================
 #=================================================================
 #=================================================================
@@ -91,8 +79,9 @@ file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
                               "${BANG_ENGINE_ROOT}/CMakeIncludes/[^.]*.cmake"
-                              "${BANG_ENGINE_ROOT}/ThirdParty/CMakeLists.txt"
-                              "${BANG_ENGINE_ROOT}/Build/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Build/BuildPackage/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/ThirdParty/CMakeLists.txt"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
 add_misc_files("${OTHER_FILES}")
@@ -282,28 +271,70 @@ ${OTHER_FILES}
 #=================================================================
 #=================================================================
 
-#=================================================================
-# Lib and dependecies (if static) build ==========================s
-#=================================================================
 
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes/CMakeDependencies.cmake) # Dependencies
+#=================================================================
+# Dependencies ===================================================
+#=================================================================
+include("${CMAKE_CURRENT_LIST_DIR}/Build/BuildDependencies/CMakeLists.txt")
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES})
-
-message("BUILD SHARED LIBS: ${BUILD_SHARED_LIBS}")
-set(GENERATED_LIB_NAME "")
 if (${BUILD_SHARED_LIBS})
-    add_library(BangLib SHARED $<TARGET_OBJECTS:BangEngineObjects>)
-    set(GENERATED_LIB_NAME "bang_shared")
+    add_library(BangLibStatic STATIC $<TARGET_OBJECTS:BangEngineObjects>)
+    add_library(BangLib       SHARED $<TARGET_OBJECTS:BangEngineObjects>)
+    set_target_properties(BangLibStatic PROPERTIES OUTPUT_NAME "Bang")
+    set_target_properties(BangLib       PROPERTIES OUTPUT_NAME "Bang")
 else()
-    add_library(BangLib STATIC $<TARGET_OBJECTS:BangEngineObjects>)
-    set(GENERATED_LIB_NAME "bang_static")
+    add_library(BangLib       STATIC $<TARGET_OBJECTS:BangEngineObjects>)
+    add_library(BangLibShared SHARED $<TARGET_OBJECTS:BangEngineObjects>)
+    set_target_properties(BangLib       PROPERTIES OUTPUT_NAME "Bang")
+    set_target_properties(BangLibShared PROPERTIES OUTPUT_NAME "Bang")
 endif()
-set_target_properties(BangLib PROPERTIES OUTPUT_NAME ${GENERATED_LIB_NAME})
 
-include_directories(${BANG_ENGINE_INCLUDE_DIR})
-target_link_libraries(BangLib  ${ALL_DEPENDENCIES_LIB_FILES})
+target_include_directories(BangLib           PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+target_include_directories(BangEngineObjects PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+target_include_directories(BangEngineObjects PUBLIC ${DEPENDENCIES_INCLUDE_DIRS})
+target_link_libraries(BangLib PRIVATE ${DEPENDENCIES_LIB_PATHS})
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
+add_dependencies(BangLib BuildDependencies)
+
+target_compile_options(BangEngineObjects PUBLIC -std=c++11)
+target_compile_options(BangEngineObjects PUBLIC -Wall)
+target_compile_options(BangEngineObjects PUBLIC -Wint-to-pointer-cast)
+target_compile_options(BangEngineObjects PUBLIC -Wno-unused-parameter)
+target_compile_options(BangEngineObjects PUBLIC -Wno-sign-compare)
+target_compile_options(BangEngineObjects PUBLIC -Wswitch)
+target_compile_options(BangEngineObjects PUBLIC -Wl,--export-dynamic)
+target_compile_options(BangEngineObjects PUBLIC -pthread)
+
+if (NOT ${BUILD_SHARED_LIBS})
+    target_compile_definitions(BangEngineObjects PUBLIC -DBUILD_STATIC)
+endif()
+
+if (DEFINED FROM_TRAVIS)
+    target_compile_definitions(BangEngineObjects PUBLIC -DFROM_TRAVIS=${FROM_TRAVIS})
+endif()
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    # target_link_libraries(BangLib PUBLIC "asan")
+    # target_link_libraries(BangLib PUBLIC "ubsan")
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=undefined)
+    # target_compile_options(BangEngineObjects PUBLIC -fno-sanitize-recover)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=address)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=leak)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=float-divide-by-zero)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=integer-divide-by-zero)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=return)
+    # target_compile_options(BangEngineObjects PUBLIC -fsanitize=null)
+    target_compile_options(BangEngineObjects PUBLIC -g)
+    target_compile_options(BangEngineObjects PUBLIC -O0)
+    target_compile_options(BangEngineObjects PUBLIC -Wl,-O0)
+    target_compile_options(BangEngineObjects PUBLIC -fno-omit-frame-pointer)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_options(BangEngineObjects PUBLIC -O3)
+    target_compile_options(BangEngineObjects PUBLIC -Wl,-O3)
+endif()
+
+
 #=================================================================
 #=================================================================
 #=================================================================

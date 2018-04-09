@@ -62,6 +62,11 @@ Array<String> Extensions::GetFragmentShaderExtensions()
     return {"frag", "frag_*"};
 }
 
+Array<String> Extensions::GetSharedLibraryFileExtensions()
+{
+    return {"so", "dll"};
+}
+
 String Extensions::GetDefaultBehaviourHeaderExtension()
 {
     return "h";

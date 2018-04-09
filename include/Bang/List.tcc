@@ -60,7 +60,7 @@ template<class T>
 typename List<T>::Iterator
 List<T>::Insert(int index, const T &x)
 {
-    ASSERT(index >= 0 && index <= Size());
+    ASSERT(index >= 0 && index <= int(Size()));
     auto it = Begin(); std::advance(it, index);
     return Insert(it, x);
 }

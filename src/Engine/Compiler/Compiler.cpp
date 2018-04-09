@@ -19,7 +19,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     args.PushBack(job.flags);
 
     // Input Files
-    args.PushBack(job.inputFiles.To<List,String>());
+    args.PushBack(job.GetInputFiles());
 
     // Include paths
     List<String> incPaths = job.includePaths.To<List,String>();
@@ -52,4 +52,31 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
 
 Compiler::Compiler()
 {
+}
+
+void Compiler::Job::AddInputFile(const Path &path)
+{
+    inputFiles.PushBack( path.GetAbsolute() );
+}
+
+void Compiler::Job::AddInputFiles(const Array<Path> &paths)
+{
+    Array<String> pathsStr;
+    for (const Path &p : paths) { pathsStr.PushBack(p.GetAbsolute()); }
+    inputFiles.PushBack(pathsStr);
+}
+
+void Compiler::Job::AddInputFile(const String &path)
+{
+    inputFiles.PushBack(path);
+}
+
+void Compiler::Job::AddInputFiles(const Array<String> &paths)
+{
+    inputFiles.PushBack(paths);
+}
+
+const List<String> &Compiler::Job::GetInputFiles() const
+{
+    return inputFiles;
 }

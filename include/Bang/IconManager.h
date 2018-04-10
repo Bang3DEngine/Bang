@@ -13,6 +13,7 @@ public:
     static RH<Texture2D> GetBangB64Icon();
     static RH<Texture2D> GetBangB512Icon();
     static RH<Texture2D> GetBangB2048Icon();
+    static RH<Texture2D> GetBang2048Icon();
     static RH<Texture2D> GetRightArrowIcon();
     static RH<Texture2D> GetDownArrowIcon();
     static RH<Texture2D> GetCheckIcon();

@@ -80,7 +80,7 @@ void UIButton::SetBlocked(bool blocked)
 {
     m_isBlocked = blocked;
 
-    p_button->IFocusable::SetEmitEvents( !IsBlocked() );
+    p_focusable->IFocusable::SetEmitEvents( !IsBlocked() );
     if (!IsBlocked())
     {
         GetText()->SetTextColor(Color::Black);
@@ -123,7 +123,7 @@ bool UIButton::IsBlocked() const { return m_isBlocked; }
 UIImageRenderer *UIButton::GetIcon() const { return p_icon; }
 UITextRenderer *UIButton::GetText() const { return p_text; }
 UIImageRenderer *UIButton::GetBackground() const { return p_background; }
-UIFocusable *UIButton::GetFocusable() const { return p_button; }
+UIFocusable *UIButton::GetFocusable() const { return p_focusable; }
  UILayoutElement *UIButton::GetLayoutElement() const { return p_layoutElement; }
 UIDirLayout *UIButton::GetDirLayout() const
 {
@@ -171,13 +171,14 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     button->p_icon = icon;
     button->p_background = bgImg;
-    button->p_button = btn;
+    button->p_focusable = btn;
     button->p_text = label->GetText();
     button->p_layoutElement = le;
 
     icon->GetGameObject()->SetParent(go);
     label->GetGameObject()->SetParent(go);
 
+    button->GetText()->SetContent("");
     button->SetIcon(nullptr, Vector2i::Zero, 0);
 
     return button;

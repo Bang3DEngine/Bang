@@ -12,6 +12,8 @@ RH<Texture2D> IconManager::GetBangB512Icon()
 { return GetIconTexture("LogoBang_B_512"); }
 RH<Texture2D> IconManager::GetBangB2048Icon()
 { return GetIconTexture("LogoBang_B_2048"); }
+RH<Texture2D> IconManager::GetBang2048Icon()
+{ return GetIconTexture("LogoBang_2048"); }
 RH<Texture2D> IconManager::GetRightArrowIcon()
 { return GetIconTexture("RightArrow"); }
 RH<Texture2D> IconManager::GetDownArrowIcon()

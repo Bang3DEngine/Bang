@@ -49,7 +49,7 @@ private:
     UIImageRenderer *p_icon          = nullptr;
     UITextRenderer  *p_text          = nullptr;
     UIImageRenderer *p_background    = nullptr;
-    UIFocusable     *p_button        = nullptr;
+    UIFocusable     *p_focusable     = nullptr;
     UILayoutElement *p_layoutElement = nullptr;
 
     UIButton();

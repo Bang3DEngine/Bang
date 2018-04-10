@@ -309,14 +309,12 @@ UIButton* GameObjectFactory::CreateUIButton()
                 GameObjectFactory::CreateUIGameObjectNamed("Button") );
 }
 
-UIButton *GameObjectFactory::CreateUIButton(const String &text,
-                                                  Texture2D *icon)
+UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
 {
     const Vector2i size(15);
     UIButton *btn = GameObjectFactory::CreateUIButton();
 
     if (!text.IsEmpty()) { btn->GetText()->SetContent(text); }
-
     if (icon) { btn->SetIcon(icon, size, 5); }
 
     return btn;

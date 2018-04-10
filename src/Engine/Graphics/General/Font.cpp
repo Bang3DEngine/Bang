@@ -37,6 +37,7 @@ void Font::Import(const Path &ttfFilepath)
     const int RefFontSize = 128;
     m_referenceFont = TTF_OpenFont(m_ttfFilepath.GetAbsolute().ToCString(),
                                    RefFontSize);
+
     bool error = (CatchTTFError() || !GetReferenceFont());
     if (!error)
     {

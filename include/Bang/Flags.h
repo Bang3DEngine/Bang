@@ -10,7 +10,7 @@ class Flags
 {
 public:
     Flags() { }
-    Flags(int flagsOn) { m_flags = Flag::None; SetOn(flagsOn); }
+    Flags(int flagsOn)  { m_flags = Flag::None; SetOn(flagsOn); }
     Flags(Flag flagsOn) { m_flags = Flag::None; SetOn(flagsOn); }
 
     void SetOn(int f)  { m_flags = m_flags | f; }

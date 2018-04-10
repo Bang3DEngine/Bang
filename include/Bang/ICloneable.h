@@ -2,6 +2,7 @@
 #define ICLONEABLE_H
 
 #include "Bang/Bang.h"
+#include "Bang/Debug.h"
 
 NAMESPACE_BANG_BEGIN
 

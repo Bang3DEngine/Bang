@@ -61,7 +61,6 @@ private:
     void InitBeforeLoop();
     virtual Paths* CreatePaths();
     virtual Settings* CreateSettings();
-    virtual SceneManager* CreateSceneManager() const;
 };
 
 NAMESPACE_BANG_END

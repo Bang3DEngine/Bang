@@ -47,7 +47,6 @@ protected:
     String m_value = "";
 };
 
-
 template<>
 inline void XMLAttribute::Set(const String &name, const Path& filepath)
 {

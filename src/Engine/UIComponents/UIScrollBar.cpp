@@ -2,7 +2,10 @@
 
 #include "Bang/Rect.h"
 #include "Bang/Input.h"
+#include "Bang/Paths.h"
 #include "Bang/AARect.h"
+#include "Bang/Resources.h"
+#include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/IFocusable.h"
 #include "Bang/UIFocusable.h"
@@ -33,7 +36,7 @@ void UIScrollBar::OnUpdate()
 
     if ( IsBeingGrabbed() )
     {
-        p_barImg->SetTint(Color::Black);
+        p_barImg->SetTint(Color::DarkGray);
 
         Vector2 mouseCoordsPx (Input::GetMousePosition());
         AARect scrollRectPx = GetScrollingRect();
@@ -188,7 +191,9 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
 
     UIImageRenderer *barImg = bar->AddComponent<UIImageRenderer>();
-    barImg->SetTint(Color::Black);
+    barImg->SetImageTexture( Resources::Load<Texture2D>(
+                                        EPATH("Images/RRect_9s.png")).Get() );
+    barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
 
     UIFocusable *btn = bar->AddComponent<UIFocusable>();
 
@@ -199,6 +204,7 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     scrollBar->SetSide(Side::Left);
     scrollBar->SetLength(50);
     scrollBar->SetThickness(10);
+    scrollBar->OnMouseExit(nullptr); // Set bar color
 
     scrollArea->SetContainedGameObject(bar);
 
@@ -227,13 +233,13 @@ void UIScrollBar::OnMouseEnter(IFocusable*)
 {
     if (!IsBeingGrabbed())
     {
-        p_barImg->SetTint(Color::DarkGray);
+        p_barImg->SetTint( Color::Gray.WithValue(0.9f) );
     }
 }
 
 void UIScrollBar::OnMouseExit(IFocusable*)
 {
-    if (!IsBeingGrabbed()) { p_barImg->SetTint(Color::Black); }
+    if (!IsBeingGrabbed()) { p_barImg->SetTint(Color::Gray.WithValue(1.2f)); }
 }
 
 UIFocusable *UIScrollBar::GetFocusable() const { return p_button; }

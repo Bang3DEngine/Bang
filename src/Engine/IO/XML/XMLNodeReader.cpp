@@ -1,6 +1,7 @@
 #include "Bang/XMLNodeReader.h"
 
 #include "Bang/File.h"
+#include "Bang/Debug.h"
 #include "Bang/Paths.h"
 #include "Bang/Serializable.h"
 
@@ -168,7 +169,12 @@ void XMLNodeReader::GetNextTag(const String &xml,
 
 XMLNode XMLNodeReader::FromFile(const Path &filepath)
 {
-    if (!filepath.IsFile()) { return XMLNode(); }
+    if (!filepath.IsFile())
+    {
+        Debug_Error("Filepath " << filepath << " not found!");
+        return XMLNode();
+    }
+
     String fileContents = File::GetContents(filepath);
     return XMLNodeReader::FromString(fileContents);
 }

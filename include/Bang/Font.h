@@ -6,6 +6,7 @@
 #include "Bang/Mutex.h"
 #include "Bang/Vector2.h"
 #include "Bang/Resource.h"
+#include "Bang/FontStyle.h"
 
 FORWARD struct _TTF_Font;
 using TTF_Font = _TTF_Font;
@@ -60,11 +61,12 @@ private:
         Map<char, GlyphMetrics> charMetrics;
     };
 
+    // For each font style
     FontDataCache m_referenceFontDataCache;
     mutable Map<int, TTF_Font*> m_openFonts;
-    mutable Map<int, RH<Texture2D>> m_cachedAtlas; // Per each font size, cached atlas
-    mutable Map<int, Map<char, AARecti>> m_cachedAtlasCharRects; // ", cached atlas char rects
-    mutable Map<int, String> m_cachedAtlasChars; // ", cached atlas chars
+    mutable Map<int, RH<Texture2D>> m_cachedAtlas;
+    mutable Map<int, Map<char, AARecti>> m_cachedAtlasCharRects;
+    mutable Map<int, String> m_cachedAtlasChars;
 
     Font();
     virtual ~Font();

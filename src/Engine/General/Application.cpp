@@ -18,7 +18,6 @@
 #include "Bang/IconManager.h"
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
-#include "Bang/SceneManager.h"
 #include "Bang/WindowManager.h"
 #include "Bang/FontSheetCreator.h"
 #include "Bang/ImportFilesManager.h"
@@ -182,9 +181,4 @@ Paths *Application::CreatePaths()
 Settings *Application::CreateSettings()
 {
     return new Settings();
-}
-
-SceneManager *Application::CreateSceneManager() const
-{
-    return new SceneManager();
 }

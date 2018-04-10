@@ -5,6 +5,7 @@
 #include <limits>
 
 #include "Bang/Bang.h"
+#include "Bang/Debug.h"
 
 NAMESPACE_BANG_BEGIN
 

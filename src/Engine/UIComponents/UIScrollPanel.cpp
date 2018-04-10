@@ -15,7 +15,7 @@
 
 USING_NAMESPACE_BANG
 
-const float UIScrollPanel::WheelScrollSpeedPx = 50.0f;
+const float UIScrollPanel::WheelScrollSpeedPx = 100.0f;
 
 UIScrollPanel::UIScrollPanel()
 {
@@ -378,9 +378,6 @@ UIScrollPanel *UIScrollPanel::CreateInto(GameObject *go)
     scrollPanel->p_scrollArea = scrollArea;
     scrollPanel->p_verticalScrollBar = verticalScrollBar;
     scrollPanel->p_horizontalScrollBar = horizontalScrollBar;
-
-    scrollPanel->p_scrollArea->GetGameObject()->
-                 GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.1f) );
 
     scrollPanel->SetVerticalShowScrollMode(ShowScrollMode::Always);
     scrollPanel->SetHorizontalShowScrollMode(ShowScrollMode::Always);

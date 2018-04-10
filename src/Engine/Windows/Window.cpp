@@ -1,4 +1,3 @@
-
 #include "Bang/Window.h"
 
 #include BANG_SDL2_INCLUDE(SDL.h)

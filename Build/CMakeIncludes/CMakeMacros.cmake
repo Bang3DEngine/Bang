@@ -64,6 +64,47 @@ macro(add_misc_files)
      endforeach()
 endmacro()
 
+macro(add_bang_compilation_flags __TARGET)
+
+    target_compile_options(${__TARGET} PUBLIC -std=c++11)
+    target_compile_options(${__TARGET} PUBLIC -Wall)
+    target_compile_options(${__TARGET} PUBLIC -Wint-to-pointer-cast)
+    target_compile_options(${__TARGET} PUBLIC -Wno-unused-parameter)
+    target_compile_options(${__TARGET} PUBLIC -Wno-sign-compare)
+    target_compile_options(${__TARGET} PUBLIC -Wswitch)
+    target_compile_options(${__TARGET} PUBLIC -Wl,--export-dynamic)
+    target_compile_options(${__TARGET} PUBLIC -pthread)
+
+    if (NOT ${BUILD_SHARED_LIBS})
+        target_compile_definitions(${__TARGET} PUBLIC -DBUILD_STATIC)
+    endif()
+
+    if (DEFINED FROM_TRAVIS)
+        target_compile_definitions(${__TARGET} PUBLIC -DFROM_TRAVIS=${FROM_TRAVIS})
+    endif()
+
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        # target_link_libraries(BangLib PUBLIC "asan")
+        # target_link_libraries(BangLib PUBLIC "ubsan")
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=undefined)
+        # target_compile_options(${__TARGET} PUBLIC -fno-sanitize-recover)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=address)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=leak)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=float-divide-by-zero)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=integer-divide-by-zero)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=return)
+        # target_compile_options(${__TARGET} PUBLIC -fsanitize=null)
+        target_compile_options(${__TARGET} PUBLIC -g)
+        target_compile_options(${__TARGET} PUBLIC -O0)
+        target_compile_options(${__TARGET} PUBLIC -Wl,-O0)
+        target_compile_options(${__TARGET} PUBLIC -fno-omit-frame-pointer)
+    elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+        target_compile_options(${__TARGET} PUBLIC -O3)
+        target_compile_options(${__TARGET} PUBLIC -Wl,-O3)
+    endif()
+
+endmacro()
+
 #=================================================================
 #=================================================================
 #=================================================================

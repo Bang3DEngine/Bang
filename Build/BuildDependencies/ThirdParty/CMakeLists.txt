@@ -185,7 +185,7 @@ add_custom_command(
 #=================================================================
 # IRRXML Copy when Assimp has built it ===========================
 #=================================================================
-add_custom_target(BuildIRRXML ALL DEPENDS BuildIRRXML)
+add_custom_target(BuildIRRXML ALL DEPENDS BuildAssimp)
 add_custom_command(
   TARGET BuildIRRXML
   COMMAND cp ${IRRXML_LIB_OUTPUT} ${IRRXML_LIB_FINAL_OUTPUT}
@@ -298,15 +298,25 @@ add_custom_command(
   TARGET BuildAlsaObjs
   COMMAND
       cd ${ALSAOBJS_DIR} &&
-      ./configure --prefix=${ALSAOBJS_DIR}/build --enable-shared=no --enable-static=yes &&
+      ./configure CPPFLAGS=-fPIC --prefix=${ALSAOBJS_DIR}/build --enable-shared=yes --enable-static=no &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cd build/lib &&
-      ar x libasound.a &&
-      /bin/sh -c "cp -R ${ALSAOBJS_DIR}/src/*.o     ${ALSAOBJS_DIR}/build/lib" &&
-      /bin/sh -c "cp -R ${ALSAOBJS_DIR}/src/pcm/*.o ${ALSAOBJS_DIR}/build/lib" &&
-      /bin/sh -c "cp -R ${ALSAOBJS_DIR}/src/ucm/*.o ${ALSAOBJS_DIR}/build/lib" &&
-      /bin/sh -c "ar ru ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_DIR}/build/lib/*.o" &&
+      /bin/sh -c "ar ru ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_DIR}/alsalisp/*.o \
+                                               ${ALSAOBJS_DIR}/aserver/*.o \
+                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/control/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/alisp/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/rawmidi/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/seq/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/timer/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/hwdep/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/mixer/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/topology/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/pcm/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/ucm/.libs/*.o" &&
       cp ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_LIB_FINAL_OUTPUT}
   COMMENT "Building ALSA"
   VERBATIM
@@ -323,10 +333,12 @@ add_custom_command(
   TARGET BuildSndio
   COMMAND
       cd ${SNDIO_DIR} &&
-      export LIBRARY_PATH="$ENV{LIBRARY_PATH}:${ALSAOBJS_DIR}/build/lib" &&
+      export LIBRARY_PATH=$ENV{LIBRARY_PATH}:${ALSAOBJS_DIR}/build/lib/ &&
+      export CPATH=$ENV{CPATH}:${ALSAOBJS_INCLUDE_DIR_0}:${ALSAOBJS_INCLUDE_DIR_1} &&
       ./configure --prefix=build &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
+      /bin/sh -c "cd ${ALSAOBJS_LIB_OUTPUT_DIR} ; ar x ${ALSAOBJS_LIB_OUTPUT} ; cd -" &&
       cd libsndio &&
       /bin/sh -c "ar ru ${SNDIO_LIB_OUTPUT} ${SNDIO_DIR}/libsndio/*.o ${ALSAOBJS_LIB_OUTPUT_DIR}/*.o" &&
       cp ${SNDIO_LIB_OUTPUT} ${SNDIO_LIB_FINAL_OUTPUT}
@@ -348,7 +360,7 @@ add_custom_command(
       mkdir -p build &&
       cd build &&
       cmake -DBUILD_SHARED_LIBS=OFF
-            -DLIBTYPE=STATIC 
+            -DLIBTYPE=STATIC
             -DCMAKE_CXX_FLAGS=-fPIC
             -DCMAKE_C_FLAGS=-fPIC
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
@@ -400,7 +412,7 @@ add_custom_command(
   TARGET BuildSDL2TTF
   COMMAND
       export PATH=$ENV{PATH}:${SDL2TTF_INSTALL_DIR} &&
-      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && 
+      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
       cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&
@@ -410,7 +422,7 @@ add_custom_command(
             --prefix=${SDL2TTF_INSTALL_DIR}
             --enable-static=yes
             --with-pic &&
-      make VERBOSE=1 -j${NUM_COMPILE_THREADS} && 
+      make VERBOSE=1 -j${NUM_COMPILE_THREADS} &&
       make install &&
       cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}
   COMMENT "Building SDL2TTF"
@@ -447,11 +459,6 @@ list(APPEND THIRD_PARTY_INCLUDE_DIRS ${PNG_INCLUDE_DIR_0})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${PNG_INCLUDE_DIR_1})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2TTF_INCLUDE_DIR})
-
-set(THIRD_PARTY_LIB_PATHS    ${THIRD_PARTY_LIB_PATHS}    PARENT_SCOPE)
-set(THIRD_PARTY_INCLUDE_DIRS ${THIRD_PARTY_INCLUDE_DIRS} PARENT_SCOPE)
-
-message("THIRD_PARTY_LIB_PATHS: ${THIRD_PARTY_LIB_PATHS}")
 
 add_custom_target(BuildThirdParty ALL
     DEPENDS BuildAssimp

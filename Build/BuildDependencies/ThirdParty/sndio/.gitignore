@@ -1,0 +1,33 @@
+# CVS default ignores begin
+tags
+TAGS
+.make.state
+.nse_depinfo
+*~
+#*
+.#*
+,*
+_$*
+*$
+*.old
+*.bak
+*.BAK
+*.orig
+*.rej
+.del-*
+*.a
+*.olb
+*.o
+*.obj
+*.so
+*.exe
+*.Z
+*.elc
+*.ln
+core
+/aucat/aucat
+/contrib/init.d.sndiod
+/contrib/sndiod.service
+/midicat/midicat
+/sndiod/sndiod
+# CVS default ignores end

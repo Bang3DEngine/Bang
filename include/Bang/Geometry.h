@@ -55,6 +55,8 @@ public:
                                         const Polygon &poly,
                                         bool *intersected,
                                         Vector3 *intersection);
+    static Array<Vector3> IntersectSegmentPolygon(const Segment &segment,
+                                                  const Polygon &poly);
     static Array<Vector3> IntersectPolygonPolygon(const Polygon &poly0,
                                                   const Polygon &poly1);
 
@@ -68,57 +70,45 @@ public:
                                      bool *intersected,
                                      Vector3 *intersectionPoint);
 
-    // Computes the intersection between a triangle and a segment
+    // Computes the intersection between a segment and a triangle
     static void IntersectSegmentTriangle(const Segment &segment,
                                          const Triangle &triangle,
                                          bool *intersected,
                                          Vector3 *intersectionPoint);
 
-    // Computes the intersection between a triangle and a triangle
-    static void IntersectTriangleTriangle(const Triangle &triangle0,
-                                          const Triangle &triangle1,
-                                          int *numIntersectionPoints,
-                                          Vector3 *intersectionPoint0,
-                                          Vector3 *intersectionPoint1);
+    // Computes the intersection between two triangles
     static Array<Vector3> IntersectTriangleTriangle(const Triangle &triangle0,
                                                     const Triangle &triangle1);
 
-    // Computes the intersection between a quad and a quad
-    static void IntersectQuadQuad(const Quad &quad0,
-                                  const Quad &quad1,
-                                  int *numIntersectionPoints,
-                                  Vector3 *intersectionPoint0,
-                                  Vector3 *intersectionPoint1);
+    static Array<Vector3> IntersectBoxBox(const std::array<Quad, 6> &box0,
+                                          const std::array<Quad, 6> &box1);
+
+    static bool IsPointInsideBox(const Vector3 &p,
+                                 const std::array<Quad, 6> &box);
+    static bool IsPointInsideBox(const Vector3 &p,
+                                 const Plane &boxTopPlane,
+                                 const Plane &boxBotPlane,
+                                 const Plane &boxLeftPlane,
+                                 const Plane &boxRightPlane,
+                                 const Plane &boxFrontPlane,
+                                 const Plane &boxBackPlane);
+
+    // Computes the intersection between two quads
     static Array<Vector3> IntersectQuadQuad(const Quad &quad0,
                                             const Quad &quad1);
-    static void IntersectQuadQuad(const Triangle &quad0Tri0,
-                                  const Triangle &quad0Tri1,
-                                  const Triangle &quad1Tri0,
-                                  const Triangle &quad1Tri1,
-                                  int *numIntersectionPoints,
-                                  Vector3 *intersectionPoint0,
-                                  Vector3 *intersectionPoint1);
-    static Array<Vector3> IntersectQuadQuad(const Triangle &quad0Tri0,
-                                            const Triangle &quad0Tri1,
-                                            const Triangle &quad1Tri0,
-                                            const Triangle &quad1Tri1);
 
     // Computes the intersection between a quad and a AABox
-    static void IntersectQuadAABox(const Quad &quad,
-                                   const AABox &aaBox,
-                                   int *numIntersectionPoints,
-                                   Vector3 *intersectionPoint0,
-                                   Vector3 *intersectionPoint1,
-                                   Vector3 *intersectionPoint2,
-                                   Vector3 *intersectionPoint3);
     static Array<Vector3> IntersectQuadAABox(const Quad &quad,
-                                             const AABox &aaBox);
-
+                                             const AABox &aaBox,
+                                             bool onlyBoundaries = false);
 
     // Returns the orientation of a point vs a line
     static Orientation GetOrientation(const Vector2 &lineP0,
                                       const Vector2 &lineP1,
                                       const Vector2 &point);
+
+    // Returns the orientation of a point vs a plane
+    static Orientation GetOrientation(const Vector3 &point, const Plane &plane);
 
     // Returns the point in the ray that is closer to the passed point
     static Vector3 RayClosestPointTo(const Ray &ray, const Vector3 &point);

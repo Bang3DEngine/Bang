@@ -35,8 +35,8 @@ public:
     template<class OtherT>
     explicit Matrix4G(const OtherT& a);
 
-    Vector3 TransformPoint(const Vector3 &point) const;
-    Vector3 TransformVector(const Vector3 &vector) const;
+    Vector3 TransformedPoint(const Vector3 &point) const;
+    Vector3 TransformedVector(const Vector3 &vector) const;
 
     Matrix4G<T> Inversed() const;
     Matrix4G<T> Transposed() const;

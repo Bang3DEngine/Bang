@@ -8,6 +8,7 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Plane;
 FORWARD class Polygon;
 FORWARD class Triangle;
 
@@ -27,6 +28,7 @@ public:
     void SetPoint(int i, const Vector3 &p);
 
     Vector3 GetNormal() const;
+    Plane GetPlane() const;
     const Vector3& GetPoint(int i) const;
     const std::array<Vector3, 4>& GetPoints() const;
     Polygon ToPolygon() const;

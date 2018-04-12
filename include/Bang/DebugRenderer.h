@@ -48,7 +48,10 @@ public:
                             const Color &color = Color::Green,
                             float time = 1.0f,
                             float thickness = 1.0f,
-                            bool depthTest = false);
+                            bool wireframe = false,
+                            bool culling = false,
+                            bool depthTest = false,
+                            const Color &bordersColor = Color::Zero);
 
     static void RenderTriangle(const Triangle &triangle,
                                const Color &color = Color::Green,
@@ -61,7 +64,8 @@ public:
                            float time = 1.0f,
                            bool wireframe = false,
                            bool culling = false,
-                           bool depthTest = false);
+                           bool depthTest = false,
+                           const Color &bordersColor = Color::Zero);
 
     static void RenderAARectNDC(const AARect &aaRectNDC,
                                 const Color &color = Color::Green,

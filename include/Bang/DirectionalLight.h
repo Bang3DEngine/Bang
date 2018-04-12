@@ -18,7 +18,7 @@ public:
     void SetShadowDistance(float shadowDistance);
 
     float GetShadowDistance() const;
-    Texture2D* GetShadowMap() const;
+    Texture2D* GetShadowMapTexture() const override;
 
     // Component
     void OnRender(RenderPass rp) override;
@@ -48,7 +48,7 @@ protected:
                               Matrix4 *viewMatrix,
                               Matrix4 *projMatrix) const;
     Matrix4 GetShadowMapMatrix(Scene *scene) const;
-    Matrix4 GetLightDirMatrix() const;
+    Matrix4 GetLightToWorldMatrix() const;
     AABox GetShadowMapOrthoBox(Scene *scene) const;
 };
 

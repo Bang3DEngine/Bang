@@ -48,24 +48,20 @@ AABox::AABox(const AABox &b)
 void AABox::SetMin(const Vector3 &bMin)
 {
     m_minv = bMin;
-    m_initialized = true;
 }
 
 void AABox::SetMax(const Vector3 &bMax)
 {
     m_maxv = bMax;
-    m_initialized = true;
 }
 
 const Vector3& AABox::GetMin() const
 {
-    ASSERT(m_initialized);
     return m_minv;
 }
 
 const Vector3& AABox::GetMax() const
 {
-    ASSERT(m_initialized);
     return m_maxv;
 }
 
@@ -160,7 +156,6 @@ bool AABox::CheckCollision(const AABox &aabox) const
 
 bool AABox::Contains(const Vector3 &point) const
 {
-    if (!m_initialized) { return false; }
     // return point.x >= GetMin().x && point.x <= GetMax().x &&
     //        point.y >= GetMin().y && point.y <= GetMax().y &&
     //        point.z >= GetMin().z && point.z <= GetMax().z;
@@ -170,17 +165,12 @@ bool AABox::Contains(const Vector3 &point) const
 
 void AABox::AddPoint(const Vector3 &point)
 {
-    if (!m_initialized) { SetMin(point); SetMax(point); }
-
     SetMin( Vector3::Min(GetMin(), point) );
     SetMax( Vector3::Max(GetMax(), point) );
 }
 
 AABox AABox::Union(const AABox &b1, const AABox &b2)
 {
-    if (!b1.m_initialized && !b2.m_initialized) { return AABox::Empty; }
-    if (!b1.m_initialized) { return b2; }
-    if (!b2.m_initialized) { return b1; }
     return AABox(Vector3::Min(b1.GetMin(), b2.GetMin()),
                  Vector3::Max(b1.GetMax(), b2.GetMax()));
 }

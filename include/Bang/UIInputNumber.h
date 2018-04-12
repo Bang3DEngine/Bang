@@ -18,8 +18,8 @@ class UIInputNumber : public Component,
     COMPONENT(UIInputNumber)
 
 public:
-	UIInputNumber();
-	virtual ~UIInputNumber();
+    UIInputNumber();
+    virtual ~UIInputNumber();
 
     void OnStart() override;
     void OnUpdate() override;

@@ -69,12 +69,12 @@ Matrix4G<T>::Matrix4G(const OtherT& a)
 }
 
 template<class T>
-Vector3 Matrix4G<T>::TransformPoint(const Vector3 &point) const
+Vector3 Matrix4G<T>::TransformedPoint(const Vector3 &point) const
 {
     return ((*this) * Vector4(point, 1)).xyz();
 }
 template<class T>
-Vector3 Matrix4G<T>::TransformVector(const Vector3 &vector) const
+Vector3 Matrix4G<T>::TransformedVector(const Vector3 &vector) const
 {
     return ((*this) * Vector4(vector, 0)).xyz();
 }

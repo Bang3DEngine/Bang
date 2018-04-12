@@ -9,8 +9,9 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
 FORWARD class Material;
-FORWARD class Renderer;
 FORWARD class GBuffer;
+FORWARD class Renderer;
+FORWARD class Texture2D;
 
 class Light : public Component
 {
@@ -21,11 +22,14 @@ public:
     void SetIntensity(float intensity);
     void SetShadowBias(float shadowBias);
     void SetShadowType(ShadowType shadowType);
+    void SetShadowMapSize(const Vector2i &shadowMapSize);
 
     Color GetColor() const;
     float GetIntensity() const;
     float GetShadowBias() const;
     ShadowType GetShadowType() const;
+    const Vector2i& GetShadowMapSize() const;
+    virtual Texture2D *GetShadowMapTexture() const;
 
     void RenderShadowMaps();
 
@@ -49,6 +53,7 @@ private:
     Color m_color = Color::White;
 
     float m_shadowBias = 0.01f;
+    Vector2i m_shadowMapSize = Vector2i(2048);
     ShadowType m_shadowType = ShadowType::SOFT;
 
     RH<Material> p_lightMaterial;

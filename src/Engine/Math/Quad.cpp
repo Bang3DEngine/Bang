@@ -1,5 +1,6 @@
 #include "Bang/Quad.h"
 
+#include "Bang/Plane.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Polygon.h"
 #include "Bang/Triangle.h"
@@ -25,6 +26,11 @@ void Quad::SetPoint(int i, const Vector3 &p)
 Vector3 Quad::GetNormal() const
 {
     return Triangle(GetPoint(0), GetPoint(1), GetPoint(2)).GetNormal();
+}
+
+Plane Quad::GetPlane() const
+{
+    return Plane(GetPoint(0), GetNormal());
 }
 
 const Vector3 &Quad::GetPoint(int i) const
@@ -101,10 +107,10 @@ NAMESPACE_BANG_BEGIN
 
 Quad operator*(const Matrix4 &m, const Quad &q)
 {
-    return Quad(m.TransformPoint(q[0]),
-                m.TransformPoint(q[1]),
-                m.TransformPoint(q[2]),
-                m.TransformPoint(q[3]));
+    return Quad(m.TransformedPoint(q[0]),
+                m.TransformedPoint(q[1]),
+                m.TransformedPoint(q[2]),
+                m.TransformedPoint(q[3]));
 }
 
 NAMESPACE_BANG_END

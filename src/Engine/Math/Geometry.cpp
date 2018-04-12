@@ -2,7 +2,9 @@
 
 #include <array>
 
+#include "Bang/Set.h"
 #include "Bang/Ray.h"
+#include "Bang/List.h"
 #include "Bang/Quad.h"
 #include "Bang/Debug.h"
 #include "Bang/Ray2D.h"
@@ -15,6 +17,7 @@
 #include "Bang/Triangle.h"
 #include "Bang/Polygon2D.h"
 #include "Bang/Segment2D.h"
+#include "Bang/DebugRenderer.h"
 
 USING_NAMESPACE_BANG
 
@@ -75,14 +78,15 @@ void Geometry::IntersectRayPlane(const Ray &ray,
 {
     const Vector3& planeNormal = plane.GetNormal();
     float dot = Vector3::Dot(planeNormal, ray.GetDirection());
-    *intersected = (Math::Abs(dot) > 0.001f);
 
-    if (*intersected)
+    if (Math::Abs(dot) > 0.001f)
     {
         *distanceFromIntersectionToRayOrigin =
                 Vector3::Dot(plane.GetPoint() - ray.GetOrigin(),
                              planeNormal) / dot;
+        *intersected = (*distanceFromIntersectionToRayOrigin >= 0.0f);
     }
+    else { *intersected = false; }
 }
 
 void Geometry::IntersectRayPlane(const Ray &ray,
@@ -165,30 +169,63 @@ void Geometry::IntersectSegmentPolygon(const Segment &segment,
                                        Vector3 *intersection)
 {
     bool intersectedWithPlane;
-    Vector3 intersectionWithPlane;
     IntersectRayPlane(Ray(segment.GetOrigin(), segment.GetDirection()),
                       poly.GetPlane(),
                       &intersectedWithPlane,
-                      &intersectionWithPlane);
+                      intersection);
 
     *intersected = false;
     if (intersectedWithPlane)
     {
-        // Segment intersects with plane, but is it inside the polygon?
-        Axis3D axisToProj;
-        Vector3 pn = poly.GetNormal(); // Poly normal to know where to project
-        if      (pn.x > pn.y && pn.x > pn.z) { axisToProj = Axis3D::X; }
-        else if (pn.y > pn.x && pn.y > pn.z) { axisToProj = Axis3D::Y; }
-        else                                 { axisToProj = Axis3D::Z; }
-
-        Polygon2D projectedPolygon = poly.ProjectedOnAxis(axisToProj);
-        Vector2 projectedIntersPoint = intersectionWithPlane.ProjectedOnAxis(axisToProj);
-        if (projectedPolygon.Contains(projectedIntersPoint))
+        float intSegDist = Vector3::Distance(*intersection, segment.GetOrigin());
+        if (intSegDist <= segment.GetLength())
         {
-            *intersected = true;
-            *intersection = intersectionWithPlane;
+            // Segment intersects with plane, but is it inside the polygon?
+            Axis3D axisToProj;
+            Vector3 apn = Vector3::Abs(poly.GetNormal()); // To know where to project
+            if      (apn.x > apn.y && apn.x > apn.z) { axisToProj = Axis3D::X; }
+            else if (apn.y > apn.x && apn.y > apn.z) { axisToProj = Axis3D::Y; }
+            else                                 { axisToProj = Axis3D::Z; }
+
+            Polygon2D projectedPolygon = poly.ProjectedOnAxis(axisToProj);
+            Vector2 projectedIntersPoint = intersection->ProjectedOnAxis(axisToProj);
+            // Debug_Log("===========================");
+            // Debug_Peek(poly.GetPoints());
+            // Debug_Peek(*intersection);
+            // Debug_Peek(projectedPolygon.GetPoints());
+            // Debug_Peek(projectedIntersPoint);
+            if (projectedPolygon.Contains(projectedIntersPoint))
+            {
+                *intersected = true;
+                // DebugRenderer::RenderPoint(*intersection, Color::Green,
+                //                            20.0f, 20.0f, true);
+            }
+            else
+            {
+                // DebugRenderer::RenderPoint(*intersection, Color::White,
+                //                            20.0f, 20.0f, true);
+            }
+            // Debug_Peek(axisToProj);
+            // Debug_Peek(*intersected);
+            // Debug_Log("===========================");
         }
+        // else
+        // {
+        //     DebugRenderer::RenderPoint(*intersection, Color::Black,
+        //                                20.0f, 20.0f, true);
+        // }
     }
+}
+
+Array<Vector3> Geometry::IntersectSegmentPolygon(const Segment &segment,
+                                                 const Polygon &poly)
+{
+    Array<Vector3> result;
+    bool intB;
+    Vector3 intP;
+    Geometry::IntersectSegmentPolygon(segment, poly, &intB, &intP);
+    if (intB) { result.PushBack(intP); }
+    return result;
 }
 
 Array<Vector3> Geometry::IntersectPolygonPolygon(const Polygon &poly0,
@@ -204,12 +241,8 @@ Array<Vector3> Geometry::IntersectPolygonPolygon(const Polygon &poly0,
         {
             Segment segment(p0.GetPoint(i),
                             p0.GetPoint((i+1) % p0.GetPoints().Size()));
-
-            bool intersected;
-            Vector3 intersPoint;
-            Geometry::IntersectSegmentPolygon(segment, p1,
-                                              &intersected, &intersPoint);
-            if (intersected) { intersectionPoints.PushBack(intersPoint); }
+            intersectionPoints.PushBack(
+                        Geometry::IntersectSegmentPolygon(segment, p1));
         }
     }
     return intersectionPoints;
@@ -281,233 +314,88 @@ void Geometry::IntersectSegmentTriangle(const Segment &segment,
     *intersectionPoint = *intersected ? ray.GetPoint(t) : ray.GetOrigin();
 }
 
-void Geometry::IntersectTriangleTriangle(const Triangle &triangle0,
-                                         const Triangle &triangle1,
-                                         int *numIntersPoints,
-                                         Vector3 *intersPoint0,
-                                         Vector3 *intersPoint1)
+Array<Vector3> Geometry::IntersectBoxBox(const std::array<Quad, 6> &box0,
+                                         const std::array<Quad, 6> &box1)
 {
-    // Do all combinations of segment-tri
-
-    *numIntersPoints = 0;
-    std::array<Triangle, 2> triangles = {{triangle0, triangle1}};
-    for (int t : {0,1})
+    Array<Vector3> result;
+    for (const Quad &q0 : box0)
     {
-        for (int i : {0,1,2})
+        for (const Quad &q1 : box1)
         {
-            if (*numIntersPoints == 2) { break; }
+            result.PushBack( Geometry::IntersectQuadQuad(q0, q1) );
 
-            bool intersected;
-            Vector3 intersPoint;
-            Segment triSegment(triangles[t].GetPoint( i ),
-                               triangles[t].GetPoint( (i+1) % 3 ));
-            Geometry::IntersectSegmentTriangle(triSegment,
-                                               triangles[1-t],
-                                               &intersected,
-                                               &intersPoint);
-
-            if (intersected)
+            // Points of q0 inside box1
+            for (const Vector3 &q0p : q0.GetPoints())
             {
-                if (*numIntersPoints == 0)
+                if (Geometry::IsPointInsideBox(q0p, box1))
                 {
-                    *intersPoint0 = intersPoint;
-                    ++(*numIntersPoints);
+                    result.PushBack(q0p);
                 }
-                else
+            }
+
+            // Points of q1 inside box0
+            for (const Vector3 &q1p : q1.GetPoints())
+            {
+                if (Geometry::IsPointInsideBox(q1p, box0))
                 {
-                    // Check that this point is not the same as before, can
-                    // happen in some cases, and we would be missing one point
-                    if (Vector3::Distance(intersPoint, *intersPoint0) > ALMOST_ZERO)
-                    {
-                        *intersPoint1 = intersPoint;
-                        ++(*numIntersPoints);
-                        break;
-                    }
+                    result.PushBack(q1p);
                 }
             }
         }
     }
+    return result;
 }
 
-void Geometry::IntersectQuadQuad(const Quad &quad0,
-                                 const Quad &quad1,
-                                 int *numIntersectionPoints,
-                                 Vector3 *intersectionPoint0,
-                                 Vector3 *intersectionPoint1)
+bool Geometry::IsPointInsideBox(const Vector3 &p, const std::array<Quad, 6> &box)
 {
-    // Forward to another function
-    Triangle quad0Tri0, quad0Tri1, quad1Tri0, quad1Tri1;
-    quad0.GetTriangles(&quad0Tri0, &quad0Tri1);
-    quad1.GetTriangles(&quad1Tri0, &quad1Tri1);
-    Geometry::IntersectQuadQuad(quad0Tri0,
-                                quad0Tri1,
-                                quad1Tri0,
-                                quad1Tri1,
-                                numIntersectionPoints,
-                                intersectionPoint0,
-                                intersectionPoint1);
+    return Geometry::IsPointInsideBox(p, box[0].GetPlane(), box[1].GetPlane(),
+                                         box[2].GetPlane(), box[3].GetPlane(),
+                                         box[4].GetPlane(), box[5].GetPlane());
+}
+
+bool Geometry::IsPointInsideBox(const Vector3 &p,
+                                const Plane &boxTopPlane,
+                                const Plane &boxBotPlane,
+                                const Plane &boxLeftPlane,
+                                const Plane &boxRightPlane,
+                                const Plane &boxFrontPlane,
+                                const Plane &boxBackPlane)
+{
+    return Geometry::GetOrientation(p, boxTopPlane)   == Orientation::Left &&
+           Geometry::GetOrientation(p, boxBotPlane)   == Orientation::Left &&
+           Geometry::GetOrientation(p, boxLeftPlane)  == Orientation::Left &&
+           Geometry::GetOrientation(p, boxRightPlane) == Orientation::Left &&
+           Geometry::GetOrientation(p, boxFrontPlane) == Orientation::Left &&
+           Geometry::GetOrientation(p, boxBackPlane)  == Orientation::Left;
 }
 
 Array<Vector3> Geometry::IntersectQuadQuad(const Quad &quad0, const Quad &quad1)
 {
-    int numInts;
-    std::array<Vector3, 2> ps;
-    Geometry::IntersectQuadQuad(quad0, quad1, &numInts, &ps[0], &ps[1]);
-
-    Array<Vector3> intersectionPoints;
-    for (int i = 0; i < numInts; ++i) { intersectionPoints.PushBack(ps[i]); }
-
-    return intersectionPoints;
+    return Geometry::IntersectPolygonPolygon(quad0.ToPolygon(), quad1.ToPolygon());
 }
 
-void Geometry::IntersectQuadQuad(const Triangle &quad0Tri0,
-                                 const Triangle &quad0Tri1,
-                                 const Triangle &quad1Tri0,
-                                 const Triangle &quad1Tri1,
-                                 int *numIntersPoints,
-                                 Vector3 *intersPointOut0,
-                                 Vector3 *intersPointOut1)
-{
-    // Do all combinations of tri-tri, similar to TriangleTriangle
-
-    *numIntersPoints = 0;
-    Array<Vector3> foundIntersectionPoints;
-    std::array<Triangle, 2> trianglesQuad0 = {{quad0Tri0, quad0Tri1}};
-    std::array<Triangle, 2> trianglesQuad1 = {{quad1Tri0, quad1Tri1}};
-    for (int t0 : {0,1})
-    {
-        for (int t1 : {0,1})
-        {
-            const Triangle &triQuad0 = trianglesQuad0[t0];
-            const Triangle &triQuad1 = trianglesQuad1[t1];
-
-            int numSubIntersectionPoints;
-            Vector3 intersPoint0, intersPoint1;
-            Geometry::IntersectTriangleTriangle(triQuad0,
-                                                triQuad1,
-                                                &numSubIntersectionPoints,
-                                                &intersPoint0,
-                                                &intersPoint1);
-
-            if (numSubIntersectionPoints >= 1)
-            { foundIntersectionPoints.PushBack(intersPoint0); }
-
-            if (numSubIntersectionPoints == 2)
-            { foundIntersectionPoints.PushBack(intersPoint1); }
-
-            // Found 2 different in same try, no need to continue
-            if (numSubIntersectionPoints == 2) { break; }
-        }
-    }
-
-    if ( foundIntersectionPoints.Size() == 0 ) { *numIntersPoints = 0; return; }
-    if ( foundIntersectionPoints.Size() == 1 )
-    {
-        *numIntersPoints = 1;
-        *intersPointOut0 = foundIntersectionPoints.Front();
-        return;
-    }
-
-    // If more than one point, take only those points that are not repeated
-    // There should be at most two not repeated
-    if ( foundIntersectionPoints.Size() >= 2 )
-    {
-        *numIntersPoints = 1;
-        *intersPointOut0 = foundIntersectionPoints.Front();
-        for (const Vector3 &foundIntersectionPoint : foundIntersectionPoints)
-        {
-            // Pick second point only if it's not the same as the first one
-            if (Vector3::Distance(*intersPointOut0, foundIntersectionPoint) > ALMOST_ZERO)
-            {
-                *numIntersPoints = 2;
-                *intersPointOut1 = foundIntersectionPoint;
-                break;
-            }
-        }
-    }
-}
-
-Array<Vector3> Geometry::IntersectQuadQuad(const Triangle &quad0Tri0,
-                                           const Triangle &quad0Tri1,
-                                           const Triangle &quad1Tri0,
-                                           const Triangle &quad1Tri1)
-{
-    int numInts;
-    std::array<Vector3, 2> ps;
-    Geometry::IntersectQuadQuad(quad0Tri0, quad0Tri1, quad1Tri0, quad1Tri1,
-                                &numInts, &ps[0], &ps[1]);
-
-    Array<Vector3> intersectionPoints;
-    for (int i = 0; i < numInts; ++i) { intersectionPoints.PushBack(ps[i]); }
-
-    return intersectionPoints;
-}
-
-void Geometry::IntersectQuadAABox(const Quad &quad,
-                                  const AABox &aaBox,
-                                  int *numIntersPoints,
-                                  Vector3 *intersPointOut0,
-                                  Vector3 *intersPointOut1,
-                                  Vector3 *intersPointOut2,
-                                  Vector3 *intersPointOut3)
+Array<Vector3> Geometry::IntersectQuadAABox(const Quad &quad, const AABox &aaBox,
+                                            bool onlyBoundaries)
 {
     // Do all combinations of quad-quad, similar to QuadQuad
     Array<Vector3> foundIntersectionPoints;
+    const std::array<Vector3, 4> quadPoints = quad.GetPoints();
     const std::array<Quad, 6> aaBoxQuads = aaBox.GetQuads();
     for (const Quad &aaBoxQuad : aaBoxQuads)
     {
-        int numSubIntersectionPoints;
-        Vector3 intersPoint0, intersPoint1;
-        Geometry::IntersectQuadQuad(quad,
-                           aaBoxQuad,
-                           &numSubIntersectionPoints,
-                           &intersPoint0,
-                           &intersPoint1);
+        Array<Vector3> inters = Geometry::IntersectQuadQuad(quad, aaBoxQuad);
+        foundIntersectionPoints.PushBack(inters);
 
-        if (numSubIntersectionPoints >= 1)
-        { foundIntersectionPoints.PushBack(intersPoint0); }
-
-        if (numSubIntersectionPoints == 2)
-        { foundIntersectionPoints.PushBack(intersPoint1); }
-    }
-
-    // Take only the two different points
-    if ( foundIntersectionPoints.IsEmpty() ) { *numIntersPoints = 0; return; }
-
-    // We know that at most there will be 4 inters. points.
-    // Pick only those unique points different.
-    Array<Vector3> goodIntersectionPoints;
-    for (const Vector3 &foundIntersectionPoint : foundIntersectionPoints)
-    {
-        if (!goodIntersectionPoints.Contains(foundIntersectionPoint))
+        if (!onlyBoundaries)
         {
-            goodIntersectionPoints.PushBack(foundIntersectionPoint);
+            for (const Vector3 &p : quadPoints)
+            {
+                if (aaBox.Contains(p)) { foundIntersectionPoints.PushBack(p); }
+            }
         }
-        if (goodIntersectionPoints.Size() == 4) { break; }
     }
 
-    *numIntersPoints = goodIntersectionPoints.Size();
-    if (goodIntersectionPoints.Size() >= 1)
-    { *intersPointOut0 = goodIntersectionPoints[0]; }
-    if (goodIntersectionPoints.Size() >= 2)
-    { *intersPointOut1 = goodIntersectionPoints[1]; }
-    if (goodIntersectionPoints.Size() >= 3)
-    { *intersPointOut2 = goodIntersectionPoints[2]; }
-    if (goodIntersectionPoints.Size() >= 4)
-    { *intersPointOut3 = goodIntersectionPoints[3]; }
-}
-
-Array<Vector3> Geometry::IntersectQuadAABox(const Quad &quad, const AABox &aaBox)
-{
-    int numInts;
-    std::array<Vector3, 4> ps;
-    Geometry::IntersectQuadAABox(quad, aaBox,
-                                 &numInts, &ps[0], &ps[1], &ps[2], &ps[3]);
-
-    Array<Vector3> intersectionPoints;
-    for (int i = 0; i < numInts; ++i) { intersectionPoints.PushBack(ps[i]); }
-
-    return intersectionPoints;
+    return foundIntersectionPoints;
 }
 
 Geometry::Orientation Geometry::GetOrientation(const Vector2 &lineP0,
@@ -518,6 +406,13 @@ Geometry::Orientation Geometry::GetOrientation(const Vector2 &lineP0,
                 ((point.y - lineP0.y) * (lineP1.x - lineP0.x));
     if (Math::Abs(det) < ALMOST_ZERO) { return Orientation::Middle; }
     return (det < 0) ? Orientation::Left : Orientation::Right;
+}
+
+Geometry::Orientation Geometry::GetOrientation(const Vector3 &point, const Plane &plane)
+{
+    float dot = Vector3::Dot(plane.GetNormal(), (point - plane.GetPoint()));
+    if (Math::Abs(dot) < ALMOST_ZERO) { return Orientation::Middle; }
+    return (dot > 0) ? Orientation::Right : Orientation::Left;
 }
 
 Vector3 Geometry::RayClosestPointTo(const Ray &ray, const Vector3 &point)

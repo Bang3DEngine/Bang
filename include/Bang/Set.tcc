@@ -16,6 +16,13 @@ Set<Key>::Set(const std::set<Key> &s) : m_set(s)
 }
 
 template<class Key>
+template<class OtherIterator>
+Set<Key>::Set(OtherIterator itBegin, OtherIterator itEnd)
+{
+    Add(itBegin, itEnd);
+}
+
+template<class Key>
 void Set<Key>::Add(const Key &key)
 {
     m_set.insert(key);

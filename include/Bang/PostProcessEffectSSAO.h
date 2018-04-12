@@ -23,9 +23,11 @@ public:
     void SetBlurRadius(int blurRadius);
     void SetNumRandomSamples(int numRandomSamples);
     void SetNumRandomAxes(int numAxes);
+    void SetSeparable(bool separable);
     void SetBilateralBlurEnabled(bool bilateralBlurEnabled);
     void SetFBSize(const Vector2 &fbSize);
 
+    bool GetSeparable() const;
     int GetBlurRadius() const;
     float GetSSAORadius() const;
     float GetSSAOIntensity() const;
@@ -35,11 +37,14 @@ public:
     const Vector2 &GetFBSize() const;
     Texture2D* GetSSAOTexture() const;
 
+    void ReloadShaders();
+
 private:
     float m_ssaoIntensity = 1.0f;
     float m_ssaoRadius = -1;
     int m_blurRadius = -1;
     int m_numAxes = -1;
+    bool m_separable = true;
     int m_numRandomOffsetsHemisphere = -1;
     bool m_bilateralBlurEnabled = true;
     Vector2 m_fbSize = Vector2::One;

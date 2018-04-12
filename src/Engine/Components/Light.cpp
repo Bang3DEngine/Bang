@@ -21,11 +21,17 @@ void Light::SetColor(const Color &color) { m_color = color; }
 void Light::SetIntensity(float intensity) { m_intensity = intensity; }
 void Light::SetShadowBias(float shadowBias) { m_shadowBias = shadowBias; }
 void Light::SetShadowType(ShadowType shadowType) { m_shadowType = shadowType; }
+void Light::SetShadowMapSize(const Vector2i &shadowMapSize)
+{
+    m_shadowMapSize = shadowMapSize;
+}
 
 Color Light::GetColor() const { return m_color; }
 float Light::GetIntensity() const { return m_intensity; }
 float Light::GetShadowBias() const { return m_shadowBias; }
 Light::ShadowType Light::GetShadowType() const { return m_shadowType; }
+const Vector2i &Light::GetShadowMapSize() const { return m_shadowMapSize; }
+Texture2D *Light::GetShadowMapTexture() const { return nullptr; }
 
 void Light::RenderShadowMaps()
 {

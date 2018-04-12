@@ -6,7 +6,8 @@ uniform float B_BlurKernel[MAX_BLUR_RADIUS];
 void main()
 {
     float depth = B_SampleDepth();
-    float DepthEpsilon = depth * 0.001;
+    vec3 normal = B_SampleNormal();
+    float DepthEpsilon = depth * depth * 0.001f;
 
     int j = 0;
     float meanOcclusion = 0.0f;
@@ -19,12 +20,23 @@ void main()
         vec2 offset = vec2(0,i);
         #endif
 
-        float ijDepth = B_SampleDepthOffset(offset);
-        if ( !B_BilateralEnabled || abs(depth - ijDepth) < DepthEpsilon )
+        bool takeIntoAccount = true;
+        float ijOcclusion = B_BlurKernel[j] * B_SampleColorOffset(offset).r;
+        if (B_BilateralEnabled)
         {
-            float blurKernel_i = B_BlurKernel[j];
-            meanOcclusion     += blurKernel_i * B_SampleColorOffset(offset).r;
-            totalKernelWeight += blurKernel_i;
+            float ijDepth = B_SampleDepthOffset(offset);
+            vec3 ijNormal = B_SampleNormalOffset(offset);
+            if (distance(depth, ijDepth) > DepthEpsilon ||
+                dot(normal, ijNormal) < 0.5f)
+            {
+                takeIntoAccount = false;
+            }
+        }
+
+        if (takeIntoAccount)
+        {
+            meanOcclusion     += ijOcclusion;
+            totalKernelWeight += B_BlurKernel[j];
         }
         j += 1;
     }

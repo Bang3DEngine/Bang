@@ -66,9 +66,9 @@ NAMESPACE_BANG_BEGIN
 
 Triangle operator*(const Matrix4 &m, const Triangle &t)
 {
-    return Triangle(m.TransformPoint(t[0]),
-                    m.TransformPoint(t[1]),
-                    m.TransformPoint(t[2]));
+    return Triangle(m.TransformedPoint(t[0]),
+                    m.TransformedPoint(t[1]),
+                    m.TransformedPoint(t[2]));
 }
 
 NAMESPACE_BANG_END

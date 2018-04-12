@@ -356,7 +356,7 @@ Vector3 Transform::GetScaleFromMatrix4(const Matrix4 &tm)
 
 Vector3 Transform::GetForward() const
 {
-    return FromLocalToWorldVector(Vector3::Forward).Normalized();
+    return FromLocalToWorldDirection(Vector3::Forward).Normalized();
 }
 
 Vector3 Transform::GetBack() const
@@ -366,7 +366,7 @@ Vector3 Transform::GetBack() const
 
 Vector3 Transform::GetRight() const
 {
-    return  FromLocalToWorldVector(Vector3::Right).Normalized();
+    return  FromLocalToWorldDirection(Vector3::Right).Normalized();
 }
 
 Vector3 Transform::GetLeft() const
@@ -376,7 +376,7 @@ Vector3 Transform::GetLeft() const
 
 Vector3 Transform::GetUp() const
 {
-    return FromLocalToWorldVector(Vector3::Up).Normalized();
+    return FromLocalToWorldDirection(Vector3::Up).Normalized();
 }
 
 Vector3 Transform::GetDown() const

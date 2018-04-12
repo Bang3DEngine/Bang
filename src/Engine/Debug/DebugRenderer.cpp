@@ -67,40 +67,26 @@ void DebugRenderer::RenderAABox(const AABox &aaBox,
                                 const Color &color,
                                 float time,
                                 float thickness,
-                                bool depthTest)
+                                bool culling,
+                                bool wireframe,
+                                bool depthTest,
+                                const Color &bordersColor)
 {
     const Vector3 ctr = aaBox.GetCenter();
     const Vector3 ext = aaBox.GetExtents();
 
-    // Floor
-    RenderLine(ctr + ext * Vector3(-1,-1,-1), ctr + ext * Vector3(-1,-1,1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(-1,-1,1), ctr + ext * Vector3(1,-1,1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,-1,1), ctr + ext * Vector3(1,-1,-1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,-1,-1), ctr + ext * Vector3(-1,-1,-1),
-               color, time, thickness, depthTest);
-
-    // Top
-    RenderLine(ctr + ext * Vector3(-1,1,-1), ctr + ext * Vector3(-1,1,1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(-1,1,1), ctr + ext * Vector3(1,1,1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,1,1), ctr + ext * Vector3(1,1,-1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,1,-1), ctr + ext * Vector3(-1,1,-1),
-               color, time, thickness, depthTest);
-
-    // Columns (?) xd
-    RenderLine(ctr + ext * Vector3(-1,-1,-1), ctr + ext * Vector3(-1,1,-1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(-1,-1,1), ctr + ext * Vector3(-1,1,1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,-1,-1), ctr + ext * Vector3(1,1,-1),
-               color, time, thickness, depthTest);
-    RenderLine(ctr + ext * Vector3(1,-1,1), ctr + ext * Vector3(1,1,1),
-               color, time, thickness, depthTest);
+    DebugRenderer::RenderQuad(aaBox.GetLeftQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetRightQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetTopQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetBotQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetBackQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetFrontQuad(), color, time,
+                              wireframe, culling, depthTest, bordersColor);
 }
 
 void DebugRenderer::RenderTriangle(const Triangle &triangle,
@@ -120,11 +106,20 @@ void DebugRenderer::RenderQuad(const Quad &quad,
                                float time,
                                bool wireframe,
                                bool culling,
-                               bool depthTest)
+                               bool depthTest,
+                               const Color &bordersColor)
 {
     CreateDebugRenderPrimitive(DebugRendererPrimitiveType::Quad,
                                {quad[0], quad[1], quad[2], quad[3]},
                                color, time, -1.0f, wireframe, culling, depthTest);
+
+    if (bordersColor != Color::Zero)
+    {
+        RenderLine(quad[0], quad[1], bordersColor, time, 1.0f, depthTest);
+        RenderLine(quad[1], quad[2], bordersColor, time, 1.0f, depthTest);
+        RenderLine(quad[2], quad[3], bordersColor, time, 1.0f, depthTest);
+        RenderLine(quad[3], quad[0], bordersColor, time, 1.0f, depthTest);
+    }
 }
 
 void DebugRenderer::RenderAARectNDC(const AARect &rectNDC, const Color &color,

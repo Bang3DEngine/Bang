@@ -20,6 +20,9 @@ public:
     Set();
     Set(const std::set<Key> &s);
 
+    template<class OtherIterator>
+    Set(OtherIterator itBegin, OtherIterator itEnd);
+
     void Add(const Key &key);
 
     template<class OtherIterator>

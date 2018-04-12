@@ -2,6 +2,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/Scene.h"
+#include "Bang/Shader.h"
 #include "Bang/AARect.h"
 #include "Bang/Camera.h"
 #include "Bang/GEngine.h"
@@ -188,10 +189,19 @@ void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
         m_randomHemisphereOffsets.Clear();
         for (int i = 0; i < GetNumRandomSamples(); ++i)
         {
-            int j = (i > GetNumRandomSamples()/2) ? 1 : 0;
             Vector3 randV = Vector3::Zero;
-            randV[j] = Random::GetRange(-1.0f, 1.0f);
-            randV.z  = Random::GetRange( 0.2f, 1.0f);
+            if (GetSeparable())
+            {
+                int j = (i > GetNumRandomSamples()/2) ? 1 : 0;
+                randV[j] = Random::GetRange(-1.0f, 1.0f);
+                randV.z  = Random::GetRange( 0.2f, 1.0f);
+            }
+            else
+            {
+                randV.x = Random::GetRange(-1.0f, 1.0f);
+                randV.y = Random::GetRange(-1.0f, 1.0f);
+                randV.z = Random::GetRange( 0.2f, 1.0f);
+            }
             randV = randV.NormalizedSafe();
 
             // Scale exponentially close to zero, so that there are more closer
@@ -214,6 +224,19 @@ void PostProcessEffectSSAO::SetNumRandomAxes(int numAxes)
     }
 }
 
+void PostProcessEffectSSAO::SetSeparable(bool separable)
+{
+    if (separable != GetSeparable())
+    {
+        m_separable = separable;
+
+        // Recalculate
+        int numRandomSamples = GetNumRandomSamples();
+        SetNumRandomSamples(0);
+        SetNumRandomSamples(numRandomSamples);
+    }
+}
+
 void PostProcessEffectSSAO::SetBilateralBlurEnabled(bool bilateralBlurEnabled)
 {
     m_bilateralBlurEnabled = bilateralBlurEnabled;
@@ -223,6 +246,11 @@ void PostProcessEffectSSAO::SetFBSize(const Vector2 &fbSize)
 {
     m_fbSize = fbSize;
     m_ssaoFB->Resize(GetFBSize().x, GetFBSize().y);
+}
+
+bool PostProcessEffectSSAO::GetSeparable() const
+{
+    return m_separable;
 }
 
 int PostProcessEffectSSAO::GetBlurRadius() const
@@ -263,6 +291,16 @@ const Vector2 &PostProcessEffectSSAO::GetFBSize() const
 Texture2D* PostProcessEffectSSAO::GetSSAOTexture() const
 {
     return m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0);
+}
+
+void PostProcessEffectSSAO::ReloadShaders()
+{
+    Resources::Import(p_ssaoShaderProgram.Get()->GetVertexShader());
+    Resources::Import(p_ssaoShaderProgram.Get()->GetFragmentShader());
+    Resources::Import(p_blurXShaderProgram.Get()->GetVertexShader());
+    Resources::Import(p_blurXShaderProgram.Get()->GetFragmentShader());
+    Resources::Import(p_blurYShaderProgram.Get()->GetVertexShader());
+    Resources::Import(p_blurYShaderProgram.Get()->GetFragmentShader());
 }
 
 void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)

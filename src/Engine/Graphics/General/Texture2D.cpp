@@ -9,6 +9,10 @@ USING_NAMESPACE_BANG
 Texture2D::Texture2D() : Texture(GL::TextureTarget::Texture2D)
 {
     CreateEmpty(1,1);
+
+    SetFilterMode(GL::FilterMode::Bilinear);
+    SetWrapMode(GL::WrapMode::ClampToEdge);
+    SetFormat( GetFormat() );
 }
 
 Texture2D::~Texture2D()
@@ -29,8 +33,7 @@ void Texture2D::Resize(int width, int height)
     }
 }
 
-void Texture2D::Fill(const Color &fillColor,
-                     int width, int height)
+void Texture2D::Fill(const Color &fillColor, int width, int height)
 {
     Array<Color> inputData = Array<Color>(width * height, fillColor);
     Fill( RCAST<const Byte*>(inputData.Data()), width, height,
@@ -45,7 +48,8 @@ void Texture2D::Fill(const Byte *newData,
     SetWidth(width);
     SetHeight(height);
 
-    GLId prevBoundId = GL::GetBoundId(GL::BindTarget::Texture2D);
+    GLId prevBoundId = GL::GetBoundId( GetGLBindTarget() ); // Save state
+
     Bind();
     GL::TexImage2D(GetTextureTarget(),
                    GetWidth(),
@@ -55,20 +59,11 @@ void Texture2D::Fill(const Byte *newData,
                    inputDataType,
                    newData);
 
-    if (newData && GetWidth() > 0 && GetHeight() > 0)
-    {
-        GL::GenerateMipMap(GL::TextureTarget::Texture2D);
-    }
+    // if (newData && GetWidth() > 0 && GetHeight() > 0) { GenerateMipMaps(); }
 
-    GL::Bind(GL::BindTarget::Texture2D, prevBoundId);
+    GL::Bind(GetGLBindTarget(), prevBoundId); // Restore
 
     PropagateTextureChanged();
-}
-
-void Texture2D::GenerateMipMaps() const
-{
-    ASSERT(GL::IsBound(this));
-    GL::GenerateMipMap( GetTextureTarget() );
 }
 
 void Texture2D::SetAlphaCutoff(float alphaCutoff)
@@ -162,5 +157,10 @@ void Texture2D::Import(const Image<Byte> &image)
              GL::ColorComp::RGBA,
              GL::DataType::UnsignedByte);
     }
+}
+
+GL::BindTarget Texture2D::GetGLBindTarget() const
+{
+    return GL::BindTarget::Texture2D;
 }
 

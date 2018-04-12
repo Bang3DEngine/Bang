@@ -12,6 +12,7 @@ class MeshFactory
 public:
     static RH<Mesh> GetPlane();
     static RH<Mesh> GetUIPlane();
+    static RH<Mesh> GetUIPlaneInvUVY();
     static RH<Mesh> GetUIPlane3x3();
     static RH<Mesh> GetCube();
     static RH<Mesh> GetSphere();

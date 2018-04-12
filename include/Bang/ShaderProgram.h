@@ -17,6 +17,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Shader;
 FORWARD class Texture2D;
+FORWARD class TextureCubeMap;
 
 class ShaderProgram : public GLObject,
                       public Resource,
@@ -46,6 +47,7 @@ public:
     bool Set(const String &name, const Matrix3& v, bool warn = true);
     bool Set(const String &name, const Matrix4& v, bool warn = true);
     bool Set(const String &name, Texture2D *texture, bool warn = true);
+    bool Set(const String &name, TextureCubeMap *textureCubeMap, bool warn = true);
     bool Set(const String &name, const Array<int>& v, bool warn = true);
     bool Set(const String &name, const Array<bool>& v, bool warn = true);
     bool Set(const String &name, const Array<float>& v, bool warn = true);
@@ -84,7 +86,7 @@ private:
     std::unordered_map<String, Matrix4> m_uniformCacheMatrix4;
 
     mutable std::unordered_map<String, GLuint> m_nameToLocationCache;
-    mutable std::unordered_map<String, Texture2D*> m_namesToTexture;
+    mutable std::unordered_map<String, Texture*> m_namesToTexture;
 
     ShaderProgram();
     ShaderProgram(Shader *vShader, Shader *fShader);
@@ -92,7 +94,8 @@ private:
                   const Path& fShaderPath);
     virtual ~ShaderProgram();
 
-    bool BindTextureToAvailableUnit(const String &texName, Texture2D *texture) const;
+    bool BindTextureToAvailableUnit(const String &texName, Texture *texture) const;
+    bool SetTexture(const String &name, Texture *texture, bool warn);
     void UpdateTextureBindings() const;
 
     // IResourceListener

@@ -100,6 +100,7 @@ public:
     {
         None               = 0,
         Texture2D          = GL_TEXTURE_2D,
+        TextureCubeMap     = GL_TEXTURE_CUBE_MAP,
         ShaderProgram      = GL_SHADER,
         Framebuffer        = GL_FRAMEBUFFER,
         DrawFramebuffer    = GL_DRAW_FRAMEBUFFER,
@@ -169,9 +170,31 @@ public:
         Texture1D = GL_TEXTURE_1D,
         Texture2D = GL_TEXTURE_2D,
         Texture3D = GL_TEXTURE_3D,
-        TextureCubeMap = GL_TEXTURE_CUBE_MAP
+        TextureCubeMap = GL_TEXTURE_CUBE_MAP,
+        TextureCubeMap_PositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        TextureCubeMap_NegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        TextureCubeMap_PositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        TextureCubeMap_NegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        TextureCubeMap_PositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        TextureCubeMap_NegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
 
+
+    enum class CubeMapDir
+    {
+        PositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        Right     = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        NegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        Left      = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        PositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        Top       = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        NegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        Bot       = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        PositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        Back      = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        NegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        Front     = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+    };
     enum class FramebufferTarget
     {
         Draw = GL_DRAW_FRAMEBUFFER,
@@ -657,7 +680,8 @@ private:
     GLId m_boundVAOId               = 0;
     GLId m_boundVBOArrayBufferId    = 0;
     GLId m_boundVBOElementsBufferId = 0;
-    GLId m_boundTextureId           = 0;
+    GLId m_boundTexture2DId         = 0;
+    GLId m_boundTextureCubeMapId    = 0;
     GLId m_boundDrawFramebufferId   = 0;
     GLId m_boundReadFramebufferId   = 0;
     GLId m_boundShaderProgramId     = 0;

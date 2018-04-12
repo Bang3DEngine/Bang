@@ -8,8 +8,10 @@ NAMESPACE_BANG_BEGIN
 
 String Extensions::GetSceneExtension() { return "bscene"; }
 String Extensions::GetPrefabExtension() { return "bprefab"; }
+
 String Extensions::GetProjectExtension() { return "bproject"; }
 String Extensions::GetMaterialExtension() { return "bmat"; }
+String Extensions::GetTextureCubeMapExtension() { return "texcm"; }
 String Extensions::GetShaderProgramExtension() { return "bshaderprogram"; }
 
 Array<String> Extensions::GetTTFExtensions()

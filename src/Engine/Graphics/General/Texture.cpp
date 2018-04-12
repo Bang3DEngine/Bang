@@ -7,9 +7,6 @@ USING_NAMESPACE_BANG
 Texture::Texture()
 {
     GL::GenTextures(1, &m_idGL);
-    SetFilterMode(GL::FilterMode::Bilinear);
-    SetWrapMode(GL::WrapMode::ClampToEdge);
-    SetFormat(m_glFormat);
 }
 
 Texture::~Texture()
@@ -29,6 +26,12 @@ Texture::Texture(const Texture &t) : GLObject(t)
     m_wrapMode = t.m_wrapMode;
     m_glFormat = t.m_glFormat;
     m_target = t.m_target;
+}
+
+void Texture::GenerateMipMaps() const
+{
+    ASSERT( GL::IsBound(this) );
+    GL::GenerateMipMap( GetTextureTarget() );
 }
 
 void Texture::SetFormat(GL::ColorFormat internalFormat)
@@ -147,11 +150,6 @@ void Texture::SetHeight(int height)
         m_size.y = height;
         PropagateTextureChanged();
     }
-}
-
-GL::BindTarget Texture::GetGLBindTarget() const
-{
-    return GL::BindTarget::Texture2D;
 }
 
 void Texture::PropagateTextureChanged()

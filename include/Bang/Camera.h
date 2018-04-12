@@ -6,6 +6,8 @@
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
 #include "Bang/Component.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/TextureCubeMap.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -50,6 +52,7 @@ public:
     void SetViewportRect(const AARect &viewportRectNDC);
     void AddRenderPass(RenderPass renderPass);
     void RemoveRenderPass(RenderPass renderPass);
+    void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM);
     void SetRenderSelectionBuffer(bool renderSelectionBuffer);
 
     const Color& GetClearColor() const;
@@ -69,6 +72,7 @@ public:
     AARect GetViewportRectNDCInWindow() const;
     const AARect& GetViewportRectNDC() const;
     GBuffer *GetGBuffer() const;
+    TextureCubeMap *GetSkyBoxTexture() const;
     SelectionFramebuffer *GetSelectionFramebuffer() const;
 
     Quad GetNearQuad()  const;
@@ -100,6 +104,7 @@ private:
 
     Set<RenderPass> m_renderPassMask;
     bool m_renderSelectionBuffer = false;
+    RH<TextureCubeMap> p_skyboxTextureCM = nullptr;
 
     Color m_clearColor = Color(Color(0.3f), 1);
     float m_orthoHeight  = 25.0f;

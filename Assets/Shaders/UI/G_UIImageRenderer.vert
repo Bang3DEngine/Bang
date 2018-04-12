@@ -2,8 +2,9 @@
 #define BANG_G
 #include "Common.glsl"
 
-const int MODE_TEXTURE = 0;
-const int MODE_SLICE_9 = 1;
+const int MODE_TEXTURE         = 0;
+const int MODE_TEXTURE_INV_UVY = 1;
+const int MODE_SLICE_9         = 2;
 
 uniform int B_ImageMode;
 uniform vec2 B_Slice9BorderStrokePx;
@@ -24,8 +25,8 @@ void main()
     vec3 localPos = B_VIn_Position;
     switch (B_ImageMode)
     {
-        case MODE_TEXTURE:
-        break;
+        case MODE_TEXTURE: break;
+        case MODE_TEXTURE_INV_UVY: break; // Uvs being changed by mesh in CPU now
 
         case MODE_SLICE_9:
         {

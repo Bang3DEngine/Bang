@@ -17,7 +17,8 @@ public:
     enum class Mode
     {
         TEXTURE = 0,
-        SLICE_9 = 1
+        TEXTURE_INV_UVY = 1,
+        SLICE_9 = 2
     };
 
     UIImageRenderer();

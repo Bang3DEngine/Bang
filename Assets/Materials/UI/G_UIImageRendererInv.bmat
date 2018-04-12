@@ -1,8 +1,0 @@
-<Material DiffuseColor="(1, 1, 1, 1)"
-          ReceivesLighting="false"
-          RenderPass="2"
-          UvMultiply="(1,-1)"
-          VertexShader="1522697072736624898 4115801876253900801 0"
-          FragmentShader="1510301744096732801 0"
-         >
-</Material>

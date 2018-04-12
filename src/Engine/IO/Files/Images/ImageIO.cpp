@@ -15,6 +15,7 @@
 #include "Bang/Image.h"
 #include "Bang/Paths.h"
 #include "Bang/Texture2D.h"
+#include "Bang/ImageIOTGA.h"
 #include "Bang/ImageIODDS.h"
 
 USING_NAMESPACE_BANG
@@ -485,107 +486,40 @@ void ImageIO::ExportTGA(const Path &filepath, const Imageb &img)
 
 void ImageIO::ImportTGA(const Path &filepath, Imageb *img, bool *ok)
 {
-    struct TGAFile
+    FILE *file = fopen(filepath.GetAbsolute().ToCString(), "rb");
+    if(file)
     {
-        unsigned char imageTypeCode;
-        short int imageWidth;
-        short int imageHeight;
-        unsigned char bitCount;
-        unsigned char *imageData;
-    };
+        int size;
+        fseek(file, 0, SEEK_END);
+        size = ftell(file);
+        fseek(file, 0, SEEK_SET);
 
-    TGAFile tgaFile;
+        unsigned char *buffer = (unsigned char *)tgaMalloc(size);
+        fread(buffer, 1, size, file);
 
-    // Open the TGA file.
-    FILE *filePtr = fopen(filepath.GetAbsolute().ToCString(), "rb");
-    if (!filePtr)
-    {
-        *ok = false;
-        return;
-    }
+        int *pixels = tgaRead(buffer, &TGA_READER_ARGB);
+        int width   = tgaGetWidth(buffer);
+        int height  = tgaGetHeight(buffer);
 
-    // Read the two first bytes we don't need.
-    short int ucharBad;
-    size_t readBytes = fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-    readBytes = fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-
-    // Which type of image gets stored in imageTypeCode.
-    readBytes = fread(&tgaFile.imageTypeCode, sizeof(unsigned char), 1, filePtr);
-    (void)(readBytes);
-
-    // For our purposes, the type code should be 2 (uncompressed RGB image)
-    // or 3 (uncompressed black-and-white images).
-    if (tgaFile.imageTypeCode != 2 && tgaFile.imageTypeCode != 3)
-    {
-        fclose(filePtr);
-        *ok = false;
-        return;
-    }
-
-    // Read 13 bytes of data we don't need.
-    short int sintBad;
-
-    size_t freadn;
-    freadn = fread(&sintBad,      sizeof(short int), 1, filePtr);
-    freadn = fread(&sintBad,      sizeof(short int), 1, filePtr);
-    freadn = fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-    freadn = fread(&sintBad,      sizeof(short int), 1, filePtr);
-    freadn = fread(&sintBad,      sizeof(short int), 1, filePtr);
-
-    // Read the image's width and height.
-    freadn = fread(&tgaFile.imageWidth, sizeof(short int), 1, filePtr);
-    freadn = fread(&tgaFile.imageHeight, sizeof(short int), 1, filePtr);
-
-    // Read the bit depth.
-    freadn = fread(&tgaFile.bitCount, sizeof(unsigned char), 1, filePtr);
-
-    // Read one byte of data we don't need.
-    freadn = fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-
-    // Color mode -> 3 = BGR, 4 = BGRA.
-    int compsPerPixel = tgaFile.bitCount / 8;
-    long imageSize = tgaFile.imageWidth * tgaFile.imageHeight;
-    long imageTotalComps = imageSize * compsPerPixel;
-
-    // Allocate memory for the image data.
-    tgaFile.imageData = (unsigned char*) malloc(sizeof(unsigned char) * imageTotalComps);
-
-    // Read the image data.
-    freadn = fread(tgaFile.imageData, sizeof(unsigned char), imageTotalComps, filePtr);
-
-    // Change from BGR to RGB so OpenGL can read the image data.
-    if (compsPerPixel == 3 || compsPerPixel == 4)
-    {
-        for (int imageIdx = 0; imageIdx < imageTotalComps; imageIdx += compsPerPixel)
+        img->Create(width, height);
+        for (int y = 0; y < height; ++y)
         {
-            unsigned char colorSwap = tgaFile.imageData[imageIdx];
-            tgaFile.imageData[imageIdx] = tgaFile.imageData[imageIdx + 2];
-            tgaFile.imageData[imageIdx + 2] = colorSwap;
-        }
-    }
+            for (int x = 0; x < width; ++x)
+            {
+                const unsigned int coord = (y * width + x);
+                Color c =
+                   Color(pixels[coord + 1] >> TGA_READER_ARGB.redShift,
+                         pixels[coord + 2] >> TGA_READER_ARGB.greenShift,
+                         pixels[coord + 3] >> TGA_READER_ARGB.blueShift,
+                         pixels[coord + 0] >> TGA_READER_ARGB.alphaShift );
+                c /= 255.0f;
 
-    img->Create(tgaFile.imageWidth, tgaFile.imageHeight);
-    for (int pixel_i = 0; pixel_i < imageSize; ++pixel_i)
-    {
-        unsigned char r = tgaFile.imageData[pixel_i * compsPerPixel + 0];
-        unsigned char g = compsPerPixel > 2 ?
-                            tgaFile.imageData[pixel_i * compsPerPixel + 1] : r;
-        unsigned char b = compsPerPixel > 2 ?
-                            tgaFile.imageData[pixel_i * compsPerPixel + 2] : r;
-        unsigned char a = compsPerPixel > 3 ?
-                            tgaFile.imageData[pixel_i * compsPerPixel + 3] : 255;
-        if (compsPerPixel >= 4)
-        {
-            a = tgaFile.imageData[pixel_i * compsPerPixel + 3];
+                img->SetPixel(x, y, c);
+            }
         }
 
-        int x = (pixel_i % tgaFile.imageWidth);
-        int y = (pixel_i / tgaFile.imageWidth);
-        Color color (r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
-        img->SetPixel(x, y, color);
+        *ok = true;
+        fclose(file);
     }
-
-    fclose(filePtr);
-
-    (void)(freadn);
+    else { *ok = false; }
 }

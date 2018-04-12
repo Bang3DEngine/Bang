@@ -13,6 +13,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/TextureCubeMap.h"
 #include "Bang/TextureUnitManager.h"
 
 USING_NAMESPACE_BANG
@@ -238,7 +239,7 @@ bool ShaderProgram::Set(const String &name, const Array<Matrix4> &v, bool warn)
 }
 
 
-bool ShaderProgram::Set(const String &name, Texture2D *texture, bool warn)
+bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
     bool needToAddTextureToMap = true;
 
@@ -248,18 +249,28 @@ bool ShaderProgram::Set(const String &name, Texture2D *texture, bool warn)
         if (texture != it->second)
         {
             needToAddTextureToMap = true;
-            Texture2D *tex = it->second;
-            if (tex) { tex->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
+            Texture *tex = it->second;
+            Asset *asset = DCAST<Asset*>(tex);
+            if (asset) { asset->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
         }
     }
 
     if (needToAddTextureToMap)
     {
         m_namesToTexture[name] = texture;
-        if (texture) { texture->EventEmitter<IDestroyListener>::RegisterListener(this); }
+        Asset *asset = DCAST<Asset*>(texture);
+        if (asset) { asset->EventEmitter<IDestroyListener>::RegisterListener(this); }
         if (GL::IsBound(this)) { BindTextureToAvailableUnit(name, texture); }
     }
     return true;
+}
+bool ShaderProgram::Set(const String &name, Texture2D *texture, bool warn)
+{
+    return SetTexture(name, texture, warn);
+}
+bool ShaderProgram::Set(const String &name, TextureCubeMap *textureCubeMap, bool warn)
+{
+    return SetTexture(name, textureCubeMap, warn);
 }
 
 bool ShaderProgram::SetVertexShader(Shader* vertexShader)
@@ -328,7 +339,7 @@ void ShaderProgram::Import(const Path &)
 }
 
 bool ShaderProgram::BindTextureToAvailableUnit(const String &texName,
-                                               Texture2D *texture) const
+                                               Texture *texture) const
 {
     int location = -1;
     if (texture)
@@ -360,10 +371,10 @@ void ShaderProgram::UnBind() const
 
 void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
-    Texture2D *destroyedTex = DCAST<Texture2D*>( object );
+    Texture *destroyedTex = DCAST<Texture2D*>( object );
     for (auto it = m_namesToTexture.begin(); it != m_namesToTexture.end(); )
     {
-        Texture2D *tex = it->second;
+        Texture *tex = it->second;
         if (tex == destroyedTex)
         {
             it = m_namesToTexture.erase(it);

@@ -21,6 +21,7 @@
 #include "Bang/MeshFactory.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/TextureCubeMap.h"
 #include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
@@ -44,10 +45,8 @@ Camera::~Camera()
 
 void Camera::Bind() const
 {
-    GLUniforms::SetCameraUniforms(GetZNear(), GetZFar());
     GLUniforms::SetViewMatrix( GetViewMatrix() );
     GLUniforms::SetProjectionMatrix( GetProjectionMatrix() );
-
     BindViewportForRendering();
 }
 
@@ -73,11 +72,7 @@ void Camera::BindGBuffer()
 {
     Vector2i vpSize = GL::GetViewportSize();
     GetGBuffer()->Resize(vpSize.x, vpSize.y);
-
     GetGBuffer()->Bind();
-    Color bgColor = GetClearColor();
-    GetGBuffer()->ClearBuffersAndBackground(bgColor);
-    GetGBuffer()->SetAllDrawBuffers();
 }
 
 void Camera::BindSelectionFramebuffer()
@@ -192,6 +187,11 @@ void Camera::RemoveRenderPass(RenderPass renderPass)
     m_renderPassMask.Remove(renderPass);
 }
 
+void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
+{
+    p_skyboxTextureCM.Set(skyBoxTextureCM);
+}
+
 void Camera::SetRenderSelectionBuffer(bool renderSelectionBuffer)
 {
     m_renderSelectionBuffer = renderSelectionBuffer;
@@ -232,6 +232,11 @@ const AARect& Camera::GetViewportRectNDC() const
 GBuffer *Camera::GetGBuffer() const
 {
     return m_gbuffer;
+}
+
+TextureCubeMap *Camera::GetSkyBoxTexture() const
+{
+    return p_skyboxTextureCM.Get();
 }
 
 SelectionFramebuffer *Camera::GetSelectionFramebuffer() const
@@ -375,29 +380,34 @@ void Camera::CloneInto(ICloneable *clone) const
     cam->SetFovDegrees(GetFovDegrees());
     cam->SetOrthoHeight(GetOrthoHeight());
     cam->SetProjectionMode(GetProjectionMode());
+    cam->SetSkyBoxTexture(GetSkyBoxTexture());
 }
 
-void Camera::ImportXML(const XMLNode &xmlInfo)
+void Camera::ImportXML(const XMLNode &xml)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportXML(xml);
 
-    if (xmlInfo.Contains("ClearColor"))
-    { SetClearColor(xmlInfo.Get<Color>("ClearColor")); }
+    if (xml.Contains("ClearColor"))
+    { SetClearColor(xml.Get<Color>("ClearColor")); }
 
-    if (xmlInfo.Contains("FOVDegrees"))
-    { SetFovDegrees(xmlInfo.Get<float>("FOVDegrees")); }
+    if (xml.Contains("FOVDegrees"))
+    { SetFovDegrees(xml.Get<float>("FOVDegrees")); }
 
-    if (xmlInfo.Contains("ZNear"))
-    { SetZNear(xmlInfo.Get<float>("ZNear")); }
+    if (xml.Contains("ZNear"))
+    { SetZNear(xml.Get<float>("ZNear")); }
 
-    if (xmlInfo.Contains("ZFar"))
-    { SetZFar(xmlInfo.Get<float>("ZFar")); }
+    if (xml.Contains("ZFar"))
+    { SetZFar(xml.Get<float>("ZFar")); }
 
-    if (xmlInfo.Contains("ProjectionMode"))
-    { SetProjectionMode( xmlInfo.Get<ProjectionMode>("ProjectionMode") ); }
+    if (xml.Contains("ProjectionMode"))
+    { SetProjectionMode( xml.Get<ProjectionMode>("ProjectionMode") ); }
 
-    if (xmlInfo.Contains("OrthoHeight"))
-    { SetOrthoHeight( xmlInfo.Get<float>("OrthoHeight") ); }
+    if (xml.Contains("OrthoHeight"))
+    { SetOrthoHeight( xml.Get<float>("OrthoHeight") ); }
+
+    if (xml.Contains("SkyBoxTexture"))
+    { SetSkyBoxTexture(
+       Resources::Load<TextureCubeMap>( xml.Get<GUID>("SkyBoxTexture") ).Get()); }
 }
 
 void Camera::ExportXML(XMLNode *xmlInfo) const
@@ -410,4 +420,6 @@ void Camera::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("ProjectionMode", GetProjectionMode());
     xmlInfo->Set("OrthoHeight", GetOrthoHeight());
     xmlInfo->Set("FOVDegrees", GetFovDegrees());
+    xmlInfo->Set("SkyBoxTexture", (GetSkyBoxTexture() ?
+                                       GetSkyBoxTexture()->GetGUID() : GUID::Empty()) );
 }

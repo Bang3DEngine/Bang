@@ -52,6 +52,7 @@ public:
 
 private:
     GL *m_gl = nullptr;
+    RH<ShaderProgram> m_renderSky;
     Camera *p_currentRenderingCamera = nullptr;
     TextureUnitManager *m_texUnitManager = nullptr;
 

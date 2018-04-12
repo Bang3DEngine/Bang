@@ -114,7 +114,6 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *checkImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkImg = checkImgGo->AddComponent<UIImageRenderer>();
-    checkImg->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     checkImg->SetImageTexture( IconManager::GetCheckIcon().Get() );
     checkImg->SetTint(Color::Black);
 

@@ -36,7 +36,7 @@ public:
 protected:
     Framebuffer *m_shadowMapFramebuffer = nullptr;
     Matrix4 m_lastUsedShadowMapViewProj = Matrix4::Identity;
-    float m_shadowDistance = 5.0f;
+    float m_shadowDistance = 100.0f;
 
     DirectionalLight();
     virtual ~DirectionalLight();

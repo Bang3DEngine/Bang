@@ -17,11 +17,6 @@ GLUniforms::MatrixUniforms *GLUniforms::GetMatrixUniforms()
     return &GLUniforms::GetActive()->m_matrixUniforms;
 }
 
-GLUniforms::CameraUniforms *GLUniforms::GetCameraUniforms()
-{
-    return &GLUniforms::GetActive()->m_cameraUniforms;
-}
-
 Matrix4 GLUniforms::GetCanvasProjectionMatrix()
 {
     const Vector2i vpSize = Vector2i::Max(GL::GetViewportSize(), Vector2i::One);
@@ -35,30 +30,31 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
     sp->Set("B_Model",          matrices->model,    false);
-    sp->Set("B_ModelInv",       matrices->modelInv,    false);
+    sp->Set("B_ModelInv",       matrices->modelInv, false);
     sp->Set("B_Normal",         matrices->normal,   false);
     sp->Set("B_View",           matrices->view,     false);
+    sp->Set("B_ViewInv",        matrices->viewInv,  false);
     sp->Set("B_Projection",     matrices->proj,     false);
     sp->Set("B_ProjectionView", matrices->projView, false);
     sp->Set("B_PVM",            matrices->pvm,      false);
-    sp->Set("B_PVMInv",         matrices->pvmInv,      false);
+    sp->Set("B_PVMInv",         matrices->pvmInv,   false);
 
     sp->Set("B_AmbientLight", Settings::GetAmbientLight(), false);
 
     Camera *cam = Camera::GetActive();
-    sp->Set("B_Camera_ZNear", (cam ? cam->GetZNear() : 0.0f), false);
-    sp->Set("B_Camera_ZFar",  (cam ?  cam->GetZFar() : 0.0f), false);
+    sp->Set("B_Camera_ZNear",  (cam ? cam->GetZNear() : 0.0f), false);
+    sp->Set("B_Camera_ZFar",   (cam ?  cam->GetZFar() : 0.0f), false);
+    sp->Set("B_Camera_ClearColor", (cam ? cam->GetClearColor() : Color::Pink), false);
+    TextureCubeMap *skt = cam ? cam->GetSkyBoxTexture() : nullptr;
+    sp->Set("B_Camera_Has_SkyBox", (skt != nullptr), false);
+    if (skt && skt->GetWidth() > 0 && skt->GetHeight() > 0)
+    {
+        sp->Set("B_Camera_SkyBox", (cam ? cam->GetSkyBoxTexture() : nullptr), false);
+    }
 
     ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();
     sp->Set("B_Viewport_MinPos", viewportUniforms->minPos, false);
     sp->Set("B_Viewport_Size",   viewportUniforms->size,   false);
-}
-
-void GLUniforms::SetCameraUniforms(float zNear, float zFar)
-{
-    CameraUniforms *cameraUniforms = GLUniforms::GetCameraUniforms();
-    cameraUniforms->zNear = zNear;
-    cameraUniforms->zFar  = zFar;
 }
 
 void GLUniforms::SetModelMatrix(const Matrix4 &model)

@@ -18,7 +18,7 @@ USING_NAMESPACE_BANG
 UIImageRenderer::UIImageRenderer()
 {
     SetMaterial(MaterialFactory::GetUIImage().Get());
-    SetMode(Mode::TEXTURE);
+    SetMode(Mode::TEXTURE_INV_UVY);
 }
 
 UIImageRenderer::~UIImageRenderer()
@@ -81,6 +81,10 @@ void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
         {
             case Mode::TEXTURE:
             p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane() );
+            break;
+
+            case Mode::TEXTURE_INV_UVY:
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlaneInvUVY() );
             break;
 
             case Mode::SLICE_9:

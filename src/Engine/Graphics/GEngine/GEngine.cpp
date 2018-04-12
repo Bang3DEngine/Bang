@@ -25,6 +25,7 @@
 #include "Bang/UILayoutManager.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/TextureUnitManager.h"
+#include "Bang/ShaderProgramFactory.h"
 #include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
@@ -49,6 +50,9 @@ void GEngine::Init()
 
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
     p_renderTextureToViewportMaterial = MaterialFactory::GetRenderTextureToViewport();
+    m_renderSky.Set( ShaderProgramFactory::Get(
+                        ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+                        EPATH("Shaders/RenderSky.frag")) );
     GL::SetActive( nullptr );
 }
 
@@ -115,28 +119,38 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
     camera->BindGBuffer();
 
+    GBuffer *gbuffer = camera->GetGBuffer();
+    gbuffer->ClearAllBuffersExceptColor();
+
     // GBuffer Scene rendering
-    camera->GetGBuffer()->SetAllDrawBuffers();
+    gbuffer->SetAllDrawBuffers();
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Scene);
     ApplyStenciledDeferredLightsToGBuffer(go, camera);
-    camera->GetGBuffer()->SetColorDrawBuffer();
-    RenderWithPass(go, RenderPass::ScenePostProcess);
+    gbuffer->SetColorDrawBuffer();
+
+    // Render the sky
+    GLId prevBoundSP = GL::GetBoundId(m_renderSky.Get()->GetGLBindTarget());
+    m_renderSky.Get()->Bind();
+    gbuffer->ApplyPass(m_renderSky.Get(), false);
+    GL::Bind(m_renderSky.Get()->GetGLBindTarget(), prevBoundSP); // Restore
+
+    RenderWithPass(go, RenderPass::ScenePostProcess); // Render scene postprocess
 
     // GBuffer Canvas rendering
-    camera->GetGBuffer()->SetAllDrawBuffers();
+    gbuffer->SetAllDrawBuffers();
     GL::Enablei(GL::Test::Blend, 0);
     GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPass(go, RenderPass::Canvas);
-    camera->GetGBuffer()->SetColorDrawBuffer();
+    gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::CanvasPostProcess);
 
     // GBuffer Overlay rendering
-    camera->GetGBuffer()->SetAllDrawBuffers();
+    gbuffer->SetAllDrawBuffers();
     GL::ClearStencilBuffer();
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);

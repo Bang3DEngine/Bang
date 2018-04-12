@@ -144,7 +144,6 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     bg->SetTint(Color::White);
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
-    downArrowIcon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     downArrowIcon->SetImageTexture( IconManager::GetDownArrowIcon().Get() );
     downArrowIcon->SetTint( Color::Black );
 

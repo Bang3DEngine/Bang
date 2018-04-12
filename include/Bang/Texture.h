@@ -22,6 +22,7 @@ public:
 
     virtual void CreateEmpty(int width, int height) = 0;
     virtual void Resize(int width, int height) = 0;
+    void GenerateMipMaps() const;
 
     void SetFormat(GL::ColorFormat internalFormat);
     void SetTarget(GL::TextureTarget target);
@@ -40,7 +41,6 @@ public:
     uint GetBytesSize() const;
 
     GL::TextureTarget GetTextureTarget() const;
-    GL::BindTarget GetGLBindTarget() const override;
 
 protected:
     void SetWidth(int width);

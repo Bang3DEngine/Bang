@@ -1089,7 +1089,7 @@ void GL::DrawArrays(const VAO *vao, GL::Primitive primitivesMode,
 {
     vao->Bind();
     GL_CALL( glDrawArrays( GLCAST(primitivesMode), startIndex, elementsCount) );
-    vao->UnBind();
+    // vao->UnBind();
 }
 
 #include "Bang/Input.h"
@@ -1101,7 +1101,7 @@ void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
                              elementsCount,
                              GLCAST(GL::DataType::UnsignedInt),
                              RCAST<const void*>(startElementIndex)) );
-    vao->UnBind();
+    // vao->UnBind();
 }
 
 uint GL::GetLineWidth()
@@ -1132,8 +1132,12 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
     switch (bindTarget)
     {
         case GL::BindTarget::Texture2D:
-            if (gl) { gl->m_boundTextureId = glId; }
-            glBindTexture( GLCAST(GL::BindTarget::Texture2D), glId);
+            if (gl) { gl->m_boundTexture2DId = glId; }
+            glBindTexture( GLCAST(bindTarget), glId);
+        break;
+        case GL::BindTarget::TextureCubeMap:
+            if (gl) { gl->m_boundTextureCubeMapId = glId; }
+            glBindTexture( GLCAST(bindTarget), glId);
         break;
         case GL::BindTarget::ShaderProgram:
             if (GL::IsBound(bindTarget, glId)) { return; }
@@ -1146,20 +1150,17 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             {
                 gl->m_boundDrawFramebufferId = gl->m_boundReadFramebufferId = glId;
             }
-            GL_CALL( glBindFramebuffer( GLCAST(GL::BindTarget::Framebuffer),
-                                        glId) );
+            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
         case GL::BindTarget::DrawFramebuffer:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundDrawFramebufferId = glId; }
-            GL_CALL( glBindFramebuffer( GLCAST(GL::BindTarget::DrawFramebuffer),
-                                        glId) );
+            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
         case GL::BindTarget::ReadFramebuffer:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundReadFramebufferId = glId; }
-            GL_CALL( glBindFramebuffer( GLCAST(GL::BindTarget::ReadFramebuffer),
-                                        glId) );
+            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
         case GL::BindTarget::VAO:
             if (GL::IsBound(bindTarget, glId)) { return; }
@@ -1169,17 +1170,17 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
         case GL::BindTarget::ElementArrayBuffer:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundVBOElementsBufferId = glId; }
-            GL_CALL( GL::BindBuffer( GL::BindTarget::ElementArrayBuffer, glId) );
+            GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
         case GL::BindTarget::ArrayBuffer:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundVBOArrayBufferId = glId; }
-            GL_CALL( GL::BindBuffer(GL::BindTarget::ArrayBuffer, glId) );
+            GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
         case GL::BindTarget::UniformBuffer:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundUniformBufferId = glId; }
-            GL_CALL( GL::BindBuffer(GL::BindTarget::UniformBuffer, glId) );
+            GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
 
         default: ASSERT(false); break;
@@ -1506,7 +1507,9 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
     switch(bindTarget)
     {
         case GL::BindTarget::Texture2D:
-            return GL::GetActive()->m_boundTextureId;
+            return GL::GetActive()->m_boundTexture2DId;
+        case GL::BindTarget::TextureCubeMap:
+            return GL::GetActive()->m_boundTextureCubeMapId;
         case GL::BindTarget::Framebuffer:
             return ( GL::GetBoundId(GL::BindTarget::DrawFramebuffer) ==
                      GL::GetBoundId(GL::BindTarget::ReadFramebuffer) ) ?
@@ -1523,9 +1526,10 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
             return GL::GetActive()->m_boundVBOElementsBufferId;
         case GL::BindTarget::ShaderProgram:
             return GL::GetActive()->m_boundShaderProgramId;
-        default: return 0;
+        default: return -1;
     }
-    return 0;
+    ASSERT(false);
+    return -1;
 }
 
 bool GL::IsBound(GL::BindTarget bindTarget, GLId glId)

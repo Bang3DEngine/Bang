@@ -57,11 +57,6 @@ RH<Material> MaterialFactory::GetUIImage()
     return MaterialFactory::Load("Materials/UI/G_UIImageRenderer.bmat");
 }
 
-RH<Material> MaterialFactory::GetUIImageInvY()
-{
-    return MaterialFactory::Load("Materials/UI/G_UIImageRendererInv.bmat");
-}
-
 RH<Material> MaterialFactory::GetRenderTextureToViewport()
 {
     return MaterialFactory::Load("Materials/RenderTextureToViewport.bmat");

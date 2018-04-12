@@ -163,7 +163,6 @@ UIButton* UIButton::CreateInto(GameObject *go)
     label->SetFocusEnabled(false);
 
     UIImageRenderer *icon = GameObjectFactory::CreateUIImage();
-    icon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
 
     GameObject *iconGo = icon->GetGameObject();
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();

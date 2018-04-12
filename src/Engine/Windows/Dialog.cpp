@@ -503,7 +503,6 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();
     iconLE->SetMinSize( Vector2i(45) );
     UIImageRenderer *icon = iconGo->AddComponent<UIImageRenderer>();
-    icon->SetMaterial( MaterialFactory::GetUIImageInvY().Get() );
     icon->SetImageTexture( IconManager::GetWarningIcon().Get() );
     icon->GetImageTexture()->SetFilterMode( GL::FilterMode::Bilinear );
 

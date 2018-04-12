@@ -7,6 +7,7 @@
 #include "Bang/Vector2.h"
 #include "Bang/TypeMap.h"
 #include "Bang/UniformBuffer.h"
+#include "Bang/TextureCubeMap.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -27,12 +28,6 @@ public:
         Matrix4 projView;
         Matrix4 pvm;
         Matrix4 pvmInv;
-    };
-
-    struct CameraUniforms
-    {
-        float zNear;
-        float zFar;
     };
 
     struct ViewportUniforms
@@ -64,7 +59,6 @@ public:
 
     static void SetAllUniformsToShaderProgram(ShaderProgram *sp);
 
-    static void SetCameraUniforms(float zNear, float zFar);
     static void SetModelMatrix(const Matrix4 &model);
     static void SetViewMatrix(const Matrix4 &view);
     static void SetProjectionMatrix(const Matrix4 &projection);
@@ -82,7 +76,6 @@ public:
 private:
     ViewportUniforms m_viewportUniforms;
     MatrixUniforms m_matrixUniforms;
-    CameraUniforms m_cameraUniforms;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::Canvas;
 
     GLUniforms() = default;
@@ -92,7 +85,6 @@ private:
 
     static ViewportUniforms* GetViewportUniforms();
     static MatrixUniforms *GetMatrixUniforms();
-    static CameraUniforms *GetCameraUniforms();
     static Matrix4 GetCanvasProjectionMatrix();
 
     friend class GL;

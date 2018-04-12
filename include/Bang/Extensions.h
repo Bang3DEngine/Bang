@@ -13,6 +13,7 @@ public:
     static String GetProjectExtension();
     static String GetMaterialExtension();
     static String GetShaderProgramExtension();
+    static String GetTextureCubeMapExtension();
 
     static Array<String> GetTTFExtensions();
     static Array<String> GetImageExtensions();

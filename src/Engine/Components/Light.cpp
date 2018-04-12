@@ -110,7 +110,7 @@ void Light::ImportXML(const XMLNode &xmlInfo)
     { SetShadowType(xmlInfo.Get<ShadowType>("ShadowType")); }
 
     if (xmlInfo.Contains("ShadowMapSize"))
-    { SetShadowMapSize(xmlInfo.Get<Vector2>("ShadowMapSize")); }
+    { SetShadowMapSize(xmlInfo.Get<Vector2i>("ShadowMapSize")); }
 }
 
 void Light::ExportXML(XMLNode *xmlInfo) const

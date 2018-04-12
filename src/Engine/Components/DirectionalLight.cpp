@@ -129,6 +129,9 @@ Texture2D *DirectionalLight::GetShadowMapTexture() const
 void DirectionalLight::CloneInto(ICloneable *clone) const
 {
     Light::CloneInto(clone);
+
+    DirectionalLight *dl = SCAST<DirectionalLight*>(clone);
+    dl->SetShadowDistance( GetShadowDistance() );
 }
 
 void DirectionalLight::GetShadowMapMatrices(Scene *scene,
@@ -185,24 +188,6 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
         { camFrustumPointsWS.PushBack(p); }
     }
 
-    /*
-    AABox camFrustumAABox( camQuads.front().GetPoint(0) );
-    for (const Quad& camQuad : camQuads)
-    {
-        for (const Vector3 &points : camQuad.GetPoints())
-        {
-            camFrustumAABox.AddPoint(points);
-        }
-    }
-    const Array<Vector3> camFrustumBoxPoints = camFrustumAABox.GetPoints();
-
-    AABox pointsToBeInsideShadowMapAABox;
-    for (const Vector3 &pointToBeInsideShadowMap : pointsToBeInsideShadowMap)
-    {
-        pointsToBeInsideShadowMapAABox.AddPoint(pointToBeInsideShadowMap);
-    }
-    */
-
     // Get light space matrix
     const Matrix4 lightToWorld = GetLightToWorldMatrix();
     const Matrix4 worldToLight = lightToWorld.Inversed();
@@ -229,17 +214,12 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     // Now, intersect the very long top, bot, left and right shadow map ortho box with
     // the scene AABBox, so that we can determine the optimal near and far distances
     // for our shadow map ortho box! (so that all needed shadow casters are inside)
-    // Debug_Peek(lightToWorld);
     Quad extCamAABoxTopQuadWS   = lightToWorld * extCamAABoxLS.GetTopQuad();
     Quad extCamAABoxBotQuadWS   = lightToWorld * extCamAABoxLS.GetBotQuad();
     Quad extCamAABoxLeftQuadWS  = lightToWorld * extCamAABoxLS.GetLeftQuad();
     Quad extCamAABoxRightQuadWS = lightToWorld * extCamAABoxLS.GetRightQuad();
     Quad extCamAABoxFrontQuadWS = lightToWorld * extCamAABoxLS.GetFrontQuad();
     Quad extCamAABoxBackQuadWS  = lightToWorld * extCamAABoxLS.GetBackQuad();
-    // Debug_Peek(extCamAABoxLS.GetTopQuad());
-    // Debug_Peek(extCamAABoxTopQuadWS);
-    // Debug_Peek(Matrix4::ToQuaternion(lightToWorld).GetEulerAngles().ToDegrees());
-    // Debug_Log("=======================================");
 
     // Get scene AABBox and intersect with all extended quads!
     Array<Vector3> extCamAABoxSceneBoxIntersectionsWS =
@@ -250,94 +230,14 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
                                  sceneAABox.GetLeftQuad(),  sceneAABox.GetRightQuad(),
                                  sceneAABox.GetFrontQuad(), sceneAABox.GetBackQuad()});
 
-    // extCamAABoxSceneBoxIntersectionsWS.PushBack(
-    //      Geometry::IntersectQuadAABox(extCamAABoxTopQuadWS,   sceneAABox, false));
-    // extCamAABoxSceneBoxIntersectionsWS.PushBack(
-    //      Geometry::IntersectQuadAABox(extCamAABoxBotQuadWS,   sceneAABox, false));
-    // extCamAABoxSceneBoxIntersectionsWS.PushBack(
-    //      Geometry::IntersectQuadAABox(extCamAABoxLeftQuadWS,  sceneAABox, false));
-    // extCamAABoxSceneBoxIntersectionsWS.PushBack(
-    //      Geometry::IntersectQuadAABox(extCamAABoxRightQuadWS, sceneAABox, false));
-
     // Make an array of all the points we want to have inside our shadow map
     // First of all, we want to have the whole camera frustum inside of it
     // And then, we want to have all the shadow casters that affect us too
-    float time = 20.0f;
-    {
-        /*
-        bool intersected;
-        Vector2 intersPoint;
-        Ray2D testRay( Vector2(0,0), Vector2(1,0) );
-        Segment2D segment(Vector2(5,-5), Vector2(5,5));
-        Geometry::IntersectRay2DSegment2D(testRay, segment,
-                                          &intersected, &intersPoint);
-        Debug_Peek(intersected);
-        Debug_Peek(intersPoint);
-        Debug_Log("==============");
-        */
-    }
 
     /*
-    if (Input::GetKeyDown(Key::I))
-    {
-        int limits = 10;
-        auto GetRand = [limits](){ return (rand() % limits) - limits; };
-
-        Vector3 s0  = Vector3(10,  10, 10);
-        Vector3 s1  = Vector3(-10, -10, -10);
-        Triangle tri0 = Triangle(
-                    Vector3(-10, -11, 0),
-                    Vector3(-10,  11, 0),
-                    Vector3( 10,  11, 0)
-                                 );
-        Triangle tri1 = Triangle(
-                    Vector3(0, -10 + 5, -10),
-                    Vector3(0, -10 + 5,  10),
-                    Vector3(0,  10 + 5,  10)
-                                 );
-
-        Vector3 p0, p1;
-        int numIntersectionPoints;
-        Geometry::IntersectTriangleTriangle(tri0, tri1, &numIntersectionPoints, &p0, &p1);
-        Array<Vector3> intersectionPoints =
-                Geometry::IntersectPolygonPolygon(tri0.ToPolygon(), tri1.ToPolygon());
-        for (const Vector3 &ip : intersectionPoints)
-        {
-            DebugRenderer::RenderPoint(ip, Color::Red, time, 10.0f, false);
-        }
-        DebugRenderer::RenderTriangle(tri0, Color::Blue, time, false, false, true);
-        DebugRenderer::RenderTriangle(tri1, Color::DarkBlue, time, false, false, true);
-        // if (numIntersectionPoints >= 1) { DebugRenderer::RenderPoint(p0, Color::Red, time, 10.0f, false); }
-        // if (numIntersectionPoints >= 2) { DebugRenderer::RenderPoint(p1, Color::Red, time, 10.0f, false); }
-        Debug_Peek(numIntersectionPoints);
-        Debug_Peek(p0);
-        Debug_Peek(p1);
-        Debug_Log("==========");
-    }
-    */
-
-    if (Input::GetKeyDown(Key::I))
-    {
-        // Segment s1 = Segment(Vector3(0,0,2), Vector3(3,3,3));
-        // s1.SetOrigin(  s1.GetOrigin()  + Vector3(4,0,0) );
-        // s1.SetDestiny( s1.GetDestiny() + Vector3(4,0,0) );
-
-        Quad q0 = Quad(Vector3(0, 0 ,2), Vector3(2, 0, 2), Vector3(2, 5, 2), Vector3(0, 5, 2));
-        Quad q1 = Quad(Vector3(4, 3, 5), Vector3(4, -3, -5), Vector3(-4, -3, -5), Vector3(-4, 3, 5));
-        DebugRenderer::RenderQuad(q0,   Color::Blue, time, false, false, true, Color::Black);
-        // DebugRenderer::RenderLine(s1.GetOrigin(), s1.GetDestiny(), Color::Blue, time, 2.0f, true);
-        DebugRenderer::RenderQuad(q1,   Color::Green, time, false, false, true, Color::Black);
-        Array<Vector3> ints = Geometry::IntersectQuadQuad(q0, q1);
-        // Array<Vector3> ints = Geometry::IntersectSegmentPolygon(s1, q1.ToPolygon());
-        for (const Vector3 &p : ints)
-        {
-            DebugRenderer::RenderPoint(p, Color::Red, time, 20.0f, true);
-        }
-    }
-
+    float time = 20.0f;
     if (Input::GetKeyDown(Key::Q))
     {
-        Debug_Peek(extCamAABoxTopQuadWS);
         DebugRenderer::RenderQuad(extCamAABoxTopQuadWS,   Color::Blue, time, false, false, true, Color::Black);
         DebugRenderer::RenderQuad(extCamAABoxBotQuadWS,   Color::Blue, time, false, false, true, Color::Black);
         DebugRenderer::RenderQuad(extCamAABoxLeftQuadWS,  Color::Blue, time, false, false, true, Color::Black);
@@ -346,65 +246,24 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
         // DebugRenderer::RenderQuad(camBotQuad,   Color::LightBlue, time, false, false, true, Color::Black);
         // DebugRenderer::RenderQuad(camLeftQuad,  Color::LightBlue, time, false, false, true, Color::Black);
         // DebugRenderer::RenderQuad(camRightQuad, Color::LightBlue, time, false, false, true, Color::Black);
-//        DebugRenderer::RenderQuad(camAABoxLS.GetTopQuad(),   Color::Green, time, false, false, true, Color::Black);
-//        DebugRenderer::RenderQuad(camAABoxLS.GetBotQuad(),   Color::Green, time, false, false, true, Color::Black);
-//        DebugRenderer::RenderQuad(camAABoxLS.GetRightQuad(), Color::Green, time, false, false, true, Color::Black);
-//        DebugRenderer::RenderQuad(camAABoxLS.GetLeftQuad(),  Color::Green, time, false, false, true, Color::Black);
+        // DebugRenderer::RenderQuad(camAABoxLS.GetTopQuad(),   Color::Green, time, false, false, true, Color::Black);
+        // DebugRenderer::RenderQuad(camAABoxLS.GetBotQuad(),   Color::Green, time, false, false, true, Color::Black);
+        // DebugRenderer::RenderQuad(camAABoxLS.GetRightQuad(), Color::Green, time, false, false, true, Color::Black);
+        // DebugRenderer::RenderQuad(camAABoxLS.GetLeftQuad(),  Color::Green, time, false, false, true, Color::Black);
         DebugRenderer::RenderAABox(sceneAABox, Color::Purple, time, 1.0f, true, false, true, Color::Black);
 
-        Array<Vector3> ints;
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxTopQuadWS,
-        //                                            sceneAABox.GetTopQuad()) );
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxBotQuadWS,
-        //                                            sceneAABox.GetBotQuad()) );
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxTopQuadWS,
-        //                                            sceneAABox.GetRightQuad()) );
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxTopQuadWS,
-        //                                            sceneAABox.GetLeftQuad()) );
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxTopQuadWS,
-        //                                            sceneAABox.GetFrontQuad()) );
-        // ints.PushBack( Geometry::IntersectQuadQuad(extCamAABoxTopQuadWS,
-        //                                            sceneAABox.GetBackQuad()) );
         for (const Vector3 &intPoint : extCamAABoxSceneBoxIntersectionsWS)
-        // for (const Vector3 &intPoint : ints)
+        for (const Vector3 &intPoint : ints)
         {
             DebugRenderer::RenderPoint(intPoint, Color::Red, time, 20.0f, true);
         }
         // DebugRenderer::RenderQuad(orthoBoxLeftQuadWorldSpace, Color::Blue, time, false, false, true);
         // DebugRenderer::RenderQuad(orthoBoxRightQuadWorldSpace, Color::Blue, time, false, false, true);
     }
-
-    /*
-    for (const Quad &quad : {camLeftQuad, camRightQuad})
-    {
-        int numIntersectionPoints;
-        std::array<Vector3, 4> intersectionPoints;
-        Geometry::IntersectQuadAABox(quad,
-                                     sceneAABox,
-                                     &numIntersectionPoints,
-                                     &intersectionPoints[0],
-                                     &intersectionPoints[1],
-                                     &intersectionPoints[2],
-                                     &intersectionPoints[3]);
-        for (int i = 0; i < numIntersectionPoints; ++i)
-        {
-            pointsToBeInsideShadowMap.PushBack(intersectionPoints[i]);
-        }
-    }
-    */
-
-/*
-    // Readjust ortho box to fit better
-    Vector3 orthoBoxCenter = orthoBoxInLightSpace.GetCenter();
-    Vector3 extents = orthoBoxInLightSpace.GetExtents();
-    // extents.z = GetShadowDistance() * 0.5f;
-    orthoBoxInLightSpace = AABox(orthoBoxCenter - extents,
-                                 orthoBoxCenter + extents);
     */
 
     Array<Vector3> pointsToBeShadowMappedWS;
     pointsToBeShadowMappedWS.PushBack(extCamAABoxSceneBoxIntersectionsWS);
-    // pointsToBeShadowMappedWS.PushBack(sceneAABox.GetPoints());
 
     AABox orthoBoxInLightSpace;
     for (const Vector3 &pointToBeShadowMappedWS : pointsToBeShadowMappedWS)
@@ -412,48 +271,6 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
         Vector3 pointToBeShadowMappedLS =
                 worldToLight.TransformedPoint(pointToBeShadowMappedWS);
         orthoBoxInLightSpace.AddPoint(pointToBeShadowMappedLS);
-    }
-
-    if (Input::GetKey(Key::C))
-    {
-        Camera *cam = scene->GetCamera();
-        auto quads = {cam->GetNearQuad(), cam->GetFarQuad(),
-                      cam->GetLeftQuad(), cam->GetRightQuad(),
-                      cam->GetTopQuad(),  cam->GetBotQuad()};
-        for (const Quad &quad : quads)
-        {
-            DebugRenderer::RenderQuad(quad, Color::Purple, 0.1f, true, false, true);
-        }
-    }
-
-    int j = 0;
-    if (Input::GetKey(Key::L))
-    {
-        auto quads = orthoBoxInLightSpace.GetQuads();
-        for (const Quad &quad : quads)
-        {
-            Quad worldQuad (lightToWorld.TransformedPoint(quad.GetPoint(0)),
-                            lightToWorld.TransformedPoint(quad.GetPoint(1)),
-                            lightToWorld.TransformedPoint(quad.GetPoint(2)),
-                            lightToWorld.TransformedPoint(quad.GetPoint(3)));
-
-            DebugRenderer::RenderQuad(worldQuad, (j == 4) ? Color::Green : Color::Red,
-                                      0.1f, true, false, true);
-            for (int i : {0,1,2,3})
-            {
-                DebugRenderer::RenderPoint(worldQuad.GetPoint(i), Color::Green,
-                                           0.1f, 5.0f, true);
-            }
-            ++j;
-        }
-    }
-
-    if (Input::GetKey(Key::S))
-    {
-        for (const Quad &quad : sceneAABox.GetQuads())
-        {
-            DebugRenderer::RenderQuad(quad, Color::Pink, 0.1f, true, false, true);
-        }
     }
 
     return orthoBoxInLightSpace;
@@ -464,7 +281,7 @@ Matrix4 DirectionalLight::GetLightToWorldMatrix() const
     const Transform *t = GetGameObject()->GetTransform();
 
     Matrix4 lightToWorld;
-    lightToWorld[0] = Vector4(Vector3::Right,                    0);
+    lightToWorld[0] = Vector4(t->GetRight().NormalizedSafe(),    0);
     lightToWorld[1] = Vector4(t->GetUp().NormalizedSafe(),       0);
     lightToWorld[2] = Vector4(-t->GetForward().NormalizedSafe(), 0);
     lightToWorld[3] = Vector4(0, 0, 0, 1);

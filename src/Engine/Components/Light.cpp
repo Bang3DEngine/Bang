@@ -90,6 +90,7 @@ void Light::CloneInto(ICloneable *clone) const
     l->SetColor(GetColor());
     l->SetShadowBias( GetShadowBias() );
     l->SetShadowType( GetShadowType() );
+    l->SetShadowMapSize( GetShadowMapSize() );
 }
 
 void Light::ImportXML(const XMLNode &xmlInfo)
@@ -107,6 +108,9 @@ void Light::ImportXML(const XMLNode &xmlInfo)
 
     if (xmlInfo.Contains("ShadowType"))
     { SetShadowType(xmlInfo.Get<ShadowType>("ShadowType")); }
+
+    if (xmlInfo.Contains("ShadowMapSize"))
+    { SetShadowMapSize(xmlInfo.Get<Vector2>("ShadowMapSize")); }
 }
 
 void Light::ExportXML(XMLNode *xmlInfo) const
@@ -117,4 +121,5 @@ void Light::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("Color", GetColor());
     xmlInfo->Set("ShadowBias", GetShadowBias());
     xmlInfo->Set("ShadowType", GetShadowType());
+    xmlInfo->Set("ShadowMapSize", GetShadowMapSize());
 }

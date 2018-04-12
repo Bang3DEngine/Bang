@@ -3,6 +3,7 @@
 #include "Bang/Paths.h"
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
+#include "Bang/TextureCubeMap.h"
 
 USING_NAMESPACE_BANG
 
@@ -30,6 +31,17 @@ RH<Texture2D> IconManager::GetLightBulbIcon()
 { return GetIconTexture("LightBulb"); }
 RH<Texture2D> IconManager::GetWarningIcon()
 { return GetIconTexture("Warn"); }
+
+RH<Texture2D> IconManager::GetWhiteTexture()
+{ return GetIconTexture("White"); }
+
+RH<TextureCubeMap> IconManager::GetWhiteTextureCubeMap()
+{
+    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(
+                                            EPATH("Icons/WhiteCM.texcm"));
+    Resources::SetPermanent(tcm.Get(), true);
+    return tcm;
+}
 
 RH<Texture2D> IconManager::GetIconTexture(const String &filename,
                                           const Path &dir)

@@ -29,7 +29,6 @@ public:
               int size,
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
-    void GenerateMipMaps() const;
 
     void SetDirTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex);
 

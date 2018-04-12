@@ -71,14 +71,14 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
     PropagateTextureChanged();
 }
 
-void TextureCubeMap::GenerateMipMaps() const
-{
-    ASSERT( GL::IsBound(this) );
-
-}
-
 void TextureCubeMap::SetDirTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
 {
+    // Debug_Log("SetDirTexture " << cubeMapDir << ": " << (tex ? tex->GetSize() : Vector2i(-1)));
+    Fill(cubeMapDir,
+         (tex ? tex->ToImage<Byte>().GetData() : SCAST<Byte*>(nullptr)),
+         Math::Min(tex->GetWidth(), tex->GetHeight()),
+         GL::ColorComp::RGBA,
+         GL::DataType::UnsignedByte);
     m_dirTextures[ GetDirIndex(cubeMapDir) ].Set(tex);
 }
 

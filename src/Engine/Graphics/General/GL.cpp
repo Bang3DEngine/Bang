@@ -450,14 +450,26 @@ void GL::AttachShader(GLId programId, GLId shaderId)
 bool GL::LinkProgram(GLId programId)
 {
     GL_CALL( glLinkProgram(programId) );
-    int linked = GL::GetProgramInteger(programId, GL::LinkStatus);
-    return linked;
+    GL_CALL(bool linkedOk = GL::GetProgramInteger(programId, GL::LinkStatus));
+    return linkedOk;
 }
 
-String GL::GetProgramLinkErrorMsg(GLId programId)
+bool GL::ValidateProgram(GLId programId)
+{
+    GL_CALL( glValidateProgram(programId) );
+    GL_CALL( bool isValid = GL::GetProgramInteger(programId, GL::ValidateStatus) );
+    if (!isValid)
+    {
+        Debug_Error( "Invalid shader program in the current state: " <<
+                     GL::GetProgramErrorMsg(programId) );
+    }
+    return isValid;
+}
+
+String GL::GetProgramErrorMsg(GLId programId)
 {
     GLint errorLength = GL::GetProgramInteger(programId, GL::InfoLogLength);
-    if (errorLength > 1)
+    if (errorLength >= 1)
     {
        char* errorLog = new char[errorLength];
        GL_CALL( glGetProgramInfoLog(programId, errorLength, NULL, errorLog) );
@@ -465,7 +477,7 @@ String GL::GetProgramLinkErrorMsg(GLId programId)
        delete[] errorLog;
        return error;
     }
-    return String();
+    return "";
 }
 
 int GL::GetProgramInteger(GLId programId, GL::Enum glEnum)
@@ -1074,6 +1086,9 @@ void GL::BufferData(GL::BindTarget target, int dataSize,
 void GL::Render(const VAO *vao, GL::Primitive renderMode,
                 int elementsCount, int startElementIndex)
 {
+    ASSERT( GL::GetBoundId(GL::BindTarget::ShaderProgram) > 0 );
+    ASSERT( GL::ValidateProgram(GL::GetBoundId(GL::BindTarget::ShaderProgram)) );
+
     if (vao->IsIndexed())
     {
         GL::DrawElements(vao, renderMode, elementsCount, startElementIndex);
@@ -1089,10 +1104,9 @@ void GL::DrawArrays(const VAO *vao, GL::Primitive primitivesMode,
 {
     vao->Bind();
     GL_CALL( glDrawArrays( GLCAST(primitivesMode), startIndex, elementsCount) );
-    // vao->UnBind();
+    vao->UnBind();
 }
 
-#include "Bang/Input.h"
 void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
                       int elementsCount, int startElementIndex)
 {
@@ -1101,7 +1115,7 @@ void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
                              elementsCount,
                              GLCAST(GL::DataType::UnsignedInt),
                              RCAST<const void*>(startElementIndex)) );
-    // vao->UnBind();
+    vao->UnBind();
 }
 
 uint GL::GetLineWidth()
@@ -1133,11 +1147,11 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
     {
         case GL::BindTarget::Texture2D:
             if (gl) { gl->m_boundTexture2DId = glId; }
-            glBindTexture( GLCAST(bindTarget), glId);
+            glBindTexture( GLCAST(bindTarget), glId );
         break;
         case GL::BindTarget::TextureCubeMap:
             if (gl) { gl->m_boundTextureCubeMapId = glId; }
-            glBindTexture( GLCAST(bindTarget), glId);
+            glBindTexture( GLCAST(bindTarget), glId );
         break;
         case GL::BindTarget::ShaderProgram:
             if (GL::IsBound(bindTarget, glId)) { return; }
@@ -1691,6 +1705,7 @@ void GL::PrintGLContext()
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::ReadFramebuffer)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::ShaderProgram)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::Texture2D)) );
+    Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TextureCubeMap)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
     Debug_Peek(GL::GetColorMask());
     Debug_Peek(GL::GetLineWidth());

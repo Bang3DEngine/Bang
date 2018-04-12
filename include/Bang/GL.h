@@ -39,6 +39,7 @@ public:
     {
         ActiveUniforms       = GL_ACTIVE_UNIFORMS,
         CompileStatus        = GL_COMPILE_STATUS,
+        ValidateStatus       = GL_VALIDATE_STATUS,
         Fill                 = GL_FILL,
         InfoLogLength        = GL_INFO_LOG_LENGTH,
         Line                 = GL_LINE,
@@ -593,7 +594,8 @@ public:
     static int GetUniformsListSize(GLId shaderProgramId);
     static GL::DataType GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex);
 
-    static String GetProgramLinkErrorMsg(GLId programId);
+    static bool   ValidateProgram(GLId programId);
+    static String GetProgramErrorMsg(GLId programId);
     static int    GetProgramInteger(GLId programId, GL::Enum glEnum);
     static void   GetProgramIntegers(GLId programId, GL::Enum glEnum, GLint *ints);
 

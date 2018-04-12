@@ -85,14 +85,14 @@ bool ShaderProgram::Link()
                    GetVertexShader()->GetResourceFilepath() << ", " <<
                    GetFragmentShader()->GetResourceFilepath() <<
                    ") did not link: " <<
-                   GL::GetProgramLinkErrorMsg(m_idGL));
+                   GL::GetProgramErrorMsg(m_idGL));
        GL::DeleteProgram(m_idGL); m_idGL = 0;
        return false;
     }
 
     m_isLinked = true;
 
-     // Invalidate caches
+    // Invalidate caches
     m_nameToLocationCache.clear();
     m_uniformCacheBool.clear();
     m_uniformCacheInt.clear();
@@ -241,22 +241,28 @@ bool ShaderProgram::Set(const String &name, const Array<Matrix4> &v, bool warn)
 
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    bool needToAddTextureToMap = true;
-
-    auto it = m_namesToTexture.find(name);
-    if (it != m_namesToTexture.end())
+    if (!texture)
     {
-        if (texture != it->second)
+        m_namesToTexture[name] = nullptr;
+        if (m_namesToTexture.count(name) == 1)
         {
-            needToAddTextureToMap = true;
-            Texture *tex = it->second;
-            Asset *asset = DCAST<Asset*>(tex);
-            if (asset) { asset->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
+            Texture *tex = m_namesToTexture.at(name);
+            m_namesToTexture.erase(name);
         }
     }
-
-    if (needToAddTextureToMap)
+    else
     {
+        auto it = m_namesToTexture.find(name);
+        if (it != m_namesToTexture.end())
+        {
+            if (texture != it->second)
+            {
+                Texture *tex = it->second;
+                Asset *asset = DCAST<Asset*>(tex);
+                if (asset) { asset->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
+            }
+        }
+
         m_namesToTexture[name] = texture;
         Asset *asset = DCAST<Asset*>(texture);
         if (asset) { asset->EventEmitter<IDestroyListener>::RegisterListener(this); }
@@ -357,11 +363,17 @@ bool ShaderProgram::BindTextureToAvailableUnit(const String &texName,
 
 void ShaderProgram::Bind() const
 {
-    if (!IsLinked()) { Debug_Warn("Binding a non-linked shader!"); }
+    #ifdef DEBUG
+    if (!IsLinked())
+    {
+        Debug_Warn("Binding a non-linked shader!");
+        return;
+    }
+    #endif
 
     GL::Bind(this);
-    UpdateTextureBindings();
     GLUniforms::SetAllUniformsToShaderProgram(const_cast<ShaderProgram*>(this));
+    UpdateTextureBindings();
 }
 
 void ShaderProgram::UnBind() const

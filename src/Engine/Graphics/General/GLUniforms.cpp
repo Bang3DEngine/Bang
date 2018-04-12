@@ -2,8 +2,8 @@
 
 #include "Bang/Camera.h"
 #include "Bang/Settings.h"
+#include "Bang/IconManager.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/UniformBuffer.h"
 
 USING_NAMESPACE_BANG
 
@@ -45,11 +45,18 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->Set("B_Camera_ZNear",  (cam ? cam->GetZNear() : 0.0f), false);
     sp->Set("B_Camera_ZFar",   (cam ?  cam->GetZFar() : 0.0f), false);
     sp->Set("B_Camera_ClearColor", (cam ? cam->GetClearColor() : Color::Pink), false);
-    TextureCubeMap *skt = cam ? cam->GetSkyBoxTexture() : nullptr;
-    sp->Set("B_Camera_Has_SkyBox", (skt != nullptr), false);
-    if (skt && skt->GetWidth() > 0 && skt->GetHeight() > 0)
+
+    TextureCubeMap *whiteCubeMap = IconManager::GetWhiteTextureCubeMap().Get();
+    if (cam->GetClearMode() == Camera::ClearMode::Color)
     {
-        sp->Set("B_Camera_SkyBox", (cam ? cam->GetSkyBoxTexture() : nullptr), false);
+        sp->Set("B_Camera_SkyBox", whiteCubeMap, false);
+        sp->Set("B_Camera_Has_SkyBox", false, false);
+    }
+    else if (cam->GetClearMode() == Camera::ClearMode::SkyBox)
+    {
+        TextureCubeMap *skt = cam ? cam->GetSkyBoxTexture() : nullptr;
+        sp->Set("B_Camera_SkyBox", skt ? skt : whiteCubeMap, false);
+        sp->Set("B_Camera_Has_SkyBox", true, false);
     }
 
     ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();

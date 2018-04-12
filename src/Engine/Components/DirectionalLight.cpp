@@ -74,10 +74,6 @@ void DirectionalLight::RenderShadowMaps_()
     GLUniforms::SetViewMatrix( shadowMapViewMatrix );
     GLUniforms::SetProjectionMatrix( shadowMapProjMatrix );
     m_lastUsedShadowMapViewProj = shadowMapProjMatrix * shadowMapViewMatrix;
-    if (Input::GetKey(Key::LShift) && Input::GetKeyDown(Key::L))
-    {
-        m_shadowMapFramebuffer->ExportDepth(Path("test.png"));
-    }
 
     // Render shadow map into framebuffer
     // GL::Enable(GL::Test::DepthClamp);

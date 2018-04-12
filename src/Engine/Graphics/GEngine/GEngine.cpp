@@ -120,7 +120,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     camera->BindGBuffer();
 
     GBuffer *gbuffer = camera->GetGBuffer();
-    gbuffer->ClearAllBuffersExceptColor();
+    gbuffer->ClearBuffersAndBackground(camera->GetClearColor()); // ClearAllBuffersExceptColor();
 
     // GBuffer Scene rendering
     gbuffer->SetAllDrawBuffers();
@@ -128,14 +128,14 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Scene);
     ApplyStenciledDeferredLightsToGBuffer(go, camera);
-    gbuffer->SetColorDrawBuffer();
 
-    // Render the sky
+    // Render the sky / background
     GLId prevBoundSP = GL::GetBoundId(m_renderSky.Get()->GetGLBindTarget());
     m_renderSky.Get()->Bind();
     gbuffer->ApplyPass(m_renderSky.Get(), false);
     GL::Bind(m_renderSky.Get()->GetGLBindTarget(), prevBoundSP); // Restore
 
+    gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::ScenePostProcess); // Render scene postprocess
 
     // GBuffer Canvas rendering

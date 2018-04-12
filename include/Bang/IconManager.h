@@ -6,6 +6,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Texture2D;
+FORWARD class TextureCubeMap;
 
 class IconManager
 {
@@ -22,6 +23,8 @@ public:
     static RH<Texture2D> GetSunIcon();
     static RH<Texture2D> GetLightBulbIcon();
     static RH<Texture2D> GetWarningIcon();
+    static RH<Texture2D> GetWhiteTexture();
+    static RH<TextureCubeMap> GetWhiteTextureCubeMap();
 
     static RH<Texture2D> GetIconTexture(const String &filename, const Path &dir);
 

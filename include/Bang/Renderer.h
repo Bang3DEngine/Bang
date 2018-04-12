@@ -2,7 +2,6 @@
 #define RENDERER_H
 
 #include "Bang/GL.h"
-#include "Bang/GLObject.h"
 #include "Bang/Component.h"
 #include "Bang/RenderPass.h"
 #include "Bang/IEventEmitter.h"
@@ -17,18 +16,15 @@ FORWARD class Material;
 FORWARD class SceneManager;
 
 class Renderer : public Component,
-                 public GLObject,
                  public IMaterialChangedListener,
                  public EventEmitter<IRendererChangedListener>
 {
     COMPONENT(Renderer)
 
 public:
+    virtual void Bind() const;
     virtual void OnRender();
-
-    // GLObject
-    virtual void Bind() const override;
-    virtual void UnBind() const override;
+    virtual void UnBind() const;
 
     // Component
     virtual void OnRender(RenderPass renderPass) override;

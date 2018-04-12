@@ -23,7 +23,7 @@ TextureUnitManager::TexUnit TextureUnitManager::BindTexture(
         // It was still bound, reuse it (just return where it is)
         unitToUse = it->second;
     }
-    else // We need to bind the new texture to the older used texture unit
+    else // We need to bind the new texture to the oldest used texture unit
     {
         if (tm->m_usedUnits.size() < tm->c_numTextureUnits)
         {
@@ -40,6 +40,9 @@ TextureUnitManager::TexUnit TextureUnitManager::BindTexture(
 
         GL::ActiveTexture(GL_TEXTURE0 + unitToUse);
         GL::Bind(SCAST<GL::BindTarget>(texTarget), texId);
+
+        // Debug_Peek(tm->m_usedUnits);
+        // Debug_Peek(tm->m_textureIdToUnit);
 
         // ASSERT(tm->m_usedUnits.size() == tm->m_textureIdToUnit.Size());
         ASSERT(tm->m_usedUnits.size() <= tm->c_numTextureUnits);

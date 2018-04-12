@@ -10,7 +10,7 @@ class GLObject
 public:
     GLId GetGLId() const;
 
-    virtual GL::BindTarget GetGLBindTarget() const;
+    virtual GL::BindTarget GetGLBindTarget() const = 0;
     virtual void Bind() const;
     virtual void UnBind() const;
 

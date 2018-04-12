@@ -18,6 +18,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/IconManager.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
@@ -189,7 +190,14 @@ void Camera::RemoveRenderPass(RenderPass renderPass)
 
 void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
 {
-    p_skyboxTextureCM.Set(skyBoxTextureCM);
+    if (skyBoxTextureCM)
+    {
+        p_skyboxTextureCM.Set(skyBoxTextureCM);
+    }
+    else
+    {
+        p_skyboxTextureCM.Set( IconManager::GetWhiteTextureCubeMap().Get() );
+    }
 }
 
 void Camera::SetRenderSelectionBuffer(bool renderSelectionBuffer)
@@ -197,11 +205,21 @@ void Camera::SetRenderSelectionBuffer(bool renderSelectionBuffer)
     m_renderSelectionBuffer = renderSelectionBuffer;
 }
 
+void Camera::SetClearMode(Camera::ClearMode clearMode)
+{
+    m_clearMode = clearMode;
+}
+
 const Color &Camera::GetClearColor() const { return m_clearColor; }
 float Camera::GetOrthoHeight() const { return m_orthoHeight; }
 float Camera::GetFovDegrees() const { return m_fovDegrees; }
 float Camera::GetZNear() const { return m_zNear; }
 float Camera::GetZFar() const { return m_zFar; }
+
+Camera::ClearMode Camera::GetClearMode() const
+{
+    return m_clearMode;
+}
 
 bool Camera::MustRenderPass(RenderPass renderPass) const
 {
@@ -376,19 +394,18 @@ void Camera::CloneInto(ICloneable *clone) const
     Camera *cam = Cast<Camera*>(clone);
     cam->SetZFar(GetZFar());
     cam->SetZNear(GetZNear());
-    cam->SetClearColor(GetClearColor());
     cam->SetFovDegrees(GetFovDegrees());
     cam->SetOrthoHeight(GetOrthoHeight());
     cam->SetProjectionMode(GetProjectionMode());
+    cam->SetClearMode(GetClearMode());
+    cam->SetClearColor(GetClearColor());
     cam->SetSkyBoxTexture(GetSkyBoxTexture());
 }
 
+#include "Bang/Image.h"
 void Camera::ImportXML(const XMLNode &xml)
 {
     Component::ImportXML(xml);
-
-    if (xml.Contains("ClearColor"))
-    { SetClearColor(xml.Get<Color>("ClearColor")); }
 
     if (xml.Contains("FOVDegrees"))
     { SetFovDegrees(xml.Get<float>("FOVDegrees")); }
@@ -399,11 +416,17 @@ void Camera::ImportXML(const XMLNode &xml)
     if (xml.Contains("ZFar"))
     { SetZFar(xml.Get<float>("ZFar")); }
 
+    if (xml.Contains("OrthoHeight"))
+    { SetOrthoHeight( xml.Get<float>("OrthoHeight") ); }
+
     if (xml.Contains("ProjectionMode"))
     { SetProjectionMode( xml.Get<ProjectionMode>("ProjectionMode") ); }
 
-    if (xml.Contains("OrthoHeight"))
-    { SetOrthoHeight( xml.Get<float>("OrthoHeight") ); }
+    if (xml.Contains("ClearMode"))
+    { SetClearMode( xml.Get<ClearMode>("ClearMode") ); }
+
+    if (xml.Contains("ClearColor"))
+    { SetClearColor(xml.Get<Color>("ClearColor")); }
 
     if (xml.Contains("SkyBoxTexture"))
     { SetSkyBoxTexture(
@@ -414,12 +437,13 @@ void Camera::ExportXML(XMLNode *xmlInfo) const
 {
     Component::ExportXML(xmlInfo);
 
-    xmlInfo->Set("ClearColor", GetClearColor());
     xmlInfo->Set("ZNear", GetZNear());
     xmlInfo->Set("ZFar", GetZFar());
     xmlInfo->Set("ProjectionMode", GetProjectionMode());
     xmlInfo->Set("OrthoHeight", GetOrthoHeight());
     xmlInfo->Set("FOVDegrees", GetFovDegrees());
+    xmlInfo->Set("ClearMode", GetClearMode());
+    xmlInfo->Set("ClearColor", GetClearColor());
     xmlInfo->Set("SkyBoxTexture", (GetSkyBoxTexture() ?
                                        GetSkyBoxTexture()->GetGUID() : GUID::Empty()) );
 }

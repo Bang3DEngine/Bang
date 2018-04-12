@@ -1,7 +1,11 @@
 #ifndef STREAMOPERATORS_H
 #define STREAMOPERATORS_H
 
+#include <array>
+#include <queue>
 #include <sstream>
+#include <utility>
+#include <unordered_map>
 #include "Bang/TypeTraits.h"
 
 NAMESPACE_BANG_BEGIN
@@ -119,6 +123,32 @@ std::ostream &operator<<(std::ostream &log, const std::array<T,N>& a)
 {
     log << "{";
     for (int i = 0; i < N; ++i) { log << a[i] << ((i == N-1) ? "" : ", "); }
+    log <<"}";
+    return log;
+}
+template <class T>
+std::ostream &operator<<(std::ostream &log, const std::queue<T>& q)
+{
+    log << "(";
+    int i = 0;
+    std::queue<T> qc = q;
+    const int N = q.size();
+    while (!qc.empty())
+    {
+        const auto &x = qc.front(); qc.pop();
+        log << x << ((i++ == N-1) ? "" : ", ");
+    }
+    log <<")";
+    return log;
+}
+template <class K, class V>
+std::ostream &operator<<(std::ostream &log, const std::unordered_map<K,V>& m)
+{
+    log << "{";
+    int i = 0;
+    const int N = m.size();
+    for (const auto &p : m)
+    { log << p.first << ": " << p.second << ((i++ == N-1) ? "" : ", "); }
     log <<"}";
     return log;
 }

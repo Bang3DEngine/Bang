@@ -22,10 +22,16 @@ class Camera : public Component
     COMPONENT(Camera)
 
 public:
-    enum ProjectionMode
+    enum class ProjectionMode
     {
         Orthographic,
         Perspective
+    };
+
+    enum class ClearMode
+    {
+        Color,
+        SkyBox
     };
 
     virtual void Bind() const;
@@ -54,6 +60,7 @@ public:
     void RemoveRenderPass(RenderPass renderPass);
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM);
     void SetRenderSelectionBuffer(bool renderSelectionBuffer);
+    void SetClearMode(ClearMode clearMode);
 
     const Color& GetClearColor() const;
     float GetOrthoWidth() const;
@@ -61,6 +68,7 @@ public:
     float GetFovDegrees() const;
     float GetZNear() const;
     float GetZFar() const;
+    ClearMode GetClearMode() const;
     bool MustRenderPass(RenderPass renderPass) const;
     const Set<RenderPass>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
@@ -107,6 +115,7 @@ private:
     RH<TextureCubeMap> p_skyboxTextureCM = nullptr;
 
     Color m_clearColor = Color(Color(0.3f), 1);
+    ClearMode m_clearMode = ClearMode::Color;
     float m_orthoHeight  = 25.0f;
     float m_fovDegrees = 60.0f;
     float m_zNear = 0.1f;

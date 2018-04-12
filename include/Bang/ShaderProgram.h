@@ -85,7 +85,7 @@ private:
     std::unordered_map<String, Matrix3> m_uniformCacheMatrix3;
     std::unordered_map<String, Matrix4> m_uniformCacheMatrix4;
 
-    mutable std::unordered_map<String, GLuint> m_nameToLocationCache;
+    mutable std::unordered_map<String, long> m_nameToLocationCache;
     mutable std::unordered_map<String, Texture*> m_namesToTexture;
 
     ShaderProgram();

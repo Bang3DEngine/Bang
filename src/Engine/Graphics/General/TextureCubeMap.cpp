@@ -74,11 +74,27 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
 void TextureCubeMap::SetDirTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
 {
     // Debug_Log("SetDirTexture " << cubeMapDir << ": " << (tex ? tex->GetSize() : Vector2i(-1)));
+
+    Image<Byte> img;
+    if (tex)
+    {
+        img = tex->ToImage<Byte>();
+        if (cubeMapDir == GL::CubeMapDir::Top)
+        {
+            img = img.Rotated270DegreesRight().InvertedVertically();
+        }
+        else if (cubeMapDir == GL::CubeMapDir::Bot)
+        {
+            img = img.Rotated90DegreesRight().InvertedVertically();
+        }
+    }
+
     Fill(cubeMapDir,
-         (tex ? tex->ToImage<Byte>().GetData() : SCAST<Byte*>(nullptr)),
-         Math::Min(tex->GetWidth(), tex->GetHeight()),
+         (tex ? img.GetData() : SCAST<Byte*>(nullptr)),
+         (tex ? Math::Min(tex->GetWidth(), tex->GetHeight()) : 1),
          GL::ColorComp::RGBA,
          GL::DataType::UnsignedByte);
+
     m_dirTextures[ GetDirIndex(cubeMapDir) ].Set(tex);
 }
 

@@ -29,15 +29,17 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     ASSERT (GL::IsBound(sp->GetGLBindTarget(), sp->GetGLId()));
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
-    sp->Set("B_Model",          matrices->model,    false);
-    sp->Set("B_ModelInv",       matrices->modelInv, false);
-    sp->Set("B_Normal",         matrices->normal,   false);
-    sp->Set("B_View",           matrices->view,     false);
-    sp->Set("B_ViewInv",        matrices->viewInv,  false);
-    sp->Set("B_Projection",     matrices->proj,     false);
-    sp->Set("B_ProjectionView", matrices->projView, false);
-    sp->Set("B_PVM",            matrices->pvm,      false);
-    sp->Set("B_PVMInv",         matrices->pvmInv,   false);
+    sp->Set("B_Model",             matrices->model,       false);
+    sp->Set("B_ModelInv",          matrices->modelInv,    false);
+    sp->Set("B_Normal",            matrices->normal,      false);
+    sp->Set("B_View",              matrices->view,        false);
+    sp->Set("B_ViewInv",           matrices->viewInv,     false);
+    sp->Set("B_Projection",        matrices->proj,        false);
+    sp->Set("B_ProjectionInv",     matrices->projInv,     false);
+    sp->Set("B_ProjectionView",    matrices->projView,    false);
+    sp->Set("B_ProjectionViewInv", matrices->projViewInv, false);
+    sp->Set("B_PVM",               matrices->pvm,         false);
+    sp->Set("B_PVMInv",            matrices->pvmInv,      false);
 
     sp->Set("B_AmbientLight", Settings::GetAmbientLight(), false);
 
@@ -124,7 +126,8 @@ void GLUniforms::UpdatePVMMatrix()
         }
         break;
     }
-    matrices->projView = projViewMatrix;
+    matrices->projView    = projViewMatrix;
+    matrices->projViewInv = matrices->projView.Inversed();
     matrices->pvm = pvmMatrix;
     matrices->pvmInv = matrices->pvm.Inversed();
 }

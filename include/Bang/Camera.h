@@ -112,7 +112,7 @@ private:
 
     Set<RenderPass> m_renderPassMask;
     bool m_renderSelectionBuffer = false;
-    RH<TextureCubeMap> p_skyboxTextureCM = nullptr;
+    RH<TextureCubeMap> p_skyboxTextureCM;
 
     Color m_clearColor = Color(Color(0.3f), 1);
     ClearMode m_clearMode = ClearMode::Color;

@@ -68,7 +68,6 @@ else ()
 
 endif()
 
-
 # Common shared dependencies ===================
 find_library(DL_LIBRARY "dl")
 find_package(OpenGL REQUIRED)
@@ -76,7 +75,16 @@ find_package(ZLIB   REQUIRED "zlib")
 find_library(SNDFILE_LIBRARY "sndfile")
 find_library(PTHREAD_LIBRARY "pthread")
 
-list(APPEND DEPENDENCIES_INCLUDE_DIRS ${OPENGL_INCLUDE_DIRS})
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if ("${USE_SANITIZER}")
+        find_library(ASAN_LIBRARY  REQUIRED NAMES asan libasan.so.4 libasan.so.3 libasan.so.2 libasan.so.1 libasan.so)
+        find_library(UBSAN_LIBRARY REQUIRED NAMES ubsan libubsan.so.2 libubsan.so.1 libubsan.so.0 libubsan.so)
+        list(APPEND DEPENDENCIES_LIB_PATHS "${ASAN_LIBRARY}")
+        list(APPEND DEPENDENCIES_LIB_PATHS "${UBSAN_LIBRARY}")
+    endif()
+endif()
+
+list(APPEND DEPENDENCIES_INCLUDE_DIRS "${OPENGL_INCLUDE_DIRS}")
 
 list(APPEND DEPENDENCIES_LIB_PATHS "${DL_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${OPENGL_LIBRARY}")

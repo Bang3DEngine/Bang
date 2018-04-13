@@ -76,7 +76,7 @@ Image<T> Texture2D::ToImage(bool invertY) const
             img.SetPixel(x, y, pixelColor);
         }
     }
-    if (invertY) { img.InvertVertically(); }
+    if (invertY) { img.InvertedVertically(); }
 
     delete[] pixels;
 

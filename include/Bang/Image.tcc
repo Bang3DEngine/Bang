@@ -225,6 +225,50 @@ void Image<T>::Resize(int _newWidth, int _newHeight,
 }
 
 template<class T>
+Image<T> Image<T>::Rotated90DegreesRight() const
+{
+    Image<T> result;
+    result.Create(GetHeight(), GetWidth());
+    for (int y = 0; y < GetHeight(); ++y)
+    {
+        for (int x = 0; x < GetWidth(); ++x)
+        {
+            result.SetPixel(GetHeight() - y - 1, GetWidth() - x - 1, GetPixel(x,y));
+        }
+    }
+    return result;
+}
+
+template<class T>
+Image<T> Image<T>::Rotated180DegreesRight() const
+{
+    Image<T> result;
+    result.Create(GetWidth(), GetHeight());
+    for (int y = 0; y < GetHeight(); ++y)
+    {
+        for (int x = 0; x < GetWidth(); ++x)
+        {
+            result.SetPixel(GetWidth() - x - 1, GetHeight() - y - 1, GetPixel(x,y));
+        }
+    }
+    return result;
+}
+template<class T>
+Image<T> Image<T>::Rotated270DegreesRight() const
+{
+    Image<T> result;
+    result.Create(GetHeight(), GetWidth());
+    for (int y = 0; y < GetHeight(); ++y)
+    {
+        for (int x = 0; x < GetWidth(); ++x)
+        {
+            result.SetPixel(y, x, GetPixel(x,y));
+        }
+    }
+    return result;
+}
+
+template<class T>
 void Image<T>::FillTransparentPixels(const Color &color)
 {
     for (int y = 0; y < GetHeight(); ++y)
@@ -271,17 +315,33 @@ template<class T>
 const Vector2i& Image<T>::GetSize() const { return m_size; }
 
 template<class T>
-void Image<T>::InvertVertically()
+Image<T> Image<T>::InvertedVertically()
 {
     Image<T> img = *this;
     for (int y = 0; y < GetHeight(); ++y)
     {
         for (int x = 0; x < GetWidth(); ++x)
         {
-            Color c = img.GetPixel(x, y);
-            SetPixel(x, GetHeight() - y - 1, c);
+            Color c = GetPixel(x, y);
+            img.SetPixel(x, GetHeight() - y - 1, c);
         }
     }
+    return img;
+}
+
+template<class T>
+Image<T> Image<T>::InvertedHorizontally()
+{
+    Image<T> img = *this;
+    for (int y = 0; y < GetHeight(); ++y)
+    {
+        for (int x = 0; x < GetWidth(); ++x)
+        {
+            Color c = GetPixel(x, y);
+            img.SetPixel(GetWidth() - x - 1, y, c);
+        }
+    }
+    return img;
 }
 
 template<class T>

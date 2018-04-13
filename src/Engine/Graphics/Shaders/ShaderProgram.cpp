@@ -372,8 +372,8 @@ void ShaderProgram::Bind() const
     #endif
 
     GL::Bind(this);
-    GLUniforms::SetAllUniformsToShaderProgram(const_cast<ShaderProgram*>(this));
     UpdateTextureBindings();
+    GLUniforms::SetAllUniformsToShaderProgram(const_cast<ShaderProgram*>(this));
 }
 
 void ShaderProgram::UnBind() const
@@ -383,7 +383,7 @@ void ShaderProgram::UnBind() const
 
 void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
-    Texture *destroyedTex = DCAST<Texture2D*>( object );
+    Texture *destroyedTex = DCAST<Texture*>( object );
     for (auto it = m_namesToTexture.begin(); it != m_namesToTexture.end(); )
     {
         Texture *tex = it->second;

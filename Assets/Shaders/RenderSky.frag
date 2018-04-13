@@ -12,10 +12,10 @@ void main()
         if (B_Camera_Has_SkyBox)
         {
             vec2 uv = B_GetViewportUv();
-            color = texture(B_Camera_SkyBox, vec3(uv * 2.0f - 1.0f, 10));
-            color = texture(B_Camera_SkyBox, vec3(uv.x, 1, uv.y));
-            color.a = 1.0f;
-            // color = vec4(uv,0,1);
+            vec3 rayDestPosWorld = B_ComputeWorldPosition(0.0f, uv);
+            vec3 camPosWorld = B_GetCameraPositionWorld();
+            vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
+            color = texture(B_Camera_SkyBox, rayDirWorld);
         }
         else { color = B_Camera_ClearColor; }
 

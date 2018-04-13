@@ -60,6 +60,10 @@ public:
                 ImageResizeMode resizeMode = ImageResizeMode::Linear,
                 AspectRatioMode arMode = AspectRatioMode::Ignore);
 
+    Image<T> Rotated90DegreesRight()  const;
+    Image<T> Rotated180DegreesRight() const;
+    Image<T> Rotated270DegreesRight() const;
+
     void FillTransparentPixels(const Color &color);
 
     T* GetData();
@@ -69,7 +73,8 @@ public:
     int GetHeight() const;
     const Vector2i& GetSize() const;
 
-    void InvertVertically();
+    Image<T> InvertedVertically();
+    Image<T> InvertedHorizontally();
 
     template<class OtherT>
     Image<OtherT> To() const;

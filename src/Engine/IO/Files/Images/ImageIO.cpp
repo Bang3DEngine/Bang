@@ -508,10 +508,10 @@ void ImageIO::ImportTGA(const Path &filepath, Imageb *img, bool *ok)
             {
                 const unsigned int coord = (y * width + x);
                 Color c =
-                   Color(pixels[coord + 1] >> TGA_READER_ARGB.redShift,
-                         pixels[coord + 2] >> TGA_READER_ARGB.greenShift,
-                         pixels[coord + 3] >> TGA_READER_ARGB.blueShift,
-                         pixels[coord + 0] >> TGA_READER_ARGB.alphaShift );
+                   Color(pixels[coord] >> TGA_READER_ARGB.redShift,
+                         pixels[coord] >> TGA_READER_ARGB.greenShift,
+                         pixels[coord] >> TGA_READER_ARGB.blueShift,
+                         pixels[coord] >> TGA_READER_ARGB.alphaShift );
                 c /= 255.0f;
 
                 img->SetPixel(x, y, c);

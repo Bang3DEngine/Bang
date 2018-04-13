@@ -4,7 +4,9 @@ uniform mat4 B_Normal;
 uniform mat4 B_View;
 uniform mat4 B_ViewInv;
 uniform mat4 B_Projection;
+uniform mat4 B_ProjectionInv;
 uniform mat4 B_ProjectionView;
+uniform mat4 B_ProjectionViewInv;
 uniform mat4 B_PVM;
 uniform mat4 B_PVMInv;
 
@@ -96,16 +98,13 @@ float B_SampleDepthOffset(vec2 pixOffset)
 float B_SampleFlagsOffset(vec2 pixOffset)
   { return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 
-vec3 B_GetCameraPositionWorld() { return inverse(B_View)[3].xyz; }
+vec3 B_GetCameraPositionWorld() { return B_ViewInv[3].xyz; }
 
 vec3 B_ComputeWorldPosition(float depth, vec2 uv)
 {
-    float x = uv.x * 2.0 - 1.0;
-    float y = uv.y * 2.0 - 1.0;
-    float z = depth * 2.0 - 1.0;
-    vec4 projectedPos = vec4(x, y, z, 1);
-    vec4 worldPos = (inverse(B_Projection) * projectedPos);
-    worldPos = (inverse(B_View) * (worldPos/worldPos.w));
+    vec4 projectedPos = vec4( (vec3(uv, depth) * 2.0 - 1.0), 1 );
+    vec4 worldPos = (B_ProjectionInv * projectedPos);
+    worldPos = (B_ViewInv * (worldPos/worldPos.w));
     return worldPos.xyz;
 }
 vec3 B_ComputeWorldPosition(float depth)

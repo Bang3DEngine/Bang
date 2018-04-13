@@ -59,7 +59,7 @@ void Texture2D::Fill(const Byte *newData,
                    inputDataType,
                    newData);
 
-    // if (newData && GetWidth() > 0 && GetHeight() > 0) { GenerateMipMaps(); }
+    if (newData && GetWidth() > 0 && GetHeight() > 0) { GenerateMipMaps(); }
 
     GL::Bind(GetGLBindTarget(), prevBoundId); // Restore
 

@@ -246,7 +246,7 @@ void ExportDepthOrStencil(const Framebuffer *fb,
     }
 
     Imageb img = Imageb::LoadFromData(fb->GetWidth(), fb->GetHeight(), bytes);
-    img.InvertVertically();
+    img = img.InvertedVertically();
     img.Export(filepath);
 
     delete[] data;

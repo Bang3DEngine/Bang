@@ -8,7 +8,7 @@ USING_NAMESPACE_BANG
 
 Texture2D::Texture2D() : Texture(GL::TextureTarget::Texture2D)
 {
-    CreateEmpty(1,1);
+    CreateEmpty(1, 1, GL::ColorComp::RGBA, GL::DataType::UnsignedByte);
 
     SetFilterMode(GL::FilterMode::Bilinear);
     SetWrapMode(GL::WrapMode::ClampToEdge);
@@ -19,17 +19,18 @@ Texture2D::~Texture2D()
 {
 }
 
-void Texture2D::CreateEmpty(int width, int height)
+void Texture2D::CreateEmpty(int width, int height,
+                            GL::ColorComp colorComp,
+                            GL::DataType dataType)
 {
-    GL::ColorComp inputColorComp = (GL::GetColorCompFrom( GetFormat() ));
-    Fill(nullptr, width, height, inputColorComp, GL::DataType::UnsignedByte);
+    Fill(nullptr, width, height, colorComp, dataType);
 }
 
 void Texture2D::Resize(int width, int height)
 {
     if (width != GetWidth() || height != GetHeight())
     {
-        CreateEmpty(width, height);
+        CreateEmpty(width, height, GetColorComp(), GetDataType());
     }
 }
 
@@ -79,39 +80,6 @@ float Texture2D::GetAlphaCutoff() const
 {
     return m_alphaCutoff;
 }
-
-Color Texture2D::GetColorFromArray(const float *pixels, int i)
-{
-    return Color(pixels[i+0], pixels[i+1], pixels[i+2], pixels[i+3]);
-}
-
-Color Texture2D::GetColorFromArray(const Byte *pixels, int i)
-{
-    return Color(pixels[i+0] / 255.0f, pixels[i+1] / 255.0f,
-            pixels[i+2] / 255.0f, pixels[i+3] / 255.0f);
-}
-
-template <class T>
-void GetTexImageInto_T(const Texture2D *tex, T *pixels)
-{
-    GLId prevBound = GL::GetBoundId(GL::BindTarget::Texture2D);
-    tex->Bind();
-    GL::GetTexImage(tex->GetTextureTarget(),
-                    GL::GetColorCompFrom( tex->GetFormat() ),
-                    pixels);
-    GL::Bind(GL::BindTarget::Texture2D, prevBound);
-}
-
-void Texture2D::GetTexImageInto(Byte *pixels) const
-{ GetTexImageInto_T<Byte>(this, pixels); }
-void Texture2D::GetTexImageInto(float *pixels) const
-{ GetTexImageInto_T<float>(this, pixels); }
-
-int Texture2D::GetNumComponents() const
-{
-    return GL::GetNumComponents( GetFormat() );
-}
-
 
 void Texture2D::ImportXML(const XMLNode &xmlInfo)
 {

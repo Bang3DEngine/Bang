@@ -12,7 +12,7 @@ uniform mat4 B_PVMInv;
 
 uniform float B_Camera_ZNear;
 uniform float B_Camera_ZFar;
-uniform vec4 B_Camera_ClearColor;
+uniform vec4  B_Camera_ClearColor;
 
 uniform vec2 B_Viewport_MinPos;
 uniform vec2 B_Viewport_Size;

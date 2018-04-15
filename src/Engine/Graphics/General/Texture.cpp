@@ -135,6 +135,23 @@ GL::WrapMode Texture::GetWrapMode() const
     return m_wrapMode;
 }
 
+Color Texture::GetColorFromFloatArray(const float *pixels, int i)
+{
+    return Color(pixels[i+0], pixels[i+1], pixels[i+2], pixels[i+3]);
+}
+
+Color Texture::GetColorFromByteArray(const Byte *pixels, int i)
+{
+    return Color(pixels[i+0] / 255.0f, pixels[i+1] / 255.0f,
+                 pixels[i+2] / 255.0f, pixels[i+3] / 255.0f);
+}
+
+int Texture::GetNumComponents() const
+{
+    return GL::GetNumComponents( GetFormat() );
+}
+
+
 void Texture::SetWidth(int width)
 {
     if (width != GetWidth())

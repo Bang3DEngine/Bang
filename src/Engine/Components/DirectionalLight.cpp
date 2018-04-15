@@ -17,6 +17,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/Framebuffer.h"
 #include "Bang/IconManager.h"
 #include "Bang/ShadowMapper.h"
 #include "Bang/ShaderProgram.h"
@@ -30,7 +31,7 @@ DirectionalLight::DirectionalLight()
     SetLightMaterial(MaterialFactory::GetDirectionalLight().Get());
 
     m_shadowMapFramebuffer = new Framebuffer(1,1);
-    m_shadowMapFramebuffer->CreateAttachment(GL::Attachment::Depth,
+    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
                                              GL::ColorFormat::Depth16);
 
     GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
@@ -47,12 +48,10 @@ DirectionalLight::~DirectionalLight()
     delete m_shadowMapFramebuffer;
 }
 
-#include "Bang/Input.h"
 void DirectionalLight::RenderShadowMaps_()
 {
     // Save previous state
     AARecti prevVP = GL::GetViewportRect();
-    bool wasDepthClampEnabled = GL::IsEnabled(GL::Test::DepthClamp);
     const Matrix4 &prevModel = GLUniforms::GetModelMatrix();
     const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
     const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
@@ -76,7 +75,6 @@ void DirectionalLight::RenderShadowMaps_()
     m_lastUsedShadowMapViewProj = shadowMapProjMatrix * shadowMapViewMatrix;
 
     // Render shadow map into framebuffer
-    // GL::Enable(GL::Test::DepthClamp);
     GL::ClearDepthBuffer(1.0f);
     GL::SetColorMask(false, false, false, false);
     GL::SetDepthFunc(GL::Function::LEqual);
@@ -89,7 +87,6 @@ void DirectionalLight::RenderShadowMaps_()
     GLUniforms::SetModelMatrix(prevModel);
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
-    GL::SetEnabled(GL::Test::DepthClamp, wasDepthClampEnabled);
     GL::Bind(m_shadowMapFramebuffer->GetGLBindTarget(), prevBoundFB);
 }
 
@@ -101,8 +98,7 @@ void DirectionalLight::SetUniformsBeforeApplyingLight(Material *mat) const
     if (!sp) { return; }
     ASSERT(GL::IsBound(sp))
 
-    Scene *scene = GetGameObject()->GetScene();
-    sp->Set("B_LightShadowMap", GetShadowMapTexture(), true);
+    sp->Set("B_LightShadowMap",     GetShadowMapTexture(), true);
     sp->Set("B_LightShadowMapSoft", GetShadowMapTexture(), true);
     sp->Set("B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, true);
 }
@@ -119,7 +115,7 @@ float DirectionalLight::GetShadowDistance() const
 
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTexture(GL::Attachment::Depth);
+    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::Depth);
 }
 
 void DirectionalLight::CloneInto(ICloneable *clone) const

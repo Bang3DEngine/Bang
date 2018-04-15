@@ -20,10 +20,10 @@ UIRendererCacher::UIRendererCacher()
 {
     p_cacheFramebuffer = new Framebuffer(1, 1);
     p_cacheFramebuffer->Bind();
-    p_cacheFramebuffer->CreateAttachment(GL::Attachment::Color0,
-                                         GL::ColorFormat::RGBA_UByte8);
-    p_cacheFramebuffer->CreateAttachment(GL::Attachment::DepthStencil,
-                                         GL::ColorFormat::Depth24_Stencil8);
+    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Color0,
+                                              GL::ColorFormat::RGBA_UByte8);
+    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::DepthStencil,
+                                              GL::ColorFormat::Depth24_Stencil8);
     p_cacheFramebuffer->UnBind();
 }
 
@@ -35,7 +35,7 @@ UIRendererCacher::~UIRendererCacher()
 void UIRendererCacher::OnStart()
 {
     // Prepare image renderer
-    Texture2D *tex = p_cacheFramebuffer->GetAttachmentTexture(GL::Attachment::Color0);
+    Texture2D *tex = p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::Color0);
     if (p_cachedImageRenderer)
     {
         tex->SetWrapMode(GL::WrapMode::Repeat);

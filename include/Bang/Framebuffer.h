@@ -9,6 +9,8 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class TextureCubeMap;
+
 class Framebuffer : public GLObject
 {
 public:
@@ -16,12 +18,19 @@ public:
     Framebuffer(int width, int height);
     virtual ~Framebuffer();
 
-    void CreateAttachment(GL::Attachment attachment, GL::ColorFormat texFormat);
+    void CreateAttachmentTex2D(GL::Attachment attachment,
+                               GL::ColorFormat texFormat);
+    void CreateAttachmentTexCubeMap(GL::Attachment attachment,
+                                    GL::ColorFormat texFormat);
 
     virtual void SetAllDrawBuffers() const;
     void SetDrawBuffers(const Array<GL::Attachment> &attachments) const;
     void SetReadBuffer(GL::Attachment attachment) const;
-    void SetAttachmentTexture(Texture2D *tex, GL::Attachment attachment);
+    void SetAttachmentTexture(Texture *tex, GL::Attachment attachment);
+    void SetAttachmentTexture2D(Texture *tex,
+                                GL::TextureTarget texTarget,
+                                GL::Attachment attachment);
+
 
     void Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,
               const AARect &ndcRect = AARect::NDCRect,
@@ -34,7 +43,8 @@ public:
     Vector2 GetSize() const;
     GL::Attachment GetCurrentReadAttachment() const;
     const Array<GL::Attachment>& GetCurrentDrawAttachments() const;
-    Texture2D* GetAttachmentTexture(GL::Attachment attachment) const;
+    Texture2D* GetAttachmentTex2D(GL::Attachment attachment) const;
+    TextureCubeMap* GetAttachmentTexCubeMap(GL::Attachment attachment) const;
     GL::BindTarget GetGLBindTarget() const override;
 
     void Clear();
@@ -54,7 +64,7 @@ protected:
     int m_width = 0;
     int m_height = 0;
     Array<GL::Attachment> m_attachments;
-    Map<GL::Attachment, RH<Texture2D>> m_attachments_To_Texture;
+    Map<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
 
     void PushDrawAttachments();
     void PopDrawAttachments();
@@ -63,6 +73,9 @@ private:
     mutable Array<GL::Attachment> m_currentDrawAttachments;
     mutable Array<GL::Attachment> m_latestDrawAttachments;
     mutable GL::Attachment m_currentReadAttachment;
+
+    void BeforeSetAttTex(Texture* tex, GL::Attachment attachment);
+    void AfterSetAttTex(Texture* tex, GL::Attachment attachment);
 };
 
 NAMESPACE_BANG_END

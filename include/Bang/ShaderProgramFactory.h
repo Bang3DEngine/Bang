@@ -1,6 +1,8 @@
 #ifndef SHADERPROGRAMFACTORY_H
 #define SHADERPROGRAMFACTORY_H
 
+#include <tuple>
+
 #include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
 
@@ -15,13 +17,21 @@ public:
 
     static ShaderProgram* GetDefault();
     static ShaderProgram* GetDefaultPostProcess();
+    static ShaderProgram* GetPointLightShadowMap();
     static ShaderProgram* Get(const Path &vShaderPath, const Path &fShaderPath);
+    static ShaderProgram* Get(const Path &vShaderPath,
+                              const Path &gShaderPath,
+                              const Path &fShaderPath);
 
 private:
-    Map< std::pair<Path, Path>, RH<ShaderProgram> > m_cache;
+    Map< std::tuple<Path,Path,Path>, RH<ShaderProgram> > m_cache;
 
     ShaderProgramFactory() = default;
 
+    static ShaderProgram* Get(const Path &vShaderPath,
+                              const Path &gShaderPath,
+                              const Path &fShaderPath,
+                              bool useGeometryShader);
     static ShaderProgramFactory* GetActive();
 
     friend class Resources;

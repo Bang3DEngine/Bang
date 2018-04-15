@@ -3,12 +3,12 @@
 
 #include "Bang/Light.h"
 #include "Bang/Matrix4.h"
-#include "Bang/Framebuffer.h"
+#include "Bang/Texture2D.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
-FORWARD class Texture2D;
+FORWARD class Framebuffer;
 
 class DirectionalLight : public Light
 {
@@ -16,8 +16,9 @@ class DirectionalLight : public Light
 
 public:
     void SetShadowDistance(float shadowDistance);
-
     float GetShadowDistance() const;
+
+    // Light
     Texture2D* GetShadowMapTexture() const override;
 
     // Component

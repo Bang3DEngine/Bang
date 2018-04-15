@@ -31,7 +31,7 @@ float Light::GetIntensity() const { return m_intensity; }
 float Light::GetShadowBias() const { return m_shadowBias; }
 Light::ShadowType Light::GetShadowType() const { return m_shadowType; }
 const Vector2i &Light::GetShadowMapSize() const { return m_shadowMapSize; }
-Texture2D *Light::GetShadowMapTexture() const { return nullptr; }
+Texture *Light::GetShadowMapTexture() const { return nullptr; }
 
 void Light::RenderShadowMaps()
 {

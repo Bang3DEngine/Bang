@@ -133,6 +133,7 @@ public:
     enum class ShaderType
     {
         Vertex   = GL_VERTEX_SHADER,
+        Geometry = GL_GEOMETRY_SHADER,
         Fragment = GL_FRAGMENT_SHADER
     };
 
@@ -408,6 +409,9 @@ public:
                                      const String &fragDataName);
     static void DeleteProgram(GLId programId);
 
+    static void FramebufferTexture(GL::FramebufferTarget target,
+                                   GL::Attachment attachment,
+                                   GLId textureId);
     static void FramebufferTexture2D(GL::FramebufferTarget target,
                                      GL::Attachment attachment,
                                      GL::TextureTarget texTarget,

@@ -1,5 +1,4 @@
 #define BANG_VERTEX
-#define BANG_G
 #include "Common.glsl"
 
 layout(location = 0) in vec3 B_VIn_Position;

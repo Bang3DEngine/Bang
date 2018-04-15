@@ -2,10 +2,13 @@
 #define POINTLIGHT_H
 
 #include "Bang/Light.h"
+#include "Bang/ShaderProgram.h"
+#include "Bang/TextureCubeMap.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
+FORWARD class Framebuffer;
 
 class PointLight : public Light
 {
@@ -14,6 +17,9 @@ class PointLight : public Light
 public:
     void SetRange(float range);
     float GetRange() const;
+
+    // Light
+    TextureCubeMap* GetShadowMapTexture() const override;
 
     // Component
     void OnRender(RenderPass rp) override;
@@ -27,6 +33,10 @@ public:
 
 protected:
     float m_range = 1.0f;
+
+    RH<ShaderProgram> m_shadowMapShaderProgram;
+    Framebuffer *m_shadowMapFramebuffer = nullptr;
+    TextureCubeMap *m_shadowMapTexCubeMap = nullptr;
 
     PointLight();
     virtual ~PointLight();

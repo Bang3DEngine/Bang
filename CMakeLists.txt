@@ -72,6 +72,7 @@ endif()
 #=================================================================
 set(BANG_ENGINE_ASSETS_DIR "${BANG_ENGINE_ROOT}/Assets")
 file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
+                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.geom"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.svg"

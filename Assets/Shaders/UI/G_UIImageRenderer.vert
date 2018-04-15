@@ -1,5 +1,4 @@
 #define BANG_VERTEX
-#define BANG_G
 #include "Common.glsl"
 
 const int MODE_TEXTURE         = 0;

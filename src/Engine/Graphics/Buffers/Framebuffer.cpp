@@ -9,6 +9,7 @@
 #include "Bang/Vector2.h"
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
+#include "Bang/TextureCubeMap.h"
 
 USING_NAMESPACE_BANG
 
@@ -27,30 +28,76 @@ Framebuffer::~Framebuffer()
     GL::DeleteFramebuffers(1, &m_idGL);
 }
 
-void Framebuffer::CreateAttachment(GL::Attachment attachment,
-                                   GL::ColorFormat texFormat)
+template<class TextureClass>
+void CreateEmptyTexture(TextureClass *tex, int width, int height,
+                        GL::ColorComp colorComp, GL::DataType dataType)
 {
-    GLId prevBoundFB = GL::GetBoundId(GetGLBindTarget());
-
-    Bind();
-
-    GL_ClearError();
-    RH<Texture2D> tex = Resources::Create<Texture2D>();
-    tex.Get()->Bind();
-    tex.Get()->SetFormat(texFormat);
-    tex.Get()->CreateEmpty(GetWidth(), GetHeight());
-    GL_CheckError();
-
-    SetAttachmentTexture(tex.Get(), attachment);
-    tex.Get()->UnBind();
-
-    GL::Bind(GetGLBindTarget(), prevBoundFB);
+    ASSERT(false);
 }
 
-Texture2D* Framebuffer::GetAttachmentTexture(GL::Attachment attachment) const
+template<>
+void CreateEmptyTexture<Texture2D>(Texture2D *tex, int width, int height,
+                                   GL::ColorComp colorComp,
+                                   GL::DataType dataType)
+{
+    tex->CreateEmpty(width, height, colorComp, dataType);
+}
+template<>
+void CreateEmptyTexture<TextureCubeMap>(TextureCubeMap *tex,
+                                        int width, int height,
+                                        GL::ColorComp colorComp,
+                                        GL::DataType dataType)
+{
+    tex->CreateEmpty(Math::Min(width, height), colorComp, dataType);
+}
+
+
+template<class TextureClass>
+void CreateAttachment(Framebuffer *fb,
+                      GL::Attachment attachment,
+                      GL::ColorFormat texFormat)
+{
+    GLId prevBoundFB = GL::GetBoundId(fb->GetGLBindTarget());
+
+    fb->Bind();
+
+    GL_ClearError();
+    RH<TextureClass> tex = Resources::Create<TextureClass>();
+    tex.Get()->Bind();
+    tex.Get()->SetFormat(texFormat);
+    CreateEmptyTexture<TextureClass>(tex.Get(),
+                                     fb->GetWidth(), fb->GetHeight(),
+                                     GL::GetColorCompFrom(texFormat),
+                                     GL::GetDataTypeFrom(texFormat));
+    GL_CheckError();
+
+    fb->SetAttachmentTexture(tex.Get(), attachment);
+    // tex.Get()->UnBind();
+
+    GL::Bind(fb->GetGLBindTarget(), prevBoundFB);
+}
+
+void Framebuffer::CreateAttachmentTex2D(GL::Attachment attachment,
+                                        GL::ColorFormat texFormat)
+{
+    CreateAttachment<Texture2D>(this, attachment, texFormat);
+}
+
+void Framebuffer::CreateAttachmentTexCubeMap(GL::Attachment attachment,
+                                             GL::ColorFormat texFormat)
+{
+    CreateAttachment<TextureCubeMap>(this, attachment, texFormat);
+}
+
+Texture2D* Framebuffer::GetAttachmentTex2D(GL::Attachment attachment) const
 {
     if (!m_attachments_To_Texture.ContainsKey(attachment)) { return nullptr; }
-    return m_attachments_To_Texture.Get(attachment).Get();
+    return DCAST<Texture2D*>( m_attachments_To_Texture.Get(attachment).Get() );
+}
+TextureCubeMap* Framebuffer::GetAttachmentTexCubeMap(GL::Attachment attachment) const
+{
+    if (!m_attachments_To_Texture.ContainsKey(attachment)) { return nullptr; }
+    return DCAST<TextureCubeMap*>( m_attachments_To_Texture.Get(attachment).Get() );
 }
 
 void Framebuffer::SetAllDrawBuffers() const
@@ -75,27 +122,43 @@ void Framebuffer::SetReadBuffer(GL::Attachment attachment) const
     m_currentReadAttachment = attachment;
 }
 
-void Framebuffer::SetAttachmentTexture(Texture2D* tex,
-                                       GL::Attachment attachment)
+void Framebuffer::BeforeSetAttTex(Texture* tex, GL::Attachment attachment)
 {
-    GLId prevId = GL::GetBoundId(GL::BindTarget::Framebuffer);
-
-    m_attachments_To_Texture.Remove(attachment);
-
     Bind();
     GL_ClearError();
-    GL::FramebufferTexture2D(GL::FramebufferTarget::ReadDraw,
-                             attachment,
-                             GL::TextureTarget::Texture2D,
-                             tex->GetGLId());
+    m_attachments_To_Texture.Remove(attachment);
+}
+void Framebuffer::AfterSetAttTex(Texture* tex, GL::Attachment attachment)
+{
     GL::CheckFramebufferError();
-    UnBind();
 
     m_attachments.PushBack(attachment);
-    RH<Texture2D> texRH;
-    texRH.Set(tex);
+    RH<Texture> texRH(tex);
     m_attachments_To_Texture.Add(attachment, texRH);
+}
 
+
+void Framebuffer::SetAttachmentTexture(Texture* tex, GL::Attachment attachment)
+{
+    GLId prevId = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    BeforeSetAttTex(tex, attachment);
+    GL::FramebufferTexture(GL::FramebufferTarget::ReadDraw,
+                           attachment,
+                           tex->GetGLId());
+    AfterSetAttTex(tex, attachment);
+    GL::Bind(GL::BindTarget::Framebuffer, prevId);
+}
+void Framebuffer::SetAttachmentTexture2D(Texture *tex,
+                                         GL::TextureTarget texTarget,
+                                         GL::Attachment attachment)
+{
+    GLId prevId = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    BeforeSetAttTex(tex, attachment);
+    GL::FramebufferTexture2D(GL::FramebufferTarget::ReadDraw,
+                             attachment,
+                             texTarget,
+                             tex->GetGLId());
+    AfterSetAttTex(tex, attachment);
     GL::Bind(GL::BindTarget::Framebuffer, prevId);
 }
 
@@ -135,7 +198,7 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
 {
     GLId prevFBId = GL::GetBoundId(GL::BindTarget::Framebuffer);
     Bind();
-    Texture2D* t = GetAttachmentTexture(attachment);
+    Texture2D* t = GetAttachmentTex2D(attachment);
     SetReadBuffer(attachment);
     Byte color[4] = {0,0,0,0};
     GL::ReadPixels(x, y, 1, 1,
@@ -155,7 +218,7 @@ void Framebuffer::Resize(int width, int height)
 
     for (const auto &it : m_attachments_To_Texture)
     {
-        Texture2D *t = it.second.Get();
+        Texture *t = it.second.Get();
         if (t) { t->Resize(m_width, m_height); }
     }
 }
@@ -214,7 +277,8 @@ void Framebuffer::Export(GL::Attachment attachment,
 
     GL::Flush(); GL::Finish();
 
-    Imageb img = GetAttachmentTexture(attachment)->ToImage(invertY);
+    Imageb img = GetAttachmentTex2D(attachment)->ToImage();
+    if (invertY) { img = img.InvertedVertically(); }
     img.Export(filepath);
 }
 
@@ -230,10 +294,8 @@ void ExportDepthOrStencil(const Framebuffer *fb,
 
     T *data = new T[fb->GetWidth() * fb->GetHeight()];
     GL::ReadPixels(0, 0, fb->GetWidth(), fb->GetHeight(),
-                   (depth ? GL::ColorComp::Depth :
-                            GL::ColorComp::StencilIndex),
-                   (depth ? GL::DataType::Float :
-                            GL::DataType::UnsignedByte),
+                   (depth ? GL::ColorComp::Depth : GL::ColorComp::StencilIndex),
+                   (depth ? GL::DataType::Float : GL::DataType::UnsignedByte),
                    data);
 
     Array<Byte> bytes(fb->GetWidth() * fb->GetHeight() * 4);

@@ -13,8 +13,10 @@ NAMESPACE_BANG_BEGIN
 enum class ImageResizeMode {Nearest, Linear};
 
 template<class T>
-class Image
+class Image : public Resource
 {
+    RESOURCE(Image)
+
 public:
     Image();
     Image(int width, int height);
@@ -83,7 +85,7 @@ public:
                                  const Array<T> &rgbaByteData);
 
     // Resource
-    void Import(const Path &imageFilepath);
+    void Import(const Path &imageFilepath) override;
 
 private:
     Vector2i m_size = Vector2i::Zero;

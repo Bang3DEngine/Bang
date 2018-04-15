@@ -7,15 +7,16 @@
 
 NAMESPACE_BANG_BEGIN
 
-class Texture2D : public Texture,
-                  public Asset
+class Texture2D : public Texture
 {
     ASSET(Texture2D)
 
 public:
     Texture2D(const Texture2D &tex) = delete;
 
-    void CreateEmpty(int width, int height) override;
+    void CreateEmpty(int width, int height,
+                     GL::ColorComp colorComp,
+                     GL::DataType dataType) override;
     void Resize(int width, int height) override;
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,
@@ -24,7 +25,7 @@ public:
               GL::DataType inputDataType);
 
     template<class T = Byte>
-    Image<T> ToImage(bool invertY = false) const;
+    Image<T> ToImage() const;
 
     void SetAlphaCutoff(float alphaCutoff);
     float GetAlphaCutoff() const;
@@ -46,41 +47,12 @@ protected:
 
     Texture2D();
     virtual ~Texture2D();
-
-private:
-    static Color GetColorFromArray(const float *pixels, int i);
-    static Color GetColorFromArray(const Byte *pixels, int i);
-
-    void GetTexImageInto(float *pixels) const;
-    void GetTexImageInto(Byte *pixels) const;
-    int GetNumComponents() const;
 };
 
 template<class T>
-Image<T> Texture2D::ToImage(bool invertY) const
+Image<T> Texture2D::ToImage() const
 {
-    const int width  = GetWidth();
-    const int height = GetHeight();
-    const int numComps = GL::GetNumComponents( GL::ColorComp::RGBA );
-    T *pixels = new T[width * height * numComps];
-
-    GetTexImageInto(pixels);
-
-    Image<T> img(width, height);
-    for (int y = 0; y < height; ++y)
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            const int coords = (y * width + x) * numComps;
-            Color pixelColor = GetColorFromArray(pixels, coords);
-            img.SetPixel(x, y, pixelColor);
-        }
-    }
-    if (invertY) { img.InvertedVertically(); }
-
-    delete[] pixels;
-
-    return img;
+    return Texture::ToImage<T>(GL::TextureTarget::Texture2D);
 }
 
 NAMESPACE_BANG_END

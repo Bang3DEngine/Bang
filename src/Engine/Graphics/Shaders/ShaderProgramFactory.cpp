@@ -29,20 +29,54 @@ ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
                EPATH("Shaders/Blur.frag"));
 }
 
+ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
+{
+    return Get(EPATH("Shaders/PointLightShadowMap.vert"),
+               // EPATH("Shaders/PointLightShadowMap.geom"),
+               EPATH("Shaders/PointLightShadowMap.frag"));
+}
+
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
                                          const Path &fShaderPath)
 {
+    return Get(vShaderPath, Path::Empty, fShaderPath, false);
+}
+
+ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
+                                         const Path &gShaderPath,
+                                         const Path &fShaderPath)
+{
+    return Get(vShaderPath, gShaderPath, fShaderPath, true);
+}
+
+ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
+                                         const Path &gShaderPath,
+                                         const Path &fShaderPath,
+                                         bool useGeometryShader)
+{
     ShaderProgramFactory *spf = ShaderProgramFactory::GetActive();
 
-    const auto &shaderPathsPair = std::make_pair(vShaderPath, fShaderPath);
-    if ( !spf->m_cache.ContainsKey(shaderPathsPair) )
+    std::tuple<Path, Path, Path> shaderPathsTuple =
+                        std::make_tuple(vShaderPath, gShaderPath, fShaderPath);
+
+    if ( !spf->m_cache.ContainsKey(shaderPathsTuple) )
     {
-        RH<ShaderProgram> shaderProgram =
-                    Resources::Create<ShaderProgram>(vShaderPath, fShaderPath);
-        spf->m_cache.Add(shaderPathsPair, shaderProgram);
+        RH<ShaderProgram> shaderProgram;
+        if (useGeometryShader)
+        {
+            shaderProgram = Resources::Create<ShaderProgram>(vShaderPath,
+                                                             gShaderPath,
+                                                             fShaderPath);
+        }
+        else
+        {
+            shaderProgram = Resources::Create<ShaderProgram>(vShaderPath,
+                                                             fShaderPath);
+        }
+        spf->m_cache.Add(shaderPathsTuple, shaderProgram);
     }
 
-    return spf->m_cache.Get(shaderPathsPair).Get();
+    return spf->m_cache.Get(shaderPathsTuple).Get();
 }
 
 ShaderProgramFactory *ShaderProgramFactory::GetActive()

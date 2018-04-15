@@ -61,13 +61,27 @@ bool GL::CheckError(int line, const String &func, const String &file)
 
 bool GL::CheckFramebufferError()
 {
-    bool error = false;
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    const bool error = (status != GL_FRAMEBUFFER_COMPLETE);
+    if (error)
     {
-        String errMsg = "There was a framebuffer error.";
+        String errMsg = "There was a framebuffer error: ";
+        switch (status)
+        {
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+                errMsg += "FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+            break;
+            case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+                errMsg += "FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
+            break;
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+                errMsg += "FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+            break;
+            case GL_FRAMEBUFFER_UNSUPPORTED:
+                errMsg += "FRAMEBUFFER_UNSUPPORTED";
+            break;
+        }
         Debug_Error(errMsg);
-        GL_CheckError();
-        error = true;
     }
     return error;
 }
@@ -523,6 +537,18 @@ void GL::DeleteProgram(GLId programId)
     GL_CALL( glDeleteProgram(programId) );
 }
 
+void GL::FramebufferTexture(GL::FramebufferTarget target,
+                            GL::Attachment attachment,
+                            GLId textureId)
+{
+    GL_CALL(
+    glFramebufferTexture(GLCAST(target),
+                         GLCAST(attachment),
+                         textureId,
+                         0);
+            );
+}
+
 void GL::FramebufferTexture2D(GL::FramebufferTarget target,
                               GL::Attachment attachment,
                               GL::TextureTarget texTarget,
@@ -534,7 +560,7 @@ void GL::FramebufferTexture2D(GL::FramebufferTarget target,
                            GLCAST(texTarget),
                            textureId,
                            0);
-    );
+            );
 }
 
 void GL::BindRenderbuffer(GL::RenderbufferTarget target, GLId renderbufferId)
@@ -1540,7 +1566,7 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
             return GL::GetActive()->m_boundVBOElementsBufferId;
         case GL::BindTarget::ShaderProgram:
             return GL::GetActive()->m_boundShaderProgramId;
-        default: return -1;
+        default: ASSERT(false);
     }
     ASSERT(false);
     return -1;
@@ -1630,6 +1656,7 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
     switch (format)
     {
         case GL::ColorFormat::RGBA_UByte8:
+        case GL::ColorFormat::RGB10_A2_UByte:
             return GL::DataType::UnsignedByte;
 
         case GL::ColorFormat::RGBA_Float16:

@@ -8,10 +8,10 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
-FORWARD class Material;
 FORWARD class GBuffer;
+FORWARD class Texture;
+FORWARD class Material;
 FORWARD class Renderer;
-FORWARD class Texture2D;
 
 class Light : public Component
 {
@@ -29,7 +29,7 @@ public:
     float GetShadowBias() const;
     ShadowType GetShadowType() const;
     const Vector2i& GetShadowMapSize() const;
-    virtual Texture2D *GetShadowMapTexture() const;
+    virtual Texture *GetShadowMapTexture() const;
 
     void RenderShadowMaps();
 

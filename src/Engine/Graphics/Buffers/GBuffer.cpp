@@ -13,12 +13,12 @@ USING_NAMESPACE_BANG
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 {
     Bind();
-    CreateAttachment(AttColor,        GL::ColorFormat::RGBA_UByte8);
-    CreateAttachment(AttDiffuse,      GL::ColorFormat::RGBA_UByte8);
-    CreateAttachment(AttNormal,       GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachment(AttMisc,         GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachment(AttColorRead,    GL::ColorFormat::RGBA_UByte8);
-    CreateAttachment(AttDepthStencil, GL::ColorFormat::Depth24_Stencil8);
+    CreateAttachmentTex2D(AttColor,        GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttDiffuse,      GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttNormal,       GL::ColorFormat::RGB10_A2_UByte);
+    CreateAttachmentTex2D(AttMisc,         GL::ColorFormat::RGB10_A2_UByte);
+    CreateAttachmentTex2D(AttColorRead,    GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttDepthStencil, GL::ColorFormat::Depth24_Stencil8);
     UnBind();
 }
 
@@ -31,11 +31,11 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     if (!sp) { return; }
     ASSERT(GL::IsBound(sp));
 
-    sp->Set(GBuffer::GetNormalsTexName(), GetAttachmentTexture(AttNormal), false);
-    sp->Set(GBuffer::GetDiffuseTexName(), GetAttachmentTexture(AttDiffuse), false);
-    sp->Set(GBuffer::GetMiscTexName(), GetAttachmentTexture(AttMisc), false);
-    sp->Set(GBuffer::GetColorsTexName(), GetAttachmentTexture(AttColorRead), false);
-    sp->Set(GBuffer::GetDepthStencilTexName(), GetAttachmentTexture(AttDepthStencil), false);
+    sp->Set(GBuffer::GetNormalsTexName(), GetAttachmentTex2D(AttNormal), false);
+    sp->Set(GBuffer::GetDiffuseTexName(), GetAttachmentTex2D(AttDiffuse), false);
+    sp->Set(GBuffer::GetMiscTexName(), GetAttachmentTex2D(AttMisc), false);
+    sp->Set(GBuffer::GetColorsTexName(), GetAttachmentTex2D(AttColorRead), false);
+    sp->Set(GBuffer::GetDepthStencilTexName(), GetAttachmentTex2D(AttDepthStencil), false);
 }
 
 

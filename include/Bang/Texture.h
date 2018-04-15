@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 
+#include "Bang/Asset.h"
+#include "Bang/Image.h"
 #include "Bang/Vector2.h"
 #include "Bang/GLObject.h"
 #include "Bang/IEventEmitter.h"
@@ -11,16 +13,20 @@
 NAMESPACE_BANG_BEGIN
 
 class Texture : public GLObject,
+                public Asset,
                 public EventEmitter<ITextureChangedListener>
 {
-public:
+    ASSET(Texture)
 
+public:
     Texture();
     Texture(GL::TextureTarget texTarget);
     Texture(const Texture &t);
     virtual ~Texture();
 
-    virtual void CreateEmpty(int width, int height) = 0;
+    virtual void CreateEmpty(int width, int height,
+                             GL::ColorComp colorComp,
+                             GL::DataType dataType) = 0;
     virtual void Resize(int width, int height) = 0;
     void GenerateMipMaps() const;
 
@@ -38,6 +44,7 @@ public:
     GL::DataType GetDataType() const;
     GL::ColorComp GetColorComp() const;
     GL::ColorFormat GetFormat() const;
+    int GetNumComponents() const;
     uint GetBytesSize() const;
 
     GL::TextureTarget GetTextureTarget() const;
@@ -48,6 +55,12 @@ protected:
 
     void PropagateTextureChanged();
 
+    static Color GetColorFromFloatArray(const float *pixels, int i);
+    static Color GetColorFromByteArray(const Byte *pixels, int i);
+
+    template<class T>
+    Image<T> ToImage(GL::TextureTarget texTarget) const;
+
 private:
     Vector2i m_size = Vector2i::Zero;
 
@@ -57,6 +70,38 @@ private:
     GL::ColorFormat m_glFormat = GL::ColorFormat::RGBA_Float32;
     GL::TextureTarget m_target = GL::TextureTarget::Texture2D;
 };
+
+template<class T>
+Image<T> Texture::ToImage(GL::TextureTarget texTarget) const
+{
+    const int width  = GetWidth();
+    const int height = GetHeight();
+    const int numComps = GL::GetNumComponents( GL::ColorComp::RGBA );
+    Byte *pixels = new Byte[width * height * numComps];
+
+    GLId prevBound = GL::GetBoundId(GetGLBindTarget());
+    Bind();
+    GL::GetTexImage(texTarget,
+                    GL::ColorComp::RGBA,
+                    GL::DataType::UnsignedByte,
+                    pixels);
+    GL::Bind(GetGLBindTarget(), prevBound);
+
+    Image<T> img(width, height);
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            const int coords = (y * width + x) * numComps;
+            Color pixelColor = GetColorFromByteArray(pixels, coords);
+            img.SetPixel(x, y, pixelColor);
+        }
+    }
+
+    delete[] pixels;
+
+    return img;
+}
 
 NAMESPACE_BANG_END
 

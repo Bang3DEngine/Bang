@@ -16,6 +16,7 @@ void main()
             vec3 camPosWorld = B_GetCameraPositionWorld();
             vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
             color = texture(B_Camera_SkyBox, rayDirWorld);
+            color.a = 1.0f;
         }
         else { color = B_Camera_ClearColor; }
 

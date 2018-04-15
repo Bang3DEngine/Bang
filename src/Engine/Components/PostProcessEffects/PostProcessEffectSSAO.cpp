@@ -20,9 +20,9 @@ USING_NAMESPACE_BANG
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
     m_ssaoFB = new Framebuffer();
-    m_ssaoFB->CreateAttachment(GL::Attachment::Color0,
+    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::Color0,
                                GL::ColorFormat::RGB10_A2_UByte);
-    m_ssaoFB->CreateAttachment(GL::Attachment::Color1,
+    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::Color1,
                                GL::ColorFormat::RGB10_A2_UByte);
 
     SetBlurRadius(1);
@@ -30,9 +30,9 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
     SetNumRandomAxes(8);
     SetNumRandomSamples(16);
 
-    m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0)->
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0)->
               SetWrapMode(GL::WrapMode::Repeat);
-    m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color1)->
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color1)->
               SetWrapMode(GL::WrapMode::Repeat);
 
     p_ssaoShaderProgram = ShaderProgramFactory::Get(
@@ -110,7 +110,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 
             m_ssaoFB->SetDrawBuffers({GL::Attachment::Color1});
             p_blurXShaderProgram.Get()->Set(GBuffer::GetColorsTexName(),
-                        m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0));
+                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0));
             GEngine::GetActive()->RenderViewportPlane(); // Render blur X!
 
             // Blur in Y
@@ -125,7 +125,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 
             m_ssaoFB->SetDrawBuffers({GL::Attachment::Color0});
             p_blurYShaderProgram.Get()->Set(GBuffer::GetColorsTexName(),
-                        m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color1));
+                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color1));
             GEngine::GetActive()->RenderViewportPlane(); // Render blur Y!
         }
 
@@ -290,7 +290,7 @@ const Vector2 &PostProcessEffectSSAO::GetFBSize() const
 
 Texture2D* PostProcessEffectSSAO::GetSSAOTexture() const
 {
-    return m_ssaoFB->GetAttachmentTexture(GL::Attachment::Color0);
+    return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0);
 }
 
 void PostProcessEffectSSAO::ReloadShaders()

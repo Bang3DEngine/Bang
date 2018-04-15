@@ -50,7 +50,14 @@ void Shader::RetrieveType(const Path &shaderPath)
     {
         m_type = GL::ShaderType::Vertex;
     }
-    else { m_type = GL::ShaderType::Fragment; }
+    else if (shaderPath.GetExtension().Contains("geom"))
+    {
+        m_type = GL::ShaderType::Geometry;
+    }
+    else
+    {
+        m_type = GL::ShaderType::Fragment;
+    }
 }
 
 GL::BindTarget Shader::GetGLBindTarget() const

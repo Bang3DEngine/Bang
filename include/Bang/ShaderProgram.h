@@ -27,8 +27,12 @@ class ShaderProgram : public GLObject,
     RESOURCE(ShaderProgram)
 
 public:
-    bool Load(const Path &vshaderPath, const Path &fshaderPath);
+    bool Load(const Path &vShaderPath, const Path &fShaderPath);
+    bool Load(const Path &vShaderPath,
+              const Path &gShaderPath,
+              const Path &fShaderPath);
     bool Load(Shader* vShader, Shader* fShader);
+    bool Load(Shader* vShader, Shader* gShader, Shader* fShader);
 
     bool Link();
     bool IsLinked() const;
@@ -46,6 +50,7 @@ public:
     bool Set(const String &name, const Vector4& v, bool warn = true);
     bool Set(const String &name, const Matrix3& v, bool warn = true);
     bool Set(const String &name, const Matrix4& v, bool warn = true);
+    bool Set(const String &name, Texture *texture, bool warn = true);
     bool Set(const String &name, Texture2D *texture, bool warn = true);
     bool Set(const String &name, TextureCubeMap *textureCubeMap, bool warn = true);
     bool Set(const String &name, const Array<int>& v, bool warn = true);
@@ -59,10 +64,17 @@ public:
     bool Set(const String &name, const Array<Matrix4>& v, bool warn = true);
     bool Set(const String &name, const Array<Texture2D*>& v, bool warn = true);
 
+    template <class T>
+    bool Set(const String &name, T v, bool warn) = delete; // No implicit conv.
+
+    bool SetShader(Shader *shader, GL::ShaderType type);
     bool SetVertexShader(Shader* vertexShader);
+    bool SetGeometryShader(Shader* geometryShader);
     bool SetFragmentShader(Shader* fragmentShader);
 
+    Shader* GetShader(GL::ShaderType type) const;
     Shader* GetVertexShader() const;
+    Shader* GetGeometryShader() const;
     Shader* GetFragmentShader() const;
 
     GLint GetUniformLocation(const String &name) const;
@@ -71,8 +83,9 @@ public:
     void Import(const Path &resourceFilepath) override;
 
 private:
-    RH<Shader> p_vshader;
-    RH<Shader> p_fshader;
+    RH<Shader> p_vShader;
+    RH<Shader> p_gShader;
+    RH<Shader> p_fShader;
     bool m_isLinked = false;
 
     std::unordered_map<String, int> m_uniformCacheInt;
@@ -90,7 +103,10 @@ private:
 
     ShaderProgram();
     ShaderProgram(Shader *vShader, Shader *fShader);
+    ShaderProgram(Shader *vShader, Shader *gShader, Shader *fShader);
+    ShaderProgram(const Path& vShaderPath, const Path& fShaderPath);
     ShaderProgram(const Path& vShaderPath,
+                  const Path& gShaderPath,
                   const Path& fShaderPath);
     virtual ~ShaderProgram();
 

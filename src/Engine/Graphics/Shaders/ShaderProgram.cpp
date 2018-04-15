@@ -28,10 +28,22 @@ ShaderProgram::ShaderProgram(Shader *vShader, Shader *fShader) : ShaderProgram()
     Load(vShader, fShader);
 }
 
+ShaderProgram::ShaderProgram(Shader *vShader, Shader *gShader, Shader *fShader)
+{
+    Load(vShader, gShader, fShader);
+}
+
 ShaderProgram::ShaderProgram(const Path &vShaderPath,
                              const Path &fShaderPath) : ShaderProgram()
 {
     Load(vShaderPath, fShaderPath);
+}
+
+ShaderProgram::ShaderProgram(const Path &vShaderPath,
+                             const Path &gShaderPath,
+                             const Path &fShaderPath)
+{
+    Load(vShaderPath, gShaderPath, fShaderPath);
 }
 
 ShaderProgram::~ShaderProgram()
@@ -46,13 +58,42 @@ bool ShaderProgram::Load(const Path &vShaderPath, const Path &fShaderPath)
     return Load(vShader.Get(), fShader.Get());
 }
 
+bool ShaderProgram::Load(const Path &vShaderPath,
+                         const Path &gShaderPath,
+                         const Path &fShaderPath)
+{
+    RH<Shader> vShader = Resources::Load<Shader>(vShaderPath);
+    RH<Shader> gShader = Resources::Load<Shader>(gShaderPath);
+    RH<Shader> fShader = Resources::Load<Shader>(fShaderPath);
+    return Load(vShader.Get(), gShader.Get(), fShader.Get());
+}
+
 bool ShaderProgram::Load(Shader* vShader, Shader* fShader)
 {
-    if(!vShader || !fShader ||
-       (vShader && vShader == GetVertexShader()) ||
-       (fShader && fShader == GetFragmentShader())) { return false; }
+    if(!vShader || !fShader) { return false; }
+    if (vShader == GetVertexShader() &&
+        fShader == GetFragmentShader())
+    {
+        return true;
+    }
 
     SetVertexShader(vShader);
+    SetFragmentShader(fShader);
+    return Link();
+}
+
+bool ShaderProgram::Load(Shader *vShader, Shader *gShader, Shader *fShader)
+{
+    if(!vShader || !gShader || !fShader) { return false; }
+    if (vShader == GetVertexShader()   &&
+        gShader == GetGeometryShader() &&
+        fShader == GetFragmentShader())
+    {
+        return true;
+    }
+
+    SetVertexShader(vShader);
+    SetGeometryShader(gShader);
     SetFragmentShader(fShader);
     return Link();
 }
@@ -77,6 +118,10 @@ bool ShaderProgram::Link()
     m_idGL = GL::CreateProgram();
 
     GL::AttachShader(m_idGL, GetVertexShader()->GetGLId());
+    if (GetGeometryShader())
+    {
+        GL::AttachShader(m_idGL, GetGeometryShader()->GetGLId());
+    }
     GL::AttachShader(m_idGL, GetFragmentShader()->GetGLId());
 
     if (!GL::LinkProgram(m_idGL))
@@ -237,18 +282,12 @@ bool ShaderProgram::Set(const String &name, const Array<Matrix4> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-
-
-bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
+bool ShaderProgram::Set(const String &name, Texture *texture, bool warn)
 {
     if (!texture)
     {
         m_namesToTexture[name] = nullptr;
-        if (m_namesToTexture.count(name) == 1)
-        {
-            Texture *tex = m_namesToTexture.at(name);
-            m_namesToTexture.erase(name);
-        }
+        if (m_namesToTexture.count(name) == 1) { m_namesToTexture.erase(name); }
     }
     else
     {
@@ -257,9 +296,12 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         {
             if (texture != it->second)
             {
-                Texture *tex = it->second;
-                Asset *asset = DCAST<Asset*>(tex);
-                if (asset) { asset->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
+                Asset *oldAsset = DCAST<Asset*>(it->second);
+                if (oldAsset)
+                {
+                    oldAsset->EventEmitter<IDestroyListener>::
+                                                UnRegisterListener(this);
+                }
             }
         }
 
@@ -272,62 +314,74 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 }
 bool ShaderProgram::Set(const String &name, Texture2D *texture, bool warn)
 {
-    return SetTexture(name, texture, warn);
+    return Set(name, SCAST<Texture*>(texture), warn);
 }
 bool ShaderProgram::Set(const String &name, TextureCubeMap *textureCubeMap, bool warn)
 {
-    return SetTexture(name, textureCubeMap, warn);
+    return Set(name, SCAST<Texture*>(textureCubeMap), warn);
+}
+
+bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
+{
+    if (shader && shader->GetType() != type)
+    {
+        String typeName = (type == GL::ShaderType::Vertex    ? "Vertex" :
+                           (type == GL::ShaderType::Geometry ? "Geometry" :
+                                                               "Fragment"));
+        Debug_Error("You are trying to set as " << typeName << " shader a "
+                    "non-" << typeName << " shader.");
+        return false;
+    }
+
+    if (GetShader(type))
+    {
+        GetShader(type)->EventEmitter<IResourceListener>::UnRegisterListener(this);
+    }
+
+    switch (type)
+    {
+        case GL::ShaderType::Vertex:   p_vShader.Set(shader); break;
+        case GL::ShaderType::Geometry: p_gShader.Set(shader); break;
+        case GL::ShaderType::Fragment: p_fShader.Set(shader); break;
+    }
+
+    if (GetShader(type))
+    {
+        GetShader(type)->EventEmitter<IResourceListener>::RegisterListener(this);
+    }
+
+    return true;
 }
 
 bool ShaderProgram::SetVertexShader(Shader* vertexShader)
 {
-    if (vertexShader && vertexShader->GetType() != GL::ShaderType::Vertex)
-    {
-        Debug_Error("You are trying to set as vertex shader a "
-                    "non-vertex shader");
-        return false;
-    }
+    return SetShader(vertexShader, GL::ShaderType::Vertex);
+}
 
-    if (GetVertexShader())
-    {
-        GetVertexShader()->EventEmitter<IResourceListener>::UnRegisterListener(this);
-    }
-
-    p_vshader.Set(vertexShader);
-
-    if (GetVertexShader())
-    {
-        GetVertexShader()->EventEmitter<IResourceListener>::RegisterListener(this);
-    }
-
-    return true;
+bool ShaderProgram::SetGeometryShader(Shader *geometryShader)
+{
+    return SetShader(geometryShader, GL::ShaderType::Geometry);
 }
 
 bool ShaderProgram::SetFragmentShader(Shader* fragmentShader)
 {
-    if (fragmentShader && fragmentShader->GetType() != GL::ShaderType::Fragment)
-    {
-        Debug_Error("You are trying to set as fragment shader a "
-                    "non-fragment shader");
-        return false;
-    }
-
-    if (GetFragmentShader())
-    {
-        GetFragmentShader()->EventEmitter<IResourceListener>::UnRegisterListener(this);
-    }
-
-    p_fshader.Set(fragmentShader);
-    if (GetFragmentShader())
-    {
-        GetFragmentShader()->EventEmitter<IResourceListener>::RegisterListener(this);
-    }
-
-    return true;
+    return SetShader(fragmentShader, GL::ShaderType::Fragment);
 }
 
-Shader* ShaderProgram::GetVertexShader() const { return p_vshader.Get(); }
-Shader* ShaderProgram::GetFragmentShader() const { return p_fshader.Get(); }
+Shader *ShaderProgram::GetShader(GL::ShaderType type) const
+{
+    switch (type)
+    {
+        case GL::ShaderType::Vertex:   return p_vShader.Get();
+        case GL::ShaderType::Geometry: return p_gShader.Get();
+        case GL::ShaderType::Fragment: return p_fShader.Get();
+    }
+    ASSERT(false);
+    return nullptr;
+}
+Shader* ShaderProgram::GetVertexShader()   const { return p_vShader.Get(); }
+Shader *ShaderProgram::GetGeometryShader() const { return p_gShader.Get(); }
+Shader* ShaderProgram::GetFragmentShader() const { return p_fShader.Get(); }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
 {
@@ -407,6 +461,8 @@ void ShaderProgram::UpdateTextureBindings() const
 void ShaderProgram::OnImported(Resource *res)
 {
     // When used shader is imported, link shaderProgram
-    ASSERT(res == GetVertexShader() || res == GetFragmentShader());
+    ASSERT(res == GetVertexShader()   ||
+           res == GetGeometryShader() ||
+           res == GetFragmentShader());
     Link();
 }

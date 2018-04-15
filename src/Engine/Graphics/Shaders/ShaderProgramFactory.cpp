@@ -32,7 +32,7 @@ ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
 ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
 {
     return Get(EPATH("Shaders/PointLightShadowMap.vert"),
-               // EPATH("Shaders/PointLightShadowMap.geom"),
+               EPATH("Shaders/PointLightShadowMap.geom"),
                EPATH("Shaders/PointLightShadowMap.frag"));
 }
 

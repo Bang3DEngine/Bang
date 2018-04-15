@@ -7,6 +7,5 @@ layout(location = 2) in vec2 B_VIn_Uv;
 
 void main()
 {
-    gl_Position = (vec4(B_VIn_Position, 1.0));
-    // gl_Position = (B_PVM * vec4(B_VIn_Position, 1.0));
+    gl_Position = (B_Model * vec4(B_VIn_Position, 1.0));
 }

@@ -14,6 +14,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/IconManager.h"
+#include "Bang/MeshRenderer.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
@@ -24,15 +25,9 @@ PointLight::PointLight() : Light()
     m_shadowMapFramebuffer = new Framebuffer();
 
     m_shadowMapTexCubeMap = new TextureCubeMap();
-    m_shadowMapTexCubeMap->CreateEmpty(128, GL::ColorComp::RGBA,
-                                       GL::DataType::UnsignedByte);
 
-    m_shadowMapFramebuffer->SetAttachmentTexture2D(
-                m_shadowMapTexCubeMap,
-                GL::TextureTarget::TextureCubeMap_PositiveX,
-                GL::Attachment::Color0);
-
-    GL::CheckFramebufferError();
+    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::Depth,
+                                                       GL::ColorFormat::Depth16);
 
     m_shadowMapShaderProgram.Set( ShaderProgramFactory::GetPointLightShadowMap() );
     SetLightMaterial(MaterialFactory::GetPointLight().Get());
@@ -67,8 +62,7 @@ float PointLight::GetRange() const { return m_range; }
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
-    // return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::Color0);
-    return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::Color0);
+    return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::Depth);
 }
 
 void PointLight::OnRender(RenderPass rp)
@@ -95,61 +89,46 @@ void PointLight::RenderShadowMaps_()
     GLId prevBoundFB = GL::GetBoundId(m_shadowMapFramebuffer->GetGLBindTarget());
     GLId prevBoundSP = GL::GetBoundId(m_shadowMapShaderProgram.Get()->GetGLBindTarget());
 
-    Vector2i shadowMapSize(128);
+    // Resize stuff to fit the shadow map size
+    Vector2i shadowMapSize(256);
     m_shadowMapFramebuffer->Bind();
+    GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
     m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);
     m_shadowMapTexCubeMap->Resize(shadowMapSize.x);
+    m_shadowMapFramebuffer->SetAllDrawBuffers();
 
     m_shadowMapShaderProgram.Get()->Bind();
 
-    GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
-
-    /*
     Scene *scene = GetGameObject()->GetScene();
     const Transform *tr = GetGameObject()->GetTransform();
     const Vector3 pos = tr->GetPosition();
     const Matrix4 perspective = Matrix4::Perspective(Math::DegToRad(90.0f),
                                                      1.0f,
                                                      0.05f,
-                                                     100.0f); // GetRange());
+                                                     GetRange());
     Array<Matrix4> cubeMapPVMMatrices;
     cubeMapPVMMatrices.Resize(6);
-    cubeMapPVMMatrices[0] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetUp()), tr->GetRight());
-    cubeMapPVMMatrices[1] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetDown()), tr->GetRight());
     cubeMapPVMMatrices[2] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetLeft()), tr->GetUp());
+                            Matrix4::LookAt(pos, (pos + tr->GetUp()), tr->GetRight());
     cubeMapPVMMatrices[3] = perspective *
+                            Matrix4::LookAt(pos, (pos + tr->GetDown()), tr->GetRight());
+    cubeMapPVMMatrices[1] = perspective *
+                            Matrix4::LookAt(pos, (pos + tr->GetLeft()), tr->GetUp());
+    cubeMapPVMMatrices[0] = perspective *
                             Matrix4::LookAt(pos, (pos + tr->GetRight()), tr->GetUp());
-    cubeMapPVMMatrices[4] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetForward()), tr->GetUp());
     cubeMapPVMMatrices[5] = perspective *
+                            Matrix4::LookAt(pos, (pos + tr->GetForward()), tr->GetUp());
+    cubeMapPVMMatrices[4] = perspective *
                             Matrix4::LookAt(pos, (pos + tr->GetBack()), tr->GetUp());
     m_shadowMapShaderProgram.Get()->Set("B_PointLightShadowMapMatrices",
                                         cubeMapPVMMatrices);
     m_shadowMapShaderProgram.Get()->Set("B_PointLightPosition", tr->GetPosition());
-    */
 
     // Render shadow map into framebuffer
-    // GL::SetColorMask(false, false, false, false);
-    // GL::SetColorMask(true, true, true, true);
-    // GL::SetDepthFunc(GL::Function::Always); // GL::Function::LEqual);
-    // GL::SetDepthMask(true);
-    m_shadowMapTexCubeMap->Bind();
-    for (int i = 0; i < 6; ++i)
-    {
-        m_shadowMapFramebuffer->SetAllDrawBuffers();
-
-        GL::FramebufferTexture2D(
-             GL::FramebufferTarget::ReadDraw,
-             GL::Attachment::Color0,
-             SCAST<GL::TextureTarget>(
-                 SCAST<uint>(GL::TextureTarget::TextureCubeMap_PositiveX) + i),
-             m_shadowMapTexCubeMap->GetGLId());
-
-        GL::ClearColorBuffer(Color::Green);
-    }
+    GEngine::GetActive()->SetReplacementShader( m_shadowMapShaderProgram.Get() );
+    GL::ClearDepthBuffer(1.0f);
+    GL::SetDepthFunc(GL::Function::LEqual);
+    GEngine::GetActive()->RenderWithPassRaw(scene, RenderPass::Scene);
 
     // Restore previous state
     GL::SetViewport(prevVP);
@@ -157,16 +136,9 @@ void PointLight::RenderShadowMaps_()
     GLUniforms::SetModelMatrix(prevModel);
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
+    GEngine::GetActive()->SetReplacementShader(nullptr);
     GL::Bind(m_shadowMapFramebuffer->GetGLBindTarget(), prevBoundFB);
     GL::Bind(m_shadowMapShaderProgram.Get()->GetGLBindTarget(), prevBoundSP);
-
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Top).Export(Path("test_top.png"));
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Bot).Export(Path("test_bot.png"));
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Left).Export(Path("test_left.png"));
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Right).Export(Path("test_right.png"));
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Front).Export(Path("test_front.png"));
-    m_shadowMapTexCubeMap->ToImage(GL::CubeMapDir::Back).Export(Path("test_back.png"));
-
 }
 
 void PointLight::CloneInto(ICloneable *clone) const

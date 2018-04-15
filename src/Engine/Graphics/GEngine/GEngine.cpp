@@ -97,6 +97,16 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::SetStencilOp(prevStencilOp);
 }
 
+void GEngine::SetReplacementShader(ShaderProgram *shader)
+{
+    m_replacementShader.Set(shader);
+}
+
+ShaderProgram *GEngine::GetReplacementShader() const
+{
+    return m_replacementShader.Get();
+}
+
 Camera *GEngine::GetActiveRenderingCamera()
 {
     GEngine *ge = GEngine::GetActive();
@@ -296,6 +306,17 @@ void GEngine::SetActiveRenderingCamera(Camera *camera)
 
 void GEngine::Render(Renderer *rend)
 {
+    // If we have a replacement shader currently, change the renderer
+    // shader program
+    Material *mat = rend->GetActiveMaterial();
+    ShaderProgram *previousSP = mat ? mat->GetShaderProgram() : nullptr;
+    if (mat && GetReplacementShader())
+    {
+        mat->SetShaderProgram( GetReplacementShader() );
+        GetReplacementShader()->Bind();
+    }
+
+    // Render with the renderer!
     Camera *activeCamera = GetActiveRenderingCamera();
     if (activeCamera)
     {
@@ -313,6 +334,13 @@ void GEngine::Render(Renderer *rend)
     else
     {
         GEngine::RenderRaw(rend);
+    }
+
+    // Restore previous shader program, in case it was replaced with
+    // replacement shader
+    if (mat)
+    {
+        mat->SetShaderProgram(previousSP);
     }
 }
 

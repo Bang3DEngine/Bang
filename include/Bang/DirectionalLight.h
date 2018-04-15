@@ -25,7 +25,7 @@ public:
     void OnRender(RenderPass rp) override;
 
     // Light
-    void SetUniformsBeforeApplyingLight(Material* mat) const override;
+    void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -45,9 +45,9 @@ protected:
     // Light
     void RenderShadowMaps_() override;
 
-    void GetShadowMapMatrices(Scene *scene,
-                              Matrix4 *viewMatrix,
-                              Matrix4 *projMatrix) const;
+    void GetWorldToShadowMapMatrices(Scene *scene,
+                                     Matrix4 *viewMatrix,
+                                     Matrix4 *projMatrix) const;
     Matrix4 GetShadowMapMatrix(Scene *scene) const;
     Matrix4 GetLightToWorldMatrix() const;
     AABox GetShadowMapOrthoBox(Scene *scene) const;

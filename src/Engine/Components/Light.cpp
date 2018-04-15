@@ -44,7 +44,7 @@ void Light::RenderShadowMaps()
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
     p_lightMaterial.Get()->Bind();
-    SetUniformsBeforeApplyingLight(p_lightMaterial.Get());
+    SetUniformsBeforeApplyingLight(p_lightMaterial.Get()->GetShaderProgram());
 
     // Intersect with light rect to draw exactly what we need
     GBuffer *gbuffer = camera->GetGBuffer();
@@ -55,21 +55,19 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
     p_lightMaterial.Get()->UnBind();
 }
 
-void Light::SetUniformsBeforeApplyingLight(Material* mat) const
+void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
 {
-    ShaderProgram *sp = mat->GetShaderProgram();
-    if (!sp) { return; }
-
     ASSERT(GL::IsBound(sp))
 
-    sp->Set("B_ShadowType", SCAST<int>( GetShadowType() ), true);
-    sp->Set("B_LightShadowBias", GetShadowBias(), true);
-    sp->Set("B_LightIntensity", GetIntensity(), false);
-    sp->Set("B_LightColor", GetColor(), false);
-
     Transform *tr = GetGameObject()->GetTransform();
-    sp->Set("B_LightForwardWorld",  tr->GetForward(), false);
-    sp->Set("B_LightPositionWorld", tr->GetPosition(), false);
+    sp->Set("B_LightShadowType",    SCAST<int>( GetShadowType() ), false);
+    sp->Set("B_LightShadowBias",    GetShadowBias(),               false);
+    sp->Set("B_LightIntensity",     GetIntensity(),                false);
+    sp->Set("B_LightColor",         GetColor(),                    false);
+    sp->Set("B_LightForwardWorld",  tr->GetForward(),              false);
+    sp->Set("B_LightPositionWorld", tr->GetPosition(),             false);
+    sp->Set("B_LightShadowMap",     GetShadowMapTexture(),         false);
+    sp->Set("B_LightShadowMapSoft", GetShadowMapTexture(),         false);
 }
 
 void Light::SetLightMaterial(Material *lightMat)

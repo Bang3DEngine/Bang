@@ -5,7 +5,7 @@
 // of the cubemap, by using the gl_Layer variable
 // (each layer is one of the faces)
 
-uniform mat4 B_PointLightShadowMapMatrices[6];
+uniform mat4 B_WorldToShadowMapMatrices[6];
 
 layout (triangles) in;
 layout (triangle_strip, max_vertices=18) out;
@@ -20,7 +20,7 @@ void main()
         for(int i = 0; i < 3; ++i) // For each tri vertex
         {
             B_FIn_Position = gl_in[i].gl_Position;
-            gl_Position    = B_PointLightShadowMapMatrices[face] * B_FIn_Position;
+            gl_Position    = B_WorldToShadowMapMatrices[face] * B_FIn_Position;
             EmitVertex();
         }
         EndPrimitive();

@@ -41,9 +41,12 @@ protected:
     PointLight();
     virtual ~PointLight();
 
+    float GetLightZFar() const;
+
     // Light
     void RenderShadowMaps_() override;
-    virtual void SetUniformsBeforeApplyingLight(Material* mat) const override;
+    Array<Matrix4> GetWorldToShadowMapMatrices() const;
+    virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const override;
 
     // Renderer
     AARect GetRenderRect(Camera *cam) const override;

@@ -3,22 +3,34 @@
 
 void main()
 {
-    vec4 diffColor = B_SampleDiffColor();
+    vec4 originalColor = B_SampleColor();
+    vec3 pixelPosWorld = B_ComputeWorldPosition();
+    vec3 pixelNormalWorld = B_SampleNormal();
+
     if (B_SampleReceivesLight())
     {
-        vec3 worldPos = B_ComputeWorldPosition( B_SampleDepth() );
-        vec3 pointLightApport = GetPointLightColorApportation(
-                                      worldPos,
-                                      B_SampleNormal(),
-                                      diffColor.rgb,
-                                      B_SampleShininess(),
-                                      B_LightPositionWorld,
-                                      B_LightIntensity,
-                                      B_LightRange,
-                                      B_LightColor.rgb,
-                                      B_GetCameraPositionWorld() );
+        float lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
+        if (lightness > 0.0f)
+        {
+            vec3 pointLightApport = GetPointLightColorApportation(
+                                          pixelPosWorld,
+                                          B_SampleNormal(),
+                                          originalColor.rgb,
+                                          B_SampleShininess(),
+                                          B_LightPositionWorld,
+                                          B_LightIntensity,
+                                          B_LightRange,
+                                          B_LightColor.rgb,
+                                          B_GetCameraPositionWorld() );
+            pointLightApport *= lightness;
 
-        B_GIn_Color = vec4(B_SampleColor().rgb + pointLightApport, diffColor.a);
+            B_GIn_Color = vec4(originalColor.rgb + pointLightApport,
+                               originalColor.a);
+        }
+        else
+        {
+            B_GIn_Color = originalColor;
+        }
     }
     else
     {
@@ -26,6 +38,6 @@ void main()
         // are stenciled
         // TODO: This seems not to be being stenciled, fix this in behalf of performance
         // B_GIn_Color = vec4(1,0,0,1);
-        B_GIn_Color = diffColor;
+        B_GIn_Color = originalColor;
     }
 }

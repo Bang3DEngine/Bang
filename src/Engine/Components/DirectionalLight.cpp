@@ -68,7 +68,7 @@ void DirectionalLight::RenderShadowMaps_()
     // Set up shadow map matrices
     Scene *scene = GetGameObject()->GetScene();
     Matrix4 shadowMapViewMatrix, shadowMapProjMatrix;
-    GetShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
+    GetWorldToShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
     GLUniforms::SetModelMatrix(Matrix4::Identity);
     GLUniforms::SetViewMatrix( shadowMapViewMatrix );
     GLUniforms::SetProjectionMatrix( shadowMapProjMatrix );
@@ -90,16 +90,11 @@ void DirectionalLight::RenderShadowMaps_()
     GL::Bind(m_shadowMapFramebuffer->GetGLBindTarget(), prevBoundFB);
 }
 
-void DirectionalLight::SetUniformsBeforeApplyingLight(Material *mat) const
+void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
 {
-    Light::SetUniformsBeforeApplyingLight(mat);
+    Light::SetUniformsBeforeApplyingLight(sp);
 
-    ShaderProgram *sp = mat->GetShaderProgram();
-    if (!sp) { return; }
     ASSERT(GL::IsBound(sp))
-
-    sp->Set("B_LightShadowMap",     GetShadowMapTexture(), true);
-    sp->Set("B_LightShadowMapSoft", GetShadowMapTexture(), true);
     sp->Set("B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, true);
 }
 
@@ -126,9 +121,9 @@ void DirectionalLight::CloneInto(ICloneable *clone) const
     dl->SetShadowDistance( GetShadowDistance() );
 }
 
-void DirectionalLight::GetShadowMapMatrices(Scene *scene,
-                                            Matrix4 *viewMatrix,
-                                            Matrix4 *projMatrix) const
+void DirectionalLight::GetWorldToShadowMapMatrices(Scene *scene,
+                                                   Matrix4 *viewMatrix,
+                                                   Matrix4 *projMatrix) const
 {
     // The ortho box will be the AABox in light space of the AABox of the
     // scene in world space
@@ -153,7 +148,7 @@ void DirectionalLight::GetShadowMapMatrices(Scene *scene,
 Matrix4 DirectionalLight::GetShadowMapMatrix(Scene *scene) const
 {
     Matrix4 shadowMapViewMatrix, shadowMapProjMatrix;
-    GetShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
+    GetWorldToShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
     return shadowMapProjMatrix * shadowMapViewMatrix;
 }
 

@@ -1,18 +1,14 @@
+#include "LightCommon.glsl"
 
-const int SHADOW_NONE = 0;
-const int SHADOW_HARD = 1;
-
-uniform int B_ShadowType;
-uniform float B_LightShadowBias;
+uniform mat4 B_WorldToShadowMapMatrix;
 uniform sampler2D B_LightShadowMap;
 uniform sampler2DShadow B_LightShadowMapSoft;
-uniform mat4 B_WorldToShadowMapMatrix;
 
 float GetFragmentLightness(const in vec3 pixelPosWorld,
                            const in vec3 pixelNormalWorld,
                            const in vec3 lightForwardWorld)
 {
-    if (B_ShadowType == SHADOW_NONE) { return 1.0f; }
+    if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
     else
     {
         // SHADOW_HARD or SHADOW_SOFT
@@ -35,7 +31,7 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
         bias = MinBias; // + clamp(bias, 0, MaxBias);
         float biasedWorldDepth = (worldPosDepthFromLightSpace - B_LightShadowBias);
 
-        if (B_ShadowType == SHADOW_HARD)
+        if (B_LightShadowType == SHADOW_HARD)
         {
             float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
             if (shadowMapDepth == 1.0f) { return 1.0f; }

@@ -1,3 +1,45 @@
+#include "LightCommon.glsl"
+
+uniform float B_PointLightZFar;
+uniform mat4 B_WorldToShadowMapMatrices[6];
+uniform samplerCube B_LightShadowMap;
+uniform samplerCubeShadow B_LightShadowMapSoft;
+
+float GetFragmentLightness(const in vec3 pixelPosWorld,
+                           const in vec3 pixelNormalWorld)
+{
+    if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
+    else
+    {
+        // SHADOW_HARD or SHADOW_SOFT
+        float pixelDistance = distance(pixelPosWorld, B_LightPositionWorld);
+        pixelDistance /= B_PointLightZFar;
+        if (pixelDistance > B_LightRange) { return 0.0f; }
+
+        // If facing away, complete shadow directly
+        vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
+        if (dot(pixelNormalWorld, pixelDirWorld) >= 0) { return 0.0f; }
+
+        // Get shadow map distance
+        float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
+
+        float biasedPixelDistance = (pixelDistance - B_LightShadowBias);
+        if (B_LightShadowType == SHADOW_HARD)
+        {
+            float depthDiff = (biasedPixelDistance - shadowMapDistance);
+            return (depthDiff > 0.0) ? 0.0 : 1.0;
+        }
+        else // SHADOW_SOFT
+        {
+            // Get the PCF value from 0 to 1
+            float lightness = texture(B_LightShadowMapSoft,
+                                      vec4(pixelDirWorld, biasedPixelDistance));
+            return lightness;
+        }
+    }
+    return 1.0f;
+}
+
 vec3 GetPointLightColorApportation(vec3  pixelPosWorld,
                                    vec3  pixelNormalWorld,
                                    vec3  pixelDiffColor,

@@ -12,6 +12,7 @@ FORWARD class GBuffer;
 FORWARD class Texture;
 FORWARD class Material;
 FORWARD class Renderer;
+FORWARD class ShaderProgram;
 
 class Light : public Component
 {
@@ -46,7 +47,7 @@ protected:
 
     void SetLightMaterial(Material* lightMat);
 
-    virtual void SetUniformsBeforeApplyingLight(Material* mat) const;
+    virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const;
 
 private:
     float m_intensity = 1.0f;

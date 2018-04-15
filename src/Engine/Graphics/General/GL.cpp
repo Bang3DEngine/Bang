@@ -899,7 +899,7 @@ void GL::GetTexImage(GL::TextureTarget textureTarget,
                   0,
                   GLCAST(colorComp),
                   GLCAST(dataType),
-                  Cast<void*>(pixels)) );
+                  SCAST<void*>(pixels)) );
 }
 
 bool GL::GetBoolean(GL::Enum glEnum)

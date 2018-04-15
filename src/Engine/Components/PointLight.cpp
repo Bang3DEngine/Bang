@@ -27,7 +27,15 @@ PointLight::PointLight() : Light()
     m_shadowMapTexCubeMap = new TextureCubeMap();
 
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::Depth,
-                                                       GL::ColorFormat::Depth16);
+                                                       GL::ColorFormat::Depth32F);
+
+    GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
+    GetShadowMapTexture()->Bind();
+    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::Bilinear);
+    GL::TexParameteri( GetShadowMapTexture()->GetTextureTarget(),
+                       GL::TexParameter::TEXTURE_COMPARE_MODE,
+                       GL_COMPARE_REF_TO_TEXTURE );
+    GL::Bind(GetShadowMapTexture()->GetGLBindTarget(), prevBoundTex);
 
     m_shadowMapShaderProgram.Set( ShaderProgramFactory::GetPointLightShadowMap() );
     SetLightMaterial(MaterialFactory::GetPointLight().Get());
@@ -39,14 +47,13 @@ PointLight::~PointLight()
     delete m_shadowMapTexCubeMap;
 }
 
-void PointLight::SetUniformsBeforeApplyingLight(Material* mat) const
+void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
 {
-    Light::SetUniformsBeforeApplyingLight(mat);
+    Light::SetUniformsBeforeApplyingLight(sp);
 
-    ShaderProgram *sp = mat->GetShaderProgram();
-    if (!sp) { return; }
     ASSERT(GL::IsBound(sp));
-    sp->Set("B_LightRange", GetRange());
+    sp->Set("B_LightRange", GetRange(), false);
+    sp->Set("B_PointLightZFar", GetLightZFar(), false);
 }
 
 AARect PointLight::GetRenderRect(Camera *cam) const
@@ -99,32 +106,13 @@ void PointLight::RenderShadowMaps_()
 
     m_shadowMapShaderProgram.Get()->Bind();
 
-    Scene *scene = GetGameObject()->GetScene();
-    const Transform *tr = GetGameObject()->GetTransform();
-    const Vector3 pos = tr->GetPosition();
-    const Matrix4 perspective = Matrix4::Perspective(Math::DegToRad(90.0f),
-                                                     1.0f,
-                                                     0.05f,
-                                                     GetRange());
-    Array<Matrix4> cubeMapPVMMatrices;
-    cubeMapPVMMatrices.Resize(6);
-    cubeMapPVMMatrices[2] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetUp()), tr->GetRight());
-    cubeMapPVMMatrices[3] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetDown()), tr->GetRight());
-    cubeMapPVMMatrices[1] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetLeft()), tr->GetUp());
-    cubeMapPVMMatrices[0] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetRight()), tr->GetUp());
-    cubeMapPVMMatrices[5] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetForward()), tr->GetUp());
-    cubeMapPVMMatrices[4] = perspective *
-                            Matrix4::LookAt(pos, (pos + tr->GetBack()), tr->GetUp());
-    m_shadowMapShaderProgram.Get()->Set("B_PointLightShadowMapMatrices",
-                                        cubeMapPVMMatrices);
-    m_shadowMapShaderProgram.Get()->Set("B_PointLightPosition", tr->GetPosition());
+    SetUniformsBeforeApplyingLight(m_shadowMapShaderProgram.Get());
+    Array<Matrix4> cubeMapPVMMatrices = GetWorldToShadowMapMatrices();
+    m_shadowMapShaderProgram.Get()->Set("B_WorldToShadowMapMatrices",
+                                        cubeMapPVMMatrices, false);
 
     // Render shadow map into framebuffer
+    Scene *scene = GetGameObject()->GetScene();
     GEngine::GetActive()->SetReplacementShader( m_shadowMapShaderProgram.Get() );
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEqual);
@@ -139,6 +127,32 @@ void PointLight::RenderShadowMaps_()
     GEngine::GetActive()->SetReplacementShader(nullptr);
     GL::Bind(m_shadowMapFramebuffer->GetGLBindTarget(), prevBoundFB);
     GL::Bind(m_shadowMapShaderProgram.Get()->GetGLBindTarget(), prevBoundSP);
+}
+
+float PointLight::GetLightZFar() const
+{
+    return GetRange();
+}
+
+Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
+{
+    Array<Matrix4> cubeMapPVMMatrices;
+
+    const Transform *tr = GetGameObject()->GetTransform();
+    const Vector3 pos  = tr->GetPosition();
+    const Matrix4 pers = Matrix4::Perspective(Math::DegToRad(90.0f), 1.0f,
+                                              0.05f, GetLightZFar());
+    const Vector3 up = Vector3::Up, down = Vector3::Down, left = Vector3::Left,
+          right = Vector3::Right, fwd = Vector3::Forward, back = Vector3::Back;
+    cubeMapPVMMatrices.Resize(6);
+    cubeMapPVMMatrices[0] = pers * Matrix4::LookAt(pos, (pos + right), down);
+    cubeMapPVMMatrices[1] = pers * Matrix4::LookAt(pos, (pos + left),  down);
+    cubeMapPVMMatrices[2] = pers * Matrix4::LookAt(pos, (pos + up),    back);
+    cubeMapPVMMatrices[3] = pers * Matrix4::LookAt(pos, (pos + down),  fwd);
+    cubeMapPVMMatrices[4] = pers * Matrix4::LookAt(pos, (pos + back),  down);
+    cubeMapPVMMatrices[5] = pers * Matrix4::LookAt(pos, (pos + fwd),   down);
+
+    return cubeMapPVMMatrices;
 }
 
 void PointLight::CloneInto(ICloneable *clone) const

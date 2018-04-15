@@ -32,9 +32,10 @@ void main()
                                         B_LightIntensity,
                                         B_LightColor.rgb,
                                         B_GetCameraPositionWorld() );
-
             dirLightApport *= lightness;
-            B_GIn_Color = vec4(originalColor.rgb + dirLightApport, diffColor.a);
+
+            B_GIn_Color = vec4(originalColor.rgb + dirLightApport,
+                               diffColor.a);
         }
         else
         {

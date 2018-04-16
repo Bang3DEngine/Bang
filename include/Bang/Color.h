@@ -8,7 +8,12 @@ NAMESPACE_BANG_BEGIN
 class Color
 {
 public:
-    float r, g, b, a;
+    union
+    {
+        struct { float r, g, b; };
+        struct { float h, s, v; };
+    };
+    float a;
 
     Color();
     explicit Color(float m);
@@ -41,6 +46,8 @@ public:
     String ToStringRgba() const;
     String ToStringRgba255() const;
 
+    Color ToHSV() const;
+    Color ToRGB() const;
     String ToString() const;
     Vector3 ToVector3() const;
     Vector4 ToVector4() const;

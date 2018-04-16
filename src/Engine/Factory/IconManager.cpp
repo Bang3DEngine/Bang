@@ -31,10 +31,14 @@ RH<Texture2D> IconManager::GetLightBulbIcon()
 { return GetIconTexture("LightBulb"); }
 RH<Texture2D> IconManager::GetWarningIcon()
 { return GetIconTexture("Warn"); }
-
+RH<Texture2D> IconManager::GetCheckerboard()
+{
+    RH<Texture2D> tex = GetIconTexture("Checkerboard");
+    tex.Get()->SetFilterMode(GL::FilterMode::Nearest);
+    return tex;
+}
 RH<Texture2D> IconManager::GetWhiteTexture()
 { return GetIconTexture("White"); }
-
 RH<TextureCubeMap> IconManager::GetWhiteTextureCubeMap()
 {
     RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(

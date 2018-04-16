@@ -133,6 +133,63 @@ String Color::ToStringRgba255() const
     return oss.str();
 }
 
+Color Color::ToHSV() const
+{
+    // In:  RGB([0,1], [0,1], [0,1], [0,1])
+    // Out: HSV([0,1], [0,1], [0,1], [0,1])
+
+    float fCMax  = Math::Max( Math::Max(r, g), b );
+    float fCMin  = Math::Min( Math::Min(r, g), b );
+    float fDelta = fCMax - fCMin;
+
+    float h, s, v;
+    if(fDelta > 0)
+    {
+        if      (fCMax == r) { h = 60 * (fmod(((g - b) / fDelta), 6)); }
+        else if (fCMax == g) { h = 60 * (((b - r) / fDelta) + 2); }
+        else if (fCMax == b) { h = 60 * (((r - g) / fDelta) + 4); }
+
+        if(fCMax > 0) { s = fDelta / fCMax; } else { s = 0; }
+        v = fCMax;
+    }
+    else
+    {
+        h = 0;
+        s = 0;
+        v = fCMax;
+    }
+
+    if(h < 0) { h = 360 + h; }
+    h /= 360.0f;
+
+    return Color(h, s, v, a);
+}
+
+Color Color::ToRGB() const
+{
+    // In:  HSV([0,1], [0,1], [0,1], [0,1])
+    // Out: RGB([0,1], [0,1], [0,1], [0,1])
+
+    int   i = SCAST<int>( Math::Floor(h * 6) );
+    float f = h * 6 - i;
+    float p = v * (1 - s);
+    float q = v * (1 - f * s);
+    float t = v * (1 - (1 - f) * s);
+
+    float newR, newG, newB;
+    switch (i % 6)
+    {
+        case 0: newR = v; newG = t; newB = p; break;
+        case 1: newR = q; newG = v; newB = p; break;
+        case 2: newR = p; newG = v; newB = t; break;
+        case 3: newR = p; newG = q; newB = v; break;
+        case 4: newR = t; newG = p; newB = v; break;
+        case 5: newR = v; newG = p; newB = q; break;
+    }
+
+    return Color(newR, newG, newB, a);
+}
+
 String Color::ToString() const
 {
     return "(" + String(r) + ", " +

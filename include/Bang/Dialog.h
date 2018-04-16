@@ -1,13 +1,16 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include "Bang/Bang.h"
+#include <stack>
+#include <functional>
 
+#include "Bang/Bang.h"
 #include "Bang/Path.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
+FORWARD class Window;
 FORWARD class UIButton;
 FORWARD class IFocusable;
 FORWARD class UIFileList;
@@ -35,10 +38,12 @@ public:
                              const Path &initialDirPath = Path::Empty,
                              const String &initialFileName = "Unnamed");
 
-    static DialogWindow* BeginCreateDialog(const String &title,
-                                           int sizeX, int sizeY,
-                                           bool resizable);
-    static void EndCreateDialog(DialogWindow *dialogWindow);
+    static DialogWindow* BeginDialogCreation(const String &title,
+                                             int sizeX, int sizeY,
+                                             bool resizable,
+                                             bool modal);
+    static void EndDialogCreation(Scene *scene);
+
     static void EndCurrentDialog();
 
     Dialog() = delete;
@@ -48,6 +53,10 @@ private:
     static Path s_resultPath;
     static String s_resultString;
     static YesNoCancel s_resultYesNoCancel;
+
+    static std::stack<DialogWindow*> s_dialogCreation_dialogWindows;
+    static std::stack<Window*> s_dialogCreation_prevActiveWindows;
+    static std::stack<bool> s_dialogCreation_modalBooleans;
 
     static DialogWindow *s_currentDialog;
 

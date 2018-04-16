@@ -49,12 +49,12 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->Set("B_Camera_ClearColor", (cam ? cam->GetClearColor() : Color::Pink), false);
 
     TextureCubeMap *whiteCubeMap = IconManager::GetWhiteTextureCubeMap().Get();
-    if (cam->GetClearMode() == Camera::ClearMode::Color)
+    if (!cam || cam->GetClearMode() == Camera::ClearMode::Color)
     {
         sp->Set("B_Camera_SkyBox", whiteCubeMap, false);
         sp->Set("B_Camera_Has_SkyBox", false, false);
     }
-    else if (cam->GetClearMode() == Camera::ClearMode::SkyBox)
+    else if (cam && cam->GetClearMode() == Camera::ClearMode::SkyBox)
     {
         TextureCubeMap *skt = cam ? cam->GetSkyBoxTexture() : nullptr;
         sp->Set("B_Camera_SkyBox", skt ? skt : whiteCubeMap, false);

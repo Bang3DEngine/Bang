@@ -23,6 +23,7 @@ public:
     static RH<Texture2D> GetSunIcon();
     static RH<Texture2D> GetLightBulbIcon();
     static RH<Texture2D> GetWarningIcon();
+    static RH<Texture2D> GetCheckerboard();
     static RH<Texture2D> GetWhiteTexture();
     static RH<TextureCubeMap> GetWhiteTextureCubeMap();
 

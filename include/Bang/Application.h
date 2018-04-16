@@ -14,6 +14,7 @@ FORWARD class Paths;
 FORWARD class Window;
 FORWARD class GEngine;
 FORWARD class Settings;
+FORWARD class Resources;
 FORWARD class AudioManager;
 FORWARD class DialogWindow;
 FORWARD class SceneManager;
@@ -59,8 +60,11 @@ private:
     bool m_forcedExit = false;
 
     void InitBeforeLoop();
-    virtual Paths* CreatePaths();
-    virtual Settings* CreateSettings();
+    virtual Paths* CreatePaths() const;
+    virtual Settings* CreateSettings() const;
+    virtual Resources *CreateResources() const;
+
+    friend class Window;
 };
 
 NAMESPACE_BANG_END

@@ -36,8 +36,6 @@ public:
     virtual void Render();
     virtual void OnResize(int newWidth, int newHeight);
 
-    virtual SceneManager* CreateSceneManager() const;
-
     virtual bool HandleEvent(const SDL_Event &sdlEvent);
     void OnHandleEventsFinished();
     virtual void OnClosed();
@@ -112,7 +110,6 @@ private:
     static Window* s_activeWindow;
 
     void RetrieveTitleBarHeight();
-    virtual Resources *CreateResources() const;
 
     void _SetMinSize(int minSizeX, int minSizeY);
     void _SetMaxSize(int maxSizeX, int maxSizeY);
@@ -120,6 +117,7 @@ private:
     Vector2i _GetMaxSize() const;
     bool IsParentWindow(int sdlWindowId) const;
 
+    virtual SceneManager *CreateSceneManager() const;
 
     friend class Application;
     friend int EventFilter(void *userData, SDL_Event *event);

@@ -115,6 +115,8 @@ public:
     MaterialFactory *GetMaterialFactory() const;
     ShaderProgramFactory *GetShaderProgramFactory() const;
 
+    virtual Array<Path> GetLookUpPaths() const;
+
     void Destroy();
 
     static Resources* GetActive();
@@ -129,7 +131,6 @@ private:
     ShaderProgramFactory *m_shaderProgramFactory = nullptr;
 
     virtual MeshFactory* CreateMeshFactory() const;
-    virtual Array<Path> GetLookUpPaths() const;
 
     friend class Window;
     friend class GUIDManager;

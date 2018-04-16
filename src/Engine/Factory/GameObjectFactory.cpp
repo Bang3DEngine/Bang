@@ -97,7 +97,8 @@ Scene *GameObjectFactory::CreateUIScene()
 
 void GameObjectFactory::CreateUISceneInto(Scene *scene)
 {
-    scene->AddComponent<Camera>();
+    Camera *cam = scene->AddComponent<Camera>();
+    scene->SetCamera(cam);
     GameObjectFactory::CreateUIGameObjectInto(scene);
     GameObjectFactory::CreateUICanvasInto(scene);
 }

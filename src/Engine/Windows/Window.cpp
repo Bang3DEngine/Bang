@@ -72,7 +72,7 @@ void Window::Create(uint flags)
     }
 
     m_input        = new Input();
-    m_resources    = CreateResources();
+    m_resources    = Application::GetInstance()->CreateResources();
     m_sceneManager = CreateSceneManager();
     m_gEngine      = new GEngine();
 
@@ -409,6 +409,7 @@ SceneManager *Window::CreateSceneManager() const
     return new SceneManager();
 }
 
+
 Window *Window::GetActive()
 {
     return Window::s_activeWindow;
@@ -435,11 +436,6 @@ void Window::SetParent(Window *parentWindow)
             p_parent->p_children.PushBack(this);
         }
     }
-}
-
-Resources *Window::CreateResources() const
-{
-    return new Resources();
 }
 
 void Window::_SetMinSize(int minSizeX, int minSizeY)

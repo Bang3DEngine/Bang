@@ -27,7 +27,7 @@ PointLight::PointLight() : Light()
     m_shadowMapTexCubeMap = new TextureCubeMap();
 
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::Depth,
-                                                       GL::ColorFormat::Depth32F);
+                                                       GL::ColorFormat::Depth16);
 
     GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
     GetShadowMapTexture()->Bind();
@@ -78,7 +78,7 @@ void PointLight::OnRender(RenderPass rp)
     if (rp == RenderPass::Overlay) // Render gizmos
     {
         Gizmos::Reset();
-        Gizmos::SetColor(GetColor());
+        Gizmos::SetColor(GetColor().WithAlpha(1.0f));
         Gizmos::SetSelectable(GetGameObject());
         Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
         Gizmos::SetScale( Vector3(0.1f) );
@@ -140,8 +140,10 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
 
     const Transform *tr = GetGameObject()->GetTransform();
     const Vector3 pos  = tr->GetPosition();
-    const Matrix4 pers = Matrix4::Perspective(Math::DegToRad(90.0f), 1.0f,
-                                              0.05f, GetLightZFar());
+    const Matrix4 pers = Matrix4::Perspective(Math::DegToRad(90.0f),
+                                              1.0f,
+                                              0.05f,
+                                              GetLightZFar());
     const Vector3 up = Vector3::Up, down = Vector3::Down, left = Vector3::Left,
           right = Vector3::Right, fwd = Vector3::Forward, back = Vector3::Back;
     cubeMapPVMMatrices.Resize(6);

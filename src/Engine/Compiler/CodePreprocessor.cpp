@@ -36,6 +36,8 @@ Path CodePreprocessor::GetIncludePath(const String &includeDirective,
         if (includePath.IsFile()) { return includePath; }
     }
 
+    Debug_Error("Could not find include: '" << includeDirective << "'. " <<
+                "Using directories: " << includeDirs);
     return Path::Empty;
 }
 

@@ -35,6 +35,9 @@ USING_NAMESPACE_BANG
 bool Dialog::s_okPressed = false;
 String Dialog::s_resultString = "";
 Path Dialog::s_resultPath = Path::Empty;
+std::stack<DialogWindow*> Dialog::s_dialogCreation_dialogWindows;
+std::stack<Window*>       Dialog::s_dialogCreation_prevActiveWindows;
+std::stack<bool>          Dialog::s_dialogCreation_modalBooleans;
 Dialog::YesNoCancel Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Cancel;
 
 DialogWindow* Dialog::s_currentDialog = nullptr;
@@ -42,12 +45,10 @@ DialogWindow* Dialog::s_currentDialog = nullptr;
 DialogWindow *Bang::Dialog::Error(const String &title,
                                   const String &msg)
 {
-    DialogWindow *dialog = BeginCreateDialog("Error: " + title, 300, 150, false);
-
+    DialogWindow *dialog =
+        Dialog::BeginDialogCreation("Error: " + title, 300, 150, false, true);
     Scene *scene = CreateMsgScene(msg);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    Dialog::EndDialogCreation(scene);
     return dialog;
 }
 
@@ -55,72 +56,59 @@ String Dialog::GetString(const String &title,
                          const String &msg,
                          const String &hint)
 {
-    DialogWindow *dialog = BeginCreateDialog(title, 300, 100, false);
-
+    Dialog::BeginDialogCreation(title, 300, 100, false, true);
     Scene *scene = CreateGetStringScene(msg, hint);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    Dialog::EndDialogCreation(scene);
     return Dialog::s_okPressed ? Dialog::s_resultString : "";
 }
 
 Dialog::YesNoCancel Dialog::GetYesNoCancel(const String &title, const String &msg)
 {
-    DialogWindow *dialog = BeginCreateDialog(title, 300, 140, false);
-
+    Dialog::BeginDialogCreation(title, 300, 140, false, true);
     Scene *scene = CreateYesNoCancelScene(msg);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    Dialog::EndDialogCreation(scene);
     return Dialog::s_resultYesNoCancel;
 }
 
 Path Dialog::OpenFilePath(const String &title, const Array<String> &extensions,
                           const Path &initialDirPath)
 {
-    DialogWindow *dialog = BeginCreateDialog(title, 500, 400, true);
-
+    Dialog::BeginDialogCreation(title, 500, 400, true, true);
     Scene *scene = GameObjectFactory::CreateScene(false);
     CreateOpenFilePathSceneInto(scene, false, extensions, initialDirPath);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    Dialog::EndDialogCreation(scene);
     return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
 }
 
-Path Dialog::OpenDirectory(const String &title,
-                           const Path &initialDirPath)
+Path Dialog::OpenDirectory(const String &title, const Path &initialDirPath)
 {
-    DialogWindow *dialog = BeginCreateDialog(title, 500, 400, true);
-
+    Dialog::BeginDialogCreation(title, 500, 400, true, true);
     Scene *scene = GameObjectFactory::CreateScene(false);
     CreateOpenFilePathSceneInto(scene, true, {}, initialDirPath);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    Dialog::EndDialogCreation(scene);
     return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
 }
 
 Path Dialog::SaveFilePath(const String &title,
                           const String &extension,
-                          const Path &initialDirPath,
-                          const String &initialFileName)
+                          const Path &initDirPath,
+                          const String &initFileName)
 {
-    DialogWindow *dialog = BeginCreateDialog(title, 500, 400, true);
-
+    Dialog::BeginDialogCreation(title, 500, 400, true, true);
     Scene *scene = GameObjectFactory::CreateScene(false);
-    CreateSaveFilePathSceneInto(scene, extension, initialDirPath,
-                                initialFileName);
-    SceneManager::LoadSceneInstantly(scene, false);
-
-    EndCreateDialog(dialog);
+    CreateSaveFilePathSceneInto(scene, extension, initDirPath, initFileName);
+    Dialog::EndDialogCreation(scene);
     return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
 }
 
-DialogWindow* Dialog::BeginCreateDialog(const String &title, int sizeX, int sizeY,
-                                        bool resizable)
+DialogWindow* Dialog::BeginDialogCreation(const String &title,
+                                          int sizeX, int sizeY,
+                                          bool resizable,
+                                          bool modal)
 {
     DialogWindow *dialogWindow = nullptr;
+    Dialog::s_dialogCreation_prevActiveWindows.push( Window::GetActive() );
+    Dialog::s_dialogCreation_modalBooleans.push( modal );
     Window *topWindow = WindowManager::GetTopWindow();
     if (topWindow)
     {
@@ -137,12 +125,29 @@ DialogWindow* Dialog::BeginCreateDialog(const String &title, int sizeX, int size
         Dialog::s_resultPath = Path::Empty;
         Dialog::s_currentDialog = dialogWindow;
     }
+    Dialog::s_dialogCreation_dialogWindows.push(dialogWindow);
     return dialogWindow;
 }
 
-void Dialog::EndCreateDialog(DialogWindow *dialogWindow)
+void Dialog::EndDialogCreation(Scene *scene)
 {
-    Application::GetInstance()->BlockingWait(dialogWindow);
+    SceneManager::LoadSceneInstantly(scene, false);
+
+    DialogWindow *dialogWindow = Dialog::s_dialogCreation_dialogWindows.top();
+    Window *prevWindow = Dialog::s_dialogCreation_prevActiveWindows.top();
+    bool modal = Dialog::s_dialogCreation_modalBooleans.top();
+    Dialog::s_dialogCreation_dialogWindows.pop();
+    Dialog::s_dialogCreation_prevActiveWindows.pop();
+    Dialog::s_dialogCreation_modalBooleans.pop();
+
+    if (modal)
+    {
+        Application::GetInstance()->BlockingWait(dialogWindow);
+    }
+    else
+    {
+        Window::SetActive( prevWindow );
+    }
 }
 
 void Dialog::EndCurrentDialog()

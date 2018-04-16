@@ -283,7 +283,7 @@ void DirectionalLight::OnRender(RenderPass rp)
     if (rp == RenderPass::Overlay)
     {
         Gizmos::Reset();
-        Gizmos::SetColor(GetColor());
+        Gizmos::SetColor(GetColor().WithAlpha(1.0f));
         Gizmos::SetSelectable(GetGameObject());
         Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
         Gizmos::SetScale( Vector3(0.1f) );

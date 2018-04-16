@@ -24,26 +24,19 @@ UISlider::~UISlider()
 {
 }
 
+
 void UISlider::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (GetHandleFocusable()->IsBeingPressed())
+    if ( GetSliderFocusable()->IsBeingPressed() )
     {
         GetHandleRenderer()->SetTint( GetPressedColor() );
-
-        GameObject *guide = GetGuideRenderer()->GetGameObject();
-        float mouseLocalX = guide->GetRectTransform()->
-                                    FromViewportPointToLocalPointNDC(
-                                            Input::GetMousePosition() ).x;
-        mouseLocalX = Math::Clamp(mouseLocalX, -1.0f, 1.0f);
-
-        float mousePercent = mouseLocalX * 0.5f + 0.5f;
-        SetValuePercent(mousePercent);
+        SetValuePercent( GetMouseRelativePercent() );
     }
     else
     {
-        GetHandleRenderer()->SetTint( GetHandleFocusable()->IsMouseOver() ?
+        GetHandleRenderer()->SetTint( GetSliderFocusable()->IsMouseOver() ?
                                        GetOverColor() : GetIdleColor());
     }
 }
@@ -57,6 +50,18 @@ void UISlider::OnValueChanged(Object *object)
     EventEmitter<IValueChangedListener>::PropagateToListeners(
                 &IValueChangedListener::OnValueChanged, this);
     IValueChangedListener::SetReceiveEvents(true);
+}
+
+float UISlider::GetMouseRelativePercent() const
+{
+    GameObject *guide = GetGuideRenderer()->GetGameObject();
+    float mouseLocalX = guide->GetRectTransform()->
+                                FromViewportPointToLocalPointNDC(
+                                        Input::GetMousePosition() ).x;
+    mouseLocalX = Math::Clamp(mouseLocalX, -1.0f, 1.0f);
+
+    float mousePercent = mouseLocalX * 0.5f + 0.5f;
+    return mousePercent;
 }
 
 void UISlider::UpdateSliderHandlerFromInputNumberValue()
@@ -119,14 +124,14 @@ UIImageRenderer *UISlider::GetHandleRenderer() const
     return p_handleRenderer;
 }
 
-UIFocusable *UISlider::GetHandleFocusable() const
+UIFocusable *UISlider::GetSliderFocusable() const
 {
-    return p_handleFocusable;
+    return p_sliderFocusable;
 }
 
 bool UISlider::HasFocus() const
 {
-    return GetHandleFocusable()->IsBeingPressed() || GetInputNumber()->HasFocus();
+    return GetSliderFocusable()->IsBeingPressed() || GetInputNumber()->HasFocus();
 }
 
 const Color &UISlider::GetIdleColor() const
@@ -157,6 +162,8 @@ UISlider *UISlider::CreateInto(GameObject *go)
     hlLE->SetFlexibleWidth(1.0f);
 
     GameObject *sliderContainer = GameObjectFactory::CreateUIGameObject();
+    UIFocusable *sliderFocusable = sliderContainer->AddComponent<UIFocusable>();
+    sliderFocusable->SetCursorType( Cursor::Type::Hand );
 
     UILayoutElement *sliderLE = sliderContainer->AddComponent<UILayoutElement>();
     sliderLE->SetFlexibleSize( Vector2::One );
@@ -173,11 +180,6 @@ UISlider *UISlider::CreateInto(GameObject *go)
     handleRT->SetAnchors(Vector2::Zero);
     handleRT->SetMargins(-6);
 
-    UIFocusable *handleFocusable = handleRenderer->GetGameObject()
-                                   ->AddComponent<UIFocusable>();
-    handleFocusable->EventEmitter<IFocusListener>::RegisterListener(slider);
-    handleFocusable->SetCursorType( Cursor::Type::Hand );
-
     guideRenderer->GetGameObject()->SetParent(sliderContainer);
     handleRenderer->GetGameObject()->SetParent(sliderContainer);
 
@@ -190,7 +192,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
 
     slider->p_guideRenderer = guideRenderer;
     slider->p_handleRenderer = handleRenderer;
-    slider->p_handleFocusable = handleFocusable;
+    slider->p_sliderFocusable = sliderFocusable;
     slider->p_inputNumber = inputNumber;
 
     slider->GetInputNumber()->SetMinMaxValues(0.0f, 100.0f);

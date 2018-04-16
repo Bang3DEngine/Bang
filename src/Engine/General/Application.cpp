@@ -13,11 +13,13 @@
 #include "Bang/Window.h"
 #include "Bang/GEngine.h"
 #include "Bang/Settings.h"
+#include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/IconManager.h"
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
+#include "Bang/SceneManager.h"
 #include "Bang/WindowManager.h"
 #include "Bang/FontSheetCreator.h"
 #include "Bang/ImportFilesManager.h"
@@ -173,12 +175,17 @@ void Application::Exit(int returnCode, bool immediate)
     }
 }
 
-Paths *Application::CreatePaths()
+Paths *Application::CreatePaths() const
 {
     return new Paths();
 }
 
-Settings *Application::CreateSettings()
+Settings *Application::CreateSettings() const
 {
     return new Settings();
+}
+
+Resources *Application::CreateResources() const
+{
+    return new Resources();
 }

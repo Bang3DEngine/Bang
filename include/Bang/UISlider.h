@@ -13,7 +13,6 @@ FORWARD class UIInputNumber;
 FORWARD class UIImageRenderer;
 
 class UISlider : public Component,
-                 public IFocusListener,
                  public IValueChangedListener,
                  public EventEmitter<IValueChangedListener>
 {
@@ -30,7 +29,7 @@ public:
     UIInputNumber *GetInputNumber() const;
     UIImageRenderer *GetGuideRenderer() const;
     UIImageRenderer *GetHandleRenderer() const;
-    UIFocusable *GetHandleFocusable() const;
+    UIFocusable *GetSliderFocusable() const;
     bool HasFocus() const;
 
     const Color& GetIdleColor() const;
@@ -44,7 +43,7 @@ private:
 
     UIImageRenderer *p_guideRenderer  = nullptr;
     UIImageRenderer *p_handleRenderer = nullptr;
-    UIFocusable *p_handleFocusable    = nullptr;
+    UIFocusable *p_sliderFocusable    = nullptr;
     UIInputNumber *p_inputNumber      = nullptr;
 
 	UISlider();
@@ -56,6 +55,7 @@ private:
     // IValueChangedListener
     void OnValueChanged(Object *object) override;
 
+    float GetMouseRelativePercent() const;
     void UpdateSliderHandlerFromInputNumberValue();
     RectTransform *GetHandleRectTransform() const;
 

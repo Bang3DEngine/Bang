@@ -340,9 +340,9 @@ UITreeItemContainer::UITreeItemContainer()
                                                        Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 
-    p_collapseButton = GameObjectFactory::CreateUIButton();
-    p_collapseButton->GetGameObject()->SetName("CollapseButton");
     RH<Texture2D> iconTex = IconManager::GetDownArrowIcon();
+    p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex.Get());
+    p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex.Get(), Vector2i(8), 0);
     p_collapseButton->GetBackground()->SetVisible(false);    
 

@@ -537,14 +537,14 @@ void RectTransform::OnRender(RenderPass rp)
     Gizmos::Reset();
     Gizmos::SetThickness(1.0f);
 
-    Rect r = GetViewportRectNDC(); (void)r;
+    AARect r = GetViewportAARectNDC(); (void)r;
 
     // Random::SetSeed(GetInstanceId());
     Gizmos::SetColor(Random::GetColorOpaque());
     // Gizmos::RenderFillRect(r);
 
     Gizmos::SetColor(Color::Green);
-    Gizmos::RenderRect(AARect(r));
+    Gizmos::RenderRectNDC(r);
     Gizmos::SetColor(Color::Yellow);
     Gizmos::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
     Gizmos::SetColor(Color::Yellow);

@@ -97,7 +97,7 @@ void PointLight::RenderShadowMaps_()
     GLId prevBoundSP = GL::GetBoundId(m_shadowMapShaderProgram.Get()->GetGLBindTarget());
 
     // Resize stuff to fit the shadow map size
-    Vector2i shadowMapSize(256);
+    const Vector2i shadowMapSize = GetShadowMapSize();
     m_shadowMapFramebuffer->Bind();
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
     m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);

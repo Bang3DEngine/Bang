@@ -13,13 +13,6 @@ void main()
                                                pixelNormalWorld,
                                                B_LightForwardWorld);
 
-        // vec2 shadowMapUv = (B_WorldToShadowMapMatrix * vec4(pixelPosWorld,1)).xy;
-        // shadowMapUv = shadowMapUv * 0.5f + 0.5f;
-        // B_GIn_Color = vec4(shadowMapUv, 0, 1); return; // Debug
-        // B_GIn_Color = vec4( vec3(lightness), 1 ); return; // Debug
-        // B_GIn_Color = (lightness != 1.0) ? vec4( vec3(lightness), 1 ) :
-        //                                 vec4( 1, 0, 0 , 1 ); return; // Debug
-
         if (lightness > 0.0f)
         {
             vec4 diffColor = B_SampleDiffColor();

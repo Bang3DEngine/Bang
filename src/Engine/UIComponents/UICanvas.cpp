@@ -128,6 +128,22 @@ void UICanvas::OnUpdate()
             focusable->UpdateFromCanvas();
         }
     }
+
+    // Set cursor type
+    if (GetGameObject()->GetScene() &&
+        GetGameObject()->GetRectTransform()->IsMouseOver())
+    {
+        // Ensure the canvas is actually on the scene (avoid cases in which we
+        // invoke a fake update() without scene) and that the mouse is over us
+        if (GetCurrentFocusMouseOver())
+        {
+            Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
+        }
+        else
+        {
+            Cursor::Set(Cursor::Type::Arrow);
+        }
+    }
 }
 
 void UICanvas::InvalidateCanvas()
@@ -186,7 +202,6 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
             { focusableMOObj->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
 
             GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(false);
-            Cursor::Set(Cursor::Type::Arrow);
         }
 
         p_currentFocusMouseOver = newFocusableMO;
@@ -195,8 +210,6 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
             Object *focusableMOObj = Cast<Object*>( GetCurrentFocusMouseOver() );
             focusableMOObj->EventEmitter<IDestroyListener>::RegisterListener(this);
             GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(true);
-
-            Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
         }
     }
 }

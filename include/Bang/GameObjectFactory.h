@@ -71,7 +71,7 @@ public:
     static UIButton*           CreateUIButtonInto(GameObject *go);
     static UIButton*           CreateUIButton();
     static UIButton*           CreateUIButton(const String &text,
-                                           Texture2D *icon = nullptr);
+                                              Texture2D *icon = nullptr);
     static UILabel*            CreateUILabel();
     static UILabel*            CreateUILabelInto(GameObject *go);
     static UIScrollArea*       CreateUIScrollAreaInto(GameObject *go);

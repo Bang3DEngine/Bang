@@ -22,11 +22,13 @@ class UICheckBox : public Component,
 public:
     void OnUpdate() override;
 
+    void SetSize(int size);
     void SetChecked(bool checked);
 
     bool IsChecked() const;
+    int GetSize() const;
 
-    UIImageRenderer *GetCheckImage() const;
+    UIImageRenderer *GetTickImage() const;
     UIImageRenderer *GetBackgroundImage() const;
     UILayoutElement *GetLayoutElement() const;
     IFocusable *GetFocusable() const;
@@ -35,9 +37,10 @@ private:
     static Color IdleColor;
     static Color OverColor;
 
+    int m_size = -1;
     bool m_isChecked = true;
     UIFocusable *p_focusable = nullptr;
-    UIImageRenderer *p_checkImage = nullptr;
+    UIImageRenderer *p_tickImage = nullptr;
     UIImageRenderer *p_checkBgImage = nullptr;
     UILayoutElement *p_layoutElement = nullptr;
 

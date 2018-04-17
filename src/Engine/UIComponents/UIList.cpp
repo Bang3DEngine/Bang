@@ -12,6 +12,7 @@
 #include "Bang/UIScrollArea.h"
 #include "Bang/UIScrollPanel.h"
 #include "Bang/RectTransform.h"
+#include "Bang/UITextRenderer.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/UILayoutIgnorer.h"
@@ -30,7 +31,6 @@ UIList::~UIList()
 {
 }
 
-#include "Bang/UITextRenderer.h"
 void UIList::OnUpdate()
 {
     Component::OnUpdate();

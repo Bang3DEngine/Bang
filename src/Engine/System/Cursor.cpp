@@ -8,17 +8,20 @@ Cursor::Type Cursor::s_type = Cursor::Type::Arrow;
 
 void Cursor::Set(Cursor::Type cursorType)
 {
-    Cursor::s_type = cursorType;
-
-    Map<Cursor::Type, SDL_Cursor*> createdCursors;
-    if ( !createdCursors.ContainsKey(Cursor::Get()) )
+    if (cursorType != Cursor::s_type)
     {
-        SDL_Cursor* cursor = SDL_CreateSystemCursor(
-                                    SCAST<SDL_SystemCursor>(Cursor::Get()) );
-        createdCursors.Add(Cursor::Get(), cursor);
-    }
+        Cursor::s_type = cursorType;
 
-    SDL_SetCursor( createdCursors.Get(Cursor::Get()) );
+        static Map<Cursor::Type, SDL_Cursor*> createdCursors;
+        if ( !createdCursors.ContainsKey(Cursor::Get()) )
+        {
+            SDL_Cursor* cursor = SDL_CreateSystemCursor(
+                                        SCAST<SDL_SystemCursor>(Cursor::Get()) );
+            createdCursors.Add(Cursor::Get(), cursor);
+        }
+
+        SDL_SetCursor( createdCursors.Get(Cursor::Get()) );
+    }
 }
 
 Cursor::Type Cursor::Get()

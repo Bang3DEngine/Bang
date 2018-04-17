@@ -318,6 +318,38 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
     if (!text.IsEmpty()) { btn->GetText()->SetContent(text); }
     if (icon) { btn->SetIcon(icon, size, 5); }
 
+    constexpr int BigPadding    = 10;
+    constexpr int MediumPadding = 6;
+    constexpr int SmallPadding  = 3;
+    if (!text.IsEmpty() && !icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingRight(BigPadding);
+        btn->GetDirLayout()->SetPaddingLeft (BigPadding);
+    }
+    else if (!text.IsEmpty() && icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
+        btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
+    }
+    else if (text.IsEmpty() && icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(SmallPadding);
+        btn->GetDirLayout()->SetPaddingTop(SmallPadding);
+        btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
+        btn->GetDirLayout()->SetPaddingRight(SmallPadding);
+    }
+    else if (text.IsEmpty() && !icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
+        btn->GetDirLayout()->SetPaddingRight(BigPadding);
+    }
+
     return btn;
 }
 

@@ -37,13 +37,17 @@ void UIComboBox::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (!UICanvas::GetActive(this)->IsMouseOver(this, true))
+    if (Input::GetMouseButtonDown(MouseButton::Left))
     {
-        if (Input::GetMouseButtonDown(MouseButton::Left))
+        if (IsListBeingShown() && !m_justStartedToShowList)
         {
-            GetList()->GetGameObject()->SetEnabled(false);
+            if (!UICanvas::GetActive(this)->IsMouseOver(GetList(), true))
+            {
+                HideList();
+            }
         }
     }
+    m_justStartedToShowList = false;
 }
 
 void UIComboBox::AddItem(const String &label, int value)
@@ -51,7 +55,7 @@ void UIComboBox::AddItem(const String &label, int value)
     GameObject *textGo = GameObjectFactory::CreateUIGameObject();
     UITextRenderer *textRend = textGo->AddComponent<UITextRenderer>();
     textRend->SetContent(label);
-    textRend->SetTextSize(11);
+    textRend->SetTextSize(12);
     textRend->SetVerticalAlign(VerticalAlignment::Center);
     textRend->SetHorizontalAlign(HorizontalAlignment::Right);
 
@@ -83,6 +87,25 @@ void UIComboBox::SetSelectionByValue(int value)
         indexOfValue = m_indexToValue.IndexOf(value);
     }
     SetSelectionByIndex(indexOfValue);
+}
+
+void UIComboBox::ShowList()
+{
+    if (!IsListBeingShown())
+    {
+        GetList()->GetGameObject()->SetEnabled(true);
+        m_justStartedToShowList = true;
+    }
+}
+
+bool UIComboBox::IsListBeingShown() const
+{
+    return GetList()->GetGameObject()->IsEnabled();
+}
+
+void UIComboBox::HideList()
+{
+    GetList()->GetGameObject()->SetEnabled(false);
 }
 
 int UIComboBox::GetSelectedValue() const
@@ -120,21 +143,24 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     UIComboBox *comboBox = go->AddComponent<UIComboBox>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
-    hl->SetChildrenVerticalStretch(Stretch::Full);
-    hl->SetChildrenVerticalAlignment(VerticalAlignment::Top);
-    hl->SetPaddings(3);
-    hl->SetSpacing(10);
+    hl->SetChildrenVerticalStretch(Stretch::None);
+    hl->SetChildrenVerticalAlignment(VerticalAlignment::Center);
+    hl->SetPaddings(6);
+    hl->SetPaddingLeft(10);
+    hl->SetPaddingRight(6);
+    hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->AddClickedCallback([comboBox](IFocusable*)
     {
-        comboBox->GetList()->GetGameObject()->SetEnabled(true);
+        comboBox->ShowList();
     });
+    focusable->SetCursorType(Cursor::Type::Hand);
 
     GameObject *currentItemTextGo = GameObjectFactory::CreateUIGameObject();
     UITextRenderer *currentItemText = currentItemTextGo->AddComponent<UITextRenderer>();
     currentItemText->SetContent("Current");
-    currentItemText->SetTextSize(11);
+    currentItemText->SetTextSize(12);
     currentItemText->SetHorizontalAlign(HorizontalAlignment::Right);
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
@@ -149,24 +175,27 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
 
     GameObject *downArrowIconGo = downArrowIcon->GetGameObject();
     UILayoutElement *downArrowLE = downArrowIconGo->AddComponent<UILayoutElement>();
-    downArrowLE->SetMinSize( Vector2i(6) );
+    downArrowLE->SetMinSize( Vector2i(8) );
+    downArrowLE->SetFlexibleSize( Vector2::Zero );
 
     UIList *list = GameObjectFactory::CreateUIList(false);
     GameObject *listGo = list->GetGameObject();
     list->SetWideSelectionMode(true);
     list->GetDirLayout()->SetPaddings(3);
+    list->GetDirLayout()->SetPaddingLeft(20);
+    list->GetDirLayout()->SetPaddingRight(2);
     list->SetSelectionCallback([comboBox](GameObject *item, UIList::Action action)
     {
         comboBox->OnListSelectionCallback(item, action);
     });
-    listGo->SetEnabled(false);
-
 
     UIImageRenderer *listBG = listGo->AddComponent<UIImageRenderer>();
     listBG->SetImageTexture( Resources::Load<Texture2D>(
-                                                EPATH("Images/RRect_9s.png")).Get() );
+                                      EPATH("Images/RRect_9s.png")).Get() );
     listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
+    UIFocusable *listFocusable = listBG->GetGameObject()->AddComponent<UIFocusable>();
+    listFocusable->SetCursorType(Cursor::Type::Hand);
 
     listGo->AddComponent<UILayoutIgnorer>();
     RectTransform *contRT = listGo->GetRectTransform();
@@ -185,6 +214,8 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     comboBox->p_currentItemText = currentItemText;
     comboBox->p_list = list;
 
+    comboBox->HideList();
+
     return comboBox;
 }
 
@@ -199,7 +230,7 @@ void UIComboBox::OnListSelectionCallback(GameObject *item, UIList::Action action
         case UIList::Action::ClickedRight:
         case UIList::Action::Pressed:
             SetSelectionByIndex(indexOfItem);
-            GetList()->GetGameObject()->SetEnabled(false);
+            HideList();
             break;
 
         default: break;

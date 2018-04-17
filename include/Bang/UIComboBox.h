@@ -24,6 +24,10 @@ public:
     void SetSelectionByIndex(int index);
     void SetSelectionByValue(int value);
 
+    void ShowList();
+    bool IsListBeingShown() const;
+    void HideList();
+
     int GetSelectedValue() const;
     int GetSelectedIndex() const;
     String GetSelectedLabel() const;
@@ -33,6 +37,7 @@ private:
     int m_selectedIndex = -1;
     Array<int> m_indexToValue;
     Array<String> m_indexToLabel;
+    bool m_justStartedToShowList = false;
 
     UIList *p_list = nullptr;
     UITextRenderer *p_currentItemText = nullptr;

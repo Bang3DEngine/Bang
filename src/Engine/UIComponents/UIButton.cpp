@@ -80,7 +80,7 @@ void UIButton::SetBlocked(bool blocked)
 {
     m_isBlocked = blocked;
 
-    p_focusable->IFocusable::SetEmitEvents( !IsBlocked() );
+    GetFocusable()->IFocusable::SetEmitEvents( !IsBlocked() );
     if (!IsBlocked())
     {
         GetText()->SetTextColor(Color::Black);
@@ -137,11 +137,6 @@ UIButton* UIButton::CreateInto(GameObject *go)
     UIButton *button = go->AddComponent<UIButton>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
-    constexpr int BTN_PADDING = 3;
-    hl->SetPaddingBot(BTN_PADDING);
-    hl->SetPaddingTop(BTN_PADDING);
-    hl->SetPaddingRight(BTN_PADDING);
-    hl->SetPaddingLeft (BTN_PADDING);
     hl->SetSpacing(0);
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();

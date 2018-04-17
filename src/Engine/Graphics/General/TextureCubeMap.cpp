@@ -87,7 +87,8 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
 
 void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
 {
-    Imageb imgForTexture = *img;
+    Imageb imgForTexture;
+    if (img) { imgForTexture = *img; }
     if (cubeMapDir == GL::CubeMapDir::Top)
     {
         imgForTexture = imgForTexture.Rotated270DegreesRight().InvertedVertically();
@@ -102,6 +103,8 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
          Math::Min(imgForTexture.GetWidth(), imgForTexture.GetHeight()),
          GL::ColorComp::RGBA,
          GL::DataType::UnsignedByte);
+
+    m_imageResources[ TextureCubeMap::GetDirIndex(cubeMapDir) ].Set(img);
 }
 
 Imageb TextureCubeMap::ToImage(GL::CubeMapDir cubeMapDir) const

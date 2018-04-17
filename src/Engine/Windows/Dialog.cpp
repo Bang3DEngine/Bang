@@ -442,10 +442,11 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     buttonsGoLE->SetFlexibleHeight(0.0f);
 
     UIInputText *inputText = GameObjectFactory::CreateUIInputText();
+    inputText->GetLabel()->SetSelectAllOnFocus(true);
     inputText->GetText()->SetContent(hint);
-    UIAutoFocuser *autoFocuser = inputText->GetLabel()->GetGameObject()->
-                                  AddComponent<UIAutoFocuser>();
-    autoFocuser->SetFocusableToAutoFocus(inputText->GetLabel());
+
+    UIAutoFocuser *autoFocuser = scene->AddComponent<UIAutoFocuser>();
+    autoFocuser->SetFocusableToAutoFocus(inputText->GetFocusable());
     Dialog::s_resultString = hint;
 
     UIButton *okButton = GameObjectFactory::CreateUIButton("Ok");

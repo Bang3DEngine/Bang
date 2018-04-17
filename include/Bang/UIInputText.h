@@ -51,6 +51,7 @@ public:
     UILabel *GetLabel() const;
     UITextCursor *GetCursor() const;
     UITextRenderer *GetText() const;
+    UIFocusable *GetFocusable() const;
     UIImageRenderer *GetBackground() const;
 
 private:
@@ -83,8 +84,8 @@ private:
     RectTransform *GetTextRT() const;
     RectTransform *GetRT() const;
 
-    bool IsDelimiter(char initialChar, char currentChar) const;
-    int GetWordSplitIndex(int cursorIndex, bool forward) const;
+    bool IsWordBoundary(char prevChar, char nextChar) const;
+    int GetCtrlStopIndex(int cursorIndex, bool forward) const;
 
     void UpdateCursorRenderer();
     void UpdateTextScrolling();

@@ -12,10 +12,11 @@ void main()
         float lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
         if (lightness > 0.0f)
         {
+            vec4 diffColor = B_SampleDiffColor();
             vec3 pointLightApport = GetPointLightColorApportation(
                                           pixelPosWorld,
                                           B_SampleNormal(),
-                                          originalColor.rgb,
+                                          diffColor.rgb,
                                           B_SampleShininess(),
                                           B_LightPositionWorld,
                                           B_LightIntensity,
@@ -24,13 +25,9 @@ void main()
                                           B_GetCameraPositionWorld() );
             pointLightApport *= lightness;
 
-            B_GIn_Color = vec4(originalColor.rgb + pointLightApport,
-                               originalColor.a);
+            B_GIn_Color = vec4(originalColor.rgb + pointLightApport, diffColor.a);
         }
-        else
-        {
-            B_GIn_Color = originalColor;
-        }
+        else { discard; }
     }
     else
     {
@@ -38,6 +35,6 @@ void main()
         // are stenciled
         // TODO: This seems not to be being stenciled, fix this in behalf of performance
         // B_GIn_Color = vec4(1,0,0,1);
-        B_GIn_Color = originalColor;
+        discard;
     }
 }

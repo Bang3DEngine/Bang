@@ -43,7 +43,7 @@ public:
     float GetCursorXViewportNDC(int cursorIndex) const;
     float GetCursorXLocalNDC(int cursorIndex) const;
 
-    bool IsSelectAllOnFocus() const;
+    bool GetSelectAllOnFocus() const;
     bool IsSelectingWithMouse() const;
 
     UIRectMask *GetMask() const;

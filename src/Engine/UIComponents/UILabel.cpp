@@ -21,7 +21,8 @@ UILabel::UILabel()
 {
     SetSelectable(false);
     SetFocusable(this);
-    SetFocusEnabled(false);
+    ResetSelection();
+    SetSelectAllOnFocus(true);
 }
 
 UILabel::~UILabel()
@@ -31,17 +32,13 @@ UILabel::~UILabel()
 void UILabel::OnStart()
 {
     Component::OnStart();
-
-    ResetSelection();
-    SetSelectAllOnFocus(true);
-    UpdateSelectionQuadRenderer();
 }
 
 void UILabel::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (UICanvas::GetActive(this)->HasFocusFocusable( GetFocusable() ))
+    if (UICanvas::GetActive(this)->HasFocusFocusable(GetFocusable()))
     {
         if (IsSelectable())
         {
@@ -69,8 +66,22 @@ void UILabel::OnUpdate()
     }
 }
 
-void UILabel::SetCursorIndex(int index) { m_cursorIndex = index; }
-void UILabel::SetSelectionIndex(int index) { m_selectionIndex = index; }
+void UILabel::SetCursorIndex(int index)
+{
+    if (index != GetCursorIndex())
+    {
+        m_cursorIndex = index;
+        UpdateSelectionQuadRenderer();
+    }
+}
+void UILabel::SetSelectionIndex(int index)
+{
+    if (index != GetSelectionIndex())
+    {
+        m_selectionIndex = index;
+        UpdateSelectionQuadRenderer();
+    }
+}
 
 void UILabel::SetSelectable(bool selectable)
 {
@@ -93,11 +104,10 @@ String UILabel::GetSelectedText() const
 void UILabel::ResetSelection()
 {
     SetSelectionIndex( GetCursorIndex() );
-    UpdateSelectionQuadRenderer();
 }
 void UILabel::SelectAll()
 {
-    SetSelection(0, GetText()->GetContent().Size());
+    SetSelection(GetText()->GetContent().Size(), 0);
 }
 void UILabel::SetSelectAllOnFocus(bool selectAllOnFocus)
 {
@@ -157,7 +167,7 @@ float UILabel::GetCursorXLocalNDC(int cursorIndex) const
     return Vector2(localTextX, 0).x;
 }
 
-bool UILabel::IsSelectAllOnFocus() const
+bool UILabel::GetSelectAllOnFocus() const
 {
     return m_selectAllOnFocusTaken;
 }
@@ -198,10 +208,12 @@ IFocusable *UILabel::GetFocusable() const { return p_focusable; }
 void UILabel::SetFocusable(IFocusable *focusable)
 {
     if (GetFocusable())
-    { GetFocusable()->EventEmitter<IFocusListener>::UnRegisterListener(this); }
+    {
+        GetFocusable()->EventEmitter<IFocusListener>::UnRegisterListener(this);
+    }
 
     p_focusable = focusable;
-    if (GetFocusable() != this) { this->SetFocusEnabled(false); }
+    SetFocusEnabled (GetFocusable() == this);
 
     if (GetFocusable())
     {
@@ -214,7 +226,7 @@ void UILabel::OnFocusTaken(IFocusable *focusable)
 {
     IFocusListener::OnFocusTaken(focusable);
 
-    if (IsSelectAllOnFocus() && IsSelectable())
+    if (GetSelectAllOnFocus() && IsSelectable())
     {
         m_firstSelectAll = true;
         SelectAll();

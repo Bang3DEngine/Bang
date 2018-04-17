@@ -3,8 +3,8 @@
 
 void main()
 {
-    vec4 originalColor = B_SampleColor();
-    vec3 pixelPosWorld = B_ComputeWorldPosition();
+    vec4 originalColor    = B_SampleColor();
+    vec3 pixelPosWorld    = B_ComputeWorldPosition();
     vec3 pixelNormalWorld = B_SampleNormal();
 
     if (B_SampleReceivesLight())
@@ -27,13 +27,9 @@ void main()
                                         B_GetCameraPositionWorld() );
             dirLightApport *= lightness;
 
-            B_GIn_Color = vec4(originalColor.rgb + dirLightApport,
-                               diffColor.a);
+            B_GIn_Color = vec4(originalColor.rgb + dirLightApport, diffColor.a);
         }
-        else
-        {
-            B_GIn_Color = originalColor;
-        }
+        else { discard; }
     }
     else
     {
@@ -41,6 +37,6 @@ void main()
         // are stenciled
         // TODO: This seems not to be being stenciled, fix this
         // B_GIn_Color = vec4(1,0,0,1);
-        B_GIn_Color = originalColor;
+        discard;
     }
 }

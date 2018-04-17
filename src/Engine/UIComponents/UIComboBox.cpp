@@ -194,7 +194,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
                                       EPATH("Images/RRect_9s.png")).Get() );
     listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
-    UIFocusable *listFocusable = listBG->GetGameObject()->AddComponent<UIFocusable>();
+    UIFocusable *listFocusable = listBG->GetGameObject()->GetComponent<UIFocusable>();
     listFocusable->SetCursorType(Cursor::Type::Hand);
 
     listGo->AddComponent<UILayoutIgnorer>();

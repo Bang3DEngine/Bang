@@ -270,7 +270,7 @@ void UIInputText::HandleKeySelection(bool existedSelection)
         {
             bool fwd = (indexAdvance > 0);
             int startIdx = GetCursorIndex() + (fwd ? 0 : -1);
-            indexAdvance = GetWordSplitIndex(startIdx, fwd) - GetCursorIndex();
+            indexAdvance = GetCtrlStopIndex(startIdx, fwd) - GetCursorIndex();
             indexAdvance += (fwd ? 0 : 1);
         }
 
@@ -354,6 +354,11 @@ UITextRenderer *UIInputText::GetText() const
     return p_label->GetText();
 }
 
+UIFocusable *UIInputText::GetFocusable() const
+{
+    return p_focusable;
+}
+
 UIImageRenderer *UIInputText::GetBackground() const
 {
     return p_background;
@@ -413,39 +418,44 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     return inputText;
 }
 
-bool UIInputText::IsDelimiter(char initialChar, char curr) const
+bool UIInputText::IsWordBoundary(char prevChar, char nextChar) const
 {
-    bool initialIsLetter = String::IsLetter(initialChar);
-    bool differentCase   = initialIsLetter &&
-                           (String::IsUpperCase(initialChar) !=
-                            String::IsUpperCase(curr));
-    return differentCase ||
-           (!String::IsLetter(curr) && !String::IsNumber(curr));
+    const bool prevCharIsUpperCase = String::IsUpperCase(prevChar);
+    const bool nextCharIsUpperCase = String::IsUpperCase(nextChar);
+    const bool prevCharIsLetter    = String::IsLetter(prevChar);
+    const bool nextCharIsLetter    = String::IsLetter(nextChar);
+    if (!prevCharIsUpperCase && nextCharIsUpperCase) { return true; }
+    if (prevCharIsLetter != nextCharIsLetter) { return true; }
+    return false;
 }
 
-int UIInputText::GetWordSplitIndex(int cursorIndex, bool forward) const
+int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
 {
     const String &content = GetText()->GetContent();
+    const int fwdInc = (forward ? 1 : -1);
 
-    if (cursorIndex <= 0 && !forward) { return cursorIndex; }
-    if (cursorIndex >= content.Size()-1 && forward) { return cursorIndex; }
+    if (cursorIndex == 0              && !forward) { return 0; }
+    if (cursorIndex == content.Size() &&  forward) { return content.Size(); }
 
     int i = cursorIndex;
-    while ( i >= 0 && i < content.Size() &&
-            IsDelimiter(content[cursorIndex], content[i]) )
+    if (forward) { i += fwdInc; }
+    while (i >= 0 && i < content.Size())
     {
-        i += (forward ? 1 : -1);
-    }
+        if ( (i + fwdInc) < 0 || (i + fwdInc) == content.Size())
+        { i += fwdInc; break; }
 
-    for (;
-         (forward ? (i < content.Size()) : (i >= 0));
-         i += (forward ? 1 : -1))
-    {
-        if ( IsDelimiter(content[cursorIndex], content[i]) )
-        {
-            return i;
-        }
+        const int minIndex  = Math::Min(i + fwdInc, i);
+        const int maxIndex  = Math::Max(i + fwdInc, i);
+        const char prevChar = content[minIndex];
+        const char nextChar = content[maxIndex];
+        Debug_Peek(prevChar);
+        Debug_Peek(nextChar);
+        Debug_Log("---");
+        if (IsWordBoundary(prevChar, nextChar)) { i += fwdInc; break; }
+
+        i += fwdInc;
     }
+    Debug_Log("End with index: " << i);
 
     return i;
 }

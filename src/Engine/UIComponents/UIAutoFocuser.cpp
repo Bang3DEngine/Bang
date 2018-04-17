@@ -16,7 +16,6 @@ void UIAutoFocuser::OnStart()
             canvas->SetFocus(p_focusableToAutoFocus);
         }
     }
-
     Component::Destroy(this);
 }
 

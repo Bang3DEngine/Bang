@@ -13,8 +13,7 @@ void ImageIODDS::ImportDDS(const Path &filepath, Texture2D *tex, bool *ok)
     GLId prevId = GL::GetBoundId(tex->GetGLBindTarget());
     tex->Bind();
 
-    tex->CreateEmpty(ddsImg.get_width(), ddsImg.get_height(),
-                     GL::ColorComp::RGBA, GL::DataType::UnsignedByte);
+    tex->CreateEmpty(ddsImg.get_width(), ddsImg.get_height());
     ddsImg.upload_texture2D(0, GLCAST( tex->GetGLBindTarget() ));
     tex->SetFormat( SCAST<GL::ColorFormat>(ddsImg.get_format()) );
 

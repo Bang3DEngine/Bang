@@ -14,9 +14,7 @@ class Texture2D : public Texture
 public:
     Texture2D(const Texture2D &tex) = delete;
 
-    void CreateEmpty(int width, int height,
-                     GL::ColorComp colorComp,
-                     GL::DataType dataType) override;
+    void CreateEmpty(int width, int height) override;
     void Resize(int width, int height) override;
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,

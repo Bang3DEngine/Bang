@@ -29,26 +29,20 @@ Framebuffer::~Framebuffer()
 }
 
 template<class TextureClass>
-void CreateEmptyTexture(TextureClass *tex, int width, int height,
-                        GL::ColorComp colorComp, GL::DataType dataType)
+void CreateEmptyTexture(TextureClass *tex, int width, int height)
 {
     ASSERT(false);
 }
 
 template<>
-void CreateEmptyTexture<Texture2D>(Texture2D *tex, int width, int height,
-                                   GL::ColorComp colorComp,
-                                   GL::DataType dataType)
+void CreateEmptyTexture<Texture2D>(Texture2D *tex, int width, int height)
 {
-    tex->CreateEmpty(width, height, colorComp, dataType);
+    tex->CreateEmpty(width, height);
 }
 template<>
-void CreateEmptyTexture<TextureCubeMap>(TextureCubeMap *tex,
-                                        int width, int height,
-                                        GL::ColorComp colorComp,
-                                        GL::DataType dataType)
+void CreateEmptyTexture<TextureCubeMap>(TextureCubeMap *tex, int width, int height)
 {
-    tex->CreateEmpty(Math::Min(width, height), colorComp, dataType);
+    tex->CreateEmpty(Math::Min(width, height));
 }
 
 
@@ -65,10 +59,7 @@ void CreateAttachment(Framebuffer *fb,
     RH<TextureClass> tex = Resources::Create<TextureClass>();
     tex.Get()->Bind();
     tex.Get()->SetFormat(texFormat);
-    CreateEmptyTexture<TextureClass>(tex.Get(),
-                                     fb->GetWidth(), fb->GetHeight(),
-                                     GL::GetColorCompFrom(texFormat),
-                                     GL::GetDataTypeFrom(texFormat));
+    CreateEmptyTexture<TextureClass>(tex.Get(), fb->GetWidth(), fb->GetHeight());
     GL_CheckError();
 
     fb->SetAttachmentTexture(tex.Get(), attachment);

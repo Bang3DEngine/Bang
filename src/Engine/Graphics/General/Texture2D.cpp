@@ -8,29 +8,27 @@ USING_NAMESPACE_BANG
 
 Texture2D::Texture2D() : Texture(GL::TextureTarget::Texture2D)
 {
-    CreateEmpty(1, 1, GL::ColorComp::RGBA, GL::DataType::UnsignedByte);
+    SetFormat(GL::ColorFormat::RGBA_UByte8);
+    CreateEmpty(1, 1);
 
     SetFilterMode(GL::FilterMode::Bilinear);
     SetWrapMode(GL::WrapMode::ClampToEdge);
-    SetFormat( GetFormat() );
 }
 
 Texture2D::~Texture2D()
 {
 }
 
-void Texture2D::CreateEmpty(int width, int height,
-                            GL::ColorComp colorComp,
-                            GL::DataType dataType)
+void Texture2D::CreateEmpty(int width, int height)
 {
-    Fill(nullptr, width, height, colorComp, dataType);
+    Fill(nullptr, width, height, GetColorComp(), GetDataType());
 }
 
 void Texture2D::Resize(int width, int height)
 {
     if (width != GetWidth() || height != GetHeight())
     {
-        CreateEmpty(width, height, GetColorComp(), GetDataType());
+        CreateEmpty(width, height);
     }
 }
 

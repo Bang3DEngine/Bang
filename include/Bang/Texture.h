@@ -24,9 +24,7 @@ public:
     Texture(const Texture &t);
     virtual ~Texture();
 
-    virtual void CreateEmpty(int width, int height,
-                             GL::ColorComp colorComp,
-                             GL::DataType dataType) = 0;
+    virtual void CreateEmpty(int width, int height) = 0;
     virtual void Resize(int width, int height) = 0;
     void GenerateMipMaps() const;
 
@@ -67,8 +65,8 @@ private:
     GL::FilterMode m_filterMode = Undef<GL::FilterMode>();
     GL::WrapMode m_wrapMode     = Undef<GL::WrapMode>();
 
-    GL::ColorFormat m_glFormat = GL::ColorFormat::RGBA_Float32;
-    GL::TextureTarget m_target = GL::TextureTarget::Texture2D;
+    GL::ColorFormat m_glFormat = Undef<GL::ColorFormat>();
+    GL::TextureTarget m_target = Undef<GL::TextureTarget>();
 };
 
 template<class T>

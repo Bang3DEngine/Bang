@@ -34,9 +34,9 @@ void Texture::GenerateMipMaps() const
     GL::GenerateMipMap( GetTextureTarget() );
 }
 
-void Texture::SetFormat(GL::ColorFormat internalFormat)
+void Texture::SetFormat(GL::ColorFormat glFormat)
 {
-    m_glFormat = internalFormat;
+    m_glFormat = glFormat;
 }
 
 void Texture::SetTarget(GL::TextureTarget target)

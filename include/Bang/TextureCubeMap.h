@@ -23,7 +23,7 @@ public:
     virtual ~TextureCubeMap();
 
     // Texture
-    void CreateEmpty(int size,  GL::ColorComp colorComp, GL::DataType dataType);
+    void CreateEmpty(int size);
     void Resize(int size);
     void Fill(GL::CubeMapDir cubeMapDir,
               const Byte *newData,
@@ -31,7 +31,6 @@ public:
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
 
-    void Fill(GL::CubeMapDir cubeMapDir, const Imageb &img);
     void SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img);
     Imageb ToImage(GL::CubeMapDir cubeMapDir) const;
     RH<Imageb> GetImageResource(GL::CubeMapDir cubeMapDir) const;
@@ -53,9 +52,7 @@ private:
     static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
     std::array<RH<Imageb>, 6> m_imageResources;
 
-    void CreateEmpty(int width, int height,
-                     GL::ColorComp colorComp,
-                     GL::DataType dataType) override;
+    void CreateEmpty(int width, int height) override;
     void Resize(int width, int height) override;
 
     static unsigned int GetDirIndex(GL::CubeMapDir dir);

@@ -13,26 +13,22 @@ const std::array<GL::CubeMapDir, 6> TextureCubeMap::AllCubeMapDirs =
 
 TextureCubeMap::TextureCubeMap() : Texture(GL::TextureTarget::TextureCubeMap)
 {
-    CreateEmpty(1, 1, GL::ColorComp::RGBA, GL::DataType::UnsignedByte);
+    SetFormat(GL::ColorFormat::RGBA_UByte8);
+    CreateEmpty(1, 1);
 
     SetFilterMode(GL::FilterMode::Bilinear);
     SetWrapMode(GL::WrapMode::ClampToEdge);
-    SetFormat( GetFormat() );
 }
 
 TextureCubeMap::~TextureCubeMap()
 {
 }
 
-void TextureCubeMap::CreateEmpty(int size,
-                                 GL::ColorComp colorComp,
-                                 GL::DataType dataType)
+void TextureCubeMap::CreateEmpty(int size)
 {
-    CreateEmpty(size, size, colorComp, dataType);
+    CreateEmpty(size, size);
 }
-void TextureCubeMap::CreateEmpty(int width, int height,
-                                 GL::ColorComp colorComp,
-                                 GL::DataType dataType)
+void TextureCubeMap::CreateEmpty(int width, int height)
 {
     ASSERT_MSG(width == height, "CubeMaps must have the same width and height.");
     SetWidth(width);
@@ -40,10 +36,8 @@ void TextureCubeMap::CreateEmpty(int width, int height,
 
     for (GL::CubeMapDir cubeMapDir : TextureCubeMap::AllCubeMapDirs)
     {
-        Fill(cubeMapDir, nullptr,
-             Math::Min(width, height),
-             colorComp,
-             dataType);
+        Fill(cubeMapDir, nullptr, Math::Min(width, height),
+             GetColorComp(), GetDataType());
     }
 }
 
@@ -52,7 +46,7 @@ void TextureCubeMap::Resize(int width, int height)
     ASSERT_MSG(width == height, "CubeMaps must have the same width and height.");
     if (width != GetWidth() || height != GetHeight())
     {
-        CreateEmpty(width, height, GetColorComp(), GetDataType());
+        CreateEmpty(width, height);
     }
 }
 void TextureCubeMap::Resize(int size)

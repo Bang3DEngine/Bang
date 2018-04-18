@@ -5,7 +5,7 @@ struct B_VertexIn  // GBuffer stored properties
     vec3 position_world;
     vec3 normal_world;
     vec2 uv;
-    vec3 diffuseColor;
+    vec3 albedoColor;
     float receivesLighting;
     float depth;
     vec4 color;

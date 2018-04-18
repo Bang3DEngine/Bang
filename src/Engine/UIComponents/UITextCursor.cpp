@@ -12,7 +12,7 @@ USING_NAMESPACE_BANG
 UITextCursor::UITextCursor()
 {
     SetMaterial(MaterialFactory::GetUIImage().Get());
-    GetMaterial()->SetDiffuseColor(Color::Black);
+    GetMaterial()->SetAlbedoColor(Color::Black);
     SetViewProjMode(GL::ViewProjMode::Canvas);
     SetStroke(1.0f);
 

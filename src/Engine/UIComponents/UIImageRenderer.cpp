@@ -68,7 +68,7 @@ void UIImageRenderer::SetTint(const Color &tint)
     if (tint != GetTint())
     {
         m_tint = tint;
-        GetMaterial()->SetDiffuseColor( GetTint() );
+        GetMaterial()->SetAlbedoColor( GetTint() );
     }
 }
 

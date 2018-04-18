@@ -26,8 +26,8 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
         float biasedPixelDistance = (pixelDistance - B_LightShadowBias);
         if (B_LightShadowType == SHADOW_HARD)
         {
-            float depthDiff = (biasedPixelDistance - shadowMapDistance);
-            return (depthDiff > 0.0) ? 0.0 : 1.0;
+            float depthAlbedo = (biasedPixelDistance - shadowMapDistance);
+            return (depthAlbedo > 0.0) ? 0.0 : 1.0;
         }
         else // SHADOW_SOFT
         {
@@ -42,8 +42,8 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
 
 vec3 GetPointLightColorApportation(vec3  pixelPosWorld,
                                    vec3  pixelNormalWorld,
-                                   vec3  pixelDiffColor,
-                                   float pixelShininess,
+                                   vec3  pixelAlbedoColor,
+                                   float pixelRoughness,
                                    vec3  lightPosWorld,
                                    float lightIntensity,
                                    float lightRange,
@@ -61,7 +61,7 @@ vec3 GetPointLightColorApportation(vec3  pixelPosWorld,
     float intensityAtt = lightIntensity * linearAtt;
 
     // DIFFUSE
-    vec3 lightDiff = pixelDiffColor * lightDot * intensityAtt * lightColor;
+    vec3 lightAlbedo = pixelAlbedoColor * lightDot * intensityAtt * lightColor;
 
     // SPECULAR
     vec3 worldCamPos     = camPosWorld;
@@ -70,11 +70,11 @@ vec3 GetPointLightColorApportation(vec3  pixelPosWorld,
     vec3 reflected       = -reflect(lightToPointDir, pixelNormalWorld);
     float specDot        = max(0.0, dot(reflected, pointToCamDir));
 
-    float specShin = pow(specDot, pixelShininess);
+    float specShin = pow(specDot, pixelRoughness);
     specShin = min(specShin, 1.0);
 
     vec3 lightSpecular = specShin * lightDot * intensityAtt * lightIntensity * lightColor;
     lightSpecular *= 0.5f;
 
-    return lightDiff + lightSpecular;
+    return lightAlbedo + lightSpecular;
 }

@@ -12,12 +12,12 @@ void main()
         float lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
         if (lightness > 0.0f)
         {
-            vec4 diffColor = B_SampleDiffColor();
+            vec4 diffColor = B_SampleAlbedoColor();
             vec3 pointLightApport = GetPointLightColorApportation(
                                           pixelPosWorld,
                                           B_SampleNormal(),
                                           diffColor.rgb,
-                                          B_SampleShininess(),
+                                          B_SampleRoughness(),
                                           B_LightPositionWorld,
                                           B_LightIntensity,
                                           B_LightRange,

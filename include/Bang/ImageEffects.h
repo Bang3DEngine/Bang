@@ -20,7 +20,7 @@ public:
     static void Outline(const Imageb &inputImageBW,
                         Imageb *outlineOutputImageBW);
 
-    static bool Diff(const Imageb &inputImage1,
+    static bool Albedo(const Imageb &inputImage1,
                      const Imageb &inputImage2,
                      Imageb *diffOutputImage,
                      bool diffAlpha = false);

@@ -27,8 +27,8 @@ public:
     void SetShaderProgram(ShaderProgram *program);
     void SetTexture(Texture2D *texture);
     void SetReceivesLighting(bool receivesLighting);
-    void SetShininess(float shininess);
-    void SetDiffuseColor(const Color &diffuseColor);
+    void SetRoughness(float roughness);
+    void SetAlbedoColor(const Color &albedoColor);
     void SetRenderPass(RenderPass renderPass);
 
     const Vector2& GetUvOffset() const;
@@ -36,8 +36,8 @@ public:
     ShaderProgram* GetShaderProgram() const;
     Texture2D* GetTexture() const;
     bool GetReceivesLighting() const;
-    float GetShininess() const;
-    const Color& GetDiffuseColor() const;
+    float GetRoughness() const;
+    const Color& GetAlbedoColor() const;
     RenderPass GetRenderPass() const;
 
     virtual void Bind() const;
@@ -61,8 +61,8 @@ protected:
     RH<ShaderProgram> p_shaderProgram;
 
     RenderPass m_renderPass = RenderPass::Scene;
-    Color m_diffuseColor    = Color::White;
-    float m_shininess       = 60.0f;
+    Color m_albedoColor    = Color::White;
+    float m_roughness       = 0.5f;
     bool m_receivesLighting = true;
     Vector2 m_uvOffset      = Vector2::Zero;
     Vector2 m_uvMultiply    = Vector2::One;

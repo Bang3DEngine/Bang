@@ -154,9 +154,9 @@ float UILabel::GetCursorXLocalNDC(int cursorIndex) const
     {
         localTextX = (cursorIndex == 0 ?
                       GetText()->GetCharRectsLocalNDC().Front().GetMin().x :
-                      GetText()->GetCharRectsLocalNDC().Back() .GetMax().x);
+                      GetText()->GetCharRectsLocalNDC().Back().GetMax().x);
     }
-    else
+    else // Is empty
     {
         HorizontalAlignment hAlign = GetText()->GetHorizontalAlignment();
         if (hAlign == HorizontalAlignment::Left)   { return -1; }

@@ -1,4 +1,4 @@
-<Material DiffuseColor="(1, 1, 1, 1)"
+<Material AlbedoColor="(1, 1, 1, 1)"
           ReceivesLighting="false"
           RenderPass="2"
           VertexShader="1522697072736624898 4115801876253900801 0"

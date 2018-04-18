@@ -466,7 +466,7 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
                                                           Vector2(space));
     LineRenderer *lr = sepGo->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
-    lr->GetMaterial()->SetDiffuseColor(Color::White);
+    lr->GetMaterial()->SetAlbedoColor(Color::White);
     lr->SetViewProjMode(GL::ViewProjMode::Canvas);
 
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();

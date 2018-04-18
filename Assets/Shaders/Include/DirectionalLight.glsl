@@ -35,8 +35,8 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
         {
             float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
             if (shadowMapDepth == 1.0f) { return 1.0f; }
-            float depthDiff = (shadowMapDepth - biasedWorldDepth);
-            return (depthDiff > 0.0) ? 1.0 : 0.0;
+            float depthAlbedo = (shadowMapDepth - biasedWorldDepth);
+            return (depthAlbedo > 0.0) ? 1.0 : 0.0;
         }
         else // SHADOW_SOFT
         {
@@ -50,8 +50,8 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
 
 vec3 GetDirectionalLightColorApportation(const in vec3  pixelPosWorld,
                                          const in vec3  pixelNormalWorld,
-                                         const in vec3  pixelDiffColor,
-                                         const in float pixelShininess,
+                                         const in vec3  pixelAlbedoColor,
+                                         const in float pixelRoughness,
                                          const in vec3  lightForwardWorld,
                                          const in float lightIntensity,
                                          const in vec3  lightColor,
@@ -60,16 +60,16 @@ vec3 GetDirectionalLightColorApportation(const in vec3  pixelPosWorld,
     float lightDot     = max(0.0, dot(pixelNormalWorld, -lightForwardWorld));
 
     // DIFFUSE
-    vec3 lightDiffuse  = pixelDiffColor * lightDot * lightIntensity * lightColor;
+    vec3 lightAlbedo  = pixelAlbedoColor * lightDot * lightIntensity * lightColor;
 
     // SPECULAR
     vec3 worldCamPos     = camPosWorld;
     vec3 pointToCamDir   = normalize(worldCamPos - pixelPosWorld);
     vec3 reflected       = -reflect(-lightForwardWorld, pixelNormalWorld);
     float specDot        = max(0.0, dot(reflected, pointToCamDir));
-    float specShin       = min(pow(specDot, pixelShininess), 1.0);
+    float specShin       = min(pow(specDot, pixelRoughness), 1.0);
     vec3 lightSpecular   = specShin * lightDot * lightIntensity * lightColor;
     lightSpecular *= 0.5f;
 
-    return lightDiffuse + lightSpecular;
+    return lightAlbedo + lightSpecular;
 }

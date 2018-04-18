@@ -183,12 +183,12 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
         if (outMaterialName->IsEmpty()) { *outMaterialName = "Material"; }
     }
 
-    float aShininess;
+    float aRoughness;
     aiColor3D aAmbientColor;
-    aiColor3D aDiffuseColor;
+    aiColor3D aAlbedoColor;
     aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
-    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aDiffuseColor);
-    aMaterial->Get(AI_MATKEY_SHININESS, aShininess);
+    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
+    aMaterial->Get(AI_MATKEY_SHININESS, aRoughness);
 
     aiString aTexturePath;
     aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aTexturePath);
@@ -201,8 +201,8 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
         matTexture = Resources::Load<Texture2D>(texturePath);
     }
 
-    outMaterial->Get()->SetDiffuseColor( AIColor3ToColor(aDiffuseColor) );
-    outMaterial->Get()->SetShininess( aShininess );
+    outMaterial->Get()->SetAlbedoColor( AIColor3ToColor(aAlbedoColor) );
+    outMaterial->Get()->SetRoughness( aRoughness );
     outMaterial->Get()->SetTexture( matTexture.Get() );
 }
 

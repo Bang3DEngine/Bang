@@ -58,8 +58,10 @@ void Font::Import(const Path &ttfFilepath)
             cm.bearing = Vector2(minx, maxy);
             cm.advance = float(advance);
 
-            if (c == ' ') { cm.size = Vector2(cm.advance,
-                                              m_referenceFontDataCache.lineSkip); }
+            if (c == ' ')
+            {
+                cm.size = Vector2(cm.advance, m_referenceFontDataCache.lineSkip);
+            }
 
             m_referenceFontDataCache.charMetrics.Add(SCAST<unsigned char>(c), cm);
             ++c;

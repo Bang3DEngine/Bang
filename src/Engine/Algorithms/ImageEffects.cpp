@@ -85,7 +85,7 @@ void ImageEffects::Outline(const Imageb &imgBW,
     }
 }
 
-bool ImageEffects::Diff(const Imageb &inputImage1,
+bool ImageEffects::Albedo(const Imageb &inputImage1,
                         const Imageb &inputImage2,
                         Imageb *diffOutputImage,
                         bool diffAlpha)

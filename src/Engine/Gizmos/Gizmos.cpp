@@ -61,7 +61,7 @@ void Gizmos::SetColor(const Color &color)
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     for (Renderer *rend : g->m_renderers)
     {
-        rend->GetMaterial()->SetDiffuseColor(color);
+        rend->GetMaterial()->SetAlbedoColor(color);
     }
 }
 

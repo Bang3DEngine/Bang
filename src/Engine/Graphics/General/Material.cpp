@@ -79,20 +79,20 @@ void Material::SetReceivesLighting(bool receivesLighting)
     }
 }
 
-void Material::SetShininess(float shininess)
+void Material::SetRoughness(float roughness)
 {
-    if (shininess != GetShininess())
+    if (roughness != GetRoughness())
     {
-        m_shininess = shininess;
+        m_roughness = roughness;
         PropagateMaterialChanged();
     }
 }
 
-void Material::SetDiffuseColor(const Color &diffuseColor)
+void Material::SetAlbedoColor(const Color &albedoColor)
 {
-    if (diffuseColor != GetDiffuseColor())
+    if (albedoColor != GetAlbedoColor())
     {
-        m_diffuseColor = diffuseColor;
+        m_albedoColor = albedoColor;
         PropagateMaterialChanged();
     }
 }
@@ -111,8 +111,8 @@ const Vector2 &Material::GetUvMultiply() const { return m_uvMultiply; }
 ShaderProgram* Material::GetShaderProgram() const { return p_shaderProgram.Get(); }
 Texture2D* Material::GetTexture() const { return p_texture.Get(); }
 bool Material::GetReceivesLighting() const { return m_receivesLighting; }
-float Material::GetShininess() const { return m_shininess; }
-const Color& Material::GetDiffuseColor() const { return m_diffuseColor; }
+float Material::GetRoughness() const { return m_roughness; }
+const Color& Material::GetAlbedoColor() const { return m_albedoColor; }
 RenderPass Material::GetRenderPass() const { return m_renderPass; }
 
 void Material::Bind() const
@@ -123,8 +123,8 @@ void Material::Bind() const
 
     sp->Set("B_UvOffset",                 GetUvOffset(), false);
     sp->Set("B_UvMultiply",               GetUvMultiply(), false);
-    sp->Set("B_MaterialDiffuseColor",     GetDiffuseColor(), false);
-    sp->Set("B_MaterialShininess",        GetShininess(), false);
+    sp->Set("B_MaterialAlbedoColor",      GetAlbedoColor(), false);
+    sp->Set("B_MaterialRoughness",        GetRoughness(), false);
     sp->Set("B_MaterialReceivesLighting", GetReceivesLighting(), false);
 
     float alphaCutoff = GetTexture() ? GetTexture()->GetAlphaCutoff() : -1.0f;
@@ -147,9 +147,9 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetUvOffset(GetUvOffset());
     matClone->SetUvMultiply(GetUvMultiply());
     matClone->SetShaderProgram(GetShaderProgram());
-    matClone->SetDiffuseColor(GetDiffuseColor());
+    matClone->SetAlbedoColor(GetAlbedoColor());
     matClone->SetReceivesLighting(GetReceivesLighting());
-    matClone->SetShininess(GetShininess());
+    matClone->SetRoughness(GetRoughness());
     matClone->SetTexture(GetTexture());
     matClone->SetRenderPass(GetRenderPass());
 }
@@ -177,11 +177,11 @@ void Material::ImportXML(const XMLNode &xml)
     if (xml.Contains("RenderPass"))
     { SetRenderPass(xml.Get<RenderPass>("RenderPass")); }
 
-    if (xml.Contains("DiffuseColor"))
-    { SetDiffuseColor(xml.Get<Color>("DiffuseColor")); }
+    if (xml.Contains("AlbedoColor"))
+    { SetAlbedoColor(xml.Get<Color>("AlbedoColor")); }
 
-    if (xml.Contains("Shininess"))
-    { SetShininess(xml.Get<float>("Shininess")); }
+    if (xml.Contains("Roughness"))
+    { SetRoughness(xml.Get<float>("Roughness")); }
 
     if (xml.Contains("ReceivesLighting"))
     { SetReceivesLighting(xml.Get<bool>("ReceivesLighting")); }
@@ -217,8 +217,8 @@ void Material::ExportXML(XMLNode *xmlInfo) const
     Asset::ExportXML(xmlInfo);
 
     xmlInfo->Set("RenderPass",       GetRenderPass());
-    xmlInfo->Set("DiffuseColor",     GetDiffuseColor());
-    xmlInfo->Set("Shininess",        GetShininess());
+    xmlInfo->Set("AlbedoColor",     GetAlbedoColor());
+    xmlInfo->Set("Roughness",        GetRoughness());
     xmlInfo->Set("ReceivesLighting", GetReceivesLighting());
     xmlInfo->Set("UvMultiply",       GetUvMultiply());
     xmlInfo->Set("UvOffset",         GetUvOffset());

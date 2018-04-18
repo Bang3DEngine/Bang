@@ -14,7 +14,7 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 {
     Bind();
     CreateAttachmentTex2D(AttColor,        GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttDiffuse,      GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttAlbedo,       GL::ColorFormat::RGBA_UByte8);
     CreateAttachmentTex2D(AttNormal,       GL::ColorFormat::RGB10_A2_UByte);
     CreateAttachmentTex2D(AttMisc,         GL::ColorFormat::RGB10_A2_UByte);
     CreateAttachmentTex2D(AttColorRead,    GL::ColorFormat::RGBA_UByte8);
@@ -32,7 +32,7 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     ASSERT(GL::IsBound(sp));
 
     sp->Set(GBuffer::GetNormalsTexName(), GetAttachmentTex2D(AttNormal), false);
-    sp->Set(GBuffer::GetDiffuseTexName(), GetAttachmentTex2D(AttDiffuse), false);
+    sp->Set(GBuffer::GetAlbedoTexName(), GetAttachmentTex2D(AttAlbedo), false);
     sp->Set(GBuffer::GetMiscTexName(), GetAttachmentTex2D(AttMisc), false);
     sp->Set(GBuffer::GetColorsTexName(), GetAttachmentTex2D(AttColorRead), false);
     sp->Set(GBuffer::GetDepthStencilTexName(), GetAttachmentTex2D(AttDepthStencil), false);
@@ -72,14 +72,14 @@ void GBuffer::PrepareColorReadBuffer(const AARect &readNDCRect)
 
 void GBuffer::SetAllDrawBuffers() const
 {
-    SetDrawBuffers({GBuffer::AttColor,  GBuffer::AttDiffuse,
+    SetDrawBuffers({GBuffer::AttColor,  GBuffer::AttAlbedo,
                     GBuffer::AttNormal, GBuffer::AttMisc
                    });
 }
 
 void GBuffer::SetAllDrawBuffersExceptColor()
 {
-    SetDrawBuffers({GBuffer::AttDiffuse, GBuffer::AttNormal, GBuffer::AttMisc});
+    SetDrawBuffers({GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc});
 }
 
 void GBuffer::SetColorDrawBuffer()
@@ -92,7 +92,7 @@ void GBuffer::ClearAllBuffersExceptColor()
     GL::ClearStencilBuffer(0);
     ClearDepth(1.0f);
 
-    SetDrawBuffers({GBuffer::AttNormal, GBuffer::AttDiffuse, GBuffer::AttMisc});
+    SetDrawBuffers({GBuffer::AttNormal, GBuffer::AttAlbedo, GBuffer::AttMisc});
     GL::ClearColorBuffer(Color::Zero);
 }
 
@@ -106,5 +106,5 @@ void GBuffer::ClearBuffersAndBackground(const Color &backgroundColor)
 String GBuffer::GetMiscTexName() { return "B_GTex_Misc"; }
 String GBuffer::GetColorsTexName() { return "B_GTex_Color"; }
 String GBuffer::GetNormalsTexName() { return "B_GTex_Normal"; }
-String GBuffer::GetDiffuseTexName() { return "B_GTex_DiffColor"; }
+String GBuffer::GetAlbedoTexName() { return "B_GTex_AlbedoColor"; }
 String GBuffer::GetDepthStencilTexName() { return "B_GTex_DepthStencil"; }

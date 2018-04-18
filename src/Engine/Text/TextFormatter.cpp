@@ -27,8 +27,9 @@ Array<TextFormatter::CharRect>
     {
         const char c = content[i];
         Vector2 size = Vector2(font->GetAtlasCharRectSize(fontSize, c));
+        if (c == ' ') { size = Vector2(font->GetAtlasCharRectSize(fontSize, 'a')); }
         AARectf charRect = AARect(Vector2(0, -size.y), Vector2(size.x, 0)) +
-                              Vector2(0, font->GetFontAscent(fontSize));
+                                  Vector2(0, font->GetFontAscent(fontSize));
         charRects.PushBack( CharRect(c, charRect) );
     }
 

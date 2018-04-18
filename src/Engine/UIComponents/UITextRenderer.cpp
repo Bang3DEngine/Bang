@@ -244,7 +244,7 @@ void UITextRenderer::SetTextColor(const Color &textColor)
 {
     if (textColor != GetTextColor())
     {
-        GetMaterial()->SetDiffuseColor( textColor );
+        GetMaterial()->SetAlbedoColor( textColor );
         OnChanged();
     }
 }
@@ -256,7 +256,8 @@ bool UITextRenderer::IsWrapping() const { return m_wrapping; }
 const String &UITextRenderer::GetContent() const { return m_content; }
 int UITextRenderer::GetTextSize() const { return m_textSize; }
 
-const Vector2& UITextRenderer::GetSpacingMultiplier() const { return m_spacingMultiplier; }
+const Vector2& UITextRenderer::GetSpacingMultiplier() const
+{ return m_spacingMultiplier; }
 const Array<AARect> &UITextRenderer::GetCharRectsLocalNDC() const
 { return m_charRectsLocalNDC; }
 const AARect &UITextRenderer::GetCharRectLocalNDC(uint charIndex) const
@@ -293,7 +294,7 @@ AARect UITextRenderer::GetBoundingRect(Camera *camera) const
 
 const Color &UITextRenderer::GetTextColor() const
 {
-    return GetMaterial()->GetDiffuseColor();
+    return GetMaterial()->GetAlbedoColor();
 }
 
 void UITextRenderer::CloneInto(ICloneable *clone) const

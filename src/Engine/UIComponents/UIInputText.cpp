@@ -448,14 +448,10 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
         const int maxIndex  = Math::Max(i + fwdInc, i);
         const char prevChar = content[minIndex];
         const char nextChar = content[maxIndex];
-        Debug_Peek(prevChar);
-        Debug_Peek(nextChar);
-        Debug_Log("---");
         if (IsWordBoundary(prevChar, nextChar)) { i += fwdInc; break; }
 
         i += fwdInc;
     }
-    Debug_Log("End with index: " << i);
 
     return i;
 }

@@ -17,12 +17,12 @@ public:
     static const GL::Attachment AttColor        = GL::Attachment::Color0;
 
     // (diffColor.r, diffColor.g, diffColor.b, diffColor.a)
-    static const GL::Attachment AttDiffuse      = GL::Attachment::Color1;
+    static const GL::Attachment AttAlbedo      = GL::Attachment::Color1;
 
     // (normal.x, normal.y, normal.z, 0)
     static const GL::Attachment AttNormal       = GL::Attachment::Color2;
 
-    // (receivesLighting, shininess, flags, ---)
+    // (receivesLighting, roughness, flags, ---)
     static const GL::Attachment AttMisc         = GL::Attachment::Color3;
 
     static const GL::Attachment AttColorRead    = GL::Attachment::Color4;
@@ -49,7 +49,7 @@ public:
 
     static String GetMiscTexName();
     static String GetColorsTexName();
-    static String GetDiffuseTexName();
+    static String GetAlbedoTexName();
     static String GetNormalsTexName();
     static String GetDepthStencilTexName();
 

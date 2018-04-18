@@ -52,8 +52,8 @@ void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     Light::SetUniformsBeforeApplyingLight(sp);
 
     ASSERT(GL::IsBound(sp));
-    sp->Set("B_LightRange", GetRange(), false);
-    sp->Set("B_PointLightZFar", GetLightZFar(), false);
+    sp->SetFloat("B_LightRange", GetRange(), false);
+    sp->SetFloat("B_PointLightZFar", GetLightZFar(), false);
 }
 
 AARect PointLight::GetRenderRect(Camera *cam) const
@@ -108,8 +108,8 @@ void PointLight::RenderShadowMaps_()
 
     SetUniformsBeforeApplyingLight(m_shadowMapShaderProgram.Get());
     Array<Matrix4> cubeMapPVMMatrices = GetWorldToShadowMapMatrices();
-    m_shadowMapShaderProgram.Get()->Set("B_WorldToShadowMapMatrices",
-                                        cubeMapPVMMatrices, false);
+    m_shadowMapShaderProgram.Get()->SetMatrix4Array("B_WorldToShadowMapMatrices",
+                                                    cubeMapPVMMatrices, false);
 
     // Render shadow map into framebuffer
     Scene *scene = GetGameObject()->GetScene();

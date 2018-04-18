@@ -60,7 +60,7 @@ void Material::SetTexture(Texture2D* texture)
 
         p_texture.Set(texture);
         ShaderProgram *sp = GetShaderProgram();
-        if (sp) { sp->Set("B_Texture0", GetTexture()); }
+        if (sp) { sp->SetTexture2D("B_Texture0", GetTexture()); }
 
         if (GetTexture())
         {
@@ -121,16 +121,16 @@ void Material::Bind() const
     if (!sp) { return; }
     sp->Bind();
 
-    sp->Set("B_UvOffset",                 GetUvOffset(), false);
-    sp->Set("B_UvMultiply",               GetUvMultiply(), false);
-    sp->Set("B_MaterialAlbedoColor",      GetAlbedoColor(), false);
-    sp->Set("B_MaterialRoughness",        GetRoughness(), false);
-    sp->Set("B_MaterialReceivesLighting", GetReceivesLighting(), false);
+    sp->SetVector2("B_UvOffset",              GetUvOffset(),         false);
+    sp->SetVector2("B_UvMultiply",            GetUvMultiply(),       false);
+    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),      false);
+    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),        false);
+    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(), false);
 
     float alphaCutoff = GetTexture() ? GetTexture()->GetAlphaCutoff() : -1.0f;
-    sp->Set("B_Texture0",  GetTexture(), false);
-    sp->Set("B_AlphaCutoff", alphaCutoff, false);
-    sp->Set("B_HasTexture", (GetTexture() != nullptr), false);
+    sp->SetTexture2D("B_Texture0",  GetTexture(),             false);
+    sp->SetFloat("B_AlphaCutoff",   alphaCutoff,              false);
+    sp->SetBool("B_HasTexture",    (GetTexture() != nullptr), false);
 }
 
 void Material::UnBind() const

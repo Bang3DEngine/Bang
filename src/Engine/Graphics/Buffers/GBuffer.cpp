@@ -31,11 +31,16 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     if (!sp) { return; }
     ASSERT(GL::IsBound(sp));
 
-    sp->Set(GBuffer::GetNormalsTexName(), GetAttachmentTex2D(AttNormal), false);
-    sp->Set(GBuffer::GetAlbedoTexName(), GetAttachmentTex2D(AttAlbedo), false);
-    sp->Set(GBuffer::GetMiscTexName(), GetAttachmentTex2D(AttMisc), false);
-    sp->Set(GBuffer::GetColorsTexName(), GetAttachmentTex2D(AttColorRead), false);
-    sp->Set(GBuffer::GetDepthStencilTexName(), GetAttachmentTex2D(AttDepthStencil), false);
+    sp->SetTexture2D(GBuffer::GetNormalsTexName(),
+                     GetAttachmentTex2D(AttNormal), false);
+    sp->SetTexture2D(GBuffer::GetAlbedoTexName(),
+                     GetAttachmentTex2D(AttAlbedo), false);
+    sp->SetTexture2D(GBuffer::GetMiscTexName(),
+                     GetAttachmentTex2D(AttMisc), false);
+    sp->SetTexture2D(GBuffer::GetColorsTexName(),
+                     GetAttachmentTex2D(AttColorRead), false);
+    sp->SetTexture2D(GBuffer::GetDepthStencilTexName(),
+                     GetAttachmentTex2D(AttDepthStencil), false);
 }
 
 

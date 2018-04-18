@@ -235,10 +235,10 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
     // Set state
     sp->Bind();
-    sp->Set("B_UvOffset",         Vector2::Zero, false);
-    sp->Set("B_UvMultiply",       Vector2::One, false);
-    sp->Set("B_destRectMinCoord", destRectMask.GetMin(), false);
-    sp->Set("B_destRectMaxCoord", destRectMask.GetMax(), false);
+    sp->SetVector2("B_UvOffset",         Vector2::Zero, false);
+    sp->SetVector2("B_UvMultiply",       Vector2::One, false);
+    sp->SetVector2("B_destRectMinCoord", destRectMask.GetMin(), false);
+    sp->SetVector2("B_destRectMaxCoord", destRectMask.GetMax(), false);
     RenderViewportPlane();
 
     // Restore state
@@ -251,7 +251,7 @@ void GEngine::RenderTexture(Texture2D *texture)
     p_renderTextureToViewportMaterial.Get()->Bind();
 
     ShaderProgram *sp = p_renderTextureToViewportMaterial.Get()->GetShaderProgram();
-    sp->Set(GBuffer::GetColorsTexName(), texture, false);
+    sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
 
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 

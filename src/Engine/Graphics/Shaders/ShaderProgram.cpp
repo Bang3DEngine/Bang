@@ -210,79 +210,79 @@ bool SetShaderUniform(ShaderProgram *sp,
     return true;
 }
 
-bool ShaderProgram::Set(const String &name, int v, bool warn)
+bool ShaderProgram::SetInt(const String &name, int v, bool warn)
 {
     return SetShaderUniform<int>(this, &m_uniformCacheInt, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, bool v, bool warn)
+bool ShaderProgram::SetBool(const String &name, bool v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheBool, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, float v, bool warn)
+bool ShaderProgram::SetFloat(const String &name, float v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheFloat, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Color &v, bool warn)
+bool ShaderProgram::SetColor(const String &name, const Color &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheColor, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Vector2 &v, bool warn)
+bool ShaderProgram::SetVector2(const String &name, const Vector2 &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheVector2, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Vector3 &v, bool warn)
+bool ShaderProgram::SetVector3(const String &name, const Vector3 &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheVector3, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Vector4 &v, bool warn)
+bool ShaderProgram::SetVector4(const String &name, const Vector4 &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheVector4, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Matrix3 &v, bool warn)
+bool ShaderProgram::SetMatrix3(const String &name, const Matrix3 &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheMatrix3, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Matrix4 &v, bool warn)
+bool ShaderProgram::SetMatrix4(const String &name, const Matrix4 &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheMatrix4, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<int> &v, bool warn)
+bool ShaderProgram::SetIntArray(const String &name, const Array<int> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<bool> &v, bool warn)
+bool ShaderProgram::SetBoolArray(const String &name, const Array<bool> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<float> &v, bool warn)
+bool ShaderProgram::SetFloatArray(const String &name, const Array<float> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Color> &v, bool warn)
+bool ShaderProgram::SetColorArray(const String &name, const Array<Color> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Vector2> &v, bool warn)
+bool ShaderProgram::SetVector2Array(const String &name, const Array<Vector2> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Vector3> &v, bool warn)
+bool ShaderProgram::SetVector3Array(const String &name, const Array<Vector3> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Vector4> &v, bool warn)
+bool ShaderProgram::SetVector4Array(const String &name, const Array<Vector4> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Matrix3> &v, bool warn)
+bool ShaderProgram::SetMatrix3Array(const String &name, const Array<Matrix3> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, const Array<Matrix4> &v, bool warn)
+bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::Set(const String &name, Texture *texture, bool warn)
+bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
     if (!texture)
     {
@@ -312,13 +312,17 @@ bool ShaderProgram::Set(const String &name, Texture *texture, bool warn)
     }
     return true;
 }
-bool ShaderProgram::Set(const String &name, Texture2D *texture, bool warn)
+bool ShaderProgram::SetTexture2D(const String &name,
+                                 Texture2D *texture,
+                                 bool warn)
 {
-    return Set(name, SCAST<Texture*>(texture), warn);
+    return SetTexture(name, SCAST<Texture*>(texture), warn);
 }
-bool ShaderProgram::Set(const String &name, TextureCubeMap *textureCubeMap, bool warn)
+bool ShaderProgram::SetTextureCubeMap(const String &name,
+                                      TextureCubeMap *textureCubeMap,
+                                      bool warn)
 {
-    return Set(name, SCAST<Texture*>(textureCubeMap), warn);
+    return SetTexture(name, SCAST<Texture*>(textureCubeMap), warn);
 }
 
 bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)

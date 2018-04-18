@@ -77,7 +77,7 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
     rend->GetActiveMaterial()->SetShaderProgram(selSP);
 
     rend->Bind();
-    selSP->Set("selectionColor", GetSelectionColor(go));
+    selSP->SetColor("selectionColor", GetSelectionColor(go));
     rend->OnRender();
     rend->UnBind();
 

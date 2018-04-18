@@ -60,14 +60,14 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     ASSERT(GL::IsBound(sp))
 
     Transform *tr = GetGameObject()->GetTransform();
-    sp->Set("B_LightShadowType",    SCAST<int>( GetShadowType() ), false);
-    sp->Set("B_LightShadowBias",    GetShadowBias(),               false);
-    sp->Set("B_LightIntensity",     GetIntensity(),                false);
-    sp->Set("B_LightColor",         GetColor(),                    false);
-    sp->Set("B_LightForwardWorld",  tr->GetForward(),              false);
-    sp->Set("B_LightPositionWorld", tr->GetPosition(),             false);
-    sp->Set("B_LightShadowMap",     GetShadowMapTexture(),         false);
-    sp->Set("B_LightShadowMapSoft", GetShadowMapTexture(),         false);
+    sp->SetInt    ("B_LightShadowType",    int( GetShadowType() ), false);
+    sp->SetFloat  ("B_LightShadowBias",    GetShadowBias(),        false);
+    sp->SetFloat  ("B_LightIntensity",     GetIntensity(),         false);
+    sp->SetColor  ("B_LightColor",         GetColor(),             false);
+    sp->SetVector3("B_LightForwardWorld",  tr->GetForward(),       false);
+    sp->SetVector3("B_LightPositionWorld", tr->GetPosition(),      false);
+    sp->SetTexture("B_LightShadowMap",     GetShadowMapTexture(),  false);
+    sp->SetTexture("B_LightShadowMapSoft", GetShadowMapTexture(),  false);
 }
 
 void Light::SetLightMaterial(Material *lightMat)

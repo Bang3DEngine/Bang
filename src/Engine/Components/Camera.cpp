@@ -197,15 +197,15 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
         {
             p_skyboxSpecularTextureCM.Set(skyBoxTextureCM);
 
-            RH<TextureCubeMap> irradianceCubeMap =
-                    CubeMapIrradianceGenerator::GenerateIrradianceCubeMap(
-                                                    GetSpecularSkyBoxTexture() );
+            // If new, generate the irradiance map
+            RH<TextureCubeMap> irradianceCubeMap = CubeMapIrradianceGenerator::
+                                   GenerateIrradianceCubeMap(skyBoxTextureCM);
             p_skyboxDiffuseTextureCM.Set( irradianceCubeMap.Get() );
         }
         else
         {
             p_skyboxSpecularTextureCM.Set( IconManager::GetWhiteTextureCubeMap().Get() );
-            p_skyboxDiffuseTextureCM.Set( IconManager::GetWhiteTextureCubeMap().Get() );
+            p_skyboxDiffuseTextureCM.Set(  IconManager::GetWhiteTextureCubeMap().Get() );
         }
     }
 }
@@ -445,9 +445,9 @@ void Camera::ImportXML(const XMLNode &xml)
 
     if (xml.Contains("SkyBoxTexture"))
     {
-        SetSkyBoxTexture(
-                Resources::Load<TextureCubeMap>(
-                             xml.Get<GUID>("SkyBoxTexture") ).Get());
+        RH<TextureCubeMap> skyCM = Resources::Load<TextureCubeMap>(
+                                            xml.Get<GUID>("SkyBoxTexture") );
+        SetSkyBoxTexture( skyCM.Get() );
     }
 }
 

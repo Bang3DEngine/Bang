@@ -41,31 +41,29 @@ public:
     void UnBind() const override;
     GL::BindTarget GetGLBindTarget() const override;
 
-    bool Set(const String &name, int v, bool warn = true);
-    bool Set(const String &name, bool v, bool warn = true);
-    bool Set(const String &name, float v, bool warn = true);
-    bool Set(const String &name, const Color& v, bool warn = true);
-    bool Set(const String &name, const Vector2& v, bool warn = true);
-    bool Set(const String &name, const Vector3& v, bool warn = true);
-    bool Set(const String &name, const Vector4& v, bool warn = true);
-    bool Set(const String &name, const Matrix3& v, bool warn = true);
-    bool Set(const String &name, const Matrix4& v, bool warn = true);
-    bool Set(const String &name, Texture *texture, bool warn = true);
-    bool Set(const String &name, Texture2D *texture, bool warn = true);
-    bool Set(const String &name, TextureCubeMap *textureCubeMap, bool warn = true);
-    bool Set(const String &name, const Array<int>& v, bool warn = true);
-    bool Set(const String &name, const Array<bool>& v, bool warn = true);
-    bool Set(const String &name, const Array<float>& v, bool warn = true);
-    bool Set(const String &name, const Array<Color>& v, bool warn = true);
-    bool Set(const String &name, const Array<Vector2>& v, bool warn = true);
-    bool Set(const String &name, const Array<Vector3>& v, bool warn = true);
-    bool Set(const String &name, const Array<Vector4>& v, bool warn = true);
-    bool Set(const String &name, const Array<Matrix3>& v, bool warn = true);
-    bool Set(const String &name, const Array<Matrix4>& v, bool warn = true);
-    bool Set(const String &name, const Array<Texture2D*>& v, bool warn = true);
-
-    template <class T>
-    bool Set(const String &name, T v, bool warn) = delete; // No implicit conv.
+    bool SetInt(const String &name, int v, bool warn = true);
+    bool SetBool(const String &name, bool v, bool warn = true);
+    bool SetFloat(const String &name, float v, bool warn = true);
+    bool SetColor(const String &name, const Color& v, bool warn = true);
+    bool SetVector2(const String &name, const Vector2& v, bool warn = true);
+    bool SetVector3(const String &name, const Vector3& v, bool warn = true);
+    bool SetVector4(const String &name, const Vector4& v, bool warn = true);
+    bool SetMatrix3(const String &name, const Matrix3& v, bool warn = true);
+    bool SetMatrix4(const String &name, const Matrix4& v, bool warn = true);
+    bool SetTexture(const String &name, Texture *texture, bool warn = true);
+    bool SetTexture2D(const String &name, Texture2D *texture, bool warn = true);
+    bool SetTextureCubeMap(const String &name, TextureCubeMap *textureCubeMap,
+                           bool warn = true);
+    bool SetIntArray(const String &name, const Array<int>& v, bool warn = true);
+    bool SetBoolArray(const String &name, const Array<bool>& v, bool warn = true);
+    bool SetFloatArray(const String &name, const Array<float>& v, bool warn = true);
+    bool SetColorArray(const String &name, const Array<Color>& v, bool warn = true);
+    bool SetVector2Array(const String &name, const Array<Vector2>& v, bool warn = true);
+    bool SetVector3Array(const String &name, const Array<Vector3>& v, bool warn = true);
+    bool SetVector4Array(const String &name, const Array<Vector4>& v, bool warn = true);
+    bool SetMatrix3Array(const String &name, const Array<Matrix3>& v, bool warn = true);
+    bool SetMatrix4Array(const String &name, const Array<Matrix4>& v, bool warn = true);
+    bool SetTexture2DArray(const String &name, const Array<Texture2D*>& v, bool warn = true);
 
     bool SetShader(Shader *shader, GL::ShaderType type);
     bool SetVertexShader(Shader* vertexShader);
@@ -111,7 +109,6 @@ private:
     virtual ~ShaderProgram();
 
     bool BindTextureToAvailableUnit(const String &texName, Texture *texture) const;
-    bool SetTexture(const String &name, Texture *texture, bool warn);
     void UpdateTextureBindings() const;
 
     // IResourceListener

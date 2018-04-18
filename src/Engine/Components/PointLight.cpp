@@ -114,6 +114,7 @@ void PointLight::RenderShadowMaps_()
     // Render shadow map into framebuffer
     Scene *scene = GetGameObject()->GetScene();
     GEngine::GetActive()->SetReplacementShader( m_shadowMapShaderProgram.Get() );
+    GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEqual);
     GEngine::GetActive()->RenderWithPassRaw(scene, RenderPass::Scene);

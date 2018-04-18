@@ -9,9 +9,12 @@ void main()
 
     if (B_SampleReceivesLight())
     {
+        // Get lightness of the pixel using shadow mapping
+        vec3 camPosWorld = B_GetCameraPositionWorld();
         float lightness = GetFragmentLightness(pixelPosWorld,
                                                pixelNormalWorld,
-                                               B_LightForwardWorld);
+                                               B_LightForwardWorld,
+                                               camPosWorld);
 
         if (lightness > 0.0f)
         {
@@ -24,7 +27,7 @@ void main()
                                         B_LightForwardWorld,
                                         B_LightIntensity,
                                         B_LightColor.rgb,
-                                        B_GetCameraPositionWorld() );
+                                        camPosWorld);
             dirLightApport *= lightness;
 
             B_GIn_Color = vec4(originalColor.rgb + dirLightApport, diffColor.a);

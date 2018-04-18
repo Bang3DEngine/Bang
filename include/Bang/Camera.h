@@ -80,7 +80,8 @@ public:
     AARect GetViewportRectNDCInWindow() const;
     const AARect& GetViewportRectNDC() const;
     GBuffer *GetGBuffer() const;
-    TextureCubeMap *GetSkyBoxTexture() const;
+    TextureCubeMap *GetSpecularSkyBoxTexture() const;
+    TextureCubeMap *GetDiffuseSkyBoxTexture() const;
     SelectionFramebuffer *GetSelectionFramebuffer() const;
 
     Quad GetNearQuad()  const;
@@ -112,7 +113,8 @@ private:
 
     Set<RenderPass> m_renderPassMask;
     bool m_renderSelectionBuffer = false;
-    RH<TextureCubeMap> p_skyboxTextureCM;
+    RH<TextureCubeMap> p_skyboxSpecularTextureCM;
+    RH<TextureCubeMap> p_skyboxDiffuseTextureCM;
 
     Color m_clearColor = Color(Color(0.3f), 1);
     ClearMode m_clearMode = ClearMode::Color;

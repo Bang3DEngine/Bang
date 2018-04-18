@@ -56,7 +56,7 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     }
     else if (cam && cam->GetClearMode() == Camera::ClearMode::SkyBox)
     {
-        TextureCubeMap *skt = cam ? cam->GetSkyBoxTexture() : nullptr;
+        TextureCubeMap *skt = cam ? cam->GetDiffuseSkyBoxTexture() : nullptr;
         sp->Set("B_Camera_SkyBox", skt ? skt : whiteCubeMap, false);
         sp->Set("B_Camera_Has_SkyBox", true, false);
     }

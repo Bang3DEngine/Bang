@@ -43,16 +43,22 @@ void Light::RenderShadowMaps()
 
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
-    p_lightMaterial.Get()->Bind();
-    SetUniformsBeforeApplyingLight(p_lightMaterial.Get()->GetShaderProgram());
+    // Save state
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+
+    ShaderProgram *lightSP = p_lightScreenPassShaderProgram.Get();
+
+    lightSP->Bind();
+    SetUniformsBeforeApplyingLight(lightSP);
 
     // Intersect with light rect to draw exactly what we need
     GBuffer *gbuffer = camera->GetGBuffer();
     AARect improvedRenderRect = AARect::Intersection(GetRenderRect(camera),
                                                  renderRect);
-    gbuffer->ApplyPass(p_lightMaterial.Get()->GetShaderProgram(),
-                       true, improvedRenderRect);
-    p_lightMaterial.Get()->UnBind();
+    gbuffer->ApplyPass(lightSP, true, improvedRenderRect);
+
+    // Restore state
+    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
 }
 
 void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
@@ -70,9 +76,9 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     sp->SetTexture("B_LightShadowMapSoft", GetShadowMapTexture(),  false);
 }
 
-void Light::SetLightMaterial(Material *lightMat)
+void Light::SetLightScreenPassShaderProgram(ShaderProgram *sp)
 {
-    p_lightMaterial.Set(lightMat);
+    p_lightScreenPassShaderProgram.Set(sp);
 }
 
 AARect Light::GetRenderRect(Camera *camera) const

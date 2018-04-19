@@ -1,5 +1,4 @@
 #define BANG_FRAGMENT
-#define BANG_SP
 #include "Common.glsl"
 
 in vec3 B_FIn_Position;

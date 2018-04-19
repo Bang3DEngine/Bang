@@ -284,8 +284,17 @@ bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v,
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    if (texture && GetUniformLocation(name) > 0)
+    if (texture)
     {
+        if (GetUniformLocation(name) < 0)
+        {
+            if (warn)
+            {
+                Debug_Warn("Texture uniform '" << name << "' not found.");
+            }
+            return false;
+        }
+
         // Texture name is in shader program, and texture is not null
         bool needToRefreshTexture;
         auto it = m_namesToTexture.find(name);
@@ -315,6 +324,7 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
             // Register listener to keep track when it is destroyed
             texture->EventEmitter<IDestroyListener>::RegisterListener(this);
         }
+
         if (GL::IsBound(this)) { BindTextureToFreeUnit(name, texture); }
     }
     else
@@ -413,7 +423,7 @@ GLint ShaderProgram::GetUniformLocation(const String &name) const
     auto it = m_nameToLocationCache.find(name);
     if (it != m_nameToLocationCache.end()) { return it->second; }
 
-    const GLuint location = GL::GetUniformLocation(m_idGL, name);
+    const int location = GL::GetUniformLocation(m_idGL, name);
     m_nameToLocationCache[name] = location;
     return location;
 }

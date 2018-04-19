@@ -7,59 +7,28 @@ USING_NAMESPACE_BANG
 
 RH<Material> MaterialFactory::GetDefault()
 {
-    return MaterialFactory::Load("Materials/G_Default.bmat");
+    return MaterialFactory::Load("Materials/Default.bmat");
 }
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {
-    return MaterialFactory::Load("Materials/G_DefaultNoPP.bmat");
+    return MaterialFactory::Load("Materials/DefaultUnLighted.bmat");
 }
-
-RH<Material> MaterialFactory::GetGizmosLightedScene()
-{
-    return MaterialFactory::Load("Materials/G_GizmosLightedScene.bmat");
-}
-
-RH<Material> MaterialFactory::GetGizmosUnLightedScene()
-{
-    return MaterialFactory::Load("Materials/G_GizmosUnLightedScene.bmat");
-}
-
 RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
-    return MaterialFactory::Load("Materials/G_GizmosUnLightedOverlay.bmat");
+    return MaterialFactory::Load("Materials/GizmosUnLightedOverlay.bmat");
 }
-
-RH<Material> MaterialFactory::GetGizmosLightedOverlay()
-{
-    return MaterialFactory::Load("Materials/G_GizmosLightedOverlay.bmat");
-}
-
 RH<Material> MaterialFactory::GetMissing()
 {
     return MaterialFactory::Load("Materials/Missing.bmat");
 }
 
-RH<Material> MaterialFactory::GetPointLight()
-{
-    return MaterialFactory::Load("Materials/PP_PointLight.bmat");
-}
-RH<Material> MaterialFactory::GetDirectionalLight()
-{
-    return MaterialFactory::Load("Materials/PP_DirectionalLight.bmat");
-}
-
 RH<Material> MaterialFactory::GetUIText()
 {
-    return MaterialFactory::Load("Materials/UI/G_UITextRenderer.bmat");
+    return MaterialFactory::Load("Materials/UITextRenderer.bmat");
 }
 RH<Material> MaterialFactory::GetUIImage()
 {
-    return MaterialFactory::Load("Materials/UI/G_UIImageRenderer.bmat");
-}
-
-RH<Material> MaterialFactory::GetRenderTextureToViewport()
-{
-    return MaterialFactory::Load("Materials/RenderTextureToViewport.bmat");
+    return MaterialFactory::Load("Materials/UIImageRenderer.bmat");
 }
 
 RH<Material> MaterialFactory::Load(const String &matEnginePath)

@@ -4,17 +4,17 @@ USING_NAMESPACE_BANG
 
 Path ShaderProgramFactory::GetDefaultVertexShaderPath()
 {
-    return EPATH("Shaders/G_Default.vert");
+    return EPATH("Shaders/Default.vert");
 }
 
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath()
 {
-    return EPATH("Shaders/G_Default.frag");
+    return EPATH("Shaders/Default.frag");
 }
 
-Path ShaderProgramFactory::GetPostProcessVertexShaderPath()
+Path ShaderProgramFactory::GetScreenPassVertexShaderPath()
 {
-    return EPATH("Shaders/PP_ScreenPass.vert");
+    return EPATH("Shaders/ScreenPass.vert");
 }
 
 ShaderProgram *ShaderProgramFactory::GetDefault()
@@ -25,7 +25,7 @@ ShaderProgram *ShaderProgramFactory::GetDefault()
 
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
 {
-    return Get(ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                EPATH("Shaders/Blur.frag"));
 }
 
@@ -34,6 +34,24 @@ ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
     return Get(EPATH("Shaders/PointLightShadowMap.vert"),
                EPATH("Shaders/PointLightShadowMap.geom"),
                EPATH("Shaders/PointLightShadowMap.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetPointLightScreenPass()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               EPATH("Shaders/PointLight.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               EPATH("Shaders/ByPassTexture.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetDirectionalLightScreenPass()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               EPATH("Shaders/DirectionalLight.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,

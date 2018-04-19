@@ -1,4 +1,3 @@
-#define BANG_SP
 #define BANG_FRAGMENT
 #include "Common.glsl"
 

@@ -23,7 +23,6 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/MaterialFactory.h"
 #include "Bang/TextureUnitManager.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/SelectionFramebuffer.h"
@@ -49,9 +48,9 @@ void GEngine::Init()
     m_texUnitManager = new TextureUnitManager();
 
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
-    p_renderTextureToViewportMaterial = MaterialFactory::GetRenderTextureToViewport();
+    p_renderTextureToViewportSP = ShaderProgramFactory::GetRenderTextureToViewport();
     m_renderSky.Set( ShaderProgramFactory::Get(
-                        ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+                        ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                         EPATH("Shaders/RenderSky.frag")) );
     GL::SetActive( nullptr );
 }
@@ -246,15 +245,17 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
 void GEngine::RenderTexture(Texture2D *texture)
 {
-    // if (!cam) { return; }
-    p_renderTextureToViewportMaterial.Get()->Bind();
+    // Save state
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
 
-    ShaderProgram *sp = p_renderTextureToViewportMaterial.Get()->GetShaderProgram();
+    ShaderProgram *sp = p_renderTextureToViewportSP.Get();
+
+    sp->Bind();
     sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
-
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
-    p_renderTextureToViewportMaterial.Get()->UnBind();
+    // Restore state
+    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
 }
 
 void GEngine::RenderViewportPlane()

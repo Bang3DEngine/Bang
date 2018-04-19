@@ -18,8 +18,9 @@ SelectionFramebuffer::SelectionFramebuffer(int width, int height) :
     Framebuffer(width, height)
 {
     ShaderProgram *selectionProgram =
-            ShaderProgramFactory::Get(EPATH("Shaders/G_Default.vert"),
-                                      EPATH("Shaders/SelectionBuffer.frag") );
+        ShaderProgramFactory::Get(
+                ShaderProgramFactory::GetDefaultVertexShaderPath(),
+                EPATH("Shaders/SelectionBuffer.frag") );
 
     p_selectionMaterial = Resources::Create<Material>();
     p_selectionMaterial.Get()->SetShaderProgram(selectionProgram);

@@ -11,20 +11,12 @@ class MaterialFactory
 public:
     static RH<Material> GetDefault();
     static RH<Material> GetDefaultUnLighted();
-    static RH<Material> GetGizmosLightedScene();
-    static RH<Material> GetGizmosUnLightedScene();
     static RH<Material> GetGizmosUnLightedOverlay();
-    static RH<Material> GetGizmosLightedOverlay();
 
     static RH<Material> GetMissing();
 
-    static RH<Material> GetPointLight();
-    static RH<Material> GetDirectionalLight();
-
     static RH<Material> GetUIText();
     static RH<Material> GetUIImage();
-
-    static RH<Material> GetRenderTextureToViewport();
 
 private:
     Map<String, RH<Material>> m_cache;

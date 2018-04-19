@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 #define MAX_RANDOM_OFFSETS 128
 

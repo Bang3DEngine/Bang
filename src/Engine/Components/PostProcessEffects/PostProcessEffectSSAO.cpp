@@ -36,16 +36,16 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
               SetWrapMode(GL::WrapMode::Repeat);
 
     p_ssaoShaderProgram = ShaderProgramFactory::Get(
-           ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+           ShaderProgramFactory::GetScreenPassVertexShaderPath(),
            EPATH("Shaders/SSAO.frag") );
     p_blurXShaderProgram = ShaderProgramFactory::Get(
-           ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+           ShaderProgramFactory::GetScreenPassVertexShaderPath(),
            EPATH("Shaders/SSAOSeparableBlurX.frag") );
     p_blurYShaderProgram = ShaderProgramFactory::Get(
-           ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+           ShaderProgramFactory::GetScreenPassVertexShaderPath(),
            EPATH("Shaders/SSAOSeparableBlurY.frag") );
     p_applySSAOShaderProgram = ShaderProgramFactory::Get(
-           ShaderProgramFactory::GetPostProcessVertexShaderPath(),
+           ShaderProgramFactory::GetScreenPassVertexShaderPath(),
            EPATH("Shaders/SSAOApply.frag") );
 }
 

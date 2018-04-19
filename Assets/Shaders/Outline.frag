@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 int Stroke = 1;
 const float DepthThresh = 0.004f;

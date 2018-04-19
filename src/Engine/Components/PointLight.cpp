@@ -15,7 +15,6 @@
 #include "Bang/Framebuffer.h"
 #include "Bang/IconManager.h"
 #include "Bang/MeshRenderer.h"
-#include "Bang/MaterialFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -23,9 +22,6 @@ USING_NAMESPACE_BANG
 PointLight::PointLight() : Light()
 {
     m_shadowMapFramebuffer = new Framebuffer();
-
-    m_shadowMapTexCubeMap = new TextureCubeMap();
-
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::Depth,
                                                        GL::ColorFormat::Depth16);
 
@@ -38,13 +34,13 @@ PointLight::PointLight() : Light()
     GL::Bind(GetShadowMapTexture()->GetGLBindTarget(), prevBoundTex);
 
     m_shadowMapShaderProgram.Set( ShaderProgramFactory::GetPointLightShadowMap() );
-    SetLightMaterial(MaterialFactory::GetPointLight().Get());
+    SetLightScreenPassShaderProgram(
+                ShaderProgramFactory::GetPointLightScreenPass());
 }
 
 PointLight::~PointLight()
 {
     delete m_shadowMapFramebuffer;
-    delete m_shadowMapTexCubeMap;
 }
 
 void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
@@ -101,7 +97,6 @@ void PointLight::RenderShadowMaps_()
     m_shadowMapFramebuffer->Bind();
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
     m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);
-    m_shadowMapTexCubeMap->Resize(shadowMapSize.x);
     m_shadowMapFramebuffer->SetAllDrawBuffers();
 
     m_shadowMapShaderProgram.Get()->Bind();

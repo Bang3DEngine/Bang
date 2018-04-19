@@ -13,11 +13,14 @@ class ShaderProgramFactory
 public:
     static Path GetDefaultVertexShaderPath();
     static Path GetDefaultFragmentShaderPath();
-    static Path GetPostProcessVertexShaderPath();
+    static Path GetScreenPassVertexShaderPath();
 
     static ShaderProgram* GetDefault();
     static ShaderProgram* GetDefaultPostProcess();
     static ShaderProgram* GetPointLightShadowMap();
+    static ShaderProgram* GetPointLightScreenPass();
+    static ShaderProgram* GetRenderTextureToViewport();
+    static ShaderProgram* GetDirectionalLightScreenPass();
     static ShaderProgram* Get(const Path &vShaderPath, const Path &fShaderPath);
     static ShaderProgram* Get(const Path &vShaderPath,
                               const Path &gShaderPath,

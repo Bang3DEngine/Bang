@@ -36,7 +36,6 @@ protected:
 
     RH<ShaderProgram> m_shadowMapShaderProgram;
     Framebuffer *m_shadowMapFramebuffer = nullptr;
-    TextureCubeMap *m_shadowMapTexCubeMap = nullptr;
 
     PointLight();
     virtual ~PointLight();

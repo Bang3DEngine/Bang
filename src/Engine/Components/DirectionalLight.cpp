@@ -22,14 +22,12 @@
 #include "Bang/ShadowMapper.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/DebugRenderer.h"
-#include "Bang/MaterialFactory.h"
+#include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
 
 DirectionalLight::DirectionalLight()
 {
-    SetLightMaterial(MaterialFactory::GetDirectionalLight().Get());
-
     m_shadowMapFramebuffer = new Framebuffer(1,1);
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
                                              GL::ColorFormat::Depth16);
@@ -41,6 +39,9 @@ DirectionalLight::DirectionalLight()
                        GL::TexParameter::TEXTURE_COMPARE_MODE,
                        GL_COMPARE_REF_TO_TEXTURE );
     GL::Bind(GetShadowMapTexture()->GetGLBindTarget(), prevBoundTex);
+
+    SetLightScreenPassShaderProgram(
+                ShaderProgramFactory::GetDirectionalLightScreenPass());
 }
 
 DirectionalLight::~DirectionalLight()

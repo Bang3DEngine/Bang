@@ -10,7 +10,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Camera;
 FORWARD class GBuffer;
 FORWARD class Texture;
-FORWARD class Material;
 FORWARD class Renderer;
 FORWARD class ShaderProgram;
 
@@ -45,8 +44,7 @@ protected:
     Light();
     virtual ~Light();
 
-    void SetLightMaterial(Material* lightMat);
-
+    void SetLightScreenPassShaderProgram(ShaderProgram* sp);
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const;
 
 private:
@@ -57,7 +55,7 @@ private:
     Vector2i m_shadowMapSize = Vector2i(2048);
     ShadowType m_shadowType = ShadowType::SOFT;
 
-    RH<Material> p_lightMaterial;
+    RH<ShaderProgram> p_lightScreenPassShaderProgram;
 
     void ApplyLight(Camera *camera, const AARect &renderRect) const;
     virtual AARect GetRenderRect(Camera *camera) const;

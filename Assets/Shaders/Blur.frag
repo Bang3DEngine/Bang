@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 uniform int B_BlurRadius = 3;
 

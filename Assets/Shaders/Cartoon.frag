@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 void main()
 {

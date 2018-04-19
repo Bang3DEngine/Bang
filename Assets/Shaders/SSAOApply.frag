@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 uniform sampler2D B_SSAOMap;
 

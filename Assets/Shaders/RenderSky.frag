@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 uniform bool B_Camera_Has_SkyBox;
 uniform samplerCube B_Camera_SkyBox;

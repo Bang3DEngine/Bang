@@ -1,4 +1,4 @@
-#include "PP.frag"
+#include "ScreenPass.frag"
 
 #define FXAA_SPAN_MAX 4.0
 #define FXAA_REDUCE_MUL   (1.0/FXAA_SPAN_MAX)

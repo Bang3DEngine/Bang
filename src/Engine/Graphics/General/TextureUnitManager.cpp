@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 TextureUnitManager::TextureUnitManager()
 {
     m_numTextureUnits = GL::GetInteger(GL::MaxTextureImageUnits);
+    m_numTextureUnits -= 1; // Reserve the last one as void unit
     // m_numTextureUnits = 8; // Uncomment to stress test with min tex units
 }
 
@@ -35,12 +36,12 @@ TextureUnitManager::BindTextureToUnit(Texture *texture)
         GL::ActiveTexture(GL_TEXTURE0 + freeUnit);
         texture->Bind();
 
-        // GL_TEXTURE0 is the void unit, so that subsequent binds for some other
+        // The last one is the void unit, so that subsequent binds for some other
         // reason dont change the current active texture unit.
         // In other words, without this line, the previous unit is bound, and
         // any texture bind for some other reason will overwrite the unit, and
         // we do not want it
-        GL::ActiveTexture(GL_TEXTURE0);
+        GL::ActiveTexture(GL_TEXTURE0 + tm->m_numTextureUnits + 1);
 
         // Update number of times used
         tm->UpdateStructuresForUsedTexture(texture, freeUnit);
@@ -61,8 +62,7 @@ TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
     if (currentNumBoundTextures < m_numTextureUnits)
     {
         // If there is enough space, allocate to free unit
-        // +1 to avoid using unit GL_TEXTURE0
-        freeUnit = currentNumBoundTextures + 1;
+        freeUnit = currentNumBoundTextures;
     }
     else
     {

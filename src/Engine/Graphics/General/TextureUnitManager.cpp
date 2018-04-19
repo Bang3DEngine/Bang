@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 TextureUnitManager::TextureUnitManager()
 {
     m_numTextureUnits = GL::GetInteger(GL::MaxTextureImageUnits);
+    // m_numTextureUnits = 8; // Uncomment to stress test with min tex units
 }
 
 TextureUnitManager::TexUnit
@@ -16,45 +17,95 @@ TextureUnitManager::BindTextureToUnit(Texture *texture)
 {
     TextureUnitManager *tm = TextureUnitManager::GetActive();
 
-    const bool textureIsBoundToSomeUnit =
-            tm->m_textureIdsBoundToSomeUnit.count(texture->GetGLId()) == 1;
-    if (textureIsBoundToSomeUnit)
+    TexUnit texUnit;
+    const GLId texId = texture->GetGLId();
+    const bool texIsAlreadyInUnit = (tm->m_textureIdToBoundUnit.count(texId) == 1);
+    if (texIsAlreadyInUnit)
     {
-        // Texture was bound to a unit, return the unit it was bound to
-        TexUnit prevTexUnit = tm->m_textureIdToBoundUnit[texture->GetGLId()];
-        return prevTexUnit;
+        // Texture was already bound to a unit. Return the unit it was bound to.
+        TexUnit prevTexUnit = tm->m_textureIdToBoundUnit[texId];
+        texUnit = prevTexUnit;
     }
     else
     {
-        // We will have to bind the texture to some unit. Get the least used
-        TexUnit freeUnit;
-        if (tm->m_usedUnitsQueue.size() < tm->m_numTextureUnits)
-        {
-            // If there is enough space, allocate to free unit
-            freeUnit = tm->m_usedUnitsQueue.size();
-        }
-        else
-        {
-            // Otherwise, we will have to make some room.
-            // Unallocate one unit so that we can put the new texture there
-            TexUnit oldestUsedUnit = tm->m_usedUnitsQueue.front();
-            freeUnit = oldestUsedUnit;
-            tm->m_usedUnitsQueue.pop();
-            tm->m_textureIdsBoundToSomeUnit.erase(texture->GetGLId());
-            texture->EventEmitter<IDestroyListener>::UnRegisterListener(tm);
-        }
+        // We will have to bind the texture to some unit.
+        const TexUnit freeUnit = tm->MakeRoomAndGetAFreeTextureUnit();
 
         // Bind to texture unit
         GL::ActiveTexture(GL_TEXTURE0 + freeUnit);
         texture->Bind();
 
-        tm->m_textureIdsBoundToSomeUnit.insert(texture->GetGLId());
-        tm->m_textureIdToBoundUnit[texture->GetGLId()] = freeUnit;
-        tm->m_usedUnitsQueue.push(freeUnit);  // Add to queue
+        // GL_TEXTURE0 is the void unit, so that subsequent binds for some other
+        // reason dont change the current active texture unit.
+        // In other words, without this line, the previous unit is bound, and
+        // any texture bind for some other reason will overwrite the unit, and
+        // we do not want it
+        GL::ActiveTexture(GL_TEXTURE0);
 
-        texture->EventEmitter<IDestroyListener>::RegisterListener(tm);
-        return freeUnit;
+        // Update number of times used
+        tm->UpdateStructuresForUsedTexture(texture, freeUnit);
+
+        texUnit = freeUnit;
     }
+
+    tm->m_timestampTexIdUsed[texId] = tm->m_timestampCounter;
+    ++tm->m_timestampCounter;
+
+    return texUnit;
+}
+
+TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
+{
+    TexUnit freeUnit = -1;
+    uint currentNumBoundTextures = m_textureIdToBoundUnit.size();
+    if (currentNumBoundTextures < m_numTextureUnits)
+    {
+        // If there is enough space, allocate to free unit
+        // +1 to avoid using unit GL_TEXTURE0
+        freeUnit = currentNumBoundTextures + 1;
+    }
+    else
+    {
+        // Otherwise, we will have to make some room.
+        // Unallocate one unit so that we can put the new texture there
+        ASSERT(m_timestampTexIdUsed.size() >= 1);
+
+        // Find the oldest used texture id
+        GLId oldestUsedTextureId        = m_timestampTexIdUsed.begin()->first;
+        uint oldestUsedTextureTimestamp = m_timestampTexIdUsed.begin()->second;
+        for (const auto &pair : m_timestampTexIdUsed)
+        {
+            const GLId texId = pair.first;
+            const uint texUseTimestamp = pair.second;
+            if (texUseTimestamp < oldestUsedTextureTimestamp)
+            {
+                oldestUsedTextureTimestamp = texUseTimestamp;
+                oldestUsedTextureId = texId;
+            }
+        }
+
+        ASSERT(m_textureIdToBoundUnit.count(oldestUsedTextureId) == 1);
+
+        // Get the unit we are going to replace
+        freeUnit = m_textureIdToBoundUnit[oldestUsedTextureId];
+
+        // UnTrack texture
+        Texture *oldestUsedTexture = m_textureIdToTexture[oldestUsedTextureId];
+        ASSERT(oldestUsedTexture);
+        UnTrackTexture(oldestUsedTexture);
+    }
+    return freeUnit;
+}
+
+void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
+                                                        uint usedUnit)
+{
+    const GLId texId = texture->GetGLId();
+
+    m_textureIdToTexture[texId] = texture;
+    m_textureIdToBoundUnit[texId] = usedUnit;
+
+    texture->EventEmitter<IDestroyListener>::RegisterListener(this);
 }
 
 
@@ -122,9 +173,17 @@ TextureUnitManager *TextureUnitManager::GetActive()
     return GEngine::GetActive()->GetTextureUnitManager();
 }
 
+void TextureUnitManager::UnTrackTexture(Texture *texture)
+{
+    const GLId texId = texture->GetGLId();
+    m_timestampTexIdUsed.erase(texId);
+    m_textureIdToTexture.erase(texId);
+    m_textureIdToBoundUnit.erase(texId);
+    texture->EventEmitter<IDestroyListener>::UnRegisterListener(this);
+}
+
 void TextureUnitManager::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
     Texture *tex = DCAST<Texture*>(object);
-    m_textureIdToBoundUnit.erase(tex->GetGLId());
-    m_textureIdsBoundToSomeUnit.erase(tex->GetGLId());
+    UnTrackTexture(tex);
 }

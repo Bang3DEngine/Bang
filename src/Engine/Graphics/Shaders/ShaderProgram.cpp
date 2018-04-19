@@ -324,6 +324,12 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         // m_namesToTexture.erase(name);
     }
 
+    if (m_namesToTexture.size() >= TextureUnitManager::GetMaxTextureUnits())
+    {
+        Debug_Error("You are using too many textures at once. Maximum is: " <<
+                    TextureUnitManager::GetMaxTextureUnits());
+    }
+
     return true;
 }
 bool ShaderProgram::SetTexture2D(const String &name,
@@ -442,35 +448,20 @@ void ShaderProgram::BindAllTexturesToUnits()
 {
     ASSERT(GL::IsBound(this));
 
-    uint unit = 0;
     for (const auto &pair : m_namesToTexture)
     {
         const String  &texName = pair.first;
         Texture *texture = pair.second;
-        BindTextureToUnit(texName, texture, unit);
-        ++unit;
+        BindTextureToFreeUnit(texName, texture);
     }
 }
 
-void ShaderProgram::BindTextureToFreeUnit(const String &textureName, Texture *texture)
+void ShaderProgram::BindTextureToFreeUnit(const String &textureName,
+                                          Texture *texture)
 {
-    uint freeTextureUnit = m_namesToTexture.size();
-    BindTextureToUnit(textureName, texture, freeTextureUnit);
-}
-
-void ShaderProgram::BindTextureToUnit(const String &texName, Texture *texture,
-                                      uint unit)
-{
-    const int MaxTexUnits = TextureUnitManager::GetMaxTextureUnits();
-    if (unit < MaxTexUnits)
-    {
-        uint unit = TextureUnitManager::BindTextureToUnit(texture);
-        SetInt(texName, unit, false);
-    }
-    else
-    {
-        Debug_Error("Can not bind so many textures. Maximum is: " << MaxTexUnits);
-    }
+    uint unit = TextureUnitManager::BindTextureToUnit(texture);
+    SetInt(textureName, unit, false); // Assign unit to sampler
+    // Debug_Log("Binding " << textureName << " to " << unit);
 }
 
 void ShaderProgram::UnBindAllTexturesFromUnits() const

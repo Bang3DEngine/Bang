@@ -110,8 +110,6 @@ private:
 
     void BindAllTexturesToUnits();
     void BindTextureToFreeUnit(const String &textureName, Texture *texture);
-    void BindTextureToUnit(const String &textureName, Texture *texture,
-                           uint unit);
     void UnBindAllTexturesFromUnits() const;
 
     // IResourceListener

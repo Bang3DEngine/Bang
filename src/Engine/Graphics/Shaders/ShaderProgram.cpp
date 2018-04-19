@@ -284,32 +284,46 @@ bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v,
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    if (!texture)
+    if (texture && GetUniformLocation(name) > 0)
     {
-        m_namesToTexture[name] = nullptr;
-        if (m_namesToTexture.count(name) == 1) { m_namesToTexture.erase(name); }
-    }
-    else
-    {
+        // Texture name is in shader program, and texture is not null
+        bool needToRefreshTexture;
         auto it = m_namesToTexture.find(name);
         if (it != m_namesToTexture.end())
         {
-            if (texture != it->second)
+            // Texture name was already being used...
+            Texture *oldTexture = it->second;
+            if (texture != oldTexture)
             {
-                Asset *oldAsset = DCAST<Asset*>(it->second);
-                if (oldAsset)
-                {
-                    oldAsset->EventEmitter<IDestroyListener>::
-                                                UnRegisterListener(this);
-                }
+                // We are changing an existing texture. Unregister listener
+                oldTexture->EventEmitter<IDestroyListener>::UnRegisterListener(this);
+                needToRefreshTexture = true;
+            }
+            else
+            {
+                // Nothing to do. We already had this tex assigned to this name
+                needToRefreshTexture = false;
             }
         }
+        else { needToRefreshTexture = true; }
 
-        m_namesToTexture[name] = texture;
-        Asset *asset = DCAST<Asset*>(texture);
-        if (asset) { asset->EventEmitter<IDestroyListener>::RegisterListener(this); }
-        if (GL::IsBound(this)) { BindTextureToAvailableUnit(name, texture); }
+        if (needToRefreshTexture)
+        {
+            // Texture name was not being used. Register and all stuff
+            m_namesToTexture[name] = texture;
+
+            // Register listener to keep track when it is destroyed
+            texture->EventEmitter<IDestroyListener>::RegisterListener(this);
+        }
+        if (GL::IsBound(this)) { BindTextureToFreeUnit(name, texture); }
     }
+    else
+    {
+        // Texture is null or shader program is not using this name.
+        // Erase it from name to texture
+        // m_namesToTexture.erase(name);
+    }
+
     return true;
 }
 bool ShaderProgram::SetTexture2D(const String &name,
@@ -330,7 +344,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
     if (shader && shader->GetType() != type)
     {
         String typeName = (type == GL::ShaderType::Vertex    ? "Vertex" :
-                           (type == GL::ShaderType::Geometry ? "Geometry" :
+                          (type == GL::ShaderType::Geometry ? "Geometry" :
                                                                "Fragment"));
         Debug_Error("You are trying to set as " << typeName << " shader a "
                     "non-" << typeName << " shader.");
@@ -380,6 +394,7 @@ Shader *ShaderProgram::GetShader(GL::ShaderType type) const
         case GL::ShaderType::Geometry: return p_gShader.Get();
         case GL::ShaderType::Fragment: return p_fShader.Get();
     }
+
     ASSERT(false);
     return nullptr;
 }
@@ -402,23 +417,6 @@ void ShaderProgram::Import(const Path &)
     // Nothing to import from filepath
 }
 
-bool ShaderProgram::BindTextureToAvailableUnit(const String &texName,
-                                               Texture *texture) const
-{
-    int location = -1;
-    if (texture)
-    {
-        location = GetUniformLocation(texName);
-        if (location >= 0)
-        {
-            int texUnit = TextureUnitManager::BindTexture(texture);
-            GL::Uniform(location, texUnit);
-        }
-    }
-    return (location >= 0);
-}
-
-
 void ShaderProgram::Bind() const
 {
     #ifdef DEBUG
@@ -430,13 +428,54 @@ void ShaderProgram::Bind() const
     #endif
 
     GL::Bind(this);
-    UpdateTextureBindings();
-    GLUniforms::SetAllUniformsToShaderProgram(const_cast<ShaderProgram*>(this));
+    ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
+    GLUniforms::SetAllUniformsToShaderProgram(noConstThis);
+    noConstThis->BindAllTexturesToUnits();
 }
 
 void ShaderProgram::UnBind() const
 {
     GL::UnBind(this);
+}
+
+void ShaderProgram::BindAllTexturesToUnits()
+{
+    ASSERT(GL::IsBound(this));
+
+    uint unit = 0;
+    for (const auto &pair : m_namesToTexture)
+    {
+        const String  &texName = pair.first;
+        Texture *texture = pair.second;
+        BindTextureToUnit(texName, texture, unit);
+        ++unit;
+    }
+}
+
+void ShaderProgram::BindTextureToFreeUnit(const String &textureName, Texture *texture)
+{
+    uint freeTextureUnit = m_namesToTexture.size();
+    BindTextureToUnit(textureName, texture, freeTextureUnit);
+}
+
+void ShaderProgram::BindTextureToUnit(const String &texName, Texture *texture,
+                                      uint unit)
+{
+    const int MaxTexUnits = TextureUnitManager::GetMaxTextureUnits();
+    if (unit < MaxTexUnits)
+    {
+        uint unit = TextureUnitManager::BindTextureToUnit(texture);
+        SetInt(texName, unit, false);
+    }
+    else
+    {
+        Debug_Error("Can not bind so many textures. Maximum is: " << MaxTexUnits);
+    }
+}
+
+void ShaderProgram::UnBindAllTexturesFromUnits() const
+{
+    TextureUnitManager::UnBindAllTexturesFromAllUnits();
 }
 
 void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
@@ -451,14 +490,6 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
             // Dont break, in case it has obj texture several times
         }
         else { ++it; }
-    }
-}
-
-void ShaderProgram::UpdateTextureBindings() const
-{
-    for (const auto &nameTexPair : m_namesToTexture)
-    {
-        BindTextureToAvailableUnit(nameTexPair.first, nameTexPair.second);
     }
 }
 

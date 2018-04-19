@@ -108,8 +108,11 @@ private:
                   const Path& fShaderPath);
     virtual ~ShaderProgram();
 
-    bool BindTextureToAvailableUnit(const String &texName, Texture *texture) const;
-    void UpdateTextureBindings() const;
+    void BindAllTexturesToUnits();
+    void BindTextureToFreeUnit(const String &textureName, Texture *texture);
+    void BindTextureToUnit(const String &textureName, Texture *texture,
+                           uint unit);
+    void UnBindAllTexturesFromUnits() const;
 
     // IResourceListener
     void OnImported(Resource *res) override;

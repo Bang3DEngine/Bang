@@ -130,7 +130,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     camera->BindGBuffer();
 
     GBuffer *gbuffer = camera->GetGBuffer();
-    gbuffer->ClearBuffersAndBackground(camera->GetClearColor()); // ClearAllBuffersExceptColor();
+    gbuffer->ClearBuffersAndBackground(camera->GetClearColor());
 
     // GBuffer Scene rendering
     gbuffer->SetAllDrawBuffers();
@@ -226,7 +226,6 @@ void GEngine::SetActive(GEngine *gEngine)
     GEngine::s_gEngine = gEngine;
     GL::SetActive( gEngine ? gEngine->GetGL() : nullptr );
 }
-
 
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {

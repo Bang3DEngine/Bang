@@ -1,14 +1,13 @@
 #define BANG_FRAGMENT
 #include "Common.glsl"
 
-uniform sampler2D B_Test2;
 uniform samplerCube B_InputCubeMap;
 
 in vec4 B_FIn_Position;
 
 out vec4 B_Out_IrradianceColor;
 
-// Sample copied from:
+// Based on:
 // https://learnopengl.com/PBR/IBL/Diffuse-irradiance
 // Thank you!
 

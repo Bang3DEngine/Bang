@@ -55,7 +55,7 @@ CubeMapIrradianceGenerator::GenerateIrradianceCubeMap(
     fb->SetAllDrawBuffers();
 
     sp->Bind();
-    sp->SetTextureCubeMap("B_InputCubeMap", textureCubeMap);
+    // sp->SetTextureCubeMap("B_InputCubeMap", textureCubeMap);
     GL::SetViewport(0, 0, ICMSize, ICMSize);
     GEngine::GetActive()->RenderViewportPlane();
 

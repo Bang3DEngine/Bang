@@ -7,6 +7,7 @@
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
+#include "Bang/IconManager.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 
@@ -128,9 +129,19 @@ void Material::Bind() const
     sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(), false);
 
     float alphaCutoff = GetTexture() ? GetTexture()->GetAlphaCutoff() : -1.0f;
-    sp->SetTexture2D("B_Texture0",  GetTexture(),             false);
-    sp->SetFloat("B_AlphaCutoff",   alphaCutoff,              false);
-    sp->SetBool("B_HasTexture",    (GetTexture() != nullptr), false);
+    if (GetTexture())
+    {
+        sp->SetTexture2D("B_Texture0",  GetTexture(), false);
+        sp->SetFloat("B_AlphaCutoff",   alphaCutoff,  false);
+        sp->SetBool("B_HasTexture",     true,         false);
+    }
+    else
+    {
+        Texture2D *whiteTex = IconManager::GetWhiteTexture().Get();
+        sp->SetTexture2D("B_Texture0",  whiteTex,     false);
+        sp->SetFloat("B_AlphaCutoff",   alphaCutoff,  false);
+        sp->SetBool("B_HasTexture",     false,        false);
+    }
 }
 
 void Material::UnBind() const

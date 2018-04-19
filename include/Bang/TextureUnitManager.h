@@ -2,6 +2,8 @@
 #define TEXTUREUNITMANAGER_H
 
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "Bang/GL.h"
 #include "Bang/Map.h"
@@ -17,18 +19,21 @@ public:
     using TexUnit = uint;
     TextureUnitManager();
 
-    // Returns the texture unit it has been bound to
-    static TexUnit BindTexture(Texture *tex);
-    static TexUnit BindTexture(GL::TextureTarget texTarget, GLId textureId);
-    static void UnBindTexture(Texture *tex);
-    static void UnBindTexture(GL::TextureTarget texTarget, GLId textureId);
+    static TexUnit BindTextureToUnit(Texture *texture);
+
+    static int GetMaxTextureUnits();
+    static void UnBindAllTexturesFromAllUnits();
+
+    static GLId GetBoundTextureToUnit(GL::TextureTarget texTarget,
+                                      GL::Enum textureUnit);
+    static void PrintTextureUnits();
+    static TextureUnitManager* GetActive();
 
 private:
-    using TexUnitMap = Map<const GLId, TexUnit>;
-
-    TexUnitMap m_textureIdToUnit;
-    std::queue<TexUnit> m_usedUnits; // Ordered in time
-    int c_numTextureUnits = 0;
+    int m_numTextureUnits = -1;
+    std::queue<TexUnit> m_usedUnitsQueue;
+    std::unordered_set<GLId> m_textureIdsBoundToSomeUnit;
+    std::unordered_map<GLId, TexUnit> m_textureIdToBoundUnit;
 
     void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
 };

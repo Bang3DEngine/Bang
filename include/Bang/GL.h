@@ -37,19 +37,23 @@ class GL
 public:
     enum Enum
     {
-        ActiveUniforms       = GL_ACTIVE_UNIFORMS,
-        CompileStatus        = GL_COMPILE_STATUS,
-        ValidateStatus       = GL_VALIDATE_STATUS,
-        Fill                 = GL_FILL,
-        InfoLogLength        = GL_INFO_LOG_LENGTH,
-        Line                 = GL_LINE,
-        LinkStatus           = GL_LINK_STATUS,
-        MaxTextureImageUnits = GL_MAX_TEXTURE_IMAGE_UNITS,
-        ReadOnly             = GL_READ_ONLY,
-        ReadWrite            = GL_READ_WRITE,
-        UnPackAlignment      = GL_UNPACK_ALIGNMENT,
-        Viewport             = GL_VIEWPORT,
-        WriteOnly            = GL_WRITE_ONLY
+        ActiveUniforms        = GL_ACTIVE_UNIFORMS,
+        CompileStatus         = GL_COMPILE_STATUS,
+        ValidateStatus        = GL_VALIDATE_STATUS,
+        Fill                  = GL_FILL,
+        InfoLogLength         = GL_INFO_LOG_LENGTH,
+        Line                  = GL_LINE,
+        LinkStatus            = GL_LINK_STATUS,
+        MaxTextureImageUnits  = GL_MAX_TEXTURE_IMAGE_UNITS,
+        ReadOnly              = GL_READ_ONLY,
+        ReadWrite             = GL_READ_WRITE,
+        UnPackAlignment       = GL_UNPACK_ALIGNMENT,
+        Viewport              = GL_VIEWPORT,
+        WriteOnly             = GL_WRITE_ONLY,
+        TextureBinding1D      = GL_TEXTURE_BINDING_1D,
+        TextureBinding2D      = GL_TEXTURE_BINDING_2D,
+        TextureBinding3D      = GL_TEXTURE_BINDING_3D,
+        TextureBindingCubeMap = GL_TEXTURE_BINDING_CUBE_MAP
     };
 
     enum class Primitive
@@ -100,7 +104,9 @@ public:
     enum class BindTarget
     {
         None               = 0,
+        Texture1D          = GL_TEXTURE_1D,
         Texture2D          = GL_TEXTURE_2D,
+        Texture3D          = GL_TEXTURE_3D,
         TextureCubeMap     = GL_TEXTURE_CUBE_MAP,
         ShaderProgram      = GL_SHADER,
         Framebuffer        = GL_FRAMEBUFFER,

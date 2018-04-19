@@ -1108,7 +1108,6 @@ void GL::BufferData(GL::BindTarget target, int dataSize,
     GL_CALL( glBufferData(GLCAST(target), dataSize, data, GLCAST(usageHint)) );
 }
 
-
 void GL::Render(const VAO *vao, GL::Primitive renderMode,
                 int elementsCount, int startElementIndex)
 {
@@ -1171,13 +1170,21 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
     GL_ClearError();
     switch (bindTarget)
     {
+        case GL::BindTarget::Texture1D:
+            // if (gl) { gl->m_boundTexture1DId = glId; }
+            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
+        break;
         case GL::BindTarget::Texture2D:
             if (gl) { gl->m_boundTexture2DId = glId; }
-            glBindTexture( GLCAST(bindTarget), glId );
+            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
+        break;
+        case GL::BindTarget::Texture3D:
+            // if (gl) { gl->m_boundTexture3DId = glId; }
+            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
         break;
         case GL::BindTarget::TextureCubeMap:
             if (gl) { gl->m_boundTextureCubeMapId = glId; }
-            glBindTexture( GLCAST(bindTarget), glId );
+            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
         break;
         case GL::BindTarget::ShaderProgram:
             if (GL::IsBound(bindTarget, glId)) { return; }

@@ -50,16 +50,21 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
                                                Color::Pink), false);
 
     TextureCubeMap *whiteCubeMap = IconManager::GetWhiteTextureCubeMap().Get();
-    if (!cam || cam->GetClearMode() == Camera::ClearMode::Color)
+    if (cam && cam->GetClearMode() == Camera::ClearMode::SkyBox)
     {
-        sp->SetTextureCubeMap("B_Camera_SkyBox", whiteCubeMap, false);
-        sp->SetBool("B_Camera_Has_SkyBox", false, false);
-    }
-    else if (cam && cam->GetClearMode() == Camera::ClearMode::SkyBox)
-    {
-        TextureCubeMap *skt = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
-        sp->SetTextureCubeMap("B_Camera_SkyBox", skt ? skt : whiteCubeMap, false);
+        TextureCubeMap *sskt = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
+        TextureCubeMap *dskt = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
+        sp->SetTextureCubeMap("B_Camera_SkyBox",  sskt ? sskt : whiteCubeMap, false);
+        sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dskt ? dskt : whiteCubeMap, false);
+        sp->SetTextureCubeMap("B_SkyBoxSpecular", sskt ? sskt : whiteCubeMap, false);
         sp->SetBool("B_Camera_Has_SkyBox", true, false);
+    }
+    else
+    {
+        sp->SetTextureCubeMap("B_Camera_SkyBox",  whiteCubeMap, false);
+        sp->SetTextureCubeMap("B_SkyBoxDiffuse",  whiteCubeMap, false);
+        sp->SetTextureCubeMap("B_SkyBoxSpecular", whiteCubeMap, false);
+        sp->SetBool("B_Camera_Has_SkyBox", false, false);
     }
 
     ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();

@@ -1,5 +1,8 @@
 #include "G.frag"
 
+uniform samplerCube B_SkyBoxDiffuse;   // Irradiance for diffuse  ambient
+uniform samplerCube B_SkyBoxSpecular;  // Irradiance for specular ambient
+
 void main()
 {
     vec4 texColor = vec4(1);
@@ -14,6 +17,6 @@ void main()
     B_GIn_Misc     = vec4(B_MaterialReceivesLighting ? 1.0 : 0.0,
                           B_MaterialRoughness / 255.0, 0, 0);
 
-    float ambientLight = (B_MaterialReceivesLighting ? B_AmbientLight : 1.0);
-    B_GIn_Color = vec4(B_GIn_Albedo.rgb * ambientLight, B_GIn_Albedo.a);
+    vec3 ambient = texture(B_SkyBoxDiffuse, B_FIn_Normal.xyz).rgb;
+    B_GIn_Color = vec4(B_GIn_Albedo.rgb * ambient, B_GIn_Albedo.a);
 }

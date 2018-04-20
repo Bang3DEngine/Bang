@@ -3,7 +3,7 @@
 
 in vec3 B_FIn_Position;
 in vec3 B_FIn_Normal;
-in vec2 B_FIn_Uv;
+in vec2 B_FIn_AlbedoUv;
 
 layout(location = 0) out vec4 B_GIn_Color;
 
@@ -13,9 +13,9 @@ out vec4 fragColor;
 
 void main()
 {
-    if (B_HasTexture)
+    if (B_HasAlbedoTexture)
     {
-        if (texture(B_Texture0, B_FIn_Uv).a < B_AlphaCutoff) { discard; }
+        if (texture(B_AlbedoTexture, B_FIn_AlbedoUv).a < B_AlphaCutoff) { discard; }
     }
     fragColor = selectionColor;
 }

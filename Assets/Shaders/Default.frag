@@ -4,7 +4,10 @@
 
 in vec3 B_FIn_Position;
 in vec3 B_FIn_Normal;
-in vec2 B_FIn_Uv;
+in vec2 B_FIn_AlbedoUv;
+in vec2 B_FIn_NormalMapUv;
+in vec3 B_FIn_Tangent;
+flat in mat3 B_TBN;
 
 layout(location = 0) out vec4 B_GIn_Color;
 layout(location = 1) out vec4 B_GIn_Albedo;
@@ -14,14 +17,23 @@ layout(location = 3) out vec4 B_GIn_Misc;
 void main()
 {
     vec4 texColor = vec4(1);
-    if (B_HasTexture)
+    if (B_HasAlbedoTexture)
     {
-        texColor = texture(B_Texture0, B_FIn_Uv);
+        texColor = texture(B_AlbedoTexture, B_FIn_AlbedoUv);
         if (texColor.a < B_AlphaCutoff) discard;
     }
-
     B_GIn_Albedo = B_MaterialAlbedoColor * vec4(texColor.rgb, 1);
-    B_GIn_Normal = vec4(B_FIn_Normal.xyz * 0.5f + 0.5f, 0);
+
+    vec3 normal = B_FIn_Normal.xyz;
+    if (B_HasNormalMapTexture)
+    {
+        vec3 normalFromMap = texture(B_NormalMapTexture, B_FIn_NormalMapUv).xyz;
+        normalFromMap.xy = normalFromMap.xy * 2.0f - 1.0f;
+        normalFromMap = B_TBN * normalFromMap;
+        normal = normalize(normalFromMap);
+    }
+    B_GIn_Normal = vec4(normal * 0.5f + 0.5f, 0);
+
     B_GIn_Misc   = vec4(B_MaterialReceivesLighting ? 1.0 : 0.0,
                         B_MaterialRoughness,
                         B_MaterialMetalness,
@@ -29,7 +41,7 @@ void main()
 
     if (B_MaterialReceivesLighting)
     {
-        vec3 N = B_FIn_Normal.xyz;
+        vec3 N = B_GIn_Normal.xyz;
         vec3 V = normalize(B_Camera_WorldPos - B_FIn_Position.xyz);
         vec3 R = reflect(-V, N);
 

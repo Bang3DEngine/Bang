@@ -147,7 +147,7 @@ void UITextRenderer::Bind() const
     {
         const int textSize = Math::Max(GetTextSize(), 1);
         Texture2D *fontAtlas = GetFont()->GetFontAtlas(textSize);
-        GetMaterial()->SetTexture(fontAtlas);
+        GetMaterial()->SetAlbedoTexture(fontAtlas);
     }
 }
 

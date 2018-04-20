@@ -56,9 +56,10 @@ public:
     static bool ImportFirstFoundMeshRaw(
                      const Path& modelFilepath,
                      Array<Mesh::VertexId> *vertexIndices,
-                     Array<Vector3> *vertexPositions,
-                     Array<Vector3> *vertexNormals,
-                     Array<Vector2> *vertexUvs);
+                     Array<Vector3> *vertexPositionsPool,
+                     Array<Vector3> *vertexNormalsPool,
+                     Array<Vector2> *vertexUvsPool,
+                     Array<Vector3> *vertexTangentsPool);
 
     static void ImportMesh(aiMesh *aMesh,
                            const GUID &parentModelGUID,
@@ -77,7 +78,8 @@ public:
                      Array<Mesh::VertexId> *vertexIndices,
                      Array<Vector3> *vertexPositionsPool,
                      Array<Vector3> *vertexNormalsPool,
-                     Array<Vector2> *vertexUvsPool);
+                     Array<Vector2> *vertexUvsPool,
+                     Array<Vector3> *vertexTangentsPool);
 
     static void ExportModel(const GameObject *gameObject,
                             const Path &meshExportPath);

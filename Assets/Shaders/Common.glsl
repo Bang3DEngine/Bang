@@ -32,11 +32,15 @@ uniform bool      B_MaterialReceivesLighting;
 uniform vec4      B_MaterialAlbedoColor;
 uniform float     B_MaterialRoughness;
 uniform float     B_MaterialMetalness;
+uniform sampler2D B_AlbedoTexture;
 uniform float     B_AlphaCutoff;
-uniform vec2      B_UvOffset;
-uniform vec2      B_UvMultiply;
-uniform bool      B_HasTexture;
-uniform sampler2D B_Texture0;
+uniform vec2      B_AlbedoUvOffset;
+uniform vec2      B_AlbedoUvMultiply;
+uniform bool      B_HasAlbedoTexture;
+uniform sampler2D B_NormalMapTexture;
+uniform vec2      B_NormalMapUvOffset;
+uniform vec2      B_NormalMapUvMultiply;
+uniform bool      B_HasNormalMapTexture;
 // ///////////////////////////////////////
 
 // Light related /////////////////////////

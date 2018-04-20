@@ -233,8 +233,8 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
     // Set state
     sp->Bind();
-    sp->SetVector2("B_UvOffset",         Vector2::Zero, false);
-    sp->SetVector2("B_UvMultiply",       Vector2::One, false);
+    sp->SetVector2("B_AlbedoUvOffset",         Vector2::Zero, false);
+    sp->SetVector2("B_AlbedoUvMultiply",       Vector2::One, false);
     sp->SetVector2("B_destRectMinCoord", destRectMask.GetMin(), false);
     sp->SetVector2("B_destRectMaxCoord", destRectMask.GetMax(), false);
     RenderViewportPlane();

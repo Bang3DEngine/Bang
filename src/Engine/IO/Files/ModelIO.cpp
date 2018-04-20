@@ -147,7 +147,8 @@ bool ModelIO::ImportFirstFoundMeshRaw(
                      Array<Mesh::VertexId> *vertexIndices,
                      Array<Vector3> *vertexPositionsPool,
                      Array<Vector3> *vertexNormalsPool,
-                     Array<Vector2> *vertexUvsPool)
+                     Array<Vector2> *vertexUvsPool,
+                     Array<Vector3> *vertexTangentsPool)
 {
     Assimp::Importer importer;
     const aiScene* scene = ImportScene(&importer, modelFilepath);
@@ -156,10 +157,11 @@ bool ModelIO::ImportFirstFoundMeshRaw(
     if (scene && scene->HasMeshes())
     {
         ModelIO::ImportMeshRaw(scene->mMeshes[0],
-                             vertexIndices,
-                             vertexPositionsPool,
-                             vertexNormalsPool,
-                             vertexUvsPool);
+                               vertexIndices,
+                               vertexPositionsPool,
+                               vertexNormalsPool,
+                               vertexUvsPool,
+                               vertexTangentsPool);
         ok = true;
     }
     return ok;
@@ -203,7 +205,7 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
 
     outMaterial->Get()->SetAlbedoColor( AIColor3ToColor(aAlbedoColor) );
     outMaterial->Get()->SetRoughness( aRoughness );
-    outMaterial->Get()->SetTexture( matTexture.Get() );
+    outMaterial->Get()->SetAlbedoTexture( matTexture.Get() );
 }
 
 void ModelIO::ImportMeshRaw(
@@ -211,7 +213,8 @@ void ModelIO::ImportMeshRaw(
                   Array<Mesh::VertexId> *vertexIndices,
                   Array<Vector3> *vertexPositionsPool,
                   Array<Vector3> *vertexNormalsPool,
-                  Array<Vector2> *vertexUvsPool)
+                  Array<Vector2> *vertexUvsPool,
+                  Array<Vector3> *vertexTangentsPool)
 {
     for (int i = 0; i < SCAST<int>(aMesh->mNumFaces); ++i)
     {
@@ -243,6 +246,16 @@ void ModelIO::ImportMeshRaw(
         {
             Vector3 uvs = AIVectorToVec3(aMesh->mTextureCoords[0][i]);
             vertexUvsPool->PushBack( uvs.xy() );
+        }
+    }
+
+    // Tangents
+    if (aMesh->HasTangentsAndBitangents())
+    {
+        for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+        {
+            Vector3 tangent = AIVectorToVec3(aMesh->mTangents[i]);
+            vertexTangentsPool->PushBack( tangent );
         }
     }
 }
@@ -281,9 +294,9 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
                 sceneMaterials.Add(material);
                 meshRendererToMaterial.Add(mr, material);
 
-                if (material->GetTexture())
+                if (material->GetAlbedoTexture())
                 {
-                    sceneTextures.Add(material->GetTexture());
+                    sceneTextures.Add(material->GetAlbedoTexture());
                 }
             }
         }
@@ -464,12 +477,14 @@ void ModelIO::ImportMesh(aiMesh *aMesh,
     Array<Vector3> vertexPositionsPool;
     Array<Vector3> vertexNormalsPool;
     Array<Vector2> vertexUvsPool;
+    Array<Vector3> vertexTangentsPool;
 
     ModelIO::ImportMeshRaw(aMesh,
-                         &vertexIndices,
-                         &vertexPositionsPool,
-                         &vertexNormalsPool,
-                         &vertexUvsPool);
+                           &vertexIndices,
+                           &vertexPositionsPool,
+                           &vertexNormalsPool,
+                           &vertexUvsPool,
+                           &vertexTangentsPool);
     if (outMeshName)
     {
         *outMeshName = String( aMesh->mName.C_Str() );
@@ -479,7 +494,8 @@ void ModelIO::ImportMesh(aiMesh *aMesh,
     outMesh->Get()->LoadAll(vertexIndices,
                             vertexPositionsPool,
                             vertexNormalsPool,
-                            vertexUvsPool);
+                            vertexUvsPool,
+                            vertexTangentsPool);
 }
 
 const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
@@ -487,9 +503,10 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
 {
     const aiScene* scene =
       importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
-          aiProcess_Triangulate            |
-          aiProcess_JoinIdenticalVertices  |
-          aiProcess_GenSmoothNormals);
+                         aiProcess_Triangulate            |
+                         aiProcess_JoinIdenticalVertices  |
+                         aiProcess_GenSmoothNormals       |
+                         aiProcess_CalcTangentSpace);
 
     return scene;
 }

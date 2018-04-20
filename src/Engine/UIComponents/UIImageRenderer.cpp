@@ -59,7 +59,7 @@ void UIImageRenderer::SetImageTexture(Texture2D* imageTexture)
     if (imageTexture != GetImageTexture())
     {
         p_imageTexture.Set(imageTexture);
-        GetMaterial()->SetTexture( GetImageTexture() );
+        GetMaterial()->SetAlbedoTexture( GetImageTexture() );
     }
 }
 

@@ -22,24 +22,30 @@ class Material : public Asset,
     ASSET(Material)
 
 public:
-    void SetUvOffset(const Vector2& uvOffset);
-    void SetUvMultiply(const Vector2& uvMultiply);
+    void SetAlbedoUvOffset(const Vector2& albedoUvOffset);
+    void SetAlbedoUvMultiply(const Vector2& albedoUvMultiply);
+    void SetNormalMapUvOffset(const Vector2& normalMapUvOffset);
+    void SetNormalMapUvMultiply(const Vector2& normalMapUvMultiply);
     void SetShaderProgram(ShaderProgram *program);
-    void SetTexture(Texture2D *texture);
     void SetReceivesLighting(bool receivesLighting);
     void SetRoughness(float roughness);
     void SetMetalness(float metalness);
+    void SetAlbedoTexture(Texture2D *texture);
     void SetAlbedoColor(const Color &albedoColor);
+    void SetNormalMapTexture(Texture2D *texture);
     void SetRenderPass(RenderPass renderPass);
 
-    const Vector2& GetUvOffset() const;
-    const Vector2& GetUvMultiply() const;
+    const Vector2& GetAlbedoUvOffset() const;
+    const Vector2& GetAlbedoUvMultiply() const;
+    const Vector2& GetNormalMapUvOffset() const;
+    const Vector2& GetNormalMapUvMultiply() const;
     ShaderProgram* GetShaderProgram() const;
-    Texture2D* GetTexture() const;
     bool GetReceivesLighting() const;
     float GetMetalness() const;
     float GetRoughness() const;
+    Texture2D* GetAlbedoTexture() const;
     const Color& GetAlbedoColor() const;
+    Texture2D* GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
 
     virtual void Bind() const;
@@ -59,16 +65,19 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
-    RH<Texture2D> p_texture;
+    RH<Texture2D> p_albedoTexture;
+    RH<Texture2D> p_normalMapTexture;
     RH<ShaderProgram> p_shaderProgram;
 
-    RenderPass m_renderPass = RenderPass::Scene;
-    Color m_albedoColor     = Color::White;
-    float m_roughness       = 1.0f;
-    float m_metalness       = 0.5f;
-    bool m_receivesLighting = true;
-    Vector2 m_uvOffset      = Vector2::Zero;
-    Vector2 m_uvMultiply    = Vector2::One;
+    RenderPass m_renderPass       = RenderPass::Scene;
+    Color m_albedoColor           = Color::White;
+    float m_roughness             = 1.0f;
+    float m_metalness             = 0.5f;
+    bool m_receivesLighting       = true;
+    Vector2 m_albedoUvOffset      = Vector2::Zero;
+    Vector2 m_albedoUvMultiply    = Vector2::One;
+    Vector2 m_normalMapUvOffset   = Vector2::Zero;
+    Vector2 m_normalMapUvMultiply = Vector2::One;
 
     Material();
     virtual ~Material();

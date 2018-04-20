@@ -64,8 +64,8 @@ void Renderer::Bind() const
     if (GetActiveMaterial()) { GetActiveMaterial()->Bind(); }
     if (GetGameObject()->GetName() == "Sphere")
     {
-        GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasTexture", false, false);
-        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasTexture",     false,         false);
+        GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasAlbedoTexture", false, false);
+        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasAlbedoTexture",     false,         false);
         // GetActiveMaterial()->GetShaderProgram()->SetBool("B_Test", false, false);
     }
 }

@@ -240,7 +240,7 @@ void Gizmos::RenderIcon(Texture2D *texture,
                     cam->GetGameObject()->GetTransform()->GetForward(),
                     cam->GetGameObject()->GetTransform()->GetUp());
     }
-    g->m_meshRenderer->GetMaterial()->SetTexture(texture);
+    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(texture);
     g->Render(g->m_meshRenderer);
 }
 
@@ -255,7 +255,7 @@ void Gizmos::RenderViewportIcon(Texture2D *texture,
 
     g->m_meshRenderer->SetRenderWireframe(false);
     SetReceivesLighting(false);
-    g->m_meshRenderer->GetMaterial()->SetTexture(texture);
+    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(texture);
     g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
     g->Render(g->m_meshRenderer);
 }
@@ -387,7 +387,7 @@ void Gizmos::Reset()
         rend->SetViewProjMode(GL::ViewProjMode::World);
     }
 
-    g->m_meshRenderer->GetMaterial()->SetTexture(nullptr);
+    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(nullptr);
 }
 
 GameObject *Gizmos::GetGameObject() const

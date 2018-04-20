@@ -81,8 +81,8 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             Vector2 rtSize = rtRectNDC.GetSize();
             Vector2 rtOri = rtRectNDC.GetMinXMinY() * 0.5f + 0.5f;
             Vector2 rtOriInvY = Vector2(rtOri.x, rtOri.y);
-            p_cachedImageRenderer->GetMaterial()->SetUvOffset( rtOriInvY );
-            p_cachedImageRenderer->GetMaterial()->SetUvMultiply( rtSize * 0.5f );
+            p_cachedImageRenderer->GetMaterial()->SetAlbedoUvOffset( rtOriInvY );
+            p_cachedImageRenderer->GetMaterial()->SetAlbedoUvMultiply( rtSize * 0.5f );
 
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);

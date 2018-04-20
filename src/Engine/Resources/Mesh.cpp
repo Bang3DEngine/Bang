@@ -26,6 +26,7 @@ Mesh::~Mesh()
     if (m_vertexPositionsPoolVBO) { delete m_vertexPositionsPoolVBO; }
     if (m_vertexNormalsPoolVBO)   { delete m_vertexNormalsPoolVBO;   }
     if (m_vertexUvsPoolVBO)       { delete m_vertexUvsPoolVBO;       }
+    if (m_vertexTangentsPoolVBO)  { delete m_vertexTangentsPoolVBO;  }
 }
 
 void Mesh::LoadVertexIndices(const Array<Mesh::VertexId> &faceIndices)
@@ -55,7 +56,7 @@ void Mesh::LoadPositionsPool(const Array<Vector3>& positions)
 
     m_vertexPositionsPoolVBO = new VBO();
     m_vertexPositionsPoolVBO->Fill((void*)(&m_positionsPool[0]),
-                               m_positionsPool.Size() * sizeof(float) * 3);
+                                   m_positionsPool.Size() * sizeof(float) * 3);
     BindPositionsVBOToLocation(Mesh::DefaultPositionsVBOLocation);
 
     m_bBox.CreateFromPositions(m_positionsPool);
@@ -75,7 +76,7 @@ void Mesh::LoadNormalsPool(const Array<Vector3> &normals)
 
     m_vertexNormalsPoolVBO = new VBO();
     m_vertexNormalsPoolVBO->Fill((void*)(&m_normalsPool[0]),
-                                     m_normalsPool.Size() * sizeof(float) * 3);
+                                 m_normalsPool.Size() * sizeof(float) * 3);
     BindNormalsVBOToLocation(Mesh::DefaultNormalsVBOLocation);
     m_areLodsValid = false;
 }
@@ -91,8 +92,26 @@ void Mesh::LoadUvsPool(const Array<Vector2> &uvs)
     }
 
     m_vertexUvsPoolVBO = new VBO();
-    m_vertexUvsPoolVBO->Fill((void*)(&m_uvsPool[0]), m_uvsPool.Size() * sizeof(float) * 2);
+    m_vertexUvsPoolVBO->Fill((void*)(&m_uvsPool[0]),
+                             m_uvsPool.Size() * sizeof(float) * 2);
     BindUvsVBOToLocation(Mesh::DefaultUvsVBOLocation);
+    m_areLodsValid = false;
+}
+
+void Mesh::LoadTangentsPool(const Array<Vector3> &tangents)
+{
+    if (m_vertexTangentsPoolVBO) { delete m_vertexTangentsPoolVBO; }
+
+    m_tangentsPool = tangents;
+    if (m_tangentsPool.IsEmpty())
+    {
+        m_tangentsPool.PushBack( Vector3::Zero );
+    }
+
+    m_vertexTangentsPoolVBO = new VBO();
+    m_vertexTangentsPoolVBO->Fill((void*)(&m_tangentsPool[0]),
+                                  m_tangentsPool.Size() * sizeof(float) * 3);
+    BindTangentsVBOToLocation(Mesh::DefaultTangentsVBOLocation);
     m_areLodsValid = false;
 }
 
@@ -105,6 +124,15 @@ void Mesh::LoadAll(const Array<Vector3> &positionsPool,
     LoadUvsPool(uvsPool);
 }
 
+void Mesh::LoadAll(const Array<Vector3> &positionsPool,
+                   const Array<Vector3> &normalsPool,
+                   const Array<Vector2> &uvsPool,
+                   const Array<Vector3> &tangentsPool)
+{
+    LoadAll(positionsPool, normalsPool, uvsPool);
+    LoadTangentsPool(tangentsPool);
+}
+
 void Mesh::LoadAll(const Array<Mesh::VertexId> &vertexIndices,
                    const Array<Vector3> &positionsPool,
                    const Array<Vector3> &normalsPool,
@@ -112,6 +140,16 @@ void Mesh::LoadAll(const Array<Mesh::VertexId> &vertexIndices,
 {
     LoadVertexIndices(vertexIndices);
     LoadAll(positionsPool, normalsPool, uvsPool);
+}
+
+void Mesh::LoadAll(const Array<VertexId> &vertexIndices,
+                   const Array<Vector3>  &positionsPool,
+                   const Array<Vector3>  &normalsPool,
+                   const Array<Vector2>  &uvsPool,
+                   const Array<Vector3>  &tangentsPool)
+{
+    LoadVertexIndices(vertexIndices);
+    LoadAll(positionsPool, normalsPool, uvsPool, tangentsPool);
 }
 
 void Mesh::BindPositionsVBOToLocation(int positionsVBOLocation)
@@ -127,6 +165,11 @@ void Mesh::BindNormalsVBOToLocation(int normalsVBOLocation)
 void Mesh::BindUvsVBOToLocation(int uvsVBOLocation)
 {
     m_vao->AddVBO(m_vertexUvsPoolVBO, uvsVBOLocation, 2);
+}
+
+void Mesh::BindTangentsVBOToLocation(int tangentsVBOLocation)
+{
+    m_vao->AddVBO(m_vertexTangentsPoolVBO, tangentsVBOLocation, 3);
 }
 
 void Mesh::CalculateLODs()
@@ -180,6 +223,7 @@ IBO *Mesh::GetVertexIndicesIBO() const { return m_vertexIndicesIBO; }
 VBO *Mesh::GetVertexPositionsPoolVBO() const { return m_vertexPositionsPoolVBO; }
 VBO *Mesh::GetVertexNormalsPoolVBO() const { return m_vertexNormalsPoolVBO; }
 VBO *Mesh::GetVertexUvsPoolVBO() const { return m_vertexUvsPoolVBO; }
+VBO *Mesh::GetVertexTangentsPoolVBO() const { return m_vertexTangentsPoolVBO; }
 const AABox &Mesh::GetAABBox() const { return m_bBox; }
 const Sphere &Mesh::GetBoundingSphere() const { return m_bSphere; }
 
@@ -187,6 +231,7 @@ const Array<Mesh::VertexId> &Mesh::GetVertexIndices() const { return m_vertexInd
 const Array<Vector3> &Mesh::GetPositionsPool() const { return m_positionsPool; }
 const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
 const Array<Vector2> &Mesh::GetUvsPool() const { return m_uvsPool; }
+const Array<Vector3> &Mesh::GetTangentsPool() const { return m_tangentsPool; }
 
 void Mesh::CloneInto(ICloneable *clone) const
 {
@@ -197,7 +242,11 @@ void Mesh::CloneInto(ICloneable *clone) const
 
     if (mClone->m_vao) { delete mClone->m_vao; }
     mClone->m_vao = new VAO();
-    mClone->LoadAll(m_vertexIndices, m_positionsPool, m_normalsPool, m_uvsPool);
+    mClone->LoadAll(m_vertexIndices,
+                    m_positionsPool,
+                    m_normalsPool,
+                    m_uvsPool,
+                    m_tangentsPool);
 }
 
 void Mesh::Import(const Path &meshFilepath)
@@ -206,13 +255,15 @@ void Mesh::Import(const Path &meshFilepath)
     Array<Vector3> positionsPool;
     Array<Vector3> normalsPool;
     Array<Vector2> uvsPool;
+    Array<Vector3> tangentsPool;
     if ( ModelIO::ImportFirstFoundMeshRaw(meshFilepath,
-                                        &vertexIndices,
-                                        &positionsPool,
-                                        &normalsPool,
-                                        &uvsPool) )
+                                          &vertexIndices,
+                                          &positionsPool,
+                                          &normalsPool,
+                                          &uvsPool,
+                                          &tangentsPool) )
     {
-        LoadAll(vertexIndices, positionsPool, normalsPool, uvsPool);
+        LoadAll(vertexIndices, positionsPool, normalsPool, uvsPool, tangentsPool);
     }
     else
     {

@@ -73,71 +73,57 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
     }
 }
 
-vec3 GetDirectionalLightColorApportation(const in vec3  pixelPosWorld,
-                                         const in vec3  pixelNormalWorld,
-                                         const in vec3  pixelAlbedoColor,
-                                         const in float pixelRoughness,
-                                         const in vec3  lightForwardWorld,
-                                         const in float lightIntensity,
-                                         const in vec3  lightColor,
-                                         const in vec3  camPosWorld)
+vec3 GetLightColorApportation()
 {
-    float lightDot     = max(0.0, dot(pixelNormalWorld, -lightForwardWorld));
+    vec3  pixelPosWorld    = B_ComputeWorldPosition();
+    vec3  pixelNormalWorld = B_SampleNormal();
+    vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
+    float pixelRoughness   = B_SampleRoughness();
+    float pixelMetalness   = B_SampleMetalness();
 
-    // DIFFUSE
-    vec3 lightAlbedo  = pixelAlbedoColor * lightDot * lightIntensity * lightColor;
+    vec3 N = pixelNormalWorld;
+    vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
+    vec3 L = -B_LightForwardWorld;
+    vec3 H = normalize(V + L);
 
-    // SPECULAR
-    vec3 worldCamPos     = camPosWorld;
-    vec3 pointToCamDir   = normalize(worldCamPos - pixelPosWorld);
-    vec3 reflected       = -reflect(-lightForwardWorld, pixelNormalWorld);
-    float specDot        = max(0.0, dot(reflected, pointToCamDir));
-    float specShin       = min(pow(specDot, pixelRoughness), 1.0);
-    vec3 lightSpecular   = specShin * lightDot * lightIntensity * lightColor;
-    lightSpecular *= 0.5f;
+    // Cook-Torrance BRDF
+    float NDF         = DistributionGGX(N, H,  pixelRoughness);
+    float G           = GeometrySmith(N, V, L, pixelRoughness);
+    vec3  F0          = mix(vec3(0.04), pixelAlbedo, pixelMetalness);
+    vec3  F           = FresnelSchlick(max(dot(H, V), 0.0), F0);
+    vec3  nominator   = NDF * G * F;
+    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+    vec3  specular    = nominator / denominator;
 
-    return lightAlbedo + lightSpecular;
+    float surfaceDotWithLight = max(dot(N, L), 0.0);
+    vec3 radiance = B_LightColor.rgb * B_LightIntensity;
+
+    vec3 kSpec   = F;
+    vec3 kDiff   = (1.0 - kSpec) * (1.0 - pixelMetalness);
+    vec3 diffuse = (kDiff * pixelAlbedo / PI);
+
+    float lightness = GetFragmentLightness(pixelPosWorld,
+                                           pixelNormalWorld,
+                                           B_LightForwardWorld,
+                                           B_Camera_WorldPos);
+
+    vec3 lightApport = (diffuse + specular) * radiance * surfaceDotWithLight;
+    lightApport *= lightness;
+
+    return lightApport;
 }
 
 void main()
 {
-    vec4 originalColor    = B_SampleColor();
-    vec3 pixelPosWorld    = B_ComputeWorldPosition();
-    vec3 pixelNormalWorld = B_SampleNormal();
-
     if (B_SampleReceivesLight())
     {
-        // Get lightness of the pixel using shadow mapping
-        vec3 camPosWorld = B_GetCameraPositionWorld();
-        float lightness = GetFragmentLightness(pixelPosWorld,
-                                               pixelNormalWorld,
-                                               B_LightForwardWorld,
-                                               camPosWorld);
-
-        if (lightness > 0.0f)
-        {
-            vec4 diffColor = B_SampleAlbedoColor();
-            vec3 dirLightApport = GetDirectionalLightColorApportation(
-                                        pixelPosWorld,
-                                        pixelNormalWorld,
-                                        diffColor.rgb,
-                                        B_SampleRoughness(),
-                                        B_LightForwardWorld,
-                                        B_LightIntensity,
-                                        B_LightColor.rgb,
-                                        camPosWorld);
-            dirLightApport *= lightness;
-
-            B_GIn_Color = vec4(originalColor.rgb + dirLightApport, diffColor.a);
-        }
-        else { discard; }
+        vec4 originalColor = B_SampleColor();
+        vec3 lightApport   = GetLightColorApportation();
+        B_GIn_Color = vec4(originalColor.rgb + lightApport, originalColor.a);
     }
     else
     {
-        // Should not arrive here, because pixels that do not receive light
-        // are stenciled
-        // TODO: This seems not to be being stenciled, fix this
-        // B_GIn_Color = vec4(1,0,0,1);
         discard;
     }
 }
+

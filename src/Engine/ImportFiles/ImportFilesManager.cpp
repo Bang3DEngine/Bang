@@ -72,6 +72,7 @@ std::pair<Path, GUID> ImportFilesManager::CreateImportFile(const Path &filepath)
         xmlInfo.Set("GUID", newGUID);
         importFilepath = GetImportFilepath(filepath);
         File::Write(importFilepath, xmlInfo.ToString());
+        ImportFilesManager::RegisterImportFilepath(importFilepath);
     }
     return std::make_pair(importFilepath, newGUID);
 }
@@ -110,7 +111,6 @@ GUIDManager* ImportFilesManager::GetGUIDManager()
 void ImportFilesManager::RegisterImportFilepath(const Path &importFilepath)
 {
     if (!IsImportFile(importFilepath)) { return; }
-
     XMLNode info = XMLNodeReader::FromFile(importFilepath);
 
     GUID guid = info.Get<GUID>("GUID");

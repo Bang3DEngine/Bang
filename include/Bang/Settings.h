@@ -16,7 +16,7 @@ public:
     static Settings *GetInstance();
 
 private:
-    float m_ambientLight = 0.1f;
+    float m_ambientLight = 0.3f;
 
 	Settings();
 	virtual ~Settings();

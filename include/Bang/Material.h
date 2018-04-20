@@ -28,6 +28,7 @@ public:
     void SetTexture(Texture2D *texture);
     void SetReceivesLighting(bool receivesLighting);
     void SetRoughness(float roughness);
+    void SetMetalness(float metalness);
     void SetAlbedoColor(const Color &albedoColor);
     void SetRenderPass(RenderPass renderPass);
 
@@ -36,6 +37,7 @@ public:
     ShaderProgram* GetShaderProgram() const;
     Texture2D* GetTexture() const;
     bool GetReceivesLighting() const;
+    float GetMetalness() const;
     float GetRoughness() const;
     const Color& GetAlbedoColor() const;
     RenderPass GetRenderPass() const;
@@ -61,8 +63,9 @@ protected:
     RH<ShaderProgram> p_shaderProgram;
 
     RenderPass m_renderPass = RenderPass::Scene;
-    Color m_albedoColor    = Color::White;
-    float m_roughness       = 0.5f;
+    Color m_albedoColor     = Color::White;
+    float m_roughness       = 1.0f;
+    float m_metalness       = 0.5f;
     bool m_receivesLighting = true;
     Vector2 m_uvOffset      = Vector2::Zero;
     Vector2 m_uvMultiply    = Vector2::One;

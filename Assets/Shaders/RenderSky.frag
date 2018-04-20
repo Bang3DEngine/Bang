@@ -1,8 +1,5 @@
 #include "ScreenPass.frag"
 
-uniform bool B_Camera_Has_SkyBox;
-uniform samplerCube B_Camera_SkyBox;
-
 void main()
 {
     float depth = B_SampleDepth();
@@ -15,7 +12,7 @@ void main()
             vec3 rayDestPosWorld = B_ComputeWorldPosition(0.0f, uv);
             vec3 camPosWorld = B_GetCameraPositionWorld();
             vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
-            color = texture(B_Camera_SkyBox, rayDirWorld);
+            color = texture(B_SkyBoxSpecular, rayDirWorld);
             color.a = 1.0f;
         }
         else { color = B_Camera_ClearColor; }

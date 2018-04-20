@@ -394,8 +394,8 @@ void Camera::OnRender(RenderPass rp)
                                         camTransform->GetPosition());
     */
 
+    Gizmos::SetReceivesLighting(false);
     Gizmos::SetSelectable(GetGameObject());
-    Gizmos::SetReceivesLighting(true);
     Gizmos::SetPosition(camTransform->GetPosition());
     Gizmos::SetRotation(camTransform->GetRotation());
     Gizmos::SetScale(Vector3::One * 0.02f * distScale);

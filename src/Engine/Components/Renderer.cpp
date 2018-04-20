@@ -58,12 +58,21 @@ void Renderer::Bind() const
     Transform *t = GetGameObject()->GetTransform();
     GLUniforms::SetModelMatrix( t ? t->GetLocalToWorldMatrix() : Matrix4::Identity );
 
+    if (GetGameObject()->GetName() == "Sphere")
+    {
+    }
     if (GetActiveMaterial()) { GetActiveMaterial()->Bind(); }
+    if (GetGameObject()->GetName() == "Sphere")
+    {
+        GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasTexture", false, false);
+        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasTexture",     false,         false);
+        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_Test", false, false);
+    }
 }
 
 void Renderer::UnBind() const
 {
-    if (GetActiveMaterial()) { GetActiveMaterial()->UnBind(); }
+    // if (GetActiveMaterial()) { GetActiveMaterial()->UnBind(); }
 }
 
 

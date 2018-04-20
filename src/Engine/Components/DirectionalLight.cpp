@@ -96,8 +96,8 @@ void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     Light::SetUniformsBeforeApplyingLight(sp);
 
     ASSERT(GL::IsBound(sp))
-    sp->SetFloat("B_ShadowDistance", GetShadowDistance(), true);
-    sp->SetMatrix4("B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, true);
+    sp->SetFloat("B_ShadowDistance", GetShadowDistance(), false);
+    sp->SetMatrix4("B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, false);
 }
 
 void DirectionalLight::SetShadowDistance(float shadowDistance)

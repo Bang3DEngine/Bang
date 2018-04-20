@@ -22,7 +22,7 @@ public:
     // (normal.x, normal.y, normal.z, 0)
     static const GL::Attachment AttNormal       = GL::Attachment::Color2;
 
-    // (receivesLighting, roughness, flags, ---)
+    // (receivesLighting, roughness, metalness, ---)
     static const GL::Attachment AttMisc         = GL::Attachment::Color3;
 
     static const GL::Attachment AttColorRead    = GL::Attachment::Color4;

@@ -55,7 +55,7 @@ public:
     static Array<ResourceClass*> GetAll();
     static Array<Resource*> GetAllResources();
 
-    static void ExportXMLResource(const Resource *resource, const Path &exportFilepath);
+    static void CreateResourceXMLAndImportFile(const Resource *resource, const Path &exportFilepath);
 
     struct ResourceEntry : public IToString
     {

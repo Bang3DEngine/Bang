@@ -61,7 +61,7 @@ void Material::SetTexture(Texture2D* texture)
 
         p_texture.Set(texture);
         ShaderProgram *sp = GetShaderProgram();
-        if (sp) { sp->SetTexture2D("B_Texture0", GetTexture()); }
+        if (sp) { sp->SetTexture2D("B_Texture0", GetTexture(), false); }
 
         if (GetTexture())
         {
@@ -89,6 +89,15 @@ void Material::SetRoughness(float roughness)
     }
 }
 
+void Material::SetMetalness(float metalness)
+{
+    if (metalness != GetMetalness())
+    {
+        m_metalness = metalness;
+        PropagateMaterialChanged();
+    }
+}
+
 void Material::SetAlbedoColor(const Color &albedoColor)
 {
     if (albedoColor != GetAlbedoColor())
@@ -112,6 +121,7 @@ const Vector2 &Material::GetUvMultiply() const { return m_uvMultiply; }
 ShaderProgram* Material::GetShaderProgram() const { return p_shaderProgram.Get(); }
 Texture2D* Material::GetTexture() const { return p_texture.Get(); }
 bool Material::GetReceivesLighting() const { return m_receivesLighting; }
+float Material::GetMetalness() const { return m_metalness; }
 float Material::GetRoughness() const { return m_roughness; }
 const Color& Material::GetAlbedoColor() const { return m_albedoColor; }
 RenderPass Material::GetRenderPass() const { return m_renderPass; }
@@ -126,29 +136,29 @@ void Material::Bind() const
     sp->SetVector2("B_UvMultiply",            GetUvMultiply(),       false);
     sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),      false);
     sp->SetFloat("B_MaterialRoughness",       GetRoughness(),        false);
+    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),        false);
     sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(), false);
 
-    float alphaCutoff = GetTexture() ? GetTexture()->GetAlphaCutoff() : -1.0f;
     if (GetTexture())
     {
-        sp->SetTexture2D("B_Texture0",  GetTexture(), false);
-        sp->SetFloat("B_AlphaCutoff",   alphaCutoff,  false);
-        sp->SetBool("B_HasTexture",     true,         false);
+        sp->SetTexture2D("B_Texture0",  GetTexture(),                    false);
+        sp->SetFloat("B_AlphaCutoff",   GetTexture()->GetAlphaCutoff(),  false);
+        sp->SetBool("B_HasTexture",     true,                            false);
     }
     else
     {
         Texture2D *whiteTex = IconManager::GetWhiteTexture().Get();
-        sp->SetTexture2D("B_Texture0",  whiteTex,     false);
-        sp->SetFloat("B_AlphaCutoff",   alphaCutoff,  false);
-        sp->SetBool("B_HasTexture",     false,        false);
+        sp->SetTexture2D("B_Texture0",  whiteTex, false);
+        sp->SetFloat("B_AlphaCutoff",   -1.0f,    false);
+        sp->SetBool("B_HasTexture",     false,    false);
     }
 }
 
 void Material::UnBind() const
 {
-    // ShaderProgram *sp = GetShaderProgram();
-    // if (!sp) { return; }
-    // sp->UnBind();
+    ShaderProgram *sp = GetShaderProgram();
+    if (!sp) { return; }
+    sp->UnBind();
 }
 
 void Material::CloneInto(ICloneable *clone) const
@@ -161,6 +171,7 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetAlbedoColor(GetAlbedoColor());
     matClone->SetReceivesLighting(GetReceivesLighting());
     matClone->SetRoughness(GetRoughness());
+    matClone->SetMetalness(GetMetalness());
     matClone->SetTexture(GetTexture());
     matClone->SetRenderPass(GetRenderPass());
 }
@@ -193,6 +204,9 @@ void Material::ImportXML(const XMLNode &xml)
 
     if (xml.Contains("Roughness"))
     { SetRoughness(xml.Get<float>("Roughness")); }
+
+    if (xml.Contains("Metalness"))
+    { SetMetalness(xml.Get<float>("Metalness")); }
 
     if (xml.Contains("ReceivesLighting"))
     { SetReceivesLighting(xml.Get<bool>("ReceivesLighting")); }
@@ -230,6 +244,7 @@ void Material::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("RenderPass",       GetRenderPass());
     xmlInfo->Set("AlbedoColor",     GetAlbedoColor());
     xmlInfo->Set("Roughness",        GetRoughness());
+    xmlInfo->Set("Metalness",        GetMetalness());
     xmlInfo->Set("ReceivesLighting", GetReceivesLighting());
     xmlInfo->Set("UvMultiply",       GetUvMultiply());
     xmlInfo->Set("UvOffset",         GetUvOffset());

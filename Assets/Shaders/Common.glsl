@@ -1,3 +1,6 @@
+
+const float PI = 3.14159265359;
+
 uniform mat4 B_Model;
 uniform mat4 B_ModelInv;
 uniform mat4 B_Normal;
@@ -10,21 +13,29 @@ uniform mat4 B_ProjectionViewInv;
 uniform mat4 B_PVM;
 uniform mat4 B_PVMInv;
 
-uniform float B_Camera_ZNear;
-uniform float B_Camera_ZFar;
-uniform vec4  B_Camera_ClearColor;
+// Camera related ///////////////////////////
+uniform float       B_Camera_ZNear;
+uniform float       B_Camera_ZFar;
+uniform vec3        B_Camera_Forward;
+uniform vec3        B_Camera_WorldPos;
+uniform vec4        B_Camera_ClearColor;
+uniform bool        B_Camera_Has_SkyBox;
+uniform samplerCube B_SkyBoxDiffuse;
+uniform samplerCube B_SkyBoxSpecular;
+/////////////////////////////////////////////
 
 uniform vec2 B_Viewport_MinPos;
 uniform vec2 B_Viewport_Size;
 
 // Material related /////////////////////////
-uniform bool  B_MaterialReceivesLighting;
-uniform vec4  B_MaterialAlbedoColor;
-uniform float B_AlphaCutoff;
-uniform float B_MaterialRoughness;
-uniform vec2  B_UvOffset;
-uniform vec2  B_UvMultiply;
-uniform bool  B_HasTexture;
+uniform bool      B_MaterialReceivesLighting;
+uniform vec4      B_MaterialAlbedoColor;
+uniform float     B_MaterialRoughness;
+uniform float     B_MaterialMetalness;
+uniform float     B_AlphaCutoff;
+uniform vec2      B_UvOffset;
+uniform vec2      B_UvMultiply;
+uniform bool      B_HasTexture;
 uniform sampler2D B_Texture0;
 // ///////////////////////////////////////
 
@@ -67,11 +78,12 @@ vec2 B_GetViewportUv() { return B_GetViewportPos() / B_Viewport_Size; }
 vec4  B_SampleColor(vec2 uv) { return texture(B_GTex_Color, uv); }
 vec3  B_SampleNormal(vec2 uv)
 {
-    return texture(B_GTex_Normal, uv).xyz * 2.0f - 1.0f;
+    return normalize( texture(B_GTex_Normal, uv).xyz * 2.0f - 1.0f );
 }
 vec4  B_SampleAlbedoColor(vec2 uv) { return texture(B_GTex_AlbedoColor, uv); }
 bool  B_SampleReceivesLight (vec2 uv) { return texture(B_GTex_Misc, uv).r > 0; }
 float B_SampleRoughness (vec2 uv) { return texture(B_GTex_Misc, uv).g; }
+float B_SampleMetalness (vec2 uv) { return texture(B_GTex_Misc, uv).b; }
 float B_SampleDepth(vec2 uv) { return texture(B_GTex_DepthStencil, uv).r; }
 float B_SampleFlags(vec2 uv) { return texture(B_GTex_Misc, uv).z; }
 
@@ -79,7 +91,8 @@ vec4  B_SampleColor()  { return B_SampleColor(B_GetViewportUv()); }
 vec3  B_SampleNormal() { return B_SampleNormal(B_GetViewportUv()); }
 vec4  B_SampleAlbedoColor() { return B_SampleAlbedoColor(B_GetViewportUv()); }
 bool  B_SampleReceivesLight() { return B_SampleReceivesLight(B_GetViewportUv()); }
-float B_SampleRoughness () { return B_SampleRoughness(B_GetViewportUv()) * 255.0f; }
+float B_SampleRoughness () { return B_SampleRoughness(B_GetViewportUv()); }
+float B_SampleMetalness () { return B_SampleMetalness(B_GetViewportUv()); }
 float B_SampleDepth() { return B_SampleDepth(B_GetViewportUv()); }
 float B_SampleFlags() { return B_SampleFlags(B_GetViewportUv()); }
 
@@ -93,6 +106,8 @@ bool  B_SampleReceivesLightOffset(vec2 pixOffset)
   { return B_SampleReceivesLight(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 float B_SampleRoughnessOffset(vec2 pixOffset)
   { return B_SampleRoughness(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+float B_SampleMetalnessOffset(vec2 pixOffset)
+  { return B_SampleMetalness(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 float B_SampleDepthOffset(vec2 pixOffset)
   { return B_SampleDepth(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 float B_SampleFlagsOffset(vec2 pixOffset)

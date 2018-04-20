@@ -57,12 +57,13 @@ Array<Resource*> Resources::GetAllResources()
     return result;
 }
 
-void Resources::ExportXMLResource(const Resource *resource,
-                                  const Path &exportFilepath)
+void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
+                                               const Path &exportFilepath)
 {
     File::Write(exportFilepath, "");
-    Path importFile = ImportFilesManager::CreateImportFile(exportFilepath).first;
-    resource->ExportXMLToFile(importFile);
+    Path importFilePath = ImportFilesManager::GetImportFilepath(exportFilepath);
+    resource->ExportXMLToFile(importFilePath);
+    ImportFilesManager::RegisterImportFilepath(importFilePath); // Once created
 }
 
 void Resources::Add(const TypeId &resTypeId, Resource *res)

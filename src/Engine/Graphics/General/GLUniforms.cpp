@@ -2,6 +2,8 @@
 
 #include "Bang/Camera.h"
 #include "Bang/Settings.h"
+#include "Bang/Transform.h"
+#include "Bang/GameObject.h"
 #include "Bang/IconManager.h"
 #include "Bang/ShaderProgram.h"
 
@@ -44,24 +46,27 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->SetFloat("B_AmbientLight", Settings::GetAmbientLight(), false);
 
     Camera *cam = Camera::GetActive();
+    Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
     sp->SetFloat("B_Camera_ZNear",  (cam ? cam->GetZNear() : 0.0f), false);
     sp->SetFloat("B_Camera_ZFar",   (cam ?  cam->GetZFar() : 0.0f), false);
-    sp->SetColor("B_Camera_ClearColor", (cam ? cam->GetClearColor() :
-                                               Color::Pink), false);
+    sp->SetVector3("B_Camera_Forward",
+                   (camTR ? camTR->GetForward() : Vector3::Zero), false);
+    sp->SetVector3("B_Camera_WorldPos",
+                   (camTR ? camTR->GetPosition() : Vector3::Zero), false);
+    sp->SetColor("B_Camera_ClearColor",
+                 (cam ? cam->GetClearColor() : Color::Pink), false);
 
     TextureCubeMap *whiteCubeMap = IconManager::GetWhiteTextureCubeMap().Get();
     if (cam && cam->GetClearMode() == Camera::ClearMode::SkyBox)
     {
         TextureCubeMap *sskt = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
         TextureCubeMap *dskt = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
-        sp->SetTextureCubeMap("B_Camera_SkyBox",  sskt ? sskt : whiteCubeMap, false);
         sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dskt ? dskt : whiteCubeMap, false);
         sp->SetTextureCubeMap("B_SkyBoxSpecular", sskt ? sskt : whiteCubeMap, false);
         sp->SetBool("B_Camera_Has_SkyBox", true, false);
     }
     else
     {
-        sp->SetTextureCubeMap("B_Camera_SkyBox",  whiteCubeMap, false);
         sp->SetTextureCubeMap("B_SkyBoxDiffuse",  whiteCubeMap, false);
         sp->SetTextureCubeMap("B_SkyBoxSpecular", whiteCubeMap, false);
         sp->SetBool("B_Camera_Has_SkyBox", false, false);

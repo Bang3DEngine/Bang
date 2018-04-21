@@ -95,9 +95,11 @@ void PointLight::RenderShadowMaps_()
     // Resize stuff to fit the shadow map size
     const Vector2i shadowMapSize = GetShadowMapSize();
     m_shadowMapFramebuffer->Bind();
-    GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
     m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);
     m_shadowMapFramebuffer->SetAllDrawBuffers();
+
+    // Set up viewport
+    GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
 
     m_shadowMapShaderProgram.Get()->Bind();
 
@@ -107,12 +109,16 @@ void PointLight::RenderShadowMaps_()
                                                     cubeMapPVMMatrices, false);
 
     // Render shadow map into framebuffer
-    Scene *scene = GetGameObject()->GetScene();
     GEngine::GetActive()->SetReplacementShader( m_shadowMapShaderProgram.Get() );
     GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEqual);
-    GEngine::GetActive()->RenderWithPassRaw(scene, RenderPass::Scene);
+
+    const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
+    for (GameObject *shadowCaster : shadowCasters)
+    {
+        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene);
+    }
 
     // Restore previous state
     GL::SetViewport(prevVP);

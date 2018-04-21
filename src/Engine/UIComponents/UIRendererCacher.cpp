@@ -22,8 +22,8 @@ UIRendererCacher::UIRendererCacher()
     p_cacheFramebuffer->Bind();
     p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Color0,
                                               GL::ColorFormat::RGBA_UByte8);
-    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::DepthStencil,
-                                              GL::ColorFormat::Depth24_Stencil8);
+    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
+                                              GL::ColorFormat::Depth16);
     p_cacheFramebuffer->UnBind();
 }
 
@@ -42,8 +42,10 @@ void UIRendererCacher::OnStart()
         p_cachedImageRenderer->SetImageTexture(tex);
         p_cachedImageRenderer->SetTint(Color::White);
         p_cachedImageRenderer->GetImageTexture()->SetAlphaCutoff(1.0f);
-        p_cachedImageRenderer->GetImageTexture()->SetFilterMode(GL::FilterMode::Nearest);
-        SetCachingEnabled(false);
+        p_cachedImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
+        p_cachedImageRenderer->GetImageTexture()->SetFilterMode(
+                                                GL::FilterMode::Nearest);
+        SetCachingEnabled(true);
     }
 }
 
@@ -81,8 +83,8 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             Vector2 rtSize = rtRectNDC.GetSize();
             Vector2 rtOri = rtRectNDC.GetMinXMinY() * 0.5f + 0.5f;
             Vector2 rtOriInvY = Vector2(rtOri.x, rtOri.y);
-            p_cachedImageRenderer->GetMaterial()->SetAlbedoUvOffset( rtOriInvY );
-            p_cachedImageRenderer->GetMaterial()->SetAlbedoUvMultiply( rtSize * 0.5f );
+            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvOffset( rtOriInvY );
+            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvMultiply( rtSize * 0.5f );
 
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);

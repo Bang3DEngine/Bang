@@ -240,11 +240,13 @@ bool ShaderProgram::SetVector4(const String &name, const Vector4 &v, bool warn)
 }
 bool ShaderProgram::SetMatrix3(const String &name, const Matrix3 &v, bool warn)
 {
-    return SetShaderUniform(this, &m_uniformCacheMatrix3, name, v, warn);
+    // return SetShaderUniform(this, &m_uniformCacheMatrix3, name, v, warn);
+    return SetShaderUniform<Matrix3>(this, nullptr, name, v, warn);
 }
 bool ShaderProgram::SetMatrix4(const String &name, const Matrix4 &v, bool warn)
 {
-    return SetShaderUniform(this, &m_uniformCacheMatrix4, name, v, warn);
+    // return SetShaderUniform(this, &m_uniformCacheMatrix4, name, v, warn);
+    return SetShaderUniform<Matrix4>(this, nullptr, name, v, warn);
 }
 bool ShaderProgram::SetIntArray(const String &name, const Array<int> &v, bool warn)
 {

@@ -7,6 +7,7 @@
 #include "Bang/GBuffer.h"
 #include "Bang/XMLNode.h"
 #include "Bang/Material.h"
+#include "Bang/Renderer.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/SceneManager.h"
@@ -74,6 +75,30 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition(),      false);
     sp->SetTexture("B_LightShadowMap",     GetShadowMapTexture(),  false);
     sp->SetTexture("B_LightShadowMapSoft", GetShadowMapTexture(),  false);
+}
+
+List<GameObject *> Light::GetActiveSceneShadowCasters() const
+{
+    Set<GameObject*> shadowCastersSet;
+    Scene *scene = SceneManager::GetActiveScene();
+    List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
+    for (Renderer *rend : renderers )
+    {
+        bool isValidShadowCaster = false;
+        if (const Material *mat = rend->GetActiveMaterial())
+        {
+            isValidShadowCaster = (mat->GetRenderPass() == RenderPass::Scene &&
+                                   rend->GetCastsShadows());
+        }
+
+        if (isValidShadowCaster)
+        {
+            shadowCastersSet.Add(rend->GetGameObject());
+        }
+    }
+
+    List<GameObject*> shadowCastersList = shadowCastersSet.GetKeys();
+    return shadowCastersList;
 }
 
 void Light::SetLightScreenPassShaderProgram(ShaderProgram *sp)

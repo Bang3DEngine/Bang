@@ -80,7 +80,12 @@ void DirectionalLight::RenderShadowMaps_()
     GL::SetColorMask(false, false, false, false);
     GL::SetDepthFunc(GL::Function::LEqual);
     GL::SetDepthMask(true);
-    GEngine::GetActive()->RenderWithPassRaw(scene, RenderPass::Scene);
+
+    const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
+    for (GameObject *shadowCaster : shadowCasters)
+    {
+        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene);
+    }
 
     // Restore previous state
     GL::SetViewport(prevVP);

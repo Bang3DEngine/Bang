@@ -74,7 +74,12 @@ vec3 GetLightColorApportation()
     vec3 kDiff   = (1.0 - kSpec) * (1.0 - pixelMetalness);
     vec3 diffuse = (kDiff * pixelAlbedo / PI);
 
-    float lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
+    float lightness = 1.0f;
+    if (B_SampleReceivesShadows())
+    {
+        lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
+    }
+
     float surfaceDotWithLight = max(0.0, dot(N, L));
 
     vec3 lightApport = (diffuse + specular) * radiance * surfaceDotWithLight;

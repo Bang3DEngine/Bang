@@ -13,14 +13,11 @@ layout(location = 1) in vec3 B_VIn_Normal;
 layout(location = 2) in vec2 B_VIn_Uv;
 layout(location = 3) in vec3 B_VIn_Tangent;
 
-out vec3 B_FIn_Position;
-out vec3 B_FIn_Normal;
 out vec2 B_FIn_AlbedoUv;
 
 void main()
 {
-    B_FIn_Normal   = normalize( (B_Normal * vec4(B_VIn_Normal, 0)).xyz );
-    B_FIn_AlbedoUv       = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
+    B_FIn_AlbedoUv = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
 
     vec3 localPos = B_VIn_Position;
     switch (B_ImageMode)
@@ -52,6 +49,5 @@ void main()
         break;
     }
 
-    B_FIn_Position = ( B_Model * vec4(localPos, 1) ).xyz;
     gl_Position = B_PVM * vec4(localPos, 1);
 }

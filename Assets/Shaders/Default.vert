@@ -11,7 +11,7 @@ out vec3 B_FIn_Normal;
 out vec2 B_FIn_AlbedoUv;
 out vec2 B_FIn_NormalMapUv;
 out vec3 B_FIn_Tangent;
-flat out mat3 B_TBN;
+out mat3 B_TBN;
 
 void main()
 {

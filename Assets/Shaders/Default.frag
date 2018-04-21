@@ -7,7 +7,7 @@ in vec3 B_FIn_Normal;
 in vec2 B_FIn_AlbedoUv;
 in vec2 B_FIn_NormalMapUv;
 in vec3 B_FIn_Tangent;
-flat in mat3 B_TBN;
+in mat3 B_TBN;
 
 layout(location = 0) out vec4 B_GIn_Color;
 layout(location = 1) out vec4 B_GIn_Albedo;
@@ -34,7 +34,9 @@ void main()
     }
     B_GIn_Normal = vec4(normal * 0.5f + 0.5f, 0);
 
-    B_GIn_Misc   = vec4(B_MaterialReceivesLighting ? 1.0 : 0.0,
+    float receivesLighting = B_MaterialReceivesLighting ? 0.25 : 0;
+    if (receivesLighting > 0 && B_ReceivesShadows) { receivesLighting = 0.75; }
+    B_GIn_Misc   = vec4(receivesLighting,
                         B_MaterialRoughness,
                         B_MaterialMetalness,
                         0);

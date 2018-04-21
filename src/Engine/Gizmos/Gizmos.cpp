@@ -95,7 +95,10 @@ void Gizmos::SetScale(const Vector3 &scale)
 void Gizmos::SetRenderPass(RenderPass rp)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers) { rend->GetMaterial()->SetRenderPass(rp); }
+    for (Renderer *rend : g->m_renderers)
+    {
+        rend->GetActiveMaterial()->SetRenderPass(rp);
+    }
 }
 
 void Gizmos::SetSelectable(GameObject *go)
@@ -127,7 +130,7 @@ void Gizmos::SetReceivesLighting(bool receivesLighting)
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     for (Renderer *rend : g->m_renderers)
     {
-        rend->GetMaterial()->SetReceivesLighting(receivesLighting);
+        rend->GetActiveMaterial()->SetReceivesLighting(receivesLighting);
     }
 }
 
@@ -240,7 +243,7 @@ void Gizmos::RenderIcon(Texture2D *texture,
                     cam->GetGameObject()->GetTransform()->GetForward(),
                     cam->GetGameObject()->GetTransform()->GetUp());
     }
-    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(texture);
+    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
     g->Render(g->m_meshRenderer);
 }
 
@@ -255,7 +258,7 @@ void Gizmos::RenderViewportIcon(Texture2D *texture,
 
     g->m_meshRenderer->SetRenderWireframe(false);
     SetReceivesLighting(false);
-    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(texture);
+    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
     g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
     g->Render(g->m_meshRenderer);
 }
@@ -387,7 +390,7 @@ void Gizmos::Reset()
         rend->SetViewProjMode(GL::ViewProjMode::World);
     }
 
-    g->m_meshRenderer->GetMaterial()->SetAlbedoTexture(nullptr);
+    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(nullptr);
 }
 
 GameObject *Gizmos::GetGameObject() const
@@ -406,7 +409,7 @@ void Gizmos::Render(Renderer *rend)
     }
 
     // Render!
-    rend->OnRender( rend->GetMaterial()->GetRenderPass() );
+    rend->OnRender( rend->GetActiveMaterial()->GetRenderPass() );
 }
 
 Gizmos* Gizmos::GetInstance()

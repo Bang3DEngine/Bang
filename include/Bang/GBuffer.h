@@ -23,6 +23,8 @@ public:
     static const GL::Attachment AttNormal       = GL::Attachment::Color2;
 
     // (receivesLighting, roughness, metalness, ---)
+    // If receivesLighting >  0 ---> receivesShadows
+    // If receivesLighting <= 0 ---> not receivesShadows
     static const GL::Attachment AttMisc         = GL::Attachment::Color3;
 
     static const GL::Attachment AttColorRead    = GL::Attachment::Color4;

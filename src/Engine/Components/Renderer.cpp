@@ -58,15 +58,14 @@ void Renderer::Bind() const
     Transform *t = GetGameObject()->GetTransform();
     GLUniforms::SetModelMatrix( t ? t->GetLocalToWorldMatrix() : Matrix4::Identity );
 
-    if (GetGameObject()->GetName() == "Sphere")
+    if (GetActiveMaterial())
     {
-    }
-    if (GetActiveMaterial()) { GetActiveMaterial()->Bind(); }
-    if (GetGameObject()->GetName() == "Sphere")
-    {
-        GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasAlbedoTexture", false, false);
-        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_HasAlbedoTexture",     false,         false);
-        // GetActiveMaterial()->GetShaderProgram()->SetBool("B_Test", false, false);
+        GetActiveMaterial()->Bind();
+        ShaderProgram *sp = GetActiveMaterial()->GetShaderProgram();
+        if (sp)
+        {
+            sp->SetBool("B_ReceivesShadows", GetReceivesShadows(), false);
+        }
     }
 }
 
@@ -100,10 +99,10 @@ void Renderer::SetMaterial(Material *mat)
         {
             p_material.Get()->EventEmitter<IMaterialChangedListener>::
                               UnRegisterListener(this);
+            p_material.Set(nullptr);
         }
 
         p_sharedMaterial.Set(mat);
-        p_material.Set(nullptr);
 
         if (GetSharedMaterial())
         {
@@ -147,6 +146,38 @@ void Renderer::SetRenderPrimitive(GL::Primitive renderPrimitive)
         PropagateRendererChanged();
     }
 }
+void Renderer::SetCullFace(GL::Face cullFace)
+{
+    if (cullFace != GetCullFace())
+    {
+        m_cullFace = cullFace;
+        PropagateRendererChanged();
+    }
+}
+void Renderer::SetCulling(bool culling)
+{
+    if (culling != GetCulling())
+    {
+        m_cullling = culling;
+        PropagateRendererChanged();
+    }
+}
+void Renderer::SetCastsShadows(bool castsShadows)
+{
+    if (castsShadows != GetCastsShadows())
+    {
+        m_castsShadows = castsShadows;
+        PropagateRendererChanged();
+    }
+}
+void Renderer::SetReceivesShadows(bool receivesShadows)
+{
+    if (receivesShadows != GetReceivesShadows())
+    {
+        m_receivesShadows = receivesShadows;
+        PropagateRendererChanged();
+    }
+}
 
 bool Renderer::IsVisible() const { return m_visible; }
 Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
@@ -154,10 +185,10 @@ Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
 void Renderer::OnMaterialChanged(const Material*) { PropagateRendererChanged(); }
 bool Renderer::IsRenderWireframe() const { return m_renderWireframe; }
 AABox Renderer::GetAABBox() const { return AABox::Empty; }
-void Renderer::SetCullFace(GL::Face cullMode) { m_cullFace = cullMode; }
-void Renderer::SetCulling(bool culling) { m_cullling = culling; }
 GL::Face Renderer::GetCullFace() const { return m_cullFace; }
 bool Renderer::GetCulling() const { return m_cullling; }
+bool Renderer::GetCastsShadows() const { return m_castsShadows; }
+bool Renderer::GetReceivesShadows() const { return m_receivesShadows; }
 GL::ViewProjMode Renderer::GetViewProjMode() const { return m_viewProjMode; }
 GL::Primitive Renderer::GetRenderPrimitive() const { return m_renderPrimitive; }
 float Renderer::GetLineWidth() const { return m_lineWidth; }
@@ -196,6 +227,8 @@ void Renderer::CloneInto(ICloneable *clone) const
     r->SetRenderWireframe(IsRenderWireframe());
     r->SetCullFace(GetCullFace());
     r->SetCulling(GetCulling());
+    r->SetCastsShadows(GetCastsShadows());
+    r->SetReceivesShadows(GetReceivesShadows());
     r->SetRenderPrimitive(GetRenderPrimitive());
     r->SetLineWidth(GetLineWidth());
 }
@@ -213,6 +246,12 @@ void Renderer::ImportXML(const XMLNode &xml)
     if (xml.Contains("LineWidth"))
     { SetLineWidth(xml.Get<float>("LineWidth")); }
 
+    if (xml.Contains("CastsShadows"))
+    { SetCastsShadows(xml.Get<bool>("CastsShadows")); }
+
+    if (xml.Contains("ReceivesShadows"))
+    { SetReceivesShadows(xml.Get<bool>("ReceivesShadows")); }
+
     if (xml.Contains("RenderWireframe"))
     { SetRenderWireframe(xml.Get<bool>("RenderWireframe")); }
 }
@@ -225,7 +264,8 @@ void Renderer::ExportXML(XMLNode *xmlInfo) const
 
     Material* sMat = GetSharedMaterial();
     xmlInfo->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
-
     xmlInfo->Set("LineWidth", GetLineWidth());
+    xmlInfo->Set("CastsShadows", GetCastsShadows());
+    xmlInfo->Set("ReceivesShadows", GetReceivesShadows());
     xmlInfo->Set("RenderWireframe", IsRenderWireframe());
 }

@@ -286,7 +286,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
                 meshRendererToMesh.Add(mr, mesh);
             }
 
-            Material *material = mr->GetMaterial();
+            Material *material = mr->GetActiveMaterial();
             if (material)
             {
                 sceneMeshToMaterial.Add(mesh, material);

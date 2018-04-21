@@ -44,6 +44,7 @@ protected:
     Light();
     virtual ~Light();
 
+    List<GameObject*> GetActiveSceneShadowCasters() const;
     void SetLightScreenPassShaderProgram(ShaderProgram* sp);
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const;
 

@@ -180,10 +180,14 @@ void Material::Bind() const
     if (!sp) { return; }
     sp->Bind();
 
-    sp->SetColor("B_MaterialAlbedoColor",      GetAlbedoColor(),      false);
-    sp->SetFloat("B_MaterialRoughness",        GetRoughness(),        false);
-    sp->SetFloat("B_MaterialMetalness",        GetMetalness(),        false);
-    sp->SetBool("B_MaterialReceivesLighting",  GetReceivesLighting(), false);
+    sp->SetColor("B_MaterialAlbedoColor",      GetAlbedoColor(),         false);
+    sp->SetFloat("B_MaterialRoughness",        GetRoughness(),           false);
+    sp->SetFloat("B_MaterialMetalness",        GetMetalness(),           false);
+    sp->SetBool("B_MaterialReceivesLighting",  GetReceivesLighting(),    false);
+    sp->SetVector2("B_AlbedoUvOffset",         GetAlbedoUvOffset(),      false);
+    sp->SetVector2("B_AlbedoUvMultiply",       GetAlbedoUvMultiply(),    false);
+    sp->SetVector2("B_NormalMapUvOffset",      GetNormalMapUvOffset(),   false);
+    sp->SetVector2("B_NormalMapUvMultiply",    GetNormalMapUvMultiply(), false);
 
     if (GetAlbedoTexture())
     {
@@ -191,8 +195,6 @@ void Material::Bind() const
         sp->SetTexture2D("B_AlbedoTexture",  albedoTex,                   false);
         sp->SetFloat("B_AlphaCutoff",        albedoTex->GetAlphaCutoff(), false);
         sp->SetBool("B_HasAlbedoTexture",    true,                        false);
-        sp->SetVector2("B_AlbedoUvOffset",   GetAlbedoUvOffset(),         false);
-        sp->SetVector2("B_AlbedoUvMultiply", GetAlbedoUvMultiply(),       false);
     }
     else
     {
@@ -200,14 +202,14 @@ void Material::Bind() const
         sp->SetTexture2D("B_AlbedoTexture",  whiteTex, false);
         sp->SetFloat("B_AlphaCutoff",        -1.0f,    false);
         sp->SetBool("B_HasAlbedoTexture",    false,    false);
+        sp->SetVector2("B_AlbedoUvOffset",   GetAlbedoUvOffset(),         false);
+        sp->SetVector2("B_AlbedoUvMultiply", GetAlbedoUvMultiply(),       false);
     }
 
     if (GetNormalMapTexture())
     {
         sp->SetTexture2D("B_NormalMapTexture",  GetNormalMapTexture(),    false);
         sp->SetBool("B_HasNormalMapTexture",    true,                     false);
-        sp->SetVector2("B_NormalMapUvOffset",   GetNormalMapUvOffset(),   false);
-        sp->SetVector2("B_NormalMapUvMultiply", GetNormalMapUvMultiply(), false);
     }
     else
     {

@@ -10,6 +10,7 @@
 #include "Bang/Renderer.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/GLUniforms.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
 

@@ -81,7 +81,7 @@ void main()
         vec3 ambient = (diffK * diffuseAmbient) + (specK * specularAmbient);
         ambient *= B_AmbientLight;
 
-        B_GIn_Color = vec4(ambient, B_GIn_Albedo.a);
+        B_GIn_Color = vec4(ambient, 1);
     }
     else
     {

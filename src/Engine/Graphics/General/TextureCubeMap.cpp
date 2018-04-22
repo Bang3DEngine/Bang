@@ -90,7 +90,7 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
                     EventEmitter<IResourceListener>::UnRegisterListener(this);
         }
 
-        ReloadCubeMapDir(cubeMapDir);
+        FillCubeMapDir(cubeMapDir, img);
         m_imageResources[ TextureCubeMap::GetDirIndex(cubeMapDir) ].Set(img);
 
         if (GetImageResource(cubeMapDir).Get())
@@ -101,9 +101,8 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
     }
 }
 
-void TextureCubeMap::ReloadCubeMapDir(GL::CubeMapDir dir)
+void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, Imageb *img)
 {
-    Imageb *img = GetImageResource(dir).Get();
     Fill(dir,
          (img ? img->GetData() : nullptr),
          (img ? Math::Min(img->GetWidth(), img->GetHeight()) : 0),
@@ -185,7 +184,6 @@ void TextureCubeMap::ImportXML(const XMLNode &xmlInfo)
         SetImageResource(GL::CubeMapDir::Back,
                  Resources::Load<Imageb>( xmlInfo.Get<GUID>("BackImage") ).Get() );
     }
-
 }
 
 void TextureCubeMap::ExportXML(XMLNode *xmlInfo) const
@@ -222,7 +220,7 @@ void TextureCubeMap::OnImported(Resource *res)
     {
         if (res == GetImageResource(cubeMapDir).Get())
         {
-            ReloadCubeMapDir(cubeMapDir);
+            FillCubeMapDir(cubeMapDir, SCAST<Imageb*>(res));
         }
     }
 }

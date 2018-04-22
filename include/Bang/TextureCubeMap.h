@@ -59,7 +59,7 @@ private:
     void CreateEmpty(int width, int height) override;
     void Resize(int width, int height) override;
 
-    void ReloadCubeMapDir(GL::CubeMapDir dir);
+    void FillCubeMapDir(GL::CubeMapDir dir, Imageb *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
 

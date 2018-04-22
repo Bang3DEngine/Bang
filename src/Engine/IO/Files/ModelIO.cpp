@@ -189,23 +189,33 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
     aiColor3D aAmbientColor;
     aiColor3D aAlbedoColor;
     aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
-    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
-    aMaterial->Get(AI_MATKEY_SHININESS, aRoughness);
+    aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aAlbedoColor);
+    aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);
+    Color albedoColor = AIColor3ToColor(aAlbedoColor);
 
-    aiString aTexturePath;
-    aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aTexturePath);
-    Path texturePath ( String(aTexturePath.C_Str()) );
-    texturePath = modelDirectory.Append(texturePath);
-
-    RH<Texture2D> matTexture;
-    if (texturePath.IsFile())
+    aiString aAlbedoTexturePath;
+    aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
+    Path albedoTexturePath ( String(aAlbedoTexturePath.C_Str()) );
+    albedoTexturePath = modelDirectory.Append(albedoTexturePath);
+    RH<Texture2D> matAlbedoTexture;
+    if (albedoTexturePath.IsFile())
     {
-        matTexture = Resources::Load<Texture2D>(texturePath);
+        matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
     }
 
-    outMaterial->Get()->SetAlbedoColor( AIColor3ToColor(aAlbedoColor) );
+    aiString aNormalsTexturePath;
+    aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
+    Path normalsTexturePath ( String(aNormalsTexturePath.C_Str()) );
+    normalsTexturePath = modelDirectory.Append(normalsTexturePath);
+    RH<Texture2D> matNormalTexture;
+    if (normalsTexturePath.IsFile())
+    {
+        matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
+    }
     outMaterial->Get()->SetRoughness( aRoughness );
-    outMaterial->Get()->SetAlbedoTexture( matTexture.Get() );
+    outMaterial->Get()->SetAlbedoTexture( matAlbedoTexture.Get() );
+    outMaterial->Get()->SetNormalMapTexture( matNormalTexture.Get() );
+    outMaterial->Get()->SetAlbedoColor( albedoColor );
 }
 
 void ModelIO::ImportMeshRaw(

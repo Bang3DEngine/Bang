@@ -189,9 +189,8 @@ void Material::Bind() const
     sp->SetVector2("B_NormalMapUvOffset",      GetNormalMapUvOffset(),   false);
     sp->SetVector2("B_NormalMapUvMultiply",    GetNormalMapUvMultiply(), false);
 
-    if (GetAlbedoTexture())
+    if (Texture2D *albedoTex = GetAlbedoTexture())
     {
-        Texture2D *albedoTex = GetAlbedoTexture();
         sp->SetTexture2D("B_AlbedoTexture",  albedoTex,                   false);
         sp->SetFloat("B_AlphaCutoff",        albedoTex->GetAlphaCutoff(), false);
         sp->SetBool("B_HasAlbedoTexture",    true,                        false);
@@ -202,8 +201,6 @@ void Material::Bind() const
         sp->SetTexture2D("B_AlbedoTexture",  whiteTex, false);
         sp->SetFloat("B_AlphaCutoff",        -1.0f,    false);
         sp->SetBool("B_HasAlbedoTexture",    false,    false);
-        sp->SetVector2("B_AlbedoUvOffset",   GetAlbedoUvOffset(),         false);
-        sp->SetVector2("B_AlbedoUvMultiply", GetAlbedoUvMultiply(),       false);
     }
 
     if (GetNormalMapTexture())

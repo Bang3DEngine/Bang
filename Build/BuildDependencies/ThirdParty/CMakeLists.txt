@@ -462,6 +462,8 @@ list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2TTF_INCLUDE_DIR})
 add_custom_target(BuildThirdParty ALL
     DEPENDS BuildAssimp
     DEPENDS BuildPng
+    DEPENDS BuildIRRXML
+    DEPENDS BuildJpeg
     DEPENDS BuildOpenAL
     DEPENDS BuildSDL2
     DEPENDS BuildSDL2TTF

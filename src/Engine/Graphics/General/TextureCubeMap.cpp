@@ -49,6 +49,7 @@ void TextureCubeMap::Resize(int width, int height)
         CreateEmpty(width, height);
     }
 }
+
 void TextureCubeMap::Resize(int size)
 {
     Resize(size, size);
@@ -81,16 +82,33 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
 
 void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
 {
-    Imageb imgForTexture;
-    if (img) { imgForTexture = *img; }
+    if (GetImageResource(cubeMapDir).Get() != img)
+    {
+        if (GetImageResource(cubeMapDir).Get())
+        {
+            GetImageResource(cubeMapDir).Get()->
+                    EventEmitter<IResourceListener>::UnRegisterListener(this);
+        }
 
-    Fill(cubeMapDir,
-         imgForTexture.GetData(),
-         Math::Min(imgForTexture.GetWidth(), imgForTexture.GetHeight()),
+        ReloadCubeMapDir(cubeMapDir);
+        m_imageResources[ TextureCubeMap::GetDirIndex(cubeMapDir) ].Set(img);
+
+        if (GetImageResource(cubeMapDir).Get())
+        {
+            GetImageResource(cubeMapDir).Get()->
+                    EventEmitter<IResourceListener>::RegisterListener(this);
+        }
+    }
+}
+
+void TextureCubeMap::ReloadCubeMapDir(GL::CubeMapDir dir)
+{
+    Imageb *img = GetImageResource(dir).Get();
+    Fill(dir,
+         (img ? img->GetData() : nullptr),
+         (img ? Math::Min(img->GetWidth(), img->GetHeight()) : 0),
          GL::ColorComp::RGBA,
          GL::DataType::UnsignedByte);
-
-    m_imageResources[ TextureCubeMap::GetDirIndex(cubeMapDir) ].Set(img);
 }
 
 Imageb TextureCubeMap::ToImage(GL::CubeMapDir cubeMapDir) const
@@ -196,6 +214,17 @@ void TextureCubeMap::Import(const Path &textureCubeMapFilepath)
 GL::BindTarget TextureCubeMap::GetGLBindTarget() const
 {
     return GL::BindTarget::TextureCubeMap;
+}
+
+void TextureCubeMap::OnImported(Resource *res)
+{
+    for (GL::CubeMapDir cubeMapDir : TextureCubeMap::AllCubeMapDirs)
+    {
+        if (res == GetImageResource(cubeMapDir).Get())
+        {
+            ReloadCubeMapDir(cubeMapDir);
+        }
+    }
 }
 
 unsigned int TextureCubeMap::GetDirIndex(GL::CubeMapDir dir)

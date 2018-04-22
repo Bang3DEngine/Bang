@@ -14,7 +14,8 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Path;
 FORWARD class XMLNode;
 
-class TextureCubeMap : public Texture
+class TextureCubeMap : public Texture,
+                       public IResourceListener
 {
     ASSET(TextureCubeMap)
 
@@ -48,6 +49,9 @@ public:
     // GLObject
     GL::BindTarget GetGLBindTarget() const override;
 
+    // IResourceListener
+    void OnImported(Resource *res) override;
+
 private:
     static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
     std::array<RH<Imageb>, 6> m_imageResources;
@@ -55,6 +59,7 @@ private:
     void CreateEmpty(int width, int height) override;
     void Resize(int width, int height) override;
 
+    void ReloadCubeMapDir(GL::CubeMapDir dir);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
 

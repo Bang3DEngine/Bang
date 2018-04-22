@@ -57,6 +57,24 @@ Array<Resource*> Resources::GetAllResources()
     return result;
 }
 
+void Resources::PrintAll()
+{
+    Resources *rs = Resources::GetActive();
+    for (const auto &typePair : rs->m_resourcesCache)
+    {
+        Debug_Log(typePair.first);
+        for (const auto &guidResPair : typePair.second)
+        {
+            const GUID &guid     = guidResPair.first;
+            const Resource *res  = guidResPair.second.resource;
+            const int usageCount = guidResPair.second.usageCount;
+            Debug_Log("    - " << Resources::GetResourcePath(res)
+                               << ", usages: (" << usageCount << ")"
+                               << ", GUID: (" << guid << ")");
+        }
+    }
+}
+
 void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
                                                const Path &exportFilepath)
 {
@@ -147,7 +165,10 @@ void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
         }
     }
 
-    if (totallyUnused) { Destroy(resEntry.resource); }
+    if (totallyUnused)
+    {
+        Destroy(resEntry.resource);
+    }
 }
 
 bool Resources::Contains(const TypeId &resTypeId, const GUID &guid)
@@ -204,8 +225,19 @@ void Resources::UnRegisterResourceUsage(const TypeId &resTypeId,
 
 void Resources::Destroy(Resource *resource)
 {
+    if (!resource) { return; }
+
     Asset *asset = DCAST<Asset*>(resource);
-    if (asset) { Asset::Destroy(asset); } else { delete resource; }
+    if (asset)
+    {
+        // Debug_Log("Destroying " << asset->GetGUID() << ", " <<
+        //           Resources::GetResourcePath(asset));
+        Asset::Destroy(asset);
+    }
+    else
+    {
+        delete resource;
+    }
 }
 
 Array<Resource *> Resources::GetCached(const GUID &guid)
@@ -237,8 +269,10 @@ Resource *Resources::GetCached(const TypeId &resTypeId, const GUID &guid)
     return rs->m_resourcesCache.Get(resTypeId).Get(guid).resource;
 }
 
-Path Resources::GetResourcePath(Resource *resource)
+Path Resources::GetResourcePath(const Resource *resource)
 {
+    if (!resource) { return Path::Empty; }
+
     Path resPath = ImportFilesManager::GetFilepath(resource->GetGUID().
                                                    WithoutInsideFileGUID());
     const GUID::GUIDType insideFileGUID = resource->GetGUID().GetInsideFileGUID();
@@ -249,35 +283,6 @@ Path Resources::GetResourcePath(Resource *resource)
         resPath = resPath.Append(insideFileResourceName);
     }
     return resPath;
-}
-
-String Resources::ToString(Resource *resource)
-{
-    String result = "";
-    Resources *rs = Resources::GetActive();
-    for (const auto &pair : rs->m_resourcesCache)
-    {
-        const String typeName = pair.first;
-        for (const auto &pairMap : pair.second)
-        {
-            if (!resource || resource == pairMap.second.resource)
-            {
-                Path resourcePath = ImportFilesManager::GetFilepath(pairMap.first);
-                result += typeName + ":";
-                result += "  " + resourcePath +
-                          "(" + String(pairMap.second.resource) + ", " +
-                                String(pairMap.second.usageCount) +
-                           ")";
-                if (!resource) { result += "\n"; }
-            }
-        }
-    }
-    return result;
-}
-
-String Resources::ToString()
-{
-    return Resources::ToString(nullptr);
 }
 
 MeshFactory *Resources::GetMeshFactory() const

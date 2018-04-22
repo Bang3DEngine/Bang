@@ -16,12 +16,14 @@ uniform mat4 B_PVMInv;
 //////////////////////////////////////////////
 
 // Camera related ///////////////////////////
+const int CAMERA_CLEARMODE_COLOR  = 0;
+const int CAMERA_CLEARMODE_SKYBOX = 1;
 uniform float       B_Camera_ZNear;
 uniform float       B_Camera_ZFar;
 uniform vec3        B_Camera_Forward;
 uniform vec3        B_Camera_WorldPos;
+uniform int         B_Camera_ClearMode;
 uniform vec4        B_Camera_ClearColor;
-uniform bool        B_Camera_Has_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
 /////////////////////////////////////////////

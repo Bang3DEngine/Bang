@@ -61,8 +61,8 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
                 }
                 else
                 {
-                    RH<ResourceClass> rh = Resources::Create<ResourceClass>(guid);
-                    return rh;
+                    RH<ResourceClass> emptyRH;
+                    return emptyRH;
                 }
             }
             else

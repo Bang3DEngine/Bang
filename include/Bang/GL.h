@@ -127,13 +127,35 @@ public:
         Int              = GL_INT,
         UnsignedInt      = GL_UNSIGNED_INT,
         Float            = GL_FLOAT,
-        Double           = GL_DOUBLE,
-        UnsignedInt_24_8 = GL_UNSIGNED_INT_24_8,
-        Vector2          = GL_FLOAT_VEC2,
-        Vector3          = GL_FLOAT_VEC3,
-        Vector4          = GL_FLOAT_VEC4,
-        Matrix3          = GL_FLOAT_MAT3,
-        Matrix4          = GL_FLOAT_MAT4
+        Double           = GL_DOUBLE
+    };
+
+
+    enum class UniformType
+    {
+        Byte                 = GL_BYTE,
+        UnsignedByte         = GL_UNSIGNED_BYTE,
+        Short                = GL_SHORT,
+        UnsignedShort        = GL_UNSIGNED_SHORT,
+        Int                  = GL_INT,
+        UnsignedInt          = GL_UNSIGNED_INT,
+        Float                = GL_FLOAT,
+        Double               = GL_DOUBLE,
+        UnsignedInt_24_8     = GL_UNSIGNED_INT_24_8,
+        Vector2              = GL_FLOAT_VEC2,
+        Vector3              = GL_FLOAT_VEC3,
+        Vector4              = GL_FLOAT_VEC4,
+        Matrix3              = GL_FLOAT_MAT3,
+        Matrix4              = GL_FLOAT_MAT4,
+        Sampler1D            = GL_SAMPLER_1D,
+        Sampler2D            = GL_SAMPLER_2D,
+        Sampler3D            = GL_SAMPLER_3D,
+        SamplerCube          = GL_SAMPLER_CUBE,
+        Sampler1DShadow      = GL_SAMPLER_1D_SHADOW,
+        Sampler2DShadow      = GL_SAMPLER_2D_SHADOW,
+        SamplerCubeShadow    = GL_SAMPLER_CUBE_SHADOW,
+        Sampler1DArrayShadow = GL_SAMPLER_1D_ARRAY_SHADOW,
+        Sampler2DArrayShadow = GL_SAMPLER_2D_ARRAY_SHADOW
     };
 
     enum class ShaderType
@@ -519,6 +541,8 @@ public:
     static void DeleteTextures(int n, const GLId *glIds);
     static void DeleteVertexArrays(int n, const GLId *glIds);
     static void DeleteBuffers(int n, const GLId *glIds);
+    static void OnDeletedGLObjects(GL::BindTarget bindTarget, int n,
+                                   const GLId *glIds);
 
     static void SetViewport(const AARect &viewportNDC);
     static void SetViewport(const AARecti &viewport);
@@ -600,9 +624,9 @@ public:
 
     static int GetUniformLocation(const String &uniformName);
     static int GetUniformLocation(GLId programId, const String &uniformName);
-
     static int GetUniformsListSize(GLId shaderProgramId);
-    static GL::DataType GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex);
+    static GL::UniformType GetUniformTypeAt(GLId shaderProgramId,
+                                            GLuint uniformIndex);
 
     static bool   ValidateProgram(GLId programId);
     static String GetProgramErrorMsg(GLId programId);

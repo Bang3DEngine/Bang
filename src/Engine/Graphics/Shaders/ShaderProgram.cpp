@@ -13,6 +13,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/IconManager.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureUnitManager.h"
 
@@ -445,6 +446,7 @@ void ShaderProgram::Bind() const
     }
     #endif
 
+    // Debug_Log("Binding " << this << " =========================================");
     GL::Bind(this);
     ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
     GLUniforms::SetAllUniformsToShaderProgram(noConstThis);
@@ -483,16 +485,36 @@ void ShaderProgram::UnBindAllTexturesFromUnits() const
 
 void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
+    Array< std::pair<String, Texture*> > entriesToSetToDefaultTex;
     Texture *destroyedTex = DCAST<Texture*>( object );
     for (auto it = m_namesToTexture.begin(); it != m_namesToTexture.end(); )
     {
         Texture *tex = it->second;
         if (tex == destroyedTex)
         {
+            const String &name = it->first;
+            entriesToSetToDefaultTex.PushBack(std::make_pair(name, tex));
+
             it = m_namesToTexture.erase(it);
             // Dont break, in case it has obj texture several times
         }
         else { ++it; }
+    }
+
+    // Set default textures to those removed entries
+    for (const auto &pair : entriesToSetToDefaultTex)
+    {
+        const String &name = pair.first;
+        Texture *tex = pair.second;
+        if (DCAST<Texture2D*>(tex))
+        {
+            SetTexture2D(name, IconManager::GetWhiteTexture().Get(), false);
+        }
+        else if (DCAST<TextureCubeMap*>(tex))
+        {
+            SetTextureCubeMap(name, IconManager::GetWhiteTextureCubeMap().Get(),
+                              false);
+        }
     }
 }
 

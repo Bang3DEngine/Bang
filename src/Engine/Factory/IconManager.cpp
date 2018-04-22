@@ -41,8 +41,18 @@ RH<Texture2D> IconManager::GetWhiteTexture()
 { return GetIconTexture("White"); }
 RH<TextureCubeMap> IconManager::GetWhiteTextureCubeMap()
 {
-    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(
-                                            EPATH("Icons/WhiteCM.texcm"));
+    Path path = EPATH("Icons/WhiteCM.texcm");
+    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
+    Resources::SetPermanent(path, true);
+    Resources::SetPermanent(tcm.Get(), true);
+    return tcm;
+}
+
+RH<TextureCubeMap> IconManager::GetDefaultTextureCubeMap()
+{
+    Path path = EPATH("Icons/DefaultSkybox.texcm");
+    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
+    Resources::SetPermanent(path, true);
     Resources::SetPermanent(tcm.Get(), true);
     return tcm;
 }
@@ -59,13 +69,15 @@ RH<Texture2D> IconManager::GetIconTexture(const String &filename,
     RH<Texture2D> iconTex = Resources::Load<Texture2D>(path);
     if (iconTex)
     {
-        GLId prevId = GL::GetBoundId(iconTex.Get()->GetGLBindTarget());
+        GLId prevTexID = GL::GetBoundId(iconTex.Get()->GetGLBindTarget());
+
         iconTex.Get()->Bind();
         iconTex.Get()->GenerateMipMaps();
         iconTex.Get()->SetAlphaCutoff(0.5f);
         iconTex.Get()->SetFilterMode(GL::FilterMode::Trilinear_LL);
         iconTex.Get()->SetWrapMode(GL::WrapMode::Repeat);
-        GL::Bind(iconTex.Get()->GetGLBindTarget(), prevId);
+
+        GL::Bind(iconTex.Get()->GetGLBindTarget(), prevTexID);
 
         Resources::SetPermanent(iconTex.Get(), true);
     }

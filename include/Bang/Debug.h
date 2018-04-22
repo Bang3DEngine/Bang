@@ -64,17 +64,17 @@ private:
 // Asserts ==============================================
 #ifdef DEBUG
 #define ASSERT_MSG(assertion, msg) if ( !(assertion) ) {\
-  Debug_Error("BANG ASSERTION FAILED: '" << msg); std::abort(); \
+  Debug_Error("BANG ASSERTION FAILED: '" << msg << "'"); std::abort(); \
 }
 #else
 #define ASSERT_MSG(assertion, msg) // No Assert in release
 #endif
 
 #define ASSERT_SOFT(assertion) if ( !(assertion) ) {\
-    Debug_Warn("BANG SOFT ASSERTION FAILED.'"); \
+    Debug_Warn("BANG SOFT ASSERTION FAILED"); \
 }
 #define ASSERT_SOFT_MSG(assertion, msg) if ( !(assertion) ) {\
-    Debug_Warn("BANG SOFT ASSERTION FAILED: '" << msg); \
+    Debug_Warn("BANG SOFT ASSERTION FAILED: '" << msg << "'"); \
 }
 
 #define ASSERT(assertion) ASSERT_MSG(assertion, #assertion)

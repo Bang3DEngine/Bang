@@ -83,14 +83,6 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
 {
     Imageb imgForTexture;
     if (img) { imgForTexture = *img; }
-    if (cubeMapDir == GL::CubeMapDir::Top)
-    {
-        imgForTexture = imgForTexture.Rotated270DegreesRight().InvertedVertically();
-    }
-    else if (cubeMapDir == GL::CubeMapDir::Bot)
-    {
-        imgForTexture = imgForTexture.Rotated90DegreesRight().InvertedVertically();
-    }
 
     Fill(cubeMapDir,
          imgForTexture.GetData(),

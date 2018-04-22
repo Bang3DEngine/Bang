@@ -17,7 +17,8 @@ FORWARD class Texture2D;
 FORWARD class ShaderProgram;
 FORWARD class SelectionFramebuffer;
 
-class Camera : public Component
+class Camera : public Component,
+               public IDestroyListener
 {
     COMPONENT(Camera)
 
@@ -102,6 +103,9 @@ public:
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
+
+    // IDestroyListener
+    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
 
 protected:
     Camera();

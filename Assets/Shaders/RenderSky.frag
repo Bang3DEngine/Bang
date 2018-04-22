@@ -6,16 +6,26 @@ void main()
     if (depth > 0.9999999f)
     {
         vec4 color;
-        if (B_Camera_Has_SkyBox)
+        switch (B_Camera_ClearMode)
         {
-            vec2 uv = B_GetViewportUv();
-            vec3 rayDestPosWorld = B_ComputeWorldPosition(0.0f, uv);
-            vec3 camPosWorld = B_GetCameraPositionWorld();
-            vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
-            color = texture(B_SkyBoxSpecular, rayDirWorld);
-            color.a = 1.0f;
+            case CAMERA_CLEARMODE_COLOR:
+                color = B_Camera_ClearColor;
+            break;
+
+            case CAMERA_CLEARMODE_SKYBOX:
+            {
+                vec2 uv = B_GetViewportUv();
+                vec3 rayDestPosWorld = B_ComputeWorldPosition(0.0f, uv);
+                vec3 camPosWorld = B_GetCameraPositionWorld();
+                vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
+                color = vec4(texture(B_SkyBoxSpecular, rayDirWorld).rgb, 1);
+            }
+            break;
+
+            default:
+                color = vec4(1,0,1,1);
+            break;
         }
-        else { color = B_Camera_ClearColor; }
 
         B_GIn_Color = color;
     }

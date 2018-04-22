@@ -26,6 +26,7 @@ public:
     static RH<Texture2D> GetCheckerboard();
     static RH<Texture2D> GetWhiteTexture();
     static RH<TextureCubeMap> GetWhiteTextureCubeMap();
+    static RH<TextureCubeMap> GetDefaultTextureCubeMap();
 
     static RH<Texture2D> GetIconTexture(const String &filename, const Path &dir);
 

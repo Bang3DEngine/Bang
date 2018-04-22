@@ -1,7 +1,7 @@
 #ifndef TEXTUREUNITMANAGER_H
 #define TEXTUREUNITMANAGER_H
 
-#include <queue>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -33,15 +33,15 @@ public:
 private:
     int m_numTextureUnits = -1;
     uint m_timestampCounter = 0;
-    std::unordered_map<GLId, TexUnit> m_textureIdToBoundUnit;
-    std::unordered_map<GLId, Texture*> m_textureIdToTexture;
-
-    using IdUnitPair = std::pair<uint, GLId>;
+    std::stack<TexUnit> m_initialFreeUnits;
     std::unordered_map<GLId, uint> m_timestampTexIdUsed;
+    std::unordered_map<GLId, Texture*> m_textureIdToTexture;
+    std::unordered_map<GLId, TexUnit> m_textureIdToBoundUnit;
 
     TexUnit MakeRoomAndGetAFreeTextureUnit();
     void UpdateStructuresForUsedTexture(Texture *texture, uint usedUnit);
-    void UnTrackTexture(Texture *texture);
+    void UnTrackTexture(GLId textureId);
+    void CheckBindingsValidity() const;
 
     void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
 };

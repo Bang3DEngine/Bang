@@ -37,6 +37,8 @@ Camera::Camera()
 
     m_gbuffer = new GBuffer(1,1);
     m_selectionFramebuffer = new SelectionFramebuffer(1,1);
+
+    SetSkyBoxTexture(nullptr);
 }
 
 Camera::~Camera()
@@ -193,20 +195,12 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
 {
     if (GetSpecularSkyBoxTexture() != skyBoxTextureCM)
     {
-        if (skyBoxTextureCM)
-        {
-            p_skyboxSpecularTextureCM.Set(skyBoxTextureCM);
+        p_skyboxSpecularTextureCM.Set(skyBoxTextureCM);
 
-            // If new, generate the irradiance map
-            RH<TextureCubeMap> irradianceCubeMap = CubeMapIrradianceGenerator::
-                                   GenerateIrradianceCubeMap(skyBoxTextureCM);
-            p_skyboxDiffuseTextureCM.Set( irradianceCubeMap.Get() );
-        }
-        else
-        {
-            p_skyboxSpecularTextureCM.Set( IconManager::GetWhiteTextureCubeMap().Get() );
-            p_skyboxDiffuseTextureCM.Set(  IconManager::GetWhiteTextureCubeMap().Get() );
-        }
+        // If new, generate the irradiance map
+        RH<TextureCubeMap> irradianceCubeMap = CubeMapIrradianceGenerator::
+                               GenerateIrradianceCubeMap(skyBoxTextureCM);
+        p_skyboxDiffuseTextureCM.Set( irradianceCubeMap.Get() );
     }
 }
 
@@ -394,7 +388,7 @@ void Camera::OnRender(RenderPass rp)
                                         camTransform->GetPosition());
     */
 
-    Gizmos::SetReceivesLighting(false);
+    Gizmos::SetReceivesLighting(true);
     Gizmos::SetSelectable(GetGameObject());
     Gizmos::SetPosition(camTransform->GetPosition());
     Gizmos::SetRotation(camTransform->GetRotation());
@@ -463,5 +457,10 @@ void Camera::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("ClearMode", GetClearMode());
     xmlInfo->Set("ClearColor", GetClearColor());
     xmlInfo->Set("SkyBoxTexture", (GetSpecularSkyBoxTexture() ?
-                      GetSpecularSkyBoxTexture()->GetGUID() : GUID::Empty()) );
+                                     GetSpecularSkyBoxTexture()->GetGUID() :
+                                     GUID::Empty()) );
+}
+
+void Camera::OnDestroyed(EventEmitter<IDestroyListener> *object)
+{
 }

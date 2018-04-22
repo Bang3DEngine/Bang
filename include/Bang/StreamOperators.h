@@ -94,6 +94,7 @@ std::ostream& operator<<(std::ostream &log, const RectG<T> &r)
 template<class T>
 std::ostream& operator<<(std::ostream &log, const Matrix3G<T> &m)
 {
+    log << std::endl;
     log << "(" << m.c0[0] << ", " << m.c1[0] << ", " << m.c2[0] << "," << std::endl;
     log << " " << m.c0[1] << ", " << m.c1[1] << ", " << m.c2[1] << "," << std::endl;
     log << " " << m.c0[2] << ", " << m.c1[2] << ", " << m.c2[2] << "," << std::endl;
@@ -104,6 +105,7 @@ std::ostream& operator<<(std::ostream &log, const Matrix3G<T> &m)
 template<class T>
 std::ostream& operator<<(std::ostream &log, const Matrix4G<T> &m)
 {
+    log << std::endl;
     log << "(" << m.c0[0] << ", " << m.c1[0] << ", " << m.c2[0] << ", " << m.c3[0] << "," << std::endl;
     log << " " << m.c0[1] << ", " << m.c1[1] << ", " << m.c2[1] << ", " << m.c3[1] << "," << std::endl;
     log << " " << m.c0[2] << ", " << m.c1[2] << ", " << m.c2[2] << ", " << m.c3[2] << "," << std::endl;
@@ -114,7 +116,7 @@ std::ostream& operator<<(std::ostream &log, const Matrix4G<T> &m)
 template <class EnumClass, class=TT_ENUM(EnumClass)>
 std::ostream& operator<<(std::ostream &log, const EnumClass &e)
 {
-    log << Cast<int>(e);
+    log << SCAST<int>(e);
     return log;
 }
 

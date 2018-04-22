@@ -54,6 +54,7 @@ public:
     template <class ResourceClass>
     static Array<ResourceClass*> GetAll();
     static Array<Resource*> GetAllResources();
+    static void PrintAll();
 
     static void CreateResourceXMLAndImportFile(const Resource *resource, const Path &exportFilepath);
 
@@ -107,9 +108,7 @@ public:
     static Array<Resource*> GetCached(const Path &path);
     static Resource* GetCached(const TypeId &resTypeId, const GUID &guid);
 
-    static Path GetResourcePath(Resource *resource);
-    static String ToString(Resource *resource);
-    static String ToString();
+    static Path GetResourcePath(const Resource *resource);
 
     MeshFactory *GetMeshFactory() const;
     MaterialFactory *GetMaterialFactory() const;

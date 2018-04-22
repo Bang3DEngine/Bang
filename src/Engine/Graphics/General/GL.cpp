@@ -18,6 +18,7 @@
 #include "Bang/GLObject.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/TextureUnitManager.h"
 
 USING_NAMESPACE_BANG
 
@@ -210,9 +211,9 @@ int GL::GetUniformsListSize(GLId shaderProgramId)
     return GL::GetProgramInteger(shaderProgramId, GL::ActiveUniforms);
 }
 
-GL::DataType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
+GL::UniformType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
 {
-    if (shaderProgramId == 0) { return GL::DataType::Byte; }
+    if (shaderProgramId == 0) { return GL::UniformType::Byte; }
 
     GLint size;
     GLenum type;
@@ -230,7 +231,7 @@ GL::DataType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
                        cname)
     );
 
-    return Cast<GL::DataType>(type);
+    return SCAST<GL::UniformType>(type);
 }
 
 void GL::BlendFunc(GL::BlendFactor srcFactor, GL::BlendFactor dstFactor)
@@ -534,6 +535,7 @@ int GL::GetUniformLocation(GLId programId, const String &uniformName)
 
 void GL::DeleteProgram(GLId programId)
 {
+    GL::OnDeletedGLObjects(GL::BindTarget::ShaderProgram, 1, &programId);
     GL_CALL( glDeleteProgram(programId) );
 }
 
@@ -973,6 +975,7 @@ void GL::GenBuffers(int n, GLId *glIds)
 
 void GL::DeleteFramebuffers(int n, const GLId *glIds)
 {
+    GL::OnDeletedGLObjects(GL::BindTarget::Framebuffer, n, glIds);
     GL_CALL( glDeleteFramebuffers(n, glIds) );
 }
 
@@ -983,17 +986,31 @@ void GL::DeleteRenderBuffers(int n, const GLId *glIds)
 
 void GL::DeleteTextures(int n, const GLId *glIds)
 {
+    // GL::OnDeletedGLObjects(GL::BindTarget::Texture1D,      n, glIds);
+    GL::OnDeletedGLObjects(GL::BindTarget::Texture2D,      n, glIds);
+    // GL::OnDeletedGLObjects(GL::BindTarget::Texture3D,      n, glIds);
+    GL::OnDeletedGLObjects(GL::BindTarget::TextureCubeMap, n, glIds);
     GL_CALL( glDeleteTextures(n, glIds) );
 }
 
 void GL::DeleteVertexArrays(int n, const GLId *glIds)
 {
+    GL::OnDeletedGLObjects(GL::BindTarget::VAO, n, glIds);
     GL_CALL( glDeleteVertexArrays(n, glIds) );
 }
 
 void GL::DeleteBuffers(int n, const GLId *glIds)
 {
     GL_CALL( glDeleteBuffers(n, glIds) );
+}
+
+void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
+{
+    // Unbind objects if they were bound
+    for (int i = 0; i < n; ++i)
+    {
+        if (GL::GetBoundId(bindTarget) == glIds[i]) { GL::UnBind(bindTarget); }
+    }
 }
 
 void GL::SetViewport(const AARect &viewportNDC)
@@ -1111,8 +1128,17 @@ void GL::BufferData(GL::BindTarget target, int dataSize,
 void GL::Render(const VAO *vao, GL::Primitive renderMode,
                 int elementsCount, int startElementIndex)
 {
-    ASSERT( GL::GetBoundId(GL::BindTarget::ShaderProgram) > 0 );
-    ASSERT( GL::ValidateProgram(GL::GetBoundId(GL::BindTarget::ShaderProgram)) );
+    #ifdef DEBUG
+    GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    ASSERT( boundShaderProgram > 0 );
+    bool programValidateOk = GL::ValidateProgram(boundShaderProgram);
+    if (!programValidateOk)
+    {
+        // TextureUnitManager::PrintTextureUnits();
+        Debug::PrintAllUniforms();
+    }
+    ASSERT(programValidateOk);
+    #endif
 
     if (vao->IsIndexed())
     {

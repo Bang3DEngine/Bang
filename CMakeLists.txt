@@ -122,6 +122,7 @@ target_include_directories(BangEngineObjects PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 target_include_directories(BangEngineObjects PUBLIC ${DEPENDENCIES_INCLUDE_DIRS})
 target_link_libraries(BangLib PRIVATE ${DEPENDENCIES_LIB_PATHS})
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
+add_dependencies(BangEngineObjects BuildDependencies)
 add_dependencies(BangLib BuildDependencies)
 
 #=================================================================

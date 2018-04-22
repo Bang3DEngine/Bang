@@ -298,15 +298,11 @@ add_custom_command(
   TARGET BuildAlsaObjs
   COMMAND
       cd ${ALSAOBJS_DIR} &&
-      ./configure CPPFLAGS=-fPIC --prefix=${ALSAOBJS_DIR}/build --enable-shared=yes --enable-static=no &&
+      ./configure CFLAGS=-fPIC CPPFLAGS=-fPIC --with-pic --prefix=${ALSAOBJS_DIR}/build --enable-shared=yes --enable-static=no &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
       /bin/sh -c "ar ru ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_DIR}/alsalisp/*.o \
                                                ${ALSAOBJS_DIR}/aserver/*.o \
-                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/control/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
                                                ${ALSAOBJS_DIR}/src/.libs/*.o \
                                                ${ALSAOBJS_DIR}/src/alisp/.libs/*.o \
                                                ${ALSAOBJS_DIR}/src/rawmidi/.libs/*.o \
@@ -316,7 +312,9 @@ add_custom_command(
                                                ${ALSAOBJS_DIR}/src/mixer/.libs/*.o \
                                                ${ALSAOBJS_DIR}/src/topology/.libs/*.o \
                                                ${ALSAOBJS_DIR}/src/pcm/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/ucm/.libs/*.o" &&
+                                               ${ALSAOBJS_DIR}/src/control/.libs/*.o \
+                                               ${ALSAOBJS_DIR}/src/ucm/.libs/*.o"
+                                            &&
       cp ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_LIB_FINAL_OUTPUT}
   COMMENT "Building ALSA"
   VERBATIM
@@ -411,13 +409,14 @@ add_custom_target(BuildSDL2TTF ALL DEPENDS BuildSDL2 DEPENDS BuildFreetype)
 add_custom_command(
   TARGET BuildSDL2TTF
   COMMAND
-      export PATH=$ENV{PATH}:${SDL2TTF_INSTALL_DIR} &&
+      export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
       cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&
       sh autogen.sh &&
       ./configure
+            CPPFLAGS=-I${SDL2_INCLUDE_DIR}
             --with-freetype-prefix=${FREETYPE_INSTALL_DIR}
             --prefix=${SDL2TTF_INSTALL_DIR}
             --enable-static=yes

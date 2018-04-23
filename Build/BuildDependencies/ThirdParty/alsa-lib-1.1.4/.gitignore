@@ -6,6 +6,7 @@
 /aserver/aserver
 /include/config.h
 /include/stamp-h1
+/include/stamp-vh
 /modules/mixer/simple/.deps/
 /src/.deps/
 /src/alisp/.deps/

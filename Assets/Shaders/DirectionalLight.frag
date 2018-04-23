@@ -121,13 +121,13 @@ void main()
 {
     if (B_SampleReceivesLight())
     {
-        vec4 originalColor = B_SampleColor();
-        vec3 lightApport   = GetLightColorApportation();
-        B_GIn_Color = vec4(originalColor.rgb + lightApport, originalColor.a);
+        vec3 lightApport = GetLightColorApportation();
+        B_GIn_Color = vec4(lightApport, 0);
     }
     else
     {
         discard;
     }
+
 }
 

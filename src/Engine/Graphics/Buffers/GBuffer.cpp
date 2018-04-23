@@ -26,7 +26,9 @@ GBuffer::~GBuffer()
 {
 }
 
-void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
+
+void GBuffer::BindAttachmentsForReading(ShaderProgram *sp,
+                                        bool readFromCopiedColor)
 {
     if (!sp) { return; }
     ASSERT(GL::IsBound(sp));
@@ -38,9 +40,50 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     sp->SetTexture2D(GBuffer::GetMiscTexName(),
                      GetAttachmentTex2D(AttMisc), false);
     sp->SetTexture2D(GBuffer::GetColorsTexName(),
-                     GetAttachmentTex2D(AttColorRead), false);
+                     GetAttachmentTex2D(
+                         readFromCopiedColor ? AttColorRead : AttColor), false);
     sp->SetTexture2D(GBuffer::GetDepthStencilTexName(),
                      GetAttachmentTex2D(AttDepthStencil), false);
+}
+
+void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
+{
+    // Save state
+    GL::StencilOperation prevStencilOp = GL::GetStencilOp();
+    PushDrawAttachments();
+
+    GL::SetStencilOp(GL::StencilOperation::Keep); // Dont modify stencil
+    BindAttachmentsForReading(sp);
+    SetColorDrawBuffer();
+    GEngine::GetActive()->RenderViewportRect(sp, mask); // Render rect!
+
+    // Restore state
+    PopDrawAttachments();
+    GL::SetStencilOp(prevStencilOp);
+}
+
+void GBuffer::ApplyPassBlend(ShaderProgram *sp,
+                             GL::BlendFactor srcBlendFactor,
+                             GL::BlendFactor dstBlendFactor,
+                             const AARect &mask)
+{
+    // Save previous state
+    GL::BlendFactor prevBlendSrcFactorColor   = GL::GetBlendSrcFactorColor();
+    GL::BlendFactor prevBlendDstFactorColor   = GL::GetBlendDstFactorColor();
+    GL::BlendFactor prevBlendSrcFactorAlpha   = GL::GetBlendSrcFactorAlpha();
+    GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
+    bool wasBlendEnabled                      = GL::IsEnabled(GL::Test::Blend);
+
+    GL::Enable(GL::Test::Blend);
+    GL::BlendFunc(srcBlendFactor, dstBlendFactor);
+    ApplyPass_(sp, mask);
+
+    // Restore gl state
+    GL::BlendFuncSeparate(prevBlendSrcFactorColor,
+                          prevBlendDstFactorColor,
+                          prevBlendSrcFactorAlpha,
+                          prevBlendDstFactorAlpha);
+    GL::SetEnabled(GL::Test::Blend, wasBlendEnabled);
 }
 
 
@@ -52,21 +95,9 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
     ASSERT(GL::IsBound(this));
     ASSERT(GL::IsBound(sp));
 
-    // Save state
-    GL::StencilOperation prevStencilOp = GL::GetStencilOp();
-    PushDrawAttachments();
-
     // Set state
-    GL::SetStencilOp(GL::StencilOperation::Keep); // Dont modify stencil
     if (willReadFromColor) { PrepareColorReadBuffer(mask); }
-    BindAttachmentsForReading(sp);
-    SetColorDrawBuffer();
-
-    GEngine::GetActive()->RenderViewportRect(sp, mask);
-
-    // Restore state
-    PopDrawAttachments();
-    GL::SetStencilOp(prevStencilOp);
+    ApplyPass_(sp, mask);
 }
 
 void GBuffer::PrepareColorReadBuffer(const AARect &readNDCRect)

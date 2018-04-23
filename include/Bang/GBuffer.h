@@ -34,8 +34,13 @@ public:
     GBuffer(int width, int height);
     virtual ~GBuffer();
 
-    void BindAttachmentsForReading(ShaderProgram *sp);
+    void BindAttachmentsForReading(ShaderProgram *sp,
+                                   bool readFromCopiedColor = true);
 
+    void ApplyPassBlend(ShaderProgram *sp,
+                        GL::BlendFactor srcBlendFactor,
+                        GL::BlendFactor dstBlendFactor,
+                        const AARect &mask = AARect::NDCRect);
     void ApplyPass(ShaderProgram *sp,
                    bool willReadFromColor = false,
                    const AARect &mask = AARect::NDCRect);
@@ -57,6 +62,7 @@ public:
 
 private:
     void RenderViewportPlane();
+    void ApplyPass_(ShaderProgram *sp, const AARect &mask);
 
     friend class GEngine;
 };

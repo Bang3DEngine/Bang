@@ -49,15 +49,18 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
     GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
 
     ShaderProgram *lightSP = p_lightScreenPassShaderProgram.Get();
-
     lightSP->Bind();
     SetUniformsBeforeApplyingLight(lightSP);
 
     // Intersect with light rect to draw exactly what we need
     GBuffer *gbuffer = camera->GetGBuffer();
     AARect improvedRenderRect = AARect::Intersection(GetRenderRect(camera),
-                                                 renderRect);
-    gbuffer->ApplyPass(lightSP, true, improvedRenderRect);
+                                                     renderRect);
+    // Additive blend
+    gbuffer->ApplyPassBlend(lightSP,
+                            GL::BlendFactor::One,
+                            GL::BlendFactor::One,
+                            improvedRenderRect);
 
     // Restore state
     GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);

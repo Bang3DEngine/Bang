@@ -68,23 +68,6 @@ set(PNG_LIB_OUTPUT_NAME "libpng.a")
 set(PNG_LIB_OUTPUT  "${PNG_LIB_OUTPUT_DIR}/${PNG_LIB_OUTPUT_NAME}")
 set(PNG_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PNG_LIB_OUTPUT_NAME}")
 
-# ALSAOBJS
-set(ALSAOBJS_DIR "${CMAKE_CURRENT_LIST_DIR}/alsa-lib-1.1.4")
-set(ALSAOBJS_INCLUDE_DIR_0 "${ALSAOBJS_DIR}/include")
-set(ALSAOBJS_INCLUDE_DIR_1 "${ALSAOBJS_DIR}/build/include")
-set(ALSAOBJS_LIB_OUTPUT_DIR  "${ALSAOBJS_DIR}/build/lib")
-set(ALSAOBJS_LIB_OUTPUT_NAME "libalsa.a")
-set(ALSAOBJS_LIB_OUTPUT  "${ALSAOBJS_LIB_OUTPUT_DIR}/${ALSAOBJS_LIB_OUTPUT_NAME}")
-set(ALSAOBJS_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ALSAOBJS_LIB_OUTPUT_NAME}")
-
-# SNDIO
-set(SNDIO_DIR "${CMAKE_CURRENT_LIST_DIR}/sndio")
-set(SNDIO_LIB_INCLUDE_DIR  "${SNDIO_DIR}")
-set(SNDIO_LIB_OUTPUT_DIR  "${SNDIO_DIR}/libsndio")
-set(SNDIO_LIB_OUTPUT_NAME "libsndio.a")
-set(SNDIO_LIB_OUTPUT  "${SNDIO_LIB_OUTPUT_DIR}/${SNDIO_LIB_OUTPUT_NAME}")
-set(SNDIO_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SNDIO_LIB_OUTPUT_NAME}")
-
 # OPENAL
 set(OPENAL_DIR "${CMAKE_CURRENT_LIST_DIR}/openal-soft")
 set(OPENAL_INCLUDE_DIR "${OPENAL_DIR}/include")
@@ -291,66 +274,9 @@ add_custom_command(
 #=================================================================
 
 #=================================================================
-# ALSAOBJS Compile ===============================================
-#=================================================================
-add_custom_target(BuildAlsaObjs ALL)
-add_custom_command(
-  TARGET BuildAlsaObjs
-  COMMAND
-      cd ${ALSAOBJS_DIR} &&
-      ./configure CFLAGS=-fPIC CPPFLAGS=-fPIC --with-pic --prefix=${ALSAOBJS_DIR}/build --enable-shared=yes --enable-static=no &&
-      make -j${NUM_COMPILE_THREADS} &&
-      make install &&
-      /bin/sh -c "ar ru ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_DIR}/alsalisp/*.o \
-                                               ${ALSAOBJS_DIR}/aserver/*.o \
-                                               ${ALSAOBJS_DIR}/src/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/alisp/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/rawmidi/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/seq/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/timer/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/hwdep/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/mixer/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/topology/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/pcm/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/control/.libs/*.o \
-                                               ${ALSAOBJS_DIR}/src/ucm/.libs/*.o"
-                                            &&
-      cp ${ALSAOBJS_LIB_OUTPUT} ${ALSAOBJS_LIB_FINAL_OUTPUT}
-  COMMENT "Building ALSA"
-  VERBATIM
-)
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
-# SNDIO Compile ==================================================
-#=================================================================
-add_custom_target(BuildSndio ALL DEPENDS BuildAlsaObjs)
-add_custom_command(
-  TARGET BuildSndio
-  COMMAND
-      cd ${SNDIO_DIR} &&
-      export LIBRARY_PATH=$ENV{LIBRARY_PATH}:${ALSAOBJS_DIR}/build/lib/ &&
-      export CPATH=$ENV{CPATH}:${ALSAOBJS_INCLUDE_DIR_0}:${ALSAOBJS_INCLUDE_DIR_1} &&
-      ./configure --prefix=build &&
-      make -j${NUM_COMPILE_THREADS} &&
-      make install &&
-      /bin/sh -c "cd ${ALSAOBJS_LIB_OUTPUT_DIR} ; ar x ${ALSAOBJS_LIB_OUTPUT} ; cd -" &&
-      cd libsndio &&
-      /bin/sh -c "ar ru ${SNDIO_LIB_OUTPUT} ${SNDIO_DIR}/libsndio/*.o ${ALSAOBJS_LIB_OUTPUT_DIR}/*.o" &&
-      cp ${SNDIO_LIB_OUTPUT} ${SNDIO_LIB_FINAL_OUTPUT}
-  COMMENT "Building sndio"
-  VERBATIM
-)
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
 # OPENAL Compile =================================================
 #=================================================================
-add_custom_target(BuildOpenAL ALL DEPENDS BuildSndio)
+add_custom_target(BuildOpenAL ALL)
 add_custom_command(
   TARGET BuildOpenAL
   COMMAND
@@ -375,7 +301,7 @@ add_custom_command(
 #=================================================================
 # SDL2 Compile ===================================================
 #=================================================================
-add_custom_target(BuildSDL2 ALL DEPENDS BuildSndio)
+add_custom_target(BuildSDL2 ALL)
 add_custom_command(
   TARGET BuildSDL2
   COMMAND
@@ -441,16 +367,12 @@ list(APPEND THIRD_PARTY_LIB_PATHS ${OPENAL_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2TTF_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${GLEW_LIB_FINAL_OUTPUT})
-list(APPEND THIRD_PARTY_LIB_PATHS ${SNDIO_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${IRRXML_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${FREETYPE_LIB_FINAL_OUTPUT})
 
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${GLEW_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${ASSIMP_INCLUDE_DIR_0})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${ASSIMP_INCLUDE_DIR_1})
-list(APPEND THIRD_PARTY_INCLUDE_DIRS ${ALSAOBJS_INCLUDE_DIR_0})
-list(APPEND THIRD_PARTY_INCLUDE_DIRS ${ALSAOBJS_INCLUDE_DIR_1})
-list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SNDIO_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${OPENAL_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${JPEG_INCLUDE_DIR_0})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${JPEG_INCLUDE_DIR_1})

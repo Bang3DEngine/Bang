@@ -50,7 +50,7 @@ void Component::SetGameObject(GameObject *newGameObject)
             GetGameObject()->RemoveComponent(this);
         }
 
-        if (!CanBeRepeatedInGameObject())
+        if (newGameObject && !CanBeRepeatedInGameObject())
         {
             for (Component *comp : newGameObject->GetComponents())
             {

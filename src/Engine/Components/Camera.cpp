@@ -115,12 +115,12 @@ Vector2 Camera::FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) c
     return v4.xy();
 }
 
-Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector3 &vpPointNDC) const
+Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector3 &vpPositionNDC) const
 {
-    return FromViewportPointNDCToWorldPoint(vpPointNDC.xy(), vpPointNDC.z);
+    return FromViewportPointNDCToWorldPoint(vpPositionNDC.xy(), vpPositionNDC.z);
 }
 
-Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPointNDC,
+Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                                  float zNDC) const
 {
     // 1 is zNear, -1 is zFar
@@ -128,7 +128,7 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPointNDC,
                     GetZNear();
 
     // Pass coordinates to clip space, to invert them using projInversed
-    Vector4 clipCoords = Vector4(vpPointNDC, 1, 1) * zWorld;
+    Vector4 clipCoords = Vector4(vpPositionNDC, 1, 1) * zWorld;
     Vector4 res4 = GetProjectionMatrix().Inversed() * clipCoords;
     Vector3 res = res4.xyz();
     res = (GetViewMatrix().Inversed() * Vector4(res, 1)).xyz();
@@ -363,7 +363,7 @@ Matrix4 Camera::GetProjectionMatrix() const
                                     GL::GetViewportAspectRatio(),
                                     GetZNear(), GetZFar());
     }
-    else //Ortho
+    // else // Ortho
     {
         return Matrix4::Ortho(-GetOrthoWidth(),  GetOrthoWidth(),
                               -GetOrthoHeight(), GetOrthoHeight(),

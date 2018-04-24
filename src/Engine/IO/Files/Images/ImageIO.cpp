@@ -343,7 +343,7 @@ void ImageIO::ImportPNG(const Path &filepath, Imageb *img, bool *ok)
     }
 
     delete[] rowPointers;
-    png_destroy_read_struct(&png, &info, NULL);
+    png_destroy_read_struct(&png, &info, nullptr);
     fclose(fp);
 
     *ok = true;

@@ -147,7 +147,7 @@ Color Color::ToHSV() const
     {
         if      (fCMax == r) { h = 60 * (fmod(((g - b) / fDelta), 6)); }
         else if (fCMax == g) { h = 60 * (((b - r) / fDelta) + 2); }
-        else if (fCMax == b) { h = 60 * (((r - g) / fDelta) + 4); }
+        else                 { h = 60 * (((r - g) / fDelta) + 4); }
 
         if(fCMax > 0) { s = fDelta / fCMax; } else { s = 0; }
         v = fCMax;
@@ -185,6 +185,7 @@ Color Color::ToRGB() const
         case 3: newR = p; newG = q; newB = v; break;
         case 4: newR = t; newG = p; newB = v; break;
         case 5: newR = v; newG = p; newB = q; break;
+        default: newR = newG = newB = 0.0f; break;
     }
 
     return Color(newR, newG, newB, a);

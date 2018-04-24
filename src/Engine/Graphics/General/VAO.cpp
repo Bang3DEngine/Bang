@@ -90,8 +90,8 @@ bool VAO::IsIndexed() const
 
 const VBO* VAO::GetVBOByLocation(GLint location) const
 {
-    if (location >= p_vbos.Size()) return nullptr;
-    else return p_vbos[location];
+    if (location >= p_vbos.Size()) { return nullptr; }
+    else { return p_vbos[location]; }
 }
 
 int VAO::GetVBOCount() const

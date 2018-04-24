@@ -156,10 +156,13 @@ void Geometry::RayLineClosestPoints(const Ray &ray,
         Plane plane( ray.GetOrigin(),
                      Vector3::Cross(lineToRayPerp, planeBitangent) );
 
-        float t;
-        bool intersected;
+        float t = 0.0f;
+        bool intersected = false;
         Geometry::IntersectRayPlane(lineRay, plane, &intersected, &t);
-        *pointOnLine = linePoint + (t * lineDirection.NormalizedSafe());
+        if (intersected)
+        {
+            *pointOnLine = linePoint + (t * lineDirection.NormalizedSafe());
+        }
     }
 }
 

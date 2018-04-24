@@ -15,8 +15,8 @@
 
 USING_NAMESPACE_BANG
 
-Color UICheckBox::IdleColor = Color::White;
-Color UICheckBox::OverColor = Color::LightBlue;
+Color UICheckBox::IdleColor = Color(1,1,1,1);
+Color UICheckBox::OverColor = Color(0.8, 0.95,  1,  1);
 
 UICheckBox::UICheckBox()
 {

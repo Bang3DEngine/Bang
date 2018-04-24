@@ -257,9 +257,9 @@ Quad AABox::GetFrontQuad() const { return GetQuad(Axis3D::Z, true); }
 Quad AABox::GetBackQuad()  const { return GetQuad(Axis3D::Z, false); }
 std::array<Quad, 6> AABox::GetQuads() const
 {
-    const std::array<Quad, 6> aaBoxQuads = {GetBotQuad(),   GetTopQuad(),
-                                            GetLeftQuad(),  GetRightQuad(),
-                                            GetFrontQuad(), GetBackQuad()};
+    const std::array<Quad, 6> aaBoxQuads = {{GetBotQuad(),   GetTopQuad(),
+                                             GetLeftQuad(),  GetRightQuad(),
+                                             GetFrontQuad(), GetBackQuad()}};
     return aaBoxQuads;
 }
 

@@ -86,10 +86,10 @@ int ThreadFunc(ThreadRunnable *runnable, Thread *thread)
     if (runnable)
     {
         runnable->Run();
+        if (runnable->IsAutoDelete()) { delete runnable; }
     }
-    if (runnable->IsAutoDelete()) { delete runnable; }
 
-    thread->m_hasFinished = true;
+    if (thread) { thread->m_hasFinished = true; }
 
     return 0;
 }

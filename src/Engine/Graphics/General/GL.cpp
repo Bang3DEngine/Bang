@@ -1106,12 +1106,13 @@ GL::BlendEquationE GL::GetBlendEquationAlpha()
 
 const AARecti& GL::GetScissorRect()
 {
-    if (!GL::IsEnabled(GL::Test::Scissor) ||
-        GL::GetActive()->m_scissorRectPx == AARecti(-1,-1,-1,-1))
+    GL *gl = GL::GetActive();
+    if (gl && (!GL::IsEnabled(GL::Test::Scissor) ||
+               gl->m_scissorRectPx == AARecti(-1,-1,-1,-1)))
     {
-        GL::GetActive()->m_scissorRectPx = GL::GetViewportRect();
+        gl->m_scissorRectPx = GL::GetViewportRect();
     }
-    return GL::GetActive()->m_scissorRectPx;
+    return gl ? gl->m_scissorRectPx : AARecti::Zero;
 }
 
 void GL::BindBuffer(GL::BindTarget target, GLId bufferId)
@@ -1283,7 +1284,7 @@ void GL::SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA)
     std::array<bool,4> newColorMask = {{maskR, maskG, maskB, maskA}};
     if (!gl || (GL::GetColorMask() != newColorMask))
     {
-        gl->m_colorMask = newColorMask;
+        if (gl) { gl->m_colorMask = newColorMask; }
         GL_CALL( glColorMask(maskR, maskG, maskB, maskA) );
     }
 }
@@ -1766,7 +1767,7 @@ void GL::PrintGLContext()
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::ShaderProgram)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::Texture2D)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TextureCubeMap)) );
-    Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
+    // Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
     Debug_Peek(GL::GetColorMask());
     Debug_Peek(GL::GetLineWidth());
     Debug_Peek(GL::IsEnabled(GL::Test::Alpha));

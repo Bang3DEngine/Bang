@@ -72,9 +72,6 @@ void DebugRenderer::RenderAABox(const AABox &aaBox,
                                 bool depthTest,
                                 const Color &bordersColor)
 {
-    const Vector3 ctr = aaBox.GetCenter();
-    const Vector3 ext = aaBox.GetExtents();
-
     DebugRenderer::RenderQuad(aaBox.GetLeftQuad(), color, time,
                               wireframe, culling, depthTest, bordersColor);
     DebugRenderer::RenderQuad(aaBox.GetRightQuad(), color, time,

@@ -112,7 +112,7 @@ bool File::Rename(const Path &oldPath, const Path &newPath)
 {
     if (!oldPath.Exists()) { return false; }
     return rename(oldPath.GetAbsolute().ToCString(),
-                  newPath.GetAbsolute().ToCString());
+                  newPath.GetAbsolute().ToCString()) != 0;
 }
 
 bool File::Duplicate(const Path &fromPath, const Path &toPath)

@@ -170,8 +170,8 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     const Quad camBotQuad   = cam->GetBotQuad();    // Get bot quad
     const Quad camLeftQuad  = cam->GetLeftQuad();   // Get left quad
     const Quad camRightQuad = cam->GetRightQuad();  // Get right quad
-    const std::array<Quad, 4> camQuads = {camTopQuad, camBotQuad,
-                                          camLeftQuad, camRightQuad};
+    const std::array<Quad, 4> camQuads = {{camTopQuad, camBotQuad,
+                                           camLeftQuad, camRightQuad}};
     cam->SetZFar(prevZFar); // Restore
 
     // Get all camera frustum points in world space
@@ -217,12 +217,12 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
 
     // Get scene AABBox and intersect with all extended quads!
     Array<Vector3> extCamAABoxSceneBoxIntersectionsWS =
-      Geometry::IntersectBoxBox({extCamAABoxTopQuadWS,   extCamAABoxBotQuadWS,
-                                 extCamAABoxLeftQuadWS,  extCamAABoxRightQuadWS,
-                                 extCamAABoxFrontQuadWS, extCamAABoxBackQuadWS},
-                                {sceneAABox.GetTopQuad(),   sceneAABox.GetBotQuad(),
-                                 sceneAABox.GetLeftQuad(),  sceneAABox.GetRightQuad(),
-                                 sceneAABox.GetFrontQuad(), sceneAABox.GetBackQuad()});
+      Geometry::IntersectBoxBox({{extCamAABoxTopQuadWS,   extCamAABoxBotQuadWS,
+                                  extCamAABoxLeftQuadWS,  extCamAABoxRightQuadWS,
+                                  extCamAABoxFrontQuadWS, extCamAABoxBackQuadWS}},
+                                {{sceneAABox.GetTopQuad(),   sceneAABox.GetBotQuad(),
+                                  sceneAABox.GetLeftQuad(),  sceneAABox.GetRightQuad(),
+                                  sceneAABox.GetFrontQuad(), sceneAABox.GetBackQuad()}});
 
     // Make an array of all the points we want to have inside our shadow map
     // First of all, we want to have the whole camera frustum inside of it

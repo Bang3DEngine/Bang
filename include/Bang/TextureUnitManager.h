@@ -24,6 +24,7 @@ public:
     static int GetMaxTextureUnits();
     static void UnBindAllTexturesFromAllUnits();
 
+    static int GetUnitTextureIsBoundTo(Texture *texture);
     static GLId GetBoundTextureToUnit(GL::TextureTarget texTarget,
                                       GL::Enum textureUnit);
     static void PrintTextureUnits();

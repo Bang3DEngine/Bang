@@ -39,12 +39,12 @@ void ALAudioSource::SetVolume(float volume)
         alSourcef(GetALSourceId(), AL_GAIN, GetVolume());
     }
 }
-void ALAudioSource::SetPitch(float _pitch)
+void ALAudioSource::SetPitch(float pitch)
 {
-    float pitch = Math::Max(_pitch, 0.01f);
-    if (pitch != GetPitch())
+    float clampedPitch = Math::Max(pitch, 0.01f);
+    if (clampedPitch != GetPitch())
     {
-        m_audioParams.pitch = pitch;
+        m_audioParams.pitch = clampedPitch;
         alSourcef(GetALSourceId(), AL_PITCH, GetPitch());
     }
 }

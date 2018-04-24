@@ -17,7 +17,9 @@ NAMESPACE_BANG_BEGIN
         GL_CheckError()
 #define GL_ClearError() GL::ClearError()
 #define GL_CheckError() \
-    ASSERT_SOFT_MSG( GL::CheckError(__LINE__, __FUNCTION__, __FILE__), \
+    ASSERT_SOFT_MSG( GL::CheckError(__LINE__, \
+                                    String(SCAST<const char*>(__FUNCTION__)), \
+                                    __FILE__), \
                      "There was an OpenGL error, see previous message.");
 #else
 #define GL_CALL( CALL ) CALL
@@ -738,7 +740,7 @@ private:
     Color m_clearColor = Color::Zero;
     GL::Face m_cullFace = GL::Face::Back;
 
-    AARecti m_scissorRectPx                   = AARecti(-1,-1,-1,-1);
+    AARecti m_scissorRectPx                 = AARecti(-1,-1,-1,-1);
     GL::Enum m_frontPolygonMode             = GL::Fill;
     GL::Enum m_backPolygonMode              = GL::Fill;
     GL::Enum m_frontBackPolygonMode         = GL::Fill;

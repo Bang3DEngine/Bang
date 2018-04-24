@@ -102,20 +102,20 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
 
 void GBuffer::PrepareColorReadBuffer(const AARect &readNDCRect)
 {
-    Blit(GBuffer::AttColor, {GBuffer::AttColorRead},
+    Blit(GBuffer::AttColor, GBuffer::AttColorRead,
          readNDCRect, GL::BufferBit::Color);
 }
 
 void GBuffer::SetAllDrawBuffers() const
 {
-    SetDrawBuffers({GBuffer::AttColor,  GBuffer::AttAlbedo,
-                    GBuffer::AttNormal, GBuffer::AttMisc
-                   });
+    SetDrawBuffers({{GBuffer::AttColor,  GBuffer::AttAlbedo,
+                     GBuffer::AttNormal, GBuffer::AttMisc
+                   }});
 }
 
 void GBuffer::SetAllDrawBuffersExceptColor()
 {
-    SetDrawBuffers({GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc});
+    SetDrawBuffers({{GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc}});
 }
 
 void GBuffer::SetColorDrawBuffer()
@@ -128,7 +128,7 @@ void GBuffer::ClearAllBuffersExceptColor()
     GL::ClearStencilBuffer(0);
     ClearDepth(1.0f);
 
-    SetDrawBuffers({GBuffer::AttNormal, GBuffer::AttAlbedo, GBuffer::AttMisc});
+    SetDrawBuffers({{GBuffer::AttNormal, GBuffer::AttAlbedo, GBuffer::AttMisc}});
     GL::ClearColorBuffer(Color::Zero);
 }
 

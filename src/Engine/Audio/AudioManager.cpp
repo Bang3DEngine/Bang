@@ -47,14 +47,15 @@ AudioManager::~AudioManager()
 
 bool AudioManager::InitAL()
 {
-    bool extIsPresent = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
+    bool extIsPresent = alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT");
     if (!extIsPresent)
     {
         Debug_Error("Enumeration extension not available.");
         return false;
     }
 
-    String defaultDeviceName = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+    String defaultDeviceName = alcGetString(nullptr,
+                                            ALC_DEFAULT_DEVICE_SPECIFIER);
 
     m_alDevice = alcOpenDevice(defaultDeviceName.ToCString());
     if(!m_alDevice)
@@ -63,7 +64,7 @@ bool AudioManager::InitAL()
         return false;
     }
 
-    m_alContext = alcCreateContext(m_alDevice, NULL);
+    m_alContext = alcCreateContext(m_alDevice, nullptr);
     if(!m_alContext)
     {
         Debug_Error("Could not start OpenAL Context");
@@ -292,7 +293,7 @@ List<String> AudioManager::GetAudioDevicesList()
 {
     List<String> audioDevicesList;
 
-    const ALCchar *devices     = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+    const ALCchar *devices     = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
     const ALCchar *currentChar = devices;
     const ALCchar *nextChar    = currentChar + 1;
 

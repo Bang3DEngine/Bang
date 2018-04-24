@@ -9,8 +9,8 @@ NAMESPACE_BANG_BEGIN
 #define EXTRA_DECLARATIONS \
 template <class OtherT1, class OtherT2>\
 explicit Vector2G(const OtherT1 &_x, \
-                  const OtherT2 &_y) : x( Cast<T>(_x) ),\
-                                       y( Cast<T>(_y) ) {}\
+                  const OtherT2 &_y) : x( SCAST<T>(_x) ),\
+                                       y( SCAST<T>(_y) ) {}\
 \
 Vector2G<T> Perpendicular() const { return Vector2G<T>(-y,x); } \
 static T Cross(const Vector2G<T> &v1, const Vector2G<T> &v2) \
@@ -32,17 +32,17 @@ CLASS_VECTOR_T(Vector2G, 2)
 CLASS_VECTOR_T_IMPL(Vector2G, 2)
 
 template<class T>
-const Vector2G<T> Vector2G<T>::Up = Vector2G<T>(Cast<T>(0), Cast<T>(1));
+const Vector2G<T> Vector2G<T>::Up = Vector2G<T>(SCAST<T>(0), SCAST<T>(1));
 template<class T>
-const Vector2G<T> Vector2G<T>::Down = Vector2G<T>(Cast<T>(0), Cast<T>(-1));
+const Vector2G<T> Vector2G<T>::Down = Vector2G<T>(SCAST<T>(0), SCAST<T>(-1));
 template<class T>
-const Vector2G<T> Vector2G<T>::Right = Vector2G<T>(Cast<T>(1), Cast<T>(0));
+const Vector2G<T> Vector2G<T>::Right = Vector2G<T>(SCAST<T>(1), SCAST<T>(0));
 template<class T>
-const Vector2G<T> Vector2G<T>::Left = Vector2G<T>(Cast<T>(-1), Cast<T>(0));
+const Vector2G<T> Vector2G<T>::Left = Vector2G<T>(SCAST<T>(-1), SCAST<T>(0));
 template<class T>
-const Vector2G<T> Vector2G<T>::Zero = Vector2G<T>(Cast<T>(0));
+const Vector2G<T> Vector2G<T>::Zero = Vector2G<T>(SCAST<T>(0));
 template<class T>
-const Vector2G<T> Vector2G<T>::One = Vector2G<T>(Cast<T>(1));
+const Vector2G<T> Vector2G<T>::One = Vector2G<T>(SCAST<T>(1));
 template<class T>
 const Vector2G<T> Vector2G<T>::Infinity = Vector2G<T>(Math::Max<T>());
 template<class T>

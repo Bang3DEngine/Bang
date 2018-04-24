@@ -109,6 +109,30 @@ macro(add_bang_compilation_flags __TARGET)
 
 endmacro()
 
+if (USE_CLANG_TIDY)
+    find_program (
+      CLANG_TIDY_EXE
+      NAMES "clang-tidy"
+      DOC "Path to clang-tidy executable"
+    )
+
+    if(NOT CLANG_TIDY_EXE)
+        message(STATUS "clang-tidy not found.")
+    else()
+          message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+          set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}"
+              "-checks=*,-clang-analyzer-alpha.*")
+    endif()
+endif()
+
+macro(add_clang_tidy __TARGET)
+    if (USE_CLANG_TIDY)
+        if(CLANG_TIDY_EXE)
+            set_target_properties( ${__TARGET} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}" )
+        endif()
+    endif()
+endmacro()
+
 #=================================================================
 #=================================================================
 #=================================================================

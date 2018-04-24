@@ -209,7 +209,7 @@ public:
 
 template<class T>
 const AARectG<T> AARectG<T>::NDCRect = AARectG<T>(Vector2G<T>(-1),
-                                               Vector2G<T>(1));
+                                                  Vector2G<T>(1));
 
 template<class T>
 const AARectG<T> AARectG<T>::Zero = AARectG<T>(0, 0, 0, 0);

@@ -17,7 +17,7 @@ public:
     static const GL::Attachment AttColor        = GL::Attachment::Color0;
 
     // (diffColor.r, diffColor.g, diffColor.b, diffColor.a)
-    static const GL::Attachment AttAlbedo      = GL::Attachment::Color1;
+    static const GL::Attachment AttAlbedo       = GL::Attachment::Color1;
 
     // (normal.x, normal.y, normal.z, 0)
     static const GL::Attachment AttNormal       = GL::Attachment::Color2;

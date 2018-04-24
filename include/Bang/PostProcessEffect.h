@@ -17,7 +17,7 @@ public:
     enum class Type { AfterScene = 0, AfterCanvas };
 
     PostProcessEffect();
-    virtual ~PostProcessEffect();
+    virtual ~PostProcessEffect() = default;
 
     // Component
     virtual void OnRender(RenderPass renderPass) override;

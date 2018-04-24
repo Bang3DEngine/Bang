@@ -34,7 +34,7 @@ USING_NAMESPACE_BANG
 
 bool Dialog::s_okPressed = false;
 String Dialog::s_resultString = "";
-Path Dialog::s_resultPath = Path::Empty;
+Path Dialog::s_resultPath = Path::EmptyPath();
 std::stack<DialogWindow*> Dialog::s_dialogCreation_dialogWindows;
 std::stack<Window*>       Dialog::s_dialogCreation_prevActiveWindows;
 std::stack<bool>          Dialog::s_dialogCreation_modalBooleans;
@@ -273,7 +273,8 @@ void Dialog::CreateOpenFilePathSceneInto(Scene *scene,
 
             if (m_openDir)
             {
-                p_openButton->GetText()->SetContent("Open " + currPath);
+                p_openButton->GetText()->SetContent("Open " +
+                                                    currPath.GetAbsolute());
             }
         }
 

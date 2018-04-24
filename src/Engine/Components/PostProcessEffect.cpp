@@ -18,10 +18,6 @@ PostProcessEffect::PostProcessEffect()
     p_shaderProgram = ShaderProgramFactory::GetDefaultPostProcess();
 }
 
-PostProcessEffect::~PostProcessEffect()
-{
-}
-
 void PostProcessEffect::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);

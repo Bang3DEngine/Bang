@@ -146,6 +146,16 @@ void TextureUnitManager::UnBindAllTexturesFromAllUnits()
     }
 }
 
+int TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
+{
+    if (!texture) { return -1; }
+
+    TextureUnitManager *tm = TextureUnitManager::GetActive();
+    GLId texId = texture->GetGLId();
+    if (tm->m_textureIdToBoundUnit.count(texId) == 0) { return -1; }
+    return tm->m_textureIdToBoundUnit[texId];
+}
+
 GLId TextureUnitManager::GetBoundTextureToUnit(GL::TextureTarget texTarget,
                                                GL::Enum textureUnit)
 {

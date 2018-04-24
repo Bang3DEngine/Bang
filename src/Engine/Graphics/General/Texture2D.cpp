@@ -35,8 +35,8 @@ void Texture2D::Resize(int width, int height)
 void Texture2D::Fill(const Color &fillColor, int width, int height)
 {
     Array<Color> inputData = Array<Color>(width * height, fillColor);
-    Fill( RCAST<const Byte*>(inputData.Data()), width, height,
-          GL::ColorComp::RGBA, GL::DataType::Float);
+    Fill(RCAST<const Byte*>(inputData.Data()), width, height,
+         GL::ColorComp::RGBA, GL::DataType::Float);
 }
 
 void Texture2D::Fill(const Byte *newData,

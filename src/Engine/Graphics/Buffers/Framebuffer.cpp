@@ -153,7 +153,8 @@ void Framebuffer::SetAttachmentTexture2D(Texture *tex,
     GL::Bind(GL::BindTarget::Framebuffer, prevId);
 }
 
-void Framebuffer::Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,
+void Framebuffer::Blit(GL::Attachment srcAttachment,
+                       GL::Attachment dstAttachment,
                        const AARect &readNDCRect,
                        GL::BufferBit bufferBit)
 {

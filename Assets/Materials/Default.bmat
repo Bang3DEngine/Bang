@@ -1,5 +1,6 @@
 <Material AlbedoColor="(1, 1, 1, 1)"
-          Roughness="1.0"
+          Roughness="0.5"
+          Metalness="0.5"
           RenderPass="0"
 	  ReceivesLighting="true"
           VertexShader="1510299163478730097 0"

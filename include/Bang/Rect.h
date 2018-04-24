@@ -152,7 +152,7 @@ public:
     {
         Vector2G<T> p0, p1, p2, p3;
         GetPoints(&p0, &p1, &p2, &p3);
-        return {p0, p1, p2, p3};
+        return {{p0, p1, p2, p3}};
     }
 
     template<class S> friend bool operator==(const RectG<S> &r1, const RectG<S> &r2);

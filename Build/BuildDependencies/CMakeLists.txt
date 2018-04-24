@@ -13,7 +13,7 @@ if (DEFINED BANG_DEPENDENCIES_BUILT)
     return()
 endif()
 set(BANG_DEPENDENCIES_BUILT ON)
-#===============================s==================================
+#=================================================================
 #=================================================================
 #=================================================================
 
@@ -28,7 +28,6 @@ if (${BUILD_SHARED_LIBS})
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
 
-    find_library(SNDIO_LIBRARY "sndio")
     find_library(ASSIMP_LIBRARY "assimp")
 
     find_package(SDL2 REQUIRED)
@@ -56,7 +55,6 @@ if (${BUILD_SHARED_LIBS})
     list(APPEND DEPENDENCIES_LIB_PATHS ${SDL2_LIBRARY})
     list(APPEND DEPENDENCIES_LIB_PATHS ${SDL2_TTF_LIBRARIES})
     list(APPEND DEPENDENCIES_LIB_PATHS ${ASSIMP_LIBRARY})
-    list(APPEND DEPENDENCIES_LIB_PATHS ${SNDIO_LIBRARY})
 
 else ()
 
@@ -71,6 +69,7 @@ endif()
 # Common shared dependencies ===================
 find_library(DL_LIBRARY "dl")
 find_package(OpenGL REQUIRED)
+find_library(SNDIO_LIBRARY "sndio")
 find_package(ZLIB   REQUIRED "zlib")
 find_library(SNDFILE_LIBRARY "sndfile")
 find_library(PTHREAD_LIBRARY "pthread")
@@ -87,8 +86,9 @@ endif()
 list(APPEND DEPENDENCIES_INCLUDE_DIRS "${OPENGL_INCLUDE_DIRS}")
 
 list(APPEND DEPENDENCIES_LIB_PATHS "${DL_LIBRARY}")
-list(APPEND DEPENDENCIES_LIB_PATHS "${OPENGL_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${ZLIB_LIBRARY}")
+list(APPEND DEPENDENCIES_LIB_PATHS "${SNDIO_LIBRARY}")
+list(APPEND DEPENDENCIES_LIB_PATHS "${OPENGL_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${SNDFILE_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${PTHREAD_LIBRARY}")
 # =================================================

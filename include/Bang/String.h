@@ -273,15 +273,13 @@ Container<String> String::Split(char splitter, bool trimResults) const
     return result;
 }
 
-template <class T>
-String operator+(const char *str, const T &v)
+inline String operator+(const char *str, const String &v)
 {
-    return String(std::string(str) + std::string(String::ToString(v)));
+    return String(std::string(str) + std::string(v));
 }
-template <class T>
-String operator+(const T &v, const char *str)
+inline String operator+(const String &v, const char *str)
 {
-    return String(std::string(String::ToString(v)) + std::string(str));
+    return String(std::string(v) + std::string(str));
 }
 
 NAMESPACE_BANG_END

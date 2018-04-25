@@ -42,14 +42,15 @@ void main()
     }
     B_GIn_Albedo = B_MaterialAlbedoColor * vec4(texColor.rgb, 1);
 
-    vec3 normal = B_FIn_Normal.xyz;
+    vec3 normal = (B_FIn_Normal.xyz);
     if (B_HasNormalMapTexture)
     {
         vec3 normalFromMap = texture(B_NormalMapTexture, B_FIn_NormalMapUv).xyz;
         normalFromMap.xy = normalFromMap.xy * 2.0f - 1.0f;
         normalFromMap = B_TBN * normalFromMap;
-        normal = normalize(normalFromMap);
+        normal = (normalFromMap);
     }
+    normal = normalize(normal);
     B_GIn_Normal = vec4(normal * 0.5f + 0.5f, 0);
 
     float receivesLighting = B_MaterialReceivesLighting ? 0.25 : 0;
@@ -61,7 +62,7 @@ void main()
 
     if (B_MaterialReceivesLighting)
     {
-        vec3 N = B_GIn_Normal.xyz;
+        vec3 N = normal.xyz;
         vec3 V = normalize(B_Camera_WorldPos - B_FIn_Position.xyz);
         vec3 R = reflect(-V, N);
 

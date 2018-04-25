@@ -16,7 +16,7 @@ out mat3 B_TBN;
 void main()
 {
     B_FIn_Position    = ( B_Model * vec4(B_VIn_Position, 1) ).xyz;
-    B_FIn_Normal      = normalize( (B_Normal * vec4(B_VIn_Normal, 0)).xyz );
+    B_FIn_Normal      = (B_Normal * vec4(B_VIn_Normal, 0)).xyz;
     B_FIn_AlbedoUv    = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
     B_FIn_NormalMapUv = B_VIn_Uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
     gl_Position       = B_PVM * vec4(B_VIn_Position, 1);

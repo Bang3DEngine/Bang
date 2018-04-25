@@ -149,7 +149,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 
     // GBuffer Canvas rendering
     gbuffer->SetColorDrawBuffer();
-    GL::Enable(GL::Test::Blend);
+    GL::Enable(GL::Enablable::Blend);
     GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
@@ -157,7 +157,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPass(go, RenderPass::Canvas);
     gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::CanvasPostProcess);
-    GL::Disable(GL::Test::Blend);
+    GL::Disable(GL::Enablable::Blend);
 
     // GBuffer Overlay rendering
     gbuffer->SetAllDrawBuffers();

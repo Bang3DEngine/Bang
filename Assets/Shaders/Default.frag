@@ -14,7 +14,7 @@ layout(location = 1) out vec4 B_GIn_Albedo;
 layout(location = 2) out vec4 B_GIn_Normal;
 layout(location = 3) out vec4 B_GIn_Misc;
 
-vec3 GetCameraSkyBoxSample(samplerCube cubeMap, vec3 direction)
+vec3 GetCameraSkyBoxSampleLod(samplerCube cubeMap, vec3 direction, float lod)
 {
     vec3 color;
     switch (B_Camera_ClearMode)
@@ -24,12 +24,17 @@ vec3 GetCameraSkyBoxSample(samplerCube cubeMap, vec3 direction)
         break;
 
         case CAMERA_CLEARMODE_SKYBOX:
-            color = texture(cubeMap, direction).rgb;
+            color = textureLod(cubeMap, direction, lod).rgb;
         break;
 
         default: color = vec3(1,0,1); break;
     }
     return color;
+}
+
+vec3 GetCameraSkyBoxSample(samplerCube cubeMap, vec3 direction)
+{
+    return GetCameraSkyBoxSampleLod(cubeMap, direction, 1.0);
 }
 
 void main()
@@ -76,10 +81,15 @@ void main()
 
         vec3 diffuseAmbient  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N) *
                                B_GIn_Albedo.rgb;
-        vec3 specularAmbient = mix(GetCameraSkyBoxSample(B_SkyBoxSpecular, R),
-                                   GetCameraSkyBoxSample(B_SkyBoxDiffuse,  R),
-                                   B_MaterialRoughness);
-        vec3 ambient = (diffK * diffuseAmbient) + (specK * specularAmbient);
+
+        const float MAX_REFLECTION_LOD = 8.0;
+        float lod = B_MaterialRoughness * MAX_REFLECTION_LOD;
+        vec3 specularAmbient = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular,
+                                                         R, lod).rgb;
+        vec2 envBRDF  = vec2(0.5);
+        specularAmbient = specularAmbient * (FSR * envBRDF.x + envBRDF.y);
+
+        vec3 ambient = (diffK * diffuseAmbient) + (specularAmbient);
         ambient *= B_AmbientLight;
 
         B_GIn_Color = vec4(ambient, 1);

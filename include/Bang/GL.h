@@ -72,15 +72,16 @@ public:
         Polygon       = GL_POLYGON
     };
 
-    enum class Test
+    enum class Enablable
     {
-        Blend      = GL_BLEND,
-        Depth      = GL_DEPTH_TEST,
-        DepthClamp = GL_DEPTH_CLAMP,
-        Stencil    = GL_STENCIL_TEST,
-        Scissor    = GL_SCISSOR_TEST,
-        Alpha      = GL_ALPHA_TEST,
-        CullFace   = GL_CULL_FACE
+        Blend                  = GL_BLEND,
+        Depth                  = GL_DEPTH_TEST,
+        DepthClamp             = GL_DEPTH_CLAMP,
+        Stencil                = GL_STENCIL_TEST,
+        Scissor                = GL_SCISSOR_TEST,
+        Alpha                  = GL_ALPHA_TEST,
+        CullFace               = GL_CULL_FACE,
+        TextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS
     };
 
     enum class UsageHint
@@ -378,14 +379,14 @@ public:
     static void ClearDepthBuffer(float clearDepth = 1.0f);
     static void ClearStencilBuffer(int stencilValue = 0);
 
-    static void Enablei (GL::Test glTest, int index);
-    static void Disablei(GL::Test glTest, int index);
-    static void Enable (GL::Test glTest);
-    static void Disable(GL::Test glTest);
-    static void SetEnabled(GL::Test glTest, bool enabled);
-    static void SetEnabledi(GL::Test glTest, int index, bool enabled);
-    static bool IsEnabled(GL::Test glTest);
-    static bool IsEnabledi(GL::Test glTest, int index);
+    static void Enablei (GL::Enablable glTest, int index);
+    static void Disablei(GL::Enablable glTest, int index);
+    static void Enable (GL::Enablable glTest);
+    static void Disable(GL::Enablable glTest);
+    static void SetEnabled(GL::Enablable glTest, bool enabled);
+    static void SetEnabledi(GL::Enablable glTest, int index, bool enabled);
+    static bool IsEnabled(GL::Enablable glTest);
+    static bool IsEnabledi(GL::Enablable glTest, int index);
 
 
     static void EnableVertexAttribArray(int location);
@@ -441,11 +442,13 @@ public:
 
     static void FramebufferTexture(GL::FramebufferTarget target,
                                    GL::Attachment attachment,
-                                   GLId textureId);
+                                   GLId textureId,
+                                   uint mipMapLevel = 0);
     static void FramebufferTexture2D(GL::FramebufferTarget target,
                                      GL::Attachment attachment,
                                      GL::TextureTarget texTarget,
-                                     GLId textureId);
+                                     GLId textureId,
+                                     uint mipMapLevel = 0);
     static void BindRenderbuffer(GL::RenderbufferTarget target,
                                  GLId renderbufferId);
     static void RenderbufferStorage(GL::RenderbufferTarget target,
@@ -729,8 +732,8 @@ private:
     Byte m_stencilValue  = 0;
     uint m_stencilMask   = 0xFF;
     AARecti m_viewportRect = AARecti::Zero;
-    Map<GL::Test, bool> m_enabledTests;
-    Map<std::pair<GL::Test, int>, bool> m_enabled_i_Tests;
+    Map<GL::Enablable, bool> m_enabledVars;
+    Map<std::pair<GL::Enablable, int>, bool> m_enabled_i_Vars;
 
     Array<GL::Attachment> m_drawBuffers = {GL::Attachment::Color0};
     GL::Attachment m_readBuffer = GL::Attachment::Color0;

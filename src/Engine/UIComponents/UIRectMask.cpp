@@ -17,12 +17,12 @@ void UIRectMask::OnBeforeChildrenRender(RenderPass renderPass)
 
     if (IsMasking() && renderPass == RenderPass::Canvas)
     {
-        m_wasScissorEnabled = GL::IsEnabled(GL::Test::Scissor);
+        m_wasScissorEnabled = GL::IsEnabled(GL::Enablable::Scissor);
         m_prevScissor = GL::GetScissorRect();
 
         AARecti rectPx( GetGameObject()->GetRectTransform()->GetViewportRect() );
 
-        GL::Enable(GL::Test::Scissor);
+        GL::Enable(GL::Enablable::Scissor);
         GL::ScissorIntersecting(rectPx);
     }
 }
@@ -35,7 +35,7 @@ void UIRectMask::OnAfterChildrenRender(RenderPass renderPass)
     {
         // Restore
         GL::Scissor(m_prevScissor);
-        GL::SetEnabled(GL::Test::Scissor, m_wasScissorEnabled);
+        GL::SetEnabled(GL::Enablable::Scissor, m_wasScissorEnabled);
     }
 }
 

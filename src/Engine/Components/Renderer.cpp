@@ -50,7 +50,7 @@ void Renderer::Bind() const
     GL::SetWireframe( IsRenderWireframe() );
 
     GL::SetCullFace( GetCullFace() ); // Culling states
-    GL::SetEnabled(GL::Test::CullFace, GetCulling());
+    GL::SetEnabled(GL::Enablable::CullFace, GetCulling());
 
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );

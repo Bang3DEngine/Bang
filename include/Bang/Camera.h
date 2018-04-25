@@ -81,6 +81,7 @@ public:
     AARect GetViewportRectNDCInWindow() const;
     const AARect& GetViewportRectNDC() const;
     GBuffer *GetGBuffer() const;
+    TextureCubeMap *GetSkyBoxTexture() const;
     TextureCubeMap *GetSpecularSkyBoxTexture() const;
     TextureCubeMap *GetDiffuseSkyBoxTexture() const;
     SelectionFramebuffer *GetSelectionFramebuffer() const;
@@ -117,6 +118,7 @@ private:
 
     Set<RenderPass> m_renderPassMask;
     bool m_renderSelectionBuffer = false;
+    RH<TextureCubeMap> p_skyboxTextureCM;
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;
     RH<TextureCubeMap> p_skyboxDiffuseTextureCM;
 

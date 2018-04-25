@@ -24,6 +24,7 @@ uniform vec3        B_Camera_Forward;
 uniform vec3        B_Camera_WorldPos;
 uniform int         B_Camera_ClearMode;
 uniform vec4        B_Camera_ClearColor;
+uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
 /////////////////////////////////////////////

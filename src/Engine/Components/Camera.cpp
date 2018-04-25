@@ -23,8 +23,8 @@
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/SelectionFramebuffer.h"
-#include "Bang/CubeMapIrradianceGenerator.h"
 
 USING_NAMESPACE_BANG
 
@@ -193,14 +193,18 @@ void Camera::RemoveRenderPass(RenderPass renderPass)
 
 void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
 {
-    if (GetSpecularSkyBoxTexture() != skyBoxTextureCM)
+    if (GetSkyBoxTexture() != skyBoxTextureCM)
     {
-        p_skyboxSpecularTextureCM.Set(skyBoxTextureCM);
+        p_skyboxTextureCM.Set(skyBoxTextureCM);
 
-        // If new, generate the irradiance map
-        RH<TextureCubeMap> irradianceCubeMap = CubeMapIrradianceGenerator::
-                               GenerateIrradianceCubeMap(skyBoxTextureCM);
-        p_skyboxDiffuseTextureCM.Set( irradianceCubeMap.Get() );
+        // If new, generate the IBL specular and diffuse textures!
+        RH<TextureCubeMap> diffuseIBLCubeMap = CubeMapIBLGenerator::
+                               GenerateDiffuseIBLCubeMap(skyBoxTextureCM);
+        p_skyboxDiffuseTextureCM.Set( diffuseIBLCubeMap.Get() );
+
+        RH<TextureCubeMap> specularIBLCubeMap = CubeMapIBLGenerator::
+                               GenerateSpecularIBLCubeMap(skyBoxTextureCM);
+        p_skyboxSpecularTextureCM.Set( specularIBLCubeMap.Get() );
     }
 }
 
@@ -254,6 +258,11 @@ const AARect& Camera::GetViewportRectNDC() const
 GBuffer *Camera::GetGBuffer() const
 {
     return m_gbuffer;
+}
+
+TextureCubeMap *Camera::GetSkyBoxTexture() const
+{
+    return p_skyboxTextureCM.Get();
 }
 
 TextureCubeMap *Camera::GetSpecularSkyBoxTexture() const
@@ -408,7 +417,7 @@ void Camera::CloneInto(ICloneable *clone) const
     cam->SetProjectionMode(GetProjectionMode());
     cam->SetClearMode(GetClearMode());
     cam->SetClearColor(GetClearColor());
-    cam->SetSkyBoxTexture(GetSpecularSkyBoxTexture());
+    cam->SetSkyBoxTexture(GetSkyBoxTexture());
 }
 
 #include "Bang/Image.h"
@@ -456,8 +465,8 @@ void Camera::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("FOVDegrees", GetFovDegrees());
     xmlInfo->Set("ClearMode", GetClearMode());
     xmlInfo->Set("ClearColor", GetClearColor());
-    xmlInfo->Set("SkyBoxTexture", (GetSpecularSkyBoxTexture() ?
-                                     GetSpecularSkyBoxTexture()->GetGUID() :
+    xmlInfo->Set("SkyBoxTexture", (GetSkyBoxTexture() ?
+                                     GetSkyBoxTexture()->GetGUID() :
                                      GUID::Empty()) );
 }
 

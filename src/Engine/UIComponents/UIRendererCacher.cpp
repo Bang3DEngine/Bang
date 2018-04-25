@@ -66,7 +66,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
             Array<GL::Attachment> prevDrawAttachments = GL::GetDrawBuffers();
             GL::Attachment prevReadAttachment         = GL::GetReadBuffer();
-            bool wasBlendEnabled                      = GL::IsEnabled(GL::Test::Blend);
+            bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::Blend);
 
             p_cacheFramebuffer->Bind();
 
@@ -105,7 +105,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
                                   prevBlendDstFactorColor,
                                   prevBlendSrcFactorAlpha,
                                   prevBlendDstFactorAlpha);
-            GL::SetEnabled(GL::Test::Blend, wasBlendEnabled);
+            GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled);
 
             m_needNewImageToSnapshot = false;
         }

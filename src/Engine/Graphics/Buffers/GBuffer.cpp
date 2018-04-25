@@ -72,9 +72,9 @@ void GBuffer::ApplyPassBlend(ShaderProgram *sp,
     GL::BlendFactor prevBlendDstFactorColor   = GL::GetBlendDstFactorColor();
     GL::BlendFactor prevBlendSrcFactorAlpha   = GL::GetBlendSrcFactorAlpha();
     GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
-    bool wasBlendEnabled                      = GL::IsEnabled(GL::Test::Blend);
+    bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::Blend);
 
-    GL::Enable(GL::Test::Blend);
+    GL::Enable(GL::Enablable::Blend);
     GL::BlendFunc(srcBlendFactor, dstBlendFactor);
     ApplyPass_(sp, mask);
 
@@ -83,7 +83,7 @@ void GBuffer::ApplyPassBlend(ShaderProgram *sp,
                           prevBlendDstFactorColor,
                           prevBlendSrcFactorAlpha,
                           prevBlendDstFactorAlpha);
-    GL::SetEnabled(GL::Test::Blend, wasBlendEnabled);
+    GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled);
 }
 
 

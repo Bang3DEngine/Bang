@@ -198,7 +198,7 @@ String SystemProcess::ReadFileDescriptor(FileDescriptor fd)
     char buffer[bufferSize];
     memset(buffer, 0, bufferSize);
     int readBytes = 0;
-    while ( (readBytes = read(fd, buffer, bufferSize)) > 0 )
+    while ( (readBytes = read(fd, buffer, bufferSize-1)) > 0 )
     {
         String readChunk(buffer);
         String::Iterator readChunkEnd = readChunk.Begin();

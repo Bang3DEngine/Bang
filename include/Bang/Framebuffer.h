@@ -26,10 +26,13 @@ public:
     virtual void SetAllDrawBuffers() const;
     void SetDrawBuffers(const Array<GL::Attachment> &attachments) const;
     void SetReadBuffer(GL::Attachment attachment) const;
-    void SetAttachmentTexture(Texture *tex, GL::Attachment attachment);
+    void SetAttachmentTexture(Texture *tex,
+                              GL::Attachment attachment,
+                              uint mipMapLevel = 0);
     void SetAttachmentTexture2D(Texture *tex,
                                 GL::TextureTarget texTarget,
-                                GL::Attachment attachment);
+                                GL::Attachment attachment,
+                                uint mipMapLevel = 0);
 
 
     void Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,

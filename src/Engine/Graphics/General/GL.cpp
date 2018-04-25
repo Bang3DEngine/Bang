@@ -27,9 +27,9 @@ GL* GL::s_activeGL = nullptr;
 GL::GL()
 {
     m_glUniforms = new GLUniforms();
-    GL::Enable(GL::Test::Depth);
-    GL::Enable(GL::Test::Stencil);
-    GL::Enable(GL::Test::CullFace);
+    GL::Enable(GL::Enablable::Depth);
+    GL::Enable(GL::Enablable::Stencil);
+    GL::Enable(GL::Enablable::CullFace);
 }
 
 GL::~GL()
@@ -278,83 +278,83 @@ void GL::BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
     }
 }
 
-void GL::Enablei (GL::Test glTest, int i)
+void GL::Enablei (GL::Enablable glEnablable, int i)
 {
-    if (!GL::IsEnabledi(glTest, i))
+    if (!GL::IsEnabledi(glEnablable, i))
     {
-        GL_CALL( glEnablei( GLCAST(glTest), i ) );
+        GL_CALL( glEnablei( GLCAST(glEnablable), i ) );
 
         GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabled_i_Tests[std::make_pair(glTest, i)] = true; }
+        if (gl) { gl->m_enabled_i_Vars[std::make_pair(glEnablable, i)] = true; }
     }
 }
-void GL::Disablei(GL::Test glTest, int i)
+void GL::Disablei(GL::Enablable glEnablable, int i)
 {
-    if (GL::IsEnabledi(glTest, i))
+    if (GL::IsEnabledi(glEnablable, i))
     {
-        GL_CALL( glDisablei( GLCAST(glTest), i ) );
+        GL_CALL( glDisablei( GLCAST(glEnablable), i ) );
 
         GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabled_i_Tests[std::make_pair(glTest, i)] = false; }
-    }
-}
-
-void GL::Enable(GL::Test glTest)
-{
-    if (!GL::IsEnabled(glTest))
-    {
-        GL_CALL( glEnable( GLCAST(glTest) ) );
-
-        GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabledTests[glTest] = true; }
+        if (gl) { gl->m_enabled_i_Vars[std::make_pair(glEnablable, i)] = false; }
     }
 }
 
-void GL::Disable(GL::Test glTest)
+void GL::Enable(GL::Enablable glEnablable)
 {
-    if (GL::IsEnabled(glTest))
+    if (!GL::IsEnabled(glEnablable))
     {
-        GL_CALL( glDisable( GLCAST(glTest) ) );
+        GL_CALL( glEnable( GLCAST(glEnablable) ) );
 
         GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabledTests[glTest] = false; }
+        if (gl) { gl->m_enabledVars[glEnablable] = true; }
     }
 }
 
-void GL::SetEnabled(GL::Test glTest, bool enabled)
+void GL::Disable(GL::Enablable glEnablable)
 {
-    if (enabled) { GL::Enable(glTest); } else { GL::Disable(glTest); }
+    if (GL::IsEnabled(glEnablable))
+    {
+        GL_CALL( glDisable( GLCAST(glEnablable) ) );
+
+        GL *gl = GL::GetActive();
+        if (gl) { gl->m_enabledVars[glEnablable] = false; }
+    }
 }
 
-void GL::SetEnabledi(GL::Test glTest, int index, bool enabled)
+void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
 {
-    if (enabled) { GL::Enablei(glTest, index); }
-    else { GL::Disablei(glTest, index); }
+    if (enabled) { GL::Enable(glEnablable); } else { GL::Disable(glEnablable); }
 }
 
-bool GL::IsEnabled(GL::Test glTest)
+void GL::SetEnabledi(GL::Enablable glEnablable, int index, bool enabled)
+{
+    if (enabled) { GL::Enablei(glEnablable, index); }
+    else { GL::Disablei(glEnablable, index); }
+}
+
+bool GL::IsEnabled(GL::Enablable glTest)
 {
     GL *gl = GL::GetActive();
     if (!gl) { return false; }
 
-    if (!gl->m_enabledTests.ContainsKey(glTest))
+    if (!gl->m_enabledVars.ContainsKey(glTest))
     {
-        gl->m_enabledTests.Add(glTest, false);
+        gl->m_enabledVars.Add(glTest, false);
     }
-    return gl->m_enabledTests.Get(glTest);
+    return gl->m_enabledVars.Get(glTest);
 }
 
-bool GL::IsEnabledi(GL::Test glTest, int index)
+bool GL::IsEnabledi(GL::Enablable glTest, int index)
 {
     GL *gl = GL::GetActive();
     if (!gl) { return false; }
 
-    std::pair<GL::Test, int> glTest_i = std::make_pair(glTest, index);
-    if (!gl->m_enabled_i_Tests.ContainsKey(glTest_i))
+    std::pair<GL::Enablable, int> glTest_i = std::make_pair(glTest, index);
+    if (!gl->m_enabled_i_Vars.ContainsKey(glTest_i))
     {
-        gl->m_enabled_i_Tests.Add(glTest_i, false);
+        gl->m_enabled_i_Vars.Add(glTest_i, false);
     }
-    return gl->m_enabled_i_Tests.Get(glTest_i);
+    return gl->m_enabled_i_Vars.Get(glTest_i);
 }
 
 void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
@@ -541,27 +541,29 @@ void GL::DeleteProgram(GLId programId)
 
 void GL::FramebufferTexture(GL::FramebufferTarget target,
                             GL::Attachment attachment,
-                            GLId textureId)
+                            GLId textureId,
+                            uint mipMapLevel)
 {
     GL_CALL(
     glFramebufferTexture(GLCAST(target),
                          GLCAST(attachment),
                          textureId,
-                         0);
+                         mipMapLevel);
             );
 }
 
 void GL::FramebufferTexture2D(GL::FramebufferTarget target,
                               GL::Attachment attachment,
                               GL::TextureTarget texTarget,
-                              GLId textureId)
+                              GLId textureId,
+                              uint mipMapLevel)
 {
     GL_CALL(
     glFramebufferTexture2D(GLCAST(target),
                            GLCAST(attachment),
                            GLCAST(texTarget),
                            textureId,
-                           0);
+                           mipMapLevel);
             );
 }
 
@@ -1107,7 +1109,7 @@ GL::BlendEquationE GL::GetBlendEquationAlpha()
 const AARecti& GL::GetScissorRect()
 {
     GL *gl = GL::GetActive();
-    if (gl && (!GL::IsEnabled(GL::Test::Scissor) ||
+    if (gl && (!GL::IsEnabled(GL::Enablable::Scissor) ||
                gl->m_scissorRectPx == AARecti(-1,-1,-1,-1)))
     {
         gl->m_scissorRectPx = GL::GetViewportRect();
@@ -1770,13 +1772,13 @@ void GL::PrintGLContext()
     // Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
     Debug_Peek(GL::GetColorMask());
     Debug_Peek(GL::GetLineWidth());
-    Debug_Peek(GL::IsEnabled(GL::Test::Alpha));
-    Debug_Peek(GL::IsEnabled(GL::Test::Blend));
-    Debug_Peek(GL::IsEnabled(GL::Test::CullFace));
-    Debug_Peek(GL::IsEnabled(GL::Test::Depth));
-    Debug_Peek(GL::IsEnabled(GL::Test::DepthClamp));
-    Debug_Peek(GL::IsEnabled(GL::Test::Scissor));
-    Debug_Peek(GL::IsEnabled(GL::Test::Stencil));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::Alpha));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::Blend));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::CullFace));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::Depth));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::DepthClamp));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::Scissor));
+    Debug_Peek(GL::IsEnabled(GL::Enablable::Stencil));
     Debug_Peek(GL::GetDrawBuffers());
     Debug_Peek(GL::GetReadBuffer());
     Debug_Peek(GL::GetDepthMask());

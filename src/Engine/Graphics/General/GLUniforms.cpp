@@ -56,11 +56,13 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->SetColor("B_Camera_ClearColor",
                  (cam ? cam->GetClearColor() : Color::Pink), false);
 
-    TextureCubeMap *sskt = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
-    TextureCubeMap *dskt = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
+    TextureCubeMap *skyBox    = cam ? cam->GetSkyBoxTexture()         : nullptr;
+    TextureCubeMap *sSkyBox   = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
+    TextureCubeMap *dSkyBox   = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
     TextureCubeMap *whiteCubeMap = IconManager::GetWhiteTextureCubeMap().Get();
-    sp->SetTextureCubeMap("B_SkyBoxSpecular", sskt ? sskt : whiteCubeMap,  false);
-    sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dskt ? dskt : whiteCubeMap,  false);
+    sp->SetTextureCubeMap("B_SkyBox",          skyBox ?  skyBox : whiteCubeMap,  false);
+    sp->SetTextureCubeMap("B_SkyBoxSpecular", sSkyBox ? sSkyBox : whiteCubeMap,  false);
+    sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dSkyBox ? dSkyBox : whiteCubeMap,  false);
     sp->SetBool("B_Camera_ClearMode", cam ? int(cam->GetClearMode()) : -1, false);
 
     ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();

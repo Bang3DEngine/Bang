@@ -18,7 +18,9 @@ void main()
                 vec3 rayDestPosWorld = B_ComputeWorldPosition(0.0f, uv);
                 vec3 camPosWorld = B_GetCameraPositionWorld();
                 vec3 rayDirWorld = (rayDestPosWorld - camPosWorld);
-                color = vec4(texture(B_SkyBoxSpecular, rayDirWorld).rgb, 1);
+                color = vec4(texture(B_SkyBox, rayDirWorld).rgb, 1);
+                // color = vec4(textureLod(B_SkyBoxSpecular, rayDirWorld, 1.5).rgb, 1);
+                // color = vec4(texture(B_SkyBoxDiffuse, rayDirWorld).rgb, 1);
             }
             break;
 

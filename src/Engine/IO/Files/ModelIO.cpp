@@ -191,6 +191,8 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
     aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
     aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
     aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);
+    aRoughness = Math::Clamp(aRoughness, 0.0f, 1.0f);
+
     Color albedoColor = AIColor3ToColor(aAlbedoColor);
 
     aiString aAlbedoTexturePath;

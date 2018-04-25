@@ -103,6 +103,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
         GetFont()->GetFontAtlas(GetTextSize()); // Load atlas
         Vector2 minUv = GetFont()->GetCharMinUv(GetTextSize(), cr.character);
         Vector2 maxUv = GetFont()->GetCharMaxUv(GetTextSize(), cr.character);
+        // std::swap(minUv.y, maxUv.y);
 
         AARect charRectViewportNDC(minViewportNDC, maxViewportNDC);
         AARect charRectLocalNDC(

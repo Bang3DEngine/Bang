@@ -36,7 +36,7 @@ Gizmos::Gizmos()
     m_gizmosGo->SetName("Gizmos");
 
     p_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube());
-    p_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetPlane());
+    p_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
     p_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere());
 
     m_lineRenderer = m_gizmosGo->AddComponent<LineRenderer>();
@@ -236,6 +236,8 @@ void Gizmos::RenderIcon(Texture2D *texture,
            Vector3 pos = g->m_gizmosGo->GetTransform()->GetPosition();
            distScale = Vector3::Distance(camPos, pos);
         }
+        distScale *= 0.5f;
+
         Vector3 scale = g->m_gizmosGo->GetTransform()->GetScale();
         g->m_gizmosGo->GetTransform()->SetScale(distScale * scale * 8.0f);
 

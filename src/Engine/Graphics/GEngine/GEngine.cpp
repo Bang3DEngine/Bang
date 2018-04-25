@@ -148,8 +148,8 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPass(go, RenderPass::ScenePostProcess); // Render scene postprocess
 
     // GBuffer Canvas rendering
-    gbuffer->SetAllDrawBuffers();
-    GL::Enablei(GL::Test::Blend, 0);
+    gbuffer->SetColorDrawBuffer();
+    GL::Enable(GL::Test::Blend);
     GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
@@ -157,6 +157,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPass(go, RenderPass::Canvas);
     gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::CanvasPostProcess);
+    GL::Disable(GL::Test::Blend);
 
     // GBuffer Overlay rendering
     gbuffer->SetAllDrawBuffers();
@@ -167,7 +168,6 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
     ApplyStenciledDeferredLightsToGBuffer(go, camera);
     RenderWithPass(go, RenderPass::OverlayPostProcess);
-    GL::Disablei(GL::Test::Blend, 0);
 }
 
 void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)

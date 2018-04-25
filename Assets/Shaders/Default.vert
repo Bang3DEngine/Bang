@@ -15,10 +15,12 @@ out mat3 B_TBN;
 
 void main()
 {
+    vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
+
     B_FIn_Position    = ( B_Model * vec4(B_VIn_Position, 1) ).xyz;
     B_FIn_Normal      = normalize( (B_Normal * vec4(B_VIn_Normal, 0)).xyz );
-    B_FIn_AlbedoUv    = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
-    B_FIn_NormalMapUv = B_VIn_Uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
+    B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
+    B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
     gl_Position       = B_PVM * vec4(B_VIn_Position, 1);
 
 
@@ -29,7 +31,7 @@ void main()
         vec3 T = (B_FIn_Tangent);
         vec3 N = (B_FIn_Normal);
         vec3 B = cross(N, T);
-        if (dot(cross(N, T), B) < 0.0) { T = T * -1.0; } // Ensure RH coord. system
+        if (dot(cross(N, T), B) < 0.0) { T *= -1; } // Ensure RH coord. system
         B_TBN = mat3(T, B, N);
     }
     else

@@ -11,6 +11,6 @@ out vec2 B_FIn_AlbedoUv;
 void main()
 {
     vec4 v = B_PVM * vec4(B_VIn_Position, 1);
-    B_FIn_AlbedoUv = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
+    B_FIn_AlbedoUv = B_VIn_Uv;
     gl_Position    = v;
 }

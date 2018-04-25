@@ -49,16 +49,14 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
     if (pid == 0) // Child process
     {
         // Set up parent to child(this) input
+        close(m_parentToChildFD[WRITE]);    // We won't write to ourselves
+        close(m_childToParentOutFD[READ]);  // We won't read from parent
+        close(m_childToParentErrFD[READ]);  // We won't read from parent
+
         // Input from stdin now will go to our pipe m_parentToChildFD[READ]
-        close(m_parentToChildFD[WRITE]);
-        dup2(m_parentToChildFD[READ],  Channel::StandardIn);
-
-        // Set up child(this) to parent output && err
         // stdout/stderr now will go to our pipe m_childToParentXXXFD[WRITE]
-        close(m_childToParentOutFD[READ]);
+        dup2(m_parentToChildFD[READ],     Channel::StandardIn);
         dup2(m_childToParentOutFD[WRITE], Channel::StandardOut);
-
-        close(m_childToParentErrFD[READ]);
         dup2(m_childToParentErrFD[WRITE], Channel::StandardError);
 
         // Execute the command, and its in/out will come to our pipes
@@ -66,7 +64,7 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
         String fc = fullCommand.Split<Array>(' ').Back().Replace("/", "_").Replace(" ", "_");
 
         // EXECUTE!
-        execl("/bin/sh", "sh", "-c", fullCommand.ToCString(), NULL);
+        execl("/bin/sh", "sh", "-c", fullCommand.ToCString(), nullptr);
     }
     else if (pid != -1) // Parent process
     {
@@ -148,12 +146,9 @@ bool SystemProcess::WaitUntilFinished(float seconds)
 
 void SystemProcess::Close()
 {
-    // Close channels
+    // Close non-closed channels
     close(m_childToParentOutFD[READ]);
-    close(m_childToParentOutFD[WRITE]);
     close(m_childToParentErrFD[READ]);
-    close(m_childToParentErrFD[WRITE]);
-    close(m_parentToChildFD[READ]);
     close(m_parentToChildFD[WRITE]);
 
     // Restore stdin / stdout / stderr

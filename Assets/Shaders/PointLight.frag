@@ -97,7 +97,7 @@ void main()
     }
     else
     {
-        discard;
+        B_GIn_Color = vec4(0);
     }
 }
 

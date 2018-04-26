@@ -197,22 +197,20 @@ void Material::Bind() const
     }
     else
     {
-        Texture2D *whiteTex = IconManager::GetWhiteTexture().Get();
-        sp->SetTexture2D("B_AlbedoTexture",  whiteTex, false);
-        sp->SetFloat("B_AlphaCutoff",        -1.0f,    false);
-        sp->SetBool("B_HasAlbedoTexture",    false,    false);
+        sp->SetTexture2D("B_AlbedoTexture",  nullptr, false);
+        sp->SetFloat("B_AlphaCutoff",        -1.0f,   false);
+        sp->SetBool("B_HasAlbedoTexture",    false,   false);
     }
 
     if (GetNormalMapTexture())
     {
-        sp->SetTexture2D("B_NormalMapTexture",  GetNormalMapTexture(),    false);
-        sp->SetBool("B_HasNormalMapTexture",    true,                     false);
+        sp->SetTexture2D("B_NormalMapTexture",  GetNormalMapTexture(), false);
+        sp->SetBool("B_HasNormalMapTexture",    true,                  false);
     }
     else
     {
-        Texture2D *whiteTex = IconManager::GetWhiteTexture().Get();
-        sp->SetTexture2D("B_NormalMapTexture",    whiteTex, false);
-        sp->SetBool("B_HasNormalMapTexture",      false,    false);
+        sp->SetTexture2D("B_NormalMapTexture", nullptr, false);
+        sp->SetBool("B_HasNormalMapTexture",   false,   false);
     }
 }
 

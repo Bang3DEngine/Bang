@@ -133,6 +133,8 @@ public:
     // Helper propagate functions
     template<class T>
     static bool CanEventBePropagated(const T& x);
+    static bool CanEventBePropagatedToGameObject(const GameObject *go);
+    static bool CanEventBePropagatedToComponent(const Component *comp);
 
     // Propagation to a single non-event listener
     template<class TFunction, class T, class... Args>

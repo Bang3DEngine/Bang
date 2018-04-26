@@ -43,10 +43,10 @@ TextureUnitManager::BindTextureToUnit(Texture *texture)
 
         // Bind to texture unit
         GL::ActiveTexture(GL_TEXTURE0 + freeUnit);
-        GL::UnBind(GL::BindTarget::Texture1D);
-        GL::UnBind(GL::BindTarget::Texture2D);
-        GL::UnBind(GL::BindTarget::Texture3D);
-        GL::UnBind(GL::BindTarget::TextureCubeMap);
+        // GL::UnBind(GL::BindTarget::Texture1D);
+        // GL::UnBind(GL::BindTarget::Texture2D);
+        // GL::UnBind(GL::BindTarget::Texture3D);
+        // GL::UnBind(GL::BindTarget::TextureCubeMap);
         texture->Bind();
 
         // The last one is the void unit, so that subsequent binds for some other

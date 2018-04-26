@@ -594,9 +594,29 @@ Sphere GameObject::GetBoundingSphere(bool includeChildren) const
     return Sphere::FromBox(GetAABBox(includeChildren));
 }
 
+bool GameObject::CanEventBePropagatedToGameObject(const GameObject *go)
+{
+    return go->IsEnabled() && go->IsReceivingEvents();
+}
+
+bool GameObject::CanEventBePropagatedToComponent(const Component *comp)
+{
+    return comp->IsEnabled() && comp->IsReceivingEvents();
+}
+
 template<class TFunction, class... Args>
 void GameObject::PropagateToChildren(const TFunction &func, const Args&... args)
 {
+    for (GameObject *child : m_children)
+    {
+        if (CanEventBePropagatedToGameObject(child))
+        {
+            (child->*func)(args...);
+            // func(comp, args...);
+            // GameObject::Propagate(func, comp, args...);
+        }
+    }
+    /*
     m_currentChildrenIterators.push(m_children.Begin());
     while (m_currentChildrenIterators.top() != m_children.End())
     {
@@ -606,11 +626,22 @@ void GameObject::PropagateToChildren(const TFunction &func, const Args&... args)
         if (m_increaseChildrenIterator) { ++m_currentChildrenIterators.top(); }
     }
     m_currentChildrenIterators.pop();
+    */
 }
 
 template<class TFunction, class... Args>
 void GameObject::PropagateToComponents(const TFunction &func, const Args&... args)
 {
+    for (Component *comp : m_components)
+    {
+        if (CanEventBePropagatedToComponent(comp))
+        {
+            (comp->*func)(args...);
+            // func(comp, args...);
+            // GameObject::Propagate(func, comp, args...);
+        }
+    }
+    /*
     m_currentComponentsIterators.push(m_components.Begin());
     while (m_currentComponentsIterators.top() != m_components.End())
     {
@@ -620,6 +651,7 @@ void GameObject::PropagateToComponents(const TFunction &func, const Args&... arg
         if (m_increaseComponentsIterator) { ++m_currentComponentsIterators.top(); }
     }
     m_currentComponentsIterators.pop();
+    */
 }
 
 void GameObject::CloneInto(ICloneable *clone) const

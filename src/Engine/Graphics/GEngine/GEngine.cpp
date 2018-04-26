@@ -60,7 +60,6 @@ void GEngine::Render(GameObject *go, Camera *camera)
     if (!go) { return; }
 
     go->BeforeRender();
-
     SetActiveRenderingCamera(camera);
     RenderShadowMaps(go);
     SetActiveRenderingCamera(nullptr);

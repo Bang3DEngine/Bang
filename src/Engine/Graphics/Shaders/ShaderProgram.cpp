@@ -501,7 +501,7 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
         else { ++it; }
     }
 
-    // Set default textures to those removed entries
+    // Set default textures to those removed entries.
     for (const auto &pair : entriesToSetToDefaultTex)
     {
         const String &name = pair.first;

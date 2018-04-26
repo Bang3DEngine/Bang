@@ -1,6 +1,7 @@
 #include "Bang/Window.h"
 
 #include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL.h>
 
 #include "Bang/GL.h"
 #include "Bang/Debug.h"
@@ -43,21 +44,40 @@ void Window::Create(uint flags)
 {
     Vector2i winSize(512);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-                        SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    constexpr int NumVersionsToTry = 8;
+    int VersionsMajors[NumVersionsToTry] = {4, 4, 4, 4, 3, 3, 3};
+    int VersionsMinors[NumVersionsToTry] = {5, 4, 3, 2, 3, 2, 1};
+    for (int i = 0; i < NumVersionsToTry; ++i)
+    {
+        int vMajor = VersionsMajors[i];
+        int vMinor = VersionsMinors[i];
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                            SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, vMajor);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, vMinor);
+        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
+        SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-    m_sdlWindow = SDL_CreateWindow("Bang",
-                                   SDL_WINDOWPOS_CENTERED,
-                                   SDL_WINDOWPOS_CENTERED,
-                                   winSize.x,
-                                   winSize.y,
-                                   flags);
+        m_sdlWindow = SDL_CreateWindow("Bang",
+                                       SDL_WINDOWPOS_CENTERED,
+                                       SDL_WINDOWPOS_CENTERED,
+                                       winSize.x,
+                                       winSize.y,
+                                       flags);
 
-    m_sdlGLContext = SDL_GL_CreateContext(GetSDLWindow());
+        m_sdlGLContext = SDL_GL_CreateContext(GetSDLWindow());
+        if (m_sdlGLContext != nullptr) { break; }
+        else
+        {
+            SDL_DestroyWindow(m_sdlWindow);
+        }
+    }
+
     Window::SetActive(this);
 
     SetMinSize(1, 1);
@@ -352,6 +372,20 @@ bool Window::IsBlockedByChildren() const
 bool Window::HasFlags(uint flags) const
 {
     return (SDL_GetWindowFlags(GetSDLWindow()) & flags) > 0;
+}
+
+int Window::GetGLMajorVersion() const
+{
+    int v;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &v);
+    return v;
+}
+
+int Window::GetGLMinorVersion() const
+{
+    int v;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &v);
+    return v;
 }
 
 int Window::GetHeightS()

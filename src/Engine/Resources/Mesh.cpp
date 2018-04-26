@@ -154,12 +154,14 @@ void Mesh::LoadAll(const Array<VertexId> &vertexIndices,
 
 void Mesh::BindPositionsVBOToLocation(int positionsVBOLocation)
 {
-    m_vao->AddVBO(m_vertexPositionsPoolVBO, positionsVBOLocation, 3);
+    m_vao->AddVBO(m_vertexPositionsPoolVBO, positionsVBOLocation, 3,
+                  GL::DataType::Float);
 }
 
 void Mesh::BindNormalsVBOToLocation(int normalsVBOLocation)
 {
-    m_vao->AddVBO(m_vertexNormalsPoolVBO, normalsVBOLocation, 3);
+    m_vao->AddVBO(m_vertexNormalsPoolVBO, normalsVBOLocation, 3,
+                  GL::DataType::Float, true);
 }
 
 void Mesh::BindUvsVBOToLocation(int uvsVBOLocation)

@@ -68,6 +68,8 @@ public:
     Vector2i GetInsidePosition() const;
     bool IsBlockedByChildren() const;
     bool HasFlags(uint flags) const;
+    int GetGLMajorVersion() const;
+    int GetGLMinorVersion() const;
 
     static float GetAspectRatioS();
     static int GetHeightS();

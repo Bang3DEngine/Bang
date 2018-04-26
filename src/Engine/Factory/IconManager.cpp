@@ -66,8 +66,9 @@ RH<Texture2D> IconManager::GetIconTexture(const String &filename,
     // (this is why it must go before Load<Texture2D>(), and not after)
     Resources::SetPermanent(path, true);
 
+    bool initialized = (Resources::GetCached<Texture2D>(path) != nullptr);
     RH<Texture2D> iconTex = Resources::Load<Texture2D>(path);
-    if (iconTex)
+    if (iconTex && !initialized)
     {
         GLId prevTexID = GL::GetBoundId(iconTex.Get()->GetGLBindTarget());
 

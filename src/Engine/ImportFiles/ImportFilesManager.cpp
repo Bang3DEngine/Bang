@@ -142,6 +142,12 @@ GUID ImportFilesManager::GetGUIDFromFilepath(const Path& filepath)
 
 GUID ImportFilesManager::GetGUIDFromImportFilepath(const Path& importFilepath)
 {
+    ImportFilesManager *ifm = ImportFilesManager::GetInstance();
+    if (ifm->m_importFilepathToGUID.ContainsKey(importFilepath))
+    {
+        return ifm->m_importFilepathToGUID.Get(importFilepath);
+    }
+
     XMLNode xmlNode = XMLNodeReader::FromFile(importFilepath);
     return xmlNode.Get<GUID>("GUID");
 }

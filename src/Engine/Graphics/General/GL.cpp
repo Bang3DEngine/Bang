@@ -1196,7 +1196,6 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
 {
     GL *gl = GL::GetActive();
 
-    GL_ClearError();
     switch (bindTarget)
     {
         case GL::BindTarget::Texture1D:
@@ -1221,7 +1220,6 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             GL_CALL( glUseProgram(glId) );
         break;
         case GL::BindTarget::Framebuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl)
             {
                 gl->m_boundDrawFramebufferId = gl->m_boundReadFramebufferId = glId;
@@ -1229,12 +1227,10 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
         case GL::BindTarget::DrawFramebuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundDrawFramebufferId = glId; }
             GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
         case GL::BindTarget::ReadFramebuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundReadFramebufferId = glId; }
             GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
         break;
@@ -1244,24 +1240,20 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             GL_CALL( glBindVertexArray(glId) );
         break;
         case GL::BindTarget::ElementArrayBuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundVBOElementsBufferId = glId; }
             GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
         case GL::BindTarget::ArrayBuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundVBOArrayBufferId = glId; }
             GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
         case GL::BindTarget::UniformBuffer:
-            if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundUniformBufferId = glId; }
             GL_CALL( GL::BindBuffer(bindTarget, glId) );
         break;
 
         default: ASSERT(false); break;
     }
-    GL_CheckError();
 }
 
 void GL::UnBind(const GLObject *bindable)

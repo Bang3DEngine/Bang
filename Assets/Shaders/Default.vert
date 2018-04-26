@@ -17,7 +17,7 @@ void main()
 {
     vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
 
-    B_FIn_Position    = ( B_Model * vec4(B_VIn_Position, 1) ).xyz;
+    B_FIn_Position    = (B_Model  * vec4(B_VIn_Position, 1)).xyz;
     B_FIn_Normal      = (B_Normal * vec4(B_VIn_Normal, 0)).xyz;
     B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
     B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
@@ -36,7 +36,7 @@ void main()
     }
     else
     {
-        B_FIn_Tangent = vec3(0);
-        B_TBN = mat3(0);
+        // B_FIn_Tangent = vec3(0);
+        // B_TBN = mat3(0);
     }
 }

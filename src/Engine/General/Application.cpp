@@ -113,7 +113,7 @@ int Application::MainLoop()
 bool Application::MainLoopIteration()
 {
     bool exit = GetWindowManager()->MainLoopIteration();
-    Thread::SleepCurrentThread(0.01f);
+    // Thread::SleepCurrentThread(0.0f);
     return exit;
 }
 

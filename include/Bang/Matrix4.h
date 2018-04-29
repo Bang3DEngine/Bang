@@ -38,7 +38,8 @@ public:
     Vector3 TransformedPoint(const Vector3 &point) const;
     Vector3 TransformedVector(const Vector3 &vector) const;
 
-    Matrix4G<T> Inversed() const;
+    Matrix4G<T> Inversed(float invertiblePrecision = 0.0001f,
+                         bool *isInvertible = nullptr) const;
     Matrix4G<T> Transposed() const;
 
     T *Data();
@@ -78,10 +79,21 @@ template<class T>
 bool operator!=(const Matrix4G<T> &m1, const Matrix4G<T>& m2);
 
 template<class T>
-Matrix4G<T> operator*(const Matrix4G<T> &m1, const Matrix4G<T>& m2);
-
+Matrix4G<T> operator+(const Matrix4G<T>& m1, const Matrix4G<T>& rhs);
 template<class T>
-Vector4G<T> operator*(const Matrix4G<T> &m, const Vector4G<T> &v);
+Matrix4G<T> operator-(const Matrix4G<T>& m1, const Matrix4G<T>& rhs);
+template<class T>
+Matrix4G<T> operator-(const Matrix4G<T>& m);
+template<class T>
+Matrix4G<T> operator*(const Matrix4G<T>& m1, const Matrix4G<T>& rhs);
+template<class T>
+Vector4G<T> operator*(const Matrix4G<T>& m, const Vector4G<T>& v);
+template<class T>
+void operator*=(Matrix4G<T>& m, const Matrix4G<T>& rhs);
+template<class T>
+void operator+=(Matrix4G<T>& m, const Matrix4G<T>& rhs);
+template<class T>
+void operator-=(Matrix4G<T>& m, const Matrix4G<T>& rhs);
 
 NAMESPACE_BANG_END
 

@@ -178,7 +178,8 @@ void Mesh::CalculateLODs()
 {
     if (!m_areLodsValid)
     {
-        m_lodMeshes = MeshSimplifier::GetAllMeshLODs( this );
+        m_lodMeshes = MeshSimplifier::GetAllMeshLODs(this,
+                                 MeshSimplifier::Method::QuadricErrorMetrics);
         m_areLodsValid = true;
     }
 }
@@ -234,6 +235,25 @@ const Array<Vector3> &Mesh::GetPositionsPool() const { return m_positionsPool; }
 const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
 const Array<Vector2> &Mesh::GetUvsPool() const { return m_uvsPool; }
 const Array<Vector3> &Mesh::GetTangentsPool() const { return m_tangentsPool; }
+
+Map<Mesh::VertexId, Array<Mesh::TriangleId> >
+Mesh::GetVertexIndicesToTriangleIndices() const
+{
+    Map<VertexId, Array<Mesh::TriangleId>> vertexIndicesToTriIndices;
+    for (int ti = 0; ti < GetNumTriangles(); ++ti)
+    {
+        std::array<Mesh::VertexId, 3> tiVerticesIds = GetTriangleVertexIndices(ti);
+        for (Mesh::VertexId tivi : tiVerticesIds)
+        {
+            if (!vertexIndicesToTriIndices.ContainsKey(tivi))
+            {
+                vertexIndicesToTriIndices.Add(tivi, {});
+            }
+            vertexIndicesToTriIndices.Get(tivi).PushBack(ti);
+        }
+    }
+    return vertexIndicesToTriIndices;
+}
 
 void Mesh::CloneInto(ICloneable *clone) const
 {

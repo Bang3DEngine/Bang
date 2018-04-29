@@ -20,6 +20,7 @@ class Mesh : public Asset,
     ASSET(Mesh)
 
 public:
+    using TriangleId = uint;
     using VertexId = uint;
 
     static constexpr uint DefaultPositionsVBOLocation = 0;
@@ -75,6 +76,8 @@ public:
     const Array<Vector2>& GetUvsPool() const;
     const Array<Vector3>& GetTangentsPool() const;
     const Path &GetModelFilepath() const;
+
+    Map<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

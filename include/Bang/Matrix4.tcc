@@ -38,9 +38,9 @@ Matrix4G<T>::Matrix4G(const Vector4G<T> &col0,
 
 template<class T>
 Matrix4G<T>::Matrix4G(const T& m00, const T& m01, const T& m02, const T& m03,
-         const T& m10, const T& m11, const T& m12, const T& m13,
-         const T& m20, const T& m21, const T& m22, const T& m23,
-         const T& m30, const T& m31, const T& m32, const T& m33)
+                      const T& m10, const T& m11, const T& m12, const T& m13,
+                      const T& m20, const T& m21, const T& m22, const T& m23,
+                      const T& m30, const T& m31, const T& m32, const T& m33)
 {
     c0 = Vector4G<T>(m00, m10, m20, m30);
     c1 = Vector4G<T>(m01, m11, m21, m31);
@@ -80,7 +80,8 @@ Vector3 Matrix4G<T>::TransformedVector(const Vector3 &vector) const
 }
 
 template<class T>
-Matrix4G<T> Matrix4G<T>::Inversed() const
+Matrix4G<T> Matrix4G<T>::Inversed(float invertiblePrecision,
+                                  bool *isInvertible) const
 {
     Matrix4G<T> inv;
     const Matrix4G<T> &m = *this;
@@ -199,12 +200,17 @@ Matrix4G<T> Matrix4G<T>::Inversed() const
 
     float det = m.c0.x * inv.c0.x + m.c0.y * inv.c1.x + m.c0.z * inv.c2.x +
                 m.c0.w * inv.c3.x;
-    if (det == 0) return *this;
+    if (Math::Abs(det) < invertiblePrecision)
+    {
+        if (isInvertible) { *isInvertible = false; }
+        return *this;
+    }
+    else if (isInvertible) { *isInvertible = true; }
 
-    inv.c0 *= Cast<T>(1) / det;
-    inv.c1 *= Cast<T>(1) / det;
-    inv.c2 *= Cast<T>(1) / det;
-    inv.c3 *= Cast<T>(1) / det;
+    inv.c0 /= det;
+    inv.c1 /= det;
+    inv.c2 /= det;
+    inv.c3 /= det;
     return inv;
 }
 
@@ -465,13 +471,28 @@ bool operator==(const Matrix4G<T> &m1, const Matrix4G<T>& m2)
 }
 
 template<class T>
-bool operator!=(const Matrix4G<T> &m1, const Matrix4G<T>& m2)
+bool operator!=(const Matrix4G<T>& m1, const Matrix4G<T>& m2)
 {
     return !(m1 == m2);
 }
 
 template<class T>
-Matrix4G<T> operator*(const Matrix4G<T> &m1, const Matrix4G<T>& m2)
+Matrix4G<T> operator+(const Matrix4G<T>& m1, const Matrix4G<T>& m2)
+{
+    return Matrix4G<T>(m1[0]+m2[0], m1[1]+m2[1], m1[2]+m2[2], m1[3]+m2[3]);
+}
+template<class T>
+Matrix4G<T> operator-(const Matrix4G<T>& m1, const Matrix4G<T>& m2)
+{
+    return Matrix4G<T>(m1[0]-m2[0], m1[1]-m2[1], m1[2]-m2[2], m1[3]-m2[3]);
+}
+template<class T>
+Matrix4G<T> operator-(const Matrix4G<T>& m)
+{
+    return Matrix4G<T>(-m[0], -m[1], -m[2], -m[3]);
+}
+template<class T>
+Matrix4G<T> operator*(const Matrix4G<T>& m1, const Matrix4G<T>& m2)
 {
     Matrix4G<T> m;
     m.c0 = Vector4G<T>((m1.c0.x * m2.c0.x) + (m1.c1.x * m2.c0.y) + (m1.c2.x * m2.c0.z) + (m1.c3.x * m2.c0.w),
@@ -495,17 +516,20 @@ Matrix4G<T> operator*(const Matrix4G<T> &m1, const Matrix4G<T>& m2)
                        (m1.c0.w * m2.c3.x) + (m1.c1.w * m2.c3.y) + (m1.c2.w * m2.c3.z) + (m1.c3.w * m2.c3.w));
     return m;
 }
-
-
 template<class T>
-Vector4G<T> operator*(const Matrix4G<T> &m, const Vector4G<T> &v)
+Vector4G<T> operator*(const Matrix4G<T>& m, const Vector4G<T>& v)
 {
     return Vector4G<T>((m.c0.x * v.x) + (m.c1.x * v.y) + (m.c2.x * v.z) + (m.c3.x * v.w),
                        (m.c0.y * v.x) + (m.c1.y * v.y) + (m.c2.y * v.z) + (m.c3.y * v.w),
                        (m.c0.z * v.x) + (m.c1.z * v.y) + (m.c2.z * v.z) + (m.c3.z * v.w),
                        (m.c0.w * v.x) + (m.c1.w * v.y) + (m.c2.w * v.z) + (m.c3.w * v.w));
 }
-
+template<class T>
+void operator*=(Matrix4G<T>& m, const Matrix4G<T>& rhs) { m = m * rhs; }
+template<class T>
+void operator+=(Matrix4G<T>& m, const Matrix4G<T>& rhs) { m = m + rhs; }
+template<class T>
+void operator-=(Matrix4G<T>& m, const Matrix4G<T>& rhs) { m = m - rhs; }
 NAMESPACE_BANG_END
 
 #endif // MATRIX4_TCC

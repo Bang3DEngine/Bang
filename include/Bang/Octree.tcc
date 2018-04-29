@@ -32,6 +32,7 @@ void Octree<T, ClassifyFunctor>::SetAABox(const AABox &aabox)
     m_leafElements.Clear();
 }
 
+#include "DebugRenderer.h"
 template<class T, class ClassifyFunctor>
 uint Octree<T, ClassifyFunctor>::Fill(const Array<T> &elements, uint maxDepth)
 {

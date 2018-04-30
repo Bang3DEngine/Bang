@@ -4,7 +4,7 @@
 #include "Bang/Paths.h"
 #include "Bang/Cursor.h"
 #include "Bang/Texture2D.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/GameObject.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIInputNumber.h"
@@ -175,7 +175,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
     guideRT->SetMarginTop(-1);
 
     UIImageRenderer *handleRenderer = GameObjectFactory::CreateUIImage(slider->m_idleColor);
-    handleRenderer->SetImageTexture( IconManager::GetCircleIcon().Get() );
+    handleRenderer->SetImageTexture( TextureFactory::GetCircleIcon().Get() );
     RectTransform *handleRT = handleRenderer->GetGameObject()->GetRectTransform();
     handleRT->SetAnchors(Vector2::Zero);
     handleRT->SetMargins(-6);

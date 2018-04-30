@@ -13,7 +13,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/GLUniforms.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureUnitManager.h"
 
@@ -508,11 +508,11 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
         Texture *tex = pair.second;
         if (DCAST<Texture2D*>(tex))
         {
-            SetTexture2D(name, IconManager::GetWhiteTexture().Get(), false);
+            SetTexture2D(name, TextureFactory::GetWhiteTexture().Get(), false);
         }
         else if (DCAST<TextureCubeMap*>(tex))
         {
-            SetTextureCubeMap(name, IconManager::GetWhiteTextureCubeMap().Get(),
+            SetTextureCubeMap(name, TextureFactory::GetWhiteTextureCubeMap().Get(),
                               false);
         }
     }

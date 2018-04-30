@@ -4,7 +4,7 @@
 #include "Bang/Settings.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgram.h"
 
 USING_NAMESPACE_BANG

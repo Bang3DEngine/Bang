@@ -4,7 +4,7 @@
 #include "Bang/Input.h"
 #include "Bang/UIButton.h"
 #include "Bang/UICanvas.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
@@ -340,7 +340,7 @@ UITreeItemContainer::UITreeItemContainer()
                                                        Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 
-    RH<Texture2D> iconTex = IconManager::GetDownArrowIcon();
+    RH<Texture2D> iconTex = TextureFactory::GetDownArrowIcon();
     p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex.Get());
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex.Get(), Vector2i(8), 0);
@@ -367,8 +367,8 @@ void UITreeItemContainer::SetCollapsed(bool collapsed)
     if (collapsed != IsCollapsed())
     {
         m_collapsed = collapsed;
-        RH<Texture2D> iconTex = IsCollapsed() ? IconManager::GetRightArrowIcon() :
-                                                  IconManager::GetDownArrowIcon();
+        RH<Texture2D> iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon() :
+                                                  TextureFactory::GetDownArrowIcon();
         GetCollapseButton()->SetIconTexture(iconTex.Get());
     }
 }

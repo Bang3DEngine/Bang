@@ -10,7 +10,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UITextRenderer.h"
@@ -170,7 +170,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     bg->SetTint(Color::White);
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
-    downArrowIcon->SetImageTexture( IconManager::GetDownArrowIcon().Get() );
+    downArrowIcon->SetImageTexture( TextureFactory::GetDownArrowIcon().Get() );
     downArrowIcon->SetTint( Color::Black );
 
     GameObject *downArrowIconGo = downArrowIcon->GetGameObject();

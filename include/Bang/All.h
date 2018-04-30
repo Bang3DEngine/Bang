@@ -70,7 +70,7 @@
 #include "Bang/IChildrenListener.h"
 #include "Bang/ICloneable.h"
 #include "Bang/IComponentListener.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/IDestroyListener.h"
 #include "Bang/IEventEmitter.h"
 #include "Bang/IEventEmitter.tcc"

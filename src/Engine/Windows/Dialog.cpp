@@ -13,7 +13,7 @@
 #include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIFileList.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UIInputText.h"
 #include "Bang/Application.h"
 #include "Bang/SceneManager.h"
@@ -506,7 +506,7 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();
     iconLE->SetMinSize( Vector2i(45) );
     UIImageRenderer *icon = iconGo->AddComponent<UIImageRenderer>();
-    icon->SetImageTexture( IconManager::GetWarningIcon().Get() );
+    icon->SetImageTexture( TextureFactory::GetWarningIcon().Get() );
     icon->GetImageTexture()->SetFilterMode( GL::FilterMode::Bilinear );
 
     GameObject *hLayoutGo = GameObjectFactory::CreateUIGameObjectNamed("HL");

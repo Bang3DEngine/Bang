@@ -7,7 +7,7 @@
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 

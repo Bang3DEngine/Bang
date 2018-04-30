@@ -18,7 +18,7 @@
 #include "Bang/Transform.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShadowMapper.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/DebugRenderer.h"
@@ -294,7 +294,7 @@ void DirectionalLight::OnRender(RenderPass rp)
         Gizmos::SetSelectable(GetGameObject());
         Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
         Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( IconManager::GetSunIcon().Get(), true );
+        Gizmos::RenderIcon( TextureFactory::GetSunIcon().Get(), true );
     }
 }
 

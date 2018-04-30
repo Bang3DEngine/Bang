@@ -11,7 +11,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/SceneManager.h"

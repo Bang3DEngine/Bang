@@ -13,7 +13,7 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ShaderProgramFactory.h"
 
@@ -78,7 +78,7 @@ void PointLight::OnRender(RenderPass rp)
         Gizmos::SetSelectable(GetGameObject());
         Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
         Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( IconManager::GetLightBulbIcon().Get(), true );
+        Gizmos::RenderIcon( TextureFactory::GetLightBulbIcon().Get(), true );
     }
 }
 

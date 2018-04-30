@@ -1,5 +1,5 @@
-#ifndef ICONMANAGER_H
-#define ICONMANAGER_H
+#ifndef TEXTUREFACTORY_H
+#define TEXTUREFACTORY_H
 
 #include "Bang/ResourceHandle.h"
 
@@ -8,7 +8,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Texture2D;
 FORWARD class TextureCubeMap;
 
-class IconManager
+class TextureFactory
 {
 public:
     static RH<Texture2D> GetBangB64Icon();
@@ -31,13 +31,13 @@ public:
     static RH<Texture2D> GetIconTexture(const String &filename, const Path &dir);
 
 private:
-    IconManager() = default;
-    virtual ~IconManager() = default;
+    TextureFactory() = default;
+    virtual ~TextureFactory() = default;
 
     static RH<Texture2D> GetIconTexture(const String &filename);
 };
 
 NAMESPACE_BANG_END
 
-#endif // ICONMANAGER_H
+#endif // TEXTUREFACTORY_H
 

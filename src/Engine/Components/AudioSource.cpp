@@ -9,7 +9,7 @@
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/AudioManager.h"
 
 USING_NAMESPACE_BANG
@@ -41,7 +41,7 @@ void AudioSource::OnRender(RenderPass rp)
         Gizmos::SetSelectable(GetGameObject());
         Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
         Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( IconManager::GetAudioIcon().Get(), true );
+        Gizmos::RenderIcon( TextureFactory::GetAudioIcon().Get(), true );
     }
 }
 

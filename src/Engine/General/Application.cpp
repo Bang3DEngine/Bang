@@ -16,7 +16,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
 #include "Bang/SceneManager.h"
@@ -73,7 +73,7 @@ Application::~Application()
 void Application::InitBeforeLoop()
 {
     GetWindowManager()->GetTopWindow()->SetIcon(
-                IconManager::GetBangB512Icon().Get()->GetResourceFilepath() );
+                TextureFactory::GetBangB512Icon().Get()->GetResourceFilepath() );
 
     #ifdef GPROF
     Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");

@@ -3,7 +3,7 @@
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
 #include "Bang/MaterialFactory.h"
@@ -127,7 +127,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
-    tickImg->SetImageTexture( IconManager::GetCheckIcon().Get() );
+    tickImg->SetImageTexture( TextureFactory::GetCheckIcon().Get() );
     tickImg->SetTint(Color::Black);
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 

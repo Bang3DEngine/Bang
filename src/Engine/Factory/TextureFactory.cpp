@@ -1,4 +1,4 @@
-#include "Bang/IconManager.h"
+#include "Bang/TextureFactory.h"
 
 #include "Bang/Paths.h"
 #include "Bang/Resources.h"
@@ -7,39 +7,39 @@
 
 USING_NAMESPACE_BANG
 
-RH<Texture2D> IconManager::GetBangB64Icon()
+RH<Texture2D> TextureFactory::GetBangB64Icon()
 { return GetIconTexture("LogoBang_B_64"); }
-RH<Texture2D> IconManager::GetBangB512Icon()
+RH<Texture2D> TextureFactory::GetBangB512Icon()
 { return GetIconTexture("LogoBang_B_512"); }
-RH<Texture2D> IconManager::GetBangB2048Icon()
+RH<Texture2D> TextureFactory::GetBangB2048Icon()
 { return GetIconTexture("LogoBang_B_2048"); }
-RH<Texture2D> IconManager::GetBang2048Icon()
+RH<Texture2D> TextureFactory::GetBang2048Icon()
 { return GetIconTexture("LogoBang_2048"); }
-RH<Texture2D> IconManager::GetRightArrowIcon()
+RH<Texture2D> TextureFactory::GetRightArrowIcon()
 { return GetIconTexture("RightArrow"); }
-RH<Texture2D> IconManager::GetDownArrowIcon()
+RH<Texture2D> TextureFactory::GetDownArrowIcon()
 { return GetIconTexture("DownArrow"); }
-RH<Texture2D> IconManager::GetCheckIcon()
+RH<Texture2D> TextureFactory::GetCheckIcon()
 { return GetIconTexture("Check"); }
-RH<Texture2D> IconManager::GetAudioIcon()
+RH<Texture2D> TextureFactory::GetAudioIcon()
 { return GetIconTexture("Audio"); }
-RH<Texture2D> IconManager::GetCircleIcon()
+RH<Texture2D> TextureFactory::GetCircleIcon()
 { return GetIconTexture("Circle"); }
-RH<Texture2D> IconManager::GetSunIcon()
+RH<Texture2D> TextureFactory::GetSunIcon()
 { return GetIconTexture("Sun"); }
-RH<Texture2D> IconManager::GetLightBulbIcon()
+RH<Texture2D> TextureFactory::GetLightBulbIcon()
 { return GetIconTexture("LightBulb"); }
-RH<Texture2D> IconManager::GetWarningIcon()
+RH<Texture2D> TextureFactory::GetWarningIcon()
 { return GetIconTexture("Warn"); }
-RH<Texture2D> IconManager::GetCheckerboard()
+RH<Texture2D> TextureFactory::GetCheckerboard()
 {
     RH<Texture2D> tex = GetIconTexture("Checkerboard");
     tex.Get()->SetFilterMode(GL::FilterMode::Nearest);
     return tex;
 }
-RH<Texture2D> IconManager::GetWhiteTexture()
+RH<Texture2D> TextureFactory::GetWhiteTexture()
 { return GetIconTexture("White"); }
-RH<TextureCubeMap> IconManager::GetWhiteTextureCubeMap()
+RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
 {
     Path path = EPATH("Icons/WhiteCM.texcm");
     RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
@@ -48,7 +48,7 @@ RH<TextureCubeMap> IconManager::GetWhiteTextureCubeMap()
     return tcm;
 }
 
-RH<TextureCubeMap> IconManager::GetDefaultTextureCubeMap()
+RH<TextureCubeMap> TextureFactory::GetDefaultTextureCubeMap()
 {
     Path path = EPATH("Icons/DefaultSkybox.texcm");
     RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
@@ -57,7 +57,7 @@ RH<TextureCubeMap> IconManager::GetDefaultTextureCubeMap()
     return tcm;
 }
 
-RH<Texture2D> IconManager::GetIconTexture(const String &filename,
+RH<Texture2D> TextureFactory::GetIconTexture(const String &filename,
                                           const Path &dir)
 {
     Path path = dir.Append(filename).AppendExtension("png");
@@ -86,9 +86,9 @@ RH<Texture2D> IconManager::GetIconTexture(const String &filename,
     return iconTex;
 }
 
-RH<Texture2D> IconManager::GetIconTexture(const String &filename)
+RH<Texture2D> TextureFactory::GetIconTexture(const String &filename)
 {
-    return IconManager::GetIconTexture(filename,
+    return TextureFactory::GetIconTexture(filename,
                                        Paths::GetEngineAssetsDir()
                                        .Append("Icons"));
 }

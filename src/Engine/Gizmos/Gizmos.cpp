@@ -360,7 +360,7 @@ void Gizmos::RenderPoint(const Vector3 &point)
 
     RH<Mesh> rhm = Resources::Create<Mesh>();
     Mesh *m = rhm.Get();
-    m->LoadPositionsPool( {point} );
+    m->SetPositionsPool( {point} );
 
     g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
     g->m_meshRenderer->SetMesh(m);

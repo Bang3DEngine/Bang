@@ -28,32 +28,13 @@ public:
     static constexpr uint DefaultUvsVBOLocation       = 2;
     static constexpr uint DefaultTangentsVBOLocation  = 3;
 
-    void LoadVertexIndices(const Array<VertexId>& vertexIndices);
-    void LoadPositionsPool(const Array<Vector3>& positions);
-    void LoadNormalsPool(const Array<Vector3>& normals);
-    void LoadUvsPool(const Array<Vector2>& uvs);
-    void LoadTangentsPool(const Array<Vector3>& tangents);
-    void LoadAll(const Array<Vector3>& positionsPool,
-                 const Array<Vector3>& normalsPool,
-                 const Array<Vector2>& uvsPool);
-    void LoadAll(const Array<Vector3>& positionsPool,
-                 const Array<Vector3>& normalsPool,
-                 const Array<Vector2>& uvsPool,
-                 const Array<Vector3>& tangentsPool);
-    void LoadAll(const Array<VertexId>& vertexIndices,
-                 const Array<Vector3>& positionsPool,
-                 const Array<Vector3>& normalsPool,
-                 const Array<Vector2>& uvsPool);
-    void LoadAll(const Array<VertexId>& vertexIndices,
-                 const Array<Vector3>& positionsPool,
-                 const Array<Vector3>& normalsPool,
-                 const Array<Vector2>& uvsPool,
-                 const Array<Vector3>& tangentsPool);
+    void SetPositionsPool(const Array<Vector3>& positions);
+    void SetNormalsPool(const Array<Vector3>& normals);
+    void SetUvsPool(const Array<Vector2>& uvs);
+    void SetTangentsPool(const Array<Vector3>& tangents);
+    void SetVertexIndices(const Array<VertexId>& vertexIndices);
 
-    void BindPositionsVBOToLocation(int positionsVBOLocation);
-    void BindNormalsVBOToLocation(int normalsVBOLocation);
-    void BindUvsVBOToLocation(int uvsVBOLocation);
-    void BindTangentsVBOToLocation(int tangentsVBOLocation);
+    void UpdateGeometry();
 
     void CalculateLODs();
     RH<Mesh> GetLOD(uint lod) const;
@@ -63,10 +44,7 @@ public:
 
     VAO *GetVAO() const;
     IBO *GetVertexIndicesIBO() const;
-    VBO *GetVertexPositionsPoolVBO() const;
-    VBO *GetVertexNormalsPoolVBO() const;
-    VBO *GetVertexUvsPoolVBO() const;
-    VBO *GetVertexTangentsPoolVBO() const;
+    VBO *GetVertexAttributesVBO() const;
     int GetVertexCount() const;
     const AABox& GetAABBox() const;
     const Sphere& GetBoundingSphere() const;
@@ -100,10 +78,7 @@ private:
 
     mutable VAO *m_vao = nullptr;
     IBO *m_vertexIndicesIBO = nullptr;
-    VBO *m_vertexPositionsPoolVBO = nullptr;
-    VBO *m_vertexNormalsPoolVBO = nullptr;
-    VBO *m_vertexUvsPoolVBO = nullptr;
-    VBO *m_vertexTangentsPoolVBO = nullptr;
+    VBO *m_vertexAttributesVBO = nullptr;
 
     AABox m_bBox;
     Sphere m_bSphere;

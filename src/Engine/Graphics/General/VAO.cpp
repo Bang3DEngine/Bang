@@ -17,13 +17,13 @@ VAO::~VAO()
     GL::DeleteVertexArrays(1, &m_idGL);
 }
 
-void VAO::AddVBO(const VBO *vbo,
-                 int location,
-                 int dataComponentsCount,
-                 GL::DataType dataType,
-                 bool dataNormalized,
-                 int dataStride,
-                 int dataOffset)
+void VAO::AddVertexAttribPointer(const VBO *vbo,
+                                 int location,
+                                 int dataComponentsCount,
+                                 GL::VertexAttribDataType dataType,
+                                 bool dataNormalized,
+                                 int dataStride,
+                                 int dataOffset)
 {
     UnBindVBO(location); // unbind in case its a vbo replacement
 
@@ -38,7 +38,6 @@ void VAO::AddVBO(const VBO *vbo,
                             dataNormalized, dataStride,
                             dataOffset);
     vbo->UnBind();
-
     UnBind();
 
     while (p_vbos.Size() <= location) p_vbos.PushBack(nullptr);

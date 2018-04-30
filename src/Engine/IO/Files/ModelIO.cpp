@@ -503,11 +503,12 @@ void ModelIO::ImportMesh(aiMesh *aMesh,
         if (outMeshName->IsEmpty()) { *outMeshName = "Mesh"; }
     }
 
-    outMesh->Get()->LoadAll(vertexIndices,
-                            vertexPositionsPool,
-                            vertexNormalsPool,
-                            vertexUvsPool,
-                            vertexTangentsPool);
+    outMesh->Get()->SetPositionsPool(vertexPositionsPool);
+    outMesh->Get()->SetNormalsPool(vertexNormalsPool);
+    outMesh->Get()->SetUvsPool(vertexUvsPool);
+    outMesh->Get()->SetTangentsPool(vertexTangentsPool);
+    outMesh->Get()->SetVertexIndices(vertexIndices);
+    outMesh->Get()->UpdateGeometry();
 }
 
 const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,

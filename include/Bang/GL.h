@@ -133,6 +133,22 @@ public:
         Double           = GL_DOUBLE
     };
 
+    enum class VertexAttribDataType
+    {
+        Byte             = GL_BYTE,
+        UnsignedByte     = GL_UNSIGNED_BYTE,
+        Short            = GL_SHORT,
+        UnsignedShort    = GL_UNSIGNED_SHORT,
+        Int              = GL_INT,
+        UnsignedInt      = GL_UNSIGNED_INT,
+        Float            = GL_FLOAT,
+        Double           = GL_DOUBLE,
+        HalfFloat        = GL_HALF_FLOAT,
+        Fixed            = GL_FIXED,
+        Int2101010Rev    = GL_INT_2_10_10_10_REV,
+        UInt2101010Rev   = GL_UNSIGNED_INT_2_10_10_10_REV,
+        UInt10F11F11FRev = GL_UNSIGNED_INT_10F_11F_11F_REV
+    };
 
     enum class UniformType
     {
@@ -393,7 +409,7 @@ public:
     static void DisableVertexAttribArray(int location);
     static void VertexAttribPointer(int location,
                                     int dataComponentsCount,
-                                    GL::DataType dataType,
+                                    GL::VertexAttribDataType dataType,
                                     bool dataNormalized,
                                     int dataStride,
                                     int dataOffset);

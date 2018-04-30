@@ -226,7 +226,6 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                             normals.PushBack(tri.GetNormal());
                             uvs.PushBack(Vector2(0,0));
                         }
-                        m_mesh.Get()->LoadAll(positions, normals, uvs);
                     }
                     else if (drp->primitive == DebugRendererPrimitiveType::Quad)
                     {
@@ -241,7 +240,10 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                         for (int i : {0,1,2}) { positions.PushBack(t0[i]); }
                         for (int i : {0,1,2}) { positions.PushBack(t1[i]); }
                     }
-                    m_mesh.Get()->LoadAll(positions, normals, uvs);
+                    m_mesh.Get()->SetPositionsPool(positions);
+                    m_mesh.Get()->SetNormalsPool(normals);
+                    m_mesh.Get()->SetUvsPool(uvs);
+                    m_mesh.Get()->UpdateGeometry();
 
                     Gizmos::SetCulling(drp->culling);
                     Gizmos::SetRenderWireframe(drp->wireframe);

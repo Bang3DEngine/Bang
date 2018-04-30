@@ -149,7 +149,7 @@ void GL::DisableVertexAttribArray(int location)
 
 void GL::VertexAttribPointer(int location,
                              int dataComponentsCount,
-                             GL::DataType dataType,
+                             GL::VertexAttribDataType dataType,
                              bool dataNormalized,
                              int dataStride,
                              int dataOffset)

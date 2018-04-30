@@ -200,6 +200,7 @@ Matrix4G<T> Matrix4G<T>::Inversed(float invertiblePrecision,
 
     float det = m.c0.x * inv.c0.x + m.c0.y * inv.c1.x + m.c0.z * inv.c2.x +
                 m.c0.w * inv.c3.x;
+
     if (Math::Abs(det) < invertiblePrecision)
     {
         if (isInvertible) { *isInvertible = false; }

@@ -311,8 +311,9 @@ void GEngine::Render(Renderer *rend)
     ShaderProgram *previousSP = mat ? mat->GetShaderProgram() : nullptr;
     if (mat && GetReplacementShader())
     {
+        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(false);
         mat->SetShaderProgram( GetReplacementShader() );
-        GetReplacementShader()->Bind();
+        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(true);
     }
 
     // Render with the renderer!
@@ -339,7 +340,9 @@ void GEngine::Render(Renderer *rend)
     // replacement shader
     if (mat)
     {
+        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(false);
         mat->SetShaderProgram(previousSP);
+        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(true);
     }
 }
 

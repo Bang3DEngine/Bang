@@ -109,6 +109,7 @@ private:
     virtual ~ShaderProgram();
 
     void BindAllTexturesToUnits();
+    void CheckTextureBindingsValidity() const;
     void BindTextureToFreeUnit(const String &textureName, Texture *texture);
     void UnBindAllTexturesFromUnits() const;
 

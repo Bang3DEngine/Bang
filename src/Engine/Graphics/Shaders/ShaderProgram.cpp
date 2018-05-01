@@ -287,60 +287,54 @@ bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v,
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    if (texture)
+    int uniformLocation = GetUniformLocation(name);
+    if (uniformLocation < 0)
     {
-        if (GetUniformLocation(name) < 0)
-        {
-            if (warn)
-            {
-                Debug_Warn("Texture uniform '" << name << "' not found.");
-            }
-            return false;
-        }
+        if (warn) { Debug_Warn("Texture uniform '" << name << "' not found."); }
+        return false;
+    }
 
-        // Texture name is in shader program, and texture is not null
-        bool needToRefreshTexture;
-        auto it = m_namesToTexture.find(name);
-        if (it != m_namesToTexture.end())
+    bool needToRefreshTexture;
+    auto it = m_namesToTexture.find(name);
+    if (it != m_namesToTexture.end())
+    {
+        // Texture name was already being used...
+        Texture *oldTexture = it->second;
+        if (texture != oldTexture)
         {
-            // Texture name was already being used...
-            Texture *oldTexture = it->second;
-            if (texture != oldTexture)
+            // We are changing an existing texture. Unregister listener
+            if (oldTexture)
             {
-                // We are changing an existing texture. Unregister listener
                 oldTexture->EventEmitter<IDestroyListener>::UnRegisterListener(this);
-                needToRefreshTexture = true;
             }
-            else
-            {
-                // Nothing to do. We already had this tex assigned to this name
-                needToRefreshTexture = false;
-            }
+            needToRefreshTexture = true;
         }
-        else { needToRefreshTexture = true; }
-
-        if (needToRefreshTexture)
+        else
         {
-            // Texture name was not being used. Register and all stuff
-            m_namesToTexture[name] = texture;
+            // Nothing to do. We already had this tex assigned to this name
+            needToRefreshTexture = false;
+        }
+    }
+    else { needToRefreshTexture = true; }
 
-            // Register listener to keep track when it is destroyed
+    if (needToRefreshTexture)
+    {
+        // Texture name was not being used. Register and all stuff
+        m_namesToTexture[name] = texture;
+
+        // Register listener to keep track when it is destroyed
+        if (texture)
+        {
             texture->EventEmitter<IDestroyListener>::RegisterListener(this);
         }
-
-        if (GL::IsBound(this)) { BindTextureToFreeUnit(name, texture); }
-    }
-    else
-    {
-        // Texture is null or shader program is not using this name.
-        // Erase it from name to texture
-        // m_namesToTexture.erase(name);
     }
 
-    if (m_namesToTexture.size() >= TextureUnitManager::GetMaxTextureUnits())
+    if (GL::IsBound(this)) { BindTextureToFreeUnit(name, texture); }
+
+    if (m_namesToTexture.size() >= TextureUnitManager::GetNumUsableTextureUnits())
     {
-        Debug_Error("You are using too many textures at once. Maximum is: " <<
-                    TextureUnitManager::GetMaxTextureUnits());
+        Debug_Error("You are using too many textures at once. Maximum usable is: " <<
+                    TextureUnitManager::GetNumUsableTextureUnits());
     }
 
     return true;
@@ -470,12 +464,108 @@ void ShaderProgram::BindAllTexturesToUnits()
     }
 }
 
-void ShaderProgram::BindTextureToFreeUnit(const String &textureName,
-                                          Texture *texture)
+void ShaderProgram::CheckTextureBindingsValidity() const
 {
+    const int uniformsListSize = GL::GetUniformsListSize(GetGLId());
+    Set<int> samplers1D, samplers2D, samplers3D, samplersCubeMap;
+    for (int i = 0; i < uniformsListSize; ++i)
+    {
+        GL::UniformType uniformType = GL::GetUniformTypeAt(GetGLId(), i);
+        if (uniformType != GL::UniformType::Sampler1D            &&
+            uniformType != GL::UniformType::Sampler1DShadow      &&
+            uniformType != GL::UniformType::Sampler1DArrayShadow &&
+            uniformType != GL::UniformType::Sampler2D            &&
+            uniformType != GL::UniformType::Sampler2DShadow      &&
+            uniformType != GL::UniformType::Sampler2DArrayShadow &&
+            uniformType != GL::UniformType::Sampler3D            &&
+            uniformType != GL::UniformType::SamplerCube          &&
+            uniformType != GL::UniformType::SamplerCubeShadow)
+        {
+            continue;
+        }
+
+        GLUniforms::GLSLVar<int> uniformVar =
+                                   GLUniforms::GetUniformAt<int>(GetGLId(), i);
+
+        // Debug_Log(uniformVar.name << ": " << uniformVar.value);
+        const int texUnit = uniformVar.value;
+        const GL::UniformType samplerType = uniformType;
+        switch (samplerType)
+        {
+            case GL::UniformType::Sampler1D:
+            case GL::UniformType::Sampler1DShadow:
+            case GL::UniformType::Sampler1DArrayShadow:
+                samplers1D.Add(texUnit);
+            break;
+
+            case GL::UniformType::Sampler2D:
+            case GL::UniformType::Sampler2DShadow:
+            case GL::UniformType::Sampler2DArrayShadow:
+                samplers2D.Add(texUnit);
+            break;
+
+            case GL::UniformType::Sampler3D:
+                samplers3D.Add(texUnit);
+            break;
+
+            case GL::UniformType::SamplerCube:
+            case GL::UniformType::SamplerCubeShadow:
+                samplersCubeMap.Add(texUnit);
+            break;
+
+            default: ASSERT(false);
+        }
+
+        int numDifferentSamplerTypesWhoPointToThisTexture = 0;
+
+        if (samplers1D.Contains(texUnit))
+        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
+        if (samplers2D.Contains(texUnit))
+        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
+        if (samplers3D.Contains(texUnit))
+        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
+        if (samplersCubeMap.Contains(texUnit))
+        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
+
+        if (texUnit != 0)
+        {
+            ASSERT(numDifferentSamplerTypesWhoPointToThisTexture == 1);
+        }
+    }
+}
+
+void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
+                                          Texture *texture_)
+{
+    Texture *texture = texture_;
+    if (!texture)
+    {
+        int uniformLocation = GetUniformLocation(texUniformName);
+        ASSERT(uniformLocation >= 0);
+
+        GL::UniformType samplerType =
+                         GL::GetUniformTypeAt(GetGLId(), uniformLocation);
+
+        // If texture is null, return its corresponding null texture unit
+        switch (samplerType)
+        {
+            case GL::UniformType::Sampler2D:
+            case GL::UniformType::Sampler2DShadow:
+            case GL::UniformType::Sampler2DArrayShadow:
+                texture = TextureFactory::GetWhiteTexture().Get();
+            break;
+
+            case GL::UniformType::SamplerCube:
+            case GL::UniformType::SamplerCubeShadow:
+                texture = TextureFactory::GetDefaultTextureCubeMap().Get();
+            break;
+
+            default: ASSERT(false);
+        }
+    }
+
     uint unit = TextureUnitManager::BindTextureToUnit(texture);
-    SetInt(textureName, unit, false); // Assign unit to sampler
-    // Debug_Log("Binding " << textureName << " to " << unit);
+    SetInt(texUniformName, unit, false); // Assign unit to sampler
 }
 
 void ShaderProgram::UnBindAllTexturesFromUnits() const
@@ -485,7 +575,7 @@ void ShaderProgram::UnBindAllTexturesFromUnits() const
 
 void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
-    Array< std::pair<String, Texture*> > entriesToSetToDefaultTex;
+    Array< std::pair<String, Texture*> > entriesToRestore;
     Texture *destroyedTex = DCAST<Texture*>( object );
     for (auto it = m_namesToTexture.begin(); it != m_namesToTexture.end(); )
     {
@@ -493,7 +583,7 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
         if (tex == destroyedTex)
         {
             const String &name = it->first;
-            entriesToSetToDefaultTex.PushBack(std::make_pair(name, tex));
+            entriesToRestore.PushBack(std::make_pair(name, tex));
 
             it = m_namesToTexture.erase(it);
             // Dont break, in case it has obj texture several times
@@ -502,19 +592,11 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
     }
 
     // Set default textures to those removed entries.
-    for (const auto &pair : entriesToSetToDefaultTex)
+    for (const auto &pair : entriesToRestore)
     {
         const String &name = pair.first;
         Texture *tex = pair.second;
-        if (DCAST<Texture2D*>(tex))
-        {
-            SetTexture2D(name, TextureFactory::GetWhiteTexture().Get(), false);
-        }
-        else if (DCAST<TextureCubeMap*>(tex))
-        {
-            SetTextureCubeMap(name, TextureFactory::GetWhiteTextureCubeMap().Get(),
-                              false);
-        }
+        SetTexture(name, nullptr, false);
     }
 }
 

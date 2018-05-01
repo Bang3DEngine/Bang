@@ -74,6 +74,9 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
     RH<ShaderProgram> prevSP;
     prevSP.Set( rend->GetActiveMaterial()->GetShaderProgram() );
 
+    rend->GetActiveMaterial()->EventEmitter<IMaterialChangedListener>::
+                               SetEmitEvents(false);
+
     ShaderProgram *selSP = p_selectionMaterial.Get()->GetShaderProgram();
     rend->GetActiveMaterial()->SetShaderProgram(selSP);
 
@@ -83,6 +86,9 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
     rend->UnBind();
 
     rend->GetActiveMaterial()->SetShaderProgram(prevSP.Get());
+
+    rend->GetActiveMaterial()->EventEmitter<IMaterialChangedListener>::
+                               SetEmitEvents(true);
 
     p_nextRenderSelectable = nullptr;
 }

@@ -47,11 +47,11 @@ public:
 
     GL::TextureTarget GetTextureTarget() const;
 
+    void PropagateTextureChanged();
+
 protected:
     void SetWidth(int width);
     void SetHeight(int height);
-
-    void PropagateTextureChanged();
 
     static Color GetColorFromFloatArray(const float *pixels, int i);
     static Color GetColorFromByteArray(const Byte *pixels, int i);

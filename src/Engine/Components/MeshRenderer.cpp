@@ -68,6 +68,7 @@ AABox MeshRenderer::GetAABBox() const
     return GetActiveMesh() ? GetActiveMesh()->GetAABBox() : AABox::Empty;
 }
 
+#include "Bang/Texture2D.h"
 void MeshRenderer::OnRender()
 {
     Renderer::OnRender();

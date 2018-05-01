@@ -54,7 +54,7 @@ public:
     float GetLineWidth() const;
 
     // IMaterialChangedListener
-    void OnMaterialChanged(const Material *changedMaterial) override;
+    void OnMaterialChanged(Material *changedMaterial) override;
 
     // Renderer
     virtual AABox GetAABBox() const;

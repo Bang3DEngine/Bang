@@ -202,10 +202,10 @@ void Material::Bind() const
         sp->SetBool("B_HasAlbedoTexture",    false,   false);
     }
 
-    if (GetNormalMapTexture())
+    if (Texture2D *normalMapTex = GetNormalMapTexture())
     {
-        sp->SetTexture2D("B_NormalMapTexture",  GetNormalMapTexture(), false);
-        sp->SetBool("B_HasNormalMapTexture",    true,                  false);
+        sp->SetTexture2D("B_NormalMapTexture",  normalMapTex, false);
+        sp->SetBool("B_HasNormalMapTexture",    true,         false);
     }
     else
     {

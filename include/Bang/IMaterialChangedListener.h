@@ -12,7 +12,7 @@ class IMaterialChangedListener : public virtual IEventListener
     EVENTLISTENER(IMaterialChangedListener)
 
 public:
-    virtual void OnMaterialChanged(const Material *changedMaterial) = 0;
+    virtual void OnMaterialChanged(Material *changedMaterial) = 0;
 };
 
 NAMESPACE_BANG_END

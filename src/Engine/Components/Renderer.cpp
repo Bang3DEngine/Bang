@@ -182,7 +182,7 @@ void Renderer::SetReceivesShadows(bool receivesShadows)
 bool Renderer::IsVisible() const { return m_visible; }
 Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
 
-void Renderer::OnMaterialChanged(const Material*) { PropagateRendererChanged(); }
+void Renderer::OnMaterialChanged(Material*) { PropagateRendererChanged(); }
 bool Renderer::IsRenderWireframe() const { return m_renderWireframe; }
 AABox Renderer::GetAABBox() const { return AABox::Empty; }
 GL::Face Renderer::GetCullFace() const { return m_cullFace; }

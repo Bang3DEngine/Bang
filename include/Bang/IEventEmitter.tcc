@@ -13,7 +13,7 @@ void EventEmitter<EListenerC>::RegisterListener(EListenerC *listener)
         if (!m_listeners.Contains(listener))
         {
             m_listeners.PushBack(listener);
-            listener->OnRegisteredTo(this);
+            if (listener) { listener->OnRegisteredTo(this); }
         }
     }
     else { m_delayedListenersToRegister.PushBack(listener); }
@@ -25,7 +25,7 @@ void EventEmitter<EListenerC>::UnRegisterListener(IEventListener *listener)
     if (!IsIteratingListeners())
     {
         m_listeners.Remove(listener);
-        listener->OnUnRegisteredFrom(this);
+        if (listener) { listener->OnUnRegisteredFrom(this); }
     }
     else { m_delayedListenersToUnRegister.PushBack(listener); }
 }
@@ -45,7 +45,7 @@ PropagateToListener(const TListener &listener, const TFunction &func,
 {
     if (listener && listener->IsReceivingEvents())
     {
-        (Cast<EventListenerClass*>(listener)->*func)(args...);
+        (DCAST<EventListenerClass*>(listener)->*func)(args...);
     }
 }
 
@@ -74,11 +74,11 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
                         const_cast< EventEmitter<EventListenerClass>* >(this);
         for (IEventListener *listener : m_delayedListenersToRegister)
         {
-            ncThis->RegisterListener( Cast<EventListenerClass*>(listener) );
+            ncThis->RegisterListener( DCAST<EventListenerClass*>(listener) );
         }
         for (IEventListener *listener : m_delayedListenersToUnRegister)
         {
-            ncThis->UnRegisterListener( Cast<EventListenerClass*>(listener) );
+            ncThis->UnRegisterListener( DCAST<EventListenerClass*>(listener) );
         }
         m_delayedListenersToRegister.Clear();
         m_delayedListenersToUnRegister.Clear();
@@ -97,7 +97,7 @@ EventEmitter<EventListenerClass>::~EventEmitter()
 {
     while (!m_listeners.IsEmpty())
     {
-        IEventListener *eListener = Cast<IEventListener*>( m_listeners.Front() );
+        IEventListener *eListener = DCAST<IEventListener*>( m_listeners.Front() );
         UnRegisterListener(eListener);
     }
 }

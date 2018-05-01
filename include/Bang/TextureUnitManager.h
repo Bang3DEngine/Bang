@@ -1,6 +1,7 @@
 #ifndef TEXTUREUNITMANAGER_H
 #define TEXTUREUNITMANAGER_H
 
+#include <queue>
 #include <stack>
 #include <unordered_map>
 #include <unordered_set>
@@ -19,9 +20,11 @@ public:
     using TexUnit = uint;
     TextureUnitManager();
 
+    static void BindTextureToUnit(Texture *texture, TexUnit unit);
     static TexUnit BindTextureToUnit(Texture *texture);
 
     static int GetMaxTextureUnits();
+    static int GetNumUsableTextureUnits();
     static void UnBindAllTexturesFromAllUnits();
 
     static int GetUnitTextureIsBoundTo(Texture *texture);
@@ -32,9 +35,12 @@ public:
 
 
 private:
-    int m_numTextureUnits = -1;
+    int m_numMaxTextureUnits    = -1;
+    int m_numUsableTextureUnits = -1;
+    TexUnit m_voidTexUnit       = -1;
+
     uint m_timestampCounter = 0;
-    std::stack<TexUnit> m_initialFreeUnits;
+    std::queue<TexUnit> m_freeUnits;
     std::unordered_map<GLId, uint> m_timestampTexIdUsed;
     std::unordered_map<GLId, Texture*> m_textureIdToTexture;
     std::unordered_map<GLId, TexUnit> m_textureIdToBoundUnit;

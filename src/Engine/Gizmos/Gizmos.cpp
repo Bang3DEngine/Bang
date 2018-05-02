@@ -445,6 +445,9 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         gbuffer->SetColorDrawBuffer();
         gbuffer->ApplyPass(sp, false);
 
+        GL::SetDepthMask(true);
+        GL::ClearDepthBuffer(1);
+
         gbuffer->PopDrawAttachments();
     }
 

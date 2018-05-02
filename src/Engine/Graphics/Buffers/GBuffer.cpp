@@ -183,6 +183,8 @@ void GBuffer::PushDepthStencilTexture()
 }
 void GBuffer::PopDepthStencilTexture()
 {
+    ASSERT( !m_depthStencilTexturesStack.empty() );
+    SetDepthStencilTexture( m_depthStencilTexturesStack.top().Get() );
     m_depthStencilTexturesStack.pop();
 }
 Texture2D *GBuffer::GetDepthStencilTexture() const

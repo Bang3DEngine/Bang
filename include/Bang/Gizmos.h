@@ -2,6 +2,7 @@
 #define GIZMOS_H
 
 #include "Bang/GameObject.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
@@ -40,12 +41,22 @@ public:
     static void RenderViewportIcon(Texture2D *texture,
                                    const AARect &winRect);
     static void RenderViewportLineNDC(const Vector2 &origin,
-                                   const Vector2 &destiny);
-    static void RenderLine(const Vector3 &origin,
-                           const Vector3 &destiny);
+                                      const Vector2 &destiny);
+    static void RenderLine(const Vector3 &origin, const Vector3 &destiny);
+    static void RenderBillboardCircle(const Vector3 &origin, float radius,
+                                      int numSegments = 32);
+    static void RenderCircle(const Vector3 &origin, float radius,
+                             int numSegments = 32);
     static void RenderRay(const Vector3 &origin,
                           const Vector3 &rayDir);
     static void RenderSphere(const Vector3 &origin, float radius);
+    static void RenderSimpleSphere(const Vector3 &origin,
+                                   float radius,
+                                   bool withOutline,
+                                   int numLoopsVertical = 4,
+                                   int numLoopsHorizontal = 4,
+                                   int numCircleSegments = 32);
+    static void RenderOutline(GameObject *gameObject);
     static void RenderFrustum(const Vector3 &forward,
                               const Vector3 &up,
                               const Vector3 &origin,
@@ -62,9 +73,10 @@ public:
 private:
     GameObject *m_gizmosGo = nullptr;
 
-    RH<Mesh> p_boxMesh;
-    RH<Mesh> p_planeMesh;
-    RH<Mesh> p_sphereMesh;
+    RH<Mesh> m_boxMesh;
+    RH<Mesh> m_planeMesh;
+    RH<Mesh> m_sphereMesh;
+    RH<ShaderProgram> m_outlineShaderProgram;
 
     GameObject *p_selectable = nullptr;
     LineRenderer *m_lineRenderer = nullptr;

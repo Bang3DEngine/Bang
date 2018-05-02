@@ -31,6 +31,7 @@ public:
     void RenderRaw(Renderer *rend);
     void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
+    void RenderWithAllPasses(GameObject *go);
     void RenderWithPass(GameObject *go, RenderPass renderPass);
     void RenderWithPassRaw(GameObject *go, RenderPass renderPass);
     void RenderViewportRect(ShaderProgram *sp,

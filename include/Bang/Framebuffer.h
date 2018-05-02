@@ -57,6 +57,9 @@ public:
     virtual void Bind() const override;
     virtual void UnBind() const override;
 
+    void PushDrawAttachments();
+    void PopDrawAttachments();
+
     void Export(GL::Attachment attachmentId, const Path &filepath,
                 bool invertY = true) const;
     void ExportDepth(const Path &filepath) const;
@@ -68,9 +71,6 @@ protected:
     int m_height = 0;
     Array<GL::Attachment> m_attachments;
     Map<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
-
-    void PushDrawAttachments();
-    void PopDrawAttachments();
 
 private:
     mutable Array<GL::Attachment> m_currentDrawAttachments;

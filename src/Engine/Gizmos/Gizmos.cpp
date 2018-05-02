@@ -27,6 +27,7 @@
 #include "Bang/MaterialFactory.h"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/SelectionFramebuffer.h"
+#include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -35,9 +36,12 @@ Gizmos::Gizmos()
     m_gizmosGo = GameObjectFactory::CreateGameObject();
     m_gizmosGo->SetName("Gizmos");
 
-    p_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube());
-    p_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
-    p_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere());
+    m_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube());
+    m_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
+    m_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere());
+    m_outlineShaderProgram = ShaderProgramFactory::Get(
+                ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+                EPATH("Shaders/GizmosOutline.frag"));
 
     m_lineRenderer = m_gizmosGo->AddComponent<LineRenderer>();
     m_meshRenderer = m_gizmosGo->AddComponent<MeshRenderer>();
@@ -48,6 +52,7 @@ Gizmos::Gizmos()
         rend->SetMaterial(MaterialFactory::GetGizmosUnLightedOverlay().Get());
     }
 
+    m_gizmosGo->Start();
     m_gizmosGo->GetHideFlags().SetOn(HideFlag::DontSerialize);
 }
 
@@ -170,7 +175,7 @@ void Gizmos::RenderSimpleBox(const AABox &b)
 void Gizmos::RenderBox(const AABox &b)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->p_boxMesh.Get());
+    g->m_meshRenderer->SetMesh(g->m_boxMesh.Get());
     g->m_gizmosGo->GetTransform()->SetPosition(b.GetCenter());
     g->m_gizmosGo->GetTransform()->
        SetScale(g->m_gizmosGo->GetTransform()->GetScale() * b.GetSize());
@@ -208,7 +213,7 @@ void Gizmos::RenderRect(const Rect &r)
 void Gizmos::RenderFillRect(const AARect &r)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->p_planeMesh.Get());
+    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
 
     Gizmos::SetPosition( Vector3(r.GetCenter(), 0) );
     Gizmos::SetScale( Vector3(r.GetSize(), 1) );
@@ -221,7 +226,7 @@ void Gizmos::RenderIcon(Texture2D *texture,
                         bool billboard)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->p_planeMesh.Get());
+    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
 
     SetRenderWireframe(false);
     SetReceivesLighting(false);
@@ -253,7 +258,7 @@ void Gizmos::RenderViewportIcon(Texture2D *texture,
                                 const AARect &winRect)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->p_planeMesh.Get());
+    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
 
     Gizmos::SetPosition( Vector3(winRect.GetCenter(), 0) );
     Gizmos::SetScale( Vector3(winRect.GetSize(), 1) );
@@ -274,6 +279,46 @@ void Gizmos::RenderLine(const Vector3 &origin, const Vector3 &destiny)
     g->m_gizmosGo->GetTransform()->SetScale(Vector3::One);
 
     g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::World);
+    g->Render(g->m_lineRenderer);
+}
+
+void Gizmos::RenderBillboardCircle(const Vector3 &origin, float radius,
+                                   int numSegments)
+{
+    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
+
+    Camera *cam = Camera::GetActive();
+    Vector3 camPos = cam ? cam->GetGameObject()->GetTransform()->GetPosition() :
+                           Vector3::Zero;
+    g->m_gizmosGo->GetTransform()->LookAt(camPos);
+    Gizmos::RenderCircle(origin, radius, numSegments);
+}
+
+void Gizmos::RenderCircle(const Vector3 &origin, float radius, int numSegments)
+{
+    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
+    Gizmos::SetPosition(origin);
+
+    Array<Vector3> circlePoints;
+    for (int i = 0; i < numSegments; ++i)
+    {
+        float angle = ((2 * Math::Pi) / numSegments) * i;
+        Vector3 point = Vector3(Math::Cos(angle) * radius,
+                                Math::Sin(angle) * radius,
+                                0.0f);
+        circlePoints.PushBack(point);
+    }
+
+    Array<Vector3> circleLinePoints;
+    for (int i = 0; i < numSegments; ++i)
+    {
+        Vector3 p0 = circlePoints[i];
+        Vector3 p1 = circlePoints[(i+1) % numSegments];
+        circleLinePoints.PushBack(p0);
+        circleLinePoints.PushBack(p1);
+    }
+
+    g->m_lineRenderer->SetPoints(circleLinePoints);
     g->Render(g->m_lineRenderer);
 }
 
@@ -300,10 +345,109 @@ void Gizmos::RenderRay(const Vector3 &origin, const Vector3 &rayDir)
 void Gizmos::RenderSphere(const Vector3 &origin, float radius)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->p_sphereMesh.Get());
+    g->m_meshRenderer->SetMesh(g->m_sphereMesh.Get());
     g->m_gizmosGo->GetTransform()->SetPosition(origin);
     g->m_gizmosGo->GetTransform()->SetScale(radius);
     g->Render(g->m_meshRenderer);
+}
+
+void Gizmos::RenderSimpleSphere(const Vector3 &origin,
+                                float radius,
+                                bool withOutline,
+                                int numLoopsVertical,
+                                int numLoopsHorizontal,
+                                int numCircleSegments)
+{
+    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
+
+    const float angleAdvVertical = (Math::Pi / numLoopsVertical);
+    for (int i = 0; i < numLoopsVertical; ++i)
+    {
+        Gizmos::SetRotation(
+            Quaternion::AngleAxis(Math::Pi / 2, Vector3::Right) *
+            Quaternion::AngleAxis(angleAdvVertical * i, Vector3::Right));
+        Gizmos::RenderCircle(origin, radius, numCircleSegments);
+    }
+
+    const float angleAdvHorizontal = (Math::Pi / numLoopsHorizontal);
+    for (int i = 0; i < numLoopsHorizontal; ++i)
+    {
+        Gizmos::SetRotation(
+            Quaternion::AngleAxis(angleAdvHorizontal * i, Vector3::Up));
+        Gizmos::RenderCircle(origin, radius, numCircleSegments);
+    }
+
+    if (withOutline)
+    {
+        for (Renderer *r : g->m_renderers) { r->SetEnabled(false); }
+        Gizmos::SetPosition( origin );
+        Gizmos::SetRotation( Quaternion::Identity );
+        Gizmos::SetScale( Vector3(radius) );
+        g->m_meshRenderer->SetEnabled(true);
+        g->m_meshRenderer->SetMesh( g->m_sphereMesh.Get() );
+        Gizmos::RenderOutline( g->m_gizmosGo );
+        for (Renderer *r : g->m_renderers) { r->SetEnabled(true); }
+    }
+}
+
+void Gizmos::RenderOutline(GameObject *gameObject)
+{
+    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
+
+    // Save state
+    bool prevDepthMask                        = GL::GetDepthMask();
+    GL::Function prevDepthFunc                = GL::GetDepthFunc();
+    Byte prevStencilValue                     = GL::GetStencilValue();
+    GL::Function prevStencilFunc              = GL::GetStencilFunc();
+    GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::Framebuffer);
+
+    GBuffer *gbuffer = GEngine::GetActiveGBuffer();
+    if (gbuffer)
+    {
+        // Save before drawing the first pass, because it could happen that it
+        // draws to gizmos and change the gizmos color and thickness.
+        const Color outlineColor = g->m_meshRenderer->GetActiveMaterial()->
+                                   GetAlbedoColor();
+        const float outlineThickness = g->m_meshRenderer->GetLineWidth();
+
+        gbuffer->PushDrawAttachments();
+        gbuffer->Bind();
+
+        // Render depth
+        gbuffer->SetDrawBuffers({});
+        GL::ClearDepthBuffer(1);
+        GL::SetDepthMask(true);
+        GL::SetDepthFunc(GL::Function::Always);
+        GL::SetStencilOp(GL::StencilOperation::Keep);
+        GL::SetColorMask(false, false, false, false);
+        GEngine::GetActive()->RenderWithAllPasses(gameObject);
+
+        // Render outline
+        GL::SetDepthMask(false);
+        GL::SetDepthFunc(GL::Function::Always);
+        GL::SetColorMask(true, true, true, true);
+
+        ShaderProgram *sp = g->m_outlineShaderProgram.Get();
+        sp->Bind();
+        sp->SetColor("B_OutlineColor", outlineColor);
+        sp->SetInt("B_OutlineThickness", outlineThickness);
+
+        gbuffer->SetColorDrawBuffer();
+        gbuffer->ApplyPass(sp, false);
+
+        gbuffer->PopDrawAttachments();
+    }
+
+    // Restore state
+    GL::SetDepthMask(prevDepthMask);
+    GL::SetDepthFunc(prevDepthFunc);
+    GL::SetStencilOp(prevStencilOperation);
+    GL::SetStencilFunc(prevStencilFunc);
+    GL::SetStencilValue(prevStencilValue);
+    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
+    GL::Bind(GL::BindTarget::Framebuffer, prevBoundFB);
 }
 
 void Gizmos::RenderFrustum(const Vector3 &forward,

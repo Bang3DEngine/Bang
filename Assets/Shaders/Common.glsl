@@ -99,6 +99,7 @@ bool  B_SampleReceivesShadows (vec2 uv) { return texture(B_GTex_Misc, uv).r > 0.
 float B_SampleRoughness (vec2 uv)       { return texture(B_GTex_Misc, uv).g; }
 float B_SampleMetalness (vec2 uv)       { return texture(B_GTex_Misc, uv).b; }
 float B_SampleDepth(vec2 uv)            { return texture(B_GTex_DepthStencil, uv).r; }
+float B_SampleStencil(vec2 uv)          { return texture(B_GTex_DepthStencil, uv).a; }
 float B_SampleFlags(vec2 uv)            { return texture(B_GTex_Misc, uv).z; }
 
 vec4  B_SampleColor()           { return B_SampleColor(B_GetViewportUv()); }
@@ -109,6 +110,7 @@ bool  B_SampleReceivesShadows() { return B_SampleReceivesShadows(B_GetViewportUv
 float B_SampleRoughness ()      { return B_SampleRoughness(B_GetViewportUv()); }
 float B_SampleMetalness ()      { return B_SampleMetalness(B_GetViewportUv()); }
 float B_SampleDepth()           { return B_SampleDepth(B_GetViewportUv()); }
+float B_SampleStencil()         { return B_SampleStencil(B_GetViewportUv()); }
 float B_SampleFlags()           { return B_SampleFlags(B_GetViewportUv()); }
 
 vec4  B_SampleColorOffset(vec2 pixOffset)
@@ -127,6 +129,8 @@ float B_SampleMetalnessOffset(vec2 pixOffset)
 { return B_SampleMetalness(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 float B_SampleDepthOffset(vec2 pixOffset)
 { return B_SampleDepth(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+float B_SampleStencilOffset(vec2 pixOffset)
+{ return B_SampleStencil(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 float B_SampleFlagsOffset(vec2 pixOffset)
 { return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 

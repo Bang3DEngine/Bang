@@ -130,6 +130,9 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GBuffer *gbuffer = camera->GetGBuffer();
     gbuffer->ClearBuffersAndBackground(camera->GetClearColor());
 
+    GL::Enablei(GL::Enablable::Blend, 0);
+    GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
+
     // GBuffer Scene rendering
     gbuffer->SetAllDrawBuffers();
     GL::SetDepthMask(true);
@@ -148,15 +151,12 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 
     // GBuffer Canvas rendering
     gbuffer->SetColorDrawBuffer();
-    GL::Enable(GL::Enablable::Blend);
-    GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPass(go, RenderPass::Canvas);
     gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::CanvasPostProcess);
-    GL::Disable(GL::Enablable::Blend);
 
     // GBuffer Overlay rendering
     gbuffer->SetAllDrawBuffers();
@@ -167,6 +167,8 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
     ApplyStenciledDeferredLightsToGBuffer(go, camera);
     RenderWithPass(go, RenderPass::OverlayPostProcess);
+
+    GL::Disablei(GL::Enablable::Blend, 0);
 }
 
 void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
@@ -205,6 +207,7 @@ void GEngine::RenderWithPassRaw(GameObject *go, RenderPass renderPass)
 void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
                                                     RenderPass renderPass)
 {
+    // Save state
     Byte prevStencilValue                     = GL::GetStencilValue();
     GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
 
@@ -214,7 +217,7 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
     // Render pass
     RenderWithPass(go, renderPass);
 
-    // Restore
+    // Restore state
     GL::SetStencilOp(prevStencilOperation);
     GL::SetStencilValue(prevStencilValue);
 }
@@ -228,15 +231,16 @@ void GEngine::SetActive(GEngine *gEngine)
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     // Save state
-    GLId prevBoundShaderProgram = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::ShaderProgram);
 
-    // Set state
+    // Set state, bind and draw
     sp->Bind();
     sp->SetVector2("B_AlbedoUvOffset",         Vector2::Zero, false);
     sp->SetVector2("B_AlbedoUvMultiply",       Vector2::One, false);
     sp->SetVector2("B_destRectMinCoord", destRectMask.GetMin(), false);
     sp->SetVector2("B_destRectMaxCoord", destRectMask.GetMax(), false);
-    RenderViewportPlane();
+
+    RenderViewportPlane(); // Renduurrr
 
     // Restore state
     GL::Bind(GL::BindTarget::ShaderProgram, prevBoundShaderProgram);
@@ -257,17 +261,27 @@ void GEngine::RenderTexture(Texture2D *texture)
     GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
 }
 
+void GEngine::RenderWithAllPasses(GameObject *go)
+{
+    RenderWithPass(go, RenderPass::Scene);
+    RenderWithPass(go, RenderPass::ScenePostProcess);
+    RenderWithPass(go, RenderPass::Canvas);
+    RenderWithPass(go, RenderPass::CanvasPostProcess);
+    RenderWithPass(go, RenderPass::Overlay);
+    RenderWithPass(go, RenderPass::OverlayPostProcess);
+}
+
 void GEngine::RenderViewportPlane()
 {
     // Save state
-    bool prevWireframe         = GL::IsWireframe();
-    bool prevDepthMask         = GL::GetDepthMask();
-    GL::Function prevDepthFunc = GL::GetDepthFunc();
+    bool prevWireframe           = GL::IsWireframe();
+    bool prevDepthMask           = GL::GetDepthMask();
+    GL::Function prevDepthFunc   = GL::GetDepthFunc();
 
     // Set state
     GL::SetWireframe(false);
-    GL::SetDepthFunc(GL::Function::Always);
     GL::SetDepthMask(false);
+    GL::SetDepthFunc(GL::Function::Always);
 
     GL::Render(p_windowPlaneMesh.Get()->GetVAO(), GL::Primitive::Triangles,
                p_windowPlaneMesh.Get()->GetVertexCount());

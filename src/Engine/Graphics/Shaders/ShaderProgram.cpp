@@ -595,7 +595,6 @@ void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
     for (const auto &pair : entriesToRestore)
     {
         const String &name = pair.first;
-        Texture *tex = pair.second;
         SetTexture(name, nullptr, false);
     }
 }

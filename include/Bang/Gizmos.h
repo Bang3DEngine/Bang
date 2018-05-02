@@ -56,7 +56,8 @@ public:
                                    int numLoopsVertical = 4,
                                    int numLoopsHorizontal = 4,
                                    int numCircleSegments = 32);
-    static void RenderOutline(GameObject *gameObject);
+    static void RenderOutline(GameObject *gameObject,
+                              float alphaDepthOnFade = 0.2f);
     static void RenderFrustum(const Vector3 &forward,
                               const Vector3 &up,
                               const Vector3 &origin,

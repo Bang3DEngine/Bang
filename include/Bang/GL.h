@@ -81,6 +81,7 @@ public:
         Scissor                = GL_SCISSOR_TEST,
         Alpha                  = GL_ALPHA_TEST,
         CullFace               = GL_CULL_FACE,
+        Multisample            = GL_MULTISAMPLE,
         TextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS
     };
 
@@ -397,9 +398,10 @@ public:
 
     static void Enablei (GL::Enablable glTest, int index);
     static void Disablei(GL::Enablable glTest, int index);
-    static void Enable (GL::Enablable glTest);
-    static void Disable(GL::Enablable glTest);
-    static void SetEnabled(GL::Enablable glTest, bool enabled);
+    static void Enable (GL::Enablable glTest, bool overrideIndexedValue = true);
+    static void Disable(GL::Enablable glTest, bool overrideIndexedValue = true);
+    static void SetEnabled(GL::Enablable glTest, bool enabled,
+                           bool overrideIndexedValue = true);
     static void SetEnabledi(GL::Enablable glTest, int index, bool enabled);
     static bool IsEnabled(GL::Enablable glTest);
     static bool IsEnabledi(GL::Enablable glTest, int index);
@@ -749,7 +751,7 @@ private:
     uint m_stencilMask   = 0xFF;
     AARecti m_viewportRect = AARecti::Zero;
     Map<GL::Enablable, bool> m_enabledVars;
-    Map<std::pair<GL::Enablable, int>, bool> m_enabled_i_Vars;
+    Map<GL::Enablable, std::array<bool, 16> > m_enabled_i_Vars;
 
     Array<GL::Attachment> m_drawBuffers = {GL::Attachment::Color0};
     GL::Attachment m_readBuffer = GL::Attachment::Color0;

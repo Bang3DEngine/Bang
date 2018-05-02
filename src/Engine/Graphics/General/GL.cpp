@@ -30,6 +30,8 @@ GL::GL()
     GL::Enable(GL::Enablable::Depth);
     GL::Enable(GL::Enablable::Stencil);
     GL::Enable(GL::Enablable::CullFace);
+    GL::Enable(GL::Enablable::Multisample);
+    GL::Disable(GL::Enablable::Multisample);
 }
 
 GL::~GL()
@@ -278,83 +280,94 @@ void GL::BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
     }
 }
 
-void GL::Enablei (GL::Enablable glEnablable, int i)
+void GL::Enable(GL::Enablable glEnablable, bool overrideIndexedValue)
 {
-    if (!GL::IsEnabledi(glEnablable, i))
+    GL::SetEnabled(glEnablable, true, overrideIndexedValue);
+}
+
+void GL::Disable(GL::Enablable glEnablable, bool overrideIndexedValue)
+{
+    GL::SetEnabled(glEnablable, false, overrideIndexedValue);
+}
+
+void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
+                    bool overrideIndexedValues)
+{
+    GL *gl = GL::GetActive();
+    if (enabled != GL::IsEnabled(glEnablable))
     {
-        GL_CALL( glEnablei( GLCAST(glEnablable), i ) );
+        if (enabled) { GL_CALL( glEnable( GLCAST(glEnablable) ); ); }
+        else { GL_CALL( glDisable( GLCAST(glEnablable) ); ); }
+        if (gl) { gl->m_enabledVars[glEnablable] = enabled; }
+    }
+
+    // Update indexed enablables accordingly, depending on if we want to override
+    // or not
+    if (gl)
+    {
+        auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
+        for (int i = 0; i < enabledis.size(); ++i)
+        {
+            if (overrideIndexedValues)
+            {
+                // This is what OpenGL does, so just update our status
+                enabledis[i] = enabled;
+            }
+            else
+            {
+                // Force gl state change to what it was before
+                bool wasPrevEnabled = enabledis[i];
+                GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
+                GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
+            }
+        }
+    }
+}
+
+void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
+{
+    if (enabled != GL::IsEnabledi(glEnablable, i))
+    {
+        if (enabled) { GL_CALL( glEnablei( GLCAST(glEnablable), i ) ); }
+        else { GL_CALL( glDisablei( GLCAST(glEnablable), i ) ); }
 
         GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabled_i_Vars[std::make_pair(glEnablable, i)] = true; }
+        if (gl)
+        {
+            if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable))
+            {
+                auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
+                for (int i = 0; i < enabledis.size(); ++i) { enabledis[i] = false; }
+            }
+            gl->m_enabled_i_Vars[glEnablable][i] = enabled;
+        }
     }
+}
+void GL::Enablei (GL::Enablable glEnablable, int i)
+{
+    GL::SetEnabledi(glEnablable, i, true);
 }
 void GL::Disablei(GL::Enablable glEnablable, int i)
 {
-    if (GL::IsEnabledi(glEnablable, i))
-    {
-        GL_CALL( glDisablei( GLCAST(glEnablable), i ) );
-
-        GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabled_i_Vars[std::make_pair(glEnablable, i)] = false; }
-    }
+    GL::SetEnabledi(glEnablable, i, false);
 }
 
-void GL::Enable(GL::Enablable glEnablable)
-{
-    if (!GL::IsEnabled(glEnablable))
-    {
-        GL_CALL( glEnable( GLCAST(glEnablable) ) );
 
-        GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabledVars[glEnablable] = true; }
-    }
-}
-
-void GL::Disable(GL::Enablable glEnablable)
-{
-    if (GL::IsEnabled(glEnablable))
-    {
-        GL_CALL( glDisable( GLCAST(glEnablable) ) );
-
-        GL *gl = GL::GetActive();
-        if (gl) { gl->m_enabledVars[glEnablable] = false; }
-    }
-}
-
-void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
-{
-    if (enabled) { GL::Enable(glEnablable); } else { GL::Disable(glEnablable); }
-}
-
-void GL::SetEnabledi(GL::Enablable glEnablable, int index, bool enabled)
-{
-    if (enabled) { GL::Enablei(glEnablable, index); }
-    else { GL::Disablei(glEnablable, index); }
-}
-
-bool GL::IsEnabled(GL::Enablable glTest)
+bool GL::IsEnabled(GL::Enablable glEnablable)
 {
     GL *gl = GL::GetActive();
     if (!gl) { return false; }
 
-    if (!gl->m_enabledVars.ContainsKey(glTest))
-    {
-        gl->m_enabledVars.Add(glTest, false);
-    }
-    return gl->m_enabledVars.Get(glTest);
+    if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
+    return gl->m_enabledVars.Get(glEnablable);
 }
-
-bool GL::IsEnabledi(GL::Enablable glTest, int index)
+bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 {
     GL *gl = GL::GetActive();
     if (!gl) { return false; }
 
-    std::pair<GL::Enablable, int> glTest_i = std::make_pair(glTest, index);
-    if (!gl->m_enabled_i_Vars.ContainsKey(glTest_i))
-    {
-        gl->m_enabled_i_Vars.Add(glTest_i, false);
-    }
-    return gl->m_enabled_i_Vars.Get(glTest_i);
+    if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable)) { return false; }
+    return gl->m_enabled_i_Vars[glEnablable][index];
 }
 
 void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,

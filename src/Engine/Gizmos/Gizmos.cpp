@@ -390,7 +390,8 @@ void Gizmos::RenderSimpleSphere(const Vector3 &origin,
     }
 }
 
-void Gizmos::RenderOutline(GameObject *gameObject)
+void Gizmos::RenderOutline(GameObject *gameObject,
+                           float alphaDepthOnFade)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
 
@@ -433,6 +434,13 @@ void Gizmos::RenderOutline(GameObject *gameObject)
         sp->Bind();
         sp->SetColor("B_OutlineColor", outlineColor);
         sp->SetInt("B_OutlineThickness", outlineThickness);
+        sp->SetFloat("B_AlphaFadeOnDepth", alphaDepthOnFade);
+        GBuffer *gbuffer = GEngine::GetActiveGBuffer();
+        if (gbuffer)
+        {
+            sp->SetTexture("B_SceneDepthTexture",
+                           gbuffer->GetSceneDepthStencilTexture(), false);
+        }
 
         gbuffer->SetColorDrawBuffer();
         gbuffer->ApplyPass(sp, false);

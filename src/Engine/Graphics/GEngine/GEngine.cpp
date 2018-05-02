@@ -125,6 +125,12 @@ SelectionFramebuffer *GEngine::GetActiveSelectionFramebuffer()
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
+    bool wasEnabledBlendi0 = GL::IsEnabledi(GL::Enablable::Blend, 0);
+    GL::BlendFactor prevBlendSrcColorFactor = GL::GetBlendSrcFactorColor();
+    GL::BlendFactor prevBlendDstColorFactor = GL::GetBlendDstFactorColor();
+    GL::BlendFactor prevBlendSrcAlphaFactor = GL::GetBlendSrcFactorAlpha();
+    GL::BlendFactor prevBlendDstAlphaFactor = GL::GetBlendDstFactorAlpha();
+
     camera->BindGBuffer();
 
     GBuffer *gbuffer = camera->GetGBuffer();
@@ -174,7 +180,9 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     // ApplyStenciledDeferredLightsToGBuffer(go, camera);
     RenderWithPass(go, RenderPass::OverlayPostProcess);
 
-    GL::Disablei(GL::Enablable::Blend, 0);
+    // GL::BlendFuncSeparate(prevBlendSrcColorFactor, prevBlendDstColorFactor,
+    //                       prevBlendSrcAlphaFactor, prevBlendDstAlphaFactor);
+    GL::SetEnabledi(GL::Enablable::Blend, 0, wasEnabledBlendi0);
     gbuffer->PopDepthStencilTexture();
 }
 
@@ -242,8 +250,8 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
     // Set state, bind and draw
     sp->Bind();
-    sp->SetVector2("B_AlbedoUvOffset",         Vector2::Zero, false);
-    sp->SetVector2("B_AlbedoUvMultiply",       Vector2::One, false);
+    sp->SetVector2("B_AlbedoUvOffset",           Vector2::Zero, false);
+    sp->SetVector2("B_AlbedoUvMultiply",          Vector2::One, false);
     sp->SetVector2("B_destRectMinCoord", destRectMask.GetMin(), false);
     sp->SetVector2("B_destRectMaxCoord", destRectMask.GetMax(), false);
 

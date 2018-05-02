@@ -105,7 +105,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
                                   prevBlendDstFactorColor,
                                   prevBlendSrcFactorAlpha,
                                   prevBlendDstFactorAlpha);
-            GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled);
+            GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled, false);
 
             m_needNewImageToSnapshot = false;
         }

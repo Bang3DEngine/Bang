@@ -62,6 +62,9 @@ void Window::Create(uint flags)
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
         SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+
         m_sdlWindow = SDL_CreateWindow("Bang",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,

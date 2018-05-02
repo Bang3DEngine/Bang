@@ -164,8 +164,9 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
-    RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
-    ApplyStenciledDeferredLightsToGBuffer(go, camera);
+    RenderWithPass(go, RenderPass::Overlay);
+    // RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
+    // ApplyStenciledDeferredLightsToGBuffer(go, camera);
     RenderWithPass(go, RenderPass::OverlayPostProcess);
 
     GL::Disablei(GL::Enablable::Blend, 0);

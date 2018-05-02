@@ -12,13 +12,28 @@ USING_NAMESPACE_BANG
 
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 {
+    // Create depth textures
+    m_sceneDepthStencilTexture   = Resources::Create<Texture2D>();
+    m_canvasDepthStencilTexture  = Resources::Create<Texture2D>();
+    m_overlayDepthStencilTexture = Resources::Create<Texture2D>();
+    auto depthStencilTexs = {m_sceneDepthStencilTexture.Get(),
+                             m_canvasDepthStencilTexture.Get(),
+                             m_overlayDepthStencilTexture.Get()};
+    for (Texture2D *depthStencilTex : depthStencilTexs)
+    {
+        depthStencilTex->Bind();
+        depthStencilTex->SetFormat(GL::ColorFormat::Depth24_Stencil8);
+        depthStencilTex->CreateEmpty(width, height);
+    }
+
+    // Create attachments
     Bind();
     CreateAttachmentTex2D(AttColor,        GL::ColorFormat::RGBA_UByte8);
     CreateAttachmentTex2D(AttAlbedo,       GL::ColorFormat::RGBA_UByte8);
     CreateAttachmentTex2D(AttNormal,       GL::ColorFormat::RGB10_A2_UByte);
     CreateAttachmentTex2D(AttMisc,         GL::ColorFormat::RGB10_A2_UByte);
     CreateAttachmentTex2D(AttColorRead,    GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttDepthStencil, GL::ColorFormat::Depth24_Stencil8);
+    SetSceneDepthStencil();
     UnBind();
 }
 
@@ -123,20 +138,56 @@ void GBuffer::SetColorDrawBuffer()
     SetDrawBuffers({GBuffer::AttColor});
 }
 
-void GBuffer::ClearAllBuffersExceptColor()
+void GBuffer::SetDepthStencilTexture(Texture2D *depthStencilTexture)
 {
-    GL::ClearStencilBuffer(0);
-    ClearDepth(1.0f);
-
-    SetDrawBuffers({{GBuffer::AttNormal, GBuffer::AttAlbedo, GBuffer::AttMisc}});
-    GL::ClearColorBuffer(Color::Zero);
+    if (depthStencilTexture != GetDepthStencilTexture())
+    {
+        SetAttachmentTexture(depthStencilTexture, GBuffer::AttDepthStencil);
+        if (GetWidth() > 0 && GetHeight() > 0)
+        {
+            Resize( GetWidth(), GetHeight() );
+        }
+        p_currentDepthStencilTexture = depthStencilTexture;
+    }
 }
 
-void GBuffer::ClearBuffersAndBackground(const Color &backgroundColor)
+Texture2D *GBuffer::GetSceneDepthStencilTexture() const
 {
-    ClearAllBuffersExceptColor();
-    SetDrawBuffers({GBuffer::AttColor}); // , GBuffer::AttColorRead});
-    GL::ClearColorBuffer(backgroundColor);
+    return m_sceneDepthStencilTexture.Get();
+}
+
+Texture2D *GBuffer::GetCanvasDepthStencilTexture() const
+{
+    return m_canvasDepthStencilTexture.Get();
+}
+
+Texture2D *GBuffer::GetOverlayDepthStencilTexture() const
+{
+    return m_overlayDepthStencilTexture.Get();
+}
+void GBuffer::SetSceneDepthStencil()
+{
+    SetDepthStencilTexture( GetSceneDepthStencilTexture() );
+}
+void GBuffer::SetCanvasDepthStencil()
+{
+    SetDepthStencilTexture( GetCanvasDepthStencilTexture() );
+}
+void GBuffer::SetOverlayDepthStencil()
+{
+    SetDepthStencilTexture( GetOverlayDepthStencilTexture() );
+}
+void GBuffer::PushDepthStencilTexture()
+{
+    m_depthStencilTexturesStack.push( GetDepthStencilTexture() );
+}
+void GBuffer::PopDepthStencilTexture()
+{
+    m_depthStencilTexturesStack.pop();
+}
+Texture2D *GBuffer::GetDepthStencilTexture() const
+{
+    return p_currentDepthStencilTexture;
 }
 
 String GBuffer::GetMiscTexName() { return "B_GTex_Misc"; }

@@ -55,12 +55,10 @@ void CreateAttachment(Framebuffer *fb,
 
     fb->Bind();
 
-    GL_ClearError();
     RH<TextureClass> tex = Resources::Create<TextureClass>();
     tex.Get()->Bind();
     tex.Get()->SetFormat(texFormat);
     CreateEmptyTexture<TextureClass>(tex.Get(), fb->GetWidth(), fb->GetHeight());
-    GL_CheckError();
 
     fb->SetAttachmentTexture(tex.Get(), attachment);
     // tex.Get()->UnBind();
@@ -116,7 +114,6 @@ void Framebuffer::SetReadBuffer(GL::Attachment attachment) const
 void Framebuffer::BeforeSetAttTex(Texture* tex, GL::Attachment attachment)
 {
     Bind();
-    GL_ClearError();
     m_attachments.Remove(attachment);
     m_attachments_To_Texture.Remove(attachment);
 }
@@ -233,23 +230,6 @@ int Framebuffer::GetHeight() const
 Vector2 Framebuffer::GetSize() const
 {
     return Vector2(GetWidth(), GetHeight());
-}
-
-void Framebuffer::Clear()
-{
-    ClearDepth(1.0f);
-    ClearColor(Color::Zero);
-}
-
-void Framebuffer::ClearDepth(float clearDepth)
-{
-    GL::ClearDepthBuffer(clearDepth);
-}
-
-void Framebuffer::ClearColor(const Color &clearColor)
-{
-    SetAllDrawBuffers();
-    GL::ClearColorBuffer(clearColor);
 }
 
 GL::BindTarget Framebuffer::GetGLBindTarget() const

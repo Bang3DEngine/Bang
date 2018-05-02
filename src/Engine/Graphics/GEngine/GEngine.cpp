@@ -128,13 +128,17 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     camera->BindGBuffer();
 
     GBuffer *gbuffer = camera->GetGBuffer();
-    gbuffer->ClearBuffersAndBackground(camera->GetClearColor());
+    gbuffer->PushDepthStencilTexture();
 
     GL::Enablei(GL::Enablable::Blend, 0);
     GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
 
     // GBuffer Scene rendering
     gbuffer->SetAllDrawBuffers();
+    gbuffer->SetSceneDepthStencil();
+    GL::ClearStencilBuffer();
+    GL::ClearDepthBuffer();
+    GL::ClearColorBuffer(Color::Zero);
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Scene);
@@ -151,15 +155,16 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 
     // GBuffer Canvas rendering
     gbuffer->SetColorDrawBuffer();
+    gbuffer->SetCanvasDepthStencil();
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
     GL::SetDepthFunc(GL::Function::LEqual);
     RenderWithPass(go, RenderPass::Canvas);
-    gbuffer->SetColorDrawBuffer();
     RenderWithPass(go, RenderPass::CanvasPostProcess);
 
     // GBuffer Overlay rendering
     gbuffer->SetAllDrawBuffers();
+    gbuffer->SetOverlayDepthStencil();
     GL::ClearStencilBuffer();
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
@@ -170,6 +175,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     RenderWithPass(go, RenderPass::OverlayPostProcess);
 
     GL::Disablei(GL::Enablable::Blend, 0);
+    gbuffer->PopDepthStencilTexture();
 }
 
 void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)

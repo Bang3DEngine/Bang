@@ -50,10 +50,6 @@ public:
     TextureCubeMap* GetAttachmentTexCubeMap(GL::Attachment attachment) const;
     GL::BindTarget GetGLBindTarget() const override;
 
-    void Clear();
-    virtual void ClearDepth(float clearDepth = 1.0f);
-    void ClearColor(const Color &clearColor = Color::Zero);
-
     virtual void Bind() const override;
     virtual void UnBind() const override;
 

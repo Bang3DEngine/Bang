@@ -25,8 +25,6 @@ public:
     void PrepareNewFrameForRender(const GameObject *go);
     void RenderForSelectionBuffer(Renderer *renderer);
 
-    void ClearColor();
-
     RH<Texture2D> GetColorTexture() const;
     GameObject *GetGameObjectInViewportPoint(const Vector2i &vpPoint);
 

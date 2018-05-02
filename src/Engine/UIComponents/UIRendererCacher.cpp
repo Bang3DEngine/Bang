@@ -77,7 +77,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             GL::ReadBuffer( GBuffer::AttColor );
             GL::DrawBuffers( {GL::Attachment::Color0} );
             GL::ClearColorBuffer(Color::Zero);
-            p_cacheFramebuffer->ClearDepth(1.0f);
+            GL::ClearDepthBuffer(1.0f);
             GL::ClearStencilBuffer(0);
 
             Vector2 rtSize = rtRectNDC.GetSize();

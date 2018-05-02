@@ -93,11 +93,6 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
     p_nextRenderSelectable = nullptr;
 }
 
-void SelectionFramebuffer::ClearColor()
-{
-    Framebuffer::ClearColor(Color::Zero);
-}
-
 GameObject *SelectionFramebuffer::
 GetGameObjectInViewportPoint(const Vector2i &vpPoint)
 {

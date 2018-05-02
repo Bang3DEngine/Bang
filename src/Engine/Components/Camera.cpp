@@ -86,8 +86,8 @@ void Camera::BindSelectionFramebuffer()
 
     GetSelectionFramebuffer()->Bind();
     GL::ClearStencilBuffer();
-    GetSelectionFramebuffer()->ClearDepth();
-    GetSelectionFramebuffer()->ClearColor();
+    GL::ClearDepthBuffer();
+    GL::ClearColorBuffer(Color::Zero);
 }
 
 Ray Camera::FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const

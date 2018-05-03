@@ -56,7 +56,7 @@ public:
     void SetZNear(float zNear);
     void SetZFar(float zFar);
     void SetProjectionMode(ProjectionMode projMode);
-    void SetViewportRect(const AARect &viewportRectNDC);
+    void SetViewportAARectNDC(const AARect &viewportRectNDC);
     void AddRenderPass(RenderPass renderPass);
     void RemoveRenderPass(RenderPass renderPass);
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM);
@@ -76,10 +76,10 @@ public:
     bool GetRenderSelectionBuffer() const;
     Matrix4 GetProjectionMatrix() const;
     ProjectionMode GetProjectionMode() const;
-    AARect GetViewportBoundingRect(const AABox &bbox);
-    AARect GetViewportRectInWindow() const;
-    AARect GetViewportRectNDCInWindow() const;
-    const AARect& GetViewportRectNDC() const;
+    AARect GetViewportBoundingAARect(const AABox &bbox);
+    AARect GetViewportAARectInWindow() const;
+    AARect GetViewportAARectNDCInWindow() const;
+    const AARect& GetViewportAARectNDC() const;
     GBuffer *GetGBuffer() const;
     TextureCubeMap *GetSkyBoxTexture() const;
     TextureCubeMap *GetSpecularSkyBoxTexture() const;

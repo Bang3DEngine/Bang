@@ -209,7 +209,7 @@ Material* Renderer::GetMaterial() const
 AARect Renderer::GetBoundingRect(Camera *camera) const
 {
     return AARect::NDCRect;
-    return camera ? camera->GetViewportBoundingRect(GetAABBox()) :
+    return camera ? camera->GetViewportBoundingAARect(GetAABBox()) :
                     AARect::Zero;
 }
 

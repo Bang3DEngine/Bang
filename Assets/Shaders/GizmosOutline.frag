@@ -28,7 +28,7 @@ void main()
     float nearPixelDepth = GetNearPixelDepth();
     if (nearPixelDepth < 1.0f)
     {
-         vec2 uv = B_GetViewportUv(); // B_FIn_AlbedoUv;
+         vec2 uv = B_GetViewportUv();
 
          float sceneDepth = texture(B_SceneDepthTexture, uv).r;
          float alpha = (nearPixelDepth > sceneDepth) ? B_AlphaFadeOnDepth : 1.0f;

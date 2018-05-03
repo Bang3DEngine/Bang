@@ -534,7 +534,7 @@ bool GameObject::IsDontDestroyOnLoad() const
 AARect GameObject::GetBoundingViewportRect(Camera *cam, bool includeChildren) const
 {
     AABox bbox = GetAABBox(includeChildren);
-    return cam->GetViewportBoundingRect(bbox);
+    return cam->GetViewportBoundingAARect(bbox);
 }
 
 AABox GameObject::GetLocalAABBox(bool includeChildren) const

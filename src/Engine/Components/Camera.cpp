@@ -62,7 +62,7 @@ void Camera::UnBind() const
 
 void Camera::BindViewportForBlitting() const
 {
-    GL::SetViewport( AARecti( GetViewportRectInWindow() ) );
+    GL::SetViewport( AARecti( GetViewportAARectInWindow() ) );
 }
 
 void Camera::BindViewportForRendering() const
@@ -104,7 +104,7 @@ Vector2i Camera::FromWindowPointToViewportPoint(const Vector2i &winPoint) const
 {
     return Vector2i(
                 GL::FromWindowPointToViewportPoint(Vector2(winPoint),
-                                                   AARecti(GetViewportRectInWindow())) );
+                                 AARecti(GetViewportAARectInWindow())) );
 }
 
 Vector2 Camera::FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const
@@ -135,7 +135,7 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     return res;
 }
 
-AARect Camera::GetViewportBoundingRect(const AABox &bbox)
+AARect Camera::GetViewportBoundingAARect(const AABox &bbox)
 {
     // If there's a point outside the camera rect, return Empty
     bool allPointsOutside = true;
@@ -176,7 +176,7 @@ void Camera::SetProjectionMode(Camera::ProjectionMode projMode)
     m_projMode = projMode;
 }
 
-void Camera::SetViewportRect(const AARect &viewportRectNDC)
+void Camera::SetViewportAARectNDC(const AARect &viewportRectNDC)
 {
     m_viewportRectNDC = viewportRectNDC;
 }
@@ -239,18 +239,18 @@ const Set<RenderPass> &Camera::GetRenderPassMask() const
     return m_renderPassMask;
 }
 
-AARect Camera::GetViewportRectInWindow() const
+AARect Camera::GetViewportAARectInWindow() const
 {
-    AARect vpRect = GetViewportRectNDC() * 0.5f + 0.5f;
+    AARect vpRect = GetViewportAARectNDC() * 0.5f + 0.5f;
     return AARect( vpRect * Vector2(GL::GetViewportSize())
-                        + Vector2(GL::GetViewportRect().GetMin()) );
+                   + Vector2(GL::GetViewportRect().GetMin()) );
 }
-AARect Camera::GetViewportRectNDCInWindow() const
+AARect Camera::GetViewportAARectNDCInWindow() const
 {
-    return GL::FromWindowRectToWindowRectNDC( GetViewportRectInWindow() );
+    return GL::FromWindowRectToWindowRectNDC( GetViewportAARectInWindow() );
 }
 
-const AARect& Camera::GetViewportRectNDC() const
+const AARect& Camera::GetViewportAARectNDC() const
 {
     return m_viewportRectNDC;
 }

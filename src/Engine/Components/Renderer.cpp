@@ -47,13 +47,6 @@ void Renderer::OnRender() {}
 void Renderer::Bind() const
 {
     GL::SetViewProjMode( GetViewProjMode() );
-    GL::SetWireframe( IsRenderWireframe() );
-
-    GL::SetCullFace( GetCullFace() ); // Culling states
-    GL::SetEnabled(GL::Enablable::CullFace, GetCulling());
-
-    GL::LineWidth( GetLineWidth() );
-    GL::PointSize( GetLineWidth() );
 
     Transform *t = GetGameObject()->GetTransform();
     GLUniforms::SetModelMatrix( t ? t->GetLocalToWorldMatrix() : Matrix4::Identity );
@@ -114,22 +107,6 @@ void Renderer::SetMaterial(Material *mat)
     }
 }
 
-void Renderer::SetLineWidth(float w)
-{
-    if (w != GetLineWidth())
-    {
-        m_lineWidth = w;
-        PropagateRendererChanged();
-    }
-}
-void Renderer::SetRenderWireframe(bool renderWireframe)
-{
-    if (renderWireframe != IsRenderWireframe())
-    {
-        m_renderWireframe = renderWireframe;
-        PropagateRendererChanged();
-    }
-}
 void Renderer::SetViewProjMode(GL::ViewProjMode viewProjMode)
 {
     if (viewProjMode != GetViewProjMode())
@@ -143,22 +120,6 @@ void Renderer::SetRenderPrimitive(GL::Primitive renderPrimitive)
     if (renderPrimitive != GetRenderPrimitive())
     {
         m_renderPrimitive = renderPrimitive;
-        PropagateRendererChanged();
-    }
-}
-void Renderer::SetCullFace(GL::Face cullFace)
-{
-    if (cullFace != GetCullFace())
-    {
-        m_cullFace = cullFace;
-        PropagateRendererChanged();
-    }
-}
-void Renderer::SetCulling(bool culling)
-{
-    if (culling != GetCulling())
-    {
-        m_cullling = culling;
         PropagateRendererChanged();
     }
 }
@@ -183,15 +144,11 @@ bool Renderer::IsVisible() const { return m_visible; }
 Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
 
 void Renderer::OnMaterialChanged(Material*) { PropagateRendererChanged(); }
-bool Renderer::IsRenderWireframe() const { return m_renderWireframe; }
 AABox Renderer::GetAABBox() const { return AABox::Empty; }
-GL::Face Renderer::GetCullFace() const { return m_cullFace; }
-bool Renderer::GetCulling() const { return m_cullling; }
 bool Renderer::GetCastsShadows() const { return m_castsShadows; }
 bool Renderer::GetReceivesShadows() const { return m_receivesShadows; }
 GL::ViewProjMode Renderer::GetViewProjMode() const { return m_viewProjMode; }
 GL::Primitive Renderer::GetRenderPrimitive() const { return m_renderPrimitive; }
-float Renderer::GetLineWidth() const { return m_lineWidth; }
 Material* Renderer::GetMaterial() const
 {
     if (!p_material)
@@ -224,13 +181,9 @@ void Renderer::CloneInto(ICloneable *clone) const
     Component::CloneInto(clone);
     Renderer *r = Cast<Renderer*>(clone);
     r->SetMaterial(GetSharedMaterial());
-    r->SetRenderWireframe(IsRenderWireframe());
-    r->SetCullFace(GetCullFace());
-    r->SetCulling(GetCulling());
     r->SetCastsShadows(GetCastsShadows());
     r->SetReceivesShadows(GetReceivesShadows());
     r->SetRenderPrimitive(GetRenderPrimitive());
-    r->SetLineWidth(GetLineWidth());
 }
 
 void Renderer::ImportXML(const XMLNode &xml)
@@ -243,17 +196,11 @@ void Renderer::ImportXML(const XMLNode &xml)
     if (xml.Contains("Material"))
     { SetMaterial(Resources::Load<Material>(xml.Get<GUID>("Material")).Get()); }
 
-    if (xml.Contains("LineWidth"))
-    { SetLineWidth(xml.Get<float>("LineWidth")); }
-
     if (xml.Contains("CastsShadows"))
     { SetCastsShadows(xml.Get<bool>("CastsShadows")); }
 
     if (xml.Contains("ReceivesShadows"))
     { SetReceivesShadows(xml.Get<bool>("ReceivesShadows")); }
-
-    if (xml.Contains("RenderWireframe"))
-    { SetRenderWireframe(xml.Get<bool>("RenderWireframe")); }
 }
 
 void Renderer::ExportXML(XMLNode *xmlInfo) const
@@ -264,8 +211,6 @@ void Renderer::ExportXML(XMLNode *xmlInfo) const
 
     Material* sMat = GetSharedMaterial();
     xmlInfo->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
-    xmlInfo->Set("LineWidth", GetLineWidth());
     xmlInfo->Set("CastsShadows", GetCastsShadows());
     xmlInfo->Set("ReceivesShadows", GetReceivesShadows());
-    xmlInfo->Set("RenderWireframe", IsRenderWireframe());
 }

@@ -8,13 +8,14 @@
 #include "Bang/Sphere.h"
 #include "Bang/GEngine.h"
 #include "Bang/XMLNode.h"
+#include "Bang/Material.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -33,7 +34,9 @@ PointLight::PointLight() : Light()
                        GL_COMPARE_REF_TO_TEXTURE );
     GL::Bind(GetShadowMapTexture()->GetGLBindTarget(), prevBoundTex);
 
-    m_shadowMapShaderProgram.Set( ShaderProgramFactory::GetPointLightShadowMap() );
+    m_shadowMapMaterial = Resources::Create<Material>();
+    m_shadowMapMaterial.Get()->SetShaderProgram(
+                ShaderProgramFactory::GetPointLightShadowMap() );
     SetLightScreenPassShaderProgram(
                 ShaderProgramFactory::GetPointLightScreenPass());
 }
@@ -101,15 +104,16 @@ void PointLight::RenderShadowMaps_()
     // Set up viewport
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
 
-    m_shadowMapShaderProgram.Get()->Bind();
+    m_shadowMapMaterial.Get()->Bind();
+    SetUniformsBeforeApplyingLight(m_shadowMapMaterial.Get()->GetShaderProgram());
 
-    SetUniformsBeforeApplyingLight(m_shadowMapShaderProgram.Get());
     Array<Matrix4> cubeMapPVMMatrices = GetWorldToShadowMapMatrices();
-    m_shadowMapShaderProgram.Get()->SetMatrix4Array("B_WorldToShadowMapMatrices",
-                                                    cubeMapPVMMatrices, false);
+    m_shadowMapMaterial.Get()->GetShaderProgram()->
+            SetMatrix4Array("B_WorldToShadowMapMatrices",
+                            cubeMapPVMMatrices, false);
 
     // Render shadow map into framebuffer
-    GEngine::GetActive()->SetReplacementShader( m_shadowMapShaderProgram.Get() );
+    GEngine::GetActive()->SetReplacementMaterial( m_shadowMapMaterial.Get() );
     GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEqual);
@@ -126,7 +130,7 @@ void PointLight::RenderShadowMaps_()
     GLUniforms::SetModelMatrix(prevModel);
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
-    GEngine::GetActive()->SetReplacementShader(nullptr);
+    GEngine::GetActive()->SetReplacementMaterial(nullptr);
     GL::Bind(GL::BindTarget::Framebuffer,   prevBoundFB);
     GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
 }

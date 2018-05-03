@@ -42,8 +42,8 @@ public:
                                                Camera *camera,
                                                const AARect &maskRectNDC = AARect::NDCRect);
 
-    void SetReplacementShader(ShaderProgram *shader);
-    ShaderProgram* GetReplacementShader() const;
+    void SetReplacementMaterial(Material *material);
+    Material* GetReplacementMaterial() const;
 
     static GBuffer *GetActiveGBuffer();
     static Camera *GetActiveRenderingCamera();
@@ -56,8 +56,8 @@ public:
 
 private:
     GL *m_gl = nullptr;
-    RH<ShaderProgram> m_renderSky;
-    RH<ShaderProgram> m_replacementShader;
+    RH<ShaderProgram> m_renderSkySP;
+    RH<Material> m_replacementMaterial;
     Camera *p_currentRenderingCamera = nullptr;
     TextureUnitManager *m_texUnitManager = nullptr;
 

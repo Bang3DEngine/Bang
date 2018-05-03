@@ -28,11 +28,11 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 
     // Create attachments
     Bind();
-    CreateAttachmentTex2D(AttColor,        GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttAlbedo,       GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttNormal,       GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachmentTex2D(AttMisc,         GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachmentTex2D(AttColorRead,    GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttColor,     GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttAlbedo,    GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttNormal,    GL::ColorFormat::RGB10_A2_UByte);
+    CreateAttachmentTex2D(AttMisc,      GL::ColorFormat::RGB10_A2_UByte);
+    CreateAttachmentTex2D(AttColorRead, GL::ColorFormat::RGBA_UByte8);
     SetSceneDepthStencil();
     UnBind();
 }

@@ -1,6 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include "Bang/GL.h"
 #include "Bang/Asset.h"
 #include "Bang/Color.h"
 #include "Bang/Vector2.h"
@@ -34,6 +35,9 @@ public:
     void SetAlbedoColor(const Color &albedoColor);
     void SetNormalMapTexture(Texture2D *texture);
     void SetRenderPass(RenderPass renderPass);
+    void SetCullFace(GL::CullFaceExt cullFace);
+    void SetRenderWireframe(bool renderWireframe);
+    void SetLineWidth(float w);
 
     const Vector2& GetAlbedoUvOffset() const;
     const Vector2& GetAlbedoUvMultiply() const;
@@ -47,6 +51,9 @@ public:
     const Color& GetAlbedoColor() const;
     Texture2D* GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
+    bool IsRenderWireframe() const;
+    GL::CullFaceExt GetCullFace() const;
+    float GetLineWidth() const;
 
     virtual void Bind() const;
     virtual void UnBind() const;
@@ -78,6 +85,9 @@ protected:
     Vector2 m_albedoUvMultiply    = Vector2::One;
     Vector2 m_normalMapUvOffset   = Vector2::Zero;
     Vector2 m_normalMapUvMultiply = Vector2::One;
+    float m_lineWidth             = 1.0f;
+    GL::CullFaceExt m_cullFace    = GL::CullFaceExt::Back;
+    bool m_renderWireframe        = false;
 
     Material();
     virtual ~Material();

@@ -41,7 +41,7 @@ void UITextCursor::ResetTickTime()
 
 void UITextCursor::SetStroke(float cursorWidth)
 {
-    SetLineWidth(cursorWidth);
+    GetMaterial()->SetLineWidth(cursorWidth);
 }
 
 void UITextCursor::SetTickTime(float cursorTickTime)
@@ -51,7 +51,7 @@ void UITextCursor::SetTickTime(float cursorTickTime)
 
 float UITextCursor::GetStroke() const
 {
-    return GetLineWidth();
+    return GetActiveMaterial()->GetLineWidth();
 }
 
 float UITextCursor::GetTickTime() const

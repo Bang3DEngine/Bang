@@ -34,7 +34,7 @@ public:
 protected:
     float m_range = 1.0f;
 
-    RH<ShaderProgram> m_shadowMapShaderProgram;
+    RH<Material> m_shadowMapMaterial;
     Framebuffer *m_shadowMapFramebuffer = nullptr;
 
     PointLight();

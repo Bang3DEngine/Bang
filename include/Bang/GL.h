@@ -98,6 +98,14 @@ public:
         DynamicCopy = GL_DYNAMIC_COPY
     };
 
+    enum class CullFaceExt
+    {
+        None         = GL_NONE,
+        Front        = GL_FRONT,
+        Back         = GL_BACK,
+        FrontAndBack = GL_FRONT_AND_BACK
+    };
+
     enum class Face
     {
         Front        = GL_FRONT,

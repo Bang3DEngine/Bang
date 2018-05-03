@@ -1,6 +1,7 @@
 #ifndef DEBUGRENDERER_H
 #define DEBUGRENDERER_H
 
+#include "Bang/GL.h"
 #include "Bang/Set.h"
 #include "Bang/Mesh.h"
 #include "Bang/Time.h"
@@ -93,7 +94,7 @@ private:
         float thickness;
         double destroyTimestamp;
         bool wireframe;
-        bool culling;
+        GL::CullFaceExt cullFace;
         bool depthTest;
         bool renderedOnce;
     };

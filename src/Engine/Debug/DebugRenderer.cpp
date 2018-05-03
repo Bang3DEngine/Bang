@@ -166,7 +166,7 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
     drp.destroyTimestamp = Time::GetNow_Seconds() + time;
     drp.thickness = thickness;
     drp.wireframe = wireframe;
-    drp.culling = culling;
+    drp.cullFace = (culling ? GL::CullFaceExt::Back : GL::CullFaceExt::None);
     drp.depthTest = depthTest;
     drp.renderedOnce = false;
 
@@ -245,7 +245,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     m_mesh.Get()->SetUvsPool(uvs);
                     m_mesh.Get()->UpdateGeometry();
 
-                    Gizmos::SetCulling(drp->culling);
+                    Gizmos::SetCullFace(drp->cullFace);
                     Gizmos::SetRenderWireframe(drp->wireframe);
                     Gizmos::RenderCustomMesh( m_mesh.Get() );
                 }

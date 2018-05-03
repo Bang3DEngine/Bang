@@ -31,27 +31,19 @@ public:
 
     void SetVisible(bool visible);
     void SetMaterial(Material *mat);
-    void SetRenderWireframe(bool renderWireframe);
-    void SetCullFace(GL::Face cullFace);
-    void SetCulling(bool cull);
     void SetCastsShadows(bool castsShadows);
     void SetReceivesShadows(bool receivesShadows);
     void SetViewProjMode(GL::ViewProjMode viewProjMode);
     void SetRenderPrimitive(GL::Primitive renderPrimitive);
-    void SetLineWidth(float w);
 
     bool IsVisible() const;
     Material* GetSharedMaterial() const;
     Material* GetActiveMaterial() const;
     Material* GetMaterial() const;
-    bool IsRenderWireframe() const;
-    GL::Face GetCullFace() const;
-    bool GetCulling() const;
     bool GetCastsShadows() const;
     bool GetReceivesShadows() const;
     GL::ViewProjMode GetViewProjMode() const;
     GL::Primitive GetRenderPrimitive() const;
-    float GetLineWidth() const;
 
     // IMaterialChangedListener
     void OnMaterialChanged(Material *changedMaterial) override;
@@ -75,12 +67,8 @@ protected:
 
 private:
     bool m_visible = true;
-    bool m_cullling = true;
-    float m_lineWidth = 1.0f;
     bool m_castsShadows = true;
     bool m_receivesShadows = true;
-    bool m_renderWireframe = false;
-    GL::Face m_cullFace = GL::Face::Back;
     GL::Primitive m_renderPrimitive = GL::Primitive::Triangles;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::World;
 

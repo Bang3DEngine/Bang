@@ -18,7 +18,7 @@ class Gizmos
 public:
     static void SetColor(const Color &color);
 
-    static void SetCulling(bool culling);
+    static void SetCullFace(GL::CullFaceExt cullFace);
     static void SetPosition(const Vector3 &position);
     static void SetRotation(const Quaternion &rotation);
     static void SetScale(const Vector3 &scale);

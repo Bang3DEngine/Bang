@@ -49,7 +49,7 @@ void GEngine::Init()
 
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
     p_renderTextureToViewportSP = ShaderProgramFactory::GetRenderTextureToViewport();
-    m_renderSky.Set( ShaderProgramFactory::Get(
+    m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                         EPATH("Shaders/RenderSky.frag")) );
     GL::SetActive( nullptr );
@@ -95,14 +95,14 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::SetStencilOp(prevStencilOp);
 }
 
-void GEngine::SetReplacementShader(ShaderProgram *shader)
+void GEngine::SetReplacementMaterial(Material *material)
 {
-    m_replacementShader.Set(shader);
+    m_replacementMaterial.Set(material);
 }
 
-ShaderProgram *GEngine::GetReplacementShader() const
+Material *GEngine::GetReplacementMaterial() const
 {
-    return m_replacementShader.Get();
+    return m_replacementMaterial.Get();
 }
 
 Camera *GEngine::GetActiveRenderingCamera()
@@ -149,10 +149,10 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::SetDepthFunc(GL::Function::LEqual);
 
     // Render the sky / background (before so that alphas in scene can be handled)
-    GLId prevBoundSP = GL::GetBoundId(m_renderSky.Get()->GetGLBindTarget());
-    m_renderSky.Get()->Bind();
-    gbuffer->ApplyPass(m_renderSky.Get(), false);
-    GL::Bind(m_renderSky.Get()->GetGLBindTarget(), prevBoundSP); // Restore
+    GLId prevBoundSP = GL::GetBoundId(m_renderSkySP.Get()->GetGLBindTarget());
+    m_renderSkySP.Get()->Bind();
+    gbuffer->ApplyPass(m_renderSkySP.Get(), false);
+    GL::Bind(m_renderSkySP.Get()->GetGLBindTarget(), prevBoundSP); // Restore
 
     // Render scene pass
     RenderWithPassAndMarkStencilForLights(go, RenderPass::Scene);
@@ -339,13 +339,13 @@ void GEngine::Render(Renderer *rend)
 {
     // If we have a replacement shader currently, change the renderer
     // shader program
-    Material *mat = rend->GetActiveMaterial();
-    ShaderProgram *previousSP = mat ? mat->GetShaderProgram() : nullptr;
-    if (mat && GetReplacementShader())
+    RH<Material> previousRendMat;
+    previousRendMat.Set(rend->GetActiveMaterial());
+    if (GetReplacementMaterial())
     {
-        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(false);
-        mat->SetShaderProgram( GetReplacementShader() );
-        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(true);
+        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(false);
+        rend->SetMaterial( GetReplacementMaterial() );
+        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(true);
     }
 
     // Render with the renderer!
@@ -370,11 +370,11 @@ void GEngine::Render(Renderer *rend)
 
     // Restore previous shader program, in case it was replaced with
     // replacement shader
-    if (mat)
+    if (GetReplacementMaterial())
     {
-        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(false);
-        mat->SetShaderProgram(previousSP);
-        mat->EventEmitter<IMaterialChangedListener>::SetEmitEvents(true);
+        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(false);
+        rend->SetMaterial(previousRendMat.Get());
+        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(true);
     }
 }
 

@@ -70,12 +70,12 @@ void Gizmos::SetColor(const Color &color)
     }
 }
 
-void Gizmos::SetCulling(bool culling)
+void Gizmos::SetCullFace(GL::CullFaceExt cullFace)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     for (Renderer *rend : g->m_renderers)
     {
-        rend->SetCulling(culling);
+        rend->GetMaterial()->SetCullFace(cullFace);
     }
 }
 
@@ -117,7 +117,7 @@ void Gizmos::SetThickness(float thickness)
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     for (Renderer *rend : g->m_renderers)
     {
-        rend->SetLineWidth(thickness);
+        rend->GetMaterial()->SetLineWidth(thickness);
     }
 }
 
@@ -126,7 +126,7 @@ void Gizmos::SetRenderWireframe(bool wireframe)
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     for (Renderer *rend : g->m_renderers)
     {
-        rend->SetRenderWireframe(wireframe);
+        rend->GetMaterial()->SetRenderWireframe(wireframe);
     }
 }
 
@@ -263,7 +263,7 @@ void Gizmos::RenderViewportIcon(Texture2D *texture,
     Gizmos::SetPosition( Vector3(winRect.GetCenter(), 0) );
     Gizmos::SetScale( Vector3(winRect.GetSize(), 1) );
 
-    g->m_meshRenderer->SetRenderWireframe(false);
+    SetRenderWireframe(false);
     SetReceivesLighting(false);
     g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
     g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
@@ -411,7 +411,8 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         // draws to gizmos and change the gizmos color and thickness.
         const Color outlineColor = g->m_meshRenderer->GetActiveMaterial()->
                                    GetAlbedoColor();
-        const float outlineThickness = g->m_meshRenderer->GetLineWidth();
+        const float outlineThickness = g->m_meshRenderer->GetActiveMaterial()->
+                                       GetLineWidth();
 
         gbuffer->PushDrawAttachments();
         gbuffer->Bind();
@@ -530,7 +531,7 @@ void Gizmos::Reset()
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
 
-    Gizmos::SetCulling(true);
+    Gizmos::SetCullFace(GL::CullFaceExt::Back);
     Gizmos::SetPosition(Vector3::Zero);
     Gizmos::SetRotation(Quaternion::Identity);
     Gizmos::SetScale(Vector3::One);

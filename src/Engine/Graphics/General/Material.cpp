@@ -22,6 +22,33 @@ Material::~Material()
 {
 }
 
+void Material::SetLineWidth(float w)
+{
+    if (w != GetLineWidth())
+    {
+        m_lineWidth = w;
+        PropagateMaterialChanged();
+    }
+}
+
+void Material::SetRenderWireframe(bool renderWireframe)
+{
+    if (renderWireframe != IsRenderWireframe())
+    {
+        m_renderWireframe = renderWireframe;
+        PropagateMaterialChanged();
+    }
+}
+
+void Material::SetCullFace(GL::CullFaceExt cullFace)
+{
+    if (cullFace != GetCullFace())
+    {
+        m_cullFace = cullFace;
+        PropagateMaterialChanged();
+    }
+}
+
 void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
 {
     if (albedoUvOffset != GetAlbedoUvOffset())
@@ -173,12 +200,27 @@ float Material::GetRoughness() const { return m_roughness; }
 const Color& Material::GetAlbedoColor() const { return m_albedoColor; }
 Texture2D *Material::GetNormalMapTexture() const { return p_normalMapTexture.Get(); }
 RenderPass Material::GetRenderPass() const { return m_renderPass; }
+float Material::GetLineWidth() const { return m_lineWidth; }
+bool Material::IsRenderWireframe() const { return m_renderWireframe; }
+GL::CullFaceExt Material::GetCullFace() const { return m_cullFace; }
 
 void Material::Bind() const
 {
     ShaderProgram *sp = GetShaderProgram();
     if (!sp) { return; }
     sp->Bind();
+
+    GL::SetWireframe( IsRenderWireframe() );
+
+    if (GetCullFace() != GL::CullFaceExt::None)
+    {
+        GL::Enable(GL::Enablable::CullFace); // Culling states
+        GL::SetCullFace( SCAST<GL::Face>(GetCullFace()) );
+    }
+    else { GL::Disable(GL::Enablable::CullFace); }
+
+    GL::LineWidth( GetLineWidth() );
+    GL::PointSize( GetLineWidth() );
 
     sp->SetColor("B_MaterialAlbedoColor",      GetAlbedoColor(),         false);
     sp->SetFloat("B_MaterialRoughness",        GetRoughness(),           false);
@@ -237,6 +279,9 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetNormalMapUvOffset(GetNormalMapUvOffset());
     matClone->SetNormalMapUvMultiply(GetNormalMapUvMultiply());
     matClone->SetRenderPass(GetRenderPass());
+    matClone->SetLineWidth(GetLineWidth());
+    matClone->SetRenderWireframe(IsRenderWireframe());
+    matClone->SetCullFace(GetCullFace());
 }
 
 void Material::OnTextureChanged(const Texture*)
@@ -302,6 +347,15 @@ void Material::ImportXML(const XMLNode &xml)
     if (xml.Contains("FragmentShader"))
     { fShader = Resources::Load<Shader>(xml.Get<GUID>("FragmentShader")); }
 
+    if (xml.Contains("LineWidth"))
+    { SetLineWidth(xml.Get<float>("LineWidth")); }
+
+    if (xml.Contains("RenderWireframe"))
+    { SetRenderWireframe(xml.Get<bool>("RenderWireframe")); }
+
+    if (xml.Contains("CullFace"))
+    { SetCullFace(xml.Get<GL::CullFaceExt>("CullFace")); }
+
     if (vShader && fShader)
     {
         ShaderProgram *newSp =
@@ -324,6 +378,9 @@ void Material::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("AlbedoUvOffset",      GetAlbedoUvOffset());
     xmlInfo->Set("NormalMapUvMultiply", GetNormalMapUvMultiply());
     xmlInfo->Set("NormalMapUvOffset",   GetNormalMapUvOffset());
+    xmlInfo->Set("LineWidth",           GetLineWidth());
+    xmlInfo->Set("RenderWireframe",     IsRenderWireframe());
+    xmlInfo->Set("CullFace",            GetCullFace());
 
     Texture2D* albedoTex = GetAlbedoTexture();
     xmlInfo->Set("AlbedoTexture",

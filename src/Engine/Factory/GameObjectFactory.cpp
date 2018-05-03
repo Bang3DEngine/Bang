@@ -161,6 +161,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     cameraGo->GetTransform()->SetPosition( Vector3(5,4,3) );
     cameraGo->GetTransform()->LookAt( Vector3::Zero );
     Camera *cam = cameraGo->AddComponent<Camera>();
+    cam->SetClearMode(Camera::ClearMode::SkyBox);
     cam->SetClearColor(Color::LightBlue);
     scene->SetCamera(cam);
 

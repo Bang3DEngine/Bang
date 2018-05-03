@@ -35,7 +35,7 @@ set(IRRXML_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IRRXML_LIB_OUTPUT_NAM
 set(FREETYPE_DIR "${CMAKE_CURRENT_LIST_DIR}/freetype-2.4.0")
 set(FREETYPE_INSTALL_DIR_NAME "freetype-install")
 set(FREETYPE_INSTALL_DIR "${FREETYPE_DIR}/${FREETYPE_INSTALL_DIR_NAME}")
-set(FREETYPE_LIB_OUTPUT_DIR  "${FREETYPE_INSTALL_DIR}/lib")
+set(FREETYPE_LIB_OUTPUT_DIR  "${FREETYPE_INSTALL_DIR}/lib*")
 set(FREETYPE_LIB_OUTPUT_NAME "libfreetype.a")
 set(FREETYPE_LIB_OUTPUT  "${FREETYPE_LIB_OUTPUT_DIR}/${FREETYPE_LIB_OUTPUT_NAME}")
 set(FREETYPE_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FREETYPE_LIB_OUTPUT_NAME}")
@@ -43,7 +43,7 @@ set(FREETYPE_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FREETYPE_LIB_OUTPUT
 # GLEW
 set(GLEW_DIR "${CMAKE_CURRENT_LIST_DIR}/glew-2.1.0")
 set(GLEW_INCLUDE_DIR "${GLEW_DIR}/include")
-set(GLEW_LIB_OUTPUT_DIR  "${GLEW_DIR}/lib")
+set(GLEW_LIB_OUTPUT_DIR  "${GLEW_DIR}/lib*")
 set(GLEW_LIB_OUTPUT_NAME "libGLEW.a")
 set(GLEW_LIB_OUTPUT  "${GLEW_LIB_OUTPUT_DIR}/${GLEW_LIB_OUTPUT_NAME}")
 set(GLEW_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${GLEW_LIB_OUTPUT_NAME}")
@@ -53,7 +53,7 @@ set(JPEG_DIR "${CMAKE_CURRENT_LIST_DIR}/libjpeg-turbo")
 set(JPEG_INSTALL_DIR "${JPEG_DIR}/jpeg-install")
 set(JPEG_INCLUDE_DIR_0 "${JPEG_DIR}")
 set(JPEG_INCLUDE_DIR_1 "${JPEG_DIR}/build")
-set(JPEG_LIB_OUTPUT_DIR  "${JPEG_INSTALL_DIR}/lib")
+set(JPEG_LIB_OUTPUT_DIR  "${JPEG_INSTALL_DIR}/lib*")
 set(JPEG_LIB_OUTPUT_NAME "libturbojpeg.a")
 set(JPEG_LIB_OUTPUT  "${JPEG_LIB_OUTPUT_DIR}/${JPEG_LIB_OUTPUT_NAME}")
 set(JPEG_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${JPEG_LIB_OUTPUT_NAME}")
@@ -63,7 +63,7 @@ set(PNG_DIR "${CMAKE_CURRENT_LIST_DIR}/libpng-1.6.34")
 set(PNG_INSTALL_DIR "${PNG_DIR}/png-install")
 set(PNG_INCLUDE_DIR_0 "${PNG_DIR}")
 set(PNG_INCLUDE_DIR_1 "${PNG_DIR}/build")
-set(PNG_LIB_OUTPUT_DIR  "${PNG_INSTALL_DIR}/lib")
+set(PNG_LIB_OUTPUT_DIR  "${PNG_INSTALL_DIR}/lib*")
 set(PNG_LIB_OUTPUT_NAME "libpng.a")
 set(PNG_LIB_OUTPUT  "${PNG_LIB_OUTPUT_DIR}/${PNG_LIB_OUTPUT_NAME}")
 set(PNG_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PNG_LIB_OUTPUT_NAME}")
@@ -89,7 +89,7 @@ set(SDL2_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SDL2_LIB_OUTPUT_NAME}")
 set(SDL2TTF_DIR "${CMAKE_CURRENT_LIST_DIR}/SDL2_ttf-2.0.14")
 set(SDL2TTF_INSTALL_DIR "${SDL2TTF_DIR}/sdl2-ttf-install")
 set(SDL2TTF_INCLUDE_DIR "${SDL2TTF_DIR}")
-set(SDL2TTF_LIB_OUTPUT_DIR  "${SDL2TTF_INSTALL_DIR}/lib")
+set(SDL2TTF_LIB_OUTPUT_DIR  "${SDL2TTF_INSTALL_DIR}/lib*")
 set(SDL2TTF_LIB_OUTPUT_NAME "libSDL2_ttf.a")
 set(SDL2TTF_LIB_OUTPUT  "${SDL2TTF_LIB_OUTPUT_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
 set(SDL2TTF_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
@@ -157,7 +157,7 @@ add_custom_command(
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             .. &&
       make -j${NUM_COMPILE_THREADS} &&
-      cp ${ASSIMP_LIB_OUTPUT} ${ASSIMP_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${ASSIMP_LIB_OUTPUT} ${ASSIMP_LIB_FINAL_OUTPUT}"
   COMMENT "Building Assimp"
   VERBATIM
 )
@@ -171,7 +171,7 @@ add_custom_command(
 add_custom_target(BuildIRRXML ALL DEPENDS BuildAssimp)
 add_custom_command(
   TARGET BuildIRRXML
-  COMMAND cp ${IRRXML_LIB_OUTPUT} ${IRRXML_LIB_FINAL_OUTPUT}
+  COMMAND /bin/bash -c "cp ${IRRXML_LIB_OUTPUT} ${IRRXML_LIB_FINAL_OUTPUT}"
   VERBATIM
 )
 #=================================================================
@@ -194,7 +194,7 @@ add_custom_command(
             --with-pic &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cp ${FREETYPE_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${FREETYPE_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}"
   COMMENT "Building Freetype"
   VERBATIM
 )
@@ -211,7 +211,7 @@ add_custom_command(
   COMMAND
       cd ${GLEW_DIR} &&
       make -j${NUM_COMPILE_THREADS} &&
-      cp ${GLEW_LIB_OUTPUT} ${GLEW_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${GLEW_LIB_OUTPUT} ${GLEW_LIB_FINAL_OUTPUT}"
   COMMENT "Building GLEW"
   VERBATIM
 )
@@ -238,7 +238,7 @@ add_custom_command(
             .. &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cp ${JPEG_LIB_OUTPUT} ${JPEG_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${JPEG_LIB_OUTPUT} ${JPEG_LIB_FINAL_OUTPUT}"
   COMMENT "Building JPEG"
   VERBATIM
 )
@@ -265,7 +265,7 @@ add_custom_command(
             .. &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cp ${PNG_LIB_OUTPUT} ${PNG_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${PNG_LIB_OUTPUT} ${PNG_LIB_FINAL_OUTPUT}"
   COMMENT "Building PNG"
   VERBATIM
 )
@@ -290,7 +290,7 @@ add_custom_command(
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             .. &&
       make -j${NUM_COMPILE_THREADS} &&
-      cp ${OPENAL_LIB_OUTPUT} ${OPENAL_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${OPENAL_LIB_OUTPUT} ${OPENAL_LIB_FINAL_OUTPUT}"
   COMMENT "Building OpenAL"
   VERBATIM
 )
@@ -320,7 +320,7 @@ add_custom_command(
           .. &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cp ${SDL2_LIB_OUTPUT} ${SDL2_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${SDL2_LIB_OUTPUT} ${SDL2_LIB_FINAL_OUTPUT}"
   COMMENT "Building SDL2"
   VERBATIM
 )
@@ -337,7 +337,7 @@ add_custom_command(
   COMMAND
       export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
-      cp ${FREETYPE_INSTALL_DIR}/lib/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib/ && # Copy to solve a installation bug
+      /bin/bash -c "cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/" && # Copy to solve a installation bug
       cd ${SDL2TTF_DIR} &&
       mkdir -p ${SDL2TTF_INSTALL_DIR} &&
       sh autogen.sh &&
@@ -349,7 +349,7 @@ add_custom_command(
             --with-pic &&
       make VERBOSE=1 -j${NUM_COMPILE_THREADS} &&
       make install &&
-      cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}
+      /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"
   COMMENT "Building SDL2TTF"
   VERBATIM
 )

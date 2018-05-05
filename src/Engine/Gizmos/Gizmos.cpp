@@ -185,7 +185,7 @@ void Gizmos::RenderBox(const AABox &b)
 void Gizmos::RenderRectNDC(const AARect &r)
 {
     Gizmos::RenderRectNDC({{r.GetMinXMinY(), r.GetMaxXMinY(),
-                            r.GetMinXMaxY(), r.GetMaxXMaxY()}});
+                            r.GetMaxXMaxY(), r.GetMinXMaxY()}});
 }
 
 void Gizmos::RenderRectNDC(const RectPoints &rectPointsNDC)

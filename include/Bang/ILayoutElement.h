@@ -16,6 +16,7 @@ public:
     virtual void OnInvalidated() override;
 
     void SetLayoutPriority(int layoutPriority);
+    int GetLayoutPriority() const;
 
 protected:
     ILayoutElement();
@@ -32,13 +33,11 @@ private:
     mutable Vector2i m_calculatedPreferredSize = -Vector2i::One;
     mutable Vector2  m_calculatedFlexibleSize  = -Vector2::One;
 
-    int GetLayoutPriority() const;
-
     virtual void CalculateLayout(Axis axis) = 0;
     void _CalculateLayout(Axis axis);
 
-    Vector2i GetMinSize()       const;
-    Vector2i GetPreferredSize() const;
+    Vector2i GetMinSize()             const;
+    Vector2i GetPreferredSize()       const;
     virtual Vector2 GetFlexibleSize() const;
 
     Vector2 GetSize(LayoutSizeType sizeType) const;

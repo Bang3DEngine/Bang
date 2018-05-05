@@ -26,6 +26,7 @@ FORWARD class UIScrollPanel;
 FORWARD class UIInputNumber;
 FORWARD class UIImageRenderer;
 FORWARD class UIRendererCacher;
+FORWARD class UIDirLayoutMovableSeparator;
 
 class GameObjectFactory
 {
@@ -80,6 +81,12 @@ public:
     static UIScrollBar*        CreateUIScrollBar();
     static UIScrollPanel*      CreateUIScrollPanelInto(GameObject *go);
     static UIScrollPanel*      CreateUIScrollPanel();
+
+    static UIDirLayoutMovableSeparator* CreateUIDirLayoutMovableHSeparator();
+    static UIDirLayoutMovableSeparator* CreateUIDirLayoutMovableVSeparator();
+    static UIDirLayoutMovableSeparator* CreateUIDirLayoutMovableSeparator();
+    static UIDirLayoutMovableSeparator* CreateUIDirLayoutMovableSeparatorInto(
+                                                            GameObject *go);
 
     static GameObject* CreateUIHSeparator(
                             LayoutSizeType sizeType = LayoutSizeType::Preferred,

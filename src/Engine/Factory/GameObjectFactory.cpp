@@ -35,6 +35,7 @@
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/DirectionalLight.h"
 #include "Bang/UIHorizontalLayout.h"
+#include "Bang/UIDirLayoutMovableSeparator.h"
 
 USING_NAMESPACE_BANG
 
@@ -387,6 +388,37 @@ UIScrollPanel *GameObjectFactory::CreateUIScrollPanel()
 {
     return GameObjectFactory::CreateUIScrollPanelInto(
                 GameObjectFactory::CreateUIGameObjectNamed("ScrollPanel") );
+}
+
+UIDirLayoutMovableSeparator*
+GameObjectFactory::CreateUIDirLayoutMovableHSeparator()
+{
+    UIDirLayoutMovableSeparator *sep =
+            GameObjectFactory::CreateUIDirLayoutMovableSeparator();
+    sep->SetAxis(Axis::Horizontal);
+    return sep;
+}
+
+UIDirLayoutMovableSeparator*
+GameObjectFactory::CreateUIDirLayoutMovableVSeparator()
+{
+    UIDirLayoutMovableSeparator *sep =
+            GameObjectFactory::CreateUIDirLayoutMovableSeparator();
+    sep->SetAxis(Axis::Vertical);
+    return sep;
+}
+
+UIDirLayoutMovableSeparator*
+GameObjectFactory::CreateUIDirLayoutMovableSeparator()
+{
+    return GameObjectFactory::CreateUIDirLayoutMovableSeparatorInto(
+                GameObjectFactory::CreateUIGameObjectNamed("UIMovSeparator") );
+}
+
+UIDirLayoutMovableSeparator*
+GameObjectFactory::CreateUIDirLayoutMovableSeparatorInto(GameObject *go)
+{
+    return UIDirLayoutMovableSeparator::CreateInto(go);
 }
 
 UIScrollArea* GameObjectFactory::CreateUIScrollAreaInto(GameObject *go)

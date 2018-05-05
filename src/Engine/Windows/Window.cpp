@@ -39,17 +39,25 @@ Window::~Window()
     SDL_DestroyWindow(m_sdlWindow);
 }
 
+#include <SDL.h>
 void Window::Create(uint flags)
 {
     Vector2i winSize(512);
 
     constexpr int NumVersionsToTry = 8;
-    int VersionsMajors[NumVersionsToTry] = {4, 4, 4, 4, 3, 3, 3};
-    int VersionsMinors[NumVersionsToTry] = {5, 4, 3, 2, 3, 2, 1};
+    int VersionsMajors[NumVersionsToTry] = {4, 4, 4, 4, 4, 3, 3, 3};
+    int VersionsMinors[NumVersionsToTry] = {6, 5, 4, 3, 2, 3, 2, 1};
     for (int i = 0; i < NumVersionsToTry; ++i)
     {
         int vMajor = VersionsMajors[i];
         int vMinor = VersionsMinors[i];
+
+        #ifdef DEBUG
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+                                SDL_GL_CONTEXT_DEBUG_FLAG |
+                                SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG);
+        #endif
+
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_CORE);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, vMajor);

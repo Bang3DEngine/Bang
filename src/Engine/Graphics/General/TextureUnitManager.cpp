@@ -134,7 +134,8 @@ void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
 
 int TextureUnitManager::GetNumUsableTextureUnits()
 {
-    return TextureUnitManager::GetActive()->m_numUsableTextureUnits;
+    TextureUnitManager *tm = TextureUnitManager::GetActive();
+    return (tm ? tm->m_numUsableTextureUnits : 99);
 }
 
 void TextureUnitManager::UnBindAllTexturesFromAllUnits()
@@ -203,7 +204,8 @@ void TextureUnitManager::PrintTextureUnits()
 
 TextureUnitManager *TextureUnitManager::GetActive()
 {
-    return GEngine::GetActive()->GetTextureUnitManager();
+    GEngine *ge = GEngine::GetActive();
+    return (ge ? ge->GetTextureUnitManager() : nullptr);
 }
 
 void TextureUnitManager::UnTrackTexture(GLId texId)

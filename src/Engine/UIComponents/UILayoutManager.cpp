@@ -29,6 +29,9 @@ void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 
     auto pLayoutContrs = go->GetComponentsInParent<ILayoutController>(false);
     for (ILayoutController *pCont : pLayoutContrs) { pCont->Invalidate(); }
+
+    auto pLayoutSelfContrs = go->GetComponents<ILayoutSelfController>();
+    for (ILayoutController *psCont : pLayoutSelfContrs) { psCont->Invalidate(); }
 }
 
 void UILayoutManager::PropagateInvalidation(ILayoutController *controller)

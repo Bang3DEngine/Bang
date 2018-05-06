@@ -56,7 +56,11 @@ void UIGridLayout::CalculateLayout(Axis axis)
 
 void UIGridLayout::SetCellSize(const Vector2i &cellSize)
 {
-    m_cellSize = cellSize;
+    if (cellSize != GetCellSize())
+    {
+        m_cellSize = cellSize;
+        ILayoutController::Invalidate();
+    }
 }
 
 const Vector2i &UIGridLayout::GetCellSize() const

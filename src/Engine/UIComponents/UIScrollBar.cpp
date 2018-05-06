@@ -41,21 +41,16 @@ void UIScrollBar::OnUpdate()
         Vector2 mouseCoordsPx (Input::GetMousePosition());
         AARect scrollRectPx = GetScrollingRect();
         AARect barRectPx( GetBar()->GetRectTransform()->GetViewportRect() );
-        if (!m_wasGrabbed)
-        {
-            m_grabOffsetPx.x = mouseCoordsPx.x - barRectPx.GetMin().x;
-            m_grabOffsetPx.y = (barRectPx.GetMax().y - mouseCoordsPx.y);
-        }
+        if (!m_wasGrabbed) { m_grabOffsetPx = (mouseCoordsPx - barRectPx.GetMin()); }
 
-        Vector2 mouseCoordsPxRel = mouseCoordsPx - scrollRectPx.GetMin();
-        mouseCoordsPxRel.y = (scrollRectPx.GetMax().y - mouseCoordsPxRel.y);
-        Vector2 offsettedMouseCoordsPxRel = mouseCoordsPxRel - m_grabOffsetPx;
+        Vector2 offsettedMouseCoordsPxRel = mouseCoordsPx - m_grabOffsetPx;
         Vector2 emptySpacePx = scrollRectPx.GetSize() - barRectPx.GetSize();
         emptySpacePx = Vector2::Max(emptySpacePx, Vector2::One);
 
         Vector2 mousePercent = ((emptySpacePx != Vector2::Zero) ?
             Vector2(offsettedMouseCoordsPxRel - scrollRectPx.GetMin()) / emptySpacePx :
             Vector2::Zero);
+        mousePercent.y = 1.0f - mousePercent.y;
         float scrollPercent = mousePercent.GetAxis( GetScrollAxis() );
         scrollPercent = Math::Clamp(scrollPercent, 0.0f, 1.0f);
 
@@ -216,7 +211,7 @@ int UIScrollBar::GetScrollingSpacePx() const
     if (!GetGameObject()->IsEnabled() || !IsEnabled()) { return 0; }
     int scrollingSpace = GetScrollingRect().GetSize().GetAxis( GetScrollAxis() );
     scrollingSpace -= GetLength();
-    return  Math::Max(scrollingSpace, 0);
+    return Math::Max(scrollingSpace, 0);
 }
 
 AARect UIScrollBar::GetScrollingRect() const

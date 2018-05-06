@@ -27,7 +27,7 @@ UIScrollPanel::~UIScrollPanel()
 
 void UIScrollPanel::UpdateScrollUI()
 {
-    Vector2 contentSize = GetContentSize();
+    Vector2 contentSize = Vector2::Max(GetContentSize(), Vector2::One);
     Vector2 containerSize = GetContainerSize();
 
     // Handle vertical/horizontal show mode
@@ -38,61 +38,43 @@ void UIScrollPanel::UpdateScrollUI()
     HandleScrollAreaRectTransform();
 
     // Handle scroll percent and scroll bar
+
+    // Set bar length
+    Vector2 sizeProp = Vector2(containerSize) / Vector2(contentSize);
+    sizeProp = Vector2::Clamp(sizeProp, Vector2(0.1f), Vector2::One);
+    GetHorizontalScrollBar()->SetLengthPercent( sizeProp.x );
+    GetVerticalScrollBar()->SetLengthPercent( sizeProp.y );
+
+    Vector2 scrollMaxAmount = GetMaxScrollLength();
+
+    Vector2 scrollingPercent =
+            Vector2(GetHorizontalScrollBar()->GetScrollingPercent(),
+                    GetVerticalScrollBar()->GetScrollingPercent());
+    scrollingPercent = Vector2::Clamp(scrollingPercent,
+                                      Vector2::Zero, Vector2::One);
+    Vector2i scrolling (scrollingPercent * scrollMaxAmount);
     if (contentSize.x > containerSize.x || contentSize.y > containerSize.y)
     {
-        contentSize = Vector2::Max(contentSize, Vector2::One);
-
-        // Set bar length
-        Vector2 sizeProp = Vector2(containerSize) / Vector2(contentSize);
-        sizeProp = Vector2::Clamp(sizeProp, Vector2(0.1f), Vector2::One);
-        GetHorizontalScrollBar()->SetLengthPercent( sizeProp.x );
-        GetVerticalScrollBar()->SetLengthPercent( sizeProp.y );
-
-        // Get scrolling percent from the scrollBar
-        Vector2 scrollingPercent(GetHorizontalScrollBar()->GetScrollingPercent(),
-                                 GetVerticalScrollBar()->GetScrollingPercent());
-        scrollingPercent = Vector2::Clamp(scrollingPercent, Vector2::Zero,
-                                                            Vector2::One);
-
         // MouseWheel scrolling
         if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
         {
             Vector2i mouseWheelPx(Input::GetMouseWheel() * WheelScrollSpeedPx);
-
             Vector2 mouseWheelPercent = Vector2(mouseWheelPx) / contentSize;
             scrollingPercent -= mouseWheelPercent;
+            scrollingPercent = Vector2::Clamp(scrollingPercent,
+                                              Vector2::Zero, Vector2::One);
         }
-        scrollingPercent = Vector2::Clamp(scrollingPercent, Vector2::Zero,
-                                                            Vector2::One);
 
         // Apply scrollings
         Vector2i scrollEnabledMask(IsHorizontalScrollEnabledAndNoFit() ? 1 : 0,
                                    IsVerticalScrollEnabledAndNoFit()   ? 1 : 0);
         scrollingPercent *= Vector2(scrollEnabledMask);
 
-        Vector2 scrollMaxAmount = (contentSize - containerSize);
-        scrollMaxAmount = Vector2::Clamp(scrollMaxAmount, Vector2::Zero,
-                                         contentSize);
-        Vector2i scrolling(scrollingPercent * scrollMaxAmount);
-
-        GetScrollArea()->SetScrolling( scrolling * Vector2i(-1, 1) );
-        GetHorizontalScrollBar()->SetScrollingPercent( scrollingPercent.x );
-        GetVerticalScrollBar()->SetScrollingPercent( scrollingPercent.y );
+        scrolling = Vector2i(scrollingPercent * scrollMaxAmount);
+        scrolling = Vector2i::Min(scrolling, Vector2i(contentSize));
     }
 
-    // If no scroll needed, reestablish bar lengths
-    if (contentSize.x < containerSize.x)
-    {
-        GetHorizontalScrollBar()->SetLengthPercent(1.0f);
-    }
-    if (contentSize.y < containerSize.y)
-    {
-        GetVerticalScrollBar()->SetLengthPercent(1.0f);
-    }
-
-    // Clamp to adjust for dynamic children size changes
-    Vector2i clampedScrolling = Vector2i::Min(GetScrolling(), Vector2i(contentSize));
-    SetScrolling(clampedScrolling);
+    SetScrolling(scrolling);
 }
 
 void UIScrollPanel::OnUpdate()
@@ -193,8 +175,8 @@ void UIScrollPanel::SetHorizontalScrollEnabled(bool enabled)
 
 void UIScrollPanel::SetScrolling(const Vector2i &scrolling)
 {
-    Vector2 scrollPerc;
     const Vector2 maxScrollLength = GetMaxScrollLength();
+    Vector2 scrollPerc;
     scrollPerc.x = (maxScrollLength.x > 0 ? scrolling.x / maxScrollLength.x : 0);
     scrollPerc.y = (maxScrollLength.y > 0 ? scrolling.y / maxScrollLength.y : 0);
     SetScrollingPercent(scrollPerc);
@@ -205,7 +187,8 @@ void UIScrollPanel::SetScrollingPercent(const Vector2 &scrollPerc)
     Vector2 scrollPercClamped = Vector2::Clamp(scrollPerc,
                                                Vector2::Zero, Vector2::One);
     GetScrollArea()->SetScrolling(
-        Vector2i( Vector2::Round(scrollPercClamped * GetMaxScrollLength())) );
+        Vector2i( Vector2::Round(scrollPercClamped * Vector2(-1,1) *
+                                 GetMaxScrollLength())) );
     GetHorizontalScrollBar()->SetScrollingPercent( scrollPercClamped.x );
     GetVerticalScrollBar()->SetScrollingPercent( scrollPercClamped.y );
 }

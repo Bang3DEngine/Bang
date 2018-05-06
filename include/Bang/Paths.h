@@ -15,8 +15,10 @@ public:
     void InitPaths(const Path &engineRootPath);
 
     static Path GetHome();
+    static Path GetEngineSrcDir();
     static Path GetExecutableDir();
     static Path GetExecutablePath();
+    static Path GetEngineIncludeDir();
     static const Path& GetEngineDir();
     static Path GetEngineAssetsDir();
     static Path GetEngineBuildDir();

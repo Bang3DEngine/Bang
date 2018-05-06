@@ -47,6 +47,11 @@ Path Paths::GetHome()
     return homePath;
 }
 
+Path Paths::GetEngineSrcDir()
+{
+    return Paths::GetEngineDir().Append("src");
+}
+
 Path Paths::GetExecutableDir()
 {
     return Paths::GetExecutablePath().GetDirectory();
@@ -58,6 +63,11 @@ Path Paths::GetExecutablePath()
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX );
     String exePath( std::string(result, (count > 0) ? count : 0) );
     return Path(exePath);
+}
+
+Path Paths::GetEngineIncludeDir()
+{
+    return Paths::GetEngineDir().Append("include");
 }
 
 const Path &Paths::GetEngineDir()
@@ -132,7 +142,7 @@ void Paths::SetProjectRoot(const Path &projectRootDir)
 List<Path> Paths::GetEngineIncludeDirs()
 {
     List<Path> incPaths;
-    incPaths.PushBack( Paths::GetEngineDir().Append("include") );
+    incPaths.PushBack( Paths::GetEngineIncludeDir() );
     return incPaths;
 }
 

@@ -16,8 +16,8 @@ FORWARD class Camera;
 class AABox
 {
 private:
-    Vector3 m_minv = Vector3(Math::Infinity<float>());
-    Vector3 m_maxv = Vector3(Math::NegativeInfinity<float>());
+    Vector3 m_minv = Vector3::Infinity;
+    Vector3 m_maxv = Vector3::NInfinity;
 
 public:
     static AABox Empty;

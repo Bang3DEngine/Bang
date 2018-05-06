@@ -11,8 +11,8 @@ template<class T>
 class AARectG
 {
 private:
-    Vector2G<T> m_min = Vector2G<T>::Zero;
-    Vector2G<T> m_max = Vector2G<T>::Zero;
+    Vector2G<T> m_min = Vector2G<T>::Infinity;
+    Vector2G<T> m_max = Vector2G<T>::NInfinity;
 
 public:
     const static AARectG<T> NDCRect;
@@ -51,6 +51,12 @@ public:
 
     void SetMin(const Vector2G<T> &minv) { m_min = minv; }
     void SetMax(const Vector2G<T> &maxv) { m_max = maxv; }
+
+    void AddPoint(const Vector2G<T>& point)
+    {
+        SetMin( Vector2G<T>::Min(GetMin(), point) );
+        SetMax( Vector2G<T>::Max(GetMax(), point) );
+    }
 
     Vector2G<T> GetMinXMaxY() const
     {

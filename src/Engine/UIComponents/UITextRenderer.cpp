@@ -43,16 +43,26 @@ void UITextRenderer::CalculateLayout(Axis axis)
 {
     if (!GetFont()) { SetCalculatedLayout(axis, 0, 0); return; }
 
-    Vector2i minSize = Vector2i::Zero;
+    uint numLines;
+    RectTransform *rt = GetGameObject()->GetRectTransform();
+    Array<TextFormatter::CharRect> charRects =
+        TextFormatter::GetFormattedTextPositions(GetContent(),
+                                                 GetFont(),
+                                                 GetTextSize(),
+                                                 AARecti( rt->GetViewportRect() ),
+                                                 GetSpacingMultiplier(),
+                                                 GetHorizontalAlignment(),
+                                                 GetVerticalAlignment(),
+                                                 IsWrapping(),
+                                                 &numLines);
+    AARect rect;
+    for (const TextFormatter::CharRect &cr : charRects)
+    {
+        rect = AARect::Union(rect, cr.rectPx);
+    }
 
-    Vector2i prefSize = TextFormatter::GetTextSizeOneLined(GetContent(),
-                                                           GetFont(),
-                                                           GetTextSize(),
-                                                           GetSpacingMultiplier());
-    prefSize.y = Math::Max<int>(prefSize.y,
-                                m_numberOfLines *
-                                GetFont()->GetFontHeight(GetTextSize()));
-
+    const Vector2i minSize = Vector2i::Zero;
+    Vector2i prefSize = Vector2i( Vector2::Round( rect.GetSize() ) );
     SetCalculatedLayout(axis, minSize.GetAxis(axis), prefSize.GetAxis(axis));
 }
 

@@ -66,14 +66,18 @@ TextFormatter::SplitCharRectsInLines(const String &content,
     for (int i = 0; i < content.Size(); ++i)
     {
         const float charAdvX = GetCharAdvanceX(content, font, fontSize, i);
-        if (wrapping)
+        bool lineBreak = (content[i] == '\n');
+        if (wrapping && !lineBreak)
         {
+            // Do we have to break line here because of wrapping?
+            bool wrappingLineBreak = false;
+
             // Split the input char positions into the needed lines.
             // Each line will contain as many words as possible (split by spaces).
-            bool lineBreak = false;
             if (content[i] != ' ')
             {
-                lineBreak = (penPosition.x + charAdvX > limitsRect.GetMax().x);
+                wrappingLineBreak = (penPosition.x + charAdvX >
+                                     limitsRect.GetMax().x);
             }
             else
             {
@@ -88,39 +92,31 @@ TextFormatter::SplitCharRectsInLines(const String &content,
                                                             fontSize, j);
                     if (tmpAdvX + jCharAdvX > limitsRect.GetMax().x)
                     {
-                        lineBreak = true;
+                        wrappingLineBreak = true;
                         break;
                     }
                     tmpAdvX += jCharAdvX * spacingMult.x;
                 }
             }
-            lineBreak = lineBreak || content[i] == '\n';
-            bool anticipatedLineBreak = ( (content[i] == ' ' && lineBreak) ||
-                                           content[i] == '\n');
 
-            if (lineBreak)
+            lineBreak = lineBreak || wrappingLineBreak;
+        }
+
+        if (lineBreak)
+        {
+            // Advance to next line! Add the current line to the result.
+            penPosition.x  = limitsRect.GetMin().x;
+            penPosition.y -= lineSkip * spacingMult.y;
+            linedCharRects.PushBack( Array<CharRect>() );
+
+            // Skip all next ' '
+            if (content[i] == ' ')
             {
-                // Advance to next line! Add the current line to the result.
-                penPosition.y -= lineSkip * spacingMult.y;
-                penPosition.x  = limitsRect.GetMin().x;
-                linedCharRects.PushBack( Array<CharRect>() );
-
-                // Skip all next ' '
-                if (content[i] == ' ')
-                {
-                    while (content[i] == ' ') { ++i; }
-                    --i;
-                }
-            }
-
-            if (!anticipatedLineBreak)
-            {
-                CharRect cr(content[i], penPosition + charRects[i].rectPx);
-                linedCharRects.Back().PushBack(cr);
-                penPosition.x += charAdvX * spacingMult.x;
+                while (content[i] == ' ') { ++i; }
+                --i;
             }
         }
-        else // Just add them in a single line
+        else
         {
             CharRect cr(content[i], penPosition + charRects[i].rectPx);
             linedCharRects.Back().PushBack(cr);
@@ -130,21 +126,25 @@ TextFormatter::SplitCharRectsInLines(const String &content,
     return linedCharRects;
 }
 
-Vector2i TextFormatter::GetTextSizeOneLined(const String &content,
+Vector2i TextFormatter::GetShortestTextSize(const String &content,
                                             const Font *font,
                                             int fontSize,
                                             const Vector2 &spacingMultiplier)
 {
+    // Get the text size with as less height as possible
     if (!font || content.IsEmpty() || fontSize <= 0) { return Vector2i::Zero; }
 
     Vector2 textSize = Vector2::Zero;
     for (int i = 0; i < content.Size(); ++i)
     {
+        char c = content[i];
+        if (c == '\n') { textSize.y += font->GetLineSkip(fontSize); }
+
         int charAdvX = GetCharAdvanceX(content, font, fontSize, i);
         textSize.x += charAdvX * spacingMultiplier.x;
         // textSize.y =  Math::Max(textSize.y, cr.GetHeight());
     }
-    textSize.y = font->GetLineSkip(fontSize);
+    textSize.y += font->GetLineSkip(fontSize);
     return Vector2i( Vector2::Round(textSize) );
 }
 

@@ -126,25 +126,32 @@ TextFormatter::SplitCharRectsInLines(const String &content,
     return linedCharRects;
 }
 
-Vector2i TextFormatter::GetShortestTextSize(const String &content,
-                                            const Font *font,
-                                            int fontSize,
-                                            const Vector2 &spacingMultiplier)
+Vector2i TextFormatter::GetMinimumHeightTextSize(const String &content,
+                                                 const Font *font,
+                                                 int fontSize,
+                                                 const Vector2 &spacingMultiplier)
 {
     // Get the text size with as less height as possible
     if (!font || content.IsEmpty() || fontSize <= 0) { return Vector2i::Zero; }
 
     Vector2 textSize = Vector2::Zero;
+    float currentLineWidth = 0.0f;
     for (int i = 0; i < content.Size(); ++i)
     {
         char c = content[i];
-        if (c == '\n') { textSize.y += font->GetLineSkip(fontSize); }
-
-        int charAdvX = GetCharAdvanceX(content, font, fontSize, i);
-        textSize.x += charAdvX * spacingMultiplier.x;
-        // textSize.y =  Math::Max(textSize.y, cr.GetHeight());
+        if (c == '\n')
+        {
+            textSize.y += font->GetLineSkip(fontSize);
+            currentLineWidth = 0.0f;
+        }
+        else
+        {
+            int charAdvX = GetCharAdvanceX(content, font, fontSize, i);
+            currentLineWidth += charAdvX * spacingMultiplier.x;
+            textSize.x = Math::Max(textSize.x, currentLineWidth);
+        }
     }
-    textSize.y += font->GetLineSkip(fontSize);
+    textSize.y += font->GetLineSkip(fontSize); // Last/first line
     return Vector2i( Vector2::Round(textSize) );
 }
 

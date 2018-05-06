@@ -35,7 +35,7 @@ public:
                                         bool wrapping,
                                         uint *numberOfLines);
 
-    static Vector2i GetShortestTextSize(const String &content,
+    static Vector2i GetMinimumHeightTextSize(const String &content,
                                         const Font *font,
                                         int fontSize,
                                         const Vector2 &spacingMultiplier);

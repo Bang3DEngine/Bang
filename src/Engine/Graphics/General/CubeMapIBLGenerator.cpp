@@ -67,9 +67,9 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
 
     // Create shader program
     ShaderProgram *sp = ShaderProgramFactory::Get(
-                EPATH("Shaders/CubeMapIBLGenerator.vert"),
-                EPATH("Shaders/CubeMapIBLGenerator.geom"),
-                EPATH("Shaders/CubeMapIBLGenerator.frag"));
+                            EPATH("Shaders/CubeMapIBLGenerator.vert"),
+                            EPATH("Shaders/CubeMapIBLGenerator.geom"),
+                            EPATH("Shaders/CubeMapIBLGenerator.frag"));
 
     // Create framebuffer and shader program
     Framebuffer *fb = new Framebuffer();
@@ -84,44 +84,33 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     {
         GL::SetViewport(0, 0, IBLCubeMapSize, IBLCubeMapSize);
         fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::Color0);
-        fb->Resize(IBLCubeMapSize, IBLCubeMapSize);
-        fb->Bind();
         fb->SetAllDrawBuffers();
 
         GEngine::GetActive()->RenderViewportPlane();
     }
     else
     {
-        fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::Color0, 0);
-
+        // Fill mipmap levels of the specular skybox, each one with more
+        // roughness progressively
         constexpr int MaxMipLevels = 8;
-        for (int mipMapLevel = MaxMipLevels-1; mipMapLevel >= 0; --mipMapLevel)
+        GL::TexParameteri(iblCubeMap->GetTextureTarget(),
+                          GL::TexParameter::TEXTURE_BASE_LEVEL, 0);
+        GL::TexParameteri(iblCubeMap->GetTextureTarget(),
+                          GL::TexParameter::TEXTURE_MAX_LEVEL, MaxMipLevels-1);
+
+        for (int mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
         {
-            // reisze framebuffer according to mip-level size.
             const float mipMapLevelF = SCAST<float>(mipMapLevel);
-            const uint mipWidth  = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
-            const uint mipHeight = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
-
-            GL::SetViewport(0, 0, mipWidth, mipHeight);
-            fb->Resize(mipWidth, mipHeight);
-            fb->Bind();
-            GL::FramebufferTexture(GL::FramebufferTarget::ReadDraw,
-                                   GL::Attachment::Color0,
-                                   iblCubeMap->GetGLId(),
-                                   mipMapLevel);
-            fb->SetAllDrawBuffers();
-
-            // GL::TexParameteri(iblCubeMap->GetTextureTarget(), GL::TexParameter::TEXTURE_BASE_LEVEL, int(mipMapLevel)-1);
-            // GL::TexParameteri(iblCubeMap->GetTextureTarget(), GL::TexParameter::TEXTURE_MAX_LEVEL, int(mipMapLevel)-1);
+            const uint mipSize = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
 
             const float roughness = SCAST<float>(mipMapLevel) / (MaxMipLevels - 1);
             sp->SetFloat("B_InputRoughness", roughness);
 
+            GL::SetViewport(0, 0, mipSize, mipSize);
+            fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::Color0, mipMapLevel);
+            fb->SetAllDrawBuffers();
             GEngine::GetActive()->RenderViewportPlane();
         }
-
-        // GL::TexParameteri(iblCubeMap->GetTextureTarget(), GL::TexParameter::TEXTURE_BASE_LEVEL, 0);
-        // GL::TexParameteri(iblCubeMap->GetTextureTarget(), GL::TexParameter::TEXTURE_MAX_LEVEL, int(MaxMipLevels)-1);
     }
 
     fb->UnBind();

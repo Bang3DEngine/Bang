@@ -191,20 +191,29 @@ void Camera::RemoveRenderPass(RenderPass renderPass)
     m_renderPassMask.Remove(renderPass);
 }
 
-void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM)
+void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
+                              bool createFilteredCubeMapsForIBL)
 {
     if (GetSkyBoxTexture() != skyBoxTextureCM)
     {
         p_skyboxTextureCM.Set(skyBoxTextureCM);
 
-        // If new, generate the IBL specular and diffuse textures!
-        RH<TextureCubeMap> diffuseIBLCubeMap = CubeMapIBLGenerator::
-                               GenerateDiffuseIBLCubeMap(skyBoxTextureCM);
-        p_skyboxDiffuseTextureCM.Set( diffuseIBLCubeMap.Get() );
+        if (createFilteredCubeMapsForIBL)
+        {
+            // If new, generate the IBL specular and diffuse textures!
+            RH<TextureCubeMap> diffuseIBLCubeMap = CubeMapIBLGenerator::
+                                   GenerateDiffuseIBLCubeMap(skyBoxTextureCM);
+            p_skyboxDiffuseTextureCM.Set( diffuseIBLCubeMap.Get() );
 
-        RH<TextureCubeMap> specularIBLCubeMap = CubeMapIBLGenerator::
-                               GenerateSpecularIBLCubeMap(skyBoxTextureCM);
-        p_skyboxSpecularTextureCM.Set( specularIBLCubeMap.Get() );
+            RH<TextureCubeMap> specularIBLCubeMap = CubeMapIBLGenerator::
+                                   GenerateSpecularIBLCubeMap(skyBoxTextureCM);
+            p_skyboxSpecularTextureCM.Set( specularIBLCubeMap.Get() );
+        }
+        else
+        {
+            p_skyboxDiffuseTextureCM.Set( skyBoxTextureCM );
+            p_skyboxSpecularTextureCM.Set( skyBoxTextureCM );
+        }
     }
 }
 

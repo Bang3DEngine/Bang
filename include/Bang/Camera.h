@@ -59,7 +59,8 @@ public:
     void SetViewportAARectNDC(const AARect &viewportRectNDC);
     void AddRenderPass(RenderPass renderPass);
     void RemoveRenderPass(RenderPass renderPass);
-    void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM);
+    void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
+                          bool createFilteredCubeMapsForIBL = true);
     void SetRenderSelectionBuffer(bool renderSelectionBuffer);
     void SetClearMode(ClearMode clearMode);
 

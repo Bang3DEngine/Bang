@@ -17,7 +17,7 @@ set(BANG_DEPENDENCIES_BUILT ON)
 #=================================================================
 #=================================================================
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../CMakeIncludes")
 add_custom_target(BuildDependencies)
 
 if (${BUILD_SHARED_LIBS})
@@ -68,15 +68,21 @@ else ()
 endif()
 
 # Common shared dependencies ===================
-find_package(OpenGL REQUIRED)
-find_library(DL_LIBRARY REQUIRED "dl")
-find_library(BSD_LIBRARY REQUIRED "bsd"
-             HINTS "/usr/lib/x86_64-linux-gnu"
-             HINTS "/usr/lib/i386-linux-gnu")
-find_library(SNDIO_LIBRARY REQUIRED "sndio")
-find_package(ZLIB REQUIRED REQUIRED "zlib")
-find_library(SNDFILE_LIBRARY REQUIRED "sndfile")
-find_library(PTHREAD_LIBRARY REQUIRED "pthread")
+set(SEARCH_LIB_PATHS "")
+list(APPEND SEARCH_LIB_PATHS "/lib")
+list(APPEND SEARCH_LIB_PATHS "/lib64")
+list(APPEND SEARCH_LIB_PATHS "/usr/lib")
+list(APPEND SEARCH_LIB_PATHS "/usr/lib64")
+list(APPEND SEARCH_LIB_PATHS "/usr/lib/x86_64-linux-gnu")
+list(APPEND SEARCH_LIB_PATHS "/usr/lib/i386-linux-gnu")
+
+find_package(OpenGL          REQUIRED)
+find_package(ZLIB            REQUIRED) #  "zlib"    PATHS ${SEARCH_LIB_PATHS})
+find_library(DL_LIBRARY      REQUIRED "dl"      PATHS ${SEARCH_LIB_PATHS})
+find_library(BSD_LIBRARY     REQUIRED "bsd"     PATHS ${SEARCH_LIB_PATHS})
+find_library(SNDIO_LIBRARY   REQUIRED "sndio"   PATHS ${SEARCH_LIB_PATHS})
+find_library(SNDFILE_LIBRARY REQUIRED "sndfile" PATHS ${SEARCH_LIB_PATHS})
+find_library(PTHREAD_LIBRARY REQUIRED "pthread" PATHS ${SEARCH_LIB_PATHS})
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     if ("${USE_SANITIZER}")

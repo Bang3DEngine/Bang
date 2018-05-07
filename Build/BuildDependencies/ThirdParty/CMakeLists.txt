@@ -112,7 +112,7 @@ echo \"Executing ASSIMP CMake ------------\"
 cd ${ASSIMP_DIR} && \
 mkdir -p build && \
 cd build && \
-cmake .. \
+cmake \
   -DBUILD_SHARED_LIBS=OFF \
   -DSYSTEM_IRRXML=OFF \
   -DASSIMP_BUILD_ZLIB=OFF \
@@ -130,7 +130,6 @@ cmake .. \
   -DASSIMP_BUILD_SMD_IMPORTER=OFF \
   -DASSIMP_BUILD_SIB_IMPORTER=OFF \
   -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF \
-  -DASSIMP_BUILD_3MF_IMPORTER=OFF \
   -DASSIMP_BUILD_AC_IMPORTER=OFF \
   -DASSIMP_BUILD_AMF_IMPORTER=OFF \
   -DASSIMP_BUILD_ASE_IMPORTER=OFF \
@@ -403,15 +402,15 @@ execute_process(COMMAND /bin/bash -c " \
 echo \"Configuring SDL2TTF ------------\" && \
 export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} && \
 export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && \
+cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/ && \
 cd ${SDL2TTF_DIR} && \
 mkdir -p ${SDL2TTF_INSTALL_DIR} && \
 sh autogen.sh && \
-./configure \
-      CPPFLAGS=-I${SDL2_INCLUDE_DIR} \
-      --with-freetype-prefix=${FREETYPE_INSTALL_DIR} \
-      --prefix=${SDL2TTF_INSTALL_DIR} \
-      --enable-static=yes \
-      --with-pic \
+./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR} \
+            --with-freetype-prefix=${FREETYPE_INSTALL_DIR} \
+            --prefix=${SDL2TTF_INSTALL_DIR} \
+            --enable-static=yes \
+            --with-pic \
 "
 )
 add_custom_command(
@@ -419,8 +418,14 @@ add_custom_command(
   COMMAND
       export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
-      /bin/bash -c "cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/" && # Copy to solve a installation bug
+      /bin/bash -c "cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/" &&
       cd ${SDL2TTF_DIR} &&
+      sh autogen.sh &&
+      ./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR}
+                  --with-freetype-prefix=${FREETYPE_INSTALL_DIR}
+                  --prefix=${SDL2TTF_INSTALL_DIR}
+                  --enable-static=yes
+                  --with-pic &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
       /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"

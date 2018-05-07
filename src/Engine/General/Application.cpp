@@ -37,8 +37,11 @@ void Application::Init(const Path &engineRootPath)
     srand(1234);
 
     Application::s_appSingleton = this;
+    m_mainThreadId = Thread::GetCurrentThreadId();
 
     m_time = new Time();
+
+    m_debug = CreateDebug();
 
     m_paths = CreatePaths();
     m_paths->InitPaths(engineRootPath);
@@ -60,6 +63,7 @@ void Application::Init(const Path &engineRootPath)
 Application::~Application()
 {
     delete m_time;
+    delete m_debug;
     delete m_paths;
     delete m_settings;
     delete m_audioManager;
@@ -79,8 +83,9 @@ void Application::InitBeforeLoop()
     Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");
     Debug_Log("Writing profiling information to: '" << profileOutFile << "'");
     ProfilerStart(profileOutFile.GetAbsolute().ToCString());
-    #endif
+#endif
 }
+
 void FlushProfiling()
 {
     #ifdef GPROF
@@ -134,6 +139,11 @@ Paths *Application::GetPaths() const
     return m_paths;
 }
 
+Debug *Application::GetDebug() const
+{
+    return m_debug;
+}
+
 Settings *Application::GetSettings() const
 {
     return m_settings;
@@ -152,6 +162,12 @@ WindowManager *Application::GetWindowManager() const
 ImportFilesManager *Application::GetImportFilesManager() const
 {
     return m_importFilesManager;
+}
+
+String Application::GetMainThreadId()
+{
+    Application *app = Application::GetInstance();
+    return app ? app->m_mainThreadId : "";
 }
 
 Application *Application::GetInstance()
@@ -173,6 +189,11 @@ void Application::Exit(int returnCode, bool immediate)
         app->m_forcedExit = true;
         app->m_exitCode = returnCode;
     }
+}
+
+Debug *Application::CreateDebug() const
+{
+    return new Debug();
 }
 
 Paths *Application::CreatePaths() const

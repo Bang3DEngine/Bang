@@ -9,6 +9,7 @@
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/Application.h"
 
 USING_NAMESPACE_BANG
 
@@ -17,30 +18,47 @@ const String Debug::c_warnPrefix   = "[ WARNING ]: ";
 const String Debug::c_errorPrefix  = "[  ERROR  ]: ";
 
 Debug::Debug() { }
+Debug::~Debug() { }
 
-
-void Debug::Log(const String &str, int line, const String &filePath)
+void Debug::Message(DebugMessageType msgType,
+                    const String &str, int line,
+                    const String &fileName)
 {
-    String fileName = Path(filePath).GetNameExt();
-    std::cerr << c_logPrefix << str << " | " <<
-                 fileName << "(" << line << ")" <<  std::endl;
+    String prefix = "";
+    switch (msgType)
+    {
+        case DebugMessageType::LOG:   prefix = c_logPrefix;   break;
+        case DebugMessageType::WARN:  prefix = c_warnPrefix;  break;
+        case DebugMessageType::ERROR: prefix = c_errorPrefix; break;
+    }
+
+    std::cerr << prefix << str << " | " << fileName <<
+                 "(" << line << ")" <<  std::endl;
     std::cerr.flush();
+
+    Debug *dbg = Debug::GetInstance();
+    if (dbg)
+    {
+        dbg->EventEmitter<IDebugListener>::PropagateToListeners(
+                    &IDebugListener::OnMessage,
+                    msgType, str, line, fileName);
+    }
+
 }
 
-void Debug::Warn(const String &str, int line, const String &filePath)
+void Debug::Log(const String &str, int line, const String &fileName)
 {
-    String fileName = Path(filePath).GetNameExt();
-    std::cerr << c_warnPrefix << str << " | " <<
-                 fileName << "(" << line << ")" << std::endl;
-    std::cerr.flush();
+    Debug::Message(DebugMessageType::LOG, str, line, fileName);
 }
 
-void Debug::Error(const String &str, int line, const String &filePath)
+void Debug::Warn(const String &str, int line, const String &fileName)
 {
-    String fileName = Path(filePath).GetNameExt();
-    std::cerr << c_errorPrefix << str << " | " <<
-                 fileName << "(" << line << ")" << std::endl;
-    std::cerr.flush();
+    Debug::Message(DebugMessageType::WARN, str, line, fileName);
+}
+
+void Debug::Error(const String &str, int line, const String &fileName)
+{
+    Debug::Message(DebugMessageType::ERROR, str, line, fileName);
 }
 
 void Debug::PrintUniforms(Shader *shader)
@@ -140,4 +158,10 @@ void Debug::PrintAllUniforms()
 void Debug::PrintUniforms()
 {
     Debug::PrintUniforms(GL::GetBoundId(GL::BindTarget::ShaderProgram));
+}
+
+Debug *Debug::GetInstance()
+{
+    Application *app = Application::GetInstance();
+    return app ? app->GetDebug() : nullptr;
 }

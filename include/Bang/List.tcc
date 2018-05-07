@@ -2,7 +2,7 @@
 #define LIST_TCC
 
 #include "Bang/List.h"
-#include "Bang/Debug.h"
+#include "Bang/Assert.h"
 #include "Bang/TypeTraits.h"
 
 NAMESPACE_BANG_BEGIN

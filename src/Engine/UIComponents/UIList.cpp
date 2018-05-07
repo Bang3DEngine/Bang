@@ -392,7 +392,6 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     UIDirLayout *dirLayout;
     if (vertical) { dirLayout = container->AddComponent<UIVerticalLayout>(); }
     else { dirLayout = container->AddComponent<UIHorizontalLayout>(); }
-    (void) dirLayout;
 
     UIFocusable *focusable = container->AddComponent<UIFocusable>();
     (void)(focusable);
@@ -403,7 +402,7 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
         scrollPanel = GameObjectFactory::CreateUIScrollPanelInto(go);
 
         UIContentSizeFitter *csf = container->AddComponent<UIContentSizeFitter>();
-        csf->SetHorizontalSizeType(LayoutSizeType::Preferred);
+        csf->SetHorizontalSizeType(LayoutSizeType::None);
         csf->SetVerticalSizeType(LayoutSizeType::Preferred);
         container->GetRectTransform()->SetPivotPosition(Vector2(-1,1));
 

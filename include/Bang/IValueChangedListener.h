@@ -7,10 +7,11 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Object;
 
-class IValueChangedListener: public virtual IEventListener
+class IValueChangedListener : public virtual IEventListener
 {
+    EVENTLISTENER(IValueChangedListener)
+
 public:
-    virtual ~IValueChangedListener() = default;
     virtual void OnValueChanged(Object *object) = 0;
 };
 

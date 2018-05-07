@@ -9,6 +9,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Time;
+FORWARD class Debug;
 FORWARD class Scene;
 FORWARD class Paths;
 FORWARD class Window;
@@ -35,10 +36,13 @@ public:
 
     Time               *GetTime() const;
     Paths              *GetPaths() const;
+    Debug              *GetDebug() const;
     Settings           *GetSettings() const;
     AudioManager       *GetAudioManager() const;
     WindowManager      *GetWindowManager() const;
     ImportFilesManager *GetImportFilesManager() const;
+
+    static String GetMainThreadId();
 
     static Application *GetInstance();
     static void SetApplicationSingleton(Application *app);
@@ -47,11 +51,14 @@ public:
 
 protected:
     Time               *m_time               = nullptr;
+    Debug              *m_debug              = nullptr;
     Paths              *m_paths              = nullptr;
     Settings           *m_settings           = nullptr;
     AudioManager       *m_audioManager       = nullptr;
     WindowManager      *m_windowManager      = nullptr;
     ImportFilesManager *m_importFilesManager = nullptr;
+
+    String m_mainThreadId = "";
 
 private:
     static Application *s_appSingleton;
@@ -60,6 +67,7 @@ private:
     bool m_forcedExit = false;
 
     void InitBeforeLoop();
+    virtual Debug* CreateDebug() const;
     virtual Paths* CreatePaths() const;
     virtual Settings* CreateSettings() const;
     virtual Resources *CreateResources() const;

@@ -46,11 +46,12 @@ void GL::ClearError()
 
 bool GL::CheckError(int line, const String &func, const String &file)
 {
-    GLenum glError;
     bool ok = true;
-    glError = glGetError();
-    if (glError != GL_NO_ERROR)
+    while (true)
     {
+        GLenum glError = glGetError();
+        if (glError == GL_NO_ERROR) { break; }
+
         const char *err = reinterpret_cast<const char*>(gluErrorString(glError));
         Debug_Error("OpenGL error \"" << String(err).ToUpper() <<
                     "\" at function \"" << func << "\" in " <<

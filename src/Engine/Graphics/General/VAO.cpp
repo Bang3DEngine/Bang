@@ -30,7 +30,6 @@ void VAO::AddVertexAttribPointer(const VBO *vbo,
     if (location < 0) return;
 
     Bind();
-
     vbo->Bind();
     GL::EnableVertexAttribArray(location);
     GL::VertexAttribPointer(location,

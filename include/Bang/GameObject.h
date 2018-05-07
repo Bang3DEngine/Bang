@@ -47,7 +47,7 @@ class GameObject : public Object,
                    public EventEmitter<IComponentListener>,
                    public EventEmitter<IGameObjectVisibilityChangedListener>
 {
-    GAMEOBJECT_NO_FRIEND(GameObject);
+    GAMEOBJECT_NO_FRIEND(GameObject)
 
 public:
     virtual void PreStart() override;

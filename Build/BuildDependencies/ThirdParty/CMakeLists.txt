@@ -13,7 +13,6 @@ project(BangThirdParty C CXX)
 #=================================================================
 # General
 set(NUM_COMPILE_THREADS 4)
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes")
 
 # Assimp
 set(ASSIMP_DIR "${CMAKE_CURRENT_LIST_DIR}/assimp")
@@ -23,6 +22,13 @@ set(ASSIMP_LIB_OUTPUT_DIR  "${ASSIMP_DIR}/build/code")
 set(ASSIMP_LIB_OUTPUT_NAME "libassimp.a")
 set(ASSIMP_LIB_OUTPUT "${ASSIMP_LIB_OUTPUT_DIR}/${ASSIMP_LIB_OUTPUT_NAME}")
 set(ASSIMP_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ASSIMP_LIB_OUTPUT_NAME}")
+
+# Minizip
+set(MINIZIP_DIR "${CMAKE_CURRENT_LIST_DIR}/minizip")
+set(MINIZIP_LIB_OUTPUT_DIR  "${MINIZIP_DIR}/build/")
+set(MINIZIP_LIB_OUTPUT_NAME "libminizip.a")
+set(MINIZIP_LIB_OUTPUT "${MINIZIP_LIB_OUTPUT_DIR}/${MINIZIP_LIB_OUTPUT_NAME}")
+set(MINIZIP_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${MINIZIP_LIB_OUTPUT_NAME}")
 
 # IRRXML (used by Assimp)
 set(IRRXML_DIR "${ASSIMP_DIR}/build/contrib/irrXML")
@@ -156,9 +162,33 @@ add_custom_command(
             -DBUILD_FRAMEWORK=OFF
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             .. &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       /bin/bash -c "cp ${ASSIMP_LIB_OUTPUT} ${ASSIMP_LIB_FINAL_OUTPUT}"
   COMMENT "Building Assimp"
+  VERBATIM
+)
+#=================================================================
+#=================================================================
+#=================================================================
+
+#=================================================================
+# MINIZIP Compile ================================================
+#=================================================================
+add_custom_target(BuildMiniZip ALL)
+add_custom_command(
+  TARGET BuildMiniZip
+  COMMAND
+      cd ${MINIZIP_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake -DBUILD_SHARED_LIBS=OFF
+            -DUSE_AES=OFF
+            -DCMAKE_C_FLAGS="-fPIC"
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            .. &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
+      /bin/bash -c "cp ${MINIZIP_LIB_OUTPUT} ${MINIZIP_LIB_FINAL_OUTPUT}"
+  COMMENT "Building MINIZIP"
   VERBATIM
 )
 #=================================================================
@@ -192,7 +222,7 @@ add_custom_command(
       ./configure
             --prefix=${FREETYPE_INSTALL_DIR}
             --with-pic &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       make install &&
       /bin/bash -c "cp ${FREETYPE_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}"
   COMMENT "Building Freetype"
@@ -236,7 +266,7 @@ add_custom_command(
             -DREQUIRE_SIMD=OFF
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             .. &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       make install &&
       /bin/bash -c "cp ${JPEG_LIB_OUTPUT} ${JPEG_LIB_FINAL_OUTPUT}"
   COMMENT "Building JPEG"
@@ -263,7 +293,7 @@ add_custom_command(
             -DCMAKE_C_FLAGS="-fPIC"
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             .. &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       make install &&
       /bin/bash -c "cp ${PNG_LIB_OUTPUT} ${PNG_LIB_FINAL_OUTPUT}"
   COMMENT "Building PNG"
@@ -289,7 +319,7 @@ add_custom_command(
             -DCMAKE_C_FLAGS=-fPIC
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             .. &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       /bin/bash -c "cp ${OPENAL_LIB_OUTPUT} ${OPENAL_LIB_FINAL_OUTPUT}"
   COMMENT "Building OpenAL"
   VERBATIM
@@ -318,7 +348,7 @@ add_custom_command(
           -DCMAKE_C_FLAGS=-fPIC
           -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           .. &&
-      make -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       make install &&
       /bin/bash -c "cp ${SDL2_LIB_OUTPUT} ${SDL2_LIB_FINAL_OUTPUT}"
   COMMENT "Building SDL2"
@@ -347,7 +377,7 @@ add_custom_command(
             --prefix=${SDL2TTF_INSTALL_DIR}
             --enable-static=yes
             --with-pic &&
-      make VERBOSE=1 -j${NUM_COMPILE_THREADS} &&
+      make -j${NUM_COMPILE_THREADS} VERBOSE=1 &&
       make install &&
       /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"
   COMMENT "Building SDL2TTF"
@@ -363,6 +393,7 @@ add_custom_command(
 list(APPEND THIRD_PARTY_LIB_PATHS ${ASSIMP_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${JPEG_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${PNG_LIB_FINAL_OUTPUT})
+list(APPEND THIRD_PARTY_LIB_PATHS ${MINIZIP_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${OPENAL_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2TTF_LIB_FINAL_OUTPUT})
@@ -384,6 +415,7 @@ list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2TTF_INCLUDE_DIR})
 add_custom_target(BuildThirdParty ALL
     DEPENDS BuildAssimp
     DEPENDS BuildPng
+    DEPENDS BuildMiniZip
     DEPENDS BuildIRRXML
     DEPENDS BuildJpeg
     DEPENDS BuildOpenAL

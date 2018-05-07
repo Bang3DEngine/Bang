@@ -17,8 +17,7 @@ set(BANG_DEPENDENCIES_BUILT ON)
 #=================================================================
 #=================================================================
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../CMakeIncludes")
-
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeIncludes")
 add_custom_target(BuildDependencies)
 
 if (${BUILD_SHARED_LIBS})
@@ -27,6 +26,7 @@ if (${BUILD_SHARED_LIBS})
     find_package(OpenAL REQUIRED)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
+    find_package(MiniZip REQUIRED)
 
     find_library(ASSIMP_LIBRARY "assimp")
 
@@ -55,6 +55,7 @@ if (${BUILD_SHARED_LIBS})
     list(APPEND DEPENDENCIES_LIB_PATHS ${SDL2_LIBRARY})
     list(APPEND DEPENDENCIES_LIB_PATHS ${SDL2_TTF_LIBRARIES})
     list(APPEND DEPENDENCIES_LIB_PATHS ${ASSIMP_LIBRARY})
+    list(APPEND DEPENDENCIES_LIB_PATHS "${MINIZIP_LIBRARY}")
 
 else ()
 
@@ -67,13 +68,15 @@ else ()
 endif()
 
 # Common shared dependencies ===================
-find_library(DL_LIBRARY "dl")
 find_package(OpenGL REQUIRED)
-find_package(MiniZip REQUIRED)
-find_library(SNDIO_LIBRARY "sndio")
-find_package(ZLIB   REQUIRED "zlib")
-find_library(SNDFILE_LIBRARY "sndfile")
-find_library(PTHREAD_LIBRARY "pthread")
+find_library(DL_LIBRARY REQUIRED "dl")
+find_library(BSD_LIBRARY REQUIRED "bsd"
+             HINTS "/usr/lib/x86_64-linux-gnu"
+             HINTS "/usr/lib/i386-linux-gnu")
+find_library(SNDIO_LIBRARY REQUIRED "sndio")
+find_package(ZLIB REQUIRED REQUIRED "zlib")
+find_library(SNDFILE_LIBRARY REQUIRED "sndfile")
+find_library(PTHREAD_LIBRARY REQUIRED "pthread")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     if ("${USE_SANITIZER}")
@@ -87,10 +90,10 @@ endif()
 list(APPEND DEPENDENCIES_INCLUDE_DIRS "${OPENGL_INCLUDE_DIRS}")
 
 list(APPEND DEPENDENCIES_LIB_PATHS "${DL_LIBRARY}")
+list(APPEND DEPENDENCIES_LIB_PATHS "${BSD_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${ZLIB_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${SNDIO_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${OPENGL_LIBRARY}")
-list(APPEND DEPENDENCIES_LIB_PATHS "${MINIZIP_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${SNDFILE_LIBRARY}")
 list(APPEND DEPENDENCIES_LIB_PATHS "${PTHREAD_LIBRARY}")
 # =================================================

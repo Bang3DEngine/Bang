@@ -43,6 +43,10 @@ make distclean
 rm -rf build
 cd ..
 
+cd minizip
+rm -rf build
+cd ..
+
 cd alsa-lib-1.1.4
 make clean
 make distclean

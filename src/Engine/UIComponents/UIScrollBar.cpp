@@ -180,7 +180,6 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
 
     go->SetName("ScrollBar");
     UIScrollBar *scrollBar = go->AddComponent<UIScrollBar>();
-    go->AddComponent<UIFocusable>();
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
     GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
@@ -190,12 +189,18 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
                                         EPATH("Images/RRect_9s.png")).Get() );
     barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
 
-    UIFocusable *btn = bar->AddComponent<UIFocusable>();
+    UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
+    barFocusable->SetCursorType(Cursor::Type::Hand);
+
+    UIFocusable *scrollAreaFocusable = scrollArea->GetGameObject()->
+                                       AddComponent<UIFocusable>();
+    scrollAreaFocusable->SetCursorType(Cursor::Type::Hand);
 
     scrollBar->p_bar = bar;
-    scrollBar->p_button = btn;
     scrollBar->p_barImg = barImg;
+    scrollBar->p_barFocusable = barFocusable;
     scrollBar->p_scrollArea = scrollArea;
+    scrollBar->p_scrollAreaFocusable = scrollAreaFocusable;
     scrollBar->SetSide(Side::Left);
     scrollBar->SetLength(50);
     scrollBar->SetThickness(10);
@@ -237,5 +242,5 @@ void UIScrollBar::OnMouseExit(IFocusable*)
     if (!IsBeingGrabbed()) { p_barImg->SetTint(Color::Gray.WithValue(1.2f)); }
 }
 
-UIFocusable *UIScrollBar::GetFocusable() const { return p_button; }
+UIFocusable *UIScrollBar::GetFocusable() const { return p_barFocusable; }
 

@@ -133,15 +133,22 @@ void UICanvas::OnUpdate()
     if (GetGameObject()->GetScene() &&
         GetGameObject()->GetRectTransform()->IsMouseOver())
     {
-        // Ensure the canvas is actually on the scene (avoid cases in which we
-        // invoke a fake update() without scene) and that the mouse is over us
-        if (GetCurrentFocusMouseOver())
+        if ( GetCurrentFocus() && GetCurrentFocus()->IsBeingPressed() )
         {
-            Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
+            Cursor::Set(GetCurrentFocus()->GetCursorType());
         }
         else
         {
-            Cursor::Set(Cursor::Type::Arrow);
+            // Ensure the canvas is actually on the scene (avoid cases in which we
+            // invoke a fake update() without scene) and that the mouse is over us
+            if (GetCurrentFocusMouseOver())
+            {
+                Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
+            }
+            else
+            {
+                Cursor::Set(Cursor::Type::Arrow);
+            }
         }
     }
 }

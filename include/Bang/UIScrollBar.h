@@ -49,9 +49,10 @@ private:
     Side m_side = Undef<Side>();
 
     GameObject *p_bar = nullptr;
-    UIFocusable *p_button = nullptr;
+    UIFocusable *p_barFocusable = nullptr;
     UIImageRenderer *p_barImg = nullptr;
     UIScrollArea *p_scrollArea = nullptr;
+    UIFocusable *p_scrollAreaFocusable = nullptr;
 
     static UIScrollBar* CreateInto(GameObject *go);
 

@@ -29,8 +29,12 @@ RH<Texture2D> TextureFactory::GetSunIcon()
 { return GetIconTexture("Sun"); }
 RH<Texture2D> TextureFactory::GetLightBulbIcon()
 { return GetIconTexture("LightBulb"); }
+RH<Bang::Texture2D> Bang::TextureFactory::GetInfoIcon()
+{ return GetIconTexture("Info"); }
 RH<Texture2D> TextureFactory::GetWarningIcon()
 { return GetIconTexture("Warn"); }
+RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
+{ return GetIconTexture("Error"); }
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
     RH<Texture2D> tex = GetIconTexture("Checkerboard");

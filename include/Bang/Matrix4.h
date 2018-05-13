@@ -38,9 +38,10 @@ public:
     Vector3 TransformedPoint(const Vector3 &point) const;
     Vector3 TransformedVector(const Vector3 &vector) const;
 
-    Matrix4G<T> Inversed(float invertiblePrecision = 0.0001f,
+    Matrix4G<T> Inversed(float invertiblePrecision = 0.00000001f,
                          bool *isInvertible = nullptr) const;
     Matrix4G<T> Transposed() const;
+    T GetDeterminant() const;
 
     T *Data();
     const T *Data() const;

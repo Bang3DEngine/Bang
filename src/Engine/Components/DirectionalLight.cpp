@@ -84,7 +84,8 @@ void DirectionalLight::RenderShadowMaps_()
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene);
+        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene,
+                                             false);
     }
 
     // Restore previous state
@@ -166,10 +167,10 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     Camera *cam = Camera::GetActive(); // Get active camera
     float prevZFar = cam->GetZFar();   // Save for later restore
     cam->SetZFar( Math::Min(prevZFar, GetShadowDistance()) ); // Shadow distance
-    const Quad camTopQuad   = cam->GetTopQuad();    // Get top quad
-    const Quad camBotQuad   = cam->GetBotQuad();    // Get bot quad
-    const Quad camLeftQuad  = cam->GetLeftQuad();   // Get left quad
-    const Quad camRightQuad = cam->GetRightQuad();  // Get right quad
+    const Quad camTopQuad   = cam->GetFrustumTopQuad();    // Get top quad
+    const Quad camBotQuad   = cam->GetFrustumBotQuad();    // Get bot quad
+    const Quad camLeftQuad  = cam->GetFrustumLeftQuad();   // Get left quad
+    const Quad camRightQuad = cam->GetFrustumRightQuad();  // Get right quad
     const std::array<Quad, 4> camQuads = {{camTopQuad, camBotQuad,
                                            camLeftQuad, camRightQuad}};
     cam->SetZFar(prevZFar); // Restore

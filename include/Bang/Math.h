@@ -72,9 +72,7 @@ public:
     template<class T, class T2, class T3>
     static T Clamp(const T &value, const T2 &min, const T3 &max)
     {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
+        return Math::Min(Math::Max(SCAST<T>(value), SCAST<T>(min)), SCAST<T>(max));
     }
 
     template<class T>

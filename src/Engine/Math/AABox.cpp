@@ -263,30 +263,6 @@ std::array<Quad, 6> AABox::GetQuads() const
     return aaBoxQuads;
 }
 
-AARect AABox::GetAABoundingViewportRect(Camera *cam) const
-{
-    Vector3 camPosition = cam->GetGameObject()->GetTransform()->GetPosition();
-    if ( Contains(camPosition) ) { return AARect::NDCRect; }
-    Array<Vector3> boxPoints = (*this).GetPoints();
-
-    List<Vector2> viewportPoints;
-    bool somePointInFront = false;
-    Vector3 camForward = cam->GetGameObject()->GetTransform()->GetForward();
-    for (const Vector3 &p : boxPoints)
-    {
-        somePointInFront = somePointInFront ||
-                           Vector3::Dot(p-camPosition, camForward) > 0;
-
-        Vector2 viewportP = cam->FromWorldPointToViewportPointNDC(p);
-        viewportPoints.PushBack(viewportP);
-    }
-    if (!somePointInFront) { return AARect::Zero; }
-
-    AARect boundingRect = AARect::GetBoundingRectFromPositions(viewportPoints.Begin(),
-                                                           viewportPoints.End());
-    return boundingRect;
-}
-
 AABox operator*(const Matrix4 &m, const AABox &b)
 {
     Array<Vector3> points = b.GetPoints();

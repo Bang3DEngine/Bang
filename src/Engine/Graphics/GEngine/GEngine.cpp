@@ -208,7 +208,8 @@ void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
     }
 }
 
-void GEngine::RenderWithPass(GameObject *go, RenderPass renderPass)
+void GEngine::RenderWithPass(GameObject *go, RenderPass renderPass,
+                             bool renderChildren)
 {
     Camera *cam = GetActiveRenderingCamera();
     if (cam && cam->MustRenderPass(renderPass))
@@ -217,9 +218,10 @@ void GEngine::RenderWithPass(GameObject *go, RenderPass renderPass)
     }
 }
 
-void GEngine::RenderWithPassRaw(GameObject *go, RenderPass renderPass)
+void GEngine::RenderWithPassRaw(GameObject *go, RenderPass renderPass,
+                                bool renderChildren)
 {
-    go->Render(renderPass, true);
+    go->Render(renderPass, renderChildren);
 }
 
 void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,

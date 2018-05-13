@@ -533,8 +533,8 @@ bool GameObject::IsDontDestroyOnLoad() const
 
 AARect GameObject::GetBoundingViewportRect(Camera *cam, bool includeChildren) const
 {
-    AABox bbox = GetAABBox(includeChildren);
-    return cam->GetViewportBoundingAARect(bbox);
+    AABox bbox = GetAABBoxWorld(includeChildren);
+    return cam->GetViewportBoundingAARectNDC(bbox);
 }
 
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
@@ -573,7 +573,7 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
     return aabBox;
 }
 
-AABox GameObject::GetAABBox(bool includeChildren) const
+AABox GameObject::GetAABBoxWorld(bool includeChildren) const
 {
     AABox b = GetLocalAABBox(includeChildren);
     if (b == AABox::Empty) { return AABox::Empty; }
@@ -591,7 +591,7 @@ Sphere GameObject::GetLocalBoundingSphere(bool includeChildren) const
 
 Sphere GameObject::GetBoundingSphere(bool includeChildren) const
 {
-    return Sphere::FromBox(GetAABBox(includeChildren));
+    return Sphere::FromBox(GetAABBoxWorld(includeChildren));
 }
 
 bool GameObject::CanEventBePropagatedToGameObject(const GameObject *go)

@@ -12,7 +12,9 @@
 #include "Bang/UIRectMask.h"
 #include "Bang/SceneManager.h"
 #include "Bang/RectTransform.h"
+#include "Bang/UIDragDroppable.h"
 #include "Bang/UILayoutManager.h"
+#include "Bang/IDragDropListener.h"
 
 USING_NAMESPACE_BANG
 
@@ -151,6 +153,26 @@ void UICanvas::OnUpdate()
             }
         }
     }
+
+    if (p_currentDDBeingDragged)
+    {
+        List<IDragDropListener*> ddListeners = GetDragDropListeners();
+        if (Input::GetMouseButtonUp(MouseButton::Left))
+        {
+            for (IDragDropListener* ddListener : ddListeners)
+            {
+                ddListener->OnDrop(p_currentDDBeingDragged);
+            }
+            p_currentDDBeingDragged->OnDropped();
+        }
+        else
+        {
+            for (IDragDropListener* ddListener : ddListeners)
+            {
+                ddListener->OnDragUpdate(p_currentDDBeingDragged);
+            }
+        }
+    }
 }
 
 void UICanvas::InvalidateCanvas()
@@ -219,6 +241,11 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
             GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(true);
         }
     }
+}
+
+List<IDragDropListener *> UICanvas::GetDragDropListeners() const
+{
+    return GetGameObject()->GetComponentsInChildren<IDragDropListener>(true);
 }
 
 void UICanvas::OnAfterChildrenUpdate()
@@ -332,6 +359,17 @@ bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
         }
     }
     return false;
+}
+
+void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
+{
+    p_currentDDBeingDragged = dragDroppable;
+
+    List<IDragDropListener*> ddListeners = GetDragDropListeners();
+    for (IDragDropListener* ddListener : ddListeners)
+    {
+        ddListener->OnDragStarted(p_currentDDBeingDragged);
+    }
 }
 
 IFocusable *UICanvas::GetCurrentFocus() { return p_currentFocus; }

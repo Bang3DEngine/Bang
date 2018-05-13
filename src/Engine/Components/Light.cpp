@@ -81,7 +81,7 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     sp->SetTexture("B_LightShadowMapSoft", GetShadowMapTexture(),  false);
 }
 
-List<GameObject *> Light::GetActiveSceneShadowCasters() const
+List<GameObject*> Light::GetActiveSceneShadowCasters() const
 {
     Set<GameObject*> shadowCastersSet;
     Scene *scene = SceneManager::GetActiveScene();

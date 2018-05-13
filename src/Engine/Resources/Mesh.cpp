@@ -7,6 +7,7 @@
 #include "Bang/VBO.h"
 #include "Bang/Debug.h"
 #include "Bang/ModelIO.h"
+#include "Bang/Triangle.h"
 #include "Bang/Resources.h"
 #include "Bang/XMLNodeReader.h"
 #include "Bang/MeshSimplifier.h"
@@ -171,6 +172,30 @@ void Mesh::UpdateGeometry()
     }
 }
 
+void Mesh::CalculateVertexNormals()
+{
+    Map<VertexId, Array<TriangleId>> vertexIndexToTriIndices =
+                                GetVertexIndicesToTriangleIndices();
+    Array<Vector3> normalsPool;
+    for (int vi = 0; vi < GetVertexIndices().Size(); ++vi)
+    {
+        Vector3 vNormal = Vector3::Zero;
+        const Array<TriangleId> &vTriIds = vertexIndexToTriIndices.Get(vi);
+        for (TriangleId vTriId : vTriIds)
+        {
+            std::array<Mesh::VertexId, 3> triVertexIds =
+                                        GetTriangleVertexIndices(vTriId);
+            Triangle tri = Triangle(GetPositionsPool()[triVertexIds[0]],
+                                    GetPositionsPool()[triVertexIds[1]],
+                                    GetPositionsPool()[triVertexIds[2]]);
+            vNormal += tri.GetNormal();
+        }
+        vNormal /= float(vTriIds.Size());
+        normalsPool.PushBack(vNormal);
+    }
+    SetNormalsPool(normalsPool);
+}
+
 void Mesh::CalculateLODs()
 {
     if (!m_areLodsValid)
@@ -182,18 +207,20 @@ void Mesh::CalculateLODs()
     }
 }
 
-RH<Mesh> Mesh::GetLOD(uint lod) const
+int Mesh::GetNumLODs() const
 {
-    if (GetLODs().IsEmpty())
-    {
-        return RH<Mesh>(const_cast<Mesh*>(this));
-    }
-
-    const uint clampedLODLevel = Math::Min(lod, GetLODs().Size()-1);
-    return GetLODs()[clampedLODLevel];
+    return GetLODMeshes().Size();
 }
 
-const Array<RH<Mesh> > Mesh::GetLODs() const
+RH<Mesh> Mesh::GetLODMesh(int lod) const
+{
+    if (GetLODMeshes().IsEmpty()) { return RH<Mesh>(const_cast<Mesh*>(this)); }
+
+    const int clampedLODLevel = Math::Clamp(lod, 0, GetNumLODs()-1);
+    return GetLODMeshes()[clampedLODLevel];
+}
+
+const Array<RH<Mesh> > Mesh::GetLODMeshes() const
 {
     return m_lodMeshes;
 }

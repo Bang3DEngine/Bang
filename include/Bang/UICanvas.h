@@ -10,7 +10,9 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
 FORWARD class IFocusable;
+FORWARD class UIDragDroppable;
 FORWARD class UILayoutManager;
+FORWARD class IDragDropListener;
 
 class UICanvas : public Component,
                  public IDestroyListener
@@ -41,6 +43,8 @@ public:
     bool IsMouseOver(const Component *comp, bool recursive = false);
     bool IsMouseOver(const GameObject *go, bool recursive = false);
 
+    void NotifyDragStarted(UIDragDroppable *dragDroppable);
+
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 
@@ -61,9 +65,12 @@ private:
 
     IFocusable* p_currentFocus = nullptr;
     IFocusable* p_currentFocusMouseOver = nullptr;
+    UIDragDroppable* p_currentDDBeingDragged = nullptr;
 
     void ApplyFocusChange();
     void SetFocusMouseOver(IFocusable *focusable);
+
+    List<IDragDropListener*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,

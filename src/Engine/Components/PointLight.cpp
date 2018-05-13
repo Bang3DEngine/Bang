@@ -4,6 +4,7 @@
 #include "Bang/AABox.h"
 #include "Bang/Scene.h"
 #include "Bang/AARect.h"
+#include "Bang/Camera.h"
 #include "Bang/Gizmos.h"
 #include "Bang/Sphere.h"
 #include "Bang/GEngine.h"
@@ -58,9 +59,9 @@ void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
 AARect PointLight::GetRenderRect(Camera *cam) const
 {
     Transform *tr = GetGameObject()->GetTransform();
-    Sphere sphere(tr->GetPosition(), GetRange());
+    Sphere sphere(tr->GetPosition(), Math::Pow(GetRange(), 2.0f) );
     AABox bbox = AABox::FromSphere(sphere);
-    return bbox.GetAABoundingViewportRect(cam);
+    return cam->GetViewportBoundingAARectNDC(bbox);
 }
 
 void PointLight::SetRange(float range) { m_range = range; }
@@ -118,10 +119,21 @@ void PointLight::RenderShadowMaps_()
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEqual);
 
+    float rangeLimit = Math::Pow(GetRange(), 1.0f);
+    const Vector3 pointLightPos = GetGameObject()->GetTransform()->GetPosition();
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene);
+        AABox shadowCasterAABoxWorld = shadowCaster->GetAABBoxWorld(false);
+        Vector3 closestPointInAABox = shadowCasterAABoxWorld.
+                                           GetClosestPointInAABB(pointLightPos);
+        bool isCompletelyOutside = Vector3::Distance(closestPointInAABox,
+                                                     pointLightPos) > rangeLimit;
+        if (!isCompletelyOutside)
+        {
+            GEngine::GetActive()->RenderWithPass(shadowCaster,
+                                                 RenderPass::Scene, false);
+        }
     }
 
     // Restore previous state

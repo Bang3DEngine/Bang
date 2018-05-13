@@ -43,9 +43,10 @@ Mesh* MeshRenderer::GetMesh() const
 }
 Mesh *MeshRenderer::GetSharedMesh() const { return p_sharedMesh.Get(); }
 
-void MeshRenderer::SetCurrentLOD(uint lod)
+void MeshRenderer::SetCurrentLOD(int lod)
 {
-    m_currentLOD = lod;
+    int maxLOD = GetActiveMesh() ? GetActiveMesh()->GetNumLODs()-1 : 0;
+    m_currentLOD = Math::Clamp(lod, 0, maxLOD);
 }
 
 void MeshRenderer::SetAutoLOD(bool autoLOD)
@@ -58,9 +59,14 @@ bool MeshRenderer::GetAutoLOD() const
     return m_autoLOD;
 }
 
-uint MeshRenderer::GetCurrentLOD() const
+int MeshRenderer::GetCurrentLOD() const
 {
     return m_currentLOD;
+}
+
+Mesh *MeshRenderer::GetCurrentLODActiveMesh() const
+{
+    return GetActiveMesh()->GetLODMesh( GetCurrentLOD() ).Get();
 }
 
 AABox MeshRenderer::GetAABBox() const
@@ -68,7 +74,6 @@ AABox MeshRenderer::GetAABBox() const
     return GetActiveMesh() ? GetActiveMesh()->GetAABBox() : AABox::Empty;
 }
 
-#include "Bang/Texture2D.h"
 void MeshRenderer::OnRender()
 {
     Renderer::OnRender();
@@ -76,7 +81,7 @@ void MeshRenderer::OnRender()
     Mesh *baseMeshToRender = GetActiveMesh();
     if (baseMeshToRender)
     {
-        Mesh *lodMeshToRender = baseMeshToRender->GetLOD( GetCurrentLOD() ).Get();
+        Mesh *lodMeshToRender = baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();
         GL::Render(lodMeshToRender->GetVAO(),
                    GetRenderPrimitive(),
                    lodMeshToRender->GetVertexCount());

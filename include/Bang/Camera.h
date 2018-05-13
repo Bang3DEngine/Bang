@@ -45,7 +45,7 @@ public:
 
     Ray      FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const;
     Vector2i FromWindowPointToViewportPoint(const Vector2i &winPoint) const;
-    Vector2  FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const;
+    Vector3  FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const;
     Vector3  FromViewportPointNDCToWorldPoint(const Vector3 &vpPositionNDC) const;
     Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                               float zFromCam) const;
@@ -76,8 +76,9 @@ public:
     Matrix4 GetViewMatrix() const;
     bool GetRenderSelectionBuffer() const;
     Matrix4 GetProjectionMatrix() const;
+    bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
     ProjectionMode GetProjectionMode() const;
-    AARect GetViewportBoundingAARect(const AABox &bbox);
+    AARect GetViewportBoundingAARectNDC(const AABox &bbox) const;
     AARect GetViewportAARectInWindow() const;
     AARect GetViewportAARectNDCInWindow() const;
     const AARect& GetViewportAARectNDC() const;
@@ -87,12 +88,12 @@ public:
     TextureCubeMap *GetDiffuseSkyBoxTexture() const;
     SelectionFramebuffer *GetSelectionFramebuffer() const;
 
-    Quad GetNearQuad()  const;
-    Quad GetFarQuad()   const;
-    Quad GetLeftQuad()  const;
-    Quad GetRightQuad() const;
-    Quad GetTopQuad()   const;
-    Quad GetBotQuad()   const;
+    Quad GetFrustumNearQuad()  const;
+    Quad GetFrustumFarQuad()   const;
+    Quad GetFrustumLeftQuad()  const;
+    Quad GetFrustumRightQuad() const;
+    Quad GetFrustumTopQuad()   const;
+    Quad GetFrustumBotQuad()   const;
 
     static Camera *GetActive();
 

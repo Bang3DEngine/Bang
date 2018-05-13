@@ -81,7 +81,7 @@ Vector3 Matrix4G<T>::TransformedVector(const Vector3 &vector) const
 
 template<class T>
 Matrix4G<T> Matrix4G<T>::Inversed(float invertiblePrecision,
-                                  bool *isInvertible) const
+                                  bool *isInvertibleOut) const
 {
     Matrix4G<T> inv;
     const Matrix4G<T> &m = *this;
@@ -198,18 +198,16 @@ Matrix4G<T> Matrix4G<T>::Inversed(float invertiblePrecision,
                m.c2.x * m.c0.y * m.c1.z -
                m.c2.x * m.c0.z * m.c1.y;
 
-    float det = m.c0.x * inv.c0.x + m.c0.y * inv.c1.x + m.c0.z * inv.c2.x +
-                m.c0.w * inv.c3.x;
+    float det = m.c0.x * inv.c0.x + m.c0.y * inv.c1.x +
+                m.c0.z * inv.c2.x + m.c0.w * inv.c3.x;
 
-    if (Math::Abs(det) < invertiblePrecision)
-    {
-        if (isInvertible) { *isInvertible = false; }
-        return *this;
-    }
-    else if (isInvertible) { *isInvertible = true; }
+    bool isInvertible = (Math::Abs(det) > invertiblePrecision);
+    if (isInvertibleOut) { *isInvertibleOut = isInvertible; }
+    if (!isInvertible) { return *this; }
 
     inv.c0 /= det;
     inv.c1 /= det;
+
     inv.c2 /= det;
     inv.c3 /= det;
     return inv;
@@ -242,6 +240,27 @@ Matrix4G<T> Matrix4G<T>::Transposed() const
     trans.c3.w = m.c3.w;
 
     return trans;
+}
+
+template<class T>
+T Matrix4G<T>::GetDeterminant() const
+{
+    const Matrix4G<T> &m = *this;
+
+    float d01 = (m[2][0] * m[3][1] - m[3][0] * m[2][1]);
+    float d02 = (m[2][0] * m[3][2] - m[3][0] * m[2][2]);
+    float d12 = (m[2][1] * m[3][2] - m[3][1] * m[2][2]);
+    float d13 = (m[2][1] * m[3][3] - m[3][1] * m[2][3]);
+    float d23 = (m[2][2] * m[3][3] - m[3][2] * m[2][3]);
+    float d30 = (m[2][3] * m[3][0] - m[3][3] * m[2][0]);
+
+    float t0 =  (m[1][1] * d23 - m[1][2] * d13 + m[1][3] * d12);
+    float t1 = -(m[1][0] * d23 + m[1][2] * d30 + m[1][3] * d02);
+    float t2 =  (m[1][0] * d13 + m[1][1] * d30 + m[1][3] * d01);
+    float t3 = -(m[1][0] * d12 - m[1][1] * d02 + m[1][2] * d01);
+
+    float det = m[0][0] * t0 + m[0][1] * t1 + m[0][2] * t2 + m[0][3] * t3;
+    return det;
 }
 
 template<class T>

@@ -13,6 +13,7 @@
 #include "Bang/Matrix4.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
+#include "Bang/Geometry.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/Texture2D.h"
@@ -107,12 +108,12 @@ Vector2i Camera::FromWindowPointToViewportPoint(const Vector2i &winPoint) const
                                  AARecti(GetViewportAARectInWindow())) );
 }
 
-Vector2 Camera::FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const
+Vector3 Camera::FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const
 {
     Vector4 v4 = GetProjectionMatrix() *
                  GetViewMatrix() * Vector4(worldPosition, 1);
     v4 /= v4.w;
-    return v4.xy();
+    return v4.xyz();
 }
 
 Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector3 &vpPositionNDC) const
@@ -135,34 +136,38 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     return res;
 }
 
-AARect Camera::GetViewportBoundingAARect(const AABox &bbox)
+AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
 {
-    // If there's a point outside the camera rect, return Empty
-    bool allPointsOutside = true;
-    AARect winRect = bbox.GetAABoundingViewportRect(this);
-    Vector2 rMin = winRect.GetMin(), rMax = winRect.GetMax();
-    allPointsOutside = allPointsOutside &&
-                       !winRect.Contains( Vector2(rMin.x, rMin.y) );
-    allPointsOutside = allPointsOutside &&
-                       !winRect.Contains( Vector2(rMin.x, rMax.y) );
-    allPointsOutside = allPointsOutside &&
-                       !winRect.Contains( Vector2(rMax.x, rMin.y) );
-    allPointsOutside = allPointsOutside &&
-                       !winRect.Contains( Vector2(rMax.x, rMax.y) );
-    if (allPointsOutside) { return AARect::Zero; }
-
-    // If there's one or more points behind the camera, return WindowRect
-    // because we don't know how to handle it properly
-    Array<Vector3> points = bbox.GetPoints();
     Transform *tr = GetGameObject()->GetTransform();
+    Vector3 camPosition = tr->GetPosition();
     Vector3 camForward = tr->GetForward();
-    for (const Vector3 &p : points)
+    if ( aaBBoxWorld.Contains(camPosition) ) { return AARect::NDCRect; }
+
+    Array<Vector3> intPoints;
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumTopQuad(),   aaBBoxWorld));
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumBotQuad(),   aaBBoxWorld));
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumLeftQuad(),  aaBBoxWorld));
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumRightQuad(), aaBBoxWorld));
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumNearQuad(),  aaBBoxWorld));
+    intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumFarQuad(),   aaBBoxWorld));
+
+    Array<Vector3> boxPoints = aaBBoxWorld.GetPoints();
+    for (const Vector3 &bp : boxPoints)
     {
-        Vector3 dirToP = p - tr->GetPosition();
-        if (Vector3::Dot(dirToP, camForward) < 0) { return AARect::NDCRect; }
+        if (IsPointInsideFrustum(bp)) { intPoints.PushBack(bp); }
     }
 
-    return winRect;
+
+    List<Vector2> viewportPoints;
+    for (const Vector3 &p : intPoints)
+    {
+        Vector2 viewportPoint = FromWorldPointToViewportPointNDC(p).xy();
+        viewportPoints.PushBack(viewportPoint);
+    }
+
+    AARect boundingRect = AARect::GetBoundingRectFromPositions(viewportPoints.Begin(),
+                                                               viewportPoints.End());
+    return boundingRect;
 }
 
 void Camera::SetOrthoHeight(float orthoHeight) { m_orthoHeight = orthoHeight; }
@@ -289,7 +294,7 @@ SelectionFramebuffer *Camera::GetSelectionFramebuffer() const
     return m_selectionFramebuffer;
 }
 
-Quad Camera::GetNearQuad() const
+Quad Camera::GetFrustumNearQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1,  1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3( 1, -1,  1) );
@@ -297,7 +302,7 @@ Quad Camera::GetNearQuad() const
     Vector3 p3 = FromViewportPointNDCToWorldPoint( Vector3(-1,  1,  1) );
     return Quad(p0, p1, p2, p3);
 }
-Quad Camera::GetFarQuad() const
+Quad Camera::GetFrustumFarQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3( 1, -1, -1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1, -1) );
@@ -305,7 +310,7 @@ Quad Camera::GetFarQuad() const
     Vector3 p3 = FromViewportPointNDCToWorldPoint( Vector3( 1,  1, -1) );
     return Quad(p0, p1, p2, p3);
 }
-Quad Camera::GetLeftQuad() const
+Quad Camera::GetFrustumLeftQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1, -1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1,  1) );
@@ -313,7 +318,7 @@ Quad Camera::GetLeftQuad() const
     Vector3 p3 = FromViewportPointNDCToWorldPoint( Vector3(-1,  1, -1) );
     return Quad(p0, p1, p2, p3);
 }
-Quad Camera::GetRightQuad() const
+Quad Camera::GetFrustumRightQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3( 1, -1,  1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3( 1, -1, -1) );
@@ -321,7 +326,7 @@ Quad Camera::GetRightQuad() const
     Vector3 p3 = FromViewportPointNDCToWorldPoint( Vector3( 1,  1,  1) );
     return Quad(p0, p1, p2, p3);
 }
-Quad Camera::GetTopQuad() const
+Quad Camera::GetFrustumTopQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3(-1,  1,  1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3( 1,  1,  1) );
@@ -329,7 +334,7 @@ Quad Camera::GetTopQuad() const
     Vector3 p3 = FromViewportPointNDCToWorldPoint( Vector3(-1,  1, -1) );
     return Quad(p0, p1, p2, p3);
 }
-Quad Camera::GetBotQuad() const
+Quad Camera::GetFrustumBotQuad() const
 {
     Vector3 p0 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1,  1) );
     Vector3 p1 = FromViewportPointNDCToWorldPoint( Vector3(-1, -1, -1) );
@@ -387,6 +392,14 @@ Matrix4 Camera::GetProjectionMatrix() const
                               -GetOrthoHeight(), GetOrthoHeight(),
                                GetZNear(),       GetZFar());
     }
+}
+
+bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
+{
+    Vector3 projPoint = FromWorldPointToViewportPointNDC(worldPoint);
+    return projPoint.x > -1.0f && projPoint.x < 1.0f &&
+           projPoint.y > -1.0f && projPoint.y < 1.0f &&
+           projPoint.z > -1.0f && projPoint.z < 1.0f;
 }
 
 void Camera::OnRender(RenderPass rp)

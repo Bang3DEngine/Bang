@@ -19,12 +19,10 @@ USING_NAMESPACE_BANG
 UIRendererCacher::UIRendererCacher()
 {
     p_cacheFramebuffer = new Framebuffer(1, 1);
-    p_cacheFramebuffer->Bind();
     p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Color0,
                                               GL::ColorFormat::RGBA_UByte8);
     p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
                                               GL::ColorFormat::Depth16);
-    p_cacheFramebuffer->UnBind();
 }
 
 UIRendererCacher::~UIRendererCacher()

@@ -44,7 +44,6 @@ public:
     float GetArea() const;
     float GetVolume() const;
     Vector3 GetExtents() const;
-    AARect GetAABoundingViewportRect(Camera *cam) const;
     Vector3 GetClosestPointInAABB(const Vector3 &point) const;
     Array<Vector3> GetPoints() const;
 

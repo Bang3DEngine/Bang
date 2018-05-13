@@ -18,11 +18,12 @@ public:
     Mesh* GetActiveMesh() const;
     Mesh* GetSharedMesh() const;
 
-    void SetCurrentLOD(uint lod);
+    void SetCurrentLOD(int lod);
     void SetAutoLOD(bool autoLOD);
 
     bool GetAutoLOD() const;
-    uint GetCurrentLOD() const;
+    int GetCurrentLOD() const;
+    Mesh *GetCurrentLODActiveMesh() const;
 
     // Renderer
     virtual AABox GetAABBox() const override;
@@ -39,7 +40,7 @@ protected:
     RH<Mesh> p_sharedMesh;
 
     bool m_autoLOD = false;
-    uint m_currentLOD = 0;
+    int m_currentLOD = 0;
 
     MeshRenderer();
     virtual ~MeshRenderer();

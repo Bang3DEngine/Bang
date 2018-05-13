@@ -35,10 +35,12 @@ public:
     void SetVertexIndices(const Array<VertexId>& vertexIndices);
 
     void UpdateGeometry();
+    void CalculateVertexNormals();
 
     void CalculateLODs();
-    RH<Mesh> GetLOD(uint lod) const;
-    const Array<RH<Mesh>> GetLODs() const;
+    int GetNumLODs() const;
+    RH<Mesh> GetLODMesh(int lod) const;
+    const Array<RH<Mesh>> GetLODMeshes() const;
     uint GetNumTriangles() const;
     std::array<VertexId, 3> GetTriangleVertexIndices(int triIndex) const;
 

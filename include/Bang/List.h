@@ -33,7 +33,7 @@ public:
 
     Iterator Insert(const Iterator& it, const T& x);
 
-    Iterator Insert(int index, const T& x);
+    Iterator Insert(const T& x, int index);
 
     Iterator Insert(const Iterator& begin, int count, const T& x);
 

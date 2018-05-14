@@ -9,6 +9,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/RectTransform.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
@@ -144,8 +145,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
-    bgImg->SetImageTexture( Resources::Load<Texture2D>(
-                                        EPATH("Images/RRect_9s.png")).Get() );
+    bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bgImg->SetTint(Color::White);
 

@@ -157,20 +157,22 @@ void UICanvas::OnUpdate()
     if (p_currentDDBeingDragged)
     {
         List<IDragDropListener*> ddListeners = GetDragDropListeners();
-        if (Input::GetMouseButtonUp(MouseButton::Left))
+        if (Input::GetMouseButton(MouseButton::Left))
+        {
+            p_currentDDBeingDragged->OnDragUpdate();
+            for (IDragDropListener* ddListener : ddListeners)
+            {
+                ddListener->OnDragUpdate(p_currentDDBeingDragged);
+            }
+        }
+        else
         {
             for (IDragDropListener* ddListener : ddListeners)
             {
                 ddListener->OnDrop(p_currentDDBeingDragged);
             }
             p_currentDDBeingDragged->OnDropped();
-        }
-        else
-        {
-            for (IDragDropListener* ddListener : ddListeners)
-            {
-                ddListener->OnDragUpdate(p_currentDDBeingDragged);
-            }
+            p_currentDDBeingDragged = nullptr;
         }
     }
 }

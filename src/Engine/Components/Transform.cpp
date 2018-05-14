@@ -328,7 +328,10 @@ const Vector3& Transform::GetLocalScale() const
 
 Vector3 Transform::GetScale() const
 {
-    return FromLocalToWorldVector(GetLocalScale());
+    GameObject *parent = GetGameObject()->GetParent();
+    Transform *parentTr = (parent ? parent->GetTransform() : nullptr);
+    Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One;
+    return parentScale * GetLocalScale();
 }
 
 Vector3 Transform::GetPositionFromMatrix4(const Matrix4 &tm)

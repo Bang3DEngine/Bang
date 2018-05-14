@@ -122,6 +122,36 @@ void UIList::AddItem(GOItem *newItem)
 
 void UIList::AddItem(GOItem *newItem, int index)
 {
+    AddItem_(newItem, index, false);
+}
+
+void UIList::MoveItem(GOItem *item, int index)
+{
+    ASSERT(index >= 0 && index <= GetNumItems());
+
+    int oldIndexOfItem = p_items.IndexOf(item);
+    ASSERT(oldIndexOfItem >= 0);
+
+    if (oldIndexOfItem != index)
+    {
+        int newIndex = (oldIndexOfItem < index) ? (index - 1) : index;
+
+        p_items.Remove(item);
+        p_items.Insert(item, newIndex);
+        item->SetParent(GetContainer(), index);
+
+        EventEmitter<IUIListListener>::PropagateToListeners(
+                    &IUIListListener::OnItemMoved, item, oldIndexOfItem, newIndex);
+    }
+}
+
+void UIList::RemoveItem(GOItem *item)
+{
+    RemoveItem_(item, false);
+}
+
+void UIList::AddItem_(GOItem *newItem, int index, bool moving)
+{
     ASSERT(index >= 0 && index <= GetNumItems());
 
     List<IFocusable*> newItemFocusables =
@@ -141,10 +171,16 @@ void UIList::AddItem(GOItem *newItem, int index)
     p_itemsBackground.Add(newItem, itemBg);
     p_items.Insert(newItem, index);
 
+    if (!moving)
+    {
+        EventEmitter<IUIListListener>::PropagateToListeners(
+                    &IUIListListener::OnItemAdded, newItem, index);
+    }
+
     if (index <= m_selectionIndex) { ++m_selectionIndex; }
 }
 
-void UIList::RemoveItem(GOItem *item)
+void UIList::RemoveItem_(GOItem *item, bool moving)
 {
     ASSERT( p_items.Contains(item) );
 
@@ -155,9 +191,17 @@ void UIList::RemoveItem(GOItem *item)
     if (GetSelectedIndex() == indexOfItem) { ClearSelection(); }
 
     // Destroy the element
-    GameObject::Destroy(item);
+    if (!moving) { GameObject::Destroy(item); }
+    item->SetParent(nullptr);
+
     p_items.Remove(item);
     p_itemsBackground.Remove(item);
+
+    if (!moving)
+    {
+        EventEmitter<IUIListListener>::PropagateToListeners(
+                    &IUIListListener::OnItemRemoved, item);
+    }
 }
 
 void UIList::ClearSelection()
@@ -196,6 +240,11 @@ GOItem *UIList::GetItem(int i) const
     return nullptr;
 }
 
+void UIList::ScrollToBegin()
+{
+    GetScrollPanel()->SetScrollingPercent( Vector2(0.0f) );
+}
+
 void UIList::ScrollTo(int i)
 {
     ScrollTo( GetItem(i) );
@@ -231,6 +280,11 @@ void UIList::ScrollTo(GOItem *item)
     {
         GetScrollPanel()->SetScrolling(scrolling);
     }
+}
+
+void UIList::ScrollToEnd()
+{
+    GetScrollPanel()->SetScrollingPercent( Vector2(1.0f) );
 }
 
 int UIList::GetNumItems() const

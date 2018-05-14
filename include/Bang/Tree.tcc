@@ -30,7 +30,7 @@ Tree<T>* Tree<T>::AddChild(const T &data)
 }
 
 template<class T>
-Tree<T>* Tree<T>::AddChild(const T &data, uint index)
+Tree<T>* Tree<T>::AddChild(const T &data, int index)
 {
     Tree<T> *childTree = new Tree<T>();
     childTree->SetParent(this, index);
@@ -53,19 +53,31 @@ void Tree<T>::SetParent(Tree<T> *parentTree)
 }
 
 template<class T>
-void Tree<T>::SetParent(Tree<T> *parentTree, uint index)
+void Tree<T>::SetParent(Tree<T> *parentTree, int index)
 {
-    if (GetParent() == parentTree) { return; }
-
-    if (GetParent())
+    if (GetParent() != parentTree)
     {
-        GetParent()->m_subTrees.Remove(this);
+        if (GetParent())
+        {
+            GetParent()->m_subTrees.Remove(this);
+        }
+
+        p_parent = parentTree;
+        if (GetParent())
+        {
+            GetParent()->m_subTrees.Insert(this, index);
+        }
     }
-
-    p_parent = parentTree;
-    if (GetParent())
+    else if (GetParent()) // Position change inside same parent
     {
-        GetParent()->m_subTrees.Insert(index, this);
+        int oldIndex = GetParent()->GetChildren().IndexOf(this);
+        ASSERT(oldIndex >= 0);
+        if (oldIndex != index)
+        {
+            int newIndex = (oldIndex < index) ? (index-1) : index;
+            GetParent()->GetChildren().Remove(this);
+            GetParent()->GetChildren().Insert(this, newIndex);
+        }
     }
 }
 
@@ -112,6 +124,19 @@ T &Tree<T>::GetData() { return m_data; }
 
 template<class T>
 const T& Tree<T>::GetData() const { return m_data; }
+
+template<class T>
+Tree<T>* Tree<T>::GetDeepCopy() const
+{
+    Tree<T>* cpy = new Tree<T>();
+    cpy->SetData(m_data);
+    for (const Tree<T> *child : GetChildren())
+    {
+        Tree<T> *childCpy = child->GetDeepCopy();
+        childCpy->SetParent(cpy, 0);
+    }
+    return cpy;
+}
 
 NAMESPACE_BANG_END
 

@@ -43,6 +43,18 @@ RH<Texture2D> TextureFactory::GetCheckerboard()
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
 { return GetIconTexture("White"); }
+
+RH<Texture2D> TextureFactory::Get9SliceRoundRectTexture()
+{
+    Path path = EPATH("Images/RRect_9s.png");
+    return Resources::Load<Texture2D>(path);
+}
+RH<Texture2D> TextureFactory::Get9SliceRoundRectBorderTexture()
+{
+    Path path = EPATH("Images/RRectBorder_9s.png");
+    return Resources::Load<Texture2D>(path);
+}
+
 RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
 {
     Path path = EPATH("Icons/WhiteCM.texcm");

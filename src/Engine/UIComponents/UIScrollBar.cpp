@@ -11,6 +11,7 @@
 #include "Bang/UIFocusable.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/RectTransform.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/GameObjectFactory.h"
 
@@ -185,8 +186,7 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
 
     UIImageRenderer *barImg = bar->AddComponent<UIImageRenderer>();
-    barImg->SetImageTexture( Resources::Load<Texture2D>(
-                                        EPATH("Images/RRect_9s.png")).Get() );
+    barImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
 
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();

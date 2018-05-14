@@ -16,6 +16,7 @@
 #include "Bang/UIScrollArea.h"
 #include "Bang/UITextCursor.h"
 #include "Bang/RectTransform.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/SystemClipboard.h"
 #include "Bang/UIImageRenderer.h"
@@ -376,8 +377,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     UIInputText *inputText = go->AddComponent<UIInputText>();
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
-    bg->SetImageTexture( Resources::Load<Texture2D>(
-                                        EPATH("Images/RRect_9s.png")).Get() );
+    bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
     inputText->p_background = bg;

@@ -14,11 +14,11 @@ public:
 
     Tree<T>* AddChild();
     Tree<T>* AddChild(const T& data);
-    Tree<T>* AddChild(const T& data, uint index);
+    Tree<T>* AddChild(const T& data, int index);
 
     void SetData(const T &data);
     void SetParent(Tree<T> *parentTree);
-    void SetParent(Tree<T> *parentTree, uint index);
+    void SetParent(Tree<T> *parentTree, int index);
 
     void Clear();
 
@@ -29,6 +29,8 @@ public:
     List< Tree<T>* >& GetChildren();
     const List< Tree<T>* >& GetChildren() const;
     List< Tree<T>* > GetChildrenRecursive() const;
+    Tree<T>* GetDeepCopy() const;
+
 
 private:
     T m_data;

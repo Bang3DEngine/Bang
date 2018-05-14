@@ -27,6 +27,9 @@ public:
     static RH<Texture2D> GetErrorIcon();
     static RH<Texture2D> GetCheckerboard();
     static RH<Texture2D> GetWhiteTexture();
+    static RH<Texture2D> Get9SliceRoundRectTexture();
+    static RH<Texture2D> Get9SliceRoundRectBorderTexture();
+
     static RH<TextureCubeMap> GetWhiteTextureCubeMap();
     static RH<TextureCubeMap> GetDefaultTextureCubeMap();
 

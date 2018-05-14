@@ -196,7 +196,7 @@ void GameObject::AddChild(GameObject *child, int index)
 {
     ASSERT(!GetChildren().Contains(child));
 
-    auto nextIt = m_children.Insert(index, child);
+    auto nextIt = m_children.Insert(child, index);
     auto it = m_children.Begin(); std::advance(it, index);
     if (!m_currentChildrenIterators.empty() &&
         m_currentChildrenIterators.top() == it)
@@ -204,6 +204,8 @@ void GameObject::AddChild(GameObject *child, int index)
         m_currentChildrenIterators.top() = nextIt;
         m_increaseChildrenIterator = false;
     }
+
+    ChildAdded(child, this);
 }
 
 void GameObject::RemoveChild(GameObject *child)
@@ -219,6 +221,8 @@ void GameObject::RemoveChild(GameObject *child)
             m_increaseChildrenIterator = false;
         }
     }
+
+    ChildRemoved(child, this);
 }
 
 void GameObject::MarkComponentForDestroyPending(Component *comp)
@@ -317,7 +321,7 @@ Component* GameObject::AddComponent(Component *component, int _index)
         }
 
         const int index = (_index != -1 ? _index : GetComponents().Size());
-        auto nextIt = m_components.Insert(index, component);
+        auto nextIt = m_components.Insert(component, index);
 
         auto it = m_components.Begin(); std::advance(it, index);
         if (!m_currentComponentsIterators.empty() &&
@@ -487,6 +491,8 @@ void GameObject::SetParent(GameObject *newParent, int _index)
     ASSERT( newParent != this );
     ASSERT( !newParent || !newParent->IsChildOf(this, true) );
 
+    int index = newParent ? (_index != -1 ? _index :
+                              newParent->GetChildren().Size()) : -1;
     if (newParent != GetParent())
     {
         if (newParent && newParent->IsWaitingToBeDestroyed())
@@ -497,25 +503,26 @@ void GameObject::SetParent(GameObject *newParent, int _index)
         }
 
         GameObject *oldParent = GetParent();
-        if (oldParent)
-        {
-            oldParent->RemoveChild(this);
-            oldParent->ChildRemoved(this, oldParent);
-        }
+        if (oldParent) { oldParent->RemoveChild(this); }
 
         p_parent = newParent;
-        if (newParent)
-        {
-            int index = (_index != -1 ? _index : GetParent()->GetChildren().Size());
-            newParent->AddChild(this, index);
-            newParent->ChildAdded(this, newParent);
-        }
+        if (newParent) { newParent->AddChild(this, index); }
 
         EventEmitter<IChildrenListener>::
                PropagateToListeners(&IChildrenListener::OnParentChanged,
                                     oldParent, newParent);
         Propagate(&IChildrenListener::OnParentChanged,
                   GetComponents<IChildrenListener>(), oldParent, newParent);
+    }
+    else if (GetParent())
+    {
+        // Its a movement inside the same parent
+        int oldIndex = GetParent()->GetChildren().IndexOf(this);
+        if (oldIndex != index)
+        {
+            GetParent()->RemoveChild(this);
+            GetParent()->AddChild(this, (oldIndex < index) ? (index-1) : index);
+        }
     }
 }
 

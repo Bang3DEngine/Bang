@@ -164,8 +164,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     currentItemText->SetHorizontalAlign(HorizontalAlignment::Right);
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
-    bg->SetImageTexture( Resources::Load<Texture2D>(
-                                        EPATH("Images/RRect_9s.png")).Get() );
+    bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
 
@@ -190,8 +189,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     });
 
     UIImageRenderer *listBG = listGo->AddComponent<UIImageRenderer>();
-    listBG->SetImageTexture( Resources::Load<Texture2D>(
-                                      EPATH("Images/RRect_9s.png")).Get() );
+    listBG->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
     UIFocusable *listFocusable = listBG->GetGameObject()->GetComponent<UIFocusable>();

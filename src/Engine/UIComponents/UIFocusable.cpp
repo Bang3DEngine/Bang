@@ -28,5 +28,3 @@ void UIFocusable::PropagateMouseOverToListeners(bool mouseOver)
 {
     IFocusable::PropagateMouseOverToListeners(mouseOver);
 }
-
-

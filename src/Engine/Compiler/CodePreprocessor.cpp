@@ -99,8 +99,8 @@ void CodePreprocessor::PreprocessCode(String *srcCode,
 
     if (lines.Size() > 0)
     {
-        if (lines.Front().BeginsWith("#version")) { lines.Insert(1, "#line 1\n"); }
-        else { lines.Insert(0, "#line 0\n"); }
+        if (lines.Front().BeginsWith("#version")) { lines.Insert("#line 1\n", 1); }
+        else { lines.Insert("#line 0\n", 0); }
 
         outputCode = String::Join(lines, "\n");
     }

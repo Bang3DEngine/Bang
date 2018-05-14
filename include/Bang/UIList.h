@@ -6,6 +6,7 @@
 #include "Bang/Map.h"
 #include "Bang/Component.h"
 #include "Bang/IFocusListener.h"
+#include "Bang/IUIListListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -18,7 +19,8 @@ using GOItem = GameObject;
 
 class UIList : public Component,
                public IFocusListener,
-               public IDestroyListener
+               public IDestroyListener,
+               public EventEmitter<IUIListListener>
 {
     COMPONENT(UIList)
 
@@ -31,6 +33,7 @@ public:
 
     void AddItem(GOItem *newItem);
     void AddItem(GOItem *newItem, int index);
+    void MoveItem(GOItem *item, int index);
     void RemoveItem(GOItem *item);
     void ClearSelection();
     void Clear();
@@ -43,8 +46,10 @@ public:
     const Array<GOItem*>& GetItems() const;
     GOItem *GetItem(int i) const;
 
+    void ScrollToBegin();
     void ScrollTo(int i);
     void ScrollTo(GOItem *item);
+    void ScrollToEnd();
     void SetSelection(int i);
     void SetSelection(GOItem *item);
 
@@ -71,6 +76,9 @@ public:
 protected:
     UIList();
     virtual ~UIList();
+
+    void AddItem_(GOItem *newItem, int index, bool moving);
+    void RemoveItem_(GOItem *item, bool moving);
 
 private:
     Array<GOItem*> p_items;

@@ -241,10 +241,9 @@ void Gizmos::RenderIcon(Texture2D *texture,
            Vector3 pos = g->m_gizmosGo->GetTransform()->GetPosition();
            distScale = Vector3::Distance(camPos, pos);
         }
-        distScale *= 0.5f;
 
         Vector3 scale = g->m_gizmosGo->GetTransform()->GetScale();
-        g->m_gizmosGo->GetTransform()->SetScale(distScale * scale * 8.0f);
+        g->m_gizmosGo->GetTransform()->SetScale(distScale * scale * 0.5f);
 
         g->m_gizmosGo->GetTransform()->LookInDirection(
                     cam->GetGameObject()->GetTransform()->GetForward(),

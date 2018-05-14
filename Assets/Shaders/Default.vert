@@ -31,7 +31,7 @@ void main()
         vec3 T = (B_FIn_Tangent);
         vec3 N = (B_FIn_Normal);
         vec3 B = cross(N, T);
-        if (dot(cross(N, T), B) < 0.0) { T *= -1; } // Ensure RH coord. system
+        if (dot(cross(N, T), B) >= 0.0) { T *= -1; } // Ensure RH coord. system
         B_TBN = mat3(T, B, N);
     }
     else

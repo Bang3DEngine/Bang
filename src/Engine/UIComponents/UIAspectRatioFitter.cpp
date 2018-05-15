@@ -67,7 +67,7 @@ void UIAspectRatioFitter::ApplyLayout(Axis axis)
     if (!parentRT) { return; }
 
     const Vector2i parentSize = Vector2i::Max(Vector2i::One,
-                                   Vector2i(parentRT->GetViewportRect().GetSize()));
+                                   Vector2i(parentRT->GetViewportAARect().GetSize()));
 
     Vector2i currentSize( Vector2::Round( Vector2(GetAspectRatio(), 1) * 30000.0f ) );
     Vector2i newSize = AspectRatio::GetAspectRatioedSize(currentSize,

@@ -36,7 +36,7 @@ void UIDirLayout::ApplyLayout(Axis axis)
     List<GameObject*> children =
                     UILayoutManager::GetLayoutableChildrenList(GetGameObject());
 
-    Vector2i layoutRectSize( Vector2::Round(rt->GetViewportRect().GetSize()) );
+    Vector2i layoutRectSize( Vector2::Round(rt->GetViewportAARect().GetSize()) );
     Vector2i paddedLayoutRectSize = layoutRectSize - GetPaddingSize();
 
     Array<Vector2i> childrenRTSizes(children.Size(), Vector2i::Zero);

@@ -47,8 +47,8 @@ void UIList::OnUpdate()
         {
             if (!childItem->IsActive()) { continue; }
 
-            bool overChildItem = canvas->IsMouseOver(childItem, false);
-            if (m_wideSelectionMode && !overChildItem)
+            bool overChildItem;
+            if (m_wideSelectionMode)
             {
                 AARect itemRTRect ( childItem->GetRectTransform()->GetViewportAARectNDC() );
                 overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
@@ -56,6 +56,11 @@ void UIList::OnUpdate()
                                  mousePos.y >= itemRTRect.GetMin().y &&
                                  mousePos.y <= itemRTRect.GetMax().y);
             }
+            else
+            {
+                overChildItem = canvas->IsMouseOver(childItem, false);
+            }
+
             if (overChildItem) { itemUnderMouse = childItem; break; }
         }
     }
@@ -182,20 +187,19 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 
 void UIList::RemoveItem_(GOItem *item, bool moving)
 {
-    ASSERT( p_items.Contains(item) );
-
     int indexOfItem = p_items.IndexOf(item);
+    if (indexOfItem < 0) { return; }
 
     if (p_itemUnderMouse == item) { p_itemUnderMouse = nullptr; }
     if (indexOfItem < GetSelectedIndex()) { m_selectionIndex -= 1; }
     if (GetSelectedIndex() == indexOfItem) { ClearSelection(); }
 
+    p_items.Remove(item);
+    p_itemsBackground.Remove(item);
+
     // Destroy the element
     if (!moving) { GameObject::Destroy(item); }
     item->SetParent(nullptr);
-
-    p_items.Remove(item);
-    p_itemsBackground.Remove(item);
 
     if (!moving)
     {

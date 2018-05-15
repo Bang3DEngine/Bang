@@ -419,6 +419,10 @@ GOItem *UITree::GetSelectedItem() const
 
 void UITree::Clear()
 {
+    while (!m_rootTree.GetChildren().IsEmpty())
+    {
+        RemoveItem(m_rootTree.GetChildren().Front()->GetData());
+    }
     GetUIList()->Clear();
     m_rootTree.Clear();
     m_itemToTree.Clear();

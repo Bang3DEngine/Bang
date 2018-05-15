@@ -475,7 +475,7 @@ bool RectTransform::IsMouseOver(bool recursive) const
     if (!Input::IsMouseInsideWindow()) { return false; }
 
     if (IsActive() && GetGameObject()->IsActive() &&
-        GetViewportRect().Contains( Vector2(Input::GetMousePosition()) ))
+        GetViewportAARect().Contains( Vector2(Input::GetMousePosition()) ))
     {
         return true;
     }
@@ -486,7 +486,7 @@ bool RectTransform::IsMouseOver(bool recursive) const
              GetGameObject()->GetComponentsInChildrenOnly<RectTransform>(true);
         for (RectTransform *childRT : childrenRTs)
         {
-            if (childRT->IsMouseOver(false)) { return true; }
+            if (childRT->IsMouseOver(recursive)) { return true; }
         }
     }
     return false;

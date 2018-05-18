@@ -1,7 +1,7 @@
 # C++ objects and libs
 *.cbp
 *.trace
-build*/
+/build*/
 *.user*
 *.refl.h
 res/EngineAssets/tmp

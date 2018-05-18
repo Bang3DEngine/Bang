@@ -99,6 +99,15 @@ set(SDL2TTF_LIB_OUTPUT_DIR  "${SDL2TTF_INSTALL_DIR}/lib*")
 set(SDL2TTF_LIB_OUTPUT_NAME "libSDL2_ttf.a")
 set(SDL2TTF_LIB_OUTPUT  "${SDL2TTF_LIB_OUTPUT_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
 set(SDL2TTF_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
+
+# ZLIB
+set(ZLIB_DIR "${CMAKE_CURRENT_LIST_DIR}/zlib-1.2.11")
+set(ZLIB_INCLUDE_DIR_0 "${ZLIB_DIR}/include")
+set(ZLIB_INCLUDE_DIR_1 "${ZLIB_DIR}/build/include")
+set(ZLIB_LIB_OUTPUT_DIR  "${ZLIB_DIR}/build/code")
+set(ZLIB_LIB_OUTPUT_NAME "libassimp.a")
+set(ZLIB_LIB_OUTPUT "${ZLIB_LIB_OUTPUT_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
+set(ZLIB_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
 #=================================================================
 #=================================================================
 #=================================================================
@@ -415,6 +424,48 @@ sh autogen.sh && \
 )
 add_custom_command(
   TARGET BuildSDL2TTF
+  COMMAND
+      export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
+      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
+      /bin/bash -c "cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/" &&
+      cd ${SDL2TTF_DIR} &&
+      sh autogen.sh &&
+      ./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR}
+                  --with-freetype-prefix=${FREETYPE_INSTALL_DIR}
+                  --prefix=${SDL2TTF_INSTALL_DIR}
+                  --enable-static=yes
+                  --with-pic &&
+      make -j${NUM_COMPILE_THREADS} &&
+      make install &&
+      /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"
+  COMMENT "Building SDL2TTF"
+  VERBATIM
+)
+#=================================================================
+#=================================================================
+#=================================================================
+
+#=================================================================
+# ZLIB Compile ================================================
+#=================================================================
+add_custom_target(BuildZLIB ALL)
+execute_process(COMMAND /bin/bash -c " \
+echo \"Configuring ZLIB ------------\" && \
+export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} && \
+export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && \
+cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/ && \
+cd ${SDL2TTF_DIR} && \
+mkdir -p ${SDL2TTF_INSTALL_DIR} && \
+sh autogen.sh && \
+./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR} \
+            --with-freetype-prefix=${FREETYPE_INSTALL_DIR} \
+            --prefix=${SDL2TTF_INSTALL_DIR} \
+            --enable-static=yes \
+            --with-pic \
+"
+)
+add_custom_command(
+  TARGET BuildZLIB
   COMMAND
       export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&

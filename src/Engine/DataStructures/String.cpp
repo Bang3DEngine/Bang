@@ -102,8 +102,8 @@ long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 String String::SubString(long startIndexInclusive, long endIndexInclusive) const
 {
     if (startIndexInclusive < 0) { return ""; }
-    if (startIndexInclusive >= Size()) { return ""; }
-    if (endIndexInclusive   >= Size()) { endIndexInclusive = Size()-1; }
+    if (startIndexInclusive >= SCAST<long>(Size())) { return ""; }
+    if (endIndexInclusive   >= SCAST<long>(Size())) { endIndexInclusive = Size()-1; }
 
     if (endIndexInclusive == String::npos)
     {
@@ -176,9 +176,9 @@ String String::Replace(const String &from, const String &to,
 
 String String::Elide(int length, bool elideRight) const
 {
-    int maxLength = std::min(int(Size()), length);
+    std::size_t maxLength = std::min(int(Size()), length);
     String result = (*this);
-    if (result.Size() > length)
+    if (SCAST<int>(result.Size()) > length)
     {
         result = result.SubString(result.Size() - maxLength,
                                   result.Size() - 1);
@@ -218,7 +218,7 @@ String String::AddInFrontOfWords(String particle) const
     String result = *this;
     if (!result.IsEmpty() && result.At(0) != ' ') { result.Insert(0, particle); }
 
-    for (int i = 0; i < result.Size() - 1; ++i)
+    for (int i = 0; i < SCAST<int>(result.Size()) - 1; ++i)
     {
         if (result.At(i) == ' ' && result.At(i+1) != ' ')
         {
@@ -280,7 +280,7 @@ float String::ToFloat(const String &str, bool *ok)
     return v;
 }
 
-long String::Size() const
+std::size_t String::Size() const
 {
     return m_str.length();
 }
@@ -300,7 +300,7 @@ bool String::Contains(const String &str, bool caseSensitive) const
     if (!caseSensitive)
     {
         auto it = std::search(Begin(), End(), str.Begin(), str.End(),
-          [](char ch1, char ch2) {
+          [this](char ch1, char ch2) {
             return String::ToUpper(ch1) == String::ToUpper(ch2);
           }
         );
@@ -322,7 +322,7 @@ bool String::EndsWith(const String &str) const
 String String::ToUpper() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for (std::size_t i = 0; i < Size(); ++i)
     {
         result[i] = String::ToUpper(result[i]);
     }
@@ -332,7 +332,7 @@ String String::ToUpper() const
 String String::ToLower() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for (std::size_t i = 0; i < Size(); ++i)
     {
         result[i] = String::ToLower(result[i]);
     }

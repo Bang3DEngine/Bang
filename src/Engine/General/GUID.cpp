@@ -1,5 +1,7 @@
 #include "Bang/GUID.h"
 
+#include <cctype>
+
 USING_NAMESPACE_BANG
 
 const GUID &GUID::Empty() { static GUID emptyGUID; return emptyGUID; }

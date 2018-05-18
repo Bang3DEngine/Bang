@@ -78,7 +78,7 @@ void BehaviourContainer::SubstituteByBehaviourInstance(Library *behavioursLibrar
 void BehaviourContainer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    BehaviourContainer *bc = Cast<BehaviourContainer*>(clone);
+    BehaviourContainer *bc = SCAST<BehaviourContainer*>(clone);
     bc->SetSourceFilepath( GetSourceFilepath() );
 }
 

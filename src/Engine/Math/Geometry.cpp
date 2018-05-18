@@ -236,11 +236,11 @@ Array<Vector3> Geometry::IntersectPolygonPolygon(const Polygon &poly0,
 {
     Array<Vector3> intersectionPoints;
     const std::array<Polygon, 2> polys = {{poly0, poly1}};
-    for (int pi = 0; pi < 2; ++pi)
+    for (uint pi = 0; pi < 2; ++pi)
     {
         const Polygon &p0 = polys[pi];
         const Polygon &p1 = polys[1-pi];
-        for (int i = 0; i < p0.GetPoints().Size(); ++i)
+        for (uint i = 0; i < p0.GetPoints().Size(); ++i)
         {
             Segment segment(p0.GetPoint(i),
                             p0.GetPoint((i+1) % p0.GetPoints().Size()));

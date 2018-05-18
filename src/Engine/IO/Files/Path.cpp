@@ -2,10 +2,14 @@
 
 #include <ctime>
 #include <cstdio>
+
+#ifdef __linux__
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#elif _WIN32
+#endif
 
 #include "Bang/List.h"
 #include "Bang/Paths.h"
@@ -54,14 +58,22 @@ bool Path::IsFile() const
 {
     if (!Exists()) { return false; }
 
+    #ifdef __linux__
     struct stat path_stat;
     stat(GetAbsolute().ToCString(), &path_stat);
     return S_ISREG(path_stat.st_mode);
+    #elif _WIN32
+    return true;
+    #endif
 }
 
 bool Path::Exists() const
 {
+    #ifdef __linux__
     return access(GetAbsolute().ToCString(), F_OK) != -1;
+    #elif _WIN32
+    return true;
+    #endif
 }
 
 List<Path> Path::GetFiles(Path::FindFlags findFlags,
@@ -131,11 +143,13 @@ List<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
 
 List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
 {
+    List<Path> subPathsList;
+
+    #ifdef __linux__
     struct dirent *dir;
     DIR *d = opendir(GetAbsolute().ToCString());
     if (!d) { return {}; }
 
-    List<Path> subPathsList;
     while ((dir = readdir(d)) != nullptr)
     {
         String subName(dir->d_name);
@@ -150,6 +164,10 @@ List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
     }
     closedir(d);
 
+    #elif _WIN32
+
+    #endif
+
     return subPathsList;
 }
 
@@ -157,9 +175,13 @@ uint64_t Path::GetModificationTimeSeconds() const
 {
     if (!Exists()) { return 0; }
 
+    #ifdef __linux__
     struct stat attr;
     stat(GetAbsolute().ToCString(), &attr);
     return attr.st_mtim.tv_sec;
+    #elif _WIN32
+    return true;
+    #endif
 }
 
 String Path::GetName() const
@@ -167,7 +189,7 @@ String Path::GetName() const
     String name = "";
     bool iteratingFirstDots = true; // Treat hidden files "....foo.txt.bang"
     const String nameExt = GetNameExt();
-    for (int i = 0; i < nameExt.Size(); ++i)
+    for (std::size_t i = 0; i < nameExt.Size(); ++i)
     {
         if (nameExt[i] != '.') { iteratingFirstDots = false; }
         if (iteratingFirstDots) { name += nameExt[i]; }

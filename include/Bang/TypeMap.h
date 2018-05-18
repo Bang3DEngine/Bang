@@ -62,8 +62,8 @@ public:
         List<Value> values;
         for (const auto& it : *this)
         {
-            Class *v = Cast<Class*>(it.second);
-            if (v) { values.PushBack( Cast<Class*>(v) ); }
+            Class *v = SCAST<Class*>(it.second);
+            if (v) { values.PushBack( SCAST<Class*>(v) ); }
         }
         return values;
     }

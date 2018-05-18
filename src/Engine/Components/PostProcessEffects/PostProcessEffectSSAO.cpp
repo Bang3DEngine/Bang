@@ -72,7 +72,8 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
         // Prepare state
         m_ssaoFB->Bind();
         SetFBSize( Vector2(GL::GetViewportSize())  );
-        GL::SetViewport(0, 0, GetFBSize().x, GetFBSize().y);
+        GL::SetViewport(0, 0, SCAST<int>(GetFBSize().x),
+                        SCAST<int>(GetFBSize().y));
 
         // First do SSAO
         {
@@ -163,16 +164,16 @@ void PostProcessEffectSSAO::SetBlurRadius(int blurRadius)
         m_blurRadius = blurRadius;
 
         // Recompute blur kernel
-        double sum = 0.0;
+        float sum = 0.0f;
         m_blurKernel.Clear();
         for (int i = -GetBlurRadius(); i <= GetBlurRadius(); ++i)
         {
-            float k = std::exp(-0.5 * Math::Pow(double(i), 2.0)/3);
+            float k = Math::Exp(-0.5f * Math::Pow(float(i), 2.0f) / 3.0f);
             m_blurKernel.PushBack(k);
             sum += m_blurKernel.Back();
         }
 
-        for (int i = 0; i < m_blurKernel.Size(); ++i)
+        for (uint i = 0; i < m_blurKernel.Size(); ++i)
         { m_blurKernel[i] /= sum; } // Normalize
     }
 }
@@ -246,7 +247,8 @@ void PostProcessEffectSSAO::SetBilateralBlurEnabled(bool bilateralBlurEnabled)
 void PostProcessEffectSSAO::SetFBSize(const Vector2 &fbSize)
 {
     m_fbSize = fbSize;
-    m_ssaoFB->Resize(GetFBSize().x, GetFBSize().y);
+    m_ssaoFB->Resize(SCAST<int>(GetFBSize().x), 
+                     SCAST<int>(GetFBSize().y));
 }
 
 bool PostProcessEffectSSAO::GetSeparable() const
@@ -316,7 +318,7 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
         randomValuesInOrthogonalPlanes.PushBack(randomAxesVector);
     }
 
-    const int imgSize = Math::Ceil( Math::Sqrt( float(numAxes) ) );
+    const int imgSize = SCAST<int>( Math::Ceil( Math::Sqrt( float(numAxes) ) ) );
     ASSERT(imgSize > 0);
 
     // Create an image with the random vectors

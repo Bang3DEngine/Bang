@@ -122,7 +122,7 @@ int UIScrollBar::GetScrolling() const { return m_scrollingPx; }
 float UIScrollBar::GetScrollingPercent() const
 {
     int scrollSpacePx = GetScrollingSpacePx();
-    return scrollSpacePx > 0 ? Cast<float>(GetScrolling()) / scrollSpacePx : 0;
+    return scrollSpacePx > 0 ? SCAST<float>(GetScrolling()) / scrollSpacePx : 0;
 }
 
 int UIScrollBar::GetLength() const { return m_length; }
@@ -150,7 +150,7 @@ void UIScrollBar::UpdateLengthThicknessMargins()
     {
         bool bot = (GetSide() == Side::Bot);
         rt->SetAnchorX( Vector2(-1, 1) );
-        rt->SetAnchorY( Vector2(bot ? -1 : 1 ) );
+        rt->SetAnchorY( Vector2(bot ? -1.0f : 1.0f) );
         rt->SetMargins(0);
         rt->SetMarginTop(bot ? -GetThickness() : 0);
         rt->SetMarginBot(bot ? 0 : -GetThickness());
@@ -162,7 +162,7 @@ void UIScrollBar::UpdateLengthThicknessMargins()
     else
     {
         bool left = (GetSide() == Side::Left);
-        rt->SetAnchorX( Vector2( left ? -1 : 1 )  );
+        rt->SetAnchorX( Vector2( left ? -1.0f : 1.0f)  );
         rt->SetAnchorY( Vector2(-1, 1) );
         rt->SetMargins(0);
         rt->SetMarginRight(left ? -GetThickness() : 0);
@@ -214,7 +214,8 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
 int UIScrollBar::GetScrollingSpacePx() const
 {
     if (!GetGameObject()->IsEnabled() || !IsEnabled()) { return 0; }
-    int scrollingSpace = GetScrollingRect().GetSize().GetAxis( GetScrollAxis() );
+    int scrollingSpace = SCAST<int>(GetScrollingRect().GetSize().
+                                    GetAxis( GetScrollAxis() ) );
     scrollingSpace -= GetLength();
     return Math::Max(scrollingSpace, 0);
 }

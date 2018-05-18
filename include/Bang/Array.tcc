@@ -2,6 +2,7 @@
 #define ARRAY_TCC
 
 #include "Bang/Array.h"
+#include "Bang/Assert.h"
 #include "Bang/Containers.h"
 
 NAMESPACE_BANG_BEGIN
@@ -24,7 +25,7 @@ Array<T>::Array(std::initializer_list<T> l) : m_vector(l) {}
 template<class T>
 void Array<T>::Insert(const T &x, int index)
 {
-    ASSERT(index >= 0 && index <= Size());
+    ASSERT(index >= 0 && index <= SCAST<int>(Size()));
     Resize( Size() + 1 );
 
     for (int i = Size()-1; i > index; --i)

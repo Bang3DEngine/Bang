@@ -293,15 +293,15 @@ void Gizmos::RenderBillboardCircle(const Vector3 &origin, float radius,
     Gizmos::RenderCircle(origin, radius, numSegments);
 }
 
-void Gizmos::RenderCircle(const Vector3 &origin, float radius, int numSegments)
+void Gizmos::RenderCircle(const Vector3 &origin, float radius, uint numSegments)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     Gizmos::SetPosition(origin);
 
     Array<Vector3> circlePoints;
-    for (int i = 0; i < numSegments; ++i)
+    for (uint i = 0; i < numSegments; ++i)
     {
-        float angle = ((2 * Math::Pi) / numSegments) * i;
+        float angle = SCAST<float>( ((2 * Math::Pi) / numSegments) * i );
         Vector3 point = Vector3(Math::Cos(angle) * radius,
                                 Math::Sin(angle) * radius,
                                 0.0f);
@@ -309,7 +309,7 @@ void Gizmos::RenderCircle(const Vector3 &origin, float radius, int numSegments)
     }
 
     Array<Vector3> circleLinePoints;
-    for (int i = 0; i < numSegments; ++i)
+    for (uint i = 0; i < numSegments; ++i)
     {
         Vector3 p0 = circlePoints[i];
         Vector3 p1 = circlePoints[(i+1) % numSegments];
@@ -353,26 +353,29 @@ void Gizmos::RenderSphere(const Vector3 &origin, float radius)
 void Gizmos::RenderSimpleSphere(const Vector3 &origin,
                                 float radius,
                                 bool withOutline,
-                                int numLoopsVertical,
-                                int numLoopsHorizontal,
-                                int numCircleSegments)
+                                uint numLoopsVertical,
+                                uint numLoopsHorizontal,
+                                uint numCircleSegments)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
 
-    const float angleAdvVertical = (Math::Pi / numLoopsVertical);
-    for (int i = 0; i < numLoopsVertical; ++i)
+    const double angleAdvVertical = (Math::Pi / numLoopsVertical);
+    for (uint i = 0; i < numLoopsVertical; ++i)
     {
         Gizmos::SetRotation(
-            Quaternion::AngleAxis(Math::Pi / 2, Vector3::Right) *
-            Quaternion::AngleAxis(angleAdvVertical * i, Vector3::Right));
+            Quaternion::AngleAxis( SCAST<float>(Math::Pi / 2),
+                                   Vector3::Right) *
+            Quaternion::AngleAxis( SCAST<float>(angleAdvVertical * i), 
+                                   Vector3::Right));
         Gizmos::RenderCircle(origin, radius, numCircleSegments);
     }
 
-    const float angleAdvHorizontal = (Math::Pi / numLoopsHorizontal);
-    for (int i = 0; i < numLoopsHorizontal; ++i)
+    const double angleAdvHorizontal = (Math::Pi / numLoopsHorizontal);
+    for (uint i = 0; i < numLoopsHorizontal; ++i)
     {
         Gizmos::SetRotation(
-            Quaternion::AngleAxis(angleAdvHorizontal * i, Vector3::Up));
+            Quaternion::AngleAxis(SCAST<float>(angleAdvHorizontal * i), 
+                                  Vector3::Up));
         Gizmos::RenderCircle(origin, radius, numCircleSegments);
     }
 
@@ -433,7 +436,7 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         ShaderProgram *sp = g->m_outlineShaderProgram.Get();
         sp->Bind();
         sp->SetColor("B_OutlineColor", outlineColor);
-        sp->SetInt("B_OutlineThickness", outlineThickness);
+        sp->SetInt("B_OutlineThickness", SCAST<int>(outlineThickness));
         sp->SetFloat("B_AlphaFadeOnDepth", alphaDepthOnFade);
         GBuffer *gbuffer = GEngine::GetActiveGBuffer();
         if (gbuffer)

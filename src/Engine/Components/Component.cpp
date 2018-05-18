@@ -113,7 +113,7 @@ bool Component::IsEnabled(bool recursive) const
 void Component::CloneInto(ICloneable *clone) const
 {
     Object::CloneInto(clone);
-    Component *c = Cast<Component*>(clone);
+    Component *c = SCAST<Component*>(clone);
     c->SetEnabled( IsEnabled() );
 }
 

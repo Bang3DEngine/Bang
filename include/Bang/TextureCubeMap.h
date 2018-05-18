@@ -32,9 +32,9 @@ public:
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
 
-    void SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img);
-    Imageb ToImage(GL::CubeMapDir cubeMapDir) const;
-    RH<Imageb> GetImageResource(GL::CubeMapDir cubeMapDir) const;
+    void SetImageResource(GL::CubeMapDir cubeMapDir, Image<Byte> *img);
+    Image<Byte> ToImage(GL::CubeMapDir cubeMapDir) const;
+    RH<Image<Byte>> GetImageResource(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;
@@ -54,12 +54,12 @@ public:
 
 private:
     static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
-    std::array<RH<Imageb>, 6> m_imageResources;
+    std::array<RH<Image<Byte>>, 6> m_imageResources;
 
     void CreateEmpty(int width, int height) override;
     void Resize(int width, int height) override;
 
-    void FillCubeMapDir(GL::CubeMapDir dir, Imageb *img);
+    void FillCubeMapDir(GL::CubeMapDir dir, Image<Byte> *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
 

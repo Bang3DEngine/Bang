@@ -6,9 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef __linux__
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#elif _WIN32
+#endif
 
 #include "Bang/Array.h"
 #include "Bang/Debug.h"
@@ -33,6 +37,7 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
     // Debug_DLog("Executing command: " << command << " " <<
     //            String::Join(extraArgs, " "));
 
+    #ifdef __linux__
     m_oldFileDescriptors[IN]  = dup(Channel::StandardIn);
     m_oldFileDescriptors[OUT] = dup(Channel::StandardOut);
     m_oldFileDescriptors[ERR] = dup(Channel::StandardError);
@@ -85,6 +90,10 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
         return false;
     }
 
+    #elif _WIN32
+
+    #endif
+
     return true;
 }
 
@@ -101,11 +110,14 @@ bool SystemProcess::WaitUntilFinished(float seconds)
 
     auto beginning = GetNow();
 
+    bool finished = false;
+
+    #ifdef __linux__
+
     // Get its return value
     int status;
     bool exited = false;
     bool signaled = false;
-    bool finished = false;
     while ( (GetNow() - beginning) / 1000.0f < seconds )
     {
         m_readOutputWhileWaiting += ReadStandardOutputRaw();
@@ -141,11 +153,18 @@ bool SystemProcess::WaitUntilFinished(float seconds)
         }
         else { m_exitCode = -1; }
     }
+
+    #elif _WIN32
+
+    #endif
+
     return finished;
 }
 
 void SystemProcess::Close()
 {
+    #ifdef __linux__
+
     // Close non-closed channels
     close(m_childToParentOutFD[READ]);
     close(m_childToParentErrFD[READ]);
@@ -158,18 +177,31 @@ void SystemProcess::Close()
     close(m_oldFileDescriptors[IN]);
     close(m_oldFileDescriptors[OUT]);
     close(m_oldFileDescriptors[ERR]);
+
+    #elif _WIN32
+    #endif
 }
 
 void SystemProcess::Write(const String &str)
 {
+    #ifdef __linux__
+    
     write(m_parentToChildFD[WRITE],
           (str).ToCString(),
           sizeof(char) * (str.Size() + 1));
+
+    #elif _WIN32
+    #endif
 }
 
 void SystemProcess::CloseWriteChannel()
 {
+    #ifdef __linux__
+
     close(m_parentToChildFD[WRITE]);
+
+    #elif _WIN32
+    #endif
 }
 
 String SystemProcess::ReadStandardOutput()
@@ -194,6 +226,8 @@ String SystemProcess::ReadFileDescriptor(FileDescriptor fd)
 {
     String output = "";
 
+    #ifdef __linux__
+
     constexpr int bufferSize = 4096;
     char buffer[bufferSize];
     memset(buffer, 0, bufferSize);
@@ -207,6 +241,10 @@ String SystemProcess::ReadFileDescriptor(FileDescriptor fd)
         output += readChunkN;
         memset(buffer, 0, bufferSize);
     }
+
+    #elif _WIN32
+    #endif
+
     return output;
 }
 

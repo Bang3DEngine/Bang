@@ -118,7 +118,7 @@ void UIFileList::UpdateEntries()
     uiList->SetSelectionCallback(
         [this, uiList](GameObject *go, UIList::Action action)
         {
-            UIFileListItem *item = Cast<UIFileListItem*>(go);
+            UIFileListItem *item = SCAST<UIFileListItem*>(go);
             if (action == UIList::Action::SelectionIn)
             {
                 p_selectedItem = item;

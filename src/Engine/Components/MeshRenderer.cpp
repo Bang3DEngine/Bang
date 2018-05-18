@@ -97,7 +97,7 @@ Mesh *MeshRenderer::GetActiveMesh() const
 void MeshRenderer::CloneInto(ICloneable *clone) const
 {
     Renderer::CloneInto(clone);
-    MeshRenderer *mr = Cast<MeshRenderer*>(clone);
+    MeshRenderer *mr = SCAST<MeshRenderer*>(clone);
     mr->SetMesh( GetSharedMesh() );
 }
 

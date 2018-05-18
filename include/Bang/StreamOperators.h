@@ -180,7 +180,7 @@ template <class T>
 std::ostream &operator<<(std::ostream &log, const Array<T> &v)
 {
     log << "[";
-    for (int i = 0; i < v.Size(); ++i)
+    for (uint i = 0; i < v.Size(); ++i)
     {
         if (i != 0) log << ", ";
         log << v[i];
@@ -279,7 +279,7 @@ std::istream& operator>>(std::istream &is, EnumClass& e)
 {
     int x;
     is >> x;
-    e = Cast<EnumClass>(x);
+    e = SCAST<EnumClass>(x);
     return is;
 }
 

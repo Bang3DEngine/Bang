@@ -101,13 +101,16 @@ set(SDL2TTF_LIB_OUTPUT  "${SDL2TTF_LIB_OUTPUT_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
 set(SDL2TTF_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SDL2TTF_LIB_OUTPUT_NAME}")
 
 # ZLIB
-set(ZLIB_DIR "${CMAKE_CURRENT_LIST_DIR}/zlib-1.2.11")
-set(ZLIB_INCLUDE_DIR_0 "${ZLIB_DIR}/include")
-set(ZLIB_INCLUDE_DIR_1 "${ZLIB_DIR}/build/include")
-set(ZLIB_LIB_OUTPUT_DIR  "${ZLIB_DIR}/build/code")
-set(ZLIB_LIB_OUTPUT_NAME "libassimp.a")
-set(ZLIB_LIB_OUTPUT "${ZLIB_LIB_OUTPUT_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
-set(ZLIB_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
+if (WIN32)
+    set(ZLIB_DIR "${CMAKE_CURRENT_LIST_DIR}/zlib-1.2.11")
+    set(ZLIB_INCLUDE_DIR_0 "${ZLIB_DIR}/include")
+    set(ZLIB_INCLUDE_DIR_1 "${ZLIB_DIR}/build/include")
+    set(ZLIB_LIB_OUTPUT_DIR  "${ZLIB_DIR}/build/code")
+    set(ZLIB_LIB_OUTPUT_NAME "libassimp.a")
+    set(ZLIB_LIB_OUTPUT "${ZLIB_LIB_OUTPUT_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
+    set(ZLIB_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ZLIB_LIB_OUTPUT_NAME}")
+endif()
+
 #=================================================================
 #=================================================================
 #=================================================================
@@ -446,43 +449,25 @@ add_custom_command(
 #=================================================================
 
 #=================================================================
-# ZLIB Compile ================================================
+# ZLIB Compile ===================================================
 #=================================================================
-add_custom_target(BuildZLIB ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Configuring ZLIB ------------\" && \
-export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} && \
-export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && \
-cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/ && \
-cd ${SDL2TTF_DIR} && \
-mkdir -p ${SDL2TTF_INSTALL_DIR} && \
-sh autogen.sh && \
-./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR} \
-            --with-freetype-prefix=${FREETYPE_INSTALL_DIR} \
-            --prefix=${SDL2TTF_INSTALL_DIR} \
-            --enable-static=yes \
-            --with-pic \
-"
-)
-add_custom_command(
-  TARGET BuildZLIB
-  COMMAND
-      export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
-      export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
-      /bin/bash -c "cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/" &&
-      cd ${SDL2TTF_DIR} &&
-      sh autogen.sh &&
-      ./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR}
-                  --with-freetype-prefix=${FREETYPE_INSTALL_DIR}
-                  --prefix=${SDL2TTF_INSTALL_DIR}
-                  --enable-static=yes
-                  --with-pic &&
-      make -j${NUM_COMPILE_THREADS} &&
-      make install &&
-      /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"
-  COMMENT "Building SDL2TTF"
-  VERBATIM
-)
+if (WIN32)
+    add_custom_target(BuildZLIB ALL)
+    execute_process(COMMAND /bin/bash -c " \
+    echo \"Configuring ZLIB ------------\" && \
+    cmake -DBUILD_SHARED_LIBS=OFF ..
+    "
+    )
+    add_custom_command(
+      TARGET BuildZLIB
+      COMMAND
+          cd ${ZLIB_DIR} &&
+          make -j${NUM_COMPILE_THREADS} &&
+          /bin/bash -c "cp ${SDL2TTF_LIB_OUTPUT} ${SDL2TTF_LIB_FINAL_OUTPUT}"
+      COMMENT "Building SDL2TTF"
+      VERBATIM
+    )
+endif()
 #=================================================================
 #=================================================================
 #=================================================================
@@ -500,6 +485,9 @@ list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2TTF_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${GLEW_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${IRRXML_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${FREETYPE_LIB_FINAL_OUTPUT})
+if (WIN32)
+    list(APPEND THIRD_PARTY_LIB_PATHS ${ZLIB_LIB_FINAL_OUTPUT})
+endif()
 
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${GLEW_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${ASSIMP_INCLUDE_DIR_0})
@@ -524,6 +512,10 @@ add_custom_target(BuildThirdParty ALL
     DEPENDS BuildGlew
     DEPENDS BuildFreetype
     DEPENDS ${THIRD_PARTY_LIB_PATHS})
+if (WIN32)
+    add_dependencies(BuildThirdParty BuildZLIB)
+endif()
+
 #=================================================================
 #=================================================================
 #=================================================================

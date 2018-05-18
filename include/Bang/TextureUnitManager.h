@@ -23,11 +23,11 @@ public:
     static void BindTextureToUnit(Texture *texture, TexUnit unit);
     static TexUnit BindTextureToUnit(Texture *texture);
 
-    static int GetMaxTextureUnits();
-    static int GetNumUsableTextureUnits();
+    static uint GetMaxTextureUnits();
+    static uint GetNumUsableTextureUnits();
     static void UnBindAllTexturesFromAllUnits();
 
-    static int GetUnitTextureIsBoundTo(Texture *texture);
+    static uint GetUnitTextureIsBoundTo(Texture *texture);
     static GLId GetBoundTextureToUnit(GL::TextureTarget texTarget,
                                       GL::Enum textureUnit);
     static void PrintTextureUnits();
@@ -35,9 +35,9 @@ public:
 
 
 private:
-    int m_numMaxTextureUnits    = -1;
-    int m_numUsableTextureUnits = -1;
-    TexUnit m_voidTexUnit       = -1;
+    uint m_numMaxTextureUnits    = -1;
+    uint m_numUsableTextureUnits = -1;
+    TexUnit m_voidTexUnit        = -1;
 
     uint m_timestampCounter = 0;
     std::queue<TexUnit> m_freeUnits;

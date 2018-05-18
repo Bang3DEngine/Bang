@@ -128,17 +128,17 @@ Color SelectionFramebuffer::MapIdToColor(IdType id)
 {
     constexpr IdType C = 256;
     Color color =
-            Color(double(   id                % C),
-                  double(  (id / C)           % C),
-                  double( ((id / C) / C)      % C),
-                  double((((id / C) / C) / C) % C)
+            Color(SCAST<float>(   id                % C),
+                  SCAST<float>(  (id / C)           % C),
+                  SCAST<float>( ((id / C) / C)      % C),
+                  SCAST<float>((((id / C) / C) / C) % C)
                  );
 
     #ifdef DEBUG
         color.a = 256.0; // To be able to see selection framebuffer
     #endif
 
-   return color / double(C);
+   return color / SCAST<float>(C);
 }
 
 typename SelectionFramebuffer::IdType

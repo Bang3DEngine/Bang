@@ -101,7 +101,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
         for (int mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
         {
             const float mipMapLevelF = SCAST<float>(mipMapLevel);
-            const uint mipSize = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
+            const uint mipSize = SCAST<uint>(IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF));
 
             const float roughness = SCAST<float>(mipMapLevel) / (MaxMipLevels - 1);
             sp->SetFloat("B_InputRoughness", roughness);

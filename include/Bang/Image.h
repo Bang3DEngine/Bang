@@ -1,6 +1,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include "Bang/Bang.h"
 #include "Bang/Path.h"
 #include "Bang/Array.h"
 #include "Bang/Color.h"
@@ -92,6 +93,12 @@ private:
     Array<T> m_pixels;
 };
 
+NAMESPACE_BANG_END
+
+#include "Bang/Image.tcc"
+
+NAMESPACE_BANG_BEGIN
+
 template class Image<Byte>;
 template class Image<float>;
 
@@ -99,7 +106,5 @@ using Imageb = Image<Byte>;
 using Imagef = Image<float>;
 
 NAMESPACE_BANG_END
-
-#include "Bang/Image.tcc"
 
 #endif // IMAGE_H

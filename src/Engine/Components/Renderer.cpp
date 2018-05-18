@@ -179,7 +179,7 @@ void Renderer::PropagateRendererChanged()
 void Renderer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Renderer *r = Cast<Renderer*>(clone);
+    Renderer *r = SCAST<Renderer*>(clone);
     r->SetMaterial(GetSharedMaterial());
     r->SetCastsShadows(GetCastsShadows());
     r->SetReceivesShadows(GetReceivesShadows());

@@ -14,12 +14,12 @@ float Time::GetDeltaTime()
 
 double Time::GetNow_Seconds()
 {
-    return GetNow_Nanos() / Cast<double>(1e9);
+    return GetNow_Nanos() / SCAST<double>(1e9);
 }
 
 uint64_t Time::GetNow_Millis()
 {
-    return GetNow_Nanos() / 1e6;
+    return SCAST<uint64_t>(GetNow_Nanos() / 1e6);
 }
 
 uint64_t Time::GetNow_Nanos()
@@ -30,8 +30,8 @@ uint64_t Time::GetNow_Nanos()
 
 void Time::SetDeltaTime(double seconds)
 {
-    Time::GetInstance()->m_deltaTimeReference = Time::GetNow_Millis() -
-                                                (seconds * 1000);
+    Time::GetInstance()->m_deltaTimeReference =
+        SCAST<uint64_t>(Time::GetNow_Millis() - (seconds * 1000));
 }
 
 void Time::SetDeltaTimeReferenceToNow()

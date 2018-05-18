@@ -35,7 +35,7 @@ void LineRenderer::OnRender()
 void LineRenderer::SetPoint(int i, const Vector3 &point)
 {
     Array<Vector3> newPoints = m_points;
-    ASSERT(i >= 0 && i <= newPoints.Size());
+    ASSERT(i >= 0 && i <= SCAST<int>(newPoints.Size()) );
 
     if (i == newPoints.Size()) { newPoints.PushBack(point); }
     else { newPoints[i] = point; }
@@ -82,7 +82,7 @@ AABox LineRenderer::GetAABBox() const
 void LineRenderer::CloneInto(ICloneable *clone) const
 {
     Renderer::CloneInto(clone);
-    LineRenderer *lr = Cast<LineRenderer*>(clone);
+    LineRenderer *lr = SCAST<LineRenderer*>(clone);
     lr->SetPoints( GetPoints() );
 }
 

@@ -30,7 +30,7 @@ protected:
 private:
     bool m_running = true;
     float m_intervalSecs = 1.0f;
-    uint64_t m_lastTickTimestampSecs = 0;
+    double m_lastTickTimestampSecs = 0.0;
 
     List<std::function<void()>> m_callbacksList;
 

@@ -13,7 +13,7 @@ void FPSChrono::MarkBegin()
 
 void FPSChrono::MarkEnd()
 {
-    while (m_latestDeltaTimes.Size() > GetMeanSamples() - 1)
+    while (SCAST<int>(m_latestDeltaTimes.Size()) > GetMeanSamples() - 1)
     {
         m_latestDeltaTimes.PopBack();
     }
@@ -37,8 +37,8 @@ double FPSChrono::GetMeanSeconds() const
 {
     if (m_latestDeltaTimes.IsEmpty()) { return 0.0; }
 
-    float meanDeltas = 0.0;
-    for (float delta : m_latestDeltaTimes) { meanDeltas += delta; }
+    double meanDeltas = 0.0f;
+    for (double delta : m_latestDeltaTimes) { meanDeltas += delta; }
     meanDeltas /= m_latestDeltaTimes.Size();
     return meanDeltas;
 }

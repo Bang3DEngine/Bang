@@ -62,10 +62,10 @@ template<class T>
 template<class OtherT>
 Matrix4G<T>::Matrix4G(const OtherT& a)
 {
-    c0 = Vector4G<T>(Cast<T>(a), Cast<T>(0), Cast<T>(0), Cast<T>(0));
-    c1 = Vector4G<T>(Cast<T>(0), Cast<T>(a), Cast<T>(0), Cast<T>(0));
-    c2 = Vector4G<T>(Cast<T>(0), Cast<T>(0), Cast<T>(a), Cast<T>(0));
-    c3 = Vector4G<T>(Cast<T>(0), Cast<T>(0), Cast<T>(0), Cast<T>(a));
+    c0 = Vector4G<T>(SCAST<T>(a), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
+    c1 = Vector4G<T>(SCAST<T>(0), SCAST<T>(a), SCAST<T>(0), SCAST<T>(0));
+    c2 = Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(a), SCAST<T>(0));
+    c3 = Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(0), SCAST<T>(a));
 }
 
 template<class T>
@@ -335,12 +335,12 @@ Matrix4G<T> Matrix4G<T>::Ortho(Real left,   Real right,
                                Real zNear,  Real zFar)
 {
     Matrix4G<T> res(1);
-    res[0][0] = SCAST<T>(2) / (right - left);
-    res[1][1] = SCAST<T>(2) / (top - bottom);
+    res[0][0] =  SCAST<T>(2) / (right - left);
+    res[1][1] =  SCAST<T>(2) / (top - bottom);
     res[2][2] = -SCAST<T>(2) / (zFar - zNear);
-    res[3][0] = -(right + left) / (right - left);
-    res[3][1] = -(top + bottom) / (top - bottom);
-    res[3][2] = -(zFar + zNear) / (zFar - zNear);
+    res[3][0] = -SCAST<T>(right + left) / (right - left);
+    res[3][1] = -SCAST<T>(top + bottom) / (top - bottom);
+    res[3][2] = -SCAST<T>(zFar + zNear) / (zFar - zNear);
     return res;
 }
 
@@ -417,9 +417,9 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
         biggestIndex = 3;
     }
 
-    float biggestVal = Math::Sqrt(fourBiggestSquaredMinus1 + Cast<T>(1)) *
-                       Cast<T>(0.5);
-    float mult = Cast<T>(0.25)/biggestVal;
+    float biggestVal = Math::Sqrt(fourBiggestSquaredMinus1 + SCAST<T>(1)) *
+                       SCAST<T>(0.5);
+    float mult = SCAST<T>(0.25)/biggestVal;
 
     QuaternionG<T> res;
     switch (biggestIndex)

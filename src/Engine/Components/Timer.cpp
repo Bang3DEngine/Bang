@@ -19,7 +19,7 @@ void Timer::OnUpdate()
 
     if (IsRunning())
     {
-        float secsSinceLastTick =
+        double secsSinceLastTick =
                             (Time::GetNow_Seconds() - m_lastTickTimestampSecs);
         if (secsSinceLastTick > GetInterval())
         {

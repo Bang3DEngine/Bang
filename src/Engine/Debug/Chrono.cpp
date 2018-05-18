@@ -32,8 +32,8 @@ void Chrono::Log()
 
     std::cerr << "Chrono " <<  m_chronoName
               << " -------------------" << std::endl;
-    long totalTime = 0;
-    for (int i = 0; i < m_events.Size() - 1; ++i)
+    uint64_t totalTime = 0;
+    for (uint i = 0; i < m_events.Size() - 1; ++i)
     {
         ChronoEvent &ce = m_events[i];
         double intervalSecs = ce.timeSinceLastEvent / 1000.0;

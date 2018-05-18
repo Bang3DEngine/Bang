@@ -159,6 +159,6 @@ VECTOR_G<T>& operator/=(VECTOR_G<T> &lhs, const T& a); \
 template<class T> \
 VECTOR_G<T> operator-(const VECTOR_G<T> &v);
 
-#include "Bang/Vector.tcc"
-
 #endif // VECTOR_H
+
+#include "Bang/Vector.tcc"

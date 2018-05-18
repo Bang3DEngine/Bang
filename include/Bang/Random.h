@@ -43,7 +43,7 @@ T Random::GetValue()
 template<class T>
 T Random::GetRange(T minIncluded, T maxExcluded)
 {
-    return Cast<T>(Random::GetValue() * (maxExcluded-minIncluded)) + minIncluded;
+    return SCAST<T>(Random::GetValue() * (maxExcluded-minIncluded)) + minIncluded;
 }
 
 NAMESPACE_BANG_END

@@ -33,7 +33,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         const int numChildren = parent->GetChildren().Size();
         const int thisIndexInParent = parent->GetChildren().IndexOf( GetGameObject() );
         if (thisIndexInParent <= 0) { return; }
-        if (thisIndexInParent >= parent->GetChildren().Size() - 1) { return; }
+        if (thisIndexInParent >= SCAST<int>(parent->GetChildren().Size()) - 1) { return; }
 
         const int prevSiblingIndex = thisIndexInParent - 1;
         const int nextSiblingIndex = thisIndexInParent + 1;

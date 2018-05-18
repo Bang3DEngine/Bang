@@ -107,7 +107,7 @@ bool Font::CatchTTFError()
 
 float Font::ScaleMagnitude(int fontSize, float magnitude)
 {
-    return Math::Round(magnitude * GetScaleProportion(fontSize));
+    return SCAST<float>( Math::Round(magnitude * GetScaleProportion(fontSize)) );
 }
 
 Vector2 Font::ScaleMagnitude(int fontSize, const Vector2 &magnitude)

@@ -1,6 +1,9 @@
 #include "Bang/Thread.h"
 
+#ifdef __linux
 #include <pthread.h>
+#elif _WIN32
+#endif
 
 #include "Bang/Debug.h"
 
@@ -56,7 +59,14 @@ void Thread::SetName(const String &threadName)
     if (threadName != GetName())
     {
         m_threadName = threadName;
+        
+        #ifdef __linux__
+
         pthread_setname_np(m_thread.native_handle(), GetName().ToCString());
+
+        #elif _WIN32
+        #endif
+
     }
 }
 void Thread::SetRunnable(ThreadRunnable *runnable)
@@ -70,7 +80,7 @@ ThreadRunnable *Thread::GetRunnable() const { return p_runnable; }
 
 void Thread::SleepCurrentThread(float seconds)
 {
-    int millis = Cast<int>(seconds * 1000);
+    int millis = SCAST<int>(seconds * 1000);
     std::this_thread::sleep_for( std::chrono::milliseconds(millis) );
 }
 

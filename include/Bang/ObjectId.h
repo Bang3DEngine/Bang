@@ -23,7 +23,7 @@ public:
 
 private:
     static ObjectIdType NextObjectId;
-    ObjectIdType m_id = Cast<ObjectIdType>(-1);
+    ObjectIdType m_id = SCAST<ObjectIdType>(-1);
 
     ObjectId();
 

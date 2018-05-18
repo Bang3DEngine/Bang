@@ -4,9 +4,12 @@
 #include <fstream>
 #include <iostream>
 
+#ifdef __linux__
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#elif _WIN32
+#endif
 
 #include "Bang/List.h"
 #include "Bang/Array.h"
@@ -81,7 +84,10 @@ bool File::DuplicateDir(const Path &fromDirpath,
 
 void File::AddExecutablePermission(const Path &path)
 {
+    #ifdef __linux__
     chmod(path.GetAbsolute().ToCString(), S_IRUSR | S_IXUSR);
+    #elif _WIN32
+    #endif
 }
 
 bool File::Remove(const Path &path)
@@ -105,7 +111,12 @@ bool File::Remove(const Path &path)
 bool File::CreateDirectory(const Path &dirPath)
 {
     if (dirPath.Exists()) { return true; }
-    return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
+
+    #ifdef __linux__
+        return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
+    #elif _WIN32
+        return false;
+    #endif
 }
 
 bool File::Rename(const Path &oldPath, const Path &newPath)
@@ -170,8 +181,10 @@ String File::GetContents(const Path &filepath)
     }
     else
     {
-        std::cerr << "Can't open file '" << filepath.ToString() << "': " <<
-                     std::strerror(errno) << std::endl;
+        char errorBuffer[512];
+        strerror_s(errorBuffer, 512, errno);
+        std::cerr << "Can't open file '" << filepath.ToString() << "': " << 
+                     errorBuffer << std::endl;
     }
     return contents;
 }

@@ -42,7 +42,7 @@ public:
     RH<Mesh> GetLODMesh(int lod) const;
     const Array<RH<Mesh>> GetLODMeshes() const;
     uint GetNumTriangles() const;
-    std::array<VertexId, 3> GetTriangleVertexIndices(int triIndex) const;
+    std::array<VertexId, 3> GetTriangleVertexIndices(uint triIndex) const;
 
     VAO *GetVAO() const;
     IBO *GetVertexIndicesIBO() const;

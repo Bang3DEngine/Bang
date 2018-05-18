@@ -13,7 +13,7 @@ TextureUnitManager::TextureUnitManager()
     m_numUsableTextureUnits = m_numMaxTextureUnits - 1;
     m_voidTexUnit = m_numMaxTextureUnits - 1;
 
-    for (int i = 0; i < m_numUsableTextureUnits; ++i)
+    for (uint i = 0; i < m_numUsableTextureUnits; ++i)
     {
         // All units are totally free at the beginning
         m_freeUnits.push(i);
@@ -72,7 +72,7 @@ TextureUnitManager::BindTextureToUnit(Texture *texture)
     return texUnit;
 }
 
-int TextureUnitManager::GetMaxTextureUnits()
+uint TextureUnitManager::GetMaxTextureUnits()
 {
     return TextureUnitManager::GetActive()->m_numMaxTextureUnits;
 }
@@ -132,7 +132,7 @@ void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
 }
 
 
-int TextureUnitManager::GetNumUsableTextureUnits()
+uint TextureUnitManager::GetNumUsableTextureUnits()
 {
     TextureUnitManager *tm = TextureUnitManager::GetActive();
     return (tm ? tm->m_numUsableTextureUnits : 99);
@@ -151,7 +151,7 @@ void TextureUnitManager::UnBindAllTexturesFromAllUnits()
     }
 }
 
-int TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
+uint TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
 {
     if (!texture) { return -1; }
 

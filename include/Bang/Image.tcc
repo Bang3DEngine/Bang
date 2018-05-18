@@ -28,6 +28,64 @@ void Image<T>::Create(int width, int height)
     m_pixels.Resize(m_size.x * m_size.y * 4);
 }
 
+
+template<class T>
+void Image<T>::SetPixel(int x, int y, const Color& color)
+{
+    ASSERT_MSG(false, "Please specialize this method!");
+}
+template<>
+void Image<Byte>::SetPixel(int x, int y, const Color &color)
+{
+    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
+               "Pixel (" << x << ", " << y << ") out of bounds");
+    const int coord = (y * GetWidth() + x) * 4;
+    m_pixels[coord + 0] = SCAST<Byte>(color.r * 255);
+    m_pixels[coord + 1] = SCAST<Byte>(color.g * 255);
+    m_pixels[coord + 2] = SCAST<Byte>(color.b * 255);
+    m_pixels[coord + 3] = SCAST<Byte>(color.a * 255);
+}
+template<>
+void Image<float>::SetPixel(int x, int y, const Color &color)
+{
+    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
+               "Pixel (" << x << ", " << y << ") out of bounds");
+    const int coord = (y * GetWidth() + x) * 4;
+    m_pixels[coord + 0] = color.r;
+    m_pixels[coord + 1] = color.g;
+    m_pixels[coord + 2] = color.b;
+    m_pixels[coord + 3] = color.a;
+}
+
+template<class T>
+Color Image<T>::GetPixel(int x, int y) const
+{
+    ASSERT_MSG(false, "Please specialize this method!");
+    return Color::Zero;
+}
+template<>
+Color Image<Byte>::GetPixel(int x, int y) const
+{
+    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
+               "Pixel (" << x << ", " << y << ") out of bounds");
+    const std::size_t coord = (y * GetWidth() + x) * 4;
+    return Color(m_pixels[coord + 0] / 255.0f,
+                 m_pixels[coord + 1] / 255.0f,
+                 m_pixels[coord + 2] / 255.0f,
+                 m_pixels[coord + 3] / 255.0f);
+}
+template<>
+Color Image<float>::GetPixel(int x, int y) const
+{
+    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
+               "Pixel (" << x << ", " << y << ") out of bounds");
+    const std::size_t coord = (y * GetWidth() + x) * 4;
+    return Color(m_pixels[coord + 0],
+                 m_pixels[coord + 1],
+                 m_pixels[coord + 2],
+            m_pixels[coord + 3]);
+}
+
 template<class T>
 void Image<T>::Create(int width, int height, const Color &backgroundColor)
 {
@@ -122,8 +180,14 @@ void Image<T>::AddMarginsToMatchAspectRatio(float aspectRatio,
                                             const Color &marginColor)
 {
     Vector2i newSize = GetSize();
-    if (aspectRatio > 1.0f) { newSize.x = (GetHeight() * aspectRatio); }
-    else { newSize.y = GetWidth() / aspectRatio; }
+    if (aspectRatio > 1.0f) 
+    { 
+        newSize.x = SCAST<int>( Math::Round(GetHeight() * aspectRatio) );
+    }
+    else 
+    { 
+        newSize.y = SCAST<int>( Math::Round(GetWidth() / aspectRatio) );
+    }
     Vector2i margins = (newSize - GetSize());
     AddMargins(margins/2, marginColor, AspectRatioMode::Ignore);
 }
@@ -143,15 +207,21 @@ void Image<T>::ResizeToMatchAspectRatio(float aspectRatio,
 {
     Vector2i newSize = GetSize();
     bool modifyWidth = ((aspectRatio > 1.0f) == makeBigger);
-    if (modifyWidth) { newSize.x = (GetHeight() * aspectRatio); }
-    else { newSize.y = GetWidth() / aspectRatio; }
+    if (modifyWidth) 
+    { 
+        newSize.x = SCAST<int>( Math::Round(GetHeight() * aspectRatio) );
+    }
+    else 
+    { 
+        newSize.y = SCAST<int>( Math::Round(GetWidth() / aspectRatio) );
+    }
     Resize(newSize, resizeMode, AspectRatioMode::Ignore);
 }
 
 template<class T>
 float Image<T>::GetAspectRatio() const
 {
-    return GetWidth() / Cast<float>(Math::Max(GetHeight(), 1));
+    return GetWidth() / SCAST<float>(Math::Max(GetHeight(), 1));
 }
 
 template<class T>
@@ -177,8 +247,8 @@ void Image<T>::Resize(int _newWidth, int _newHeight,
     // Now do the resizing
     Image<T> original = *this;
 
-    Vector2 sizeProp(original.GetWidth()  / Cast<float>(newSize.x),
-                     original.GetHeight() / Cast<float>(newSize.y));
+    Vector2 sizeProp(original.GetWidth()  / SCAST<float>(newSize.x),
+                     original.GetHeight() / SCAST<float>(newSize.y));
 
     Create(newSize.x, newSize.y);
     for (int y = 0; y < newSize.y; ++y)
@@ -217,7 +287,7 @@ void Image<T>::Resize(int _newWidth, int _newHeight,
 
                 int pixels = (oriBotRight.x-oriTopLeft.x) *
                              (oriBotRight.y-oriTopLeft.y);
-                newColor /= Math::Max(pixels, 1);
+                newColor /= float( Math::Max(pixels, 1) );
             }
             SetPixel(x, y, newColor);
         }
@@ -293,19 +363,6 @@ const T *Image<T>::GetData() const
 }
 
 template<class T>
-void Image<T>::SetPixel(int x, int y, const Color& color)
-{
-    ASSERT_MSG(false, "Please specialize this method!");
-}
-
-template<class T>
-Color Image<T>::GetPixel(int x, int y) const
-{
-    ASSERT_MSG(false, "Please specialize this method!");
-    return Color::Zero;
-}
-
-template<class T>
 int Image<T>::GetWidth() const { return m_size.x; }
 
 template<class T>
@@ -350,7 +407,8 @@ Image<T> Image<T>::LoadFromData(int width, int height,
 {
     Image<T> img(width, height);
     img.m_pixels = rgbaByteData;
-    ASSERT(int(rgbaByteData.Size()) == (img.GetWidth() * img.GetHeight() * 4));
+    ASSERT( SCAST<int>(rgbaByteData.Size()) == (img.GetWidth() * 
+                                                img.GetHeight() * 4));
     return img;
 }
 
@@ -374,14 +432,23 @@ void Image<T>::Export(const Path &filepath) const
 {
     ASSERT_MSG(false, "Please implement this method!");
 }
+template<>
+void Image<Byte>::Export(const Path &filepath) const
+{
+    ImageIO::Export(filepath, *this);
+}
+template<>
+void Image<float>::Export(const Path &filepath) const
+{
+    Image<Byte> byteImg = this->To<Byte>();
+    ImageIO::Export(filepath, byteImg);
+}
 
 template<class T>
 void Image<T>::Import(const Path &imageFilepath)
 {
     ASSERT_MSG(false, "Please implement this method!");
 }
-
-// Specializations
 template<>
 void Image<Byte>::Import(const Path &imageFilepath)
 {
@@ -395,67 +462,6 @@ void Image<float>::Import(const Path &imageFilepath)
     Image<Byte> byteImg;
     ImageIO::Import(imageFilepath, &byteImg, &ok);
     *this = byteImg.To<float>();
-}
-
-template<>
-void Image<Byte>::Export(const Path &filepath) const
-{
-    ImageIO::Export(filepath, *this);
-}
-
-template<>
-void Image<float>::Export(const Path &filepath) const
-{
-    Image<Byte> byteImg = this->To<Byte>();
-    ImageIO::Export(filepath, byteImg);
-}
-
-template<>
-void Image<Byte>::SetPixel(int x, int y, const Color &color)
-{
-    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
-               "Pixel (" << x << ", " << y << ") out of bounds");
-    const int coord = (y * GetWidth() + x) * 4;
-    m_pixels[coord + 0] = Cast<Byte>(color.r * 255);
-    m_pixels[coord + 1] = Cast<Byte>(color.g * 255);
-    m_pixels[coord + 2] = Cast<Byte>(color.b * 255);
-    m_pixels[coord + 3] = Cast<Byte>(color.a * 255);
-}
-
-template<>
-void Image<float>::SetPixel(int x, int y, const Color &color)
-{
-    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
-               "Pixel (" << x << ", " << y << ") out of bounds");
-    const int coord = (y * GetWidth() + x) * 4;
-    m_pixels[coord + 0] = color.r;
-    m_pixels[coord + 1] = color.g;
-    m_pixels[coord + 2] = color.b;
-    m_pixels[coord + 3] = color.a;
-}
-
-template<>
-Color Image<Byte>::GetPixel(int x, int y) const
-{
-    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
-               "Pixel (" << x << ", " << y << ") out of bounds");
-    const std::size_t coord = (y * GetWidth() + x) * 4;
-    return Color(m_pixels[coord + 0] / 255.0f,
-                 m_pixels[coord + 1] / 255.0f,
-                 m_pixels[coord + 2] / 255.0f,
-                 m_pixels[coord + 3] / 255.0f);
-}
-
-template<>
-Color Image<float>::GetPixel(int x, int y) const
-{
-    ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
-               "Pixel (" << x << ", " << y << ") out of bounds");
-    const std::size_t coord = (y * GetWidth() + x) * 4;
-    return Color(m_pixels[coord + 0],
-                 m_pixels[coord + 1],
-                 m_pixels[coord + 2],
-            m_pixels[coord + 3]);
 }
 
 NAMESPACE_BANG_END

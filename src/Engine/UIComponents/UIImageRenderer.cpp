@@ -133,7 +133,7 @@ AARect UIImageRenderer::GetBoundingRect(Camera *camera) const
 void UIImageRenderer::CloneInto(ICloneable *clone) const
 {
     UIRenderer::CloneInto(clone);
-    UIImageRenderer *img = Cast<UIImageRenderer*>(clone);
+    UIImageRenderer *img = SCAST<UIImageRenderer*>(clone);
     img->SetImageTexture( GetImageTexture() );
     img->SetTint( GetTint() );
 }

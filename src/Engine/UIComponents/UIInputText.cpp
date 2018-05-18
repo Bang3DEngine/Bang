@@ -320,8 +320,8 @@ void UIInputText::ReplaceSelectedText(const String &replaceStr)
     int minIndex = GetLabel()->GetSelectionBeginIndex();
     int maxIndex = GetLabel()->GetSelectionEndIndex();
 
-    if (minIndex >= 0 && minIndex <= content.Size() &&
-        maxIndex >= 0 && maxIndex <= content.Size())
+    if (minIndex >= 0 && minIndex <= SCAST<int>(content.Size()) &&
+        maxIndex >= 0 && maxIndex <= SCAST<int>(content.Size()))
     {
         content.Remove(minIndex, maxIndex);
         content.Insert(minIndex, replaceStr);
@@ -439,7 +439,7 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
 
     int i = cursorIndex;
     if (forward) { i += fwdInc; }
-    while (i >= 0 && i < content.Size())
+    while (i >= 0 && i < SCAST<int>(content.Size()))
     {
         if ( (i + fwdInc) < 0 || (i + fwdInc) == content.Size())
         { i += fwdInc; break; }

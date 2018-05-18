@@ -327,14 +327,14 @@ void RectTransform::SetAnchors(const Vector2 &anchorMin,
 
 void RectTransform::SetWidthFromPivot(int width)
 {
-    SetMarginLeft ( -(GetPivotPosition().x - (-1)) * width / 2 );
-    SetMarginRight(  (GetPivotPosition().x - ( 1)) * width / 2 );
+    SetMarginLeft ( SCAST<int>(-(GetPivotPosition().x - (-1)) * width / 2) );
+    SetMarginRight( SCAST<int>( (GetPivotPosition().x - ( 1)) * width / 2) );
 }
 
 void RectTransform::SetHeightFromPivot(int height)
 {
-    SetMarginBot( -(GetPivotPosition().y - (-1)) * height / 2 );
-    SetMarginTop(  (GetPivotPosition().y - ( 1)) * height / 2 );
+    SetMarginBot( SCAST<int>(-(GetPivotPosition().y - (-1)) * height / 2) );
+    SetMarginTop( SCAST<int>( (GetPivotPosition().y - ( 1)) * height / 2) );
 }
 
 int RectTransform::GetMarginLeft() const { return GetMarginLeftBot().x; }
@@ -343,11 +343,11 @@ int RectTransform::GetMarginRight() const { return GetMarginRightTop().x; }
 int RectTransform::GetMarginBot() const { return GetMarginLeftBot().y; }
 int RectTransform::GetMarginMin(Axis axis) const { return GetMargins(axis)[0]; }
 int RectTransform::GetMarginMax(Axis axis) const { return GetMargins(axis)[1]; }
-Vector2 RectTransform::GetMargins(Axis axis) const
+Vector2i RectTransform::GetMargins(Axis axis) const
 {
     return axis == Axis::Horizontal ?
-                Vector2(GetMarginLeft(), GetMarginRight()) :
-                Vector2(GetMarginBot(),  GetMarginTop());
+                Vector2i(GetMarginLeft(), GetMarginRight()) :
+                Vector2i(GetMarginBot(),  GetMarginTop());
 
 }
 
@@ -564,7 +564,7 @@ void RectTransform::OnRender(RenderPass rp)
 void RectTransform::CloneInto(ICloneable *clone) const
 {
     Transform::CloneInto(clone);
-    RectTransform *rt = Cast<RectTransform*>(clone);
+    RectTransform *rt = SCAST<RectTransform*>(clone);
 
     rt->SetMargins( GetMarginLeftBot(), GetMarginRightTop() );
     rt->SetAnchors( GetAnchorMin(), GetAnchorMax() );

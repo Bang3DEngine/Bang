@@ -178,7 +178,7 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
 void PointLight::CloneInto(ICloneable *clone) const
 {
     Light::CloneInto(clone);
-    PointLight *pl = Cast<PointLight*>(clone);
+    PointLight *pl = SCAST<PointLight*>(clone);
     pl->SetRange(GetRange());
 }
 

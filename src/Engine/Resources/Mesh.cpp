@@ -74,7 +74,7 @@ void Mesh::UpdateGeometry()
     m_vertexAttributesVBO = new VBO();
 
     Array<float> interleavedAttributes;
-    for (int i = 0; i < GetPositionsPool().Size(); ++i)
+    for (uint i = 0; i < GetPositionsPool().Size(); ++i)
     {
         if (i < GetPositionsPool().Size())
         {
@@ -177,7 +177,7 @@ void Mesh::CalculateVertexNormals()
     Map<VertexId, Array<TriangleId>> vertexIndexToTriIndices =
                                 GetVertexIndicesToTriangleIndices();
     Array<Vector3> normalsPool;
-    for (int vi = 0; vi < GetVertexIndices().Size(); ++vi)
+    for (uint vi = 0; vi < GetVertexIndices().Size(); ++vi)
     {
         Vector3 vNormal = Vector3::Zero;
         const Array<TriangleId> &vTriIds = vertexIndexToTriIndices.Get(vi);
@@ -230,9 +230,9 @@ uint Mesh::GetNumTriangles() const
     return SCAST<uint>(GetVertexIndices().Size() / 3);
 }
 
-std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(int triIndex) const
+std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(uint triIndex) const
 {
-    ASSERT(triIndex >= 0 && triIndex < GetNumTriangles());
+    ASSERT(triIndex < GetNumTriangles());
     const VertexId triVertex0Index = GetVertexIndices()[triIndex * 3 + 0];
     const VertexId triVertex1Index = GetVertexIndices()[triIndex * 3 + 1];
     const VertexId triVertex2Index = GetVertexIndices()[triIndex * 3 + 2];
@@ -262,7 +262,7 @@ Map<Mesh::VertexId, Array<Mesh::TriangleId> >
 Mesh::GetVertexIndicesToTriangleIndices() const
 {
     Map<VertexId, Array<Mesh::TriangleId>> vertexIndicesToTriIndices;
-    for (int ti = 0; ti < GetNumTriangles(); ++ti)
+    for (uint ti = 0; ti < GetNumTriangles(); ++ti)
     {
         std::array<Mesh::VertexId, 3> tiVerticesIds = GetTriangleVertexIndices(ti);
         for (Mesh::VertexId tivi : tiVerticesIds)
@@ -279,7 +279,7 @@ Mesh::GetVertexIndicesToTriangleIndices() const
 
 void Mesh::CloneInto(ICloneable *clone) const
 {
-    Mesh *mClone = Cast<Mesh*>(clone);
+    Mesh *mClone = SCAST<Mesh*>(clone);
 
     mClone->m_bBox = m_bBox;
     mClone->m_bSphere = m_bSphere;

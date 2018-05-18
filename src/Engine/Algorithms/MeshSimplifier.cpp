@@ -391,7 +391,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
                 vertexRepresentativeData.tangent += vData.tangent;
             }
 
-            const float vertexClusterSize = vertexCluster.Size();
+            const float vertexClusterSize = SCAST<float>( vertexCluster.Size() );
             vertexRepresentativeData.pos     /= vertexClusterSize;
             vertexRepresentativeData.normal  /= vertexClusterSize;
             vertexRepresentativeData.uv      /= vertexClusterSize;

@@ -24,7 +24,7 @@ private:
     String m_threadsName = "BangPooledThread";
     List<Thread*> m_threadList;
 
-    int m_maxThreadCount = 32;
+    uint m_maxThreadCount = 32u;
 };
 
 NAMESPACE_BANG_END

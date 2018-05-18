@@ -118,7 +118,7 @@ AARect Light::GetRenderRect(Camera *camera) const
 void Light::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Light *l = Cast<Light*>(clone);
+    Light *l = SCAST<Light*>(clone);
     l->SetIntensity(GetIntensity());
     l->SetColor(GetColor());
     l->SetShadowBias( GetShadowBias() );

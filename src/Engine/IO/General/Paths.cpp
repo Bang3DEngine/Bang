@@ -2,9 +2,12 @@
 
 #include <limits.h>
 
+#ifdef __linux__
 #include <sys/types.h>
 #include <unistd.h>
 #include <pwd.h>
+#elif _WIN32
+#endif
 
 #include "Bang/Debug.h"
 #include "Bang/String.h"
@@ -42,8 +45,16 @@ void Paths::InitPaths(const Path &engineRootPath)
 Path Paths::GetHome()
 {
     Path homePath;
+
+    #ifdef __linux__
+    
     struct passwd *pw = getpwuid(getuid());
     homePath = Path(pw->pw_dir);
+    
+    #elif _WIN32
+
+    #endif
+
     return homePath;
 }
 
@@ -59,10 +70,18 @@ Path Paths::GetExecutableDir()
 
 Path Paths::GetExecutablePath()
 {
+    #ifdef __linux__
+    
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX );
     String exePath( std::string(result, (count > 0) ? count : 0) );
     return Path(exePath);
+
+    #elif _WIN32
+
+    return Path::Empty;
+
+    #endif
 }
 
 Path Paths::GetEngineIncludeDir()

@@ -37,8 +37,8 @@ set(BANG_ENGINE_INCLUDE_DIR   ${BANG_ENGINE_ROOT}/include)
 set(BANG_ENGINE_LIBRARIES_DIR ${BANG_ENGINE_ROOT}/Libraries)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
-include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
 
 # Output params
 message("Bang ======================================")
@@ -79,9 +79,9 @@ file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
                               "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildPackage/CMakeLists.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/CMakeLists.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/ThirdParty/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Compile/CompilePackage/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Compile/CompileDependencies/CMakeLists.txt"
+                              "${BANG_ENGINE_ROOT}/Compile/CompileDependencies/ThirdParty/CMakeLists.txt"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
                               "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
 add_misc_files("${OTHER_FILES}")
@@ -101,7 +101,7 @@ file(GLOB_RECURSE ENGINE_SRC_FILES "${BANG_ENGINE_SRC_DIR}/*.cpp")
 #=================================================================
 # Dependencies ===================================================
 #=================================================================
-include("${CMAKE_CURRENT_LIST_DIR}/Build/BuildDependencies/CMakeLists.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/Compile/CompileDependencies/CMakeLists.txt")
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES} ${OTHER_FILES})
 if (${BUILD_SHARED_LIBS})

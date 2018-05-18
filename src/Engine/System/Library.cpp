@@ -1,6 +1,9 @@
 #include "Bang/Library.h"
 
+#ifdef __linux__
 #include <dlfcn.h>
+#elif _WIN32
+#endif
 
 USING_NAMESPACE_BANG
 
@@ -21,8 +24,15 @@ Library::~Library()
 bool Library::Load()
 {
     ClearError();
+    #ifdef __linux__
+    
     m_libHandle = dlopen(GetLibraryPath().GetAbsolute().ToCString(),
-                         RTLD_NOW | RTLD_GLOBAL);
+        RTLD_NOW | RTLD_GLOBAL);
+
+    #elif _WIN32
+    
+    #endif
+
     FetchError();
     return !TheresError();
 }
@@ -30,7 +40,16 @@ bool Library::Load()
 bool Library::UnLoad()
 {
     ClearError();
-    if ( IsLoaded() ) { dlclose(m_libHandle); }
+    if ( IsLoaded() )
+    {
+        #ifdef __linux__
+        
+        dlclose(m_libHandle);
+
+        #elif _WIN32
+
+        #endif
+    }
     FetchError();
     return !TheresError();
 }
@@ -48,7 +67,15 @@ bool Library::IsLoaded() const
 void *Library::GetSymbol(const String &symbolName)
 {
     ClearError();
-    void *symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
+    void *symbolAddress = nullptr;
+
+    #ifdef __linux__
+    
+    symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
+
+    #elif _WIN32
+    #endif
+
     FetchError();
     return symbolAddress;
 }
@@ -65,13 +92,21 @@ const String& Library::GetErrorString() const
 
 void Library::ClearError()
 {
-    dlerror();
+    FetchError();
     m_errorString = "";
 }
 
 void Library::FetchError()
 {
-    const char *error = dlerror();
+    const char *error = "";
+
+    #ifdef __linux__
+
+    dlerror();
+    
+    #elif _WIN32
+    #endif
+
     if (error) { m_errorString = String(error); }
     else { m_errorString = ""; }
 }

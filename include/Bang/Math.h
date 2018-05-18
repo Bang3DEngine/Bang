@@ -84,7 +84,7 @@ public:
     template<class T = int, class T2>
     static T Round(const T2 &value)
     {
-        return std::round(value);
+        return SCAST<T>( std::round(value) );
     }
 
     template<class T>
@@ -109,13 +109,13 @@ public:
     template<class T>
     static T Pow(const T &base, const T &exponent)
     {
-        return std::pow(base, exponent);
+        return SCAST<T>( std::pow(base, exponent) );
     }
 
     template<class T>
     static T Log(const T &value)
     {
-        return std::log(value);
+        return SCAST<T>( std::log(value) );
     }
 
     template<class T>
@@ -127,31 +127,31 @@ public:
     template<class T>
     static T Exp(const T &x)
     {
-        return std::exp(x);
+        return SCAST<T>( std::exp(x) );
     }
 
     template<class T>
     static T Sqrt(const T &x)
     {
-        return std::sqrt(x);
+        return SCAST<T>( std::sqrt(x) );
     }
 
     template<class T>
     static T Sin(const T &rad)
     {
-        return std::sin(rad);
+        return SCAST<T>( std::sin(rad) );
     }
 
     template<class T>
     static T Cos(const T &rad)
     {
-        return std::cos(rad);
+        return SCAST<T>( std::cos(rad) );
     }
 
     template<class T>
     static T Tan(const T &rad)
     {
-        return std::tan(rad);
+        return SCAST<T>( std::tan(rad) );
     }
 
     template<class T>

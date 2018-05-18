@@ -684,7 +684,7 @@ public:
     static const AARecti& GetScissorRect();
     static const Color& GetClearColor();
     static GL::Enum GetPolygonMode(GL::Face face);
-    static uint GetLineWidth();
+    static float GetLineWidth();
     static uint GetStencilMask();
     static GL::Function GetStencilFunc();
     static GL::StencilOperation GetStencilOp();
@@ -754,7 +754,7 @@ private:
     GLId m_boundShaderProgramId     = 0;
     GLId m_boundUniformBufferId     = 0;
     std::array<bool, 4> m_colorMask = {{true, true, true, true}};
-    uint m_lineWidth     = 0;
+    float m_lineWidth    = 0.0f;
     Byte m_stencilValue  = 0;
     uint m_stencilMask   = 0xFF;
     AARecti m_viewportRect = AARecti::Zero;

@@ -431,7 +431,7 @@ void Camera::OnRender(RenderPass rp)
 void Camera::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Camera *cam = Cast<Camera*>(clone);
+    Camera *cam = SCAST<Camera*>(clone);
     cam->SetZFar(GetZFar());
     cam->SetZNear(GetZNear());
     cam->SetFovDegrees(GetFovDegrees());

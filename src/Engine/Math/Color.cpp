@@ -10,24 +10,24 @@
 
 NAMESPACE_BANG_BEGIN
 
-const Color Color::Red           = Color(1,      0,   0,  1);
-const Color Color::Orange        = Color(1,    0.5,   0,  1);
-const Color Color::Yellow        = Color(1,      1,   0,  1);
-const Color Color::Green         = Color(0,      1,   0,  1);
-const Color Color::Turquoise     = Color(1,      1,   0,  1);
-const Color Color::VeryLightBlue = Color(0.8, 0.95,  1,  1);
-const Color Color::LightBlue     = Color(0.7,  0.9,   1,  1);
-const Color Color::Blue          = Color(0,      0,   1,  1);
-const Color Color::DarkBlue      = Color(0,      0, 0.6,  1);
-const Color Color::Purple        = Color(0.5,    0,   1,  1);
-const Color Color::Pink          = Color(1,      0,   1,  1);
-const Color Color::Black         = Color(0,      0,   0,  1);
-const Color Color::LightGray     = Color(0.8,  0.8, 0.8,  1);
-const Color Color::DarkGray      = Color(0.3,  0.3, 0.3,  1);
-const Color Color::Gray          = Color(0.5,  0.5, 0.5,  1);
-const Color Color::White         = Color(1,      1,   1,  1);
-const Color Color::Zero          = Color(0,      0,   0,  0);
-const Color Color::One           = Color(1,      1,   1,  1);
+const Color Color::Red           = Color(1,        0,    0,  1);
+const Color Color::Orange        = Color(1,     0.5f,    0,  1);
+const Color Color::Yellow        = Color(1,        1,    0,  1);
+const Color Color::Green         = Color(0,        1,    0,  1);
+const Color Color::Turquoise     = Color(1,        1,    0,  1);
+const Color Color::VeryLightBlue = Color(0.8f, 0.95f,    1,  1);
+const Color Color::LightBlue     = Color(0.7f,  0.9f,    1,  1);
+const Color Color::Blue          = Color(0,        0,    1,  1);
+const Color Color::DarkBlue      = Color(0,        0, 0.6f,  1);
+const Color Color::Purple        = Color(0.5f,     0,    1,  1);
+const Color Color::Pink          = Color(1,        0,    1,  1);
+const Color Color::Black         = Color(0,        0,    0,  1);
+const Color Color::LightGray     = Color(0.8f,  0.8f, 0.8f,  1);
+const Color Color::DarkGray      = Color(0.3f,  0.3f, 0.3f,  1);
+const Color Color::Gray          = Color(0.5f,  0.5f, 0.5f,  1);
+const Color Color::White         = Color(1,        1,    1,  1);
+const Color Color::Zero          = Color(0,        0,    0,  0);
+const Color Color::One           = Color(1,        1,    1,  1);
 
 Color::Color() : Color(0)
 {
@@ -145,7 +145,7 @@ Color Color::ToHSV() const
     float h, s, v;
     if(fDelta > 0)
     {
-        if      (fCMax == r) { h = 60 * (fmod(((g - b) / fDelta), 6)); }
+        if      (fCMax == r) { h = 60 * (Math::Modf<float>(((g - b) / fDelta), 6)); }
         else if (fCMax == g) { h = 60 * (((b - r) / fDelta) + 2); }
         else                 { h = 60 * (((r - g) / fDelta) + 4); }
 

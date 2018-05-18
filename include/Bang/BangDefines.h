@@ -2,7 +2,7 @@
 #define BANGFORWARD_H
 
 #include <cstdint>
-#include <stddef.h>
+#include <cstddef>
 
 #define NAMESPACE_NAME       Bang
 #define USING_NAMESPACE_BANG using namespace NAMESPACE_NAME;

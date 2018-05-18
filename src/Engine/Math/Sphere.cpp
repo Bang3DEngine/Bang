@@ -35,9 +35,12 @@ Array<Vector3> Sphere::GetPoints() const
     }
     return points;
 }
-float Sphere::GetDiameter() const { return 2 * m_radius; }
-float Sphere::GetArea() const { return 2 * Math::Pi * m_radius; }
-float Sphere::GetVolume() const { return Math::Pi * m_radius * m_radius; }
+float Sphere::GetDiameter() const 
+{ return SCAST<float>(2 * m_radius); }
+float Sphere::GetArea() const 
+{ return SCAST<float>(2 * Math::Pi * m_radius); }
+float Sphere::GetVolume() const 
+{ return SCAST<float>(Math::Pi * m_radius * m_radius); }
 const Vector3 & Sphere::GetCenter() const { return m_center; }
 float Sphere::GetRadius() const { return m_radius; }
 

@@ -79,7 +79,7 @@ bool Object::IsWaitingToBeDestroyed() const { return m_waitingToBeDestroyed; }
 
 void Object::CloneInto(ICloneable *clone) const
 {
-    Object *obj = Cast<Object*>(clone);
+    Object *obj = SCAST<Object*>(clone);
     obj->SetEnabled( IsEnabled() );
 }
 

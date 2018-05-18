@@ -35,7 +35,7 @@ public:
     template <class T>
     void SetArray(const String &name, const Array<T>& array)
     {
-        for (int i = 0; i < array.Size(); ++i)
+        for (uint i = 0; i < array.Size(); ++i)
         {
             const T& x = array[i];
             Set(name + "_" + String::ToString(i), x);

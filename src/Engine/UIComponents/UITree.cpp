@@ -42,7 +42,7 @@ void UITree::OnUpdate()
             if (selItemCont)
             {
                 UITreeItemContainer *selectedItemCont =
-                                        Cast<UITreeItemContainer*>(selItemCont);
+                                        SCAST<UITreeItemContainer*>(selItemCont);
                 GOItem *selectedItem = selectedItemCont->GetContainedItem();
 
                 bool isCollapsed = selectedItemCont->IsCollapsed();
@@ -77,7 +77,7 @@ void UITree::OnUpdate()
 void UITree::OnClicked(IFocusable *focusable)
 {
     IFocusable *collapseButton = focusable;
-    Component *cCollapseButton = Cast<Component*>(collapseButton);
+    Component *cCollapseButton = DCAST<Component*>(collapseButton);
     UITreeItemContainer *itemContainer =
                SCAST<UITreeItemContainer*>(cCollapseButton->GetGameObject()->
                                            GetParent());
@@ -385,7 +385,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 
         // Remove needed stuff from list, remove from map, and delete the item
         // tree (which recursively deletes its children)
-        for (int i = 0; i < itemsToRemove.Size(); ++i)
+        for (uint i = 0; i < itemsToRemove.Size(); ++i)
         {
             GOItem *itemToRemove = itemsToRemove[i];
             UITreeItemContainer* itemContToRemove = itemsContToRemove[i];
@@ -411,7 +411,7 @@ GOItem *UITree::GetSelectedItem() const
     if (selectedItem)
     {
         UITreeItemContainer *selectedItemCont =
-                                Cast<UITreeItemContainer*>(selectedItem);
+                                SCAST<UITreeItemContainer*>(selectedItem);
         return selectedItemCont->GetContainedItem();
     }
     return nullptr;
@@ -610,7 +610,7 @@ UITree *UITree::CreateInto(GameObject *go)
             // Forward selectionCallback from itemContainer to actual item
             if (uiTree->m_selectionCallback)
             {
-                UITreeItemContainer *itemCont = Cast<UITreeItemContainer*>(item);
+                UITreeItemContainer *itemCont = SCAST<UITreeItemContainer*>(item);
                 uiTree->m_selectionCallback( itemCont->GetContainedItem(), action);
             }
         }
@@ -621,7 +621,7 @@ UITree *UITree::CreateInto(GameObject *go)
 
 UITreeItemContainer *UITree::GetItemContainer(GOItem *item) const
 {
-    ASSERT(!item || !Cast<UITreeItemContainer*>(item) );
+    ASSERT(!item || !SCAST<UITreeItemContainer*>(item) );
     return item ? SCAST<UITreeItemContainer*>(item->GetParent()) : nullptr;
 }
 

@@ -22,8 +22,8 @@ UILayoutManager::UILayoutManager()
 
 void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 {
-    Component *comp = Cast<Component*>(element);
-    GameObject *go = Cast<GameObject*>(element);
+    Component *comp = DCAST<Component*>(element);
+    GameObject *go = DCAST<GameObject*>(element);
     if (!go && comp) { go = comp->GetGameObject(); }
     if (!go) { return; }
 
@@ -36,13 +36,13 @@ void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 
 void UILayoutManager::PropagateInvalidation(ILayoutController *controller)
 {
-    Component *comp = Cast<Component*>(controller);
-    GameObject *go = Cast<GameObject*>(controller);
+    Component *comp = DCAST<Component*>(controller);
+    GameObject *go = DCAST<GameObject*>(controller);
     if (!go && comp) { go = comp->GetGameObject(); }
     if (!go) { return; }
 
-    ILayoutElement *lElm = comp ? Cast<ILayoutElement*>(comp) : nullptr;
-    if (!lElm) { lElm = go ? Cast<ILayoutElement*>(go) : nullptr; }
+    ILayoutElement *lElm = comp ? DCAST<ILayoutElement*>(comp) : nullptr;
+    if (!lElm) { lElm = go ? DCAST<ILayoutElement*>(go) : nullptr; }
     if (lElm)
     {
         lElm->Invalidate();

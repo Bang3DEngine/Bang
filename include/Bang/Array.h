@@ -97,8 +97,8 @@ Array<const T&> MakeArray(const T& x, Args&&... args)
     if (sizeof...(args) == 0) { return Array<const T&>(); }
 
     Array<const T&> res;
-    res.PushBack( Cast<const T&>(x) );
-    for (auto arg : {args...}) { res.PushBack( Cast<const T&>(arg) ); }
+    res.PushBack( SCAST<const T&>(x) );
+    for (auto arg : {args...}) { res.PushBack( SCAST<const T&>(arg) ); }
     return res;
 }
 

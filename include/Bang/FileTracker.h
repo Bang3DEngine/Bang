@@ -36,7 +36,7 @@ public:
 private:
     Map<Path, uint64_t> m_pathsToTrackToModificationTime;
     float m_checkFrequencySeconds = 5.0f;
-    uint64_t m_lastCheckTime = 0.0;
+    uint64_t m_lastCheckTime = 0u;
 
     bool NeedsCheck() const;
 };

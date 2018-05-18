@@ -46,16 +46,16 @@ public:
     static void RenderBillboardCircle(const Vector3 &origin, float radius,
                                       int numSegments = 32);
     static void RenderCircle(const Vector3 &origin, float radius,
-                             int numSegments = 32);
+                             uint numSegments = 32);
     static void RenderRay(const Vector3 &origin,
                           const Vector3 &rayDir);
     static void RenderSphere(const Vector3 &origin, float radius);
     static void RenderSimpleSphere(const Vector3 &origin,
                                    float radius,
                                    bool withOutline,
-                                   int numLoopsVertical = 4,
-                                   int numLoopsHorizontal = 4,
-                                   int numCircleSegments = 32);
+                                   uint numLoopsVertical = 4,
+                                   uint numLoopsHorizontal = 4,
+                                   uint numCircleSegments = 32);
     static void RenderOutline(GameObject *gameObject,
                               float alphaDepthOnFade = 0.2f);
     static void RenderFrustum(const Vector3 &forward,

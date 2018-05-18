@@ -59,7 +59,7 @@ public:
     int GetMarginBot()   const;
     int GetMarginMin(Axis axis) const;
     int GetMarginMax(Axis axis) const;
-    Vector2 GetMargins(Axis axis) const;
+    Vector2i GetMargins(Axis axis) const;
     const Vector2i& GetMarginRightTop() const;
     const Vector2i& GetMarginLeftBot() const;
     const Vector2& GetPivotPosition()  const;

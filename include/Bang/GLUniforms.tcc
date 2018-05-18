@@ -34,7 +34,7 @@ GLUniforms::GLSLVar<T> GLUniforms::GetUniformAt(GLId shaderProgramId,
 
     GL_CALL(
     glGetActiveUniform(shaderProgramId,
-                       Cast<GLuint>(uniformIndex),
+                       SCAST<GLuint>(uniformIndex),
                        bufSize,
                        &length,
                        &size,

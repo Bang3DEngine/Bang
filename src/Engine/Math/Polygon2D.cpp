@@ -21,13 +21,13 @@ void Polygon2D::AddPoint(const Vector2 &p)
 
 void Polygon2D::SetPoint(int i, const Vector2 &p)
 {
-    ASSERT(i >= 0 && i < GetPoints().Size());
+    ASSERT(i >= 0 && i < SCAST<int>(GetPoints().Size()));
     m_points[i] = p;
 }
 
 bool Polygon2D::Contains(const Vector2 &p)
 {
-    ASSERT(GetPoints().Size() >= 3);
+    ASSERT(GetPoints().Size() >= 3u);
 
     Vector2 minPoint = GetPoint(0);
     Vector2 maxPoint = GetPoint(0);
@@ -40,7 +40,7 @@ bool Polygon2D::Contains(const Vector2 &p)
 
     int intersectionCount = 0;
     Ray2D testRay (p, p + Vector2(VeryFar));
-    for (int i = 0; i < GetPoints().Size(); ++i)
+    for (uint i = 0; i < GetPoints().Size(); ++i)
     {
         const Segment2D segment(GetPoint(i),
                                 GetPoint( (i+1) % GetPoints().Size() ) );
@@ -56,7 +56,7 @@ bool Polygon2D::Contains(const Vector2 &p)
 
 const Vector2 &Polygon2D::GetPoint(int i) const
 {
-    ASSERT(i >= 0 && i < GetPoints().Size());
+    ASSERT(i >= 0 && i < SCAST<int>(GetPoints().Size()));
     return m_points[i];
 }
 

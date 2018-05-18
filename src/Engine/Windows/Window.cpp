@@ -268,7 +268,7 @@ void Window::SetIcon(const Path &iconPath)
 
 void Window::SetBordered(bool bordered)
 {
-    SDL_SetWindowBordered(GetSDLWindow(), Cast<SDL_bool>(bordered));
+    SDL_SetWindowBordered(GetSDLWindow(), SCAST<SDL_bool>(bordered));
 }
 
 void Window::SetMinSize(int minSizeX, int minSizeY)

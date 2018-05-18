@@ -31,39 +31,6 @@
 #define TT_NOT_SUBCLASS(T, BASE_CLASS) \
     typename std::enable_if<!T_SUBCLASS(T, BASE_CLASS), T>::type
 
-// Templated SFINAE cast dynamic/static cast
-template <class SourceT, class DestT>
-struct IsExplicitlyConvertible :
-        public std::__and_<
-                    std::is_constructible<SourceT, DestT>,
-                    std::__not_<std::is_convertible<DestT, SourceT>>
-                >::type
-{
-};
-
-template<typename SourceT, typename DestT>
-  struct IsStaticCasteable
-  : public std::__or_<
-                    std::is_enum<SourceT>,
-                    std::is_same<SourceT, DestT>,
-                    std::is_convertible<DestT, SourceT>,
-                    std::is_fundamental<SourceT>,
-                    std::is_fundamental< std::remove_pointer<SourceT> >,
-                    std::is_fundamental< std::remove_reference<SourceT> >,
-                    IsExplicitlyConvertible<DestT, SourceT>
-               >::type
-{
-};
-
-template<class DestT, class SourceT>
-    typename std::enable_if< IsStaticCasteable<DestT, SourceT>::value, DestT >::type
-Cast(SourceT x)
-{ return SCAST<DestT>(x); }
-
-template<class DestT, class SourceT>
-    typename std::enable_if< !IsStaticCasteable<DestT, SourceT>::value, DestT >::type
- Cast(SourceT x)
-{ return DCAST<DestT>(x); }
 // =====================================================
 
 #endif // TYPETRAITS_H

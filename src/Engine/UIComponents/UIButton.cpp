@@ -19,10 +19,10 @@
 
 USING_NAMESPACE_BANG
 
-const Color UIButton::IdleColor    = Color(1,1,1,1);
-const Color UIButton::OverColor    = Color(0.8, 0.95,  1,  1);
-const Color UIButton::BlockedColor = Color(0.8,  0.8, 0.8,  1) * 0.8f;
-const Color UIButton::PressedColor = Color(0.3,  0.3, 0.3,  1);
+const Color UIButton::IdleColor    = Color(   1,     1,    1,  1);
+const Color UIButton::OverColor    = Color(0.8f, 0.95f,    1,  1);
+const Color UIButton::BlockedColor = Color(0.8f,  0.8f, 0.8f,  1) * 0.8f;
+const Color UIButton::PressedColor = Color(0.3f,  0.3f, 0.3f,  1);
 
 UIButton::UIButton()
 {

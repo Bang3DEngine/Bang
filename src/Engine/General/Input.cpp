@@ -210,7 +210,7 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         case SDL_KEYDOWN:
             eventInfo.type       = EventInfo::KeyDown;
             eventInfo.autoRepeat = event.key.repeat;
-            eventInfo.key        = Cast<Key>(event.key.keysym.sym);
+            eventInfo.key        = SCAST<Key>(event.key.keysym.sym);
             eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
             enqueue = true;
         break;
@@ -218,7 +218,7 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         case SDL_KEYUP:
             eventInfo.type       = EventInfo::KeyUp;
             eventInfo.autoRepeat = event.key.repeat;
-            eventInfo.key        = Cast<Key>(event.key.keysym.sym);
+            eventInfo.key        = SCAST<Key>(event.key.keysym.sym);
             eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
             enqueue = true;
         break;
@@ -229,14 +229,14 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
 
         case SDL_MOUSEBUTTONDOWN:
             eventInfo.type        = EventInfo::MouseDown;
-            eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
+            eventInfo.mouseButton = SCAST<MouseButton>(event.button.button);
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
             enqueue = true;
         break;
 
         case SDL_MOUSEBUTTONUP:
             eventInfo.type        = EventInfo::MouseUp;
-            eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
+            eventInfo.mouseButton = SCAST<MouseButton>(event.button.button);
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
             enqueue = true;
         break;
@@ -282,7 +282,7 @@ Input *Input::GetActive()
 
 String KeyToString(Key k)
 {
-    return String( SDL_GetKeyName( Cast<SDL_Keycode>(k) ) );
+    return String( SDL_GetKeyName(SCAST<SDL_Keycode>(k) ) );
 }
 
 bool Input::GetKey(Key k)

@@ -171,7 +171,7 @@ Array<ResourceClass*> Resources::GetAll()
     Array<Resource*> resources = Resources::GetAllResources();
     for (Resource *res : resources)
     {
-        ResourceClass *rc = Cast<ResourceClass*>(res);
+        ResourceClass *rc = SCAST<ResourceClass*>(res);
         if (rc) { result.PushBack(rc); }
     }
     return result;

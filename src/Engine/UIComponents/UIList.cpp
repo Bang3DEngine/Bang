@@ -234,7 +234,7 @@ void UIList::SetIdleColor(const Color &idleColor)
 const Array<GOItem *> &UIList::GetItems() const { return p_items; }
 GOItem *UIList::GetItem(int i) const
 {
-    if (i >= 0 && i < p_items.Size())
+    if (i >= 0 && i < SCAST<int>(p_items.Size()))
     {
         // auto it = GetItems().Begin();
         // std::advance(it, GetSelectedIndex());

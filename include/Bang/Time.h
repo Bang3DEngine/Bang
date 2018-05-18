@@ -18,7 +18,7 @@ public:
 private:
     double m_time = 0.0;
     float m_deltaTime = 0.0f;
-    uint64_t m_deltaTimeReference = 0.0;
+    uint64_t m_deltaTimeReference = 0u;
 
     Time() = default;
     virtual ~Time() = default;

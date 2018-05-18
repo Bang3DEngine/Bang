@@ -265,7 +265,7 @@ void Material::UnBind() const
 
 void Material::CloneInto(ICloneable *clone) const
 {
-    Material *matClone = Cast<Material*>(clone);
+    Material *matClone = SCAST<Material*>(clone);
 
     matClone->SetShaderProgram(GetShaderProgram());
     matClone->SetAlbedoColor(GetAlbedoColor());

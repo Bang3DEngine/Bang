@@ -155,7 +155,8 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     GameObject *wall2 = GameObjectFactory::CreateCubeGameObject();
     wall2->SetName("Wall2");
     wall2->GetTransform()->TranslateLocal( Vector3(0, 3, -4) );
-    wall2->GetTransform()->SetLocalRotation( Quaternion::AngleAxis(Math::Pi/2, Vector3::Up) );
+    wall2->GetTransform()->SetLocalRotation( Quaternion::AngleAxis(
+                        SCAST<float>(Math::Pi/2.0f), Vector3::Up) );
     wall2->GetTransform()->SetLocalScale( Vector3(0.2f, 10.0f, 10.0f));
 
     GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");

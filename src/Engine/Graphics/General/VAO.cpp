@@ -39,7 +39,7 @@ void VAO::AddVertexAttribPointer(const VBO *vbo,
     vbo->UnBind();
     UnBind();
 
-    while (p_vbos.Size() <= location) p_vbos.PushBack(nullptr);
+    while (SCAST<int>(p_vbos.Size()) <= location) p_vbos.PushBack(nullptr);
     p_vbos[location] = vbo;
 }
 
@@ -53,7 +53,7 @@ void VAO::SetIBO(IBO *ebo)
 
 void VAO::UnBindVBO(GLint location)
 {
-    if (location >= 0 && location < p_vbos.Size())
+    if (location >= 0 && location < SCAST<int>(p_vbos.Size()))
     {
         this->Bind();
         GL::DisableVertexAttribArray(location);
@@ -88,7 +88,7 @@ bool VAO::IsIndexed() const
 
 const VBO* VAO::GetVBOByLocation(GLint location) const
 {
-    if (location >= p_vbos.Size()) { return nullptr; }
+    if (location >= SCAST<int>(p_vbos.Size())) { return nullptr; }
     else { return p_vbos[location]; }
 }
 

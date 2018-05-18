@@ -226,7 +226,7 @@ GL::UniformType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
 
     GL_CALL(
     glGetActiveUniform(shaderProgramId,
-                       Cast<GLuint>(uniformIndex),
+                       SCAST<GLuint>(uniformIndex),
                        bufSize,
                        &length,
                        &size,
@@ -307,7 +307,7 @@ void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
     if (gl)
     {
         auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
-        for (int i = 0; i < enabledis.size(); ++i)
+        for (uint i = 0; i < enabledis.size(); ++i)
         {
             if (overrideIndexedValues)
             {
@@ -338,7 +338,7 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
             if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable))
             {
                 auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
-                for (int i = 0; i < enabledis.size(); ++i) { enabledis[i] = false; }
+                for (uint i = 0; i < enabledis.size(); ++i) { enabledis[i] = false; }
             }
             gl->m_enabled_i_Vars[glEnablable][i] = enabled;
         }
@@ -1031,8 +1031,8 @@ void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
 
 void GL::SetViewport(const AARect &viewportNDC)
 {
-    Vector2 minPx = GL::FromViewportPointNDCToViewportPoint(viewportNDC.GetMin());
-    Vector2 maxPx = GL::FromViewportAmountNDCToViewportAmount(viewportNDC.GetMax());
+    Vector2i minPx( GL::FromViewportPointNDCToViewportPoint(viewportNDC.GetMin()) );
+    Vector2i maxPx( GL::FromViewportAmountNDCToViewportAmount(viewportNDC.GetMax()) );
     GL::SetViewport( AARecti(minPx.x, minPx.y, maxPx.x, maxPx.y) );
 }
 
@@ -1186,7 +1186,7 @@ void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
     vao->UnBind();
 }
 
-uint GL::GetLineWidth()
+float GL::GetLineWidth()
 {
     return GL::GetActive()->m_lineWidth;
 }

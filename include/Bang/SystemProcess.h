@@ -1,7 +1,10 @@
 #ifndef SYSTEMPROCESS_H
 #define SYSTEMPROCESS_H
 
+#ifdef __linux__
 #include <unistd.h>
+#elif _WIN32
+#endif
 
 #include "Bang/Math.h"
 #include "Bang/List.h"
@@ -16,9 +19,13 @@ public:
 
     enum Channel
     {
+        #ifdef __linux__
         StandardIn    = STDIN_FILENO,
         StandardOut   = STDOUT_FILENO,
         StandardError = STDERR_FILENO
+        #elif _WIN32
+        StandardIn = 0, StandardOut = 1, StandardError = 2
+        #endif
     };
 
     SystemProcess();

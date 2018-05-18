@@ -229,14 +229,15 @@ VECTOR_G<T> VECTOR_G<T>::FromAxis(Axis axis) \
 } \
 \
 template<class T> \
-const T& VECTOR_G<T>::operator[](std::size_t i) const \
-{ \
-    return (RCAST<const T*>(this))[i]; \
-} \
-template<class T> \
 T& VECTOR_G<T>::operator[](std::size_t i) \
 { \
     return (RCAST<T*>(this))[i]; \
+} \
+\
+template<class T> \
+const T& VECTOR_G<T>::operator[](std::size_t i) const \
+{ \
+    return (RCAST<const T*>(this))[i]; \
 } \
 \
 /* Operators */ \

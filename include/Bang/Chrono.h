@@ -17,9 +17,9 @@ public:
 private:
     struct ChronoEvent
     {
-        String eventName        = "";
-        long time               = 0;
-        long timeSinceLastEvent = 0;
+        String eventName            = "";
+        uint64_t time               = 0;
+        uint64_t timeSinceLastEvent = 0;
     };
 
     String m_chronoName = "";

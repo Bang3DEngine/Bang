@@ -107,7 +107,7 @@ float AudioSource::GetPlayProgress() const
 void AudioSource::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    AudioSource *as = Cast<AudioSource*>(clone);
+    AudioSource *as = SCAST<AudioSource*>(clone);
     as->SetAudioClip( GetAudioClip() );
     as->SetVolume( GetVolume()  );
     as->SetPitch( GetPitch() );

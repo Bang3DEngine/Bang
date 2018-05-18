@@ -105,7 +105,7 @@ void FileTracker::SetCheckFrequencySeconds(float checkFrequencySeconds)
 
 bool FileTracker::NeedsCheck() const
 {
-    float passedSecondsSinceLastCheck = (Time::GetNow_Seconds() - m_lastCheckTime);
+    double passedSecondsSinceLastCheck = (Time::GetNow_Seconds() - m_lastCheckTime);
     return (passedSecondsSinceLastCheck > GetCheckFrequencySeconds());
 }
 

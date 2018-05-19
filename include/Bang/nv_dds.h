@@ -8,11 +8,12 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include <GL/glew.h>
 #ifndef NV_DDS_NO_GL_SUPPORT
     #ifdef __APPLE__
-        #include <OpenGL/gl.h>
+    #include <OpenGL/gl.h>
     #else
-        #include <GL/gl.h>
+    #include <GL/gl.h>
     #endif
 #endif
 

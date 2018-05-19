@@ -35,7 +35,7 @@ void Image<T>::SetPixel(int x, int y, const Color& color)
     ASSERT_MSG(false, "Please specialize this method!");
 }
 template<>
-void Image<Byte>::SetPixel(int x, int y, const Color &color)
+inline void Image<Byte>::SetPixel(int x, int y, const Color &color)
 {
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
@@ -46,7 +46,7 @@ void Image<Byte>::SetPixel(int x, int y, const Color &color)
     m_pixels[coord + 3] = SCAST<Byte>(color.a * 255);
 }
 template<>
-void Image<float>::SetPixel(int x, int y, const Color &color)
+inline void Image<float>::SetPixel(int x, int y, const Color &color)
 {
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
@@ -64,7 +64,7 @@ Color Image<T>::GetPixel(int x, int y) const
     return Color::Zero;
 }
 template<>
-Color Image<Byte>::GetPixel(int x, int y) const
+inline Color Image<Byte>::GetPixel(int x, int y) const
 {
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
@@ -75,7 +75,7 @@ Color Image<Byte>::GetPixel(int x, int y) const
                  m_pixels[coord + 3] / 255.0f);
 }
 template<>
-Color Image<float>::GetPixel(int x, int y) const
+inline Color Image<float>::GetPixel(int x, int y) const
 {
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
@@ -433,12 +433,12 @@ void Image<T>::Export(const Path &filepath) const
     ASSERT_MSG(false, "Please implement this method!");
 }
 template<>
-void Image<Byte>::Export(const Path &filepath) const
+inline void Image<Byte>::Export(const Path &filepath) const
 {
     ImageIO::Export(filepath, *this);
 }
 template<>
-void Image<float>::Export(const Path &filepath) const
+inline void Image<float>::Export(const Path &filepath) const
 {
     Image<Byte> byteImg = this->To<Byte>();
     ImageIO::Export(filepath, byteImg);
@@ -450,13 +450,13 @@ void Image<T>::Import(const Path &imageFilepath)
     ASSERT_MSG(false, "Please implement this method!");
 }
 template<>
-void Image<Byte>::Import(const Path &imageFilepath)
+inline void Image<Byte>::Import(const Path &imageFilepath)
 {
     bool ok; ImageIO::Import(imageFilepath, this, &ok);
 }
 
 template<>
-void Image<float>::Import(const Path &imageFilepath)
+inline void Image<float>::Import(const Path &imageFilepath)
 {
     bool ok;
     Image<Byte> byteImg;

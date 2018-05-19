@@ -159,6 +159,7 @@
 
 #include "Bang/nv_dds.h"
 
+#include <GL/gl.h>
 #include <cstring>
 #include <cassert>
 #include <fstream>

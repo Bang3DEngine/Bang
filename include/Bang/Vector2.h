@@ -86,6 +86,23 @@ public:
    static T Cross(const Vector2G<T> &v1, const Vector2G<T> &v2);
 };
 
+template<class T>
+const Vector2G<T> Vector2G<T>::Up = Vector2G<T>(SCAST<T>(0), SCAST<T>(1));
+template<class T>
+const Vector2G<T> Vector2G<T>::Down = Vector2G<T>(SCAST<T>(0), SCAST<T>(-1));
+template<class T>
+const Vector2G<T> Vector2G<T>::Right = Vector2G<T>(SCAST<T>(1), SCAST<T>(0));
+template<class T>
+const Vector2G<T> Vector2G<T>::Left = Vector2G<T>(SCAST<T>(-1), SCAST<T>(0));
+template<class T>
+const Vector2G<T> Vector2G<T>::Zero = Vector2G<T>(SCAST<T>(0));
+template<class T>
+const Vector2G<T> Vector2G<T>::One = Vector2G<T>(SCAST<T>(1));
+template<class T>
+const Vector2G<T> Vector2G<T>::Infinity = Vector2G<T>(Math::Max<T>());
+template<class T>
+const Vector2G<T> Vector2G<T>::NInfinity = Vector2G<T>(Math::Min<T>());
+
 
 template<class T>
 bool operator==(const Vector2G<T> &lhs, const Vector2G<T> &rhs);

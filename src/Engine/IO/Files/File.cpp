@@ -178,13 +178,11 @@ String File::GetContents(const Path &filepath)
         }
 
         ifs.close();
-    }
+    }   
     else
     {
-        char errorBuffer[512];
-        strerror_s(errorBuffer, 512, errno);
         std::cerr << "Can't open file '" << filepath.ToString() << "': " << 
-                     errorBuffer << std::endl;
+                     strerror(errno) << std::endl;
     }
     return contents;
 }

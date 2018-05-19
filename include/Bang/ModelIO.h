@@ -7,10 +7,10 @@
 #include "Bang/Matrix4.h"
 #include "Bang/ResourceHandle.h"
 
-FORWARD class aiMesh;
-FORWARD class aiNode;
-FORWARD class aiScene;
-FORWARD class aiMaterial;
+FORWARD struct aiMesh;
+FORWARD struct aiNode;
+FORWARD struct aiScene;
+FORWARD struct aiMaterial;
 FORWARD namespace Assimp
 {
     FORWARD class Importer;

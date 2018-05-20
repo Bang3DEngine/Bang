@@ -1,0 +1,129 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  autofit.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\autofit\afglobal.c(284): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  ftbase.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\base\ftrfork.c(482): warning C4267: 'initializing': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\base\ftrfork.c(518): warning C4267: 'initializing': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\base\ftrfork.c(764): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  ftbbox.c
+  ftbitmap.c
+  ftfstype.c
+  ftgasp.c
+  ftglyph.c
+  ftgxval.c
+  ftinit.c
+  ftlcdfil.c
+  ftmm.c
+  ftotval.c
+  ftpatent.c
+  ftpfr.c
+  ftstroke.c
+  ftsynth.c
+  ftsystem.c
+  fttype1.c
+  ftwinfnt.c
+  ftxf86.c
+  Compiling...
+  bdf.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\bdf\bdflib.c(722): warning C4244: 'function': conversion from 'ptrdiff_t' to 'unsigned long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\bdf\bdflib.c(726): warning C4244: 'function': conversion from 'ptrdiff_t' to 'unsigned long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\bdf\bdflib.c(1004): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\bdf\bdflib.c(1171): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\bdf\bdfdrivr.c(269): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  ftcache.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcmru.c(266): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcmanag.c(595): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftccache.c(294): warning C4267: '-=': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftccache.c(372): warning C4267: '-=': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftccache.c(427): warning C4267: '+=': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftccache.c(583): warning C4267: '-=': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftccmap.c(363): warning C4311: 'type cast': pointer truncation from 'FTC_FaceID' to 'FT_ULong'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcbasic.c(372): warning C4311: 'type cast': pointer truncation from 'FTC_FaceID' to 'FT_ULong'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcbasic.c(441): warning C4311: 'type cast': pointer truncation from 'FTC_FaceID' to 'FT_ULong'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcbasic.c(708): warning C4311: 'type cast': pointer truncation from 'FTC_FaceID' to 'FT_ULong'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cache\ftcbasic.c(779): warning C4311: 'type cast': pointer truncation from 'FTC_FaceID' to 'FT_ULong'
+  cff.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cff\cffobjs.c(405): warning C4267: 'initializing': conversion from 'size_t' to 'FT_Int32', possible loss of data
+  type1cid.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cid\cidparse.c(120): warning C4244: '+=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cid\cidparse.c(125): warning C4244: '+=': conversion from '__int64' to 'FT_ULong', possible loss of data
+  ftgzip.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(122): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(157): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(160): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(169): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(189): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(192): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(203): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(212): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(226): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(230): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(233): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infcodes.c(236): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(139): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(165): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(182): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(186): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(192): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(201): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(202): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(217): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(225): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(232): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(241): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(258): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(271): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(284): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(297): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(326): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(332): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(339): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(357): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(361): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(364): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\gzip\infblock.c(367): warning C4244: '+=': conversion from '__int64' to 'uLong', possible loss of data
+  ftlzw.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\lzw\ftzopen.c(127): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  pcf.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\pcf\pcfread.c(1062): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\pcf\pcfdrivr.c(516): warning C4267: 'function': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\pcf\pcfdrivr.c(521): warning C4267: 'function': conversion from 'size_t' to 'FT_ULong', possible loss of data
+  pfr.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\pfr\pfrload.c(460): warning C4244: 'function': conversion from 'FT_PtrDist' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\pfr\pfrobjs.c(506): warning C4267: 'function': conversion from 'size_t' to 'FT_ULong', possible loss of data
+  psaux.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\psaux\psobjs.c(206): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\psaux\psobjs.c(252): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\psaux\afmparse.c(404): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  pshinter.c
+  psmodule.c
+  raster.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\raster\ftraster.c(728): warning C4311: 'type cast': pointer truncation from 'PProfile' to 'long'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\raster\ftraster.c(734): warning C4311: 'type cast': pointer truncation from 'PProfile' to 'long'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\raster\ftraster.c(788): warning C4311: 'type cast': pointer truncation from 'PProfile' to 'long'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\raster\ftraster.c(3451): warning C4244: '=': conversion from '__int64' to 'long', possible loss of data
+  sfnt.c
+  smooth.c
+  truetype.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttinterp.c(481): warning C4311: 'type cast': pointer truncation from 'TT_ExecContext' to 'FT_Long'
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(223): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(708): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(787): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1171): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1246): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1364): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1379): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1384): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\truetype\ttgxvar.c(1438): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+  type1.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\type1\t1parse.c(120): warning C4267: 'function': conversion from 'size_t' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\type1\t1parse.c(419): warning C4244: '=': conversion from '__int64' to 'FT_ULong', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\type1\t1load.c(618): warning C4244: 'function': conversion from 'FT_PtrDist' to 'FT_Long', possible loss of data
+  type42.c
+  winfnt.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\winfonts\winfnt.c(847): warning C4244: 'function': conversion from 'FT_PtrDist' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\winfonts\winfnt.c(858): warning C4244: 'function': conversion from 'FT_PtrDist' to 'FT_Long', possible loss of data
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\winfonts\winfnt.c(858): warning C4267: 'function': conversion from 'size_t' to 'FT_Long', possible loss of data
+  ftdebug.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\builds\win32\ftdebug.c(151): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  CompileFreetype.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\CompileFreetype\\..\build\Release\libfreetype2.lib

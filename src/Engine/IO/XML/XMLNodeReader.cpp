@@ -51,7 +51,7 @@ void XMLNodeReader::GetNextAttribute(const String &tag,
 
     if (attributeEnd)
     {
-        *attributeEnd = startPosition + attrString.Size();
+        *attributeEnd = startPosition + SCAST<int>(attrString.Size());
     }
 
     if (attribute)

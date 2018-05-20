@@ -80,7 +80,7 @@ uint TextureUnitManager::GetMaxTextureUnits()
 TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
 {
     TexUnit freeUnit = -1;
-    uint numFreeTextures = m_freeUnits.size();
+    uint numFreeTextures = SCAST<uint>(m_freeUnits.size());
     if (numFreeTextures > 0)
     {
         // If there is a directly free unit

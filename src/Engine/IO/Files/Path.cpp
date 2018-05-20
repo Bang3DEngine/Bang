@@ -36,10 +36,10 @@ void Path::SetPath(const String &path)
 {
     m_absolutePath = path;
     if (!m_absolutePath.IsEmpty() &&
-         m_absolutePath.At(m_absolutePath.Size()-1) == '/')
+         m_absolutePath.At( SCAST<int>(m_absolutePath.Size()) - 1 ) == '/')
     {
-        m_absolutePath.Remove(m_absolutePath.Size()-1,
-                              m_absolutePath.Size());
+        m_absolutePath.Remove(SCAST<int>(m_absolutePath.Size()) - 1,
+                              SCAST<int>(m_absolutePath.Size()));
     }
 
     if (m_absolutePath.BeginsWith("./"))
@@ -390,7 +390,7 @@ Path Path::GetNextDuplicatePath(const Path &filepath)
             number = readNumber + 1;
             splitted.PopBack();
 
-            int lastUnderscorePos = fileName.RFind('_');
+            int lastUnderscorePos = SCAST<int>(fileName.RFind('_'));
             if (lastUnderscorePos != -1) // Strip _[number] from fileName
             {
                 fileName = fileName.SubString(0, lastUnderscorePos-1);

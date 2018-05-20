@@ -62,7 +62,7 @@ void Map<Key,Value>::Clear()
 template<class Key, class Value>
 int Map<Key,Value>::Size() const
 {
-    return m_map.size();
+    return SCAST<int>(m_map.size());
 }
 
 template<class Key, class Value>

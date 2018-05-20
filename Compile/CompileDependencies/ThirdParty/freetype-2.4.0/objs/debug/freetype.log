@@ -1,0 +1,46 @@
+﻿  autofit.c
+  ftbase.c
+  ftbbox.c
+  ftbitmap.c
+  ftfstype.c
+  ftgasp.c
+  ftglyph.c
+  ftgxval.c
+  ftinit.c
+  ftlcdfil.c
+  ftmm.c
+  ftotval.c
+  ftpatent.c
+  ftpfr.c
+  ftstroke.c
+  ftsynth.c
+  ftsystem.c
+  fttype1.c
+  ftwinfnt.c
+  ftxf86.c
+  Generating Code...
+  Compiling...
+  bdf.c
+  ftcache.c
+  cff.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\freetype-2.4.0\src\cff\cffgload.c(2683): warning C4244: '=': conversion from 'FT_UInt' to 'FT_Byte', possible loss of data
+  type1cid.c
+  ftgzip.c
+  ftlzw.c
+  pcf.c
+  pfr.c
+  psaux.c
+  pshinter.c
+  psmodule.c
+  raster.c
+  sfnt.c
+  smooth.c
+  truetype.c
+  type1.c
+  type42.c
+  winfnt.c
+  Generating Code...
+  ftdebug.c
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1386,5): warning MSB8012: TargetPath(C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\builds\win32\vc2008\.\..\..\..\objs\debug\freetype.lib) does not match the Library's OutputFile property value (C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\objs\win32\vc2008\freetype240_D.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1388,5): warning MSB8012: TargetName(freetype) does not match the Library's OutputFile property value (freetype240_D). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+  freetype.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\builds\win32\vc2008\.\..\..\..\objs\debug\freetype.lib

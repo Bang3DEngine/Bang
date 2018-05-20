@@ -162,7 +162,7 @@ template<class T>
 void Array<T>::Resize(int n)   { m_vector.resize(n); }
 
 template<class T>
-uint Array<T>::Size() const    { return m_vector.size(); }
+uint Array<T>::Size() const    { return SCAST<uint>(m_vector.size()); }
 
 template<class T>
 void Array<T>::Clear()         { m_vector.clear(); }

@@ -168,7 +168,8 @@ Path ImportFilesManager::GetFilepath(const Path &importFilepath)
     String ending = "." + GetImportExtension();
     if (strPath.EndsWith(ending))
     {
-        strPath.Remove(strPath.Size() - ending.Size(), strPath.Size());
+        strPath.Remove(SCAST<int>(strPath.Size() - ending.Size()), 
+                       SCAST<int>(strPath.Size()));
     }
 
     return Path(strPath);

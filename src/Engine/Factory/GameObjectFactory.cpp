@@ -463,7 +463,7 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 
     String duplicateNameNumber = "";
     bool isDuplicatedName = false;
-    for (int i = originalName.Size()-1; i >= 0; --i)
+    for (int i = SCAST<int>(originalName.Size())-1; i >= 0; --i)
     {
         char c = originalName[i];
         if (String::IsNumber(c))

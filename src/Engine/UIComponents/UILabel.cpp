@@ -107,7 +107,7 @@ void UILabel::ResetSelection()
 }
 void UILabel::SelectAll()
 {
-    SetSelection(GetText()->GetContent().Size(), 0);
+    SetSelection(SCAST<int>(GetText()->GetContent().Size()), 0);
 }
 void UILabel::SetSelectAllOnFocus(bool selectAllOnFocus)
 {
@@ -139,7 +139,7 @@ float UILabel::GetCursorXViewportNDC(int cursorIndex) const
 float UILabel::GetCursorXLocalNDC(int cursorIndex) const
 {
     float localTextX = 0.0f;
-    const int textLength = GetText()->GetContent().Size();
+    const int textLength = SCAST<int>(GetText()->GetContent().Size());
     if (cursorIndex > 0 && cursorIndex < textLength) // Between two chars
     {
         AARect currentCharRect = GetText()->GetCharRectLocalNDC(cursorIndex - 1);

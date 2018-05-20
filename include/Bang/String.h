@@ -73,8 +73,8 @@ public:
     long IndexOfOneNotOf(const String &charSet, long startingPos = 0) const;
 
     // Both startIndex and endIndex are inclusive
-    String SubString(long startIndexInclusive,
-                     long endIndexInclusive = String::npos) const;
+    String SubString(std::size_t startIndexInclusive,
+                     std::size_t endIndexInclusive = std::string::npos) const;
 
     const char *ToCString() const;
 
@@ -185,7 +185,7 @@ String String::TrimLeft(Container<char> trimChars) const
     std::size_t i = 0;
     for (; i < Size(); ++i)
     {
-        if (!trimChars.Contains( At(i) )) break;
+        if (!trimChars.Contains( At( SCAST<int>(i) ) )) break;
     }
     return (i == Size()) ? "" : SubString(i, Size());
 }
@@ -195,7 +195,7 @@ String String::TrimRight(Container<char> trimChars) const
 {
     if (IsEmpty()) { return ""; }
 
-    int i = Size() - 1;
+    int i = SCAST<int>(Size()) - 1;
     for (; i >= 0; --i)
     {
         if (!trimChars.Contains( At(i) )) break;
@@ -253,7 +253,7 @@ Container<String> String::Split(char splitter, bool trimResults) const
         if (indexFound == -1)
         {
             lastParticle = true;
-            indexFound = Size();
+            indexFound = SCAST<long>(Size());
         }
 
         if (indexFound == lastIndexFound)

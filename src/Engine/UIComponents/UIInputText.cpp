@@ -180,7 +180,7 @@ void UIInputText::HandleTyping()
     if (!inputText.IsEmpty())
     {
         ReplaceSelectedText(inputText);
-        SetCursorIndex( GetCursorIndex() + inputText.Size() );
+        SetCursorIndex( GetCursorIndex() + SCAST<int>(inputText.Size()) );
         resetSelection = true;
     }
 
@@ -197,7 +197,7 @@ void UIInputText::HandleTyping()
             String clipboardText = SystemClipboard::Get();
             clipboardText = FilterAllowedInputText(clipboardText);
             ReplaceSelectedText(clipboardText);
-            SetCursorIndex( GetCursorIndex() + clipboardText.Size());
+            SetCursorIndex( GetCursorIndex() + SCAST<int>(clipboardText.Size()));
             resetSelection = true;
         }
     }
@@ -205,7 +205,7 @@ void UIInputText::HandleTyping()
     if (Input::GetKeyDown(Key::End))
     {
         resetSelection = !IsSelecting();
-        SetCursorIndex( GetText()->GetContent().Size() );
+        SetCursorIndex( SCAST<int>(GetText()->GetContent().Size()) );
     }
     else if (Input::GetKeyDown(Key::Home))
     {
@@ -408,7 +408,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     label->GetGameObject()->SetParent(scrollArea->GetContainer());
     cursorGo->SetParent(label->GetGameObject());
 
-    inputText->SetCursorIndex( inputText->GetText()->GetContent().Size() );
+    inputText->SetCursorIndex( SCAST<int>(inputText->GetText()->GetContent().Size()) );
     inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::Left);
     inputText->GetText()->SetVerticalAlign(VerticalAlignment::Center);
     inputText->GetText()->SetWrapping(false);
@@ -434,8 +434,10 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
     const String &content = GetText()->GetContent();
     const int fwdInc = (forward ? 1 : -1);
 
-    if (cursorIndex == 0              && !forward) { return 0; }
-    if (cursorIndex == content.Size() &&  forward) { return content.Size(); }
+    if (cursorIndex == 0                          && !forward)
+    { return 0; }
+    if (cursorIndex == SCAST<int>(content.Size()) &&  forward)
+    { return content.Size(); }
 
     int i = cursorIndex;
     if (forward) { i += fwdInc; }

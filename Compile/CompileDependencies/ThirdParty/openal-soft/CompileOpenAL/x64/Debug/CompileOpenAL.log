@@ -1,0 +1,366 @@
+﻿  Ya existe el subdirectorio o el archivo build\Debug.
+  -- Selecting Windows SDK version 10.0.17134.0 to target Windows 10.0.16299.
+  -- Could NOT find ALSA (missing: ALSA_LIBRARY ALSA_INCLUDE_DIR) 
+  -- Could NOT find OSS (missing: OSS_INCLUDE_DIR) 
+  -- Could NOT find AudioIO (missing: AUDIOIO_INCLUDE_DIR) 
+  -- Could NOT find SoundIO (missing: SOUNDIO_LIBRARY SOUNDIO_INCLUDE_DIR) 
+  -- Could NOT find QSA (missing: QSA_LIBRARY QSA_INCLUDE_DIR) 
+  -- Looking for include files windows.h, mmsystem.h
+  -- Looking for include files windows.h, mmsystem.h - found
+  -- Looking for waveOutOpen in winmm
+  -- Looking for waveOutOpen in winmm - found
+  -- FindWindowsSDK: Detected Visual Studio 2012 or newer, not using the _xp toolset variant: including SDK versions that drop XP support in search!
+  -- Found WindowsSDK: C:/Program Files (x86)/Windows Kits/10  
+  -- Found DSound: C:/Program Files (x86)/Windows Kits/10/Lib/10.0.17134.0/um/x64/dsound.lib  
+  -- Looking for mmdeviceapi.h
+  -- Looking for mmdeviceapi.h - found
+  -- Could NOT find PortAudio (missing: PORTAUDIO_LIBRARY PORTAUDIO_INCLUDE_DIR) 
+  -- Could NOT find PulseAudio (missing: PULSEAUDIO_LIBRARY PULSEAUDIO_INCLUDE_DIR) 
+  -- Could NOT find JACK (missing: JACK_LIBRARY JACK_INCLUDE_DIR) 
+  -- Looking for include files SLES/OpenSLES.h, SLES/OpenSLES_Android.h
+  -- Looking for include files SLES/OpenSLES.h, SLES/OpenSLES_Android.h - not found
+  -- Found Git: C:/Program Files/Git/cmd/git.exe (found version "2.16.1.windows.4") 
+  -- 
+  -- Building OpenAL with support for the following backends:
+  --      WinMM, DirectSound, MMDevApi, WaveFile, Null
+  -- 
+  -- Building with support for CPU extensions:
+  --     Default, SSE, SSE2, SSE3, SSE4.1
+  -- 
+  -- Installing HRTF definitions
+  -- 
+  -- Installing AmbDec presets
+  -- 
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 20/05/2018 10:32:51.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\ZERO_CHECK\".
+    Creando directorio "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Checking Build System
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "OpenAL.dir\Debug\".
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\Debug\".
+    Creando directorio "OpenAL.dir\Debug\OpenAL.tlog\".
+  InitializeBuildStatus:
+    Se creará "OpenAL.dir\Debug\OpenAL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  MakeDirsForCl:
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.dir\Debug\Alc\effects".
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.dir\Debug\Alc\backends".
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\Include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D _WIN32 /D _WIN32_WINNT=0x0502 /D AL_BUILD_LIBRARY /D AL_ALEXT_PROTOTYPES /D _LARGEFILE_SOURCE /D _LARGE_FILES /D restrict= /D HAVE_STRUCT_TIMESPEC /D _CRT_SECURE_NO_WARNINGS /D _CRT_NONSTDC_NO_DEPRECATE /D strcasecmp=_stricmp /D strncasecmp=_strnicmp /D AL_LIBTYPE_STATIC /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"OpenAL.dir\Debug\\" /Fd"OpenAL.dir\Debug\OpenAL.pdb" /Gd /TC /wd4098 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common\almalloc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common\atomic.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common\rwlock.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common\threads.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common\uintmap.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alAuxEffectSlot.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alBuffer.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alEffect.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alError.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alExtension.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alFilter.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alListener.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alSource.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alState.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\alThunk.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\sample_cvt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\ALc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\ALu.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\alcConfig.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\alcRing.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\bs2b.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\converter.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mastering.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\chorus.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\compressor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\dedicated.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\distortion.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\echo.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\equalizer.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\flanger.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\modulator.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\reverb.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\helpers.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\bsinc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\hrtf.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\uhjfilter.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\ambdec.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\bformatdec.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\nfcfilter.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\panning.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer_c.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer_sse.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer_sse2.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer_sse3.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\mixer_sse41.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\base.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\loopback.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\winmm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\dsound.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\mmdevapi.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\wave.c"
+    almalloc.c
+    atomic.c
+    rwlock.c
+    threads.c
+    uintmap.c
+    alAuxEffectSlot.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(128): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(186): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(684): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    alBuffer.c
+    alEffect.c
+    alError.c
+    alExtension.c
+    alFilter.c
+    alListener.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\allistener.c(502): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    alSource.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alsource.c(2929): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alsource.c(3142): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    alState.c
+    alThunk.c
+    sample_cvt.c
+    ALc.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(1234): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2326): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2329): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2598): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(3769): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    ALu.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(108): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(111): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(290): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(340): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(1430): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(1817): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    alcConfig.c
+    alcRing.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(54): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(241): warning C4267: 'function': conversion from 'size_t' to 'LONG', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(247): warning C4267: 'function': conversion from 'size_t' to 'LONG', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    Generating Code...
+    Compiling...
+    bs2b.c
+    converter.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\converter.c(29): warning C4244: 'function': conversion from 'ALdouble' to 'ALfloat', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    mastering.c
+    chorus.c
+    compressor.c
+    dedicated.c
+    distortion.c
+    echo.c
+    equalizer.c
+    flanger.c
+    modulator.c
+    reverb.c
+    helpers.c
+    bsinc.c
+    hrtf.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\hrtf.c(288): warning C4267: '=': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\hrtf.c(1044): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    uhjfilter.c
+    ambdec.c
+    bformatdec.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\bformatdec.c(584): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    nfcfilter.c
+    panning.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\panning.c(558): warning C4267: '+=': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    Generating Code...
+    Compiling...
+    mixer.c
+    mixer_c.c
+    mixer_sse.c
+    mixer_sse2.c
+    mixer_sse3.c
+    mixer_sse41.c
+    base.c
+    loopback.c
+    winmm.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\winmm.c(710): warning C4267: 'return': conversion from 'size_t' to 'ALCuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    dsound.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\dsound.c(950): warning C4267: 'return': conversion from 'size_t' to 'ALCuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    mmdevapi.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1369): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1378): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1385): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1386): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    wave.c
+    Generating Code...
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\Include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D _WIN32 /D _WIN32_WINNT=0x0502 /D AL_BUILD_LIBRARY /D AL_ALEXT_PROTOTYPES /D _LARGEFILE_SOURCE /D _LARGE_FILES /D restrict= /D HAVE_STRUCT_TIMESPEC /D _CRT_SECURE_NO_WARNINGS /D _CRT_NONSTDC_NO_DEPRECATE /D strcasecmp=_stricmp /D strncasecmp=_strnicmp /D AL_LIBTYPE_STATIC /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"OpenAL.dir\Debug\/Alc/effects/null.c.obj" /Fd"OpenAL.dir\Debug\OpenAL.pdb" /Gd /TC /wd4098 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\effects\null.c"
+    null.c
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\common" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\OpenAL32\Include" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D _WIN32 /D _WIN32_WINNT=0x0502 /D AL_BUILD_LIBRARY /D AL_ALEXT_PROTOTYPES /D _LARGEFILE_SOURCE /D _LARGE_FILES /D restrict= /D HAVE_STRUCT_TIMESPEC /D _CRT_SECURE_NO_WARNINGS /D _CRT_NONSTDC_NO_DEPRECATE /D strcasecmp=_stricmp /D strncasecmp=_strnicmp /D AL_LIBTYPE_STATIC /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"OpenAL.dir\Debug\/Alc/backends/null.c.obj" /Fd"OpenAL.dir\Debug\OpenAL.pdb" /Gd /TC /wd4098 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\Alc\backends\null.c"
+    null.c
+  Lib:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\Lib.exe /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\Debug\OpenAL32.lib" /NOLOGO /MACHINE:X64  /machine:x64 OpenAL.dir\Debug\almalloc.obj
+    OpenAL.dir\Debug\atomic.obj
+    OpenAL.dir\Debug\rwlock.obj
+    OpenAL.dir\Debug\threads.obj
+    OpenAL.dir\Debug\uintmap.obj
+    OpenAL.dir\Debug\alAuxEffectSlot.obj
+    OpenAL.dir\Debug\alBuffer.obj
+    OpenAL.dir\Debug\alEffect.obj
+    OpenAL.dir\Debug\alError.obj
+    OpenAL.dir\Debug\alExtension.obj
+    OpenAL.dir\Debug\alFilter.obj
+    OpenAL.dir\Debug\alListener.obj
+    OpenAL.dir\Debug\alSource.obj
+    OpenAL.dir\Debug\alState.obj
+    OpenAL.dir\Debug\alThunk.obj
+    OpenAL.dir\Debug\sample_cvt.obj
+    OpenAL.dir\Debug\ALc.obj
+    OpenAL.dir\Debug\ALu.obj
+    OpenAL.dir\Debug\alcConfig.obj
+    OpenAL.dir\Debug\alcRing.obj
+    OpenAL.dir\Debug\bs2b.obj
+    OpenAL.dir\Debug\converter.obj
+    OpenAL.dir\Debug\mastering.obj
+    OpenAL.dir\Debug\chorus.obj
+    OpenAL.dir\Debug\compressor.obj
+    OpenAL.dir\Debug\dedicated.obj
+    OpenAL.dir\Debug\distortion.obj
+    OpenAL.dir\Debug\echo.obj
+    OpenAL.dir\Debug\equalizer.obj
+    OpenAL.dir\Debug\flanger.obj
+    OpenAL.dir\Debug\modulator.obj
+    OpenAL.dir\Debug\reverb.obj
+    OpenAL.dir\Debug\helpers.obj
+    OpenAL.dir\Debug\bsinc.obj
+    OpenAL.dir\Debug\hrtf.obj
+    OpenAL.dir\Debug\uhjfilter.obj
+    OpenAL.dir\Debug\ambdec.obj
+    OpenAL.dir\Debug\bformatdec.obj
+    OpenAL.dir\Debug\nfcfilter.obj
+    OpenAL.dir\Debug\panning.obj
+    OpenAL.dir\Debug\mixer.obj
+    OpenAL.dir\Debug\mixer_c.obj
+    OpenAL.dir\Debug\mixer_sse.obj
+    OpenAL.dir\Debug\mixer_sse2.obj
+    OpenAL.dir\Debug\mixer_sse3.obj
+    OpenAL.dir\Debug\mixer_sse41.obj
+    OpenAL.dir\Debug\base.obj
+    OpenAL.dir\Debug\loopback.obj
+    OpenAL.dir\Debug\winmm.obj
+    OpenAL.dir\Debug\dsound.obj
+    OpenAL.dir\Debug\mmdevapi.obj
+    OpenAL.dir\Debug\wave.obj
+    OpenAL.dir\Debug\/Alc/effects/null.c.obj
+    OpenAL.dir\Debug\/Alc/backends/null.c.obj
+atomic.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+    OpenAL.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\Debug\OpenAL32.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "OpenAL.dir\Debug\OpenAL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "OpenAL.dir\Debug\OpenAL.tlog\OpenAL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\ALL_BUILD\".
+    Creando directorio "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+  
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (destino predeterminado) (1) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (destino predeterminado) (3) ->
+  (ClCompile destino) -> 
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(128): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(186): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alauxeffectslot.c(684): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\allistener.c(502): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alsource.c(2929): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\openal32\alsource.c(3142): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(1234): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2326): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2329): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(2598): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alc.c(3769): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(108): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(111): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(290): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(340): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(1430): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alu.c(1817): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(54): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(241): warning C4267: 'function': conversion from 'size_t' to 'LONG', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\alcring.c(247): warning C4267: 'function': conversion from 'size_t' to 'LONG', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\converter.c(29): warning C4244: 'function': conversion from 'ALdouble' to 'ALfloat', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\hrtf.c(288): warning C4267: '=': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\hrtf.c(1044): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\bformatdec.c(584): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\panning.c(558): warning C4267: '+=': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\winmm.c(710): warning C4267: 'return': conversion from 'size_t' to 'ALCuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\dsound.c(950): warning C4267: 'return': conversion from 'size_t' to 'ALCuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1369): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1378): warning C4267: 'function': conversion from 'size_t' to 'ALsizei', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1385): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\openal-soft\alc\backends\mmdevapi.c(1386): warning C4267: 'function': conversion from 'size_t' to 'ALuint', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+  
+  
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (destino predeterminado) (1) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (destino predeterminado) (3) ->
+  (Lib destino) -> 
+atomic.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj]
+  
+      32 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:13.01
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 20/05/2018 10:33:04.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\install.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "OpenAL.dir\Debug\OpenAL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+    Todas las salidas están actualizadas.
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    OpenAL.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\Debug\OpenAL32.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "OpenAL.dir\Debug\OpenAL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "OpenAL.dir\Debug\OpenAL.tlog\OpenAL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\OpenAL.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\ALL_BUILD.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\INSTALL\".
+    Creando directorio "x64\Debug\INSTALL\INSTALL.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  PostBuildEvent:
+    setlocal
+    "C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Debug -P cmake_install.cmake
+    if %errorlevel% neq 0 goto :cmEnd
+    :cmEnd
+    endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+    :cmErrorLevel
+    exit /b %1
+    :cmDone
+    if %errorlevel% neq 0 goto :VCEnd
+    :VCEnd
+    -- Install configuration: "Debug"
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/lib/OpenAL32.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/lib/cmake/OpenAL/OpenALConfig.cmake
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/lib/cmake/OpenAL/OpenALConfig-debug.cmake
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/al.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/alc.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/alext.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/efx.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/efx-creative.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/include/AL/efx-presets.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/lib/pkgconfig/openal.pc
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/hrtf/default-44100.mhr
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/hrtf/default-48000.mhr
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/3D7.1.ambdec
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/hexagon.ambdec
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/itu5.1.ambdec
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/rectangle.ambdec
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/square.ambdec
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/openal-soft/build/Debug/share/openal/presets/presets.txt
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\INSTALL\INSTALL.tlog\INSTALL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\openal-soft\build\Debug\install.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:00.88

@@ -1,0 +1,30 @@
+﻿  -- Selecting Windows SDK version 10.0.17134.0 to target Windows 10.0.16299.
+  -- The C compiler identification is MSVC 19.14.26428.1
+  -- The ASM compiler identification is MSVC
+  -- Found assembler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe -- works
+  -- Detecting C compiler ABI info
+  -- Detecting C compiler ABI info - done
+  -- Found ZLIB: C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\CompileLibPng\\..\..\zlib-1.2.11\build\Release\lib\zlibd.lib (found version "1.2.11") 
+  -- Performing Test HAVE_LD_VERSION_SCRIPT
+  -- Performing Test HAVE_LD_VERSION_SCRIPT - Failed
+  -- Performing Test HAVE_SOLARIS_LD_VERSION_SCRIPT
+  -- Performing Test HAVE_SOLARIS_LD_VERSION_SCRIPT - Failed
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Release
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 20/05/2018 10:16:33.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Release\ALL_BUILD.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Release\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Release\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Release\ZERO_CHECK\".
+    Creando directorio "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Checking Build System
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(133,5): warning MSB5021: Terminating the task executable "cmd" and its child processes because the build was canceled.

@@ -130,7 +130,7 @@ template<class T>
 void List<T>::Clear() { m_list.clear(); }
 
 template<class T>
-uint List<T>::Size() const  { return m_list.size(); }
+uint List<T>::Size() const  { return SCAST<uint>(m_list.size()); }
 
 template<class T>
 void List<T>::Resize(int n) { m_list.resize(n); }

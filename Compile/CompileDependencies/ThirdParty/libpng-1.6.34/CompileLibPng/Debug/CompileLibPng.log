@@ -1,0 +1,369 @@
+﻿  Ya existe el subdirectorio o el archivo build.
+  -- Selecting Windows SDK version 10.0.17134.0 to target Windows 10.0.16299.
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 19/05/2018 11:10:07.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\genfiles.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\genfiles\genfiles.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\genfiles\genfiles.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\genfiles\genfiles.tlog\genfiles.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\genfiles.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png.dir\Debug\png.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    png.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\libpng16d.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png.dir\Debug\png.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png.dir\Debug\png.tlog\png.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png-fix-itxt.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    png-fix-itxt.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\png-fix-itxt.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\png-fix-itxt.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png-fix-itxt.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png_static.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png_static.dir\Debug\png_static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    png_static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\libpng16_staticd.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png_static.dir\Debug\png_static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png_static.dir\Debug\png_static.tlog\png_static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png_static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngfix.vcxproj" (7) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngfix.dir\Debug\pngfix.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngfix.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngfix.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngfix.dir\Debug\pngfix.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngfix.dir\Debug\pngfix.tlog\pngfix.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngfix.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngimage.vcxproj" (8) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngimage.dir\Debug\pngimage.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngimage.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngimage.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngimage.dir\Debug\pngimage.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngimage.dir\Debug\pngimage.tlog\pngimage.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngimage.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngstest.vcxproj" (9) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngstest.dir\Debug\pngstest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngstest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngstest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngstest.dir\Debug\pngstest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngstest.dir\Debug\pngstest.tlog\pngstest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngstest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngtest.vcxproj" (10) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngtest.dir\Debug\pngtest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngtest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngtest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngtest.dir\Debug\pngtest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngtest.dir\Debug\pngtest.tlog\pngtest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngtest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngunknown.vcxproj" (11) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngunknown.dir\Debug\pngunknown.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngunknown.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngunknown.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngunknown.dir\Debug\pngunknown.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngunknown.dir\Debug\pngunknown.tlog\pngunknown.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngunknown.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngvalid.vcxproj" (12) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngvalid.dir\Debug\pngvalid.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngvalid.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngvalid.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngvalid.dir\Debug\pngvalid.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngvalid.dir\Debug\pngvalid.tlog\pngvalid.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngvalid.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:02.16
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 19/05/2018 11:10:09.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\install.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (4) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\genfiles.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\genfiles\genfiles.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\genfiles\genfiles.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\genfiles\genfiles.tlog\genfiles.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\genfiles.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png.dir\Debug\png.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    png.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\libpng16d.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png.dir\Debug\png.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png.dir\Debug\png.tlog\png.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png-fix-itxt.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    png-fix-itxt.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\png-fix-itxt.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png-fix-itxt.dir\Debug\png-fix-itxt.tlog\png-fix-itxt.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png-fix-itxt.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png_static.vcxproj" (7) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "png_static.dir\Debug\png_static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    png_static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\libpng16_staticd.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "png_static.dir\Debug\png_static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "png_static.dir\Debug\png_static.tlog\png_static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\png_static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngfix.vcxproj" (8) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngfix.dir\Debug\pngfix.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngfix.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngfix.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngfix.dir\Debug\pngfix.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngfix.dir\Debug\pngfix.tlog\pngfix.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngfix.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngimage.vcxproj" (9) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngimage.dir\Debug\pngimage.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngimage.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngimage.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngimage.dir\Debug\pngimage.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngimage.dir\Debug\pngimage.tlog\pngimage.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngimage.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngstest.vcxproj" (10) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngstest.dir\Debug\pngstest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngstest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngstest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngstest.dir\Debug\pngstest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngstest.dir\Debug\pngstest.tlog\pngstest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngstest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngtest.vcxproj" (11) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngtest.dir\Debug\pngtest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngtest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngtest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngtest.dir\Debug\pngtest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngtest.dir\Debug\pngtest.tlog\pngtest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngtest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngunknown.vcxproj" (12) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngunknown.dir\Debug\pngunknown.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngunknown.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngunknown.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngunknown.dir\Debug\pngunknown.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngunknown.dir\Debug\pngunknown.tlog\pngunknown.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngunknown.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngvalid.vcxproj" (13) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "pngvalid.dir\Debug\pngvalid.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    pngvalid.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\Debug\pngvalid.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "pngvalid.dir\Debug\pngvalid.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "pngvalid.dir\Debug\pngvalid.tlog\pngvalid.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\pngvalid.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\ALL_BUILD.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "Win32\Debug\INSTALL\".
+    Creando directorio "Win32\Debug\INSTALL\INSTALL.tlog\".
+  InitializeBuildStatus:
+    Se creará "Win32\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  PostBuildEvent:
+    setlocal
+    "C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Debug -P cmake_install.cmake
+    if %errorlevel% neq 0 goto :cmEnd
+    :cmEnd
+    endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+    :cmErrorLevel
+    exit /b %1
+    :cmDone
+    if %errorlevel% neq 0 goto :VCEnd
+    :VCEnd
+    -- Install configuration: "Debug"
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/lib/libpng16d.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/bin/libpng16d.dll
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/lib/libpng16_staticd.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/png.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/pngconf.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/pnglibconf.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/libpng16/png.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/libpng16/pngconf.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/include/libpng16/pnglibconf.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/bin/pngfix.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/bin/png-fix-itxt.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/share/man/man3/libpng.3
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/share/man/man3/libpngpf.3
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/share/man/man5/png.5
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/lib/libpng/libpng16.cmake
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libpng-1.6.34/build/Debug/lib/libpng/libpng16-debug.cmake
+  FinalizeBuildStatus:
+    Se eliminará el archivo "Win32\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "Win32\Debug\INSTALL\INSTALL.tlog\INSTALL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\install.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:02.38

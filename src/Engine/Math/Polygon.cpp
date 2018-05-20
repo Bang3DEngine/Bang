@@ -64,6 +64,6 @@ Vector3 &Polygon::operator[](std::size_t i)
 
 const Vector3 &Polygon::operator[](std::size_t i) const
 {
-    return GetPoint(i);
+    return GetPoint(SCAST<int>(i));
 }
 

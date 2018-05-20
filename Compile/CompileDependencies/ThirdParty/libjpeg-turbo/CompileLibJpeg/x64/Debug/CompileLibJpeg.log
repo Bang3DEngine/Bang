@@ -1,0 +1,1380 @@
+﻿  -- Selecting Windows SDK version 10.0.17134.0 to target Windows 10.0.16299.
+  -- The C compiler identification is MSVC 19.14.26428.1
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe -- works
+  -- Detecting C compiler ABI info
+  -- Detecting C compiler ABI info - done
+  -- CMAKE_BUILD_TYPE = Release
+  -- VERSION = 1.5.90, BUILD = 20180519
+  -- 64-bit build (x86_64)
+  -- CMAKE_INSTALL_PREFIX = C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug
+  -- CMAKE_INSTALL_BINDIR = bin (C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin)
+  -- CMAKE_INSTALL_DATAROOTDIR = share (C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share)
+  -- CMAKE_INSTALL_DOCDIR = share/doc/libjpeg-turbo (C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo)
+  -- CMAKE_INSTALL_INCLUDEDIR = include (C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include)
+  -- CMAKE_INSTALL_LIBDIR = lib (C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/lib)
+  -- Shared libraries enabled (ENABLE_SHARED = 1)
+  -- Static libraries enabled (ENABLE_STATIC = 1)
+  -- 12-bit JPEG support disabled (WITH_12BIT = 0)
+  -- Arithmetic decoding support enabled (WITH_ARITH_DEC = 1)
+  -- Arithmetic encoding support enabled (WITH_ARITH_ENC = 1)
+  -- TurboJPEG API library enabled (WITH_TURBOJPEG = 1)
+  -- TurboJPEG Java wrapper disabled (WITH_JAVA = 0)
+  -- In-memory source/destination managers enabled (WITH_MEM_SRCDST = 1)
+  -- Emulating libjpeg API/ABI v6.2 (WITH_JPEG7 = 0, WITH_JPEG8 = 0)
+  -- libjpeg API shared library version = 62.3.0
+  -- Compiler flags = /DWIN32 /D_WINDOWS /W3 /W3 /wd4996 /MT /O2 /Ob2 /DNDEBUG
+  -- Linker flags = /machine:x64 /INCREMENTAL:NO
+  -- Looking for sys/types.h
+  -- Looking for sys/types.h - found
+  -- Looking for stdint.h
+  -- Looking for stdint.h - found
+  -- Looking for stddef.h
+  -- Looking for stddef.h - found
+  -- Check size of size_t
+  -- Check size of size_t - done
+  -- Check size of unsigned long
+  -- Check size of unsigned long - done
+  -- Looking for include file intrin.h
+  -- Looking for include file intrin.h - found
+  -- Performing Test INLINE_WORKS
+  -- Performing Test INLINE_WORKS - Success
+  -- INLINE = __forceinline (FORCE_INLINE = 1)
+  -- SIMD extensions: None (WITH_SIMD = 0)
+  -- FLOATTEST = 32bit
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 19/05/2018 17:22:08.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\ZERO_CHECK\".
+    Creando directorio "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Checking Build System
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/md5/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (4) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "simd.dir\Debug\".
+    Creando directorio "simd.dir\Debug\simd.tlog\".
+  InitializeBuildStatus:
+    Se creará "simd.dir\Debug\simd.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"simd.dir\Debug\\" /Fd"simd.dir\Debug\simd.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jsimd_none.c"
+    jsimd_none.c
+  Lib:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\Lib.exe /OUT:"simd.dir\Debug\simd.lib" /NOLOGO /MACHINE:X64  /machine:x64 simd.dir\Debug\jsimd_none.obj
+    simd.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\simd.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "simd.dir\Debug\simd.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "simd.dir\Debug\simd.tlog\simd.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "jpeg.dir\Debug\".
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\".
+    Creando directorio "jpeg.dir\Debug\jpeg.tlog\".
+  InitializeBuildStatus:
+    Se creará "jpeg.dir\Debug\jpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/sharedlib/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D jpeg_EXPORTS /D _WINDLL /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"jpeg.dir\Debug\\" /Fd"jpeg.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcdctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jchuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcinit.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcomapi.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcparam.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcprepct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jctrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jddctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdhuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdinput.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmerge.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdpostct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdtrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jerror.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctred.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant1.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant2.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jutils.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemnobs.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jaricom.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdarith.c"
+    jcapimin.c
+    jcapistd.c
+    jccoefct.c
+    jccolor.c
+    jcdctmgr.c
+    jchuff.c
+    jcicc.c
+    jcinit.c
+    jcmainct.c
+    jcmarker.c
+    jcmaster.c
+    jcomapi.c
+    jcparam.c
+    jcphuff.c
+    jcprepct.c
+    jcsample.c
+    jctrans.c
+    jdapimin.c
+    jdapistd.c
+    jdatadst.c
+    Generating Code...
+    Compiling...
+    jdatasrc.c
+    jdcoefct.c
+    jdcolor.c
+    jddctmgr.c
+    jdhuff.c
+    jdicc.c
+    jdinput.c
+    jdmainct.c
+    jdmarker.c
+    jdmaster.c
+    jdmerge.c
+    jdphuff.c
+    jdpostct.c
+    jdsample.c
+    jdtrans.c
+    jerror.c
+    jfdctflt.c
+    jfdctfst.c
+    jfdctint.c
+    jidctflt.c
+    Generating Code...
+    Compiling...
+    jidctfst.c
+    jidctint.c
+    jidctred.c
+    jquant1.c
+    jquant2.c
+    jutils.c
+    jmemmgr.c
+    jmemnobs.c
+    jaricom.c
+    jcarith.c
+    jdarith.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg62.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /NODEFAULTLIB:LIBCMT /NODEFAULTLIB:LIBCMTD /DEF:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/win/jpeg62-memsrcdst.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpeg.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpeg.lib" /MACHINE:X64  /machine:x64 /DLL jpeg.dir\Debug\jcapimin.obj
+    jpeg.dir\Debug\jcapistd.obj
+    jpeg.dir\Debug\jccoefct.obj
+    jpeg.dir\Debug\jccolor.obj
+    jpeg.dir\Debug\jcdctmgr.obj
+    jpeg.dir\Debug\jchuff.obj
+    jpeg.dir\Debug\jcicc.obj
+    jpeg.dir\Debug\jcinit.obj
+    jpeg.dir\Debug\jcmainct.obj
+    jpeg.dir\Debug\jcmarker.obj
+    jpeg.dir\Debug\jcmaster.obj
+    jpeg.dir\Debug\jcomapi.obj
+    jpeg.dir\Debug\jcparam.obj
+    jpeg.dir\Debug\jcphuff.obj
+    jpeg.dir\Debug\jcprepct.obj
+    jpeg.dir\Debug\jcsample.obj
+    jpeg.dir\Debug\jctrans.obj
+    jpeg.dir\Debug\jdapimin.obj
+    jpeg.dir\Debug\jdapistd.obj
+    jpeg.dir\Debug\jdatadst.obj
+    jpeg.dir\Debug\jdatasrc.obj
+    jpeg.dir\Debug\jdcoefct.obj
+    jpeg.dir\Debug\jdcolor.obj
+    jpeg.dir\Debug\jddctmgr.obj
+    jpeg.dir\Debug\jdhuff.obj
+    jpeg.dir\Debug\jdicc.obj
+    jpeg.dir\Debug\jdinput.obj
+    jpeg.dir\Debug\jdmainct.obj
+    jpeg.dir\Debug\jdmarker.obj
+    jpeg.dir\Debug\jdmaster.obj
+    jpeg.dir\Debug\jdmerge.obj
+    jpeg.dir\Debug\jdphuff.obj
+    jpeg.dir\Debug\jdpostct.obj
+    jpeg.dir\Debug\jdsample.obj
+    jpeg.dir\Debug\jdtrans.obj
+    jpeg.dir\Debug\jerror.obj
+    jpeg.dir\Debug\jfdctflt.obj
+    jpeg.dir\Debug\jfdctfst.obj
+    jpeg.dir\Debug\jfdctint.obj
+    jpeg.dir\Debug\jidctflt.obj
+    jpeg.dir\Debug\jidctfst.obj
+    jpeg.dir\Debug\jidctint.obj
+    jpeg.dir\Debug\jidctred.obj
+    jpeg.dir\Debug\jquant1.obj
+    jpeg.dir\Debug\jquant2.obj
+    jpeg.dir\Debug\jutils.obj
+    jpeg.dir\Debug\jmemmgr.obj
+    jpeg.dir\Debug\jmemnobs.obj
+    jpeg.dir\Debug\jaricom.obj
+    jpeg.dir\Debug\jcarith.obj
+    jpeg.dir\Debug\jdarith.obj
+    "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\jsimd_none.obj"
+       Creating library C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpeg.lib and object C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpeg.exp
+    jpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg62.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpeg.dir\Debug\jpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpeg.dir\Debug\jpeg.tlog\jpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "cjpeg.dir\Debug\".
+    Creando directorio "cjpeg.dir\Debug\cjpeg.tlog\".
+  InitializeBuildStatus:
+    Se creará "cjpeg.dir\Debug\cjpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/sharedlib/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D GIF_SUPPORTED /D PPM_SUPPORTED /D TARGA_SUPPORTED /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cjpeg.dir\Debug\\" /Fd"cjpeg.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdgif.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdtarga.c"
+    cjpeg.c
+    cdjpeg.c
+    rdgif.c
+    rdppm.c
+    rdswitch.c
+    rdbmp.c
+    rdtarga.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg.exe" /INCREMENTAL /NOLOGO ..\Debug\jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/cjpeg.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/cjpeg.lib" /MACHINE:X64  /machine:x64 cjpeg.dir\Debug\cjpeg.obj
+    cjpeg.dir\Debug\cdjpeg.obj
+    cjpeg.dir\Debug\rdgif.obj
+    cjpeg.dir\Debug\rdppm.obj
+    cjpeg.dir\Debug\rdswitch.obj
+    cjpeg.dir\Debug\rdbmp.obj
+    cjpeg.dir\Debug\rdtarga.obj
+    cjpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "cjpeg.dir\Debug\cjpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "cjpeg.dir\Debug\cjpeg.tlog\cjpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (6) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpeg-static.vcxproj" (7) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "jpeg-static.dir\Debug\".
+    Creando directorio "jpeg-static.dir\Debug\jpeg-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "jpeg-static.dir\Debug\jpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"jpeg-static.dir\Debug\\" /Fd"jpeg-static.dir\Debug\jpeg-static.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcdctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jchuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcinit.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcomapi.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcparam.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcprepct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jctrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jddctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdhuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdinput.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmerge.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdpostct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdtrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jerror.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctred.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant1.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant2.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jutils.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemnobs.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jaricom.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdarith.c"
+    jcapimin.c
+    jcapistd.c
+    jccoefct.c
+    jccolor.c
+    jcdctmgr.c
+    jchuff.c
+    jcicc.c
+    jcinit.c
+    jcmainct.c
+    jcmarker.c
+    jcmaster.c
+    jcomapi.c
+    jcparam.c
+    jcphuff.c
+    jcprepct.c
+    jcsample.c
+    jctrans.c
+    jdapimin.c
+    jdapistd.c
+    jdatadst.c
+    Generating Code...
+    Compiling...
+    jdatasrc.c
+    jdcoefct.c
+    jdcolor.c
+    jddctmgr.c
+    jdhuff.c
+    jdicc.c
+    jdinput.c
+    jdmainct.c
+    jdmarker.c
+    jdmaster.c
+    jdmerge.c
+    jdphuff.c
+    jdpostct.c
+    jdsample.c
+    jdtrans.c
+    jerror.c
+    jfdctflt.c
+    jfdctfst.c
+    jfdctint.c
+    jidctflt.c
+    Generating Code...
+    Compiling...
+    jidctfst.c
+    jidctint.c
+    jidctred.c
+    jquant1.c
+    jquant2.c
+    jutils.c
+    jmemmgr.c
+    jmemnobs.c
+    jaricom.c
+    jcarith.c
+    jdarith.c
+    Generating Code...
+  Lib:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\Lib.exe /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg-static.lib" /NOLOGO /MACHINE:X64  /machine:x64 "jpeg-static.dir\Debug\jcapimin.obj"
+    "jpeg-static.dir\Debug\jcapistd.obj"
+    "jpeg-static.dir\Debug\jccoefct.obj"
+    "jpeg-static.dir\Debug\jccolor.obj"
+    "jpeg-static.dir\Debug\jcdctmgr.obj"
+    "jpeg-static.dir\Debug\jchuff.obj"
+    "jpeg-static.dir\Debug\jcicc.obj"
+    "jpeg-static.dir\Debug\jcinit.obj"
+    "jpeg-static.dir\Debug\jcmainct.obj"
+    "jpeg-static.dir\Debug\jcmarker.obj"
+    "jpeg-static.dir\Debug\jcmaster.obj"
+    "jpeg-static.dir\Debug\jcomapi.obj"
+    "jpeg-static.dir\Debug\jcparam.obj"
+    "jpeg-static.dir\Debug\jcphuff.obj"
+    "jpeg-static.dir\Debug\jcprepct.obj"
+    "jpeg-static.dir\Debug\jcsample.obj"
+    "jpeg-static.dir\Debug\jctrans.obj"
+    "jpeg-static.dir\Debug\jdapimin.obj"
+    "jpeg-static.dir\Debug\jdapistd.obj"
+    "jpeg-static.dir\Debug\jdatadst.obj"
+    "jpeg-static.dir\Debug\jdatasrc.obj"
+    "jpeg-static.dir\Debug\jdcoefct.obj"
+    "jpeg-static.dir\Debug\jdcolor.obj"
+    "jpeg-static.dir\Debug\jddctmgr.obj"
+    "jpeg-static.dir\Debug\jdhuff.obj"
+    "jpeg-static.dir\Debug\jdicc.obj"
+    "jpeg-static.dir\Debug\jdinput.obj"
+    "jpeg-static.dir\Debug\jdmainct.obj"
+    "jpeg-static.dir\Debug\jdmarker.obj"
+    "jpeg-static.dir\Debug\jdmaster.obj"
+    "jpeg-static.dir\Debug\jdmerge.obj"
+    "jpeg-static.dir\Debug\jdphuff.obj"
+    "jpeg-static.dir\Debug\jdpostct.obj"
+    "jpeg-static.dir\Debug\jdsample.obj"
+    "jpeg-static.dir\Debug\jdtrans.obj"
+    "jpeg-static.dir\Debug\jerror.obj"
+    "jpeg-static.dir\Debug\jfdctflt.obj"
+    "jpeg-static.dir\Debug\jfdctfst.obj"
+    "jpeg-static.dir\Debug\jfdctint.obj"
+    "jpeg-static.dir\Debug\jidctflt.obj"
+    "jpeg-static.dir\Debug\jidctfst.obj"
+    "jpeg-static.dir\Debug\jidctint.obj"
+    "jpeg-static.dir\Debug\jidctred.obj"
+    "jpeg-static.dir\Debug\jquant1.obj"
+    "jpeg-static.dir\Debug\jquant2.obj"
+    "jpeg-static.dir\Debug\jutils.obj"
+    "jpeg-static.dir\Debug\jmemmgr.obj"
+    "jpeg-static.dir\Debug\jmemnobs.obj"
+    "jpeg-static.dir\Debug\jaricom.obj"
+    "jpeg-static.dir\Debug\jcarith.obj"
+    "jpeg-static.dir\Debug\jdarith.obj"
+    "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\jsimd_none.obj"
+    jpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg-static.lib
+  CopyFilesToOutputDirectory:
+    Copiando el archivo de "jpeg-static.dir\Debug\jpeg-static.pdb" en "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg-static.pdb".
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpeg-static.dir\Debug\jpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpeg-static.dir\Debug\jpeg-static.tlog\jpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpeg-static.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "cjpeg-static.dir\Debug\".
+    Creando directorio "cjpeg-static.dir\Debug\cjpeg-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "cjpeg-static.dir\Debug\cjpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D GIF_SUPPORTED /D PPM_SUPPORTED /D TARGA_SUPPORTED /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cjpeg-static.dir\Debug\\" /Fd"cjpeg-static.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdgif.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdtarga.c"
+    cjpeg.c
+    cdjpeg.c
+    rdgif.c
+    rdppm.c
+    rdswitch.c
+    rdbmp.c
+    rdtarga.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg-static.exe" /INCREMENTAL /NOLOGO "Debug\jpeg-static.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/cjpeg-static.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/cjpeg-static.lib" /MACHINE:X64  /machine:x64 "cjpeg-static.dir\Debug\cjpeg.obj"
+    "cjpeg-static.dir\Debug\cdjpeg.obj"
+    "cjpeg-static.dir\Debug\rdgif.obj"
+    "cjpeg-static.dir\Debug\rdppm.obj"
+    "cjpeg-static.dir\Debug\rdswitch.obj"
+    "cjpeg-static.dir\Debug\rdbmp.obj"
+    "cjpeg-static.dir\Debug\rdtarga.obj"
+    cjpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "cjpeg-static.dir\Debug\cjpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "cjpeg-static.dir\Debug\cjpeg-static.tlog\cjpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\djpeg.vcxproj" (8) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "djpeg.dir\Debug\".
+    Creando directorio "djpeg.dir\Debug\djpeg.tlog\".
+  InitializeBuildStatus:
+    Se creará "djpeg.dir\Debug\djpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/sharedlib/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D GIF_SUPPORTED /D PPM_SUPPORTED /D TARGA_SUPPORTED /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"djpeg.dir\Debug\\" /Fd"djpeg.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\djpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdcolmap.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrgif.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrtarga.c"
+    djpeg.c
+    cdjpeg.c
+    rdcolmap.c
+    rdswitch.c
+    wrgif.c
+    wrppm.c
+    wrbmp.c
+    wrtarga.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg.exe" /INCREMENTAL /NOLOGO ..\Debug\jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/djpeg.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/djpeg.lib" /MACHINE:X64  /machine:x64 djpeg.dir\Debug\djpeg.obj
+    djpeg.dir\Debug\cdjpeg.obj
+    djpeg.dir\Debug\rdcolmap.obj
+    djpeg.dir\Debug\rdswitch.obj
+    djpeg.dir\Debug\wrgif.obj
+    djpeg.dir\Debug\wrppm.obj
+    djpeg.dir\Debug\wrbmp.obj
+    djpeg.dir\Debug\wrtarga.obj
+    djpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "djpeg.dir\Debug\djpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "djpeg.dir\Debug\djpeg.tlog\djpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\djpeg.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\djpeg-static.vcxproj" (9) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "djpeg-static.dir\Debug\".
+    Creando directorio "djpeg-static.dir\Debug\djpeg-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "djpeg-static.dir\Debug\djpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D GIF_SUPPORTED /D PPM_SUPPORTED /D TARGA_SUPPORTED /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"djpeg-static.dir\Debug\\" /Fd"djpeg-static.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\djpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdcolmap.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrgif.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrtarga.c"
+    djpeg.c
+    cdjpeg.c
+    rdcolmap.c
+    rdswitch.c
+    wrgif.c
+    wrppm.c
+    wrbmp.c
+    wrtarga.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg-static.exe" /INCREMENTAL /NOLOGO "Debug\jpeg-static.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/djpeg-static.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/djpeg-static.lib" /MACHINE:X64  /machine:x64 "djpeg-static.dir\Debug\djpeg.obj"
+    "djpeg-static.dir\Debug\cdjpeg.obj"
+    "djpeg-static.dir\Debug\rdcolmap.obj"
+    "djpeg-static.dir\Debug\rdswitch.obj"
+    "djpeg-static.dir\Debug\wrgif.obj"
+    "djpeg-static.dir\Debug\wrppm.obj"
+    "djpeg-static.dir\Debug\wrbmp.obj"
+    "djpeg-static.dir\Debug\wrtarga.obj"
+    djpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "djpeg-static.dir\Debug\djpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "djpeg-static.dir\Debug\djpeg-static.tlog\djpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\djpeg-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jcstest.vcxproj" (10) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "jcstest.dir\Debug\".
+    Creando directorio "jcstest.dir\Debug\jcstest.tlog\".
+  InitializeBuildStatus:
+    Se creará "jcstest.dir\Debug\jcstest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/sharedlib/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"jcstest.dir\Debug\\" /Fd"jcstest.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcstest.c"
+    jcstest.c
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jcstest.exe" /INCREMENTAL /NOLOGO ..\Debug\jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jcstest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jcstest.lib" /MACHINE:X64  /machine:x64 jcstest.dir\Debug\jcstest.obj
+    jcstest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jcstest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jcstest.dir\Debug\jcstest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jcstest.dir\Debug\jcstest.tlog\jcstest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jcstest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpegtran.vcxproj" (11) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "jpegtran.dir\Debug\".
+    Creando directorio "jpegtran.dir\Debug\jpegtran.tlog\".
+  InitializeBuildStatus:
+    Se creará "jpegtran.dir\Debug\jpegtran.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/sharedlib/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/sharedlib/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"jpegtran.dir\Debug\\" /Fd"jpegtran.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jpegtran.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\transupp.c"
+    jpegtran.c
+    cdjpeg.c
+    rdswitch.c
+    transupp.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran.exe" /INCREMENTAL /NOLOGO ..\Debug\jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpegtran.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpegtran.lib" /MACHINE:X64  /machine:x64 jpegtran.dir\Debug\jpegtran.obj
+    jpegtran.dir\Debug\cdjpeg.obj
+    jpegtran.dir\Debug\rdswitch.obj
+    jpegtran.dir\Debug\transupp.obj
+    jpegtran.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpegtran.dir\Debug\jpegtran.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpegtran.dir\Debug\jpegtran.tlog\jpegtran.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpegtran.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpegtran-static.vcxproj" (12) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "jpegtran-static.dir\Debug\".
+    Creando directorio "jpegtran-static.dir\Debug\jpegtran-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "jpegtran-static.dir\Debug\jpegtran-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D USE_SETMODE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"jpegtran-static.dir\Debug\\" /Fd"jpegtran-static.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jpegtran.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\cdjpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdswitch.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\transupp.c"
+    jpegtran.c
+    cdjpeg.c
+    rdswitch.c
+    transupp.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran-static.exe" /INCREMENTAL /NOLOGO "Debug\jpeg-static.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpegtran-static.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/jpegtran-static.lib" /MACHINE:X64  /machine:x64 "jpegtran-static.dir\Debug\jpegtran.obj"
+    "jpegtran-static.dir\Debug\cdjpeg.obj"
+    "jpegtran-static.dir\Debug\rdswitch.obj"
+    "jpegtran-static.dir\Debug\transupp.obj"
+    jpegtran-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpegtran-static.dir\Debug\jpegtran-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpegtran-static.dir\Debug\jpegtran-static.tlog\jpegtran-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpegtran-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\md5cmp.vcxproj" (13) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "md5cmp.dir\Debug\".
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\Debug\".
+    Creando directorio "md5cmp.dir\Debug\md5cmp.tlog\".
+  InitializeBuildStatus:
+    Se creará "md5cmp.dir\Debug\md5cmp.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/md5/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/md5/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"md5cmp.dir\Debug\\" /Fd"md5cmp.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5cmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5hl.c"
+    md5cmp.c
+    md5.c
+    md5hl.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\Debug\md5cmp.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/md5/Debug/md5cmp.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/md5/Debug/md5cmp.lib" /MACHINE:X64  /machine:x64 md5cmp.dir\Debug\md5cmp.obj
+    md5cmp.dir\Debug\md5.obj
+    md5cmp.dir\Debug\md5hl.obj
+    md5cmp.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\Debug\md5cmp.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "md5cmp.dir\Debug\md5cmp.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "md5cmp.dir\Debug\md5cmp.tlog\md5cmp.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\md5cmp.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\rdjpgcom.vcxproj" (14) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "rdjpgcom.dir\Debug\".
+    Creando directorio "rdjpgcom.dir\Debug\rdjpgcom.tlog\".
+  InitializeBuildStatus:
+    Se creará "rdjpgcom.dir\Debug\rdjpgcom.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"rdjpgcom.dir\Debug\\" /Fd"rdjpgcom.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdjpgcom.c"
+    rdjpgcom.c
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\rdjpgcom.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/rdjpgcom.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/rdjpgcom.lib" /MACHINE:X64  /machine:x64 rdjpgcom.dir\Debug\rdjpgcom.obj
+    rdjpgcom.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\rdjpgcom.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "rdjpgcom.dir\Debug\rdjpgcom.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "rdjpgcom.dir\Debug\rdjpgcom.tlog\rdjpgcom.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\rdjpgcom.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (15) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (15) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg.vcxproj" (16) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "turbojpeg.dir\Debug\".
+    Creando directorio "turbojpeg.dir\Debug\turbojpeg.tlog\".
+  InitializeBuildStatus:
+    Se creará "turbojpeg.dir\Debug\turbojpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D PPM_SUPPORTED /D "CMAKE_INTDIR=\"Debug\"" /D DLLDEFINE /D _WINDLL /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"turbojpeg.dir\Debug\\" /Fd"turbojpeg.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcdctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jchuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcinit.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcomapi.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcparam.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcprepct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jctrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jddctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdhuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdinput.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmerge.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdpostct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdtrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jerror.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctred.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant1.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant2.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jutils.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemnobs.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jaricom.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\turbojpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\transupp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst-tj.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc-tj.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrppm.c"
+    jcapimin.c
+    jcapistd.c
+    jccoefct.c
+    jccolor.c
+    jcdctmgr.c
+    jchuff.c
+    jcicc.c
+    jcinit.c
+    jcmainct.c
+    jcmarker.c
+    jcmaster.c
+    jcomapi.c
+    jcparam.c
+    jcphuff.c
+    jcprepct.c
+    jcsample.c
+    jctrans.c
+    jdapimin.c
+    jdapistd.c
+    jdatadst.c
+    Generating Code...
+    Compiling...
+    jdatasrc.c
+    jdcoefct.c
+    jdcolor.c
+    jddctmgr.c
+    jdhuff.c
+    jdicc.c
+    jdinput.c
+    jdmainct.c
+    jdmarker.c
+    jdmaster.c
+    jdmerge.c
+    jdphuff.c
+    jdpostct.c
+    jdsample.c
+    jdtrans.c
+    jerror.c
+    jfdctflt.c
+    jfdctfst.c
+    jfdctint.c
+    jidctflt.c
+    Generating Code...
+    Compiling...
+    jidctfst.c
+    jidctint.c
+    jidctred.c
+    jquant1.c
+    jquant2.c
+    jutils.c
+    jmemmgr.c
+    jmemnobs.c
+    jaricom.c
+    jcarith.c
+    jdarith.c
+    turbojpeg.c
+    transupp.c
+    jdatadst-tj.c
+    jdatasrc-tj.c
+    rdbmp.c
+    rdppm.c
+    wrbmp.c
+    wrppm.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/turbojpeg.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/turbojpeg.lib" /MACHINE:X64  /machine:x64 /DLL turbojpeg.dir\Debug\jcapimin.obj
+    turbojpeg.dir\Debug\jcapistd.obj
+    turbojpeg.dir\Debug\jccoefct.obj
+    turbojpeg.dir\Debug\jccolor.obj
+    turbojpeg.dir\Debug\jcdctmgr.obj
+    turbojpeg.dir\Debug\jchuff.obj
+    turbojpeg.dir\Debug\jcicc.obj
+    turbojpeg.dir\Debug\jcinit.obj
+    turbojpeg.dir\Debug\jcmainct.obj
+    turbojpeg.dir\Debug\jcmarker.obj
+    turbojpeg.dir\Debug\jcmaster.obj
+    turbojpeg.dir\Debug\jcomapi.obj
+    turbojpeg.dir\Debug\jcparam.obj
+    turbojpeg.dir\Debug\jcphuff.obj
+    turbojpeg.dir\Debug\jcprepct.obj
+    turbojpeg.dir\Debug\jcsample.obj
+    turbojpeg.dir\Debug\jctrans.obj
+    turbojpeg.dir\Debug\jdapimin.obj
+    turbojpeg.dir\Debug\jdapistd.obj
+    turbojpeg.dir\Debug\jdatadst.obj
+    turbojpeg.dir\Debug\jdatasrc.obj
+    turbojpeg.dir\Debug\jdcoefct.obj
+    turbojpeg.dir\Debug\jdcolor.obj
+    turbojpeg.dir\Debug\jddctmgr.obj
+    turbojpeg.dir\Debug\jdhuff.obj
+    turbojpeg.dir\Debug\jdicc.obj
+    turbojpeg.dir\Debug\jdinput.obj
+    turbojpeg.dir\Debug\jdmainct.obj
+    turbojpeg.dir\Debug\jdmarker.obj
+    turbojpeg.dir\Debug\jdmaster.obj
+    turbojpeg.dir\Debug\jdmerge.obj
+    turbojpeg.dir\Debug\jdphuff.obj
+    turbojpeg.dir\Debug\jdpostct.obj
+    turbojpeg.dir\Debug\jdsample.obj
+    turbojpeg.dir\Debug\jdtrans.obj
+    turbojpeg.dir\Debug\jerror.obj
+    turbojpeg.dir\Debug\jfdctflt.obj
+    turbojpeg.dir\Debug\jfdctfst.obj
+    turbojpeg.dir\Debug\jfdctint.obj
+    turbojpeg.dir\Debug\jidctflt.obj
+    turbojpeg.dir\Debug\jidctfst.obj
+    turbojpeg.dir\Debug\jidctint.obj
+    turbojpeg.dir\Debug\jidctred.obj
+    turbojpeg.dir\Debug\jquant1.obj
+    turbojpeg.dir\Debug\jquant2.obj
+    turbojpeg.dir\Debug\jutils.obj
+    turbojpeg.dir\Debug\jmemmgr.obj
+    turbojpeg.dir\Debug\jmemnobs.obj
+    turbojpeg.dir\Debug\jaricom.obj
+    turbojpeg.dir\Debug\jcarith.obj
+    turbojpeg.dir\Debug\jdarith.obj
+    turbojpeg.dir\Debug\turbojpeg.obj
+    turbojpeg.dir\Debug\transupp.obj
+    "turbojpeg.dir\Debug\jdatadst-tj.obj"
+    "turbojpeg.dir\Debug\jdatasrc-tj.obj"
+    turbojpeg.dir\Debug\rdbmp.obj
+    turbojpeg.dir\Debug\rdppm.obj
+    turbojpeg.dir\Debug\wrbmp.obj
+    turbojpeg.dir\Debug\wrppm.obj
+    "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\jsimd_none.obj"
+       Creating library C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/turbojpeg.lib and object C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/turbojpeg.exp
+    turbojpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "turbojpeg.dir\Debug\turbojpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "turbojpeg.dir\Debug\turbojpeg.tlog\turbojpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "tjbench.dir\Debug\".
+    Creando directorio "tjbench.dir\Debug\tjbench.tlog\".
+  InitializeBuildStatus:
+    Se creará "tjbench.dir\Debug\tjbench.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"tjbench.dir\Debug\\" /Fd"tjbench.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjbench.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjutil.c"
+    tjbench.c
+    tjutil.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench.exe" /INCREMENTAL /NOLOGO Debug\turbojpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjbench.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjbench.lib" /MACHINE:X64  /machine:x64 tjbench.dir\Debug\tjbench.obj
+    tjbench.dir\Debug\tjutil.obj
+    tjbench.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjbench.dir\Debug\tjbench.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjbench.dir\Debug\tjbench.tlog\tjbench.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (17) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (17) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg-static.vcxproj" (18) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "turbojpeg-static.dir\Debug\".
+    Creando directorio "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D BMP_SUPPORTED /D PPM_SUPPORTED /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"turbojpeg-static.dir\Debug\\" /Fd"turbojpeg-static.dir\Debug\turbojpeg-static.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jccolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcdctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jchuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcinit.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcomapi.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcparam.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcprepct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jctrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapimin.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdapistd.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcoefct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdcolor.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jddctmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdhuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdicc.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdinput.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmainct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmarker.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmaster.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdmerge.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdphuff.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdpostct.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdsample.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdtrans.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jerror.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jfdctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctflt.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctfst.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctint.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jidctred.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant1.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jquant2.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jutils.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemmgr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jmemnobs.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jaricom.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jcarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdarith.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\turbojpeg.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\transupp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatadst-tj.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\jdatasrc-tj.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\rdppm.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrbmp.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrppm.c"
+    jcapimin.c
+    jcapistd.c
+    jccoefct.c
+    jccolor.c
+    jcdctmgr.c
+    jchuff.c
+    jcicc.c
+    jcinit.c
+    jcmainct.c
+    jcmarker.c
+    jcmaster.c
+    jcomapi.c
+    jcparam.c
+    jcphuff.c
+    jcprepct.c
+    jcsample.c
+    jctrans.c
+    jdapimin.c
+    jdapistd.c
+    jdatadst.c
+    Generating Code...
+    Compiling...
+    jdatasrc.c
+    jdcoefct.c
+    jdcolor.c
+    jddctmgr.c
+    jdhuff.c
+    jdicc.c
+    jdinput.c
+    jdmainct.c
+    jdmarker.c
+    jdmaster.c
+    jdmerge.c
+    jdphuff.c
+    jdpostct.c
+    jdsample.c
+    jdtrans.c
+    jerror.c
+    jfdctflt.c
+    jfdctfst.c
+    jfdctint.c
+    jidctflt.c
+    Generating Code...
+    Compiling...
+    jidctfst.c
+    jidctint.c
+    jidctred.c
+    jquant1.c
+    jquant2.c
+    jutils.c
+    jmemmgr.c
+    jmemnobs.c
+    jaricom.c
+    jcarith.c
+    jdarith.c
+    turbojpeg.c
+    transupp.c
+    jdatadst-tj.c
+    jdatasrc-tj.c
+    rdbmp.c
+    rdppm.c
+    wrbmp.c
+    wrppm.c
+    Generating Code...
+  Lib:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\Lib.exe /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg-static.lib" /NOLOGO /MACHINE:X64  /machine:x64 "turbojpeg-static.dir\Debug\jcapimin.obj"
+    "turbojpeg-static.dir\Debug\jcapistd.obj"
+    "turbojpeg-static.dir\Debug\jccoefct.obj"
+    "turbojpeg-static.dir\Debug\jccolor.obj"
+    "turbojpeg-static.dir\Debug\jcdctmgr.obj"
+    "turbojpeg-static.dir\Debug\jchuff.obj"
+    "turbojpeg-static.dir\Debug\jcicc.obj"
+    "turbojpeg-static.dir\Debug\jcinit.obj"
+    "turbojpeg-static.dir\Debug\jcmainct.obj"
+    "turbojpeg-static.dir\Debug\jcmarker.obj"
+    "turbojpeg-static.dir\Debug\jcmaster.obj"
+    "turbojpeg-static.dir\Debug\jcomapi.obj"
+    "turbojpeg-static.dir\Debug\jcparam.obj"
+    "turbojpeg-static.dir\Debug\jcphuff.obj"
+    "turbojpeg-static.dir\Debug\jcprepct.obj"
+    "turbojpeg-static.dir\Debug\jcsample.obj"
+    "turbojpeg-static.dir\Debug\jctrans.obj"
+    "turbojpeg-static.dir\Debug\jdapimin.obj"
+    "turbojpeg-static.dir\Debug\jdapistd.obj"
+    "turbojpeg-static.dir\Debug\jdatadst.obj"
+    "turbojpeg-static.dir\Debug\jdatasrc.obj"
+    "turbojpeg-static.dir\Debug\jdcoefct.obj"
+    "turbojpeg-static.dir\Debug\jdcolor.obj"
+    "turbojpeg-static.dir\Debug\jddctmgr.obj"
+    "turbojpeg-static.dir\Debug\jdhuff.obj"
+    "turbojpeg-static.dir\Debug\jdicc.obj"
+    "turbojpeg-static.dir\Debug\jdinput.obj"
+    "turbojpeg-static.dir\Debug\jdmainct.obj"
+    "turbojpeg-static.dir\Debug\jdmarker.obj"
+    "turbojpeg-static.dir\Debug\jdmaster.obj"
+    "turbojpeg-static.dir\Debug\jdmerge.obj"
+    "turbojpeg-static.dir\Debug\jdphuff.obj"
+    "turbojpeg-static.dir\Debug\jdpostct.obj"
+    "turbojpeg-static.dir\Debug\jdsample.obj"
+    "turbojpeg-static.dir\Debug\jdtrans.obj"
+    "turbojpeg-static.dir\Debug\jerror.obj"
+    "turbojpeg-static.dir\Debug\jfdctflt.obj"
+    "turbojpeg-static.dir\Debug\jfdctfst.obj"
+    "turbojpeg-static.dir\Debug\jfdctint.obj"
+    "turbojpeg-static.dir\Debug\jidctflt.obj"
+    "turbojpeg-static.dir\Debug\jidctfst.obj"
+    "turbojpeg-static.dir\Debug\jidctint.obj"
+    "turbojpeg-static.dir\Debug\jidctred.obj"
+    "turbojpeg-static.dir\Debug\jquant1.obj"
+    "turbojpeg-static.dir\Debug\jquant2.obj"
+    "turbojpeg-static.dir\Debug\jutils.obj"
+    "turbojpeg-static.dir\Debug\jmemmgr.obj"
+    "turbojpeg-static.dir\Debug\jmemnobs.obj"
+    "turbojpeg-static.dir\Debug\jaricom.obj"
+    "turbojpeg-static.dir\Debug\jcarith.obj"
+    "turbojpeg-static.dir\Debug\jdarith.obj"
+    "turbojpeg-static.dir\Debug\turbojpeg.obj"
+    "turbojpeg-static.dir\Debug\transupp.obj"
+    "turbojpeg-static.dir\Debug\jdatadst-tj.obj"
+    "turbojpeg-static.dir\Debug\jdatasrc-tj.obj"
+    "turbojpeg-static.dir\Debug\rdbmp.obj"
+    "turbojpeg-static.dir\Debug\rdppm.obj"
+    "turbojpeg-static.dir\Debug\wrbmp.obj"
+    "turbojpeg-static.dir\Debug\wrppm.obj"
+    "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\jsimd_none.obj"
+    turbojpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg-static.lib
+  CopyFilesToOutputDirectory:
+    Copiando el archivo de "turbojpeg-static.dir\Debug\turbojpeg-static.pdb" en "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg-static.pdb".
+  FinalizeBuildStatus:
+    Se eliminará el archivo "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\turbojpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg-static.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "tjbench-static.dir\Debug\".
+    Creando directorio "tjbench-static.dir\Debug\tjbench-static.tlog\".
+  InitializeBuildStatus:
+    Se creará "tjbench-static.dir\Debug\tjbench-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"tjbench-static.dir\Debug\\" /Fd"tjbench-static.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjbench.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjutil.c"
+    tjbench.c
+    tjutil.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench-static.exe" /INCREMENTAL /NOLOGO "Debug\turbojpeg-static.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjbench-static.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjbench-static.lib" /MACHINE:X64  /machine:x64 "tjbench-static.dir\Debug\tjbench.obj"
+    "tjbench-static.dir\Debug\tjutil.obj"
+    tjbench-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjbench-static.dir\Debug\tjbench-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjbench-static.dir\Debug\tjbench-static.tlog\tjbench-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjexample.vcxproj" (19) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "tjexample.dir\Debug\".
+    Creando directorio "tjexample.dir\Debug\tjexample.tlog\".
+  InitializeBuildStatus:
+    Se creará "tjexample.dir\Debug\tjexample.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"tjexample.dir\Debug\\" /Fd"tjexample.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjexample.c"
+    tjexample.c
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjexample.exe" /INCREMENTAL /NOLOGO Debug\turbojpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjexample.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjexample.lib" /MACHINE:X64  /machine:x64 tjexample.dir\Debug\tjexample.obj
+    tjexample.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjexample.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjexample.dir\Debug\tjexample.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjexample.dir\Debug\tjexample.tlog\tjexample.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjexample.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest.vcxproj" (20) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "tjunittest.dir\Debug\".
+    Creando directorio "tjunittest.dir\Debug\tjunittest.tlog\".
+  InitializeBuildStatus:
+    Se creará "tjunittest.dir\Debug\tjunittest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"tjunittest.dir\Debug\\" /Fd"tjunittest.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjunittest.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjutil.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5hl.c"
+    tjunittest.c
+    tjutil.c
+    md5.c
+    md5hl.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest.exe" /INCREMENTAL /NOLOGO Debug\turbojpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjunittest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjunittest.lib" /MACHINE:X64  /machine:x64 tjunittest.dir\Debug\tjunittest.obj
+    tjunittest.dir\Debug\tjutil.obj
+    tjunittest.dir\Debug\md5.obj
+    tjunittest.dir\Debug\md5hl.obj
+    tjunittest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjunittest.dir\Debug\tjunittest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjunittest.dir\Debug\tjunittest.tlog\tjunittest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest-static.vcxproj" (21) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "tjunittest-static.dir\Debug\".
+    Creando directorio "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\".
+  InitializeBuildStatus:
+    Se creará "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"tjunittest-static.dir\Debug\\" /Fd"tjunittest-static.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjunittest.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\tjutil.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\md5\md5hl.c"
+    tjunittest.c
+    tjutil.c
+    md5.c
+    md5hl.c
+    Generating Code...
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest-static.exe" /INCREMENTAL /NOLOGO "Debug\turbojpeg-static.lib" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjunittest-static.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/tjunittest-static.lib" /MACHINE:X64  /machine:x64 "tjunittest-static.dir\Debug\tjunittest.obj"
+    "tjunittest-static.dir\Debug\tjutil.obj"
+    "tjunittest-static.dir\Debug\md5.obj"
+    "tjunittest-static.dir\Debug\md5hl.obj"
+    tjunittest-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\tjunittest-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\wrjpgcom.vcxproj" (22) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "wrjpgcom.dir\Debug\".
+    Creando directorio "wrjpgcom.dir\Debug\wrjpgcom.tlog\".
+  InitializeBuildStatus:
+    Se creará "wrjpgcom.dir\Debug\wrjpgcom.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo" /Zi /nologo /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"wrjpgcom.dir\Debug\\" /Fd"wrjpgcom.dir\Debug\vc141.pdb" /Gd /TC /wd4996 /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\wrjpgcom.c"
+    wrjpgcom.c
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\wrjpgcom.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/wrjpgcom.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/Debug/wrjpgcom.lib" /MACHINE:X64  /machine:x64 wrjpgcom.dir\Debug\wrjpgcom.obj
+    wrjpgcom.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\wrjpgcom.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "wrjpgcom.dir\Debug\wrjpgcom.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "wrjpgcom.dir\Debug\wrjpgcom.tlog\wrjpgcom.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\wrjpgcom.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\ALL_BUILD\".
+    Creando directorio "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:01:20.98
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 19/05/2018 17:23:30.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\install.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (4) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (5) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "simd.dir\Debug\simd.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    simd.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.dir\Debug\simd.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "simd.dir\Debug\simd.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "simd.dir\Debug\simd.tlog\simd.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\simd.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "jpeg.dir\Debug\jpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    jpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg62.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpeg.dir\Debug\jpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpeg.dir\Debug\jpeg.tlog\jpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpeg.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "cjpeg.dir\Debug\cjpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    cjpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "cjpeg.dir\Debug\cjpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "cjpeg.dir\Debug\cjpeg.tlog\cjpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\cjpeg.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (7) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (7) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpeg-static.vcxproj" (8) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "jpeg-static.dir\Debug\jpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    jpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpeg-static.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpeg-static.dir\Debug\jpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpeg-static.dir\Debug\jpeg-static.tlog\jpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpeg-static.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "cjpeg-static.dir\Debug\cjpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    cjpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\cjpeg-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "cjpeg-static.dir\Debug\cjpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "cjpeg-static.dir\Debug\cjpeg-static.tlog\cjpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\cjpeg-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\djpeg.vcxproj" (9) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "djpeg.dir\Debug\djpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    djpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "djpeg.dir\Debug\djpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "djpeg.dir\Debug\djpeg.tlog\djpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\djpeg.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\djpeg-static.vcxproj" (10) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "djpeg-static.dir\Debug\djpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    djpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\djpeg-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "djpeg-static.dir\Debug\djpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "djpeg-static.dir\Debug\djpeg-static.tlog\djpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\djpeg-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jcstest.vcxproj" (11) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "jcstest.dir\Debug\jcstest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    jcstest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jcstest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jcstest.dir\Debug\jcstest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jcstest.dir\Debug\jcstest.tlog\jcstest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jcstest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpegtran.vcxproj" (12) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "jpegtran.dir\Debug\jpegtran.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    jpegtran.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpegtran.dir\Debug\jpegtran.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpegtran.dir\Debug\jpegtran.tlog\jpegtran.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\sharedlib\jpegtran.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpegtran-static.vcxproj" (13) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "jpegtran-static.dir\Debug\jpegtran-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    jpegtran-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\jpegtran-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "jpegtran-static.dir\Debug\jpegtran-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "jpegtran-static.dir\Debug\jpegtran-static.tlog\jpegtran-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\jpegtran-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\md5cmp.vcxproj" (14) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "md5cmp.dir\Debug\md5cmp.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    md5cmp.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\Debug\md5cmp.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "md5cmp.dir\Debug\md5cmp.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "md5cmp.dir\Debug\md5cmp.tlog\md5cmp.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\md5\md5cmp.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\rdjpgcom.vcxproj" (15) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "rdjpgcom.dir\Debug\rdjpgcom.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    rdjpgcom.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\rdjpgcom.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "rdjpgcom.dir\Debug\rdjpgcom.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "rdjpgcom.dir\Debug\rdjpgcom.tlog\rdjpgcom.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\rdjpgcom.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (16) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (16) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg.vcxproj" (17) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "turbojpeg.dir\Debug\turbojpeg.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    turbojpeg.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "turbojpeg.dir\Debug\turbojpeg.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "turbojpeg.dir\Debug\turbojpeg.tlog\turbojpeg.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "tjbench.dir\Debug\tjbench.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    tjbench.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjbench.dir\Debug\tjbench.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjbench.dir\Debug\tjbench.tlog\tjbench.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (18) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (18) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg-static.vcxproj" (19) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    turbojpeg-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\turbojpeg-static.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "turbojpeg-static.dir\Debug\turbojpeg-static.tlog\turbojpeg-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\turbojpeg-static.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "tjbench-static.dir\Debug\tjbench-static.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    tjbench-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjbench-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjbench-static.dir\Debug\tjbench-static.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjbench-static.dir\Debug\tjbench-static.tlog\tjbench-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjbench-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjexample.vcxproj" (20) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "tjexample.dir\Debug\tjexample.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    tjexample.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjexample.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjexample.dir\Debug\tjexample.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjexample.dir\Debug\tjexample.tlog\tjexample.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjexample.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest.vcxproj" (21) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "tjunittest.dir\Debug\tjunittest.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    tjunittest.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjunittest.dir\Debug\tjunittest.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjunittest.dir\Debug\tjunittest.tlog\tjunittest.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest-static.vcxproj" (22) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    tjunittest-static.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\tjunittest-static.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "tjunittest-static.dir\Debug\tjunitte.13C6E093.tlog\tjunittest-static.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\tjunittest-static.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\wrjpgcom.vcxproj" (23) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "wrjpgcom.dir\Debug\wrjpgcom.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    wrjpgcom.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\Debug\wrjpgcom.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "wrjpgcom.dir\Debug\wrjpgcom.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "wrjpgcom.dir\Debug\wrjpgcom.tlog\wrjpgcom.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\wrjpgcom.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\ALL_BUILD.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Debug\INSTALL\".
+    Creando directorio "x64\Debug\INSTALL\INSTALL.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  PostBuildEvent:
+    setlocal
+    "C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Debug -P cmake_install.cmake
+    if %errorlevel% neq 0 goto :cmEnd
+    :cmEnd
+    endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+    :cmErrorLevel
+    exit /b %1
+    :cmDone
+    if %errorlevel% neq 0 goto :VCEnd
+    :VCEnd
+    -- Install configuration: "Debug"
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/lib/turbojpeg.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/turbojpeg.dll
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/tjbench.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/lib/turbojpeg-static.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include/turbojpeg.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/lib/jpeg-static.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/rdjpgcom.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/wrjpgcom.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/README.ijg
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/README.md
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/example.txt
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/tjexample.c
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/libjpeg.txt
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/structure.txt
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/usage.txt
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/wizard.txt
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/share/doc/libjpeg-turbo/LICENSE.md
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include/jconfig.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include/jerror.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include/jmorecfg.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/include/jpeglib.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/lib/jpeg.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/jpeg62.dll
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/cjpeg.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/djpeg.exe
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/libjpeg-turbo/build/Debug/bin/jpegtran.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Debug\INSTALL\INSTALL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Debug\INSTALL\INSTALL.tlog\INSTALL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\Debug\install.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:03.09

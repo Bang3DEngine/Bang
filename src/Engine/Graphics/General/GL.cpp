@@ -430,7 +430,7 @@ GLId GL::CreateShader(GL::ShaderType shaderType)
 
 void GL::ShaderSource(GLId shaderId, const String &sourceCode)
 {
-    int sourceSize = sourceCode.Size();
+    int sourceSize = SCAST<int>(sourceCode.Size());
     const char *src = sourceCode.ToCString();
     GL_CALL( glShaderSource(shaderId, 1, &src, &sourceSize) );
 }

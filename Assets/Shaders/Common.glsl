@@ -46,6 +46,7 @@ uniform sampler2D B_NormalMapTexture;
 uniform vec2      B_NormalMapUvOffset;
 uniform vec2      B_NormalMapUvMultiply;
 uniform bool      B_HasNormalMapTexture;
+uniform float     B_NormalMapMultiplyFactor;
 // ///////////////////////////////////////
 
 // Renderer related //////////////////////

@@ -85,6 +85,15 @@ void Material::SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply)
     }
 }
 
+void Material::SetNormalMapMultiplyFactor(float normalMapMultiplyFactor)
+{
+    if (normalMapMultiplyFactor != GetNormalMapMultiplyFactor())
+    {
+        m_normalMapMultiplyFactor = normalMapMultiplyFactor;
+        PropagateMaterialChanged();
+    }
+}
+
 void Material::SetShaderProgram(ShaderProgram* program)
 {
     if (p_shaderProgram.Get() != program)
@@ -192,6 +201,7 @@ const Vector2 &Material::GetAlbedoUvOffset() const { return m_albedoUvOffset; }
 const Vector2 &Material::GetAlbedoUvMultiply() const { return m_albedoUvMultiply; }
 const Vector2 &Material::GetNormalMapUvOffset() const { return m_normalMapUvOffset; }
 const Vector2 &Material::GetNormalMapUvMultiply() const { return m_normalMapUvMultiply; }
+float Material::GetNormalMapMultiplyFactor() const { return m_normalMapMultiplyFactor; }
 ShaderProgram* Material::GetShaderProgram() const { return p_shaderProgram.Get(); }
 Texture2D* Material::GetAlbedoTexture() const { return p_albedoTexture.Get(); }
 bool Material::GetReceivesLighting() const { return m_receivesLighting; }
@@ -222,14 +232,15 @@ void Material::Bind() const
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );
 
-    sp->SetColor("B_MaterialAlbedoColor",      GetAlbedoColor(),         false);
-    sp->SetFloat("B_MaterialRoughness",        GetRoughness(),           false);
-    sp->SetFloat("B_MaterialMetalness",        GetMetalness(),           false);
-    sp->SetBool("B_MaterialReceivesLighting",  GetReceivesLighting(),    false);
-    sp->SetVector2("B_AlbedoUvOffset",         GetAlbedoUvOffset(),      false);
-    sp->SetVector2("B_AlbedoUvMultiply",       GetAlbedoUvMultiply(),    false);
-    sp->SetVector2("B_NormalMapUvOffset",      GetNormalMapUvOffset(),   false);
-    sp->SetVector2("B_NormalMapUvMultiply",    GetNormalMapUvMultiply(), false);
+    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),             false);
+    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),               false);
+    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),               false);
+    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(),        false);
+    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),          false);
+    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(),        false);
+    sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),       false);
+    sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),     false);
+    sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(), false);
 
     if (Texture2D *albedoTex = GetAlbedoTexture())
     {
@@ -278,6 +289,7 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetNormalMapTexture(GetNormalMapTexture());
     matClone->SetNormalMapUvOffset(GetNormalMapUvOffset());
     matClone->SetNormalMapUvMultiply(GetNormalMapUvMultiply());
+    matClone->SetNormalMapMultiplyFactor(GetNormalMapMultiplyFactor());
     matClone->SetRenderPass(GetRenderPass());
     matClone->SetLineWidth(GetLineWidth());
     matClone->SetRenderWireframe(IsRenderWireframe());
@@ -339,6 +351,9 @@ void Material::ImportXML(const XMLNode &xml)
     if (xml.Contains("NormalMapUvMultiply"))
     { SetNormalMapUvMultiply(xml.Get<Vector2>("NormalMapUvMultiply")); }
 
+    if (xml.Contains("NormalMapMultiplyFactor"))
+    { SetNormalMapMultiplyFactor(xml.Get<float>("NormalMapMultiplyFactor")); }
+
     RH<Shader> vShader;
     if (xml.Contains("VertexShader"))
     {  vShader = Resources::Load<Shader>(xml.Get<GUID>("VertexShader"));  }
@@ -369,18 +384,19 @@ void Material::ExportXML(XMLNode *xmlInfo) const
 {
     Asset::ExportXML(xmlInfo);
 
-    xmlInfo->Set("RenderPass",          GetRenderPass());
-    xmlInfo->Set("AlbedoColor",         GetAlbedoColor());
-    xmlInfo->Set("Roughness",           GetRoughness());
-    xmlInfo->Set("Metalness",           GetMetalness());
-    xmlInfo->Set("ReceivesLighting",    GetReceivesLighting());
-    xmlInfo->Set("AlbedoUvMultiply",    GetAlbedoUvMultiply());
-    xmlInfo->Set("AlbedoUvOffset",      GetAlbedoUvOffset());
-    xmlInfo->Set("NormalMapUvMultiply", GetNormalMapUvMultiply());
-    xmlInfo->Set("NormalMapUvOffset",   GetNormalMapUvOffset());
-    xmlInfo->Set("LineWidth",           GetLineWidth());
-    xmlInfo->Set("RenderWireframe",     IsRenderWireframe());
-    xmlInfo->Set("CullFace",            GetCullFace());
+    xmlInfo->Set("RenderPass",              GetRenderPass());
+    xmlInfo->Set("AlbedoColor",             GetAlbedoColor());
+    xmlInfo->Set("Roughness",               GetRoughness());
+    xmlInfo->Set("Metalness",               GetMetalness());
+    xmlInfo->Set("ReceivesLighting",        GetReceivesLighting());
+    xmlInfo->Set("AlbedoUvMultiply",        GetAlbedoUvMultiply());
+    xmlInfo->Set("AlbedoUvOffset",          GetAlbedoUvOffset());
+    xmlInfo->Set("NormalMapUvMultiply",     GetNormalMapUvMultiply());
+    xmlInfo->Set("NormalMapUvOffset",       GetNormalMapUvOffset());
+    xmlInfo->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
+    xmlInfo->Set("LineWidth",               GetLineWidth());
+    xmlInfo->Set("RenderWireframe",         IsRenderWireframe());
+    xmlInfo->Set("CullFace",                GetCullFace());
 
     Texture2D* albedoTex = GetAlbedoTexture();
     xmlInfo->Set("AlbedoTexture",

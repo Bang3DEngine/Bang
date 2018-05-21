@@ -51,9 +51,9 @@ void main()
     if (B_HasNormalMapTexture)
     {
         vec3 normalFromMap = texture(B_NormalMapTexture, B_FIn_NormalMapUv).xyz;
-        normalFromMap.xy = normalFromMap.xy * 2.0f - 1.0f;
+        normalFromMap.xy = (normalFromMap.xy * 2.0f - 1.0f) * B_NormalMapMultiplyFactor;
         normalFromMap = B_TBN * normalFromMap;
-        normal = (normalFromMap);
+        normal = normalFromMap;
     }
     normal = normalize(normal);
     B_GIn_Normal = vec4(normal * 0.5f + 0.5f, 0);
@@ -73,11 +73,12 @@ void main()
 
         // Calculate ambient color
         vec3 F0  = mix(vec3(0.04), B_GIn_Albedo.rgb, B_MaterialMetalness);
-        vec3 FSR = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0,
-                                           B_MaterialRoughness);
+        vec3 FSR = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, B_MaterialRoughness);
+        // vec3 FSR = FresnelSchlick(max(dot(N, V), 0.0), F0);
 
         vec3 specK = FSR;
         vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
+        specK = (1.0 - diffK);
 
         vec3 diffuseAmbient  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N) *
                                B_GIn_Albedo.rgb;
@@ -86,10 +87,8 @@ void main()
         float lod = B_MaterialRoughness * MAX_REFLECTION_LOD;
         vec3 specularAmbient = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular,
                                                          R, lod).rgb;
-        vec2 envBRDF  = vec2(0.5);
-        specularAmbient = specularAmbient * (FSR * envBRDF.x + envBRDF.y);
 
-        vec3 ambient = (diffK * diffuseAmbient) + (specularAmbient);
+        vec3 ambient = (diffK * diffuseAmbient) + (specK * specularAmbient);
         ambient *= B_AmbientLight;
 
         B_GIn_Color = vec4(ambient, 1);

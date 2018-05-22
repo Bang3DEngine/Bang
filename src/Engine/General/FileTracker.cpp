@@ -53,7 +53,8 @@ void FileTracker::Clear()
     m_pathsToTrackToModificationTime.Clear();
 }
 
-void FileTracker::Update(bool forceCheckNow) {
+void FileTracker::Update(bool forceCheckNow)
+{
     if (NeedsCheck() || forceCheckNow)
     {
         Map<Path, uint64_t> previousPathsToTrack = m_pathsToTrackToModificationTime;

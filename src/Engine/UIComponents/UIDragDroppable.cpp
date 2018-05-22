@@ -38,6 +38,9 @@ void UIDragDroppable::OnUpdate()
     {
         if (Input::GetMouseButtonDown(MouseButton::Left))
         {
+            RectTransform *thisRT = GetGameObject()->GetRectTransform();
+            const AARecti thisRect( thisRT->GetViewportAARect() );
+            m_dragGrabOffset = (Input::GetMousePosition() - thisRect.GetMin());
             m_beingPressed = GetGameObject()->GetRectTransform()->IsMouseOver();
         }
     }
@@ -116,7 +119,6 @@ void UIDragDroppable::OnDragStarted()
 
     canvas->NotifyDragStarted(this);
 
-    RectTransform *thisRT = GetGameObject()->GetRectTransform();
     /*
     if (!m_dragDropFB)
     {
@@ -141,8 +143,6 @@ void UIDragDroppable::OnDragStarted()
         m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
         m_dragDropGameObject->Start();
 
-        AARecti thisRect( thisRT->GetViewportAARect() );
-        m_dragGrabOffset = (Input::GetMousePosition() - thisRect.GetMin());
         MoveDragDropGameObjectTo( Input::GetMousePosition() );
 
         p_dragDropImageRenderer = m_dragDropGameObject->AddComponent<UIImageRenderer>();

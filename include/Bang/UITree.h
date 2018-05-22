@@ -41,6 +41,7 @@ public:
     GOItem* GetParentItem(GOItem *item) const;
     bool IsItemCollapsed(GOItem *item) const;
     List<GOItem*> GetTopChildrenItems() const;
+    bool Contains(UITreeItemContainer *item) const;
     List<GOItem*> GetChildrenItems(GOItem *item) const;
     bool ItemIsChildOfRecursive(GOItem *item, GOItem *parent) const;
     UIList* GetUIList() const;

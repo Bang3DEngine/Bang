@@ -169,6 +169,13 @@ void UITree::OnDrop(UIDragDroppable *dragDroppable)
 {
     IDragDropListener::OnDrop(dragDroppable);
 
+    UITreeItemContainer *draggedItemCont = DCAST<UITreeItemContainer*>(
+                                              dragDroppable->GetGameObject());
+    if ( !Contains(draggedItemCont) )
+    {
+        return;
+    }
+
     GOItem *itemOver = nullptr;
     MouseItemRelativePosition relPos;
     GetMousePositionInTree(&itemOver, &relPos);
@@ -621,8 +628,10 @@ UITree *UITree::CreateInto(GameObject *go)
 
 UITreeItemContainer *UITree::GetItemContainer(GOItem *item) const
 {
-    ASSERT(!item || !Cast<UITreeItemContainer*>(item) );
-    return item ? SCAST<UITreeItemContainer*>(item->GetParent()) : nullptr;
+    ASSERT(!item || !DCAST<UITreeItemContainer*>(item) );
+    return item ? (item->GetParent() ?
+                   DCAST<UITreeItemContainer*>(item->GetParent()) : nullptr)
+                : nullptr;
 }
 
 void UITree::UpdateCollapsability(GOItem *item)
@@ -644,6 +653,11 @@ void UITree::IndentItem(GOItem *item)
     Tree<GOItem*> *itemTree = GetItemTree(item);
     GetItemContainer(item)->SetIndentation(UITree::IndentationPx *
                                            itemTree->GetDepth());
+}
+
+bool UITree::Contains(UITreeItemContainer *itemCont) const
+{
+    return itemCont && GetUIList()->GetItems().Contains(itemCont);
 }
 
 bool UITree::IsValidDrag(GOItem *itemBeingDragged, GOItem *itemOver) const

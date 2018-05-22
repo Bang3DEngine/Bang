@@ -245,9 +245,27 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
     }
 }
 
-List<IDragDropListener *> UICanvas::GetDragDropListeners() const
+List<IDragDropListener*> UICanvas::GetDragDropListeners() const
 {
-    return GetGameObject()->GetComponentsInChildren<IDragDropListener>(true);
+    List<IDragDropListener*> dragDropListeners;
+
+    std::queue<GameObject*> gos;
+    gos.push(GetGameObject());
+
+    while (!gos.empty())
+    {
+        GameObject *go = gos.front();
+        gos.pop();
+
+        if (IDragDropListener* ddListGo = DCAST<IDragDropListener*>(go))
+        {
+            dragDropListeners.PushBack(ddListGo);
+        }
+        dragDropListeners.PushBack( go->GetComponents<IDragDropListener>() );
+
+        for (GameObject *child : go->GetChildren()) { gos.push(child); }
+    }
+    return dragDropListeners;
 }
 
 void UICanvas::OnAfterChildrenUpdate()

@@ -18,14 +18,14 @@ public:
 
     static bool Remove(const Path &path);
     static bool CreateDirectory(const Path &dirPath);
-    static bool Rename(const Path &oldPath, const Path &newPath);
+    static bool Rename(const Path &srcPath, const Path &dstPath);
 
-    static bool Duplicate(const Path &fromPath, const Path &toPath);
-    static bool DuplicateFile(const Path &fromFilepath,
-                              const Path &toFilepath,
+    static bool Duplicate(const Path &srcPath, const Path &dstPath);
+    static bool DuplicateFile(const Path &srcFilepath,
+                              const Path &dstFilepath,
                               bool overwrite = true);
-    static bool DuplicateDir(const Path &fromDirpath,
-                             const Path &toDirpath,
+    static bool DuplicateDir(const Path &srcDirpath,
+                             const Path &dstDirpath,
                              bool overwrite = true);
     static void AddExecutablePermission(const Path &path);
 
@@ -36,6 +36,11 @@ public:
 
 protected:
     Path m_path;
+
+    static bool DuplicateDir(const Path &srcDirpath,
+                             const Path &dstDirpath,
+                             Set<Path> &pathsToIgnore,
+                             bool overwrite = true);
 };
 
 NAMESPACE_BANG_END

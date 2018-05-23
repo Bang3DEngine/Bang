@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "Bang/Set.h"
 #include "Bang/List.h"
 #include "Bang/Array.h"
 #include "Bang/String.h"
@@ -32,51 +33,66 @@ File::~File()
 {
 }
 
-bool File::DuplicateFile(const Path &fromFilepath,
-                         const Path &toFilepath,
+bool File::DuplicateFile(const Path &srcFilepath,
+                         const Path &dstFilepath,
                          bool overwrite)
 {
-    if (!fromFilepath.IsFile()) { return false; }
-    if (!overwrite && toFilepath.Exists()) { return false; }
+    if (!srcFilepath.IsFile()) { return false; }
+    if (!overwrite && dstFilepath.Exists()) { return false; }
 
-    std::ifstream src(fromFilepath.GetAbsolute().ToCString(), std::ios::binary);
+    std::ifstream src(srcFilepath.GetAbsolute().ToCString(), std::ios::binary);
     if (!src) { return false; }
 
-    if (overwrite) { File::Remove(toFilepath); }
-    std::ofstream dst(toFilepath.GetAbsolute().ToCString(),   std::ios::binary);
+    if (overwrite) { File::Remove(dstFilepath); }
+    std::ofstream dst(dstFilepath.GetAbsolute().ToCString(),   std::ios::binary);
     if (!dst) { return false; }
 
     dst << src.rdbuf();
     return true;
 }
 
-bool File::DuplicateDir(const Path &fromDirpath,
-                        const Path &toDirpath,
+bool File::DuplicateDir(const Path &srcDirpath,
+                        const Path &dstDirPath,
+                        Set<Path> &pathsToIgnore,
                         bool overwrite)
 {
-    if (!fromDirpath.IsDir()) { return false; }
-    if (!overwrite && toDirpath.Exists()) { return false; }
-    if (!File::CreateDirectory(toDirpath)) { return false; }
+    if (!srcDirpath.IsDir()) { return false; }
+    if (!overwrite && dstDirPath.Exists()) { return false; }
+    if (pathsToIgnore.Contains(srcDirpath)) { return true; }
+    if (!File::CreateDirectory(dstDirPath)) { return false; }
 
-    List<Path> filepaths = fromDirpath.GetFiles(Path::FindFlag::SimpleHidden);
+
+    List<Path> filepaths = srcDirpath.GetFiles(Path::FindFlag::SimpleHidden);
     for(const Path& filepath : filepaths)
     {
         String fileName = filepath.GetNameExt();
-        bool ok = File::DuplicateFile(fromDirpath.Append(fileName),
-                                      toDirpath.Append(fileName),
+        bool ok = File::DuplicateFile(srcDirpath.Append(fileName),
+                                      dstDirPath.Append(fileName),
                                       overwrite);
         if (!ok) { return false; }
     }
 
-    List<Path> subdirs = fromDirpath.GetSubDirectories(Path::FindFlag::SimpleHidden);
+    List<Path> subdirs = srcDirpath.GetSubDirectories(Path::FindFlag::SimpleHidden);
     for (const Path &subdir : subdirs)
     {
-        bool ok = File::DuplicateDir(subdir,
-                                     toDirpath.Append(subdir.GetName()),
-                                     overwrite);
+        if (subdir.BeginsWith(dstDirPath)) { continue; }
+
+        Path newSubDirPath = dstDirPath.Append(subdir.GetName());
+        pathsToIgnore.Add(newSubDirPath);
+
+        bool ok = File::DuplicateDir(subdir, newSubDirPath, pathsToIgnore, overwrite);
         if (!ok) { return false; }
     }
     return true;
+}
+
+bool File::DuplicateDir(const Path &srcDirpath,
+                        const Path &dstDirPath,
+                        bool overwrite)
+{
+    Set<Path> pathsToIgnore;
+    pathsToIgnore.Add(dstDirPath);
+    return DuplicateDir(srcDirpath, dstDirPath, pathsToIgnore, overwrite);
 }
 
 void File::AddExecutablePermission(const Path &path)

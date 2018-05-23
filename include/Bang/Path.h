@@ -49,6 +49,7 @@ public:
     String GetNameExt() const;
     String GetExtension() const;
     Array<String> GetExtensions() const;
+    Path GetRelativePath(const Path &prefix) const;
     const String& GetAbsolute() const;
     Path GetDuplicatePath() const;
 

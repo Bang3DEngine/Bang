@@ -65,40 +65,29 @@ bool Path::Exists() const
 }
 
 List<Path> Path::GetFiles(Path::FindFlags findFlags,
-                           const Array<String> &extensions) const
+                          const Array<String> &extensions) const
 {
     if (!IsDir()) { return {}; }
 
-    if (!findFlags.IsOn(Path::FindFlag::Recursive))
+    List<Path> subFilesList;
+    List<Path> subPathsList = GetSubPaths(findFlags);
+    for (const Path &subPath : subPathsList)
     {
-        List<Path> subFilesList;
-        List<Path> subPathsList = GetSubPaths(findFlags);
-        for (const Path &subPath : subPathsList)
+        bool extMatches = extensions.IsEmpty() ||
+                          subPath.HasExtension(extensions);
+        if (subPath.IsDir())
         {
-            bool extMatches = extensions.IsEmpty() ||
-                              subPath.HasExtension(extensions);
-            if ( subPath.IsFile() && extMatches )
+            if (findFlags.IsOn(Path::FindFlag::Recursive))
             {
-                subFilesList.PushBack(subPath);
+                subFilesList.PushBack( subPath.GetFiles(findFlags, extensions) );
             }
         }
-        return subFilesList;
-    }
-    else
-    {
-        List<Path> filesList;
-        Path::FindFlags noRecursive = findFlags;
-        noRecursive.SetOff(Path::FindFlag::Recursive);
-        filesList.PushBack( GetFiles(noRecursive, extensions) );
-
-        List<Path> subDirs = GetSubDirectories(findFlags);
-        for (const Path &subdir : subDirs)
+        else if ( /*subPath.IsFile() &&*/ extMatches )
         {
-            List<Path> subFilesList = subdir.GetFiles(findFlags, extensions);
-            filesList.PushBack(subFilesList);
+            subFilesList.PushBack(subPath);
         }
-        return filesList;
     }
+    return subFilesList;
 }
 
 List<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
@@ -106,24 +95,16 @@ List<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
     if (!IsDir()) { return {}; }
 
     List<Path> subDirsList;
-    if (findFlags.IsOff(Path::FindFlag::Recursive))
+    List<Path> subPathsList = GetSubPaths(findFlags);
+    for (const Path &subPath : subPathsList)
     {
-        List<Path> subPathsList = GetSubPaths(findFlags);
-        for (const Path &subPath : subPathsList)
+        if (subPath.IsDir())
         {
-            if (subPath.IsDir()) { subDirsList.PushBack(subPath); }
-        }
-    }
-    else
-    {
-        Path::FindFlags noRecursive = findFlags;
-        noRecursive.SetOff(Path::FindFlag::Recursive);
-        subDirsList = GetSubDirectories(noRecursive);
-        for (Path subdirPath : subDirsList)
-        {
-            List<Path> subdirsListRecursive =
-                    subdirPath.GetSubDirectories(findFlags);
-            subDirsList.Splice(subDirsList.End(), subdirsListRecursive);
+            subDirsList.PushBack(subPath);
+            if (findFlags.IsOn(Path::FindFlag::Recursive))
+            {
+                subDirsList.PushBack( subPath.GetSubDirectories(findFlags) );
+            }
         }
     }
     return subDirsList;
@@ -138,7 +119,7 @@ List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
     List<Path> subPathsList;
     while ((dir = readdir(d)) != nullptr)
     {
-        String subName(dir->d_name);
+        String subName = dir->d_name;
         if (findFlags.IsOff(Path::FindFlag::Hidden) &&
             (subName.BeginsWith("."))) { continue; }
 
@@ -210,6 +191,17 @@ Array<String> Path::GetExtensions() const
     List<String> parts = GetNameExt().Split<List>('.');
     if (!parts.IsEmpty()) { parts.PopFront(); }
     return parts.To<Array>();
+}
+
+Path Path::GetRelativePath(const Path &prefix) const
+{
+    const String &absolute = GetAbsolute();
+    String relative = absolute;
+    if (absolute.BeginsWith(prefix.GetAbsolute()))
+    {
+        relative.Remove(0, prefix.GetAbsolute().Size());
+    }
+    return Path(relative);
 }
 
 Path Path::GetDirectory() const

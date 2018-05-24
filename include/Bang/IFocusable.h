@@ -31,9 +31,9 @@ protected:
 
     void SetFocus();
     void ClearFocus();
-    virtual void PropagateFocusToListeners();
-    virtual void PropagateOnClickedToListeners(ClickType clickType);
-    virtual void PropagateMouseOverToListeners(bool mouseOver);
+    void PropagateFocusToListeners();
+    void PropagateOnClickedToListeners(ClickType clickType);
+    void PropagateMouseOverToListeners(bool mouseOver);
 
 private:
     bool m_beingPressed = false;

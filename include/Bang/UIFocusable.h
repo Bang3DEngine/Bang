@@ -12,10 +12,6 @@ class UIFocusable : public Component,
     COMPONENT(UIFocusable);
 
 protected:
-    // IFocusable
-    virtual void PropagateFocusToListeners() override;
-    virtual void PropagateMouseOverToListeners(bool mouseOver) override;
-
     // Component
     virtual bool CanBeRepeatedInGameObject() const override;
 

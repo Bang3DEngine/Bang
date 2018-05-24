@@ -89,7 +89,7 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
     for (const auto &x : GetListeners())
     {
         #ifdef DEBUG
-        const int previousSize = GetListeners().Size();
+        const int previousSize = GetListeners().Size(); (void) previousSize;
         #endif
 
         if (IsEmittingEvents()) { PropagateToListener(x, func, args...); }

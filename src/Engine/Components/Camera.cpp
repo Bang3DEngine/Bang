@@ -140,7 +140,6 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
 {
     Transform *tr = GetGameObject()->GetTransform();
     Vector3 camPosition = tr->GetPosition();
-    Vector3 camForward = tr->GetForward();
     if ( aaBBoxWorld.Contains(camPosition) ) { return AARect::NDCRect; }
 
     Array<Vector3> intPoints;

@@ -126,10 +126,6 @@ SelectionFramebuffer *GEngine::GetActiveSelectionFramebuffer()
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
     bool wasEnabledBlendi0 = GL::IsEnabledi(GL::Enablable::Blend, 0);
-    GL::BlendFactor prevBlendSrcColorFactor = GL::GetBlendSrcFactorColor();
-    GL::BlendFactor prevBlendDstColorFactor = GL::GetBlendDstFactorColor();
-    GL::BlendFactor prevBlendSrcAlphaFactor = GL::GetBlendSrcFactorAlpha();
-    GL::BlendFactor prevBlendDstAlphaFactor = GL::GetBlendDstFactorAlpha();
 
     camera->BindGBuffer();
 

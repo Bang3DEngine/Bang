@@ -18,13 +18,3 @@ UIFocusable::~UIFocusable()
 }
 
 bool UIFocusable::CanBeRepeatedInGameObject() const { return false; }
-
-void UIFocusable::PropagateFocusToListeners()
-{
-    IFocusable::PropagateFocusToListeners();
-}
-
-void UIFocusable::PropagateMouseOverToListeners(bool mouseOver)
-{
-    IFocusable::PropagateMouseOverToListeners(mouseOver);
-}

@@ -22,7 +22,6 @@ void IFocusable::UpdateFromCanvas()
         {
             if (Input::GetMouseButtonDoubleClick(MouseButton::Left))
             {
-                std::cerr << "Double click on " << this << std::endl;
                 Click(ClickType::Double);
                 doubleClick = true;
             }
@@ -41,7 +40,6 @@ void IFocusable::UpdateFromCanvas()
                 }
 
                 m_lastMouseDownWasHere = true;
-                std::cerr << "Down click on " << this << std::endl;
                 Click(ClickType::Down);
             }
 
@@ -51,7 +49,6 @@ void IFocusable::UpdateFromCanvas()
             {
                 if (Input::GetMouseButtonUp(MouseButton::Left))
                 {
-                    std::cerr << "Full click on " << this << std::endl;
                     Click(ClickType::Full);
                 }
             }

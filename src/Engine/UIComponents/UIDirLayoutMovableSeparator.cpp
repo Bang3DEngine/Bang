@@ -30,7 +30,6 @@ void UIDirLayoutMovableSeparator::OnUpdate()
     {
         GameObject *parent = GetGameObject()->GetParent();
         RectTransform *parentRT = parent->GetRectTransform();
-        const int numChildren = parent->GetChildren().Size();
         const int thisIndexInParent = parent->GetChildren().IndexOf( GetGameObject() );
         if (thisIndexInParent <= 0) { return; }
         if (thisIndexInParent >= parent->GetChildren().Size() - 1) { return; }

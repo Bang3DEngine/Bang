@@ -447,9 +447,8 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     GameObject *container = withScrollPanel ?
                                 GameObjectFactory::CreateUIGameObject() : go;
 
-    UIDirLayout *dirLayout;
-    if (vertical) { dirLayout = container->AddComponent<UIVerticalLayout>(); }
-    else { dirLayout = container->AddComponent<UIHorizontalLayout>(); }
+    if (vertical) { container->AddComponent<UIVerticalLayout>(); }
+    else { container->AddComponent<UIHorizontalLayout>(); }
 
     UIFocusable *focusable = container->AddComponent<UIFocusable>();
     (void)(focusable);

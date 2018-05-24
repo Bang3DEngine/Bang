@@ -537,7 +537,7 @@ void GL::BindFragDataLocation(GLId programId, int location,
 
 int GL::GetUniformLocation(const String &uniformName)
 {
-    return GL::GetUniformLocation(GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM),
+    return GL::GetUniformLocation(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM),
                                   uniformName);
 }
 int GL::GetUniformLocation(GLId programId, const String &uniformName)
@@ -549,7 +549,7 @@ int GL::GetUniformLocation(GLId programId, const String &uniformName)
 
 void GL::DeleteProgram(GLId programId)
 {
-    GL::OnDeletedGLObjects(GL::BindTarget::SHADER__PROGRAM, 1, &programId);
+    GL::OnDeletedGLObjects(GL::BindTarget::SHADER_PROGRAM, 1, &programId);
     GL_CALL( glDeleteProgram(programId) );
 }
 
@@ -1146,7 +1146,7 @@ void GL::Render(const VAO *vao, GL::Primitive renderMode,
                 int elementsCount, int startElementIndex)
 {
     #ifdef DEBUG
-    GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
     ASSERT( boundShaderProgram > 0 );
     bool programValidateOk = GL::ValidateProgram(boundShaderProgram);
     if (!programValidateOk)
@@ -1228,7 +1228,7 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             if (gl) { gl->m_boundTextureCubeMapId = glId; }
             GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
         break;
-        case GL::BindTarget::SHADER__PROGRAM:
+        case GL::BindTarget::SHADER_PROGRAM:
             if (GL::IsBound(bindTarget, glId)) { return; }
             if (gl) { gl->m_boundShaderProgramId = glId; }
             GL_CALL( glUseProgram(glId) );
@@ -1606,7 +1606,7 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
             return GL::GetActive()->m_boundVBOArrayBufferId;
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
             return GL::GetActive()->m_boundVBOElementsBufferId;
-        case GL::BindTarget::SHADER__PROGRAM:
+        case GL::BindTarget::SHADER_PROGRAM:
             return GL::GetActive()->m_boundShaderProgramId;
         default: ASSERT(false);
     }
@@ -1772,7 +1772,7 @@ void GL::PrintGLContext()
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::FRAMEBUFFER)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER)) );
-    Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM)) );
+    Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_2D)) );
     Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP)) );
     // Debug_Peek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );

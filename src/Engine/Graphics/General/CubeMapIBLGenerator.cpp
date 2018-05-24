@@ -46,7 +46,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
     const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
     const GLId prevBoundFB   = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
-    const GLId prevBoundSP   = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    const GLId prevBoundSP   = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
     const GLId prevBoundTex  = GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP);
     bool wasCullEnabled      = GL::IsEnabled(GL::Enablable::CULL_FACE);
 
@@ -124,7 +124,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
     GL::Bind(GL::BindTarget::FRAMEBUFFER,    prevBoundFB);
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM,  prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM,  prevBoundSP);
     GL::Bind(GL::BindTarget::TEXTURE_CUBE_MAP, prevBoundTex);
 
     return iblCubeMapRH;

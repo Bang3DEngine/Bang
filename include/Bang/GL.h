@@ -81,6 +81,7 @@ public:
         SCISSOR_TEST              = GL_SCISSOR_TEST,
         ALPHA_TEST                = GL_ALPHA_TEST,
         CULL_FACE                 = GL_CULL_FACE,
+        FRAMEBUFFER_SRGB          = GL_FRAMEBUFFER_SRGB,
         MULTISAMPLE               = GL_MULTISAMPLE,
         TEXTURE_CUBE_MAP_SEAMLESS = GL_TEXTURE_CUBE_MAP_SEAMLESS
     };
@@ -120,7 +121,7 @@ public:
         TEXTURE_2D           = GL_TEXTURE_2D,
         TEXTURE_3D           = GL_TEXTURE_3D,
         TEXTURE_CUBE_MAP     = GL_TEXTURE_CUBE_MAP,
-        SHADER__PROGRAM      = GL_SHADER,
+        SHADER_PROGRAM      = GL_SHADER,
         FRAMEBUFFER          = GL_FRAMEBUFFER,
         DRAW_FRAMEBUFFER     = GL_DRAW_FRAMEBUFFER,
         READ_FRAMEBUFFER     = GL_READ_FRAMEBUFFER,
@@ -206,6 +207,8 @@ public:
 
     enum class ColorFormat
     {
+        SRGB              = GL_SRGB,
+        SRGBA             = GL_SRGB_ALPHA,
         RGBA8             = GL_RGBA8,
         RGBA16F           = GL_RGBA16F,
         RGB10_A2          = GL_RGB10_A2,

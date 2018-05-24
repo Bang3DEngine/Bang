@@ -94,7 +94,7 @@ void PointLight::RenderShadowMaps_()
     const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
     const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
     GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
 
     // Resize stuff to fit the shadow map size
     const Vector2i shadowMapSize = GetShadowMapSize();
@@ -144,7 +144,7 @@ void PointLight::RenderShadowMaps_()
     GLUniforms::SetProjectionMatrix(prevProj);
     GEngine::GetActive()->SetReplacementMaterial(nullptr);
     GL::Bind(GL::BindTarget::FRAMEBUFFER,   prevBoundFB);
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }
 
 float PointLight::GetLightZFar() const

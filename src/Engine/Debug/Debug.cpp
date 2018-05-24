@@ -157,7 +157,7 @@ void Debug::PrintAllUniforms()
 
 void Debug::PrintUniforms()
 {
-    Debug::PrintUniforms(GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM));
+    Debug::PrintUniforms(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM));
 }
 
 Debug *Debug::GetInstance()

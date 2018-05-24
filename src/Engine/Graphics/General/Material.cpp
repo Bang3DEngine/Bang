@@ -232,15 +232,16 @@ void Material::Bind() const
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );
 
-    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),             false);
-    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),               false);
-    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),               false);
-    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(),        false);
-    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),          false);
-    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(),        false);
-    sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),       false);
-    sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),     false);
-    sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(), false);
+    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),               false);
+    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),                 false);
+    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),                 false);
+    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(),          false);
+    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),            false);
+    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(),          false);
+    sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),         false);
+    sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),       false);
+    sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(),   false);
+    sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture().Get(), false);
 
     if (Texture2D *albedoTex = GetAlbedoTexture())
     {

@@ -45,6 +45,8 @@ protected:
 
     Texture2D();
     virtual ~Texture2D();
+
+    void OnFormatChanged() override;
 };
 
 template<class T>

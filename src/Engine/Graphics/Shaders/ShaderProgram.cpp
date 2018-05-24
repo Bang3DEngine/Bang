@@ -161,7 +161,7 @@ bool ShaderProgram::IsLinked() const
 
 GL::BindTarget ShaderProgram::GetGLBindTarget() const
 {
-    return GL::BindTarget::SHADER__PROGRAM;
+    return GL::BindTarget::SHADER_PROGRAM;
 }
 
 template <template <class T> class Container, class T>

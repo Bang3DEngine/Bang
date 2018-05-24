@@ -36,12 +36,19 @@ void Texture::GenerateMipMaps() const
 
 void Texture::SetFormat(GL::ColorFormat glFormat)
 {
-    m_glFormat = glFormat;
+    if (glFormat != GetFormat())
+    {
+        m_glFormat = glFormat;
+        OnFormatChanged();
+    }
 }
 
 void Texture::SetTarget(GL::TextureTarget target)
 {
-    m_target = target;
+    if (target != GetTextureTarget())
+    {
+        m_target = target;
+    }
 }
 
 void Texture::SetFilterMode(GL::FilterMode filterMode)
@@ -143,7 +150,11 @@ Color Texture::GetColorFromFloatArray(const float *pixels, int i)
 Color Texture::GetColorFromByteArray(const Byte *pixels, int i)
 {
     return Color(pixels[i+0] / 255.0f, pixels[i+1] / 255.0f,
-                 pixels[i+2] / 255.0f, pixels[i+3] / 255.0f);
+            pixels[i+2] / 255.0f, pixels[i+3] / 255.0f);
+}
+
+void Texture::OnFormatChanged()
+{
 }
 
 int Texture::GetNumComponents() const

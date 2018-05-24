@@ -8,104 +8,109 @@
 USING_NAMESPACE_BANG
 
 RH<Texture2D> TextureFactory::GetBangB64Icon()
-{ return GetIconTexture("LogoBang_B_64"); }
+{ return GetTexture2D("LogoBang_B_64.png"); }
 RH<Texture2D> TextureFactory::GetBangB512Icon()
-{ return GetIconTexture("LogoBang_B_512"); }
+{ return GetTexture2D("LogoBang_B_512.png"); }
 RH<Texture2D> TextureFactory::GetBangB2048Icon()
-{ return GetIconTexture("LogoBang_B_2048"); }
+{ return GetTexture2D("LogoBang_B_2048.png"); }
 RH<Texture2D> TextureFactory::GetBang2048Icon()
-{ return GetIconTexture("LogoBang_2048"); }
+{ return GetTexture2D("LogoBang_2048.png"); }
 RH<Texture2D> TextureFactory::GetRightArrowIcon()
-{ return GetIconTexture("RightArrow"); }
+{ return GetTexture2D("RightArrow.png"); }
 RH<Texture2D> TextureFactory::GetDownArrowIcon()
-{ return GetIconTexture("DownArrow"); }
+{ return GetTexture2D("DownArrow.png"); }
 RH<Texture2D> TextureFactory::GetCheckIcon()
-{ return GetIconTexture("Check"); }
+{ return GetTexture2D("Check.png"); }
 RH<Texture2D> TextureFactory::GetAudioIcon()
-{ return GetIconTexture("Audio"); }
+{ return GetTexture2D("Audio.png"); }
 RH<Texture2D> TextureFactory::GetCircleIcon()
-{ return GetIconTexture("Circle"); }
+{ return GetTexture2D("Circle.png"); }
 RH<Texture2D> TextureFactory::GetSunIcon()
-{ return GetIconTexture("Sun"); }
+{ return GetTexture2D("Sun.png"); }
 RH<Texture2D> TextureFactory::GetLightBulbIcon()
-{ return GetIconTexture("LightBulb"); }
+{ return GetTexture2D("LightBulb.png"); }
 RH<Bang::Texture2D> Bang::TextureFactory::GetInfoIcon()
-{ return GetIconTexture("Info"); }
+{ return GetTexture2D("Info.png"); }
 RH<Texture2D> TextureFactory::GetWarningIcon()
-{ return GetIconTexture("Warn"); }
+{ return GetTexture2D("Warn.png"); }
 RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
-{ return GetIconTexture("Error"); }
+{ return GetTexture2D("Error.png"); }
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
-    RH<Texture2D> tex = GetIconTexture("Checkerboard");
+    RH<Texture2D> tex = GetTexture2D("Checkerboard.png");
     tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
     return tex;
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
-{ return GetIconTexture("White"); }
-
+{ return GetTexture2D("White.png"); }
+RH<Texture2D> TextureFactory::GetBRDFLUTTexture()
+{ return TextureFactory::GetTexture2D("BRDF_LUT.png"); }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectTexture()
 {
-    Path path = EPATH("Images/RRect_9s.png");
-    return Resources::Load<Texture2D>(path);
+    Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png").Get();
+    tex->SetFilterMode(GL::FilterMode::NEAREST);
+    return TextureFactory::GetTexture2D("RRect_9s.png");
 }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectBorderTexture()
-{
-    Path path = EPATH("Images/RRectBorder_9s.png");
-    return Resources::Load<Texture2D>(path);
-}
+{ return TextureFactory::GetTexture2D("RRectBorder_9s.png"); }
 
 RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
-{
-    Path path = EPATH("Icons/WhiteCM.texcm");
-    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
-    Resources::SetPermanent(path, true);
-    Resources::SetPermanent(tcm.Get(), true);
-    return tcm;
-}
-
+{ return TextureFactory::GetTextureCubeMap("WhiteCM.texcm"); }
 RH<TextureCubeMap> TextureFactory::GetDefaultTextureCubeMap()
+{ return TextureFactory::GetTextureCubeMap("DefaultSkybox.texcm"); }
+
+RH<Texture2D> TextureFactory::GetTexture2D(const String &filename)
 {
-    Path path = EPATH("Icons/DefaultSkybox.texcm");
-    RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
-    Resources::SetPermanent(path, true);
-    Resources::SetPermanent(tcm.Get(), true);
-    return tcm;
+    return TextureFactory::GetTexture2D(filename, EPATH("Textures"));
 }
 
-RH<Texture2D> TextureFactory::GetIconTexture(const String &filename,
-                                          const Path &dir)
+RH<Texture2D> TextureFactory::GetTexture2D(const String &filename, const Path &dir)
 {
-    Path path = dir.Append(filename).AppendExtension("png");
+    Path path = dir.Append(filename);
 
     // Avoid removing of img resource when loading Texture2D[::Import()]
     // (this is why it must go before Load<Texture2D>(), and not after)
     Resources::SetPermanent(path, true);
 
     bool initialized = (Resources::GetCached<Texture2D>(path) != nullptr);
-    RH<Texture2D> iconTex = Resources::Load<Texture2D>(path);
-    if (iconTex && !initialized)
+    RH<Texture2D> tex = Resources::Load<Texture2D>(path);
+    if (tex && !initialized)
     {
-        GLId prevTexID = GL::GetBoundId(iconTex.Get()->GetGLBindTarget());
+        GLId prevTexID = GL::GetBoundId(tex.Get()->GetGLBindTarget());
 
-        iconTex.Get()->Bind();
-        iconTex.Get()->GenerateMipMaps();
-        iconTex.Get()->SetAlphaCutoff(0.5f);
-        iconTex.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
-        iconTex.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+        tex.Get()->Bind();
+        tex.Get()->GenerateMipMaps();
+        tex.Get()->SetAlphaCutoff(0.5f);
+        tex.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
+        tex.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 
-        GL::Bind(iconTex.Get()->GetGLBindTarget(), prevTexID);
+        GL::Bind(tex.Get()->GetGLBindTarget(), prevTexID);
 
-        Resources::SetPermanent(iconTex.Get(), true);
+        Resources::SetPermanent(tex.Get(), true);
     }
 
-    return iconTex;
+    return tex;
 }
 
-RH<Texture2D> TextureFactory::GetIconTexture(const String &filename)
+RH<TextureCubeMap> TextureFactory::GetTextureCubeMap(const String &filename)
 {
-    return TextureFactory::GetIconTexture(filename,
-                                       Paths::GetEngineAssetsDir()
-                                       .Append("Icons"));
+    return TextureFactory::GetTextureCubeMap(filename, EPATH("Textures"));
 }
 
+RH<TextureCubeMap> TextureFactory::GetTextureCubeMap(const String &filename, const Path &dir)
+{
+    Path path = dir.Append(filename);
+
+    // Avoid removing of img resource when loading Texture2D[::Import()]
+    // (this is why it must go before Load<Texture2D>(), and not after)
+    Resources::SetPermanent(path, true);
+
+    bool initialized = (Resources::GetCached<TextureCubeMap>(path) != nullptr);
+    RH<TextureCubeMap> texCM = Resources::Load<TextureCubeMap>(path);
+    if (texCM && !initialized)
+    {
+        Resources::SetPermanent(texCM.Get(), true);
+    }
+
+    return texCM;
+}

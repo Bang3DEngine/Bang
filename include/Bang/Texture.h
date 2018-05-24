@@ -59,6 +59,8 @@ protected:
     template<class T>
     Image<T> ToImage(GL::TextureTarget texTarget) const;
 
+    virtual void OnFormatChanged();
+
 private:
     Vector2i m_size = Vector2i::Zero;
 

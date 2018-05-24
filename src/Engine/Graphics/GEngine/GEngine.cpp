@@ -247,7 +247,7 @@ void GEngine::SetActive(GEngine *gEngine)
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     // Save state
-    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
 
     // Set state, bind and draw
     sp->Bind();
@@ -259,13 +259,13 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
     RenderViewportPlane(); // Renduurrr
 
     // Restore state
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundShaderProgram);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundShaderProgram);
 }
 
 void GEngine::RenderTexture(Texture2D *texture)
 {
     // Save state
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
 
     ShaderProgram *sp = p_renderTextureToViewportSP.Get();
 
@@ -274,7 +274,7 @@ void GEngine::RenderTexture(Texture2D *texture)
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
     // Restore state
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }
 
 void GEngine::RenderWithAllPasses(GameObject *go)

@@ -72,23 +72,23 @@ void main()
         vec3 R = reflect(-V, N);
 
         // Calculate ambient color
+        float dotNV = max(dot(N, V), 0.0);
         vec3 F0  = mix(vec3(0.04), B_GIn_Albedo.rgb, B_MaterialMetalness);
-        vec3 FSR = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, B_MaterialRoughness);
+        vec3 FSR = FresnelSchlickRoughness(dotNV, F0, B_MaterialRoughness);
         // vec3 FSR = FresnelSchlick(max(dot(N, V), 0.0), F0);
 
         vec3 specK = FSR;
         vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
-        specK = (1.0 - diffK);
-
         vec3 diffuseAmbient  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N) *
                                B_GIn_Albedo.rgb;
 
-        const float MAX_REFLECTION_LOD = 8.0;
-        float lod = B_MaterialRoughness * MAX_REFLECTION_LOD;
-        vec3 specularAmbient = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular,
-                                                         R, lod).rgb;
+        const float LOD_MAX_REFLECTION = 8.0;
+        float lod = B_MaterialRoughness * LOD_MAX_REFLECTION;
+        vec3 specularAmbient = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
+        vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
+        vec3 specular = specularAmbient * (FSR * envBRDF.x + envBRDF.y);
 
-        vec3 ambient = (diffK * diffuseAmbient) + (specK * specularAmbient);
+        vec3 ambient = (diffK * diffuseAmbient) + (specularAmbient);
         ambient *= B_AmbientLight;
 
         B_GIn_Color = vec4(ambient, 1);

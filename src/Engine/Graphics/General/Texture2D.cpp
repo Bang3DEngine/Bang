@@ -19,6 +19,17 @@ Texture2D::~Texture2D()
 {
 }
 
+void Texture2D::OnFormatChanged()
+{
+    Texture::OnFormatChanged();
+
+    if (GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
+    {
+        RH<Imageb> img = Resources::Load<Imageb>( GetResourceFilepath() );
+        Import( *(img.Get()) );
+    }
+}
+
 void Texture2D::CreateEmpty(int width, int height)
 {
     Fill(nullptr, width, height, GetColorComp(), GetDataType());
@@ -83,6 +94,9 @@ void Texture2D::ImportXML(const XMLNode &xmlInfo)
 {
     Asset::ImportXML(xmlInfo);
 
+    if (xmlInfo.Contains("Format"))
+    { SetFormat( xmlInfo.Get<GL::ColorFormat>("Format") ); }
+
     if (xmlInfo.Contains("FilterMode"))
     { SetFilterMode( xmlInfo.Get<GL::FilterMode>("FilterMode") ); }
 
@@ -97,6 +111,7 @@ void Texture2D::ExportXML(XMLNode *xmlInfo) const
 {
     Asset::ExportXML(xmlInfo);
 
+    xmlInfo->Set("Format", GetFormat());
     xmlInfo->Set("FilterMode", GetFilterMode());
     xmlInfo->Set("WrapMode", GetWrapMode());
     xmlInfo->Set("AlphaCutoff", GetAlphaCutoff());
@@ -117,7 +132,6 @@ void Texture2D::Import(const Image<Byte> &image)
         SetWidth(image.GetWidth());
         SetHeight(image.GetHeight());
 
-        SetFormat(GL::ColorFormat::RGBA8);
         Fill(image.GetData(),
              GetWidth(), GetHeight(),
              GL::ColorComp::RGBA,

@@ -62,7 +62,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
     if ( MustBeRendered(renderPass) )
     {
         // Save state
-        GLId prevSP = GL::GetBoundId( GL::BindTarget::SHADER__PROGRAM );
+        GLId prevSP = GL::GetBoundId( GL::BindTarget::SHADER_PROGRAM );
         GLId prevFB = GL::GetBoundId( GL::BindTarget::FRAMEBUFFER );
         AARecti prevVP = GL::GetViewportRect();
 
@@ -141,7 +141,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
         }
 
         // Restore state
-        GL::Bind( GL::BindTarget::SHADER__PROGRAM, prevSP );
+        GL::Bind( GL::BindTarget::SHADER_PROGRAM, prevSP );
         GL::SetViewport(prevVP);
     }
 }

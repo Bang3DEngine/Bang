@@ -46,7 +46,7 @@ void Light::RenderShadowMaps()
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
     // Save state
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
 
     ShaderProgram *lightSP = p_lightScreenPassShaderProgram.Get();
     lightSP->Bind();
@@ -63,7 +63,7 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
                             improvedRenderRect);
 
     // Restore state
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }
 
 void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const

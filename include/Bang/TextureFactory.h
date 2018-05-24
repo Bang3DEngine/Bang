@@ -27,19 +27,21 @@ public:
     static RH<Texture2D> GetErrorIcon();
     static RH<Texture2D> GetCheckerboard();
     static RH<Texture2D> GetWhiteTexture();
+    static RH<Texture2D> GetBRDFLUTTexture();
     static RH<Texture2D> Get9SliceRoundRectTexture();
     static RH<Texture2D> Get9SliceRoundRectBorderTexture();
 
     static RH<TextureCubeMap> GetWhiteTextureCubeMap();
     static RH<TextureCubeMap> GetDefaultTextureCubeMap();
 
-    static RH<Texture2D> GetIconTexture(const String &filename, const Path &dir);
+    static RH<Texture2D> GetTexture2D(const String &filename);
+    static RH<Texture2D> GetTexture2D(const String &filename, const Path &dir);
+    static RH<TextureCubeMap> GetTextureCubeMap(const String &filename);
+    static RH<TextureCubeMap> GetTextureCubeMap(const String &filename, const Path &dir);
 
 private:
-    TextureFactory() = default;
-    virtual ~TextureFactory() = default;
-
-    static RH<Texture2D> GetIconTexture(const String &filename);
+    TextureFactory() = delete;
+    virtual ~TextureFactory() = delete;
 };
 
 NAMESPACE_BANG_END

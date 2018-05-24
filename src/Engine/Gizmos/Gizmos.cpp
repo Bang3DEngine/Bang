@@ -400,7 +400,7 @@ void Gizmos::RenderOutline(GameObject *gameObject,
     Byte prevStencilValue                     = GL::GetStencilValue();
     GL::Function prevStencilFunc              = GL::GetStencilFunc();
     GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
     GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
 
     GBuffer *gbuffer = GEngine::GetActiveGBuffer();
@@ -457,7 +457,7 @@ void Gizmos::RenderOutline(GameObject *gameObject,
     GL::SetStencilOp(prevStencilOperation);
     GL::SetStencilFunc(prevStencilFunc);
     GL::SetStencilValue(prevStencilValue);
-    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
     GL::Bind(GL::BindTarget::FRAMEBUFFER, prevBoundFB);
 }
 

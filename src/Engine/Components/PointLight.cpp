@@ -24,12 +24,12 @@ USING_NAMESPACE_BANG
 PointLight::PointLight() : Light()
 {
     m_shadowMapFramebuffer = new Framebuffer();
-    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::Depth,
-                                                       GL::ColorFormat::Depth16);
+    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::DEPTH,
+                                                       GL::ColorFormat::DEPTH16);
 
     GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
     GetShadowMapTexture()->Bind();
-    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::Bilinear);
+    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
     GL::TexParameteri( GetShadowMapTexture()->GetTextureTarget(),
                        GL::TexParameter::TEXTURE_COMPARE_MODE,
                        GL_COMPARE_REF_TO_TEXTURE );
@@ -69,13 +69,13 @@ float PointLight::GetRange() const { return m_range; }
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::Depth);
+    return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::DEPTH);
 }
 
 void PointLight::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
-    if (rp == RenderPass::Overlay) // Render gizmos
+    if (rp == RenderPass::OVERLAY) // Render gizmos
     {
         Gizmos::Reset();
         Gizmos::SetColor(GetColor().WithAlpha(1.0f));
@@ -93,8 +93,8 @@ void PointLight::RenderShadowMaps_()
     const Matrix4 &prevModel = GLUniforms::GetModelMatrix();
     const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
     const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
-    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::Framebuffer);
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
 
     // Resize stuff to fit the shadow map size
     const Vector2i shadowMapSize = GetShadowMapSize();
@@ -117,7 +117,7 @@ void PointLight::RenderShadowMaps_()
     GEngine::GetActive()->SetReplacementMaterial( m_shadowMapMaterial.Get() );
     GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
-    GL::SetDepthFunc(GL::Function::LEqual);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
 
     float rangeLimit = Math::Pow(GetRange(), 1.0f);
     const Vector3 pointLightPos = GetGameObject()->GetTransform()->GetPosition();
@@ -132,7 +132,7 @@ void PointLight::RenderShadowMaps_()
         if (!isCompletelyOutside)
         {
             GEngine::GetActive()->RenderWithPass(shadowCaster,
-                                                 RenderPass::Scene, false);
+                                                 RenderPass::SCENE, false);
         }
     }
 
@@ -143,8 +143,8 @@ void PointLight::RenderShadowMaps_()
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
     GEngine::GetActive()->SetReplacementMaterial(nullptr);
-    GL::Bind(GL::BindTarget::Framebuffer,   prevBoundFB);
-    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
+    GL::Bind(GL::BindTarget::FRAMEBUFFER,   prevBoundFB);
+    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
 }
 
 float PointLight::GetLightZFar() const

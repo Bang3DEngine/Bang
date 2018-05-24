@@ -29,7 +29,7 @@ protected:
     virtual ~UIDirLayout();
 
 private:
-    Axis m_axis = Axis::Horizontal;
+    Axis m_axis = Axis::HORIZONTAL;
 
     Vector2i GetTotalSpacing(const List<GameObject*> &children) const;
 

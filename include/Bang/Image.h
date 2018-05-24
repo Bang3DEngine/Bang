@@ -10,7 +10,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum class ImageResizeMode {Nearest, Linear};
+enum class ImageResizeMode { NEAREST, LINEAR };
 
 template<class T>
 class Image : public Resource
@@ -29,15 +29,15 @@ public:
     void Copy(const Image<T> &image, const Vector2i& pos);
     void Copy(const Image<T> &image,
               const AARecti& dstRect,
-              ImageResizeMode resizeMode = ImageResizeMode::Linear);
+              ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
     void Copy(const Image<T> &image,
               const AARecti& srcCopyRect,
               const AARecti& dstCopyRect,
-              ImageResizeMode resizeMode = ImageResizeMode::Linear);
+              ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
 
     void AddMargins(const Vector2i& margins,
                     const Color &marginColor = Color::Zero,
-                    AspectRatioMode arMode = AspectRatioMode::Ignore);
+                    AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
     void AddMarginsToMatchAspectRatio(const Vector2i &aspectRatioSizes,
                                       const Color &marginColor = Color::Zero);
@@ -47,20 +47,20 @@ public:
     void ResizeToMatchAspectRatio(
                const Vector2i &aspectRatioSizes,
                bool makeBigger = false,
-               ImageResizeMode resizeMode = ImageResizeMode::Linear);
+               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
     void ResizeToMatchAspectRatio(
             float aspectRatio,
             bool makeBigger = false,
-            ImageResizeMode resizeMode = ImageResizeMode::Linear);
+            ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
 
     float GetAspectRatio() const;
 
     void Resize(const Vector2i &newSize,
-                ImageResizeMode resizeMode = ImageResizeMode::Linear,
-                AspectRatioMode arMode = AspectRatioMode::Ignore);
+                ImageResizeMode resizeMode = ImageResizeMode::LINEAR,
+                AspectRatioMode arMode = AspectRatioMode::IGNORE);
     void Resize(int newWidth, int newHeight,
-                ImageResizeMode resizeMode = ImageResizeMode::Linear,
-                AspectRatioMode arMode = AspectRatioMode::Ignore);
+                ImageResizeMode resizeMode = ImageResizeMode::LINEAR,
+                AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
     Image<T> Rotated90DegreesRight()  const;
     Image<T> Rotated180DegreesRight() const;

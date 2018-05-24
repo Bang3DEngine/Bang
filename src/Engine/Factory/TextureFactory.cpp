@@ -38,7 +38,7 @@ RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
     RH<Texture2D> tex = GetIconTexture("Checkerboard");
-    tex.Get()->SetFilterMode(GL::FilterMode::Nearest);
+    tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
     return tex;
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
@@ -91,8 +91,8 @@ RH<Texture2D> TextureFactory::GetIconTexture(const String &filename,
         iconTex.Get()->Bind();
         iconTex.Get()->GenerateMipMaps();
         iconTex.Get()->SetAlphaCutoff(0.5f);
-        iconTex.Get()->SetFilterMode(GL::FilterMode::Trilinear_LL);
-        iconTex.Get()->SetWrapMode(GL::WrapMode::Repeat);
+        iconTex.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
+        iconTex.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 
         GL::Bind(iconTex.Get()->GetGLBindTarget(), prevTexID);
 

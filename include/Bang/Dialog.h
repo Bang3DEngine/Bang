@@ -21,7 +21,7 @@ FORWARD class DialogWindow;
 class Dialog
 {
 public:
-    enum YesNoCancel { Yes, No, Cancel };
+    enum YesNoCancel { YES, NO, CANCEL };
 
     static DialogWindow* Error(const String &title,
                                const String &msg);

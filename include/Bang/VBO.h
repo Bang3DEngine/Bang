@@ -13,7 +13,7 @@ public:
     virtual ~VBO();
 
     void Fill(const void *data, int dataSize,
-              GL::UsageHint usage = GL::UsageHint::StaticDraw);
+              GL::UsageHint usage = GL::UsageHint::STATIC_DRAW);
 
     GL::BindTarget GetGLBindTarget() const override;
     void Bind() const override;

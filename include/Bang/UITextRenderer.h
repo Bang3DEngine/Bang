@@ -75,8 +75,8 @@ private:
     mutable AARect m_textRectNDC  = AARect::Zero;
 
     bool m_wrapping = false;
-    HorizontalAlignment m_horizontalAlignment = HorizontalAlignment::Center;
-    VerticalAlignment m_verticalAlignment     = VerticalAlignment::Center;
+    HorizontalAlignment m_horizontalAlignment = HorizontalAlignment::CENTER;
+    VerticalAlignment m_verticalAlignment     = VerticalAlignment::CENTER;
 
     RH<Mesh> p_mesh;
     mutable uint m_numberOfLines = 0;

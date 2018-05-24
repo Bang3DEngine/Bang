@@ -88,7 +88,7 @@ Path Paths::GetEngineLibrariesDir(BinType binaryType)
 {
     return GetEngineDir().
            Append("bin").
-           Append(binaryType == BinType::Debug ? "Debug" : "Release").
+           Append(binaryType == BinType::BIN_DEBUG ? "Debug" : "Release").
            Append("lib");
 }
 
@@ -101,7 +101,7 @@ Path Paths::CreateEnginePath(const String &path)
 List<Path> Paths::GetAllProjectSubDirs()
 {
     List<Path> subdirs = Paths::GetProjectDir()
-                         .GetSubDirectories(Path::FindFlag::Recursive);
+                         .GetSubDirectories(Path::FindFlag::RECURSIVE);
     subdirs.PushFront(Paths::GetProjectDir());
     return subdirs;
 }
@@ -109,7 +109,7 @@ List<Path> Paths::GetAllProjectSubDirs()
 List<Path> Paths::GetProjectIncludeDirs()
 {
     List<Path> incDirs = Paths::GetProjectAssetsDir()
-                        .GetSubDirectories(Path::FindFlag::Recursive);
+                        .GetSubDirectories(Path::FindFlag::RECURSIVE);
     incDirs.PushBack( Paths::GetProjectAssetsDir() );
     return incDirs;
 }

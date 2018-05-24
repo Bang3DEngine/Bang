@@ -120,12 +120,12 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->AddClickedCallback([checkBox](IFocusable*, ClickType clickType)
     {
-        if (clickType == ClickType::Full)
+        if (clickType == ClickType::FULL)
         {
             checkBox->SetChecked( !checkBox->IsChecked() );
         }
     });
-    focusable->SetCursorType(Cursor::Type::Hand);
+    focusable->SetCursorType(Cursor::Type::HAND);
 
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();

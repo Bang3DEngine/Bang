@@ -56,13 +56,13 @@ void UIButton::SetBlocked(bool blocked)
             GetText()->SetTextColor(Color::Black);
             if (GetFocusable()->IsMouseOver()) { OnMouseEnter(GetFocusable()); }
             else { OnMouseExit(GetFocusable()); }
-            GetFocusable()->SetCursorType( Cursor::Type::Hand );
+            GetFocusable()->SetCursorType( Cursor::Type::HAND );
         }
         else
         {
             GetText()->SetTextColor(Color::DarkGray);
             GetBackground()->SetTint(UIButton::BlockedColor);
-            GetFocusable()->SetCursorType( Cursor::Type::No );
+            GetFocusable()->SetCursorType( Cursor::Type::NO );
         }
     }
 }
@@ -149,7 +149,7 @@ void UIButton::OnClicked(IFocusable *focusable, ClickType clickType)
 
     if (!IsBlocked())
     {
-        if (clickType == ClickType::Full)
+        if (clickType == ClickType::FULL)
         {
             for (auto clickedCallback : m_clickedCallbacks)
             {
@@ -214,7 +214,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     button->GetText()->SetContent("");
     button->SetIcon(nullptr, Vector2i::Zero, 0);
-    button->GetFocusable()->SetCursorType( Cursor::Type::Hand );
+    button->GetFocusable()->SetCursorType( Cursor::Type::HAND );
 
     return button;
 }

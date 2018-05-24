@@ -24,7 +24,7 @@ void ILayoutController::_ApplyLayout(Axis axis)
     if (IInvalidatable<ILayoutController>::IsInvalid())
     {
         ApplyLayout(axis);
-        if (axis == Axis::Vertical) { Validate(); }
+        if (axis == Axis::VERTICAL) { Validate(); }
     }
 }
 

@@ -18,7 +18,7 @@ FORWARD class Segment2D;
 class Geometry
 {
 public:
-    enum Orientation { Left, Middle, Right };
+    enum Orientation { LEFT, MIDDLE, RIGHT };
 
     static void IntersectSegment2DSegment2D(const Segment2D& segment0,
                                             const Segment2D& segment1,

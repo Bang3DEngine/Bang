@@ -26,9 +26,9 @@ SelectionFramebuffer::SelectionFramebuffer(int width, int height) :
     p_selectionMaterial.Get()->SetShaderProgram(selectionProgram);
 
     Bind();
-    CreateAttachmentTex2D(AttColor, GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(GL::Attachment::DepthStencil,
-                     GL::ColorFormat::Depth24_Stencil8);
+    CreateAttachmentTex2D(AttColor, GL::ColorFormat::RGBA8);
+    CreateAttachmentTex2D(GL::Attachment::DEPTH_STENCIL,
+                     GL::ColorFormat::DEPTH24_STENCIL8);
     UnBind();
 
     p_colorTexture.Set(GetAttachmentTex2D(AttColor));

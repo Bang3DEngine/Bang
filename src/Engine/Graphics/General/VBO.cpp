@@ -23,7 +23,7 @@ void VBO::Fill(const void *data, int dataSize, GL::UsageHint usage)
 
 GL::BindTarget VBO::GetGLBindTarget() const
 {
-    return GL::BindTarget::ArrayBuffer;
+    return GL::BindTarget::ARRAY_BUFFER;
 }
 
 void VBO::Bind() const

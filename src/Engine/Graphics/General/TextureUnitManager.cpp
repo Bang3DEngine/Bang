@@ -9,7 +9,7 @@ USING_NAMESPACE_BANG
 
 TextureUnitManager::TextureUnitManager()
 {
-    m_numMaxTextureUnits = GL::GetInteger(GL::MaxTextureImageUnits);
+    m_numMaxTextureUnits = GL::GetInteger(GL::MAX_TEXTURE_IMAGE_UNITS);
     m_numUsableTextureUnits = m_numMaxTextureUnits - 1;
     m_voidTexUnit = m_numMaxTextureUnits - 1;
 
@@ -144,10 +144,10 @@ void TextureUnitManager::UnBindAllTexturesFromAllUnits()
     for (int unit = 0; unit < MaxTexUnits; ++unit)
     {
         GL::ActiveTexture(GL_TEXTURE0 + unit);
-        GL::UnBind(GL::BindTarget::Texture1D);
-        GL::UnBind(GL::BindTarget::Texture2D);
-        GL::UnBind(GL::BindTarget::Texture3D);
-        GL::UnBind(GL::BindTarget::TextureCubeMap);
+        GL::UnBind(GL::BindTarget::TEXTURE_1D);
+        GL::UnBind(GL::BindTarget::TEXTURE_2D);
+        GL::UnBind(GL::BindTarget::TEXTURE_3D);
+        GL::UnBind(GL::BindTarget::TEXTURE_CUBE_MAP);
     }
 }
 
@@ -174,15 +174,15 @@ GLId TextureUnitManager::GetBoundTextureToUnit(GL::TextureTarget texTarget,
 void TextureUnitManager::PrintTextureUnits()
 {
     Debug_Log("===============================");
-    const int NumTextureUnits = GL::GetInteger(GL::MaxTextureImageUnits);
+    const int NumTextureUnits = GL::GetInteger(GL::MAX_TEXTURE_IMAGE_UNITS);
     for (int i = 0; i < NumTextureUnits; ++i)
     {
         Debug_Log("Texture unit " << i << " ---:");
         GL::ActiveTexture(GL_TEXTURE0 + i);
-        GLId tex1DId = GL::GetInteger(GL::Enum::TextureBinding1D);
-        GLId tex2DId = GL::GetInteger(GL::Enum::TextureBinding2D);
-        GLId tex3DId = GL::GetInteger(GL::Enum::TextureBinding3D);
-        GLId texCMId = GL::GetInteger(GL::Enum::TextureBindingCubeMap);
+        GLId tex1DId = GL::GetInteger(GL::Enum::TEXTURE_BINDING_1D);
+        GLId tex2DId = GL::GetInteger(GL::Enum::TEXTURE_BINDING_2D);
+        GLId tex3DId = GL::GetInteger(GL::Enum::TEXTURE_BINDING_3D);
+        GLId texCMId = GL::GetInteger(GL::Enum::TEXTURE_BINDING_CUBE_MAP);
         Debug_Log("  Texture_1D:      " << tex1DId);
         Debug_Log("  Texture_2D:      " << tex2DId);
         Debug_Log("  Texture_3D:      " << tex3DId);

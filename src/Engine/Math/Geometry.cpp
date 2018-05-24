@@ -33,12 +33,12 @@ void Geometry::IntersectSegment2DSegment2D(const Segment2D &segment0,
 
     Geometry::Orientation orient0 = Geometry::GetOrientation(p0, p1, q0);
     Geometry::Orientation orient1 = Geometry::GetOrientation(p0, p1, q1);
-    if (orient0 == orient1 && orient0 != Geometry::Orientation::Middle)
+    if (orient0 == orient1 && orient0 != Geometry::Orientation::MIDDLE)
     { *intersected = false; return; }
 
     Geometry::Orientation orient2 = Geometry::GetOrientation(q0, q1, p0);
     Geometry::Orientation orient3 = Geometry::GetOrientation(q0, q1, p1);
-    if (orient2 == orient3 && orient2 != Geometry::Orientation::Middle)
+    if (orient2 == orient3 && orient2 != Geometry::Orientation::MIDDLE)
     { *intersected = false; return; }
 
     const float x1 = p0.x, x2 = p1.x, x3 = q0.x, x4 = q1.x;
@@ -364,12 +364,12 @@ bool Geometry::IsPointInsideBox(const Vector3 &p,
                                 const Plane &boxFrontPlane,
                                 const Plane &boxBackPlane)
 {
-    return Geometry::GetOrientation(p, boxTopPlane)   == Orientation::Left &&
-           Geometry::GetOrientation(p, boxBotPlane)   == Orientation::Left &&
-           Geometry::GetOrientation(p, boxLeftPlane)  == Orientation::Left &&
-           Geometry::GetOrientation(p, boxRightPlane) == Orientation::Left &&
-           Geometry::GetOrientation(p, boxFrontPlane) == Orientation::Left &&
-           Geometry::GetOrientation(p, boxBackPlane)  == Orientation::Left;
+    return Geometry::GetOrientation(p, boxTopPlane)   == Orientation::LEFT &&
+           Geometry::GetOrientation(p, boxBotPlane)   == Orientation::LEFT &&
+           Geometry::GetOrientation(p, boxLeftPlane)  == Orientation::LEFT &&
+           Geometry::GetOrientation(p, boxRightPlane) == Orientation::LEFT &&
+           Geometry::GetOrientation(p, boxFrontPlane) == Orientation::LEFT &&
+           Geometry::GetOrientation(p, boxBackPlane)  == Orientation::LEFT;
 }
 
 Array<Vector3> Geometry::IntersectQuadQuad(const Quad &quad0, const Quad &quad1)
@@ -407,15 +407,15 @@ Geometry::Orientation Geometry::GetOrientation(const Vector2 &lineP0,
 {
     float det = ((point.x - lineP0.x) * (lineP1.y - lineP0.y)) -
                 ((point.y - lineP0.y) * (lineP1.x - lineP0.x));
-    if (Math::Abs(det) < ALMOST_ZERO) { return Orientation::Middle; }
-    return (det < 0) ? Orientation::Left : Orientation::Right;
+    if (Math::Abs(det) < ALMOST_ZERO) { return Orientation::MIDDLE; }
+    return (det < 0) ? Orientation::LEFT : Orientation::RIGHT;
 }
 
 Geometry::Orientation Geometry::GetOrientation(const Vector3 &point, const Plane &plane)
 {
     float dot = Vector3::Dot(plane.GetNormal(), (point - plane.GetPoint()));
-    if (Math::Abs(dot) < ALMOST_ZERO) { return Orientation::Middle; }
-    return (dot > 0) ? Orientation::Right : Orientation::Left;
+    if (Math::Abs(dot) < ALMOST_ZERO) { return Orientation::MIDDLE; }
+    return (dot > 0) ? Orientation::RIGHT : Orientation::LEFT;
 }
 
 Vector3 Geometry::RayClosestPointTo(const Ray &ray, const Vector3 &point)

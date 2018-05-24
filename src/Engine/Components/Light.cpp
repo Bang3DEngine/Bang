@@ -46,7 +46,7 @@ void Light::RenderShadowMaps()
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
     // Save state
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
 
     ShaderProgram *lightSP = p_lightScreenPassShaderProgram.Get();
     lightSP->Bind();
@@ -58,12 +58,12 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
                                                      renderRect);
     // Additive blend
     gbuffer->ApplyPassBlend(lightSP,
-                            GL::BlendFactor::One,
-                            GL::BlendFactor::One,
+                            GL::BlendFactor::ONE,
+                            GL::BlendFactor::ONE,
                             improvedRenderRect);
 
     // Restore state
-    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
 }
 
 void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
@@ -91,7 +91,7 @@ List<GameObject*> Light::GetActiveSceneShadowCasters() const
         bool isValidShadowCaster = false;
         if (const Material *mat = rend->GetActiveMaterial())
         {
-            isValidShadowCaster = (mat->GetRenderPass() == RenderPass::Scene &&
+            isValidShadowCaster = (mat->GetRenderPass() == RenderPass::SCENE &&
                                    rend->GetCastsShadows());
         }
 

@@ -162,7 +162,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     cameraGo->GetTransform()->SetPosition( Vector3(5,4,3) );
     cameraGo->GetTransform()->LookAt( Vector3::Zero );
     Camera *cam = cameraGo->AddComponent<Camera>();
-    cam->SetClearMode(Camera::ClearMode::SkyBox);
+    cam->SetClearMode(Camera::ClearMode::SKY_BOX);
     cam->SetClearColor(Color::LightBlue);
     scene->SetCamera(cam);
 
@@ -395,7 +395,7 @@ GameObjectFactory::CreateUIDirLayoutMovableHSeparator()
 {
     UIDirLayoutMovableSeparator *sep =
             GameObjectFactory::CreateUIDirLayoutMovableSeparator();
-    sep->SetAxis(Axis::Horizontal);
+    sep->SetAxis(Axis::HORIZONTAL);
     return sep;
 }
 
@@ -404,7 +404,7 @@ GameObjectFactory::CreateUIDirLayoutMovableVSeparator()
 {
     UIDirLayoutMovableSeparator *sep =
             GameObjectFactory::CreateUIDirLayoutMovableSeparator();
-    sep->SetAxis(Axis::Vertical);
+    sep->SetAxis(Axis::VERTICAL);
     return sep;
 }
 
@@ -436,8 +436,8 @@ GameObject *GameObjectFactory::CreateUISpacer(LayoutSizeType sizeType,
     le->SetPreferredSize( Vector2i(0) );
     le->SetFlexibleSize( Vector2(0) );
 
-    if (sizeType == LayoutSizeType::Min) { le->SetMinSize(Vector2i(space)); }
-    else if (sizeType == LayoutSizeType::Preferred) { le->SetPreferredSize(Vector2i(space)); }
+    if (sizeType == LayoutSizeType::MIN) { le->SetMinSize(Vector2i(space)); }
+    else if (sizeType == LayoutSizeType::PREFERRED) { le->SetPreferredSize(Vector2i(space)); }
     else { le->SetFlexibleSize( Vector2(space) ); }
     return spacerGo;
 }
@@ -500,7 +500,7 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
     LineRenderer *lr = sepGo->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
     lr->GetMaterial()->SetAlbedoColor(Color::White);
-    lr->SetViewProjMode(GL::ViewProjMode::Canvas);
+    lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();
     le->SetPreferredSize( Vector2i::Max(space, Vector2i::One) );
@@ -544,7 +544,7 @@ GameObject* GameObjectFactory::CreateGameObjectWithMesh(Mesh* m,
     go->SetName(name);
 
     MeshRenderer *r = go->AddComponent<MeshRenderer>();
-    r->SetRenderPrimitive(GL::Primitive::Triangles);
+    r->SetRenderPrimitive(GL::Primitive::TRIANGLES);
     r->SetMaterial(MaterialFactory::GetDefault().Get());
     r->SetMesh(m);
 

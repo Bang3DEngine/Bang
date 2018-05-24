@@ -30,8 +30,8 @@ public:
     void OnInvalidated() override;
 
 private:
-    LayoutSizeType m_verticalSizeType   = LayoutSizeType::None;
-    LayoutSizeType m_horizontalSizeType = LayoutSizeType::None;
+    LayoutSizeType m_verticalSizeType   = LayoutSizeType::NONE;
+    LayoutSizeType m_horizontalSizeType = LayoutSizeType::NONE;
 
     UIContentSizeFitter();
     virtual ~UIContentSizeFitter();

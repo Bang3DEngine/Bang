@@ -53,7 +53,7 @@ Gizmos::Gizmos()
     }
 
     m_gizmosGo->Start();
-    m_gizmosGo->GetHideFlags().SetOn(HideFlag::DontSerialize);
+    m_gizmosGo->GetHideFlags().SetOn(HideFlag::DONT_SERIALIZE);
 }
 
 Gizmos::~Gizmos()
@@ -218,7 +218,7 @@ void Gizmos::RenderFillRect(const AARect &r)
     Gizmos::SetPosition( Vector3(r.GetCenter(), 0) );
     Gizmos::SetScale( Vector3(r.GetSize(), 1) );
 
-    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
+    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
     g->Render(g->m_meshRenderer);
 }
 
@@ -236,7 +236,7 @@ void Gizmos::RenderIcon(Texture2D *texture,
 
         Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
         float distScale = 1.0f;
-        if (cam->GetProjectionMode() == Camera::ProjectionMode::Perspective)
+        if (cam->GetProjectionMode() == Camera::ProjectionMode::PERSPECTIVE)
         {
            Vector3 pos = g->m_gizmosGo->GetTransform()->GetPosition();
            distScale = Vector3::Distance(camPos, pos);
@@ -265,7 +265,7 @@ void Gizmos::RenderViewportIcon(Texture2D *texture,
     SetRenderWireframe(false);
     SetReceivesLighting(false);
     g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
-    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
+    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
     g->Render(g->m_meshRenderer);
 }
 
@@ -277,7 +277,7 @@ void Gizmos::RenderLine(const Vector3 &origin, const Vector3 &destiny)
     g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
     g->m_gizmosGo->GetTransform()->SetScale(Vector3::One);
 
-    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::World);
+    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::WORLD);
     g->Render(g->m_lineRenderer);
 }
 
@@ -332,7 +332,7 @@ void Gizmos::RenderViewportLineNDC(const Vector2 &origin, const Vector2 &destiny
     g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
     g->m_gizmosGo->GetTransform()->SetScale(Vector3::One);
 
-    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::Canvas);
+    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
     g->Render(g->m_lineRenderer);
 }
 
@@ -400,8 +400,8 @@ void Gizmos::RenderOutline(GameObject *gameObject,
     Byte prevStencilValue                     = GL::GetStencilValue();
     GL::Function prevStencilFunc              = GL::GetStencilFunc();
     GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
-    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
+    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
 
     GBuffer *gbuffer = GEngine::GetActiveGBuffer();
     if (gbuffer)
@@ -420,14 +420,14 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         gbuffer->SetDrawBuffers({});
         GL::ClearDepthBuffer(1);
         GL::SetDepthMask(true);
-        GL::SetDepthFunc(GL::Function::Always);
-        GL::SetStencilOp(GL::StencilOperation::Keep);
+        GL::SetDepthFunc(GL::Function::ALWAYS);
+        GL::SetStencilOp(GL::StencilOperation::KEEP);
         GL::SetColorMask(false, false, false, false);
         GEngine::GetActive()->RenderWithAllPasses(gameObject);
 
         // Render outline
         GL::SetDepthMask(false);
-        GL::SetDepthFunc(GL::Function::Always);
+        GL::SetDepthFunc(GL::Function::ALWAYS);
         GL::SetColorMask(true, true, true, true);
 
         ShaderProgram *sp = g->m_outlineShaderProgram.Get();
@@ -457,8 +457,8 @@ void Gizmos::RenderOutline(GameObject *gameObject,
     GL::SetStencilOp(prevStencilOperation);
     GL::SetStencilFunc(prevStencilFunc);
     GL::SetStencilValue(prevStencilValue);
-    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
-    GL::Bind(GL::BindTarget::Framebuffer, prevBoundFB);
+    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
+    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevBoundFB);
 }
 
 void Gizmos::RenderFrustum(const Vector3 &forward,
@@ -519,18 +519,18 @@ void Gizmos::RenderPoint(const Vector3 &point)
 
     g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
     g->m_meshRenderer->SetMesh(m);
-    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::Points);
+    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::POINTS);
 
     Render(g->m_meshRenderer);
 
-    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::Triangles);
+    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::TRIANGLES);
 }
 
 void Gizmos::Reset()
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
 
-    Gizmos::SetCullFace(GL::CullFaceExt::Back);
+    Gizmos::SetCullFace(GL::CullFaceExt::BACK);
     Gizmos::SetPosition(Vector3::Zero);
     Gizmos::SetRotation(Quaternion::Identity);
     Gizmos::SetScale(Vector3::One);
@@ -539,12 +539,12 @@ void Gizmos::Reset()
     Gizmos::SetReceivesLighting(false);
     Gizmos::SetRenderWireframe(false);
     Gizmos::SetSelectable(nullptr);
-    Gizmos::SetRenderPass(RenderPass::Overlay);
+    Gizmos::SetRenderPass(RenderPass::OVERLAY);
 
     List<Renderer*> rends = g->m_gizmosGo->GetComponents<Renderer>();
     for (Renderer *rend : rends)
     {
-        rend->SetViewProjMode(GL::ViewProjMode::World);
+        rend->SetViewProjMode(GL::ViewProjMode::WORLD);
     }
 
     g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(nullptr);

@@ -15,9 +15,9 @@ class ALAudioSource : public virtual EventEmitter<IDestroyListener>
 public:
     enum State
     {
-        Playing = AL_PLAYING,
-        Paused  = AL_PAUSED,
-        Stopped = AL_STOPPED
+        PLAYING = AL_PLAYING,
+        PAUSED  = AL_PAUSED,
+        STOPPED = AL_STOPPED
     };
 
     ALAudioSource();

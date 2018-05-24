@@ -92,21 +92,21 @@ TextureCubeMap* Framebuffer::GetAttachmentTexCubeMap(GL::Attachment attachment) 
 void Framebuffer::SetAllDrawBuffers() const
 {
     Array<GL::Attachment> colorAtts = m_attachments;
-    colorAtts.Remove(GL::Attachment::DepthStencil);
-    colorAtts.Remove(GL::Attachment::Depth);
+    colorAtts.Remove(GL::Attachment::DEPTH_STENCIL);
+    colorAtts.Remove(GL::Attachment::DEPTH);
     SetDrawBuffers(colorAtts);
 }
 
 void Framebuffer::SetDrawBuffers(const Array<GL::Attachment> &attachments) const
 {
-    ASSERT(GL::GetBoundId(GL::BindTarget::DrawFramebuffer) == GetGLId());
+    ASSERT(GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) == GetGLId());
     GL::DrawBuffers(attachments);
     m_currentDrawAttachments = attachments;
 }
 
 void Framebuffer::SetReadBuffer(GL::Attachment attachment) const
 {
-    ASSERT(GL::GetBoundId(GL::BindTarget::ReadFramebuffer) == GetGLId());
+    ASSERT(GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER) == GetGLId());
     GL::ReadBuffer(attachment);
     m_currentReadAttachment = attachment;
 }
@@ -130,29 +130,29 @@ void Framebuffer::AfterSetAttTex(Texture* tex, GL::Attachment attachment)
 void Framebuffer::SetAttachmentTexture(Texture* tex, GL::Attachment attachment,
                                        uint mipMapLevel)
 {
-    GLId prevId = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    GLId prevId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
     BeforeSetAttTex(tex, attachment);
-    GL::FramebufferTexture(GL::FramebufferTarget::ReadDraw,
+    GL::FramebufferTexture(GL::FramebufferTarget::READ_DRAW,
                            attachment,
                            tex->GetGLId(),
                            mipMapLevel);
     AfterSetAttTex(tex, attachment);
-    GL::Bind(GL::BindTarget::Framebuffer, prevId);
+    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevId);
 }
 void Framebuffer::SetAttachmentTexture2D(Texture *tex,
                                          GL::TextureTarget texTarget,
                                          GL::Attachment attachment,
                                          uint mipMapLevel)
 {
-    GLId prevId = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    GLId prevId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
     BeforeSetAttTex(tex, attachment);
-    GL::FramebufferTexture2D(GL::FramebufferTarget::ReadDraw,
+    GL::FramebufferTexture2D(GL::FramebufferTarget::READ_DRAW,
                              attachment,
                              texTarget,
                              tex->GetGLId(),
                              mipMapLevel);
     AfterSetAttTex(tex, attachment);
-    GL::Bind(GL::BindTarget::Framebuffer, prevId);
+    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevId);
 }
 
 void Framebuffer::Blit(GL::Attachment srcAttachment,
@@ -160,8 +160,8 @@ void Framebuffer::Blit(GL::Attachment srcAttachment,
                        const AARect &readNDCRect,
                        GL::BufferBit bufferBit)
 {
-    GLId prevFBDrawId = GL::GetBoundId(GL::BindTarget::DrawFramebuffer);
-    GLId prevFBReadId = GL::GetBoundId(GL::BindTarget::ReadFramebuffer);
+    GLId prevFBDrawId = GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER);
+    GLId prevFBReadId = GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER);
 
     Bind();
     PushDrawAttachments();
@@ -170,12 +170,12 @@ void Framebuffer::Blit(GL::Attachment srcAttachment,
     AARect rf ( readNDCRect * 0.5f + 0.5f );
     AARecti r ( AARect(Vector2::Floor(rf.GetMin()),
                        Vector2::Ceil(rf.GetMax())) * GetSize() );
-    GL::BlitFramebuffer(r, r, GL::FilterMode::Nearest, bufferBit);
+    GL::BlitFramebuffer(r, r, GL::FilterMode::NEAREST, bufferBit);
     PopDrawAttachments();
 
     // Restore
-    GL::Bind(GL::BindTarget::DrawFramebuffer, prevFBDrawId);
-    GL::Bind(GL::BindTarget::ReadFramebuffer, prevFBReadId);
+    GL::Bind(GL::BindTarget::DRAW_FRAMEBUFFER, prevFBDrawId);
+    GL::Bind(GL::BindTarget::READ_FRAMEBUFFER, prevFBReadId);
 }
 
 GL::Attachment Framebuffer::GetCurrentReadAttachment() const
@@ -190,7 +190,7 @@ const Array<GL::Attachment>& Framebuffer::GetCurrentDrawAttachments() const
 
 Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
 {
-    GLId prevFBId = GL::GetBoundId(GL::BindTarget::Framebuffer);
+    GLId prevFBId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
     Bind();
     Texture2D* t = GetAttachmentTex2D(attachment);
     SetReadBuffer(attachment);
@@ -200,7 +200,7 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
                    t->GetDataType(),
                    Cast<void*>(&color));
     Color readColor = Color(color[0], color[1], color[2], color[3]) / 255.0f;
-    GL::Bind(GL::BindTarget::Framebuffer, prevFBId);
+    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevFBId);
     return readColor;
 }
 
@@ -234,7 +234,7 @@ Vector2 Framebuffer::GetSize() const
 
 GL::BindTarget Framebuffer::GetGLBindTarget() const
 {
-    return GL::BindTarget::Framebuffer;
+    return GL::BindTarget::FRAMEBUFFER;
 }
 
 void Framebuffer::Bind() const
@@ -271,8 +271,8 @@ void ExportDepthOrStencil(const Framebuffer *fb,
 
     T *data = new T[fb->GetWidth() * fb->GetHeight()];
     GL::ReadPixels(0, 0, fb->GetWidth(), fb->GetHeight(),
-                   (depth ? GL::ColorComp::Depth : GL::ColorComp::StencilIndex),
-                   (depth ? GL::DataType::Float : GL::DataType::UnsignedByte),
+                   (depth ? GL::ColorComp::DEPTH : GL::ColorComp::STENCIL_INDEX),
+                   (depth ? GL::DataType::FLOAT : GL::DataType::UNSIGNED_BYTE),
                    data);
 
     Array<Byte> bytes(fb->GetWidth() * fb->GetHeight() * 4);

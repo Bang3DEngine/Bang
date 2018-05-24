@@ -69,10 +69,10 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
 
     if (atlasTexture) // Create final atlas texture
     {
-        GL::PixelStore(GL::UnPackAlignment, 1);
+        GL::PixelStore(GL::UNPACK_ALIGNMENT, 1);
         atlasTexture->Import(atlasImage);
-        atlasTexture->SetWrapMode(GL::WrapMode::ClampToEdge);
-        atlasTexture->SetFilterMode(GL::FilterMode::Nearest);
+        atlasTexture->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+        atlasTexture->SetFilterMode(GL::FilterMode::NEAREST);
         atlasTexture->SetAlphaCutoff(0.5f);
         atlasTexture->Bind();
         atlasTexture->GenerateMipMaps();
@@ -149,6 +149,6 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
 
     Imageb fittedResultMargined = fittedResult;
     fittedResultMargined.AddMargins(Vector2i(margin), bgColor,
-                                    AspectRatioMode::Ignore);
+                                    AspectRatioMode::IGNORE);
     return fittedResultMargined;
 }

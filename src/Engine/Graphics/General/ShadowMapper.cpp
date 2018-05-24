@@ -17,7 +17,7 @@ AABox ShadowMapper::GetSceneCastersAABox(Scene *scene)
     for (Renderer *rend : renderers)
     {
         Material *mat = rend->GetActiveMaterial();
-        if (mat && mat->GetRenderPass() == RenderPass::Scene)
+        if (mat && mat->GetRenderPass() == RenderPass::SCENE)
         {
             Matrix4 localToWorld = rend->GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
             AABox rendAABox = rend->GetAABBox();

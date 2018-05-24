@@ -7,12 +7,12 @@ Vector2i AspectRatio::GetAspectRatioedSize(const Vector2i &currentSize,
                                            AspectRatioMode aspectRatioMode)
 {
     Vector2i finalSize = targetSize;
-    if (aspectRatioMode != AspectRatioMode::Ignore)
+    if (aspectRatioMode != AspectRatioMode::IGNORE)
     {
         Vector2 aspectRatio(Cast<float>(targetSize.x) / currentSize.x,
                             Cast<float>(targetSize.y) / currentSize.y);
 
-        bool keepExc = (aspectRatioMode == AspectRatioMode::KeepExceeding);
+        bool keepExc = (aspectRatioMode == AspectRatioMode::KEEP_EXCEEDING);
         float ar =  (aspectRatio.x < aspectRatio.y) ?
                     (keepExc ? aspectRatio.y : aspectRatio.x) :
                     (keepExc ? aspectRatio.x : aspectRatio.y);

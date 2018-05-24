@@ -551,7 +551,7 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
     for (Renderer *rend : rends)
     {
         if (rend && rend->IsEnabled() && rend->GetActiveMaterial() &&
-            rend->GetActiveMaterial()->GetRenderPass() == RenderPass::Scene)
+            rend->GetActiveMaterial()->GetRenderPass() == RenderPass::SCENE)
         {
             const AABox rendAABox = rend->GetAABBox();
             if (rendAABox != AABox::Empty)
@@ -671,7 +671,7 @@ void GameObject::CloneInto(ICloneable *clone) const
 
     for (GameObject *child : GetChildren())
     {
-        if (!child->GetHideFlags().IsOn(HideFlag::DontClone))
+        if (!child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             GameObject *childClone = child->Clone();
             childClone->SetParent(go);
@@ -680,7 +680,7 @@ void GameObject::CloneInto(ICloneable *clone) const
 
     for (Component *comp : GetComponents())
     {
-        if (!comp->GetHideFlags().IsOn(HideFlag::DontClone))
+        if (!comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             go->AddComponent(comp->Clone());
         }
@@ -761,7 +761,7 @@ void GameObject::ExportXML(XMLNode *xmlInfo) const
 
     for (Component *c : GetComponents())
     {
-        if (c->GetHideFlags().IsOff(HideFlag::DontSerialize))
+        if (c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             XMLNode xmlComp;
             c->ExportXML(&xmlComp);
@@ -771,7 +771,7 @@ void GameObject::ExportXML(XMLNode *xmlInfo) const
 
     for (GameObject *child : GetChildren())
     {
-        if (child->GetHideFlags().IsOff(HideFlag::DontSerialize))
+        if (child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             XMLNode xmlChild;
             child->ExportXML(&xmlChild);

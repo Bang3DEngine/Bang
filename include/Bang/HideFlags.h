@@ -7,9 +7,9 @@ NAMESPACE_BANG_BEGIN
 
 enum HideFlag
 {
-    Default,
-    DontSerialize,
-    DontClone
+    DEFAULT,
+    DONT_SERIALIZE,
+    DONT_CLONE
 };
 
 CREATE_FLAGS(HideFlags, HideFlag);

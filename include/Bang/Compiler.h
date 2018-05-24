@@ -11,9 +11,9 @@ class Compiler
 public:
     enum OutputType
     {
-        Object,
-        SharedLib,
-        Executable
+        OBJECT,
+        SHARED_LIB,
+        EXECUTABLE
     };
 
     struct Job
@@ -23,7 +23,7 @@ public:
         List<String> libraries;
         List<String> flags;
         Path outputFile;
-        OutputType outputMode = OutputType::Executable;
+        OutputType outputMode = OutputType::EXECUTABLE;
 
         void AddInputFile(const Path &path);
         void AddInputFiles(const Array<Path> &paths);

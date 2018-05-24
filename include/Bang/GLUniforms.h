@@ -77,7 +77,7 @@ public:
 private:
     ViewportUniforms m_viewportUniforms;
     MatrixUniforms m_matrixUniforms;
-    GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::Canvas;
+    GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::CANVAS;
 
     GLUniforms() = default;
     virtual ~GLUniforms() = default;

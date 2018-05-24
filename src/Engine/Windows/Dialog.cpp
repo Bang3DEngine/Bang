@@ -38,7 +38,7 @@ Path Dialog::s_resultPath = Path::EmptyPath();
 std::stack<DialogWindow*> Dialog::s_dialogCreation_dialogWindows;
 std::stack<Window*>       Dialog::s_dialogCreation_prevActiveWindows;
 std::stack<bool>          Dialog::s_dialogCreation_modalBooleans;
-Dialog::YesNoCancel Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Cancel;
+Dialog::YesNoCancel Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::CANCEL;
 
 DialogWindow* Dialog::s_currentDialog = nullptr;
 
@@ -299,14 +299,14 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
 
     GameObject *vlGo = GameObjectFactory::CreateUIGameObject();
     UIVerticalLayout *vl = vlGo->AddComponent<UIVerticalLayout>();
-    vl->SetChildrenVerticalStretch(Stretch::None);
+    vl->SetChildrenVerticalStretch(Stretch::NONE);
     UILayoutElement *vlLE = vlGo->AddComponent<UILayoutElement>();
     vlLE->SetFlexibleHeight(1);
 
     GameObject *botHLGo = GameObjectFactory::CreateUIGameObject();
     UIHorizontalLayout *hl = botHLGo->AddComponent<UIHorizontalLayout>();
-    hl->SetChildrenHorizontalAlignment(HorizontalAlignment::Right);
-    hl->SetChildrenVerticalStretch(Stretch::Full);
+    hl->SetChildrenHorizontalAlignment(HorizontalAlignment::RIGHT);
+    hl->SetChildrenVerticalStretch(Stretch::FULL);
     UILayoutElement *hlLE = botHLGo->AddComponent<UILayoutElement>();
     hlLE->SetFlexibleHeight(0);
 
@@ -339,14 +339,14 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     inputHLLE->SetFlexibleHeight(0);
 
     UIHorizontalLayout *inputPathHL = inputPathCont->AddComponent<UIHorizontalLayout>();
-    inputPathHL->SetChildrenVerticalStretch(Stretch::Full);
-    inputPathHL->SetChildrenHorizontalStretch(Stretch::None);
+    inputPathHL->SetChildrenVerticalStretch(Stretch::FULL);
+    inputPathHL->SetChildrenHorizontalStretch(Stretch::NONE);
     inputPathHL->SetSpacing(10);
 
-    list->GetScrollPanel()->SetHorizontalScrollBarSide(VerticalSide::Bot);
-    list->GetScrollPanel()->SetVerticalScrollBarSide(HorizontalSide::Right);
-    list->GetScrollPanel()->SetVerticalShowScrollMode(ShowScrollMode::WhenNeeded);
-    list->GetScrollPanel()->SetHorizontalShowScrollMode(ShowScrollMode::WhenNeeded);
+    list->GetScrollPanel()->SetHorizontalScrollBarSide(VerticalSide::BOT);
+    list->GetScrollPanel()->SetVerticalScrollBarSide(HorizontalSide::RIGHT);
+    list->GetScrollPanel()->SetVerticalShowScrollMode(ShowScrollMode::WHEN_NEEDED);
+    list->GetScrollPanel()->SetHorizontalShowScrollMode(ShowScrollMode::WHEN_NEEDED);
 
     UIButton *goButton = GameObjectFactory::CreateUIButton("Go");
     goButton->AddClickedCallback( [inputPathText, fileList]()
@@ -380,18 +380,18 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     inputPathText->GetGameObject()->SetParent(inputPathCont);
     goButton->GetGameObject()->SetParent(inputPathCont);
 
-    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::Min, 10)->SetParent(vlGo);
+    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::MIN, 10)->SetParent(vlGo);
     list->GetGameObject()->SetParent(vlGo);
-    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::Min, 10)->SetParent(vlGo);
+    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::MIN, 10)->SetParent(vlGo);
 
     botHLGo->SetParent(vlGo);
-    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Flexible, 0.0001f)->
+    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::FLEXIBLE, 0.0001f)->
             SetParent(botHLGo);
     botInputText->GetGameObject()->SetParent(botHLGo);
     botHLGo->SetName("WOW");
-    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Preferred, 10)->SetParent(botHLGo);
+    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::PREFERRED, 10)->SetParent(botHLGo);
     cancelButton->GetGameObject()->SetParent(botHLGo);
-    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Preferred, 5)->SetParent(botHLGo);
+    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::PREFERRED, 5)->SetParent(botHLGo);
     openButton->GetGameObject()->SetParent(botHLGo);
 
     scene->SetFirstFoundCamera();
@@ -421,12 +421,12 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     msgText->SetContent(msg);
     msgText->SetTextColor(Color::White);
     msgText->SetTextSize(12);
-    msgText->SetHorizontalAlign(HorizontalAlignment::Left);
-    msgText->SetVerticalAlign(VerticalAlignment::Center);
+    msgText->SetHorizontalAlign(HorizontalAlignment::LEFT);
+    msgText->SetVerticalAlign(VerticalAlignment::CENTER);
 
     GameObject *buttonsGo = GameObjectFactory::CreateUIGameObject();
     UIHorizontalLayout *buttonsHL = buttonsGo->AddComponent<UIHorizontalLayout>();
-    buttonsHL->SetChildrenVerticalStretch(Stretch::Full);
+    buttonsHL->SetChildrenVerticalStretch(Stretch::FULL);
     buttonsHL->SetSpacing(20);
     buttonsHL->SetPaddings(5);
     UILayoutElement *buttonsGoLE = buttonsGo->AddComponent<UILayoutElement>();
@@ -445,12 +445,12 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     okButton->AddClickedCallback(Dialog::OnOkClicked);
 
     msgGo->SetParent(scene);
-    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::Min, 10.0f)->SetParent(scene);
+    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::MIN, 10.0f)->SetParent(scene);
     inputText->GetGameObject()->SetParent(scene);
-    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::Flexible, 99999.0f)->
+    GameObjectFactory::CreateUIVSpacer(LayoutSizeType::FLEXIBLE, 99999.0f)->
             SetParent(scene);
     buttonsGo->SetParent(scene);
-    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Flexible, 0.0001f)->
+    GameObjectFactory::CreateUIHSpacer(LayoutSizeType::FLEXIBLE, 0.0001f)->
             SetParent(buttonsGo);
     okButton->GetGameObject()->SetParent(buttonsGo);
 
@@ -464,9 +464,9 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
         void OnUpdate() override
         {
             Component::OnUpdate();
-            if (Input::GetKeyDown(Key::Enter))
+            if (Input::GetKeyDown(Key::ENTER))
             {
-                m_okButton->Click(ClickType::Full);
+                m_okButton->Click(ClickType::FULL);
             }
         }
 
@@ -501,12 +501,12 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     iconLE->SetMinSize( Vector2i(45) );
     UIImageRenderer *icon = iconGo->AddComponent<UIImageRenderer>();
     icon->SetImageTexture( TextureFactory::GetWarningIcon().Get() );
-    icon->GetImageTexture()->SetFilterMode( GL::FilterMode::Bilinear );
+    icon->GetImageTexture()->SetFilterMode( GL::FilterMode::BILINEAR );
 
     GameObject *hLayoutGo = GameObjectFactory::CreateUIGameObjectNamed("HL");
     UIHorizontalLayout *hLayout = hLayoutGo->AddComponent<UIHorizontalLayout>();
-    hLayout->SetChildrenHorizontalAlignment(HorizontalAlignment::Center);
-    hLayout->SetChildrenVerticalAlignment(VerticalAlignment::Center);
+    hLayout->SetChildrenHorizontalAlignment(HorizontalAlignment::CENTER);
+    hLayout->SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
 
     GameObject *msgGo = GameObjectFactory::CreateUIGameObjectNamed("MSGGo");
     UITextRenderer *text = msgGo->AddComponent<UITextRenderer>();
@@ -514,13 +514,13 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     text->SetContent(msg);
     text->SetTextColor(Color::White);
     text->SetTextSize(12);
-    text->SetHorizontalAlign(HorizontalAlignment::Left);
-    text->SetVerticalAlign(VerticalAlignment::Top);
+    text->SetHorizontalAlign(HorizontalAlignment::LEFT);
+    text->SetVerticalAlign(VerticalAlignment::TOP);
 
     GameObject *buttonsGo = GameObjectFactory::CreateUIGameObject();
     GameObject *hSpacer = GameObjectFactory::CreateUIHSpacer();
     UIHorizontalLayout *buttonsHL = buttonsGo->AddComponent<UIHorizontalLayout>();
-    buttonsHL->SetChildrenVerticalStretch(Stretch::Full);
+    buttonsHL->SetChildrenVerticalStretch(Stretch::FULL);
     buttonsHL->SetSpacing(20);
     buttonsHL->SetPaddings(5);
     UILayoutElement *buttonsGoLE = buttonsGo->AddComponent<UILayoutElement>();
@@ -540,10 +540,10 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
      mainVLayoutGo->SetParent(container);
       hLayoutGo->SetParent(mainVLayoutGo);
        iconGo->SetParent(hLayoutGo);
-       GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Min, 20)->
+       GameObjectFactory::CreateUIHSpacer(LayoutSizeType::MIN, 20)->
                SetParent(hLayoutGo);
        msgGo->SetParent(hLayoutGo);
-       GameObjectFactory::CreateUIHSeparator(LayoutSizeType::Min, 20)->
+       GameObjectFactory::CreateUIHSeparator(LayoutSizeType::MIN, 20)->
                SetParent(mainVLayoutGo);
       buttonsGo->SetParent(mainVLayoutGo);
        hSpacer->SetParent(buttonsGo);
@@ -570,12 +570,12 @@ Scene *Dialog::CreateMsgScene(const String &msg)
     iconLE->SetMinSize( Vector2i(45) );
     UIImageRenderer *icon = iconGo->AddComponent<UIImageRenderer>();
     icon->SetImageTexture( EPATH("Icons/Error.png"));
-    icon->GetImageTexture()->SetFilterMode( GL::FilterMode::Bilinear );
+    icon->GetImageTexture()->SetFilterMode( GL::FilterMode::BILINEAR );
 
     GameObject *hLayoutGo = GameObjectFactory::CreateUIGameObjectNamed("HL");
     UIHorizontalLayout *hLayout = hLayoutGo->AddComponent<UIHorizontalLayout>();
-    hLayout->SetChildrenHorizontalAlignment(HorizontalAlignment::Center);
-    hLayout->SetChildrenVerticalAlignment(VerticalAlignment::Center);
+    hLayout->SetChildrenHorizontalAlignment(HorizontalAlignment::CENTER);
+    hLayout->SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
     UILayoutElement *hLayoutLE = hLayoutGo->AddComponent<UILayoutElement>();
     hLayoutLE->SetPreferredSize( Vector2i::One );
 
@@ -585,8 +585,8 @@ Scene *Dialog::CreateMsgScene(const String &msg)
     text->SetContent(msg);
     text->SetTextColor(Color::White);
     text->SetTextSize(12);
-    text->SetHorizontalAlign(HorizontalAlignment::Center);
-    text->SetVerticalAlign(VerticalAlignment::Center);
+    text->SetHorizontalAlign(HorizontalAlignment::CENTER);
+    text->SetVerticalAlign(VerticalAlignment::CENTER);
 
     GameObject *buttonsGo = GameObjectFactory::CreateUIGameObject();
     GameObject *hSpacer = GameObjectFactory::CreateUIHSpacer();
@@ -604,10 +604,10 @@ Scene *Dialog::CreateMsgScene(const String &msg)
      mainVLayoutGo->SetParent(container);
       hLayoutGo->SetParent(mainVLayoutGo);
        iconGo->SetParent(hLayoutGo);
-       GameObjectFactory::CreateUIHSpacer(LayoutSizeType::Min, 20)->
+       GameObjectFactory::CreateUIHSpacer(LayoutSizeType::MIN, 20)->
                SetParent(hLayoutGo);
        msgGo->SetParent(hLayoutGo);
-       GameObjectFactory::CreateUIHSeparator(LayoutSizeType::Min, 20)->
+       GameObjectFactory::CreateUIHSeparator(LayoutSizeType::MIN, 20)->
                SetParent(mainVLayoutGo);
       buttonsGo->SetParent(mainVLayoutGo);
        hSpacer->SetParent(buttonsGo);
@@ -636,19 +636,19 @@ void Dialog::OnOkClicked()
 
 void Dialog::OnYesClicked()
 {
-    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Yes;
+    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::YES;
     OnNeedToEndDialog();
 }
 
 void Dialog::OnNoClicked()
 {
-    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::No;
+    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::NO;
     OnNeedToEndDialog();
 }
 
 void Dialog::OnCancelClicked()
 {
-    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Cancel;
+    Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::CANCEL;
     OnNeedToEndDialog();
 }
 

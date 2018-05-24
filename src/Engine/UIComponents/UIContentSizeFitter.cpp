@@ -24,16 +24,16 @@ void UIContentSizeFitter::ApplyLayout(Axis axis)
     RectTransform *rt = GetGameObject()->GetRectTransform();
     if (!rt) { return; }
 
-    if (axis == Axis::Horizontal &&
-        GetHorizontalSizeType() != LayoutSizeType::None)
+    if (axis == Axis::HORIZONTAL &&
+        GetHorizontalSizeType() != LayoutSizeType::NONE)
     {
         Vector2i hSize (UILayoutManager::GetSize(GetGameObject(),
                                                  GetHorizontalSizeType()));
         rt->SetWidthFromPivot(hSize.x);
     }
 
-    if (axis == Axis::Vertical &&
-        GetVerticalSizeType() != LayoutSizeType::None)
+    if (axis == Axis::VERTICAL &&
+        GetVerticalSizeType() != LayoutSizeType::NONE)
     {
         Vector2i vSize (UILayoutManager::GetSize(GetGameObject(),
                                                  GetVerticalSizeType()));
@@ -43,9 +43,9 @@ void UIContentSizeFitter::ApplyLayout(Axis axis)
 
 void UIContentSizeFitter::SetHorizontalSizeType(LayoutSizeType sizeType)
 {
-    ASSERT(sizeType == LayoutSizeType::None ||
-           sizeType == LayoutSizeType::Min  ||
-           sizeType == LayoutSizeType::Preferred);
+    ASSERT(sizeType == LayoutSizeType::NONE ||
+           sizeType == LayoutSizeType::MIN  ||
+           sizeType == LayoutSizeType::PREFERRED);
 
     if (sizeType != GetHorizontalSizeType())
     {
@@ -56,9 +56,9 @@ void UIContentSizeFitter::SetHorizontalSizeType(LayoutSizeType sizeType)
 
 void UIContentSizeFitter::SetVerticalSizeType(LayoutSizeType sizeType)
 {
-    ASSERT(sizeType == LayoutSizeType::None ||
-           sizeType == LayoutSizeType::Min  ||
-           sizeType == LayoutSizeType::Preferred);
+    ASSERT(sizeType == LayoutSizeType::NONE ||
+           sizeType == LayoutSizeType::MIN  ||
+           sizeType == LayoutSizeType::PREFERRED);
 
     if (sizeType != GetVerticalSizeType())
     {

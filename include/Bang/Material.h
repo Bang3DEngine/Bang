@@ -78,7 +78,7 @@ protected:
     RH<Texture2D> p_normalMapTexture;
     RH<ShaderProgram> p_shaderProgram;
 
-    RenderPass m_renderPass         = RenderPass::Scene;
+    RenderPass m_renderPass         = RenderPass::SCENE;
     Color m_albedoColor             = Color::White;
     float m_roughness               = 1.0f;
     float m_metalness               = 0.5f;
@@ -89,7 +89,7 @@ protected:
     Vector2 m_normalMapUvMultiply   = Vector2::One;
     float m_lineWidth               = 1.0f;
     float m_normalMapMultiplyFactor = 1.0f;
-    GL::CullFaceExt m_cullFace      = GL::CullFaceExt::Back;
+    GL::CullFaceExt m_cullFace      = GL::CullFaceExt::BACK;
     bool m_renderWireframe          = false;
 
     Material();

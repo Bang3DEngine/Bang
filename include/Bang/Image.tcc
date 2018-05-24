@@ -125,7 +125,7 @@ void Image<T>::AddMarginsToMatchAspectRatio(float aspectRatio,
     if (aspectRatio > 1.0f) { newSize.x = (GetHeight() * aspectRatio); }
     else { newSize.y = GetWidth() / aspectRatio; }
     Vector2i margins = (newSize - GetSize());
-    AddMargins(margins/2, marginColor, AspectRatioMode::Ignore);
+    AddMargins(margins/2, marginColor, AspectRatioMode::IGNORE);
 }
 
 template<class T>
@@ -145,7 +145,7 @@ void Image<T>::ResizeToMatchAspectRatio(float aspectRatio,
     bool modifyWidth = ((aspectRatio > 1.0f) == makeBigger);
     if (modifyWidth) { newSize.x = (GetHeight() * aspectRatio); }
     else { newSize.y = GetWidth() / aspectRatio; }
-    Resize(newSize, resizeMode, AspectRatioMode::Ignore);
+    Resize(newSize, resizeMode, AspectRatioMode::IGNORE);
 }
 
 template<class T>
@@ -186,7 +186,7 @@ void Image<T>::Resize(int _newWidth, int _newHeight,
         for (int x = 0; x < newSize.x; ++x)
         {
             Color newColor;
-            if (resizeMode == ImageResizeMode::Nearest)
+            if (resizeMode == ImageResizeMode::NEAREST)
             {
                 // Pick nearest original pixel
                 Vector2 oriCoord = Vector2(x,y) * sizeProp;

@@ -25,8 +25,8 @@ class UIList : public Component,
     COMPONENT(UIList)
 
 public:
-    enum Action { SelectionIn, SelectionOut, MouseOver, MouseOut,
-                  Pressed, DoubleClickedLeft, ClickedLeft, ClickedRight };
+    enum Action { SELECTION_IN, SELECTION_OUT, MOUSE_OVER, MOUSE_OUT,
+                  PRESSED, DOUBLE_CLICKED_LEFT, CLICKED_LEFT, CLICKED_RIGHT };
 
     // Component
     void OnUpdate() override;

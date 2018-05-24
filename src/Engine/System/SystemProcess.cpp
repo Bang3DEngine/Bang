@@ -33,9 +33,9 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
     // Debug_DLog("Executing command: " << command << " " <<
     //            String::Join(extraArgs, " "));
 
-    m_oldFileDescriptors[IN]  = dup(Channel::StandardIn);
-    m_oldFileDescriptors[OUT] = dup(Channel::StandardOut);
-    m_oldFileDescriptors[ERR] = dup(Channel::StandardError);
+    m_oldFileDescriptors[IN]  = dup(Channel::STDIN);
+    m_oldFileDescriptors[OUT] = dup(Channel::STDOUT);
+    m_oldFileDescriptors[ERR] = dup(Channel::STDERR);
 
     if (pipe(m_childToParentOutFD) != 0 ||
         pipe(m_childToParentErrFD) != 0 ||
@@ -55,9 +55,9 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
 
         // Input from stdin now will go to our pipe m_parentToChildFD[READ]
         // stdout/stderr now will go to our pipe m_childToParentXXXFD[WRITE]
-        dup2(m_parentToChildFD[READ],     Channel::StandardIn);
-        dup2(m_childToParentOutFD[WRITE], Channel::StandardOut);
-        dup2(m_childToParentErrFD[WRITE], Channel::StandardError);
+        dup2(m_parentToChildFD[READ],     Channel::STDIN);
+        dup2(m_childToParentOutFD[WRITE], Channel::STDOUT);
+        dup2(m_childToParentErrFD[WRITE], Channel::STDERR);
 
         // Execute the command, and its in/out will come to our pipes
         String fullCommand = command + " " + String::Join(extraArgs, " ");
@@ -152,9 +152,9 @@ void SystemProcess::Close()
     close(m_parentToChildFD[WRITE]);
 
     // Restore stdin / stdout / stderr
-    dup2(Channel::StandardIn,    m_oldFileDescriptors[IN]);
-    dup2(Channel::StandardOut,   m_oldFileDescriptors[OUT]);
-    dup2(Channel::StandardError, m_oldFileDescriptors[ERR]);
+    dup2(Channel::STDIN,    m_oldFileDescriptors[IN]);
+    dup2(Channel::STDOUT,   m_oldFileDescriptors[OUT]);
+    dup2(Channel::STDERR, m_oldFileDescriptors[ERR]);
     close(m_oldFileDescriptors[IN]);
     close(m_oldFileDescriptors[OUT]);
     close(m_oldFileDescriptors[ERR]);

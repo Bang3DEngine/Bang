@@ -81,7 +81,7 @@ Image<T> Texture::ToImage(GL::TextureTarget texTarget) const
     Bind();
     GL::GetTexImage(texTarget,
                     GL::ColorComp::RGBA,
-                    GL::DataType::UnsignedByte,
+                    GL::DataType::UNSIGNED_BYTE,
                     pixels);
     GL::Bind(GetGLBindTarget(), prevBound);
 

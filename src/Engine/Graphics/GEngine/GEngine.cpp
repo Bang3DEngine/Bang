@@ -79,8 +79,8 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::StencilOperation prevStencilOp = GL::GetStencilOp();
 
     // We have marked from before the zone where we want to apply the effect
-    GL::SetStencilOp(GL::StencilOperation::Keep);
-    GL::SetStencilFunc(GL::Function::Equal);
+    GL::SetStencilOp(GL::StencilOperation::KEEP);
+    GL::SetStencilFunc(GL::Function::EQUAL);
     GL::SetStencilValue(1);
 
     List<Light*> lights = lightsContainer->GetComponentsInChildren<Light>();
@@ -125,15 +125,15 @@ SelectionFramebuffer *GEngine::GetActiveSelectionFramebuffer()
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
-    bool wasEnabledBlendi0 = GL::IsEnabledi(GL::Enablable::Blend, 0);
+    bool wasEnabledBlendi0 = GL::IsEnabledi(GL::Enablable::BLEND, 0);
 
     camera->BindGBuffer();
 
     GBuffer *gbuffer = camera->GetGBuffer();
     gbuffer->PushDepthStencilTexture();
 
-    GL::Enablei(GL::Enablable::Blend, 0);
-    GL::BlendFunc(GL::BlendFactor::SrcAlpha, GL::BlendFactor::OneMinusSrcAlpha);
+    GL::Enablei(GL::Enablable::BLEND, 0);
+    GL::BlendFunc(GL::BlendFactor::SRC_ALPHA, GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
 
     // GBuffer Scene rendering
     gbuffer->SetAllDrawBuffers();
@@ -142,7 +142,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::ClearDepthBuffer();
     GL::ClearColorBuffer(Color::Zero);
     GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEqual);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
 
     // Render the sky / background (before so that alphas in scene can be handled)
     GLId prevBoundSP = GL::GetBoundId(m_renderSkySP.Get()->GetGLBindTarget());
@@ -151,21 +151,21 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::Bind(m_renderSkySP.Get()->GetGLBindTarget(), prevBoundSP); // Restore
 
     // Render scene pass
-    RenderWithPassAndMarkStencilForLights(go, RenderPass::Scene);
+    RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
     ApplyStenciledDeferredLightsToGBuffer(go, camera);
 
      // Render scene postprocess
     gbuffer->SetColorDrawBuffer();
-    RenderWithPass(go, RenderPass::ScenePostProcess);
+    RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
 
     // GBuffer Canvas rendering
     gbuffer->SetColorDrawBuffer();
     gbuffer->SetCanvasDepthStencil();
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEqual);
-    RenderWithPass(go, RenderPass::Canvas);
-    RenderWithPass(go, RenderPass::CanvasPostProcess);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
+    RenderWithPass(go, RenderPass::CANVAS);
+    RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
 
     // GBuffer Overlay rendering
     gbuffer->SetAllDrawBuffers();
@@ -173,15 +173,15 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::ClearStencilBuffer();
     GL::ClearDepthBuffer();
     GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEqual);
-    RenderWithPass(go, RenderPass::Overlay);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
+    RenderWithPass(go, RenderPass::OVERLAY);
     // RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
     // ApplyStenciledDeferredLightsToGBuffer(go, camera);
-    RenderWithPass(go, RenderPass::OverlayPostProcess);
+    RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
 
     // GL::BlendFuncSeparate(prevBlendSrcColorFactor, prevBlendDstColorFactor,
     //                       prevBlendSrcAlphaFactor, prevBlendDstAlphaFactor);
-    GL::SetEnabledi(GL::Enablable::Blend, 0, wasEnabledBlendi0);
+    GL::SetEnabledi(GL::Enablable::BLEND, 0, wasEnabledBlendi0);
     gbuffer->PopDepthStencilTexture();
 }
 
@@ -193,14 +193,14 @@ void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
 
         // Selection rendering
         camera->GetSelectionFramebuffer()->PrepareNewFrameForRender(go);
-        go->Render(RenderPass::Scene);
+        go->Render(RenderPass::SCENE);
         GL::ClearStencilBuffer();
         GL::ClearDepthBuffer();
-        GL::SetDepthFunc(GL::Function::LEqual);
-        RenderWithPass(go, RenderPass::Canvas);
+        GL::SetDepthFunc(GL::Function::LEQUAL);
+        RenderWithPass(go, RenderPass::CANVAS);
 
         GL::ClearDepthBuffer();
-        RenderWithPass(go, RenderPass::Overlay);
+        RenderWithPass(go, RenderPass::OVERLAY);
     }
 }
 
@@ -228,7 +228,7 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
     GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
 
     GL::SetStencilValue(1);
-    GL::SetStencilOp(GL::StencilOperation::Replace);
+    GL::SetStencilOp(GL::StencilOperation::REPLACE);
 
     // Render pass
     RenderWithPass(go, renderPass);
@@ -247,7 +247,7 @@ void GEngine::SetActive(GEngine *gEngine)
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     // Save state
-    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
 
     // Set state, bind and draw
     sp->Bind();
@@ -259,13 +259,13 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
     RenderViewportPlane(); // Renduurrr
 
     // Restore state
-    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundShaderProgram);
+    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundShaderProgram);
 }
 
 void GEngine::RenderTexture(Texture2D *texture)
 {
     // Save state
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::ShaderProgram);
+    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM);
 
     ShaderProgram *sp = p_renderTextureToViewportSP.Get();
 
@@ -274,17 +274,17 @@ void GEngine::RenderTexture(Texture2D *texture)
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
     // Restore state
-    GL::Bind(GL::BindTarget::ShaderProgram, prevBoundSP);
+    GL::Bind(GL::BindTarget::SHADER__PROGRAM, prevBoundSP);
 }
 
 void GEngine::RenderWithAllPasses(GameObject *go)
 {
-    RenderWithPass(go, RenderPass::Scene);
-    RenderWithPass(go, RenderPass::ScenePostProcess);
-    RenderWithPass(go, RenderPass::Canvas);
-    RenderWithPass(go, RenderPass::CanvasPostProcess);
-    RenderWithPass(go, RenderPass::Overlay);
-    RenderWithPass(go, RenderPass::OverlayPostProcess);
+    RenderWithPass(go, RenderPass::SCENE);
+    RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
+    RenderWithPass(go, RenderPass::CANVAS);
+    RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
+    RenderWithPass(go, RenderPass::OVERLAY);
+    RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
 }
 
 void GEngine::RenderViewportPlane()
@@ -297,9 +297,9 @@ void GEngine::RenderViewportPlane()
     // Set state
     GL::SetWireframe(false);
     GL::SetDepthMask(false);
-    GL::SetDepthFunc(GL::Function::Always);
+    GL::SetDepthFunc(GL::Function::ALWAYS);
 
-    GL::Render(p_windowPlaneMesh.Get()->GetVAO(), GL::Primitive::Triangles,
+    GL::Render(p_windowPlaneMesh.Get()->GetVAO(), GL::Primitive::TRIANGLES,
                p_windowPlaneMesh.Get()->GetVertexCount());
 
     // Restore state
@@ -357,7 +357,7 @@ void GEngine::Render(Renderer *rend)
         else
         {
             ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
-                    GL::GetBoundId(GL::BindTarget::DrawFramebuffer) > 0 );
+                    GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
             GEngine::RenderRaw(rend);
         }
     }

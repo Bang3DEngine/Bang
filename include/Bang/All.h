@@ -47,7 +47,6 @@
 #include "Bang/File.h"
 #include "Bang/FileTracker.h"
 #include "Bang/Flags.h"
-#include "Bang/FocusAction.h"
 #include "Bang/Font.h"
 #include "Bang/FontSheetCreator.h"
 #include "Bang/FPSChrono.h"

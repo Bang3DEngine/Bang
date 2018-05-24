@@ -10,7 +10,7 @@ USING_NAMESPACE_BANG
 
 UIAspectRatioFitter::UIAspectRatioFitter()
 {
-    SetAspectRatioMode(AspectRatioMode::Keep);
+    SetAspectRatioMode(AspectRatioMode::KEEP);
 }
 
 UIAspectRatioFitter::~UIAspectRatioFitter()
@@ -73,7 +73,7 @@ void UIAspectRatioFitter::ApplyLayout(Axis axis)
     Vector2i newSize = AspectRatio::GetAspectRatioedSize(currentSize,
                                                          parentSize,
                                                          GetAspectRatioMode());
-    if (axis == Axis::Vertical)
+    if (axis == Axis::VERTICAL)
     {
         rt->SetWidthFromPivot(newSize.x);
         rt->SetHeightFromPivot(newSize.y);

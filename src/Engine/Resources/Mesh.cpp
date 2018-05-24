@@ -129,7 +129,7 @@ void Mesh::UpdateGeometry()
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
                                          Mesh::DefaultPositionsVBOLocation,
                                          3,
-                                         GL::VertexAttribDataType::Float,
+                                         GL::VertexAttribDataType::FLOAT,
                                          false,
                                          totalStride,
                                          posOffset);
@@ -141,7 +141,7 @@ void Mesh::UpdateGeometry()
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
                                          Mesh::DefaultNormalsVBOLocation,
                                          3,
-                                         GL::VertexAttribDataType::Float,
+                                         GL::VertexAttribDataType::FLOAT,
                                          true,
                                          totalStride,
                                          normalsOffset);
@@ -153,7 +153,7 @@ void Mesh::UpdateGeometry()
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
                                          Mesh::DefaultUvsVBOLocation,
                                          2,
-                                         GL::VertexAttribDataType::Float,
+                                         GL::VertexAttribDataType::FLOAT,
                                          false,
                                          totalStride,
                                          uvsOffset);
@@ -165,7 +165,7 @@ void Mesh::UpdateGeometry()
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
                                          Mesh::DefaultTangentsVBOLocation,
                                          3,
-                                         GL::VertexAttribDataType::Float,
+                                         GL::VertexAttribDataType::FLOAT,
                                          false,
                                          totalStride,
                                          tangentsOffset);
@@ -202,7 +202,7 @@ void Mesh::CalculateLODs()
     {
         m_lodMeshes = MeshSimplifier::GetAllMeshLODs(this,
                                  // MeshSimplifier::Method::Clustering);
-                                 MeshSimplifier::Method::QuadricErrorMetrics);
+                                 MeshSimplifier::Method::QUADRIC_ERROR_METRICS);
         m_areLodsValid = true;
     }
 }

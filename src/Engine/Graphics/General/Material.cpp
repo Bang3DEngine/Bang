@@ -222,12 +222,12 @@ void Material::Bind() const
 
     GL::SetWireframe( IsRenderWireframe() );
 
-    if (GetCullFace() != GL::CullFaceExt::None)
+    if (GetCullFace() != GL::CullFaceExt::NONE)
     {
-        GL::Enable(GL::Enablable::CullFace); // Culling states
+        GL::Enable(GL::Enablable::CULL_FACE); // Culling states
         GL::SetCullFace( SCAST<GL::Face>(GetCullFace()) );
     }
-    else { GL::Disable(GL::Enablable::CullFace); }
+    else { GL::Disable(GL::Enablable::CULL_FACE); }
 
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );

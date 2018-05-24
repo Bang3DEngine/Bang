@@ -16,9 +16,9 @@ public:
 
     enum Channel
     {
-        StandardIn    = STDIN_FILENO,
-        StandardOut   = STDOUT_FILENO,
-        StandardError = STDERR_FILENO
+        STDIN  = STDIN_FILENO,
+        STDOUT = STDOUT_FILENO,
+        STDERR = STDERR_FILENO
     };
 
     SystemProcess();

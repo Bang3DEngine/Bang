@@ -11,18 +11,18 @@ class Cursor
 public:
     enum class Type
     {
-        Arrow     = SDL_SYSTEM_CURSOR_ARROW,
-        Crosshair = SDL_SYSTEM_CURSOR_CROSSHAIR,
-        Hand      = SDL_SYSTEM_CURSOR_HAND,
-        IBeam     = SDL_SYSTEM_CURSOR_IBEAM,
-        No        = SDL_SYSTEM_CURSOR_NO,
-        SizeNWSE  = SDL_SYSTEM_CURSOR_SIZENWSE,
-        SizeNESW  = SDL_SYSTEM_CURSOR_SIZENESW,
-        SizeWE    = SDL_SYSTEM_CURSOR_SIZEWE,
-        SizeNS    = SDL_SYSTEM_CURSOR_SIZENS,
-        SizeAll   = SDL_SYSTEM_CURSOR_SIZEALL,
-        Wait      = SDL_SYSTEM_CURSOR_WAIT,
-        WaitArrow = SDL_SYSTEM_CURSOR_WAITARROW
+        ARROW      = SDL_SYSTEM_CURSOR_ARROW,
+        CROSSHAIR  = SDL_SYSTEM_CURSOR_CROSSHAIR,
+        HAND       = SDL_SYSTEM_CURSOR_HAND,
+        IBEAM      = SDL_SYSTEM_CURSOR_IBEAM,
+        NO         = SDL_SYSTEM_CURSOR_NO,
+        SIZE_NW_SE = SDL_SYSTEM_CURSOR_SIZENWSE,
+        SIZE_NE_SW = SDL_SYSTEM_CURSOR_SIZENESW,
+        SIZE_WE    = SDL_SYSTEM_CURSOR_SIZEWE,
+        SIZE_NS    = SDL_SYSTEM_CURSOR_SIZENS,
+        SIZE_ALL   = SDL_SYSTEM_CURSOR_SIZEALL,
+        WAIT       = SDL_SYSTEM_CURSOR_WAIT,
+        WAIT_ARROW = SDL_SYSTEM_CURSOR_WAITARROW
     };
 
     static void Set(Type cursorType);

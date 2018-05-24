@@ -51,17 +51,17 @@ void UILayoutManager::PropagateInvalidation(ILayoutController *controller)
 
 Vector2i UILayoutManager::GetMinSize(GameObject *go)
 {
-    return Vector2i( UILayoutManager::GetSize(go, LayoutSizeType::Min) );
+    return Vector2i( UILayoutManager::GetSize(go, LayoutSizeType::MIN) );
 }
 
 Vector2i UILayoutManager::GetPreferredSize(GameObject *go)
 {
-    return Vector2i( UILayoutManager::GetSize(go, LayoutSizeType::Preferred) );
+    return Vector2i( UILayoutManager::GetSize(go, LayoutSizeType::PREFERRED) );
 }
 
 Vector2 UILayoutManager::GetFlexibleSize(GameObject *go)
 {
-    return UILayoutManager::GetSize(go, LayoutSizeType::Flexible);
+    return UILayoutManager::GetSize(go, LayoutSizeType::FLEXIBLE);
 }
 
 Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
@@ -121,10 +121,10 @@ void UILayoutManager::RebuildLayout(GameObject *rootGo)
 {
     if (!rootGo) { return; }
 
-    CalculateLayout(rootGo, Axis::Horizontal);
-    ApplyLayout(rootGo, Axis::Horizontal);
-    CalculateLayout(rootGo, Axis::Vertical);
-    ApplyLayout(rootGo, Axis::Vertical);
+    CalculateLayout(rootGo, Axis::HORIZONTAL);
+    ApplyLayout(rootGo, Axis::HORIZONTAL);
+    CalculateLayout(rootGo, Axis::VERTICAL);
+    ApplyLayout(rootGo, Axis::VERTICAL);
 }
 
 void UILayoutManager::CalculateLayout(GameObject *gameObject, Axis axis)

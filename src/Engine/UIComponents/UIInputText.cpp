@@ -147,12 +147,12 @@ void UIInputText::HandleTyping()
         int offsetSelection = 1;
         bool removeText = false;
         bool selecting = GetSelectedText().Size() > 0;
-        if (Input::GetKeyDownRepeat(Key::Delete))
+        if (Input::GetKeyDownRepeat(Key::DELETE))
         {
             if (selecting) { offsetSelection += -1; }
             removeText = true;
         }
-        else if (Input::GetKeyDownRepeat(Key::BackSpace))
+        else if (Input::GetKeyDownRepeat(Key::BACKSPACE))
         {
             offsetCursor    += (selecting ? 0 : -1);
             offsetSelection += -1;
@@ -184,7 +184,7 @@ void UIInputText::HandleTyping()
         resetSelection = true;
     }
 
-    if ( (Input::GetKey(Key::LCtrl) || Input::GetKey(Key::RCtrl)) )
+    if ( (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL)) )
     {
         String selectedText = GetSelectedText();
         if ( Input::GetKeyDown(Key::X) && selectedText.Size() > 0 )
@@ -202,12 +202,12 @@ void UIInputText::HandleTyping()
         }
     }
 
-    if (Input::GetKeyDown(Key::End))
+    if (Input::GetKeyDown(Key::END))
     {
         resetSelection = !IsSelecting();
         SetCursorIndex( GetText()->GetContent().Size() );
     }
-    else if (Input::GetKeyDown(Key::Home))
+    else if (Input::GetKeyDown(Key::HOME))
     {
         resetSelection = !IsSelecting();
         SetCursorIndex(0);
@@ -262,12 +262,12 @@ void UIInputText::HandleKeySelection(bool existedSelection)
 {
     // Get cursor advance 1/-1
     int indexAdvance = 0;
-    if (Input::GetKeyDownRepeat(Key::Right)) { indexAdvance = 1; }
-    if (Input::GetKeyDownRepeat(Key::Left)) { indexAdvance = -1; }
+    if (Input::GetKeyDownRepeat(Key::RIGHT)) { indexAdvance = 1; }
+    if (Input::GetKeyDownRepeat(Key::LEFT)) { indexAdvance = -1; }
 
     if (indexAdvance != 0)
     {
-        if (Input::GetKey(Key::LCtrl) || Input::GetKey(Key::RCtrl))
+        if (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL))
         {
             bool fwd = (indexAdvance > 0);
             int startIdx = GetCursorIndex() + (fwd ? 0 : -1);
@@ -367,7 +367,7 @@ UIImageRenderer *UIInputText::GetBackground() const
 
 bool UIInputText::IsShiftPressed() const
 {
-    return Input::GetKey(Key::LShift) || Input::GetKey(Key::RShift);
+    return Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
 }
 
 UIInputText *UIInputText::CreateInto(GameObject *go)
@@ -409,8 +409,8 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     cursorGo->SetParent(label->GetGameObject());
 
     inputText->SetCursorIndex( inputText->GetText()->GetContent().Size() );
-    inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::Left);
-    inputText->GetText()->SetVerticalAlign(VerticalAlignment::Center);
+    inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::LEFT);
+    inputText->GetText()->SetVerticalAlign(VerticalAlignment::CENTER);
     inputText->GetText()->SetWrapping(false);
     inputText->GetLabel()->ResetSelection();
     inputText->UpdateCursorRenderer();

@@ -69,8 +69,8 @@ private:
     bool m_visible = true;
     bool m_castsShadows = true;
     bool m_receivesShadows = true;
-    GL::Primitive m_renderPrimitive = GL::Primitive::Triangles;
-    GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::World;
+    GL::Primitive m_renderPrimitive = GL::Primitive::TRIANGLES;
+    GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::WORLD;
 
     mutable RH<Material> p_material;
     RH<Material> p_sharedMaterial;

@@ -116,12 +116,12 @@ void GLUniforms::UpdatePVMMatrix()
     Matrix4 projViewMatrix;
     switch (glu->GetViewProjMode())
     {
-        case GL::ViewProjMode::World:
+        case GL::ViewProjMode::WORLD:
             pvmMatrix = matrices->proj * viewModel;
             projViewMatrix = matrices->proj * matrices->view;
         break;
 
-        case GL::ViewProjMode::Canvas:
+        case GL::ViewProjMode::CANVAS:
         {
             Matrix4 proj = GLUniforms::GetCanvasProjectionMatrix();
             pvmMatrix = proj * model;
@@ -157,7 +157,7 @@ const Matrix4 &GLUniforms::GetViewMatrix()
 Matrix4 GLUniforms::GetProjectionMatrix()
 {
     GLUniforms *glu = GLUniforms::GetActive();
-    return (glu->GetViewProjMode() == GL::ViewProjMode::World) ?
+    return (glu->GetViewProjMode() == GL::ViewProjMode::WORLD) ?
                 glu->GetMatrixUniforms()->proj :
                 GLUniforms::GetCanvasProjectionMatrix();
 }

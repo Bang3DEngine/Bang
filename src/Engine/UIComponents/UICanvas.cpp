@@ -56,7 +56,7 @@ void UICanvas::OnUpdate()
                 maskedRectNDC.Contains( Input::GetMousePositionNDC() ))
             {
                 focusMouseOver = focusable;
-                if (Input::GetMouseButtonDown(MouseButton::Left))
+                if (Input::GetMouseButtonDown(MouseButton::LEFT))
                 {
                     SetFocus(focusable);
                 }
@@ -67,7 +67,7 @@ void UICanvas::OnUpdate()
     SetFocusMouseOver(focusMouseOver); // Set Focus mouse over and cursor
 
     // Reset focus when clicking out of everything
-    if (Input::GetMouseButtonDown(MouseButton::Left) && !focusMouseOver)
+    if (Input::GetMouseButtonDown(MouseButton::LEFT) && !focusMouseOver)
     {
         SetFocus(nullptr);
     }
@@ -96,14 +96,14 @@ void UICanvas::OnUpdate()
     }
 
     // Tabbing
-    if (Input::GetKeyDownRepeat(Key::Tab))
+    if (Input::GetKeyDownRepeat(Key::TAB))
     {
         IFocusable *currentFocus = GetCurrentFocus();
         if (currentFocus)
         {
             const int n = focusables.Size();
             int indexOfFocus = focusables.IndexOf(currentFocus);
-            bool shift = Input::GetKey(Key::LShift) || Input::GetKey(Key::RShift);
+            bool shift = Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
             int newFocusIndex = indexOfFocus;
 
             while (true)
@@ -160,20 +160,20 @@ void UICanvas::OnUpdate()
                 }
                 else
                 {
-                    Cursor::Set(Cursor::Type::Arrow);
+                    Cursor::Set(Cursor::Type::ARROW);
                 }
             }
         }
         else
         {
-            Cursor::Set(Cursor::Type::Crosshair);
+            Cursor::Set(Cursor::Type::CROSSHAIR);
         }
     }
 
     if (p_currentDDBeingDragged)
     {
         List<IDragDropListener*> ddListeners = GetDragDropListeners();
-        if (Input::GetMouseButton(MouseButton::Left))
+        if (Input::GetMouseButton(MouseButton::LEFT))
         {
             p_currentDDBeingDragged->OnDragUpdate();
             for (IDragDropListener* ddListener : ddListeners)
@@ -296,7 +296,7 @@ void UICanvas::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if (renderPass == RenderPass::Canvas)
+    if (renderPass == RenderPass::CANVAS)
     {
         GetLayoutManager()->RebuildLayout( GetGameObject() );
     }

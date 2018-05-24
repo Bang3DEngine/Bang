@@ -69,19 +69,19 @@ void UIList::OnUpdate()
     {
         if (p_itemUnderMouse)
         {
-            CallSelectionCallback(p_itemUnderMouse, Action::MouseOut);
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
         }
 
         p_itemUnderMouse = itemUnderMouse;
         if (p_itemUnderMouse)
         {
-            CallSelectionCallback(p_itemUnderMouse, Action::MouseOver);
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
         }
     }
 
     if (!p_itemUnderMouse)
     {
-        if (p_itemUnderMouse) { CallSelectionCallback(p_itemUnderMouse, Action::MouseOut); }
+        if (p_itemUnderMouse) { CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT); }
         p_itemUnderMouse = nullptr;
     }
 
@@ -92,29 +92,29 @@ void UIList::OnUpdate()
         HandleShortcuts();
 
         // Clicked
-        if (Input::GetKeyDownRepeat(Key::Right) ||
-            Input::GetKeyDownRepeat(Key::Enter))
+        if (Input::GetKeyDownRepeat(Key::RIGHT) ||
+            Input::GetKeyDownRepeat(Key::ENTER))
         {
             GOItem *selectedItem = GetSelectedItem();
-            if (selectedItem) { CallSelectionCallback(selectedItem, Action::Pressed); }
+            if (selectedItem) { CallSelectionCallback(selectedItem, Action::PRESSED); }
         }
 
         if (p_itemUnderMouse)
         {
-            if (Input::GetMouseButtonDown(MouseButton::Left))
+            if (Input::GetMouseButtonDown(MouseButton::LEFT))
             {
                 SetSelection(p_itemUnderMouse);
-                CallSelectionCallback(p_itemUnderMouse, Action::ClickedLeft);
+                CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_LEFT);
             }
 
-            if (Input::GetMouseButtonDown(MouseButton::Right))
+            if (Input::GetMouseButtonDown(MouseButton::RIGHT))
             {
-                CallSelectionCallback(p_itemUnderMouse, Action::ClickedRight);
+                CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_RIGHT);
             }
 
-            if (Input::GetMouseButtonDoubleClick(MouseButton::Left))
+            if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
             {
-                CallSelectionCallback(p_itemUnderMouse, Action::DoubleClickedLeft);
+                CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
             }
         }
     }
@@ -306,7 +306,7 @@ void UIList::SetSelection(int index)
     if (GetSelectedIndex() != index)
     {
         GOItem *prevSelectedItem = GetSelectedItem();
-        if (prevSelectedItem) { CallSelectionCallback(prevSelectedItem, Action::SelectionOut); }
+        if (prevSelectedItem) { CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT); }
     }
 
     if (GetSelectedIndex() != index && index >= 0 && index < GetNumItems())
@@ -322,7 +322,7 @@ void UIList::SetSelection(int index)
             UICanvas *canvas = GetGameObject()->GetComponentInParent<UICanvas>();
             if (canvas) { canvas->SetFocus(itemFocusable); }
 
-            CallSelectionCallback(selectedItem, Action::SelectionIn);
+            CallSelectionCallback(selectedItem, Action::SELECTION_IN);
         }
     }
     else if (index == -1)
@@ -336,9 +336,9 @@ void UIList::HandleShortcuts()
     int newSelectedIndex = -1;
 
     int numItems = GetNumItems();
-    if (Input::GetKeyDownRepeat(Key::Down) || Input::GetKeyDownRepeat(Key::Up))
+    if (Input::GetKeyDownRepeat(Key::DOWN) || Input::GetKeyDownRepeat(Key::UP))
     {
-        int inc = Input::GetKeyDownRepeat(Key::Down) ? 1 : -1;
+        int inc = Input::GetKeyDownRepeat(Key::DOWN) ? 1 : -1;
         GOItem *newSelectedItem;
         newSelectedIndex = GetSelectedIndex();
         do
@@ -350,18 +350,18 @@ void UIList::HandleShortcuts()
         while (newSelectedIndex != GetSelectedIndex() &&
                !newSelectedItem->IsEnabled());
     }
-    else if (Input::GetKeyDownRepeat(Key::PageDown) ||
-             Input::GetKeyDownRepeat(Key::PageUp))
+    else if (Input::GetKeyDownRepeat(Key::PAGEDOWN) ||
+             Input::GetKeyDownRepeat(Key::PAGEUP))
     {
         if (GetScrollPanel())
         {
-            int sign = Input::GetKeyDownRepeat(Key::PageDown) ? 1 : -1;
+            int sign = Input::GetKeyDownRepeat(Key::PAGEDOWN) ? 1 : -1;
             GetScrollPanel()->SetScrolling( GetScrollPanel()->GetScrolling() +
                               sign * Vector2i(GetScrollPanel()->GetContainerSize()) );
         }
     }
-    else if (Input::GetKeyDown(Key::End)) { newSelectedIndex = GetNumItems() - 1; }
-    else if (Input::GetKeyDown(Key::Home)) { newSelectedIndex = 0; }
+    else if (Input::GetKeyDown(Key::END)) { newSelectedIndex = GetNumItems() - 1; }
+    else if (Input::GetKeyDown(Key::HOME)) { newSelectedIndex = 0; }
 
     if (newSelectedIndex >= 0)
     {
@@ -427,7 +427,7 @@ void UIList::OnDestroyed(EventEmitter<IDestroyListener> *object)
 {
     if (object == p_itemUnderMouse)
     {
-        CallSelectionCallback(p_itemUnderMouse, Action::SelectionOut);
+        CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
     }
 }
@@ -459,8 +459,8 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
         scrollPanel = GameObjectFactory::CreateUIScrollPanelInto(go);
 
         UIContentSizeFitter *csf = container->AddComponent<UIContentSizeFitter>();
-        csf->SetHorizontalSizeType(LayoutSizeType::None);
-        csf->SetVerticalSizeType(LayoutSizeType::Preferred);
+        csf->SetHorizontalSizeType(LayoutSizeType::NONE);
+        csf->SetVerticalSizeType(LayoutSizeType::PREFERRED);
         container->GetRectTransform()->SetPivotPosition(Vector2(-1,1));
 
         scrollPanel->GetScrollArea()->SetContainedGameObject(container);
@@ -482,19 +482,19 @@ void UIList::CallSelectionCallback(GOItem *item, Action action)
     bool isSelected = (GetSelectedItem() == item);
     switch (action)
     {
-        case UIList::Action::MouseOver:
+        case UIList::Action::MOUSE_OVER:
             if (!m_useSelectColor || !isSelected) { itemBg->SetTint( GetOverColor() ); }
         break;
 
-        case UIList::Action::MouseOut:
+        case UIList::Action::MOUSE_OUT:
             if (!m_useSelectColor || !isSelected) { itemBg->SetTint( GetIdleColor() ); }
         break;
 
-        case UIList::Action::SelectionIn:
+        case UIList::Action::SELECTION_IN:
             if (m_useSelectColor) { itemBg->SetTint( GetSelectedColor() ); }
         break;
 
-        case UIList::Action::SelectionOut:
+        case UIList::Action::SELECTION_OUT:
             if (m_useSelectColor) { itemBg->SetTint( GetIdleColor() ); }
         break;
 

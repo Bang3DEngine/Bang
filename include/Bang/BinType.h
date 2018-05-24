@@ -7,8 +7,8 @@ NAMESPACE_BANG_BEGIN
 
 enum class BinType
 {
-    Debug,
-    Release
+    BIN_DEBUG,
+    BIN_RELEASE
 };
 
 NAMESPACE_BANG_END

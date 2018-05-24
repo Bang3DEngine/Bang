@@ -2,8 +2,8 @@
 
 USING_NAMESPACE_BANG
 
-UIVerticalLayout::UIVerticalLayout() : UIDirLayout(Axis::Vertical)
+UIVerticalLayout::UIVerticalLayout() : UIDirLayout(Axis::VERTICAL)
 {
-    SetChildrenHorizontalStretch(Stretch::Full);
-    SetChildrenVerticalStretch(Stretch::None);
+    SetChildrenHorizontalStretch(Stretch::FULL);
+    SetChildrenVerticalStretch(Stretch::NONE);
 }

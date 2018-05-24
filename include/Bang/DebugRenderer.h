@@ -82,7 +82,7 @@ public:
 
 private:
     enum class DebugRendererPrimitiveType
-    { Point, Line, LineNDC, AARectNDC, RectNDC, Triangle, Quad };
+    { POINT, LINE, LINE_NDC, AARECT_NDC, RECT_NDC, TRIANGLE, QUAD };
 
     struct DebugRenderPrimitive
     {

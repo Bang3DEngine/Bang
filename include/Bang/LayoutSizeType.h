@@ -5,7 +5,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum class LayoutSizeType { None, Min, Preferred, Flexible };
+enum class LayoutSizeType { NONE, MIN, PREFERRED, FLEXIBLE };
 
 NAMESPACE_BANG_END
 

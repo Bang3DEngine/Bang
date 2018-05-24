@@ -64,27 +64,27 @@ void Input::OnFrameFinished()
 
 void Input::ProcessEventInfo(const EventInfo &ei)
 {
-    if (ei.type == EventInfo::Type::Wheel)
+    if (ei.type == EventInfo::Type::WHEEL)
     {
         ProcessMouseWheelEventInfo(ei);
     }
-    else if (ei.type == EventInfo::Type::MouseMove)
+    else if (ei.type == EventInfo::Type::MOUSE_MOVE)
     {
         ProcessMouseMoveEventInfo(ei);
     }
-    else if (ei.type == EventInfo::Type::MouseDown)
+    else if (ei.type == EventInfo::Type::MOUSE_DOWN)
     {
         ProcessMouseDownEventInfo(ei);
     }
-    else if (ei.type == EventInfo::Type::MouseUp)
+    else if (ei.type == EventInfo::Type::MOUSE_UP)
     {
         ProcessMouseUpEventInfo(ei);
     }
-    else if (ei.type == EventInfo::Type::KeyDown)
+    else if (ei.type == EventInfo::Type::KEY_DOWN)
     {
         ProcessKeyDownEventInfo(ei);
     }
-    else if (ei.type == EventInfo::Type::KeyUp)
+    else if (ei.type == EventInfo::Type::KEY_UP)
     {
         ProcessKeyUpEventInfo(ei);
     }
@@ -208,7 +208,7 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
     switch (event.type)
     {
         case SDL_KEYDOWN:
-            eventInfo.type       = EventInfo::KeyDown;
+            eventInfo.type       = EventInfo::Type::KEY_DOWN;
             eventInfo.autoRepeat = event.key.repeat;
             eventInfo.key        = Cast<Key>(event.key.keysym.sym);
             eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
@@ -216,7 +216,7 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         break;
 
         case SDL_KEYUP:
-            eventInfo.type       = EventInfo::KeyUp;
+            eventInfo.type       = EventInfo::Type::KEY_UP;
             eventInfo.autoRepeat = event.key.repeat;
             eventInfo.key        = Cast<Key>(event.key.keysym.sym);
             eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
@@ -228,28 +228,28 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         break;
 
         case SDL_MOUSEBUTTONDOWN:
-            eventInfo.type        = EventInfo::MouseDown;
+            eventInfo.type        = EventInfo::Type::MOUSE_DOWN;
             eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
             enqueue = true;
         break;
 
         case SDL_MOUSEBUTTONUP:
-            eventInfo.type        = EventInfo::MouseUp;
+            eventInfo.type        = EventInfo::Type::MOUSE_UP;
             eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
             enqueue = true;
         break;
 
         case SDL_MOUSEWHEEL:
-            eventInfo.type       = EventInfo::Wheel;
+            eventInfo.type       = EventInfo::Type::WHEEL;
             eventInfo.wheelDelta = Vector2(event.wheel.x, event.wheel.y);
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
             enqueue = true;
         break;
 
         case SDL_MOUSEMOTION:
-            eventInfo.type      = EventInfo::MouseMove;
+            eventInfo.type      = EventInfo::Type::MOUSE_MOVE;
             eventInfo.x         = event.motion.x;
             eventInfo.y         = event.motion.y;
             eventInfo.timestampSecs = event.button.timestamp / 1000.0f;

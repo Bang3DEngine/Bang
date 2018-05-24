@@ -31,7 +31,7 @@ UITextRenderer::UITextRenderer() : UIRenderer()
     SetTextSize(20.0f);
     SetTextColor(Color::Black);
 
-    SetRenderPrimitive(GL::Primitive::Triangles);
+    SetRenderPrimitive(GL::Primitive::TRIANGLES);
     OnChanged();
 }
 
@@ -45,7 +45,7 @@ void UITextRenderer::CalculateLayout(Axis axis)
 
     Vector2i minSize = Vector2i::Zero;
     Vector2i prefSize = Vector2i::Zero;
-    if (axis == Axis::Horizontal)
+    if (axis == Axis::HORIZONTAL)
     {
         prefSize = TextFormatter::GetMinimumHeightTextSize(GetContent(),
                                                            GetFont(),

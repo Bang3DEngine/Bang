@@ -17,7 +17,7 @@ UIMask::~UIMask() {}
 void UIMask::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
-    if  (!m_restoringStencil && renderPass == RenderPass::Canvas)
+    if  (!m_restoringStencil && renderPass == RenderPass::CANVAS)
     {
         PrepareStencilToDrawMask();
     }
@@ -26,13 +26,13 @@ void UIMask::OnRender(RenderPass renderPass)
 void UIMask::OnBeforeChildrenRender(RenderPass renderPass)
 {
     Component::OnBeforeChildrenRender(renderPass);
-    if (renderPass == RenderPass::Canvas) { PrepareStencilToDrawChildren(); }
+    if (renderPass == RenderPass::CANVAS) { PrepareStencilToDrawChildren(); }
 }
 
 void UIMask::OnAfterChildrenRender(RenderPass renderPass)
 {
     Component::OnAfterChildrenRender(renderPass);
-    if (renderPass == RenderPass::Canvas) { RestoreStencilBuffer(renderPass); }
+    if (renderPass == RenderPass::CANVAS) { RestoreStencilBuffer(renderPass); }
 }
 
 void UIMask::PrepareStencilToDrawMask()
@@ -47,8 +47,8 @@ void UIMask::PrepareStencilToDrawMask()
 
     if (IsMasking())
     {
-        GL::SetStencilOp( GL::StencilOperation::Incr );
-        GL::SetStencilFunc(GL::Function::Equal); // Only increment once
+        GL::SetStencilOp( GL::StencilOperation::INCR );
+        GL::SetStencilFunc(GL::Function::EQUAL); // Only increment once
     }
 }
 
@@ -63,7 +63,7 @@ void UIMask::PrepareStencilToDrawChildren()
         // Test and write for current stencil value + 1
         GL::SetStencilValue( GL::GetStencilValue() + 1 );
         GL::SetStencilOp(m_stencilOpBefore);
-        GL::SetStencilFunc(GL::Function::Equal); // Mask children
+        GL::SetStencilFunc(GL::Function::EQUAL); // Mask children
     }
 }
 
@@ -73,8 +73,8 @@ void UIMask::RestoreStencilBuffer(RenderPass renderPass)
 
     // Restore stencil as it was before, decrementing marked mask pixels
     GL::SetColorMask(false, false, false, false);
-    GL::SetStencilFunc(GL::Function::Equal);
-    GL::SetStencilOp( GL::StencilOperation::Decr );
+    GL::SetStencilFunc(GL::Function::EQUAL);
+    GL::SetStencilOp( GL::StencilOperation::DECR );
 
     m_restoringStencil = true;
     GetGameObject()->Render(renderPass, false);

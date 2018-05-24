@@ -50,7 +50,7 @@ protected:
 template<class T>
 Image<T> Texture2D::ToImage() const
 {
-    return Texture::ToImage<T>(GL::TextureTarget::Texture2D);
+    return Texture::ToImage<T>(GL::TextureTarget::TEXTURE_2D);
 }
 
 NAMESPACE_BANG_END

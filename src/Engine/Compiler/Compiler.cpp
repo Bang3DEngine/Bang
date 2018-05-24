@@ -11,9 +11,9 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     List<String> args;
 
     // Output mode
-    if      (job.outputMode == OutputType::Object)     { args.PushBack("-c"); }
-    else if (job.outputMode == OutputType::SharedLib)  { args.PushBack("-shared"); }
-    else if (job.outputMode == OutputType::Executable) { args.PushBack("-c"); }
+    if      (job.outputMode == OutputType::OBJECT)     { args.PushBack("-c"); }
+    else if (job.outputMode == OutputType::SHARED_LIB)  { args.PushBack("-shared"); }
+    else if (job.outputMode == OutputType::EXECUTABLE) { args.PushBack("-c"); }
 
     // Flags
     args.PushBack(job.flags);

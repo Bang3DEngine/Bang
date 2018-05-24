@@ -11,9 +11,9 @@ UniformBuffer<BufferStruct>::UniformBuffer()
     GL::GenBuffers(1, &m_idGL);
 
     Bind();
-    GL::BufferData(GL::BindTarget::UniformBuffer,
+    GL::BufferData(GL::BindTarget::UNIFORM_BUFFER,
                    sizeof(BufferStruct), &m_data,
-                   GL::UsageHint::DynamicDraw);
+                   GL::UsageHint::DYNAMIC_DRAW);
     UnBind();
 }
 
@@ -46,7 +46,7 @@ void UniformBuffer<BufferStruct>::UpdateBuffer() const
 {
     Bind();
 
-    GLvoid* p = GL::MapBuffer( GetGLBindTarget(), GL::WriteOnly );
+    GLvoid* p = GL::MapBuffer( GetGLBindTarget(), GL::WRITE_ONLY );
     memcpy(p, GetData(), sizeof(BufferStruct));
     GL::UnMapBuffer( GetGLBindTarget() );
 
@@ -56,7 +56,7 @@ void UniformBuffer<BufferStruct>::UpdateBuffer() const
 template<class BufferStruct>
 GL::BindTarget UniformBuffer<BufferStruct>::GetGLBindTarget() const
 {
-    return GL::BindTarget::UniformBuffer;
+    return GL::BindTarget::UNIFORM_BUFFER;
 }
 
 #endif // UNIFORM_BUFFER_TCC

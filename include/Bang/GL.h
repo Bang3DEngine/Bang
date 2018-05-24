@@ -39,257 +39,258 @@ class GL
 public:
     enum Enum
     {
-        ActiveUniforms        = GL_ACTIVE_UNIFORMS,
-        CompileStatus         = GL_COMPILE_STATUS,
-        ValidateStatus        = GL_VALIDATE_STATUS,
-        Fill                  = GL_FILL,
-        InfoLogLength         = GL_INFO_LOG_LENGTH,
-        Line                  = GL_LINE,
-        LinkStatus            = GL_LINK_STATUS,
-        MaxTextureImageUnits  = GL_MAX_TEXTURE_IMAGE_UNITS,
-        ReadOnly              = GL_READ_ONLY,
-        ReadWrite             = GL_READ_WRITE,
-        UnPackAlignment       = GL_UNPACK_ALIGNMENT,
-        Viewport              = GL_VIEWPORT,
-        WriteOnly             = GL_WRITE_ONLY,
-        TextureBinding1D      = GL_TEXTURE_BINDING_1D,
-        TextureBinding2D      = GL_TEXTURE_BINDING_2D,
-        TextureBinding3D      = GL_TEXTURE_BINDING_3D,
-        TextureBindingCubeMap = GL_TEXTURE_BINDING_CUBE_MAP
+        ACTIVE_UNIFORMS          = GL_ACTIVE_UNIFORMS,
+        COMPILE_STATUS           = GL_COMPILE_STATUS,
+        VALIDATE_STATUS          = GL_VALIDATE_STATUS,
+        FILL                     = GL_FILL,
+        INFO_LOG_LENGTH          = GL_INFO_LOG_LENGTH,
+        LINE                     = GL_LINE,
+        LINK_STATUS              = GL_LINK_STATUS,
+        MAX_TEXTURE_IMAGE_UNITS  = GL_MAX_TEXTURE_IMAGE_UNITS,
+        READ_ONLY                = GL_READ_ONLY,
+        READ_WRITE               = GL_READ_WRITE,
+        UNPACK_ALIGNMENT         = GL_UNPACK_ALIGNMENT,
+        VIEWPORT                 = GL_VIEWPORT,
+        WRITE_ONLY               = GL_WRITE_ONLY,
+        TEXTURE_BINDING_1D       = GL_TEXTURE_BINDING_1D,
+        TEXTURE_BINDING_2D       = GL_TEXTURE_BINDING_2D,
+        TEXTURE_BINDING_3D       = GL_TEXTURE_BINDING_3D,
+        TEXTURE_BINDING_CUBE_MAP = GL_TEXTURE_BINDING_CUBE_MAP
     };
 
     enum class Primitive
     {
-        Points        = GL_POINTS,
-        Lines         = GL_LINES,
-        LineStrip     = GL_LINE_STRIP,
-        LineLoop      = GL_LINE_LOOP,
-        Triangles     = GL_TRIANGLES,
-        TriangleStrip = GL_TRIANGLE_STRIP,
-        TriangleFan   = GL_TRIANGLE_FAN,
-        Quads         = GL_QUADS,
-        QuadStrip     = GL_QUAD_STRIP,
-        Polygon       = GL_POLYGON
+        POINTS         = GL_POINTS,
+        LINES          = GL_LINES,
+        LINE_STRIP     = GL_LINE_STRIP,
+        LINE_LOOP      = GL_LINE_LOOP,
+        TRIANGLES      = GL_TRIANGLES,
+        TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
+        TRIANGLE_FAN   = GL_TRIANGLE_FAN,
+        QUADS          = GL_QUADS,
+        QUAD_STRIP     = GL_QUAD_STRIP,
+        POLYGON        = GL_POLYGON
     };
 
     enum class Enablable
     {
-        Blend                  = GL_BLEND,
-        Depth                  = GL_DEPTH_TEST,
-        DepthClamp             = GL_DEPTH_CLAMP,
-        Stencil                = GL_STENCIL_TEST,
-        Scissor                = GL_SCISSOR_TEST,
-        Alpha                  = GL_ALPHA_TEST,
-        CullFace               = GL_CULL_FACE,
-        Multisample            = GL_MULTISAMPLE,
-        TextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS
+        BLEND                     = GL_BLEND,
+        DEPTH_TEST                = GL_DEPTH_TEST,
+        DEPTH_CLAMP               = GL_DEPTH_CLAMP,
+        STENCIL_TEST              = GL_STENCIL_TEST,
+        SCISSOR_TEST              = GL_SCISSOR_TEST,
+        ALPHA_TEST                = GL_ALPHA_TEST,
+        CULL_FACE                 = GL_CULL_FACE,
+        MULTISAMPLE               = GL_MULTISAMPLE,
+        TEXTURE_CUBE_MAP_SEAMLESS = GL_TEXTURE_CUBE_MAP_SEAMLESS
     };
 
     enum class UsageHint
     {
-        StreamDraw  = GL_STREAM_DRAW,
-        StreamRead  = GL_STREAM_READ,
-        StreamCopy  = GL_STREAM_COPY,
-        StaticDraw  = GL_STATIC_DRAW,
-        StaticRead  = GL_STATIC_READ,
-        StaticCopy  = GL_STATIC_COPY,
-        DynamicDraw = GL_DYNAMIC_DRAW,
-        DynamicRead = GL_DYNAMIC_READ,
-        DynamicCopy = GL_DYNAMIC_COPY
+        STREAM_DRAW  = GL_STREAM_DRAW,
+        STREAM_READ  = GL_STREAM_READ,
+        STREAM_COPY  = GL_STREAM_COPY,
+        STATIC_DRAW  = GL_STATIC_DRAW,
+        STATIC_READ  = GL_STATIC_READ,
+        STATIC_COPY  = GL_STATIC_COPY,
+        DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
+        DYNAMIC_READ = GL_DYNAMIC_READ,
+        DYNAMIC_COPY = GL_DYNAMIC_COPY
     };
 
     enum class CullFaceExt
     {
-        None         = GL_NONE,
-        Front        = GL_FRONT,
-        Back         = GL_BACK,
-        FrontAndBack = GL_FRONT_AND_BACK
+        NONE            = GL_NONE,
+        FRONT           = GL_FRONT,
+        BACK            = GL_BACK,
+        FRONT_AND_BACK = GL_FRONT_AND_BACK
     };
 
     enum class Face
     {
-        Front        = GL_FRONT,
-        Back         = GL_BACK,
-        FrontAndBack = GL_FRONT_AND_BACK
+        FRONT          = GL_FRONT,
+        BACK           = GL_BACK,
+        FRONT_AND_BACK = GL_FRONT_AND_BACK
     };
 
     enum class BindTarget
     {
-        None               = 0,
-        Texture1D          = GL_TEXTURE_1D,
-        Texture2D          = GL_TEXTURE_2D,
-        Texture3D          = GL_TEXTURE_3D,
-        TextureCubeMap     = GL_TEXTURE_CUBE_MAP,
-        ShaderProgram      = GL_SHADER,
-        Framebuffer        = GL_FRAMEBUFFER,
-        DrawFramebuffer    = GL_DRAW_FRAMEBUFFER,
-        ReadFramebuffer    = GL_READ_FRAMEBUFFER,
-        VAO                = GL_VERTEX_ARRAY,
-        ArrayBuffer        = GL_ARRAY_BUFFER,
-        ElementArrayBuffer = GL_ELEMENT_ARRAY_BUFFER,
-        UniformBuffer      = GL_UNIFORM_BUFFER
+        NONE                 = 0,
+        TEXTURE_1D           = GL_TEXTURE_1D,
+        TEXTURE_2D           = GL_TEXTURE_2D,
+        TEXTURE_3D           = GL_TEXTURE_3D,
+        TEXTURE_CUBE_MAP     = GL_TEXTURE_CUBE_MAP,
+        SHADER__PROGRAM      = GL_SHADER,
+        FRAMEBUFFER          = GL_FRAMEBUFFER,
+        DRAW_FRAMEBUFFER     = GL_DRAW_FRAMEBUFFER,
+        READ_FRAMEBUFFER     = GL_READ_FRAMEBUFFER,
+        VERTEX_ARRAY         = GL_VERTEX_ARRAY,
+        VAO                  = GL_VERTEX_ARRAY,
+        ARRAY_BUFFER         = GL_ARRAY_BUFFER,
+        ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER,
+        UNIFORM_BUFFER       = GL_UNIFORM_BUFFER
     };
 
     enum class DataType
     {
-        Byte             = GL_BYTE,
-        UnsignedByte     = GL_UNSIGNED_BYTE,
-        Short            = GL_SHORT,
-        UnsignedShort    = GL_UNSIGNED_SHORT,
-        Int              = GL_INT,
-        UnsignedInt      = GL_UNSIGNED_INT,
-        Float            = GL_FLOAT,
-        Double           = GL_DOUBLE
+        BYTE             = GL_BYTE,
+        UNSIGNED_BYTE    = GL_UNSIGNED_BYTE,
+        SHORT            = GL_SHORT,
+        UNSIGNED_SHORT   = GL_UNSIGNED_SHORT,
+        INT              = GL_INT,
+        UNSIGNED_INT     = GL_UNSIGNED_INT,
+        FLOAT            = GL_FLOAT,
+        DOUBLE           = GL_DOUBLE
     };
 
     enum class VertexAttribDataType
     {
-        Byte             = GL_BYTE,
-        UnsignedByte     = GL_UNSIGNED_BYTE,
-        Short            = GL_SHORT,
-        UnsignedShort    = GL_UNSIGNED_SHORT,
-        Int              = GL_INT,
-        UnsignedInt      = GL_UNSIGNED_INT,
-        Float            = GL_FLOAT,
-        Double           = GL_DOUBLE,
-        HalfFloat        = GL_HALF_FLOAT,
-        Fixed            = GL_FIXED,
-        Int2101010Rev    = GL_INT_2_10_10_10_REV,
-        UInt2101010Rev   = GL_UNSIGNED_INT_2_10_10_10_REV,
-        UInt10F11F11FRev = GL_UNSIGNED_INT_10F_11F_11F_REV
+        BYTE                         = GL_BYTE,
+        UNSIGNED_BYTE                = GL_UNSIGNED_BYTE,
+        SHORT                        = GL_SHORT,
+        UNSIGNED_SHORT               = GL_UNSIGNED_SHORT,
+        INT                          = GL_INT,
+        UNSIGNED_INT                 = GL_UNSIGNED_INT,
+        FLOAT                        = GL_FLOAT,
+        DOUBLE                       = GL_DOUBLE,
+        HALF_FLOAT                   = GL_HALF_FLOAT,
+        FIXED                        = GL_FIXED,
+        INT_2_10_10_10_REV           = GL_INT_2_10_10_10_REV,
+        UNSIGNED_INT_2_10_10_10_REV  = GL_UNSIGNED_INT_2_10_10_10_REV,
+        UNSIGNED_INT_10F_11F_11F_REV = GL_UNSIGNED_INT_10F_11F_11F_REV
     };
 
     enum class UniformType
     {
-        Byte                 = GL_BYTE,
-        UnsignedByte         = GL_UNSIGNED_BYTE,
-        Short                = GL_SHORT,
-        UnsignedShort        = GL_UNSIGNED_SHORT,
-        Int                  = GL_INT,
-        UnsignedInt          = GL_UNSIGNED_INT,
-        Float                = GL_FLOAT,
-        Double               = GL_DOUBLE,
-        UnsignedInt_24_8     = GL_UNSIGNED_INT_24_8,
-        Vector2              = GL_FLOAT_VEC2,
-        Vector3              = GL_FLOAT_VEC3,
-        Vector4              = GL_FLOAT_VEC4,
-        Matrix3              = GL_FLOAT_MAT3,
-        Matrix4              = GL_FLOAT_MAT4,
-        Sampler1D            = GL_SAMPLER_1D,
-        Sampler2D            = GL_SAMPLER_2D,
-        Sampler3D            = GL_SAMPLER_3D,
-        SamplerCube          = GL_SAMPLER_CUBE,
-        Sampler1DShadow      = GL_SAMPLER_1D_SHADOW,
-        Sampler2DShadow      = GL_SAMPLER_2D_SHADOW,
-        SamplerCubeShadow    = GL_SAMPLER_CUBE_SHADOW,
-        Sampler1DArrayShadow = GL_SAMPLER_1D_ARRAY_SHADOW,
-        Sampler2DArrayShadow = GL_SAMPLER_2D_ARRAY_SHADOW
+        BYTE                    = GL_BYTE,
+        UNSIGNED_BYTE           = GL_UNSIGNED_BYTE,
+        SHORT                   = GL_SHORT,
+        UNSIGNED_SHORT          = GL_UNSIGNED_SHORT,
+        INT                     = GL_INT,
+        UNSIGNED_INT            = GL_UNSIGNED_INT,
+        FLOAT                   = GL_FLOAT,
+        DOUBLE                  = GL_DOUBLE,
+        UNSIGNED_INT_24_8       = GL_UNSIGNED_INT_24_8,
+        VEC2                    = GL_FLOAT_VEC2,
+        VEC3                    = GL_FLOAT_VEC3,
+        VEC4                    = GL_FLOAT_VEC4,
+        MAT3                    = GL_FLOAT_MAT3,
+        MAT4                    = GL_FLOAT_MAT4,
+        SAMPLER_1D              = GL_SAMPLER_1D,
+        SAMPLER_2D              = GL_SAMPLER_2D,
+        SAMPLER_3D              = GL_SAMPLER_3D,
+        SAMPLER_CUBE            = GL_SAMPLER_CUBE,
+        SAMPLER_1D_SHADOW       = GL_SAMPLER_1D_SHADOW,
+        SAMPLER_2D_SHADOW       = GL_SAMPLER_2D_SHADOW,
+        SAMPLER_CUBE_SHADOW     = GL_SAMPLER_CUBE_SHADOW,
+        SAMPLER_1D_ARRAY_SHADOW = GL_SAMPLER_1D_ARRAY_SHADOW,
+        SAMPLER_2D_ARRAY_SHADOW = GL_SAMPLER_2D_ARRAY_SHADOW
     };
 
     enum class ShaderType
     {
-        Vertex   = GL_VERTEX_SHADER,
-        Geometry = GL_GEOMETRY_SHADER,
-        Fragment = GL_FRAGMENT_SHADER
+        VERTEX   = GL_VERTEX_SHADER,
+        GEOMETRY = GL_GEOMETRY_SHADER,
+        FRAGMENT = GL_FRAGMENT_SHADER
     };
 
     enum class ColorComp
     {
-        RED  = GL_RED,
-        RGB  = GL_RGB,
-        RGBA = GL_RGBA,
-        Depth = GL_DEPTH_COMPONENT,
-        DepthStencil = GL_DEPTH_STENCIL,
-        StencilIndex = GL_STENCIL_INDEX
+        RED           = GL_RED,
+        RGB           = GL_RGB,
+        RGBA          = GL_RGBA,
+        DEPTH         = GL_DEPTH_COMPONENT,
+        DEPTH_STENCIL = GL_DEPTH_STENCIL,
+        STENCIL_INDEX = GL_STENCIL_INDEX
     };
 
     enum class ColorFormat
     {
-        RGBA_UByte8          = GL_RGBA8,
-        RGBA_Float16         = GL_RGBA16F,
-        RGB10_A2_UByte       = GL_RGB10_A2,
-        RGBA_Float32         = GL_RGBA32F,
-        Depth                = GL_DEPTH_COMPONENT,
-        Depth16              = GL_DEPTH_COMPONENT16,
-        Depth24              = GL_DEPTH_COMPONENT24,
-        Depth32              = GL_DEPTH_COMPONENT32,
-        Depth32F             = GL_DEPTH_COMPONENT32F,
-        Depth24_Stencil8     = GL_DEPTH24_STENCIL8
+        RGBA8             = GL_RGBA8,
+        RGBA16F           = GL_RGBA16F,
+        RGB10_A2          = GL_RGB10_A2,
+        RGBA32F           = GL_RGBA32F,
+        DEPTH             = GL_DEPTH_COMPONENT,
+        DEPTH16           = GL_DEPTH_COMPONENT16,
+        DEPTH24           = GL_DEPTH_COMPONENT24,
+        DEPTH32           = GL_DEPTH_COMPONENT32,
+        DEPTH32F          = GL_DEPTH_COMPONENT32F,
+        DEPTH24_STENCIL8  = GL_DEPTH24_STENCIL8
     };
 
     enum class ViewProjMode
     {
-        World  = 0,
-        Canvas = 1
+        WORLD  = 0,
+        CANVAS = 1
     };
 
     enum class TextureTarget
     {
-        Texture1D = GL_TEXTURE_1D,
-        Texture2D = GL_TEXTURE_2D,
-        Texture3D = GL_TEXTURE_3D,
-        TextureCubeMap = GL_TEXTURE_CUBE_MAP,
-        TextureCubeMap_PositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        TextureCubeMap_NegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        TextureCubeMap_PositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        TextureCubeMap_NegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        TextureCubeMap_PositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        TextureCubeMap_NegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+        TEXTURE_1D                  = GL_TEXTURE_1D,
+        TEXTURE_2D                  = GL_TEXTURE_2D,
+        TEXTURE_3D                  = GL_TEXTURE_3D,
+        TEXTURE_CUBE_MAP            = GL_TEXTURE_CUBE_MAP,
+        TEXTURE_CUBE_MAP_POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        TEXTURE_CUBE_MAP_NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        TEXTURE_CUBE_MAP_POSITIVE_Y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        TEXTURE_CUBE_MAP_NEGATIVE_Y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        TEXTURE_CUBE_MAP_POSITIVE_Z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        TEXTURE_CUBE_MAP_NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
 
 
     enum class CubeMapDir
     {
-        PositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        Right     = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        NegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        Left      = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        PositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        Top       = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        NegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        Bot       = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        PositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        Back      = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        NegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-        Front     = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+        POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        RIGHT      = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        LEFT       = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        POSITIVE_Y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        TOP        = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        NEGATIVE_Y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        BOT        = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        POSITIVE_Z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        BACK       = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        FRONT      = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
     enum class FramebufferTarget
     {
-        Draw = GL_DRAW_FRAMEBUFFER,
-        Read = GL_READ_FRAMEBUFFER,
-        ReadDraw = GL_FRAMEBUFFER
+        DRAW      = GL_DRAW_FRAMEBUFFER,
+        READ      = GL_READ_FRAMEBUFFER,
+        READ_DRAW = GL_FRAMEBUFFER
     };
     enum class RenderbufferTarget
     {
-        Renderbuffer = GL_RENDERBUFFER
+        RENDERBUFFER = GL_RENDERBUFFER
     };
 
     enum class RenderbufferFormat
     {
-        Depth = GL_DEPTH,
-        Stencil = GL_STENCIL,
-        Depth24_Stencil8 = GL_DEPTH24_STENCIL8
+        DEPTH            = GL_DEPTH,
+        STENCIL          = GL_STENCIL,
+        DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8
     };
 
     enum class BufferBit
     {
-        Color    = GL_COLOR_BUFFER_BIT,
-        Depth    = GL_DEPTH_BUFFER_BIT,
-        Stencil  = GL_STENCIL_BUFFER_BIT,
-        Scissor  = GL_SCISSOR_BIT
+        COLOR    = GL_COLOR_BUFFER_BIT,
+        DEPTH    = GL_DEPTH_BUFFER_BIT,
+        STENCIL  = GL_STENCIL_BUFFER_BIT,
+        SCISSOR  = GL_SCISSOR_BIT
     };
 
     enum class WrapMode
     {
-        Repeat = GL_REPEAT,
-        ClampToEdge = GL_CLAMP_TO_EDGE,
-        ClampToBorder = GL_CLAMP_TO_BORDER
+        REPEAT          = GL_REPEAT,
+        CLAMP_TO_EDGE   = GL_CLAMP_TO_EDGE,
+        CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER
     };
     enum class WrapCoord
     {
-        WrapS = GL_TEXTURE_WRAP_S,
-        WrapT = GL_TEXTURE_WRAP_T,
-        WrapR = GL_TEXTURE_WRAP_R
+        WRAP_S = GL_TEXTURE_WRAP_S,
+        WRAP_T = GL_TEXTURE_WRAP_T,
+        WRAP_R = GL_TEXTURE_WRAP_R
     };
 
     enum class TexParameter
@@ -315,82 +316,82 @@ public:
 
     enum class FilterMode
     {
-        Nearest = GL_NEAREST,
-        Bilinear = GL_LINEAR,
-        Trilinear_NN = GL_NEAREST_MIPMAP_NEAREST,
-        Trilinear_NL = GL_NEAREST_MIPMAP_LINEAR,
-        Trilinear_LN = GL_LINEAR_MIPMAP_NEAREST,
-        Trilinear_LL = GL_LINEAR_MIPMAP_LINEAR
+        NEAREST      = GL_NEAREST,
+        BILINEAR     = GL_LINEAR,
+        TRILINEAR_NN = GL_NEAREST_MIPMAP_NEAREST,
+        TRILINEAR_NL = GL_NEAREST_MIPMAP_LINEAR,
+        TRILINEAR_LN = GL_LINEAR_MIPMAP_NEAREST,
+        TRILINEAR_LL = GL_LINEAR_MIPMAP_LINEAR
     };
     enum class FilterMagMin
     {
-        Mag = GL_TEXTURE_MAG_FILTER,
-        Min = GL_TEXTURE_MIN_FILTER
+        MAG = GL_TEXTURE_MAG_FILTER,
+        MIN = GL_TEXTURE_MIN_FILTER
     };
 
     enum class StencilOperation
     {
-        Zero     = GL_ZERO,
-        Keep     = GL_KEEP,
-        Replace  = GL_REPLACE,
-        Incr     = GL_INCR,
-        IncrWrap = GL_INCR_WRAP,
-        Decr     = GL_DECR,
-        DecrWrap = GL_DECR_WRAP,
-        Invert   = GL_INVERT
+        ZERO      = GL_ZERO,
+        KEEP      = GL_KEEP,
+        REPLACE   = GL_REPLACE,
+        INCR      = GL_INCR,
+        INCR_WRAP = GL_INCR_WRAP,
+        DECR      = GL_DECR,
+        DECR_WRAP = GL_DECR_WRAP,
+        INVERT    = GL_INVERT
     };
 
     enum class BlendFactor
     {
-        Zero             = GL_ZERO,
-        One              = GL_ONE,
-        SrcColor         = GL_SRC_COLOR,
-        OneMinusSrcColor = GL_ONE_MINUS_SRC_COLOR,
-        DstColor         = GL_DST_COLOR,
-        OneMinusDstColor = GL_ONE_MINUS_DST_COLOR,
-        SrcAlpha         = GL_SRC_ALPHA,
-        OneMinusSrcAlpha = GL_ONE_MINUS_SRC_ALPHA,
-        DstAlpha         = GL_DST_ALPHA,
-        OneMinusDstAlpha = GL_ONE_MINUS_DST_ALPHA
+        ZERO                = GL_ZERO,
+        ONE                 = GL_ONE,
+        SRC_COLOR           = GL_SRC_COLOR,
+        ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR,
+        DST_COLOR           = GL_DST_COLOR,
+        ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR,
+        SRC_ALPHA           = GL_SRC_ALPHA,
+        ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
+        DST_ALPHA           = GL_DST_ALPHA,
+        ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA
     };
 
     enum class BlendEquationE
     {
-        FuncAdd = GL_FUNC_ADD,
-        FuncSubtract = GL_FUNC_SUBTRACT,
-        FuncReverseSubtract = GL_FUNC_REVERSE_SUBTRACT,
-        Min = GL_MIN,
-        Max = GL_MAX
+        FUNC_ADD              = GL_FUNC_ADD,
+        FUNC_SUBTRACT         = GL_FUNC_SUBTRACT,
+        FUNC_REVERSE_SUBTRACT = GL_FUNC_REVERSE_SUBTRACT,
+        MIN                   = GL_MIN,
+        MAX                   = GL_MAX
     };
 
     enum class Function
     {
-        Never    = GL_NEVER,
-        Less     = GL_LESS,
-        LEqual   = GL_LEQUAL,
-        Greater  = GL_GREATER,
-        GEqual   = GL_GEQUAL,
-        Equal    = GL_EQUAL,
-        NotEqual = GL_NOTEQUAL,
-        Always   = GL_ALWAYS
+        NEVER     = GL_NEVER,
+        LESS      = GL_LESS,
+        LEQUAL    = GL_LEQUAL,
+        GREATER   = GL_GREATER,
+        GEQUAL    = GL_GEQUAL,
+        EQUAL     = GL_EQUAL,
+        NOT_EQUAL = GL_NOTEQUAL,
+        ALWAYS    = GL_ALWAYS
     };
 
     enum class Attachment
     {
-        None         = GL_NONE,
-        Color0       = GL_COLOR_ATTACHMENT0,
-        Color1       = GL_COLOR_ATTACHMENT1,
-        Color2       = GL_COLOR_ATTACHMENT2,
-        Color3       = GL_COLOR_ATTACHMENT3,
-        Color4       = GL_COLOR_ATTACHMENT4,
-        Color5       = GL_COLOR_ATTACHMENT5,
-        Color6       = GL_COLOR_ATTACHMENT6,
-        Color7       = GL_COLOR_ATTACHMENT7,
-        DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT,
-        Stencil      = GL_STENCIL_ATTACHMENT,
-        Depth        = GL_DEPTH_ATTACHMENT,
-        Back         = GL_BACK,
-        Front        = GL_FRONT
+        NONE          = GL_NONE,
+        COLOR0        = GL_COLOR_ATTACHMENT0,
+        COLOR1        = GL_COLOR_ATTACHMENT1,
+        COLOR2        = GL_COLOR_ATTACHMENT2,
+        COLOR3        = GL_COLOR_ATTACHMENT3,
+        COLOR4        = GL_COLOR_ATTACHMENT4,
+        COLOR5        = GL_COLOR_ATTACHMENT5,
+        COLOR6        = GL_COLOR_ATTACHMENT6,
+        COLOR7        = GL_COLOR_ATTACHMENT7,
+        DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT,
+        STENCIL       = GL_STENCIL_ATTACHMENT,
+        DEPTH         = GL_DEPTH_ATTACHMENT,
+        BACK          = GL_BACK,
+        FRONT         = GL_FRONT
     };
 
     static void ClearError();
@@ -761,26 +762,26 @@ private:
     Map<GL::Enablable, bool> m_enabledVars;
     Map<GL::Enablable, std::array<bool, 16> > m_enabled_i_Vars;
 
-    Array<GL::Attachment> m_drawBuffers = {GL::Attachment::Color0};
-    GL::Attachment m_readBuffer = GL::Attachment::Color0;
+    Array<GL::Attachment> m_drawBuffers = {GL::Attachment::COLOR0};
+    GL::Attachment m_readBuffer = GL::Attachment::COLOR0;
 
     bool m_depthMask = true;
-    GL::Function m_depthFunc = GL::Function::Less;
+    GL::Function m_depthFunc = GL::Function::LESS;
     Color m_clearColor = Color::Zero;
-    GL::Face m_cullFace = GL::Face::Back;
+    GL::Face m_cullFace = GL::Face::BACK;
 
     AARecti m_scissorRectPx                 = AARecti(-1,-1,-1,-1);
-    GL::Enum m_frontPolygonMode             = GL::Fill;
-    GL::Enum m_backPolygonMode              = GL::Fill;
-    GL::Enum m_frontBackPolygonMode         = GL::Fill;
-    GL::Function m_stencilFunc              = GL::Function::Always;
-    GL::BlendFactor m_blendSrcFactorColor   = GL::BlendFactor::One;
-    GL::BlendFactor m_blendDstFactorColor   = GL::BlendFactor::Zero;
-    GL::BlendFactor m_blendSrcFactorAlpha   = GL::BlendFactor::One;
-    GL::BlendFactor m_blendDstFactorAlpha   = GL::BlendFactor::Zero;
-    GL::BlendEquationE m_blendEquationColor = GL::BlendEquationE::FuncAdd;
-    GL::BlendEquationE m_blendEquationAlpha = GL::BlendEquationE::FuncAdd;
-    GL::StencilOperation m_stencilOp        = GL::StencilOperation::Keep;
+    GL::Enum m_frontPolygonMode             = GL::FILL;
+    GL::Enum m_backPolygonMode              = GL::FILL;
+    GL::Enum m_frontBackPolygonMode         = GL::FILL;
+    GL::Function m_stencilFunc              = GL::Function::ALWAYS;
+    GL::BlendFactor m_blendSrcFactorColor   = GL::BlendFactor::ONE;
+    GL::BlendFactor m_blendDstFactorColor   = GL::BlendFactor::ZERO;
+    GL::BlendFactor m_blendSrcFactorAlpha   = GL::BlendFactor::ONE;
+    GL::BlendFactor m_blendDstFactorAlpha   = GL::BlendFactor::ZERO;
+    GL::BlendEquationE m_blendEquationColor = GL::BlendEquationE::FUNC_ADD;
+    GL::BlendEquationE m_blendEquationAlpha = GL::BlendEquationE::FUNC_ADD;
+    GL::StencilOperation m_stencilOp        = GL::StencilOperation::KEEP;
 
     GLUniforms *m_glUniforms = nullptr;
 

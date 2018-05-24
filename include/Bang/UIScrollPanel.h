@@ -9,7 +9,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class UIScrollBar;
 FORWARD class UIScrollArea;
 
-enum class ShowScrollMode { Never = 0, WhenNeeded = 1, Always = 2 };
+enum class ShowScrollMode { NEVER = 0, WHEN_NEEDED = 1, ALWAYS = 2 };
 
 class UIScrollPanel : public Component
 {

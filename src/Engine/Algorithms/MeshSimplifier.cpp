@@ -83,7 +83,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     }
 
     Map<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
-    if (simplificationMethod == Method::QuadricErrorMetrics)
+    if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
     {
         vertexIdxsToTriIdxs = mesh->GetVertexIndicesToTriangleIndices();
     }
@@ -380,7 +380,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
     switch (simplificationMethod)
     {
-        case Method::Clustering:
+        case Method::CLUSTERING:
         {
             for (const auto &pair : vertexCluster)
             {
@@ -399,7 +399,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
         }
         break;
 
-        case Method::QuadricErrorMetrics:
+        case Method::QUADRIC_ERROR_METRICS:
         {
 
         // To get the position use quadric error metrics
@@ -486,7 +486,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
         vertexRepresentativeData =
                 GetVertexRepresentativeForCluster(mesh, vertexCluster,
                                                   vertexIdxsToTriIdxs,
-                                                  Method::Clustering);
+                                                  Method::CLUSTERING);
         if (isInvertible && clusterAABox.Contains(minimumQuadricErrorPosition))
         {
             vertexRepresentativeData.pos = minimumQuadricErrorPosition;

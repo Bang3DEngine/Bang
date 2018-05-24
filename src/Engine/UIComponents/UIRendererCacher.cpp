@@ -19,10 +19,10 @@ USING_NAMESPACE_BANG
 UIRendererCacher::UIRendererCacher()
 {
     p_cacheFramebuffer = new Framebuffer(1, 1);
-    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Color0,
-                                              GL::ColorFormat::RGBA_UByte8);
-    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
-                                              GL::ColorFormat::Depth16);
+    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
+                                              GL::ColorFormat::RGBA8);
+    p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
+                                              GL::ColorFormat::DEPTH16);
 }
 
 UIRendererCacher::~UIRendererCacher()
@@ -33,16 +33,16 @@ UIRendererCacher::~UIRendererCacher()
 void UIRendererCacher::OnStart()
 {
     // Prepare image renderer
-    Texture2D *tex = p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::Color0);
+    Texture2D *tex = p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
     if (p_cachedImageRenderer)
     {
-        tex->SetWrapMode(GL::WrapMode::Repeat);
+        tex->SetWrapMode(GL::WrapMode::REPEAT);
         p_cachedImageRenderer->SetImageTexture(tex);
         p_cachedImageRenderer->SetTint(Color::White);
         p_cachedImageRenderer->GetImageTexture()->SetAlphaCutoff(1.0f);
         p_cachedImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
         p_cachedImageRenderer->GetImageTexture()->SetFilterMode(
-                                                GL::FilterMode::Nearest);
+                                                GL::FilterMode::NEAREST);
         SetCachingEnabled(true);
     }
 }
@@ -51,20 +51,20 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if (renderPass == RenderPass::Canvas)
+    if (renderPass == RenderPass::CANVAS)
     {
         if (IsCachingEnabled() && m_needNewImageToSnapshot)
         {
             // Save previous state
-            GLId prevBoundDrawFramebuffer = GL::GetBoundId(GL::BindTarget::DrawFramebuffer);
-            GLId prevBoundReadFramebuffer = GL::GetBoundId(GL::BindTarget::ReadFramebuffer);
+            GLId prevBoundDrawFramebuffer = GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER);
+            GLId prevBoundReadFramebuffer = GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER);
             GL::BlendFactor prevBlendSrcFactorColor   = GL::GetBlendSrcFactorColor();
             GL::BlendFactor prevBlendDstFactorColor   = GL::GetBlendDstFactorColor();
             GL::BlendFactor prevBlendSrcFactorAlpha   = GL::GetBlendSrcFactorAlpha();
             GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
             Array<GL::Attachment> prevDrawAttachments = GL::GetDrawBuffers();
             GL::Attachment prevReadAttachment         = GL::GetReadBuffer();
-            bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::Blend);
+            bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::BLEND);
 
             p_cacheFramebuffer->Bind();
 
@@ -73,7 +73,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             p_cacheFramebuffer->Resize(gbuffer->GetWidth(), gbuffer->GetHeight());
 
             GL::ReadBuffer( GBuffer::AttColor );
-            GL::DrawBuffers( {GL::Attachment::Color0} );
+            GL::DrawBuffers( {GL::Attachment::COLOR0} );
             GL::ClearColorBuffer(Color::Zero);
             GL::ClearDepthBuffer(1.0f);
             GL::ClearStencilBuffer(0);
@@ -86,24 +86,24 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);
-            GL::BlendFuncSeparate(GL::BlendFactor::SrcAlpha,
-                                  GL::BlendFactor::OneMinusSrcAlpha,
-                                  GL::BlendFactor::One,
-                                  GL::BlendFactor::OneMinusSrcAlpha);
-            GetContainer()->Render(RenderPass::Canvas);
+            GL::BlendFuncSeparate(GL::BlendFactor::SRC_ALPHA,
+                                  GL::BlendFactor::ONE_MINUS_SRC_ALPHA,
+                                  GL::BlendFactor::ONE,
+                                  GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+            GetContainer()->Render(RenderPass::CANVAS);
             p_cachedImageRenderer->SetVisible(true);
             SetContainerVisible(false);
 
             // Restore gl state
-            GL::Bind(GL::BindTarget::DrawFramebuffer, prevBoundDrawFramebuffer);
-            GL::Bind(GL::BindTarget::ReadFramebuffer, prevBoundReadFramebuffer);
+            GL::Bind(GL::BindTarget::DRAW_FRAMEBUFFER, prevBoundDrawFramebuffer);
+            GL::Bind(GL::BindTarget::READ_FRAMEBUFFER, prevBoundReadFramebuffer);
             GL::DrawBuffers(prevDrawAttachments);
             GL::ReadBuffer(prevReadAttachment);
             GL::BlendFuncSeparate(prevBlendSrcFactorColor,
                                   prevBlendDstFactorColor,
                                   prevBlendSrcFactorAlpha,
                                   prevBlendDstFactorAlpha);
-            GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled, false);
+            GL::SetEnabled(GL::Enablable::BLEND, wasBlendEnabled, false);
 
             m_needNewImageToSnapshot = false;
         }

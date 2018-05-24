@@ -4,7 +4,7 @@
 
 USING_NAMESPACE_BANG
 
-Cursor::Type Cursor::s_type = Cursor::Type::Arrow;
+Cursor::Type Cursor::s_type = Cursor::Type::ARROW;
 
 void Cursor::Set(Cursor::Type cursorType)
 {

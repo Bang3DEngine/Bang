@@ -16,7 +16,7 @@ LineRenderer::LineRenderer()
     SetCastsShadows(false);
     SetReceivesShadows(false);
     SetMaterial(MaterialFactory::GetDefaultUnLighted().Get());
-    SetRenderPrimitive(GL::Primitive::Lines);
+    SetRenderPrimitive(GL::Primitive::LINES);
 }
 
 LineRenderer::~LineRenderer()

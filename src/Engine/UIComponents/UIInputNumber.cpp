@@ -32,15 +32,15 @@ void UIInputNumber::OnUpdate()
 
     if (HasFocus())
     {
-        if (Input::GetKeyDown(Key::Enter))
+        if (Input::GetKeyDown(Key::ENTER))
         {
             UICanvas::GetActive(this)->SetFocus(nullptr);
         }
 
 
         float increment = 0.0f;
-        if (Input::GetKeyDownRepeat(Key::Up))   { increment =  1.0f; }
-        if (Input::GetKeyDownRepeat(Key::Down)) { increment = -1.0f; }
+        if (Input::GetKeyDownRepeat(Key::UP))   { increment =  1.0f; }
+        if (Input::GetKeyDownRepeat(Key::DOWN)) { increment = -1.0f; }
         if (increment != 0.0f)
         {
             SetValue( GetValue() + increment );
@@ -167,7 +167,7 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
 
     UIInputText *inputText = go->GetComponent<UIInputText>();
     inputText->SetAllowedCharacters("0123456789.,-+");
-    inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::Left);
+    inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::LEFT);
     inputText->GetText()->SetTextSize(12);
 
     inputNumber->p_inputText = inputText;

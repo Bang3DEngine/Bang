@@ -136,8 +136,8 @@ void UIScrollPanel::SetVerticalScrollBarSide(HorizontalSide side)
 {
     if (GetVerticalScrollBarSide() != side)
     {
-        GetVerticalScrollBar()->SetSide(side == HorizontalSide::Left ? Side::Left :
-                                                                       Side::Right);
+        GetVerticalScrollBar()->SetSide(side == HorizontalSide::LEFT ? Side::LEFT :
+                                                                       Side::RIGHT);
         m_verticalScrollBarSide = side;
     }
 }
@@ -146,8 +146,8 @@ void UIScrollPanel::SetHorizontalScrollBarSide(VerticalSide side)
 {
     if (GetHorizontalScrollBarSide() != side)
     {
-        GetHorizontalScrollBar()->SetSide(side == VerticalSide::Top ? Side::Top :
-                                                                      Side::Bot);
+        GetHorizontalScrollBar()->SetSide(side == VerticalSide::TOP ? Side::TOP :
+                                                                      Side::BOT);
         m_horizontalScrollBarSide = side;
     }
 }
@@ -245,7 +245,7 @@ void UIScrollPanel::HandleScrollAreaRectTransform()
     GameObject *vScrollBarGo = vScrollBar->GetGameObject();
     int vScrollBarThickness = (vScrollBarGo->IsEnabled() ?
                                vScrollBar->GetThickness() : 0 );
-    if (GetVerticalScrollBarSide() == HorizontalSide::Right)
+    if (GetVerticalScrollBarSide() == HorizontalSide::RIGHT)
     {
         scrollAreaRT->SetMarginLeft(0);
         scrollAreaRT->SetMarginRight(vScrollBarThickness);
@@ -262,7 +262,7 @@ void UIScrollPanel::HandleScrollAreaRectTransform()
     RectTransform *vScrollBarRT = vScrollBarGo->GetRectTransform();
     int hScrollBarThickness = (hScrollBarGo->IsEnabled() ?
                                hScrollBar->GetThickness() : 0 );
-    if (GetHorizontalScrollBarSide() == VerticalSide::Bot)
+    if (GetHorizontalScrollBarSide() == VerticalSide::BOT)
     {
         scrollAreaRT->SetMarginTop(0);
         vScrollBarRT->SetMarginTop(0);
@@ -313,20 +313,20 @@ void UIScrollPanel::HandleScrollShowMode(const Vector2& contentSize,
     bool showHorizontal = false;
     switch (GetHorizontalShowScrollMode())
     {
-        case ShowScrollMode::Never: showHorizontal = false; break;
-        case ShowScrollMode::WhenNeeded:
+        case ShowScrollMode::NEVER: showHorizontal = false; break;
+        case ShowScrollMode::WHEN_NEEDED:
             showHorizontal = (contentSize.x > containerSize.x); break;
-        case ShowScrollMode::Always: showHorizontal = true; break;
+        case ShowScrollMode::ALWAYS: showHorizontal = true; break;
     }
     showHorizontal = showHorizontal && IsHorizontalScrollEnabledAndNoFit();
 
     bool showVertical = false;
     switch (GetVerticalShowScrollMode())
     {
-        case ShowScrollMode::Never: showVertical = false; break;
-        case ShowScrollMode::WhenNeeded:
+        case ShowScrollMode::NEVER: showVertical = false; break;
+        case ShowScrollMode::WHEN_NEEDED:
             showVertical = (contentSize.y > containerSize.y); break;
-        case ShowScrollMode::Always: showVertical = true; break;
+        case ShowScrollMode::ALWAYS: showVertical = true; break;
     }
     showVertical = showVertical && IsVerticalScrollEnabledAndNoFit();
 
@@ -362,10 +362,10 @@ UIScrollPanel *UIScrollPanel::CreateInto(GameObject *go)
     scrollPanel->p_verticalScrollBar = verticalScrollBar;
     scrollPanel->p_horizontalScrollBar = horizontalScrollBar;
 
-    scrollPanel->SetVerticalShowScrollMode(ShowScrollMode::Always);
-    scrollPanel->SetHorizontalShowScrollMode(ShowScrollMode::Always);
-    scrollPanel->SetVerticalScrollBarSide(HorizontalSide::Left);
-    scrollPanel->SetHorizontalScrollBarSide(VerticalSide::Bot);
+    scrollPanel->SetVerticalShowScrollMode(ShowScrollMode::ALWAYS);
+    scrollPanel->SetHorizontalShowScrollMode(ShowScrollMode::ALWAYS);
+    scrollPanel->SetVerticalScrollBarSide(HorizontalSide::LEFT);
+    scrollPanel->SetHorizontalScrollBarSide(VerticalSide::BOT);
     scrollPanel->UpdateScrollUI(); // To avoid first frame being wrong
 
     return scrollPanel;

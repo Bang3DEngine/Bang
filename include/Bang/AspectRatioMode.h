@@ -7,7 +7,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum class AspectRatioMode {Ignore, Keep, KeepExceeding};
+enum class AspectRatioMode { IGNORE, KEEP, KEEP_EXCEEDING};
 
 
 namespace AspectRatio

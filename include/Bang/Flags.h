@@ -10,8 +10,8 @@ class Flags
 {
 public:
     Flags() { }
-    Flags(int flagsOn)  { m_flags = Flag::None; SetOn(flagsOn); }
-    Flags(Flag flagsOn) { m_flags = Flag::None; SetOn(flagsOn); }
+    Flags(int flagsOn)  { m_flags = Flag::NONE; SetOn(flagsOn); }
+    Flags(Flag flagsOn) { m_flags = Flag::NONE; SetOn(flagsOn); }
 
     void SetOn(int f)  { m_flags = m_flags | f; }
     void SetOn(Flag f) { SetOn(static_cast<int>(f)); }
@@ -50,7 +50,7 @@ public:
     }
 
 private:
-    int m_flags = Flag::Default;
+    int m_flags = Flag::DEFAULT;
 };
 
 #define CREATE_FLAGS(FlagsName, FlagType) using FlagsName = Flags<FlagType>

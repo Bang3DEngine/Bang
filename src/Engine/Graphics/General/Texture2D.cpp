@@ -6,13 +6,13 @@
 
 USING_NAMESPACE_BANG
 
-Texture2D::Texture2D() : Texture(GL::TextureTarget::Texture2D)
+Texture2D::Texture2D() : Texture(GL::TextureTarget::TEXTURE_2D)
 {
-    SetFormat(GL::ColorFormat::RGBA_UByte8);
+    SetFormat(GL::ColorFormat::RGBA8);
     CreateEmpty(1, 1);
 
-    SetFilterMode(GL::FilterMode::Bilinear);
-    SetWrapMode(GL::WrapMode::ClampToEdge);
+    SetFilterMode(GL::FilterMode::BILINEAR);
+    SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 }
 
 Texture2D::~Texture2D()
@@ -36,7 +36,7 @@ void Texture2D::Fill(const Color &fillColor, int width, int height)
 {
     Array<Color> inputData = Array<Color>(width * height, fillColor);
     Fill(RCAST<const Byte*>(inputData.Data()), width, height,
-         GL::ColorComp::RGBA, GL::DataType::Float);
+         GL::ColorComp::RGBA, GL::DataType::FLOAT);
 }
 
 void Texture2D::Fill(const Byte *newData,
@@ -117,16 +117,16 @@ void Texture2D::Import(const Image<Byte> &image)
         SetWidth(image.GetWidth());
         SetHeight(image.GetHeight());
 
-        SetFormat(GL::ColorFormat::RGBA_UByte8);
+        SetFormat(GL::ColorFormat::RGBA8);
         Fill(image.GetData(),
              GetWidth(), GetHeight(),
              GL::ColorComp::RGBA,
-             GL::DataType::UnsignedByte);
+             GL::DataType::UNSIGNED_BYTE);
     }
 }
 
 GL::BindTarget Texture2D::GetGLBindTarget() const
 {
-    return GL::BindTarget::Texture2D;
+    return GL::BindTarget::TEXTURE_2D;
 }
 

@@ -163,7 +163,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
 
     GameObject *sliderContainer = GameObjectFactory::CreateUIGameObject();
     UIFocusable *sliderFocusable = sliderContainer->AddComponent<UIFocusable>();
-    sliderFocusable->SetCursorType( Cursor::Type::Hand );
+    sliderFocusable->SetCursorType( Cursor::Type::HAND );
 
     UILayoutElement *sliderLE = sliderContainer->AddComponent<UILayoutElement>();
     sliderLE->SetFlexibleSize( Vector2::One );

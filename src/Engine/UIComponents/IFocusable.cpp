@@ -20,9 +20,9 @@ void IFocusable::UpdateFromCanvas()
         bool doubleClick = false;
         if (m_lastMouseDownWasHere) // Order dependent
         {
-            if (Input::GetMouseButtonDoubleClick(MouseButton::Left))
+            if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
             {
-                Click(ClickType::Double);
+                Click(ClickType::DOUBLE);
                 doubleClick = true;
             }
         }
@@ -30,7 +30,7 @@ void IFocusable::UpdateFromCanvas()
         if (!doubleClick)
         {
             // Then this
-            if (Input::GetMouseButtonDown(MouseButton::Left)) // Order dependent
+            if (Input::GetMouseButtonDown(MouseButton::LEFT)) // Order dependent
             {
                 if (!IsBeingPressed())
                 {
@@ -40,29 +40,29 @@ void IFocusable::UpdateFromCanvas()
                 }
 
                 m_lastMouseDownWasHere = true;
-                Click(ClickType::Down);
+                Click(ClickType::DOWN);
             }
 
             // Order dependent. Must go after detecting button down, to detect cases
             // in which down&up are in the same frame
             if (m_lastMouseDownWasHere)
             {
-                if (Input::GetMouseButtonUp(MouseButton::Left))
+                if (Input::GetMouseButtonUp(MouseButton::LEFT))
                 {
-                    Click(ClickType::Full);
+                    Click(ClickType::FULL);
                 }
             }
         }
     }
     else
     {
-        if (Input::GetMouseButtonDown(MouseButton::Left))
+        if (Input::GetMouseButtonDown(MouseButton::LEFT))
         {
             m_lastMouseDownWasHere = false;
         }
     }
 
-    if (IsBeingPressed() && !Input::GetMouseButton(MouseButton::Left))
+    if (IsBeingPressed() && !Input::GetMouseButton(MouseButton::LEFT))
     {
         EventEmitter<IFocusListener>::PropagateToListeners(
                     &IFocusListener::OnStoppedBeingPressed, this);

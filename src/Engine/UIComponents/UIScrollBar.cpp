@@ -59,7 +59,7 @@ void UIScrollBar::OnUpdate()
     }
     m_wasGrabbed = IsBeingGrabbed();
 
-    if (Input::GetMouseButtonUp(MouseButton::Left))
+    if (Input::GetMouseButtonUp(MouseButton::LEFT))
     {
         if ( GetFocusable()->IsMouseOver() ) { OnMouseEnter(GetFocusable()); }
         else { OnMouseExit(GetFocusable()); }
@@ -80,7 +80,7 @@ void UIScrollBar::SetScrolling(int _scrollingPx)
     int scrollingPx = Math::Clamp(_scrollingPx, 0, GetScrollingSpacePx());
     m_scrollingPx = scrollingPx;
 
-    Vector2i scrolling = (GetScrollAxis() == Axis::Vertical) ?
+    Vector2i scrolling = (GetScrollAxis() == Axis::VERTICAL) ?
                           Vector2i(0, -scrollingPx) : Vector2i(scrollingPx, 0);
     GetScrollArea()->SetScrolling(scrolling);
 }
@@ -105,7 +105,7 @@ void UIScrollBar::SetLengthPercent(float lengthPercent)
 {
     Vector2i length(
         Vector2::Round(Vector2(GetScrollingRect().GetSize()) * lengthPercent ) );
-    SetLength(GetScrollAxis() == Axis::Vertical ? length.y : length.x);
+    SetLength(GetScrollAxis() == Axis::VERTICAL ? length.y : length.x);
 }
 
 void UIScrollBar::SetThickness(int thickPx)
@@ -131,10 +131,10 @@ Axis UIScrollBar::GetScrollAxis() const
 {
     switch (GetSide())
     {
-        case Side::Left: case Side::Right: return Axis::Vertical;
-        case Side::Top: case Side::Bot: return Axis::Horizontal;
+        case Side::LEFT: case Side::RIGHT: return Axis::VERTICAL;
+        case Side::TOP: case Side::BOT: return Axis::HORIZONTAL;
     }
-    ASSERT(false); return Axis::Horizontal;
+    ASSERT(false); return Axis::HORIZONTAL;
 }
 
 bool UIScrollBar::IsBeingGrabbed() const
@@ -146,9 +146,9 @@ void UIScrollBar::UpdateLengthThicknessMargins()
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
     RectTransform *barRT = GetBar()->GetRectTransform();
-    if (GetScrollAxis() == Axis::Horizontal)
+    if (GetScrollAxis() == Axis::HORIZONTAL)
     {
-        bool bot = (GetSide() == Side::Bot);
+        bool bot = (GetSide() == Side::BOT);
         rt->SetAnchorX( Vector2(-1, 1) );
         rt->SetAnchorY( Vector2(bot ? -1 : 1 ) );
         rt->SetMargins(0);
@@ -161,7 +161,7 @@ void UIScrollBar::UpdateLengthThicknessMargins()
     }
     else
     {
-        bool left = (GetSide() == Side::Left);
+        bool left = (GetSide() == Side::LEFT);
         rt->SetAnchorX( Vector2( left ? -1 : 1 )  );
         rt->SetAnchorY( Vector2(-1, 1) );
         rt->SetMargins(0);
@@ -190,18 +190,18 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
 
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
-    barFocusable->SetCursorType(Cursor::Type::Hand);
+    barFocusable->SetCursorType(Cursor::Type::HAND);
 
     UIFocusable *scrollAreaFocusable = scrollArea->GetGameObject()->
                                        AddComponent<UIFocusable>();
-    scrollAreaFocusable->SetCursorType(Cursor::Type::Hand);
+    scrollAreaFocusable->SetCursorType(Cursor::Type::HAND);
 
     scrollBar->p_bar = bar;
     scrollBar->p_barImg = barImg;
     scrollBar->p_barFocusable = barFocusable;
     scrollBar->p_scrollArea = scrollArea;
     scrollBar->p_scrollAreaFocusable = scrollAreaFocusable;
-    scrollBar->SetSide(Side::Left);
+    scrollBar->SetSide(Side::LEFT);
     scrollBar->SetLength(50);
     scrollBar->SetThickness(10);
     scrollBar->OnMouseExit(nullptr); // Set bar color

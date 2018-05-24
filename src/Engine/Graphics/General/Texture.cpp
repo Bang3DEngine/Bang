@@ -53,13 +53,13 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
         GLId prevBoundTex = GL::GetBoundId(GetGLBindTarget());
         Bind();
 
-        if (GetFilterMode() == GL::FilterMode::Nearest ||
-            GetFilterMode() == GL::FilterMode::Bilinear)
+        if (GetFilterMode() == GL::FilterMode::NEAREST ||
+            GetFilterMode() == GL::FilterMode::BILINEAR)
         {
-            GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::Mag,
+            GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::MAG,
                                    GetFilterMode());
         }
-        GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::Min,
+        GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::MIN,
                                GetFilterMode());
 
         GL::Bind(GetGLBindTarget(), prevBoundTex);
@@ -76,9 +76,9 @@ void Texture::SetWrapMode(GL::WrapMode wrapMode)
 
         GLId prevBoundTex = GL::GetBoundId(GetGLBindTarget());
         Bind();
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WrapS, GetWrapMode());
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WrapT, GetWrapMode());
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WrapR, GetWrapMode());
+        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_S, GetWrapMode());
+        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_T, GetWrapMode());
+        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_R, GetWrapMode());
         GL::Bind(GetGLBindTarget(), prevBoundTex);
 
         PropagateTextureChanged();

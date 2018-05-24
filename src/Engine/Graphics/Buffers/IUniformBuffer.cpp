@@ -26,5 +26,5 @@ GLuint IUniformBuffer::GetBindingPoint() const { return m_bindingPoint; }
 
 GL::BindTarget IUniformBuffer::GetGLBindTarget() const
 {
-    return GL::BindTarget::UniformBuffer;
+    return GL::BindTarget::UNIFORM_BUFFER;
 }

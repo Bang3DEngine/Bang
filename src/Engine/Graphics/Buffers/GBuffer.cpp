@@ -22,17 +22,17 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     for (Texture2D *depthStencilTex : depthStencilTexs)
     {
         depthStencilTex->Bind();
-        depthStencilTex->SetFormat(GL::ColorFormat::Depth24_Stencil8);
+        depthStencilTex->SetFormat(GL::ColorFormat::DEPTH24_STENCIL8);
         depthStencilTex->CreateEmpty(width, height);
     }
 
     // Create attachments
     Bind();
-    CreateAttachmentTex2D(AttColor,     GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttAlbedo,    GL::ColorFormat::RGBA_UByte8);
-    CreateAttachmentTex2D(AttNormal,    GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachmentTex2D(AttMisc,      GL::ColorFormat::RGB10_A2_UByte);
-    CreateAttachmentTex2D(AttColorRead, GL::ColorFormat::RGBA_UByte8);
+    CreateAttachmentTex2D(AttColor,     GL::ColorFormat::RGBA8);
+    CreateAttachmentTex2D(AttAlbedo,    GL::ColorFormat::RGBA8);
+    CreateAttachmentTex2D(AttNormal,    GL::ColorFormat::RGB10_A2);
+    CreateAttachmentTex2D(AttMisc,      GL::ColorFormat::RGB10_A2);
+    CreateAttachmentTex2D(AttColorRead, GL::ColorFormat::RGBA8);
     SetSceneDepthStencil();
     UnBind();
 }
@@ -67,7 +67,7 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
     GL::StencilOperation prevStencilOp = GL::GetStencilOp();
     PushDrawAttachments();
 
-    GL::SetStencilOp(GL::StencilOperation::Keep); // Dont modify stencil
+    GL::SetStencilOp(GL::StencilOperation::KEEP); // Dont modify stencil
     BindAttachmentsForReading(sp);
     SetColorDrawBuffer();
     GEngine::GetActive()->RenderViewportRect(sp, mask); // Render rect!
@@ -87,9 +87,9 @@ void GBuffer::ApplyPassBlend(ShaderProgram *sp,
     GL::BlendFactor prevBlendDstFactorColor = GL::GetBlendDstFactorColor();
     GL::BlendFactor prevBlendSrcFactorAlpha = GL::GetBlendSrcFactorAlpha();
     GL::BlendFactor prevBlendDstFactorAlpha = GL::GetBlendDstFactorAlpha();
-    bool wasBlendEnabled                    = GL::IsEnabled(GL::Enablable::Blend);
+    bool wasBlendEnabled                    = GL::IsEnabled(GL::Enablable::BLEND);
 
-    GL::Enable(GL::Enablable::Blend);
+    GL::Enable(GL::Enablable::BLEND);
     GL::BlendFunc(srcBlendFactor, dstBlendFactor);
     ApplyPass_(sp, mask);
 
@@ -98,7 +98,7 @@ void GBuffer::ApplyPassBlend(ShaderProgram *sp,
                           prevBlendDstFactorColor,
                           prevBlendSrcFactorAlpha,
                           prevBlendDstFactorAlpha);
-    GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled, false);
+    GL::SetEnabled(GL::Enablable::BLEND, wasBlendEnabled, false);
 }
 
 
@@ -118,7 +118,7 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
 void GBuffer::PrepareColorReadBuffer(const AARect &readNDCRect)
 {
     Blit(GBuffer::AttColor, GBuffer::AttColorRead,
-         readNDCRect, GL::BufferBit::Color);
+         readNDCRect, GL::BufferBit::COLOR);
 }
 
 void GBuffer::SetAllDrawBuffers() const

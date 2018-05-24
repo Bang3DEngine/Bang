@@ -36,7 +36,7 @@ void UIDragDroppable::OnUpdate()
     if (GetFocusable()) { m_beingPressed = GetFocusable()->IsBeingPressed(); }
     else
     {
-        if (Input::GetMouseButtonDown(MouseButton::Left))
+        if (Input::GetMouseButtonDown(MouseButton::LEFT))
         {
             RectTransform *thisRT = GetGameObject()->GetRectTransform();
             const AARecti thisRect( thisRT->GetViewportAARect() );
@@ -45,7 +45,7 @@ void UIDragDroppable::OnUpdate()
         }
     }
 
-    if (Input::GetMouseButtonUp(MouseButton::Left))
+    if (Input::GetMouseButtonUp(MouseButton::LEFT))
     {
         m_beingPressed = false;
     }
@@ -225,7 +225,7 @@ void UIDragDroppable::OnClicked(IFocusable *focusable, ClickType clickType)
     ASSERT(GetFocusable() && focusable == GetFocusable());
     IFocusListener::OnClicked(focusable, clickType);
 
-    if (clickType == ClickType::Down)
+    if (clickType == ClickType::DOWN)
     {
         OnDragStarted();
     }

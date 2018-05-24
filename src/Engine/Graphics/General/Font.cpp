@@ -136,7 +136,7 @@ Texture2D *Font::GetFontAtlas(int fontSize) const
             m_cachedAtlasCharRects[fontSize].Add(chars[i], charRects[i]);
         }
 
-        atlasTex.Get()->SetFilterMode(GL::FilterMode::Nearest);
+        atlasTex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
     }
 
     return m_cachedAtlas.Get(fontSize).Get();

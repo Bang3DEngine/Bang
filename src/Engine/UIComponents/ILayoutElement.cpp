@@ -14,13 +14,13 @@ void ILayoutElement::SetCalculatedLayout(Axis axis,
                                          int preferred,
                                          float flexible)
 {
-    if (axis == Axis::Horizontal)
+    if (axis == Axis::HORIZONTAL)
     {
         m_calculatedMinSize.x       = min;
         m_calculatedPreferredSize.x = preferred;
         m_calculatedFlexibleSize.x  = flexible;
     }
-    else if (axis == Axis::Vertical)
+    else if (axis == Axis::VERTICAL)
     {
         m_calculatedMinSize.y       = min;
         m_calculatedPreferredSize.y = preferred;
@@ -54,7 +54,7 @@ void ILayoutElement::_CalculateLayout(Axis axis)
     if (IInvalidatable<ILayoutElement>::IsInvalid())
     {
         CalculateLayout(axis);
-        if (axis == Axis::Vertical) { Validate(); }
+        if (axis == Axis::VERTICAL) { Validate(); }
     }
 }
 
@@ -75,8 +75,8 @@ Vector2 ILayoutElement::GetFlexibleSize() const
 
 Vector2 ILayoutElement::GetSize(LayoutSizeType sizeType) const
 {
-    if (sizeType == LayoutSizeType::Min) { return Vector2( GetMinSize() ); }
-    if (sizeType == LayoutSizeType::Preferred) { return Vector2( GetPreferredSize() ); }
-    if (sizeType == LayoutSizeType::Flexible)  { return GetFlexibleSize(); }
+    if (sizeType == LayoutSizeType::MIN) { return Vector2( GetMinSize() ); }
+    if (sizeType == LayoutSizeType::PREFERRED) { return Vector2( GetPreferredSize() ); }
+    if (sizeType == LayoutSizeType::FLEXIBLE)  { return GetFlexibleSize(); }
     return Vector2::Zero;
 }

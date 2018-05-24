@@ -14,7 +14,7 @@ class PostProcessEffect : public Component
     COMPONENT(PostProcessEffect)
 
 public:
-    enum class Type { AfterScene = 0, AfterCanvas };
+    enum class Type { AFTER_SCENE = 0, AFTER_CANVAS };
 
     PostProcessEffect();
     virtual ~PostProcessEffect() = default;
@@ -48,7 +48,7 @@ protected:
 private:
     RH<ShaderProgram> p_shaderProgram;
     RH<Shader> p_postProcessShader;
-    Type m_type = Type::AfterScene;
+    Type m_type = Type::AFTER_SCENE;
     int m_priority = 0;
 };
 

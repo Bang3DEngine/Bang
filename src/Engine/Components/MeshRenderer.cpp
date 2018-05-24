@@ -14,7 +14,7 @@ USING_NAMESPACE_BANG
 
 MeshRenderer::MeshRenderer()
 {
-    SetRenderPrimitive( GL::Primitive::Triangles );
+    SetRenderPrimitive( GL::Primitive::TRIANGLES );
     SetMesh( MeshFactory::GetCube().Get() );
 }
 

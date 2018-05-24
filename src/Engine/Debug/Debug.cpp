@@ -74,69 +74,69 @@ void Debug::PrintUniforms(uint programId)
         GL::UniformType type = GL::GetUniformTypeAt(programId, i);
         switch (type)
         {
-            case GL::UniformType::Float:
-            case GL::UniformType::Double:
+            case GL::UniformType::FLOAT:
+            case GL::UniformType::DOUBLE:
             {
                 GLUniforms::GLSLVar<float> var = GLUniforms::GetUniformAt<float>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Byte:
-            case GL::UniformType::UnsignedByte:
+            case GL::UniformType::BYTE:
+            case GL::UniformType::UNSIGNED_BYTE:
             {
                 GLUniforms::GLSLVar<Byte> var = GLUniforms::GetUniformAt<Byte>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Short:
-            case GL::UniformType::UnsignedShort:
+            case GL::UniformType::SHORT:
+            case GL::UniformType::UNSIGNED_SHORT:
             {
                 GLUniforms::GLSLVar<short> var = GLUniforms::GetUniformAt<short>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Vector2:
+            case GL::UniformType::VEC2:
             {
                 GLUniforms::GLSLVar<Vector2> var = GLUniforms::GetUniformAt<Vector2>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Vector3:
+            case GL::UniformType::VEC3:
             {
                 GLUniforms::GLSLVar<Vector3> var = GLUniforms::GetUniformAt<Vector3>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Vector4:
+            case GL::UniformType::VEC4:
             {
                 GLUniforms::GLSLVar<Vector4> var = GLUniforms::GetUniformAt<Vector4>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Matrix3:
+            case GL::UniformType::MAT3:
             {
                 GLUniforms::GLSLVar<Matrix3> var = GLUniforms::GetUniformAt<Matrix3>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Matrix4:
+            case GL::UniformType::MAT4:
             {
                 GLUniforms::GLSLVar<Matrix4> var = GLUniforms::GetUniformAt<Matrix4>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
                 break;
             }
-            case GL::UniformType::Int:
-            case GL::UniformType::UnsignedInt:
-            case GL::UniformType::UnsignedInt_24_8:
-            case GL::UniformType::Sampler1D:
-            case GL::UniformType::Sampler2D:
-            case GL::UniformType::Sampler3D:
-            case GL::UniformType::SamplerCube:
-            case GL::UniformType::Sampler1DShadow:
-            case GL::UniformType::Sampler2DShadow:
-            case GL::UniformType::SamplerCubeShadow:
-            case GL::UniformType::Sampler1DArrayShadow:
-            case GL::UniformType::Sampler2DArrayShadow:
+            case GL::UniformType::INT:
+            case GL::UniformType::UNSIGNED_INT:
+            case GL::UniformType::UNSIGNED_INT_24_8:
+            case GL::UniformType::SAMPLER_1D:
+            case GL::UniformType::SAMPLER_2D:
+            case GL::UniformType::SAMPLER_3D:
+            case GL::UniformType::SAMPLER_CUBE:
+            case GL::UniformType::SAMPLER_1D_SHADOW:
+            case GL::UniformType::SAMPLER_2D_SHADOW:
+            case GL::UniformType::SAMPLER_CUBE_SHADOW:
+            case GL::UniformType::SAMPLER_1D_ARRAY_SHADOW:
+            case GL::UniformType::SAMPLER_2D_ARRAY_SHADOW:
             {
                 GLUniforms::GLSLVar<int> var = GLUniforms::GetUniformAt<int>(programId, i);
                 Debug_Log(var.name << ": " << var.value);
@@ -157,7 +157,7 @@ void Debug::PrintAllUniforms()
 
 void Debug::PrintUniforms()
 {
-    Debug::PrintUniforms(GL::GetBoundId(GL::BindTarget::ShaderProgram));
+    Debug::PrintUniforms(GL::GetBoundId(GL::BindTarget::SHADER__PROGRAM));
 }
 
 Debug *Debug::GetInstance()

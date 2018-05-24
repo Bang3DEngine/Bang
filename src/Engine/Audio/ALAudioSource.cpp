@@ -93,9 +93,9 @@ void ALAudioSource::SetALBufferId(ALuint bufferId)
     alSourcei(m_alSourceId, AL_BUFFER, bufferId);
 }
 
-bool ALAudioSource::IsPlaying() const { return GetState() == State::Playing; }
-bool ALAudioSource::IsPaused() const { return GetState() == State::Paused; }
-bool ALAudioSource::IsStopped() const { return GetState() == State::Stopped; }
+bool ALAudioSource::IsPlaying() const { return GetState() == State::PLAYING; }
+bool ALAudioSource::IsPaused() const { return GetState() == State::PAUSED; }
+bool ALAudioSource::IsStopped() const { return GetState() == State::STOPPED; }
 float ALAudioSource::GetVolume() const { return m_audioParams.volume; }
 float ALAudioSource::GetPitch() const { return m_audioParams.pitch; }
 float ALAudioSource::GetRange() const { return m_audioParams.range; }

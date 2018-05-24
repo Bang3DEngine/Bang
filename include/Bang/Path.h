@@ -13,14 +13,14 @@ class Path : public IToString
 public:
     enum FindFlag
     {
-        None      = 0,
-        Recursive = 1,
-        Hidden    = 2,
+        NONE      = 0,
+        RECURSIVE = 1,
+        HIDDEN    = 2,
 
-        Simple          = FindFlag::None,
-        SimpleHidden    = FindFlag::Simple | FindFlag::Hidden,
-        RecursiveHidden = FindFlag::Recursive | FindFlag::Hidden,
-        Default         = FindFlag::SimpleHidden
+        SIMPLE           = FindFlag::NONE,
+        SIMPLE_HIDDEN    = FindFlag::SIMPLE | FindFlag::HIDDEN,
+        RECURSIVE_HIDDEN = FindFlag::RECURSIVE | FindFlag::HIDDEN,
+        DEFAULT          = FindFlag::SIMPLE_HIDDEN
     };
     CREATE_FLAGS(FindFlags, FindFlag);
 
@@ -36,7 +36,7 @@ public:
     bool Exists() const;
 
 
-    List<Path> GetFiles(FindFlags findFlags = FindFlag::Default,
+    List<Path> GetFiles(FindFlags findFlags = FindFlag::DEFAULT,
                         const Array<String> &extensions = {}) const;
     List<Path> GetSubDirectories(FindFlags findFlags) const;
     List<Path> GetSubPaths(FindFlags findFlags) const;

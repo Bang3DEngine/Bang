@@ -37,7 +37,7 @@ void UIComboBox::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (Input::GetMouseButtonDown(MouseButton::Left))
+    if (Input::GetMouseButtonDown(MouseButton::LEFT))
     {
         if (IsListBeingShown() && !m_justStartedToShowList)
         {
@@ -56,8 +56,8 @@ void UIComboBox::AddItem(const String &label, int value)
     UITextRenderer *textRend = textGo->AddComponent<UITextRenderer>();
     textRend->SetContent(label);
     textRend->SetTextSize(12);
-    textRend->SetVerticalAlign(VerticalAlignment::Center);
-    textRend->SetHorizontalAlign(HorizontalAlignment::Right);
+    textRend->SetVerticalAlign(VerticalAlignment::CENTER);
+    textRend->SetHorizontalAlign(HorizontalAlignment::RIGHT);
 
     GetList()->AddItem(textGo);
     m_indexToValue.PushBack( value );
@@ -143,8 +143,8 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     UIComboBox *comboBox = go->AddComponent<UIComboBox>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
-    hl->SetChildrenVerticalStretch(Stretch::None);
-    hl->SetChildrenVerticalAlignment(VerticalAlignment::Center);
+    hl->SetChildrenVerticalStretch(Stretch::NONE);
+    hl->SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
     hl->SetPaddings(6);
     hl->SetPaddingLeft(10);
     hl->SetPaddingRight(6);
@@ -155,13 +155,13 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     {
         comboBox->ShowList();
     });
-    focusable->SetCursorType(Cursor::Type::Hand);
+    focusable->SetCursorType(Cursor::Type::HAND);
 
     GameObject *currentItemTextGo = GameObjectFactory::CreateUIGameObject();
     UITextRenderer *currentItemText = currentItemTextGo->AddComponent<UITextRenderer>();
     currentItemText->SetContent("Current");
     currentItemText->SetTextSize(12);
-    currentItemText->SetHorizontalAlign(HorizontalAlignment::Right);
+    currentItemText->SetHorizontalAlign(HorizontalAlignment::RIGHT);
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
     bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
@@ -193,7 +193,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
     UIFocusable *listFocusable = listBG->GetGameObject()->GetComponent<UIFocusable>();
-    listFocusable->SetCursorType(Cursor::Type::Hand);
+    listFocusable->SetCursorType(Cursor::Type::HAND);
 
     listGo->AddComponent<UILayoutIgnorer>();
     RectTransform *contRT = listGo->GetRectTransform();
@@ -202,8 +202,8 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     contRT->TranslateLocal(Vector3(0.0f, 0.0f, -0.0001f));
 
     UIContentSizeFitter *csf = listGo->AddComponent<UIContentSizeFitter>();
-    csf->SetHorizontalSizeType(LayoutSizeType::Preferred);
-    csf->SetVerticalSizeType(LayoutSizeType::Preferred);
+    csf->SetHorizontalSizeType(LayoutSizeType::PREFERRED);
+    csf->SetVerticalSizeType(LayoutSizeType::PREFERRED);
 
     currentItemTextGo->SetParent(go);
     downArrowIconGo->SetParent(go);
@@ -224,9 +224,9 @@ void UIComboBox::OnListSelectionCallback(GameObject *item, UIList::Action action
 
     switch (action)
     {
-        case UIList::Action::ClickedLeft:
-        case UIList::Action::ClickedRight:
-        case UIList::Action::Pressed:
+        case UIList::Action::CLICKED_LEFT:
+        case UIList::Action::CLICKED_RIGHT:
+        case UIList::Action::PRESSED:
             SetSelectionByIndex(indexOfItem);
             HideList();
             break;

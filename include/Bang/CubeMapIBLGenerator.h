@@ -19,7 +19,7 @@ public:
     virtual ~CubeMapIBLGenerator() = delete;
 
 private:
-    enum IBLType { Diffuse = 0, Specular };
+    enum class IBLType { DIFFUSE = 0, SPECULAR };
 
     static RH<TextureCubeMap> GenerateIBLCubeMap(TextureCubeMap *textureCubeMap,
                                                  IBLType iblType);

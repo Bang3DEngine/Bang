@@ -77,7 +77,7 @@ List<Path> Path::GetFiles(Path::FindFlags findFlags,
                           subPath.HasExtension(extensions);
         if (subPath.IsDir())
         {
-            if (findFlags.IsOn(Path::FindFlag::Recursive))
+            if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
             {
                 subFilesList.PushBack( subPath.GetFiles(findFlags, extensions) );
             }
@@ -101,7 +101,7 @@ List<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
         if (subPath.IsDir())
         {
             subDirsList.PushBack(subPath);
-            if (findFlags.IsOn(Path::FindFlag::Recursive))
+            if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
             {
                 subDirsList.PushBack( subPath.GetSubDirectories(findFlags) );
             }
@@ -120,7 +120,7 @@ List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
     while ((dir = readdir(d)) != nullptr)
     {
         String subName = dir->d_name;
-        if (findFlags.IsOff(Path::FindFlag::Hidden) &&
+        if (findFlags.IsOff(Path::FindFlag::HIDDEN) &&
             (subName.BeginsWith("."))) { continue; }
 
         if (subName != "." && subName != "..")

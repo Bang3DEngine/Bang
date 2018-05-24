@@ -20,20 +20,20 @@ USING_NAMESPACE_BANG
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
     m_ssaoFB = new Framebuffer();
-    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::Color0,
-                               GL::ColorFormat::RGB10_A2_UByte);
-    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::Color1,
-                               GL::ColorFormat::RGB10_A2_UByte);
+    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR0,
+                               GL::ColorFormat::RGB10_A2);
+    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR1,
+                               GL::ColorFormat::RGB10_A2);
 
     SetBlurRadius(1);
     SetSSAORadius(1);
     SetNumRandomAxes(8);
     SetNumRandomSamples(16);
 
-    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0)->
-              SetWrapMode(GL::WrapMode::Repeat);
-    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color1)->
-              SetWrapMode(GL::WrapMode::Repeat);
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0)->
+              SetWrapMode(GL::WrapMode::REPEAT);
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1)->
+              SetWrapMode(GL::WrapMode::REPEAT);
 
     p_ssaoShaderProgram = ShaderProgramFactory::Get(
            ShaderProgramFactory::GetScreenPassVertexShaderPath(),
@@ -62,8 +62,8 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
     if ( MustBeRendered(renderPass) )
     {
         // Save state
-        GLId prevSP = GL::GetBoundId( GL::BindTarget::ShaderProgram );
-        GLId prevFB = GL::GetBoundId( GL::BindTarget::Framebuffer );
+        GLId prevSP = GL::GetBoundId( GL::BindTarget::SHADER__PROGRAM );
+        GLId prevFB = GL::GetBoundId( GL::BindTarget::FRAMEBUFFER );
         AARecti prevVP = GL::GetViewportRect();
 
         // Get references
@@ -92,7 +92,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             p_ssaoShaderProgram.Get()->SetVector3Array("B_RandomHemisphereOffsetsArray",
                                                        m_randomHemisphereOffsets);
 
-            m_ssaoFB->SetDrawBuffers({GL::Attachment::Color0});
+            m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
             gbuffer->BindAttachmentsForReading(p_ssaoShaderProgram.Get());
             GEngine::GetActive()->RenderViewportPlane(); // Render Pass!
         }
@@ -108,9 +108,9 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             p_blurXShaderProgram.Get()->SetFloatArray("B_BlurKernel", m_blurKernel);
             p_blurXShaderProgram.Get()->SetInt("B_BlurRadius", GetBlurRadius());
 
-            m_ssaoFB->SetDrawBuffers({GL::Attachment::Color1});
+            m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR1});
             p_blurXShaderProgram.Get()->SetTexture2D(GBuffer::GetColorsTexName(),
-                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0));
+                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0));
             GEngine::GetActive()->RenderViewportPlane(); // Render blur X!
 
             // Blur in Y
@@ -123,14 +123,14 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             p_blurYShaderProgram.Get()->SetTexture2D(GBuffer::GetColorsTexName(),
                                                      GetSSAOTexture());
 
-            m_ssaoFB->SetDrawBuffers({GL::Attachment::Color0});
+            m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
             p_blurYShaderProgram.Get()->SetTexture2D(GBuffer::GetColorsTexName(),
-                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color1));
+                        m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1));
             GEngine::GetActive()->RenderViewportPlane(); // Render blur Y!
         }
 
         // Restore previous framebuffer
-        GL::Bind( GL::BindTarget::Framebuffer, prevFB );
+        GL::Bind( GL::BindTarget::FRAMEBUFFER, prevFB );
 
         // Then apply actual SSAO blending with occlusion calculated above!
         {
@@ -141,7 +141,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
         }
 
         // Restore state
-        GL::Bind( GL::BindTarget::ShaderProgram, prevSP );
+        GL::Bind( GL::BindTarget::SHADER__PROGRAM, prevSP );
         GL::SetViewport(prevVP);
     }
 }
@@ -291,7 +291,7 @@ const Vector2 &PostProcessEffectSSAO::GetFBSize() const
 
 Texture2D* PostProcessEffectSSAO::GetSSAOTexture() const
 {
-    return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::Color0);
+    return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
 void PostProcessEffectSSAO::ReloadShaders()
@@ -334,6 +334,6 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
     m_randomAxesTexture = Resources::Create<Texture2D>();
     m_randomAxesTexture.Get()->Resize(imgSize, imgSize);
     m_randomAxesTexture.Get()->Import(randomsImg);
-    m_randomAxesTexture.Get()->SetWrapMode(GL::WrapMode::Repeat);
-    m_randomAxesTexture.Get()->SetFilterMode(GL::FilterMode::Bilinear);
+    m_randomAxesTexture.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_randomAxesTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
 }

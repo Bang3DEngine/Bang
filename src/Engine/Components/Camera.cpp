@@ -31,10 +31,10 @@ USING_NAMESPACE_BANG
 
 Camera::Camera()
 {
-    AddRenderPass(RenderPass::Scene);
-    AddRenderPass(RenderPass::ScenePostProcess);
-    AddRenderPass(RenderPass::Canvas);
-    AddRenderPass(RenderPass::CanvasPostProcess);
+    AddRenderPass(RenderPass::SCENE);
+    AddRenderPass(RenderPass::SCENE_POSTPROCESS);
+    AddRenderPass(RenderPass::CANVAS);
+    AddRenderPass(RenderPass::CANVAS_POSTPROCESS);
 
     m_gbuffer = new GBuffer(1,1);
     m_selectionFramebuffer = new SelectionFramebuffer(1,1);
@@ -372,7 +372,7 @@ bool Camera::GetRenderSelectionBuffer() const
 
 Matrix4 Camera::GetProjectionMatrix() const
 {
-    if (m_projMode == ProjectionMode::Perspective)
+    if (m_projMode == ProjectionMode::PERSPECTIVE)
     {
         if (GL::GetViewportAspectRatio() == 0.0 ||
             GetFovDegrees() == 0.0 ||
@@ -404,7 +404,7 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
 void Camera::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
-    if (rp != RenderPass::Overlay) { return; }
+    if (rp != RenderPass::OVERLAY) { return; }
 
     Gizmos::Reset();
     static RH<Mesh> cameraMesh = MeshFactory::GetCamera();

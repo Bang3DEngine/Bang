@@ -49,7 +49,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         if (!prevLE || !nextLE) { return; }
 
         constexpr int AuxiliarLayoutElementPriority = 147;
-        const bool horizontal = (GetAxis() == Axis::Horizontal);
+        const bool horizontal = (GetAxis() == Axis::HORIZONTAL);
 
         // Prepare siblings, by setting preferred and flexible
         Map<GameObject*, UILayoutElement*> childToAuxLE;
@@ -191,9 +191,9 @@ void UIDirLayoutMovableSeparator::SetAxis(Axis axis)
         constexpr float linePercent = 1.0f;
         UILayoutElement *le = GetGameObject()->GetComponent<UILayoutElement>();
 
-        bool horizontal = (GetAxis() == Axis::Horizontal);
-        p_focusable->SetCursorType(horizontal ? Cursor::Type::SizeWE :
-                                                Cursor::Type::SizeNS);
+        bool horizontal = (GetAxis() == Axis::HORIZONTAL);
+        p_focusable->SetCursorType(horizontal ? Cursor::Type::SIZE_WE :
+                                                Cursor::Type::SIZE_NS);
         if (horizontal)
         {
             le->SetFlexibleSize( Vector2(0, 99999999) );
@@ -241,11 +241,11 @@ UIDirLayoutMovableSeparator::CreateInto(GameObject *go)
     LineRenderer *lr = go->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
     lr->GetMaterial()->SetAlbedoColor(Color::White);
-    lr->SetViewProjMode(GL::ViewProjMode::Canvas);
+    lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     dirLayoutSep->p_lineRenderer = lr;
     dirLayoutSep->p_focusable = focusable;
-    dirLayoutSep->SetAxis(Axis::Horizontal);
+    dirLayoutSep->SetAxis(Axis::HORIZONTAL);
 
     return dirLayoutSep;
 }

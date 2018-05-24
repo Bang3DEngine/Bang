@@ -29,12 +29,12 @@ USING_NAMESPACE_BANG
 DirectionalLight::DirectionalLight()
 {
     m_shadowMapFramebuffer = new Framebuffer(1,1);
-    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::Depth,
-                                             GL::ColorFormat::Depth16);
+    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
+                                             GL::ColorFormat::DEPTH16);
 
     GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
     GetShadowMapTexture()->Bind();
-    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::Bilinear);
+    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
     GL::TexParameteri( GetShadowMapTexture()->GetTextureTarget(),
                        GL::TexParameter::TEXTURE_COMPARE_MODE,
                        GL_COMPARE_REF_TO_TEXTURE );
@@ -78,13 +78,13 @@ void DirectionalLight::RenderShadowMaps_()
     // Render shadow map into framebuffer
     GL::ClearDepthBuffer(1.0f);
     GL::SetColorMask(false, false, false, false);
-    GL::SetDepthFunc(GL::Function::LEqual);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
     GL::SetDepthMask(true);
 
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::Scene,
+        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::SCENE,
                                              false);
     }
 
@@ -118,7 +118,7 @@ float DirectionalLight::GetShadowDistance() const
 
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::Depth);
+    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::DEPTH);
 }
 
 void DirectionalLight::CloneInto(ICloneable *clone) const
@@ -288,7 +288,7 @@ void DirectionalLight::OnRender(RenderPass rp)
     Component::OnRender(rp);
 
     // Gizmo rendering
-    if (rp == RenderPass::Overlay)
+    if (rp == RenderPass::OVERLAY)
     {
         Gizmos::Reset();
         Gizmos::SetColor(GetColor().WithAlpha(1.0f));

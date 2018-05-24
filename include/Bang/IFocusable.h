@@ -42,7 +42,7 @@ private:
     bool m_focusEnabled = true;
     bool m_hasJustFocusChanged = false;
     bool m_lastMouseDownWasHere = false;
-    Cursor::Type m_cursorType = Cursor::Type::Arrow;
+    Cursor::Type m_cursorType = Cursor::Type::ARROW;
 
     Array<ClickedCallback> m_clickedCallbacks;
 

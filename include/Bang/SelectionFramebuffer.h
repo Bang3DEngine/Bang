@@ -16,7 +16,7 @@ class SelectionFramebuffer : public Framebuffer,
                              public IDestroyListener
 {
 public:
-    static const GL::Attachment AttColor = GL::Attachment::Color0;
+    static const GL::Attachment AttColor = GL::Attachment::COLOR0;
 
     SelectionFramebuffer(int width, int height);
     virtual ~SelectionFramebuffer();

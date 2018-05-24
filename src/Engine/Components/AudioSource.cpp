@@ -35,7 +35,7 @@ void AudioSource::OnStart()
 void AudioSource::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
-    if (rp == RenderPass::Overlay)
+    if (rp == RenderPass::OVERLAY)
     {
         Gizmos::Reset();
         Gizmos::SetSelectable(GetGameObject());

@@ -230,10 +230,10 @@ void RectTransform::SetMargins(Axis axis, const Vector2i &margins)
 
 void RectTransform::SetMargins(Axis axis, int marginMin, int marginMax)
 {
-    if (axis == Axis::Vertical)
+    if (axis == Axis::VERTICAL)
     { SetMarginBot(marginMin); SetMarginTop(marginMax); }
 
-    if (axis == Axis::Horizontal)
+    if (axis == Axis::HORIZONTAL)
     { SetMarginLeft(marginMin); SetMarginRight(marginMax); }
 }
 
@@ -345,7 +345,7 @@ int RectTransform::GetMarginMin(Axis axis) const { return GetMargins(axis)[0]; }
 int RectTransform::GetMarginMax(Axis axis) const { return GetMargins(axis)[1]; }
 Vector2 RectTransform::GetMargins(Axis axis) const
 {
-    return axis == Axis::Horizontal ?
+    return axis == Axis::HORIZONTAL ?
                 Vector2(GetMarginLeft(), GetMarginRight()) :
                 Vector2(GetMarginBot(),  GetMarginTop());
 

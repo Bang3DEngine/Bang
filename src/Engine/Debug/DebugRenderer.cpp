@@ -35,7 +35,7 @@ void DebugRenderer::RenderLine(const Vector3 &origin,
                                float thickness,
                                bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::Line,
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LINE,
                                {origin, end},
                                color, time, thickness, false, false, depthTest);
 }
@@ -46,7 +46,7 @@ void DebugRenderer::RenderPoint(const Vector3 &point,
                                 float thickness,
                                 bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::Point,
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::POINT,
                                {point},
                                color, time, thickness, false, false, depthTest);
 }
@@ -58,7 +58,7 @@ void DebugRenderer::RenderLineNDC(const Vector2 &originNDC,
                                   float thickness,
                                   bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LineNDC,
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LINE_NDC,
                                {Vector3(originNDC,0), Vector3(endNDC,0)},
                                color, time, thickness, false, false, depthTest);
 }
@@ -93,7 +93,7 @@ void DebugRenderer::RenderTriangle(const Triangle &triangle,
                                    bool culling,
                                    bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::Triangle,
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::TRIANGLE,
                                {triangle[0], triangle[1], triangle[2]},
                                color, time, -1.0f, wireframe, culling, depthTest);
 }
@@ -106,7 +106,7 @@ void DebugRenderer::RenderQuad(const Quad &quad,
                                bool depthTest,
                                const Color &bordersColor)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::Quad,
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::QUAD,
                                {quad[0], quad[1], quad[2], quad[3]},
                                color, time, -1.0f, wireframe, culling, depthTest);
 
@@ -123,7 +123,7 @@ void DebugRenderer::RenderAARectNDC(const AARect &rectNDC, const Color &color,
                                     float time, float thickness, bool depthTest)
 {
     DebugRenderer::DebugRenderPrimitive *drp =
-        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::AARectNDC,
+        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::AARECT_NDC,
                                    {}, color, time, thickness, false, false, depthTest);
     if (drp)
     {
@@ -135,7 +135,7 @@ void DebugRenderer::RenderRectNDC(const Rect &rectNDC, const Color &color,
                                   float time, float thickness, bool depthTest)
 {
     DebugRenderer::DebugRenderPrimitive *drp =
-        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::RectNDC,
+        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::RECT_NDC,
                                    {}, color, time, thickness, false, false, depthTest);
     if (drp)
     {
@@ -166,7 +166,7 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
     drp.destroyTimestamp = Time::GetNow_Seconds() + time;
     drp.thickness = thickness;
     drp.wireframe = wireframe;
-    drp.cullFace = (culling ? GL::CullFaceExt::Back : GL::CullFaceExt::None);
+    drp.cullFace = (culling ? GL::CullFaceExt::BACK : GL::CullFaceExt::NONE);
     drp.depthTest = depthTest;
     drp.renderedOnce = false;
 
@@ -193,31 +193,31 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         else
         {
             Gizmos::Reset();
-            GL::SetDepthFunc(drp->depthTest ? GL::Function::LEqual :
-                                              GL::Function::Always);
+            GL::SetDepthFunc(drp->depthTest ? GL::Function::LEQUAL :
+                                              GL::Function::ALWAYS);
             Gizmos::SetColor(drp->color);
             if (drp->thickness >= 0.0f) { Gizmos::SetThickness(drp->thickness); }
             switch (drp->primitive)
             {
-                case DebugRendererPrimitiveType::Line:
+                case DebugRendererPrimitiveType::LINE:
                     Gizmos::RenderLine(drp->p0, drp->p1);
                 break;
 
-                case DebugRendererPrimitiveType::LineNDC:
+                case DebugRendererPrimitiveType::LINE_NDC:
                     Gizmos::RenderViewportLineNDC(drp->p0.xy(), drp->p1.xy());
                 break;
 
-                case DebugRendererPrimitiveType::Point:
+                case DebugRendererPrimitiveType::POINT:
                     Gizmos::RenderPoint(drp->p0);
                 break;
 
-                case DebugRendererPrimitiveType::Triangle:
-                case DebugRendererPrimitiveType::Quad:
+                case DebugRendererPrimitiveType::TRIANGLE:
+                case DebugRendererPrimitiveType::QUAD:
                 {
                     // Load mesh
                     Array<Vector3> positions, normals;
                     Array<Vector2> uvs;
-                    if (drp->primitive == DebugRendererPrimitiveType::Triangle)
+                    if (drp->primitive == DebugRendererPrimitiveType::TRIANGLE)
                     {
                         Triangle tri(drp->p0, drp->p1, drp->p2);
                         for (int i : {0,1,2})
@@ -227,7 +227,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                             uvs.PushBack(Vector2(0,0));
                         }
                     }
-                    else if (drp->primitive == DebugRendererPrimitiveType::Quad)
+                    else if (drp->primitive == DebugRendererPrimitiveType::QUAD)
                     {
                         Quad quad(drp->p0, drp->p1, drp->p2, drp->p3);
                         for (int i : {0,1,2,3,4,5})
@@ -251,12 +251,12 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                 }
                 break;
 
-                case DebugRendererPrimitiveType::AARectNDC:
+                case DebugRendererPrimitiveType::AARECT_NDC:
                     Gizmos::RenderRectNDC(
                          GL::FromViewportRectNDCToViewportRect(drp->aaRectNDC) );
                 break;
 
-                case DebugRendererPrimitiveType::RectNDC:
+                case DebugRendererPrimitiveType::RECT_NDC:
                     Gizmos::RenderRectNDC(drp->rectNDCPoints);
                 break;
 

@@ -17,7 +17,7 @@ Shader::Shader(GL::ShaderType t) : m_type(t)
 {
 }
 
-Shader::Shader() : Shader(GL::ShaderType::Vertex)
+Shader::Shader() : Shader(GL::ShaderType::VERTEX)
 {
 }
 
@@ -48,21 +48,21 @@ void Shader::RetrieveType(const Path &shaderPath)
 {
     if (shaderPath.GetExtension().Contains("vert"))
     {
-        m_type = GL::ShaderType::Vertex;
+        m_type = GL::ShaderType::VERTEX;
     }
     else if (shaderPath.GetExtension().Contains("geom"))
     {
-        m_type = GL::ShaderType::Geometry;
+        m_type = GL::ShaderType::GEOMETRY;
     }
     else
     {
-        m_type = GL::ShaderType::Fragment;
+        m_type = GL::ShaderType::FRAGMENT;
     }
 }
 
 GL::BindTarget Shader::GetGLBindTarget() const
 {
-    return GL::BindTarget::None;
+    return GL::BindTarget::NONE;
 }
 
 const String& Shader::GetSourceCode() const

@@ -34,8 +34,8 @@ void UITree::OnUpdate()
     if (GetUIList()->SomeChildHasFocus())
     {
         int collapseOnOff = 0;
-        if (Input::GetKeyDownRepeat(Key::Left)) { collapseOnOff = -1; }
-        else if (Input::GetKeyDownRepeat(Key::Right)) { collapseOnOff = 1; }
+        if (Input::GetKeyDownRepeat(Key::LEFT)) { collapseOnOff = -1; }
+        else if (Input::GetKeyDownRepeat(Key::RIGHT)) { collapseOnOff = 1; }
         if (collapseOnOff != 0)
         {
             GOItem *selItemCont = GetUIList()->GetSelectedItem();
@@ -76,7 +76,7 @@ void UITree::OnUpdate()
 
 void UITree::OnClicked(IFocusable *focusable, ClickType clickType)
 {
-    if (clickType == ClickType::Full)
+    if (clickType == ClickType::FULL)
     {
         IFocusable *collapseButton = focusable;
         Component *cCollapseButton = Cast<Component*>(collapseButton);
@@ -705,7 +705,7 @@ UITreeItemContainer::UITreeItemContainer()
     GameObjectFactory::CreateUIGameObjectInto(this);
 
     AddComponent<UIHorizontalLayout>();
-    p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::Preferred,
+    p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::PREFERRED,
                                                        Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 

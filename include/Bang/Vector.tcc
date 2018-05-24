@@ -215,17 +215,17 @@ VECTOR_G<T> VECTOR_G<T>::Clamp2(const VECTOR_G<T> &v, \
 template<class T> \
 Axis VECTOR_G<T>::GetAxis() const \
 { \
-    return x == 1 ? Axis::Horizontal : Axis::Vertical; \
+    return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL; \
 } \
 template<class T> \
 const T& VECTOR_G<T>::GetAxis(Axis axis) const \
 { \
-    return (axis == Axis::Horizontal) ? x : y; \
+    return (axis == Axis::HORIZONTAL) ? x : y; \
 } \
 template<class T> \
 VECTOR_G<T> VECTOR_G<T>::FromAxis(Axis axis) \
 { \
-    return (axis == Axis::Horizontal) ? VECTOR_G<T>::Right : VECTOR_G<T>::Up; \
+    return (axis == Axis::HORIZONTAL) ? VECTOR_G<T>::Right : VECTOR_G<T>::Up; \
 } \
 \
 template<class T> \

@@ -44,7 +44,7 @@ void UILabel::OnUpdate()
         {
             if (!GetFocusable()->HasJustFocusChanged())
             {
-                if (Input::GetMouseButtonDown(MouseButton::Left))
+                if (Input::GetMouseButtonDown(MouseButton::LEFT))
                 {
                     m_firstSelectAll = false;
                 }
@@ -57,7 +57,7 @@ void UILabel::OnUpdate()
             ResetSelection();
         }
 
-        if (Input::GetMouseButtonUp(MouseButton::Left))
+        if (Input::GetMouseButtonUp(MouseButton::LEFT))
         {
             m_selectingWithMouse = false;
         }
@@ -159,9 +159,9 @@ float UILabel::GetCursorXLocalNDC(int cursorIndex) const
     else // Is empty
     {
         HorizontalAlignment hAlign = GetText()->GetHorizontalAlignment();
-        if (hAlign == HorizontalAlignment::Left)   { return -1; }
-        if (hAlign == HorizontalAlignment::Center) { return  0; }
-        if (hAlign == HorizontalAlignment::Right)  { return  1; }
+        if (hAlign == HorizontalAlignment::LEFT)   { return -1; }
+        if (hAlign == HorizontalAlignment::CENTER) { return  0; }
+        if (hAlign == HorizontalAlignment::RIGHT)  { return  1; }
     }
 
     return Vector2(localTextX, 0).x;
@@ -218,7 +218,7 @@ void UILabel::SetFocusable(IFocusable *focusable)
     if (GetFocusable())
     {
         GetFocusable()->EventEmitter<IFocusListener>::RegisterListener(this);
-        GetFocusable()->SetCursorType( Cursor::Type::IBeam );
+        GetFocusable()->SetCursorType( Cursor::Type::IBEAM );
     }
 }
 
@@ -252,12 +252,12 @@ RectTransform *UILabel::GetTextParentRT() const
 }
 bool UILabel::IsShiftPressed() const
 {
-    return Input::GetKey(Key::LShift) || Input::GetKey(Key::RShift);
+    return Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
 }
 
 void UILabel::HandleClipboardCopy()
 {
-    if ( (Input::GetKey(Key::LCtrl) || Input::GetKey(Key::RCtrl)) )
+    if ( (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL)) )
     {
         String selectedText = GetSelectedText();
         if ( Input::GetKeyDown(Key::C) && selectedText.Size() > 0 )
@@ -269,13 +269,13 @@ void UILabel::HandleClipboardCopy()
 
 void UILabel::HandleMouseSelection()
 {
-    if (Input::GetMouseButtonDown(MouseButton::Left))
+    if (Input::GetMouseButtonDown(MouseButton::LEFT))
     {
         m_selectingWithMouse = true;
     }
 
     // Find the closest visible char bounds to the mouse position
-    if (Input::GetMouseButton(MouseButton::Left))
+    if (Input::GetMouseButton(MouseButton::LEFT))
     {
         Vector2 mouseCoordsLocalNDC = Input::GetMousePositionNDC();
         mouseCoordsLocalNDC = GetTextParentRT()->FromViewportPointNDCToLocalPointNDC(
@@ -284,14 +284,14 @@ void UILabel::HandleMouseSelection()
         SetCursorIndex(closestCharIndex);
 
         // Move the selection index accordingly
-        if (!IsShiftPressed() && Input::GetMouseButtonDown(MouseButton::Left))
+        if (!IsShiftPressed() && Input::GetMouseButtonDown(MouseButton::LEFT))
         {
             ResetSelection();
         }
         if (!IsSelectingWithMouse()) { ResetSelection(); }
     }
 
-    if (Input::GetMouseButtonDoubleClick(MouseButton::Left))
+    if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
     {
         SelectAll();
     }
@@ -323,9 +323,9 @@ UILabel *UILabel::CreateInto(GameObject *go)
     UILabel *label = go->AddComponent<UILabel>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
-    hl->SetChildrenVerticalAlignment(VerticalAlignment::Center);
-    hl->SetChildrenVerticalStretch(Stretch::Full);
-    hl->SetChildrenHorizontalStretch(Stretch::Full);
+    hl->SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
+    hl->SetChildrenVerticalStretch(Stretch::FULL);
+    hl->SetChildrenHorizontalStretch(Stretch::FULL);
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();
     le->SetFlexibleSize( Vector2::One );
@@ -336,7 +336,7 @@ UILabel *UILabel::CreateInto(GameObject *go)
 
     GameObject *textGO = GameObjectFactory::CreateUIGameObject();
     UITextRenderer *text = textGO->AddComponent<UITextRenderer>();
-    text->SetVerticalAlign(VerticalAlignment::Center);
+    text->SetVerticalAlign(VerticalAlignment::CENTER);
     text->SetTextSize(12);
     text->SetWrapping(false);
 

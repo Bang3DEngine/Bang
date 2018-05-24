@@ -92,7 +92,7 @@ const Array<String> &UIFileList::GetFileExtensions() const
 
 void UIFileList::UpdateEntries()
 {
-    List<Path> paths = GetCurrentPath().GetSubPaths(Path::FindFlag::Simple);
+    List<Path> paths = GetCurrentPath().GetSubPaths(Path::FindFlag::SIMPLE);
 
     if (!GetFileExtensions().IsEmpty())
     {
@@ -119,16 +119,16 @@ void UIFileList::UpdateEntries()
         [this, uiList](GameObject *go, UIList::Action action)
         {
             UIFileListItem *item = Cast<UIFileListItem*>(go);
-            if (action == UIList::Action::SelectionIn)
+            if (action == UIList::Action::SELECTION_IN)
             {
                 p_selectedItem = item;
             }
-            else if (action == UIList::Action::SelectionOut)
+            else if (action == UIList::Action::SELECTION_OUT)
             {
                 p_selectedItem = nullptr;
             }
-            else if (action == UIList::Action::Pressed ||
-                     action == UIList::Action::DoubleClickedLeft)
+            else if (action == UIList::Action::PRESSED ||
+                     action == UIList::Action::DOUBLE_CLICKED_LEFT)
             {
                 Path itemPath = item->GetPath();
                 if (itemPath.GetAbsolute() == "..")
@@ -161,7 +161,7 @@ UIFileListItem::UIFileListItem()
     GameObject *container = GameObjectFactory::CreateUIGameObject();
     m_text = container->AddComponent<UITextRenderer>();
     m_text->SetTextSize(12);
-    m_text->SetHorizontalAlign(HorizontalAlignment::Left);
+    m_text->SetHorizontalAlign(HorizontalAlignment::LEFT);
 
     container->SetParent(this);
 }

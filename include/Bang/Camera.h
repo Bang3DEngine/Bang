@@ -25,14 +25,14 @@ class Camera : public Component,
 public:
     enum class ProjectionMode
     {
-        Orthographic,
-        Perspective
+        ORTHOGRAPHIC,
+        PERSPECTIVE
     };
 
     enum class ClearMode
     {
-        Color,
-        SkyBox
+        COLOR,
+        SKY_BOX
     };
 
     virtual void Bind() const;
@@ -125,13 +125,13 @@ private:
     RH<TextureCubeMap> p_skyboxDiffuseTextureCM;
 
     Color m_clearColor = Color(Color(0.3f), 1);
-    ClearMode m_clearMode = ClearMode::Color;
+    ClearMode m_clearMode = ClearMode::COLOR;
     float m_orthoHeight  = 25.0f;
     float m_fovDegrees = 60.0f;
     float m_zNear = 0.1f;
     float m_zFar = 100.0f;
     AARect m_viewportRectNDC = AARect::NDCRect;
-    ProjectionMode m_projMode = ProjectionMode::Perspective;
+    ProjectionMode m_projMode = ProjectionMode::PERSPECTIVE;
 
     friend class Scene;
 };

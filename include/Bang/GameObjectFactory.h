@@ -89,22 +89,22 @@ public:
                                                             GameObject *go);
 
     static GameObject* CreateUIHSeparator(
-                            LayoutSizeType sizeType = LayoutSizeType::Preferred,
+                            LayoutSizeType sizeType = LayoutSizeType::PREFERRED,
                             int spaceY = 1,
                             float linePercent = 1.0f);
     static GameObject* CreateUIVSeparator(
-                            LayoutSizeType sizeType = LayoutSizeType::Preferred,
+                            LayoutSizeType sizeType = LayoutSizeType::PREFERRED,
                             int spaceX = 1,
                             float linePercent = 1.0f);
 
     static GameObject* CreateUISpacer(
-                            LayoutSizeType sizeType = LayoutSizeType::Flexible,
+                            LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
                             const Vector2 &space = Vector2::One);
     static GameObject* CreateUIHSpacer(
-                            LayoutSizeType sizeType = LayoutSizeType::Flexible,
+                            LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
                             float spaceX = 1);
     static GameObject* CreateUIVSpacer(
-                            LayoutSizeType sizeType = LayoutSizeType::Flexible,
+                            LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
                             float spaceY = 1);
 
     static String GetGameObjectDuplicateName(const GameObject *go);

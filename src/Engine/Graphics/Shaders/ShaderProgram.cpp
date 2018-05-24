@@ -161,7 +161,7 @@ bool ShaderProgram::IsLinked() const
 
 GL::BindTarget ShaderProgram::GetGLBindTarget() const
 {
-    return GL::BindTarget::ShaderProgram;
+    return GL::BindTarget::SHADER__PROGRAM;
 }
 
 template <template <class T> class Container, class T>
@@ -356,8 +356,8 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 {
     if (shader && shader->GetType() != type)
     {
-        String typeName = (type == GL::ShaderType::Vertex    ? "Vertex" :
-                          (type == GL::ShaderType::Geometry ? "Geometry" :
+        String typeName = (type == GL::ShaderType::VERTEX    ? "Vertex" :
+                          (type == GL::ShaderType::GEOMETRY ? "Geometry" :
                                                                "Fragment"));
         Debug_Error("You are trying to set as " << typeName << " shader a "
                     "non-" << typeName << " shader.");
@@ -371,9 +371,9 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
     switch (type)
     {
-        case GL::ShaderType::Vertex:   p_vShader.Set(shader); break;
-        case GL::ShaderType::Geometry: p_gShader.Set(shader); break;
-        case GL::ShaderType::Fragment: p_fShader.Set(shader); break;
+        case GL::ShaderType::VERTEX:   p_vShader.Set(shader); break;
+        case GL::ShaderType::GEOMETRY: p_gShader.Set(shader); break;
+        case GL::ShaderType::FRAGMENT: p_fShader.Set(shader); break;
     }
 
     if (GetShader(type))
@@ -386,26 +386,26 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
 bool ShaderProgram::SetVertexShader(Shader* vertexShader)
 {
-    return SetShader(vertexShader, GL::ShaderType::Vertex);
+    return SetShader(vertexShader, GL::ShaderType::VERTEX);
 }
 
 bool ShaderProgram::SetGeometryShader(Shader *geometryShader)
 {
-    return SetShader(geometryShader, GL::ShaderType::Geometry);
+    return SetShader(geometryShader, GL::ShaderType::GEOMETRY);
 }
 
 bool ShaderProgram::SetFragmentShader(Shader* fragmentShader)
 {
-    return SetShader(fragmentShader, GL::ShaderType::Fragment);
+    return SetShader(fragmentShader, GL::ShaderType::FRAGMENT);
 }
 
 Shader *ShaderProgram::GetShader(GL::ShaderType type) const
 {
     switch (type)
     {
-        case GL::ShaderType::Vertex:   return p_vShader.Get();
-        case GL::ShaderType::Geometry: return p_gShader.Get();
-        case GL::ShaderType::Fragment: return p_fShader.Get();
+        case GL::ShaderType::VERTEX:   return p_vShader.Get();
+        case GL::ShaderType::GEOMETRY: return p_gShader.Get();
+        case GL::ShaderType::FRAGMENT: return p_fShader.Get();
     }
 
     ASSERT(false);
@@ -471,15 +471,15 @@ void ShaderProgram::CheckTextureBindingsValidity() const
     for (int i = 0; i < uniformsListSize; ++i)
     {
         GL::UniformType uniformType = GL::GetUniformTypeAt(GetGLId(), i);
-        if (uniformType != GL::UniformType::Sampler1D            &&
-            uniformType != GL::UniformType::Sampler1DShadow      &&
-            uniformType != GL::UniformType::Sampler1DArrayShadow &&
-            uniformType != GL::UniformType::Sampler2D            &&
-            uniformType != GL::UniformType::Sampler2DShadow      &&
-            uniformType != GL::UniformType::Sampler2DArrayShadow &&
-            uniformType != GL::UniformType::Sampler3D            &&
-            uniformType != GL::UniformType::SamplerCube          &&
-            uniformType != GL::UniformType::SamplerCubeShadow)
+        if (uniformType != GL::UniformType::SAMPLER_1D            &&
+            uniformType != GL::UniformType::SAMPLER_1D_SHADOW      &&
+            uniformType != GL::UniformType::SAMPLER_1D_ARRAY_SHADOW &&
+            uniformType != GL::UniformType::SAMPLER_2D            &&
+            uniformType != GL::UniformType::SAMPLER_2D_SHADOW      &&
+            uniformType != GL::UniformType::SAMPLER_2D_ARRAY_SHADOW &&
+            uniformType != GL::UniformType::SAMPLER_3D            &&
+            uniformType != GL::UniformType::SAMPLER_CUBE          &&
+            uniformType != GL::UniformType::SAMPLER_CUBE_SHADOW)
         {
             continue;
         }
@@ -492,24 +492,24 @@ void ShaderProgram::CheckTextureBindingsValidity() const
         const GL::UniformType samplerType = uniformType;
         switch (samplerType)
         {
-            case GL::UniformType::Sampler1D:
-            case GL::UniformType::Sampler1DShadow:
-            case GL::UniformType::Sampler1DArrayShadow:
+            case GL::UniformType::SAMPLER_1D:
+            case GL::UniformType::SAMPLER_1D_SHADOW:
+            case GL::UniformType::SAMPLER_1D_ARRAY_SHADOW:
                 samplers1D.Add(texUnit);
             break;
 
-            case GL::UniformType::Sampler2D:
-            case GL::UniformType::Sampler2DShadow:
-            case GL::UniformType::Sampler2DArrayShadow:
+            case GL::UniformType::SAMPLER_2D:
+            case GL::UniformType::SAMPLER_2D_SHADOW:
+            case GL::UniformType::SAMPLER_2D_ARRAY_SHADOW:
                 samplers2D.Add(texUnit);
             break;
 
-            case GL::UniformType::Sampler3D:
+            case GL::UniformType::SAMPLER_3D:
                 samplers3D.Add(texUnit);
             break;
 
-            case GL::UniformType::SamplerCube:
-            case GL::UniformType::SamplerCubeShadow:
+            case GL::UniformType::SAMPLER_CUBE:
+            case GL::UniformType::SAMPLER_CUBE_SHADOW:
                 samplersCubeMap.Add(texUnit);
             break;
 
@@ -549,14 +549,14 @@ void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
         // If texture is null, return its corresponding null texture unit
         switch (samplerType)
         {
-            case GL::UniformType::Sampler2D:
-            case GL::UniformType::Sampler2DShadow:
-            case GL::UniformType::Sampler2DArrayShadow:
+            case GL::UniformType::SAMPLER_2D:
+            case GL::UniformType::SAMPLER_2D_SHADOW:
+            case GL::UniformType::SAMPLER_2D_ARRAY_SHADOW:
                 texture = TextureFactory::GetWhiteTexture().Get();
             break;
 
-            case GL::UniformType::SamplerCube:
-            case GL::UniformType::SamplerCubeShadow:
+            case GL::UniformType::SAMPLER_CUBE:
+            case GL::UniformType::SAMPLER_CUBE_SHADOW:
                 texture = TextureFactory::GetDefaultTextureCubeMap().Get();
             break;
 

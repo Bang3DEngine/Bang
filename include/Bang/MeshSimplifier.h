@@ -13,8 +13,8 @@ class MeshSimplifier
 public:
     enum class Method
     {
-        Clustering,
-        QuadricErrorMetrics
+        CLUSTERING,
+        QUADRIC_ERROR_METRICS
     };
 
     static Array<RH<Mesh>> GetAllMeshLODs(const Mesh *mesh,

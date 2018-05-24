@@ -41,8 +41,8 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
 
-    if (rp == RenderPass::Scene) { GetDebugRenderer()->RenderPrimitives(true); }
-    else if (rp == RenderPass::Overlay) { GetDebugRenderer()->RenderPrimitives(false); }
+    if (rp == RenderPass::SCENE) { GetDebugRenderer()->RenderPrimitives(true); }
+    else if (rp == RenderPass::OVERLAY) { GetDebugRenderer()->RenderPrimitives(false); }
 }
 
 void Scene::OnResize(int newWidth, int newHeight)

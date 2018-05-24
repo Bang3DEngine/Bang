@@ -37,7 +37,7 @@ public:
 
     void Blit(GL::Attachment srcAttachment, GL::Attachment dstAttachment,
               const AARect &ndcRect = AARect::NDCRect,
-              GL::BufferBit bufferBit = GL::BufferBit::Color);
+              GL::BufferBit bufferBit = GL::BufferBit::COLOR);
     Color ReadColor(int x, int y, GL::Attachment attachment) const;
     void Resize(int width, int height);
 

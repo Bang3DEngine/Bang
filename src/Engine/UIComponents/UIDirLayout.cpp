@@ -11,7 +11,7 @@
 
 USING_NAMESPACE_BANG
 
-UIDirLayout::UIDirLayout() : UIDirLayout(Axis::Vertical)
+UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
 {
 }
 
@@ -80,18 +80,18 @@ void UIDirLayout::ApplyLayoutToChildRectTransform(Axis rebuildPassAxis,
     crt->SetAnchors( Vector2(-1, 1) );
 
     Vector2i paddedLayoutRectSize = layoutRectSize - GetPaddingSize();
-    if (GetAxis() == Axis::Vertical)
+    if (GetAxis() == Axis::VERTICAL)
     {
-        if (rebuildPassAxis == Axis::Horizontal)
+        if (rebuildPassAxis == Axis::HORIZONTAL)
         {
             crt->SetMarginLeft( GetPaddingLeft() );
 
             HorizontalAlignment hAlign = GetChildrenHorizontalAlignment();
-            if (hAlign == HorizontalAlignment::Center)
+            if (hAlign == HorizontalAlignment::CENTER)
             {
                 crt->AddMarginLeft( (paddedLayoutRectSize.x - childRTSize.x) / 2);
             }
-            else if (hAlign == HorizontalAlignment::Right)
+            else if (hAlign == HorizontalAlignment::RIGHT)
             {
                 crt->AddMarginLeft( (paddedLayoutRectSize.x - childRTSize.x) );
             }
@@ -105,16 +105,16 @@ void UIDirLayout::ApplyLayoutToChildRectTransform(Axis rebuildPassAxis,
     }
     else // Axis::Horizontal
     {
-        if (rebuildPassAxis == Axis::Vertical)
+        if (rebuildPassAxis == Axis::VERTICAL)
         {
             crt->SetMarginTop( GetPaddingTop() );
 
             VerticalAlignment vAlign = GetChildrenVerticalAlignment();
-            if (vAlign == VerticalAlignment::Center)
+            if (vAlign == VerticalAlignment::CENTER)
             {
                 crt->AddMarginTop( (paddedLayoutRectSize.y - childRTSize.y) / 2);
             }
-            else if (vAlign == VerticalAlignment::Bot)
+            else if (vAlign == VerticalAlignment::BOT)
             {
                 crt->AddMarginTop( (paddedLayoutRectSize.y - childRTSize.y) );
             }
@@ -137,7 +137,7 @@ void UIDirLayout::FillChildrenMinSizes(const Vector2i &layoutRectSize,
     for (GameObject *child : children)
     {
         Vector2i childRTSize = UILayoutManager::GetMinSize(child);
-        if (GetAxis() == Axis::Vertical)
+        if (GetAxis() == Axis::VERTICAL)
         {
             availableSpace->y -= childRTSize.y;
             childRTSize.x = Math::Min(childRTSize.x, layoutRectSize.x);
@@ -198,7 +198,7 @@ void UIDirLayout::FillChildrenPreferredSizes(const Vector2i &layoutRectSize,
         // Apply children sizes populating the final array
         Vector2i newChildRTSize = newChildRTSizes[i];
         Vector2i minChildSize = (*childrenRTSizes)[i];
-        if (GetAxis() == Axis::Vertical)
+        if (GetAxis() == Axis::VERTICAL)
         {
             availableSpace->y -= (newChildRTSize.y - minChildSize.y);
             newChildRTSize.x = Math::Min(newChildRTSize.x, layoutRectSize.x);
@@ -240,7 +240,7 @@ void UIDirLayout::FillChildrenFlexibleSizes(const Vector2i &layoutRectSize,
         Vector2i flexAvailPxToAdd (sizeProportion * originalAvailableSpace);
         Vector2i childRTSize = Vector2i::Max(prefChildSize,
                                              prefChildSize + flexAvailPxToAdd);
-        if (GetAxis() == Axis::Vertical)
+        if (GetAxis() == Axis::VERTICAL)
         {
             childRTSize.x = Math::Min(childRTSize.x, layoutRectSize.x);
             availableSpace->y -= flexAvailPxToAdd.y;
@@ -266,16 +266,16 @@ void UIDirLayout::ApplyStretches(const Vector2i &layoutRectSize,
     for (const Vector2i& childRTSize : *childrenRTSizes)
     {
         Vector2i newChildRTSize = childRTSize;
-        if (GetChildrenHorizontalStretch() == Stretch::Full)
+        if (GetChildrenHorizontalStretch() == Stretch::FULL)
         {
-            if (GetAxis() == Axis::Horizontal)
+            if (GetAxis() == Axis::HORIZONTAL)
             { newChildRTSize.x = layoutRectSize.x / childrenRTSizes->Size(); }
             else { newChildRTSize.x = layoutRectSize.x; }
         }
 
-        if (GetChildrenVerticalStretch() == Stretch::Full)
+        if (GetChildrenVerticalStretch() == Stretch::FULL)
         {
-            if (GetAxis() == Axis::Vertical)
+            if (GetAxis() == Axis::VERTICAL)
             { newChildRTSize.y = layoutRectSize.y / childrenRTSizes->Size(); }
             else { newChildRTSize.y = layoutRectSize.y; }
         }
@@ -294,9 +294,9 @@ void UIDirLayout::CalculateLayout(Axis axis)
                 UILayoutManager::GetLayoutableChildrenList( GetGameObject() );
     for (GameObject *child : children)
     {
-        Vector2i cMinSize (UILayoutManager::GetSize(child, LayoutSizeType::Min));
-        Vector2i cPrefSize(UILayoutManager::GetSize(child, LayoutSizeType::Preferred));
-        if (GetAxis() == Axis::Vertical)
+        Vector2i cMinSize (UILayoutManager::GetSize(child, LayoutSizeType::MIN));
+        Vector2i cPrefSize(UILayoutManager::GetSize(child, LayoutSizeType::PREFERRED));
+        if (GetAxis() == Axis::VERTICAL)
         {
             minSize.x  = Math::Max(minSize.x, cMinSize.x);
             prefSize.x = Math::Max(prefSize.x, cPrefSize.x);

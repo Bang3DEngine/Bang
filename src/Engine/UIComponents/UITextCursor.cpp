@@ -13,7 +13,7 @@ UITextCursor::UITextCursor()
 {
     SetMaterial(MaterialFactory::GetUIImage().Get());
     GetMaterial()->SetAlbedoColor(Color::Black);
-    SetViewProjMode(GL::ViewProjMode::Canvas);
+    SetViewProjMode(GL::ViewProjMode::CANVAS);
     SetStroke(1.0f);
 
     constexpr float limit = 1.0f;

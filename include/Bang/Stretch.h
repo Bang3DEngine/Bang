@@ -5,7 +5,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum class Stretch { None = 0, Full };
+enum class Stretch { NONE = 0, FULL };
 
 NAMESPACE_BANG_END
 

@@ -9,17 +9,26 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class IFocusable;
 
+enum class ClickType { Down, Full, Double };
+
 class IFocusListener : public virtual IEventListener
 {
     EVENTLISTENER(IFocusListener)
 
 public:
-    virtual void    OnFocusTaken(IFocusable *focusable) { (void)focusable; }
-    virtual void     OnFocusLost(IFocusable *focusable) { (void)focusable; }
-    virtual void       OnClicked(IFocusable *focusable) { (void)focusable; }
-    virtual void OnDoubleClicked(IFocusable *focusable) { (void)focusable; }
-    virtual void    OnMouseEnter(IFocusable *focusable) { (void)focusable; }
-    virtual void     OnMouseExit(IFocusable *focusable) { (void)focusable; }
+    virtual void OnFocusTaken(IFocusable *focusable) { (void)focusable; }
+    virtual void OnFocusLost(IFocusable *focusable) { (void)focusable; }
+
+    virtual void OnMouseEnter(IFocusable *focusable) { (void)focusable; }
+    virtual void OnMouseExit(IFocusable *focusable) { (void)focusable; }
+
+    virtual void OnStartedBeingPressed(IFocusable *focusable) { (void)focusable; }
+    virtual void OnStoppedBeingPressed(IFocusable *focusable) { (void)focusable; }
+
+    virtual void OnClicked(IFocusable *focusable, ClickType clickType)
+    {
+        (void)focusable;
+    }
 };
 
 NAMESPACE_BANG_END

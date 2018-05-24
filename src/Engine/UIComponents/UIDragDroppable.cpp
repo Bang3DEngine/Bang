@@ -220,11 +220,15 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnClicked(IFocusable *focusable)
+void UIDragDroppable::OnClicked(IFocusable *focusable, ClickType clickType)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
-    IFocusListener::OnClicked(focusable);
-    OnDragStarted();
+    IFocusListener::OnClicked(focusable, clickType);
+
+    if (clickType == ClickType::Down)
+    {
+        OnDragStarted();
+    }
 }
 
 void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)

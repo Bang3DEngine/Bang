@@ -6,6 +6,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Path.h"
+#include "Bang/IFocusListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -81,13 +82,13 @@ private:
 
     static Scene* CreateMsgScene(const String &msg);
 
-    static void OnOkClicked(IFocusable *button);
-    static void OnYesClicked(IFocusable *button);
-    static void OnNoClicked(IFocusable *button);
-    static void OnCancelClicked(IFocusable *button);
+    static void OnOkClicked();
+    static void OnYesClicked();
+    static void OnNoClicked();
+    static void OnCancelClicked();
+    static void OnNeedToEndDialog();
     static void AcceptDialogPath(const Path &path);
     static void OnDialogPathChanged(const Path &path);
-    static void OnNeedToEndDialog(IFocusable *button);
 };
 
 NAMESPACE_BANG_END

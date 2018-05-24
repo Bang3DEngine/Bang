@@ -55,7 +55,7 @@ public:
     void OnUpdate() override;
 
     // IFocusListener
-    void OnClicked(IFocusable *focusable) override;
+    void OnClicked(IFocusable *focusable, ClickType clickType) override;
 
     // IDragDropListener
     virtual void OnDragStarted(UIDragDroppable *dragDroppable);

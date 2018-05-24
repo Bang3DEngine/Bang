@@ -54,7 +54,7 @@ private:
     void MoveDragDropGameObjectTo(const Vector2i &pos);
 
     // IFocusable
-    virtual void OnClicked(IFocusable *focusable) override;
+    virtual void OnClicked(IFocusable *focusable, ClickType clickType) override;
 
     friend class UICanvas;
 };

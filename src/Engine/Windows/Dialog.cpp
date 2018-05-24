@@ -179,8 +179,7 @@ void Dialog::CreateSaveFilePathSceneInto(Scene *scene,
 
     UIButton *saveButton = botLeftButton;
     saveButton->GetText()->SetContent("Save");
-    saveButton->GetFocusable()->AddClickedCallback(
-        [fileList, botInputText](IFocusable *)
+    saveButton->AddClickedCallback([fileList, botInputText]()
         {
             Path path = fileList->GetCurrentPath()
                         .Append(botInputText->GetText()->GetContent())
@@ -246,9 +245,7 @@ void Dialog::CreateOpenFilePathSceneInto(Scene *scene,
 
     UIButton *openButton = botRightButton;
     openButton->GetText()->SetContent("Open");
-    openButton->GetFocusable()->AddClickedCallback(
-        [fileList](IFocusable *) { OnOkClicked(nullptr); }
-    );
+    openButton->AddClickedCallback(Dialog::OnOkClicked);
 
     botInputText->GetGameObject()->SetEnabled(false);
 
@@ -352,8 +349,7 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     list->GetScrollPanel()->SetHorizontalShowScrollMode(ShowScrollMode::WhenNeeded);
 
     UIButton *goButton = GameObjectFactory::CreateUIButton("Go");
-    goButton->GetFocusable()->AddClickedCallback(
-        [inputPathText, fileList](IFocusable *)
+    goButton->AddClickedCallback( [inputPathText, fileList]()
         {
             Path inputPath(inputPathText->GetText()->GetContent());
             if (inputPath.IsFile()) { inputPath = inputPath.GetDirectory(); }
@@ -373,12 +369,7 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     cancelButton->GetGameObject()->SetName("CancelButton");
     cancelButton->GetGameObject()->GetComponent<UILayoutElement>()->
                   SetFlexibleHeight(1.0f);
-    cancelButton->GetFocusable()->AddClickedCallback(
-        [scene](IFocusable *)
-        {
-            Dialog::EndCurrentDialog();
-        }
-    );
+    cancelButton->AddClickedCallback(Dialog::EndCurrentDialog);
 
     UIInputText *botInputText = GameObjectFactory::CreateUIInputText();
     botInputText->GetText()->SetContent("");
@@ -451,7 +442,7 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     Dialog::s_resultString = hint;
 
     UIButton *okButton = GameObjectFactory::CreateUIButton("Ok");
-    okButton->GetFocusable()->AddClickedCallback(OnOkClicked);
+    okButton->AddClickedCallback(Dialog::OnOkClicked);
 
     msgGo->SetParent(scene);
     GameObjectFactory::CreateUIVSpacer(LayoutSizeType::Min, 10.0f)->SetParent(scene);
@@ -473,7 +464,10 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
         void OnUpdate() override
         {
             Component::OnUpdate();
-            if (Input::GetKeyDown(Key::Enter)) { m_okButton->Click(false); }
+            if (Input::GetKeyDown(Key::Enter))
+            {
+                m_okButton->Click(ClickType::Full);
+            }
         }
 
         virtual void OnValueChanged(Object *object) override
@@ -534,13 +528,13 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     buttonsGoLE->SetFlexibleHeight(0.0f);
 
     UIButton *buttonYes = GameObjectFactory::CreateUIButton("Yes");
-    buttonYes->GetFocusable()->AddClickedCallback(OnYesClicked);
+    buttonYes->AddClickedCallback(Dialog::OnYesClicked);
 
     UIButton *buttonNo = GameObjectFactory::CreateUIButton("No");
-    buttonNo->GetFocusable()->AddClickedCallback(OnNoClicked);
+    buttonNo->AddClickedCallback(Dialog::OnNoClicked);
 
     UIButton *buttonCancel = GameObjectFactory::CreateUIButton("Cancel");
-    buttonCancel->GetFocusable()->AddClickedCallback(OnCancelClicked);
+    buttonCancel->AddClickedCallback(Dialog::OnCancelClicked);
 
     container->SetParent(scene);
      mainVLayoutGo->SetParent(container);
@@ -601,10 +595,10 @@ Scene *Dialog::CreateMsgScene(const String &msg)
     buttonsHL->SetPaddings(5);
 
     UIButton *button0 = GameObjectFactory::CreateUIButton("Cancel");
-    button0->GetFocusable()->AddClickedCallback(OnNeedToEndDialog);
+    button0->AddClickedCallback(Dialog::OnNeedToEndDialog);
 
     UIButton *button1 = GameObjectFactory::CreateUIButton();
-    button1->GetFocusable()->AddClickedCallback(OnNeedToEndDialog);
+    button1->AddClickedCallback(Dialog::OnNeedToEndDialog);
 
     container->SetParent(scene);
      mainVLayoutGo->SetParent(container);
@@ -626,7 +620,7 @@ Scene *Dialog::CreateMsgScene(const String &msg)
 void Dialog::AcceptDialogPath(const Path &path)
 {
     OnDialogPathChanged(path);
-    OnOkClicked(nullptr);
+    OnOkClicked();
 }
 
 void Dialog::OnDialogPathChanged(const Path &path)
@@ -634,31 +628,31 @@ void Dialog::OnDialogPathChanged(const Path &path)
     Dialog::s_resultPath = path;
 }
 
-void Dialog::OnOkClicked(IFocusable *)
+void Dialog::OnOkClicked()
 {
     Dialog::s_okPressed = true;
-    OnNeedToEndDialog(nullptr);
+    OnNeedToEndDialog();
 }
 
-void Dialog::OnYesClicked(IFocusable *)
+void Dialog::OnYesClicked()
 {
     Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Yes;
-    OnNeedToEndDialog(nullptr);
+    OnNeedToEndDialog();
 }
 
-void Dialog::OnNoClicked(IFocusable *)
+void Dialog::OnNoClicked()
 {
     Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::No;
-    OnNeedToEndDialog(nullptr);
+    OnNeedToEndDialog();
 }
 
-void Dialog::OnCancelClicked(IFocusable *)
+void Dialog::OnCancelClicked()
 {
     Dialog::s_resultYesNoCancel = Dialog::YesNoCancel::Cancel;
-    OnNeedToEndDialog(nullptr);
+    OnNeedToEndDialog();
 }
 
-void Dialog::OnNeedToEndDialog(IFocusable *)
+void Dialog::OnNeedToEndDialog()
 {
     EndCurrentDialog();
 }

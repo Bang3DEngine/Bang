@@ -21,15 +21,17 @@ class UIButton : public Component,
 public:
     // Component
     void OnStart() override;
-    void OnUpdate() override;
 
-    void Click(bool doubleClick);
+    void Click(ClickType clickType);
     void SetBlocked(bool blocked);
     void SetIconSize(const Vector2i &size);
     void SetIconTexture(Texture2D *texture);
     void SetIconSpacingWithText(int spacingWithText);
     void SetIcon(Texture2D *texture, const Vector2i &size,
                  int spacingWithText = 0);
+
+    using ClickedCallback = std::function<void()>;
+    void AddClickedCallback(ClickedCallback clickedCallback);
 
     bool IsBlocked() const;
     UIImageRenderer* GetIcon() const;
@@ -51,9 +53,17 @@ private:
     UIImageRenderer *p_background    = nullptr;
     UIFocusable     *p_focusable     = nullptr;
     UILayoutElement *p_layoutElement = nullptr;
+    Array<ClickedCallback> m_clickedCallbacks;
 
     UIButton();
     virtual ~UIButton();
+
+    // IFocusListener
+    void OnMouseEnter(IFocusable *focusable) override;
+    void OnMouseExit(IFocusable *focusable) override;
+    void OnStartedBeingPressed(IFocusable *focusable) override;
+    void OnStoppedBeingPressed(IFocusable *focusable) override;
+    void OnClicked(IFocusable *focusable, ClickType clickType) override;
 
     static UIButton *CreateInto(GameObject *go);
 

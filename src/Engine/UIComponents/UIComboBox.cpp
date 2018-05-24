@@ -151,7 +151,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddClickedCallback([comboBox](IFocusable*)
+    focusable->AddClickedCallback([comboBox](IFocusable*, ClickType)
     {
         comboBox->ShowList();
     });

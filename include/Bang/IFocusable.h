@@ -15,17 +15,15 @@ public:
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
 
-    void Click(bool doubleClick);
+    void Click(ClickType clickType);
     bool HasFocus() const;
     bool IsFocusEnabled() const;
     bool HasJustFocusChanged() const;
     bool IsBeingPressed() const;
     Cursor::Type GetCursorType() const;
 
-    using ClickedCallback = std::function<void(IFocusable*)>;
+    using ClickedCallback = std::function<void(IFocusable*, ClickType clickType)>;
     void AddClickedCallback(ClickedCallback callback);
-    void AddDoubleClickedCallback(ClickedCallback callback);
-
 
 protected:
     IFocusable();
@@ -34,7 +32,7 @@ protected:
     void SetFocus();
     void ClearFocus();
     virtual void PropagateFocusToListeners();
-    virtual void PropagateOnClickedToListeners(bool doubleClick);
+    virtual void PropagateOnClickedToListeners(ClickType clickType);
     virtual void PropagateMouseOverToListeners(bool mouseOver);
 
 private:
@@ -43,10 +41,10 @@ private:
     bool m_isMouseOver = false;
     bool m_focusEnabled = true;
     bool m_hasJustFocusChanged = false;
+    bool m_lastMouseDownWasHere = false;
     Cursor::Type m_cursorType = Cursor::Type::Arrow;
 
     Array<ClickedCallback> m_clickedCallbacks;
-    Array<ClickedCallback> m_doubleClickedCallbacks;
 
     void UpdateFromCanvas();
 

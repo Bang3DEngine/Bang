@@ -127,7 +127,16 @@ void UICanvas::OnUpdate()
     {
         if (!destroyedFocusables.set.Contains(focusable))
         {
-            focusable->UpdateFromCanvas();
+            bool update = true;
+            if (Object *obj = DCAST<Object*>(focusable))
+            {
+                update = obj->IsActive();
+            }
+
+            if (update)
+            {
+                focusable->UpdateFromCanvas();
+            }
         }
     }
 
@@ -135,22 +144,29 @@ void UICanvas::OnUpdate()
     if (GetGameObject()->GetScene() &&
         GetGameObject()->GetRectTransform()->IsMouseOver())
     {
-        if ( GetCurrentFocus() && GetCurrentFocus()->IsBeingPressed() )
+        if (!p_currentDDBeingDragged)
         {
-            Cursor::Set(GetCurrentFocus()->GetCursorType());
-        }
-        else
-        {
-            // Ensure the canvas is actually on the scene (avoid cases in which we
-            // invoke a fake update() without scene) and that the mouse is over us
-            if (GetCurrentFocusMouseOver())
+            if ( GetCurrentFocus() && GetCurrentFocus()->IsBeingPressed() )
             {
-                Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
+                Cursor::Set(GetCurrentFocus()->GetCursorType());
             }
             else
             {
-                Cursor::Set(Cursor::Type::Arrow);
+                // Ensure the canvas is actually on the scene (avoid cases in which we
+                // invoke a fake update() without scene) and that the mouse is over us
+                if (GetCurrentFocusMouseOver())
+                {
+                    Cursor::Set(GetCurrentFocusMouseOver()->GetCursorType());
+                }
+                else
+                {
+                    Cursor::Set(Cursor::Type::Arrow);
+                }
             }
+        }
+        else
+        {
+            Cursor::Set(Cursor::Type::Crosshair);
         }
     }
 

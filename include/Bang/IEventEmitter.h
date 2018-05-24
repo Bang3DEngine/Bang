@@ -49,6 +49,7 @@ protected:
     virtual ~EventEmitter();
 
 private:
+    bool m_isBeingDestroyed = false;
     List<IEventListener*> m_listeners;
 
     mutable int m_iteratingListeners = 0;

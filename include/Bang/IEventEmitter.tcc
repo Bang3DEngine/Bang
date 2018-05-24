@@ -5,18 +5,32 @@
 
 USING_NAMESPACE_BANG
 
+template<class EventListenerClass>
+EventEmitter<EventListenerClass>::~EventEmitter()
+{
+    m_isBeingDestroyed = true;
+    while (!m_listeners.IsEmpty())
+    {
+        IEventListener *eListener = DCAST<IEventListener*>( m_listeners.Front() );
+        UnRegisterListener(eListener);
+    }
+}
+
 template <class EListenerC>
 void EventEmitter<EListenerC>::RegisterListener(EListenerC *listener)
 {
-    if (!IsIteratingListeners())
+    if (!m_isBeingDestroyed)
     {
-        if (!m_listeners.Contains(listener))
+        if (!IsIteratingListeners())
         {
-            m_listeners.PushBack(listener);
-            if (listener) { listener->OnRegisteredTo(this); }
+            if (!m_listeners.Contains(listener))
+            {
+                m_listeners.PushBack(listener);
+                if (listener) { listener->OnRegisteredTo(this); }
+            }
         }
+        else { m_delayedListenersToRegister.PushBack(listener); }
     }
-    else { m_delayedListenersToRegister.PushBack(listener); }
 }
 
 template <class EListenerC>
@@ -54,19 +68,6 @@ template<class TFunction, class... Args>
 void EventEmitter<EventListenerClass>::
 PropagateToListeners(const TFunction &func, const Args&... args) const
 {
-    ++m_iteratingListeners;
-    for (const auto &x : GetListeners())
-    {
-        #ifdef DEBUG
-        const int previousSize = GetListeners().Size();
-        #endif
-
-        if (IsEmittingEvents()) { PropagateToListener(x, func, args...); }
-
-        ASSERT(GetListeners().Size() == previousSize);
-    }
-    --m_iteratingListeners;
-
     // Un/Register delayed listeners, if not iterating
     if ( !IsIteratingListeners() )
     {
@@ -83,6 +84,19 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
         m_delayedListenersToRegister.Clear();
         m_delayedListenersToUnRegister.Clear();
     }
+
+    ++m_iteratingListeners;
+    for (const auto &x : GetListeners())
+    {
+        #ifdef DEBUG
+        const int previousSize = GetListeners().Size();
+        #endif
+
+        if (IsEmittingEvents()) { PropagateToListener(x, func, args...); }
+
+        ASSERT(GetListeners().Size() == previousSize);
+    }
+    --m_iteratingListeners;
 }
 
 
@@ -90,16 +104,6 @@ template<class EventListenerClass>
 const List<IEventListener*>& EventEmitter<EventListenerClass>::GetListeners() const
 {
     return m_listeners;
-}
-
-template<class EventListenerClass>
-EventEmitter<EventListenerClass>::~EventEmitter()
-{
-    while (!m_listeners.IsEmpty())
-    {
-        IEventListener *eListener = DCAST<IEventListener*>( m_listeners.Front() );
-        UnRegisterListener(eListener);
-    }
 }
 
 #endif // IEVENTEMITTER_TCC

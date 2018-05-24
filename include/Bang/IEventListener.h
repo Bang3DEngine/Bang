@@ -23,7 +23,8 @@ protected:
     virtual ~IEventListener();
 
 private:
-    bool m_receivingEvents = true;
+    bool m_receivesEvents = true;
+    bool m_isBeingDestroyed = false;
     List<IEventEmitter*> m_emitters;
 
     void OnRegisteredTo(IEventEmitter *emitter);

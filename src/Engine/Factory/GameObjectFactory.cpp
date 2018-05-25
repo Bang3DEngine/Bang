@@ -98,7 +98,7 @@ Scene *GameObjectFactory::CreateUIScene()
 
 void GameObjectFactory::CreateUISceneInto(Scene *scene)
 {
-    Camera *cam = scene->AddComponent<Camera>();
+    Camera *cam = GameObjectFactory::CreateUICameraInto(scene);
     scene->SetCamera(cam);
     GameObjectFactory::CreateUIGameObjectInto(scene);
     GameObjectFactory::CreateUICanvasInto(scene);
@@ -489,6 +489,21 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
     else { duplicateName = (originalName + "_1"); }
 
     return duplicateName;
+}
+
+Camera *GameObjectFactory::CreateUICamera()
+{
+    GameObject *go = GameObjectFactory::CreateGameObject();
+    return GameObjectFactory::CreateUICameraInto(go);
+}
+
+Camera *GameObjectFactory::CreateUICameraInto(GameObject *go)
+{
+    Camera *cam = go->AddComponent<Camera>();
+    cam->SetGammaCorrection(1.0f);
+    cam->SetClearColor(Color::LightGray);
+    cam->SetRenderSelectionBuffer(false);
+    return cam;
 }
 
 GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,

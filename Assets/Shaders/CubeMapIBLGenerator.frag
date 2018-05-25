@@ -23,6 +23,7 @@ vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness);
 
 void main()
 {
+    float Gamma = 2.2f;
     const float PI = 3.1415926535f;
 
     vec3 irradiance = vec3(0.0);
@@ -59,8 +60,9 @@ void main()
                                  tangentSample.z * normal;
 
                 // Add to irradiance
-                irradiance += texture(B_InputCubeMap, sampleVec).rgb *
-                              cosTheta * sinTheta;
+                vec3 cubeMapColor = pow(texture(B_InputCubeMap, sampleVec).rgb,
+                                        vec3(Gamma));
+                irradiance += cubeMapColor * cosTheta * sinTheta;
 
                 nrSamples++;
             }
@@ -86,7 +88,9 @@ void main()
             float NdotL = max(dot(normal, L), 0.0);
             if(NdotL > 0.0)
             {
-                prefilteredColor += texture(B_InputCubeMap, L).rgb * NdotL;
+                vec3 cubeMapColor = pow(texture(B_InputCubeMap, L).rgb,
+                                        vec3(Gamma));
+                prefilteredColor += cubeMapColor * NdotL;
                 totalWeight      += NdotL;
             }
         }
@@ -95,6 +99,7 @@ void main()
     }
 
     B_Out_IrradianceColor = vec4(irradiance, 1);
+    // B_Out_IrradianceColor = vec4(pow(irradiance, vec3(1.0f/Gamma)), 1);
 }
 
 

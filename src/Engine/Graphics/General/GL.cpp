@@ -1697,6 +1697,8 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
 {
     switch (format)
     {
+        case GL::ColorFormat::SRGB:
+        case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
         case GL::ColorFormat::RGB10_A2:
             return GL::DataType::UNSIGNED_BYTE;
@@ -1721,6 +1723,7 @@ GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
 {
     switch (format)
     {
+        case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
         case GL::ColorFormat::RGBA16F:
         case GL::ColorFormat::RGBA32F:

@@ -37,9 +37,8 @@ RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
 { return GetTexture2D("Error.png"); }
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
-    // RH<Texture2D> tex = GetTexture2D("Checkerboard.png");
-    // tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
-    // return tex;
+    RH<Texture2D> tex = GetTexture2D("Checkerboard.png");
+    tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
     return TextureFactory::GetTexture2D("Checkerboard.png");
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
@@ -48,9 +47,8 @@ RH<Texture2D> TextureFactory::GetBRDFLUTTexture()
 { return TextureFactory::GetTexture2D("BRDF_LUT.png"); }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectTexture()
 {
-    // Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png").Get();
-    // tex->SetFilterMode(GL::FilterMode::NEAREST);
-    // return TextureFactory::GetTexture2D("RRect_9s.png");
+    Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png").Get();
+    tex->SetFilterMode(GL::FilterMode::NEAREST);
     return TextureFactory::GetTexture2D("RRect_9s.png");
 }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectBorderTexture()

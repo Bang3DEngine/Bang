@@ -24,7 +24,8 @@ vec3 GetCameraSkyBoxSampleLod(samplerCube cubeMap, vec3 direction, float lod)
         break;
 
         case CAMERA_CLEARMODE_SKYBOX:
-            color = textureLod(cubeMap, direction, lod).rgb;
+            // color = textureLod(cubeMap, direction, lod).rgb;
+            color = pow(textureLod(cubeMap, direction, lod).rgb, vec3(2.2f));
         break;
 
         default: color = vec3(1,0,1); break;

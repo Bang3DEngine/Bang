@@ -551,7 +551,7 @@ void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
         {
             case GL::UniformType::SAMPLER_CUBE:
             case GL::UniformType::SAMPLER_CUBE_SHADOW:
-                texture = TextureFactory::GetDefaultTextureCubeMap().Get();
+                texture = TextureFactory::GetWhiteTextureCubeMap().Get();
             break;
 
             default:

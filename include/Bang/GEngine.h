@@ -32,13 +32,13 @@ public:
     void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
     void RenderWithAllPasses(GameObject *go);
-    void RenderTextureGammaCorrected(Texture2D *texture, float gammaCorrection);
     void RenderWithPass(GameObject *go, RenderPass renderPass,
                         bool renderChildren = true);
     void RenderWithPassRaw(GameObject *go, RenderPass renderPass,
                            bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
                             const AARect &destRectMask = AARect::NDCRect);
+    void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
     void RenderViewportPlane();
 
     void ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,

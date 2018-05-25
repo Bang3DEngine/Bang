@@ -183,6 +183,11 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     //                       prevBlendSrcAlphaFactor, prevBlendDstAlphaFactor);
     GL::SetEnabledi(GL::Enablable::BLEND, 0, wasEnabledBlendi0);
     gbuffer->PopDepthStencilTexture();
+
+    if (camera->GetGammaCorrection() != 1.0f)
+    {
+        ApplyGammaCorrection(camera->GetGBuffer(), camera->GetGammaCorrection());
+    }
 }
 
 void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
@@ -262,13 +267,25 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
     GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundShaderProgram);
 }
 
-void GEngine::RenderTexture(Texture2D *texture)
+void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 {
-    RenderTextureGammaCorrected(texture, 1.0f);
+    // Save state
+    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
+    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+
+    gbuffer->Bind();
+
+    ShaderProgram *sp = p_renderTextureToViewportSP.Get();
+    sp->Bind();
+    sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
+    gbuffer->ApplyPass(p_renderTextureToViewportSP.Get(), true);
+
+    // Restore state
+    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevBoundFB);
+    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundShaderProgram);
 }
 
-void GEngine::RenderTextureGammaCorrected(Texture2D *texture,
-                                          float gammaCorrection)
+void GEngine::RenderTexture(Texture2D *texture)
 {
     // Save state
     GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
@@ -276,14 +293,13 @@ void GEngine::RenderTextureGammaCorrected(Texture2D *texture,
     ShaderProgram *sp = p_renderTextureToViewportSP.Get();
 
     sp->Bind();
-    sp->SetFloat("B_GammaCorrection", gammaCorrection);
+    sp->SetFloat("B_GammaCorrection", 1.0f, false);
     sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
     // Restore state
     GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }
-
 
 void GEngine::RenderWithAllPasses(GameObject *go)
 {

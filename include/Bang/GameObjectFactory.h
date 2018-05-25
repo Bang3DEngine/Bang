@@ -9,6 +9,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
+FORWARD class Camera;
 FORWARD class UIList;
 FORWARD class UITree;
 FORWARD class UILabel;
@@ -108,6 +109,9 @@ public:
                             float spaceY = 1);
 
     static String GetGameObjectDuplicateName(const GameObject *go);
+
+    static Camera*     CreateUICamera();
+    static Camera*     CreateUICameraInto(GameObject *go);
 
     static GameObject* CreatePlaneGameObject();
     static GameObject* CreateCubeGameObject();

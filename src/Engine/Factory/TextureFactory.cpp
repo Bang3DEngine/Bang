@@ -37,9 +37,10 @@ RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
 { return GetTexture2D("Error.png"); }
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
-    RH<Texture2D> tex = GetTexture2D("Checkerboard.png");
-    tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
-    return tex;
+    // RH<Texture2D> tex = GetTexture2D("Checkerboard.png");
+    // tex.Get()->SetFilterMode(GL::FilterMode::NEAREST);
+    // return tex;
+    return TextureFactory::GetTexture2D("Checkerboard.png");
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
 { return GetTexture2D("White.png"); }
@@ -47,13 +48,13 @@ RH<Texture2D> TextureFactory::GetBRDFLUTTexture()
 { return TextureFactory::GetTexture2D("BRDF_LUT.png"); }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectTexture()
 {
-    Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png").Get();
-    tex->SetFilterMode(GL::FilterMode::NEAREST);
+    // Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png").Get();
+    // tex->SetFilterMode(GL::FilterMode::NEAREST);
+    // return TextureFactory::GetTexture2D("RRect_9s.png");
     return TextureFactory::GetTexture2D("RRect_9s.png");
 }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectBorderTexture()
 { return TextureFactory::GetTexture2D("RRectBorder_9s.png"); }
-
 RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
 { return TextureFactory::GetTextureCubeMap("WhiteCM.texcm"); }
 RH<TextureCubeMap> TextureFactory::GetDefaultTextureCubeMap()

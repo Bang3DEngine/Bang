@@ -50,6 +50,7 @@ public:
     Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                               float zFromCam) const;
 
+    void SetGammaCorrection(float gammaCorrection);
     void SetOrthoHeight(float orthoHeight);
     void SetClearColor(const Color& color);
     void SetFovDegrees(float fovDegrees);
@@ -71,6 +72,7 @@ public:
     float GetZNear() const;
     float GetZFar() const;
     ClearMode GetClearMode() const;
+    float GetGammaCorrection() const;
     bool MustRenderPass(RenderPass renderPass) const;
     const Set<RenderPass>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
@@ -130,6 +132,7 @@ private:
     float m_fovDegrees = 60.0f;
     float m_zNear = 0.1f;
     float m_zFar = 100.0f;
+    float m_gammaCorrection = 2.2f;
     AARect m_viewportRectNDC = AARect::NDCRect;
     ProjectionMode m_projMode = ProjectionMode::PERSPECTIVE;
 

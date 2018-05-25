@@ -549,18 +549,14 @@ void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
         // If texture is null, return its corresponding null texture unit
         switch (samplerType)
         {
-            case GL::UniformType::SAMPLER_2D:
-            case GL::UniformType::SAMPLER_2D_SHADOW:
-            case GL::UniformType::SAMPLER_2D_ARRAY_SHADOW:
-                texture = TextureFactory::GetWhiteTexture().Get();
-            break;
-
             case GL::UniformType::SAMPLER_CUBE:
             case GL::UniformType::SAMPLER_CUBE_SHADOW:
                 texture = TextureFactory::GetDefaultTextureCubeMap().Get();
             break;
 
-            default: ASSERT(false);
+            default:
+                texture = TextureFactory::GetWhiteTexture().Get();
+            break;
         }
     }
 

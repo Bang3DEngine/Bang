@@ -45,7 +45,7 @@ ShaderProgram *ShaderProgramFactory::GetPointLightScreenPass()
 ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/ByPassTexture.frag"));
+               EPATH("Shaders/RenderTexture.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDirectionalLightScreenPass()

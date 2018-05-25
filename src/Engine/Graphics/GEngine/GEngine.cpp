@@ -264,18 +264,26 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
 void GEngine::RenderTexture(Texture2D *texture)
 {
+    RenderTextureGammaCorrected(texture, 1.0f);
+}
+
+void GEngine::RenderTextureGammaCorrected(Texture2D *texture,
+                                          float gammaCorrection)
+{
     // Save state
     GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
 
     ShaderProgram *sp = p_renderTextureToViewportSP.Get();
 
     sp->Bind();
+    sp->SetFloat("B_GammaCorrection", gammaCorrection);
     sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
     // Restore state
     GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }
+
 
 void GEngine::RenderWithAllPasses(GameObject *go)
 {

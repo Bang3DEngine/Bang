@@ -136,6 +136,11 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     return res;
 }
 
+void Camera::SetGammaCorrection(float gammaCorrection)
+{
+    m_gammaCorrection = gammaCorrection;
+}
+
 AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
 {
     Transform *tr = GetGameObject()->GetTransform();
@@ -240,6 +245,11 @@ float Camera::GetZFar() const { return m_zFar; }
 Camera::ClearMode Camera::GetClearMode() const
 {
     return m_clearMode;
+}
+
+float Camera::GetGammaCorrection() const
+{
+    return m_gammaCorrection;
 }
 
 bool Camera::MustRenderPass(RenderPass renderPass) const

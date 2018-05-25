@@ -32,6 +32,7 @@ public:
     void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
     void RenderWithAllPasses(GameObject *go);
+    void RenderTextureGammaCorrected(Texture2D *texture, float gammaCorrection);
     void RenderWithPass(GameObject *go, RenderPass renderPass,
                         bool renderChildren = true);
     void RenderWithPassRaw(GameObject *go, RenderPass renderPass,

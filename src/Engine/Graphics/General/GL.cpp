@@ -26,18 +26,37 @@ USING_NAMESPACE_BANG
 
 // Helper functions
 template<class T>
+static void SetGLContextValue(GL::StackAndValue<T> *stackAndValue, const T &value)
+{
+    stackAndValue->currentValue = value;
+}
+template<class T>
 static void SetGLContextValue(GL::StackAndValue<T> GL::*svMPtr, const T &value)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
-    GL::StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
-    stackAndValue->currentValue = value;
+    SetGLContextValue( &(gl->*svMPtr), value );
+}
+template<class T>
+static T& GetGLContextValue(GL::StackAndValue<T> &stackAndValue)
+{
+    return stackAndValue.currentValue;
+}
+template<class T>
+static T& GetGLContextValue(GL::StackAndValue<T> GL::*svMPtr)
+{
+    GL *gl = GL::GetInstance(); ASSERT(gl);
+    return GetGLContextValue(gl->*svMPtr);
+}
+template<class T>
+static const T& GetGLContextValue(const GL::StackAndValue<T> &stackAndValue)
+{
+    return stackAndValue.currentValue;
 }
 template<class T>
 static const T& GetGLContextValue(const GL::StackAndValue<T> GL::*svMPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
-    const GL::StackAndValue<T> &stackAndValue = (gl->*svMPtr);
-    return stackAndValue.currentValue;
+    return GetGLContextValue(gl->*svMPtr);
 }
 template<class T>
 static void PushGLContextValue(GL::StackAndValue<T> GL::*svMPtr)
@@ -253,7 +272,7 @@ void GL::ClearColorBuffer(const Color &clearColor,
 
     if (GL::GetClearColor() != clearColor)
     {
-        GL::GetInstance()->m_clearColors.currentValue = clearColor;
+        SetGLContextValue(&GL::m_clearColors, clearColor);
         GL_CALL( glClearColor(clearColor.r, clearColor.g,
                               clearColor.b, clearColor.a) );
     }
@@ -436,33 +455,33 @@ void GL::Disable(GL::Enablable glEnablable, bool overrideIndexedValue)
 void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
                     bool overrideIndexedValues)
 {
-    GL *gl = GL::GetInstance();
+    GL *gl = GL::GetInstance(); ASSERT(gl);
+
     if (enabled != GL::IsEnabled(glEnablable))
     {
         if (enabled) { GL_CALL( glEnable( GLCAST(glEnablable) ); ); }
         else { GL_CALL( glDisable( GLCAST(glEnablable) ); ); }
-        if (gl) { gl->m_enabledVars[glEnablable] = enabled; }
+
+        auto &enabledStackAndValue = gl->m_enabledVars[glEnablable];
+        enabledStackAndValue.currentValue = enabled;
     }
 
     // Update indexed enablables accordingly, depending on if we want to override
     // or not
-    if (gl)
+    auto &enabledisStackAndValue =  gl->m_enabled_i_Vars[glEnablable];
+    for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
     {
-        auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
-        for (int i = 0; i < enabledis.size(); ++i)
+        if (overrideIndexedValues)
         {
-            if (overrideIndexedValues)
-            {
-                // This is what OpenGL does, so just update our status
-                enabledis[i] = enabled;
-            }
-            else
-            {
-                // Force gl state change to what it was before
-                bool wasPrevEnabled = enabledis[i];
-                GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
-                GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
-            }
+            // This is what OpenGL does, so just update our status
+            enabledisStackAndValue.currentValue[i] = enabled;
+        }
+        else
+        {
+            // Force gl state change to what it was before
+            bool wasPrevEnabled = enabledisStackAndValue.currentValue[i];
+            GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
+            GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
         }
     }
 }
@@ -479,10 +498,13 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
         {
             if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable))
             {
-                auto &enabledis = gl->m_enabled_i_Vars.Get(glEnablable);
-                for (int i = 0; i < enabledis.size(); ++i) { enabledis[i] = false; }
+                auto &enabledisStackAndValue = gl->m_enabled_i_Vars.Get(glEnablable);
+                for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
+                {
+                    enabledisStackAndValue.currentValue[i] = false;
+                }
             }
-            gl->m_enabled_i_Vars[glEnablable][i] = enabled;
+            gl->m_enabled_i_Vars[glEnablable].currentValue[i] = enabled;
         }
     }
 }
@@ -498,19 +520,17 @@ void GL::Disablei(GL::Enablable glEnablable, int i)
 
 bool GL::IsEnabled(GL::Enablable glEnablable)
 {
-    GL *gl = GL::GetInstance();
-    if (!gl) { return false; }
+    GL *gl = GL::GetInstance(); ASSERT(gl);
 
     if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
-    return gl->m_enabledVars.Get(glEnablable);
+    return gl->m_enabledVars.Get(glEnablable).currentValue;
 }
 bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 {
-    GL *gl = GL::GetInstance();
-    if (!gl) { return false; }
+    GL *gl = GL::GetInstance(); ASSERT(gl);
 
     if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable)) { return false; }
-    return gl->m_enabled_i_Vars[glEnablable][index];
+    return gl->m_enabled_i_Vars[glEnablable].currentValue[index];
 }
 
 void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
@@ -1897,6 +1917,16 @@ void GL::BindUniformBufferToShader(const String &uniformBlockName,
                                                uniformBlockName.ToCString()) );
     GL_CALL( glUniformBlockBinding(sp->GetGLId(), blockIndex,
                                    buffer->GetBindingPoint()) );
+}
+
+void GL::Push(GL::BindTarget bindTarget)
+{
+
+}
+
+void GL::Pop(GL::BindTarget bindTarget)
+{
+
 }
 
 void GL::PrintGLContext()

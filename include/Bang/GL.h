@@ -125,7 +125,7 @@ public:
         TEXTURE_2D           = GL_TEXTURE_2D,
         TEXTURE_3D           = GL_TEXTURE_3D,
         TEXTURE_CUBE_MAP     = GL_TEXTURE_CUBE_MAP,
-        SHADER_PROGRAM      = GL_SHADER,
+        SHADER_PROGRAM       = GL_SHADER,
         FRAMEBUFFER          = GL_FRAMEBUFFER,
         DRAW_FRAMEBUFFER     = GL_DRAW_FRAMEBUFFER,
         READ_FRAMEBUFFER     = GL_READ_FRAMEBUFFER,
@@ -399,6 +399,20 @@ public:
         DEPTH         = GL_DEPTH_ATTACHMENT,
         BACK          = GL_BACK,
         FRONT         = GL_FRONT
+    };
+
+    enum class Pushable
+    {
+        Framebuffer,
+        ShaderProgram,
+        BlendStates,
+        DepthStates,
+        StencilStates,
+        VAO,
+        VBO,
+        FramebufferAttachments,
+        Viewport,
+        ColorMask,
     };
 
     static void ClearError();
@@ -741,6 +755,9 @@ public:
                                           const ShaderProgram *sp,
                                           const IUniformBuffer *buffer);
 
+    static void Push(GL::BindTarget bindTarget);
+    static void Pop(GL::BindTarget bindTarget);
+
     static void PrintGLContext();
 
     static GL::ViewProjMode GetViewProjMode();
@@ -780,8 +797,8 @@ private:
     StackAndValue<AARecti> m_viewportRects;
     StackAndValue< std::array<bool, 4> > m_colorMasks;
 
-    Map<GL::Enablable, bool> m_enabledVars;
-    Map<GL::Enablable, std::array<bool, 16> > m_enabled_i_Vars;
+    Map<GL::Enablable, StackAndValue<bool>> m_enabledVars;
+    Map<GL::Enablable, StackAndValue<std::array<bool, 16>> > m_enabled_i_Vars;
 
     StackAndValue< Array<GL::Attachment> > m_drawBuffers;
     StackAndValue< GL::Attachment > m_readBuffers;

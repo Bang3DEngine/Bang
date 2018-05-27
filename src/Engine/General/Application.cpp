@@ -57,6 +57,11 @@ void Application::Init(const Path &engineRootPath)
     m_importFilesManager = new ImportFilesManager();
     ImportFilesManager::CreateMissingImportFiles(Paths::GetEngineAssetsDir());
     ImportFilesManager::LoadImportFilepathGUIDs(Paths::GetEngineAssetsDir());
+
+    m_resources = CreateResources();
+
+    m_gEngine = new GEngine();
+    m_gEngine->Init();
 }
 
 
@@ -65,7 +70,14 @@ Application::~Application()
     delete m_time;
     delete m_debug;
     delete m_paths;
+
+    delete m_gEngine; m_gEngine = nullptr;
+
+    m_resources->Destroy();
+    delete m_resources; m_resources = nullptr;
+
     delete m_settings;
+    delete m_resources;
     delete m_audioManager;
     delete m_windowManager;
     delete m_importFilesManager;
@@ -144,9 +156,19 @@ Debug *Application::GetDebug() const
     return m_debug;
 }
 
+GEngine *Application::GetGEngine() const
+{
+    return m_gEngine;
+}
+
 Settings *Application::GetSettings() const
 {
     return m_settings;
+}
+
+Resources *Application::GetResources() const
+{
+    return m_resources;
 }
 
 AudioManager *Application::GetAudioManager() const

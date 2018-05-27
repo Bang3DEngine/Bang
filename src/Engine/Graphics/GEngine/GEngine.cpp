@@ -7,7 +7,6 @@
 #include "Bang/Scene.h"
 #include "Bang/Light.h"
 #include "Bang/Input.h"
-#include "Bang/Window.h"
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/ChronoGL.h"
@@ -18,6 +17,7 @@
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/Application.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
@@ -28,8 +28,6 @@
 #include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
-
-GEngine* GEngine::s_gEngine = nullptr;
 
 GEngine::GEngine()
 {
@@ -44,7 +42,6 @@ GEngine::~GEngine()
 void GEngine::Init()
 {
     m_gl = new GL();
-    GL::SetActive( GetGL() );
     m_texUnitManager = new TextureUnitManager();
 
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
@@ -52,7 +49,6 @@ void GEngine::Init()
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                         EPATH("Shaders/RenderSky.frag")) );
-    GL::SetActive( nullptr );
 }
 
 void GEngine::Render(GameObject *go, Camera *camera)
@@ -107,7 +103,7 @@ Material *GEngine::GetReplacementMaterial() const
 
 Camera *GEngine::GetActiveRenderingCamera()
 {
-    GEngine *ge = GEngine::GetActive();
+    GEngine *ge = GEngine::GetInstance();
     return ge ? ge->p_currentRenderingCamera : nullptr;
 }
 
@@ -243,12 +239,6 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
     GL::SetStencilValue(prevStencilValue);
 }
 
-void GEngine::SetActive(GEngine *gEngine)
-{
-    GEngine::s_gEngine = gEngine;
-    GL::SetActive( gEngine ? gEngine->GetGL() : nullptr );
-}
-
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     // Save state
@@ -332,10 +322,10 @@ void GEngine::RenderViewportPlane()
     GL::SetDepthFunc(prevDepthFunc);
 }
 
-GEngine* GEngine::GetActive()
+GEngine* GEngine::GetInstance()
 {
-    Window *win = Window::GetActive();
-    return win ? win->GetGEngine() : nullptr;
+    Application *app = Application::GetInstance();
+    return app ? app->GetGEngine() : nullptr;
 }
 
 void GEngine::RenderShadowMaps(GameObject *go)

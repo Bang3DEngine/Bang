@@ -2,6 +2,8 @@
 #define WINDOWMANAGER_TCC
 
 #include "Bang.h"
+#include "Bang/Window.h"
+#include "Bang/WindowManager.h"
 
 NAMESPACE_BANG_BEGIN
 

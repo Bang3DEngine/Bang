@@ -204,7 +204,7 @@ void TextureUnitManager::PrintTextureUnits()
 
 TextureUnitManager *TextureUnitManager::GetActive()
 {
-    GEngine *ge = GEngine::GetActive();
+    GEngine *ge = GEngine::GetInstance();
     return (ge ? ge->GetTextureUnitManager() : nullptr);
 }
 

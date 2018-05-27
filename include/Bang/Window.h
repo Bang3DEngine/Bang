@@ -76,8 +76,6 @@ public:
     static int GetWidthS();
 
     SDL_GLContext   GetGLContext() const;
-    Resources      *GetResources() const;
-    GEngine        *GetGEngine() const;
     Input          *GetInput() const;
     SceneManager   *GetSceneManager() const;
 
@@ -98,8 +96,6 @@ private:
     Window* p_parent = nullptr;
 
     SDL_GLContext   m_sdlGLContext  = nullptr;
-    Resources      *m_resources     = nullptr;
-    GEngine        *m_gEngine       = nullptr;
     Input          *m_input         = nullptr;
     SceneManager   *m_sceneManager  = nullptr;
 

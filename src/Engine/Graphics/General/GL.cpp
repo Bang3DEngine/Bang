@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include BANG_SDL2_INCLUDE(SDL.h)
+
 #include "Bang/VAO.h"
 #include "Bang/List.h"
 #include "Bang/Rect.h"
@@ -22,10 +24,69 @@
 
 USING_NAMESPACE_BANG
 
-GL* GL::s_activeGL = nullptr;
-
 GL::GL()
 {
+    // Create shared context.
+    // For this, create a window, get context, and destroy window
+
+    int VersionsMajors[] = {4, 4, 4, 4, 4, 3, 3, 3};
+    int VersionsMinors[] = {6, 5, 4, 3, 2, 3, 2, 1};
+    constexpr int NumVersionsToTry = sizeof(VersionsMajors) / sizeof(int);
+    for (int i = 0; i < NumVersionsToTry; ++i)
+    {
+        int vMajor = VersionsMajors[i];
+        int vMinor = VersionsMinors[i];
+
+        #ifdef DEBUG
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+                                SDL_GL_CONTEXT_DEBUG_FLAG |
+                                SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG);
+        #endif
+
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                            SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, vMajor);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, vMinor);
+        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
+        SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+
+        SDL_Window *sdlWindow = SDL_CreateWindow("BangGLContextWindow",
+                                                 0, 0, 1, 1, SDL_WINDOW_OPENGL);
+        m_sharedGLContext = SDL_GL_CreateContext(sdlWindow);
+
+        if (m_sharedGLContext)
+        {
+            m_auxiliarWindowToCreateSharedGLContext = sdlWindow;
+            SDL_HideWindow(sdlWindow);
+            break;
+        }
+        else
+        {
+            SDL_DestroyWindow(sdlWindow);
+        }
+    }
+
+    if (!m_sharedGLContext)
+    {
+        Debug_Error("Could not start an OpenGL context...");
+    }
+
+    // Init GLEW
+    glewExperimental = true;
+    GLenum glewError = glewInit();
+    if (glewError != GLEW_OK)
+    {
+        Debug_Error("Glew init error: " << glewGetErrorString(glewError));
+    }
+
+    // Init other stuff
     m_glUniforms = new GLUniforms();
     GL::Enable(GL::Enablable::DEPTH_TEST);
     GL::Enable(GL::Enablable::STENCIL_TEST);
@@ -37,6 +98,9 @@ GL::GL()
 GL::~GL()
 {
     delete m_glUniforms;
+
+    SDL_DestroyWindow(m_auxiliarWindowToCreateSharedGLContext);
+    SDL_GL_DeleteContext( GL::GetSharedGLContext() );
 }
 
 void GL::ClearError()
@@ -92,7 +156,7 @@ bool GL::CheckFramebufferError()
 
 const Color& GL::GetClearColor()
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     return gl ? gl->m_clearColor : Color::Zero;
 }
 
@@ -114,7 +178,7 @@ void GL::ClearColorBuffer(const Color &clearColor,
 
     if (GL::GetClearColor() != clearColor)
     {
-        GL::GetActive()->m_clearColor = clearColor;
+        GL::GetInstance()->m_clearColor = clearColor;
         GL_CALL( glClearColor(clearColor.r, clearColor.g,
                               clearColor.b, clearColor.a) );
     }
@@ -174,11 +238,11 @@ void GL::PolygonMode(GL::Face face, GL::Enum mode)
         switch (face)
         {
             case GL::Face::FRONT_AND_BACK:
-                GL::GetActive()->m_frontBackPolygonMode = mode; break;
+                GL::GetInstance()->m_frontBackPolygonMode = mode; break;
             case GL::Face::FRONT:
-                GL::GetActive()->m_frontPolygonMode = mode; break;
+                GL::GetInstance()->m_frontPolygonMode = mode; break;
             case GL::Face::BACK:
-                GL::GetActive()->m_backPolygonMode = mode; break;
+                GL::GetInstance()->m_backPolygonMode = mode; break;
             default: return;
         }
 
@@ -190,9 +254,9 @@ GL::Enum GL::GetPolygonMode(GL::Face face)
 {
     switch (face)
     {
-        case GL::Face::FRONT_AND_BACK: return GL::GetActive()->m_frontBackPolygonMode;
-        case GL::Face::FRONT: return GL::GetActive()->m_frontPolygonMode;
-        case GL::Face::BACK: return GL::GetActive()->m_backPolygonMode;
+        case GL::Face::FRONT_AND_BACK: return GL::GetInstance()->m_frontBackPolygonMode;
+        case GL::Face::FRONT: return GL::GetInstance()->m_frontPolygonMode;
+        case GL::Face::BACK: return GL::GetInstance()->m_backPolygonMode;
         default: break;
     }
     return  GL::FILL;
@@ -252,10 +316,10 @@ void GL::BlendFuncSeparate(GL::BlendFactor srcFactorColor,
         srcFactorAlpha != GL::GetBlendSrcFactorAlpha() ||
         dstFactorAlpha != GL::GetBlendDstFactorAlpha())
     {
-        GL::GetActive()->m_blendSrcFactorColor = srcFactorColor;
-        GL::GetActive()->m_blendDstFactorColor = dstFactorColor;
-        GL::GetActive()->m_blendSrcFactorAlpha = srcFactorAlpha;
-        GL::GetActive()->m_blendDstFactorAlpha = dstFactorAlpha;
+        GL::GetInstance()->m_blendSrcFactorColor = srcFactorColor;
+        GL::GetInstance()->m_blendDstFactorColor = dstFactorColor;
+        GL::GetInstance()->m_blendSrcFactorAlpha = srcFactorAlpha;
+        GL::GetInstance()->m_blendDstFactorAlpha = dstFactorAlpha;
         GL_CALL( glBlendFuncSeparate( GLCAST(srcFactorColor),
                                       GLCAST(dstFactorColor),
                                       GLCAST(srcFactorAlpha),
@@ -274,8 +338,8 @@ void GL::BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
     if (blendEquationColor != GL::GetBlendEquationColor() ||
         blendEquationAlpha != GL::GetBlendEquationAlpha() )
     {
-        GL::GetActive()->m_blendEquationColor = blendEquationColor;
-        GL::GetActive()->m_blendEquationAlpha = blendEquationAlpha;
+        GL::GetInstance()->m_blendEquationColor = blendEquationColor;
+        GL::GetInstance()->m_blendEquationAlpha = blendEquationAlpha;
         GL_CALL( glBlendEquationSeparate( GLCAST(blendEquationColor),
                                           GLCAST(blendEquationAlpha) ) );
     }
@@ -294,7 +358,7 @@ void GL::Disable(GL::Enablable glEnablable, bool overrideIndexedValue)
 void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
                     bool overrideIndexedValues)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     if (enabled != GL::IsEnabled(glEnablable))
     {
         if (enabled) { GL_CALL( glEnable( GLCAST(glEnablable) ); ); }
@@ -332,7 +396,7 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
         if (enabled) { GL_CALL( glEnablei( GLCAST(glEnablable), i ) ); }
         else { GL_CALL( glDisablei( GLCAST(glEnablable), i ) ); }
 
-        GL *gl = GL::GetActive();
+        GL *gl = GL::GetInstance();
         if (gl)
         {
             if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable))
@@ -356,7 +420,7 @@ void GL::Disablei(GL::Enablable glEnablable, int i)
 
 bool GL::IsEnabled(GL::Enablable glEnablable)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     if (!gl) { return false; }
 
     if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
@@ -364,7 +428,7 @@ bool GL::IsEnabled(GL::Enablable glEnablable)
 }
 bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     if (!gl) { return false; }
 
     if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable)) { return false; }
@@ -404,7 +468,7 @@ void GL::Scissor(const AARecti &scissorRectPx)
 {
     if (scissorRectPx != GL::GetScissorRect())
     {
-        GL::GetActive()->m_scissorRectPx = scissorRectPx;
+        GL::GetInstance()->m_scissorRectPx = scissorRectPx;
         GL_CALL( glScissor(scissorRectPx.GetMin().x, scissorRectPx.GetMin().y,
                            scissorRectPx.GetWidth(), scissorRectPx.GetHeight()) );
     }
@@ -612,7 +676,7 @@ void GL::FramebufferRenderbuffer(GL::FramebufferTarget target,
 
 void GL::DrawBuffers(const Array<GL::Attachment> &drawAttachments)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     // if (!Containers::Equal(gl->m_drawBuffers.Begin(), gl->m_drawBuffers.End(),
     //                        drawAttachments.Begin()))
     {
@@ -624,7 +688,7 @@ void GL::DrawBuffers(const Array<GL::Attachment> &drawAttachments)
 
 void GL::ReadBuffer(GL::Attachment readAttachment)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     // if (gl->m_readBuffer != readAttachment)
     {
         gl->m_readBuffer = readAttachment;
@@ -954,7 +1018,7 @@ void GL::LineWidth(float lineWidth)
 {
     if (GL::GetLineWidth() != lineWidth)
     {
-        GL::GetActive()->m_lineWidth = lineWidth;
+        GL::GetInstance()->m_lineWidth = lineWidth;
         GL_CALL( glLineWidth(lineWidth) );
     }
 }
@@ -1047,7 +1111,7 @@ void GL::SetViewport(int x, int y, int width, int height)
     AARecti vpRect( Vector2i(x, y), Vector2i(x+width, y+height));
     if (GL::GetViewportRect() != vpRect)
     {
-        GL *gl = GL::GetActive();
+        GL *gl = GL::GetInstance();
         if (gl) { gl->m_viewportRect = vpRect; }
         GL_CALL( glViewport(x, y, width, height) );
 
@@ -1060,7 +1124,7 @@ void GL::SetViewport(int x, int y, int width, int height)
 
 AARecti GL::GetViewportRect()
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     return gl ? gl->m_viewportRect : AARecti::Zero;
 }
 
@@ -1082,47 +1146,47 @@ Vector2 GL::GetViewportPixelSize()
 
 const Array<GL::Attachment> &GL::GetDrawBuffers()
 {
-    return GL::GetActive()->m_drawBuffers;
+    return GL::GetInstance()->m_drawBuffers;
 }
 
 GL::Attachment &GL::GetReadBuffer()
 {
-    return GL::GetActive()->m_readBuffer;
+    return GL::GetInstance()->m_readBuffer;
 }
 
 GL::BlendFactor GL::GetBlendSrcFactorColor()
 {
-    return GL::GetActive()->m_blendSrcFactorColor;
+    return GL::GetInstance()->m_blendSrcFactorColor;
 }
 
 GL::BlendFactor GL::GetBlendDstFactorColor()
 {
-    return GL::GetActive()->m_blendDstFactorColor;
+    return GL::GetInstance()->m_blendDstFactorColor;
 }
 
 GL::BlendFactor GL::GetBlendSrcFactorAlpha()
 {
-    return GL::GetActive()->m_blendSrcFactorAlpha;
+    return GL::GetInstance()->m_blendSrcFactorAlpha;
 }
 
 GL::BlendFactor GL::GetBlendDstFactorAlpha()
 {
-    return GL::GetActive()->m_blendDstFactorAlpha;
+    return GL::GetInstance()->m_blendDstFactorAlpha;
 }
 
 GL::BlendEquationE GL::GetBlendEquationColor()
 {
-    return GL::GetActive()->m_blendEquationColor;
+    return GL::GetInstance()->m_blendEquationColor;
 }
 
 GL::BlendEquationE GL::GetBlendEquationAlpha()
 {
-    return GL::GetActive()->m_blendEquationAlpha;
+    return GL::GetInstance()->m_blendEquationAlpha;
 }
 
 const AARecti& GL::GetScissorRect()
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     if (gl && (!GL::IsEnabled(GL::Enablable::SCISSOR_TEST) ||
                gl->m_scissorRectPx == AARecti(-1,-1,-1,-1)))
     {
@@ -1188,17 +1252,17 @@ void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
 
 uint GL::GetLineWidth()
 {
-    return GL::GetActive()->m_lineWidth;
+    return GL::GetInstance()->m_lineWidth;
 }
 
 uint GL::GetStencilMask()
 {
-    return GL::GetActive()->m_stencilMask;
+    return GL::GetInstance()->m_stencilMask;
 }
 
 GL::Function GL::GetStencilFunc()
 {
-    return GL::GetActive()->m_stencilFunc;
+    return GL::GetInstance()->m_stencilFunc;
 }
 
 void GL::Bind(const GLObject *bindable)
@@ -1208,7 +1272,7 @@ void GL::Bind(const GLObject *bindable)
 
 void GL::Bind(GL::BindTarget bindTarget, GLId glId)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
 
     switch (bindTarget)
     {
@@ -1288,7 +1352,7 @@ bool GL::IsBound(const GLObject *bindable)
 
 void GL::SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA)
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     std::array<bool,4> newColorMask = {{maskR, maskG, maskB, maskA}};
     if (!gl || (GL::GetColorMask() != newColorMask))
     {
@@ -1299,14 +1363,14 @@ void GL::SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA)
 
 void GL::SetViewProjMode(GL::ViewProjMode mode)
 {
-    GL::GetActive()->GetGLUniforms()->SetViewProjMode(mode);
+    GL::GetInstance()->GetGLUniforms()->SetViewProjMode(mode);
 }
 
 void GL::SetStencilOp(GL::StencilOperation fail,
                       GL::StencilOperation zFail,
                       GL::StencilOperation zPass)
 {
-    GL::GetActive()->m_stencilOp = zPass;
+    GL::GetInstance()->m_stencilOp = zPass;
     GL_CALL( glStencilOp(GLCAST(fail), GLCAST(zFail), GLCAST(zPass)) );
 }
 
@@ -1323,7 +1387,7 @@ void GL::SetStencilFunc(GL::Function stencilFunction,
         stencilValue != GL::GetStencilValue() ||
         mask != GL::GetStencilMask())
     {
-        GL *gl = GL::GetActive();
+        GL *gl = GL::GetInstance();
         gl->m_stencilFunc  = stencilFunction;
         gl->m_stencilValue = stencilValue;
         gl->m_stencilMask  = mask;
@@ -1348,9 +1412,9 @@ void GL::SetStencilValue(Byte value)
 
 void GL::SetDepthMask(bool writeDepth)
 {
-    if (GL::GetActive()->GetDepthMask() != writeDepth)
+    if (GL::GetInstance()->GetDepthMask() != writeDepth)
     {
-        GL *gl = GL::GetActive();
+        GL *gl = GL::GetInstance();
         gl->m_depthMask = writeDepth;
         GL_CALL( glDepthMask(writeDepth) );
     }
@@ -1360,7 +1424,7 @@ void GL::SetDepthFunc(GL::Function depthFunc)
 {
     if (GL::GetDepthFunc() != depthFunc)
     {
-        GL::GetActive()->m_depthFunc = depthFunc;
+        GL::GetInstance()->m_depthFunc = depthFunc;
         GL_CALL( glDepthFunc( GLCAST(depthFunc) ) );
     }
 }
@@ -1369,7 +1433,7 @@ void GL::SetCullFace(GL::Face cullFace)
 {
     if (GL::GetCullFace() != cullFace)
     {
-        GL::GetActive()->m_cullFace = cullFace;
+        GL::GetInstance()->m_cullFace = cullFace;
         GL_CALL( glCullFace( GLCAST(cullFace) ) );
     }
 }
@@ -1554,16 +1618,16 @@ Vector2 GL::FromViewportPointNDCToViewportPoint(const Vector2 &vpPointNDC)
 
 GL::StencilOperation GL::GetStencilOp()
 {
-    return GL::GetActive()->m_stencilOp;
+    return GL::GetInstance()->m_stencilOp;
 }
 Byte GL::GetStencilValue()
 {
-    return GL::GetActive()->m_stencilValue;
+    return GL::GetInstance()->m_stencilValue;
 }
 
 std::array<bool, 4> GL::GetColorMask()
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     return gl ? gl->m_colorMask : std::array<bool, 4>({{true, true, true, true}});
 }
 bool GL::IsColorMaskR()  { return GL::GetColorMask()[0];  }
@@ -1571,8 +1635,8 @@ bool GL::IsColorMaskG()  { return GL::GetColorMask()[1];  }
 bool GL::IsColorMaskB()  { return GL::GetColorMask()[2];  }
 bool GL::IsColorMaskA()  { return GL::GetColorMask()[3];  }
 
-bool GL::GetDepthMask()  { return GL::GetActive()->m_depthMask; }
-GL::Function GL::GetDepthFunc() { return GL::GetActive()->m_depthFunc; }
+bool GL::GetDepthMask()  { return GL::GetInstance()->m_depthMask; }
+GL::Function GL::GetDepthFunc() { return GL::GetInstance()->m_depthFunc; }
 
 bool GL::IsWireframe()
 {
@@ -1580,8 +1644,13 @@ bool GL::IsWireframe()
 }
 GL::Face GL::GetCullFace()
 {
-    GL *gl = GL::GetActive();
+    GL *gl = GL::GetInstance();
     return gl ? gl->m_cullFace : GL::Face::BACK;
+}
+
+SDL_GLContext GL::GetSharedGLContext()
+{
+    return GL::GetInstance()->m_sharedGLContext;
 }
 
 GLId GL::GetBoundId(GL::BindTarget bindTarget)
@@ -1589,25 +1658,25 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
     switch(bindTarget)
     {
         case GL::BindTarget::TEXTURE_2D:
-            return GL::GetActive()->m_boundTexture2DId;
+            return GL::GetInstance()->m_boundTexture2DId;
         case GL::BindTarget::TEXTURE_CUBE_MAP:
-            return GL::GetActive()->m_boundTextureCubeMapId;
+            return GL::GetInstance()->m_boundTextureCubeMapId;
         case GL::BindTarget::FRAMEBUFFER:
             return ( GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) ==
                      GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER) ) ?
                        GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) : 0;
         case GL::BindTarget::DRAW_FRAMEBUFFER:
-            return GL::GetActive()->m_boundDrawFramebufferId;
+            return GL::GetInstance()->m_boundDrawFramebufferId;
         case GL::BindTarget::READ_FRAMEBUFFER:
-            return GL::GetActive()->m_boundReadFramebufferId;
+            return GL::GetInstance()->m_boundReadFramebufferId;
         case GL::BindTarget::VAO:
-            return GL::GetActive()->m_boundVAOId;
+            return GL::GetInstance()->m_boundVAOId;
         case GL::BindTarget::ARRAY_BUFFER:
-            return GL::GetActive()->m_boundVBOArrayBufferId;
+            return GL::GetInstance()->m_boundVBOArrayBufferId;
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
-            return GL::GetActive()->m_boundVBOElementsBufferId;
+            return GL::GetInstance()->m_boundVBOElementsBufferId;
         case GL::BindTarget::SHADER_PROGRAM:
-            return GL::GetActive()->m_boundShaderProgramId;
+            return GL::GetInstance()->m_boundShaderProgramId;
         default: ASSERT(false);
     }
     ASSERT(false);
@@ -1623,16 +1692,18 @@ uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
 {
     switch (texFormat)
     {
-        case GL::ColorFormat::RGBA8:      return 1;
-        case GL::ColorFormat::RGBA16F:     return 8;
+        case GL::ColorFormat::SRGB:             return 3;
+        case GL::ColorFormat::SRGBA:            return 4;
+        case GL::ColorFormat::RGBA8:            return 4;
+        case GL::ColorFormat::RGBA16F:          return 8;
         case GL::ColorFormat::DEPTH:            return 4;
         case GL::ColorFormat::DEPTH16:          return 2;
         case GL::ColorFormat::DEPTH24:          return 3;
         case GL::ColorFormat::DEPTH32:          return 4;
         case GL::ColorFormat::DEPTH32F:         return 16;
         case GL::ColorFormat::DEPTH24_STENCIL8: return 4;
-        case GL::ColorFormat::RGB10_A2:   return 4;
-        case GL::ColorFormat::RGBA32F:     return 16;
+        case GL::ColorFormat::RGB10_A2:         return 4;
+        case GL::ColorFormat::RGBA32F:          return 16;
     }
     return 0;
 }
@@ -1815,17 +1886,13 @@ void GL::PrintGLContext()
 
 GL::ViewProjMode GL::GetViewProjMode()
 {
-    return GL::GetActive()->GetGLUniforms()->GetViewProjMode();
+    return GL::GetInstance()->GetGLUniforms()->GetViewProjMode();
 }
 
-GL *GL::GetActive()
+GL *GL::GetInstance()
 {
-    return GL::s_activeGL;
+    GEngine *ge = GEngine::GetInstance();
+    return ge ? ge->GetGL() : nullptr;
 }
 
 GLUniforms *GL::GetGLUniforms() const { return m_glUniforms; }
-
-void GL::SetActive(GL *gl)
-{
-    GL::s_activeGL = gl;
-}

@@ -44,5 +44,5 @@ RH<Material> MaterialFactory::Load(const String &matEnginePath)
 
 MaterialFactory *MaterialFactory::GetActive()
 {
-    return Resources::GetActive()->GetMaterialFactory();
+    return Resources::GetInstance()->GetMaterialFactory();
 }

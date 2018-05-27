@@ -22,6 +22,7 @@ Window* Window::s_activeWindow = nullptr;
 
 Window::Window()
 {
+    m_sdlGLContext = GL::GetSharedGLContext();
 }
 
 Window::~Window()
@@ -30,84 +31,37 @@ Window::~Window()
 
     delete m_sceneManager;  m_sceneManager  = nullptr;
     delete m_input;         m_input         = nullptr;
-    delete m_gEngine;       m_gEngine       = nullptr;
 
-    m_resources->Destroy();
-    delete m_resources;     m_resources     = nullptr;
-
-    SDL_GL_DeleteContext(GetGLContext());
     SDL_DestroyWindow(m_sdlWindow);
 }
 
-#include <SDL.h>
+SDL_Window *CreateSDLWindow(uint flags, const Vector2i &winSize)
+{
+    return SDL_CreateWindow("Bang",
+                            SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED,
+                            winSize.x,
+                            winSize.y,
+                            flags);
+}
+
 void Window::Create(uint flags)
 {
     Vector2i winSize(512);
 
-    constexpr int NumVersionsToTry = 8;
-    int VersionsMajors[NumVersionsToTry] = {4, 4, 4, 4, 4, 3, 3, 3};
-    int VersionsMinors[NumVersionsToTry] = {6, 5, 4, 3, 2, 3, 2, 1};
-    for (int i = 0; i < NumVersionsToTry; ++i)
-    {
-        int vMajor = VersionsMajors[i];
-        int vMinor = VersionsMinors[i];
-
-        #ifdef DEBUG
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-                                SDL_GL_CONTEXT_DEBUG_FLAG |
-                                SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG);
-        #endif
-
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-                            SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, vMajor);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, vMinor);
-        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
-        SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-
-        m_sdlWindow = SDL_CreateWindow("Bang",
-                                       SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED,
-                                       winSize.x,
-                                       winSize.y,
-                                       flags);
-
-        m_sdlGLContext = SDL_GL_CreateContext(GetSDLWindow());
-        if (m_sdlGLContext != nullptr) { break; }
-        else
-        {
-            SDL_DestroyWindow(m_sdlWindow);
-        }
-    }
+    // Share context
+    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+    m_sdlWindow = CreateSDLWindow(flags, winSize);
 
     Window::SetActive(this);
 
     SetMinSize(1, 1);
     SetMaxSize(99999, 99999);
 
-    // Init GLEW
-    glewExperimental = true;
-    GLenum glewError = glewInit();
-    if (glewError != GLEW_OK)
-    {
-        Debug_Error("Glew init error: " << glewGetErrorString(glewError));
-    }
-
     m_input        = new Input();
-    m_resources    = Application::GetInstance()->CreateResources();
     m_sceneManager = CreateSceneManager();
-    m_gEngine      = new GEngine();
 
     m_sceneManager->Init();
-    m_gEngine->Init();
 
     SetSize(winSize.x, winSize.y);
 }
@@ -413,16 +367,6 @@ SDL_GLContext Window::GetGLContext() const
     return m_sdlGLContext;
 }
 
-Resources *Window::GetResources() const
-{
-    return m_resources;
-}
-
-GEngine *Window::GetGEngine() const
-{
-    return m_gEngine;
-}
-
 Input *Window::GetInput() const
 {
     return m_input;
@@ -515,6 +459,5 @@ bool Window::IsParentWindow(int sdlWindowId) const
 void Window::SetActive(Window *window)
 {
     Window::s_activeWindow = window;
-    GEngine::SetActive(window ? window->GetGEngine() : nullptr);
     if (window) { window->MakeCurrent(); }
 }

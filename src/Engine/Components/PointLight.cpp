@@ -114,7 +114,7 @@ void PointLight::RenderShadowMaps_()
                             cubeMapPVMMatrices, false);
 
     // Render shadow map into framebuffer
-    GEngine::GetActive()->SetReplacementMaterial( m_shadowMapMaterial.Get() );
+    GEngine::GetInstance()->SetReplacementMaterial( m_shadowMapMaterial.Get() );
     GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEQUAL);
@@ -131,7 +131,7 @@ void PointLight::RenderShadowMaps_()
                                                      pointLightPos) > rangeLimit;
         if (!isCompletelyOutside)
         {
-            GEngine::GetActive()->RenderWithPass(shadowCaster,
+            GEngine::GetInstance()->RenderWithPass(shadowCaster,
                                                  RenderPass::SCENE, false);
         }
     }
@@ -142,7 +142,7 @@ void PointLight::RenderShadowMaps_()
     GLUniforms::SetModelMatrix(prevModel);
     GLUniforms::SetViewMatrix(prevView);
     GLUniforms::SetProjectionMatrix(prevProj);
-    GEngine::GetActive()->SetReplacementMaterial(nullptr);
+    GEngine::GetInstance()->SetReplacementMaterial(nullptr);
     GL::Bind(GL::BindTarget::FRAMEBUFFER,   prevBoundFB);
     GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
 }

@@ -86,7 +86,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
         fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::COLOR0);
         fb->SetAllDrawBuffers();
 
-        GEngine::GetActive()->RenderViewportPlane();
+        GEngine::GetInstance()->RenderViewportPlane();
     }
     else
     {
@@ -109,7 +109,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
             GL::SetViewport(0, 0, mipSize, mipSize);
             fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::COLOR0, mipMapLevel);
             fb->SetAllDrawBuffers();
-            GEngine::GetActive()->RenderViewportPlane();
+            GEngine::GetInstance()->RenderViewportPlane();
         }
     }
 

@@ -37,7 +37,9 @@ public:
     Time               *GetTime() const;
     Paths              *GetPaths() const;
     Debug              *GetDebug() const;
+    GEngine            *GetGEngine() const;
     Settings           *GetSettings() const;
+    Resources          *GetResources() const;
     AudioManager       *GetAudioManager() const;
     WindowManager      *GetWindowManager() const;
     ImportFilesManager *GetImportFilesManager() const;
@@ -53,7 +55,9 @@ protected:
     Time               *m_time               = nullptr;
     Debug              *m_debug              = nullptr;
     Paths              *m_paths              = nullptr;
+    GEngine            *m_gEngine            = nullptr;
     Settings           *m_settings           = nullptr;
+    Resources          *m_resources          = nullptr;
     AudioManager       *m_audioManager       = nullptr;
     WindowManager      *m_windowManager      = nullptr;
     ImportFilesManager *m_importFilesManager = nullptr;

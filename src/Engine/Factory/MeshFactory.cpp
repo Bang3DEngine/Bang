@@ -41,5 +41,5 @@ RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
 
 MeshFactory *MeshFactory::GetActive()
 {
-    return Resources::GetActive()->GetMeshFactory();
+    return Resources::GetInstance()->GetMeshFactory();
 }

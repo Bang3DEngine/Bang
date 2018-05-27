@@ -8,6 +8,8 @@
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
 
+FORWARD class SDL_Window;
+
 NAMESPACE_BANG_BEGIN
 
 #ifdef DEBUG
@@ -702,6 +704,7 @@ public:
     static GL::Function GetDepthFunc();
     static bool IsWireframe();
     static GL::Face GetCullFace();
+    static SDL_GLContext GetSharedGLContext();
 
     static void GetTexImage(GL::TextureTarget textureTarget,
                             GL::ColorComp colorComp,
@@ -740,7 +743,7 @@ public:
 
     static GL::ViewProjMode GetViewProjMode();
 
-    static GL* GetActive();
+    static GL* GetInstance();
     GLUniforms *GetGLUniforms() const;
 
     GL();
@@ -748,6 +751,9 @@ public:
 
 private:
     // Context
+    SDL_Window *m_auxiliarWindowToCreateSharedGLContext = nullptr;
+    SDL_GLContext m_sharedGLContext = nullptr;
+
     GLId m_boundVAOId               = 0;
     GLId m_boundVBOArrayBufferId    = 0;
     GLId m_boundVBOElementsBufferId = 0;
@@ -787,9 +793,6 @@ private:
     GL::StencilOperation m_stencilOp        = GL::StencilOperation::KEEP;
 
     GLUniforms *m_glUniforms = nullptr;
-
-    static GL* s_activeGL;
-    static void SetActive(GL *gl);
 
     friend class GEngine;
 };

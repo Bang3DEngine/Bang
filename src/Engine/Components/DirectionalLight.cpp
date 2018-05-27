@@ -84,7 +84,7 @@ void DirectionalLight::RenderShadowMaps_()
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        GEngine::GetActive()->RenderWithPass(shadowCaster, RenderPass::SCENE,
+        GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
                                              false);
     }
 

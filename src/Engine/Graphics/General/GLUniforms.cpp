@@ -169,7 +169,7 @@ GL::ViewProjMode GLUniforms::GetViewProjMode() const
 
 GLUniforms *GLUniforms::GetActive()
 {
-    return GL::GetActive()->GetGLUniforms();
+    return GL::GetInstance()->GetGLUniforms();
 }
 
 void GLUniforms::OnViewportChanged(const AARecti &newViewport)

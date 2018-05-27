@@ -99,6 +99,6 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
 
 ShaderProgramFactory *ShaderProgramFactory::GetActive()
 {
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     return rs ? rs->GetShaderProgramFactory() : nullptr;
 }

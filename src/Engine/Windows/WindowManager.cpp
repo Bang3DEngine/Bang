@@ -106,6 +106,7 @@ Window *WindowManager::GetTopWindow()
     if (!wm) { return nullptr; }
     return !wm->GetCurrentWindows().IsEmpty() ? wm->GetCurrentWindows().Front() : nullptr;
 }
+
 void WindowManager::SetupWindow(Window *window, uint _flags)
 {
     WindowManager::GetInstance()->GetCurrentWindows().PushBack(window);

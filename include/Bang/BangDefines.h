@@ -108,6 +108,8 @@ using Recti       = RectG<int>;
 using Rect        = Rectf;
 using RectPoints  = std::array<Vector2, 4>;
 
+using SDL_GLContext = void*;
+
 // ======================================================
 
 // Other ================================================

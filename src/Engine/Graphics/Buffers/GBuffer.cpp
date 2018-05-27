@@ -70,7 +70,7 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
     GL::SetStencilOp(GL::StencilOperation::KEEP); // Dont modify stencil
     BindAttachmentsForReading(sp);
     SetColorDrawBuffer();
-    GEngine::GetActive()->RenderViewportRect(sp, mask); // Render rect!
+    GEngine::GetInstance()->RenderViewportRect(sp, mask); // Render rect!
 
     // Restore state
     PopDrawAttachments();

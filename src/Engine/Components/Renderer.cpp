@@ -39,7 +39,7 @@ void Renderer::OnRender(RenderPass renderPass)
     Material *mat = GetActiveMaterial();
     if (IsVisible() && mat && mat->GetRenderPass() == renderPass)
     {
-        GEngine::GetActive()->Render(this);
+        GEngine::GetInstance()->Render(this);
     }
 }
 void Renderer::OnRender() {}

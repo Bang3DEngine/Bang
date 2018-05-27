@@ -5,6 +5,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/List.h"
+#include "Bang/Window.h"
 
 NAMESPACE_BANG_BEGIN
 

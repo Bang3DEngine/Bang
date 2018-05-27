@@ -94,7 +94,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 
             m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
             gbuffer->BindAttachmentsForReading(p_ssaoShaderProgram.Get());
-            GEngine::GetActive()->RenderViewportPlane(); // Render Pass!
+            GEngine::GetInstance()->RenderViewportPlane(); // Render Pass!
         }
 
         // Then blur separatedly, first X, then Y
@@ -111,7 +111,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR1});
             p_blurXShaderProgram.Get()->SetTexture2D(GBuffer::GetColorsTexName(),
                         m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0));
-            GEngine::GetActive()->RenderViewportPlane(); // Render blur X!
+            GEngine::GetInstance()->RenderViewportPlane(); // Render blur X!
 
             // Blur in Y
             p_blurYShaderProgram.Get()->Bind();
@@ -126,7 +126,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
             p_blurYShaderProgram.Get()->SetTexture2D(GBuffer::GetColorsTexName(),
                         m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1));
-            GEngine::GetActive()->RenderViewportPlane(); // Render blur Y!
+            GEngine::GetInstance()->RenderViewportPlane(); // Render blur Y!
         }
 
         // Restore previous framebuffer

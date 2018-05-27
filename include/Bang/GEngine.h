@@ -55,7 +55,7 @@ public:
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
 
-    static GEngine* GetActive();
+    static GEngine* GetInstance();
 
 private:
     GL *m_gl = nullptr;
@@ -73,9 +73,6 @@ private:
     void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
 
     void SetActiveRenderingCamera(Camera *camera);
-
-    static GEngine *s_gEngine;
-    static void SetActive(GEngine *gEngine);
 
     friend class Window;
 };

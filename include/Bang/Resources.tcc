@@ -31,7 +31,7 @@ RH<ResourceClass> Resources::Load(const Path &filepath)
 template <class ResourceClass>
 RH<ResourceClass> Resources::Load(const String &filepathStr)
 {
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     Array<Path> lookupPaths = rs->GetLookUpPaths();
 
     Path filepath = Path::Empty;

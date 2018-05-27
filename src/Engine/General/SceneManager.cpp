@@ -71,7 +71,7 @@ void SceneManager::Render()
     if (activeScene)
     {
         Camera *camera = activeScene->GetCamera();
-        GEngine *ge = GEngine::GetActive();
+        GEngine *ge = GEngine::GetInstance();
         if (camera && ge)
         {
             ge->Render(activeScene, camera);

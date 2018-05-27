@@ -118,7 +118,7 @@ public:
 
     void Destroy();
 
-    static Resources* GetActive();
+    static Resources* GetInstance();
 
 private:
     Set<Path> m_permanentResourcesPaths;

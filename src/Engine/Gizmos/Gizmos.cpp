@@ -423,7 +423,7 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         GL::SetDepthFunc(GL::Function::ALWAYS);
         GL::SetStencilOp(GL::StencilOperation::KEEP);
         GL::SetColorMask(false, false, false, false);
-        GEngine::GetActive()->RenderWithAllPasses(gameObject);
+        GEngine::GetInstance()->RenderWithAllPasses(gameObject);
 
         // Render outline
         GL::SetDepthMask(false);
@@ -559,7 +559,7 @@ void Gizmos::Render(Renderer *rend)
 {
     // Set selectable for SelectionFramebuffer if any was set
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    SelectionFramebuffer *sfb = GEngine::GetActive()->GetActiveSelectionFramebuffer();
+    SelectionFramebuffer *sfb = GEngine::GetInstance()->GetActiveSelectionFramebuffer();
     if (sfb && GL::IsBound(sfb) && g->p_selectable)
     {
         sfb->SetNextRenderSelectable(g->p_selectable);

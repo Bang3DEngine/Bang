@@ -7,8 +7,8 @@
 #include "Bang/Model.h"
 #include "Bang/Object.h"
 #include "Bang/Random.h"
-#include "Bang/Window.h"
 #include "Bang/Extensions.h"
+#include "Bang/Application.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/ShaderProgramFactory.h"
@@ -49,7 +49,7 @@ void Resources::Import(Resource *res)
 Array<Resource*> Resources::GetAllResources()
 {
     Array<Resource*> result;
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     for (auto& itMap : rs->m_resourcesCache)
     {
         for (const auto& it : itMap.second) { result.PushBack(it.second.resource); }
@@ -59,7 +59,7 @@ Array<Resource*> Resources::GetAllResources()
 
 void Resources::PrintAll()
 {
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     for (const auto &typePair : rs->m_resourcesCache)
     {
         Debug_Log(typePair.first);
@@ -91,7 +91,7 @@ void Resources::Add(const TypeId &resTypeId, Resource *res)
     ASSERT(!guid.IsEmpty());
     ASSERT(!resTypeId.IsEmpty());
 
-    Resources *rs = Resources::GetActive(); ASSERT(rs);
+    Resources *rs = Resources::GetInstance(); ASSERT(rs);
     ASSERT(!Resources::Contains(resTypeId, guid));
 
     if (!rs->m_resourcesCache.ContainsKey(resTypeId))
@@ -108,7 +108,7 @@ void Resources::SetPermanent(Resource *resource, bool permanent)
 {
     if (resource)
     {
-        Resources *rs = Resources::GetActive(); ASSERT(rs);
+        Resources *rs = Resources::GetInstance(); ASSERT(rs);
         if (permanent) { rs->m_permanentResources.Add(resource); }
         else { rs->m_permanentResources.Remove(resource); }
     }
@@ -118,7 +118,7 @@ bool Resources::IsPermanent(Resource *resource)
 {
     if (!resource) { return false; }
 
-    Resources *rs = Resources::GetActive(); ASSERT(rs);
+    Resources *rs = Resources::GetInstance(); ASSERT(rs);
     return rs->m_permanentResources.Contains(resource);
 }
 
@@ -126,7 +126,7 @@ void Resources::SetPermanent(const Path &resourcePath, bool permanent)
 {
     if (!resourcePath.IsEmpty())
     {
-        Resources *rs = Resources::GetActive(); ASSERT(rs);
+        Resources *rs = Resources::GetInstance(); ASSERT(rs);
         if (permanent) { rs->m_permanentResourcesPaths.Add(resourcePath); }
         else { rs->m_permanentResourcesPaths.Remove(resourcePath); }
     }
@@ -136,13 +136,13 @@ bool Resources::IsPermanent(const Path &resourcePath)
 {
     if (resourcePath.IsEmpty()) { return false; }
 
-    Resources *rs = Resources::GetActive(); ASSERT(rs);
+    Resources *rs = Resources::GetInstance(); ASSERT(rs);
     return rs->m_permanentResourcesPaths.Contains(resourcePath);
 }
 
 void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
 {
-    Resources *rs = Resources::GetActive(); ASSERT(rs);
+    Resources *rs = Resources::GetInstance(); ASSERT(rs);
     ASSERT(rs->m_resourcesCache.ContainsKey(resTypeId));
 
     auto &map = rs->m_resourcesCache.Get(resTypeId);
@@ -187,7 +187,7 @@ void Resources::RegisterResourceUsage(const TypeId &resTypeId, Resource *resourc
     ASSERT(!guid.IsEmpty());
     ASSERT(!resTypeId.IsEmpty());
 
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     if (!Resources::Contains(resTypeId, guid))
     {
         Resources::Add(resTypeId, resource);
@@ -202,7 +202,7 @@ void Resources::UnRegisterResourceUsage(const TypeId &resTypeId,
     ASSERT(!guid.IsEmpty());
     ASSERT(!resTypeId.IsEmpty());
 
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     if (rs)
     {
         ASSERT(Resources::Contains(resTypeId, guid));
@@ -242,7 +242,7 @@ void Resources::Destroy(Resource *resource)
 
 Array<Resource *> Resources::GetCached(const GUID &guid)
 {
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
 
     Array<Resource*> foundResources;
     for (const auto &map : rs->m_resourcesCache)
@@ -263,7 +263,7 @@ Array<Resource *> Resources::GetCached(const Path &path)
 
 Resource *Resources::GetCached(const TypeId &resTypeId, const GUID &guid)
 {
-    Resources *rs = Resources::GetActive();
+    Resources *rs = Resources::GetInstance();
     if (!rs->m_resourcesCache.ContainsKey(resTypeId)) { return nullptr; }
     if (!rs->m_resourcesCache.Get(resTypeId).ContainsKey(guid)) { return nullptr; }
     return rs->m_resourcesCache.Get(resTypeId).Get(guid).resource;
@@ -307,10 +307,10 @@ void Resources::Destroy()
     delete m_shaderProgramFactory; m_shaderProgramFactory = nullptr;
 }
 
-Resources *Resources::GetActive()
+Resources *Resources::GetInstance()
 {
-    Window *win = Window::GetActive();
-    return  win ? win->GetResources() : nullptr;
+    Application *app = Application::GetInstance();
+    return  app ? app->GetResources() : nullptr;
 }
 
 MeshFactory *Resources::CreateMeshFactory() const

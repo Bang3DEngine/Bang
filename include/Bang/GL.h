@@ -755,8 +755,15 @@ public:
                                           const ShaderProgram *sp,
                                           const IUniformBuffer *buffer);
 
+    static void Push(GL::Pushable pushable);
+    static void Push(GL::Enablable enablable);
     static void Push(GL::BindTarget bindTarget);
+    static void Pop(GL::Pushable pushable);
+    static void Pop(GL::Enablable enablable);
     static void Pop(GL::BindTarget bindTarget);
+    static void PushOrPop(GL::Pushable pushable, bool push);
+    static void PushOrPop(GL::Enablable enablable, bool push);
+    static void PushOrPop(GL::BindTarget bindTarget, bool push);
 
     static void PrintGLContext();
 

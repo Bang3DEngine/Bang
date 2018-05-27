@@ -1919,14 +1919,187 @@ void GL::BindUniformBufferToShader(const String &uniformBlockName,
                                    buffer->GetBindingPoint()) );
 }
 
+template <class T>
+void Push_(GL::StackAndValue<T> *stackAndValue)
+{
+    stackAndValue->stack.push( stackAndValue->currentValue );
+}
+template <class T>
+void Pop_(GL::StackAndValue<T> *stackAndValue)
+{
+    ASSERT(stackAndValue->stack.size() >= 1);
+    stackAndValue->stack.pop();
+}
+template <class T>
+void PushOrPop_(GL::StackAndValue<T> *stackAndValue, bool push)
+{
+    if (push) { Push_(stackAndValue); } else { Pop_(stackAndValue); }
+}
+template <class T>
+void Push_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr)
+{
+    GL *gl = GL::GetInstance(); ASSERT(gl);
+    Push_(&(gl->*stackAndValueMemberPtr));
+}
+template <class T>
+void Pop_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr)
+{
+    GL *gl = GL::GetInstance(); ASSERT(gl);
+    Pop_(&(gl->*stackAndValueMemberPtr));
+}
+template <class T>
+void PushOrPop_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr, bool push)
+{
+    if (push) { Push_(stackAndValueMemberPtr); }
+    else { Pop_(stackAndValueMemberPtr); }
+}
+
+void GL::Push(GL::Pushable pushable)
+{
+    PushOrPop(pushable, false);
+}
+
+void GL::Push(GL::Enablable enablable)
+{
+    PushOrPop(enablable, false);
+}
+
 void GL::Push(GL::BindTarget bindTarget)
 {
+    PushOrPop(bindTarget, false);
+}
 
+void GL::Pop(GL::Pushable pushable)
+{
+    PushOrPop(pushable, false);
+}
+
+void GL::Pop(GL::Enablable enablable)
+{
+    PushOrPop(enablable, false);
 }
 
 void GL::Pop(GL::BindTarget bindTarget)
 {
+    PushOrPop(bindTarget, false);
+}
 
+void GL::PushOrPop(GL::Pushable pushable, bool push)
+{
+    switch (pushable)
+    {
+        case GL::Pushable::BlendStates:
+            PushOrPop_(&GL::m_blendEquationAlphas,  push);
+            PushOrPop_(&GL::m_blendEquationColors,  push);
+            PushOrPop_(&GL::m_blendDstFactorAlphas, push);
+            PushOrPop_(&GL::m_blendDstFactorColors, push);
+            PushOrPop_(&GL::m_blendSrcFactorAlphas, push);
+            PushOrPop_(&GL::m_blendSrcFactorColors, push);
+        break;
+
+        case GL::Pushable::ColorMask:
+            PushOrPop_(&GL::m_colorMasks, push);
+        break;
+
+        case GL::Pushable::DepthStates:
+            PushOrPop(GL::Enablable::DEPTH_TEST,  push);
+            PushOrPop(GL::Enablable::DEPTH_CLAMP, push);
+            PushOrPop_(&GL::m_depthFuncs, push);
+            PushOrPop_(&GL::m_depthMasks, push);
+        break;
+
+        case GL::Pushable::Framebuffer:
+            PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
+        break;
+
+        case GL::Pushable::FramebufferAttachments:
+            PushOrPop_(&GL::m_drawBuffers, push);
+            PushOrPop_(&GL::m_readBuffers, push);
+        break;
+
+        case GL::Pushable::ShaderProgram:
+            PushOrPop(GL::BindTarget::SHADER_PROGRAM, push);
+        break;
+
+        case GL::Pushable::StencilStates:
+            PushOrPop(GL::Enablable::STENCIL_TEST, push);
+            PushOrPop_(&GL::m_stencilFuncs,  push);
+            PushOrPop_(&GL::m_stencilMasks,  push);
+            PushOrPop_(&GL::m_stencilOps,    push);
+            PushOrPop_(&GL::m_stencilValues, push);
+        break;
+
+        case GL::Pushable::VAO:
+            PushOrPop_(&GL::m_boundVAOIds, push);
+        break;
+
+        case GL::Pushable::VBO:
+            PushOrPop_(&GL::m_boundVAOIds, push);
+        break;
+
+        case GL::Pushable::Viewport:
+            PushOrPop_(&GL::m_viewportRects, push);
+        break;
+
+        default:
+            ASSERT(false);
+        break;
+    }
+}
+
+void GL::PushOrPop(GL::Enablable enablable, bool push)
+{
+    GL *gl = GL::GetInstance(); ASSERT(gl);
+    PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
+    PushOrPop_(&gl->m_enabled_i_Vars.Get(enablable), push);
+}
+
+void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
+{
+    switch (bindTarget)
+    {
+        case GL::BindTarget::NONE:
+        case GL::BindTarget::TEXTURE_1D:
+        case GL::BindTarget::TEXTURE_3D:
+            ASSERT(false);
+        break;
+
+        case GL::BindTarget::TEXTURE_2D:
+            PushOrPop_(&GL::m_boundTexture2DIds, push);
+        break;
+        case GL::BindTarget::TEXTURE_CUBE_MAP:
+            PushOrPop_(&GL::m_boundTextureCubeMapIds, push);
+        break;
+        case GL::BindTarget::SHADER_PROGRAM:
+            PushOrPop_(&GL::m_boundShaderProgramIds, push);
+        break;
+        case GL::BindTarget::FRAMEBUFFER:
+            GL::PushOrPop(GL::BindTarget::DRAW_FRAMEBUFFER, push);
+            GL::PushOrPop(GL::BindTarget::READ_FRAMEBUFFER, push);
+        break;
+        case GL::BindTarget::DRAW_FRAMEBUFFER:
+            PushOrPop_(&GL::m_boundDrawFramebufferIds, push);
+        break;
+        case GL::BindTarget::READ_FRAMEBUFFER:
+            PushOrPop_(&GL::m_boundReadFramebufferIds, push);
+        break;
+        case GL::BindTarget::VAO:
+            PushOrPop_(&GL::m_boundVAOIds, push);
+        break;
+        case GL::BindTarget::ARRAY_BUFFER:
+            PushOrPop_(&GL::m_boundVBOArrayBufferIds, push);
+        break;
+        case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
+            PushOrPop_(&GL::m_boundVBOElementsBufferIds, push);
+        break;
+        case GL::BindTarget::UNIFORM_BUFFER:
+            PushOrPop_(&GL::m_boundUniformBufferIds, push);
+        break;
+
+        default:
+            ASSERT(false);
+        break;
+    }
 }
 
 void GL::PrintGLContext()

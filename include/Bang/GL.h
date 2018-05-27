@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include <stack>
+
 #include "Bang/Map.h"
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
@@ -679,7 +681,7 @@ public:
     static Vector2 GetViewportPixelSize();
 
     static const Array<GL::Attachment>& GetDrawBuffers();
-    static GL::Attachment& GetReadBuffer();
+    static const GL::Attachment& GetReadBuffer();
 
     static GL::BlendFactor GetBlendSrcFactorColor();
     static GL::BlendFactor GetBlendDstFactorColor();
@@ -749,48 +751,58 @@ public:
     GL();
     virtual ~GL();
 
+    template <class T>
+    struct StackAndValue
+    {
+        T currentValue;
+        std::stack<T> stack;
+    };
+
 private:
+    void Init();
+
     // Context
     SDL_Window *m_auxiliarWindowToCreateSharedGLContext = nullptr;
     SDL_GLContext m_sharedGLContext = nullptr;
 
-    GLId m_boundVAOId               = 0;
-    GLId m_boundVBOArrayBufferId    = 0;
-    GLId m_boundVBOElementsBufferId = 0;
-    GLId m_boundTexture2DId         = 0;
-    GLId m_boundTextureCubeMapId    = 0;
-    GLId m_boundDrawFramebufferId   = 0;
-    GLId m_boundReadFramebufferId   = 0;
-    GLId m_boundShaderProgramId     = 0;
-    GLId m_boundUniformBufferId     = 0;
-    std::array<bool, 4> m_colorMask = {{true, true, true, true}};
-    uint m_lineWidth     = 0;
-    Byte m_stencilValue  = 0;
-    uint m_stencilMask   = 0xFF;
-    AARecti m_viewportRect = AARecti::Zero;
+    StackAndValue<GLId>  m_boundVAOIds;
+    StackAndValue<GLId>  m_boundVBOArrayBufferIds;
+    StackAndValue<GLId>  m_boundVBOElementsBufferIds;
+    StackAndValue<GLId>  m_boundTexture2DIds;
+    StackAndValue<GLId>  m_boundTextureCubeMapIds;
+    StackAndValue<GLId>  m_boundDrawFramebufferIds;
+    StackAndValue<GLId>  m_boundReadFramebufferIds;
+    StackAndValue<GLId>  m_boundShaderProgramIds;
+    StackAndValue<GLId>  m_boundUniformBufferIds;
+    StackAndValue<float> m_lineWidths;
+    StackAndValue<Byte>  m_stencilValues;
+    StackAndValue<uint>  m_stencilMasks;
+    StackAndValue<AARecti> m_viewportRects;
+    StackAndValue< std::array<bool, 4> > m_colorMasks;
+
     Map<GL::Enablable, bool> m_enabledVars;
     Map<GL::Enablable, std::array<bool, 16> > m_enabled_i_Vars;
 
-    Array<GL::Attachment> m_drawBuffers = {GL::Attachment::COLOR0};
-    GL::Attachment m_readBuffer = GL::Attachment::COLOR0;
+    StackAndValue< Array<GL::Attachment> > m_drawBuffers;
+    StackAndValue< GL::Attachment > m_readBuffers;
 
-    bool m_depthMask = true;
-    GL::Function m_depthFunc = GL::Function::LESS;
-    Color m_clearColor = Color::Zero;
-    GL::Face m_cullFace = GL::Face::BACK;
+    StackAndValue<bool> m_depthMasks;
+    StackAndValue<GL::Function> m_depthFuncs;
+    StackAndValue<Color> m_clearColors;
+    StackAndValue<GL::Face> m_cullFaces;
 
-    AARecti m_scissorRectPx                 = AARecti(-1,-1,-1,-1);
-    GL::Enum m_frontPolygonMode             = GL::FILL;
-    GL::Enum m_backPolygonMode              = GL::FILL;
-    GL::Enum m_frontBackPolygonMode         = GL::FILL;
-    GL::Function m_stencilFunc              = GL::Function::ALWAYS;
-    GL::BlendFactor m_blendSrcFactorColor   = GL::BlendFactor::ONE;
-    GL::BlendFactor m_blendDstFactorColor   = GL::BlendFactor::ZERO;
-    GL::BlendFactor m_blendSrcFactorAlpha   = GL::BlendFactor::ONE;
-    GL::BlendFactor m_blendDstFactorAlpha   = GL::BlendFactor::ZERO;
-    GL::BlendEquationE m_blendEquationColor = GL::BlendEquationE::FUNC_ADD;
-    GL::BlendEquationE m_blendEquationAlpha = GL::BlendEquationE::FUNC_ADD;
-    GL::StencilOperation m_stencilOp        = GL::StencilOperation::KEEP;
+    StackAndValue<AARecti> m_scissorRectsPx;
+    StackAndValue<GL::Enum> m_frontPolygonModes;
+    StackAndValue<GL::Enum> m_backPolygonModes;
+    StackAndValue<GL::Enum> m_frontBackPolygonModes;
+    StackAndValue<GL::Function> m_stencilFuncs;
+    StackAndValue<GL::BlendFactor> m_blendSrcFactorColors;
+    StackAndValue<GL::BlendFactor> m_blendDstFactorColors;
+    StackAndValue<GL::BlendFactor> m_blendSrcFactorAlphas;
+    StackAndValue<GL::BlendFactor> m_blendDstFactorAlphas;
+    StackAndValue<GL::BlendEquationE> m_blendEquationColors;
+    StackAndValue<GL::BlendEquationE> m_blendEquationAlphas;
+    StackAndValue<GL::StencilOperation> m_stencilOps;
 
     GLUniforms *m_glUniforms = nullptr;
 

@@ -42,6 +42,8 @@ GEngine::~GEngine()
 void GEngine::Init()
 {
     m_gl = new GL();
+    m_gl->Init();
+
     m_texUnitManager = new TextureUnitManager();
 
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());

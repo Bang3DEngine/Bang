@@ -16,28 +16,26 @@ class GBuffer : public Framebuffer
 {
 public:
 
-    static const GL::Attachment AttColor        = GL::Attachment::COLOR0;
+    static const GL::Attachment AttColor0        = GL::Attachment::COLOR0;
+    static const GL::Attachment AttColor1        = GL::Attachment::COLOR1;
 
     // (diffColor.r, diffColor.g, diffColor.b, diffColor.a)
-    static const GL::Attachment AttAlbedo       = GL::Attachment::COLOR1;
+    static const GL::Attachment AttAlbedo       = GL::Attachment::COLOR2;
 
     // (normal.x, normal.y, normal.z, 0)
-    static const GL::Attachment AttNormal       = GL::Attachment::COLOR2;
+    static const GL::Attachment AttNormal       = GL::Attachment::COLOR3;
 
     // (receivesLighting, roughness, metalness, ---)
     // If receivesLighting >  0 ---> receivesShadows
     // If receivesLighting <= 0 ---> not receivesShadows
-    static const GL::Attachment AttMisc         = GL::Attachment::COLOR3;
-
-    static const GL::Attachment AttColorRead    = GL::Attachment::COLOR4;
+    static const GL::Attachment AttMisc         = GL::Attachment::COLOR4;
 
     static const GL::Attachment AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
 
     GBuffer(int width, int height);
     virtual ~GBuffer();
 
-    void BindAttachmentsForReading(ShaderProgram *sp,
-                                   bool readFromCopiedColor = true);
+    void BindAttachmentsForReading(ShaderProgram *sp);
 
     void ApplyPassBlend(ShaderProgram *sp,
                         GL::BlendFactor srcBlendFactor,
@@ -46,8 +44,6 @@ public:
     void ApplyPass(ShaderProgram *sp,
                    bool willReadFromColor = false,
                    const AARect &mask = AARect::NDCRect);
-
-    void PrepareColorReadBuffer(const AARect &readNDCRect = AARect::NDCRect);
 
     void SetAllDrawBuffers() const override;
     void SetAllDrawBuffersExceptColor();
@@ -59,6 +55,8 @@ public:
     void SetOverlayDepthStencil();
     void PopDepthStencilTexture();
     void SetDepthStencilTexture(Texture2D *depthStencilTexture);
+    GL::Attachment GetLastDrawnColorAttachment() const;
+    Texture2D *GetLastDrawnColorTexture() const;
     Texture2D *GetSceneDepthStencilTexture() const;
     Texture2D *GetCanvasDepthStencilTexture() const;
     Texture2D *GetOverlayDepthStencilTexture() const;
@@ -71,6 +69,9 @@ public:
     static String GetDepthStencilTexName();
 
 private:
+    GL::Attachment m_drawColorAttachment = Undef<GL::Attachment>();
+    GL::Attachment m_readColorAttachment = Undef<GL::Attachment>();
+
     RH<Texture2D> m_sceneDepthStencilTexture;
     RH<Texture2D> m_canvasDepthStencilTexture;
     RH<Texture2D> m_overlayDepthStencilTexture;

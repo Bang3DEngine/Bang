@@ -395,13 +395,11 @@ void Gizmos::RenderOutline(GameObject *gameObject,
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
 
     // Save state
-    bool prevDepthMask                        = GL::GetDepthMask();
-    GL::Function prevDepthFunc                = GL::GetDepthFunc();
-    Byte prevStencilValue                     = GL::GetStencilValue();
-    GL::Function prevStencilFunc              = GL::GetStencilFunc();
-    GL::StencilOperation prevStencilOperation = GL::GetStencilOp();
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::Pushable::COLOR_MASK);
+    GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::STENCIL_STATES);
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     GBuffer *gbuffer = GEngine::GetActiveGBuffer();
     if (gbuffer)
@@ -451,14 +449,11 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         gbuffer->PopDrawAttachments();
     }
 
-    // Restore state
-    GL::SetDepthMask(prevDepthMask);
-    GL::SetDepthFunc(prevDepthFunc);
-    GL::SetStencilOp(prevStencilOperation);
-    GL::SetStencilFunc(prevStencilFunc);
-    GL::SetStencilValue(prevStencilValue);
-    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
-    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevBoundFB);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+    GL::Pop(GL::Pushable::STENCIL_STATES);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::COLOR_MASK);
 }
 
 void Gizmos::RenderFrustum(const Vector3 &forward,

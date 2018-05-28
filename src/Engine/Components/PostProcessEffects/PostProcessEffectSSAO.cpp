@@ -61,10 +61,9 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 
     if ( MustBeRendered(renderPass) )
     {
-        // Save state
-        GLId prevSP = GL::GetBoundId( GL::BindTarget::SHADER_PROGRAM );
-        GLId prevFB = GL::GetBoundId( GL::BindTarget::FRAMEBUFFER );
-        AARecti prevVP = GL::GetViewportRect();
+        GL::Push(GL::Pushable::VIEWPORT);
+        GL::Push(GL::BindTarget::SHADER_PROGRAM);
+        GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
         // Get references
         GBuffer *gbuffer = GEngine::GetActiveGBuffer();
@@ -129,8 +128,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             GEngine::GetInstance()->RenderViewportPlane(); // Render blur Y!
         }
 
-        // Restore previous framebuffer
-        GL::Bind( GL::BindTarget::FRAMEBUFFER, prevFB );
+        GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
         // Then apply actual SSAO blending with occlusion calculated above!
         {
@@ -140,9 +138,8 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             gbuffer->ApplyPass(p_applySSAOShaderProgram.Get(), true);
         }
 
-        // Restore state
-        GL::Bind( GL::BindTarget::SHADER_PROGRAM, prevSP );
-        GL::SetViewport(prevVP);
+        GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+        GL::Pop(GL::Pushable::VIEWPORT);
     }
 }
 

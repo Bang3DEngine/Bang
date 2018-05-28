@@ -132,6 +132,7 @@ public:
         VERTEX_ARRAY         = GL_VERTEX_ARRAY,
         VAO                  = GL_VERTEX_ARRAY,
         ARRAY_BUFFER         = GL_ARRAY_BUFFER,
+        VBO                  = GL_ARRAY_BUFFER,
         ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER,
         UNIFORM_BUFFER       = GL_UNIFORM_BUFFER
     };
@@ -403,16 +404,20 @@ public:
 
     enum class Pushable
     {
-        Framebuffer,
-        ShaderProgram,
-        BlendStates,
-        DepthStates,
-        StencilStates,
+        FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS,
+        SHADER_PROGRAM,
+        BLEND_STATES,
+        DEPTH_STATES,
+        STENCIL_STATES,
         VAO,
         VBO,
-        FramebufferAttachments,
-        Viewport,
-        ColorMask,
+        VIEWPORT,
+        COLOR_MASK,
+        MODEL_MATRIX,
+        VIEW_MATRIX,
+        PROJECTION_MATRIX,
+        ALL_MATRICES,
+        VIEWPROJ_MODE
     };
 
     static void ClearError();
@@ -605,6 +610,7 @@ public:
     static void BufferData(GL::BindTarget target,
                            int dataSize, const void *data,
                            GL::UsageHint usageHint);
+    static void SetColorMask(const std::array<bool, 4> &colorMask);
     static void SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA);
     static void SetViewProjMode(GL::ViewProjMode mode);
     static void SetStencilOp(GL::StencilOperation zPass);
@@ -803,6 +809,10 @@ private:
     StackAndValue<uint>  m_stencilMasks;
     StackAndValue<AARecti> m_viewportRects;
     StackAndValue< std::array<bool, 4> > m_colorMasks;
+    std::stack<Matrix4> m_modelMatrices;
+    std::stack<Matrix4> m_viewMatrices;
+    std::stack<Matrix4> m_projectionMatrices;
+    std::stack<GL::ViewProjMode> m_viewProjModes;
 
     Map<GL::Enablable, StackAndValue<bool>> m_enabledVars;
     Map<GL::Enablable, StackAndValue<std::array<bool, 16>> > m_enabled_i_Vars;

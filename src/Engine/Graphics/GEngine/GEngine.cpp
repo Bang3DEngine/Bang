@@ -123,7 +123,9 @@ SelectionFramebuffer *GEngine::GetActiveSelectionFramebuffer()
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
-    bool wasEnabledBlendi0 = GL::IsEnabledi(GL::Enablable::BLEND, 0);
+    GL::Push(GL::Pushable::BLEND_STATES);
+    GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     camera->BindGBuffer();
 
@@ -143,10 +145,12 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::SetDepthFunc(GL::Function::LEQUAL);
 
     // Render the sky / background (before so that alphas in scene can be handled)
-    GLId prevBoundSP = GL::GetBoundId(m_renderSkySP.Get()->GetGLBindTarget());
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
+
     m_renderSkySP.Get()->Bind();
     gbuffer->ApplyPass(m_renderSkySP.Get(), false);
-    GL::Bind(m_renderSkySP.Get()->GetGLBindTarget(), prevBoundSP); // Restore
+
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 
     // Render scene pass
     RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
@@ -177,9 +181,9 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     // ApplyStenciledDeferredLightsToGBuffer(go, camera);
     RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
 
-    // GL::BlendFuncSeparate(prevBlendSrcColorFactor, prevBlendDstColorFactor,
-    //                       prevBlendSrcAlphaFactor, prevBlendDstAlphaFactor);
-    GL::SetEnabledi(GL::Enablable::BLEND, 0, wasEnabledBlendi0);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::BLEND_STATES);
     gbuffer->PopDepthStencilTexture();
 
     if (camera->GetGammaCorrection() != 1.0f)
@@ -192,6 +196,8 @@ void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
 {
     if (camera->GetRenderSelectionBuffer())
     {
+        GL::Push(GL::Pushable::DEPTH_STATES);
+
         camera->BindSelectionFramebuffer();
 
         // Selection rendering
@@ -204,6 +210,8 @@ void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
 
         GL::ClearDepthBuffer();
         RenderWithPass(go, RenderPass::OVERLAY);
+
+        GL::Pop(GL::Pushable::DEPTH_STATES);
     }
 }
 

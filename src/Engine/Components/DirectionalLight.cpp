@@ -30,15 +30,17 @@ DirectionalLight::DirectionalLight()
 {
     m_shadowMapFramebuffer = new Framebuffer(1,1);
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
-                                             GL::ColorFormat::DEPTH16);
+                                                  GL::ColorFormat::DEPTH16);
 
-    GLId prevBoundTex = GL::GetBoundId(GetShadowMapTexture()->GetGLBindTarget());
+    GL::Push(GL::BindTarget::TEXTURE_2D);
+
     GetShadowMapTexture()->Bind();
     GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
     GL::TexParameteri( GetShadowMapTexture()->GetTextureTarget(),
                        GL::TexParameter::TEXTURE_COMPARE_MODE,
                        GL_COMPARE_REF_TO_TEXTURE );
-    GL::Bind(GetShadowMapTexture()->GetGLBindTarget(), prevBoundTex);
+
+    GL::Pop(GL::BindTarget::TEXTURE_2D);
 
     SetLightScreenPassShaderProgram(
                 ShaderProgramFactory::GetDirectionalLightScreenPass());
@@ -51,12 +53,11 @@ DirectionalLight::~DirectionalLight()
 
 void DirectionalLight::RenderShadowMaps_()
 {
-    // Save previous state
-    AARecti prevVP = GL::GetViewportRect();
-    const Matrix4 &prevModel = GLUniforms::GetModelMatrix();
-    const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
-    const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
-    GLId prevBoundFB = GL::GetBoundId(m_shadowMapFramebuffer->GetGLBindTarget());
+    GL::Push(GL::Pushable::VIEWPORT);
+    GL::Push(GL::Pushable::COLOR_MASK);
+    GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::ALL_MATRICES);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     // Bind and resize shadow map framebuffer
     const Vector2i& shadowMapSize = GetShadowMapSize();
@@ -85,16 +86,14 @@ void DirectionalLight::RenderShadowMaps_()
     for (GameObject *shadowCaster : shadowCasters)
     {
         GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
-                                             false);
+                                               false);
     }
 
-    // Restore previous state
-    GL::SetViewport(prevVP);
-    GL::SetColorMask(true, true, true, true);
-    GLUniforms::SetModelMatrix(prevModel);
-    GLUniforms::SetViewMatrix(prevView);
-    GLUniforms::SetProjectionMatrix(prevProj);
-    GL::Bind(m_shadowMapFramebuffer->GetGLBindTarget(), prevBoundFB);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::ALL_MATRICES);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::COLOR_MASK);
+    GL::Pop(GL::Pushable::VIEWPORT);
 }
 
 void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const

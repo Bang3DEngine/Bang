@@ -1297,6 +1297,11 @@ void GL::BufferData(GL::BindTarget target, int dataSize,
     GL_CALL( glBufferData(GLCAST(target), dataSize, data, GLCAST(usageHint)) );
 }
 
+void GL::SetColorMask(const std::array<bool, 4> &colorMask)
+{
+    GL::SetColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
+}
+
 void GL::Render(const VAO *vao, GL::Primitive renderMode,
                 int elementsCount, int startElementIndex)
 {
@@ -1956,17 +1961,17 @@ void PushOrPop_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr, bool push)
 
 void GL::Push(GL::Pushable pushable)
 {
-    PushOrPop(pushable, false);
+    PushOrPop(pushable, true);
 }
 
 void GL::Push(GL::Enablable enablable)
 {
-    PushOrPop(enablable, false);
+    PushOrPop(enablable, true);
 }
 
 void GL::Push(GL::BindTarget bindTarget)
 {
-    PushOrPop(bindTarget, false);
+    PushOrPop(bindTarget, true);
 }
 
 void GL::Pop(GL::Pushable pushable)
@@ -1986,59 +1991,167 @@ void GL::Pop(GL::BindTarget bindTarget)
 
 void GL::PushOrPop(GL::Pushable pushable, bool push)
 {
+    GL *gl = GL::GetInstance(); ASSERT(gl);
     switch (pushable)
     {
-        case GL::Pushable::BlendStates:
-            PushOrPop_(&GL::m_blendEquationAlphas,  push);
-            PushOrPop_(&GL::m_blendEquationColors,  push);
-            PushOrPop_(&GL::m_blendDstFactorAlphas, push);
-            PushOrPop_(&GL::m_blendDstFactorColors, push);
-            PushOrPop_(&GL::m_blendSrcFactorAlphas, push);
-            PushOrPop_(&GL::m_blendSrcFactorColors, push);
+        case GL::Pushable::BLEND_STATES:
+            PushOrPop(GL::Enablable::BLEND, push);
+            if (!push)
+            {
+                GL::BlendEquationSeparate(gl->m_blendEquationColors.stack.top(),
+                                          gl->m_blendEquationAlphas.stack.top());
+                GL::BlendFuncSeparate(gl->m_blendSrcFactorColors.stack.top(),
+                                      gl->m_blendDstFactorAlphas.stack.top(),
+                                      gl->m_blendSrcFactorAlphas.stack.top(),
+                                      gl->m_blendDstFactorColors.stack.top());
+            }
+            PushOrPop_(&gl->m_blendEquationAlphas,  push);
+            PushOrPop_(&gl->m_blendEquationColors,  push);
+            PushOrPop_(&gl->m_blendDstFactorAlphas, push);
+            PushOrPop_(&gl->m_blendDstFactorColors, push);
+            PushOrPop_(&gl->m_blendSrcFactorAlphas, push);
+            PushOrPop_(&gl->m_blendSrcFactorColors, push);
+
         break;
 
-        case GL::Pushable::ColorMask:
-            PushOrPop_(&GL::m_colorMasks, push);
+        case GL::Pushable::COLOR_MASK:
+        if (!push)
+        {
+            GL::SetColorMask(gl->m_colorMasks.stack.top());
+        }
+        PushOrPop_(&gl->m_colorMasks, push);
         break;
 
-        case GL::Pushable::DepthStates:
+        case GL::Pushable::DEPTH_STATES:
             PushOrPop(GL::Enablable::DEPTH_TEST,  push);
             PushOrPop(GL::Enablable::DEPTH_CLAMP, push);
-            PushOrPop_(&GL::m_depthFuncs, push);
-            PushOrPop_(&GL::m_depthMasks, push);
+            if (!push)
+            {
+                GL::SetDepthFunc(gl->m_depthFuncs.stack.top());
+                GL::SetDepthMask(gl->m_depthMasks.stack.top());
+            }
+            PushOrPop_(&gl->m_depthFuncs, push);
+            PushOrPop_(&gl->m_depthMasks, push);
         break;
 
-        case GL::Pushable::Framebuffer:
-            PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
+        case GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS:
+            if (!push)
+            {
+                PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
+                if (GL::GetBoundId(GL::BindTarget::FRAMEBUFFER) > 0)
+                {
+                    GL::DrawBuffers(gl->m_drawBuffers.stack.top());
+                    GL::ReadBuffer(gl->m_readBuffers.stack.top());
+                }
+            }
+
+            PushOrPop_(&gl->m_drawBuffers, push);
+            PushOrPop_(&gl->m_readBuffers, push);
+
+            if (push)
+            {
+                PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
+            }
         break;
 
-        case GL::Pushable::FramebufferAttachments:
-            PushOrPop_(&GL::m_drawBuffers, push);
-            PushOrPop_(&GL::m_readBuffers, push);
-        break;
-
-        case GL::Pushable::ShaderProgram:
+        case GL::Pushable::SHADER_PROGRAM:
             PushOrPop(GL::BindTarget::SHADER_PROGRAM, push);
         break;
 
-        case GL::Pushable::StencilStates:
+        case GL::Pushable::STENCIL_STATES:
             PushOrPop(GL::Enablable::STENCIL_TEST, push);
-            PushOrPop_(&GL::m_stencilFuncs,  push);
-            PushOrPop_(&GL::m_stencilMasks,  push);
-            PushOrPop_(&GL::m_stencilOps,    push);
-            PushOrPop_(&GL::m_stencilValues, push);
+            if (!push)
+            {
+                GL::SetStencilFunc(gl->m_stencilFuncs.stack.top(),
+                                   gl->m_stencilMasks.stack.top());
+                GL::SetStencilOp(gl->m_stencilOps.stack.top());
+                GL::SetStencilValue(gl->m_stencilValues.stack.top());
+            }
+            PushOrPop_(&gl->m_stencilFuncs,  push);
+            PushOrPop_(&gl->m_stencilMasks,  push);
+            PushOrPop_(&gl->m_stencilOps,    push);
+            PushOrPop_(&gl->m_stencilValues, push);
         break;
 
         case GL::Pushable::VAO:
-            PushOrPop_(&GL::m_boundVAOIds, push);
+            GL::PushOrPop(GL::BindTarget::VAO, push);
         break;
 
         case GL::Pushable::VBO:
-            PushOrPop_(&GL::m_boundVAOIds, push);
+            GL::PushOrPop(GL::BindTarget::ARRAY_BUFFER, push);
         break;
 
-        case GL::Pushable::Viewport:
-            PushOrPop_(&GL::m_viewportRects, push);
+        case GL::Pushable::VIEWPORT:
+            if (!push)
+            {
+                GL::SetViewport(gl->m_viewportRects.stack.top());
+            }
+            PushOrPop_(&gl->m_viewportRects, push);
+        break;
+
+        case GL::Pushable::MODEL_MATRIX:
+            if (push)
+            {
+                gl->m_modelMatrices.push(
+                                GLUniforms::GetActive()->GetModelMatrix() );
+            }
+            else
+            {
+                ASSERT(gl->m_modelMatrices.size() >= 1);
+                GLUniforms::GetActive()->SetModelMatrix(gl->m_modelMatrices.top());
+                gl->m_modelMatrices.pop();
+            }
+        break;
+
+        case GL::Pushable::VIEW_MATRIX:
+            if (push)
+            {
+                gl->m_viewMatrices.push(
+                                    GLUniforms::GetActive()->GetViewMatrix() );
+            }
+            else
+            {
+                ASSERT(gl->m_viewMatrices.size() >= 1);
+                GLUniforms::GetActive()->SetViewMatrix(
+                                                gl->m_viewMatrices.top());
+                gl->m_viewMatrices.pop();
+            }
+        break;
+
+        case GL::Pushable::PROJECTION_MATRIX:
+            if (push)
+            {
+                gl->m_projectionMatrices.push(
+                            GLUniforms::GetActive()->GetProjectionMatrix() );
+            }
+            else
+            {
+                ASSERT(gl->m_projectionMatrices.size() >= 1);
+                GLUniforms::GetActive()->SetProjectionMatrix(
+                                            gl->m_projectionMatrices.top());
+                gl->m_projectionMatrices.pop();
+            }
+        break;
+
+        case GL::Pushable::ALL_MATRICES:
+            PushOrPop(GL::Pushable::MODEL_MATRIX, push);
+            PushOrPop(GL::Pushable::VIEW_MATRIX, push);
+            PushOrPop(GL::Pushable::PROJECTION_MATRIX, push);
+        break;
+
+        case GL::Pushable::VIEWPROJ_MODE:
+            if (push)
+            {
+                gl->m_viewProjModes.push(
+                                GLUniforms::GetActive()->GetViewProjMode() );
+            }
+            else
+            {
+                ASSERT(gl->m_viewProjModes.size() >= 1);
+                GLUniforms::GetActive()->SetViewProjMode(
+                                                gl->m_viewProjModes.top());
+                gl->m_viewProjModes.pop();
+            }
         break;
 
         default:
@@ -2056,6 +2169,7 @@ void GL::PushOrPop(GL::Enablable enablable, bool push)
 
 void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
 {
+    GL *gl = GL::GetInstance();
     switch (bindTarget)
     {
         case GL::BindTarget::NONE:
@@ -2065,35 +2179,71 @@ void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
         break;
 
         case GL::BindTarget::TEXTURE_2D:
-            PushOrPop_(&GL::m_boundTexture2DIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundTexture2DIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundTexture2DIds, push);
         break;
         case GL::BindTarget::TEXTURE_CUBE_MAP:
-            PushOrPop_(&GL::m_boundTextureCubeMapIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundTextureCubeMapIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundTextureCubeMapIds, push);
         break;
         case GL::BindTarget::SHADER_PROGRAM:
-            PushOrPop_(&GL::m_boundShaderProgramIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundShaderProgramIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundShaderProgramIds, push);
         break;
         case GL::BindTarget::FRAMEBUFFER:
             GL::PushOrPop(GL::BindTarget::DRAW_FRAMEBUFFER, push);
             GL::PushOrPop(GL::BindTarget::READ_FRAMEBUFFER, push);
         break;
         case GL::BindTarget::DRAW_FRAMEBUFFER:
-            PushOrPop_(&GL::m_boundDrawFramebufferIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundDrawFramebufferIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundDrawFramebufferIds, push);
         break;
         case GL::BindTarget::READ_FRAMEBUFFER:
-            PushOrPop_(&GL::m_boundReadFramebufferIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundReadFramebufferIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundReadFramebufferIds, push);
         break;
         case GL::BindTarget::VAO:
-            PushOrPop_(&GL::m_boundVAOIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundVAOIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundVAOIds, push);
         break;
         case GL::BindTarget::ARRAY_BUFFER:
-            PushOrPop_(&GL::m_boundVBOArrayBufferIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundVBOArrayBufferIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundVBOArrayBufferIds, push);
         break;
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
-            PushOrPop_(&GL::m_boundVBOElementsBufferIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundVBOElementsBufferIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundVBOElementsBufferIds, push);
         break;
         case GL::BindTarget::UNIFORM_BUFFER:
-            PushOrPop_(&GL::m_boundUniformBufferIds, push);
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundUniformBufferIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundUniformBufferIds, push);
         break;
 
         default:

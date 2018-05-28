@@ -55,16 +55,8 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
     {
         if (IsCachingEnabled() && m_needNewImageToSnapshot)
         {
-            // Save previous state
-            GLId prevBoundDrawFramebuffer = GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER);
-            GLId prevBoundReadFramebuffer = GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER);
-            GL::BlendFactor prevBlendSrcFactorColor   = GL::GetBlendSrcFactorColor();
-            GL::BlendFactor prevBlendDstFactorColor   = GL::GetBlendDstFactorColor();
-            GL::BlendFactor prevBlendSrcFactorAlpha   = GL::GetBlendSrcFactorAlpha();
-            GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
-            Array<GL::Attachment> prevDrawAttachments = GL::GetDrawBuffers();
-            GL::Attachment prevReadAttachment         = GL::GetReadBuffer();
-            bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::BLEND);
+            GL::Push( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
+            GL::Push( GL::Pushable::BLEND_STATES );
 
             p_cacheFramebuffer->Bind();
 
@@ -94,16 +86,8 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             p_cachedImageRenderer->SetVisible(true);
             SetContainerVisible(false);
 
-            // Restore gl state
-            GL::Bind(GL::BindTarget::DRAW_FRAMEBUFFER, prevBoundDrawFramebuffer);
-            GL::Bind(GL::BindTarget::READ_FRAMEBUFFER, prevBoundReadFramebuffer);
-            GL::DrawBuffers(prevDrawAttachments);
-            GL::ReadBuffer(prevReadAttachment);
-            GL::BlendFuncSeparate(prevBlendSrcFactorColor,
-                                  prevBlendDstFactorColor,
-                                  prevBlendSrcFactorAlpha,
-                                  prevBlendDstFactorAlpha);
-            GL::SetEnabled(GL::Enablable::BLEND, wasBlendEnabled, false);
+            GL::Pop( GL::Pushable::BLEND_STATES );
+            GL::Pop( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
 
             m_needNewImageToSnapshot = false;
         }

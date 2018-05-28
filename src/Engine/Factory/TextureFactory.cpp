@@ -75,7 +75,7 @@ RH<Texture2D> TextureFactory::GetTexture2D(const String &filename, const Path &d
     RH<Texture2D> tex = Resources::Load<Texture2D>(path);
     if (tex && !initialized)
     {
-        GLId prevTexID = GL::GetBoundId(tex.Get()->GetGLBindTarget());
+        GL::Push(GL::BindTarget::TEXTURE_2D);
 
         tex.Get()->Bind();
         tex.Get()->GenerateMipMaps();
@@ -83,7 +83,7 @@ RH<Texture2D> TextureFactory::GetTexture2D(const String &filename, const Path &d
         tex.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
         tex.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 
-        GL::Bind(tex.Get()->GetGLBindTarget(), prevTexID);
+        GL::Pop(GL::BindTarget::TEXTURE_2D);
 
         Resources::SetPermanent(tex.Get(), true);
     }

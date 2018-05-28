@@ -251,8 +251,7 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
 
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
-    // Save state
-    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
     // Set state, bind and draw
     sp->Bind();
@@ -263,15 +262,13 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
     RenderViewportPlane(); // Renduurrr
 
-    // Restore state
-    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundShaderProgram);
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
 void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 {
-    // Save state
-    GLId prevBoundShaderProgram  = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    GLId prevBoundFB = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     gbuffer->Bind();
 
@@ -280,15 +277,13 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
     sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
     gbuffer->ApplyPass(p_renderTextureToViewportSP.Get(), true);
 
-    // Restore state
-    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevBoundFB);
-    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundShaderProgram);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
 void GEngine::RenderTexture(Texture2D *texture)
 {
-    // Save state
-    GLId prevBoundSP = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
     ShaderProgram *sp = p_renderTextureToViewportSP.Get();
 
@@ -297,8 +292,7 @@ void GEngine::RenderTexture(Texture2D *texture)
     sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
-    // Restore state
-    GL::Bind(GL::BindTarget::SHADER_PROGRAM, prevBoundSP);
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
 void GEngine::RenderWithAllPasses(GameObject *go)
@@ -314,9 +308,8 @@ void GEngine::RenderWithAllPasses(GameObject *go)
 void GEngine::RenderViewportPlane()
 {
     // Save state
-    bool prevWireframe           = GL::IsWireframe();
-    bool prevDepthMask           = GL::GetDepthMask();
-    GL::Function prevDepthFunc   = GL::GetDepthFunc();
+    bool prevWireframe = GL::IsWireframe();
+    GL::Push(GL::Pushable::DEPTH_STATES);
 
     // Set state
     GL::SetWireframe(false);
@@ -328,8 +321,7 @@ void GEngine::RenderViewportPlane()
 
     // Restore state
     GL::SetWireframe(prevWireframe);
-    GL::SetDepthMask(prevDepthMask);
-    GL::SetDepthFunc(prevDepthFunc);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
 }
 
 GEngine* GEngine::GetInstance()

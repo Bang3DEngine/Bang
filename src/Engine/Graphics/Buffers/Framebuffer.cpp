@@ -51,7 +51,7 @@ void CreateAttachment(Framebuffer *fb,
                       GL::Attachment attachment,
                       GL::ColorFormat texFormat)
 {
-    GLId prevBoundFB = GL::GetBoundId(fb->GetGLBindTarget());
+    GL::Push(GL::BindTarget::FRAMEBUFFER);
 
     fb->Bind();
 
@@ -63,7 +63,7 @@ void CreateAttachment(Framebuffer *fb,
     fb->SetAttachmentTexture(tex.Get(), attachment);
     // tex.Get()->UnBind();
 
-    GL::Bind(fb->GetGLBindTarget(), prevBoundFB);
+    GL::Pop(GL::BindTarget::FRAMEBUFFER);
 }
 
 void Framebuffer::CreateAttachmentTex2D(GL::Attachment attachment,
@@ -130,21 +130,24 @@ void Framebuffer::AfterSetAttTex(Texture* tex, GL::Attachment attachment)
 void Framebuffer::SetAttachmentTexture(Texture* tex, GL::Attachment attachment,
                                        uint mipMapLevel)
 {
-    GLId prevId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::BindTarget::FRAMEBUFFER);
+
     BeforeSetAttTex(tex, attachment);
     GL::FramebufferTexture(GL::FramebufferTarget::READ_DRAW,
                            attachment,
                            tex->GetGLId(),
                            mipMapLevel);
     AfterSetAttTex(tex, attachment);
-    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevId);
+
+    GL::Pop(GL::BindTarget::FRAMEBUFFER);
 }
 void Framebuffer::SetAttachmentTexture2D(Texture *tex,
                                          GL::TextureTarget texTarget,
                                          GL::Attachment attachment,
                                          uint mipMapLevel)
 {
-    GLId prevId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::BindTarget::FRAMEBUFFER);
+
     BeforeSetAttTex(tex, attachment);
     GL::FramebufferTexture2D(GL::FramebufferTarget::READ_DRAW,
                              attachment,
@@ -152,7 +155,8 @@ void Framebuffer::SetAttachmentTexture2D(Texture *tex,
                              tex->GetGLId(),
                              mipMapLevel);
     AfterSetAttTex(tex, attachment);
-    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevId);
+
+    GL::Pop(GL::BindTarget::FRAMEBUFFER);
 }
 
 void Framebuffer::Blit(GL::Attachment srcAttachment,
@@ -160,8 +164,8 @@ void Framebuffer::Blit(GL::Attachment srcAttachment,
                        const AARect &readNDCRect,
                        GL::BufferBit bufferBit)
 {
-    GLId prevFBDrawId = GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER);
-    GLId prevFBReadId = GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER);
+    GL::Push(GL::BindTarget::DRAW_FRAMEBUFFER);
+    GL::Push(GL::BindTarget::READ_FRAMEBUFFER);
 
     Bind();
     PushDrawAttachments();
@@ -173,9 +177,8 @@ void Framebuffer::Blit(GL::Attachment srcAttachment,
     GL::BlitFramebuffer(r, r, GL::FilterMode::NEAREST, bufferBit);
     PopDrawAttachments();
 
-    // Restore
-    GL::Bind(GL::BindTarget::DRAW_FRAMEBUFFER, prevFBDrawId);
-    GL::Bind(GL::BindTarget::READ_FRAMEBUFFER, prevFBReadId);
+    GL::Pop(GL::BindTarget::READ_FRAMEBUFFER);
+    GL::Pop(GL::BindTarget::DRAW_FRAMEBUFFER);
 }
 
 GL::Attachment Framebuffer::GetCurrentReadAttachment() const
@@ -190,7 +193,8 @@ const Array<GL::Attachment>& Framebuffer::GetCurrentDrawAttachments() const
 
 Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
 {
-    GLId prevFBId = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::BindTarget::FRAMEBUFFER);
+
     Bind();
     Texture2D* t = GetAttachmentTex2D(attachment);
     SetReadBuffer(attachment);
@@ -199,8 +203,10 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
                    GL::GetColorCompFrom(t->GetFormat()),
                    t->GetDataType(),
                    Cast<void*>(&color));
+
+    GL::Pop(GL::BindTarget::FRAMEBUFFER);
+
     Color readColor = Color(color[0], color[1], color[2], color[3]) / 255.0f;
-    GL::Bind(GL::BindTarget::FRAMEBUFFER, prevFBId);
     return readColor;
 }
 

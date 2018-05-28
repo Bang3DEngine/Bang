@@ -155,15 +155,8 @@ void UIDragDroppable::OnDragStarted()
 
     /*
     // Save previous state
-    GLId prevBoundDrawFramebuffer = GL::GetBoundId(GL::BindTarget::DrawFramebuffer);
-    GLId prevBoundReadFramebuffer = GL::GetBoundId(GL::BindTarget::ReadFramebuffer);
-    GL::BlendFactor prevBlendSrcFactorColor   = GL::GetBlendSrcFactorColor();
-    GL::BlendFactor prevBlendDstFactorColor   = GL::GetBlendDstFactorColor();
-    GL::BlendFactor prevBlendSrcFactorAlpha   = GL::GetBlendSrcFactorAlpha();
-    GL::BlendFactor prevBlendDstFactorAlpha   = GL::GetBlendDstFactorAlpha();
-    Array<GL::Attachment> prevDrawAttachments = GL::GetDrawBuffers();
-    GL::Attachment prevReadAttachment         = GL::GetReadBuffer();
-    bool wasBlendEnabled                      = GL::IsEnabled(GL::Enablable::Blend);
+    GL::Push( GL::Pushable::BLEND_STATES );
+    GL::Push( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
 
     m_dragDropFB->Bind();
 
@@ -190,16 +183,8 @@ void UIDragDroppable::OnDragStarted()
                           GL::BlendFactor::OneMinusSrcAlpha);
     GetGameObject()->Render(RenderPass::Canvas);
 
-    // Restore gl state
-    GL::Bind(GL::BindTarget::DrawFramebuffer, prevBoundDrawFramebuffer);
-    GL::Bind(GL::BindTarget::ReadFramebuffer, prevBoundReadFramebuffer);
-    GL::DrawBuffers(prevDrawAttachments);
-    GL::ReadBuffer(prevReadAttachment);
-    GL::BlendFuncSeparate(prevBlendSrcFactorColor,
-                          prevBlendDstFactorColor,
-                          prevBlendSrcFactorAlpha,
-                          prevBlendDstFactorAlpha);
-    GL::SetEnabled(GL::Enablable::Blend, wasBlendEnabled, false);
+    GL::Pop( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
+    GL::Pop( GL::Pushable::BLEND_STATES );
     */
 }
 

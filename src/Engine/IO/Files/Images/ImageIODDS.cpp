@@ -10,14 +10,15 @@ void ImageIODDS::ImportDDS(const Path &filepath, Texture2D *tex, bool *ok)
     nv_dds::CDDSImage ddsImg;
     ddsImg.load(filepath.GetAbsolute(), true);
 
-    GLId prevId = GL::GetBoundId(tex->GetGLBindTarget());
+    GL::Push( tex->GetGLBindTarget() );
+
     tex->Bind();
 
     tex->CreateEmpty(ddsImg.get_width(), ddsImg.get_height());
     ddsImg.upload_texture2D(0, GLCAST( tex->GetGLBindTarget() ));
     tex->SetFormat( SCAST<GL::ColorFormat>(ddsImg.get_format()) );
 
-    GL::Bind(tex->GetGLBindTarget(), prevId);
+    GL::Pop( tex->GetGLBindTarget() );
 
     if (ok) { *ok = true; }
 }

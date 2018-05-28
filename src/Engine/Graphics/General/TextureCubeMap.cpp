@@ -64,7 +64,7 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
     SetWidth(size);
     SetHeight(size);
 
-    GLId prevBoundId = GL::GetBoundId( GetGLBindTarget() ); // Save state
+    GL::Push( GetGLBindTarget() );
 
     Bind();
     GL::TexImage2D(SCAST<GL::TextureTarget>(cubeMapDir),
@@ -75,7 +75,7 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
                    inputDataType,
                    newData);
 
-    GL::Bind(GetGLBindTarget(), prevBoundId); // Restore
+    GL::Pop( GetGLBindTarget() );
 
     PropagateTextureChanged();
 }

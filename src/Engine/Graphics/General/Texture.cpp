@@ -57,7 +57,8 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
     {
         m_filterMode = filterMode;
 
-        GLId prevBoundTex = GL::GetBoundId(GetGLBindTarget());
+        GL::Push( GetGLBindTarget() );
+
         Bind();
 
         if (GetFilterMode() == GL::FilterMode::NEAREST ||
@@ -69,7 +70,7 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
         GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::MIN,
                                GetFilterMode());
 
-        GL::Bind(GetGLBindTarget(), prevBoundTex);
+        GL::Pop( GetGLBindTarget() );
 
         PropagateTextureChanged();
     }
@@ -81,12 +82,14 @@ void Texture::SetWrapMode(GL::WrapMode wrapMode)
     {
         m_wrapMode = wrapMode;
 
-        GLId prevBoundTex = GL::GetBoundId(GetGLBindTarget());
+        GL::Push( GetGLBindTarget() );
+
         Bind();
         GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_S, GetWrapMode());
         GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_T, GetWrapMode());
         GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_R, GetWrapMode());
-        GL::Bind(GetGLBindTarget(), prevBoundTex);
+
+        GL::Pop( GetGLBindTarget() );
 
         PropagateTextureChanged();
     }

@@ -40,15 +40,14 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     constexpr uint IBLCubeMapSizes[2] = {32, 128};
     const uint IBLCubeMapSize = IBLCubeMapSizes[ SCAST<int>(iblType) ];
 
-    // Save OpenGL state
-    const AARecti prevVP = GL::GetViewportRect();
-    const Matrix4 &prevModel = GLUniforms::GetModelMatrix();
-    const Matrix4 &prevView  = GLUniforms::GetViewMatrix();
-    const Matrix4 &prevProj  = GLUniforms::GetProjectionMatrix();
-    const GLId prevBoundFB   = GL::GetBoundId(GL::BindTarget::FRAMEBUFFER);
-    const GLId prevBoundSP   = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    const GLId prevBoundTex  = GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP);
-    bool wasCullEnabled      = GL::IsEnabled(GL::Enablable::CULL_FACE);
+    GL::Push(GL::Pushable::VIEWPORT);
+    GL::Push(GL::Enablable::CULL_FACE);
+    GL::Push(GL::Pushable::COLOR_MASK);
+    GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::ALL_MATRICES);
+    GL::Push(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::BindTarget::TEXTURE_CUBE_MAP);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     GL::Enable(GL::Enablable::TEXTURE_CUBE_MAP_SEAMLESS);
 
@@ -117,15 +116,14 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     delete fb;
 
     // Restore OpenGL state
-    GL::SetViewport(prevVP);
-    GL::SetEnabled(GL::Enablable::CULL_FACE, wasCullEnabled);
-    GL::SetColorMask(true, true, true, true);
-    GLUniforms::SetModelMatrix(prevModel);
-    GLUniforms::SetViewMatrix(prevView);
-    GLUniforms::SetProjectionMatrix(prevProj);
-    GL::Bind(GL::BindTarget::FRAMEBUFFER,    prevBoundFB);
-    GL::Bind(GL::BindTarget::SHADER_PROGRAM,  prevBoundSP);
-    GL::Bind(GL::BindTarget::TEXTURE_CUBE_MAP, prevBoundTex);
+    GL::Pop(GL::Pushable::VIEWPORT);
+    GL::Pop(GL::Pushable::COLOR_MASK);
+    GL::Pop(GL::Enablable::CULL_FACE);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::ALL_MATRICES);
+    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+    GL::Pop(GL::BindTarget::TEXTURE_CUBE_MAP);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     return iblCubeMapRH;
 }

@@ -31,6 +31,7 @@ USING_NAMESPACE_BANG
 
 GEngine::GEngine()
 {
+    p_renderingCameras.currentValue = nullptr;
 }
 
 GEngine::~GEngine()
@@ -58,14 +59,16 @@ void GEngine::Render(GameObject *go, Camera *camera)
     if (!go) { return; }
 
     go->BeforeRender();
+    PushActiveRenderingCamera();
     SetActiveRenderingCamera(camera);
     RenderShadowMaps(go);
-    SetActiveRenderingCamera(nullptr);
+    PopActiveRenderingCamera();
 
+    PushActiveRenderingCamera();
     SetActiveRenderingCamera(camera);
     RenderToGBuffer(go, camera);
     RenderToSelectionFramebuffer(go, camera);
-    SetActiveRenderingCamera(nullptr);
+    PopActiveRenderingCamera();
 }
 
 void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
@@ -106,7 +109,7 @@ Material *GEngine::GetReplacementMaterial() const
 Camera *GEngine::GetActiveRenderingCamera()
 {
     GEngine *ge = GEngine::GetInstance();
-    return ge ? ge->p_currentRenderingCamera : nullptr;
+    return ge ? ge->p_renderingCameras.currentValue : nullptr;
 }
 
 GBuffer *GEngine::GetActiveGBuffer()
@@ -341,12 +344,54 @@ void GEngine::RenderShadowMaps(GameObject *go)
     }
 }
 
+void GEngine::PushActiveRenderingCamera()
+{
+    if ( GetActiveRenderingCamera() )
+    {
+        GetActiveRenderingCamera()->EventEmitter<IDestroyListener>::
+                                    RegisterListener(this);
+    }
+    p_renderingCameras.stack.push( GetActiveRenderingCamera() );
+}
+
 void GEngine::SetActiveRenderingCamera(Camera *camera)
 {
-    if (p_currentRenderingCamera) { p_currentRenderingCamera->UnBind(); }
+    if (GetActiveRenderingCamera())
+    {
+        GetActiveRenderingCamera()->UnBind();
+    }
 
-    p_currentRenderingCamera = camera;
-    if (p_currentRenderingCamera) { p_currentRenderingCamera->Bind(); }
+    p_renderingCameras.currentValue = camera;
+    if (GetActiveRenderingCamera())
+    {
+        GetActiveRenderingCamera()->Bind();
+    }
+}
+
+void GEngine::PopActiveRenderingCamera()
+{
+    ASSERT(p_renderingCameras.stack.size() >= 1);
+
+    // Pop until we find a non-destroyed camera or until the stack is empty.
+    Camera *poppedCamera = nullptr;
+    while (!p_renderingCameras.stack.empty())
+    {
+        if (p_renderingCameras.stack.empty()) { break; }
+
+        Camera *pCam = p_renderingCameras.stack.top();
+        p_renderingCameras.stack.pop();
+        bool cameraIsDestroyed =
+                        m_stackedCamerasThatHaveBeenDestroyed.Contains(pCam);
+        m_stackedCamerasThatHaveBeenDestroyed.Remove(pCam);
+
+        if (!cameraIsDestroyed)
+        {
+            poppedCamera = pCam;
+            break;
+        }
+    }
+
+    SetActiveRenderingCamera(poppedCamera);
 }
 
 void GEngine::Render(Renderer *rend)
@@ -403,4 +448,12 @@ GL *GEngine::GetGL() const { return m_gl; }
 TextureUnitManager *GEngine::GetTextureUnitManager() const
 {
     return m_texUnitManager;
+}
+
+void GEngine::OnDestroyed(EventEmitter<IDestroyListener> *object)
+{
+    Camera *cam = DCAST<Camera*>(object);
+    ASSERT(cam);
+
+    m_stackedCamerasThatHaveBeenDestroyed.Add(cam);
 }

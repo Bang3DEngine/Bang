@@ -55,7 +55,6 @@ uniform bool B_ReceivesShadows;
 //////////////////////////////////////////
 
 // Light related /////////////////////////
-uniform float B_AmbientLight;
 uniform float B_LightRange;
 uniform vec4  B_LightColor;
 uniform float B_LightIntensity;

@@ -20,56 +20,57 @@
 #include "Bang/GLObject.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/StackAndValue.h"
 #include "Bang/TextureUnitManager.h"
 
 USING_NAMESPACE_BANG
 
 // Helper functions
 template<class T>
-static void SetGLContextValue(GL::StackAndValue<T> *stackAndValue, const T &value)
+static void SetGLContextValue(StackAndValue<T> *stackAndValue, const T &value)
 {
     stackAndValue->currentValue = value;
 }
 template<class T>
-static void SetGLContextValue(GL::StackAndValue<T> GL::*svMPtr, const T &value)
+static void SetGLContextValue(StackAndValue<T> GL::*svMPtr, const T &value)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
     SetGLContextValue( &(gl->*svMPtr), value );
 }
 template<class T>
-static T& GetGLContextValue(GL::StackAndValue<T> &stackAndValue)
+static T& GetGLContextValue(StackAndValue<T> &stackAndValue)
 {
     return stackAndValue.currentValue;
 }
 template<class T>
-static T& GetGLContextValue(GL::StackAndValue<T> GL::*svMPtr)
+static T& GetGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
     return GetGLContextValue(gl->*svMPtr);
 }
 template<class T>
-static const T& GetGLContextValue(const GL::StackAndValue<T> &stackAndValue)
+static const T& GetGLContextValue(const StackAndValue<T> &stackAndValue)
 {
     return stackAndValue.currentValue;
 }
 template<class T>
-static const T& GetGLContextValue(const GL::StackAndValue<T> GL::*svMPtr)
+static const T& GetGLContextValue(const StackAndValue<T> GL::*svMPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
     return GetGLContextValue(gl->*svMPtr);
 }
 template<class T>
-static void PushGLContextValue(GL::StackAndValue<T> GL::*svMPtr)
+static void PushGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
-    GL::StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
+    StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
     stackAndValue->stack.push( stackAndValue.currentValue );
 }
 template<class T>
-static const T& PopAndGetGLContextValue(GL::StackAndValue<T> GL::*svMPtr)
+static const T& PopAndGetGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
-    GL::StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
+    StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
 
     ASSERT(stackAndValue.stack.size() >= 1);
     stackAndValue->currentValue = stackAndValue->stack.top();
@@ -1925,35 +1926,35 @@ void GL::BindUniformBufferToShader(const String &uniformBlockName,
 }
 
 template <class T>
-void Push_(GL::StackAndValue<T> *stackAndValue)
+void Push_(StackAndValue<T> *stackAndValue)
 {
     stackAndValue->stack.push( stackAndValue->currentValue );
 }
 template <class T>
-void Pop_(GL::StackAndValue<T> *stackAndValue)
+void Pop_(StackAndValue<T> *stackAndValue)
 {
     ASSERT(stackAndValue->stack.size() >= 1);
     stackAndValue->stack.pop();
 }
 template <class T>
-void PushOrPop_(GL::StackAndValue<T> *stackAndValue, bool push)
+void PushOrPop_(StackAndValue<T> *stackAndValue, bool push)
 {
     if (push) { Push_(stackAndValue); } else { Pop_(stackAndValue); }
 }
 template <class T>
-void Push_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr)
+void Push_(StackAndValue<T> GL::*stackAndValueMemberPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
     Push_(&(gl->*stackAndValueMemberPtr));
 }
 template <class T>
-void Pop_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr)
+void Pop_(StackAndValue<T> GL::*stackAndValueMemberPtr)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
     Pop_(&(gl->*stackAndValueMemberPtr));
 }
 template <class T>
-void PushOrPop_(GL::StackAndValue<T> GL::*stackAndValueMemberPtr, bool push)
+void PushOrPop_(StackAndValue<T> GL::*stackAndValueMemberPtr, bool push)
 {
     if (push) { Push_(stackAndValueMemberPtr); }
     else { Pop_(stackAndValueMemberPtr); }

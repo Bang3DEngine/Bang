@@ -43,8 +43,6 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->SetMatrix4("B_PVM",               matrices->pvm,         false);
     sp->SetMatrix4("B_PVMInv",            matrices->pvmInv,      false);
 
-    sp->SetFloat("B_AmbientLight", Settings::GetAmbientLight(), false);
-
     Camera *cam = Camera::GetActive();
     Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
     sp->SetFloat("B_Camera_ZNear",  (cam ? cam->GetZNear() : 0.0f), false);

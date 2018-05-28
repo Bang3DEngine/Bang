@@ -9,15 +9,9 @@ class Settings
 {
 public:
 
-    static void SetAmbientLight(float ambientLight);
-
-    static float GetAmbientLight();
-
     static Settings *GetInstance();
 
 private:
-    float m_ambientLight = 0.3f;
-
 	Settings();
 	virtual ~Settings();
 

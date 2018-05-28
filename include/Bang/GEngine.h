@@ -1,9 +1,12 @@
 #ifndef GENGINE_H
 #define GENGINE_H
 
+#include "Bang/Set.h"
 #include "Bang/AARect.h"
 #include "Bang/RenderPass.h"
+#include "Bang/StackAndValue.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/IDestroyListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -19,7 +22,7 @@ FORWARD class ShaderProgram;
 FORWARD class TextureUnitManager;
 FORWARD class SelectionFramebuffer;
 
-class GEngine
+class GEngine : public IDestroyListener
 {
 public:
     GEngine();
@@ -55,13 +58,17 @@ public:
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
 
+    // IDestroyListener
+    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+
     static GEngine* GetInstance();
 
 private:
     GL *m_gl = nullptr;
     RH<ShaderProgram> m_renderSkySP;
     RH<Material> m_replacementMaterial;
-    Camera *p_currentRenderingCamera = nullptr;
+    StackAndValue<Camera*> p_renderingCameras;
+    Set<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
     TextureUnitManager *m_texUnitManager = nullptr;
 
     RH<Mesh> p_windowPlaneMesh;
@@ -72,7 +79,9 @@ private:
     void RenderToSelectionFramebuffer(GameObject *go, Camera *camera);
     void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
 
+    void PushActiveRenderingCamera();
     void SetActiveRenderingCamera(Camera *camera);
+    void PopActiveRenderingCamera();
 
     friend class Window;
 };

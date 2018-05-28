@@ -50,6 +50,9 @@ Camera::~Camera()
 
 void Camera::Bind() const
 {
+    GL::Push(GL::Pushable::VIEWPORT);
+    GL::Push(GL::Pushable::VIEW_MATRIX);
+    GL::Push(GL::Pushable::PROJECTION_MATRIX);
     GLUniforms::SetViewMatrix( GetViewMatrix() );
     GLUniforms::SetProjectionMatrix( GetProjectionMatrix() );
     BindViewportForRendering();
@@ -59,6 +62,9 @@ void Camera::UnBind() const
 {
     GetGBuffer()->UnBind();
     GetSelectionFramebuffer()->UnBind();
+    GL::Pop(GL::Pushable::PROJECTION_MATRIX);
+    GL::Pop(GL::Pushable::VIEW_MATRIX);
+    GL::Pop(GL::Pushable::VIEWPORT);
 }
 
 void Camera::BindViewportForBlitting() const
@@ -138,7 +144,10 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
 
 void Camera::SetGammaCorrection(float gammaCorrection)
 {
-    m_gammaCorrection = gammaCorrection;
+    if (gammaCorrection != GetGammaCorrection())
+    {
+        m_gammaCorrection = gammaCorrection;
+    }
 }
 
 AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const

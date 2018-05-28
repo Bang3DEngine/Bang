@@ -9,6 +9,7 @@
 #include "Bang/Map.h"
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
+#include "Bang/StackAndValue.h"
 
 FORWARD class SDL_Window;
 
@@ -780,13 +781,6 @@ public:
 
     GL();
     virtual ~GL();
-
-    template <class T>
-    struct StackAndValue
-    {
-        T currentValue;
-        std::stack<T> stack;
-    };
 
 private:
     void Init();

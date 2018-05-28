@@ -79,18 +79,21 @@ void main()
 
         vec3 specK = FSR;
         vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
-        vec3 diffuseAmbient  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N) *
-                               B_GIn_Albedo.rgb;
 
         const float LOD_MAX_REFLECTION = 8.0;
         float lod = B_MaterialRoughness * LOD_MAX_REFLECTION;
-        vec3 specularAmbient = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
-        vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
-        vec3 specular = specularAmbient * (FSR * envBRDF.x + envBRDF.y);
 
-        vec3 ambient = (diffK * diffuseAmbient) + (specularAmbient);
-        ambient *= B_AmbientLight;
+        vec3 diffuseCubeMapSample  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
+        vec3 specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
 
+        vec3 diffuseAmbient = diffuseCubeMapSample * B_GIn_Albedo.rgb;
+        vec3 specularAmbient = specularCubeMapSample;
+        // vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
+
+        vec3 diffuse  = diffuseAmbient * diffK;
+        vec3 specular = specularAmbient * specK; // (specK * envBRDF.x + envBRDF.y);
+
+        vec3 ambient = (diffuse) + (specular);
         B_GIn_Color = vec4(ambient, 1);
     }
     else

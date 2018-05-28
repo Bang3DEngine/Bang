@@ -300,6 +300,10 @@ ShaderProgramFactory *Resources::GetShaderProgramFactory() const
     return m_shaderProgramFactory;
 }
 
+void Resources::Init()
+{
+}
+
 void Resources::Destroy()
 {
     delete m_meshFactory;          m_meshFactory          = nullptr;

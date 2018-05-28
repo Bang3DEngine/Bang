@@ -62,6 +62,8 @@ void Application::Init(const Path &engineRootPath)
 
     m_gEngine = new GEngine();
     m_gEngine->Init();
+
+    m_resources->Init();
 }
 
 

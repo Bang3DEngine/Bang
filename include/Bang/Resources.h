@@ -114,6 +114,7 @@ public:
     MaterialFactory *GetMaterialFactory() const;
     ShaderProgramFactory *GetShaderProgramFactory() const;
 
+    virtual void Init();
     virtual Array<Path> GetLookUpPaths() const;
 
     void Destroy();

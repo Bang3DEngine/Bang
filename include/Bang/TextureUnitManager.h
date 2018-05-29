@@ -4,7 +4,6 @@
 #include <queue>
 #include <stack>
 #include <unordered_map>
-#include <unordered_set>
 
 #include "Bang/GL.h"
 #include "Bang/Map.h"

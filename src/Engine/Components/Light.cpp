@@ -81,7 +81,7 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
 
 List<GameObject*> Light::GetActiveSceneShadowCasters() const
 {
-    Set<GameObject*> shadowCastersSet;
+    USet<GameObject*> shadowCastersSet;
     Scene *scene = SceneManager::GetActiveScene();
     List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
     for (Renderer *rend : renderers )

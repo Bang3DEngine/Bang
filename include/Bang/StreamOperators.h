@@ -32,6 +32,7 @@ FORWARD_T  class Matrix3G;
 FORWARD_T  class Matrix4G;
 FORWARD    class IToString;
 FORWARD_T  class QuaternionG;
+FORWARD template<class Key, class Hash, class Pred, class Alloc> class USet;
 
 std::istream& operator>>(std::istream& is, GUID &guid);
 std::istream& operator>>(std::istream& is, Path &p);
@@ -204,6 +205,20 @@ std::ostream &operator<<(std::ostream &log, const Map<T,S> &m)
 
 template <class T>
 std::ostream &operator<<(std::ostream &log, const Set<T> &s)
+{
+    log << "{";
+    for (auto it = s.Begin(); it != s.End(); ++it)
+    {
+        if (it != s.Begin()) log << ", ";
+        log << (*it);
+    }
+    log << "}";
+    return log;
+}
+
+template <class Key, class Hash, class Pred, class Alloc>
+std::ostream &operator<<(std::ostream &log,
+                         const USet<Key, Hash, Pred, Alloc> &s)
 {
     log << "{";
     for (auto it = s.Begin(); it != s.End(); ++it)

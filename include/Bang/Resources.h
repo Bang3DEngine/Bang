@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "Bang/Map.h"
+#include "Bang/USet.h"
 #include "Bang/Asset.h"
 #include "Bang/Paths.h"
 #include "Bang/TypeMap.h"
@@ -122,8 +123,8 @@ public:
     static Resources* GetInstance();
 
 private:
-    Set<Path> m_permanentResourcesPaths;
-    Set<Resource*> m_permanentResources;
+    USet<Path> m_permanentResourcesPaths;
+    USet<Resource*> m_permanentResources;
     TypeMap< Map<GUID, ResourceEntry> > m_resourcesCache;
 
     MeshFactory *m_meshFactory = nullptr;

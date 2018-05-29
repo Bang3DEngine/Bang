@@ -9,6 +9,7 @@
 
 #include "Bang/Map.h"
 #include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/List.h"
 #include "Bang/Array.h"
 
@@ -19,6 +20,7 @@ template <typename... Args> struct IsContainer< std::list<Args...> > : std::true
 template <typename... Args> struct IsContainer< std::vector<Args...> > : std::true_type{};
 template <typename... Args> struct IsContainer< Bang::Map<Args...> > : std::true_type{};
 template <typename... Args> struct IsContainer< Bang::Set<Args...> > : std::true_type{};
+template <typename... Args> struct IsContainer< Bang::USet<Args...> > : std::true_type{};
 template <typename... Args> struct IsContainer< Bang::List<Args...> > : std::true_type{};
 template <typename... Args> struct IsContainer< Bang::Array<Args...> > : std::true_type{};
 

@@ -1,6 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include "Bang/USet.h"
 #include "Bang/Path.h"
 
 NAMESPACE_BANG_BEGIN
@@ -39,7 +40,7 @@ protected:
 
     static bool DuplicateDir(const Path &srcDirpath,
                              const Path &dstDirpath,
-                             Set<Path> &pathsToIgnore,
+                             USet<Path> &pathsToIgnore,
                              bool overwrite = true);
 };
 

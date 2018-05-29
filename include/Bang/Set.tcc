@@ -19,7 +19,7 @@ template<class Key>
 template<class OtherIterator>
 Set<Key>::Set(OtherIterator itBegin, OtherIterator itEnd)
 {
-    Add(itBegin, itEnd);
+    Set(itBegin, itEnd);
 }
 
 template<class Key>

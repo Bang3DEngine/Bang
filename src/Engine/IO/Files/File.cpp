@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/List.h"
 #include "Bang/Array.h"
 #include "Bang/String.h"
@@ -53,7 +53,7 @@ bool File::DuplicateFile(const Path &srcFilepath,
 
 bool File::DuplicateDir(const Path &srcDirpath,
                         const Path &dstDirPath,
-                        Set<Path> &pathsToIgnore,
+                        USet<Path> &pathsToIgnore,
                         bool overwrite)
 {
     if (!srcDirpath.IsDir()) { return false; }
@@ -90,7 +90,7 @@ bool File::DuplicateDir(const Path &srcDirpath,
                         const Path &dstDirPath,
                         bool overwrite)
 {
-    Set<Path> pathsToIgnore;
+    USet<Path> pathsToIgnore;
     pathsToIgnore.Add(dstDirPath);
     return DuplicateDir(srcDirpath, dstDirPath, pathsToIgnore, overwrite);
 }

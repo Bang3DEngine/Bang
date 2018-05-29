@@ -14,6 +14,7 @@
 #include <assimp/Exporter.hpp>
 #endif
 
+#include "Bang/USet.h"
 #include "Bang/Path.h"
 #include "Bang/Mesh.h"
 #include "Bang/Model.h"
@@ -280,9 +281,9 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     aiScene scene;
 
     // Create scene meshes, materials and textures
-    Set<Mesh*> sceneMeshes;
-    Set<Material*> sceneMaterials;
-    Set<Texture2D*> sceneTextures;
+    USet<Mesh*> sceneMeshes;
+    USet<Material*> sceneMaterials;
+    USet<Texture2D*> sceneTextures;
     Map<Mesh*, Material*> sceneMeshToMaterial;
     Map<MeshRenderer*, Mesh*> meshRendererToMesh;
     Map<MeshRenderer*, Material*> meshRendererToMaterial;

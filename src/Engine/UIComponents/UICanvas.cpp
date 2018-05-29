@@ -76,7 +76,7 @@ void UICanvas::OnUpdate()
     // a helper class which implements IDestroyListener
     struct DestroyFocusablesHandler : public IDestroyListener
     {
-        Set<IFocusable*> set;
+        USet<IFocusable*> set;
         void OnDestroyed(EventEmitter<IDestroyListener> *object) override
         { set.Add( DCAST<IFocusable*>(object) ); }
     };

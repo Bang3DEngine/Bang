@@ -3,6 +3,7 @@
 #include "Bang/Set.h"
 #include "Bang/File.h"
 #include "Bang/List.h"
+#include "Bang/USet.h"
 #include "Bang/Debug.h"
 #include "Bang/Paths.h"
 #include "Bang/Application.h"
@@ -26,7 +27,7 @@ void ImportFilesManager::CreateMissingImportFiles(const Path &directory)
 
     List<Path> assetFile = directory.GetFiles(Path::FindFlag::RECURSIVE);
 
-    Set<Path> files;
+    USet<Path> files;
     files.Add(assetFile.Begin(), assetFile.End());
 
     for (const Path &filepath : files)

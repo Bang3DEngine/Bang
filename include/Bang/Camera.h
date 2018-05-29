@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #include "Bang/Ray.h"
-#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
 #include "Bang/Component.h"
@@ -74,7 +74,7 @@ public:
     ClearMode GetClearMode() const;
     float GetGammaCorrection() const;
     bool MustRenderPass(RenderPass renderPass) const;
-    const Set<RenderPass>& GetRenderPassMask() const;
+    const USet<RenderPass>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
     bool GetRenderSelectionBuffer() const;
     Matrix4 GetProjectionMatrix() const;
@@ -120,7 +120,7 @@ private:
     GBuffer *m_gbuffer = nullptr;
     SelectionFramebuffer *m_selectionFramebuffer = nullptr;
 
-    Set<RenderPass> m_renderPassMask;
+    USet<RenderPass> m_renderPassMask;
     bool m_renderSelectionBuffer = false;
     RH<TextureCubeMap> p_skyboxTextureCM;
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;

@@ -50,4 +50,19 @@ private:
 
 NAMESPACE_BANG_END
 
+// Hash for GUID
+namespace std
+{
+    template <>
+    struct hash<Bang::GUID>
+    {
+        std::size_t operator()(const Bang::GUID& guid) const
+        {
+            return std::hash<GUID::GUIDType>()(guid.GetTimeGUID()) ^
+                   std::hash<GUID::GUIDType>()(guid.GetRandGUID()) ^
+                   std::hash<GUID::GUIDType>()(guid.GetInsideFileGUID());
+        }
+    };
+}
+
 #endif // GUID_H

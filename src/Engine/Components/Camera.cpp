@@ -266,7 +266,7 @@ bool Camera::MustRenderPass(RenderPass renderPass) const
     return GetRenderPassMask().Contains(renderPass);
 }
 
-const Set<RenderPass> &Camera::GetRenderPassMask() const
+const USet<RenderPass> &Camera::GetRenderPassMask() const
 {
     return m_renderPassMask;
 }
@@ -460,7 +460,6 @@ void Camera::CloneInto(ICloneable *clone) const
     cam->SetSkyBoxTexture(GetSkyBoxTexture());
 }
 
-#include "Bang/Image.h"
 void Camera::ImportXML(const XMLNode &xml)
 {
     Component::ImportXML(xml);

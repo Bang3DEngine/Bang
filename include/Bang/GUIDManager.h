@@ -1,7 +1,7 @@
 #ifndef GUIDMANAGER_H
 #define GUIDMANAGER_H
 
-#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/GUID.h"
 
 NAMESPACE_BANG_BEGIN
@@ -20,7 +20,7 @@ public:
 private:
     GUIDManager();
 
-    Set<GUID> m_guids;
+    USet<GUID> m_guids;
 
     static GUIDManager* GetInstance();
 

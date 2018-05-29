@@ -128,7 +128,7 @@ void UIDragDroppable::OnDragStarted()
         m_dragDropFB->CreateAttachmentTex2D(GL::Attachment::Depth,
                                             GL::ColorFormat::Depth16);
 
-        m_dragDropTexture.Set(m_dragDropFB->GetAttachmentTex2D(GL::Attachment::Color0));
+        m_dragDropTexture.Add(m_dragDropFB->GetAttachmentTex2D(GL::Attachment::Color0));
         m_dragDropTexture.Get()->SetWrapMode(GL::WrapMode::Repeat);
         m_dragDropTexture.Get()->SetAlphaCutoff(1.0f);
         m_dragDropTexture.Get()->SetFilterMode(GL::FilterMode::Nearest);

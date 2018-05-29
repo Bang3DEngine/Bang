@@ -1,6 +1,8 @@
 #include "Bang/ShaderProgram.h"
 
 #include "Bang/GL.h"
+#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/Debug.h"
 #include "Bang/Color.h"
 #include "Bang/Shader.h"
@@ -467,7 +469,7 @@ void ShaderProgram::BindAllTexturesToUnits()
 void ShaderProgram::CheckTextureBindingsValidity() const
 {
     const int uniformsListSize = GL::GetUniformsListSize(GetGLId());
-    Set<int> samplers1D, samplers2D, samplers3D, samplersCubeMap;
+    USet<int> samplers1D, samplers2D, samplers3D, samplersCubeMap;
     for (int i = 0; i < uniformsListSize; ++i)
     {
         GL::UniformType uniformType = GL::GetUniformTypeAt(GetGLId(), i);

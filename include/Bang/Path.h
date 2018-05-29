@@ -88,4 +88,17 @@ private:
 
 NAMESPACE_BANG_END
 
+// Hash for Path
+namespace std
+{
+    template <>
+    struct hash<Bang::Path>
+    {
+        std::size_t operator()(const Bang::Path& path) const
+        {
+            return std::hash<std::string>()(path.GetAbsolute());
+        }
+    };
+}
+
 #endif // PATH_H

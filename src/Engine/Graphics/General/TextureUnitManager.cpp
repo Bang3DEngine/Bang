@@ -1,7 +1,7 @@
 #include "Bang/TextureUnitManager.h"
 
 #include "Bang/GL.h"
-#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/Texture.h"
 #include "Bang/GEngine.h"
 
@@ -235,7 +235,7 @@ void TextureUnitManager::UnTrackTexture(GLId texId)
 
 void TextureUnitManager::CheckBindingsValidity() const
 {
-    Set<TexUnit> boundUnits;
+    USet<TexUnit> boundUnits;
     for (const auto &pair : m_textureIdToBoundUnit)
     {
         if (boundUnits.Contains(pair.second)) { ASSERT(false); }

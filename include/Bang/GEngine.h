@@ -1,7 +1,7 @@
 #ifndef GENGINE_H
 #define GENGINE_H
 
-#include "Bang/Set.h"
+#include "Bang/USet.h"
 #include "Bang/AARect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/StackAndValue.h"
@@ -68,7 +68,7 @@ private:
     RH<ShaderProgram> m_renderSkySP;
     RH<Material> m_replacementMaterial;
     StackAndValue<Camera*> p_renderingCameras;
-    Set<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
+    USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
     TextureUnitManager *m_texUnitManager = nullptr;
 
     RH<Mesh> p_windowPlaneMesh;

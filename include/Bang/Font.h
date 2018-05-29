@@ -2,8 +2,10 @@
 #define FONT_H
 
 #include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Asset.h"
 #include "Bang/Mutex.h"
+#include "Bang/AARect.h"
 #include "Bang/Vector2.h"
 #include "Bang/Resource.h"
 #include "Bang/FontStyle.h"
@@ -58,15 +60,15 @@ private:
     struct FontDataCache
     {
         float height, ascent, descent, lineSkip;
-        Map<char, GlyphMetrics> charMetrics;
+        UMap<char, GlyphMetrics> charMetrics;
     };
 
     // For each font style
     FontDataCache m_referenceFontDataCache;
-    mutable Map<int, TTF_Font*> m_openFonts;
-    mutable Map<int, RH<Texture2D>> m_cachedAtlas;
-    mutable Map<int, Map<char, AARecti>> m_cachedAtlasCharRects;
-    mutable Map<int, String> m_cachedAtlasChars;
+    mutable UMap<int, TTF_Font*> m_openFonts;
+    mutable UMap<int, RH<Texture2D>> m_cachedAtlas;
+    mutable UMap<int, UMap<char, AARecti>> m_cachedAtlasCharRects;
+    mutable UMap<int, String> m_cachedAtlasChars;
 
     Font();
     virtual ~Font();

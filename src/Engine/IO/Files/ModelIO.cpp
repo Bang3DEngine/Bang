@@ -14,6 +14,7 @@
 #include <assimp/Exporter.hpp>
 #endif
 
+#include "Bang/UMap.h"
 #include "Bang/USet.h"
 #include "Bang/Path.h"
 #include "Bang/Mesh.h"
@@ -284,9 +285,9 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     USet<Mesh*> sceneMeshes;
     USet<Material*> sceneMaterials;
     USet<Texture2D*> sceneTextures;
-    Map<Mesh*, Material*> sceneMeshToMaterial;
-    Map<MeshRenderer*, Mesh*> meshRendererToMesh;
-    Map<MeshRenderer*, Material*> meshRendererToMaterial;
+    UMap<Mesh*, Material*> sceneMeshToMaterial;
+    UMap<MeshRenderer*, Mesh*> meshRendererToMesh;
+    UMap<MeshRenderer*, Material*> meshRendererToMaterial;
     {
         List<MeshRenderer*> rootMRs =
                    rootGameObject->GetComponentsInChildren<MeshRenderer>(true);

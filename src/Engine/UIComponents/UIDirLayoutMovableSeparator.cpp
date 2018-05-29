@@ -1,5 +1,6 @@
 #include "Bang/UIDirLayoutMovableSeparator.h"
 
+#include "Bang/UMap.h"
 #include "Bang/Input.h"
 #include "Bang/Material.h"
 #include "Bang/GameObject.h"
@@ -52,7 +53,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         const bool horizontal = (GetAxis() == Axis::HORIZONTAL);
 
         // Prepare siblings, by setting preferred and flexible
-        Map<GameObject*, UILayoutElement*> childToAuxLE;
+        UMap<GameObject*, UILayoutElement*> childToAuxLE;
         for (GameObject *child : parent->GetChildren())
         {
             UILayoutElement *auxLE = nullptr;

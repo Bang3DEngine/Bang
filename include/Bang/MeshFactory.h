@@ -2,6 +2,7 @@
 #define MESHFACTORY_H
 
 #include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Path.h"
 #include "Bang/ResourceHandle.h"
 
@@ -27,7 +28,7 @@ protected:
     static RH<Mesh> GetMesh(const Path &fullPath);
 
 private:
-    Map<Path, RH<Mesh>> m_cache;
+    UMap<Path, RH<Mesh>> m_cache;
 
     static MeshFactory* GetActive();
 

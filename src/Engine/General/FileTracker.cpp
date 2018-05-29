@@ -1,6 +1,7 @@
 #include "Bang/FileTracker.h"
 
 #include "Bang/Time.h"
+#include "Bang/UMap.h"
 #include "Bang/List.h"
 #include "Bang/Debug.h"
 
@@ -57,7 +58,7 @@ void FileTracker::Update(bool forceCheckNow)
 {
     if (NeedsCheck() || forceCheckNow)
     {
-        Map<Path, uint64_t> previousPathsToTrack = m_pathsToTrackToModificationTime;
+        UMap<Path, uint64_t> previousPathsToTrack = m_pathsToTrackToModificationTime;
 
         // Check for removed paths
         for (const auto &previousPathToModTime : previousPathsToTrack)

@@ -1,6 +1,6 @@
 #include "Bang/Cursor.h"
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 
 USING_NAMESPACE_BANG
 
@@ -12,7 +12,7 @@ void Cursor::Set(Cursor::Type cursorType)
     {
         Cursor::s_type = cursorType;
 
-        static Map<Cursor::Type, SDL_Cursor*> createdCursors;
+        static UMap<Cursor::Type, SDL_Cursor*> createdCursors;
         if ( !createdCursors.ContainsKey(Cursor::Get()) )
         {
             SDL_Cursor* cursor = SDL_CreateSystemCursor(

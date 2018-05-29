@@ -6,7 +6,7 @@
 
 #include <stack>
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
 #include "Bang/StackAndValue.h"
@@ -808,8 +808,8 @@ private:
     std::stack<Matrix4> m_projectionMatrices;
     std::stack<GL::ViewProjMode> m_viewProjModes;
 
-    Map<GL::Enablable, StackAndValue<bool>> m_enabledVars;
-    Map<GL::Enablable, StackAndValue<std::array<bool, 16>> > m_enabled_i_Vars;
+    UMap<GL::Enablable, StackAndValue<bool>> m_enabledVars;
+    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>> > m_enabled_i_Vars;
 
     StackAndValue< Array<GL::Attachment> > m_drawBuffers;
     StackAndValue< GL::Attachment > m_readBuffers;

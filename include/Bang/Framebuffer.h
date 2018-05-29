@@ -1,7 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Array.h"
 #include "Bang/Color.h"
 #include "Bang/GLObject.h"
@@ -66,7 +66,7 @@ protected:
     int m_width = 0;
     int m_height = 0;
     Array<GL::Attachment> m_attachments;
-    Map<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
+    UMap<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
 
 private:
     mutable Array<GL::Attachment> m_currentDrawAttachments;

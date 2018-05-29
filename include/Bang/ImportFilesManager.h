@@ -1,7 +1,7 @@
 #ifndef IMPORTFILESMANAGER_H
 #define IMPORTFILESMANAGER_H
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/GUID.h"
 #include "Bang/Path.h"
 #include "Bang/GUIDManager.h"
@@ -33,8 +33,8 @@ public:
     static GUID GetGUIDFromImportFilepath(const Path& importFilepath);
 
 private:
-    Map<GUID, Path> m_GUIDToImportFilepath;
-    Map<Path, GUID> m_importFilepathToGUID;
+    UMap<GUID, Path> m_GUIDToImportFilepath;
+    UMap<Path, GUID> m_importFilepathToGUID;
 
     GUIDManager m_GUIDManager;
 

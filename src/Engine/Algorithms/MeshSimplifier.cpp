@@ -53,7 +53,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
     // Compute useful connectivity info for later
     using VertexIdPair = std::pair<Mesh::VertexId, Mesh::VertexId>;
-    Map<Mesh::VertexId, Set<VertexIdPair> >
+    UMap<Mesh::VertexId, Set<VertexIdPair> >
                 vertexIndexToTriangleOtherVerticesIndices;
     for (uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
     {
@@ -82,7 +82,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         }
     }
 
-    Map<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
+    UMap<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
     if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
     {
         vertexIdxsToTriIdxs = mesh->GetVertexIndicesToTriangleIndices();
@@ -101,7 +101,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         // just the collection of vertices at each octree node)
         using ClusterId = uint;
         Array<VertexCluster> vertexClusters;
-        Map<Mesh::VertexId, ClusterId> vertexIndexToClusterIndex;
+        UMap<Mesh::VertexId, ClusterId> vertexIndexToClusterIndex;
 
         // Make clusters for each octree node in this level...
         for (const SimplOctree *octNodeInLevel : octreeNodesInLevel)
@@ -230,7 +230,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         // Third:  for each vertex cluster, create a set of the pair of clusters
         //         it forms a triangle with. We can do this with the prev info.
         using ClusterIdPair = std::pair<ClusterId, ClusterId>;
-        Map<ClusterId, Set<ClusterIdPair> >
+        UMap<ClusterId, Set<ClusterIdPair> >
                 clusterIdToOtherClusterIdsThatFormATriangleWithIt;
 
         // For each cluster
@@ -367,7 +367,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     const Mesh &mesh,
     const VertexCluster &vertexCluster,
-    const Map<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
+    const UMap<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
     Method simplificationMethod)
 {
     VertexData vertexRepresentativeData;

@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "Bang/UMap.h"
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
@@ -57,7 +58,7 @@ public:
     const Array<Vector3>& GetTangentsPool() const;
     const Path &GetModelFilepath() const;
 
-    Map<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
+    UMap<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

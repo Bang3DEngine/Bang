@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/USet.h"
 #include "Bang/Asset.h"
 #include "Bang/Paths.h"
@@ -125,7 +125,7 @@ public:
 private:
     USet<Path> m_permanentResourcesPaths;
     USet<Resource*> m_permanentResources;
-    TypeMap< Map<GUID, ResourceEntry> > m_resourcesCache;
+    TypeMap< UMap<GUID, ResourceEntry> > m_resourcesCache;
 
     MeshFactory *m_meshFactory = nullptr;
     MaterialFactory *m_materialFactory = nullptr;

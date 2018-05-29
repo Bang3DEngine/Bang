@@ -114,6 +114,12 @@ using SDL_GLContext = void*;
 
 // Other ================================================
 template<class EnumT> constexpr EnumT Undef() { return SCAST<EnumT>(-1); }
+
+struct EnumClassHash
+{
+    template <typename T>
+    std::size_t operator()(T t) const { return static_cast<std::size_t>(t); }
+};
 // ======================================================
 
 #ifdef BUILD_STATIC

@@ -174,7 +174,7 @@ void Mesh::UpdateGeometry()
 
 void Mesh::CalculateVertexNormals()
 {
-    Map<VertexId, Array<TriangleId>> vertexIndexToTriIndices =
+    UMap<VertexId, Array<TriangleId>> vertexIndexToTriIndices =
                                 GetVertexIndicesToTriangleIndices();
     Array<Vector3> normalsPool;
     for (int vi = 0; vi < GetVertexIndices().Size(); ++vi)
@@ -258,10 +258,10 @@ const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
 const Array<Vector2> &Mesh::GetUvsPool() const { return m_uvsPool; }
 const Array<Vector3> &Mesh::GetTangentsPool() const { return m_tangentsPool; }
 
-Map<Mesh::VertexId, Array<Mesh::TriangleId> >
+UMap<Mesh::VertexId, Array<Mesh::TriangleId> >
 Mesh::GetVertexIndicesToTriangleIndices() const
 {
-    Map<VertexId, Array<Mesh::TriangleId>> vertexIndicesToTriIndices;
+    UMap<VertexId, Array<Mesh::TriangleId>> vertexIndicesToTriIndices;
     for (int ti = 0; ti < GetNumTriangles(); ++ti)
     {
         std::array<Mesh::VertexId, 3> tiVerticesIds = GetTriangleVertexIndices(ti);

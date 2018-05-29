@@ -1,7 +1,7 @@
 #ifndef SELECTIONFRAMEBUFFER_H
 #define SELECTIONFRAMEBUFFER_H
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/IDestroyListener.h"
 
@@ -37,8 +37,8 @@ private:
     RH<Material> p_selectionMaterial;
 
     GameObject *p_nextRenderSelectable = nullptr;
-    mutable Map<GameObject*, IdType> m_gameObject_To_Id;
-    mutable Map<IdType, GameObject*> m_id_To_GameObject;
+    mutable UMap<GameObject*, IdType> m_gameObject_To_Id;
+    mutable UMap<IdType, GameObject*> m_id_To_GameObject;
 
     static Color MapIdToColor(IdType id);
     static IdType MapColorToId(const Color &color);

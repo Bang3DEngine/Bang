@@ -6,7 +6,7 @@
 #include <iostream>
 #include BANG_SDL2_INCLUDE(SDL.h)
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Array.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -151,12 +151,6 @@ private:
     Array<Key> m_keysDown;
     Array<Key> m_pressedKeys;
 
-    FORWARD struct EventInfo;
-    FORWARD class  ButtonInfo;
-    Map<Key, ButtonInfo> m_keyInfos;
-    Map<MouseButton, ButtonInfo> m_mouseInfo;
-    Array<EventInfo> m_eventInfoQueue;
-
     Input();
     virtual ~Input();
 
@@ -201,6 +195,10 @@ private:
             return String(oss.str());
         }
     };
+
+    UMap<Key, ButtonInfo, EnumClassHash> m_keyInfos;
+    UMap<MouseButton, ButtonInfo, EnumClassHash> m_mouseInfo;
+    Array<EventInfo> m_eventInfoQueue;
 
     void ProcessMouseWheelEventInfo(const EventInfo &ei);
     void ProcessMouseMoveEventInfo(const EventInfo &ei);

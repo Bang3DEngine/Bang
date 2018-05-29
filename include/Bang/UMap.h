@@ -1,24 +1,29 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef UMAP_H
+#define UMAP_H
 
-#include <map>
+#include <unordered_map>
+
 #include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD_T class List;
 
-template <class Key, class Value>
-class Map
+template <class Key,
+          class Value,
+          class Hash  = std::hash<Key>,
+          class Pred  = std::equal_to<Key>,
+          class Alloc = std::allocator<std::pair<const Key, Value> > >
+class UMap
 {
 public:
-    using Iterator = typename std::map<Key, Value>::iterator;
-    using RIterator = typename std::map<Key, Value>::reverse_iterator;
-    using Const_Iterator = typename std::map<Key, Value>::const_iterator;
-    using Const_RIterator = typename std::map<Key, Value>::const_reverse_iterator;
+    using Iterator =
+    typename std::unordered_map<Key, Value, Hash, Pred, Alloc>::iterator;
+    using Const_Iterator =
+    typename std::unordered_map<Key, Value, Hash, Pred, Alloc>::const_iterator;
 
-    Map();
-    Map(const std::map<Key, Value> &m);
+    UMap();
+    UMap(const std::unordered_map<Key, Value, Hash, Pred, Alloc> &m);
 
     void Add(const Key &key, const Value &value = Value());
 
@@ -50,10 +55,6 @@ public:
     Const_Iterator End() const;
     Const_Iterator CBegin() const;
     Const_Iterator CEnd() const;
-    RIterator RBegin();
-    RIterator REnd();
-    Const_RIterator CRBegin() const;
-    Const_RIterator CREnd() const;
 
     // To allow range-based for loops
     Iterator begin();
@@ -64,11 +65,11 @@ public:
     Const_Iterator cend() const;
 
 private:
-    std::map<Key, Value> m_map;
+    std::unordered_map<Key, Value, Hash, Pred, Alloc> m_umap;
 };
 
 NAMESPACE_BANG_END
 
-#include "Bang/Map.tcc"
+#include "Bang/UMap.tcc"
 
-#endif // MAP_H
+#endif // UMAP_H

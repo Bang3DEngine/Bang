@@ -3,7 +3,7 @@
 
 #include <functional>
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Component.h"
 #include "Bang/IFocusListener.h"
 #include "Bang/IUIListListener.h"
@@ -82,7 +82,7 @@ protected:
 
 private:
     Array<GOItem*> p_items;
-    Map<GOItem*, UIImageRenderer*> p_itemsBackground;
+    UMap<GOItem*, UIImageRenderer*> p_itemsBackground;
     bool m_someChildHasFocus = false;
 
     int m_selectionIndex = -1;

@@ -1,7 +1,7 @@
 #ifndef FILETRACKER_H
 #define FILETRACKER_H
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Path.h"
 #include "Bang/IEventEmitter.h"
 
@@ -34,7 +34,7 @@ public:
     float GetCheckFrequencySeconds() const;
 
 private:
-    Map<Path, uint64_t> m_pathsToTrackToModificationTime;
+    UMap<Path, uint64_t> m_pathsToTrackToModificationTime;
     float m_checkFrequencySeconds = 5.0f;
     uint64_t m_lastCheckTime = 0.0;
 

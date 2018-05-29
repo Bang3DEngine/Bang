@@ -7,6 +7,7 @@
 #include "Bang/Set.h"
 #include "Bang/Math.h"
 #include "Bang/List.h"
+#include "Bang/UMap.h"
 #include "Bang/Vector3.h"
 #include "Bang/ThreadPool.h"
 #include "Bang/MutexLocker.h"
@@ -56,7 +57,7 @@ private:
     ThreadPool m_threadPool;
     Mutex m_mutexCurrentAudios;
     bool m_playOnStartBlocked = false;
-    Map<ALAudioSource*, AudioPlayerRunnable*> m_sourcesToPlayers;
+    UMap<ALAudioSource*, AudioPlayerRunnable*> m_sourcesToPlayers;
 
     AudioManager();
     virtual ~AudioManager();

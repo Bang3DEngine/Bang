@@ -1,6 +1,8 @@
 #include "Bang/UILayoutManager.h"
 
+#include "Bang/Map.h"
 #include "Bang/Set.h"
+#include "Bang/UMap.h"
 #include "Bang/Scene.h"
 #include "Bang/AARect.h"
 #include "Bang/UICanvas.h"

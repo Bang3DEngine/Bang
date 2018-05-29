@@ -1,9 +1,9 @@
 #ifndef UITREE_H
 #define UITREE_H
 
-#include "Bang/Map.h"
 #include "Bang/List.h"
 #include "Bang/Tree.h"
+#include "Bang/UMap.h"
 #include "Bang/UIList.h"
 #include "Bang/UIButton.h"
 #include "Bang/Component.h"
@@ -77,7 +77,7 @@ private:
     Tree<GOItem*> m_rootTree;
     UIList *p_uiList = nullptr;
     GOItem *p_itemBeingDragged = nullptr;
-    Map<GOItem*, Tree<GOItem*>*> m_itemToTree;
+    UMap<GOItem*, Tree<GOItem*>*> m_itemToTree;
     UIList::SelectionCallback m_selectionCallback;
 
     GameObject *p_dragMarker = nullptr;

@@ -1,7 +1,7 @@
 #ifndef MESHSIMPLIFIER_H
 #define MESHSIMPLIFIER_H
 
-#include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Bang.h"
 #include "Bang/Mesh.h"
 #include "Bang/ResourceHandle.h"
@@ -30,12 +30,12 @@ private:
         Vector2 uv      = Vector2::Zero;
         Vector3 tangent = Vector3::Zero;
     };
-    using VertexCluster = Map<Mesh::VertexId, VertexData>;
+    using VertexCluster = UMap<Mesh::VertexId, VertexData>;
 
     static VertexData GetVertexRepresentativeForCluster(
         const Mesh &mesh,
         const VertexCluster &vertexCluster,
-        const Map<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
+        const UMap<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
         Method simplificationMethod);
 };
 

@@ -425,12 +425,24 @@ public:
     static bool CheckError(int line, const String &func, const String &file);
     static bool CheckFramebufferError();
 
+    static void Clear(GLbitfield bufferBit);
     static void Clear(GL::BufferBit bufferBit);
+    static void SetClearColorBufferValue(const Color &clearColor);
     static void ClearColorBuffer(const Color& clearColor = Color::Zero,
                                  bool clearR = true, bool clearG = true,
                                  bool clearB = true, bool clearA = true);
-    static void ClearDepthBuffer(float clearDepth = 1.0f);
-    static void ClearStencilBuffer(int stencilValue = 0);
+    static void ClearDepthBuffer();
+    static void ClearStencilBuffer();
+    static void ClearDepthBuffer(float clearDepth);
+    static void ClearStencilBuffer(int stencilValue);
+    static void SetClearDepthBufferValue(float clearDepthBufferValue);
+    static void SetClearStencilBufferValue(int clearStencilBufferValue);
+    static void ClearStencilDepthBuffers(int clearStencilValue = 0,
+                                         float clearDepthValue = 1.0f);
+    static void ClearColorStencilDepthBuffers(
+                                const Color &clearColorValue = Color::Zero,
+                                int clearStencilValue = 0,
+                                float clearDepthValue = 1.0f);
 
     static void Enablei (GL::Enablable glTest, int index);
     static void Disablei(GL::Enablable glTest, int index);

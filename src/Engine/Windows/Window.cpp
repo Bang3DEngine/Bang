@@ -94,8 +94,7 @@ bool Window::MainLoopIteration()
 
 void Window::Clear()
 {
-    GL::ClearDepthBuffer();
-    GL::ClearColorBuffer(Color::Zero);
+    GL::ClearColorStencilDepthBuffers();
 }
 
 void Window::Update()

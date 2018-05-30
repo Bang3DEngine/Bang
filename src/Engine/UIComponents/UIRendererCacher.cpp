@@ -66,7 +66,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 
             GL::ReadBuffer( gbuffer->GetLastDrawnColorAttachment() );
             GL::DrawBuffers( {GL::Attachment::COLOR0} );
-            GL::ClearColorBuffer(Color::Zero);
+            GL::ClearColorStencilDepthBuffers(Color::Zero, 0, 1.0f);
             GL::ClearDepthBuffer(1.0f);
             GL::ClearStencilBuffer(0);
 

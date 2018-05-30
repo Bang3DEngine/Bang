@@ -255,9 +255,19 @@ const Color& GL::GetClearColor()
     return GetGLContextValue(&GL::m_clearColors);
 }
 
+void GL::Clear(GLbitfield bufferBit)
+{
+    GL_CALL( glClear(bufferBit) );
+}
 void GL::Clear(GL::BufferBit bufferBit)
 {
-    GL_CALL( glClear( GLCAST(bufferBit) ) );
+    GL::Clear( SCAST<GLbitfield>(bufferBit) );
+}
+
+void GL::SetClearColorBufferValue(const Color &clearColor)
+{
+    GL_CALL( glClearColor(clearColor.r, clearColor.g,
+                          clearColor.b, clearColor.a) );
 }
 
 void GL::ClearColorBuffer(const Color &clearColor,
@@ -274,8 +284,7 @@ void GL::ClearColorBuffer(const Color &clearColor,
     if (GL::GetClearColor() != clearColor)
     {
         SetGLContextValue(&GL::m_clearColors, clearColor);
-        GL_CALL( glClearColor(clearColor.r, clearColor.g,
-                              clearColor.b, clearColor.a) );
+        GL::SetClearColorBufferValue(clearColor);
     }
 
     GL::Clear(GL::BufferBit::COLOR);
@@ -287,16 +296,56 @@ void GL::ClearColorBuffer(const Color &clearColor,
     }
 }
 
+void GL::ClearDepthBuffer()
+{
+    GL::Clear(GL::BufferBit::DEPTH);
+}
+
+void GL::ClearStencilBuffer()
+{
+    GL::Clear(GL::BufferBit::STENCIL);
+}
+
 void GL::ClearDepthBuffer(float clearDepth)
 {
-    GL_CALL( glClearDepth(clearDepth) );
+    GL::SetClearDepthBufferValue(clearDepth);
     GL::Clear(GL::BufferBit::DEPTH);
 }
 
 void GL::ClearStencilBuffer(int stencilValue)
 {
-    GL_CALL( glClearStencil(stencilValue) );
+    GL::SetClearStencilBufferValue(stencilValue);
     GL::Clear(GL::BufferBit::STENCIL);
+}
+
+void GL::SetClearDepthBufferValue(float clearDepthBufferValue)
+{
+    GL_CALL( glClearDepth(clearDepthBufferValue) );
+}
+
+void GL::SetClearStencilBufferValue(int clearStencilBufferValue)
+{
+    GL_CALL( glClearStencil(clearStencilBufferValue) );
+}
+
+void GL::ClearStencilDepthBuffers(int clearStencilValue, float clearDepthValue)
+{
+    GL::SetClearStencilBufferValue(clearStencilValue);
+    GL::SetClearDepthBufferValue(clearDepthValue);
+    GL::Clear(SCAST<GLbitfield>(GL::BufferBit::DEPTH) |
+              SCAST<GLbitfield>(GL::BufferBit::STENCIL));
+}
+
+void GL::ClearColorStencilDepthBuffers(const Color &clearColorValue,
+                                       int clearStencilValue,
+                                       float clearDepthValue)
+{
+    GL::SetClearColorBufferValue(clearColorValue);
+    GL::SetClearStencilBufferValue(clearStencilValue);
+    GL::SetClearDepthBufferValue(clearDepthValue);
+    GL::Clear(SCAST<GLbitfield>(GL::BufferBit::DEPTH) |
+              SCAST<GLbitfield>(GL::BufferBit::STENCIL) |
+              SCAST<GLbitfield>(GL::BufferBit::COLOR) );
 }
 
 void GL::EnableVertexAttribArray(int location)

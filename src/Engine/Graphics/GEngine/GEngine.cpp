@@ -156,8 +156,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     {
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetSceneDepthStencil();
-        GL::ClearStencilBuffer();
-        GL::ClearDepthBuffer();
+        GL::ClearStencilDepthBuffers();
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);
 
@@ -201,8 +200,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         // GBuffer Overlay rendering
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetOverlayDepthStencil();
-        GL::ClearStencilBuffer();
-        GL::ClearDepthBuffer();
+        GL::ClearStencilDepthBuffers();
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);
         RenderWithPass(go, RenderPass::OVERLAY);
@@ -231,8 +229,7 @@ void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
         // Selection rendering
         camera->GetSelectionFramebuffer()->PrepareNewFrameForRender(go);
         go->Render(RenderPass::SCENE);
-        GL::ClearStencilBuffer();
-        GL::ClearDepthBuffer();
+        GL::ClearStencilDepthBuffers();
         GL::SetDepthFunc(GL::Function::LEQUAL);
         RenderWithPass(go, RenderPass::CANVAS);
 

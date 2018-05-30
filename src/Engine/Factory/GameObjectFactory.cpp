@@ -27,6 +27,7 @@
 #include "Bang/RectTransform.h"
 #include "Bang/UIInputNumber.h"
 #include "Bang/UIScrollPanel.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
@@ -121,6 +122,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     MeshRenderer *mr3 = cube2->AddComponent<MeshRenderer>();
     mr3->SetMesh(MeshFactory::GetCube().Get());
 
+    /*
     GameObject *lightGo = GameObjectFactory::CreateGameObjectNamed("Light");
     PointLight *pl = lightGo->AddComponent<PointLight>();
     pl->SetRange(20.0f);
@@ -134,10 +136,12 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     pl2->SetColor(Color::Purple);
     light2Go->GetTransform()->SetPosition( Vector3(-7,4,-2) );
     light2Go->GetTransform()->LookAt( Vector3::Zero );
+    */
 
     GameObject *light3Go = GameObjectFactory::CreateGameObjectNamed("Light3");
     PointLight *pl3 = light3Go->AddComponent<PointLight>();
     pl3->SetRange(6.0f);
+    pl3->SetIntensity(0.5f);
     pl3->SetColor(Color::White);
     light3Go->GetTransform()->SetPosition( Vector3(0, 4, 0) );
     light3Go->GetTransform()->LookAt( Vector3::Zero );
@@ -163,6 +167,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     cameraGo->GetTransform()->LookAt( Vector3::Zero );
     Camera *cam = cameraGo->AddComponent<Camera>();
     cam->SetClearMode(Camera::ClearMode::SKY_BOX);
+    cam->SetSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap().Get() );
     cam->SetClearColor(Color::LightBlue);
     scene->SetCamera(cam);
 
@@ -171,8 +176,8 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
         GameObjectFactory::CreateGameObjectNamed("GO_" + String(i))->SetParent(scene);
     }
 
-    lightGo->SetParent(scene);
-    light2Go->SetParent(scene);
+    // lightGo->SetParent(scene);
+    // light2Go->SetParent(scene);
     light3Go->SetParent(scene);
     floor->SetParent(scene);
     wall1->SetParent(scene);

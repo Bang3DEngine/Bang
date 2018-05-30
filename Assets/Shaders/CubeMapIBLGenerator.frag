@@ -98,8 +98,8 @@ void main()
         irradiance = prefilteredColor / totalWeight;
     }
 
-    B_Out_IrradianceColor = vec4(pow(irradiance, vec3(Gamma)), 1);
-    // B_Out_IrradianceColor = vec4(pow(irradiance, vec3(1.0f/Gamma)), 1);
+    // B_Out_IrradianceColor = vec4(pow(irradiance, vec3(Gamma)), 1);
+    B_Out_IrradianceColor = vec4(irradiance, 1);
 }
 
 

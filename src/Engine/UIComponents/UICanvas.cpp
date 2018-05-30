@@ -495,4 +495,29 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
             maskRectStack->pop();
         }
     }
+
+    /*
+    Containers::StableSort(sortedCandidates->Begin(),
+                           sortedCandidates->End(),
+    [](const std::pair<IFocusable*, AARect> &pl,
+       const std::pair<IFocusable*, AARect> &pr)
+    {
+        Component *compL = DCAST<Component*>(pl.first);
+        GameObject *goL = compL ? compL->GetGameObject() :
+                                  DCAST<GameObject*>(pl.first);
+        ASSERT(goL);
+
+        Component *compR = DCAST<Component*>(pr.first);
+        GameObject *goR = compR ? compR->GetGameObject() :
+                                  DCAST<GameObject*>(pr.first);
+        ASSERT(goR);
+
+        Transform *trL = goL->GetTransform();
+        Transform *trR = goR->GetTransform();
+        if (!trL) { return true;  }
+        if (!trR) { return false; }
+
+        return trL->GetPosition().z > trR->GetPosition().z;
+    });
+    */
 }

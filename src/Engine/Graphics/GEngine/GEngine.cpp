@@ -138,51 +138,76 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::Enablei(GL::Enablable::BLEND, 0);
     GL::BlendFunc(GL::BlendFactor::SRC_ALPHA, GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
 
+    auto RenderSky = [this, gbuffer]()
+    {
+        // Render the sky / background (before so that alphas in scene can be handled)
+        GL::Push(GL::BindTarget::SHADER_PROGRAM);
+
+        m_renderSkySP.Get()->Bind();
+        gbuffer->ApplyPass(m_renderSkySP.Get(), false);
+
+        GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+    };
+
+    bool hasRenderedSky = false;
+
     // GBuffer Scene rendering
-    gbuffer->SetAllDrawBuffers();
-    gbuffer->SetSceneDepthStencil();
-    GL::ClearStencilBuffer();
-    GL::ClearDepthBuffer();
-    GL::ClearColorBuffer(Color::Zero);
-    GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEQUAL);
+    if (camera->GetRenderPassMask().Contains(RenderPass::SCENE))
+    {
+        gbuffer->SetAllDrawBuffers();
+        gbuffer->SetSceneDepthStencil();
+        GL::ClearStencilBuffer();
+        GL::ClearDepthBuffer();
+        GL::SetDepthMask(true);
+        GL::SetDepthFunc(GL::Function::LEQUAL);
 
-    // Render the sky / background (before so that alphas in scene can be handled)
-    GL::Push(GL::BindTarget::SHADER_PROGRAM);
+        if (!hasRenderedSky)
+        {
+            RenderSky();
+            hasRenderedSky = true;
+        }
 
-    m_renderSkySP.Get()->Bind();
-    gbuffer->ApplyPass(m_renderSkySP.Get(), false);
+        // Render scene pass
+        RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
+        ApplyStenciledDeferredLightsToGBuffer(go, camera);
 
-    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-
-    // Render scene pass
-    RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
-    ApplyStenciledDeferredLightsToGBuffer(go, camera);
-
-     // Render scene postprocess
-    gbuffer->SetColorDrawBuffer();
-    RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
+        // Render scene postprocess
+        gbuffer->SetColorDrawBuffer();
+        RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
+    }
 
     // GBuffer Canvas rendering
-    gbuffer->SetColorDrawBuffer();
-    gbuffer->SetCanvasDepthStencil();
-    GL::ClearDepthBuffer();
-    GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEQUAL);
-    RenderWithPass(go, RenderPass::CANVAS);
-    RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
+    if (camera->GetRenderPassMask().Contains(RenderPass::CANVAS))
+    {
+        gbuffer->SetCanvasDepthStencil();
+        GL::ClearDepthBuffer();
+        GL::SetDepthMask(true);
+        GL::SetDepthFunc(GL::Function::LEQUAL);
 
-    // GBuffer Overlay rendering
-    gbuffer->SetAllDrawBuffers();
-    gbuffer->SetOverlayDepthStencil();
-    GL::ClearStencilBuffer();
-    GL::ClearDepthBuffer();
-    GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEQUAL);
-    RenderWithPass(go, RenderPass::OVERLAY);
-    // RenderWithPassAndMarkStencilForLights(go, RenderPass::Overlay);
-    // ApplyStenciledDeferredLightsToGBuffer(go, camera);
-    RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
+        if (!hasRenderedSky)
+        {
+            gbuffer->SetAllDrawBuffers();
+            RenderSky();
+            hasRenderedSky = true;
+        }
+
+        gbuffer->SetColorDrawBuffer();
+        RenderWithPass(go, RenderPass::CANVAS);
+        RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
+    }
+
+    if (camera->GetRenderPassMask().Contains(RenderPass::OVERLAY))
+    {
+        // GBuffer Overlay rendering
+        gbuffer->SetAllDrawBuffers();
+        gbuffer->SetOverlayDepthStencil();
+        GL::ClearStencilBuffer();
+        GL::ClearDepthBuffer();
+        GL::SetDepthMask(true);
+        GL::SetDepthFunc(GL::Function::LEQUAL);
+        RenderWithPass(go, RenderPass::OVERLAY);
+        RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
+    }
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::DEPTH_STATES);

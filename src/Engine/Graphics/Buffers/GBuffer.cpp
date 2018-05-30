@@ -63,7 +63,7 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
     // Save state
-    GL::StencilOperation prevStencilOp = GL::GetStencilOp();
+    GL::Push(GL::Pushable::STENCIL_STATES);
     PushDrawAttachments();
 
     GL::SetStencilOp(GL::StencilOperation::KEEP); // Dont modify stencil
@@ -72,9 +72,8 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
     SetColorDrawBuffer();
     GEngine::GetInstance()->RenderViewportRect(sp, mask); // Render rect!
 
-    // Restore state
     PopDrawAttachments();
-    GL::SetStencilOp(prevStencilOp);
+    GL::Pop(GL::Pushable::STENCIL_STATES);
 }
 
 void GBuffer::ApplyPassBlend(ShaderProgram *sp,

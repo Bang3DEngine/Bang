@@ -177,7 +177,8 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
 
 void DebugRenderer::RenderPrimitives(bool withDepth)
 {
-    GL::Function prevDepthFunc = GL::GetDepthFunc();
+    GL::Push(GL::Pushable::DEPTH_STATES);
+
     for (auto it = m_primitivesToRender.Begin(); it != m_primitivesToRender.End(); )
     {
         DebugRenderPrimitive *drp = &(*it);
@@ -266,7 +267,8 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
             ++it;
         }
     }
-    GL::SetDepthFunc(prevDepthFunc);
+
+    GL::Pop(GL::Pushable::DEPTH_STATES);
 }
 
 DebugRenderer *DebugRenderer::GetActive()

@@ -15,6 +15,8 @@ public:
     static GameObject *GetOveredGameObject();
     static GameObject *GetOveredGameObject(Scene *scene);
     static GameObject *GetOveredGameObject(Camera *camera);
+    static GameObject *GetOveredGameObject(Camera *camera,
+                                           const Vector2i &viewportPoint);
     Selection() = delete;
 };
 

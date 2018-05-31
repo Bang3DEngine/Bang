@@ -86,6 +86,11 @@ void UILabel::SetSelectionIndex(int index)
 void UILabel::SetSelectable(bool selectable)
 {
     m_selectable = selectable;
+    if (GetFocusable())
+    {
+        GetFocusable()->SetCursorType(selectable ? Cursor::Type::IBEAM :
+                                                   Cursor::Type::ARROW);
+    }
     if (p_selectionQuad) { p_selectionQuad->SetEnabled(selectable); }
 }
 void UILabel::SetSelection(int cursorIndex, int selectionIndex)

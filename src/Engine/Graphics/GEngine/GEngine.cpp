@@ -156,6 +156,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     {
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetSceneDepthStencil();
+        GL::ClearColorBuffer(Color::Zero);
         GL::ClearStencilDepthBuffers();
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);

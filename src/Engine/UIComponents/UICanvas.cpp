@@ -170,6 +170,7 @@ void UICanvas::OnUpdate()
         }
     }
 
+    // Drag drop
     if (p_currentDDBeingDragged)
     {
         List<IDragDropListener*> ddListeners = GetDragDropListeners();
@@ -178,14 +179,20 @@ void UICanvas::OnUpdate()
             p_currentDDBeingDragged->OnDragUpdate();
             for (IDragDropListener* ddListener : ddListeners)
             {
-                ddListener->OnDragUpdate(p_currentDDBeingDragged);
+                if (ddListener->IsReceivingEvents())
+                {
+                    ddListener->OnDragUpdate(p_currentDDBeingDragged);
+                }
             }
         }
         else
         {
             for (IDragDropListener* ddListener : ddListeners)
             {
-                ddListener->OnDrop(p_currentDDBeingDragged);
+                if (ddListener->IsReceivingEvents())
+                {
+                    ddListener->OnDrop(p_currentDDBeingDragged);
+                }
             }
             p_currentDDBeingDragged->OnDropped();
             p_currentDDBeingDragged = nullptr;
@@ -404,7 +411,10 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
     List<IDragDropListener*> ddListeners = GetDragDropListeners();
     for (IDragDropListener* ddListener : ddListeners)
     {
-        ddListener->OnDragStarted(p_currentDDBeingDragged);
+        if (ddListener->IsReceivingEvents())
+        {
+            ddListener->OnDragStarted(p_currentDDBeingDragged);
+        }
     }
 }
 

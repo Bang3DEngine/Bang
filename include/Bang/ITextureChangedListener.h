@@ -1,13 +1,13 @@
 #ifndef ITEXTURECHANGEDLISTENER_H
 #define ITEXTURECHANGEDLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Texture;
 
-class ITextureChangedListener : public virtual IEventListener
+class ITextureChangedListener
 {
 public:
     virtual ~ITextureChangedListener() = default;

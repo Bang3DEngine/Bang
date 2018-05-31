@@ -18,9 +18,9 @@ FORWARD class UIDragDroppable;
 FORWARD class UITreeItemContainer;
 
 class UITree : public Component,
-               public IFocusListener,
-               public IDestroyListener,
-               public IDragDropListener,
+               public EventListener<IFocusListener>,
+               public EventListener<IDestroyListener>,
+               public EventListener<IDragDropListener>,
                public EventEmitter<IUITreeListener>
 {
     COMPONENT(UITree)

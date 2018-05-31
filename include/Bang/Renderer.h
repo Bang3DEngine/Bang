@@ -16,7 +16,7 @@ FORWARD class Material;
 FORWARD class SceneManager;
 
 class Renderer : public Component,
-                 public IMaterialChangedListener,
+                 public EventListener<IMaterialChangedListener>,
                  public EventEmitter<IRendererChangedListener>
 {
     COMPONENT(Renderer)

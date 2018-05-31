@@ -1,16 +1,14 @@
 #ifndef IRENDERERCHANGEDLISTENER_H
 #define IRENDERERCHANGEDLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Renderer;
 
-class IRendererChangedListener : public virtual IEventListener
+class IRendererChangedListener
 {
-    EVENTLISTENER(IRendererChangedListener)
-
 public:
     virtual void OnRendererChanged(Renderer *changedRenderer) = 0;
 };

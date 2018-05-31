@@ -1,16 +1,14 @@
 #ifndef IVALUECHANGEDLISTENER_H
 #define IVALUECHANGEDLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Object;
 
-class IValueChangedListener : public virtual IEventListener
+class IValueChangedListener
 {
-    EVENTLISTENER(IValueChangedListener)
-
 public:
     virtual void OnValueChanged(Object *object) = 0;
 };

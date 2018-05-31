@@ -14,7 +14,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class GameObject;
 
 class UIDirLayoutMovableSeparator : public Component,
-                                    public IFocusListener
+                                    public EventListener<IFocusListener>
 {
     COMPONENT(UIDirLayoutMovableSeparator)
 

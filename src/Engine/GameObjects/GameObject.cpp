@@ -129,23 +129,27 @@ void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
     EventEmitter<IChildrenListener>::
           PropagateToListeners(&IChildrenListener::OnChildAdded,
                                addedChild, parent);
-    Propagate(&IChildrenListener::OnChildAdded,
-              GetComponentsInParentAndThis<IChildrenListener>(),
-              addedChild, parent);
-    Propagate(&IChildrenListener::OnChildAdded, GetParent(),
-              addedChild, parent);
+    PropagateToList(&EventListener<IChildrenListener>::OnChildAdded,
+                    GetComponentsInParentAndThis<
+                          EventListener<IChildrenListener> >(),
+                    addedChild, parent);
+    PropagateSingle(&IChildrenListener::OnChildAdded,
+                    SCAST<IChildrenListener*>(GetParent()),
+                    addedChild, parent);
 }
 
 void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
 {
     EventEmitter<IChildrenListener>::
-          PropagateToListeners(&IChildrenListener::OnChildRemoved,
+          PropagateToListeners(&EventListener<IChildrenListener>::OnChildRemoved,
                                removedChild, parent);
-    Propagate(&IChildrenListener::OnChildRemoved,
-              GetComponentsInParentAndThis<IChildrenListener>(true),
-              removedChild, parent);
-    Propagate(&IChildrenListener::OnChildRemoved, GetParent(),
-              removedChild, parent);
+    PropagateToList(&EventListener<IChildrenListener>::OnChildRemoved,
+                    GetComponentsInParentAndThis<
+                                EventListener<IChildrenListener>>(true),
+                    removedChild, parent);
+    PropagateSingle(&IChildrenListener::OnChildRemoved,
+                    SCAST<IChildrenListener*>(GetParent()),
+                    removedChild, parent);
 }
 
 void GameObject::DestroyPending()
@@ -180,8 +184,8 @@ void GameObject::DestroyPending()
 
 void GameObject::PropagateEnabledEvent(bool enabled) const
 {
-    auto enabledListeners = GetComponents<IObjectListener>();
-    for (IObjectListener *eList : enabledListeners)
+    auto enabledListeners = GetComponents<IObjectEvents>();
+    for (IObjectEvents *eList : enabledListeners)
     {
         if (enabled) { eList->OnEnabled(); } else { eList->OnDisabled(); }
     }
@@ -255,14 +259,16 @@ void GameObject::RemoveComponent(Component *component)
 void GameObject::OnEnabled()
 {
     Object::OnEnabled();
-    Propagate(&IObjectListener::OnEnabled, GetComponents<IObjectListener>());
-    PropagateToChildren(&IObjectListener::OnEnabled);
+    PropagateToList(&EventListener<IObjectEvents>::OnEnabled,
+                    GetComponents<EventListener<IObjectEvents>>());
+    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled);
 }
 void GameObject::OnDisabled()
 {
     Object::OnDisabled();
-    Propagate(&IObjectListener::OnDisabled, GetComponents<IObjectListener>());
-    PropagateToChildren(&IObjectListener::OnDisabled);
+    PropagateToList(&EventListener<IObjectEvents>::OnDisabled,
+                    GetComponents<EventListener<IObjectEvents>>());
+    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled);
 }
 
 void GameObject::Destroy(GameObject *gameObject)
@@ -511,8 +517,9 @@ void GameObject::SetParent(GameObject *newParent, int _index)
         EventEmitter<IChildrenListener>::
                PropagateToListeners(&IChildrenListener::OnParentChanged,
                                     oldParent, newParent);
-        Propagate(&IChildrenListener::OnParentChanged,
-                  GetComponents<IChildrenListener>(), oldParent, newParent);
+        PropagateToList(&EventListener<IChildrenListener>::OnParentChanged,
+                        GetComponents<EventListener<IChildrenListener>>(),
+                        oldParent, newParent);
     }
     else if (GetParent())
     {
@@ -601,64 +608,16 @@ Sphere GameObject::GetBoundingSphere(bool includeChildren) const
     return Sphere::FromBox(GetAABBoxWorld(includeChildren));
 }
 
-bool GameObject::CanEventBePropagatedToGameObject(const GameObject *go)
+template<class T>
+bool CanEventBePropagatedToGameObject(const GameObject *go)
 {
-    return go->IsEnabled() && go->IsReceivingEvents();
+    return go->IsEnabled() && go->T::IsReceivingEvents();
 }
 
-bool GameObject::CanEventBePropagatedToComponent(const Component *comp)
+template<class T>
+bool CanEventBePropagatedToComponent(const Component *comp)
 {
-    return comp->IsEnabled() && comp->IsReceivingEvents();
-}
-
-template<class TFunction, class... Args>
-void GameObject::PropagateToChildren(const TFunction &func, const Args&... args)
-{
-    for (GameObject *child : m_children)
-    {
-        if (CanEventBePropagatedToGameObject(child))
-        {
-            (child->*func)(args...);
-            // func(comp, args...);
-            // GameObject::Propagate(func, comp, args...);
-        }
-    }
-    /*
-    m_currentChildrenIterators.push(m_children.Begin());
-    while (m_currentChildrenIterators.top() != m_children.End())
-    {
-        m_increaseChildrenIterator = true;
-        GameObject *child = *(m_currentChildrenIterators.top());
-        GameObject::Propagate(func, child, args...);
-        if (m_increaseChildrenIterator) { ++m_currentChildrenIterators.top(); }
-    }
-    m_currentChildrenIterators.pop();
-    */
-}
-
-template<class TFunction, class... Args>
-void GameObject::PropagateToComponents(const TFunction &func, const Args&... args)
-{
-    for (Component *comp : m_components)
-    {
-        if (CanEventBePropagatedToComponent(comp))
-        {
-            (comp->*func)(args...);
-            // func(comp, args...);
-            // GameObject::Propagate(func, comp, args...);
-        }
-    }
-    /*
-    m_currentComponentsIterators.push(m_components.Begin());
-    while (m_currentComponentsIterators.top() != m_components.End())
-    {
-        m_increaseComponentsIterator = true;
-        Component *comp = *(m_currentComponentsIterators.top());
-        GameObject::Propagate(func, comp, args...);
-        if (m_increaseComponentsIterator) { ++m_currentComponentsIterators.top(); }
-    }
-    m_currentComponentsIterators.pop();
-    */
+    return comp->IsEnabled() && comp->T::IsReceivingEvents();
 }
 
 void GameObject::CloneInto(ICloneable *clone) const

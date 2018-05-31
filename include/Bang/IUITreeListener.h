@@ -2,14 +2,10 @@
 #define IUITREELISTENER_H
 
 #include "Bang/Bang.h"
-#include "Bang/IEventListener.h"
-
 NAMESPACE_BANG_BEGIN
 
-class IUITreeListener : public virtual IEventListener
+class IUITreeListener
 {
-    EVENTLISTENER(IUITreeListener);
-
 public:
     virtual void OnItemAdded(GameObject *item, GameObject *parentItem,
                              int indexInsideParent)

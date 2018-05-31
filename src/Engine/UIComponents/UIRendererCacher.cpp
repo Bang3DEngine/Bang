@@ -144,7 +144,7 @@ void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
             child->GetTransform()->EventEmitter<ITransformListener>::RegisterListener(this);
         }
 
-        child->EventEmitter<IObjectListener>::RegisterListener(this);
+        child->EventEmitter<IObjectEvents>::RegisterListener(this);
         child->EventEmitter<IChildrenListener>::RegisterListener(this);
         child->EventEmitter<IGameObjectVisibilityChangedListener>::RegisterListener(this);
     }
@@ -200,9 +200,9 @@ void UIRendererCacher::OnDisabled()
 
 void UIRendererCacher::SetContainerVisible(bool visible)
 {
-    SetReceiveEvents(false);
+    EventListener<IGameObjectVisibilityChangedListener>::SetReceiveEvents(false);
     GetContainer()->SetVisible(visible);
-    SetReceiveEvents(true);
+    EventListener<IGameObjectVisibilityChangedListener>::SetReceiveEvents(true);
 }
 
 UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)

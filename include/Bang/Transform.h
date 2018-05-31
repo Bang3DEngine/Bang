@@ -25,8 +25,8 @@ public: void OnInvalidated() override { OnInvalidatedLocal(); }
 class Transform : public Component,
                   public IInvalidatableTransformWorld,
                   public IInvalidatableTransformLocal,
-                  public ITransformListener,
-                  public IChildrenListener,
+                  public EventListener<ITransformListener>,
+                  public EventListener<IChildrenListener>,
                   public EventEmitter<ITransformListener>
 {
     COMPONENT(Transform)

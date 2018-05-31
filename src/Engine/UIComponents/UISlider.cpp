@@ -44,12 +44,12 @@ void UISlider::OnUpdate()
 void UISlider::OnValueChanged(Object *object)
 {
     ASSERT(object == GetInputNumber());
-    IValueChangedListener::SetReceiveEvents(false);
+    EventListener<IValueChangedListener>::SetReceiveEvents(false);
     SetValue( GetInputNumber()->GetValue() );
     UpdateSliderHandlerFromInputNumberValue();
     EventEmitter<IValueChangedListener>::PropagateToListeners(
                 &IValueChangedListener::OnValueChanged, this);
-    IValueChangedListener::SetReceiveEvents(true);
+    EventListener<IValueChangedListener>::SetReceiveEvents(true);
 }
 
 float UISlider::GetMouseRelativePercent() const

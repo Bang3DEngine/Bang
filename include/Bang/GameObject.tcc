@@ -114,7 +114,7 @@ template <class T>
 bool GameObject::HasComponent() const { return GetComponent<T>() ; }
 
 template<class T>
-bool GameObject::CanEventBePropagated(const T& x)
+bool CanEventBePropagated(const T& x)
 {
     if (!x) { return false; }
     const Object *object = DCAST<const Object*>(x);
@@ -123,39 +123,80 @@ bool GameObject::CanEventBePropagated(const T& x)
            !object->IsWaitingToBeDestroyed());
 }
 
-template<class TFunction, class T, class... Args>
-typename std::enable_if< (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-                         !std::is_base_of<IEventListener, typename std::remove_pointer<T>::type>::value &&
-                         !IsContainer<T>::value, void >::type
-GameObject::Propagate(const TFunction &func,
-                      const T &obj,
-                      const Args&... args)
+template<class T, class TReturn, class... Args>
+void GameObject::PropagateSingle(TReturn T::*func, T *receiver,
+                                 const Args&... args)
 {
-    if (CanEventBePropagated(obj)) { (obj->*func)(args...); }
-}
-
-template<class TFunction, class T, class... Args>
-typename std::enable_if< (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-                          std::is_base_of<IEventListener, typename std::remove_pointer<T>::type>::value &&
-                         !IsContainer<T>::value, void >::type
-GameObject::Propagate(const TFunction &func, const T &obj, const Args&... args)
-{
-    IEventListener *listener = SCAST<IEventListener*>(obj);
-    if (CanEventBePropagated(obj) && listener->IsReceivingEvents())
-    { (obj->*func)(args...); }
-}
-
-template<class TFunction, template <class T> class TContainer, class T, class... Args>
-typename std::enable_if< (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-                          IsContainer<TContainer<T>>::value, void >::type
-GameObject::Propagate(const TFunction &func,
-                      const TContainer<T> &container,
-                      const Args&... args)
-{
-    for (const auto &x : container)
+    if (CanEventBePropagated(receiver))
     {
-        GameObject::Propagate(func, x, args...);
+        (receiver->*func)(args...);
     }
+}
+
+template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+void GameObject::PropagateToList(TReturn TListenerInnerT::*func,
+                                 const List<TListener*> &list,
+                                 const Args&... args)
+{
+    for (TListener *listener : list)
+    {
+        if (CanEventBePropagated(listener) && listener->IsReceivingEvents())
+        {
+            (listener->*func)(args...);
+        }
+    }
+}
+
+template<class TListener, class TReturn, class... Args>
+void GameObject::PropagateToChildren(TReturn TListener::*func,
+                                     const Args&... args)
+{
+    for (GameObject *child : m_children)
+    {
+        if (child->IsEnabled())
+        {
+            (child->*func)(args...);
+            // func(comp, args...);
+            // GameObject::Propagate(func, comp, args...);
+        }
+    }
+    /*
+    m_currentChildrenIterators.push(m_children.Begin());
+    while (m_currentChildrenIterators.top() != m_children.End())
+    {
+        m_increaseChildrenIterator = true;
+        GameObject *child = *(m_currentChildrenIterators.top());
+        GameObject::Propagate(func, child, args...);
+        if (m_increaseChildrenIterator) { ++m_currentChildrenIterators.top(); }
+    }
+    m_currentChildrenIterators.pop();
+    */
+}
+
+template<class TListener, class TReturn, class... Args>
+void GameObject::PropagateToComponents(TReturn TListener::*func,
+                                       const Args&... args)
+{
+    for (Component *comp : m_components)
+    {
+        if (comp->IsEnabled())
+        {
+            (comp->*func)(args...);
+            // func(comp, args...);
+            // GameObject::Propagate(func, comp, args...);
+        }
+    }
+    /*
+    m_currentComponentsIterators.push(m_components.Begin());
+    while (m_currentComponentsIterators.top() != m_components.End())
+    {
+        m_increaseComponentsIterator = true;
+        Component *comp = *(m_currentComponentsIterators.top());
+        GameObject::Propagate(func, comp, args...);
+        if (m_increaseComponentsIterator) { ++m_currentComponentsIterators.top(); }
+    }
+    m_currentComponentsIterators.pop();
+    */
 }
 
 template<class T>

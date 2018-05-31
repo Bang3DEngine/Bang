@@ -1,11 +1,11 @@
 #ifndef ITRANSFORMLISTENER_H
 #define ITRANSFORMLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
-class ITransformListener : public virtual IEventListener
+class ITransformListener
 {
 public:
     virtual ~ITransformListener() = default;

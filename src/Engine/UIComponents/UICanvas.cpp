@@ -74,7 +74,7 @@ void UICanvas::OnUpdate()
 
     // Create list of focusables, and track those destroyed. For this, we create
     // a helper class which implements IDestroyListener
-    struct DestroyFocusablesHandler : public IDestroyListener
+    struct DestroyFocusablesHandler : public EventListener<IDestroyListener>
     {
         USet<IFocusable*> set;
         void OnDestroyed(EventEmitter<IDestroyListener> *object) override
@@ -173,11 +173,11 @@ void UICanvas::OnUpdate()
     // Drag drop
     if (p_currentDDBeingDragged)
     {
-        List<IDragDropListener*> ddListeners = GetDragDropListeners();
+        List<EventListener<IDragDropListener>*> ddListeners = GetDragDropListeners();
         if (Input::GetMouseButton(MouseButton::LEFT))
         {
             p_currentDDBeingDragged->OnDragUpdate();
-            for (IDragDropListener* ddListener : ddListeners)
+            for (EventListener<IDragDropListener>* ddListener : ddListeners)
             {
                 if (ddListener->IsReceivingEvents())
                 {
@@ -187,7 +187,7 @@ void UICanvas::OnUpdate()
         }
         else
         {
-            for (IDragDropListener* ddListener : ddListeners)
+            for (EventListener<IDragDropListener>* ddListener : ddListeners)
             {
                 if (ddListener->IsReceivingEvents())
                 {
@@ -268,9 +268,9 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
     }
 }
 
-List<IDragDropListener*> UICanvas::GetDragDropListeners() const
+List<EventListener<IDragDropListener>*> UICanvas::GetDragDropListeners() const
 {
-    List<IDragDropListener*> dragDropListeners;
+    List<EventListener<IDragDropListener>*> dragDropListeners;
 
     std::queue<GameObject*> gos;
     gos.push(GetGameObject());
@@ -280,11 +280,13 @@ List<IDragDropListener*> UICanvas::GetDragDropListeners() const
         GameObject *go = gos.front();
         gos.pop();
 
-        if (IDragDropListener* ddListGo = DCAST<IDragDropListener*>(go))
+        if (EventListener<IDragDropListener>* ddListGo =
+                            DCAST<EventListener<IDragDropListener>*>(go))
         {
             dragDropListeners.PushBack(ddListGo);
         }
-        dragDropListeners.PushBack( go->GetComponents<IDragDropListener>() );
+        dragDropListeners.PushBack(
+                    go->GetComponents< EventListener<IDragDropListener> >() );
 
         for (GameObject *child : go->GetChildren()) { gos.push(child); }
     }
@@ -408,8 +410,8 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
 {
     p_currentDDBeingDragged = dragDroppable;
 
-    List<IDragDropListener*> ddListeners = GetDragDropListeners();
-    for (IDragDropListener* ddListener : ddListeners)
+    List<EventListener<IDragDropListener>*> ddListeners = GetDragDropListeners();
+    for (EventListener<IDragDropListener>* ddListener : ddListeners)
     {
         if (ddListener->IsReceivingEvents())
         {

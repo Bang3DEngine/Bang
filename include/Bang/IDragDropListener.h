@@ -2,13 +2,12 @@
 #define IDRAGDROPLISTENER_H
 
 #include "Bang/Bang.h"
-#include "Bang/IEventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class UIDragDroppable;
 
-class IDragDropListener : public virtual IEventListener
+class IDragDropListener
 {
 public:
 	IDragDropListener();

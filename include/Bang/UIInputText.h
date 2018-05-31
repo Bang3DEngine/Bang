@@ -21,7 +21,7 @@ FORWARD class UIImageRenderer;
 class UIInputText : public Component,
                     public EventEmitter<IValueChangedListener>,
                     public EventEmitter<IFocusListener>,
-                    public IFocusListener,
+                    public EventListener<IFocusListener>,
                     public ILayoutElement
 {
     COMPONENT(UIInputText)

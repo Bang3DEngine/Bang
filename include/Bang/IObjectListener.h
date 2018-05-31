@@ -1,11 +1,11 @@
 #ifndef IOBJECTLISTENER_H
 #define IOBJECTLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
-class IObjectListener : public virtual IEventListener
+class IObjectEvents
 {
 public:
     virtual void OnStarted()  {}

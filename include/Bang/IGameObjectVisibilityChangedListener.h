@@ -7,10 +7,8 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Object;
 
-class IGameObjectVisibilityChangedListener : public virtual IEventListener
+class IGameObjectVisibilityChangedListener
 {
-    EVENTLISTENER(IGameObjectVisibilityChangedListener)
-
 public:
     virtual void OnVisibilityChanged(GameObject *go) = 0;
 };

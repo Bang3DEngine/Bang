@@ -7,8 +7,8 @@
 
 #include "Bang/Assert.h"
 #include "Bang/String.h"
-#include "Bang/IEventEmitter.h"
-#include "Bang/IEventListener.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 #include "Bang/StreamOperators.h"
 
 NAMESPACE_BANG_BEGIN
@@ -18,10 +18,8 @@ FORWARD class Shader;
 
 enum class DebugMessageType { LOG, WARN, ERROR };
 
-class IDebugListener : public virtual IEventListener
+class IDebugListener
 {
-    EVENTLISTENER(IDebugListener)
-
 public:
     virtual void OnMessage(DebugMessageType msgType, const String &str,
                            int line, const String &fileName) = 0;

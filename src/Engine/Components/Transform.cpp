@@ -402,14 +402,14 @@ void Transform::OnTransformChanged()
     if (!go) { return; }
 
     EventEmitter<ITransformListener>::
-       PropagateToListeners(&ITransformListener::OnTransformChanged);
+       PropagateToListeners(&EventListener<ITransformListener>::OnTransformChanged);
 
-    ITransformListener::SetReceiveEvents(false);
+    EventListener<ITransformListener>::SetReceiveEvents(false);
 
-    go->Propagate(&ITransformListener::OnTransformChanged,
-                  go->GetComponents<ITransformListener>());
+    go->PropagateToList(&EventListener<ITransformListener>::OnTransformChanged,
+                  go->GetComponents<EventListener<ITransformListener>>());
 
-    ITransformListener::SetReceiveEvents(true);
+    EventListener<ITransformListener>::SetReceiveEvents(true);
 
     PropagateParentTransformChangedEventToChildren();
     PropagateChildrenTransformChangedEventToParent();
@@ -419,18 +419,24 @@ void Transform::PropagateParentTransformChangedEventToChildren() const
 {
     GameObject *go = GetGameObject();
     EventEmitter<ITransformListener>::
-           PropagateToListeners(&ITransformListener::OnParentTransformChanged);
-    go->Propagate(&ITransformListener::OnParentTransformChanged,
-                  go->GetComponentsInChildrenOnly<ITransformListener>(false));
+           PropagateToListeners(
+                &EventListener<ITransformListener>::OnParentTransformChanged);
+    go->PropagateToList(
+            &EventListener<ITransformListener>::OnParentTransformChanged,
+                  go->GetComponentsInChildrenOnly<
+                            EventListener<ITransformListener>>(false));
 }
 
 void Transform::PropagateChildrenTransformChangedEventToParent() const
 {
     GameObject *go = GetGameObject();
     EventEmitter<ITransformListener>::
-           PropagateToListeners(&ITransformListener::OnChildrenTransformChanged);
-    go->Propagate(&ITransformListener::OnChildrenTransformChanged,
-                  go->GetComponentsInParent<ITransformListener>(false));
+           PropagateToListeners(
+                &EventListener<ITransformListener>::OnChildrenTransformChanged);
+    go->PropagateToList(
+            &EventListener<ITransformListener>::OnChildrenTransformChanged,
+                  go->GetComponentsInParent<
+                            EventListener<ITransformListener>>(false));
 }
 
 void Transform::OnParentTransformChanged()

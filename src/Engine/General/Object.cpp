@@ -28,8 +28,8 @@ void Object::Start()
     {
         OnStart();
         m_started = true;
-        EventEmitter<IObjectListener>::
-                PropagateToListeners(&IObjectListener::OnStarted);
+        EventEmitter<IObjectEvents>::
+                PropagateToListeners(&IObjectEvents::OnStarted);
     }
 }
 
@@ -37,13 +37,13 @@ void Object::OnPreStart() {}
 void Object::OnStart() {}
 void Object::OnEnabled()
 {
-    EventEmitter<IObjectListener>::
-            PropagateToListeners(&IObjectListener::OnEnabled);
+    EventEmitter<IObjectEvents>::
+            PropagateToListeners(&IObjectEvents::OnEnabled);
 }
 void Object::OnDisabled()
 {
-    EventEmitter<IObjectListener>::
-            PropagateToListeners(&IObjectListener::OnDisabled);
+    EventEmitter<IObjectEvents>::
+            PropagateToListeners(&IObjectEvents::OnDisabled);
 }
 void Object::OnDestroy() {}
 

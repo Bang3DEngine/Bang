@@ -1,23 +1,23 @@
-#ifndef IEVENTEMITTER_TCC
-#define IEVENTEMITTER_TCC
+#ifndef EVENTEMITTER_TCC
+#define EVENTEMITTER_TCC
 
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 
 USING_NAMESPACE_BANG
 
-template<class EventListenerClass>
-EventEmitter<EventListenerClass>::~EventEmitter()
+template<class T>
+EventEmitter<T>::~EventEmitter()
 {
     m_isBeingDestroyed = true;
     while (!m_listeners.IsEmpty())
     {
-        IEventListener *eListener = DCAST<IEventListener*>( m_listeners.Front() );
+        EventListener<T> *eListener = DCAST<EventListener<T>*>( m_listeners.Front() );
         UnRegisterListener(eListener);
     }
 }
 
-template <class EListenerC>
-void EventEmitter<EListenerC>::RegisterListener(EListenerC *listener)
+template <class T>
+void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 {
     if (!m_isBeingDestroyed)
     {
@@ -33,8 +33,8 @@ void EventEmitter<EListenerC>::RegisterListener(EListenerC *listener)
     }
 }
 
-template <class EListenerC>
-void EventEmitter<EListenerC>::UnRegisterListener(IEventListener *listener)
+template <class T>
+void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
     if (!IsIteratingListeners())
     {
@@ -44,42 +44,41 @@ void EventEmitter<EListenerC>::UnRegisterListener(IEventListener *listener)
     else { m_delayedListenersToUnRegister.PushBack(listener); }
 }
 
-template<class EventListenerClass>
-bool EventEmitter<EventListenerClass>::IsIteratingListeners() const
+template<class T>
+bool EventEmitter<T>::IsIteratingListeners() const
 {
     ASSERT(m_iteratingListeners >= 0);
     return (m_iteratingListeners > 0);
 }
 
-template <class EventListenerClass>
+template <class T>
 template<class TListener, class TFunction, class... Args>
-void EventEmitter<EventListenerClass>::
+void EventEmitter<T>::
 PropagateToListener(const TListener &listener, const TFunction &func,
                     const Args&... args)
 {
     if (listener && listener->IsReceivingEvents())
     {
-        (DCAST<EventListenerClass*>(listener)->*func)(args...);
+        (DCAST<EventListener<T>*>(listener)->*func)(args...);
     }
 }
 
-template <class EventListenerClass>
+template <class T>
 template<class TFunction, class... Args>
-void EventEmitter<EventListenerClass>::
+void EventEmitter<T>::
 PropagateToListeners(const TFunction &func, const Args&... args) const
 {
     // Un/Register delayed listeners, if not iterating
     if ( !IsIteratingListeners() )
     {
-        EventEmitter<EventListenerClass> *ncThis =
-                        const_cast< EventEmitter<EventListenerClass>* >(this);
-        for (IEventListener *listener : m_delayedListenersToRegister)
+        EventEmitter<T> *ncThis = const_cast< EventEmitter<T>* >(this);
+        for (EventListener<T> *listener : m_delayedListenersToRegister)
         {
-            ncThis->RegisterListener( DCAST<EventListenerClass*>(listener) );
+            ncThis->RegisterListener( DCAST<EventListener<T>*>(listener) );
         }
-        for (IEventListener *listener : m_delayedListenersToUnRegister)
+        for (EventListener<T> *listener : m_delayedListenersToUnRegister)
         {
-            ncThis->UnRegisterListener( DCAST<EventListenerClass*>(listener) );
+            ncThis->UnRegisterListener( DCAST<EventListener<T>*>(listener) );
         }
         m_delayedListenersToRegister.Clear();
         m_delayedListenersToUnRegister.Clear();
@@ -100,10 +99,10 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
 }
 
 
-template<class EventListenerClass>
-const List<IEventListener*>& EventEmitter<EventListenerClass>::GetListeners() const
+template<class T>
+const List<EventListener<T>*>& EventEmitter<T>::GetListeners() const
 {
     return m_listeners;
 }
 
-#endif // IEVENTEMITTER_TCC
+#endif // EVENTEMITTER_TCC

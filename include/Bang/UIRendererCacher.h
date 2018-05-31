@@ -17,10 +17,10 @@ FORWARD class ShaderProgram;
 FORWARD class UIImageRenderer;
 
 class UIRendererCacher : public Component,
-                         public IChildrenListener,
-                         public ITransformListener,
-                         public IRendererChangedListener,
-                         public IGameObjectVisibilityChangedListener
+                         public EventListener<IChildrenListener>,
+                         public EventListener<ITransformListener>,
+                         public EventListener<IRendererChangedListener>,
+                         public EventListener<IGameObjectVisibilityChangedListener>
 {
     COMPONENT( UIRendererCacher )
 

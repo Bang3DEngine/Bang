@@ -13,10 +13,8 @@ NAMESPACE_BANG_BEGIN
     friend class Resources;
 
 FORWARD class Resource;
-class IResourceListener : public virtual IEventListener
+class IResourceListener
 {
-    EVENTLISTENER(IResourceListener)
-
 public:
     virtual void OnImported(Resource *res) { (void)(res); }
 };

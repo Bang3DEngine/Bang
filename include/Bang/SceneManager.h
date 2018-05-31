@@ -2,8 +2,8 @@
 #define SCENEMANAGER_H
 
 #include "Bang/Path.h"
-#include "Bang/IEventEmitter.h"
-#include "Bang/IEventListener.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 
 #include "Bang/IDestroyListener.h"
 
@@ -12,17 +12,15 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Scene;
 FORWARD class BehaviourManager;
 
-class ISceneManagerListener : public virtual IEventListener
+class ISceneManagerListener
 {
-    EVENTLISTENER(ISceneManagerListener)
-
 public:
     virtual void OnSceneLoaded(Scene *scene, const Path &sceneFilepath)
     { (void)scene; (void)sceneFilepath; }
 };
 
 class SceneManager : public EventEmitter<ISceneManagerListener>,
-                     public IDestroyListener
+                     public EventListener<IDestroyListener>
 {
 public:
     static void LoadScene(Scene *scene, bool destroyActive = true);

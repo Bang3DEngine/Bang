@@ -1,16 +1,14 @@
 #ifndef IMATERIALCHANGEDLISTENER_H
 #define IMATERIALCHANGEDLISTENER_H
 
-#include "Bang/IEventListener.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Material;
 
-class IMaterialChangedListener : public virtual IEventListener
+class IMaterialChangedListener
 {
-    EVENTLISTENER(IMaterialChangedListener)
-
 public:
     virtual void OnMaterialChanged(Material *changedMaterial) = 0;
 };

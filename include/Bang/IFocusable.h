@@ -1,8 +1,9 @@
 ﻿#ifndef IFOCUSABLE_H
 #define IFOCUSABLE_H
 
+#include "Bang/Array.h"
 #include "Bang/Cursor.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IFocusListener.h"
 
 NAMESPACE_BANG_BEGIN

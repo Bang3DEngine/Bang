@@ -15,7 +15,7 @@ FORWARD class UILayoutManager;
 FORWARD class IDragDropListener;
 
 class UICanvas : public Component,
-                 public IDestroyListener
+                 public EventListener<IDestroyListener>
 {
     COMPONENT(UICanvas)
 
@@ -70,7 +70,7 @@ private:
     void ApplyFocusChange();
     void SetFocusMouseOver(IFocusable *focusable);
 
-    List<IDragDropListener*> GetDragDropListeners() const;
+    List<EventListener<IDragDropListener>*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,

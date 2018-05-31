@@ -15,7 +15,7 @@ FORWARD class Path;
 FORWARD class XMLNode;
 
 class TextureCubeMap : public Texture,
-                       public IResourceListener
+                       public EventListener<IResourceListener>
 {
     ASSET(TextureCubeMap)
 

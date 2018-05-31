@@ -22,7 +22,7 @@ FORWARD class ShaderProgram;
 FORWARD class TextureUnitManager;
 FORWARD class SelectionFramebuffer;
 
-class GEngine : public IDestroyListener
+class GEngine : public EventListener<IDestroyListener>
 {
 public:
     GEngine();

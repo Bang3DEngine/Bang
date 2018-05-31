@@ -13,7 +13,7 @@ FORWARD class Framebuffer;
 FORWARD class UIImageRenderer;
 
 class UIDragDroppable : public Component,
-                        public IFocusListener
+                        public EventListener<IFocusListener>
 {
     COMPONENT(UIDragDroppable);
 

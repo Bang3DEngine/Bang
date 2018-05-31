@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "Bang/UMap.h"
+#include "Bang/Array.h"
 #include "Bang/Component.h"
 #include "Bang/IFocusListener.h"
 #include "Bang/IUIListListener.h"
@@ -18,8 +19,8 @@ FORWARD class UIImageRenderer;
 using GOItem = GameObject;
 
 class UIList : public Component,
-               public IFocusListener,
-               public IDestroyListener,
+               public EventListener<IFocusListener>,
+               public EventListener<IDestroyListener>,
                public EventEmitter<IUIListListener>
 {
     COMPONENT(UIList)

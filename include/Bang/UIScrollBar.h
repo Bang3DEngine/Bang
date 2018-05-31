@@ -12,7 +12,7 @@ FORWARD class UIScrollArea;
 FORWARD class UIImageRenderer;
 
 class UIScrollBar : public Component,
-                    public IFocusListener
+                    public EventListener<IFocusListener>
 {
     COMPONENT(UIScrollBar)
 

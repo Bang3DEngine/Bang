@@ -21,8 +21,8 @@ FORWARD class TextureCubeMap;
 
 class ShaderProgram : public GLObject,
                       public Resource,
-                      public IResourceListener,
-                      public IDestroyListener
+                      public EventListener<IResourceListener>,
+                      public EventListener<IDestroyListener>
 {
     RESOURCE(ShaderProgram)
 

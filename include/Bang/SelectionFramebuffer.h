@@ -13,7 +13,7 @@ FORWARD class GameObject;
 FORWARD class ShaderProgram;
 
 class SelectionFramebuffer : public Framebuffer,
-                             public IDestroyListener
+                             public EventListener<IDestroyListener>
 {
 public:
     static const GL::Attachment AttColor = GL::Attachment::COLOR0;

@@ -14,7 +14,7 @@ FORWARD class Gizmos;
 FORWARD class DebugRenderer;
 
 class Scene : public GameObject,
-              public IDestroyListener
+              public EventListener<IDestroyListener>
 {
     GAMEOBJECT(Scene);
 

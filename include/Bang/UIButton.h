@@ -14,7 +14,7 @@ FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
 
 class UIButton : public Component,
-                 public IFocusListener
+                 public EventListener<IFocusListener>
 {
     COMPONENT(UIButton)
 

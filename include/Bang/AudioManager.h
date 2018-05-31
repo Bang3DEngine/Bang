@@ -24,7 +24,7 @@ FORWARD class AudioSource;
 FORWARD class ALAudioSource;
 FORWARD class AudioPlayerRunnable;
 
-class AudioManager : public IDestroyListener
+class AudioManager : public EventListener<IDestroyListener>
 {
 public:
     void Init();

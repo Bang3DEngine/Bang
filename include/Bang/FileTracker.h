@@ -3,11 +3,11 @@
 
 #include "Bang/UMap.h"
 #include "Bang/Path.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 
 NAMESPACE_BANG_BEGIN
 
-class IFileTrackerListener : public IEventListener
+class IFileTrackerListener
 {
 public:
     virtual void OnPathAdded(const Path &addedPath)       {}

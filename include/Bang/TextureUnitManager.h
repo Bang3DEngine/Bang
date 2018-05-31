@@ -13,7 +13,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Texture;
 
-class TextureUnitManager : public IDestroyListener
+class TextureUnitManager : public EventListener<IDestroyListener>
 {
 public:
     using TexUnit = uint;

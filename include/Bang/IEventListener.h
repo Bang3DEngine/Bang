@@ -1,7 +1,7 @@
 #ifndef IEVENTLISTENER_H
 #define IEVENTLISTENER_H
 
-#include "Bang/List.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -15,22 +15,17 @@ FORWARD class IEventEmitter;
 class IEventListener
 {
 public:
-    void SetReceiveEvents(bool receiveEvents);
-    bool IsReceivingEvents() const;
+    virtual void SetReceiveEvents(bool receiveEvents) = 0;
+    virtual bool IsReceivingEvents() const = 0;
 
 protected:
     IEventListener() = default;
-    virtual ~IEventListener();
+    virtual ~IEventListener() = default;
 
-private:
-    bool m_receivesEvents = true;
-    bool m_isBeingDestroyed = false;
-    List<IEventEmitter*> m_emitters;
+    virtual void OnRegisteredTo(IEventEmitter *emitter) = 0;
+    virtual void OnUnRegisteredFrom(IEventEmitter *emitter) = 0;
 
-    void OnRegisteredTo(IEventEmitter *emitter);
-    void OnUnRegisteredFrom(IEventEmitter *emitter);
-
-    template<class> friend class EventEmitter;
+    template<class> friend class EventListener;
 };
 
 NAMESPACE_BANG_END

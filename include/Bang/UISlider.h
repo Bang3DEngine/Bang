@@ -13,7 +13,7 @@ FORWARD class UIInputNumber;
 FORWARD class UIImageRenderer;
 
 class UISlider : public Component,
-                 public IValueChangedListener,
+                 public EventListener<IValueChangedListener>,
                  public EventEmitter<IValueChangedListener>
 {
     COMPONENT(UISlider)

@@ -12,8 +12,8 @@ FORWARD class UIInputText;
 
 class UIInputNumber : public Component,
                       public EventEmitter<IValueChangedListener>,
-                      public IValueChangedListener,
-                      public IFocusListener
+                      public EventListener<IValueChangedListener>,
+                      public EventListener<IFocusListener>
 {
     COMPONENT(UIInputNumber)
 

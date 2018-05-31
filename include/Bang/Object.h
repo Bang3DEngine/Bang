@@ -11,9 +11,9 @@ NAMESPACE_BANG_BEGIN
 
 class Object : public Serializable,
                public ICloneable,
-               public IObjectListener,
+               public EventListener<IObjectEvents>,
                public EventEmitter<IDestroyListener>,
-               public EventEmitter<IObjectListener>
+               public EventEmitter<IObjectEvents>
 {
 public:
     const ObjectId& GetObjectId() const;

@@ -14,7 +14,7 @@ FORWARD class UITextRenderer;
 
 class UILabel : public Component,
                 public IFocusable,
-                public IFocusListener
+                public EventListener<IFocusListener>
 {
     COMPONENT(UILabel)
 

@@ -41,7 +41,7 @@ FORWARD class RectTransform;
 
 class GameObject : public Object,
                    public IToString,
-                   public IChildrenListener,
+                   public EventListener<IChildrenListener>,
                    public EventEmitter<INameListener>,
                    public EventEmitter<IChildrenListener>,
                    public EventEmitter<IComponentListener>,
@@ -131,41 +131,27 @@ public:
     Sphere GetBoundingSphere(bool includeChildren = true) const;
 
     // Helper propagate functions
-    template<class T>
-    static bool CanEventBePropagated(const T& x);
-    static bool CanEventBePropagatedToGameObject(const GameObject *go);
-    static bool CanEventBePropagatedToComponent(const Component *comp);
+    template<class T, class TReturn, class... Args>
+    void PropagateSingle(TReturn T::*func, T *receiver, const Args&... args);
 
-    // Propagation to a single non-event listener
-    template<class TFunction, class T, class... Args>
-    static typename std::enable_if<
-        (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-        !std::is_base_of<IEventListener,
-                             typename std::remove_pointer<T>::type>::value &&
-        !IsContainer<T>::value, void >::type
-    Propagate(const TFunction &func, const T &obj, const Args&... args);
+    template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+    void PropagateToList(TReturn TListenerInnerT::*func,
+                         const List<TListener*> &list,
+                         const Args&... args);
 
-    // Propagation to a single event listener
-    template<class TFunction, class T, class... Args>
-    static typename std::enable_if<
-        (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-         std::is_base_of<IEventListener,
-                         typename std::remove_pointer<T>::type>::value &&
-         !IsContainer<T>::value, void >::type
-    Propagate(const TFunction &func, const T &obj, const Args&... args);
+    template<class T, class TReturn, class... Args>
+    void PropagateToChildren(TReturn T::*func, const Args&... args);
 
-    // List propagation
-    template<class TFunction, template <class T> class TContainer, class T, class... Args>
-    static typename std::enable_if<
-        (std::is_pointer<T>::value || std::is_reference<T>::value) &&
-         IsContainer<TContainer<T>>::value, void >::type
-    Propagate(const TFunction &func, const TContainer<T> &container, const Args&... args);
+    template<class T, class TReturn, class... Args>
+    void PropagateToComponents(TReturn T::*func, const Args&... args);
 
-    template<class TFunction, class... Args>
-    void PropagateToChildren(const TFunction &func, const Args&... args);
+    template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+    void PropagateToChildrenListeners(TReturn TListener::*func,
+                                      const Args&... args);
 
-    template<class TFunction, class... Args>
-    void PropagateToComponents(const TFunction &func, const Args&... args);
+    template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+    void PropagateToComponentListeners(TReturn TListenerInnerT::*func,
+                                       const Args&... args);
 
 
     // ICloneable

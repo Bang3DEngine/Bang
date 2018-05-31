@@ -455,7 +455,7 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     okButton->GetGameObject()->SetParent(buttonsGo);
 
     class GetSceneController : public Component,
-                               public IValueChangedListener
+                               public EventListener<IValueChangedListener>
     {
     public:
         UIButton *m_okButton;

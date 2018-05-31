@@ -2,6 +2,7 @@
 #define ARRAY_TCC
 
 #include "Bang/Array.h"
+#include "Bang/Assert.h"
 #include "Bang/Containers.h"
 
 NAMESPACE_BANG_BEGIN

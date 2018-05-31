@@ -15,7 +15,7 @@ FORWARD class UILayoutElement;
 class UICheckBox : public Component,
                    public EventEmitter<IValueChangedListener>,
                    public EventEmitter<IFocusListener>,
-                   public IFocusListener
+                   public EventListener<IFocusListener>
 {
     COMPONENT(UICheckBox)
 

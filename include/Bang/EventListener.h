@@ -9,10 +9,12 @@ FORWARD template<class T> class EventEmitter;
 
 template <class T>
 class EventListener : public T,
+                      public virtual IEventListenerCommon,
                       public IEventListener
 {
 public:
     void SetReceiveEvents(bool receiveEvents);
+    bool IsReceivingEventsNonCommon() const;
     bool IsReceivingEvents() const;
 
 protected:

@@ -2,6 +2,8 @@
 #define ILAYOUTCONTROLLER_H
 
 #include "Bang/Axis.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/IChildrenListener.h"
 #include "Bang/ITransformListener.h"
@@ -9,8 +11,8 @@
 NAMESPACE_BANG_BEGIN
 
 class ILayoutController : public IInvalidatable<ILayoutController>,
-                          public IChildrenListener,
-                          public ITransformListener
+                          public EventListener<IChildrenListener>,
+                          public EventListener<ITransformListener>
 {
 public:
     // IInvalidatable

@@ -1,7 +1,7 @@
 #ifndef IMATERIALCHANGEDLISTENER_H
 #define IMATERIALCHANGEDLISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -9,6 +9,8 @@ FORWARD class Material;
 
 class IMaterialChangedListener
 {
+    EVENTLISTENER(IMaterialChangedListener);
+
 public:
     virtual void OnMaterialChanged(Material *changedMaterial) = 0;
 };

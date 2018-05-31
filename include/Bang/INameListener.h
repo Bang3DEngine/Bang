@@ -1,12 +1,14 @@
 #ifndef INAMELISTENER_H
 #define INAMELISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
 class INameListener
 {
+    EVENTLISTENER(INameListener);
+
 public:
     virtual void OnNameChanged(GameObject *go, const String &oldName,
                                const String &newName) = 0;

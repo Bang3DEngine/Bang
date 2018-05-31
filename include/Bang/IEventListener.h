@@ -7,10 +7,31 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class IEventEmitter;
 
-#define EVENTLISTENER(ClassName) \
-    protected: \
+#define EVENTLISTENER_NS(ClassName) \
+    private: \
         ClassName() = default; \
         virtual ~ClassName() = default; \
+    template<class> friend class Bang::EventListener;
+
+#define EVENTLISTENER(ClassName) \
+    private: \
+        ClassName() = default; \
+        virtual ~ClassName() = default; \
+    template<class> friend class EventListener;
+
+class IEventListenerCommon
+{
+protected:
+    IEventListenerCommon() = default;
+    virtual ~IEventListenerCommon() = default;
+
+public:
+    void SetReceiveEventsCommon(bool receiveEvents);
+    bool IsReceivingEventsCommon() const;
+
+private:
+    bool m_isReceivingEventsCommon = true;
+};
 
 class IEventListener
 {

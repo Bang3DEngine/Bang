@@ -9,6 +9,8 @@ NAMESPACE_BANG_BEGIN
 
 class IFileTrackerListener
 {
+    EVENTLISTENER(IFileTrackerListener);
+
 public:
     virtual void OnPathAdded(const Path &addedPath)       {}
     virtual void OnPathModified(const Path &modifiedPath) {}

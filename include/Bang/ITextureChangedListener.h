@@ -1,7 +1,7 @@
 #ifndef ITEXTURECHANGEDLISTENER_H
 #define ITEXTURECHANGEDLISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -9,8 +9,9 @@ FORWARD class Texture;
 
 class ITextureChangedListener
 {
+    EVENTLISTENER(ITextureChangedListener);
+
 public:
-    virtual ~ITextureChangedListener() = default;
     virtual void OnTextureChanged(const Texture *changedTexture) = 0;
 };
 

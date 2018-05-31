@@ -131,8 +131,10 @@ public:
     Sphere GetBoundingSphere(bool includeChildren = true) const;
 
     // Helper propagate functions
-    template<class T, class TReturn, class... Args>
-    void PropagateSingle(TReturn T::*func, T *receiver, const Args&... args);
+    template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+    void PropagateSingle(TReturn TListenerInnerT::*func,
+                         TListener *receiver,
+                         const Args&... args);
 
     template<class TListener, class TListenerInnerT, class TReturn, class... Args>
     void PropagateToList(TReturn TListenerInnerT::*func,

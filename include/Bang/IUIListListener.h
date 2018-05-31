@@ -1,12 +1,14 @@
 #ifndef IUILISTLISTENER_H
 #define IUILISTLISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
 class IUIListListener
 {
+    EVENTLISTENER(IUIListListener);
+
 public:
     virtual void OnItemAdded(GameObject *item, int index) { (void)item; (void)index; }
 

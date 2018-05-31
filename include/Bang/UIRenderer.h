@@ -14,8 +14,8 @@
 NAMESPACE_BANG_BEGIN
 
 class UIRenderer : public Renderer,
-                   public IChildrenListener,
-                   public ITransformListener
+                   public EventListener<IChildrenListener>,
+                   public EventListener<ITransformListener>
 {
 public:
     virtual AARect GetBoundingRect(Camera *camera) const override;

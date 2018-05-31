@@ -8,6 +8,8 @@ NAMESPACE_BANG_BEGIN
 
 class IDestroyListener
 {
+    EVENTLISTENER(IDestroyListener);
+
 public:
     virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) = 0;
 };

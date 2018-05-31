@@ -18,7 +18,7 @@ FORWARD class ShaderProgram;
 FORWARD class SelectionFramebuffer;
 
 class Camera : public Component,
-               public IDestroyListener
+               public EventListener<IDestroyListener>
 {
     COMPONENT(Camera)
 

@@ -28,9 +28,15 @@ void EventListener<T>::SetReceiveEvents(bool receiveEvents)
 }
 
 template<class T>
-bool EventListener<T>::IsReceivingEvents() const
+bool EventListener<T>::IsReceivingEventsNonCommon() const
 {
     return m_receivesEvents;
+}
+
+template<class T>
+bool EventListener<T>::IsReceivingEvents() const
+{
+    return IsReceivingEventsNonCommon() && IsReceivingEventsCommon();
 }
 
 template<class T>

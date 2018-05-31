@@ -1,7 +1,7 @@
 #ifndef IFOCUSLISTENER_H
 #define IFOCUSLISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -11,6 +11,8 @@ enum class ClickType { DOWN, FULL, DOUBLE };
 
 class IFocusListener
 {
+    EVENTLISTENER(IFocusListener);
+
 public:
     virtual void OnFocusTaken(IFocusable *focusable) { (void)focusable; }
     virtual void OnFocusLost(IFocusable *focusable) { (void)focusable; }

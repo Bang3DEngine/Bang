@@ -123,8 +123,10 @@ bool CanEventBePropagated(const T& x)
            !object->IsWaitingToBeDestroyed());
 }
 
-template<class T, class TReturn, class... Args>
-void GameObject::PropagateSingle(TReturn T::*func, T *receiver,
+
+template<class TListener, class TListenerInnerT, class TReturn, class... Args>
+void GameObject::PropagateSingle(TReturn TListenerInnerT::*func,
+                                 TListener *receiver,
                                  const Args&... args)
 {
     if (CanEventBePropagated(receiver))

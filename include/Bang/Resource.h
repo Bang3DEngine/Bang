@@ -2,9 +2,9 @@
 #define RESOURCE_H
 
 #include "Bang/IGUIDable.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/Serializable.h"
-#include "Bang/IEventEmitter.h"
-#include "Bang/IEventListener.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -15,6 +15,8 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Resource;
 class IResourceListener
 {
+    EVENTLISTENER(IResourceListener);
+
 public:
     virtual void OnImported(Resource *res) { (void)(res); }
 };

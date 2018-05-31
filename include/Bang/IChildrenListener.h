@@ -1,12 +1,14 @@
 #ifndef ICHILDRENLISTENER_H
 #define ICHILDRENLISTENER_H
 
-#include "Bang/Bang.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 
 class IChildrenListener
 {
+    EVENTLISTENER(IChildrenListener);
+
 public:
     virtual void OnChildAdded(GameObject *addedChild, GameObject *parent)
     {

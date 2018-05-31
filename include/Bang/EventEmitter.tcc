@@ -52,18 +52,6 @@ bool EventEmitter<T>::IsIteratingListeners() const
 }
 
 template <class T>
-template<class TListener, class TFunction, class... Args>
-void EventEmitter<T>::
-PropagateToListener(const TListener &listener, const TFunction &func,
-                    const Args&... args)
-{
-    if (listener && listener->IsReceivingEvents())
-    {
-        (DCAST<EventListener<T>*>(listener)->*func)(args...);
-    }
-}
-
-template <class T>
 template<class TFunction, class... Args>
 void EventEmitter<T>::
 PropagateToListeners(const TFunction &func, const Args&... args) const
@@ -85,13 +73,21 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
     }
 
     ++m_iteratingListeners;
-    for (const auto &x : GetListeners())
+    for (const auto &listener : GetListeners())
     {
         #ifdef DEBUG
         const int previousSize = GetListeners().Size(); (void) previousSize;
         #endif
 
-        if (IsEmittingEvents()) { PropagateToListener(x, func, args...); }
+        if (IsEmittingEvents())
+        {
+            if (listener && listener->IsReceivingEvents())
+            {
+                EventListener<T> *listenerT = DCAST<EventListener<T>*>(listener);
+                ASSERT(listenerT);
+                (listenerT->*func)(args...);
+            }
+        }
 
         ASSERT(GetListeners().Size() == previousSize);
     }

@@ -16,11 +16,6 @@ public:
     void RegisterListener(EventListener<T> *listener);
     void UnRegisterListener(EventListener<T> *listener);
 
-    template<class TListener, class TFunction, class... Args>
-    static void PropagateToListener(const TListener &listener,
-                                    const TFunction &func,
-                                    const Args&... args);
-
     template<class TFunction, class... Args>
     void PropagateToListeners(const TFunction &func, const Args&... args) const;
 

@@ -20,6 +20,8 @@ enum class DebugMessageType { LOG, WARN, ERROR };
 
 class IDebugListener
 {
+    EVENTLISTENER(IDebugListener);
+
 public:
     virtual void OnMessage(DebugMessageType msgType, const String &str,
                            int line, const String &fileName) = 0;

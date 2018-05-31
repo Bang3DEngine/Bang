@@ -15,7 +15,7 @@ FORWARD class UITextRenderer;
 class UIComboBox : public Component,
                    public EventEmitter<IValueChangedListener>,
                    public EventEmitter<IFocusListener>,
-                   public IFocusListener
+                   public EventListener<IFocusListener>
 {
     COMPONENT(UIComboBox)
 

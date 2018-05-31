@@ -53,8 +53,8 @@ private:
     Color m_color = Color::White;
 
     float m_shadowBias = 0.01f;
-    Vector2i m_shadowMapSize = Vector2i(2048);
-    ShadowType m_shadowType = ShadowType::SOFT;
+    Vector2i m_shadowMapSize = Vector2i(256);
+    ShadowType m_shadowType = ShadowType::HARD;
 
     RH<ShaderProgram> p_lightScreenPassShaderProgram;
 

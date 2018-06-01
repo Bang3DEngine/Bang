@@ -55,7 +55,7 @@ void SelectionFramebuffer::PrepareNewFrameForRender(const GameObject *go)
         m_gameObject_To_Id[go] = id;
         m_id_To_GameObject[id] = go;
 
-        go->EventEmitter<IDestroyListener>::RegisterListener(this);
+        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
 
         ++id;
     }
@@ -74,7 +74,7 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
     RH<ShaderProgram> prevSP;
     prevSP.Set( rend->GetActiveMaterial()->GetShaderProgram() );
 
-    rend->GetActiveMaterial()->EventEmitter<IMaterialChangedListener>::
+    rend->GetActiveMaterial()->EventEmitter<IEventsMaterialChanged>::
                                SetEmitEvents(false);
 
     ShaderProgram *selSP = p_selectionMaterial.Get()->GetShaderProgram();
@@ -87,7 +87,7 @@ void SelectionFramebuffer::RenderForSelectionBuffer(Renderer *rend)
 
     rend->GetActiveMaterial()->SetShaderProgram(prevSP.Get());
 
-    rend->GetActiveMaterial()->EventEmitter<IMaterialChangedListener>::
+    rend->GetActiveMaterial()->EventEmitter<IEventsMaterialChanged>::
                                SetEmitEvents(true);
 
     p_nextRenderSelectable = nullptr;
@@ -105,7 +105,7 @@ GetGameObjectInViewportPoint(const Vector2i &vpPoint)
     return nullptr;
 }
 
-void SelectionFramebuffer::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void SelectionFramebuffer::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     GameObject *go = DCAST<GameObject*>(object);
     if (go)

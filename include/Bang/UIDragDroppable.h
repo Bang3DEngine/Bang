@@ -4,16 +4,19 @@
 #include "Bang/Bang.h"
 #include "Bang/Component.h"
 #include "Bang/Texture2D.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsDragDrop.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
+FORWARD class IFocusable;
 FORWARD class Framebuffer;
 FORWARD class UIImageRenderer;
 
 class UIDragDroppable : public Component,
-                        public EventListener<IFocusListener>
+                        public EventEmitter<IEventsDragDrop>,
+                        public EventListener<IEventsFocus>
 {
     COMPONENT(UIDragDroppable);
 
@@ -54,7 +57,8 @@ private:
     void MoveDragDropGameObjectTo(const Vector2i &pos);
 
     // IFocusable
-    virtual void OnClicked(IFocusable *focusable, ClickType clickType) override;
+    virtual void OnClicked(EventEmitter<IEventsFocus> *focusable,
+                           ClickType clickType) override;
 
     friend class UICanvas;
 };

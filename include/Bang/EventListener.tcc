@@ -6,12 +6,6 @@
 USING_NAMESPACE_BANG
 
 template<class T>
-EventListener<T>::EventListener()
-{
-
-}
-
-template<class T>
 EventListener<T>::~EventListener()
 {
     m_isBeingDestroyed = true;

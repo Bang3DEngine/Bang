@@ -74,12 +74,13 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnClicked(IFocusable *focusable, ClickType clickType)
+void UITree::OnClicked(EventEmitter<IEventsFocus> *focusable,
+                       ClickType clickType)
 {
     if (clickType == ClickType::FULL)
     {
-        IFocusable *collapseButton = focusable;
-        Component *cCollapseButton = Cast<Component*>(collapseButton);
+        IFocusable *collapseButton = DCAST<IFocusable*>(focusable);
+        Component *cCollapseButton = DCAST<Component*>(collapseButton);
         UITreeItemContainer *itemContainer =
                    SCAST<UITreeItemContainer*>(cCollapseButton->GetGameObject()->
                                                GetParent());
@@ -93,7 +94,7 @@ void UITree::OnClicked(IFocusable *focusable, ClickType clickType)
 
 void UITree::OnDragStarted(UIDragDroppable *dd)
 {
-    IDragDropListener::OnDragStarted(dd);
+    IEventsDragDrop::OnDragStarted(dd);
     p_itemBeingDragged = SCAST<UITreeItemContainer*>(dd->GetGameObject())->
                                                         GetContainedItem();
     p_dragMarker->SetParent( GetGameObject()->GetScene() );
@@ -101,7 +102,7 @@ void UITree::OnDragStarted(UIDragDroppable *dd)
 
 void UITree::OnDragUpdate(UIDragDroppable *dragDroppable)
 {
-    IDragDropListener::OnDragUpdate(dragDroppable);
+    IEventsDragDrop::OnDragUpdate(dragDroppable);
 
     GOItem *childItemOver = nullptr;
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
@@ -170,7 +171,7 @@ void UITree::OnDragUpdate(UIDragDroppable *dragDroppable)
 
 void UITree::OnDrop(UIDragDroppable *dragDroppable)
 {
-    IDragDropListener::OnDrop(dragDroppable);
+    IEventsDragDrop::OnDrop(dragDroppable);
 
     UITreeItemContainer *draggedItemCont = DCAST<UITreeItemContainer*>(
                                               dragDroppable->GetGameObject());
@@ -217,7 +218,7 @@ void UITree::OnDrop(UIDragDroppable *dragDroppable)
     p_dragMarker->SetParent(nullptr);
 }
 
-void UITree::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void UITree::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     GOItem* item = SCAST<GOItem*>(object);
     RemoveItem(item);
@@ -297,8 +298,8 @@ void UITree::MoveItem(GOItem *itemToMove, GOItem *newParentItem,
 
     delete itemTreeCpy;
 
-    EventEmitter<IUITreeListener>::PropagateToListeners(
-                &IUITreeListener::OnItemMoved, itemToMove,
+    EventEmitter<IEventsUITree>::PropagateToListeners(
+                &IEventsUITree::OnItemMoved, itemToMove,
                 oldParentItem, oldIndexInParent,
                 newParentItem, newIndexInsideParent);
 }
@@ -333,8 +334,8 @@ void UITree::AddItem_(GOItem* newItem, GOItem *parentItem,
 
         // Listen to focus and destroying
         newItemContainer->GetCollapseButton()->GetFocusable()->
-                EventEmitter<IFocusListener>::RegisterListener(this);
-        newItem->EventEmitter<IDestroyListener>::RegisterListener(this);
+                EventEmitter<IEventsFocus>::RegisterListener(this);
+        newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
 
         // Update collapsabilities
         UpdateCollapsability(newItem);
@@ -344,8 +345,8 @@ void UITree::AddItem_(GOItem* newItem, GOItem *parentItem,
 
         if (!moving)
         {
-            EventEmitter<IUITreeListener>::PropagateToListeners(
-                        &IUITreeListener::OnItemAdded, newItem, parentItem,
+            EventEmitter<IEventsUITree>::PropagateToListeners(
+                        &IEventsUITree::OnItemAdded, newItem, parentItem,
                         indexInsideParent);
         }
     }
@@ -406,8 +407,8 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 
         if (!moving)
         {
-            EventEmitter<IUITreeListener>::PropagateToListeners(
-                        &IUITreeListener::OnItemRemoved, item);
+            EventEmitter<IEventsUITree>::PropagateToListeners(
+                        &IEventsUITree::OnItemRemoved, item);
         }
 
         // Update parent collapsability

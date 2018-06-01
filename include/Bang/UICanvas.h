@@ -12,10 +12,10 @@ FORWARD class GameObject;
 FORWARD class IFocusable;
 FORWARD class UIDragDroppable;
 FORWARD class UILayoutManager;
-FORWARD class IDragDropListener;
+FORWARD class IEventsDragDrop;
 
 class UICanvas : public Component,
-                 public EventListener<IDestroyListener>
+                 public EventListener<IEventsDestroy>
 {
     COMPONENT(UICanvas)
 
@@ -52,8 +52,8 @@ public:
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
-    // IDestroyListener
-    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     UILayoutManager* GetLayoutManager() const;
 
@@ -70,7 +70,7 @@ private:
     void ApplyFocusChange();
     void SetFocusMouseOver(IFocusable *focusable);
 
-    List<EventListener<IDragDropListener>*> GetDragDropListeners() const;
+    List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,

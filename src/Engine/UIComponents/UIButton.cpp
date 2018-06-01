@@ -36,7 +36,7 @@ UIButton::~UIButton()
 void UIButton::OnStart()
 {
     Component::OnStart();
-    GetFocusable()->EventEmitter<IFocusListener>::RegisterListener(this);
+    GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
 }
 
 void UIButton::Click(ClickType clickType)
@@ -97,9 +97,9 @@ void UIButton::AddClickedCallback(UIButton::ClickedCallback clickedCallback)
     m_clickedCallbacks.PushBack(clickedCallback);
 }
 
-void UIButton::OnMouseEnter(IFocusable *focusable)
+void UIButton::OnMouseEnter(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnMouseEnter(focusable);
+    IEventsFocus::OnMouseEnter(focusable);
 
     if (!IsBlocked())
     {
@@ -109,9 +109,9 @@ void UIButton::OnMouseEnter(IFocusable *focusable)
     }
 }
 
-void UIButton::OnMouseExit(IFocusable *focusable)
+void UIButton::OnMouseExit(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnMouseExit(focusable);
+    IEventsFocus::OnMouseExit(focusable);
 
     if (!IsBlocked())
     {
@@ -121,9 +121,9 @@ void UIButton::OnMouseExit(IFocusable *focusable)
     }
 }
 
-void UIButton::OnStartedBeingPressed(IFocusable *focusable)
+void UIButton::OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnStartedBeingPressed(focusable);
+    IEventsFocus::OnStartedBeingPressed(focusable);
 
     if (!IsBlocked())
     {
@@ -131,9 +131,9 @@ void UIButton::OnStartedBeingPressed(IFocusable *focusable)
     }
 }
 
-void UIButton::OnStoppedBeingPressed(IFocusable *focusable)
+void UIButton::OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnStoppedBeingPressed(focusable);
+    IEventsFocus::OnStoppedBeingPressed(focusable);
 
     if (!IsBlocked())
     {
@@ -143,9 +143,10 @@ void UIButton::OnStoppedBeingPressed(IFocusable *focusable)
     }
 }
 
-void UIButton::OnClicked(IFocusable *focusable, ClickType clickType)
+void UIButton::OnClicked(EventEmitter<IEventsFocus> *focusable,
+                         ClickType clickType)
 {
-    IFocusListener::OnClicked(focusable, clickType);
+    IEventsFocus::OnClicked(focusable, clickType);
 
     if (!IsBlocked())
     {

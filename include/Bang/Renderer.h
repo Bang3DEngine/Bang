@@ -6,8 +6,8 @@
 #include "Bang/RenderPass.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/IMaterialChangedListener.h"
-#include "Bang/IRendererChangedListener.h"
+#include "Bang/IEventsMaterialChanged.h"
+#include "Bang/IEventsRendererChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -16,8 +16,8 @@ FORWARD class Material;
 FORWARD class SceneManager;
 
 class Renderer : public Component,
-                 public EventListener<IMaterialChangedListener>,
-                 public EventEmitter<IRendererChangedListener>
+                 public EventListener<IEventsMaterialChanged>,
+                 public EventEmitter<IEventsRendererChanged>
 {
     COMPONENT(Renderer)
 
@@ -45,7 +45,7 @@ public:
     GL::ViewProjMode GetViewProjMode() const;
     GL::Primitive GetRenderPrimitive() const;
 
-    // IMaterialChangedListener
+    // IEventsMaterialChanged
     void OnMaterialChanged(Material *changedMaterial) override;
 
     // Renderer

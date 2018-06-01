@@ -5,7 +5,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/UIRenderer.h"
 #include "Bang/AspectRatioMode.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsTransform.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -38,7 +38,7 @@ public:
     Texture2D *GetImageTexture() const;
     const Vector2i& GetSlice9BorderStrokePx() const;
 
-    // ITransformListener
+    // IEventsTransform
     virtual void OnTransformChanged() override;
 
     // Renderer

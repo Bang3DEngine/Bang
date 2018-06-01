@@ -5,24 +5,12 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/Serializable.h"
 #include "Bang/EventListener.h"
+#include "Bang/IEventsResource.h"
 
 NAMESPACE_BANG_BEGIN
 
-#define RESOURCE(CLASSNAME) \
-    SERIALIZABLE(CLASSNAME) \
-    friend class Resources;
-
-FORWARD class Resource;
-class IResourceListener
-{
-    EVENTLISTENER(IResourceListener);
-
-public:
-    virtual void OnImported(Resource *res) { (void)(res); }
-};
-
 class Resource : public Serializable,
-                 public EventEmitter<IResourceListener>
+                 public EventEmitter<IEventsResource>
 {
 public:
     Path GetResourceFilepath() const;
@@ -45,6 +33,10 @@ protected:
 
     friend class Resources;
 };
+
+#define RESOURCE(CLASSNAME) \
+    SERIALIZABLE(CLASSNAME) \
+    friend class Resources;
 
 NAMESPACE_BANG_END
 

@@ -41,15 +41,15 @@ void UISlider::OnUpdate()
     }
 }
 
-void UISlider::OnValueChanged(Object *object)
+void UISlider::OnValueChanged(EventEmitter<IEventsValueChanged> *object)
 {
     ASSERT(object == GetInputNumber());
-    EventListener<IValueChangedListener>::SetReceiveEvents(false);
+    EventListener<IEventsValueChanged>::SetReceiveEvents(false);
     SetValue( GetInputNumber()->GetValue() );
     UpdateSliderHandlerFromInputNumberValue();
-    EventEmitter<IValueChangedListener>::PropagateToListeners(
-                &IValueChangedListener::OnValueChanged, this);
-    EventListener<IValueChangedListener>::SetReceiveEvents(true);
+    EventEmitter<IEventsValueChanged>::PropagateToListeners(
+                &IEventsValueChanged::OnValueChanged, this);
+    EventListener<IEventsValueChanged>::SetReceiveEvents(true);
 }
 
 float UISlider::GetMouseRelativePercent() const
@@ -188,7 +188,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
                                      ->AddComponent<UILayoutElement>();
     inputNumberLE->SetMinWidth(20);
     inputNumberLE->SetFlexibleWidth( 0.2f );
-    inputNumber->EventEmitter<IValueChangedListener>::RegisterListener(slider);
+    inputNumber->EventEmitter<IEventsValueChanged>::RegisterListener(slider);
 
     slider->p_guideRenderer = guideRenderer;
     slider->p_handleRenderer = handleRenderer;

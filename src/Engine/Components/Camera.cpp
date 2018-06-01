@@ -507,6 +507,6 @@ void Camera::ExportXML(XMLNode *xmlInfo) const
                                      GUID::Empty()) );
 }
 
-void Camera::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void Camera::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
 }

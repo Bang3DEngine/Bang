@@ -145,8 +145,8 @@ void UIList::MoveItem(GOItem *item, int index)
         p_items.Insert(item, newIndex);
         item->SetParent(GetContainer(), index);
 
-        EventEmitter<IUIListListener>::PropagateToListeners(
-                    &IUIListListener::OnItemMoved, item, oldIndexOfItem, newIndex);
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+                    &IEventsUIList::OnItemMoved, item, oldIndexOfItem, newIndex);
     }
 }
 
@@ -167,10 +167,10 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 
     for (IFocusable* newItemFocusable : newItemFocusables)
     {
-        newItemFocusable->EventEmitter<IFocusListener>::RegisterListener(this);
+        newItemFocusable->EventEmitter<IEventsFocus>::RegisterListener(this);
     }
 
-    newItem->EventEmitter<IDestroyListener>::RegisterListener(this);
+    newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
     newItem->SetParent(GetContainer(), index);
 
     p_itemsBackground.Add(newItem, itemBg);
@@ -178,8 +178,8 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 
     if (!moving)
     {
-        EventEmitter<IUIListListener>::PropagateToListeners(
-                    &IUIListListener::OnItemAdded, newItem, index);
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+                    &IEventsUIList::OnItemAdded, newItem, index);
     }
 
     if (index <= m_selectionIndex) { ++m_selectionIndex; }
@@ -203,8 +203,8 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
 
     if (!moving)
     {
-        EventEmitter<IUIListListener>::PropagateToListeners(
-                    &IUIListListener::OnItemRemoved, item);
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+                    &IEventsUIList::OnItemRemoved, item);
     }
 }
 
@@ -369,15 +369,15 @@ void UIList::HandleShortcuts()
     }
 }
 
-void UIList::OnFocusTaken(IFocusable *focusable)
+void UIList::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusTaken(focusable);
+    IEventsFocus::OnFocusTaken(focusable);
     m_someChildHasFocus = true;
 }
 
-void UIList::OnFocusLost(IFocusable *focusable)
+void UIList::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusLost(focusable);
+    IEventsFocus::OnFocusLost(focusable);
     m_someChildHasFocus = false;
 }
 
@@ -423,7 +423,7 @@ void UIList::SetUseSelectedColor(bool useSelectColor)
     m_useSelectColor = useSelectColor;
 }
 
-void UIList::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == p_itemUnderMouse)
     {

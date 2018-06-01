@@ -111,7 +111,7 @@ String AudioManager::GetALCErrorEnumString(ALCenum errorEnum)
     return "";
 }
 
-void AudioManager::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void AudioManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (ALAudioSource *alAudioSource = DCAST<ALAudioSource*>(object))
     {
@@ -153,7 +153,7 @@ void AudioManager::Play(AudioClip *audioClip, ALAudioSource *aas, float delay)
     if (started)
     {
         MutexLocker ml(&am->m_mutexCurrentAudios); (void)ml;
-        aas->EventEmitter<IDestroyListener>::RegisterListener(am);
+        aas->EventEmitter<IEventsDestroy>::RegisterListener(am);
         am->m_sourcesToPlayers.Add(aas, player);
     }
 }

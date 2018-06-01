@@ -64,8 +64,8 @@ void UICheckBox::SetChecked(bool checked)
         m_isChecked = checked;
 
         GetTickImage()->SetEnabled( IsChecked() );
-        EventEmitter<IValueChangedListener>::PropagateToListeners(
-                    &IValueChangedListener::OnValueChanged, this);
+        EventEmitter<IEventsValueChanged>::PropagateToListeners(
+                    &IEventsValueChanged::OnValueChanged, this);
     }
 }
 

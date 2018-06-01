@@ -8,7 +8,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/UIRenderer.h"
 #include "Bang/ILayoutElement.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsTransform.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -56,7 +56,7 @@ public:
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;
 
-    // ITransformListener
+    // IEventsTransform
     virtual void OnTransformChanged() override;
 
     // ICloneable

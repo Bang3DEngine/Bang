@@ -5,17 +5,17 @@
 #include "Bang/UIList.h"
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IFocusListener.h"
-#include "Bang/IValueChangedListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class UITextRenderer;
 
 class UIComboBox : public Component,
-                   public EventEmitter<IValueChangedListener>,
-                   public EventEmitter<IFocusListener>,
-                   public EventListener<IFocusListener>
+                   public EventEmitter<IEventsValueChanged>,
+                   public EventEmitter<IEventsFocus>,
+                   public EventListener<IEventsFocus>
 {
     COMPONENT(UIComboBox)
 

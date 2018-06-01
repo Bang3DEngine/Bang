@@ -6,9 +6,9 @@
 #include "Bang/Component.h"
 #include "Bang/RenderPass.h"
 #include "Bang/UIRenderer.h"
-#include "Bang/IChildrenListener.h"
-#include "Bang/IRendererChangedListener.h"
-#include "Bang/IGameObjectVisibilityChangedListener.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -17,10 +17,10 @@ FORWARD class ShaderProgram;
 FORWARD class UIImageRenderer;
 
 class UIRendererCacher : public Component,
-                         public EventListener<IChildrenListener>,
-                         public EventListener<ITransformListener>,
-                         public EventListener<IRendererChangedListener>,
-                         public EventListener<IGameObjectVisibilityChangedListener>
+                         public EventListener<IEventsChildren>,
+                         public EventListener<IEventsTransform>,
+                         public EventListener<IEventsRendererChanged>,
+                         public EventListener<IEventsGameObjectVisibilityChanged>
 {
     COMPONENT( UIRendererCacher )
 
@@ -39,17 +39,17 @@ public:
 
     void OnChanged();
 
-    // IChildrenListener
+    // IEventsChildren
     void OnChildAdded(GameObject *addedChild, GameObject *parent) override;
     void OnChildRemoved(GameObject *removedChild, GameObject *parent) override;
 
-    // ITransformListener
+    // IEventsTransform
     void OnTransformChanged() override;
 
-    // IRendererChangedListener
+    // IEventsRendererChanged
     void OnRendererChanged(Renderer *changedRenderer) override;
 
-    // IObjectListener
+    // IEventsObject
     void OnStarted() override;
     void OnEnabled() override;
     void OnDisabled() override;
@@ -65,7 +65,7 @@ private:
     void SetContainerVisible(bool visible);
     static UIRendererCacher* CreateInto(GameObject *go);
 
-    // IGameObjectVisibilityChangedListener
+    // IEventsGameObjectVisibilityChanged
     void OnVisibilityChanged(GameObject *go) override;
 
     friend class GameObjectFactory;

@@ -8,13 +8,13 @@
 #include "Bang/Vector2.h"
 #include "Bang/GLObject.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/ITextureChangedListener.h"
+#include "Bang/IEventsTextureChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 class Texture : public GLObject,
                 public Asset,
-                public EventEmitter<ITextureChangedListener>
+                public EventEmitter<IEventsTextureChanged>
 {
     ASSET(Texture)
 

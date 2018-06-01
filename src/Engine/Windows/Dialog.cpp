@@ -13,7 +13,6 @@
 #include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIFileList.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/UIInputText.h"
 #include "Bang/Application.h"
 #include "Bang/SceneManager.h"
@@ -22,6 +21,7 @@
 #include "Bang/UIAutoFocuser.h"
 #include "Bang/UIScrollPanel.h"
 #include "Bang/WindowManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UILayoutElement.h"
@@ -29,6 +29,7 @@
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/UIHorizontalLayout.h"
+#include "Bang/IEventsValueChanged.h"
 
 USING_NAMESPACE_BANG
 
@@ -455,7 +456,7 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
     okButton->GetGameObject()->SetParent(buttonsGo);
 
     class GetSceneController : public Component,
-                               public EventListener<IValueChangedListener>
+                               public EventListener<IEventsValueChanged>
     {
     public:
         UIButton *m_okButton;
@@ -470,7 +471,8 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
             }
         }
 
-        virtual void OnValueChanged(Object *object) override
+        virtual void OnValueChanged(
+                        EventEmitter<IEventsValueChanged> *object) override
         {
             ASSERT(m_inputText == object);
             Dialog::s_resultString = m_inputText->GetText()->GetContent();
@@ -479,7 +481,7 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
 
     GetSceneController *gsc = inputText->GetGameObject()->AddComponent<GetSceneController>();
     gsc->m_inputText = inputText;
-    gsc->m_inputText->EventEmitter<IValueChangedListener>::RegisterListener(gsc);
+    gsc->m_inputText->EventEmitter<IEventsValueChanged>::RegisterListener(gsc);
     gsc->m_okButton = okButton;
 
     return scene;

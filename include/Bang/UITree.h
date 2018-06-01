@@ -8,9 +8,9 @@
 #include "Bang/UIButton.h"
 #include "Bang/Component.h"
 #include "Bang/GameObject.h"
-#include "Bang/IFocusListener.h"
-#include "Bang/IUITreeListener.h"
-#include "Bang/IDragDropListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsUITree.h"
+#include "Bang/IEventsDragDrop.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -18,10 +18,10 @@ FORWARD class UIDragDroppable;
 FORWARD class UITreeItemContainer;
 
 class UITree : public Component,
-               public EventListener<IFocusListener>,
-               public EventListener<IDestroyListener>,
-               public EventListener<IDragDropListener>,
-               public EventEmitter<IUITreeListener>
+               public EventListener<IEventsFocus>,
+               public EventListener<IEventsDestroy>,
+               public EventListener<IEventsDragDrop>,
+               public EventEmitter<IEventsUITree>
 {
     COMPONENT(UITree)
 
@@ -54,16 +54,17 @@ public:
     // Component
     void OnUpdate() override;
 
-    // IFocusListener
-    void OnClicked(IFocusable *focusable, ClickType clickType) override;
+    // IEventsFocus
+    void OnClicked(EventEmitter<IEventsFocus> *focusable,
+                   ClickType clickType) override;
 
-    // IDragDropListener
+    // IEventsDragDrop
     virtual void OnDragStarted(UIDragDroppable *dragDroppable);
     virtual void OnDragUpdate(UIDragDroppable *dragDroppable);
     virtual void OnDrop(UIDragDroppable *dragDroppable);
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 protected:
     UITree();

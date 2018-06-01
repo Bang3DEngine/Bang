@@ -371,7 +371,7 @@ void GEngine::PushActiveRenderingCamera()
 {
     if ( GetActiveRenderingCamera() )
     {
-        GetActiveRenderingCamera()->EventEmitter<IDestroyListener>::
+        GetActiveRenderingCamera()->EventEmitter<IEventsDestroy>::
                                     RegisterListener(this);
     }
     p_renderingCameras.stack.push( GetActiveRenderingCamera() );
@@ -425,9 +425,9 @@ void GEngine::Render(Renderer *rend)
     previousRendMat.Set(rend->GetActiveMaterial());
     if (GetReplacementMaterial())
     {
-        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(false);
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
         rend->SetMaterial( GetReplacementMaterial() );
-        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(true);
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
     }
 
     // Render with the renderer!
@@ -454,9 +454,9 @@ void GEngine::Render(Renderer *rend)
     // replacement shader
     if (GetReplacementMaterial())
     {
-        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(false);
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
         rend->SetMaterial(previousRendMat.Get());
-        rend->EventEmitter<IRendererChangedListener>::SetEmitEvents(true);
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
     }
 }
 
@@ -473,7 +473,7 @@ TextureUnitManager *GEngine::GetTextureUnitManager() const
     return m_texUnitManager;
 }
 
-void GEngine::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void GEngine::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     Camera *cam = DCAST<Camera*>(object);
     ASSERT(cam);

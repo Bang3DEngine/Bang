@@ -7,7 +7,7 @@
 #include "Bang/Serializable.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/ComponentFactory.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 

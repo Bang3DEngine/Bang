@@ -19,8 +19,8 @@ AudioPlayerRunnable::AudioPlayerRunnable(AudioClip *clip,
 AudioPlayerRunnable::~AudioPlayerRunnable()
 {
     AudioManager::GetInstance()->OnAudioFinishedPlaying(this);
-    EventEmitter<IDestroyListener>::PropagateToListeners(
-                          &IDestroyListener::OnDestroyed, this);
+    EventEmitter<IEventsDestroy>::PropagateToListeners(
+                          &IEventsDestroy::OnDestroyed, this);
 }
 
 void AudioPlayerRunnable::Resume() { p_alAudioSource->Play(); }

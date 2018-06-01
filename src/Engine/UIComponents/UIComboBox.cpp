@@ -74,8 +74,8 @@ void UIComboBox::SetSelectionByIndex(int index)
     {
         m_selectedIndex = index;
         p_currentItemText->SetContent( m_indexToLabel[index] );
-        EventEmitter<IValueChangedListener>::PropagateToListeners(
-                    &IValueChangedListener::OnValueChanged, this);
+        EventEmitter<IEventsValueChanged>::PropagateToListeners(
+                    &IEventsValueChanged::OnValueChanged, this);
     }
 }
 

@@ -13,11 +13,11 @@
 #include "Bang/IsContainer.h"
 #include "Bang/Serializable.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/INameListener.h"
-#include "Bang/IDestroyListener.h"
-#include "Bang/IChildrenListener.h"
-#include "Bang/IComponentListener.h"
-#include "Bang/IGameObjectVisibilityChangedListener.h"
+#include "Bang/IEventsName.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsComponent.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -41,11 +41,11 @@ FORWARD class RectTransform;
 
 class GameObject : public Object,
                    public IToString,
-                   public EventListener<IChildrenListener>,
-                   public EventEmitter<INameListener>,
-                   public EventEmitter<IChildrenListener>,
-                   public EventEmitter<IComponentListener>,
-                   public EventEmitter<IGameObjectVisibilityChangedListener>
+                   public EventListener<IEventsChildren>,
+                   public EventEmitter<IEventsName>,
+                   public EventEmitter<IEventsChildren>,
+                   public EventEmitter<IEventsComponent>,
+                   public EventEmitter<IEventsGameObjectVisibilityChanged>
 {
     GAMEOBJECT_NO_FRIEND(GameObject)
 
@@ -182,7 +182,7 @@ protected:
     virtual void ChildAdded(GameObject *addedChild, GameObject *parent);
     virtual void ChildRemoved(GameObject *removedChild, GameObject *parent);
 
-    // IObjectListener
+    // IEventsObject
     virtual void OnEnabled() override;
     virtual void OnDisabled() override;
 

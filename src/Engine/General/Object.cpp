@@ -54,8 +54,8 @@ void Object::DestroyObject(Object *object)
         object->m_waitingToBeDestroyed = true;
 
         object->OnDestroy();
-        object->EventEmitter<IDestroyListener>::
-                PropagateToListeners(&IDestroyListener::OnDestroyed, object);
+        object->EventEmitter<IEventsDestroy>::
+                PropagateToListeners(&IEventsDestroy::OnDestroyed, object);
     }
 }
 

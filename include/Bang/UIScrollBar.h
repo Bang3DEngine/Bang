@@ -3,7 +3,7 @@
 
 #include "Bang/Alignment.h"
 #include "Bang/Component.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -12,7 +12,7 @@ FORWARD class UIScrollArea;
 FORWARD class UIImageRenderer;
 
 class UIScrollBar : public Component,
-                    public EventListener<IFocusListener>
+                    public EventListener<IEventsFocus>
 {
     COMPONENT(UIScrollBar)
 
@@ -64,9 +64,9 @@ private:
     UIFocusable* GetFocusable() const;
     GameObject* GetBar() const;
 
-    // IFocusListener
-    void OnMouseEnter(IFocusable *focusable) override;
-    void OnMouseExit(IFocusable *focusable) override;
+    // IEventsFocus
+    void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
+    void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
 
     friend class GameObjectFactory;
 };

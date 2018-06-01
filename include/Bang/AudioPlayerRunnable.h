@@ -4,7 +4,7 @@
 #include "Bang/Thread.h"
 
 #include "Bang/EventEmitter.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -12,7 +12,7 @@ FORWARD class AudioClip;
 FORWARD class ALAudioSource;
 
 class AudioPlayerRunnable : public ThreadRunnable,
-                            public EventEmitter<IDestroyListener>
+                            public EventEmitter<IEventsDestroy>
 {
 public:
     AudioPlayerRunnable(AudioClip *clip,

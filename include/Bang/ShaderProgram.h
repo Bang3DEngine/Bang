@@ -11,7 +11,8 @@
 #include "Bang/Vector4.h"
 #include "Bang/GLObject.h"
 #include "Bang/Resources.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsResource.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -21,8 +22,8 @@ FORWARD class TextureCubeMap;
 
 class ShaderProgram : public GLObject,
                       public Resource,
-                      public EventListener<IResourceListener>,
-                      public EventListener<IDestroyListener>
+                      public EventListener<IEventsResource>,
+                      public EventListener<IEventsDestroy>
 {
     RESOURCE(ShaderProgram)
 
@@ -116,8 +117,8 @@ private:
     // IResourceListener
     void OnImported(Resource *res) override;
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
 
 NAMESPACE_BANG_END

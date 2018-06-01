@@ -108,14 +108,14 @@ void SceneManager::SetSceneVariable(Scene **sceneVar, Scene *sceneValue)
         if (*sceneVar)
         {
             if (GetLoadedScene() != GetActiveScene_())
-            { (*sceneVar)->EventEmitter<IDestroyListener>::UnRegisterListener(this); }
+            { (*sceneVar)->EventEmitter<IEventsDestroy>::UnRegisterListener(this); }
         }
 
         *sceneVar = sceneValue;
         if (*sceneVar)
         {
             if (GetLoadedScene() != GetActiveScene_())
-            { (*sceneVar)->EventEmitter<IDestroyListener>::RegisterListener(this); }
+            { (*sceneVar)->EventEmitter<IEventsDestroy>::RegisterListener(this); }
         }
     }
 }
@@ -200,8 +200,8 @@ void SceneManager::LoadSceneInstantly_()
     if (!GetActiveScene_()) { SetActiveScene_(loadedScene); }
 
     // Propagate loaded event and clear next load variables
-    EventEmitter<ISceneManagerListener>::PropagateToListeners(
-        &ISceneManagerListener::OnSceneLoaded,
+    EventEmitter<IEventsSceneManager>::PropagateToListeners(
+        &IEventsSceneManager::OnSceneLoaded,
          GetNextLoadScene(), GetNextLoadScenePath());
     ClearNextLoad();
 }
@@ -217,7 +217,7 @@ List<GameObject*> SceneManager::FindDontDestroyOnLoadGameObjects(GameObject *go)
     return result;
 }
 
-void SceneManager::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void SceneManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == GetNextLoadScene()) { ClearNextLoad(); }
     if (object == GetLoadedScene())   { p_loadedScene = nullptr; }
@@ -243,7 +243,7 @@ void SceneManager::PrepareNextLoad(Scene *scene, const Path &scenePath, bool des
 {
     if (GetNextLoadScene() && GetNextLoadScene() != GetActiveScene_())
     {
-        GetNextLoadScene()->EventEmitter<IDestroyListener>::UnRegisterListener(this);
+        GetNextLoadScene()->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
 
     m_nextLoadNeeded = true;
@@ -253,6 +253,6 @@ void SceneManager::PrepareNextLoad(Scene *scene, const Path &scenePath, bool des
 
     if (GetNextLoadScene())
     {
-        GetNextLoadScene()->EventEmitter<IDestroyListener>::RegisterListener(this);
+        GetNextLoadScene()->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 }

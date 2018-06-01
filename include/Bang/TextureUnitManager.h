@@ -7,13 +7,13 @@
 
 #include "Bang/GL.h"
 #include "Bang/Map.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Texture;
 
-class TextureUnitManager : public EventListener<IDestroyListener>
+class TextureUnitManager : public EventListener<IEventsDestroy>
 {
 public:
     using TexUnit = uint;
@@ -49,7 +49,7 @@ private:
     void UnTrackTexture(GLId textureId);
     void CheckBindingsValidity() const;
 
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
 
 NAMESPACE_BANG_END

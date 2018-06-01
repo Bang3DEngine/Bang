@@ -87,7 +87,7 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
         if (GetImageResource(cubeMapDir).Get())
         {
             GetImageResource(cubeMapDir).Get()->
-                    EventEmitter<IResourceListener>::UnRegisterListener(this);
+                    EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
 
         FillCubeMapDir(cubeMapDir, img);
@@ -96,7 +96,7 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
         if (GetImageResource(cubeMapDir).Get())
         {
             GetImageResource(cubeMapDir).Get()->
-                    EventEmitter<IResourceListener>::RegisterListener(this);
+                    EventEmitter<IEventsResource>::RegisterListener(this);
         }
     }
 }

@@ -16,8 +16,8 @@ protected:
     virtual bool CanBeRepeatedInGameObject() const override;
 
 private:
-    UIFocusable();
-    virtual ~UIFocusable();
+    UIFocusable() = default;
+    virtual ~UIFocusable() = default;
 };
 
 NAMESPACE_BANG_END

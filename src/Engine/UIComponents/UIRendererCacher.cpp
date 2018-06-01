@@ -136,17 +136,17 @@ void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
         List<Renderer*> renderers = child->GetComponents<Renderer>();
         for (Renderer *rend : renderers)
         {
-            rend->EventEmitter<IRendererChangedListener>::RegisterListener(this);
+            rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
         }
 
         if (child->GetTransform())
         {
-            child->GetTransform()->EventEmitter<ITransformListener>::RegisterListener(this);
+            child->GetTransform()->EventEmitter<IEventsTransform>::RegisterListener(this);
         }
 
         child->EventEmitter<IObjectEvents>::RegisterListener(this);
-        child->EventEmitter<IChildrenListener>::RegisterListener(this);
-        child->EventEmitter<IGameObjectVisibilityChangedListener>::RegisterListener(this);
+        child->EventEmitter<IEventsChildren>::RegisterListener(this);
+        child->EventEmitter<IEventsGameObjectVisibilityChanged>::RegisterListener(this);
     }
 
     OnChanged();
@@ -161,10 +161,10 @@ void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject*)
         List<Renderer*> renderers = child->GetComponents<Renderer>();
         for (Renderer *rend : renderers)
         {
-            rend->EventEmitter<IRendererChangedListener>::UnRegisterListener(this);
+            rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
         }
-        child->EventEmitter<IChildrenListener>::UnRegisterListener(this);
-        child->EventEmitter<IGameObjectVisibilityChangedListener>::UnRegisterListener(this);
+        child->EventEmitter<IEventsChildren>::UnRegisterListener(this);
+        child->EventEmitter<IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
     }
 
     OnChanged();
@@ -200,9 +200,9 @@ void UIRendererCacher::OnDisabled()
 
 void UIRendererCacher::SetContainerVisible(bool visible)
 {
-    EventListener<IGameObjectVisibilityChangedListener>::SetReceiveEvents(false);
+    EventListener<IEventsGameObjectVisibilityChanged>::SetReceiveEvents(false);
     GetContainer()->SetVisible(visible);
-    EventListener<IGameObjectVisibilityChangedListener>::SetReceiveEvents(true);
+    EventListener<IEventsGameObjectVisibilityChanged>::SetReceiveEvents(true);
 }
 
 UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)
@@ -218,7 +218,7 @@ UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)
     rendererCacher->p_uiRenderersContainer = container;
 
     container->SetParent(go);
-    container->EventEmitter<IChildrenListener>::RegisterListener(rendererCacher);
+    container->EventEmitter<IEventsChildren>::RegisterListener(rendererCacher);
     rendererCacher->OnChildAdded(container, go);
 
     return rendererCacher;

@@ -4,7 +4,7 @@
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IValueChangedListener.h"
+#include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -13,8 +13,8 @@ FORWARD class UIInputNumber;
 FORWARD class UIImageRenderer;
 
 class UISlider : public Component,
-                 public EventListener<IValueChangedListener>,
-                 public EventEmitter<IValueChangedListener>
+                 public EventListener<IEventsValueChanged>,
+                 public EventEmitter<IEventsValueChanged>
 {
     COMPONENT(UISlider)
 
@@ -52,8 +52,8 @@ private:
     // Component
     void OnUpdate() override;
 
-    // IValueChangedListener
-    void OnValueChanged(Object *object) override;
+    // IEventsValueChanged
+    void OnValueChanged(EventEmitter<IEventsValueChanged> *object) override;
 
     float GetMouseRelativePercent() const;
     void UpdateSliderHandlerFromInputNumberValue();

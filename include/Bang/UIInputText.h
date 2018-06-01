@@ -4,8 +4,8 @@
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/ILayoutElement.h"
-#include "Bang/IFocusListener.h"
-#include "Bang/IValueChangedListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -19,9 +19,9 @@ FORWARD class UITextRenderer;
 FORWARD class UIImageRenderer;
 
 class UIInputText : public Component,
-                    public EventEmitter<IValueChangedListener>,
-                    public EventEmitter<IFocusListener>,
-                    public EventListener<IFocusListener>,
+                    public EventEmitter<IEventsValueChanged>,
+                    public EventEmitter<IEventsFocus>,
+                    public EventListener<IEventsFocus>,
                     public ILayoutElement
 {
     COMPONENT(UIInputText)
@@ -40,9 +40,9 @@ public:
     void SetBlocked(bool blocked);
     void SetAllowedCharacters(const String &allowedCharacters);
 
-    // IFocusListener
-    virtual void OnFocusTaken(IFocusable *focusable) override;
-    virtual void OnFocusLost(IFocusable *focusable) override;
+    // IEventsFocus
+    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
 
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;

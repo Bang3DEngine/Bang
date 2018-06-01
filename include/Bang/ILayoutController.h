@@ -5,26 +5,26 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/IInvalidatable.h"
-#include "Bang/IChildrenListener.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
 
 NAMESPACE_BANG_BEGIN
 
 class ILayoutController : public IInvalidatable<ILayoutController>,
-                          public EventListener<IChildrenListener>,
-                          public EventListener<ITransformListener>
+                          public EventListener<IEventsChildren>,
+                          public EventListener<IEventsTransform>
 {
 public:
     // IInvalidatable
     virtual void Invalidate() override;
     virtual void OnInvalidated() override;
 
-    // IChildrenListener
+    // IEventsChildren
     void OnChildAdded(GameObject *addedChild, GameObject *parent) override;
     void OnChildRemoved(GameObject *removedChild, GameObject *parent) override;
     void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
 
-    // ITransformListener
+    // IEventsTransform
     virtual void OnTransformChanged() override;
     virtual void OnParentTransformChanged() override;
 

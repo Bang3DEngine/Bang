@@ -15,7 +15,7 @@
 #include "Bang/Transform.h"
 #include "Bang/SceneManager.h"
 #include "Bang/RectTransform.h"
-#include "Bang/IObjectListener.h"
+#include "Bang/IEventsObject.h"
 #include "Bang/GameObjectFactory.h"
 
 USING_NAMESPACE_BANG
@@ -126,29 +126,29 @@ void GameObject::AfterChildrenRender(RenderPass renderPass)
 
 void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
 {
-    EventEmitter<IChildrenListener>::
-          PropagateToListeners(&IChildrenListener::OnChildAdded,
+    EventEmitter<IEventsChildren>::
+          PropagateToListeners(&IEventsChildren::OnChildAdded,
                                addedChild, parent);
-    PropagateToList(&EventListener<IChildrenListener>::OnChildAdded,
+    PropagateToList(&EventListener<IEventsChildren>::OnChildAdded,
                     GetComponentsInParentAndThis<
-                          EventListener<IChildrenListener> >(),
+                          EventListener<IEventsChildren> >(),
                     addedChild, parent);
-    PropagateSingle(&EventListener<IChildrenListener>::OnChildAdded,
-                    SCAST<EventListener<IChildrenListener>*>(GetParent()),
+    PropagateSingle(&EventListener<IEventsChildren>::OnChildAdded,
+                    SCAST<EventListener<IEventsChildren>*>(GetParent()),
                     addedChild, parent);
 }
 
 void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
 {
-    EventEmitter<IChildrenListener>::
-          PropagateToListeners(&EventListener<IChildrenListener>::OnChildRemoved,
+    EventEmitter<IEventsChildren>::
+          PropagateToListeners(&EventListener<IEventsChildren>::OnChildRemoved,
                                removedChild, parent);
-    PropagateToList(&EventListener<IChildrenListener>::OnChildRemoved,
+    PropagateToList(&EventListener<IEventsChildren>::OnChildRemoved,
                     GetComponentsInParentAndThis<
-                                EventListener<IChildrenListener>>(true),
+                                EventListener<IEventsChildren>>(true),
                     removedChild, parent);
-    PropagateSingle(&EventListener<IChildrenListener>::OnChildRemoved,
-                    SCAST<EventListener<IChildrenListener>*>(GetParent()),
+    PropagateSingle(&EventListener<IEventsChildren>::OnChildRemoved,
+                    SCAST<EventListener<IEventsChildren>*>(GetParent()),
                     removedChild, parent);
 }
 
@@ -249,8 +249,8 @@ void GameObject::RemoveComponent(Component *component)
             m_increaseComponentsIterator = false;
         }
 
-        EventEmitter<IComponentListener>::PropagateToListeners(
-                    &IComponentListener::OnComponentRemoved, component);
+        EventEmitter<IEventsComponent>::PropagateToListeners(
+                    &IEventsComponent::OnComponentRemoved, component);
     }
 
     if (component == p_transform) { p_transform = nullptr; }
@@ -341,8 +341,8 @@ Component* GameObject::AddComponent(Component *component, int _index)
 
         component->SetGameObject(this);
 
-        EventEmitter<IComponentListener>::PropagateToListeners(
-                    &IComponentListener::OnComponentAdded, component, index);
+        EventEmitter<IEventsComponent>::PropagateToListeners(
+                    &IEventsComponent::OnComponentAdded, component, index);
     }
     return component;
 }
@@ -391,8 +391,8 @@ void GameObject::SetName(const String &name)
     {
         String oldName = name;
         m_name = name;
-        EventEmitter<INameListener>::PropagateToListeners(
-                    &INameListener::OnNameChanged, this, oldName, GetName());
+        EventEmitter<IEventsName>::PropagateToListeners(
+                    &IEventsName::OnNameChanged, this, oldName, GetName());
     }
 }
 const String& GameObject::GetName() const { return m_name; }
@@ -428,8 +428,8 @@ void GameObject::SetVisible(bool visible)
     if (visible != IsVisible())
     {
         m_visible = visible;
-        EventEmitter<IGameObjectVisibilityChangedListener>::PropagateToListeners(
-            &IGameObjectVisibilityChangedListener::OnVisibilityChanged, this);
+        EventEmitter<IEventsGameObjectVisibilityChanged>::PropagateToListeners(
+            &IEventsGameObjectVisibilityChanged::OnVisibilityChanged, this);
     }
 }
 
@@ -514,11 +514,11 @@ void GameObject::SetParent(GameObject *newParent, int _index)
         p_parent = newParent;
         if (newParent) { newParent->AddChild(this, index); }
 
-        EventEmitter<IChildrenListener>::
-               PropagateToListeners(&IChildrenListener::OnParentChanged,
+        EventEmitter<IEventsChildren>::
+               PropagateToListeners(&IEventsChildren::OnParentChanged,
                                     oldParent, newParent);
-        PropagateToList(&EventListener<IChildrenListener>::OnParentChanged,
-                        GetComponents<EventListener<IChildrenListener>>(),
+        PropagateToList(&EventListener<IEventsChildren>::OnParentChanged,
+                        GetComponents<EventListener<IEventsChildren>>(),
                         oldParent, newParent);
     }
     else if (GetParent())

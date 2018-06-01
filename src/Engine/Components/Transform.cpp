@@ -5,7 +5,7 @@
 
 #include "Bang/XMLNode.h"
 #include "Bang/GameObject.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsTransform.h"
 
 USING_NAMESPACE_BANG
 
@@ -401,15 +401,15 @@ void Transform::OnTransformChanged()
     GameObject *go = GetGameObject();
     if (!go) { return; }
 
-    EventEmitter<ITransformListener>::
-       PropagateToListeners(&EventListener<ITransformListener>::OnTransformChanged);
+    EventEmitter<IEventsTransform>::
+       PropagateToListeners(&EventListener<IEventsTransform>::OnTransformChanged);
 
-    EventListener<ITransformListener>::SetReceiveEvents(false);
+    EventListener<IEventsTransform>::SetReceiveEvents(false);
 
-    go->PropagateToList(&EventListener<ITransformListener>::OnTransformChanged,
-                  go->GetComponents<EventListener<ITransformListener>>());
+    go->PropagateToList(&EventListener<IEventsTransform>::OnTransformChanged,
+                  go->GetComponents<EventListener<IEventsTransform>>());
 
-    EventListener<ITransformListener>::SetReceiveEvents(true);
+    EventListener<IEventsTransform>::SetReceiveEvents(true);
 
     PropagateParentTransformChangedEventToChildren();
     PropagateChildrenTransformChangedEventToParent();
@@ -418,25 +418,25 @@ void Transform::OnTransformChanged()
 void Transform::PropagateParentTransformChangedEventToChildren() const
 {
     GameObject *go = GetGameObject();
-    EventEmitter<ITransformListener>::
+    EventEmitter<IEventsTransform>::
            PropagateToListeners(
-                &EventListener<ITransformListener>::OnParentTransformChanged);
+                &EventListener<IEventsTransform>::OnParentTransformChanged);
     go->PropagateToList(
-            &EventListener<ITransformListener>::OnParentTransformChanged,
+            &EventListener<IEventsTransform>::OnParentTransformChanged,
                   go->GetComponentsInChildrenOnly<
-                            EventListener<ITransformListener>>(false));
+                            EventListener<IEventsTransform>>(false));
 }
 
 void Transform::PropagateChildrenTransformChangedEventToParent() const
 {
     GameObject *go = GetGameObject();
-    EventEmitter<ITransformListener>::
+    EventEmitter<IEventsTransform>::
            PropagateToListeners(
-                &EventListener<ITransformListener>::OnChildrenTransformChanged);
+                &EventListener<IEventsTransform>::OnChildrenTransformChanged);
     go->PropagateToList(
-            &EventListener<ITransformListener>::OnChildrenTransformChanged,
+            &EventListener<IEventsTransform>::OnChildrenTransformChanged,
                   go->GetComponentsInParent<
-                            EventListener<ITransformListener>>(false));
+                            EventListener<IEventsTransform>>(false));
 }
 
 void Transform::OnParentTransformChanged()

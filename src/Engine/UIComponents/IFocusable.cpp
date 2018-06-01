@@ -35,8 +35,8 @@ void IFocusable::UpdateFromCanvas()
                 if (!IsBeingPressed())
                 {
                     m_beingPressed = true;
-                    EventEmitter<IFocusListener>::PropagateToListeners(
-                                &IFocusListener::OnStartedBeingPressed, this);
+                    EventEmitter<IEventsFocus>::PropagateToListeners(
+                                &IEventsFocus::OnStartedBeingPressed, this);
                 }
 
                 m_lastMouseDownWasHere = true;
@@ -64,8 +64,8 @@ void IFocusable::UpdateFromCanvas()
 
     if (IsBeingPressed() && !Input::GetMouseButton(MouseButton::LEFT))
     {
-        EventEmitter<IFocusListener>::PropagateToListeners(
-                    &IFocusListener::OnStoppedBeingPressed, this);
+        EventEmitter<IEventsFocus>::PropagateToListeners(
+                    &IEventsFocus::OnStoppedBeingPressed, this);
         m_beingPressed = false;
     }
 }
@@ -129,13 +129,13 @@ void IFocusable::PropagateMouseOverToListeners(bool mouseOver)
         m_isMouseOver = mouseOver;
         if (IsMouseOver())
         {
-            EventEmitter<IFocusListener>::
-                    PropagateToListeners(&IFocusListener::OnMouseEnter, this);
+            EventEmitter<IEventsFocus>::
+                    PropagateToListeners(&IEventsFocus::OnMouseEnter, this);
         }
         else
         {
-            EventEmitter<IFocusListener>::
-                    PropagateToListeners(&IFocusListener::OnMouseExit, this);
+            EventEmitter<IEventsFocus>::
+                    PropagateToListeners(&IEventsFocus::OnMouseExit, this);
         }
     }
 }
@@ -145,13 +145,13 @@ void IFocusable::PropagateFocusToListeners()
 {
     if (HasFocus())
     {
-        EventEmitter<IFocusListener>::
-                PropagateToListeners(&IFocusListener::OnFocusTaken, this);
+        EventEmitter<IEventsFocus>::
+                PropagateToListeners(&IEventsFocus::OnFocusTaken, this);
     }
     else
     {
-        EventEmitter<IFocusListener>::
-            PropagateToListeners(&IFocusListener::OnFocusLost, this);
+        EventEmitter<IEventsFocus>::
+            PropagateToListeners(&IEventsFocus::OnFocusLost, this);
     }
 }
 
@@ -159,8 +159,8 @@ void IFocusable::PropagateOnClickedToListeners(ClickType clickType)
 {
     if (IsEmittingEvents())
     {
-        EventEmitter<IFocusListener>::
-            PropagateToListeners(&IFocusListener::OnClicked, this, clickType);
+        EventEmitter<IEventsFocus>::
+            PropagateToListeners(&IEventsFocus::OnClicked, this, clickType);
         for (auto callback : m_clickedCallbacks) { callback(this, clickType); }
     }
 }

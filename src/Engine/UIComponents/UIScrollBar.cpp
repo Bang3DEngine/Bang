@@ -28,7 +28,7 @@ UIScrollBar::~UIScrollBar()
 void UIScrollBar::OnStart()
 {
     Component::OnStart();
-    GetFocusable()->EventEmitter<IFocusListener>::RegisterListener(this);
+    GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
 }
 
 void UIScrollBar::OnUpdate()
@@ -229,7 +229,7 @@ AARect UIScrollBar::GetScrollingRect() const
 UIScrollArea *UIScrollBar::GetScrollArea() const { return p_scrollArea; }
 GameObject *UIScrollBar::GetBar() const { return p_bar; }
 
-void UIScrollBar::OnMouseEnter(IFocusable*)
+void UIScrollBar::OnMouseEnter(EventEmitter<IEventsFocus>*)
 {
     if (!IsBeingGrabbed())
     {
@@ -237,7 +237,7 @@ void UIScrollBar::OnMouseEnter(IFocusable*)
     }
 }
 
-void UIScrollBar::OnMouseExit(IFocusable*)
+void UIScrollBar::OnMouseExit(EventEmitter<IEventsFocus>*)
 {
     if (!IsBeingGrabbed()) { p_barImg->SetTint(Color::Gray.WithValue(1.2f)); }
 }

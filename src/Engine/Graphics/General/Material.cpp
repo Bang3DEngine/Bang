@@ -145,7 +145,7 @@ void Material::SetAlbedoTexture(Texture2D* texture)
     {
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<ITextureChangedListener>::
+            GetAlbedoTexture()->EventEmitter<IEventsTextureChanged>::
                                 UnRegisterListener(this);
         }
 
@@ -155,7 +155,7 @@ void Material::SetAlbedoTexture(Texture2D* texture)
 
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<ITextureChangedListener>::
+            GetAlbedoTexture()->EventEmitter<IEventsTextureChanged>::
                                 RegisterListener(this);
         }
 
@@ -169,7 +169,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
     {
         if (GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<ITextureChangedListener>::
+            GetNormalMapTexture()->EventEmitter<IEventsTextureChanged>::
                                    UnRegisterListener(this);
         }
 
@@ -180,7 +180,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
 
         if (GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<ITextureChangedListener>::
+            GetNormalMapTexture()->EventEmitter<IEventsTextureChanged>::
                                    RegisterListener(this);
         }
 
@@ -304,8 +304,8 @@ void Material::OnTextureChanged(const Texture*)
 
 void Material::PropagateMaterialChanged()
 {
-    EventEmitter<IMaterialChangedListener>::PropagateToListeners(
-                &IMaterialChangedListener::OnMaterialChanged, this);
+    EventEmitter<IEventsMaterialChanged>::PropagateToListeners(
+                &IEventsMaterialChanged::OnMaterialChanged, this);
 }
 
 void Material::Import(const Path &materialFilepath)

@@ -84,13 +84,13 @@ void Renderer::SetMaterial(Material *mat)
     {
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()->EventEmitter<IMaterialChangedListener>::
+            GetSharedMaterial()->EventEmitter<IEventsMaterialChanged>::
                                  UnRegisterListener(this);
         }
 
         if (p_material.Get())
         {
-            p_material.Get()->EventEmitter<IMaterialChangedListener>::
+            p_material.Get()->EventEmitter<IEventsMaterialChanged>::
                               UnRegisterListener(this);
             p_material.Set(nullptr);
         }
@@ -99,7 +99,7 @@ void Renderer::SetMaterial(Material *mat)
 
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()->EventEmitter<IMaterialChangedListener>::
+            GetSharedMaterial()->EventEmitter<IEventsMaterialChanged>::
                                  RegisterListener(this);
         }
 
@@ -156,7 +156,7 @@ Material* Renderer::GetMaterial() const
         if (GetSharedMaterial())
         {
             p_material = Resources::Clone<Material>(GetSharedMaterial());
-            p_material.Get()->EventEmitter<IMaterialChangedListener>::
+            p_material.Get()->EventEmitter<IEventsMaterialChanged>::
                               RegisterListener(const_cast<Renderer*>(this));
         }
     }
@@ -172,8 +172,8 @@ AARect Renderer::GetBoundingRect(Camera *camera) const
 
 void Renderer::PropagateRendererChanged()
 {
-    EventEmitter<IRendererChangedListener>::PropagateToListeners(
-                &IRendererChangedListener::OnRendererChanged, this);
+    EventEmitter<IEventsRendererChanged>::PropagateToListeners(
+                &IEventsRendererChanged::OnRendererChanged, this);
 }
 
 void Renderer::CloneInto(ICloneable *clone) const

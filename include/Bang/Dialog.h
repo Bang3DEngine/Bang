@@ -6,7 +6,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Path.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -7,27 +7,18 @@
 
 #include "Bang/Assert.h"
 #include "Bang/String.h"
+#include "Bang/IEventsDebug.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/StreamOperators.h"
+#include "Bang/DebugMessageType.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Object;
 FORWARD class Shader;
 
-enum class DebugMessageType { LOG, WARN, ERROR };
-
-class IDebugListener
-{
-    EVENTLISTENER(IDebugListener);
-
-public:
-    virtual void OnMessage(DebugMessageType msgType, const String &str,
-                           int line, const String &fileName) = 0;
-};
-
-class Debug : public EventEmitter<IDebugListener>
+class Debug : public EventEmitter<IEventsDebug>
 {
 public:
     static void Log(const String &str, int line, const String &fileName);

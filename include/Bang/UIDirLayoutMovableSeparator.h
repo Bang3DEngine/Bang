@@ -6,15 +6,16 @@
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/LineRenderer.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 #include "Bang/LayoutSizeType.h"
+#include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
 
 class UIDirLayoutMovableSeparator : public Component,
-                                    public EventListener<IFocusListener>
+                                    public EventListener<IEventsFocus>
 {
     COMPONENT(UIDirLayoutMovableSeparator)
 
@@ -27,9 +28,9 @@ public:
     void SetAxis(Axis axis);
     Axis GetAxis() const;
 
-    // IFocusListener
-    virtual void OnMouseEnter(IFocusable *focusable) override;
-    virtual void OnMouseExit(IFocusable *focusable) override;
+    // IEventsFocus
+    virtual void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
 
     static UIDirLayoutMovableSeparator *CreateInto(GameObject *go);
 

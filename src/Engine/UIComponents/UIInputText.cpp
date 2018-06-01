@@ -331,8 +331,8 @@ void UIInputText::ReplaceSelectedText(const String &replaceStr)
     SetCursorIndex(minIndex);
     GetLabel()->ResetSelection();
 
-    EventEmitter<IValueChangedListener>::
-            PropagateToListeners(&IValueChangedListener::OnValueChanged, this);
+    EventEmitter<IEventsValueChanged>::
+            PropagateToListeners(&IEventsValueChanged::OnValueChanged, this);
 }
 
 void UIInputText::SetBlocked(bool blocked)
@@ -383,7 +383,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_background = bg;
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->EventEmitter<IFocusListener>::RegisterListener(inputText);
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(inputText);
     inputText->p_focusable = focusable;
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
@@ -456,22 +456,22 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
     return i;
 }
 
-void UIInputText::OnFocusTaken(IFocusable *focusable)
+void UIInputText::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusTaken(focusable);
+    IEventsFocus::OnFocusTaken(focusable);
 
-    EventEmitter<IFocusListener>::
-            PropagateToListeners(&IFocusListener::OnFocusTaken, focusable);
+    EventEmitter<IEventsFocus>::
+            PropagateToListeners(&IEventsFocus::OnFocusTaken, focusable);
 
     Input::PollInputText();
 }
 
-void UIInputText::OnFocusLost(IFocusable *focusable)
+void UIInputText::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusLost(focusable);
+    IEventsFocus::OnFocusLost(focusable);
 
-    EventEmitter<IFocusListener>::
-            PropagateToListeners(&IFocusListener::OnFocusLost, focusable);
+    EventEmitter<IEventsFocus>::
+            PropagateToListeners(&IEventsFocus::OnFocusLost, focusable);
 
     UpdateCursorRenderer();
 }

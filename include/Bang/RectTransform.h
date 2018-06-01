@@ -6,7 +6,7 @@
 #include "Bang/Vector2.h"
 #include "Bang/Transform.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IObjectListener.h"
+#include "Bang/IEventsObject.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -105,7 +105,7 @@ public:
     const Matrix4& GetRectLocalToWorldMatrix() const;
     const Matrix4& GetRectLocalToWorldMatrixInv() const;
 
-    // IObjectListener
+    // IEventsObject
     void OnEnabled() override;
     void OnDisabled() override;
 

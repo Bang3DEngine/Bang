@@ -39,8 +39,8 @@ void Debug::Message(DebugMessageType msgType,
     Debug *dbg = Debug::GetInstance();
     if (dbg)
     {
-        dbg->EventEmitter<IDebugListener>::PropagateToListeners(
-                    &IDebugListener::OnMessage,
+        dbg->EventEmitter<IEventsDebug>::PropagateToListeners(
+                    &IEventsDebug::OnMessage,
                     msgType, str, line, fileName);
     }
 

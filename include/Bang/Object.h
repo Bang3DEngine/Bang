@@ -4,15 +4,15 @@
 #include "Bang/ObjectId.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/Serializable.h"
-#include "Bang/IObjectListener.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsObject.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
 class Object : public Serializable,
                public ICloneable,
                public EventListener<IObjectEvents>,
-               public EventEmitter<IDestroyListener>,
+               public EventEmitter<IEventsDestroy>,
                public EventEmitter<IObjectEvents>
 {
 public:

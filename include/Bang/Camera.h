@@ -18,7 +18,7 @@ FORWARD class ShaderProgram;
 FORWARD class SelectionFramebuffer;
 
 class Camera : public Component,
-               public EventListener<IDestroyListener>
+               public EventListener<IEventsDestroy>
 {
     COMPONENT(Camera)
 
@@ -109,8 +109,8 @@ public:
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
-    // IDestroyListener
-    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 protected:
     Camera();

@@ -6,11 +6,11 @@
 
 #include "Bang/AudioParams.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
-class ALAudioSource : public virtual EventEmitter<IDestroyListener>
+class ALAudioSource : public virtual EventEmitter<IEventsDestroy>
 {
 public:
     enum State

@@ -30,7 +30,7 @@ public:
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
-    // ITransformListener
+    // IEventsTransform
     void OnTransformChanged() override;
     void OnParentTransformChanged() override;
 

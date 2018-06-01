@@ -22,8 +22,8 @@ UIInputNumber::~UIInputNumber()
 void UIInputNumber::OnStart()
 {
     UIInputText *inputText = GetGameObject()->GetComponent<UIInputText>();
-    inputText->EventEmitter<IFocusListener>::RegisterListener(this);
-    inputText->EventEmitter<IValueChangedListener>::RegisterListener(this);
+    inputText->EventEmitter<IEventsFocus>::RegisterListener(this);
+    inputText->EventEmitter<IEventsValueChanged>::RegisterListener(this);
 }
 
 void UIInputNumber::OnUpdate()
@@ -59,8 +59,8 @@ void UIInputNumber::SetValue(float v)
     if (finalValue != GetValue())
     {
         m_value = finalValue;
-        EventEmitter<IValueChangedListener>::
-           PropagateToListeners(&IValueChangedListener::OnValueChanged, this);
+        EventEmitter<IEventsValueChanged>::
+           PropagateToListeners(&IEventsValueChanged::OnValueChanged, this);
     }
 
     if (!HasFocus()) { UpdateTextFromValue(); }
@@ -96,15 +96,15 @@ uint UIInputNumber::GetDecimalPlaces() const
     return m_decimalPlaces;
 }
 
-void UIInputNumber::OnFocusTaken(IFocusable *focusable)
+void UIInputNumber::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusTaken(focusable);
+    IEventsFocus::OnFocusTaken(focusable);
     m_hasFocus = true;
 }
 
-void UIInputNumber::OnFocusLost(IFocusable *focusable)
+void UIInputNumber::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusLost(focusable);
+    IEventsFocus::OnFocusLost(focusable);
     m_hasFocus = false;
     SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );
 }
@@ -151,7 +151,7 @@ const Vector2 &UIInputNumber::GetMinMaxValues() const
 }
 bool UIInputNumber::HasFocus() const { return m_hasFocus; }
 
-void UIInputNumber::OnValueChanged(Object *object)
+void UIInputNumber::OnValueChanged(EventEmitter<IEventsValueChanged> *object)
 {
     ASSERT(object == GetInputText());
     UpdateValueFromText();

@@ -6,8 +6,8 @@
 #include "Bang/UMap.h"
 #include "Bang/Array.h"
 #include "Bang/Component.h"
-#include "Bang/IFocusListener.h"
-#include "Bang/IUIListListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsUIList.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -19,9 +19,9 @@ FORWARD class UIImageRenderer;
 using GOItem = GameObject;
 
 class UIList : public Component,
-               public EventListener<IFocusListener>,
-               public EventListener<IDestroyListener>,
-               public EventEmitter<IUIListListener>
+               public EventListener<IEventsFocus>,
+               public EventListener<IEventsDestroy>,
+               public EventEmitter<IEventsUIList>
 {
     COMPONENT(UIList)
 
@@ -68,8 +68,8 @@ public:
 
     void SetWideSelectionMode(bool wideSelectionMode);
 
-    // IDestroyListener
-    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     using SelectionCallback = std::function<void(GOItem *item, Action action)>;
     void SetSelectionCallback(SelectionCallback selectionCallback);
@@ -102,9 +102,9 @@ private:
 
     void HandleShortcuts();
 
-    // IFocusListener
-    virtual void OnFocusTaken(IFocusable *focusable) override;
-    virtual void OnFocusLost(IFocusable *focusable) override;
+    // IEventsFocus
+    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);

@@ -73,14 +73,14 @@ void UIDragDroppable::SetFocusable(IFocusable *focusable)
     {
         if (GetFocusable())
         {
-            GetFocusable()->EventEmitter<IFocusListener>::UnRegisterListener(this);
+            GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(this);
         }
 
         p_focusable = focusable;
 
         if (GetFocusable())
         {
-            GetFocusable()->EventEmitter<IFocusListener>::RegisterListener(this);
+            GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
         }
     }
 }
@@ -118,6 +118,8 @@ void UIDragDroppable::OnDragStarted()
     if (!canvas) { return; }
 
     canvas->NotifyDragStarted(this);
+    EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                        &IEventsDragDrop::OnDragStarted, this);
 
     /*
     if (!m_dragDropFB)
@@ -190,7 +192,12 @@ void UIDragDroppable::OnDragStarted()
 
 void UIDragDroppable::OnDragUpdate()
 {
-    MoveDragDropGameObjectTo( Input::GetMousePosition() );
+    if (m_dragDropGameObject)
+    {
+        MoveDragDropGameObjectTo( Input::GetMousePosition() );
+        EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                            &IEventsDragDrop::OnDragUpdate, this);
+    }
 }
 
 void UIDragDroppable::OnDropped()
@@ -199,16 +206,20 @@ void UIDragDroppable::OnDropped()
 
     if (m_dragDropGameObject)
     {
+        EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                            &IEventsDragDrop::OnDrop, this);
+
         GameObject::Destroy(m_dragDropGameObject);
         m_dragDropGameObject = nullptr;
         p_dragDropImageRenderer = nullptr;
     }
 }
 
-void UIDragDroppable::OnClicked(IFocusable *focusable, ClickType clickType)
+void UIDragDroppable::OnClicked(EventEmitter<IEventsFocus> *focusable,
+                                ClickType clickType)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
-    IFocusListener::OnClicked(focusable, clickType);
+    IEventsFocus::OnClicked(focusable, clickType);
 
     if (clickType == ClickType::DOWN)
     {

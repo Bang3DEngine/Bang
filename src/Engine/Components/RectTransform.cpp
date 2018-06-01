@@ -12,7 +12,7 @@
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsTransform.h"
 
 USING_NAMESPACE_BANG
 

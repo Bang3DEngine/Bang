@@ -5,7 +5,7 @@
 
 #include "Bang/List.h"
 #include "Bang/GameObject.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -14,7 +14,7 @@ FORWARD class Gizmos;
 FORWARD class DebugRenderer;
 
 class Scene : public GameObject,
-              public EventListener<IDestroyListener>
+              public EventListener<IEventsDestroy>
 {
     GAMEOBJECT(Scene);
 
@@ -31,8 +31,8 @@ public:
 
     void InvalidateCanvas();
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;

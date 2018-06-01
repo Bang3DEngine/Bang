@@ -56,6 +56,6 @@ void Resource::_Import(const Path &resourceFilepath)
     Import(resourceFilepath);          // Import from filepath
     ImportXMLFromFile(importFilepath); // Import XML then
 
-    EventEmitter<IResourceListener>::PropagateToListeners(
-                &IResourceListener::OnImported, this);
+    EventEmitter<IEventsResource>::PropagateToListeners(
+                &IEventsResource::OnImported, this);
 }

@@ -6,16 +6,16 @@
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
-#include "Bang/IObjectListener.h"
-#include "Bang/IChildrenListener.h"
-#include "Bang/ITransformListener.h"
-#include "Bang/IMaterialChangedListener.h"
+#include "Bang/IEventsObject.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
+#include "Bang/IEventsMaterialChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 class UIRenderer : public Renderer,
-                   public EventListener<IChildrenListener>,
-                   public EventListener<ITransformListener>
+                   public EventListener<IEventsChildren>,
+                   public EventListener<IEventsTransform>
 {
 public:
     virtual AARect GetBoundingRect(Camera *camera) const override;
@@ -27,14 +27,14 @@ public:
     void SetCullByRectTransform(bool cullByRectTransform);
     bool GetCullByRectTransform() const;
 
-    // IObjectListener
+    // IEventsObject
     virtual void OnEnabled()  override;
     virtual void OnDisabled() override;
 
-    // ITransformListener
+    // IEventsTransform
     virtual void OnTransformChanged() override;
 
-    // IChildrenListener
+    // IEventsChildren
     virtual void OnChildAdded(GameObject *addedChild, GameObject *parent) override;
     virtual void OnChildRemoved(GameObject *removedChild, GameObject *parent) override;
     virtual void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;

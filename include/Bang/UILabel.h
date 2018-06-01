@@ -3,7 +3,7 @@
 
 #include "Bang/Component.h"
 #include "Bang/IFocusable.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -14,7 +14,7 @@ FORWARD class UITextRenderer;
 
 class UILabel : public Component,
                 public IFocusable,
-                public EventListener<IFocusListener>
+                public EventListener<IEventsFocus>
 {
     COMPONENT(UILabel)
 
@@ -52,9 +52,9 @@ public:
 
     void SetFocusable(IFocusable *focusable);
 
-    // IFocusListener
-    virtual void OnFocusTaken(IFocusable *focusable) override;
-    virtual void OnFocusLost(IFocusable *focusable) override;
+    // IEventsFocus
+    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
 
 private:
     int m_cursorIndex = 0;

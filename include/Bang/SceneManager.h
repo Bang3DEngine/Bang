@@ -4,25 +4,16 @@
 #include "Bang/Path.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
-
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsSceneManager.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
 FORWARD class BehaviourManager;
 
-class ISceneManagerListener
-{
-    EVENTLISTENER_NS(ISceneManagerListener);
-
-public:
-    virtual void OnSceneLoaded(Scene *scene, const Path &sceneFilepath)
-    { (void)scene; (void)sceneFilepath; }
-};
-
-class SceneManager : public EventEmitter<ISceneManagerListener>,
-                     public EventListener<IDestroyListener>
+class SceneManager : public EventEmitter<IEventsSceneManager>,
+                     public EventListener<IEventsDestroy>
 {
 public:
     static void LoadScene(Scene *scene, bool destroyActive = true);
@@ -76,8 +67,8 @@ private:
     void PrepareNextLoad(Scene *scene, const Path &scenePath, bool destroyActive);
     static List<GameObject*> FindDontDestroyOnLoadGameObjects(GameObject *go);
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     friend class Window;
     friend class Application;

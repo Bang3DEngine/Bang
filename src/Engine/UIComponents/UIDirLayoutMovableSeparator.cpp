@@ -215,12 +215,12 @@ Axis UIDirLayoutMovableSeparator::GetAxis() const
     return m_axis;
 }
 
-void UIDirLayoutMovableSeparator::OnMouseEnter(IFocusable *focusable)
+void UIDirLayoutMovableSeparator::OnMouseEnter(EventEmitter<IEventsFocus>*)
 {
     p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
 }
 
-void UIDirLayoutMovableSeparator::OnMouseExit(IFocusable *focusable)
+void UIDirLayoutMovableSeparator::OnMouseExit(EventEmitter<IEventsFocus>*)
 {
     p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
 }
@@ -237,7 +237,7 @@ UIDirLayoutMovableSeparator::CreateInto(GameObject *go)
     le->SetFlexibleSize( Vector2(0) );
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->EventEmitter<IFocusListener>::RegisterListener(dirLayoutSep);
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(dirLayoutSep);
 
     LineRenderer *lr = go->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());

@@ -185,6 +185,6 @@ void Texture::SetHeight(int height)
 
 void Texture::PropagateTextureChanged()
 {
-    EventEmitter<ITextureChangedListener>::PropagateToListeners(
-                &ITextureChangedListener::OnTextureChanged, this);
+    EventEmitter<IEventsTextureChanged>::PropagateToListeners(
+                &IEventsTextureChanged::OnTextureChanged, this);
 }

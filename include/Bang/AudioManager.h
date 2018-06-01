@@ -13,7 +13,7 @@
 #include "Bang/MutexLocker.h"
 #include "Bang/AudioParams.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -24,7 +24,7 @@ FORWARD class AudioSource;
 FORWARD class ALAudioSource;
 FORWARD class AudioPlayerRunnable;
 
-class AudioManager : public EventListener<IDestroyListener>
+class AudioManager : public EventListener<IEventsDestroy>
 {
 public:
     void Init();
@@ -67,8 +67,8 @@ private:
     static String GetALErrorEnumString(ALenum errorEnum);
     static String GetALCErrorEnumString(ALCenum errorEnum);
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
     void OnAudioPlayerDestroyed(AudioPlayerRunnable *audioPlayer);
     void OnALAudioSourceDestroyed(ALAudioSource *alAudioSource);
 

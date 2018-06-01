@@ -3,7 +3,7 @@
 
 #include "Bang/UMap.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -13,7 +13,7 @@ FORWARD class GameObject;
 FORWARD class ShaderProgram;
 
 class SelectionFramebuffer : public Framebuffer,
-                             public EventListener<IDestroyListener>
+                             public EventListener<IEventsDestroy>
 {
 public:
     static const GL::Attachment AttColor = GL::Attachment::COLOR0;
@@ -28,8 +28,8 @@ public:
     RH<Texture2D> GetColorTexture() const;
     GameObject *GetGameObjectInViewportPoint(const Vector2i &vpPoint);
 
-    // IDestroyListener
-    void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 private:
     using IdType = unsigned long long;
 

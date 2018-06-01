@@ -8,6 +8,7 @@
 #include "Bang/Image.h"
 #include "Bang/Texture.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/IEventsResource.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -15,7 +16,7 @@ FORWARD class Path;
 FORWARD class XMLNode;
 
 class TextureCubeMap : public Texture,
-                       public EventListener<IResourceListener>
+                       public EventListener<IEventsResource>
 {
     ASSET(TextureCubeMap)
 

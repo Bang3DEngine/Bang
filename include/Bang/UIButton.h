@@ -3,7 +3,7 @@
 
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -14,7 +14,7 @@ FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
 
 class UIButton : public Component,
-                 public EventListener<IFocusListener>
+                 public EventListener<IEventsFocus>
 {
     COMPONENT(UIButton)
 
@@ -58,12 +58,13 @@ private:
     UIButton();
     virtual ~UIButton();
 
-    // IFocusListener
-    void OnMouseEnter(IFocusable *focusable) override;
-    void OnMouseExit(IFocusable *focusable) override;
-    void OnStartedBeingPressed(IFocusable *focusable) override;
-    void OnStoppedBeingPressed(IFocusable *focusable) override;
-    void OnClicked(IFocusable *focusable, ClickType clickType) override;
+    // IEventsFocus
+    void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
+    void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
+    void OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusable) override;
+    void OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusable) override;
+    void OnClicked(EventEmitter<IEventsFocus> *focusable,
+                   ClickType clickType) override;
 
     static UIButton *CreateInto(GameObject *go);
 

@@ -60,7 +60,7 @@ void Scene::SetCamera(Camera *cam)
     p_camera = cam;
     if (p_camera)
     {
-        p_camera->EventEmitter<IDestroyListener>::RegisterListener(this);
+        p_camera->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 }
 
@@ -77,7 +77,7 @@ void Scene::InvalidateCanvas()
     for (UICanvas *canvas : canvases) { canvas->InvalidateCanvas(); }
 }
 
-void Scene::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == GetCamera())
     {

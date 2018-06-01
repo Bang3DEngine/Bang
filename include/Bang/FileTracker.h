@@ -4,23 +4,11 @@
 #include "Bang/UMap.h"
 #include "Bang/Path.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
+#include "Bang/IEventsFileTracker.h"
 
 NAMESPACE_BANG_BEGIN
 
-class IFileTrackerListener
-{
-    EVENTLISTENER(IFileTrackerListener);
-
-public:
-    virtual void OnPathAdded(const Path &addedPath)       {}
-    virtual void OnPathModified(const Path &modifiedPath) {}
-    virtual void OnPathRemoved(const Path &removedPath)   {}
-};
-
-
-
-class FileTracker : public EventEmitter<IFileTrackerListener>
+class FileTracker : public EventEmitter<IEventsFileTracker>
 {
 public:
 	FileTracker();

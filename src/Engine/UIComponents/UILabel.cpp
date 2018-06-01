@@ -214,7 +214,7 @@ void UILabel::SetFocusable(IFocusable *focusable)
 {
     if (GetFocusable())
     {
-        GetFocusable()->EventEmitter<IFocusListener>::UnRegisterListener(this);
+        GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(this);
     }
 
     p_focusable = focusable;
@@ -222,14 +222,14 @@ void UILabel::SetFocusable(IFocusable *focusable)
 
     if (GetFocusable())
     {
-        GetFocusable()->EventEmitter<IFocusListener>::RegisterListener(this);
+        GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
         GetFocusable()->SetCursorType( Cursor::Type::IBEAM );
     }
 }
 
-void UILabel::OnFocusTaken(IFocusable *focusable)
+void UILabel::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusTaken(focusable);
+    IEventsFocus::OnFocusTaken(focusable);
 
     if (GetSelectAllOnFocus() && IsSelectable())
     {
@@ -241,9 +241,9 @@ void UILabel::OnFocusTaken(IFocusable *focusable)
     UpdateSelectionQuadRenderer();
 }
 
-void UILabel::OnFocusLost(IFocusable *focusable)
+void UILabel::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
 {
-    IFocusListener::OnFocusLost(focusable);
+    IEventsFocus::OnFocusLost(focusable);
 
     ResetSelection();
     UpdateSelectionQuadRenderer();

@@ -15,8 +15,8 @@ Asset::~Asset()
 
 void Asset::Destroy(Asset *asset)
 {
-    asset->EventEmitter<IDestroyListener>::PropagateToListeners(
-                                   &IDestroyListener::OnDestroyed, asset);
+    asset->EventEmitter<IEventsDestroy>::PropagateToListeners(
+                                   &IEventsDestroy::OnDestroyed, asset);
     delete asset;
 }
 

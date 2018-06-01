@@ -6,8 +6,8 @@
 #include "Bang/Component.h"
 #include "Bang/Quaternion.h"
 #include "Bang/IInvalidatable.h"
-#include "Bang/IChildrenListener.h"
-#include "Bang/ITransformListener.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -25,9 +25,9 @@ public: void OnInvalidated() override { OnInvalidatedLocal(); }
 class Transform : public Component,
                   public IInvalidatableTransformWorld,
                   public IInvalidatableTransformLocal,
-                  public EventListener<ITransformListener>,
-                  public EventListener<IChildrenListener>,
-                  public EventEmitter<ITransformListener>
+                  public EventListener<IEventsTransform>,
+                  public EventListener<IEventsChildren>,
+                  public EventEmitter<IEventsTransform>
 {
     COMPONENT(Transform)
 
@@ -99,10 +99,10 @@ public:
     static Quaternion GetRotationFromMatrix4(const Matrix4 &transformMatrix);
     static Vector3    GetScaleFromMatrix4   (const Matrix4 &transformMatrix);
 
-    // IChildrenListener
+    // IEventsChildren
     void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
 
-    // ITransformListener
+    // IEventsTransform
     void OnTransformChanged() override;
     void OnParentTransformChanged() override;
     void OnChildrenTransformChanged() override;

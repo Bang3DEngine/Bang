@@ -6,7 +6,7 @@
 #include "Bang/RenderPass.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/IDestroyListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -22,7 +22,7 @@ FORWARD class ShaderProgram;
 FORWARD class TextureUnitManager;
 FORWARD class SelectionFramebuffer;
 
-class GEngine : public EventListener<IDestroyListener>
+class GEngine : public EventListener<IEventsDestroy>
 {
 public:
     GEngine();
@@ -58,8 +58,8 @@ public:
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
 
-    // IDestroyListener
-    virtual void OnDestroyed(EventEmitter<IDestroyListener> *object) override;
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     static GEngine* GetInstance();
 

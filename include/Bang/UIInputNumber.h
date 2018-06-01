@@ -3,17 +3,17 @@
 
 #include "Bang/UIFocusable.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IFocusListener.h"
-#include "Bang/IValueChangedListener.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class UIInputText;
 
 class UIInputNumber : public Component,
-                      public EventEmitter<IValueChangedListener>,
-                      public EventListener<IValueChangedListener>,
-                      public EventListener<IFocusListener>
+                      public EventEmitter<IEventsValueChanged>,
+                      public EventListener<IEventsValueChanged>,
+                      public EventListener<IEventsFocus>
 {
     COMPONENT(UIInputNumber)
 
@@ -37,9 +37,9 @@ public:
 
     bool HasFocus() const;
 
-    // IFocusListener
-    virtual void OnFocusTaken(IFocusable *focusable) override;
-    virtual void OnFocusLost(IFocusable *focusable) override;
+    // IEventsFocus
+    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
 
 private:
     float m_value            = 0.0f;
@@ -53,8 +53,8 @@ private:
     void UpdateTextFromValue();
     void ChangeTextColorBasedOnMinMax();
 
-    // IValueChangedListener
-    void OnValueChanged(Object*) override;
+    // IEventsValueChanged
+    void OnValueChanged(EventEmitter<IEventsValueChanged>*) override;
 
     static UIInputNumber *CreateInto(GameObject *go);
 

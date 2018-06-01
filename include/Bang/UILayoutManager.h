@@ -17,7 +17,7 @@ FORWARD class Component;
 FORWARD class RectTransform;
 FORWARD class ILayoutElement;
 FORWARD class ILayoutController;
-FORWARD class ITransformListener;
+FORWARD class IEventsTransform;
 
 class UILayoutManager
 {

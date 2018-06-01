@@ -30,8 +30,8 @@ void FileTracker::TrackPath(const Path &path)
                                              path.GetModificationTimeSeconds());
         if (!wasBeingTracked)
         {
-            EventEmitter<IFileTrackerListener>::
-               PropagateToListeners(&IFileTrackerListener::OnPathAdded, path);
+            EventEmitter<IEventsFileTracker>::
+               PropagateToListeners(&IEventsFileTracker::OnPathAdded, path);
         }
     }
 }
@@ -66,8 +66,8 @@ void FileTracker::Update(bool forceCheckNow)
             const Path &previousPath = previousPathToModTime.first;
             if (!previousPath.Exists())
             {
-                EventEmitter<IFileTrackerListener>::
-                   PropagateToListeners(&IFileTrackerListener::OnPathRemoved,
+                EventEmitter<IEventsFileTracker>::
+                   PropagateToListeners(&IEventsFileTracker::OnPathRemoved,
                                         previousPath);
                 UnTrackPath(previousPath);
             }
@@ -91,8 +91,8 @@ void FileTracker::Update(bool forceCheckNow)
             ASSERT(epsilon < GetCheckFrequencySeconds());
             if (newPath.GetModificationTimeSeconds() >= m_lastCheckTime - epsilon)
             {
-                EventEmitter<IFileTrackerListener>::
-                   PropagateToListeners(&IFileTrackerListener::OnPathModified, newPath);
+                EventEmitter<IEventsFileTracker>::
+                   PropagateToListeners(&IEventsFileTracker::OnPathModified, newPath);
             }
         }
 

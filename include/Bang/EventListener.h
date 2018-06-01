@@ -17,7 +17,7 @@ public:
     bool IsReceivingEvents() const;
 
 protected:
-    EventListener();
+    EventListener() = default;
     virtual ~EventListener();
 
 private:
@@ -30,21 +30,6 @@ private:
 
     template<class> friend class EventEmitter;
 };
-
-// Macros
-#define EVENTLISTENER_NS(ClassName) \
-    private: \
-        ClassName() = default; \
-        virtual ~ClassName() = default; \
-    template<class> friend class Bang::EventListener;
-
-#define EVENTLISTENER(ClassName) \
-    private: \
-        ClassName() = default; \
-        virtual ~ClassName() = default; \
-    template<class> friend class EventListener;
-
-
 
 NAMESPACE_BANG_END
 

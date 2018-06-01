@@ -307,7 +307,7 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
             // We are changing an existing texture. Unregister listener
             if (oldTexture)
             {
-                oldTexture->EventEmitter<IDestroyListener>::UnRegisterListener(this);
+                oldTexture->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
             }
             needToRefreshTexture = true;
         }
@@ -327,7 +327,7 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         // Register listener to keep track when it is destroyed
         if (texture)
         {
-            texture->EventEmitter<IDestroyListener>::RegisterListener(this);
+            texture->EventEmitter<IEventsDestroy>::RegisterListener(this);
         }
     }
 
@@ -368,7 +368,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
     if (GetShader(type))
     {
-        GetShader(type)->EventEmitter<IResourceListener>::UnRegisterListener(this);
+        GetShader(type)->EventEmitter<IEventsResource>::UnRegisterListener(this);
     }
 
     switch (type)
@@ -380,7 +380,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
     if (GetShader(type))
     {
-        GetShader(type)->EventEmitter<IResourceListener>::RegisterListener(this);
+        GetShader(type)->EventEmitter<IEventsResource>::RegisterListener(this);
     }
 
     return true;
@@ -571,7 +571,7 @@ void ShaderProgram::UnBindAllTexturesFromUnits() const
     TextureUnitManager::UnBindAllTexturesFromAllUnits();
 }
 
-void ShaderProgram::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     Array< std::pair<String, Texture*> > entriesToRestore;
     Texture *destroyedTex = DCAST<Texture*>( object );

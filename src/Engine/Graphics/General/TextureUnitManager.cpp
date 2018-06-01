@@ -126,7 +126,7 @@ void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
     m_timestampTexIdUsed[texId] = 0;
     m_textureIdToTexture[texId] = texture;
     m_textureIdToBoundUnit[texId] = usedUnit;
-    texture->EventEmitter<IDestroyListener>::RegisterListener(this);
+    texture->EventEmitter<IEventsDestroy>::RegisterListener(this);
 
     // CheckBindingsValidity();
 }
@@ -227,7 +227,7 @@ void TextureUnitManager::UnTrackTexture(GLId texId)
     m_textureIdToBoundUnit.erase(texId);
     if (texture)
     {
-        texture->EventEmitter<IDestroyListener>::UnRegisterListener(this);
+        texture->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
 
     // CheckBindingsValidity();
@@ -243,7 +243,7 @@ void TextureUnitManager::CheckBindingsValidity() const
     }
 }
 
-void TextureUnitManager::OnDestroyed(EventEmitter<IDestroyListener> *object)
+void TextureUnitManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     Texture *tex = DCAST<Texture*>(object);
 

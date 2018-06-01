@@ -4,11 +4,11 @@
 #include "Bang/Array.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IFocusListener.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
-class IFocusable : public EventEmitter<IFocusListener>
+class IFocusable : public EventEmitter<IEventsFocus>
 {
 public:
     bool IsMouseOver() const;

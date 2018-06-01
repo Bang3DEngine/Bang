@@ -2,8 +2,8 @@
 #define OBJECT_H
 
 #include "Bang/ObjectId.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/Serializable.h"
-#include "Bang/IEventEmitter.h"
 #include "Bang/IObjectListener.h"
 #include "Bang/IDestroyListener.h"
 

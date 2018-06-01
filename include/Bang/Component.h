@@ -5,7 +5,7 @@
 #include "Bang/IToString.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/ComponentFactory.h"
 #include "Bang/IDestroyListener.h"
 

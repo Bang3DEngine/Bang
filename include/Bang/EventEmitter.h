@@ -2,17 +2,19 @@
 #define EVENTEMITTER_H
 
 #include "Bang/List.h"
-#include "Bang/IEventEmitter.h"
-#include "Bang/IEventListener.h"
+#include "Bang/EventEmitter.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD template <class T> class EventListener;
 
 template <class T>
-class EventEmitter : public IEventEmitter
+class EventEmitter
 {
 public:
+    void SetEmitEvents(bool emitEvents);
+    bool IsEmittingEvents() const;
+
     void RegisterListener(EventListener<T> *listener);
     void UnRegisterListener(EventListener<T> *listener);
 
@@ -27,6 +29,7 @@ protected:
     virtual ~EventEmitter();
 
 private:
+    bool m_emitEvents = true;
     bool m_isBeingDestroyed = false;
     List<EventListener<T>*> m_listeners;
 

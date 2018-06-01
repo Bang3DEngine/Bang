@@ -4,7 +4,7 @@
 #include "Bang/Map.h"
 #include "Bang/UIList.h"
 #include "Bang/Component.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IFocusListener.h"
 #include "Bang/IValueChangedListener.h"
 

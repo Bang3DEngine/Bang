@@ -2,7 +2,7 @@
 #define UIINPUTTEXT_H
 
 #include "Bang/Component.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/IFocusListener.h"
 #include "Bang/IValueChangedListener.h"

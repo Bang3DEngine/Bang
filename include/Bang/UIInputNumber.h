@@ -2,7 +2,7 @@
 #define UIINPUTNUMBER_H
 
 #include "Bang/UIFocusable.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IFocusListener.h"
 #include "Bang/IValueChangedListener.h"
 

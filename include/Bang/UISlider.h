@@ -3,7 +3,7 @@
 
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IValueChangedListener.h"
 
 NAMESPACE_BANG_BEGIN

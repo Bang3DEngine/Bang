@@ -11,9 +11,20 @@ EventEmitter<T>::~EventEmitter()
     m_isBeingDestroyed = true;
     while (!m_listeners.IsEmpty())
     {
-        EventListener<T> *eListener = DCAST<EventListener<T>*>( m_listeners.Front() );
-        UnRegisterListener(eListener);
+        UnRegisterListener( m_listeners.Front() );
     }
+}
+
+template<class T>
+void EventEmitter<T>::SetEmitEvents(bool emitEvents)
+{
+    m_emitEvents = emitEvents;
+}
+
+template<class T>
+bool EventEmitter<T>::IsEmittingEvents() const
+{
+    return m_emitEvents;
 }
 
 template <class T>
@@ -62,11 +73,11 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
         EventEmitter<T> *ncThis = const_cast< EventEmitter<T>* >(this);
         for (EventListener<T> *listener : m_delayedListenersToRegister)
         {
-            ncThis->RegisterListener( DCAST<EventListener<T>*>(listener) );
+            ncThis->RegisterListener(listener);
         }
         for (EventListener<T> *listener : m_delayedListenersToUnRegister)
         {
-            ncThis->UnRegisterListener( DCAST<EventListener<T>*>(listener) );
+            ncThis->UnRegisterListener(listener);
         }
         m_delayedListenersToRegister.Clear();
         m_delayedListenersToUnRegister.Clear();
@@ -83,9 +94,7 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
         {
             if (listener && listener->IsReceivingEvents())
             {
-                EventListener<T> *listenerT = DCAST<EventListener<T>*>(listener);
-                ASSERT(listenerT);
-                (listenerT->*func)(args...);
+                (listener->*func)(args...);
             }
         }
 

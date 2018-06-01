@@ -7,7 +7,7 @@
 #include "Bang/Image.h"
 #include "Bang/Vector2.h"
 #include "Bang/GLObject.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/ITextureChangedListener.h"
 
 NAMESPACE_BANG_BEGIN

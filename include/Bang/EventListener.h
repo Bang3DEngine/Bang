@@ -1,7 +1,6 @@
 #ifndef EVENTLISTENER_H
 #define EVENTLISTENER_H
 
-#include "Bang/IEventListener.h"
 #include "Bang/IEventListenerCommon.h"
 
 NAMESPACE_BANG_BEGIN
@@ -10,7 +9,7 @@ FORWARD template<class T> class EventEmitter;
 
 template <class T>
 class EventListener : public T,
-                      public IEventListener
+                      public virtual IEventListenerCommon
 {
 public:
     void SetReceiveEvents(bool receiveEvents);
@@ -19,15 +18,15 @@ public:
 
 protected:
     EventListener();
-    ~EventListener();
+    virtual ~EventListener();
 
 private:
     bool m_receivesEvents = true;
     bool m_isBeingDestroyed = false;
     List<EventEmitter<T>*> m_emitters;
 
-    void OnRegisteredTo(IEventEmitter *emitter) override;
-    void OnUnRegisteredFrom(IEventEmitter *emitter) override;
+    void OnRegisteredTo(EventEmitter<T> *emitter);
+    void OnUnRegisteredFrom(EventEmitter<T> *emitter);
 
     template<class> friend class EventEmitter;
 };

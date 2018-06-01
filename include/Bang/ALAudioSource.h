@@ -5,7 +5,7 @@
 #include <AL/alc.h>
 
 #include "Bang/AudioParams.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IDestroyListener.h"
 
 NAMESPACE_BANG_BEGIN

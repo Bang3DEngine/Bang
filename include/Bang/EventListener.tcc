@@ -40,18 +40,18 @@ bool EventListener<T>::IsReceivingEvents() const
 }
 
 template<class T>
-void EventListener<T>::OnRegisteredTo(IEventEmitter *emitter)
+void EventListener<T>::OnRegisteredTo(EventEmitter<T> *emitter)
 {
     if (!m_isBeingDestroyed)
     {
-        m_emitters.PushBack( DCAST<EventEmitter<T>*>(emitter) );
+        m_emitters.PushBack(emitter);
     }
 }
 
 template<class T>
-void EventListener<T>::OnUnRegisteredFrom(IEventEmitter *emitter)
+void EventListener<T>::OnUnRegisteredFrom(EventEmitter<T> *emitter)
 {
-    m_emitters.Remove( DCAST<EventEmitter<T>*>(emitter) );
+    m_emitters.Remove(emitter);
 }
 
 #endif // EVENTLISTENER_TCC

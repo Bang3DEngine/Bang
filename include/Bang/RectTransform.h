@@ -5,7 +5,7 @@
 #include "Bang/AARect.h"
 #include "Bang/Vector2.h"
 #include "Bang/Transform.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/IObjectListener.h"
 
 NAMESPACE_BANG_BEGIN

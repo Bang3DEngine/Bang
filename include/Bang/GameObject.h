@@ -12,7 +12,7 @@
 #include "Bang/RenderPass.h"
 #include "Bang/IsContainer.h"
 #include "Bang/Serializable.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/INameListener.h"
 #include "Bang/IDestroyListener.h"
 #include "Bang/IChildrenListener.h"

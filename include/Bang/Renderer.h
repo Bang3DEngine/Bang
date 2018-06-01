@@ -4,7 +4,7 @@
 #include "Bang/GL.h"
 #include "Bang/Component.h"
 #include "Bang/RenderPass.h"
-#include "Bang/IEventEmitter.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IMaterialChangedListener.h"
 #include "Bang/IRendererChangedListener.h"

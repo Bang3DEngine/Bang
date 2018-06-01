@@ -1,0 +1,22 @@
+#ifndef MOUSEBUTTON_H
+#define MOUSEBUTTON_H
+
+#include "Bang/Bang.h"
+#include BANG_SDL2_INCLUDE(SDL.h)
+
+NAMESPACE_BANG_BEGIN
+
+enum class MouseButton
+{
+    NONE      = 0,
+    LEFT      = SDL_BUTTON_LEFT,
+    RIGHT     = SDL_BUTTON_RIGHT,
+    MIDDLE    = SDL_BUTTON_MIDDLE,
+    XBUTTON1  = SDL_BUTTON_X1,
+    XBUTTON2  = SDL_BUTTON_X2
+};
+
+NAMESPACE_BANG_END
+
+#endif // MOUSEBUTTON_H
+

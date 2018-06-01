@@ -31,6 +31,7 @@ void Input::OnFrameFinished()
         {
             kInfo.down = false; // Not down anymore, just pressed.
             m_keysDown.Remove(it->first);
+            m_keysDownRepeat.Remove(it->first);
         }
 
         if (kInfo.up) // After a frame where it was Up
@@ -183,6 +184,7 @@ void Input::ProcessKeyDownEventInfo(const EventInfo &ei)
         m_keysDown.PushBack(k);
         m_keysUp.Remove(k);
     }
+    if (!m_keysDownRepeat.Contains(k)) { m_keysDownRepeat.PushBack(k); }
 }
 
 void Input::ProcessKeyUpEventInfo(const EventInfo &ei)
@@ -196,6 +198,7 @@ void Input::ProcessKeyUpEventInfo(const EventInfo &ei)
     m_pressedKeys.Remove(k);
     m_keysDown.Remove(k);
     m_keysUp.PushBack(k);
+    m_keysDownRepeat.Remove(k);
 }
 
 void Input::PeekEvent(const SDL_Event &event, const Window *window)
@@ -323,6 +326,11 @@ const Array<Key> &Input::GetKeysDown()
 const Array<Key>& Input::GetPressedKeys()
 {
     return Input::GetActive()->m_pressedKeys;
+}
+
+const Array<Key> &Input::GetKeysDownRepeat()
+{
+    return Input::GetActive()->m_keysDownRepeat;
 }
 
 Vector2 Input::GetMouseWheel()
@@ -523,6 +531,7 @@ void Input::Reset()
     m_keysUp.Clear();
     m_keysDown.Clear();
     m_pressedKeys.Clear();
+    m_keysDownRepeat.Clear();
 
     m_keyInfos.Clear();
     m_mouseInfo.Clear();

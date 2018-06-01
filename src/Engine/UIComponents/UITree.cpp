@@ -107,7 +107,6 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     IEventsDragDrop::OnDragUpdate(dd_);
 
     GOItem *childItemOver = nullptr;
-    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
     GetMousePositionInTree(&childItemOver, &markPosition);
 

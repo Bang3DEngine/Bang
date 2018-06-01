@@ -92,19 +92,22 @@ void UITree::OnClicked(EventEmitter<IEventsFocus> *focusable,
     }
 }
 
-void UITree::OnDragStarted(UIDragDroppable *dd)
+void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
 {
-    IEventsDragDrop::OnDragStarted(dd);
+    IEventsDragDrop::OnDragStarted(dd_);
+
+    UIDragDroppable *dd = DCAST<UIDragDroppable*>(dd_);
     p_itemBeingDragged = SCAST<UITreeItemContainer*>(dd->GetGameObject())->
                                                         GetContainedItem();
     p_dragMarker->SetParent( GetGameObject()->GetScene() );
 }
 
-void UITree::OnDragUpdate(UIDragDroppable *dragDroppable)
+void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 {
-    IEventsDragDrop::OnDragUpdate(dragDroppable);
+    IEventsDragDrop::OnDragUpdate(dd_);
 
     GOItem *childItemOver = nullptr;
+    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
     GetMousePositionInTree(&childItemOver, &markPosition);
 
@@ -169,10 +172,11 @@ void UITree::OnDragUpdate(UIDragDroppable *dragDroppable)
     p_dragMarkerImg->SetTint(isValidDrag ? Color::Blue : Color::Red);
 }
 
-void UITree::OnDrop(UIDragDroppable *dragDroppable)
+void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 {
-    IEventsDragDrop::OnDrop(dragDroppable);
+    IEventsDragDrop::OnDrop(dd_);
 
+    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
     UITreeItemContainer *draggedItemCont = DCAST<UITreeItemContainer*>(
                                               dragDroppable->GetGameObject());
     if ( !Contains(draggedItemCont) )

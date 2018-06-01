@@ -59,9 +59,9 @@ public:
                    ClickType clickType) override;
 
     // IEventsDragDrop
-    virtual void OnDragStarted(UIDragDroppable *dragDroppable);
-    virtual void OnDragUpdate(UIDragDroppable *dragDroppable);
-    virtual void OnDrop(UIDragDroppable *dragDroppable);
+    virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDragUpdate(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;

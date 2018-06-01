@@ -2,6 +2,7 @@
 #define EVENTLISTENER_H
 
 #include "Bang/IEventListener.h"
+#include "Bang/IEventListenerCommon.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -9,7 +10,6 @@ FORWARD template<class T> class EventEmitter;
 
 template <class T>
 class EventListener : public T,
-                      public virtual IEventListenerCommon,
                       public IEventListener
 {
 public:
@@ -31,6 +31,21 @@ private:
 
     template<class> friend class EventEmitter;
 };
+
+// Macros
+#define EVENTLISTENER_NS(ClassName) \
+    private: \
+        ClassName() = default; \
+        virtual ~ClassName() = default; \
+    template<class> friend class Bang::EventListener;
+
+#define EVENTLISTENER(ClassName) \
+    private: \
+        ClassName() = default; \
+        virtual ~ClassName() = default; \
+    template<class> friend class EventListener;
+
+
 
 NAMESPACE_BANG_END
 

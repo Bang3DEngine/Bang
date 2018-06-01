@@ -4,6 +4,7 @@
 #include "Bang/UMap.h"
 #include "Bang/Path.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 

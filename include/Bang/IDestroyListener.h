@@ -1,8 +1,8 @@
 #ifndef IDESTROYLISTENER_H
 #define IDESTROYLISTENER_H
 
-#include "Bang/IEventEmitter.h"
-#include "Bang/IEventListener.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 
 NAMESPACE_BANG_BEGIN
 

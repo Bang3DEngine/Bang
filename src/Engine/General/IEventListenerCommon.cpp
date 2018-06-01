@@ -1,4 +1,4 @@
-#include "Bang/IEventListener.h"
+#include "Bang/IEventListenerCommon.h"
 
 USING_NAMESPACE_BANG
 
@@ -11,5 +11,6 @@ bool IEventListenerCommon::IsReceivingEventsCommon() const
 {
     return m_isReceivingEventsCommon;
 }
+
 
 

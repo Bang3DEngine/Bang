@@ -692,20 +692,83 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
     if (xmlInfo.Contains("DontDestroyOnLoad"))
     { SetDontDestroyOnLoad( xmlInfo.Get<bool>("DontDestroyOnLoad") ); }
 
+    USet<GameObject*> childrenToRemove;
+    for (GameObject *child : GetChildren())
+    {
+        childrenToRemove.Add(child);
+    }
+
+    USet<Component*> componentsToRemove;
+    for (Component *comp : GetComponents())
+    {
+        componentsToRemove.Add(comp);
+    }
+
     for (const XMLNode& xmlChild : xmlInfo.GetChildren() )
     {
+        const GUID guid = xmlChild.Get<GUID>("GUID");
         const String& tagName = xmlChild.GetTagName();
+
         if (tagName == GameObject::GetClassNameStatic())
         {
-            GameObject *child = GameObjectFactory::CreateGameObject(false);
+            GameObject *child = nullptr;
+            for (GameObject *containedChild : GetChildren())
+            {
+                // See if it is already contained
+                if (containedChild->GetGUID() == guid)
+                {
+                    child = containedChild;
+                    childrenToRemove.Remove(child);
+                    break;
+                }
+            }
+
+            if (!child)
+            {
+                child = GameObjectFactory::CreateGameObject(false);
+            }
+            else
+            {
+                child->SetParent(nullptr); // To reorder
+            }
             child->SetParent(this);
             child->ImportXML(xmlChild);
         }
         else
         {
-            Component *comp = AddComponent(tagName);
-            if (comp) { comp->ImportXML(xmlChild); }
+            Component *comp = nullptr;
+            for (Component *containedComp : GetComponents())
+            {
+                // See if it is already contained
+                if (containedComp->GetGUID() == guid)
+                {
+                    comp = containedComp;
+                    componentsToRemove.Remove(comp);
+                    break;
+                }
+            }
+
+            if (!comp)
+            {
+                comp = AddComponent(tagName);
+            }
+            else
+            {
+                RemoveComponent(comp); // To reorder
+                AddComponent(comp);
+            }
+            comp->ImportXML(xmlChild);
         }
+    }
+
+    // Remove non existing gameObjects and components in xml
+    for (GameObject *childToRemove : childrenToRemove)
+    {
+        GameObject::Destroy(childToRemove);
+    }
+    for (Component *compToRemove : componentsToRemove)
+    {
+        Component::Destroy(compToRemove);
     }
 }
 

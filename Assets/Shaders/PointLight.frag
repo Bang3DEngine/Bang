@@ -48,6 +48,7 @@ vec3 GetLightColorApportation()
     vec3 posDiff = (B_LightPositionWorld - pixelPosWorld);
     float distSq = dot(posDiff, posDiff);
     float attenuation = ((B_LightRange*B_LightRange) / (distSq)) - 1.0;
+    attenuation = min(attenuation, 1.0);
     float intensityAtt = B_LightIntensity * attenuation;
     if (intensityAtt <= 0.0) { return vec3(0); }
 

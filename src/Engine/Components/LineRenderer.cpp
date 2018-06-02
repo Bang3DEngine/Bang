@@ -5,6 +5,8 @@
 #include "Bang/AABox.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
+#include "Bang/Transform.h"
+#include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
@@ -59,9 +61,10 @@ void LineRenderer::SetPoints(const Array<Vector3> &points)
 const Array<Vector3> &LineRenderer::GetPoints() const { return m_points; }
 AABox LineRenderer::GetAABBox() const
 {
-    return AABox::Empty;
-    /*
-    if (m_points.IsEmpty()) { return AABox::Empty; }
+    if (m_points.IsEmpty())
+    {
+        return GetGameObject()->GetTransform()->GetPosition();
+    }
 
     Vector3 minp = m_points.Front();
     Vector3 maxp = m_points.Front();
@@ -76,7 +79,6 @@ AABox LineRenderer::GetAABBox() const
     minp -= Vector3(strokeAdd);
     maxp += Vector3(strokeAdd);
     return AABox(minp, maxp);
-    */
 }
 
 void LineRenderer::CloneInto(ICloneable *clone) const

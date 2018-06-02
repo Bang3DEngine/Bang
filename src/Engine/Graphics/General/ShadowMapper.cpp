@@ -16,13 +16,17 @@ AABox ShadowMapper::GetSceneCastersAABox(Scene *scene)
     List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
     for (Renderer *rend : renderers)
     {
-        Material *mat = rend->GetActiveMaterial();
-        if (mat && mat->GetRenderPass() == RenderPass::SCENE)
+        if (rend->IsActive() && rend->GetCastsShadows())
         {
-            Matrix4 localToWorld = rend->GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-            AABox rendAABox = rend->GetAABBox();
-            AABox rendAABoxWorld = localToWorld * rendAABox;
-            casterPoints.PushBack( rendAABoxWorld.GetPoints() );
+            Material *mat = rend->GetActiveMaterial();
+            if (mat && mat->GetRenderPass() == RenderPass::SCENE)
+            {
+                Matrix4 localToWorld = rend->GetGameObject()->GetTransform()->
+                                       GetLocalToWorldMatrix();
+                AABox rendAABox = rend->GetAABBox();
+                AABox rendAABoxWorld = localToWorld * rendAABox;
+                casterPoints.PushBack( rendAABoxWorld.GetPoints() );
+            }
         }
     }
 

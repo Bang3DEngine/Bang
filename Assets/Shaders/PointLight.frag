@@ -25,6 +25,7 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
         if (B_LightShadowType == SHADOW_HARD)
         {
             float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
+            if (shadowMapDistance == 1.0f) { return 1.0f; }
             float depthDiff = (biasedPixelDistance - shadowMapDistance);
             return (depthDiff > 0.0) ? 0.0 : 1.0;
         }
@@ -42,6 +43,14 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
 vec3 GetLightColorApportation()
 {
     vec3  pixelPosWorld    = B_ComputeWorldPosition();
+
+    // Attenuation
+    vec3 posDiff = (B_LightPositionWorld - pixelPosWorld);
+    float distSq = dot(posDiff, posDiff);
+    float attenuation = ((B_LightRange*B_LightRange) / (distSq)) - 1.0;
+    float intensityAtt = B_LightIntensity * attenuation;
+    if (intensityAtt <= 0.0) { return vec3(0); }
+
     vec3  pixelNormalWorld = B_SampleNormal();
     vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
     float pixelRoughness   = B_SampleRoughness();
@@ -52,11 +61,7 @@ vec3 GetLightColorApportation()
     vec3 L = normalize(B_LightPositionWorld - pixelPosWorld);
     vec3 H = normalize(V + L);
 
-    // Linear Attenuation
-    float d = distance(B_LightPositionWorld, pixelPosWorld) ;
-    // float attenuation = clamp(1.0 - (d / B_LightRange), 0, 1);
-    float attenuation = (B_LightRange * B_LightRange) / (d * d);
-    float intensityAtt = B_LightIntensity * attenuation;
+
     vec3 radiance = B_LightColor.rgb * intensityAtt;
 
     // Cook-Torrance BRDF

@@ -14,6 +14,13 @@ Resource::~Resource()
 {
 }
 
+void Resource::PropagateResourceChanged()
+{
+    EventEmitter<IEventsResource>::PropagateToListeners(
+                                        &IEventsResource::OnResourceChanged,
+                                        this);
+}
+
 // Resource
 Path Resource::GetResourceFilepath() const
 {

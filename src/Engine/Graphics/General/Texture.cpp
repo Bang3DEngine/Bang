@@ -40,6 +40,7 @@ void Texture::SetFormat(GL::ColorFormat glFormat)
     {
         m_glFormat = glFormat;
         OnFormatChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -48,6 +49,7 @@ void Texture::SetTarget(GL::TextureTarget target)
     if (target != GetTextureTarget())
     {
         m_target = target;
+        PropagateResourceChanged();
     }
 }
 
@@ -72,7 +74,7 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
 
         GL::Pop( GetGLBindTarget() );
 
-        PropagateTextureChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -91,7 +93,7 @@ void Texture::SetWrapMode(GL::WrapMode wrapMode)
 
         GL::Pop( GetGLBindTarget() );
 
-        PropagateTextureChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -171,7 +173,7 @@ void Texture::SetWidth(int width)
     if (width != GetWidth())
     {
         m_size.x = width;
-        PropagateTextureChanged();
+        PropagateResourceChanged();
     }
 }
 void Texture::SetHeight(int height)
@@ -179,12 +181,6 @@ void Texture::SetHeight(int height)
     if (height != GetHeight())
     {
         m_size.y = height;
-        PropagateTextureChanged();
+        PropagateResourceChanged();
     }
-}
-
-void Texture::PropagateTextureChanged()
-{
-    EventEmitter<IEventsTextureChanged>::PropagateToListeners(
-                &IEventsTextureChanged::OnTextureChanged, this);
 }

@@ -9,7 +9,6 @@
 #include "Bang/IEventsObject.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
-#include "Bang/IEventsMaterialChanged.h"
 
 NAMESPACE_BANG_BEGIN
 

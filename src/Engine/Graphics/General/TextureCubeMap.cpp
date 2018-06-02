@@ -77,7 +77,7 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
 
     GL::Pop( GetGLBindTarget() );
 
-    PropagateTextureChanged();
+    PropagateResourceChanged();
 }
 
 void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
@@ -98,6 +98,8 @@ void TextureCubeMap::SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img)
             GetImageResource(cubeMapDir).Get()->
                     EventEmitter<IEventsResource>::RegisterListener(this);
         }
+
+        PropagateResourceChanged();
     }
 }
 

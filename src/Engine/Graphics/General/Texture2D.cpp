@@ -73,7 +73,7 @@ void Texture2D::Fill(const Byte *newData,
 
     GL::Pop( GetGLBindTarget() );
 
-    PropagateTextureChanged();
+    PropagateResourceChanged();
 }
 
 void Texture2D::SetAlphaCutoff(float alphaCutoff)
@@ -81,7 +81,7 @@ void Texture2D::SetAlphaCutoff(float alphaCutoff)
     if (alphaCutoff != GetAlphaCutoff())
     {
         m_alphaCutoff = alphaCutoff;
-        PropagateTextureChanged();
+        PropagateResourceChanged();
     }
 }
 

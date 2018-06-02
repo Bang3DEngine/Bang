@@ -21,14 +21,12 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
         vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
         // if (dot(pixelNormalWorld, pixelDirWorld) >= 0) { return 0.0f; }
 
-        // Get shadow map distance
-        float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
-
         float biasedPixelDistance = (pixelDistance - B_LightShadowBias);
         if (B_LightShadowType == SHADOW_HARD)
         {
-            float depth = (biasedPixelDistance - shadowMapDistance);
-            return (depth > 0.0) ? 0.0 : 1.0;
+            float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
+            float depthDiff = (biasedPixelDistance - shadowMapDistance);
+            return (depthDiff > 0.0) ? 0.0 : 1.0;
         }
         else // SHADOW_SOFT
         {

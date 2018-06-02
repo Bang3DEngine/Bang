@@ -12,6 +12,11 @@ class IEventsResource
     IEVENTS(IEventsResource);
 
 public:
+    virtual void OnResourceChanged(Resource *res)
+    {
+        (void) res;
+    }
+
     virtual void OnImported(Resource *res)
     {
         (void) res;

@@ -15,6 +15,7 @@ class Resource : public Serializable,
 public:
     Path GetResourceFilepath() const;
 
+    void PropagateResourceChanged();
     virtual GUID::GUIDType GetNextInsideFileGUID() const;
 
 protected:

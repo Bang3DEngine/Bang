@@ -27,7 +27,7 @@ void Material::SetLineWidth(float w)
     if (w != GetLineWidth())
     {
         m_lineWidth = w;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -36,7 +36,7 @@ void Material::SetRenderWireframe(bool renderWireframe)
     if (renderWireframe != IsRenderWireframe())
     {
         m_renderWireframe = renderWireframe;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -45,7 +45,7 @@ void Material::SetCullFace(GL::CullFaceExt cullFace)
     if (cullFace != GetCullFace())
     {
         m_cullFace = cullFace;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -54,7 +54,7 @@ void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
     if (albedoUvOffset != GetAlbedoUvOffset())
     {
         m_albedoUvOffset = albedoUvOffset;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -63,7 +63,7 @@ void Material::SetAlbedoUvMultiply(const Vector2 &albedoUvMultiply)
     if (albedoUvMultiply != GetAlbedoUvMultiply())
     {
         m_albedoUvMultiply = albedoUvMultiply;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -72,7 +72,7 @@ void Material::SetNormalMapUvOffset(const Vector2 &normalMapUvOffset)
     if (normalMapUvOffset != GetNormalMapUvOffset())
     {
         m_normalMapUvOffset = normalMapUvOffset;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -81,7 +81,7 @@ void Material::SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply)
     if (normalMapUvMultiply != GetNormalMapUvMultiply())
     {
         m_normalMapUvMultiply = normalMapUvMultiply;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -90,7 +90,7 @@ void Material::SetNormalMapMultiplyFactor(float normalMapMultiplyFactor)
     if (normalMapMultiplyFactor != GetNormalMapMultiplyFactor())
     {
         m_normalMapMultiplyFactor = normalMapMultiplyFactor;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -99,7 +99,7 @@ void Material::SetShaderProgram(ShaderProgram* program)
     if (p_shaderProgram.Get() != program)
     {
         p_shaderProgram.Set(program);
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -108,7 +108,7 @@ void Material::SetReceivesLighting(bool receivesLighting)
     if (receivesLighting != GetReceivesLighting())
     {
         m_receivesLighting = receivesLighting;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -117,7 +117,7 @@ void Material::SetRoughness(float roughness)
     if (roughness != GetRoughness())
     {
         m_roughness = roughness;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -126,7 +126,7 @@ void Material::SetMetalness(float metalness)
     if (metalness != GetMetalness())
     {
         m_metalness = metalness;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -135,7 +135,7 @@ void Material::SetAlbedoColor(const Color &albedoColor)
     if (albedoColor != GetAlbedoColor())
     {
         m_albedoColor = albedoColor;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -145,7 +145,7 @@ void Material::SetAlbedoTexture(Texture2D* texture)
     {
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<IEventsTextureChanged>::
+            GetAlbedoTexture()->EventEmitter<IEventsResource>::
                                 UnRegisterListener(this);
         }
 
@@ -155,11 +155,11 @@ void Material::SetAlbedoTexture(Texture2D* texture)
 
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<IEventsTextureChanged>::
+            GetAlbedoTexture()->EventEmitter<IEventsResource>::
                                 RegisterListener(this);
         }
 
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -169,7 +169,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
     {
         if (GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<IEventsTextureChanged>::
+            GetNormalMapTexture()->EventEmitter<IEventsResource>::
                                    UnRegisterListener(this);
         }
 
@@ -180,11 +180,11 @@ void Material::SetNormalMapTexture(Texture2D *texture)
 
         if (GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<IEventsTextureChanged>::
+            GetNormalMapTexture()->EventEmitter<IEventsResource>::
                                    RegisterListener(this);
         }
 
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -193,7 +193,7 @@ void Material::SetRenderPass(RenderPass renderPass)
     if (renderPass != GetRenderPass())
     {
         m_renderPass = renderPass;
-        PropagateMaterialChanged();
+        PropagateResourceChanged();
     }
 }
 
@@ -297,15 +297,9 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetCullFace(GetCullFace());
 }
 
-void Material::OnTextureChanged(const Texture*)
+void Material::OnResourceChanged(Resource *res)
 {
-    PropagateMaterialChanged();
-}
-
-void Material::PropagateMaterialChanged()
-{
-    EventEmitter<IEventsMaterialChanged>::PropagateToListeners(
-                &IEventsMaterialChanged::OnMaterialChanged, this);
+    PropagateResourceChanged();
 }
 
 void Material::Import(const Path &materialFilepath)

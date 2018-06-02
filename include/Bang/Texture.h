@@ -8,13 +8,11 @@
 #include "Bang/Vector2.h"
 #include "Bang/GLObject.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IEventsTextureChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
 class Texture : public GLObject,
-                public Asset,
-                public EventEmitter<IEventsTextureChanged>
+                public Asset
 {
     ASSET(Texture)
 
@@ -46,8 +44,6 @@ public:
     uint GetBytesSize() const;
 
     GL::TextureTarget GetTextureTarget() const;
-
-    void PropagateTextureChanged();
 
 protected:
     void SetWidth(int width);

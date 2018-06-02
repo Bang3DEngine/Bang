@@ -7,8 +7,6 @@
 #include "Bang/Vector2.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/IEventsTextureChanged.h"
-#include "Bang/IEventsMaterialChanged.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -17,8 +15,7 @@ FORWARD class ShaderProgram;
 
 class Material : public Asset,
                  public ICloneable,
-                 public EventListener<IEventsTextureChanged>,
-                 public EventEmitter<IEventsMaterialChanged>
+                 public EventListener<IEventsResource>
 {
     ASSET(Material)
 
@@ -64,7 +61,7 @@ public:
     virtual void CloneInto(ICloneable *clone) const override;
 
     // IEventsTextureChanged
-    void OnTextureChanged(const Texture *changedTexture) override;
+    void OnResourceChanged(Resource *changedResource) override;
 
     // Resource
     void Import(const Path &materialFilepath) override;
@@ -94,8 +91,6 @@ protected:
 
     Material();
     virtual ~Material();
-
-    void PropagateMaterialChanged();
 };
 
 NAMESPACE_BANG_END

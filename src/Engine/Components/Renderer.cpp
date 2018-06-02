@@ -84,13 +84,13 @@ void Renderer::SetMaterial(Material *mat)
     {
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()->EventEmitter<IEventsMaterialChanged>::
+            GetSharedMaterial()->EventEmitter<IEventsResource>::
                                  UnRegisterListener(this);
         }
 
         if (p_material.Get())
         {
-            p_material.Get()->EventEmitter<IEventsMaterialChanged>::
+            p_material.Get()->EventEmitter<IEventsResource>::
                               UnRegisterListener(this);
             p_material.Set(nullptr);
         }
@@ -99,7 +99,7 @@ void Renderer::SetMaterial(Material *mat)
 
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()->EventEmitter<IEventsMaterialChanged>::
+            GetSharedMaterial()->EventEmitter<IEventsResource>::
                                  RegisterListener(this);
         }
 
@@ -143,7 +143,7 @@ void Renderer::SetReceivesShadows(bool receivesShadows)
 bool Renderer::IsVisible() const { return m_visible; }
 Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
 
-void Renderer::OnMaterialChanged(Material*) { PropagateRendererChanged(); }
+void Renderer::OnResourceChanged(Resource*) { PropagateRendererChanged(); }
 AABox Renderer::GetAABBox() const { return AABox::Empty; }
 bool Renderer::GetCastsShadows() const { return m_castsShadows; }
 bool Renderer::GetReceivesShadows() const { return m_receivesShadows; }
@@ -156,7 +156,7 @@ Material* Renderer::GetMaterial() const
         if (GetSharedMaterial())
         {
             p_material = Resources::Clone<Material>(GetSharedMaterial());
-            p_material.Get()->EventEmitter<IEventsMaterialChanged>::
+            p_material.Get()->EventEmitter<IEventsResource>::
                               RegisterListener(const_cast<Renderer*>(this));
         }
     }

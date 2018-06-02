@@ -164,6 +164,16 @@ void File::Write(const Path &filepath, const List<String> &lines)
     File::Write(filepath, String::Join(lines, "\n"));
 }
 
+void File::Write(const Path &filepath, const Byte *bytes, std::size_t bytesSize)
+{
+    std::ofstream out(filepath.GetAbsolute(), std::ios::binary);
+    if (out)
+    {
+        out.write(RCAST<const char*>(bytes), bytesSize);
+        out.close();
+    }
+}
+
 String File::GetContents(const Path &filepath)
 {
     if (!filepath.IsFile()) { return ""; }

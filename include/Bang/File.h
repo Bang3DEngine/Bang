@@ -34,6 +34,8 @@ public:
     static void Write(const Path &filepath, const String &contents);
     static void Write(const Path &filepath, const Array<String> &lines);
     static void Write(const Path &filepath, const List<String> &lines);
+    static void Write(const Path &filepath, const Byte *bytes,
+                      std::size_t bytesSize);
 
 protected:
     Path m_path;

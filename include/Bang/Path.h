@@ -34,7 +34,7 @@ public:
     bool IsDir() const;
     bool IsFile() const;
     bool Exists() const;
-
+    bool IsSubPathOf(const Path &path) const;
 
     List<Path> GetFiles(FindFlags findFlags = FindFlag::DEFAULT,
                         const Array<String> &extensions = {}) const;

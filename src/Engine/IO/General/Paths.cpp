@@ -148,7 +148,7 @@ List<Path> Paths::GetEngineIncludeDirs()
 
 bool Paths::IsEnginePath(const Path &path)
 {
-    return path.BeginsWith( String(Paths::GetEngineDir()) + String("/") );
+    return path.IsSubPathOf( Paths::GetEngineDir() );
 }
 
 void Paths::SetEngineRoot(const Path &engineRootDir)

@@ -6,22 +6,24 @@ uniform mat4 B_WorldToShadowMapMatrices[6];
 uniform samplerCube B_LightShadowMap;
 uniform samplerCubeShadow B_LightShadowMapSoft;
 
-float GetFragmentLightness(const in vec3 pixelPosWorld,
+float GetFragmentLightness(const float pixelDistSq,
+                           const in vec3 pixelPosWorld,
                            const in vec3 pixelNormalWorld)
 {
     if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
     else
     {
         // SHADOW_HARD or SHADOW_SOFT
-        float pixelDistance = distance(pixelPosWorld, B_LightPositionWorld);
-        pixelDistance /= B_PointLightZFar;
-        // if (pixelDistance > B_LightRange) { return 0.0f; }
 
         // If facing away, complete shadow directly
         vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
-        // if (dot(pixelNormalWorld, pixelDirWorld) >= 0) { return 0.0f; }
+        if (dot(pixelNormalWorld, pixelDirWorld) >= 0) { return 0.0f; }
 
-        float biasedPixelDistance = (pixelDistance - B_LightShadowBias);
+        if (pixelDistSq > B_LightRange*B_LightRange) { return 0.0f; }
+        float pixelDistance = sqrt(pixelDistSq);
+        float pixelDistanceNorm = pixelDistance / B_PointLightZFar;
+
+        float biasedPixelDistance = (pixelDistanceNorm - B_LightShadowBias);
         if (B_LightShadowType == SHADOW_HARD)
         {
             float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
@@ -42,17 +44,25 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
 
 vec3 GetLightColorApportation()
 {
-    vec3  pixelPosWorld    = B_ComputeWorldPosition();
+    vec3 pixelPosWorld = B_ComputeWorldPosition();
 
     // Attenuation
     vec3 posDiff = (B_LightPositionWorld - pixelPosWorld);
-    float distSq = dot(posDiff, posDiff);
-    float attenuation = ((B_LightRange*B_LightRange) / (distSq)) - 1.0;
+    float pixelDistSq = dot(posDiff, posDiff);
+    float attenuation = ((B_LightRange*B_LightRange) / (pixelDistSq)) - 1.0;
     attenuation = min(attenuation, 1.0);
     float intensityAtt = B_LightIntensity * attenuation;
     if (intensityAtt <= 0.0) { return vec3(0); }
 
+    float lightness = 1.0f;
     vec3  pixelNormalWorld = B_SampleNormal();
+    if (B_SampleReceivesShadows())
+    {
+        lightness = GetFragmentLightness(pixelDistSq,
+                                         pixelPosWorld,
+                                         pixelNormalWorld);
+    }
+
     vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
     float pixelRoughness   = B_SampleRoughness();
     float pixelMetalness   = B_SampleMetalness();
@@ -78,11 +88,6 @@ vec3 GetLightColorApportation()
     vec3 kDiff   = (1.0 - kSpec) * (1.0 - pixelMetalness);
     vec3 diffuse = (kDiff * pixelAlbedo / PI);
 
-    float lightness = 1.0f;
-    if (B_SampleReceivesShadows())
-    {
-        lightness = GetFragmentLightness(pixelPosWorld, pixelNormalWorld);
-    }
 
     float surfaceDotWithLight = max(0.0, dot(N, L));
 

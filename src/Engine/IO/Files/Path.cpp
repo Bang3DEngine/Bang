@@ -64,6 +64,11 @@ bool Path::Exists() const
     return access(GetAbsolute().ToCString(), F_OK) != -1;
 }
 
+bool Path::IsSubPathOf(const Path &path) const
+{
+    return GetAbsolute().BeginsWith(path.GetAbsolute());
+}
+
 List<Path> Path::GetFiles(Path::FindFlags findFlags,
                           const Array<String> &extensions) const
 {

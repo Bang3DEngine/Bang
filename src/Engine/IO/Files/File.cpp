@@ -75,7 +75,7 @@ bool File::DuplicateDir(const Path &srcDirpath,
     List<Path> subdirs = srcDirpath.GetSubDirectories(Path::FindFlag::SIMPLE_HIDDEN);
     for (const Path &subdir : subdirs)
     {
-        if (subdir.BeginsWith(dstDirPath)) { continue; }
+        if (subdir.IsSubPathOf(dstDirPath)) { continue; }
 
         Path newSubDirPath = dstDirPath.Append(subdir.GetName());
         pathsToIgnore.Add(newSubDirPath);

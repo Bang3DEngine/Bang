@@ -36,12 +36,13 @@ Gizmos::Gizmos()
     m_gizmosGo = GameObjectFactory::CreateGameObject();
     m_gizmosGo->SetName("Gizmos");
 
+    const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
     m_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube());
     m_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
     m_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere());
     m_outlineShaderProgram = ShaderProgramFactory::Get(
                 ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-                EPATH("Shaders/GizmosOutline.frag"));
+                engShadersDir.Append("GizmosOutline.frag"));
 
     m_lineRenderer = m_gizmosGo->AddComponent<LineRenderer>();
     m_meshRenderer = m_gizmosGo->AddComponent<MeshRenderer>();

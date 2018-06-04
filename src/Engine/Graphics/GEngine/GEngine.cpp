@@ -47,11 +47,12 @@ void GEngine::Init()
     GL::SetActive( GetGL() );
     m_texUnitManager = new TextureUnitManager();
 
+    const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
     p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
     p_renderTextureToViewportSP = ShaderProgramFactory::GetRenderTextureToViewport();
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-                        EPATH("Shaders/RenderSky.frag")) );
+                        engShadersDir.Append("RenderSky.frag")) );
     GL::SetActive( nullptr );
 }
 

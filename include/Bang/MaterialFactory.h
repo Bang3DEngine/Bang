@@ -1,6 +1,7 @@
 #ifndef MATERIALFACTORY_H
 #define MATERIALFACTORY_H
 
+#include "Bang/Path.h"
 #include "Bang/Material.h"
 #include "Bang/ResourceHandle.h"
 
@@ -19,7 +20,7 @@ public:
     static RH<Material> GetUIImage();
 
 private:
-    Map<String, RH<Material>> m_cache;
+    Map<Path, RH<Material>> m_cache;
 
     MaterialFactory() = default;
     static RH<Material> Load(const String &matEnginePath);

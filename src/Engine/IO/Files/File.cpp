@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #elif _WIN32
+#include <Windows.h>
 #endif
 
 #include "Bang/List.h"
@@ -59,7 +60,7 @@ bool File::DuplicateDir(const Path &fromDirpath,
 {
     if (!fromDirpath.IsDir()) { return false; }
     if (!overwrite && toDirpath.Exists()) { return false; }
-    if (!File::CreateDirectory(toDirpath)) { return false; }
+    if (!File::CreateDir(toDirpath)) { return false; }
 
     List<Path> filepaths = fromDirpath.GetFiles(Path::FindFlag::SimpleHidden);
     for(const Path& filepath : filepaths)
@@ -108,14 +109,14 @@ bool File::Remove(const Path &path)
     }
 }
 
-bool File::CreateDirectory(const Path &dirPath)
+bool File::CreateDir(const Path &dirPath)
 {
     if (dirPath.Exists()) { return true; }
 
     #ifdef __linux__
         return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
     #elif _WIN32
-        return false;
+        return CreateDirectory(dirPath.GetAbsolute().ToCString(), NULL);
     #endif
 }
 

@@ -139,7 +139,7 @@ float UILabel::GetCursorXViewportNDC(int cursorIndex) const
 float UILabel::GetCursorXLocalNDC(int cursorIndex) const
 {
     float localTextX = 0.0f;
-    const int textLength = SCAST<int>(GetText()->GetContent().Size());
+    const int textLength = SCAST<int>(GetText()->GetCharRectsLocalNDC().Size());
     if (cursorIndex > 0 && cursorIndex < textLength) // Between two chars
     {
         AARect currentCharRect = GetText()->GetCharRectLocalNDC(cursorIndex - 1);

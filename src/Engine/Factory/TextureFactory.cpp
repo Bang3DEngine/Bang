@@ -8,56 +8,56 @@
 USING_NAMESPACE_BANG
 
 RH<Texture2D> TextureFactory::GetBangB64Icon()
-{ return GetIconTexture("LogoBang_B_64"); }
+{ return GetTexture("LogoBang_B_64"); }
 RH<Texture2D> TextureFactory::GetBangB512Icon()
-{ return GetIconTexture("LogoBang_B_512"); }
+{ return GetTexture("LogoBang_B_512"); }
 RH<Texture2D> TextureFactory::GetBangB2048Icon()
-{ return GetIconTexture("LogoBang_B_2048"); }
+{ return GetTexture("LogoBang_B_2048"); }
 RH<Texture2D> TextureFactory::GetBang2048Icon()
-{ return GetIconTexture("LogoBang_2048"); }
+{ return GetTexture("LogoBang_2048"); }
 RH<Texture2D> TextureFactory::GetRightArrowIcon()
-{ return GetIconTexture("RightArrow"); }
+{ return GetTexture("RightArrow"); }
 RH<Texture2D> TextureFactory::GetDownArrowIcon()
-{ return GetIconTexture("DownArrow"); }
+{ return GetTexture("DownArrow"); }
 RH<Texture2D> TextureFactory::GetCheckIcon()
-{ return GetIconTexture("Check"); }
+{ return GetTexture("Check"); }
 RH<Texture2D> TextureFactory::GetAudioIcon()
-{ return GetIconTexture("Audio"); }
+{ return GetTexture("Audio"); }
 RH<Texture2D> TextureFactory::GetCircleIcon()
-{ return GetIconTexture("Circle"); }
+{ return GetTexture("Circle"); }
 RH<Texture2D> TextureFactory::GetSunIcon()
-{ return GetIconTexture("Sun"); }
+{ return GetTexture("Sun"); }
 RH<Texture2D> TextureFactory::GetLightBulbIcon()
-{ return GetIconTexture("LightBulb"); }
+{ return GetTexture("LightBulb"); }
 RH<Bang::Texture2D> Bang::TextureFactory::GetInfoIcon()
-{ return GetIconTexture("Info"); }
+{ return GetTexture("Info"); }
 RH<Texture2D> TextureFactory::GetWarningIcon()
-{ return GetIconTexture("Warn"); }
+{ return GetTexture("Warn"); }
 RH<Bang::Texture2D> Bang::TextureFactory::GetErrorIcon()
-{ return GetIconTexture("Error"); }
+{ return GetTexture("Error"); }
 RH<Texture2D> TextureFactory::GetCheckerboard()
 {
-    RH<Texture2D> tex = GetIconTexture("Checkerboard");
+    RH<Texture2D> tex = GetTexture("Checkerboard");
     tex.Get()->SetFilterMode(GL::FilterMode::Nearest);
     return tex;
 }
 RH<Texture2D> TextureFactory::GetWhiteTexture()
-{ return GetIconTexture("White"); }
+{ 
+    return GetTexture("White"); 
+}
 
 RH<Texture2D> TextureFactory::Get9SliceRoundRectTexture()
 {
-    Path path = EPATH("Images/RRect_9s.png");
-    return Resources::Load<Texture2D>(path);
+    return GetTexture("RRect_9s.png");
 }
 RH<Texture2D> TextureFactory::Get9SliceRoundRectBorderTexture()
 {
-    Path path = EPATH("Images/RRectBorder_9s.png");
-    return Resources::Load<Texture2D>(path);
+    return GetTexture("RRectBorder_9s.png");
 }
 
 RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
 {
-    Path path = EPATH("Icons/WhiteCM.texcm");
+    Path path = GetTexturesDir().Append("WhiteCM.texcm");
     RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
     Resources::SetPermanent(path, true);
     Resources::SetPermanent(tcm.Get(), true);
@@ -66,14 +66,14 @@ RH<TextureCubeMap> TextureFactory::GetWhiteTextureCubeMap()
 
 RH<TextureCubeMap> TextureFactory::GetDefaultTextureCubeMap()
 {
-    Path path = EPATH("Icons/DefaultSkybox.texcm");
+    Path path = GetTexturesDir().Append("DefaultSkybox.texcm");
     RH<TextureCubeMap> tcm = Resources::Load<TextureCubeMap>(path);
     Resources::SetPermanent(path, true);
     Resources::SetPermanent(tcm.Get(), true);
     return tcm;
 }
 
-RH<Texture2D> TextureFactory::GetIconTexture(const String &filename,
+RH<Texture2D> TextureFactory::GetTexture(const String &filename,
                                           const Path &dir)
 {
     Path path = dir.Append(filename).AppendExtension("png");
@@ -102,10 +102,13 @@ RH<Texture2D> TextureFactory::GetIconTexture(const String &filename,
     return iconTex;
 }
 
-RH<Texture2D> TextureFactory::GetIconTexture(const String &filename)
+Path TextureFactory::GetTexturesDir()
 {
-    return TextureFactory::GetIconTexture(filename,
-                                       Paths::GetEngineAssetsDir()
-                                       .Append("Icons"));
+    return Paths::GetEngineAssetsDir().Append("Textures");
+}
+
+RH<Texture2D> TextureFactory::GetTexture(const String &filename)
+{
+    return TextureFactory::GetTexture(filename, GetTexturesDir());
 }
 

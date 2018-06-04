@@ -33,13 +33,14 @@ public:
     static RH<TextureCubeMap> GetWhiteTextureCubeMap();
     static RH<TextureCubeMap> GetDefaultTextureCubeMap();
 
-    static RH<Texture2D> GetIconTexture(const String &filename, const Path &dir);
+    static RH<Texture2D> GetTexture(const String &filename, const Path &dir);
 
 private:
     TextureFactory() = default;
     virtual ~TextureFactory() = default;
 
-    static RH<Texture2D> GetIconTexture(const String &filename);
+    static Path GetTexturesDir();
+    static RH<Texture2D> GetTexture(const String &filename);
 };
 
 NAMESPACE_BANG_END

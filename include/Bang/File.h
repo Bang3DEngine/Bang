@@ -17,7 +17,7 @@ public:
     const Path& GetPath() const;
 
     static bool Remove(const Path &path);
-    static bool CreateDirectory(const Path &dirPath);
+    static bool CreateDir(const Path &dirPath);
     static bool Rename(const Path &oldPath, const Path &newPath);
 
     static bool Duplicate(const Path &fromPath, const Path &toPath);

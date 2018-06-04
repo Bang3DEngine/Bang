@@ -11,9 +11,11 @@ const String ShaderPreprocessor::GLSLVersionString = "#version 330 core";
 
 void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
 {
+    const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
+
     List<Path> includeDirs;
-    includeDirs.PushBack(EPATH("Shaders"));
-    includeDirs.PushBack(EPATH("Shaders/Include"));
+    includeDirs.PushBack(engShadersDir);
+    includeDirs.PushBack(engShadersDir.Append("Include"));
     if (Resources::GetActive())
     {
         Array<Path> lookUpPaths = Resources::GetActive()->GetLookUpPaths();

@@ -7,37 +7,39 @@ USING_NAMESPACE_BANG
 
 RH<Material> MaterialFactory::GetDefault()
 {
-    return MaterialFactory::Load("Materials/Default.bmat");
+    return MaterialFactory::Load("Default.bmat");
 }
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {
-    return MaterialFactory::Load("Materials/DefaultUnLighted.bmat");
+    return MaterialFactory::Load("DefaultUnLighted.bmat");
 }
 RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
-    return MaterialFactory::Load("Materials/GizmosUnLightedOverlay.bmat");
+    return MaterialFactory::Load("GizmosUnLightedOverlay.bmat");
 }
 RH<Material> MaterialFactory::GetMissing()
 {
-    return MaterialFactory::Load("Materials/Missing.bmat");
+    return MaterialFactory::Load("Missing.bmat");
 }
 
 RH<Material> MaterialFactory::GetUIText()
 {
-    return MaterialFactory::Load("Materials/UITextRenderer.bmat");
+    return MaterialFactory::Load("UITextRenderer.bmat");
 }
 RH<Material> MaterialFactory::GetUIImage()
 {
-    return MaterialFactory::Load("Materials/UIImageRenderer.bmat");
+    return MaterialFactory::Load("UIImageRenderer.bmat");
 }
 
-RH<Material> MaterialFactory::Load(const String &matEnginePath)
+RH<Material> MaterialFactory::Load(const String &matEnginePathStr)
 {
+    Path matEnginePath = Paths::GetEngineAssetsDir().Append("Materials").
+                         Append(matEnginePathStr);
     MaterialFactory *mf = MaterialFactory::GetActive();
     if (!mf->m_cache.ContainsKey(matEnginePath))
     {
         mf->m_cache.Add(matEnginePath,
-                        Resources::Load<Material>(EPATH(matEnginePath)));
+                        Resources::Load<Material>(matEnginePath));
     }
     return mf->m_cache.Get(matEnginePath);
 }

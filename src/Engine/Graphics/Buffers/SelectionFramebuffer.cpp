@@ -17,10 +17,11 @@ USING_NAMESPACE_BANG
 SelectionFramebuffer::SelectionFramebuffer(int width, int height) :
     Framebuffer(width, height)
 {
+    const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
     ShaderProgram *selectionProgram =
         ShaderProgramFactory::Get(
                 ShaderProgramFactory::GetDefaultVertexShaderPath(),
-                EPATH("Shaders/SelectionBuffer.frag") );
+                engShadersDir.Append("SelectionBuffer.frag") );
 
     p_selectionMaterial = Resources::Create<Material>();
     p_selectionMaterial.Get()->SetShaderProgram(selectionProgram);

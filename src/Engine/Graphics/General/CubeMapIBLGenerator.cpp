@@ -66,10 +66,11 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     }
 
     // Create shader program
+    const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
     ShaderProgram *sp = ShaderProgramFactory::Get(
-                            EPATH("Shaders/CubeMapIBLGenerator.vert"),
-                            EPATH("Shaders/CubeMapIBLGenerator.geom"),
-                            EPATH("Shaders/CubeMapIBLGenerator.frag"));
+                            engShadersDir.Append("CubeMapIBLGenerator.vert"),
+                            engShadersDir.Append("CubeMapIBLGenerator.geom"),
+                            engShadersDir.Append("CubeMapIBLGenerator.frag"));
 
     // Create framebuffer and shader program
     Framebuffer *fb = new Framebuffer();

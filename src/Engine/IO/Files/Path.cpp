@@ -8,12 +8,20 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+constexpr char Separator[] = "/";
+constexpr char SeparatorC = '/';
 #elif _WIN32
+#include <windows.h>
+#include "Shlwapi.h"
+#include "Bang/WinUndef.h"
+constexpr char Separator[] = "\\";
+constexpr char SeparatorC = '\\';
 #endif
 
 #include "Bang/List.h"
 #include "Bang/Paths.h"
 #include "Bang/Array.h"
+#include "Bang/Debug.h"
 
 USING_NAMESPACE_BANG
 
@@ -36,7 +44,8 @@ void Path::SetPath(const String &path)
 {
     m_absolutePath = path;
     if (!m_absolutePath.IsEmpty() &&
-         m_absolutePath.At( SCAST<int>(m_absolutePath.Size()) - 1 ) == '/')
+         m_absolutePath.At( SCAST<int>(m_absolutePath.Size()) - 1 ) == 
+         SeparatorC)
     {
         m_absolutePath.Remove(SCAST<int>(m_absolutePath.Size()) - 1,
                               SCAST<int>(m_absolutePath.Size()));
@@ -63,7 +72,7 @@ bool Path::IsFile() const
     stat(GetAbsolute().ToCString(), &path_stat);
     return S_ISREG(path_stat.st_mode);
     #elif _WIN32
-    return true;
+    return !PathIsDirectory( GetAbsolute().ToCString() );
     #endif
 }
 
@@ -72,7 +81,7 @@ bool Path::Exists() const
     #ifdef __linux__
     return access(GetAbsolute().ToCString(), F_OK) != -1;
     #elif _WIN32
-    return true;
+    return PathFileExists( GetAbsolute().ToCString() );
     #endif
 }
 
@@ -146,6 +155,7 @@ List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
     List<Path> subPathsList;
 
     #ifdef __linux__
+
     struct dirent *dir;
     DIR *d = opendir(GetAbsolute().ToCString());
     if (!d) { return {}; }
@@ -166,6 +176,27 @@ List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
 
     #elif _WIN32
 
+    char fullpath[MAX_PATH];
+    GetFullPathName(GetAbsolute().ToCString(), MAX_PATH, fullpath, 0);
+    std::string fp(fullpath);
+
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = FindFirstFile((LPCSTR)(GetAbsolute() +
+                                  String(Separator + String("*"))).ToCString(),
+                   &findFileData);
+    if (hFind != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            String fileName(findFileData.cFileName);
+            if (fileName != "." && fileName != "..")
+            {
+                subPathsList.PushBack( Append(fileName) );
+            }
+        }
+        while (FindNextFile(hFind, &findFileData) != 0);
+    }
+
     #endif
 
     return subPathsList;
@@ -180,7 +211,18 @@ uint64_t Path::GetModificationTimeSeconds() const
     stat(GetAbsolute().ToCString(), &attr);
     return attr.st_mtim.tv_sec;
     #elif _WIN32
-    return true;
+    struct stat fileStat;
+    stat(GetAbsolute().ToCString(), &fileStat);
+    return SCAST<uint64_t>(fileStat.st_mtime);
+    /*
+    HANDLE hFile = CreateFile(GetAbsolute().ToCString(), GENERIC_READ, 
+                              FILE_SHARE_READ, NULL,
+                              OPEN_EXISTING, 0, NULL);
+    FILETIME ftCreate, ftAccess, ftWrite;
+    SYSTEMTIME stUTC, stLocal;
+    return GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite);
+    return ftWrite.dwHighDateTime
+    */
     #endif
 }
 
@@ -201,7 +243,20 @@ String Path::GetName() const
 
 bool Path::IsAbsolute() const
 {
-    return GetAbsolute().BeginsWith("/");
+	#ifdef __linux__
+    
+	return GetAbsolute().BeginsWith(Separator);
+	
+	#elif _WIN32
+	
+	return 
+		GetAbsolute().Size() >= 3 &&
+		( (GetAbsolute()[0] >= 'A' && GetAbsolute()[0] <= 'Z') ||
+	      (GetAbsolute()[0] >= 'a' && GetAbsolute()[0] <= 'z') ) &&
+		GetAbsolute()[1] <= ':' &&
+		GetAbsolute()[2] == SeparatorC;
+
+	#endif
 }
 
 String Path::GetNameExt() const
@@ -209,7 +264,7 @@ String Path::GetNameExt() const
     if (IsEmpty()) { return ""; }
 
     String filename = GetAbsolute();
-    const size_t lastSlash = GetAbsolute().RFind('/');
+    const size_t lastSlash = GetAbsolute().RFind(SeparatorC);
     if (lastSlash != String::npos)
     {
         filename = GetAbsolute().SubString(lastSlash + 1);
@@ -238,7 +293,7 @@ Path Path::GetDirectory() const
 {
     if (IsEmpty()) { return Path::Empty; }
 
-    const size_t lastSlash = GetAbsolute().RFind('/');
+    const size_t lastSlash = GetAbsolute().RFind(SeparatorC);
     if (lastSlash != String::npos)
     {
         return Path(GetAbsolute().SubString(0, lastSlash-1));
@@ -286,9 +341,9 @@ bool Path::BeginsWith(const String &path) const
 Path Path::Append(const Path &pathRHS) const
 {
     String str = pathRHS.GetAbsolute();
-    if (str.BeginsWith("./")) { str.Remove(0, 1); }
-    while (str.BeginsWith("/")) { str.Remove(0, 1); }
-    return this->AppendRaw("/" + str);
+    if (str.BeginsWith( "." + String(Separator) )) { str.Remove(0, 1); }
+    while (str.BeginsWith(Separator)) { str.Remove(0, 1); }
+    return this->AppendRaw(Separator + str);
 }
 
 Path Path::Append(const String &str) const

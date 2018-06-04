@@ -2,19 +2,24 @@
 
 USING_NAMESPACE_BANG
 
+const Path EngShadersPath()
+{
+    return Paths::GetEngineAssetsDir().Append("Shaders");
+}
+
 Path ShaderProgramFactory::GetDefaultVertexShaderPath()
 {
-    return EPATH("Shaders/Default.vert");
+    return EngShadersPath().Append("Default.vert");
 }
 
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath()
 {
-    return EPATH("Shaders/Default.frag");
+    return EngShadersPath().Append("Default.frag");
 }
 
 Path ShaderProgramFactory::GetScreenPassVertexShaderPath()
 {
-    return EPATH("Shaders/ScreenPass.vert");
+    return EngShadersPath().Append("ScreenPass.vert");
 }
 
 ShaderProgram *ShaderProgramFactory::GetDefault()
@@ -26,32 +31,32 @@ ShaderProgram *ShaderProgramFactory::GetDefault()
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/Blur.frag"));
+               EngShadersPath().Append("Blur.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
 {
-    return Get(EPATH("Shaders/PointLightShadowMap.vert"),
-               EPATH("Shaders/PointLightShadowMap.geom"),
-               EPATH("Shaders/PointLightShadowMap.frag"));
+    return Get(EngShadersPath().Append("PointLightShadowMap.vert"),
+               EngShadersPath().Append("PointLightShadowMap.geom"),
+               EngShadersPath().Append("PointLightShadowMap.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetPointLightScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/PointLight.frag"));
+               EngShadersPath().Append("PointLight.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/ByPassTexture.frag"));
+               EngShadersPath().Append("ByPassTexture.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDirectionalLightScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/DirectionalLight.frag"));
+               EngShadersPath().Append("DirectionalLight.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,

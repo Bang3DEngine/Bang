@@ -489,8 +489,8 @@ bool GL::ValidateProgram(GLId programId)
     GL_CALL( bool isValid = GL::GetProgramInteger(programId, GL::ValidateStatus) );
     if (!isValid)
     {
-        Debug_Error( "Invalid shader program in the current state: " <<
-                     GL::GetProgramErrorMsg(programId) );
+        // Debug_Error( "Invalid shader program in the current state: " <<
+        //              GL::GetProgramErrorMsg(programId) );
     }
     return isValid;
 }
@@ -617,8 +617,15 @@ void GL::DrawBuffers(const Array<GL::Attachment> &drawAttachments)
     //                        drawAttachments.Begin()))
     {
         gl->m_drawBuffers = drawAttachments;
-        GL_CALL( glDrawBuffers(drawAttachments.Size(),
-                               (const GLenum*)(&drawAttachments[0])) );
+        if (drawAttachments.Size() > 0)
+        {
+            GL_CALL(glDrawBuffers(drawAttachments.Size(),
+                    (const GLenum*)(&drawAttachments[0])));
+        }
+        else
+        {
+            GL_CALL(glDrawBuffers(0, nullptr));
+        }
     }
 }
 
@@ -1152,9 +1159,10 @@ void GL::Render(const VAO *vao, GL::Primitive renderMode,
     if (!programValidateOk)
     {
         // TextureUnitManager::PrintTextureUnits();
-        Debug::PrintAllUniforms();
+        // Debug::PrintAllUniforms();
+        // GL::PrintGLContext();
     }
-    ASSERT(programValidateOk);
+    // ASSERT(programValidateOk);
     #endif
 
     if (vao->IsIndexed())

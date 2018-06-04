@@ -621,8 +621,8 @@ UITree *UITree::CreateInto(GameObject *go)
 
 UITreeItemContainer *UITree::GetItemContainer(GOItem *item) const
 {
-    ASSERT(!item || !SCAST<UITreeItemContainer*>(item) );
-    return item ? SCAST<UITreeItemContainer*>(item->GetParent()) : nullptr;
+    ASSERT(!item || !DCAST<UITreeItemContainer*>(item) );
+    return item ? DCAST<UITreeItemContainer*>(item->GetParent()) : nullptr;
 }
 
 void UITree::UpdateCollapsability(GOItem *item)

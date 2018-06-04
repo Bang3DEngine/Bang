@@ -6,7 +6,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <pwd.h>
+constexpr char Separator[] = "/";
+constexpr char SeparatorC = '/';
 #elif _WIN32
+#include <Windows.h>
+#include <stdlib.h>
+#include "Bang/WinUndef.h"
+constexpr char Separator[] = "\\";
+constexpr char SeparatorC = '\\';
 #endif
 
 #include "Bang/Debug.h"
@@ -79,7 +86,14 @@ Path Paths::GetExecutablePath()
 
     #elif _WIN32
 
-    return Path::Empty;
+	HMODULE hModule = GetModuleHandleW(NULL);
+	WCHAR path[_MAX_PATH];
+	GetModuleFileNameW(hModule, path, _MAX_PATH);
+
+	std::wstring wsPath(path);
+	std::string sPath(wsPath.begin(), wsPath.end());
+
+    return Path( String(sPath) );
 
     #endif
 }
@@ -167,7 +181,7 @@ List<Path> Paths::GetEngineIncludeDirs()
 
 bool Paths::IsEnginePath(const Path &path)
 {
-    return path.BeginsWith( String(Paths::GetEngineDir()) + String("/") );
+    return path.BeginsWith( String(Paths::GetEngineDir()) + String(Separator) );
 }
 
 void Paths::SetEngineRoot(const Path &engineRootDir)
@@ -178,9 +192,12 @@ void Paths::SetEngineRoot(const Path &engineRootDir)
 Path Paths::GetResolvedPath(const Path &path_)
 {
     Path path = path_;
-    if (!path.IsAbsolute()) { path = Paths::GetExecutableDir().Append(path); }
+    if (!path.IsAbsolute()) 
+    { 
+        path = Paths::GetExecutableDir().Append(path); 
+    }
 
-    List<String> pathParts = path.GetAbsolute().Split<List>('/');
+    List<String> pathParts = path.GetAbsolute().Split<List>(SeparatorC);
     pathParts.RemoveAll(".");
 
     int skipNext = 0;
@@ -193,7 +210,7 @@ Path Paths::GetResolvedPath(const Path &path_)
         if (pathPart == "..") { ++skipNext; }
         else { resolvedPathParts.PushFront(pathPart); }
     }
-    Path resolvedPath = Path( String::Join(resolvedPathParts, "/") );
+    Path resolvedPath = Path( String::Join(resolvedPathParts, Separator) );
     return resolvedPath;
 }
 

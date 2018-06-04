@@ -34,8 +34,11 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
     if (m_vertexIndicesIBO) { delete m_vertexIndicesIBO; }
 
     m_vertexIndicesIBO = new IBO();
-    m_vertexIndicesIBO->Fill((void*)(&m_vertexIndices[0]),
-                             m_vertexIndices.Size() * sizeof(Mesh::VertexId));
+    if (m_vertexIndices.Size() >= 1)
+    {
+        m_vertexIndicesIBO->Fill((void*)(&m_vertexIndices[0]),
+            m_vertexIndices.Size() * sizeof(Mesh::VertexId));
+    }
 
     m_vao->SetIBO(m_vertexIndicesIBO); // Bind to VAO
 
@@ -108,8 +111,11 @@ void Mesh::UpdateGeometry()
         }
     }
 
-    GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
-                                   interleavedAttributes.Size() * sizeof(float));
+    if (interleavedAttributes.Size() >= 1)
+    {
+        GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
+            interleavedAttributes.Size() * sizeof(float));
+    }
 
     bool hasPos      = !GetPositionsPool().IsEmpty();
     bool hasNormals  = !GetNormalsPool().IsEmpty();
@@ -185,6 +191,14 @@ void Mesh::CalculateVertexNormals()
         {
             std::array<Mesh::VertexId, 3> triVertexIds =
                                         GetTriangleVertexIndices(vTriId);
+
+            for (int i = 0; i < 3; ++i)
+            {
+                ASSERT(triVertexIds[i] >= 0);
+                ASSERT(triVertexIds[i] <= GetPositionsPool().Size());
+            }
+            ASSERT(triVertexIds.size() == 3);
+
             Triangle tri = Triangle(GetPositionsPool()[triVertexIds[0]],
                                     GetPositionsPool()[triVertexIds[1]],
                                     GetPositionsPool()[triVertexIds[2]]);

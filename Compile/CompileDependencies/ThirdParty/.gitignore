@@ -1,6 +1,11 @@
 autom4te.cache/
 # Compiled Object files
+*.tlog
+*.pdb
+*.idb
 *.slo
+*.log
+*.lastbuildstate
 *.lo
 *.o
 *.obj

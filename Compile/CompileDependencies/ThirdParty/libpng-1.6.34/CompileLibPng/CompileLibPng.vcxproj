@@ -71,6 +71,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\..\..\zlib-1.2.11\build\</IncludePath>
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,18 +94,18 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..\..
 )
 </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -102,16 +116,16 @@ cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"<
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlibd.lib ..\..\..
 )
 </Command>
     </PreBuildEvent>
@@ -130,16 +144,16 @@ cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\b
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..\..
 )
 </Command>
     </PreBuildEvent>
@@ -158,16 +172,16 @@ cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DZLIB_INCL
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlibd.lib ..\..\..
 )
 </Command>
     </PreBuildEvent>

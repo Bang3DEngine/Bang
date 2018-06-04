@@ -70,21 +70,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)\..\build\$(Configuration)</OutDir>
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
     <TargetName>libsdl2_ttf</TargetName>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)\..\build\$(Configuration)</OutDir>
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
     <TargetName>libsdl2_ttf</TargetName>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)\..\build\$(Configuration)</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>libsdl2_ttf</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)\..\build\$(Configuration)</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>libsdl2_ttf</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

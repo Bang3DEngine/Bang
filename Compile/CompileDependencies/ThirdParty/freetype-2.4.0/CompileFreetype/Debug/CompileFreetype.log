@@ -1,2 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  CompileFreetype.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\CompileFreetype\\..\build\Debug\libfreetype2.lib

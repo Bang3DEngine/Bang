@@ -1,3 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  SDL_ttf.c
-  CompileSDL2_TTF.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14\CompileSDL2_TTF\\..\build\Debug\libsdl2_ttf.lib

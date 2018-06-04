@@ -69,7 +69,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -86,9 +93,9 @@ cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATI
 )</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -99,16 +106,16 @@ cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"<
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATIC_PIC=ON -DSNDIO=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON  ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATIC_PIC=ON -DSNDIO=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON  ..\..\..
 )</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -126,9 +133,9 @@ cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\b
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
@@ -153,16 +160,16 @@ cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATI
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)\..\build
-cmake --build "$(Configuration)" --config "$(Configuration)"
-cmake --build "$(Configuration)" --target "install" --config "$(Configuration)"</Command>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)\$(Platform)
+cmake --build . --config "$(Configuration)"
+cmake --build . --target "install" --config "$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+      <Command>IF NOT EXIST "build\$(Configuration)\$(Platform)\*.sln"  (
 cd $(ProjectDir)\..
-mkdir build\$(Configuration)
-cd build\$(Configuration)
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATIC_PIC=ON -DSNDIO=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON  ..\..
+mkdir build\$(Configuration)\$(Platform)
+cd build\$(Configuration)\$(Platform)
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DSDL_STATIC_PIC=ON -DSNDIO=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON  ..\..\..
 )</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

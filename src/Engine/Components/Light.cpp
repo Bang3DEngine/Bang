@@ -86,16 +86,19 @@ List<GameObject*> Light::GetActiveSceneShadowCasters() const
     List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
     for (Renderer *rend : renderers )
     {
-        bool isValidShadowCaster = false;
-        if (const Material *mat = rend->GetActiveMaterial())
+        if (rend->IsActive() && rend->GetCastsShadows())
         {
-            isValidShadowCaster = (mat->GetRenderPass() == RenderPass::SCENE &&
-                                   rend->GetCastsShadows());
-        }
+            bool isValidShadowCaster = false;
+            if (const Material *mat = rend->GetActiveMaterial())
+            {
+                isValidShadowCaster = (mat->GetRenderPass() == RenderPass::SCENE &&
+                                       rend->GetCastsShadows());
+            }
 
-        if (isValidShadowCaster)
-        {
-            shadowCastersSet.Add(rend->GetGameObject());
+            if (isValidShadowCaster)
+            {
+                shadowCastersSet.Add(rend->GetGameObject());
+            }
         }
     }
 

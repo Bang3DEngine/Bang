@@ -290,7 +290,7 @@ Vector2G<T> Vector3G<T>::ProjectedOnAxis(Axis3D axis) const
 
 template<class T>
 template<class OtherT1, class OtherT2> 
-static Vector3G<T> Vector3G<T>::Cross(
+Vector3G<T> Vector3G<T>::Cross(
                         const Vector3G<OtherT1> &v1, 
                         const Vector3G<OtherT2> &v2) 
 { 
@@ -301,7 +301,7 @@ static Vector3G<T> Vector3G<T>::Cross(
 
 template<class T>
 template<class OtherT1, class OtherT2> 
-static Vector3G<T> Vector3G<T>::Reflect(
+Vector3G<T> Vector3G<T>::Reflect(
                         const Vector3G<OtherT1> &incident, 
                         const Vector3G<OtherT2> &normal) 
 { 

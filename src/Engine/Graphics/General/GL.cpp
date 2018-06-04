@@ -489,8 +489,8 @@ bool GL::ValidateProgram(GLId programId)
     GL_CALL( bool isValid = GL::GetProgramInteger(programId, GL::ValidateStatus) );
     if (!isValid)
     {
-        // Debug_Error( "Invalid shader program in the current state: " <<
-        //              GL::GetProgramErrorMsg(programId) );
+        Debug_Error( "Invalid shader program in the current state: " <<
+                     GL::GetProgramErrorMsg(programId) );
     }
     return isValid;
 }

@@ -8,7 +8,7 @@
 NAMESPACE_BANG_BEGIN
 
 template<class T>
-static T Vector2G<T>::Cross(const Vector2G<T> &v1, const Vector2G<T> &v2)
+T Vector2G<T>::Cross(const Vector2G<T> &v1, const Vector2G<T> &v2)
 {
     return (v1.x * v2.y) - (v1.y * v2.x);
 }

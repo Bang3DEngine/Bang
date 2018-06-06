@@ -8,9 +8,9 @@ uniform mat4 B_WorldToShadowMapMatrices[6];
 uniform samplerCube B_LightShadowMap;
 uniform samplerCubeShadow B_LightShadowMapSoft;
 
-float GetFragmentLightness(const float pixelDistSq,
-                           const in vec3 pixelPosWorld,
-                           const in vec3 pixelNormalWorld)
+float GetPointLightFragmentLightness(const float pixelDistSq,
+                                     const in vec3 pixelPosWorld,
+                                     const in vec3 pixelNormalWorld)
 {
     if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
     else
@@ -44,10 +44,12 @@ float GetFragmentLightness(const float pixelDistSq,
     return 1.0f;
 }
 
-vec3 GetLightColorApportation()
+vec3 GetPointLightColorApportation(const vec3 pixelPosWorld,
+                                   const vec3 pixelNormalWorld,
+                                   const vec3 pixelAlbedo,
+                                   const float pixelRoughness,
+                                   const float pixelMetalness)
 {
-    vec3 pixelPosWorld = B_ComputeWorldPosition();
-
     // Attenuation
     vec3 posDiff = (B_LightPositionWorld - pixelPosWorld);
     float pixelDistSq = dot(posDiff, posDiff);
@@ -57,17 +59,12 @@ vec3 GetLightColorApportation()
     if (intensityAtt <= 0.0) { return vec3(0); }
 
     float lightness = 1.0f;
-    vec3  pixelNormalWorld = B_SampleNormal();
     if (B_SampleReceivesShadows())
     {
-        lightness = GetFragmentLightness(pixelDistSq,
-                                         pixelPosWorld,
-                                         pixelNormalWorld);
+        lightness = GetPointLightFragmentLightness(pixelDistSq,
+                                                   pixelPosWorld,
+                                                   pixelNormalWorld);
     }
-
-    vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
-    float pixelRoughness   = B_SampleRoughness();
-    float pixelMetalness   = B_SampleMetalness();
 
     vec3 N = pixelNormalWorld;
     vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
@@ -90,7 +87,6 @@ vec3 GetLightColorApportation()
     vec3 kDiff   = (1.0 - kSpec) * (1.0 - pixelMetalness);
     vec3 diffuse = (kDiff * pixelAlbedo / PI);
 
-
     float surfaceDotWithLight = max(0.0, dot(N, L));
 
     vec3 lightApport = (diffuse + specular) * radiance * surfaceDotWithLight;
@@ -99,11 +95,26 @@ vec3 GetLightColorApportation()
     return lightApport;
 }
 
+vec3 GetPointLightColorApportation()
+{
+    vec3  pixelPosWorld    = B_ComputeWorldPosition();
+    vec3  pixelNormalWorld = B_SampleNormal();
+    vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
+    float pixelRoughness   = B_SampleRoughness();
+    float pixelMetalness   = B_SampleMetalness();
+
+    return GetPointLightColorApportation(pixelPosWorld,
+                                         pixelNormalWorld,
+                                         pixelAlbedo,
+                                         pixelRoughness,
+                                         pixelMetalness);
+}
+
 void main()
 {
     if (B_SampleReceivesLight())
     {
-        vec3 lightApport = GetLightColorApportation();
+        vec3 lightApport = GetPointLightColorApportation();
         B_GIn_Color = vec4(lightApport, 0);
     }
     else

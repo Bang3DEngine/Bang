@@ -126,10 +126,6 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::Push(GL::Pushable::DEPTH_STATES);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
-    GL::Enablei(GL::Enablable::BLEND, 0);
-    GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
-                  GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
-
     GBuffer *gbuffer = camera->GetGBuffer();
 
     auto RenderSky = [this, gbuffer]() // Lambda to render the sky / background
@@ -183,6 +179,11 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
         }
     }
+
+    // Enable blend for transparent stuff from now on
+    GL::Enablei(GL::Enablable::BLEND, 0);
+    GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
+                  GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
 
     // GBuffer Canvas rendering
     if (camera->MustRenderPass(RenderPass::CANVAS))
@@ -335,6 +336,9 @@ void GEngine::RenderWithAllPasses(GameObject *go)
 
 void GEngine::RenderTransparentPass(GameObject *go)
 {
+    Camera *cam = Camera::GetActive();
+    ASSERT(cam);
+
     GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::DEPTH_STATES);
 
@@ -343,7 +347,42 @@ void GEngine::RenderTransparentPass(GameObject *go)
     GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
                   GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
 
-    RenderWithPass(go, RenderPass::SCENE_TRANSPARENT);
+    const Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
+
+    // Sort back to front
+    List<GameObject*> goChildren = go->GetChildrenRecursively();
+    goChildren.Sort(
+    [camPos](const GameObject *lhs, const GameObject *rhs) -> bool
+    {
+        const Transform *lhsTrans = lhs->GetTransform();
+        const Transform *rhsTrans = rhs->GetTransform();
+        if (!lhsTrans || !rhsTrans)
+        {
+            return false;
+        }
+
+        const Vector3 lhsPos = lhsTrans->GetPosition();
+        const Vector3 rhsPos = rhsTrans->GetPosition();
+        const Vector3 lhsCamPosDiff = (lhsPos - camPos);
+        const Vector3 rhsCamPosDiff = (rhsPos - camPos);
+        const float lhsDistToCamSq = Vector3::Dot(lhsCamPosDiff, lhsCamPosDiff);
+        const float rhsDistToCamSq = Vector3::Dot(rhsCamPosDiff, rhsCamPosDiff);
+        return lhsDistToCamSq < rhsDistToCamSq;
+    });
+
+    // Render back to front
+    for (GameObject *go : goChildren)
+    {
+        List<Renderer*> renderers = go->GetComponents<Renderer>();
+        for (Renderer *rend : renderers)
+        {
+            Material *mat = rend->GetActiveMaterial();
+            if (mat && (mat->GetRenderPass() == RenderPass::SCENE_TRANSPARENT))
+            {
+                GEngine::Render(rend);
+            }
+        }
+    }
 
     GL::Pop(GL::Pushable::DEPTH_STATES);
     GL::Pop(GL::Pushable::BLEND_STATES);

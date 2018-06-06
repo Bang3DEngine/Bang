@@ -51,9 +51,9 @@ void main()
     if (B_HasAlbedoTexture)
     {
         texColor = texture(B_AlbedoTexture, B_FIn_AlbedoUv);
-        if (texColor.a < B_AlphaCutoff) discard;
+        if (texColor.a < B_AlphaCutoff) { discard; }
     }
-    vec4 finalAlbedo = B_MaterialAlbedoColor * vec4(texColor.rgb, 1);
+    vec4 finalAlbedo = B_MaterialAlbedoColor * texColor;
 
     vec3 finalNormal = (B_FIn_Normal.xyz);
     if (B_HasNormalMapTexture)
@@ -98,11 +98,11 @@ void main()
         vec3 specular = specularAmbient * specK; // (specK * envBRDF.x + envBRDF.y);
 
         vec3 ambient = (diffuse) + (specular);
-        finalColor = vec4(ambient, B_MaterialAlbedoColor.a);
+        finalColor = vec4(ambient, finalAlbedo.a);
     }
     else
     {
-        finalColor = B_MaterialAlbedoColor;
+        finalColor = finalAlbedo;
     }
 
     #if defined(BANG_FORWARD_RENDERING)
@@ -116,7 +116,7 @@ void main()
     #elif defined(BANG_DEFERRED_RENDERING)
 
     B_GIn_Color  = finalColor;
-    B_GIn_Albedo = finalAlbedo;
+    B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);
     B_GIn_Normal = vec4(finalNormal * 0.5f + 0.5f, 0);
     B_GIn_Misc   = vec4(receivesLighting,
                         B_MaterialRoughness,

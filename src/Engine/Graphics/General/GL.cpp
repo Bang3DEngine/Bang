@@ -518,20 +518,23 @@ void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
 
     // Update indexed enablables accordingly, depending on if we want to override
     // or not
-    auto &enabledisStackAndValue =  gl->m_enabled_i_Vars[glEnablable];
-    for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
+    if (GL::CanEnablableBeIndexed(glEnablable))
     {
-        if (overrideIndexedValues)
+        auto &enabledisStackAndValue =  gl->m_enabled_i_Vars[glEnablable];
+        for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
         {
-            // This is what OpenGL does, so just update our status
-            enabledisStackAndValue.currentValue[i] = enabled;
-        }
-        else
-        {
-            // Force gl state change to what it was before
-            bool wasPrevEnabled = enabledisStackAndValue.currentValue[i];
-            GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
-            GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
+            if (overrideIndexedValues)
+            {
+                // This is what OpenGL does, so just update our status
+                enabledisStackAndValue.currentValue[i] = enabled;
+            }
+            else
+            {
+                // Force gl state change to what it was before
+                bool wasPrevEnabled = enabledisStackAndValue.currentValue[i];
+                GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
+                GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
+            }
         }
     }
 }
@@ -581,6 +584,11 @@ bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 
     if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable)) { return false; }
     return gl->m_enabled_i_Vars[glEnablable].currentValue[index];
+}
+
+bool GL::CanEnablableBeIndexed(GL::Enablable enablable)
+{
+    return (enablable == GL::Enablable::BLEND);
 }
 
 void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
@@ -2045,16 +2053,18 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
     switch (pushable)
     {
         case GL::Pushable::BLEND_STATES:
-            PushOrPop(GL::Enablable::BLEND, push);
             if (!push)
             {
-                GL::BlendEquationSeparate(gl->m_blendEquationColors.stack.top(),
-                                          gl->m_blendEquationAlphas.stack.top());
-                GL::BlendFuncSeparate(gl->m_blendSrcFactorColors.stack.top(),
-                                      gl->m_blendDstFactorAlphas.stack.top(),
-                                      gl->m_blendSrcFactorAlphas.stack.top(),
-                                      gl->m_blendDstFactorColors.stack.top());
+                const auto &enabledIStackAndValue =
+                                gl->m_enabled_i_Vars.Get(GL::Enablable::BLEND);
+                for (int i = 0; i < 4; ++i)
+                {
+                    GL::SetEnabledi(GL::Enablable::BLEND, i,
+                                    enabledIStackAndValue.stack.top()[i]);
+                }
             }
+
+            PushOrPop(GL::Enablable::BLEND, push);
             PushOrPop_(&gl->m_blendEquationAlphas,  push);
             PushOrPop_(&gl->m_blendEquationColors,  push);
             PushOrPop_(&gl->m_blendDstFactorAlphas, push);
@@ -2213,6 +2223,15 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
 void GL::PushOrPop(GL::Enablable enablable, bool push)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
+
+    if (!push)
+    {
+        ASSERT(gl->m_enabledVars.ContainsKey(enablable));
+        ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
+        GL::SetEnabled(enablable, gl->m_enabledVars.Get(enablable).stack.top(),
+                       false);
+    }
+
     PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
     PushOrPop_(&gl->m_enabled_i_Vars.Get(enablable), push);
 }

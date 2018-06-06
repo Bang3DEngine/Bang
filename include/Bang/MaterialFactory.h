@@ -10,7 +10,7 @@ NAMESPACE_BANG_BEGIN
 class MaterialFactory
 {
 public:
-    static RH<Material> GetDefault();
+    static RH<Material> GetDefault(RenderPass renderPass = RenderPass::SCENE);
     static RH<Material> GetDefaultUnLighted();
     static RH<Material> GetGizmosUnLightedOverlay();
 

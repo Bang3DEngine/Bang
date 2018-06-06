@@ -79,16 +79,39 @@ float B_LinearizeDepth(float d)
                   d * (B_Camera_ZFar - B_Camera_ZNear));
 }
 
-vec2 B_GetViewportStep() { return 1.0 / B_Viewport_Size; }
+vec3 B_GetCameraPositionWorld()
+{
+    return B_ViewInv[3].xyz;
+}
 
-#ifdef BANG_FRAGMENT
+vec3 B_ComputeWorldPosition(float depth, vec2 uv)
+{
+    vec4 projectedPos = vec4( (vec3(uv, depth) * 2.0 - 1.0), 1 );
+    vec4 worldPos = (B_ProjectionInv * projectedPos);
+    worldPos = (B_ViewInv * (worldPos/worldPos.w));
+    return worldPos.xyz;
+}
+
+vec2 B_GetViewportStep()
+{
+    return 1.0 / B_Viewport_Size;
+}
+
+#if defined(BANG_FRAGMENT)
 vec2 B_GetViewportPos() { return gl_FragCoord.xy - B_Viewport_MinPos; }
 vec2 B_GetViewportUv()  { return B_GetViewportPos() / B_Viewport_Size; }
+vec3 B_ComputeWorldPosition(float depth)
+{
+    return B_ComputeWorldPosition(depth, B_GetViewportUv());
+}
 #endif
+
 //
 
 // GBuffer Samplers //////////////////////
-#ifdef BANG_FRAGMENT
+#if defined(BANG_FRAGMENT)
+
+// #if defined(BANG_DEFERRED_RENDERING)
 vec4  B_SampleColor(vec2 uv) { return texture(B_GTex_Color, uv); }
 vec3  B_SampleNormal(vec2 uv)
 {
@@ -135,20 +158,9 @@ float B_SampleStencilOffset(vec2 pixOffset)
 float B_SampleFlagsOffset(vec2 pixOffset)
 { return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
 
-vec3 B_GetCameraPositionWorld() { return B_ViewInv[3].xyz; }
-
-vec3 B_ComputeWorldPosition(float depth, vec2 uv)
-{
-    vec4 projectedPos = vec4( (vec3(uv, depth) * 2.0 - 1.0), 1 );
-    vec4 worldPos = (B_ProjectionInv * projectedPos);
-    worldPos = (B_ViewInv * (worldPos/worldPos.w));
-    return worldPos.xyz;
-}
-vec3 B_ComputeWorldPosition(float depth)
-{
-    return B_ComputeWorldPosition(depth, B_GetViewportUv());
-}
 vec3 B_ComputeWorldPosition() { return B_ComputeWorldPosition( B_SampleDepth() ); }
+// #endif
+
 #endif
 // ///////////////////////////////////////
 

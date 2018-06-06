@@ -2,14 +2,38 @@
 
 USING_NAMESPACE_BANG
 
-Path ShaderProgramFactory::GetDefaultVertexShaderPath()
+Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 {
-    return EPATH("Shaders/Default.vert");
+    switch (renderPass)
+    {
+        case RenderPass::SCENE:
+            return EPATH("Shaders/Default.vert");
+        break;
+
+        case RenderPass::SCENE_TRANSPARENT:
+            return EPATH("Shaders/DefaultTransparent.vert");
+        break;
+
+        default: break;
+    }
+    return ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass::SCENE);
 }
 
-Path ShaderProgramFactory::GetDefaultFragmentShaderPath()
+Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 {
-    return EPATH("Shaders/Default.frag");
+    switch (renderPass)
+    {
+        case RenderPass::SCENE:
+            return EPATH("Shaders/Default.frag");
+        break;
+
+        case RenderPass::SCENE_TRANSPARENT:
+            return EPATH("Shaders/DefaultTransparent.frag");
+        break;
+
+        default: break;
+    }
+    return ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass::SCENE);
 }
 
 Path ShaderProgramFactory::GetScreenPassVertexShaderPath()
@@ -17,10 +41,10 @@ Path ShaderProgramFactory::GetScreenPassVertexShaderPath()
     return EPATH("Shaders/ScreenPass.vert");
 }
 
-ShaderProgram *ShaderProgramFactory::GetDefault()
+ShaderProgram *ShaderProgramFactory::GetDefault(RenderPass renderPass)
 {
-    return Get(ShaderProgramFactory::GetDefaultVertexShaderPath(),
-               ShaderProgramFactory::GetDefaultFragmentShaderPath());
+    return Get(ShaderProgramFactory::GetDefaultVertexShaderPath(renderPass),
+               ShaderProgramFactory::GetDefaultFragmentShaderPath(renderPass));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()

@@ -3,6 +3,7 @@
 
 #include <tuple>
 
+#include "Bang/RenderPass.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
 
@@ -11,11 +12,11 @@ NAMESPACE_BANG_BEGIN
 class ShaderProgramFactory
 {
 public:
-    static Path GetDefaultVertexShaderPath();
-    static Path GetDefaultFragmentShaderPath();
+    static Path GetDefaultVertexShaderPath(RenderPass renderPass = RenderPass::SCENE);
+    static Path GetDefaultFragmentShaderPath(RenderPass renderPass = RenderPass::SCENE);
     static Path GetScreenPassVertexShaderPath();
 
-    static ShaderProgram* GetDefault();
+    static ShaderProgram* GetDefault(RenderPass renderPass = RenderPass::SCENE);
     static ShaderProgram* GetDefaultPostProcess();
     static ShaderProgram* GetPointLightShadowMap();
     static ShaderProgram* GetPointLightScreenPass();

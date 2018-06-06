@@ -1,2 +1,2 @@
-#define BANG_DEFERRED_RENDERING
+#define BANG_FORWARD_RENDERING
 #include "DefaultFragCommon.glsl"

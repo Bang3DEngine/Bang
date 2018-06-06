@@ -32,6 +32,7 @@ USING_NAMESPACE_BANG
 Camera::Camera()
 {
     AddRenderPass(RenderPass::SCENE);
+    AddRenderPass(RenderPass::SCENE_TRANSPARENT);
     AddRenderPass(RenderPass::SCENE_POSTPROCESS);
     AddRenderPass(RenderPass::CANVAS);
     AddRenderPass(RenderPass::CANVAS_POSTPROCESS);

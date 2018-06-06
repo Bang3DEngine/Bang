@@ -5,9 +5,21 @@
 
 USING_NAMESPACE_BANG
 
-RH<Material> MaterialFactory::GetDefault()
+RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 {
-    return MaterialFactory::Load("Materials/Default.bmat");
+    switch (renderPass)
+    {
+        case RenderPass::SCENE:
+            return MaterialFactory::Load("Materials/Default.bmat");
+        break;
+
+        case RenderPass::SCENE_TRANSPARENT:
+            return MaterialFactory::Load("Materials/DefaultTransparent.bmat");
+        break;
+
+        default: break;
+    }
+    return MaterialFactory::GetDefault(RenderPass::SCENE);
 }
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {

@@ -35,23 +35,23 @@ public:
     void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
     void RenderWithAllPasses(GameObject *go);
+    void RenderTransparentPass(GameObject *go);
     void RenderWithPass(GameObject *go, RenderPass renderPass,
                         bool renderChildren = true);
-    void RenderWithPassRaw(GameObject *go, RenderPass renderPass,
-                           bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
                             const AARect &destRectMask = AARect::NDCRect);
-    void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
     void RenderViewportPlane();
 
-    void ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
-                                               Camera *camera,
-                                               const AARect &maskRectNDC = AARect::NDCRect);
+    void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
+    void ApplyStenciledDeferredLightsToGBuffer(
+                                GameObject *lightsContainer,
+                                Camera *camera,
+                                const AARect &maskRectNDC = AARect::NDCRect);
 
     void SetReplacementMaterial(Material *material);
-    Material* GetReplacementMaterial() const;
 
     static GBuffer *GetActiveGBuffer();
+    Material* GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
     static SelectionFramebuffer *GetActiveSelectionFramebuffer();
 

@@ -8,6 +8,7 @@ NAMESPACE_BANG_BEGIN
 enum class RenderPass
 {
     SCENE               = 0,
+    SCENE_TRANSPARENT   = 6,
     SCENE_POSTPROCESS   = 1,
 
     CANVAS              = 2,

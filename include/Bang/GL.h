@@ -453,6 +453,7 @@ public:
     static void SetEnabledi(GL::Enablable glTest, int index, bool enabled);
     static bool IsEnabled(GL::Enablable glTest);
     static bool IsEnabledi(GL::Enablable glTest, int index);
+    static bool CanEnablableBeIndexed(GL::Enablable enablable);
 
 
     static void EnableVertexAttribArray(int location);

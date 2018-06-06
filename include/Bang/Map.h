@@ -8,17 +8,17 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD_T class List;
 
-template <class Key, class Value>
+template <class Key, class Value, class Compare = std::less<Key>>
 class Map
 {
 public:
-    using Iterator = typename std::map<Key, Value>::iterator;
-    using RIterator = typename std::map<Key, Value>::reverse_iterator;
-    using Const_Iterator = typename std::map<Key, Value>::const_iterator;
-    using Const_RIterator = typename std::map<Key, Value>::const_reverse_iterator;
+    using Iterator = typename std::map<Key, Value, Compare>::iterator;
+    using RIterator = typename std::map<Key, Value, Compare>::reverse_iterator;
+    using Const_Iterator = typename std::map<Key, Value, Compare>::const_iterator;
+    using Const_RIterator = typename std::map<Key, Value, Compare>::const_reverse_iterator;
 
     Map();
-    Map(const std::map<Key, Value> &m);
+    Map(const std::map<Key, Value, Compare> &m);
 
     void Add(const Key &key, const Value &value = Value());
 
@@ -64,7 +64,7 @@ public:
     Const_Iterator cend() const;
 
 private:
-    std::map<Key, Value> m_map;
+    std::map<Key, Value, Compare> m_map;
 };
 
 NAMESPACE_BANG_END

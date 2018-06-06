@@ -10,32 +10,30 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD_T  class Set;
-FORWARD_TT class Map;
-FORWARD    class Path;
-FORWARD_T  class Tree;
-FORWARD    class GUID;
-FORWARD_T  class List;
-FORWARD    class Quad;
-FORWARD    class AABox;
-FORWARD_T  class Array;
-FORWARD    class Color;
-FORWARD_T  class RectG;
-FORWARD    class String;
-FORWARD_T  class AARectG;
-FORWARD    class ObjectId;
-FORWARD    class Triangle;
-FORWARD_T  class Vector2G;
-FORWARD_T  class Vector3G;
-FORWARD_T  class Vector4G;
-FORWARD_T  class Matrix3G;
-FORWARD_T  class Matrix4G;
-FORWARD    class IToString;
-FORWARD_T  class QuaternionG;
-FORWARD template<class Key, class Value, class Hash,
-                 class Pred, class Alloc> class UMap;
-FORWARD template<class Key, class Hash,
-                 class Pred, class Alloc> class USet;
+FORWARD_TT    class Set;
+FORWARD_TTT   class Map;
+FORWARD_TTTTT class UMap;
+FORWARD_TTTT  class USet;
+FORWARD       class Path;
+FORWARD_T     class Tree;
+FORWARD       class GUID;
+FORWARD_T     class List;
+FORWARD       class Quad;
+FORWARD       class AABox;
+FORWARD_T     class Array;
+FORWARD       class Color;
+FORWARD_T     class RectG;
+FORWARD       class String;
+FORWARD_T     class AARectG;
+FORWARD       class ObjectId;
+FORWARD       class Triangle;
+FORWARD_T     class Vector2G;
+FORWARD_T     class Vector3G;
+FORWARD_T     class Vector4G;
+FORWARD_T     class Matrix3G;
+FORWARD_T     class Matrix4G;
+FORWARD       class IToString;
+FORWARD_T     class QuaternionG;
 
 std::istream& operator>>(std::istream& is, GUID &guid);
 std::istream& operator>>(std::istream& is, Path &p);
@@ -193,8 +191,8 @@ std::ostream &operator<<(std::ostream &log, const Array<T> &v)
     return log;
 }
 
-template <class T, class S>
-std::ostream &operator<<(std::ostream &log, const Map<T,S> &m)
+template <class T, class S, class C>
+std::ostream &operator<<(std::ostream &log, const Map<T,S,C> &m)
 {
     log << "{";
     for (auto it = m.CBegin(); it != m.CEnd(); ++it)
@@ -221,8 +219,8 @@ std::ostream &operator<<(std::ostream &log,
     return log;
 }
 
-template <class T>
-std::ostream &operator<<(std::ostream &log, const Set<T> &s)
+template <class T, class C>
+std::ostream &operator<<(std::ostream &log, const Set<T,C> &s)
 {
     log << "{";
     for (auto it = s.Begin(); it != s.End(); ++it)

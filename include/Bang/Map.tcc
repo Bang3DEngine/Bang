@@ -6,33 +6,37 @@
 
 NAMESPACE_BANG_BEGIN
 
-template<class Key, class Value>
-Map<Key, Value>::Map() {}
+template<class Key, class Value, class Compare>
+Map<Key, Value, Compare>::Map()
+{
+}
 
-template<class Key, class Value>
-Map<Key,Value>::Map(const std::map<Key, Value> &m) : m_map(m) {}
+template<class Key, class Value, class Compare>
+Map<Key,Value,Compare>::Map(const std::map<Key, Value,Compare> &m) : m_map(m)
+{
+}
 
-template<class Key, class Value>
-void Map<Key,Value>::Add(const Key &key, const Value &value)
+template<class Key, class Value, class Compare>
+void Map<Key,Value,Compare>::Add(const Key &key, const Value &value)
 {
     (*this)[key] = value;
 }
 
-template<class Key, class Value>
-void Map<Key,Value>::Remove(const Key &key)
+template<class Key, class Value, class Compare>
+void Map<Key,Value,Compare>::Remove(const Key &key)
 {
     m_map.erase(key);
 }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator
-Map<Key,Value>::Remove(typename Map<Key,Value>::Iterator it)
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator
+Map<Key,Value,Compare>::Remove(typename Map<Key,Value,Compare>::Iterator it)
 {
     return m_map.erase(it);
 }
 
-template<class Key, class Value>
-void Map<Key,Value>::RemoveValues(const Value &value)
+template<class Key, class Value, class Compare>
+void Map<Key,Value,Compare>::RemoveValues(const Value &value)
 {
     for (auto it = Begin(); it != End(); )
     {
@@ -41,44 +45,44 @@ void Map<Key,Value>::RemoveValues(const Value &value)
     }
 }
 
-template<class Key, class Value>
-Value &Map<Key,Value>::Get(const Key &key)
+template<class Key, class Value, class Compare>
+Value &Map<Key,Value,Compare>::Get(const Key &key)
 {
     return (*this)[key];
 }
 
-template<class Key, class Value>
-const Value &Map<Key,Value>::Get(const Key &key) const
+template<class Key, class Value, class Compare>
+const Value &Map<Key,Value,Compare>::Get(const Key &key) const
 {
     return m_map.at(key);
 }
 
-template<class Key, class Value>
-void Map<Key,Value>::Clear()
+template<class Key, class Value, class Compare>
+void Map<Key,Value,Compare>::Clear()
 {
     m_map.clear();
 }
 
-template<class Key, class Value>
-int Map<Key,Value>::Size() const
+template<class Key, class Value, class Compare>
+int Map<Key,Value,Compare>::Size() const
 {
     return m_map.size();
 }
 
-template<class Key, class Value>
-bool Map<Key,Value>::IsEmpty() const
+template<class Key, class Value, class Compare>
+bool Map<Key,Value,Compare>::IsEmpty() const
 {
     return Size() == 0;
 }
 
-template<class Key, class Value>
-bool Map<Key,Value>::ContainsKey(const Key &key) const
+template<class Key, class Value, class Compare>
+bool Map<Key,Value,Compare>::ContainsKey(const Key &key) const
 {
     return Find(key) != CEnd();
 }
 
-template<class Key, class Value>
-bool Map<Key,Value>::ContainsValue(const Value &value) const
+template<class Key, class Value, class Compare>
+bool Map<Key,Value,Compare>::ContainsValue(const Value &value) const
 {
     for (auto it = Begin(); it != End(); ++it)
     {
@@ -87,21 +91,21 @@ bool Map<Key,Value>::ContainsValue(const Value &value) const
     return false;
 }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator Map<Key,Value>::Find(const Key &key)
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator Map<Key,Value,Compare>::Find(const Key &key)
 {
     return m_map.find(key);
 }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::Find(const Key &key) const
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::Find(const Key &key) const
 {
     return m_map.find(key);
 }
 
-template<class Key, class Value>
-List<Key> Map<Key,Value>::GetKeysWithValue(const Value &v) const
+template<class Key, class Value, class Compare>
+List<Key> Map<Key,Value,Compare>::GetKeysWithValue(const Value &v) const
 {
     List<Key> result;
     for (auto it = Begin(); it != End(); ++it)
@@ -111,16 +115,16 @@ List<Key> Map<Key,Value>::GetKeysWithValue(const Value &v) const
     return result;
 }
 
-template<class Key, class Value>
-List<Key> Map<Key,Value>::GetKeys() const
+template<class Key, class Value, class Compare>
+List<Key> Map<Key,Value,Compare>::GetKeys() const
 {
     List<Key> result;
     for (const auto& it : *this) { result.PushBack(it.first); }
     return result;
 }
 
-template<class Key, class Value>
-List<Value> Map<Key,Value>::GetValues() const
+template<class Key, class Value, class Compare>
+List<Value> Map<Key,Value,Compare>::GetValues() const
 {
     List<Value> result;
     for (auto it = Begin(); it != End(); ++it)
@@ -130,75 +134,76 @@ List<Value> Map<Key,Value>::GetValues() const
     return result;
 }
 
-template<class Key, class Value>
-const Value &Map<Key,Value>::operator[](const Key &k) const { return m_map[k]; }
+template<class Key, class Value, class Compare>
+const Value &Map<Key,Value,Compare>::operator[](const Key &k) const
+{ return m_map[k]; }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator
-Map<Key,Value>::Begin() { return m_map.begin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator
+Map<Key,Value,Compare>::Begin() { return m_map.begin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::Begin() const { return CBegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::Begin() const { return CBegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::CBegin() const { return m_map.cbegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::CBegin() const { return m_map.cbegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator
-Map<Key,Value>::End() { return m_map.end(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator
+Map<Key,Value,Compare>::End() { return m_map.end(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::End() const { return CEnd(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::End() const { return CEnd(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::CEnd() const { return m_map.cend(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::CEnd() const { return m_map.cend(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::RIterator
-Map<Key,Value>::RBegin() { return m_map.rbegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::RIterator
+Map<Key,Value,Compare>::RBegin() { return m_map.rbegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::RIterator
-Map<Key,Value>::REnd() { return m_map.rend(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::RIterator
+Map<Key,Value,Compare>::REnd() { return m_map.rend(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_RIterator
-Map<Key,Value>::CRBegin() const { return m_map.crbegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_RIterator
+Map<Key,Value,Compare>::CRBegin() const { return m_map.crbegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_RIterator
-Map<Key,Value>::CREnd() const { return m_map.crend(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_RIterator
+Map<Key,Value,Compare>::CREnd() const { return m_map.crend(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator
-Map<Key,Value>::begin() { return m_map.begin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator
+Map<Key,Value,Compare>::begin() { return m_map.begin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Iterator
-Map<Key,Value>::end() { return m_map.end(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Iterator
+Map<Key,Value,Compare>::end() { return m_map.end(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::begin() const { return this->CBegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::begin() const { return this->CBegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::end() const { return this->CEnd(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::end() const { return this->CEnd(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::cbegin() const { return m_map.cbegin(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::cbegin() const { return m_map.cbegin(); }
 
-template<class Key, class Value>
-typename Map<Key,Value>::Const_Iterator
-Map<Key,Value>::cend() const { return m_map.cend(); }
+template<class Key, class Value, class Compare>
+typename Map<Key,Value,Compare>::Const_Iterator
+Map<Key,Value,Compare>::cend() const { return m_map.cend(); }
 
-template<class Key, class Value>
-Value &Map<Key,Value>::operator[](const Key &k) { return m_map[k]; }
+template<class Key, class Value, class Compare>
+Value &Map<Key,Value,Compare>::operator[](const Key &k) { return m_map[k]; }
 
 NAMESPACE_BANG_END
 

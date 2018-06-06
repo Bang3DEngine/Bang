@@ -68,11 +68,27 @@ public: \
                             Real t); \
     \
     Axis GetAxis() const; \
+    T& GetAxis(Axis axis); \
     const T& GetAxis(Axis axis) const; \
     static VECTOR_G<T> FromAxis(Axis axis); \
     \
     T& operator[](std::size_t i); \
     const T& operator[](std::size_t i) const; \
+    T& operator[](const Axis &axis); \
+    const T& operator[](const Axis &axis) const; \
+    \
+    struct LexicographicCompare \
+    { \
+        bool operator() (const VECTOR_G<T> &lhs, const VECTOR_G<T> &rhs) const \
+        { \
+            for (int i = 0; i < N; ++i) \
+            { \
+                if (lhs[i] < rhs[i]) { return true; } \
+                else if (lhs[i] > rhs[i]) { return false; } \
+            } \
+            return false; \
+        } \
+    };\
     \
     EXTRA_DECLARATIONS \
 }; \

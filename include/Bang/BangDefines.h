@@ -25,8 +25,11 @@ NAMESPACE_BANG_BEGIN
 
 // Frequent class forwardings ==========================
 #define FORWARD
-#define FORWARD_T  template<class>
-#define FORWARD_TT template<class,class>
+#define FORWARD_T     template<class>
+#define FORWARD_TT    template<class,class>
+#define FORWARD_TTT   template<class,class,class>
+#define FORWARD_TTTT  template<class,class,class,class>
+#define FORWARD_TTTTT template<class,class,class,class,class>
 
 NAMESPACE_BANG_END
 
@@ -46,10 +49,12 @@ FORWARD class Transform;
 FORWARD class GameObject;
 FORWARD class ICloneable;
 
-FORWARD_TT class Map;
-FORWARD_T  class Set;
-FORWARD_T  class List;
-FORWARD_T  class Array;
+FORWARD_TTT   class Map;
+FORWARD_TT    class Set;
+FORWARD_T     class List;
+FORWARD_T     class Array;
+FORWARD_TTTT  class USet;
+FORWARD_TTTTT class UMap;
 
 FORWARD   class File;
 FORWARD_T class RectG;

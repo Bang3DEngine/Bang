@@ -218,6 +218,11 @@ Axis VECTOR_G<T>::GetAxis() const \
     return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL; \
 } \
 template<class T> \
+T& VECTOR_G<T>::GetAxis(Axis axis) \
+{ \
+    return (axis == Axis::HORIZONTAL) ? x : y; \
+} \
+template<class T> \
 const T& VECTOR_G<T>::GetAxis(Axis axis) const \
 { \
     return (axis == Axis::HORIZONTAL) ? x : y; \
@@ -229,14 +234,24 @@ VECTOR_G<T> VECTOR_G<T>::FromAxis(Axis axis) \
 } \
 \
 template<class T> \
+T& VECTOR_G<T>::operator[](std::size_t i) \
+{ \
+    return (RCAST<T*>(this))[i]; \
+} \
+template<class T> \
 const T& VECTOR_G<T>::operator[](std::size_t i) const \
 { \
     return (RCAST<const T*>(this))[i]; \
 } \
 template<class T> \
-T& VECTOR_G<T>::operator[](std::size_t i) \
+T& VECTOR_G<T>::operator[](const Axis &axis) \
 { \
-    return (RCAST<T*>(this))[i]; \
+    return (RCAST<T*>(this))[axis == Axis::HORIZONTAL ? 0 : 1]; \
+} \
+template<class T> \
+const T& VECTOR_G<T>::operator[](const Axis &axis) const \
+{ \
+    return (RCAST<const T*>(this))[axis == Axis::HORIZONTAL ? 0 : 1]; \
 } \
 \
 /* Operators */ \

@@ -8,17 +8,17 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD_T class List;
 
-template<class Key>
+template<class Key, class Compare = std::less<Key>>
 class Set
 {
 public:
-    using Iterator = typename std::set<Key>::iterator;
-    using RIterator = typename std::set<Key>::reverse_iterator;
-    using Const_Iterator = typename std::set<Key>::const_iterator;
-    using Const_RIterator = typename std::set<Key>::const_reverse_iterator;
+    using Iterator = typename std::set<Key, Compare>::iterator;
+    using RIterator = typename std::set<Key, Compare>::reverse_iterator;
+    using Const_Iterator = typename std::set<Key, Compare>::const_iterator;
+    using Const_RIterator = typename std::set<Key, Compare>::const_reverse_iterator;
 
     Set();
-    Set(const std::set<Key> &s);
+    Set(const std::set<Key, Compare> &s);
 
     template<class OtherIterator>
     Set(OtherIterator itBegin, OtherIterator itEnd);
@@ -54,7 +54,7 @@ public:
     Const_Iterator end() const;
 
 private:
-    std::set<Key> m_set;
+    std::set<Key, Compare> m_set;
 };
 
 NAMESPACE_BANG_END

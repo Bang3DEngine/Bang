@@ -76,4 +76,72 @@ vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 GetCameraSkyBoxSampleLod(const samplerCube cubeMap,
+                              const vec3 direction,
+                              const float lod)
+{
+    vec3 color;
+    switch (B_Camera_ClearMode)
+    {
+        case CAMERA_CLEARMODE_COLOR:
+            color = B_Camera_ClearColor.rgb;
+        break;
+
+        case CAMERA_CLEARMODE_SKYBOX:
+            color = textureLod(cubeMap, direction, lod).rgb;
+        break;
+
+        default: color = vec3(1,0,1); break;
+    }
+    return color;
+}
+
+vec3 GetCameraSkyBoxSample(const samplerCube cubeMap, const vec3 direction)
+{
+    return GetCameraSkyBoxSampleLod(cubeMap, direction, 1.0);
+}
+
+vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
+                        const vec3 pixelNormalWorld,
+                        const vec4 pixelAlbedo)
+{
+    vec4 finalColor = vec4(0);
+    if (B_MaterialReceivesLighting)
+    {
+        vec3 N = pixelNormalWorld.xyz;
+        vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
+        vec3 R = reflect(-V, N);
+
+        // Calculate ambient color
+        float dotNV = max(dot(N, V), 0.0);
+        vec3 F0  = mix(vec3(0.04), pixelAlbedo.rgb, B_MaterialMetalness);
+        vec3 FSR = FresnelSchlickRoughness(dotNV, F0, B_MaterialRoughness);
+        // vec3 FSR = FresnelSchlick(max(dot(N, V), 0.0), F0);
+
+        vec3 specK = FSR;
+        vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
+
+        const float LOD_MAX_REFLECTION = 8.0;
+        float lod = B_MaterialRoughness * LOD_MAX_REFLECTION;
+
+        vec3 diffuseCubeMapSample  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
+        vec3 specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
+
+        vec3 diffuseAmbient = diffuseCubeMapSample * pixelAlbedo.rgb;
+        vec3 specularAmbient = specularCubeMapSample;
+        // vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
+
+        vec3 diffuse  = diffuseAmbient * diffK;
+        vec3 specular = specularAmbient * specK; // (specK * envBRDF.x + envBRDF.y);
+
+        vec3 ambient = (diffuse) + (specular);
+        finalColor = vec4(ambient, pixelAlbedo.a);
+    }
+    else
+    {
+        finalColor = pixelAlbedo;
+    }
+    return finalColor;
+}
+
 #endif

@@ -106,6 +106,8 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
     List<Light*> lights = go->GetComponentsInChildren<Light>(true);
     for (Light *light : lights)
     {
+        if (!light->IsActive()) { continue; }
+
         uint lightType = 0;
         Transform *lightTR = light->GetGameObject()->GetTransform();
         float range = 0.0f;
@@ -147,9 +149,8 @@ void GEngine::PrepareForForwardRendering(Renderer *rend)
                   m_currentForwardRenderingLightRanges, false);
             sp->SetIntArray("B_ForwardRenderingLightTypes",
                   m_currentForwardRenderingLightTypes, false);
-            sp->SetInt("B_ForwardRenderingLightNumber",
-                       numLights, false);
         }
+        sp->SetInt("B_ForwardRenderingLightNumber", numLights, false);
     }
 }
 
@@ -447,7 +448,7 @@ void GEngine::RenderTransparentPass(GameObject *go)
         const Vector3 rhsCamPosDiff = (rhsPos - camPos);
         const float lhsDistToCamSq = Vector3::Dot(lhsCamPosDiff, lhsCamPosDiff);
         const float rhsDistToCamSq = Vector3::Dot(rhsCamPosDiff, rhsCamPosDiff);
-        return lhsDistToCamSq < rhsDistToCamSq;
+        return lhsDistToCamSq > rhsDistToCamSq;
     });
 
     // Render back to front

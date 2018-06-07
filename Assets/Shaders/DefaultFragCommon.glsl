@@ -2,10 +2,8 @@
 
 #include "Common.glsl"
 #include "LightCommon.glsl"
-
-#if defined(BANG_FORWARD_RENDERING)
-#include "PointLight.glsl"
-#include "DirectionalLight.glsl"
+#if defined (BANG_FORWARD_RENDERING)
+#include "ForwardLightCommon.glsl"
 #endif
 
 in vec3 B_FIn_Position;
@@ -28,31 +26,6 @@ layout(location = 3) out vec4 B_GIn_Misc;
 
 #endif
 
-vec3 GetCameraSkyBoxSampleLod(samplerCube cubeMap, vec3 direction, float lod)
-{
-    vec3 color;
-    switch (B_Camera_ClearMode)
-    {
-        case CAMERA_CLEARMODE_COLOR:
-            color = B_Camera_ClearColor.rgb;
-        break;
-
-        case CAMERA_CLEARMODE_SKYBOX:
-            color = textureLod(cubeMap, direction, lod).rgb;
-        break;
-
-        default: color = vec3(1,0,1); break;
-    }
-    return color;
-}
-
-vec3 GetCameraSkyBoxSample(samplerCube cubeMap, vec3 direction)
-{
-    return GetCameraSkyBoxSampleLod(cubeMap, direction, 1.0);
-}
-
-
-
 void main()
 {
     vec4 texColor = vec4(1);
@@ -73,104 +46,21 @@ void main()
     }
     finalNormal = normalize(finalNormal);
 
-    float receivesLighting = B_MaterialReceivesLighting ? 0.25 : 0;
-    if (receivesLighting > 0 && B_ReceivesShadows) { receivesLighting = 0.75; }
-
-    vec4 finalColor;
-    if (B_MaterialReceivesLighting)
-    {
-        vec3 N = finalNormal.xyz;
-        vec3 V = normalize(B_Camera_WorldPos - B_FIn_Position.xyz);
-        vec3 R = reflect(-V, N);
-
-        // Calculate ambient color
-        float dotNV = max(dot(N, V), 0.0);
-        vec3 F0  = mix(vec3(0.04), finalAlbedo.rgb, B_MaterialMetalness);
-        vec3 FSR = FresnelSchlickRoughness(dotNV, F0, B_MaterialRoughness);
-        // vec3 FSR = FresnelSchlick(max(dot(N, V), 0.0), F0);
-
-        vec3 specK = FSR;
-        vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
-
-        const float LOD_MAX_REFLECTION = 8.0;
-        float lod = B_MaterialRoughness * LOD_MAX_REFLECTION;
-
-        vec3 diffuseCubeMapSample  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
-        vec3 specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
-
-        vec3 diffuseAmbient = diffuseCubeMapSample * finalAlbedo.rgb;
-        vec3 specularAmbient = specularCubeMapSample;
-        // vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
-
-        vec3 diffuse  = diffuseAmbient * diffK;
-        vec3 specular = specularAmbient * specK; // (specK * envBRDF.x + envBRDF.y);
-
-        vec3 ambient = (diffuse) + (specular);
-        finalColor = vec4(ambient, finalAlbedo.a);
-    }
-    else
-    {
-        finalColor = finalAlbedo;
-    }
-
-    #if defined(BANG_FORWARD_RENDERING) // Apply lights in forward rendering
-    if (B_MaterialReceivesLighting)
-    {
-        vec3 lightColorApportation = vec3(0.0f);
-        for (int i = 0; i < B_ForwardRenderingLightNumber; ++i)
-        {
-            int lightType = B_ForwardRenderingLightTypes[i];
-            vec3 lightColor = B_ForwardRenderingLightColors[i].rgb;
-            float lightIntensity = B_ForwardRenderingLightIntensities[i];
-            switch (lightType)
-            {
-                case LIGHT_TYPE_DIRECTIONAL:
-                {
-                    vec3 lightDir = B_ForwardRenderingLightForwardDirs[i];
-                    lightColorApportation +=
-                        GetDirectionalLightColorApportation(
-                                                      lightDir,
-                                                      lightIntensity,
-                                                      lightColor.rgb,
-                                                      B_Camera_WorldPos,
-                                                      B_FIn_Position.xyz,
-                                                      finalNormal.xyz,
-                                                      finalAlbedo.rgb,
-                                                      B_ReceivesShadows,
-                                                      B_MaterialRoughness,
-                                                      B_MaterialMetalness);
-                }
-                break;
-
-                case LIGHT_TYPE_POINT:
-                {
-                    float lightRange = B_ForwardRenderingLightRanges[i];
-                    vec3 lightPosWorld = B_ForwardRenderingLightPositions[i];
-                    lightColorApportation +=
-                        GetPointLightColorApportation(lightPosWorld,
-                                                      lightRange,
-                                                      lightIntensity,
-                                                      lightColor.rgb,
-                                                      B_Camera_WorldPos,
-                                                      B_FIn_Position.xyz,
-                                                      finalNormal.xyz,
-                                                      finalAlbedo.rgb,
-                                                      B_ReceivesShadows,
-                                                      B_MaterialRoughness,
-                                                      B_MaterialMetalness);
-                }
-                break;
-            }
-        }
-        finalColor += vec4(lightColorApportation, 0);
-    }
-    #endif
+    vec3 finalPosition = B_FIn_Position.xyz;
+    vec4 finalColor = GetIBLAmbientColor(finalPosition,  finalNormal, finalAlbedo);
 
     #if defined(BANG_FORWARD_RENDERING)
 
+    finalColor += vec4(GetForwardLightApport(B_FIn_Position.xyz,
+                                             finalNormal.xyz,
+                                             finalAlbedo.rgb),
+                       0);
     B_GIn_Color  = finalColor;
 
     #elif defined(BANG_DEFERRED_RENDERING)
+
+    float receivesLighting = B_MaterialReceivesLighting ? 0.25 : 0;
+    if (receivesLighting > 0 && B_ReceivesShadows) { receivesLighting = 0.75; }
 
     B_GIn_Color  = finalColor;
     B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);

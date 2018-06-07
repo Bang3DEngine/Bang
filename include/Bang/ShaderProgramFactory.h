@@ -19,9 +19,9 @@ public:
     static ShaderProgram* GetDefault(RenderPass renderPass = RenderPass::SCENE);
     static ShaderProgram* GetDefaultPostProcess();
     static ShaderProgram* GetPointLightShadowMap();
-    static ShaderProgram* GetPointLightScreenPass();
+    static ShaderProgram* GetPointLightDeferredScreenPass();
     static ShaderProgram* GetRenderTextureToViewport();
-    static ShaderProgram* GetDirectionalLightScreenPass();
+    static ShaderProgram* GetDirectionalLightDeferredScreenPass();
     static ShaderProgram* Get(const Path &vShaderPath, const Path &fShaderPath);
     static ShaderProgram* Get(const Path &vShaderPath,
                               const Path &gShaderPath,

@@ -1,6 +1,21 @@
 #define BANG_FRAGMENT
 #include "Common.glsl"
-#include "LightCommon.glsl"
+// #include "LightCommon.glsl"
+#include "PointLight.glsl"
+// #include "DirectionalLight.glsl"
+
+#if defined(BANG_FORWARD_RENDERING) // Forward lighting uniforms
+#define BANG_MAX_LIGHTS 128
+uniform vec4[BANG_MAX_LIGHTS]   B_ForwardRenderingLightColors;
+uniform vec3[BANG_MAX_LIGHTS]   B_ForwardRenderingLightPositions;
+uniform vec3[BANG_MAX_LIGHTS]   B_ForwardRenderingLightForwardDirs;
+uniform float[BANG_MAX_LIGHTS]  B_ForwardRenderingLightIntensities;
+uniform float[BANG_MAX_LIGHTS]  B_ForwardRenderingLightRanges;
+uniform int[BANG_MAX_LIGHTS]    B_ForwardRenderingLightTypes;
+uniform int                     B_ForwardRenderingLightNumber;
+const int LIGHT_TYPE_DIRECTIONAL = 0;
+const int LIGHT_TYPE_POINT       = 1;
+#endif
 
 in vec3 B_FIn_Position;
 in vec3 B_FIn_Normal;
@@ -44,6 +59,8 @@ vec3 GetCameraSkyBoxSample(samplerCube cubeMap, vec3 direction)
 {
     return GetCameraSkyBoxSampleLod(cubeMap, direction, 1.0);
 }
+
+
 
 void main()
 {
@@ -105,8 +122,45 @@ void main()
         finalColor = finalAlbedo;
     }
 
-    #if defined(BANG_FORWARD_RENDERING)
-    // Apply lights
+    #if defined(BANG_FORWARD_RENDERING) // Apply lights in forward rendering
+    if (B_MaterialReceivesLighting)
+    {
+        vec3 lightColorApportation = vec3(0.0f);
+        for (int i = 0; i < B_ForwardRenderingLightNumber; ++i)
+        {
+            int lightType = B_ForwardRenderingLightTypes[i];
+            vec3 lightColor = B_ForwardRenderingLightColors[i].rgb;
+            float lightIntensity = B_ForwardRenderingLightIntensities[i];
+            switch (lightType)
+            {
+                case LIGHT_TYPE_DIRECTIONAL:
+                {
+                    vec3 lightDir = B_ForwardRenderingLightForwardDirs[i];
+                }
+                break;
+
+                case LIGHT_TYPE_POINT:
+                {
+                    float lightRange = B_ForwardRenderingLightRanges[i];
+                    vec3 lightPosWorld = B_ForwardRenderingLightPositions[i];
+                    lightColorApportation +=
+                        GetPointLightColorApportation(lightPosWorld,
+                                                      lightRange,
+                                                      lightIntensity,
+                                                      lightColor.rgb,
+                                                      B_Camera_WorldPos,
+                                                      B_FIn_Position.xyz,
+                                                      finalNormal.xyz,
+                                                      finalAlbedo.rgb,
+                                                      B_ReceivesShadows,
+                                                      B_MaterialRoughness,
+                                                      B_MaterialMetalness);
+                }
+                break;
+            }
+        }
+        finalColor += vec4(lightColorApportation, 0);
+    }
     #endif
 
     #if defined(BANG_FORWARD_RENDERING)

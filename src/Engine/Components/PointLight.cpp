@@ -39,7 +39,7 @@ PointLight::PointLight() : Light()
     m_shadowMapMaterial.Get()->SetShaderProgram(
                 ShaderProgramFactory::GetPointLightShadowMap() );
     SetLightScreenPassShaderProgram(
-                ShaderProgramFactory::GetPointLightScreenPass());
+                ShaderProgramFactory::GetPointLightDeferredScreenPass());
 }
 
 PointLight::~PointLight()

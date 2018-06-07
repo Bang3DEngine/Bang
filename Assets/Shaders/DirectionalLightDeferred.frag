@@ -13,11 +13,10 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
                            const in vec3 lightForwardWorld,
                            const in vec3 camPosWorld)
 {
-    float ShadowDist = B_ShadowDistance * 2;
-    if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
-    else
+    if (B_LightShadowType != SHADOW_NONE)
     {
         // SHADOW_HARD or SHADOW_SOFT
+        float ShadowDist = B_ShadowDistance * 2;
 
         // If facing away, complete shadow directly
         if (dot(pixelNormalWorld, -lightForwardWorld) < 0) { return 0.0f; }
@@ -73,6 +72,7 @@ float GetFragmentLightness(const in vec3 pixelPosWorld,
 
         return lightness;
     }
+    return 1.0f;
 }
 
 vec3 GetLightColorApportation()

@@ -43,7 +43,7 @@ DirectionalLight::DirectionalLight()
     GL::Pop(GL::BindTarget::TEXTURE_2D);
 
     SetLightScreenPassShaderProgram(
-                ShaderProgramFactory::GetDirectionalLightScreenPass());
+                ShaderProgramFactory::GetDirectionalLightDeferredScreenPass());
 }
 
 DirectionalLight::~DirectionalLight()

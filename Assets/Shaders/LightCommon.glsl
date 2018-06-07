@@ -1,3 +1,6 @@
+#ifndef LIGHT_COMMON_GLSL
+#define LIGHT_COMMON_GLSL
+
 const int SHADOW_NONE = 0;
 const int SHADOW_HARD = 1;
 const int SHADOW_SOFT = 2;
@@ -48,3 +51,5 @@ vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
+#endif

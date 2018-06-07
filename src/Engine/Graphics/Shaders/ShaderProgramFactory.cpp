@@ -60,10 +60,10 @@ ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
                EPATH("Shaders/PointLightShadowMap.frag"));
 }
 
-ShaderProgram *ShaderProgramFactory::GetPointLightScreenPass()
+ShaderProgram *ShaderProgramFactory::GetPointLightDeferredScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/PointLight.frag"));
+               EPATH("Shaders/PointLightDeferred.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
@@ -72,10 +72,10 @@ ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
                EPATH("Shaders/RenderTexture.frag"));
 }
 
-ShaderProgram *ShaderProgramFactory::GetDirectionalLightScreenPass()
+ShaderProgram *ShaderProgramFactory::GetDirectionalLightDeferredScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/DirectionalLight.frag"));
+               EPATH("Shaders/DirectionalLightDeferred.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,

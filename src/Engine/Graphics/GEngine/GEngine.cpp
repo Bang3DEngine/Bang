@@ -17,6 +17,7 @@
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/PointLight.h"
 #include "Bang/Application.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/SceneManager.h"
@@ -92,6 +93,66 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::Pop(GL::Pushable::STENCIL_STATES);
 }
 
+void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
+{
+    m_currentForwardRenderingLightTypes.Clear();
+    m_currentForwardRenderingLightColors.Clear();
+    m_currentForwardRenderingLightPositions.Clear();
+    m_currentForwardRenderingLightForwardDirs.Clear();
+    m_currentForwardRenderingLightIntensities.Clear();
+    m_currentForwardRenderingLightRanges.Clear();
+
+    int i = 0;
+    List<Light*> lights = go->GetComponentsInChildren<Light>(true);
+    for (Light *light : lights)
+    {
+        uint lightType = 0;
+        Transform *lightTR = light->GetGameObject()->GetTransform();
+        float range = 0.0f;
+        if (PointLight *pl = DCAST<PointLight*>(light))
+        {
+            range = pl->GetRange();
+            lightType = 1;
+        }
+
+        m_currentForwardRenderingLightTypes.PushBack(lightType);
+        m_currentForwardRenderingLightColors.PushBack(light->GetColor());
+        m_currentForwardRenderingLightPositions.PushBack(lightTR->GetPosition());
+        m_currentForwardRenderingLightForwardDirs.PushBack(lightTR->GetForward());
+        m_currentForwardRenderingLightIntensities.PushBack(light->GetIntensity());
+        m_currentForwardRenderingLightRanges.PushBack(range);
+
+        if (++i == 128) { break; }
+    }
+}
+
+void GEngine::PrepareForForwardRendering(Renderer *rend)
+{
+    Material *mat = rend->GetActiveMaterial();
+    if (ShaderProgram *sp = (mat ? mat->GetShaderProgram() : nullptr))
+    {
+        ASSERT(GL::IsBound(sp));
+        int numLights = m_currentForwardRenderingLightColors.Size();
+        if (numLights > 0)
+        {
+            sp->SetColorArray("B_ForwardRenderingLightColors",
+                  m_currentForwardRenderingLightColors, false);
+            sp->SetVector3Array("B_ForwardRenderingLightPositions",
+                  m_currentForwardRenderingLightPositions, false);
+            sp->SetVector3Array("B_ForwardRenderingLightForwardDirs",
+                  m_currentForwardRenderingLightForwardDirs, false);
+            sp->SetFloatArray("B_ForwardRenderingLightIntensities",
+                  m_currentForwardRenderingLightIntensities, false);
+            sp->SetFloatArray("B_ForwardRenderingLightRanges",
+                  m_currentForwardRenderingLightRanges, false);
+            sp->SetIntArray("B_ForwardRenderingLightTypes",
+                  m_currentForwardRenderingLightTypes, false);
+            sp->SetInt("B_ForwardRenderingLightNumber",
+                       numLights, false);
+        }
+    }
+}
+
 void GEngine::SetReplacementMaterial(Material *material)
 {
     m_replacementMaterial.Set(material);
@@ -135,6 +196,12 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         gbuffer->ApplyPass(m_renderSkySP.Get(), false);
         GL::Pop(GL::BindTarget::SHADER_PROGRAM);
     };
+
+    bool needsForwardRendering = camera->MustRenderPass(RenderPass::SCENE_TRANSPARENT);
+    if (needsForwardRendering)
+    {
+        RetrieveForwardRenderingInformation(go);
+    }
 
     camera->BindGBuffer();
     gbuffer->PushDepthStencilTexture();
@@ -277,6 +344,18 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
     GL::Pop(GL::Pushable::STENCIL_STATES);
 }
 
+bool GEngine::CanRenderNow(Renderer *rend, RenderPass renderPass) const
+{
+    if (!rend->IsVisible())
+    {
+        return false;
+    }
+
+    Material *mat = GetReplacementMaterial() ? GetReplacementMaterial() :
+                                               rend->GetActiveMaterial();
+    return (mat && (mat->GetRenderPass() == renderPass));
+}
+
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
@@ -326,7 +405,7 @@ void GEngine::RenderTexture(Texture2D *texture)
 void GEngine::RenderWithAllPasses(GameObject *go)
 {
     RenderWithPass(go, RenderPass::SCENE);
-    RenderWithPass(go, RenderPass::SCENE_TRANSPARENT);
+    RenderTransparentPass(go);
     RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
     RenderWithPass(go, RenderPass::CANVAS);
     RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
@@ -346,6 +425,7 @@ void GEngine::RenderTransparentPass(GameObject *go)
     GL::Enable(GL::Enablable::BLEND);
     GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
                   GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+    m_currentlyForwardRendering = true;
 
     const Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
 
@@ -373,17 +453,10 @@ void GEngine::RenderTransparentPass(GameObject *go)
     // Render back to front
     for (GameObject *go : goChildren)
     {
-        List<Renderer*> renderers = go->GetComponents<Renderer>();
-        for (Renderer *rend : renderers)
-        {
-            Material *mat = rend->GetActiveMaterial();
-            if (mat && (mat->GetRenderPass() == RenderPass::SCENE_TRANSPARENT))
-            {
-                GEngine::Render(rend);
-            }
-        }
+        go->Render(RenderPass::SCENE_TRANSPARENT, false);
     }
 
+    m_currentlyForwardRendering = false;
     GL::Pop(GL::Pushable::DEPTH_STATES);
     GL::Pop(GL::Pushable::BLEND_STATES);
 }
@@ -476,12 +549,12 @@ void GEngine::PopActiveRenderingCamera()
 
 void GEngine::Render(Renderer *rend)
 {
-    // If we have a replacement shader currently, change the renderer
-    // shader program
+    // If we have a replacement shader currently, change the renderer sp
     RH<Material> previousRendMat;
     previousRendMat.Set(rend->GetActiveMaterial());
     if (GetReplacementMaterial())
     {
+
         rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
         rend->SetMaterial( GetReplacementMaterial() );
         rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
@@ -489,39 +562,36 @@ void GEngine::Render(Renderer *rend)
 
     // Render with the renderer!
     Camera *activeCamera = GetActiveRenderingCamera();
-    if (activeCamera)
+    ASSERT(activeCamera);
+
+    if (GL::IsBound(activeCamera->GetSelectionFramebuffer()))
     {
-        if (GL::IsBound(activeCamera->GetSelectionFramebuffer()))
-        {
-            activeCamera->GetSelectionFramebuffer()->RenderForSelectionBuffer(rend);
-        }
-        else
-        {
-            ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
-                    GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
-            GEngine::RenderRaw(rend);
-        }
+        activeCamera->GetSelectionFramebuffer()->RenderForSelectionBuffer(rend);
     }
     else
     {
-        GEngine::RenderRaw(rend);
+        ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
+                GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
+
+        rend->Bind();
+
+        if (m_currentlyForwardRendering)
+        {
+            PrepareForForwardRendering(rend);
+        }
+
+        rend->OnRender();
+
+        rend->UnBind();
     }
 
-    // Restore previous shader program, in case it was replaced with
-    // replacement shader
+    // Restore previous sp, in case it was replaced with replacement shader
     if (GetReplacementMaterial())
     {
         rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
         rend->SetMaterial(previousRendMat.Get());
         rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
     }
-}
-
-void GEngine::RenderRaw(Renderer *rend)
-{
-    rend->Bind();
-    rend->OnRender();
-    rend->UnBind();
 }
 
 GL *GEngine::GetGL() const { return m_gl; }

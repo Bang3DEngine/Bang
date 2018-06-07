@@ -36,10 +36,10 @@ void Renderer::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    Material *mat = GetActiveMaterial();
-    if (IsVisible() && mat && mat->GetRenderPass() == renderPass)
+    GEngine *ge = GEngine::GetInstance(); ASSERT(ge);
+    if (ge->CanRenderNow(this, renderPass))
     {
-        GEngine::GetInstance()->Render(this);
+        ge->Render(this);
     }
 }
 void Renderer::OnRender() {}

@@ -421,7 +421,11 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         GL::SetDepthFunc(GL::Function::ALWAYS);
         GL::SetStencilOp(GL::StencilOperation::KEEP);
         GL::SetColorMask(false, false, false, false);
-        GEngine::GetInstance()->RenderWithAllPasses(gameObject);
+
+        GEngine::GetInstance()->SetReplacementMaterial(
+                                 MaterialFactory::GetDefaultUnLighted().Get());
+        GEngine::GetInstance()->RenderWithPass(gameObject, RenderPass::SCENE);
+        GEngine::GetInstance()->SetReplacementMaterial(nullptr);
 
         // Render outline
         GL::SetDepthMask(false);

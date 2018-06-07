@@ -1,3 +1,5 @@
+#ifndef COMMON_GLSL
+#define COMMON_GLSL
 
 const float PI = 3.14159265359;
 
@@ -163,5 +165,7 @@ vec3 B_ComputeWorldPosition() { return B_ComputeWorldPosition( B_SampleDepth() )
 
 #endif
 // ///////////////////////////////////////
+
+#endif
 
 

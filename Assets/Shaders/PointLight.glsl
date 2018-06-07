@@ -1,19 +1,22 @@
-#define BANG_FRAGMENT
-#define BANG_DEFERRED_RENDERING
-#include "ScreenPass.frag"
+#ifndef POINT_LIGHT_GLSL
+#define POINT_LIGHT_GLSL
+
 #include "LightCommon.glsl"
 
 uniform float B_PointLightZFar;
+
+#if defined(BANG_DEFERRED_RENDERING)
 uniform mat4 B_WorldToShadowMapMatrices[6];
 uniform samplerCube B_LightShadowMap;
 uniform samplerCubeShadow B_LightShadowMapSoft;
+#endif
 
 float GetPointLightFragmentLightness(const float pixelDistSq,
                                      const in vec3 pixelPosWorld,
                                      const in vec3 pixelNormalWorld)
 {
-    if (B_LightShadowType == SHADOW_NONE) { return 1.0f; }
-    else
+    #if defined(BANG_DEFERRED_RENDERING)
+    if (B_LightShadowType != SHADOW_NONE)
     {
         // SHADOW_HARD or SHADOW_SOFT
 
@@ -41,25 +44,32 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
             return lightness;
         }
     }
+    #endif
     return 1.0f;
 }
 
-vec3 GetPointLightColorApportation(const vec3 pixelPosWorld,
+vec3 GetPointLightColorApportation(const vec3 lightPosWorld,
+                                   const float lightRange,
+                                   const float lightIntensity,
+                                   const vec3 lightColor,
+                                   const vec3 camPosWorld,
+                                   const vec3 pixelPosWorld,
                                    const vec3 pixelNormalWorld,
                                    const vec3 pixelAlbedo,
+                                   const bool pixelReceivesShadows,
                                    const float pixelRoughness,
                                    const float pixelMetalness)
 {
     // Attenuation
-    vec3 posDiff = (B_LightPositionWorld - pixelPosWorld);
+    vec3 posDiff = (lightPosWorld - pixelPosWorld);
     float pixelDistSq = dot(posDiff, posDiff);
-    float attenuation = ((B_LightRange*B_LightRange) / (pixelDistSq)) - 1.0;
+    float attenuation = ((lightRange * lightRange) / (pixelDistSq)) - 1.0;
     attenuation = min(attenuation, 1.0);
-    float intensityAtt = B_LightIntensity * attenuation;
+    float intensityAtt = lightIntensity * attenuation;
     if (intensityAtt <= 0.0) { return vec3(0); }
 
     float lightness = 1.0f;
-    if (B_SampleReceivesShadows())
+    if (pixelReceivesShadows)
     {
         lightness = GetPointLightFragmentLightness(pixelDistSq,
                                                    pixelPosWorld,
@@ -67,12 +77,12 @@ vec3 GetPointLightColorApportation(const vec3 pixelPosWorld,
     }
 
     vec3 N = pixelNormalWorld;
-    vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
-    vec3 L = normalize(B_LightPositionWorld - pixelPosWorld);
+    vec3 V = normalize(camPosWorld - pixelPosWorld);
+    vec3 L = normalize(lightPosWorld - pixelPosWorld);
     vec3 H = normalize(V + L);
 
 
-    vec3 radiance = B_LightColor.rgb * intensityAtt;
+    vec3 radiance = lightColor * intensityAtt;
 
     // Cook-Torrance BRDF
     float NDF         = DistributionGGX(N, H,  pixelRoughness);
@@ -95,32 +105,4 @@ vec3 GetPointLightColorApportation(const vec3 pixelPosWorld,
     return lightApport;
 }
 
-vec3 GetPointLightColorApportation()
-{
-    vec3  pixelPosWorld    = B_ComputeWorldPosition();
-    vec3  pixelNormalWorld = B_SampleNormal();
-    vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
-    float pixelRoughness   = B_SampleRoughness();
-    float pixelMetalness   = B_SampleMetalness();
-
-    return GetPointLightColorApportation(pixelPosWorld,
-                                         pixelNormalWorld,
-                                         pixelAlbedo,
-                                         pixelRoughness,
-                                         pixelMetalness);
-}
-
-void main()
-{
-    if (B_SampleReceivesLight())
-    {
-        vec3 lightApport = GetPointLightColorApportation();
-        B_GIn_Color = vec4(lightApport, 0);
-    }
-    else
-    {
-        B_GIn_Color = vec4(0);
-    }
-}
-
-
+#endif

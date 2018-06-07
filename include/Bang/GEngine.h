@@ -2,6 +2,7 @@
 #define GENGINE_H
 
 #include "Bang/USet.h"
+#include "Bang/Array.h"
 #include "Bang/AARect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/StackAndValue.h"
@@ -11,6 +12,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GL;
+FORWARD class Light;
 FORWARD class Scene;
 FORWARD class Camera;
 FORWARD class Texture;
@@ -30,12 +32,8 @@ public:
 
     void Init();
 
-    void Render(Renderer *rend);
-    void RenderRaw(Renderer *rend);
     void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
-    void RenderWithAllPasses(GameObject *go);
-    void RenderTransparentPass(GameObject *go);
     void RenderWithPass(GameObject *go, RenderPass renderPass,
                         bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
@@ -43,10 +41,6 @@ public:
     void RenderViewportPlane();
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
-    void ApplyStenciledDeferredLightsToGBuffer(
-                                GameObject *lightsContainer,
-                                Camera *camera,
-                                const AARect &maskRectNDC = AARect::NDCRect);
 
     void SetReplacementMaterial(Material *material);
 
@@ -71,19 +65,42 @@ private:
     USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
     TextureUnitManager *m_texUnitManager = nullptr;
 
+    // Forward rendering arrays
+    bool m_currentlyForwardRendering = false;
+    Array<int> m_currentForwardRenderingLightTypes;
+    Array<Color> m_currentForwardRenderingLightColors;
+    Array<Vector3> m_currentForwardRenderingLightPositions;
+    Array<Vector3> m_currentForwardRenderingLightForwardDirs;
+    Array<float> m_currentForwardRenderingLightIntensities;
+    Array<float> m_currentForwardRenderingLightRanges;
+
     RH<Mesh> p_windowPlaneMesh;
     RH<ShaderProgram> p_renderTextureToViewportSP;
 
+    void Render(Renderer *rend);
     void RenderShadowMaps(GameObject *go);
+    void RenderWithAllPasses(GameObject *go);
+    void RenderTransparentPass(GameObject *go);
     void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderToSelectionFramebuffer(GameObject *go, Camera *camera);
     void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
+    bool CanRenderNow(Renderer *rend, RenderPass renderPass) const;
+
+    void ApplyStenciledDeferredLightsToGBuffer(
+                                GameObject *lightsContainer,
+                                Camera *camera,
+                                const AARect &maskRectNDC = AARect::NDCRect);
+
+    void RetrieveForwardRenderingInformation(GameObject *goToRender);
+    void PrepareForForwardRendering(Renderer *rend);
 
     void PushActiveRenderingCamera();
     void SetActiveRenderingCamera(Camera *camera);
     void PopActiveRenderingCamera();
 
+    friend class Gizmos;
     friend class Window;
+    friend class Renderer;
 };
 
 NAMESPACE_BANG_END

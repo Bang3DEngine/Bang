@@ -1,4 +1,5 @@
 #define BANG_FRAGMENT
+#define BANG_DEFERRED_RENDERING
 #include "Common.glsl"
 #include "LightCommon.glsl"
 

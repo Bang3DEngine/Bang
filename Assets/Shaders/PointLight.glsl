@@ -3,12 +3,13 @@
 
 #include "LightCommon.glsl"
 
-uniform float B_PointLightZFar;
-
 #if defined(BANG_DEFERRED_RENDERING)
-uniform mat4 B_WorldToShadowMapMatrices[6];
-uniform samplerCube B_LightShadowMap;
-uniform samplerCubeShadow B_LightShadowMapSoft;
+
+    uniform float B_PointLightZFar;
+    uniform mat4 B_WorldToShadowMapMatrices[6];
+    uniform samplerCube B_LightShadowMap;
+    uniform samplerCubeShadow B_LightShadowMapSoft;
+
 #endif
 
 float GetPointLightFragmentLightness(const float pixelDistSq,

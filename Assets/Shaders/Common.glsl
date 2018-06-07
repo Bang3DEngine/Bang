@@ -56,14 +56,6 @@ uniform sampler2D B_BRDF_LUT;
 uniform bool B_ReceivesShadows;
 //////////////////////////////////////////
 
-// Light related /////////////////////////
-uniform float B_LightRange;
-uniform vec4  B_LightColor;
-uniform float B_LightIntensity;
-uniform vec3  B_LightForwardWorld;
-uniform vec3  B_LightPositionWorld;
-// ///////////////////////////////////////
-
 
 // GBuffer textures //////////////////////
 uniform sampler2D B_GTex_Normal;

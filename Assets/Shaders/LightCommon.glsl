@@ -5,8 +5,32 @@ const int SHADOW_NONE = 0;
 const int SHADOW_HARD = 1;
 const int SHADOW_SOFT = 2;
 
-uniform int B_LightShadowType;
-uniform float B_LightShadowBias;
+const int LIGHT_TYPE_DIRECTIONAL = 0;
+const int LIGHT_TYPE_POINT       = 1;
+
+#if defined(BANG_DEFERRED_RENDERING)
+
+    uniform float B_LightRange;
+    uniform vec4  B_LightColor;
+    uniform float B_LightIntensity;
+    uniform vec3  B_LightForwardWorld;
+    uniform vec3  B_LightPositionWorld;
+
+    uniform int B_LightShadowType;
+    uniform float B_LightShadowBias;
+
+#elif defined(BANG_FORWARD_RENDERING) // Forward lighting uniforms
+
+    #define BANG_MAX_FORWARD_LIGHTS 128
+    uniform int B_ForwardRenderingLightNumber;
+    uniform vec4[BANG_MAX_FORWARD_LIGHTS]   B_ForwardRenderingLightColors;
+    uniform vec3[BANG_MAX_FORWARD_LIGHTS]   B_ForwardRenderingLightPositions;
+    uniform vec3[BANG_MAX_FORWARD_LIGHTS]   B_ForwardRenderingLightForwardDirs;
+    uniform float[BANG_MAX_FORWARD_LIGHTS]  B_ForwardRenderingLightIntensities;
+    uniform float[BANG_MAX_FORWARD_LIGHTS]  B_ForwardRenderingLightRanges;
+    uniform int[BANG_MAX_FORWARD_LIGHTS]    B_ForwardRenderingLightTypes;
+
+#endif
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {

@@ -555,18 +555,15 @@ GameObject *Gizmos::GetGameObject() const
 
 void Gizmos::Render(Renderer *rend)
 {
-    /*
-    // Set selectable for SelectionFramebuffer if any was set
-    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    SelectionFramebuffer *sfb = GEngine::GetInstance()->GetActiveSelectionFramebuffer();
-    if (sfb && GL::IsBound(sfb) && g->p_selectable)
-    {
-        sfb->SetNextRenderSelectable(g->p_selectable);
-    }
-    */
+    Gizmos *g = Gizmos::GetInstance();
 
-    // Render!
+    g->EventEmitter<IEventsGizmos>::PropagateToListeners(
+                   &IEventsGizmos::OnBeforeRender, rend, g->p_selectable);
+
     rend->OnRender( rend->GetActiveMaterial()->GetRenderPass() );
+
+    g->EventEmitter<IEventsGizmos>::PropagateToListeners(
+                   &IEventsGizmos::OnAfterRender, rend, g->p_selectable);
 }
 
 Gizmos* Gizmos::GetInstance()

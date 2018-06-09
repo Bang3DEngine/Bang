@@ -2,6 +2,8 @@
 #define GIZMOS_H
 
 #include "Bang/GameObject.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/IEventsGizmos.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
 
@@ -13,7 +15,7 @@ FORWARD   class Texture2D;
 FORWARD   class LineRenderer;
 FORWARD   class MeshRenderer;
 
-class Gizmos
+class Gizmos : public EventEmitter<IEventsGizmos>
 {
 public:
     static void SetColor(const Color &color);
@@ -70,6 +72,7 @@ public:
     static void Reset();
 
     GameObject *GetGameObject() const;
+    static Gizmos *GetInstance();
 
 private:
     GameObject *m_gizmosGo = nullptr;
@@ -86,8 +89,6 @@ private:
 
     Gizmos();
     virtual ~Gizmos();
-
-    static Gizmos *GetInstance();
 
     friend class Scene;
 };

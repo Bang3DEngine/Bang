@@ -165,6 +165,11 @@ void GEngine::SetReplacementMaterial(Material *material)
     m_replacementMaterial.Set(material);
 }
 
+void GEngine::SetRenderRoutine(GEngine::RenderRoutine renderRoutine)
+{
+    m_renderRoutine = renderRoutine;
+}
+
 Material *GEngine::GetReplacementMaterial() const
 {
     return m_replacementMaterial.Get();
@@ -525,41 +530,48 @@ void GEngine::PopActiveRenderingCamera()
 
 void GEngine::Render(Renderer *rend)
 {
-    // If we have a replacement shader currently, change the renderer sp
-    RH<Material> previousRendMat;
-    previousRendMat.Set(rend->GetActiveMaterial());
-    if (GetReplacementMaterial())
+    if (!m_renderRoutine)
     {
+        // If we have a replacement shader currently, change the renderer sp
+        RH<Material> previousRendMat;
+        previousRendMat.Set(rend->GetActiveMaterial());
+        if (GetReplacementMaterial())
+        {
 
-        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-        rend->SetMaterial( GetReplacementMaterial() );
-        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
+            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
+            rend->SetMaterial( GetReplacementMaterial() );
+            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
+        }
+
+        // Render with the renderer!
+        Camera *activeCamera = GetActiveRenderingCamera();
+        ASSERT(activeCamera);
+
+        ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
+                GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
+
+        rend->Bind();
+
+        if (m_currentlyForwardRendering)
+        {
+            PrepareForForwardRendering(rend);
+        }
+
+        rend->OnRender();
+
+        rend->UnBind();
+
+        // Restore previous sp, in case it was replaced with replacement shader
+        if (GetReplacementMaterial())
+        {
+            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
+            rend->SetMaterial(previousRendMat.Get());
+            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
+        }
     }
-
-    // Render with the renderer!
-    Camera *activeCamera = GetActiveRenderingCamera();
-    ASSERT(activeCamera);
-
-    ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
-            GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
-
-    rend->Bind();
-
-    if (m_currentlyForwardRendering)
+    else
     {
-        PrepareForForwardRendering(rend);
-    }
-
-    rend->OnRender();
-
-    rend->UnBind();
-
-    // Restore previous sp, in case it was replaced with replacement shader
-    if (GetReplacementMaterial())
-    {
-        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-        rend->SetMaterial(previousRendMat.Get());
-        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
+        m_renderRoutine(rend);
     }
 }
 

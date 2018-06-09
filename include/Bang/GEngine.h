@@ -26,6 +26,8 @@ FORWARD class TextureUnitManager;
 class GEngine : public EventListener<IEventsDestroy>
 {
 public:
+    using RenderRoutine = std::function<void(Renderer*)>;
+
     GEngine();
     virtual ~GEngine();
 
@@ -43,8 +45,10 @@ public:
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
 
     void SetReplacementMaterial(Material *material);
+    void SetRenderRoutine(RenderRoutine renderRoutine);
 
     void PushActiveRenderingCamera();
+    void SetActiveRenderingCamera(Camera *camera);
     void PopActiveRenderingCamera();
 
     static GBuffer *GetActiveGBuffer();
@@ -53,6 +57,7 @@ public:
 
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
+
 
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
@@ -66,6 +71,7 @@ private:
     StackAndValue<Camera*> p_renderingCameras;
     USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
     TextureUnitManager *m_texUnitManager = nullptr;
+    RenderRoutine m_renderRoutine;
 
     // Forward rendering arrays
     bool m_currentlyForwardRendering = false;
@@ -94,8 +100,6 @@ private:
 
     void RetrieveForwardRenderingInformation(GameObject *goToRender);
     void PrepareForForwardRendering(Renderer *rend);
-
-    void SetActiveRenderingCamera(Camera *camera);
 
     friend class Gizmos;
     friend class Window;

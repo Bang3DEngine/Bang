@@ -26,7 +26,6 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/GameObjectFactory.h"
-#include "Bang/SelectionFramebuffer.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -556,6 +555,7 @@ GameObject *Gizmos::GetGameObject() const
 
 void Gizmos::Render(Renderer *rend)
 {
+    /*
     // Set selectable for SelectionFramebuffer if any was set
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
     SelectionFramebuffer *sfb = GEngine::GetInstance()->GetActiveSelectionFramebuffer();
@@ -563,6 +563,7 @@ void Gizmos::Render(Renderer *rend)
     {
         sfb->SetNextRenderSelectable(g->p_selectable);
     }
+    */
 
     // Render!
     rend->OnRender( rend->GetActiveMaterial()->GetRenderPass() );

@@ -25,7 +25,6 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/CubeMapIBLGenerator.h"
-#include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
 
@@ -38,7 +37,6 @@ Camera::Camera()
     AddRenderPass(RenderPass::CANVAS_POSTPROCESS);
 
     m_gbuffer = new GBuffer(1,1);
-    m_selectionFramebuffer = new SelectionFramebuffer(1,1);
 
     SetSkyBoxTexture(nullptr);
 }
@@ -46,7 +44,6 @@ Camera::Camera()
 Camera::~Camera()
 {
     delete m_gbuffer;
-    delete m_selectionFramebuffer;
 }
 
 void Camera::Bind() const
@@ -57,12 +54,12 @@ void Camera::Bind() const
     GLUniforms::SetViewMatrix( GetViewMatrix() );
     GLUniforms::SetProjectionMatrix( GetProjectionMatrix() );
     BindViewportForRendering();
+    GetGBuffer()->Bind();
 }
 
 void Camera::UnBind() const
 {
     GetGBuffer()->UnBind();
-    GetSelectionFramebuffer()->UnBind();
     GL::Pop(GL::Pushable::PROJECTION_MATRIX);
     GL::Pop(GL::Pushable::VIEW_MATRIX);
     GL::Pop(GL::Pushable::VIEWPORT);
@@ -85,15 +82,6 @@ void Camera::BindGBuffer()
     Vector2i vpSize = GL::GetViewportSize();
     GetGBuffer()->Resize(vpSize.x, vpSize.y);
     GetGBuffer()->Bind();
-}
-
-void Camera::BindSelectionFramebuffer()
-{
-    Vector2i vpSize = GL::GetViewportSize();
-    GetSelectionFramebuffer()->Resize(vpSize.x, vpSize.y);
-
-    GetSelectionFramebuffer()->Bind();
-    GL::ClearColorStencilDepthBuffers();
 }
 
 Ray Camera::FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const
@@ -234,11 +222,6 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
     }
 }
 
-void Camera::SetRenderSelectionBuffer(bool renderSelectionBuffer)
-{
-    m_renderSelectionBuffer = renderSelectionBuffer;
-}
-
 void Camera::SetClearMode(Camera::ClearMode clearMode)
 {
     m_clearMode = clearMode;
@@ -304,11 +287,6 @@ TextureCubeMap *Camera::GetSpecularSkyBoxTexture() const
 TextureCubeMap *Camera::GetDiffuseSkyBoxTexture() const
 {
     return p_skyboxDiffuseTextureCM.Get();
-}
-
-SelectionFramebuffer *Camera::GetSelectionFramebuffer() const
-{
-    return m_selectionFramebuffer;
 }
 
 Quad Camera::GetFrustumNearQuad() const
@@ -385,11 +363,6 @@ Matrix4 Camera::GetViewMatrix() const
     // localToWorld.SetScale( Vector3::One );
     // Debug_Peek(localToWorld);
     return localToWorld.Inversed();
-}
-
-bool Camera::GetRenderSelectionBuffer() const
-{
-    return m_renderSelectionBuffer;
 }
 
 Matrix4 Camera::GetProjectionMatrix() const

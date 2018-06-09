@@ -81,23 +81,13 @@ void GBuffer::ApplyPassBlend(ShaderProgram *sp,
                              GL::BlendFactor dstBlendFactor,
                              const AARect &mask)
 {
-    // Save previous state
-    GL::BlendFactor prevBlendSrcFactorColor = GL::GetBlendSrcFactorColor();
-    GL::BlendFactor prevBlendDstFactorColor = GL::GetBlendDstFactorColor();
-    GL::BlendFactor prevBlendSrcFactorAlpha = GL::GetBlendSrcFactorAlpha();
-    GL::BlendFactor prevBlendDstFactorAlpha = GL::GetBlendDstFactorAlpha();
-    bool wasBlendEnabled                    = GL::IsEnabled(GL::Enablable::BLEND);
+    GL::Push(GL::Pushable::BLEND_STATES);
 
     GL::Enable(GL::Enablable::BLEND);
     GL::BlendFunc(srcBlendFactor, dstBlendFactor);
     ApplyPass_(sp, mask);
 
-    // Restore gl state
-    GL::BlendFuncSeparate(prevBlendSrcFactorColor,
-                          prevBlendDstFactorColor,
-                          prevBlendSrcFactorAlpha,
-                          prevBlendDstFactorAlpha);
-    GL::SetEnabled(GL::Enablable::BLEND, wasBlendEnabled, false);
+    GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 

@@ -22,8 +22,10 @@ public:
     Texture(const Texture &t);
     virtual ~Texture();
 
-    virtual void CreateEmpty(int width, int height) = 0;
-    virtual void Resize(int width, int height) = 0;
+    virtual void CreateEmpty(const Vector2i &size) = 0;
+    virtual void Resize(const Vector2i &size) = 0;
+    void CreateEmpty(int width, int height);
+    void Resize(int width, int height);
     void GenerateMipMaps() const;
 
     void SetFormat(GL::ColorFormat internalFormat);

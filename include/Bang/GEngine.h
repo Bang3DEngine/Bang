@@ -22,7 +22,6 @@ FORWARD class Texture2D;
 FORWARD class Framebuffer;
 FORWARD class ShaderProgram;
 FORWARD class TextureUnitManager;
-FORWARD class SelectionFramebuffer;
 
 class GEngine : public EventListener<IEventsDestroy>
 {
@@ -32,7 +31,8 @@ public:
 
     void Init();
 
-    void Render(GameObject *go, Camera *camera);
+    void Render(Scene *scene);
+    void Render(Scene *scene, Camera *camera);
     void RenderTexture(Texture2D *texture);
     void RenderWithPass(GameObject *go, RenderPass renderPass,
                         bool renderChildren = true);
@@ -44,10 +44,12 @@ public:
 
     void SetReplacementMaterial(Material *material);
 
+    void PushActiveRenderingCamera();
+    void PopActiveRenderingCamera();
+
     static GBuffer *GetActiveGBuffer();
     Material* GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
-    static SelectionFramebuffer *GetActiveSelectionFramebuffer();
 
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
@@ -82,7 +84,6 @@ private:
     void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);
     void RenderToGBuffer(GameObject *go, Camera *camera);
-    void RenderToSelectionFramebuffer(GameObject *go, Camera *camera);
     void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
     bool CanRenderNow(Renderer *rend, RenderPass renderPass) const;
 
@@ -94,9 +95,7 @@ private:
     void RetrieveForwardRenderingInformation(GameObject *goToRender);
     void PrepareForForwardRendering(Renderer *rend);
 
-    void PushActiveRenderingCamera();
     void SetActiveRenderingCamera(Camera *camera);
-    void PopActiveRenderingCamera();
 
     friend class Gizmos;
     friend class Window;

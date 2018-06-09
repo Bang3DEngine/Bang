@@ -28,25 +28,24 @@ void TextureCubeMap::CreateEmpty(int size)
 {
     CreateEmpty(size, size);
 }
-void TextureCubeMap::CreateEmpty(int width, int height)
+void TextureCubeMap::CreateEmpty(const Vector2i &size)
 {
-    ASSERT_MSG(width == height, "CubeMaps must have the same width and height.");
-    SetWidth(width);
-    SetHeight(height);
+    ASSERT_MSG(size.x == size.y, "CubeMaps must have the same width and height.");
+    SetWidth(size.x);
+    SetHeight(size.y);
 
     for (GL::CubeMapDir cubeMapDir : TextureCubeMap::AllCubeMapDirs)
     {
-        Fill(cubeMapDir, nullptr, Math::Min(width, height),
-             GetColorComp(), GetDataType());
+        Fill(cubeMapDir, nullptr, size.x, GetColorComp(), GetDataType());
     }
 }
 
-void TextureCubeMap::Resize(int width, int height)
+void TextureCubeMap::Resize(const Vector2i &size)
 {
-    ASSERT_MSG(width == height, "CubeMaps must have the same width and height.");
-    if (width != GetWidth() || height != GetHeight())
+    ASSERT_MSG(size.x == size.y, "CubeMaps must have the same width and height.");
+    if (size != GetSize())
     {
-        CreateEmpty(width, height);
+        CreateEmpty(size.x, size.y);
     }
 }
 

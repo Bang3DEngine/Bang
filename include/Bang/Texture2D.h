@@ -14,8 +14,11 @@ class Texture2D : public Texture
 public:
     Texture2D(const Texture2D &tex) = delete;
 
-    void CreateEmpty(int width, int height) override;
-    void Resize(int width, int height) override;
+    // Texture
+    using Texture::Resize;
+    using Texture::CreateEmpty;
+    void CreateEmpty(const Vector2i &size) override;
+    void Resize(const Vector2i &size) override;
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,
               int width, int height,

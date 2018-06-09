@@ -91,9 +91,13 @@ void PointLight::RenderShadowMaps_()
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
     GL::Push(GL::Pushable::ALL_MATRICES);
+    GL::Push(GL::Pushable::VIEWPROJ_MODE);
     GL::Push(GL::Pushable::DEPTH_STATES);
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    GEngine *ge = GEngine::GetInstance();
+    ge->PushActiveRenderingCamera();
 
     // Resize stuff to fit the shadow map size
     const Vector2i shadowMapSize = GetShadowMapSize();
@@ -134,14 +138,17 @@ void PointLight::RenderShadowMaps_()
                                                  RenderPass::SCENE, false);
         }
     }
+    ge->PopActiveRenderingCamera();
+
+    GEngine::GetInstance()->SetReplacementMaterial(nullptr);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::VIEWPROJ_MODE);
     GL::Pop(GL::Pushable::ALL_MATRICES);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
     GL::Pop(GL::Pushable::COLOR_MASK);
     GL::Pop(GL::Pushable::VIEWPORT);
-    GEngine::GetInstance()->SetReplacementMaterial(nullptr);
 }
 
 float PointLight::GetLightZFar() const

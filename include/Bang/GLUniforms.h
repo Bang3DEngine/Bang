@@ -71,6 +71,7 @@ public:
     static const Matrix4 &GetModelMatrix();
     static const Matrix4 &GetViewMatrix();
     static       Matrix4  GetProjectionMatrix();
+    static       Matrix4  GetProjectionMatrix(GL::ViewProjMode viewProjMode);
 
     static GLUniforms *GetActive();
 

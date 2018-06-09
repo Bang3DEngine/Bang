@@ -25,6 +25,8 @@ public:
     virtual ~TextureCubeMap();
 
     // Texture
+    using Texture::Resize;
+    using Texture::CreateEmpty;
     void CreateEmpty(int size);
     void Resize(int size);
     void Fill(GL::CubeMapDir cubeMapDir,
@@ -57,8 +59,8 @@ private:
     static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
     std::array<RH<Imageb>, 6> m_imageResources;
 
-    void CreateEmpty(int width, int height) override;
-    void Resize(int width, int height) override;
+    void CreateEmpty(const Vector2i &size) override;
+    void Resize(const Vector2i &size) override;
 
     void FillCubeMapDir(GL::CubeMapDir dir, Imageb *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);

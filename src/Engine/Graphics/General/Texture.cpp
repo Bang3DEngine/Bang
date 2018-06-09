@@ -14,6 +14,16 @@ Texture::~Texture()
     GL::DeleteTextures(1, &m_idGL);
 }
 
+void Texture::CreateEmpty(int width, int height)
+{
+    CreateEmpty( Vector2i(width, height) );
+}
+
+void Texture::Resize(int width, int height)
+{
+    Resize( Vector2i(width, height) );
+}
+
 Texture::Texture(GL::TextureTarget texTarget) : Texture()
 {
     m_target = texTarget;
@@ -21,7 +31,7 @@ Texture::Texture(GL::TextureTarget texTarget) : Texture()
 
 Texture::Texture(const Texture &t) : GLObject(t)
 {
-    m_size = Vector2i(t.GetWidth(), t.GetHeight());
+    m_size = t.GetSize();
     m_filterMode = t.m_filterMode;
     m_wrapMode = t.m_wrapMode;
     m_glFormat = t.m_glFormat;

@@ -26,7 +26,6 @@
 #include "Bang/UILayoutManager.h"
 #include "Bang/TextureUnitManager.h"
 #include "Bang/ShaderProgramFactory.h"
-#include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
 
@@ -52,24 +51,31 @@ void GEngine::Init()
     p_renderTextureToViewportSP = ShaderProgramFactory::GetRenderTextureToViewport();
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-                        EPATH("Shaders/RenderSky.frag")) );
+                           EPATH("Shaders/RenderSky.frag")) );
 }
 
-void GEngine::Render(GameObject *go, Camera *camera)
+void GEngine::Render(Scene *scene)
 {
-    if (!go) { return; }
+    if (scene)
+    {
+        scene->BeforeRender();
+        RenderShadowMaps(scene);
+        RenderToGBuffer(scene, GetActiveRenderingCamera());
+    }
+}
 
-    go->BeforeRender();
-    PushActiveRenderingCamera();
-    SetActiveRenderingCamera(camera);
-    RenderShadowMaps(go);
-    PopActiveRenderingCamera();
+void GEngine::Render(Scene *scene, Camera *camera)
+{
+    if (scene)
+    {
+        PushActiveRenderingCamera();
+        SetActiveRenderingCamera(camera);
 
-    PushActiveRenderingCamera();
-    SetActiveRenderingCamera(camera);
-    RenderToGBuffer(go, camera);
-    RenderToSelectionFramebuffer(go, camera);
-    PopActiveRenderingCamera();
+        Render(scene);
+
+        PopActiveRenderingCamera();
+    }
+
 }
 
 void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
@@ -174,12 +180,6 @@ GBuffer *GEngine::GetActiveGBuffer()
 {
     Camera *cam = GEngine::GetActiveRenderingCamera();
     return cam ? cam->GetGBuffer() : nullptr;
-}
-
-SelectionFramebuffer *GEngine::GetActiveSelectionFramebuffer()
-{
-    Camera *cam = GEngine::GetActiveRenderingCamera();
-    return cam ? cam->GetSelectionFramebuffer() : nullptr;
 }
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
@@ -300,29 +300,6 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     if (camera->GetGammaCorrection() != 1.0f)
     {
         ApplyGammaCorrection(camera->GetGBuffer(), camera->GetGammaCorrection());
-    }
-}
-
-void GEngine::RenderToSelectionFramebuffer(GameObject *go, Camera *camera)
-{
-    if (camera->GetRenderSelectionBuffer())
-    {
-        GL::Push(GL::Pushable::DEPTH_STATES);
-
-        camera->BindSelectionFramebuffer();
-
-        // Selection rendering
-        camera->GetSelectionFramebuffer()->PrepareNewFrameForRender(go);
-        go->Render(RenderPass::SCENE);
-        go->Render(RenderPass::SCENE_TRANSPARENT);
-        GL::ClearStencilDepthBuffers();
-        GL::SetDepthFunc(GL::Function::LEQUAL);
-        RenderWithPass(go, RenderPass::CANVAS);
-
-        GL::ClearDepthBuffer();
-        RenderWithPass(go, RenderPass::OVERLAY);
-
-        GL::Pop(GL::Pushable::DEPTH_STATES);
     }
 }
 
@@ -530,8 +507,6 @@ void GEngine::PopActiveRenderingCamera()
     Camera *poppedCamera = nullptr;
     while (!p_renderingCameras.stack.empty())
     {
-        if (p_renderingCameras.stack.empty()) { break; }
-
         Camera *pCam = p_renderingCameras.stack.top();
         p_renderingCameras.stack.pop();
         bool cameraIsDestroyed =
@@ -565,26 +540,19 @@ void GEngine::Render(Renderer *rend)
     Camera *activeCamera = GetActiveRenderingCamera();
     ASSERT(activeCamera);
 
-    if (GL::IsBound(activeCamera->GetSelectionFramebuffer()))
+    ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
+            GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
+
+    rend->Bind();
+
+    if (m_currentlyForwardRendering)
     {
-        activeCamera->GetSelectionFramebuffer()->RenderForSelectionBuffer(rend);
+        PrepareForForwardRendering(rend);
     }
-    else
-    {
-        ASSERT( GL::IsBound(activeCamera->GetGBuffer()) ||
-                GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
 
-        rend->Bind();
+    rend->OnRender();
 
-        if (m_currentlyForwardRendering)
-        {
-            PrepareForForwardRendering(rend);
-        }
-
-        rend->OnRender();
-
-        rend->UnBind();
-    }
+    rend->UnBind();
 
     // Restore previous sp, in case it was replaced with replacement shader
     if (GetReplacementMaterial())

@@ -30,16 +30,16 @@ void Texture2D::OnFormatChanged()
     }
 }
 
-void Texture2D::CreateEmpty(int width, int height)
+void Texture2D::CreateEmpty(const Vector2i &size)
 {
-    Fill(nullptr, width, height, GetColorComp(), GetDataType());
+    Fill(nullptr, size.x, size.y, GetColorComp(), GetDataType());
 }
 
-void Texture2D::Resize(int width, int height)
+void Texture2D::Resize(const Vector2i &size)
 {
-    if (width != GetWidth() || height != GetHeight())
+    if (size != GetSize())
     {
-        CreateEmpty(width, height);
+        CreateEmpty(size.x, size.y);
     }
 }
 

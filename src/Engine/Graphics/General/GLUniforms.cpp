@@ -74,7 +74,7 @@ void GLUniforms::SetModelMatrix(const Matrix4 &model)
     {
         matrices->model = model;
         matrices->modelInv = model.Inversed();
-        UpdatePVMMatrix();
+        GLUniforms::UpdatePVMMatrix();
     }
 
 }
@@ -85,7 +85,7 @@ void GLUniforms::SetViewMatrix(const Matrix4 &view)
     {
         matrices->view    = view;
         matrices->viewInv = view.Inversed();
-        UpdatePVMMatrix();
+        GLUniforms::UpdatePVMMatrix();
     }
 }
 void GLUniforms::SetProjectionMatrix(const Matrix4 &projection)
@@ -95,7 +95,7 @@ void GLUniforms::SetProjectionMatrix(const Matrix4 &projection)
     {
         matrices->proj    = projection;
         matrices->projInv = projection.Inversed();
-        UpdatePVMMatrix();
+        GLUniforms::UpdatePVMMatrix();
     }
 }
 
@@ -154,8 +154,14 @@ const Matrix4 &GLUniforms::GetViewMatrix()
 
 Matrix4 GLUniforms::GetProjectionMatrix()
 {
+    GL::ViewProjMode vpm = GLUniforms::GetActive()->GetViewProjMode();
+    return GLUniforms::GetProjectionMatrix(vpm);
+}
+
+Matrix4 GLUniforms::GetProjectionMatrix(GL::ViewProjMode viewProjMode)
+{
     GLUniforms *glu = GLUniforms::GetActive();
-    return (glu->GetViewProjMode() == GL::ViewProjMode::WORLD) ?
+    return (viewProjMode == GL::ViewProjMode::WORLD) ?
                 glu->GetMatrixUniforms()->proj :
                 GLUniforms::GetCanvasProjectionMatrix();
 }

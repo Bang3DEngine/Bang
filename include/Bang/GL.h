@@ -51,6 +51,7 @@ public:
         INFO_LOG_LENGTH          = GL_INFO_LOG_LENGTH,
         LINE                     = GL_LINE,
         LINK_STATUS              = GL_LINK_STATUS,
+        MAX_DRAW_BUFFERS         = GL_MAX_DRAW_BUFFERS,
         MAX_TEXTURE_IMAGE_UNITS  = GL_MAX_TEXTURE_IMAGE_UNITS,
         READ_ONLY                = GL_READ_ONLY,
         READ_WRITE               = GL_READ_WRITE,
@@ -446,14 +447,14 @@ public:
 
     static void Enablei (GL::Enablable glTest, int index);
     static void Disablei(GL::Enablable glTest, int index);
-    static void Enable (GL::Enablable glTest, bool overrideIndexedValue = true);
-    static void Disable(GL::Enablable glTest, bool overrideIndexedValue = true);
-    static void SetEnabled(GL::Enablable glTest, bool enabled,
-                           bool overrideIndexedValue = true);
+    static void Enable (GL::Enablable glTest);
+    static void Disable(GL::Enablable glTest);
+    static void SetEnabled(GL::Enablable glTest, bool enabled);
     static void SetEnabledi(GL::Enablable glTest, int index, bool enabled);
     static bool IsEnabled(GL::Enablable glTest);
     static bool IsEnabledi(GL::Enablable glTest, int index);
     static bool CanEnablableBeIndexed(GL::Enablable enablable);
+    static int  GetEnablableIndexMax(GL::Enablable enablable);
 
 
     static void EnableVertexAttribArray(int location);
@@ -821,9 +822,9 @@ private:
     std::stack<Matrix4> m_projectionMatrices;
     std::stack<GL::ViewProjMode> m_viewProjModes;
 
-    UMap<GL::Enablable, StackAndValue<bool>> m_enabledVars;
-    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>> > m_enabled_i_Vars;
+    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>>> m_enabledVars;
 
+    uint m_maxDrawBuffers = 0;
     StackAndValue< Array<GL::Attachment> > m_drawBuffers;
     StackAndValue< GL::Attachment > m_readBuffers;
 

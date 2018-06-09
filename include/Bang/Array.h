@@ -68,6 +68,7 @@ public:
     const T& At(std::size_t i) const;
     T& operator[](std::size_t i);
     const T& operator[](std::size_t i) const;
+    bool operator==(const Array<T> &rhs) const;
 
     template< template <class> class Container, class OtherT = T>
     Container<OtherT> To() const;

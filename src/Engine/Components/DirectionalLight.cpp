@@ -59,6 +59,9 @@ void DirectionalLight::RenderShadowMaps_()
     GL::Push(GL::Pushable::ALL_MATRICES);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
+    GEngine *ge = GEngine::GetInstance();
+    ge->PushActiveRenderingCamera();
+
     // Bind and resize shadow map framebuffer
     const Vector2i& shadowMapSize = GetShadowMapSize();
     m_shadowMapFramebuffer->Bind();
@@ -88,6 +91,8 @@ void DirectionalLight::RenderShadowMaps_()
         GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
                                                false);
     }
+
+    ge->PopActiveRenderingCamera();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::ALL_MATRICES);

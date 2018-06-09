@@ -14,7 +14,6 @@
 #include "Bang/Application.h"
 #include "Bang/SceneManager.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/SelectionFramebuffer.h"
 
 USING_NAMESPACE_BANG
 

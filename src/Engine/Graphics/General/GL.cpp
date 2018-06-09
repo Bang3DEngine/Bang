@@ -162,6 +162,7 @@ void GL::Init()
     GL::Enable(GL::Enablable::MULTISAMPLE);
     GL::Disable(GL::Enablable::MULTISAMPLE);
 
+    m_maxDrawBuffers = GL::GetInteger(GL::Enum::MAX_DRAW_BUFFERS);
     SetGLContextValue(&GL::m_boundVAOIds, 0u);
     SetGLContextValue(&GL::m_boundVBOArrayBufferIds, 0u);
     SetGLContextValue(&GL::m_boundVBOElementsBufferIds, 0u);
@@ -492,18 +493,18 @@ void GL::BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
     }
 }
 
-void GL::Enable(GL::Enablable glEnablable, bool overrideIndexedValue)
+void GL::Enable(GL::Enablable glEnablable)
 {
-    GL::SetEnabled(glEnablable, true, overrideIndexedValue);
+
+    GL::SetEnabled(glEnablable, true);
 }
 
-void GL::Disable(GL::Enablable glEnablable, bool overrideIndexedValue)
+void GL::Disable(GL::Enablable glEnablable)
 {
-    GL::SetEnabled(glEnablable, false, overrideIndexedValue);
+    GL::SetEnabled(glEnablable, false);
 }
 
-void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
-                    bool overrideIndexedValues)
+void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
 
@@ -512,35 +513,18 @@ void GL::SetEnabled(GL::Enablable glEnablable, bool enabled,
         if (enabled) { GL_CALL( glEnable( GLCAST(glEnablable) ); ); }
         else { GL_CALL( glDisable( GLCAST(glEnablable) ); ); }
 
-        auto &enabledStackAndValue = gl->m_enabledVars[glEnablable];
-        enabledStackAndValue.currentValue = enabled;
-    }
-
-    // Update indexed enablables accordingly, depending on if we want to override
-    // or not
-    if (GL::CanEnablableBeIndexed(glEnablable))
-    {
-        auto &enabledisStackAndValue =  gl->m_enabled_i_Vars[glEnablable];
-        for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
+        auto &enabledisStackAndValue = gl->m_enabledVars[glEnablable];
+        for (int i = 0; i < GL::GetEnablableIndexMax(glEnablable); ++i)
         {
-            if (overrideIndexedValues)
-            {
-                // This is what OpenGL does, so just update our status
-                enabledisStackAndValue.currentValue[i] = enabled;
-            }
-            else
-            {
-                // Force gl state change to what it was before
-                bool wasPrevEnabled = enabledisStackAndValue.currentValue[i];
-                GL::SetEnabledi(glEnablable, !wasPrevEnabled, i);
-                GL::SetEnabledi(glEnablable,  wasPrevEnabled, i);
-            }
+            enabledisStackAndValue.currentValue[i] = enabled;
         }
     }
 }
 
 void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
 {
+    ASSERT(i >= 0 && i <= GL::GetEnablableIndexMax(glEnablable));
+
     if (enabled != GL::IsEnabledi(glEnablable, i))
     {
         if (enabled) { GL_CALL( glEnablei( GLCAST(glEnablable), i ) ); }
@@ -549,15 +533,15 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
         GL *gl = GL::GetInstance();
         if (gl)
         {
-            if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable))
+            if (!gl->m_enabledVars.ContainsKey(glEnablable))
             {
-                auto &enabledisStackAndValue = gl->m_enabled_i_Vars.Get(glEnablable);
+                auto &enabledisStackAndValue = gl->m_enabledVars.Get(glEnablable);
                 for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
                 {
                     enabledisStackAndValue.currentValue[i] = false;
                 }
             }
-            gl->m_enabled_i_Vars[glEnablable].currentValue[i] = enabled;
+            gl->m_enabledVars[glEnablable].currentValue[i] = enabled;
         }
     }
 }
@@ -573,22 +557,33 @@ void GL::Disablei(GL::Enablable glEnablable, int i)
 
 bool GL::IsEnabled(GL::Enablable glEnablable)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
-
-    if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
-    return gl->m_enabledVars.Get(glEnablable).currentValue;
+    return GL::IsEnabledi(glEnablable, 0);
 }
 bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 {
     GL *gl = GL::GetInstance(); ASSERT(gl);
 
-    if (!gl->m_enabled_i_Vars.ContainsKey(glEnablable)) { return false; }
-    return gl->m_enabled_i_Vars[glEnablable].currentValue[index];
+    if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
+    const bool isEnabledi = gl->m_enabledVars[glEnablable].currentValue[index];
+    return isEnabledi;
 }
 
 bool GL::CanEnablableBeIndexed(GL::Enablable enablable)
 {
     return (enablable == GL::Enablable::BLEND);
+}
+
+int GL::GetEnablableIndexMax(GL::Enablable enablable)
+{
+    switch (enablable)
+    {
+        case GL::Enablable::BLEND:
+            return GL::GetInstance()->m_maxDrawBuffers;
+        break;
+
+        default: break;
+    }
+    return 1;
 }
 
 void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
@@ -1991,6 +1986,7 @@ template <class T>
 void Pop_(StackAndValue<T> *stackAndValue)
 {
     ASSERT(stackAndValue->stack.size() >= 1);
+    ASSERT(stackAndValue->stack.top() == stackAndValue->currentValue);
     stackAndValue->stack.pop();
 }
 template <class T>
@@ -2055,13 +2051,18 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
         case GL::Pushable::BLEND_STATES:
             if (!push)
             {
-                const auto &enabledIStackAndValue =
-                                gl->m_enabled_i_Vars.Get(GL::Enablable::BLEND);
-                for (int i = 0; i < 4; ++i)
-                {
-                    GL::SetEnabledi(GL::Enablable::BLEND, i,
-                                    enabledIStackAndValue.stack.top()[i]);
-                }
+                ASSERT(gl->m_blendSrcFactorColors.stack.size() >= 1);
+                ASSERT(gl->m_blendDstFactorColors.stack.size() >= 1);
+                ASSERT(gl->m_blendSrcFactorAlphas.stack.size() >= 1);
+                ASSERT(gl->m_blendDstFactorAlphas.stack.size() >= 1);
+                ASSERT(gl->m_blendEquationColors.stack.size() >= 1);
+                ASSERT(gl->m_blendEquationAlphas.stack.size() >= 1);
+                GL::BlendFuncSeparate(gl->m_blendSrcFactorColors.stack.top(),
+                                      gl->m_blendDstFactorColors.stack.top(),
+                                      gl->m_blendSrcFactorAlphas.stack.top(),
+                                      gl->m_blendDstFactorAlphas.stack.top());
+                GL::BlendEquationSeparate(gl->m_blendEquationColors.stack.top(),
+                                          gl->m_blendEquationAlphas.stack.top());
             }
 
             PushOrPop(GL::Enablable::BLEND, push);
@@ -2102,6 +2103,13 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
                 {
                     GL::DrawBuffers(gl->m_drawBuffers.stack.top());
                     GL::ReadBuffer(gl->m_readBuffers.stack.top());
+                }
+                else
+                {
+                    // Simply update to mantain coherency (and so assert in
+                    // pop does not bother)
+                    gl->m_drawBuffers.currentValue = gl->m_drawBuffers.stack.top();
+                    gl->m_readBuffers.currentValue = gl->m_readBuffers.stack.top();
                 }
             }
 
@@ -2182,7 +2190,8 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
             if (push)
             {
                 gl->m_projectionMatrices.push(
-                            GLUniforms::GetActive()->GetProjectionMatrix() );
+                    GLUniforms::GetActive()->GetProjectionMatrix(
+                                                GL::ViewProjMode::WORLD) );
             }
             else
             {
@@ -2228,12 +2237,19 @@ void GL::PushOrPop(GL::Enablable enablable, bool push)
     {
         ASSERT(gl->m_enabledVars.ContainsKey(enablable));
         ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
-        GL::SetEnabled(enablable, gl->m_enabledVars.Get(enablable).stack.top(),
-                       false);
+        GL::SetEnabled(enablable, gl->m_enabledVars.Get(enablable).stack.top()[0]);
+
+        ASSERT(gl->m_enabledVars.ContainsKey(enablable));
+        ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
+        auto &enabledIStackAndValue = gl->m_enabledVars.Get(enablable);
+        for (int i = 0; i < GL::GetEnablableIndexMax(enablable); ++i)
+        {
+            GL::SetEnabledi(enablable, i, enabledIStackAndValue.stack.top()[i]);
+        }
     }
 
     PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
-    PushOrPop_(&gl->m_enabled_i_Vars.Get(enablable), push);
+    PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
 }
 
 void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
@@ -2363,6 +2379,10 @@ void GL::PrintGLContext()
     Debug_Peek(GL::GetBlendEquationColor());
     Debug_Peek(GL::GetBlendSrcFactorAlpha());
     Debug_Peek(GL::GetBlendSrcFactorColor());
+    Debug_Peek(GLUniforms::GetModelMatrix());
+    Debug_Peek(GLUniforms::GetViewMatrix());
+    Debug_Peek(GLUniforms::GetProjectionMatrix());
+    Debug_Peek(GLUniforms::GetActive()->GetViewProjMode());
 
     Debug::PrintAllUniforms();
 

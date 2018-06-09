@@ -179,6 +179,20 @@ const T &Array<T>::At(std::size_t i) const { return m_vector.at(i); }
 template<class T>
 const T &Array<T>::operator[](std::size_t i) const { return m_vector[i]; }
 
+template<class T>
+bool Array<T>::operator==(const Array<T> &rhs) const
+{
+    if (Size() != rhs.Size()) { return false; }
+    for (int i = 0; i < Size(); ++i)
+    {
+        if (At(i) != rhs.At(i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 template <class T>
 template< template <class> class Container, class OtherT>
 Container<OtherT> Array<T>::To() const

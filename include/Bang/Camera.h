@@ -15,7 +15,6 @@ FORWARD class Quad;
 FORWARD class GBuffer;
 FORWARD class Texture2D;
 FORWARD class ShaderProgram;
-FORWARD class SelectionFramebuffer;
 
 class Camera : public Component,
                public EventListener<IEventsDestroy>
@@ -39,7 +38,6 @@ public:
     virtual void UnBind() const;
 
     void BindGBuffer();
-    void BindSelectionFramebuffer();
     void BindViewportForBlitting() const;
     void BindViewportForRendering() const;
 
@@ -62,7 +60,6 @@ public:
     void RemoveRenderPass(RenderPass renderPass);
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
                           bool createFilteredCubeMapsForIBL = true);
-    void SetRenderSelectionBuffer(bool renderSelectionBuffer);
     void SetClearMode(ClearMode clearMode);
 
     const Color& GetClearColor() const;
@@ -76,7 +73,6 @@ public:
     bool MustRenderPass(RenderPass renderPass) const;
     const USet<RenderPass>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
-    bool GetRenderSelectionBuffer() const;
     Matrix4 GetProjectionMatrix() const;
     bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
     ProjectionMode GetProjectionMode() const;
@@ -88,7 +84,6 @@ public:
     TextureCubeMap *GetSkyBoxTexture() const;
     TextureCubeMap *GetSpecularSkyBoxTexture() const;
     TextureCubeMap *GetDiffuseSkyBoxTexture() const;
-    SelectionFramebuffer *GetSelectionFramebuffer() const;
 
     Quad GetFrustumNearQuad()  const;
     Quad GetFrustumFarQuad()   const;
@@ -118,10 +113,8 @@ protected:
 
 private:
     GBuffer *m_gbuffer = nullptr;
-    SelectionFramebuffer *m_selectionFramebuffer = nullptr;
 
     USet<RenderPass> m_renderPassMask;
-    bool m_renderSelectionBuffer = false;
     RH<TextureCubeMap> p_skyboxTextureCM;
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;
     RH<TextureCubeMap> p_skyboxDiffuseTextureCM;

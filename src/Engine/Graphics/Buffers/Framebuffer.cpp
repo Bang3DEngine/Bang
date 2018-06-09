@@ -17,9 +17,9 @@ Framebuffer::Framebuffer() : Framebuffer(1,1)
 {
 }
 
-Framebuffer::Framebuffer(int width, int height) : m_width(width),
-                                                  m_height(height)
+Framebuffer::Framebuffer(int width, int height)
 {
+    m_size = Vector2i(width, height);
     GL::GenFramebuffers(1, &m_idGL);
 }
 
@@ -164,21 +164,19 @@ void Framebuffer::Blit(GL::Attachment srcAttachment,
                        const AARect &readNDCRect,
                        GL::BufferBit bufferBit)
 {
-    GL::Push(GL::BindTarget::DRAW_FRAMEBUFFER);
-    GL::Push(GL::BindTarget::READ_FRAMEBUFFER);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     Bind();
     PushDrawAttachments();
     SetReadBuffer(srcAttachment);
     SetDrawBuffers({dstAttachment});
     AARect rf ( readNDCRect * 0.5f + 0.5f );
-    AARecti r ( AARect(Vector2::Floor(rf.GetMin()),
-                       Vector2::Ceil(rf.GetMax())) * GetSize() );
+    AARecti r ( Vector2i(Vector2::Floor(rf.GetMin())),
+                Vector2i(Vector2::Ceil(rf.GetMax())) * GetSize() );
     GL::BlitFramebuffer(r, r, GL::FilterMode::NEAREST, bufferBit);
     PopDrawAttachments();
 
-    GL::Pop(GL::BindTarget::READ_FRAMEBUFFER);
-    GL::Pop(GL::BindTarget::DRAW_FRAMEBUFFER);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 }
 
 GL::Attachment Framebuffer::GetCurrentReadAttachment() const
@@ -193,7 +191,7 @@ const Array<GL::Attachment>& Framebuffer::GetCurrentDrawAttachments() const
 
 Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
 {
-    GL::Push(GL::BindTarget::FRAMEBUFFER);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     Bind();
     Texture2D* t = GetAttachmentTex2D(attachment);
@@ -201,41 +199,46 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
     Byte color[4] = {0,0,0,0};
     GL::ReadPixels(x, y, 1, 1,
                    GL::GetColorCompFrom(t->GetFormat()),
-                   t->GetDataType(),
-                   Cast<void*>(&color));
+                   GL::DataType::UNSIGNED_BYTE,
+                   SCAST<void*>(&color));
+    UnBind();
 
-    GL::Pop(GL::BindTarget::FRAMEBUFFER);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     Color readColor = Color(color[0], color[1], color[2], color[3]) / 255.0f;
     return readColor;
 }
 
-
-void Framebuffer::Resize(int width, int height)
+void Framebuffer::Resize(const Vector2i &size)
 {
-    m_width  = Math::Max(width,  1);
-    m_height = Math::Max(height, 1);
+    m_size = Vector2i::Max(size, Vector2i::One);
 
     for (const auto &it : m_attachments_To_Texture)
     {
         Texture *t = it.second.Get();
-        if (t) { t->Resize(m_width, m_height); }
+        if (t) { t->Resize(GetSize()); }
     }
+}
+
+
+void Framebuffer::Resize(int width, int height)
+{
+    Resize( Vector2i(width, height) );
 }
 
 int Framebuffer::GetWidth() const
 {
-    return m_width;
+    return GetSize().x;
 }
 
 int Framebuffer::GetHeight() const
 {
-    return m_height;
+    return GetSize().y;
 }
 
-Vector2 Framebuffer::GetSize() const
+const Vector2i& Framebuffer::GetSize() const
 {
-    return Vector2(GetWidth(), GetHeight());
+    return m_size;
 }
 
 GL::BindTarget Framebuffer::GetGLBindTarget() const

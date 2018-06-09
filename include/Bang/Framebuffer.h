@@ -39,11 +39,12 @@ public:
               const AARect &ndcRect = AARect::NDCRect,
               GL::BufferBit bufferBit = GL::BufferBit::COLOR);
     Color ReadColor(int x, int y, GL::Attachment attachment) const;
+    void Resize(const Vector2i &size);
     void Resize(int width, int height);
 
     int GetWidth() const;
     int GetHeight() const;
-    Vector2 GetSize() const;
+    const Vector2i& GetSize() const;
     GL::Attachment GetCurrentReadAttachment() const;
     const Array<GL::Attachment>& GetCurrentDrawAttachments() const;
     Texture2D* GetAttachmentTex2D(GL::Attachment attachment) const;
@@ -63,8 +64,7 @@ public:
                        int stencilValueMultiplier = 1) const;
 
 protected:
-    int m_width = 0;
-    int m_height = 0;
+    Vector2i m_size = Vector2i::Zero;
     Array<GL::Attachment> m_attachments;
     UMap<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
 

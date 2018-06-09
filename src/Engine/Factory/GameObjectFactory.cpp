@@ -507,7 +507,6 @@ Camera *GameObjectFactory::CreateUICameraInto(GameObject *go)
     Camera *cam = go->AddComponent<Camera>();
     cam->SetGammaCorrection(1.0f);
     cam->SetClearColor(Color::LightGray);
-    cam->SetRenderSelectionBuffer(false);
     return cam;
 }
 

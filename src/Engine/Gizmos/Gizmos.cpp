@@ -411,7 +411,9 @@ void Gizmos::RenderOutline(GameObject *gameObject,
                                        GetLineWidth();
 
         gbuffer->PushDrawAttachments();
+        gbuffer->PushDepthStencilTexture();
         gbuffer->Bind();
+        gbuffer->SetOverlayDepthStencil();
 
         // Render depth
         gbuffer->SetDrawBuffers({});
@@ -449,6 +451,7 @@ void Gizmos::RenderOutline(GameObject *gameObject,
         GL::SetDepthMask(true);
         GL::ClearDepthBuffer(1);
 
+        gbuffer->PopDepthStencilTexture();
         gbuffer->PopDrawAttachments();
     }
 

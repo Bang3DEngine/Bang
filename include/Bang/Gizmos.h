@@ -3,7 +3,6 @@
 
 #include "Bang/GameObject.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IEventsGizmos.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
 
@@ -15,7 +14,7 @@ FORWARD   class Texture2D;
 FORWARD   class LineRenderer;
 FORWARD   class MeshRenderer;
 
-class Gizmos : public EventEmitter<IEventsGizmos>
+class Gizmos
 {
 public:
     static void SetColor(const Color &color);
@@ -26,7 +25,6 @@ public:
     static void SetScale(const Vector3 &scale);
 
     static void SetRenderPass(RenderPass rp);
-    static void SetSelectable(GameObject *go);
     static void SetThickness(float thickness);
     static void SetRenderWireframe(bool wireframe);
     static void SetReceivesLighting(bool receivesLighting);
@@ -82,7 +80,6 @@ private:
     RH<Mesh> m_sphereMesh;
     RH<ShaderProgram> m_outlineShaderProgram;
 
-    GameObject *p_selectable = nullptr;
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;
     List<Renderer*> m_renderers;

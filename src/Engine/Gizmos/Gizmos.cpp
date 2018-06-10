@@ -105,12 +105,6 @@ void Gizmos::SetRenderPass(RenderPass rp)
     }
 }
 
-void Gizmos::SetSelectable(GameObject *go)
-{
-    Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
-    g->p_selectable = go;
-}
-
 void Gizmos::SetThickness(float thickness)
 {
     Gizmos *g = Gizmos::GetInstance(); if (!g) { return; }
@@ -539,7 +533,6 @@ void Gizmos::Reset()
     Gizmos::SetThickness(1.0f);
     Gizmos::SetReceivesLighting(false);
     Gizmos::SetRenderWireframe(false);
-    Gizmos::SetSelectable(nullptr);
     Gizmos::SetRenderPass(RenderPass::OVERLAY);
 
     List<Renderer*> rends = g->m_gizmosGo->GetComponents<Renderer>();
@@ -558,15 +551,7 @@ GameObject *Gizmos::GetGameObject() const
 
 void Gizmos::Render(Renderer *rend)
 {
-    Gizmos *g = Gizmos::GetInstance();
-
-    g->EventEmitter<IEventsGizmos>::PropagateToListeners(
-                   &IEventsGizmos::OnBeforeRender, rend, g->p_selectable);
-
     rend->OnRender( rend->GetActiveMaterial()->GetRenderPass() );
-
-    g->EventEmitter<IEventsGizmos>::PropagateToListeners(
-                   &IEventsGizmos::OnAfterRender, rend, g->p_selectable);
 }
 
 Gizmos* Gizmos::GetInstance()

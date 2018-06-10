@@ -37,17 +37,13 @@ public:
     virtual void Bind() const;
     virtual void UnBind() const;
 
-    void BindGBuffer();
-    void BindViewportForBlitting() const;
-    void BindViewportForRendering() const;
-
     Ray      FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const;
-    Vector2i FromWindowPointToViewportPoint(const Vector2i &winPoint) const;
     Vector3  FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const;
     Vector3  FromViewportPointNDCToWorldPoint(const Vector3 &vpPositionNDC) const;
     Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                               float zFromCam) const;
 
+    void SetRenderSize(const Vector2i &renderSize);
     void SetGammaCorrection(float gammaCorrection);
     void SetOrthoHeight(float orthoHeight);
     void SetClearColor(const Color& color);
@@ -55,7 +51,6 @@ public:
     void SetZNear(float zNear);
     void SetZFar(float zFar);
     void SetProjectionMode(ProjectionMode projMode);
-    void SetViewportAARectNDC(const AARect &viewportRectNDC);
     void AddRenderPass(RenderPass renderPass);
     void RemoveRenderPass(RenderPass renderPass);
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
@@ -63,6 +58,7 @@ public:
     void SetClearMode(ClearMode clearMode);
 
     const Color& GetClearColor() const;
+    float GetAspectRatio() const;
     float GetOrthoWidth() const;
     float GetOrthoHeight() const;
     float GetFovDegrees() const;
@@ -77,10 +73,8 @@ public:
     bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
     ProjectionMode GetProjectionMode() const;
     AARect GetViewportBoundingAARectNDC(const AABox &bbox) const;
-    AARect GetViewportAARectInWindow() const;
-    AARect GetViewportAARectNDCInWindow() const;
-    const AARect& GetViewportAARectNDC() const;
     GBuffer *GetGBuffer() const;
+    const Vector2i &GetRenderSize() const;
     TextureCubeMap *GetSkyBoxTexture() const;
     TextureCubeMap *GetSpecularSkyBoxTexture() const;
     TextureCubeMap *GetDiffuseSkyBoxTexture() const;
@@ -126,7 +120,6 @@ private:
     float m_zNear = 0.1f;
     float m_zFar = 100.0f;
     float m_gammaCorrection = 1.0f / 2.2f;
-    AARect m_viewportRectNDC = AARect::NDCRect;
     ProjectionMode m_projMode = ProjectionMode::PERSPECTIVE;
 
     friend class Scene;

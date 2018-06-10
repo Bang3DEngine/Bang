@@ -53,7 +53,7 @@ void Camera::Bind() const
     GL::Push(GL::Pushable::PROJECTION_MATRIX);
     GLUniforms::SetViewMatrix( GetViewMatrix() );
     GLUniforms::SetProjectionMatrix( GetProjectionMatrix() );
-    BindViewportForRendering();
+    GL::SetViewport(0, 0, GetRenderSize().x, GetRenderSize().y);
     GetGBuffer()->Bind();
 }
 
@@ -65,25 +65,6 @@ void Camera::UnBind() const
     GL::Pop(GL::Pushable::VIEWPORT);
 }
 
-void Camera::BindViewportForBlitting() const
-{
-    GL::SetViewport( AARecti( GetViewportAARectInWindow() ) );
-}
-
-void Camera::BindViewportForRendering() const
-{
-    BindViewportForBlitting();
-    AARecti vpRect = GL::GetViewportRect();
-    GL::SetViewport(0, 0, vpRect.GetWidth(), vpRect.GetHeight());
-}
-
-void Camera::BindGBuffer()
-{
-    Vector2i vpSize = GL::GetViewportSize();
-    GetGBuffer()->Resize(vpSize.x, vpSize.y);
-    GetGBuffer()->Bind();
-}
-
 Ray Camera::FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const
 {
     Vector3 worldPoint = FromViewportPointNDCToWorldPoint(vpPointNDC, 1);
@@ -92,13 +73,6 @@ Ray Camera::FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const
     ray.SetOrigin( GetGameObject()->GetTransform()->GetPosition() );
     ray.SetDirection( (worldPoint - ray.GetOrigin()).Normalized() );
     return ray;
-}
-
-Vector2i Camera::FromWindowPointToViewportPoint(const Vector2i &winPoint) const
-{
-    return Vector2i(
-                GL::FromWindowPointToViewportPoint(Vector2(winPoint),
-                                 AARecti(GetViewportAARectInWindow())) );
 }
 
 Vector3 Camera::FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const
@@ -127,6 +101,11 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     Vector3 res = res4.xyz();
     res = (GetViewMatrix().Inversed() * Vector4(res, 1)).xyz();
     return res;
+}
+
+void Camera::SetRenderSize(const Vector2i &renderSize)
+{
+    GetGBuffer()->Resize( renderSize );
 }
 
 void Camera::SetGammaCorrection(float gammaCorrection)
@@ -181,11 +160,6 @@ void Camera::SetProjectionMode(Camera::ProjectionMode projMode)
     m_projMode = projMode;
 }
 
-void Camera::SetViewportAARectNDC(const AARect &viewportRectNDC)
-{
-    m_viewportRectNDC = viewportRectNDC;
-}
-
 void Camera::AddRenderPass(RenderPass renderPass)
 {
     m_renderPassMask.Add(renderPass);
@@ -228,6 +202,11 @@ void Camera::SetClearMode(Camera::ClearMode clearMode)
 }
 
 const Color &Camera::GetClearColor() const { return m_clearColor; }
+
+float Camera::GetAspectRatio() const
+{
+    return SCAST<float>(GetRenderSize().x) / Math::Max(GetRenderSize().y, 1);
+}
 float Camera::GetOrthoHeight() const { return m_orthoHeight; }
 float Camera::GetFovDegrees() const { return m_fovDegrees; }
 float Camera::GetZNear() const { return m_zNear; }
@@ -253,25 +232,14 @@ const USet<RenderPass> &Camera::GetRenderPassMask() const
     return m_renderPassMask;
 }
 
-AARect Camera::GetViewportAARectInWindow() const
-{
-    AARect vpRect = GetViewportAARectNDC() * 0.5f + 0.5f;
-    return AARect( vpRect * Vector2(GL::GetViewportSize())
-                   + Vector2(GL::GetViewportRect().GetMin()) );
-}
-AARect Camera::GetViewportAARectNDCInWindow() const
-{
-    return GL::FromWindowRectToWindowRectNDC( GetViewportAARectInWindow() );
-}
-
-const AARect& Camera::GetViewportAARectNDC() const
-{
-    return m_viewportRectNDC;
-}
-
 GBuffer *Camera::GetGBuffer() const
 {
     return m_gbuffer;
+}
+
+const Vector2i &Camera::GetRenderSize() const
+{
+    return GetGBuffer()->GetSize();
 }
 
 TextureCubeMap *Camera::GetSkyBoxTexture() const
@@ -352,7 +320,7 @@ Camera::ProjectionMode Camera::GetProjectionMode() const { return m_projMode; }
 
 float Camera::GetOrthoWidth() const
 {
-   return GetOrthoHeight() * GL::GetViewportAspectRatio();
+   return GetOrthoHeight() * GetAspectRatio();
 }
 
 Matrix4 Camera::GetViewMatrix() const
@@ -360,8 +328,6 @@ Matrix4 Camera::GetViewMatrix() const
     Transform *tr = GetGameObject()->GetTransform();
     Matrix4 localToWorld = Matrix4::TranslateMatrix(tr->GetPosition()) *
                            Matrix4::RotateMatrix(tr->GetRotation());
-    // localToWorld.SetScale( Vector3::One );
-    // Debug_Peek(localToWorld);
     return localToWorld.Inversed();
 }
 
@@ -369,18 +335,16 @@ Matrix4 Camera::GetProjectionMatrix() const
 {
     if (m_projMode == ProjectionMode::PERSPECTIVE)
     {
-        if (GL::GetViewportAspectRatio() == 0.0 ||
-            GetFovDegrees() == 0.0 ||
+        if (GetAspectRatio() == 0.0 || GetFovDegrees() == 0.0 ||
             GetZNear() == GetZFar())
         {
             return Matrix4::Identity;
         }
 
         return Matrix4::Perspective(Math::DegToRad(GetFovDegrees()),
-                                    GL::GetViewportAspectRatio(),
-                                    GetZNear(), GetZFar());
+                                    GetAspectRatio(), GetZNear(), GetZFar());
     }
-    // else // Ortho
+    else // Ortho
     {
         return Matrix4::Ortho(-GetOrthoWidth(),  GetOrthoWidth(),
                               -GetOrthoHeight(), GetOrthoHeight(),

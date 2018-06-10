@@ -74,12 +74,9 @@ void SceneManager::Render()
         GEngine *ge = GEngine::GetInstance();
         if (camera && ge)
         {
+            camera->SetRenderSize( Window::GetActive()->GetSize() );
             ge->Render(activeScene, camera);
-            AARecti prevVP = GL::GetViewportRect();
-            camera->BindViewportForBlitting();
-            ge->RenderTexture(
-                    camera->GetGBuffer()->GetLastDrawnColorTexture());
-            GL::SetViewport(prevVP);
+            ge->RenderTexture( camera->GetGBuffer()->GetLastDrawnColorTexture() );
         }
     }
 }

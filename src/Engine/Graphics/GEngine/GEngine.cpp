@@ -189,9 +189,12 @@ GBuffer *GEngine::GetActiveGBuffer()
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
+    GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::DEPTH_STATES);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    GL::SetViewport(0, 0, camera->GetRenderSize().x, camera->GetRenderSize().y);
 
     GBuffer *gbuffer = camera->GetGBuffer();
 
@@ -209,7 +212,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         RetrieveForwardRenderingInformation(go);
     }
 
-    camera->BindGBuffer();
+    gbuffer->Bind();
     gbuffer->PushDepthStencilTexture();
 
     bool hasRenderedSky = false;
@@ -297,15 +300,16 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         }
     }
 
-    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
-    GL::Pop(GL::Pushable::DEPTH_STATES);
-    GL::Pop(GL::Pushable::BLEND_STATES);
-    gbuffer->PopDepthStencilTexture();
-
     if (camera->GetGammaCorrection() != 1.0f)
     {
         ApplyGammaCorrection(camera->GetGBuffer(), camera->GetGammaCorrection());
     }
+
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::BLEND_STATES);
+    GL::Pop(GL::Pushable::VIEWPORT);
+    gbuffer->PopDepthStencilTexture();
 }
 
 void GEngine::RenderWithPass(GameObject *go, RenderPass renderPass,

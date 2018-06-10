@@ -5,7 +5,6 @@
 #include "Bang/Ray2D.h"
 #include "Bang/Scene.h"
 #include "Bang/Camera.h"
-#include "Bang/Gizmos.h"
 #include "Bang/GEngine.h"
 #include "Bang/Polygon.h"
 #include "Bang/Segment.h"
@@ -285,22 +284,6 @@ Matrix4 DirectionalLight::GetLightToWorldMatrix() const
     lightToWorld[2] = Vector4(-t->GetForward().NormalizedSafe(), 0);
     lightToWorld[3] = Vector4(0, 0, 0, 1);
     return lightToWorld;
-}
-
-void DirectionalLight::OnRender(RenderPass rp)
-{
-    Component::OnRender(rp);
-
-    // Gizmo rendering
-    if (rp == RenderPass::OVERLAY)
-    {
-        Gizmos::Reset();
-        Gizmos::SetColor(GetColor().WithAlpha(1.0f));
-        Gizmos::SetSelectable(GetGameObject());
-        Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
-        Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( TextureFactory::GetSunIcon().Get(), true );
-    }
 }
 
 void DirectionalLight::ImportXML(const XMLNode &xmlInfo)

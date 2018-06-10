@@ -5,7 +5,6 @@
 #include "Bang/Scene.h"
 #include "Bang/AARect.h"
 #include "Bang/Camera.h"
-#include "Bang/Gizmos.h"
 #include "Bang/Sphere.h"
 #include "Bang/GEngine.h"
 #include "Bang/XMLNode.h"
@@ -70,20 +69,6 @@ float PointLight::GetRange() const { return m_range; }
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
     return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::DEPTH);
-}
-
-void PointLight::OnRender(RenderPass rp)
-{
-    Component::OnRender(rp);
-    if (rp == RenderPass::OVERLAY) // Render gizmos
-    {
-        Gizmos::Reset();
-        Gizmos::SetColor(GetColor().WithAlpha(1.0f));
-        Gizmos::SetSelectable(GetGameObject());
-        Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
-        Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( TextureFactory::GetLightBulbIcon().Get(), true );
-    }
 }
 
 void PointLight::RenderShadowMaps_()

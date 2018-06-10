@@ -21,9 +21,6 @@ public:
     // Light
     Texture2D* GetShadowMapTexture() const override;
 
-    // Component
-    void OnRender(RenderPass rp) override;
-
     // Light
     void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const override;
 

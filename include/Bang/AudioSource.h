@@ -30,7 +30,6 @@ public:
 
     // Component
     void OnStart() override;
-    void OnRender(RenderPass rp) override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

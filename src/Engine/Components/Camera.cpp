@@ -6,7 +6,6 @@
 #include "Bang/AABox.h"
 #include "Bang/Scene.h"
 #include "Bang/AARect.h"
-#include "Bang/Gizmos.h"
 #include "Bang/Window.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -19,11 +18,11 @@
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/GLUniforms.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/CubeMapIBLGenerator.h"
 
 USING_NAMESPACE_BANG
@@ -358,32 +357,6 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
     return projPoint.x > -1.0f && projPoint.x < 1.0f &&
            projPoint.y > -1.0f && projPoint.y < 1.0f &&
            projPoint.z > -1.0f && projPoint.z < 1.0f;
-}
-
-void Camera::OnRender(RenderPass rp)
-{
-    Component::OnRender(rp);
-    if (rp != RenderPass::OVERLAY) { return; }
-
-    Gizmos::Reset();
-    static RH<Mesh> cameraMesh = MeshFactory::GetCamera();
-    Transform *camTransform = GetGameObject()->GetTransform();
-    float distScale = 15.0f;
-
-    /*
-    Camera *sceneCam = SceneManager::GetActiveScene()->GetCamera();
-    Transform *sceneCamTransform = sceneCam->GetGameObject()->GetTransform();
-    float distScale = Vector3::Distance(sceneCamTransform->GetPosition(),
-                                        camTransform->GetPosition());
-    */
-
-    Gizmos::SetReceivesLighting(true);
-    Gizmos::SetSelectable(GetGameObject());
-    Gizmos::SetPosition(camTransform->GetPosition());
-    Gizmos::SetRotation(camTransform->GetRotation());
-    Gizmos::SetScale(Vector3::One * 0.02f * distScale);
-    Gizmos::SetColor(Color::White);
-    Gizmos::RenderCustomMesh(cameraMesh.Get());
 }
 
 void Camera::CloneInto(ICloneable *clone) const

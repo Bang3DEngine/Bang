@@ -1,6 +1,5 @@
 #include "Bang/AudioSource.h"
 
-#include "Bang/Gizmos.h"
 #include "Bang/XMLNode.h"
 #include "Bang/AudioClip.h"
 #include "Bang/Transform.h"
@@ -9,8 +8,8 @@
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/AudioManager.h"
+#include "Bang/TextureFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -29,19 +28,6 @@ void AudioSource::OnStart()
     if (GetPlayOnStart() && !AudioManager::GetPlayOnStartBlocked())
     {
         Play();
-    }
-}
-
-void AudioSource::OnRender(RenderPass rp)
-{
-    Component::OnRender(rp);
-    if (rp == RenderPass::OVERLAY)
-    {
-        Gizmos::Reset();
-        Gizmos::SetSelectable(GetGameObject());
-        Gizmos::SetPosition( GetGameObject()->GetTransform()->GetPosition() );
-        Gizmos::SetScale( Vector3(0.1f) );
-        Gizmos::RenderIcon( TextureFactory::GetAudioIcon().Get(), true );
     }
 }
 

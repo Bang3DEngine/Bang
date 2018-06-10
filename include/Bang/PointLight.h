@@ -21,9 +21,6 @@ public:
     // Light
     TextureCubeMap* GetShadowMapTexture() const override;
 
-    // Component
-    void OnRender(RenderPass rp) override;
-
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 

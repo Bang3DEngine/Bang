@@ -290,7 +290,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetOverlayDepthStencil();
         GL::ClearStencilDepthBuffers();
-        GL::SetDepthMask(true);
+        GL::SetDepthMask(false);
         GL::SetDepthFunc(GL::Function::LEQUAL);
 
         RenderWithPass(go, RenderPass::OVERLAY);

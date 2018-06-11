@@ -60,169 +60,142 @@ RenderFactory::~RenderFactory()
     GameObject::Destroy(m_gizmosGo);
 }
 
-void RenderFactory::SetColor(const Color &color)
+void RenderFactory::RenderCustomMesh(Mesh *m,
+                                     const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetMaterial()->SetAlbedoColor(color);
-    }
-}
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
-void RenderFactory::SetCullFace(GL::CullFaceExt cullFace)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetMaterial()->SetCullFace(cullFace);
-    }
-}
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
+    rf->m_meshRenderer->SetMesh(m);
 
-void RenderFactory::SetPosition(const Vector3 &position)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_gizmosGo->GetTransform()->SetPosition(position);
-}
-
-void RenderFactory::SetRotation(const Quaternion &rotation)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_gizmosGo->GetTransform()->SetRotation(rotation);
-}
-
-void RenderFactory::SetScale(const Vector3 &scale)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_gizmosGo->GetTransform()->SetLocalScale(scale);
-}
-
-void RenderFactory::SetRenderPass(RenderPass rp)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetActiveMaterial()->SetRenderPass(rp);
-    }
-}
-
-void RenderFactory::SetThickness(float thickness)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetMaterial()->SetLineWidth(thickness);
-    }
-}
-
-void RenderFactory::SetRenderWireframe(bool wireframe)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetMaterial()->SetRenderWireframe(wireframe);
-    }
-}
-
-void RenderFactory::SetReceivesLighting(bool receivesLighting)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    for (Renderer *rend : g->m_renderers)
-    {
-        rend->GetActiveMaterial()->SetReceivesLighting(receivesLighting);
-    }
-}
-
-void RenderFactory::RenderCustomMesh(Mesh *m)
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(m);
-    Render(g->m_meshRenderer);
+    Render(rf->m_meshRenderer, paramsCpy);
 }
 
 
-void RenderFactory::RenderSimpleBox(const AABox &b)
+void RenderFactory::RenderSimpleBox(const AABox &b,
+                                    const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    const Quaternion &r = g->m_gizmosGo->GetTransform()->GetLocalRotation();
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    const Quaternion &r = params.rotation;
     const Vector3& bMin = b.GetMin();
     const Vector3& bMax = b.GetMax();
 
-    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z), r * Vector3(bMax.x, bMin.y, bMin.z));
-    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z), r * Vector3(bMin.x, bMax.y, bMin.z));
-    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z), r * Vector3(bMin.x, bMin.y, bMax.z));
+    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
+               r * Vector3(bMax.x, bMin.y, bMin.z),
+               params);
+    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
+               r * Vector3(bMin.x, bMax.y, bMin.z),
+               params);
+    RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
+               r * Vector3(bMin.x, bMin.y, bMax.z),
+               params);
 
-    RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z), r * Vector3(bMax.x, bMax.y, bMin.z));
-    RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z), r * Vector3(bMax.x, bMin.y, bMax.z));
+    RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z),
+               r * Vector3(bMax.x, bMax.y, bMin.z),
+               params);
+    RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z),
+               r * Vector3(bMax.x, bMin.y, bMax.z),
+               params);
 
-    RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z), r * Vector3(bMax.x, bMax.y, bMin.z));
-    RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z), r * Vector3(bMin.x, bMax.y, bMax.z));
+    RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z),
+               r * Vector3(bMax.x, bMax.y, bMin.z),
+               params);
+    RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z),
+               r * Vector3(bMin.x, bMax.y, bMax.z),
+               params);
 
-    RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z), r * Vector3(bMax.x, bMin.y, bMax.z));
-    RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z), r * Vector3(bMin.x, bMax.y, bMax.z));
+    RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z),
+               r * Vector3(bMax.x, bMin.y, bMax.z),
+               params);
+    RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z),
+               r * Vector3(bMin.x, bMax.y, bMax.z),
+               params);
 
-    RenderLine(r * Vector3(bMin.x, bMax.y, bMax.z), r * Vector3(bMax.x, bMax.y, bMax.z));
-    RenderLine(r * Vector3(bMax.x, bMin.y, bMax.z), r * Vector3(bMax.x, bMax.y, bMax.z));
-    RenderLine(r * Vector3(bMax.x, bMax.y, bMin.z), r * Vector3(bMax.x, bMax.y, bMax.z));
+    RenderLine(r * Vector3(bMin.x, bMax.y, bMax.z),
+               r * Vector3(bMax.x, bMax.y, bMax.z),
+               params);
+    RenderLine(r * Vector3(bMax.x, bMin.y, bMax.z),
+               r * Vector3(bMax.x, bMax.y, bMax.z),
+               params);
+    RenderLine(r * Vector3(bMax.x, bMax.y, bMin.z),
+               r * Vector3(bMax.x, bMax.y, bMax.z),
+               params);
 }
 
-void RenderFactory::RenderBox(const AABox &b)
+void RenderFactory::RenderBox(const AABox &b,
+                              const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->m_boxMesh.Get());
-    g->m_gizmosGo->GetTransform()->SetPosition(b.GetCenter());
-    g->m_gizmosGo->GetTransform()->
-       SetScale(g->m_gizmosGo->GetTransform()->GetScale() * b.GetSize());
-    g->Render(g->m_meshRenderer);
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    rf->m_meshRenderer->SetMesh(rf->m_boxMesh.Get());
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
+    paramsCpy.position = b.GetCenter();
+    paramsCpy.scale *= b.GetSize();
+
+    rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderRectNDC(const AARect &r)
+void RenderFactory::RenderRectNDC(const AARect &r,
+                                  const RenderFactory::Parameters &params)
 {
     RenderFactory::RenderRectNDC({{r.GetMinXMinY(), r.GetMaxXMinY(),
-                            r.GetMaxXMaxY(), r.GetMinXMaxY()}});
+                                   r.GetMaxXMaxY(), r.GetMinXMaxY()}},
+                                 params);
 }
 
-void RenderFactory::RenderRectNDC(const RectPoints &rectPointsNDC)
+void RenderFactory::RenderRectNDC(const RectPoints &rectPointsNDC,
+                                  const RenderFactory::Parameters &params)
 {
-    RenderViewportLineNDC(rectPointsNDC[0], rectPointsNDC[1]);
-    RenderViewportLineNDC(rectPointsNDC[1], rectPointsNDC[2]);
-    RenderViewportLineNDC(rectPointsNDC[2], rectPointsNDC[3]);
-    RenderViewportLineNDC(rectPointsNDC[3], rectPointsNDC[0]);
+    RenderViewportLineNDC(rectPointsNDC[0], rectPointsNDC[1], params);
+    RenderViewportLineNDC(rectPointsNDC[1], rectPointsNDC[2], params);
+    RenderViewportLineNDC(rectPointsNDC[2], rectPointsNDC[3], params);
+    RenderViewportLineNDC(rectPointsNDC[3], rectPointsNDC[0], params);
 }
 
-void RenderFactory::RenderRect(const RectPoints &rectPoints)
+void RenderFactory::RenderRect(const RectPoints &rectPoints,
+                               const RenderFactory::Parameters &params)
 {
     RenderRectNDC({{GL::FromViewportPointToViewportPointNDC(rectPoints[0]),
                     GL::FromViewportPointToViewportPointNDC(rectPoints[1]),
                     GL::FromViewportPointToViewportPointNDC(rectPoints[2]),
-                    GL::FromViewportPointToViewportPointNDC(rectPoints[3])}});
+                    GL::FromViewportPointToViewportPointNDC(rectPoints[3])}},
+                  params);
 }
 
-void RenderFactory::RenderRect(const Rect &r)
+void RenderFactory::RenderRect(const Rect &r,
+                               const RenderFactory::Parameters &params)
 {
     RenderRect({{r.GetLeftBot(), r.GetRightBot(),
-                 r.GetLeftTop(), r.GetRightTop()}});
+                 r.GetLeftTop(), r.GetRightTop()}},
+               params);
 }
 
-void RenderFactory::RenderFillRect(const AARect &r)
+void RenderFactory::RenderFillRect(const AARect &r,
+                                   const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    rf->m_meshRenderer->SetMesh(rf->m_planeMesh.Get());
 
-    RenderFactory::SetPosition( Vector3(r.GetCenter(), 0) );
-    RenderFactory::SetScale( Vector3(r.GetSize(), 1) );
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::CANVAS;
+    paramsCpy.position = Vector3(r.GetCenter(), 0);
+    paramsCpy.scale = Vector3(r.GetSize(), 1);
 
-    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
-    g->Render(g->m_meshRenderer);
+    rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 
 void RenderFactory::RenderIcon(Texture2D *texture,
-                        bool billboard)
+                               bool billboard,
+                               const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    rf->m_meshRenderer->SetMesh(rf->m_planeMesh.Get());
 
-    SetRenderWireframe(false);
-    SetReceivesLighting(false);
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.wireframe = false;
+    paramsCpy.receivesLighting = false;
     if (billboard)
     {
         Camera *cam = Camera::GetActive();
@@ -231,65 +204,70 @@ void RenderFactory::RenderIcon(Texture2D *texture,
         float distScale = 1.0f;
         if (cam->GetProjectionMode() == Camera::ProjectionMode::PERSPECTIVE)
         {
-           Vector3 pos = g->m_gizmosGo->GetTransform()->GetPosition();
-           distScale = Vector3::Distance(camPos, pos);
+           distScale = Vector3::Distance(camPos, paramsCpy.position);
         }
 
-        Vector3 scale = g->m_gizmosGo->GetTransform()->GetScale();
-        g->m_gizmosGo->GetTransform()->SetScale(distScale * scale * 0.5f);
-
-        g->m_gizmosGo->GetTransform()->LookInDirection(
-                    cam->GetGameObject()->GetTransform()->GetForward(),
-                    cam->GetGameObject()->GetTransform()->GetUp());
+        paramsCpy.scale *= distScale * 0.5f;
+        paramsCpy.rotation = Quaternion::LookDirection(
+                                cam->GetGameObject()->GetTransform()->GetForward(),
+                                cam->GetGameObject()->GetTransform()->GetUp());
     }
-    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
-    g->Render(g->m_meshRenderer);
+    paramsCpy.texture = texture;
+    rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 
 void RenderFactory::RenderViewportIcon(Texture2D *texture,
-                                const AARect &winRect)
+                                       const AARect &winRect,
+                                       const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->m_planeMesh.Get());
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    rf->m_meshRenderer->SetMesh(rf->m_planeMesh.Get());
 
-    RenderFactory::SetPosition( Vector3(winRect.GetCenter(), 0) );
-    RenderFactory::SetScale( Vector3(winRect.GetSize(), 1) );
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::CANVAS;
+    paramsCpy.position = Vector3(winRect.GetCenter(), 0);
+    paramsCpy.scale = Vector3(winRect.GetSize(), 1);
+    paramsCpy.wireframe = false;
+    paramsCpy.receivesLighting = false;
 
-    SetRenderWireframe(false);
-    SetReceivesLighting(false);
-    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
-    g->m_meshRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
-    g->Render(g->m_meshRenderer);
+    rf->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(texture);
+    rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderLine(const Vector3 &origin, const Vector3 &destiny)
+void RenderFactory::RenderLine(const Vector3 &origin,
+                               const Vector3 &destiny,
+                               const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_lineRenderer->SetPoints( {origin, destiny} );
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
-    g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
-    g->m_gizmosGo->GetTransform()->SetScale(Vector3::One);
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
 
-    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::WORLD);
-    g->Render(g->m_lineRenderer);
+    rf->m_lineRenderer->SetPoints( {origin, destiny} );
+    rf->Render(rf->m_lineRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderBillboardCircle(const Vector3 &origin, float radius,
-                                   int numSegments)
+void RenderFactory::RenderBillboardCircle(float radius,
+                                          const RenderFactory::Parameters &params,
+                                          int numSegments)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
     Camera *cam = Camera::GetActive();
     Vector3 camPos = cam ? cam->GetGameObject()->GetTransform()->GetPosition() :
                            Vector3::Zero;
-    g->m_gizmosGo->GetTransform()->LookAt(camPos);
-    RenderFactory::RenderCircle(origin, radius, numSegments);
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.rotation =
+      Quaternion::LookDirection((camPos - paramsCpy.position).NormalizedSafe());
+    RenderFactory::RenderCircle(radius, paramsCpy, numSegments);
 }
 
-void RenderFactory::RenderCircle(const Vector3 &origin, float radius, int numSegments)
+void RenderFactory::RenderCircle(float radius,
+                                 const RenderFactory::Parameters &params,
+                                 int numSegments)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    RenderFactory::SetPosition(origin);
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
     Array<Vector3> circlePoints;
     for (int i = 0; i < numSegments; ++i)
@@ -310,82 +288,95 @@ void RenderFactory::RenderCircle(const Vector3 &origin, float radius, int numSeg
         circleLinePoints.PushBack(p1);
     }
 
-    g->m_lineRenderer->SetPoints(circleLinePoints);
-    g->Render(g->m_lineRenderer);
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
+
+    rf->m_lineRenderer->SetPoints(circleLinePoints);
+    rf->Render(rf->m_lineRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderViewportLineNDC(const Vector2 &origin, const Vector2 &destiny)
+void RenderFactory::RenderViewportLineNDC(const Vector2 &origin,
+                                          const Vector2 &destiny,
+                                          const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
     Vector2 originVP  = GL::FromViewportPointNDCToViewportPoint(origin);
     Vector2 destinyVP = GL::FromViewportPointNDCToViewportPoint(destiny);
-    g->m_lineRenderer->SetPoints( {Vector3(originVP.x,  originVP.y,  0),
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::CANVAS;
+
+    rf->m_lineRenderer->SetPoints( {Vector3(originVP.x,  originVP.y,  0),
                                    Vector3(destinyVP.x, destinyVP.y, 0)} );
-
-    g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
-    g->m_gizmosGo->GetTransform()->SetScale(Vector3::One);
-
-    g->m_lineRenderer->SetViewProjMode(GL::ViewProjMode::CANVAS);
-    g->Render(g->m_lineRenderer);
+    rf->Render(rf->m_lineRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderRay(const Vector3 &origin, const Vector3 &rayDir)
+void RenderFactory::RenderRay(const Vector3 &origin,
+                              const Vector3 &rayDir,
+                              const RenderFactory::Parameters &params)
 {
-    RenderFactory::RenderLine(origin, origin + rayDir);
+    RenderFactory::RenderLine(origin, origin + rayDir, params);
 }
 
-void RenderFactory::RenderSphere(const Vector3 &origin, float radius)
+void RenderFactory::RenderSphere(float radius,
+                                 const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-    g->m_meshRenderer->SetMesh(g->m_sphereMesh.Get());
-    g->m_gizmosGo->GetTransform()->SetPosition(origin);
-    g->m_gizmosGo->GetTransform()->SetScale(radius);
-    g->Render(g->m_meshRenderer);
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+    rf->m_meshRenderer->SetMesh(rf->m_sphereMesh.Get());
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.scale = Vector3(radius);
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
+
+    rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 
-void RenderFactory::RenderSimpleSphere(const Vector3 &origin,
-                                float radius,
-                                bool withOutline,
-                                int numLoopsVertical,
-                                int numLoopsHorizontal,
-                                int numCircleSegments)
+void RenderFactory::RenderSimpleSphere(float radius,
+                                       bool withOutline,
+                                       const RenderFactory::Parameters &params,
+                                       int numLoopsVertical,
+                                       int numLoopsHorizontal,
+                                       int numCircleSegments)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
 
     const float angleAdvVertical = (Math::Pi / numLoopsVertical);
     for (int i = 0; i < numLoopsVertical; ++i)
     {
-        RenderFactory::SetRotation(
+        paramsCpy.rotation =
             Quaternion::AngleAxis(Math::Pi / 2, Vector3::Right) *
-            Quaternion::AngleAxis(angleAdvVertical * i, Vector3::Right));
-        RenderFactory::RenderCircle(origin, radius, numCircleSegments);
+            Quaternion::AngleAxis(angleAdvVertical * i, Vector3::Right);
+        RenderFactory::RenderCircle(radius, paramsCpy, numCircleSegments);
     }
 
     const float angleAdvHorizontal = (Math::Pi / numLoopsHorizontal);
     for (int i = 0; i < numLoopsHorizontal; ++i)
     {
-        RenderFactory::SetRotation(
-            Quaternion::AngleAxis(angleAdvHorizontal * i, Vector3::Up));
-        RenderFactory::RenderCircle(origin, radius, numCircleSegments);
+        paramsCpy.rotation =
+            Quaternion::AngleAxis(angleAdvHorizontal * i, Vector3::Up);
+        RenderFactory::RenderCircle(radius, paramsCpy, numCircleSegments);
     }
 
     if (withOutline)
     {
-        for (Renderer *r : g->m_renderers) { r->SetEnabled(false); }
-        RenderFactory::SetPosition( origin );
-        RenderFactory::SetRotation( Quaternion::Identity );
-        RenderFactory::SetScale( Vector3(radius) );
-        g->m_meshRenderer->SetEnabled(true);
-        g->m_meshRenderer->SetMesh( g->m_sphereMesh.Get() );
-        RenderFactory::RenderOutline( g->m_gizmosGo );
-        for (Renderer *r : g->m_renderers) { r->SetEnabled(true); }
+        for (Renderer *r : rf->m_renderers) { r->SetEnabled(false); }
+        paramsCpy.scale = Vector3(radius);
+        rf->m_meshRenderer->SetEnabled(true);
+        rf->m_meshRenderer->SetMesh( rf->m_sphereMesh.Get() );
+        RenderFactory::ApplyRenderParameters(rf->m_meshRenderer, paramsCpy);
+        RenderFactory::RenderOutline( rf->m_gizmosGo, paramsCpy );
+        for (Renderer *r : rf->m_renderers) { r->SetEnabled(true); }
     }
 }
 
 void RenderFactory::RenderOutline(GameObject *gameObject,
-                           float alphaDepthOnFade)
+                                  const RenderFactory::Parameters &params,
+                                  float alphaDepthOnFade)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
     // Save state
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -399,10 +390,6 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
     {
         // Save before drawing the first pass, because it could happen that it
         // draws to gizmos and change the gizmos color and thickness.
-        const Color outlineColor = g->m_meshRenderer->GetActiveMaterial()->
-                                   GetAlbedoColor();
-        const float outlineThickness = g->m_meshRenderer->GetActiveMaterial()->
-                                       GetLineWidth();
 
         gbuffer->PushDrawAttachments();
         gbuffer->PushDepthStencilTexture();
@@ -427,10 +414,10 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
         GL::SetDepthFunc(GL::Function::ALWAYS);
         GL::SetColorMask(true, true, true, true);
 
-        ShaderProgram *sp = g->m_outlineShaderProgram.Get();
+        ShaderProgram *sp = rf->m_outlineShaderProgram.Get();
         sp->Bind();
-        sp->SetColor("B_OutlineColor", outlineColor);
-        sp->SetInt("B_OutlineThickness", outlineThickness);
+        sp->SetColor("B_OutlineColor", params.color);
+        sp->SetInt("B_OutlineThickness", params.thickness);
         sp->SetFloat("B_AlphaFadeOnDepth", alphaDepthOnFade);
         GBuffer *gbuffer = GEngine::GetActiveGBuffer();
         if (gbuffer)
@@ -457,10 +444,13 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
 }
 
 void RenderFactory::RenderFrustum(const Vector3 &forward,
-                           const Vector3 &up,
-                           const Vector3 &origin,
-                           float zNear, float zFar,
-                           float fovDegrees, float aspectRatio)
+                                  const Vector3 &up,
+                                  const Vector3 &origin,
+                                  float zNear,
+                                  float zFar,
+                                  float fovDegrees,
+                                  float aspectRatio,
+                                  const RenderFactory::Parameters &params)
 {
     const Vector3 &c = origin;
     const Vector3 right = Vector3::Cross(forward, up).Normalized();
@@ -486,62 +476,40 @@ void RenderFactory::RenderFrustum(const Vector3 &forward,
     Vector3 farDownLeft   = farPlaneCenter - right * farWidth2 - up * farHeight2;
 
     // Near plane
-    RenderFactory::RenderLine(nearUpLeft   , nearUpRight);
-    RenderFactory::RenderLine(nearUpRight  , nearDownRight);
-    RenderFactory::RenderLine(nearDownRight, nearDownLeft);
-    RenderFactory::RenderLine(nearDownLeft , nearUpLeft);
+    RenderFactory::RenderLine(nearUpLeft   , nearUpRight,   params);
+    RenderFactory::RenderLine(nearUpRight  , nearDownRight, params);
+    RenderFactory::RenderLine(nearDownRight, nearDownLeft,  params);
+    RenderFactory::RenderLine(nearDownLeft , nearUpLeft,    params);
 
     // Far plane
-    RenderFactory::RenderLine(farUpLeft   , farUpRight);
-    RenderFactory::RenderLine(farUpRight  , farDownRight);
-    RenderFactory::RenderLine(farDownRight, farDownLeft);
-    RenderFactory::RenderLine(farDownLeft , farUpLeft);
+    RenderFactory::RenderLine(farUpLeft   , farUpRight,   params);
+    RenderFactory::RenderLine(farUpRight  , farDownRight, params);
+    RenderFactory::RenderLine(farDownRight, farDownLeft,  params);
+    RenderFactory::RenderLine(farDownLeft , farUpLeft,    params);
 
     // Projection lines
-    RenderFactory::RenderLine(nearUpLeft   , farUpLeft);
-    RenderFactory::RenderLine(nearUpRight  , farUpRight);
-    RenderFactory::RenderLine(nearDownRight, farDownRight);
-    RenderFactory::RenderLine(nearDownLeft , farDownLeft);
+    RenderFactory::RenderLine(nearUpLeft   , farUpLeft,    params);
+    RenderFactory::RenderLine(nearUpRight  , farUpRight,   params);
+    RenderFactory::RenderLine(nearDownRight, farDownRight, params);
+    RenderFactory::RenderLine(nearDownLeft , farDownLeft,  params);
 }
 
-void RenderFactory::RenderPoint(const Vector3 &point)
+void RenderFactory::RenderPoint(const Vector3 &point,
+                                const RenderFactory::Parameters &params)
 {
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
+    RenderFactory *rf = RenderFactory::GetInstance(); if (!rf) { return; }
 
     RH<Mesh> rhm = Resources::Create<Mesh>();
     Mesh *m = rhm.Get();
     m->SetPositionsPool( {point} );
+    m->UpdateGeometry();
 
-    g->m_gizmosGo->GetTransform()->SetPosition(Vector3::Zero);
-    g->m_meshRenderer->SetMesh(m);
-    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::POINTS);
+    rf->m_meshRenderer->SetMesh(m);
+    rf->m_meshRenderer->SetRenderPrimitive(GL::Primitive::POINTS);
 
-    Render(g->m_meshRenderer);
+    Render(rf->m_meshRenderer, params);
 
-    g->m_meshRenderer->SetRenderPrimitive(GL::Primitive::TRIANGLES);
-}
-
-void RenderFactory::Reset()
-{
-    RenderFactory *g = RenderFactory::GetInstance(); if (!g) { return; }
-
-    RenderFactory::SetCullFace(GL::CullFaceExt::BACK);
-    RenderFactory::SetPosition(Vector3::Zero);
-    RenderFactory::SetRotation(Quaternion::Identity);
-    RenderFactory::SetScale(Vector3::One);
-    RenderFactory::SetColor(Color::White);
-    RenderFactory::SetThickness(1.0f);
-    RenderFactory::SetReceivesLighting(false);
-    RenderFactory::SetRenderWireframe(false);
-    RenderFactory::SetRenderPass(RenderPass::OVERLAY);
-
-    List<Renderer*> rends = g->m_gizmosGo->GetComponents<Renderer>();
-    for (Renderer *rend : rends)
-    {
-        rend->SetViewProjMode(GL::ViewProjMode::WORLD);
-    }
-
-    g->m_meshRenderer->GetActiveMaterial()->SetAlbedoTexture(nullptr);
+    rf->m_meshRenderer->SetRenderPrimitive(GL::Primitive::TRIANGLES);
 }
 
 GameObject *RenderFactory::GetGameObject() const
@@ -549,13 +517,37 @@ GameObject *RenderFactory::GetGameObject() const
     return m_gizmosGo;
 }
 
-void RenderFactory::Render(Renderer *rend)
+void RenderFactory::Render(Renderer *rend,
+                           const RenderFactory::Parameters &params)
 {
-    rend->OnRender( rend->GetActiveMaterial()->GetRenderPass() );
+    ApplyRenderParameters( rend, params );
+    rend->OnRender( rend->GetMaterial()->GetRenderPass() );
 }
 
 RenderFactory* RenderFactory::GetInstance()
 {
     Scene *scene = SceneManager::GetActiveScene();
     return scene ? scene->GetGizmos() : nullptr;
+}
+
+void RenderFactory::ApplyRenderParameters(Renderer *rend,
+                                          const RenderFactory::Parameters &params)
+{
+    if (rend)
+    {
+        Material *mat = rend->GetMaterial();
+        mat->SetAlbedoColor(params.color);
+        mat->SetReceivesLighting(params.receivesLighting);
+        mat->SetRenderWireframe(params.wireframe);
+        mat->SetCullFace(params.cullFace);
+        mat->SetLineWidth(params.thickness);
+        mat->SetAlbedoTexture(params.texture.Get());
+
+        rend->SetViewProjMode(params.viewProjMode);
+    }
+
+    RenderFactory *rf = RenderFactory::GetInstance();
+    rf->GetGameObject()->GetTransform()->SetPosition(params.position);
+    rf->GetGameObject()->GetTransform()->SetRotation(params.rotation);
+    rf->GetGameObject()->GetTransform()->SetLocalScale(params.scale);
 }

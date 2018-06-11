@@ -193,23 +193,26 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         }
         else
         {
-            RenderFactory::Reset();
+            RenderFactory::Parameters params;
+            params.color = drp->color;
+            if (drp->thickness >= 0.0f) { params.thickness = drp->thickness; }
             GL::SetDepthFunc(drp->depthTest ? GL::Function::LEQUAL :
                                               GL::Function::ALWAYS);
-            RenderFactory::SetColor(drp->color);
-            if (drp->thickness >= 0.0f) { RenderFactory::SetThickness(drp->thickness); }
             switch (drp->primitive)
             {
                 case DebugRendererPrimitiveType::LINE:
-                    RenderFactory::RenderLine(drp->p0, drp->p1);
+                    RenderFactory::RenderLine(drp->p0, drp->p1, params);
                 break;
 
                 case DebugRendererPrimitiveType::LINE_NDC:
-                    RenderFactory::RenderViewportLineNDC(drp->p0.xy(), drp->p1.xy());
+                    RenderFactory::RenderViewportLineNDC(drp->p0.xy(),
+                                                         drp->p1.xy(),
+                                                         params);
                 break;
 
                 case DebugRendererPrimitiveType::POINT:
-                    RenderFactory::RenderPoint(drp->p0);
+                    RenderFactory::RenderPoint(drp->p0,
+                                               params);
                 break;
 
                 case DebugRendererPrimitiveType::TRIANGLE:
@@ -246,19 +249,20 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     m_mesh.Get()->SetUvsPool(uvs);
                     m_mesh.Get()->UpdateGeometry();
 
-                    RenderFactory::SetCullFace(drp->cullFace);
-                    RenderFactory::SetRenderWireframe(drp->wireframe);
-                    RenderFactory::RenderCustomMesh( m_mesh.Get() );
+                    params.cullFace = drp->cullFace;
+                    params.wireframe = drp->wireframe;
+                    RenderFactory::RenderCustomMesh( m_mesh.Get(), params );
                 }
                 break;
 
                 case DebugRendererPrimitiveType::AARECT_NDC:
                     RenderFactory::RenderRectNDC(
-                         GL::FromViewportRectNDCToViewportRect(drp->aaRectNDC) );
+                         GL::FromViewportRectNDCToViewportRect(drp->aaRectNDC),
+                         params );
                 break;
 
                 case DebugRendererPrimitiveType::RECT_NDC:
-                    RenderFactory::RenderRectNDC(drp->rectNDCPoints);
+                    RenderFactory::RenderRectNDC(drp->rectNDCPoints, params);
                 break;
 
                 default: ASSERT(false); break;

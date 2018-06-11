@@ -541,7 +541,6 @@ void GEngine::Render(Renderer *rend)
         previousRendMat.Set(rend->GetActiveMaterial());
         if (GetReplacementMaterial())
         {
-
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
             rend->SetMaterial( GetReplacementMaterial() );
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);

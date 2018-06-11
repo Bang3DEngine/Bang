@@ -1,6 +1,7 @@
 #ifndef RENDERFACTORY_H
 #define RENDERFACTORY_H
 
+#include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/ShaderProgram.h"
@@ -17,57 +18,78 @@ FORWARD   class MeshRenderer;
 class RenderFactory
 {
 public:
-    static void SetColor(const Color &color);
+    struct Parameters
+    {
+        RH<Texture2D> texture;
+        bool wireframe = false;
+        float thickness = 1.0f;
+        Color color = Color::White;
+        bool receivesLighting = false;
+        Vector3 scale = Vector3::One;
+        Vector3 position = Vector3::Zero;
+        Quaternion rotation = Quaternion::Identity;
+        GL::CullFaceExt cullFace = GL::CullFaceExt::BACK;
+        GL::ViewProjMode viewProjMode = GL::ViewProjMode::WORLD;
+    };
 
-    static void SetCullFace(GL::CullFaceExt cullFace);
-    static void SetPosition(const Vector3 &position);
-    static void SetRotation(const Quaternion &rotation);
-    static void SetScale(const Vector3 &scale);
-
-    static void SetRenderPass(RenderPass rp);
-    static void SetThickness(float thickness);
-    static void SetRenderWireframe(bool wireframe);
-    static void SetReceivesLighting(bool receivesLighting);
-    static void RenderCustomMesh(Mesh *m);
-    static void RenderBox(const AABox &b);
-    static void RenderSimpleBox(const AABox &b);
-    static void RenderRectNDC(const AARect &r);
-    static void RenderRectNDC(const RectPoints &rectPointsNDC);
-    static void RenderRect(const RectPoints &rectPoints);
-    static void RenderRect(const Rect &r);
-    static void RenderFillRect(const AARect &r);
+    static void RenderCustomMesh(Mesh *m,
+                                 const RenderFactory::Parameters &params);
+    static void RenderBox(const AABox &b,
+                          const RenderFactory::Parameters &params);
+    static void RenderSimpleBox(const AABox &b,
+                                const RenderFactory::Parameters &params);
+    static void RenderRectNDC(const AARect &r,
+                              const RenderFactory::Parameters &params);
+    static void RenderRectNDC(const RectPoints &rectPointsNDC,
+                              const RenderFactory::Parameters &params);
+    static void RenderRect(const RectPoints &rectPoints,
+                           const RenderFactory::Parameters &params);
+    static void RenderRect(const Rect &r,
+                           const RenderFactory::Parameters &params);
+    static void RenderFillRect(const AARect &r,
+                               const RenderFactory::Parameters &params);
     static void RenderIcon(Texture2D *texture,
-                           bool billboard = true);
+                           bool billboard,
+                           const RenderFactory::Parameters &params);
     static void RenderViewportIcon(Texture2D *texture,
-                                   const AARect &winRect);
+                                   const AARect &winRect,
+                                   const RenderFactory::Parameters &params);
     static void RenderViewportLineNDC(const Vector2 &origin,
-                                      const Vector2 &destiny);
-    static void RenderLine(const Vector3 &origin, const Vector3 &destiny);
-    static void RenderBillboardCircle(const Vector3 &origin, float radius,
+                                      const Vector2 &destiny,
+                                      const RenderFactory::Parameters &params);
+    static void RenderLine(const Vector3 &origin,
+                           const Vector3 &destiny,
+                           const RenderFactory::Parameters &params);
+    static void RenderBillboardCircle(float radius,
+                                      const RenderFactory::Parameters &params,
                                       int numSegments = 32);
-    static void RenderCircle(const Vector3 &origin, float radius,
+    static void RenderCircle(float radius,
+                             const RenderFactory::Parameters &params,
                              int numSegments = 32);
     static void RenderRay(const Vector3 &origin,
-                          const Vector3 &rayDir);
-    static void RenderSphere(const Vector3 &origin, float radius);
-    static void RenderSimpleSphere(const Vector3 &origin,
-                                   float radius,
+                          const Vector3 &rayDir,
+                          const RenderFactory::Parameters &params);
+    static void RenderSphere(float radius,
+                             const RenderFactory::Parameters &params);
+    static void RenderSimpleSphere(float radius,
                                    bool withOutline,
+                                   const RenderFactory::Parameters &params,
                                    int numLoopsVertical = 4,
                                    int numLoopsHorizontal = 4,
                                    int numCircleSegments = 32);
     static void RenderOutline(GameObject *gameObject,
+                              const RenderFactory::Parameters &params,
                               float alphaDepthOnFade = 0.2f);
     static void RenderFrustum(const Vector3 &forward,
                               const Vector3 &up,
                               const Vector3 &origin,
-                              float zNear, float zFar,
-                              float fovDegrees, float aspectRatio);
-    static void RenderPoint(const Vector3 &point);
-
-    static void Render(Renderer *rend);
-
-    static void Reset();
+                              float zNear,
+                              float zFar,
+                              float fovDegrees,
+                              float aspectRatio,
+                              const RenderFactory::Parameters &params);
+    static void RenderPoint(const Vector3 &point,
+                            const RenderFactory::Parameters &params);
 
     GameObject *GetGameObject() const;
     static RenderFactory *GetInstance();
@@ -80,12 +102,18 @@ private:
     RH<Mesh> m_sphereMesh;
     RH<ShaderProgram> m_outlineShaderProgram;
 
+
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;
     List<Renderer*> m_renderers;
 
     RenderFactory();
     virtual ~RenderFactory();
+
+    static void ApplyRenderParameters(Renderer *rend,
+                                      const RenderFactory::Parameters &params);
+    static void Render(Renderer *rend,
+                       const RenderFactory::Parameters &params);
 
     friend class Scene;
 };

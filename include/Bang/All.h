@@ -58,7 +58,7 @@
 #include "Bang/GEngineDebugger.h"
 #include "Bang/GEngine.h"
 #include "Bang/Geometry.h"
-#include "Bang/Gizmos.h"
+#include "Bang/RenderFactory.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/GLUniforms.h"

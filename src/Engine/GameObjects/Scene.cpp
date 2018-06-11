@@ -2,7 +2,6 @@
 
 #include "Bang/Debug.h"
 #include "Bang/Camera.h"
-#include "Bang/Gizmos.h"
 #include "Bang/XMLNode.h"
 #include "Bang/GEngine.h"
 #include "Bang/UICanvas.h"
@@ -11,13 +10,14 @@
 #include "Bang/SceneManager.h"
 #include "Bang/DebugRenderer.h"
 #include "Bang/RectTransform.h"
+#include "Bang/RenderFactory.h"
 #include "Bang/GameObjectFactory.h"
 
 USING_NAMESPACE_BANG
 
 Scene::Scene() : GameObject("Scene")
 {
-    m_gizmos = new Gizmos();
+    m_gizmos = new RenderFactory();
     p_debugRenderer = GameObject::Create<DebugRenderer>();
 }
 
@@ -50,7 +50,7 @@ void Scene::OnResize(int newWidth, int newHeight)
     InvalidateCanvas();
 }
 
-Gizmos *Scene::GetGizmos() const { return m_gizmos; }
+RenderFactory *Scene::GetGizmos() const { return m_gizmos; }
 DebugRenderer *Scene::GetDebugRenderer() const { return p_debugRenderer; }
 
 void Scene::SetCamera(Camera *cam)

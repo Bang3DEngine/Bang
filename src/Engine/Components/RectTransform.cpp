@@ -5,12 +5,12 @@
 #include "Bang/Debug.h"
 #include "Bang/Input.h"
 #include "Bang/AARect.h"
-#include "Bang/Gizmos.h"
 #include "Bang/Window.h"
 #include "Bang/XMLNode.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/RenderFactory.h"
 #include "Bang/UILayoutManager.h"
 #include "Bang/IEventsTransform.h"
 

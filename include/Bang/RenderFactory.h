@@ -1,5 +1,5 @@
-#ifndef GIZMOS_H
-#define GIZMOS_H
+#ifndef RENDERFACTORY_H
+#define RENDERFACTORY_H
 
 #include "Bang/GameObject.h"
 #include "Bang/EventEmitter.h"
@@ -14,7 +14,7 @@ FORWARD   class Texture2D;
 FORWARD   class LineRenderer;
 FORWARD   class MeshRenderer;
 
-class Gizmos
+class RenderFactory
 {
 public:
     static void SetColor(const Color &color);
@@ -70,7 +70,7 @@ public:
     static void Reset();
 
     GameObject *GetGameObject() const;
-    static Gizmos *GetInstance();
+    static RenderFactory *GetInstance();
 
 private:
     GameObject *m_gizmosGo = nullptr;
@@ -84,12 +84,12 @@ private:
     MeshRenderer *m_meshRenderer = nullptr;
     List<Renderer*> m_renderers;
 
-    Gizmos();
-    virtual ~Gizmos();
+    RenderFactory();
+    virtual ~RenderFactory();
 
     friend class Scene;
 };
 
 NAMESPACE_BANG_END
 
-#endif // GIZMOS_H
+#endif // RENDERFACTORY_H

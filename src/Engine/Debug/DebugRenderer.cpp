@@ -6,10 +6,10 @@
 #include "Bang/Debug.h"
 #include "Bang/AABox.h"
 #include "Bang/Scene.h"
-#include "Bang/Gizmos.h"
 #include "Bang/Triangle.h"
 #include "Bang/Resources.h"
 #include "Bang/SceneManager.h"
+#include "Bang/RenderFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -193,23 +193,23 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         }
         else
         {
-            Gizmos::Reset();
+            RenderFactory::Reset();
             GL::SetDepthFunc(drp->depthTest ? GL::Function::LEQUAL :
                                               GL::Function::ALWAYS);
-            Gizmos::SetColor(drp->color);
-            if (drp->thickness >= 0.0f) { Gizmos::SetThickness(drp->thickness); }
+            RenderFactory::SetColor(drp->color);
+            if (drp->thickness >= 0.0f) { RenderFactory::SetThickness(drp->thickness); }
             switch (drp->primitive)
             {
                 case DebugRendererPrimitiveType::LINE:
-                    Gizmos::RenderLine(drp->p0, drp->p1);
+                    RenderFactory::RenderLine(drp->p0, drp->p1);
                 break;
 
                 case DebugRendererPrimitiveType::LINE_NDC:
-                    Gizmos::RenderViewportLineNDC(drp->p0.xy(), drp->p1.xy());
+                    RenderFactory::RenderViewportLineNDC(drp->p0.xy(), drp->p1.xy());
                 break;
 
                 case DebugRendererPrimitiveType::POINT:
-                    Gizmos::RenderPoint(drp->p0);
+                    RenderFactory::RenderPoint(drp->p0);
                 break;
 
                 case DebugRendererPrimitiveType::TRIANGLE:
@@ -246,19 +246,19 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     m_mesh.Get()->SetUvsPool(uvs);
                     m_mesh.Get()->UpdateGeometry();
 
-                    Gizmos::SetCullFace(drp->cullFace);
-                    Gizmos::SetRenderWireframe(drp->wireframe);
-                    Gizmos::RenderCustomMesh( m_mesh.Get() );
+                    RenderFactory::SetCullFace(drp->cullFace);
+                    RenderFactory::SetRenderWireframe(drp->wireframe);
+                    RenderFactory::RenderCustomMesh( m_mesh.Get() );
                 }
                 break;
 
                 case DebugRendererPrimitiveType::AARECT_NDC:
-                    Gizmos::RenderRectNDC(
+                    RenderFactory::RenderRectNDC(
                          GL::FromViewportRectNDCToViewportRect(drp->aaRectNDC) );
                 break;
 
                 case DebugRendererPrimitiveType::RECT_NDC:
-                    Gizmos::RenderRectNDC(drp->rectNDCPoints);
+                    RenderFactory::RenderRectNDC(drp->rectNDCPoints);
                 break;
 
                 default: ASSERT(false); break;

@@ -10,7 +10,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
-FORWARD class Gizmos;
+FORWARD class RenderFactory;
 FORWARD class DebugRenderer;
 
 class Scene : public GameObject,
@@ -40,18 +40,18 @@ public:
 
 protected:
     Camera *p_camera = nullptr;
-    Gizmos *m_gizmos = nullptr;
+    RenderFactory *m_gizmos = nullptr;
     DebugRenderer *p_debugRenderer = nullptr;
 
     Scene();
     virtual ~Scene();
 
-    Gizmos *GetGizmos() const;
+    RenderFactory *GetGizmos() const;
     DebugRenderer *GetDebugRenderer() const;
 
 private:
 
-    friend class Gizmos;
+    friend class RenderFactory;
     friend class Window;
     friend class GEngine;
     friend class Application;

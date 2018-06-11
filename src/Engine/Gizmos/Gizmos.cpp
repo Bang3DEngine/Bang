@@ -438,8 +438,6 @@ void Gizmos::RenderOutline(GameObject *gameObject,
             sp->SetTexture("B_SceneDepthTexture",
                            gbuffer->GetSceneDepthStencilTexture(), false);
         }
-
-        gbuffer->SetColorDrawBuffer();
         gbuffer->ApplyPass(sp, false);
 
         GL::SetDepthMask(true);

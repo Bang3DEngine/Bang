@@ -66,7 +66,7 @@ public:
 protected:
     Vector2i m_size = Vector2i::Zero;
     Array<GL::Attachment> m_attachments;
-    UMap<GL::Attachment, RH<Texture>> m_attachments_To_Texture;
+    UMap<GL::Attachment, RH<Texture>, EnumClassHash> m_attachments_To_Texture;
 
 private:
     mutable Array<GL::Attachment> m_currentDrawAttachments;

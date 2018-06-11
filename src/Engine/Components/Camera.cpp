@@ -226,7 +226,7 @@ bool Camera::MustRenderPass(RenderPass renderPass) const
     return GetRenderPassMask().Contains(renderPass);
 }
 
-const USet<RenderPass> &Camera::GetRenderPassMask() const
+const USet<RenderPass, EnumClassHash> &Camera::GetRenderPassMask() const
 {
     return m_renderPassMask;
 }

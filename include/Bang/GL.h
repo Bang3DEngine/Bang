@@ -5,6 +5,7 @@
 #include <GL/gl.h>
 
 #include <stack>
+#include <array>
 
 #include "Bang/UMap.h"
 #include "Bang/Color.h"
@@ -822,7 +823,8 @@ private:
     std::stack<Matrix4> m_projectionMatrices;
     std::stack<GL::ViewProjMode> m_viewProjModes;
 
-    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>>> m_enabledVars;
+    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>>,
+         EnumClassHash> m_enabledVars;
 
     uint m_maxDrawBuffers = 0;
     StackAndValue< Array<GL::Attachment> > m_drawBuffers;

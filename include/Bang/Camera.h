@@ -67,7 +67,7 @@ public:
     ClearMode GetClearMode() const;
     float GetGammaCorrection() const;
     bool MustRenderPass(RenderPass renderPass) const;
-    const USet<RenderPass>& GetRenderPassMask() const;
+    const USet<RenderPass, EnumClassHash>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
     Matrix4 GetProjectionMatrix() const;
     bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
@@ -105,7 +105,7 @@ protected:
 private:
     GBuffer *m_gbuffer = nullptr;
 
-    USet<RenderPass> m_renderPassMask;
+    USet<RenderPass, EnumClassHash> m_renderPassMask;
     RH<TextureCubeMap> p_skyboxTextureCM;
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;
     RH<TextureCubeMap> p_skyboxDiffuseTextureCM;

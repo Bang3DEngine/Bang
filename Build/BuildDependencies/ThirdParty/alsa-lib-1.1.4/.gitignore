@@ -28,4 +28,4 @@
 /test/lsb/.deps/
 /utils/alsa-lib.spec
 /utils/alsa.pc
-
+config.h.in

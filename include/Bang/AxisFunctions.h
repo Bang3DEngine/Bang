@@ -36,7 +36,7 @@ inline int GetAxisIndex(Axis3DExt axis)
 inline std::pair<int,int> GetOtherAxisIndex(Axis3D axis)
 {
     int i = GetAxisIndex(axis);
-    return std::make_pair( (i+2) % 3, (i+2) % 3 );
+    return std::make_pair( (i+1) % 3, (i+2) % 3 );
 }
 
 inline Color GetAxisColor(Axis3D axis)

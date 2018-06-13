@@ -88,9 +88,17 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         vertexIdxsToTriIdxs = mesh->GetVertexIndicesToTriangleIndices();
     }
 
+    int octreeDepth = octree.GetDepth();
+    int numLevelsToGenerate = Math::Min(octreeDepth, 6);
+    Array<int> levelsToGenerate;
+    for (int i = 0; i < numLevelsToGenerate; ++i)
+    {
+        levelsToGenerate.PushBack( (octreeDepth / numLevelsToGenerate) * i );
+    }
+
     // For each level of detail
     Array< RH<Mesh> > simplifiedMeshesArray;
-    for (int level = 0; level <= MaxOctreeDepth; ++level)
+    for (int level : levelsToGenerate)
     {
         // Get the octree nodes at that level (and leaves pruned before)
         Array<const SimplOctree*> octreeNodesInLevel =

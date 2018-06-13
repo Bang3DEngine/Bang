@@ -19,6 +19,7 @@ public:
     void SetAABox(const AABox& aabox);
     uint Fill(const Array<T> &elements, uint maxDepth);
 
+    int GetDepth() const;
     const AABox GetAABox() const;
     const Array<T>& GetElements() const;
     Array<T> GetElementsRecursive() const;

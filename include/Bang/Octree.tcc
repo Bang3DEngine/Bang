@@ -97,6 +97,19 @@ uint Octree<T, ClassifyFunctor>::Fill(const Array<T> &elements, uint maxDepth)
 }
 
 template<class T, class ClassifyFunctor>
+int Octree<T, ClassifyFunctor>::GetDepth() const
+{
+    int childrenMaxDepth = 0;
+    for (Octree *oct : GetChildren())
+    {
+        if (oct)
+        {
+            childrenMaxDepth = Math::Max(childrenMaxDepth, oct->GetDepth());
+        }
+    }
+    return childrenMaxDepth + 1;
+}
+template<class T, class ClassifyFunctor>
 const AABox Octree<T, ClassifyFunctor>::GetAABox() const
 {
     return m_aaBox;

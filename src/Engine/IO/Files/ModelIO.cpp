@@ -27,6 +27,7 @@
 #include "Bang/Vector3.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
+#include "Bang/Transform.h"
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
 #include "Bang/MeshRenderer.h"
@@ -293,24 +294,24 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
                    rootGameObject->GetComponentsInChildren<MeshRenderer>(true);
         for (MeshRenderer *mr : rootMRs)
         {
-            Mesh *mesh = mr->GetActiveMesh();
+            Mesh *mesh = mr->GetCurrentLODActiveMesh();
             if (mesh)
             {
                 sceneMeshes.Add(mesh);
                 meshRendererToMesh.Add(mr, mesh);
-            }
 
-            Material *material = mr->GetActiveMaterial();
-            if (material)
-            {
-                sceneMeshToMaterial.Add(mesh, material);
-
-                sceneMaterials.Add(material);
-                meshRendererToMaterial.Add(mr, material);
-
-                if (material->GetAlbedoTexture())
+                Material *material = mr->GetActiveMaterial();
+                if (material)
                 {
-                    sceneTextures.Add(material->GetAlbedoTexture());
+                    sceneMeshToMaterial.Add(mesh, material);
+
+                    sceneMaterials.Add(material);
+                    meshRendererToMaterial.Add(mr, material);
+
+                    if (material->GetAlbedoTexture())
+                    {
+                        sceneTextures.Add(material->GetAlbedoTexture());
+                    }
                 }
             }
         }
@@ -320,32 +321,44 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
 
     Array<Mesh*> sceneMeshesArray(sceneMeshes.Begin(), sceneMeshes.End());
     Array<Texture2D*> sceneTexturesArray(sceneTextures.Begin(), sceneTextures.End());
-    Array<Material*> sceneMaterialsArray(sceneMaterials.Begin(), sceneMaterials.End());
+    Array<Material*> sceneMaterialsArray;
+    if (sceneMaterials.Size() > 0)
+    {
+        sceneMaterialsArray = Array<Material*>(sceneMaterials.Begin(),
+                                               sceneMaterials.End());
+    }
 
     // Create materials
     scene.mNumMaterials = sceneMaterialsArray.Size();
-    scene.mMaterials = new aiMaterial*[scene.mNumMaterials];
-    for (int i = 0; i < scene.mNumMaterials; ++i)
+    if (scene.mNumMaterials > 0)
     {
-        Material *material = sceneMaterialsArray[i];
-        aiMaterial *aMaterial = MaterialToAiMaterial(material);;
-        scene.mMaterials[i] = aMaterial;
+        scene.mMaterials = new aiMaterial*[scene.mNumMaterials];
+        for (int i = 0; i < scene.mNumMaterials; ++i)
+        {
+            Material *material = sceneMaterialsArray[i];
+            aiMaterial *aMaterial = MaterialToAiMaterial(material);;
+            scene.mMaterials[i] = aMaterial;
+        }
     }
 
     // Create meshes
     scene.mNumMeshes = sceneMeshesArray.Size();
-    scene.mMeshes = new aiMesh*[scene.mNumMeshes];
-    for (int i = 0; i < scene.mNumMeshes; ++i)
+    if (scene.mNumMeshes > 0)
     {
-        Mesh *mesh = sceneMeshesArray[i];
-        aiMesh *aMesh = MeshToAiMesh(mesh);
-        if (sceneMeshToMaterial.ContainsKey(mesh))
+        scene.mMeshes = new aiMesh*[scene.mNumMeshes];
+        for (int i = 0; i < scene.mNumMeshes; ++i)
         {
-            Material *meshMaterial = sceneMeshToMaterial[mesh];
-            aMesh->mMaterialIndex = sceneMaterialsArray.IndexOf(meshMaterial);
+            Mesh *mesh = sceneMeshesArray[i];
+            aiMesh *aMesh = MeshToAiMesh(mesh);
+            if (sceneMeshToMaterial.ContainsKey(mesh))
+            {
+                Material *meshMaterial = sceneMeshToMaterial[mesh];
+                aMesh->mMaterialIndex = sceneMaterialsArray.IndexOf(meshMaterial);
+            }
+            scene.mMeshes[i] = aMesh;
         }
-        scene.mMeshes[i] = aMesh;
     }
+
     // scene.mNumTextures = sceneTexturesArray.Size();
     // scene.mTextures = new aiTexture*[scene.mNumTextures];
 
@@ -391,22 +404,25 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
     goNode->mNumChildren = gameObject->GetChildren().Size();
 
     // Count number of meshes
-    const List<MeshRenderer*> mrs = gameObject->GetComponents<MeshRenderer>();
+    const List<MeshRenderer*> &mrs = gameObject->GetComponents<MeshRenderer>();
 
     // Meshes
     goNode->mNumMeshes = 0; // Count number of meshes
     for (MeshRenderer *mr : mrs)
     {
-        goNode->mNumMeshes += (mr->GetActiveMesh() ? 1 : 0);
+        goNode->mNumMeshes += (mr->GetCurrentLODActiveMesh() ? 1 : 0);
     }
-    goNode->mMeshes = new unsigned int[goNode->mNumMeshes];
+    if (goNode->mNumMeshes > 0)
+    {
+        goNode->mMeshes = new unsigned int[goNode->mNumMeshes];
+    }
 
     int i = 0; // Populate meshes indices
     for (MeshRenderer *mr : mrs)
     {
-        if (mr->GetActiveMesh())
+        if (mr->GetCurrentLODActiveMesh())
         {
-            goNode->mMeshes[i] = sceneMeshes.IndexOf(mr->GetActiveMesh());
+            goNode->mMeshes[i] = sceneMeshes.IndexOf(mr->GetCurrentLODActiveMesh());
         }
     }
 
@@ -421,6 +437,17 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
             goNode->mChildren[i] = childNode;
             childNode->mParent = goNode;
         }
+    }
+
+    Matrix4 transformationMatrix = Matrix4::Identity;
+    if (Transform *tr = gameObject->GetTransform())
+    {
+        Matrix4 m = tr->GetLocalToParentMatrix();
+        goNode->mTransformation =
+                aiMatrix4x4(m[0][0], m[1][0], m[2][0], m[3][0],
+                            m[0][1], m[1][1], m[2][1], m[3][1],
+                            m[0][2], m[1][2], m[2][2], m[3][2],
+                            m[0][3], m[1][3], m[2][3], m[3][3]);
     }
 
     return goNode;
@@ -441,10 +468,20 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
          // Populate vertices
         for (int i = 0; i < aMesh->mNumVertices; ++i)
         {
-            aMesh->mVertices[i] = VectorToAIVec3(mesh->GetPositionsPool()[i]);
-            aMesh->mNormals[i]  = VectorToAIVec3(mesh->GetNormalsPool()[i]);
-            aMesh->mTextureCoords[0][i] =
-                            VectorToAIVec3(Vector3(mesh->GetUvsPool()[i], 0));
+            Vector3 posi = (mesh->GetPositionsPool().Size() > i ?
+                                                mesh->GetPositionsPool()[i] :
+                                                Vector3::Zero);
+            aMesh->mVertices[i] = VectorToAIVec3(posi);
+
+            Vector3 normali = (mesh->GetNormalsPool().Size() > i ?
+                                                mesh->GetNormalsPool()[i] :
+                                                Vector3::Zero);
+            aMesh->mNormals[i]  = VectorToAIVec3(normali);
+
+            Vector3 texCoordi = (mesh->GetUvsPool().Size() > i ?
+                                        Vector3(mesh->GetUvsPool()[i], 0) :
+                                        Vector3::Zero);
+            aMesh->mTextureCoords[0][i] = VectorToAIVec3(texCoordi);
         }
 
         aMesh->mNumFaces = mesh->GetNumTriangles();

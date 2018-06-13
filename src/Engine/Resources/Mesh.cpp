@@ -201,7 +201,7 @@ void Mesh::CalculateLODs()
     if (!m_areLodsValid)
     {
         m_lodMeshes = MeshSimplifier::GetAllMeshLODs(this,
-                                 // MeshSimplifier::Method::Clustering);
+                                 // MeshSimplifier::Method::CLUSTERING);
                                  MeshSimplifier::Method::QUADRIC_ERROR_METRICS);
         m_areLodsValid = true;
     }

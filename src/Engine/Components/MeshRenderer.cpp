@@ -66,7 +66,8 @@ int MeshRenderer::GetCurrentLOD() const
 
 Mesh *MeshRenderer::GetCurrentLODActiveMesh() const
 {
-    return GetActiveMesh()->GetLODMesh( GetCurrentLOD() ).Get();
+    return GetActiveMesh() ?
+                GetActiveMesh()->GetLODMesh( GetCurrentLOD() ).Get() : nullptr;
 }
 
 AABox MeshRenderer::GetAABBox() const

@@ -45,9 +45,10 @@ public:
     template<class ResourceClass, class ...Args>
     static RH<ResourceClass> Create(const GUID &guid, const Args&... args);
     template<class ResourceClass, class ...Args>
-    static RH<ResourceClass> CreateInnerResource(const GUID &baseGUID,
-                                                  const GUID::GUIDType insideFileGUID,
-                                                  const Args&... args);
+    static RH<ResourceClass> CreateInnerResource(
+                                        const GUID &baseGUID,
+                                        const GUID::GUIDType embeddedFileGUID,
+                                        const Args&... args);
 
     template<class ResourceClass>
     static RH<ResourceClass> Clone(const RH<ResourceClass> &src);
@@ -57,7 +58,8 @@ public:
     static Array<Resource*> GetAllResources();
     static void PrintAll();
 
-    static void CreateResourceXMLAndImportFile(const Resource *resource, const Path &exportFilepath);
+    static void CreateResourceXMLAndImportFile(const Resource *resource,
+                                               const Path &exportFilepath);
 
     struct ResourceEntry : public IToString
     {
@@ -71,13 +73,18 @@ public:
 
     static void Add(const TypeId &resTypeId, Resource *res);
 
+    static bool IsEmbeddedResource(const GUID &guid);
+    static bool IsEmbeddedResource(const Path &resourcePath);
+
     static void SetPermanent(Resource *resource, bool permanent);
     static bool IsPermanent(Resource *resource);
     static void SetPermanent(const Path &resourcePath, bool permanent);
     static bool IsPermanent(const Path &resourcePath);
 
-    static void RegisterResourceUsage(const TypeId &resTypeId, Resource *resource);
-    static void UnRegisterResourceUsage(const TypeId &resTypeId, Resource *resource);
+    static void RegisterResourceUsage(const TypeId &resTypeId,
+                                      Resource *resource);
+    static void UnRegisterResourceUsage(const TypeId &resTypeId,
+                                        Resource *resource);
 
     static void Remove(const TypeId &resTypeId, const GUID &guid);
 

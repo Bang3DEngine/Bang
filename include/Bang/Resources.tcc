@@ -48,8 +48,9 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
 {
     if (!guid.IsEmpty())
     {
-        const GUID::GUIDType insideFileGUID = guid.GetInsideFileGUID();
-        if (insideFileGUID == 0) // Normal resource (file attached to it)
+        const GUID::GUIDType embeddedFileGUID = guid.GetEmbeddedFileGUID();
+        bool isAnEmbeddedResource = (embeddedFileGUID != GUID::EmptyGUID);
+        if (!isAnEmbeddedResource) // Normal resource (file attached to it)
         {
             if (!Resources::Contains<ResourceClass>(guid))
             {
@@ -72,31 +73,34 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
                             Resources::GetCached<ResourceClass>(guid) );
             }
         }
-        else  // Inner resource (resource embedded into another resource)
+        else  // Embedded resource (resource into another resource)
         {
             if (!Resources::Contains<ResourceClass>(guid))
             {
                 // It is a resource inside another resource. Find parent path,
                 // load it, and retrieve from it the inner resource!
                 GUID parentResourceGUID = guid.WithoutInsideFileGUID();
-                Path parentFilepath = ImportFilesManager::GetFilepath(parentResourceGUID);
+                Path parentFilepath = ImportFilesManager::GetFilepath(
+                                                           parentResourceGUID);
                 if (parentFilepath.IsFile())
                 {
-                    // Load the parent resource guessing the type from the extension
+                    // Load the parent resource guessing the type from
+                    // the extension
                     RH<Resource> parentRes =
-                                    Resources::LoadFromExtension(parentFilepath);
+                                  Resources::LoadFromExtension(parentFilepath);
                     if (parentRes)
                     {
-                        // Call virtual function that finds inner resource, create
-                        // the handler, and return it
-                        Resource *innerRes =
-                            parentRes.Get()->GetInsideFileResource(insideFileGUID);
-                        RH<ResourceClass> innerResRH;
-                        if (innerRes)
+                        // Call virtual function that finds embedded resource,
+                        // create the handler, and return it
+                        Resource *embeddedRes =
+                            parentRes.Get()->GetEmbeddedResource(
+                                                       embeddedFileGUID);
+                        RH<ResourceClass> embeddedResRH;
+                        if (embeddedRes)
                         {
-                            innerResRH.Set( DCAST<ResourceClass*>(innerRes) );
+                            embeddedResRH.Set( DCAST<ResourceClass*>(embeddedRes) );
                         }
-                        return innerResRH;
+                        return embeddedResRH;
                     }
                 }
             }
@@ -124,12 +128,13 @@ RH<ResourceClass> Resources::Create(const GUID &guid, const Args&... args)
 }
 
 template<class ResourceClass, class ...Args>
-RH<ResourceClass> Resources::CreateInnerResource(const GUID &baseGUID,
-                                                 const GUID::GUIDType insideFileGUID,
-                                                 const Args&... args)
+RH<ResourceClass> Resources::CreateInnerResource(
+                                        const GUID &baseGUID,
+                                        const GUID::GUIDType embeddedFileGUID,
+                                        const Args&... args)
 {
     GUID resourceInsideFileGUID;
-    GUIDManager::CreateInsideFileGUID(baseGUID, insideFileGUID,
+    GUIDManager::CreateInsideFileGUID(baseGUID, embeddedFileGUID,
                                       &resourceInsideFileGUID);
     return Resources::Create<ResourceClass, Args...>(resourceInsideFileGUID,
                                                       args...);

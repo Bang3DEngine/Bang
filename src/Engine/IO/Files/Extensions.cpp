@@ -6,6 +6,7 @@
 
 NAMESPACE_BANG_BEGIN
 
+String Extensions::GetMeshExtension() { return "bmesh"; }
 String Extensions::GetSceneExtension() { return "bscene"; }
 String Extensions::GetPrefabExtension() { return "bprefab"; }
 

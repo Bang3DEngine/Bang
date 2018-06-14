@@ -6,8 +6,10 @@
 #include "Bang/USet.h"
 #include "Bang/Debug.h"
 #include "Bang/Paths.h"
+#include "Bang/Resources.h"
 #include "Bang/Application.h"
 #include "Bang/XMLNodeReader.h"
+#include "Bang/ResourceHandle.h"
 
 USING_NAMESPACE_BANG
 
@@ -137,8 +139,26 @@ void ImportFilesManager::UnRegisterImportFilepath(const Path &importFilepath)
 
 GUID ImportFilesManager::GetGUIDFromFilepath(const Path& filepath)
 {
-    Path importFilepath = GetImportFilepath(filepath);
-    return GetGUIDFromImportFilepath(importFilepath);
+    if ( !Resources::IsEmbeddedResource(filepath) )
+    {
+        Path importFilepath = GetImportFilepath(filepath);
+        return GetGUIDFromImportFilepath(importFilepath);
+    }
+    else
+    {
+        Path parentResPath = filepath.GetDirectory();
+        Resource *parentRes = Resources::GetCached<Resource>(parentResPath);
+        if (parentRes)
+        {
+            if (Resource *embeddedRes = parentRes->GetEmbeddedResource(
+                                                           filepath.GetName()))
+            {
+                return embeddedRes->GetGUID();
+            }
+        }
+    }
+
+    return GUID::Empty();
 }
 
 GUID ImportFilesManager::GetGUIDFromImportFilepath(const Path& importFilepath)

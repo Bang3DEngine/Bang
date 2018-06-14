@@ -14,10 +14,9 @@ class GUID : public IToString
 {
 public:
     using GUIDType = uint64_t;
+    static const GUIDType EmptyGUID;
 
-private: static constexpr GUIDType EmptyGUID = 0;
-public:
-    GUID() {}
+    GUID() = default;
 
     static const GUID& Empty();
     bool IsEmpty() const;
@@ -29,7 +28,7 @@ public:
 
     const GUIDType& GetTimeGUID() const;
     const GUIDType& GetRandGUID() const;
-    const GUIDType& GetInsideFileGUID() const;
+    const GUIDType& GetEmbeddedFileGUID() const;
 
     GUID WithoutInsideFileGUID() const;
 
@@ -39,11 +38,11 @@ public:
     bool operator<(const GUID &rhs) const;
 
 private:
-    GUIDType m_timeGUID       = GUID::EmptyGUID;
-    GUIDType m_randGUID       = GUID::EmptyGUID;
-    GUIDType m_insideFileGUID = GUID::EmptyGUID;
+    GUIDType m_timeGUID         = GUID::EmptyGUID;
+    GUIDType m_randGUID         = GUID::EmptyGUID;
+    GUIDType m_embeddedFileGUID = GUID::EmptyGUID;
 
-    void SetInsideFileGUID(const GUIDType &guid);
+    void SetEmbeddedFileGUID(const GUIDType &guid);
 
     friend class GUIDManager;
 };
@@ -60,7 +59,7 @@ namespace std
         {
             return std::hash<GUID::GUIDType>()(guid.GetTimeGUID()) ^
                    std::hash<GUID::GUIDType>()(guid.GetRandGUID()) ^
-                   std::hash<GUID::GUIDType>()(guid.GetInsideFileGUID());
+                   std::hash<GUID::GUIDType>()(guid.GetEmbeddedFileGUID());
         }
     };
 }

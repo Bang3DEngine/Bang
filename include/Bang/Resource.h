@@ -16,15 +16,18 @@ public:
     Path GetResourceFilepath() const;
 
     void PropagateResourceChanged();
-    virtual GUID::GUIDType GetNextInsideFileGUID() const;
+
+    Resource* GetEmbeddedResource(const GUID &embeddedFileGUID) const;
+    Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
+    virtual Resource* GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const;
+    virtual String GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const;
+    virtual GUID GetEmbeddedResourceGUID(const String &embeddedResourceName) const;
 
 protected:
     Resource();
     virtual ~Resource();
 
-    Resource* GetInsideFileResource(const GUID &insideFileGUID) const;
-    virtual Resource* GetInsideFileResource(GUID::GUIDType insideFileGUID) const;
-    virtual String GetInsideFileResourceName(GUID::GUIDType insideFileGUID) const;
+    virtual GUID::GUIDType GetNextEmbeddedFileGUID() const;
 
     virtual void ImportXML(const XMLNode &xmlInfo);
     virtual void ExportXML(XMLNode *xmlInfo) const;

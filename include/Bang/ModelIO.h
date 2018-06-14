@@ -41,7 +41,23 @@ struct ModelIOScene
 
     Tree<ModelIONode> *modelTree = nullptr;
 
-    ~ModelIOScene() { if (modelTree) { delete modelTree; } }
+    ~ModelIOScene()
+    {
+        Clear();
+    }
+
+    void Clear()
+    {
+        meshes.Clear();
+        meshesNames.Clear();
+        materials.Clear();
+        materialsNames.Clear();
+
+        if (modelTree)
+        {
+            delete modelTree;
+        }
+    }
 };
 
 class ModelIO

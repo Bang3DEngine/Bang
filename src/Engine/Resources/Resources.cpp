@@ -104,6 +104,16 @@ void Resources::Add(const TypeId &resTypeId, Resource *res)
     rs->m_resourcesCache.Get(resTypeId).Add(guid, resourceEntry);
 }
 
+bool Resources::IsEmbeddedResource(const GUID &guid)
+{
+    return (guid.GetEmbeddedFileGUID() != GUID::EmptyGUID);
+}
+
+bool Resources::IsEmbeddedResource(const Path &resourcePath)
+{
+    return resourcePath.GetDirectory().IsFile();
+}
+
 void Resources::SetPermanent(Resource *resource, bool permanent)
 {
     if (resource)
@@ -275,11 +285,11 @@ Path Resources::GetResourcePath(const Resource *resource)
 
     Path resPath = ImportFilesManager::GetFilepath(resource->GetGUID().
                                                    WithoutInsideFileGUID());
-    const GUID::GUIDType insideFileGUID = resource->GetGUID().GetInsideFileGUID();
+    const GUID::GUIDType insideFileGUID = resource->GetGUID().GetEmbeddedFileGUID();
     if (insideFileGUID != 0)
     {
         String insideFileResourceName =
-                    resource->GetInsideFileResourceName(insideFileGUID);
+                    resource->GetEmbeddedFileResourceName(insideFileGUID);
         resPath = resPath.Append(insideFileResourceName);
     }
     return resPath;

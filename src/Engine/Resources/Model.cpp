@@ -5,6 +5,7 @@
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
+#include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
 #include "Bang/GUIDManager.h"
 #include "Bang/MeshRenderer.h"
@@ -61,18 +62,21 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
 
 GameObject *Model::CreateGameObjectFromModel() const
 {
-    return CreateGameObjectFromModelNodeTree(m_modelScene, m_modelScene.modelTree);
+    return CreateGameObjectFromModelNodeTree(m_modelScene,
+                                             m_modelScene.modelTree);
 }
 
 void Model::AddMesh(Mesh *mesh, Material *material,
                     const String &meshName, const String &materialName)
 {
     String newMeshName = Model::GetNewName(meshName, GetMeshesNames());
-    m_modelScene.meshesNames.PushBack(newMeshName);
+    m_modelScene.meshesNames.PushBack(
+            newMeshName + "." + Extensions::GetMeshExtension());
     m_modelScene.meshes.PushBack( RH<Mesh>(mesh) );
 
     String newMaterialName = Model::GetNewName(materialName, GetMaterialsNames());
-    m_modelScene.materialsNames.PushBack(newMaterialName);
+    m_modelScene.materialsNames.PushBack(
+            newMaterialName + "." + Extensions::GetMaterialExtension());
     m_modelScene.materials.PushBack( RH<Material>(material) );
 }
 
@@ -125,36 +129,38 @@ const Array<String> &Model::GetMaterialsNames() const
     return m_modelScene.materialsNames;
 }
 
-GUID::GUIDType Model::GetNextInsideFileGUID() const
+GUID::GUIDType Model::GetNextEmbeddedFileGUID() const
 {
     return m_modelScene.meshes.Size() + m_modelScene.materials.Size();
 }
 
-Resource *Model::GetInsideFileResource(GUID::GUIDType insideFileGUID) const
+Resource *Model::GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const
 {
-    auto pair = GetInsideFileResourceAndName(insideFileGUID);
+    auto pair = GetEmbeddedFileResourceAndName(embeddedFileGUID);
     return pair.first;
 }
 
-String Model::GetInsideFileResourceName(GUID::GUIDType insideFileGUID) const
+String Model::GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const
 {
-    auto pair = GetInsideFileResourceAndName(insideFileGUID);
+    auto pair = GetEmbeddedFileResourceAndName(embeddedFileGUID);
     return pair.second;
 }
 
 void Model::Import(const Path &modelFilepath)
 {
-    Array< RH<Mesh> > meshes;
-    Array< RH<Material> > materials;
-    Array< String > meshesNames;
-    Array< String > materialsNames;
+    // Clear previous
+    m_modelScene.Clear();
 
-    ModelIO::ImportModel(modelFilepath, GetGUID(), &m_modelScene);
+    // Load new
+    ModelIOScene modelScene;
+    ModelIO::ImportModel(modelFilepath, GetGUID(), &modelScene);
 
-    for (uint i = 0; i < meshes.Size(); ++i)
+    // Copy
+    m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
+    for (uint i = 0; i < modelScene.meshes.Size(); ++i)
     {
-        AddMesh(meshes[i].Get(), materials[i].Get(),
-                meshesNames[i], materialsNames[i]);
+        AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
+                modelScene.meshesNames[i],  modelScene.materialsNames[i]);
     }
 }
 
@@ -169,7 +175,7 @@ void Model::ExportXML(XMLNode *xmlInfo) const
 }
 
 std::pair<Resource *, String>
-Model::GetInsideFileResourceAndName(GUID::GUIDType insideFileGUID) const
+Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const
 {
     std::pair<Resource*, String> pair;
     pair.first = nullptr;
@@ -190,7 +196,7 @@ Model::GetInsideFileResourceAndName(GUID::GUIDType insideFileGUID) const
 
     for (uint i = 0; i < resources.Size(); ++i)
     {
-        if (resources[i]->GetGUID().GetInsideFileGUID() == insideFileGUID)
+        if (resources[i]->GetGUID().GetEmbeddedFileGUID() == embeddedFileGUID)
         {
             pair.first = resources[i];
             pair.second = names[i];
@@ -204,12 +210,12 @@ Model::GetInsideFileResourceAndName(GUID::GUIDType insideFileGUID) const
 String Model::GetNewName(const String &originalName,
                          const Array<String> &existingNames)
 {
-    int auxIndex = -1;
+    int auxIndex = 0;
     String newName = originalName;
     while (existingNames.Contains(newName))
     {
-        ++auxIndex;
         newName = originalName + "_" + String(auxIndex);
+        ++auxIndex;
     }
     return newName;
 }

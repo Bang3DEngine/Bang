@@ -8,6 +8,7 @@ NAMESPACE_BANG_BEGIN
 class Extensions
 {
 public:
+    static String GetMeshExtension();
     static String GetSceneExtension();
     static String GetPrefabExtension();
     static String GetProjectExtension();

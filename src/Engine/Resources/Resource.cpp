@@ -27,24 +27,36 @@ Path Resource::GetResourceFilepath() const
     return ImportFilesManager::GetFilepath( GetGUID() );
 }
 
-GUID::GUIDType Resource::GetNextInsideFileGUID() const
+GUID::GUIDType Resource::GetNextEmbeddedFileGUID() const
 {
     return 0;
 }
 
-Resource *Resource::GetInsideFileResource(const GUID &insideFileGUID) const
+Resource *Resource::GetEmbeddedResource(const GUID &embeddedFileGUID) const
 {
-    return GetInsideFileResource(insideFileGUID.GetInsideFileGUID());
+    return GetEmbeddedResource(embeddedFileGUID.GetEmbeddedFileGUID());
 }
 
-Resource* Resource::GetInsideFileResource(GUID::GUIDType) const
+Resource *Resource::GetEmbeddedResource(const String &embeddedResourceName) const
+{
+    (void) embeddedResourceName;
+    return nullptr;
+}
+
+Resource* Resource::GetEmbeddedResource(GUID::GUIDType) const
 {
     return nullptr;
 }
 
-String Resource::GetInsideFileResourceName(GUID::GUIDType) const
+String Resource::GetEmbeddedFileResourceName(GUID::GUIDType) const
 {
-    return "InsideResource";
+    return "EmbeddedResource";
+}
+
+GUID Resource::GetEmbeddedResourceGUID(const String &embeddedResourceName) const
+{
+    (void) embeddedResourceName;
+    return GUID::Empty();
 }
 
 void Resource::ImportXML(const XMLNode &xmlInfo)

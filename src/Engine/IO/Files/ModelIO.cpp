@@ -104,11 +104,11 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         String materialName;
         RH<Material> materialRH;
         ModelIO::ImportMaterial(scene->mMaterials[i],
-                              modelFilepath.GetDirectory(),
-                              modelGUID,
-                              innerResourceGUID,
-                              &materialRH,
-                              &materialName);
+                                modelFilepath.GetDirectory(),
+                                modelGUID,
+                                innerResourceGUID,
+                                &materialRH,
+                                &materialName);
 
         unorderedMaterials.PushBack(materialRH);
         unorderedMaterialNames.PushBack(materialName);
@@ -439,7 +439,6 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
         }
     }
 
-    Matrix4 transformationMatrix = Matrix4::Identity;
     if (Transform *tr = gameObject->GetTransform())
     {
         Matrix4 m = tr->GetLocalToParentMatrix();

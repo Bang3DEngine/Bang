@@ -19,8 +19,10 @@ public:
 
     GameObject *CreateGameObjectFromModel() const;
 
-    void AddMesh(Mesh *mesh, Material *material,
-                 const String &meshName, const String &materialName);
+    void AddMesh(Mesh *mesh,
+                 Material *material,
+                 const String &meshName,
+                 const String &materialName);
 
     RH<Mesh> GetMeshByName(const String &meshName);
     RH<Material> GetMaterialByName(const String &materialName);
@@ -30,9 +32,11 @@ public:
     const Array<String>& GetMeshesNames() const;
     const Array<String>& GetMaterialsNames() const;
 
-    virtual GUID::GUIDType GetNextInsideFileGUID() const override;
-    virtual Resource* GetInsideFileResource(GUID::GUIDType insideFileGUID) const override;
-    virtual String GetInsideFileResourceName(GUID::GUIDType insideFileGUID) const override;
+    virtual GUID::GUIDType GetNextEmbeddedFileGUID() const override;
+    virtual Resource* GetEmbeddedResource(
+                            GUID::GUIDType embeddedFileGUID) const override;
+    virtual String GetEmbeddedFileResourceName(
+                            GUID::GUIDType embeddedFileGUID) const override;
 
     // Resource
     void Import(const Path &modelFilepath) override;
@@ -45,7 +49,7 @@ private:
     ModelIOScene m_modelScene;
 
     std::pair<Resource*, String>
-        GetInsideFileResourceAndName(GUID::GUIDType insideFileGUID) const;
+        GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const;
 
     static String GetNewName(const String &originalName,
                              const Array<String> &existingNames);

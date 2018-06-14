@@ -26,16 +26,8 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
-    Asset();
-    virtual ~Asset();
-
-private:
-    template <class AssetClass, class... Args>
-    static AssetClass* Create(Args... args) { return new AssetClass(args...); }
-
-    static void Destroy(Asset *asset);
-
-    friend class Resources;
+    Asset() = default;
+    virtual ~Asset() = default;
 };
 
 NAMESPACE_BANG_END

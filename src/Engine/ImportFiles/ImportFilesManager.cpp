@@ -36,7 +36,7 @@ void ImportFilesManager::CreateMissingImportFiles(const Path &directory)
     {
         if (!IsImportFile(filepath) && !HasImportFile(filepath))
         {
-            ImportFilesManager::CreateImportFile(filepath);
+            ImportFilesManager::CreateImportFileIfMissing(filepath);
         }
     }
 }
@@ -64,18 +64,21 @@ void ImportFilesManager::LoadImportFilepathGUIDs(const Path &directory)
     }
 }
 
-std::pair<Path, GUID> ImportFilesManager::CreateImportFile(const Path &filepath)
+std::pair<Path, GUID> ImportFilesManager::CreateImportFileIfMissing(const Path &filepath)
 {
-    Path importFilepath;
+    Path importFilepath = GetImportFilepath(filepath);
     GUID newGUID = GUID::Empty();
     if ( !IsImportFile(filepath) && !HasImportFile(filepath) )
     {
         XMLNode xmlInfo;
         newGUID = GUIDManager::GetNewGUID();
         xmlInfo.Set("GUID", newGUID);
-        importFilepath = GetImportFilepath(filepath);
         File::Write(importFilepath, xmlInfo.ToString());
         ImportFilesManager::RegisterImportFilepath(importFilepath);
+    }
+    else
+    {
+        newGUID = GetGUIDFromFilepath(filepath);
     }
     return std::make_pair(importFilepath, newGUID);
 }
@@ -97,7 +100,7 @@ void ImportFilesManager::DuplicateImportFile(const Path &filepath,
     const Path dupImportFilepath = GetImportFilepath(dupFilepath);
     File::Remove(dupImportFilepath);
 
-    const GUID& newGUID = CreateImportFile(dupFilepath).second;
+    const GUID& newGUID = CreateImportFileIfMissing(dupFilepath).second;
     const Path originalImportFilepath = GetImportFilepath(filepath);
     XMLNode originalXML = XMLNodeReader::FromFile(originalImportFilepath);
     originalXML.Set("GUID", newGUID);
@@ -116,67 +119,100 @@ void ImportFilesManager::RegisterImportFilepath(const Path &importFilepath)
     if (!IsImportFile(importFilepath)) { return; }
     XMLNode info = XMLNodeReader::FromFile(importFilepath);
 
+    Path filepath = GetFilepath(importFilepath);
     GUID guid = info.Get<GUID>("GUID");
     ImportFilesManager *ifm = ImportFilesManager::GetInstance();
-    if (ifm->m_GUIDToImportFilepath.ContainsKey(guid) &&
-        ifm->m_GUIDToImportFilepath.Get(guid) != importFilepath)
+    if (ifm->m_GUIDToFilepath.ContainsKey(guid) &&
+        ifm->m_GUIDToFilepath.Get(guid) != filepath)
     {
         Debug_Error("Found conflicting GUID: " << guid <<
-                    "(Files '" << importFilepath << "' and '" <<
-                    ifm->m_GUIDToImportFilepath.Get(guid) << "'");
+                    "(Files '" << filepath << "' and '" <<
+                    ifm->m_GUIDToFilepath.Get(guid) << "'");
     }
 
-    ifm->m_GUIDToImportFilepath.Add(guid, importFilepath);
-    ifm->m_importFilepathToGUID.Add(importFilepath, guid);
+    ifm->m_GUIDToFilepath.Add(guid, filepath);
+    ifm->m_filepathToGUID.Add(filepath, guid);
 }
 
 void ImportFilesManager::UnRegisterImportFilepath(const Path &importFilepath)
 {
     ImportFilesManager *ifm = ImportFilesManager::GetInstance();
-    ifm->m_GUIDToImportFilepath.RemoveValues(importFilepath);
-    ifm->m_importFilepathToGUID.Remove(importFilepath);
+    Path filepath = GetFilepath(importFilepath);
+    ifm->m_GUIDToFilepath.RemoveValues(filepath);
+    ifm->m_filepathToGUID.Remove(filepath);
 }
 
 GUID ImportFilesManager::GetGUIDFromFilepath(const Path& filepath)
 {
-    if ( !Resources::IsEmbeddedResource(filepath) )
+    ImportFilesManager *ifm = ImportFilesManager::GetInstance();
+    if (ifm->m_filepathToGUID.ContainsKey(filepath))
     {
-        Path importFilepath = GetImportFilepath(filepath);
-        return GetGUIDFromImportFilepath(importFilepath);
+        return ifm->m_filepathToGUID.Get(filepath);
     }
     else
     {
-        Path parentResPath = filepath.GetDirectory();
-        Resource *parentRes = Resources::GetCached<Resource>(parentResPath);
-        if (parentRes)
+        if ( !Resources::IsEmbeddedResource(filepath) )
         {
-            if (Resource *embeddedRes = parentRes->GetEmbeddedResource(
-                                                           filepath.GetName()))
+            Path importFilepath = GetImportFilepath(filepath);
+            if (importFilepath.IsFile())
             {
-                return embeddedRes->GetGUID();
+                XMLNode xmlNode = XMLNodeReader::FromFile(importFilepath);
+                GUID guid = xmlNode.Get<GUID>("GUID");
+                ifm->m_filepathToGUID.Add(filepath, guid);
+                return guid;
+            }
+        }
+        else
+        {
+            Path parentResPath = filepath.GetDirectory();
+            Resource *parentRes = Resources::GetCached<Resource>(parentResPath);
+            if (parentRes)
+            {
+                if (Resource *embeddedRes = parentRes->GetEmbeddedResource(
+                                                               filepath.GetName()))
+                {
+                    return embeddedRes->GetGUID();
+                }
             }
         }
     }
-
     return GUID::Empty();
-}
-
-GUID ImportFilesManager::GetGUIDFromImportFilepath(const Path& importFilepath)
-{
-    ImportFilesManager *ifm = ImportFilesManager::GetInstance();
-    if (ifm->m_importFilepathToGUID.ContainsKey(importFilepath))
-    {
-        return ifm->m_importFilepathToGUID.Get(importFilepath);
-    }
-
-    XMLNode xmlNode = XMLNodeReader::FromFile(importFilepath);
-    return xmlNode.Get<GUID>("GUID");
 }
 
 Path ImportFilesManager::GetFilepath(const GUID &guid)
 {
-    Path importFilepath = ImportFilesManager::GetImportFilepath(guid);
-    return ImportFilesManager::GetFilepath(importFilepath);
+    ImportFilesManager *ifm = ImportFilesManager::GetInstance();
+    if (ifm->m_GUIDToFilepath.ContainsKey(guid))
+    {
+        return ifm->m_GUIDToFilepath.Get(guid);
+    }
+    else
+    {
+        if (!Resources::IsEmbeddedResource(guid))
+        {
+            return Path::Empty;
+        }
+        else
+        {
+            Path parentPath = ImportFilesManager::GetFilepath(
+                                    guid.WithoutEmbeddedFileGUID());
+            if (parentPath.IsFile())
+            {
+                Resource *res = Resources::LoadFromExtension(parentPath).Get();
+                if (res)
+                {
+                    String name = res->GetEmbeddedFileResourceName(
+                                                guid.GetEmbeddedFileGUID());
+                    return parentPath.Append(name);
+                }
+                else
+                {
+                    return Path::Empty;
+                }
+            }
+        }
+    }
+    return Path::Empty;
 }
 
 Path ImportFilesManager::GetFilepath(const Path &importFilepath)
@@ -197,17 +233,14 @@ Path ImportFilesManager::GetFilepath(const Path &importFilepath)
 
 Path ImportFilesManager::GetImportFilepath(const Path &filepath)
 {
-    return filepath.AppendExtension( GetImportExtension() ).WithHidden(true);
+    return filepath.AppendExtension(
+                ImportFilesManager::GetImportExtension() ).WithHidden(true);
 }
 
-const Path &ImportFilesManager::GetImportFilepath(const GUID &guid)
+Path ImportFilesManager::GetImportFilepath(const GUID &guid)
 {
-    ImportFilesManager *ifm = ImportFilesManager::GetInstance();
-    if (ifm->m_GUIDToImportFilepath.ContainsKey(guid))
-    {
-        return ifm->m_GUIDToImportFilepath.Get(guid);
-    }
-    return Path::Empty;
+    return ImportFilesManager::GetImportFilepath(
+                                    ImportFilesManager::GetFilepath(guid) );
 }
 
 void ImportFilesManager::OnFilepathRenamed(const Path &oldPath, const Path &newPath)

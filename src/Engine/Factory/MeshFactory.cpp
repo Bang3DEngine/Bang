@@ -37,7 +37,8 @@ RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
     MeshFactory *mf = MeshFactory::GetActive();
     if (!mf->m_cache.ContainsKey(fullPath))
     {
-        mf->m_cache.Add(fullPath, Resources::Load<Mesh>(fullPath));
+        RH<Mesh> meshRH = Resources::Load<Mesh>(fullPath);
+        mf->m_cache.Add(fullPath, meshRH);
     }
     return mf->m_cache.Get(fullPath);
 }

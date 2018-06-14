@@ -80,15 +80,15 @@ void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
         switch (GetMode())
         {
             case Mode::TEXTURE:
-            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane() );
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane().Get() );
             break;
 
             case Mode::TEXTURE_INV_UVY:
-            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlaneInvUVY() );
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlaneInvUVY().Get() );
             break;
 
             case Mode::SLICE_9:
-            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane3x3() );
+            p_quadMesh = Resources::Clone<Mesh>( MeshFactory::GetUIPlane3x3().Get() );
             break;
         }
     }

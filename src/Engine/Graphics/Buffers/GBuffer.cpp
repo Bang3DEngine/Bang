@@ -138,7 +138,7 @@ void GBuffer::SetDepthStencilTexture(Texture2D *depthStencilTexture)
         {
             Resize( GetWidth(), GetHeight() );
         }
-        p_currentDepthStencilTexture = depthStencilTexture;
+        p_currentDepthStencilTexture.Set(depthStencilTexture);
     }
 }
 
@@ -180,7 +180,7 @@ void GBuffer::SetOverlayDepthStencil()
 }
 void GBuffer::PushDepthStencilTexture()
 {
-    m_depthStencilTexturesStack.push( GetDepthStencilTexture() );
+    m_depthStencilTexturesStack.push( RH<Texture2D>(GetDepthStencilTexture()) );
 }
 void GBuffer::PopDepthStencilTexture()
 {
@@ -190,7 +190,7 @@ void GBuffer::PopDepthStencilTexture()
 }
 Texture2D *GBuffer::GetDepthStencilTexture() const
 {
-    return p_currentDepthStencilTexture;
+    return p_currentDepthStencilTexture.Get();
 }
 
 String GBuffer::GetMiscTexName() { return "B_GTex_Misc"; }

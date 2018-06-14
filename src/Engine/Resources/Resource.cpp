@@ -14,6 +14,16 @@ Resource::~Resource()
 {
 }
 
+void Resource::SetParentResource(Resource *parentResource)
+{
+    p_parentResource.Set(parentResource);
+}
+
+Resource* Resource::GetParentResource() const
+{
+    return p_parentResource.Get();
+}
+
 void Resource::PropagateResourceChanged()
 {
     EventEmitter<IEventsResource>::PropagateToListeners(
@@ -69,10 +79,10 @@ void Resource::ExportXML(XMLNode *xmlInfo) const
     Serializable::ExportXML(xmlInfo);
 }
 
-void Resource::_Import(const Path &resourceFilepath)
+void Resource::Import_(const Path &resourceFilepath)
 {
+    Import(resourceFilepath);
     Path importFilepath = ImportFilesManager::GetImportFilepath(resourceFilepath);
-    Import(resourceFilepath);          // Import from filepath
     ImportXMLFromFile(importFilepath); // Import XML then
 
     EventEmitter<IEventsResource>::PropagateToListeners(

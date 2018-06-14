@@ -15,7 +15,7 @@ USING_NAMESPACE_BANG
 
 PostProcessEffect::PostProcessEffect()
 {
-    p_shaderProgram = ShaderProgramFactory::GetDefaultPostProcess();
+    p_shaderProgram.Set( ShaderProgramFactory::GetDefaultPostProcess() );
 }
 
 void PostProcessEffect::OnRender(RenderPass renderPass)

@@ -66,18 +66,22 @@ GameObject *Model::CreateGameObjectFromModel() const
                                              m_modelScene.modelTree);
 }
 
-void Model::AddMesh(Mesh *mesh, Material *material,
-                    const String &meshName, const String &materialName)
+void Model::AddMesh(Mesh *mesh,
+                    Material *material,
+                    const String &meshName,
+                    const String &materialName)
 {
     String newMeshName = Model::GetNewName(meshName, GetMeshesNames());
     m_modelScene.meshesNames.PushBack(
             newMeshName + "." + Extensions::GetMeshExtension());
     m_modelScene.meshes.PushBack( RH<Mesh>(mesh) );
+    mesh->SetParentResource(this);
 
     String newMaterialName = Model::GetNewName(materialName, GetMaterialsNames());
     m_modelScene.materialsNames.PushBack(
             newMaterialName + "." + Extensions::GetMaterialExtension());
     m_modelScene.materials.PushBack( RH<Material>(material) );
+    material->SetParentResource(this);
 }
 
 RH<Mesh> Model::GetMeshByName(const String &meshName)

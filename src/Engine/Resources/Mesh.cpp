@@ -7,6 +7,7 @@
 #include "Bang/VBO.h"
 #include "Bang/Debug.h"
 #include "Bang/ModelIO.h"
+#include "Bang/Material.h"
 #include "Bang/Triangle.h"
 #include "Bang/Resources.h"
 #include "Bang/XMLNodeReader.h"

@@ -5,21 +5,6 @@
 
 USING_NAMESPACE_BANG
 
-Asset::Asset()
-{
-}
-
-Asset::~Asset()
-{
-}
-
-void Asset::Destroy(Asset *asset)
-{
-    asset->EventEmitter<IEventsDestroy>::PropagateToListeners(
-                                   &IEventsDestroy::OnDestroyed, asset);
-    delete asset;
-}
-
 String Asset::ToString() const
 {
     String res = GetClassName();

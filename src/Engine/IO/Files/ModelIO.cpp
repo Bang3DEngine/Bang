@@ -94,7 +94,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     const aiScene* scene = ImportScene(&importer, modelFilepath);
     if (!scene) { return false; }
 
-    int innerResourceGUID = 1;
+    int embeddedResourceGUID = 1;
 
     // Load materials
     Array< String > unorderedMaterialNames;
@@ -106,14 +106,14 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         ModelIO::ImportMaterial(scene->mMaterials[i],
                                 modelFilepath.GetDirectory(),
                                 modelGUID,
-                                innerResourceGUID,
+                                embeddedResourceGUID,
                                 &materialRH,
                                 &materialName);
 
         unorderedMaterials.PushBack(materialRH);
         unorderedMaterialNames.PushBack(materialName);
 
-        ++innerResourceGUID;
+        ++embeddedResourceGUID;
     }
 
     // Load meshes and store them into arrays
@@ -123,7 +123,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         String meshName;
         ModelIO::ImportMesh(scene->mMeshes[i],
                           modelGUID,
-                          innerResourceGUID,
+                          embeddedResourceGUID,
                           &meshRH,
                           &meshName);
 
@@ -137,7 +137,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         modelScene->materials.PushBack(mat);
         modelScene->materialsNames.PushBack(materialName);
 
-        ++innerResourceGUID;
+        ++embeddedResourceGUID;
     }
 
     modelScene->modelTree = ReadModelNode(scene->mRootNode);
@@ -173,12 +173,12 @@ bool ModelIO::ImportFirstFoundMeshRaw(
 void ModelIO::ImportMaterial(aiMaterial *aMaterial,
                              const Path& modelDirectory,
                              const GUID &parentModelGUID,
-                             const GUID::GUIDType &innerMaterialGUID,
+                             const GUID::GUIDType &embeddedMaterialGUID,
                              RH<Material> *outMaterial,
                              String *outMaterialName)
 {
-    *outMaterial =  Resources::CreateInnerResource<Material>(parentModelGUID,
-                                                             innerMaterialGUID);
+    *outMaterial =  Resources::CreateEmbeddedResource<Material>(parentModelGUID,
+                                                                embeddedMaterialGUID);
 
     aiString aMatName;
     aiGetMaterialString(aMaterial, AI_MATKEY_NAME, &aMatName);
@@ -517,11 +517,12 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
 
 void ModelIO::ImportMesh(aiMesh *aMesh,
                          const GUID &parentModelGUID,
-                         const GUID::GUIDType &innerMeshGUID,
+                         const GUID::GUIDType &embeddedMeshGUID,
                          RH<Mesh> *outMesh,
                          String *outMeshName)
 {
-    *outMesh =  Resources::CreateInnerResource<Mesh>(parentModelGUID, innerMeshGUID);
+    *outMesh =  Resources::CreateEmbeddedResource<Mesh>(parentModelGUID,
+                                                        embeddedMeshGUID);
 
     Array<Mesh::VertexId> vertexIndices;
     Array<Vector3> vertexPositionsPool;

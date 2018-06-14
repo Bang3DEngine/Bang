@@ -2,6 +2,7 @@
 #define MESHFACTORY_H
 
 #include "Bang/Map.h"
+#include "Bang/Mesh.h"
 #include "Bang/UMap.h"
 #include "Bang/Path.h"
 #include "Bang/ResourceHandle.h"

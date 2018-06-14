@@ -30,14 +30,14 @@ bool GUIDManager::IsBeingUsed(const GUID &guid)
     return GUIDManager::GetInstance()->m_guids.Contains(guid);
 }
 
-void GUIDManager::CreateInsideFileGUID(const GUID &baseGUID,
-                                       GUID::GUIDType insideFileGUID,
-                                       GUID *outGUID)
+void GUIDManager::CreateEmbeddedFileGUID(const GUID &baseGUID,
+                                         GUID::GUIDType embeddedFileGUID,
+                                         GUID *newGUID)
 {
-    ASSERT_MSG(insideFileGUID > 0, "Inner file GUID's must be greater than zero!");
+    ASSERT_MSG(embeddedFileGUID > 0, "Inner file GUID's must be greater than zero!");
 
-    *outGUID = baseGUID;
-    outGUID->SetEmbeddedFileGUID(insideFileGUID);
+    *newGUID = baseGUID;
+    newGUID->SetEmbeddedFileGUID(embeddedFileGUID);
 }
 
 GUIDManager *GUIDManager::GetInstance()

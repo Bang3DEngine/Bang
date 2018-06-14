@@ -5,6 +5,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/Serializable.h"
 #include "Bang/EventListener.h"
+#include "Bang/ResourceHandle.h"
 #include "Bang/IEventsResource.h"
 
 NAMESPACE_BANG_BEGIN
@@ -13,10 +14,11 @@ class Resource : public Serializable,
                  public EventEmitter<IEventsResource>
 {
 public:
-    Path GetResourceFilepath() const;
-
+    void SetParentResource(Resource *parentResource);
     void PropagateResourceChanged();
 
+    Path GetResourceFilepath() const;
+    Resource* GetParentResource() const;
     Resource* GetEmbeddedResource(const GUID &embeddedFileGUID) const;
     Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
     virtual Resource* GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const;
@@ -32,8 +34,12 @@ protected:
     virtual void ImportXML(const XMLNode &xmlInfo);
     virtual void ExportXML(XMLNode *xmlInfo) const;
 
-    void _Import(const Path &resourceFilepath);
+    void Import_(const Path &resourceFilepath);
     virtual void Import(const Path &resourceFilepath) = 0;
+
+
+private:
+    RH<Resource> p_parentResource;
 
     friend class Resources;
 };

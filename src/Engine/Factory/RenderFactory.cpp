@@ -35,12 +35,12 @@ RenderFactory::RenderFactory()
     m_gizmosGo = GameObjectFactory::CreateGameObject();
     m_gizmosGo->SetName("Gizmos");
 
-    m_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube());
-    m_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane());
-    m_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere());
-    m_outlineShaderProgram = ShaderProgramFactory::Get(
+    m_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube().Get());
+    m_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane().Get());
+    m_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere().Get());
+    m_outlineShaderProgram.Set( ShaderProgramFactory::Get(
                 ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-                EPATH("Shaders/GizmosOutline.frag"));
+                EPATH("Shaders/GizmosOutline.frag")) );
 
     m_lineRenderer = m_gizmosGo->AddComponent<LineRenderer>();
     m_meshRenderer = m_gizmosGo->AddComponent<MeshRenderer>();
@@ -212,7 +212,7 @@ void RenderFactory::RenderIcon(Texture2D *texture,
                                 cam->GetGameObject()->GetTransform()->GetForward(),
                                 cam->GetGameObject()->GetTransform()->GetUp());
     }
-    paramsCpy.texture = texture;
+    paramsCpy.texture.Set( texture );
     rf->Render(rf->m_meshRenderer, paramsCpy);
 }
 

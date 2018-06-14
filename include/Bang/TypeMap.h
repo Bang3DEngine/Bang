@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <type_traits>
 
 #include "Bang/List.h"
 #include "Bang/UMap.h"
@@ -13,8 +14,20 @@ NAMESPACE_BANG_BEGIN
 using TypeId = String;
 template <class T>
 static TypeId GetTypeId() { return typeid(T).name(); }
+
 template <class T>
-static TypeId GetTypeId(const T& x) { return typeid(x).name(); }
+static TypeId GetTypeId(const T& x,
+                        typename std::enable_if<!std::is_pointer<T>::value, T>::type = 0)
+{
+    return typeid(x).name();
+}
+
+template <class T>
+static TypeId GetTypeId(const T& x,
+                        typename std::enable_if<std::is_pointer<T>::value, T>::type = 0)
+{
+    return x ? typeid(*x).name() : "";
+}
 
 template <class Value>
 class TypeMap : public UMap<TypeId, Value>

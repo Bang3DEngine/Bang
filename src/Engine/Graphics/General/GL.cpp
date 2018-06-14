@@ -248,7 +248,7 @@ bool GL::CheckFramebufferError()
         }
         Debug_Error(errMsg);
     }
-    return error;
+    return !error;
 }
 
 const Color& GL::GetClearColor()

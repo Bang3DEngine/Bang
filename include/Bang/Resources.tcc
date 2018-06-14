@@ -10,163 +10,67 @@ NAMESPACE_BANG_BEGIN
 template <class ResourceClass>
 RH<ResourceClass> Resources::Load(const Path &filepath)
 {
-    if (!filepath.Exists())
-    {
-        Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");
-    }
-
-    GUID resGUID = ImportFilesManager::GetGUIDFromFilepath(filepath);
-    ResourceClass* res = Resources::GetCached<ResourceClass>(resGUID);
-    if (!res)
-    {
-        res = Resources::_Create<ResourceClass>();
-
-        Path importFilepath = ImportFilesManager::GetImportFilepath(filepath);
-        res->Resource::ImportXMLFromFile(importFilepath); // Get resource GUID
-        Resources::Import(res); // Actually import all
-    }
-    return RH<ResourceClass>(res);
-}
-
-template <class ResourceClass>
-RH<ResourceClass> Resources::Load(const String &filepathStr)
-{
-    Resources *rs = Resources::GetInstance();
-    Array<Path> lookupPaths = rs->GetLookUpPaths();
-
-    Path filepath = Path::Empty;
-    for (const Path &lookUpPath : lookupPaths)
-    {
-        filepath = lookUpPath.Append(filepathStr);
-        if (filepath.IsFile()) { break; }
-    }
-    return Resources::Load<ResourceClass>(filepath);
+    return RH<ResourceClass>( SCAST<ResourceClass*>(
+        Resources::GetInstance()->Load_(
+           []() -> Resource*
+           {
+               return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
+           },
+           GetTypeId<ResourceClass>(),
+           filepath).Get() ) );
 }
 
 template <class ResourceClass>
 RH<ResourceClass> Resources::Load(const GUID &guid)
 {
-    if (!guid.IsEmpty())
-    {
-        const GUID::GUIDType embeddedFileGUID = guid.GetEmbeddedFileGUID();
-        bool isAnEmbeddedResource = (embeddedFileGUID != GUID::EmptyGUID);
-        if (!isAnEmbeddedResource) // Normal resource (file attached to it)
-        {
-            if (!Resources::Contains<ResourceClass>(guid))
-            {
-                // If we don't have it loaded, load/create a new one
-                Path filepath = ImportFilesManager::GetFilepath(guid);
-                if (filepath.IsFile())
-                {
-                    return Resources::Load<ResourceClass>(filepath);
-                }
-                else
-                {
-                    RH<ResourceClass> emptyRH;
-                    return emptyRH;
-                }
-            }
-            else
-            {
-                // Load it from cache
-                return RH<ResourceClass>(
-                            Resources::GetCached<ResourceClass>(guid) );
-            }
-        }
-        else  // Embedded resource (resource into another resource)
-        {
-            if (!Resources::Contains<ResourceClass>(guid))
-            {
-                // It is a resource inside another resource. Find parent path,
-                // load it, and retrieve from it the inner resource!
-                GUID parentResourceGUID = guid.WithoutInsideFileGUID();
-                Path parentFilepath = ImportFilesManager::GetFilepath(
-                                                           parentResourceGUID);
-                if (parentFilepath.IsFile())
-                {
-                    // Load the parent resource guessing the type from
-                    // the extension
-                    RH<Resource> parentRes =
-                                  Resources::LoadFromExtension(parentFilepath);
-                    if (parentRes)
-                    {
-                        // Call virtual function that finds embedded resource,
-                        // create the handler, and return it
-                        Resource *embeddedRes =
-                            parentRes.Get()->GetEmbeddedResource(
-                                                       embeddedFileGUID);
-                        RH<ResourceClass> embeddedResRH;
-                        if (embeddedRes)
-                        {
-                            embeddedResRH.Set( DCAST<ResourceClass*>(embeddedRes) );
-                        }
-                        return embeddedResRH;
-                    }
-                }
-            }
-            else
-            {
-                // Load it from cache
-                return RH<ResourceClass>(
-                            Resources::GetCached<ResourceClass>(guid) );
-            }
-        }
-    }
-
-    return RH<ResourceClass>();
+    return RH<ResourceClass>( SCAST<ResourceClass*>(
+        Resources::GetInstance()->Load_(
+           []() -> Resource*
+           {
+               return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
+           },
+           GetTypeId<ResourceClass>(),
+           guid).Get() ) );
 }
 
 template<class ResourceClass, class ...Args>
 RH<ResourceClass> Resources::Create(const Args&... args)
 {
-    return RH<ResourceClass>( Resources::_Create<ResourceClass>(args...) );
+    return RH<ResourceClass>( Resources::Create_<ResourceClass, Args...>(
+                                  args...) );
 }
 template<class ResourceClass, class ...Args>
 RH<ResourceClass> Resources::Create(const GUID &guid, const Args&... args)
 {
-    return RH<ResourceClass>( Resources::_Create<ResourceClass>(guid, args...) );
+    return RH<ResourceClass>( Resources::Create_<ResourceClass, Args...>(
+                                  guid, args...) );
+}
+
+template <class ResourceClass, class ...Args>
+ResourceClass *Resources::Create_(const Args&... args)
+{
+    return Create_<ResourceClass, Args...>(GUIDManager::GetNewGUID(), args...);
+}
+
+template <class ResourceClass, class ...Args>
+ResourceClass *Resources::Create_(const GUID &guid, const Args&... args)
+{
+    ResourceClass *res = new ResourceClass(args...);
+    res->SetGUID(guid);
+    return res;
 }
 
 template<class ResourceClass, class ...Args>
-RH<ResourceClass> Resources::CreateInnerResource(
+RH<ResourceClass> Resources::CreateEmbeddedResource(
                                         const GUID &baseGUID,
                                         const GUID::GUIDType embeddedFileGUID,
                                         const Args&... args)
 {
-    GUID resourceInsideFileGUID;
-    GUIDManager::CreateInsideFileGUID(baseGUID, embeddedFileGUID,
-                                      &resourceInsideFileGUID);
-    return Resources::Create<ResourceClass, Args...>(resourceInsideFileGUID,
-                                                      args...);
-}
-
-template<class ResourceClass, class ...Args>
-ResourceClass* Resources::_Create(const GUID &guid, const Args&... args)
-{
-    ResourceClass *res = Resources::_JustCreate<ResourceClass>(args...);
-    res->SetGUID(guid);
-
-    return res;
-}
-template<class ResourceClass, class ...Args>
-ResourceClass* Resources::_Create(const Args&... args)
-{
-    GUID guid = GUIDManager::GetNewGUID();
-    return Resources::_Create<ResourceClass, Args...>( guid, args... );
-}
-
-template<class ResourceClass, class ...Args>
-typename std::enable_if<T_SUBCLASS(ResourceClass, Asset),
-         ResourceClass*>::type Resources::_JustCreate(const Args&... args)
-{
-    return Asset::Create<ResourceClass>(args...);
-}
-
-template<class ResourceClass, class ...Args>
-typename std::enable_if<T_NOT_SUBCLASS(ResourceClass, Asset),
-         ResourceClass*>::type  Resources::_JustCreate(const Args&... args)
-{
-    return new ResourceClass(args...);
+    GUID newResourceEmbeddedFileGUID;
+    GUIDManager::CreateEmbeddedFileGUID(baseGUID, embeddedFileGUID,
+                                        &newResourceEmbeddedFileGUID);
+    return Resources::Create<ResourceClass, Args...>(newResourceEmbeddedFileGUID,
+                                                     args...);
 }
 
 template <class ResourceClass>
@@ -185,31 +89,32 @@ Array<ResourceClass*> Resources::GetAll()
 template<class ResourceClass>
 bool Resources::Contains(const GUID &guid)
 {
-    return Resources::Contains(GetTypeId<ResourceClass>(), guid);
+    return Contains_(GetTypeId<ResourceClass>(), guid);
 }
 
 template<class ResourceClass>
 ResourceClass* Resources::GetCached(const GUID &guid)
 {
-    return SCAST<ResourceClass*>(
-                Resources::GetCached(GetTypeId<ResourceClass>(), guid) );
+    Resource *res = Resources::GetInstance()->
+                               GetCached_(GetTypeId<ResourceClass>(), guid);
+    return SCAST<ResourceClass*>(res);
 }
 template<class ResourceClass>
 ResourceClass* Resources::GetCached(const Path &path)
 {
-    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
-    return SCAST<ResourceClass*>(
-                Resources::GetCached(GetTypeId<ResourceClass>(), guid) );
+    Resource *res = Resources::GetInstance()->
+                               GetCached_(GetTypeId<ResourceClass>(), path);
+    return SCAST<ResourceClass*>(res);
 }
 
 template<class ResourceClass>
-RH<ResourceClass> Resources::Clone(const RH<ResourceClass> &src)
+RH<ResourceClass> Resources::Clone(const ResourceClass *src)
 {
     RH<ResourceClass> rh;
-    if (src.Get())
+    if (src)
     {
         rh = Resources::Create<ResourceClass>();
-        src.Get()->CloneInto( rh.Get() );
+        src->CloneInto( rh.Get() );
     }
     return rh;
 }

@@ -75,7 +75,7 @@ private:
     RH<Texture2D> m_sceneDepthStencilTexture;
     RH<Texture2D> m_canvasDepthStencilTexture;
     RH<Texture2D> m_overlayDepthStencilTexture;
-    Texture2D *p_currentDepthStencilTexture = nullptr;
+    RH<Texture2D> p_currentDepthStencilTexture;
     std::stack<RH<Texture2D>> m_depthStencilTexturesStack;
 
     void RenderViewportPlane();

@@ -14,7 +14,7 @@ public:
     static void CreateMissingImportFiles(const Path &directory);
     static void LoadImportFilepathGUIDs(const Path &directory);
 
-    static std::pair<Path, GUID> CreateImportFile(const Path &filepath);
+    static std::pair<Path, GUID> CreateImportFileIfMissing(const Path &filepath);
     static bool HasImportFile(const Path &filepath);
     static bool IsImportFile(const Path &filepath);
     static void DuplicateImportFile(const Path &filepath,
@@ -26,15 +26,14 @@ public:
     static Path GetFilepath(const GUID& guid);
     static Path GetFilepath(const Path& importFilepath);
     static Path GetImportFilepath(const Path &filepath);
-    static const Path& GetImportFilepath(const GUID& guid);
+    static Path GetImportFilepath(const GUID& guid);
     static void OnFilepathRenamed(const Path &oldPath, const Path &newPath);
 
     static GUID GetGUIDFromFilepath(const Path& filepath);
-    static GUID GetGUIDFromImportFilepath(const Path& importFilepath);
 
 private:
-    UMap<GUID, Path> m_GUIDToImportFilepath;
-    UMap<Path, GUID> m_importFilepathToGUID;
+    UMap<GUID, Path> m_GUIDToFilepath;
+    UMap<Path, GUID> m_filepathToGUID;
 
     GUIDManager m_GUIDManager;
 

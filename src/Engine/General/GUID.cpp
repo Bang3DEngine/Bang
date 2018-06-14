@@ -42,7 +42,7 @@ const GUID::GUIDType &GUID::GetEmbeddedFileGUID() const
     return m_embeddedFileGUID;
 }
 
-GUID GUID::WithoutInsideFileGUID() const
+GUID GUID::WithoutEmbeddedFileGUID() const
 {
     GUID guid = *this;
     guid.SetEmbeddedFileGUID( GUID::EmptyGUID );

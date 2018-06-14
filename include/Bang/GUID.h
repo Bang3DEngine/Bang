@@ -30,7 +30,7 @@ public:
     const GUIDType& GetRandGUID() const;
     const GUIDType& GetEmbeddedFileGUID() const;
 
-    GUID WithoutInsideFileGUID() const;
+    GUID WithoutEmbeddedFileGUID() const;
 
     std::istream &operator>>(std::istream &is);
     bool operator==(const GUID &rhs) const;

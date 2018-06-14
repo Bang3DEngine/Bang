@@ -29,21 +29,19 @@ Resources::~Resources()
     ASSERT_MSG(m_shaderProgramFactory == nullptr, "Call Destroy()");
 }
 
-RH<Resource> Resources::LoadFromExtension(const Path &filepath)
+RH<Resource> Resources::LoadFromExtension(const Path &path)
 {
     RH<Resource> resRH;
-
-    if (filepath.HasExtension(Extensions::GetModelExtensions()))
+    if (path.HasExtension(Extensions::GetModelExtensions()))
     {
-        resRH.Set( Resources::Load<Model>(filepath).Get() );
+        resRH.Set( Resources::Load<Model>(path).Get() );
     }
-
     return resRH;
 }
 
 void Resources::Import(Resource *res)
 {
-    res->_Import( res->GetResourceFilepath() );
+    res->Import_( res->GetResourceFilepath() );
 }
 
 Array<Resource*> Resources::GetAllResources()
@@ -84,24 +82,141 @@ void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
     ImportFilesManager::RegisterImportFilepath(importFilePath); // Once created
 }
 
-void Resources::Add(const TypeId &resTypeId, Resource *res)
+RH<Resource> Resources::Load_(std::function<Resource*()> creator,
+                              const String &resourceClassTypeId,
+                              const Path &filepath)
+{
+    if (!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
+    {
+        Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");
+    }
+
+    Resource *res = GetCached_(resourceClassTypeId, filepath);
+    if (!res)
+    {
+        res = creator();
+        Path importFilepath = ImportFilesManager::GetImportFilepath(filepath);
+        res->ImportXMLFromFile(importFilepath); // Get resource GUID
+        Resources::Import(res); // Actually import all
+    }
+    return RH<Resource>(res);
+}
+
+RH<Resource> Resources::Load_(std::function<Resource*()> creator,
+                              const String &resourceClassTypeId,
+                              const GUID &guid)
+{
+    if (guid.IsEmpty()) { return RH<Resource>(nullptr); }
+
+    RH<Resource> resRH( GetCached_(resourceClassTypeId, guid) );
+    if (!resRH)
+    {
+        if (!Resources::IsEmbeddedResource(guid))
+        {
+            Path resPath = ImportFilesManager::GetImportFilepath(guid);
+            if (resPath.IsFile())
+            {
+                resRH.Set( Load_(creator, resourceClassTypeId, resPath).Get() );
+            }
+        }
+        else
+        {
+            GUID parentGUID = guid.WithoutEmbeddedFileGUID();
+            Path parentPath = ImportFilesManager::GetFilepath(parentGUID);
+            if (parentPath.IsFile())
+            {
+                if (RH<Resource> parentResRH =
+                                    Resources::LoadFromExtension(parentPath))
+                {
+                    resRH.Set( parentResRH.Get()->GetEmbeddedResource(guid) );
+                }
+            }
+        }
+    }
+    return resRH;
+}
+
+Array<Resource*> Resources::GetAllCached(const Path &path)
+{
+    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
+    return GetAllCached(guid);
+}
+
+Array<Resource*> Resources::GetAllCached(const GUID &guid)
+{
+    Resources *rs = Resources::GetInstance();
+
+    Array<Resource*> foundResources;
+    for (const auto &map : rs->m_resourcesCache)
+    {
+        if ( map.second.ContainsKey(guid) )
+        {
+            foundResources.PushBack(map.second.Get(guid).resource);
+        }
+    }
+    return foundResources;
+}
+
+Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
+                                const GUID &guid) const
+{
+    if (m_resourcesCache.ContainsKey(resourceClassTypeId) &&
+        m_resourcesCache.Get(resourceClassTypeId).ContainsKey(guid))
+    {
+        return m_resourcesCache.Get(resourceClassTypeId).Get(guid).resource;
+    }
+    else
+    {
+        if (Resources::IsEmbeddedResource(guid))
+        {
+            GUID parentGUID = guid.WithoutEmbeddedFileGUID();
+            if (Resource *parentRes = GetCached_(resourceClassTypeId, parentGUID))
+            {
+                return parentRes->GetEmbeddedResource(guid.GetEmbeddedFileGUID());
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
+                                const Path &path) const
+{
+    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
+    return GetCached_(resourceClassTypeId, guid);
+}
+
+bool Resources::Contains_(Resource *resource) const
+{
+    if (!resource)
+    {
+        return false;
+    }
+    return GetCached_(GetTypeId(resource), resource->GetGUID());
+}
+
+
+void Resources::Add(const TypeId &resourceClassTypeId, Resource *res)
 {
     const GUID &guid = res->GetGUID();
     ASSERT(res != nullptr);
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resTypeId.IsEmpty());
+    ASSERT(!resourceClassTypeId.IsEmpty());
 
     Resources *rs = Resources::GetInstance(); ASSERT(rs);
-    ASSERT(!Resources::Contains(resTypeId, guid));
+    ASSERT(!rs->GetCached_(resourceClassTypeId, guid));
 
-    if (!rs->m_resourcesCache.ContainsKey(resTypeId))
-    { rs->m_resourcesCache.Add(resTypeId); }
+    if (!rs->m_resourcesCache.ContainsKey(resourceClassTypeId))
+    {
+        rs->m_resourcesCache.Add(resourceClassTypeId);
+    }
 
     ResourceEntry resourceEntry;
     resourceEntry.resource = res;
     resourceEntry.usageCount = 0;
-    ASSERT(!rs->m_resourcesCache.Get(resTypeId).ContainsKey(guid));
-    rs->m_resourcesCache.Get(resTypeId).Add(guid, resourceEntry);
+    ASSERT(!rs->m_resourcesCache.Get(resourceClassTypeId).ContainsKey(guid));
+    rs->m_resourcesCache.Get(resourceClassTypeId).Add(guid, resourceEntry);
 }
 
 bool Resources::IsEmbeddedResource(const GUID &guid)
@@ -181,43 +296,39 @@ void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
     }
 }
 
-bool Resources::Contains(const TypeId &resTypeId, const GUID &guid)
-{
-    return Resources::GetCached(resTypeId, guid) != nullptr;
-}
-
 Array<Path> Resources::GetLookUpPaths() const
 {
     return {Paths::GetProjectAssetsDir(), Paths::GetEngineAssetsDir()};
 }
 
-void Resources::RegisterResourceUsage(const TypeId &resTypeId, Resource *resource)
+void Resources::RegisterResourceUsage(const TypeId &resourceClassTypeId,
+                                      Resource *resource)
 {
+    Resources *rs = Resources::GetInstance();
     const GUID &guid = resource->GetGUID();
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resTypeId.IsEmpty());
+    ASSERT(!resourceClassTypeId.IsEmpty());
 
-    Resources *rs = Resources::GetInstance();
-    if (!Resources::Contains(resTypeId, guid))
+    if (!rs->GetCached_(resourceClassTypeId, guid))
     {
-        Resources::Add(resTypeId, resource);
+        Resources::Add(resourceClassTypeId, resource);
     }
-    ++rs->m_resourcesCache.Get(resTypeId).Get(guid).usageCount;
+    ++rs->m_resourcesCache.Get(resourceClassTypeId).Get(guid).usageCount;
 }
 
-void Resources::UnRegisterResourceUsage(const TypeId &resTypeId,
+void Resources::UnRegisterResourceUsage(const TypeId &resourceClassTypeId,
                                         Resource *resource)
 {
+    Resources *rs = Resources::GetInstance();
     const GUID &guid = resource->GetGUID();
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resTypeId.IsEmpty());
+    ASSERT(!resourceClassTypeId.IsEmpty());
 
-    Resources *rs = Resources::GetInstance();
     if (rs)
     {
-        ASSERT(Resources::Contains(resTypeId, guid));
-        uint *resourcesUsage = &(rs->m_resourcesCache.Get(resTypeId)
-                                 .Get(guid).usageCount);
+        ASSERT(rs->GetCached_(resourceClassTypeId, guid));
+        uint *resourcesUsage = &(rs->m_resourcesCache.Get(resourceClassTypeId).
+                                 Get(guid).usageCount);
         ASSERT(*resourcesUsage >= 1);
         --(*resourcesUsage);
 
@@ -227,7 +338,7 @@ void Resources::UnRegisterResourceUsage(const TypeId &resTypeId,
             if (!Resources::IsPermanent(resource) &&
                 !Resources::IsPermanent(resourcePath) )
             {
-                Resources::Remove(resTypeId, guid);
+                Resources::Remove(resourceClassTypeId, guid);
             }
         }
     }
@@ -237,62 +348,19 @@ void Resources::Destroy(Resource *resource)
 {
     if (!resource) { return; }
 
-    Asset *asset = DCAST<Asset*>(resource);
-    if (asset)
+    if (EventEmitter<IEventsDestroy> *destroyable =
+                            DCAST< EventEmitter<IEventsDestroy>* >(resource))
     {
-        // Debug_Log("Destroying " << asset->GetGUID() << ", " <<
-        //           Resources::GetResourcePath(asset));
-        Asset::Destroy(asset);
+        destroyable->EventEmitter<IEventsDestroy>::PropagateToListeners(
+                                    &IEventsDestroy::OnDestroyed, destroyable);
     }
-    else
-    {
-        delete resource;
-    }
-}
-
-Array<Resource *> Resources::GetCached(const GUID &guid)
-{
-    Resources *rs = Resources::GetInstance();
-
-    Array<Resource*> foundResources;
-    for (const auto &map : rs->m_resourcesCache)
-    {
-        if ( map.second.ContainsKey(guid) )
-        {
-            foundResources.PushBack(map.second.Get(guid).resource);
-        }
-    }
-    return foundResources;
-}
-
-Array<Resource *> Resources::GetCached(const Path &path)
-{
-    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
-    return GetCached(guid);
-}
-
-Resource *Resources::GetCached(const TypeId &resTypeId, const GUID &guid)
-{
-    Resources *rs = Resources::GetInstance();
-    if (!rs->m_resourcesCache.ContainsKey(resTypeId)) { return nullptr; }
-    if (!rs->m_resourcesCache.Get(resTypeId).ContainsKey(guid)) { return nullptr; }
-    return rs->m_resourcesCache.Get(resTypeId).Get(guid).resource;
+    delete resource;
 }
 
 Path Resources::GetResourcePath(const Resource *resource)
 {
     if (!resource) { return Path::Empty; }
-
-    Path resPath = ImportFilesManager::GetFilepath(resource->GetGUID().
-                                                   WithoutInsideFileGUID());
-    const GUID::GUIDType insideFileGUID = resource->GetGUID().GetEmbeddedFileGUID();
-    if (insideFileGUID != 0)
-    {
-        String insideFileResourceName =
-                    resource->GetEmbeddedFileResourceName(insideFileGUID);
-        resPath = resPath.Append(insideFileResourceName);
-    }
-    return resPath;
+    return ImportFilesManager::GetFilepath(resource->GetGUID());
 }
 
 MeshFactory *Resources::GetMeshFactory() const

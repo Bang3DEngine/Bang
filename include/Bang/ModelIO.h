@@ -79,13 +79,13 @@ public:
 
     static void ImportMesh(aiMesh *aMesh,
                            const GUID &parentModelGUID,
-                           const GUID::GUIDType &innerMeshGUID,
+                           const GUID::GUIDType &embeddedMeshGUID,
                            RH<Mesh> *outMesh,
                            String *outMeshName);
     static void ImportMaterial(aiMaterial *aMaterial,
                                const Path& modelDirectory,
                                const GUID &parentModelGUID,
-                               const GUID::GUIDType &innerMaterialGUID,
+                               const GUID::GUIDType &embeddedMaterialGUID,
                                RH<Material> *outMaterial,
                                String *outMaterialName);
 

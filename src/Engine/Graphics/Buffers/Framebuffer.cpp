@@ -119,7 +119,7 @@ void Framebuffer::BeforeSetAttTex(Texture* tex, GL::Attachment attachment)
 }
 void Framebuffer::AfterSetAttTex(Texture* tex, GL::Attachment attachment)
 {
-    GL::CheckFramebufferError();
+    ASSERT( GL::CheckFramebufferError() );
 
     RH<Texture> texRH(tex);
     m_attachments.PushBack(attachment);
@@ -127,7 +127,8 @@ void Framebuffer::AfterSetAttTex(Texture* tex, GL::Attachment attachment)
 }
 
 
-void Framebuffer::SetAttachmentTexture(Texture* tex, GL::Attachment attachment,
+void Framebuffer::SetAttachmentTexture(Texture* tex,
+                                       GL::Attachment attachment,
                                        uint mipMapLevel)
 {
     GL::Push(GL::BindTarget::FRAMEBUFFER);

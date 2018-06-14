@@ -15,7 +15,7 @@
 
 USING_NAMESPACE_BANG
 
-const float UIScrollPanel::WheelScrollSpeedPx = 100.0f;
+const float UIScrollPanel::WheelScrollSpeedPx = 200.0f;
 
 UIScrollPanel::UIScrollPanel()
 {

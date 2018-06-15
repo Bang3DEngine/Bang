@@ -10,6 +10,7 @@
 #include "Bang/List.h"
 #include "Bang/Paths.h"
 #include "Bang/Array.h"
+#include "Bang/Extensions.h"
 
 USING_NAMESPACE_BANG
 
@@ -319,7 +320,10 @@ bool Path::HasExtension(const Array<String> &extensions) const
     {
         for (const String &thisExtension : thisExtensions)
         {
-            if (extension.EqualsNoCase(thisExtension)) { return true; }
+            if (Extensions::Equals(extension, thisExtension))
+            {
+                return true;
+            }
         }
     }
     return false;

@@ -41,7 +41,9 @@ void UIDragDroppable::OnUpdate()
             RectTransform *thisRT = GetGameObject()->GetRectTransform();
             const AARecti thisRect( thisRT->GetViewportAARect() );
             m_dragGrabOffset = (Input::GetMousePosition() - thisRect.GetMin());
-            m_beingPressed = GetGameObject()->GetRectTransform()->IsMouseOver();
+            m_beingPressed = thisRT->IsMouseOver() &&
+                             UICanvas::GetActive(GetGameObject())->
+                                       IsMouseOver(GetGameObject(), true);
         }
     }
 

@@ -78,7 +78,7 @@ std::pair<Path, GUID> ImportFilesManager::CreateImportFileIfMissing(const Path &
     }
     else
     {
-        newGUID = GetGUIDFromFilepath(filepath);
+        newGUID = GetGUID(filepath);
     }
     return std::make_pair(importFilepath, newGUID);
 }
@@ -142,7 +142,7 @@ void ImportFilesManager::UnRegisterImportFilepath(const Path &importFilepath)
     ifm->m_filepathToGUID.Remove(filepath);
 }
 
-GUID ImportFilesManager::GetGUIDFromFilepath(const Path& filepath)
+GUID ImportFilesManager::GetGUID(const Path& filepath)
 {
     ImportFilesManager *ifm = ImportFilesManager::GetInstance();
     if (ifm->m_filepathToGUID.ContainsKey(filepath))
@@ -243,7 +243,8 @@ Path ImportFilesManager::GetImportFilepath(const GUID &guid)
                                     ImportFilesManager::GetFilepath(guid) );
 }
 
-void ImportFilesManager::OnFilepathRenamed(const Path &oldPath, const Path &newPath)
+void ImportFilesManager::OnFilepathRenamed(const Path &oldPath,
+                                           const Path &newPath)
 {
     Path oldImportFilepath = ImportFilesManager::GetImportFilepath(oldPath);
     ImportFilesManager::UnRegisterImportFilepath(oldImportFilepath);

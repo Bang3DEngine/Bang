@@ -139,7 +139,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
 
 Array<Resource*> Resources::GetAllCached(const Path &path)
 {
-    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
+    GUID guid = ImportFilesManager::GetGUID(path);
     return GetAllCached(guid);
 }
 
@@ -184,7 +184,7 @@ Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
 Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
                                 const Path &path) const
 {
-    GUID guid = ImportFilesManager::GetGUIDFromFilepath(path);
+    GUID guid = ImportFilesManager::GetGUID(path);
     return GetCached_(resourceClassTypeId, guid);
 }
 

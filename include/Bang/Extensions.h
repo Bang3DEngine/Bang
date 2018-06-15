@@ -30,7 +30,6 @@ public:
     static String GetDefaultBehaviourHeaderExtension();
     static String GetDefaultBehaviourSourceExtension();
 
-    static bool Has(const Path &path, const Array<String> &extensions);
     static bool Equals(const String &extension, const Array<String> &extensions);
     static bool Equals(const String &extensionSrc, const String &extensionDst);
 

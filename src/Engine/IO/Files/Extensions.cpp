@@ -80,19 +80,21 @@ String Extensions::GetDefaultBehaviourSourceExtension()
     return "cpp";
 }
 
-bool Extensions::Has(const Path &path, const Array<String> &extensions)
-{
-    return Extensions::Equals(path.GetExtension(), extensions);
-}
-
 bool Extensions::Equals(const String &extension, const Array<String> &extensions)
 {
-    return extensions.Contains(extension.ToLower());
+    for (const String &otherExt : extensions)
+    {
+        if (Extensions::Equals(extension, otherExt))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Extensions::Equals(const String &extensionSrc, const String &extensionDst)
 {
-    return extensionSrc.ToLower() == extensionDst.ToLower();
+    return extensionSrc.EqualsNoCase(extensionDst);
 }
 
 NAMESPACE_BANG_END

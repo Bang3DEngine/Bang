@@ -30,7 +30,7 @@ public:
     void SetImageTexture(const Path &imagePath);
     void SetImageTexture(Texture2D* imageTexture);
     void SetTint(const Color& tint);
-    void SetMode(Mode mode);
+    void SetMode(UIImageRenderer::Mode mode);
     void SetSlice9BorderStrokePx(const Vector2i& slice9borderStrokePx);
 
     Mode GetMode() const;

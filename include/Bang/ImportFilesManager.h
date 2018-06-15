@@ -27,9 +27,10 @@ public:
     static Path GetFilepath(const Path& importFilepath);
     static Path GetImportFilepath(const Path &filepath);
     static Path GetImportFilepath(const GUID& guid);
+    static GUID GetGUID(const Path& filepath);
+
     static void OnFilepathRenamed(const Path &oldPath, const Path &newPath);
 
-    static GUID GetGUIDFromFilepath(const Path& filepath);
 
 private:
     UMap<GUID, Path> m_GUIDToFilepath;

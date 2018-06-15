@@ -5,6 +5,7 @@
 #include "Bang/Tree.h"
 #include "Bang/Array.h"
 #include "Bang/Matrix4.h"
+#include "Bang/Material.h"
 #include "Bang/ResourceHandle.h"
 
 FORWARD class aiMesh;

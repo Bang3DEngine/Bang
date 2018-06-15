@@ -107,13 +107,6 @@ private:
     TypeId m_typeId = "";
     ResourceClass* p_resource = nullptr;
 
-    static void ForceCompleteness_() // To force completeness of templated class
-    {
-        ASSERT(false);
-        ResourceClass rc;
-        (void) rc;
-    }
-
     friend class Resources;
 };
 

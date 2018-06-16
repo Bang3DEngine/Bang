@@ -8,6 +8,7 @@ NAMESPACE_BANG_BEGIN
 enum class ClickType
 {
     DOWN,
+    UP,
     FULL,
     DOUBLE
 };

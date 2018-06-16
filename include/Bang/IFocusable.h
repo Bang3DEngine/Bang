@@ -1,8 +1,10 @@
 ﻿#ifndef IFOCUSABLE_H
 #define IFOCUSABLE_H
 
+#include "Bang/Key.h"
 #include "Bang/Array.h"
 #include "Bang/Cursor.h"
+#include "Bang/Vector2.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/IEventsFocus.h"
 
@@ -23,6 +25,13 @@ public:
     bool IsBeingPressed() const;
     Cursor::Type GetCursorType() const;
 
+    IEventsFocus::Event::PropagationResult ProcessEvent(IEventsFocus::Event event);
+
+    using EventCallback = std::function<IEventsFocus::Event::PropagationResult(
+                                                  EventEmitter<IEventsFocus>*,
+                                                  IEventsFocus::Event)>;
+    void AddEventCallback(EventCallback eventCallback);
+
     using ClickedCallback = std::function<void(IFocusable*, ClickType clickType)>;
     void AddClickedCallback(ClickedCallback callback);
 
@@ -36,6 +45,9 @@ protected:
     void PropagateOnClickedToListeners(ClickType clickType);
     void PropagateMouseOverToListeners(bool mouseOver);
 
+    void SetBeingPressed(bool beingPressed);
+    void SetIsMouseOver(bool isMouseOver);
+
 private:
     bool m_beingPressed = false;
     bool m_hasFocus = false;
@@ -45,6 +57,7 @@ private:
     bool m_lastMouseDownWasHere = false;
     Cursor::Type m_cursorType = Cursor::Type::ARROW;
 
+    Array<EventCallback> m_eventCallbacks;
     Array<ClickedCallback> m_clickedCallbacks;
 
     void UpdateFromCanvas();

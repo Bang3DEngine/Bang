@@ -5,6 +5,7 @@
 
 #include "Bang/Set.h"
 #include "Bang/Component.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -29,6 +30,7 @@ public:
     virtual void OnAfterChildrenUpdate() override;
     virtual void OnRender(RenderPass renderPass) override;
 
+    void UpdateEvents(GameObject *go);
     void InvalidateCanvas();
 
     void ClearFocus();
@@ -66,6 +68,13 @@ private:
     IFocusable* p_currentFocus = nullptr;
     IFocusable* p_currentFocusMouseOver = nullptr;
     UIDragDroppable* p_currentDDBeingDragged = nullptr;
+
+    // Events related
+    Vector2i m_lastMousePosition = Vector2i(-1);
+    IFocusable *p_eventsCurrentFocus = nullptr;
+    Set<IFocusable*> p_focusablesUnderMouse;
+    IFocusable *p_focusableUnderMouseTopMost = nullptr;
+    Set<IFocusable*> p_focusablesPotentiallyBeingPressed;
 
     void ApplyFocusChange();
     void SetFocusMouseOver(IFocusable *focusable);

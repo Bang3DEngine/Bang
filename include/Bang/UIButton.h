@@ -13,8 +13,7 @@ FORWARD class UITextRenderer;
 FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
 
-class UIButton : public Component,
-                 public EventListener<IEventsFocus>
+class UIButton : public Component
 {
     COMPONENT(UIButton)
 
@@ -59,12 +58,11 @@ private:
     virtual ~UIButton();
 
     // IEventsFocus
-    void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
-    void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
-    void OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusable) override;
-    void OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusable) override;
-    void OnClicked(EventEmitter<IEventsFocus> *focusable,
-                   ClickType clickType) override;
+    IEventsFocus::Event::PropagationResult
+                  OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
+                               const IEventsFocus::Event &event);
+    void OnMouseEnter();
+    void OnMouseExit();
 
     static UIButton *CreateInto(GameObject *go);
 

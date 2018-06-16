@@ -157,14 +157,22 @@ void Model::Import(const Path &modelFilepath)
 
     // Load new
     ModelIOScene modelScene;
-    ModelIO::ImportModel(modelFilepath, GetGUID(), &modelScene);
 
     // Copy
-    m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
-    for (uint i = 0; i < modelScene.meshes.Size(); ++i)
+    if (ModelIO::ImportModel(modelFilepath, GetGUID(), &modelScene))
     {
-        AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
-                modelScene.meshesNames[i],  modelScene.materialsNames[i]);
+        ASSERT(modelScene.modelTree);
+        m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
+        for (uint i = 0; i < modelScene.meshes.Size(); ++i)
+        {
+            AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
+                    modelScene.meshesNames[i],  modelScene.materialsNames[i]);
+        }
+    }
+    else
+    {
+        Debug_Error("Can not load model " << modelFilepath << ". " <<
+                    "Look for errors above.");
     }
 }
 

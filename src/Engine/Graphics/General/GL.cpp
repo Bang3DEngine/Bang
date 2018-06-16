@@ -2076,11 +2076,20 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
         break;
 
         case GL::Pushable::COLOR_MASK:
-        if (!push)
-        {
-            GL::SetColorMask(gl->m_colorMasks.stack.top());
-        }
-        PushOrPop_(&gl->m_colorMasks, push);
+            if (!push)
+            {
+                GL::SetColorMask(gl->m_colorMasks.stack.top());
+            }
+            PushOrPop_(&gl->m_colorMasks, push);
+        break;
+
+        case GL::Pushable::CULL_FACE:
+            if (!push)
+            {
+                GL::SetCullFace(gl->m_cullFaces.stack.top());
+            }
+            PushOrPop(GL::Enablable::CULL_FACE, push);
+            PushOrPop_(&gl->m_cullFaces, push);
         break;
 
         case GL::Pushable::DEPTH_STATES:

@@ -48,6 +48,7 @@ int ModelIO::GetModelNumTriangles(const Path &modelFilepath)
 {
     Assimp::Importer importer;
     const aiScene* scene = ImportScene(&importer, modelFilepath);
+    if (!scene) { return 0; }
 
     if (scene && scene->HasMeshes()) { return scene->mMeshes[0]->mNumFaces; }
     return 0;
@@ -155,6 +156,7 @@ bool ModelIO::ImportFirstFoundMeshRaw(
 {
     Assimp::Importer importer;
     const aiScene* scene = ImportScene(&importer, modelFilepath);
+    if (!scene) { return false; }
 
     bool ok = false;
     if (scene && scene->HasMeshes())
@@ -551,7 +553,7 @@ void ModelIO::ImportMesh(aiMesh *aMesh,
 }
 
 const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
-                                  const Path &modelFilepath)
+                                    const Path &modelFilepath)
 {
     const aiScene* scene =
       importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
@@ -559,6 +561,12 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
                          aiProcess_JoinIdenticalVertices  |
                          aiProcess_GenSmoothNormals       |
                          aiProcess_CalcTangentSpace);
+
+    String errorStr = importer->GetErrorString();
+    if (!errorStr.IsEmpty())
+    {
+        Debug_Error(errorStr);
+    }
 
     return scene;
 }

@@ -557,13 +557,16 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
     AABox aabBox = AABox::Empty;
     for (Renderer *rend : rends)
     {
-        if (rend && rend->IsEnabled() && rend->GetActiveMaterial() &&
-            rend->GetActiveMaterial()->GetRenderPass() == RenderPass::SCENE)
+        if (rend && rend->IsEnabled() && rend->GetActiveMaterial())
         {
-            const AABox rendAABox = rend->GetAABBox();
-            if (rendAABox != AABox::Empty)
+            RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
+            if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
             {
-                aabBox = AABox::Union(aabBox, rendAABox);
+                const AABox rendAABox = rend->GetAABBox();
+                if (rendAABox != AABox::Empty)
+                {
+                    aabBox = AABox::Union(aabBox, rendAABox);
+                }
             }
         }
     }

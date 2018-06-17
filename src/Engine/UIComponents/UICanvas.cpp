@@ -34,177 +34,6 @@ void UICanvas::OnStart()
     Component::OnStart();
 }
 
-void UICanvas::OnUpdate()
-{
-    Component::OnUpdate();
-
-    UpdateEvents( GetGameObject() );
-
-    /*
-    // Focus
-    IFocusable *focusMouseOver = nullptr;
-
-    Array< std::pair<IFocusable*, AARect> > focusablesAndRectsNDC;
-    GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
-                                             &focusablesAndRectsNDC);
-    for (const auto& focusableAndRectNDC : focusablesAndRectsNDC)
-    {
-        IFocusable *focusable = focusableAndRectNDC.first;
-        const AARect& maskedRectNDC = focusableAndRectNDC.second;
-
-        Component *focusableComp = Cast<Component*>(focusable);
-        if (focusableComp->IsActive() && focusable->IsFocusEnabled())
-        {
-            RectTransform *rt = focusableComp->GetGameObject()->GetRectTransform();
-            if (rt && rt->IsMouseOver() &&
-                maskedRectNDC.Contains( Input::GetMousePositionNDC() ))
-            {
-                focusMouseOver = focusable;
-                if (Input::GetMouseButtonDown(MouseButton::LEFT))
-                {
-                    SetFocus(focusable);
-                }
-                break; // Finished searching!
-            }
-        }
-    }
-    SetFocusMouseOver(focusMouseOver); // Set Focus mouse over and cursor
-
-    // Reset focus when clicking out of everything
-    if (Input::GetMouseButtonDown(MouseButton::LEFT) && !focusMouseOver)
-    {
-        SetFocus(nullptr);
-    }
-
-    // Create list of focusables, and track those destroyed. For this, we create
-    // a helper class which implements IEventsDestroy
-    struct DestroyFocusablesHandler : public EventListener<IEventsDestroy>
-    {
-        USet<IFocusable*> set;
-        void OnDestroyed(EventEmitter<IEventsDestroy> *object) override
-        { set.Add( DCAST<IFocusable*>(object) ); }
-    };
-
-    Array<IFocusable*> focusables;
-    DestroyFocusablesHandler destroyedFocusables;
-    for (const auto& focusableAndRectNDC : focusablesAndRectsNDC)
-    {
-        IFocusable *focusable = focusableAndRectNDC.first;
-        Object *objFocusable = DCAST<Object*>(focusable);
-        if (objFocusable)
-        {
-            objFocusable->EventEmitter<IEventsDestroy>::
-                         RegisterListener(&destroyedFocusables);
-        }
-        focusables.PushBack(focusable);
-    }
-
-    // Tabbing
-    if (Input::GetKeyDownRepeat(Key::TAB))
-    {
-        IFocusable *currentFocus = GetCurrentFocus();
-        if (currentFocus)
-        {
-            const int n = focusables.Size();
-            int indexOfFocus = focusables.IndexOf(currentFocus);
-            bool shift = Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
-            int newFocusIndex = indexOfFocus;
-
-            while (true)
-            {
-                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + n) % n;
-                if (newFocusIndex == indexOfFocus) { break; } // Complete loop
-
-                IFocusable *newFocus = focusables.At(newFocusIndex);
-                Component *newFocusComp = Cast<Component*>(newFocus);
-                const bool isValid = newFocus->IsFocusEnabled() &&
-                                     (!newFocusComp ||
-                                       newFocusComp->IsEnabled(true));
-                if (isValid) { break; }
-            }
-            SetFocus( focusables.At(newFocusIndex) );
-        }
-    }
-
-    // Update focusables
-    for (IFocusable *focusable : focusables)
-    {
-        if (!destroyedFocusables.set.Contains(focusable))
-        {
-            bool update = true;
-            if (Object *obj = DCAST<Object*>(focusable))
-            {
-                update = obj->IsActive();
-            }
-
-            if (update)
-            {
-                focusable->UpdateFromCanvas();
-            }
-        }
-    }
-    */
-
-    // Set cursor type
-    if (GetGameObject()->GetScene() &&
-        GetGameObject()->GetRectTransform()->IsMouseOver())
-    {
-        if (!p_ddBeingDragged)
-        {
-            if ( GetFocus() && GetFocus()->IsBeingPressed() )
-            {
-                Cursor::Set(GetFocus()->GetCursorType());
-            }
-            else
-            {
-                // Ensure the canvas is actually on the scene (avoid cases in which we
-                // invoke a fake update() without scene) and that the mouse is over us
-                if (GetFocusableUnderMouseTopMost())
-                {
-                    Cursor::Set(GetFocusableUnderMouseTopMost()->GetCursorType());
-                }
-                else
-                {
-                    Cursor::Set(Cursor::Type::ARROW);
-                }
-            }
-        }
-        else
-        {
-            Cursor::Set(Cursor::Type::CROSSHAIR);
-        }
-    }
-
-    // Drag drop
-    if (p_ddBeingDragged)
-    {
-        List<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
-        if (Input::GetMouseButton(MouseButton::LEFT))
-        {
-            p_ddBeingDragged->OnDragUpdate();
-            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
-            {
-                if (ddListener->IsReceivingEvents())
-                {
-                    ddListener->OnDragUpdate(p_ddBeingDragged);
-                }
-            }
-        }
-        else
-        {
-            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
-            {
-                if (ddListener->IsReceivingEvents())
-                {
-                    ddListener->OnDrop(p_ddBeingDragged);
-                }
-            }
-            p_ddBeingDragged->OnDropped();
-            p_ddBeingDragged = nullptr;
-        }
-    }
-}
-
 GameObject *GetGameObjectFromFocusable(IFocusable *focusable)
 {
     if (!focusable)
@@ -233,16 +62,14 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
         {
             UIEventResult propagationResult =
                                      focusableInGo->ProcessEvent(event);
-            if (propagationResult ==
-                UIEventResult::INTERCEPT)
+            if (propagationResult == UIEventResult::INTERCEPT)
             {
                 finalPropResult = UIEventResult::INTERCEPT;
             }
         }
     }
 
-    if (finalPropResult ==
-        UIEventResult::IGNORE)
+    if (finalPropResult == UIEventResult::IGNORE)
     {
         if (GameObject *nextFocusableParent = focusableGo->GetParent())
         {
@@ -260,16 +87,19 @@ void PropagateUIEvent(IFocusable *focusable, const UIEvent &event)
     }
 }
 
-void UICanvas::UpdateEvents(GameObject *go)
+void UICanvas::OnUpdate()
 {
+    Component::OnUpdate();
+
     const Vector2i currentMousePos = Input::GetMousePosition();
     const Vector2 currentMousePosNDC = Input::GetMousePositionNDC();
 
     IFocusable *focusableUnderMouseTopMost = nullptr;
 
-    Array<std::pair<IFocusable*, AARect>> focusCandidates;
-    GetSortedFocusCandidatesByOcclusionOrder(go, &focusCandidates);
-    for (const auto &pair : focusCandidates)
+    Array<std::pair<IFocusable*, AARect>> focusablesAndRectsNDC;
+    GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
+                                             &focusablesAndRectsNDC);
+    for (const auto &pair : focusablesAndRectsNDC)
     {
         IFocusable *focusable = pair.first;
         const AARect &aaRectMaskNDC = pair.second;
@@ -287,9 +117,14 @@ void UICanvas::UpdateEvents(GameObject *go)
             }
         }
     }
+    Array<IFocusable*> focusables;
+    for (const auto& focusableAndRectNDC : focusablesAndRectsNDC)
+    {
+        focusables.PushBack(focusableAndRectNDC.first);
+    }
 
     Map<IFocusable*, AARect> focusableToAARectMasksNDCs;
-    for (const auto &pair : focusCandidates)
+    for (const auto &pair : focusablesAndRectsNDC)
     {
         focusableToAARectMasksNDCs.Add(pair.first, pair.second);
     }
@@ -403,21 +238,7 @@ void UICanvas::UpdateEvents(GameObject *go)
 
         if (Input::GetMouseButtonDown(MouseButton::LEFT))
         {
-            if (GetFocusableUnderMouseTopMost() != p_focus)
-            {
-                if (GetFocus())
-                {
-                    PropagateClickEvent(GetFocus(), UIEvent::Type::FOCUS_LOST);
-                    UnRegisterForDestroy(GetFocus());
-                }
-
-                p_focus = GetFocusableUnderMouseTopMost();
-                if (GetFocus())
-                {
-                    PropagateClickEvent(GetFocus(), UIEvent::Type::FOCUS_TAKEN);
-                    RegisterForDestroy(GetFocus());
-                }
-            }
+            SetFocus( GetFocusableUnderMouseTopMost() );
 
             p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
             for (IFocusable *focusable : p_focusablesPotentiallyBeingPressed)
@@ -480,6 +301,92 @@ void UICanvas::UpdateEvents(GameObject *go)
 
         }
     }
+
+    // Tabbing
+    if (Input::GetKeyDownRepeat(Key::TAB))
+    {
+        IFocusable *focus = GetFocus();
+        if (focus)
+        {
+            const int n = focusables.Size();
+            int indexOfFocus = focusables.IndexOf(focus);
+            bool shift = Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
+            int newFocusIndex = indexOfFocus;
+
+            while (true)
+            {
+                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + n) % n;
+                if (newFocusIndex == indexOfFocus) { break; } // Complete loop
+
+                IFocusable *newFocus = focusables.At(newFocusIndex);
+                Component *newFocusComp = Cast<Component*>(newFocus);
+                const bool isValid = newFocus->IsFocusEnabled() &&
+                                     (!newFocusComp ||
+                                       newFocusComp->IsEnabled(true));
+                if (isValid) { break; }
+            }
+            SetFocus( focusables.At(newFocusIndex) );
+        }
+    }
+
+    // Set cursor type
+    if (GetGameObject()->GetScene() &&
+        GetGameObject()->GetRectTransform()->IsMouseOver())
+    {
+        if (!p_ddBeingDragged)
+        {
+            if ( GetFocus() && GetFocus()->IsBeingPressed() )
+            {
+                Cursor::Set(GetFocus()->GetCursorType());
+            }
+            else
+            {
+                // Ensure the canvas is actually on the scene (avoid cases in which we
+                // invoke a fake update() without scene) and that the mouse is over us
+                if (GetFocusableUnderMouseTopMost())
+                {
+                    Cursor::Set(GetFocusableUnderMouseTopMost()->GetCursorType());
+                }
+                else
+                {
+                    Cursor::Set(Cursor::Type::ARROW);
+                }
+            }
+        }
+        else
+        {
+            Cursor::Set(Cursor::Type::CROSSHAIR);
+        }
+    }
+
+    // Drag drop
+    if (p_ddBeingDragged)
+    {
+        List<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
+        if (Input::GetMouseButton(MouseButton::LEFT))
+        {
+            p_ddBeingDragged->OnDragUpdate();
+            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
+            {
+                if (ddListener->IsReceivingEvents())
+                {
+                    ddListener->OnDragUpdate(p_ddBeingDragged);
+                }
+            }
+        }
+        else
+        {
+            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
+            {
+                if (ddListener->IsReceivingEvents())
+                {
+                    ddListener->OnDrop(p_ddBeingDragged);
+                }
+            }
+            p_ddBeingDragged->OnDropped();
+            p_ddBeingDragged = nullptr;
+        }
+    }
 }
 
 void UICanvas::InvalidateCanvas()
@@ -506,15 +413,25 @@ void UICanvas::SetFocus(IFocusable *newFocusable_)
     {
         if (GetFocus())
         {
-            UnRegisterForDestroy(GetFocus());
             GetFocus()->ClearFocus();
+
+            UIEvent focusLostEvent;
+            focusLostEvent.type = UIEvent::Type::FOCUS_LOST;
+            GetFocus()->ProcessEvent(focusLostEvent);
+
+            UnRegisterForDestroy(GetFocus());
         }
 
         p_focus = newFocusable;
         if (GetFocus())
         {
-            RegisterForDestroy(GetFocus());
             GetFocus()->SetFocus();
+
+            UIEvent focusTakenEvent;
+            focusTakenEvent.type = UIEvent::Type::FOCUS_TAKEN;
+            GetFocus()->ProcessEvent(focusTakenEvent);
+
+            RegisterForDestroy(GetFocus());
         }
     }
 }

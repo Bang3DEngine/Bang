@@ -40,14 +40,11 @@ UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
     }
 
     // Propagate events
-    UIEventResult finalResult =
-            UIEventResult::IGNORE;
+    UIEventResult finalResult = UIEventResult::IGNORE;
     for (EventCallback eventCallback : m_eventCallbacks)
     {
-        UIEventResult propagationResult =
-                                                    eventCallback(this, event);
-        if (propagationResult ==
-            UIEventResult::INTERCEPT)
+        UIEventResult propagationResult = eventCallback(this, event);
+        if (propagationResult == UIEventResult::INTERCEPT)
         {
             finalResult = UIEventResult::INTERCEPT;
         }

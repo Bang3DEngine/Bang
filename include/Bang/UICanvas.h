@@ -30,7 +30,6 @@ public:
     virtual void OnAfterChildrenUpdate() override;
     virtual void OnRender(RenderPass renderPass) override;
 
-    void UpdateEvents(GameObject *go);
     void InvalidateCanvas();
 
     void ClearFocus();

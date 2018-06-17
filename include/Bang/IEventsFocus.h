@@ -4,7 +4,6 @@
 #include "Bang/Key.h"
 #include "Bang/Vector2.h"
 #include "Bang/IEvents.h"
-#include "Bang/ClickType.h"
 #include "Bang/MouseButton.h"
 
 NAMESPACE_BANG_BEGIN
@@ -21,7 +20,10 @@ struct UIEvent
 {
     enum class Type
     {
-        MOUSE_CLICK,
+        MOUSE_CLICK_DOWN,
+        MOUSE_CLICK_UP,
+        MOUSE_CLICK_FULL,
+        MOUSE_CLICK_DOUBLE,
         MOUSE_ENTER,
         STARTED_BEING_PRESSED,
         FINISHED_BEING_PRESSED,
@@ -37,11 +39,10 @@ struct UIEvent
     Vector2i mousePosition;
     struct
     {
-        ClickType type;
         MouseButton button;
-        Vector2i mouseDelta;
+        Vector2i delta;
     }
-    click;
+    mouse;
 
     struct
     {
@@ -51,7 +52,7 @@ struct UIEvent
 
     struct
     {
-        float amount;
+        Vector2 amount;
     }
     wheel;
 };

@@ -467,7 +467,7 @@ Scene* Dialog::CreateGetStringScene(const String &msg, const String &hint)
             Component::OnUpdate();
             if (Input::GetKeyDown(Key::ENTER))
             {
-                m_okButton->Click(ClickType::FULL);
+                m_okButton->Click();
             }
         }
 

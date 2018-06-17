@@ -120,8 +120,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->AddEventCallback([checkBox](IFocusable*, const UIEvent &event)
     {
-        if (event.type == UIEvent::Type::MOUSE_CLICK &&
-            event.click.type == ClickType::FULL)
+        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
         {
             checkBox->SetChecked( !checkBox->IsChecked() );
             return UIEventResult::INTERCEPT;

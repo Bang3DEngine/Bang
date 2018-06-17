@@ -155,20 +155,17 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->AddEventCallback([comboBox](IFocusable*, const UIEvent &event)
     {
-        if (event.type == UIEvent::Type::MOUSE_CLICK)
+        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
         {
-            if (event.click.type == ClickType::FULL)
+            if (comboBox->IsListBeingShown())
             {
-                if (comboBox->IsListBeingShown())
-                {
-                    comboBox->HideList();
-                }
-                else
-                {
-                    comboBox->ShowList();
-                }
-                return UIEventResult::INTERCEPT;
+                comboBox->HideList();
             }
+            else
+            {
+                comboBox->ShowList();
+            }
+            return UIEventResult::INTERCEPT;
         }
         return UIEventResult::IGNORE;
     });

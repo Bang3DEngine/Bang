@@ -42,24 +42,21 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
     {
         switch (event.type)
         {
-            case UIEvent::Type::MOUSE_CLICK:
-                if (event.click.button == MouseButton::LEFT)
+            case UIEvent::Type::MOUSE_CLICK_DOWN:
+                if (event.mouse.button == MouseButton::LEFT)
                 {
-                    switch (event.click.type)
+                    GetBackground()->SetTint(UIButton::PressedColor);
+                    return UIEventResult::INTERCEPT;
+                }
+            break;
+            case UIEvent::Type::MOUSE_CLICK_FULL:
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    for (auto clickedCallback : m_clickedCallbacks)
                     {
-                        case ClickType::DOWN:
-                            GetBackground()->SetTint(UIButton::PressedColor);
-                        break;
-
-                        case ClickType::FULL:
-                            for (auto clickedCallback : m_clickedCallbacks)
-                            {
-                                clickedCallback();
-                            }
-                        break;
-
-                        default: break;
+                        clickedCallback();
                     }
+                    return UIEventResult::INTERCEPT;
                 }
             break;
 
@@ -75,6 +72,7 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
                 {
                     OnMouseExit();
                 }
+                return UIEventResult::INTERCEPT;
             break;
 
             default: break;
@@ -107,8 +105,12 @@ void UIButton::OnStart()
     });
 }
 
-void UIButton::Click(ClickType clickType)
+void UIButton::Click()
 {
+    UIEvent event;
+    event.type = UIEvent::Type::MOUSE_CLICK_FULL;
+    event.mouse.button = MouseButton::LEFT;
+    GetFocusable()->ProcessEvent(event);
 }
 
 void UIButton::SetBlocked(bool blocked)

@@ -21,7 +21,7 @@ public:
     // Component
     void OnStart() override;
 
-    void Click(ClickType clickType);
+    void Click();
     void SetBlocked(bool blocked);
     void SetIconSize(const Vector2i &size);
     void SetIconTexture(Texture2D *texture);

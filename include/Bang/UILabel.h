@@ -53,8 +53,8 @@ public:
     void SetFocusable(IFocusable *focusable);
 
     // IEventsFocus
-    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
-    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnEvent(IFocusable *focusable,
+                         const IEventsFocus::Event &event) override;
 
 private:
     int m_cursorIndex = 0;

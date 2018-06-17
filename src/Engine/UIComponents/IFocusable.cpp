@@ -53,6 +53,10 @@ IFocusable::ProcessEvent(IEventsFocus::Event event)
             finalResult = IEventsFocus::Event::PropagationResult::STOP_PROPAGATION;
         }
     }
+
+    EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnEvent,
+                                                     this, event);
+
     return finalResult;
 }
 

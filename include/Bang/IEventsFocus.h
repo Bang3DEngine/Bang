@@ -9,6 +9,8 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class IFocusable;
+
 class IEventsFocus
 {
     IEVENTS(IEventsFocus);
@@ -59,13 +61,11 @@ public:
         wheel;
     };
 
-    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusEmitter)
+    virtual void OnEvent(IFocusable *focusable,
+                         const IEventsFocus::Event &event)
     {
-        (void) focusEmitter;
-    }
-    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
+        (void) focusable;
+        (void) event;
     }
 
     virtual void OnMouseEnter(EventEmitter<IEventsFocus> *focusEmitter)

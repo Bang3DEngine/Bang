@@ -202,54 +202,71 @@ int UILabel::GetClosestCharIndexTo(const Vector2 &coordsLocalNDC)
     return closestCharIndex;
 }
 
-int UILabel::GetCursorIndex() const { return m_cursorIndex; }
-int UILabel::GetSelectionIndex() const { return m_selectionIndex; }
-bool UILabel::IsSelectingWithMouse() const { return m_selectingWithMouse; }
-
-UIRectMask *UILabel::GetMask() const { return p_mask; }
-UITextRenderer *UILabel::GetText() const { return p_text; }
-IFocusable *UILabel::GetFocusable() const { return p_focusable; }
+int UILabel::GetCursorIndex() const
+{
+    return m_cursorIndex;
+}
+int UILabel::GetSelectionIndex() const
+{
+    return m_selectionIndex;
+}
+bool UILabel::IsSelectingWithMouse() const
+{
+    return m_selectingWithMouse;
+}
+UIRectMask *UILabel::GetMask() const
+{
+    return p_mask;
+}
+UITextRenderer *UILabel::GetText() const
+{
+    return p_text;
+}
+IFocusable *UILabel::GetFocusable() const
+{
+    return p_focusable;
+}
 
 void UILabel::SetFocusable(IFocusable *focusable)
 {
-    if (GetFocusable())
+    if (focusable != GetFocusable())
     {
-        GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(this);
-    }
+        if (GetFocusable())
+        {
+            GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(this);
+        }
 
-    p_focusable = focusable;
-    SetFocusEnabled (GetFocusable() == this);
+        p_focusable = focusable;
+        SetFocusEnabled (GetFocusable() == this);
 
-    if (GetFocusable())
-    {
-        GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
-        GetFocusable()->SetCursorType( Cursor::Type::IBEAM );
+        if (GetFocusable())
+        {
+            GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
+            GetFocusable()->SetCursorType( Cursor::Type::IBEAM );
+        }
     }
 }
 
-void UILabel::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
+void UILabel::OnEvent(IFocusable*, const IEventsFocus::Event &event)
 {
-    IEventsFocus::OnFocusTaken(focusable);
-
-    if (GetSelectAllOnFocus() && IsSelectable())
+    if (event.type == IEventsFocus::Event::Type::FOCUS_TAKEN)
     {
-        m_firstSelectAll = true;
-        SelectAll();
+        if (GetSelectAllOnFocus() && IsSelectable())
+        {
+            m_firstSelectAll = true;
+            SelectAll();
+        }
+        else { ResetSelection(); }
+
+        UpdateSelectionQuadRenderer();
     }
-    else { ResetSelection(); }
-
-    UpdateSelectionQuadRenderer();
+    else if (event.type == IEventsFocus::Event::Type::FOCUS_LOST)
+    {
+        ResetSelection();
+        UpdateSelectionQuadRenderer();
+        m_selectingWithMouse = false;
+    }
 }
-
-void UILabel::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnFocusLost(focusable);
-
-    ResetSelection();
-    UpdateSelectionQuadRenderer();
-    m_selectingWithMouse = false;
-}
-
 
 RectTransform *UILabel::GetTextParentRT() const
 {

@@ -14,7 +14,7 @@ class IFocusable : public EventEmitter<IEventsFocus>
 {
 public:
     using EventCallback = std::function<IEventsFocus::Event::PropagationResult(
-                                            IFocusable*, IEventsFocus::Event)>;
+                                    IFocusable*, const IEventsFocus::Event&)>;
 
     IEventsFocus::Event::PropagationResult ProcessEvent(IEventsFocus::Event event);
 

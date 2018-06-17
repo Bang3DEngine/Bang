@@ -413,7 +413,27 @@ void UICanvas::UpdateEvents(GameObject *go)
         {
             if (mbDown == MouseButton::LEFT)
             {
-                p_currentFocus = p_focusableUnderMouseTopMost;
+                if (p_focusableUnderMouseTopMost != p_currentFocus)
+                {
+                    if (p_currentFocus)
+                    {
+                        IEventsFocus::Event focusLostEvent;
+                        focusLostEvent.mousePosition = currentMousePos;
+                        focusLostEvent.type = IEventsFocus::Event::Type::
+                                               FOCUS_LOST;
+                        PropagateUIEvent(p_currentFocus, focusLostEvent);
+                    }
+
+                    p_currentFocus = p_focusableUnderMouseTopMost;
+                    if (p_currentFocus)
+                    {
+                        IEventsFocus::Event focusTakenEvent;
+                        focusTakenEvent.mousePosition = currentMousePos;
+                        focusTakenEvent.type = IEventsFocus::Event::Type::
+                                               FOCUS_TAKEN;
+                        PropagateUIEvent(p_currentFocus, focusTakenEvent);
+                    }
+                }
                 p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
             }
 
@@ -423,8 +443,7 @@ void UICanvas::UpdateEvents(GameObject *go)
                 clickEventDown.click.type = ClickType::DOWN;
                 clickEventDown.click.button = mbDown;
                 clickEventDown.click.button = MouseButton::LEFT;
-                PropagateUIEvent(p_focusableUnderMouseTopMost,
-                                 clickEventDown);
+                PropagateUIEvent(p_focusableUnderMouseTopMost, clickEventDown);
             }
 
         }
@@ -638,13 +657,20 @@ bool UICanvas::IsMouseOver(const Component *comp, bool recursive)
 }
 bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
 {
-    if (!go) { return false; }
     if (!recursive)
     {
-        List<IFocusable*> focusables = go->GetComponents<IFocusable>();
-        for (IFocusable *focusable : focusables)
+        List<const IFocusable*> focusables = go->GetComponents<const IFocusable>();
+        if (const IFocusable *focusable = DCAST<const IFocusable*>(go))
         {
-            if (IsMouseOverFocusable(focusable)) { return true; }
+            focusables.PushBack(focusable);
+        }
+
+        for (const IFocusable *focusable : focusables)
+        {
+            if (p_focusableUnderMouseTopMost == focusable)
+            {
+                return true;
+            }
         }
     }
     else
@@ -659,6 +685,7 @@ bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
             }
         }
     }
+
     return false;
 }
 

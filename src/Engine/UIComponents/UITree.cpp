@@ -505,7 +505,10 @@ bool UITree::IsItemCollapsed(GOItem *item) const
     return GetItemContainer(item)->IsCollapsed();
 }
 
-UIList *UITree::GetUIList() const { return p_uiList; }
+UIList *UITree::GetUIList() const
+{
+    return p_uiList;
+}
 
 void UITree::GetMousePositionInTree(
                     GOItem **itemOverOut,

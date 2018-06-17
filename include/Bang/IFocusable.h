@@ -35,7 +35,6 @@ protected:
     IFocusable();
     virtual ~IFocusable();
 
-
 private:
     bool m_beingPressed = false;
     bool m_hasFocus = false;
@@ -52,6 +51,8 @@ private:
     void SetIsMouseOver(bool isMouseOver);
     void SetFocus();
     void ClearFocus();
+
+    friend class UICanvas;
 };
 
 NAMESPACE_BANG_END

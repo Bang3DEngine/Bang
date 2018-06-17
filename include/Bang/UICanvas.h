@@ -36,8 +36,9 @@ public:
     void ClearFocus();
     void SetFocus(IFocusable *focusable);
 
-    IFocusable* GetCurrentFocus();
-    IFocusable* GetCurrentFocusMouseOver();
+    IFocusable* GetFocus();
+    const Vector2i& GetLastMousePosition() const;
+    IFocusable* GetFocusableUnderMouseTopMost() const;
     bool HasFocusFocusable(const IFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
     bool HasFocus(const GameObject *go, bool recursive = false);
@@ -65,19 +66,16 @@ public:
 private:
     UILayoutManager *m_uiLayoutManager = nullptr;
 
-    IFocusable* p_currentFocus = nullptr;
-    IFocusable* p_currentFocusMouseOver = nullptr;
-    UIDragDroppable* p_currentDDBeingDragged = nullptr;
-
-    // Events related
     Vector2i m_lastMousePosition = Vector2i(-1);
-    IFocusable *p_eventsCurrentFocus = nullptr;
+
+    IFocusable *p_focus = nullptr;
     Set<IFocusable*> p_focusablesUnderMouse;
+    UIDragDroppable *p_ddBeingDragged = nullptr;
     IFocusable *p_focusableUnderMouseTopMost = nullptr;
     Set<IFocusable*> p_focusablesPotentiallyBeingPressed;
 
-    void ApplyFocusChange();
-    void SetFocusMouseOver(IFocusable *focusable);
+    void RegisterForDestroy(IFocusable *focusable);
+    void UnRegisterForDestroy(IFocusable *focusable);
 
     List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 

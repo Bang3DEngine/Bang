@@ -402,7 +402,10 @@ int UIList::GetSelectedIndex() const
     return m_selectionIndex;
 }
 
-bool UIList::SomeChildHasFocus() const { return m_someChildHasFocus; }
+bool UIList::SomeChildHasFocus() const
+{
+    return m_someChildHasFocus;
+}
 
 GOItem *UIList::GetSelectedItem() const
 {

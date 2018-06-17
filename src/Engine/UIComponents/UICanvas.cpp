@@ -265,7 +265,7 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (Input::GetMouseButtonUp(MouseButton::LEFT))
+        if (!Input::GetMouseButton(MouseButton::LEFT))
         {
             for (IFocusable *focusablePotentiallyBeingPressed :
                     p_focusablesPotentiallyBeingPressed)

@@ -153,10 +153,9 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([comboBox](IFocusable*,
-                                           const IEventsFocus::Event &event)
+    focusable->AddEventCallback([comboBox](IFocusable*, const UIEvent &event)
     {
-        if (event.type == IEventsFocus::Event::Type::MOUSE_CLICK)
+        if (event.type == UIEvent::Type::MOUSE_CLICK)
         {
             if (event.click.type == ClickType::FULL)
             {
@@ -168,10 +167,10 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
                 {
                     comboBox->ShowList();
                 }
-                return IEventsFocus::Event::PropagationResult::STOP_PROPAGATION;
+                return UIEventResult::INTERCEPT;
             }
         }
-        return IEventsFocus::Event::PropagationResult::PROPAGATE_TO_PARENT;
+        return UIEventResult::IGNORE;
     });
     focusable->SetCursorType(Cursor::Type::HAND);
 

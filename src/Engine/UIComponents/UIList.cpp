@@ -375,13 +375,13 @@ void UIList::HandleShortcuts()
     }
 }
 
-void UIList::OnEvent(IFocusable *focusable, const IEventsFocus::Event &event)
+void UIList::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::FOCUS_TAKEN)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
         m_someChildHasFocus = true;
     }
-    else if (event.type == IEventsFocus::Event::Type::FOCUS_LOST)
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         m_someChildHasFocus = false;
     }

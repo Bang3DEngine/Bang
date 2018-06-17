@@ -74,9 +74,9 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnEvent(IFocusable *focusable, const IEventsFocus::Event &event)
+void UITree::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::MOUSE_CLICK)
+    if (event.type == UIEvent::Type::MOUSE_CLICK)
     {
         if (event.click.type == ClickType::FULL)
         {

@@ -140,13 +140,13 @@ bool UIInputNumber::HasFocus() const
     return m_hasFocus;
 }
 
-void UIInputNumber::OnEvent(IFocusable*, const IEventsFocus::Event &event)
+void UIInputNumber::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::FOCUS_TAKEN)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
         m_hasFocus = true;
     }
-    else if (event.type == IEventsFocus::Event::Type::FOCUS_LOST)
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         m_hasFocus = false;
         SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );

@@ -247,9 +247,9 @@ void UILabel::SetFocusable(IFocusable *focusable)
     }
 }
 
-void UILabel::OnEvent(IFocusable*, const IEventsFocus::Event &event)
+void UILabel::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::FOCUS_TAKEN)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
         if (GetSelectAllOnFocus() && IsSelectable())
         {
@@ -260,7 +260,7 @@ void UILabel::OnEvent(IFocusable*, const IEventsFocus::Event &event)
 
         UpdateSelectionQuadRenderer();
     }
-    else if (event.type == IEventsFocus::Event::Type::FOCUS_LOST)
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         ResetSelection();
         UpdateSelectionQuadRenderer();

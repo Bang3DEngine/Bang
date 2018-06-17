@@ -456,13 +456,13 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
     return i;
 }
 
-void UIInputText::OnEvent(IFocusable *focusable, const IEventsFocus::Event &event)
+void UIInputText::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::FOCUS_TAKEN)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
         Input::PollInputText();
     }
-    else if (event.type == IEventsFocus::Event::Type::FOCUS_LOST)
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         UpdateCursorRenderer();
     }

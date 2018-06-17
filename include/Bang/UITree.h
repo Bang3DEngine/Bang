@@ -55,8 +55,7 @@ public:
     void OnUpdate() override;
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable,
-                         const IEventsFocus::Event &event) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     // IEventsDragDrop
     virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;

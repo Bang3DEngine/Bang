@@ -198,14 +198,19 @@ Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const
     for (uint i = 0; i < GetMeshes().Size(); ++i)
     {
         names.PushBack(GetMeshesNames()[i]);
-        names.PushBack(GetMaterialsNames()[i]);
         resources.PushBack(GetMeshes()[i].Get());
+    }
+
+    for (uint i = 0; i < GetMaterials().Size(); ++i)
+    {
         resources.PushBack(GetMaterials()[i].Get());
+        names.PushBack(GetMaterialsNames()[i]);
     }
 
     for (uint i = 0; i < resources.Size(); ++i)
     {
-        if (resources[i]->GetGUID().GetEmbeddedFileGUID() == embeddedFileGUID)
+        if (resources[i] &&
+            resources[i]->GetGUID().GetEmbeddedFileGUID() == embeddedFileGUID)
         {
             pair.first = resources[i];
             pair.second = names[i];

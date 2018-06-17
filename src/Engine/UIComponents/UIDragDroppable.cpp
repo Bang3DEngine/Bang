@@ -217,12 +217,11 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnEvent(IFocusable *focusable,
-                              const IEventsFocus::Event &event)
+void UIDragDroppable::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
-    if (event.type == IEventsFocus::Event::Type::MOUSE_CLICK)
+    if (event.type == UIEvent::Type::MOUSE_CLICK)
     {
         if (event.click.type == ClickType::DOWN)
         {

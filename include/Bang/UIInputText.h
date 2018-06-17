@@ -41,8 +41,7 @@ public:
     void SetAllowedCharacters(const String &allowedCharacters);
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable,
-                         const IEventsFocus::Event &event) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;

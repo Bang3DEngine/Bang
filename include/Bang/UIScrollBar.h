@@ -67,8 +67,7 @@ private:
     GameObject* GetBar() const;
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable,
-                         const IEventsFocus::Event &event) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     friend class GameObjectFactory;
 };

@@ -215,14 +215,13 @@ Axis UIDirLayoutMovableSeparator::GetAxis() const
     return m_axis;
 }
 
-void UIDirLayoutMovableSeparator::OnEvent(IFocusable*,
-                                          const IEventsFocus::Event &event)
+void UIDirLayoutMovableSeparator::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::MOUSE_ENTER)
+    if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
     }
-    else if (event.type == IEventsFocus::Event::Type::MOUSE_EXIT)
+    else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
     }

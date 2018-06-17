@@ -251,13 +251,13 @@ AARect UIScrollBar::GetScrollingRect() const
 UIScrollArea *UIScrollBar::GetScrollArea() const { return p_scrollArea; }
 GameObject *UIScrollBar::GetBar() const { return p_bar; }
 
-void UIScrollBar::OnEvent(IFocusable*, const IEventsFocus::Event &event)
+void UIScrollBar::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (event.type == IEventsFocus::Event::Type::MOUSE_ENTER)
+    if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
         OnMouseEnter();
     }
-    else if (event.type == IEventsFocus::Event::Type::MOUSE_EXIT)
+    else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
         OnMouseExit();
     }

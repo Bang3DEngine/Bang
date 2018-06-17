@@ -53,8 +53,7 @@ public:
     void SetFocusable(IFocusable *focusable);
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable,
-                         const IEventsFocus::Event &event) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
 private:
     int m_cursorIndex = 0;

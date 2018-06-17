@@ -16,24 +16,23 @@ void IFocusable::UpdateFromCanvas()
 {
 }
 
-IEventsFocus::Event::PropagationResult
-IFocusable::ProcessEvent(IEventsFocus::Event event)
+UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
 {
     switch (event.type)
     {
-        case IEventsFocus::Event::Type::MOUSE_ENTER:
+        case UIEvent::Type::MOUSE_ENTER:
             SetIsMouseOver(true);
         break;
 
-        case IEventsFocus::Event::Type::MOUSE_EXIT:
+        case UIEvent::Type::MOUSE_EXIT:
             SetIsMouseOver(false);
         break;
 
-        case IEventsFocus::Event::Type::STARTED_BEING_PRESSED:
+        case UIEvent::Type::STARTED_BEING_PRESSED:
             SetBeingPressed(true);
         break;
 
-        case IEventsFocus::Event::Type::FINISHED_BEING_PRESSED:
+        case UIEvent::Type::FINISHED_BEING_PRESSED:
             SetBeingPressed(false);
         break;
 
@@ -41,16 +40,16 @@ IFocusable::ProcessEvent(IEventsFocus::Event event)
     }
 
     // Propagate events
-    IEventsFocus::Event::PropagationResult finalResult =
-            IEventsFocus::Event::PropagationResult::PROPAGATE_TO_PARENT;
+    UIEventResult finalResult =
+            UIEventResult::IGNORE;
     for (EventCallback eventCallback : m_eventCallbacks)
     {
-        IEventsFocus::Event::PropagationResult propagationResult =
+        UIEventResult propagationResult =
                                                     eventCallback(this, event);
         if (propagationResult ==
-            IEventsFocus::Event::PropagationResult::STOP_PROPAGATION)
+            UIEventResult::INTERCEPT)
         {
-            finalResult = IEventsFocus::Event::PropagationResult::STOP_PROPAGATION;
+            finalResult = UIEventResult::INTERCEPT;
         }
     }
 

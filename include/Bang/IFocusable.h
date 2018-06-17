@@ -13,10 +13,10 @@ NAMESPACE_BANG_BEGIN
 class IFocusable : public EventEmitter<IEventsFocus>
 {
 public:
-    using EventCallback = std::function<IEventsFocus::Event::PropagationResult(
-                                    IFocusable*, const IEventsFocus::Event&)>;
+    using EventCallback = std::function<UIEventResult(IFocusable*,
+                                                      const UIEvent&)>;
 
-    IEventsFocus::Event::PropagationResult ProcessEvent(IEventsFocus::Event event);
+    UIEventResult ProcessEvent(const UIEvent &event);
 
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);

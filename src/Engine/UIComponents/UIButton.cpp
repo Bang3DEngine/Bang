@@ -33,16 +33,16 @@ UIButton::~UIButton()
 
 }
 
-IEventsFocus::Event::PropagationResult
+UIEventResult
 UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                       const IEventsFocus::Event &event)
+                       const UIEvent &event)
 {
     (void) focusable;
     if (!IsBlocked())
     {
         switch (event.type)
         {
-            case IEventsFocus::Event::Type::MOUSE_CLICK:
+            case UIEvent::Type::MOUSE_CLICK:
                 if (event.click.button == MouseButton::LEFT)
                 {
                     switch (event.click.type)
@@ -63,10 +63,10 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
                 }
             break;
 
-            case IEventsFocus::Event::Type::STARTED_BEING_PRESSED:
-            case IEventsFocus::Event::Type::FINISHED_BEING_PRESSED:
-            case IEventsFocus::Event::Type::MOUSE_ENTER:
-            case IEventsFocus::Event::Type::MOUSE_EXIT:
+            case UIEvent::Type::STARTED_BEING_PRESSED:
+            case UIEvent::Type::FINISHED_BEING_PRESSED:
+            case UIEvent::Type::MOUSE_ENTER:
+            case UIEvent::Type::MOUSE_EXIT:
                 if (GetFocusable()->IsMouseOver())
                 {
                     OnMouseEnter();
@@ -80,7 +80,7 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
             default: break;
         }
     }
-    return IEventsFocus::Event::PropagationResult::PROPAGATE_TO_PARENT;
+    return UIEventResult::IGNORE;
 }
 
 void UIButton::OnMouseEnter()
@@ -101,7 +101,7 @@ void UIButton::OnStart()
 {
     Component::OnStart();
     GetFocusable()->AddEventCallback([this](EventEmitter<IEventsFocus> *focusable,
-                                            const IEventsFocus::Event &event)
+                                            const UIEvent &event)
     {
         return OnFocusEvent(focusable, event);
     });

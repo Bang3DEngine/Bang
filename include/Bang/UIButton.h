@@ -58,9 +58,8 @@ private:
     virtual ~UIButton();
 
     // IEventsFocus
-    IEventsFocus::Event::PropagationResult
-                  OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                               const IEventsFocus::Event &event);
+    UIEventResult OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
+                               const UIEvent &event);
     void OnMouseEnter();
     void OnMouseExit();
 

@@ -118,16 +118,15 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([checkBox](IFocusable*,
-                                           const IEventsFocus::Event &event)
+    focusable->AddEventCallback([checkBox](IFocusable*, const UIEvent &event)
     {
-        if (event.type == IEventsFocus::Event::Type::MOUSE_CLICK &&
+        if (event.type == UIEvent::Type::MOUSE_CLICK &&
             event.click.type == ClickType::FULL)
         {
             checkBox->SetChecked( !checkBox->IsChecked() );
-            return IEventsFocus::Event::PropagationResult::STOP_PROPAGATION;
+            return UIEventResult::INTERCEPT;
         }
-        return IEventsFocus::Event::PropagationResult::PROPAGATE_TO_PARENT;
+        return UIEventResult::IGNORE;
     });
     focusable->SetCursorType(Cursor::Type::HAND);
 

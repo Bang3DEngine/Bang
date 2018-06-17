@@ -193,9 +193,6 @@ Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const
     pair.first = nullptr;
     pair.second = "NameNotFound";
 
-    ASSERT(GetMeshes().Size() == GetMaterials().Size());
-    ASSERT(GetMeshes().Size() == GetMeshesNames().Size());
-    ASSERT(GetMeshes().Size() == GetMaterialsNames().Size());
     Array< String > names;
     Array< Resource* > resources;
     for (uint i = 0; i < GetMeshes().Size(); ++i)

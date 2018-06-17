@@ -74,20 +74,22 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnClicked(EventEmitter<IEventsFocus> *focusable,
-                       ClickType clickType)
+void UITree::OnEvent(IFocusable *focusable, const IEventsFocus::Event &event)
 {
-    if (clickType == ClickType::FULL)
+    if (event.type == IEventsFocus::Event::Type::MOUSE_CLICK)
     {
-        IFocusable *collapseButton = DCAST<IFocusable*>(focusable);
-        Component *cCollapseButton = DCAST<Component*>(collapseButton);
-        UITreeItemContainer *itemContainer =
-                   SCAST<UITreeItemContainer*>(cCollapseButton->GetGameObject()->
-                                               GetParent());
-        if (itemContainer)
+        if (event.click.type == ClickType::FULL)
         {
-            SetItemCollapsed(itemContainer->GetContainedItem(),
-                             !itemContainer->IsCollapsed());
+            IFocusable *collapseButton = DCAST<IFocusable*>(focusable);
+            Component *cCollapseButton = DCAST<Component*>(collapseButton);
+            UITreeItemContainer *itemContainer =
+                       SCAST<UITreeItemContainer*>(cCollapseButton->GetGameObject()->
+                                                   GetParent());
+            if (itemContainer)
+            {
+                SetItemCollapsed(itemContainer->GetContainedItem(),
+                                 !itemContainer->IsCollapsed());
+            }
         }
     }
 }

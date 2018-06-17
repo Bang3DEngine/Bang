@@ -67,12 +67,6 @@ public:
         (void) focusable;
         (void) event;
     }
-
-    virtual void OnClicked(EventEmitter<IEventsFocus> *focusEmitter,
-                           ClickType clickType)
-    {
-        (void) focusEmitter;
-    }
 };
 
 NAMESPACE_BANG_END

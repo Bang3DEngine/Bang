@@ -64,10 +64,6 @@ bool IFocusable::IsBeingPressed() const
 {
     return m_beingPressed;
 }
-void IFocusable::AddClickedCallback(ClickedCallback callback)
-{
-    m_clickedCallbacks.PushBack(callback);
-}
 
 Cursor::Type IFocusable::GetCursorType() const
 {
@@ -89,11 +85,6 @@ void IFocusable::SetCursorType(Cursor::Type cursorType)
     m_cursorType = cursorType;
 }
 
-void IFocusable::Click(ClickType clickType)
-{
-    PropagateOnClickedToListeners(clickType);
-}
-
 bool IFocusable::HasFocus() const
 {
     return m_hasFocus;
@@ -113,7 +104,6 @@ void IFocusable::SetFocus()
     {
         m_hasFocus = true;
         m_hasJustFocusChanged = true;
-        PropagateFocusToListeners();
     }
 }
 
@@ -123,25 +113,6 @@ void IFocusable::ClearFocus()
     {
         m_hasFocus = false;
         m_hasJustFocusChanged = true;
-        PropagateFocusToListeners();
-    }
-}
-
-void IFocusable::PropagateMouseOverToListeners(bool mouseOver)
-{
-    if (IsMouseOver() != mouseOver)
-    {
-        m_isMouseOver = mouseOver;
-        if (IsMouseOver())
-        {
-            EventEmitter<IEventsFocus>::
-                    PropagateToListeners(&IEventsFocus::OnMouseEnter, this);
-        }
-        else
-        {
-            EventEmitter<IEventsFocus>::
-                    PropagateToListeners(&IEventsFocus::OnMouseExit, this);
-        }
     }
 }
 
@@ -158,29 +129,5 @@ void IFocusable::SetIsMouseOver(bool isMouseOver)
     if (isMouseOver != m_isMouseOver)
     {
         m_isMouseOver = isMouseOver;
-    }
-}
-
-void IFocusable::PropagateFocusToListeners()
-{
-    if (HasFocus())
-    {
-        EventEmitter<IEventsFocus>::
-                PropagateToListeners(&IEventsFocus::OnFocusTaken, this);
-    }
-    else
-    {
-        EventEmitter<IEventsFocus>::
-            PropagateToListeners(&IEventsFocus::OnFocusLost, this);
-    }
-}
-
-void IFocusable::PropagateOnClickedToListeners(ClickType clickType)
-{
-    if (IsEmittingEvents())
-    {
-        EventEmitter<IEventsFocus>::
-            PropagateToListeners(&IEventsFocus::OnClicked, this, clickType);
-        for (auto callback : m_clickedCallbacks) { callback(this, clickType); }
     }
 }

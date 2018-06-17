@@ -13,40 +13,28 @@ NAMESPACE_BANG_BEGIN
 class IFocusable : public EventEmitter<IEventsFocus>
 {
 public:
-    bool IsMouseOver() const;
+    using EventCallback = std::function<IEventsFocus::Event::PropagationResult(
+                                            IFocusable*, IEventsFocus::Event)>;
+
+    IEventsFocus::Event::PropagationResult ProcessEvent(IEventsFocus::Event event);
 
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
+    void AddEventCallback(EventCallback eventCallback);
 
-    void Click(ClickType clickType);
     bool HasFocus() const;
     bool IsFocusEnabled() const;
     bool HasJustFocusChanged() const;
     bool IsBeingPressed() const;
+    bool IsMouseOver() const;
     Cursor::Type GetCursorType() const;
 
-    IEventsFocus::Event::PropagationResult ProcessEvent(IEventsFocus::Event event);
 
-    using EventCallback = std::function<IEventsFocus::Event::PropagationResult(
-                                                  EventEmitter<IEventsFocus>*,
-                                                  IEventsFocus::Event)>;
-    void AddEventCallback(EventCallback eventCallback);
-
-    using ClickedCallback = std::function<void(IFocusable*, ClickType clickType)>;
-    void AddClickedCallback(ClickedCallback callback);
 
 protected:
     IFocusable();
     virtual ~IFocusable();
 
-    void SetFocus();
-    void ClearFocus();
-    void PropagateFocusToListeners();
-    void PropagateOnClickedToListeners(ClickType clickType);
-    void PropagateMouseOverToListeners(bool mouseOver);
-
-    void SetBeingPressed(bool beingPressed);
-    void SetIsMouseOver(bool isMouseOver);
 
 private:
     bool m_beingPressed = false;
@@ -58,11 +46,12 @@ private:
     Cursor::Type m_cursorType = Cursor::Type::ARROW;
 
     Array<EventCallback> m_eventCallbacks;
-    Array<ClickedCallback> m_clickedCallbacks;
 
     void UpdateFromCanvas();
-
-    friend class UICanvas;
+    void SetBeingPressed(bool beingPressed);
+    void SetIsMouseOver(bool isMouseOver);
+    void SetFocus();
+    void ClearFocus();
 };
 
 NAMESPACE_BANG_END

@@ -321,7 +321,6 @@ void UICanvas::UpdateEvents(GameObject *go)
 
             for (IFocusable *focusableNotUnderAnymore : focusablesNotUnderAnymore)
             {
-                focusableNotUnderAnymore->SetIsMouseOver(false);
                 IEventsFocus::Event eventExit = eventMoveBase;
                 eventExit.type = IEventsFocus::Event::Type::MOUSE_EXIT;
                 PropagateUIEvent(focusableNotUnderAnymore, eventExit);
@@ -351,63 +350,88 @@ void UICanvas::UpdateEvents(GameObject *go)
         m_lastMousePosition = currentMousePos;
     }
 
-    if (Input::GetMouseButtonUp(MouseButton::LEFT))
+    const Array<MouseButton> mouseButtonsDown = Input::GetMouseButtonsDown();
+    const Array<MouseButton> mouseButtonsUp = Input::GetMouseButtonsUp();
+    if (mouseButtonsDown.Size() >= 1 || mouseButtonsUp.Size() >= 1)
     {
-        for (IFocusable *focusablePotentiallyBeingPressed :
-                p_focusablesPotentiallyBeingPressed)
-        {
-            if (focusablePotentiallyBeingPressed->IsBeingPressed())
-            {
-                IEventsFocus::Event clickEventFinishedPressed;
-                clickEventFinishedPressed.mousePosition = currentMousePos;
-                clickEventFinishedPressed.type = IEventsFocus::Event::Type::
-                                                 FINISHED_BEING_PRESSED;
-                clickEventFinishedPressed.click.type = ClickType::DOWN;
-                clickEventFinishedPressed.click.button = MouseButton::LEFT;
+        IEventsFocus::Event clickEvent;
+        clickEvent.mousePosition = currentMousePos;
+        clickEvent.type = IEventsFocus::Event::Type::MOUSE_CLICK;
 
-                PropagateUIEvent(focusablePotentiallyBeingPressed,
-                                 clickEventFinishedPressed);
+        if (Input::GetMouseButtonDown(MouseButton::LEFT))
+        {
+            if (p_focusableUnderMouseTopMost)
+            {
+                IEventsFocus::Event clickEventStartedPressed = clickEvent;
+                clickEventStartedPressed.type = IEventsFocus::Event::Type::
+                                                STARTED_BEING_PRESSED;
+                clickEventStartedPressed.click.type = ClickType::DOWN;
+                clickEventStartedPressed.click.button = MouseButton::LEFT;
+                PropagateUIEvent(p_focusableUnderMouseTopMost,
+                                 clickEventStartedPressed);
             }
         }
-        p_focusablesPotentiallyBeingPressed.Clear();
-    }
 
-    if (p_focusableUnderMouseTopMost)
-    {
-        const Array<MouseButton> mouseButtonsDown = Input::GetMouseButtonsDown();
-        const Array<MouseButton> mouseButtonsUp = Input::GetMouseButtonsUp();
-        if (mouseButtonsDown.Size() >= 1 || mouseButtonsUp.Size() >= 1)
+        if (Input::GetMouseButtonUp(MouseButton::LEFT))
         {
-            IEventsFocus::Event clickEvent;
-            clickEvent.mousePosition = currentMousePos;
-            clickEvent.type = IEventsFocus::Event::Type::MOUSE_CLICK;
-
-            for (MouseButton mbDown : mouseButtonsDown)
+            if (p_currentFocus && p_currentFocus->IsBeingPressed())
             {
-                if (mbDown == MouseButton::LEFT)
+                if (GameObject *focusGo = GetGameObjectFromFocusable(p_currentFocus))
                 {
-                    p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
-
-                    if (p_focusableUnderMouseTopMost)
+                    if (RectTransform *rt = focusGo->GetRectTransform())
                     {
-                        IEventsFocus::Event clickEventStartedPressed = clickEvent;
-                        clickEventStartedPressed.type = IEventsFocus::Event::Type::
-                                                        STARTED_BEING_PRESSED;
-                        clickEventStartedPressed.click.type = ClickType::DOWN;
-                        clickEventStartedPressed.click.button = MouseButton::LEFT;
-
-                        PropagateUIEvent(p_focusableUnderMouseTopMost,
-                                         clickEventStartedPressed);
+                        if (rt->IsMouseOver(false))
+                        {
+                            IEventsFocus::Event clickEventFull = clickEvent;
+                            clickEventFull.click.type = ClickType::FULL;
+                            clickEventFull.click.button = MouseButton::LEFT;
+                            PropagateUIEvent(p_currentFocus, clickEventFull);
+                        }
                     }
                 }
+            }
 
+            for (IFocusable *focusablePotentiallyBeingPressed :
+                    p_focusablesPotentiallyBeingPressed)
+            {
+                if (focusablePotentiallyBeingPressed->IsBeingPressed())
+                {
+                    IEventsFocus::Event clickEventFinishedPressed;
+                    clickEventFinishedPressed.mousePosition = currentMousePos;
+                    clickEventFinishedPressed.type = IEventsFocus::Event::Type::
+                                                     FINISHED_BEING_PRESSED;
+                    clickEventFinishedPressed.click.type = ClickType::DOWN;
+                    clickEventFinishedPressed.click.button = MouseButton::LEFT;
+                    PropagateUIEvent(focusablePotentiallyBeingPressed,
+                                     clickEventFinishedPressed);
+                }
+            }
+            p_focusablesPotentiallyBeingPressed.Clear();
+        }
+
+        for (MouseButton mbDown : mouseButtonsDown)
+        {
+            if (mbDown == MouseButton::LEFT)
+            {
+                p_currentFocus = p_focusableUnderMouseTopMost;
+                p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
+            }
+
+            if (p_focusableUnderMouseTopMost)
+            {
                 IEventsFocus::Event clickEventDown = clickEvent;
                 clickEventDown.click.type = ClickType::DOWN;
                 clickEventDown.click.button = mbDown;
-                PropagateUIEvent(p_focusableUnderMouseTopMost, clickEventDown);
+                clickEventDown.click.button = MouseButton::LEFT;
+                PropagateUIEvent(p_focusableUnderMouseTopMost,
+                                 clickEventDown);
             }
 
-            for (MouseButton mbUp : mouseButtonsUp)
+        }
+
+        for (MouseButton mbUp : mouseButtonsUp)
+        {
+            if (p_focusableUnderMouseTopMost)
             {
                 IEventsFocus::Event clickEventUp = clickEvent;
                 clickEventUp.click.type = ClickType::UP;
@@ -437,6 +461,7 @@ void UICanvas::InvalidateCanvas()
 
 void UICanvas::SetFocus(IFocusable *_newFocusable)
 {
+    /*
     IFocusable *newFocusable = _newFocusable;
     Object *obj = newFocusable ? DCAST<Object*>(newFocusable) : nullptr;
     if (obj)
@@ -452,7 +477,7 @@ void UICanvas::SetFocus(IFocusable *_newFocusable)
             if (GetCurrentFocus() != GetCurrentFocusMouseOver())
             { focusableObj->EventEmitter<IEventsDestroy>::UnRegisterListener(this); }
 
-            GetCurrentFocus()->ClearFocus();
+            // GetCurrentFocus()->ClearFocus();
         }
 
         p_currentFocus = newFocusable;
@@ -461,13 +486,15 @@ void UICanvas::SetFocus(IFocusable *_newFocusable)
             Object *focusableObj = DCAST<Object*>( GetCurrentFocus() );
             focusableObj->EventEmitter<IEventsDestroy>::RegisterListener(this);
 
-            GetCurrentFocus()->SetFocus();
+            // GetCurrentFocus()->SetFocus();
         }
     }
+    */
 }
 
 void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
 {
+    /*
     IFocusable *newFocusableMO = _newFocusableMO;
     Object *obj = newFocusableMO ? DCAST<Object*>(newFocusableMO) : nullptr;
     if (obj)
@@ -483,7 +510,7 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
             if (GetCurrentFocus() != GetCurrentFocusMouseOver())
             { focusableMOObj->EventEmitter<IEventsDestroy>::UnRegisterListener(this); }
 
-            GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(false);
+            // GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(false);
         }
 
         p_currentFocusMouseOver = newFocusableMO;
@@ -491,9 +518,10 @@ void UICanvas::SetFocusMouseOver(IFocusable *_newFocusableMO)
         {
             Object *focusableMOObj = Cast<Object*>( GetCurrentFocusMouseOver() );
             focusableMOObj->EventEmitter<IEventsDestroy>::RegisterListener(this);
-            GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(true);
+            // GetCurrentFocusMouseOver()->PropagateMouseOverToListeners(true);
         }
     }
+    */
 }
 
 List<EventListener<IEventsDragDrop>*> UICanvas::GetDragDropListeners() const
@@ -525,7 +553,7 @@ void UICanvas::OnAfterChildrenUpdate()
 {
     Component::OnAfterChildrenUpdate();
 
-    if (GetCurrentFocus()) { GetCurrentFocus()->m_hasJustFocusChanged = false; }
+    // if (GetCurrentFocus()) { GetCurrentFocus()->m_hasJustFocusChanged = false; }
 }
 
 
@@ -648,8 +676,14 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
     }
 }
 
-IFocusable *UICanvas::GetCurrentFocus() { return p_currentFocus; }
-IFocusable* UICanvas::GetCurrentFocusMouseOver() { return p_currentFocusMouseOver; }
+IFocusable *UICanvas::GetCurrentFocus()
+{
+    return p_currentFocus;
+}
+IFocusable* UICanvas::GetCurrentFocusMouseOver()
+{
+    return p_currentFocusMouseOver;
+}
 
 
 UILayoutManager *UICanvas::GetLayoutManager() const

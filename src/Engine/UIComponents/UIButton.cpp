@@ -109,7 +109,6 @@ void UIButton::OnStart()
 
 void UIButton::Click(ClickType clickType)
 {
-    GetFocusable()->Click(clickType);
 }
 
 void UIButton::SetBlocked(bool blocked)

@@ -68,24 +68,6 @@ public:
         (void) event;
     }
 
-    virtual void OnMouseEnter(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-    virtual void OnMouseExit(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-
-    virtual void OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-    virtual void OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-
     virtual void OnClicked(EventEmitter<IEventsFocus> *focusEmitter,
                            ClickType clickType)
     {

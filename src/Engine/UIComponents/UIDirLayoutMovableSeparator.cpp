@@ -215,14 +215,17 @@ Axis UIDirLayoutMovableSeparator::GetAxis() const
     return m_axis;
 }
 
-void UIDirLayoutMovableSeparator::OnMouseEnter(EventEmitter<IEventsFocus>*)
+void UIDirLayoutMovableSeparator::OnEvent(IFocusable*,
+                                          const IEventsFocus::Event &event)
 {
-    p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
-}
-
-void UIDirLayoutMovableSeparator::OnMouseExit(EventEmitter<IEventsFocus>*)
-{
-    p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
+    if (event.type == IEventsFocus::Event::Type::MOUSE_ENTER)
+    {
+        p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
+    }
+    else if (event.type == IEventsFocus::Event::Type::MOUSE_EXIT)
+    {
+        p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
+    }
 }
 
 UIDirLayoutMovableSeparator*

@@ -56,6 +56,8 @@ private:
 
     static UIScrollBar* CreateInto(GameObject *go);
 
+    void OnMouseEnter();
+    void OnMouseExit();
     void UpdateLengthThicknessMargins();
 
     int GetScrollingSpacePx() const;
@@ -65,8 +67,8 @@ private:
     GameObject* GetBar() const;
 
     // IEventsFocus
-    void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
-    void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnEvent(IFocusable *focusable,
+                         const IEventsFocus::Event &event) override;
 
     friend class GameObjectFactory;
 };

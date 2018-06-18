@@ -186,14 +186,17 @@ void UICanvas::OnUpdate()
                                     UIEvent::Type::MOUSE_ENTER);
             }
 
-            if (currentMousePos != GetLastMousePosition())
-            {
-                PropagateClickEvent(GetFocusableUnderMouseTopMost(),
-                                    UIEvent::Type::MOUSE_MOVE);
-            }
-
             p_focusablesUnderMouse.Add(GetFocusableUnderMouseTopMost());
             RegisterForDestroy(GetFocusableUnderMouseTopMost());
+        }
+    }
+
+    if (GetFocusableUnderMouseTopMost())
+    {
+        if (currentMousePos != GetLastMousePosition())
+        {
+            PropagateClickEvent(GetFocusableUnderMouseTopMost(),
+                                UIEvent::Type::MOUSE_MOVE);
         }
     }
     m_lastMousePosition = currentMousePos;

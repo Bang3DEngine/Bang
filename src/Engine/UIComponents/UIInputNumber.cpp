@@ -37,7 +37,6 @@ void UIInputNumber::OnUpdate()
             UICanvas::GetActive(this)->SetFocus(nullptr);
         }
 
-
         float increment = 0.0f;
         if (Input::GetKeyDownRepeat(Key::UP))   { increment =  1.0f; }
         if (Input::GetKeyDownRepeat(Key::DOWN)) { increment = -1.0f; }

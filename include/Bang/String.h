@@ -79,10 +79,12 @@ public:
 
     std::size_t Find(char c, std::size_t toIndex  = String::npos) const;
     std::size_t RFind(char c, std::size_t toIndex = String::npos) const;
-    std::size_t
-    Find(const char *str, std::size_t fromIndex, std::size_t length) const;
-    std::size_t
-    RFind(const char *str, std::size_t fromIndex, std::size_t length) const;
+    std::size_t Find(const String &str,
+                     std::size_t fromIndex = 0,
+                     std::size_t length = String::npos) const;
+    std::size_t RFind(const String &str,
+                      std::size_t toIndex = String::npos,
+                      std::size_t length = String::npos) const;
 
     int ReplaceInSitu(const String &from, const String &to,
                 int maxNumberOfReplacements = -1);

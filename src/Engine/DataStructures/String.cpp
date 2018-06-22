@@ -78,25 +78,25 @@ void String::Remove(int beginIndex, int endIndexExclusive)
 long String::IndexOf(char c, long startingPos) const
 {
     int index = m_str.find(c, startingPos);
-    return index == String::npos ? - 1 : index;
+    return index == String::npos ? -1 : index;
 }
 
 long String::IndexOf(const String &str, long startingPos) const
 {
     int index = m_str.find(str, startingPos);
-    return index == String::npos ? - 1 : index;
+    return index == String::npos ? -1 : index;
 }
 
 long String::IndexOfOneOf(const String &charSet, long startingPos) const
 {
     int index = m_str.find_first_of(charSet, startingPos);
-    return index == String::npos ? - 1 : index;
+    return index == String::npos ? -1 : index;
 }
 
 long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 {
     int index = m_str.find_first_not_of(charSet, startingPos);
-    return index == String::npos ? - 1 : index;
+    return index == String::npos ? -1 : index;
 }
 
 String String::SubString(long startIndexInclusive, long endIndexInclusive) const
@@ -126,17 +126,25 @@ std::size_t String::RFind(char c, std::size_t toIndex) const
 {
     return m_str.rfind(c, toIndex);
 }
-std::size_t String::Find(const char *str,
+std::size_t String::Find(const String &str,
                          std::size_t fromIndex,
-                         std::size_t length) const
+                         std::size_t length_) const
 {
-    return m_str.find(str, fromIndex, length);
+    std::size_t length = std::min(std::max(length_, std::size_t(0)),
+                                  std::max(std::size_t(str.Size())-fromIndex,
+                                           std::size_t(0)));
+    return m_str.find(str.ToCString(), fromIndex, length);
 }
-std::size_t String::RFind(const char *str,
-                          std::size_t fromIndex,
-                          std::size_t length) const
+std::size_t String::RFind(const String &str,
+                          std::size_t toIndex,
+                          std::size_t length_) const
 {
-    return m_str.rfind(str, fromIndex, length);
+    std::size_t length = std::min(std::max(length_, std::size_t(0)),
+                                  std::max(std::min(std::size_t(str.Size()),
+                                                    toIndex),
+                                           std::size_t(0)));
+    std::size_t idx = m_str.rfind(str.ToCString(), toIndex, length);
+    return idx;
 }
 
 int String::ReplaceInSitu(const String &from,
@@ -316,7 +324,8 @@ bool String::BeginsWith(const String &str) const
 
 bool String::EndsWith(const String &str) const
 {
-    return this->IndexOf(str) == Size() - str.Size();
+    std::size_t idx = this->RFind(str);
+    return idx == (Size() - str.Size());
 }
 
 String String::ToUpper() const

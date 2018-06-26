@@ -1,47 +1,71 @@
 #ifndef IEVENTSFOCUS_H
 #define IEVENTSFOCUS_H
 
+#include "Bang/Key.h"
+#include "Bang/Vector2.h"
 #include "Bang/IEvents.h"
-#include "Bang/ClickType.h"
+#include "Bang/MouseButton.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class IFocusable;
+
+enum class UIEventResult
+{
+    IGNORE,
+    INTERCEPT
+};
+
+struct UIEvent
+{
+    enum class Type
+    {
+        MOUSE_CLICK_DOWN,
+        MOUSE_CLICK_UP,
+        MOUSE_CLICK_FULL,
+        MOUSE_CLICK_DOUBLE,
+        MOUSE_ENTER,
+        STARTED_BEING_PRESSED,
+        FINISHED_BEING_PRESSED,
+        MOUSE_MOVE,
+        MOUSE_EXIT,
+        FOCUS_TAKEN,
+        FOCUS_LOST,
+        KEY,
+        WHEEL
+    };
+
+    Type type;
+    Vector2i mousePosition;
+    struct
+    {
+        MouseButton button;
+        Vector2i delta;
+    }
+    mouse;
+
+    struct
+    {
+        Key key;
+    }
+    key;
+
+    struct
+    {
+        Vector2 amount;
+    }
+    wheel;
+};
 
 class IEventsFocus
 {
     IEVENTS(IEventsFocus);
 
 public:
-    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusEmitter)
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event)
     {
-        (void) focusEmitter;
-    }
-    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-
-    virtual void OnMouseEnter(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-    virtual void OnMouseExit(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-
-    virtual void OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-    virtual void OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusEmitter)
-    {
-        (void) focusEmitter;
-    }
-
-    virtual void OnClicked(EventEmitter<IEventsFocus> *focusEmitter,
-                           ClickType clickType)
-    {
-        (void) focusEmitter;
+        (void) focusable;
+        (void) event;
     }
 };
 

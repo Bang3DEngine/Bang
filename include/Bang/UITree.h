@@ -55,8 +55,7 @@ public:
     void OnUpdate() override;
 
     // IEventsFocus
-    void OnClicked(EventEmitter<IEventsFocus> *focusable,
-                   ClickType clickType) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     // IEventsDragDrop
     virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;

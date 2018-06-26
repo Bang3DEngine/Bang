@@ -5,6 +5,7 @@
 
 #include "Bang/Set.h"
 #include "Bang/Component.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -34,8 +35,9 @@ public:
     void ClearFocus();
     void SetFocus(IFocusable *focusable);
 
-    IFocusable* GetCurrentFocus();
-    IFocusable* GetCurrentFocusMouseOver();
+    IFocusable* GetFocus();
+    const Vector2i& GetLastMousePosition() const;
+    IFocusable* GetFocusableUnderMouseTopMost() const;
     bool HasFocusFocusable(const IFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
     bool HasFocus(const GameObject *go, bool recursive = false);
@@ -63,12 +65,16 @@ public:
 private:
     UILayoutManager *m_uiLayoutManager = nullptr;
 
-    IFocusable* p_currentFocus = nullptr;
-    IFocusable* p_currentFocusMouseOver = nullptr;
-    UIDragDroppable* p_currentDDBeingDragged = nullptr;
+    Vector2i m_lastMousePosition = Vector2i(-1);
 
-    void ApplyFocusChange();
-    void SetFocusMouseOver(IFocusable *focusable);
+    IFocusable *p_focus = nullptr;
+    Set<IFocusable*> p_focusablesUnderMouse;
+    UIDragDroppable *p_ddBeingDragged = nullptr;
+    IFocusable *p_focusableUnderMouseTopMost = nullptr;
+    Set<IFocusable*> p_focusablesPotentiallyBeingPressed;
+
+    void RegisterForDestroy(IFocusable *focusable);
+    void UnRegisterForDestroy(IFocusable *focusable);
 
     List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 

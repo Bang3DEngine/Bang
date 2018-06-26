@@ -103,8 +103,7 @@ private:
     void HandleShortcuts();
 
     // IEventsFocus
-    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
-    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);

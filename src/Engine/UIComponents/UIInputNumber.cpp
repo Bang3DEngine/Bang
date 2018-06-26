@@ -37,7 +37,6 @@ void UIInputNumber::OnUpdate()
             UICanvas::GetActive(this)->SetFocus(nullptr);
         }
 
-
         float increment = 0.0f;
         if (Input::GetKeyDownRepeat(Key::UP))   { increment =  1.0f; }
         if (Input::GetKeyDownRepeat(Key::DOWN)) { increment = -1.0f; }
@@ -95,20 +94,6 @@ uint UIInputNumber::GetDecimalPlaces() const
 {
     return m_decimalPlaces;
 }
-
-void UIInputNumber::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnFocusTaken(focusable);
-    m_hasFocus = true;
-}
-
-void UIInputNumber::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnFocusLost(focusable);
-    m_hasFocus = false;
-    SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );
-}
-
 void UIInputNumber::UpdateValueFromText()
 {
     const String &content = GetInputText()->GetText()->GetContent();
@@ -149,7 +134,23 @@ const Vector2 &UIInputNumber::GetMinMaxValues() const
 {
     return m_minMaxValues;
 }
-bool UIInputNumber::HasFocus() const { return m_hasFocus; }
+bool UIInputNumber::HasFocus() const
+{
+    return m_hasFocus;
+}
+
+void UIInputNumber::OnEvent(IFocusable*, const UIEvent &event)
+{
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    {
+        m_hasFocus = true;
+    }
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
+    {
+        m_hasFocus = false;
+        SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );
+    }
+}
 
 void UIInputNumber::OnValueChanged(EventEmitter<IEventsValueChanged> *object)
 {

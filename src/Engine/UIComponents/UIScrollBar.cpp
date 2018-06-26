@@ -61,8 +61,14 @@ void UIScrollBar::OnUpdate()
 
     if (Input::GetMouseButtonUp(MouseButton::LEFT))
     {
-        if ( GetFocusable()->IsMouseOver() ) { OnMouseEnter(GetFocusable()); }
-        else { OnMouseExit(GetFocusable()); }
+        if ( GetFocusable()->IsMouseOver() )
+        {
+            OnMouseEnter();
+        }
+        else
+        {
+            OnMouseExit();
+        }
     }
 }
 
@@ -204,11 +210,27 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     scrollBar->SetSide(Side::LEFT);
     scrollBar->SetLength(50);
     scrollBar->SetThickness(10);
-    scrollBar->OnMouseExit(nullptr); // Set bar color
+    scrollBar->OnMouseExit(); // Set bar color
 
     scrollArea->SetContainedGameObject(bar);
 
     return scrollBar;
+}
+
+void UIScrollBar::OnMouseEnter()
+{
+    if (!IsBeingGrabbed())
+    {
+        p_barImg->SetTint( Color::Gray.WithValue(0.9f) );
+    }
+}
+
+void UIScrollBar::OnMouseExit()
+{
+    if (!IsBeingGrabbed())
+    {
+        p_barImg->SetTint(Color::Gray.WithValue(1.2f));
+    }
 }
 
 int UIScrollBar::GetScrollingSpacePx() const
@@ -229,17 +251,16 @@ AARect UIScrollBar::GetScrollingRect() const
 UIScrollArea *UIScrollBar::GetScrollArea() const { return p_scrollArea; }
 GameObject *UIScrollBar::GetBar() const { return p_bar; }
 
-void UIScrollBar::OnMouseEnter(EventEmitter<IEventsFocus>*)
+void UIScrollBar::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (!IsBeingGrabbed())
+    if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
-        p_barImg->SetTint( Color::Gray.WithValue(0.9f) );
+        OnMouseEnter();
     }
-}
-
-void UIScrollBar::OnMouseExit(EventEmitter<IEventsFocus>*)
-{
-    if (!IsBeingGrabbed()) { p_barImg->SetTint(Color::Gray.WithValue(1.2f)); }
+    else if (event.type == UIEvent::Type::MOUSE_EXIT)
+    {
+        OnMouseExit();
+    }
 }
 
 UIFocusable *UIScrollBar::GetFocusable() const { return p_barFocusable; }

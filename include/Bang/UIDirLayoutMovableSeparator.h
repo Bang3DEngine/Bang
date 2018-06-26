@@ -29,8 +29,7 @@ public:
     Axis GetAxis() const;
 
     // IEventsFocus
-    virtual void OnMouseEnter(EventEmitter<IEventsFocus> *focusable) override;
-    virtual void OnMouseExit(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
     static UIDirLayoutMovableSeparator *CreateInto(GameObject *go);
 

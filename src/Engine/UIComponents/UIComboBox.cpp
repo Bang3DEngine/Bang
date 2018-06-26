@@ -37,6 +37,7 @@ void UIComboBox::OnUpdate()
 {
     Component::OnUpdate();
 
+    /*
     if (Input::GetMouseButtonDown(MouseButton::LEFT))
     {
         if (IsListBeingShown() && !m_justStartedToShowList)
@@ -48,6 +49,7 @@ void UIComboBox::OnUpdate()
         }
     }
     m_justStartedToShowList = false;
+    */
 }
 
 void UIComboBox::AddItem(const String &label, int value)
@@ -151,9 +153,21 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddClickedCallback([comboBox](IFocusable*, ClickType)
+    focusable->AddEventCallback([comboBox](IFocusable*, const UIEvent &event)
     {
-        comboBox->ShowList();
+        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
+        {
+            if (comboBox->IsListBeingShown())
+            {
+                comboBox->HideList();
+            }
+            else
+            {
+                comboBox->ShowList();
+            }
+            return UIEventResult::INTERCEPT;
+        }
+        return UIEventResult::IGNORE;
     });
     focusable->SetCursorType(Cursor::Type::HAND);
 

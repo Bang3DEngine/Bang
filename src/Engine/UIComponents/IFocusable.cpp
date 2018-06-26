@@ -14,69 +14,61 @@ IFocusable::~IFocusable()
 
 void IFocusable::UpdateFromCanvas()
 {
-    // Handle all cases :)
-    if (IsMouseOver())
-    {
-        bool doubleClick = false;
-        if (m_lastMouseDownWasHere) // Order dependent
-        {
-            if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
-            {
-                Click(ClickType::DOUBLE);
-                doubleClick = true;
-            }
-        }
-
-        if (!doubleClick)
-        {
-            // Then this
-            if (Input::GetMouseButtonDown(MouseButton::LEFT)) // Order dependent
-            {
-                if (!IsBeingPressed())
-                {
-                    m_beingPressed = true;
-                    EventEmitter<IEventsFocus>::PropagateToListeners(
-                                &IEventsFocus::OnStartedBeingPressed, this);
-                }
-
-                m_lastMouseDownWasHere = true;
-                Click(ClickType::DOWN);
-            }
-
-            // Order dependent. Must go after detecting button down, to detect cases
-            // in which down&up are in the same frame
-            if (m_lastMouseDownWasHere)
-            {
-                if (Input::GetMouseButtonUp(MouseButton::LEFT))
-                {
-                    Click(ClickType::FULL);
-                }
-            }
-        }
-    }
-    else
-    {
-        if (Input::GetMouseButtonDown(MouseButton::LEFT))
-        {
-            m_lastMouseDownWasHere = false;
-        }
-    }
-
-    if (IsBeingPressed() && !Input::GetMouseButton(MouseButton::LEFT))
-    {
-        EventEmitter<IEventsFocus>::PropagateToListeners(
-                    &IEventsFocus::OnStoppedBeingPressed, this);
-        m_beingPressed = false;
-    }
 }
 
-Cursor::Type IFocusable::GetCursorType() const { return m_cursorType; }
-bool IFocusable::IsBeingPressed() const { return m_beingPressed; }
-void IFocusable::AddClickedCallback(ClickedCallback callback)
+UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
 {
-    m_clickedCallbacks.PushBack(callback);
+    switch (event.type)
+    {
+        case UIEvent::Type::MOUSE_ENTER:
+            SetIsMouseOver(true);
+        break;
+
+        case UIEvent::Type::MOUSE_EXIT:
+            SetIsMouseOver(false);
+        break;
+
+        case UIEvent::Type::STARTED_BEING_PRESSED:
+            SetBeingPressed(true);
+        break;
+
+        case UIEvent::Type::FINISHED_BEING_PRESSED:
+            SetBeingPressed(false);
+        break;
+
+        default: break;
+    }
+
+    // Propagate events
+    UIEventResult finalResult = UIEventResult::IGNORE;
+    for (EventCallback eventCallback : m_eventCallbacks)
+    {
+        UIEventResult propagationResult = eventCallback(this, event);
+        if (propagationResult == UIEventResult::INTERCEPT)
+        {
+            finalResult = UIEventResult::INTERCEPT;
+        }
+    }
+
+    EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnEvent,
+                                                     this, event);
+
+    return finalResult;
 }
 
+void IFocusable::AddEventCallback(IFocusable::EventCallback eventCallback)
+{
+    m_eventCallbacks.PushBack(eventCallback);
+}
+bool IFocusable::IsBeingPressed() const
+{
+    return m_beingPressed;
+}
+
+Cursor::Type IFocusable::GetCursorType() const
+{
+    return m_cursorType;
+}
 
 bool IFocusable::IsMouseOver() const
 {
@@ -93,14 +85,18 @@ void IFocusable::SetCursorType(Cursor::Type cursorType)
     m_cursorType = cursorType;
 }
 
-void IFocusable::Click(ClickType clickType)
+bool IFocusable::HasFocus() const
 {
-    PropagateOnClickedToListeners(clickType);
+    return m_hasFocus;
 }
-
-bool IFocusable::HasFocus() const { return m_hasFocus; }
-bool IFocusable::IsFocusEnabled() const { return m_focusEnabled; }
-bool IFocusable::HasJustFocusChanged() const { return m_hasJustFocusChanged; }
+bool IFocusable::IsFocusEnabled() const
+{
+    return m_focusEnabled;
+}
+bool IFocusable::HasJustFocusChanged() const
+{
+    return m_hasJustFocusChanged;
+}
 
 void IFocusable::SetFocus()
 {
@@ -108,7 +104,6 @@ void IFocusable::SetFocus()
     {
         m_hasFocus = true;
         m_hasJustFocusChanged = true;
-        PropagateFocusToListeners();
     }
 }
 
@@ -118,49 +113,21 @@ void IFocusable::ClearFocus()
     {
         m_hasFocus = false;
         m_hasJustFocusChanged = true;
-        PropagateFocusToListeners();
     }
 }
 
-void IFocusable::PropagateMouseOverToListeners(bool mouseOver)
+void IFocusable::SetBeingPressed(bool beingPressed)
 {
-    if (IsMouseOver() != mouseOver)
+    if (beingPressed != m_beingPressed)
     {
-        m_isMouseOver = mouseOver;
-        if (IsMouseOver())
-        {
-            EventEmitter<IEventsFocus>::
-                    PropagateToListeners(&IEventsFocus::OnMouseEnter, this);
-        }
-        else
-        {
-            EventEmitter<IEventsFocus>::
-                    PropagateToListeners(&IEventsFocus::OnMouseExit, this);
-        }
+        m_beingPressed = beingPressed;
     }
 }
 
-
-void IFocusable::PropagateFocusToListeners()
+void IFocusable::SetIsMouseOver(bool isMouseOver)
 {
-    if (HasFocus())
+    if (isMouseOver != m_isMouseOver)
     {
-        EventEmitter<IEventsFocus>::
-                PropagateToListeners(&IEventsFocus::OnFocusTaken, this);
-    }
-    else
-    {
-        EventEmitter<IEventsFocus>::
-            PropagateToListeners(&IEventsFocus::OnFocusLost, this);
-    }
-}
-
-void IFocusable::PropagateOnClickedToListeners(ClickType clickType)
-{
-    if (IsEmittingEvents())
-    {
-        EventEmitter<IEventsFocus>::
-            PropagateToListeners(&IEventsFocus::OnClicked, this, clickType);
-        for (auto callback : m_clickedCallbacks) { callback(this, clickType); }
+        m_isMouseOver = isMouseOver;
     }
 }

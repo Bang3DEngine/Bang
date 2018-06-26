@@ -74,10 +74,9 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnClicked(EventEmitter<IEventsFocus> *focusable,
-                       ClickType clickType)
+void UITree::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
-    if (clickType == ClickType::FULL)
+    if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
     {
         IFocusable *collapseButton = DCAST<IFocusable*>(focusable);
         Component *cCollapseButton = DCAST<Component*>(collapseButton);
@@ -503,7 +502,10 @@ bool UITree::IsItemCollapsed(GOItem *item) const
     return GetItemContainer(item)->IsCollapsed();
 }
 
-UIList *UITree::GetUIList() const { return p_uiList; }
+UIList *UITree::GetUIList() const
+{
+    return p_uiList;
+}
 
 void UITree::GetMousePositionInTree(
                     GOItem **itemOverOut,

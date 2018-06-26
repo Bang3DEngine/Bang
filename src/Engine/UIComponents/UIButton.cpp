@@ -33,15 +33,84 @@ UIButton::~UIButton()
 
 }
 
+UIEventResult
+UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
+                       const UIEvent &event)
+{
+    (void) focusable;
+    if (!IsBlocked())
+    {
+        switch (event.type)
+        {
+            case UIEvent::Type::MOUSE_CLICK_DOWN:
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    GetBackground()->SetTint(UIButton::PressedColor);
+                    return UIEventResult::INTERCEPT;
+                }
+            break;
+            case UIEvent::Type::MOUSE_CLICK_FULL:
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    for (auto clickedCallback : m_clickedCallbacks)
+                    {
+                        clickedCallback();
+                    }
+                    return UIEventResult::INTERCEPT;
+                }
+            break;
+
+            case UIEvent::Type::STARTED_BEING_PRESSED:
+            case UIEvent::Type::FINISHED_BEING_PRESSED:
+            case UIEvent::Type::MOUSE_ENTER:
+            case UIEvent::Type::MOUSE_EXIT:
+                if (GetFocusable()->IsMouseOver())
+                {
+                    OnMouseEnter();
+                }
+                else
+                {
+                    OnMouseExit();
+                }
+                return UIEventResult::INTERCEPT;
+            break;
+
+            default: break;
+        }
+    }
+    return UIEventResult::IGNORE;
+}
+
+void UIButton::OnMouseEnter()
+{
+    GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
+                                 UIButton::PressedColor :
+                                 UIButton::OverColor);
+}
+
+void UIButton::OnMouseExit()
+{
+    GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
+                                 UIButton::PressedColor :
+                                 UIButton::IdleColor);
+}
+
 void UIButton::OnStart()
 {
     Component::OnStart();
-    GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
+    GetFocusable()->AddEventCallback([this](EventEmitter<IEventsFocus> *focusable,
+                                            const UIEvent &event)
+    {
+        return OnFocusEvent(focusable, event);
+    });
 }
 
-void UIButton::Click(ClickType clickType)
+void UIButton::Click()
 {
-    GetFocusable()->Click(clickType);
+    UIEvent event;
+    event.type = UIEvent::Type::MOUSE_CLICK_FULL;
+    event.mouse.button = MouseButton::LEFT;
+    GetFocusable()->ProcessEvent(event);
 }
 
 void UIButton::SetBlocked(bool blocked)
@@ -54,8 +123,14 @@ void UIButton::SetBlocked(bool blocked)
         if (!IsBlocked())
         {
             GetText()->SetTextColor(Color::Black);
-            if (GetFocusable()->IsMouseOver()) { OnMouseEnter(GetFocusable()); }
-            else { OnMouseExit(GetFocusable()); }
+            if (GetFocusable()->IsMouseOver())
+            {
+                OnMouseEnter();
+            }
+            else
+            {
+                OnMouseExit();
+            }
             GetFocusable()->SetCursorType( Cursor::Type::HAND );
         }
         else
@@ -95,69 +170,6 @@ void UIButton::SetIcon(Texture2D *texture, const Vector2i &size,
 void UIButton::AddClickedCallback(UIButton::ClickedCallback clickedCallback)
 {
     m_clickedCallbacks.PushBack(clickedCallback);
-}
-
-void UIButton::OnMouseEnter(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnMouseEnter(focusable);
-
-    if (!IsBlocked())
-    {
-        GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                                     UIButton::PressedColor :
-                                     UIButton::OverColor);
-    }
-}
-
-void UIButton::OnMouseExit(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnMouseExit(focusable);
-
-    if (!IsBlocked())
-    {
-        GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                                     UIButton::PressedColor :
-                                     UIButton::IdleColor);
-    }
-}
-
-void UIButton::OnStartedBeingPressed(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnStartedBeingPressed(focusable);
-
-    if (!IsBlocked())
-    {
-        GetBackground()->SetTint(UIButton::PressedColor);
-    }
-}
-
-void UIButton::OnStoppedBeingPressed(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnStoppedBeingPressed(focusable);
-
-    if (!IsBlocked())
-    {
-        GetBackground()->SetTint(GetFocusable()->IsMouseOver() ?
-                                     UIButton::OverColor :
-                                     UIButton::IdleColor);
-    }
-}
-
-void UIButton::OnClicked(EventEmitter<IEventsFocus> *focusable,
-                         ClickType clickType)
-{
-    IEventsFocus::OnClicked(focusable, clickType);
-
-    if (!IsBlocked())
-    {
-        if (clickType == ClickType::FULL)
-        {
-            for (auto clickedCallback : m_clickedCallbacks)
-            {
-                clickedCallback();
-            }
-        }
-    }
 }
 
 bool UIButton::IsBlocked() const { return m_isBlocked; }

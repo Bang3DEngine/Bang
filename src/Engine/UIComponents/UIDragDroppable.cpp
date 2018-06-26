@@ -217,13 +217,11 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnClicked(EventEmitter<IEventsFocus> *focusable,
-                                ClickType clickType)
+void UIDragDroppable::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
-    IEventsFocus::OnClicked(focusable, clickType);
 
-    if (clickType == ClickType::DOWN)
+    if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
     {
         OnDragStarted();
     }
@@ -249,4 +247,5 @@ void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)
     ddGoRT->SetScale( thisRT->GetScale() );
     ddGoRT->TranslateLocal( Vector3(0, 0, -0.3f) );
 }
+
 

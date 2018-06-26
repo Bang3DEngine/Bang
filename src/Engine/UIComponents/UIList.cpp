@@ -81,7 +81,10 @@ void UIList::OnUpdate()
 
     if (!p_itemUnderMouse)
     {
-        if (p_itemUnderMouse) { CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT); }
+        if (p_itemUnderMouse)
+        {
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+        }
         p_itemUnderMouse = nullptr;
     }
 
@@ -96,7 +99,10 @@ void UIList::OnUpdate()
             Input::GetKeyDownRepeat(Key::ENTER))
         {
             GOItem *selectedItem = GetSelectedItem();
-            if (selectedItem) { CallSelectionCallback(selectedItem, Action::PRESSED); }
+            if (selectedItem)
+            {
+                CallSelectionCallback(selectedItem, Action::PRESSED);
+            }
         }
 
         if (p_itemUnderMouse)
@@ -369,16 +375,16 @@ void UIList::HandleShortcuts()
     }
 }
 
-void UIList::OnFocusTaken(EventEmitter<IEventsFocus> *focusable)
+void UIList::OnEvent(IFocusable *focusable, const UIEvent &event)
 {
-    IEventsFocus::OnFocusTaken(focusable);
-    m_someChildHasFocus = true;
-}
-
-void UIList::OnFocusLost(EventEmitter<IEventsFocus> *focusable)
-{
-    IEventsFocus::OnFocusLost(focusable);
-    m_someChildHasFocus = false;
+    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    {
+        m_someChildHasFocus = true;
+    }
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
+    {
+        m_someChildHasFocus = false;
+    }
 }
 
 void UIList::SetSelection(GOItem *item)
@@ -396,7 +402,10 @@ int UIList::GetSelectedIndex() const
     return m_selectionIndex;
 }
 
-bool UIList::SomeChildHasFocus() const { return m_someChildHasFocus; }
+bool UIList::SomeChildHasFocus() const
+{
+    return m_someChildHasFocus;
+}
 
 GOItem *UIList::GetSelectedItem() const
 {

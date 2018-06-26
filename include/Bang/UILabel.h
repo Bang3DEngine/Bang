@@ -21,7 +21,6 @@ class UILabel : public Component,
 public:
 	virtual ~UILabel();
 
-    void OnStart() override;
     void OnUpdate() override;
 
     void SetCursorIndex(int index);
@@ -53,13 +52,11 @@ public:
     void SetFocusable(IFocusable *focusable);
 
     // IEventsFocus
-    virtual void OnFocusTaken(EventEmitter<IEventsFocus> *focusable) override;
-    virtual void OnFocusLost(EventEmitter<IEventsFocus> *focusable) override;
+    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
 
 private:
     int m_cursorIndex = 0;
     int m_selectionIndex = 0;
-    bool m_firstSelectAll = true;
     bool m_selectingWithMouse = false;
     bool m_selectable = Undef<bool>();
     bool m_selectAllOnFocusTaken = false;

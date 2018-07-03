@@ -132,6 +132,8 @@ void GL::Init()
         {
             m_auxiliarWindowToCreateSharedGLContext = sdlWindow;
             SDL_HideWindow(sdlWindow);
+            Debug_Log("Using OpenGL context with version " <<
+                      vMajor << "." << vMinor);
             break;
         }
         else
@@ -198,6 +200,8 @@ void GL::Init()
     SetGLContextValue(&GL::m_blendEquationColors, GL::BlendEquationE::FUNC_ADD);
     SetGLContextValue(&GL::m_blendEquationAlphas, GL::BlendEquationE::FUNC_ADD);
     SetGLContextValue(&GL::m_stencilOps, GL::StencilOperation::KEEP);
+
+    GL::PrintGLStats();
 }
 
 void GL::ClearError()
@@ -219,6 +223,7 @@ bool GL::CheckError(int line, const String &func, const String &file)
                     file <<
                     ":" <<
                     line);
+        GL::PrintGLContext();
         ok = false;
     }
     return ok;
@@ -430,22 +435,17 @@ GL::UniformType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
 {
     if (shaderProgramId == 0) { return GL::UniformType::BYTE; }
 
-    GLint size;
-    GLenum type;
-    GLsizei length;
-    constexpr GLsizei bufSize = 128;
-    GLchar cname[bufSize];
-
+    GLint size = -1;
+    GLenum type = -1;
     GL_CALL(
     glGetActiveUniform(shaderProgramId,
-                       Cast<GLuint>(uniformIndex),
-                       bufSize,
-                       &length,
+                       SCAST<GLuint>(uniformIndex),
+                       0,
+                       NULL,
                        &size,
                        &type,
-                       cname)
+                       NULL)
     );
-
     return SCAST<GL::UniformType>(type);
 }
 
@@ -2344,6 +2344,55 @@ void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
             ASSERT(false);
         break;
     }
+}
+
+void GL::PrintGLStats()
+{
+    const int maxUniformLocations =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_UNIFORM_LOCATIONS));
+    const int maxUniformBufferBindings =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_UNIFORM_BUFFER_BINDINGS));
+    const int maxVaryingComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_VARYING_COMPONENTS));
+    const int maxVertexUniformsComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_VERTEX_UNIFORM_COMPONENTS));
+    const int maxGeomUniformsComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_GEOMETRY_UNIFORM_COMPONENTS));
+    const int maxTessControlUniformsComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS));
+    const int maxTessEvalUniformsComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS));
+    const int maxFragUniformsComponents =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS));
+    const int maxTexUnits =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_UNITS));
+    const int maxTexSize =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_SIZE));
+    const int maxTexSize3D =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_3D_TEXTURE_SIZE));
+    const int maxFBWidth =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_FRAMEBUFFER_WIDTH));
+    const int maxFBHeight =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_FRAMEBUFFER_HEIGHT));
+    const int maxColorAttachments =
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_COLOR_ATTACHMENTS));
+
+    Debug_Log("GL Stats: ================");
+    Debug_Peek(maxUniformLocations);
+    Debug_Peek(maxUniformBufferBindings);
+    Debug_Peek(maxVaryingComponents);
+    Debug_Peek(maxVertexUniformsComponents);
+    Debug_Peek(maxGeomUniformsComponents);
+    Debug_Peek(maxTessControlUniformsComponents);
+    Debug_Peek(maxTessEvalUniformsComponents);
+    Debug_Peek(maxFragUniformsComponents);
+    Debug_Peek(maxTexUnits);
+    Debug_Peek(maxTexSize);
+    Debug_Peek(maxTexSize3D);
+    Debug_Peek(maxFBWidth);
+    Debug_Peek(maxFBHeight);
+    Debug_Peek(maxColorAttachments);
+    Debug_Log("==========================");
 }
 
 void GL::PrintGLContext()

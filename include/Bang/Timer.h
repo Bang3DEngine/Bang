@@ -2,6 +2,7 @@
 #define TIMER_H
 
 #include "Bang/List.h"
+#include "Bang/Time.h"
 #include "Bang/Component.h"
 
 NAMESPACE_BANG_BEGIN
@@ -30,7 +31,7 @@ protected:
 private:
     bool m_running = true;
     float m_intervalSecs = 1.0f;
-    uint64_t m_lastTickTimestampSecs = 0;
+    Time::TimeT m_lastTickTimestampSecs = 0;
 
     List<std::function<void()>> m_callbacksList;
 

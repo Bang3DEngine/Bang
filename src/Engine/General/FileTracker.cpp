@@ -58,7 +58,8 @@ void FileTracker::Update(bool forceCheckNow)
 {
     if (NeedsCheck() || forceCheckNow)
     {
-        UMap<Path, uint64_t> previousPathsToTrack = m_pathsToTrackToModificationTime;
+        UMap<Path, double> previousPathsToTrack =
+                                        m_pathsToTrackToModificationTime;
 
         // Check for removed paths
         for (const auto &previousPathToModTime : previousPathsToTrack)
@@ -96,7 +97,7 @@ void FileTracker::Update(bool forceCheckNow)
             }
         }
 
-        m_lastCheckTime = SCAST<uint64_t>(Time::GetNow_Seconds());
+        m_lastCheckTime = Time::GetNow_Seconds();
     }
 }
 

@@ -21,6 +21,11 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     }
     return MaterialFactory::GetDefault(RenderPass::SCENE);
 }
+
+RH<Material> MaterialFactory::GetDefaultAnimated()
+{
+    return MaterialFactory::Load("Materials/DefaultAnimated.bmat");
+}
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {
     return MaterialFactory::Load("Materials/DefaultUnLighted.bmat");

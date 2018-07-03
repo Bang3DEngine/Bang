@@ -19,6 +19,11 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
     return ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass::SCENE);
 }
 
+Path ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath()
+{
+    return EPATH("Shaders/DefaultAnimated.vert");
+}
+
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 {
     switch (renderPass)

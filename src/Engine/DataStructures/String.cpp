@@ -23,10 +23,6 @@ String::String(std::istreambuf_iterator<char, std::char_traits<char> > begin,
     m_str = std::string(begin, end);
 }
 
-String::~String()
-{
-}
-
 char String::At(int index) const
 {
     return m_str.at(index);

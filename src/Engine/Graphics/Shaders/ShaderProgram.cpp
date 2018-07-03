@@ -419,10 +419,10 @@ Shader* ShaderProgram::GetFragmentShader() const { return p_fShader.Get(); }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
 {
-    auto it = m_nameToLocationCache.find(name);
-    if (it != m_nameToLocationCache.end()) { return it->second; }
+    // auto it = m_nameToLocationCache.find(name);
+    // if (it != m_nameToLocationCache.end()) { return it->second; }
 
-    const int location = GL::GetUniformLocation(m_idGL, name);
+    const int location = GL::GetUniformLocation(GetGLId(), name);
     m_nameToLocationCache[name] = location;
     return location;
 }

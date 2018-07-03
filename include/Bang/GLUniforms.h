@@ -40,9 +40,18 @@ public:
     template <class T>
     struct GLSLVar
     {
-        String name = ""; T value;
-        GLSLVar(const String &_name, const T &_value)
-            : name(_name), value(_value) {}
+        String name = "";
+        T value = T();
+        int size = -1;
+        Array<T> values;
+
+        GLSLVar(const String &name_, const T &value_, int size_)
+            : name(name_),
+              value(value_),
+              size(size_)
+        {
+        }
+
         GLSLVar() {}
     };
 
@@ -51,6 +60,14 @@ public:
 
     template <class T>
     static T GetUniform(GLId program, const String &uniformName);
+
+    template <class T>
+    static Array<T> GetUniformArray(GLId program, const String &uniformName,
+                                    int numElements);
+
+    template <class T>
+    static Array<T> GetUniformArray(GLId program, int uniformLocation,
+                                    int numElements);
 
     template <class T>
     static T GetUniform(const String &uniformName);

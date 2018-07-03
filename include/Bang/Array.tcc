@@ -60,6 +60,8 @@ void Array<T>::PushBack(const Container<OtherT>& container)
 }
 
 template<class T>
+T *Array<T>::Data() { return m_vector.data(); }
+template<class T>
 const T *Array<T>::Data() const { return m_vector.data(); }
 
 template<class T>
@@ -171,13 +173,28 @@ template<class T>
 bool Array<T>::IsEmpty() const { return Size() == 0; }
 
 template<class T>
-T &Array<T>::At(std::size_t i) { return m_vector.at(i); }
+typename ArrayRefType<T>::RefT Array<T>::At(std::size_t i)
+{
+    return m_vector.at(i);
+}
 
 template<class T>
-const T &Array<T>::At(std::size_t i) const { return m_vector.at(i); }
+typename ArrayRefType<T>::ConstRefT Array<T>::At(std::size_t i) const
+{
+    return m_vector.at(i);
+}
 
 template<class T>
-const T &Array<T>::operator[](std::size_t i) const { return m_vector[i]; }
+typename ArrayRefType<T>::ConstRefT Array<T>::operator[](std::size_t i) const
+{
+    return m_vector[i];
+}
+
+template<class T>
+typename ArrayRefType<T>::RefT  Array<T>::operator[](std::size_t i)
+{
+    return m_vector[i];
+}
 
 template<class T>
 bool Array<T>::operator==(const Array<T> &rhs) const
@@ -201,9 +218,6 @@ Container<OtherT> Array<T>::To() const
     for (const T &x : *this) { cont.PushBack( OtherT(x) ); }
     return cont;
 }
-
-template<class T>
-T &Array<T>::operator[](std::size_t i) { return m_vector[i]; }
 
 template<class T>
 typename Array<T>::Iterator Array<T>::Begin() { return m_vector.begin(); }

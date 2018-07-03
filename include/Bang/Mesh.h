@@ -8,6 +8,7 @@
 #include "Bang/Sphere.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
+#include "Bang/Animation.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -23,6 +24,11 @@ class Mesh : public Asset,
 public:
     using TriangleId = uint;
     using VertexId = uint;
+    struct Bone
+    {
+        Map<Mesh::VertexId, float> weights;
+        Matrix4 transform;
+    };
 
     static constexpr uint DefaultPositionsVBOLocation = 0;
     static constexpr uint DefaultNormalsVBOLocation   = 1;
@@ -35,6 +41,7 @@ public:
     void SetTangentsPool(const Array<Vector3>& tangents);
     void SetVertexIndices(const Array<VertexId>& vertexIndices);
 
+    void AddBone(const String &boneName, const Mesh::Bone &bone);
     void UpdateGeometry();
     void CalculateVertexNormals();
 
@@ -56,6 +63,7 @@ public:
     const Array<Vector3>& GetNormalsPool() const;
     const Array<Vector2>& GetUvsPool() const;
     const Array<Vector3>& GetTangentsPool() const;
+    const Map<String, Mesh::Bone>& GetBones() const;
     const Path &GetModelFilepath() const;
 
     UMap<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
@@ -78,6 +86,9 @@ private:
     Array<Vector3> m_normalsPool;
     Array<Vector2> m_uvsPool;
     Array<Vector3> m_tangentsPool;
+
+    Map<String, Bone> m_bones;
+    RH<Animation> m_animations;
 
     mutable VAO *m_vao = nullptr;
     IBO *m_vertexIndicesIBO = nullptr;

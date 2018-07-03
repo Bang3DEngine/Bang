@@ -1,6 +1,7 @@
 #ifndef PATH_H
 #define PATH_H
 
+#include "Bang/Time.h"
 #include "Bang/Array.h"
 #include "Bang/Flags.h"
 #include "Bang/String.h"
@@ -41,7 +42,7 @@ public:
     List<Path> GetSubDirectories(FindFlags findFlags) const;
     List<Path> GetSubPaths(FindFlags findFlags) const;
 
-    uint64_t GetModificationTimeSeconds() const;
+    Time::TimeT GetModificationTimeSeconds() const;
 
     Path GetDirectory() const;
     String GetName() const;

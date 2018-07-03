@@ -14,15 +14,15 @@ float Time::GetDeltaTime()
 
 double Time::GetNow_Seconds()
 {
-    return GetNow_Nanos() / Cast<double>(1e9);
+    return GetNow_Nanos() / SCAST<double>(1e9);
 }
 
-uint64_t Time::GetNow_Millis()
+Time::TimeT Time::GetNow_Millis()
 {
     return GetNow_Nanos() / 1e6;
 }
 
-uint64_t Time::GetNow_Nanos()
+Time::TimeT Time::GetNow_Nanos()
 {
     return std::chrono::system_clock::now().time_since_epoch() /
             std::chrono::nanoseconds(1);

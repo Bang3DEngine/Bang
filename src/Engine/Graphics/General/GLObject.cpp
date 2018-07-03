@@ -8,7 +8,7 @@ GLObject::GLObject() {}
 
 GLId GLObject::GetGLId() const
 {
-    return m_idGL;
+     return m_idGL;
 }
 
 void GLObject::Bind() const

@@ -6,14 +6,38 @@
 
 NAMESPACE_BANG_BEGIN
 
-String Extensions::GetMeshExtension() { return "bmesh"; }
-String Extensions::GetSceneExtension() { return "bscene"; }
-String Extensions::GetPrefabExtension() { return "bprefab"; }
-
-String Extensions::GetProjectExtension() { return "bproject"; }
-String Extensions::GetMaterialExtension() { return "bmat"; }
-String Extensions::GetTextureCubeMapExtension() { return "texcm"; }
-String Extensions::GetShaderProgramExtension() { return "bshaderprogram"; }
+String Extensions::GetMeshExtension()
+{
+    return "bmesh";
+}
+String Extensions::GetSceneExtension()
+{
+    return "bscene";
+}
+String Extensions::GetPrefabExtension()
+{
+    return "bprefab";
+}
+String Extensions::GetProjectExtension()
+{
+    return "bproject";
+}
+String Extensions::GetMaterialExtension()
+{
+    return "bmat";
+}
+String Extensions::GetAnimationExtension()
+{
+    return "banim";
+}
+String Extensions::GetTextureCubeMapExtension()
+{
+    return "texcm";
+}
+String Extensions::GetShaderProgramExtension()
+{
+    return "bshaderprogram";
+}
 
 Array<String> Extensions::GetTTFExtensions()
 {

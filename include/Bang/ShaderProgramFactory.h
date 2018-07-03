@@ -12,8 +12,11 @@ NAMESPACE_BANG_BEGIN
 class ShaderProgramFactory
 {
 public:
-    static Path GetDefaultVertexShaderPath(RenderPass renderPass = RenderPass::SCENE);
-    static Path GetDefaultFragmentShaderPath(RenderPass renderPass = RenderPass::SCENE);
+    static Path GetDefaultVertexShaderPath(
+                                    RenderPass renderPass = RenderPass::SCENE);
+    static Path GetDefaultAnimatedVertexShaderPath();
+    static Path GetDefaultFragmentShaderPath(
+                                    RenderPass renderPass = RenderPass::SCENE);
     static Path GetScreenPassVertexShaderPath();
 
     static ShaderProgram* GetDefault(RenderPass renderPass = RenderPass::SCENE);

@@ -4,6 +4,7 @@
 #include "Bang/Light.h"
 #include "Bang/UIMask.h"
 #include "Bang/Camera.h"
+#include "Bang/Animator.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Renderer.h"
 #include "Bang/Transform.h"
@@ -45,6 +46,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, UIMask);
     CREATE_COMPONENT(componentClassName, Renderer);
     CREATE_COMPONENT(componentClassName, UICanvas);
+    CREATE_COMPONENT(componentClassName, Animator);
     CREATE_COMPONENT(componentClassName, Transform);
     CREATE_COMPONENT(componentClassName, PointLight);
     CREATE_COMPONENT(componentClassName, UIRectMask);
@@ -76,6 +78,7 @@ bool ComponentFactory::Exists(const String &componentClassName)
     EXISTS_COMPONENT(componentClassName, UIMask);
     EXISTS_COMPONENT(componentClassName, Renderer);
     EXISTS_COMPONENT(componentClassName, UICanvas);
+    CREATE_COMPONENT(componentClassName, Animator);
     EXISTS_COMPONENT(componentClassName, Transform);
     EXISTS_COMPONENT(componentClassName, PointLight);
     EXISTS_COMPONENT(componentClassName, UIRectMask);

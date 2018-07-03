@@ -788,6 +788,7 @@ public:
     static void PushOrPop(GL::Enablable enablable, bool push);
     static void PushOrPop(GL::BindTarget bindTarget, bool push);
 
+    static void PrintGLStats();
     static void PrintGLContext();
 
     static GL::ViewProjMode GetViewProjMode();

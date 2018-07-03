@@ -16,6 +16,7 @@ public:
 
 protected:
     GLObject();
+    virtual ~GLObject() = default;
 
     GLId m_idGL = 0;
 };

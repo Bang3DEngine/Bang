@@ -13,6 +13,7 @@ public:
     static String GetPrefabExtension();
     static String GetProjectExtension();
     static String GetMaterialExtension();
+    static String GetAnimationExtension();
     static String GetShaderProgramExtension();
     static String GetTextureCubeMapExtension();
 

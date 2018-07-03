@@ -9,6 +9,13 @@
 
 NAMESPACE_BANG_BEGIN
 
+// Template helpers to handle the special vector<bool> case
+template <class RT>
+struct ArrayRefType { using RefT = RT&; using ConstRefT = const RT&; };
+template<>
+struct ArrayRefType<bool> { using RefT = bool; using ConstRefT = const bool; };
+//
+
 template <class T>
 class Array
 {
@@ -38,6 +45,7 @@ public:
     template <template <class OtherT> class Container, class OtherT>
     void PushBack(const Container<OtherT>& container);
 
+    T* Data();
     const T* Data() const;
 
     Const_Iterator Find(const T& x) const;
@@ -64,10 +72,10 @@ public:
     void Clear();
     bool IsEmpty() const;
 
-    T& At(std::size_t i);
-    const T& At(std::size_t i) const;
-    T& operator[](std::size_t i);
-    const T& operator[](std::size_t i) const;
+    typename ArrayRefType<T>::RefT At(std::size_t i);
+    typename ArrayRefType<T>::ConstRefT At(std::size_t i) const;
+    typename ArrayRefType<T>::RefT operator[](std::size_t i);
+    typename ArrayRefType<T>::ConstRefT operator[](std::size_t i) const;
     bool operator==(const Array<T> &rhs) const;
 
     template< template <class> class Container, class OtherT = T>

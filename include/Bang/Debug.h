@@ -26,7 +26,9 @@ public:
     static void Error(const String &str, int line, const String &fileName);
 
     static void PrintUniforms(Shader *shader);
-    static void PrintUniforms(uint shaderProgramId);
+    static void PrintUniforms(uint shaderProgramId,
+                              uint fromUniformIdx = 0,
+                              uint toUniformIdx = SCAST<uint>(-2));
     static void PrintAllUniforms();
     static void PrintUniforms();
 
@@ -37,7 +39,9 @@ protected:
     virtual ~Debug();
 
     static void Message(DebugMessageType msgType,
-                        const String &str, int line, const String &fileName);
+                        const String &str,
+                        int line,
+                        const String &fileName);
 
     static void OnMessage();
 

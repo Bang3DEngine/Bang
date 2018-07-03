@@ -36,7 +36,7 @@ public:
     template<class Iterator>
     String(Iterator begin, Iterator end) : m_str(begin, end) { }
 
-    virtual ~String();
+    ~String() = default;
 
     char At(int index) const;
 

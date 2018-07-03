@@ -6,6 +6,7 @@
 #include "Bang/Array.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Material.h"
+#include "Bang/Animation.h"
 #include "Bang/ResourceHandle.h"
 
 FORWARD class aiMesh;
@@ -33,32 +34,20 @@ struct ModelIONode
 };
 
 struct ModelIOScene
-{
+{    
     Array< RH<Mesh> > meshes;
     Array< String > meshesNames;
 
     Array< RH<Material> > materials;
     Array< String > materialsNames;
 
+    Array< RH<Animation> > animations;
+    Array< String > animationsNames;
+
     Tree<ModelIONode> *modelTree = nullptr;
 
-    ~ModelIOScene()
-    {
-        Clear();
-    }
-
-    void Clear()
-    {
-        meshes.Clear();
-        meshesNames.Clear();
-        materials.Clear();
-        materialsNames.Clear();
-
-        if (modelTree)
-        {
-            delete modelTree;
-        }
-    }
+    ~ModelIOScene();
+    void Clear();
 };
 
 class ModelIO
@@ -69,14 +58,6 @@ public:
     static bool ImportModel(const Path& modelFilepath,
                             const GUID &modelGUID,
                             ModelIOScene *modelScene);
-
-    static bool ImportFirstFoundMeshRaw(
-                     const Path& modelFilepath,
-                     Array<Mesh::VertexId> *vertexIndices,
-                     Array<Vector3> *vertexPositionsPool,
-                     Array<Vector3> *vertexNormalsPool,
-                     Array<Vector2> *vertexUvsPool,
-                     Array<Vector3> *vertexTangentsPool);
 
     static void ImportMesh(aiMesh *aMesh,
                            const GUID &parentModelGUID,
@@ -90,13 +71,23 @@ public:
                                RH<Material> *outMaterial,
                                String *outMaterialName);
 
+
+    static bool ImportFirstFoundMeshRaw(
+                     const Path& modelFilepath,
+                     Array<Mesh::VertexId> *vertexIndices,
+                     Array<Vector3> *vertexPositionsPool,
+                     Array<Vector3> *vertexNormalsPool,
+                     Array<Vector2> *vertexUvsPool,
+                     Array<Vector3> *vertexTangentsPool,
+                     Map<String, Mesh::Bone> *bones);
     static void ImportMeshRaw(
                      aiMesh *aMesh,
                      Array<Mesh::VertexId> *vertexIndices,
                      Array<Vector3> *vertexPositionsPool,
                      Array<Vector3> *vertexNormalsPool,
                      Array<Vector2> *vertexUvsPool,
-                     Array<Vector3> *vertexTangentsPool);
+                     Array<Vector3> *vertexTangentsPool,
+                     Map<String, Mesh::Bone> *bones);
 
     static void ExportModel(const GameObject *gameObject,
                             const Path &meshExportPath);

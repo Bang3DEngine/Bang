@@ -3,6 +3,7 @@
 
 #include "Bang/UMap.h"
 #include "Bang/Path.h"
+#include "Bang/Time.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/IEventsFileTracker.h"
 
@@ -25,9 +26,9 @@ public:
     float GetCheckFrequencySeconds() const;
 
 private:
-    UMap<Path, uint64_t> m_pathsToTrackToModificationTime;
+    UMap<Path, double> m_pathsToTrackToModificationTime;
     float m_checkFrequencySeconds = 5.0f;
-    uint64_t m_lastCheckTime = 0.0;
+    double m_lastCheckTime = 0.0;
 
     bool NeedsCheck() const;
 };

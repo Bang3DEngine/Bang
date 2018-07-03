@@ -43,6 +43,11 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
     m_areLodsValid = false;
 }
 
+void Mesh::AddBone(const String &boneName, const Mesh::Bone &bone)
+{
+    m_bones.Add(boneName, bone);
+}
+
 void Mesh::SetPositionsPool(const Array<Vector3>& positions)
 {
     m_positionsPool = positions;
@@ -253,6 +258,11 @@ VBO *Mesh::GetVertexAttributesVBO() const { return m_vertexAttributesVBO; }
 const AABox &Mesh::GetAABBox() const { return m_bBox; }
 const Sphere &Mesh::GetBoundingSphere() const { return m_bSphere; }
 
+const Map<String, Mesh::Bone> &Mesh::GetBones() const
+{
+    return m_bones;
+}
+
 const Array<Mesh::VertexId> &Mesh::GetVertexIndices() const { return m_vertexIndices; }
 const Array<Vector3> &Mesh::GetPositionsPool() const { return m_positionsPool; }
 const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
@@ -302,12 +312,14 @@ void Mesh::Import(const Path &meshFilepath)
     Array<Vector3> normalsPool;
     Array<Vector2> uvsPool;
     Array<Vector3> tangentsPool;
+    Map<String, Mesh::Bone> bonesPool;
     if ( ModelIO::ImportFirstFoundMeshRaw(meshFilepath,
                                           &vertexIndices,
                                           &positionsPool,
                                           &normalsPool,
                                           &uvsPool,
-                                          &tangentsPool) )
+                                          &tangentsPool,
+                                          &bonesPool) )
     {
         SetPositionsPool(positionsPool);
         SetNormalsPool(normalsPool);
@@ -315,6 +327,11 @@ void Mesh::Import(const Path &meshFilepath)
         SetTangentsPool(tangentsPool);
         SetVertexIndices(vertexIndices);
         UpdateGeometry();
+
+        for (const auto &pair : bonesPool)
+        {
+            AddBone(pair.first, pair.second);
+        }
     }
     else
     {

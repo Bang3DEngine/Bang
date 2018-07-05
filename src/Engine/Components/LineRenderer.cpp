@@ -29,9 +29,9 @@ void LineRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    if (p_mesh.Get()->GetVertexCount() <= 0) { return; }
+    if (p_mesh.Get()->GetNumVertices() <= 0) { return; }
     GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(),
-               p_mesh.Get()->GetVertexCount());
+               p_mesh.Get()->GetNumVertices());
 }
 
 void LineRenderer::SetPoint(int i, const Vector3 &point)
@@ -53,7 +53,7 @@ void LineRenderer::SetPoints(const Array<Vector3> &points)
     {
         m_points = points;
         p_mesh.Get()->SetPositionsPool(GetPoints());
-        p_mesh.Get()->UpdateGeometry();
+        p_mesh.Get()->UpdateVAOs();
         PropagateRendererChanged();
     }
 }

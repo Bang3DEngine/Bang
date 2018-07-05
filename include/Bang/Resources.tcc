@@ -62,15 +62,19 @@ ResourceClass *Resources::Create_(const GUID &guid, const Args&... args)
 
 template<class ResourceClass, class ...Args>
 RH<ResourceClass> Resources::CreateEmbeddedResource(
-                                        const GUID &baseGUID,
+                                        Resource *parentResource,
                                         const GUID::GUIDType embeddedFileGUID,
                                         const Args&... args)
 {
     GUID newResourceEmbeddedFileGUID;
-    GUIDManager::CreateEmbeddedFileGUID(baseGUID, embeddedFileGUID,
+    GUIDManager::CreateEmbeddedFileGUID(parentResource->GetGUID(),
+                                        embeddedFileGUID,
                                         &newResourceEmbeddedFileGUID);
-    return Resources::Create<ResourceClass, Args...>(newResourceEmbeddedFileGUID,
+    RH<ResourceClass> embeddedRes =
+           Resources::Create<ResourceClass, Args...>(newResourceEmbeddedFileGUID,
                                                      args...);
+    embeddedRes.Get()->SetParentResource(parentResource);
+    return embeddedRes;
 }
 
 template <class ResourceClass>

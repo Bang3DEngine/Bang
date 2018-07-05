@@ -422,8 +422,8 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
         GBuffer *gbuffer = GEngine::GetActiveGBuffer();
         if (gbuffer)
         {
-            sp->SetTexture("B_SceneDepthTexture",
-                           gbuffer->GetSceneDepthStencilTexture(), false);
+            sp->SetTexture2D("B_SceneDepthTexture",
+                             gbuffer->GetSceneDepthStencilTexture(), false);
         }
 
         gbuffer->SetColorDrawBuffer();
@@ -502,7 +502,7 @@ void RenderFactory::RenderPoint(const Vector3 &point,
     RH<Mesh> rhm = Resources::Create<Mesh>();
     Mesh *m = rhm.Get();
     m->SetPositionsPool( {point} );
-    m->UpdateGeometry();
+    m->UpdateVAOs();
 
     rf->m_meshRenderer->SetMesh(m);
     rf->m_meshRenderer->SetRenderPrimitive(GL::Primitive::POINTS);

@@ -32,7 +32,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
     Array<OctreeData> octreeData; // Retrieve all the octree data
     {
-        for (int i = 0; i < mesh->GetVertexCount(); ++i)
+        for (int i = 0; i < mesh->GetNumVertices(); ++i)
         {
             const int vIndex = (mesh->GetVertexIndicesIBO() ?
                                         mesh->GetVertexIndices()[i] : i);
@@ -356,14 +356,14 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
         simplifiedMesh.Get()->SetVertexIndices(vertexClusterTrisIndices);
         simplifiedMesh.Get()->CalculateVertexNormals();
-        simplifiedMesh.Get()->UpdateGeometry();
+        simplifiedMesh.Get()->UpdateVAOs();
 
         Debug_Log("Level " << level << ": " << vertexClusterTrisIndices.Size() <<
-                  "/" << mesh->GetVertexCount());
+                  "/" << mesh->GetNumVertices());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
 
-        if (vertexClusterTrisIndices.Size() == mesh->GetVertexCount())
+        if (vertexClusterTrisIndices.Size() == mesh->GetNumVertices())
         {
             // This was the max level, going further makes no sense
             break;

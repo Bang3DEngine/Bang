@@ -56,17 +56,17 @@ public:
     static int GetModelNumTriangles(const Path& modelFilepath);
 
     static bool ImportModel(const Path& modelFilepath,
-                            const GUID &modelGUID,
+                            Model *model,
                             ModelIOScene *modelScene);
 
     static void ImportMesh(aiMesh *aMesh,
-                           const GUID &parentModelGUID,
+                           Model *model,
                            const GUID::GUIDType &embeddedMeshGUID,
                            RH<Mesh> *outMesh,
                            String *outMeshName);
     static void ImportMaterial(aiMaterial *aMaterial,
                                const Path& modelDirectory,
-                               const GUID &parentModelGUID,
+                               Model *model,
                                const GUID::GUIDType &embeddedMaterialGUID,
                                RH<Material> *outMaterial,
                                String *outMaterialName);

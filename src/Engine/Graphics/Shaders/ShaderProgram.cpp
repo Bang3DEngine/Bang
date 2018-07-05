@@ -289,6 +289,8 @@ bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v,
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
+    ASSERT(texture != nullptr);
+
     int uniformLocation = GetUniformLocation(name);
     if (uniformLocation < 0)
     {
@@ -325,13 +327,13 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         m_namesToTexture[name] = texture;
 
         // Register listener to keep track when it is destroyed
-        if (texture)
-        {
-            texture->EventEmitter<IEventsDestroy>::RegisterListener(this);
-        }
+        texture->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 
-    if (GL::IsBound(this)) { BindTextureToFreeUnit(name, texture); }
+    if (GL::IsBound(this))
+    {
+        BindTextureToFreeUnit(name, texture);
+    }
 
     if (m_namesToTexture.size() >= TextureUnitManager::GetNumUsableTextureUnits())
     {
@@ -342,16 +344,45 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
     return true;
 }
 bool ShaderProgram::SetTexture2D(const String &name,
-                                 Texture2D *texture,
+                                 Texture2D *texture2D,
                                  bool warn)
 {
-    return SetTexture(name, SCAST<Texture*>(texture), warn);
+    if (texture2D)
+    {
+        return SetTexture(name, SCAST<Texture*>(texture2D), warn);
+    }
+    else
+    {
+        return  SetDefaultTexture2D(name, warn);
+    }
 }
+bool ShaderProgram::SetDefaultTexture2D(const String &name, bool warn)
+{
+    return SetTexture(name,
+                      SCAST<Texture*>(
+                          TextureFactory::GetWhiteTexture().Get()),
+                      warn);
+}
+
 bool ShaderProgram::SetTextureCubeMap(const String &name,
-                                      TextureCubeMap *textureCubeMap,
+                                      TextureCubeMap *textureCM,
                                       bool warn)
 {
-    return SetTexture(name, SCAST<Texture*>(textureCubeMap), warn);
+    if (textureCM)
+    {
+        return SetTexture(name, SCAST<Texture*>(textureCM), warn);
+    }
+    else
+    {
+        return  SetDefaultTextureCubeMap(name, warn);
+    }
+}
+bool ShaderProgram::SetDefaultTextureCubeMap(const String &name, bool warn)
+{
+    return SetTexture(name,
+                      SCAST<Texture*>(
+                          TextureFactory::GetWhiteTextureCubeMap().Get()),
+                      warn);
 }
 
 bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
@@ -419,8 +450,8 @@ Shader* ShaderProgram::GetFragmentShader() const { return p_fShader.Get(); }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
 {
-    // auto it = m_nameToLocationCache.find(name);
-    // if (it != m_nameToLocationCache.end()) { return it->second; }
+    auto it = m_nameToLocationCache.find(name);
+    if (it != m_nameToLocationCache.end()) { return it->second; }
 
     const int location = GL::GetUniformLocation(GetGLId(), name);
     m_nameToLocationCache[name] = location;
@@ -442,7 +473,6 @@ void ShaderProgram::Bind() const
     }
     #endif
 
-    // Debug_Log("Binding " << this << " =========================================");
     GL::Bind(this);
     ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
     GLUniforms::SetAllUniformsToShaderProgram(noConstThis);
@@ -537,31 +567,9 @@ void ShaderProgram::CheckTextureBindingsValidity() const
 }
 
 void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
-                                          Texture *texture_)
+                                          Texture *texture)
 {
-    Texture *texture = texture_;
-    if (!texture)
-    {
-        int uniformLocation = GetUniformLocation(texUniformName);
-        ASSERT(uniformLocation >= 0);
-
-        GL::UniformType samplerType =
-                         GL::GetUniformTypeAt(GetGLId(), uniformLocation);
-
-        // If texture is null, return its corresponding null texture unit
-        switch (samplerType)
-        {
-            case GL::UniformType::SAMPLER_CUBE:
-            case GL::UniformType::SAMPLER_CUBE_SHADOW:
-                texture = TextureFactory::GetWhiteTextureCubeMap().Get();
-            break;
-
-            default:
-                texture = TextureFactory::GetWhiteTexture().Get();
-            break;
-        }
-    }
-
+    ASSERT(texture);
     uint unit = TextureUnitManager::BindTextureToUnit(texture);
     SetInt(texUniformName, unit, false); // Assign unit to sampler
 }
@@ -593,7 +601,14 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     for (const auto &pair : entriesToRestore)
     {
         const String &name = pair.first;
-        SetTexture(name, nullptr, false);
+        if (DCAST<TextureCubeMap*>(destroyedTex))
+        {
+            SetDefaultTextureCubeMap(name, false);
+        }
+        else
+        {
+            SetDefaultTexture2D(name, false);
+        }
     }
 }
 

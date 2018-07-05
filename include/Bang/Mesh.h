@@ -34,15 +34,17 @@ public:
     static constexpr uint DefaultNormalsVBOLocation   = 1;
     static constexpr uint DefaultUvsVBOLocation       = 2;
     static constexpr uint DefaultTangentsVBOLocation  = 3;
+    static constexpr uint DefaultVertexToBonesIndicesVBOLocation = 4;
+    static constexpr uint DefaultVertexToBonesWeightsVBOLocation = 5;
 
     void SetPositionsPool(const Array<Vector3>& positions);
     void SetNormalsPool(const Array<Vector3>& normals);
     void SetUvsPool(const Array<Vector2>& uvs);
     void SetTangentsPool(const Array<Vector3>& tangents);
+    void SetBonesPool(const Map<String, Mesh::Bone> &bones);
     void SetVertexIndices(const Array<VertexId>& vertexIndices);
 
-    void AddBone(const String &boneName, const Mesh::Bone &bone);
-    void UpdateGeometry();
+    void UpdateVAOs();
     void CalculateVertexNormals();
 
     void CalculateLODs();
@@ -55,7 +57,7 @@ public:
     VAO *GetVAO() const;
     IBO *GetVertexIndicesIBO() const;
     VBO *GetVertexAttributesVBO() const;
-    int GetVertexCount() const;
+    int GetNumVertices() const;
     const AABox& GetAABBox() const;
     const Sphere& GetBoundingSphere() const;
     const Array<VertexId>& GetVertexIndices() const;
@@ -63,7 +65,7 @@ public:
     const Array<Vector3>& GetNormalsPool() const;
     const Array<Vector2>& GetUvsPool() const;
     const Array<Vector3>& GetTangentsPool() const;
-    const Map<String, Mesh::Bone>& GetBones() const;
+    const Map<String, Mesh::Bone>& GetBonesPool() const;
     const Path &GetModelFilepath() const;
 
     UMap<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
@@ -87,7 +89,9 @@ private:
     Array<Vector2> m_uvsPool;
     Array<Vector3> m_tangentsPool;
 
-    Map<String, Bone> m_bones;
+    Map<String, Bone> m_bonesPool;
+    Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIndicesPool;
+    Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
     RH<Animation> m_animations;
 
     mutable VAO *m_vao = nullptr;

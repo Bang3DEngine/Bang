@@ -158,6 +158,24 @@ Array<Resource*> Resources::GetAllCached(const GUID &guid)
     return foundResources;
 }
 
+Resource *Resources::GetCachedResource(const Path &path)
+{
+    return Resources::GetCachedResource( ImportFilesManager::GetGUID(path) );
+}
+
+Resource *Resources::GetCachedResource(const GUID &guid)
+{
+    Resources *rss = Resources::GetInstance();
+    for (const auto &pair : rss->m_resourcesCache)
+    {
+        Resource *res = rss->GetCached_(pair.first, guid);
+        if (res)
+        {
+            return res;
+        }
+    }
+    return nullptr;
+}
 Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
                                 const GUID &guid) const
 {

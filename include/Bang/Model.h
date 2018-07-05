@@ -29,16 +29,16 @@ public:
 
     const Array< RH<Mesh> >& GetMeshes() const;
     const Array< RH<Material> >& GetMaterials() const;
+    const Array< RH<Animation> >& GetAnimations() const;
     const Array<String>& GetMeshesNames() const;
     const Array<String>& GetMaterialsNames() const;
-
-    virtual GUID::GUIDType GetNextEmbeddedFileGUID() const override;
-    virtual Resource* GetEmbeddedResource(
-                            GUID::GUIDType embeddedFileGUID) const override;
-    virtual String GetEmbeddedFileResourceName(
-                            GUID::GUIDType embeddedFileGUID) const override;
+    const Array<String>& GetAnimationsNames() const;
 
     // Resource
+    GUID::GUIDType GetNextEmbeddedFileGUID() const override;
+    Resource* GetEmbeddedResource(const String &embeddedResourceName) const override;
+    Resource* GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const override;
+    String GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const override;
     void Import(const Path &modelFilepath) override;
 
     // Serializable

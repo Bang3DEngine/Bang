@@ -460,7 +460,7 @@ void GEngine::RenderViewportPlane()
     GL::SetDepthFunc(GL::Function::ALWAYS);
 
     GL::Render(p_windowPlaneMesh.Get()->GetVAO(), GL::Primitive::TRIANGLES,
-               p_windowPlaneMesh.Get()->GetVertexCount());
+               p_windowPlaneMesh.Get()->GetNumVertices());
 
     // Restore state
     GL::SetWireframe(prevWireframe);

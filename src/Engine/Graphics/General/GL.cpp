@@ -223,7 +223,7 @@ bool GL::CheckError(int line, const String &func, const String &file)
                     file <<
                     ":" <<
                     line);
-        GL::PrintGLContext();
+        // GL::PrintGLContext();
         ok = false;
     }
     return ok;

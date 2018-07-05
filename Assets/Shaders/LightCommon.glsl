@@ -21,7 +21,7 @@ const int LIGHT_TYPE_POINT       = 1;
 
 #elif defined(BANG_FORWARD_RENDERING) // Forward lighting uniforms
 
-    #define BANG_MAX_FORWARD_LIGHTS 128
+    const int BANG_MAX_FORWARD_LIGHTS = 128;
     uniform int B_ForwardRenderingLightNumber;
     uniform vec4[BANG_MAX_FORWARD_LIGHTS]   B_ForwardRenderingLightColors;
     uniform vec3[BANG_MAX_FORWARD_LIGHTS]   B_ForwardRenderingLightPositions;

@@ -51,7 +51,6 @@ public:
     bool SetVector4(const String &name, const Vector4& v, bool warn = true);
     bool SetMatrix3(const String &name, const Matrix3& v, bool warn = true);
     bool SetMatrix4(const String &name, const Matrix4& v, bool warn = true);
-    bool SetTexture(const String &name, Texture *texture, bool warn = true);
     bool SetTexture2D(const String &name, Texture2D *texture, bool warn = true);
     bool SetTextureCubeMap(const String &name, TextureCubeMap *textureCubeMap,
                            bool warn = true);
@@ -108,6 +107,10 @@ private:
                   const Path& gShaderPath,
                   const Path& fShaderPath);
     virtual ~ShaderProgram();
+
+    bool SetDefaultTexture2D(const String &name, bool warn = true);
+    bool SetDefaultTextureCubeMap(const String &name, bool warn = true);
+    bool SetTexture(const String &name, Texture *texture, bool warn = true);
 
     void BindAllTexturesToUnits();
     void CheckTextureBindingsValidity() const;

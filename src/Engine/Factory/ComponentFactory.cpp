@@ -29,6 +29,7 @@
 #include "Bang/PostProcessEffect.h"
 #include "Bang/BehaviourContainer.h"
 #include "Bang/UIHorizontalLayout.h"
+#include "Bang/SkinnedMeshRenderer.h"
 
 USING_NAMESPACE_BANG
 
@@ -42,6 +43,8 @@ USING_NAMESPACE_BANG
 
 Component* ComponentFactory::Create(const String &componentClassName)
 {
+    ASSERT(ComponentFactory::Exists(componentClassName));
+
     CREATE_COMPONENT(componentClassName, Camera);
     CREATE_COMPONENT(componentClassName, UIMask);
     CREATE_COMPONENT(componentClassName, Renderer);
@@ -64,6 +67,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, PostProcessEffect);
     CREATE_COMPONENT(componentClassName, BehaviourContainer);
     CREATE_COMPONENT(componentClassName, UIHorizontalLayout);
+    CREATE_COMPONENT(componentClassName, SkinnedMeshRenderer);
 
     Debug_Warn("Please register class '" << componentClassName << "' in "
                "ComponentFactory");
@@ -78,7 +82,7 @@ bool ComponentFactory::Exists(const String &componentClassName)
     EXISTS_COMPONENT(componentClassName, UIMask);
     EXISTS_COMPONENT(componentClassName, Renderer);
     EXISTS_COMPONENT(componentClassName, UICanvas);
-    CREATE_COMPONENT(componentClassName, Animator);
+    EXISTS_COMPONENT(componentClassName, Animator);
     EXISTS_COMPONENT(componentClassName, Transform);
     EXISTS_COMPONENT(componentClassName, PointLight);
     EXISTS_COMPONENT(componentClassName, UIRectMask);
@@ -97,6 +101,7 @@ bool ComponentFactory::Exists(const String &componentClassName)
     EXISTS_COMPONENT(componentClassName, PostProcessEffect);
     EXISTS_COMPONENT(componentClassName, BehaviourContainer);
     EXISTS_COMPONENT(componentClassName, UIHorizontalLayout);
+    EXISTS_COMPONENT(componentClassName, SkinnedMeshRenderer);
 
     return false;
 }

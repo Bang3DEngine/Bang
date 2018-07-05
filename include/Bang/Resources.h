@@ -46,7 +46,7 @@ public:
     static RH<ResourceClass> Create(const GUID &guid, const Args&... args);
     template<class ResourceClass, class ...Args>
     static RH<ResourceClass> CreateEmbeddedResource(
-                                        const GUID &baseGUID,
+                                        Resource *parentResource,
                                         const GUID::GUIDType embeddedFileGUID,
                                         const Args&... args);
     static void CreateResourceXMLAndImportFile(const Resource *resource,
@@ -82,6 +82,9 @@ public:
 
     template <class ResourceClass>
     static bool Contains(const GUID &guid);
+
+    static Resource* GetCachedResource(const Path &path);
+    static Resource* GetCachedResource(const GUID &guid);
 
     template<class ResourceClass>
     static ResourceClass* GetCached(const GUID &guid);

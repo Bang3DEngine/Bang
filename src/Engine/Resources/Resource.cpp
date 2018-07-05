@@ -63,12 +63,6 @@ String Resource::GetEmbeddedFileResourceName(GUID::GUIDType) const
     return "EmbeddedResource";
 }
 
-GUID Resource::GetEmbeddedResourceGUID(const String &embeddedResourceName) const
-{
-    (void) embeddedResourceName;
-    return GUID::Empty();
-}
-
 void Resource::ImportXML(const XMLNode &xmlInfo)
 {
     Serializable::ImportXML(xmlInfo);

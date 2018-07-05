@@ -43,11 +43,6 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
     m_areLodsValid = false;
 }
 
-void Mesh::AddBone(const String &boneName, const Mesh::Bone &bone)
-{
-    m_bones.Add(boneName, bone);
-}
-
 void Mesh::SetPositionsPool(const Array<Vector3>& positions)
 {
     m_positionsPool = positions;
@@ -74,10 +69,84 @@ void Mesh::SetTangentsPool(const Array<Vector3> &tangents)
     m_areLodsValid = false;
 }
 
-void Mesh::UpdateGeometry()
+void Mesh::SetBonesPool(const Map<String, Mesh::Bone> &bones)
+{
+    m_bonesPool = bones;
+}
+
+void Mesh::UpdateVAOs()
 {
     if (m_vertexAttributesVBO) { delete m_vertexAttributesVBO; }
     m_vertexAttributesVBO = new VBO();
+
+    bool hasPos      = !GetPositionsPool().IsEmpty();
+    bool hasNormals  = !GetNormalsPool().IsEmpty();
+    bool hasUvs      = !GetUvsPool().IsEmpty();
+    bool hasTangents = !GetTangentsPool().IsEmpty();
+    bool hasBones    = !GetBonesPool().IsEmpty();
+
+    if (hasBones)
+    {
+        // Pick 4 most relevant bones per vertex
+        Array<Mesh::Bone> allBones = GetBonesPool().GetValues().To<Array>();
+        for (VertexId vid = 0; vid < GetVertexIndices().Size(); ++vid)
+        {
+            struct BoneExt : public IToString
+            {
+                float weight;
+                uint id;
+                String ToString() const override
+                { return "Bone(" + String::ToString(id) + ": " +
+                                   String::ToString(weight) + ")"; }
+            };
+
+            int boneId = 0;
+            Array<BoneExt> vertexBonesExt;
+            for (const Mesh::Bone &bone : allBones)
+            {
+                if (bone.weights.ContainsKey(vid))
+                {
+                    BoneExt boneExt;
+                    boneExt.weight = bone.weights.Get(vid);
+                    boneExt.id     = boneId;
+                    ++boneId;
+                    vertexBonesExt.PushBack(boneExt);
+                }
+            }
+
+            m_vertexIdToImportantBonesIndicesPool.Add(vid,
+                                       std::array<int, 4>({{0,0,0,0}}));
+            m_vertexIdToImportantBonesWeightsPool.Add(vid,
+                                       // std::array<float, 4>({{0,0,0,0}}));
+                                        std::array<float, 4>({{0,0,0,0}}));
+
+            if (!vertexBonesExt.IsEmpty())
+            {
+                Containers::Sort(vertexBonesExt.Begin(),
+                                 vertexBonesExt.End(),
+                         [](const BoneExt &lhs, const BoneExt &rhs) -> bool
+                         {
+                             return lhs.weight > rhs.weight;
+                         });
+
+                int numImportantBones = Math::Min(4u, vertexBonesExt.Size());
+
+                float weightSum = 0.0f;
+                for (int i = 0; i < numImportantBones; ++i)
+                {
+                    weightSum += vertexBonesExt[i].weight; // To norm later
+                }
+
+                for (int i = 0; i < numImportantBones; ++i)
+                {
+                    m_vertexIdToImportantBonesIndicesPool.Get(vid)[i] =
+                                        vertexBonesExt[i].id;
+                    m_vertexIdToImportantBonesWeightsPool.Get(vid)[i] =
+                                        vertexBonesExt[i].weight / weightSum;
+                }
+            }
+        }
+    }
 
     Array<float> interleavedAttributes;
     for (int i = 0; i < GetPositionsPool().Size(); ++i)
@@ -112,24 +181,51 @@ void Mesh::UpdateGeometry()
             interleavedAttributes.PushBack(tangent.y);
             interleavedAttributes.PushBack(tangent.z);
         }
+
+        if (i < m_vertexIdToImportantBonesIndicesPool.Size())
+        {
+            const auto &vertexIdToImportantBonesIndices =
+                    m_vertexIdToImportantBonesIndicesPool.Get(i);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesIndices[0]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesIndices[1]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesIndices[2]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesIndices[3]);
+        }
+
+        if (i < m_vertexIdToImportantBonesWeightsPool.Size())
+        {
+            const auto &vertexIdToImportantBonesWeights =
+                    m_vertexIdToImportantBonesWeightsPool.Get(i);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesWeights[0]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesWeights[1]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesWeights[2]);
+            interleavedAttributes.PushBack(vertexIdToImportantBonesWeights[3]);
+        }
     }
 
     GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
                                    interleavedAttributes.Size() * sizeof(float));
 
-    bool hasPos      = !GetPositionsPool().IsEmpty();
-    bool hasNormals  = !GetNormalsPool().IsEmpty();
-    bool hasUvs      = !GetUvsPool().IsEmpty();
-    bool hasTangents = !GetTangentsPool().IsEmpty();
-    const int posBytesSize      = hasPos      ? (3 * sizeof(float)) : 0;
-    const int normalsBytesSize  = hasNormals  ? (3 * sizeof(float)) : 0;
-    const int uvsBytesSize      = hasUvs      ? (2 * sizeof(float)) : 0;
-    const int tangentsBytesSize = hasTangents ? (3 * sizeof(float)) : 0;
+    const int posBytesSize                  = hasPos      ? (3 * sizeof(float)) : 0;
+    const int normalsBytesSize              = hasNormals  ? (3 * sizeof(float)) : 0;
+    const int uvsBytesSize                  = hasUvs      ? (2 * sizeof(float)) : 0;
+    const int tangentsBytesSize             = hasTangents ? (3 * sizeof(float)) : 0;
+    const int vertexToBonesIndicesBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
+    const int vertexToBonesWeightsBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
 
     int totalStride = posBytesSize + normalsBytesSize +
-                      uvsBytesSize + tangentsBytesSize;
+                      uvsBytesSize + tangentsBytesSize +
+                      vertexToBonesIndicesBytesSize +
+                      vertexToBonesWeightsBytesSize;
 
-    const int posOffset = 0;
+    const int posOffset      = 0;
+    const int normalsOffset  = posOffset + posBytesSize;
+    const int uvsOffset      = normalsOffset + normalsBytesSize;
+    const int tangentsOffset = uvsOffset + uvsBytesSize;
+    const int vertexToBonesIndicesOffset = tangentsOffset + tangentsBytesSize;
+    const int vertexToBonesWeightsOffset = vertexToBonesIndicesOffset +
+                                           vertexToBonesIndicesBytesSize;
+
     if (hasPos)
     {
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
@@ -141,7 +237,6 @@ void Mesh::UpdateGeometry()
                                          posOffset);
     }
 
-    const int normalsOffset = posOffset + posBytesSize;
     if (hasNormals)
     {
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
@@ -153,7 +248,6 @@ void Mesh::UpdateGeometry()
                                          normalsOffset);
     }
 
-    const int uvsOffset = normalsOffset + normalsBytesSize;
     if (hasUvs)
     {
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
@@ -165,7 +259,6 @@ void Mesh::UpdateGeometry()
                                          uvsOffset);
     }
 
-    const int tangentsOffset = uvsOffset + uvsBytesSize;
     if (hasTangents)
     {
         GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
@@ -176,6 +269,27 @@ void Mesh::UpdateGeometry()
                                          totalStride,
                                          tangentsOffset);
     }
+
+    if (hasBones)
+    {
+        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
+                                         Mesh::DefaultVertexToBonesIndicesVBOLocation,
+                                         4,
+                                         GL::VertexAttribDataType::FLOAT,
+                                         false,
+                                         totalStride,
+                                         vertexToBonesIndicesOffset);
+
+        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
+                                         Mesh::DefaultVertexToBonesWeightsVBOLocation,
+                                         4,
+                                         GL::VertexAttribDataType::FLOAT,
+                                         false,
+                                         totalStride,
+                                         vertexToBonesWeightsOffset);
+    }
+
+    // Debug_Log("UpdateVAOs() with " << GetNumVertices());
 }
 
 void Mesh::CalculateVertexNormals()
@@ -245,7 +359,7 @@ std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(int triIndex) const
     return {{triVertex0Index, triVertex1Index, triVertex2Index}};
 }
 
-int Mesh::GetVertexCount() const
+int Mesh::GetNumVertices() const
 {
     return GetVertexIndicesIBO() ? GetVertexIndices().Size() :
                                    GetPositionsPool().Size();
@@ -258,9 +372,9 @@ VBO *Mesh::GetVertexAttributesVBO() const { return m_vertexAttributesVBO; }
 const AABox &Mesh::GetAABBox() const { return m_bBox; }
 const Sphere &Mesh::GetBoundingSphere() const { return m_bSphere; }
 
-const Map<String, Mesh::Bone> &Mesh::GetBones() const
+const Map<String, Mesh::Bone> &Mesh::GetBonesPool() const
 {
-    return m_bones;
+    return m_bonesPool;
 }
 
 const Array<Mesh::VertexId> &Mesh::GetVertexIndices() const { return m_vertexIndices; }
@@ -301,8 +415,9 @@ void Mesh::CloneInto(ICloneable *clone) const
     mClone->SetNormalsPool( GetNormalsPool() );
     mClone->SetUvsPool( GetUvsPool() );
     mClone->SetTangentsPool( GetTangentsPool() );
+    mClone->SetBonesPool( GetBonesPool() );
     mClone->SetVertexIndices( GetVertexIndices() );
-    mClone->UpdateGeometry();
+    mClone->UpdateVAOs();
 }
 
 void Mesh::Import(const Path &meshFilepath)
@@ -325,13 +440,9 @@ void Mesh::Import(const Path &meshFilepath)
         SetNormalsPool(normalsPool);
         SetUvsPool(uvsPool);
         SetTangentsPool(tangentsPool);
+        SetBonesPool(bonesPool);
         SetVertexIndices(vertexIndices);
-        UpdateGeometry();
-
-        for (const auto &pair : bonesPool)
-        {
-            AddBone(pair.first, pair.second);
-        }
+        UpdateVAOs();
     }
     else
     {

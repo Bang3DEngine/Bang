@@ -247,7 +247,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     m_mesh.Get()->SetPositionsPool(positions);
                     m_mesh.Get()->SetNormalsPool(normals);
                     m_mesh.Get()->SetUvsPool(uvs);
-                    m_mesh.Get()->UpdateGeometry();
+                    m_mesh.Get()->UpdateVAOs();
 
                     params.cullFace = drp->cullFace;
                     params.wireframe = drp->wireframe;

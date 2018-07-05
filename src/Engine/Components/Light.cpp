@@ -75,8 +75,24 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     sp->SetColor  ("B_LightColor",         GetColor(),             false);
     sp->SetVector3("B_LightForwardWorld",  tr->GetForward(),       false);
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition(),      false);
-    sp->SetTexture("B_LightShadowMap",     GetShadowMapTexture(),  false);
-    sp->SetTexture("B_LightShadowMapSoft", GetShadowMapTexture(),  false);
+    if (DCAST<Texture2D*>(GetShadowMapTexture()))
+    {
+        sp->SetTexture2D("B_LightShadowMap",
+                         SCAST<Texture2D*>(GetShadowMapTexture()),
+                         false);
+        sp->SetTexture2D("B_LightShadowMapSoft",
+                         SCAST<Texture2D*>(GetShadowMapTexture()),
+                         false);
+    }
+    else
+    {
+        sp->SetTextureCubeMap("B_LightShadowMap",
+                              SCAST<TextureCubeMap*>(GetShadowMapTexture()),
+                              false);
+        sp->SetTextureCubeMap("B_LightShadowMapSoft",
+                              SCAST<TextureCubeMap*>(GetShadowMapTexture()),
+                              false);
+    }
 }
 
 List<GameObject*> Light::GetActiveSceneShadowCasters() const

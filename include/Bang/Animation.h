@@ -16,15 +16,24 @@ class Animation : public Asset
     ASSET(Animation);
 
 public:
+    template <class T>
     struct KeyFrame
     {
         float time;
-        Map<String, Matrix4> boneNameToTransformation;
+        T value;
     };
 
-    void AddKeyFrame(const Animation::KeyFrame &keyFrame);
+    void AddPositionKeyFrame(const Animation::KeyFrame<Vector3> &keyFrame);
+    void AddRotationKeyFrame(const Animation::KeyFrame<Quaternion> &keyFrame);
+    void AddScaleKeyFrame(const Animation::KeyFrame<Vector3> &keyFrame);
+    void SetFramesPerSecond(float framesPerSecond);
+    void SetDuration(float durationInSeconds);
 
-    const Array<KeyFrame>& GetKeyFrames() const;
+    float GetDuration() const;
+    float GetFramesPerSecond() const;
+    const Array<KeyFrame<Vector3> > &GetPositionKeyFrames() const;
+    const Array<KeyFrame<Quaternion>>& GetRotationKeyFrames() const;
+    const Array<KeyFrame<Vector3>>& GetScaleKeyFrames() const;
 
     // Resource
     void Import(const Path &animationFilepath) override;
@@ -37,7 +46,12 @@ private:
     Animation();
     virtual ~Animation();
 
-    Array<KeyFrame> m_keyFrames;
+    float m_durationSeconds = 0.0f;
+    float m_framesPerSecond = 0.0f;
+
+    Array<KeyFrame<Vector3>> m_positionKeyFrames;
+    Array<KeyFrame<Quaternion>> m_rotationKeyFrames;
+    Array<KeyFrame<Vector3>> m_scaleKeyFrames;
 };
 
 NAMESPACE_BANG_END

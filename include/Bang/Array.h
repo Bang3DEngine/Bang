@@ -9,17 +9,12 @@
 
 NAMESPACE_BANG_BEGIN
 
-// Template helpers to handle the special vector<bool> case
-template <class RT>
-struct ArrayRefType { using RefT = RT&; using ConstRefT = const RT&; };
-template<>
-struct ArrayRefType<bool> { using RefT = bool; using ConstRefT = const bool; };
-//
-
 template <class T>
 class Array
 {
 public:
+    using Ref = typename std::vector<T>::reference;
+    using ConstRef = typename std::vector<T>::const_reference;
     using Iterator = typename std::vector<T>::iterator;
     using RIterator = typename std::vector<T>::reverse_iterator;
     using Const_Iterator = typename std::vector<T>::const_iterator;
@@ -72,10 +67,10 @@ public:
     void Clear();
     bool IsEmpty() const;
 
-    typename ArrayRefType<T>::RefT At(std::size_t i);
-    typename ArrayRefType<T>::ConstRefT At(std::size_t i) const;
-    typename ArrayRefType<T>::RefT operator[](std::size_t i);
-    typename ArrayRefType<T>::ConstRefT operator[](std::size_t i) const;
+    typename Array<T>::Ref At(std::size_t i);
+    typename Array<T>::ConstRef At(std::size_t i) const;
+    typename Array<T>::Ref operator[](std::size_t i);
+    typename Array<T>::ConstRef operator[](std::size_t i) const;
     bool operator==(const Array<T> &rhs) const;
 
     template< template <class> class Container, class OtherT = T>

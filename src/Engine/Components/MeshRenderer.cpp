@@ -85,7 +85,7 @@ void MeshRenderer::OnRender()
         Mesh *lodMeshToRender = baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();
         GL::Render(lodMeshToRender->GetVAO(),
                    GetRenderPrimitive(),
-                   lodMeshToRender->GetVertexCount());
+                   lodMeshToRender->GetNumVertices());
     }
 }
 

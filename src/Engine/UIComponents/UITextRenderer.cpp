@@ -91,7 +91,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
     {
         p_mesh.Get()->SetPositionsPool({});
         p_mesh.Get()->SetUvsPool({});
-        p_mesh.Get()->UpdateGeometry();
+        p_mesh.Get()->UpdateVAOs();
         return;
     }
 
@@ -165,7 +165,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
                                                          textQuadPos2D.End());
     p_mesh.Get()->SetPositionsPool(textQuadPos3D);
     p_mesh.Get()->SetUvsPool(textQuadUvs);
-    p_mesh.Get()->UpdateGeometry();
+    p_mesh.Get()->UpdateVAOs();
 }
 
 void UITextRenderer::Bind() const
@@ -185,7 +185,7 @@ void UITextRenderer::OnRender()
     UIRenderer::OnRender();
     RegenerateCharQuadsVAO();
 
-    int vertCount = p_mesh.Get()->GetVertexCount();
+    int vertCount = p_mesh.Get()->GetNumVertices();
     if (vertCount >= 3)
     {
         GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(), vertCount);

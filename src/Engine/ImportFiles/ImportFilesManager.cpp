@@ -165,11 +165,11 @@ GUID ImportFilesManager::GetGUID(const Path& filepath)
         else
         {
             Path parentResPath = filepath.GetDirectory();
-            Resource *parentRes = Resources::GetCached<Resource>(parentResPath);
+            Resource *parentRes = Resources::GetCachedResource(parentResPath);
             if (parentRes)
             {
                 if (Resource *embeddedRes = parentRes->GetEmbeddedResource(
-                                                               filepath.GetName()))
+                                                        filepath.GetNameExt()))
                 {
                     return embeddedRes->GetGUID();
                 }
@@ -188,11 +188,7 @@ Path ImportFilesManager::GetFilepath(const GUID &guid)
     }
     else
     {
-        if (!Resources::IsEmbeddedResource(guid))
-        {
-            return Path::Empty;
-        }
-        else
+        if (Resources::IsEmbeddedResource(guid))
         {
             Path parentPath = ImportFilesManager::GetFilepath(
                                     guid.WithoutEmbeddedFileGUID());
@@ -204,10 +200,6 @@ Path ImportFilesManager::GetFilepath(const GUID &guid)
                     String name = res->GetEmbeddedFileResourceName(
                                                 guid.GetEmbeddedFileGUID());
                     return parentPath.Append(name);
-                }
-                else
-                {
-                    return Path::Empty;
                 }
             }
         }

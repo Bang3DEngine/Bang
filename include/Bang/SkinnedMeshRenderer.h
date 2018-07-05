@@ -8,11 +8,17 @@ NAMESPACE_BANG_BEGIN
 
 class SkinnedMeshRenderer : public MeshRenderer
 {
+    COMPONENT(SkinnedMeshRenderer);
+
 public:
 	SkinnedMeshRenderer();
 	virtual ~SkinnedMeshRenderer();
 
+    // MeshRenderer
+    void OnRender() override;
+
 private:
+    bool m_hadAnimatorBefore = true;
 };
 
 NAMESPACE_BANG_END

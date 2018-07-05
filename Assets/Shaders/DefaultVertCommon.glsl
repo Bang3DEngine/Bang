@@ -3,17 +3,17 @@
 
 #ifdef BANG_HAS_ANIMATIONS
 const int B_MAX_NUM_BONES = 128;
-uniform int B_BoneAnimationMatrices[B_MAX_NUM_BONES];
+uniform mat4[B_MAX_NUM_BONES] B_BoneAnimationMatrices;
 #endif
 
 layout(location = 0) in vec3  B_VIn_Position;
 layout(location = 1) in vec3  B_VIn_Normal;
 layout(location = 2) in vec2  B_VIn_Uv;
 layout(location = 3) in vec3  B_VIn_Tangent;
-// #ifdef BANG_HAS_ANIMATIONS
-// layout(location = 4) in ivec4 B_VIn_VertexBones; // Max 4 bones per vertex
-// layout(location = 5) in  vec4 B_VIn_VertexWeights;
-// #endif
+#ifdef BANG_HAS_ANIMATIONS
+layout(location = 4) in vec4 B_VIn_VertexBones; // Max 4 bones per vertex
+layout(location = 5) in vec4 B_VIn_VertexWeights;
+#endif
 
 out vec3 B_FIn_Position;
 out vec3 B_FIn_Normal;
@@ -27,22 +27,18 @@ void main()
     vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
 
     #ifdef BANG_HAS_ANIMATIONS
-    float x = 0.0;
-    for (int i = 0; i < B_MAX_NUM_BONES; ++i)
-    {
-        x += B_BoneAnimationMatrices[i];
-    }
-    uv.x += x;
-    #endif
-    // ivec4 vids = ivec4(0); // B_VIn_VertexBones;
-    // mat4 boneTransform =
-    //    (B_BoneAnimationMatrices[vids[0]])+ // * B_VIn_VertexWeights[vids[0]]) +
-    //    (B_BoneAnimationMatrices[vids[1]])+ // * B_VIn_VertexWeights[vids[1]]) +
-    //    (B_BoneAnimationMatrices[vids[2]])+ // * B_VIn_VertexWeights[vids[2]]) +
-    //    (B_BoneAnimationMatrices[vids[3]]); //  * B_VIn_VertexWeights[vids[3]]);
-    // #else
+    ivec4 boneIds = ivec4(int(B_VIn_VertexBones.x),
+                          int(B_VIn_VertexBones.y),
+                          int(B_VIn_VertexBones.z),
+                          int(B_VIn_VertexBones.w));
+    mat4 boneTransform =
+       (B_BoneAnimationMatrices[boneIds[0]] * B_VIn_VertexWeights[boneIds[0]]) +
+       (B_BoneAnimationMatrices[boneIds[1]] * B_VIn_VertexWeights[boneIds[1]]) +
+       (B_BoneAnimationMatrices[boneIds[2]] * B_VIn_VertexWeights[boneIds[2]]) +
+       (B_BoneAnimationMatrices[boneIds[3]] * B_VIn_VertexWeights[boneIds[3]]);
+    #else
     const mat4 boneTransform = mat4(1.0);
-    // #endif
+    #endif
 
     B_FIn_Position    = (B_Model  * boneTransform * vec4(B_VIn_Position, 1)).xyz;
     B_FIn_Normal      = (B_Normal * boneTransform * vec4(B_VIn_Normal, 0)).xyz;

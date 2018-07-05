@@ -173,25 +173,25 @@ template<class T>
 bool Array<T>::IsEmpty() const { return Size() == 0; }
 
 template<class T>
-typename ArrayRefType<T>::RefT Array<T>::At(std::size_t i)
+typename Array<T>::Ref Array<T>::At(std::size_t i)
 {
     return m_vector.at(i);
 }
 
 template<class T>
-typename ArrayRefType<T>::ConstRefT Array<T>::At(std::size_t i) const
+typename Array<T>::ConstRef Array<T>::At(std::size_t i) const
 {
     return m_vector.at(i);
 }
 
 template<class T>
-typename ArrayRefType<T>::ConstRefT Array<T>::operator[](std::size_t i) const
+typename Array<T>::Ref Array<T>::operator[](std::size_t i)
 {
     return m_vector[i];
 }
 
 template<class T>
-typename ArrayRefType<T>::RefT  Array<T>::operator[](std::size_t i)
+typename Array<T>::ConstRef Array<T>::operator[](std::size_t i) const
 {
     return m_vector[i];
 }

@@ -20,10 +20,9 @@ public:
     Path GetResourceFilepath() const;
     Resource* GetParentResource() const;
     Resource* GetEmbeddedResource(const GUID &embeddedFileGUID) const;
-    Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
+    virtual Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
     virtual Resource* GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const;
     virtual String GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const;
-    virtual GUID GetEmbeddedResourceGUID(const String &embeddedResourceName) const;
 
 protected:
     Resource();

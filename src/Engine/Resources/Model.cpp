@@ -10,6 +10,7 @@
 #include "Bang/GUIDManager.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/SkinnedMeshRenderer.h"
 
 USING_NAMESPACE_BANG
 
@@ -44,8 +45,19 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     // Add mesh renderers
     for (int i = 0; i < SCAST<int>(modelNode.meshIndices.Size()); ++i)
     {
-        MeshRenderer *mr = gameObject->AddComponent<MeshRenderer>();
-        mr->SetMesh( modelScene.meshes[ modelNode.meshIndices[i] ].Get() );
+        Mesh *mesh = modelScene.meshes[ modelNode.meshIndices[i] ].Get();
+
+        MeshRenderer *mr = nullptr;
+        if (!mesh->GetBonesPool().IsEmpty())
+        {
+            mr = gameObject->AddComponent<MeshRenderer>();
+        }
+        else
+        {
+            mr = gameObject->AddComponent<SkinnedMeshRenderer>();
+        }
+
+        mr->SetMesh(mesh);
         mr->SetMaterial( modelScene.materials[ modelNode.meshIndices[i] ].Get() );
     }
 
@@ -75,13 +87,11 @@ void Model::AddMesh(Mesh *mesh,
     m_modelScene.meshesNames.PushBack(
             newMeshName + "." + Extensions::GetMeshExtension());
     m_modelScene.meshes.PushBack( RH<Mesh>(mesh) );
-    mesh->SetParentResource(this);
 
     String newMaterialName = Model::GetNewName(materialName, GetMaterialsNames());
     m_modelScene.materialsNames.PushBack(
             newMaterialName + "." + Extensions::GetMaterialExtension());
     m_modelScene.materials.PushBack( RH<Material>(material) );
-    material->SetParentResource(this);
 }
 
 RH<Mesh> Model::GetMeshByName(const String &meshName)
@@ -123,6 +133,11 @@ const Array<RH<Material> > &Model::GetMaterials() const
     return m_modelScene.materials;
 }
 
+const Array<RH<Animation> > &Model::GetAnimations() const
+{
+    return m_modelScene.animations;
+}
+
 const Array<String> &Model::GetMeshesNames() const
 {
     return m_modelScene.meshesNames;
@@ -133,9 +148,40 @@ const Array<String> &Model::GetMaterialsNames() const
     return m_modelScene.materialsNames;
 }
 
+const Array<String> &Model::GetAnimationsNames() const
+{
+    return m_modelScene.animationsNames;
+}
+
 GUID::GUIDType Model::GetNextEmbeddedFileGUID() const
 {
     return m_modelScene.meshes.Size() + m_modelScene.materials.Size();
+}
+
+Resource *Model::GetEmbeddedResource(const String &embeddedResourceName) const
+{
+    for (int i = 0; i < m_modelScene.meshes.Size(); ++i)
+    {
+        if (embeddedResourceName == m_modelScene.meshesNames[i])
+        {
+            return m_modelScene.meshes[i].Get();
+        }
+    }
+    for (int i = 0; i < m_modelScene.materials.Size(); ++i)
+    {
+        if (embeddedResourceName == m_modelScene.materialsNames[i])
+        {
+            return m_modelScene.materials[i].Get();
+        }
+    }
+    for (int i = 0; i < m_modelScene.animations.Size(); ++i)
+    {
+        if (embeddedResourceName == m_modelScene.animationsNames[i])
+        {
+            return m_modelScene.animations[i].Get();
+        }
+    }
+    return nullptr;
 }
 
 Resource *Model::GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const
@@ -159,7 +205,7 @@ void Model::Import(const Path &modelFilepath)
     ModelIOScene modelScene;
 
     // Copy
-    if (ModelIO::ImportModel(modelFilepath, GetGUID(), &modelScene))
+    if (ModelIO::ImportModel(modelFilepath, this, &modelScene))
     {
         ASSERT(modelScene.modelTree);
         m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
@@ -167,6 +213,15 @@ void Model::Import(const Path &modelFilepath)
         {
             AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
                     modelScene.meshesNames[i],  modelScene.materialsNames[i]);
+        }
+
+        for (int i = 0; i < modelScene.animations.Size(); ++i)
+        {
+            const RH<Animation> &animation = modelScene.animations[i];
+            const String &animationName = modelScene.animationsNames[i];
+            m_modelScene.animations.PushBack(animation);
+            m_modelScene.animationsNames.PushBack(animationName + "." +
+                                     Extensions::GetAnimationExtension());
         }
     }
     else

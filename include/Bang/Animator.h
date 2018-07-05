@@ -9,17 +9,22 @@
 
 NAMESPACE_BANG_BEGIN
 
+
 class Animator : public Component
 {
     COMPONENT(Animator);
 
 public:
-	Animator();
+    static Array<Matrix4> s_identityMatrices;
+    static constexpr int MaxNumBones = 128;
+
+    Animator();
 	virtual ~Animator();
 
     // Component
+    void OnStart() override;
     void OnUpdate() override;
-
+    void OnRender(RenderPass rp) override;
     void SetAnimation(Animation *animation);
     void Play();
     void Stop();
@@ -34,6 +39,10 @@ private:
     Time::TimeT m_prevFrameTimeMillis = 0;
 
     RH<Animation> p_animation;
+
+    void SetSkinnedMeshRendererCurrentBoneMatrices(
+                                RenderPass rp,
+                                const Array<Matrix4> &boneMatrices);
 };
 
 NAMESPACE_BANG_END

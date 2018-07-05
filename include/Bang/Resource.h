@@ -15,12 +15,8 @@ class Resource : public Serializable,
                  public EventEmitter<IEventsResource>
 {
 public:
-    template<class T>
-    void AddEmbeddedResource(const String &embeddedResourceName,
-                             Resource *embeddedResource);
     void RemoveEmbeddedResource(Resource *resource);
     void RemoveEmbeddedResource(const String &embeddedResourceName);
-    void SetParentResource(Resource *parentResource);
     void PropagateResourceChanged();
 
     Path GetResourceFilepath() const;
@@ -34,39 +30,48 @@ protected:
     Resource();
     virtual ~Resource();
 
+    // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo);
     virtual void ExportXML(XMLNode *xmlInfo) const;
 
-    void Import_(const Path &resourceFilepath);
+    // Resource
     virtual void Import(const Path &resourceFilepath) = 0;
-
+    void Import_(const Path &resourceFilepath);
 
 private:
+    // Embedded resource related variables
+    RH<Resource> p_parentResource;
     Map<String, RH<Resource>> m_nameToEmbeddedResource;
     Map<Resource*, String> m_embeddedResourceToName;
     Map<GUID, Resource*> m_GUIDToEmbeddedResource;
-    RH<Resource> p_parentResource;
+    mutable GUID::GUIDType m_nextNewEmbeddedResourceGUID = 1;
+
+    template<class T>
+    void AddEmbeddedResource(const String &embeddedResourceName,
+                             T *embeddedResource);
+    GUID::GUIDType GetNewEmbeddedResourceGUID() const;
+
+    void SetParentResource(Resource *parentResource);
 
     friend class Resources;
 };
 
 template<class T>
 void Resource::AddEmbeddedResource(const String &embeddedResourceName,
-                                   Resource *embeddedResource)
+                                   T *embeddedResource)
 {
     m_nameToEmbeddedResource.Add(embeddedResourceName,
-                                 RH<Resource>(embeddedResource));
+                                 RH<Resource>( SCAST<Resource*>(embeddedResource) ));
     m_embeddedResourceToName.Add(embeddedResource, embeddedResourceName);
     m_GUIDToEmbeddedResource.Add(embeddedResource->GetGUID(),
                                                  embeddedResource);
 
     RH<Resource> prevParentResource( embeddedResource->GetParentResource() );
-    embeddedResource->SetParentResource(embeddedResource);
-
     if (prevParentResource)
     {
         prevParentResource.Get()->RemoveEmbeddedResource(embeddedResource);
     }
+    embeddedResource->SetParentResource(this);
 }
 
 #define RESOURCE(CLASSNAME) \

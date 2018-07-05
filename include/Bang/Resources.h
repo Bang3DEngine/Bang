@@ -47,7 +47,7 @@ public:
     template<class ResourceClass = Resource, class ...Args>
     static RH<ResourceClass> CreateEmbeddedResource(
                                         Resource *parentResource,
-                                        const GUID::GUIDType embeddedFileGUID,
+                                        const String &embeddedResourceName,
                                         const Args&... args);
     static void CreateResourceXMLAndImportFile(const Resource *resource,
                                                const Path &exportFilepath);

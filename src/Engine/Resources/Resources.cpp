@@ -218,15 +218,16 @@ bool Resources::IsPermanent(const Path &resourcePath)
 
 void Resources::Remove(const GUID &guid)
 {
-    Resources *rs = Resources::GetInstance(); ASSERT(rs);
+    Resources *rss = Resources::GetInstance(); ASSERT(rss);
 
-    auto it = rs->m_resourcesCache.Find(guid);
+    auto it = rss->m_resourcesCache.Find(guid);
+    ASSERT(it != rss->m_resourcesCache.End());
+
     const ResourceEntry &resEntry = it->second;
     ASSERT(resEntry.resource != nullptr);
     ASSERT(resEntry.usageCount == 0);
 
-    Resource *resource = resEntry.resource;
-    if (resource)
+    if (Resource *resource = resEntry.resource)
     {
         if (EventEmitter<IEventsDestroy> *destroyable =
                              DCAST< EventEmitter<IEventsDestroy>* >(resource))
@@ -235,8 +236,10 @@ void Resources::Remove(const GUID &guid)
                                     &IEventsDestroy::OnDestroyed, destroyable);
         }
 
-        // delete resource;
+        delete resource;
     }
+
+    rss->m_resourcesCache.Remove(it);
 }
 
 Array<Path> Resources::GetLookUpPaths() const

@@ -59,19 +59,6 @@ public:
                             Model *model,
                             ModelIOScene *modelScene);
 
-    static void ImportMesh(aiMesh *aMesh,
-                           Model *model,
-                           const GUID::GUIDType &embeddedMeshGUID,
-                           RH<Mesh> *outMesh,
-                           String *outMeshName);
-    static void ImportMaterial(aiMaterial *aMaterial,
-                               const Path& modelDirectory,
-                               Model *model,
-                               const GUID::GUIDType &embeddedMaterialGUID,
-                               RH<Material> *outMaterial,
-                               String *outMaterialName);
-
-
     static bool ImportFirstFoundMeshRaw(
                      const Path& modelFilepath,
                      Array<Mesh::VertexId> *vertexIndices,
@@ -102,6 +89,17 @@ private:
     static aiMaterial* MaterialToAiMaterial(const Material *material);
     static const aiScene *ImportScene(Assimp::Importer *importer,
                                       const Path& modelFilepath);
+
+
+    static void ImportEmbeddedMesh(aiMesh *aMesh,
+                                   Model *model,
+                                   RH<Mesh> *outMesh,
+                                   String *outMeshName);
+    static void ImportEmbeddedMaterial(aiMaterial *aMaterial,
+                                       const Path& modelDirectory,
+                                       Model *model,
+                                       RH<Material> *outMaterial,
+                                       String *outMaterialName);
 };
 
 NAMESPACE_BANG_END

@@ -30,6 +30,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/Texture2D.h"
+#include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/XMLNodeReader.h"
@@ -133,8 +134,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     const aiScene* aScene = ImportScene(&importer, modelFilepath);
     if (!aScene) { return false; }
 
-    int embeddedResourceGUID = 1;
-
     // Load materials
     Array< String > unorderedMaterialNames;
     Array< RH<Material> > unorderedMaterials;
@@ -142,17 +141,14 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     {
         String materialName;
         RH<Material> materialRH;
-        ModelIO::ImportMaterial(aScene->mMaterials[i],
-                                modelFilepath.GetDirectory(),
-                                model,
-                                embeddedResourceGUID,
-                                &materialRH,
-                                &materialName);
+        ModelIO::ImportEmbeddedMaterial(aScene->mMaterials[i],
+                                        modelFilepath.GetDirectory(),
+                                        model,
+                                        &materialRH,
+                                        &materialName);
 
         unorderedMaterials.PushBack(materialRH);
         unorderedMaterialNames.PushBack(materialName);
-
-        ++embeddedResourceGUID;
     }
 
     // Load meshes and store them into arrays
@@ -160,11 +156,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     {
         RH<Mesh> meshRH;
         String meshName;
-        ModelIO::ImportMesh(aScene->mMeshes[i],
-                            model,
-                            embeddedResourceGUID,
-                            &meshRH,
-                            &meshName);
+        ModelIO::ImportEmbeddedMesh(aScene->mMeshes[i], model, &meshRH, &meshName);
 
         int matIndex = aScene->mMeshes[i]->mMaterialIndex;
         RH<Material> mat = unorderedMaterials[matIndex];
@@ -175,17 +167,21 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
 
         modelScene->materials.PushBack(mat);
         modelScene->materialsNames.PushBack(materialName);
-
-        ++embeddedResourceGUID;
     }
 
     // Load animations and store them into arrays
     for (int i = 0; i < SCAST<int>(aScene->mNumAnimations); ++i)
     {
         aiAnimation *aAnimation = aScene->mAnimations[i];
+        String animationName = AiStringToString(aAnimation->mName);
+        if (animationName.IsEmpty())
+        {
+            animationName = "Animation";
+        }
+        animationName.Append("." + Extensions::GetAnimationExtension());
         RH<Animation> animationRH = Resources::CreateEmbeddedResource<Animation>(
                                                     model,
-                                                    embeddedResourceGUID);
+                                                    animationName);
         Animation *animation = animationRH.Get();
         animation->SetDuration(aAnimation->mDuration);
         animation->SetFramesPerSecond(aAnimation->mTicksPerSecond);
@@ -218,7 +214,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         }
         modelScene->animations.PushBack(animationRH);
         modelScene->animationsNames.PushBack( AiStringToString(aAnimation->mName) );
-        ++embeddedResourceGUID;
     }
 
     modelScene->modelTree = ReadModelNode(aScene, aScene->mRootNode);
@@ -252,59 +247,6 @@ bool ModelIO::ImportFirstFoundMeshRaw(
         ok = true;
     }
     return ok;
-}
-
-void ModelIO::ImportMaterial(aiMaterial *aMaterial,
-                             const Path& modelDirectory,
-                             Model *model,
-                             const GUID::GUIDType &embeddedMaterialGUID,
-                             RH<Material> *outMaterial,
-                             String *outMaterialName)
-{
-    *outMaterial =  Resources::CreateEmbeddedResource<Material>(
-                                                model, embeddedMaterialGUID);
-
-    aiString aMatName;
-    aiGetMaterialString(aMaterial, AI_MATKEY_NAME, &aMatName);
-    if (outMaterialName)
-    {
-        *outMaterialName = String( aMatName.C_Str() );
-        if (outMaterialName->IsEmpty()) { *outMaterialName = "Material"; }
-    }
-
-    float aRoughness = 0.0f;
-    aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
-    aiColor3D aAlbedoColor  = aiColor3D(1.0f, 1.0f, 1.0f);
-    aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
-    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
-    aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);
-    aRoughness = Math::Clamp(aRoughness, 0.0f, 1.0f);
-
-    Color albedoColor = AiColor3ToColor(aAlbedoColor);
-
-    aiString aAlbedoTexturePath;
-    aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
-    Path albedoTexturePath ( String(aAlbedoTexturePath.C_Str()) );
-    albedoTexturePath = modelDirectory.Append(albedoTexturePath);
-    RH<Texture2D> matAlbedoTexture;
-    if (albedoTexturePath.IsFile())
-    {
-        matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
-    }
-
-    aiString aNormalsTexturePath;
-    aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
-    Path normalsTexturePath ( String(aNormalsTexturePath.C_Str()) );
-    normalsTexturePath = modelDirectory.Append(normalsTexturePath);
-    RH<Texture2D> matNormalTexture;
-    if (normalsTexturePath.IsFile())
-    {
-        matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
-    }
-    outMaterial->Get()->SetRoughness( aRoughness );
-    outMaterial->Get()->SetAlbedoTexture( matAlbedoTexture.Get() );
-    outMaterial->Get()->SetNormalMapTexture( matNormalTexture.Get() );
-    outMaterial->Get()->SetAlbedoColor( albedoColor );
 }
 
 void ModelIO::ImportMeshRaw(
@@ -619,13 +561,75 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
 #endif
 }
 
-void ModelIO::ImportMesh(aiMesh *aMesh,
-                         Model *model,
-                         const GUID::GUIDType &embeddedMeshGUID,
-                         RH<Mesh> *outMeshRH,
-                         String *outMeshName)
+void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
+                                     const Path& modelDirectory,
+                                     Model *model,
+                                     RH<Material> *outMaterial,
+                                     String *outMaterialName)
 {
-    *outMeshRH =  Resources::CreateEmbeddedResource<Mesh>(model, embeddedMeshGUID);
+    aiString aMatName;
+    aiGetMaterialString(aMaterial, AI_MATKEY_NAME, &aMatName);
+    String materialName = AiStringToString(aMatName);
+    if (materialName.IsEmpty())
+    {
+        materialName = "Material";
+    }
+    materialName.Append("." + Extensions::GetMaterialExtension());
+
+    *outMaterialName = materialName;
+    *outMaterial =  Resources::CreateEmbeddedResource<Material>(model,
+                                                                materialName);
+
+    float aRoughness = 0.0f;
+    aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
+    aiColor3D aAlbedoColor  = aiColor3D(1.0f, 1.0f, 1.0f);
+    aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
+    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
+    aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);
+    aRoughness = Math::Clamp(aRoughness, 0.0f, 1.0f);
+
+    Color albedoColor = AiColor3ToColor(aAlbedoColor);
+
+    aiString aAlbedoTexturePath;
+    aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
+    Path albedoTexturePath ( String(aAlbedoTexturePath.C_Str()) );
+    albedoTexturePath = modelDirectory.Append(albedoTexturePath);
+    RH<Texture2D> matAlbedoTexture;
+    if (albedoTexturePath.IsFile())
+    {
+        matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
+    }
+
+    aiString aNormalsTexturePath;
+    aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
+    Path normalsTexturePath ( String(aNormalsTexturePath.C_Str()) );
+    normalsTexturePath = modelDirectory.Append(normalsTexturePath);
+    RH<Texture2D> matNormalTexture;
+    if (normalsTexturePath.IsFile())
+    {
+        matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
+    }
+    outMaterial->Get()->SetRoughness( aRoughness );
+    outMaterial->Get()->SetAlbedoTexture( matAlbedoTexture.Get() );
+    outMaterial->Get()->SetNormalMapTexture( matNormalTexture.Get() );
+    outMaterial->Get()->SetAlbedoColor( albedoColor );
+}
+
+void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
+                                 Model *model,
+                                 RH<Mesh> *outMeshRH,
+                                 String *outMeshName)
+{
+    aiString aMeshName = aMesh->mName;
+    String meshName = AiStringToString(aMeshName);
+    if (meshName.IsEmpty())
+    {
+        meshName = "Mesh";
+    }
+    meshName.Append("." + Extensions::GetMeshExtension());
+
+    *outMeshRH =  Resources::CreateEmbeddedResource<Mesh>(model, meshName);
+    *outMeshName = meshName;
 
     Array<Mesh::VertexId> vertexIndices;
     Array<Vector3> vertexPositionsPool;

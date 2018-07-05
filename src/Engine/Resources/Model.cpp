@@ -78,27 +78,6 @@ GameObject *Model::CreateGameObjectFromModel() const
                                              m_modelScene.modelTree);
 }
 
-void Model::AddMesh(Mesh *mesh,
-                    Material *material,
-                    const String &meshName,
-                    const String &materialName)
-{
-    String newMeshName = Model::GetNewName(meshName, GetMeshesNames());
-    m_modelScene.meshesNames.PushBack(
-            newMeshName + "." + Extensions::GetMeshExtension());
-    m_modelScene.meshes.PushBack( RH<Mesh>(mesh) );
-
-    String newMaterialName = Model::GetNewName(materialName, GetMaterialsNames());
-    m_modelScene.materialsNames.PushBack(
-            newMaterialName + "." + Extensions::GetMaterialExtension());
-    m_modelScene.materials.PushBack( RH<Material>(material) );
-
-    AddEmbeddedResource<Mesh>(m_modelScene.meshesNames.Back(),
-                              m_modelScene.meshes.Back().Get());
-    AddEmbeddedResource<Material>(m_modelScene.materialsNames.Back(),
-                                  m_modelScene.materials.Back().Get());
-}
-
 const Array<RH<Mesh> > &Model::GetMeshes() const
 {
     return m_modelScene.meshes;
@@ -135,10 +114,10 @@ void Model::Import(const Path &modelFilepath)
     m_modelScene.Clear();
 
     // Load new
-    ModelIOScene modelScene;
-    if (ModelIO::ImportModel(modelFilepath, this, &modelScene))
-    {
+    if (ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
+    {/*
         // Copy
+
         ASSERT(modelScene.modelTree);
             m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
         for (uint i = 0; i < modelScene.meshes.Size(); ++i)
@@ -157,6 +136,7 @@ void Model::Import(const Path &modelFilepath)
             AddEmbeddedResource<Animation>(m_modelScene.animationsNames.Back(),
                                            m_modelScene.animations.Back().Get());
         }
+        */
     }
     else
     {
@@ -208,17 +188,4 @@ Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedResourceGUID) const
     }
 
     return pair;
-}
-
-String Model::GetNewName(const String &originalName,
-                         const Array<String> &existingNames)
-{
-    int auxIndex = 0;
-    String newName = originalName;
-    while (existingNames.Contains(newName))
-    {
-        newName = originalName + "_" + String(auxIndex);
-        ++auxIndex;
-    }
-    return newName;
 }

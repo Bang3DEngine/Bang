@@ -19,11 +19,6 @@ public:
 
     GameObject *CreateGameObjectFromModel() const;
 
-    void AddMesh(Mesh *mesh,
-                 Material *material,
-                 const String &meshName,
-                 const String &materialName);
-
     const Array< RH<Mesh> >& GetMeshes() const;
     const Array< RH<Material> >& GetMaterials() const;
     const Array< RH<Animation> >& GetAnimations() const;
@@ -43,9 +38,6 @@ private:
 
     std::pair<Resource*, String>
         GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const;
-
-    static String GetNewName(const String &originalName,
-                             const Array<String> &existingNames);
 };
 
 NAMESPACE_BANG_END

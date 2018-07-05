@@ -113,3 +113,10 @@ void Resource::Import_(const Path &resourceFilepath)
     EventEmitter<IEventsResource>::PropagateToListeners(
                 &IEventsResource::OnImported, this);
 }
+
+GUID::GUIDType Resource::GetNewEmbeddedResourceGUID() const
+{
+    auto nextNewGUID = m_nextNewEmbeddedResourceGUID;
+    ++m_nextNewEmbeddedResourceGUID;
+    return nextNewGUID;
+}

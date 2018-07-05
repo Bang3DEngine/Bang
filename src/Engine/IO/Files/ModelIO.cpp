@@ -272,9 +272,9 @@ void ModelIO::ImportMaterial(aiMaterial *aMaterial,
         if (outMaterialName->IsEmpty()) { *outMaterialName = "Material"; }
     }
 
-    float aRoughness;
-    aiColor3D aAmbientColor;
-    aiColor3D aAlbedoColor;
+    float aRoughness = 0.0f;
+    aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
+    aiColor3D aAlbedoColor  = aiColor3D(1.0f, 1.0f, 1.0f);
     aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
     aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
     aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);

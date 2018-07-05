@@ -14,6 +14,23 @@ Resource::~Resource()
 {
 }
 
+void Resource::RemoveEmbeddedResource(Resource *embeddedResource)
+{
+     m_nameToEmbeddedResource.RemoveValues(RH<Resource>(embeddedResource));
+     m_embeddedResourceToName.Remove(embeddedResource);
+     m_GUIDToEmbeddedResource.RemoveValues(embeddedResource);
+     embeddedResource->SetParentResource(nullptr);
+}
+void Resource::RemoveEmbeddedResource(const String &embeddedResourceName)
+{
+    if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
+    {
+        Resource *embeddedResource = m_nameToEmbeddedResource.Get(
+                                        embeddedResourceName).Get();
+        RemoveEmbeddedResource(embeddedResource);
+    }
+}
+
 void Resource::SetParentResource(Resource *parentResource)
 {
     p_parentResource.Set(parentResource);
@@ -37,30 +54,44 @@ Path Resource::GetResourceFilepath() const
     return ImportFilesManager::GetFilepath( GetGUID() );
 }
 
-GUID::GUIDType Resource::GetNextEmbeddedFileGUID() const
+Resource *Resource::GetEmbeddedResource(const GUID &embeddedResGUID) const
 {
-    return 0;
-}
-
-Resource *Resource::GetEmbeddedResource(const GUID &embeddedFileGUID) const
-{
-    return GetEmbeddedResource(embeddedFileGUID.GetEmbeddedFileGUID());
+    if (m_GUIDToEmbeddedResource.ContainsKey(embeddedResGUID))
+    {
+        Resource *embeddedResource = m_GUIDToEmbeddedResource.Get(embeddedResGUID);
+        return embeddedResource;
+    }
+    return nullptr;
 }
 
 Resource *Resource::GetEmbeddedResource(const String &embeddedResourceName) const
 {
-    (void) embeddedResourceName;
+    if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
+    {
+        Resource *embeddedResource =
+                    m_nameToEmbeddedResource.Get(embeddedResourceName).Get();
+        return embeddedResource;
+    }
     return nullptr;
 }
 
-Resource* Resource::GetEmbeddedResource(GUID::GUIDType) const
+Resource* Resource::GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const
 {
-    return nullptr;
+    GUID embeddedResourceFullGUID = GetGUID().WithEmbeddedResourceGUID(embeddedResGUID);
+    return GetEmbeddedResource(embeddedResourceFullGUID);
 }
 
-String Resource::GetEmbeddedFileResourceName(GUID::GUIDType) const
+String Resource::GetEmbeddedResourceName(GUID::GUIDType embeddedResGUID) const
 {
-    return "EmbeddedResource";
+    Resource *embeddedResource = GetEmbeddedResource(embeddedResGUID);
+    if (embeddedResource)
+    {
+        if (m_embeddedResourceToName.ContainsKey(embeddedResource))
+        {
+            return m_embeddedResourceToName.Get(embeddedResource);
+        }
+    }
+    return "";
 }
 
 void Resource::ImportXML(const XMLNode &xmlInfo)

@@ -11,6 +11,12 @@
 
 NAMESPACE_BANG_BEGIN
 
+std::ostream& operator<<(std::ostream &log, const Path &p)
+{
+    log << p.GetAbsolute();
+    return log;
+}
+
 std::ostream& operator<<(std::ostream &log, const Color &c)
 {
     log << "(" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")";
@@ -81,6 +87,14 @@ std::istream &operator>>(std::istream &is, GUID &guid)
 {
     guid.operator>>(is);
     return is;
+}
+
+std::ostream &operator<<(std::ostream &log, const GUID &guid)
+{
+    log << guid.GetTimeGUID() << " " <<
+           guid.GetRandGUID() << " " <<
+           guid.GetEmbeddedResourceGUID();
+    return log;
 }
 
 NAMESPACE_BANG_END

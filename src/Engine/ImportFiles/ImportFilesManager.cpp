@@ -184,21 +184,22 @@ Path ImportFilesManager::GetFilepath(const GUID &guid)
     ImportFilesManager *ifm = ImportFilesManager::GetInstance();
     if (ifm->m_GUIDToFilepath.ContainsKey(guid))
     {
-        return ifm->m_GUIDToFilepath.Get(guid);
+        Path path = ifm->m_GUIDToFilepath.Get(guid);
+        return path;
     }
     else
     {
         if (Resources::IsEmbeddedResource(guid))
         {
             Path parentPath = ImportFilesManager::GetFilepath(
-                                    guid.WithoutEmbeddedFileGUID());
+                                    guid.WithoutEmbeddedResourceGUID());
             if (parentPath.IsFile())
             {
-                Resource *res = Resources::LoadFromExtension(parentPath).Get();
-                if (res)
+                RH<Resource> resRH = Resources::LoadFromExtension(parentPath);
+                if (resRH)
                 {
-                    String name = res->GetEmbeddedFileResourceName(
-                                                guid.GetEmbeddedFileGUID());
+                    String name = resRH.Get()->GetEmbeddedResourceName(
+                                                guid.GetEmbeddedResourceGUID() );
                     return parentPath.Append(name);
                 }
             }

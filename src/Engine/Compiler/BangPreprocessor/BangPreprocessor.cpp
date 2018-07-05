@@ -91,9 +91,9 @@ void BangPreprocessor::Preprocess(const Path &filepath)
 
         if (preprocessedSomething)
         {
-            std::cout << "  File '" << filepath.ToString().ToCString()
+            std::cout << "  File '" << filepath.GetAbsolute().ToCString()
                       << "' successfully preprocessed into '"
-                      << reflFilepath.ToString().ToCString()
+                      << reflFilepath.GetAbsolute().ToCString()
                       << "'" << std::endl;
         }
     }

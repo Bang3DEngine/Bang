@@ -92,15 +92,21 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
         return RH<Resource>(nullptr);
     }
 
+    RH<Resource> resRH;
     Resource *res = GetCached_(resourceClassTypeId, filepath);
+    resRH.Set(res); // Register as soon as possible
     if (!res)
     {
         res = creator();
+
         Path importFilepath = ImportFilesManager::GetImportFilepath(filepath);
         res->ImportXMLFromFile(importFilepath); // Get resource GUID
+        resRH.Set(res); // Register as soon as possible
+
         Resources::Import(res); // Actually import all
     }
-    return RH<Resource>(res);
+
+    return resRH;
 }
 
 RH<Resource> Resources::Load_(std::function<Resource*()> creator,
@@ -122,7 +128,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
         }
         else
         {
-            GUID parentGUID = guid.WithoutEmbeddedFileGUID();
+            GUID parentGUID = guid.WithoutEmbeddedResourceGUID();
             Path parentPath = ImportFilesManager::GetFilepath(parentGUID);
             if (parentPath.IsFile())
             {
@@ -188,10 +194,10 @@ Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
     {
         if (Resources::IsEmbeddedResource(guid))
         {
-            GUID parentGUID = guid.WithoutEmbeddedFileGUID();
+            GUID parentGUID = guid.WithoutEmbeddedResourceGUID();
             if (Resource *parentRes = GetCached_(resourceClassTypeId, parentGUID))
             {
-                return parentRes->GetEmbeddedResource(guid.GetEmbeddedFileGUID());
+                return parentRes->GetEmbeddedResource(guid.GetEmbeddedResourceGUID());
             }
         }
     }
@@ -240,7 +246,7 @@ void Resources::Add(const TypeId &resourceClassTypeId, Resource *res)
 
 bool Resources::IsEmbeddedResource(const GUID &guid)
 {
-    return (guid.GetEmbeddedFileGUID() != GUID::EmptyGUID);
+    return (guid.GetEmbeddedResourceGUID() != GUID::EmptyGUID);
 }
 
 bool Resources::IsEmbeddedResource(const Path &resourcePath)
@@ -293,16 +299,15 @@ void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
     ASSERT(map.ContainsKey(guid));
 
     auto it = map.Find(guid);
-    ResourceEntry resEntry = it->second;
-    map.Remove(it);
-
+    const ResourceEntry &resEntry = it->second;
     ASSERT(resEntry.resource != nullptr);
     ASSERT(resEntry.usageCount == 0);
 
     bool totallyUnused = true;
     for (const auto &pair : rs->m_resourcesCache)
     {
-        if (pair.second.ContainsKey(resEntry.resource->GetGUID()))
+        if (pair.first != resTypeId &&
+            pair.second.ContainsKey(resEntry.resource->GetGUID()))
         {
             totallyUnused = false;
             break;
@@ -313,6 +318,7 @@ void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
     {
         Destroy(resEntry.resource);
     }
+    map.Remove(it);
 }
 
 Array<Path> Resources::GetLookUpPaths() const

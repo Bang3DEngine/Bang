@@ -37,7 +37,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     args.PushBack(libs);
 
     // Output file
-    args.PushBack( List<String>({"-o", job.outputFile.ToString()}) );
+    args.PushBack( List<String>({"-o", job.outputFile.GetAbsolute()}) );
 
 
     Result result;

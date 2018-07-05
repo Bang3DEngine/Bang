@@ -239,11 +239,6 @@ Path Path::GetDuplicatePath() const
     return resultPath;
 }
 
-String Path::ToString() const
-{
-    return GetAbsolute();
-}
-
 bool Path::IsEmpty() const
 {
     return GetAbsolute().IsEmpty();

@@ -92,36 +92,12 @@ void Model::AddMesh(Mesh *mesh,
     m_modelScene.materialsNames.PushBack(
             newMaterialName + "." + Extensions::GetMaterialExtension());
     m_modelScene.materials.PushBack( RH<Material>(material) );
-}
 
-RH<Mesh> Model::GetMeshByName(const String &meshName)
-{
-    RH<Mesh> mesh;
-    for (uint i = 0; i < GetMeshesNames().Size(); ++i)
-    {
-        if (meshName == GetMeshesNames()[i])
-        {
-            mesh.Set(GetMeshes()[i].Get());
-            break;
-        }
-    }
-    return mesh;
+    AddEmbeddedResource<Mesh>(m_modelScene.meshesNames.Back(),
+                              m_modelScene.meshes.Back().Get());
+    AddEmbeddedResource<Material>(m_modelScene.materialsNames.Back(),
+                                  m_modelScene.materials.Back().Get());
 }
-
-RH<Material> Model::GetMaterialByName(const String &materialName)
-{
-    RH<Material> material;
-    for (uint i = 0; i < GetMaterialsNames().Size(); ++i)
-    {
-        if (materialName == GetMaterialsNames()[i])
-        {
-            material.Set(GetMaterials()[i].Get());
-            break;
-        }
-    }
-    return material;
-}
-
 
 const Array<RH<Mesh> > &Model::GetMeshes() const
 {
@@ -153,49 +129,6 @@ const Array<String> &Model::GetAnimationsNames() const
     return m_modelScene.animationsNames;
 }
 
-GUID::GUIDType Model::GetNextEmbeddedFileGUID() const
-{
-    return m_modelScene.meshes.Size() + m_modelScene.materials.Size();
-}
-
-Resource *Model::GetEmbeddedResource(const String &embeddedResourceName) const
-{
-    for (int i = 0; i < m_modelScene.meshes.Size(); ++i)
-    {
-        if (embeddedResourceName == m_modelScene.meshesNames[i])
-        {
-            return m_modelScene.meshes[i].Get();
-        }
-    }
-    for (int i = 0; i < m_modelScene.materials.Size(); ++i)
-    {
-        if (embeddedResourceName == m_modelScene.materialsNames[i])
-        {
-            return m_modelScene.materials[i].Get();
-        }
-    }
-    for (int i = 0; i < m_modelScene.animations.Size(); ++i)
-    {
-        if (embeddedResourceName == m_modelScene.animationsNames[i])
-        {
-            return m_modelScene.animations[i].Get();
-        }
-    }
-    return nullptr;
-}
-
-Resource *Model::GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const
-{
-    auto pair = GetEmbeddedFileResourceAndName(embeddedFileGUID);
-    return pair.first;
-}
-
-String Model::GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const
-{
-    auto pair = GetEmbeddedFileResourceAndName(embeddedFileGUID);
-    return pair.second;
-}
-
 void Model::Import(const Path &modelFilepath)
 {
     // Clear previous
@@ -203,12 +136,11 @@ void Model::Import(const Path &modelFilepath)
 
     // Load new
     ModelIOScene modelScene;
-
-    // Copy
     if (ModelIO::ImportModel(modelFilepath, this, &modelScene))
     {
+        // Copy
         ASSERT(modelScene.modelTree);
-        m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
+            m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
         for (uint i = 0; i < modelScene.meshes.Size(); ++i)
         {
             AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
@@ -222,6 +154,8 @@ void Model::Import(const Path &modelFilepath)
             m_modelScene.animations.PushBack(animation);
             m_modelScene.animationsNames.PushBack(animationName + "." +
                                      Extensions::GetAnimationExtension());
+            AddEmbeddedResource<Animation>(m_modelScene.animationsNames.Back(),
+                                           m_modelScene.animations.Back().Get());
         }
     }
     else
@@ -242,7 +176,7 @@ void Model::ExportXML(XMLNode *xmlInfo) const
 }
 
 std::pair<Resource *, String>
-Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const
+Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedResourceGUID) const
 {
     std::pair<Resource*, String> pair;
     pair.first = nullptr;
@@ -265,7 +199,7 @@ Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const
     for (uint i = 0; i < resources.Size(); ++i)
     {
         if (resources[i] &&
-            resources[i]->GetGUID().GetEmbeddedFileGUID() == embeddedFileGUID)
+            resources[i]->GetGUID().GetEmbeddedResourceGUID() == embeddedResourceGUID)
         {
             pair.first = resources[i];
             pair.second = names[i];

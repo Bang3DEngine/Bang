@@ -24,9 +24,6 @@ public:
                  const String &meshName,
                  const String &materialName);
 
-    RH<Mesh> GetMeshByName(const String &meshName);
-    RH<Material> GetMaterialByName(const String &materialName);
-
     const Array< RH<Mesh> >& GetMeshes() const;
     const Array< RH<Material> >& GetMaterials() const;
     const Array< RH<Animation> >& GetAnimations() const;
@@ -35,10 +32,6 @@ public:
     const Array<String>& GetAnimationsNames() const;
 
     // Resource
-    GUID::GUIDType GetNextEmbeddedFileGUID() const override;
-    Resource* GetEmbeddedResource(const String &embeddedResourceName) const override;
-    Resource* GetEmbeddedResource(GUID::GUIDType embeddedFileGUID) const override;
-    String GetEmbeddedFileResourceName(GUID::GUIDType embeddedFileGUID) const override;
     void Import(const Path &modelFilepath) override;
 
     // Serializable

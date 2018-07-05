@@ -37,7 +37,7 @@ void GUIDManager::CreateEmbeddedFileGUID(const GUID &baseGUID,
     ASSERT_MSG(embeddedFileGUID > 0, "Inner file GUID's must be greater than zero!");
 
     *newGUID = baseGUID;
-    newGUID->SetEmbeddedFileGUID(embeddedFileGUID);
+    newGUID->SetEmbeddedResourceGUID(embeddedFileGUID);
 }
 
 GUIDManager *GUIDManager::GetInstance()

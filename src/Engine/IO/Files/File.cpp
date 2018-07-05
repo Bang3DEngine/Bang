@@ -196,7 +196,7 @@ String File::GetContents(const Path &filepath)
     }
     else
     {
-        std::cerr << "Can't open file '" << filepath.ToString() << "': " <<
+        std::cerr << "Can't open file '" << filepath << "': " <<
                      std::strerror(errno) << std::endl;
     }
     return contents;

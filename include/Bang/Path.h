@@ -9,7 +9,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-class Path : public IToString
+class Path
 {
 public:
     enum FindFlag
@@ -54,7 +54,6 @@ public:
     const String& GetAbsolute() const;
     Path GetDuplicatePath() const;
 
-    virtual String ToString() const override;
     bool IsEmpty() const;
 
     bool BeginsWith(const Path &path) const;

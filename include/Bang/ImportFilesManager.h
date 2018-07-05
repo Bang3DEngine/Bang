@@ -1,6 +1,7 @@
 #ifndef IMPORTFILESMANAGER_H
 #define IMPORTFILESMANAGER_H
 
+#include "Bang/Map.h"
 #include "Bang/UMap.h"
 #include "Bang/GUID.h"
 #include "Bang/Path.h"
@@ -33,8 +34,8 @@ public:
 
 
 private:
-    UMap<GUID, Path> m_GUIDToFilepath;
-    UMap<Path, GUID> m_filepathToGUID;
+    Map<GUID, Path> m_GUIDToFilepath;
+    Map<Path, GUID> m_filepathToGUID;
 
     GUIDManager m_GUIDManager;
 

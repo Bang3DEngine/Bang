@@ -8,9 +8,9 @@ const GUID &GUID::Empty() { static GUID emptyGUID; return emptyGUID; }
 
 bool GUID::IsEmpty() const { return *this == Empty(); }
 
-void GUID::SetEmbeddedFileGUID(const GUIDType &guid)
+void GUID::SetEmbeddedResourceGUID(const GUIDType &guid)
 {
-    m_embeddedFileGUID = guid;
+    m_embeddedResourceGUID = guid;
 }
 
 GUID GUID::GetRandomGUID()
@@ -18,15 +18,8 @@ GUID GUID::GetRandomGUID()
     GUID guid;
     guid.m_timeGUID = Time::GetNow_Nanos();
     guid.m_randGUID = Random::GetRange<GUIDType>(1, Math::Max<GUIDType>());
-    guid.m_embeddedFileGUID = GUID::EmptyGUID;
+    guid.m_embeddedResourceGUID = GUID::EmptyGUID;
     return guid;
-}
-
-String GUID::ToString() const
-{
-    return String::ToString( GetTimeGUID() ) + " " +
-           String::ToString( GetRandGUID() ) + " " +
-           String::ToString( GetEmbeddedFileGUID() );
 }
 
 const GUID::GUIDType &GUID::GetTimeGUID() const
@@ -37,15 +30,22 @@ const GUID::GUIDType &GUID::GetRandGUID() const
 {
     return m_randGUID;
 }
-const GUID::GUIDType &GUID::GetEmbeddedFileGUID() const
+const GUID::GUIDType &GUID::GetEmbeddedResourceGUID() const
 {
-    return m_embeddedFileGUID;
+    return m_embeddedResourceGUID;
 }
 
-GUID GUID::WithoutEmbeddedFileGUID() const
+GUID GUID::WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const
 {
     GUID guid = *this;
-    guid.SetEmbeddedFileGUID( GUID::EmptyGUID );
+    guid.SetEmbeddedResourceGUID(embeddedFileGUID);
+    return guid;
+}
+
+GUID GUID::WithoutEmbeddedResourceGUID() const
+{
+    GUID guid = *this;
+    guid.SetEmbeddedResourceGUID( GUID::EmptyGUID );
     return guid;
 }
 
@@ -55,15 +55,15 @@ std::istream &GUID::operator>>(std::istream &is)
     is >> std::ws;
     if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_randGUID; }
     is >> std::ws;
-    if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_embeddedFileGUID; }
+    if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_embeddedResourceGUID; }
     return is;
 }
 
 bool GUID::operator==(const GUID &rhs) const
 {
-    return        GetTimeGUID() ==       rhs.GetTimeGUID() &&
-                  GetRandGUID() ==       rhs.GetRandGUID() &&
-            GetEmbeddedFileGUID() == rhs.GetEmbeddedFileGUID();
+    return  GetTimeGUID() == rhs.GetTimeGUID() &&
+            GetRandGUID() == rhs.GetRandGUID() &&
+            GetEmbeddedResourceGUID() == rhs.GetEmbeddedResourceGUID();
 }
 
 bool GUID::operator!=(const GUID &rhs) const
@@ -81,7 +81,7 @@ bool GUID::operator<(const GUID &rhs) const
         else if (GetRandGUID() > rhs.GetRandGUID()) { return false; }
         else
         {
-            return (GetEmbeddedFileGUID() < rhs.GetEmbeddedFileGUID());
+            return (GetEmbeddedResourceGUID() < rhs.GetEmbeddedResourceGUID());
         }
     }
 }

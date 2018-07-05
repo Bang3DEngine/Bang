@@ -4,13 +4,11 @@
 #include <istream>
 
 #include "Bang/Time.h"
-#include "Bang/String.h"
 #include "Bang/Random.h"
-#include "Bang/IToString.h"
 
 NAMESPACE_BANG_BEGIN
 
-class GUID : public IToString
+class GUID
 {
 public:
     using GUIDType = uint64_t;
@@ -23,14 +21,12 @@ public:
 
     static GUID GetRandomGUID();
 
-    // IToString
-    String ToString() const override;
-
     const GUIDType& GetTimeGUID() const;
     const GUIDType& GetRandGUID() const;
-    const GUIDType& GetEmbeddedFileGUID() const;
+    const GUIDType& GetEmbeddedResourceGUID() const;
 
-    GUID WithoutEmbeddedFileGUID() const;
+    GUID WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const;
+    GUID WithoutEmbeddedResourceGUID() const;
 
     std::istream &operator>>(std::istream &is);
     bool operator==(const GUID &rhs) const;
@@ -38,11 +34,11 @@ public:
     bool operator<(const GUID &rhs) const;
 
 private:
-    GUIDType m_timeGUID         = GUID::EmptyGUID;
-    GUIDType m_randGUID         = GUID::EmptyGUID;
-    GUIDType m_embeddedFileGUID = GUID::EmptyGUID;
+    GUIDType m_timeGUID             = GUID::EmptyGUID;
+    GUIDType m_randGUID             = GUID::EmptyGUID;
+    GUIDType m_embeddedResourceGUID = GUID::EmptyGUID;
 
-    void SetEmbeddedFileGUID(const GUIDType &guid);
+    void SetEmbeddedResourceGUID(const GUIDType &guid);
 
     friend class GUIDManager;
 };
@@ -59,7 +55,7 @@ namespace std
         {
             return std::hash<GUID::GUIDType>()(guid.GetTimeGUID()) ^
                    std::hash<GUID::GUIDType>()(guid.GetRandGUID()) ^
-                   std::hash<GUID::GUIDType>()(guid.GetEmbeddedFileGUID());
+                   std::hash<GUID::GUIDType>()(guid.GetEmbeddedResourceGUID());
         }
     };
 }

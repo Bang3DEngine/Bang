@@ -14,7 +14,8 @@ class ImageIO
 public:
     static void Export(const Path& filepath, const Imageb &img);
     static void Import(const Path& filepath, Imageb *img, bool *ok = nullptr);
-    static void Import(const Path& filepath, Texture2D *tex, bool *ok = nullptr);
+    static void Import(const Path& filepath, Imageb *img,
+                       Texture2D *tex, bool *ok = nullptr);
 
     ImageIO() = delete;
 

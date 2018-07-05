@@ -6,7 +6,7 @@
 #include "Bang/GL.h"
 #include "Bang/Asset.h"
 #include "Bang/Image.h"
-#include "Bang/Texture.h"
+#include "Bang/Texture2D.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IEventsResource.h"
 
@@ -35,9 +35,9 @@ public:
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
 
-    void SetImageResource(GL::CubeMapDir cubeMapDir, Imageb *img);
+    void SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex);
     Imageb ToImage(GL::CubeMapDir cubeMapDir) const;
-    RH<Imageb> GetImageResource(GL::CubeMapDir cubeMapDir) const;
+    RH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;
@@ -57,12 +57,12 @@ public:
 
 private:
     static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
-    std::array<RH<Imageb>, 6> m_imageResources;
+    std::array<RH<Texture2D>, 6> m_sideTextures;
 
     void CreateEmpty(const Vector2i &size) override;
     void Resize(const Vector2i &size) override;
 
-    void FillCubeMapDir(GL::CubeMapDir dir, Imageb *img);
+    void FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
 

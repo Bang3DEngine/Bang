@@ -165,7 +165,7 @@ GUID ImportFilesManager::GetGUID(const Path& filepath)
         else
         {
             Path parentResPath = filepath.GetDirectory();
-            Resource *parentRes = Resources::GetCachedResource(parentResPath);
+            Resource *parentRes = Resources::GetCached(parentResPath);
             if (parentRes)
             {
                 if (Resource *embeddedRes = parentRes->GetEmbeddedResource(

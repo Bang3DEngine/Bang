@@ -29,7 +29,9 @@ public:
     Image<T> ToImage() const;
 
     void SetAlphaCutoff(float alphaCutoff);
+
     float GetAlphaCutoff() const;
+    const Imageb& GetImage() const;
 
     void Import(const Image<Byte> &image);
 
@@ -44,6 +46,7 @@ public:
     virtual void Import(const Path &imageFilepath) override;
 
 protected:
+    Imageb m_image;
     float m_alphaCutoff = 0.1f;
 
     Texture2D();

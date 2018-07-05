@@ -38,13 +38,13 @@ public:
     Resources();
     virtual ~Resources();
 
-    static void Add(const TypeId &resTypeId, Resource *res);
+    static void Add(Resource *res);
 
-    template<class ResourceClass, class ...Args>
+    template<class ResourceClass = Resource, class ...Args>
     static RH<ResourceClass> Create(const Args&... args);
-    template<class ResourceClass, class ...Args>
+    template<class ResourceClass = Resource, class ...Args>
     static RH<ResourceClass> Create(const GUID &guid, const Args&... args);
-    template<class ResourceClass, class ...Args>
+    template<class ResourceClass = Resource, class ...Args>
     static RH<ResourceClass> CreateEmbeddedResource(
                                         Resource *parentResource,
                                         const GUID::GUIDType embeddedFileGUID,
@@ -52,16 +52,16 @@ public:
     static void CreateResourceXMLAndImportFile(const Resource *resource,
                                                const Path &exportFilepath);
 
-    template <class ResourceClass>
+    template <class ResourceClass = Resource>
     static RH<ResourceClass> Load(const Path &filepath);
-    template <class ResourceClass>
+    template <class ResourceClass = Resource>
     static RH<ResourceClass> Load(const GUID &guid);
 
     static RH<Resource> LoadFromExtension(const Path &filepath);
 
     static void Import(Resource *res);
 
-    template<class ResourceClass>
+    template<class ResourceClass = Resource>
     static RH<ResourceClass> Clone(const ResourceClass *src);
 
     static void SetPermanent(Resource *resource, bool permanent);
@@ -69,36 +69,27 @@ public:
     static void SetPermanent(const Path &resourcePath, bool permanent);
     static bool IsPermanent(const Path &resourcePath);
 
-    static void RegisterResourceUsage(const TypeId &resTypeId,
-                                      Resource *resource);
-    static void UnRegisterResourceUsage(const TypeId &resTypeId,
-                                        Resource *resource);
+    static void RegisterResourceUsage(Resource *resource);
+    static void UnRegisterResourceUsage(Resource *resource);
 
-    static void Remove(const TypeId &resTypeId, const GUID &guid);
-    static void Destroy(Resource *resource);
+    static void Remove(const GUID &guid);
 
     static bool IsEmbeddedResource(const GUID &guid);
     static bool IsEmbeddedResource(const Path &path);
 
-    template <class ResourceClass>
+    template <class ResourceClass = Resource>
     static bool Contains(const GUID &guid);
 
-    static Resource* GetCachedResource(const Path &path);
-    static Resource* GetCachedResource(const GUID &guid);
-
-    template<class ResourceClass>
+    template<class ResourceClass = Resource>
     static ResourceClass* GetCached(const GUID &guid);
-    template<class ResourceClass>
+    template<class ResourceClass = Resource>
     static ResourceClass* GetCached(const Path &path);
-    static Array<Resource*> GetAllCached(const GUID &guid);
-    static Array<Resource*> GetAllCached(const Path &path);
 
     static Path GetResourcePath(const Resource *resource);
 
-    template <class ResourceClass>
+    template <class ResourceClass = Resource>
     static Array<ResourceClass*> GetAll();
     static Array<Resource*> GetAllResources();
-    static void PrintAll();
 
     MeshFactory *GetMeshFactory() const;
     MaterialFactory *GetMaterialFactory() const;
@@ -114,7 +105,7 @@ public:
 private:
     USet<Path> m_permanentResourcesPaths;
     USet<Resource*> m_permanentResources;
-    TypeMap< UMap<GUID, ResourceEntry> > m_resourcesCache;
+    UMap<GUID, ResourceEntry> m_resourcesCache;
 
     MeshFactory *m_meshFactory = nullptr;
     MaterialFactory *m_materialFactory = nullptr;
@@ -128,16 +119,12 @@ private:
     static ResourceClass *Create_(const GUID &guid, const Args&... args);
 
     RH<Resource> Load_(std::function<Resource*()> creator,
-                       const String &resourceClassTypeId,
                        const Path &path);
     RH<Resource> Load_(std::function<Resource*()> creator,
-                       const String &resourceClassTypeId,
                        const GUID &guid);
 
-    Resource* GetCached_(const TypeId &resourceClassTypeId,
-                         const GUID &guid) const;
-    Resource* GetCached_(const TypeId &resourceClassTypeId,
-                         const Path &path) const;
+    Resource* GetCached_(const GUID &guid) const;
+    Resource* GetCached_(const Path &path) const;
     bool Contains_(Resource *resource) const;
 
     friend class Window;

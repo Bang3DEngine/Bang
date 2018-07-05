@@ -5,14 +5,14 @@
 
 NAMESPACE_BANG_BEGIN
 
-void OnResourceSet(String typeId, Resource *resource)
+void OnResourceSet(Resource *resource)
 {
-    Resources::RegisterResourceUsage(typeId, resource);
+    Resources::RegisterResourceUsage(resource);
 }
 
-void OnResourceUnSet(String typeId, Resource *resource)
+void OnResourceUnSet(Resource *resource)
 {
-    Resources::UnRegisterResourceUsage(typeId, resource);
+    Resources::UnRegisterResourceUsage(resource);
 }
 
 NAMESPACE_BANG_END

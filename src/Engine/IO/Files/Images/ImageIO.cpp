@@ -73,7 +73,7 @@ void ImageIO::Import(const Path &filepath, Imageb *img, bool *_ok)
     if (_ok) { *_ok = ok; }
 }
 
-void ImageIO::Import(const Path &filepath, Texture2D *tex, bool *_ok)
+void ImageIO::Import(const Path &filepath, Imageb *img, Texture2D *tex, bool *_ok)
 {
     bool ok = false;
     if (filepath.HasExtension("dds"))
@@ -82,10 +82,10 @@ void ImageIO::Import(const Path &filepath, Texture2D *tex, bool *_ok)
     }
     else
     {
-        Imageb img;
-        ImageIO::Import(filepath, &img, _ok);
-        tex->Import(img);
+        ImageIO::Import(filepath, img, _ok);
+        tex->Import(*img);
     }
+
     if (_ok) { *_ok = ok; }
 }
 

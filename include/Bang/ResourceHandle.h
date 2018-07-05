@@ -1,14 +1,14 @@
 #ifndef RESOURCEHANDLE_H
 #define RESOURCEHANDLE_H
 
-#include "Bang/TypeMap.h"
+#include "Bang/Bang.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Resource;
 
-void OnResourceSet(String typeId, Resource *resource);
-void OnResourceUnSet(String typeId, Resource *resource);
+void OnResourceSet(Resource *resource);
+void OnResourceUnSet(Resource *resource);
 
 template <class ResourceClass>
 class ResourceHandle
@@ -43,10 +43,7 @@ public:
         if (&rhs != this)
         {
             p_resource = rhs.Get();
-            m_typeId = rhs.m_typeId;
-
             rhs.p_resource = nullptr;
-            rhs.m_typeId = "";
         }
         return *this;
     }
@@ -86,25 +83,21 @@ public:
             {
                 // Must be done in two steps, so that we avoid unset loops
                 Resource *prevResource = p_resource;
-                TypeId prevTypeId = m_typeId;
 
                 p_resource = nullptr;
-                m_typeId = "";
 
-                OnResourceUnSet(prevTypeId, prevResource);
+                OnResourceUnSet(prevResource);
             }
 
             p_resource = resource;
             if (Get())
             {
-                m_typeId = GetTypeId( Get() );
-                OnResourceSet(m_typeId, Get());
+                OnResourceSet(Get());
             }
         }
     }
 
 private:
-    TypeId m_typeId = "";
     ResourceClass* p_resource = nullptr;
 
     friend class Resources;

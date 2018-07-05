@@ -10,27 +10,59 @@ NAMESPACE_BANG_BEGIN
 template <class ResourceClass>
 RH<ResourceClass> Resources::Load(const Path &filepath)
 {
-    return RH<ResourceClass>( SCAST<ResourceClass*>(
-        Resources::GetInstance()->Load_(
-           []() -> Resource*
-           {
-               return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
-           },
-           GetTypeId<ResourceClass>(),
-           filepath).Get() ) );
+    Resources *rss = Resources::GetInstance();
+    auto creator = []() -> Resource*
+    {
+        return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
+    };
+
+    RH<ResourceClass> resultRH;
+    {
+        RH<Resource> resRH = rss->Load_(creator, filepath);
+        if (resRH)
+        {
+            if (ResourceClass *res = DCAST<ResourceClass*>(resRH.Get()))
+            {
+                resultRH = RH<ResourceClass>(res);
+            }
+            else
+            {
+                ASSERT_MSG(res, "Resource " << filepath << " being loaded "
+                           "as two different types of resources. "
+                           "This is forbidden");
+            }
+        }
+    }
+    return resultRH;
 }
 
 template <class ResourceClass>
 RH<ResourceClass> Resources::Load(const GUID &guid)
 {
-    return RH<ResourceClass>( SCAST<ResourceClass*>(
-        Resources::GetInstance()->Load_(
-           []() -> Resource*
-           {
-               return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
-           },
-           GetTypeId<ResourceClass>(),
-           guid).Get() ) );
+    Resources *rss = Resources::GetInstance();
+    auto creator = []() -> Resource*
+    {
+        return SCAST<Resource*>( Resources::Create_<ResourceClass>() );
+    };
+
+    RH<ResourceClass> resultRH;
+    {
+        RH<Resource> resRH = rss->Load_(creator, guid);
+        if (resRH)
+        {
+            if (ResourceClass *res = DCAST<ResourceClass*>(resRH.Get()))
+            {
+                resultRH = RH<ResourceClass>(res);
+            }
+            else
+            {
+                ASSERT_MSG(res, "Resource " << guid << " being loaded "
+                           "as two different types of resources. "
+                           "This is forbidden");
+            }
+        }
+    }
+    return resultRH;
 }
 
 template<class ResourceClass, class ...Args>
@@ -93,21 +125,19 @@ Array<ResourceClass*> Resources::GetAll()
 template<class ResourceClass>
 bool Resources::Contains(const GUID &guid)
 {
-    return Contains_(GetTypeId<ResourceClass>(), guid);
+    return Resources::GetInstance()->GetCached_(guid) != nullptr;
 }
 
 template<class ResourceClass>
 ResourceClass* Resources::GetCached(const GUID &guid)
 {
-    Resource *res = Resources::GetInstance()->
-                               GetCached_(GetTypeId<ResourceClass>(), guid);
+    Resource *res = Resources::GetInstance()->GetCached_(guid);
     return SCAST<ResourceClass*>(res);
 }
 template<class ResourceClass>
 ResourceClass* Resources::GetCached(const Path &path)
 {
-    Resource *res = Resources::GetInstance()->
-                               GetCached_(GetTypeId<ResourceClass>(), path);
+    Resource *res = Resources::GetInstance()->GetCached_(path);
     return SCAST<ResourceClass*>(res);
 }
 

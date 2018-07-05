@@ -48,29 +48,11 @@ Array<Resource*> Resources::GetAllResources()
 {
     Array<Resource*> result;
     Resources *rs = Resources::GetInstance();
-    for (auto& itMap : rs->m_resourcesCache)
+    for (const auto& it : rs->m_resourcesCache)
     {
-        for (const auto& it : itMap.second) { result.PushBack(it.second.resource); }
+        result.PushBack(it.second.resource);
     }
     return result;
-}
-
-void Resources::PrintAll()
-{
-    Resources *rs = Resources::GetInstance();
-    for (const auto &typePair : rs->m_resourcesCache)
-    {
-        Debug_Log(typePair.first);
-        for (const auto &guidResPair : typePair.second)
-        {
-            const GUID &guid     = guidResPair.first;
-            const Resource *res  = guidResPair.second.resource;
-            const int usageCount = guidResPair.second.usageCount;
-            Debug_Log("    - " << Resources::GetResourcePath(res)
-                               << ", usages: (" << usageCount << ")"
-                               << ", GUID: (" << guid << ")");
-        }
-    }
 }
 
 void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
@@ -83,7 +65,6 @@ void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
 }
 
 RH<Resource> Resources::Load_(std::function<Resource*()> creator,
-                              const String &resourceClassTypeId,
                               const Path &filepath)
 {
     if (!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
@@ -93,7 +74,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
     }
 
     RH<Resource> resRH;
-    Resource *res = GetCached_(resourceClassTypeId, filepath);
+    Resource *res = GetCached_(filepath);
     resRH.Set(res); // Register as soon as possible
     if (!res)
     {
@@ -109,13 +90,11 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
     return resRH;
 }
 
-RH<Resource> Resources::Load_(std::function<Resource*()> creator,
-                              const String &resourceClassTypeId,
-                              const GUID &guid)
+RH<Resource> Resources::Load_(std::function<Resource*()> creator, const GUID &guid)
 {
     if (guid.IsEmpty()) { return RH<Resource>(nullptr); }
 
-    RH<Resource> resRH( GetCached_(resourceClassTypeId, guid) );
+    RH<Resource> resRH( GetCached_(guid) );
     if (!resRH)
     {
         if (!Resources::IsEmbeddedResource(guid))
@@ -123,7 +102,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
             Path resPath = ImportFilesManager::GetImportFilepath(guid);
             if (resPath.IsFile())
             {
-                resRH.Set( Load_(creator, resourceClassTypeId, resPath).Get() );
+                resRH.Set( Load_(creator, resPath).Get() );
             }
         }
         else
@@ -143,59 +122,18 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
     return resRH;
 }
 
-Array<Resource*> Resources::GetAllCached(const Path &path)
+Resource* Resources::GetCached_(const GUID &guid) const
 {
-    GUID guid = ImportFilesManager::GetGUID(path);
-    return GetAllCached(guid);
-}
-
-Array<Resource*> Resources::GetAllCached(const GUID &guid)
-{
-    Resources *rs = Resources::GetInstance();
-
-    Array<Resource*> foundResources;
-    for (const auto &map : rs->m_resourcesCache)
+    if (m_resourcesCache.ContainsKey(guid))
     {
-        if ( map.second.ContainsKey(guid) )
-        {
-            foundResources.PushBack(map.second.Get(guid).resource);
-        }
-    }
-    return foundResources;
-}
-
-Resource *Resources::GetCachedResource(const Path &path)
-{
-    return Resources::GetCachedResource( ImportFilesManager::GetGUID(path) );
-}
-
-Resource *Resources::GetCachedResource(const GUID &guid)
-{
-    Resources *rss = Resources::GetInstance();
-    for (const auto &pair : rss->m_resourcesCache)
-    {
-        Resource *res = rss->GetCached_(pair.first, guid);
-        if (res)
-        {
-            return res;
-        }
-    }
-    return nullptr;
-}
-Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
-                                const GUID &guid) const
-{
-    if (m_resourcesCache.ContainsKey(resourceClassTypeId) &&
-        m_resourcesCache.Get(resourceClassTypeId).ContainsKey(guid))
-    {
-        return m_resourcesCache.Get(resourceClassTypeId).Get(guid).resource;
+        return m_resourcesCache.Get(guid).resource;
     }
     else
     {
         if (Resources::IsEmbeddedResource(guid))
         {
             GUID parentGUID = guid.WithoutEmbeddedResourceGUID();
-            if (Resource *parentRes = GetCached_(resourceClassTypeId, parentGUID))
+            if (Resource *parentRes = GetCached_(parentGUID))
             {
                 return parentRes->GetEmbeddedResource(guid.GetEmbeddedResourceGUID());
             }
@@ -205,43 +143,31 @@ Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
     return nullptr;
 }
 
-Resource* Resources::GetCached_(const TypeId &resourceClassTypeId,
-                                const Path &path) const
+Resource* Resources::GetCached_(const Path &path) const
 {
     GUID guid = ImportFilesManager::GetGUID(path);
-    return GetCached_(resourceClassTypeId, guid);
+    return GetCached_(guid);
 }
 
 bool Resources::Contains_(Resource *resource) const
 {
-    if (!resource)
-    {
-        return false;
-    }
-    return GetCached_(GetTypeId(resource), resource->GetGUID());
+    return resource && GetCached_(resource->GetGUID());
 }
 
 
-void Resources::Add(const TypeId &resourceClassTypeId, Resource *res)
+void Resources::Add(Resource *res)
 {
     const GUID &guid = res->GetGUID();
     ASSERT(res != nullptr);
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resourceClassTypeId.IsEmpty());
 
     Resources *rs = Resources::GetInstance(); ASSERT(rs);
-    ASSERT(!rs->GetCached_(resourceClassTypeId, guid));
-
-    if (!rs->m_resourcesCache.ContainsKey(resourceClassTypeId))
-    {
-        rs->m_resourcesCache.Add(resourceClassTypeId);
-    }
+    ASSERT(!rs->GetCached_(guid));
 
     ResourceEntry resourceEntry;
     resourceEntry.resource = res;
     resourceEntry.usageCount = 0;
-    ASSERT(!rs->m_resourcesCache.Get(resourceClassTypeId).ContainsKey(guid));
-    rs->m_resourcesCache.Get(resourceClassTypeId).Add(guid, resourceEntry);
+    rs->m_resourcesCache.Add(guid, resourceEntry);
 }
 
 bool Resources::IsEmbeddedResource(const GUID &guid)
@@ -290,35 +216,27 @@ bool Resources::IsPermanent(const Path &resourcePath)
     return rs->m_permanentResourcesPaths.Contains(resourcePath);
 }
 
-void Resources::Remove(const TypeId &resTypeId, const GUID &guid)
+void Resources::Remove(const GUID &guid)
 {
     Resources *rs = Resources::GetInstance(); ASSERT(rs);
-    ASSERT(rs->m_resourcesCache.ContainsKey(resTypeId));
 
-    auto &map = rs->m_resourcesCache.Get(resTypeId);
-    ASSERT(map.ContainsKey(guid));
-
-    auto it = map.Find(guid);
+    auto it = rs->m_resourcesCache.Find(guid);
     const ResourceEntry &resEntry = it->second;
     ASSERT(resEntry.resource != nullptr);
     ASSERT(resEntry.usageCount == 0);
 
-    bool totallyUnused = true;
-    for (const auto &pair : rs->m_resourcesCache)
+    Resource *resource = resEntry.resource;
+    if (resource)
     {
-        if (pair.first != resTypeId &&
-            pair.second.ContainsKey(resEntry.resource->GetGUID()))
+        if (EventEmitter<IEventsDestroy> *destroyable =
+                             DCAST< EventEmitter<IEventsDestroy>* >(resource))
         {
-            totallyUnused = false;
-            break;
+            destroyable->EventEmitter<IEventsDestroy>::PropagateToListeners(
+                                    &IEventsDestroy::OnDestroyed, destroyable);
         }
-    }
 
-    if (totallyUnused)
-    {
-        Destroy(resEntry.resource);
+        // delete resource;
     }
-    map.Remove(it);
 }
 
 Array<Path> Resources::GetLookUpPaths() const
@@ -326,60 +244,41 @@ Array<Path> Resources::GetLookUpPaths() const
     return {Paths::GetProjectAssetsDir(), Paths::GetEngineAssetsDir()};
 }
 
-void Resources::RegisterResourceUsage(const TypeId &resourceClassTypeId,
-                                      Resource *resource)
+void Resources::RegisterResourceUsage(Resource *resource)
 {
     Resources *rs = Resources::GetInstance();
     const GUID &guid = resource->GetGUID();
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resourceClassTypeId.IsEmpty());
 
-    if (!rs->GetCached_(resourceClassTypeId, guid))
+    if (!rs->GetCached_(guid))
     {
-        Resources::Add(resourceClassTypeId, resource);
+        Resources::Add(resource);
     }
-    ++rs->m_resourcesCache.Get(resourceClassTypeId).Get(guid).usageCount;
+    ++rs->m_resourcesCache.Get(guid).usageCount;
 }
 
-void Resources::UnRegisterResourceUsage(const TypeId &resourceClassTypeId,
-                                        Resource *resource)
+void Resources::UnRegisterResourceUsage(Resource *res)
 {
     Resources *rs = Resources::GetInstance();
-    const GUID &guid = resource->GetGUID();
+    const GUID &guid = res->GetGUID();
     ASSERT(!guid.IsEmpty());
-    ASSERT(!resourceClassTypeId.IsEmpty());
 
     if (rs)
     {
-        ASSERT(rs->GetCached_(resourceClassTypeId, guid));
-        uint *resourcesUsage = &(rs->m_resourcesCache.Get(resourceClassTypeId).
-                                 Get(guid).usageCount);
+        ASSERT(rs->GetCached_(guid));
+        uint *resourcesUsage = &(rs->m_resourcesCache.Get(guid).usageCount);
         ASSERT(*resourcesUsage >= 1);
         --(*resourcesUsage);
 
         if (*resourcesUsage == 0)
         {
-            const Path resourcePath = Resources::GetResourcePath(resource);
-            if (!Resources::IsPermanent(resource) &&
-                !Resources::IsPermanent(resourcePath) )
+            const Path resPath = Resources::GetResourcePath(res);
+            if (!Resources::IsPermanent(res) && !Resources::IsPermanent(resPath) )
             {
-                Resources::Remove(resourceClassTypeId, guid);
+                Resources::Remove(guid);
             }
         }
     }
-}
-
-void Resources::Destroy(Resource *resource)
-{
-    if (!resource) { return; }
-
-    if (EventEmitter<IEventsDestroy> *destroyable =
-                            DCAST< EventEmitter<IEventsDestroy>* >(resource))
-    {
-        destroyable->EventEmitter<IEventsDestroy>::PropagateToListeners(
-                                    &IEventsDestroy::OnDestroyed, destroyable);
-    }
-    delete resource;
 }
 
 Path Resources::GetResourcePath(const Resource *resource)

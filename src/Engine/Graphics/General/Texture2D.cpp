@@ -25,8 +25,9 @@ void Texture2D::OnFormatChanged()
 
     if (GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
     {
-        RH<Imageb> img = Resources::Load<Imageb>( GetResourceFilepath() );
-        Import( *(img.Get()) );
+        Imageb img;
+        ImageIO::Import(GetResourceFilepath(), &img);
+        Import(img);
     }
 }
 
@@ -90,6 +91,11 @@ float Texture2D::GetAlphaCutoff() const
     return m_alphaCutoff;
 }
 
+const Imageb &Texture2D::GetImage() const
+{
+    return m_image;
+}
+
 void Texture2D::ImportXML(const XMLNode &xmlInfo)
 {
     Asset::ImportXML(xmlInfo);
@@ -119,7 +125,7 @@ void Texture2D::ExportXML(XMLNode *xmlInfo) const
 
 void Texture2D::Import(const Path &imageFilepath)
 {
-    ImageIO::Import(imageFilepath, this, nullptr);
+    ImageIO::Import(imageFilepath, &m_image, this, nullptr);
 
     Path importFilepath = ImportFilesManager::GetImportFilepath(imageFilepath);
     ImportXMLFromFile(importFilepath);
@@ -129,6 +135,8 @@ void Texture2D::Import(const Image<Byte> &image)
 {
     if (image.GetData())
     {
+        m_image = image;
+
         SetWidth(image.GetWidth());
         SetHeight(image.GetHeight());
 

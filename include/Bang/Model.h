@@ -35,9 +35,6 @@ public:
 
 private:
     ModelIOScene m_modelScene;
-
-    std::pair<Resource*, String>
-        GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedFileGUID) const;
 };
 
 NAMESPACE_BANG_END

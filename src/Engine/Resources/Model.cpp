@@ -110,35 +110,8 @@ const Array<String> &Model::GetAnimationsNames() const
 
 void Model::Import(const Path &modelFilepath)
 {
-    // Clear previous
     m_modelScene.Clear();
-
-    // Load new
-    if (ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
-    {/*
-        // Copy
-
-        ASSERT(modelScene.modelTree);
-            m_modelScene.modelTree = modelScene.modelTree->GetDeepCopy();
-        for (uint i = 0; i < modelScene.meshes.Size(); ++i)
-        {
-            AddMesh(modelScene.meshes[i].Get(), modelScene.materials[i].Get(),
-                    modelScene.meshesNames[i],  modelScene.materialsNames[i]);
-        }
-
-        for (int i = 0; i < modelScene.animations.Size(); ++i)
-        {
-            const RH<Animation> &animation = modelScene.animations[i];
-            const String &animationName = modelScene.animationsNames[i];
-            m_modelScene.animations.PushBack(animation);
-            m_modelScene.animationsNames.PushBack(animationName + "." +
-                                     Extensions::GetAnimationExtension());
-            AddEmbeddedResource<Animation>(m_modelScene.animationsNames.Back(),
-                                           m_modelScene.animations.Back().Get());
-        }
-        */
-    }
-    else
+    if (!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
     {
         Debug_Error("Can not load model " << modelFilepath << ". " <<
                     "Look for errors above.");
@@ -153,39 +126,4 @@ void Model::ImportXML(const XMLNode &xmlInfo)
 void Model::ExportXML(XMLNode *xmlInfo) const
 {
     Asset::ExportXML(xmlInfo);
-}
-
-std::pair<Resource *, String>
-Model::GetEmbeddedFileResourceAndName(GUID::GUIDType embeddedResourceGUID) const
-{
-    std::pair<Resource*, String> pair;
-    pair.first = nullptr;
-    pair.second = "NameNotFound";
-
-    Array< String > names;
-    Array< Resource* > resources;
-    for (uint i = 0; i < GetMeshes().Size(); ++i)
-    {
-        names.PushBack(GetMeshesNames()[i]);
-        resources.PushBack(GetMeshes()[i].Get());
-    }
-
-    for (uint i = 0; i < GetMaterials().Size(); ++i)
-    {
-        resources.PushBack(GetMaterials()[i].Get());
-        names.PushBack(GetMaterialsNames()[i]);
-    }
-
-    for (uint i = 0; i < resources.Size(); ++i)
-    {
-        if (resources[i] &&
-            resources[i]->GetGUID().GetEmbeddedResourceGUID() == embeddedResourceGUID)
-        {
-            pair.first = resources[i];
-            pair.second = names[i];
-            break;
-        }
-    }
-
-    return pair;
 }

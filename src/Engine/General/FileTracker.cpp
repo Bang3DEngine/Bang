@@ -30,6 +30,7 @@ void FileTracker::TrackPath(const Path &path)
                                              path.GetModificationTimeSeconds());
         if (!wasBeingTracked)
         {
+            m_pathsJustRecentlyTracked.Add(path);
             EventEmitter<IEventsFileTracker>::
                PropagateToListeners(&IEventsFileTracker::OnPathAdded, path);
         }
@@ -58,7 +59,9 @@ void FileTracker::Update(bool forceCheckNow)
 {
     if (NeedsCheck() || forceCheckNow)
     {
-        UMap<Path, double> previousPathsToTrack =
+        const USet<Path> previousJustRecentlyTrackedPaths =
+                                        m_pathsJustRecentlyTracked;
+        const UMap<Path, double> previousPathsToTrack =
                                         m_pathsToTrackToModificationTime;
 
         // Check for removed paths
@@ -73,6 +76,8 @@ void FileTracker::Update(bool forceCheckNow)
                 UnTrackPath(previousPath);
             }
         }
+
+        m_pathsJustRecentlyTracked.Clear(); // Clear just tracked paths
 
         // Check for new paths and add them to track
         for (const auto &pathToModTime : previousPathsToTrack)
@@ -89,11 +94,15 @@ void FileTracker::Update(bool forceCheckNow)
         {
             const Path &newPath = newPathToModTime.first;
             double epsilon = GetCheckFrequencySeconds() / 2.0;
+            bool isRecentlyCreatedPath =
+                      previousJustRecentlyTrackedPaths.Contains(newPath);
             ASSERT(epsilon < GetCheckFrequencySeconds());
-            if (newPath.GetModificationTimeSeconds() >= m_lastCheckTime - epsilon)
+            if (newPath.GetModificationTimeSeconds() >= (m_lastCheckTime - epsilon) &&
+                !isRecentlyCreatedPath)
             {
                 EventEmitter<IEventsFileTracker>::
-                   PropagateToListeners(&IEventsFileTracker::OnPathModified, newPath);
+                   PropagateToListeners(&IEventsFileTracker::OnPathModified,
+                                        newPath);
             }
         }
 

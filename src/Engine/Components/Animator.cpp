@@ -122,3 +122,30 @@ Animation *Animator::GetAnimation() const
     return p_animation.Get();
 }
 
+void Animator::CloneInto(ICloneable *clone) const
+{
+    Component::CloneInto(clone);
+    Animator *animatorClone = SCAST<Animator*>(clone);
+    animatorClone->SetAnimation( GetAnimation() );
+}
+
+void Animator::ImportXML(const XMLNode &xmlInfo)
+{
+    Component::ImportXML(xmlInfo);
+
+    if (xmlInfo.Contains("Animation"))
+    {
+        RH<Animation> animation = Resources::Load<Animation>(
+                                             xmlInfo.Get<GUID>("Animation") );
+        SetAnimation( animation.Get() );
+    }
+}
+
+void Animator::ExportXML(XMLNode *xmlInfo) const
+{
+    Component::ExportXML(xmlInfo);
+
+    xmlInfo->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
+                                               GUID::Empty());
+}
+

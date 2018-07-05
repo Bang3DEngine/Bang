@@ -25,6 +25,7 @@ public:
     void OnStart() override;
     void OnUpdate() override;
     void OnRender(RenderPass rp) override;
+
     void SetAnimation(Animation *animation);
     void Play();
     void Stop();
@@ -32,6 +33,13 @@ public:
 
     bool IsPlaying() const;
     Animation* GetAnimation() const;
+
+    // ICloneable
+    virtual void CloneInto(ICloneable *clone) const override;
+
+    // Serializable
+    virtual void ImportXML(const XMLNode &xmlInfo) override;
+    virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 private:
     bool m_playing = false;

@@ -89,7 +89,7 @@ void TextureCubeMap::SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
                     EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
 
-        FillCubeMapDir(cubeMapDir, &tex->GetImage());
+        FillCubeMapDir(cubeMapDir, tex ? &tex->GetImage() : nullptr);
         m_sideTextures[ TextureCubeMap::GetDirIndex(cubeMapDir) ].Set(tex);
 
         if (GetSideTexture(cubeMapDir).Get())
@@ -158,7 +158,7 @@ void TextureCubeMap::ImportXML(const XMLNode &xmlInfo)
     if (xmlInfo.Contains("TopImage"))
     {
         SetSideTexture(GL::CubeMapDir::TOP,
-                 Resources::Load<Texture2D>(xmlInfo.Get<GUID>("TopImage") ).Get() );
+                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("TopImage") ).Get() );
     }
     if (xmlInfo.Contains("BotImage"))
     {
@@ -221,7 +221,9 @@ void TextureCubeMap::OnImported(Resource *res)
     {
         if (res == GetSideTexture(cubeMapDir).Get())
         {
-            FillCubeMapDir(cubeMapDir, DCAST<Imageb*>(res));
+            Texture2D *tex = DCAST<Texture2D*>(res);
+            ASSERT(tex);
+            FillCubeMapDir(cubeMapDir, &(tex->GetImage()));
         }
     }
 }

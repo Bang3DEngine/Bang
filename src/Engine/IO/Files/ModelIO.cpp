@@ -213,7 +213,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
             }
         }
         modelScene->animations.PushBack(animationRH);
-        modelScene->animationsNames.PushBack( AiStringToString(aAnimation->mName) );
+        modelScene->animationsNames.PushBack(animationName);
     }
 
     modelScene->modelTree = ReadModelNode(aScene, aScene->mRootNode);
@@ -645,11 +645,6 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
                            &vertexUvsPool,
                            &vertexTangentsPool,
                            &bonesPool);
-    if (outMeshName)
-    {
-        *outMeshName = String( aMesh->mName.C_Str() );
-        if (outMeshName->IsEmpty()) { *outMeshName = "Mesh"; }
-    }
 
     Mesh *outMesh = outMeshRH->Get();
     outMesh->SetPositionsPool(vertexPositionsPool);

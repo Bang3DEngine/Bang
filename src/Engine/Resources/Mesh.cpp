@@ -422,33 +422,8 @@ void Mesh::CloneInto(ICloneable *clone) const
 
 void Mesh::Import(const Path &meshFilepath)
 {
-    Array<VertexId> vertexIndices;
-    Array<Vector3> positionsPool;
-    Array<Vector3> normalsPool;
-    Array<Vector2> uvsPool;
-    Array<Vector3> tangentsPool;
-    Map<String, Mesh::Bone> bonesPool;
-    if ( ModelIO::ImportFirstFoundMeshRaw(meshFilepath,
-                                          &vertexIndices,
-                                          &positionsPool,
-                                          &normalsPool,
-                                          &uvsPool,
-                                          &tangentsPool,
-                                          &bonesPool) )
-    {
-        SetPositionsPool(positionsPool);
-        SetNormalsPool(normalsPool);
-        SetUvsPool(uvsPool);
-        SetTangentsPool(tangentsPool);
-        SetBonesPool(bonesPool);
-        SetVertexIndices(vertexIndices);
-        UpdateVAOs();
-    }
-    else
-    {
-        Debug_Error("There was an error when reading mesh file '" <<
-                     meshFilepath << "'.");
-    }
+    ASSERT_MSG(false, "Load the Model, and from there retrieve the mesh.");
+    (void) meshFilepath;
 }
 
 

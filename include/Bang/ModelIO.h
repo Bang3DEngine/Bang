@@ -59,14 +59,6 @@ public:
                             Model *model,
                             ModelIOScene *modelScene);
 
-    static bool ImportFirstFoundMeshRaw(
-                     const Path& modelFilepath,
-                     Array<Mesh::VertexId> *vertexIndices,
-                     Array<Vector3> *vertexPositionsPool,
-                     Array<Vector3> *vertexNormalsPool,
-                     Array<Vector2> *vertexUvsPool,
-                     Array<Vector3> *vertexTangentsPool,
-                     Map<String, Mesh::Bone> *bones);
     static void ImportMeshRaw(
                      aiMesh *aMesh,
                      Array<Mesh::VertexId> *vertexIndices,
@@ -89,7 +81,6 @@ private:
     static aiMaterial* MaterialToAiMaterial(const Material *material);
     static const aiScene *ImportScene(Assimp::Importer *importer,
                                       const Path& modelFilepath);
-
 
     static void ImportEmbeddedMesh(aiMesh *aMesh,
                                    Model *model,

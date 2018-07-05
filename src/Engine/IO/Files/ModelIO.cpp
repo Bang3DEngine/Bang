@@ -221,34 +221,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     return true;
 }
 
-bool ModelIO::ImportFirstFoundMeshRaw(
-                     const Path &modelFilepath,
-                     Array<Mesh::VertexId> *vertexIndices,
-                     Array<Vector3> *vertexPositionsPool,
-                     Array<Vector3> *vertexNormalsPool,
-                     Array<Vector2> *vertexUvsPool,
-                     Array<Vector3> *vertexTangentsPool,
-                     Map<String, Mesh::Bone> *bones)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = ImportScene(&importer, modelFilepath);
-    if (!scene) { return false; }
-
-    bool ok = false;
-    if (scene && scene->HasMeshes())
-    {
-        ModelIO::ImportMeshRaw(scene->mMeshes[0],
-                               vertexIndices,
-                               vertexPositionsPool,
-                               vertexNormalsPool,
-                               vertexUvsPool,
-                               vertexTangentsPool,
-                               bones);
-        ok = true;
-    }
-    return ok;
-}
-
 void ModelIO::ImportMeshRaw(
                   aiMesh *aMesh,
                   Array<Mesh::VertexId> *vertexIndices,

@@ -1,10 +1,10 @@
 #ifndef MESHFACTORY_H
 #define MESHFACTORY_H
 
-#include "Bang/Map.h"
+#include "Bang/Set.h"
 #include "Bang/Mesh.h"
-#include "Bang/UMap.h"
 #include "Bang/Path.h"
+#include "Bang/Model.h"
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
@@ -29,7 +29,7 @@ protected:
     static RH<Mesh> GetMesh(const Path &fullPath);
 
 private:
-    UMap<Path, RH<Mesh>> m_cache;
+    Set< RH<Model> > m_modelCache;
 
     static MeshFactory* GetActive();
 

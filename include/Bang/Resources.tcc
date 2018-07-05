@@ -56,9 +56,9 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
             }
             else
             {
-                ASSERT_MSG(res, "Resource " << guid << " being loaded "
-                           "as two different types of resources. "
-                           "This is forbidden");
+                // ASSERT_MSG(res, "Resource " << guid << " being loaded "
+                //            "as two different types of resources. "
+                //            "This is forbidden");
             }
         }
     }

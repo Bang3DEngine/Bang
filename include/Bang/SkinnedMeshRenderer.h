@@ -1,7 +1,7 @@
 #ifndef SKINNEDMESHRENDERER_H
 #define SKINNEDMESHRENDERER_H
 
-#include "Bang/Bang.h"
+#include "Bang/Map.h"
 #include "Bang/MeshRenderer.h"
 
 NAMESPACE_BANG_BEGIN
@@ -17,7 +17,22 @@ public:
     // MeshRenderer
     void OnRender() override;
 
+    void SetRootBoneGameObject(GameObject* rootBoneGameObject);
+    void SetBoneGameObject(const String &boneName, GameObject *gameObject);
+
+    GameObject* GetRootBoneGameObject() const;
+    GameObject *GetBoneGameObject(const String &boneName) const;
+    const Map<String, GameObject*>& GetBoneNameToGameObject() const;
+
+    // Serializable
+    virtual void ImportXML(const XMLNode &xmlInfo) override;
+    virtual void ExportXML(XMLNode *xmlInfo) const override;
+
 private:
+    static const String XMLBoneGameObjectPrefix;
+
+    GameObject *p_rootBoneGameObject = nullptr;
+    Map<String, GameObject*> m_boneNameToGameObject;
     bool m_hadAnimatorBefore = true;
 };
 

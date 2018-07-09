@@ -71,6 +71,7 @@ public:
     Component* AddComponent(Component *c, int index = -1);
 
     static GameObject *Find(const String &name);
+    GameObject *FindInChildren(const GUID &guid, bool recursive = true);
     GameObject *FindInChildren(const String &name, bool recursive = true);
 
     void SetVisible(bool visible);

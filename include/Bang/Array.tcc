@@ -273,6 +273,13 @@ void Array<T>::PushBack(IteratorClass itBegin, IteratorClass itEnd)
     }
 }
 
+template<class T>
+const Array<T>& Array<T>::Empty()
+{
+    static Array<T> empty;
+    return empty;
+}
+
 NAMESPACE_BANG_END
 
 #endif // ARRAY_TCC

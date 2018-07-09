@@ -55,8 +55,8 @@ Array<String> Extensions::GetModelExtensions()
             "blend", "3ds", "ase", "ifc", "xgl", "zgl", "dxf",
             "lwo", "lws", "lxo", "stl", "x", "ac", "ms3d", "cob",
             "scn", "bvh", "csm", "mdl", "md2", "md3", "pk3", "mdc",
-            "md5", "smd", "vta", "ogex", "3d", "b3d", "q3d", "q3s",
-            "nff", "off", "raw", "ter", "mdl", "hmp", "ndo"};
+            "md5", "md5mesh", "md5anim", "smd", "vta", "ogex", "3d", "b3d",
+            "q3d", "q3s", "nff", "off", "raw", "ter", "mdl", "hmp", "ndo"};
 }
 
 Array<String> Extensions::GetAudioClipExtensions()

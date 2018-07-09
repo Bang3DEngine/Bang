@@ -11,8 +11,8 @@ layout(location = 1) in vec3  B_VIn_Normal;
 layout(location = 2) in vec2  B_VIn_Uv;
 layout(location = 3) in vec3  B_VIn_Tangent;
 #ifdef BANG_HAS_ANIMATIONS
-layout(location = 4) in vec4 B_VIn_VertexBones; // Max 4 bones per vertex
-layout(location = 5) in vec4 B_VIn_VertexWeights;
+layout(location = 4) in vec4 B_VIn_VertexBonesIds; // Max 4 bones per vertex
+layout(location = 5) in vec4 B_VIn_VertexBonesWeights;
 #endif
 
 out vec3 B_FIn_Position;
@@ -21,30 +21,49 @@ out vec2 B_FIn_AlbedoUv;
 out vec2 B_FIn_NormalMapUv;
 out vec3 B_FIn_Tangent;
 out mat3 B_TBN;
+out vec4 boneIdsF;
 
 void main()
 {
     vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
 
+    vec4 modelPosition = vec4(B_VIn_Position, 1);
+    vec4 modelNormal   = vec4(B_VIn_Normal,   0);
+
     #ifdef BANG_HAS_ANIMATIONS
-    ivec4 boneIds = ivec4(int(B_VIn_VertexBones.x),
-                          int(B_VIn_VertexBones.y),
-                          int(B_VIn_VertexBones.z),
-                          int(B_VIn_VertexBones.w));
-    mat4 boneTransform =
-       (B_BoneAnimationMatrices[boneIds[0]] * B_VIn_VertexWeights[boneIds[0]]) +
-       (B_BoneAnimationMatrices[boneIds[1]] * B_VIn_VertexWeights[boneIds[1]]) +
-       (B_BoneAnimationMatrices[boneIds[2]] * B_VIn_VertexWeights[boneIds[2]]) +
-       (B_BoneAnimationMatrices[boneIds[3]] * B_VIn_VertexWeights[boneIds[3]]);
+    ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
+    // boneIds = ivec4(0);
+    vec4 boneWeights = B_VIn_VertexBonesWeights;
+    boneWeights = vec4(1,0,0,0);
+    // boneIdsF = vec4(boneWeights[0], boneWeights[1], boneWeights[2], boneWeights[3]);
+    boneIdsF = boneIds;
+
+    vec4 bonedPosition = vec4(0);
+    vec3 modelPositionXYZ = modelPosition.xyz;
+    bonedPosition += (B_BoneAnimationMatrices[boneIds[0]] * vec4(modelPositionXYZ, 1)) * boneWeights[0];
+    bonedPosition += (B_BoneAnimationMatrices[boneIds[1]] * vec4(modelPositionXYZ, 1)) * boneWeights[1];
+    bonedPosition += (B_BoneAnimationMatrices[boneIds[2]] * vec4(modelPositionXYZ, 1)) * boneWeights[2];
+    bonedPosition += (B_BoneAnimationMatrices[boneIds[3]] * vec4(modelPositionXYZ, 1)) * boneWeights[3];
+    modelPosition = vec4(bonedPosition.xyz, 1);
+
+    // vec4 bonedNormal = vec4(0);
+    // vec3 modelNormalXYZ = modelNormal.xyz;
+    // bonedNormal += (B_BoneAnimationMatrices[boneIds[0]] * vec4(modelNormalXYZ,1)) * boneWeights[boneIds[0]];
+    // bonedNormal += (B_BoneAnimationMatrices[boneIds[1]] * vec4(modelNormalXYZ,1)) * boneWeights[boneIds[1]];
+    // bonedNormal += (B_BoneAnimationMatrices[boneIds[2]] * vec4(modelNormalXYZ,1)) * boneWeights[boneIds[2]];
+    // bonedNormal += (B_BoneAnimationMatrices[boneIds[3]] * vec4(modelNormalXYZ,1)) * boneWeights[boneIds[3]];
+    // modelNormal = vec4(bonedNormal.xyz, 0);
+
+    // float s = 1.0f; boneTransform = mat4(vec4(s,0,0,0), vec4(0,s,0,0), vec4(0,0,s,0), vec4(0,0,0,1));
     #else
-    const mat4 boneTransform = mat4(1.0);
+    // float s = 1.0f; boneTransform = mat4(vec4(s,0,0,0), vec4(0,s,0,0), vec4(0,0,s,0), vec4(0,0,0,1));
     #endif
 
-    B_FIn_Position    = (B_Model  * boneTransform * vec4(B_VIn_Position, 1)).xyz;
-    B_FIn_Normal      = (B_Normal * boneTransform * vec4(B_VIn_Normal, 0)).xyz;
+    B_FIn_Position    = (B_Model  * modelPosition).xyz;
+    B_FIn_Normal      = (B_Normal * modelNormal).xyz;
     B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
     B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
-    gl_Position       = B_PVM * boneTransform * vec4(B_VIn_Position, 1);
+    gl_Position       = B_PVM * modelPosition;
 
     // Calculate TBN for normal mapping
     if (B_HasNormalMapTexture)

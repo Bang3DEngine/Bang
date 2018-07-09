@@ -21,6 +21,7 @@ public:
 
     Path GetResourceFilepath() const;
     Resource* GetParentResource() const;
+    const Map<String, RH<Resource>>& GetEmbeddedResources() const;
     Resource* GetEmbeddedResource(const GUID &embeddedResGUID) const;
     Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
     Resource* GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const;

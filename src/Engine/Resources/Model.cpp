@@ -2,6 +2,7 @@
 
 #include "Bang/Mesh.h"
 #include "Bang/ModelIO.h"
+#include "Bang/Animator.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
@@ -9,8 +10,10 @@
 #include "Bang/GameObject.h"
 #include "Bang/GUIDManager.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/SkinnedMeshRenderer.h"
+#include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -24,7 +27,7 @@ Model::~Model()
 }
 
 GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
-                                              const Tree<ModelIONode>* modelTree)
+                                               const Tree<ModelIONode>* modelTree)
 {
     GameObject *gameObject = GameObjectFactory::CreateGameObject();
     if (!modelTree) { return gameObject; }
@@ -34,38 +37,86 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     // Set name
     gameObject->SetName( modelNode.name );
 
+    // Is it a bone gameObject ?
+    bool isBoneGameObject = false;
+    for (const RH<Mesh> &meshRH : modelScene.meshes)
+    {
+        if (meshRH.Get()->GetBonesPool().ContainsKey(gameObject->GetName()))
+        {
+            isBoneGameObject = true;
+            break;
+        }
+    }
+
     // Set transform
-    gameObject->GetTransform()->SetLocalPosition(
-                Transform::GetPositionFromMatrix4(modelNode.transformation) );
-    gameObject->GetTransform()->SetLocalRotation(
-                Transform::GetRotationFromMatrix4(modelNode.transformation) );
-    gameObject->GetTransform()->SetLocalScale(
-                Transform::GetScaleFromMatrix4(modelNode.transformation) );
+    if (!isBoneGameObject)
+    {
+        gameObject->GetTransform()->SetLocalPosition(
+                    Transform::GetPositionFromMatrix4(modelNode.transformation) );
+        gameObject->GetTransform()->SetLocalRotation(
+                    Transform::GetRotationFromMatrix4(modelNode.transformation) );
+        gameObject->GetTransform()->SetLocalScale(
+                    Transform::GetScaleFromMatrix4(modelNode.transformation) );
+    }
+    else
+    {
+        gameObject->GetTransform()->SetLocalPosition(Vector3::Zero);
+        gameObject->GetTransform()->SetLocalRotation(Quaternion::Identity);
+        gameObject->GetTransform()->SetLocalScale(Vector3::One);
+    }
 
     // Add mesh renderers
-    for (int i = 0; i < SCAST<int>(modelNode.meshIndices.Size()); ++i)
+    bool addAnimator = false;
+    for (uint i = 0; i < modelNode.meshIndices.Size(); ++i)
     {
         Mesh *mesh = modelScene.meshes[ modelNode.meshIndices[i] ].Get();
+        Material *material = modelScene.materials[ modelNode.meshIndices[i] ].Get();
 
         MeshRenderer *mr = nullptr;
-        if (!mesh->GetBonesPool().IsEmpty())
+        if (mesh->GetBonesPool().IsEmpty())
         {
             mr = gameObject->AddComponent<MeshRenderer>();
         }
         else
         {
+            addAnimator = true;
             mr = gameObject->AddComponent<SkinnedMeshRenderer>();
+            // SkinnedMeshRenderer *smr = SCAST<SkinnedMeshRenderer*>(mr);
+            // smr->SetBoneGameObject();
+
+            /*
+            if (RH<Shader> vAnimShader = Resources::Load<Shader>(
+                  ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath()))
+            {
+                RH<Material> materialAnimRH;
+                materialAnimRH.Set( SCAST<Material*>(material->Clone()) );
+                materialAnimRH.Get()->GetShaderProgram()->SetVertexShader(
+                                                            vAnimShader.Get());
+                materialAnimRH.Get()->GetShaderProgram()->Link();
+                mr->SetMaterial(materialAnimRH.Get());
+            }
+            else
+            {
+                mr->SetMaterial(material);
+            }
+            */
         }
 
         mr->SetMesh(mesh);
-        mr->SetMaterial( modelScene.materials[ modelNode.meshIndices[i] ].Get() );
+        mr->SetMaterial(material);
+    }
+
+    if (addAnimator && modelScene.animations.Size() >= 1)
+    {
+        Animator *animator = gameObject->AddComponent<Animator>();
+        animator->SetAnimation( modelScene.animations[0].Get() );
     }
 
     // Add children
     for (const Tree<ModelIONode> *childTree : modelTree->GetChildren())
     {
         GameObject *childGo = CreateGameObjectFromModelNodeTree(modelScene,
-                                                                childTree);
+                                                                 childTree);
         childGo->SetParent(gameObject);
     }
 
@@ -74,8 +125,34 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
 
 GameObject *Model::CreateGameObjectFromModel() const
 {
-    return CreateGameObjectFromModelNodeTree(m_modelScene,
-                                             m_modelScene.modelTree);
+    GameObject *modelGo = CreateGameObjectFromModelNodeTree(m_modelScene,
+                                                            m_modelScene.modelTree);
+
+    // If skinned mesh renderer, set bone references to gameObjects
+    if (SkinnedMeshRenderer *smr =
+                    modelGo->GetComponentInChildren<SkinnedMeshRenderer>(true))
+    {
+        if (Mesh *sMesh = smr->GetActiveMesh())
+        {
+            for (const auto &it : sMesh->GetBonesPool())
+            {
+                const String &boneName = it.first;
+                // const Mesh::Bone &bone = it.second;
+                if (GameObject *boneGo = modelGo->FindInChildren(boneName, true))
+                {
+                    const String &boneGoParentName = boneGo->GetParent() ?
+                                        boneGo->GetParent()->GetName() : "";
+                    if (!sMesh->GetBonesPool().ContainsKey(boneGoParentName))
+                    {
+                        smr->SetRootBoneGameObject( boneGo->GetParent() );
+                    }
+                    smr->SetBoneGameObject(boneName, boneGo);
+                }
+            }
+        }
+    }
+
+    return modelGo;
 }
 
 const Array<RH<Mesh> > &Model::GetMeshes() const

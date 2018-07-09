@@ -43,6 +43,11 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
     m_areLodsValid = false;
 }
 
+void Mesh::SetBonesIndices(const Map<String, uint> &bonesIndices)
+{
+    m_bonesIndices = bonesIndices;
+}
+
 void Mesh::SetPositionsPool(const Array<Vector3>& positions)
 {
     m_positionsPool = positions;
@@ -88,7 +93,6 @@ void Mesh::UpdateVAOs()
     if (hasBones)
     {
         // Pick 4 most relevant bones per vertex
-        Array<Mesh::Bone> allBones = GetBonesPool().GetValues().To<Array>();
         for (VertexId vid = 0; vid < GetVertexIndices().Size(); ++vid)
         {
             struct BoneExt : public IToString
@@ -100,16 +104,18 @@ void Mesh::UpdateVAOs()
                                    String::ToString(weight) + ")"; }
             };
 
-            int boneId = 0;
             Array<BoneExt> vertexBonesExt;
-            for (const Mesh::Bone &bone : allBones)
+            for (const auto &it : GetBonesPool())
             {
+                const String &boneName = it.first;
+                const Mesh::Bone &bone = it.second;
                 if (bone.weights.ContainsKey(vid))
                 {
+                    ASSERT(GetBonesIndices().ContainsKey(boneName));
+
                     BoneExt boneExt;
                     boneExt.weight = bone.weights.Get(vid);
-                    boneExt.id     = boneId;
-                    ++boneId;
+                    boneExt.id     = GetBonesIndices().Get(boneName);
                     vertexBonesExt.PushBack(boneExt);
                 }
             }
@@ -144,6 +150,9 @@ void Mesh::UpdateVAOs()
                     m_vertexIdToImportantBonesWeightsPool.Get(vid)[i] =
                                         vertexBonesExt[i].weight / weightSum;
                 }
+
+                std::cerr << "ind: " << m_vertexIdToImportantBonesIndicesPool.Get(vid) << std::endl;
+                std::cerr << "wei: " << m_vertexIdToImportantBonesWeightsPool.Get(vid) << std::endl;
             }
         }
     }
@@ -213,8 +222,10 @@ void Mesh::UpdateVAOs()
     const int vertexToBonesIndicesBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
     const int vertexToBonesWeightsBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
 
-    int totalStride = posBytesSize + normalsBytesSize +
-                      uvsBytesSize + tangentsBytesSize +
+    int totalStride = posBytesSize +
+                      normalsBytesSize +
+                      uvsBytesSize +
+                      tangentsBytesSize +
                       vertexToBonesIndicesBytesSize +
                       vertexToBonesWeightsBytesSize;
 
@@ -350,6 +361,15 @@ uint Mesh::GetNumTriangles() const
     return SCAST<uint>(GetVertexIndices().Size() / 3);
 }
 
+uint Mesh::GetBoneIndex(const String &boneName) const
+{
+    if (m_bonesIndices.ContainsKey(boneName))
+    {
+        return m_bonesIndices.Get(boneName);
+    }
+    return SCAST<uint>(-1);
+}
+
 std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(int triIndex) const
 {
     ASSERT(triIndex >= 0 && triIndex < GetNumTriangles());
@@ -382,6 +402,11 @@ const Array<Vector3> &Mesh::GetPositionsPool() const { return m_positionsPool; }
 const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
 const Array<Vector2> &Mesh::GetUvsPool() const { return m_uvsPool; }
 const Array<Vector3> &Mesh::GetTangentsPool() const { return m_tangentsPool; }
+
+const Map<String, uint> &Mesh::GetBonesIndices() const
+{
+    return m_bonesIndices;
+}
 
 UMap<Mesh::VertexId, Array<Mesh::TriangleId> >
 Mesh::GetVertexIndicesToTriangleIndices() const
@@ -417,6 +442,7 @@ void Mesh::CloneInto(ICloneable *clone) const
     mClone->SetTangentsPool( GetTangentsPool() );
     mClone->SetBonesPool( GetBonesPool() );
     mClone->SetVertexIndices( GetVertexIndices() );
+    mClone->SetBonesIndices( GetBonesIndices() );
     mClone->UpdateVAOs();
 }
 

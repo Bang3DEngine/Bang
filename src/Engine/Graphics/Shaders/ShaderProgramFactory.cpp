@@ -52,6 +52,12 @@ ShaderProgram *ShaderProgramFactory::GetDefault(RenderPass renderPass)
                ShaderProgramFactory::GetDefaultFragmentShaderPath(renderPass));
 }
 
+ShaderProgram *ShaderProgramFactory::GetDefaultAnimated()
+{
+    return Get(ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath(),
+        ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass::SCENE));
+}
+
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),

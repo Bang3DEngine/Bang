@@ -3,6 +3,7 @@
 
 #include "Bang/Bang.h"
 #include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL.h>
 
 NAMESPACE_BANG_BEGIN
 

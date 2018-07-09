@@ -15,7 +15,8 @@ class Animator : public Component
     COMPONENT(Animator);
 
 public:
-    static Array<Matrix4> s_identityMatrices;
+    static Array<Matrix4>       s_identityMatrices;
+    static Map<String, Matrix4> s_identityBoneMatrices;
     static constexpr int MaxNumBones = 128;
 
     Animator();
@@ -43,14 +44,14 @@ public:
 
 private:
     bool m_playing = false;
-    double m_animationTimeSeconds = 0.0;
+    float m_animationTimeSeconds = 0.0f;
     Time::TimeT m_prevFrameTimeMillis = 0;
 
     RH<Animation> p_animation;
 
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                 RenderPass rp,
-                                const Array<Matrix4> &boneMatrices);
+                                const Map<String, Matrix4> &boneAnimMatrices);
 };
 
 NAMESPACE_BANG_END

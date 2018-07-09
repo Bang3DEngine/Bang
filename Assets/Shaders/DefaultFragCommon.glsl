@@ -12,6 +12,7 @@ in vec2 B_FIn_AlbedoUv;
 in vec2 B_FIn_NormalMapUv;
 in vec3 B_FIn_Tangent;
 in mat3 B_TBN;
+in vec4 boneIdsF;
 
 #if defined(BANG_FORWARD_RENDERING)
 
@@ -55,7 +56,7 @@ void main()
                                              finalNormal.xyz,
                                              finalAlbedo.rgb),
                        0);
-    B_GIn_Color  = finalColor;
+    B_GIn_Color = finalColor;
 
     #elif defined(BANG_DEFERRED_RENDERING)
 
@@ -64,6 +65,13 @@ void main()
 
     B_GIn_Color  = finalColor;
     B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);
+    // B_GIn_Color = vec4(boneIdsF.x, boneIdsF.y, boneIdsF.z, boneIdsF.w) / 32.0;
+    // B_GIn_Albedo = B_GIn_Color;
+    int b = 18; if ( abs(boneIdsF.x - b) < 0.01f || abs(boneIdsF.y - b) < 0.01f || abs(boneIdsF.z - b) < 0.01f || abs(boneIdsF.w - b) < 0.01f ) { B_GIn_Color = B_GIn_Albedo = vec4(1,0,0,1); }
+    // int w = 1; if ( abs(boneIdsF.x - w) < 0.01f || abs(boneIdsF.y - w) < 0.01f || abs(boneIdsF.z - w) < 0.01f || abs(boneIdsF.w - w) < 0.01f ) { B_GIn_Color = B_GIn_Albedo = vec4(1,0,0,1); }
+    // float w = 0.5; if ( boneIdsF.x > w || boneIdsF.y > w || boneIdsF.z > w || boneIdsF.w > w) { B_GIn_Color = B_GIn_Albedo = vec4(1,0,0,1); }
+    // B_GIn_Color = B_GIn_Albedo = boneIdsF;
+    // int w = 1; if ( boneIdsF.x > w || boneIdsF.y > w || boneIdsF.z > w || boneIdsF.w > w) { B_GIn_Color = B_GIn_Albedo = vec4(1,0,0,1); }
     B_GIn_Normal = vec4(finalNormal * 0.5f + 0.5f, 0);
     B_GIn_Misc   = vec4(receivesLighting,
                         B_MaterialRoughness,

@@ -43,6 +43,7 @@ public:
     void SetTangentsPool(const Array<Vector3>& tangents);
     void SetBonesPool(const Map<String, Mesh::Bone> &bones);
     void SetVertexIndices(const Array<VertexId>& vertexIndices);
+    void SetBonesIndices(const Map<String, uint>& bonesIndices);
 
     void UpdateVAOs();
     void CalculateVertexNormals();
@@ -52,6 +53,7 @@ public:
     RH<Mesh> GetLODMesh(int lod) const;
     const Array<RH<Mesh>> GetLODMeshes() const;
     uint GetNumTriangles() const;
+    uint GetBoneIndex(const String &boneName) const;
     std::array<VertexId, 3> GetTriangleVertexIndices(int triIndex) const;
 
     VAO *GetVAO() const;
@@ -65,6 +67,7 @@ public:
     const Array<Vector3>& GetNormalsPool() const;
     const Array<Vector2>& GetUvsPool() const;
     const Array<Vector3>& GetTangentsPool() const;
+    const Map<String, uint>& GetBonesIndices() const;
     const Map<String, Mesh::Bone>& GetBonesPool() const;
     const Path &GetModelFilepath() const;
 
@@ -90,6 +93,7 @@ private:
     Array<Vector3> m_tangentsPool;
 
     Map<String, Bone> m_bonesPool;
+    Map<String, uint> m_bonesIndices;
     Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIndicesPool;
     Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
     RH<Animation> m_animations;

@@ -403,6 +403,26 @@ GameObject *GameObject::Find(const String &name)
     return scene ? scene->FindInChildren(name) : nullptr;
 }
 
+GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (child->GetGUID() == guid)
+        {
+            return child;
+        }
+        else if (recursive)
+        {
+            GameObject *found = child->FindInChildren(guid, true);
+            if (found)
+            {
+                return found;
+            }
+        }
+    }
+    return nullptr;
+}
+
 GameObject *GameObject::FindInChildren(const String &name, bool recursive)
 {
     for (GameObject *child : GetChildren())

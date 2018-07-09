@@ -19,21 +19,40 @@ public:
     template <class T>
     struct KeyFrame
     {
-        float time;
+        float timeInFrames;
         T value;
     };
 
-    void AddPositionKeyFrame(const Animation::KeyFrame<Vector3> &keyFrame);
-    void AddRotationKeyFrame(const Animation::KeyFrame<Quaternion> &keyFrame);
-    void AddScaleKeyFrame(const Animation::KeyFrame<Vector3> &keyFrame);
+    void AddPositionKeyFrame(const String &boneName,
+                             const Animation::KeyFrame<Vector3> &keyFrame);
+    void AddRotationKeyFrame(const String &boneName,
+                             const Animation::KeyFrame<Quaternion> &keyFrame);
+    void AddScaleKeyFrame(const String &boneName,
+                          const Animation::KeyFrame<Vector3> &keyFrame);
     void SetFramesPerSecond(float framesPerSecond);
-    void SetDuration(float durationInSeconds);
+    void SetDurationInFrames(float durationInSeconds);
 
-    float GetDuration() const;
+    float GetDurationInFrames() const;
     float GetFramesPerSecond() const;
-    const Array<KeyFrame<Vector3> > &GetPositionKeyFrames() const;
-    const Array<KeyFrame<Quaternion>>& GetRotationKeyFrames() const;
-    const Array<KeyFrame<Vector3>>& GetScaleKeyFrames() const;
+    Map<String, Matrix4> GetBoneAnimationMatricesForSecond(float second) const;
+
+    const Array< Animation::KeyFrame<Vector3> > &
+    GetPositionKeyFrames(const String &boneName) const;
+
+    const Array< Animation::KeyFrame<Quaternion> > &
+    GetRotationKeyFrames(const String &boneName) const;
+
+    const Array< Animation::KeyFrame<Vector3> > &
+    GetScaleKeyFrames(const String &boneName) const;
+
+    const Map< String, Array< Animation::KeyFrame<Vector3> > > &
+    GetBoneNameToPositionKeyFrames() const;
+
+    const Map< String, Array< Animation::KeyFrame<Quaternion> > > &
+    GetBoneNameToRotationKeyFrames() const;
+
+    const Map< String, Array< Animation::KeyFrame<Vector3> > > &
+    GetBoneNameToScaleKeyFrames() const;
 
     // Resource
     void Import(const Path &animationFilepath) override;
@@ -46,12 +65,12 @@ private:
     Animation();
     virtual ~Animation();
 
-    float m_durationSeconds = 0.0f;
-    float m_framesPerSecond = 0.0f;
+    float m_durationInFrames = 0.0f;
+    float m_framesPerSecond  = 0.0f;
 
-    Array<KeyFrame<Vector3>> m_positionKeyFrames;
-    Array<KeyFrame<Quaternion>> m_rotationKeyFrames;
-    Array<KeyFrame<Vector3>> m_scaleKeyFrames;
+    Map<String, Array<KeyFrame<Vector3>>>    m_boneNameToPositionKeyFrames;
+    Map<String, Array<KeyFrame<Quaternion>>> m_boneNameToRotationKeyFrames;
+    Map<String, Array<KeyFrame<Vector3>>>    m_boneNameToScaleKeyFrames;
 };
 
 NAMESPACE_BANG_END

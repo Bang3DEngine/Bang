@@ -20,6 +20,7 @@ public:
     static Path GetScreenPassVertexShaderPath();
 
     static ShaderProgram* GetDefault(RenderPass renderPass = RenderPass::SCENE);
+    static ShaderProgram* GetDefaultAnimated();
     static ShaderProgram* GetDefaultPostProcess();
     static ShaderProgram* GetPointLightShadowMap();
     static ShaderProgram* GetPointLightDeferredScreenPass();

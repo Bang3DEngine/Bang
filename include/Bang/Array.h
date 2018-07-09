@@ -20,6 +20,8 @@ public:
     using Const_Iterator = typename std::vector<T>::const_iterator;
     using Const_RIterator = typename std::vector<T>::const_reverse_iterator;
 
+    static const Array<T>& Empty();
+
     Array();
     Array(const std::vector<T> &v);
     Array(int size);

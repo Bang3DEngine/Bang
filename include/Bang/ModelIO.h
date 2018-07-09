@@ -66,7 +66,8 @@ public:
                      Array<Vector3> *vertexNormalsPool,
                      Array<Vector2> *vertexUvsPool,
                      Array<Vector3> *vertexTangentsPool,
-                     Map<String, Mesh::Bone> *bones);
+                     Map<String, Mesh::Bone> *bones,
+                     Map<String, uint> *bonesIndices);
 
     static void ExportModel(const GameObject *gameObject,
                             const Path &meshExportPath);
@@ -89,6 +90,7 @@ private:
     static void ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                        const Path& modelDirectory,
                                        Model *model,
+                                       bool forAnimation,
                                        RH<Material> *outMaterial,
                                        String *outMaterialName);
 };

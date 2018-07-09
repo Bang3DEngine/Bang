@@ -41,6 +41,11 @@ Resource* Resource::GetParentResource() const
     return p_parentResource.Get();
 }
 
+const Map<String, RH<Resource> > &Resource::GetEmbeddedResources() const
+{
+    return m_nameToEmbeddedResource;
+}
+
 void Resource::PropagateResourceChanged()
 {
     EventEmitter<IEventsResource>::PropagateToListeners(

@@ -171,12 +171,15 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
 
 
     // Load meshes
+    Map<String, Mesh::Bone> allBones;
     for (int i = 0; i < SCAST<int>(aScene->mNumMeshes); ++i)
     {
         RH<Mesh> meshRH;
         String meshName;
-        ModelIO::ImportEmbeddedMesh(aScene->mMeshes[i], model,
-                                    &meshRH, &meshName);
+        ModelIO::ImportEmbeddedMesh(aScene->mMeshes[i],
+                                    model,
+                                    &meshRH,
+                                    &meshName);
         modelScene->meshes.PushBack(meshRH);
         modelScene->meshesNames.PushBack(meshName);
 
@@ -195,6 +198,13 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         {
             modelScene->materials.PushBack(noAnimMaterial);
             modelScene->materialsNames.PushBack(noAnimMaterialName);
+        }
+
+
+        // Update global bones
+        for (const auto &it : meshRH.Get()->GetBonesPool())
+        {
+            allBones.Add(it.first, it.second);
         }
     }
 
@@ -249,6 +259,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         modelScene->animationsNames.PushBack(animationName);
     }
 
+    modelScene->allBones = allBones;
     modelScene->rootGameObjectName = AiStringToString(aScene->mRootNode->mName);
     modelScene->modelTree = ReadModelNode(aScene, aScene->mRootNode);
 
@@ -685,7 +696,6 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
     const aiScene* scene =
       importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
                          aiProcess_Triangulate            |
-                         aiProcess_JoinIdenticalVertices  |
                          aiProcess_GenSmoothNormals       |
                          aiProcess_CalcTangentSpace);
 

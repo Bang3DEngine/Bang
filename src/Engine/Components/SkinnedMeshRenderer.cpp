@@ -168,41 +168,38 @@ const Map<String, GameObject *> &SkinnedMeshRenderer::GetBoneNameToGameObject() 
 
 void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
 {
-    if (Mesh *mesh = GetActiveMesh())
+    if (Model *model = GetActiveModel())
     {
+        const Map<String, Mesh::Bone> &allBones = model->GetAllBones();
+
         // Retrieve root gameObject
         p_rootBoneGameObject = nullptr;
         List<GameObject*> children = GetGameObject()->GetChildrenRecursively();
         for (GameObject *child : children)
         {
             GameObject *parent = child->GetParent();
-            if (  mesh->GetBonesPool().ContainsKey(child->GetName()) &&
-                 !mesh->GetBonesPool().ContainsKey(parent->GetName()) )
+            if (  allBones.ContainsKey(child->GetName()) &&
+                 !allBones.ContainsKey(parent->GetName()) )
             {
                 SetRootBoneGameObject(child);
                 break;
             }
         }
-        if (!GetRootBoneGameObject()) // Pick root if not previously found otherwise
+        if (!GetRootBoneGameObject()) // Pick root if not found previously
         {
-            if (Model *model = GetActiveModel())
-            {
-                GameObject *rootBoneGameObject =
-                    GetGameObject()->
-                    FindInAncestorsAndThis(model->GetRootGameObjectName());
-                SetRootBoneGameObject(rootBoneGameObject);
-            }
+            GameObject *rootBoneGameObject = GetGameObject()->
+                        FindInAncestorsAndThis(model->GetRootGameObjectName());
+            SetRootBoneGameObject(rootBoneGameObject);
         }
 
         // Fill boneName to gameObject
         ASSERT(GetRootBoneGameObject());
         m_boneNameToGameObject.Clear();
-        for (const auto &it : mesh->GetBonesPool())
+        for (const auto &it : allBones)
         {
             const String &boneName = it.first;
-            GameObject *boneGo = GetRootBoneGameObject()->
-                                 FindInChildren(boneName, true);
-            if (boneGo)
+            if (GameObject *boneGo = GetRootBoneGameObject()->
+                                     FindInChildren(boneName, true))
             {
                 m_boneNameToGameObject.Add(boneName, boneGo);
             }
@@ -210,7 +207,7 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
 
         // Calculate boneSpace to rootSpace matrices
         m_boneSpaceToRootSpaceMatrices.Clear();
-        for (const auto &it : mesh->GetBonesPool())
+        for (const auto &it : allBones)
         {
             const String &boneName = it.first;
             const Mesh::Bone &bone = it.second;

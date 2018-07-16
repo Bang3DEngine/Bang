@@ -26,6 +26,7 @@ public:
     const Array<String>& GetMeshesNames() const;
     const Array<String>& GetMaterialsNames() const;
     const Array<String>& GetAnimationsNames() const;
+    const Map<String, Mesh::Bone>& GetAllBones() const;
 
     // Resource
     void Import(const Path &modelFilepath) override;

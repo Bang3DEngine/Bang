@@ -44,6 +44,8 @@ struct ModelIOScene
     Array< RH<Animation> > animations;
     Array< String > animationsNames;
 
+    Map<String, Mesh::Bone> allBones;
+
     String rootGameObjectName = "";
     Tree<ModelIONode> *modelTree = nullptr;
 

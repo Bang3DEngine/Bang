@@ -133,6 +133,11 @@ const Array<String> &Model::GetAnimationsNames() const
     return m_modelScene.animationsNames;
 }
 
+const Map<String, Mesh::Bone> &Model::GetAllBones() const
+{
+    return m_modelScene.allBones;
+}
+
 void Model::Import(const Path &modelFilepath)
 {
     m_modelScene.Clear();

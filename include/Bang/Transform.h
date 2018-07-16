@@ -37,6 +37,8 @@ public:
     void LookAt(GameObject *target, const Vector3 &up = Vector3::Up);
     void LookInDirection(const Vector3 &dir, const Vector3 &up = Vector3::Up);
 
+    void FillFromMatrix(const Matrix4 &transformMatrix);
+
     void SetLocalPosition(const Vector3 &p);
     void SetPosition(const Vector3 &p);
     void TranslateLocal(const Vector3 &translation);

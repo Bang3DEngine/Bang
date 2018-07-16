@@ -443,6 +443,20 @@ GameObject *GameObject::FindInChildren(const String &name, bool recursive)
     return nullptr;
 }
 
+GameObject *GameObject::FindInAncestors(const String &name)
+{
+    return GetParent() ? GetParent()->FindInAncestorsAndThis(name) : nullptr;
+}
+
+GameObject *GameObject::FindInAncestorsAndThis(const String &name)
+{
+    if (GetName() == name)
+    {
+        return this;
+    }
+    return GetParent() ? GetParent()->FindInAncestorsAndThis(name) : nullptr;
+}
+
 void GameObject::SetVisible(bool visible)
 {
     if (visible != IsVisible())

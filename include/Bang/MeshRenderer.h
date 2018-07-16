@@ -47,6 +47,7 @@ protected:
 
     // Renderer
     virtual void OnRender() override;
+
 };
 
 NAMESPACE_BANG_END

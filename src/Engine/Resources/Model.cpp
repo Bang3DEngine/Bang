@@ -27,43 +27,21 @@ Model::~Model()
 }
 
 GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
-                                               const Tree<ModelIONode>* modelTree)
+                                              const Tree<ModelIONode>* modelTree)
 {
     GameObject *gameObject = GameObjectFactory::CreateGameObject();
-    if (!modelTree) { return gameObject; }
+    if (!modelTree)
+    {
+        return gameObject;
+    }
 
     const ModelIONode &modelNode = modelTree->GetData();
 
     // Set name
     gameObject->SetName( modelNode.name );
 
-    // Is it a bone gameObject ?
-    bool isBoneGameObject = false;
-    for (const RH<Mesh> &meshRH : modelScene.meshes)
-    {
-        if (meshRH.Get()->GetBonesPool().ContainsKey(gameObject->GetName()))
-        {
-            isBoneGameObject = true;
-            break;
-        }
-    }
-
     // Set transform
-    if (!isBoneGameObject)
-    {
-        gameObject->GetTransform()->SetLocalPosition(
-                    Transform::GetPositionFromMatrix4(modelNode.transformation) );
-        gameObject->GetTransform()->SetLocalRotation(
-                    Transform::GetRotationFromMatrix4(modelNode.transformation) );
-        gameObject->GetTransform()->SetLocalScale(
-                    Transform::GetScaleFromMatrix4(modelNode.transformation) );
-    }
-    else
-    {
-        gameObject->GetTransform()->SetLocalPosition(Vector3::Zero);
-        gameObject->GetTransform()->SetLocalRotation(Quaternion::Identity);
-        gameObject->GetTransform()->SetLocalScale(Vector3::One);
-    }
+    gameObject->GetTransform()->FillFromMatrix( modelNode.localToParent );
 
     // Add mesh renderers
     bool addAnimator = false;
@@ -116,11 +94,57 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     for (const Tree<ModelIONode> *childTree : modelTree->GetChildren())
     {
         GameObject *childGo = CreateGameObjectFromModelNodeTree(modelScene,
-                                                                 childTree);
+                                                                childTree);
         childGo->SetParent(gameObject);
     }
 
     return gameObject;
+}
+
+void SetGameObjectFromModelBoneTransforms(GameObject *gameObject,
+                                          GameObject *rootBone,
+                                          const ModelIOScene &modelScene)
+{
+    /*
+    // Is it a bone gameObject ?
+    const Mesh::Bone *gameObjectBone = nullptr;
+    for (const RH<Mesh> &meshRH : modelScene.meshes)
+    {
+        if (meshRH.Get()->GetBonesPool().ContainsKey(gameObject->GetName()))
+        {
+            gameObjectBone = &(meshRH.Get()->GetBonesPool().
+                               Get(gameObject->GetName()));
+            break;
+        }
+    }
+
+    // Set transform
+    Matrix4 gameObjectLocalToParent = Matrix4::Identity;
+    if (gameObjectBone)
+    {
+        // gameObject->GetTransform()->SetLocalPosition(Vector3::Zero);
+        // gameObject->GetTransform()->SetLocalRotation(Quaternion::Identity);
+        // gameObject->GetTransform()->SetLocalScale(Vector3::One);
+        Matrix4 parentToWorldMatrix = gameObject->GetParent() ?
+            gameObject->GetParent()->GetTransform()->GetLocalToWorldMatrix() :
+            Matrix4::Identity;
+        Matrix4 worldToParentMatrix = parentToWorldMatrix.Inversed();
+        Matrix4 localToWorldMatrix = gameObject->GetTransform()->GetLocalToWorldMatrix();
+        Matrix4 worldToLocalMatrix = localToWorldMatrix.Inversed();
+
+        // gameObjectLocalToParent =
+                  // worldToParentMatrix *
+                  // rootBone->GetTransform()->GetLocalToWorldMatrix() *
+                  // gameObjectBone->boneInRootBoneSpaceToLocalSpace.Inversed();
+    }
+    // gameObject->GetTransform()->FillFromMatrix(gameObjectLocalToParent);
+
+    // Set children transforms
+    for (GameObject *child : gameObject->GetChildren())
+    {
+        SetGameObjectFromModelBoneTransforms(child, rootBone, modelScene);
+    }
+    */
 }
 
 GameObject *Model::CreateGameObjectFromModel() const
@@ -128,31 +152,28 @@ GameObject *Model::CreateGameObjectFromModel() const
     GameObject *modelGo = CreateGameObjectFromModelNodeTree(m_modelScene,
                                                             m_modelScene.modelTree);
 
-    // If skinned mesh renderer, set bone references to gameObjects
-    if (SkinnedMeshRenderer *smr =
-                    modelGo->GetComponentInChildren<SkinnedMeshRenderer>(true))
+    Vector3 scale = Vector3::One;
+    Vector3 bboxSize = modelGo->GetAABBoxWorld().GetSize();
+    float minSize = Math::Min(Math::Min(bboxSize.x, bboxSize.y), bboxSize.z);
+    if (minSize > 0.0f)
     {
-        if (Mesh *sMesh = smr->GetActiveMesh())
-        {
-            for (const auto &it : sMesh->GetBonesPool())
-            {
-                const String &boneName = it.first;
-                // const Mesh::Bone &bone = it.second;
-                if (GameObject *boneGo = modelGo->FindInChildren(boneName, true))
-                {
-                    const String &boneGoParentName = boneGo->GetParent() ?
-                                        boneGo->GetParent()->GetName() : "";
-                    if (!sMesh->GetBonesPool().ContainsKey(boneGoParentName))
-                    {
-                        smr->SetRootBoneGameObject( boneGo->GetParent() );
-                    }
-                    smr->SetBoneGameObject(boneName, boneGo);
-                }
-            }
-        }
+        scale = Vector3(1.0f / minSize);
     }
+    modelGo->GetTransform()->SetLocalScale(scale);
 
+    // If skinned mesh renderer, set bone references to gameObjects
+    List<SkinnedMeshRenderer*> smrs =
+                    modelGo->GetComponentsInChildren<SkinnedMeshRenderer>(true);
+    for (SkinnedMeshRenderer *smr : smrs)
+    {
+        smr->RetrieveBonesBindPoseFromCurrentHierarchy();
+    }
     return modelGo;
+}
+
+const String& Model::GetRootGameObjectName() const
+{
+    return m_modelScene.rootGameObjectName;
 }
 
 const Array<RH<Mesh> > &Model::GetMeshes() const

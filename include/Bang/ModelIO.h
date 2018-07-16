@@ -27,7 +27,7 @@ FORWARD class Texture2D;
 struct ModelIONode
 {
     String name;
-    Matrix4 transformation;
+    Matrix4 localToParent;
 
     Array<uint> meshIndices;
     Array<uint> meshMaterialIndices;
@@ -44,6 +44,7 @@ struct ModelIOScene
     Array< RH<Animation> > animations;
     Array< String > animationsNames;
 
+    String rootGameObjectName = "";
     Tree<ModelIONode> *modelTree = nullptr;
 
     ~ModelIOScene();

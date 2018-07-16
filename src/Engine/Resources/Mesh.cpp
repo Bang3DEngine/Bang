@@ -151,8 +151,8 @@ void Mesh::UpdateVAOs()
                                         vertexBonesExt[i].weight / weightSum;
                 }
 
-                std::cerr << "ind: " << m_vertexIdToImportantBonesIndicesPool.Get(vid) << std::endl;
-                std::cerr << "wei: " << m_vertexIdToImportantBonesWeightsPool.Get(vid) << std::endl;
+                // std::cerr << "ind: " << m_vertexIdToImportantBonesIndicesPool.Get(vid) << std::endl;
+                // std::cerr << "wei: " << m_vertexIdToImportantBonesWeightsPool.Get(vid) << std::endl;
             }
         }
     }

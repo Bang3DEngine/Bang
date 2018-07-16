@@ -109,7 +109,7 @@ Tree<ModelIONode>* ReadModelNode(const aiScene *scene, aiNode *node)
     ModelIONode &modelNode = modelNodeTree->GetData();
 
     modelNode.name = AiStringToString(node->mName);
-    modelNode.transformation = AiMatrix4ToMatrix4(node->mTransformation);
+    modelNode.localToParent = AiMatrix4ToMatrix4(node->mTransformation);
 
     // Set mesh indices
     for (int i = 0; i < node->mNumMeshes; ++i)
@@ -168,6 +168,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         unorderedAnimMaterials.PushBack(animMaterialRH);
         unorderedAnimMaterialNames.PushBack(animMaterialName);
     }
+
 
     // Load meshes
     for (int i = 0; i < SCAST<int>(aScene->mNumMeshes); ++i)
@@ -248,6 +249,7 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         modelScene->animationsNames.PushBack(animationName);
     }
 
+    modelScene->rootGameObjectName = AiStringToString(aScene->mRootNode->mName);
     modelScene->modelTree = ReadModelNode(aScene, aScene->mRootNode);
 
     return true;
@@ -321,7 +323,7 @@ void ModelIO::ImportMeshRaw(
                 const aiVertexWeight &aVertWeight = aBone->mWeights[j];
                 bone.weights.Add(aVertWeight.mVertexId, aVertWeight.mWeight);
             }
-            bone.transform = AiMatrix4ToMatrix4(aBone->mOffsetMatrix);
+            bone.rootNodeSpaceToBoneSpace = AiMatrix4ToMatrix4(aBone->mOffsetMatrix);
 
             bonesIndices->Add(boneName, boneIdx);
             bones->Add(boneName, bone);

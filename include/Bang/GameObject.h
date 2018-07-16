@@ -73,6 +73,8 @@ public:
     static GameObject *Find(const String &name);
     GameObject *FindInChildren(const GUID &guid, bool recursive = true);
     GameObject *FindInChildren(const String &name, bool recursive = true);
+    GameObject *FindInAncestors(const String &name);
+    GameObject *FindInAncestorsAndThis(const String &name);
 
     void SetVisible(bool visible);
     void SetParent(GameObject *newParent, int _index = -1);

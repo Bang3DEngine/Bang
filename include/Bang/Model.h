@@ -19,6 +19,7 @@ public:
 
     GameObject *CreateGameObjectFromModel() const;
 
+    const String& GetRootGameObjectName() const;
     const Array< RH<Mesh> >& GetMeshes() const;
     const Array< RH<Material> >& GetMaterials() const;
     const Array< RH<Animation> >& GetAnimations() const;

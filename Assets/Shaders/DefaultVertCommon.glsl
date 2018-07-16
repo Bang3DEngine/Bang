@@ -34,7 +34,7 @@ void main()
     ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
     // boneIds = ivec4(0);
     vec4 boneWeights = B_VIn_VertexBonesWeights;
-    boneWeights = vec4(1,0,0,0);
+    // boneWeights = vec4(1,0,0,0);
     // boneIdsF = vec4(boneWeights[0], boneWeights[1], boneWeights[2], boneWeights[3]);
     boneIdsF = boneIds;
 

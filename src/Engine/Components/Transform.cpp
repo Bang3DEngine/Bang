@@ -273,6 +273,13 @@ void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
     LookAt(GetPosition() + dir * 99.0f, up);
 }
 
+void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
+{
+    SetLocalPosition( Transform::GetPositionFromMatrix4(transformMatrix) );
+    SetLocalRotation( Transform::GetRotationFromMatrix4(transformMatrix) );
+    SetLocalScale   ( Transform::GetScaleFromMatrix4(transformMatrix)    );
+}
+
 const Vector3& Transform::GetLocalPosition() const
 {
     return m_localPosition;

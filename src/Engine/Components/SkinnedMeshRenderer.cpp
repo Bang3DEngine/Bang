@@ -26,50 +26,57 @@ SkinnedMeshRenderer::~SkinnedMeshRenderer()
 
 #include "Bang/Input.h"
 Matrix4 GetBoneTransformMatrixFor(
+                const SkinnedMeshRenderer *smr,
                 const String &boneName,
                 GameObject *boneGameObject,
                 GameObject *rootBoneGameObject,
                 const Map<String, Matrix4> &boneSpaceToParentBoneSpaceMatrices,
                 const Map<String, Matrix4> &boneSpaceToRootSpaceMatrices,
-                const Map<String, Mesh::Bone> &bonesPool,
-                bool recursiveCall = false)
+                const Map<String, Mesh::Bone> &bonesPool)
 {
+    if (!boneGameObject || boneGameObject == rootBoneGameObject)
+    {
+        return Matrix4::Identity;
+    }
+
     if (!boneSpaceToParentBoneSpaceMatrices.ContainsKey(boneName))
     {
         return Matrix4::Identity;
     }
 
-    Matrix4 localToParent;
-    if (Transform *tr = boneGameObject->GetTransform())
-    {
-        localToParent = tr->GetLocalToParentMatrix();
-    }
+    GameObject *parentBoneGo = boneGameObject->GetParent();
+    String parentBoneGoName = parentBoneGo ? parentBoneGo->GetName() : nullptr;
 
+    //*
     Matrix4 boneSpaceToRootSpace = Matrix4::Identity;
     if (boneSpaceToRootSpaceMatrices.ContainsKey(boneName))
     {
         boneSpaceToRootSpace = boneSpaceToRootSpaceMatrices.Get(boneName);
     }
-    Matrix4 rootSpaceToBoneSpace = boneSpaceToRootSpace.Inversed();
 
-    GameObject *parentBoneGo = boneGameObject->GetParent();
-    String parentBoneGoName = parentBoneGo ? parentBoneGo->GetName() : nullptr;
     Matrix4 parentBoneSpaceToRootSpace = Matrix4::Identity;
     if (boneSpaceToRootSpaceMatrices.ContainsKey(parentBoneGoName))
     {
         parentBoneSpaceToRootSpace = boneSpaceToRootSpaceMatrices.Get(parentBoneGoName);
     }
+    /*/
+    Matrix4 boneSpaceToRootSpace = smr->GetBoneToRootBoneMatrix(boneName);
+    Matrix4 parentBoneSpaceToRootSpace = smr->GetBoneToRootBoneMatrix(parentBoneGoName);
+    //*/
+    Matrix4 rootSpaceToBoneSpace = boneSpaceToRootSpace.Inversed();
     Matrix4 rootSpaceToParentBoneSpace = parentBoneSpaceToRootSpace.Inversed();
-
+    Matrix4 localToParentTransform = boneGameObject->GetTransform()->GetLocalToParentMatrix();
+    ASSERT(boneSpaceToParentBoneSpaceMatrices.ContainsKey(boneName));
+    Matrix4 boneSpaceToParentBoneSpace = boneSpaceToParentBoneSpaceMatrices.Get(boneName);
 
     Matrix4 parentBoneTransformInRootSpace = GetBoneTransformMatrixFor(
+                                              smr,
                                               parentBoneGoName,
                                               parentBoneGo,
                                               rootBoneGameObject,
                                               boneSpaceToParentBoneSpaceMatrices,
                                               boneSpaceToRootSpaceMatrices,
-                                              bonesPool,
-                                              true);
+                                              bonesPool);
     Matrix4 parentBoneToRootNode = Matrix4::Identity;
     if (GameObject *parentBoneGameObject = boneGameObject->GetParent())
     {
@@ -88,26 +95,28 @@ Matrix4 GetBoneTransformMatrixFor(
         boneGameObject->GetTransform()->SetLocalScale(Vector3::One);
     }
 
-    ASSERT(boneSpaceToParentBoneSpaceMatrices.ContainsKey(boneName));
-    Matrix4 boneSpaceToParentBoneSpace = boneSpaceToParentBoneSpaceMatrices.Get(boneName);
-    Matrix4 boneTransformInBoneSpace =
-                      boneGameObject->GetTransform()->GetLocalToParentMatrix();
 
-    Matrix4 boneTransformInRootSpace = parentBoneTransformInRootSpace *
-                                       // boneSpaceToRootSpace *
-                                       // parentBoneTransformInRootSpace *
-                                   // parentBoneSpaceToRootSpace *
-                                   boneSpaceToRootSpace *
-                                       // boneSpaceToParentBoneSpace *
-                                       // localToParent *
-                                     // boneTransformInBoneSpace.Inversed() *
-                                     // boneSpaceToParentBoneSpace.Inversed() *
-                                     boneTransformInBoneSpace *
-                                       //
-                                   rootSpaceToBoneSpace
-                                   // rootSpaceToParentBoneSpace
-                                       // rootSpaceToBoneSpace
-                                       ;
+    Matrix4 boneTransformInRootSpace =
+      parentBoneTransformInRootSpace *
+      // boneSpaceToRootSpace *
+      // parentBoneTransformInRootSpace *
+      // parentBoneSpaceToRootSpace *
+      // (Input::GetKey(Key::E) ? parentBoneSpaceToRootSpace : boneSpaceToRootSpace) *
+      // boneSpaceToRootSpace *
+      // boneSpaceToParentBoneSpace *
+      // boneTransformInBoneSpace.Inversed() *
+      // (Input::GetKey(Key::A) ? boneSpaceToParentBoneSpace.Inversed() : Matrix4::Identity) *
+      // (Input::GetKey(Key::B) ? boneSpaceToParentBoneSpace : Matrix4::Identity) *
+      parentBoneSpaceToRootSpace *
+      localToParentTransform * // *
+      // (Input::GetKey(Key::C) ? boneSpaceToParentBoneSpace.Inversed() : Matrix4::Identity) *
+      // (Input::GetKey(Key::D) ? boneSpaceToParentBoneSpace : Matrix4::Identity) *
+      //
+      rootSpaceToBoneSpace
+      // (Input::GetKey(Key::E) ? rootSpaceToParentBoneSpace : rootSpaceToBoneSpace)
+      // rootSpaceToParentBoneSpace
+      // rootSpaceToBoneSpace
+      ;
 
     return boneTransformInRootSpace;
 }
@@ -134,6 +143,7 @@ void SkinnedMeshRenderer::OnRender()
                 {
                     const auto &bonesPool = GetActiveMesh()->GetBonesPool();
                     Matrix4 localToRootMatrix = GetBoneTransformMatrixFor(
+                                this,
                                 boneName,
                                 boneGameObject,
                                 rootBoneGo,

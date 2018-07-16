@@ -65,6 +65,9 @@ protected:
 
     void PropagateRendererChanged();
 
+    // Renderer
+    virtual Matrix4 GetModelMatrixUniform() const;
+
 private:
     bool m_visible = true;
     bool m_castsShadows = true;
@@ -74,6 +77,7 @@ private:
 
     mutable RH<Material> p_material;
     RH<Material> p_sharedMaterial;
+
 
     friend class GEngine;
 };

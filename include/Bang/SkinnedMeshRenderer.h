@@ -16,6 +16,7 @@ public:
 
     // MeshRenderer
     void OnRender() override;
+    Matrix4 GetModelMatrixUniform() const override;
 
     void SetRootBoneGameObject(GameObject* rootBoneGameObject);
     void SetBoneGameObject(const String &boneName, GameObject *gameObject);
@@ -36,7 +37,6 @@ private:
 
     GameObject *p_rootBoneGameObject = nullptr;
     Map<String, GameObject*> m_boneNameToGameObject;
-    Map<String, Matrix4> m_boneSpaceToParentSpaceMatrices;
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     bool m_hadAnimatorBefore = true;
 

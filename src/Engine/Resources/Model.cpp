@@ -59,25 +59,7 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
         {
             addAnimator = true;
             mr = gameObject->AddComponent<SkinnedMeshRenderer>();
-            // SkinnedMeshRenderer *smr = SCAST<SkinnedMeshRenderer*>(mr);
-            // smr->SetBoneGameObject();
-
-            /*
-            if (RH<Shader> vAnimShader = Resources::Load<Shader>(
-                  ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath()))
-            {
-                RH<Material> materialAnimRH;
-                materialAnimRH.Set( SCAST<Material*>(material->Clone()) );
-                materialAnimRH.Get()->GetShaderProgram()->SetVertexShader(
-                                                            vAnimShader.Get());
-                materialAnimRH.Get()->GetShaderProgram()->Link();
-                mr->SetMaterial(materialAnimRH.Get());
-            }
-            else
-            {
-                mr->SetMaterial(material);
-            }
-            */
+            // gameObject->GetTransform()->FillFromMatrix( Matrix4::Identity );
         }
 
         mr->SetMesh(mesh);
@@ -101,65 +83,10 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     return gameObject;
 }
 
-void SetGameObjectFromModelBoneTransforms(GameObject *gameObject,
-                                          GameObject *rootBone,
-                                          const ModelIOScene &modelScene)
-{
-    /*
-    // Is it a bone gameObject ?
-    const Mesh::Bone *gameObjectBone = nullptr;
-    for (const RH<Mesh> &meshRH : modelScene.meshes)
-    {
-        if (meshRH.Get()->GetBonesPool().ContainsKey(gameObject->GetName()))
-        {
-            gameObjectBone = &(meshRH.Get()->GetBonesPool().
-                               Get(gameObject->GetName()));
-            break;
-        }
-    }
-
-    // Set transform
-    Matrix4 gameObjectLocalToParent = Matrix4::Identity;
-    if (gameObjectBone)
-    {
-        // gameObject->GetTransform()->SetLocalPosition(Vector3::Zero);
-        // gameObject->GetTransform()->SetLocalRotation(Quaternion::Identity);
-        // gameObject->GetTransform()->SetLocalScale(Vector3::One);
-        Matrix4 parentToWorldMatrix = gameObject->GetParent() ?
-            gameObject->GetParent()->GetTransform()->GetLocalToWorldMatrix() :
-            Matrix4::Identity;
-        Matrix4 worldToParentMatrix = parentToWorldMatrix.Inversed();
-        Matrix4 localToWorldMatrix = gameObject->GetTransform()->GetLocalToWorldMatrix();
-        Matrix4 worldToLocalMatrix = localToWorldMatrix.Inversed();
-
-        // gameObjectLocalToParent =
-                  // worldToParentMatrix *
-                  // rootBone->GetTransform()->GetLocalToWorldMatrix() *
-                  // gameObjectBone->boneInRootBoneSpaceToLocalSpace.Inversed();
-    }
-    // gameObject->GetTransform()->FillFromMatrix(gameObjectLocalToParent);
-
-    // Set children transforms
-    for (GameObject *child : gameObject->GetChildren())
-    {
-        SetGameObjectFromModelBoneTransforms(child, rootBone, modelScene);
-    }
-    */
-}
-
 GameObject *Model::CreateGameObjectFromModel() const
 {
     GameObject *modelGo = CreateGameObjectFromModelNodeTree(m_modelScene,
                                                             m_modelScene.modelTree);
-
-    Vector3 scale = Vector3::One;
-    Vector3 bboxSize = modelGo->GetAABBoxWorld().GetSize();
-    float minSize = Math::Min(Math::Min(bboxSize.x, bboxSize.y), bboxSize.z);
-    if (minSize > 0.0f)
-    {
-        scale = Vector3(1.0f / minSize);
-    }
-    modelGo->GetTransform()->SetLocalScale(scale);
 
     // If skinned mesh renderer, set bone references to gameObjects
     List<SkinnedMeshRenderer*> smrs =

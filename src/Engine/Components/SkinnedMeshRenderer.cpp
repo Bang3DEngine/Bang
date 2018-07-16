@@ -135,24 +135,21 @@ void SkinnedMeshRenderer::SetBoneGameObject(const String &boneName,
     m_boneNameToGameObject.Add(boneName, gameObject);
 }
 
+Model *SkinnedMeshRenderer::GetActiveModel() const
+{
+    if (Mesh *mesh = GetActiveMesh())
+    {
+        if (Resource *parentRes = mesh->GetParentResource())
+        {
+            return DCAST<Model*>(parentRes);
+        }
+    }
+    return nullptr;
+}
+
 GameObject *SkinnedMeshRenderer::GetRootBoneGameObject() const
 {
     return p_rootBoneGameObject;
-}
-
-Matrix4 SkinnedMeshRenderer::GetBoneToRootBoneMatrix(const String &boneName) const
-{
-    Matrix4 boneToRootBoneMatrix = Matrix4::Identity;
-    if (GameObject *boneGo = GetBoneGameObject(boneName))
-    {
-        if (GameObject *rootBoneGo = GetRootBoneGameObject())
-        {
-            boneToRootBoneMatrix =
-                   rootBoneGo->GetTransform()->GetLocalToWorldMatrixInv() *
-                   boneGo->GetTransform()->GetLocalToWorldMatrix();
-        }
-    }
-    return boneToRootBoneMatrix;
 }
 
 GameObject *SkinnedMeshRenderer::GetBoneGameObject(const String &boneName) const
@@ -188,15 +185,12 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
         }
         if (!GetRootBoneGameObject()) // Pick root if not previously found otherwise
         {
-            if (Resource *parentRes = mesh->GetParentResource())
+            if (Model *model = GetActiveModel())
             {
-                if (Model *model = DCAST<Model*>(parentRes))
-                {
-                    GameObject *rootBoneGameObject =
-                        GetGameObject()->
-                        FindInAncestorsAndThis(model->GetRootGameObjectName());
-                    SetRootBoneGameObject(rootBoneGameObject);
-                }
+                GameObject *rootBoneGameObject =
+                    GetGameObject()->
+                    FindInAncestorsAndThis(model->GetRootGameObjectName());
+                SetRootBoneGameObject(rootBoneGameObject);
             }
         }
 

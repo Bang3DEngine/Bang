@@ -98,7 +98,7 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
                             if (mesh->GetBonesPool().ContainsKey(boneName))
                             {
                                 boneOffsetMatrix =
-                                  mesh->GetBonesPool().Get(boneName).rootNodeSpaceToBoneSpace;
+                                  mesh->GetBonesPool().Get(boneName).rootNodeSpaceToBoneBindSpace;
                             }
 
                             Matrix4 finalBoneAnimMatrix = boneAnimMatrix *

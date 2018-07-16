@@ -27,7 +27,7 @@ public:
     struct Bone
     {
         Map<Mesh::VertexId, float> weights;
-        Matrix4 rootNodeSpaceToBoneSpace;
+        Matrix4 rootNodeSpaceToBoneBindSpace;
     };
 
     static constexpr uint DefaultPositionsVBOLocation = 0;

@@ -323,7 +323,7 @@ void ModelIO::ImportMeshRaw(
                 const aiVertexWeight &aVertWeight = aBone->mWeights[j];
                 bone.weights.Add(aVertWeight.mVertexId, aVertWeight.mWeight);
             }
-            bone.rootNodeSpaceToBoneSpace = AiMatrix4ToMatrix4(aBone->mOffsetMatrix);
+            bone.rootNodeSpaceToBoneBindSpace = AiMatrix4ToMatrix4(aBone->mOffsetMatrix);
 
             bonesIndices->Add(boneName, boneIdx);
             bones->Add(boneName, bone);

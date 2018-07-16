@@ -21,6 +21,7 @@ public:
     void SetBoneGameObject(const String &boneName, GameObject *gameObject);
 
     GameObject* GetRootBoneGameObject() const;
+    Matrix4 GetBoneToRootBoneMatrix(const String &boneName) const;
     GameObject *GetBoneGameObject(const String &boneName) const;
     const Map<String, GameObject*>& GetBoneNameToGameObject() const;
 

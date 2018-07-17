@@ -610,15 +610,12 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                 ShaderProgramFactory::GetDefaultAnimated() );
     }
 
-    float aRoughness = 0.0f;
     aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
-    aiColor3D aAlbedoColor  = aiColor3D(1.0f, 1.0f, 1.0f);
+    aiColor3D aDiffuseColor  = aiColor3D(1.0f, 1.0f, 1.0f);
     aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
-    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aAlbedoColor);
-    aMaterial->Get(AI_MATKEY_REFLECTIVITY, aRoughness);
-    aRoughness = Math::Clamp(aRoughness, 0.0f, 1.0f);
+    aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aDiffuseColor);
 
-    Color albedoColor = AiColor3ToColor(aAlbedoColor);
+    Color albedoColor = AiColor3ToColor(aDiffuseColor);
 
     aiString aAlbedoTexturePath;
     aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
@@ -639,10 +636,12 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     {
         matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
     }
-    outMaterial->Get()->SetRoughness( aRoughness );
+    outMaterial->Get()->SetRoughness( 0.5f );
+    outMaterial->Get()->SetMetalness( 0.1f );
     outMaterial->Get()->SetAlbedoTexture( matAlbedoTexture.Get() );
     outMaterial->Get()->SetNormalMapTexture( matNormalTexture.Get() );
-    outMaterial->Get()->SetAlbedoColor( albedoColor );
+    outMaterial->Get()->SetAlbedoColor( matAlbedoTexture ? Color::White :
+                                                           albedoColor );
 }
 
 void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,

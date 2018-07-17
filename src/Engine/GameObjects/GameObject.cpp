@@ -389,7 +389,7 @@ void GameObject::SetName(const String &name)
 {
     if (name != GetName())
     {
-        String oldName = name;
+        String oldName = GetName();
         m_name = name;
         EventEmitter<IEventsName>::PropagateToListeners(
                     &IEventsName::OnNameChanged, this, oldName, GetName());
@@ -405,6 +405,35 @@ GameObject *GameObject::Find(const String &name)
 
 GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
 {
+    for (GameObject *child : GetChildren())
+    {
+        if (GameObject *found = child->FindInChildrenAndThis(guid, recursive))
+        {
+            return found;
+        }
+    }
+    return nullptr;
+}
+
+GameObject *GameObject::FindInChildren(const String &name, bool recursive)
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (GameObject *found = child->FindInChildrenAndThis(name, recursive))
+        {
+            return found;
+        }
+    }
+    return nullptr;
+}
+
+GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
+{
+    if (GetGUID() == guid)
+    {
+        return this;
+    }
+
     for (GameObject *child : GetChildren())
     {
         if (child->GetGUID() == guid)
@@ -423,8 +452,13 @@ GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
     return nullptr;
 }
 
-GameObject *GameObject::FindInChildren(const String &name, bool recursive)
+GameObject *GameObject::FindInChildrenAndThis(const String &name, bool recursive)
 {
+    if (GetName() == name)
+    {
+        return this;
+    }
+
     for (GameObject *child : GetChildren())
     {
         if (child->GetName() == name)
@@ -443,18 +477,41 @@ GameObject *GameObject::FindInChildren(const String &name, bool recursive)
     return nullptr;
 }
 
-GameObject *GameObject::FindInAncestors(const String &name)
+GameObject *GameObject::FindInAncestors(const String &name, bool broadSearch)
 {
-    return GetParent() ? GetParent()->FindInAncestorsAndThis(name) : nullptr;
+    return GetParent() ? GetParent()->FindInAncestorsAndThis(name, broadSearch) :
+                         nullptr;
 }
 
-GameObject *GameObject::FindInAncestorsAndThis(const String &name)
+GameObject *GameObject::FindInAncestorsAndThis(const String &name,
+                                               bool broadSearch)
 {
     if (GetName() == name)
     {
         return this;
     }
-    return GetParent() ? GetParent()->FindInAncestorsAndThis(name) : nullptr;
+
+    if (broadSearch)
+    {
+        if (GetParent())
+        {
+            for (GameObject *siblingOrThis : GetParent()->GetChildren())
+            {
+                if (siblingOrThis->GetName() == name)
+                {
+                    return this;
+                }
+
+                if (GameObject *found = siblingOrThis->FindInAncestors(name, true))
+                {
+                    return found;
+                }
+            }
+        }
+    }
+
+    return GetParent() ? GetParent()->FindInAncestorsAndThis(name, false) :
+                         nullptr;
 }
 
 void GameObject::SetVisible(bool visible)

@@ -46,6 +46,10 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
 void Mesh::SetBonesIndices(const Map<String, uint> &bonesIndices)
 {
     m_bonesIndices = bonesIndices;
+    for (const auto &pair : bonesIndices)
+    {
+        m_indexToBone.Add(pair.second, pair.first);
+    }
 }
 
 void Mesh::SetPositionsPool(const Array<Vector3>& positions)
@@ -359,6 +363,15 @@ const Array<RH<Mesh> > Mesh::GetLODMeshes() const
 uint Mesh::GetNumTriangles() const
 {
     return SCAST<uint>(GetVertexIndices().Size() / 3);
+}
+
+String Mesh::GetBoneName(uint boneIndex) const
+{
+    if (m_indexToBone.ContainsKey(boneIndex))
+    {
+        return m_indexToBone.Get(boneIndex);
+    }
+    return "";
 }
 
 uint Mesh::GetBoneIndex(const String &boneName) const

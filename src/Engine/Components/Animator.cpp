@@ -2,6 +2,7 @@
 
 #include "Bang/Mesh.h"
 #include "Bang/Material.h"
+#include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/SkinnedMeshRenderer.h"
@@ -59,18 +60,12 @@ void Animator::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
 
-    /*
     if (GetAnimation() && IsPlaying())
     {
         Map< String, Matrix4 > boneNameToCurrentMatrices =
            GetAnimation()->GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
         SetSkinnedMeshRendererCurrentBoneMatrices(rp, boneNameToCurrentMatrices);
     }
-    else
-    {
-        SetSkinnedMeshRendererCurrentBoneMatrices(rp, Animator::s_identityBoneMatrices);
-    }
-    */
 }
 
 void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
@@ -81,43 +76,34 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
                         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
-        if (Mesh *mesh = smr->GetActiveMesh())
+        if (Material *mat = smr->GetActiveMaterial())
         {
-            if (Material *mat = smr->GetActiveMaterial())
+            if (mat->GetRenderPass() == rp)
             {
-                if (mat->GetRenderPass() == rp)
+                for (const auto &pair : boneAnimMatrices)
                 {
-                    if (ShaderProgram *sp = mat->GetShaderProgram())
+                    const String &boneName = pair.first;
+                    const Matrix4 &boneAnimMatrix = pair.second;
+                    GameObject *boneGo = smr->GetBoneGameObject(boneName);
+                    if (boneGo && smr->GetActiveMesh()->
+                                  GetBonesPool().ContainsKey(boneName))
                     {
-                        Array<Matrix4> finalBoneAnimMatrices;
-                        for (const auto &pair :  boneAnimMatrices)
-                        {
-                            const String &boneName = pair.first;
-                            const Matrix4 &boneAnimMatrix = pair.second;
-                            Matrix4 boneOffsetMatrix;
-                            if (mesh->GetBonesPool().ContainsKey(boneName))
-                            {
-                                boneOffsetMatrix =
-                                  mesh->GetBonesPool().Get(boneName).rootNodeSpaceToBoneBindSpace;
-                            }
-
-                            Matrix4 finalBoneAnimMatrix = boneAnimMatrix *
-                                                          boneOffsetMatrix;
-                            finalBoneAnimMatrices.PushBack(finalBoneAnimMatrix);
-                        }
-
-                        GL::Push(GL::Pushable::SHADER_PROGRAM);
-
-                        sp->Bind();
-                        sp->SetMatrix4Array("B_BoneAnimationMatrices",
-                                            finalBoneAnimMatrices,
-                                            false);
-
-                        GL::Pop(GL::Pushable::SHADER_PROGRAM);
+                        boneGo->GetTransform()->FillFromMatrix( boneAnimMatrix );
+                    }
+                    if (boneName.Contains("arm"))
+                    {
+                        // Debug_Log(boneGo->GetTransform()->GetLocalRotation());
                     }
                 }
             }
         }
+    }
+
+    GameObject *upperArmL = smrs.Front()->GetRootBoneGameObject()->
+                            FindInChildren("upperarm.L");
+    for (SkinnedMeshRenderer *smr : smrs)
+    {
+        smr->UpdateBonesMatricesFromTransformMatrices();
     }
 }
 

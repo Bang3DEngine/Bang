@@ -53,6 +53,7 @@ public:
     RH<Mesh> GetLODMesh(int lod) const;
     const Array<RH<Mesh>> GetLODMeshes() const;
     uint GetNumTriangles() const;
+    String GetBoneName(uint boneIndex) const;
     uint GetBoneIndex(const String &boneName) const;
     std::array<VertexId, 3> GetTriangleVertexIndices(int triIndex) const;
 
@@ -94,6 +95,7 @@ private:
 
     Map<String, Bone> m_bonesPool;
     Map<String, uint> m_bonesIndices;
+    Map<uint, String> m_indexToBone;
     Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIndicesPool;
     Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
     RH<Animation> m_animations;

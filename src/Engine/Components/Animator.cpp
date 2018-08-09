@@ -90,17 +90,11 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
                     {
                         boneGo->GetTransform()->FillFromMatrix( boneAnimMatrix );
                     }
-                    if (boneName.Contains("arm"))
-                    {
-                        // Debug_Log(boneGo->GetTransform()->GetLocalRotation());
-                    }
                 }
             }
         }
     }
 
-    GameObject *upperArmL = smrs.Front()->GetRootBoneGameObject()->
-                            FindInChildren("upperarm.L");
     for (SkinnedMeshRenderer *smr : smrs)
     {
         smr->UpdateBonesMatricesFromTransformMatrices();

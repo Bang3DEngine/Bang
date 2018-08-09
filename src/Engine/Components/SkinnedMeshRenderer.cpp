@@ -93,13 +93,15 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
     {
         if (GetActiveMesh())
         {
-            GameObject *boneGameObject = GetBoneGameObject(boneName);
-            Matrix4 localToParent = boneGameObject->GetTransform()->
-                                    GetLocalToParentMatrix();
-            Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
-                                                          boneGameObject,
-                                                          localToParent);
-            bonesMatrices.Add(boneName, boneTransformMatrix);
+            if (GameObject *boneGameObject = GetBoneGameObject(boneName))
+            {
+                Matrix4 localToParent = boneGameObject->GetTransform()->
+                                        GetLocalToParentMatrix();
+                Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
+                                                              boneGameObject,
+                                                              localToParent);
+                bonesMatrices.Add(boneName, boneTransformMatrix);
+            }
         }
     }
     SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
@@ -234,23 +236,7 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
         const Map<String, Mesh::Bone> &allBones = model->GetAllBones();
 
         // Retrieve root gameObject
-        /*
-        List<GameObject*> children = GetGameObject()->GetChildrenRecursively();
-        for (GameObject *child : children)
-        {
-            GameObject *parent = child->GetParent();
-            if (  allBones.ContainsKey(child->GetName()) &&
-                 !allBones.ContainsKey(parent->GetName()) )
-            {
-                SetRootBoneGameObjectName(child->GetName());
-                break;
-            }
-        }
-        */
-        // if (!GetRootBoneGameObject()) // Pick root if not found previously
-        {
-            SetRootBoneGameObjectName(model->GetRootGameObjectName());
-        }
+        SetRootBoneGameObjectName(model->GetRootGameObjectName());
         ASSERT(GetRootBoneGameObject());
         GetRootBoneGameObject()->EventEmitter<IEventsName>::RegisterListener(this);
 

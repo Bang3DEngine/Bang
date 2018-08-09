@@ -139,6 +139,16 @@ void Material::SetAlbedoColor(const Color &albedoColor)
     }
 }
 
+void Material::SetRoughnessTexture(Texture2D *roughnessTexture)
+{
+    p_roughnessTexture.Set(roughnessTexture);
+}
+
+void Material::SetMetalnessTexture(Texture2D *metalnessTexture)
+{
+    p_metalnessTexture.Set(metalnessTexture);
+}
+
 void Material::SetAlbedoTexture(Texture2D* texture)
 {
     if (p_albedoTexture.Get() != texture)
@@ -208,6 +218,16 @@ bool Material::GetReceivesLighting() const { return m_receivesLighting; }
 float Material::GetMetalness() const { return m_metalness; }
 float Material::GetRoughness() const { return m_roughness; }
 const Color& Material::GetAlbedoColor() const { return m_albedoColor; }
+
+Texture2D *Material::GetRoughnessTexture() const
+{
+    return p_roughnessTexture.Get();
+}
+
+Texture2D *Material::GetMetalnessTexture() const
+{
+    return p_metalnessTexture.Get();
+}
 Texture2D *Material::GetNormalMapTexture() const { return p_normalMapTexture.Get(); }
 RenderPass Material::GetRenderPass() const { return m_renderPass; }
 float Material::GetLineWidth() const { return m_lineWidth; }
@@ -256,6 +276,26 @@ void Material::Bind() const
         sp->SetBool("B_HasAlbedoTexture",    false,   false);
     }
 
+    if (Texture2D *roughnessTex = GetRoughnessTexture())
+    {
+        sp->SetTexture2D("B_RoughnessTexture",  roughnessTex, false);
+    }
+    else
+    {
+        sp->SetTexture2D("B_RoughnessTexture",
+                         TextureFactory::GetWhiteTexture().Get(), false);
+    }
+
+    if (Texture2D *metalnessTex = GetMetalnessTexture())
+    {
+        sp->SetTexture2D("B_MetalnessTexture",  metalnessTex, false);
+    }
+    else
+    {
+        sp->SetTexture2D("B_MetalnessTexture",
+                         TextureFactory::GetWhiteTexture().Get(), false);
+    }
+
     if (Texture2D *normalMapTex = GetNormalMapTexture())
     {
         sp->SetTexture2D("B_NormalMapTexture",  normalMapTex, false);
@@ -293,6 +333,8 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetNormalMapMultiplyFactor(GetNormalMapMultiplyFactor());
     matClone->SetRenderPass(GetRenderPass());
     matClone->SetLineWidth(GetLineWidth());
+    matClone->SetRoughnessTexture( GetRoughnessTexture() );
+    matClone->SetMetalnessTexture( GetMetalnessTexture() );
     matClone->SetRenderWireframe(IsRenderWireframe());
     matClone->SetCullFace(GetCullFace());
 }
@@ -335,6 +377,14 @@ void Material::ImportXML(const XMLNode &xml)
 
     if (xml.Contains("AlbedoUvMultiply"))
     { SetAlbedoUvMultiply(xml.Get<Vector2>("AlbedoUvMultiply")); }
+
+    if (xml.Contains("RoughnessTexture"))
+    { SetRoughnessTexture(
+         Resources::Load<Texture2D>(xml.Get<GUID>("RoughnessTexture")).Get()); }
+
+    if (xml.Contains("MetalnessTexture"))
+    { SetMetalnessTexture(
+         Resources::Load<Texture2D>(xml.Get<GUID>("MetalnessTexture")).Get()); }
 
     if (xml.Contains("NormalMapTexture"))
     { SetNormalMapTexture(
@@ -396,6 +446,12 @@ void Material::ExportXML(XMLNode *xmlInfo) const
     Texture2D* albedoTex = GetAlbedoTexture();
     xmlInfo->Set("AlbedoTexture",
                  albedoTex ? albedoTex->GetGUID() : GUID::Empty());
+    Texture2D* roughnessTex = GetRoughnessTexture();
+    xmlInfo->Set("RoughnessTexture",
+                 roughnessTex ? roughnessTex->GetGUID() : GUID::Empty());
+    Texture2D* metalnessTex = GetMetalnessTexture();
+    xmlInfo->Set("MetalnessTexture",
+                 metalnessTex ? metalnessTex->GetGUID() : GUID::Empty());
     Texture2D* normalTex = GetNormalMapTexture();
     xmlInfo->Set("NormalMapTexture",
                  normalTex ? normalTex->GetGUID() : GUID::Empty());

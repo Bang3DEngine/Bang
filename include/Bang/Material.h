@@ -29,9 +29,11 @@ public:
     void SetReceivesLighting(bool receivesLighting);
     void SetRoughness(float roughness);
     void SetMetalness(float metalness);
-    void SetAlbedoTexture(Texture2D *texture);
+    void SetAlbedoTexture(Texture2D *albedoTexture);
     void SetAlbedoColor(const Color &albedoColor);
-    void SetNormalMapTexture(Texture2D *texture);
+    void SetRoughnessTexture(Texture2D *roughnessTexture);
+    void SetMetalnessTexture(Texture2D *metalnessTexture);
+    void SetNormalMapTexture(Texture2D *normalMapTexture);
     void SetRenderPass(RenderPass renderPass);
     void SetCullFace(GL::CullFaceExt cullFace);
     void SetRenderWireframe(bool renderWireframe);
@@ -48,6 +50,8 @@ public:
     float GetRoughness() const;
     Texture2D* GetAlbedoTexture() const;
     const Color& GetAlbedoColor() const;
+    Texture2D* GetRoughnessTexture() const;
+    Texture2D* GetMetalnessTexture() const;
     Texture2D* GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
     bool IsRenderWireframe() const;
@@ -72,6 +76,8 @@ public:
 
 protected:
     RH<Texture2D> p_albedoTexture;
+    RH<Texture2D> p_roughnessTexture;
+    RH<Texture2D> p_metalnessTexture;
     RH<Texture2D> p_normalMapTexture;
     RH<ShaderProgram> p_shaderProgram;
 

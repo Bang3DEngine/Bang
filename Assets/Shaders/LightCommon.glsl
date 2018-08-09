@@ -103,7 +103,9 @@ vec3 GetCameraSkyBoxSample(const samplerCube cubeMap, const vec3 direction)
 
 vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
                         const vec3 pixelNormalWorld,
-                        const vec4 pixelAlbedo)
+                        const vec4 pixelAlbedo,
+                        const float pixelRoughness,
+                        const float pixelMetalness)
 {
     vec4 finalColor = vec4(0);
     if (B_MaterialReceivesLighting)
@@ -114,22 +116,22 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
 
         // Calculate ambient color
         float dotNV = max(dot(N, V), 0.0);
-        vec3 F0  = mix(vec3(0.04), pixelAlbedo.rgb, B_MaterialMetalness);
-        vec3 FSR = FresnelSchlickRoughness(dotNV, F0, B_MaterialRoughness);
+        vec3 F0  = mix(vec3(0.04), pixelAlbedo.rgb, pixelMetalness);
+        vec3 FSR = FresnelSchlickRoughness(dotNV, F0, pixelRoughness);
         // vec3 FSR = FresnelSchlick(max(dot(N, V), 0.0), F0);
 
         vec3 specK = FSR;
-        vec3 diffK = (1.0 - specK) * (1.0 - B_MaterialMetalness);
+        vec3 diffK = (1.0 - specK) * (1.0 - pixelMetalness);
 
         const float LOD_MAX_REFLECTION = 8.0;
-        float lod = B_MaterialRoughness * LOD_MAX_REFLECTION;
+        float lod = pixelRoughness * LOD_MAX_REFLECTION;
 
         vec3 diffuseCubeMapSample  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
         vec3 specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
 
         vec3 diffuseAmbient = diffuseCubeMapSample * pixelAlbedo.rgb;
         vec3 specularAmbient = specularCubeMapSample;
-        // vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, B_MaterialRoughness)).rg;
+        // vec2 envBRDF  = texture(B_BRDF_LUT, vec2(dotNV, pixelRoughness)).rg;
 
         vec3 diffuse  = diffuseAmbient * diffK;
         vec3 specular = specularAmbient * specK; // (specK * envBRDF.x + envBRDF.y);

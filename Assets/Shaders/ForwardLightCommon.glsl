@@ -6,9 +6,11 @@
 #include "PointLight.glsl"
 #include "DirectionalLight.glsl"
 
-vec3 GetForwardLightApport(const vec3 pixelPosWorld,
-                           const vec3 pixelNormalWorld,
-                           const vec3 pixelAlbedo)
+vec3 GetForwardLightApport(const vec3  pixelPosWorld,
+                           const vec3  pixelNormalWorld,
+                           const vec3  pixelAlbedo,
+                           const float pixelRoughness,
+                           const float pixelMetalness)
 {
     vec3 lightColorApportation = vec3(0.0f);
     if (B_MaterialReceivesLighting)
@@ -33,8 +35,8 @@ vec3 GetForwardLightApport(const vec3 pixelPosWorld,
                                                       pixelNormalWorld,
                                                       pixelAlbedo,
                                                       false,
-                                                      B_MaterialRoughness,
-                                                      B_MaterialMetalness);
+                                                      pixelRoughness,
+                                                      pixelMetalness);
                 }
                 break;
 
@@ -52,8 +54,8 @@ vec3 GetForwardLightApport(const vec3 pixelPosWorld,
                                                       pixelNormalWorld,
                                                       pixelAlbedo,
                                                       false,
-                                                      B_MaterialRoughness,
-                                                      B_MaterialMetalness);
+                                                      pixelRoughness,
+                                                      pixelMetalness);
                 }
                 break;
             }

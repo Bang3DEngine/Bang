@@ -46,14 +46,19 @@ void main()
     }
     finalNormal = normalize(finalNormal);
 
+    float pixelRoughness = texture(B_RoughnessTexture, B_FIn_AlbedoUv).r * B_MaterialRoughness;
+    float pixelMetalness = texture(B_MetalnessTexture, B_FIn_AlbedoUv).r * B_MaterialMetalness;
     vec3 finalPosition = B_FIn_Position.xyz;
-    vec4 finalColor = GetIBLAmbientColor(finalPosition,  finalNormal, finalAlbedo);
+    vec4 finalColor = GetIBLAmbientColor(finalPosition,  finalNormal, finalAlbedo,
+                                         pixelRoughness, pixelMetalness);
 
     #if defined(BANG_FORWARD_RENDERING)
 
     finalColor += vec4(GetForwardLightApport(B_FIn_Position.xyz,
                                              finalNormal.xyz,
-                                             finalAlbedo.rgb), 0);
+                                             finalAlbedo.rgb,
+                                             pixelRoughness,
+                                             pixelMetalness), 0);
     B_GIn_Color = finalColor;
 
     #elif defined(BANG_DEFERRED_RENDERING)
@@ -65,8 +70,8 @@ void main()
     B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);
     B_GIn_Normal = vec4(finalNormal * 0.5f + 0.5f, 0);
     B_GIn_Misc   = vec4(receivesLighting,
-                        B_MaterialRoughness,
-                        B_MaterialMetalness,
+                        pixelRoughness,
+                        pixelMetalness,
                         0);
 
     #endif

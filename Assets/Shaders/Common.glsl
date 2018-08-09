@@ -44,6 +44,8 @@ uniform float     B_AlphaCutoff;
 uniform vec2      B_AlbedoUvOffset;
 uniform vec2      B_AlbedoUvMultiply;
 uniform bool      B_HasAlbedoTexture;
+uniform sampler2D B_RoughnessTexture;
+uniform sampler2D B_MetalnessTexture;
 uniform sampler2D B_NormalMapTexture;
 uniform vec2      B_NormalMapUvOffset;
 uniform vec2      B_NormalMapUvMultiply;

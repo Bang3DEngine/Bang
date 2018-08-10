@@ -198,8 +198,8 @@ UIButton* UIButton::CreateInto(GameObject *go)
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
-    bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bgImg->SetTint(Color::White);
 
     UIFocusable *btn = go->AddComponent<UIFocusable>();

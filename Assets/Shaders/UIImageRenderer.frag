@@ -2,7 +2,13 @@
 
 void main()
 {
-    vec4 texColor = B_HasAlbedoTexture ? texture(B_AlbedoTexture,
-                                                 B_FIn_AlbedoUv) : vec4(1);
-    B_GIn_Color  = B_MaterialAlbedoColor * texColor;
+    if (B_HasAlbedoTexture)
+    {
+        B_GIn_Color = B_MaterialAlbedoColor * texture(B_AlbedoTexture,
+                                                      B_FIn_AlbedoUv);
+    }
+    else
+    {
+        B_GIn_Color = B_MaterialAlbedoColor;
+    }
 }

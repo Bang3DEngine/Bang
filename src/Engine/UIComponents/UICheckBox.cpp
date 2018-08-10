@@ -112,8 +112,8 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *checkBgImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkBgImg = checkBgImgGo->AddComponent<UIImageRenderer>();
-    checkBgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    checkBgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // checkBgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // checkBgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     checkBgImg->SetTint(UICheckBox::IdleColor);
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 

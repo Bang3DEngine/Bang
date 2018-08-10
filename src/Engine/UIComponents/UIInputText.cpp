@@ -377,8 +377,8 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     UIInputText *inputText = go->AddComponent<UIInputText>();
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
-    bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    bg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
     inputText->p_background = bg;
 

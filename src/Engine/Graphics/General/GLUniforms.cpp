@@ -26,45 +26,46 @@ Matrix4 GLUniforms::GetCanvasProjectionMatrix()
     return ortho;
 }
 
-void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
+void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
+                                               bool needsPBRUniforms)
 {
     ASSERT (GL::IsBound(sp->GetGLBindTarget(), sp->GetGLId()));
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
-    sp->SetMatrix4("B_Model",             matrices->model,       false);
-    sp->SetMatrix4("B_ModelInv",          matrices->modelInv,    false);
-    sp->SetMatrix4("B_Normal",            matrices->normal,      false);
-    sp->SetMatrix4("B_View",              matrices->view,        false);
-    sp->SetMatrix4("B_ViewInv",           matrices->viewInv,     false);
-    sp->SetMatrix4("B_Projection",        matrices->proj,        false);
-    sp->SetMatrix4("B_ProjectionInv",     matrices->projInv,     false);
-    sp->SetMatrix4("B_ProjectionView",    matrices->projView,    false);
-    sp->SetMatrix4("B_ProjectionViewInv", matrices->projViewInv, false);
-    sp->SetMatrix4("B_PVM",               matrices->pvm,         false);
-    sp->SetMatrix4("B_PVMInv",            matrices->pvmInv,      false);
 
-    Camera *cam = Camera::GetActive();
-    Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
-    sp->SetFloat("B_Camera_ZNear",  (cam ? cam->GetZNear() : 0.0f), false);
-    sp->SetFloat("B_Camera_ZFar",   (cam ?  cam->GetZFar() : 0.0f), false);
-    sp->SetVector3("B_Camera_Forward",
-                   (camTR ? camTR->GetForward() : Vector3::Zero), false);
-    sp->SetVector3("B_Camera_WorldPos",
-                   (camTR ? camTR->GetPosition() : Vector3::Zero), false);
-    sp->SetColor("B_Camera_ClearColor",
-                 (cam ? cam->GetClearColor() : Color::Pink), false);
+    sp->SetMatrix4("B_ModelInv", matrices->modelInv, false); // Needed for 9slice
+    sp->SetMatrix4("B_PVM",      matrices->pvm,      false);
 
-    TextureCubeMap *skyBox    = cam ? cam->GetSkyBoxTexture()         : nullptr;
-    TextureCubeMap *sSkyBox   = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
-    TextureCubeMap *dSkyBox   = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
-    sp->SetTextureCubeMap("B_SkyBox",         skyBox,  false);
-    sp->SetTextureCubeMap("B_SkyBoxSpecular", sSkyBox, false);
-    sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dSkyBox, false);
-    sp->SetBool("B_Camera_ClearMode", cam ? int(cam->GetClearMode()) : -1, false);
+    if (needsPBRUniforms)
+    {
+        sp->SetMatrix4("B_Model",          matrices->model,    false);
+        sp->SetMatrix4("B_Normal",         matrices->normal,   false);
+        sp->SetMatrix4("B_View",           matrices->view,     false);
+        sp->SetMatrix4("B_ViewInv",        matrices->viewInv,  false);
+        sp->SetMatrix4("B_Projection",     matrices->proj,     false);
+        sp->SetMatrix4("B_ProjectionInv",  matrices->projInv,  false);
+        sp->SetMatrix4("B_ProjectionView", matrices->projView, false);
+        sp->SetMatrix4("B_PVMInv",         matrices->pvmInv,   false);
 
-    ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();
-    sp->SetVector2("B_Viewport_MinPos", viewportUniforms->minPos, false);
-    sp->SetVector2("B_Viewport_Size",   viewportUniforms->size,   false);
+        Camera *cam = Camera::GetActive();
+        Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
+        sp->SetVector3("B_Camera_WorldPos",
+                       (camTR ? camTR->GetPosition() : Vector3::Zero), false);
+        sp->SetColor("B_Camera_ClearColor",
+                     (cam ? cam->GetClearColor() : Color::Pink), false);
+
+        TextureCubeMap *skyBox    = cam ? cam->GetSkyBoxTexture()         : nullptr;
+        TextureCubeMap *sSkyBox   = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
+        TextureCubeMap *dSkyBox   = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
+        sp->SetTextureCubeMap("B_SkyBox",         skyBox,  false);
+        sp->SetTextureCubeMap("B_SkyBoxSpecular", sSkyBox, false);
+        sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dSkyBox, false);
+        sp->SetBool("B_Camera_ClearMode", cam ? int(cam->GetClearMode()) : -1, false);
+
+        ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();
+        sp->SetVector2("B_Viewport_MinPos", viewportUniforms->minPos, false);
+        sp->SetVector2("B_Viewport_Size",   viewportUniforms->size,   false);
+    }
 }
 
 void GLUniforms::SetModelMatrix(const Matrix4 &model)
@@ -128,7 +129,6 @@ void GLUniforms::UpdatePVMMatrix()
         break;
     }
     matrices->projView    = projViewMatrix;
-    matrices->projViewInv = matrices->projView.Inversed();
     matrices->pvm = pvmMatrix;
     matrices->pvmInv = matrices->pvm.Inversed();
 }

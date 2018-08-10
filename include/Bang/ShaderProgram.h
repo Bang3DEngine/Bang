@@ -40,6 +40,7 @@ public:
 
     void Bind() const override;
     void UnBind() const override;
+    void BindPrecise(bool needsPBRUniforms) const;
     GL::BindTarget GetGLBindTarget() const override;
 
     bool SetInt(const String &name, int v, bool warn = true);
@@ -85,6 +86,7 @@ private:
     RH<Shader> p_gShader;
     RH<Shader> p_fShader;
     bool m_isLinked = false;
+    mutable bool m_lastNeedsPBRUniforms = true;
 
     std::unordered_map<String, int> m_uniformCacheInt;
     std::unordered_map<String, bool> m_uniformCacheBool;

@@ -178,8 +178,8 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     currentItemText->SetHorizontalAlign(HorizontalAlignment::RIGHT);
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
-    bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    bg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();

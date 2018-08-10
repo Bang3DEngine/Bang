@@ -26,7 +26,6 @@ public:
         Matrix4 proj;
         Matrix4 projInv;
         Matrix4 projView;
-        Matrix4 projViewInv;
         Matrix4 pvm;
         Matrix4 pvmInv;
     };
@@ -75,7 +74,8 @@ public:
     template <class T>
     static GLSLVar<T> GetUniformAt(GLId shaderProgramId, GLuint uniformIndex);
 
-    static void SetAllUniformsToShaderProgram(ShaderProgram *sp);
+    static void SetAllUniformsToShaderProgram(ShaderProgram *sp,
+                                              bool needsPBRUniforms);
 
     static void SetModelMatrix(const Matrix4 &model);
     static void SetViewMatrix(const Matrix4 &view);

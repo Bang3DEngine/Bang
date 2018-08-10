@@ -7,8 +7,9 @@
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
-#include "Bang/TextureFactory.h"
+#include "Bang/GLUniforms.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -237,8 +238,14 @@ GL::CullFaceExt Material::GetCullFace() const { return m_cullFace; }
 void Material::Bind() const
 {
     ShaderProgram *sp = GetShaderProgram();
-    if (!sp) { return; }
-    sp->Bind();
+    if (!sp)
+    {
+        return;
+    }
+
+    const bool needsPBR = (GetRenderPass() == RenderPass::SCENE ||
+                           GetRenderPass() == RenderPass::SCENE_TRANSPARENT);
+    sp->BindPrecise(needsPBR);
 
     GL::SetWireframe( IsRenderWireframe() );
 
@@ -252,16 +259,10 @@ void Material::Bind() const
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );
 
-    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),               false);
-    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),                 false);
-    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),                 false);
-    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(),          false);
-    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),            false);
-    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(),          false);
-    sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),         false);
-    sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),       false);
-    sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(),   false);
-    sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture().Get(), false);
+    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),      false);
+    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),   false);
+    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(), false);
+    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(), false);
 
     if (Texture2D *albedoTex = GetAlbedoTexture())
     {
@@ -276,43 +277,54 @@ void Material::Bind() const
         sp->SetBool("B_HasAlbedoTexture",    false,   false);
     }
 
-    if (Texture2D *roughnessTex = GetRoughnessTexture())
+    if (needsPBR)
     {
-        sp->SetTexture2D("B_RoughnessTexture",  roughnessTex, false);
-    }
-    else
-    {
-        sp->SetTexture2D("B_RoughnessTexture",
-                         TextureFactory::GetWhiteTexture().Get(), false);
-    }
+        sp->SetFloat("B_MaterialRoughness",       GetRoughness(),                 false);
+        sp->SetFloat("B_MaterialMetalness",       GetMetalness(),                 false);
+        sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),         false);
+        sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),       false);
+        sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(),   false);
+        sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture().Get(), false);
 
-    if (Texture2D *metalnessTex = GetMetalnessTexture())
-    {
-        sp->SetTexture2D("B_MetalnessTexture",  metalnessTex, false);
-    }
-    else
-    {
-        sp->SetTexture2D("B_MetalnessTexture",
-                         TextureFactory::GetWhiteTexture().Get(), false);
-    }
+        if (Texture2D *roughnessTex = GetRoughnessTexture())
+        {
+            sp->SetTexture2D("B_RoughnessTexture",  roughnessTex, false);
+        }
+        else
+        {
+            sp->SetTexture2D("B_RoughnessTexture",
+                             TextureFactory::GetWhiteTexture().Get(), false);
+        }
 
-    if (Texture2D *normalMapTex = GetNormalMapTexture())
-    {
-        sp->SetTexture2D("B_NormalMapTexture",  normalMapTex, false);
-        sp->SetBool("B_HasNormalMapTexture",    true,         false);
-    }
-    else
-    {
-        sp->SetTexture2D("B_NormalMapTexture", nullptr, false);
-        sp->SetBool("B_HasNormalMapTexture",   false,   false);
+        if (Texture2D *metalnessTex = GetMetalnessTexture())
+        {
+            sp->SetTexture2D("B_MetalnessTexture",  metalnessTex, false);
+        }
+        else
+        {
+            sp->SetTexture2D("B_MetalnessTexture",
+                             TextureFactory::GetWhiteTexture().Get(), false);
+        }
+
+        if (Texture2D *normalMapTex = GetNormalMapTexture())
+        {
+            sp->SetTexture2D("B_NormalMapTexture",  normalMapTex, false);
+            sp->SetBool("B_HasNormalMapTexture",    true,         false);
+        }
+        else
+        {
+            sp->SetTexture2D("B_NormalMapTexture", nullptr, false);
+            sp->SetBool("B_HasNormalMapTexture",   false,   false);
+        }
     }
 }
 
 void Material::UnBind() const
 {
-    ShaderProgram *sp = GetShaderProgram();
-    if (!sp) { return; }
-    sp->UnBind();
+    if (ShaderProgram *sp = GetShaderProgram())
+    {
+        sp->UnBind();
+    }
 }
 
 void Material::CloneInto(ICloneable *clone) const

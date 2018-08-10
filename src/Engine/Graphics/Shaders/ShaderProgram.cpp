@@ -473,15 +473,27 @@ void ShaderProgram::Bind() const
     }
     #endif
 
-    GL::Bind(this);
-    ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
-    GLUniforms::SetAllUniformsToShaderProgram(noConstThis);
-    noConstThis->BindAllTexturesToUnits();
+    BindPrecise(m_lastNeedsPBRUniforms);
 }
 
 void ShaderProgram::UnBind() const
 {
     GL::UnBind(this);
+}
+
+void ShaderProgram::BindPrecise(bool needsPBRUniforms) const
+{
+    m_lastNeedsPBRUniforms = needsPBRUniforms;
+
+    if (!GL::IsBound(this))
+    {
+        GL::Bind(this);
+    }
+
+    ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
+    GLUniforms::SetAllUniformsToShaderProgram(noConstThis, needsPBRUniforms);
+    noConstThis->BindAllTexturesToUnits();
+
 }
 
 void ShaderProgram::BindAllTexturesToUnits()

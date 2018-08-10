@@ -192,8 +192,8 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
 
     UIImageRenderer *barImg = bar->AddComponent<UIImageRenderer>();
-    barImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // barImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
 
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
     barFocusable->SetCursorType(Cursor::Type::HAND);

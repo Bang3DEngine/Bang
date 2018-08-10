@@ -12,7 +12,6 @@ uniform mat4 B_ViewInv;
 uniform mat4 B_Projection;
 uniform mat4 B_ProjectionInv;
 uniform mat4 B_ProjectionView;
-uniform mat4 B_ProjectionViewInv;
 uniform mat4 B_PVM;
 uniform mat4 B_PVMInv;
 //////////////////////////////////////////////
@@ -20,9 +19,6 @@ uniform mat4 B_PVMInv;
 // Camera related ///////////////////////////
 const int CAMERA_CLEARMODE_COLOR  = 0;
 const int CAMERA_CLEARMODE_SKYBOX = 1;
-uniform float       B_Camera_ZNear;
-uniform float       B_Camera_ZFar;
-uniform vec3        B_Camera_Forward;
 uniform vec3        B_Camera_WorldPos;
 uniform int         B_Camera_ClearMode;
 uniform vec4        B_Camera_ClearColor;
@@ -68,11 +64,9 @@ uniform sampler2D B_GTex_DepthStencil;
 // ///////////////////////////////////////
 
 // Util functions /////////////////
-float B_LinearizeDepth(float d)
+float B_LinearizeDepth(float d, float camZNear, float camZFar)
 {
-    return (2 * B_Camera_ZNear) /
-                (B_Camera_ZFar + B_Camera_ZNear -
-                  d * (B_Camera_ZFar - B_Camera_ZNear));
+    return (2 * camZNear) / (camZFar + camZNear - d * (camZFar - camZNear));
 }
 
 vec3 B_GetCameraPositionWorld()

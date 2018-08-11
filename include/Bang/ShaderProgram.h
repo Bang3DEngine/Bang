@@ -46,6 +46,7 @@ public:
     bool SetInt(const String &name, int v, bool warn = true);
     bool SetBool(const String &name, bool v, bool warn = true);
     bool SetFloat(const String &name, float v, bool warn = true);
+    bool SetDouble(const String &name, double v, bool warn = true);
     bool SetColor(const String &name, const Color& v, bool warn = true);
     bool SetVector2(const String &name, const Vector2& v, bool warn = true);
     bool SetVector3(const String &name, const Vector3& v, bool warn = true);
@@ -58,6 +59,7 @@ public:
     bool SetIntArray(const String &name, const Array<int>& v, bool warn = true);
     bool SetBoolArray(const String &name, const Array<bool>& v, bool warn = true);
     bool SetFloatArray(const String &name, const Array<float>& v, bool warn = true);
+    bool SetDoubleArray(const String &name, const Array<double>& v, bool warn = true);
     bool SetColorArray(const String &name, const Array<Color>& v, bool warn = true);
     bool SetVector2Array(const String &name, const Array<Vector2>& v, bool warn = true);
     bool SetVector3Array(const String &name, const Array<Vector3>& v, bool warn = true);
@@ -91,6 +93,7 @@ private:
     std::unordered_map<String, int> m_uniformCacheInt;
     std::unordered_map<String, bool> m_uniformCacheBool;
     std::unordered_map<String, float> m_uniformCacheFloat;
+    std::unordered_map<String, double> m_uniformCacheDouble;
     std::unordered_map<String, Color> m_uniformCacheColor;
     std::unordered_map<String, Vector2> m_uniformCacheVector2;
     std::unordered_map<String, Vector3> m_uniformCacheVector3;

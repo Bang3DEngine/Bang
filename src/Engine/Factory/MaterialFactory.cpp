@@ -34,6 +34,10 @@ RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
     return MaterialFactory::Load("Materials/GizmosUnLightedOverlay.bmat");
 }
+RH<Bang::Material> Bang::MaterialFactory::GetWater()
+{
+    return MaterialFactory::Load("Materials/Water.bmat");
+}
 RH<Material> MaterialFactory::GetMissing()
 {
     return MaterialFactory::Load("Materials/Missing.bmat");
@@ -63,3 +67,4 @@ MaterialFactory *MaterialFactory::GetActive()
 {
     return Resources::GetInstance()->GetMaterialFactory();
 }
+

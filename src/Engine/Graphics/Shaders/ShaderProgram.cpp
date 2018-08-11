@@ -225,6 +225,11 @@ bool ShaderProgram::SetFloat(const String &name, float v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheFloat, name, v, warn);
 }
+
+bool ShaderProgram::SetDouble(const String &name, double v, bool warn)
+{
+    return SetShaderUniform(this, &m_uniformCacheDouble, name, v, warn);
+}
 bool ShaderProgram::SetColor(const String &name, const Color &v, bool warn)
 {
     return SetShaderUniform(this, &m_uniformCacheColor, name, v, warn);
@@ -260,6 +265,11 @@ bool ShaderProgram::SetBoolArray(const String &name, const Array<bool> &v, bool 
     return SetShaderUniformArray(this, name, v, warn);
 }
 bool ShaderProgram::SetFloatArray(const String &name, const Array<float> &v, bool warn)
+{
+    return SetShaderUniformArray(this, name, v, warn);
+}
+
+bool ShaderProgram::SetDoubleArray(const String &name, const Array<double> &v, bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }

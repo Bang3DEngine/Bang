@@ -31,6 +31,8 @@ public:
                               const Path &gShaderPath,
                               const Path &fShaderPath);
 
+    static Path GetEngineShadersDir();
+
 private:
     Map< std::tuple<Path,Path,Path>, RH<ShaderProgram> > m_cache;
 

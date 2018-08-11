@@ -17,6 +17,7 @@
 #include "Bang/UIInputText.h"
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/WaterRenderer.h"
 #include "Bang/UITextCursor.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/AudioListener.h"
@@ -57,6 +58,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, UIInputText);
     CREATE_COMPONENT(componentClassName, LineRenderer);
     CREATE_COMPONENT(componentClassName, MeshRenderer);
+    CREATE_COMPONENT(componentClassName, WaterRenderer);
     CREATE_COMPONENT(componentClassName, UIScrollArea);
     CREATE_COMPONENT(componentClassName, AudioListener);
     CREATE_COMPONENT(componentClassName, RectTransform);
@@ -91,6 +93,7 @@ bool ComponentFactory::Exists(const String &componentClassName)
     EXISTS_COMPONENT(componentClassName, UIInputText);
     EXISTS_COMPONENT(componentClassName, LineRenderer);
     EXISTS_COMPONENT(componentClassName, MeshRenderer);
+    EXISTS_COMPONENT(componentClassName, WaterRenderer);
     EXISTS_COMPONENT(componentClassName, UIScrollArea);
     EXISTS_COMPONENT(componentClassName, AudioListener);
     EXISTS_COMPONENT(componentClassName, RectTransform);

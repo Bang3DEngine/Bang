@@ -27,8 +27,9 @@ uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
 /////////////////////////////////////////////
 
-uniform vec2 B_Viewport_MinPos;
-uniform vec2 B_Viewport_Size;
+uniform float B_TimeSeconds;
+uniform vec2  B_Viewport_MinPos;
+uniform vec2  B_Viewport_Size;
 
 // Material related /////////////////////////
 uniform bool      B_MaterialReceivesLighting;

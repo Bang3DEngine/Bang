@@ -12,17 +12,24 @@ public:
 
     static float GetDeltaTime();
     static double GetNow_Seconds();
-    static TimeT GetNow_Millis();
-    static TimeT GetNow_Nanos();
+    static TimeT  GetNow_Millis();
+    static TimeT  GetNow_Nanos();
+    static double GetEllapsed_Seconds();
+    static TimeT  GetEllapsed_Millis();
+    static TimeT  GetEllapsed_Nanos();
     static void SetDeltaTime(double seconds);
     static void SetDeltaTimeReferenceToNow();
 
 private:
     double m_time = 0.0;
-    float m_deltaTime = 0.0f;
-    TimeT m_deltaTimeReference = 0.0;
 
-    Time() = default;
+    TimeT m_ellapsedTimeNanos = 0;
+    TimeT m_initialTimeNanos  = 0;
+
+    float m_deltaTime               = 0.0f;
+    TimeT m_deltaTimeReferenceNanos = 0;
+
+    Time();
     virtual ~Time() = default;
 
     static Time *GetInstance();

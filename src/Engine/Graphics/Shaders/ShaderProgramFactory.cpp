@@ -7,11 +7,13 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
     switch (renderPass)
     {
         case RenderPass::SCENE:
-            return EPATH("Shaders/Default.vert");
+            return ShaderProgramFactory::GetEngineShadersDir().Append(
+                        "Default.vert");
         break;
 
         case RenderPass::SCENE_TRANSPARENT:
-            return EPATH("Shaders/DefaultTransparent.vert");
+            return ShaderProgramFactory::GetEngineShadersDir().Append(
+                        "DefaultTransparent.vert");
         break;
 
         default: break;
@@ -21,7 +23,8 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 
 Path ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath()
 {
-    return EPATH("Shaders/DefaultAnimated.vert");
+    return ShaderProgramFactory::GetEngineShadersDir().Append(
+                "DefaultAnimated.vert");
 }
 
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
@@ -29,11 +32,13 @@ Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
     switch (renderPass)
     {
         case RenderPass::SCENE:
-            return EPATH("Shaders/Default.frag");
+            return ShaderProgramFactory::GetEngineShadersDir().Append(
+                        "Default.frag");
         break;
 
         case RenderPass::SCENE_TRANSPARENT:
-            return EPATH("Shaders/DefaultTransparent.frag");
+            return ShaderProgramFactory::GetEngineShadersDir().Append(
+                        "DefaultTransparent.frag");
         break;
 
         default: break;
@@ -43,7 +48,8 @@ Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 
 Path ShaderProgramFactory::GetScreenPassVertexShaderPath()
 {
-    return EPATH("Shaders/ScreenPass.vert");
+    return ShaderProgramFactory::GetEngineShadersDir().Append(
+                "ScreenPass.vert");
 }
 
 ShaderProgram *ShaderProgramFactory::GetDefault(RenderPass renderPass)
@@ -61,32 +67,39 @@ ShaderProgram *ShaderProgramFactory::GetDefaultAnimated()
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/Blur.frag"));
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "Blur.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetPointLightShadowMap()
 {
-    return Get(EPATH("Shaders/PointLightShadowMap.vert"),
-               EPATH("Shaders/PointLightShadowMap.geom"),
-               EPATH("Shaders/PointLightShadowMap.frag"));
+    return Get(ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "PointLightShadowMap.vert"),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "PointLightShadowMap.geom"),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                    "PointLightShadowMap.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetPointLightDeferredScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/PointLightDeferred.frag"));
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "PointLightDeferred.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/RenderTexture.frag"));
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                        "RenderTexture.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDirectionalLightDeferredScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-               EPATH("Shaders/DirectionalLightDeferred.frag"));
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                                    "DirectionalLightDeferred.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
@@ -100,6 +113,11 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
                                          const Path &fShaderPath)
 {
     return Get(vShaderPath, gShaderPath, fShaderPath, true);
+}
+
+Path ShaderProgramFactory::GetEngineShadersDir()
+{
+    return EPATH("Shaders");
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,

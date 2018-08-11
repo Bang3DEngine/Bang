@@ -33,8 +33,9 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
 
-    sp->SetMatrix4("B_ModelInv", matrices->modelInv, false); // Needed for 9slice
-    sp->SetMatrix4("B_PVM",      matrices->pvm,      false);
+    sp->SetFloat("B_TimeSeconds",  (Time::GetEllapsed_Seconds()), false);
+    sp->SetMatrix4("B_ModelInv",    matrices->modelInv, false); // Needed for 9slice
+    sp->SetMatrix4("B_PVM",         matrices->pvm,      false);
 
     if (needsPBRUniforms)
     {

@@ -878,6 +878,11 @@ void GL::Uniform(const String &name, float value)
     GL::Uniform( GL::GetUniformLocation(name), value);
 }
 
+void GL::Uniform(const String &name, double value)
+{
+    GL::Uniform( GL::GetUniformLocation(name), value);
+}
+
 void GL::Uniform(const String &name, bool value)
 {
     GL::Uniform( GL::GetUniformLocation(name), value);
@@ -924,6 +929,10 @@ void GL::Uniform(const String &name, const Array<float> &value)
 {
     GL::Uniform( GL::GetUniformLocation(name), value);
 }
+void GL::Uniform(const String &name, const Array<double> &value)
+{
+    GL::Uniform( GL::GetUniformLocation(name), value);
+}
 void GL::Uniform(const String &name, const Array<Color> &value)
 {
     GL::Uniform( GL::GetUniformLocation(name), value);
@@ -954,6 +963,10 @@ void GL::Uniform(int location, int value)
     if (location >= 0) { GL_CALL( glUniform1i(location, value) ); }
 }
 void GL::Uniform(int location, float value)
+{
+    if (location >= 0) { GL_CALL( glUniform1f(location, value) ); }
+}
+void GL::Uniform(int location, double value)
 {
     if (location >= 0) { GL_CALL( glUniform1f(location, value) ); }
 }
@@ -1004,6 +1017,13 @@ void GL::Uniform(int location, const Array<float> &value)
     if (location >= 0) { GL_CALL( glUniform1fv(location, value.Size(),
                                                value.Data()) ); }
 }
+
+void GL::Uniform(int location, const Array<double> &value)
+{
+    if (location >= 0) { GL_CALL( glUniform1dv(location, value.Size(),
+                                   RCAST<const GLdouble*>(value.Data())) ); }
+}
+
 void GL::Uniform(int location, const Array<Color> &value)
 {
     if (location >= 0) { GL_CALL( glUniform4fv(location, value.Size(),

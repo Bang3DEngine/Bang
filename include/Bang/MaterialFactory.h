@@ -14,6 +14,7 @@ public:
     static RH<Material> GetDefaultAnimated();
     static RH<Material> GetDefaultUnLighted();
     static RH<Material> GetGizmosUnLightedOverlay();
+    static RH<Material> GetWater();
 
     static RH<Material> GetMissing();
 

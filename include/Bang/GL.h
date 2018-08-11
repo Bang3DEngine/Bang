@@ -545,6 +545,7 @@ public:
 
     static void Uniform(const String &name, int value);
     static void Uniform(const String &name, float value);
+    static void Uniform(const String &name, double value);
     static void Uniform(const String &name, bool value);
     static void Uniform(const String &name, const Matrix3f &value);
     static void Uniform(const String &name, const Matrix4f &value);
@@ -555,6 +556,7 @@ public:
     static void Uniform(const String &name, const Array<int> &value);
     static void Uniform(const String &name, const Array<bool> &value);
     static void Uniform(const String &name, const Array<float> &value);
+    static void Uniform(const String &name, const Array<double> &value);
     static void Uniform(const String &name, const Array<Color> &value);
     static void Uniform(const String &name, const Array<Vector2> &value);
     static void Uniform(const String &name, const Array<Vector3> &value);
@@ -563,6 +565,7 @@ public:
     static void Uniform(const String &name, const Array<Matrix4> &value);
     static void Uniform(int location, int value);
     static void Uniform(int location, float value);
+    static void Uniform(int location, double value);
     static void Uniform(int location, bool value);
     static void Uniform(int location, const Matrix3f &value);
     static void Uniform(int location, const Matrix4f &value);
@@ -573,6 +576,7 @@ public:
     static void Uniform(int location, const Array<int> &value);
     static void Uniform(int location, const Array<bool> &value);
     static void Uniform(int location, const Array<float> &value);
+    static void Uniform(int location, const Array<double> &value);
     static void Uniform(int location, const Array<Color> &value);
     static void Uniform(int location, const Array<Vector2> &value);
     static void Uniform(int location, const Array<Vector3> &value);

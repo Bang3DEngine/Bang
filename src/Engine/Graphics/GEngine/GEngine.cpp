@@ -23,6 +23,7 @@
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/RectTransform.h"
+#include "Bang/ReflectionProbe.h"
 #include "Bang/UILayoutManager.h"
 #include "Bang/TextureUnitManager.h"
 #include "Bang/ShaderProgramFactory.h"
@@ -61,6 +62,7 @@ void GEngine::Render(Scene *scene)
         scene->BeforeRender();
         RenderShadowMaps(scene);
         RenderToGBuffer(scene, GetActiveRenderingCamera());
+        RenderReflectionProbes(scene);
     }
 }
 
@@ -189,6 +191,13 @@ GBuffer *GEngine::GetActiveGBuffer()
 
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
+    const bool needToChangeCamera = (camera != GetActiveRenderingCamera());
+    if (needToChangeCamera)
+    {
+        PushActiveRenderingCamera();
+        SetActiveRenderingCamera(camera);
+    }
+
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::DEPTH_STATES);
@@ -310,6 +319,11 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::Pushable::VIEWPORT);
     gbuffer->PopDepthStencilTexture();
+
+    if (needToChangeCamera)
+    {
+        PopActiveRenderingCamera();
+    }
 }
 
 void GEngine::RenderWithPass(GameObject *go, RenderPass renderPass,
@@ -481,6 +495,18 @@ void GEngine::RenderShadowMaps(GameObject *go)
     for (Light *light : lights)
     {
         if (light->IsActive()) { light->RenderShadowMaps(); }
+    }
+}
+
+void GEngine::RenderReflectionProbes(GameObject *go)
+{
+    if (!go->IsActive()) { return; }
+
+    List<ReflectionProbe*> reflProbes =
+                            go->GetComponentsInChildren<ReflectionProbe>(true);
+    for (ReflectionProbe *reflProbe : reflProbes)
+    {
+        GEngine::RenderToGBuffer(go, reflProbe->GetCamera());
     }
 }
 

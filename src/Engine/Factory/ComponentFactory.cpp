@@ -23,6 +23,7 @@
 #include "Bang/AudioListener.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/ReflectionProbe.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/DirectionalLight.h"
@@ -63,6 +64,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, AudioListener);
     CREATE_COMPONENT(componentClassName, RectTransform);
     CREATE_COMPONENT(componentClassName, UITextRenderer);
+    CREATE_COMPONENT(componentClassName, ReflectionProbe);
     CREATE_COMPONENT(componentClassName, UIImageRenderer);
     CREATE_COMPONENT(componentClassName, DirectionalLight);
     CREATE_COMPONENT(componentClassName, UIVerticalLayout);
@@ -98,6 +100,7 @@ bool ComponentFactory::Exists(const String &componentClassName)
     EXISTS_COMPONENT(componentClassName, AudioListener);
     EXISTS_COMPONENT(componentClassName, RectTransform);
     EXISTS_COMPONENT(componentClassName, UITextRenderer);
+    EXISTS_COMPONENT(componentClassName, ReflectionProbe);
     EXISTS_COMPONENT(componentClassName, UIImageRenderer);
     EXISTS_COMPONENT(componentClassName, DirectionalLight);
     EXISTS_COMPONENT(componentClassName, UIVerticalLayout);

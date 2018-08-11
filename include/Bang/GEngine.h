@@ -87,6 +87,7 @@ private:
 
     void Render(Renderer *rend);
     void RenderShadowMaps(GameObject *go);
+    void RenderReflectionProbes(GameObject *go);
     void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);
     void RenderToGBuffer(GameObject *go, Camera *camera);

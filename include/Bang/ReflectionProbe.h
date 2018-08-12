@@ -1,6 +1,8 @@
 #ifndef REFLECTIONPROBE_H
 #define REFLECTIONPROBE_H
 
+#include <array>
+
 #include "Bang/Array.h"
 #include "Bang/Vector3.h"
 #include "Bang/Component.h"
@@ -19,7 +21,8 @@ public:
 	ReflectionProbe();
 	virtual ~ReflectionProbe();
 
-    Camera *GetCamera() const;
+    void RenderReflectionProbe();
+    TextureCubeMap *GetTextureCubeMap() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -29,7 +32,11 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 private:
-    GameObject *m_cameraGo = nullptr;
+    Framebuffer *m_textureCubeMapFB = nullptr;
+    std::array<GameObject*, 6> m_cameraGos;
+    RH<TextureCubeMap> p_textureCubeMap;
+
+    Camera *GetCamera(GL::CubeMapDir dir) const;
 };
 
 NAMESPACE_BANG_END

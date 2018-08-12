@@ -32,9 +32,12 @@ void UIImageRenderer::OnRender()
     if (GetActiveMaterial() && GetActiveMaterial()->GetShaderProgram())
     {
         GetActiveMaterial()->GetShaderProgram()->SetInt("B_ImageMode",
-                                                        SCAST<int>( GetMode() ));
-        GetActiveMaterial()->GetShaderProgram()->SetVector2("B_Slice9BorderStrokePx",
-                                              Vector2(GetSlice9BorderStrokePx()));
+                                                        SCAST<int>( GetMode() ),
+                                                        false);
+        GetActiveMaterial()->GetShaderProgram()->SetVector2(
+                                              "B_Slice9BorderStrokePx",
+                                              Vector2(GetSlice9BorderStrokePx()),
+                                              false);
     }
 
     if (GetTint().a > 0.0f)

@@ -37,8 +37,20 @@ GEngine::GEngine()
 
 GEngine::~GEngine()
 {
-    delete m_texUnitManager;
-    delete m_gl;
+    if (m_texUnitManager)
+    {
+        delete m_texUnitManager;
+    }
+
+    if (m_gl)
+    {
+        delete m_gl;
+    }
+
+    if (m_fillCubeMapFromTexturesFB)
+    {
+        delete m_fillCubeMapFromTexturesFB;
+    }
 }
 
 void GEngine::Init()
@@ -53,6 +65,13 @@ void GEngine::Init()
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                            EPATH("Shaders/RenderSky.frag")) );
+
+    Path shadersDir = ShaderProgramFactory::GetEngineShadersDir();
+    m_fillCubeMapFromTexturesFB = new Framebuffer();
+    m_fillCubeMapFromTexturesSP.Set( ShaderProgramFactory::Get(
+                shadersDir.Append("FillCubeMapFromTextures.vert"),
+                shadersDir.Append("FillCubeMapFromTextures.geom"),
+                shadersDir.Append("FillCubeMapFromTextures.frag")));
 }
 
 void GEngine::Render(Scene *scene)
@@ -506,7 +525,7 @@ void GEngine::RenderReflectionProbes(GameObject *go)
                             go->GetComponentsInChildren<ReflectionProbe>(true);
     for (ReflectionProbe *reflProbe : reflProbes)
     {
-        GEngine::RenderToGBuffer(go, reflProbe->GetCamera());
+        reflProbe->RenderReflectionProbe();
     }
 }
 
@@ -556,6 +575,57 @@ void GEngine::PopActiveRenderingCamera()
     }
 
     SetActiveRenderingCamera(poppedCamera);
+}
+
+void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
+                                      Texture2D *topTexture,
+                                      Texture2D *botTexture,
+                                      Texture2D *leftTexture,
+                                      Texture2D *rightTexture,
+                                      Texture2D *frontTexture,
+                                      Texture2D *backTexture,
+                                      int mipMapLevel)
+{
+    GL::Push(GL::Pushable::VIEWPORT);
+    GL::Push(GL::Pushable::SHADER_PROGRAM);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    m_fillCubeMapFromTexturesFB->Bind();
+    m_fillCubeMapFromTexturesSP.Get()->Bind();
+
+    GL::SetViewport(0, 0, texCMToFill->GetWidth(), texCMToFill->GetHeight());
+    m_fillCubeMapFromTexturesFB->SetAttachmentTexture(texCMToFill,
+                                                      GL::Attachment::COLOR0,
+                                                      mipMapLevel);
+    m_fillCubeMapFromTexturesFB->SetAllDrawBuffers();
+
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_TopTexture",
+                                                    topTexture,
+                                                    false);
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_BotTexture",
+                                                    botTexture,
+                                                    false);
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_LeftTexture",
+                                                    leftTexture,
+                                                    false);
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_RightTexture",
+                                                    rightTexture,
+                                                    false);
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_FrontTexture",
+                                                    frontTexture,
+                                                    false);
+    m_fillCubeMapFromTexturesSP.Get()->SetTexture2D("B_FillCMFromTexture_BackTexture",
+                                                    backTexture,
+                                                    false);
+
+    GEngine::GetInstance()->RenderViewportPlane();
+
+    m_fillCubeMapFromTexturesSP.Get()->UnBind();
+    m_fillCubeMapFromTexturesFB->UnBind();
+
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::SHADER_PROGRAM);
+    GL::Pop(GL::Pushable::VIEWPORT);
 }
 
 void GEngine::Render(Renderer *rend)

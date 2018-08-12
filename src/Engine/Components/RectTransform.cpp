@@ -10,6 +10,7 @@
 #include "Bang/Matrix4.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/DebugRenderer.h"
 #include "Bang/RenderFactory.h"
 #include "Bang/UILayoutManager.h"
 #include "Bang/IEventsTransform.h"
@@ -532,32 +533,23 @@ void RectTransform::OnRender(RenderPass rp)
 {
     Transform::OnRender(rp);
     /*
-    if (rp != RenderPass::Overlay) { return; }
-
-    Gizmos::Reset();
-    Gizmos::SetThickness(1.0f);
+    if (rp != RenderPass::OVERLAY) { return; }
 
     AARect r = GetViewportAARectNDC(); (void)r;
-
-    // Random::SetSeed(GetInstanceId());
-    Gizmos::SetColor(Random::GetColorOpaque());
-    // Gizmos::RenderFillRect(r);
-
-    Gizmos::SetColor(Color::Green);
-    Gizmos::RenderRectNDC(r);
-    Gizmos::SetColor(Color::Yellow);
-    Gizmos::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
-    Gizmos::SetColor(Color::Yellow);
-    Gizmos::RenderScreenLine(r.GetMinXMinY(), r.GetMaxXMaxY());
+    DebugRenderer::RenderAARectNDC(r, Color::Green, 0.1f, 1.0f, false);
+    DebugRenderer::SetColor(Color::Yellow);
+    DebugRenderer::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
+    DebugRenderer::SetColor(Color::Yellow);
+    DebugRenderer::RenderScreenLine(r.GetMinXMinY(), r.GetMaxXMaxY());
     float size = GL::FromViewportAmountToViewportAmountNDC(Vector2(2)).x;
-    Gizmos::SetColor(Color::Red);
-    Gizmos::RenderRect(Rect(r.GetCenter() - Vector2(size),
+    DebugRenderer::SetColor(Color::Red);
+    DebugRenderer::RenderRect(Rect(r.GetCenter() - Vector2(size),
                             r.GetCenter() + Vector2(size)));
 
-    Gizmos::SetColor(Color::Blue);
+    DebugRenderer::SetColor(Color::Blue);
     Rect anchorRect = FromLocalNDCToViewportNDC(
                                 Rect(GetAnchorMin(), GetAnchorMax()));
-    Gizmos::RenderRect(anchorRect);
+    DebugRenderer::RenderRect(anchorRect);
     */
 }
 

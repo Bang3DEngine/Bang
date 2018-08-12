@@ -249,7 +249,6 @@ public:
         TEXTURE_CUBE_MAP_NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
 
-
     enum class CubeMapDir
     {
         POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -265,6 +264,10 @@ public:
         NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
         FRONT      = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
+
+    static const std::array<GL::CubeMapDir, 6>& GetAllCubeMapDirs();
+    static int GetCubeMapDirIndex(GL::CubeMapDir cmDir);
+
     enum class FramebufferTarget
     {
         DRAW      = GL_DRAW_FRAMEBUFFER,

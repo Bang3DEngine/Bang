@@ -204,6 +204,56 @@ void GL::Init()
     GL::PrintGLStats();
 }
 
+const std::array<GL::CubeMapDir, 6> &GL::GetAllCubeMapDirs()
+{
+    static bool initialized = false;
+    static std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
+
+    if (!initialized)
+    {
+        AllCubeMapDirs =
+            {{GL::CubeMapDir::POSITIVE_X, GL::CubeMapDir::NEGATIVE_X,
+              GL::CubeMapDir::POSITIVE_Y, GL::CubeMapDir::NEGATIVE_Y,
+              GL::CubeMapDir::POSITIVE_Z, GL::CubeMapDir::NEGATIVE_Z}};
+        initialized = true;
+    }
+
+    return AllCubeMapDirs;
+}
+
+int GL::GetCubeMapDirIndex(GL::CubeMapDir cmDir)
+{
+    switch (cmDir)
+    {
+        case GL::CubeMapDir::POSITIVE_X:
+            return 0;
+        break;
+
+        case GL::CubeMapDir::NEGATIVE_X:
+            return 1;
+        break;
+
+        case GL::CubeMapDir::POSITIVE_Y:
+            return 2;
+        break;
+
+        case GL::CubeMapDir::NEGATIVE_Y:
+            return 3;
+        break;
+
+        case GL::CubeMapDir::POSITIVE_Z:
+            return 4;
+        break;
+
+        case GL::CubeMapDir::NEGATIVE_Z:
+            return 5;
+        break;
+    }
+
+    ASSERT(false);
+    return -1;
+}
+
 void GL::ClearError()
 {
     glGetError();

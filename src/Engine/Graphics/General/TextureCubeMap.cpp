@@ -6,11 +6,6 @@
 
 USING_NAMESPACE_BANG
 
-const std::array<GL::CubeMapDir, 6> TextureCubeMap::AllCubeMapDirs =
-    {{GL::CubeMapDir::POSITIVE_X, GL::CubeMapDir::NEGATIVE_X,
-      GL::CubeMapDir::POSITIVE_Y, GL::CubeMapDir::NEGATIVE_Y,
-      GL::CubeMapDir::POSITIVE_Z, GL::CubeMapDir::NEGATIVE_Z}};
-
 TextureCubeMap::TextureCubeMap() : Texture(GL::TextureTarget::TEXTURE_CUBE_MAP)
 {
     SetFormat(GL::ColorFormat::RGBA8);
@@ -34,7 +29,7 @@ void TextureCubeMap::CreateEmpty(const Vector2i &size)
     SetWidth(size.x);
     SetHeight(size.y);
 
-    for (GL::CubeMapDir cubeMapDir : TextureCubeMap::AllCubeMapDirs)
+    for (GL::CubeMapDir cubeMapDir : GL::GetAllCubeMapDirs())
     {
         Fill(cubeMapDir, nullptr, size.x, GetColorComp(), GetDataType());
     }
@@ -132,12 +127,12 @@ void TextureCubeMap::Import(const Image<Byte> &topImage,
 
     std::array<Image<Byte>, 6> imgs = {{topImage, botImage, leftImage,
                                         rightImage, frontImage, backImage}};
-    for (int i = 0; i < TextureCubeMap::AllCubeMapDirs.size(); ++i)
+    for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         const Image<Byte> &img = imgs[i];
         if (img.GetData())
         {
-            GL::CubeMapDir cubeMapDir = TextureCubeMap::AllCubeMapDirs[i];
+            GL::CubeMapDir cubeMapDir = GL::GetAllCubeMapDirs()[i];
 
             SetWidth(img.GetWidth());
             SetHeight(img.GetHeight());
@@ -217,7 +212,7 @@ GL::BindTarget TextureCubeMap::GetGLBindTarget() const
 
 void TextureCubeMap::OnImported(Resource *res)
 {
-    for (GL::CubeMapDir cubeMapDir : TextureCubeMap::AllCubeMapDirs)
+    for (GL::CubeMapDir cubeMapDir : GL::GetAllCubeMapDirs())
     {
         if (res == GetSideTexture(cubeMapDir).Get())
         {

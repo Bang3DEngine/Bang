@@ -30,8 +30,8 @@ public:
                               GL::Attachment attachment,
                               uint mipMapLevel = 0);
     void SetAttachmentTexture2D(Texture *tex,
-                                GL::TextureTarget texTarget,
                                 GL::Attachment attachment,
+                                GL::TextureTarget texTarget,
                                 uint mipMapLevel = 0);
 
 

@@ -129,9 +129,14 @@ bool ShaderProgram::Link()
 
     if (!GL::LinkProgram(m_idGL))
     {
+       Path vsPath = (GetVertexShader() ?
+                      GetVertexShader()->GetResourceFilepath() : Path::Empty);
+       Path gsPath = (GetGeometryShader() ?
+                      GetGeometryShader()->GetResourceFilepath() : Path::Empty);
+       Path fsPath = (GetFragmentShader() ?
+                      GetFragmentShader()->GetResourceFilepath() : Path::Empty);
        Debug_Error("The shader program " << this << "( " <<
-                   GetVertexShader()->GetResourceFilepath() << ", " <<
-                   GetFragmentShader()->GetResourceFilepath() <<
+                   vsPath << ", " << gsPath << ", " << fsPath <<
                    ") did not link: " <<
                    GL::GetProgramErrorMsg(m_idGL));
        GL::DeleteProgram(m_idGL); m_idGL = 0;

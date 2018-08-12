@@ -143,8 +143,8 @@ void Framebuffer::SetAttachmentTexture(Texture* tex,
     GL::Pop(GL::BindTarget::FRAMEBUFFER);
 }
 void Framebuffer::SetAttachmentTexture2D(Texture *tex,
-                                         GL::TextureTarget texTarget,
                                          GL::Attachment attachment,
+                                         GL::TextureTarget texTarget,
                                          uint mipMapLevel)
 {
     GL::Push(GL::BindTarget::FRAMEBUFFER);

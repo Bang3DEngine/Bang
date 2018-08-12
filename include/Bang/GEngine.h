@@ -21,6 +21,7 @@ FORWARD class Renderer;
 FORWARD class Texture2D;
 FORWARD class Framebuffer;
 FORWARD class ShaderProgram;
+FORWARD class TextureCubeMap;
 FORWARD class TextureUnitManager;
 
 class GEngine : public EventListener<IEventsDestroy>
@@ -40,6 +41,7 @@ public:
                         bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
                             const AARect &destRectMask = AARect::NDCRect);
+    void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderViewportPlane();
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
@@ -50,6 +52,15 @@ public:
     void PushActiveRenderingCamera();
     void SetActiveRenderingCamera(Camera *camera);
     void PopActiveRenderingCamera();
+
+    void FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
+                                 Texture2D *topTexture,
+                                 Texture2D *botTexture,
+                                 Texture2D *leftTexture,
+                                 Texture2D *rightTexture,
+                                 Texture2D *frontTexture,
+                                 Texture2D *backTexture,
+                                 int mipMapLevel = 0);
 
     static GBuffer *GetActiveGBuffer();
     Material* GetReplacementMaterial() const;
@@ -73,6 +84,9 @@ private:
     TextureUnitManager *m_texUnitManager = nullptr;
     RenderRoutine m_renderRoutine;
 
+    RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
+    Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
+
     // Forward rendering arrays
     bool m_currentlyForwardRendering = false;
     Array<int> m_currentForwardRenderingLightTypes;
@@ -90,7 +104,6 @@ private:
     void RenderReflectionProbes(GameObject *go);
     void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);
-    void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
     bool CanRenderNow(Renderer *rend, RenderPass renderPass) const;
 

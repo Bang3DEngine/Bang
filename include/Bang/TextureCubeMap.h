@@ -56,7 +56,6 @@ public:
     void OnImported(Resource *res) override;
 
 private:
-    static const std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
     std::array<RH<Texture2D>, 6> m_sideTextures;
 
     void CreateEmpty(const Vector2i &size) override;

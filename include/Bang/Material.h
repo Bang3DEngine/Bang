@@ -18,6 +18,7 @@ class Material : public Asset,
                  public EventListener<IEventsResource>
 {
     ASSET(Material)
+    ICLONEABLE(Material)
 
 public:
     void SetAlbedoUvOffset(const Vector2& albedoUvOffset);

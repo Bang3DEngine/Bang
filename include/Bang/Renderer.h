@@ -66,8 +66,6 @@ protected:
     Renderer();
     virtual ~Renderer();
 
-    void SetReflectionProbeUniforms();
-    ReflectionProbe *GetClosestReflectionProbe() const;
     void PropagateRendererChanged();
 
     // Renderer

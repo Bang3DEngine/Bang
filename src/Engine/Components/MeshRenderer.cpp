@@ -9,6 +9,7 @@
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/ReflectionProbe.h"
 
 USING_NAMESPACE_BANG
 
@@ -42,6 +43,12 @@ Mesh* MeshRenderer::GetMesh() const
     return p_mesh.Get();
 }
 Mesh *MeshRenderer::GetSharedMesh() const { return p_sharedMesh.Get(); }
+
+void MeshRenderer::Bind()
+{
+    Renderer::Bind();
+    ReflectionProbe::SetRendererUniforms(this);
+}
 
 void MeshRenderer::SetCurrentLOD(int lod)
 {

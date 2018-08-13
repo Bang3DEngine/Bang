@@ -18,6 +18,8 @@ public:
     Mesh* GetActiveMesh() const;
     Mesh* GetSharedMesh() const;
 
+    virtual void Bind() override;
+
     void SetCurrentLOD(int lod);
     void SetAutoLOD(bool autoLOD);
 

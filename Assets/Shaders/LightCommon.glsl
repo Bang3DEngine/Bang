@@ -115,48 +115,55 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
         vec3 R = reflect(-V, N);
 
         bool useReflectionProbeAsCubeMap = false;
-        bool isBoxed = (B_SkyBoxSize.x > 0);
-        if (isBoxed)
+        bool isBoxed = (B_ReflectionProbeSize.x > 0);
+        if (B_UseReflectionProbe)
         {
-            vec3 halfSkyBoxSize = B_SkyBoxSize * 0.5f;
-            vec3 boxMax = (B_SkyBoxCenter + halfSkyBoxSize);
-            vec3 boxMin = (B_SkyBoxCenter - halfSkyBoxSize);
-
-            bool isPixelInsideBox = (pixelPosWorld.x >= boxMin.x &&
-                                     pixelPosWorld.y >= boxMin.y &&
-                                     pixelPosWorld.z >= boxMin.z &&
-                                     pixelPosWorld.x <= boxMax.x &&
-                                     pixelPosWorld.y <= boxMax.y &&
-                                     pixelPosWorld.z <= boxMax.z);
-            if (isPixelInsideBox)
+            if (isBoxed)
             {
-                // Skybox is boxed, intersect with it!
-                float intersectionRightDist = (boxMax.x - pixelPosWorld.x) / R.x;
-                float intersectionLeftDist  = (boxMin.x - pixelPosWorld.x) / R.x;
-                float intersectionTopDist   = (boxMax.y - pixelPosWorld.y) / R.y;
-                float intersectionBotDist   = (boxMin.y - pixelPosWorld.y) / R.y;
-                float intersectionFrontDist = (boxMax.z - pixelPosWorld.z) / R.z;
-                float intersectionBackDist  = (boxMin.z - pixelPosWorld.z) / R.z;
+                vec3 halfSkyBoxSize = B_ReflectionProbeSize * 0.5f;
+                vec3 boxMax = (B_ReflectionProbeCenter + halfSkyBoxSize);
+                vec3 boxMin = (B_ReflectionProbeCenter - halfSkyBoxSize);
 
-                if (intersectionRightDist <= 0) { intersectionRightDist = 9999999.9f; }
-                if (intersectionLeftDist  <= 0) { intersectionLeftDist  = 9999999.9f; }
-                if (intersectionTopDist   <= 0) { intersectionTopDist   = 9999999.9f; }
-                if (intersectionBotDist   <= 0) { intersectionBotDist   = 9999999.9f; }
-                if (intersectionFrontDist <= 0) { intersectionFrontDist = 9999999.9f; }
-                if (intersectionBackDist  <= 0) { intersectionBackDist  = 9999999.9f; }
+                bool isPixelInsideBox = (pixelPosWorld.x >= boxMin.x &&
+                                         pixelPosWorld.y >= boxMin.y &&
+                                         pixelPosWorld.z >= boxMin.z &&
+                                         pixelPosWorld.x <= boxMax.x &&
+                                         pixelPosWorld.y <= boxMax.y &&
+                                         pixelPosWorld.z <= boxMax.z);
+                if (isPixelInsideBox)
+                {
+                    // Skybox is boxed, intersect with it!
+                    float intersectionRightDist = (boxMax.x - pixelPosWorld.x) / R.x;
+                    float intersectionLeftDist  = (boxMin.x - pixelPosWorld.x) / R.x;
+                    float intersectionTopDist   = (boxMax.y - pixelPosWorld.y) / R.y;
+                    float intersectionBotDist   = (boxMin.y - pixelPosWorld.y) / R.y;
+                    float intersectionFrontDist = (boxMax.z - pixelPosWorld.z) / R.z;
+                    float intersectionBackDist  = (boxMin.z - pixelPosWorld.z) / R.z;
 
-                float minIntersectionDist = min(intersectionRightDist,
-                                            min(intersectionLeftDist,
-                                            min(intersectionTopDist,
-                                            min(intersectionBotDist,
-                                            min(intersectionFrontDist,
-                                                intersectionBackDist)))));
+                    if (intersectionRightDist <= 0) { intersectionRightDist = 9999999.9f; }
+                    if (intersectionLeftDist  <= 0) { intersectionLeftDist  = 9999999.9f; }
+                    if (intersectionTopDist   <= 0) { intersectionTopDist   = 9999999.9f; }
+                    if (intersectionBotDist   <= 0) { intersectionBotDist   = 9999999.9f; }
+                    if (intersectionFrontDist <= 0) { intersectionFrontDist = 9999999.9f; }
+                    if (intersectionBackDist  <= 0) { intersectionBackDist  = 9999999.9f; }
 
-                vec3 intersectionPoint = pixelPosWorld + (minIntersectionDist * R);
+                    float minIntersectionDist = min(intersectionRightDist,
+                                                min(intersectionLeftDist,
+                                                min(intersectionTopDist,
+                                                min(intersectionBotDist,
+                                                min(intersectionFrontDist,
+                                                    intersectionBackDist)))));
 
+                    vec3 intersectionPoint = pixelPosWorld + (minIntersectionDist * R);
+
+                    useReflectionProbeAsCubeMap = true;
+                    R = normalize(intersectionPoint - B_ReflectionProbeCenter);
+                    R.z *= -1;
+                }
+            }
+            else
+            {
                 useReflectionProbeAsCubeMap = true;
-                R = normalize(intersectionPoint - B_SkyBoxCenter);
-                R.z *= -1;
             }
         }
 

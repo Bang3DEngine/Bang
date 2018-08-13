@@ -15,7 +15,6 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/ReflectionProbe.h"
 
 USING_NAMESPACE_BANG
 
@@ -62,7 +61,6 @@ void Renderer::Bind()
         mat->Bind();
         if (ShaderProgram *sp = mat->GetShaderProgram())
         {
-            SetReflectionProbeUniforms();
             sp->SetBool("B_ReceivesShadows", GetReceivesShadows(), false);
         }
     }
@@ -201,80 +199,6 @@ Matrix4 Renderer::GetModelMatrixUniform() const
     return GetGameObject()->GetTransform() ?
                     GetGameObject()->GetTransform()->GetLocalToWorldMatrix() :
                     Matrix4::Identity;
-}
-
-void Renderer::SetReflectionProbeUniforms()
-{
-    if (Material *mat = GetActiveMaterial())
-    {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
-        {
-            bool usingReflectionProbes = false;
-            if (GetUseReflectionProbes())
-            {
-                if (ReflectionProbe *closestReflProbe = GetClosestReflectionProbe())
-                {
-                    if (closestReflProbe->GetIsBoxed())
-                    {
-                        sp->SetVector3("B_SkyBoxCenter",
-                                       closestReflProbe->GetGameObject()->
-                                       GetTransform()->GetPosition(),
-                                       false);
-                        sp->SetVector3("B_SkyBoxSize",
-                                       closestReflProbe->GetSize(),
-                                       false);
-                    }
-                    else
-                    {
-                        sp->SetVector3("B_SkyBoxSize", -Vector3::One, false);
-                    }
-
-                    sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                                          closestReflProbe->GetTextureCubeMap(),
-                                          false);
-                    sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                                          closestReflProbe->GetTextureCubeMap(),
-                                          false);
-                    usingReflectionProbes = true;
-                }
-            }
-
-            if (!usingReflectionProbes)
-            {
-                sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
-                                      false);
-                sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
-                                      false);
-            }
-        }
-    }
-}
-
-ReflectionProbe *Renderer::GetClosestReflectionProbe() const
-{
-    GEngine *ge = GEngine::GetInstance();
-    ASSERT(ge);
-
-    Vector3 thisPos = GetGameObject()->GetTransform()->GetPosition();
-
-    ReflectionProbe *closestReflProbe = nullptr;
-    float closestReflProbeSqDist = Math::Infinity<float>();
-    List<ReflectionProbe*> reflProbes = ge->GetCurrentReflectionProbes();
-    for (ReflectionProbe *reflProbe : reflProbes)
-    {
-        Vector3 reflProbePos = reflProbe->GetGameObject()->
-                               GetTransform()->GetPosition();
-        float sqDist = Vector3::SqDistance(thisPos, reflProbePos);
-        if (sqDist < closestReflProbeSqDist)
-        {
-            closestReflProbe = reflProbe;
-            closestReflProbeSqDist = sqDist;
-        }
-    }
-
-    return closestReflProbe;
 }
 
 void Renderer::CloneInto(ICloneable *clone) const

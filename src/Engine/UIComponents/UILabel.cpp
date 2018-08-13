@@ -239,7 +239,8 @@ void UILabel::SetFocusable(IFocusable *focusable)
 
 void UILabel::OnEvent(IFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN ||
+        event.type == UIEvent::Type::MOUSE_CLICK_DOUBLE)
     {
         if (GetSelectAllOnFocus() && IsSelectable())
         {
@@ -332,6 +333,7 @@ void UILabel::HandleMouseSelection()
 
 void UILabel::UpdateSelectionQuadRenderer()
 {
+    GetText()->RegenerateCharQuadsVAO();
     float cursorX     = GetCursorXViewportNDC( GetCursorIndex() );
     float selectionX  = GetCursorXViewportNDC( GetSelectionIndex() );
 

@@ -8,15 +8,21 @@ USING_NAMESPACE_BANG
 void UIAutoFocuser::OnStart()
 {
     Component::OnStart();
-    if (p_focusableToAutoFocus)
+}
+
+void UIAutoFocuser::OnUpdate()
+{
+    Component::OnUpdate();
+
+    if (++m_frames == 2 && p_focusableToAutoFocus)
     {
         UICanvas *canvas = UICanvas::GetActive( GetGameObject() );
         if (canvas)
         {
             canvas->SetFocus(p_focusableToAutoFocus);
         }
+        Component::Destroy(this);
     }
-    Component::Destroy(this);
 }
 
 void UIAutoFocuser::SetFocusableToAutoFocus(IFocusable *focusable)

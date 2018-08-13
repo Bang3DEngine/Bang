@@ -14,11 +14,13 @@ class UIAutoFocuser : public Component
 public:
     // Component
     void OnStart() override;
+    void OnUpdate() override;
 
     void SetFocusableToAutoFocus(IFocusable* focusable);
     IFocusable* GetFocusableToAutoFocus() const;
 
 private:
+    int m_frames = 0;
     IFocusable* p_focusableToAutoFocus = nullptr;
 
     UIAutoFocuser() = default;

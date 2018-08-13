@@ -113,41 +113,51 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
         vec3 N = pixelNormalWorld.xyz;
         vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
         vec3 R = reflect(-V, N);
-        if (B_SkyBoxSize.x > 0)
+
+        bool useReflectionProbeAsCubeMap = false;
+        bool isBoxed = (B_SkyBoxSize.x > 0);
+        if (isBoxed)
         {
             vec3 halfSkyBoxSize = B_SkyBoxSize * 0.5f;
+            vec3 boxMax = (B_SkyBoxCenter + halfSkyBoxSize);
+            vec3 boxMin = (B_SkyBoxCenter - halfSkyBoxSize);
 
-            // Skybox is boxed, intersect with it!
-            float intersectionRightDist = ((B_SkyBoxCenter.x + halfSkyBoxSize.x) -
-                                           pixelPosWorld.x) / R.x;
-            float intersectionLeftDist = ((B_SkyBoxCenter.x - halfSkyBoxSize.x) -
-                                           pixelPosWorld.x) / R.x;
-            float intersectionTopDist = ((B_SkyBoxCenter.y + halfSkyBoxSize.y) -
-                                          pixelPosWorld.y) / R.y;
-            float intersectionBotDist = ((B_SkyBoxCenter.y - halfSkyBoxSize.y) -
-                                          pixelPosWorld.y) / R.y;
-            float intersectionFrontDist = ((B_SkyBoxCenter.z + halfSkyBoxSize.z) -
-                                            pixelPosWorld.z) / R.z;
-            float intersectionBackDist = ((B_SkyBoxCenter.z - halfSkyBoxSize.z) -
-                                           pixelPosWorld.z) / R.z;
+            bool isPixelInsideBox = (pixelPosWorld.x >= boxMin.x &&
+                                     pixelPosWorld.y >= boxMin.y &&
+                                     pixelPosWorld.z >= boxMin.z &&
+                                     pixelPosWorld.x <= boxMax.x &&
+                                     pixelPosWorld.y <= boxMax.y &&
+                                     pixelPosWorld.z <= boxMax.z);
+            if (isPixelInsideBox)
+            {
+                // Skybox is boxed, intersect with it!
+                float intersectionRightDist = (boxMax.x - pixelPosWorld.x) / R.x;
+                float intersectionLeftDist  = (boxMin.x - pixelPosWorld.x) / R.x;
+                float intersectionTopDist   = (boxMax.y - pixelPosWorld.y) / R.y;
+                float intersectionBotDist   = (boxMin.y - pixelPosWorld.y) / R.y;
+                float intersectionFrontDist = (boxMax.z - pixelPosWorld.z) / R.z;
+                float intersectionBackDist  = (boxMin.z - pixelPosWorld.z) / R.z;
 
-            if (intersectionRightDist <= 0) { intersectionRightDist = 9999999.9f; }
-            if (intersectionLeftDist  <= 0) { intersectionLeftDist  = 9999999.9f; }
-            if (intersectionTopDist   <= 0) { intersectionTopDist   = 9999999.9f; }
-            if (intersectionBotDist   <= 0) { intersectionBotDist   = 9999999.9f; }
-            if (intersectionFrontDist <= 0) { intersectionFrontDist = 9999999.9f; }
-            if (intersectionBackDist  <= 0) { intersectionBackDist  = 9999999.9f; }
+                if (intersectionRightDist <= 0) { intersectionRightDist = 9999999.9f; }
+                if (intersectionLeftDist  <= 0) { intersectionLeftDist  = 9999999.9f; }
+                if (intersectionTopDist   <= 0) { intersectionTopDist   = 9999999.9f; }
+                if (intersectionBotDist   <= 0) { intersectionBotDist   = 9999999.9f; }
+                if (intersectionFrontDist <= 0) { intersectionFrontDist = 9999999.9f; }
+                if (intersectionBackDist  <= 0) { intersectionBackDist  = 9999999.9f; }
 
-            float minIntersectionDist = min(intersectionRightDist,
-                                        min(intersectionLeftDist,
-                                        min(intersectionTopDist,
-                                        min(intersectionBotDist,
-                                        min(intersectionFrontDist,
-                                            intersectionBackDist)))));
+                float minIntersectionDist = min(intersectionRightDist,
+                                            min(intersectionLeftDist,
+                                            min(intersectionTopDist,
+                                            min(intersectionBotDist,
+                                            min(intersectionFrontDist,
+                                                intersectionBackDist)))));
 
-            vec3 intersectionPoint = pixelPosWorld + (minIntersectionDist * R);
-            R = normalize(intersectionPoint - B_SkyBoxCenter);
-            R.z *= -1;
+                vec3 intersectionPoint = pixelPosWorld + (minIntersectionDist * R);
+
+                useReflectionProbeAsCubeMap = true;
+                R = normalize(intersectionPoint - B_SkyBoxCenter);
+                R.z *= -1;
+            }
         }
 
         // Calculate ambient color
@@ -162,8 +172,18 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
         const float LOD_MAX_REFLECTION = 8.0;
         float lod = pixelRoughness * LOD_MAX_REFLECTION;
 
-        vec3 diffuseCubeMapSample  = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
-        vec3 specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
+        vec3 diffuseCubeMapSample;
+        vec3 specularCubeMapSample;
+        if (useReflectionProbeAsCubeMap)
+        {
+            diffuseCubeMapSample = GetCameraSkyBoxSample(B_ReflectionProbeDiffuse, N).rgb;
+            specularCubeMapSample = GetCameraSkyBoxSampleLod(B_ReflectionProbeSpecular, R, lod).rgb;
+        }
+        else // SkyBox sampled directly
+        {
+            diffuseCubeMapSample = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
+            specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;
+        }
 
         vec3 diffuseAmbient = diffuseCubeMapSample * pixelAlbedo.rgb;
         vec3 specularAmbient = specularCubeMapSample;

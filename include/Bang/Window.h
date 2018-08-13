@@ -14,7 +14,6 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Time;
 FORWARD class Input;
-FORWARD class Camera;
 FORWARD class GEngine;
 FORWARD class Resources;
 FORWARD class Texture2D;

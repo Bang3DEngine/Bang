@@ -20,6 +20,7 @@
 #include "Bang/PointLight.h"
 #include "Bang/Application.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/RenderFlags.h"
 #include "Bang/SceneManager.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/RectTransform.h"
@@ -78,10 +79,24 @@ void GEngine::Render(Scene *scene)
 {
     if (scene)
     {
-        scene->BeforeRender();
-        RenderShadowMaps(scene);
-        RenderToGBuffer(scene, GetActiveRenderingCamera());
-        RenderReflectionProbes(scene);
+        if (Camera *camera = GetActiveRenderingCamera())
+        {
+            RenderFlags renderFlags = camera->GetRenderFlags();
+
+            scene->BeforeRender();
+
+            if (renderFlags.IsOn(RenderFlag::RENDER_SHADOW_MAPS))
+            {
+                RenderShadowMaps(scene);
+            }
+
+            RenderToGBuffer(scene, camera);
+
+            if (renderFlags.IsOn(RenderFlag::RENDER_REFLECTION_PROBES))
+            {
+                RenderReflectionProbes(scene);
+            }
+        }
     }
 }
 
@@ -210,8 +225,84 @@ GBuffer *GEngine::GetActiveGBuffer()
     return cam ? cam->GetGBuffer() : nullptr;
 }
 
+void SetDrawBuffersToClearFromFlags(GBuffer *gbuffer, RenderFlags renderFlags)
+{
+    ASSERT(GL::IsBound(gbuffer));
+
+    Array<GL::Attachment> clearAttachments;
+
+    if (renderFlags.IsOn(RenderFlag::CLEAR_ALBEDO))
+    {
+        clearAttachments.PushBack(GBuffer::AttAlbedo);
+    }
+
+    if (renderFlags.IsOn(RenderFlag::CLEAR_COLOR))
+    {
+        clearAttachments.PushBack(GBuffer::AttColor0);
+        clearAttachments.PushBack(GBuffer::AttColor1);
+    }
+
+    if (renderFlags.IsOn(RenderFlag::CLEAR_MISC))
+    {
+        clearAttachments.PushBack(GBuffer::AttMisc);
+    }
+
+    if (renderFlags.IsOn(RenderFlag::CLEAR_NORMALS))
+    {
+        clearAttachments.PushBack(GBuffer::AttNormal);
+    }
+
+    gbuffer->SetDrawBuffers(clearAttachments);
+}
+
 void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
+    auto ClearNeededBuffersForTheFirstTime = [this](GBuffer *gbuffer,
+                                                    Camera *camera)
+    {
+        RenderFlags renderFlags = camera->GetRenderFlags();
+        SetDrawBuffersToClearFromFlags(gbuffer, renderFlags);
+        Array<GL::Attachment> currentDrawAttachments =
+                              gbuffer->GetCurrentDrawAttachments();
+        currentDrawAttachments.Remove( GBuffer::AttColor0 );
+        currentDrawAttachments.Remove( GBuffer::AttColor1 );
+
+        if (currentDrawAttachments.Size() > 0)
+        {
+            gbuffer->SetDrawBuffers( currentDrawAttachments );
+            GL::ClearColorBuffer(Color::Zero); // Clear all except color
+        }
+
+        if (camera->GetClearMode() == Camera::ClearMode::SKY_BOX)
+        {
+            GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+            GL::Push(GL::BindTarget::SHADER_PROGRAM);
+
+            gbuffer->SetColorDrawBuffer();
+            m_renderSkySP.Get()->Bind();
+            gbuffer->ApplyPass(m_renderSkySP.Get(), false);
+
+            GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+            GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+        }
+        else // COLOR
+        {
+            if (renderFlags.IsOn(RenderFlag::CLEAR_COLOR))
+            {
+                gbuffer->SetColorDrawBuffer();
+                GL::ClearColorBuffer( camera->GetClearColor() );
+            }
+        }
+    };
+
+    auto ClearDepthStencilIfNeeded = [this](RenderFlags renderFlags)
+    {
+        if (renderFlags.IsOn(RenderFlag::CLEAR_DEPTH_STENCIL))
+        {
+            GL::ClearStencilDepthBuffers();
+        }
+    };
+
     const bool needToChangeCamera = (camera != GetActiveRenderingCamera());
     if (needToChangeCamera)
     {
@@ -228,45 +319,26 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 
     GBuffer *gbuffer = camera->GetGBuffer();
 
-    auto RenderSky = [this, gbuffer]() // Lambda to render the sky / background
-    {
-        GL::Push(GL::BindTarget::SHADER_PROGRAM);
-        m_renderSkySP.Get()->Bind();
-        gbuffer->ApplyPass(m_renderSkySP.Get(), false);
-        GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-    };
-
-    bool needsForwardRendering = camera->MustRenderPass(RenderPass::SCENE_TRANSPARENT);
-    if (needsForwardRendering)
-    {
-        RetrieveForwardRenderingInformation(go);
-    }
-
     gbuffer->Bind();
     gbuffer->PushDepthStencilTexture();
 
-    bool hasRenderedSky = false;
+    RenderFlags renderFlags = camera->GetRenderFlags();
+    ClearNeededBuffersForTheFirstTime(gbuffer, camera);
 
     // GBuffer Scene rendering
     if (camera->MustRenderPass(RenderPass::SCENE) ||
         camera->MustRenderPass(RenderPass::SCENE_TRANSPARENT))
     {
-        gbuffer->SetAllDrawBuffers();
         gbuffer->SetSceneDepthStencil();
-        GL::ClearColorBuffer(Color::Zero);
-        GL::ClearStencilDepthBuffers();
+        ClearDepthStencilIfNeeded(renderFlags);
+
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);
-
-        if (!hasRenderedSky)
-        {
-            RenderSky();
-            hasRenderedSky = true;
-        }
 
         // Render scene pass
         if (camera->MustRenderPass(RenderPass::SCENE))
         {
+            gbuffer->SetAllDrawBuffers();
             RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
             ApplyStenciledDeferredLightsToGBuffer(go, camera);
         }
@@ -274,12 +346,13 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         // Render scene transparent
         if (camera->MustRenderPass(RenderPass::SCENE_TRANSPARENT))
         {
+            RetrieveForwardRenderingInformation(go);
             gbuffer->SetColorDrawBuffer();
             RenderTransparentPass(go);
         }
 
         // Render scene postprocess
-        if (camera->MustRenderPass(RenderPass::SCENE))
+        if (camera->MustRenderPass(RenderPass::SCENE_POSTPROCESS))
         {
             gbuffer->SetColorDrawBuffer();
             RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
@@ -295,16 +368,10 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     if (camera->MustRenderPass(RenderPass::CANVAS))
     {
         gbuffer->SetCanvasDepthStencil();
-        GL::ClearDepthBuffer();
+        ClearDepthStencilIfNeeded(renderFlags);
+
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);
-
-        if (!hasRenderedSky)
-        {
-            gbuffer->SetAllDrawBuffers();
-            RenderSky();
-            hasRenderedSky = true;
-        }
 
         gbuffer->SetColorDrawBuffer();
         RenderWithPass(go, RenderPass::CANVAS);
@@ -319,7 +386,8 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         // GBuffer Overlay rendering
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetOverlayDepthStencil();
-        GL::ClearStencilDepthBuffers();
+        ClearDepthStencilIfNeeded(renderFlags);
+
         GL::SetDepthMask(false);
         GL::SetDepthFunc(GL::Function::LEQUAL);
 

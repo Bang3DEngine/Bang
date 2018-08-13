@@ -26,8 +26,10 @@ uniform vec3        B_Camera_WorldForward;
 uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
-uniform vec3 B_SkyBoxCenter; // If boxed
-uniform vec3 B_SkyBoxSize;   // If boxed. Otherwise _.x < 0
+uniform samplerCube B_ReflectionProbeDiffuse;
+uniform samplerCube B_ReflectionProbeSpecular;
+uniform vec3        B_SkyBoxCenter; // If boxed
+uniform vec3        B_SkyBoxSize;   // If boxed. Otherwise _.x < 0
 /////////////////////////////////////////////
 
 uniform float B_TimeSeconds;

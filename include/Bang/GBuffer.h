@@ -16,21 +16,16 @@ class GBuffer : public Framebuffer
 {
 public:
 
-    static const GL::Attachment AttColor0        = GL::Attachment::COLOR0;
-    static const GL::Attachment AttColor1        = GL::Attachment::COLOR1;
-
-    // (diffColor.r, diffColor.g, diffColor.b, diffColor.a)
-    static const GL::Attachment AttAlbedo       = GL::Attachment::COLOR2;
-
-    // (normal.x, normal.y, normal.z, 0)
-    static const GL::Attachment AttNormal       = GL::Attachment::COLOR3;
-
-    // (receivesLighting, roughness, metalness, ---)
-    // If receivesLighting >  0 ---> receivesShadows
-    // If receivesLighting <= 0 ---> not receivesShadows
-    static const GL::Attachment AttMisc         = GL::Attachment::COLOR4;
-
-    static const GL::Attachment AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
+    // NORMAL: (normal.x, normal.y, normal.z, 0)
+    // MISC:   (receivesLighting, roughness, metalness, ---)
+    //          If receivesLighting >  0 ---> receivesShadows
+    //          If receivesLighting <= 0 ---> not receivesShadows
+    static const GL::Attachment AttColor0;
+    static const GL::Attachment AttColor1;
+    static const GL::Attachment AttAlbedo;
+    static const GL::Attachment AttNormal;
+    static const GL::Attachment AttMisc;
+    static const GL::Attachment AttDepthStencil;
 
     GBuffer(int width, int height);
     virtual ~GBuffer();

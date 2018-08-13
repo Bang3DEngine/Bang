@@ -209,24 +209,44 @@ void Renderer::SetReflectionProbeUniforms()
     {
         if (ShaderProgram *sp = mat->GetShaderProgram())
         {
+            bool usingReflectionProbes = false;
             if (GetUseReflectionProbes())
             {
                 if (ReflectionProbe *closestReflProbe = GetClosestReflectionProbe())
                 {
-                    sp->SetVector3("B_SkyBoxCenter",
-                                   closestReflProbe->GetGameObject()->
-                                   GetTransform()->GetPosition(),
-                                   false);
-                    sp->SetVector3("B_SkyBoxSize",
-                                   closestReflProbe->GetSize(),
-                                   false);
-                    sp->SetTextureCubeMap("B_SkyBoxDiffuse",
+                    if (closestReflProbe->GetIsBoxed())
+                    {
+                        sp->SetVector3("B_SkyBoxCenter",
+                                       closestReflProbe->GetGameObject()->
+                                       GetTransform()->GetPosition(),
+                                       false);
+                        sp->SetVector3("B_SkyBoxSize",
+                                       closestReflProbe->GetSize(),
+                                       false);
+                    }
+                    else
+                    {
+                        sp->SetVector3("B_SkyBoxSize", -Vector3::One, false);
+                    }
+
+                    sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
                                           closestReflProbe->GetTextureCubeMap(),
                                           false);
-                    sp->SetTextureCubeMap("B_SkyBoxSpecular",
+                    sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
                                           closestReflProbe->GetTextureCubeMap(),
                                           false);
+                    usingReflectionProbes = true;
                 }
+            }
+
+            if (!usingReflectionProbes)
+            {
+                sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
+                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
+                                      false);
+                sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
+                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
+                                      false);
             }
         }
     }

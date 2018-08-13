@@ -115,5 +115,6 @@ void MeshRenderer::ImportXML(const XMLNode &xmlInfo)
 void MeshRenderer::ExportXML(XMLNode *xmlInfo) const
 {
     Renderer::ExportXML(xmlInfo);
-    xmlInfo->Set("Mesh", GetSharedMesh() ? GetSharedMesh()->GetGUID() : GUID::Empty());
+    xmlInfo->Set("Mesh", GetSharedMesh() ? GetSharedMesh()->GetGUID() :
+                                           GUID::Empty());
 }

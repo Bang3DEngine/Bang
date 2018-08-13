@@ -6,7 +6,6 @@
 #include "Bang/Debug.h"
 #include "Bang/Input.h"
 #include "Bang/Scene.h"
-#include "Bang/Camera.h"
 #include "Bang/GEngine.h"
 #include "Bang/GBuffer.h"
 #include "Bang/Resources.h"

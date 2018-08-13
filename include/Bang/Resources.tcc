@@ -25,7 +25,7 @@ RH<ResourceClass> Resources::Load(const Path &filepath)
             {
                 resultRH = RH<ResourceClass>(res);
             }
-            else
+            else if (!Resources::IsEmbeddedResource(filepath))
             {
                 ASSERT_MSG(res, "Resource " << filepath << " being loaded "
                            "as two different types of resources. "
@@ -56,9 +56,9 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
             }
             else
             {
-                // ASSERT_MSG(res, "Resource " << guid << " being loaded "
-                //            "as two different types of resources. "
-                //            "This is forbidden");
+                ASSERT_MSG(res, "Resource " << guid << " being loaded "
+                           "as two different types of resources. "
+                           "This is forbidden");
             }
         }
     }

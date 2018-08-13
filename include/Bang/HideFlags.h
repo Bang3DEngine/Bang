@@ -5,11 +5,12 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum HideFlag
+enum class HideFlag
 {
-    DEFAULT,
-    DONT_SERIALIZE,
-    DONT_CLONE
+    NONE           = 0,
+    DONT_SERIALIZE = 1,
+    DONT_CLONE     = 2,
+    DEFAULT        = HideFlag::NONE
 };
 
 CREATE_FLAGS(HideFlags, HideFlag);

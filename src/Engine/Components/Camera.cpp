@@ -102,6 +102,14 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     return res;
 }
 
+void Camera::SetRenderFlags(RenderFlags renderFlags)
+{
+    if (renderFlags != GetRenderFlags())
+    {
+        m_renderFlags = renderFlags;
+    }
+}
+
 void Camera::SetRenderSize(const Vector2i &renderSize)
 {
     GetGBuffer()->Resize( renderSize );
@@ -219,6 +227,11 @@ Camera::ClearMode Camera::GetClearMode() const
 float Camera::GetGammaCorrection() const
 {
     return m_gammaCorrection;
+}
+
+RenderFlags Camera::GetRenderFlags() const
+{
+    return m_renderFlags;
 }
 
 bool Camera::MustRenderPass(RenderPass renderPass) const

@@ -10,6 +10,13 @@
 
 USING_NAMESPACE_BANG
 
+const GL::Attachment GBuffer::AttColor0       = GL::Attachment::COLOR0;
+const GL::Attachment GBuffer::AttColor1       = GL::Attachment::COLOR1;
+const GL::Attachment GBuffer::AttAlbedo       = GL::Attachment::COLOR2;
+const GL::Attachment GBuffer::AttNormal       = GL::Attachment::COLOR3;
+const GL::Attachment GBuffer::AttMisc         = GL::Attachment::COLOR4;
+const GL::Attachment GBuffer::AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
+
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 {
     // Create depth textures
@@ -115,13 +122,17 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
 void GBuffer::SetAllDrawBuffers() const
 {
     SetDrawBuffers({{m_drawColorAttachment,
-                     GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc
+                     GBuffer::AttAlbedo,
+                     GBuffer::AttNormal,
+                     GBuffer::AttMisc
                    }});
 }
 
 void GBuffer::SetAllDrawBuffersExceptColor()
 {
-    SetDrawBuffers({{GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc}});
+    SetDrawBuffers({{GBuffer::AttAlbedo,
+                     GBuffer::AttNormal,
+                     GBuffer::AttMisc}});
 }
 
 void GBuffer::SetColorDrawBuffer()

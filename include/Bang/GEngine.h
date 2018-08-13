@@ -3,6 +3,7 @@
 
 #include "Bang/USet.h"
 #include "Bang/Array.h"
+#include "Bang/Flags.h"
 #include "Bang/AARect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/StackAndValue.h"
@@ -38,14 +39,16 @@ public:
     void Render(Scene *scene);
     void Render(Scene *scene, Camera *camera);
     void RenderTexture(Texture2D *texture);
-    void RenderWithPass(GameObject *go, RenderPass renderPass,
+    void RenderWithPass(GameObject *go,
+                        RenderPass renderPass,
                         bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
                             const AARect &destRectMask = AARect::NDCRect);
     void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderViewportPlane();
 
-    void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
+    void ApplyGammaCorrection(GBuffer *gbuffer,
+                              float gammaCorrection);
 
     List<ReflectionProbe*> GetCurrentReflectionProbes() const;
 

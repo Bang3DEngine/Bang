@@ -6,6 +6,7 @@
 #include "Bang/Color.h"
 #include "Bang/AARect.h"
 #include "Bang/Component.h"
+#include "Bang/RenderFlags.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/TextureCubeMap.h"
 
@@ -43,6 +44,7 @@ public:
     Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                               float zFromCam) const;
 
+    void SetRenderFlags(RenderFlags renderFlags);
     void SetRenderSize(const Vector2i &renderSize);
     void SetGammaCorrection(float gammaCorrection);
     void SetOrthoHeight(float orthoHeight);
@@ -66,6 +68,7 @@ public:
     float GetZFar() const;
     ClearMode GetClearMode() const;
     float GetGammaCorrection() const;
+    RenderFlags GetRenderFlags() const;
     bool MustRenderPass(RenderPass renderPass) const;
     const USet<RenderPass, EnumClassHash>& GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
@@ -105,6 +108,7 @@ protected:
 private:
     GBuffer *m_gbuffer = nullptr;
 
+    RenderFlags m_renderFlags = RenderFlag::DEFAULT;
     USet<RenderPass, EnumClassHash> m_renderPassMask;
     RH<TextureCubeMap> p_skyboxTextureCM;
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;

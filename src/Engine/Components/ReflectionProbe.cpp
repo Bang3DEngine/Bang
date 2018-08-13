@@ -52,6 +52,9 @@ ReflectionProbe::ReflectionProbe()
         cam->RemoveRenderPass(RenderPass::OVERLAY_POSTPROCESS);
         cam->RemoveRenderPass(RenderPass::CANVAS);
         cam->RemoveRenderPass(RenderPass::CANVAS_POSTPROCESS);
+        cam->SetRenderFlags( cam->GetRenderFlags().
+                             SetOff(RenderFlag::RENDER_SHADOW_MAPS).
+                             SetOff(RenderFlag::RENDER_REFLECTION_PROBES));
         cam->GetGameObject()->GetTransform()->LookInDirection(lookDir, upDir);
 
         m_cameraGos[i] = camGo;

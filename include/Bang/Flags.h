@@ -5,24 +5,65 @@
 
 NAMESPACE_BANG_BEGIN
 
+using FlagsPrimitiveType = uint32_t;
+
 template <class Flag>
 class Flags
 {
 public:
-    Flags() { }
-    Flags(int flagsOn)  { m_flags = Flag::NONE; SetOn(flagsOn); }
-    Flags(Flag flagsOn) { m_flags = Flag::NONE; SetOn(flagsOn); }
+    Flags()
+    {
+    }
 
-    void SetOn(int f)  { m_flags = m_flags | f; }
-    void SetOn(Flag f) { SetOn(static_cast<int>(f)); }
+    Flags(FlagsPrimitiveType flagsOn)
+    {
+        m_flags = SCAST<FlagsPrimitiveType>(Flag::NONE);
+        SetOn(flagsOn);
+    }
 
-    void SetOff(int f)  { m_flags = m_flags & ~f; }
-    void SetOff(Flag f) { SetOff(static_cast<int>(f)); }
+    Flags(Flag flagsOn)
+    {
+        m_flags = SCAST<FlagsPrimitiveType>(Flag::NONE);
+        SetOn(flagsOn);
+    }
 
-    bool IsOn(int f)  const { return (m_flags & f) > 0; }
-    bool IsOn(Flag f) const { return IsOn(static_cast<int>(f)); }
-    bool IsOff(int f)  const { return !IsOn(f); }
-    bool IsOff(Flag f) const { return !IsOn(f); }
+    Flags SetOn(FlagsPrimitiveType f)
+    {
+        m_flags = m_flags | f;
+        return *this;
+    }
+    Flags SetOn(Flag f)
+    {
+        return SetOn(SCAST<FlagsPrimitiveType>(f));
+    }
+
+    Flags SetOff(FlagsPrimitiveType f)
+    {
+        m_flags = m_flags & ~f;
+        return *this;
+    }
+    Flags SetOff(Flag f)
+    {
+        return SetOff(static_cast<FlagsPrimitiveType>(f));
+    }
+
+    bool IsOn(FlagsPrimitiveType f) const
+    {
+        return (m_flags & f) > 0;
+    }
+    bool IsOn(Flag f) const
+    {
+        return IsOn(SCAST<FlagsPrimitiveType>(f));
+    }
+
+    bool IsOff(FlagsPrimitiveType f) const
+    {
+        return !IsOn(f);
+    }
+    bool IsOff(Flag f) const
+    {
+        return !IsOn(f);
+    }
 
     inline Flags operator|(Flag f)
     {
@@ -44,13 +85,18 @@ public:
         return Flags(m_flags ^ f);
     }
 
-    int ToInteger() const
+    inline bool operator==(const Flags &rhs) const
     {
-        return m_flags;
+        return SCAST<FlagsPrimitiveType>(m_flags) ==
+               SCAST<FlagsPrimitiveType>(rhs.m_flags);
+    }
+    inline bool operator!=(const Flags &rhs) const
+    {
+        return !(*this == rhs);
     }
 
 private:
-    int m_flags = Flag::DEFAULT;
+    FlagsPrimitiveType m_flags = SCAST<FlagsPrimitiveType>(Flag::DEFAULT);
 };
 
 #define CREATE_FLAGS(FlagsName, FlagType) using FlagsName = Flags<FlagType>

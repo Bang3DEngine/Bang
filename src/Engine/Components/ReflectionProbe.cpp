@@ -25,9 +25,6 @@ ReflectionProbe::ReflectionProbe()
     for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         GL::CubeMapDir cmDir = GL::GetAllCubeMapDirs()[i];
-        GameObject *camGo = GameObjectFactory::CreateGameObject();
-        Camera *cam = camGo->AddComponent<Camera>();
-        cam->SetRenderSize( Vector2i(256) );
 
         Vector3 lookDir = Vector3::Forward;
         Vector3 upDir   = Vector3::Up;
@@ -48,6 +45,10 @@ ReflectionProbe::ReflectionProbe()
             case GL::CubeMapDir::BACK:  lookDir = Vector3::Back;    break;
             case GL::CubeMapDir::FRONT: lookDir = Vector3::Forward; break;
         }
+
+        GameObject *camGo = GameObjectFactory::CreateGameObject();
+        Camera *cam = camGo->AddComponent<Camera>();
+        cam->SetRenderSize( Vector2i(256) );
         cam->SetFovDegrees(90.0f);
         cam->RemoveRenderPass(RenderPass::OVERLAY);
         cam->RemoveRenderPass(RenderPass::OVERLAY_POSTPROCESS);
@@ -58,7 +59,7 @@ ReflectionProbe::ReflectionProbe()
                              SetOff(RenderFlag::RENDER_REFLECTION_PROBES));
         cam->GetGameObject()->GetTransform()->LookInDirection(lookDir, upDir);
 
-        m_cameraGos[i] = camGo;
+        m_cameras[i] = cam;
     }
 }
 
@@ -66,21 +67,22 @@ ReflectionProbe::~ReflectionProbe()
 {
     for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
-        GameObject::Destroy(m_cameraGos[i]);
+        GameObject::Destroy( GetCameras()[i]->GetGameObject() );
     }
 }
 
-void ReflectionProbe::RenderReflectionProbe()
+void ReflectionProbe::RenderReflectionProbe(bool force)
 {
-    if ((Time::GetNow_Millis() - m_lastRenderTimeMillis) / 1000.0f >=
-        GetRestTimeSeconds())
+    bool hasRested = ((Time::GetNow_Millis() - m_lastRenderTimeMillis) / 1000.0f >=
+                       GetRestTimeSeconds());
+    if (hasRested || force)
     {
         Camera *sceneCam = GetGameObject()->GetScene()->GetCamera();
 
         // Render from each of the 6 cameras...
         for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
         {
-            GameObject *camGo = m_cameraGos[i];
+            GameObject *camGo = GetCameras()[i]->GetGameObject();
             camGo->GetTransform()->SetPosition( GetGameObject()->GetTransform()->
                                                 GetPosition() );
 
@@ -94,8 +96,8 @@ void ReflectionProbe::RenderReflectionProbe()
         }
 
         #define __GET_TEX(CubeMapDir) \
-            m_cameraGos[ GL::GetCubeMapDirIndex(CubeMapDir) ]-> \
-            GetComponent<Camera>()->GetGBuffer()->GetLastDrawnColorTexture()
+            GetCameras()[ GL::GetCubeMapDirIndex(CubeMapDir) ]-> \
+            GetGBuffer()->GetLastDrawnColorTexture()
 
         GEngine::GetInstance()->FillCubeMapFromTextures(
                                         GetTextureCubeMapWithoutFiltering(),
@@ -118,6 +120,46 @@ void ReflectionProbe::RenderReflectionProbe()
     }
 
 #undef __GET_TEX
+}
+
+void ReflectionProbe::SetCamerasClearColor(const Color &clearColor)
+{
+    for (Camera *cam : GetCameras())
+    {
+        cam->SetClearColor(clearColor);
+    }
+}
+
+void ReflectionProbe::SetCamerasSkyBoxTexture(TextureCubeMap *skybox)
+{
+    for (Camera *cam : GetCameras())
+    {
+        cam->SetSkyBoxTexture(skybox);
+    }
+}
+
+void ReflectionProbe::SetCamerasClearMode(Camera::ClearMode clearMode)
+{
+    for (Camera *cam : GetCameras())
+    {
+        cam->SetClearMode(clearMode);
+    }
+}
+
+void ReflectionProbe::SetCamerasZNear(float zNear)
+{
+    for (Camera *cam : GetCameras())
+    {
+        cam->SetZNear(zNear);
+    }
+}
+
+void ReflectionProbe::SetCamerasZFar(float zFar)
+{
+    for (Camera *cam : GetCameras())
+    {
+        cam->SetZFar(zFar);
+    }
 }
 
 void ReflectionProbe::SetSize(const Vector3 &size)
@@ -170,7 +212,37 @@ const Vector3 &ReflectionProbe::GetSize() const
 Camera* ReflectionProbe::GetCamera(GL::CubeMapDir cubeMapDir) const
 {
     int cmDirIdx = GL::GetCubeMapDirIndex(cubeMapDir);
-    return m_cameraGos[cmDirIdx]->GetComponent<Camera>();
+    return GetCameras()[cmDirIdx];
+}
+
+const std::array<Camera*, 6> &ReflectionProbe::GetCameras() const
+{
+    return m_cameras;
+}
+
+TextureCubeMap *ReflectionProbe::GetCamerasSkyBoxTexture() const
+{
+    return GetCameras()[0]->GetSkyBoxTexture();
+}
+
+const Color &ReflectionProbe::GetCamerasClearColor() const
+{
+    return GetCameras()[0]->GetClearColor();
+}
+
+Camera::ClearMode ReflectionProbe::GetCamerasClearMode() const
+{
+    return GetCameras()[0]->GetClearMode();
+}
+
+float ReflectionProbe::GetCamerasZNear() const
+{
+    return GetCameras()[0]->GetZNear();
+}
+
+float ReflectionProbe::GetCamerasZFar() const
+{
+    return GetCameras()[0]->GetZFar();
 }
 
 void ReflectionProbe::SetRendererUniforms(Renderer *renderer)

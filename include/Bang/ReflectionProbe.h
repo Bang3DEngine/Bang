@@ -4,6 +4,7 @@
 #include <array>
 
 #include "Bang/Array.h"
+#include "Bang/Camera.h"
 #include "Bang/Vector3.h"
 #include "Bang/Component.h"
 #include "Bang/Framebuffer.h"
@@ -11,7 +12,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Camera;
 FORWARD class Renderer;
 
 class ReflectionProbe : public Component
@@ -22,8 +22,13 @@ public:
 	ReflectionProbe();
 	virtual ~ReflectionProbe();
 
-    void RenderReflectionProbe();
+    void RenderReflectionProbe(bool force = false);
 
+    void SetCamerasClearColor(const Color &clearColor);
+    void SetCamerasSkyBoxTexture(TextureCubeMap *skybox);
+    void SetCamerasClearMode(Camera::ClearMode clearMode);
+    void SetCamerasZNear(float zNear);
+    void SetCamerasZFar(float zFar);
     void SetSize(const Vector3 &size);
     void SetIsBoxed(bool isBoxed);
     void SetFilterForIBL(bool filterForIBL);
@@ -37,6 +42,13 @@ public:
     TextureCubeMap *GetTextureCubeMapSpecular() const;
     TextureCubeMap *GetTextureCubeMapWithoutFiltering() const;
     Camera* GetCamera(GL::CubeMapDir cubeMapDir) const;
+    const std::array<Camera*, 6> &GetCameras() const;
+
+    const Color& GetCamerasClearColor() const;
+    Camera::ClearMode GetCamerasClearMode() const;
+    TextureCubeMap* GetCamerasSkyBoxTexture() const;
+    float GetCamerasZNear() const;
+    float GetCamerasZFar() const;
 
     static void SetRendererUniforms(Renderer *renderer);
 
@@ -53,9 +65,9 @@ private:
     Vector3 m_size = Vector3::One;
     float m_restTimeSeconds = 0.5f;
 
+    std::array<Camera*, 6> m_cameras;
     Time::TimeT m_lastRenderTimeMillis = 0;
     Framebuffer *m_textureCubeMapFB = nullptr;
-    std::array<GameObject*, 6> m_cameraGos;
     RH<TextureCubeMap> p_textureCubeMapWithoutFiltering;
     RH<TextureCubeMap> p_textureCubeMapDiffuse;
     RH<TextureCubeMap> p_textureCubeMapSpecular;

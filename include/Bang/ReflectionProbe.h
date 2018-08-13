@@ -29,12 +29,14 @@ public:
     void SetCamerasClearMode(Camera::ClearMode clearMode);
     void SetCamerasZNear(float zNear);
     void SetCamerasZFar(float zFar);
+    void SetRenderSize(int size);
     void SetSize(const Vector3 &size);
     void SetIsBoxed(bool isBoxed);
     void SetFilterForIBL(bool filterForIBL);
     void SetRestTimeSeconds(float restTimeSeconds);
 
     bool GetIsBoxed() const;
+    int GetRenderSize() const;
     bool GetFilterForIBL() const;
     const Vector3 &GetSize() const;
     float GetRestTimeSeconds() const;
@@ -64,6 +66,13 @@ private:
     bool m_filterForIBL = true;
     Vector3 m_size = Vector3::One;
     float m_restTimeSeconds = 0.5f;
+
+    int m_renderSize = -1;
+    float m_camerasZNear = -1.0f;
+    float m_camerasZFar  = -1.0f;
+    Color m_camerasClearColor = -Color::One;
+    Camera::ClearMode m_camerasClearMode = Undef<Camera::ClearMode>();
+    RH<TextureCubeMap> m_camerasSkyBoxTexture;
 
     std::array<Camera*, 6> m_cameras;
     Time::TimeT m_lastRenderTimeMillis = 0;

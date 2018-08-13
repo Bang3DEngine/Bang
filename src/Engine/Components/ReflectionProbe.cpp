@@ -61,6 +61,13 @@ ReflectionProbe::ReflectionProbe()
 
         m_cameras[i] = cam;
     }
+
+    SetRenderSize(256);
+    SetCamerasZNear(0.01f);
+    SetCamerasZFar(100.0f);
+    SetCamerasClearColor(Color::Gray);
+    SetCamerasClearMode(Camera::ClearMode::COLOR);
+    SetCamerasSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap().Get() );
 }
 
 ReflectionProbe::~ReflectionProbe()
@@ -77,8 +84,6 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
                        GetRestTimeSeconds());
     if (hasRested || force)
     {
-        Camera *sceneCam = GetGameObject()->GetScene()->GetCamera();
-
         // Render from each of the 6 cameras...
         for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
         {
@@ -87,10 +92,6 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
                                                 GetPosition() );
 
             Camera *cam = camGo->GetComponent<Camera>();
-            cam->SetSkyBoxTexture(sceneCam->GetSkyBoxTexture());
-
-            GetTextureCubeMapWithoutFiltering()->Resize( cam->GetRenderSize().x );
-
             GEngine::GetInstance()->RenderToGBuffer(GetGameObject()->GetScene(),
                                                     cam);
         }
@@ -122,43 +123,81 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
 #undef __GET_TEX
 }
 
-void ReflectionProbe::SetCamerasClearColor(const Color &clearColor)
+void ReflectionProbe::SetRenderSize(int size)
 {
-    for (Camera *cam : GetCameras())
+    if (size != GetRenderSize())
     {
-        cam->SetClearColor(clearColor);
+        m_renderSize = size;
+
+        float sqrt = Math::Log10( float(size) ) / Math::Log10(2.0f);
+        bool isPowerOfTwo = ( Math::Abs(sqrt - Math::Round(sqrt)) < 0.0001f );
+        ASSERT(isPowerOfTwo);
+
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetRenderSize( Vector2i(size) );
+            GetTextureCubeMapWithoutFiltering()->Resize( size );
+        }
     }
 }
 
-void ReflectionProbe::SetCamerasSkyBoxTexture(TextureCubeMap *skybox)
+void ReflectionProbe::SetCamerasClearColor(const Color &clearColor)
 {
-    for (Camera *cam : GetCameras())
+    if (clearColor != GetCamerasClearColor())
     {
-        cam->SetSkyBoxTexture(skybox);
+        m_camerasClearColor = clearColor;
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetClearColor( GetCamerasClearColor() );
+        }
+    }
+}
+
+void ReflectionProbe::SetCamerasSkyBoxTexture(TextureCubeMap *skyBoxTexture)
+{
+    if (skyBoxTexture != GetCamerasSkyBoxTexture())
+    {
+        m_camerasSkyBoxTexture.Set( skyBoxTexture );
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetSkyBoxTexture( GetCamerasSkyBoxTexture() );
+        }
     }
 }
 
 void ReflectionProbe::SetCamerasClearMode(Camera::ClearMode clearMode)
 {
-    for (Camera *cam : GetCameras())
+    if (clearMode != GetCamerasClearMode())
     {
-        cam->SetClearMode(clearMode);
+        m_camerasClearMode = clearMode;
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetClearMode( GetCamerasClearMode() );
+        }
     }
 }
 
 void ReflectionProbe::SetCamerasZNear(float zNear)
 {
-    for (Camera *cam : GetCameras())
+    if (zNear != GetCamerasZNear())
     {
-        cam->SetZNear(zNear);
+        m_camerasZNear = zNear;
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetZNear( GetCamerasZNear() );
+        }
     }
 }
 
 void ReflectionProbe::SetCamerasZFar(float zFar)
 {
-    for (Camera *cam : GetCameras())
+    if (zFar != GetCamerasZFar())
     {
-        cam->SetZFar(zFar);
+        m_camerasZFar = zFar;
+        for (Camera *cam : GetCameras())
+        {
+            cam->SetZFar( GetCamerasZFar() );
+        }
     }
 }
 
@@ -180,13 +219,24 @@ void ReflectionProbe::SetIsBoxed(bool isBoxed)
 
 void ReflectionProbe::SetRestTimeSeconds(float restTimeSeconds)
 {
-    m_restTimeSeconds = restTimeSeconds;
-    m_lastRenderTimeMillis = 0;
+    if (restTimeSeconds != GetRestTimeSeconds())
+    {
+        m_restTimeSeconds = restTimeSeconds;
+        m_lastRenderTimeMillis = 0;
+    }
 }
 
 void ReflectionProbe::SetFilterForIBL(bool filterForIBL)
 {
-    m_filterForIBL = filterForIBL;
+    if (filterForIBL != GetFilterForIBL())
+    {
+        m_filterForIBL = filterForIBL;
+    }
+}
+
+int ReflectionProbe::GetRenderSize() const
+{
+    return m_renderSize;
 }
 
 bool ReflectionProbe::GetIsBoxed() const
@@ -222,27 +272,27 @@ const std::array<Camera*, 6> &ReflectionProbe::GetCameras() const
 
 TextureCubeMap *ReflectionProbe::GetCamerasSkyBoxTexture() const
 {
-    return GetCameras()[0]->GetSkyBoxTexture();
+    return m_camerasSkyBoxTexture.Get();
 }
 
 const Color &ReflectionProbe::GetCamerasClearColor() const
 {
-    return GetCameras()[0]->GetClearColor();
+    return m_camerasClearColor;
 }
 
 Camera::ClearMode ReflectionProbe::GetCamerasClearMode() const
 {
-    return GetCameras()[0]->GetClearMode();
+    return m_camerasClearMode;
 }
 
 float ReflectionProbe::GetCamerasZNear() const
 {
-    return GetCameras()[0]->GetZNear();
+    return m_camerasZNear;
 }
 
 float ReflectionProbe::GetCamerasZFar() const
 {
-    return GetCameras()[0]->GetZFar();
+    return m_camerasZFar;
 }
 
 void ReflectionProbe::SetRendererUniforms(Renderer *renderer)
@@ -336,6 +386,48 @@ void ReflectionProbe::ImportXML(const XMLNode &xmlInfo)
     {
         SetIsBoxed(xmlInfo.Get<bool>("IsBoxed"));
     }
+
+    if (xmlInfo.Contains("RenderSize"))
+    {
+        SetRenderSize(xmlInfo.Get<int>("RenderSize"));
+    }
+
+    if (xmlInfo.Contains("FilterForIBL"))
+    {
+        SetFilterForIBL(xmlInfo.Get<bool>("FilterForIBL"));
+    }
+
+    if (xmlInfo.Contains("RestTimeSeconds"))
+    {
+        SetRestTimeSeconds(xmlInfo.Get<float>("RestTimeSeconds"));
+    }
+
+    if (xmlInfo.Contains("CamerasZNear"))
+    {
+        SetCamerasZNear(xmlInfo.Get<float>("CamerasZNear"));
+    }
+
+    if (xmlInfo.Contains("CamerasZFar"))
+    {
+        SetCamerasZFar(xmlInfo.Get<float>("CamerasZFar"));
+    }
+
+    if (xmlInfo.Contains("CamerasClearColor"))
+    {
+        SetCamerasClearColor(xmlInfo.Get<Color>("CamerasClearColor"));
+    }
+
+    if (xmlInfo.Contains("CamerasClearMode"))
+    {
+        SetCamerasClearMode( SCAST<Camera::ClearMode>(
+                                 xmlInfo.Get<int>("CamerasClearMode")) );
+    }
+
+    if (xmlInfo.Contains("CamerasSkyBoxTexture"))
+    {
+        SetCamerasSkyBoxTexture(Resources::Load<TextureCubeMap>(
+                                xmlInfo.Get<GUID>("CamerasSkyBoxTexture")).Get());
+    }
 }
 
 void ReflectionProbe::ExportXML(XMLNode *xmlInfo) const
@@ -344,6 +436,17 @@ void ReflectionProbe::ExportXML(XMLNode *xmlInfo) const
 
     xmlInfo->Set("Size", GetSize());
     xmlInfo->Set("IsBoxed", GetIsBoxed());
+    xmlInfo->Set("RenderSize", GetRenderSize());
+    xmlInfo->Set("FilterForIBL", GetFilterForIBL());
+    xmlInfo->Set("RestTimeSeconds", GetRestTimeSeconds());
+
+    xmlInfo->Set("CamerasZFar", GetCamerasZFar());
+    xmlInfo->Set("CamerasZNear", GetCamerasZNear());
+    xmlInfo->Set("CamerasClearColor", GetCamerasClearColor());
+    xmlInfo->Set("CamerasClearMode", SCAST<int>(GetCamerasClearMode()));
+    xmlInfo->Set("CamerasSkyBoxTexture",
+             GetCamerasSkyBoxTexture() ? GetCamerasSkyBoxTexture()->GetGUID() :
+                                         GUID::Empty());
 }
 
 ReflectionProbe *ReflectionProbe::GetClosestReflectionProbe(Renderer *renderer)

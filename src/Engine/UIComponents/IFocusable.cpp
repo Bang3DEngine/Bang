@@ -32,6 +32,8 @@ UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
             SetBeingPressed(true);
         break;
 
+        case UIEvent::Type::MOUSE_CLICK_FULL:
+        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
         case UIEvent::Type::FINISHED_BEING_PRESSED:
             SetBeingPressed(false);
         break;
@@ -41,17 +43,19 @@ UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
 
     // Propagate events
     UIEventResult finalResult = UIEventResult::IGNORE;
-    for (EventCallback eventCallback : m_eventCallbacks)
+    if (IFocusable::IsEmittingEvents() && IsFocusEnabled())
     {
-        UIEventResult propagationResult = eventCallback(this, event);
-        if (propagationResult == UIEventResult::INTERCEPT)
+        for (EventCallback eventCallback : m_eventCallbacks)
         {
-            finalResult = UIEventResult::INTERCEPT;
+            UIEventResult propagationResult = eventCallback(this, event);
+            if (propagationResult == UIEventResult::INTERCEPT)
+            {
+                finalResult = UIEventResult::INTERCEPT;
+            }
         }
+        EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnEvent,
+                                                         this, event);
     }
-
-    EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnEvent,
-                                                     this, event);
 
     return finalResult;
 }
@@ -118,7 +122,7 @@ void IFocusable::ClearFocus()
 
 void IFocusable::SetBeingPressed(bool beingPressed)
 {
-    if (beingPressed != m_beingPressed)
+    if (beingPressed != IsBeingPressed())
     {
         m_beingPressed = beingPressed;
     }
@@ -126,7 +130,7 @@ void IFocusable::SetBeingPressed(bool beingPressed)
 
 void IFocusable::SetIsMouseOver(bool isMouseOver)
 {
-    if (isMouseOver != m_isMouseOver)
+    if (isMouseOver != IsMouseOver())
     {
         m_isMouseOver = isMouseOver;
     }

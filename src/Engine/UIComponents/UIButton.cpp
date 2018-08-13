@@ -43,15 +43,16 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
         switch (event.type)
         {
             case UIEvent::Type::MOUSE_CLICK_DOWN:
-                if (event.mouse.button == MouseButton::LEFT)
+                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
-                    GetBackground()->SetTint(UIButton::PressedColor);
+                    OnMouseEnter();
                     return UIEventResult::INTERCEPT;
                 }
             break;
             case UIEvent::Type::MOUSE_CLICK_FULL:
-                if (event.mouse.button == MouseButton::LEFT)
+                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
+                    OnMouseEnter();
                     for (auto clickedCallback : m_clickedCallbacks)
                     {
                         clickedCallback();
@@ -62,6 +63,7 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
 
             case UIEvent::Type::STARTED_BEING_PRESSED:
             case UIEvent::Type::FINISHED_BEING_PRESSED:
+            case UIEvent::Type::MOUSE_CLICK_UP:
             case UIEvent::Type::MOUSE_ENTER:
             case UIEvent::Type::MOUSE_EXIT:
                 if (GetFocusable()->IsMouseOver())
@@ -84,15 +86,15 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
 void UIButton::OnMouseEnter()
 {
     GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                                 UIButton::PressedColor :
-                                 UIButton::OverColor);
+                             UIButton::PressedColor :
+                             UIButton::OverColor);
 }
 
 void UIButton::OnMouseExit()
 {
     GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                                 UIButton::PressedColor :
-                                 UIButton::IdleColor);
+                             UIButton::PressedColor :
+                             UIButton::IdleColor);
 }
 
 void UIButton::OnStart()

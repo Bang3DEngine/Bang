@@ -107,13 +107,13 @@ void UIList::OnUpdate()
 
         if (p_itemUnderMouse)
         {
-            if (Input::GetMouseButtonDown(MouseButton::LEFT))
+            if (Input::GetMouseButtonUp(MouseButton::LEFT))
             {
                 SetSelection(p_itemUnderMouse);
                 CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_LEFT);
             }
 
-            if (Input::GetMouseButtonDown(MouseButton::RIGHT))
+            if (Input::GetMouseButtonUp(MouseButton::RIGHT))
             {
                 CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_RIGHT);
             }

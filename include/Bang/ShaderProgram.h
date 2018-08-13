@@ -38,9 +38,9 @@ public:
     bool Link();
     bool IsLinked() const;
 
-    void Bind() const override;
-    void UnBind() const override;
-    void BindPrecise(bool needsPBRUniforms) const;
+    void Bind() override;
+    void UnBind() override;
+    void BindPrecise(bool needsPBRUniforms);
     GL::BindTarget GetGLBindTarget() const override;
 
     bool SetInt(const String &name, int v, bool warn = true);
@@ -112,6 +112,9 @@ private:
                   const Path& gShaderPath,
                   const Path& fShaderPath);
     virtual ~ShaderProgram();
+
+    void Bind() const override;
+    void UnBind() const override;
 
     bool SetDefaultTexture2D(const String &name, bool warn = true);
     bool SetDefaultTextureCubeMap(const String &name, bool warn = true);

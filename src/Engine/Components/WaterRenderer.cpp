@@ -14,6 +14,8 @@ WaterRenderer::WaterRenderer()
 {
     p_planeMesh = MeshFactory::GetPlane();
     SetMaterial( MaterialFactory::GetWater().Get() );
+
+    SetUseReflectionProbes(true);
 }
 
 WaterRenderer::~WaterRenderer()

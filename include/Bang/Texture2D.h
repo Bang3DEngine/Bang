@@ -26,7 +26,7 @@ public:
               GL::DataType inputDataType);
 
     template<class T = Byte>
-    Image<T> ToImage() const;
+    Image<T> ToImage();
 
     void SetAlphaCutoff(float alphaCutoff);
 
@@ -56,7 +56,7 @@ protected:
 };
 
 template<class T>
-Image<T> Texture2D::ToImage() const
+Image<T> Texture2D::ToImage()
 {
     return Texture::ToImage<T>(GL::TextureTarget::TEXTURE_2D);
 }

@@ -4,6 +4,7 @@
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
+#include "Bang/XMLNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObjectFactory.h"
@@ -47,6 +48,10 @@ ReflectionProbe::ReflectionProbe()
             case GL::CubeMapDir::FRONT: lookDir = Vector3::Forward; break;
         }
         cam->SetFovDegrees(90.0f);
+        cam->RemoveRenderPass(RenderPass::OVERLAY);
+        cam->RemoveRenderPass(RenderPass::OVERLAY_POSTPROCESS);
+        cam->RemoveRenderPass(RenderPass::CANVAS);
+        cam->RemoveRenderPass(RenderPass::CANVAS_POSTPROCESS);
         cam->GetGameObject()->GetTransform()->LookInDirection(lookDir, upDir);
 
         m_cameraGos[i] = camGo;
@@ -78,7 +83,8 @@ void ReflectionProbe::RenderReflectionProbe()
         cam->SetSkyBoxTexture(sceneCam->GetSkyBoxTexture());
         cam->SetRenderSize( p_textureCubeMap.Get()->GetSize() );
 
-        GEngine::GetInstance()->RenderToGBuffer(GetGameObject()->GetScene(), cam);
+        GEngine::GetInstance()->RenderToGBuffer(GetGameObject()->GetScene(),
+                                                cam);
     }
 
     #define __GET_TEX(CubeMapDir) \
@@ -97,6 +103,38 @@ void ReflectionProbe::RenderReflectionProbe()
     #undef __GET_TEX
 }
 
+void ReflectionProbe::SetSize(const Vector3 &size)
+{
+    if (size != GetSize())
+    {
+        m_size = size;
+    }
+}
+
+void ReflectionProbe::SetIsBoxed(bool isBoxed)
+{
+    if (isBoxed != GetIsBoxed())
+    {
+        m_isBoxed = isBoxed;
+    }
+}
+
+bool ReflectionProbe::GetIsBoxed() const
+{
+    return m_isBoxed;
+}
+
+const Vector3 &ReflectionProbe::GetSize() const
+{
+    return m_size;
+}
+
+Camera* ReflectionProbe::GetCamera(GL::CubeMapDir cubeMapDir) const
+{
+    int cmDirIdx = GL::GetCubeMapDirIndex(cubeMapDir);
+    return m_cameraGos[cmDirIdx]->GetComponent<Camera>();
+}
+
 TextureCubeMap *ReflectionProbe::GetTextureCubeMap() const
 {
     return p_textureCubeMap.Get();
@@ -107,21 +145,30 @@ void ReflectionProbe::CloneInto(ICloneable *clone) const
     Component::CloneInto(clone);
 
     ReflectionProbe *rpClone = SCAST<ReflectionProbe*>(clone);
-    (void) rpClone;
+    rpClone->SetSize( GetSize() );
+    rpClone->SetIsBoxed( GetIsBoxed() );
 }
 
 void ReflectionProbe::ImportXML(const XMLNode &xmlInfo)
 {
     Component::ImportXML(xmlInfo);
+
+    if (xmlInfo.Contains("Size"))
+    {
+        SetSize(xmlInfo.Get<Vector3>("Size"));
+    }
+
+    if (xmlInfo.Contains("IsBoxed"))
+    {
+        SetIsBoxed(xmlInfo.Get<bool>("IsBoxed"));
+    }
 }
 
 void ReflectionProbe::ExportXML(XMLNode *xmlInfo) const
 {
     Component::ExportXML(xmlInfo);
-}
 
-Camera *ReflectionProbe::GetCamera(GL::CubeMapDir dir) const
-{
-    return m_cameraGos[ GL::GetCubeMapDirIndex(dir) ]->GetComponent<Camera>();
+    xmlInfo->Set("Size", GetSize());
+    xmlInfo->Set("IsBoxed", GetIsBoxed());
 }
 

@@ -168,7 +168,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
     p_mesh.Get()->UpdateVAOs();
 }
 
-void UITextRenderer::Bind() const
+void UITextRenderer::Bind()
 {
     UIRenderer::Bind();
 
@@ -192,7 +192,7 @@ void UITextRenderer::OnRender()
     }
 }
 
-void UITextRenderer::UnBind() const
+void UITextRenderer::UnBind()
 {
     UIRenderer::UnBind();
 }

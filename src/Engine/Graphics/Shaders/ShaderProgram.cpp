@@ -480,6 +480,16 @@ void ShaderProgram::Import(const Path &)
 
 void ShaderProgram::Bind() const
 {
+    ASSERT(false);
+}
+
+void ShaderProgram::UnBind() const
+{
+    ASSERT(false);
+}
+
+void ShaderProgram::Bind()
+{
     #ifdef DEBUG
     if (!IsLinked())
     {
@@ -491,12 +501,12 @@ void ShaderProgram::Bind() const
     BindPrecise(m_lastNeedsPBRUniforms);
 }
 
-void ShaderProgram::UnBind() const
+void ShaderProgram::UnBind()
 {
-    GL::UnBind(this);
+    // GL::UnBind(this);
 }
 
-void ShaderProgram::BindPrecise(bool needsPBRUniforms) const
+void ShaderProgram::BindPrecise(bool needsPBRUniforms)
 {
     m_lastNeedsPBRUniforms = needsPBRUniforms;
 
@@ -505,10 +515,8 @@ void ShaderProgram::BindPrecise(bool needsPBRUniforms) const
         GL::Bind(this);
     }
 
-    ShaderProgram* noConstThis = const_cast<ShaderProgram*>(this);
-    GLUniforms::SetAllUniformsToShaderProgram(noConstThis, needsPBRUniforms);
-    noConstThis->BindAllTexturesToUnits();
-
+    GLUniforms::SetAllUniformsToShaderProgram(this, needsPBRUniforms);
+    BindAllTexturesToUnits();
 }
 
 void ShaderProgram::BindAllTexturesToUnits()

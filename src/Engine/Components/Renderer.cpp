@@ -13,7 +13,9 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/ReflectionProbe.h"
 
 USING_NAMESPACE_BANG
 
@@ -36,31 +38,37 @@ void Renderer::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    GEngine *ge = GEngine::GetInstance(); ASSERT(ge);
+    GEngine *ge = GEngine::GetInstance();
+    ASSERT(ge);
+
     if (ge->CanRenderNow(this, renderPass))
     {
         ge->Render(this);
     }
 }
-void Renderer::OnRender() {}
 
-void Renderer::Bind() const
+void Renderer::OnRender()
+{
+    // Empty
+}
+
+void Renderer::Bind()
 {
     GL::SetViewProjMode( GetViewProjMode() );
     GLUniforms::SetModelMatrix( GetModelMatrixUniform() );
 
-    if (GetActiveMaterial())
+    if (Material *mat = GetActiveMaterial())
     {
-        GetActiveMaterial()->Bind();
-        ShaderProgram *sp = GetActiveMaterial()->GetShaderProgram();
-        if (sp)
+        mat->Bind();
+        if (ShaderProgram *sp = mat->GetShaderProgram())
         {
+            SetReflectionProbeUniforms();
             sp->SetBool("B_ReceivesShadows", GetReceivesShadows(), false);
         }
     }
 }
 
-void Renderer::UnBind() const
+void Renderer::UnBind()
 {
     // if (GetActiveMaterial()) { GetActiveMaterial()->UnBind(); }
 }
@@ -121,6 +129,15 @@ void Renderer::SetRenderPrimitive(GL::Primitive renderPrimitive)
         PropagateRendererChanged();
     }
 }
+
+void Renderer::SetUseReflectionProbes(bool useReflectionProbes)
+{
+    if (useReflectionProbes != GetUseReflectionProbes())
+    {
+        m_useReflectionProbes = useReflectionProbes;
+        PropagateRendererChanged();
+    }
+}
 void Renderer::SetCastsShadows(bool castsShadows)
 {
     if (castsShadows != GetCastsShadows())
@@ -147,6 +164,11 @@ bool Renderer::GetCastsShadows() const { return m_castsShadows; }
 bool Renderer::GetReceivesShadows() const { return m_receivesShadows; }
 GL::ViewProjMode Renderer::GetViewProjMode() const { return m_viewProjMode; }
 GL::Primitive Renderer::GetRenderPrimitive() const { return m_renderPrimitive; }
+
+bool Renderer::GetUseReflectionProbes() const
+{
+    return m_useReflectionProbes;
+}
 Material* Renderer::GetMaterial() const
 {
     if (!p_material)
@@ -181,6 +203,60 @@ Matrix4 Renderer::GetModelMatrixUniform() const
                     Matrix4::Identity;
 }
 
+void Renderer::SetReflectionProbeUniforms()
+{
+    if (Material *mat = GetActiveMaterial())
+    {
+        if (ShaderProgram *sp = mat->GetShaderProgram())
+        {
+            if (GetUseReflectionProbes())
+            {
+                if (ReflectionProbe *closestReflProbe = GetClosestReflectionProbe())
+                {
+                    sp->SetVector3("B_SkyBoxCenter",
+                                   closestReflProbe->GetGameObject()->
+                                   GetTransform()->GetPosition(),
+                                   false);
+                    sp->SetVector3("B_SkyBoxSize",
+                                   closestReflProbe->GetSize(),
+                                   false);
+                    sp->SetTextureCubeMap("B_SkyBoxDiffuse",
+                                          closestReflProbe->GetTextureCubeMap(),
+                                          false);
+                    sp->SetTextureCubeMap("B_SkyBoxSpecular",
+                                          closestReflProbe->GetTextureCubeMap(),
+                                          false);
+                }
+            }
+        }
+    }
+}
+
+ReflectionProbe *Renderer::GetClosestReflectionProbe() const
+{
+    GEngine *ge = GEngine::GetInstance();
+    ASSERT(ge);
+
+    Vector3 thisPos = GetGameObject()->GetTransform()->GetPosition();
+
+    ReflectionProbe *closestReflProbe = nullptr;
+    float closestReflProbeSqDist = Math::Infinity<float>();
+    List<ReflectionProbe*> reflProbes = ge->GetCurrentReflectionProbes();
+    for (ReflectionProbe *reflProbe : reflProbes)
+    {
+        Vector3 reflProbePos = reflProbe->GetGameObject()->
+                               GetTransform()->GetPosition();
+        float sqDist = Vector3::SqDistance(thisPos, reflProbePos);
+        if (sqDist < closestReflProbeSqDist)
+        {
+            closestReflProbe = reflProbe;
+            closestReflProbeSqDist = sqDist;
+        }
+    }
+
+    return closestReflProbe;
+}
+
 void Renderer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
@@ -189,6 +265,7 @@ void Renderer::CloneInto(ICloneable *clone) const
     r->SetCastsShadows(GetCastsShadows());
     r->SetReceivesShadows(GetReceivesShadows());
     r->SetRenderPrimitive(GetRenderPrimitive());
+    r->SetUseReflectionProbes( GetUseReflectionProbes() );
 }
 
 void Renderer::ImportXML(const XMLNode &xml)
@@ -200,6 +277,9 @@ void Renderer::ImportXML(const XMLNode &xml)
 
     if (xml.Contains("Material"))
     { SetMaterial(Resources::Load<Material>(xml.Get<GUID>("Material")).Get()); }
+
+    if (xml.Contains("UseReflectionProbes"))
+    { SetUseReflectionProbes(xml.Get<bool>("UseReflectionProbes")); }
 
     if (xml.Contains("CastsShadows"))
     { SetCastsShadows(xml.Get<bool>("CastsShadows")); }
@@ -218,4 +298,5 @@ void Renderer::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
     xmlInfo->Set("CastsShadows", GetCastsShadows());
     xmlInfo->Set("ReceivesShadows", GetReceivesShadows());
+    xmlInfo->Set("UseReflectionProbes", GetUseReflectionProbes());
 }

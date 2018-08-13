@@ -22,6 +22,7 @@ FORWARD class Texture2D;
 FORWARD class Framebuffer;
 FORWARD class ShaderProgram;
 FORWARD class TextureCubeMap;
+FORWARD class ReflectionProbe;
 FORWARD class TextureUnitManager;
 
 class GEngine : public EventListener<IEventsDestroy>
@@ -45,6 +46,8 @@ public:
     void RenderViewportPlane();
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
+
+    List<ReflectionProbe*> GetCurrentReflectionProbes() const;
 
     void SetReplacementMaterial(Material *material);
     void SetRenderRoutine(RenderRoutine renderRoutine);
@@ -86,6 +89,8 @@ private:
 
     RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
     Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
+
+    List<ReflectionProbe*> m_currentReflectionProbes;
 
     // Forward rendering arrays
     bool m_currentlyForwardRendering = false;

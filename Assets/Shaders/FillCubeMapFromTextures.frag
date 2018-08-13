@@ -40,14 +40,21 @@ void main()
         break;
 
         case TOP_DIR_IDX:
+        {
             float prevUvX = uv.x;
             uv.x = 1.0 - uv.y;
             uv.y = prevUvX;
             B_Out_Color = texture(B_FillCMFromTexture_TopTexture, uv);
+        }
         break;
 
         case BOT_DIR_IDX:
+        {
+            float prevUvX = uv.x;
+            uv.x = 1.0 - uv.y;
+            uv.y = prevUvX;
             B_Out_Color = texture(B_FillCMFromTexture_BotTexture, uv);
+        }
         break;
 
         case BACK_DIR_IDX:
@@ -58,6 +65,4 @@ void main()
             B_Out_Color = texture(B_FillCMFromTexture_FrontTexture, uv);
         break;
     }
-
-    // B_Out_Color = vec4(uv, 0, 1);
 }

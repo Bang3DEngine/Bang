@@ -87,6 +87,8 @@ void GEngine::Render(Scene *scene)
 
 void GEngine::Render(Scene *scene, Camera *camera)
 {
+    m_currentReflectionProbes = scene->GetComponentsInChildren<ReflectionProbe>(true);
+
     if (scene)
     {
         PushActiveRenderingCamera();
@@ -406,6 +408,11 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+}
+
+List<ReflectionProbe *> GEngine::GetCurrentReflectionProbes() const
+{
+    return m_currentReflectionProbes;
 }
 
 void GEngine::RenderTexture(Texture2D *texture)

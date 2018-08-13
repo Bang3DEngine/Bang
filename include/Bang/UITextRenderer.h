@@ -50,8 +50,8 @@ public:
 
     // UIRenderer
     virtual void OnRender() override;
-    virtual void Bind() const override;
-    virtual void UnBind() const override;
+    virtual void Bind() override;
+    virtual void UnBind() override;
 
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;

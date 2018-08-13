@@ -22,9 +22,12 @@ const int CAMERA_CLEARMODE_SKYBOX = 1;
 uniform vec3        B_Camera_WorldPos;
 uniform int         B_Camera_ClearMode;
 uniform vec4        B_Camera_ClearColor;
+uniform vec3        B_Camera_WorldForward;
 uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
+uniform vec3 B_SkyBoxCenter; // If boxed
+uniform vec3 B_SkyBoxSize;   // If boxed. Otherwise _.x < 0
 /////////////////////////////////////////////
 
 uniform float B_TimeSeconds;

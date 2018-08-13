@@ -113,6 +113,42 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
         vec3 N = pixelNormalWorld.xyz;
         vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
         vec3 R = reflect(-V, N);
+        if (B_SkyBoxSize.x > 0)
+        {
+            vec3 halfSkyBoxSize = B_SkyBoxSize * 0.5f;
+
+            // Skybox is boxed, intersect with it!
+            float intersectionRightDist = ((B_SkyBoxCenter.x + halfSkyBoxSize.x) -
+                                           pixelPosWorld.x) / R.x;
+            float intersectionLeftDist = ((B_SkyBoxCenter.x - halfSkyBoxSize.x) -
+                                           pixelPosWorld.x) / R.x;
+            float intersectionTopDist = ((B_SkyBoxCenter.y + halfSkyBoxSize.y) -
+                                          pixelPosWorld.y) / R.y;
+            float intersectionBotDist = ((B_SkyBoxCenter.y - halfSkyBoxSize.y) -
+                                          pixelPosWorld.y) / R.y;
+            float intersectionFrontDist = ((B_SkyBoxCenter.z + halfSkyBoxSize.z) -
+                                            pixelPosWorld.z) / R.z;
+            float intersectionBackDist = ((B_SkyBoxCenter.z - halfSkyBoxSize.z) -
+                                           pixelPosWorld.z) / R.z;
+
+            if (intersectionRightDist <= 0) { intersectionRightDist = 9999999.9f; }
+            if (intersectionLeftDist  <= 0) { intersectionLeftDist  = 9999999.9f; }
+            if (intersectionTopDist   <= 0) { intersectionTopDist   = 9999999.9f; }
+            if (intersectionBotDist   <= 0) { intersectionBotDist   = 9999999.9f; }
+            if (intersectionFrontDist <= 0) { intersectionFrontDist = 9999999.9f; }
+            if (intersectionBackDist  <= 0) { intersectionBackDist  = 9999999.9f; }
+
+            float minIntersectionDist = min(intersectionRightDist,
+                                        min(intersectionLeftDist,
+                                        min(intersectionTopDist,
+                                        min(intersectionBotDist,
+                                        min(intersectionFrontDist,
+                                            intersectionBackDist)))));
+
+            vec3 intersectionPoint = pixelPosWorld + (minIntersectionDist * R);
+            R = normalize(intersectionPoint - B_SkyBoxCenter);
+            R.z *= -1;
+        }
 
         // Calculate ambient color
         float dotNV = max(dot(N, V), 0.0);

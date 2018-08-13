@@ -45,6 +45,9 @@ void main()
     vec3 normal = -normalize( cross(neighbor0Position - position,
                                     neighbor1Position - position) );
 
+    vec3 viewVector = normalize(position - B_Camera_WorldPos);
+    vec3 reflectedViewVector = reflect(viewVector, normal);
+
     vec4 finalColor = GetIBLAmbientColor(position, normal, WaterColor,
                                          WaterRoughness, WaterMetalness);
     finalColor += vec4(GetForwardLightApport(position,
@@ -52,5 +55,6 @@ void main()
                                              WaterColor.rgb,
                                              WaterRoughness,
                                              WaterMetalness), 0);
+    // finalColor = texture(B_SkyBoxSpecular, reflectedViewVector);
     B_GIn_Color = finalColor;
 }

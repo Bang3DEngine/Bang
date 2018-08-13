@@ -14,6 +14,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Camera;
 FORWARD class Material;
 FORWARD class SceneManager;
+FORWARD class ReflectionProbe;
 
 class Renderer : public Component,
                  public EventListener<IEventsResource>,
@@ -22,9 +23,9 @@ class Renderer : public Component,
     COMPONENT(Renderer)
 
 public:
-    virtual void Bind() const;
+    virtual void Bind();
     virtual void OnRender();
-    virtual void UnBind() const;
+    virtual void UnBind();
 
     // Component
     virtual void OnRender(RenderPass renderPass) override;
@@ -35,6 +36,7 @@ public:
     void SetReceivesShadows(bool receivesShadows);
     void SetViewProjMode(GL::ViewProjMode viewProjMode);
     void SetRenderPrimitive(GL::Primitive renderPrimitive);
+    void SetUseReflectionProbes(bool useReflectionProbes);
 
     bool IsVisible() const;
     Material* GetSharedMaterial() const;
@@ -44,6 +46,7 @@ public:
     bool GetReceivesShadows() const;
     GL::ViewProjMode GetViewProjMode() const;
     GL::Primitive GetRenderPrimitive() const;
+    bool GetUseReflectionProbes() const;
 
     // IEventsResourceChanged
     void OnResourceChanged(Resource *changedResource) override;
@@ -63,6 +66,8 @@ protected:
     Renderer();
     virtual ~Renderer();
 
+    void SetReflectionProbeUniforms();
+    ReflectionProbe *GetClosestReflectionProbe() const;
     void PropagateRendererChanged();
 
     // Renderer
@@ -72,6 +77,7 @@ private:
     bool m_visible = true;
     bool m_castsShadows = true;
     bool m_receivesShadows = true;
+    bool m_useReflectionProbes = false;
     GL::Primitive m_renderPrimitive = GL::Primitive::TRIANGLES;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::WORLD;
 

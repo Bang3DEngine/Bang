@@ -50,6 +50,8 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
 
         Camera *cam = Camera::GetActive();
         Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
+        sp->SetVector3("B_Camera_WorldForward",
+                       (camTR ? camTR->GetForward() : Vector3::Zero), false);
         sp->SetVector3("B_Camera_WorldPos",
                        (camTR ? camTR->GetPosition() : Vector3::Zero), false);
         sp->SetColor("B_Camera_ClearColor",

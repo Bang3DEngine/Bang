@@ -11,6 +11,8 @@ public:
     GLId GetGLId() const;
 
     virtual GL::BindTarget GetGLBindTarget() const = 0;
+    virtual void Bind();
+    virtual void UnBind();
     virtual void Bind() const;
     virtual void UnBind() const;
 

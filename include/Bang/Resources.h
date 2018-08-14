@@ -65,11 +65,6 @@ public:
     template<class ResourceClass = Resource>
     static RH<ResourceClass> Clone(const ResourceClass *src);
 
-    static void SetPermanent(Resource *resource, bool permanent);
-    static bool IsPermanent(Resource *resource);
-    static void SetPermanent(const Path &resourcePath, bool permanent);
-    static bool IsPermanent(const Path &resourcePath);
-
     static void RegisterResourceUsage(Resource *resource);
     static void UnRegisterResourceUsage(Resource *resource);
 

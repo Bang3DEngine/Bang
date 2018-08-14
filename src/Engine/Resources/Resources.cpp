@@ -187,42 +187,6 @@ bool Resources::IsEmbeddedResource(const Path &resourcePath)
     return resourcePath.GetDirectory().IsFile();
 }
 
-void Resources::SetPermanent(Resource *resource, bool permanent)
-{
-    if (resource)
-    {
-        Resources *rs = Resources::GetInstance(); ASSERT(rs);
-        if (permanent) { rs->m_permanentResources.Add(resource); }
-        else { rs->m_permanentResources.Remove(resource); }
-    }
-}
-
-bool Resources::IsPermanent(Resource *resource)
-{
-    if (!resource) { return false; }
-
-    Resources *rs = Resources::GetInstance(); ASSERT(rs);
-    return rs->m_permanentResources.Contains(resource);
-}
-
-void Resources::SetPermanent(const Path &resourcePath, bool permanent)
-{
-    if (!resourcePath.IsEmpty())
-    {
-        Resources *rs = Resources::GetInstance(); ASSERT(rs);
-        if (permanent) { rs->m_permanentResourcesPaths.Add(resourcePath); }
-        else { rs->m_permanentResourcesPaths.Remove(resourcePath); }
-    }
-}
-
-bool Resources::IsPermanent(const Path &resourcePath)
-{
-    if (resourcePath.IsEmpty()) { return false; }
-
-    Resources *rs = Resources::GetInstance(); ASSERT(rs);
-    return rs->m_permanentResourcesPaths.Contains(resourcePath);
-}
-
 void Resources::Remove(const GUID &guid)
 {
     Resources *rss = Resources::GetInstance(); ASSERT(rss);
@@ -273,21 +237,14 @@ void Resources::UnRegisterResourceUsage(Resource *res)
     const GUID &guid = res->GetGUID();
     ASSERT(!guid.IsEmpty());
 
-    if (rs)
-    {
-        ASSERT(rs->GetCached_(guid));
-        uint *resourcesUsage = &(rs->m_resourcesCache.Get(guid).usageCount);
-        ASSERT(*resourcesUsage >= 1);
-        --(*resourcesUsage);
+    ASSERT(rs->GetCached_(guid));
+    uint *resourcesUsage = &(rs->m_resourcesCache.Get(guid).usageCount);
+    ASSERT(*resourcesUsage >= 1);
+    --(*resourcesUsage);
 
-        if (*resourcesUsage == 0)
-        {
-            const Path resPath = Resources::GetResourcePath(res);
-            if (!Resources::IsPermanent(res) && !Resources::IsPermanent(resPath) )
-            {
-                Resources::Remove(guid);
-            }
-        }
+    if (*resourcesUsage == 0)
+    {
+        Resources::Remove(guid);
     }
 }
 

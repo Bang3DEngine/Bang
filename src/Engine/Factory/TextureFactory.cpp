@@ -131,10 +131,6 @@ Texture2D* TextureFactory::GetTexture2D(const String &filename, const Path &dir)
     }
     else
     {
-        // Avoid removing of img resource when loading Texture2D[::Import()]
-        // (this is why it must go before Load<Texture2D>(), and not after)
-        Resources::SetPermanent(path, true);
-
         bool initialized = (Resources::GetCached<Texture2D>(path) != nullptr);
         RH<Texture2D> texRH = Resources::Load<Texture2D>(path);
         if (texRH && !initialized)
@@ -148,8 +144,6 @@ Texture2D* TextureFactory::GetTexture2D(const String &filename, const Path &dir)
             texRH.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 
             GL::Pop(GL::BindTarget::TEXTURE_2D);
-
-            Resources::SetPermanent(texRH.Get(), true);
         }
 
         tex = texRH.Get();
@@ -176,18 +170,7 @@ TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename, const 
     }
     else
     {
-
-        // Avoid removing of img resource when loading Texture2D[::Import()]
-        // (this is why it must go before Load<Texture2D>(), and not after)
-        Resources::SetPermanent(path, true);
-
-        bool initialized = (Resources::GetCached<TextureCubeMap>(path) != nullptr);
         RH<TextureCubeMap> texCMRH = Resources::Load<TextureCubeMap>(path);
-        if (texCMRH && !initialized)
-        {
-            Resources::SetPermanent(texCMRH.Get(), true);
-        }
-
         texCM = texCMRH.Get();
         tf->m_textureCubeMapsCache.Add(path, texCMRH);
     }

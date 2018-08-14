@@ -7,6 +7,7 @@
 
 #include "Bang/Map.h"
 #include "Bang/List.h"
+#include "Bang/Math.h"
 #include "Bang/Array.h"
 #include "Bang/IToString.h"
 
@@ -315,7 +316,20 @@ bool String::Contains(const String &str, bool caseSensitive) const
 
 bool String::BeginsWith(const String &str) const
 {
-    return this->IndexOf(str) == 0;
+    if (str.Size() > Size())
+    {
+        return false;
+
+    }
+
+    for (int i = 0; i < str.Size(); ++i)
+    {
+        if (At(i) != str[i])
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool String::EndsWith(const String &str) const

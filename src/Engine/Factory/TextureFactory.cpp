@@ -158,7 +158,8 @@ TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename)
     return TextureFactory::GetTextureCubeMap(filename, EPATH("Textures"));
 }
 
-TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename, const Path &dir)
+TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename,
+                                                  const Path &dir)
 {
     TextureFactory *tf = TextureFactory::GetInstance();
     Path path = dir.Append(filename);

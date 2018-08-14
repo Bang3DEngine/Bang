@@ -498,25 +498,18 @@ void ShaderProgram::Bind()
     }
     #endif
 
-    BindPrecise(m_lastNeedsPBRUniforms);
-}
-
-void ShaderProgram::UnBind()
-{
-    // GL::UnBind(this);
-}
-
-void ShaderProgram::BindPrecise(bool needsPBRUniforms)
-{
-    m_lastNeedsPBRUniforms = needsPBRUniforms;
-
     if (!GL::IsBound(this))
     {
         GL::Bind(this);
     }
 
-    GLUniforms::SetAllUniformsToShaderProgram(this, needsPBRUniforms);
+    GLUniforms::SetAllUniformsToShaderProgram(this);
     BindAllTexturesToUnits();
+}
+
+void ShaderProgram::UnBind()
+{
+    // GL::UnBind(this);
 }
 
 void ShaderProgram::BindAllTexturesToUnits()

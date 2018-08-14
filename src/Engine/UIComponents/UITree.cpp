@@ -710,8 +710,9 @@ UITreeItemContainer::UITreeItemContainer()
 {
     GameObjectFactory::CreateUIGameObjectInto(this);
 
-    AddComponent<UIHorizontalLayout>();
-    p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::PREFERRED,
+    UIHorizontalLayout *hLayout = AddComponent<UIHorizontalLayout>();
+
+    p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN,
                                                        Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 
@@ -767,7 +768,7 @@ GameObject *UITreeItemContainer::GetContainedItem() const
 void UITreeItemContainer::SetIndentation(int indentationPx)
 {
     m_indentationPx = indentationPx;
-    p_indentSpacer->GetComponent<UILayoutElement>()->SetPreferredWidth(indentationPx);
+    p_indentSpacer->GetComponent<UILayoutElement>()->SetMinWidth(indentationPx);
 }
 
 bool UITreeItemContainer::IsCollapsed() const

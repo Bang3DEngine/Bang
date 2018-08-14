@@ -334,6 +334,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
         if (p_itemUnderMouse)
         {
             CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+            return UIEventResult::INTERCEPT;
         }
         break;
 
@@ -381,6 +382,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
                 {
                     CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
                 }
+                return UIEventResult::INTERCEPT;
             }
         }
         break;
@@ -392,10 +394,12 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
                 {
                     SetSelection(p_itemUnderMouse);
                     CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_LEFT_DOWN);
+                    return UIEventResult::INTERCEPT;
                 }
                 else if (event.mouse.button == MouseButton::RIGHT)
                 {
                     CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_RIGHT_DOWN);
+                    return UIEventResult::INTERCEPT;
                 }
             }
         break;
@@ -407,6 +411,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
                 {
                     SetSelection(p_itemUnderMouse);
                     CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_LEFT_UP);
+                    return UIEventResult::INTERCEPT;
                 }
             }
         break;
@@ -415,6 +420,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
         if (p_itemUnderMouse)
         {
             CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
+            return UIEventResult::INTERCEPT;
         }
         break;
 
@@ -441,13 +447,9 @@ int UIList::GetSelectedIndex() const
 
 bool UIList::SomeChildHasFocus() const
 {
-    UICanvas *canvas = UICanvas::GetActive( this );
-    for (GOItem *item : GetItems())
+    if (UICanvas *canvas = UICanvas::GetActive( this ))
     {
-        if (canvas->HasFocus(item, true))
-        {
-            return true;
-        }
+        return canvas->HasFocus(this, true);
     }
     return false;
 }
@@ -508,8 +510,17 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
                                 GameObjectFactory::CreateUIGameObject() : go;
     container->SetName("UIList");
 
-    if (vertical) { container->AddComponent<UIVerticalLayout>(); }
-    else { container->AddComponent<UIHorizontalLayout>(); }
+    UIDirLayout *dirLayout = nullptr;
+    if (vertical)
+    {
+        dirLayout = container->AddComponent<UIVerticalLayout>();
+    }
+    else
+    {
+        dirLayout = container->AddComponent<UIHorizontalLayout>();
+    }
+    dirLayout->SetChildrenVerticalStretch(Stretch::FULL);
+    dirLayout->SetChildrenHorizontalStretch(Stretch::FULL);
 
     list->p_focusable = container->AddComponent<UIFocusable>();
     list->p_focusable->AddEventCallback([list](IFocusable *focusable,

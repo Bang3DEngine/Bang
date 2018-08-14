@@ -28,7 +28,7 @@ float GetWaterHeight(vec2 positionInPlane)
 void main()
 {
     const float WaterRoughness = 0.0f;
-    const float WaterMetalness = 0.7f;
+    const float WaterMetalness = 0.3f;
     vec4 WaterColor = vec4(0.1f, 0.4f, 0.7f, 0.5f);
 
     const vec2 DeltaPos    = vec2(0.01);

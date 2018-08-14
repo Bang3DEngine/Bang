@@ -1,7 +1,10 @@
 #ifndef TEXTUREFACTORY_H
 #define TEXTUREFACTORY_H
 
-#include "Bang/ResourceHandle.h"
+#include "Bang/Map.h"
+#include "Bang/Path.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TextureCubeMap.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -11,37 +14,45 @@ FORWARD class TextureCubeMap;
 class TextureFactory
 {
 public:
-    static RH<Texture2D> GetBangB64Icon();
-    static RH<Texture2D> GetBangB512Icon();
-    static RH<Texture2D> GetBangB2048Icon();
-    static RH<Texture2D> GetBang2048Icon();
-    static RH<Texture2D> GetRightArrowIcon();
-    static RH<Texture2D> GetDownArrowIcon();
-    static RH<Texture2D> GetCheckIcon();
-    static RH<Texture2D> GetAudioIcon();
-    static RH<Texture2D> GetCircleIcon();
-    static RH<Texture2D> GetSunIcon();
-    static RH<Texture2D> GetLightBulbIcon();
-    static RH<Texture2D> GetInfoIcon();
-    static RH<Texture2D> GetWarningIcon();
-    static RH<Texture2D> GetErrorIcon();
-    static RH<Texture2D> GetCheckerboard();
-    static RH<Texture2D> GetWhiteTexture();
-    static RH<Texture2D> GetBRDFLUTTexture();
-    static RH<Texture2D> Get9SliceRoundRectTexture();
-    static RH<Texture2D> Get9SliceRoundRectBorderTexture();
+    static Texture2D* GetBangB64Icon();
+    static Texture2D* GetBangB512Icon();
+    static Texture2D* GetBangB2048Icon();
+    static Texture2D* GetBang2048Icon();
+    static Texture2D* GetRightArrowIcon();
+    static Texture2D* GetDownArrowIcon();
+    static Texture2D* GetCheckIcon();
+    static Texture2D* GetAudioIcon();
+    static Texture2D* GetCircleIcon();
+    static Texture2D* GetSunIcon();
+    static Texture2D* GetLightBulbIcon();
+    static Texture2D* GetInfoIcon();
+    static Texture2D* GetWarningIcon();
+    static Texture2D* GetErrorIcon();
+    static Texture2D* GetCheckerboard();
+    static Texture2D* GetWhiteTexture();
+    static Texture2D* GetBRDFLUTTexture();
+    static Texture2D* Get9SliceRoundRectTexture();
+    static Texture2D* Get9SliceRoundRectBorderTexture();
 
-    static RH<TextureCubeMap> GetWhiteTextureCubeMap();
-    static RH<TextureCubeMap> GetDefaultTextureCubeMap();
+    static TextureCubeMap* GetWhiteTextureCubeMap();
+    static TextureCubeMap* GetDefaultTextureCubeMap();
 
-    static RH<Texture2D> GetTexture2D(const String &filename);
-    static RH<Texture2D> GetTexture2D(const String &filename, const Path &dir);
-    static RH<TextureCubeMap> GetTextureCubeMap(const String &filename);
-    static RH<TextureCubeMap> GetTextureCubeMap(const String &filename, const Path &dir);
+    static Texture2D* GetTexture2D(const String &filename);
+    static Texture2D* GetTexture2D(const String &filename, const Path &dir);
+    static TextureCubeMap* GetTextureCubeMap(const String &filename);
+    static TextureCubeMap* GetTextureCubeMap(const String &filename, const Path &dir);
+
+protected:
+    TextureFactory() = default;
+    virtual ~TextureFactory() = default;
+
+    static TextureFactory* GetInstance();
 
 private:
-    TextureFactory() = delete;
-    virtual ~TextureFactory() = delete;
+    Map<Path, RH<Texture2D>> m_texture2DCache;
+    Map<Path, RH<TextureCubeMap>> m_textureCubeMapsCache;
+
+    friend class Resources;
 };
 
 NAMESPACE_BANG_END

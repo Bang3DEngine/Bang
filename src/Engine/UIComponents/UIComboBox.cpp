@@ -206,7 +206,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     bg->SetTint(Color::White);
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
-    downArrowIcon->SetImageTexture( TextureFactory::GetDownArrowIcon().Get() );
+    downArrowIcon->SetImageTexture( TextureFactory::GetDownArrowIcon() );
     downArrowIcon->SetTint( Color::Black );
 
     GameObject *downArrowIconGo = downArrowIcon->GetGameObject();
@@ -226,7 +226,7 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     });
 
     UIImageRenderer *listBG = listGo->AddComponent<UIImageRenderer>();
-    listBG->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    listBG->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture() );
     listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
     UIFocusable *listFocusable = listBG->GetGameObject()->GetComponent<UIFocusable>();

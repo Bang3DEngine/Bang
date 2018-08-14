@@ -67,7 +67,7 @@ ReflectionProbe::ReflectionProbe()
     SetCamerasZFar(100.0f);
     SetCamerasClearColor(Color::Gray);
     SetCamerasClearMode(Camera::ClearMode::COLOR);
-    SetCamerasSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap().Get() );
+    SetCamerasSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap() );
 }
 
 ReflectionProbe::~ReflectionProbe()
@@ -337,10 +337,10 @@ void ReflectionProbe::SetRendererUniforms(Renderer *renderer)
             {
                 sp->SetBool("B_UseReflectionProbe", false, false);
                 sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
+                                      TextureFactory::GetWhiteTextureCubeMap(),
                                       false);
                 sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                                      TextureFactory::GetWhiteTextureCubeMap().Get(),
+                                      TextureFactory::GetWhiteTextureCubeMap(),
                                       false);
             }
         }

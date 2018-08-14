@@ -18,6 +18,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Asset;
 FORWARD class MeshFactory;
+FORWARD class TextureFactory;
 FORWARD class MaterialFactory;
 FORWARD class ShaderProgramFactory;
 
@@ -92,6 +93,7 @@ public:
     static Array<Resource*> GetAllResources();
 
     MeshFactory *GetMeshFactory() const;
+    TextureFactory *GetTextureFactory() const;
     MaterialFactory *GetMaterialFactory() const;
     ShaderProgramFactory *GetShaderProgramFactory() const;
 
@@ -108,10 +110,12 @@ private:
     UMap<GUID, ResourceEntry> m_resourcesCache;
 
     MeshFactory *m_meshFactory = nullptr;
+    TextureFactory *m_textureFactory = nullptr;
     MaterialFactory *m_materialFactory = nullptr;
     ShaderProgramFactory *m_shaderProgramFactory = nullptr;
 
     virtual MeshFactory* CreateMeshFactory() const;
+    virtual TextureFactory* CreateTextureFactory() const;
 
     template <class ResourceClass, class ...Args>
     static ResourceClass *Create_(const Args&... args);

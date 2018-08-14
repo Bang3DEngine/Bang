@@ -131,7 +131,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
-    tickImg->SetImageTexture( TextureFactory::GetCheckIcon().Get() );
+    tickImg->SetImageTexture( TextureFactory::GetCheckIcon() );
     tickImg->SetTint(Color::Black);
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 

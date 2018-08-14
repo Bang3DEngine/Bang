@@ -374,8 +374,7 @@ bool ShaderProgram::SetTexture2D(const String &name,
 bool ShaderProgram::SetDefaultTexture2D(const String &name, bool warn)
 {
     return SetTexture(name,
-                      SCAST<Texture*>(
-                          TextureFactory::GetWhiteTexture().Get()),
+                      SCAST<Texture*>( TextureFactory::GetWhiteTexture() ),
                       warn);
 }
 
@@ -395,8 +394,7 @@ bool ShaderProgram::SetTextureCubeMap(const String &name,
 bool ShaderProgram::SetDefaultTextureCubeMap(const String &name, bool warn)
 {
     return SetTexture(name,
-                      SCAST<Texture*>(
-                          TextureFactory::GetWhiteTextureCubeMap().Get()),
+                      SCAST<Texture*>( TextureFactory::GetWhiteTextureCubeMap() ),
                       warn);
 }
 

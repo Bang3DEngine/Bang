@@ -167,7 +167,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     cameraGo->GetTransform()->LookAt( Vector3::Zero );
     Camera *cam = cameraGo->AddComponent<Camera>();
     cam->SetClearMode(Camera::ClearMode::SKY_BOX);
-    cam->SetSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap().Get() );
+    cam->SetSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap() );
     cam->SetClearColor(Color::LightBlue);
     scene->SetCamera(cam);
 

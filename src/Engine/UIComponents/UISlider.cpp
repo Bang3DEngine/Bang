@@ -175,7 +175,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
     guideRT->SetMarginTop(-1);
 
     UIImageRenderer *handleRenderer = GameObjectFactory::CreateUIImage(slider->m_idleColor);
-    handleRenderer->SetImageTexture( TextureFactory::GetCircleIcon().Get() );
+    handleRenderer->SetImageTexture( TextureFactory::GetCircleIcon() );
     RectTransform *handleRT = handleRenderer->GetGameObject()->GetRectTransform();
     handleRT->SetAnchors(Vector2::Zero);
     handleRT->SetMargins(-6);

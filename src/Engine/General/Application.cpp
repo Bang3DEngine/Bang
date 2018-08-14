@@ -59,11 +59,10 @@ void Application::Init(const Path &engineRootPath)
     ImportFilesManager::LoadImportFilepathGUIDs(Paths::GetEngineAssetsDir());
 
     m_resources = CreateResources();
+    m_resources->Init();
 
     m_gEngine = new GEngine();
     m_gEngine->Init();
-
-    m_resources->Init();
 }
 
 
@@ -91,7 +90,7 @@ Application::~Application()
 void Application::InitBeforeLoop()
 {
     GetWindowManager()->GetTopWindow()->SetIcon(
-                TextureFactory::GetBangB512Icon().Get()->GetResourceFilepath() );
+                TextureFactory::GetBangB512Icon()->GetResourceFilepath() );
 
     #ifdef GPROF
     Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");

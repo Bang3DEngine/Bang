@@ -10,6 +10,7 @@
 #include "Bang/Extensions.h"
 #include "Bang/Application.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
@@ -17,7 +18,12 @@ USING_NAMESPACE_BANG
 
 Resources::Resources()
 {
+}
+
+void Resources::Init()
+{
     m_meshFactory = CreateMeshFactory();
+    m_textureFactory = CreateTextureFactory();
     m_materialFactory = new MaterialFactory();
     m_shaderProgramFactory = new ShaderProgramFactory();
 }
@@ -25,6 +31,7 @@ Resources::Resources()
 Resources::~Resources()
 {
     ASSERT_MSG(m_meshFactory == nullptr,          "Call Destroy()");
+    ASSERT_MSG(m_textureFactory == nullptr,       "Call Destroy()");
     ASSERT_MSG(m_materialFactory == nullptr,      "Call Destroy()");
     ASSERT_MSG(m_shaderProgramFactory == nullptr, "Call Destroy()");
 }
@@ -295,6 +302,11 @@ MeshFactory *Resources::GetMeshFactory() const
     return m_meshFactory;
 }
 
+TextureFactory *Resources::GetTextureFactory() const
+{
+    return m_textureFactory;
+}
+
 MaterialFactory *Resources::GetMaterialFactory() const
 {
     return m_materialFactory;
@@ -305,13 +317,10 @@ ShaderProgramFactory *Resources::GetShaderProgramFactory() const
     return m_shaderProgramFactory;
 }
 
-void Resources::Init()
-{
-}
-
 void Resources::Destroy()
 {
     delete m_meshFactory;          m_meshFactory          = nullptr;
+    delete m_textureFactory;       m_textureFactory       = nullptr;
     delete m_materialFactory;      m_materialFactory      = nullptr;
     delete m_shaderProgramFactory; m_shaderProgramFactory = nullptr;
 }
@@ -325,4 +334,9 @@ Resources *Resources::GetInstance()
 MeshFactory *Resources::CreateMeshFactory() const
 {
     return new MeshFactory();
+}
+
+TextureFactory *Resources::CreateTextureFactory() const
+{
+    return new TextureFactory();
 }

@@ -280,7 +280,7 @@ void Material::Bind() const
     sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),         false);
     sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),       false);
     sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(),   false);
-    sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture().Get(), false);
+    sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture(), false);
 
     if (Texture2D *roughnessTex = GetRoughnessTexture())
     {
@@ -289,7 +289,8 @@ void Material::Bind() const
     else
     {
         sp->SetTexture2D("B_RoughnessTexture",
-                         TextureFactory::GetWhiteTexture().Get(), false);
+                         TextureFactory::GetWhiteTexture(),
+                         false);
     }
 
     if (Texture2D *metalnessTex = GetMetalnessTexture())
@@ -299,7 +300,8 @@ void Material::Bind() const
     else
     {
         sp->SetTexture2D("B_MetalnessTexture",
-                         TextureFactory::GetWhiteTexture().Get(), false);
+                         TextureFactory::GetWhiteTexture(),
+                         false);
     }
 
     if (Texture2D *normalMapTex = GetNormalMapTexture())

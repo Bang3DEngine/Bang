@@ -134,7 +134,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
             case MouseItemRelativePosition::OVER:
                 dragMarkerPos  = childItemContRect.GetMinXMinY();
                 dragMarkerSize = childItemContRect.GetMax() - dragMarkerPos;
-                markImgRH      = TextureFactory::Get9SliceRoundRectBorderTexture();
+                markImgRH.Set(TextureFactory::Get9SliceRoundRectBorderTexture());
                 markImgMode    = UIImageRenderer::Mode::SLICE_9;
             break;
 
@@ -725,11 +725,11 @@ UITreeItemContainer::UITreeItemContainer()
                                                        Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 
-    RH<Texture2D> iconTex = TextureFactory::GetDownArrowIcon();
-    p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex.Get());
+    Texture2D *iconTex = TextureFactory::GetDownArrowIcon();
+    p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex);
     p_collapseButton->GetLayoutElement()->SetFlexibleSize( Vector2::Zero );
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
-    p_collapseButton->SetIcon(iconTex.Get(), Vector2i(8), 0);
+    p_collapseButton->SetIcon(iconTex, Vector2i(8), 0);
     p_collapseButton->GetBackground()->SetVisible(false);    
 
     p_dragDroppable = AddComponent<UIDragDroppable>();
@@ -758,9 +758,9 @@ void UITreeItemContainer::SetCollapsed(bool collapsed)
     if (collapsed != IsCollapsed())
     {
         m_collapsed = collapsed;
-        RH<Texture2D> iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon() :
-                                                TextureFactory::GetDownArrowIcon();
-        GetCollapseButton()->SetIconTexture(iconTex.Get());
+        Texture2D *iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon() :
+                                             TextureFactory::GetDownArrowIcon();
+        GetCollapseButton()->SetIconTexture(iconTex);
     }
 }
 

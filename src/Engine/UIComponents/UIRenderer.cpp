@@ -48,15 +48,15 @@ bool UIRenderer::GetCullByRectTransform() const
     return m_cullByRectTransform;
 }
 
-void UIRenderer::OnEnabled()
+void UIRenderer::OnEnabled(Object *object)
 {
-    Renderer::OnEnabled();
+    Renderer::OnEnabled(object);
     PropagateRendererChanged();
 }
 
-void UIRenderer::OnDisabled()
+void UIRenderer::OnDisabled(Object *object)
 {
-    Renderer::OnDisabled();
+    Renderer::OnDisabled(object);
     PropagateRendererChanged();
 }
 

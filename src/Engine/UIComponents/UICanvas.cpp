@@ -167,25 +167,22 @@ void UICanvas::OnUpdate()
         {
             PropagateIFocusableEvent(focusableNotUnderAnymore,
                                      UIEvent::Type::MOUSE_EXIT);
-            UnRegisterForDestroy(focusableNotUnderAnymore);
+            UnRegisterForEvents(focusableNotUnderAnymore);
             p_focusablesUnderMouse.Remove(focusableNotUnderAnymore);
         }
 
         if (GetFocusableUnderMouseTopMost())
         {
-            UnRegisterForDestroy(GetFocusableUnderMouseTopMost());
+            UnRegisterForEvents(GetFocusableUnderMouseTopMost());
         }
 
         p_focusableUnderMouseTopMost = focusableUnderMouseTopMost;
         if (GetFocusableUnderMouseTopMost())
         {
-            {
-                PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
-                                         UIEvent::Type::MOUSE_ENTER);
-            }
-
+            PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
+                                     UIEvent::Type::MOUSE_ENTER);
             p_focusablesUnderMouse.Add(GetFocusableUnderMouseTopMost());
-            RegisterForDestroy(GetFocusableUnderMouseTopMost());
+            RegisterForEvents(GetFocusableUnderMouseTopMost());
         }
     }
 
@@ -195,9 +192,15 @@ void UICanvas::OnUpdate()
         {
             PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                      UIEvent::Type::MOUSE_MOVE);
+            RegisterForEvents( GetFocusableUnderMouseTopMost() );
         }
     }
     m_lastMousePosition = currentMousePos;
+
+    for (IFocusable *focusableUnderMouse : p_focusablesUnderMouse)
+    {
+        RegisterForEvents( focusableUnderMouse );
+    }
 
     const Array<MouseButton> mouseButtonsDown = Input::GetMouseButtonsDown();
     const Array<MouseButton> mouseButtonsUp = Input::GetMouseButtonsUp();
@@ -211,6 +214,7 @@ void UICanvas::OnUpdate()
             if (GetFocusableUnderMouseTopMost())
             {
                 {
+                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
                     PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                              UIEvent::Type::MOUSE_CLICK_DOWN,
                                              mbDown);
@@ -222,6 +226,7 @@ void UICanvas::OnUpdate()
         {
             if (GetFocusableUnderMouseTopMost())
             {
+                RegisterForEvents( GetFocusableUnderMouseTopMost() );
                 PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                          UIEvent::Type::MOUSE_CLICK_UP,
                                          mbUp);
@@ -232,6 +237,7 @@ void UICanvas::OnUpdate()
         {
             if (GetFocusableUnderMouseTopMost())
             {
+                RegisterForEvents( GetFocusableUnderMouseTopMost() );
                 PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                          UIEvent::Type::STARTED_BEING_PRESSED);
             }
@@ -244,7 +250,12 @@ void UICanvas::OnUpdate()
             p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
             for (IFocusable *focusable : p_focusablesPotentiallyBeingPressed)
             {
-                RegisterForDestroy(focusable);
+                RegisterForEvents(focusable);
+            }
+
+            if (GetFocusableUnderMouseTopMost())
+            {
+                RegisterForEvents( GetFocusableUnderMouseTopMost() );
             }
         }
 
@@ -258,6 +269,7 @@ void UICanvas::OnUpdate()
                     {
                         if (rt->IsMouseOver(false))
                         {
+                            RegisterForEvents( GetFocusableUnderMouseTopMost() );
                             PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                                      UIEvent::Type::MOUSE_CLICK_FULL);
                         }
@@ -273,6 +285,7 @@ void UICanvas::OnUpdate()
             {
                 if (focusablePotentiallyBeingPressed->IsBeingPressed())
                 {
+                    RegisterForEvents( focusablePotentiallyBeingPressed );
                     PropagateIFocusableEvent(focusablePotentiallyBeingPressed,
                                         UIEvent::Type::FINISHED_BEING_PRESSED);
                 }
@@ -280,7 +293,7 @@ void UICanvas::OnUpdate()
 
             for (IFocusable *focusable : p_focusablesPotentiallyBeingPressed)
             {
-                UnRegisterForDestroy(focusable);
+                UnRegisterForEvents(focusable);
             }
             p_focusablesPotentiallyBeingPressed.Clear();
         }
@@ -288,6 +301,7 @@ void UICanvas::OnUpdate()
         if (GetFocusableUnderMouseTopMost() &&
             Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
         {
+            RegisterForEvents( GetFocusableUnderMouseTopMost() );
             PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                      UIEvent::Type::MOUSE_CLICK_DOUBLE);
         }
@@ -420,7 +434,7 @@ void UICanvas::SetFocus(IFocusable *newFocusable_)
             focusLostEvent.type = UIEvent::Type::FOCUS_LOST;
             GetFocus()->ProcessEvent(focusLostEvent);
 
-            UnRegisterForDestroy(GetFocus());
+            UnRegisterForEvents(GetFocus());
         }
 
         p_focus = newFocusable;
@@ -432,7 +446,7 @@ void UICanvas::SetFocus(IFocusable *newFocusable_)
             focusTakenEvent.type = UIEvent::Type::FOCUS_TAKEN;
             GetFocus()->ProcessEvent(focusTakenEvent);
 
-            RegisterForDestroy(GetFocus());
+            RegisterForEvents(GetFocus());
         }
     }
 }
@@ -646,7 +660,55 @@ UICanvas *UICanvas::GetActive(const Component *comp)
     return UICanvas::GetActive(comp->GetGameObject());
 }
 
-void UICanvas::RegisterForDestroy(IFocusable *focusable)
+void UICanvas::OnDisabled(Object *object)
+{
+    Component::OnDisabled(object);
+
+    if (object == p_ddBeingDragged)
+    {
+        p_ddBeingDragged = nullptr;
+    }
+
+    List<IFocusable*> disabledFocusables;
+    if (IFocusable *focusableObj = DCAST<IFocusable*>(object))
+    {
+        disabledFocusables.PushBack(focusableObj);
+    }
+
+    if (GameObject *disabledGo = DCAST<GameObject*>(object))
+    {
+        List<IFocusable*> disabledGoFocusables = disabledGo->
+                                    GetComponentsInChildren<IFocusable>(true);
+        for (IFocusable *disabledGoFocusable : disabledGoFocusables)
+        {
+            disabledFocusables.PushBack(disabledGoFocusable);
+        }
+    }
+
+    for (IFocusable *disabledFocusable : disabledFocusables)
+    {
+        disabledFocusable->ClearFocus();
+        disabledFocusable->SetIsMouseOver(false);
+        disabledFocusable->SetBeingPressed(false);
+
+        if (disabledFocusable == GetFocus())
+        {
+            SetFocus(nullptr);
+        }
+
+        if (disabledFocusable == GetFocusableUnderMouseTopMost())
+        {
+            p_focusableUnderMouseTopMost->SetIsMouseOver(false);
+            p_focusableUnderMouseTopMost = nullptr;
+        }
+
+        p_focusablesUnderMouse.Remove(disabledFocusable);
+        p_focusablesPotentiallyBeingPressed.Remove(disabledFocusable);
+        UnRegisterForEvents(disabledFocusable);
+    }
+}
+
+void UICanvas::RegisterForEvents(IFocusable *focusable)
 {
     ASSERT(focusable);
     if (EventEmitter<IEventsDestroy> *destroyable =
@@ -654,44 +716,56 @@ void UICanvas::RegisterForDestroy(IFocusable *focusable)
     {
         destroyable->RegisterListener(this);
     }
+
+    if (EventEmitter<IObjectEvents> *focusableObj =
+                        DCAST<EventEmitter<IObjectEvents>*>(focusable))
+    {
+        focusableObj->EventEmitter<IObjectEvents>::RegisterListener(this);
+    }
 }
 
-void UICanvas::UnRegisterForDestroy(IFocusable *focusable)
+void UICanvas::UnRegisterForEvents(IFocusable *focusable)
 {
     ASSERT(focusable);
 
-    int numReferencesTrackingIt = 0;
+    int numReferencesTrackingThisFocusable = 0;
     if (focusable == GetFocus())
     {
-        ++numReferencesTrackingIt;
+        ++numReferencesTrackingThisFocusable;
     }
     if (focusable == GetFocusableUnderMouseTopMost())
     {
-        ++numReferencesTrackingIt;
+        ++numReferencesTrackingThisFocusable;
     }
     if (p_focusablesUnderMouse.Contains(focusable))
     {
-        ++numReferencesTrackingIt;
+        ++numReferencesTrackingThisFocusable;
     }
     if (p_focusablesPotentiallyBeingPressed.Contains(focusable))
     {
-        ++numReferencesTrackingIt;
+        ++numReferencesTrackingThisFocusable;
     }
     if (UIDragDroppable *dd = DCAST<UIDragDroppable*>(focusable))
     {
         if (dd == p_ddBeingDragged)
         {
-            ++numReferencesTrackingIt;
+            ++numReferencesTrackingThisFocusable;
         }
     }
 
-    if (numReferencesTrackingIt <= 1)
+    if (numReferencesTrackingThisFocusable <= 1)
     {
         if (EventEmitter<IEventsDestroy> *destroyable =
                 DCAST<EventEmitter<IEventsDestroy>*>(focusable))
         {
             destroyable->UnRegisterListener(this);
         }
+    }
+
+    if (EventEmitter<IObjectEvents> *focusableObj =
+            DCAST<EventEmitter<IObjectEvents>*>(focusable))
+    {
+        focusableObj->EventEmitter<IObjectEvents>::UnRegisterListener(this);
     }
 }
 

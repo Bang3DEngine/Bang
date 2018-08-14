@@ -5,20 +5,22 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Object;
+
 class IObjectEvents
 {
     IEVENTS(IObjectEvents);
 
 public:
-    virtual void OnStarted()
+    virtual void OnStarted(Object *obj)
     {
     }
 
-    virtual void OnEnabled()
+    virtual void OnEnabled(Object *obj)
     {
     }
 
-    virtual void OnDisabled()
+    virtual void OnDisabled(Object *obj)
     {
     }
 };

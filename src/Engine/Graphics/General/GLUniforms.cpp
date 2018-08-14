@@ -34,20 +34,19 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
 
     sp->SetFloat("B_TimeSeconds",  (Time::GetEllapsed_Seconds()), false);
-    sp->SetMatrix4("B_ModelInv",    matrices->modelInv, false); // Needed for 9slice
-    sp->SetMatrix4("B_PVM",         matrices->pvm,      false);
+    sp->SetMatrix4("B_Model",          matrices->model,    false);
+    sp->SetMatrix4("B_ModelInv",       matrices->modelInv, false);
+    sp->SetMatrix4("B_Normal",         matrices->normal,   false);
+    sp->SetMatrix4("B_View",           matrices->view,     false);
+    sp->SetMatrix4("B_ViewInv",        matrices->viewInv,  false);
+    sp->SetMatrix4("B_Projection",     matrices->proj,     false);
+    sp->SetMatrix4("B_ProjectionInv",  matrices->projInv,  false);
+    sp->SetMatrix4("B_ProjectionView", matrices->projView, false);
+    sp->SetMatrix4("B_PVMInv",         matrices->pvmInv,   false);
+    sp->SetMatrix4("B_PVM",            matrices->pvm,      false);
 
     if (needsPBRUniforms)
     {
-        sp->SetMatrix4("B_Model",          matrices->model,    false);
-        sp->SetMatrix4("B_Normal",         matrices->normal,   false);
-        sp->SetMatrix4("B_View",           matrices->view,     false);
-        sp->SetMatrix4("B_ViewInv",        matrices->viewInv,  false);
-        sp->SetMatrix4("B_Projection",     matrices->proj,     false);
-        sp->SetMatrix4("B_ProjectionInv",  matrices->projInv,  false);
-        sp->SetMatrix4("B_ProjectionView", matrices->projView, false);
-        sp->SetMatrix4("B_PVMInv",         matrices->pvmInv,   false);
-
         Camera *cam = Camera::GetActive();
         Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
         sp->SetVector3("B_Camera_WorldForward",

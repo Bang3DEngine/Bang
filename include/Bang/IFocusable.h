@@ -29,8 +29,6 @@ public:
     bool IsMouseOver() const;
     Cursor::Type GetCursorType() const;
 
-
-
 protected:
     IFocusable();
     virtual ~IFocusable();

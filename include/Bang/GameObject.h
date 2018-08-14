@@ -188,8 +188,8 @@ protected:
     virtual void ChildRemoved(GameObject *removedChild, GameObject *parent);
 
     // IEventsObject
-    virtual void OnEnabled() override;
-    virtual void OnDisabled() override;
+    virtual void OnEnabled(Object *object) override;
+    virtual void OnDisabled(Object *object) override;
 
 private:
     List<GameObject*> m_children;
@@ -210,8 +210,6 @@ private:
     bool m_increaseComponentsIterator = true;
     std::stack< List<GameObject*>::Iterator > m_currentChildrenIterators;
     std::stack< List<Component*>::Iterator  > m_currentComponentsIterators;
-
-    void PropagateEnabledEvent(bool enabled) const;
 
     void AddChild(GameObject *child, int index);
     void RemoveChild(GameObject *child);

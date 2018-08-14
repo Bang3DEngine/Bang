@@ -73,8 +73,11 @@ private:
     IFocusable *p_focusableUnderMouseTopMost = nullptr;
     Set<IFocusable*> p_focusablesPotentiallyBeingPressed;
 
-    void RegisterForDestroy(IFocusable *focusable);
-    void UnRegisterForDestroy(IFocusable *focusable);
+    // IObjectEvents
+    void OnDisabled(Object *object) override;
+
+    void RegisterForEvents(IFocusable *focusable);
+    void UnRegisterForEvents(IFocusable *focusable);
 
     List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 

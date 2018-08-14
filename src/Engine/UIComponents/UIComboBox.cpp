@@ -37,19 +37,20 @@ void UIComboBox::OnUpdate()
 {
     Component::OnUpdate();
 
-    /*
-    if (Input::GetMouseButtonDown(MouseButton::LEFT))
+    m_secondsWithListShown += Time::GetDeltaTime();
+    m_listRecentlyToggled = false;
+
+    // Close when click outside
+    if (IsListBeingShown())
     {
-        if (IsListBeingShown() && !m_justStartedToShowList)
+        if (Input::GetMouseButtonDown(MouseButton::LEFT))
         {
-            if (!UICanvas::GetActive(this)->IsMouseOver(GetList(), true))
+            if (!UICanvas::GetActive(this)->IsMouseOver(this, true))
             {
                 HideList();
             }
         }
     }
-    m_justStartedToShowList = false;
-    */
 }
 
 void UIComboBox::AddItem(const String &label, int value)
@@ -95,8 +96,9 @@ void UIComboBox::ShowList()
 {
     if (!IsListBeingShown())
     {
+        m_secondsWithListShown = 0.0f;
+        SCAST<UIFocusable*>(GetList()->GetFocusable())->SetEnabled(true);
         GetList()->GetGameObject()->SetEnabled(true);
-        m_justStartedToShowList = true;
     }
 }
 
@@ -107,7 +109,12 @@ bool UIComboBox::IsListBeingShown() const
 
 void UIComboBox::HideList()
 {
-    GetList()->GetGameObject()->SetEnabled(false);
+    if (IsListBeingShown())
+    {
+        m_secondsWithListShown = 0.0f;
+        SCAST<UIFocusable*>(GetList()->GetFocusable())->SetEnabled(false);
+        GetList()->GetGameObject()->SetEnabled(false);
+    }
 }
 
 int UIComboBox::GetSelectedValue() const
@@ -153,19 +160,35 @@ UIComboBox *UIComboBox::CreateInto(GameObject *go)
     hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([comboBox](IFocusable*, const UIEvent &event)
+    focusable->AddEventCallback([comboBox](IFocusable*,
+                                           const UIEvent &event)
     {
-        if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
+        if (!comboBox->m_listRecentlyToggled)
         {
-            if (comboBox->IsListBeingShown())
+            if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
             {
-                comboBox->HideList();
+                if (comboBox->IsListBeingShown() &&
+                    comboBox->GetList()->GetFocusable()->IsMouseOver() &&
+                    comboBox->m_secondsWithListShown > 0.3f)
+                {
+                    comboBox->m_listRecentlyToggled = true;
+                }
             }
-            else
+            else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
             {
-                comboBox->ShowList();
+                if (!comboBox->IsListBeingShown())
+                {
+                    comboBox->m_listRecentlyToggled = true;
+                    comboBox->ShowList();
+                }
+                else
+                {
+                    if (!comboBox->GetList()->GetFocusable()->IsMouseOver())
+                    {
+                        comboBox->HideList();
+                    }
+                }
             }
-            return UIEventResult::INTERCEPT;
         }
         return UIEventResult::IGNORE;
     });
@@ -238,11 +261,21 @@ void UIComboBox::OnListSelectionCallback(GameObject *item, UIList::Action action
 
     switch (action)
     {
-        case UIList::Action::CLICKED_LEFT:
-        case UIList::Action::CLICKED_RIGHT:
+        case UIList::Action::MOUSE_LEFT_UP:
+            if (IsListBeingShown() &&
+                GetList()->GetFocusable()->IsMouseOver() &&
+                m_secondsWithListShown > 0.3f)
+            {
+                SetSelectionByIndex(indexOfItem);
+                HideList();
+            }
+        break;
+
+        case UIList::Action::SELECTION_IN:
+        case UIList::Action::MOUSE_LEFT_DOWN:
+        case UIList::Action::MOUSE_RIGHT_DOWN:
         case UIList::Action::PRESSED:
             SetSelectionByIndex(indexOfItem);
-            HideList();
             break;
 
         default: break;

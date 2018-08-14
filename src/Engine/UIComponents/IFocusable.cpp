@@ -38,7 +38,8 @@ UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
             SetBeingPressed(false);
         break;
 
-        default: break;
+        default:
+        break;
     }
 
     // Propagate events

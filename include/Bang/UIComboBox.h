@@ -37,7 +37,8 @@ private:
     int m_selectedIndex = -1;
     Array<int> m_indexToValue;
     Array<String> m_indexToLabel;
-    bool m_justStartedToShowList = false;
+    float m_secondsWithListShown = 0.0f;
+    bool m_listRecentlyToggled = false;
 
     UIList *p_list = nullptr;
     UITextRenderer *p_currentItemText = nullptr;

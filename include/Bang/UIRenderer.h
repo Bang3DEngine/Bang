@@ -27,8 +27,8 @@ public:
     bool GetCullByRectTransform() const;
 
     // IEventsObject
-    virtual void OnEnabled()  override;
-    virtual void OnDisabled() override;
+    virtual void OnEnabled(Object *object)  override;
+    virtual void OnDisabled(Object *object) override;
 
     // IEventsTransform
     virtual void OnTransformChanged() override;

@@ -616,5 +616,14 @@ void RectTransform::WarnWrongAnchorsIfNeeded()
     }
 }
 
-void RectTransform::OnEnabled()  { InvalidateTransform(); }
-void RectTransform::OnDisabled() { InvalidateTransform(); }
+void RectTransform::OnEnabled(Object *object)
+{
+    Transform::OnEnabled(object);
+    InvalidateTransform();
+}
+
+void RectTransform::OnDisabled(Object *object)
+{
+    Transform::OnDisabled(object);
+    InvalidateTransform();
+}

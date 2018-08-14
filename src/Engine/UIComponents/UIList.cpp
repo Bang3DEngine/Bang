@@ -35,95 +35,28 @@ void UIList::OnUpdate()
 {
     Component::OnUpdate();
 
+    HandleShortcuts();
+    /*
     // Mouse In/Out
-    UICanvas *canvas = UICanvas::GetActive(this);
-    GOItem *itemUnderMouse = nullptr;
-    if (canvas->IsMouseOver(GetContainer(), true))
+
+    // Clicked
+
+    if (p_itemUnderMouse)
     {
-        const Vector2 mousePos = Input::GetMousePositionNDC();
-        const AARect listRTNDCRect ( GetGameObject()->GetRectTransform()->
-                                     GetViewportAARectNDC() );
-        for (GOItem *childItem : p_items)
+        if (Input::GetMouseButtonUp(MouseButton::LEFT) ||
+            Input::GetMouseButtonDown(MouseButton::LEFT))
         {
-            if (!childItem->IsActive()) { continue; }
+        }
 
-            bool overChildItem;
-            if (m_wideSelectionMode)
-            {
-                AARect itemRTRect ( childItem->GetRectTransform()->GetViewportAARectNDC() );
-                overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
-                                 mousePos.x <= listRTNDCRect.GetMax().x &&
-                                 mousePos.y >= itemRTRect.GetMin().y &&
-                                 mousePos.y <= itemRTRect.GetMax().y);
-            }
-            else
-            {
-                overChildItem = canvas->IsMouseOver(childItem, false);
-            }
+        if (Input::GetMouseButtonUp(MouseButton::RIGHT))
+        {
+        }
 
-            if (overChildItem) { itemUnderMouse = childItem; break; }
+        if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
+        {
         }
     }
-
-    if (p_itemUnderMouse != itemUnderMouse)
-    {
-        if (p_itemUnderMouse)
-        {
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
-        }
-
-        p_itemUnderMouse = itemUnderMouse;
-        if (p_itemUnderMouse)
-        {
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
-        }
-    }
-
-    if (!p_itemUnderMouse)
-    {
-        if (p_itemUnderMouse)
-        {
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
-        }
-        p_itemUnderMouse = nullptr;
-    }
-
-    bool someChildHasFocus = m_wideSelectionMode ? (p_itemUnderMouse != nullptr) :
-                                                    SomeChildHasFocus();
-    if (someChildHasFocus)
-    {
-        HandleShortcuts();
-
-        // Clicked
-        if (Input::GetKeyDownRepeat(Key::RIGHT) ||
-            Input::GetKeyDownRepeat(Key::ENTER))
-        {
-            GOItem *selectedItem = GetSelectedItem();
-            if (selectedItem)
-            {
-                CallSelectionCallback(selectedItem, Action::PRESSED);
-            }
-        }
-
-        if (p_itemUnderMouse)
-        {
-            if (Input::GetMouseButtonUp(MouseButton::LEFT))
-            {
-                SetSelection(p_itemUnderMouse);
-                CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_LEFT);
-            }
-
-            if (Input::GetMouseButtonUp(MouseButton::RIGHT))
-            {
-                CallSelectionCallback(p_itemUnderMouse, Action::CLICKED_RIGHT);
-            }
-
-            if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
-            {
-                CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
-            }
-        }
-    }
+    */
 }
 
 void UIList::AddItem(GOItem *newItem)
@@ -312,7 +245,10 @@ void UIList::SetSelection(int index)
     if (GetSelectedIndex() != index)
     {
         GOItem *prevSelectedItem = GetSelectedItem();
-        if (prevSelectedItem) { CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT); }
+        if (prevSelectedItem)
+        {
+            CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT);
+        }
     }
 
     if (GetSelectedIndex() != index && index >= 0 && index < GetNumItems())
@@ -322,12 +258,6 @@ void UIList::SetSelection(int index)
         if (selectedItem)
         {
             ScrollTo(selectedItem);
-
-            IFocusable *itemFocusable = selectedItem->
-                                        GetComponentInChildren<IFocusable>(true);
-            UICanvas *canvas = GetGameObject()->GetComponentInParent<UICanvas>();
-            if (canvas) { canvas->SetFocus(itemFocusable); }
-
             CallSelectionCallback(selectedItem, Action::SELECTION_IN);
         }
     }
@@ -342,49 +272,156 @@ void UIList::HandleShortcuts()
     int newSelectedIndex = -1;
 
     int numItems = GetNumItems();
-    if (Input::GetKeyDownRepeat(Key::DOWN) || Input::GetKeyDownRepeat(Key::UP))
+    if (numItems > 0 && UICanvas::GetActive(this)->HasFocus(this, true))
     {
-        int inc = Input::GetKeyDownRepeat(Key::DOWN) ? 1 : -1;
-        GOItem *newSelectedItem;
-        newSelectedIndex = GetSelectedIndex();
-        do
+        if (Input::GetKeyDownRepeat(Key::DOWN) || Input::GetKeyDownRepeat(Key::UP))
         {
-            newSelectedIndex = (newSelectedIndex + inc + numItems) % numItems;
-            newSelectedItem = GetItem(newSelectedIndex);
-            if (newSelectedIndex == GetSelectedIndex()) { break; }
+            int inc = Input::GetKeyDownRepeat(Key::DOWN) ? 1 : -1;
+            GOItem *newSelectedItem;
+            newSelectedIndex = GetSelectedIndex();
+            do
+            {
+                newSelectedIndex = (newSelectedIndex + inc + numItems) % numItems;
+                newSelectedItem = GetItem(newSelectedIndex);
+                if (newSelectedIndex == GetSelectedIndex()) { break; }
+            }
+            while (newSelectedIndex != GetSelectedIndex() &&
+                   !newSelectedItem->IsEnabled());
         }
-        while (newSelectedIndex != GetSelectedIndex() &&
-               !newSelectedItem->IsEnabled());
-    }
-    else if (Input::GetKeyDownRepeat(Key::PAGEDOWN) ||
-             Input::GetKeyDownRepeat(Key::PAGEUP))
-    {
-        if (GetScrollPanel())
+        else if (Input::GetKeyDownRepeat(Key::PAGEDOWN) ||
+                 Input::GetKeyDownRepeat(Key::PAGEUP))
         {
-            int sign = Input::GetKeyDownRepeat(Key::PAGEDOWN) ? 1 : -1;
-            GetScrollPanel()->SetScrolling( GetScrollPanel()->GetScrolling() +
-                              sign * Vector2i(GetScrollPanel()->GetContainerSize()) );
+            if (GetScrollPanel())
+            {
+                int sign = Input::GetKeyDownRepeat(Key::PAGEDOWN) ? 1 : -1;
+                GetScrollPanel()->SetScrolling( GetScrollPanel()->GetScrolling() +
+                                  sign * Vector2i(GetScrollPanel()->GetContainerSize()) );
+            }
         }
-    }
-    else if (Input::GetKeyDown(Key::END)) { newSelectedIndex = GetNumItems() - 1; }
-    else if (Input::GetKeyDown(Key::HOME)) { newSelectedIndex = 0; }
+        else if (Input::GetKeyDown(Key::END))
+        {
+            newSelectedIndex = GetNumItems() - 1;
+        }
+        else if (Input::GetKeyDown(Key::HOME))
+        {
+            newSelectedIndex = 0;
+        }
 
-    if (newSelectedIndex >= 0)
-    {
-        SetSelection(newSelectedIndex);
+        if (newSelectedIndex >= 0)
+        {
+            SetSelection(newSelectedIndex);
+        }
+
+
+        if (Input::GetKeyDownRepeat(Key::RIGHT) ||
+            Input::GetKeyDownRepeat(Key::ENTER))
+        {
+            GOItem *selectedItem = GetSelectedItem();
+            if (selectedItem)
+            {
+                CallSelectionCallback(selectedItem, Action::PRESSED);
+            }
+        }
     }
+
 }
 
-void UIList::OnEvent(IFocusable *focusable, const UIEvent &event)
+UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    switch (event.type)
     {
-        m_someChildHasFocus = true;
+        case UIEvent::Type::MOUSE_EXIT:
+        if (p_itemUnderMouse)
+        {
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+        }
+        break;
+
+        case UIEvent::Type::MOUSE_ENTER:
+        case UIEvent::Type::MOUSE_MOVE:
+        {
+            UICanvas *canvas = UICanvas::GetActive(this);
+            GOItem *itemUnderMouse = nullptr;
+            if (canvas->IsMouseOver(GetContainer(), true))
+            {
+                const Vector2 mousePos = Input::GetMousePositionNDC();
+                const AARect listRTNDCRect ( GetGameObject()->GetRectTransform()->
+                                             GetViewportAARectNDC() );
+                for (GOItem *childItem : p_items)
+                {
+                    if (!childItem->IsActive()) { continue; }
+
+                    bool overChildItem;
+                    if (m_wideSelectionMode)
+                    {
+                        AARect itemRTRect ( childItem->GetRectTransform()->GetViewportAARectNDC() );
+                        overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
+                                         mousePos.x <= listRTNDCRect.GetMax().x &&
+                                         mousePos.y >= itemRTRect.GetMin().y &&
+                                         mousePos.y <= itemRTRect.GetMax().y);
+                    }
+                    else
+                    {
+                        overChildItem = canvas->IsMouseOver(childItem, false);
+                    }
+
+                    if (overChildItem) { itemUnderMouse = childItem; break; }
+                }
+            }
+
+            if (p_itemUnderMouse != itemUnderMouse)
+            {
+                if (p_itemUnderMouse)
+                {
+                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+                }
+
+                p_itemUnderMouse = itemUnderMouse;
+                if (p_itemUnderMouse)
+                {
+                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
+                }
+            }
+        }
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_DOWN:
+            if (p_itemUnderMouse)
+            {
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    SetSelection(p_itemUnderMouse);
+                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_LEFT_DOWN);
+                }
+                else if (event.mouse.button == MouseButton::RIGHT)
+                {
+                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_RIGHT_DOWN);
+                }
+            }
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_UP:
+            if (p_itemUnderMouse)
+            {
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    SetSelection(p_itemUnderMouse);
+                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_LEFT_UP);
+                }
+            }
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
+        if (p_itemUnderMouse)
+        {
+            CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
+        }
+        break;
+
+        default:
+        break;
     }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
-    {
-        m_someChildHasFocus = false;
-    }
+    return UIEventResult::IGNORE;
 }
 
 void UIList::SetSelection(GOItem *item)
@@ -404,12 +441,25 @@ int UIList::GetSelectedIndex() const
 
 bool UIList::SomeChildHasFocus() const
 {
-    return m_someChildHasFocus;
+    UICanvas *canvas = UICanvas::GetActive( this );
+    for (GOItem *item : GetItems())
+    {
+        if (canvas->HasFocus(item, true))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 GOItem *UIList::GetSelectedItem() const
 {
     return GetItem( GetSelectedIndex() );
+}
+
+IFocusable *UIList::GetFocusable() const
+{
+    return p_focusable;
 }
 
 void UIList::SetWideSelectionMode(bool wideSelectionMode)
@@ -451,16 +501,23 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     REQUIRE_COMPONENT(go, RectTransform);
 
     UIList *list = go->AddComponent<UIList>();
+    go->SetName("UIList");
 
     const bool vertical = true;
     GameObject *container = withScrollPanel ?
                                 GameObjectFactory::CreateUIGameObject() : go;
+    container->SetName("UIList");
 
     if (vertical) { container->AddComponent<UIVerticalLayout>(); }
     else { container->AddComponent<UIHorizontalLayout>(); }
 
-    UIFocusable *focusable = container->AddComponent<UIFocusable>();
-    (void)(focusable);
+    list->p_focusable = container->AddComponent<UIFocusable>();
+    list->p_focusable->AddEventCallback([list](IFocusable *focusable,
+                                               const UIEvent &event)
+    {
+        return list->UIEventCallback(focusable, event);
+    });
+
 
     if (withScrollPanel)
     {

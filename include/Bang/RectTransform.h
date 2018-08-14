@@ -106,8 +106,8 @@ public:
     const Matrix4& GetRectLocalToWorldMatrixInv() const;
 
     // IEventsObject
-    void OnEnabled() override;
-    void OnDisabled() override;
+    void OnEnabled(Object *object) override;
+    void OnDisabled(Object *object) override;
 
     // ICloneable
     void CloneInto(ICloneable *clone) const override;

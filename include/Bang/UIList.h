@@ -27,7 +27,8 @@ class UIList : public Component,
 
 public:
     enum Action { SELECTION_IN, SELECTION_OUT, MOUSE_OVER, MOUSE_OUT,
-                  PRESSED, DOUBLE_CLICKED_LEFT, CLICKED_LEFT, CLICKED_RIGHT };
+                  PRESSED, DOUBLE_CLICKED_LEFT, MOUSE_LEFT_DOWN, MOUSE_LEFT_UP,
+                  MOUSE_RIGHT_DOWN };
 
     // Component
     void OnUpdate() override;
@@ -65,6 +66,7 @@ public:
     bool SomeChildHasFocus() const;
     int GetSelectedIndex() const;
     GOItem* GetSelectedItem() const;
+    IFocusable* GetFocusable() const;
 
     void SetWideSelectionMode(bool wideSelectionMode);
 
@@ -83,8 +85,8 @@ protected:
 
 private:
     Array<GOItem*> p_items;
+    IFocusable *p_focusable = nullptr;
     UMap<GOItem*, UIImageRenderer*> p_itemsBackground;
-    bool m_someChildHasFocus = false;
 
     int m_selectionIndex = -1;
     GOItem *p_itemUnderMouse = nullptr;
@@ -103,7 +105,7 @@ private:
     void HandleShortcuts();
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
+    UIEventResult UIEventCallback(IFocusable *focusable, const UIEvent &event);
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);

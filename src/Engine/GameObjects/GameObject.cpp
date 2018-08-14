@@ -182,20 +182,6 @@ void GameObject::DestroyPending()
     }
 }
 
-void GameObject::PropagateEnabledEvent(bool enabled) const
-{
-    auto enabledListeners = GetComponents<IObjectEvents>();
-    for (IObjectEvents *eList : enabledListeners)
-    {
-        if (enabled) { eList->OnEnabled(); } else { eList->OnDisabled(); }
-    }
-
-    for (GameObject *child : GetChildren())
-    {
-        if (enabled) { child->OnEnabled(); } else { child->OnDisabled(); }
-    }
-}
-
 void GameObject::AddChild(GameObject *child, int index)
 {
     ASSERT(!GetChildren().Contains(child));
@@ -256,19 +242,19 @@ void GameObject::RemoveComponent(Component *component)
     if (component == p_transform) { p_transform = nullptr; }
 }
 
-void GameObject::OnEnabled()
+void GameObject::OnEnabled(Object *object)
 {
-    Object::OnEnabled();
+    Object::OnEnabled(object);
     PropagateToList(&EventListener<IObjectEvents>::OnEnabled,
-                    GetComponents<EventListener<IObjectEvents>>());
-    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled);
+                    GetComponents<EventListener<IObjectEvents>>(), object);
+    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled, object);
 }
-void GameObject::OnDisabled()
+void GameObject::OnDisabled(Object *object)
 {
-    Object::OnDisabled();
+    Object::OnDisabled(object);
     PropagateToList(&EventListener<IObjectEvents>::OnDisabled,
-                    GetComponents<EventListener<IObjectEvents>>());
-    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled);
+                    GetComponents<EventListener<IObjectEvents>>(), object);
+    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
 }
 
 void GameObject::Destroy(GameObject *gameObject)

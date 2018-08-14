@@ -36,8 +36,8 @@ protected:
 
     virtual void OnPreStart();
     virtual void OnStart();
-    virtual void OnEnabled() override;
-    virtual void OnDisabled() override;
+    virtual void OnEnabled(Object *object) override;
+    virtual void OnDisabled(Object *object) override;
     virtual void OnDestroy();
 
     static void DestroyObject(Object *object);

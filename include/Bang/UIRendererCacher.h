@@ -50,9 +50,9 @@ public:
     void OnRendererChanged(Renderer *changedRenderer) override;
 
     // IEventsObject
-    void OnStarted() override;
-    void OnEnabled() override;
-    void OnDisabled() override;
+    void OnStarted(Object *object) override;
+    void OnEnabled(Object *object) override;
+    void OnDisabled(Object *object) override;
 
 private:
     bool m_cachingEnabled = true;

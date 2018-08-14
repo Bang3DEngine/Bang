@@ -180,21 +180,21 @@ void UIRendererCacher::OnRendererChanged(Renderer*)
     OnChanged();
 }
 
-void UIRendererCacher::OnStarted()
+void UIRendererCacher::OnStarted(Object *object)
 {
-    Component::OnStarted();
+    Component::OnStarted(object);
     OnChanged();
 }
 
-void UIRendererCacher::OnEnabled()
+void UIRendererCacher::OnEnabled(Object *object)
 {
-    Component::OnEnabled();
+    Component::OnEnabled(object);
     OnChanged();
 }
 
-void UIRendererCacher::OnDisabled()
+void UIRendererCacher::OnDisabled(Object *object)
 {
-    Component::OnDisabled();
+    Component::OnDisabled(object);
     OnChanged();
 }
 

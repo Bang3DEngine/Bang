@@ -32,6 +32,8 @@ UIRendererCacher::~UIRendererCacher()
 
 void UIRendererCacher::OnStart()
 {
+    Component::OnStart();
+
     // Prepare image renderer
     Texture2D *tex = p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
     if (p_cachedImageRenderer)
@@ -43,7 +45,6 @@ void UIRendererCacher::OnStart()
         p_cachedImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
         p_cachedImageRenderer->GetImageTexture()->SetFilterMode(
                                                 GL::FilterMode::NEAREST);
-        SetCachingEnabled(true);
     }
 }
 

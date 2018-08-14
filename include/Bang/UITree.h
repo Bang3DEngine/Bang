@@ -123,6 +123,7 @@ private:
     bool m_collapsed = false;
 
     int m_indentationPx = 0;
+    GameObject *p_userItemContainer = nullptr;
     UIButton *p_collapseButton = nullptr;
     GOItem *p_containedGameObject = nullptr;
     GameObject *p_indentSpacer = nullptr;

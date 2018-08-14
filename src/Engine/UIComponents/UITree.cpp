@@ -638,9 +638,9 @@ UITree *UITree::CreateInto(GameObject *go)
 UITreeItemContainer *UITree::GetItemContainer(GOItem *item) const
 {
     ASSERT(!item || !DCAST<UITreeItemContainer*>(item) );
-    return item ? (item->GetParent() ?
-                   DCAST<UITreeItemContainer*>(item->GetParent()) : nullptr)
-                : nullptr;
+    return item ? (item->GetParent()->GetParent() ?
+       DCAST<UITreeItemContainer*>(item->GetParent()->GetParent()) : nullptr) :
+                  nullptr;
 }
 
 void UITree::UpdateCollapsability(GOItem *item)
@@ -711,6 +711,15 @@ UITreeItemContainer::UITreeItemContainer()
     GameObjectFactory::CreateUIGameObjectInto(this);
 
     UIHorizontalLayout *hLayout = AddComponent<UIHorizontalLayout>();
+    hLayout->SetChildrenVerticalStretch(Stretch::FULL);
+
+    p_userItemContainer = GameObjectFactory::CreateUIGameObject();
+
+    UIHorizontalLayout *containerHLayout = p_userItemContainer->AddComponent<UIHorizontalLayout>();
+    containerHLayout->SetChildrenHorizontalStretch(Stretch::FULL);
+
+    UILayoutElement *containerLE = p_userItemContainer->AddComponent<UILayoutElement>();
+    containerLE->SetFlexibleSize(Vector2(99999.0f));
 
     p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN,
                                                        Vector2::Zero);
@@ -718,6 +727,7 @@ UITreeItemContainer::UITreeItemContainer()
 
     RH<Texture2D> iconTex = TextureFactory::GetDownArrowIcon();
     p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex.Get());
+    p_collapseButton->GetLayoutElement()->SetFlexibleSize( Vector2::Zero );
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex.Get(), Vector2i(8), 0);
     p_collapseButton->GetBackground()->SetVisible(false);    
@@ -728,6 +738,7 @@ UITreeItemContainer::UITreeItemContainer()
 
     p_indentSpacer->SetParent(this);
     p_collapseButton->GetGameObject()->SetParent(this);
+    p_userItemContainer->SetParent(this);
 }
 
 UITreeItemContainer::~UITreeItemContainer()
@@ -756,7 +767,7 @@ void UITreeItemContainer::SetCollapsed(bool collapsed)
 void UITreeItemContainer::SetContainedItem(GOItem *go)
 {
     p_containedGameObject = go;
-    p_containedGameObject->SetParent(this);
+    p_containedGameObject->SetParent(p_userItemContainer);
     SetName("GOItemCont_" + go->GetName());
 }
 

@@ -20,7 +20,7 @@ public:
     static Path GetExecutablePath();
     static Path GetEngineIncludeDir();
     static const Path& GetEngineDir();
-    static Path GetEngineAssetsDir();
+    static const Path& GetEngineAssetsDir();
     static Path GetEngineBuildDir();
     static Path GetEngineResourcesDir();
     static Path GetEngineLibrariesDir(BinType binaryType);
@@ -56,8 +56,11 @@ protected:
     static Paths* GetInstance();
 
 private:
-    Path c_engineRoot  = Path::Empty;
-    Path c_projectRoot = Path::Empty;
+    Path m_engineRoot  = Path::Empty;
+    Path m_projectRoot = Path::Empty;
+
+    // Cached paths (the ones more used), to avoid Path creation every time
+    Path m_engineAssetsDir = Path::Empty;
 
     friend class Application;
 };

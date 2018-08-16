@@ -39,11 +39,13 @@ public:
 
     static Texture2D* GetTexture2D(const String &filename);
     static Texture2D* GetTexture2D(const String &filename, const Path &dir);
+    static Texture2D* GetTexture2D(const Path &path);
     static TextureCubeMap* GetTextureCubeMap(const String &filename);
     static TextureCubeMap* GetTextureCubeMap(const String &filename, const Path &dir);
+    static TextureCubeMap* GetTextureCubeMap(const Path &path);
 
 protected:
-    TextureFactory() = default;
+    TextureFactory();
     virtual ~TextureFactory() = default;
 
     static TextureFactory* GetInstance();
@@ -51,6 +53,11 @@ protected:
 private:
     Map<Path, RH<Texture2D>> m_texture2DCache;
     Map<Path, RH<TextureCubeMap>> m_textureCubeMapsCache;
+
+    // Cache most used paths
+    Path m_whiteTexturePath   = Path::Empty;
+    Path m_whiteTextureCMPath = Path::Empty;
+    Path m_brdfLutTexturePath = Path::Empty;
 
     friend class Resources;
 };

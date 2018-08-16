@@ -137,7 +137,7 @@ List<GameObject *> UILayoutManager::GetLayoutableChildrenList(GameObject *go)
         UILayoutIgnorer *ltIgnorer = child->GetComponent<UILayoutIgnorer>();
         bool ignoreLayout = ltIgnorer ? ltIgnorer->IsIgnoreLayout() : false;
         if (child->IsEnabled() &&
-            GetLayoutElementsIn(child).Size() > 0 &&
+            child->HasComponent<ILayoutElement>() &&
             !ignoreLayout)
         {
             childrenList.PushBack(child);
@@ -223,14 +223,19 @@ const List<T*> &GetGatheredListOf(
 {
     if (gameObject)
     {
-        if (!gatherMap.ContainsKey(gameObject))
+        auto it = gatherMap.Find(gameObject);
+        if (it == gatherMap.End())
         {
             ObjectGatherer<T, false> objGatherer;
             objGatherer.SetRoot(gameObject);
             gatherMap.Add(gameObject, objGatherer);
             gameObject->EventEmitter<IEventsDestroy>::RegisterListener(layoutMgr);
+            return gatherMap.Get(gameObject).GetList();
         }
-        return gatherMap.Get(gameObject).GetList();
+        else
+        {
+            return it->second.GetList();
+        }
     }
     return List<T*>::Empty();
 }

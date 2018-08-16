@@ -129,9 +129,11 @@ void ReflectionProbe::SetRenderSize(int size)
     {
         m_renderSize = size;
 
+        #ifdef DEBUG
         float sqrt = Math::Log10( float(size) ) / Math::Log10(2.0f);
         bool isPowerOfTwo = ( Math::Abs(sqrt - Math::Round(sqrt)) < 0.0001f );
         ASSERT(isPowerOfTwo);
+        #endif
 
         for (Camera *cam : GetCameras())
         {

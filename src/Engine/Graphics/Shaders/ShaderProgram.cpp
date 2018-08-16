@@ -146,17 +146,17 @@ bool ShaderProgram::Link()
     m_isLinked = true;
 
     // Invalidate caches
-    m_nameToLocationCache.clear();
-    m_uniformCacheBool.clear();
-    m_uniformCacheInt.clear();
-    m_uniformCacheFloat.clear();
-    m_uniformCacheColor.clear();
-    m_uniformCacheVector2.clear();
-    m_uniformCacheVector3.clear();
-    m_uniformCacheVector4.clear();
-    m_uniformCacheMatrix3.clear();
-    m_uniformCacheMatrix4.clear();
-    m_namesToTexture.clear();
+    m_nameToLocationCache.Clear();
+    m_uniformCacheBool.Clear();
+    m_uniformCacheInt.Clear();
+    m_uniformCacheFloat.Clear();
+    m_uniformCacheColor.Clear();
+    m_uniformCacheVector2.Clear();
+    m_uniformCacheVector3.Clear();
+    m_uniformCacheVector4.Clear();
+    m_uniformCacheMatrix3.Clear();
+    m_uniformCacheMatrix4.Clear();
+    m_namesToTexture.Clear();
 
     return true;
 }
@@ -192,7 +192,7 @@ bool SetShaderUniformArray(ShaderProgram *sp,
 
 template<class T, class=TT_NOT_POINTER(T)>
 bool SetShaderUniform(ShaderProgram *sp,
-                      std::unordered_map<String, T> *cache,
+                      UMap<String, T> *cache,
                       const String &name,
                       const T &v,
                       bool warn)
@@ -202,17 +202,29 @@ bool SetShaderUniform(ShaderProgram *sp,
     bool update = true;
     if (cache)
     {
-        const auto &it = cache->find(name);
-        if (it != cache->end() && it->second == v) { update = false; }
+        auto it = cache->Find(name);
+        if (it != cache->End() && it->second == v)
+        {
+            update = false;
+        }
     }
 
     if (update)
     {
-        if (cache) { (*cache)[name] = v; }
+        if (cache)
+        {
+            (*cache)[name] = v;
+        }
 
         int location = sp->GetUniformLocation(name);
-        if (location >= 0) { GL::Uniform(location, v); }
-        else if (warn) { Debug_Warn("Uniform '" << name << "' not found"); }
+        if (location >= 0)
+        {
+            GL::Uniform(location, v);
+        }
+        else if (warn)
+        {
+            Debug_Warn("Uniform '" << name << "' not found");
+        }
         return (location >= 0);
     }
     return true;
@@ -314,8 +326,8 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
     }
 
     bool needToRefreshTexture;
-    auto it = m_namesToTexture.find(name);
-    if (it != m_namesToTexture.end())
+    auto it = m_namesToTexture.Find(name);
+    if (it != m_namesToTexture.End())
     {
         // Texture name was already being used...
         Texture *oldTexture = it->second;
@@ -350,7 +362,7 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         BindTextureToFreeUnit(name, texture);
     }
 
-    if (m_namesToTexture.size() >= TextureUnitManager::GetNumUsableTextureUnits())
+    if (m_namesToTexture.Size() >= TextureUnitManager::GetNumUsableTextureUnits())
     {
         Debug_Error("You are using too many textures at once. Maximum usable is: " <<
                     TextureUnitManager::GetNumUsableTextureUnits());
@@ -463,8 +475,11 @@ Shader* ShaderProgram::GetFragmentShader() const { return p_fShader.Get(); }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
 {
-    auto it = m_nameToLocationCache.find(name);
-    if (it != m_nameToLocationCache.end()) { return it->second; }
+    auto it = m_nameToLocationCache.Find(name);
+    if (it != m_nameToLocationCache.End())
+    {
+        return it->second;
+    }
 
     const int location = GL::GetUniformLocation(GetGLId(), name);
     m_nameToLocationCache[name] = location;
@@ -617,10 +632,13 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
             const String &name = it->first;
             entriesToRestore.PushBack(std::make_pair(name, tex));
 
-            it = m_namesToTexture.erase(it);
+            it = m_namesToTexture.Remove(it);
             // Dont break, in case it has obj texture several times
         }
-        else { ++it; }
+        else
+        {
+            ++it;
+        }
     }
 
     // Set default textures to those removed entries.

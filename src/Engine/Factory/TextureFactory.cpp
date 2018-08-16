@@ -5,6 +5,13 @@
 
 USING_NAMESPACE_BANG
 
+TextureFactory::TextureFactory()
+{
+    m_whiteTexturePath   = EPATH("Textures").Append("White.png");
+    m_whiteTextureCMPath = EPATH("Textures").Append("WhiteCM.texcm");
+    m_brdfLutTexturePath = EPATH("Textures").Append("BRDF_LUT.png");
+}
+
 Texture2D* TextureFactory::GetBangB64Icon()
 {
     return GetTexture2D("LogoBang_B_64.png");
@@ -84,12 +91,13 @@ Texture2D* TextureFactory::GetCheckerboard()
 }
 Texture2D* TextureFactory::GetWhiteTexture()
 {
-    return GetTexture2D("White.png");
+    return GetTexture2D( TextureFactory::GetInstance()->m_whiteTexturePath );
 }
 
 Texture2D* TextureFactory::GetBRDFLUTTexture()
 {
-    return TextureFactory::GetTexture2D("BRDF_LUT.png");
+    return TextureFactory::GetTexture2D( TextureFactory::GetInstance()->
+                                         m_brdfLutTexturePath );
 }
 
 Texture2D* TextureFactory::Get9SliceRoundRectTexture()
@@ -106,7 +114,8 @@ Texture2D* TextureFactory::Get9SliceRoundRectBorderTexture()
 
 TextureCubeMap* TextureFactory::GetWhiteTextureCubeMap()
 {
-    return TextureFactory::GetTextureCubeMap("WhiteCM.texcm");
+    return TextureFactory::GetTextureCubeMap( TextureFactory::GetInstance()->
+                                              m_whiteTextureCMPath );
 }
 
 TextureCubeMap* TextureFactory::GetDefaultTextureCubeMap()
@@ -121,8 +130,13 @@ Texture2D* TextureFactory::GetTexture2D(const String &filename)
 
 Texture2D* TextureFactory::GetTexture2D(const String &filename, const Path &dir)
 {
-    TextureFactory *tf = TextureFactory::GetInstance();
     Path path = dir.Append(filename);
+    return GetTexture2D(path);
+}
+
+Texture2D *TextureFactory::GetTexture2D(const Path &path)
+{
+    TextureFactory *tf = TextureFactory::GetInstance();
     Texture2D *tex = nullptr;
 
     if (tf->m_texture2DCache.ContainsKey(path))
@@ -161,8 +175,13 @@ TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename)
 TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename,
                                                   const Path &dir)
 {
-    TextureFactory *tf = TextureFactory::GetInstance();
     Path path = dir.Append(filename);
+    return GetTextureCubeMap(path);
+}
+
+TextureCubeMap *TextureFactory::GetTextureCubeMap(const Path &path)
+{
+    TextureFactory *tf = TextureFactory::GetInstance();
     TextureCubeMap *texCM = nullptr;
 
     if (tf->m_textureCubeMapsCache.ContainsKey(path))

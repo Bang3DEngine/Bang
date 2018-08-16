@@ -24,9 +24,13 @@ Paths::~Paths()
 
 void Paths::InitPaths(const Path &engineRootPath)
 {
-    c_engineRoot = Path::Empty;
-    if (!engineRootPath.IsEmpty()) { Paths::SetEngineRoot(engineRootPath); }
+    m_engineRoot = Path::Empty;
+    if (!engineRootPath.IsEmpty())
+    {
+        Paths::SetEngineRoot(engineRootPath);
+    }
 
+    m_engineAssetsDir = Paths::GetEngineDir().Append("Assets");
     if (GetEngineAssetsDir().IsDir())
     {
         Debug_Log("Picking as Paths Bang Root: '" << GetEngineDir() << "'");
@@ -72,11 +76,11 @@ Path Paths::GetEngineIncludeDir()
 
 const Path &Paths::GetEngineDir()
 {
-    return Paths::GetInstance()->c_engineRoot;
+    return Paths::GetInstance()->m_engineRoot;
 }
-Path Paths::GetEngineAssetsDir()
+const Path& Paths::GetEngineAssetsDir()
 {
-    return Paths::GetEngineDir().Append("Assets");
+    return Paths::GetInstance()->m_engineAssetsDir;
 }
 
 Path Paths::GetEngineBuildDir()
@@ -116,7 +120,7 @@ List<Path> Paths::GetProjectIncludeDirs()
 
 const Path &Paths::GetProjectDir()
 {
-    return Paths::GetInstance()->c_projectRoot;
+    return Paths::GetInstance()->m_projectRoot;
 }
 
 Path Paths::GetProjectAssetsDir()
@@ -136,7 +140,7 @@ Path Paths::CreateProjectPath(const String &path)
 
 void Paths::SetProjectRoot(const Path &projectRootDir)
 {
-    Paths::GetInstance()->c_projectRoot = projectRootDir;
+    Paths::GetInstance()->m_projectRoot = projectRootDir;
 }
 
 List<Path> Paths::GetEngineIncludeDirs()
@@ -153,7 +157,7 @@ bool Paths::IsEnginePath(const Path &path)
 
 void Paths::SetEngineRoot(const Path &engineRootDir)
 {
-    Paths::GetInstance()->c_engineRoot = engineRootDir;
+    Paths::GetInstance()->m_engineRoot = engineRootDir;
 }
 
 Path Paths::GetResolvedPath(const Path &path_)

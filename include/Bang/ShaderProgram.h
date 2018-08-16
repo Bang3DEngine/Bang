@@ -1,9 +1,8 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
-#include <unordered_map>
-
 #include "Bang/Map.h"
+#include "Bang/UMap.h"
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Vector2.h"
@@ -88,19 +87,19 @@ private:
     RH<Shader> p_fShader;
     bool m_isLinked = false;
 
-    std::unordered_map<String, int> m_uniformCacheInt;
-    std::unordered_map<String, bool> m_uniformCacheBool;
-    std::unordered_map<String, float> m_uniformCacheFloat;
-    std::unordered_map<String, double> m_uniformCacheDouble;
-    std::unordered_map<String, Color> m_uniformCacheColor;
-    std::unordered_map<String, Vector2> m_uniformCacheVector2;
-    std::unordered_map<String, Vector3> m_uniformCacheVector3;
-    std::unordered_map<String, Vector4> m_uniformCacheVector4;
-    std::unordered_map<String, Matrix3> m_uniformCacheMatrix3;
-    std::unordered_map<String, Matrix4> m_uniformCacheMatrix4;
+    UMap<String, int> m_uniformCacheInt;
+    UMap<String, bool> m_uniformCacheBool;
+    UMap<String, float> m_uniformCacheFloat;
+    UMap<String, double> m_uniformCacheDouble;
+    UMap<String, Color> m_uniformCacheColor;
+    UMap<String, Vector2> m_uniformCacheVector2;
+    UMap<String, Vector3> m_uniformCacheVector3;
+    UMap<String, Vector4> m_uniformCacheVector4;
+    UMap<String, Matrix3> m_uniformCacheMatrix3;
+    UMap<String, Matrix4> m_uniformCacheMatrix4;
 
-    mutable std::unordered_map<String, int> m_nameToLocationCache;
-    mutable std::unordered_map<String, Texture*> m_namesToTexture;
+    mutable UMap<String, int> m_nameToLocationCache;
+    mutable UMap<String, Texture*> m_namesToTexture;
 
     ShaderProgram();
     ShaderProgram(Shader *vShader, Shader *fShader);

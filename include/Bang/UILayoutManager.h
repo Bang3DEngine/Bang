@@ -3,31 +3,35 @@
 
 #include "Bang/Bang.h"
 
-#include "Bang/Map.h"
 #include "Bang/Set.h"
+#include "Bang/UMap.h"
 #include "Bang/Axis.h"
 #include "Bang/List.h"
 #include "Bang/Object.h"
+#include "Bang/EventListener.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/LayoutSizeType.h"
+#include "Bang/ILayoutElement.h"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/ILayoutController.h"
+#include "Bang/ILayoutSelfController.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
 FORWARD class Component;
 FORWARD class RectTransform;
-FORWARD class ILayoutElement;
-FORWARD class ILayoutController;
 FORWARD class IEventsTransform;
 
-class UILayoutManager
+class UILayoutManager : public EventListener<IEventsDestroy>
 {
 public:
     UILayoutManager();
 
     void RebuildLayout(GameObject *gameObject);
 
-    static void PropagateInvalidation(ILayoutElement    *element);
-    static void PropagateInvalidation(ILayoutController *controller);
+    void PropagateInvalidation(ILayoutElement *element);
+    void PropagateInvalidation(ILayoutController *controller);
 
     static Vector2i GetMinSize(GameObject *go);
     static Vector2i GetPreferredSize(GameObject *go);
@@ -36,13 +40,28 @@ public:
 
     static List<GameObject*> GetLayoutableChildrenList(GameObject *go);
 
+    static UILayoutManager* GetActive(GameObject *go);
+    static UILayoutManager* GetActive(Component *comp);
+    static UILayoutManager* GetActive(ILayoutElement *layoutElement);
+    static UILayoutManager* GetActive(ILayoutController *layoutController);
 
 private:
+    UMap<GameObject*, ObjectGatherer<ILayoutElement, false>>
+        m_iLayoutElementsPerGameObject;
+    UMap<GameObject*, ObjectGatherer<ILayoutController, false>>
+        m_iLayoutControllersPerGameObject;
+    UMap<GameObject*, ObjectGatherer<ILayoutSelfController, false>>
+        m_iLayoutSelfControllersPerGameObject;
+
     void CalculateLayout(GameObject *gameObject, Axis axis);
     void ApplyLayout(GameObject *gameObject, Axis axis);
 
-    static UILayoutManager* GetActive(GameObject *go);
-    static UILayoutManager* GetActive(Component *comp);
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
+
+    const List<ILayoutElement*>& GetLayoutElementsIn(GameObject *gameObject);
+    const List<ILayoutController*>& GetLayoutControllersIn(GameObject *gameObject);
+    const List<ILayoutSelfController*>& GetLayoutSelfControllersIn(GameObject *gameObject);
 };
 
 NAMESPACE_BANG_END

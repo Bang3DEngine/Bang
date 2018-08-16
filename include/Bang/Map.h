@@ -22,6 +22,9 @@ public:
 
     void Add(const Key &key, const Value &value = Value());
 
+    template<typename... Args>
+    void Emplace(Args&&... args);
+
     void Remove(const Key &key);
     Iterator Remove(Iterator it);
     void RemoveValues(const Value &value);

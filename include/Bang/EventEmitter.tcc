@@ -28,7 +28,7 @@ bool EventEmitter<T>::IsEmittingEvents() const
 }
 
 template <class T>
-void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
+bool EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 {
     if (!m_isBeingDestroyed)
     {
@@ -37,22 +37,38 @@ void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
             if (!m_listeners.Contains(listener))
             {
                 m_listeners.PushBack(listener);
-                if (listener) { listener->OnRegisteredTo(this); }
+                if (listener)
+                {
+                    listener->OnRegisteredTo(this);
+                }
+                return true;
             }
         }
-        else { m_delayedListenersToRegister.PushBack(listener); }
+        else
+        {
+            m_delayedListenersToRegister.PushBack(listener);
+        }
     }
+    return false;
 }
 
 template <class T>
-void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
+bool EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
     if (!IsIteratingListeners())
     {
         m_listeners.Remove(listener);
-        if (listener) { listener->OnUnRegisteredFrom(this); }
+        if (listener)
+        {
+            listener->OnUnRegisteredFrom(this);
+        }
+        return true;
     }
-    else { m_delayedListenersToUnRegister.PushBack(listener); }
+    else
+    {
+        m_delayedListenersToUnRegister.PushBack(listener);
+        return false;
+    }
 }
 
 template<class T>

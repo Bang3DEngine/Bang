@@ -8,6 +8,13 @@
 NAMESPACE_BANG_BEGIN
 
 template<class T>
+const List<T>& List<T>::Empty()
+{
+    static List<T> emptyList;
+    return emptyList;
+}
+
+template<class T>
 List<T>::List() {}
 
 template<class T>

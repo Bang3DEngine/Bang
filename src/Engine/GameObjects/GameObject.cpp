@@ -236,7 +236,7 @@ void GameObject::RemoveComponent(Component *component)
         }
 
         EventEmitter<IEventsComponent>::PropagateToListeners(
-                    &IEventsComponent::OnComponentRemoved, component);
+                    &IEventsComponent::OnComponentRemoved, component, this);
     }
 
     if (component == p_transform) { p_transform = nullptr; }

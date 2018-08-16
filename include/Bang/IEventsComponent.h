@@ -18,9 +18,11 @@ public:
         (void) index;
     }
 
-    virtual void OnComponentRemoved(Component *removedComponent)
+    virtual void OnComponentRemoved(Component *removedComponent,
+                                    GameObject *previousGameObject)
     {
         (void) removedComponent;
+        (void) previousGameObject;
     }
 };
 

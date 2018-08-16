@@ -41,7 +41,10 @@ void ILayoutElement::Invalidate()
 void ILayoutElement::OnInvalidated()
 {
     IInvalidatable<ILayoutElement>::OnInvalidated();
-    UILayoutManager::PropagateInvalidation(this);
+    if (UILayoutManager *uilm = UILayoutManager::GetActive(this))
+    {
+        uilm->PropagateInvalidation(this);
+    }
 }
 
 int ILayoutElement::GetLayoutPriority() const
@@ -54,7 +57,10 @@ void ILayoutElement::_CalculateLayout(Axis axis)
     if (IInvalidatable<ILayoutElement>::IsInvalid())
     {
         CalculateLayout(axis);
-        if (axis == Axis::VERTICAL) { Validate(); }
+        if (axis == Axis::VERTICAL)
+        {
+            Validate();
+        }
     }
 }
 
@@ -75,8 +81,20 @@ Vector2 ILayoutElement::GetFlexibleSize() const
 
 Vector2 ILayoutElement::GetSize(LayoutSizeType sizeType) const
 {
-    if (sizeType == LayoutSizeType::MIN) { return Vector2( GetMinSize() ); }
-    if (sizeType == LayoutSizeType::PREFERRED) { return Vector2( GetPreferredSize() ); }
-    if (sizeType == LayoutSizeType::FLEXIBLE)  { return GetFlexibleSize(); }
+    if (sizeType == LayoutSizeType::MIN)
+    {
+        return Vector2( GetMinSize() );
+    }
+
+    if (sizeType == LayoutSizeType::PREFERRED)
+    {
+        return Vector2( GetPreferredSize() );
+    }
+
+    if (sizeType == LayoutSizeType::FLEXIBLE)
+    {
+        return GetFlexibleSize();
+    }
+
     return Vector2::Zero;
 }

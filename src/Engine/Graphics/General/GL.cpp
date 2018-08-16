@@ -313,7 +313,7 @@ const Color& GL::GetClearColor()
 
 void GL::Clear(GLbitfield bufferBit)
 {
-    GL_CALL( glClear(bufferBit) );
+    // GL_CALL( glClear(bufferBit) );
 }
 void GL::Clear(GL::BufferBit bufferBit)
 {
@@ -1442,11 +1442,11 @@ void GL::Render(const VAO *vao, GL::Primitive renderMode,
 
     if (vao->IsIndexed())
     {
-        GL::DrawElements(vao, renderMode, elementsCount, startElementIndex);
+        // GL::DrawElements(vao, renderMode, elementsCount, startElementIndex);
     }
     else
     {
-        GL::DrawArrays(vao, renderMode, elementsCount, startElementIndex);
+        // GL::DrawArrays(vao, renderMode, elementsCount, startElementIndex);
     }
 }
 

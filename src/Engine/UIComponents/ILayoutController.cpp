@@ -16,7 +16,10 @@ void ILayoutController::Invalidate()
 void ILayoutController::OnInvalidated()
 {
     IInvalidatable<ILayoutController>::OnInvalidated();
-    UILayoutManager::PropagateInvalidation(this);
+    if (UILayoutManager *uilm = UILayoutManager::GetActive(this))
+    {
+        uilm->PropagateInvalidation(this);
+    }
 }
 
 void ILayoutController::_ApplyLayout(Axis axis)

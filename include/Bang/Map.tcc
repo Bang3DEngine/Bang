@@ -23,6 +23,13 @@ void Map<Key,Value,Compare>::Add(const Key &key, const Value &value)
 }
 
 template<class Key, class Value, class Compare>
+template<typename... Args>
+void Map<Key,Value,Compare>::Emplace(Args&&... args)
+{
+    m_map.emplace(args...);
+}
+
+template<class Key, class Value, class Compare>
 void Map<Key,Value,Compare>::Remove(const Key &key)
 {
     m_map.erase(key);

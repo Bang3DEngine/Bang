@@ -826,7 +826,7 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
             IFocusable *focusable = child->GetComponent<IFocusable>();
             if (focusable)
             {
-                Object *focusableObj = Cast<Object*>(focusable);
+                Object *focusableObj = DCAST<Object*>(focusable);
                 if (!focusableObj || focusableObj->IsActive())
                 {
                     sortedCandidates->PushBack(

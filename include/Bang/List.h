@@ -17,6 +17,8 @@ public:
     using Const_Iterator = typename std::list<T>::const_iterator;
     using Const_RIterator = typename std::list<T>::const_reverse_iterator;
 
+    static const List<T>& Empty();
+
     List();
     List(const std::list<T> &l);
     List(int size);

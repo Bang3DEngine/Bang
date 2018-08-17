@@ -11,7 +11,10 @@ EventEmitter<T>::~EventEmitter()
     m_isBeingDestroyed = true;
     while (!m_listeners.IsEmpty())
     {
-        UnRegisterListener( m_listeners.Front() );
+        if (!UnRegisterListener( m_listeners.Front() ))
+        {
+            m_listeners.PopFront();
+        }
     }
 }
 

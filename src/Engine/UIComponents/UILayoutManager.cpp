@@ -244,22 +244,22 @@ template <class T>
 const List<T*> &GetGatheredListOf(
                         UILayoutManager *layoutMgr,
                         GameObject *gameObject,
-                        UMap<GameObject*, ObjectGatherer<T, false>> &gatherMap)
+                        UMap<GameObject*, ObjectGatherer<T, false>*> &gatherMap)
 {
     if (gameObject)
     {
         auto it = gatherMap.Find(gameObject);
         if (it == gatherMap.End())
         {
-            ObjectGatherer<T, false> objGatherer;
-            objGatherer.SetRoot(gameObject);
+            ObjectGatherer<T, false> *objGatherer = new ObjectGatherer<T, false>();
+            objGatherer->SetRoot(gameObject);
             gatherMap.Add(gameObject, objGatherer);
             gameObject->EventEmitter<IEventsDestroy>::RegisterListener(layoutMgr);
-            return gatherMap.Get(gameObject).GetList();
+            return gatherMap.Get(gameObject)->GetList();
         }
         else
         {
-            return it->second.GetList();
+            return it->second->GetList();
         }
     }
     return List<T*>::Empty();

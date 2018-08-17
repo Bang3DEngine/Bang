@@ -9,6 +9,12 @@ template<class T>
 EventListener<T>::~EventListener()
 {
     m_isBeingDestroyed = true;
+    ClearRegistrations();
+}
+
+template<class T>
+void EventListener<T>::ClearRegistrations()
+{
     while (!m_emitters.IsEmpty())
     {
         if (!m_emitters.Front()->UnRegisterListener(this))
@@ -17,6 +23,7 @@ EventListener<T>::~EventListener()
         }
     }
 }
+
 
 template<class T>
 void EventListener<T>::SetReceiveEvents(bool receiveEvents)

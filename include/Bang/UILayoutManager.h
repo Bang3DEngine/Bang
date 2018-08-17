@@ -46,9 +46,9 @@ public:
     static UILayoutManager* GetActive(ILayoutController *layoutController);
 
 private:
-    UMap<GameObject*, ObjectGatherer<ILayoutElement, false>>
+    UMap<GameObject*, ObjectGatherer<ILayoutElement, false>*>
         m_iLayoutElementsPerGameObject;
-    UMap<GameObject*, ObjectGatherer<ILayoutController, false>>
+    UMap<GameObject*, ObjectGatherer<ILayoutController, false>*>
         m_iLayoutControllersPerGameObject;
 
     void CalculateLayout(GameObject *gameObject, Axis axis);

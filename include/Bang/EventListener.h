@@ -25,6 +25,7 @@ private:
     bool m_isBeingDestroyed = false;
     List<EventEmitter<T>*> m_emitters;
 
+    void ClearRegistrations();
     void OnRegisteredTo(EventEmitter<T> *emitter);
     void OnUnRegisteredFrom(EventEmitter<T> *emitter);
 

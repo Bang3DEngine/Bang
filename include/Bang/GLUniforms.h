@@ -16,6 +16,45 @@ FORWARD class ShaderProgram;
 class GLUniforms
 {
 public:
+    static const String UniformName_ReceivesShadows;
+    static const String UniformName_MaterialAlbedoColor;
+    static const String UniformName_AlbedoUvOffset;
+    static const String UniformName_AlbedoUvMultiply;
+    static const String UniformName_MaterialReceivesLighting;
+    static const String UniformName_AlbedoTexture;
+    static const String UniformName_AlphaCutoff;
+    static const String UniformName_HasAlbedoTexture;
+    static const String UniformName_MaterialRoughness;
+    static const String UniformName_MaterialMetalness;
+    static const String UniformName_NormalMapUvOffset;
+    static const String UniformName_NormalMapUvMultiply;
+    static const String UniformName_NormalMapMultiplyFactor;
+    static const String UniformName_BRDF_LUT;
+    static const String UniformName_RoughnessTexture;
+    static const String UniformName_MetalnessTexture;
+    static const String UniformName_NormalMapTexture;
+    static const String UniformName_HasNormalMapTexture;
+    static const String UniformName_TimeSeconds;
+    static const String UniformName_Model;
+    static const String UniformName_ModelInv;
+    static const String UniformName_Normal;
+    static const String UniformName_View;
+    static const String UniformName_ViewInv;
+    static const String UniformName_Projection;
+    static const String UniformName_ProjectionInv;
+    static const String UniformName_ProjectionView;
+    static const String UniformName_PVMInv;
+    static const String UniformName_PVM;
+    static const String UniformName_Camera_WorldForward;
+    static const String UniformName_Camera_WorldPos;
+    static const String UniformName_Camera_ClearColor;
+    static const String UniformName_Camera_ClearMode;
+    static const String UniformName_SkyBox;
+    static const String UniformName_SkyBoxSpecular;
+    static const String UniformName_SkyBoxDiffuse;
+    static const String UniformName_Viewport_MinPos;
+    static const String UniformName_Viewport_Size;
+
     struct MatrixUniforms
     {
         Matrix4 model;

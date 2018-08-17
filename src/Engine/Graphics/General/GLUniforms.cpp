@@ -9,6 +9,45 @@
 
 USING_NAMESPACE_BANG
 
+const String GLUniforms::UniformName_ReceivesShadows = "B_ReceivesShadows";
+const String GLUniforms::UniformName_MaterialAlbedoColor = "B_MaterialAlbedoColor";
+const String GLUniforms::UniformName_AlbedoUvOffset = "B_AlbedoUvOffset";
+const String GLUniforms::UniformName_AlbedoUvMultiply = "B_AlbedoUvMultiply";
+const String GLUniforms::UniformName_MaterialReceivesLighting = "B_MaterialReceivesLighting";
+const String GLUniforms::UniformName_AlbedoTexture = "B_AlbedoTexture";
+const String GLUniforms::UniformName_AlphaCutoff = "B_AlphaCutoff";
+const String GLUniforms::UniformName_HasAlbedoTexture = "B_HasAlbedoTexture";
+const String GLUniforms::UniformName_MaterialRoughness = "B_MaterialRoughness";
+const String GLUniforms::UniformName_MaterialMetalness = "B_MaterialMetalness";
+const String GLUniforms::UniformName_NormalMapUvOffset = "B_NormalMapUvOffset";
+const String GLUniforms::UniformName_NormalMapUvMultiply = "B_NormalMapUvMultiply";
+const String GLUniforms::UniformName_NormalMapMultiplyFactor = "B_NormalMapMultiplyFactor";
+const String GLUniforms::UniformName_BRDF_LUT = "B_BRDF_LUT";
+const String GLUniforms::UniformName_RoughnessTexture = "B_RoughnessTexture";
+const String GLUniforms::UniformName_MetalnessTexture = "B_MetalnessTexture";
+const String GLUniforms::UniformName_NormalMapTexture = "B_NormalMapTexture";
+const String GLUniforms::UniformName_HasNormalMapTexture = "B_HasNormalMapTexture";
+const String GLUniforms::UniformName_TimeSeconds = "B_TimeSeconds";
+const String GLUniforms::UniformName_Model = "B_Model";
+const String GLUniforms::UniformName_ModelInv = "B_ModelInv";
+const String GLUniforms::UniformName_Normal = "B_Normal";
+const String GLUniforms::UniformName_View = "B_View";
+const String GLUniforms::UniformName_ViewInv = "B_ViewInv";
+const String GLUniforms::UniformName_Projection = "B_Projection";
+const String GLUniforms::UniformName_ProjectionInv = "B_ProjectionInv";
+const String GLUniforms::UniformName_ProjectionView = "B_ProjectionView";
+const String GLUniforms::UniformName_PVMInv = "B_PVMInv";
+const String GLUniforms::UniformName_PVM = "B_PVM";
+const String GLUniforms::UniformName_Camera_WorldForward = "B_Camera_WorldForward";
+const String GLUniforms::UniformName_Camera_WorldPos = "B_Camera_WorldPos";
+const String GLUniforms::UniformName_Camera_ClearColor = "B_Camera_ClearColor";
+const String GLUniforms::UniformName_Camera_ClearMode = "B_Camera_ClearMode";
+const String GLUniforms::UniformName_SkyBox = "B_SkyBox";
+const String GLUniforms::UniformName_SkyBoxSpecular = "B_SkyBoxDiffuse";
+const String GLUniforms::UniformName_SkyBoxDiffuse = "B_SkyBoxSpecular";
+const String GLUniforms::UniformName_Viewport_MinPos = "B_Viewport_MinPos";
+const String GLUniforms::UniformName_Viewport_Size = "B_Viewport_Size";
+
 GLUniforms::ViewportUniforms *GLUniforms::GetViewportUniforms()
 {
     return &GLUniforms::GetActive()->m_viewportUniforms;
@@ -32,38 +71,45 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
 
     MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
 
-    sp->SetFloat("B_TimeSeconds",  (Time::GetEllapsed_Seconds()), false);
-    sp->SetMatrix4("B_Model",          matrices->model,    false);
-    sp->SetMatrix4("B_ModelInv",       matrices->modelInv, false);
-    sp->SetMatrix4("B_Normal",         matrices->normal,   false);
-    sp->SetMatrix4("B_View",           matrices->view,     false);
-    sp->SetMatrix4("B_ViewInv",        matrices->viewInv,  false);
-    sp->SetMatrix4("B_Projection",     matrices->proj,     false);
-    sp->SetMatrix4("B_ProjectionInv",  matrices->projInv,  false);
-    sp->SetMatrix4("B_ProjectionView", matrices->projView, false);
-    sp->SetMatrix4("B_PVMInv",         matrices->pvmInv,   false);
-    sp->SetMatrix4("B_PVM",            matrices->pvm,      false);
+    sp->SetFloat(GLUniforms::UniformName_TimeSeconds,
+                 Time::GetEllapsed_Seconds(),
+                 false);
+    sp->SetMatrix4(GLUniforms::UniformName_Model,          matrices->model,    false);
+    sp->SetMatrix4(GLUniforms::UniformName_ModelInv,       matrices->modelInv, false);
+    sp->SetMatrix4(GLUniforms::UniformName_Normal,         matrices->normal,   false);
+    sp->SetMatrix4(GLUniforms::UniformName_View,           matrices->view,     false);
+    sp->SetMatrix4(GLUniforms::UniformName_ViewInv,        matrices->viewInv,  false);
+    sp->SetMatrix4(GLUniforms::UniformName_Projection,     matrices->proj,     false);
+    sp->SetMatrix4(GLUniforms::UniformName_ProjectionInv,  matrices->projInv,  false);
+    sp->SetMatrix4(GLUniforms::UniformName_ProjectionView, matrices->projView, false);
+    sp->SetMatrix4(GLUniforms::UniformName_PVMInv,         matrices->pvmInv,   false);
+    sp->SetMatrix4(GLUniforms::UniformName_PVM,            matrices->pvm,      false);
 
     Camera *cam = Camera::GetActive();
     Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
-    sp->SetVector3("B_Camera_WorldForward",
-                   (camTR ? camTR->GetForward() : Vector3::Zero), false);
-    sp->SetVector3("B_Camera_WorldPos",
-                   (camTR ? camTR->GetPosition() : Vector3::Zero), false);
-    sp->SetColor("B_Camera_ClearColor",
-                 (cam ? cam->GetClearColor() : Color::Pink), false);
+    sp->SetVector3(GLUniforms::UniformName_Camera_WorldForward,
+                   (camTR ? camTR->GetForward() : Vector3::Zero),
+                   false);
+    sp->SetVector3(GLUniforms::UniformName_Camera_WorldPos,
+                   (camTR ? camTR->GetPosition() : Vector3::Zero),
+                   false);
+    sp->SetColor(GLUniforms::UniformName_Camera_ClearColor,
+                 (cam ? cam->GetClearColor() : Color::Pink),
+                 false);
+    sp->SetBool(GLUniforms::UniformName_Camera_ClearMode,
+                cam ? int(cam->GetClearMode()) : -1,
+                false);
 
     TextureCubeMap *skyBox    = cam ? cam->GetSkyBoxTexture()         : nullptr;
     TextureCubeMap *sSkyBox   = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
     TextureCubeMap *dSkyBox   = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
-    sp->SetTextureCubeMap("B_SkyBox",         skyBox,  false);
-    sp->SetTextureCubeMap("B_SkyBoxSpecular", sSkyBox, false);
-    sp->SetTextureCubeMap("B_SkyBoxDiffuse",  dSkyBox, false);
-    sp->SetBool("B_Camera_ClearMode", cam ? int(cam->GetClearMode()) : -1, false);
+    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBox,         skyBox,  false);
+    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxSpecular, sSkyBox, false);
+    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxDiffuse,  dSkyBox, false);
 
     ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();
-    sp->SetVector2("B_Viewport_MinPos", viewportUniforms->minPos, false);
-    sp->SetVector2("B_Viewport_Size",   viewportUniforms->size,   false);
+    sp->SetVector2(GLUniforms::UniformName_Viewport_MinPos, viewportUniforms->minPos, false);
+    sp->SetVector2(GLUniforms::UniformName_Viewport_Size,   viewportUniforms->size,   false);
 }
 
 void GLUniforms::SetModelMatrix(const Matrix4 &model)

@@ -257,62 +257,106 @@ void Material::Bind() const
     GL::LineWidth( GetLineWidth() );
     GL::PointSize( GetLineWidth() );
 
-    sp->SetColor("B_MaterialAlbedoColor",     GetAlbedoColor(),      false);
-    sp->SetVector2("B_AlbedoUvOffset",        GetAlbedoUvOffset(),   false);
-    sp->SetVector2("B_AlbedoUvMultiply",      GetAlbedoUvMultiply(), false);
-    sp->SetBool("B_MaterialReceivesLighting", GetReceivesLighting(), false);
+    sp->SetColor(GLUniforms::UniformName_MaterialAlbedoColor,
+                 GetAlbedoColor(),
+                 false);
+    sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset,
+                   GetAlbedoUvOffset(),
+                   false);
+    sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply,
+                   GetAlbedoUvMultiply(),
+                   false);
+    sp->SetBool(GLUniforms::UniformName_MaterialReceivesLighting,
+                GetReceivesLighting(),
+                false);
 
     if (Texture2D *albedoTex = GetAlbedoTexture())
     {
-        sp->SetTexture2D("B_AlbedoTexture",  albedoTex,                   false);
-        sp->SetFloat("B_AlphaCutoff",        albedoTex->GetAlphaCutoff(), false);
-        sp->SetBool("B_HasAlbedoTexture",    true,                        false);
+        sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture,
+                         albedoTex,
+                         false);
+        sp->SetFloat(GLUniforms::UniformName_AlphaCutoff,
+                     albedoTex->GetAlphaCutoff(),
+                     false);
+        sp->SetBool(GLUniforms::UniformName_HasAlbedoTexture,
+                    true,
+                    false);
     }
     else
     {
-        sp->SetTexture2D("B_AlbedoTexture",  nullptr, false);
-        sp->SetFloat("B_AlphaCutoff",        -1.0f,   false);
-        sp->SetBool("B_HasAlbedoTexture",    false,   false);
+        sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture,
+                         nullptr,
+                         false);
+        sp->SetFloat(GLUniforms::UniformName_AlphaCutoff,
+                     -1.0f,
+                     false);
+        sp->SetBool(GLUniforms::UniformName_HasAlbedoTexture,
+                    false,
+                    false);
     }
 
-    sp->SetFloat("B_MaterialRoughness",       GetRoughness(),                 false);
-    sp->SetFloat("B_MaterialMetalness",       GetMetalness(),                 false);
-    sp->SetVector2("B_NormalMapUvOffset",     GetNormalMapUvOffset(),         false);
-    sp->SetVector2("B_NormalMapUvMultiply",   GetNormalMapUvMultiply(),       false);
-    sp->SetFloat("B_NormalMapMultiplyFactor", GetNormalMapMultiplyFactor(),   false);
-    sp->SetTexture2D("B_BRDF_LUT", TextureFactory::GetBRDFLUTTexture(), false);
+    sp->SetFloat(GLUniforms::UniformName_MaterialRoughness,
+                 GetRoughness(),
+                 false);
+    sp->SetFloat(GLUniforms::UniformName_MaterialMetalness,
+                 GetMetalness(),
+                 false);
+    sp->SetVector2(GLUniforms::UniformName_NormalMapUvOffset,
+                   GetNormalMapUvOffset(),
+                   false);
+    sp->SetVector2(GLUniforms::UniformName_NormalMapUvMultiply,
+                   GetNormalMapUvMultiply(),
+                   false);
+    sp->SetFloat(GLUniforms::UniformName_NormalMapMultiplyFactor,
+                 GetNormalMapMultiplyFactor(),
+                 false);
+    sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
+                     TextureFactory::GetBRDFLUTTexture(),
+                     false);
 
     if (Texture2D *roughnessTex = GetRoughnessTexture())
     {
-        sp->SetTexture2D("B_RoughnessTexture", roughnessTex, false);
+        sp->SetTexture2D(GLUniforms::UniformName_RoughnessTexture,
+                         roughnessTex,
+                         false);
     }
     else
     {
-        sp->SetTexture2D("B_RoughnessTexture",
+        sp->SetTexture2D(GLUniforms::UniformName_RoughnessTexture,
                          TextureFactory::GetWhiteTexture(),
                          false);
     }
 
     if (Texture2D *metalnessTex = GetMetalnessTexture())
     {
-        sp->SetTexture2D("B_MetalnessTexture", metalnessTex, false);
+        sp->SetTexture2D(GLUniforms::UniformName_MetalnessTexture,
+                         metalnessTex,
+                         false);
     }
     else
     {
-        sp->SetTexture2D("B_MetalnessTexture",
+        sp->SetTexture2D(GLUniforms::UniformName_MetalnessTexture,
                          TextureFactory::GetWhiteTexture(),
                          false);
     }
 
     if (Texture2D *normalMapTex = GetNormalMapTexture())
     {
-        sp->SetTexture2D("B_NormalMapTexture",  normalMapTex, false);
-        sp->SetBool("B_HasNormalMapTexture",    true,         false);
+        sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture,
+                         normalMapTex,
+                         false);
+        sp->SetBool(GLUniforms::UniformName_HasNormalMapTexture,
+                    true,
+                    false);
     }
     else
     {
-        sp->SetTexture2D("B_NormalMapTexture", nullptr, false);
-        sp->SetBool("B_HasNormalMapTexture",   false,   false);
+        sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture,
+                         nullptr,
+                         false);
+        sp->SetBool(GLUniforms::UniformName_HasNormalMapTexture,
+                    false,
+                    false);
     }
 }
 

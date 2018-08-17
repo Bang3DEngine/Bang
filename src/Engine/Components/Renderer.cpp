@@ -61,9 +61,7 @@ void Renderer::Bind()
         mat->Bind();
         if (ShaderProgram *sp = mat->GetShaderProgram())
         {
-            sp->SetBool(GLUniforms::UniformName_ReceivesShadows,
-                        GetReceivesShadows(),
-                        false);
+            sp->SetBool(GLUniforms::UniformName_ReceivesShadows, GetReceivesShadows());
         }
     }
 }

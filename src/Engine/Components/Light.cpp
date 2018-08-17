@@ -69,29 +69,25 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     ASSERT(GL::IsBound(sp))
 
     Transform *tr = GetGameObject()->GetTransform();
-    sp->SetInt    ("B_LightShadowType",    int( GetShadowType() ), false);
-    sp->SetFloat  ("B_LightShadowBias",    GetShadowBias(),        false);
-    sp->SetFloat  ("B_LightIntensity",     GetIntensity(),         false);
-    sp->SetColor  ("B_LightColor",         GetColor(),             false);
-    sp->SetVector3("B_LightForwardWorld",  tr->GetForward(),       false);
-    sp->SetVector3("B_LightPositionWorld", tr->GetPosition(),      false);
+    sp->SetInt    ("B_LightShadowType",    int( GetShadowType() ));
+    sp->SetFloat  ("B_LightShadowBias",    GetShadowBias());
+    sp->SetFloat  ("B_LightIntensity",     GetIntensity());
+    sp->SetColor  ("B_LightColor",         GetColor());
+    sp->SetVector3("B_LightForwardWorld",  tr->GetForward());
+    sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
     if (DCAST<Texture2D*>(GetShadowMapTexture()))
     {
         sp->SetTexture2D("B_LightShadowMap",
-                         SCAST<Texture2D*>(GetShadowMapTexture()),
-                         false);
+                         SCAST<Texture2D*>(GetShadowMapTexture()));
         sp->SetTexture2D("B_LightShadowMapSoft",
-                         SCAST<Texture2D*>(GetShadowMapTexture()),
-                         false);
+                         SCAST<Texture2D*>(GetShadowMapTexture()));
     }
     else
     {
         sp->SetTextureCubeMap("B_LightShadowMap",
-                              SCAST<TextureCubeMap*>(GetShadowMapTexture()),
-                              false);
+                              SCAST<TextureCubeMap*>(GetShadowMapTexture()));
         sp->SetTextureCubeMap("B_LightShadowMapSoft",
-                              SCAST<TextureCubeMap*>(GetShadowMapTexture()),
-                              false);
+                              SCAST<TextureCubeMap*>(GetShadowMapTexture()));
     }
 }
 

@@ -1,6 +1,8 @@
 #ifndef EVENTEMITTER_H
 #define EVENTEMITTER_H
 
+#include <functional>
+
 #include "Bang/List.h"
 #include "Bang/EventEmitter.h"
 
@@ -21,6 +23,10 @@ public:
     template<class TFunction, class... Args>
     void PropagateToListeners(const TFunction &func, const Args&... args) const;
 
+    template<class TResult, class TFunction, class... Args>
+    Array<TResult> PropagateToListenersAndGatherResult(const TFunction &func,
+                                                       const Args&... args) const;
+
     bool IsIteratingListeners() const;
     const List<EventListener<T>*>& GetListeners() const;
 
@@ -36,6 +42,12 @@ private:
     mutable int m_iteratingListeners = 0;
     mutable List<EventListener<T>*> m_delayedListenersToRegister;
     mutable List<EventListener<T>*> m_delayedListenersToUnRegister;
+
+    template<class TFunction, class... Args>
+    void PropagateToListeners_(
+                std::function<void(EventListener<T>*)> listenerCall,
+                const TFunction &func,
+                const Args&... args) const;
 };
 
 NAMESPACE_BANG_END

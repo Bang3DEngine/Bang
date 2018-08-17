@@ -105,6 +105,8 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDragUpdate(dd_);
 
+    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
+
     GOItem *childItemOver = nullptr;
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
     GetMousePositionInTree(&childItemOver, &markPosition);
@@ -166,54 +168,77 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     p_dragMarkerImg->SetImageTexture(markImgRH.Get());
     p_dragMarkerImg->SetMode(markImgMode);
 
-    bool isValidDrag = IsValidDrag(p_itemBeingDragged, childItemOver);
+    bool isValidDrag = IsValidDrag(dragDroppable,
+                                   p_itemBeingDragged,
+                                   childItemOver);
     p_dragMarkerImg->SetTint(isValidDrag ? Color::Blue : Color::Red);
 }
 
-void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
+void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_, bool inside)
 {
-    IEventsDragDrop::OnDrop(dd_);
+    IEventsDragDrop::OnDrop(dd_, inside);
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
-    UITreeItemContainer *draggedItemCont = DCAST<UITreeItemContainer*>(
-                                              dragDroppable->GetGameObject());
-    if ( !Contains(draggedItemCont) )
+
+    if (inside)
     {
-        return;
+        GOItem *itemOver = nullptr;
+        MouseItemRelativePosition relPos;
+        GetMousePositionInTree(&itemOver, &relPos);
+
+        GOItem *newParentItem = nullptr;
+        int newIndexInParent = 0;
+        switch (relPos)
+        {
+            case MouseItemRelativePosition::ABOVE:
+                newParentItem = GetParentItem(itemOver);
+                newIndexInParent = GetChildrenItems(newParentItem).
+                                   IndexOf(itemOver);
+            break;
+
+            case MouseItemRelativePosition::OVER:
+                newParentItem = itemOver;
+                newIndexInParent = -1;
+            break;
+
+            case MouseItemRelativePosition::BELOW:
+                newParentItem = GetParentItem(itemOver);
+                newIndexInParent = GetChildrenItems(newParentItem).
+                                   IndexOf(itemOver) + 1;
+            break;
+
+            case MouseItemRelativePosition::BELOW_ALL:
+                newParentItem = nullptr;
+                newIndexInParent = m_rootTree.GetChildren().Size();
+            break;
+        }
+
+        if (UITreeItemContainer *draggedItemCont = DCAST<UITreeItemContainer*>(
+                                                   dragDroppable->GetGameObject()))
+        {
+            if ( Contains(draggedItemCont) )
+            {
+                if (p_itemBeingDragged &&
+                    IsValidDrag(dragDroppable, p_itemBeingDragged, itemOver))
+                {
+                    MoveItem(p_itemBeingDragged, newParentItem, newIndexInParent);
+                }
+            }
+        }
+        else
+        {
+            EventEmitter<IEventsUITree>::PropagateToListeners(
+                                                 &IEventsUITree::OnDropFromOutside,
+                                                 dragDroppable,
+                                                 newParentItem,
+                                                 newIndexInParent);
+        }
     }
-
-    GOItem *itemOver = nullptr;
-    MouseItemRelativePosition relPos;
-    GetMousePositionInTree(&itemOver, &relPos);
-
-    GOItem *newParentItem = nullptr;
-    int newIndexInParent = 0;
-    switch (relPos)
+    else
     {
-        case MouseItemRelativePosition::ABOVE:
-            newParentItem = GetParentItem(itemOver);
-            newIndexInParent = GetChildrenItems(newParentItem).IndexOf(itemOver);
-        break;
-
-        case MouseItemRelativePosition::OVER:
-            newParentItem = itemOver;
-            newIndexInParent = -1;
-        break;
-
-        case MouseItemRelativePosition::BELOW:
-            newParentItem = GetParentItem(itemOver);
-            newIndexInParent = GetChildrenItems(newParentItem).IndexOf(itemOver) + 1;
-        break;
-
-        case MouseItemRelativePosition::BELOW_ALL:
-            newParentItem = nullptr;
-            newIndexInParent = m_rootTree.GetChildren().Size();
-        break;
-    }
-
-    if (p_itemBeingDragged && IsValidDrag(p_itemBeingDragged, itemOver))
-    {
-        MoveItem(p_itemBeingDragged, newParentItem, newIndexInParent);
+        EventEmitter<IEventsUITree>::PropagateToListeners(
+                                             &IEventsUITree::OnDropOutside,
+                                             p_itemBeingDragged);
     }
 
     p_itemBeingDragged = nullptr;
@@ -669,13 +694,32 @@ bool UITree::Contains(UITreeItemContainer *itemCont) const
     return itemCont && GetUIList()->GetItems().Contains(itemCont);
 }
 
-bool UITree::IsValidDrag(GOItem *itemBeingDragged, GOItem *itemOver) const
+bool UITree::IsValidDrag(UIDragDroppable *dd,
+                         GOItem *itemBeingDragged,
+                         GOItem *itemOver) const
 {
-    if (!itemBeingDragged) { return false; }
+    if (itemBeingDragged)
+    {
+        bool isValidDrag = (itemBeingDragged != itemOver) &&
+                           !ItemIsChildOfRecursive(itemOver, itemBeingDragged);
 
-    bool isValidDrag = (itemBeingDragged != itemOver) &&
-                       !ItemIsChildOfRecursive(itemOver, itemBeingDragged);
-    return isValidDrag;
+        bool allListenersAccept = true; // Do all listeners accept this drag?
+        Array<bool> listenerDragAcceptances =
+            EventEmitter<IEventsUITree>::PropagateToListenersAndGatherResult<bool>(
+                                    &IEventsUITree::AcceptDragOrDrop,
+                                    dd);
+        for (bool acceptance : listenerDragAcceptances)
+        {
+            if (!acceptance)
+            {
+                allListenersAccept = false;
+                break;
+            }
+        }
+
+        return isValidDrag && allListenersAccept;
+    }
+    return false;
 }
 
 GOItem* UITree::GetParentItem(GOItem *item) const

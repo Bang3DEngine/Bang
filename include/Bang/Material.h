@@ -21,6 +21,13 @@ class Material : public Asset,
     ICLONEABLE(Material)
 
 public:
+    enum class UniformFlags
+    {
+        Matrices,
+        InverseMatrices,
+
+    };
+
     void SetAlbedoUvOffset(const Vector2& albedoUvOffset);
     void SetAlbedoUvMultiply(const Vector2& albedoUvMultiply);
     void SetNormalMapUvOffset(const Vector2& normalMapUvOffset);

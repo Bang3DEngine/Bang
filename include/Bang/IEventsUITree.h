@@ -6,6 +6,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
+FORWARD class UIDragDroppable;
 
 class IEventsUITree
 {
@@ -37,6 +38,26 @@ public:
     virtual void OnItemRemoved(GameObject *item)
     {
         (void) item;
+    }
+
+    virtual void OnDropOutside(GameObject *item)
+    {
+        (void) item;
+    }
+
+    virtual void OnDropFromOutside(UIDragDroppable *dropped,
+                                   GameObject *newParentItem,
+                                   int newIndexInsideParent)
+    {
+        (void) dropped;
+        (void) newParentItem;
+        (void) newIndexInsideParent;
+    }
+
+    virtual bool AcceptDragOrDrop(UIDragDroppable *dd)
+    {
+        (void) dd;
+        return true;
     }
 };
 

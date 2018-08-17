@@ -20,7 +20,8 @@ public:
         (void) dragDropEmitter;
     }
 
-    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDropEmitter)
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDropEmitter,
+                        bool inside)
     {
         (void) dragDropEmitter;
     }

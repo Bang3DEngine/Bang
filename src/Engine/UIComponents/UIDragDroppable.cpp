@@ -209,7 +209,7 @@ void UIDragDroppable::OnDropped()
     if (m_dragDropGameObject)
     {
         EventEmitter<IEventsDragDrop>::PropagateToListeners(
-                            &IEventsDragDrop::OnDrop, this);
+                            &IEventsDragDrop::OnDrop, this, true);
 
         GameObject::Destroy(m_dragDropGameObject);
         m_dragDropGameObject = nullptr;

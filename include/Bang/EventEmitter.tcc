@@ -81,10 +81,12 @@ bool EventEmitter<T>::IsIteratingListeners() const
     return (m_iteratingListeners > 0);
 }
 
-template <class T>
+template<class T>
 template<class TFunction, class... Args>
-void EventEmitter<T>::
-PropagateToListeners(const TFunction &func, const Args&... args) const
+void EventEmitter<T>::PropagateToListeners_(
+              std::function<void(EventListener<T>*)> listenerCall,
+              const TFunction &func,
+              const Args&... args) const
 {
     // Un/Register delayed listeners, if not iterating
     if ( !IsIteratingListeners() )
@@ -101,27 +103,55 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
         m_delayedListenersToRegister.Clear();
         m_delayedListenersToUnRegister.Clear();
     }
-
     ++m_iteratingListeners;
+
     for (const auto &listener : GetListeners())
     {
         #ifdef DEBUG
-        const int previousSize = GetListeners().Size(); (void) previousSize;
+        const int previousSize = GetListeners().Size();
+        (void) previousSize;
         #endif
 
         if (IsEmittingEvents())
         {
             if (listener && listener->IsReceivingEvents())
             {
-                (listener->*func)(args...);
+                listenerCall(listener);
             }
         }
 
         ASSERT(GetListeners().Size() == previousSize);
     }
+
     --m_iteratingListeners;
 }
 
+template <class T>
+template<class TFunction, class... Args>
+void EventEmitter<T>::
+PropagateToListeners(const TFunction &func, const Args&... args) const
+{
+    PropagateToListeners_([&](EventListener<T> *listener)
+                          {
+                              (listener->*func)(args...);
+                          },
+                          func, args...);
+}
+
+template<class T>
+template<class TResult, class TFunction, class... Args>
+Array<TResult>
+EventEmitter<T>::PropagateToListenersAndGatherResult(const TFunction &func,
+                                                     const Args&... args) const
+{
+    Array<TResult> gatheredResult;
+    PropagateToListeners_([&](EventListener<T> *listener)
+                          {
+                              gatheredResult.PushBack( (listener->*func)(args...) );
+                          },
+                          func, args...);
+    return gatheredResult;
+}
 
 template<class T>
 const List<EventListener<T>*>& EventEmitter<T>::GetListeners() const

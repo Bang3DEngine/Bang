@@ -26,7 +26,13 @@ class UITree : public Component,
     COMPONENT(UITree)
 
 public:
-    enum class MouseItemRelativePosition { ABOVE, OVER, BELOW, BELOW_ALL };
+    enum class MouseItemRelativePosition
+    {
+        ABOVE,
+        OVER,
+        BELOW,
+        BELOW_ALL
+    };
 
     void AddItem(GOItem *newItem, GOItem *parentItem, int indexInsideParent = 0);
     void MoveItem(GOItem *item, GOItem *newParentItem, int newIndexInsideParent = 0);
@@ -60,7 +66,8 @@ public:
     // IEventsDragDrop
     virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;
     virtual void OnDragUpdate(EventEmitter<IEventsDragDrop> *dragDroppable) override;
-    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable,
+                        bool inside) override;
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
@@ -92,7 +99,9 @@ private:
     void SetItemCollapsedRecursive(GOItem *item, bool collapse);
     void UpdateCollapsability(GOItem *item);
     void IndentItem(GOItem *item);
-    bool IsValidDrag(GOItem *itemBeingDragged, GOItem *itemOver) const;
+    bool IsValidDrag(UIDragDroppable *dd,
+                     GOItem *itemBeingDragged,
+                     GOItem *itemOver) const;
 
     Tree<GOItem*>* GetItemTree(GOItem* item) const;
     UITreeItemContainer* GetItemContainer(GOItem *item) const;

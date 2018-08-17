@@ -395,7 +395,16 @@ void UICanvas::OnUpdate()
             {
                 if (ddListener->IsReceivingEvents())
                 {
-                    ddListener->OnDrop(p_ddBeingDragged);
+                    bool inside = false;
+                    if (Component *comp = DCAST<Component*>(ddListener))
+                    {
+                        inside = UICanvas::IsMouseOver(comp, true);
+                    }
+                    else if (GameObject *go = DCAST<GameObject*>(ddListener))
+                    {
+                        inside = UICanvas::IsMouseOver(go, true);
+                    }
+                    ddListener->OnDrop(p_ddBeingDragged, inside);
                 }
             }
             p_ddBeingDragged->OnDropped();

@@ -31,18 +31,22 @@ void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 
     if (go)
     {
-        const List<ILayoutController*> &pLayoutContrs =
-                                GetLayoutControllersIn(go->GetParent()); // go->GetComponentsInParent<ILayoutController>(false);
-        for (ILayoutController *pCont : pLayoutContrs)
+        const List<ILayoutController*> &layoutControllers =
+                                       GetLayoutControllersIn(go->GetParent());
+        for (ILayoutController *layoutController : layoutControllers)
         {
-            pCont->Invalidate();
+            if (!layoutController->IsSelfController())
+            {
+                layoutController->Invalidate();
+            }
         }
 
-        const List<ILayoutSelfController*> &pLayoutSelfControllers =
-                                GetLayoutSelfControllersIn(go); // go->GetComponents<ILayoutSelfController>();
-        for (ILayoutSelfController *psCont : pLayoutSelfControllers)
+        for (ILayoutController *layoutController : layoutControllers)
         {
-            psCont->Invalidate();
+            if (layoutController->IsSelfController())
+            {
+                layoutController->Invalidate();
+            }
         }
     }
 }
@@ -105,7 +109,10 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
         }
         priorLayoutElms.Get(prior).PushBack(le);
     }
-    if (priorLayoutElms.IsEmpty()) { return Vector2::Zero; }
+    if (priorLayoutElms.IsEmpty())
+    {
+        return Vector2::Zero;
+    }
 
     // Get the max size between the elements ordered by priority.
     // Sizes less than zero will be ignored.
@@ -117,13 +124,31 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
         for (ILayoutElement *le : les)
         {
             Vector2 leSize =  le->GetSize(sizeType);
-            if (!sizeXFound) { size.x = Math::Max(size.x, leSize.x); }
-            if (!sizeYFound) { size.y = Math::Max(size.y, leSize.y); }
+            if (!sizeXFound)
+            {
+                size.x = Math::Max(size.x, leSize.x);
+            }
+
+            if (!sizeYFound)
+            {
+                size.y = Math::Max(size.y, leSize.y);
+            }
         }
 
-        if (size.x >= 0) { sizeXFound = true; }
-        if (size.y >= 0) { sizeYFound = true; }
-        if (sizeXFound && sizeYFound) { break; }
+        if (size.x >= 0)
+        {
+            sizeXFound = true;
+        }
+
+        if (size.y >= 0)
+        {
+            sizeYFound = true;
+        }
+
+        if (sizeXFound && sizeYFound)
+        {
+            break;
+        }
     }
 
     return Vector2::Max(size, Vector2::Zero);
@@ -166,7 +191,6 @@ void UILayoutManager::CalculateLayout(GameObject *gameObject, Axis axis)
     }
 
     const List<ILayoutElement*> &goLEs = GetLayoutElementsIn(gameObject);
-                                         // gameObject->GetComponents<ILayoutElement>();
     for (ILayoutElement *goLE : goLEs)
     {
         goLE->_CalculateLayout(axis);
@@ -182,19 +206,21 @@ void UILayoutManager::ApplyLayout(GameObject *gameObject, Axis axis)
         GameObject *go = goQueue.front();
         goQueue.pop();
 
+        const List<ILayoutController*> &layoutControllers = GetLayoutControllersIn(go);
+
         // SelfLayoutControllers
-        const List<ILayoutSelfController*> &layoutSelfControllers =
-                                            GetLayoutSelfControllersIn(go);
-        for (ILayoutSelfController *layoutSelfController : layoutSelfControllers)
+        for (ILayoutController *layoutController : layoutControllers)
         {
-            layoutSelfController->_ApplyLayout(axis);
+            if (layoutController->IsSelfController())
+            {
+                layoutController->_ApplyLayout(axis);
+            }
         }
 
         // Normal LayoutControllers
-        const List<ILayoutController*> &layoutControllers = GetLayoutControllersIn(go);
         for (ILayoutController *layoutController : layoutControllers)
         {
-            if (!DCAST<ILayoutSelfController*>(layoutController))
+            if (!layoutController->IsSelfController())
             {
                 layoutController->_ApplyLayout(axis);
             }
@@ -212,7 +238,6 @@ void UILayoutManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     m_iLayoutElementsPerGameObject.Remove( DCAST<GameObject*>(object) );
     m_iLayoutControllersPerGameObject.Remove( DCAST<GameObject*>(object) );
-    m_iLayoutSelfControllersPerGameObject.Remove( DCAST<GameObject*>(object) );
 }
 
 template <class T>
@@ -255,15 +280,6 @@ GetLayoutControllersIn(GameObject *gameObject)
                                   this,
                                   gameObject,
                                   m_iLayoutControllersPerGameObject);
-}
-
-const List<ILayoutSelfController*> &UILayoutManager::
-GetLayoutSelfControllersIn(GameObject *gameObject)
-{
-    return GetGatheredListOf<ILayoutSelfController>(
-                                  this,
-                                  gameObject,
-                                  m_iLayoutSelfControllersPerGameObject);
 }
 
 UILayoutManager *UILayoutManager::GetActive(GameObject *go)

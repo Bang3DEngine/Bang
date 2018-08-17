@@ -7,6 +7,10 @@ NAMESPACE_BANG_BEGIN
 
 class ILayoutSelfController : public ILayoutController
 {
+    bool IsSelfController() const override
+    {
+        return true;
+    }
 };
 
 NAMESPACE_BANG_END

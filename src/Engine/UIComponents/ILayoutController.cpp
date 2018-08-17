@@ -5,8 +5,18 @@
 
 USING_NAMESPACE_BANG
 
-ILayoutController::ILayoutController() {}
-ILayoutController::~ILayoutController() {}
+ILayoutController::ILayoutController()
+{
+}
+
+ILayoutController::~ILayoutController()
+{
+}
+
+bool ILayoutController::IsSelfController() const
+{
+    return false;
+}
 
 void ILayoutController::Invalidate()
 {
@@ -34,14 +44,16 @@ void ILayoutController::_ApplyLayout(Axis axis)
 void ILayoutController::OnChildAdded(GameObject *addedChild,
                                      GameObject *parent)
 {
-    (void) addedChild; (void) parent;
+    (void) addedChild;
+    (void) parent;
     Invalidate();
 }
 
 void ILayoutController::OnChildRemoved(GameObject *removedChild,
                                        GameObject *parent)
 {
-    (void) removedChild; (void) parent;
+    (void) removedChild;
+    (void) parent;
     Invalidate();
 }
 

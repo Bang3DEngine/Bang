@@ -2435,7 +2435,7 @@ void GL::PrintGLStats()
     const int maxFragUniformsComponents =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS));
     const int maxTexUnits =
-        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_UNITS));
+        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_IMAGE_UNITS));
     const int maxTexSize =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_SIZE));
     const int maxTexSize3D =

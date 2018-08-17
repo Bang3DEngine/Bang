@@ -15,6 +15,8 @@ class ILayoutController : public IInvalidatable<ILayoutController>,
                           public EventListener<IEventsTransform>
 {
 public:
+    virtual bool IsSelfController() const;
+
     // IInvalidatable
     virtual void Invalidate() override;
     virtual void OnInvalidated() override;

@@ -50,8 +50,6 @@ private:
         m_iLayoutElementsPerGameObject;
     UMap<GameObject*, ObjectGatherer<ILayoutController, false>>
         m_iLayoutControllersPerGameObject;
-    UMap<GameObject*, ObjectGatherer<ILayoutSelfController, false>>
-        m_iLayoutSelfControllersPerGameObject;
 
     void CalculateLayout(GameObject *gameObject, Axis axis);
     void ApplyLayout(GameObject *gameObject, Axis axis);
@@ -61,7 +59,6 @@ private:
 
     const List<ILayoutElement*>& GetLayoutElementsIn(GameObject *gameObject);
     const List<ILayoutController*>& GetLayoutControllersIn(GameObject *gameObject);
-    const List<ILayoutSelfController*>& GetLayoutSelfControllersIn(GameObject *gameObject);
 };
 
 NAMESPACE_BANG_END

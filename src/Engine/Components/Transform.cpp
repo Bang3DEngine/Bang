@@ -394,9 +394,18 @@ Vector3 Transform::GetDown() const
     return -GetUp();
 }
 
-void Transform::OnInvalidatedWorld() { OnTransformInvalidated(); }
-void Transform::OnInvalidatedLocal() { OnTransformInvalidated(); }
-void Transform::OnTransformInvalidated() { OnTransformChanged(); }
+void Transform::OnInvalidatedWorld()
+{
+    OnTransformInvalidated();
+}
+void Transform::OnInvalidatedLocal()
+{
+    OnTransformInvalidated();
+}
+void Transform::OnTransformInvalidated()
+{
+    OnTransformChanged();
+}
 void Transform::OnParentChanged(GameObject*, GameObject*)
 {
     OnParentTransformChanged();

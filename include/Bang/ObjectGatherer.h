@@ -31,7 +31,10 @@ public:
 private:
     GameObject *p_root = nullptr;
     List<ObjectType*> m_gatheredObjects;
+
+    #ifdef DEBUG
     USet<GameObject*> m_processedGameObjects;
+    #endif
 
     void RegisterEventsAndGather(GameObject *go);
     void UnRegisterEventsAndRemoveObjects(GameObject *go);

@@ -61,7 +61,7 @@ message("===========================================")
 #=================================================================
 if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     add_definitions(-DGPROF)
-    remove_definitions(-DDEBUG)
+    add_definitions(-DNDEBUG)
     link_libraries("profiler") # gperftools
 endif()
 #=================================================================

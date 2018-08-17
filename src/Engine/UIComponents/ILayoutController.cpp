@@ -37,7 +37,10 @@ void ILayoutController::_ApplyLayout(Axis axis)
     if (IInvalidatable<ILayoutController>::IsInvalid())
     {
         ApplyLayout(axis);
-        if (axis == Axis::VERTICAL) { Validate(); }
+        if (axis == Axis::VERTICAL)
+        {
+            Validate();
+        }
     }
 }
 
@@ -47,6 +50,7 @@ void ILayoutController::OnChildAdded(GameObject *addedChild,
     (void) addedChild;
     (void) parent;
     Invalidate();
+    addedChild->EventEmitter<IEventsChildren>::RegisterListener(this);
 }
 
 void ILayoutController::OnChildRemoved(GameObject *removedChild,
@@ -55,6 +59,7 @@ void ILayoutController::OnChildRemoved(GameObject *removedChild,
     (void) removedChild;
     (void) parent;
     Invalidate();
+    removedChild->EventEmitter<IEventsChildren>::UnRegisterListener(this);
 }
 
 void ILayoutController::OnParentChanged(GameObject*, GameObject*)

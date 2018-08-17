@@ -31,23 +31,23 @@ template <class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::
 RegisterEventsAndGather(GameObject *go)
 {
-    if (!m_processedGameObjects.Contains(go))
+    #ifdef DEBUG
+    ASSERT (!m_processedGameObjects.Contains(go))
+    m_processedGameObjects.Add(go);
+    #endif
+
+    if (RECURSIVE)
     {
-        m_processedGameObjects.Add(go);
+        go->EventEmitter<IEventsChildren>::RegisterListener(this);
+    }
+    go->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    go->EventEmitter<IEventsComponent>::RegisterListener(this);
 
-        if (RECURSIVE)
-        {
-            go->EventEmitter<IEventsChildren>::RegisterListener(this);
-        }
-        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
-        go->EventEmitter<IEventsComponent>::RegisterListener(this);
-
-        List<ObjectType*> goObjectsOfTheType;
-        GatherObjectsOfTheType(&goObjectsOfTheType, go);
-        for (ObjectType *obj : goObjectsOfTheType)
-        {
-            m_gatheredObjects.PushBack(obj);
-        }
+    List<ObjectType*> goObjectsOfTheType;
+    GatherObjectsOfTheType(&goObjectsOfTheType, go);
+    for (ObjectType *obj : goObjectsOfTheType)
+    {
+        m_gatheredObjects.PushBack(obj);
     }
 }
 
@@ -56,8 +56,10 @@ template<class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::
 UnRegisterEventsAndRemoveObjects(GameObject *go)
 {
+    #ifdef DEBUG
     ASSERT(m_processedGameObjects.Contains(go));
     m_processedGameObjects.Remove(go);
+    #endif
 
     if (RECURSIVE)
     {

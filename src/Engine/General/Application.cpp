@@ -12,6 +12,7 @@
 #include "Bang/Chrono.h"
 #include "Bang/Window.h"
 #include "Bang/GEngine.h"
+#include "Bang/Physics.h"
 #include "Bang/Settings.h"
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
@@ -47,6 +48,9 @@ void Application::Init(const Path &engineRootPath)
     m_paths->InitPaths(engineRootPath);
 
     m_settings = CreateSettings();
+
+    m_physics = new Physics();
+    m_physics->Init();
 
     m_audioManager = new AudioManager();
     m_audioManager->Init();
@@ -160,6 +164,11 @@ Debug *Application::GetDebug() const
 GEngine *Application::GetGEngine() const
 {
     return m_gEngine;
+}
+
+Physics *Application::GetPhysics() const
+{
+    return m_physics;
 }
 
 Settings *Application::GetSettings() const

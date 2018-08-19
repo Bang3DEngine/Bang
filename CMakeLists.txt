@@ -59,7 +59,9 @@ message("===========================================")
 #=================================================================
 # Profiling set up if needed =====================================
 #=================================================================
-if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -g3")
+elseif (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     add_definitions(-DGPROF)
     add_definitions(-DNDEBUG)
     link_libraries("profiler") # gperftools
@@ -121,7 +123,8 @@ add_bang_compilation_flags(BangEngineObjects)
 target_include_directories(BangLib           PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 target_include_directories(BangEngineObjects PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 target_include_directories(BangEngineObjects PUBLIC ${DEPENDENCIES_INCLUDE_DIRS})
-target_link_libraries(BangLib PUBLIC ${DEPENDENCIES_LIB_PATHS})
+target_link_libraries(BangLib PUBLIC ${DEPENDENCIES_LIBS})
+add_dependencies(BangLib LowLevel LowLevelAABB LowLevelCloth LowLevelDynamics LowLevelParticles PhysX3 PxPvdSDK PsFastXml SceneQuery PhysX3Common PhysXVehicle PxFoundation PhysX3Cooking PhysX3Extensions SimulationController PhysX3CharacterKinematic)
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
 add_dependencies(BangEngineObjects BuildDependencies)
 add_dependencies(BangLib BuildDependencies)

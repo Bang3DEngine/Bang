@@ -14,6 +14,7 @@ FORWARD class Scene;
 FORWARD class Paths;
 FORWARD class Window;
 FORWARD class GEngine;
+FORWARD class Physics;
 FORWARD class Settings;
 FORWARD class Resources;
 FORWARD class AudioManager;
@@ -38,6 +39,7 @@ public:
     Paths              *GetPaths() const;
     Debug              *GetDebug() const;
     GEngine            *GetGEngine() const;
+    Physics            *GetPhysics() const;
     Settings           *GetSettings() const;
     Resources          *GetResources() const;
     AudioManager       *GetAudioManager() const;
@@ -55,6 +57,7 @@ protected:
     Time               *m_time               = nullptr;
     Debug              *m_debug              = nullptr;
     Paths              *m_paths              = nullptr;
+    Physics            *m_physics            = nullptr;
     GEngine            *m_gEngine            = nullptr;
     Settings           *m_settings           = nullptr;
     Resources          *m_resources          = nullptr;

@@ -17,7 +17,7 @@ FORWARD class RigidBody;
 FORWARD class PhysicsObject;
 FORWARD class PxSceneContainer;
 
-class Physics : public EventListener<IEventsComponentChangeGameObject>
+class Physics
 {
 public:
 	Physics();
@@ -38,6 +38,14 @@ public:
 
     float GetSleepStepTimeSeconds() const;
 
+    static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
+    static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);
+    static Vector4 GetVector4FromPxVec4(const physx::PxVec4 &v);
+    static Quaternion GetQuaternionFromPxQuat(const physx::PxQuat &q);
+    static physx::PxVec2 GetPxVec2FromVector2(const Vector2 &v);
+    static physx::PxVec3 GetPxVec3FromVector3(const Vector3 &v);
+    static physx::PxVec4 GetPxVec4FromVector4(const Vector4 &v);
+    static physx::PxQuat GetPxQuatFromQuaternion(const Quaternion &q);
     static Physics *GetInstance();
 
 private:
@@ -57,26 +65,14 @@ private:
     physx::PxFoundation* GetPxFoundation() const;
     physx::PxPhysics* GetPxPhysics() const;
 
+    physx::PxMaterial* CreateNewMaterial();
     physx::PxActor* CreateIntoPxScene(PhysicsObject *phObj);
 
-    static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
-    static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);
-    static Vector4 GetVector4FromPxVec4(const physx::PxVec4 &v);
-    static Quaternion GetQuaternionFromPxQuat(const physx::PxQuat &q);
-    static physx::PxVec2 GetPxVec2FromVector2(const Vector2 &v);
-    static physx::PxVec3 GetPxVec3FromVector3(const Vector3 &v);
-    static physx::PxVec4 GetPxVec4FromVector4(const Vector4 &v);
-    static physx::PxQuat GetPxQuatFromQuaternion(const Quaternion &q);
     static GameObject* GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
     static void FillTransformFromPxTransform(Transform *transform,
                                              const physx::PxTransform &pxTransform);
     static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
-
-    // IEventsComponentChangeGameObject
-    virtual void OnComponentChangedGameObject(GameObject *previousGameObject,
-                                              GameObject *newGameObject,
-                                              Component *component) override;
 
     friend class PxSceneContainer;
 };

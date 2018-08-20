@@ -33,7 +33,6 @@ Scene::~Scene()
 void Scene::OnPreStart()
 {
     GameObject::OnPreStart();
-    Physics::GetInstance()->ResetStepTimeReference(this);
 }
 
 void Scene::Update()

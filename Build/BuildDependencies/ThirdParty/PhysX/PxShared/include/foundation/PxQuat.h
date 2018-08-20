@@ -141,8 +141,8 @@ class PxQuat
 	*/
 	PX_CUDA_CALLABLE bool isSane() const
 	{
-		const float unitTolerance = 1e-2f;
-		return isFinite() && PxAbs(magnitude() - 1) < unitTolerance;
+                const float unitTolerance = 1e-2f;
+                return isFinite() && PxAbs(magnitude() - 1) < unitTolerance;
 	}
 
 	/**

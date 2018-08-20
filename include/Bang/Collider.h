@@ -5,16 +5,27 @@
 #include "Bang/Component.h"
 #include "Bang/PhysicsObject.h"
 
+FORWARD namespace physx
+{
+    FORWARD class PxShape;
+    FORWARD class PxRigidBody;
+}
+
 NAMESPACE_BANG_BEGIN
+
+#define COLLIDER(className) \
+            COMPONENT(className) \
+            friend class Physics;
 
 class Collider : public PhysicsObject,
                  public Component
 {
-    COMPONENT(Collider)
-
 public:
 	Collider();
 	virtual ~Collider();
+
+    // Component
+    void OnUpdate() override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -22,6 +33,21 @@ public:
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
+
+protected:
+    virtual void UpdateShapeGeometry() = 0;
+
+    void SetPxRigidBody(physx::PxRigidBody *pxRB);
+    void SetPxShape(physx::PxShape *pxShape);
+
+    physx::PxRigidBody* GetPxRigidBody() const;
+    physx::PxShape* GetPxShape() const;
+
+private:
+    physx::PxShape *p_pxShape = nullptr;
+    physx::PxRigidBody *p_pxRigidBody = nullptr;
+
+    friend class Physics;
 };
 
 NAMESPACE_BANG_END

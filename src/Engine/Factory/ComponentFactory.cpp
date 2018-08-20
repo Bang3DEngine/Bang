@@ -53,7 +53,6 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, Renderer);
     CREATE_COMPONENT(componentClassName, UICanvas);
     CREATE_COMPONENT(componentClassName, Animator);
-    CREATE_COMPONENT(componentClassName, Collider);
     CREATE_COMPONENT(componentClassName, Transform);
     CREATE_COMPONENT(componentClassName, RigidBody);
     CREATE_COMPONENT(componentClassName, PointLight);

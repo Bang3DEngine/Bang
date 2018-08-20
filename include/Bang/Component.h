@@ -6,8 +6,9 @@
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/ComponentFactory.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/ComponentFactory.h"
+#include "Bang/IEventsComponentChangeGameObject.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -27,7 +28,8 @@ NAMESPACE_BANG_BEGIN
     friend class Component;
 
 class Component : public Object,
-                  public IToString
+                  public IToString,
+                  public EventEmitter<IEventsComponentChangeGameObject>
 {
     COMPONENT_NO_FRIEND(Component)
 
@@ -79,7 +81,8 @@ protected:
     void Render(RenderPass renderPass);
     void AfterChildrenRender(RenderPass renderPass);
 
-    virtual void OnGameObjectChanged();
+    virtual void OnGameObjectChanged(GameObject *previousGameObject,
+                                     GameObject *newGameObject);
 
     virtual bool CanBeRepeatedInGameObject() const;
 

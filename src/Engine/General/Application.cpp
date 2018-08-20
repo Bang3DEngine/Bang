@@ -76,6 +76,7 @@ Application::~Application()
     delete m_debug;
     delete m_paths;
 
+    delete m_physics; m_physics = nullptr;
     delete m_gEngine; m_gEngine = nullptr;
 
     m_resources->Destroy();

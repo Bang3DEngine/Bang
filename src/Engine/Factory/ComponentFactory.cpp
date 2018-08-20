@@ -7,8 +7,9 @@
 #include "Bang/Animator.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Renderer.h"
-#include "Bang/Transform.h"
 #include "Bang/Component.h"
+#include "Bang/Transform.h"
+#include "Bang/RigidBody.h"
 #include "Bang/PointLight.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/UIRenderer.h"
@@ -45,14 +46,13 @@ USING_NAMESPACE_BANG
 
 Component* ComponentFactory::Create(const String &componentClassName)
 {
-    ASSERT(ComponentFactory::Exists(componentClassName));
-
     CREATE_COMPONENT(componentClassName, Camera);
     CREATE_COMPONENT(componentClassName, UIMask);
     CREATE_COMPONENT(componentClassName, Renderer);
     CREATE_COMPONENT(componentClassName, UICanvas);
     CREATE_COMPONENT(componentClassName, Animator);
     CREATE_COMPONENT(componentClassName, Transform);
+    CREATE_COMPONENT(componentClassName, RigidBody);
     CREATE_COMPONENT(componentClassName, PointLight);
     CREATE_COMPONENT(componentClassName, UIRectMask);
     CREATE_COMPONENT(componentClassName, AudioSource);
@@ -77,37 +77,4 @@ Component* ComponentFactory::Create(const String &componentClassName)
                "ComponentFactory");
 
     return nullptr;
-}
-
-bool ComponentFactory::Exists(const String &componentClassName)
-{
-    EXISTS_COMPONENT(componentClassName, Light);
-    EXISTS_COMPONENT(componentClassName, Camera);
-    EXISTS_COMPONENT(componentClassName, UIMask);
-    EXISTS_COMPONENT(componentClassName, Renderer);
-    EXISTS_COMPONENT(componentClassName, UICanvas);
-    EXISTS_COMPONENT(componentClassName, Animator);
-    EXISTS_COMPONENT(componentClassName, Transform);
-    EXISTS_COMPONENT(componentClassName, PointLight);
-    EXISTS_COMPONENT(componentClassName, UIRectMask);
-    EXISTS_COMPONENT(componentClassName, UIRenderer);
-    EXISTS_COMPONENT(componentClassName, AudioSource);
-    EXISTS_COMPONENT(componentClassName, UIInputText);
-    EXISTS_COMPONENT(componentClassName, LineRenderer);
-    EXISTS_COMPONENT(componentClassName, MeshRenderer);
-    EXISTS_COMPONENT(componentClassName, WaterRenderer);
-    EXISTS_COMPONENT(componentClassName, UIScrollArea);
-    EXISTS_COMPONENT(componentClassName, AudioListener);
-    EXISTS_COMPONENT(componentClassName, RectTransform);
-    EXISTS_COMPONENT(componentClassName, UITextRenderer);
-    EXISTS_COMPONENT(componentClassName, ReflectionProbe);
-    EXISTS_COMPONENT(componentClassName, UIImageRenderer);
-    EXISTS_COMPONENT(componentClassName, DirectionalLight);
-    EXISTS_COMPONENT(componentClassName, UIVerticalLayout);
-    EXISTS_COMPONENT(componentClassName, PostProcessEffect);
-    EXISTS_COMPONENT(componentClassName, BehaviourContainer);
-    EXISTS_COMPONENT(componentClassName, UIHorizontalLayout);
-    EXISTS_COMPONENT(componentClassName, SkinnedMeshRenderer);
-
-    return false;
 }

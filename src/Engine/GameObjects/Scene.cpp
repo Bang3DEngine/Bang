@@ -3,6 +3,7 @@
 #include "Bang/Debug.h"
 #include "Bang/Camera.h"
 #include "Bang/XMLNode.h"
+#include "Bang/Physics.h"
 #include "Bang/GEngine.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Transform.h"
@@ -19,6 +20,8 @@ Scene::Scene() : GameObject("Scene")
 {
     m_gizmos = new RenderFactory();
     p_debugRenderer = GameObject::Create<DebugRenderer>();
+
+    Physics::GetInstance()->RegisterScene(this);
 }
 
 Scene::~Scene()
@@ -30,6 +33,7 @@ Scene::~Scene()
 void Scene::OnPreStart()
 {
     GameObject::OnPreStart();
+    Physics::GetInstance()->ResetStepTimeReference(this);
 }
 
 void Scene::Update()

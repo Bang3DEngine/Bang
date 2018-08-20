@@ -14,7 +14,6 @@ protected:
     virtual ~ComponentFactory() = default;
 
     static Component* Create(const String &componentClassName);
-    static bool Exists(const String &componentClassName);
 
     friend class Component;
     friend class GameObject;

@@ -10,3 +10,18 @@ Collider::~Collider()
 {
 }
 
+void Collider::CloneInto(ICloneable *clone) const
+{
+
+}
+
+void Collider::ImportXML(const XMLNode &xmlInfo)
+{
+
+}
+
+void Collider::ExportXML(XMLNode *xmlInfo) const
+{
+
+}
+

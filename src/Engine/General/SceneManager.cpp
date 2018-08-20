@@ -9,6 +9,7 @@
 #include "Bang/Window.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
+#include "Bang/Physics.h"
 #include "Bang/Extensions.h"
 #include "Bang/AudioManager.h"
 #include "Bang/BehaviourManager.h"
@@ -52,6 +53,8 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
         {
             scene->PreUpdate();
             scene->Update();
+            Physics::GetInstance()->UpdateFromTransforms(scene);
+            Physics::GetInstance()->StepIfNeeded(scene);
             scene->PostUpdate();
         }
         scene->DestroyPending();

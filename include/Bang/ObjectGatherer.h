@@ -8,6 +8,7 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsComponent.h"
+#include "Bang/IEventsObjectGatherer.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -17,7 +18,8 @@ FORWARD class GameObject;
 template <class ObjectType, bool RECURSIVE>
 class ObjectGatherer : public EventListener<IEventsDestroy>,
                        public EventListener<IEventsChildren>,
-                       public EventListener<IEventsComponent>
+                       public EventListener<IEventsComponent>,
+                       public EventEmitter< IEventsObjectGatherer<ObjectType> >
 {
 public:
     ObjectGatherer()  = default;

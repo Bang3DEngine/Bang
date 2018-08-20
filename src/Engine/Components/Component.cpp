@@ -38,6 +38,8 @@ void Component::SetGameObject(GameObject *newGameObject)
 {
     if (GetGameObject() != newGameObject)
     {
+        GameObject *previousGameObject = GetGameObject();
+
         if (newGameObject && newGameObject->IsWaitingToBeDestroyed())
         {
             Debug_Warn("Trying to set as gameObject a destroyed gameObject. "
@@ -64,7 +66,7 @@ void Component::SetGameObject(GameObject *newGameObject)
 
         p_gameObject = newGameObject;
 
-        OnGameObjectChanged();
+        OnGameObjectChanged(previousGameObject, newGameObject);
     }
 }
 
@@ -100,7 +102,15 @@ void Component::Render(RenderPass rp)
 void Component::AfterChildrenRender(RenderPass rp)
 { if (IsActive()) { OnAfterChildrenRender(rp); } }
 
-void Component::OnGameObjectChanged() {}
+void Component::OnGameObjectChanged(GameObject *previousGameObject,
+                                    GameObject *newGameObject)
+{
+    EventEmitter<IEventsComponentChangeGameObject>::PropagateToListeners(
+                &IEventsComponentChangeGameObject::OnComponentChangedGameObject,
+                previousGameObject,
+                newGameObject,
+                this);
+}
 bool Component::CanBeRepeatedInGameObject() const { return true;  }
 
 bool Component::IsEnabled(bool recursive) const

@@ -36,7 +36,8 @@ private:
 
     // Component
     void OnPreStart() override;
-    void OnGameObjectChanged() override;
+    void OnGameObjectChanged(GameObject *previousGameObject,
+                             GameObject *newGameObject) override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

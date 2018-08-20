@@ -21,9 +21,10 @@ void BehaviourContainer::OnPreStart()
     TryToSubstituteByBehaviourInstance();
 }
 
-void BehaviourContainer::OnGameObjectChanged()
+void BehaviourContainer::OnGameObjectChanged(GameObject *previousGameObject,
+                                             GameObject *newGameObject)
 {
-    Component::OnGameObjectChanged();
+    Component::OnGameObjectChanged(previousGameObject, newGameObject);
     TryToSubstituteByBehaviourInstance();
 }
 

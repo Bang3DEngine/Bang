@@ -31,12 +31,12 @@ public:
 
     void InvalidateCanvas();
 
-    // IEventsDestroy
-    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
-
     // Serializable
     virtual void ImportXML(const XMLNode &xmlInfo) override;
     virtual void ExportXML(XMLNode *xmlInfo) const override;
+
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 protected:
     Camera *p_camera = nullptr;

@@ -5,6 +5,7 @@
 #include "Bang/UIMask.h"
 #include "Bang/Camera.h"
 #include "Bang/Animator.h"
+#include "Bang/Collider.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Renderer.h"
 #include "Bang/Component.h"
@@ -13,6 +14,7 @@
 #include "Bang/PointLight.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/UIRenderer.h"
+#include "Bang/BoxCollider.h"
 #include "Bang/Application.h"
 #include "Bang/AudioSource.h"
 #include "Bang/UIInputText.h"
@@ -51,10 +53,12 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, Renderer);
     CREATE_COMPONENT(componentClassName, UICanvas);
     CREATE_COMPONENT(componentClassName, Animator);
+    CREATE_COMPONENT(componentClassName, Collider);
     CREATE_COMPONENT(componentClassName, Transform);
     CREATE_COMPONENT(componentClassName, RigidBody);
     CREATE_COMPONENT(componentClassName, PointLight);
     CREATE_COMPONENT(componentClassName, UIRectMask);
+    CREATE_COMPONENT(componentClassName, BoxCollider);
     CREATE_COMPONENT(componentClassName, AudioSource);
     CREATE_COMPONENT(componentClassName, UIInputText);
     CREATE_COMPONENT(componentClassName, LineRenderer);

@@ -7,6 +7,7 @@ USING_NAMESPACE_BANG
 
 RigidBody::RigidBody()
 {
+    SetPhysicsObjectType( PhysicsObject::Type::RIGIDBODY );
 }
 
 RigidBody::~RigidBody()

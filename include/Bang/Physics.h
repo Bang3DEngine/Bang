@@ -14,6 +14,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Scene;
 FORWARD class RigidBody;
+FORWARD class PhysicsObject;
 FORWARD class PxSceneContainer;
 
 class Physics : public EventListener<IEventsComponentChangeGameObject>
@@ -31,8 +32,7 @@ public:
 
     void RegisterScene(Scene *scene);
     void UnRegisterScene(Scene *scene);
-    void RegisterRigidbody(RigidBody *rb);
-    void UnRegisterRigidbody(RigidBody *rb);
+    void UnRegisterPhysicsObject(PhysicsObject *phObj);
 
     void UpdateRigidbodyValues(RigidBody *rb);
 
@@ -50,14 +50,14 @@ private:
 
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
 
-    Scene* GetSceneFromRigidbody(RigidBody *rb) const;
+    Scene* GetSceneFromPhysicsObject(PhysicsObject *phObj) const;
     PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
     const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
 
     physx::PxFoundation* GetPxFoundation() const;
     physx::PxPhysics* GetPxPhysics() const;
 
-    physx::PxRigidBody* CreatePxRigidBodyFromRigidBody(RigidBody *rb);
+    physx::PxActor* CreateIntoPxScene(PhysicsObject *phObj);
 
     static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
     static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);
@@ -67,6 +67,7 @@ private:
     static physx::PxVec3 GetPxVec3FromVector3(const Vector3 &v);
     static physx::PxVec4 GetPxVec4FromVector4(const Vector4 &v);
     static physx::PxQuat GetPxQuatFromQuaternion(const Quaternion &q);
+    static GameObject* GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
     static void FillTransformFromPxTransform(Transform *transform,
                                              const physx::PxTransform &pxTransform);
@@ -80,7 +81,7 @@ private:
     friend class PxSceneContainer;
 };
 
-class PxSceneContainer : public EventListener< IEventsObjectGatherer<RigidBody> >
+class PxSceneContainer : public EventListener< IEventsObjectGatherer<PhysicsObject> >
 {
 public:
     PxSceneContainer(Scene *scene);
@@ -89,20 +90,20 @@ public:
     Time::TimeT m_lastStepTimeMillis = 0;
 
     physx::PxScene *p_pxScene = nullptr;
-    ObjectGatherer<RigidBody, true> *m_rigidBodyGatherer = nullptr;
-    Map<RigidBody*, physx::PxRigidBody*> m_rigidBodyToPxRigidBody;
-    Map<physx::PxRigidBody*, RigidBody*> m_pxRigidBodyToRigidBody;
+    ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
+    Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
+    Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
 
     void ResetStepTimeReference();
 
-    physx::PxScene *GetPxScene() const;
-    physx::PxRigidBody* GetPxRigidBodyFromRigidBody(RigidBody *rb) const;
-    RigidBody* GetRigidBodyFromPxRigidBody(physx::PxRigidBody *rb) const;
+    physx::PxScene* GetPxScene() const;
+    physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
+    GameObject* GetGameObjectFromPxActor(physx::PxActor *pxActor) const;
 
     // IEventsObjectGatherer
-    virtual void OnObjectGathered(RigidBody *rb) override;
+    virtual void OnObjectGathered(PhysicsObject *phObj) override;
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
-                                    RigidBody *rb) override;
+                                    PhysicsObject *phObj) override;
 };
 
 NAMESPACE_BANG_END

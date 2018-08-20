@@ -3,10 +3,12 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Component.h"
+#include "Bang/PhysicsObject.h"
 
 NAMESPACE_BANG_BEGIN
 
-class RigidBody : public Component
+class RigidBody : public PhysicsObject,
+                  public Component
 {
     COMPONENT(RigidBody)
 

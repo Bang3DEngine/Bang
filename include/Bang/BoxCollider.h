@@ -14,6 +14,10 @@ public:
 	BoxCollider();
     virtual ~BoxCollider();
 
+    void SetHalfExtents(const Vector3 &halfExtents);
+
+    const Vector3& GetHalfExtents() const;
+
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 
@@ -22,6 +26,8 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
+    Vector3 m_halfExtents = Vector3(0.5f);
+
     void UpdateShapeGeometry() override;
 };
 

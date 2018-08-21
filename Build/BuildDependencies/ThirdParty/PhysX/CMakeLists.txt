@@ -152,10 +152,6 @@ include_directories("${PHYSX_ROOT_DIR}/PhysX_3.4/Include/solver")
 include_directories("${PHYSX_ROOT_DIR}/PhysX_3.4/Include/gpu")
 include_directories("${PHYSX_ROOT_DIR}/PhysX_3.4/Include/pvd")
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    add_definitions(-D_DEBUG)
-endif ()
-
 link_directories("${PHYSX_ROOT_DIR}/lib")
 
 # PhysX Library

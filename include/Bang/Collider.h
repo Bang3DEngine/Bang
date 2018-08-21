@@ -22,10 +22,14 @@ class Collider : public PhysicsObject,
 {
 public:
 	Collider();
-	virtual ~Collider();
+    virtual ~Collider();
 
     // Component
     void OnUpdate() override;
+
+    void SetCenter(const Vector3 &center);
+
+    const Vector3& GetCenter() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -35,7 +39,7 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
-    virtual void UpdateShapeGeometry() = 0;
+    virtual void UpdateShapeGeometry();
 
     void SetPxRigidBody(physx::PxRigidBody *pxRB);
     void SetPxShape(physx::PxShape *pxShape);
@@ -44,6 +48,8 @@ protected:
     physx::PxShape* GetPxShape() const;
 
 private:
+    Vector3 m_center = Vector3::Zero;
+
     physx::PxShape *p_pxShape = nullptr;
     physx::PxRigidBody *p_pxRigidBody = nullptr;
 

@@ -11,10 +11,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-#ifndef NDEBUG
-#define DEBUG
-#endif
-
 // Casts ===============================================
 #define SCAST static_cast
 #define DCAST dynamic_cast

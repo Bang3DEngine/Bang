@@ -12,6 +12,8 @@
 using namespace physx;
 USING_NAMESPACE_BANG
 
+const float Physics::MaximumSleepTime = 0.1f;
+
 Physics::Physics()
 {
 }
@@ -78,7 +80,15 @@ void Physics::UpdateFromTransforms(Scene *scene)
     }
 }
 
-void Physics::Step(Scene *scene, float simulationTime)
+void Physics::SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore)
+{
+    if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
+    {
+        pxSceneContainer->m_numFramesLeftToIgnore = numNextFramesToIgnore;
+    }
+}
+
+void Physics::Step(Scene *scene, float simulationTime_)
 {
     PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene);
     ASSERT(pxSceneContainer);
@@ -87,6 +97,7 @@ void Physics::Step(Scene *scene, float simulationTime)
     ASSERT(pxScene);
 
     // Step
+    float simulationTime = Math::Min(MaximumSleepTime, simulationTime_);
     ResetStepTimeReference(scene);
     pxScene->simulate(simulationTime);
     pxScene->fetchResults(true);
@@ -131,7 +142,15 @@ void Physics::StepIfNeeded(Scene *scene)
                 (nowMillis - pxSceneContainer->m_lastStepTimeMillis) / 1000.0f;
     if (secondsSinceLastStep >= GetSleepStepTimeSeconds())
     {
-        Step(scene, secondsSinceLastStep);
+        if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
+        {
+            Step(scene, secondsSinceLastStep);
+        }
+        else
+        {
+            pxSceneContainer->ResetStepTimeReference();
+            --pxSceneContainer->m_numFramesLeftToIgnore;
+        }
     }
 }
 
@@ -140,7 +159,6 @@ void Physics::RegisterScene(Scene *scene)
     ASSERT(scene);
 
     PxSceneContainer *pxSceneContainer = new PxSceneContainer(scene);
-
     m_sceneToPxSceneContainer.Add(scene, pxSceneContainer);
 }
 
@@ -229,6 +247,10 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
             case PhysicsObject::Type::RIGIDBODY:
             {
                 PxRigidDynamic *pxRD = SCAST<PxRigidDynamic*>(pxActor);
+
+                RigidBody *rb = SCAST<RigidBody*>(phObj);
+                rb->SetPxRigidDynamic(pxRD);
+
                 pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
             }
             break;

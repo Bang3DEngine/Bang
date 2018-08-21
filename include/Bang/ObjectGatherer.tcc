@@ -46,9 +46,7 @@ RegisterEventsAndGather(GameObject *go)
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
     for (ObjectType *obj : goObjectsOfTheType)
     {
-        m_gatheredObjects.PushBack(obj);
-        EventEmitter<IEventsObjectGatherer<ObjectType>>::PropagateToListeners(
-                    &IEventsObjectGatherer<ObjectType>::OnObjectGathered, obj);
+        AddGatheredObject(obj);
     }
 
     if (RECURSIVE)
@@ -85,10 +83,7 @@ UnRegisterEventsAndRemoveObjects(GameObject *go)
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
     for (ObjectType *obj : goObjectsOfTheType)
     {
-        m_gatheredObjects.Remove(obj);
-        EventEmitter<IEventsObjectGatherer<ObjectType>>::PropagateToListeners(
-                    &IEventsObjectGatherer<ObjectType>::OnObjectUnGathered,
-                    go, obj);
+        RemoveGatheredObject(obj, go);
     }
 
     if (RECURSIVE)
@@ -141,7 +136,7 @@ OnComponentAdded(Component *addedComponent, int)
 {
     if (ObjectType *obj = DCAST<ObjectType*>(addedComponent))
     {
-        m_gatheredObjects.PushBack(obj);
+        AddGatheredObject(obj);
     }
 }
 
@@ -151,9 +146,29 @@ OnComponentRemoved(Component *removedComponent, GameObject *previousGameObject)
 {
     if (ObjectType *obj = DCAST<ObjectType*>(removedComponent))
     {
-        m_gatheredObjects.Remove(obj);
+        RemoveGatheredObject(obj, previousGameObject);
     }
 }
+
+template<class ObjectType, bool RECURSIVE>
+void ObjectGatherer<ObjectType, RECURSIVE>::
+AddGatheredObject(ObjectType *obj)
+{
+    m_gatheredObjects.PushBack(obj);
+    EventEmitter<IEventsObjectGatherer<ObjectType>>::PropagateToListeners(
+                &IEventsObjectGatherer<ObjectType>::OnObjectGathered, obj);
+}
+
+template<class ObjectType, bool RECURSIVE>
+void ObjectGatherer<ObjectType, RECURSIVE>::
+RemoveGatheredObject(ObjectType *obj, GameObject *previousGameObject)
+{
+    m_gatheredObjects.Remove(obj);
+    EventEmitter<IEventsObjectGatherer<ObjectType>>::PropagateToListeners(
+                &IEventsObjectGatherer<ObjectType>::OnObjectUnGathered,
+                previousGameObject, obj);
+}
+
 
 template<class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::

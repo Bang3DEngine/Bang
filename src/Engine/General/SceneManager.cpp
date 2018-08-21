@@ -47,6 +47,7 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
 {
     if (scene)
     {
+        bool firstFrame = (!scene->IsStarted());
         scene->PreStart();
         scene->Start();
         if (update)

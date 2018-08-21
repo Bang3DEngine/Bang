@@ -95,11 +95,19 @@ macro(add_bang_compilation_flags __TARGET)
             target_compile_options(${__TARGET} PUBLIC -fsanitize=null)
         endif()
 
+        add_definitions(-DDEBUG)
+        add_definitions(-D_DEBUG)
         target_compile_options(${__TARGET} PUBLIC -g3)
         target_compile_options(${__TARGET} PUBLIC -O0)
         target_compile_options(${__TARGET} PUBLIC -ggdb)
         target_compile_options(${__TARGET} PUBLIC -Wl,-O0)
         target_compile_options(${__TARGET} PUBLIC -fno-omit-frame-pointer)
+
+    elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+
+        add_definitions(-DGPROF)
+        add_definitions(-DNDEBUG)
+        link_libraries("profiler") # gperftools
 
     elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 

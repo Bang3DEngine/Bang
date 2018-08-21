@@ -29,6 +29,7 @@ public:
     void StepIfNeeded(Scene *scene);
     void ResetStepTimeReference(Scene *scene);
     void UpdateFromTransforms(Scene *scene);
+    void SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore);
 
     void RegisterScene(Scene *scene);
     void UnRegisterScene(Scene *scene);
@@ -54,7 +55,8 @@ private:
     physx::PxFoundation *m_pxFoundation = nullptr;
     physx::PxPhysics *m_pxPhysics = nullptr;
 
-    float m_sleepStepTimeSeconds = 0.025f;
+    float m_sleepStepTimeSeconds = (1.0f/60.0f);
+    const static float MaximumSleepTime;
 
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
 
@@ -85,6 +87,7 @@ public:
 
     Time::TimeT m_lastStepTimeMillis = 0;
 
+    int m_numFramesLeftToIgnore = 0;
     physx::PxScene *p_pxScene = nullptr;
     ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
     Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;

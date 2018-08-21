@@ -53,6 +53,9 @@ private:
     void OnComponentRemoved(Component *removedComponent,
                             GameObject *previousGameObject) override;
 
+    void AddGatheredObject(ObjectType *obj);
+    void RemoveGatheredObject(ObjectType *obj, GameObject *previousGameObject);
+
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };

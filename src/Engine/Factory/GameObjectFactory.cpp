@@ -18,6 +18,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/UICheckBox.h"
 #include "Bang/UIComboBox.h"
+#include "Bang/BoxCollider.h"
 #include "Bang/UIInputText.h"
 #include "Bang/UIScrollBar.h"
 #include "Bang/MeshFactory.h"
@@ -573,23 +574,31 @@ GameObject* GameObjectFactory::CreateGameObjectWithMesh(Mesh* m,
 GameObject* GameObjectFactory::CreatePlaneGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetPlane();
-    return CreateGameObjectWithMesh(mesh.Get(), "Plane");
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Plane");
+    go->AddComponent<BoxCollider>();
+    return go;
 }
 
 GameObject* GameObjectFactory::CreateCubeGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetCube();
-    return CreateGameObjectWithMesh(mesh.Get(), "Cube");
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cube");
+    go->AddComponent<BoxCollider>();
+    return go;
 }
 
 GameObject* GameObjectFactory::CreateSphereGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetSphere();
-    return CreateGameObjectWithMesh(mesh.Get(), "Sphere");
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Sphere");
+    go->AddComponent<BoxCollider>();
+    return go;
 }
 
 GameObject* GameObjectFactory::CreateConeGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetCone();
-    return CreateGameObjectWithMesh(mesh.Get(), "Cone");
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cone");
+    go->AddComponent<BoxCollider>();
+    return go;
 }

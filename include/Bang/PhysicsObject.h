@@ -12,7 +12,8 @@ public:
     {
         NONE,
         RIGIDBODY,
-        BOX_COLLIDER
+        BOX_COLLIDER,
+        SPHERE_COLLIDER
     };
 
 	PhysicsObject();

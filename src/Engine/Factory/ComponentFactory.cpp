@@ -25,6 +25,7 @@
 #include "Bang/UIScrollArea.h"
 #include "Bang/AudioListener.h"
 #include "Bang/RectTransform.h"
+#include "Bang/SphereCollider.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/StreamOperators.h"
@@ -66,6 +67,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, UIScrollArea);
     CREATE_COMPONENT(componentClassName, AudioListener);
     CREATE_COMPONENT(componentClassName, RectTransform);
+    CREATE_COMPONENT(componentClassName, SphereCollider);
     CREATE_COMPONENT(componentClassName, UITextRenderer);
     CREATE_COMPONENT(componentClassName, ReflectionProbe);
     CREATE_COMPONENT(componentClassName, UIImageRenderer);

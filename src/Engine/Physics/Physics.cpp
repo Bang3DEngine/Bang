@@ -8,6 +8,7 @@
 #include "Bang/Application.h"
 #include "Bang/BoxCollider.h"
 #include "Bang/PhysicsObject.h"
+#include "Bang/SphereCollider.h"
 
 using namespace physx;
 USING_NAMESPACE_BANG
@@ -267,6 +268,22 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
                 bc->SetPxRigidBody( pxRigidDynamic );
                 bc->SetPxShape( pxBoxShape );
                 bc->UpdateShapeGeometry();
+            }
+            break;
+
+            case PhysicsObject::Type::SPHERE_COLLIDER:
+            {
+                SphereCollider *sc = SCAST<SphereCollider*>(phObj);
+
+                PxMaterial *pxMaterial = CreateNewMaterial();
+                PxRigidDynamic *pxRigidDynamic = SCAST<PxRigidDynamic*>(pxActor);
+
+                PxSphereGeometry pxSphereGeom = PxSphereGeometry(0.1f);
+                PxShape *pxSphereShape =
+                        pxRigidDynamic->createShape(pxSphereGeom, *pxMaterial);
+                sc->SetPxRigidBody( pxRigidDynamic );
+                sc->SetPxShape( pxSphereShape );
+                sc->UpdateShapeGeometry();
             }
             break;
 

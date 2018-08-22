@@ -21,24 +21,53 @@
 
 USING_NAMESPACE_BANG
 
-RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
-                                                TextureCubeMap *textureCubeMap)
+CubeMapIBLGenerator::CubeMapIBLGenerator()
 {
-    return GenerateIBLCubeMap(textureCubeMap, IBLType::DIFFUSE);
+    // Create framebuffer and shader program
+    m_iblFramebuffer = new Framebuffer();
+
+    m_iblShaderProgram = ShaderProgramFactory::Get(
+                            EPATH("Shaders/CubeMapIBLGenerator.vert"),
+                            EPATH("Shaders/CubeMapIBLGenerator.geom"),
+                            EPATH("Shaders/CubeMapIBLGenerator.frag"));
+}
+
+CubeMapIBLGenerator::~CubeMapIBLGenerator()
+{
+    delete m_iblFramebuffer;
+}
+
+RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
+                                                TextureCubeMap *textureCubeMap,
+                                                uint IBLCubeMapSize,
+                                                uint sampleCount)
+{
+    return GenerateIBLCubeMap(textureCubeMap,
+                              IBLType::DIFFUSE,
+                              IBLCubeMapSize,
+                              sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
-                                                TextureCubeMap *textureCubeMap)
+                                                TextureCubeMap *textureCubeMap,
+                                                uint IBLCubeMapSize,
+                                                uint sampleCount)
 {
-    return GenerateIBLCubeMap(textureCubeMap, IBLType::SPECULAR);
+    return GenerateIBLCubeMap(textureCubeMap,
+                              IBLType::SPECULAR,
+                              IBLCubeMapSize,
+                              sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
                                                 TextureCubeMap *textureCubeMap,
-                                                IBLType iblType)
+                                                IBLType iblType,
+                                                uint IBLCubeMapSize,
+                                                uint sampleCount)
 {
-    constexpr uint IBLCubeMapSizes[2] = {32, 128};
-    const uint IBLCubeMapSize = IBLCubeMapSizes[ SCAST<int>(iblType) ];
+    #ifdef DEBUG
+    ASSERT(Math::IsPowerOfTwo(IBLCubeMapSize));
+    #endif
 
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Enablable::CULL_FACE);
@@ -64,26 +93,21 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
         iblCubeMap->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
     }
 
-    // Create shader program
-    ShaderProgram *sp = ShaderProgramFactory::Get(
-                            EPATH("Shaders/CubeMapIBLGenerator.vert"),
-                            EPATH("Shaders/CubeMapIBLGenerator.geom"),
-                            EPATH("Shaders/CubeMapIBLGenerator.frag"));
+    CubeMapIBLGenerator *cmg = CubeMapIBLGenerator::GetInstance();
+    cmg->m_iblFramebuffer->Bind();
 
-    // Create framebuffer and shader program
-    Framebuffer *fb = new Framebuffer();
-    fb->Bind();
-
-    sp->Bind();
-    sp->SetInt("B_IBLType", SCAST<int>(iblType));
-    sp->SetTextureCubeMap("B_InputCubeMap", textureCubeMap);
+    cmg->m_iblShaderProgram->Bind();
+    cmg->m_iblShaderProgram->SetInt("B_SampleCount", sampleCount);
+    cmg->m_iblShaderProgram->SetInt("B_IBLType", SCAST<int>(iblType));
+    cmg->m_iblShaderProgram->SetTextureCubeMap("B_InputCubeMap", textureCubeMap);
 
     // Draw to cubemap
     if (iblType == IBLType::DIFFUSE)
     {
         GL::SetViewport(0, 0, IBLCubeMapSize, IBLCubeMapSize);
-        fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::COLOR0);
-        fb->SetAllDrawBuffers();
+        cmg->m_iblFramebuffer->SetAttachmentTexture(iblCubeMap,
+                                                    GL::Attachment::COLOR0);
+        cmg->m_iblFramebuffer->SetAllDrawBuffers();
 
         GEngine::GetInstance()->RenderViewportPlane();
     }
@@ -91,29 +115,31 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     {
         // Fill mipmap levels of the specular skybox, each one with more
         // roughness progressively
-        constexpr int MaxMipLevels = 8;
+        const uint MaxMipLevels =
+           Math::Round(Math::Log10(float(IBLCubeMapSize)) / Math::Log10(2.0f));
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
                           GL::TexParameter::TEXTURE_BASE_LEVEL, 0);
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
                           GL::TexParameter::TEXTURE_MAX_LEVEL, MaxMipLevels-1);
 
-        for (int mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
+        for (uint mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
         {
             const float mipMapLevelF = SCAST<float>(mipMapLevel);
             const uint mipSize = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
 
             const float roughness = SCAST<float>(mipMapLevel) / (MaxMipLevels - 1);
-            sp->SetFloat("B_InputRoughness", roughness);
+            cmg->m_iblShaderProgram->SetFloat("B_InputRoughness", roughness);
 
             GL::SetViewport(0, 0, mipSize, mipSize);
-            fb->SetAttachmentTexture(iblCubeMap, GL::Attachment::COLOR0, mipMapLevel);
-            fb->SetAllDrawBuffers();
+            cmg->m_iblFramebuffer->SetAttachmentTexture(iblCubeMap,
+                                                        GL::Attachment::COLOR0,
+                                                        mipMapLevel);
+            cmg->m_iblFramebuffer->SetAllDrawBuffers();
             GEngine::GetInstance()->RenderViewportPlane();
         }
     }
 
-    fb->UnBind();
-    delete fb;
+    cmg->m_iblFramebuffer->UnBind();
 
     // Restore OpenGL state
     GL::Pop(GL::Pushable::VIEWPORT);
@@ -126,6 +152,11 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     return iblCubeMapRH;
+}
+
+CubeMapIBLGenerator *CubeMapIBLGenerator::GetInstance()
+{
+    return Resources::GetInstance()->GetCubeMapIBLGenerator();
 }
 
 

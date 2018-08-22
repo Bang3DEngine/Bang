@@ -99,8 +99,8 @@ void Physics::Step(Scene *scene, float simulationTime_)
 
     // Step
     float simulationTime = Math::Min(MaximumSleepTime, simulationTime_);
-    ResetStepTimeReference(scene);
     pxScene->simulate(simulationTime);
+    ResetStepTimeReference(scene);
     pxScene->fetchResults(true);
 
     uint32_t numActActorsOut;

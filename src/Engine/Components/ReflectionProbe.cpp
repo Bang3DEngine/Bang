@@ -112,9 +112,13 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
         if (GetFilterForIBL())
         {
             p_textureCubeMapDiffuse  = CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
-                                            GetTextureCubeMapWithoutFiltering());
+                                            GetTextureCubeMapWithoutFiltering(),
+                                            16,
+                                            10);
             p_textureCubeMapSpecular = CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
-                                            GetTextureCubeMapWithoutFiltering());
+                                            GetTextureCubeMapWithoutFiltering(),
+                                            128,
+                                            64);
         }
 
         m_lastRenderTimeMillis = Time::GetNow_Millis();
@@ -130,9 +134,7 @@ void ReflectionProbe::SetRenderSize(int size)
         m_renderSize = size;
 
         #ifdef DEBUG
-        float sqrt = Math::Log10( float(size) ) / Math::Log10(2.0f);
-        bool isPowerOfTwo = ( Math::Abs(sqrt - Math::Round(sqrt)) < 0.0001f );
-        ASSERT(isPowerOfTwo);
+        ASSERT( Math::IsPowerOfTwo(size) );
         #endif
 
         for (Camera *cam : GetCameras())
@@ -372,7 +374,15 @@ void ReflectionProbe::CloneInto(ICloneable *clone) const
 
     ReflectionProbe *rpClone = SCAST<ReflectionProbe*>(clone);
     rpClone->SetSize( GetSize() );
+    rpClone->SetRenderSize( GetRenderSize() );
+    rpClone->SetFilterForIBL( GetFilterForIBL() );
+    rpClone->SetRestTimeSeconds( GetRestTimeSeconds() );
     rpClone->SetIsBoxed( GetIsBoxed() );
+    rpClone->SetCamerasZNear( GetCamerasZNear() );
+    rpClone->SetCamerasZFar( GetCamerasZFar() );
+    rpClone->SetCamerasClearMode( GetCamerasClearMode() );
+    rpClone->SetCamerasSkyBoxTexture( GetCamerasSkyBoxTexture() );
+    rpClone->SetCamerasClearColor( rpClone->GetCamerasClearColor() );
 }
 
 void ReflectionProbe::ImportXML(const XMLNode &xmlInfo)

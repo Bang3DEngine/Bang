@@ -29,6 +29,7 @@
 #include "Bang/UIInputNumber.h"
 #include "Bang/UIScrollPanel.h"
 #include "Bang/TextureFactory.h"
+#include "Bang/SphereCollider.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
@@ -591,7 +592,7 @@ GameObject* GameObjectFactory::CreateSphereGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetSphere();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Sphere");
-    go->AddComponent<BoxCollider>();
+    go->AddComponent<SphereCollider>();
     return go;
 }
 

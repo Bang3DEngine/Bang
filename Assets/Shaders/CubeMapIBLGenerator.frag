@@ -8,6 +8,8 @@ uniform int B_IBLType;
 uniform float B_InputRoughness;
 uniform samplerCube B_InputCubeMap;
 
+uniform int B_SampleCount; // The lowest,  the more quality
+
 in vec4 B_FIn_Position;
 
 out vec4 B_Out_IrradianceColor;
@@ -17,8 +19,8 @@ out vec4 B_Out_IrradianceColor;
 // https://learnopengl.com/PBR/IBL/Specular-irradiance
 // Thank you!
 
-vec2 Hammersley(uint i, uint N);
-float VanDerCorpus(uint n, uint base);
+vec2 Hammersley(int i, int N);
+float VanDerCorpus(int n, int base);
 vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness);
 
 void main()
@@ -38,8 +40,8 @@ void main()
         vec3 right = cross(up, normal);
         up = cross(normal, right);
 
-        float sampleDelta = 0.05;
         float nrSamples   = 0.0;
+        float sampleDelta = 1.0f / B_SampleCount;
         for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
         {
             float sinPhi = sin(phi);
@@ -77,11 +79,10 @@ void main()
         vec3      V = R;
 
         float totalWeight = 0.0;
-        const uint SAMPLE_COUNT = 256u;
         vec3 prefilteredColor = vec3(0.0);
-        for(uint i = 0u; i < SAMPLE_COUNT; ++i)
+        for(int i = 0; i < B_SampleCount; ++i)
         {
-            vec2 Xi = Hammersley(i, SAMPLE_COUNT);
+            vec2 Xi = Hammersley(i, B_SampleCount);
             vec3 H  = ImportanceSampleGGX(Xi, normal, B_InputRoughness);
             vec3 L  = normalize(2.0 * dot(V, H) * H - V);
 
@@ -106,28 +107,28 @@ void main()
 // =============================================================
 
 // Helper functions
-float VanDerCorpus(uint n, uint base)
+float VanDerCorpus(int n, int base)
 {
     float invBase = 1.0 / float(base);
     float denom   = 1.0;
     float result  = 0.0;
 
-    for(uint i = 0u; i < 32u; ++i)
+    for(int i = 0; i < 32; ++i)
     {
-        if(n > 0u)
+        if(n > 0)
         {
             denom   = mod(float(n), 2.0);
             result += denom * invBase;
             invBase = invBase / 2.0;
-            n       = uint(float(n) / 2.0);
+            n       = int(float(n) / 2.0);
         }
     }
 
     return result;
 }
-vec2 Hammersley(uint i, uint N)
+vec2 Hammersley(int i, int N)
 {
-    return vec2(float(i)/float(N), VanDerCorpus(i, 2u));
+    return vec2(float(i)/float(N), VanDerCorpus(i, 2));
 }
 vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)
 {

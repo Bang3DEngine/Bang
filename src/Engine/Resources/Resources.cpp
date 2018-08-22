@@ -12,6 +12,7 @@
 #include "Bang/MeshFactory.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -28,12 +29,14 @@ void Resources::Init()
     m_shaderProgramFactory = new ShaderProgramFactory();
 }
 
+void Resources::InitAfterGL()
+{
+    m_cubeMapIBLGenerator = new CubeMapIBLGenerator();
+}
+
 Resources::~Resources()
 {
-    ASSERT_MSG(m_meshFactory == nullptr,          "Call Destroy()");
-    ASSERT_MSG(m_textureFactory == nullptr,       "Call Destroy()");
-    ASSERT_MSG(m_materialFactory == nullptr,      "Call Destroy()");
-    ASSERT_MSG(m_shaderProgramFactory == nullptr, "Call Destroy()");
+    Destroy();
 }
 
 RH<Resource> Resources::LoadFromExtension(const Path &path)
@@ -269,6 +272,11 @@ MaterialFactory *Resources::GetMaterialFactory() const
     return m_materialFactory;
 }
 
+CubeMapIBLGenerator *Resources::GetCubeMapIBLGenerator() const
+{
+    return m_cubeMapIBLGenerator;
+}
+
 ShaderProgramFactory *Resources::GetShaderProgramFactory() const
 {
     return m_shaderProgramFactory;
@@ -276,10 +284,13 @@ ShaderProgramFactory *Resources::GetShaderProgramFactory() const
 
 void Resources::Destroy()
 {
-    delete m_meshFactory;          m_meshFactory          = nullptr;
-    delete m_textureFactory;       m_textureFactory       = nullptr;
-    delete m_materialFactory;      m_materialFactory      = nullptr;
-    delete m_shaderProgramFactory; m_shaderProgramFactory = nullptr;
+    #define B_DESTROY_AND_NULL(p) if (p) { delete p; p = nullptr; }
+    B_DESTROY_AND_NULL(m_meshFactory);
+    B_DESTROY_AND_NULL(m_textureFactory);
+    B_DESTROY_AND_NULL(m_materialFactory);
+    B_DESTROY_AND_NULL(m_cubeMapIBLGenerator);
+    B_DESTROY_AND_NULL(m_shaderProgramFactory);
+    #undef B_DESTROY_AND_NULL
 }
 
 Resources *Resources::GetInstance()

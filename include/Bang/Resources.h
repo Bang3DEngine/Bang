@@ -20,6 +20,7 @@ FORWARD class Asset;
 FORWARD class MeshFactory;
 FORWARD class TextureFactory;
 FORWARD class MaterialFactory;
+FORWARD class CubeMapIBLGenerator;
 FORWARD class ShaderProgramFactory;
 
 class Resources
@@ -90,9 +91,11 @@ public:
     MeshFactory *GetMeshFactory() const;
     TextureFactory *GetTextureFactory() const;
     MaterialFactory *GetMaterialFactory() const;
+    CubeMapIBLGenerator *GetCubeMapIBLGenerator() const;
     ShaderProgramFactory *GetShaderProgramFactory() const;
 
     virtual void Init();
+    virtual void InitAfterGL();
     virtual Array<Path> GetLookUpPaths() const;
 
     void Destroy();
@@ -107,6 +110,7 @@ private:
     MeshFactory *m_meshFactory = nullptr;
     TextureFactory *m_textureFactory = nullptr;
     MaterialFactory *m_materialFactory = nullptr;
+    CubeMapIBLGenerator *m_cubeMapIBLGenerator = nullptr;
     ShaderProgramFactory *m_shaderProgramFactory = nullptr;
 
     virtual MeshFactory* CreateMeshFactory() const;

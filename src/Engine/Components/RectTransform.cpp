@@ -532,11 +532,12 @@ const Matrix4 &RectTransform::GetRectLocalToWorldMatrixInv() const
 void RectTransform::OnRender(RenderPass rp)
 {
     Transform::OnRender(rp);
-    /*
     if (rp != RenderPass::OVERLAY) { return; }
 
+    /*
     AARect r = GetViewportAARectNDC(); (void)r;
     DebugRenderer::RenderAARectNDC(r, Color::Green, 0.1f, 1.0f, false);
+
     DebugRenderer::SetColor(Color::Yellow);
     DebugRenderer::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
     DebugRenderer::SetColor(Color::Yellow);

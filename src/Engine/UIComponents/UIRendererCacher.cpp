@@ -67,9 +67,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 
             GL::ReadBuffer( gbuffer->GetLastDrawnColorAttachment() );
             GL::DrawBuffers( {GL::Attachment::COLOR0} );
-            GL::ClearColorStencilDepthBuffers(Color::Zero, 0, 1.0f);
-            GL::ClearDepthBuffer(1.0f);
-            GL::ClearStencilBuffer(0);
+            GL::ClearColorStencilDepthBuffers();
 
             Vector2 rtSize = rtRectNDC.GetSize();
             Vector2 rtOri = rtRectNDC.GetMinXMinY() * 0.5f + 0.5f;
@@ -83,14 +81,14 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
                                   GL::BlendFactor::ONE_MINUS_SRC_ALPHA,
                                   GL::BlendFactor::ONE,
                                   GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
-            GetContainer()->Render(RenderPass::CANVAS);
-            p_cachedImageRenderer->SetVisible(true);
-            SetContainerVisible(false);
+            GetContainer()->Render(renderPass);
 
             GL::Pop( GL::Pushable::BLEND_STATES );
             GL::Pop( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
 
             m_needNewImageToSnapshot = false;
+            p_cachedImageRenderer->SetVisible(true);
+            SetContainerVisible(false);
         }
         else if (!IsCachingEnabled())
         {

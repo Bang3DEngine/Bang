@@ -34,29 +34,7 @@ UIList::~UIList()
 void UIList::OnUpdate()
 {
     Component::OnUpdate();
-
     HandleShortcuts();
-    /*
-    // Mouse In/Out
-
-    // Clicked
-
-    if (p_itemUnderMouse)
-    {
-        if (Input::GetMouseButtonUp(MouseButton::LEFT) ||
-            Input::GetMouseButtonDown(MouseButton::LEFT))
-        {
-        }
-
-        if (Input::GetMouseButtonUp(MouseButton::RIGHT))
-        {
-        }
-
-        if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
-        {
-        }
-    }
-    */
 }
 
 void UIList::AddItem(GOItem *newItem)
@@ -333,7 +311,9 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
         case UIEvent::Type::MOUSE_EXIT:
         if (p_itemUnderMouse)
         {
+            ASSERT(p_itemUnderMouse);
             CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+            p_itemUnderMouse = nullptr;
             return UIEventResult::INTERCEPT;
         }
         break;
@@ -350,7 +330,10 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
                                              GetViewportAARectNDC() );
                 for (GOItem *childItem : p_items)
                 {
-                    if (!childItem->IsActive()) { continue; }
+                    if (!childItem->IsActive())
+                    {
+                        continue;
+                    }
 
                     bool overChildItem;
                     if (m_wideSelectionMode)
@@ -366,7 +349,11 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
                         overChildItem = canvas->IsMouseOver(childItem, false);
                     }
 
-                    if (overChildItem) { itemUnderMouse = childItem; break; }
+                    if (overChildItem)
+                    {
+                        itemUnderMouse = childItem;
+                        break;
+                    }
                 }
             }
 
@@ -409,7 +396,6 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
             {
                 if (event.mouse.button == MouseButton::LEFT)
                 {
-                    SetSelection(p_itemUnderMouse);
                     CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_LEFT_UP);
                     return UIEventResult::INTERCEPT;
                 }
@@ -519,7 +505,7 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     {
         dirLayout = container->AddComponent<UIHorizontalLayout>();
     }
-    dirLayout->SetChildrenVerticalStretch(Stretch::FULL);
+    dirLayout->SetChildrenVerticalStretch(Stretch::NONE);
     dirLayout->SetChildrenHorizontalStretch(Stretch::FULL);
 
     list->p_focusable = container->AddComponent<UIFocusable>();

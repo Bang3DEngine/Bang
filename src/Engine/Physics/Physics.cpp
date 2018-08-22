@@ -116,6 +116,10 @@ void Physics::Step(Scene *scene, float simulationTime)
     {
         PxActor *pxActor = activeActors[i];
         GameObject *go = pxSceneContainer->GetGameObjectFromPxActor(pxActor);
+        if (!go)
+        {
+            continue;
+        }
 
         List<PhysicsObject*> physicsObjects = go->GetComponents<PhysicsObject>();
         for (PhysicsObject *phObj : physicsObjects)
@@ -124,11 +128,14 @@ void Physics::Step(Scene *scene, float simulationTime)
             {
                 case PhysicsObject::Type::RIGIDBODY:
                 {
-                    // RigidBody *rb = SCAST<RigidBody*>(phObj);
-                    PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
-                    if (Transform *tr = go->GetTransform())
+                    RigidBody *rb = SCAST<RigidBody*>(phObj);
+                    if (rb->IsActive())
                     {
-                        FillTransformFromPxTransform( tr, pxRB->getGlobalPose() );
+                        PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
+                        if (Transform *tr = go->GetTransform())
+                        {
+                            FillTransformFromPxTransform( tr, pxRB->getGlobalPose() );
+                        }
                     }
                 }
                 break;
@@ -300,6 +307,7 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
                 rb->SetPxRigidDynamic(pxRD);
 
                 pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+                rb->UpdatePxRigidDynamicValues();
             }
             break;
 
@@ -407,7 +415,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
     Physics *ph = Physics::GetInstance();
 
     PxSceneDesc sceneDesc(ph->GetPxPhysics()->getTolerancesScale());
-    sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+    sceneDesc.gravity = Physics::GetPxVec3FromVector3(ph->GetGravity());
     sceneDesc.cpuDispatcher	= PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader	= PxDefaultSimulationFilterShader;
 

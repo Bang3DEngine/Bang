@@ -34,10 +34,15 @@ public:
     void RegisterScene(Scene *scene);
     void UnRegisterScene(Scene *scene);
     void UnRegisterPhysicsObject(PhysicsObject *phObj);
-
     void UpdateRigidbodyValues(RigidBody *rb);
 
-    float GetSleepStepTimeSeconds() const;
+    void SetStepSleepTime(float stepSleepTimeSeconds);
+    void SetMaxSubSteps(int maxSubSteps);
+    void SetGravity(const Vector3 &gravity);
+
+    int GetMaxSubSteps() const;
+    float GetStepSleepTimeSeconds() const;
+    const Vector3& GetGravity() const;
 
     static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
     static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);
@@ -55,8 +60,9 @@ private:
     physx::PxFoundation *m_pxFoundation = nullptr;
     physx::PxPhysics *m_pxPhysics = nullptr;
 
-    float m_sleepStepTimeSeconds = (1.0f/60.0f);
-    const static float MaximumSleepTime;
+    int m_maxSubSteps = 10;
+    float m_stepSleepTimeSeconds = (1.0f/60.0f);
+    Vector3 m_gravity = Vector3(0.0f, -9.81f, 0.0f);
 
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
 

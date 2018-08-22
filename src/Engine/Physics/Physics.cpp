@@ -13,8 +13,6 @@
 using namespace physx;
 USING_NAMESPACE_BANG
 
-const float Physics::MaximumSleepTime = 0.1f;
-
 Physics::Physics()
 {
 }
@@ -89,7 +87,7 @@ void Physics::SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore)
     }
 }
 
-void Physics::Step(Scene *scene, float simulationTime_)
+void Physics::Step(Scene *scene, float simulationTime)
 {
     PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene);
     ASSERT(pxSceneContainer);
@@ -98,10 +96,19 @@ void Physics::Step(Scene *scene, float simulationTime_)
     ASSERT(pxScene);
 
     // Step
-    float simulationTime = Math::Min(MaximumSleepTime, simulationTime_);
-    pxScene->simulate(simulationTime);
+    int subStepsToBeDone =
+        Math::Min(
+           SCAST<int>(Math::Ceil(simulationTime / GetStepSleepTimeSeconds())),
+           GetMaxSubSteps());
+    subStepsToBeDone = Math::Max(subStepsToBeDone, 1);
+
+    float subStepTime = (simulationTime / subStepsToBeDone);
+    for (int i = 0; i < subStepsToBeDone; ++i)
+    {
+        pxScene->simulate(subStepTime);
+        pxScene->fetchResults(true);
+    }
     ResetStepTimeReference(scene);
-    pxScene->fetchResults(true);
 
     uint32_t numActActorsOut;
     PxActor** activeActors = pxScene->getActiveActors(numActActorsOut);
@@ -141,7 +148,7 @@ void Physics::StepIfNeeded(Scene *scene)
     Time::TimeT nowMillis = Time::GetNow_Millis();
     float secondsSinceLastStep =
                 (nowMillis - pxSceneContainer->m_lastStepTimeMillis) / 1000.0f;
-    if (secondsSinceLastStep >= GetSleepStepTimeSeconds())
+    if (secondsSinceLastStep >= GetStepSleepTimeSeconds())
     {
         if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
         {
@@ -151,6 +158,36 @@ void Physics::StepIfNeeded(Scene *scene)
         {
             pxSceneContainer->ResetStepTimeReference();
             --pxSceneContainer->m_numFramesLeftToIgnore;
+        }
+    }
+}
+
+void Physics::SetStepSleepTime(float stepSleepTimeSeconds)
+{
+    if (stepSleepTimeSeconds != GetStepSleepTimeSeconds())
+    {
+        m_stepSleepTimeSeconds = stepSleepTimeSeconds;
+    }
+}
+
+void Physics::SetMaxSubSteps(int maxSubSteps)
+{
+    if (maxSubSteps != GetMaxSubSteps())
+    {
+        m_maxSubSteps = maxSubSteps;
+    }
+}
+
+void Physics::SetGravity(const Vector3 &gravity)
+{
+    if (gravity != GetGravity())
+    {
+        m_gravity = gravity;
+        for (const auto &pair : m_sceneToPxSceneContainer)
+        {
+            PxSceneContainer *pxSceneCont = pair.second;
+            PxScene *pxScene = pxSceneCont->GetPxScene();
+            pxScene->setGravity( Physics::GetPxVec3FromVector3(GetGravity()) );
         }
     }
 }
@@ -172,9 +209,19 @@ void Physics::UnRegisterScene(Scene *scene)
     }
 }
 
-float Physics::GetSleepStepTimeSeconds() const
+int Physics::GetMaxSubSteps() const
 {
-    return m_sleepStepTimeSeconds;
+    return m_maxSubSteps;
+}
+
+float Physics::GetStepSleepTimeSeconds() const
+{
+    return m_stepSleepTimeSeconds;
+}
+
+const Vector3 &Physics::GetGravity() const
+{
+    return m_gravity;
 }
 
 Physics *Physics::GetInstance()

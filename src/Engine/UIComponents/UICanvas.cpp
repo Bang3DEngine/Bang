@@ -181,8 +181,13 @@ void UICanvas::OnUpdate()
         {
             PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                      UIEvent::Type::MOUSE_ENTER);
-            p_focusablesUnderMouse.Add(GetFocusableUnderMouseTopMost());
-            RegisterForEvents(GetFocusableUnderMouseTopMost());
+
+            // We can lose the focusable when propagating event, so recheck
+            if (GetFocusableUnderMouseTopMost())
+            {
+                p_focusablesUnderMouse.Add(GetFocusableUnderMouseTopMost());
+                RegisterForEvents(GetFocusableUnderMouseTopMost());
+            }
         }
     }
 
@@ -192,7 +197,12 @@ void UICanvas::OnUpdate()
         {
             PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
                                      UIEvent::Type::MOUSE_MOVE);
-            RegisterForEvents( GetFocusableUnderMouseTopMost() );
+
+            // We can lose the focusable when propagating event, so recheck
+            if (GetFocusableUnderMouseTopMost())
+            {
+                RegisterForEvents( GetFocusableUnderMouseTopMost() );
+            }
         }
     }
     m_lastMousePosition = currentMousePos;

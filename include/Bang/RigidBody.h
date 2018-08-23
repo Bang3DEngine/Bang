@@ -55,6 +55,7 @@ private:
     physx::PxRigidDynamic* GetPxRigidDynamic() const;
 
     friend class Physics;
+    friend class PxSceneContainer;
 };
 
 NAMESPACE_BANG_END

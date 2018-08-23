@@ -17,7 +17,7 @@ FORWARD class RigidBody;
 FORWARD class PhysicsObject;
 FORWARD class PxSceneContainer;
 
-class Physics
+class Physics : public EventListener<IEventsDestroy>
 {
 public:
 	Physics();
@@ -32,8 +32,6 @@ public:
     void SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore);
 
     void RegisterScene(Scene *scene);
-    void UnRegisterScene(Scene *scene);
-    void UnRegisterPhysicsObject(PhysicsObject *phObj);
     void UpdateRigidbodyValues(RigidBody *rb);
 
     void SetStepSleepTime(float stepSleepTimeSeconds);
@@ -53,6 +51,9 @@ public:
     static physx::PxVec4 GetPxVec4FromVector4(const Vector4 &v);
     static physx::PxQuat GetPxQuatFromQuaternion(const Quaternion &q);
     static Physics *GetInstance();
+
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;
 
 private:
     physx::PxDefaultAllocator m_pxAllocator;
@@ -85,7 +86,8 @@ private:
     friend class PxSceneContainer;
 };
 
-class PxSceneContainer : public EventListener< IEventsObjectGatherer<PhysicsObject> >
+class PxSceneContainer : public EventListener<IEventsObjectGatherer<PhysicsObject>>,
+                         public EventListener<IEventsDestroy>
 {
 public:
     PxSceneContainer(Scene *scene);
@@ -105,10 +107,15 @@ public:
     physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
     GameObject* GetGameObjectFromPxActor(physx::PxActor *pxActor) const;
 
+    void ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go);
+
     // IEventsObjectGatherer
     virtual void OnObjectGathered(PhysicsObject *phObj) override;
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
                                     PhysicsObject *phObj) override;
+
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;
 };
 
 NAMESPACE_BANG_END

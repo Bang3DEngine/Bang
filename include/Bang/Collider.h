@@ -47,6 +47,10 @@ protected:
     physx::PxRigidBody* GetPxRigidBody() const;
     physx::PxShape* GetPxShape() const;
 
+    // Object
+    void OnEnabled(Object *object) override;
+    void OnDisabled(Object *object) override;
+
 private:
     Vector3 m_center = Vector3::Zero;
 
@@ -54,6 +58,7 @@ private:
     physx::PxRigidBody *p_pxRigidBody = nullptr;
 
     friend class Physics;
+    friend class PxSceneContainer;
 };
 
 NAMESPACE_BANG_END

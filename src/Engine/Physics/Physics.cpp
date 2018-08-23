@@ -19,14 +19,14 @@ Physics::Physics()
 
 Physics::~Physics()
 {
-    GetPxFoundation()->release();
-    GetPxPhysics()->release();
-
     for (auto &it : m_sceneToPxSceneContainer)
     {
         PxSceneContainer *pxSceneCont = it.second;
         delete pxSceneCont;
     }
+
+    GetPxFoundation()->release();
+    GetPxPhysics()->release();
 }
 
 void Physics::Init()
@@ -205,15 +205,7 @@ void Physics::RegisterScene(Scene *scene)
 
     PxSceneContainer *pxSceneContainer = new PxSceneContainer(scene);
     m_sceneToPxSceneContainer.Add(scene, pxSceneContainer);
-}
-
-void Physics::UnRegisterScene(Scene *scene)
-{
-    if (PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
-    {
-        delete pxSceneCont;
-        m_sceneToPxSceneContainer.Remove(scene);
-    }
+    scene->EventEmitter<IEventsDestroy>::RegisterListener(this);
 }
 
 int Physics::GetMaxSubSteps() const
@@ -234,6 +226,18 @@ const Vector3 &Physics::GetGravity() const
 Physics *Physics::GetInstance()
 {
     return Application::GetInstance()->GetPhysics();
+}
+
+void Physics::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
+{
+    if (Scene *scene = DCAST<Scene*>(ee))
+    {
+        if (PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
+        {
+            delete pxSceneCont;
+            m_sceneToPxSceneContainer.Remove(scene);
+        }
+    }
 }
 
 Scene *Physics::GetSceneFromPhysicsObject(PhysicsObject *phObj) const
@@ -344,6 +348,11 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
 
             default: break;
         }
+
+        if (Component *comp = DCAST<Component*>(phObj))
+        {
+            comp->EventEmitter<IEventsDestroy>::RegisterListener(pxSceneCont);
+        }
     }
     return pxActor;
 }
@@ -427,7 +436,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
     p_pxScene = pxScene;
     m_physicsObjectGatherer->SetRoot(scene);
     m_physicsObjectGatherer->EventEmitter<IEventsObjectGatherer>::
-                         RegisterListener(this);
+                             RegisterListener(this);
 }
 
 PxSceneContainer::~PxSceneContainer()
@@ -440,6 +449,7 @@ PxSceneContainer::~PxSceneContainer()
         PxActor *pxActor = it.second;
         pxActor->release();
     }
+    m_gameObjectToPxActor.Clear();
 }
 
 void PxSceneContainer::ResetStepTimeReference()
@@ -492,6 +502,20 @@ GameObject *PxSceneContainer::GetGameObjectFromPxActor(PxActor *pxActor) const
     return nullptr;
 }
 
+void PxSceneContainer::ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go)
+{
+    if (PxActor *pxActor = GetPxActorFromGameObject(go))
+    {
+        List<PhysicsObject*> phObjs = go->GetComponents<PhysicsObject>();
+        if (phObjs.Size() == 0)
+        {
+            pxActor->release();
+            m_gameObjectToPxActor.Remove(go);
+            m_pxActorToGameObject.Remove(pxActor);
+        }
+    }
+}
+
 void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
 {
     Physics::GetInstance()->CreateIntoPxScene(phObj);
@@ -500,10 +524,58 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
 void PxSceneContainer::OnObjectUnGathered(GameObject *previousGameObject,
                                           PhysicsObject *phObj)
 {
-    (void) phObj;
     if (PxActor *prevPxActor = GetPxActorFromGameObject(previousGameObject))
     {
-        m_gameObjectToPxActor.Remove(previousGameObject);
-        m_pxActorToGameObject.Remove(prevPxActor);
+        switch (phObj->GetPhysicsObjectType())
+        {
+            case PhysicsObject::Type::RIGIDBODY:
+            {
+            }
+            break;
+
+            case PhysicsObject::Type::BOX_COLLIDER:
+            case PhysicsObject::Type::SPHERE_COLLIDER:
+            {
+                Collider *coll = SCAST<Collider*>(phObj);
+                PxRigidActor *pxRD = SCAST<PxRigidActor*>(prevPxActor);
+                ASSERT(prevPxActor == coll->GetPxRigidBody());
+                pxRD->detachShape(*coll->GetPxShape());
+            }
+            break;
+
+            default:
+            break;
+        }
+
+        ReleasePxActorIfNoMorePhysicsObjectsOnIt(previousGameObject);
+    }
+}
+
+void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
+{
+    if (PhysicsObject *phObj = DCAST<PhysicsObject*>(ee))
+    {
+        switch (phObj->GetPhysicsObjectType())
+        {
+            case PhysicsObject::Type::RIGIDBODY:
+            {
+                // RigidBody *rb = SCAST<RigidBody*>(phObj);
+            }
+            break;
+
+            case PhysicsObject::Type::BOX_COLLIDER:
+            case PhysicsObject::Type::SPHERE_COLLIDER:
+            {
+                // Collider *coll = SCAST<Collider*>(phObj);
+                // if (coll->GetPxShape()->isReleasable())
+                // {
+                //     coll->GetPxShape()->release();
+                // }
+            }
+            break;
+
+            default:
+            break;
+        }
     }
 }

@@ -36,6 +36,18 @@ const Vector3 &Collider::GetCenter() const
     return m_center;
 }
 
+void Collider::OnEnabled(Object *)
+{
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+}
+
+void Collider::OnDisabled(Object *)
+{
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+}
+
 void Collider::SetPxRigidBody(physx::PxRigidBody *pxRB)
 {
     p_pxRigidBody = pxRB;

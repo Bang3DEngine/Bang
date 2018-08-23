@@ -47,8 +47,6 @@ void ILayoutController::_ApplyLayout(Axis axis)
 void ILayoutController::OnChildAdded(GameObject *addedChild,
                                      GameObject *parent)
 {
-    (void) addedChild;
-    (void) parent;
     Invalidate();
     addedChild->EventEmitter<IEventsChildren>::RegisterListener(this);
 }
@@ -56,8 +54,6 @@ void ILayoutController::OnChildAdded(GameObject *addedChild,
 void ILayoutController::OnChildRemoved(GameObject *removedChild,
                                        GameObject *parent)
 {
-    (void) removedChild;
-    (void) parent;
     Invalidate();
     removedChild->EventEmitter<IEventsChildren>::UnRegisterListener(this);
 }

@@ -28,7 +28,7 @@ public:
 protected:
     Vector3 m_halfExtents = Vector3(0.5f);
 
-    void UpdateShapeGeometry() override;
+    void UpdatePxShape() override;
 };
 
 NAMESPACE_BANG_END

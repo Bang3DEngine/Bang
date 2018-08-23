@@ -10,11 +10,11 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     switch (renderPass)
     {
         case RenderPass::SCENE:
-            return MaterialFactory::Load("Materials/Default.bmat");
+            return MaterialFactory::LoadMaterial("Materials/Default.bmat");
         break;
 
         case RenderPass::SCENE_TRANSPARENT:
-            return MaterialFactory::Load("Materials/DefaultTransparent.bmat");
+            return MaterialFactory::LoadMaterial("Materials/DefaultTransparent.bmat");
         break;
 
         default: break;
@@ -24,43 +24,59 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 
 RH<Material> MaterialFactory::GetDefaultAnimated()
 {
-    return MaterialFactory::Load("Materials/DefaultAnimated.bmat");
+    return MaterialFactory::LoadMaterial("Materials/DefaultAnimated.bmat");
 }
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {
-    return MaterialFactory::Load("Materials/DefaultUnLighted.bmat");
+    return MaterialFactory::LoadMaterial("Materials/DefaultUnLighted.bmat");
 }
 RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
-    return MaterialFactory::Load("Materials/GizmosUnLightedOverlay.bmat");
+    return MaterialFactory::LoadMaterial("Materials/GizmosUnLightedOverlay.bmat");
 }
 RH<Bang::Material> Bang::MaterialFactory::GetWater()
 {
-    return MaterialFactory::Load("Materials/Water.bmat");
+    return MaterialFactory::LoadMaterial("Materials/Water.bmat");
+}
+
+RH<PhysicsMaterial> MaterialFactory::GetDefaultPhysicsMaterial()
+{
+    return MaterialFactory::LoadPhysicsMaterial("Materials/Default.bphmat");
 }
 RH<Material> MaterialFactory::GetMissing()
 {
-    return MaterialFactory::Load("Materials/Missing.bmat");
+    return MaterialFactory::LoadMaterial("Materials/Missing.bmat");
 }
 
 RH<Material> MaterialFactory::GetUIText()
 {
-    return MaterialFactory::Load("Materials/UITextRenderer.bmat");
+    return MaterialFactory::LoadMaterial("Materials/UITextRenderer.bmat");
 }
 RH<Material> MaterialFactory::GetUIImage()
 {
-    return MaterialFactory::Load("Materials/UIImageRenderer.bmat");
+    return MaterialFactory::LoadMaterial("Materials/UIImageRenderer.bmat");
 }
 
-RH<Material> MaterialFactory::Load(const String &matEnginePath)
+RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePath)
 {
     MaterialFactory *mf = MaterialFactory::GetActive();
-    if (!mf->m_cache.ContainsKey(matEnginePath))
+    if (!mf->m_cacheMaterials.ContainsKey(matEnginePath))
     {
-        mf->m_cache.Add(matEnginePath,
+        mf->m_cacheMaterials.Add(matEnginePath,
                         Resources::Load<Material>(EPATH(matEnginePath)));
     }
-    return mf->m_cache.Get(matEnginePath);
+    return mf->m_cacheMaterials.Get(matEnginePath);
+}
+
+RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(const String &phMatEnginePath)
+{
+    MaterialFactory *mf = MaterialFactory::GetActive();
+    if (!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))
+    {
+        mf->m_cachePhysicsMaterials.Add(phMatEnginePath,
+                    Resources::Load<PhysicsMaterial>(EPATH(phMatEnginePath)));
+    }
+    return mf->m_cachePhysicsMaterials.Get(phMatEnginePath);
 }
 
 MaterialFactory *MaterialFactory::GetActive()

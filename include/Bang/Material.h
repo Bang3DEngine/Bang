@@ -72,7 +72,7 @@ public:
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 
-    // IEventsTextureChanged
+    // IEventsResource
     void OnResourceChanged(Resource *changedResource) override;
 
     // Resource

@@ -4,6 +4,7 @@
 #include "Bang/UMap.h"
 #include "Bang/Material.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/PhysicsMaterial.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -16,16 +17,20 @@ public:
     static RH<Material> GetGizmosUnLightedOverlay();
     static RH<Material> GetWater();
 
+    static RH<PhysicsMaterial> GetDefaultPhysicsMaterial();
+
     static RH<Material> GetMissing();
 
     static RH<Material> GetUIText();
     static RH<Material> GetUIImage();
 
 private:
-    UMap<String, RH<Material>> m_cache;
+    UMap<String, RH<Material>> m_cacheMaterials;
+    UMap<String, RH<PhysicsMaterial>> m_cachePhysicsMaterials;
 
     MaterialFactory() = default;
-    static RH<Material> Load(const String &matEnginePath);
+    static RH<Material> LoadMaterial(const String &matEnginePath);
+    static RH<PhysicsMaterial> LoadPhysicsMaterial(const String &phMatEnginePath);
 
     static MaterialFactory* GetActive();
 

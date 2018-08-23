@@ -9,6 +9,7 @@
 #include "Bang/BoxCollider.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/SphereCollider.h"
+#include "Bang/PhysicsMaterial.h"
 
 using namespace physx;
 USING_NAMESPACE_BANG
@@ -208,6 +209,13 @@ void Physics::RegisterScene(Scene *scene)
     scene->EventEmitter<IEventsDestroy>::RegisterListener(this);
 }
 
+void Physics::RegisterPhysicsMaterial(PhysicsMaterial *physicsMaterial)
+{
+    PxMaterial *pxMaterial = GetPxPhysics()->createMaterial(0.5f, 0.5f, 0.5f);
+    physicsMaterial->SetPxMaterial(pxMaterial);
+    physicsMaterial->UpdatePxMaterial();
+}
+
 int Physics::GetMaxSubSteps() const
 {
     return m_maxSubSteps;
@@ -326,7 +334,7 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
                 PxShape *pxBoxShape = pxRigidDynamic->createShape(pxBoxGeom, *pxMaterial);
                 bc->SetPxRigidBody( pxRigidDynamic );
                 bc->SetPxShape( pxBoxShape );
-                bc->UpdateShapeGeometry();
+                bc->UpdatePxShape();
             }
             break;
 
@@ -342,7 +350,7 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
                         pxRigidDynamic->createShape(pxSphereGeom, *pxMaterial);
                 sc->SetPxRigidBody( pxRigidDynamic );
                 sc->SetPxShape( pxSphereShape );
-                sc->UpdateShapeGeometry();
+                sc->UpdatePxShape();
             }
             break;
 
@@ -441,7 +449,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
 
 PxSceneContainer::~PxSceneContainer()
 {
-    p_pxScene->release();
+    GetPxScene()->release();
 
     delete m_physicsObjectGatherer;
     for (auto &it : m_gameObjectToPxActor)

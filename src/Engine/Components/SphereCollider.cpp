@@ -21,7 +21,7 @@ void SphereCollider::SetRadius(const float radius)
     if (radius != GetRadius())
     {
         m_radius = radius;
-        UpdateShapeGeometry();
+        UpdatePxShape();
     }
 }
 
@@ -62,9 +62,9 @@ void SphereCollider::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("Radius", GetRadius());
 }
 
-void SphereCollider::UpdateShapeGeometry()
+void SphereCollider::UpdatePxShape()
 {
-    Collider::UpdateShapeGeometry();
+    Collider::UpdatePxShape();
 
     if (GetPxShape())
     {

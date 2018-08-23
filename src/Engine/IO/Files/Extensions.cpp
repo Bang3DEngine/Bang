@@ -26,6 +26,10 @@ String Extensions::GetMaterialExtension()
 {
     return "bmat";
 }
+String Extensions::GetPhysicsMaterialExtension()
+{
+    return "bphmat";
+}
 String Extensions::GetAnimationExtension()
 {
     return "banim";

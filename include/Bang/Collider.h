@@ -4,6 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/Component.h"
 #include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsMaterial.h"
 
 FORWARD namespace physx
 {
@@ -28,8 +29,12 @@ public:
     void OnUpdate() override;
 
     void SetCenter(const Vector3 &center);
+    void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
 
     const Vector3& GetCenter() const;
+    PhysicsMaterial* GetSharedPhysicsMaterial() const;
+    PhysicsMaterial* GetActivePhysicsMaterial() const;
+    PhysicsMaterial *GetPhysicsMaterial() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -39,7 +44,7 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
-    virtual void UpdateShapeGeometry();
+    virtual void UpdatePxShape();
 
     void SetPxRigidBody(physx::PxRigidBody *pxRB);
     void SetPxShape(physx::PxShape *pxShape);
@@ -53,6 +58,9 @@ protected:
 
 private:
     Vector3 m_center = Vector3::Zero;
+
+    mutable RH<PhysicsMaterial> p_physicsMaterial;
+    RH<PhysicsMaterial> p_sharedPhysicsMaterial;
 
     physx::PxShape *p_pxShape = nullptr;
     physx::PxRigidBody *p_pxRigidBody = nullptr;

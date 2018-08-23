@@ -15,6 +15,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Scene;
 FORWARD class RigidBody;
 FORWARD class PhysicsObject;
+FORWARD class PhysicsMaterial;
 FORWARD class PxSceneContainer;
 
 class Physics : public EventListener<IEventsDestroy>
@@ -32,6 +33,7 @@ public:
     void SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore);
 
     void RegisterScene(Scene *scene);
+    void RegisterPhysicsMaterial(PhysicsMaterial *physicsMaterial);
     void UpdateRigidbodyValues(RigidBody *rb);
 
     void SetStepSleepTime(float stepSleepTimeSeconds);

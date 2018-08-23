@@ -29,7 +29,7 @@ public:
 protected:
     float m_radius = 1.0f;
 
-    void UpdateShapeGeometry() override;
+    void UpdatePxShape() override;
 
 };
 

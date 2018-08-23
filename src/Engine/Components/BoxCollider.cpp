@@ -20,7 +20,7 @@ void BoxCollider::SetHalfExtents(const Vector3 &halfExtents)
     if (halfExtents != GetHalfExtents())
     {
         m_halfExtents = halfExtents;
-        UpdateShapeGeometry();
+        UpdatePxShape();
     }
 }
 
@@ -54,9 +54,9 @@ void BoxCollider::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("HalfExtents", GetHalfExtents());
 }
 
-void BoxCollider::UpdateShapeGeometry()
+void BoxCollider::UpdatePxShape()
 {
-    Collider::UpdateShapeGeometry();
+    Collider::UpdatePxShape();
 
     if (GetPxShape())
     {

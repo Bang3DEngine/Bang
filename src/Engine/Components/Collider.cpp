@@ -4,12 +4,16 @@
 
 #include "Bang/Physics.h"
 #include "Bang/XMLNode.h"
+#include "Bang/Resources.h"
 #include "Bang/Transform.h"
+#include "Bang/PhysicsMaterial.h"
+#include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
 
 Collider::Collider()
 {
+    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 
 Collider::~Collider()
@@ -19,7 +23,7 @@ Collider::~Collider()
 void Collider::OnUpdate()
 {
     Component::OnUpdate();
-    UpdateShapeGeometry();
+    UpdatePxShape();
 }
 
 void Collider::SetCenter(const Vector3 &center)
@@ -27,13 +31,54 @@ void Collider::SetCenter(const Vector3 &center)
     if (center != GetCenter())
     {
         m_center = center;
-        UpdateShapeGeometry();
+        UpdatePxShape();
+    }
+}
+
+void Collider::SetPhysicsMaterial(PhysicsMaterial *physicsMaterial)
+{
+    if (physicsMaterial != GetSharedPhysicsMaterial())
+    {
+        if (p_physicsMaterial.Get())
+        {
+            p_physicsMaterial.Set(nullptr);
+        }
+
+        p_sharedPhysicsMaterial.Set(physicsMaterial);
+        UpdatePxShape();
     }
 }
 
 const Vector3 &Collider::GetCenter() const
 {
     return m_center;
+}
+
+PhysicsMaterial *Collider::GetSharedPhysicsMaterial() const
+{
+    return p_sharedPhysicsMaterial.Get();
+}
+
+PhysicsMaterial *Collider::GetActivePhysicsMaterial() const
+{
+    if (p_physicsMaterial.Get())
+    {
+        return GetPhysicsMaterial();
+    }
+    return GetSharedPhysicsMaterial();
+}
+
+PhysicsMaterial *Collider::GetPhysicsMaterial() const
+{
+    if (!p_physicsMaterial)
+    {
+        if (GetSharedPhysicsMaterial())
+        {
+            p_physicsMaterial = Resources::Clone<PhysicsMaterial>(
+                                        GetSharedPhysicsMaterial());
+        }
+    }
+    return p_physicsMaterial.Get();
 }
 
 void Collider::OnEnabled(Object *)
@@ -74,6 +119,7 @@ void Collider::CloneInto(ICloneable *clone) const
 
     Collider *colliderClone = SCAST<Collider*>(clone);
     colliderClone->SetCenter( GetCenter() );
+    colliderClone->SetPhysicsMaterial( GetSharedPhysicsMaterial() );
 }
 
 void Collider::ImportXML(const XMLNode &xmlInfo)
@@ -84,6 +130,13 @@ void Collider::ImportXML(const XMLNode &xmlInfo)
     {
         SetCenter( xmlInfo.Get<Vector3>("Center") );
     }
+
+    if (xmlInfo.Contains("PhysicsMaterial"))
+    {
+        RH<PhysicsMaterial> phMat = Resources::Load<PhysicsMaterial>(
+                                      xmlInfo.Get<GUID>("PhysicsMaterial"));
+        SetPhysicsMaterial(phMat.Get());
+    }
 }
 
 void Collider::ExportXML(XMLNode *xmlInfo) const
@@ -91,15 +144,28 @@ void Collider::ExportXML(XMLNode *xmlInfo) const
     Component::ExportXML(xmlInfo);
 
     xmlInfo->Set("Center", GetCenter());
+    xmlInfo->Set("PhysicsMaterial",
+                 GetSharedPhysicsMaterial() ?
+                     GetSharedPhysicsMaterial()->GetGUID() : GUID::Empty());
 }
 
-void Collider::UpdateShapeGeometry()
+void Collider::UpdatePxShape()
 {
     if (GetPxShape())
     {
         physx::PxTransform pxLocalTransform = GetPxShape()->getLocalPose();
         pxLocalTransform.p = Physics::GetPxVec3FromVector3( GetCenter() );
         GetPxShape()->setLocalPose( pxLocalTransform );
+
+        if (GetActivePhysicsMaterial())
+        {
+            if (GetPxShape())
+            {
+                physx::PxMaterial *material = GetActivePhysicsMaterial()->
+                                              GetPxMaterial();
+                GetPxShape()->setMaterials(&material, 1);
+            }
+        }
 
         physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
     }

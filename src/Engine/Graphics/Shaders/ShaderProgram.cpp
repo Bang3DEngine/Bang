@@ -316,7 +316,10 @@ bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v,
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    ASSERT(texture != nullptr);
+    if (!texture)
+    {
+        return false;
+    }
 
     int uniformLocation = GetUniformLocation(name);
     if (uniformLocation < 0)

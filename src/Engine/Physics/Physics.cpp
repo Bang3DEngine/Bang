@@ -25,8 +25,8 @@ Physics::~Physics()
         delete pxSceneCont;
     }
 
-    GetPxFoundation()->release();
     GetPxPhysics()->release();
+    GetPxFoundation()->release();
 }
 
 void Physics::Init()

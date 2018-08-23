@@ -37,7 +37,7 @@ public:
 
     virtual bool HandleEvent(const SDL_Event &sdlEvent);
     void OnHandleEventsFinished();
-    virtual void OnClosed();
+    virtual bool OnClosed();
 
     void Maximize();
     void Restore();

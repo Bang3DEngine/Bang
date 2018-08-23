@@ -138,10 +138,13 @@ bool WindowManager::HandleEvents()
                 for (Window *w : windowsToBeClosed)
                 {
                     Window::SetActive(w);
-                    w->OnClosed();
-                    GetCurrentWindows().Remove(w);
-                    delete w;
-                    Window::SetActive(nullptr);
+                    bool canCloseWindow = w->OnClosed();
+                    if (canCloseWindow)
+                    {
+                        GetCurrentWindows().Remove(w);
+                        delete w;
+                        Window::SetActive(nullptr);
+                    }
                 }
             }
         }

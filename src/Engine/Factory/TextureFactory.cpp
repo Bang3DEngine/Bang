@@ -181,20 +181,20 @@ TextureCubeMap* TextureFactory::GetTextureCubeMap(const String &filename,
 
 TextureCubeMap *TextureFactory::GetTextureCubeMap(const Path &path)
 {
-    TextureFactory *tf = TextureFactory::GetInstance();
     TextureCubeMap *texCM = nullptr;
-
-    if (tf->m_textureCubeMapsCache.ContainsKey(path))
+    if (TextureFactory *tf = TextureFactory::GetInstance())
     {
-        texCM = tf->m_textureCubeMapsCache.Get(path).Get();
+        if (tf->m_textureCubeMapsCache.ContainsKey(path))
+        {
+            texCM = tf->m_textureCubeMapsCache.Get(path).Get();
+        }
+        else
+        {
+            RH<TextureCubeMap> texCMRH = Resources::Load<TextureCubeMap>(path);
+            texCM = texCMRH.Get();
+            tf->m_textureCubeMapsCache.Add(path, texCMRH);
+        }
     }
-    else
-    {
-        RH<TextureCubeMap> texCMRH = Resources::Load<TextureCubeMap>(path);
-        texCM = texCMRH.Get();
-        tf->m_textureCubeMapsCache.Add(path, texCMRH);
-    }
-
     return texCM;
 }
 

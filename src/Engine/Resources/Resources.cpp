@@ -77,6 +77,11 @@ void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
 RH<Resource> Resources::Load_(std::function<Resource*()> creator,
                               const Path &filepath)
 {
+    if (m_beingDestroyed)
+    {
+        return RH<Resource>(nullptr);
+    }
+
     if (!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
     {
         Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");
@@ -236,18 +241,20 @@ void Resources::RegisterResourceUsage(Resource *resource)
 
 void Resources::UnRegisterResourceUsage(Resource *res)
 {
-    Resources *rs = Resources::GetInstance();
-    const GUID &guid = res->GetGUID();
-    ASSERT(!guid.IsEmpty());
-
-    ASSERT(rs->GetCached_(guid));
-    uint *resourcesUsage = &(rs->m_resourcesCache.Get(guid).usageCount);
-    ASSERT(*resourcesUsage >= 1);
-    --(*resourcesUsage);
-
-    if (*resourcesUsage == 0)
+    if (Resources *rs = Resources::GetInstance())
     {
-        Resources::Remove(guid);
+        const GUID &guid = res->GetGUID();
+        ASSERT(!guid.IsEmpty());
+
+        ASSERT(rs->GetCached_(guid));
+        uint *resourcesUsage = &(rs->m_resourcesCache.Get(guid).usageCount);
+        ASSERT(*resourcesUsage >= 1);
+        --(*resourcesUsage);
+
+        if (*resourcesUsage == 0)
+        {
+            Resources::Remove(guid);
+        }
     }
 }
 
@@ -284,6 +291,8 @@ ShaderProgramFactory *Resources::GetShaderProgramFactory() const
 
 void Resources::Destroy()
 {
+    m_beingDestroyed = true;
+
     #define B_DESTROY_AND_NULL(p) if (p) { delete p; p = nullptr; }
     B_DESTROY_AND_NULL(m_meshFactory);
     B_DESTROY_AND_NULL(m_textureFactory);

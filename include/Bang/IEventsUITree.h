@@ -40,9 +40,9 @@ public:
         (void) item;
     }
 
-    virtual void OnDropOutside(GameObject *item)
+    virtual void OnDropOutside(UIDragDroppable *dropped)
     {
-        (void) item;
+        (void) dropped;
     }
 
     virtual void OnDropFromOutside(UIDragDroppable *dropped,

@@ -17,8 +17,6 @@ FileTracker::~FileTracker()
 
 void FileTracker::TrackPath(const Path &path)
 {
-    return;
-
     if (path.IsDir())
     {
         List<Path> dirSubPaths = path.GetSubPaths(Path::FindFlag::RECURSIVE_HIDDEN);

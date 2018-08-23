@@ -159,9 +159,9 @@ void Window::OnHandleEventsFinished()
     OnResize(m_newSize.x, m_newSize.y);
 }
 
-void Window::OnClosed()
+bool Window::OnClosed()
 {
-
+    return true;
 }
 
 void Window::Maximize()

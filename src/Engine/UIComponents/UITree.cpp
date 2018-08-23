@@ -96,8 +96,16 @@ void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
     IEventsDragDrop::OnDragStarted(dd_);
 
     UIDragDroppable *dd = DCAST<UIDragDroppable*>(dd_);
-    p_itemBeingDragged = SCAST<UITreeItemContainer*>(dd->GetGameObject())->
-                                                        GetContainedItem();
+    if (UITreeItemContainer *treeItemCont =
+                                DCAST<UITreeItemContainer*>(dd->GetGameObject()))
+    {
+        p_itemBeingDragged = treeItemCont->GetContainedItem();
+    }
+    else
+    {
+        p_itemBeingDragged = nullptr;
+    }
+
     p_dragMarker->SetParent( GetGameObject()->GetScene() );
 }
 
@@ -238,7 +246,7 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_, bool inside)
     {
         EventEmitter<IEventsUITree>::PropagateToListeners(
                                              &IEventsUITree::OnDropOutside,
-                                             p_itemBeingDragged);
+                                             dragDroppable);
     }
 
     p_itemBeingDragged = nullptr;
@@ -698,28 +706,28 @@ bool UITree::IsValidDrag(UIDragDroppable *dd,
                          GOItem *itemBeingDragged,
                          GOItem *itemOver) const
 {
-    if (itemBeingDragged)
+    bool allListenersAccept = true; // Do all listeners accept this drag?
+    Array<bool> listenerDragAcceptances =
+        EventEmitter<IEventsUITree>::PropagateToListenersAndGatherResult<bool>(
+                                &IEventsUITree::AcceptDragOrDrop,
+                                dd);
+    for (bool acceptance : listenerDragAcceptances)
     {
-        bool isValidDrag = (itemBeingDragged != itemOver) &&
-                           !ItemIsChildOfRecursive(itemOver, itemBeingDragged);
-
-        bool allListenersAccept = true; // Do all listeners accept this drag?
-        Array<bool> listenerDragAcceptances =
-            EventEmitter<IEventsUITree>::PropagateToListenersAndGatherResult<bool>(
-                                    &IEventsUITree::AcceptDragOrDrop,
-                                    dd);
-        for (bool acceptance : listenerDragAcceptances)
+        if (!acceptance)
         {
-            if (!acceptance)
-            {
-                allListenersAccept = false;
-                break;
-            }
+            allListenersAccept = false;
+            break;
         }
-
-        return isValidDrag && allListenersAccept;
     }
-    return false;
+
+    bool isValidDrag = allListenersAccept;
+    if (isValidDrag && itemBeingDragged)
+    {
+        isValidDrag &= (itemBeingDragged != itemOver) &&
+                       !ItemIsChildOfRecursive(itemOver, itemBeingDragged);
+    }
+
+    return isValidDrag;
 }
 
 GOItem* UITree::GetParentItem(GOItem *item) const

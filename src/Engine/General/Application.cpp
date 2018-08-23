@@ -79,16 +79,16 @@ Application::~Application()
     delete m_paths;
 
     delete m_physics; m_physics = nullptr;
-    delete m_gEngine; m_gEngine = nullptr;
 
     m_resources->Destroy();
     delete m_resources; m_resources = nullptr;
 
     delete m_settings;
-    delete m_resources;
     delete m_audioManager;
     delete m_windowManager;
     delete m_importFilesManager;
+
+    // delete m_gEngine; m_gEngine = nullptr;
 }
 
 #ifdef GPROF

@@ -602,7 +602,10 @@ void GameObject::SetParent(GameObject *newParent, int _index)
     }
 }
 
-GameObject *GameObject::GetParent() const { return p_parent; }
+GameObject *GameObject::GetParent() const
+{
+    return p_parent;
+}
 
 void GameObject::SetDontDestroyOnLoad(bool dontDestroyOnLoad)
 {

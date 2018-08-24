@@ -85,36 +85,63 @@ public:
     GameObject* GetChild(uint index) const;
     GameObject* GetChild(const GUID &guid) const;
     GameObject* GetChild(const String &name) const;
-    const List<GameObject*>& GetChildren() const;
-    List<GameObject*> GetChildrenRecursively() const;
+    const Array<GameObject*>& GetChildren() const;
+    Array<GameObject*> GetChildrenRecursively() const;
+    void GetChildrenRecursively(Array<GameObject*> *children) const;
+
+    Component* GetComponentByGUID(const GUID &guid) const;
+
+    const Array<Component*>& GetComponents() const;
 
     template <class T>
     T* GetComponent() const;
-    Component* GetComponentByGUID(const GUID &guid) const;
-
-    template <class T>
-    List<T*> GetComponents() const;
-    const List<Component*>& GetComponents() const;
-
     template <class T>
     T* GetComponentInParent(bool recursive = true) const;
-
     template <class T>
-    List<T*> GetComponentsInParent(bool recursive = true) const;
-
-    template <class T>
-    List<T*> GetComponentsInParentAndThis(bool recursive = true) const;
-
+    T* GetComponentInParentAndThis(bool recursive = true) const;
     template <class T>
     T* GetComponentInChildren(bool recursive = true) const;
+    template <class T>
+    T* GetComponentInChildrenAndThis(bool recursive = true) const;
 
     template <class T>
-    List<T*> GetComponentsInChildren(bool recursive = true) const;
+    Array<T*> GetComponents() const;
+    template <class T>
+    void GetComponents(Array<T*> *componentsOut) const;
 
     template <class T>
-    T* GetComponentInChildrenOnly(bool recursive = true) const;
+    Array<T*> GetComponentsInParent() const;
     template <class T>
-    List<T*> GetComponentsInChildrenOnly(bool recursive = true) const;
+    void GetComponentsInParent(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInParentAndThis() const;
+    template <class T>
+    void GetComponentsInParentAndThis(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInAncestors() const;
+    template <class T>
+    void GetComponentsInAncestors(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInAncestorsAndThis() const;
+    template <class T>
+    void GetComponentsInAncestorsAndThis(Array<T*> *componentsOut) const;
+
+    template <class T>
+    Array<T*> GetComponentsInChildren() const;
+    template <class T>
+    void GetComponentsInChildren(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInChildrenAndThis() const;
+    template <class T>
+    void GetComponentsInChildrenAndThis(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInDescendants() const;
+    template <class T>
+    void GetComponentsInDescendants(Array<T*> *componentsOut) const;
+    template <class T>
+    Array<T*> GetComponentsInDescendantsAndThis() const;
+    template <class T>
+    void GetComponentsInDescendantsAndThis(Array<T*> *componentsOut) const;
 
     template <class T>
     bool HasComponent() const;
@@ -142,9 +169,9 @@ public:
                          const Args&... args);
 
     template<class TListener, class TListenerInnerT, class TReturn, class... Args>
-    void PropagateToList(TReturn TListenerInnerT::*func,
-                         const List<TListener*> &list,
-                         const Args&... args);
+    void PropagateToArray(TReturn TListenerInnerT::*func,
+                          const Array<TListener*> &list,
+                          const Args&... args);
 
     template<class T, class TReturn, class... Args>
     void PropagateToChildren(TReturn T::*func, const Args&... args);
@@ -192,8 +219,8 @@ protected:
     virtual void OnDisabled(Object *object) override;
 
 private:
-    List<GameObject*> m_children;
-    List<Component*> m_components;
+    Array<GameObject*> m_children;
+    Array<Component*> m_components;
 
     String m_name = "";
     bool m_visible = true;
@@ -208,8 +235,6 @@ private:
     // Concurrent modification when iterating stuff
     bool m_increaseChildrenIterator = true;
     bool m_increaseComponentsIterator = true;
-    std::stack< List<GameObject*>::Iterator > m_currentChildrenIterators;
-    std::stack< List<Component*>::Iterator  > m_currentComponentsIterators;
 
     void AddChild(GameObject *child, int index);
     void RemoveChild(GameObject *child);

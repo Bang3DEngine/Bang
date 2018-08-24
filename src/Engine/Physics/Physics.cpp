@@ -55,10 +55,8 @@ void Physics::UpdateFromTransforms(Scene *scene)
 {
     if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
-        PxScene *pxScene = pxSceneContainer->GetPxScene();
-        ASSERT(pxScene);
-
-        const auto &allPhObjs = pxSceneContainer->m_physicsObjectGatherer->GetList();
+        const auto &allPhObjs = pxSceneContainer->m_physicsObjectGatherer->
+                                GetGatheredArray();
         for (PhysicsObject *phObj : allPhObjs)
         {
             if (Component *comp = DCAST<Component*>(phObj))
@@ -122,7 +120,7 @@ void Physics::Step(Scene *scene, float simulationTime)
             continue;
         }
 
-        List<PhysicsObject*> physicsObjects = go->GetComponents<PhysicsObject>();
+        Array<PhysicsObject*> physicsObjects = go->GetComponents<PhysicsObject>();
         for (PhysicsObject *phObj : physicsObjects)
         {
             switch (phObj->GetPhysicsObjectType())
@@ -514,7 +512,7 @@ void PxSceneContainer::ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go)
 {
     if (PxActor *pxActor = GetPxActorFromGameObject(go))
     {
-        List<PhysicsObject*> phObjs = go->GetComponents<PhysicsObject>();
+        Array<PhysicsObject*> phObjs = go->GetComponents<PhysicsObject>();
         if (phObjs.Size() == 0)
         {
             pxActor->release();

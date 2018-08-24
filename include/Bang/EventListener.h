@@ -22,7 +22,7 @@ protected:
 
 private:
     bool m_receivesEvents = true;
-    List<EventEmitter<T>*> m_emitters;
+    Array<EventEmitter<T>*> m_emitters;
 
     void AddEmitter(EventEmitter<T> *emitter);
     void RemoveEmitter(EventEmitter<T> *emitter);

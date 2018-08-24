@@ -54,7 +54,7 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
     ASSERT(focusableGo);
 
     UIEventResult finalPropResult = UIEventResult::IGNORE;
-    List<IFocusable*> focusablesInGo = focusableGo->GetComponents<IFocusable>();
+    Array<IFocusable*> focusablesInGo = focusableGo->GetComponents<IFocusable>();
     for (IFocusable *focusableInGo : focusablesInGo)
     {
         if (focusableInGo->IsFocusEnabled())
@@ -425,8 +425,8 @@ void UICanvas::OnUpdate()
 
 void UICanvas::InvalidateCanvas()
 {
-    List<RectTransform*> rts = GetGameObject()->
-                               GetComponentsInChildren<RectTransform>(true);
+    Array<RectTransform*> rts = GetGameObject()->
+                                GetComponentsInDescendantsAndThis<RectTransform>();
     for (RectTransform *rt : rts) { rt->InvalidateTransform(); }
 }
 
@@ -571,7 +571,7 @@ bool UICanvas::HasFocus(const GameObject *go, bool recursive)
 
     if (!recursive)
     {
-        List<IFocusable*> focusables = go->GetComponents<IFocusable>();
+        Array<IFocusable*> focusables = go->GetComponents<IFocusable>();
         for (IFocusable *focusable : focusables)
         {
             if (HasFocusFocusable(focusable)) { return true; }
@@ -582,8 +582,7 @@ bool UICanvas::HasFocus(const GameObject *go, bool recursive)
         if (HasFocus(go, false)) { return true; }
         else
         {
-            const List<GameObject*>& children = go->GetChildren();
-            for (GameObject *child : children)
+            for (GameObject *child : go->GetChildren())
             {
                 if (HasFocus(child, true)) { return true; }
             }
@@ -604,7 +603,7 @@ bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
 {
     if (!recursive)
     {
-        List<const IFocusable*> focusables = go->GetComponents<const IFocusable>();
+        Array<const IFocusable*> focusables = go->GetComponents<const IFocusable>();
         if (const IFocusable *focusable = DCAST<const IFocusable*>(go))
         {
             focusables.PushBack(focusable);
@@ -623,8 +622,7 @@ bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
         if (IsMouseOver(go, false)) { return true; }
         else
         {
-            const List<GameObject*>& children = go->GetChildren();
-            for (GameObject *child : children)
+            for (GameObject *child : go->GetChildren())
             {
                 if (IsMouseOver(child, true)) { return true; }
             }
@@ -696,8 +694,8 @@ void UICanvas::OnDisabled(Object *object)
 
     if (GameObject *disabledGo = DCAST<GameObject*>(object))
     {
-        List<IFocusable*> disabledGoFocusables = disabledGo->
-                                    GetComponentsInChildren<IFocusable>(true);
+        Array<IFocusable*> disabledGoFocusables =
+                    disabledGo->GetComponentsInDescendantsAndThis<IFocusable>();
         for (IFocusable *disabledGoFocusable : disabledGoFocusables)
         {
             disabledFocusables.PushBack(disabledGoFocusable);
@@ -824,7 +822,7 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
         Array< std::pair<IFocusable*, AARect> > *sortedCandidates,
         std::stack<AARect> *maskRectStack) const
 {
-    List<GameObject*> children = go->GetChildren();
+    const Array<GameObject*> &children = go->GetChildren();
     for (auto it = children.RBegin(); it != children.REnd(); ++it)
     {
         GameObject *child = *it;

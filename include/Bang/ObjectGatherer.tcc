@@ -29,8 +29,8 @@ GameObject* ObjectGatherer<ObjectType, RECURSIVE>::GetRoot() const
 }
 
 template <class ObjectType, bool RECURSIVE>
-const List<ObjectType*>&
-ObjectGatherer<ObjectType, RECURSIVE>::GetList() const
+const Array<ObjectType*>&
+ObjectGatherer<ObjectType, RECURSIVE>::GetGatheredArray() const
 {
     return m_gatheredObjects;
 }
@@ -47,7 +47,7 @@ RegisterEventsAndGather(GameObject *go)
     go->EventEmitter<IEventsDestroy>::RegisterListener(this);
     go->EventEmitter<IEventsComponent>::RegisterListener(this);
 
-    List<ObjectType*> goObjectsOfTheType;
+    Array<ObjectType*> goObjectsOfTheType;
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
     for (ObjectType *obj : goObjectsOfTheType)
     {
@@ -84,7 +84,7 @@ UnRegisterEventsAndRemoveObjects(GameObject *go)
     go->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     go->EventEmitter<IEventsComponent>::UnRegisterListener(this);
 
-    List<ObjectType*> goObjectsOfTheType;
+    Array<ObjectType*> goObjectsOfTheType;
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
     for (ObjectType *obj : goObjectsOfTheType)
     {
@@ -103,7 +103,7 @@ UnRegisterEventsAndRemoveObjects(GameObject *go)
 
 template<class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::
-GatherObjectsOfTheType(List<ObjectType*> *gatheredObjects, GameObject *go)
+GatherObjectsOfTheType(Array<ObjectType*> *gatheredObjects, GameObject *go)
 {
     if (ObjectType* obj = DCAST<ObjectType*>(go))
     {
@@ -181,17 +181,17 @@ ObjectGatherer::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     GameObject *go = DCAST<GameObject*>(object);
 
-    List<GameObject*> gosToUnRegister;
+    Array<GameObject*> gosToUnRegister;
     if (RECURSIVE)
     {
-        List<GameObject*> childrenRecursive;
+        Array<GameObject*> childrenRecursive;
         for (GameObject *child : childrenRecursive)
         {
             gosToUnRegister.PushBack(child);
         }
     }
 
-    gosToUnRegister.PushFront(go);
+    gosToUnRegister.PushBack(go);
     for (GameObject *childOrGo : gosToUnRegister)
     {
         UnRegisterEventsAndRemoveObjects(childOrGo);

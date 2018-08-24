@@ -470,7 +470,7 @@ ReflectionProbe *ReflectionProbe::GetClosestReflectionProbe(Renderer *renderer)
 
     ReflectionProbe *closestReflProbe = nullptr;
     float closestReflProbeSqDist = Math::Infinity<float>();
-    List<ReflectionProbe*> reflProbes = ge->GetCurrentReflectionProbes();
+    Array<ReflectionProbe*> reflProbes = ge->GetCurrentReflectionProbes();
     for (ReflectionProbe *reflProbe : reflProbes)
     {
         if (reflProbe->IsActive())

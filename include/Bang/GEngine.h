@@ -50,7 +50,7 @@ public:
     void ApplyGammaCorrection(GBuffer *gbuffer,
                               float gammaCorrection);
 
-    List<ReflectionProbe*> GetCurrentReflectionProbes() const;
+    Array<ReflectionProbe*> GetCurrentReflectionProbes() const;
 
     void SetReplacementMaterial(Material *material);
     void SetRenderRoutine(RenderRoutine renderRoutine);
@@ -93,7 +93,7 @@ private:
     RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
     Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
 
-    List<ReflectionProbe*> m_currentReflectionProbes;
+    Array<ReflectionProbe*> m_currentReflectionProbes;
 
     // Forward rendering arrays
     bool m_currentlyForwardRendering = false;

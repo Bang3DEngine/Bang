@@ -95,7 +95,8 @@ List<GameObject*> Light::GetActiveSceneShadowCasters() const
 {
     USet<GameObject*> shadowCastersSet;
     Scene *scene = SceneManager::GetActiveScene();
-    List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
+    Array<Renderer*> renderers =
+                        scene->GetComponentsInDescendantsAndThis<Renderer>();
     for (Renderer *rend : renderers )
     {
         if (rend->IsActive() && rend->GetCastsShadows())

@@ -89,8 +89,8 @@ GameObject *Model::CreateGameObjectFromModel() const
                                                             m_modelScene.modelTree);
 
     // If skinned mesh renderer, set bone references to gameObjects
-    List<SkinnedMeshRenderer*> smrs =
-                    modelGo->GetComponentsInChildren<SkinnedMeshRenderer>(true);
+    Array<SkinnedMeshRenderer*> smrs =
+            modelGo->GetComponentsInDescendantsAndThis<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
         smr->RetrieveBonesBindPoseFromCurrentHierarchy();

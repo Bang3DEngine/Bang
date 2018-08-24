@@ -57,8 +57,8 @@ private:
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
-    const List<ILayoutElement*>& GetLayoutElementsIn(GameObject *gameObject);
-    const List<ILayoutController*>& GetLayoutControllersIn(GameObject *gameObject);
+    const Array<ILayoutElement*>& GetLayoutElementsIn(GameObject *gameObject);
+    const Array<ILayoutController*>& GetLayoutControllersIn(GameObject *gameObject);
 };
 
 NAMESPACE_BANG_END

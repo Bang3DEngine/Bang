@@ -69,6 +69,10 @@ public:
     void Clear();
     bool IsEmpty() const;
 
+    void Sort();
+    template<class StrictWeakOrdering>
+    void Sort(const StrictWeakOrdering &sortClass);
+
     typename Array<T>::Ref At(std::size_t i);
     typename Array<T>::ConstRef At(std::size_t i) const;
     typename Array<T>::Ref operator[](std::size_t i);

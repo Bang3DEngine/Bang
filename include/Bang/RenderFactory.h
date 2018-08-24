@@ -105,7 +105,7 @@ private:
 
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;
-    List<Renderer*> m_renderers;
+    Array<Renderer*> m_renderers;
 
     RenderFactory();
     virtual ~RenderFactory();

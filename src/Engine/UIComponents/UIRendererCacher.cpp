@@ -129,10 +129,10 @@ void UIRendererCacher::OnChanged()
 
 void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
 {
-    List<GameObject*> children = GetContainer()->GetChildrenRecursively();
+    Array<GameObject*> children = GetContainer()->GetChildrenRecursively();
     for (GameObject *child : children)
     {
-        List<Renderer*> renderers = child->GetComponents<Renderer>();
+        Array<Renderer*> renderers = child->GetComponents<Renderer>();
         for (Renderer *rend : renderers)
         {
             rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
@@ -153,11 +153,11 @@ void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
 
 void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject*)
 {
-    List<GameObject*> children = removedChild->GetChildrenRecursively();
+    Array<GameObject*> children = removedChild->GetChildrenRecursively();
     children.PushBack(removedChild);
     for (GameObject *child : children)
     {
-        List<Renderer*> renderers = child->GetComponents<Renderer>();
+        Array<Renderer*> renderers = child->GetComponents<Renderer>();
         for (Renderer *rend : renderers)
         {
             rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);

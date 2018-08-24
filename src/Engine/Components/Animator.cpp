@@ -72,7 +72,7 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
                                 RenderPass rp,
                                 const Map<String, Matrix4> &boneAnimMatrices)
 {
-    List<SkinnedMeshRenderer*> smrs =
+    Array<SkinnedMeshRenderer*> smrs =
                         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {

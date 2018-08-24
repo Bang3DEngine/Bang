@@ -81,18 +81,12 @@ bool Window::MainLoopIteration()
     GetInput()->ProcessEnqueuedEvents();
 
     Update();
-    Time::SetDeltaTimeReferenceToNow();
     Render();
 
     GetInput()->OnFrameFinished();
     SwapBuffers();
 
     return true;
-}
-
-void Window::Clear()
-{
-    GL::ClearColorStencilDepthBuffers();
 }
 
 void Window::Update()
@@ -102,7 +96,6 @@ void Window::Update()
 
 void Window::Render()
 {
-    Clear();
     GetSceneManager()->Render();
 }
 
@@ -182,16 +175,27 @@ void Window::Minimize()
 void Window::MoveToFront()
 {
     SDL_RaiseWindow(GetSDLWindow());
-    for (Window *childWindow : p_children) { childWindow->MoveToFront(); }
+    for (Window *childWindow : p_children)
+    {
+        childWindow->MoveToFront();
+    }
 }
 
 void SDL_PutPixel32(SDL_Surface *surface, int x, int y, Uint32 color)
 {
-    if( SDL_MUSTLOCK(surface) ) { SDL_LockSurface(surface); }
+    if( SDL_MUSTLOCK(surface) )
+    {
+        SDL_LockSurface(surface);
+    }
+
     Uint8 * pixel = (Uint8*)surface->pixels;
     pixel += (y * surface->pitch) + (x * sizeof(Uint32));
     *((Uint32*)pixel) = color;
-    if( SDL_MUSTLOCK(surface) ) { SDL_UnlockSurface(surface); }
+
+    if( SDL_MUSTLOCK(surface) )
+    {
+        SDL_UnlockSurface(surface);
+    }
 }
 
 void Window::SetIcon(const Path &iconPath)
@@ -236,20 +240,22 @@ void Window::SetMaxSize(int maxSizeX, int maxSizeY)
 
 void Window::SetResizable(bool resizable)
 {
-    if (m_isResizable == resizable) { return; }
-    m_isResizable = resizable;
+    if (m_isResizable != resizable)
+    {
+        m_isResizable = resizable;
 
-    if (IsResizable())
-    {
-        _SetMaxSize(GetMaxSize().x, GetMaxSize().y);
-        _SetMinSize(GetMinSize().x, GetMinSize().y);
-        SetSize(GetSize().x, GetSize().y);
-    }
-    else
-    {
-        Vector2i size = GetSize();
-        _SetMinSize(size.x,   size.y);
-        _SetMaxSize(size.x+1, size.y+1);
+        if (IsResizable())
+        {
+            _SetMaxSize(GetMaxSize().x, GetMaxSize().y);
+            _SetMinSize(GetMinSize().x, GetMinSize().y);
+            SetSize(GetSize().x, GetSize().y);
+        }
+        else
+        {
+            Vector2i size = GetSize();
+            _SetMinSize(size.x,   size.y);
+            _SetMaxSize(size.x+1, size.y+1);
+        }
     }
 }
 
@@ -456,5 +462,8 @@ bool Window::IsParentWindow(int sdlWindowId) const
 void Window::SetActive(Window *window)
 {
     Window::s_activeWindow = window;
-    if (window) { window->MakeCurrent(); }
+    if (window)
+    {
+        window->MakeCurrent();
+    }
 }

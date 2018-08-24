@@ -102,7 +102,8 @@ void GEngine::Render(Scene *scene)
 
 void GEngine::Render(Scene *scene, Camera *camera)
 {
-    m_currentReflectionProbes = scene->GetComponentsInChildren<ReflectionProbe>(true);
+    m_currentReflectionProbes =
+                scene->GetComponentsInDescendantsAndThis<ReflectionProbe>();
 
     if (scene)
     {
@@ -127,7 +128,7 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::SetStencilFunc(GL::Function::EQUAL);
     GL::SetStencilValue(1);
 
-    List<Light*> lights = lightsContainer->GetComponentsInChildren<Light>();
+    Array<Light*> lights = lightsContainer->GetComponentsInChildrenAndThis<Light>();
     for (Light *light : lights)
     {
         if (!light || !light->IsEnabled(true)) { continue; }
@@ -147,7 +148,7 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
     m_currentForwardRenderingLightRanges.Clear();
 
     int i = 0;
-    List<Light*> lights = go->GetComponentsInChildren<Light>(true);
+    Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
     for (Light *light : lights)
     {
         if (!light->IsActive()) { continue; }
@@ -478,7 +479,7 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
-List<ReflectionProbe *> GEngine::GetCurrentReflectionProbes() const
+Array<ReflectionProbe *> GEngine::GetCurrentReflectionProbes() const
 {
     return m_currentReflectionProbes;
 }
@@ -525,7 +526,7 @@ void GEngine::RenderTransparentPass(GameObject *go)
     const Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
 
     // Sort back to front
-    List<GameObject*> goChildren = go->GetChildrenRecursively();
+    Array<GameObject*> goChildren = go->GetChildrenRecursively();
     goChildren.Sort(
     [camPos](const GameObject *lhs, const GameObject *rhs) -> bool
     {
@@ -583,24 +584,29 @@ GEngine* GEngine::GetInstance()
 
 void GEngine::RenderShadowMaps(GameObject *go)
 {
-    if (!go->IsActive()) { return; }
-
-    List<Light*> lights = go->GetComponentsInChildren<Light>(true);
-    for (Light *light : lights)
+    if (go->IsActive())
     {
-        if (light->IsActive()) { light->RenderShadowMaps(); }
+        Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
+        for (Light *light : lights)
+        {
+            if (light->IsActive())
+            {
+                light->RenderShadowMaps();
+            }
+        }
     }
 }
 
 void GEngine::RenderReflectionProbes(GameObject *go)
 {
-    if (!go->IsActive()) { return; }
-
-    List<ReflectionProbe*> reflProbes =
-                            go->GetComponentsInChildren<ReflectionProbe>(true);
-    for (ReflectionProbe *reflProbe : reflProbes)
+    if (go->IsActive())
     {
-        reflProbe->RenderReflectionProbe();
+        Array<ReflectionProbe*> reflProbes =
+                     go->GetComponentsInDescendantsAndThis<ReflectionProbe>();
+        for (ReflectionProbe *reflProbe : reflProbes)
+        {
+            reflProbe->RenderReflectionProbe();
+        }
     }
 }
 

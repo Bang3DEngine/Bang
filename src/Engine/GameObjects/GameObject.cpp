@@ -48,57 +48,61 @@ void GameObject::Start()
 
 void GameObject::PreUpdate()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::PreUpdate);
-    PropagateToChildren(&GameObject::PreUpdate);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::PreUpdate);
+        PropagateToChildren(&GameObject::PreUpdate);
+    }
 }
 
 void GameObject::BeforeChildrenUpdate()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::BeforeChildrenUpdate);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::BeforeChildrenUpdate);
+    }
 }
 
 void GameObject::Update()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::Update);
-    BeforeChildrenUpdate();
-    PropagateToChildren(&GameObject::Update);
-    AfterChildrenUpdate();
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::Update);
+        BeforeChildrenUpdate();
+        PropagateToChildren(&GameObject::Update);
+        AfterChildrenUpdate();
+    }
 }
 
 void GameObject::AfterChildrenUpdate()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::OnAfterChildrenUpdate);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::OnAfterChildrenUpdate);
+    }
 }
 
 void GameObject::PostUpdate()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::OnPostUpdate);
-    PropagateToChildren(&GameObject::PostUpdate);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::OnPostUpdate);
+        PropagateToChildren(&GameObject::PostUpdate);
+    }
 }
 
 void GameObject::BeforeRender()
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::OnBeforeRender);
-    PropagateToChildren(&GameObject::BeforeRender);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::OnBeforeRender);
+        PropagateToChildren(&GameObject::BeforeRender);
+    }
 }
 
 void GameObject::Render(RenderPass renderPass, bool renderChildren)
 {
-    if (!IsActive()) { return; }
-
-    if (IsVisible())
+    if (IsActive() && IsVisible())
     {
         PropagateToComponents(&Component::OnRender, renderPass);
         if (renderChildren)
@@ -111,17 +115,19 @@ void GameObject::Render(RenderPass renderPass, bool renderChildren)
 }
 
 void GameObject::BeforeChildrenRender(RenderPass renderPass)
-{
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::OnBeforeChildrenRender, renderPass);
+{   
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::OnBeforeChildrenRender, renderPass);
+    }
 }
 
 void GameObject::AfterChildrenRender(RenderPass renderPass)
 {
-    if (!IsActive()) { return; }
-
-    PropagateToComponents(&Component::OnAfterChildrenRender, renderPass);
+    if (IsActive())
+    {
+        PropagateToComponents(&Component::OnAfterChildrenRender, renderPass);
+    }
 }
 
 void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
@@ -129,7 +135,7 @@ void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
     EventEmitter<IEventsChildren>::
           PropagateToListeners(&IEventsChildren::OnChildAdded,
                                addedChild, parent);
-    PropagateToList(&EventListener<IEventsChildren>::OnChildAdded,
+    PropagateToArray(&EventListener<IEventsChildren>::OnChildAdded,
                     GetComponents< EventListener<IEventsChildren> >(),
                     addedChild, parent);
 }
@@ -139,7 +145,7 @@ void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
     EventEmitter<IEventsChildren>::
           PropagateToListeners(&EventListener<IEventsChildren>::OnChildRemoved,
                                removedChild, parent);
-    PropagateToList(&EventListener<IEventsChildren>::OnChildRemoved,
+    PropagateToArray(&EventListener<IEventsChildren>::OnChildRemoved,
                     GetComponents< EventListener<IEventsChildren> >(),
                     removedChild, parent);
 }
@@ -178,32 +184,13 @@ void GameObject::AddChild(GameObject *child, int index)
 {
     ASSERT(!GetChildren().Contains(child));
 
-    auto nextIt = m_children.Insert(child, index);
-    auto it = m_children.Begin(); std::advance(it, index);
-    if (!m_currentChildrenIterators.empty() &&
-        m_currentChildrenIterators.top() == it)
-    {
-        m_currentChildrenIterators.top() = nextIt;
-        m_increaseChildrenIterator = false;
-    }
-
+    m_children.Insert(child, index);
     ChildAdded(child, this);
 }
 
 void GameObject::RemoveChild(GameObject *child)
 {
-    auto it = m_children.Find(child);
-    if (it != GetChildren().End())
-    {
-        auto nextIt = m_children.Remove(it);
-        if (!m_currentChildrenIterators.empty() &&
-            m_currentChildrenIterators.top() == it)
-        {
-            m_currentChildrenIterators.top() = nextIt;
-            m_increaseChildrenIterator = false;
-        }
-    }
-
+    m_children.Remove(child);
     ChildRemoved(child, this);
 }
 
@@ -216,35 +203,27 @@ void GameObject::MarkComponentForDestroyPending(Component *comp)
 
 void GameObject::RemoveComponent(Component *component)
 {
-    auto it = m_components.Find(component);
-    if (it != m_components.End())
+    m_components.Remove(component);
+    EventEmitter<IEventsComponent>::PropagateToListeners(
+                &IEventsComponent::OnComponentRemoved, component, this);
+
+    if (component == p_transform)
     {
-        auto nextIt = m_components.Remove(it);
-        if (!m_currentComponentsIterators.empty() &&
-            m_currentComponentsIterators.top() == it)
-        {
-            m_currentComponentsIterators.top() = nextIt;
-            m_increaseComponentsIterator = false;
-        }
-
-        EventEmitter<IEventsComponent>::PropagateToListeners(
-                    &IEventsComponent::OnComponentRemoved, component, this);
+        p_transform = nullptr;
     }
-
-    if (component == p_transform) { p_transform = nullptr; }
 }
 
 void GameObject::OnEnabled(Object *object)
 {
     Object::OnEnabled(object);
-    PropagateToList(&EventListener<IObjectEvents>::OnEnabled,
+    PropagateToArray(&EventListener<IObjectEvents>::OnEnabled,
                     GetComponents<EventListener<IObjectEvents>>(), object);
     PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled, object);
 }
 void GameObject::OnDisabled(Object *object)
 {
     Object::OnDisabled(object);
-    PropagateToList(&EventListener<IObjectEvents>::OnDisabled,
+    PropagateToArray(&EventListener<IObjectEvents>::OnDisabled,
                     GetComponents<EventListener<IObjectEvents>>(), object);
     PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
 }
@@ -305,17 +284,12 @@ Component* GameObject::AddComponent(Component *component, int _index)
         }
 
         const int index = (_index != -1 ? _index : GetComponents().Size());
-        auto nextIt = m_components.Insert(component, index);
+        m_components.Insert(component, index);
 
-        auto it = m_components.Begin(); std::advance(it, index);
-        if (!m_currentComponentsIterators.empty() &&
-             m_currentComponentsIterators.top() == it)
+        if (transformComp)
         {
-            m_currentComponentsIterators.top() = nextIt;
-            m_increaseComponentsIterator = false;
+            p_transform = transformComp;
         }
-
-        if (transformComp) { p_transform = transformComp; }
 
         component->SetGameObject(this);
 
@@ -325,7 +299,7 @@ Component* GameObject::AddComponent(Component *component, int _index)
     return component;
 }
 
-const List<Component *> &GameObject::GetComponents() const
+const Array<Component *> &GameObject::GetComponents() const
 {
     return m_components;
 }
@@ -334,7 +308,10 @@ bool GameObject::HasComponent(const String &className) const
 {
     for (Component *comp : GetComponents())
     {
-        if (comp->GetClassName() == className) { return true; }
+        if (comp->GetClassName() == className)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -343,21 +320,29 @@ Component *GameObject::GetComponentByGUID(const GUID &guid) const
 {
     for (Component *comp : GetComponents())
     {
-        if (comp->GetGUID() == guid) { return comp; }
+        if (comp->GetGUID() == guid)
+        {
+            return comp;
+        }
     }
     return nullptr;
 }
 
 Scene* GameObject::GetScene() const
 {
-    Scene *scene = DCAST<Scene*>( const_cast<GameObject*>(this) );
-    if (scene) { return scene; }
+    if (Scene *scene = DCAST<Scene*>( const_cast<GameObject*>(this) ))
+    {
+        return scene;
+    }
 
     GameObject *parent = GetParent();
     return parent ? parent->GetScene() : nullptr;
 }
 
-Transform *GameObject::GetTransform() const { return p_transform; }
+Transform *GameObject::GetTransform() const
+{
+    return p_transform;
+}
 RectTransform *GameObject::GetRectTransform() const
 {
     return GetTransform() ? DCAST<RectTransform*>(GetTransform()) : nullptr;
@@ -520,7 +505,7 @@ GameObject *GameObject::GetChild(const String &name) const
     return nullptr;
 }
 
-const List<GameObject *> &GameObject::GetChildren() const
+const Array<GameObject *> &GameObject::GetChildren() const
 {
     return m_children;
 }
@@ -533,16 +518,20 @@ GameObject *GameObject::GetChild(uint index) const
     return *it;
 }
 
-List<GameObject *> GameObject::GetChildrenRecursively() const
+void GameObject::GetChildrenRecursively(Array<GameObject*> *children) const
 {
-    List<GameObject*> cc;
-    for (GameObject *c : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        cc.PushBack(c);
-        List<GameObject*> childChildren = c->GetChildrenRecursively();
-        cc.Splice(cc.Begin(), childChildren);
+        children->PushBack(child);
+        child->GetChildrenRecursively(children);
     }
-    return cc;
+}
+
+Array<GameObject*> GameObject::GetChildrenRecursively() const
+{
+    Array<GameObject*> children;
+    GetChildrenRecursively(&children);
+    return children;
 }
 
 bool GameObject::IsChildOf(const GameObject *parent, bool recursive) const
@@ -586,7 +575,7 @@ void GameObject::SetParent(GameObject *newParent, int _index)
         EventEmitter<IEventsChildren>::
                PropagateToListeners(&IEventsChildren::OnParentChanged,
                                     oldParent, newParent);
-        PropagateToList(&EventListener<IEventsChildren>::OnParentChanged,
+        PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
                         GetComponents<EventListener<IEventsChildren>>(),
                         oldParent, newParent);
     }
@@ -625,7 +614,7 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam, bool includeChildren) co
 
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
 {
-    List<Renderer*> rends = GetComponents<Renderer>();
+    Array<Renderer*> rends = GetComponents<Renderer>();
     AABox aabBox = AABox::Empty;
     for (Renderer *rend : rends)
     {

@@ -3,8 +3,7 @@
 
 #include <functional>
 
-#include "Bang/List.h"
-#include "Bang/USet.h"
+#include "Bang/Array.h"
 #include "Bang/EventEmitter.h"
 
 NAMESPACE_BANG_BEGIN
@@ -28,7 +27,7 @@ public:
     Array<TResult> PropagateToListenersAndGatherResult(const TFunction &func,
                                                        const Args&... args) const;
 
-    const List<EventListener<T>*>& GetListeners() const;
+    const Array<EventListener<T>*>& GetListeners() const;
 
 protected:
     EventEmitter() = default;
@@ -36,12 +35,12 @@ protected:
 
 private:
     bool m_emitEvents = true;
-    List<EventListener<T>*> m_listeners;
+    Array<EventListener<T>*> m_listeners;
 
     struct MutableIterator
     {
     public:
-        using TIterator = typename List<EventListener<T>*>::Iterator;
+        using TIterator = typename Array<EventListener<T>*>::Iterator;
         MutableIterator(TIterator it) : m_it(it)
         {
         }
@@ -72,7 +71,7 @@ private:
         bool m_hasBeenModified = false;
         TIterator m_it;
     };
-    mutable List<MutableIterator> m_mutableIterators;
+    mutable Array<MutableIterator> m_mutableIterators;
 
     template<class TFunction, class... Args>
     void PropagateToListeners_(

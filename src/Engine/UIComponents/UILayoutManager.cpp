@@ -31,7 +31,7 @@ void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 
     if (go)
     {
-        const List<ILayoutController*> &layoutControllers =
+        const Array<ILayoutController*> &layoutControllers =
                                        GetLayoutControllersIn(go->GetParent());
         for (ILayoutController *layoutController : layoutControllers)
         {
@@ -94,7 +94,7 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
 {
     // Retrieve layout elements and their respective priority
     Map<int, List<ILayoutElement*> > priorLayoutElms;
-    List<ILayoutElement*> les = go->GetComponents<ILayoutElement>();
+    Array<ILayoutElement*> les = go->GetComponents<ILayoutElement>();
     if (les.IsEmpty())
     {
         return Vector2::Zero;
@@ -184,13 +184,12 @@ void UILayoutManager::RebuildLayout(GameObject *rootGo)
 
 void UILayoutManager::CalculateLayout(GameObject *gameObject, Axis axis)
 {
-    const List<GameObject*> &children = gameObject->GetChildren();
-    for (GameObject *child : children)
+    for (GameObject *child : gameObject->GetChildren())
     {
         CalculateLayout(child, axis);
     }
 
-    const List<ILayoutElement*> &goLEs = GetLayoutElementsIn(gameObject);
+    const Array<ILayoutElement*> &goLEs = GetLayoutElementsIn(gameObject);
     for (ILayoutElement *goLE : goLEs)
     {
         goLE->_CalculateLayout(axis);
@@ -206,7 +205,7 @@ void UILayoutManager::ApplyLayout(GameObject *gameObject, Axis axis)
         GameObject *go = goQueue.front();
         goQueue.pop();
 
-        const List<ILayoutController*> &layoutControllers = GetLayoutControllersIn(go);
+        const Array<ILayoutController*> &layoutControllers = GetLayoutControllersIn(go);
 
         // SelfLayoutControllers
         for (ILayoutController *layoutController : layoutControllers)
@@ -226,8 +225,7 @@ void UILayoutManager::ApplyLayout(GameObject *gameObject, Axis axis)
             }
         }
 
-        const List<GameObject*> &children = go->GetChildren();
-        for (GameObject *child : children)
+        for (GameObject *child : go->GetChildren())
         {
             goQueue.push(child);
         }
@@ -241,7 +239,7 @@ void UILayoutManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 }
 
 template <class T>
-const List<T*> &GetGatheredListOf(
+const Array<T*> &GetGatheredArrayOf(
                         UILayoutManager *layoutMgr,
                         GameObject *gameObject,
                         UMap<GameObject*, ObjectGatherer<T, false>*> &gatherMap)
@@ -255,31 +253,31 @@ const List<T*> &GetGatheredListOf(
             objGatherer->SetRoot(gameObject);
             gatherMap.Add(gameObject, objGatherer);
             gameObject->EventEmitter<IEventsDestroy>::RegisterListener(layoutMgr);
-            return gatherMap.Get(gameObject)->GetList();
+            return gatherMap.Get(gameObject)->GetGatheredArray();
         }
         else
         {
-            return it->second->GetList();
+            return it->second->GetGatheredArray();
         }
     }
-    return List<T*>::Empty();
+    return Array<T*>::Empty();
 }
 
-const List<ILayoutElement*> &UILayoutManager::
+const Array<ILayoutElement*> &UILayoutManager::
 GetLayoutElementsIn(GameObject *gameObject)
 {
-    return GetGatheredListOf<ILayoutElement>(this,
-                                             gameObject,
-                                             m_iLayoutElementsPerGameObject);
+    return GetGatheredArrayOf<ILayoutElement>(this,
+                                              gameObject,
+                                              m_iLayoutElementsPerGameObject);
 }
 
-const List<ILayoutController*> &UILayoutManager::
+const Array<ILayoutController*> &UILayoutManager::
 GetLayoutControllersIn(GameObject *gameObject)
 {
-    return GetGatheredListOf<ILayoutController>(
-                                  this,
-                                  gameObject,
-                                  m_iLayoutControllersPerGameObject);
+    return GetGatheredArrayOf<ILayoutController>(
+                                      this,
+                                      gameObject,
+                                      m_iLayoutControllersPerGameObject);
 }
 
 UILayoutManager *UILayoutManager::GetActive(GameObject *go)

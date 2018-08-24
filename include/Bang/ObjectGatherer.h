@@ -28,11 +28,11 @@ public:
     void SetRoot(GameObject *root);
 
     GameObject* GetRoot() const;
-    const List<ObjectType*>& GetList() const;
+    const Array<ObjectType*>& GetGatheredArray() const;
 
 private:
     GameObject *p_root = nullptr;
-    List<ObjectType*> m_gatheredObjects;
+    Array<ObjectType*> m_gatheredObjects;
 
     #ifdef DEBUG
     USet<GameObject*> m_processedGameObjects;
@@ -42,7 +42,7 @@ private:
     void UnRegisterEventsAndRemoveObjects(GameObject *go);
 
     static void
-    GatherObjectsOfTheType(List<ObjectType*> *gatheredObjects, GameObject *go);
+    GatherObjectsOfTheType(Array<ObjectType*> *gatheredObjects, GameObject *go);
 
     // IEventsChildren
     void OnChildAdded(GameObject *addedChild, GameObject *parent) override;

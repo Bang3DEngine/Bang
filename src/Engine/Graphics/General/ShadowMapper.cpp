@@ -13,7 +13,8 @@ USING_NAMESPACE_BANG
 AABox ShadowMapper::GetSceneCastersAABox(Scene *scene)
 {
     Array<Vector3> casterPoints;
-    List<Renderer*> renderers = scene->GetComponentsInChildren<Renderer>(true);
+    Array<Renderer*> renderers =
+                     scene->GetComponentsInDescendantsAndThis<Renderer>();
     for (Renderer *rend : renderers)
     {
         if (rend->IsActive() && rend->GetCastsShadows())

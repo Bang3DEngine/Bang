@@ -357,8 +357,8 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     UMap<MeshRenderer*, Mesh*> meshRendererToMesh;
     UMap<MeshRenderer*, Material*> meshRendererToMaterial;
     {
-        List<MeshRenderer*> rootMRs =
-                   rootGameObject->GetComponentsInChildren<MeshRenderer>(true);
+        Array<MeshRenderer*> rootMRs =
+            rootGameObject->GetComponentsInDescendantsAndThis<MeshRenderer>();
         for (MeshRenderer *mr : rootMRs)
         {
             Mesh *mesh = mr->GetCurrentLODActiveMesh();
@@ -471,7 +471,7 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
     goNode->mNumChildren = gameObject->GetChildren().Size();
 
     // Count number of meshes
-    const List<MeshRenderer*> &mrs = gameObject->GetComponents<MeshRenderer>();
+    Array<MeshRenderer*> mrs = gameObject->GetComponents<MeshRenderer>();
 
     // Meshes
     goNode->mNumMeshes = 0; // Count number of meshes

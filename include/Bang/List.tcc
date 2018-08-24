@@ -105,12 +105,6 @@ List<T> List<T>::Concat(const List<T> &l) const
 }
 
 template<class T>
-void List<T>::Sort()
-{
-    m_list.sort();
-}
-
-template<class T>
 void List<T>::PushBack(const T &x)  { m_list.push_back(x);  }
 
 template<class T>
@@ -123,11 +117,20 @@ void List<T>::PushBack(const Container<OtherT> &container)
     }
 }
 
+template<class T>
+void List<T>::Sort()
+{
+    m_list.sort();
+}
+
 template <class T>
 template <class StrictWeakOrdering>
 void List<T>::Sort(const StrictWeakOrdering &sortClass)
 {
-    m_list.sort(sortClass);
+    if (!IsEmpty())
+    {
+        m_list.sort(sortClass);
+    }
 }
 
 template<class T>

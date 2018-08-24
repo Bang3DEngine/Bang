@@ -123,7 +123,7 @@ EventEmitter<T>::PropagateToListenersAndGatherResult(const TFunction &func,
 }
 
 template<class T>
-const List<EventListener<T>*>& EventEmitter<T>::GetListeners() const
+const Array<EventListener<T>*>& EventEmitter<T>::GetListeners() const
 {
     return m_listeners;
 }

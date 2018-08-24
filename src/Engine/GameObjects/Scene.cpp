@@ -44,8 +44,14 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
 
-    if (rp == RenderPass::SCENE) { GetDebugRenderer()->RenderPrimitives(true); }
-    else if (rp == RenderPass::OVERLAY) { GetDebugRenderer()->RenderPrimitives(false); }
+    if (rp == RenderPass::SCENE)
+    {
+        GetDebugRenderer()->RenderPrimitives(true);
+    }
+    else if (rp == RenderPass::OVERLAY)
+    {
+        GetDebugRenderer()->RenderPrimitives(false);
+    }
 }
 
 void Scene::OnResize(int newWidth, int newHeight)
@@ -53,13 +59,17 @@ void Scene::OnResize(int newWidth, int newHeight)
     InvalidateCanvas();
 }
 
-RenderFactory *Scene::GetGizmos() const { return m_gizmos; }
-DebugRenderer *Scene::GetDebugRenderer() const { return p_debugRenderer; }
+RenderFactory *Scene::GetGizmos() const
+{
+    return m_gizmos;
+}
+DebugRenderer *Scene::GetDebugRenderer() const
+{
+    return p_debugRenderer;
+}
 
 void Scene::SetCamera(Camera *cam)
 {
-    if (p_camera) { p_camera = nullptr; }
-
     p_camera = cam;
     if (p_camera)
     {
@@ -69,15 +79,17 @@ void Scene::SetCamera(Camera *cam)
 
 void Scene::SetFirstFoundCamera()
 {
-    Camera *sceneCamera = GetComponentInChildren<Camera>();
-    // if (!sceneCamera) { Debug_Warn("No camera found!"); }
+    Camera *sceneCamera = GetComponentInChildrenAndThis<Camera>();
     SetCamera(sceneCamera);
 }
 
 void Scene::InvalidateCanvas()
 {
-    List<UICanvas*> canvases = GetComponentsInChildren<UICanvas>(true);
-    for (UICanvas *canvas : canvases) { canvas->InvalidateCanvas(); }
+    Array<UICanvas*> canvases = GetComponentsInDescendantsAndThis<UICanvas>();
+    for (UICanvas *canvas : canvases)
+    {
+        canvas->InvalidateCanvas();
+    }
 }
 
 void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
@@ -88,7 +100,10 @@ void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     }
 }
 
-Camera *Scene::GetCamera() const { return p_camera; }
+Camera *Scene::GetCamera() const
+{
+    return p_camera;
+}
 
 void Scene::ImportXML(const XMLNode &xmlInfo)
 {

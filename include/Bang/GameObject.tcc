@@ -26,97 +26,221 @@ T* GameObject::GetComponent() const
 {
     for (Component *comp : m_components)
     {
-        T *tp = DCAST<T*>(comp);
-        if (tp) { return tp; }
-    }
-    return nullptr;
-}
-
-template <class T>
-List<T*> GameObject::GetComponents() const
-{
-    List<T*> comps_l;
-    for (Component *comp : m_components)
-    {
-        T *tp = DCAST<T*>(comp);
-        if (tp) { comps_l.PushBack(tp); }
-    }
-    return comps_l;
-}
-
-template <class T>
-T* GameObject::GetComponentInParent(bool recursive) const
-{
-    if (!GetParent()) { return nullptr; }
-    T* comp = GetParent()->GetComponent<T>();
-    if (comp) { return comp; }
-    return recursive ? GetParent()->GetComponentInParent<T>(recursive) : nullptr;
-}
-
-template <class T>
-List<T*> GameObject::GetComponentsInParent(bool recursive) const
-{
-    List<T*> result;
-    if (!GetParent()) { return result; }
-    result = GetParent()->GetComponents<T>();
-    return recursive ? result.Concat(GetParent()->GetComponentsInParent<T>(recursive)) :
-                       result;
-}
-
-template <class T>
-T* GameObject::GetComponentInChildren(bool recursive) const
-{
-    T *compThis = GetComponent<T>();
-    if (compThis) { return compThis; }
-    return GetComponentInChildrenOnly<T>(recursive);
-}
-
-template <class T>
-List<T*> GameObject::GetComponentsInChildren(bool recursive) const
-{
-    List<T*> comps_l;
-    comps_l.PushBack( GetComponents<T>() );
-    comps_l.PushBack( GetComponentsInChildrenOnly<T>(recursive) );
-    return comps_l;
-}
-
-template<class T>
-T *GameObject::GetComponentInChildrenOnly(bool recursive) const
-{
-    for (auto c = GetChildren().Begin(); c != GetChildren().End(); ++c)
-    {
-        T *comp = (*c)->GetComponent<T>();
-        if (comp) return comp;
-        if (recursive)
+        if (T *tcomp = DCAST<T*>(comp))
         {
-            comp = (*c)->GetComponentInChildren<T>(true);
-            if (comp) return comp;
+            return tcomp;
         }
     }
     return nullptr;
 }
 
-template<class T>
-List<T*> GameObject::GetComponentsInChildrenOnly(bool recursive) const
+template <class T>
+T* GameObject::GetComponentInParent(bool recursive) const
 {
-    List<T*> comps;
-    for (auto c = GetChildren().Begin(); c != GetChildren().End(); ++c)
+    if (GetParent())
     {
-        List<T*> childChildrenComps =
-                recursive ? (*c)->GetComponentsInChildren<T>(true) :
-                            (*c)->GetComponents<T>();
-        comps.Splice(comps.End(), childChildrenComps); //concat
+        if (T *comp = GetParent()->GetComponent<T>())
+        {
+            return comp;
+        }
+        if (recursive)
+        {
+            return GetParent()->GetComponentInParent<T>(true);
+        }
     }
-    return comps;
+    return nullptr;
 }
 
 template <class T>
-bool GameObject::HasComponent() const { return GetComponent<T>() ; }
+T* GameObject::GetComponentInParentAndThis(bool recursive) const
+{
+    if (T* comp = GetComponent<T>())
+    {
+        return comp;
+    }
+    return GetComponentInParent<T>(recursive);
+}
+
+template <class T>
+T* GameObject::GetComponentInChildren(bool recursive) const
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (T *comp = child->GetComponent<T>())
+        {
+            return comp;
+        }
+
+        if (recursive)
+        {
+            if (T *comp = child->GetComponentInChildren<T>(true))
+            {
+                return comp;
+            }
+        }
+    }
+    return nullptr;
+}
+template <class T>
+T* GameObject::GetComponentInChildrenAndThis(bool recursive) const
+{
+    if (T* comp = GetComponent<T>())
+    {
+        return comp;
+    }
+    return GetComponentInChildren<T>(recursive);
+}
+
+template <class T>
+Array<T*> GameObject::GetComponents() const
+{
+    Array<T*> comps;
+    GetComponents<T>(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponents(Array<T*> *components) const
+{
+    for (Component *comp : GetComponents())
+    {
+        if (T *tcomp = DCAST<T*>(comp))
+        {
+            components->PushBack(tcomp);
+        }
+    }
+}
+
+template <class T>
+Array<T*> GameObject::GetComponentsInParent() const
+{
+    Array<T*> comps;
+    GetComponentsInParent(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInParent(Array<T*> *componentsOut) const
+{
+    if (GetParent())
+    {
+        GetParent()->GetComponents<T>(componentsOut);
+    }
+}
+template <class T>
+Array<T*> GameObject::GetComponentsInParentAndThis() const
+{
+    Array<T*> comps;
+    GetComponentsInParentAndThis(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInParentAndThis(Array<T*> *componentsOut) const
+{
+    GetComponents<T>(componentsOut);
+    GetComponentsInParent<T>(componentsOut);
+}
+
+template <class T>
+Array<T*> GameObject::GetComponentsInAncestors() const
+{
+    Array<T*> comps;
+    GetComponentsInAncestors(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInAncestors(Array<T*> *componentsOut) const
+{
+    if (GetParent())
+    {
+        GetParent()->GetComponents<T>(componentsOut);
+        GetParent()->GetComponentsInAncestors<T>(componentsOut);
+    }
+}
+template <class T>
+Array<T*> GameObject::GetComponentsInAncestorsAndThis() const
+{
+    Array<T*> comps;
+    GetComponentsInAncestorsAndThis(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInAncestorsAndThis(Array<T*> *componentsOut) const
+{
+    GetComponents<T>(componentsOut);
+    GetComponentsInAncestors<T>(componentsOut);
+}
+
+template <class T>
+Array<T*> GameObject::GetComponentsInChildren() const
+{
+    Array<T*> comps;
+    GetComponentsInChildren(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInChildren(Array<T*> *componentsOut) const
+{
+    for (GameObject *child : GetChildren())
+    {
+        child->GetComponents<T>(componentsOut);
+    }
+}
+template <class T>
+Array<T*> GameObject::GetComponentsInChildrenAndThis() const
+{
+    Array<T*> comps;
+    GetComponentsInChildrenAndThis(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInChildrenAndThis(Array<T*> *componentsOut) const
+{
+    GetComponents<T>(componentsOut);
+    GetComponentsInChildren<T>(componentsOut);
+}
+template <class T>
+Array<T*> GameObject::GetComponentsInDescendants() const
+{
+    Array<T*> comps;
+    GetComponentsInDescendants(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInDescendants(Array<T*> *componentsOut) const
+{
+    for (GameObject *child : GetChildren())
+    {
+        child->GetComponents<T>(componentsOut);
+        child->GetComponentsInDescendants<T>(componentsOut);
+    }
+}
+template <class T>
+Array<T*> GameObject::GetComponentsInDescendantsAndThis() const
+{
+    Array<T*> comps;
+    GetComponentsInDescendantsAndThis(&comps);
+    return comps;
+}
+template <class T>
+void GameObject::GetComponentsInDescendantsAndThis(Array<T*> *componentsOut) const
+{
+    GetComponents<T>(componentsOut);
+    GetComponentsInDescendants<T>(componentsOut);
+}
+
+template <class T>
+bool GameObject::HasComponent() const
+{
+    return GetComponent<T>() ;
+}
 
 template<class T>
 bool CanEventBePropagated(const T& x)
 {
-    if (!x) { return false; }
+    if (!x)
+    {
+        return false;
+    }
+
     const Object *object = DCAST<const Object*>(x);
     return !object ||
            (object->IsEnabled() &&
@@ -136,8 +260,8 @@ void GameObject::PropagateSingle(TReturn TListenerInnerT::*func,
 }
 
 template<class TListener, class TListenerInnerT, class TReturn, class... Args>
-void GameObject::PropagateToList(TReturn TListenerInnerT::*func,
-                                 const List<TListener*> &list,
+void GameObject::PropagateToArray(TReturn TListenerInnerT::*func,
+                                 const Array<TListener*> &list,
                                  const Args&... args)
 {
     for (TListener *listener : list)
@@ -158,21 +282,8 @@ void GameObject::PropagateToChildren(TReturn TListener::*func,
         if (child->IsEnabled())
         {
             (child->*func)(args...);
-            // func(comp, args...);
-            // GameObject::Propagate(func, comp, args...);
         }
     }
-    /*
-    m_currentChildrenIterators.push(m_children.Begin());
-    while (m_currentChildrenIterators.top() != m_children.End())
-    {
-        m_increaseChildrenIterator = true;
-        GameObject *child = *(m_currentChildrenIterators.top());
-        GameObject::Propagate(func, child, args...);
-        if (m_increaseChildrenIterator) { ++m_currentChildrenIterators.top(); }
-    }
-    m_currentChildrenIterators.pop();
-    */
 }
 
 template<class TListener, class TReturn, class... Args>
@@ -184,30 +295,8 @@ void GameObject::PropagateToComponents(TReturn TListener::*func,
         if (comp->IsEnabled())
         {
             (comp->*func)(args...);
-            // func(comp, args...);
-            // GameObject::Propagate(func, comp, args...);
         }
     }
-    /*
-    m_currentComponentsIterators.push(m_components.Begin());
-    while (m_currentComponentsIterators.top() != m_components.End())
-    {
-        m_increaseComponentsIterator = true;
-        Component *comp = *(m_currentComponentsIterators.top());
-        GameObject::Propagate(func, comp, args...);
-        if (m_increaseComponentsIterator) { ++m_currentComponentsIterators.top(); }
-    }
-    m_currentComponentsIterators.pop();
-    */
-}
-
-template<class T>
-List<T*> GameObject::GetComponentsInParentAndThis(bool recursive) const
-{
-    List<T*> comps_l;
-    comps_l.PushBack( GetComponents<T>() );
-    comps_l.PushBack( GetComponentsInParent<T>(recursive) );
-    return comps_l;
 }
 
 

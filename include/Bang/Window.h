@@ -30,7 +30,6 @@ public:
     bool MainLoopIteration();
     void MakeCurrent();
 
-    void Clear();
     virtual void Update();
     virtual void Render();
     virtual void OnResize(int newWidth, int newHeight);

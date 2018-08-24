@@ -76,8 +76,8 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 {
     ASSERT(index >= 0 && index <= GetNumItems());
 
-    List<IFocusable*> newItemFocusables =
-                            newItem->GetComponentsInChildren<IFocusable>(true);
+    Array<IFocusable*> newItemFocusables =
+                       newItem->GetComponentsInDescendantsAndThis<IFocusable>();
 
     UIImageRenderer *itemBg = newItem->AddComponent<UIImageRenderer>(0);
     itemBg->SetTint( GetIdleColor() );

@@ -422,7 +422,7 @@ void Transform::OnTransformChanged()
 
     EventListener<IEventsTransform>::SetReceiveEvents(false);
 
-    go->PropagateToList(&EventListener<IEventsTransform>::OnTransformChanged,
+    go->PropagateToArray(&EventListener<IEventsTransform>::OnTransformChanged,
                   go->GetComponents<EventListener<IEventsTransform>>());
 
     EventListener<IEventsTransform>::SetReceiveEvents(true);
@@ -437,10 +437,9 @@ void Transform::PropagateParentTransformChangedEventToChildren() const
     EventEmitter<IEventsTransform>::
            PropagateToListeners(
                 &EventListener<IEventsTransform>::OnParentTransformChanged);
-    go->PropagateToList(
-            &EventListener<IEventsTransform>::OnParentTransformChanged,
-                  go->GetComponentsInChildrenOnly<
-                            EventListener<IEventsTransform>>(false));
+    go->PropagateToArray(
+        &EventListener<IEventsTransform>::OnParentTransformChanged,
+              go->GetComponentsInChildren<EventListener<IEventsTransform>>());
 }
 
 void Transform::PropagateChildrenTransformChangedEventToParent() const
@@ -449,10 +448,9 @@ void Transform::PropagateChildrenTransformChangedEventToParent() const
     EventEmitter<IEventsTransform>::
            PropagateToListeners(
                 &EventListener<IEventsTransform>::OnChildrenTransformChanged);
-    go->PropagateToList(
-            &EventListener<IEventsTransform>::OnChildrenTransformChanged,
-                  go->GetComponentsInParent<
-                            EventListener<IEventsTransform>>(false));
+    go->PropagateToArray(
+        &EventListener<IEventsTransform>::OnChildrenTransformChanged,
+              go->GetComponentsInParent<EventListener<IEventsTransform>>());
 }
 
 void Transform::OnParentTransformChanged()

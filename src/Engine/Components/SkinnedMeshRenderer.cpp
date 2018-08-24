@@ -110,7 +110,7 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
 void SkinnedMeshRenderer::OnRender()
 {
     bool updateBonesMatricesFromTransformMatrices = true;
-    List<Animator*> animators = GetGameObject()->GetComponents<Animator>();
+    Array<Animator*> animators = GetGameObject()->GetComponents<Animator>();
     for (Animator *animator : animators)
     {
         if (animator->IsPlaying())

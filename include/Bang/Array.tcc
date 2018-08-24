@@ -172,6 +172,26 @@ void Array<T>::Clear()         { m_vector.clear(); }
 template<class T>
 bool Array<T>::IsEmpty() const { return Size() == 0; }
 
+
+template<class T>
+void Array<T>::Sort()
+{
+    if (!IsEmpty())
+    {
+        Containers::Sort(Begin(), End());
+    }
+}
+
+template <class T>
+template <class StrictWeakOrdering>
+void Array<T>::Sort(const StrictWeakOrdering &sortClass)
+{
+    if (!IsEmpty())
+    {
+        Containers::Sort(Begin(), End(), sortClass);
+    }
+}
+
 template<class T>
 typename Array<T>::Ref Array<T>::At(std::size_t i)
 {

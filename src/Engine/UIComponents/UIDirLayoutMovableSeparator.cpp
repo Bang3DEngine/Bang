@@ -103,7 +103,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         for (int prevOrNext = 0; prevOrNext <= 1; ++prevOrNext)
         {
             bool isPrev = (prevOrNext==0);
-            const List<GameObject*> siblings = parent->GetChildren();
+            const Array<GameObject*> &siblings = parent->GetChildren();
             const Vector2i totalIdealNeededRoomForNewSize =
                                 prevNextIdealNeededRoomForNewSize[prevOrNext];
 

@@ -178,7 +178,10 @@ void UIList::ScrollTo(GOItem *item)
     AARect itemRect ( item->GetRectTransform()-> GetViewportRect() );
     AARect panelRect ( GetScrollPanel()->GetGameObject()->GetRectTransform()->
                                                           GetViewportRect() );
-    AARect containerRect ( GetContainer()->GetRectTransform()-> GetViewportRect() );
+    ASSERT(panelRect.IsValid());
+
+    AARect containerRect ( GetContainer()->GetRectTransform()->GetViewportRect() );
+    ASSERT(containerRect.IsValid());
 
     Vector2 relativeItemRectMin = itemRect.GetMin() - containerRect.GetMin();
     relativeItemRectMin.y = (containerRect.GetHeight() - relativeItemRectMin.y);

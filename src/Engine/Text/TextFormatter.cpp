@@ -39,8 +39,82 @@ Array<TextFormatter::CharRect>
                                            charRects, wrapping);
     *numberOfLines = linedCharRects.Size();
 
-    TextFormatter::ApplyAlignment(&linedCharRects, limitsRect, font, fontSize,
-                                   hAlignment, vAlignment);
+    if (limitsRect.IsValid())
+    {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        TextFormatter::ApplyAlignment(&linedCharRects, limitsRect, font, fontSize,
+                                      hAlignment, vAlignment);
+    }
 
     Array<CharRect> finalCharRects; // Flattened result
     for (const Array<CharRect> &line : linedCharRects)
@@ -165,6 +239,8 @@ void TextFormatter::ApplyAlignment(Array< Array<CharRect> > *linesCharRects,
                                    HorizontalAlignment hAlignment,
                                    VerticalAlignment vAlignment)
 {
+    ASSERT(limitsRect.IsValid());
+
     // For each line apply the HorizontalAlign
     for (Array<CharRect> &line : *linesCharRects)
     {

@@ -216,7 +216,8 @@ Vector2i Font::GetAtlasCharRectSize(int fontSize, char c) const
 {
     if (!GetReferenceFont()) { return Vector2i::Zero; }
     GetFontAtlas(fontSize); // Load if not loaded yet
-    return m_cachedAtlasCharRects[fontSize][c].GetSize();
+    const AARecti &charRect = m_cachedAtlasCharRects[fontSize][c];
+    return charRect.IsValid() ? charRect.GetSize() : Vector2i::Zero;
 }
 
 bool Font::HasFontSizeLoaded(int fontSize) const

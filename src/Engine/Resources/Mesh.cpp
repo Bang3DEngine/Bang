@@ -85,7 +85,10 @@ void Mesh::SetBonesPool(const Map<String, Mesh::Bone> &bones)
 
 void Mesh::UpdateVAOs()
 {
-    if (m_vertexAttributesVBO) { delete m_vertexAttributesVBO; }
+    if (m_vertexAttributesVBO)
+    {
+        delete m_vertexAttributesVBO;
+    }
     m_vertexAttributesVBO = new VBO();
 
     bool hasPos      = !GetPositionsPool().IsEmpty();
@@ -216,8 +219,12 @@ void Mesh::UpdateVAOs()
         }
     }
 
-    GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
-                                   interleavedAttributes.Size() * sizeof(float));
+    if (interleavedAttributes.Size() >= 1)
+    {
+        GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
+                                       interleavedAttributes.Size() *
+                                       sizeof(float));
+    }
 
     const int posBytesSize                  = hasPos      ? (3 * sizeof(float)) : 0;
     const int normalsBytesSize              = hasNormals  ? (3 * sizeof(float)) : 0;
@@ -303,8 +310,6 @@ void Mesh::UpdateVAOs()
                                          totalStride,
                                          vertexToBonesWeightsOffset);
     }
-
-    // Debug_Log("UpdateVAOs() with " << GetNumVertices());
 }
 
 void Mesh::CalculateVertexNormals()

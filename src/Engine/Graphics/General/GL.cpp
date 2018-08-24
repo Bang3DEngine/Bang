@@ -669,9 +669,19 @@ void GL::Scissor(const AARecti &scissorRectPx)
 {
     if (scissorRectPx != GL::GetScissorRect())
     {
-        SetGLContextValue(&GL::m_scissorRectsPx, scissorRectPx);
-        GL_CALL( glScissor(scissorRectPx.GetMin().x, scissorRectPx.GetMin().y,
-                           scissorRectPx.GetWidth(), scissorRectPx.GetHeight()) );
+        if (scissorRectPx.IsValid())
+        {
+            SetGLContextValue(&GL::m_scissorRectsPx, scissorRectPx);
+            GL_CALL( glScissor(scissorRectPx.GetMin().x,
+                               scissorRectPx.GetMin().y,
+                               scissorRectPx.GetWidth(),
+                               scissorRectPx.GetHeight()) );
+        }
+        else
+        {
+            SetGLContextValue(&GL::m_scissorRectsPx, AARecti::Zero);
+            GL_CALL( glScissor(0,0,0,0) );
+        }
     }
 }
 
@@ -881,8 +891,15 @@ void GL::DrawBuffers(const Array<GL::Attachment> &drawAttachments)
     //                        drawAttachments.Begin()))
     {
         SetGLContextValue(&GL::m_drawBuffers, drawAttachments);
-        GL_CALL( glDrawBuffers(drawAttachments.Size(),
-                               (const GLenum*)(&drawAttachments[0])) );
+        if (drawAttachments.Size() >= 1)
+        {
+            GL_CALL( glDrawBuffers(drawAttachments.Size(),
+                                   (const GLenum*)(&drawAttachments[0])) );
+        }
+        else
+        {
+            GL::DrawBuffers({GL::Attachment::NONE});
+        }
     }
 }
 
@@ -910,9 +927,14 @@ void GL::ReadPixels(int x, int y, int width, int height,
 void GL::ReadPixels(const AARecti &readRect, GL::ColorComp inputComp,
                     GL::DataType outputDataType, void *pixels)
 {
-    GL::ReadPixels(readRect.GetMin().x, readRect.GetMin().y,
-                   readRect.GetWidth(), readRect.GetHeight(),
-                   inputComp, outputDataType, pixels);
+    ASSERT(readRect.IsValid());
+    GL::ReadPixels(readRect.GetMin().x,
+                   readRect.GetMin().y,
+                   readRect.GetWidth(),
+                   readRect.GetHeight(),
+                   inputComp,
+                   outputDataType,
+                   pixels);
 }
 
 void GL::Finish() { glFinish(); }

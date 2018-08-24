@@ -93,6 +93,11 @@ macro(add_bang_compilation_flags __TARGET)
             target_compile_options(${__TARGET} PUBLIC -fsanitize=integer-divide-by-zero)
             target_compile_options(${__TARGET} PUBLIC -fsanitize=return)
             target_compile_options(${__TARGET} PUBLIC -fsanitize=null)
+
+            # When executing set these environment variables:
+            # ASAN_OPTIONS  = "abort_on_error=1"
+            # UBSAN_OPTIONS = "print_stacktrace=1:halt_on_error=1"
+            # LD_PRELOAD    = /path/to/libasan.x.so
         endif()
 
         add_definitions(-DDEBUG)

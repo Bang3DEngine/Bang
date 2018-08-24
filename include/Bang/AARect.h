@@ -49,8 +49,20 @@ public:
         m_max = Vector2G<T>::Max(p1, p2);
     }
 
-    void SetMin(const Vector2G<T> &minv) { m_min = minv; }
-    void SetMax(const Vector2G<T> &maxv) { m_max = maxv; }
+    void SetMin(const Vector2G<T> &minv)
+    {
+        m_min = minv;
+    }
+
+    void SetMax(const Vector2G<T> &maxv)
+    {
+        m_max = maxv;
+    }
+
+    bool IsValid() const
+    {
+        return GetMin() < GetMax();
+    }
 
     void AddPoint(const Vector2G<T>& point)
     {
@@ -95,7 +107,7 @@ public:
 
     T GetHeight() const
     {
-        return (GetMax().y - GetMin().y);
+       return (GetMax().y - GetMin().y);
     }
 
     T GetArea() const

@@ -8,13 +8,9 @@ USING_NAMESPACE_BANG
 template<class T>
 EventListener<T>::~EventListener()
 {
-    m_isBeingDestroyed = true;
     while (!m_emitters.IsEmpty())
     {
-        if (!m_emitters.Front()->UnRegisterListener(this))
-        {
-            m_emitters.PopFront();
-        }
+        m_emitters.Front()->UnRegisterListener(this);
     }
 }
 
@@ -39,7 +35,7 @@ bool EventListener<T>::IsReceivingEvents() const
 template<class T>
 void EventListener<T>::AddEmitter(EventEmitter<T> *emitter)
 {
-    if (!m_isBeingDestroyed && !m_emitters.Contains(emitter))
+    if (!m_emitters.Contains(emitter))
     {
         m_emitters.PushBack(emitter);
     }

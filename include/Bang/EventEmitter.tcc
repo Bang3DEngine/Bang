@@ -37,18 +37,17 @@ bool EventEmitter<T>::IsEmittingEvents() const
 }
 
 template <class T>
-bool EventEmitter<T>::RegisterListener(EventListener<T> *listener)
+void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 {
     if (!m_listeners.Contains(listener))
     {
         m_listeners.PushBack(listener);
         listener->AddEmitter(this);
     }
-    return true;
 }
 
 template <class T>
-bool EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
+void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
     auto listenerIt = m_listeners.Find(listener);
     if (listenerIt != m_listeners.End())
@@ -63,13 +62,6 @@ bool EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
             }
         }
     }
-    return true;
-}
-
-template<class T>
-bool EventEmitter<T>::IsIteratingListeners() const
-{
-    return (m_mutableIterators.Size() > 0);
 }
 
 template<class T>

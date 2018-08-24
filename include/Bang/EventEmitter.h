@@ -18,8 +18,8 @@ public:
     void SetEmitEvents(bool emitEvents);
     bool IsEmittingEvents() const;
 
-    bool RegisterListener(EventListener<T> *listener);
-    bool UnRegisterListener(EventListener<T> *listener);
+    void RegisterListener(EventListener<T> *listener);
+    void UnRegisterListener(EventListener<T> *listener);
 
     template<class TFunction, class... Args>
     void PropagateToListeners(const TFunction &func, const Args&... args) const;
@@ -28,7 +28,6 @@ public:
     Array<TResult> PropagateToListenersAndGatherResult(const TFunction &func,
                                                        const Args&... args) const;
 
-    bool IsIteratingListeners() const;
     const List<EventListener<T>*>& GetListeners() const;
 
 protected:

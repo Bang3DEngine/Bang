@@ -22,7 +22,6 @@ protected:
 
 private:
     bool m_receivesEvents = true;
-    bool m_isBeingDestroyed = false;
     List<EventEmitter<T>*> m_emitters;
 
     void AddEmitter(EventEmitter<T> *emitter);

@@ -25,9 +25,8 @@ private:
     bool m_isBeingDestroyed = false;
     List<EventEmitter<T>*> m_emitters;
 
-    void ClearRegistrations();
-    void OnRegisteredTo(EventEmitter<T> *emitter);
-    void OnUnRegisteredFrom(EventEmitter<T> *emitter);
+    void AddEmitter(EventEmitter<T> *emitter);
+    void RemoveEmitter(EventEmitter<T> *emitter);
 
     template<class> friend class EventEmitter;
 };

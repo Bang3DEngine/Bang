@@ -8,6 +8,11 @@
 NAMESPACE_BANG_BEGIN
 
 template<class ObjectType, bool RECURSIVE>
+ObjectGatherer<ObjectType, RECURSIVE>::~ObjectGatherer()
+{
+}
+
+template<class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::SetRoot(GameObject *root)
 {
     p_root = root;

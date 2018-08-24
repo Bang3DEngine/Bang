@@ -8,14 +8,20 @@ USING_NAMESPACE_BANG
 template<class T>
 EventEmitter<T>::~EventEmitter()
 {
-    m_isBeingDestroyed = true;
-    while (!m_listeners.IsEmpty())
+    m_mutableIterators.PushBack( MutableIterator(m_listeners.Begin()) );
+    MutableIterator &mIt = m_mutableIterators.Back();
+    while (mIt.GetIterator() != GetListeners().End())
     {
-        if (!UnRegisterListener( m_listeners.Front() ))
+        EventListener<T> *listener = *(mIt.GetIterator());
+        UnRegisterListener(listener);
+
+        // Recheck needed, in case it was modified
+        if (mIt.GetIterator() != GetListeners().End())
         {
-            m_listeners.PopFront();
+            mIt.IncreaseIfNeeded();
         }
     }
+    m_mutableIterators.PopBack();
 }
 
 template<class T>
@@ -33,52 +39,37 @@ bool EventEmitter<T>::IsEmittingEvents() const
 template <class T>
 bool EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 {
-    if (!m_isBeingDestroyed)
+    if (!m_listeners.Contains(listener))
     {
-        if (!IsIteratingListeners())
-        {
-            if (!m_listeners.Contains(listener))
-            {
-                m_listeners.PushBack(listener);
-                if (listener)
-                {
-                    listener->OnRegisteredTo(this);
-                }
-                return true;
-            }
-        }
-        else
-        {
-            m_delayedListenersToRegister.PushBack(listener);
-        }
+        m_listeners.PushBack(listener);
+        listener->AddEmitter(this);
     }
-    return false;
+    return true;
 }
 
 template <class T>
 bool EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
-    if (!IsIteratingListeners())
+    auto listenerIt = m_listeners.Find(listener);
+    if (listenerIt != m_listeners.End())
     {
-        m_listeners.Remove(listener);
-        if (listener)
+        auto nextListenerIt = m_listeners.Remove(listenerIt);
+        listener->RemoveEmitter(this);
+        for (auto &mIt : m_mutableIterators)
         {
-            listener->OnUnRegisteredFrom(this);
+            if (mIt.GetIterator() == listenerIt)
+            {
+                mIt.SetIterator(nextListenerIt);
+            }
         }
-        return true;
     }
-    else
-    {
-        m_delayedListenersToUnRegister.PushBack(listener);
-        return false;
-    }
+    return true;
 }
 
 template<class T>
 bool EventEmitter<T>::IsIteratingListeners() const
 {
-    ASSERT(m_iteratingListeners >= 0);
-    return (m_iteratingListeners > 0);
+    return (m_mutableIterators.Size() > 0);
 }
 
 template<class T>
@@ -88,42 +79,28 @@ void EventEmitter<T>::PropagateToListeners_(
               const TFunction &func,
               const Args&... args) const
 {
-    // Un/Register delayed listeners, if not iterating
-    if ( !IsIteratingListeners() )
-    {
-        EventEmitter<T> *ncThis = const_cast< EventEmitter<T>* >(this);
-        for (EventListener<T> *listener : m_delayedListenersToRegister)
-        {
-            ncThis->RegisterListener(listener);
-        }
-        for (EventListener<T> *listener : m_delayedListenersToUnRegister)
-        {
-            ncThis->UnRegisterListener(listener);
-        }
-        m_delayedListenersToRegister.Clear();
-        m_delayedListenersToUnRegister.Clear();
-    }
-    ++m_iteratingListeners;
+    EventEmitter<T> *ncThis = const_cast< EventEmitter<T>* >(this);
+    m_mutableIterators.PushBack( MutableIterator(ncThis->m_listeners.Begin()) );
 
-    for (const auto &listener : GetListeners())
+    MutableIterator &mIt = m_mutableIterators.Back();
+    while (mIt.GetIterator() != GetListeners().End())
     {
-        #ifdef DEBUG
-        const int previousSize = GetListeners().Size();
-        (void) previousSize;
-        #endif
-
         if (IsEmittingEvents())
         {
+            EventListener<T>* listener = *(mIt.GetIterator());
             if (listener && listener->IsReceivingEvents())
             {
                 listenerCall(listener);
             }
         }
 
-        ASSERT(GetListeners().Size() == previousSize);
+        // Recheck needed, in case it was modified
+        if (mIt.GetIterator() != GetListeners().End())
+        {
+            mIt.IncreaseIfNeeded();
+        }
     }
-
-    --m_iteratingListeners;
+    m_mutableIterators.PopBack();
 }
 
 template <class T>

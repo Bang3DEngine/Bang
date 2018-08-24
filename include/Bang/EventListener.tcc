@@ -9,12 +9,6 @@ template<class T>
 EventListener<T>::~EventListener()
 {
     m_isBeingDestroyed = true;
-    ClearRegistrations();
-}
-
-template<class T>
-void EventListener<T>::ClearRegistrations()
-{
     while (!m_emitters.IsEmpty())
     {
         if (!m_emitters.Front()->UnRegisterListener(this))
@@ -23,7 +17,6 @@ void EventListener<T>::ClearRegistrations()
         }
     }
 }
-
 
 template<class T>
 void EventListener<T>::SetReceiveEvents(bool receiveEvents)
@@ -44,16 +37,16 @@ bool EventListener<T>::IsReceivingEvents() const
 }
 
 template<class T>
-void EventListener<T>::OnRegisteredTo(EventEmitter<T> *emitter)
+void EventListener<T>::AddEmitter(EventEmitter<T> *emitter)
 {
-    if (!m_isBeingDestroyed)
+    if (!m_isBeingDestroyed && !m_emitters.Contains(emitter))
     {
         m_emitters.PushBack(emitter);
     }
 }
 
 template<class T>
-void EventListener<T>::OnUnRegisteredFrom(EventEmitter<T> *emitter)
+void EventListener<T>::RemoveEmitter(EventEmitter<T> *emitter)
 {
     m_emitters.Remove(emitter);
 }

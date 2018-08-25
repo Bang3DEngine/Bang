@@ -28,6 +28,7 @@ public:
 protected:
     Vector3 m_halfExtents = Vector3(0.5f);
 
+    // Collider
     void UpdatePxShape() override;
 };
 

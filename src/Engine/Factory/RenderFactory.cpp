@@ -352,20 +352,22 @@ void RenderFactory::RenderWireframeCapsule(float height,
     RenderFactory::Parameters paramsCpy = params;
 
     const float hHeight = (height / 2);
-    RenderFactory::RenderLine(paramsCpy.position + Vector3(radius, -hHeight, 0),
-                              paramsCpy.position + Vector3(radius, +hHeight, 0),
+    RenderFactory::RenderLine(Vector3(radius, -hHeight, 0),
+                              Vector3(radius, +hHeight, 0),
                               paramsCpy);
-    RenderFactory::RenderLine(paramsCpy.position + Vector3(-radius, -hHeight, 0),
-                              paramsCpy.position + Vector3(-radius, +hHeight, 0),
+    RenderFactory::RenderLine(Vector3(-radius, -hHeight, 0),
+                              Vector3(-radius, +hHeight, 0),
                               paramsCpy);
-    RenderFactory::RenderLine(paramsCpy.position + Vector3(0, -hHeight, radius),
-                              paramsCpy.position + Vector3(0, +hHeight, radius),
+    RenderFactory::RenderLine(Vector3(0, -hHeight, radius),
+                              Vector3(0, +hHeight, radius),
                               paramsCpy);
-    RenderFactory::RenderLine(paramsCpy.position + Vector3(0, -hHeight, -radius),
-                              paramsCpy.position + Vector3(0, +hHeight, -radius),
+    RenderFactory::RenderLine(Vector3(0, -hHeight, -radius),
+                              Vector3(0, +hHeight, -radius),
                               paramsCpy);
 
-    paramsCpy.position = Vector3(0, hHeight, 0);
+    Vector3 capsuleCenter = paramsCpy.position;
+    paramsCpy.position = capsuleCenter +
+                         paramsCpy.rotation * Vector3(0, hHeight, 0);
     RenderFactory::RenderWireframeSphere(radius,
                                          false,
                                          paramsCpy,
@@ -377,7 +379,8 @@ void RenderFactory::RenderWireframeCapsule(float height,
             params.rotation *
             Quaternion::AngleAxis(Math::Pi, Vector3::Forward);
 
-    paramsCpy.position = Vector3(0, -hHeight, 0);
+    paramsCpy.position = capsuleCenter +
+                         paramsCpy.rotation * Vector3(0, hHeight, 0);
     RenderFactory::RenderWireframeSphere(radius,
                                          false,
                                          paramsCpy,

@@ -44,6 +44,7 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
+    virtual Quaternion GetInternalRotation() const;
     virtual void UpdatePxShape();
 
     void SetPxRigidBody(physx::PxRigidBody *pxRB);

@@ -20,9 +20,9 @@
 #include "Bang/UIInputText.h"
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshRenderer.h"
-#include "Bang/WaterRenderer.h"
 #include "Bang/UITextCursor.h"
 #include "Bang/UIScrollArea.h"
+#include "Bang/WaterRenderer.h"
 #include "Bang/AudioListener.h"
 #include "Bang/RectTransform.h"
 #include "Bang/SphereCollider.h"
@@ -30,6 +30,7 @@
 #include "Bang/ReflectionProbe.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/UIImageRenderer.h"
+#include "Bang/CapsuleCollider.h"
 #include "Bang/DirectionalLight.h"
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/PostProcessEffect.h"
@@ -69,6 +70,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, RectTransform);
     CREATE_COMPONENT(componentClassName, SphereCollider);
     CREATE_COMPONENT(componentClassName, UITextRenderer);
+    CREATE_COMPONENT(componentClassName, CapsuleCollider);
     CREATE_COMPONENT(componentClassName, ReflectionProbe);
     CREATE_COMPONENT(componentClassName, UIImageRenderer);
     CREATE_COMPONENT(componentClassName, DirectionalLight);

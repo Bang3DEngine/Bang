@@ -149,12 +149,19 @@ void Collider::ExportXML(XMLNode *xmlInfo) const
                      GetSharedPhysicsMaterial()->GetGUID() : GUID::Empty());
 }
 
+Quaternion Collider::GetInternalRotation() const
+{
+    return Quaternion::Identity;
+}
+
 void Collider::UpdatePxShape()
 {
     if (GetPxShape())
     {
         physx::PxTransform pxLocalTransform = GetPxShape()->getLocalPose();
         pxLocalTransform.p = Physics::GetPxVec3FromVector3( GetCenter() );
+        pxLocalTransform.q = Physics::GetPxQuatFromQuaternion(
+                                                    GetInternalRotation() );
         GetPxShape()->setLocalPose( pxLocalTransform );
 
         if (GetActivePhysicsMaterial())

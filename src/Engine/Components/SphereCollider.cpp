@@ -16,7 +16,7 @@ SphereCollider::~SphereCollider()
 {
 }
 
-void SphereCollider::SetRadius(const float radius)
+void SphereCollider::SetRadius(float radius)
 {
     if (radius != GetRadius())
     {

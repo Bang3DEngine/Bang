@@ -31,6 +31,7 @@
 #include "Bang/TextureFactory.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/CapsuleCollider.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
@@ -585,6 +586,14 @@ GameObject* GameObjectFactory::CreateCubeGameObject()
     RH<Mesh> mesh = MeshFactory::GetCube();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cube");
     go->AddComponent<BoxCollider>();
+    return go;
+}
+
+GameObject *GameObjectFactory::CreateCapsuleGameObject()
+{
+    RH<Mesh> mesh = MeshFactory::GetCapsule();
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Capsule");
+    go->AddComponent<CapsuleCollider>();
     return go;
 }
 

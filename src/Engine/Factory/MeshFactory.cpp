@@ -30,6 +30,10 @@ RH<Mesh> MeshFactory::GetCube()
 {
     return MeshFactory::GetMesh("Meshes/Cube.obj");
 }
+RH<Mesh> MeshFactory::GetCapsule()
+{
+    return MeshFactory::GetMesh("Meshes/Capsule.obj");
+}
 RH<Mesh> MeshFactory::GetSphere()
 {
     return MeshFactory::GetMesh("Meshes/Sphere.obj");

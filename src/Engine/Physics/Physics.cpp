@@ -9,6 +9,7 @@
 #include "Bang/BoxCollider.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/SphereCollider.h"
+#include "Bang/CapsuleCollider.h"
 #include "Bang/PhysicsMaterial.h"
 
 using namespace physx;
@@ -352,6 +353,22 @@ PxActor* Physics::CreateIntoPxScene(PhysicsObject *phObj)
             }
             break;
 
+        case PhysicsObject::Type::CAPSULE_COLLIDER:
+        {
+            CapsuleCollider *cc = SCAST<CapsuleCollider*>(phObj);
+
+            PxMaterial *pxMaterial = CreateNewMaterial();
+            PxRigidDynamic *pxRigidDynamic = SCAST<PxRigidDynamic*>(pxActor);
+
+            PxCapsuleGeometry pxCapsuleGeom = PxCapsuleGeometry(0.1f, 0.1f);
+            PxShape *pxCapsuleShape =
+                    pxRigidDynamic->createShape(pxCapsuleGeom, *pxMaterial);
+            cc->SetPxRigidBody( pxRigidDynamic );
+            cc->SetPxShape( pxCapsuleShape );
+            cc->UpdatePxShape();
+        }
+        break;
+
             default: break;
         }
 
@@ -541,6 +558,7 @@ void PxSceneContainer::OnObjectUnGathered(GameObject *previousGameObject,
 
             case PhysicsObject::Type::BOX_COLLIDER:
             case PhysicsObject::Type::SPHERE_COLLIDER:
+            case PhysicsObject::Type::CAPSULE_COLLIDER:
             {
                 Collider *coll = SCAST<Collider*>(phObj);
                 PxRigidActor *pxRD = SCAST<PxRigidActor*>(prevPxActor);
@@ -571,6 +589,7 @@ void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 
             case PhysicsObject::Type::BOX_COLLIDER:
             case PhysicsObject::Type::SPHERE_COLLIDER:
+            case PhysicsObject::Type::CAPSULE_COLLIDER:
             {
                 // Collider *coll = SCAST<Collider*>(phObj);
                 // if (coll->GetPxShape()->isReleasable())

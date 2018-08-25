@@ -36,8 +36,8 @@ public:
                                  const RenderFactory::Parameters &params);
     static void RenderBox(const AABox &b,
                           const RenderFactory::Parameters &params);
-    static void RenderSimpleBox(const AABox &b,
-                                const RenderFactory::Parameters &params);
+    static void RenderWireframeBox(const AABox &b,
+                                   const RenderFactory::Parameters &params);
     static void RenderRectNDC(const AARect &r,
                               const RenderFactory::Parameters &params);
     static void RenderRectNDC(const RectPoints &rectPointsNDC,
@@ -63,20 +63,25 @@ public:
     static void RenderBillboardCircle(float radius,
                                       const RenderFactory::Parameters &params,
                                       int numSegments = 32);
-    static void RenderCircle(float radius,
-                             const RenderFactory::Parameters &params,
-                             int numSegments = 32);
+    static void RenderWireframeCircle(float radius,
+                                      const RenderFactory::Parameters &params,
+                                      int numSegments = 32,
+                                      bool hemicircle = false);
     static void RenderRay(const Vector3 &origin,
                           const Vector3 &rayDir,
                           const RenderFactory::Parameters &params);
     static void RenderSphere(float radius,
                              const RenderFactory::Parameters &params);
-    static void RenderSimpleSphere(float radius,
-                                   bool withOutline,
-                                   const RenderFactory::Parameters &params,
-                                   int numLoopsVertical = 4,
-                                   int numLoopsHorizontal = 4,
-                                   int numCircleSegments = 32);
+    static void RenderWireframeCapsule(float height,
+                                       float radius,
+                                       const RenderFactory::Parameters &params);
+    static void RenderWireframeSphere(float radius,
+                                      bool withOutline,
+                                      const RenderFactory::Parameters &params,
+                                      int numLoopsVertical = 4,
+                                      int numLoopsHorizontal = 4,
+                                      int numCircleSegments = 32,
+                                      bool hemisphere = false);
     static void RenderOutline(GameObject *gameObject,
                               const RenderFactory::Parameters &params,
                               float alphaDepthOnFade = 0.2f);

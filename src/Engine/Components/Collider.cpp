@@ -26,6 +26,15 @@ void Collider::OnUpdate()
     UpdatePxShape();
 }
 
+void Collider::SetIsTrigger(bool isTrigger)
+{
+    if (isTrigger != GetIsTrigger())
+    {
+        m_isTrigger = isTrigger;
+        UpdatePxShape();
+    }
+}
+
 void Collider::SetCenter(const Vector3 &center)
 {
     if (center != GetCenter())
@@ -47,6 +56,11 @@ void Collider::SetPhysicsMaterial(PhysicsMaterial *physicsMaterial)
         p_sharedPhysicsMaterial.Set(physicsMaterial);
         UpdatePxShape();
     }
+}
+
+bool Collider::GetIsTrigger() const
+{
+    return m_isTrigger;
 }
 
 const Vector3 &Collider::GetCenter() const
@@ -84,7 +98,7 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
 void Collider::OnEnabled(Object *)
 {
     GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
-    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
 }
 
 void Collider::OnDisabled(Object *)
@@ -119,12 +133,18 @@ void Collider::CloneInto(ICloneable *clone) const
 
     Collider *colliderClone = SCAST<Collider*>(clone);
     colliderClone->SetCenter( GetCenter() );
+    colliderClone->SetIsTrigger( GetIsTrigger() );
     colliderClone->SetPhysicsMaterial( GetSharedPhysicsMaterial() );
 }
 
 void Collider::ImportXML(const XMLNode &xmlInfo)
 {
     Component::ImportXML(xmlInfo);
+
+    if (xmlInfo.Contains("IsTrigger"))
+    {
+        SetIsTrigger( xmlInfo.Get<bool>("IsTrigger") );
+    }
 
     if (xmlInfo.Contains("Center"))
     {
@@ -144,6 +164,7 @@ void Collider::ExportXML(XMLNode *xmlInfo) const
     Component::ExportXML(xmlInfo);
 
     xmlInfo->Set("Center", GetCenter());
+    xmlInfo->Set("IsTrigger", GetIsTrigger());
     xmlInfo->Set("PhysicsMaterial",
                  GetSharedPhysicsMaterial() ?
                      GetSharedPhysicsMaterial()->GetGUID() : GUID::Empty());
@@ -163,6 +184,9 @@ void Collider::UpdatePxShape()
         pxLocalTransform.q = Physics::GetPxQuatFromQuaternion(
                                                     GetInternalRotation() );
         GetPxShape()->setLocalPose( pxLocalTransform );
+
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
 
         if (GetActivePhysicsMaterial())
         {

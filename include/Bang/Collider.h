@@ -28,9 +28,11 @@ public:
     // Component
     void OnUpdate() override;
 
+    void SetIsTrigger(bool isTrigger);
     void SetCenter(const Vector3 &center);
     void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
 
+    bool GetIsTrigger() const;
     const Vector3& GetCenter() const;
     PhysicsMaterial* GetSharedPhysicsMaterial() const;
     PhysicsMaterial* GetActivePhysicsMaterial() const;
@@ -58,6 +60,7 @@ protected:
     void OnDisabled(Object *object) override;
 
 private:
+    bool m_isTrigger = false;
     Vector3 m_center = Vector3::Zero;
 
     mutable RH<PhysicsMaterial> p_physicsMaterial;

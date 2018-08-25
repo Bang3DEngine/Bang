@@ -38,8 +38,14 @@ void UIInputNumber::OnUpdate()
         }
 
         float increment = 0.0f;
-        if (Input::GetKeyDownRepeat(Key::UP))   { increment =  1.0f; }
-        if (Input::GetKeyDownRepeat(Key::DOWN)) { increment = -1.0f; }
+        if (Input::GetKeyDownRepeat(Key::UP))
+        {
+            increment =  1.0f;
+        }
+        if (Input::GetKeyDownRepeat(Key::DOWN))
+        {
+            increment = -1.0f;
+        }
         if (increment != 0.0f)
         {
             SetValue( GetValue() + increment );
@@ -62,13 +68,19 @@ void UIInputNumber::SetValue(float v)
            PropagateToListeners(&IEventsValueChanged::OnValueChanged, this);
     }
 
-    if (!HasFocus()) { UpdateTextFromValue(); }
+    if (!HasFocus())
+    {
+        UpdateTextFromValue();
+    }
     ChangeTextColorBasedOnMinMax();
 }
 
 void UIInputNumber::SetMinMaxValues(float min, float max)
 {
-    if (max < min) { Debug_Warn("Max and min are swapped! Correcting them..."); }
+    if (max < min)
+    {
+        Debug_Warn("Max and min are swapped! Correcting them...");
+    }
 
     m_minMaxValues = Vector2(Math::Min(min, max), Math::Max(min, max));
     SetValue( GetValue() );
@@ -79,7 +91,10 @@ void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
     m_decimalPlaces = decimalPlaces;
 
     String allowedChars = "0123456789+-";
-    if (GetDecimalPlaces() > 0) { allowedChars += ",."; }
+    if (GetDecimalPlaces() > 0)
+    {
+        allowedChars += ",.";
+    }
     GetInputText()->SetAllowedCharacters(allowedChars);
 
     SetValue( GetValue() );
@@ -96,9 +111,13 @@ uint UIInputNumber::GetDecimalPlaces() const
 }
 void UIInputNumber::UpdateValueFromText()
 {
-    const String &content = GetInputText()->GetText()->GetContent();
     float value = 0.0f;
-    if (!content.IsEmpty()) { std::istringstream iss(content); iss >> value; }
+        const String &content = GetInputText()->GetText()->GetContent();
+    if (!content.IsEmpty())
+    {
+        std::istringstream iss(content);
+        iss >> value;
+    }
     SetValue(value);
 }
 
@@ -118,7 +137,10 @@ void UIInputNumber::ChangeTextColorBasedOnMinMax()
     GetInputText()->GetText()->SetTextColor(textColor);
 }
 
-UIInputText *UIInputNumber::GetInputText() const { return p_inputText; }
+UIInputText *UIInputNumber::GetInputText() const
+{
+    return p_inputText;
+}
 
 float UIInputNumber::GetMinValue() const
 {
@@ -148,7 +170,7 @@ void UIInputNumber::OnEvent(IFocusable*, const UIEvent &event)
     else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         m_hasFocus = false;
-        SetValue( String::ToFloat( GetInputText()->GetText()->GetContent() ) );
+        UpdateTextFromValue();
     }
 }
 

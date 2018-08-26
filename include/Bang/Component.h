@@ -12,6 +12,9 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Collider;
+FORWARD class Collision;
+
 #define REQUIRE_COMPONENT(gameObject, ComponentClass) \
     ASSERT(gameObject->HasComponent<ComponentClass>())
 
@@ -90,6 +93,7 @@ private:
     GameObject *p_gameObject = nullptr;
 
     friend class GameObject;
+    friend class PxSceneContainer;
 };
 
 NAMESPACE_BANG_END

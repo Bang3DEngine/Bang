@@ -14,10 +14,17 @@ void SystemUtils::System(const String &command,
     SystemProcess process;
     process.Start(command, argsList);
     process.WaitUntilFinished();
-    Debug_DLog("System: '" << command << " " << String::Join(argsList, " ") << "'");
 
     String out = process.ReadStandardOutput() + process.ReadStandardError();
-    if (output) { *output = out; }
-    if (success) { *success = process.FinishedOk(); }
+    if (output)
+    {
+        *output = out;
+    }
+
+    if (success)
+    {
+        *success = process.FinishedOk();
+    }
+
     process.Close();
 }

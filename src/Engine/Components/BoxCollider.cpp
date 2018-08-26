@@ -3,6 +3,7 @@
 #include "Bang/Physics.h"
 #include "Bang/XMLNode.h"
 #include "Bang/Transform.h"
+#include "Bang/GameObject.h"
 
 USING_NAMESPACE_BANG
 

@@ -70,37 +70,104 @@ void Component::SetGameObject(GameObject *newGameObject)
     }
 }
 
-GameObject *Component::GetGameObject() const { return p_gameObject; }
+GameObject *Component::GetGameObject() const
+{
+    return p_gameObject;
+}
 
-void Component::OnPreStart() {}
-void Component::OnStart() {}
-void Component::OnPreUpdate() {}
-void Component::OnBeforeChildrenUpdate() {}
-void Component::OnUpdate() {}
-void Component::OnAfterChildrenUpdate() {}
-void Component::OnPostUpdate() {}
-void Component::OnBeforeRender() {}
-void Component::OnBeforeChildrenRender(RenderPass) {}
-void Component::OnRender(RenderPass) {}
-void Component::OnAfterChildrenRender(RenderPass) {}
-void Component::OnDestroy() {}
+void Component::OnPreStart()
+{
+}
+void Component::OnStart()
+{
+}
+void Component::OnPreUpdate()
+{
+}
+void Component::OnBeforeChildrenUpdate()
+{
+}
+void Component::OnUpdate()
+{
+}
+void Component::OnAfterChildrenUpdate()
+{
+}
+void Component::OnPostUpdate()
+{
+}
+void Component::OnBeforeRender()
+{
+}
+void Component::OnBeforeChildrenRender(RenderPass)
+{
+}
+void Component::OnRender(RenderPass)
+{
+}
+void Component::OnAfterChildrenRender(RenderPass)
+{
+}
+void Component::OnDestroy()
+{
+}
 
 void Component::PreUpdate()
-{ if (IsActive()) { OnPreUpdate(); } }
+{
+    if (IsActive())
+    {
+        OnPreUpdate();
+    }
+}
 void Component::BeforeChildrenUpdate()
-{ if (IsActive()) { OnBeforeChildrenUpdate(); } }
+{
+    if (IsActive())
+    {
+        OnBeforeChildrenUpdate();
+    }
+}
 void Component::Update()
-{ if (IsActive()) { OnUpdate(); } }
+{
+    if (IsActive())
+    {
+        OnUpdate();
+    }
+}
 void Component::AfterChildrenUpdate()
-{ if (IsActive()) { OnAfterChildrenUpdate(); } }
+{
+    if (IsActive())
+    {
+        OnAfterChildrenUpdate();
+    }
+}
 void Component::BeforeRender()
-{ if (IsActive()) { OnBeforeRender(); } }
+{
+    if (IsActive())
+    {
+        OnBeforeRender();
+    }
+}
 void Component::BeforeChildrenRender(RenderPass rp)
-{ if (IsActive()) { OnBeforeChildrenRender(rp); } }
+{
+    if (IsActive())
+    {
+        OnBeforeChildrenRender(rp);
+    }
+}
 void Component::Render(RenderPass rp)
-{ if (IsActive()) { OnRender(rp); } }
+{
+    if (IsActive())
+    {
+        OnRender(rp);
+    }
+}
 void Component::AfterChildrenRender(RenderPass rp)
-{ if (IsActive()) { OnAfterChildrenRender(rp); } }
+{
+    if (IsActive())
+    {
+        OnAfterChildrenRender(rp);
+    }
+}
 
 void Component::OnGameObjectChanged(GameObject *previousGameObject,
                                     GameObject *newGameObject)
@@ -111,7 +178,11 @@ void Component::OnGameObjectChanged(GameObject *previousGameObject,
                 newGameObject,
                 this);
 }
-bool Component::CanBeRepeatedInGameObject() const { return true;  }
+
+bool Component::CanBeRepeatedInGameObject() const
+{
+    return true;
+}
 
 bool Component::IsEnabled(bool recursive) const
 {
@@ -138,7 +209,9 @@ void Component::ImportXML(const XMLNode &xmlInfo)
 {
     Serializable::ImportXML(xmlInfo);
     if (xmlInfo.Contains("Enabled"))
-    { SetEnabled(xmlInfo.Get<bool>("Enabled", true)); }
+    {
+        SetEnabled(xmlInfo.Get<bool>("Enabled", true));
+    }
 }
 
 void Component::ExportXML(XMLNode *xmlInfo) const

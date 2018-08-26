@@ -16,7 +16,8 @@ NAMESPACE_BANG_BEGIN
 
 #define COLLIDER(className) \
             COMPONENT(className) \
-            friend class Physics;
+            friend class Physics; \
+            friend class PxSceneContainer;
 
 class Collider : public PhysicsObject,
                  public Component

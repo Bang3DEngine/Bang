@@ -21,14 +21,17 @@
 #include "Bang/Application.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/SceneManager.h"
+#include "Bang/EventListener.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UIImageRenderer.h"
+#include "Bang/IEventsGameObjectPhysics.h"
 
 USING_NAMESPACE_BANG
 
 NAMESPACE_BANG_BEGIN
 
-class Behaviour : public Component
+class Behaviour : public Component,
+                  public EventListener<IEventsGameObjectPhysics>
 {
     COMPONENT(Behaviour)
 

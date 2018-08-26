@@ -4,11 +4,10 @@
 #include "PxPhysicsAPI.h"
 
 #include "Bang/Map.h"
+#include "Bang/Vector3.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
-#include "Bang/ObjectGatherer.h"
-#include "Bang/IEventsChildren.h"
-#include "Bang/IEventsComponentChangeGameObject.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -77,7 +76,6 @@ private:
     physx::PxPhysics* GetPxPhysics() const;
 
     physx::PxMaterial* CreateNewMaterial();
-    physx::PxActor* CreateIntoPxScene(PhysicsObject *phObj);
 
     static GameObject* GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
@@ -88,37 +86,6 @@ private:
     friend class PxSceneContainer;
 };
 
-class PxSceneContainer : public EventListener<IEventsObjectGatherer<PhysicsObject>>,
-                         public EventListener<IEventsDestroy>
-{
-public:
-    PxSceneContainer(Scene *scene);
-    virtual ~PxSceneContainer();
-
-    Time::TimeT m_lastStepTimeMillis = 0;
-
-    int m_numFramesLeftToIgnore = 0;
-    physx::PxScene *p_pxScene = nullptr;
-    ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
-    Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
-    Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
-
-    void ResetStepTimeReference();
-
-    physx::PxScene* GetPxScene() const;
-    physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
-    GameObject* GetGameObjectFromPxActor(physx::PxActor *pxActor) const;
-
-    void ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go);
-
-    // IEventsObjectGatherer
-    virtual void OnObjectGathered(PhysicsObject *phObj) override;
-    virtual void OnObjectUnGathered(GameObject *previousGameObject,
-                                    PhysicsObject *phObj) override;
-
-    // IEventsDestroy
-    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;
-};
 
 NAMESPACE_BANG_END
 

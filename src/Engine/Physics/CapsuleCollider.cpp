@@ -126,6 +126,7 @@ Quaternion CapsuleCollider::GetInternalRotation() const
             return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Up);
         break;
     }
+    return Quaternion::Identity;
 }
 
 void CapsuleCollider::UpdatePxShape()

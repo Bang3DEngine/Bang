@@ -16,17 +16,26 @@ BehaviourManager::BehaviourManager()
 
 BehaviourManager::~BehaviourManager()
 {
-    if (m_behavioursLibrary) { delete m_behavioursLibrary; }
+    if (m_behavioursLibrary)
+    {
+        delete m_behavioursLibrary;
+    }
 }
 
 Behaviour *BehaviourManager::CreateBehaviourInstance(const String &behaviourName,
                                                      Library *behavioursLib)
 {
     if (!behavioursLib)
-    { Debug_Error("No current behavioursLib..."); return nullptr; }
+    {
+        Debug_Error("No current behavioursLib...");
+        return nullptr;
+    }
 
     if (!behavioursLib->IsLoaded())
-    { Debug_Error("No loaded behavioursLib..."); behavioursLib->Load(); }
+    {
+        Debug_Error("No loaded behavioursLib...");
+        behavioursLib->Load();
+    }
 
     String errorString = "";
     if (behavioursLib->IsLoaded())
@@ -43,9 +52,15 @@ Behaviour *BehaviourManager::CreateBehaviourInstance(const String &behaviourName
             // of this main binary, so it can link it.
             return createFunction(Application::GetInstance());
         }
-        else { errorString = behavioursLib->GetErrorString(); }
+        else
+        {
+            errorString = behavioursLib->GetErrorString();
+        }
     }
-    else { errorString = behavioursLib->GetErrorString(); }
+    else
+    {
+        errorString = behavioursLib->GetErrorString();
+    }
 
     Debug_Error(errorString);
     return nullptr;
@@ -113,8 +128,8 @@ void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
 
     if (GetBehavioursLibrary())
     {
-        Debug_DLog("Going to load BehavioursLibrary " <<
-                   GetBehavioursLibrary()->GetLibraryPath());
+        // Debug_DLog("Going to load BehavioursLibrary " <<
+        //            GetBehavioursLibrary()->GetLibraryPath());
 
         if(!GetBehavioursLibrary()->Load())
         {

@@ -16,8 +16,18 @@
 
 USING_NAMESPACE_BANG
 
-enum { IN = 0, OUT = 1, ERR = 2 };
-enum { WRITE = OUT, READ = IN };
+enum
+{
+    IN = 0,
+    OUT = 1,
+    ERR = 2
+};
+
+enum
+{
+    WRITE = OUT,
+    READ = IN
+};
 
 SystemProcess::SystemProcess()
 {
@@ -32,6 +42,9 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
 {
     // Debug_DLog("Executing command: " << command << " " <<
     //            String::Join(extraArgs, " "));
+    // Debug_DLog("LD_PRELOAD: " << std::getenv("LD_PRELOAD"));
+    char ldPreloadEmpty[] = "LD_PRELOAD=";
+    putenv(ldPreloadEmpty);
 
     m_oldFileDescriptors[IN]  = dup(Channel::STDIN);
     m_oldFileDescriptors[OUT] = dup(Channel::STDOUT);
@@ -110,6 +123,16 @@ bool SystemProcess::WaitUntilFinished(float seconds)
     {
         m_readOutputWhileWaiting += ReadStandardOutputRaw();
         m_readErrorWhileWaiting  += ReadStandardErrorRaw();
+
+        if (m_readOutputWhileWaiting.Size() >= 1)
+        {
+            Debug_DLog(m_readOutputWhileWaiting);
+        }
+
+        if (m_readErrorWhileWaiting.Size() >= 1)
+        {
+            Debug_DLog(m_readErrorWhileWaiting);
+        }
 
         status = -1;
         int waitpidStatus = waitpid(m_childPID, &status, WNOHANG);

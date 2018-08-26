@@ -88,7 +88,7 @@ find_library(PTHREAD_LIBRARY REQUIRED "pthread" PATHS ${SEARCH_LIB_PATHS})
 include("${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PhysX/CMakeLists.txt")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    if ("${USE_SANITIZER}")
+    if (${USE_SANITIZER})
         find_library(ASAN_LIBRARY  REQUIRED NAMES asan libasan.so.4 libasan.so.3 libasan.so.2 libasan.so.1 libasan.so)
         find_library(UBSAN_LIBRARY REQUIRED NAMES ubsan libubsan.so.2 libubsan.so.1 libubsan.so.0 libubsan.so)
         list(APPEND DEPENDENCIES_LIBS "${ASAN_LIBRARY}")

@@ -147,6 +147,14 @@ List<Path> Paths::GetEngineIncludeDirs()
 {
     List<Path> incPaths;
     incPaths.PushBack( Paths::GetEngineIncludeDir() );
+
+    Path physxRootDir = Paths::GetEngineDir().
+                        Append("Build/BuildDependencies/ThirdParty/PhysX/");
+    List<Path> physxDirs = physxRootDir.GetSubDirectories(Path::FindFlag::RECURSIVE);
+    for (const Path &physxDir : physxDirs)
+    {
+        incPaths.PushBack(physxDir);
+    }
     return incPaths;
 }
 

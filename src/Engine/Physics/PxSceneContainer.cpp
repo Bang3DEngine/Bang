@@ -37,6 +37,19 @@ physx::PxFilterFlags CollisionFilterShader(
                    PxPairFlag::eNOTIFY_TOUCH_PERSISTS |
                    PxPairFlag::eNOTIFY_TOUCH_LOST |
                    PxPairFlag::eNOTIFY_CONTACT_POINTS;
+
+    if (PxFilterObjectIsKinematic(attributes0) &&
+        PxFilterObjectIsKinematic(attributes1))
+    {
+        retPairFlags.clear(PxPairFlag::eSOLVE_CONTACT);
+    }
+
+    if (PxFilterObjectIsTrigger(attributes0) &&
+        PxFilterObjectIsTrigger(attributes1))
+    {
+        retPairFlags.set(PxPairFlag::eNOTIFY_TOUCH_PERSISTS);
+    }
+
     PxFilterFlags filterFlags;
     filterFlags.set(PxFilterFlag::eNOTIFY);
     filterFlags.clear(PxFilterFlag::eCALLBACK);
@@ -113,6 +126,49 @@ GameObject *PxSceneContainer::GetGameObjectFromPxActor(PxActor *pxActor) const
         return m_pxActorToGameObject.Get(pxActor);
     }
     return nullptr;
+}
+
+void PxSceneContainer::RayCast(const RayCastInfo &rcInfo,
+                               RayCastHitInfo *hitInfo)
+{
+    if (!hitInfo)
+    {
+        return;
+    }
+
+    PxScene *pxScene = GetPxScene();
+    Vector3 unitDir = rcInfo.direction.NormalizedSafe();
+
+    const PxU32 bufferSize = 256;        // [in] size of 'hitBuffer'
+    PxRaycastHit hitArray[bufferSize];  // [out] User provided buffer for results
+    PxRaycastBuffer hitOutBuffer(hitArray, bufferSize);
+
+    PxHitFlags hf = (PxHitFlag::eDEFAULT | PxHitFlag::eUV);
+    PxQueryFilterData fd;
+    fd.flags = (PxQueryFlag::eNO_BLOCK | PxQueryFlag::eDYNAMIC);
+
+    pxScene->raycast(Physics::GetPxVec3FromVector3(rcInfo.origin),
+                     Physics::GetPxVec3FromVector3(unitDir),
+                     rcInfo.maxDistance,
+                     hitOutBuffer,
+                     hf,
+                     fd);
+
+    for (uint32_t i = 0; i < hitOutBuffer.getNbTouches(); ++i)
+    {
+        const PxRaycastHit &pxRCHit = hitOutBuffer.getTouch(i);
+
+        RayCastHit hit;
+        hit.m_distance  = pxRCHit.distance;
+        hit.m_faceIndex = pxRCHit.faceIndex;
+        hit.m_position  = Physics::GetVector3FromPxVec3(pxRCHit.position);
+        hit.m_normal    = Physics::GetVector3FromPxVec3(pxRCHit.normal);
+        hit.m_uv        = Vector2(pxRCHit.u, pxRCHit.v);
+
+        hit.p_collider  = GetColliderFromPxShape( pxRCHit.shape );
+
+        hitInfo->m_hits.PushBack( hit );
+    }
 }
 
 PxActor* PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const

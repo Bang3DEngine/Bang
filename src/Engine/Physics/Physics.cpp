@@ -7,6 +7,7 @@
 #include "Bang/Transform.h"
 #include "Bang/Application.h"
 #include "Bang/BoxCollider.h"
+#include "Bang/SceneManager.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/CapsuleCollider.h"
@@ -231,6 +232,32 @@ float Physics::GetStepSleepTimeSeconds() const
 const Vector3 &Physics::GetGravity() const
 {
     return m_gravity;
+}
+
+void Physics::RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo)
+{
+    Physics *ph = Physics::GetInstance();
+    ASSERT(ph);
+
+    if (Scene *scene = SceneManager::GetActiveScene())
+    {
+        if (PxSceneContainer *pxSceneCont = ph->GetPxSceneContainerFromScene(scene))
+        {
+            pxSceneCont->RayCast(rcInfo, hitInfo);
+        }
+    }
+}
+
+void Physics::RayCast(const Vector3 &origin,
+                      const Vector3 &direction,
+                      float maxDistance,
+                      RayCastHitInfo *hitInfo)
+{
+    RayCastInfo rcInfo;
+    rcInfo.origin = origin;
+    rcInfo.direction = direction;
+    rcInfo.maxDistance = maxDistance;
+    Physics::RayCast(rcInfo, hitInfo);
 }
 
 Physics *Physics::GetInstance()

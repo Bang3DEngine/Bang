@@ -97,14 +97,16 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
 
 void Collider::OnEnabled(Object *)
 {
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
     GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, !GetIsTrigger());
 }
 
 void Collider::OnDisabled(Object *)
 {
     GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
     GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
 }
 
 void Collider::SetPxRigidBody(physx::PxRigidBody *pxRB)

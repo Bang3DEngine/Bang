@@ -5,10 +5,12 @@
 
 #include "Bang/Map.h"
 #include "Bang/Time.h"
+#include "Bang/RayCastInfo.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/ObjectGatherer.h"
+#include "Bang/RayCastHitInfo.h"
 #include "Bang/IEventsChildren.h"
 
 NAMESPACE_BANG_BEGIN
@@ -36,6 +38,8 @@ public:
     physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
     Collider* GetColliderFromPxShape(physx::PxShape *pxShape) const;
     GameObject* GetGameObjectFromPxActor(physx::PxActor *pxActor) const;
+
+    void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
 
     void ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go);
 

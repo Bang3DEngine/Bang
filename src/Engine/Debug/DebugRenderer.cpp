@@ -154,7 +154,11 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
                                           bool depthTest)
 {
     DebugRenderer *dr = DebugRenderer::GetActive();
-    if (!dr) { Debug_Error("No active DebugRenderer!"); return nullptr; }
+    if (!dr)
+    {
+        Debug_Error("No active DebugRenderer!");
+        return nullptr;
+    }
 
     DebugRenderPrimitive drp;
     drp.primitive = primitive;
@@ -178,6 +182,7 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
 void DebugRenderer::RenderPrimitives(bool withDepth)
 {
     GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::SHADER_PROGRAM);
 
     for (auto it = m_primitivesToRender.Begin(); it != m_primitivesToRender.End(); )
     {
@@ -195,7 +200,11 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         {
             RenderFactory::Parameters params;
             params.color = drp->color;
-            if (drp->thickness >= 0.0f) { params.thickness = drp->thickness; }
+            if (drp->thickness >= 0.0f)
+            {
+                params.thickness = drp->thickness;
+            }
+
             GL::SetDepthFunc(drp->depthTest ? GL::Function::LEQUAL :
                                               GL::Function::ALWAYS);
             switch (drp->primitive)
@@ -241,8 +250,14 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                             uvs.PushBack(Vector2(0,0));
                         }
                         Triangle t0, t1; quad.GetTriangles(&t0, &t1);
-                        for (int i : {0,1,2}) { positions.PushBack(t0[i]); }
-                        for (int i : {0,1,2}) { positions.PushBack(t1[i]); }
+                        for (int i : {0,1,2})
+                        {
+                            positions.PushBack(t0[i]);
+                        }
+                        for (int i : {0,1,2})
+                        {
+                            positions.PushBack(t1[i]);
+                        }
                     }
                     m_mesh.Get()->SetPositionsPool(positions);
                     m_mesh.Get()->SetNormalsPool(normals);
@@ -272,6 +287,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         }
     }
 
+    GL::Pop(GL::Pushable::SHADER_PROGRAM);
     GL::Pop(GL::Pushable::DEPTH_STATES);
 }
 

@@ -5,9 +5,29 @@
 
 NAMESPACE_BANG_BEGIN
 
-enum class Axis { VERTICAL, HORIZONTAL };
-enum class Axis3D { X, Y, Z };
-enum class Axis3DExt { X, Y, Z, XY, XZ, YZ, XYZ };
+enum class Axis
+{
+    VERTICAL,
+    HORIZONTAL
+};
+
+enum class Axis3D
+{
+    X,
+    Y,
+    Z
+};
+
+enum class Axis3DExt
+{
+    X,
+    Y,
+    Z,
+    XY,
+    XZ,
+    YZ,
+    XYZ
+};
 
 NAMESPACE_BANG_END
 

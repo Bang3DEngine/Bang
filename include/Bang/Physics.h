@@ -5,8 +5,10 @@
 
 #include "Bang/Map.h"
 #include "Bang/Vector3.h"
+#include "Bang/RayCastInfo.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
+#include "Bang/RayCastHitInfo.h"
 #include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
@@ -42,6 +44,12 @@ public:
     int GetMaxSubSteps() const;
     float GetStepSleepTimeSeconds() const;
     const Vector3& GetGravity() const;
+
+    static void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
+    static void RayCast(const Vector3 &origin,
+                        const Vector3 &direction,
+                        float maxDistance,
+                        RayCastHitInfo *hitInfo);
 
     static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
     static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);

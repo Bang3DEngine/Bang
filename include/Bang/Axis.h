@@ -2,6 +2,7 @@
 #define AXIS_H
 
 #include "Bang/Bang.h"
+#include "Bang/Flags.h"
 
 NAMESPACE_BANG_BEGIN
 

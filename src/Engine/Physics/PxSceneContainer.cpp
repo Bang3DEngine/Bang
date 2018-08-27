@@ -47,7 +47,7 @@ physx::PxFilterFlags CollisionFilterShader(
     if (PxFilterObjectIsTrigger(attributes0) &&
         PxFilterObjectIsTrigger(attributes1))
     {
-        retPairFlags.set(PxPairFlag::eNOTIFY_TOUCH_PERSISTS);
+        retPairFlags.clear(PxPairFlag::eNOTIFY_TOUCH_PERSISTS);
     }
 
     PxFilterFlags filterFlags;

@@ -29,7 +29,7 @@ public:
 
     Flags SetOn(FlagsPrimitiveType f)
     {
-        m_flags = m_flags | f;
+        m_flags = GetValue() | f;
         return *this;
     }
     Flags SetOn(Flag f)
@@ -39,7 +39,7 @@ public:
 
     Flags SetOff(FlagsPrimitiveType f)
     {
-        m_flags = m_flags & ~f;
+        m_flags = GetValue() & ~f;
         return *this;
     }
     Flags SetOff(Flag f)
@@ -49,7 +49,7 @@ public:
 
     bool IsOn(FlagsPrimitiveType f) const
     {
-        return (m_flags & f) > 0;
+        return (GetValue() & f) > 0;
     }
     bool IsOn(Flag f) const
     {
@@ -67,32 +67,38 @@ public:
 
     inline Flags operator|(Flag f)
     {
-        return Flags(m_flags | f);
+        return Flags(GetValue() | f);
     }
 
     inline Flags operator~()
     {
-        return Flags(~m_flags);
+        return Flags(~GetValue());
     }
 
     inline Flags operator&(Flag f)
     {
-        return Flags(m_flags & f);
+        return Flags(GetValue() & f);
     }
 
     inline Flags operator^(Flag f)
     {
-        return Flags(m_flags ^ f);
+        return Flags(GetValue() ^ f);
     }
 
     inline bool operator==(const Flags &rhs) const
     {
-        return SCAST<FlagsPrimitiveType>(m_flags) ==
-               SCAST<FlagsPrimitiveType>(rhs.m_flags);
+        return SCAST<FlagsPrimitiveType>(GetValue()) ==
+               SCAST<FlagsPrimitiveType>(rhs.GetValue());
     }
+
     inline bool operator!=(const Flags &rhs) const
     {
         return !(*this == rhs);
+    }
+
+    FlagsPrimitiveType GetValue() const
+    {
+        return m_flags;
     }
 
 private:

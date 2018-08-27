@@ -8,13 +8,13 @@ NAMESPACE_BANG_BEGIN
 enum class RenderFlag
 {
     NONE = 0,
-    CLEAR_COLOR              = 0b00000000001,
-    CLEAR_NORMALS            = 0b00000000010,
-    CLEAR_ALBEDO             = 0b00000000100,
-    CLEAR_MISC               = 0b00000001000,
-    CLEAR_DEPTH_STENCIL      = 0b00000010000,
-    RENDER_SHADOW_MAPS       = 0b00000100000,
-    RENDER_REFLECTION_PROBES = 0b00001000000,
+    CLEAR_COLOR              = (1 << 0),
+    CLEAR_NORMALS            = (1 << 1),
+    CLEAR_ALBEDO             = (1 << 2),
+    CLEAR_MISC               = (1 << 3),
+    CLEAR_DEPTH_STENCIL      = (1 << 4),
+    RENDER_SHADOW_MAPS       = (1 << 5),
+    RENDER_REFLECTION_PROBES = (1 << 6),
     DEFAULT = SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_COLOR)         |
               SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_NORMALS)       |
               SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_ALBEDO)        |

@@ -83,11 +83,11 @@ namespace Sc
 
 		PX_INLINE void checkLowLevelActivationState();
 	
-	private:
+    private:
 		ParticleElementRbElementInteraction& operator=(const ParticleElementRbElementInteraction&);
 		void activateForLowLevel(const PxU32 ccdPass);
 		void deactivateForLowLevel(bool isDyingRb, const PxU32 ccdPass);
-		static void operator delete(void*) {}
+        // static void operator delete(void*) {}
 
 		PX_FORCE_INLINE PxU32 isRbTrigger() const { return (getRbShape().getFlags() & PxShapeFlag::eTRIGGER_SHAPE); }
 

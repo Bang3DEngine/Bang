@@ -59,6 +59,15 @@ void RigidBody::SetIsKinematic(bool isKinematic)
     }
 }
 
+void RigidBody::SetConstraints(const RigidBodyConstraints &constraints)
+{
+    if (constraints != GetConstraints())
+    {
+        m_constraints = constraints;
+        UpdatePxRigidDynamicValues();
+    }
+}
+
 float RigidBody::GetMass() const
 {
     return m_mass;
@@ -84,6 +93,11 @@ bool RigidBody::GetIsKinematic() const
     return m_isKinematic;
 }
 
+const RigidBodyConstraints& RigidBody::GetConstraints() const
+{
+    return m_constraints;
+}
+
 void RigidBody::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
@@ -94,6 +108,7 @@ void RigidBody::CloneInto(ICloneable *clone) const
     rbClone->SetAngularDrag( GetAngularDrag() );
     rbClone->SetUseGravity( GetUseGravity() );
     rbClone->SetIsKinematic( GetIsKinematic() );
+    rbClone->SetConstraints( GetConstraints() );
 }
 
 void RigidBody::ImportXML(const XMLNode &xmlInfo)
@@ -124,6 +139,12 @@ void RigidBody::ImportXML(const XMLNode &xmlInfo)
     {
         SetIsKinematic( xmlInfo.Get<bool>("IsKinematic") );
     }
+
+    if (xmlInfo.Contains("Constraints"))
+    {
+        SetConstraints( SCAST<RigidBodyConstraints>(
+                                    xmlInfo.Get<int>("Constraints")) );
+    }
 }
 
 void RigidBody::ExportXML(XMLNode *xmlInfo) const
@@ -135,6 +156,7 @@ void RigidBody::ExportXML(XMLNode *xmlInfo) const
     xmlInfo->Set("AngularDrag", GetAngularDrag());
     xmlInfo->Set("UseGravity",  GetUseGravity());
     xmlInfo->Set("IsKinematic", GetIsKinematic());
+    xmlInfo->Set("Constraints", GetConstraints().GetValue());
 }
 
 void RigidBody::UpdatePxRigidDynamicValues()
@@ -146,6 +168,8 @@ void RigidBody::UpdatePxRigidDynamicValues()
         GetPxRigidDynamic()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC,
                                               GetIsKinematic());
         GetPxRigidDynamic()->setMass( GetMass() );
+        GetPxRigidDynamic()->setRigidDynamicLockFlags(
+          SCAST<physx::PxRigidDynamicLockFlags>(GetConstraints().GetValue()) );
         GetPxRigidDynamic()->setLinearDamping( GetDrag() );
         GetPxRigidDynamic()->setAngularDamping( GetAngularDrag() );
     }

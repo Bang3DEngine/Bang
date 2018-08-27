@@ -34,7 +34,10 @@ Behaviour *BehaviourManager::CreateBehaviourInstance(const String &behaviourName
     if (!behavioursLib->IsLoaded())
     {
         Debug_Error("No loaded behavioursLib...");
-        behavioursLib->Load();
+        if (!behavioursLib->Load())
+        {
+            return nullptr;
+        }
     }
 
     String errorString = "";

@@ -21,38 +21,56 @@ class UIComboBox : public Component,
 
 public:
     void AddItem(const String &label, int value);
+    void SetSelectionByIndex(int index, bool selected);
+    void SetSelectionByValue(int value, bool selected);
     void SetSelectionByIndex(int index);
     void SetSelectionByValue(int value);
+    void SetMultiCheck(bool multicheck);
+    void ClearSelectionByIndex(int index);
+    void ClearSelectionByValue(int value);
+    void ClearSelection();
 
     void ShowList();
-    bool IsListBeingShown() const;
     void HideList();
+    bool IsListBeingShown() const;
+    bool IsSelectedByIndex(int index) const;
 
+    bool HasFocus() const;
+    bool GetMultiCheck() const;
     int GetSelectedValue() const;
     int GetSelectedIndex() const;
     String GetSelectedLabel() const;
-    bool HasFocus() const;
+    Array<int> GetSelectedValues() const;
+    const Array<int>& GetSelectedIndices() const;
 
-private:
-    int m_selectedIndex = -1;
-    Array<int> m_indexToValue;
-    Array<String> m_indexToLabel;
-    float m_secondsWithListShown = 0.0f;
-    bool m_listRecentlyToggled = false;
-
-    UIList *p_list = nullptr;
-    UITextRenderer *p_currentItemText = nullptr;
-
-	UIComboBox();
+protected:
+    UIComboBox();
     virtual ~UIComboBox();
 
     void OnUpdate() override;
 
+    void UpdateSelectedItemTopText();
+
     UIList *GetList() const;
     static UIComboBox *CreateInto(GameObject *go);
+    static void CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
+                                                 GameObject *go);
 
     // UIList item handler
     void OnListSelectionCallback(GameObject *item, UIList::Action action);
+
+private:
+    bool m_multiCheck = false;
+    Array<int> m_indexToValue;
+    Array<String> m_indexToLabel;
+    Array<int> m_selectedIndices;
+    Array<UIImageRenderer*> m_checkImgs;
+    bool m_listRecentlyToggled = false;
+    float m_secondsWithListShown = 0.0f;
+
+    UIList *p_list = nullptr;
+    UITextRenderer *p_selectedItemText = nullptr;
+
 
     friend class GameObjectFactory;
 };

@@ -277,6 +277,19 @@ UIComboBox *GameObjectFactory::CreateUIComboBox()
                 GameObjectFactory::CreateUIGameObjectNamed("ComboBox") );
 }
 
+UIComboBox *GameObjectFactory::CreateUIBoolComboBoxInto(GameObject *go)
+{
+    UIComboBox *cb = GameObjectFactory::CreateUIComboBoxInto(go);
+    cb->SetMultiCheck(true);
+    return cb;
+}
+
+UIComboBox *GameObjectFactory::CreateUIBoolComboBox()
+{
+    return GameObjectFactory::CreateUIBoolComboBoxInto(
+                GameObjectFactory::CreateUIGameObjectNamed("BoolComboBox") );
+}
+
 UISlider *GameObjectFactory::CreateUISliderInto(GameObject *go)
 {
     return UISlider::CreateInto(go);

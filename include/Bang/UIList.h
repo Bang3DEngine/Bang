@@ -43,7 +43,6 @@ public:
     void SetIdleColor(const Color &idleColor);
     void SetOverColor(const Color &overColor);
     void SetSelectedColor(const Color &selectedColor);
-    void SetUseSelectedColor(bool useSelectColor);
 
     const Array<GOItem*>& GetItems() const;
     GOItem *GetItem(int i) const;
@@ -83,6 +82,9 @@ protected:
     void AddItem_(GOItem *newItem, int index, bool moving);
     void RemoveItem_(GOItem *item, bool moving);
 
+    UIEventResult OnMouseMove(bool forceColorsUpdate = false);
+    UIImageRenderer *GetItemBg(GOItem *item) const;
+
 private:
     Array<GOItem*> p_items;
     IFocusable *p_focusable = nullptr;
@@ -95,7 +97,6 @@ private:
     GameObject *p_container = nullptr;
     UIScrollPanel *p_scrollPanel = nullptr;
 
-    bool m_useSelectColor = true;
     Color m_idleColor = Color::Zero;
     Color m_overColor = Color::VeryLightBlue;
     Color m_selectedColor = Color::LightBlue;

@@ -64,6 +64,8 @@ public:
     static UICheckBox*         CreateUICheckBox();
     static UIComboBox*         CreateUIComboBoxInto(GameObject *go);
     static UIComboBox*         CreateUIComboBox();
+    static UIComboBox*         CreateUIBoolComboBoxInto(GameObject *go);
+    static UIComboBox*         CreateUIBoolComboBox();
     static UISlider*           CreateUISliderInto(GameObject *go);
     static UISlider*           CreateUISlider();
     static UIInputNumber*      CreateUIInputNumberInto(GameObject *go);

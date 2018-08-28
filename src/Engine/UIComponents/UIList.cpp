@@ -105,17 +105,34 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 void UIList::RemoveItem_(GOItem *item, bool moving)
 {
     int indexOfItem = p_items.IndexOf(item);
-    if (indexOfItem < 0) { return; }
+    if (indexOfItem < 0)
+    {
+        return;
+    }
 
-    if (p_itemUnderMouse == item) { p_itemUnderMouse = nullptr; }
-    if (indexOfItem < GetSelectedIndex()) { m_selectionIndex -= 1; }
-    if (GetSelectedIndex() == indexOfItem) { ClearSelection(); }
+    if (p_itemUnderMouse == item)
+    {
+        p_itemUnderMouse = nullptr;
+    }
+
+    if (indexOfItem < GetSelectedIndex())
+    {
+        m_selectionIndex -= 1;
+    }
+
+    if (GetSelectedIndex() == indexOfItem)
+    {
+        ClearSelection();
+    }
 
     p_items.Remove(item);
     p_itemsBackground.Remove(item);
 
     // Destroy the element
-    if (!moving) { GameObject::Destroy(item); }
+    if (!moving)
+    {
+        GameObject::Destroy(item);
+    }
     item->SetParent(nullptr);
 
     if (!moving)
@@ -125,21 +142,104 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     }
 }
 
+UIEventResult UIList::OnMouseMove(bool forceColorsUpdate)
+{
+    UICanvas *canvas = UICanvas::GetActive(this);
+    if (!canvas)
+    {
+        return UIEventResult::IGNORE;
+    }
+
+    GOItem *itemUnderMouse = nullptr;
+    if (canvas->IsMouseOver(GetContainer(), true))
+    {
+        const Vector2 mousePos = Input::GetMousePositionNDC();
+        const AARect listRTNDCRect ( GetGameObject()->GetRectTransform()->
+                                     GetViewportAARectNDC() );
+        for (GOItem *childItem : p_items)
+        {
+            if (!childItem->IsActive())
+            {
+                continue;
+            }
+
+            bool overChildItem;
+            if (m_wideSelectionMode)
+            {
+                AARect itemRTRect ( childItem->GetRectTransform()->GetViewportAARectNDC() );
+                overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
+                                 mousePos.x <= listRTNDCRect.GetMax().x &&
+                                 mousePos.y >= itemRTRect.GetMin().y &&
+                                 mousePos.y <= itemRTRect.GetMax().y);
+            }
+            else
+            {
+                overChildItem = canvas->IsMouseOver(childItem, false);
+            }
+
+            if (overChildItem)
+            {
+                itemUnderMouse = childItem;
+                break;
+            }
+        }
+    }
+
+    if ( (p_itemUnderMouse != itemUnderMouse) || forceColorsUpdate )
+    {
+        if (p_itemUnderMouse)
+        {
+            if (GetSelectedItem() != p_itemUnderMouse)
+            {
+                UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse);
+                ASSERT(itemBg);
+                itemBg->SetTint( GetIdleColor() );
+            }
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+        }
+
+        p_itemUnderMouse = itemUnderMouse;
+        if (p_itemUnderMouse)
+        {
+            if (GetSelectedItem() != p_itemUnderMouse)
+            {
+                UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse);
+                ASSERT(itemBg);
+                itemBg->SetTint( GetOverColor() );
+            }
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
+        }
+        return UIEventResult::INTERCEPT;
+    }
+    return UIEventResult::IGNORE;
+}
+
+UIImageRenderer *UIList::GetItemBg(GOItem *item) const
+{
+    if (!item || !p_itemsBackground.ContainsKey(item))
+    {
+        return nullptr;
+    }
+    return p_itemsBackground.Get(item);
+}
+
 void UIList::ClearSelection()
 {
-    if (GetSelectedIndex() >= 0)
-    {
-        SetSelection(-1);
-    }
+    SetSelection(-1);
 }
 
 void UIList::Clear()
 {
-    while (!p_items.IsEmpty()) { RemoveItem(p_items.Front()); }
+    while (!p_items.IsEmpty())
+    {
+        RemoveItem(p_items.Front());
+    }
+
     if (GetScrollPanel())
     {
         GetScrollPanel()->SetScrollingPercent( Vector2(0.0f) );
     }
+
     ClearSelection();
 }
 
@@ -148,14 +248,15 @@ void UIList::SetIdleColor(const Color &idleColor)
     m_idleColor = idleColor;
 }
 
-const Array<GOItem *> &UIList::GetItems() const { return p_items; }
+const Array<GOItem *> &UIList::GetItems() const
+{
+    return p_items;
+}
+
 GOItem *UIList::GetItem(int i) const
 {
     if (i >= 0 && i < p_items.Size())
     {
-        // auto it = GetItems().Begin();
-        // std::advance(it, GetSelectedIndex());
-        // return *it;
         return GetItems()[i];
     }
     return nullptr;
@@ -173,7 +274,10 @@ void UIList::ScrollTo(int i)
 
 void UIList::ScrollTo(GOItem *item)
 {
-    if (!GetScrollPanel()) { return; }
+    if (!GetScrollPanel())
+    {
+        return;
+    }
 
     AARect itemRect ( item->GetRectTransform()-> GetViewportRect() );
     AARect panelRect ( GetScrollPanel()->GetGameObject()->GetRectTransform()->
@@ -228,6 +332,7 @@ void UIList::SetSelection(int index)
         GOItem *prevSelectedItem = GetSelectedItem();
         if (prevSelectedItem)
         {
+            GetItemBg(prevSelectedItem)->SetTint( GetIdleColor() );
             CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT);
         }
     }
@@ -239,6 +344,7 @@ void UIList::SetSelection(int index)
         if (selectedItem)
         {
             ScrollTo(selectedItem);
+            GetItemBg(selectedItem)->SetTint( GetSelectedColor() );
             CallSelectionCallback(selectedItem, Action::SELECTION_IN);
         }
     }
@@ -246,14 +352,21 @@ void UIList::SetSelection(int index)
     {
         m_selectionIndex = -1;
     }
+
+    OnMouseMove(true);
 }
 
 void UIList::HandleShortcuts()
 {
-    int newSelectedIndex = -1;
+    UICanvas *canvas = UICanvas::GetActive(this);
+    if (!canvas)
+    {
+        return;
+    }
 
+    int newSelectedIndex = -1;
     int numItems = GetNumItems();
-    if (numItems > 0 && UICanvas::GetActive(this)->HasFocus(this, true))
+    if (numItems > 0 && canvas->HasFocus(this, true))
     {
         if (Input::GetKeyDownRepeat(Key::DOWN) || Input::GetKeyDownRepeat(Key::UP))
         {
@@ -264,7 +377,10 @@ void UIList::HandleShortcuts()
             {
                 newSelectedIndex = (newSelectedIndex + inc + numItems) % numItems;
                 newSelectedItem = GetItem(newSelectedIndex);
-                if (newSelectedIndex == GetSelectedIndex()) { break; }
+                if (newSelectedIndex == GetSelectedIndex())
+                {
+                    break;
+                }
             }
             while (newSelectedIndex != GetSelectedIndex() &&
                    !newSelectedItem->IsEnabled());
@@ -314,66 +430,14 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
         case UIEvent::Type::MOUSE_EXIT:
         if (p_itemUnderMouse)
         {
-            ASSERT(p_itemUnderMouse);
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
-            p_itemUnderMouse = nullptr;
-            return UIEventResult::INTERCEPT;
+            return OnMouseMove();
         }
         break;
 
         case UIEvent::Type::MOUSE_ENTER:
         case UIEvent::Type::MOUSE_MOVE:
         {
-            UICanvas *canvas = UICanvas::GetActive(this);
-            GOItem *itemUnderMouse = nullptr;
-            if (canvas->IsMouseOver(GetContainer(), true))
-            {
-                const Vector2 mousePos = Input::GetMousePositionNDC();
-                const AARect listRTNDCRect ( GetGameObject()->GetRectTransform()->
-                                             GetViewportAARectNDC() );
-                for (GOItem *childItem : p_items)
-                {
-                    if (!childItem->IsActive())
-                    {
-                        continue;
-                    }
-
-                    bool overChildItem;
-                    if (m_wideSelectionMode)
-                    {
-                        AARect itemRTRect ( childItem->GetRectTransform()->GetViewportAARectNDC() );
-                        overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
-                                         mousePos.x <= listRTNDCRect.GetMax().x &&
-                                         mousePos.y >= itemRTRect.GetMin().y &&
-                                         mousePos.y <= itemRTRect.GetMax().y);
-                    }
-                    else
-                    {
-                        overChildItem = canvas->IsMouseOver(childItem, false);
-                    }
-
-                    if (overChildItem)
-                    {
-                        itemUnderMouse = childItem;
-                        break;
-                    }
-                }
-            }
-
-            if (p_itemUnderMouse != itemUnderMouse)
-            {
-                if (p_itemUnderMouse)
-                {
-                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
-                }
-
-                p_itemUnderMouse = itemUnderMouse;
-                if (p_itemUnderMouse)
-                {
-                    CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
-                }
-                return UIEventResult::INTERCEPT;
-            }
+            return OnMouseMove();
         }
         break;
 
@@ -468,15 +532,14 @@ void UIList::SetSelectedColor(const Color &selectedColor)
     m_selectedColor = selectedColor;
 }
 
-void UIList::SetUseSelectedColor(bool useSelectColor)
-{
-    m_useSelectColor = useSelectColor;
-}
-
 void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == p_itemUnderMouse)
     {
+        if (UIImageRenderer *bg = GetItemBg(p_itemUnderMouse))
+        {
+            bg->SetTint( GetIdleColor() );
+        }
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
     }
@@ -533,7 +596,10 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
 
         list->p_scrollPanel = scrollPanel;
     }
-    else { list->p_scrollPanel = nullptr; }
+    else
+    {
+        list->p_scrollPanel = nullptr;
+    }
 
     list->p_container = container;
 
@@ -542,35 +608,16 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
 
 void UIList::CallSelectionCallback(GOItem *item, Action action)
 {
-    UIImageRenderer *itemBg = p_itemsBackground.Get(item);
-    ASSERT(itemBg);
-
-    bool isSelected = (GetSelectedItem() == item);
-    switch (action)
+    if (m_selectionCallback)
     {
-        case UIList::Action::MOUSE_OVER:
-            if (!m_useSelectColor || !isSelected) { itemBg->SetTint( GetOverColor() ); }
-        break;
-
-        case UIList::Action::MOUSE_OUT:
-            if (!m_useSelectColor || !isSelected) { itemBg->SetTint( GetIdleColor() ); }
-        break;
-
-        case UIList::Action::SELECTION_IN:
-            if (m_useSelectColor) { itemBg->SetTint( GetSelectedColor() ); }
-        break;
-
-        case UIList::Action::SELECTION_OUT:
-            if (m_useSelectColor) { itemBg->SetTint( GetIdleColor() ); }
-        break;
-
-        default: break;
+        m_selectionCallback(item, action);
     }
-
-    if (m_selectionCallback) { m_selectionCallback(item, action); }
 }
 
-UIScrollPanel *UIList::GetScrollPanel() const { return p_scrollPanel; }
+UIScrollPanel *UIList::GetScrollPanel() const
+{
+    return p_scrollPanel;
+}
 
 const Color &UIList::GetIdleColor() const
 {

@@ -124,15 +124,16 @@ bool SystemProcess::WaitUntilFinished(float seconds)
         m_readOutputWhileWaiting += ReadStandardOutputRaw();
         m_readErrorWhileWaiting  += ReadStandardErrorRaw();
 
+        /*
         if (m_readOutputWhileWaiting.Size() >= 1)
         {
             Debug_DLog(m_readOutputWhileWaiting);
         }
-
         if (m_readErrorWhileWaiting.Size() >= 1)
         {
             Debug_DLog(m_readErrorWhileWaiting);
         }
+        */
 
         status = -1;
         int waitpidStatus = waitpid(m_childPID, &status, WNOHANG);

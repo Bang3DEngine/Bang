@@ -191,6 +191,17 @@ void UIComboBox::SetSelectionByValue(int value)
     SetSelectionByValue(value, true);
 }
 
+void UIComboBox::SetSelectionForFlag(int flagValue)
+{
+    for (int i = 0; i < GetNumItems(); ++i)
+    {
+        if (flagValue & (1 << i))
+        {
+            SetSelectionByIndex(i);
+        }
+    }
+}
+
 void UIComboBox::SetMultiCheck(bool multicheck)
 {
     if (multicheck != GetMultiCheck())
@@ -261,6 +272,11 @@ void UIComboBox::HideList()
     }
 }
 
+int UIComboBox::GetNumItems() const
+{
+    return GetList()->GetNumItems();
+}
+
 bool UIComboBox::GetMultiCheck() const
 {
     return m_multiCheck;
@@ -307,6 +323,17 @@ Array<int> UIComboBox::GetSelectedValues() const
         selectedValues.PushBack( m_indexToValue[selectedIndex] );
     }
     return selectedValues;
+}
+
+int UIComboBox::GetSelectedValuesForFlag() const
+{
+    int bitwiseOr = 0;
+    auto selectedValues = GetSelectedValues();
+    for (int selectedValue : selectedValues)
+    {
+        bitwiseOr |= selectedValue;
+    }
+    return bitwiseOr;
 }
 
 bool UIComboBox::HasFocus() const
@@ -411,7 +438,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     RectTransform *contRT = listGo->GetRectTransform();
     contRT->SetAnchors( Vector2(1, -1) );
     contRT->SetPivotPosition( Vector2(1, 1) );
-    contRT->TranslateLocal(Vector3(0.0f, 0.0f, -0.0001f));
+    contRT->TranslateLocal(Vector3(0.0f, 0.0f, -0.9f));
 
     UIContentSizeFitter *csf = listGo->AddComponent<UIContentSizeFitter>();
     csf->SetHorizontalSizeType(LayoutSizeType::PREFERRED);

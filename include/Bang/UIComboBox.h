@@ -25,6 +25,7 @@ public:
     void SetSelectionByValue(int value, bool selected);
     void SetSelectionByIndex(int index);
     void SetSelectionByValue(int value);
+    void SetSelectionForFlag(int flagValue);
     void SetMultiCheck(bool multicheck);
     void ClearSelectionByIndex(int index);
     void ClearSelectionByValue(int value);
@@ -32,6 +33,7 @@ public:
 
     void ShowList();
     void HideList();
+    int GetNumItems() const;
     bool IsListBeingShown() const;
     bool IsSelectedByIndex(int index) const;
 
@@ -41,6 +43,7 @@ public:
     int GetSelectedIndex() const;
     String GetSelectedLabel() const;
     Array<int> GetSelectedValues() const;
+    int GetSelectedValuesForFlag() const;
     const Array<int>& GetSelectedIndices() const;
 
 protected:

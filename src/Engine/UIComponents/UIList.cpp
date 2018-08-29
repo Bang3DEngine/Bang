@@ -142,7 +142,8 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     }
 }
 
-UIEventResult UIList::OnMouseMove(bool forceColorsUpdate)
+UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
+                                  bool callCallbacks)
 {
     UICanvas *canvas = UICanvas::GetActive(this);
     if (!canvas)
@@ -195,7 +196,11 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate)
                 ASSERT(itemBg);
                 itemBg->SetTint( GetIdleColor() );
             }
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+
+            if (callCallbacks)
+            {
+                CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
+            }
         }
 
         p_itemUnderMouse = itemUnderMouse;
@@ -207,7 +212,11 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate)
                 ASSERT(itemBg);
                 itemBg->SetTint( GetOverColor() );
             }
-            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
+
+            if (callCallbacks)
+            {
+                CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
+            }
         }
         return UIEventResult::INTERCEPT;
     }
@@ -353,7 +362,7 @@ void UIList::SetSelection(int index)
         m_selectionIndex = -1;
     }
 
-    OnMouseMove(true);
+    OnMouseMove(true, false);
 }
 
 void UIList::HandleShortcuts()

@@ -82,7 +82,8 @@ protected:
     void AddItem_(GOItem *newItem, int index, bool moving);
     void RemoveItem_(GOItem *item, bool moving);
 
-    UIEventResult OnMouseMove(bool forceColorsUpdate = false);
+    UIEventResult OnMouseMove(bool forceColorsUpdate = false,
+                              bool callCallbacks = true);
     UIImageRenderer *GetItemBg(GOItem *item) const;
 
 private:

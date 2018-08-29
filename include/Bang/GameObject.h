@@ -173,6 +173,9 @@ public:
                           const Array<TListener*> &list,
                           const Args&... args);
 
+    void PropagateToChildren(std::function<void(GameObject*)> func);
+    void PropagateToComponents(std::function<void(Component*)> func);
+
     template<class T, class TReturn, class... Args>
     void PropagateToChildren(TReturn T::*func, const Args&... args);
 
@@ -230,24 +233,17 @@ private:
     GameObject* p_parent = nullptr;
 
     // Concurrent modification when iterating stuff
-    #ifdef DEBUG
-    std::stack<int> m_numChildrenInEachIteration;
-    std::stack<int> m_numComponentsInEachIteration;
-    #endif
-
-    int m_childrenIterationDepth = 0;
-    int m_componentsIterationDepth = 0;
-    bool m_increaseChildrenIterator = true;
-    bool m_increaseComponentsIterator = true;
-    void OnStartIteratingChildren();
-    void OnEndIteratingChildren();
-    void OnStartIteratingComponents();
-    void OnEndIteratingComponents();
+    Array<int> m_childrenIterationIndices;
+    Array<int> m_componentIterationIndices;
+    void UpdateChildrenIndicesForAdd(int addIndex);
+    void UpdateChildrenIndicesForRemove(int removeIndex);
+    void UpdateComponentIndicesForAdd(int addIndex);
+    void UpdateComponentIndicesForRemove(int removeIndex);
+    void UpdateIndicesForAdd(Array<int> &iterationIndices, int addIndex);
+    void UpdateIndicesForRemove(Array<int> &iterationIndices, int removeIndex);
 
     void AddChild(GameObject *child, int index);
     void RemoveChild(GameObject *child);
-    void ClearChildrenToBeRemoved();
-    void ClearComponentsToBeRemoved();
 
     friend class Scene;
     friend class Prefab;

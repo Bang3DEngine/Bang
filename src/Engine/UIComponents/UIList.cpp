@@ -29,7 +29,6 @@ UIList::UIList()
 
 UIList::~UIList()
 {
-    p_focusable->ClearEventCallbacks();
 }
 
 void UIList::OnUpdate()

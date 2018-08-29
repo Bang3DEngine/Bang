@@ -63,13 +63,13 @@ void Scene::DestroyDelayed()
 {
     while (!m_componentsToDestroyDelayed.IsEmpty())
     {
-        Component *comp = m_componentsToDestroyDelayed.Front();
+        Component *comp = m_componentsToDestroyDelayed.Back();
         Component::Destroy(comp);
     }
 
     while (!m_gameObjectsToDestroyDelayed.IsEmpty())
     {
-        GameObject *go = m_gameObjectsToDestroyDelayed.Front();
+        GameObject *go = m_gameObjectsToDestroyDelayed.Back();
         GameObject::Destroy(go);
     }
 }
@@ -100,7 +100,8 @@ void Scene::SetFirstFoundCamera()
 
 void Scene::AddGameObjectToDestroyDelayed(GameObject *go)
 {
-    if (!m_gameObjectsToDestroyDelayed.Contains(go))
+    if (!go->IsWaitingToBeDestroyed() &&
+        !m_gameObjectsToDestroyDelayed.Contains(go))
     {
         m_gameObjectsToDestroyDelayed.PushBack(go);
         go->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -109,7 +110,8 @@ void Scene::AddGameObjectToDestroyDelayed(GameObject *go)
 
 void Scene::AddComponentToDestroyDelayed(Component *comp)
 {
-    if (!m_componentsToDestroyDelayed.Contains(comp))
+    if (!comp->IsWaitingToBeDestroyed() &&
+        !m_componentsToDestroyDelayed.Contains(comp))
     {
         m_componentsToDestroyDelayed.PushBack(comp);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -136,9 +138,10 @@ void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     {
         m_componentsToDestroyDelayed.Remove(comp);
     }
-    else if (GameObject *go = DCAST<GameObject*>(object))
+
+    if (GameObject *go = DCAST<GameObject*>(object))
     {
-        m_gameObjectsToDestroyDelayed.Remove(go );
+        m_gameObjectsToDestroyDelayed.Remove(go);
     }
 }
 

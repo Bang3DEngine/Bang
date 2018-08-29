@@ -278,40 +278,20 @@ template<class TListener, class TReturn, class... Args>
 void GameObject::PropagateToChildren(TReturn TListener::*func,
                                      const Args&... args)
 {
-    OnStartIteratingChildren();
-
-    for (GameObject *child : m_children)
+    PropagateToChildren([&](GameObject *child)
     {
-        if (child)
-        {
-            if (child->IsEnabled())
-            {
-                (child->*func)(args...);
-            }
-        }
-    }
-
-    OnEndIteratingChildren();
+        (child->*func)(args...);
+    });
 }
 
 template<class TListener, class TReturn, class... Args>
 void GameObject::PropagateToComponents(TReturn TListener::*func,
                                        const Args&... args)
 {
-    OnStartIteratingComponents();
-
-    for (int i = 0; i < GetComponents().Size(); ++i)
+    PropagateToComponents([&](Component *comp)
     {
-        if (Component *comp = GetComponents()[i])
-        {
-            if (comp->IsEnabled())
-            {
-                (comp->*func)(args...);
-            }
-        }
-    }
-
-    OnEndIteratingComponents();
+        (comp->*func)(args...);
+    });
 }
 
 

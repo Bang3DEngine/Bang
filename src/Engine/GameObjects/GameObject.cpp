@@ -170,6 +170,7 @@ Component* GameObject::AddComponent(Component *component, int _index)
 
         const int index = (_index != -1 ? _index : GetComponents().Size());
         m_components.Insert(component, index);
+        UpdateComponentIndicesForAdd(index);
 
         if (transformComp)
         {
@@ -189,61 +190,37 @@ void GameObject::AddChild(GameObject *child, int index)
     ASSERT(!GetChildren().Contains(child));
 
     m_children.Insert(child, index);
+    UpdateChildrenIndicesForAdd(index);
     ChildAdded(child, this);
 }
 
 void GameObject::RemoveChild(GameObject *child)
 {
-    if (m_childrenIterationDepth == 0)
+    int i = m_children.IndexOf(child);
+    if (i >= 0)
     {
-        m_children.Remove(child);
+        m_children.RemoveByIndex(i);
+        UpdateChildrenIndicesForRemove(i);
+        ChildRemoved(child, this);
     }
-    else
-    {
-        auto it = m_children.Find(child);
-        if (it != m_children.End())
-        {
-            *it = nullptr;
-        }
-    }
-
-    ChildRemoved(child, this);
 }
 
 void GameObject::RemoveComponent(Component *component)
 {
-    if (m_componentsIterationDepth == 0)
+    int i = m_components.IndexOf(component);
+    if (i >= 0)
     {
-        m_components.Remove(component);
-    }
-    else
-    {
-        auto it = m_components.Find(component);
-        if (it != m_components.End())
+        m_components.RemoveByIndex(i);
+        UpdateComponentIndicesForRemove(i);
+
+        EventEmitter<IEventsComponent>::PropagateToListeners(
+                    &IEventsComponent::OnComponentRemoved, component, this);
+
+        if (component == p_transform)
         {
-            *it = nullptr;
+            p_transform = nullptr;
         }
     }
-
-    EventEmitter<IEventsComponent>::PropagateToListeners(
-                &IEventsComponent::OnComponentRemoved, component, this);
-
-    if (component == p_transform)
-    {
-        p_transform = nullptr;
-    }
-}
-
-void GameObject::ClearChildrenToBeRemoved()
-{
-    ASSERT(m_childrenIterationDepth == 0);
-    m_children.RemoveAll(nullptr);
-}
-
-void GameObject::ClearComponentsToBeRemoved()
-{
-    ASSERT(m_componentsIterationDepth == 0);
-    m_components.RemoveAll(nullptr);
 }
 
 void GameObject::OnEnabled(Object *object)
@@ -261,47 +238,45 @@ void GameObject::OnDisabled(Object *object)
     PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
 }
 
-void GameObject::OnStartIteratingChildren()
+void GameObject::UpdateChildrenIndicesForAdd(int addIndex)
 {
-    #ifdef DEBUG
-    m_numChildrenInEachIteration.push( GetChildren().Size() );
-    #endif
-
-    ++m_childrenIterationDepth;
+    UpdateIndicesForAdd(m_childrenIterationIndices, addIndex);
 }
 
-void GameObject::OnEndIteratingChildren()
+void GameObject::UpdateChildrenIndicesForRemove(int removeIndex)
 {
-    #ifdef DEBUG
-    ASSERT(GetChildren().Size() >= m_numChildrenInEachIteration.top());
-    m_numChildrenInEachIteration.pop();
-    #endif
+    UpdateIndicesForRemove(m_childrenIterationIndices, removeIndex);
+}
 
-    if (--m_childrenIterationDepth == 0)
+void GameObject::UpdateComponentIndicesForAdd(int addIndex)
+{
+    UpdateIndicesForAdd(m_componentIterationIndices, addIndex);
+}
+
+void GameObject::UpdateComponentIndicesForRemove(int removeIndex)
+{
+    UpdateIndicesForRemove(m_componentIterationIndices, removeIndex);
+}
+
+void GameObject::UpdateIndicesForAdd(Array<int> &iterationIndices, int addIndex)
+{
+    for (int &idx : iterationIndices)
     {
-        ClearChildrenToBeRemoved();
+        if (addIndex <= idx)
+        {
+            ++idx;
+        }
     }
 }
 
-void GameObject::OnStartIteratingComponents()
+void GameObject::UpdateIndicesForRemove(Array<int> &iterationIndices, int removeIndex)
 {
-    #ifdef DEBUG
-    m_numComponentsInEachIteration.push( GetComponents().Size() );
-    #endif
-
-    ++m_componentsIterationDepth;
-}
-
-void GameObject::OnEndIteratingComponents()
-{
-    #ifdef DEBUG
-    ASSERT(GetComponents().Size() >= m_numComponentsInEachIteration.top());
-    m_numComponentsInEachIteration.pop();
-    #endif
-
-    if (--m_componentsIterationDepth == 0)
+    for (int &idx : iterationIndices)
     {
-        ClearComponentsToBeRemoved();
+        if (removeIndex < idx)
+        {
+            --idx;
+        }
     }
 }
 
@@ -313,25 +288,27 @@ void GameObject::Destroy(GameObject *gameObject)
     {
         Object::PropagateObjectDestruction(gameObject);
 
-        gameObject->OnStartIteratingChildren();
-        for (GameObject *child : gameObject->GetChildren())
+        /*
+        gameObject->PropagateToChildren([](GameObject *child)
         {
-            if (child)
-            {
-                GameObject::Destroy(child);
-            }
-        }
-        gameObject->OnEndIteratingChildren();
+            GameObject::Destroy(child);
+        });
+        gameObject->PropagateToComponents([](Component *comp)
+        {
+            Component::Destroy(comp);
+        });
+        */
 
-        gameObject->OnStartIteratingComponents();
-        for (Component *comp : gameObject->GetComponents())
+        while (!gameObject->GetChildren().IsEmpty())
         {
-            if (comp)
-            {
-                Component::Destroy(comp);
-            }
+            GameObject *go = gameObject->GetChildren().Back();
+            GameObject::Destroy(go);
         }
-        gameObject->OnEndIteratingComponents();
+        while (!gameObject->GetComponents().IsEmpty())
+        {
+            Component *comp = gameObject->GetComponents().Back();
+            Component::Destroy(comp);
+        }
 
         delete gameObject;
     }
@@ -756,6 +733,38 @@ Sphere GameObject::GetBoundingSphere(bool includeChildren) const
     return Sphere::FromBox(GetAABBoxWorld(includeChildren));
 }
 
+void GameObject::PropagateToChildren(std::function<void(GameObject*)> func)
+{
+    m_childrenIterationIndices.PushBack(0);
+    for (int &i = m_childrenIterationIndices.Back();
+         i < GetChildren().Size();
+         ++i)
+    {
+        GameObject *child = GetChildren()[i];
+        if (child->IsEnabled())
+        {
+            func(child);
+        }
+    }
+    m_childrenIterationIndices.PopBack();
+}
+
+void GameObject::PropagateToComponents(std::function<void(Component*)> func)
+{
+    m_componentIterationIndices.PushBack(0);
+    for (int &i = m_componentIterationIndices.Back();
+         i < GetComponents().Size();
+         ++i)
+    {
+        Component *comp = GetComponents()[i];
+        if (comp->IsEnabled())
+        {
+            func(comp);
+        }
+    }
+    m_componentIterationIndices.PopBack();
+}
+
 template<class T>
 bool CanEventBePropagatedToGameObject(const GameObject *go)
 {
@@ -850,21 +859,17 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
         SetDontDestroyOnLoad( xmlInfo.Get<bool>("DontDestroyOnLoad") );
     }
 
-    OnStartIteratingChildren();
     USet<GameObject*> childrenToRemove;
     for (GameObject *child : GetChildren())
     {
         childrenToRemove.Add(child);
     }
-    OnEndIteratingChildren();
 
-    OnStartIteratingComponents();
     USet<Component*> componentsToRemove;
     for (Component *comp : GetComponents())
     {
         componentsToRemove.Add(comp);
     }
-    OnEndIteratingComponents();
 
     for (const XMLNode& xmlChild : xmlInfo.GetChildren() )
     {

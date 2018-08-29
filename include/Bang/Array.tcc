@@ -131,6 +131,18 @@ typename Array<T>::Iterator Array<T>::Remove(const T &x)
 }
 
 template<class T>
+typename Array<T>::Iterator Array<T>::RemoveByIndex(std::size_t i)
+{
+    Iterator it = Begin();
+    std::advance(it, i);
+    if (it != End())
+    {
+        return Remove(it);
+    }
+    return End();
+}
+
+template<class T>
 void Array<T>::RemoveAll(const T &x)
 {
     for (Iterator it = Begin(); it != End(); )

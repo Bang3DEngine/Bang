@@ -54,7 +54,32 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
     ASSERT(focusableGo);
 
     UIEventResult finalPropResult = UIEventResult::IGNORE;
+
     Array<IFocusable*> focusablesInGo = focusableGo->GetComponents<IFocusable>();
+
+    class DestroyTracker : public GameObject,
+                           public EventListener<IEventsDestroy>
+    {
+    public:
+        Array<IFocusable*> *focusables = nullptr;
+        void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override
+        {
+            ASSERT(focusables);
+            focusables->Remove( DCAST<IFocusable*>(ee) );
+        }
+    };
+
+    DestroyTracker *destroyTracker = GameObject::Create<DestroyTracker>();
+    destroyTracker->focusables = &focusablesInGo;
+
+    for (IFocusable *focusableInGo : focusablesInGo)
+    {
+        if (auto *ee = DCAST<EventEmitter<IEventsDestroy>*>(focusableInGo))
+        {
+            ee->EventEmitter<IEventsDestroy>::RegisterListener(destroyTracker);
+        }
+    }
+
     for (IFocusable *focusableInGo : focusablesInGo)
     {
         if (focusableInGo->IsFocusEnabled())
@@ -74,6 +99,8 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
             PropagateUIEvent(nextFocusableParent, event);
         }
     }
+
+    GameObject::Destroy(destroyTracker);
 }
 
 void PropagateUIEvent(IFocusable *focusable, const UIEvent &event)
@@ -731,6 +758,7 @@ void UICanvas::OnDisabled(Object *object)
 void UICanvas::RegisterForEvents(IFocusable *focusable)
 {
     ASSERT(focusable);
+
     if (EventEmitter<IEventsDestroy> *destroyable =
             DCAST<EventEmitter<IEventsDestroy>*>(focusable))
     {

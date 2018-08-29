@@ -58,6 +58,7 @@ public:
     Iterator Remove(const Iterator &first, const Iterator &last);
     Iterator Remove(Iterator it);
     Iterator Remove(const T& x);
+    Iterator RemoveByIndex(std::size_t i);
     void RemoveAll(const T& x);
 
     T& PopBack();

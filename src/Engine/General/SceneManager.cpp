@@ -60,7 +60,7 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
             Physics::GetInstance()->StepIfNeeded(scene);
             scene->PostUpdate();
         }
-        scene->DestroyPending();
+        scene->DestroyDelayed();
         Time::SetDeltaTimeReferenceToNow();
     }
 }

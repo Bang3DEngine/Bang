@@ -490,7 +490,10 @@ List<EventListener<IEventsDragDrop>*> UICanvas::GetDragDropListeners() const
         dragDropListeners.PushBack(
                     go->GetComponents< EventListener<IEventsDragDrop> >() );
 
-        for (GameObject *child : go->GetChildren()) { gos.push(child); }
+        for (GameObject *child : go->GetChildren())
+        {
+            gos.push(child);
+        }
     }
     return dragDropListeners;
 }

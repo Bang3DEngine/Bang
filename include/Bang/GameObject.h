@@ -54,11 +54,11 @@ public:
     virtual void Start() override;
     virtual void Update();
     virtual void Render(RenderPass renderPass, bool renderChildren = true);
-    void DestroyPending();
 
     template <class T = GameObject, class... Args>
     static T* Create(Args... args);
     static void Destroy(GameObject *gameObject);
+    static void DestroyDelayed(GameObject *gameObject);
 
     bool IsEnabled(bool recursive = false) const;
 
@@ -229,16 +229,25 @@ private:
     Transform *p_transform = nullptr;
     GameObject* p_parent = nullptr;
 
-    std::queue<GameObject*> p_pendingGameObjectsToDestroy;
-    std::queue<Component*> p_pendingComponentsToDestroy;
-
     // Concurrent modification when iterating stuff
+    #ifdef DEBUG
+    std::stack<int> m_numChildrenInEachIteration;
+    std::stack<int> m_numComponentsInEachIteration;
+    #endif
+
+    int m_childrenIterationDepth = 0;
+    int m_componentsIterationDepth = 0;
     bool m_increaseChildrenIterator = true;
     bool m_increaseComponentsIterator = true;
+    void OnStartIteratingChildren();
+    void OnEndIteratingChildren();
+    void OnStartIteratingComponents();
+    void OnEndIteratingComponents();
 
     void AddChild(GameObject *child, int index);
     void RemoveChild(GameObject *child);
-    void MarkComponentForDestroyPending(Component *comp);
+    void ClearChildrenToBeRemoved();
+    void ClearComponentsToBeRemoved();
 
     friend class Scene;
     friend class Prefab;

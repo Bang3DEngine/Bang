@@ -47,7 +47,7 @@ void Object::OnDisabled(Object *object)
 }
 void Object::OnDestroy() {}
 
-void Object::DestroyObject(Object *object)
+void Object::PropagateObjectDestruction(Object *object)
 {
     if (!object->IsWaitingToBeDestroyed())
     {

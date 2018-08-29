@@ -43,6 +43,7 @@ T* GameObject::GetComponentInParent(bool recursive) const
         {
             return comp;
         }
+
         if (recursive)
         {
             return GetParent()->GetComponentInParent<T>(true);
@@ -277,26 +278,40 @@ template<class TListener, class TReturn, class... Args>
 void GameObject::PropagateToChildren(TReturn TListener::*func,
                                      const Args&... args)
 {
+    OnStartIteratingChildren();
+
     for (GameObject *child : m_children)
     {
-        if (child->IsEnabled())
+        if (child)
         {
-            (child->*func)(args...);
+            if (child->IsEnabled())
+            {
+                (child->*func)(args...);
+            }
         }
     }
+
+    OnEndIteratingChildren();
 }
 
 template<class TListener, class TReturn, class... Args>
 void GameObject::PropagateToComponents(TReturn TListener::*func,
                                        const Args&... args)
 {
-    for (Component *comp : m_components)
+    OnStartIteratingComponents();
+
+    for (int i = 0; i < GetComponents().Size(); ++i)
     {
-        if (comp->IsEnabled())
+        if (Component *comp = GetComponents()[i])
         {
-            (comp->*func)(args...);
+            if (comp->IsEnabled())
+            {
+                (comp->*func)(args...);
+            }
         }
     }
+
+    OnEndIteratingComponents();
 }
 
 

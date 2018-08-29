@@ -190,15 +190,17 @@ Path Paths::GetResolvedPath(const Path &path_)
     return resolvedPath;
 }
 
-void Paths::SortPathsByName(List<Path> *paths)
+void Paths::SortPathsByName(List<Path> *paths, bool caseSensitive)
 {
     Array<Path> pathsArr;
     pathsArr.PushBack(paths->Begin(), paths->End());
     std::stable_sort(
         pathsArr.Begin(), pathsArr.End(),
-        [](const Path &lhs, const Path &rhs)
+        [caseSensitive](const Path &lhs, const Path &rhs)
         {
-            return lhs.GetNameExt() < rhs.GetNameExt();
+            return caseSensitive ?
+                    lhs.GetNameExt() < rhs.GetNameExt() :
+                    (lhs.GetNameExt().ToUpper() <  rhs.GetNameExt().ToUpper());
         }
     );
 
@@ -214,7 +216,7 @@ void Paths::SortPathsByExtension(List<Path> *paths)
         pathsArr.Begin(), pathsArr.End(),
         [](const Path &lhs, const Path &rhs)
         {
-            return lhs.GetExtension() < rhs.GetExtension();
+            return lhs.GetExtension().ToUpper() < rhs.GetExtension().ToUpper();
         }
     );
 

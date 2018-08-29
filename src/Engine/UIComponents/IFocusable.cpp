@@ -65,6 +65,11 @@ void IFocusable::AddEventCallback(IFocusable::EventCallback eventCallback)
 {
     m_eventCallbacks.PushBack(eventCallback);
 }
+
+void IFocusable::ClearEventCallbacks()
+{
+    m_eventCallbacks.Clear();
+}
 bool IFocusable::IsBeingPressed() const
 {
     return m_beingPressed;

@@ -21,6 +21,7 @@ public:
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
     void AddEventCallback(IFocusable::EventCallback eventCallback);
+    void ClearEventCallbacks();
 
     bool HasFocus() const;
     bool IsFocusEnabled() const;

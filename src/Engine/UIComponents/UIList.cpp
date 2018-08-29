@@ -29,6 +29,7 @@ UIList::UIList()
 
 UIList::~UIList()
 {
+    p_focusable->ClearEventCallbacks();
 }
 
 void UIList::OnUpdate()
@@ -133,7 +134,10 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     {
         GameObject::Destroy(item);
     }
-    item->SetParent(nullptr);
+    else
+    {
+        item->SetParent(nullptr);
+    }
 
     if (!moving)
     {
@@ -197,6 +201,8 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
                 itemBg->SetTint( GetIdleColor() );
             }
 
+            p_itemUnderMouse->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+
             if (callCallbacks)
             {
                 CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
@@ -213,6 +219,7 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
                 itemBg->SetTint( GetOverColor() );
             }
 
+            p_itemUnderMouse->EventEmitter<IEventsDestroy>::RegisterListener(this);
             if (callCallbacks)
             {
                 CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
@@ -551,12 +558,19 @@ void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         }
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
+
+        OnMouseMove(true, true);
     }
 }
 
 void UIList::SetSelectionCallback(SelectionCallback selectionCallback)
 {
     m_selectionCallback = selectionCallback;
+}
+
+void UIList::ClearSelectionCallback()
+{
+    m_selectionCallback = nullptr;
 }
 
 UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)

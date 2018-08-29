@@ -150,121 +150,6 @@ void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
                     removedChild, parent);
 }
 
-void GameObject::DestroyPending()
-{
-    // Pending GameObjects and Components do not necessarily have to be children
-    // or components of this gameObject!!!
-    PropagateToChildren(&GameObject::DestroyPending);
-
-    // Destroy pending children
-    while (!p_pendingGameObjectsToDestroy.empty())
-    {
-        GameObject *goToDestroy = p_pendingGameObjectsToDestroy.front();
-        p_pendingGameObjectsToDestroy.pop();
-
-        ASSERT(goToDestroy->IsWaitingToBeDestroyed());
-        goToDestroy->DestroyPending();
-        RemoveChild(goToDestroy);
-        delete goToDestroy;
-    }
-
-    // Destroy pending components
-    while (!p_pendingComponentsToDestroy.empty())
-    {
-        Component *componentToDestroy = p_pendingComponentsToDestroy.front();
-        p_pendingComponentsToDestroy.pop();
-
-        ASSERT(componentToDestroy->IsWaitingToBeDestroyed());
-        RemoveComponent(componentToDestroy);
-        delete componentToDestroy;
-    }
-}
-
-void GameObject::AddChild(GameObject *child, int index)
-{
-    ASSERT(!GetChildren().Contains(child));
-
-    m_children.Insert(child, index);
-    ChildAdded(child, this);
-}
-
-void GameObject::RemoveChild(GameObject *child)
-{
-    m_children.Remove(child);
-    ChildRemoved(child, this);
-}
-
-void GameObject::MarkComponentForDestroyPending(Component *comp)
-{
-    ASSERT(comp->IsWaitingToBeDestroyed());
-    ASSERT(GetComponents().Contains(comp));
-    p_pendingComponentsToDestroy.push(comp);
-}
-
-void GameObject::RemoveComponent(Component *component)
-{
-    m_components.Remove(component);
-    EventEmitter<IEventsComponent>::PropagateToListeners(
-                &IEventsComponent::OnComponentRemoved, component, this);
-
-    if (component == p_transform)
-    {
-        p_transform = nullptr;
-    }
-}
-
-void GameObject::OnEnabled(Object *object)
-{
-    Object::OnEnabled(object);
-    PropagateToArray(&EventListener<IObjectEvents>::OnEnabled,
-                    GetComponents<EventListener<IObjectEvents>>(), object);
-    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled, object);
-}
-void GameObject::OnDisabled(Object *object)
-{
-    Object::OnDisabled(object);
-    PropagateToArray(&EventListener<IObjectEvents>::OnDisabled,
-                    GetComponents<EventListener<IObjectEvents>>(), object);
-    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
-}
-
-void GameObject::Destroy(GameObject *gameObject)
-{
-    ASSERT(gameObject);
-
-    if (!gameObject->IsWaitingToBeDestroyed())
-    {
-        Object::DestroyObject(gameObject);
-
-        for (GameObject *child : gameObject->GetChildren())
-        {
-            GameObject::Destroy(child);
-        }
-
-        for (Component *comp : gameObject->GetComponents())
-        {
-            Component::Destroy(comp);
-        }
-
-        if (gameObject->GetParent())
-        {
-            gameObject->GetParent()->p_pendingGameObjectsToDestroy.push(gameObject);
-        }
-        else
-        {
-            gameObject->DestroyPending();
-            delete gameObject;
-        }
-    }
-}
-
-bool GameObject::IsEnabled(bool recursive) const
-{
-    if (!recursive) { return Object::IsEnabled(); }
-    else { return IsEnabled(false) &&
-                  (!GetParent() || GetParent()->IsEnabled(true)); }
-}
-
 Component *GameObject::AddComponent(const String &componentClassName,
                                     int _index)
 {
@@ -297,6 +182,185 @@ Component* GameObject::AddComponent(Component *component, int _index)
                     &IEventsComponent::OnComponentAdded, component, index);
     }
     return component;
+}
+
+void GameObject::AddChild(GameObject *child, int index)
+{
+    ASSERT(!GetChildren().Contains(child));
+
+    m_children.Insert(child, index);
+    ChildAdded(child, this);
+}
+
+void GameObject::RemoveChild(GameObject *child)
+{
+    if (m_childrenIterationDepth == 0)
+    {
+        m_children.Remove(child);
+    }
+    else
+    {
+        auto it = m_children.Find(child);
+        if (it != m_children.End())
+        {
+            *it = nullptr;
+        }
+    }
+
+    ChildRemoved(child, this);
+}
+
+void GameObject::RemoveComponent(Component *component)
+{
+    if (m_componentsIterationDepth == 0)
+    {
+        m_components.Remove(component);
+    }
+    else
+    {
+        auto it = m_components.Find(component);
+        if (it != m_components.End())
+        {
+            *it = nullptr;
+        }
+    }
+
+    EventEmitter<IEventsComponent>::PropagateToListeners(
+                &IEventsComponent::OnComponentRemoved, component, this);
+
+    if (component == p_transform)
+    {
+        p_transform = nullptr;
+    }
+}
+
+void GameObject::ClearChildrenToBeRemoved()
+{
+    ASSERT(m_childrenIterationDepth == 0);
+    m_children.RemoveAll(nullptr);
+}
+
+void GameObject::ClearComponentsToBeRemoved()
+{
+    ASSERT(m_componentsIterationDepth == 0);
+    m_components.RemoveAll(nullptr);
+}
+
+void GameObject::OnEnabled(Object *object)
+{
+    Object::OnEnabled(object);
+    PropagateToArray(&EventListener<IObjectEvents>::OnEnabled,
+                    GetComponents<EventListener<IObjectEvents>>(), object);
+    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled, object);
+}
+void GameObject::OnDisabled(Object *object)
+{
+    Object::OnDisabled(object);
+    PropagateToArray(&EventListener<IObjectEvents>::OnDisabled,
+                    GetComponents<EventListener<IObjectEvents>>(), object);
+    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
+}
+
+void GameObject::OnStartIteratingChildren()
+{
+    #ifdef DEBUG
+    m_numChildrenInEachIteration.push( GetChildren().Size() );
+    #endif
+
+    ++m_childrenIterationDepth;
+}
+
+void GameObject::OnEndIteratingChildren()
+{
+    #ifdef DEBUG
+    ASSERT(GetChildren().Size() >= m_numChildrenInEachIteration.top());
+    m_numChildrenInEachIteration.pop();
+    #endif
+
+    if (--m_childrenIterationDepth == 0)
+    {
+        ClearChildrenToBeRemoved();
+    }
+}
+
+void GameObject::OnStartIteratingComponents()
+{
+    #ifdef DEBUG
+    m_numComponentsInEachIteration.push( GetComponents().Size() );
+    #endif
+
+    ++m_componentsIterationDepth;
+}
+
+void GameObject::OnEndIteratingComponents()
+{
+    #ifdef DEBUG
+    ASSERT(GetComponents().Size() >= m_numComponentsInEachIteration.top());
+    m_numComponentsInEachIteration.pop();
+    #endif
+
+    if (--m_componentsIterationDepth == 0)
+    {
+        ClearComponentsToBeRemoved();
+    }
+}
+
+void GameObject::Destroy(GameObject *gameObject)
+{
+    ASSERT(gameObject);
+
+    if (!gameObject->IsWaitingToBeDestroyed())
+    {
+        Object::PropagateObjectDestruction(gameObject);
+
+        gameObject->OnStartIteratingChildren();
+        for (GameObject *child : gameObject->GetChildren())
+        {
+            if (child)
+            {
+                GameObject::Destroy(child);
+            }
+        }
+        gameObject->OnEndIteratingChildren();
+
+        gameObject->OnStartIteratingComponents();
+        for (Component *comp : gameObject->GetComponents())
+        {
+            if (comp)
+            {
+                Component::Destroy(comp);
+            }
+        }
+        gameObject->OnEndIteratingComponents();
+
+        delete gameObject;
+    }
+}
+
+void GameObject::DestroyDelayed(GameObject *gameObject)
+{
+    if (Scene *scene = SceneManager::GetActiveScene())
+    {
+        scene->AddGameObjectToDestroyDelayed(gameObject);
+        gameObject->SetParent(nullptr);
+    }
+    else
+    {
+        GameObject::Destroy(gameObject);
+    }
+}
+
+bool GameObject::IsEnabled(bool recursive) const
+{
+    if (!recursive)
+    {
+        return Object::IsEnabled();
+    }
+    else
+    {
+        return IsEnabled(false) &&
+               (!GetParent() || GetParent()->IsEnabled(true));
+    }
 }
 
 const Array<Component *> &GameObject::GetComponents() const
@@ -491,7 +555,10 @@ GameObject *GameObject::GetChild(const GUID &guid) const
 {
     for (GameObject *go : GetChildren())
     {
-        if (go->GetGUID() == guid) { return go; }
+        if (go->GetGUID() == guid)
+        {
+            return go;
+        }
     }
     return nullptr;
 }
@@ -500,7 +567,10 @@ GameObject *GameObject::GetChild(const String &name) const
 {
     for (GameObject *child : GetChildren())
     {
-        if (child->m_name == name) { return child; }
+        if (child->GetName() == name)
+        {
+            return child;
+        }
     }
     return nullptr;
 }
@@ -512,10 +582,11 @@ const Array<GameObject *> &GameObject::GetChildren() const
 
 GameObject *GameObject::GetChild(uint index) const
 {
-    if (index >= GetChildren().Size()) { return nullptr; }
-
-    auto it = GetChildren().Begin(); std::advance(it, index);
-    return *it;
+    if (index >= GetChildren().Size())
+    {
+        return nullptr;
+    }
+    return GetChildren()[index];
 }
 
 void GameObject::GetChildrenRecursively(Array<GameObject*> *children) const
@@ -536,7 +607,11 @@ Array<GameObject*> GameObject::GetChildrenRecursively() const
 
 bool GameObject::IsChildOf(const GameObject *parent, bool recursive) const
 {
-    if (!GetParent()) { return false; }
+    if (!GetParent())
+    {
+        return false;
+    }
+
     if (recursive)
     {
         return IsChildOf(parent, false) ||
@@ -550,12 +625,12 @@ bool GameObject::IsVisible() const
     return m_visible;
 }
 
-void GameObject::SetParent(GameObject *newParent, int _index)
+void GameObject::SetParent(GameObject *newParent, int index_)
 {
     ASSERT( newParent != this );
     ASSERT( !newParent || !newParent->IsChildOf(this, true) );
 
-    int index = newParent ? (_index != -1 ? _index :
+    int index = newParent ? (index_ != -1 ? index_ :
                               newParent->GetChildren().Size()) : -1;
     if (newParent != GetParent())
     {
@@ -567,10 +642,16 @@ void GameObject::SetParent(GameObject *newParent, int _index)
         }
 
         GameObject *oldParent = GetParent();
-        if (oldParent) { oldParent->RemoveChild(this); }
+        if (oldParent)
+        {
+            oldParent->RemoveChild(this);
+        }
 
         p_parent = newParent;
-        if (newParent) { newParent->AddChild(this, index); }
+        if (newParent)
+        {
+            newParent->AddChild(this, index);
+        }
 
         EventEmitter<IEventsChildren>::
                PropagateToListeners(&IEventsChildren::OnParentChanged,
@@ -641,7 +722,10 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
             {
                 Matrix4 mat;
                 const Transform *childT = child->GetTransform();
-                if (childT) { mat = childT->GetLocalToParentMatrix(); }
+                if (childT)
+                {
+                    mat = childT->GetLocalToParentMatrix();
+                }
                 aabBoxChild = mat * aabBoxChild;
                 aabBox = AABox::Union(aabBox, aabBoxChild);
             }
@@ -728,7 +812,9 @@ String GameObject::ToStringStructure(bool recursive, const String &indent)
     {
         oss << "\n";
         for (GameObject *child : GetChildren())
-        { oss << child->ToStringStructure(true, indent + "  "); }
+        {
+            oss << child->ToStringStructure(true, indent + "  ");
+        }
     }
     return String(oss.str());
 }
@@ -745,28 +831,40 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
     Serializable::ImportXML(xmlInfo);
 
     if (xmlInfo.Contains("Enabled"))
-    { SetEnabled( xmlInfo.Get<bool>("Enabled") ); }
+    {
+        SetEnabled( xmlInfo.Get<bool>("Enabled") );
+    }
 
     if (xmlInfo.Contains("Visible"))
-    { SetVisible( xmlInfo.Get<bool>("Visible") ); }
+    {
+        SetVisible( xmlInfo.Get<bool>("Visible") );
+    }
 
     if (xmlInfo.Contains("Name"))
-    { SetName( xmlInfo.Get<String>("Name") ); }
+    {
+        SetName( xmlInfo.Get<String>("Name") );
+    }
 
     if (xmlInfo.Contains("DontDestroyOnLoad"))
-    { SetDontDestroyOnLoad( xmlInfo.Get<bool>("DontDestroyOnLoad") ); }
+    {
+        SetDontDestroyOnLoad( xmlInfo.Get<bool>("DontDestroyOnLoad") );
+    }
 
+    OnStartIteratingChildren();
     USet<GameObject*> childrenToRemove;
     for (GameObject *child : GetChildren())
     {
         childrenToRemove.Add(child);
     }
+    OnEndIteratingChildren();
 
+    OnStartIteratingComponents();
     USet<Component*> componentsToRemove;
     for (Component *comp : GetComponents())
     {
         componentsToRemove.Add(comp);
     }
+    OnEndIteratingComponents();
 
     for (const XMLNode& xmlChild : xmlInfo.GetChildren() )
     {

@@ -23,9 +23,13 @@ public:
     virtual void Update() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
+    void DestroyDelayed();
 
     void SetCamera(Camera *cam);
     void SetFirstFoundCamera();
+
+    void AddGameObjectToDestroyDelayed(GameObject *go);
+    void AddComponentToDestroyDelayed(Component *comp);
 
     virtual Camera *GetCamera() const;
 
@@ -43,6 +47,9 @@ protected:
     RenderFactory *m_gizmos = nullptr;
     DebugRenderer *p_debugRenderer = nullptr;
 
+    Array<GameObject*> m_gameObjectsToDestroyDelayed;
+    Array<Component*> m_componentsToDestroyDelayed;
+
     Scene();
     virtual ~Scene();
 
@@ -51,11 +58,11 @@ protected:
 
 private:
 
-    friend class RenderFactory;
     friend class Window;
     friend class GEngine;
     friend class Application;
     friend class SceneManager;
+    friend class RenderFactory;
     friend class DebugRenderer;
 };
 

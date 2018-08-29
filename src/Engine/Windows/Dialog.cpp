@@ -353,7 +353,11 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     goButton->AddClickedCallback( [inputPathText, fileList]()
         {
             Path inputPath(inputPathText->GetText()->GetContent());
-            if (inputPath.IsFile()) { inputPath = inputPath.GetDirectory(); }
+            if (inputPath.IsFile())
+            {
+                inputPath = inputPath.GetDirectory();
+            }
+
             if (inputPath.IsDir())
             {
                 fileList->SetCurrentPath(inputPath);
@@ -389,7 +393,6 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     GameObjectFactory::CreateUIHSpacer(LayoutSizeType::FLEXIBLE, 0.0001f)->
             SetParent(botHLGo);
     botInputText->GetGameObject()->SetParent(botHLGo);
-    botHLGo->SetName("WOW");
     GameObjectFactory::CreateUIHSpacer(LayoutSizeType::PREFERRED, 10)->SetParent(botHLGo);
     cancelButton->GetGameObject()->SetParent(botHLGo);
     GameObjectFactory::CreateUIHSpacer(LayoutSizeType::PREFERRED, 5)->SetParent(botHLGo);

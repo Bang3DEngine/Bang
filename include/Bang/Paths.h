@@ -40,7 +40,7 @@ public:
     static void SetEngineRoot(const Path &engineRootDir);
 
     static Path GetResolvedPath(const Path &path);
-    static void SortPathsByName(List<Path> *paths);
+    static void SortPathsByName(List<Path> *paths, bool caseSensitive = false);
     static void SortPathsByExtension(List<Path> *paths);
     static void FilterByExtension(List<Path> *paths,
                                   const Array<String>& extensions);

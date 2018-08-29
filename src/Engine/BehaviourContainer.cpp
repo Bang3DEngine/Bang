@@ -72,7 +72,7 @@ void BehaviourContainer::SubstituteByBehaviourInstance(Library *behavioursLibrar
     if (behaviour)
     {
         GetGameObject()->AddComponent(behaviour);
-        Component::Destroy(this);
+        Component::DestroyDelayed(this);
     }
 }
 

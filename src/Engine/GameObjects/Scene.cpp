@@ -59,6 +59,21 @@ void Scene::OnResize(int newWidth, int newHeight)
     InvalidateCanvas();
 }
 
+void Scene::DestroyDelayed()
+{
+    while (!m_componentsToDestroyDelayed.IsEmpty())
+    {
+        Component *comp = m_componentsToDestroyDelayed.Front();
+        Component::Destroy(comp);
+    }
+
+    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
+    {
+        GameObject *go = m_gameObjectsToDestroyDelayed.Front();
+        GameObject::Destroy(go);
+    }
+}
+
 RenderFactory *Scene::GetGizmos() const
 {
     return m_gizmos;
@@ -83,6 +98,24 @@ void Scene::SetFirstFoundCamera()
     SetCamera(sceneCamera);
 }
 
+void Scene::AddGameObjectToDestroyDelayed(GameObject *go)
+{
+    if (!m_gameObjectsToDestroyDelayed.Contains(go))
+    {
+        m_gameObjectsToDestroyDelayed.PushBack(go);
+        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
+}
+
+void Scene::AddComponentToDestroyDelayed(Component *comp)
+{
+    if (!m_componentsToDestroyDelayed.Contains(comp))
+    {
+        m_componentsToDestroyDelayed.PushBack(comp);
+        comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
+}
+
 void Scene::InvalidateCanvas()
 {
     Array<UICanvas*> canvases = GetComponentsInDescendantsAndThis<UICanvas>();
@@ -97,6 +130,15 @@ void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     if (object == GetCamera())
     {
         SetCamera(nullptr);
+    }
+
+    if (Component *comp = DCAST<Component*>(object))
+    {
+        m_componentsToDestroyDelayed.Remove(comp);
+    }
+    else if (GameObject *go = DCAST<GameObject*>(object))
+    {
+        m_gameObjectsToDestroyDelayed.Remove(go );
     }
 }
 

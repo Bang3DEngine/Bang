@@ -40,7 +40,7 @@ protected:
     virtual void OnDisabled(Object *object) override;
     virtual void OnDestroy();
 
-    static void DestroyObject(Object *object);
+    static void PropagateObjectDestruction(Object *object);
 
 private:
     ObjectId m_objectId;

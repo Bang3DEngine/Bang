@@ -74,6 +74,7 @@ public:
 
     using SelectionCallback = std::function<void(GOItem *item, Action action)>;
     void SetSelectionCallback(SelectionCallback selectionCallback);
+    void ClearSelectionCallback();
 
 protected:
     UIList();

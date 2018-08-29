@@ -8,20 +8,14 @@ USING_NAMESPACE_BANG
 template<class T>
 EventEmitter<T>::~EventEmitter()
 {
-    m_mutableIterators.PushBack( MutableIterator(m_listeners.Begin()) );
-    MutableIterator &mIt = m_mutableIterators.Back();
-    while (mIt.GetIterator() != GetListeners().End())
+    ++m_iterationDepth;
+    for (EventListener<T> *listener : GetListeners())
     {
-        EventListener<T> *listener = *(mIt.GetIterator());
-        UnRegisterListener(listener);
-
-        // Recheck needed, in case it was modified
-        if (mIt.GetIterator() != GetListeners().End())
+        if (listener)
         {
-            mIt.IncreaseIfNeeded();
+            UnRegisterListener(listener);
         }
     }
-    m_mutableIterators.PopBack();
 }
 
 template<class T>
@@ -49,50 +43,67 @@ void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 template <class T>
 void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
-    auto listenerIt = m_listeners.Find(listener);
-    if (listenerIt != m_listeners.End())
+    if (m_iterationDepth == 0)
     {
-        auto nextListenerIt = m_listeners.Remove(listenerIt);
-        listener->RemoveEmitter(this);
-        for (auto &mIt : m_mutableIterators)
+        m_listeners.Remove(listener);
+    }
+    else
+    {
+        MarkListenerAsDeleted(listener);
+    }
+    listener->RemoveEmitter(this);
+}
+
+template<class T>
+void EventEmitter<T>::MarkListenerAsDeleted(EventListener<T> *listener)
+{
+    for (int i = 0; i < GetListeners().Size(); ++i)
+    {
+        if (GetListeners()[i] == listener)
         {
-            if (mIt.GetIterator() == listenerIt)
-            {
-                mIt.SetIterator(nextListenerIt);
-            }
+            GetListeners()[i] = nullptr;
         }
     }
 }
 
 template<class T>
-template<class TFunction, class... Args>
-void EventEmitter<T>::PropagateToListeners_(
-              std::function<void(EventListener<T>*)> listenerCall,
-              const TFunction &func,
-              const Args&... args) const
+void EventEmitter<T>::ClearDeletedListeners()
 {
-    EventEmitter<T> *ncThis = const_cast< EventEmitter<T>* >(this);
-    m_mutableIterators.PushBack( MutableIterator(ncThis->m_listeners.Begin()) );
+    ASSERT(m_iterationDepth == 0);
+    GetListeners().RemoveAll(nullptr);
+}
 
-    MutableIterator &mIt = m_mutableIterators.Back();
-    while (mIt.GetIterator() != GetListeners().End())
+template<class T>
+Array<EventListener<T>*> &EventEmitter<T>::GetListeners()
+{
+    return m_listeners;
+}
+
+template<class T>
+void EventEmitter<T>::PropagateToListeners_(
+              std::function<void(EventListener<T>*)> listenerCall) const
+{
+    if (IsEmittingEvents())
     {
-        if (IsEmittingEvents())
+        ++m_iterationDepth;
+
+        for (int i = 0; i < GetListeners().Size(); ++i)
         {
-            EventListener<T>* listener = *(mIt.GetIterator());
-            if (listener && listener->IsReceivingEvents())
+            if (EventListener<T> *listener = GetListeners()[i])
             {
-                listenerCall(listener);
+                if (listener->IsReceivingEvents())
+                {
+                    listenerCall(listener);
+                }
             }
         }
 
-        // Recheck needed, in case it was modified
-        if (mIt.GetIterator() != GetListeners().End())
+        if (--m_iterationDepth == 0)
         {
-            mIt.IncreaseIfNeeded();
+            EventEmitter<T> *ncThis = const_cast<EventEmitter<T>*>(this);
+            ncThis->ClearDeletedListeners();
         }
     }
-    m_mutableIterators.PopBack();
 }
 
 template <class T>
@@ -103,8 +114,7 @@ PropagateToListeners(const TFunction &func, const Args&... args) const
     PropagateToListeners_([&](EventListener<T> *listener)
                           {
                               (listener->*func)(args...);
-                          },
-                          func, args...);
+                          });
 }
 
 template<class T>
@@ -117,8 +127,7 @@ EventEmitter<T>::PropagateToListenersAndGatherResult(const TFunction &func,
     PropagateToListeners_([&](EventListener<T> *listener)
                           {
                               gatheredResult.PushBack( (listener->*func)(args...) );
-                          },
-                          func, args...);
+                          });
     return gatheredResult;
 }
 

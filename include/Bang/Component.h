@@ -40,6 +40,7 @@ public:
     template <class T, class... Args>
     static T* Create(const Args&... args) { return new T(args...); }
     static void Destroy(Component *component);
+    static void DestroyDelayed(Component *component);
 
     void SetGameObject(GameObject *gameObject);
 

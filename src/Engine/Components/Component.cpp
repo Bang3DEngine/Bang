@@ -1,10 +1,12 @@
 #include "Bang/Component.h"
 
 #include "Bang/Debug.h"
+#include "Bang/Scene.h"
 #include "Bang/String.h"
 #include "Bang/XMLNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/SceneManager.h"
 
 USING_NAMESPACE_BANG
 
@@ -22,15 +24,25 @@ void Component::Destroy(Component *component)
 {
     if (!component->IsWaitingToBeDestroyed())
     {
-        Object::DestroyObject(component);
+        Object::PropagateObjectDestruction(component);
         if (component->GetGameObject())
         {
-            component->GetGameObject()->MarkComponentForDestroyPending(component);
+            component->GetGameObject()->RemoveComponent(component);
         }
-        else
-        {
-            delete component;
-        }
+        delete component;
+    }
+}
+
+void Component::DestroyDelayed(Component *component)
+{
+    if (Scene *scene = SceneManager::GetActiveScene())
+    {
+        scene->AddComponentToDestroyDelayed(component);
+        component->SetGameObject(nullptr);
+    }
+    else
+    {
+        Component::Destroy(component);
     }
 }
 

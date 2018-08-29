@@ -25,6 +25,14 @@ enum class RigidBodyConstraint
 };
 CREATE_FLAGS(RigidBodyConstraints, RigidBodyConstraint);
 
+enum class ForceMode
+{
+    FORCE           = physx::PxForceMode::eFORCE,
+    IMPULSE         = physx::PxForceMode::eIMPULSE,
+    ACCELERATION    = physx::PxForceMode::eACCELERATION,
+    VELOCITY_CHANGE = physx::PxForceMode::eVELOCITY_CHANGE
+};
+
 NAMESPACE_BANG_BEGIN
 
 class RigidBody : public PhysicsObject,
@@ -36,11 +44,32 @@ public:
 	RigidBody();
     virtual ~RigidBody();
 
+    void AddForce(const Vector3 &force, ForceMode forceMode = ForceMode::FORCE);
+    void AddTorque(const Vector3 &torque, ForceMode forceMode = ForceMode::FORCE);
+    void AddForceAtPos(const Vector3 &force,
+                       const Vector3 &pos,
+                       ForceMode forceMode = ForceMode::FORCE);
+    void AddForceAtLocalPos(const Vector3 &force,
+                            const Vector3 &pos,
+                            ForceMode forceMode = ForceMode::FORCE);
+    void AddLocalForceAtPos(const Vector3 &force,
+                            const Vector3 &pos,
+                            ForceMode forceMode = ForceMode::FORCE);
+    void AddLocalForceAtLocalPos(const Vector3 &force,
+                                 const Vector3 &pos,
+                                 ForceMode forceMode = ForceMode::FORCE);
+
+    void ClearForce(ForceMode forceMode = ForceMode::FORCE);
+    void ClearTorque(ForceMode forceMode = ForceMode::FORCE);
+
     void SetMass(float mass);
     void SetDrag(float drag);
     void SetAngularDrag(float angularDrag);
     void SetUseGravity(bool useGravity);
     void SetIsKinematic(bool isKinematic);
+    void SetLinearVelocity(const Vector3 &linearVelocity);
+    void SetAngularVelocity(const Vector3 &angularVelocity);
+    void SetMaxAngularVelocity(float maxAngularVelocity);
     void SetConstraints(const RigidBodyConstraints &constraints);
 
     float GetMass() const;
@@ -48,6 +77,9 @@ public:
     float GetAngularDrag() const;
     bool GetUseGravity() const;
     bool GetIsKinematic() const;
+    Vector3 GetLinearVelocity() const;
+    Vector3 GetAngularVelocity() const;
+    float GetMaxAngularVelocity() const;
     const RigidBodyConstraints& GetConstraints() const;
 
     // ICloneable

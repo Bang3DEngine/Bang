@@ -59,12 +59,128 @@ void RigidBody::SetIsKinematic(bool isKinematic)
     }
 }
 
+void RigidBody::SetLinearVelocity(const Vector3 &linearVelocity)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->setLinearVelocity(
+                            Physics::GetPxVec3FromVector3(linearVelocity));
+    }
+}
+
+void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->setAngularVelocity(
+                            Physics::GetPxVec3FromVector3(angularVelocity));
+    }
+}
+
+void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->setMaxAngularVelocity(maxAngularVelocity);
+    }
+}
+
 void RigidBody::SetConstraints(const RigidBodyConstraints &constraints)
 {
     if (constraints != GetConstraints())
     {
         m_constraints = constraints;
         UpdatePxRigidDynamicValues();
+    }
+}
+
+void RigidBody::AddForce(const Vector3 &force, ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->addForce(Physics::GetPxVec3FromVector3(force),
+                                      SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::AddTorque(const Vector3 &torque, ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->addTorque(Physics::GetPxVec3FromVector3(torque),
+                                       SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::AddForceAtPos(const Vector3 &force,
+                              const Vector3 &pos,
+                              ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        physx::PxRigidBodyExt::addForceAtPos(
+                    *GetPxRigidDynamic(),
+                    Physics::GetPxVec3FromVector3(force),
+                    Physics::GetPxVec3FromVector3(pos),
+                    SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::AddForceAtLocalPos(const Vector3 &force,
+                                   const Vector3 &pos,
+                                   ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        physx::PxRigidBodyExt::addForceAtLocalPos(
+                    *GetPxRigidDynamic(),
+                    Physics::GetPxVec3FromVector3(force),
+                    Physics::GetPxVec3FromVector3(pos),
+                    SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::AddLocalForceAtPos(const Vector3 &force,
+                                   const Vector3 &pos,
+                                   ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        physx::PxRigidBodyExt::addLocalForceAtPos(
+                    *GetPxRigidDynamic(),
+                    Physics::GetPxVec3FromVector3(force),
+                    Physics::GetPxVec3FromVector3(pos),
+                    SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::AddLocalForceAtLocalPos(const Vector3 &force,
+                                        const Vector3 &pos,
+                                        ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        physx::PxRigidBodyExt::addLocalForceAtLocalPos(
+                    *GetPxRigidDynamic(),
+                    Physics::GetPxVec3FromVector3(force),
+                    Physics::GetPxVec3FromVector3(pos),
+                    SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::ClearForce(ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->clearForce(SCAST<physx::PxForceMode::Enum>(forceMode));
+    }
+}
+
+void RigidBody::ClearTorque(ForceMode forceMode)
+{
+    if (GetPxRigidDynamic())
+    {
+        GetPxRigidDynamic()->clearTorque(SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -91,6 +207,26 @@ bool RigidBody::GetUseGravity() const
 bool RigidBody::GetIsKinematic() const
 {
     return m_isKinematic;
+}
+
+Vector3 RigidBody::GetLinearVelocity() const
+{
+    return GetPxRigidDynamic() ?
+     Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getLinearVelocity()) :
+     Vector3::Zero;
+}
+
+Vector3 RigidBody::GetAngularVelocity() const
+{
+    return GetPxRigidDynamic() ?
+     Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getAngularVelocity()) :
+     Vector3::Zero;
+}
+
+float RigidBody::GetMaxAngularVelocity() const
+{
+    return GetPxRigidDynamic() ? GetPxRigidDynamic()->getMaxAngularVelocity() :
+                                 0.0f;
 }
 
 const RigidBodyConstraints& RigidBody::GetConstraints() const

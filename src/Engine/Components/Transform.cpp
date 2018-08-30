@@ -275,9 +275,9 @@ void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    SetLocalPosition( Transform::GetPositionFromMatrix4(transformMatrix) );
-    SetLocalRotation( Transform::GetRotationFromMatrix4(transformMatrix) );
-    SetLocalScale   ( Transform::GetScaleFromMatrix4(transformMatrix)    );
+    SetLocalPosition( transformMatrix.GetTranslation() );
+    SetLocalRotation( transformMatrix.GetRotation() );
+    SetLocalScale   ( transformMatrix.GetScale() );
 }
 
 const Vector3& Transform::GetLocalPosition() const
@@ -339,29 +339,6 @@ Vector3 Transform::GetScale() const
     Transform *parentTr = (parent ? parent->GetTransform() : nullptr);
     Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One;
     return parentScale * GetLocalScale();
-}
-
-Vector3 Transform::GetPositionFromMatrix4(const Matrix4 &tm)
-{
-    return tm.c3.xyz();
-}
-
-Quaternion Transform::GetRotationFromMatrix4(const Matrix4 &tm)
-{
-    Vector3 scale = Transform::GetScaleFromMatrix4(tm);
-
-    Matrix4 rotMatrix;
-    rotMatrix.c0 = Vector4(tm.c0.xyz() / scale.x, 0);
-    rotMatrix.c1 = Vector4(tm.c1.xyz() / scale.y, 0);
-    rotMatrix.c2 = Vector4(tm.c2.xyz() / scale.z, 0);
-    rotMatrix.c3 = Vector4(0, 0, 0, 1);
-
-    return Matrix4::ToQuaternion(rotMatrix);
-}
-
-Vector3 Transform::GetScaleFromMatrix4(const Matrix4 &tm)
-{
-    return Vector3(tm.c0.Length(), tm.c1.Length(), tm.c2.Length());
 }
 
 Vector3 Transform::GetForward() const

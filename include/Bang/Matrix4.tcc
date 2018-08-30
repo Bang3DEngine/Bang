@@ -2,6 +2,7 @@
 #define MATRIX4_TCC
 
 #include "Bang/Matrix4.h"
+#include "Bang/Quaternion.h"
 
 USING_NAMESPACE_BANG
 
@@ -270,7 +271,7 @@ template<class T>
 const T *Matrix4G<T>::Data() const { return SCAST<const T*>(&(c0.x)); }
 
 template<class T>
-void Matrix4G<T>::SetTranslate(const Vector3G<T> &translate)
+void Matrix4G<T>::SetTranslation(const Vector3G<T> &translate)
 {
     c3.x = translate.x;
     c3.y = translate.y;
@@ -282,6 +283,30 @@ void Matrix4G<T>::SetScale(const Vector3G<T> &scale)
     c0.x = scale.x;
     c1.y = scale.y;
     c2.z = scale.z;
+}
+
+template<class T>
+Vector3 Matrix4G<T>::GetTranslation() const
+{
+    return c3.xyz();
+}
+template<class T>
+Quaternion Matrix4G<T>::GetRotation() const
+{
+    Vector3 scale = GetScale();
+
+    Matrix4 rotMatrix;
+    rotMatrix.c0 = Vector4(c0.xyz() / scale.x, 0);
+    rotMatrix.c1 = Vector4(c1.xyz() / scale.y, 0);
+    rotMatrix.c2 = Vector4(c2.xyz() / scale.z, 0);
+    rotMatrix.c3 = Vector4(0, 0, 0, 1);
+
+    return Matrix4::ToQuaternion(rotMatrix);
+}
+template<class T>
+Vector3 Matrix4G<T>::GetScale() const
+{
+    return Vector3(c0.Length(), c1.Length(), c2.Length());
 }
 
 template<class T>

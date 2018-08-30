@@ -97,10 +97,6 @@ public:
     const Vector3& GetLocalScale() const;
     Vector3 GetScale() const;
 
-    static Vector3    GetPositionFromMatrix4(const Matrix4 &transformMatrix);
-    static Quaternion GetRotationFromMatrix4(const Matrix4 &transformMatrix);
-    static Vector3    GetScaleFromMatrix4   (const Matrix4 &transformMatrix);
-
     // IEventsChildren
     void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
 

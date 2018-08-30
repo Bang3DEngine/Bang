@@ -6,8 +6,10 @@
 #include "Bang/XMLNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
+#include "Bang/GameObject.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/PxSceneContainer.h"
 
 USING_NAMESPACE_BANG
 
@@ -97,16 +99,22 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
 
 void Collider::OnEnabled(Object *)
 {
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
-    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, !GetIsTrigger());
+    if (GetPxShape())
+    {
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, !GetIsTrigger());
+    }
 }
 
 void Collider::OnDisabled(Object *)
 {
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
-    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+    if (GetPxShape())
+    {
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+    }
 }
 
 void Collider::SetPxRigidBody(physx::PxRigidBody *pxRB)
@@ -127,6 +135,65 @@ physx::PxRigidBody *Collider::GetPxRigidBody() const
 physx::PxShape *Collider::GetPxShape() const
 {
     return p_pxShape;
+}
+
+Quaternion Collider::GetInternalRotation() const
+{
+    return Quaternion::Identity;
+}
+
+Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
+{
+    Matrix4 shapeTransformWithRespectToPxActor =
+            GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
+    if (physx::PxActor *pxActor = GetPxRigidBody())
+    {
+        Physics *ph = Physics::GetInstance();
+        if (PxSceneContainer *pxSceneCont = ph->GetPxSceneContainerFromScene(
+                                                GetGameObject()->GetScene() ))
+        {
+            if (GameObject *pxActorGo = pxSceneCont->GetGameObjectFromPxActor(pxActor))
+            {
+                shapeTransformWithRespectToPxActor =
+                        pxActorGo->GetTransform()->GetLocalToWorldMatrixInv() *
+                        shapeTransformWithRespectToPxActor;
+            }
+        }
+    }
+    return shapeTransformWithRespectToPxActor;
+}
+
+void Collider::UpdatePxShape()
+{
+    if (GetPxShape())
+    {
+        Vector3 shapeLocalPosFromPxActor = GetCenter();
+        Quaternion shapeLocalRotFromPxActor = GetInternalRotation();
+
+        Matrix4 shapeTransformWithRespectToPxActor =
+                                    GetShapeTransformWithRespectToPxActor();
+        shapeLocalPosFromPxActor += shapeTransformWithRespectToPxActor.GetTranslation();
+        shapeLocalRotFromPxActor = shapeTransformWithRespectToPxActor.GetRotation() *
+                                   shapeLocalRotFromPxActor;
+
+        physx::PxTransform pxLocalTransform = GetPxShape()->getLocalPose();
+        pxLocalTransform.p = Physics::GetPxVec3FromVector3( shapeLocalPosFromPxActor );
+        pxLocalTransform.q = Physics::GetPxQuatFromQuaternion(
+                                                    shapeLocalRotFromPxActor );
+        GetPxShape()->setLocalPose( pxLocalTransform );
+
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
+
+        if (GetActivePhysicsMaterial())
+        {
+            physx::PxMaterial *material = GetActivePhysicsMaterial()->
+                                          GetPxMaterial();
+            GetPxShape()->setMaterials(&material, 1);
+        }
+
+        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
+    }
 }
 
 void Collider::CloneInto(ICloneable *clone) const
@@ -172,34 +239,3 @@ void Collider::ExportXML(XMLNode *xmlInfo) const
                      GetSharedPhysicsMaterial()->GetGUID() : GUID::Empty());
 }
 
-Quaternion Collider::GetInternalRotation() const
-{
-    return Quaternion::Identity;
-}
-
-void Collider::UpdatePxShape()
-{
-    if (GetPxShape())
-    {
-        physx::PxTransform pxLocalTransform = GetPxShape()->getLocalPose();
-        pxLocalTransform.p = Physics::GetPxVec3FromVector3( GetCenter() );
-        pxLocalTransform.q = Physics::GetPxQuatFromQuaternion(
-                                                    GetInternalRotation() );
-        GetPxShape()->setLocalPose( pxLocalTransform );
-
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
-
-        if (GetActivePhysicsMaterial())
-        {
-            if (GetPxShape())
-            {
-                physx::PxMaterial *material = GetActivePhysicsMaterial()->
-                                              GetPxMaterial();
-                GetPxShape()->setMaterials(&material, 1);
-            }
-        }
-
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
-    }
-}

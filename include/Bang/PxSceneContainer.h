@@ -41,7 +41,8 @@ public:
 
     void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
 
-    void ReleasePxActorIfNoMorePhysicsObjectsOnIt(GameObject *go);
+    physx::PxActor* GetAncestorOrThisPxActor(GameObject *go);
+    void SynchronizePxActorCreationReleasingWithPhysX(GameObject *go);
 
     // PxSimulationEventCallback
     void onConstraintBreak(physx::PxConstraintInfo* constraints,

@@ -46,8 +46,11 @@ public:
     T *Data();
     const T *Data() const;
 
-    void SetTranslate(const Vector3G<T> &translate);
+    void SetTranslation(const Vector3G<T> &translate);
     void SetScale(const Vector3G<T> &scale);
+    Vector3 GetTranslation() const;
+    Quaternion GetRotation() const;
+    Vector3 GetScale() const;
 
     static Matrix4G<T> LookAt(const Vector3G<T> &eyePosition,
                               const Vector3G<T> &focusPoint,

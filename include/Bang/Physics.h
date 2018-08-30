@@ -44,6 +44,8 @@ public:
     int GetMaxSubSteps() const;
     float GetStepSleepTimeSeconds() const;
     const Vector3& GetGravity() const;
+    PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
+    const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
 
     static void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
     static void RayCast(const Vector3 &origin,
@@ -77,8 +79,6 @@ private:
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
 
     Scene* GetSceneFromPhysicsObject(PhysicsObject *phObj) const;
-    PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
-    const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
 
     physx::PxFoundation* GetPxFoundation() const;
     physx::PxPhysics* GetPxPhysics() const;

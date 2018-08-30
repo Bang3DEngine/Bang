@@ -47,6 +47,7 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
+    Matrix4 GetShapeTransformWithRespectToPxActor() const;
     virtual Quaternion GetInternalRotation() const;
     virtual void UpdatePxShape();
 

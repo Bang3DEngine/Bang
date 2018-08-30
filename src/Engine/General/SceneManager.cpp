@@ -25,7 +25,7 @@ SceneManager::~SceneManager()
 {
     if (GetLoadedScene())
     {
-        GameObject::Destroy( GetLoadedScene() );
+        GameObject::DestroyImmediate( GetLoadedScene() );
     }
     delete m_behaviourManager;
 }
@@ -60,7 +60,7 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
             Physics::GetInstance()->StepIfNeeded(scene);
             scene->PostUpdate();
         }
-        scene->DestroyDelayed();
+        scene->DestroyDelayedElements();
         Time::SetDeltaTimeReferenceToNow();
     }
 }
@@ -208,7 +208,7 @@ void SceneManager::LoadSceneInstantly_()
     Scene *prevLoadedScene = GetLoadedScene();
     if (GetNextLoadDestroyPrevious() && prevLoadedScene)
     {
-        GameObject::Destroy(prevLoadedScene);
+        GameObject::DestroyImmediate(prevLoadedScene);
     }
     AudioManager::StopAllSounds();
 

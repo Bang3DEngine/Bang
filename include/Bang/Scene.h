@@ -23,7 +23,7 @@ public:
     virtual void Update() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
-    void DestroyDelayed();
+    void DestroyDelayedElements();
 
     void SetCamera(Camera *cam);
     void SetFirstFoundCamera();

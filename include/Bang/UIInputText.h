@@ -22,6 +22,7 @@ class UIInputText : public Component,
                     public EventEmitter<IEventsValueChanged>,
                     public EventEmitter<IEventsFocus>,
                     public EventListener<IEventsFocus>,
+                    public EventListener<IEventsDestroy>,
                     public ILayoutElement
 {
     COMPONENT(UIInputText)
@@ -42,6 +43,9 @@ public:
 
     // IEventsFocus
     virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
+
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;

@@ -40,7 +40,7 @@ public:
     template <class T, class... Args>
     static T* Create(const Args&... args) { return new T(args...); }
     static void Destroy(Component *component);
-    static void DestroyDelayed(Component *component);
+    static void DestroyImmediate(Component *component);
 
     void SetGameObject(GameObject *gameObject);
 
@@ -84,6 +84,7 @@ protected:
     void BeforeChildrenRender(RenderPass renderPass);
     void Render(RenderPass renderPass);
     void AfterChildrenRender(RenderPass renderPass);
+    void SetGameObjectForced(GameObject *gameObject);
 
     virtual void OnGameObjectChanged(GameObject *previousGameObject,
                                      GameObject *newGameObject);

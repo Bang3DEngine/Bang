@@ -138,7 +138,7 @@ void PhysicsMaterial::ExportXML(XMLNode *xmlInfo) const
 
     xmlInfo->Set("StaticFriction", GetStaticFriction());
     xmlInfo->Set("DynamicFriction", GetDynamicFriction());
-    xmlInfo->Set("Resitution", GetRestitution());
+    xmlInfo->Set("Restitution", GetRestitution());
     xmlInfo->Set("FrictionCombineMode",
                  SCAST<int>(GetFrictionCombineMode()));
     xmlInfo->Set("RestitutionCombineMode",

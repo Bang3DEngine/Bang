@@ -20,8 +20,9 @@
 
 USING_NAMESPACE_BANG
 
-GameObject::GameObject(const String &name) : m_name(name)
+GameObject::GameObject(const String &name)
 {
+    SetName(name);
 }
 
 GameObject::~GameObject()
@@ -30,6 +31,7 @@ GameObject::~GameObject()
     ASSERT(GetComponents().IsEmpty());
     ASSERT(IsWaitingToBeDestroyed());
     SetParent(nullptr);
+    ASSERT(GetParent() == nullptr);
 }
 
 void GameObject::PreStart()
@@ -280,7 +282,7 @@ void GameObject::UpdateIndicesForRemove(Array<int> &iterationIndices, int remove
     }
 }
 
-void GameObject::Destroy(GameObject *gameObject)
+void GameObject::DestroyImmediate(GameObject *gameObject)
 {
     ASSERT(gameObject);
 
@@ -288,33 +290,25 @@ void GameObject::Destroy(GameObject *gameObject)
     {
         Object::PropagateObjectDestruction(gameObject);
 
-        /*
-        gameObject->PropagateToChildren([](GameObject *child)
-        {
-            GameObject::Destroy(child);
-        });
-        gameObject->PropagateToComponents([](Component *comp)
-        {
-            Component::Destroy(comp);
-        });
-        */
-
         while (!gameObject->GetChildren().IsEmpty())
         {
             GameObject *go = gameObject->GetChildren().Back();
-            GameObject::Destroy(go);
+            ASSERT(!go->IsWaitingToBeDestroyed());
+            GameObject::DestroyImmediate(go);
         }
+
         while (!gameObject->GetComponents().IsEmpty())
         {
             Component *comp = gameObject->GetComponents().Back();
-            Component::Destroy(comp);
+            ASSERT(!comp->IsWaitingToBeDestroyed());
+            Component::DestroyImmediate(comp);
         }
 
         delete gameObject;
     }
 }
 
-void GameObject::DestroyDelayed(GameObject *gameObject)
+void GameObject::Destroy(GameObject *gameObject)
 {
     if (Scene *scene = SceneManager::GetActiveScene())
     {
@@ -323,7 +317,7 @@ void GameObject::DestroyDelayed(GameObject *gameObject)
     }
     else
     {
-        GameObject::Destroy(gameObject);
+        GameObject::DestroyImmediate(gameObject);
     }
 }
 
@@ -931,11 +925,11 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
     // Remove non existing gameObjects and components in xml
     for (GameObject *childToRemove : childrenToRemove)
     {
-        GameObject::Destroy(childToRemove);
+        GameObject::DestroyImmediate(childToRemove);
     }
     for (Component *compToRemove : componentsToRemove)
     {
-        Component::Destroy(compToRemove);
+        Component::DestroyImmediate(compToRemove);
     }
 }
 

@@ -68,11 +68,13 @@ void BehaviourContainer::TryToSubstituteByBehaviourInstance()
 
 void BehaviourContainer::SubstituteByBehaviourInstance(Library *behavioursLibrary)
 {
-    Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary);
-    if (behaviour)
+    if (Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
     {
-        GetGameObject()->AddComponent(behaviour);
-        Component::DestroyDelayed(this);
+        if (GetGameObject())
+        {
+            GetGameObject()->AddComponent(behaviour);
+            Component::Destroy(this);
+        }
     }
 }
 
@@ -88,7 +90,9 @@ void BehaviourContainer::ImportXML(const XMLNode &xmlInfo)
     Component::ImportXML(xmlInfo);
 
     if (xmlInfo.Contains("SourceFilepath"))
-    { SetSourceFilepath( xmlInfo.Get<Path>("SourceFilepath") ); }
+    {
+        SetSourceFilepath( xmlInfo.Get<Path>("SourceFilepath") );
+    }
 
     TryToSubstituteByBehaviourInstance();
 }

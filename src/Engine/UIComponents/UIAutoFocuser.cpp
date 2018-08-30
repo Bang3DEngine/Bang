@@ -21,7 +21,7 @@ void UIAutoFocuser::OnUpdate()
         {
             canvas->SetFocus(p_focusableToAutoFocus);
         }
-        Component::DestroyDelayed(this);
+        Component::Destroy(this);
     }
 }
 

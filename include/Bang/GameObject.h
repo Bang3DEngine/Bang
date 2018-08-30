@@ -58,7 +58,7 @@ public:
     template <class T = GameObject, class... Args>
     static T* Create(Args... args);
     static void Destroy(GameObject *gameObject);
-    static void DestroyDelayed(GameObject *gameObject);
+    static void DestroyImmediate(GameObject *gameObject);
 
     bool IsEnabled(bool recursive = false) const;
 

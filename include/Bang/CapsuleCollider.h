@@ -33,8 +33,8 @@ public:
     virtual void ExportXML(XMLNode *xmlInfo) const override;
 
 protected:
-    float m_radius = 1.0f;
-    float m_height = 2.0f;
+    float m_radius = 0.5f;
+    float m_height = 1.0f;
     Axis3D m_axis = Axis3D::Y;
 
     // Collider

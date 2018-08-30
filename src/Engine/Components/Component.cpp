@@ -17,23 +17,20 @@ Component::Component()
 Component::~Component()
 {
     ASSERT(IsWaitingToBeDestroyed());
-    SetGameObject(nullptr);
+    ASSERT(GetGameObject() == nullptr);
 }
 
-void Component::Destroy(Component *component)
+void Component::DestroyImmediate(Component *component)
 {
     if (!component->IsWaitingToBeDestroyed())
     {
         Object::PropagateObjectDestruction(component);
-        if (component->GetGameObject())
-        {
-            component->GetGameObject()->RemoveComponent(component);
-        }
+        component->SetGameObjectForced(nullptr);
         delete component;
     }
 }
 
-void Component::DestroyDelayed(Component *component)
+void Component::Destroy(Component *component)
 {
     if (Scene *scene = SceneManager::GetActiveScene())
     {
@@ -42,13 +39,21 @@ void Component::DestroyDelayed(Component *component)
     }
     else
     {
-        Component::Destroy(component);
+        Component::DestroyImmediate(component);
     }
 }
 
 void Component::SetGameObject(GameObject *newGameObject)
 {
-    if (GetGameObject() != newGameObject)
+    if (!IsWaitingToBeDestroyed())
+    {
+        SetGameObjectForced(newGameObject);
+    }
+}
+
+void Component::SetGameObjectForced(GameObject *newGameObject)
+{
+    if (newGameObject != GetGameObject())
     {
         GameObject *previousGameObject = GetGameObject();
 

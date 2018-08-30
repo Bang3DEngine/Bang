@@ -65,75 +65,85 @@ void UIInputText::OnUpdate()
 void UIInputText::UpdateCursorRenderer()
 {
     // Cursor "I" position update
-    float cursorX = GetLabel()->GetCursorXViewportNDC( GetCursorIndex() );
-    float fontHeight =
-        GetText()->GetFont()->GetFontHeight( GetText()->GetTextSize() );
-    float fontHeightNDC =
-         GL::FromViewportAmountToViewportAmountNDC(Vector2(0, fontHeight)).y;
+    if (GetLabel())
+    {
+        float cursorX = GetLabel()->GetCursorXViewportNDC( GetCursorIndex() );
+        float fontHeight =
+            GetText()->GetFont()->GetFontHeight( GetText()->GetTextSize() );
+        float fontHeightNDC =
+             GL::FromViewportAmountToViewportAmountNDC(Vector2(0, fontHeight)).y;
 
-    constexpr float MarginsNDC = 0.1f;
-    AARect limitsRect ( GetLabelRT()->GetViewportAARectNDC() );
-    Vector2 minPoint = Vector2(cursorX, limitsRect.GetCenter().y - fontHeightNDC / 2.0f);
-    Vector2 maxPoint = Vector2(cursorX, limitsRect.GetCenter().y + fontHeightNDC / 2.0f);
+        constexpr float MarginsNDC = 0.1f;
+        AARect limitsRect ( GetLabelRT()->GetViewportAARectNDC() );
+        Vector2 minPoint = Vector2(cursorX, limitsRect.GetCenter().y - fontHeightNDC / 2.0f);
+        Vector2 maxPoint = Vector2(cursorX, limitsRect.GetCenter().y + fontHeightNDC / 2.0f);
 
-    const RectTransform *cParentRT = p_cursor->GetGameObject()->GetParent()->GetRectTransform();
-    Vector2 minPointLocalNDC = cParentRT->FromViewportPointNDCToLocalPointNDC(minPoint);
-    Vector2 maxPointLocalNDC = cParentRT->FromViewportPointNDCToLocalPointNDC(maxPoint);
-    minPointLocalNDC.y = Math::Clamp(minPointLocalNDC.y,
-                                     -1.0f + MarginsNDC, 1.0f - MarginsNDC);
-    maxPointLocalNDC.y = Math::Clamp(maxPointLocalNDC.y,
-                                     -1.0f + MarginsNDC, 1.0f - MarginsNDC);
-    minPointLocalNDC = Vector2::Min(minPointLocalNDC, maxPointLocalNDC);
-    maxPointLocalNDC = Vector2::Max(minPointLocalNDC, maxPointLocalNDC);
+        const RectTransform *cParentRT = p_cursor->GetGameObject()->GetParent()->GetRectTransform();
+        Vector2 minPointLocalNDC = cParentRT->FromViewportPointNDCToLocalPointNDC(minPoint);
+        Vector2 maxPointLocalNDC = cParentRT->FromViewportPointNDCToLocalPointNDC(maxPoint);
+        minPointLocalNDC.y = Math::Clamp(minPointLocalNDC.y,
+                                         -1.0f + MarginsNDC, 1.0f - MarginsNDC);
+        maxPointLocalNDC.y = Math::Clamp(maxPointLocalNDC.y,
+                                         -1.0f + MarginsNDC, 1.0f - MarginsNDC);
+        minPointLocalNDC = Vector2::Min(minPointLocalNDC, maxPointLocalNDC);
+        maxPointLocalNDC = Vector2::Max(minPointLocalNDC, maxPointLocalNDC);
 
-    RectTransform *cRT = p_cursor->GetGameObject()->GetRectTransform();
-    cRT->SetAnchors(minPointLocalNDC, maxPointLocalNDC);
+        RectTransform *cRT = p_cursor->GetGameObject()->GetRectTransform();
+        cRT->SetAnchors(minPointLocalNDC, maxPointLocalNDC);
+    }
 }
 
 void UIInputText::UpdateTextScrolling()
 {
-    Vector2i prevScrollPx = p_scrollArea->GetScrolling();
-    p_scrollArea->SetScrolling( Vector2i::Zero );
-    GetText()->RegenerateCharQuadsVAO();
-
-    Vector2 scrollNDC = Vector2::Zero;
-    AARect labelLimits ( GetLabelRT()->GetViewportAARectNDC() );
-    AARect contentRectNDC = GetText()->GetContentViewportNDCRect();
-    if (contentRectNDC.GetWidth() > labelLimits.GetWidth() && GetCursorIndex() > 0)
+    if (p_scrollArea)
     {
-        p_scrollArea->SetScrolling(prevScrollPx);
+        Vector2i prevScrollPx = p_scrollArea->GetScrolling();
+        p_scrollArea->SetScrolling( Vector2i::Zero );
         GetText()->RegenerateCharQuadsVAO();
-        contentRectNDC = GetText()->GetContentViewportNDCRect();
-        float cursorX = GetLabel()->GetCursorXViewportNDC( GetCursorIndex() );
-        float lookAheadNDC = GL::FromViewportAmountToViewportAmountNDC(
-                                                Vector2(LookAheadOffsetPx) ).x;
-        if (cursorX < labelLimits.GetMin().x)
+
+        Vector2 scrollNDC = Vector2::Zero;
+        AARect labelLimits ( GetLabelRT()->GetViewportAARectNDC() );
+        AARect contentRectNDC = GetText()->GetContentViewportNDCRect();
+        if (contentRectNDC.GetWidth() > labelLimits.GetWidth() && GetCursorIndex() > 0)
         {
-            scrollNDC.x = labelLimits.GetMin().x - cursorX + lookAheadNDC;
-        }
-        else if (cursorX > labelLimits.GetMax().x)
-        {
-            scrollNDC.x = labelLimits.GetMax().x - cursorX - lookAheadNDC;
-        }
-        else
-        {
-            if (contentRectNDC.GetMin().x < labelLimits.GetMin().x &&
-                contentRectNDC.GetMax().x < labelLimits.GetMax().x)
+            p_scrollArea->SetScrolling(prevScrollPx);
+            GetText()->RegenerateCharQuadsVAO();
+            contentRectNDC = GetText()->GetContentViewportNDCRect();
+            float cursorX = GetLabel()->GetCursorXViewportNDC( GetCursorIndex() );
+            float lookAheadNDC = GL::FromViewportAmountToViewportAmountNDC(
+                                                    Vector2(LookAheadOffsetPx) ).x;
+            if (cursorX < labelLimits.GetMin().x)
             {
-                scrollNDC.x = labelLimits.GetMax().x -
-                              contentRectNDC.GetMax().x -
-                              lookAheadNDC;
+                scrollNDC.x = labelLimits.GetMin().x - cursorX + lookAheadNDC;
             }
+            else if (cursorX > labelLimits.GetMax().x)
+            {
+                scrollNDC.x = labelLimits.GetMax().x - cursorX - lookAheadNDC;
+            }
+            else
+            {
+                if (contentRectNDC.GetMin().x < labelLimits.GetMin().x &&
+                    contentRectNDC.GetMax().x < labelLimits.GetMax().x)
+                {
+                    scrollNDC.x = labelLimits.GetMax().x -
+                                  contentRectNDC.GetMax().x -
+                                  lookAheadNDC;
+                }
+            }
+
+            Vector2i scrollPx( GL::FromViewportAmountNDCToViewportAmount(scrollNDC) );
+            p_scrollArea->SetScrolling(prevScrollPx + scrollPx);
         }
 
-        Vector2i scrollPx( GL::FromViewportAmountNDCToViewportAmount(scrollNDC) );
-        p_scrollArea->SetScrolling(prevScrollPx + scrollPx);
     }
 }
 
 void UIInputText::HandleTyping()
 {
-    if (IsBlocked()) { return; }
+    if (IsBlocked())
+    {
+        return;
+    }
 
     String inputText = Input::PollInputText();
     inputText = FilterAllowedInputText(inputText);
@@ -213,7 +223,10 @@ void UIInputText::HandleTyping()
         SetCursorIndex(0);
     }
 
-    if (resetSelection) { GetLabel()->ResetSelection(); }
+    if (resetSelection)
+    {
+        GetLabel()->ResetSelection();
+    }
 }
 
 void UIInputText::HandleCursorIndices(bool existedSelection)
@@ -229,28 +242,44 @@ String UIInputText::FilterAllowedInputText(const String &inputText)
     String allowedText = "";
     for (char c : inputText)
     {
-        if (m_allowedCharacters.Contains( String(c) )) { allowedText += c; }
+        if (m_allowedCharacters.Contains( String(c) ))
+        {
+            allowedText += c;
+        }
     }
     return allowedText;
 }
 
 bool UIInputText::IsSelecting() const
 {
-    return IsShiftPressed() || GetLabel()->IsSelectingWithMouse();
+    if (GetLabel())
+    {
+        return IsShiftPressed() || GetLabel()->IsSelectingWithMouse();
+    }
+    return false;
 }
 
-int UIInputText::GetCursorIndex() const { return GetLabel()->GetCursorIndex(); }
-int UIInputText::GetSelectionIndex() const { return GetLabel()->GetSelectionIndex(); }
-UILabel *UIInputText::GetLabel() const { return p_label; }
+int UIInputText::GetCursorIndex() const
+{
+    return GetLabel() ? GetLabel()->GetCursorIndex() : -1;
+}
+int UIInputText::GetSelectionIndex() const
+{
+    return GetLabel() ? GetLabel()->GetSelectionIndex() : -1;
+}
+UILabel *UIInputText::GetLabel() const
+{
+    return p_label;
+}
 
 RectTransform *UIInputText::GetLabelRT() const
 {
-    return GetLabel()->GetGameObject()->GetRectTransform();
+    return GetLabel() ? GetLabel()->GetGameObject()->GetRectTransform() : nullptr;
 }
 
 RectTransform *UIInputText::GetTextRT() const
 {
-    return GetText()->GetGameObject()->GetRectTransform();
+    return GetText() ? GetText()->GetGameObject()->GetRectTransform() : nullptr;
 }
 
 RectTransform *UIInputText::GetRT() const
@@ -262,8 +291,15 @@ void UIInputText::HandleKeySelection(bool existedSelection)
 {
     // Get cursor advance 1/-1
     int indexAdvance = 0;
-    if (Input::GetKeyDownRepeat(Key::RIGHT)) { indexAdvance = 1; }
-    if (Input::GetKeyDownRepeat(Key::LEFT)) { indexAdvance = -1; }
+    if (Input::GetKeyDownRepeat(Key::RIGHT))
+    {
+        indexAdvance = 1;
+    }
+
+    if (Input::GetKeyDownRepeat(Key::LEFT))
+    {
+        indexAdvance = -1;
+    }
 
     if (indexAdvance != 0)
     {
@@ -291,7 +327,10 @@ void UIInputText::HandleKeySelection(bool existedSelection)
         SetCursorIndex(newIndex);
 
         // Selection resetting handling
-        if (!IsSelecting()) { GetLabel()->ResetSelection(); }
+        if (!IsSelecting())
+        {
+            GetLabel()->ResetSelection();
+        }
     }
 }
 
@@ -312,7 +351,10 @@ void UIInputText::SetSelection(int selectionBeginIndex,
     UpdateCursorRenderer();
 }
 
-String UIInputText::GetSelectedText() const { return GetLabel()->GetSelectedText(); }
+String UIInputText::GetSelectedText() const
+{
+    return GetLabel()->GetSelectedText();
+}
 
 void UIInputText::ReplaceSelectedText(const String &replaceStr)
 {
@@ -381,20 +423,24 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
     inputText->p_background = bg;
+    inputText->p_background->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->EventEmitter<IEventsFocus>::RegisterListener(inputText);
     inputText->p_focusable = focusable;
+    inputText->p_focusable->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
     scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(Vector2::Zero);
     scrollArea->GetMask()->SetMasking(true);
     scrollArea->GetBackground()->SetTint(Color::Zero);
     inputText->p_scrollArea = scrollArea;
+    inputText->p_scrollArea->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();
     UITextCursor *cursor = cursorGo->AddComponent<UITextCursor>();
     inputText->p_cursor = cursor;
+    inputText->p_cursor->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
     cursor->SetEnabled(false);
 
     UILabel *label = GameObjectFactory::CreateUILabel();
@@ -404,6 +450,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
                             SetMargins(MarginX, MarginY, MarginX, MarginY);
     label->SetFocusable( inputText->p_focusable );
     inputText->p_label = label;
+    inputText->p_label->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     label->GetGameObject()->SetParent(scrollArea->GetContainer());
     cursorGo->SetParent(label->GetGameObject());
@@ -424,8 +471,17 @@ bool UIInputText::IsWordBoundary(char prevChar, char nextChar) const
     const bool nextCharIsUpperCase = String::IsUpperCase(nextChar);
     const bool prevCharIsLetter    = String::IsLetter(prevChar);
     const bool nextCharIsLetter    = String::IsLetter(nextChar);
-    if (!prevCharIsUpperCase && nextCharIsUpperCase) { return true; }
-    if (prevCharIsLetter != nextCharIsLetter) { return true; }
+
+    if (!prevCharIsUpperCase && nextCharIsUpperCase)
+    {
+        return true;
+    }
+
+    if (prevCharIsLetter != nextCharIsLetter)
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -469,6 +525,30 @@ void UIInputText::OnEvent(IFocusable *focusable, const UIEvent &event)
 
     EventEmitter<IEventsFocus>::
             PropagateToListeners(&IEventsFocus::OnEvent, focusable, event);
+}
+
+void UIInputText::OnDestroyed(EventEmitter<IEventsDestroy> *object)
+{
+    if (object == p_label)
+    {
+        p_label = nullptr;
+    }
+    if (object == p_cursor)
+    {
+        p_cursor = nullptr;
+    }
+    if (object == p_focusable)
+    {
+        p_focusable = nullptr;
+    }
+    if (object == p_scrollArea)
+    {
+        p_scrollArea = nullptr;
+    }
+    else if (object == p_background)
+    {
+        p_background = nullptr;
+    }
 }
 
 void UIInputText::CalculateLayout(Axis axis)

@@ -27,7 +27,7 @@ Scene::Scene() : GameObject("Scene")
 Scene::~Scene()
 {
     delete m_gizmos;
-    GameObject::Destroy(p_debugRenderer);
+    GameObject::DestroyImmediate(p_debugRenderer);
 }
 
 void Scene::OnPreStart()
@@ -59,18 +59,18 @@ void Scene::OnResize(int newWidth, int newHeight)
     InvalidateCanvas();
 }
 
-void Scene::DestroyDelayed()
+void Scene::DestroyDelayedElements()
 {
     while (!m_componentsToDestroyDelayed.IsEmpty())
     {
         Component *comp = m_componentsToDestroyDelayed.Back();
-        Component::Destroy(comp);
+        Component::DestroyImmediate(comp);
     }
 
     while (!m_gameObjectsToDestroyDelayed.IsEmpty())
     {
         GameObject *go = m_gameObjectsToDestroyDelayed.Back();
-        GameObject::Destroy(go);
+        GameObject::DestroyImmediate(go);
     }
 }
 

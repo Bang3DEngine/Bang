@@ -100,7 +100,7 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
         }
     }
 
-    GameObject::Destroy(destroyTracker);
+    GameObject::DestroyImmediate(destroyTracker);
 }
 
 void PropagateUIEvent(IFocusable *focusable, const UIEvent &event)
@@ -461,12 +461,9 @@ void UICanvas::SetFocus(IFocusable *newFocusable_)
 {
     IFocusable *newFocusable = newFocusable_;
     Object *obj = newFocusable ? DCAST<Object*>(newFocusable) : nullptr;
-    if (obj)
+    if (obj && obj->IsWaitingToBeDestroyed())
     {
-        if (obj->IsWaitingToBeDestroyed())
-        {
-            newFocusable = nullptr;
-        }
+        newFocusable = nullptr;
     }
 
 
@@ -699,7 +696,7 @@ UILayoutManager *UICanvas::GetLayoutManager() const
 UICanvas *UICanvas::GetActive(const GameObject *go)
 {
     UICanvas *canvasInThis = go->GetComponent<UICanvas>();
-    return canvasInThis ? canvasInThis : go->GetComponentInParent<UICanvas>();
+    return canvasInThis ? canvasInThis : go->GetComponentInParent<UICanvas>(true);
 }
 
 UICanvas *UICanvas::GetActive(const Component *comp)

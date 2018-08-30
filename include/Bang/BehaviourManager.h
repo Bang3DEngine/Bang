@@ -2,13 +2,16 @@
 #define BEHAVIOURMANAGER_H
 
 #include "Bang/Bang.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
+#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Library;
 FORWARD class Behaviour;
 
-class BehaviourManager
+class BehaviourManager : public EventListener<IEventsDestroy>
 {
 public:
 	BehaviourManager();
@@ -24,14 +27,20 @@ public:
 
     void SetBehavioursLibrary(const Path &libPath);
     void SetBehavioursLibrary(Library *behavioursLibrary);
+    void RegisterBehaviour(Behaviour *behaviour);
 
     virtual bool IsInstanceCreationAllowed() const;
     Library* GetBehavioursLibrary() const;
+    void DestroyBehavioursUsingCurrentLibrary();
+
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     static BehaviourManager* GetActive();
 
 private:
     Library *m_behavioursLibrary = nullptr;
+    Array<Behaviour*> p_behavioursUsingCurrentLibrary;
 
 };
 

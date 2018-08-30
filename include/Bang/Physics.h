@@ -72,7 +72,7 @@ private:
 
     int m_maxSubSteps = 10;
     float m_stepSleepTimeSeconds = (1.0f/60.0f);
-    Vector3 m_gravity = Vector3(0.0f, -9.81f, 0.0f);
+    Vector3 m_gravity = Vector3(0.0f, -30.0f, 0.0f);
 
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
 

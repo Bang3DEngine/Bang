@@ -4,11 +4,13 @@
 #include "Bang/Time.h"
 #include "Bang/Extensions.h"
 #include "Bang/Application.h"
+#include "Bang/BehaviourManager.h"
 
 USING_NAMESPACE_BANG
 
 Behaviour::Behaviour()
 {
+    BehaviourManager::GetActive()->RegisterBehaviour(this);
 }
 
 Behaviour::~Behaviour()

@@ -50,14 +50,14 @@ void Transform::SetLocalRotation(const Quaternion &q)
     if (GetLocalRotation() != q)
     {
         m_localRotation = q.Normalized();
-        m_localEulerAnglesDegreesHint = GetLocalRotation().GetEulerAngles();
+        m_localEulerAnglesDegreesHint = GetLocalRotation().GetEulerAnglesDegrees();
         InvalidateTransform();
     }
 }
 void Transform::SetLocalEuler(const Vector3 &degreesEuler)
 {
     Vector3 eulersRads = degreesEuler.ToRadians();
-    SetLocalRotation( Quaternion::FromEulerAngles(eulersRads) );
+    SetLocalRotation( Quaternion::FromEulerAnglesRads(eulersRads) );
     m_localEulerAnglesDegreesHint = degreesEuler;
 }
 void Transform::SetLocalEuler(float x, float y, float z)
@@ -475,25 +475,27 @@ void Transform::ImportXML(const XMLNode &xmlInfo)
     Component::ImportXML(xmlInfo);
 
     if (xmlInfo.Contains("Position"))
-    { SetLocalPosition(xmlInfo.Get<Vector3>("Position")); }
+    {
+        SetLocalPosition(xmlInfo.Get<Vector3>("Position"));
+    }
 
     if (xmlInfo.Contains("Rotation"))
-    { SetLocalRotation(xmlInfo.Get<Quaternion>("Rotation")); }
-
-    if (xmlInfo.Contains("EulerAngleRadsHint"))
-    { SetLocalEuler(xmlInfo.Get<Vector3>("EulerAngleRadsHint")); }
+    {
+        SetLocalRotation(xmlInfo.Get<Quaternion>("Rotation"));
+    }
 
     if (xmlInfo.Contains("Scale"))
-    { SetLocalScale(xmlInfo.Get<Vector3>("Scale")); }
+    {
+        SetLocalScale(xmlInfo.Get<Vector3>("Scale"));
+    }
 }
 
 void Transform::ExportXML(XMLNode *xmlInfo) const
 {
     Component::ExportXML(xmlInfo);
-    xmlInfo->Set("Position",           GetLocalPosition());
-    xmlInfo->Set("Rotation",           GetLocalRotation());
-    xmlInfo->Set("EulerAngleRadsHint", GetLocalEuler());
-    xmlInfo->Set("Scale",              GetLocalScale());
+    xmlInfo->Set("Position", GetLocalPosition());
+    xmlInfo->Set("Rotation", GetLocalRotation());
+    xmlInfo->Set("Scale",    GetLocalScale());
 }
 
 void Transform::InvalidateTransform()

@@ -51,9 +51,9 @@ public:
         return Conjugated()/QuaternionG<T>::Dot(*this, *this);
     }
 
-    Vector3G<T> GetEulerAngles() const
+    Vector3G<T> GetEulerAnglesDegrees() const
     {
-        return QuaternionG<T>::GetEulerAngles(*this);
+        return QuaternionG<T>::GetEulerAnglesDegrees(*this);
     }
 
     T GetPitch() const
@@ -113,14 +113,14 @@ public:
 
         return axis.NormalizedSafe() * angle;
     }
-    static QuaternionG<T> FromEulerAngles(const Vector3 &eulerAnglesRads)
+    static QuaternionG<T> FromEulerAnglesRads(const Vector3 &eulerAnglesRads)
     {
         QuaternionG<T> qx = Quaternion::AngleAxis(eulerAnglesRads.x, Vector3::Right);
         QuaternionG<T> qy = Quaternion::AngleAxis(eulerAnglesRads.y, Vector3::Up);
         QuaternionG<T> qz = Quaternion::AngleAxis(eulerAnglesRads.z, Vector3::Forward);
         return (qz * qy * qx).Normalized();
     }
-    static Vector3G<T> GetEulerAngles(const QuaternionG<T> &q)
+    static Vector3G<T> GetEulerAnglesDegrees(const QuaternionG<T> &q)
     {
         return Vector3G<T>(q.GetPitch(), q.GetYaw(), q.GetRoll()).ToDegrees();
     }

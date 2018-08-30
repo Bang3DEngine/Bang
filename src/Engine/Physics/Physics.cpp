@@ -346,8 +346,8 @@ void Physics::FillTransformFromPxTransform(Transform *transform,
 {
     if (transform)
     {
-        transform->SetLocalPosition( GetVector3FromPxVec3(pxTransform.p) );
-        transform->SetLocalRotation( GetQuaternionFromPxQuat(pxTransform.q) );
+        transform->SetPosition( GetVector3FromPxVec3(pxTransform.p) );
+        transform->SetRotation( GetQuaternionFromPxQuat(pxTransform.q) );
     }
 }
 

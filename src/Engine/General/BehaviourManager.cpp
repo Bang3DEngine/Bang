@@ -16,10 +16,7 @@ BehaviourManager::BehaviourManager()
 
 BehaviourManager::~BehaviourManager()
 {
-    if (m_behavioursLibrary)
-    {
-        delete m_behavioursLibrary;
-    }
+    SetBehavioursLibrary(nullptr);
 }
 
 Behaviour *BehaviourManager::CreateBehaviourInstance(const String &behaviourName,
@@ -108,6 +105,22 @@ Library *BehaviourManager::GetBehavioursLibrary() const
     return m_behavioursLibrary;
 }
 
+void BehaviourManager::DestroyBehavioursUsingCurrentLibrary()
+{
+    while (!p_behavioursUsingCurrentLibrary.IsEmpty())
+    {
+        Behaviour *behaviour = p_behavioursUsingCurrentLibrary.Back();
+        Component::DestroyImmediate(behaviour);
+    }
+}
+
+void BehaviourManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
+{
+    Behaviour *behaviour = SCAST<Behaviour*>(object);
+    p_behavioursUsingCurrentLibrary.Remove(behaviour);
+    ASSERT(!p_behavioursUsingCurrentLibrary.Contains(behaviour));
+}
+
 BehaviourManager *BehaviourManager::GetActive()
 {
     return SceneManager::GetActive()->GetBehaviourManager();
@@ -124,6 +137,7 @@ void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
 {
     if (GetBehavioursLibrary())
     {
+        DestroyBehavioursUsingCurrentLibrary();
         delete GetBehavioursLibrary();
     }
 
@@ -138,5 +152,14 @@ void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
         {
             Debug_Error(GetBehavioursLibrary()->GetErrorString());
         }
+    }
+}
+
+void BehaviourManager::RegisterBehaviour(Behaviour *behaviour)
+{
+    if (!p_behavioursUsingCurrentLibrary.Contains(behaviour))
+    {
+        p_behavioursUsingCurrentLibrary.PushBack(behaviour);
+        behaviour->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 }

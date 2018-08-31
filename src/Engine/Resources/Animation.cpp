@@ -1,9 +1,12 @@
 #include "Bang/Animation.h"
 
+#include "Bang/XMLNode.h"
+
 USING_NAMESPACE_BANG
 
 Animation::Animation()
 {
+    SetWrapMode(AnimationWrapMode::REPEAT);
 }
 
 Animation::~Animation()
@@ -61,6 +64,15 @@ void Animation::SetDurationInFrames(float durationInSeconds)
     }
 }
 
+void Animation::SetWrapMode(AnimationWrapMode wrapMode)
+{
+    if (wrapMode != GetWrapMode())
+    {
+        m_wrapMode = wrapMode;
+        PropagateResourceChanged();
+    }
+}
+
 float Animation::GetDurationInFrames() const
 {
     return m_durationInFrames;
@@ -71,19 +83,54 @@ float Animation::GetFramesPerSecond() const
     return m_framesPerSecond;
 }
 
+AnimationWrapMode Animation::GetWrapMode() const
+{
+    return m_wrapMode;
+}
+
 template<class T>
 Array<Animation::KeyFrame<T>>
 GetConsecutiveKeyFrames(const Array<Animation::KeyFrame<T>> &keyFrames,
-                        float timeSecs)
+                        AnimationWrapMode animationWrapMode,
+                        float durationInFrames,
+                        float timeInFrames_)
 {
-    const uint numKF = keyFrames.Size();
-    for (uint i = 0; i < numKF - 1; ++i)
+    if (durationInFrames > 0.0f)
     {
-        const Animation::KeyFrame<T> &prevPosKF = keyFrames[i];
-        const Animation::KeyFrame<T> &nextPosKF = keyFrames[i + 1];
-        if (timeSecs >= prevPosKF.timeInFrames && timeSecs < nextPosKF.timeInFrames)
+        float timeInFrames = timeInFrames_;
+        switch (animationWrapMode)
         {
-            return {{prevPosKF, nextPosKF}};
+            case AnimationWrapMode::CLAMP:
+                timeInFrames = Math::Clamp(timeInFrames, 0.0f, durationInFrames);
+            break;
+
+            case AnimationWrapMode::REPEAT:
+                timeInFrames = Math::Modf(timeInFrames, durationInFrames);
+            break;
+
+            case AnimationWrapMode::PING_PONG:
+            {
+                timeInFrames = Math::Modf(timeInFrames, durationInFrames);
+                int parity = SCAST<int>(timeInFrames / durationInFrames);
+                if ((parity % 2) == 1)
+                {
+                    timeInFrames = durationInFrames - timeInFrames;
+                }
+            }
+            break;
+        }
+
+
+        const uint numKF = keyFrames.Size();
+        for (uint i = 0; i < numKF - 1; ++i)
+        {
+            const Animation::KeyFrame<T> &prevPosKF = keyFrames[i];
+            const Animation::KeyFrame<T> &nextPosKF = keyFrames[i + 1];
+            if (timeInFrames >= prevPosKF.timeInFrames &&
+                timeInFrames <= nextPosKF.timeInFrames)
+            {
+                return {{prevPosKF, nextPosKF}};
+            }
         }
     }
     return {{}};
@@ -108,7 +155,10 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         bonesMatrices.Add(boneName, Matrix4::Identity);
 
         Array< KeyFrame<Vector3> > positionInterpKeyFrames =
-                        GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
+                        GetConsecutiveKeyFrames(posKeyFrames,
+                                                GetWrapMode(),
+                                                GetDurationInFrames(),
+                                                timeInFrames);
 
         if (positionInterpKeyFrames.Size() == 2)
         {
@@ -120,7 +170,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
 
             float timePassedSincePrev = (timeInFrames - prevPosKF.timeInFrames);
             float interpFactor = (timePassedSincePrev / deltaTime);
-            ASSERT(interpFactor >= 0 && interpFactor <= 1);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
             Vector3 position = Vector3::Lerp(prevPosKF.value,
                                              nextPosKF.value,
@@ -139,7 +189,10 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         bonesMatrices.Add(boneName, Matrix4::Identity);
 
         Array< KeyFrame<Quaternion> > rotationInterpKeyFrames =
-                        GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
+                        GetConsecutiveKeyFrames(rotKeyFrames,
+                                                GetWrapMode(),
+                                                GetDurationInFrames(),
+                                                timeInFrames);
 
         if (rotationInterpKeyFrames.Size() == 2)
         {
@@ -151,7 +204,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
 
             float timePassedSincePrev = (timeInFrames - prevRotKF.timeInFrames);
             float interpFactor = (timePassedSincePrev / deltaTime);
-            ASSERT(interpFactor >= 0 && interpFactor <= 1);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
             Quaternion rotation = Quaternion::SLerp(prevRotKF.value,
                                                     nextRotKF.value,
@@ -241,10 +294,17 @@ void Animation::Import(const Path &animationFilepath)
 void Animation::ImportXML(const XMLNode &xmlInfo)
 {
     Asset::ImportXML(xmlInfo);
+
+    if (xmlInfo.Contains("WrapMode"))
+    {
+        SetWrapMode( SCAST<AnimationWrapMode>(xmlInfo.Get<int>("WrapMode")) );
+    }
 }
 
 void Animation::ExportXML(XMLNode *xmlInfo) const
 {
     Asset::ExportXML(xmlInfo);
+
+    xmlInfo->Set("WrapMode", SCAST<int>(GetWrapMode()));
 }
 

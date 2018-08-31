@@ -500,8 +500,8 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             GL::SetStencilOp(GL::StencilOperation::KEEP);
             GL::SetColorMask(false, false, false, false);
 
-            GEngine::GetInstance()->SetReplacementMaterial(
-                                     MaterialFactory::GetDefaultUnLighted().Get());
+            // GEngine::GetInstance()->SetReplacementMaterial(
+            //                          MaterialFactory::GetDefaultUnLighted().Get());
             GEngine::GetInstance()->RenderWithPass(gameObject, RenderPass::SCENE);
             GEngine::GetInstance()->SetReplacementMaterial(nullptr);
 

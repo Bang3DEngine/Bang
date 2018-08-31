@@ -11,6 +11,13 @@
 
 NAMESPACE_BANG_BEGIN
 
+enum class AnimationWrapMode
+{
+    CLAMP,
+    REPEAT,
+    PING_PONG
+};
+
 class Animation : public Asset
 {
     ASSET(Animation);
@@ -31,9 +38,11 @@ public:
                           const Animation::KeyFrame<Vector3> &keyFrame);
     void SetFramesPerSecond(float framesPerSecond);
     void SetDurationInFrames(float durationInSeconds);
+    void SetWrapMode(AnimationWrapMode wrapMode);
 
     float GetDurationInFrames() const;
     float GetFramesPerSecond() const;
+    AnimationWrapMode GetWrapMode() const;
     Map<String, Matrix4> GetBoneAnimationMatricesForSecond(float second) const;
 
     const Array< Animation::KeyFrame<Vector3> > &
@@ -67,6 +76,7 @@ private:
 
     float m_durationInFrames = 0.0f;
     float m_framesPerSecond  = 0.0f;
+    AnimationWrapMode m_wrapMode = AnimationWrapMode::CLAMP;
 
     Map<String, Array<KeyFrame<Vector3>>>    m_boneNameToPositionKeyFrames;
     Map<String, Array<KeyFrame<Quaternion>>> m_boneNameToRotationKeyFrames;

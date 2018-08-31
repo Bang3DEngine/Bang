@@ -156,7 +156,11 @@ void SkinnedMeshRenderer::OnRender()
 void SkinnedMeshRenderer::SetRootBoneGameObjectName(
                                           const String &rootBoneGameObjectName)
 {
-    m_rootBoneGameObjectName = rootBoneGameObjectName;
+    if (rootBoneGameObjectName != GetRootBoneGameObjectName())
+    {
+        m_rootBoneGameObjectName = rootBoneGameObjectName;
+        RetrieveBonesBindPoseFromCurrentHierarchy();
+    }
 }
 
 Model *SkinnedMeshRenderer::GetActiveModel() const
@@ -311,7 +315,7 @@ void SkinnedMeshRenderer::ImportXML(const XMLNode &xmlInfo)
 {
     MeshRenderer::ImportXML(xmlInfo);
 
-    if (xmlInfo.Contains("RootBoneGameObject"))
+    if (xmlInfo.Contains("RootBoneGameObjectName"))
     {
         String rootBoneName = xmlInfo.Get<String>("RootBoneGameObjectName");
         SetRootBoneGameObjectName(rootBoneName);

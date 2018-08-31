@@ -85,8 +85,9 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
 
 GameObject *Model::CreateGameObjectFromModel() const
 {
-    GameObject *modelGo = CreateGameObjectFromModelNodeTree(m_modelScene,
-                                                            m_modelScene.modelTree);
+    GameObject *modelGo = CreateGameObjectFromModelNodeTree(
+                                                    m_modelScene,
+                                                    m_modelScene.modelTree);
 
     // If skinned mesh renderer, set bone references to gameObjects
     Array<SkinnedMeshRenderer*> smrs =

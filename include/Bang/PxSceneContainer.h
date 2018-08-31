@@ -23,17 +23,9 @@ public:
     PxSceneContainer(Scene *scene);
     virtual ~PxSceneContainer();
 
-    Time::TimeT m_lastStepTimeMillis = 0;
-
-    int m_numFramesLeftToIgnore = 0;
-    physx::PxScene *p_pxScene = nullptr;
-    ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
-    Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
-    Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
-    Map<physx::PxShape*, Collider*> m_pxShapeToCollider;
-
     void ResetStepTimeReference();
 
+    Scene *GetScene() const;
     physx::PxScene* GetPxScene() const;
     physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
     Collider* GetColliderFromPxShape(physx::PxShape *pxShape) const;
@@ -43,6 +35,17 @@ public:
 
     physx::PxActor* GetAncestorOrThisPxActor(GameObject *go);
     void SynchronizePxActorCreationReleasingWithPhysX(GameObject *go);
+
+private:
+    Time::TimeT m_lastStepTimeMillis = 0;
+
+    Scene *p_scene = nullptr;
+    int m_numFramesLeftToIgnore = 0;
+    physx::PxScene *p_pxScene = nullptr;
+    ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
+    Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
+    Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
+    Map<physx::PxShape*, Collider*> m_pxShapeToCollider;
 
     // PxSimulationEventCallback
     void onConstraintBreak(physx::PxConstraintInfo* constraints,
@@ -65,6 +68,8 @@ public:
 
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;
+
+    friend class Physics;
 };
 
 NAMESPACE_BANG_END

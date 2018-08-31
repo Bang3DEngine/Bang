@@ -73,6 +73,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
 
     m_physicsObjectGatherer = new ObjectGatherer<PhysicsObject, true>();
 
+    p_scene = scene;
     p_pxScene = pxScene;
     m_physicsObjectGatherer->SetRoot(scene);
     m_physicsObjectGatherer->EventEmitter<IEventsObjectGatherer>::
@@ -104,6 +105,11 @@ PxSceneContainer::~PxSceneContainer()
 void PxSceneContainer::ResetStepTimeReference()
 {
     m_lastStepTimeMillis = Time::GetNow_Millis();
+}
+
+Scene *PxSceneContainer::GetScene() const
+{
+    return p_scene;
 }
 
 PxScene *PxSceneContainer::GetPxScene() const

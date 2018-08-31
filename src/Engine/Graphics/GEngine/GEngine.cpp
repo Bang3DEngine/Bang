@@ -589,7 +589,7 @@ void GEngine::RenderShadowMaps(GameObject *go)
         Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
         for (Light *light : lights)
         {
-            if (light->IsActive())
+            if (light->IsEnabled(true))
             {
                 light->RenderShadowMaps();
             }
@@ -605,7 +605,10 @@ void GEngine::RenderReflectionProbes(GameObject *go)
                      go->GetComponentsInDescendantsAndThis<ReflectionProbe>();
         for (ReflectionProbe *reflProbe : reflProbes)
         {
-            reflProbe->RenderReflectionProbe();
+            if (reflProbe->IsEnabled(true))
+            {
+                reflProbe->RenderReflectionProbe();
+            }
         }
     }
 }

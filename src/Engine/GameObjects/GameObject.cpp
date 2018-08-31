@@ -596,7 +596,9 @@ bool GameObject::IsVisible() const
     return m_visible;
 }
 
-void GameObject::SetParent(GameObject *newParent, int index_)
+void GameObject::SetParent(GameObject *newParent,
+                           int index_,
+                           bool keepWorldTransform)
 {
     ASSERT( newParent != this );
     ASSERT( !newParent || !newParent->IsChildOf(this, true) );
@@ -612,6 +614,12 @@ void GameObject::SetParent(GameObject *newParent, int index_)
             return;
         }
 
+        Matrix4 prevWorldTransform = Matrix4::Identity;
+        if (keepWorldTransform && GetTransform())
+        {
+            prevWorldTransform = GetTransform()->GetLocalToWorldMatrix();
+        }
+
         GameObject *oldParent = GetParent();
         if (oldParent)
         {
@@ -621,6 +629,12 @@ void GameObject::SetParent(GameObject *newParent, int index_)
         p_parent = newParent;
         if (newParent)
         {
+            if (keepWorldTransform && newParent->GetTransform())
+            {
+                GetTransform()->FillFromMatrix(newParent->GetTransform()->
+                                               GetLocalToWorldMatrixInv() *
+                                               prevWorldTransform);
+            }
             newParent->AddChild(this, index);
         }
 
@@ -629,11 +643,12 @@ void GameObject::SetParent(GameObject *newParent, int index_)
                                     oldParent, newParent);
         PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
                         GetComponents<EventListener<IEventsChildren>>(),
-                        oldParent, newParent);
+                        oldParent,
+                        newParent);
     }
     else if (GetParent())
     {
-        // Its a movement inside the same parent
+        // Is it a movement inside the same parent ?
         int oldIndex = GetParent()->GetChildren().IndexOf(this);
         if (oldIndex != index)
         {
@@ -651,6 +666,15 @@ GameObject *GameObject::GetParent() const
 void GameObject::SetDontDestroyOnLoad(bool dontDestroyOnLoad)
 {
     m_dontDestroyOnLoad = dontDestroyOnLoad;
+}
+
+int GameObject::GetIndexInsideParent() const
+{
+    if (GameObject *parent = GetParent())
+    {
+        return parent->GetChildren().IndexOf(const_cast<GameObject*>(this));
+    }
+    return -1;
 }
 
 bool GameObject::IsDontDestroyOnLoad() const

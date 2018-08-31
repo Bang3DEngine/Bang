@@ -275,9 +275,12 @@ void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    SetLocalPosition( transformMatrix.GetTranslation() );
-    SetLocalRotation( transformMatrix.GetRotation() );
-    SetLocalScale   ( transformMatrix.GetScale() );
+    Vector3 localPos    = transformMatrix.GetTranslation();
+    Quaternion localRot = transformMatrix.GetRotation();
+    Vector3 localScale  = transformMatrix.GetScale();
+    SetLocalPosition( localPos   );
+    SetLocalRotation( localRot   );
+    SetLocalScale   ( localScale );
 }
 
 const Vector3& Transform::GetLocalPosition() const

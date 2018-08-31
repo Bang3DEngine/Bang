@@ -301,12 +301,12 @@ Quaternion Matrix4G<T>::GetRotation() const
     rotMatrix.c2 = Vector4(c2.xyz() / scale.z, 0);
     rotMatrix.c3 = Vector4(0, 0, 0, 1);
 
-    return Matrix4::ToQuaternion(rotMatrix);
+    return Matrix4::ToQuaternion(rotMatrix).Normalized();
 }
 template<class T>
 Vector3 Matrix4G<T>::GetScale() const
 {
-    return Vector3(c0.Length(), c1.Length(), c2.Length());
+    return Vector3(c0.xyz().Length(), c1.xyz().Length(), c2.xyz().Length());
 }
 
 template<class T>
@@ -314,8 +314,8 @@ Matrix4G<T> Matrix4G<T>::LookAt(const Vector3G<T> &eyePosition,
                                 const Vector3G<T> &focusPoint,
                                 const Vector3G<T> &up)
 {
-    const Vector3G<T> f( (focusPoint - eyePosition).Normalized() );
-    const Vector3G<T> s( (Vector3G<T>::Cross(f, up)).Normalized() );
+    const Vector3G<T> f( (focusPoint - eyePosition).NormalizedSafe() );
+    const Vector3G<T> s( (Vector3G<T>::Cross(f, up)).NormalizedSafe() );
     const Vector3G<T> u(  Vector3G<T>::Cross(s, f) );
 
     Matrix4G<T> res(1);
@@ -442,9 +442,9 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
         biggestIndex = 3;
     }
 
-    float biggestVal = Math::Sqrt(fourBiggestSquaredMinus1 + Cast<T>(1)) *
-                       Cast<T>(0.5);
-    float mult = Cast<T>(0.25)/biggestVal;
+    float biggestVal = Math::Sqrt(fourBiggestSquaredMinus1 + SCAST<T>(1)) *
+                       SCAST<T>(0.5);
+    float mult = SCAST<T>(0.25)/biggestVal;
 
     QuaternionG<T> res;
     switch (biggestIndex)
@@ -473,7 +473,32 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
             res.z = biggestVal;
             res.w = (m.c0[1] - m.c1[0]) * mult;
             break;
-
+    /*
+        case 0:
+            res.x = (m.c2[1] - m.c1[2]) * mult;
+            res.y = (m.c0[2] - m.c2[0]) * mult;
+            res.z = (m.c1[0] - m.c0[1]) * mult;
+            res.w = biggestVal;
+            break;
+        case 1:
+            res.x = biggestVal;
+            res.y = (m.c1[0] + m.c0[1]) * mult;
+            res.z = (m.c0[2] + m.c2[0]) * mult;
+            res.w = (m.c2[1] - m.c1[2]) * mult;
+            break;
+        case 2:
+            res.x = (m.c1[0] + m.c0[1]) * mult;
+            res.y = biggestVal;
+            res.z = (m.c2[1] + m.c1[2]) * mult;
+            res.w = (m.c0[2] - m.c2[0]) * mult;
+            break;
+        case 3:
+            res.x = (m.c0[2] + m.c2[0]) * mult;
+            res.y = (m.c2[1] + m.c1[2]) * mult;
+            res.z = biggestVal;
+            res.w = (m.c1[0] - m.c0[1]) * mult;
+            break;
+*/
         default: break;
     }
     return res;

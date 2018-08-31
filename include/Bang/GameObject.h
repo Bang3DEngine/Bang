@@ -79,9 +79,12 @@ public:
     GameObject *FindInAncestorsAndThis(const String &name, bool broadSearch);
 
     void SetVisible(bool visible);
-    void SetParent(GameObject *newParent, int _index = -1);
+    void SetParent(GameObject *newParent,
+                   int _index = -1,
+                   bool keepWorldTransform = false);
     void SetDontDestroyOnLoad(bool dontDestroyOnLoad);
 
+    int GetIndexInsideParent() const;
     GameObject* GetChild(uint index) const;
     GameObject* GetChild(const GUID &guid) const;
     GameObject* GetChild(const String &name) const;

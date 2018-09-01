@@ -512,16 +512,35 @@ void UITree::SetItemCollapsedRecursive(GOItem *item, bool collapse)
     }
 }
 
+void UITree::UnCollapse(GOItem *item)
+{
+    ASSERT( !item || !DCAST<UITreeItemContainer*>(item) );
+
+    UITreeItemContainer *itemContainer = GetItemContainer(item);
+    if (item)
+    {
+        itemContainer->SetEnabled(true);
+        itemContainer->SetCollapsed(false);
+
+        Tree<GOItem*> *itemTree = GetItemTree(item);
+        for (Tree<GOItem*> *childItemTree : itemTree->GetChildren())
+        {
+            GOItem *childItem = childItemTree->GetData();
+            UITreeItemContainer *childItemContainer = GetItemContainer(childItem);
+            childItemContainer->SetEnabled(true);
+        }
+    }
+}
+
 void UITree::UnCollapseUpwards(GOItem *item)
 {
     ASSERT( !item || !DCAST<UITreeItemContainer*>(item) );
 
-    if (!item) { return; }
-
-    UITreeItemContainer *itemContainer = GetItemContainer(item);
-    itemContainer->SetEnabled(true);
-    itemContainer->SetCollapsed(false);
-    UnCollapseUpwards( GetParentItem(item) );
+    if (item)
+    {
+        UnCollapse(item);
+        UnCollapseUpwards( GetParentItem(item) );
+    }
 }
 
 void UITree::SetSelectionCallback(UIList::SelectionCallback callback)

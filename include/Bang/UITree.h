@@ -95,6 +95,7 @@ private:
     void AddItem_(const Tree<GOItem*> &newItemTree, GOItem *parentItem,
                   int indexInsideParent, bool moving);
     void RemoveItem_(GOItem *itemToRemove, bool moving);
+    void UnCollapse(GOItem *item);
     void UnCollapseUpwards(GOItem *item);
     void SetItemCollapsedRecursive(GOItem *item, bool collapse);
     void UpdateCollapsability(GOItem *item);

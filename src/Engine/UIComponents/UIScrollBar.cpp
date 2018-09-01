@@ -37,7 +37,7 @@ void UIScrollBar::OnUpdate()
 
     if ( IsBeingGrabbed() )
     {
-        p_barImg->SetTint(Color::DarkGray);
+        p_barImg->SetTint(Color::White.WithValue(0.8f));
 
         Vector2 mouseCoordsPx (Input::GetMousePosition());
         AARect scrollRectPx = GetScrollingRect();
@@ -189,8 +189,9 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     UIScrollBar *scrollBar = go->AddComponent<UIScrollBar>();
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
-    GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
+    scrollArea->GetBackground()->SetTint(Color::White.WithValue(0.4f));
 
+    GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
     UIImageRenderer *barImg = bar->AddComponent<UIImageRenderer>();
     // barImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // barImg->SetMode(UIImageRenderer::Mode::SLICE_9);
@@ -226,7 +227,7 @@ void UIScrollBar::OnMouseEnter()
 {
     if (!IsBeingGrabbed())
     {
-        p_barImg->SetTint( Color::Gray.WithValue(0.9f) );
+        p_barImg->SetTint( Color::White.WithValue(1.0f) );
     }
 }
 
@@ -234,7 +235,7 @@ void UIScrollBar::OnMouseExit()
 {
     if (!IsBeingGrabbed())
     {
-        p_barImg->SetTint(Color::Gray.WithValue(1.2f));
+        p_barImg->SetTint(Color::White.WithValue(0.9f));
     }
 }
 

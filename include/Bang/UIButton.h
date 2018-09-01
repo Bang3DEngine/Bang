@@ -33,6 +33,7 @@ public:
     void AddClickedCallback(ClickedCallback clickedCallback);
 
     bool IsBlocked() const;
+    UIImageRenderer *GetBorder() const;
     UIImageRenderer* GetIcon() const;
     UITextRenderer* GetText() const;
     UIImageRenderer* GetBackground() const;
@@ -49,9 +50,10 @@ private:
     bool m_isBlocked = false;
     UIImageRenderer *p_icon          = nullptr;
     UITextRenderer  *p_text          = nullptr;
+    UIImageRenderer *p_border        = nullptr;
     UIImageRenderer *p_background    = nullptr;
-    UIFocusable     *p_focusable     = nullptr;
     UILayoutElement *p_layoutElement = nullptr;
+    UIFocusable     *p_focusable     = nullptr;
     Array<ClickedCallback> m_clickedCallbacks;
 
     UIButton();

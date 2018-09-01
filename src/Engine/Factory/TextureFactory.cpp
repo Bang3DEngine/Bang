@@ -32,6 +32,16 @@ Texture2D* TextureFactory::GetBang2048Icon()
     return GetTexture2D("LogoBang_2048.png");
 }
 
+Texture2D *TextureFactory::GetInnerShadow()
+{
+    return TextureFactory::GetTexture2D("InnerShadow.png");
+}
+
+Texture2D *TextureFactory::GetOuterShadow()
+{
+    return TextureFactory::GetTexture2D("OuterShadow.png");
+}
+
 Texture2D* TextureFactory::GetRightArrowIcon()
 {
     return GetTexture2D("RightArrow.png");
@@ -100,11 +110,18 @@ Texture2D* TextureFactory::GetBRDFLUTTexture()
                                          m_brdfLutTexturePath );
 }
 
+Texture2D *TextureFactory::Get9SliceBorder()
+{
+    Texture2D *tex = TextureFactory::GetTexture2D("Border_9s.png");
+    tex->SetFilterMode(GL::FilterMode::NEAREST);
+    return tex;
+}
+
 Texture2D* TextureFactory::Get9SliceRoundRectTexture()
 {
     Texture2D *tex = TextureFactory::GetTexture2D("RRect_9s.png");
     tex->SetFilterMode(GL::FilterMode::NEAREST);
-    return TextureFactory::GetTexture2D("RRect_9s.png");
+    return tex;
 }
 
 Texture2D* TextureFactory::Get9SliceRoundRectBorderTexture()

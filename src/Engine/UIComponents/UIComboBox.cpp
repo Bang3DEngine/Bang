@@ -406,6 +406,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     // bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
+    GameObjectFactory::AddInnerBorder(go, Vector2i(1));
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
     downArrowIcon->SetImageTexture( TextureFactory::GetDownArrowIcon() );
@@ -428,11 +429,12 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     });
 
     UIImageRenderer *listBG = listGo->AddComponent<UIImageRenderer>();
-    listBG->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture() );
-    listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
+    // listBG->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture() );
+    // listBG->SetMode(UIImageRenderer::Mode::SLICE_9);
     listBG->SetTint(Color::White);
     UIFocusable *listFocusable = listBG->GetGameObject()->GetComponent<UIFocusable>();
     listFocusable->SetCursorType(Cursor::Type::HAND);
+    GameObjectFactory::AddOuterBorder(listGo, Vector2i(1));
 
     listGo->AddComponent<UILayoutIgnorer>();
     RectTransform *contRT = listGo->GetRectTransform();

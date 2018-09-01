@@ -110,6 +110,19 @@ public:
                             LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
                             float spaceY = 1);
 
+    static UIImageRenderer* AddInnerShadow(GameObject *uiGo,
+                                           const Vector2i &size = Vector2i(20),
+                                           float alpha = 1.0f);
+    static UIImageRenderer* AddOuterShadow(GameObject *uiGo,
+                                           const Vector2i &size = Vector2i(20),
+                                           float alpha = 1.0f);
+    static UIImageRenderer* AddOuterBorder(GameObject *uiGo,
+                                           const Vector2i &size = Vector2i(1),
+                                           const Color &color = Color::Black);
+    static UIImageRenderer* AddInnerBorder(GameObject *uiGo,
+                                           const Vector2i &size = Vector2i(1),
+                                           const Color &color = Color::Black);
+
     static String GetGameObjectDuplicateName(const GameObject *go);
 
     static Camera*     CreateUICamera();

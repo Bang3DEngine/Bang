@@ -243,7 +243,7 @@ UIDirLayoutMovableSeparator::CreateInto(GameObject *go)
 
     LineRenderer *lr = go->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
-    lr->GetMaterial()->SetAlbedoColor(Color::White);
+    lr->GetMaterial()->SetAlbedoColor(Color::DarkGray);
     lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     dirLayoutSep->p_lineRenderer = lr;

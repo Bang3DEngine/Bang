@@ -198,6 +198,11 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
     barFocusable->SetCursorType(Cursor::Type::HAND);
 
+    GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject(), Vector2i(2));
+    GameObjectFactory::AddInnerBorder(scrollArea->GetGameObject(), Vector2i(1));
+    // GameObjectFactory::AddOuterShadow(bar, Vector2i(1, 5));
+    GameObjectFactory::AddInnerBorder(bar, Vector2i(1));
+
     UIFocusable *scrollAreaFocusable = scrollArea->GetGameObject()->
                                        AddComponent<UIFocusable>();
     scrollAreaFocusable->SetCursorType(Cursor::Type::HAND);
@@ -235,7 +240,10 @@ void UIScrollBar::OnMouseExit()
 
 int UIScrollBar::GetScrollingSpacePx() const
 {
-    if (!GetGameObject()->IsEnabled() || !IsEnabled()) { return 0; }
+    if (!GetGameObject()->IsEnabled() || !IsEnabled())
+    {
+        return 0;
+    }
     int scrollingSpace = GetScrollingRect().GetSize().GetAxis( GetScrollAxis() );
     scrollingSpace -= GetLength();
     return Math::Max(scrollingSpace, 0);
@@ -248,8 +256,14 @@ AARect UIScrollBar::GetScrollingRect() const
     return AARect( rt->GetViewportRect() );
 }
 
-UIScrollArea *UIScrollBar::GetScrollArea() const { return p_scrollArea; }
-GameObject *UIScrollBar::GetBar() const { return p_bar; }
+UIScrollArea *UIScrollBar::GetScrollArea() const
+{
+    return p_scrollArea;
+}
+GameObject *UIScrollBar::GetBar() const
+{
+    return p_bar;
+}
 
 void UIScrollBar::OnEvent(IFocusable*, const UIEvent &event)
 {

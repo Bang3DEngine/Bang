@@ -195,13 +195,13 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
         {
             if (GetSelectedItem() != p_itemUnderMouse)
             {
-                UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse);
-                ASSERT(itemBg);
-                itemBg->SetTint( GetIdleColor() );
+                if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
+                {
+                    itemBg->SetTint( GetIdleColor() );
+                }
             }
 
             p_itemUnderMouse->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
-
             if (callCallbacks)
             {
                 CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
@@ -213,9 +213,10 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
         {
             if (GetSelectedItem() != p_itemUnderMouse)
             {
-                UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse);
-                ASSERT(itemBg);
-                itemBg->SetTint( GetOverColor() );
+                if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
+                {
+                    itemBg->SetTint( GetOverColor() );
+                }
             }
 
             p_itemUnderMouse->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -337,7 +338,7 @@ int UIList::GetNumItems() const
 
 UIDirLayout *UIList::GetDirLayout() const
 {
-    return GetGameObject()->GetComponent<UIDirLayout>();
+    return GetGameObject()->GetComponentInChildrenAndThis<UIDirLayout>();
 }
 
 void UIList::SetSelection(int index)
@@ -557,8 +558,6 @@ void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         }
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
-
-        OnMouseMove(true, true);
     }
 }
 

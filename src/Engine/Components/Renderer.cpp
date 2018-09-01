@@ -55,6 +55,7 @@ void Renderer::Bind()
 {
     GL::SetViewProjMode( GetViewProjMode() );
     GLUniforms::SetModelMatrix( GetModelMatrixUniform() );
+    GL::SetDepthMask( GetDepthMask() );
 
     if (Material *mat = GetActiveMaterial())
     {
@@ -111,6 +112,15 @@ void Renderer::SetMaterial(Material *mat)
     }
 }
 
+void Renderer::SetDepthMask(bool depthMask)
+{
+    if (depthMask != GetDepthMask())
+    {
+        m_depthMask = depthMask;
+        PropagateRendererChanged();
+    }
+}
+
 void Renderer::SetViewProjMode(GL::ViewProjMode viewProjMode)
 {
     if (viewProjMode != GetViewProjMode())
@@ -154,6 +164,11 @@ void Renderer::SetReceivesShadows(bool receivesShadows)
 }
 
 bool Renderer::IsVisible() const { return m_visible; }
+
+bool Renderer::GetDepthMask() const
+{
+    return m_depthMask;
+}
 Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
 
 void Renderer::OnResourceChanged(Resource*) { PropagateRendererChanged(); }
@@ -216,6 +231,9 @@ void Renderer::ImportXML(const XMLNode &xml)
 {
     Component::ImportXML(xml);
 
+    if (xml.Contains("DepthMask"))
+    { SetDepthMask( xml.Get<bool>("DepthMask") ); }
+
     if (xml.Contains("Visible"))
     { SetVisible( xml.Get<bool>("Visible") ); }
 
@@ -237,6 +255,7 @@ void Renderer::ExportXML(XMLNode *xmlInfo) const
     Component::ExportXML(xmlInfo);
 
     xmlInfo->Set("Visible", IsVisible());
+    xmlInfo->Set("DepthMask", GetDepthMask());
 
     Material* sMat = GetSharedMaterial();
     xmlInfo->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());

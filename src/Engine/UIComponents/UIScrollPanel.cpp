@@ -362,6 +362,12 @@ UIScrollPanel *UIScrollPanel::CreateInto(GameObject *go)
     scrollPanel->p_verticalScrollBar = verticalScrollBar;
     scrollPanel->p_horizontalScrollBar = horizontalScrollBar;
 
+    GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject(), Vector2i(10), 0.3f);
+
+    GameObject *innerBorderGo = GameObjectFactory::CreateUIGameObject();
+    GameObjectFactory::AddInnerBorder(innerBorderGo, Vector2i(1));
+    innerBorderGo->SetParent(go);
+
     scrollPanel->SetVerticalShowScrollMode(ShowScrollMode::ALWAYS);
     scrollPanel->SetHorizontalShowScrollMode(ShowScrollMode::ALWAYS);
     scrollPanel->SetVerticalScrollBarSide(HorizontalSide::LEFT);

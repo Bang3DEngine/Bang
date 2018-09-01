@@ -174,12 +174,35 @@ void UIButton::AddClickedCallback(UIButton::ClickedCallback clickedCallback)
     m_clickedCallbacks.PushBack(clickedCallback);
 }
 
-bool UIButton::IsBlocked() const { return m_isBlocked; }
-UIImageRenderer *UIButton::GetIcon() const { return p_icon; }
-UITextRenderer *UIButton::GetText() const { return p_text; }
-UIImageRenderer *UIButton::GetBackground() const { return p_background; }
-UIFocusable *UIButton::GetFocusable() const { return p_focusable; }
-UILayoutElement *UIButton::GetLayoutElement() const { return p_layoutElement; }
+bool UIButton::IsBlocked() const
+{
+    return m_isBlocked;
+}
+
+UIImageRenderer *UIButton::GetBorder() const
+{
+    return p_border;
+}
+UIImageRenderer *UIButton::GetIcon() const
+{
+    return p_icon;
+}
+UITextRenderer *UIButton::GetText() const
+{
+    return p_text;
+}
+UIImageRenderer *UIButton::GetBackground() const
+{
+    return p_background;
+}
+UIFocusable *UIButton::GetFocusable() const
+{
+    return p_focusable;
+}
+UILayoutElement *UIButton::GetLayoutElement() const
+{
+    return p_layoutElement;
+}
 
 UIDirLayout *UIButton::GetDirLayout() const
 {
@@ -203,6 +226,8 @@ UIButton* UIButton::CreateInto(GameObject *go)
     // bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bgImg->SetTint(Color::White);
+
+    button->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
 
     UIFocusable *btn = go->AddComponent<UIFocusable>();
 

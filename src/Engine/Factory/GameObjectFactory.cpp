@@ -477,6 +477,74 @@ GameObject *GameObjectFactory::CreateUIVSpacer(LayoutSizeType sizeType,
     return spacerGo;
 }
 
+UIImageRenderer* GameObjectFactory::AddInnerShadow(GameObject *uiGo,
+                                                   const Vector2i &size,
+                                                   float alpha)
+{
+    GameObject *innerShadowGo = GameObjectFactory::CreateUIGameObject();
+    UIImageRenderer *innerShadowImg = innerShadowGo->AddComponent<UIImageRenderer>();
+    innerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    innerShadowImg->SetImageTexture( TextureFactory::GetInnerShadow() );
+    innerShadowImg->SetSlice9BorderStrokePx( size );
+    innerShadowImg->SetTint(Color::One.WithAlpha(alpha));
+    innerShadowImg->SetDepthMask(false);
+    // innerShadowGo->GetTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
+    innerShadowGo->SetParent(uiGo);
+    return innerShadowImg;
+}
+
+UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
+                                                   const Vector2i &size,
+                                                   float alpha)
+{
+    GameObject *outerShadowGo = GameObjectFactory::CreateUIGameObject();
+    UIImageRenderer *outerShadowImg = outerShadowGo->AddComponent<UIImageRenderer>();
+    outerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    outerShadowImg->SetImageTexture( TextureFactory::GetOuterShadow() );
+    outerShadowImg->SetSlice9BorderStrokePx( size );
+    outerShadowImg->SetTint(Color::One.WithAlpha(alpha));
+    outerShadowImg->SetDepthMask(false);
+    outerShadowGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
+    outerShadowGo->GetRectTransform()->SetMargins(-size.x,
+                                                  -size.y,
+                                                  -size.x,
+                                                  -size.y);
+    outerShadowGo->SetParent(uiGo);
+    return outerShadowImg;
+}
+
+UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
+                                                   const Vector2i &size,
+                                                   const Color &color)
+{
+    GameObject *outerBorderGo = GameObjectFactory::CreateUIGameObject();
+    UIImageRenderer *outerBorderImg = outerBorderGo->AddComponent<UIImageRenderer>();
+    outerBorderImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    outerBorderImg->SetImageTexture( TextureFactory::Get9SliceBorder() );
+    outerBorderImg->SetSlice9BorderStrokePx( size );
+    outerBorderImg->SetTint(color);
+    outerBorderGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, -0.00001f) );
+    outerBorderGo->GetRectTransform()->SetMargins(-size.x,
+                                                  -size.y,
+                                                  -size.x,
+                                                  -size.y);
+    outerBorderGo->SetParent(uiGo);
+    return outerBorderImg;
+}
+
+UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
+                                                   const Vector2i &size,
+                                                   const Color &color)
+{
+    UIImageRenderer *innerBorderImg = uiGo->AddComponent<UIImageRenderer>();
+    innerBorderImg->SetMode(UIImageRenderer::Mode::SLICE_9);
+    innerBorderImg->SetImageTexture( TextureFactory::Get9SliceBorder() );
+    innerBorderImg->SetSlice9BorderStrokePx( size );
+    innerBorderImg->SetTint(color);
+    return innerBorderImg;
+}
+
+
 String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 {
     String originalName = go->GetName();
@@ -534,7 +602,7 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
                                                           Vector2(space));
     LineRenderer *lr = sepGo->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
-    lr->GetMaterial()->SetAlbedoColor(Color::White);
+    lr->GetMaterial()->SetAlbedoColor(Color::Black);
     lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();

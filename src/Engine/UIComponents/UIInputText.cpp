@@ -425,6 +425,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_background = bg;
     inputText->p_background->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
+
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->EventEmitter<IEventsFocus>::RegisterListener(inputText);
     inputText->p_focusable = focusable;
@@ -436,6 +437,9 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     scrollArea->GetBackground()->SetTint(Color::Zero);
     inputText->p_scrollArea = scrollArea;
     inputText->p_scrollArea->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
+
+    GameObjectFactory::AddInnerBorder(go, Vector2i(1));
+    GameObjectFactory::AddInnerShadow(go, Vector2i(4));
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();
     UITextCursor *cursor = cursorGo->AddComponent<UITextCursor>();

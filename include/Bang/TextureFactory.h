@@ -18,6 +18,8 @@ public:
     static Texture2D* GetBangB512Icon();
     static Texture2D* GetBangB2048Icon();
     static Texture2D* GetBang2048Icon();
+    static Texture2D* GetInnerShadow();
+    static Texture2D* GetOuterShadow();
     static Texture2D* GetRightArrowIcon();
     static Texture2D* GetDownArrowIcon();
     static Texture2D* GetCheckIcon();
@@ -31,6 +33,7 @@ public:
     static Texture2D* GetCheckerboard();
     static Texture2D* GetWhiteTexture();
     static Texture2D* GetBRDFLUTTexture();
+    static Texture2D* Get9SliceBorder();
     static Texture2D* Get9SliceRoundRectTexture();
     static Texture2D* Get9SliceRoundRectBorderTexture();
 

@@ -782,6 +782,8 @@ UITreeItemContainer::UITreeItemContainer()
     p_collapseButton->GetLayoutElement()->SetFlexibleSize( Vector2::Zero );
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex, Vector2i(8), 0);
+    p_collapseButton->GetIcon()->SetTint(Color::Black);
+    p_collapseButton->GetBorder()->SetVisible(false);
     p_collapseButton->GetBackground()->SetVisible(false);    
 
     p_dragDroppable = AddComponent<UIDragDroppable>();

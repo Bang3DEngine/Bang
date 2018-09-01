@@ -32,6 +32,7 @@ public:
 
     void SetVisible(bool visible);
     void SetMaterial(Material *mat);
+    void SetDepthMask(bool depthMask);
     void SetCastsShadows(bool castsShadows);
     void SetReceivesShadows(bool receivesShadows);
     void SetViewProjMode(GL::ViewProjMode viewProjMode);
@@ -39,6 +40,7 @@ public:
     void SetUseReflectionProbes(bool useReflectionProbes);
 
     bool IsVisible() const;
+    bool GetDepthMask() const;
     Material* GetSharedMaterial() const;
     Material* GetActiveMaterial() const;
     Material* GetMaterial() const;
@@ -73,6 +75,7 @@ protected:
 
 private:
     bool m_visible = true;
+    bool m_depthMask = true;
     bool m_castsShadows = true;
     bool m_receivesShadows = true;
     bool m_useReflectionProbes = false;

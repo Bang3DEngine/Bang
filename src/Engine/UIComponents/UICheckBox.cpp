@@ -136,7 +136,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     GameObjectFactory::AddInnerBorder(checkBgImgGo, Vector2i(1));
-    GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(4));
+    GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(3));
 
     checkBox->p_focusable = focusable;
     checkBox->p_tickImage = tickImg;

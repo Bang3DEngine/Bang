@@ -93,6 +93,10 @@ void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
             case Mode::SLICE_9:
             p_quadMesh = MeshFactory::GetUIPlane3x3();
             break;
+
+            case Mode::SLICE_9_INV_UVY:
+            p_quadMesh = MeshFactory::GetUIPlane3x3InvUVY();
+            break;
         }
     }
 }
@@ -153,7 +157,19 @@ void UIImageRenderer::ImportXML(const XMLNode &xmlInfo)
     }
 
     if (xmlInfo.Contains("Tint"))
-    { SetTint( xmlInfo.Get<Color>("Tint") ); }
+    {
+        SetTint( xmlInfo.Get<Color>("Tint") );
+    }
+
+    if (xmlInfo.Contains("Mode"))
+    {
+        SetMode( SCAST<UIImageRenderer::Mode>( xmlInfo.Get<int>("Mode") ) );
+    }
+
+    if (xmlInfo.Contains("Slice9BorderStrokePx"))
+    {
+        SetSlice9BorderStrokePx( xmlInfo.Get<Vector2i>("Slice9BorderStrokePx") );
+    }
 }
 
 void UIImageRenderer::ExportXML(XMLNode *xmlInfo) const
@@ -163,5 +179,7 @@ void UIImageRenderer::ExportXML(XMLNode *xmlInfo) const
     Texture2D *imgTex = GetImageTexture();
     xmlInfo->Set("Image", imgTex ? imgTex->GetGUID() : GUID::Empty());
     xmlInfo->Set("Tint", GetTint());
+    xmlInfo->Set("Mode", SCAST<int>(GetMode()));
+    xmlInfo->Set("Slice9BorderStrokePx", GetSlice9BorderStrokePx());
 }
 

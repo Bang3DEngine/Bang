@@ -42,11 +42,6 @@ public:
     UILayoutElement *GetLayoutElement() const;
 
 private:
-    static const Color IdleColor;
-    static const Color OverColor;
-    static const Color BlockedColor;
-    static const Color PressedColor;
-
     bool m_isBlocked = false;
     UIImageRenderer *p_icon          = nullptr;
     UITextRenderer  *p_text          = nullptr;
@@ -58,6 +53,11 @@ private:
 
     UIButton();
     virtual ~UIButton();
+
+    void ChangeAspectToIdle();
+    void ChangeAspectToOver();
+    void ChangeAspectToPressed();
+    void ChangeAspectToBlocked();
 
     // IEventsFocus
     UIEventResult OnFocusEvent(EventEmitter<IEventsFocus> *focusable,

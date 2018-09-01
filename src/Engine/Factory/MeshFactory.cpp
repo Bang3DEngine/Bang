@@ -26,6 +26,10 @@ RH<Mesh> MeshFactory::GetUIPlane3x3()
 {
     return MeshFactory::GetMesh("Meshes/UIPlane3x3.obj");
 }
+RH<Bang::Mesh> Bang::MeshFactory::GetUIPlane3x3InvUVY()
+{
+    return MeshFactory::GetMesh("Meshes/UIPlane3x3InvUVY.obj");
+}
 RH<Mesh> MeshFactory::GetCube()
 {
     return MeshFactory::GetMesh("Meshes/Cube.obj");

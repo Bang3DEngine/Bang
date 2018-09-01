@@ -32,6 +32,16 @@ Texture2D* TextureFactory::GetBang2048Icon()
     return GetTexture2D("LogoBang_2048.png");
 }
 
+Texture2D *TextureFactory::GetButtonIdle()
+{
+    return GetTexture2D("ButtonIdle.png");
+}
+
+Texture2D *TextureFactory::GetButtonDown()
+{
+    return GetTexture2D("ButtonDown.png");
+}
+
 Texture2D *TextureFactory::GetInnerShadow()
 {
     return TextureFactory::GetTexture2D("InnerShadow.png");

@@ -4,6 +4,7 @@
 const int MODE_TEXTURE         = 0;
 const int MODE_TEXTURE_INV_UVY = 1;
 const int MODE_SLICE_9         = 2;
+const int MODE_SLICE_9_INV_UVY = 3;
 
 uniform int B_ImageMode;
 uniform vec2 B_Slice9BorderStrokePx;
@@ -18,7 +19,7 @@ void main()
     B_FIn_AlbedoUv = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
 
     vec3 localPos = B_VIn_Position;
-    if (B_ImageMode == MODE_SLICE_9)
+    if (B_ImageMode >= MODE_SLICE_9)
     {
         // Modify vertex position if needed ========
         // In x

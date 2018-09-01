@@ -18,7 +18,8 @@ public:
     {
         TEXTURE = 0,
         TEXTURE_INV_UVY = 1,
-        SLICE_9 = 2
+        SLICE_9 = 2,
+        SLICE_9_INV_UVY = 3
     };
 
     UIImageRenderer();

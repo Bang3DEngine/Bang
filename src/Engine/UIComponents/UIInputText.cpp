@@ -439,7 +439,7 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_scrollArea->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     GameObjectFactory::AddInnerBorder(go, Vector2i(1));
-    GameObjectFactory::AddInnerShadow(go, Vector2i(4));
+    GameObjectFactory::AddInnerShadow(go, Vector2i(3));
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();
     UITextCursor *cursor = cursorGo->AddComponent<UITextCursor>();

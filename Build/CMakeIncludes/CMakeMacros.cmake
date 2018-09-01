@@ -68,6 +68,7 @@ macro(add_bang_compilation_flags __TARGET)
 
     target_compile_options(${__TARGET} PUBLIC -std=c++11)
     target_compile_options(${__TARGET} PUBLIC -Wall)
+    target_compile_options(${__TARGET} PUBLIC -fPIC)
     target_compile_options(${__TARGET} PUBLIC -Wint-to-pointer-cast)
     target_compile_options(${__TARGET} PUBLIC -Wno-unused-parameter)
     target_compile_options(${__TARGET} PUBLIC -Wno-sign-compare)

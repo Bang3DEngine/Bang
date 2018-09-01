@@ -504,7 +504,7 @@ UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
     outerShadowImg->SetSlice9BorderStrokePx( size );
     outerShadowImg->SetTint(Color::One.WithAlpha(alpha));
     outerShadowImg->SetDepthMask(false);
-    outerShadowGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
+    outerShadowGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.001f) );
     outerShadowGo->GetRectTransform()->SetMargins(-size.x,
                                                   -size.y,
                                                   -size.x,

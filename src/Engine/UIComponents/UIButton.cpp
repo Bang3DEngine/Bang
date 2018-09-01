@@ -19,11 +19,6 @@
 
 USING_NAMESPACE_BANG
 
-const Color UIButton::IdleColor    = Color(1,1,1,1);
-const Color UIButton::OverColor    = Color(0.8, 0.95,  1,  1);
-const Color UIButton::PressedColor = Color(0.8, 0.95,  1,  1)  * 0.8f;
-const Color UIButton::BlockedColor = Color(0.8,  0.8, 0.8,  1) * 0.8f;
-
 UIButton::UIButton()
 {
 }
@@ -85,16 +80,26 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
 
 void UIButton::OnMouseEnter()
 {
-    GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                             UIButton::PressedColor :
-                             UIButton::OverColor);
+    if (GetFocusable()->IsBeingPressed())
+    {
+        ChangeAspectToPressed();
+    }
+    else
+    {
+        ChangeAspectToOver();
+    }
 }
 
 void UIButton::OnMouseExit()
 {
-    GetBackground()->SetTint(GetFocusable()->IsBeingPressed() ?
-                             UIButton::PressedColor :
-                             UIButton::IdleColor);
+    if (GetFocusable()->IsBeingPressed())
+    {
+        ChangeAspectToPressed();
+    }
+    else
+    {
+        ChangeAspectToIdle();
+    }
 }
 
 void UIButton::OnStart()
@@ -124,7 +129,6 @@ void UIButton::SetBlocked(bool blocked)
         GetFocusable()->IFocusable::SetEmitEvents( !IsBlocked() );
         if (!IsBlocked())
         {
-            GetText()->SetTextColor(Color::Black);
             if (GetFocusable()->IsMouseOver())
             {
                 OnMouseEnter();
@@ -133,13 +137,10 @@ void UIButton::SetBlocked(bool blocked)
             {
                 OnMouseExit();
             }
-            GetFocusable()->SetCursorType( Cursor::Type::HAND );
         }
         else
         {
-            GetText()->SetTextColor(Color::DarkGray);
-            GetBackground()->SetTint(UIButton::BlockedColor);
-            GetFocusable()->SetCursorType( Cursor::Type::NO );
+            ChangeAspectToBlocked();
         }
     }
 }
@@ -209,6 +210,38 @@ UIDirLayout *UIButton::GetDirLayout() const
     return GetGameObject()->GetComponent<UIDirLayout>();
 }
 
+void UIButton::ChangeAspectToIdle()
+{
+    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
+    GetBackground()->SetTint( Color::White.WithValue(1.2f) );
+    GetText()->SetTextColor(Color::Black);
+    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+}
+
+void UIButton::ChangeAspectToOver()
+{
+    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
+    GetBackground()->SetTint( Color::LightBlue );
+    GetText()->SetTextColor(Color::Black);
+    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+}
+
+void UIButton::ChangeAspectToPressed()
+{
+    GetBackground()->SetImageTexture( TextureFactory::GetButtonDown() );
+    GetBackground()->SetTint( Color::LightBlue );
+    GetText()->SetTextColor(Color::Black);
+    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+}
+
+void UIButton::ChangeAspectToBlocked()
+{
+    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
+    GetBackground()->SetTint( Color::White.WithValue(0.75f) );
+    GetText()->SetTextColor(Color::DarkGray);
+    GetFocusable()->SetCursorType( Cursor::Type::NO );
+}
+
 UIButton* UIButton::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
@@ -224,8 +257,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
     // bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
-    // bgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    bgImg->SetTint(Color::White);
+    bgImg->SetMode(UIImageRenderer::Mode::SLICE_9_INV_UVY);
 
     button->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
 
@@ -254,7 +286,8 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     button->GetText()->SetContent("");
     button->SetIcon(nullptr, Vector2i::Zero, 0);
-    button->GetFocusable()->SetCursorType( Cursor::Type::HAND );
+
+    button->ChangeAspectToIdle();
 
     return button;
 }

@@ -18,6 +18,8 @@ public:
     static Texture2D* GetBangB512Icon();
     static Texture2D* GetBangB2048Icon();
     static Texture2D* GetBang2048Icon();
+    static Texture2D* GetButtonIdle();
+    static Texture2D* GetButtonDown();
     static Texture2D* GetInnerShadow();
     static Texture2D* GetOuterShadow();
     static Texture2D* GetRightArrowIcon();

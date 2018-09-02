@@ -102,11 +102,35 @@ String Resource::GetEmbeddedResourceName(GUID::GUIDType embeddedResGUID) const
 void Resource::ImportXML(const XMLNode &xmlInfo)
 {
     Serializable::ImportXML(xmlInfo);
+
+    for (const auto &pair : GetEmbeddedResources())
+    {
+        if (Resource *embeddedRes = pair.second.Get())
+        {
+            const String &embeddedResName = pair.first;
+            if (const XMLNode *embeddedResXMLInfo =
+                               xmlInfo.GetChild(embeddedResName))
+            {
+                embeddedRes->ImportXML(*embeddedResXMLInfo);
+            }
+        }
+    }
 }
 
 void Resource::ExportXML(XMLNode *xmlInfo) const
 {
     Serializable::ExportXML(xmlInfo);
+
+    for (const auto &pair : GetEmbeddedResources())
+    {
+        if (Resource *embeddedRes = pair.second.Get())
+        {
+            const String &embeddedResName = pair.first;
+            XMLNode embeddedResXMLInfo = embeddedRes->GetXMLInfo();
+            embeddedResXMLInfo.SetTagName(embeddedResName);
+            xmlInfo->AddChild(embeddedResXMLInfo);
+        }
+    }
 }
 
 void Resource::Import_(const Path &resourceFilepath)

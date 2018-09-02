@@ -6,6 +6,8 @@
 #include "Bang/Flags.h"
 #include "Bang/AARect.h"
 #include "Bang/RenderPass.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IEventsDestroy.h"

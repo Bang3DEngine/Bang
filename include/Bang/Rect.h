@@ -55,13 +55,22 @@ public:
     void SetAxis(const Vector2G<T> &axis0)
     {
         m_axis0 = axis0;
-        if (m_axis0.SqLength() != 1.0f) { m_axis0 = m_axis0.NormalizedSafe(); }
+        if (m_axis0.SqLength() != 1.0f)
+        {
+            m_axis0 = m_axis0.NormalizedSafe();
+        }
     }
 
     void SetHalfSize(int i, const T &halfSize)
     {
-        if (i == 0) { m_halfSizeAxis0 = halfSize; }
-        else if (i == 1) { m_halfSizeAxis1 = halfSize; }
+        if (i == 0)
+        {
+            m_halfSizeAxis0 = halfSize;
+        }
+        else if (i == 1)
+        {
+            m_halfSizeAxis1 = halfSize;
+        }
     }
 
     void SetHalfSizes(const T &halfSizeAxis0, const T &halfSizeAxis1)
@@ -70,18 +79,26 @@ public:
         SetHalfSize(1, halfSizeAxis1);
     }
 
-    const Vector2G<T>& GetCenter() const { return m_center; }
+    const Vector2G<T>& GetCenter() const
+    {
+        return m_center;
+    }
+
     Vector2G<T> GetAxis(int i) const
     {
-        ASSERT(i == 0 || i == 1);
-        if (i == 0) { return m_axis0; }
+        if (i == 0)
+        {
+            return m_axis0;
+        }
         return m_axis0.Perpendicular();
     }
 
     T GetHalfSize(int i) const
     {
-        ASSERT(i == 0 || i == 1);
-        if (i == 0) { return m_halfSizeAxis0; }
+        if (i == 0)
+        {
+            return m_halfSizeAxis0;
+        }
         return m_halfSizeAxis1;
     }
 
@@ -94,6 +111,7 @@ public:
     {
         return Vector2G<T>(GetHalfSize(0), GetHalfSize(1));
     }
+
     Vector2G<T> GetSize() const
     {
         return GetHalfSize() * T(2);
@@ -118,14 +136,17 @@ public:
     {
         return GetCenter() - GetHalfExtent(0) - GetHalfExtent(1);
     }
+
     Vector2G<T> GetRightBot() const
     {
         return GetCenter() + GetHalfExtent(0) - GetHalfExtent(1);
     }
+
     Vector2G<T> GetLeftTop() const
     {
         return GetCenter() - GetHalfExtent(0) + GetHalfExtent(1);
     }
+
     Vector2G<T> GetRightTop() const
     {
         return GetCenter() + GetHalfExtent(0) + GetHalfExtent(1);
@@ -139,6 +160,7 @@ public:
         *p1        = GetRightBot();
         *opposedP0 = GetRightTop();
     }
+
     void GetPoints(Vector2G<T> *p0,
                    Vector2G<T> *p1,
                    Vector2G<T> *opposedP0,

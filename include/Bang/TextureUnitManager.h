@@ -7,6 +7,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/Map.h"
+#include "Bang/EventListener.h"
 #include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN

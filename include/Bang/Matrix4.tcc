@@ -515,7 +515,6 @@ Vector4G<T>& Matrix4G<T>::operator[](std::size_t i)
         case 2: return c2;
         case 3: return c3;
     }
-    ASSERT(false);
     return c3;
 }
 template<class T>

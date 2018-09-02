@@ -54,13 +54,12 @@ macro(get_list_realpaths __LIST)
 endmacro()
 
 macro(add_misc_files)
-     foreach(_it ${ARGN})
-         if(NOT IS_DIRECTORY ${_it})
-             get_filename_component(name ${_it} NAME)
-             if(NOT ${_it} MATCHES "^/\\\\..*$;~$")
-                set_source_files_properties(${_it} PROPERTIES HEADER_FILE_ONLY TRUE)
-             endif()
-         endif()
+
+endmacro()
+
+macro(remove_from_list_another_list __LIST_TO_REMOVE_FROM __LIST_OF_ITEMS_TO_REMOVE)
+     foreach(ITEM_TO_REMOVE ${__LIST_OF_ITEMS_TO_REMOVE})
+         list(REMOVE_ITEM ${__LIST_TO_REMOVE_FROM} ${ITEM_TO_REMOVE})
      endforeach()
 endmacro()
 

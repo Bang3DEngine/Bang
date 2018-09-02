@@ -53,9 +53,9 @@ namespace std
     {
         std::size_t operator()(const Bang::GUID& guid) const
         {
-            return std::hash<GUID::GUIDType>()(guid.GetTimeGUID()) ^
-                   std::hash<GUID::GUIDType>()(guid.GetRandGUID()) ^
-                   std::hash<GUID::GUIDType>()(guid.GetEmbeddedResourceGUID());
+            return std::hash<Bang::GUID::GUIDType>()(guid.GetTimeGUID()) ^
+                   std::hash<Bang::GUID::GUIDType>()(guid.GetRandGUID()) ^
+                   std::hash<Bang::GUID::GUIDType>()(guid.GetEmbeddedResourceGUID());
         }
     };
 }

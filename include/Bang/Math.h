@@ -5,7 +5,6 @@
 #include <limits>
 
 #include "Bang/Bang.h"
-#include "Bang/Debug.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -37,7 +36,6 @@ public:
     template<class T>
     static constexpr T NaN()
     {
-        ASSERT_MSG(false, "NaN does not exist for this type.");
         return 0;
     }
 

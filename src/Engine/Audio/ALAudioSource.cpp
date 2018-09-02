@@ -1,5 +1,8 @@
 #include "Bang/ALAudioSource.h"
 
+#include "Bang/AudioManager.h"
+#include "Bang/EventListener.h"
+
 USING_NAMESPACE_BANG
 
 ALAudioSource::ALAudioSource()

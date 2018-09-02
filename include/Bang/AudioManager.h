@@ -12,6 +12,8 @@
 #include "Bang/ThreadPool.h"
 #include "Bang/MutexLocker.h"
 #include "Bang/AudioParams.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IEventsDestroy.h"
 

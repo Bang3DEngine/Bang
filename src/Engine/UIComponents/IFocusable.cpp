@@ -1,6 +1,8 @@
 #include "Bang/IFocusable.h"
 
 #include "Bang/Input.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 
 USING_NAMESPACE_BANG
 

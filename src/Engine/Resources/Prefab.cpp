@@ -1,10 +1,10 @@
 #include "Bang/Prefab.h"
 
 #include "Bang/Scene.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/SceneManager.h"
-#include "Bang/XMLMetaReader.h"
 #include "Bang/GameObjectFactory.h"
 
 USING_NAMESPACE_BANG
@@ -39,9 +39,10 @@ GameObject *Prefab::InstantiateRaw() const
 {
     GameObject *go = GameObjectFactory::CreateGameObject(false);
 
-    if (!GetInfoContent().IsEmpty())
+    if (!GetMetaContent().IsEmpty())
     {
-        MetaNode metaNode = XMLMetaReader::FromString(GetInfoContent());
+        MetaNode metaNode;
+        metaNode.Import(GetMetaContent());
         go->ImportMeta(metaNode);
     }
     return go;
@@ -59,14 +60,14 @@ void Prefab::SetGameObject(GameObject *go)
     }
 }
 
-const String &Prefab::GetInfoContent() const
+const String &Prefab::GetMetaContent() const
 {
     return m_gameObjectMetaInfoContent;
 }
 
 void Prefab::Import(const Path &prefabFilepath)
 {
-    ImportMetaFromFile( ImportFilesManager::GetImportFilepath(prefabFilepath) );
+    ImportMetaFromFile( MetaFilesManager::GetMetaFilepath(prefabFilepath) );
 }
 
 void Prefab::ImportMeta(const MetaNode &metaNode)
@@ -74,7 +75,7 @@ void Prefab::ImportMeta(const MetaNode &metaNode)
     Asset::ImportMeta(metaNode);
 
     String newMetaInfo = metaNode.ToString();
-    if (newMetaInfo != GetInfoContent())
+    if (newMetaInfo != GetMetaContent())
     {
         m_gameObjectMetaInfoContent = newMetaInfo;
     }
@@ -84,5 +85,8 @@ void Prefab::ExportMeta(MetaNode *metaNode) const
 {
     Asset::ExportMeta(metaNode);
 
-    *metaNode = XMLMetaReader::FromString(GetInfoContent());
+    MetaNode prefabMetaNode;
+    prefabMetaNode.Import(GetMetaContent());
+
+    *metaNode = prefabMetaNode;
 }

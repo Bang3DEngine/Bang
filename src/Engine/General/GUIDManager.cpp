@@ -1,7 +1,7 @@
 #include "Bang/GUIDManager.h"
 
 #include "Bang/Resources.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 
 USING_NAMESPACE_BANG
 
@@ -42,5 +42,5 @@ void GUIDManager::CreateEmbeddedFileGUID(const GUID &baseGUID,
 
 GUIDManager *GUIDManager::GetInstance()
 {
-    return ImportFilesManager::GetGUIDManager();
+    return MetaFilesManager::GetGUIDManager();
 }

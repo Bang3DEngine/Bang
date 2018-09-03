@@ -17,13 +17,13 @@
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
 #include "Bang/SceneManager.h"
 #include "Bang/WindowManager.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/FontSheetCreator.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 
 USING_NAMESPACE_BANG
 
@@ -58,9 +58,9 @@ void Application::Init(const Path &engineRootPath)
     m_windowManager = new WindowManager();
     GetWindowManager()->Init();
 
-    m_importFilesManager = new ImportFilesManager();
-    ImportFilesManager::CreateMissingImportFiles(Paths::GetEngineAssetsDir());
-    ImportFilesManager::LoadImportFilepathGUIDs(Paths::GetEngineAssetsDir());
+    m_metaFilesManager = new MetaFilesManager();
+    MetaFilesManager::CreateMissingMetaFiles(Paths::GetEngineAssetsDir());
+    MetaFilesManager::LoadMetaFilepathGUIDs(Paths::GetEngineAssetsDir());
 
     m_resources = CreateResources();
     m_resources->Init();
@@ -86,7 +86,7 @@ Application::~Application()
     delete m_settings;
     delete m_audioManager;
     delete m_windowManager;
-    delete m_importFilesManager;
+    delete m_metaFilesManager;
 
     // delete m_gEngine; m_gEngine = nullptr;
 }
@@ -194,9 +194,9 @@ WindowManager *Application::GetWindowManager() const
     return m_windowManager;
 }
 
-ImportFilesManager *Application::GetImportFilesManager() const
+MetaFilesManager *Application::GetMetaFilesManager() const
 {
-    return m_importFilesManager;
+    return m_metaFilesManager;
 }
 
 String Application::GetMainThreadId()

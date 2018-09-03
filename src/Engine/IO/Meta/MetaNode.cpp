@@ -1,7 +1,8 @@
 #include "Bang/MetaNode.h"
 
+#include "Bang/File.h"
+#include "Bang/Debug.h"
 #include "Bang/Paths.h"
-#include "Bang/XMLMetaReader.h"
 
 #include "yaml-cpp/yaml.h"
 
@@ -107,31 +108,6 @@ const MetaNode *MetaNode::GetChild(const String &name) const
     return nullptr;
 }
 
-String MetaNode::ToString(const String& indent) const
-{
-    String str = "";
-
-    str += indent + "<" + m_name;
-    for (const auto& attrPair : GetAttributesListInOrder())
-    {
-        const MetaAttribute* attr = attrPair.second;
-        str += " " + attr->ToString() + "\n";
-        for (int i = 0; i < m_name.Size() + indent.Size() + 1; ++i )
-        {
-            str += " ";
-        }
-    }
-    str += ">\n";
-
-    const String newIndent = indent + "    ";
-    for (const MetaNode& child : m_children)
-    {
-        str += child.ToString(newIndent);
-    }
-    str += indent + "</" + m_name + ">\n";
-    return str;
-}
-
 void MetaNode::SetName(const String name)
 {
     m_name = name;
@@ -144,7 +120,7 @@ String MetaNode::ToString() const
     return String(out.c_str());
 }
 
-void MetaNode::ToString_(YAML::Emitter &out) const
+void MetaNode::ToStringInner(YAML::Emitter &out) const
 {
     out << YAML::Key << GetName();
     out << YAML::Value << YAML::BeginMap;
@@ -160,7 +136,7 @@ void MetaNode::ToString_(YAML::Emitter &out) const
         out << YAML::Value << YAML::BeginMap;
         for (const MetaNode &childMeta : GetChildren())
         {
-            childMeta.ToString_(out);
+            childMeta.ToStringInner(out);
         }
         out << YAML::EndMap;
 
@@ -169,7 +145,7 @@ void MetaNode::ToString_(YAML::Emitter &out) const
 void MetaNode::ToString(YAML::Emitter &out) const
 {
     out << YAML::BeginMap;
-    ToString_(out);
+    ToStringInner(out);
     out << YAML::EndMap;
 }
 
@@ -208,7 +184,56 @@ List<MetaNode> &MetaNode::GetChildren()
     return m_children;
 }
 
-MetaNode MetaNode::FromString(const String &metaString)
+void MetaNode::Import(const String &metaString)
 {
-    return XMLMetaReader::FromString(metaString);
+    const YAML::Node yamlNode = YAML::Load(metaString);
+    if (!yamlNode.IsNull() && yamlNode.size() >= 1)
+    {
+        const YAML::Node &rootNameYAMLNode = yamlNode.begin()->first;
+        const YAML::Node &rootMapYAMLNode  = yamlNode.begin()->second;
+        SetName( rootNameYAMLNode.Scalar() );
+        Import(rootMapYAMLNode);
+    }
+}
+
+void MetaNode::Import(const YAML::Node &yamlNode)
+{
+    if (!yamlNode.IsNull())
+    {
+        for (const auto &attrYAMLPair : yamlNode)
+        {
+            const YAML::Node &attrYAMLName = attrYAMLPair.first;
+            const YAML::Node &attrYAMLNode = attrYAMLPair.second;
+            if (attrYAMLName.Scalar() != "Children")
+            {
+                Set(attrYAMLName.Scalar(), attrYAMLNode.Scalar());
+            }
+            else
+            {
+                const YAML::Node &childrenYAMLNode = attrYAMLNode;
+                for (const auto &childYAMLPair : childrenYAMLNode)
+                {
+                    const YAML::Node &childYAMLName = childYAMLPair.first;
+                    const YAML::Node &childYAMLNode = childYAMLPair.second;
+                    MetaNode childMetaNode;
+                    childMetaNode.SetName(childYAMLName.Scalar());
+                    childMetaNode.Import(childYAMLNode);
+                    AddChild(childMetaNode);
+                }
+            }
+        }
+    }
+}
+
+void MetaNode::Import(const Path &filepath)
+{
+    if (filepath.IsFile())
+    {
+        String fileContents = File::GetContents(filepath);
+        Import(fileContents);
+    }
+    else
+    {
+        Debug_Error("Filepath " << filepath << " not found!");
+    }
 }

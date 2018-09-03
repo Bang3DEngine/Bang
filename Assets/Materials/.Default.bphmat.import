@@ -1,8 +1,0 @@
-<PhysicsMaterial GUID="1535038714910480479 1215681765759254529 0"
-                 StaticFriction="0.5"
-                 DynamicFriction="0.5"
-                 Resitution="0.5"
-                 FrictionCombineMode="0"
-                 RestitutionCombineMode="0"
-                >
-</PhysicsMaterial>

@@ -12,7 +12,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/MeshSimplifier.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 
 USING_NAMESPACE_BANG
 

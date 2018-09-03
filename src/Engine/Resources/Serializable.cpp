@@ -43,7 +43,8 @@ String Serializable::GetSerializedString() const
 
 void Serializable::ImportMeta(const String &metaNodeString)
 {
-    MetaNode metaNode = MetaNode::FromString(metaNodeString);
+    MetaNode metaNode;
+    metaNode.Import(metaNodeString);
     ImportMeta(metaNode);
 }
 

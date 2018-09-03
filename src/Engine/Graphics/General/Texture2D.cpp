@@ -136,7 +136,7 @@ void Texture2D::Import(const Path &imageFilepath)
 {
     ImageIO::Import(imageFilepath, &m_image, this, nullptr);
 
-    Path importFilepath = ImportFilesManager::GetImportFilepath(imageFilepath);
+    Path importFilepath = MetaFilesManager::GetMetaFilepath(imageFilepath);
     ImportMetaFromFile(importFilepath);
 }
 

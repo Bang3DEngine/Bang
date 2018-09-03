@@ -11,7 +11,7 @@
 #include "Bang/Resource.h"
 #include "Bang/Serializable.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 
 NAMESPACE_BANG_BEGIN
 

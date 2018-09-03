@@ -9,6 +9,7 @@
 
 FORWARD namespace YAML
 {
+    FORWARD class Node;
     FORWARD class Emitter;
 }
 
@@ -83,7 +84,6 @@ public:
     void SetName(const String name);
     String ToString() const override;
     void ToString(YAML::Emitter &out) const;
-    String ToString(const String& indent) const;
 
     const String& GetName() const;
     const Map<String, MetaAttribute>& GetAttributes() const;
@@ -92,7 +92,9 @@ public:
     const List<MetaNode>& GetChildren() const;
     List<MetaNode>& GetChildren();
 
-    static MetaNode FromString(const String &metaString);
+    void Import(const String &metaString);
+    void Import(const YAML::Node &yamlNode);
+    void Import(const Path &filepath);
 
 private:
     String m_name;
@@ -100,7 +102,7 @@ private:
     mutable List<String> m_attributeOrder;
     mutable Map<String, MetaAttribute> m_attributes;
 
-    void ToString_(YAML::Emitter &out) const;
+    void ToStringInner(YAML::Emitter &out) const;
 };
 
 NAMESPACE_BANG_END

@@ -16,7 +16,7 @@ public:
 
     void SetGameObject(GameObject *go);
 
-    const String& GetInfoContent() const;
+    const String& GetMetaContent() const;
 
     // Resource
     void Import(const Path& prefabFilepath) override;

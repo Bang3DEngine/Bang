@@ -307,7 +307,6 @@ export(PACKAGE YamlCppLib)
 set(EXPORT_TARGETS YamlCppLib CACHE INTERNAL "export targets")
 
 set(CONFIG_INCLUDE_DIRS "${YAML_CPP_SOURCE_DIR}/include")
-message("${YAML_ROOT_DIR}")
 configure_file("${YAML_ROOT_DIR}/yaml-cpp-config.cmake.in"
                "${YAML_ROOT_DIR}/yaml-cpp-config.cmake" @ONLY)
 

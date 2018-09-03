@@ -21,7 +21,7 @@ FORWARD class AudioManager;
 FORWARD class DialogWindow;
 FORWARD class SceneManager;
 FORWARD class WindowManager;
-FORWARD class ImportFilesManager;
+FORWARD class MetaFilesManager;
 
 class Application
 {
@@ -35,16 +35,16 @@ public:
     bool MainLoopIteration();
     void BlockingWait(Window *win);
 
-    Time               *GetTime() const;
-    Paths              *GetPaths() const;
-    Debug              *GetDebug() const;
-    GEngine            *GetGEngine() const;
-    Physics            *GetPhysics() const;
-    Settings           *GetSettings() const;
-    Resources          *GetResources() const;
-    AudioManager       *GetAudioManager() const;
-    WindowManager      *GetWindowManager() const;
-    ImportFilesManager *GetImportFilesManager() const;
+    Time             *GetTime() const;
+    Paths            *GetPaths() const;
+    Debug            *GetDebug() const;
+    GEngine          *GetGEngine() const;
+    Physics          *GetPhysics() const;
+    Settings         *GetSettings() const;
+    Resources        *GetResources() const;
+    AudioManager     *GetAudioManager() const;
+    WindowManager    *GetWindowManager() const;
+    MetaFilesManager *GetMetaFilesManager() const;
 
     static String GetMainThreadId();
 
@@ -54,16 +54,16 @@ public:
     static void Exit(int returnCode, bool immediate = false);
 
 protected:
-    Time               *m_time               = nullptr;
-    Debug              *m_debug              = nullptr;
-    Paths              *m_paths              = nullptr;
-    Physics            *m_physics            = nullptr;
-    GEngine            *m_gEngine            = nullptr;
-    Settings           *m_settings           = nullptr;
-    Resources          *m_resources          = nullptr;
-    AudioManager       *m_audioManager       = nullptr;
-    WindowManager      *m_windowManager      = nullptr;
-    ImportFilesManager *m_importFilesManager = nullptr;
+    Time             *m_time               = nullptr;
+    Debug            *m_debug              = nullptr;
+    Paths            *m_paths              = nullptr;
+    Physics          *m_physics            = nullptr;
+    GEngine          *m_gEngine            = nullptr;
+    Settings         *m_settings           = nullptr;
+    Resources        *m_resources          = nullptr;
+    AudioManager     *m_audioManager       = nullptr;
+    WindowManager    *m_windowManager      = nullptr;
+    MetaFilesManager *m_metaFilesManager = nullptr;
 
     String m_mainThreadId = "";
 

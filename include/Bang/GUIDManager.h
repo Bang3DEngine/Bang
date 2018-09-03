@@ -24,7 +24,7 @@ private:
 
     static GUIDManager* GetInstance();
 
-    friend class ImportFilesManager;
+    friend class MetaFilesManager;
 };
 
 NAMESPACE_BANG_END

@@ -69,9 +69,9 @@ void Resources::CreateResourceMetaAndImportFile(const Resource *resource,
                                                const Path &exportFilepath)
 {
     File::Write(exportFilepath, "");
-    Path importFilePath = ImportFilesManager::GetImportFilepath(exportFilepath);
+    Path importFilePath = MetaFilesManager::GetMetaFilepath(exportFilepath);
     resource->ExportMetaToFile(importFilePath);
-    ImportFilesManager::RegisterImportFilepath(importFilePath); // Once created
+    MetaFilesManager::RegisterMetaFilepath(importFilePath); // Once created
 }
 
 RH<Resource> Resources::Load_(std::function<Resource*()> creator,
@@ -95,7 +95,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
     {
         res = creator();
 
-        Path importFilepath = ImportFilesManager::GetImportFilepath(filepath);
+        Path importFilepath = MetaFilesManager::GetMetaFilepath(filepath);
         res->ImportMetaFromFile(importFilepath); // Get resource GUID
         resRH.Set(res); // Register as soon as possible
 
@@ -114,7 +114,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator, const GUID &gu
     {
         if (!Resources::IsEmbeddedResource(guid))
         {
-            Path resPath = ImportFilesManager::GetImportFilepath(guid);
+            Path resPath = MetaFilesManager::GetMetaFilepath(guid);
             if (resPath.IsFile())
             {
                 resRH.Set( Load_(creator, resPath).Get() );
@@ -123,7 +123,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator, const GUID &gu
         else
         {
             GUID parentGUID = guid.WithoutEmbeddedResourceGUID();
-            Path parentPath = ImportFilesManager::GetFilepath(parentGUID);
+            Path parentPath = MetaFilesManager::GetFilepath(parentGUID);
             if (parentPath.IsFile())
             {
                 if (RH<Resource> parentResRH =
@@ -160,7 +160,7 @@ Resource* Resources::GetCached_(const GUID &guid) const
 
 Resource* Resources::GetCached_(const Path &path) const
 {
-    GUID guid = ImportFilesManager::GetGUID(path);
+    GUID guid = MetaFilesManager::GetGUID(path);
     return GetCached_(guid);
 }
 
@@ -261,7 +261,7 @@ void Resources::UnRegisterResourceUsage(Resource *res)
 Path Resources::GetResourcePath(const Resource *resource)
 {
     if (!resource) { return Path::Empty; }
-    return ImportFilesManager::GetFilepath(resource->GetGUID());
+    return MetaFilesManager::GetFilepath(resource->GetGUID());
 }
 
 MeshFactory *Resources::GetMeshFactory() const

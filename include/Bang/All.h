@@ -87,7 +87,7 @@
 #include "Bang/ImageIODDS.h"
 #include "Bang/ImageIO.h"
 #include "Bang/IEventsMaterialChanged.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/IEventsName.h"
 #include "Bang/Input.h"
 #include "Bang/IEventsObject.h"
@@ -224,6 +224,5 @@
 #include "Bang/WindowManager.tcc"
 #include "Bang/MetaAttribute.h"
 #include "Bang/MetaNode.h"
-#include "Bang/XMLMetaReader.h"
 
 #endif //ALL_H

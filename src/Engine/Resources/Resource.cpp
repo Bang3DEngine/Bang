@@ -2,7 +2,7 @@
 
 #include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
-#include "Bang/ImportFilesManager.h"
+#include "Bang/MetaFilesManager.h"
 
 USING_NAMESPACE_BANG
 
@@ -57,7 +57,7 @@ void Resource::PropagateResourceChanged()
 // Resource
 Path Resource::GetResourceFilepath() const
 {
-    return ImportFilesManager::GetFilepath( GetGUID() );
+    return MetaFilesManager::GetFilepath( GetGUID() );
 }
 
 Resource *Resource::GetEmbeddedResource(const GUID &embeddedResGUID) const
@@ -137,7 +137,7 @@ void Resource::ExportMeta(MetaNode *metaNode) const
 void Resource::Import_(const Path &resourceFilepath)
 {
     Import(resourceFilepath);
-    Path importFilepath = ImportFilesManager::GetImportFilepath(resourceFilepath);
+    Path importFilepath = MetaFilesManager::GetMetaFilepath(resourceFilepath);
     ImportMetaFromFile(importFilepath); // Import Meta then
 
     EventEmitter<IEventsResource>::PropagateToListeners(

@@ -46,20 +46,20 @@ void Animation::AddScaleKeyFrame(const String &boneName,
     PropagateResourceChanged();
 }
 
-void Animation::SetFramesPerSecond(float framesPerSecond)
-{
-    if (framesPerSecond != GetFramesPerSecond())
-    {
-        m_framesPerSecond = framesPerSecond;
-        PropagateResourceChanged();
-    }
-}
-
 void Animation::SetDurationInFrames(float durationInSeconds)
 {
     if (durationInSeconds != GetDurationInFrames())
     {
         m_durationInFrames = durationInSeconds;
+        PropagateResourceChanged();
+    }
+}
+
+void Animation::SetFramesPerSecond(float framesPerSecond)
+{
+    if (framesPerSecond != GetFramesPerSecond())
+    {
+        m_framesPerSecond = framesPerSecond;
         PropagateResourceChanged();
     }
 }
@@ -71,6 +71,20 @@ void Animation::SetWrapMode(AnimationWrapMode wrapMode)
         m_wrapMode = wrapMode;
         PropagateResourceChanged();
     }
+}
+
+void Animation::SetSpeed(float speed)
+{
+    if (speed != GetSpeed())
+    {
+        m_speed = speed;
+        PropagateResourceChanged();
+    }
+}
+
+float Animation::GetSpeed() const
+{
+    return m_speed;
 }
 
 float Animation::GetDurationInFrames() const
@@ -165,11 +179,11 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
             Matrix4 boneMatrix;
             const KeyFrame<Vector3> &prevPosKF = positionInterpKeyFrames[0];
             const KeyFrame<Vector3> &nextPosKF = positionInterpKeyFrames[1];
-            float deltaTime = (nextPosKF.timeInFrames - prevPosKF.timeInFrames);
-            ASSERT(deltaTime > 0);
+            float timeBetweenPrevNext = (nextPosKF.timeInFrames -
+                                         prevPosKF.timeInFrames);
 
             float timePassedSincePrev = (timeInFrames - prevPosKF.timeInFrames);
-            float interpFactor = (timePassedSincePrev / deltaTime);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
             interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
             Vector3 position = Vector3::Lerp(prevPosKF.value,
@@ -199,11 +213,11 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
             Matrix4 boneMatrix;
             const KeyFrame<Quaternion> &prevRotKF = rotationInterpKeyFrames[0];
             const KeyFrame<Quaternion> &nextRotKF = rotationInterpKeyFrames[1];
-            float deltaTime = (nextRotKF.timeInFrames - prevRotKF.timeInFrames);
-            ASSERT(deltaTime > 0);
+            float timeBetweenPrevNext = (nextRotKF.timeInFrames -
+                                         prevRotKF.timeInFrames);
 
             float timePassedSincePrev = (timeInFrames - prevRotKF.timeInFrames);
-            float interpFactor = (timePassedSincePrev / deltaTime);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
             interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
             Quaternion rotation = Quaternion::SLerp(prevRotKF.value,
@@ -289,6 +303,7 @@ Animation::GetBoneNameToScaleKeyFrames() const
 
 void Animation::Import(const Path &animationFilepath)
 {
+    (void) animationFilepath;
 }
 
 void Animation::ImportXML(const XMLNode &xmlInfo)
@@ -299,12 +314,18 @@ void Animation::ImportXML(const XMLNode &xmlInfo)
     {
         SetWrapMode( SCAST<AnimationWrapMode>(xmlInfo.Get<int>("WrapMode")) );
     }
+
+    if (xmlInfo.Contains("Speed"))
+    {
+        SetSpeed( xmlInfo.Get<float>("Speed") );
+    }
 }
 
 void Animation::ExportXML(XMLNode *xmlInfo) const
 {
     Asset::ExportXML(xmlInfo);
 
+    xmlInfo->Set("Speed", SCAST<float>(GetSpeed()));
     xmlInfo->Set("WrapMode", SCAST<int>(GetWrapMode()));
 }
 

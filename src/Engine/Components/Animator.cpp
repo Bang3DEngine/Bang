@@ -52,7 +52,7 @@ void Animator::OnUpdate()
     if (GetAnimation() && IsPlaying())
     {
         double passedTimeSeconds = (passedTimeMillis / double(1e3));
-        m_animationTimeSeconds += passedTimeSeconds;
+        m_animationTimeSeconds += passedTimeSeconds * GetAnimation()->GetSpeed();
     }
 }
 

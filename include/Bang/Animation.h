@@ -36,12 +36,14 @@ public:
                              const Animation::KeyFrame<Quaternion> &keyFrame);
     void AddScaleKeyFrame(const String &boneName,
                           const Animation::KeyFrame<Vector3> &keyFrame);
-    void SetFramesPerSecond(float framesPerSecond);
     void SetDurationInFrames(float durationInSeconds);
+    void SetFramesPerSecond(float framesPerSecond);
     void SetWrapMode(AnimationWrapMode wrapMode);
+    void SetSpeed(float speed);
 
-    float GetDurationInFrames() const;
+    float GetSpeed() const;
     float GetFramesPerSecond() const;
+    float GetDurationInFrames() const;
     AnimationWrapMode GetWrapMode() const;
     Map<String, Matrix4> GetBoneAnimationMatricesForSecond(float second) const;
 
@@ -74,6 +76,7 @@ private:
     Animation();
     virtual ~Animation();
 
+    float m_speed = 1.0f;
     float m_durationInFrames = 0.0f;
     float m_framesPerSecond  = 0.0f;
     AnimationWrapMode m_wrapMode = AnimationWrapMode::CLAMP;

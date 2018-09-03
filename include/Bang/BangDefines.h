@@ -39,7 +39,7 @@ FORWARD class Color;
 FORWARD class AABox;
 FORWARD class String;
 FORWARD class Sphere;
-FORWARD class XMLNode;
+FORWARD class MetaNode;
 FORWARD class Material;
 FORWARD class Transform;
 FORWARD class GameObject;

@@ -1,5 +1,5 @@
-#ifndef XMLATTRIBUTE_H
-#define XMLATTRIBUTE_H
+#ifndef METAATTRIBUTE_H
+#define METAATTRIBUTE_H
 
 #include "Bang/Paths.h"
 #include "Bang/Array.h"
@@ -9,11 +9,11 @@
 
 NAMESPACE_BANG_BEGIN
 
-class XMLAttribute : public IToString
+class MetaAttribute : public IToString
 {
 public:
-    XMLAttribute();
-    XMLAttribute(const String &name, const String &value);
+    MetaAttribute();
+    MetaAttribute(const String &name, const String &value);
 
     void Set(const String &name, const String &value);
 
@@ -24,7 +24,7 @@ public:
     const String& GetStringValue() const;
 
     String ToString() const;
-    static XMLAttribute FromString(const String &string);
+    static MetaAttribute FromString(const String &string);
 
     template<class T>
     void Set(const String &name, const T& value)
@@ -48,31 +48,31 @@ protected:
 };
 
 template<>
-inline void XMLAttribute::Set(const String &name, const Path& filepath)
+inline void MetaAttribute::Set(const String &name, const Path& filepath)
 {
     Set(name, filepath.GetAbsolute());
 }
 
 template<>
-inline void XMLAttribute::Set(const String &name, const bool& value)
+inline void MetaAttribute::Set(const String &name, const bool& value)
 {
     Set(name, value ? "True" : "False");
 }
 
 template<>
-inline bool XMLAttribute::Get() const
+inline bool MetaAttribute::Get() const
 {
     return GetStringValue().EqualsNoCase("true");
 }
 
 template<>
-inline String XMLAttribute::Get() const
+inline String MetaAttribute::Get() const
 {
     return GetStringValue();
 }
 
 template<>
-inline Path XMLAttribute::Get() const
+inline Path MetaAttribute::Get() const
 {
     if ( GetStringValue().IsEmpty() ) { return Path::Empty; }
     return Path(GetStringValue());
@@ -80,4 +80,4 @@ inline Path XMLAttribute::Get() const
 
 NAMESPACE_BANG_END
 
-#endif // XMLATTRIBUTE_H
+#endif // METAATTRIBUTE_H

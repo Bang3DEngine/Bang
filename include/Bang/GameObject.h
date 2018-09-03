@@ -203,8 +203,8 @@ public:
     String ToString() const override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
     GameObject(const String &name = "GameObject");

@@ -4,13 +4,13 @@
 #include <sstream>
 #include <fstream>
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Serializable;
 
-class XMLNodeReader
+class XMLMetaReader
 {
 public:
     static void GetNextOpenTag(const String &xml,
@@ -33,20 +33,20 @@ public:
 
     static void GetNextAttribute(const String &tag,
                                  int startPosition,
-                                 XMLAttribute *attribute,
+                                 MetaAttribute *attribute,
                                  int *attributeEnd);
 
     static bool IsOpenTag(const String &tag);
 
 public:
-    XMLNodeReader();
+    XMLMetaReader();
 
     static String GetTagName(const String &tag,
                              int *tagNameBegin = nullptr,
                              int *tagNameEnd = nullptr);
 
-    static XMLNode FromFile(const Path &filepath);
-    static XMLNode FromString(const String &xml);
+    static MetaNode FromFile(const Path &filepath);
+    static MetaNode FromString(const String &xml);
 };
 
 NAMESPACE_BANG_END

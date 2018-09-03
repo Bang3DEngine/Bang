@@ -1,4 +1,4 @@
-#include "Bang/XMLAttribute.h"
+#include "Bang/MetaAttribute.h"
 
 #include <iostream>
 #include <functional>
@@ -9,33 +9,33 @@
 
 USING_NAMESPACE_BANG
 
-XMLAttribute::XMLAttribute()
+MetaAttribute::MetaAttribute()
 {
 }
 
-XMLAttribute::XMLAttribute(const String &name, const String &value)
+MetaAttribute::MetaAttribute(const String &name, const String &value)
 {
     Set(name, value);
 }
 
 
-void XMLAttribute::Set(const String &name, const String &value)
+void MetaAttribute::Set(const String &name, const String &value)
 {
     SetName(name);
     SetValue(value);
 }
 
-const String &XMLAttribute::GetName() const
+const String& MetaAttribute::GetName() const
 {
     return m_name;
 }
 
-const String& XMLAttribute::GetStringValue() const
+const String& MetaAttribute::GetStringValue() const
 {
     return m_value;
 }
 
-String XMLAttribute::ToString() const
+String MetaAttribute::ToString() const
 {
     String str = "";
     str += GetName();
@@ -45,24 +45,36 @@ String XMLAttribute::ToString() const
     return str;
 }
 
-XMLAttribute XMLAttribute::FromString(const String &string)
+MetaAttribute MetaAttribute::FromString(const String &string)
 {
-    XMLAttribute attribute;
+    MetaAttribute attribute;
 
     String str = string.Trim();
 
     const String TokenSpace = " \t\n";
     int nameBegin = str.IndexOfOneNotOf(TokenSpace, 0);
-    if (nameBegin == -1) { return attribute; }
+    if (nameBegin == -1)
+    {
+        return attribute;
+    }
 
     int nameEnd = str.IndexOfOneOf(TokenSpace + ":" + "=", nameBegin + 1);
-    if (nameEnd == -1) { return attribute; }
+    if (nameEnd == -1)
+    {
+        return attribute;
+    }
 
     int valueBegin = str.IndexOfOneOf("\"", nameEnd + 1) + 1;
-    if (valueBegin == -1) { return attribute; }
+    if (valueBegin == -1)
+    {
+        return attribute;
+    }
 
     int valueEnd = str.IndexOfOneOf("\"", valueBegin+1);
-    if (valueEnd == -1) { return attribute; }
+    if (valueEnd == -1)
+    {
+        return attribute;
+    }
 
     String name = str.SubString(nameBegin, nameEnd-1);
     String value = str.SubString(valueBegin, valueEnd-1);
@@ -72,12 +84,12 @@ XMLAttribute XMLAttribute::FromString(const String &string)
     return attribute;
 }
 
-void XMLAttribute::SetValue(const String &value)
+void MetaAttribute::SetValue(const String &value)
 {
     m_value = value;
 }
 
-void XMLAttribute::SetName(const String &name)
+void MetaAttribute::SetName(const String &name)
 {
     m_name = name;
 }

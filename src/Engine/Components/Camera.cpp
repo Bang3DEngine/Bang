@@ -12,6 +12,7 @@
 #include "Bang/Matrix4.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Geometry.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
@@ -386,51 +387,65 @@ void Camera::CloneInto(ICloneable *clone) const
     cam->SetSkyBoxTexture(GetSkyBoxTexture());
 }
 
-void Camera::ImportXML(const XMLNode &xml)
+void Camera::ImportMeta(const MetaNode &meta)
 {
-    Component::ImportXML(xml);
+    Component::ImportMeta(meta);
 
-    if (xml.Contains("FOVDegrees"))
-    { SetFovDegrees(xml.Get<float>("FOVDegrees")); }
+    if (meta.Contains("FOVDegrees"))
+    {
+        SetFovDegrees(meta.Get<float>("FOVDegrees"));
+    }
 
-    if (xml.Contains("ZNear"))
-    { SetZNear(xml.Get<float>("ZNear")); }
+    if (meta.Contains("ZNear"))
+    {
+        SetZNear(meta.Get<float>("ZNear"));
+    }
 
-    if (xml.Contains("ZFar"))
-    { SetZFar(xml.Get<float>("ZFar")); }
+    if (meta.Contains("ZFar"))
+    {
+        SetZFar(meta.Get<float>("ZFar"));
+    }
 
-    if (xml.Contains("OrthoHeight"))
-    { SetOrthoHeight( xml.Get<float>("OrthoHeight") ); }
+    if (meta.Contains("OrthoHeight"))
+    {
+        SetOrthoHeight( meta.Get<float>("OrthoHeight") );
+    }
 
-    if (xml.Contains("ProjectionMode"))
-    { SetProjectionMode( xml.Get<ProjectionMode>("ProjectionMode") ); }
+    if (meta.Contains("ProjectionMode"))
+    {
+        SetProjectionMode( meta.Get<ProjectionMode>("ProjectionMode") );
+    }
 
-    if (xml.Contains("ClearMode"))
-    { SetClearMode( xml.Get<ClearMode>("ClearMode") ); }
+    if (meta.Contains("ClearMode"))
+    {
+        SetClearMode( meta.Get<ClearMode>("ClearMode") );
+    }
 
-    if (xml.Contains("ClearColor"))
-    { SetClearColor(xml.Get<Color>("ClearColor")); }
+    if (meta.Contains("ClearColor"))
+    {
+        SetClearColor(meta.Get<Color>("ClearColor"));
+    }
 
-    if (xml.Contains("SkyBoxTexture"))
+    if (meta.Contains("SkyBoxTexture"))
     {
         RH<TextureCubeMap> skyCM = Resources::Load<TextureCubeMap>(
-                                            xml.Get<GUID>("SkyBoxTexture") );
+                                            meta.Get<GUID>("SkyBoxTexture") );
         SetSkyBoxTexture( skyCM.Get() );
     }
 }
 
-void Camera::ExportXML(XMLNode *xmlInfo) const
+void Camera::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("ZNear", GetZNear());
-    xmlInfo->Set("ZFar", GetZFar());
-    xmlInfo->Set("ProjectionMode", GetProjectionMode());
-    xmlInfo->Set("OrthoHeight", GetOrthoHeight());
-    xmlInfo->Set("FOVDegrees", GetFovDegrees());
-    xmlInfo->Set("ClearMode", GetClearMode());
-    xmlInfo->Set("ClearColor", GetClearColor());
-    xmlInfo->Set("SkyBoxTexture", (GetSkyBoxTexture() ?
+    metaNode->Set("ZNear", GetZNear());
+    metaNode->Set("ZFar", GetZFar());
+    metaNode->Set("ProjectionMode", GetProjectionMode());
+    metaNode->Set("OrthoHeight", GetOrthoHeight());
+    metaNode->Set("FOVDegrees", GetFovDegrees());
+    metaNode->Set("ClearMode", GetClearMode());
+    metaNode->Set("ClearColor", GetClearColor());
+    metaNode->Set("SkyBoxTexture", (GetSkyBoxTexture() ?
                                      GetSkyBoxTexture()->GetGUID() :
                                      GUID::Empty()) );
 }

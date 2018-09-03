@@ -3,7 +3,7 @@
 #include "Bang/Debug.h"
 #include "Bang/Scene.h"
 #include "Bang/String.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/SceneManager.h"
@@ -222,19 +222,19 @@ String Component::ToString() const
     return GetClassName() + "(" + String::ToString((void*)this) + ")";
 }
 
-void Component::ImportXML(const XMLNode &xmlInfo)
+void Component::ImportMeta(const MetaNode &metaNode)
 {
-    Serializable::ImportXML(xmlInfo);
-    if (xmlInfo.Contains("Enabled"))
+    Serializable::ImportMeta(metaNode);
+    if (metaNode.Contains("Enabled"))
     {
-        SetEnabled(xmlInfo.Get<bool>("Enabled", true));
+        SetEnabled(metaNode.Get<bool>("Enabled", true));
     }
 }
 
-void Component::ExportXML(XMLNode *xmlInfo) const
+void Component::ExportMeta(MetaNode *metaNode) const
 {
-    Serializable::ExportXML(xmlInfo);
+    Serializable::ExportMeta(metaNode);
 
-    xmlInfo->SetTagName( GetClassName() );
-    xmlInfo->Set("Enabled", IsEnabled());
+    metaNode->SetName( GetClassName() );
+    metaNode->Set("Enabled", IsEnabled());
 }

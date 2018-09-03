@@ -3,7 +3,7 @@
 #include <sndfile.h>
 
 #include "Bang/Debug.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/AudioSource.h"
 #include "Bang/AudioManager.h"
@@ -136,12 +136,12 @@ void AudioClip::FreeBuffer()
     }
 }
 
-void AudioClip::ImportXML(const XMLNode &xmlInfo)
+void AudioClip::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 }
 
-void AudioClip::ExportXML(XMLNode *xmlInfo) const
+void AudioClip::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 }

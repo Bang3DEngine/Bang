@@ -44,8 +44,8 @@ public:
     Stretch GetChildrenHorizontalStretch() const;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
     int m_spacingPx = 0;

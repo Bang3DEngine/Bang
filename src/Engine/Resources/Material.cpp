@@ -2,7 +2,7 @@
 
 #include "Bang/Paths.h"
 #include "Bang/Shader.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Vector4.h"
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
@@ -365,75 +365,113 @@ void Material::OnResourceChanged(Resource *res)
 
 void Material::Import(const Path &materialFilepath)
 {
-    ImportXMLFromFile(materialFilepath);
+    ImportMetaFromFile(materialFilepath);
 }
 
-void Material::ImportXML(const XMLNode &xml)
+void Material::ImportMeta(const MetaNode &meta)
 {
-    Asset::ImportXML(xml);
+    Asset::ImportMeta(meta);
 
-    if (xml.Contains("RenderPass"))
-    { SetRenderPass(xml.Get<RenderPass>("RenderPass")); }
+    if (meta.Contains("RenderPass"))
+    {
+        SetRenderPass(meta.Get<RenderPass>("RenderPass"));
+    }
 
-    if (xml.Contains("AlbedoColor"))
-    { SetAlbedoColor(xml.Get<Color>("AlbedoColor")); }
+    if (meta.Contains("AlbedoColor"))
+    {
+        SetAlbedoColor(meta.Get<Color>("AlbedoColor"));
+    }
 
-    if (xml.Contains("Roughness"))
-    { SetRoughness(xml.Get<float>("Roughness")); }
+    if (meta.Contains("Roughness"))
+    {
+        SetRoughness(meta.Get<float>("Roughness"));
+    }
 
-    if (xml.Contains("Metalness"))
-    { SetMetalness(xml.Get<float>("Metalness")); }
+    if (meta.Contains("Metalness"))
+    {
+        SetMetalness(meta.Get<float>("Metalness"));
+    }
 
-    if (xml.Contains("ReceivesLighting"))
-    { SetReceivesLighting(xml.Get<bool>("ReceivesLighting")); }
+    if (meta.Contains("ReceivesLighting"))
+    {
+        SetReceivesLighting(meta.Get<bool>("ReceivesLighting"));
+    }
 
-    if (xml.Contains("AlbedoTexture"))
-    { SetAlbedoTexture(
-          Resources::Load<Texture2D>(xml.Get<GUID>("AlbedoTexture")).Get()); }
+    if (meta.Contains("AlbedoTexture"))
+    {
+        SetAlbedoTexture(
+          Resources::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
+    }
 
-    if (xml.Contains("AlbedoUvOffset"))
-    { SetAlbedoUvOffset(xml.Get<Vector2>("AlbedoUvOffset")); }
+    if (meta.Contains("AlbedoUvOffset"))
+    {
+        SetAlbedoUvOffset(meta.Get<Vector2>("AlbedoUvOffset"));
+    }
 
-    if (xml.Contains("AlbedoUvMultiply"))
-    { SetAlbedoUvMultiply(xml.Get<Vector2>("AlbedoUvMultiply")); }
+    if (meta.Contains("AlbedoUvMultiply"))
+    {
+        SetAlbedoUvMultiply(meta.Get<Vector2>("AlbedoUvMultiply"));
+    }
 
-    if (xml.Contains("RoughnessTexture"))
-    { SetRoughnessTexture(
-         Resources::Load<Texture2D>(xml.Get<GUID>("RoughnessTexture")).Get()); }
+    if (meta.Contains("RoughnessTexture"))
+    {
+        SetRoughnessTexture(
+         Resources::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture")).Get());
+    }
 
-    if (xml.Contains("MetalnessTexture"))
-    { SetMetalnessTexture(
-         Resources::Load<Texture2D>(xml.Get<GUID>("MetalnessTexture")).Get()); }
+    if (meta.Contains("MetalnessTexture"))
+    {
+        SetMetalnessTexture(
+         Resources::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture")).Get());
+    }
 
-    if (xml.Contains("NormalMapTexture"))
-    { SetNormalMapTexture(
-         Resources::Load<Texture2D>(xml.Get<GUID>("NormalMapTexture")).Get()); }
+    if (meta.Contains("NormalMapTexture"))
+    {
+        SetNormalMapTexture(
+         Resources::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture")).Get());
+    }
 
-    if (xml.Contains("NormalMapUvOffset"))
-    { SetNormalMapUvOffset(xml.Get<Vector2>("NormalMapUvOffset")); }
+    if (meta.Contains("NormalMapUvOffset"))
+    {
+        SetNormalMapUvOffset(meta.Get<Vector2>("NormalMapUvOffset"));
+    }
 
-    if (xml.Contains("NormalMapUvMultiply"))
-    { SetNormalMapUvMultiply(xml.Get<Vector2>("NormalMapUvMultiply")); }
+    if (meta.Contains("NormalMapUvMultiply"))
+    {
+        SetNormalMapUvMultiply(meta.Get<Vector2>("NormalMapUvMultiply"));
+    }
 
-    if (xml.Contains("NormalMapMultiplyFactor"))
-    { SetNormalMapMultiplyFactor(xml.Get<float>("NormalMapMultiplyFactor")); }
+    if (meta.Contains("NormalMapMultiplyFactor"))
+    {
+        SetNormalMapMultiplyFactor(meta.Get<float>("NormalMapMultiplyFactor"));
+    }
 
     RH<Shader> vShader;
-    if (xml.Contains("VertexShader"))
-    {  vShader = Resources::Load<Shader>(xml.Get<GUID>("VertexShader"));  }
+    if (meta.Contains("VertexShader"))
+    {
+        vShader = Resources::Load<Shader>(meta.Get<GUID>("VertexShader"));
+    }
 
     RH<Shader> fShader;
-    if (xml.Contains("FragmentShader"))
-    { fShader = Resources::Load<Shader>(xml.Get<GUID>("FragmentShader")); }
+    if (meta.Contains("FragmentShader"))
+    {
+        fShader = Resources::Load<Shader>(meta.Get<GUID>("FragmentShader"));
+    }
 
-    if (xml.Contains("LineWidth"))
-    { SetLineWidth(xml.Get<float>("LineWidth")); }
+    if (meta.Contains("LineWidth"))
+    {
+        SetLineWidth(meta.Get<float>("LineWidth"));
+    }
 
-    if (xml.Contains("RenderWireframe"))
-    { SetRenderWireframe(xml.Get<bool>("RenderWireframe")); }
+    if (meta.Contains("RenderWireframe"))
+    {
+        SetRenderWireframe(meta.Get<bool>("RenderWireframe"));
+    }
 
-    if (xml.Contains("CullFace"))
-    { SetCullFace(xml.Get<GL::CullFaceExt>("CullFace")); }
+    if (meta.Contains("CullFace"))
+    {
+        SetCullFace(meta.Get<GL::CullFaceExt>("CullFace"));
+    }
 
     if (vShader && fShader)
     {
@@ -444,40 +482,40 @@ void Material::ImportXML(const XMLNode &xml)
     }
 }
 
-void Material::ExportXML(XMLNode *xmlInfo) const
+void Material::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
-    xmlInfo->Set("RenderPass",              GetRenderPass());
-    xmlInfo->Set("AlbedoColor",             GetAlbedoColor());
-    xmlInfo->Set("Roughness",               GetRoughness());
-    xmlInfo->Set("Metalness",               GetMetalness());
-    xmlInfo->Set("ReceivesLighting",        GetReceivesLighting());
-    xmlInfo->Set("AlbedoUvMultiply",        GetAlbedoUvMultiply());
-    xmlInfo->Set("AlbedoUvOffset",          GetAlbedoUvOffset());
-    xmlInfo->Set("NormalMapUvMultiply",     GetNormalMapUvMultiply());
-    xmlInfo->Set("NormalMapUvOffset",       GetNormalMapUvOffset());
-    xmlInfo->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
-    xmlInfo->Set("LineWidth",               GetLineWidth());
-    xmlInfo->Set("RenderWireframe",         IsRenderWireframe());
-    xmlInfo->Set("CullFace",                GetCullFace());
+    metaNode->Set("RenderPass",              GetRenderPass());
+    metaNode->Set("AlbedoColor",             GetAlbedoColor());
+    metaNode->Set("Roughness",               GetRoughness());
+    metaNode->Set("Metalness",               GetMetalness());
+    metaNode->Set("ReceivesLighting",        GetReceivesLighting());
+    metaNode->Set("AlbedoUvMultiply",        GetAlbedoUvMultiply());
+    metaNode->Set("AlbedoUvOffset",          GetAlbedoUvOffset());
+    metaNode->Set("NormalMapUvMultiply",     GetNormalMapUvMultiply());
+    metaNode->Set("NormalMapUvOffset",       GetNormalMapUvOffset());
+    metaNode->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
+    metaNode->Set("LineWidth",               GetLineWidth());
+    metaNode->Set("RenderWireframe",         IsRenderWireframe());
+    metaNode->Set("CullFace",                GetCullFace());
 
     Texture2D* albedoTex = GetAlbedoTexture();
-    xmlInfo->Set("AlbedoTexture",
+    metaNode->Set("AlbedoTexture",
                  albedoTex ? albedoTex->GetGUID() : GUID::Empty());
     Texture2D* roughnessTex = GetRoughnessTexture();
-    xmlInfo->Set("RoughnessTexture",
+    metaNode->Set("RoughnessTexture",
                  roughnessTex ? roughnessTex->GetGUID() : GUID::Empty());
     Texture2D* metalnessTex = GetMetalnessTexture();
-    xmlInfo->Set("MetalnessTexture",
+    metaNode->Set("MetalnessTexture",
                  metalnessTex ? metalnessTex->GetGUID() : GUID::Empty());
     Texture2D* normalTex = GetNormalMapTexture();
-    xmlInfo->Set("NormalMapTexture",
+    metaNode->Set("NormalMapTexture",
                  normalTex ? normalTex->GetGUID() : GUID::Empty());
 
     ShaderProgram *sp = GetShaderProgram();
     Shader* vShader = (sp ? sp->GetVertexShader()   : nullptr);
     Shader* fShader = (sp ? sp->GetFragmentShader() : nullptr);
-    xmlInfo->Set("VertexShader",   vShader->GetGUID());
-    xmlInfo->Set("FragmentShader", fShader->GetGUID());
+    metaNode->Set("VertexShader",   vShader->GetGUID());
+    metaNode->Set("FragmentShader", fShader->GetGUID());
 }

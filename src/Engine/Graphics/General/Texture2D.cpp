@@ -2,6 +2,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/ImageIO.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 
 USING_NAMESPACE_BANG
@@ -96,31 +97,39 @@ const Imageb &Texture2D::GetImage() const
     return m_image;
 }
 
-void Texture2D::ImportXML(const XMLNode &xmlInfo)
+void Texture2D::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Format"))
-    { SetFormat( xmlInfo.Get<GL::ColorFormat>("Format") ); }
+    if (metaNode.Contains("Format"))
+    {
+        SetFormat( metaNode.Get<GL::ColorFormat>("Format") );
+    }
 
-    if (xmlInfo.Contains("FilterMode"))
-    { SetFilterMode( xmlInfo.Get<GL::FilterMode>("FilterMode") ); }
+    if (metaNode.Contains("FilterMode"))
+    {
+        SetFilterMode( metaNode.Get<GL::FilterMode>("FilterMode") );
+    }
 
-    if (xmlInfo.Contains("WrapMode"))
-    { SetWrapMode( xmlInfo.Get<GL::WrapMode>("WrapMode") ); }
+    if (metaNode.Contains("WrapMode"))
+    {
+        SetWrapMode( metaNode.Get<GL::WrapMode>("WrapMode") );
+    }
 
-    if (xmlInfo.Contains("AlphaCutoff"))
-    { SetAlphaCutoff( xmlInfo.Get<float>("AlphaCutoff") ); }
+    if (metaNode.Contains("AlphaCutoff"))
+    {
+        SetAlphaCutoff( metaNode.Get<float>("AlphaCutoff") );
+    }
 }
 
-void Texture2D::ExportXML(XMLNode *xmlInfo) const
+void Texture2D::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
-    xmlInfo->Set("Format", GetFormat());
-    xmlInfo->Set("FilterMode", GetFilterMode());
-    xmlInfo->Set("WrapMode", GetWrapMode());
-    xmlInfo->Set("AlphaCutoff", GetAlphaCutoff());
+    metaNode->Set("Format", GetFormat());
+    metaNode->Set("FilterMode", GetFilterMode());
+    metaNode->Set("WrapMode", GetWrapMode());
+    metaNode->Set("AlphaCutoff", GetAlphaCutoff());
 }
 
 void Texture2D::Import(const Path &imageFilepath)
@@ -128,7 +137,7 @@ void Texture2D::Import(const Path &imageFilepath)
     ImageIO::Import(imageFilepath, &m_image, this, nullptr);
 
     Path importFilepath = ImportFilesManager::GetImportFilepath(imageFilepath);
-    ImportXMLFromFile(importFilepath);
+    ImportMetaFromFile(importFilepath);
 }
 
 void Texture2D::Import(const Image<Byte> &image)

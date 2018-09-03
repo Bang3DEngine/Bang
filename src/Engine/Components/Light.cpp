@@ -5,7 +5,7 @@
 #include "Bang/AARect.h"
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Material.h"
 #include "Bang/Renderer.h"
 #include "Bang/Transform.h"
@@ -140,33 +140,33 @@ void Light::CloneInto(ICloneable *clone) const
     l->SetShadowMapSize( GetShadowMapSize() );
 }
 
-void Light::ImportXML(const XMLNode &xmlInfo)
+void Light::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Intensity"))
-    { SetIntensity(xmlInfo.Get<float>("Intensity")); }
+    if (metaNode.Contains("Intensity"))
+    { SetIntensity(metaNode.Get<float>("Intensity")); }
 
-    if (xmlInfo.Contains("Color"))
-    { SetColor(xmlInfo.Get<Color>("Color")); }
+    if (metaNode.Contains("Color"))
+    { SetColor(metaNode.Get<Color>("Color")); }
 
-    if (xmlInfo.Contains("ShadowBias"))
-    { SetShadowBias(xmlInfo.Get<float>("ShadowBias")); }
+    if (metaNode.Contains("ShadowBias"))
+    { SetShadowBias(metaNode.Get<float>("ShadowBias")); }
 
-    if (xmlInfo.Contains("ShadowType"))
-    { SetShadowType(xmlInfo.Get<ShadowType>("ShadowType")); }
+    if (metaNode.Contains("ShadowType"))
+    { SetShadowType(metaNode.Get<ShadowType>("ShadowType")); }
 
-    if (xmlInfo.Contains("ShadowMapSize"))
-    { SetShadowMapSize(xmlInfo.Get<Vector2i>("ShadowMapSize")); }
+    if (metaNode.Contains("ShadowMapSize"))
+    { SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize")); }
 }
 
-void Light::ExportXML(XMLNode *xmlInfo) const
+void Light::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Intensity", GetIntensity());
-    xmlInfo->Set("Color", GetColor());
-    xmlInfo->Set("ShadowBias", GetShadowBias());
-    xmlInfo->Set("ShadowType", GetShadowType());
-    xmlInfo->Set("ShadowMapSize", GetShadowMapSize());
+    metaNode->Set("Intensity", GetIntensity());
+    metaNode->Set("Color", GetColor());
+    metaNode->Set("ShadowBias", GetShadowBias());
+    metaNode->Set("ShadowType", GetShadowType());
+    metaNode->Set("ShadowMapSize", GetShadowMapSize());
 }

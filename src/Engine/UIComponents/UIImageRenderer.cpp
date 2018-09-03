@@ -4,6 +4,7 @@
 #include "Bang/Mesh.h"
 #include "Bang/Image.h"
 #include "Bang/Material.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
@@ -145,41 +146,41 @@ void UIImageRenderer::CloneInto(ICloneable *clone) const
     img->SetTint( GetTint() );
 }
 
-void UIImageRenderer::ImportXML(const XMLNode &xmlInfo)
+void UIImageRenderer::ImportMeta(const MetaNode &metaNode)
 {
-    UIRenderer::ImportXML(xmlInfo);
+    UIRenderer::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Image"))
+    if (metaNode.Contains("Image"))
     {
         RH<Texture2D> tex = Resources::Load<Texture2D>(
-                                            xmlInfo.Get<GUID>("Image"));
+                                            metaNode.Get<GUID>("Image"));
         SetImageTexture(tex.Get());
     }
 
-    if (xmlInfo.Contains("Tint"))
+    if (metaNode.Contains("Tint"))
     {
-        SetTint( xmlInfo.Get<Color>("Tint") );
+        SetTint( metaNode.Get<Color>("Tint") );
     }
 
-    if (xmlInfo.Contains("Mode"))
+    if (metaNode.Contains("Mode"))
     {
-        SetMode( SCAST<UIImageRenderer::Mode>( xmlInfo.Get<int>("Mode") ) );
+        SetMode( SCAST<UIImageRenderer::Mode>( metaNode.Get<int>("Mode") ) );
     }
 
-    if (xmlInfo.Contains("Slice9BorderStrokePx"))
+    if (metaNode.Contains("Slice9BorderStrokePx"))
     {
-        SetSlice9BorderStrokePx( xmlInfo.Get<Vector2i>("Slice9BorderStrokePx") );
+        SetSlice9BorderStrokePx( metaNode.Get<Vector2i>("Slice9BorderStrokePx") );
     }
 }
 
-void UIImageRenderer::ExportXML(XMLNode *xmlInfo) const
+void UIImageRenderer::ExportMeta(MetaNode *metaNode) const
 {
-    UIRenderer::ExportXML(xmlInfo);
+    UIRenderer::ExportMeta(metaNode);
 
     Texture2D *imgTex = GetImageTexture();
-    xmlInfo->Set("Image", imgTex ? imgTex->GetGUID() : GUID::Empty());
-    xmlInfo->Set("Tint", GetTint());
-    xmlInfo->Set("Mode", SCAST<int>(GetMode()));
-    xmlInfo->Set("Slice9BorderStrokePx", GetSlice9BorderStrokePx());
+    metaNode->Set("Image", imgTex ? imgTex->GetGUID() : GUID::Empty());
+    metaNode->Set("Tint", GetTint());
+    metaNode->Set("Mode", SCAST<int>(GetMode()));
+    metaNode->Set("Slice9BorderStrokePx", GetSlice9BorderStrokePx());
 }
 

@@ -2,7 +2,7 @@
 
 #include "Bang/Rect.h"
 #include "Bang/AARect.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
 #include "Bang/RectTransform.h"
 
@@ -80,23 +80,23 @@ void UIAspectRatioFitter::ApplyLayout(Axis axis)
     }
 }
 
-void UIAspectRatioFitter::ImportXML(const XMLNode &xmlInfo)
+void UIAspectRatioFitter::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("AspectRatio"))
-    { SetAspectRatio(xmlInfo.Get<float>("AspectRatio")); }
+    if (metaNode.Contains("AspectRatio"))
+    { SetAspectRatio(metaNode.Get<float>("AspectRatio")); }
 
-    if (xmlInfo.Contains("AspectRatioMode"))
-    { SetAspectRatioMode(xmlInfo.Get<AspectRatioMode>("AspectRatioMode")); }
+    if (metaNode.Contains("AspectRatioMode"))
+    { SetAspectRatioMode(metaNode.Get<AspectRatioMode>("AspectRatioMode")); }
 }
 
-void UIAspectRatioFitter::ExportXML(XMLNode *xmlInfo) const
+void UIAspectRatioFitter::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("AspectRatio", GetAspectRatio());
-    xmlInfo->Set("AspectRatioMode", GetAspectRatioMode());
+    metaNode->Set("AspectRatio", GetAspectRatio());
+    metaNode->Set("AspectRatioMode", GetAspectRatioMode());
 }
 
 void UIAspectRatioFitter::OnTransformChanged()

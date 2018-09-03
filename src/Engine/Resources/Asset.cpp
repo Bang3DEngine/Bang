@@ -12,12 +12,12 @@ String Asset::ToString() const
     return res;
 }
 
-void Asset::ImportXML(const XMLNode &xmlInfo)
+void Asset::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportXML(xmlInfo);
+    Resource::ImportMeta(metaNode);
 }
 
-void Asset::ExportXML(XMLNode *xmlInfo) const
+void Asset::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportXML(xmlInfo);
+    Resource::ExportMeta(metaNode);
 }

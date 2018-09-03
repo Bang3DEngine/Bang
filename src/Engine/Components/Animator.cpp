@@ -2,6 +2,7 @@
 
 #include "Bang/Mesh.h"
 #include "Bang/Material.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/ShaderProgram.h"
@@ -143,23 +144,23 @@ void Animator::CloneInto(ICloneable *clone) const
     animatorClone->SetAnimation( GetAnimation() );
 }
 
-void Animator::ImportXML(const XMLNode &xmlInfo)
+void Animator::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Animation"))
+    if (metaNode.Contains("Animation"))
     {
         RH<Animation> animation = Resources::Load<Animation>(
-                                             xmlInfo.Get<GUID>("Animation") );
+                                             metaNode.Get<GUID>("Animation") );
         SetAnimation( animation.Get() );
     }
 }
 
-void Animator::ExportXML(XMLNode *xmlInfo) const
+void Animator::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
+    metaNode->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
                                                GUID::Empty());
 }
 

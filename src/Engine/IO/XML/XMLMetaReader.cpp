@@ -1,4 +1,4 @@
-#include "Bang/XMLNodeReader.h"
+#include "Bang/XMLMetaReader.h"
 
 #include "Bang/File.h"
 #include "Bang/Debug.h"
@@ -7,13 +7,13 @@
 
 USING_NAMESPACE_BANG
 
-XMLNodeReader::XMLNodeReader()
+XMLMetaReader::XMLMetaReader()
 {
 }
 
-String XMLNodeReader::GetTagName(const String &tag,
-                             int *tagNameBegin,
-                             int *tagNameEnd)
+String XMLMetaReader::GetTagName(const String &tag,
+                                 int *tagNameBegin,
+                                 int *tagNameEnd)
 {
     const String TokenSpace = " \t\n\r";
     int tagBegin = tag.IndexOfOneOf("<");
@@ -22,18 +22,29 @@ String XMLNodeReader::GetTagName(const String &tag,
     int nameBegin = tag.IndexOfOneNotOf(TokenSpace, tagBegin + 1);
     int nameEnd = tag.IndexOfOneOf(TokenSpace + ">", nameBegin + 1);
 
-    if (tagNameBegin) *tagNameBegin = nameBegin;
-    if (tagNameEnd) *tagNameEnd = nameEnd;
+    if (tagNameBegin)
+    {
+        *tagNameBegin = nameBegin;
+    }
+
+    if (tagNameEnd)
+    {
+        *tagNameEnd = nameEnd;
+    }
 
     return tag.SubString(nameBegin, nameEnd - 1);
 }
 
-void XMLNodeReader::GetNextAttribute(const String &tag,
-                                 int startPosition,
-                                 XMLAttribute *attribute,
-                                 int *attributeEnd)
+void XMLMetaReader::GetNextAttribute(const String &tag,
+                                     int startPosition,
+                                     MetaAttribute *attribute,
+                                     int *attributeEnd)
 {
-    if (attributeEnd) { *attributeEnd = -1; }
+    if (attributeEnd)
+    {
+        *attributeEnd = -1;
+    }
+
     if (attribute)
     {
         attribute->SetName("");
@@ -42,12 +53,18 @@ void XMLNodeReader::GetNextAttribute(const String &tag,
 
     int attrEnd = tag.IndexOf("\"", startPosition);
     attrEnd = tag.IndexOf("\"", attrEnd + 1);
-    if (attrEnd == -1) { return; }
+    if (attrEnd == -1)
+    {
+        return;
+    }
 
     String attrString = tag.SubString(startPosition, attrEnd);
 
-    XMLAttribute attr = XMLAttribute::FromString(attrString);
-    if (attr.GetName().IsEmpty()) { return; }
+    MetaAttribute attr = MetaAttribute::FromString(attrString);
+    if (attr.GetName().IsEmpty())
+    {
+        return;
+    }
 
     if (attributeEnd)
     {
@@ -60,12 +77,12 @@ void XMLNodeReader::GetNextAttribute(const String &tag,
     }
 }
 
-bool XMLNodeReader::IsOpenTag(const String &tag)
+bool XMLMetaReader::IsOpenTag(const String &tag)
 {
     return tag[0] == '<' && tag[1] != '/';
 }
 
-void XMLNodeReader::GetCorrespondingCloseTag(const String &xml,
+void XMLMetaReader::GetCorrespondingCloseTag(const String &xml,
                                          int startPositionAfterOpenTag,
                                          String tagName,
                                          int *beginPosition,
@@ -82,13 +99,13 @@ void XMLNodeReader::GetCorrespondingCloseTag(const String &xml,
     {
         String tag;
         int begin;
-        XMLNodeReader::GetNextTag(xml, end, &tag, &begin, &end);
+        XMLMetaReader::GetNextTag(xml, end, &tag, &begin, &end);
         if (end != -1)
         {
-            String name = XMLNodeReader::GetTagName(tag);
+            String name = XMLMetaReader::GetTagName(tag);
             if (name == tagName)
             {
-                bool openTag = XMLNodeReader::IsOpenTag(tag);
+                bool openTag = XMLMetaReader::IsOpenTag(tag);
                 if (openTag)
                 {
                     ++tagDeepness;
@@ -113,7 +130,7 @@ void XMLNodeReader::GetCorrespondingCloseTag(const String &xml,
     }
 }
 
-void XMLNodeReader::GetNextOpenTag(const String &xml,
+void XMLMetaReader::GetNextOpenTag(const String &xml,
                                int startPosition,
                                String *tag,
                                int *beginTagPosition,
@@ -123,8 +140,8 @@ void XMLNodeReader::GetNextOpenTag(const String &xml,
     int end = startPosition;
     while (end != -1)
     {
-        XMLNodeReader::GetNextTag(xml, end, &resultTag, beginTagPosition, &end);
-        if (XMLNodeReader::IsOpenTag(resultTag))
+        XMLMetaReader::GetNextTag(xml, end, &resultTag, beginTagPosition, &end);
+        if (XMLMetaReader::IsOpenTag(resultTag))
         {
             break;
         }
@@ -143,7 +160,7 @@ void XMLNodeReader::GetNextOpenTag(const String &xml,
     }
 }
 
-void XMLNodeReader::GetNextTag(const String &xml,
+void XMLMetaReader::GetNextTag(const String &xml,
                            int startPosition,
                            String *tag,
                            int *beginPosition,
@@ -154,10 +171,16 @@ void XMLNodeReader::GetNextTag(const String &xml,
     *endTagPosition = -1;
 
     int tagBegin = xml.IndexOf('<', startPosition);
-    if (tagBegin == -1) { return; }
+    if (tagBegin == -1)
+    {
+        return;
+    }
 
     int tagEnd = xml.IndexOf('>', tagBegin + 1);
-    if (tagEnd == -1) { return; }
+    if (tagEnd == -1)
+    {
+        return;
+    }
 
     if (tagBegin < tagEnd)
     {
@@ -167,43 +190,49 @@ void XMLNodeReader::GetNextTag(const String &xml,
     }
 }
 
-XMLNode XMLNodeReader::FromFile(const Path &filepath)
+MetaNode XMLMetaReader::FromFile(const Path &filepath)
 {
     if (!filepath.IsFile())
     {
         Debug_Error("Filepath " << filepath << " not found!");
-        return XMLNode();
+        return MetaNode();
     }
 
     String fileContents = File::GetContents(filepath);
-    return XMLNodeReader::FromString(fileContents);
+    return XMLMetaReader::FromString(fileContents);
 }
 
-XMLNode XMLNodeReader::FromString(const String &xml)
+MetaNode XMLMetaReader::FromString(const String &xml)
 {
-    if (xml.IsEmpty()) { return XMLNode(); }
+    if (xml.IsEmpty())
+    {
+        return MetaNode();
+    }
 
     //Read name
     String tag;
     int rootOpenTagBegin, rootOpenTagEnd;
-    XMLNodeReader::GetNextOpenTag(xml, 0, &tag, &rootOpenTagBegin, &rootOpenTagEnd);
-    if (rootOpenTagEnd == -1) { return XMLNode(); }
+    XMLMetaReader::GetNextOpenTag(xml, 0, &tag, &rootOpenTagBegin, &rootOpenTagEnd);
+    if (rootOpenTagEnd == -1)
+    {
+        return MetaNode();
+    }
 
     int tagNameEnd;
-    String tagName = XMLNodeReader::GetTagName(tag, nullptr, &tagNameEnd);
+    String tagName = XMLMetaReader::GetTagName(tag, nullptr, &tagNameEnd);
     int rootCloseTagBegin, rootCloseTagEnd;
-    XMLNodeReader::GetCorrespondingCloseTag(xml, rootOpenTagEnd, tagName,
+    XMLMetaReader::GetCorrespondingCloseTag(xml, rootOpenTagEnd, tagName,
                                         &rootCloseTagBegin, &rootCloseTagEnd);
 
-    XMLNode root;
-    root.SetTagName(tagName);
+    MetaNode root;
+    root.SetName(tagName);
 
     //Read attributes
     int attrEnd = tagNameEnd;
     while (attrEnd != -1)
     {
-        XMLAttribute attr;
-        XMLNodeReader::GetNextAttribute(tag, attrEnd + 1, &attr, &attrEnd);
+        MetaAttribute attr;
+        XMLMetaReader::GetNextAttribute(tag, attrEnd + 1, &attr, &attrEnd);
         if(attrEnd == -1) { break; }
         root.Set(attr.GetName(), attr.GetStringValue());
     }
@@ -215,18 +244,21 @@ XMLNode XMLNodeReader::FromString(const String &xml)
     {
         String innerTag;
         int childOpenTagBegin, childOpenTagEnd;
-        XMLNodeReader::GetNextOpenTag(innerXML, innerLastPos, &innerTag,
+        XMLMetaReader::GetNextOpenTag(innerXML, innerLastPos, &innerTag,
                                   &childOpenTagBegin, &childOpenTagEnd);
 
-        if (childOpenTagBegin == -1) { break; }
+        if (childOpenTagBegin == -1)
+        {
+            break;
+        }
 
-        String tagName = XMLNodeReader::GetTagName(innerTag);
+        String tagName = XMLMetaReader::GetTagName(innerTag);
         int childCloseTagBegin, childCloseTagEnd;
-        XMLNodeReader::GetCorrespondingCloseTag(innerXML, childOpenTagEnd, tagName,
+        XMLMetaReader::GetCorrespondingCloseTag(innerXML, childOpenTagEnd, tagName,
                                             &childCloseTagBegin, &childCloseTagEnd);
         String childXML = innerXML.SubString(childOpenTagBegin, childCloseTagEnd);
 
-        XMLNode child = XMLNodeReader::FromString(childXML);
+        MetaNode child = XMLMetaReader::FromString(childXML);
         root.AddChild(child);
 
         innerLastPos = childCloseTagEnd;

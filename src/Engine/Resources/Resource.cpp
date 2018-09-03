@@ -1,5 +1,6 @@
 #include "Bang/Resource.h"
 
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/ImportFilesManager.h"
 
@@ -99,36 +100,36 @@ String Resource::GetEmbeddedResourceName(GUID::GUIDType embeddedResGUID) const
     return "";
 }
 
-void Resource::ImportXML(const XMLNode &xmlInfo)
+void Resource::ImportMeta(const MetaNode &metaNode)
 {
-    Serializable::ImportXML(xmlInfo);
+    Serializable::ImportMeta(metaNode);
 
     for (const auto &pair : GetEmbeddedResources())
     {
         if (Resource *embeddedRes = pair.second.Get())
         {
             const String &embeddedResName = pair.first;
-            if (const XMLNode *embeddedResXMLInfo =
-                               xmlInfo.GetChild(embeddedResName))
+            if (const MetaNode *embeddedResMetaInfo =
+                                metaNode.GetChild(embeddedResName))
             {
-                embeddedRes->ImportXML(*embeddedResXMLInfo);
+                embeddedRes->ImportMeta(*embeddedResMetaInfo);
             }
         }
     }
 }
 
-void Resource::ExportXML(XMLNode *xmlInfo) const
+void Resource::ExportMeta(MetaNode *metaNode) const
 {
-    Serializable::ExportXML(xmlInfo);
+    Serializable::ExportMeta(metaNode);
 
     for (const auto &pair : GetEmbeddedResources())
     {
         if (Resource *embeddedRes = pair.second.Get())
         {
             const String &embeddedResName = pair.first;
-            XMLNode embeddedResXMLInfo = embeddedRes->GetXMLInfo();
-            embeddedResXMLInfo.SetTagName(embeddedResName);
-            xmlInfo->AddChild(embeddedResXMLInfo);
+            MetaNode embeddedResMeta = embeddedRes->GetMeta();
+            embeddedResMeta.SetName(embeddedResName);
+            metaNode->AddChild(embeddedResMeta);
         }
     }
 }
@@ -137,7 +138,7 @@ void Resource::Import_(const Path &resourceFilepath)
 {
     Import(resourceFilepath);
     Path importFilepath = ImportFilesManager::GetImportFilepath(resourceFilepath);
-    ImportXMLFromFile(importFilepath); // Import XML then
+    ImportMetaFromFile(importFilepath); // Import Meta then
 
     EventEmitter<IEventsResource>::PropagateToListeners(
                 &IEventsResource::OnImported, this);

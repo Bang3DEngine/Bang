@@ -4,7 +4,7 @@
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Renderer.h"
 #include "Bang/Material.h"
 #include "Bang/Transform.h"
@@ -385,78 +385,78 @@ void ReflectionProbe::CloneInto(ICloneable *clone) const
     rpClone->SetCamerasClearColor( rpClone->GetCamerasClearColor() );
 }
 
-void ReflectionProbe::ImportXML(const XMLNode &xmlInfo)
+void ReflectionProbe::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Size"))
+    if (metaNode.Contains("Size"))
     {
-        SetSize(xmlInfo.Get<Vector3>("Size"));
+        SetSize(metaNode.Get<Vector3>("Size"));
     }
 
-    if (xmlInfo.Contains("IsBoxed"))
+    if (metaNode.Contains("IsBoxed"))
     {
-        SetIsBoxed(xmlInfo.Get<bool>("IsBoxed"));
+        SetIsBoxed(metaNode.Get<bool>("IsBoxed"));
     }
 
-    if (xmlInfo.Contains("RenderSize"))
+    if (metaNode.Contains("RenderSize"))
     {
-        SetRenderSize(xmlInfo.Get<int>("RenderSize"));
+        SetRenderSize(metaNode.Get<int>("RenderSize"));
     }
 
-    if (xmlInfo.Contains("FilterForIBL"))
+    if (metaNode.Contains("FilterForIBL"))
     {
-        SetFilterForIBL(xmlInfo.Get<bool>("FilterForIBL"));
+        SetFilterForIBL(metaNode.Get<bool>("FilterForIBL"));
     }
 
-    if (xmlInfo.Contains("RestTimeSeconds"))
+    if (metaNode.Contains("RestTimeSeconds"))
     {
-        SetRestTimeSeconds(xmlInfo.Get<float>("RestTimeSeconds"));
+        SetRestTimeSeconds(metaNode.Get<float>("RestTimeSeconds"));
     }
 
-    if (xmlInfo.Contains("CamerasZNear"))
+    if (metaNode.Contains("CamerasZNear"))
     {
-        SetCamerasZNear(xmlInfo.Get<float>("CamerasZNear"));
+        SetCamerasZNear(metaNode.Get<float>("CamerasZNear"));
     }
 
-    if (xmlInfo.Contains("CamerasZFar"))
+    if (metaNode.Contains("CamerasZFar"))
     {
-        SetCamerasZFar(xmlInfo.Get<float>("CamerasZFar"));
+        SetCamerasZFar(metaNode.Get<float>("CamerasZFar"));
     }
 
-    if (xmlInfo.Contains("CamerasClearColor"))
+    if (metaNode.Contains("CamerasClearColor"))
     {
-        SetCamerasClearColor(xmlInfo.Get<Color>("CamerasClearColor"));
+        SetCamerasClearColor(metaNode.Get<Color>("CamerasClearColor"));
     }
 
-    if (xmlInfo.Contains("CamerasClearMode"))
+    if (metaNode.Contains("CamerasClearMode"))
     {
         SetCamerasClearMode( SCAST<Camera::ClearMode>(
-                                 xmlInfo.Get<int>("CamerasClearMode")) );
+                                 metaNode.Get<int>("CamerasClearMode")) );
     }
 
-    if (xmlInfo.Contains("CamerasSkyBoxTexture"))
+    if (metaNode.Contains("CamerasSkyBoxTexture"))
     {
         SetCamerasSkyBoxTexture(Resources::Load<TextureCubeMap>(
-                                xmlInfo.Get<GUID>("CamerasSkyBoxTexture")).Get());
+                                metaNode.Get<GUID>("CamerasSkyBoxTexture")).Get());
     }
 }
 
-void ReflectionProbe::ExportXML(XMLNode *xmlInfo) const
+void ReflectionProbe::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Size", GetSize());
-    xmlInfo->Set("IsBoxed", GetIsBoxed());
-    xmlInfo->Set("RenderSize", GetRenderSize());
-    xmlInfo->Set("FilterForIBL", GetFilterForIBL());
-    xmlInfo->Set("RestTimeSeconds", GetRestTimeSeconds());
+    metaNode->Set("Size", GetSize());
+    metaNode->Set("IsBoxed", GetIsBoxed());
+    metaNode->Set("RenderSize", GetRenderSize());
+    metaNode->Set("FilterForIBL", GetFilterForIBL());
+    metaNode->Set("RestTimeSeconds", GetRestTimeSeconds());
 
-    xmlInfo->Set("CamerasZFar", GetCamerasZFar());
-    xmlInfo->Set("CamerasZNear", GetCamerasZNear());
-    xmlInfo->Set("CamerasClearColor", GetCamerasClearColor());
-    xmlInfo->Set("CamerasClearMode", SCAST<int>(GetCamerasClearMode()));
-    xmlInfo->Set("CamerasSkyBoxTexture",
+    metaNode->Set("CamerasZFar", GetCamerasZFar());
+    metaNode->Set("CamerasZNear", GetCamerasZNear());
+    metaNode->Set("CamerasClearColor", GetCamerasClearColor());
+    metaNode->Set("CamerasClearMode", SCAST<int>(GetCamerasClearMode()));
+    metaNode->Set("CamerasSkyBoxTexture",
              GetCamerasSkyBoxTexture() ? GetCamerasSkyBoxTexture()->GetGUID() :
                                          GUID::Empty());
 }

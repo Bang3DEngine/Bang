@@ -149,12 +149,12 @@ void Model::Import(const Path &modelFilepath)
     }
 }
 
-void Model::ImportXML(const XMLNode &xmlInfo)
+void Model::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 }
 
-void Model::ExportXML(XMLNode *xmlInfo) const
+void Model::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 }

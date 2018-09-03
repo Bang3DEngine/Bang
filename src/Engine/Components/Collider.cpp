@@ -3,7 +3,7 @@
 #include "PxPhysicsAPI.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
@@ -206,35 +206,35 @@ void Collider::CloneInto(ICloneable *clone) const
     colliderClone->SetPhysicsMaterial( GetSharedPhysicsMaterial() );
 }
 
-void Collider::ImportXML(const XMLNode &xmlInfo)
+void Collider::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("IsTrigger"))
+    if (metaNode.Contains("IsTrigger"))
     {
-        SetIsTrigger( xmlInfo.Get<bool>("IsTrigger") );
+        SetIsTrigger( metaNode.Get<bool>("IsTrigger") );
     }
 
-    if (xmlInfo.Contains("Center"))
+    if (metaNode.Contains("Center"))
     {
-        SetCenter( xmlInfo.Get<Vector3>("Center") );
+        SetCenter( metaNode.Get<Vector3>("Center") );
     }
 
-    if (xmlInfo.Contains("PhysicsMaterial"))
+    if (metaNode.Contains("PhysicsMaterial"))
     {
         RH<PhysicsMaterial> phMat = Resources::Load<PhysicsMaterial>(
-                                      xmlInfo.Get<GUID>("PhysicsMaterial"));
+                                      metaNode.Get<GUID>("PhysicsMaterial"));
         SetPhysicsMaterial(phMat.Get());
     }
 }
 
-void Collider::ExportXML(XMLNode *xmlInfo) const
+void Collider::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Center", GetCenter());
-    xmlInfo->Set("IsTrigger", GetIsTrigger());
-    xmlInfo->Set("PhysicsMaterial",
+    metaNode->Set("Center", GetCenter());
+    metaNode->Set("IsTrigger", GetIsTrigger());
+    metaNode->Set("PhysicsMaterial",
                  GetSharedPhysicsMaterial() ?
                      GetSharedPhysicsMaterial()->GetGUID() : GUID::Empty());
 }

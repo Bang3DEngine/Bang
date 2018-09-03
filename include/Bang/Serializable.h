@@ -20,17 +20,17 @@ public:
     virtual ~Serializable();
     Serializable(const Serializable &rhs);
 
-    void ImportXML(const String &xmlInfoString);
+    void ImportMeta(const String &metaNodeString);
 
-    virtual void ImportXML(const XMLNode &xmlInfo);
-    virtual void ExportXML(XMLNode *xmlInfo) const;
+    virtual void ImportMeta(const MetaNode &metaNode);
+    virtual void ExportMeta(MetaNode *metaNode) const;
 
-    virtual bool ImportXMLFromFile(const Path &path);
-    virtual bool ExportXMLToFile(const Path &path) const;
+    virtual bool ImportMetaFromFile(const Path &path);
+    virtual bool ExportMetaToFile(const Path &path) const;
 
     virtual String GetClassName() const = 0;
 
-    XMLNode GetXMLInfo() const;
+    MetaNode GetMeta() const;
     String GetSerializedString() const;
 
     HideFlags& GetHideFlags();

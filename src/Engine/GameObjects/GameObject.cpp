@@ -8,7 +8,7 @@
 #include "Bang/Scene.h"
 #include "Bang/Sphere.h"
 #include "Bang/Camera.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Renderer.h"
 #include "Bang/Material.h"
 #include "Bang/Component.h"
@@ -853,28 +853,28 @@ String GameObject::ToString() const
     return oss.str();
 }
 
-void GameObject::ImportXML(const XMLNode &xmlInfo)
+void GameObject::ImportMeta(const MetaNode &metaNode)
 {
-    Serializable::ImportXML(xmlInfo);
+    Serializable::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Enabled"))
+    if (metaNode.Contains("Enabled"))
     {
-        SetEnabled( xmlInfo.Get<bool>("Enabled") );
+        SetEnabled( metaNode.Get<bool>("Enabled") );
     }
 
-    if (xmlInfo.Contains("Visible"))
+    if (metaNode.Contains("Visible"))
     {
-        SetVisible( xmlInfo.Get<bool>("Visible") );
+        SetVisible( metaNode.Get<bool>("Visible") );
     }
 
-    if (xmlInfo.Contains("Name"))
+    if (metaNode.Contains("Name"))
     {
-        SetName( xmlInfo.Get<String>("Name") );
+        SetName( metaNode.Get<String>("Name") );
     }
 
-    if (xmlInfo.Contains("DontDestroyOnLoad"))
+    if (metaNode.Contains("DontDestroyOnLoad"))
     {
-        SetDontDestroyOnLoad( xmlInfo.Get<bool>("DontDestroyOnLoad") );
+        SetDontDestroyOnLoad( metaNode.Get<bool>("DontDestroyOnLoad") );
     }
 
     USet<GameObject*> childrenToRemove;
@@ -889,10 +889,10 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
         componentsToRemove.Add(comp);
     }
 
-    for (const XMLNode& xmlChild : xmlInfo.GetChildren() )
+    for (const MetaNode& childMeta : metaNode.GetChildren() )
     {
-        const GUID guid = xmlChild.Get<GUID>("GUID");
-        const String& tagName = xmlChild.GetTagName();
+        const GUID guid = childMeta.Get<GUID>("GUID");
+        const String& tagName = childMeta.GetName();
 
         if (tagName == GameObject::GetClassNameStatic())
         {
@@ -917,7 +917,7 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
                 child->SetParent(nullptr); // To reorder
             }
             child->SetParent(this);
-            child->ImportXML(xmlChild);
+            child->ImportMeta(childMeta);
         }
         else
         {
@@ -942,11 +942,11 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
                 RemoveComponent(comp); // To reorder
                 AddComponent(comp);
             }
-            comp->ImportXML(xmlChild);
+            comp->ImportMeta(childMeta);
         }
     }
 
-    // Remove non existing gameObjects and components in xml
+    // Remove non existing gameObjects and components in meta
     for (GameObject *childToRemove : childrenToRemove)
     {
         GameObject::DestroyImmediate(childToRemove);
@@ -957,22 +957,22 @@ void GameObject::ImportXML(const XMLNode &xmlInfo)
     }
 }
 
-void GameObject::ExportXML(XMLNode *xmlInfo) const
+void GameObject::ExportMeta(MetaNode *metaNode) const
 {
-    Serializable::ExportXML(xmlInfo);
+    Serializable::ExportMeta(metaNode);
 
-    xmlInfo->Set("Enabled", IsEnabled());
-    xmlInfo->Set("Visible", IsVisible());
-    xmlInfo->Set("Name", GetName());
-    xmlInfo->Set("DontDestroyOnLoad", IsDontDestroyOnLoad());
+    metaNode->Set("Enabled", IsEnabled());
+    metaNode->Set("Visible", IsVisible());
+    metaNode->Set("Name", GetName());
+    metaNode->Set("DontDestroyOnLoad", IsDontDestroyOnLoad());
 
     for (Component *c : GetComponents())
     {
         if (c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
-            XMLNode xmlComp;
-            c->ExportXML(&xmlComp);
-            xmlInfo->AddChild(xmlComp);
+            MetaNode compMeta;
+            c->ExportMeta(&compMeta);
+            metaNode->AddChild(compMeta);
         }
     }
 
@@ -980,9 +980,9 @@ void GameObject::ExportXML(XMLNode *xmlInfo) const
     {
         if (child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
-            XMLNode xmlChild;
-            child->ExportXML(&xmlChild);
-            xmlInfo->AddChild(xmlChild);
+            MetaNode childMeta;
+            child->ExportMeta(&childMeta);
+            metaNode->AddChild(childMeta);
         }
     }
 }

@@ -5,6 +5,7 @@
 #include "Bang/Mesh.h"
 #include "Bang/ModelIO.h"
 #include "Bang/Material.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
@@ -109,19 +110,19 @@ void MeshRenderer::CloneInto(ICloneable *clone) const
     mr->SetMesh( GetSharedMesh() );
 }
 
-void MeshRenderer::ImportXML(const XMLNode &xmlInfo)
+void MeshRenderer::ImportMeta(const MetaNode &metaNode)
 {
-    Renderer::ImportXML(xmlInfo);
-    if (xmlInfo.Contains("Mesh"))
+    Renderer::ImportMeta(metaNode);
+    if (metaNode.Contains("Mesh"))
     {
-        RH<Mesh> mesh = Resources::Load<Mesh>(xmlInfo.Get<GUID>("Mesh"));
+        RH<Mesh> mesh = Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh"));
         SetMesh( mesh.Get() );
     }
 }
 
-void MeshRenderer::ExportXML(XMLNode *xmlInfo) const
+void MeshRenderer::ExportMeta(MetaNode *metaNode) const
 {
-    Renderer::ExportXML(xmlInfo);
-    xmlInfo->Set("Mesh", GetSharedMesh() ? GetSharedMesh()->GetGUID() :
+    Renderer::ExportMeta(metaNode);
+    metaNode->Set("Mesh", GetSharedMesh() ? GetSharedMesh()->GetGUID() :
                                            GUID::Empty());
 }

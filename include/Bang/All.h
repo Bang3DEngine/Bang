@@ -222,8 +222,8 @@
 #include "Bang/Window.h"
 #include "Bang/WindowManager.h"
 #include "Bang/WindowManager.tcc"
-#include "Bang/XMLAttribute.h"
-#include "Bang/XMLNode.h"
-#include "Bang/XMLNodeReader.h"
+#include "Bang/MetaAttribute.h"
+#include "Bang/MetaNode.h"
+#include "Bang/XMLMetaReader.h"
 
 #endif //ALL_H

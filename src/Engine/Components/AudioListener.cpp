@@ -2,7 +2,7 @@
 
 #include <AL/al.h>
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 
@@ -23,14 +23,14 @@ void AudioListener::OnUpdate()
     UpdateALProperties();
 }
 
-void AudioListener::ImportXML(const XMLNode &xmlInfo)
+void AudioListener::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 }
 
-void AudioListener::ExportXML(XMLNode *xmlInfo) const
+void AudioListener::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 }
 
 void AudioListener::UpdateALProperties() const

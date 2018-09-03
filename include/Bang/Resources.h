@@ -10,7 +10,6 @@
 #include "Bang/TypeMap.h"
 #include "Bang/Resource.h"
 #include "Bang/Serializable.h"
-#include "Bang/XMLNodeReader.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/ImportFilesManager.h"
 
@@ -51,7 +50,7 @@ public:
                                         Resource *parentResource,
                                         const String &embeddedResourceName,
                                         const Args&... args);
-    static void CreateResourceXMLAndImportFile(const Resource *resource,
+    static void CreateResourceMetaAndImportFile(const Resource *resource,
                                                const Path &exportFilepath);
 
     template <class ResourceClass = Resource>

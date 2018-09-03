@@ -1,6 +1,6 @@
 #include "Bang/Animation.h"
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 
 USING_NAMESPACE_BANG
 
@@ -306,26 +306,26 @@ void Animation::Import(const Path &animationFilepath)
     (void) animationFilepath;
 }
 
-void Animation::ImportXML(const XMLNode &xmlInfo)
+void Animation::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("WrapMode"))
+    if (metaNode.Contains("WrapMode"))
     {
-        SetWrapMode( SCAST<AnimationWrapMode>(xmlInfo.Get<int>("WrapMode")) );
+        SetWrapMode( SCAST<AnimationWrapMode>(metaNode.Get<int>("WrapMode")) );
     }
 
-    if (xmlInfo.Contains("Speed"))
+    if (metaNode.Contains("Speed"))
     {
-        SetSpeed( xmlInfo.Get<float>("Speed") );
+        SetSpeed( metaNode.Get<float>("Speed") );
     }
 }
 
-void Animation::ExportXML(XMLNode *xmlInfo) const
+void Animation::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
-    xmlInfo->Set("Speed", SCAST<float>(GetSpeed()));
-    xmlInfo->Set("WrapMode", SCAST<int>(GetWrapMode()));
+    metaNode->Set("Speed", SCAST<float>(GetSpeed()));
+    metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));
 }
 

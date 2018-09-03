@@ -10,7 +10,7 @@ FORWARD NAMESPACE_BANG_END
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Library;
-FORWARD class XMLNode;
+FORWARD class MetaNode;
 FORWARD class Behaviour;
 
 class BehaviourContainer : public Component
@@ -43,8 +43,8 @@ private:
     virtual void CloneInto(ICloneable *clone) const override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
     friend class ComponentFactory;
 };

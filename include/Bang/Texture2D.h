@@ -39,8 +39,8 @@ public:
     GL::BindTarget GetGLBindTarget() const override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
     // Resource
     virtual void Import(const Path &imageFilepath) override;

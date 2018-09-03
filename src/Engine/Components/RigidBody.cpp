@@ -1,7 +1,7 @@
 #include "Bang/RigidBody.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 
 USING_NAMESPACE_BANG
 
@@ -247,52 +247,52 @@ void RigidBody::CloneInto(ICloneable *clone) const
     rbClone->SetConstraints( GetConstraints() );
 }
 
-void RigidBody::ImportXML(const XMLNode &xmlInfo)
+void RigidBody::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Mass"))
+    if (metaNode.Contains("Mass"))
     {
-        SetMass( xmlInfo.Get<float>("Mass") );
+        SetMass( metaNode.Get<float>("Mass") );
     }
 
-    if (xmlInfo.Contains("Drag"))
+    if (metaNode.Contains("Drag"))
     {
-        SetDrag( xmlInfo.Get<float>("Drag") );
+        SetDrag( metaNode.Get<float>("Drag") );
     }
 
-    if (xmlInfo.Contains("AngularDrag"))
+    if (metaNode.Contains("AngularDrag"))
     {
-        SetAngularDrag( xmlInfo.Get<float>("AngularDrag") );
+        SetAngularDrag( metaNode.Get<float>("AngularDrag") );
     }
 
-    if (xmlInfo.Contains("UseGravity"))
+    if (metaNode.Contains("UseGravity"))
     {
-        SetUseGravity( xmlInfo.Get<bool>("UseGravity") );
+        SetUseGravity( metaNode.Get<bool>("UseGravity") );
     }
 
-    if (xmlInfo.Contains("IsKinematic"))
+    if (metaNode.Contains("IsKinematic"))
     {
-        SetIsKinematic( xmlInfo.Get<bool>("IsKinematic") );
+        SetIsKinematic( metaNode.Get<bool>("IsKinematic") );
     }
 
-    if (xmlInfo.Contains("Constraints"))
+    if (metaNode.Contains("Constraints"))
     {
         SetConstraints( SCAST<RigidBodyConstraints>(
-                                    xmlInfo.Get<int>("Constraints")) );
+                                    metaNode.Get<int>("Constraints")) );
     }
 }
 
-void RigidBody::ExportXML(XMLNode *xmlInfo) const
+void RigidBody::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Mass",        GetMass());
-    xmlInfo->Set("Drag",        GetDrag());
-    xmlInfo->Set("AngularDrag", GetAngularDrag());
-    xmlInfo->Set("UseGravity",  GetUseGravity());
-    xmlInfo->Set("IsKinematic", GetIsKinematic());
-    xmlInfo->Set("Constraints", GetConstraints().GetValue());
+    metaNode->Set("Mass",        GetMass());
+    metaNode->Set("Drag",        GetDrag());
+    metaNode->Set("AngularDrag", GetAngularDrag());
+    metaNode->Set("UseGravity",  GetUseGravity());
+    metaNode->Set("IsKinematic", GetIsKinematic());
+    metaNode->Set("Constraints", GetConstraints().GetValue());
 }
 
 void RigidBody::UpdatePxRigidDynamicValues()

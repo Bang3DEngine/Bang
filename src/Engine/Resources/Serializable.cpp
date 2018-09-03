@@ -8,7 +8,7 @@
 #include "Bang/Path.h"
 #include "Bang/File.h"
 #include "Bang/String.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GUIDManager.h"
 
 USING_NAMESPACE_BANG
@@ -27,50 +27,50 @@ Serializable::Serializable(const Serializable &)
     // Don't copy GUID, intentionally left in blank
 }
 
-XMLNode Serializable::GetXMLInfo() const
+MetaNode Serializable::GetMeta() const
 {
-    XMLNode xmlInfo;
-    ExportXML(&xmlInfo);
-    return xmlInfo;
+    MetaNode metaNode;
+    ExportMeta(&metaNode);
+    return metaNode;
 }
 
 String Serializable::GetSerializedString() const
 {
-    XMLNode xmlInfo;
-    ExportXML(&xmlInfo);
-    return xmlInfo.ToString();
+    MetaNode metaNode;
+    ExportMeta(&metaNode);
+    return metaNode.ToString();
 }
 
-void Serializable::ImportXML(const String &xmlInfoString)
+void Serializable::ImportMeta(const String &metaNodeString)
 {
-    XMLNode xmlInfo = XMLNode::FromString(xmlInfoString);
-    ImportXML(xmlInfo);
+    MetaNode metaNode = MetaNode::FromString(metaNodeString);
+    ImportMeta(metaNode);
 }
 
-void Serializable::ImportXML(const XMLNode &xmlInfo)
+void Serializable::ImportMeta(const MetaNode &metaNode)
 {
-    if (xmlInfo.Contains("GUID"))
-    { SetGUID(xmlInfo.Get<GUID>("GUID")); }
+    if (metaNode.Contains("GUID"))
+    { SetGUID(metaNode.Get<GUID>("GUID")); }
 }
 
-void Serializable::ExportXML(XMLNode *xmlInfo) const
+void Serializable::ExportMeta(MetaNode *metaNode) const
 {
-    xmlInfo->SetTagName( GetClassName() );
-    xmlInfo->Set<GUID>( "GUID", GetGUID() );
+    metaNode->SetName( GetClassName() );
+    metaNode->Set<GUID>( "GUID", GetGUID() );
 }
 
-bool Serializable::ImportXMLFromFile(const Path &path)
+bool Serializable::ImportMetaFromFile(const Path &path)
 {
     if (path.Exists())
     {
         String fileContents = File::GetContents(path);
-        ImportXML(fileContents);
+        ImportMeta(fileContents);
         return true;
     }
     return false;
 }
 
-bool Serializable::ExportXMLToFile(const Path &path) const
+bool Serializable::ExportMetaToFile(const Path &path) const
 {
     File::Write(path, GetSerializedString());
     return true;

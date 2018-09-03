@@ -1,7 +1,7 @@
 #include "Bang/UIContentSizeFitter.h"
 
 #include "Bang/AARect.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/UIRenderer.h"
 #include "Bang/GameObject.h"
 #include "Bang/RectTransform.h"
@@ -77,23 +77,23 @@ LayoutSizeType UIContentSizeFitter::GetVerticalSizeType() const
     return m_verticalSizeType;
 }
 
-void UIContentSizeFitter::ImportXML(const XMLNode &xmlInfo)
+void UIContentSizeFitter::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("HorizontalSizeType"))
-    { SetHorizontalSizeType( xmlInfo.Get<LayoutSizeType>("HorizontalSizeType") ); }
+    if (metaNode.Contains("HorizontalSizeType"))
+    { SetHorizontalSizeType( metaNode.Get<LayoutSizeType>("HorizontalSizeType") ); }
 
-    if (xmlInfo.Contains("VerticalSizeType"))
-    { SetVerticalSizeType( xmlInfo.Get<LayoutSizeType>("VerticalSizeType") ); }
+    if (metaNode.Contains("VerticalSizeType"))
+    { SetVerticalSizeType( metaNode.Get<LayoutSizeType>("VerticalSizeType") ); }
 }
 
-void UIContentSizeFitter::ExportXML(XMLNode *xmlInfo) const
+void UIContentSizeFitter::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("HorizontalSizeType", GetHorizontalSizeType());
-    xmlInfo->Set("VerticalSizeType", GetVerticalSizeType());
+    metaNode->Set("HorizontalSizeType", GetHorizontalSizeType());
+    metaNode->Set("VerticalSizeType", GetVerticalSizeType());
 }
 
 void UIContentSizeFitter::OnInvalidated()

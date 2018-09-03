@@ -6,7 +6,7 @@
 #include "Bang/Input.h"
 #include "Bang/AARect.h"
 #include "Bang/Window.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
@@ -564,36 +564,36 @@ void RectTransform::CloneInto(ICloneable *clone) const
     rt->SetPivotPosition( GetPivotPosition() );
 }
 
-void RectTransform::ImportXML(const XMLNode &xmlInfo)
+void RectTransform::ImportMeta(const MetaNode &metaNode)
 {
-    Transform::ImportXML(xmlInfo);
+    Transform::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("MarginLeftBot"))
+    if (metaNode.Contains("MarginLeftBot"))
     {
-        SetMargins (xmlInfo.Get<Vector2i>("MarginLeftBot"),
-                    xmlInfo.Get<Vector2i>("MarginRightTop"));
+        SetMargins (metaNode.Get<Vector2i>("MarginLeftBot"),
+                    metaNode.Get<Vector2i>("MarginRightTop"));
     }
 
-    if (xmlInfo.Contains("PivotPosition"))
-    { SetPivotPosition( xmlInfo.Get<Vector2>("PivotPosition") ); }
+    if (metaNode.Contains("PivotPosition"))
+    { SetPivotPosition( metaNode.Get<Vector2>("PivotPosition") ); }
 
-    if (xmlInfo.Contains("AnchorMin"))
-    { SetAnchorMin( xmlInfo.Get<Vector2>("AnchorMin") ); }
+    if (metaNode.Contains("AnchorMin"))
+    { SetAnchorMin( metaNode.Get<Vector2>("AnchorMin") ); }
 
-    if (xmlInfo.Contains("AnchorMax"))
-    { SetAnchorMax( xmlInfo.Get<Vector2>("AnchorMax") ); }
+    if (metaNode.Contains("AnchorMax"))
+    { SetAnchorMax( metaNode.Get<Vector2>("AnchorMax") ); }
 }
 
-void RectTransform::ExportXML(XMLNode *xmlInfo) const
+void RectTransform::ExportMeta(MetaNode *metaNode) const
 {
-    Transform::ExportXML(xmlInfo);
+    Transform::ExportMeta(metaNode);
 
-    xmlInfo->Set("MarginLeftBot",  GetMarginLeftBot() );
-    xmlInfo->Set("MarginRightTop", GetMarginRightTop());
+    metaNode->Set("MarginLeftBot",  GetMarginLeftBot() );
+    metaNode->Set("MarginRightTop", GetMarginRightTop());
 
-    xmlInfo->Set("PivotPosition",  GetPivotPosition());
-    xmlInfo->Set("AnchorMin",      GetAnchorMin()    );
-    xmlInfo->Set("AnchorMax",      GetAnchorMax()    );
+    metaNode->Set("PivotPosition",  GetPivotPosition());
+    metaNode->Set("AnchorMin",      GetAnchorMin()    );
+    metaNode->Set("AnchorMax",      GetAnchorMax()    );
 }
 
 void RectTransform::WarnWrongAnchorsIfNeeded()

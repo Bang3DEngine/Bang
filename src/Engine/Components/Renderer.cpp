@@ -8,6 +8,7 @@
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/Resources.h"
 #include "Bang/GLUniforms.h"
@@ -227,39 +228,51 @@ void Renderer::CloneInto(ICloneable *clone) const
     r->SetUseReflectionProbes( GetUseReflectionProbes() );
 }
 
-void Renderer::ImportXML(const XMLNode &xml)
+void Renderer::ImportMeta(const MetaNode &meta)
 {
-    Component::ImportXML(xml);
+    Component::ImportMeta(meta);
 
-    if (xml.Contains("DepthMask"))
-    { SetDepthMask( xml.Get<bool>("DepthMask") ); }
+    if (meta.Contains("DepthMask"))
+    {
+        SetDepthMask( meta.Get<bool>("DepthMask") );
+    }
 
-    if (xml.Contains("Visible"))
-    { SetVisible( xml.Get<bool>("Visible") ); }
+    if (meta.Contains("Visible"))
+    {
+        SetVisible( meta.Get<bool>("Visible") );
+    }
 
-    if (xml.Contains("Material"))
-    { SetMaterial(Resources::Load<Material>(xml.Get<GUID>("Material")).Get()); }
+    if (meta.Contains("Material"))
+    {
+        SetMaterial(Resources::Load<Material>(meta.Get<GUID>("Material")).Get());
+    }
 
-    if (xml.Contains("UseReflectionProbes"))
-    { SetUseReflectionProbes(xml.Get<bool>("UseReflectionProbes")); }
+    if (meta.Contains("UseReflectionProbes"))
+    {
+        SetUseReflectionProbes(meta.Get<bool>("UseReflectionProbes"));
+    }
 
-    if (xml.Contains("CastsShadows"))
-    { SetCastsShadows(xml.Get<bool>("CastsShadows")); }
+    if (meta.Contains("CastsShadows"))
+    {
+        SetCastsShadows(meta.Get<bool>("CastsShadows"));
+    }
 
-    if (xml.Contains("ReceivesShadows"))
-    { SetReceivesShadows(xml.Get<bool>("ReceivesShadows")); }
+    if (meta.Contains("ReceivesShadows"))
+    {
+        SetReceivesShadows(meta.Get<bool>("ReceivesShadows"));
+    }
 }
 
-void Renderer::ExportXML(XMLNode *xmlInfo) const
+void Renderer::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Visible", IsVisible());
-    xmlInfo->Set("DepthMask", GetDepthMask());
+    metaNode->Set("Visible", IsVisible());
+    metaNode->Set("DepthMask", GetDepthMask());
 
     Material* sMat = GetSharedMaterial();
-    xmlInfo->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
-    xmlInfo->Set("CastsShadows", GetCastsShadows());
-    xmlInfo->Set("ReceivesShadows", GetReceivesShadows());
-    xmlInfo->Set("UseReflectionProbes", GetUseReflectionProbes());
+    metaNode->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
+    metaNode->Set("CastsShadows", GetCastsShadows());
+    metaNode->Set("ReceivesShadows", GetReceivesShadows());
+    metaNode->Set("UseReflectionProbes", GetUseReflectionProbes());
 }

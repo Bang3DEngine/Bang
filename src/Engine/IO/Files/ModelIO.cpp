@@ -28,6 +28,7 @@
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Material.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/Texture2D.h"
@@ -35,7 +36,6 @@
 #include "Bang/GameObject.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/XMLNodeReader.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG

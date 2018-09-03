@@ -1,7 +1,7 @@
 #include "Bang/CapsuleCollider.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 
@@ -80,34 +80,34 @@ void CapsuleCollider::CloneInto(ICloneable *clone) const
     ccClone->SetHeight( GetHeight() );
 }
 
-void CapsuleCollider::ImportXML(const XMLNode &xmlInfo)
+void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
 {
-    Collider::ImportXML(xmlInfo);
+    Collider::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Radius"))
+    if (metaNode.Contains("Radius"))
     {
-        SetRadius( xmlInfo.Get<float>("Radius") );
+        SetRadius( metaNode.Get<float>("Radius") );
     }
 
-    if (xmlInfo.Contains("Height"))
+    if (metaNode.Contains("Height"))
     {
-        SetHeight( xmlInfo.Get<float>("Height") );
+        SetHeight( metaNode.Get<float>("Height") );
     }
 
-    if (xmlInfo.Contains("Axis"))
+    if (metaNode.Contains("Axis"))
     {
-        SetAxis( SCAST<Axis3D>( xmlInfo.Get<int>("Axis") ) );
+        SetAxis( SCAST<Axis3D>( metaNode.Get<int>("Axis") ) );
     }
 
 }
 
-void CapsuleCollider::ExportXML(XMLNode *xmlInfo) const
+void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
 {
-    Collider::ExportXML(xmlInfo);
+    Collider::ExportMeta(metaNode);
 
-    xmlInfo->Set("Radius", GetRadius());
-    xmlInfo->Set("Height", GetHeight());
-    xmlInfo->Set("Axis3D", SCAST<int>(GetAxis()));
+    metaNode->Set("Radius", GetRadius());
+    metaNode->Set("Height", GetHeight());
+    metaNode->Set("Axis3D", SCAST<int>(GetAxis()));
 }
 
 Quaternion CapsuleCollider::GetInternalRotation() const

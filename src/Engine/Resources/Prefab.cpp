@@ -4,7 +4,7 @@
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/SceneManager.h"
-#include "Bang/XMLNodeReader.h"
+#include "Bang/XMLMetaReader.h"
 #include "Bang/GameObjectFactory.h"
 
 USING_NAMESPACE_BANG
@@ -19,9 +19,9 @@ Prefab::Prefab(GameObject *go)
     SetGameObject(go);
 }
 
-Prefab::Prefab(const String &gameObjectXMLInfoContent)
+Prefab::Prefab(const String &gameObjectMetaInfoContent)
 {
-    m_gameObjectXMLInfoContent = gameObjectXMLInfoContent;
+    m_gameObjectMetaInfoContent = gameObjectMetaInfoContent;
 }
 
 Prefab::~Prefab()
@@ -41,8 +41,8 @@ GameObject *Prefab::InstantiateRaw() const
 
     if (!GetInfoContent().IsEmpty())
     {
-        XMLNode xmlInfo = XMLNodeReader::FromString(GetInfoContent());
-        go->ImportXML(xmlInfo);
+        MetaNode metaNode = XMLMetaReader::FromString(GetInfoContent());
+        go->ImportMeta(metaNode);
     }
     return go;
 }
@@ -51,35 +51,38 @@ void Prefab::SetGameObject(GameObject *go)
 {
     if (go)
     {
-        m_gameObjectXMLInfoContent = go->GetSerializedString();
+        m_gameObjectMetaInfoContent = go->GetSerializedString();
     }
-    else { m_gameObjectXMLInfoContent = ""; }
+    else
+    {
+        m_gameObjectMetaInfoContent = "";
+    }
 }
 
 const String &Prefab::GetInfoContent() const
 {
-    return m_gameObjectXMLInfoContent;
+    return m_gameObjectMetaInfoContent;
 }
 
 void Prefab::Import(const Path &prefabFilepath)
 {
-    ImportXMLFromFile( ImportFilesManager::GetImportFilepath(prefabFilepath) );
+    ImportMetaFromFile( ImportFilesManager::GetImportFilepath(prefabFilepath) );
 }
 
-void Prefab::ImportXML(const XMLNode &xmlInfo)
+void Prefab::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 
-    String newXMLInfo = xmlInfo.ToString();
-    if (newXMLInfo != GetInfoContent())
+    String newMetaInfo = metaNode.ToString();
+    if (newMetaInfo != GetInfoContent())
     {
-        m_gameObjectXMLInfoContent = newXMLInfo;
+        m_gameObjectMetaInfoContent = newMetaInfo;
     }
 }
 
-void Prefab::ExportXML(XMLNode *xmlInfo) const
+void Prefab::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
-    *xmlInfo = XMLNodeReader::FromString(GetInfoContent());
+    *metaNode = XMLMetaReader::FromString(GetInfoContent());
 }

@@ -4,7 +4,7 @@
 #include "Bang/Font.h"
 #include "Bang/Scene.h"
 #include "Bang/Camera.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Material.h"
 #include "Bang/Transform.h"
 #include "Bang/Texture2D.h"
@@ -341,51 +341,69 @@ void UITextRenderer::CloneInto(ICloneable *clone) const
     text->SetVerticalAlign( GetVerticalAlignment() );
 }
 
-void UITextRenderer::ImportXML(const XMLNode &xml)
+void UITextRenderer::ImportMeta(const MetaNode &meta)
 {
-    UIRenderer::ImportXML(xml);
+    UIRenderer::ImportMeta(meta);
 
-    if (xml.Contains("Font"))
-    { SetFont(Resources::Load<Font>(xml.Get<GUID>("Font")).Get()); }
+    if (meta.Contains("Font"))
+    {
+        SetFont(Resources::Load<Font>(meta.Get<GUID>("Font")).Get());
+    }
 
-    if (xml.Contains("Content"))
-    { SetContent(xml.Get<String>("Content")); }
+    if (meta.Contains("Content"))
+    {
+        SetContent(meta.Get<String>("Content"));
+    }
 
-    if (xml.Contains("TextSize"))
-    { SetTextSize(xml.Get<float>("TextSize")); }
+    if (meta.Contains("TextSize"))
+    {
+        SetTextSize(meta.Get<float>("TextSize"));
+    }
 
-    if (xml.Contains("SpacingMultiplier"))
-    { SetSpacingMultiplier(xml.Get<Vector2>("SpacingMultiplier")); }
+    if (meta.Contains("SpacingMultiplier"))
+    {
+        SetSpacingMultiplier(meta.Get<Vector2>("SpacingMultiplier"));
+    }
 
-    if (xml.Contains("Kerning"))
-    { SetKerning(xml.Get<bool>("Kerning")); }
+    if (meta.Contains("Kerning"))
+    {
+        SetKerning(meta.Get<bool>("Kerning"));
+    }
 
-    if (xml.Contains("TextColor"))
-    { SetTextColor( xml.Get<Color>("TextColor") ); }
+    if (meta.Contains("TextColor"))
+    {
+        SetTextColor( meta.Get<Color>("TextColor") );
+    }
 
-    if (xml.Contains("Wrapping"))
-    { SetWrapping( xml.Get<bool>("Wrapping") ); }
+    if (meta.Contains("Wrapping"))
+    {
+        SetWrapping( meta.Get<bool>("Wrapping") );
+    }
 
-    if (xml.Contains("VerticalAlign"))
-    { SetVerticalAlign( xml.Get<VerticalAlignment>("VerticalAlign") ); }
+    if (meta.Contains("VerticalAlign"))
+    {
+        SetVerticalAlign( meta.Get<VerticalAlignment>("VerticalAlign") );
+    }
 
-    if (xml.Contains("HorizontalAlign"))
-    { SetHorizontalAlign( xml.Get<HorizontalAlignment>("HorizontalAlign")); }
+    if (meta.Contains("HorizontalAlign"))
+    {
+        SetHorizontalAlign( meta.Get<HorizontalAlignment>("HorizontalAlign"));
+    }
 }
 
-void UITextRenderer::ExportXML(XMLNode *xmlInfo) const
+void UITextRenderer::ExportMeta(MetaNode *metaNode) const
 {
-    UIRenderer::ExportXML(xmlInfo);
+    UIRenderer::ExportMeta(metaNode);
 
-    xmlInfo->Set("Font", GetFont() ? GetFont()->GetGUID() : GUID::Empty());
-    xmlInfo->Set("Content", GetContent());
-    xmlInfo->Set("TextSize", GetTextSize());
-    xmlInfo->Set("SpacingMultiplier", GetSpacingMultiplier());
-    xmlInfo->Set("TextColor", GetTextColor());
-    xmlInfo->Set("Kerning", IsKerning());
-    xmlInfo->Set("Wrapping", IsWrapping());
-    xmlInfo->Set("VerticalAlign", GetVerticalAlignment() );
-    xmlInfo->Set("HorizontalAlign", GetHorizontalAlignment() );
+    metaNode->Set("Font", GetFont() ? GetFont()->GetGUID() : GUID::Empty());
+    metaNode->Set("Content", GetContent());
+    metaNode->Set("TextSize", GetTextSize());
+    metaNode->Set("SpacingMultiplier", GetSpacingMultiplier());
+    metaNode->Set("TextColor", GetTextColor());
+    metaNode->Set("Kerning", IsKerning());
+    metaNode->Set("Wrapping", IsWrapping());
+    metaNode->Set("VerticalAlign", GetVerticalAlignment() );
+    metaNode->Set("HorizontalAlign", GetHorizontalAlignment() );
 }
 
 void UITextRenderer::OnChanged()

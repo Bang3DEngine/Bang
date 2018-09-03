@@ -1,7 +1,7 @@
 #include "Bang/SphereCollider.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 
@@ -45,21 +45,21 @@ void SphereCollider::CloneInto(ICloneable *clone) const
     scClone->SetRadius( GetRadius() );
 }
 
-void SphereCollider::ImportXML(const XMLNode &xmlInfo)
+void SphereCollider::ImportMeta(const MetaNode &metaNode)
 {
-    Collider::ImportXML(xmlInfo);
+    Collider::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Radius"))
+    if (metaNode.Contains("Radius"))
     {
-        SetRadius( xmlInfo.Get<float>("Radius") );
+        SetRadius( metaNode.Get<float>("Radius") );
     }
 }
 
-void SphereCollider::ExportXML(XMLNode *xmlInfo) const
+void SphereCollider::ExportMeta(MetaNode *metaNode) const
 {
-    Collider::ExportXML(xmlInfo);
+    Collider::ExportMeta(metaNode);
 
-    xmlInfo->Set("Radius", GetRadius());
+    metaNode->Set("Radius", GetRadius());
 }
 
 void SphereCollider::UpdatePxShape()

@@ -8,10 +8,10 @@
 #include "Bang/AARect.h"
 #include "Bang/Thread.h"
 #include "Bang/Vector2.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/MutexLocker.h"
-#include "Bang/XMLNodeReader.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/FontSheetCreator.h"
 
@@ -73,14 +73,14 @@ void Font::Import(const Path &ttfFilepath)
     }
 }
 
-void Font::ImportXML(const XMLNode &xmlInfo)
+void Font::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 }
 
-void Font::ExportXML(XMLNode *xmlInfo) const
+void Font::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 }
 
 float Font::GetScaleProportion(int fontSize)

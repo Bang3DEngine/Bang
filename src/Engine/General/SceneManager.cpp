@@ -177,7 +177,7 @@ void SceneManager::LoadScene(const Path &sceneFilepath, bool destroyActive)
     if (scenePath.IsFile())
     {
         Scene *scene = GameObjectFactory::CreateScene(false);
-        scene->ImportXMLFromFile(sceneFilepath);
+        scene->ImportMetaFromFile(sceneFilepath);
         sm->PrepareNextLoad(scene, sceneFilepath, destroyActive);
     }
     else

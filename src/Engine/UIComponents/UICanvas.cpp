@@ -5,7 +5,7 @@
 #include "Bang/Scene.h"
 #include "Bang/AARect.h"
 #include "Bang/Cursor.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Component.h"
 #include "Bang/GameObject.h"
 #include "Bang/IFocusable.h"
@@ -547,14 +547,14 @@ void UICanvas::CloneInto(ICloneable *clone) const
     Component::CloneInto(clone);
 }
 
-void UICanvas::ImportXML(const XMLNode &xmlInfo)
+void UICanvas::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 }
 
-void UICanvas::ExportXML(XMLNode *xmlInfo) const
+void UICanvas::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 }
 
 void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)

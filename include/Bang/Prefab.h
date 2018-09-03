@@ -22,15 +22,15 @@ public:
     void Import(const Path& prefabFilepath) override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    String m_gameObjectXMLInfoContent = "";
+    String m_gameObjectMetaInfoContent = "";
 
     Prefab();
     Prefab(GameObject *go);
-    Prefab(const String &gameObjectXMLInfoContent);
+    Prefab(const String &gameObjectMetaInfoContent);
     virtual ~Prefab();
 };
 

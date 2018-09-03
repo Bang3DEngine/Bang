@@ -1,7 +1,7 @@
 #include "Bang/BoxCollider.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 
@@ -38,21 +38,21 @@ void BoxCollider::CloneInto(ICloneable *clone) const
     bcClone->SetHalfExtents( GetHalfExtents() );
 }
 
-void BoxCollider::ImportXML(const XMLNode &xmlInfo)
+void BoxCollider::ImportMeta(const MetaNode &metaNode)
 {
-    Collider::ImportXML(xmlInfo);
+    Collider::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("HalfExtents"))
+    if (metaNode.Contains("HalfExtents"))
     {
-        SetHalfExtents( xmlInfo.Get<Vector3>("HalfExtents") );
+        SetHalfExtents( metaNode.Get<Vector3>("HalfExtents") );
     }
 }
 
-void BoxCollider::ExportXML(XMLNode *xmlInfo) const
+void BoxCollider::ExportMeta(MetaNode *metaNode) const
 {
-    Collider::ExportXML(xmlInfo);
+    Collider::ExportMeta(metaNode);
 
-    xmlInfo->Set("HalfExtents", GetHalfExtents());
+    metaNode->Set("HalfExtents", GetHalfExtents());
 }
 
 void BoxCollider::UpdatePxShape()

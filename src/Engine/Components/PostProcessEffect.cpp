@@ -3,7 +3,7 @@
 #include "Bang/Paths.h"
 #include "Bang/Camera.h"
 #include "Bang/Shader.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/Resources.h"
@@ -95,32 +95,32 @@ void PostProcessEffect::CloneInto(ICloneable *clone) const
     ppe->SetPriority( GetPriority() );
 }
 
-void PostProcessEffect::ImportXML(const XMLNode &xmlInfo)
+void PostProcessEffect::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Priority"))
-    { SetPriority( xmlInfo.Get<int>("Priority") ); }
+    if (metaNode.Contains("Priority"))
+    { SetPriority( metaNode.Get<int>("Priority") ); }
 
-    if (xmlInfo.Contains("Type"))
-    { SetType( xmlInfo.Get<Type>("Type") ); }
+    if (metaNode.Contains("Type"))
+    { SetType( metaNode.Get<Type>("Type") ); }
 
-    if (xmlInfo.Contains("PostProcessShader"))
+    if (metaNode.Contains("PostProcessShader"))
     {
-        GUID shaderGUID = xmlInfo.Get<GUID>("PostProcessShader");
+        GUID shaderGUID = metaNode.Get<GUID>("PostProcessShader");
         RH<Shader> ppShader = Resources::Load<Shader>(shaderGUID);
         SetPostProcessShader(ppShader.Get());
     }
 }
 
-void PostProcessEffect::ExportXML(XMLNode *xmlInfo) const
+void PostProcessEffect::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
     if (GetPostProcessShader())
-    { xmlInfo->Set("PostProcessShader", GetPostProcessShader()->GetGUID()); }
-    xmlInfo->Set("Priority", GetPriority());
-    xmlInfo->Set("Type", GetType());
+    { metaNode->Set("PostProcessShader", GetPostProcessShader()->GetGUID()); }
+    metaNode->Set("Priority", GetPriority());
+    metaNode->Set("Type", GetType());
 }
 
 bool operator<(const PostProcessEffect& lhs, const PostProcessEffect& rhs)

@@ -9,8 +9,8 @@
 #include "Bang/ModelIO.h"
 #include "Bang/Material.h"
 #include "Bang/Triangle.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
-#include "Bang/XMLNodeReader.h"
 #include "Bang/MeshSimplifier.h"
 #include "Bang/ImportFilesManager.h"
 
@@ -471,12 +471,12 @@ void Mesh::Import(const Path &meshFilepath)
 }
 
 
-void Mesh::ImportXML(const XMLNode &xmlInfo)
+void Mesh::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 }
 
-void Mesh::ExportXML(XMLNode *xmlInfo) const
+void Mesh::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 }

@@ -8,7 +8,7 @@
 #include "Bang/Paths.h"
 #include "Bang/Resources.h"
 #include "Bang/Application.h"
-#include "Bang/XMLNodeReader.h"
+#include "Bang/XMLMetaReader.h"
 #include "Bang/ResourceHandle.h"
 
 USING_NAMESPACE_BANG
@@ -70,10 +70,10 @@ std::pair<Path, GUID> ImportFilesManager::CreateImportFileIfMissing(const Path &
     GUID newGUID = GUID::Empty();
     if ( !IsImportFile(filepath) && !HasImportFile(filepath) )
     {
-        XMLNode xmlInfo;
+        MetaNode metaNode;
         newGUID = GUIDManager::GetNewGUID();
-        xmlInfo.Set("GUID", newGUID);
-        File::Write(importFilepath, xmlInfo.ToString());
+        metaNode.Set("GUID", newGUID);
+        File::Write(importFilepath, metaNode.ToString());
         ImportFilesManager::RegisterImportFilepath(importFilepath);
     }
     else
@@ -102,10 +102,10 @@ void ImportFilesManager::DuplicateImportFile(const Path &filepath,
 
     const GUID& newGUID = CreateImportFileIfMissing(dupFilepath).second;
     const Path originalImportFilepath = GetImportFilepath(filepath);
-    XMLNode originalXML = XMLNodeReader::FromFile(originalImportFilepath);
-    originalXML.Set("GUID", newGUID);
+    MetaNode originalMetaNode = XMLMetaReader::FromFile(originalImportFilepath);
+    originalMetaNode.Set("GUID", newGUID);
 
-    File::Write(dupImportFilepath, originalXML.ToString());
+    File::Write(dupImportFilepath, originalMetaNode.ToString());
     RegisterImportFilepath(dupImportFilepath);
 }
 
@@ -116,11 +116,15 @@ GUIDManager* ImportFilesManager::GetGUIDManager()
 
 void ImportFilesManager::RegisterImportFilepath(const Path &importFilepath)
 {
-    if (!IsImportFile(importFilepath)) { return; }
-    XMLNode info = XMLNodeReader::FromFile(importFilepath);
+    if (!IsImportFile(importFilepath))
+    {
+        return;
+    }
+
+    MetaNode metaNode = XMLMetaReader::FromFile(importFilepath);
 
     Path filepath = GetFilepath(importFilepath);
-    GUID guid = info.Get<GUID>("GUID");
+    GUID guid = metaNode.Get<GUID>("GUID");
     ImportFilesManager *ifm = ImportFilesManager::GetInstance();
     if (ifm->m_GUIDToFilepath.ContainsKey(guid) &&
         ifm->m_GUIDToFilepath.Get(guid) != filepath)
@@ -156,8 +160,8 @@ GUID ImportFilesManager::GetGUID(const Path& filepath)
             Path importFilepath = GetImportFilepath(filepath);
             if (importFilepath.IsFile())
             {
-                XMLNode xmlNode = XMLNodeReader::FromFile(importFilepath);
-                GUID guid = xmlNode.Get<GUID>("GUID");
+                MetaNode metaNode = XMLMetaReader::FromFile(importFilepath);
+                GUID guid = metaNode.Get<GUID>("GUID");
                 ifm->m_filepathToGUID.Add(filepath, guid);
                 return guid;
             }

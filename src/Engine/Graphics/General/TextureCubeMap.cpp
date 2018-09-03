@@ -1,7 +1,7 @@
 #include "Bang/TextureCubeMap.h"
 
 #include "Bang/Path.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 
 USING_NAMESPACE_BANG
@@ -146,63 +146,63 @@ void TextureCubeMap::Import(const Image<Byte> &topImage,
     }
 }
 
-void TextureCubeMap::ImportXML(const XMLNode &xmlInfo)
+void TextureCubeMap::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("TopImage"))
+    if (metaNode.Contains("TopImage"))
     {
         SetSideTexture(GL::CubeMapDir::TOP,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("TopImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("TopImage") ).Get() );
     }
-    if (xmlInfo.Contains("BotImage"))
+    if (metaNode.Contains("BotImage"))
     {
         SetSideTexture(GL::CubeMapDir::BOT,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("BotImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("BotImage") ).Get() );
     }
-    if (xmlInfo.Contains("LeftImage"))
+    if (metaNode.Contains("LeftImage"))
     {
         SetSideTexture(GL::CubeMapDir::LEFT,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("LeftImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("LeftImage") ).Get() );
     }
-    if (xmlInfo.Contains("RightImage"))
+    if (metaNode.Contains("RightImage"))
     {
         SetSideTexture(GL::CubeMapDir::RIGHT,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("RightImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("RightImage") ).Get() );
     }
-    if (xmlInfo.Contains("FrontImage"))
+    if (metaNode.Contains("FrontImage"))
     {
         SetSideTexture(GL::CubeMapDir::FRONT,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("FrontImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("FrontImage") ).Get() );
     }
-    if (xmlInfo.Contains("BackImage"))
+    if (metaNode.Contains("BackImage"))
     {
         SetSideTexture(GL::CubeMapDir::BACK,
-                 Resources::Load<Texture2D>( xmlInfo.Get<GUID>("BackImage") ).Get() );
+                 Resources::Load<Texture2D>( metaNode.Get<GUID>("BackImage") ).Get() );
     }
 }
 
-void TextureCubeMap::ExportXML(XMLNode *xmlInfo) const
+void TextureCubeMap::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
     if (GetSideTexture(GL::CubeMapDir::TOP))
-    { xmlInfo->Set("TopImage", GetSideTexture(GL::CubeMapDir::TOP).Get()->GetGUID()); }
+    { metaNode->Set("TopImage", GetSideTexture(GL::CubeMapDir::TOP).Get()->GetGUID()); }
     if (GetSideTexture(GL::CubeMapDir::BOT))
-    { xmlInfo->Set("BotImage", GetSideTexture(GL::CubeMapDir::BOT).Get()->GetGUID()); }
+    { metaNode->Set("BotImage", GetSideTexture(GL::CubeMapDir::BOT).Get()->GetGUID()); }
     if (GetSideTexture(GL::CubeMapDir::LEFT))
-    { xmlInfo->Set("LeftImage", GetSideTexture(GL::CubeMapDir::LEFT).Get()->GetGUID()); }
+    { metaNode->Set("LeftImage", GetSideTexture(GL::CubeMapDir::LEFT).Get()->GetGUID()); }
     if (GetSideTexture(GL::CubeMapDir::RIGHT))
-    { xmlInfo->Set("RightImage", GetSideTexture(GL::CubeMapDir::RIGHT).Get()->GetGUID()); }
+    { metaNode->Set("RightImage", GetSideTexture(GL::CubeMapDir::RIGHT).Get()->GetGUID()); }
     if (GetSideTexture(GL::CubeMapDir::FRONT))
-    { xmlInfo->Set("FrontImage", GetSideTexture(GL::CubeMapDir::FRONT).Get()->GetGUID()); }
+    { metaNode->Set("FrontImage", GetSideTexture(GL::CubeMapDir::FRONT).Get()->GetGUID()); }
     if (GetSideTexture(GL::CubeMapDir::BACK))
-    { xmlInfo->Set("BackImage", GetSideTexture(GL::CubeMapDir::BACK).Get()->GetGUID()); }
+    { metaNode->Set("BackImage", GetSideTexture(GL::CubeMapDir::BACK).Get()->GetGUID()); }
 }
 
 void TextureCubeMap::Import(const Path &textureCubeMapFilepath)
 {
-    ImportXMLFromFile(textureCubeMapFilepath);
+    ImportMetaFromFile(textureCubeMapFilepath);
 }
 
 GL::BindTarget TextureCubeMap::GetGLBindTarget() const

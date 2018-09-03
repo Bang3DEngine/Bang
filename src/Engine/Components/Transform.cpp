@@ -3,7 +3,7 @@
 #include <sstream>
 #include <ostream>
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsTransform.h"
 
@@ -450,32 +450,32 @@ void Transform::CloneInto(ICloneable *clone) const
     t->SetLocalScale(GetLocalScale());
 }
 
-void Transform::ImportXML(const XMLNode &xmlInfo)
+void Transform::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Position"))
+    if (metaNode.Contains("Position"))
     {
-        SetLocalPosition(xmlInfo.Get<Vector3>("Position"));
+        SetLocalPosition(metaNode.Get<Vector3>("Position"));
     }
 
-    if (xmlInfo.Contains("Rotation"))
+    if (metaNode.Contains("Rotation"))
     {
-        SetLocalRotation(xmlInfo.Get<Quaternion>("Rotation"));
+        SetLocalRotation(metaNode.Get<Quaternion>("Rotation"));
     }
 
-    if (xmlInfo.Contains("Scale"))
+    if (metaNode.Contains("Scale"))
     {
-        SetLocalScale(xmlInfo.Get<Vector3>("Scale"));
+        SetLocalScale(metaNode.Get<Vector3>("Scale"));
     }
 }
 
-void Transform::ExportXML(XMLNode *xmlInfo) const
+void Transform::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
-    xmlInfo->Set("Position", GetLocalPosition());
-    xmlInfo->Set("Rotation", GetLocalRotation());
-    xmlInfo->Set("Scale",    GetLocalScale());
+    Component::ExportMeta(metaNode);
+    metaNode->Set("Position", GetLocalPosition());
+    metaNode->Set("Rotation", GetLocalRotation());
+    metaNode->Set("Scale",    GetLocalScale());
 }
 
 void Transform::InvalidateTransform()

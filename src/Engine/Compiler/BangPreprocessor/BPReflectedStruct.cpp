@@ -142,7 +142,7 @@ String BPReflectedStruct::GetGetReflectionInfoCode() const
 String BPReflectedStruct::GetWriteReflectionCode() const
 {
     String src = R"VERBATIM(
-        void WriteReflection(XMLNode *xmlInfo) const override
+        void WriteReflection(MetaNode *metaNode) const override
         {
             VARS_SETS
         }
@@ -152,7 +152,7 @@ String BPReflectedStruct::GetWriteReflectionCode() const
     for (const BPReflectedVariable &var : GetVariables())
     {
         String varSetSrc = R"VERBATIM(
-                    xmlInfo->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
+                    metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
             )VERBATIM";
 
         String varType = var.GetVariableType();
@@ -170,7 +170,7 @@ String BPReflectedStruct::GetWriteReflectionCode() const
 String BPReflectedStruct::GetReadReflectionCode() const
 {
     String src = R"VERBATIM(
-        void ReadReflection(const XMLNode &xmlInfo) override
+        void ReadReflection(const MetaNode &metaNode) override
         {
             VARS_GETS
         }
@@ -180,7 +180,7 @@ String BPReflectedStruct::GetReadReflectionCode() const
     for (const BPReflectedVariable &var : GetVariables())
     {
         String varGetSrc = R"VERBATIM(
-                    VAR_NAME = xmlInfo.GET_FUNC("VAR_REFL_NAME");
+                    VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
             )VERBATIM";
 
         String varType = var.GetVariableType();

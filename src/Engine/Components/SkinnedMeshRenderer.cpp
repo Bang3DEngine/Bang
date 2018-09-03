@@ -4,6 +4,7 @@
 #include "Bang/Model.h"
 #include "Bang/Scene.h"
 #include "Bang/Material.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Animator.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
@@ -12,7 +13,7 @@
 
 USING_NAMESPACE_BANG
 
-const String SkinnedMeshRenderer::XMLBoneGameObjectPrefix =
+const String SkinnedMeshRenderer::MetaBoneGameObjectPrefix =
                                         "SkinnedMeshRendererBoneGameObject_";
 
 SkinnedMeshRenderer::SkinnedMeshRenderer()
@@ -311,22 +312,22 @@ void SkinnedMeshRenderer::CloneInto(ICloneable *clone) const
     smrClone->m_initialTransforms = m_initialTransforms;
 }
 
-void SkinnedMeshRenderer::ImportXML(const XMLNode &xmlInfo)
+void SkinnedMeshRenderer::ImportMeta(const MetaNode &metaNode)
 {
-    MeshRenderer::ImportXML(xmlInfo);
+    MeshRenderer::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("RootBoneGameObjectName"))
+    if (metaNode.Contains("RootBoneGameObjectName"))
     {
-        String rootBoneName = xmlInfo.Get<String>("RootBoneGameObjectName");
+        String rootBoneName = metaNode.Get<String>("RootBoneGameObjectName");
         SetRootBoneGameObjectName(rootBoneName);
     }
 }
 
-void SkinnedMeshRenderer::ExportXML(XMLNode *xmlInfo) const
+void SkinnedMeshRenderer::ExportMeta(MetaNode *metaNode) const
 {
-    MeshRenderer::ExportXML(xmlInfo);
+    MeshRenderer::ExportMeta(metaNode);
 
-    xmlInfo->Set("RootBoneGameObjectName", GetRootBoneGameObjectName());
+    metaNode->Set("RootBoneGameObjectName", GetRootBoneGameObjectName());
 }
 
 Matrix4 SkinnedMeshRenderer::GetModelMatrixUniform() const

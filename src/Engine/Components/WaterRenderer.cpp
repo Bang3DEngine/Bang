@@ -39,13 +39,13 @@ void WaterRenderer::CloneInto(ICloneable *clone) const
     (void) wrClone;
 }
 
-void WaterRenderer::ImportXML(const XMLNode &xmlInfo)
+void WaterRenderer::ImportMeta(const MetaNode &metaNode)
 {
-    Renderer::ImportXML(xmlInfo);
+    Renderer::ImportMeta(metaNode);
 }
 
-void WaterRenderer::ExportXML(XMLNode *xmlInfo) const
+void WaterRenderer::ExportMeta(MetaNode *metaNode) const
 {
-    Renderer::ExportXML(xmlInfo);
+    Renderer::ExportMeta(metaNode);
 }
 

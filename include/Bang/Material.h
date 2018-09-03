@@ -79,8 +79,8 @@ public:
     void Import(const Path &materialFilepath) override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
     RH<Texture2D> p_albedoTexture;

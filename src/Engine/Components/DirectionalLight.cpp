@@ -8,7 +8,7 @@
 #include "Bang/GEngine.h"
 #include "Bang/Polygon.h"
 #include "Bang/Segment.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Geometry.h"
 #include "Bang/Triangle.h"
 #include "Bang/Texture2D.h"
@@ -286,17 +286,17 @@ Matrix4 DirectionalLight::GetLightToWorldMatrix() const
     return lightToWorld;
 }
 
-void DirectionalLight::ImportXML(const XMLNode &xmlInfo)
+void DirectionalLight::ImportMeta(const MetaNode &metaNode)
 {
-    Light::ImportXML(xmlInfo);
+    Light::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("ShadowDistance"))
-    { SetShadowDistance(xmlInfo.Get<float>("ShadowDistance")); }
+    if (metaNode.Contains("ShadowDistance"))
+    { SetShadowDistance(metaNode.Get<float>("ShadowDistance")); }
 }
 
-void DirectionalLight::ExportXML(XMLNode *xmlInfo) const
+void DirectionalLight::ExportMeta(MetaNode *metaNode) const
 {
-    Light::ExportXML(xmlInfo);
+    Light::ExportMeta(metaNode);
 
-    xmlInfo->Set("ShadowDistance", GetShadowDistance());
+    metaNode->Set("ShadowDistance", GetShadowDistance());
 }

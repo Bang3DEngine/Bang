@@ -7,7 +7,7 @@
 #include "Bang/Camera.h"
 #include "Bang/Sphere.h"
 #include "Bang/GEngine.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Material.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
@@ -170,15 +170,15 @@ void PointLight::CloneInto(ICloneable *clone) const
     pl->SetRange(GetRange());
 }
 
-void PointLight::ImportXML(const XMLNode &xmlInfo)
+void PointLight::ImportMeta(const MetaNode &metaNode)
 {
-    Light::ImportXML(xmlInfo);
-    if (xmlInfo.Contains("Range"))
-    { SetRange(xmlInfo.Get<float>("Range")); }
+    Light::ImportMeta(metaNode);
+    if (metaNode.Contains("Range"))
+    { SetRange(metaNode.Get<float>("Range")); }
 }
 
-void PointLight::ExportXML(XMLNode *xmlInfo) const
+void PointLight::ExportMeta(MetaNode *metaNode) const
 {
-    Light::ExportXML(xmlInfo);
-    xmlInfo->Set("Range", GetRange());
+    Light::ExportMeta(metaNode);
+    metaNode->Set("Range", GetRange());
 }

@@ -1,6 +1,6 @@
 #include "Bang/AudioSource.h"
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/AudioClip.h"
 #include "Bang/Transform.h"
 #include "Bang/AudioClip.h"
@@ -102,43 +102,53 @@ void AudioSource::CloneInto(ICloneable *clone) const
     as->SetPlayOnStart( GetPlayOnStart() );
 }
 
-void AudioSource::ImportXML(const XMLNode &xml)
+void AudioSource::ImportMeta(const MetaNode &meta)
 {
-    Component::ImportXML(xml);
+    Component::ImportMeta(meta);
 
-    if (xml.Contains("AudioClip"))
+    if (meta.Contains("AudioClip"))
     {
         RH<AudioClip> audioClip =
-                    Resources::Load<AudioClip>(xml.Get<GUID>("AudioClip"));
+                    Resources::Load<AudioClip>(meta.Get<GUID>("AudioClip"));
         SetAudioClip(audioClip.Get());
     }
 
-    if (xml.Contains("Volume"))
-    { SetVolume(xml.Get<float>("Volume")); }
+    if (meta.Contains("Volume"))
+    {
+        SetVolume(meta.Get<float>("Volume"));
+    }
 
-    if (xml.Contains("Pitch"))
-    { SetPitch(xml.Get<float>("Pitch")); }
+    if (meta.Contains("Pitch"))
+    {
+        SetPitch(meta.Get<float>("Pitch"));
+    }
 
-    if (xml.Contains("Range"))
-    { SetRange(xml.Get<float>("Range")); }
+    if (meta.Contains("Range"))
+    {
+        SetRange(meta.Get<float>("Range"));
+    }
 
-    if (xml.Contains("Looping"))
-    { SetLooping(xml.Get<bool>("Looping")); }
+    if (meta.Contains("Looping"))
+    {
+        SetLooping(meta.Get<bool>("Looping"));
+    }
 
-    if (xml.Contains("PlayOnStart"))
-    { SetPlayOnStart(xml.Get<bool>("PlayOnStart")); }
+    if (meta.Contains("PlayOnStart"))
+    {
+        SetPlayOnStart(meta.Get<bool>("PlayOnStart"));
+    }
 }
 
-void AudioSource::ExportXML(XMLNode *xmlInfo) const
+void AudioSource::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
     AudioClip *audioClip = GetAudioClip();
     GUID audioClipGUID = audioClip ? audioClip->GetGUID() : GUID::Empty();
-    xmlInfo->Set("AudioClip",   audioClipGUID);
-    xmlInfo->Set("Volume",      GetVolume());
-    xmlInfo->Set("Pitch",       GetPitch());
-    xmlInfo->Set("Range",       GetRange());
-    xmlInfo->Set("Looping",     GetLooping());
-    xmlInfo->Set("PlayOnStart", GetPlayOnStart());
+    metaNode->Set("AudioClip",   audioClipGUID);
+    metaNode->Set("Volume",      GetVolume());
+    metaNode->Set("Pitch",       GetPitch());
+    metaNode->Set("Range",       GetRange());
+    metaNode->Set("Looping",     GetLooping());
+    metaNode->Set("PlayOnStart", GetPlayOnStart());
 }

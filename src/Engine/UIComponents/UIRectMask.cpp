@@ -2,7 +2,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/Rect.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
 #include "Bang/RectTransform.h"
 
@@ -42,17 +42,17 @@ void UIRectMask::OnAfterChildrenRender(RenderPass renderPass)
 void UIRectMask::SetMasking(bool maskEnabled) { m_masking = maskEnabled; }
 bool UIRectMask::IsMasking() const { return m_masking; }
 
-void UIRectMask::ImportXML(const XMLNode &xmlInfo)
+void UIRectMask::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Masking"))
-    { SetMasking( xmlInfo.Get<bool>("Masking") ); }
+    if (metaNode.Contains("Masking"))
+    { SetMasking( metaNode.Get<bool>("Masking") ); }
 }
 
-void UIRectMask::ExportXML(XMLNode *xmlInfo) const
+void UIRectMask::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Masking", IsMasking());
+    metaNode->Set("Masking", IsMasking());
 }

@@ -86,8 +86,8 @@ public:
     virtual void CloneInto(ICloneable *clone) const override;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
     float m_mass = 1.0f;

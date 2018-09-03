@@ -1,6 +1,6 @@
 #include "Bang/BehaviourContainer.h"
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Behaviour.h"
 #include "Bang/Application.h"
 #include "Bang/BehaviourManager.h"
@@ -85,21 +85,21 @@ void BehaviourContainer::CloneInto(ICloneable *clone) const
     bc->SetSourceFilepath( GetSourceFilepath() );
 }
 
-void BehaviourContainer::ImportXML(const XMLNode &xmlInfo)
+void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("SourceFilepath"))
+    if (metaNode.Contains("SourceFilepath"))
     {
-        SetSourceFilepath( xmlInfo.Get<Path>("SourceFilepath") );
+        SetSourceFilepath( metaNode.Get<Path>("SourceFilepath") );
     }
 
     TryToSubstituteByBehaviourInstance();
 }
 
-void BehaviourContainer::ExportXML(XMLNode *xmlInfo) const
+void BehaviourContainer::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("SourceFilepath", GetSourceFilepath());
+    metaNode->Set("SourceFilepath", GetSourceFilepath());
 }

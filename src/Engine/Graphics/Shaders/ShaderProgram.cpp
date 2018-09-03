@@ -11,7 +11,7 @@
 #include "Bang/Vector4.h"
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix4.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Resources.h"
 #include "Bang/GLUniforms.h"

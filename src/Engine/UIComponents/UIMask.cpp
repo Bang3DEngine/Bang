@@ -1,7 +1,7 @@
 #include "Bang/UIMask.h"
 
 #include "Bang/GL.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIRenderer.h"
 
@@ -93,21 +93,21 @@ void UIMask::SetDrawMask(bool drawMask) { m_drawMask = drawMask; }
 bool UIMask::IsMasking() const { return m_masking; }
 bool UIMask::IsDrawMask() const { return true; } // m_drawMask; }
 
-void UIMask::ImportXML(const XMLNode &xmlInfo)
+void UIMask::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("Masking"))
-    { SetMasking( xmlInfo.Get<bool>("Masking") ); }
+    if (metaNode.Contains("Masking"))
+    { SetMasking( metaNode.Get<bool>("Masking") ); }
 
-    if (xmlInfo.Contains("DrawMask"))
-    { SetDrawMask( xmlInfo.Get<bool>("DrawMask") ); }
+    if (metaNode.Contains("DrawMask"))
+    { SetDrawMask( metaNode.Get<bool>("DrawMask") ); }
 }
 
-void UIMask::ExportXML(XMLNode *xmlInfo) const
+void UIMask::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("Masking", IsMasking());
-    xmlInfo->Set("DrawMask", IsDrawMask());
+    metaNode->Set("Masking", IsMasking());
+    metaNode->Set("DrawMask", IsDrawMask());
 }

@@ -32,8 +32,8 @@ protected:
     virtual ~Resource();
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo);
-    virtual void ExportXML(XMLNode *xmlInfo) const;
+    virtual void ImportMeta(const MetaNode &metaNode);
+    virtual void ExportMeta(MetaNode *metaNode) const;
 
     // Resource
     virtual void Import(const Path &resourceFilepath) = 0;

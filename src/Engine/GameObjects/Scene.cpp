@@ -2,7 +2,7 @@
 
 #include "Bang/Debug.h"
 #include "Bang/Camera.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Physics.h"
 #include "Bang/GEngine.h"
 #include "Bang/UICanvas.h"
@@ -150,14 +150,14 @@ Camera *Scene::GetCamera() const
     return p_camera;
 }
 
-void Scene::ImportXML(const XMLNode &xmlInfo)
+void Scene::ImportMeta(const MetaNode &metaNode)
 {
-    GameObject::ImportXML(xmlInfo);
+    GameObject::ImportMeta(metaNode);
     SetFirstFoundCamera();
 }
 
-void Scene::ExportXML(XMLNode *xmlInfo) const
+void Scene::ExportMeta(MetaNode *metaNode) const
 {
-    GameObject::ExportXML(xmlInfo);
-    xmlInfo->SetTagName("Scene");
+    GameObject::ExportMeta(metaNode);
+    metaNode->SetName("Scene");
 }

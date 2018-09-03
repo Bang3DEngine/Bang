@@ -106,7 +106,7 @@ void BangPreprocessor::Preprocess(const String &source,
     *preprocessedSomething = false;
     String &reflectionHeaderSource = *_reflectionHeaderSource;
     reflectionHeaderSource = R"VERBATIM(
-             #include "Bang/XMLNode.h"
+             #include "Bang/MetaNode.h"
              #include "Bang/BPReflectedStruct.h"
              #include "Bang/BPReflectedVariable.h"
           )VERBATIM";

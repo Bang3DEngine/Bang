@@ -1,6 +1,6 @@
 #include "Bang/UIGroupLayout.h"
 
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
 #include "Bang/UILayoutManager.h"
 
@@ -146,17 +146,17 @@ Vector2i UIGroupLayout::GetPaddingSize() const
     return GetPaddingLeftBot() + GetPaddingRightTop();
 }
 
-void UIGroupLayout::ImportXML(const XMLNode &xmlInfo)
+void UIGroupLayout::ImportMeta(const MetaNode &metaNode)
 {
-    Component::ImportXML(xmlInfo);
+    Component::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("SpacingPx"))
-    { SetSpacing( xmlInfo.Get<int>("SpacingPx") ); }
+    if (metaNode.Contains("SpacingPx"))
+    { SetSpacing( metaNode.Get<int>("SpacingPx") ); }
 }
 
-void UIGroupLayout::ExportXML(XMLNode *xmlInfo) const
+void UIGroupLayout::ExportMeta(MetaNode *metaNode) const
 {
-    Component::ExportXML(xmlInfo);
+    Component::ExportMeta(metaNode);
 
-    xmlInfo->Set("SpacingPx", m_spacingPx);
+    metaNode->Set("SpacingPx", m_spacingPx);
 }

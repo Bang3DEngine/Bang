@@ -65,12 +65,12 @@ Array<Resource*> Resources::GetAllResources()
     return result;
 }
 
-void Resources::CreateResourceXMLAndImportFile(const Resource *resource,
+void Resources::CreateResourceMetaAndImportFile(const Resource *resource,
                                                const Path &exportFilepath)
 {
     File::Write(exportFilepath, "");
     Path importFilePath = ImportFilesManager::GetImportFilepath(exportFilepath);
-    resource->ExportXMLToFile(importFilePath);
+    resource->ExportMetaToFile(importFilePath);
     ImportFilesManager::RegisterImportFilepath(importFilePath); // Once created
 }
 
@@ -96,7 +96,7 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
         res = creator();
 
         Path importFilepath = ImportFilesManager::GetImportFilepath(filepath);
-        res->ImportXMLFromFile(importFilepath); // Get resource GUID
+        res->ImportMetaFromFile(importFilepath); // Get resource GUID
         resRH.Set(res); // Register as soon as possible
 
         Resources::Import(res); // Actually import all

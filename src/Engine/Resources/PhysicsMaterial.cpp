@@ -1,7 +1,7 @@
 #include "Bang/PhysicsMaterial.h"
 
 #include "Bang/Physics.h"
-#include "Bang/XMLNode.h"
+#include "Bang/MetaNode.h"
 
 USING_NAMESPACE_BANG
 
@@ -97,51 +97,51 @@ void PhysicsMaterial::CloneInto(ICloneable *clone) const
 
 void PhysicsMaterial::Import(const Path &physicsMaterialFilepath)
 {
-    ImportXMLFromFile(physicsMaterialFilepath);
+    ImportMetaFromFile(physicsMaterialFilepath);
 }
 
-void PhysicsMaterial::ImportXML(const XMLNode &xmlInfo)
+void PhysicsMaterial::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportXML(xmlInfo);
+    Asset::ImportMeta(metaNode);
 
-    if (xmlInfo.Contains("StaticFriction"))
+    if (metaNode.Contains("StaticFriction"))
     {
-        SetStaticFriction( xmlInfo.Get<float>("StaticFriction") );
+        SetStaticFriction( metaNode.Get<float>("StaticFriction") );
     }
 
-    if (xmlInfo.Contains("DynamicFriction"))
+    if (metaNode.Contains("DynamicFriction"))
     {
-        SetDynamicFriction( xmlInfo.Get<float>("DynamicFriction") );
+        SetDynamicFriction( metaNode.Get<float>("DynamicFriction") );
     }
 
-    if (xmlInfo.Contains("Restitution"))
+    if (metaNode.Contains("Restitution"))
     {
-        SetRestitution( xmlInfo.Get<float>("Restitution") );
+        SetRestitution( metaNode.Get<float>("Restitution") );
     }
 
-    if (xmlInfo.Contains("FrictionCombineMode"))
+    if (metaNode.Contains("FrictionCombineMode"))
     {
         SetFrictionCombineMode(
-                    xmlInfo.Get<CombineMode>("FrictionCombineMode") );
+                    metaNode.Get<CombineMode>("FrictionCombineMode") );
     }
 
-    if (xmlInfo.Contains("RestitutionCombineMode"))
+    if (metaNode.Contains("RestitutionCombineMode"))
     {
         SetRestitutionCombineMode(
-                    xmlInfo.Get<CombineMode>("RestitutionCombineMode") );
+                    metaNode.Get<CombineMode>("RestitutionCombineMode") );
     }
 }
 
-void PhysicsMaterial::ExportXML(XMLNode *xmlInfo) const
+void PhysicsMaterial::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportXML(xmlInfo);
+    Asset::ExportMeta(metaNode);
 
-    xmlInfo->Set("StaticFriction", GetStaticFriction());
-    xmlInfo->Set("DynamicFriction", GetDynamicFriction());
-    xmlInfo->Set("Restitution", GetRestitution());
-    xmlInfo->Set("FrictionCombineMode",
+    metaNode->Set("StaticFriction", GetStaticFriction());
+    metaNode->Set("DynamicFriction", GetDynamicFriction());
+    metaNode->Set("Restitution", GetRestitution());
+    metaNode->Set("FrictionCombineMode",
                  SCAST<int>(GetFrictionCombineMode()));
-    xmlInfo->Set("RestitutionCombineMode",
+    metaNode->Set("RestitutionCombineMode",
                  SCAST<int>(GetRestitutionCombineMode()));
 }
 

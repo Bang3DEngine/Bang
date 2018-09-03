@@ -13,7 +13,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Path;
-FORWARD class XMLNode;
+FORWARD class MetaNode;
 
 class TextureCubeMap : public Texture,
                        public EventListener<IEventsResource>
@@ -40,8 +40,8 @@ public:
     RH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
-    virtual void ImportXML(const XMLNode &xmlInfo) override;
-    virtual void ExportXML(XMLNode *xmlInfo) const override;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
     // Resource
     virtual void Import(const Path &textureCubeMapFilepath) override;

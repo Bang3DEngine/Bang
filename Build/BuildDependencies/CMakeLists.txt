@@ -61,7 +61,7 @@ else ()
 
     include("${CMAKE_CURRENT_LIST_DIR}/ThirdParty/CMakeLists.txt")
     list(APPEND DEPENDENCIES_INCLUDE_DIRS ${THIRD_PARTY_INCLUDE_DIRS})
-    list(APPEND DEPENDENCIES_LIBS    ${THIRD_PARTY_LIB_PATHS})
+    list(APPEND DEPENDENCIES_LIBS ${THIRD_PARTY_LIB_PATHS})
 
     add_dependencies(BuildDependencies BuildThirdParty)
 
@@ -88,6 +88,12 @@ find_library(PTHREAD_LIBRARY REQUIRED "pthread" PATHS ${SEARCH_LIB_PATHS})
 include("${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PhysX/CMakeLists.txt")
 add_dependencies(BuildDependencies PhysXLib)
 
+# YAML
+include("${CMAKE_CURRENT_LIST_DIR}/ThirdParty/yaml-cpp/CMakeLists.txt")
+list(APPEND DEPENDENCIES_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/ThirdParty/yaml-cpp/include")
+set_target_properties(YamlCppLib PROPERTIES LINKER_LANGUAGE CXX)
+add_dependencies(BuildDependencies YamlCppLib)
+
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     if (${USE_SANITIZER})
         find_library(ASAN_LIBRARY  REQUIRED NAMES asan libasan.so.4 libasan.so.3 libasan.so.2 libasan.so.1 libasan.so)
@@ -107,5 +113,6 @@ list(APPEND DEPENDENCIES_LIBS "${OPENGL_LIBRARY}")
 list(APPEND DEPENDENCIES_LIBS "${SNDFILE_LIBRARY}")
 list(APPEND DEPENDENCIES_LIBS "${PTHREAD_LIBRARY}")
 list(APPEND DEPENDENCIES_LIBS PhysXLib)
+list(APPEND DEPENDENCIES_LIBS YamlCppLib)
 # =================================================
 

@@ -11,6 +11,8 @@
 #include "Bang/XMLMetaReader.h"
 #include "Bang/ResourceHandle.h"
 
+#include "yaml-cpp/yaml.h"
+
 USING_NAMESPACE_BANG
 
 ImportFilesManager::ImportFilesManager()
@@ -114,6 +116,37 @@ GUIDManager* ImportFilesManager::GetGUIDManager()
     return &(ImportFilesManager::GetInstance()->m_GUIDManager);
 }
 
+void ExportMetaToYAML(const MetaNode &metaNode, YAML::Emitter &out)
+{
+    out << YAML::BeginMap;
+
+    for (const auto &pair : metaNode.GetAttributes())
+    {
+        const String &attrName = pair.first;
+        const MetaAttribute &metaAttr = pair.second;
+        out << attrName;
+        out << metaAttr.GetStringValue();
+    }
+
+    for (const MetaNode &metaChildNode : metaNode.GetChildren())
+    {
+        ExportMetaToYAML(metaChildNode, out);
+    }
+
+    out << YAML::EndMap;
+}
+
+void ExportMetaToYAML(const Path &prevPath, const MetaNode &metaNode)
+{
+    YAML::Emitter out;
+    if (prevPath.GetAbsolute().EndsWith(".import"))
+    {
+        ExportMetaToYAML(metaNode, out);
+        Path newPath = Path(prevPath.GetAbsolute().Replace(".import", ".meta"));
+        File::Write(newPath, String(out.c_str()));
+    }
+}
+
 void ImportFilesManager::RegisterImportFilepath(const Path &importFilepath)
 {
     if (!IsImportFile(importFilepath))
@@ -136,6 +169,8 @@ void ImportFilesManager::RegisterImportFilepath(const Path &importFilepath)
 
     ifm->m_GUIDToFilepath.Add(guid, filepath);
     ifm->m_filepathToGUID.Add(filepath, guid);
+
+    ExportMetaToYAML(importFilepath, metaNode);
 }
 
 void ImportFilesManager::UnRegisterImportFilepath(const Path &importFilepath)

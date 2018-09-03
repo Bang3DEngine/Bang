@@ -1,0 +1,3 @@
+build/
+yaml-cpp-config-version.cmake
+yaml-cpp-config.cmake

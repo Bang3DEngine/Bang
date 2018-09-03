@@ -1,9 +1,13 @@
 #include "Bang/XMLMetaReader.h"
 
+#include <sstream>
+
 #include "Bang/File.h"
 #include "Bang/Debug.h"
 #include "Bang/Paths.h"
 #include "Bang/Serializable.h"
+
+#include "yaml-cpp/yaml.h"
 
 USING_NAMESPACE_BANG
 
@@ -202,67 +206,113 @@ MetaNode XMLMetaReader::FromFile(const Path &filepath)
     return XMLMetaReader::FromString(fileContents);
 }
 
-MetaNode XMLMetaReader::FromString(const String &xml)
+void FromYAMLNode(const YAML::Node &yamlNode, MetaNode &metaNode)
 {
-    if (xml.IsEmpty())
+    if (!yamlNode.IsNull())
     {
-        return MetaNode();
-    }
-
-    //Read name
-    String tag;
-    int rootOpenTagBegin, rootOpenTagEnd;
-    XMLMetaReader::GetNextOpenTag(xml, 0, &tag, &rootOpenTagBegin, &rootOpenTagEnd);
-    if (rootOpenTagEnd == -1)
-    {
-        return MetaNode();
-    }
-
-    int tagNameEnd;
-    String tagName = XMLMetaReader::GetTagName(tag, nullptr, &tagNameEnd);
-    int rootCloseTagBegin, rootCloseTagEnd;
-    XMLMetaReader::GetCorrespondingCloseTag(xml, rootOpenTagEnd, tagName,
-                                        &rootCloseTagBegin, &rootCloseTagEnd);
-
-    MetaNode root;
-    root.SetName(tagName);
-
-    //Read attributes
-    int attrEnd = tagNameEnd;
-    while (attrEnd != -1)
-    {
-        MetaAttribute attr;
-        XMLMetaReader::GetNextAttribute(tag, attrEnd + 1, &attr, &attrEnd);
-        if(attrEnd == -1) { break; }
-        root.Set(attr.GetName(), attr.GetStringValue());
-    }
-
-    //Read children
-    String innerXML = xml.SubString(rootOpenTagEnd + 1, rootCloseTagBegin - 1);
-    int innerLastPos = 0;
-    while (true)
-    {
-        String innerTag;
-        int childOpenTagBegin, childOpenTagEnd;
-        XMLMetaReader::GetNextOpenTag(innerXML, innerLastPos, &innerTag,
-                                  &childOpenTagBegin, &childOpenTagEnd);
-
-        if (childOpenTagBegin == -1)
+        for (const auto &attrYAMLPair : yamlNode)
         {
-            break;
+            const YAML::Node &attrYAMLName = attrYAMLPair.first;
+            const YAML::Node &attrYAMLNode = attrYAMLPair.second;
+            if (attrYAMLName.Scalar() != "Children")
+            {
+                metaNode.Set(attrYAMLName.Scalar(), attrYAMLNode.Scalar());
+            }
+            else
+            {
+                const YAML::Node &childrenYAMLNode = attrYAMLNode;
+                for (const auto &childYAMLPair : childrenYAMLNode)
+                {
+                    const YAML::Node &childYAMLName = childYAMLPair.first;
+                    const YAML::Node &childYAMLNode = childYAMLPair.second;
+                    MetaNode childMetaNode;
+                    FromYAMLNode(childYAMLNode, childMetaNode);
+                    childMetaNode.SetName(childYAMLName.Scalar());
+                    metaNode.AddChild(childMetaNode);
+                }
+            }
+        }
+    }
+}
+
+MetaNode XMLMetaReader::FromString(const String &metaString)
+{
+    if (!metaString.BeginsWith("<"))
+    {
+        MetaNode metaNode;
+        const YAML::Node yamlNode = YAML::Load(metaString);
+        if (!yamlNode.IsNull() && yamlNode.size() >= 1)
+        {
+            const YAML::Node &rootNameYAMLNode = yamlNode.begin()->first;
+            const YAML::Node &rootMapYAMLNode  = yamlNode.begin()->second;
+            metaNode.SetName( rootNameYAMLNode.Scalar() );
+            ::FromYAMLNode(rootMapYAMLNode, metaNode);
+        }
+        return metaNode;
+    }
+    else
+    {
+        ASSERT(false);
+        if (metaString.IsEmpty())
+        {
+            return MetaNode();
         }
 
-        String tagName = XMLMetaReader::GetTagName(innerTag);
-        int childCloseTagBegin, childCloseTagEnd;
-        XMLMetaReader::GetCorrespondingCloseTag(innerXML, childOpenTagEnd, tagName,
-                                            &childCloseTagBegin, &childCloseTagEnd);
-        String childXML = innerXML.SubString(childOpenTagBegin, childCloseTagEnd);
+        //Read name
+        String tag;
+        int rootOpenTagBegin, rootOpenTagEnd;
+        XMLMetaReader::GetNextOpenTag(metaString, 0, &tag, &rootOpenTagBegin, &rootOpenTagEnd);
+        if (rootOpenTagEnd == -1)
+        {
+            return MetaNode();
+        }
 
-        MetaNode child = XMLMetaReader::FromString(childXML);
-        root.AddChild(child);
+        int tagNameEnd;
+        String tagName = XMLMetaReader::GetTagName(tag, nullptr, &tagNameEnd);
+        int rootCloseTagBegin, rootCloseTagEnd;
+        XMLMetaReader::GetCorrespondingCloseTag(metaString, rootOpenTagEnd, tagName,
+                                            &rootCloseTagBegin, &rootCloseTagEnd);
 
-        innerLastPos = childCloseTagEnd;
+        MetaNode root;
+        root.SetName(tagName);
+
+        //Read attributes
+        int attrEnd = tagNameEnd;
+        while (attrEnd != -1)
+        {
+            MetaAttribute attr;
+            XMLMetaReader::GetNextAttribute(tag, attrEnd + 1, &attr, &attrEnd);
+            if(attrEnd == -1) { break; }
+            root.Set(attr.GetName(), attr.GetStringValue());
+        }
+
+        //Read children
+        String innerMeta = metaString.SubString(rootOpenTagEnd + 1, rootCloseTagBegin - 1);
+        int innerLastPos = 0;
+        while (true)
+        {
+            String innerTag;
+            int childOpenTagBegin, childOpenTagEnd;
+            XMLMetaReader::GetNextOpenTag(innerMeta, innerLastPos, &innerTag,
+                                      &childOpenTagBegin, &childOpenTagEnd);
+
+            if (childOpenTagBegin == -1)
+            {
+                break;
+            }
+
+            String tagName = XMLMetaReader::GetTagName(innerTag);
+            int childCloseTagBegin, childCloseTagEnd;
+            XMLMetaReader::GetCorrespondingCloseTag(innerMeta, childOpenTagEnd, tagName,
+                                                &childCloseTagBegin, &childCloseTagEnd);
+            String childMeta = innerMeta.SubString(childOpenTagBegin, childCloseTagEnd);
+
+            MetaNode child = XMLMetaReader::FromString(childMeta);
+            root.AddChild(child);
+
+            innerLastPos = childCloseTagEnd;
+        }
+
+        return root;
     }
-
-    return root;
 }

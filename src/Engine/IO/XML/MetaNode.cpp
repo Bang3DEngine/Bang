@@ -3,6 +3,8 @@
 #include "Bang/Paths.h"
 #include "Bang/XMLMetaReader.h"
 
+#include "yaml-cpp/yaml.h"
+
 USING_NAMESPACE_BANG
 
 MetaNode::MetaNode(const String &name)
@@ -137,7 +139,38 @@ void MetaNode::SetName(const String name)
 
 String MetaNode::ToString() const
 {
-    return ToString("");
+    YAML::Emitter out;
+    ToString(out);
+    return String(out.c_str());
+}
+
+void MetaNode::ToString_(YAML::Emitter &out) const
+{
+    out << YAML::Key << GetName();
+    out << YAML::Value << YAML::BeginMap;
+
+        for (const auto &pair : GetAttributes())
+        {
+            const MetaAttribute &attr = pair.second;
+            out << YAML::Key << attr.GetName();
+            out << YAML::Value << attr.GetStringValue();
+        }
+
+        out << YAML::Key << "Children";
+        out << YAML::Value << YAML::BeginMap;
+        for (const MetaNode &childMeta : GetChildren())
+        {
+            childMeta.ToString_(out);
+        }
+        out << YAML::EndMap;
+
+    out << YAML::EndMap;
+}
+void MetaNode::ToString(YAML::Emitter &out) const
+{
+    out << YAML::BeginMap;
+    ToString_(out);
+    out << YAML::EndMap;
 }
 
 const String &MetaNode::GetName() const

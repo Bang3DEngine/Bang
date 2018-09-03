@@ -692,6 +692,11 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
 const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
                                     const Path &modelFilepath)
 {
+    if (!modelFilepath.IsFile())
+    {
+        return nullptr;
+    }
+
     const aiScene* scene =
       importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
                          aiProcess_Triangulate            |

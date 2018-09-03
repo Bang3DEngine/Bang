@@ -50,7 +50,9 @@ void Serializable::ImportMeta(const String &metaNodeString)
 void Serializable::ImportMeta(const MetaNode &metaNode)
 {
     if (metaNode.Contains("GUID"))
-    { SetGUID(metaNode.Get<GUID>("GUID")); }
+    {
+        SetGUID(metaNode.Get<GUID>("GUID"));
+    }
 }
 
 void Serializable::ExportMeta(MetaNode *metaNode) const
@@ -76,6 +78,13 @@ bool Serializable::ExportMetaToFile(const Path &path) const
     return true;
 }
 
-HideFlags &Serializable::GetHideFlags() { return m_hideFlags; }
-const HideFlags &Serializable::GetHideFlags() const { return m_hideFlags; }
+HideFlags &Serializable::GetHideFlags()
+{
+    return m_hideFlags;
+}
+
+const HideFlags &Serializable::GetHideFlags() const
+{
+    return m_hideFlags;
+}
 

@@ -889,7 +889,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
         componentsToRemove.Add(comp);
     }
 
-    for (const MetaNode& childMeta : metaNode.GetChildren() )
+    for (const MetaNode& childMeta : metaNode.GetChildren())
     {
         const GUID guid = childMeta.Get<GUID>("GUID");
         const String& tagName = childMeta.GetName();

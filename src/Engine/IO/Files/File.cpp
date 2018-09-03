@@ -176,7 +176,10 @@ void File::Write(const Path &filepath, const Byte *bytes, std::size_t bytesSize)
 
 String File::GetContents(const Path &filepath)
 {
-    if (!filepath.IsFile()) { return ""; }
+    if (!filepath.IsFile())
+    {
+        return "";
+    }
 
     String contents = "";
     std::ifstream ifs(filepath.GetAbsolute().ToCString());

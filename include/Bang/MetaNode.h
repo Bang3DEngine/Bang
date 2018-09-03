@@ -7,6 +7,11 @@
 #include "Bang/MetaAttribute.h"
 #include "Bang/StreamOperators.h"
 
+FORWARD namespace YAML
+{
+    FORWARD class Emitter;
+}
+
 NAMESPACE_BANG_BEGIN
 
 class MetaNode : public IToString
@@ -77,6 +82,7 @@ public:
     const MetaNode *GetChild(const String &name) const;
     void SetName(const String name);
     String ToString() const override;
+    void ToString(YAML::Emitter &out) const;
     String ToString(const String& indent) const;
 
     const String& GetName() const;
@@ -93,6 +99,8 @@ private:
     List<MetaNode> m_children;
     mutable List<String> m_attributeOrder;
     mutable Map<String, MetaAttribute> m_attributes;
+
+    void ToString_(YAML::Emitter &out) const;
 };
 
 NAMESPACE_BANG_END

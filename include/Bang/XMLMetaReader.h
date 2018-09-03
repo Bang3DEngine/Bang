@@ -1,5 +1,5 @@
-#ifndef XMLNODEREADER_H
-#define XMLNODEREADER_H
+#ifndef XMLMETAREADER_H
+#define XMLMETAREADER_H
 
 #include <sstream>
 #include <fstream>
@@ -13,19 +13,19 @@ FORWARD class Serializable;
 class XMLMetaReader
 {
 public:
-    static void GetNextOpenTag(const String &xml,
+    static void GetNextOpenTag(const String &metaString,
                                int startPosition,
                                String *tag,
                                int *beginPosition,
                                int *endTagPosition);
 
-    static void GetNextTag(const String &xml,
+    static void GetNextTag(const String &metaString,
                            int startPosition,
                            String *tag,
                            int *beginPosition,
                            int *endTagPosition);
 
-    static void GetCorrespondingCloseTag(const String &xml,
+    static void GetCorrespondingCloseTag(const String &metaString,
                                          int startPositionAfterOpenTag,
                                          String tagName,
                                          int *beginPosition,
@@ -46,9 +46,9 @@ public:
                              int *tagNameEnd = nullptr);
 
     static MetaNode FromFile(const Path &filepath);
-    static MetaNode FromString(const String &xml);
+    static MetaNode FromString(const String &metaString);
 };
 
 NAMESPACE_BANG_END
 
-#endif // XMLNODEREADER_H
+#endif // XMLMETAREADER_H

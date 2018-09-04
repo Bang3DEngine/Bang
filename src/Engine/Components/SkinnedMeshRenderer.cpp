@@ -203,12 +203,19 @@ const String &SkinnedMeshRenderer::GetRootBoneGameObjectName() const
 
 GameObject *SkinnedMeshRenderer::GetBoneGameObject(const String &boneName) const
 {
+    GameObject *boneGo = nullptr;
     GameObject *rootBoneGo = GetRootBoneGameObject();
-    if (rootBoneGo)
+    auto it = m_boneNameToBoneGameObject.Find(boneName);
+    if (it != m_boneNameToBoneGameObject.End())
     {
-        return rootBoneGo->FindInChildren(boneName);
+        boneGo = it->second;
     }
-    return nullptr;
+    else
+    {
+        boneGo = rootBoneGo ? rootBoneGo->FindInChildren(boneName) : nullptr;
+        m_boneNameToBoneGameObject.Add(boneName, boneGo);
+    }
+    return boneGo;
 }
 
 Matrix4 SkinnedMeshRenderer::GetBoneSpaceToRootSpaceMatrix(const String &boneName) const
@@ -293,6 +300,7 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
 void SkinnedMeshRenderer::OnObjectGathered(GameObject *go)
 {
     p_rootBoneGameObject = nullptr;
+    m_boneNameToBoneGameObject.Clear();
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 
@@ -300,6 +308,7 @@ void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
                                              GameObject *go)
 {
     p_rootBoneGameObject = nullptr;
+    m_boneNameToBoneGameObject.Clear();
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 

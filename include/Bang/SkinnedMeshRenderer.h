@@ -76,6 +76,7 @@ private:
 
     String m_rootBoneGameObjectName = "";
     mutable GameObject *p_rootBoneGameObject = nullptr;
+    mutable Map<String, GameObject*> m_boneNameToBoneGameObject;
 
 
 };

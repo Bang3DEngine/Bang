@@ -1,12 +1,2 @@
-#define BANG_VERTEX
-#include "Common.glsl"
-
-layout(location = 0) in vec3 B_VIn_Position;
-layout(location = 1) in vec3 B_VIn_Normal;
-layout(location = 2) in vec2 B_VIn_Uv;
-layout(location = 3) in vec3 B_VIn_Tangent;
-
-void main()
-{
-    gl_Position = (B_Model * vec4(B_VIn_Position, 1.0));
-}
+#define ONLY_OUT_MODEL_POS_VEC4
+#include "DefaultVertCommon.glsl"

@@ -13,12 +13,14 @@ layout(location = 3) in vec3 B_VIn_Tangent;
 layout(location = 4) in vec4 B_VIn_VertexBonesIds; // Max 4 bones per vertex
 layout(location = 5) in vec4 B_VIn_VertexBonesWeights;
 
+#ifndef ONLY_OUT_MODEL_POS_VEC4
 out vec3 B_FIn_Position;
 out vec3 B_FIn_Normal;
 out vec2 B_FIn_AlbedoUv;
 out vec2 B_FIn_NormalMapUv;
 out vec3 B_FIn_Tangent;
 out mat3 B_TBN;
+#endif
 
 void main()
 {
@@ -47,6 +49,8 @@ void main()
         modelNormal = vec4(bonedNormal.xyz, 0);
     }
 
+    #ifndef ONLY_OUT_MODEL_POS_VEC4
+
     B_FIn_Position    = (B_Model  * modelPosition).xyz;
     B_FIn_Normal      = (B_Normal * modelNormal).xyz;
     B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
@@ -71,4 +75,10 @@ void main()
         // B_FIn_Tangent = vec3(0);
         // B_TBN = mat3(0);
     }
+
+    #else
+
+    gl_Position = B_Model * modelPosition;
+
+    #endif
 }

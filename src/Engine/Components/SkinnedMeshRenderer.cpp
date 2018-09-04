@@ -9,13 +9,11 @@
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
 
 SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
-    SetMaterial( MaterialFactory::GetDefaultAnimated().Get() );
 }
 
 SkinnedMeshRenderer::~SkinnedMeshRenderer()
@@ -70,7 +68,7 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
     return boneTransformInRootSpace;
 }
 
-Matrix4 SkinnedMeshRenderer::GetInitialTransformMatrixFor(const String &boneName) const
+const Matrix4& SkinnedMeshRenderer::GetInitialTransformMatrixFor(const String &boneName) const
 {
     if (m_initialTransforms.ContainsKey(boneName))
     {
@@ -79,9 +77,29 @@ Matrix4 SkinnedMeshRenderer::GetInitialTransformMatrixFor(const String &boneName
     return Matrix4::Identity;
 }
 
+const Map<String, Matrix4> &SkinnedMeshRenderer::GetInitialTransforms() const
+{
+    return m_initialTransforms;
+}
+
 const Set<String> &SkinnedMeshRenderer::GetBonesNames() const
 {
     return m_bonesNames;
+}
+
+void SkinnedMeshRenderer::BindBoneMatrices()
+{
+    if (Material *mat = GetActiveMaterial())
+    {
+        if (ShaderProgram *sp = mat->GetShaderProgram())
+        {
+            sp->Bind();
+            sp->SetBool("B_HasBoneAnimations", true);
+            sp->SetMatrix4Array("B_BoneAnimationMatrices",
+                                m_bonesTransformsMatricesArrayUniform,
+                                false);
+        }
+    }
 }
 
 void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
@@ -105,7 +123,7 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
     SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
 }
 
-void SkinnedMeshRenderer::OnRender()
+void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatricesIfNeeded()
 {
     bool updateBonesMatricesFromTransformMatrices = true;
     Array<Animator*> animators = GetGameObject()->GetComponents<Animator>();
@@ -113,40 +131,28 @@ void SkinnedMeshRenderer::OnRender()
     {
         if (animator->IsPlaying())
         {
-            m_needsToUpdateToDefaultMatrices = true;
             updateBonesMatricesFromTransformMatrices = false;
         }
     }
 
     if (updateBonesMatricesFromTransformMatrices)
     {
-        if (m_needsToUpdateToDefaultMatrices)
+        for (const String &boneName : GetBonesNames())
         {
-            for (const String &boneName : m_bonesNames)
+            if (GameObject *go = GetBoneGameObject(boneName))
             {
-                if (GameObject *go = GetBoneGameObject(boneName))
-                {
-                    go->GetTransform()->FillFromMatrix(
-                                    GetInitialTransformMatrixFor(boneName) );
-                }
+                go->GetTransform()->FillFromMatrix(
+                                GetInitialTransformMatrixFor(boneName) );
             }
-            m_needsToUpdateToDefaultMatrices = false;
         }
-
         UpdateBonesMatricesFromTransformMatrices();
     }
+}
 
-    // Bind matrices
-    if (Material *mat = GetActiveMaterial())
-    {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
-        {
-            sp->Bind();
-            sp->SetMatrix4Array("B_BoneAnimationMatrices",
-                                m_bonesTransformsMatricesArrayUniform,
-                                false);
-        }
-    }
+void SkinnedMeshRenderer::OnRender()
+{
+    UpdateBonesMatricesFromTransformMatricesIfNeeded();
+    BindBoneMatrices();
 
     MeshRenderer::OnRender();
 }
@@ -305,7 +311,6 @@ void SkinnedMeshRenderer::CloneInto(ICloneable *clone) const
     smrClone->m_bonesNames = m_bonesNames;
     smrClone->m_rootBoneGameObjectName = m_rootBoneGameObjectName;
     smrClone->m_boneSpaceToRootSpaceMatrices = m_boneSpaceToRootSpaceMatrices;
-    smrClone->m_needsToUpdateToDefaultMatrices = m_needsToUpdateToDefaultMatrices;
     smrClone->m_initialTransforms = m_initialTransforms;
 }
 

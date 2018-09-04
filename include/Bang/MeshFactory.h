@@ -23,12 +23,12 @@ public:
     static RH<Mesh> GetCone();
     static RH<Mesh> GetCamera();
 
+    static RH<Mesh> GetMesh(const String &enginePath);
+    static RH<Mesh> GetMesh(const Path &fullPath);
+
 protected:
     MeshFactory() = default;
     virtual ~MeshFactory() = default;
-
-    static RH<Mesh> GetMesh(const String &enginePath);
-    static RH<Mesh> GetMesh(const Path &fullPath);
 
 private:
     Set< RH<Model> > m_modelCache;

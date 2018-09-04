@@ -13,7 +13,7 @@ Texture2D::Texture2D() : Texture(GL::TextureTarget::TEXTURE_2D)
     CreateEmpty(1, 1);
 
     SetFilterMode(GL::FilterMode::BILINEAR);
-    SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+    SetWrapMode(GL::WrapMode::REPEAT);
 }
 
 Texture2D::~Texture2D()

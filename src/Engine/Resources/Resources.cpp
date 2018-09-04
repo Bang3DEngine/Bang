@@ -107,7 +107,11 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
 
 RH<Resource> Resources::Load_(std::function<Resource*()> creator, const GUID &guid)
 {
-    if (guid.IsEmpty()) { return RH<Resource>(nullptr); }
+    if (guid.IsEmpty())
+    {
+        return RH<Resource>(nullptr);
+    }
+
 
     RH<Resource> resRH( GetCached_(guid) );
     if (!resRH)
@@ -206,7 +210,8 @@ void Resources::Remove(const GUID &guid)
     ASSERT(resEntry.resource != nullptr);
     ASSERT(resEntry.usageCount == 0);
 
-    if (Resource *resource = resEntry.resource)
+    Resource *resource = resEntry.resource;
+    if (resource)
     {
         if (EventEmitter<IEventsDestroy> *destroyable =
                              DCAST< EventEmitter<IEventsDestroy>* >(resource))
@@ -214,11 +219,19 @@ void Resources::Remove(const GUID &guid)
             destroyable->EventEmitter<IEventsDestroy>::PropagateToListeners(
                                     &IEventsDestroy::OnDestroyed, destroyable);
         }
-
-        delete resource;
     }
 
-    rss->m_resourcesCache.Remove(it);
+    do
+    {
+        rss->m_resourcesCache.Remove(it);
+        it = rss->m_resourcesCache.Find(guid);
+    }
+    while (it != rss->m_resourcesCache.End());
+
+    if (resource)
+    {
+        delete resource;
+    }
 }
 
 Array<Path> Resources::GetLookUpPaths() const
@@ -228,10 +241,10 @@ Array<Path> Resources::GetLookUpPaths() const
 
 void Resources::RegisterResourceUsage(Resource *resource)
 {
-    Resources *rs = Resources::GetInstance();
     const GUID &guid = resource->GetGUID();
     ASSERT(!guid.IsEmpty());
 
+    Resources *rs = Resources::GetInstance();
     if (!rs->GetCached_(guid))
     {
         Resources::Add(resource);

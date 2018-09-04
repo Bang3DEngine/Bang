@@ -61,7 +61,7 @@ void GEngine::Init()
 
     m_texUnitManager = new TextureUnitManager();
 
-    p_windowPlaneMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane().Get());
+    p_windowPlaneMesh = MeshFactory::GetUIPlane();
     p_renderTextureToViewportSP.Set( ShaderProgramFactory::GetRenderTextureToViewport() );
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),

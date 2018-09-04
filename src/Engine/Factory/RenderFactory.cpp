@@ -35,9 +35,9 @@ RenderFactory::RenderFactory()
     m_gizmosGo = GameObjectFactory::CreateGameObject();
     m_gizmosGo->SetName("Gizmos");
 
-    m_boxMesh = Resources::Clone<Mesh>(MeshFactory::GetCube().Get());
-    m_planeMesh = Resources::Clone<Mesh>(MeshFactory::GetUIPlane().Get());
-    m_sphereMesh = Resources::Clone<Mesh>(MeshFactory::GetSphere().Get());
+    m_boxMesh = MeshFactory::GetCube();
+    m_planeMesh = MeshFactory::GetUIPlane();
+    m_sphereMesh = MeshFactory::GetSphere();
     m_outlineShaderProgram.Set( ShaderProgramFactory::Get(
                 ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                 EPATH("Shaders/GizmosOutline.frag")) );

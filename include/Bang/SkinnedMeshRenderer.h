@@ -32,10 +32,13 @@ public:
     Matrix4 GetBoneSpaceToRootSpaceMatrix(const String &boneName) const;
     Matrix4 GetBoneTransformMatrixFor(GameObject *boneGameObject,
                                       const Matrix4 &transform) const;
-    Matrix4 GetInitialTransformMatrixFor(const String &boneName) const;
+    const Matrix4& GetInitialTransformMatrixFor(const String &boneName) const;
+    const Map<String, Matrix4> &GetInitialTransforms() const;
     const Set<String> &GetBonesNames() const;
 
+    void BindBoneMatrices();
     void UpdateBonesMatricesFromTransformMatrices();
+    void UpdateBonesMatricesFromTransformMatricesIfNeeded();
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                     const Map<String, Matrix4> &boneMatrices);
     void SetSkinnedMeshRendererCurrentBoneMatrices(
@@ -60,7 +63,6 @@ private:
     String m_rootBoneGameObjectName = "";
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     Map<String, Matrix4> m_initialTransforms;
-    bool m_needsToUpdateToDefaultMatrices = true;
 
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 

@@ -488,7 +488,7 @@ Mesh::GetVertexIndicesToTriangleIndices() const
 
 void Mesh::CloneInto(ICloneable *clone) const
 {
-    Mesh *mClone = Cast<Mesh*>(clone);
+    Mesh *mClone = SCAST<Mesh*>(clone);
 
     mClone->m_bBox = m_bBox;
     mClone->m_bSphere = m_bSphere;
@@ -511,7 +511,8 @@ void Mesh::CloneInto(ICloneable *clone) const
 
 void Mesh::Import(const Path &meshFilepath)
 {
-    ASSERT_MSG(false, "Load the Model, and from there retrieve the mesh.");
+    ASSERT_MSG(false, "Load the Model, and from there retrieve the mesh. "
+                      "Or use MeshFactory.");
     (void) meshFilepath;
 }
 

@@ -97,9 +97,15 @@ int ModelIO::GetModelNumTriangles(const Path &modelFilepath)
 {
     Assimp::Importer importer;
     const aiScene* scene = ImportScene(&importer, modelFilepath);
-    if (!scene) { return 0; }
+    if (!scene)
+    {
+        return 0;
+    }
 
-    if (scene && scene->HasMeshes()) { return scene->mMeshes[0]->mNumFaces; }
+    if (scene && scene->HasMeshes())
+    {
+        return scene->mMeshes[0]->mNumFaces;
+    }
     return 0;
 }
 
@@ -142,8 +148,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     // Load materials
     Array< String > unorderedMaterialNames;
     Array< RH<Material> > unorderedMaterials;
-    Array< String > unorderedAnimMaterialNames;
-    Array< RH<Material> > unorderedAnimMaterials;
     for (int i = 0; i < SCAST<int>(aScene->mNumMaterials); ++i)
     {
         String materialName;
@@ -156,17 +160,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
                                         &materialName);
         unorderedMaterials.PushBack(materialRH);
         unorderedMaterialNames.PushBack(materialName);
-
-        String animMaterialName;
-        RH<Material> animMaterialRH;
-        ModelIO::ImportEmbeddedMaterial(aScene->mMaterials[i],
-                                        modelFilepath.GetDirectory(),
-                                        model,
-                                        true,
-                                        &animMaterialRH,
-                                        &animMaterialName);
-        unorderedAnimMaterials.PushBack(animMaterialRH);
-        unorderedAnimMaterialNames.PushBack(animMaterialName);
     }
 
 
@@ -185,21 +178,10 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
 
         uint matIndex = aScene->mMeshes[i]->mMaterialIndex;
 
-        RH<Material> noAnimMaterial = unorderedMaterials[matIndex];
-        const String &noAnimMaterialName = unorderedMaterialNames[matIndex];
-        RH<Material> animMaterial = unorderedAnimMaterials[matIndex];
-        const String &animMaterialName = unorderedAnimMaterialNames[matIndex];
-        if (meshRH.Get()->GetBonesPool().Size() >= 1)
-        {
-            modelScene->materials.PushBack(animMaterial);
-            modelScene->materialsNames.PushBack(animMaterialName);
-        }
-        else
-        {
-            modelScene->materials.PushBack(noAnimMaterial);
-            modelScene->materialsNames.PushBack(noAnimMaterialName);
-        }
-
+        RH<Material> material = unorderedMaterials[matIndex];
+        const String &materialName = unorderedMaterialNames[matIndex];
+        modelScene->materials.PushBack(material);
+        modelScene->materialsNames.PushBack(materialName);
 
         // Update global bones
         for (const auto &it : meshRH.Get()->GetBonesPool())
@@ -361,8 +343,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
             rootGameObject->GetComponentsInDescendantsAndThis<MeshRenderer>();
         for (MeshRenderer *mr : rootMRs)
         {
-            Mesh *mesh = mr->GetCurrentLODActiveMesh();
-            if (mesh)
+            if (Mesh *mesh = mr->GetCurrentLODActiveMesh())
             {
                 sceneMeshes.Add(mesh);
                 meshRendererToMesh.Add(mr, mesh);
@@ -384,7 +365,10 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         }
     }
 
-    if (sceneMeshes.IsEmpty()) { return; }
+    if (sceneMeshes.IsEmpty())
+    {
+        return;
+    }
 
     Array<Mesh*> sceneMeshesArray(sceneMeshes.Begin(), sceneMeshes.End());
     Array<Texture2D*> sceneTexturesArray(sceneTextures.Begin(), sceneTextures.End());

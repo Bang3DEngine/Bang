@@ -36,54 +36,48 @@ void Animator::OnUpdate()
 
     if (Input::GetKeyDown(Key::X))
     {
-        if (IsPlaying()) Stop(); else Play();
+        if (IsPlaying())
+        {
+            Stop();
+        }
+        else
+        {
+            Play();
+        }
     }
 
     if (GetAnimation() && IsPlaying())
     {
         double passedTimeSeconds = (passedTimeMillis / double(1e3));
         m_animationTimeSeconds += passedTimeSeconds * GetAnimation()->GetSpeed();
+
+        Map< String, Matrix4 > boneNameToCurrentMatrices = GetAnimation()->
+                 GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
+        SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
     }
 }
 
 void Animator::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
-
-    if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
-    {
-        if (GetAnimation() && IsPlaying())
-        {
-            Map< String, Matrix4 > boneNameToCurrentMatrices =
-               GetAnimation()->GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
-            SetSkinnedMeshRendererCurrentBoneMatrices(rp, boneNameToCurrentMatrices);
-        }
-    }
 }
 
 void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
-                                RenderPass rp,
                                 const Map<String, Matrix4> &boneAnimMatrices)
 {
     Array<SkinnedMeshRenderer*> smrs =
                         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
-        if (Material *mat = smr->GetActiveMaterial())
+        for (const auto &pair : boneAnimMatrices)
         {
-            if (mat->GetRenderPass() == rp)
+            const String &boneName = pair.first;
+            const Matrix4 &boneAnimMatrix = pair.second;
+            GameObject *boneGo = smr->GetBoneGameObject(boneName);
+            if (boneGo && smr->GetActiveMesh()->
+                          GetBonesPool().ContainsKey(boneName))
             {
-                for (const auto &pair : boneAnimMatrices)
-                {
-                    const String &boneName = pair.first;
-                    const Matrix4 &boneAnimMatrix = pair.second;
-                    GameObject *boneGo = smr->GetBoneGameObject(boneName);
-                    if (boneGo && smr->GetActiveMesh()->
-                                  GetBonesPool().ContainsKey(boneName))
-                    {
-                        boneGo->GetTransform()->FillFromMatrix( boneAnimMatrix );
-                    }
-                }
+                boneGo->GetTransform()->FillFromMatrix( boneAnimMatrix );
             }
         }
     }

@@ -48,7 +48,6 @@ private:
     RH<Animation> p_animation;
 
     void SetSkinnedMeshRendererCurrentBoneMatrices(
-                                RenderPass rp,
                                 const Map<String, Matrix4> &boneAnimMatrices);
 };
 

@@ -121,8 +121,13 @@ Array<ResourceClass*> Resources::GetAll()
     Array<Resource*> resources = Resources::GetAllResources();
     for (Resource *res : resources)
     {
-        ResourceClass *rc = Cast<ResourceClass*>(res);
-        if (rc) { result.PushBack(rc); }
+        if (res)
+        {
+            if (ResourceClass *rc = DCAST<ResourceClass*>(res))
+            {
+                result.PushBack(rc);
+            }
+        }
     }
     return result;
 }

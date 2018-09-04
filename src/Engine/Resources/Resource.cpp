@@ -13,6 +13,7 @@ Resource::Resource()
 
 Resource::~Resource()
 {
+    ASSERT( !Resources::Contains(GetGUID()) )
 }
 
 void Resource::RemoveEmbeddedResource(Resource *embeddedResource)
@@ -109,10 +110,10 @@ void Resource::ImportMeta(const MetaNode &metaNode)
         if (Resource *embeddedRes = pair.second.Get())
         {
             const String &embeddedResName = pair.first;
-            if (const MetaNode *embeddedResMetaInfo =
+            if (const MetaNode *embeddedResMetaNode =
                                 metaNode.GetChild(embeddedResName))
             {
-                embeddedRes->ImportMeta(*embeddedResMetaInfo);
+                embeddedRes->ImportMeta(*embeddedResMetaNode);
             }
         }
     }

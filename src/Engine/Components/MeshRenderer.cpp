@@ -10,6 +10,8 @@
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/ShaderProgram.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/ReflectionProbe.h"
 
 USING_NAMESPACE_BANG
@@ -17,6 +19,7 @@ USING_NAMESPACE_BANG
 MeshRenderer::MeshRenderer()
 {
     SetRenderPrimitive( GL::Primitive::TRIANGLES );
+    SetMaterial( MaterialFactory::GetDefault().Get() );
     SetMesh( MeshFactory::GetCube().Get() );
 }
 
@@ -48,6 +51,14 @@ Mesh *MeshRenderer::GetSharedMesh() const { return p_sharedMesh.Get(); }
 void MeshRenderer::Bind()
 {
     Renderer::Bind();
+    if (Material *mat = GetActiveMaterial())
+    {
+        if (ShaderProgram *sp = mat->GetShaderProgram())
+        {
+            sp->Bind();
+            sp->SetBool("B_HasBoneAnimations", false);
+        }
+    }
     ReflectionProbe::SetRendererUniforms(this);
 }
 

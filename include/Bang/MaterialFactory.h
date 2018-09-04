@@ -12,7 +12,6 @@ class MaterialFactory
 {
 public:
     static RH<Material> GetDefault(RenderPass renderPass = RenderPass::SCENE);
-    static RH<Material> GetDefaultAnimated();
     static RH<Material> GetDefaultUnLighted();
     static RH<Material> GetGizmosUnLightedOverlay();
     static RH<Material> GetWater();

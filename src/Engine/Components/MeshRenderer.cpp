@@ -90,7 +90,8 @@ void MeshRenderer::OnRender()
     Mesh *baseMeshToRender = GetActiveMesh();
     if (baseMeshToRender)
     {
-        Mesh *lodMeshToRender = baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();
+        Mesh *lodMeshToRender =
+                baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();
         GL::Render(lodMeshToRender->GetVAO(),
                    GetRenderPrimitive(),
                    lodMeshToRender->GetNumVertices());
@@ -99,7 +100,10 @@ void MeshRenderer::OnRender()
 
 Mesh *MeshRenderer::GetActiveMesh() const
 {
-    if (p_mesh) { return GetMesh(); }
+    if (p_mesh)
+    {
+        return GetMesh();
+    }
     return GetSharedMesh();
 }
 

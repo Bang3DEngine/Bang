@@ -233,8 +233,10 @@ public:
     }
 
     static constexpr float Map(float value,
-                               float srcMin, float srcMax,
-                               float destMin, float destMax)
+                               float srcMin,
+                               float srcMax,
+                               float destMin,
+                               float destMax)
     {
         return ((value-srcMin) / (srcMax - srcMin)) *
                 (destMax - destMin) +

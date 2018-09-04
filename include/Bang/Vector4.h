@@ -104,9 +104,9 @@ const Vector4G<T> Vector4G<T>::Back = Vector4G<T>(SCAST<T>(0),
                                                   SCAST<T>(1),
                                                   SCAST<T>(0));
 template<class T>
-const Vector4G<T> Vector4G<T>::Infinity = Vector4G<T>(Math::Max<T>());
+const Vector4G<T> Vector4G<T>::Infinity = Vector4G<T>(Math::Infinity<T>());
 template<class T>
-const Vector4G<T> Vector4G<T>::NInfinity = Vector4G<T>(Math::Min<T>());
+const Vector4G<T> Vector4G<T>::NInfinity = Vector4G<T>(Math::NegativeInfinity<T>());
 
 #undef XYZ_MEMBERS
 #undef EXTRA_DECLARATIONS

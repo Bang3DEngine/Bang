@@ -488,7 +488,7 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
 void PxSceneContainer::OnObjectUnGathered(GameObject *previousGameObject,
                                           PhysicsObject *phObj)
 {
-    if (PxActor *prevPxActor = GetPxActorFromGameObject(previousGameObject))
+    if (GetPxActorFromGameObject(previousGameObject))
     {
         switch (phObj->GetPhysicsObjectType())
         {

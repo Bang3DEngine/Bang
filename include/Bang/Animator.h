@@ -15,8 +15,6 @@ class Animator : public Component
     COMPONENT(Animator);
 
 public:
-    static Array<Matrix4>       s_identityMatrices;
-    static Map<String, Matrix4> s_identityBoneMatrices;
     static constexpr int MaxNumBones = 128;
 
     Animator();

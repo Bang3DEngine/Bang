@@ -174,7 +174,9 @@ void PointLight::ImportMeta(const MetaNode &metaNode)
 {
     Light::ImportMeta(metaNode);
     if (metaNode.Contains("Range"))
-    { SetRange(metaNode.Get<float>("Range")); }
+    {
+        SetRange(metaNode.Get<float>("Range"));
+    }
 }
 
 void PointLight::ExportMeta(MetaNode *metaNode) const

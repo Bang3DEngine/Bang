@@ -170,10 +170,10 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     Camera *cam = Camera::GetActive(); // Get active camera
     float prevZFar = cam->GetZFar();   // Save for later restore
     cam->SetZFar( Math::Min(prevZFar, GetShadowDistance()) ); // Shadow distance
-    const Quad camTopQuad   = cam->GetFrustumTopQuad();    // Get top quad
-    const Quad camBotQuad   = cam->GetFrustumBotQuad();    // Get bot quad
-    const Quad camLeftQuad  = cam->GetFrustumLeftQuad();   // Get left quad
-    const Quad camRightQuad = cam->GetFrustumRightQuad();  // Get right quad
+    const Quad camTopQuad   = cam->GetFrustumTopQuad();       // Get top quad
+    const Quad camBotQuad   = cam->GetFrustumBotQuad();       // Get bot quad
+    const Quad camLeftQuad  = cam->GetFrustumLeftQuad();      // Get left quad
+    const Quad camRightQuad = cam->GetFrustumRightQuad();     // Get right quad
     const std::array<Quad, 4> camQuads = {{camTopQuad, camBotQuad,
                                            camLeftQuad, camRightQuad}};
     cam->SetZFar(prevZFar); // Restore
@@ -183,7 +183,9 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     for (const Quad &quad : camQuads)
     {
         for (const Vector3 &p : quad.GetPoints())
-        { camFrustumPointsWS.PushBack(p); }
+        {
+            camFrustumPointsWS.PushBack(p);
+        }
     }
 
     // Get light space matrix
@@ -291,7 +293,9 @@ void DirectionalLight::ImportMeta(const MetaNode &metaNode)
     Light::ImportMeta(metaNode);
 
     if (metaNode.Contains("ShadowDistance"))
-    { SetShadowDistance(metaNode.Get<float>("ShadowDistance")); }
+    {
+        SetShadowDistance(metaNode.Get<float>("ShadowDistance"));
+    }
 }
 
 void DirectionalLight::ExportMeta(MetaNode *metaNode) const

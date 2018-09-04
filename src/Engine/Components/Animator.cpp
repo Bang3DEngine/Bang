@@ -10,19 +10,8 @@
 
 USING_NAMESPACE_BANG
 
-Array<Matrix4> Animator::s_identityMatrices;
-Map<String, Matrix4> Animator::s_identityBoneMatrices;
-
 Animator::Animator()
 {
-    if (Animator::s_identityMatrices.IsEmpty())
-    {
-        for (int i = 0; i < Animator::MaxNumBones; ++i)
-        {
-            Animator::s_identityMatrices.PushBack(Matrix4::Identity);
-            Animator::s_identityBoneMatrices.Add("", Matrix4::Identity);
-        }
-    }
 }
 
 Animator::~Animator()
@@ -61,11 +50,14 @@ void Animator::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
 
-    if (GetAnimation() && IsPlaying())
+    if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
     {
-        Map< String, Matrix4 > boneNameToCurrentMatrices =
-           GetAnimation()->GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
-        SetSkinnedMeshRendererCurrentBoneMatrices(rp, boneNameToCurrentMatrices);
+        if (GetAnimation() && IsPlaying())
+        {
+            Map< String, Matrix4 > boneNameToCurrentMatrices =
+               GetAnimation()->GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
+            SetSkinnedMeshRendererCurrentBoneMatrices(rp, boneNameToCurrentMatrices);
+        }
     }
 }
 
@@ -161,6 +153,6 @@ void Animator::ExportMeta(MetaNode *metaNode) const
     Component::ExportMeta(metaNode);
 
     metaNode->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
-                                               GUID::Empty());
+                                                GUID::Empty());
 }
 

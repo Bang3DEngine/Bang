@@ -79,7 +79,9 @@ void GameObjectFactory::CreateUIGameObjectInto(GameObject *go,  bool addComps)
     if (addComps)
     {
         if (!go->HasComponent<RectTransform>())
-        { go->AddComponent<RectTransform>(); }
+        {
+            go->AddComponent<RectTransform>();
+        }
     }
 }
 

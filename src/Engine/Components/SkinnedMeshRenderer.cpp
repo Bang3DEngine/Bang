@@ -13,9 +13,6 @@
 
 USING_NAMESPACE_BANG
 
-const String SkinnedMeshRenderer::MetaBoneGameObjectPrefix =
-                                        "SkinnedMeshRendererBoneGameObject_";
-
 SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
     SetMaterial( MaterialFactory::GetDefaultAnimated().Get() );

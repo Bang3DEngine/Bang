@@ -23,9 +23,20 @@ Mesh::Mesh() : m_bBox(Vector3::Zero)
 
 Mesh::~Mesh()
 {
-    if (m_vao)                 { delete m_vao;                 }
-    if (m_vertexIndicesIBO)    { delete m_vertexIndicesIBO;    }
-    if (m_vertexAttributesVBO) { delete m_vertexAttributesVBO; }
+    if (m_vao)
+    {
+        delete m_vao;
+    }
+
+    if (m_vertexIndicesIBO)
+    {
+        delete m_vertexIndicesIBO;
+    }
+
+    if (m_vertexAttributesVBO)
+    {
+        delete m_vertexAttributesVBO;
+    }
 }
 
 void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
@@ -354,7 +365,10 @@ int Mesh::GetNumLODs() const
 
 RH<Mesh> Mesh::GetLODMesh(int lod) const
 {
-    if (GetLODMeshes().IsEmpty()) { return RH<Mesh>(const_cast<Mesh*>(this)); }
+    if (GetLODMeshes().IsEmpty())
+    {
+        return RH<Mesh>(const_cast<Mesh*>(this));
+    }
 
     const int clampedLODLevel = Math::Clamp(lod, 0, GetNumLODs()-1);
     return GetLODMeshes()[clampedLODLevel];
@@ -404,23 +418,50 @@ int Mesh::GetNumVertices() const
 }
 
 
-VAO *Mesh::GetVAO() const { return m_vao; }
-IBO *Mesh::GetVertexIndicesIBO() const { return m_vertexIndicesIBO; }
-VBO *Mesh::GetVertexAttributesVBO() const { return m_vertexAttributesVBO; }
-const AABox &Mesh::GetAABBox() const { return m_bBox; }
-const Sphere &Mesh::GetBoundingSphere() const { return m_bSphere; }
-
+VAO *Mesh::GetVAO() const
+{
+    return m_vao;
+}
+IBO *Mesh::GetVertexIndicesIBO() const
+{
+    return m_vertexIndicesIBO;
+}
+VBO *Mesh::GetVertexAttributesVBO() const
+{
+    return m_vertexAttributesVBO;
+}
+const AABox &Mesh::GetAABBox() const
+{
+    return m_bBox;
+}
+const Sphere &Mesh::GetBoundingSphere() const
+{
+    return m_bSphere;
+}
 const Map<String, Mesh::Bone> &Mesh::GetBonesPool() const
 {
     return m_bonesPool;
 }
-
-const Array<Mesh::VertexId> &Mesh::GetVertexIndices() const { return m_vertexIndices; }
-const Array<Vector3> &Mesh::GetPositionsPool() const { return m_positionsPool; }
-const Array<Vector3> &Mesh::GetNormalsPool() const { return m_normalsPool; }
-const Array<Vector2> &Mesh::GetUvsPool() const { return m_uvsPool; }
-const Array<Vector3> &Mesh::GetTangentsPool() const { return m_tangentsPool; }
-
+const Array<Mesh::VertexId> &Mesh::GetVertexIndices() const
+{
+    return m_vertexIndices;
+}
+const Array<Vector3> &Mesh::GetPositionsPool() const
+{
+    return m_positionsPool;
+}
+const Array<Vector3> &Mesh::GetNormalsPool() const
+{
+    return m_normalsPool;
+}
+const Array<Vector2> &Mesh::GetUvsPool() const
+{
+    return m_uvsPool;
+}
+const Array<Vector3> &Mesh::GetTangentsPool() const
+{
+    return m_tangentsPool;
+}
 const Map<String, uint> &Mesh::GetBonesIndices() const
 {
     return m_bonesIndices;
@@ -452,7 +493,11 @@ void Mesh::CloneInto(ICloneable *clone) const
     mClone->m_bBox = m_bBox;
     mClone->m_bSphere = m_bSphere;
 
-    if (mClone->m_vao) { delete mClone->m_vao; }
+    if (mClone->m_vao)
+    {
+        delete mClone->m_vao;
+    }
+
     mClone->m_vao = new VAO();
     mClone->SetPositionsPool( GetPositionsPool() );
     mClone->SetNormalsPool( GetNormalsPool() );

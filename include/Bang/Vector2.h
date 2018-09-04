@@ -44,9 +44,9 @@ const Vector2G<T> Vector2G<T>::Zero = Vector2G<T>(SCAST<T>(0));
 template<class T>
 const Vector2G<T> Vector2G<T>::One = Vector2G<T>(SCAST<T>(1));
 template<class T>
-const Vector2G<T> Vector2G<T>::Infinity = Vector2G<T>(Math::Max<T>());
+const Vector2G<T> Vector2G<T>::Infinity = Vector2G<T>(Math::Infinity<T>());
 template<class T>
-const Vector2G<T> Vector2G<T>::NInfinity = Vector2G<T>(Math::Min<T>());
+const Vector2G<T> Vector2G<T>::NInfinity = Vector2G<T>(Math::NegativeInfinity<T>());
 
 #undef XYZ_MEMBERS
 #undef EXTRA_DECLARATIONS

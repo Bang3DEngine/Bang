@@ -177,8 +177,11 @@ AABox AABox::Union(const AABox &b1, const AABox &b2)
 
 void AABox::CreateFromPositions(const Array<Vector3> &positions)
 {
-    if (positions.IsEmpty()) { return; }
-    for (const Vector3 &v : positions) { AddPoint(v); }
+    *this = AABox::Empty;
+    for (const Vector3 &v : positions)
+    {
+        AddPoint(v);
+    }
 }
 
 AABox AABox::FromPointAndSize(const Vector3 &point, const Vector3 &size)

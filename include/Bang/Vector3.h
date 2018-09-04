@@ -112,9 +112,9 @@ const Vector3G<T> Vector3G<T>::Back = Vector3G<T>(SCAST<T>(0),
                                                   SCAST<T>(0),
                                                   SCAST<T>(1));
 template<class T>
-const Vector3G<T> Vector3G<T>::Infinity = Vector3G<T>(Math::Max<T>());
+const Vector3G<T> Vector3G<T>::Infinity = Vector3G<T>(Math::Infinity<T>());
 template<class T>
-const Vector3G<T> Vector3G<T>::NInfinity = Vector3G<T>(Math::Min<T>());
+const Vector3G<T> Vector3G<T>::NInfinity = Vector3G<T>(Math::NegativeInfinity<T>());
 
 #undef XYZ_MEMBERS
 #undef EXTRA_DECLARATIONS

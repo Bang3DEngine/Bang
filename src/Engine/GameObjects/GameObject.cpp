@@ -690,8 +690,8 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam, bool includeChildren) co
 
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
 {
-    Array<Renderer*> rends = GetComponents<Renderer>();
     AABox aabBox = AABox::Empty;
+    Array<Renderer*> rends = GetComponents<Renderer>();
     for (Renderer *rend : rends)
     {
         if (rend && rend->IsEnabled() && rend->GetActiveMaterial())
@@ -700,10 +700,7 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
             if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
             {
                 const AABox rendAABox = rend->GetAABBox();
-                if (rendAABox != AABox::Empty)
-                {
-                    aabBox = AABox::Union(aabBox, rendAABox);
-                }
+                aabBox = AABox::Union(aabBox, rendAABox);
             }
         }
     }
@@ -733,11 +730,15 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
 AABox GameObject::GetAABBoxWorld(bool includeChildren) const
 {
     AABox b = GetLocalAABBox(includeChildren);
-    if (b == AABox::Empty) { return AABox::Empty; }
-
-    Matrix4 mat = Matrix4::Identity;
-    if (GetTransform()) { mat = GetTransform()->GetLocalToWorldMatrix(); }
-    b = mat * b;
+    if (b != AABox::Empty)
+    {
+        Matrix4 mat = Matrix4::Identity;
+        if (GetTransform())
+        {
+            mat = GetTransform()->GetLocalToWorldMatrix();
+        }
+        b = mat * b;
+    }
     return b;
 }
 

@@ -7,7 +7,6 @@
 #include "Bang/AARect.h"
 #include "Bang/Vector3.h"
 #include "Bang/Matrix4.h"
-#include "Bang/IToString.h"
 
 NAMESPACE_BANG_BEGIN
 

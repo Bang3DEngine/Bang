@@ -37,14 +37,7 @@ std::ostream& operator<<(std::ostream &log, const Triangle &t)
 
 std::ostream& operator<<(std::ostream &log, const AABox &b)
 {
-    log << "(";
-    log << "Top:" << b.GetTopQuad();
-    log << "Bot:" << b.GetBotQuad();
-    log << "Left:" << b.GetLeftQuad();
-    log << "Right:" << b.GetRightQuad();
-    log << "Front:" << b.GetFrontQuad();
-    log << "Back:" << b.GetBackQuad();
-    log << ")";
+    log << "(" << b.GetMin() << ", " << b.GetMax() << ")";
     return log;
 }
 

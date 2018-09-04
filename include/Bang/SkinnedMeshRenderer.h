@@ -56,8 +56,6 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    static const String MetaBoneGameObjectPrefix;
-
     Set<String> m_bonesNames;
     String m_rootBoneGameObjectName = "";
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;

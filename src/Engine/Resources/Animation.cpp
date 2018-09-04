@@ -181,6 +181,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
             const KeyFrame<Vector3> &nextPosKF = positionInterpKeyFrames[1];
             float timeBetweenPrevNext = (nextPosKF.timeInFrames -
                                          prevPosKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
 
             float timePassedSincePrev = (timeInFrames - prevPosKF.timeInFrames);
             float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
@@ -215,6 +216,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
             const KeyFrame<Quaternion> &nextRotKF = rotationInterpKeyFrames[1];
             float timeBetweenPrevNext = (nextRotKF.timeInFrames -
                                          prevRotKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
 
             float timePassedSincePrev = (timeInFrames - prevRotKF.timeInFrames);
             float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);

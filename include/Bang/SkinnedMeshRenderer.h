@@ -67,15 +67,16 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    String m_rootBoneGameObjectName = "";
-
     Set<String> m_bonesNames;
-    Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     Map<String, Matrix4> m_initialTransforms;
+    Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
+    Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 
     ObjectGatherer<GameObject, true> *m_gameObjectGatherer = nullptr;
 
-    Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
+    String m_rootBoneGameObjectName = "";
+    mutable GameObject *p_rootBoneGameObject = nullptr;
+
 
 };
 

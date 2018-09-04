@@ -188,8 +188,12 @@ Model *SkinnedMeshRenderer::GetActiveModel() const
 
 GameObject *SkinnedMeshRenderer::GetRootBoneGameObject() const
 {
-    return GetGameObject()->FindInAncestorsAndThis(
-                GetRootBoneGameObjectName(), true);
+    if (!p_rootBoneGameObject)
+    {
+        p_rootBoneGameObject = GetGameObject()->FindInAncestorsAndThis(
+                                    GetRootBoneGameObjectName(), true);
+    }
+    return p_rootBoneGameObject;
 }
 
 const String &SkinnedMeshRenderer::GetRootBoneGameObjectName() const
@@ -288,12 +292,14 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
 
 void SkinnedMeshRenderer::OnObjectGathered(GameObject *go)
 {
+    p_rootBoneGameObject = nullptr;
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 
 void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
                                              GameObject *go)
 {
+    p_rootBoneGameObject = nullptr;
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 

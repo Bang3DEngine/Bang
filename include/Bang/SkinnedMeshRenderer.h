@@ -5,13 +5,15 @@
 #include "Bang/Map.h"
 #include "Bang/IEventsName.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/ObjectGatherer.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Model;
 
 class SkinnedMeshRenderer : public MeshRenderer,
-                            public EventListener<IEventsName>
+                            public EventListener<IEventsName>,
+                            public EventListener< IEventsObjectGatherer<GameObject> >
 {
     COMPONENT(SkinnedMeshRenderer);
 
@@ -21,6 +23,7 @@ public:
 
     // MeshRenderer
     void OnRender() override;
+    virtual void Bind() override;
     Matrix4 GetModelMatrixUniform() const override;
 
     void SetRootBoneGameObjectName(const String &rootBoneGameObjectName);
@@ -46,6 +49,11 @@ public:
 
     void RetrieveBonesBindPoseFromCurrentHierarchy();
 
+    // ObjectGatherer
+    virtual void OnObjectGathered(GameObject *go) override;
+    virtual void OnObjectUnGathered(GameObject *previousGameObject,
+                                    GameObject *go) override;
+
     // IEventsName
     virtual void OnNameChanged(GameObject *go,
                                const String &oldName,
@@ -59,10 +67,13 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    Set<String> m_bonesNames;
     String m_rootBoneGameObjectName = "";
+
+    Set<String> m_bonesNames;
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     Map<String, Matrix4> m_initialTransforms;
+
+    ObjectGatherer<GameObject, true> *m_gameObjectGatherer = nullptr;
 
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 

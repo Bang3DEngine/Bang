@@ -15,10 +15,23 @@ ObjectGatherer<ObjectType, RECURSIVE>::~ObjectGatherer()
 template<class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::SetRoot(GameObject *root)
 {
-    p_root = root;
-    if (GetRoot())
+    if (root != GetRoot())
     {
-        RegisterEventsAndGather( GetRoot() );
+        if (GetRoot())
+        {
+            UnRegisterEventsAndRemoveObjects(GetRoot());
+        }
+        ASSERT(m_gatheredObjects.IsEmpty());
+        ASSERT(m_processedGameObjects.IsEmpty());
+
+        p_root = root;
+        m_gatheredObjects.Clear();
+        m_processedGameObjects.Clear();
+
+        if (GetRoot())
+        {
+            RegisterEventsAndGather( GetRoot() );
+        }
     }
 }
 

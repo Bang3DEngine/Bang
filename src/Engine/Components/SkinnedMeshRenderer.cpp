@@ -14,10 +14,13 @@ USING_NAMESPACE_BANG
 
 SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
+    m_gameObjectGatherer = new ObjectGatherer<GameObject, true>();
+    m_gameObjectGatherer->RegisterListener(this);
 }
 
 SkinnedMeshRenderer::~SkinnedMeshRenderer()
 {
+    delete m_gameObjectGatherer;
 }
 
 Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
@@ -151,10 +154,14 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatricesIfNeeded()
 
 void SkinnedMeshRenderer::OnRender()
 {
+    MeshRenderer::OnRender();
+}
+
+void SkinnedMeshRenderer::Bind()
+{
+    MeshRenderer::Bind();
     UpdateBonesMatricesFromTransformMatricesIfNeeded();
     BindBoneMatrices();
-
-    MeshRenderer::OnRender();
 }
 
 void SkinnedMeshRenderer::SetRootBoneGameObjectName(
@@ -163,7 +170,7 @@ void SkinnedMeshRenderer::SetRootBoneGameObjectName(
     if (rootBoneGameObjectName != GetRootBoneGameObjectName())
     {
         m_rootBoneGameObjectName = rootBoneGameObjectName;
-        RetrieveBonesBindPoseFromCurrentHierarchy();
+        m_gameObjectGatherer->SetRoot( GetRootBoneGameObject() );
     }
 }
 
@@ -181,8 +188,8 @@ Model *SkinnedMeshRenderer::GetActiveModel() const
 
 GameObject *SkinnedMeshRenderer::GetRootBoneGameObject() const
 {
-    return GetGameObject()->FindInAncestorsAndThis( GetRootBoneGameObjectName(),
-                                                    true );
+    return GetGameObject()->FindInAncestorsAndThis(
+                GetRootBoneGameObjectName(), true);
 }
 
 const String &SkinnedMeshRenderer::GetRootBoneGameObjectName() const
@@ -245,33 +252,49 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
 
         // Retrieve root gameObject
         SetRootBoneGameObjectName(model->GetRootGameObjectName());
-        ASSERT(GetRootBoneGameObject());
-        GetRootBoneGameObject()->EventEmitter<IEventsName>::RegisterListener(this);
-
-        // Fill boneName to gameObject
-        for (const auto &it : allBones)
+        if (GetRootBoneGameObject())
         {
-            const String &boneName = it.first;
-            m_bonesNames.Add(boneName);
-            if (GameObject *boneGo = GetRootBoneGameObject()->
-                                     FindInChildrenAndThis(boneName, true))
+            GetRootBoneGameObject()->EventEmitter<IEventsName>::RegisterListener(this);
+
+            m_bonesNames.Clear();
+            m_initialTransforms.Clear();
+
+            // Fill boneName to gameObject
+            for (const auto &it : allBones)
             {
-                m_initialTransforms.Add(boneName, boneGo->GetTransform()->
-                                                  GetLocalToParentMatrix());
-                boneGo->EventEmitter<IEventsName>::RegisterListener(this);
+                const String &boneName = it.first;
+                m_bonesNames.Add(boneName);
+                if (GameObject *boneGo = GetRootBoneGameObject()->
+                                         FindInChildrenAndThis(boneName, true))
+                {
+                    m_initialTransforms.Add(boneName, boneGo->GetTransform()->
+                                                      GetLocalToParentMatrix());
+                    boneGo->EventEmitter<IEventsName>::RegisterListener(this);
+                }
+            }
+
+            // Calculate boneSpace to rootSpace matrices
+            m_boneSpaceToRootSpaceMatrices.Clear();
+            for (const auto &it : allBones)
+            {
+                const String &boneName = it.first;
+                const Mesh::Bone &bone = it.second;
+                Matrix4 boneSpaceToRootSpace = bone.rootNodeSpaceToBoneBindSpace.Inversed();
+                m_boneSpaceToRootSpaceMatrices.Add(boneName, boneSpaceToRootSpace);
             }
         }
-
-        // Calculate boneSpace to rootSpace matrices
-        m_boneSpaceToRootSpaceMatrices.Clear();
-        for (const auto &it : allBones)
-        {
-            const String &boneName = it.first;
-            const Mesh::Bone &bone = it.second;
-            Matrix4 boneSpaceToRootSpace = bone.rootNodeSpaceToBoneBindSpace.Inversed();
-            m_boneSpaceToRootSpaceMatrices.Add(boneName, boneSpaceToRootSpace);
-        }
     }
+}
+
+void SkinnedMeshRenderer::OnObjectGathered(GameObject *go)
+{
+    RetrieveBonesBindPoseFromCurrentHierarchy();
+}
+
+void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
+                                             GameObject *go)
+{
+    RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 
 void SkinnedMeshRenderer::OnNameChanged(GameObject*,

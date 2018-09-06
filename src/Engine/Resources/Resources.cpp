@@ -147,6 +147,7 @@ Resource* Resources::GetCached_(const GUID &guid) const
     {
         return m_resourcesCache.Get(guid).resource;
     }
+    /*
     else
     {
         if (Resources::IsEmbeddedResource(guid))
@@ -157,8 +158,7 @@ Resource* Resources::GetCached_(const GUID &guid) const
                 return parentRes->GetEmbeddedResource(guid.GetEmbeddedResourceGUID());
             }
         }
-    }
-
+    }*/
     return nullptr;
 }
 
@@ -230,6 +230,10 @@ void Resources::Remove(const GUID &guid)
 
     if (resource)
     {
+        if (resource->GetGUID().GetEmbeddedResourceGUID() == 1)
+        {
+            int a = 2;
+        }
         delete resource;
     }
 }
@@ -273,8 +277,12 @@ void Resources::UnRegisterResourceUsage(Resource *res)
 
 Path Resources::GetResourcePath(const Resource *resource)
 {
-    if (!resource) { return Path::Empty; }
-    return MetaFilesManager::GetFilepath(resource->GetGUID());
+    Path resourcePath;
+    if (resource)
+    {
+        resourcePath = MetaFilesManager::GetFilepath(resource->GetGUID());
+    }
+    return resourcePath;
 }
 
 MeshFactory *Resources::GetMeshFactory() const

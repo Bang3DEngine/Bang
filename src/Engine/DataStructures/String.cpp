@@ -13,10 +13,21 @@
 
 NAMESPACE_BANG_BEGIN
 
-String::String() : m_str("") {}
-String::String(const char *cstr) { if (cstr != nullptr) { m_str = cstr; } }
+String::String() : m_str("")
+{
+}
 
-String::String(const std::string &stdstr) : m_str(stdstr) {}
+String::String(const char *cstr)
+{
+    if (cstr != nullptr)
+    {
+        m_str = cstr;
+    }
+}
+
+String::String(const std::string &stdstr) : m_str(stdstr)
+{
+}
 
 String::String(std::istreambuf_iterator<char, std::char_traits<char> > begin,
                std::istreambuf_iterator<char, std::char_traits<char> > end)
@@ -29,9 +40,19 @@ char String::At(int index) const
     return m_str.at(index);
 }
 
+void String::Append(char c)
+{
+    m_str += c;
+}
+
 void String::Append(const String &str)
 {
     *this = *this + str;
+}
+
+void String::Prepend(char c)
+{
+    m_str = c + m_str;
 }
 
 void String::Prepend(const String &str)
@@ -98,9 +119,15 @@ long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 
 String String::SubString(long startIndexInclusive, long endIndexInclusive) const
 {
-    if (startIndexInclusive < 0) { return ""; }
-    if (startIndexInclusive >= Size()) { return ""; }
-    if (endIndexInclusive   >= Size()) { endIndexInclusive = Size()-1; }
+    if ((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
+    {
+        return "";
+    }
+
+    if (endIndexInclusive >= Size())
+    {
+        endIndexInclusive = (Size() - 1);
+    }
 
     if (endIndexInclusive == String::npos)
     {
@@ -187,8 +214,14 @@ String String::Elide(int length, bool elideRight) const
     {
         result = result.SubString(result.Size() - maxLength,
                                   result.Size() - 1);
-        if (elideRight) { result = result + "..."; }
-        else            { result = "..." + result; }
+        if (elideRight)
+        {
+            result = result + "...";
+        }
+        else
+        {
+            result = "..." + result;
+        }
     }
     return result;
 }
@@ -305,7 +338,8 @@ bool String::Contains(const String &str, bool caseSensitive) const
     if (!caseSensitive)
     {
         auto it = std::search(Begin(), End(), str.Begin(), str.End(),
-          [](char ch1, char ch2) {
+          [](char ch1, char ch2)
+          {
             return String::ToUpper(ch1) == String::ToUpper(ch2);
           }
         );

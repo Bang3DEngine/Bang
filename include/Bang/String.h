@@ -43,7 +43,10 @@ public:
     template < template <class String> class Container >
     static String Join(const Container<String> &parts, String joiner = "");
 
+    void Append(char c);
     void Append(const String &str);
+
+    void Prepend(char c);
     void Prepend(const String &str);
 
     Iterator Insert(Iterator it, char c);

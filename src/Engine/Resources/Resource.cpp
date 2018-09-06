@@ -13,22 +13,55 @@ Resource::Resource()
 
 Resource::~Resource()
 {
-    ASSERT( !Resources::Contains(GetGUID()) )
+    if (GetParentResource())
+    {
+        GetParentResource()->RemoveEmbeddedResource(this);
+    }
+
+    bool stillOnResources = Resources::Contains(GetGUID());
+    ASSERT( !stillOnResources )
 }
 
+void Resource::AddEmbeddedResource(const String &embeddedResourceName,
+                                   Resource *embeddedResource)
+{
+    if (!m_embeddedResourceToName.ContainsKey(embeddedResource))
+    {
+        m_embeddedResourceToName.Add(embeddedResource);
+        m_nameToEmbeddedResource.Add(embeddedResourceName, embeddedResource);
+        m_embeddedResourceToName.Add(embeddedResource, embeddedResourceName);
+        m_GUIDToEmbeddedResource.Add(embeddedResource->GetGUID(), embeddedResource);
+
+        RH<Resource> prevParentResource( embeddedResource->GetParentResource() );
+        if (prevParentResource)
+        {
+            prevParentResource.Get()->RemoveEmbeddedResource(embeddedResource);
+        }
+        embeddedResource->SetParentResource(this);
+    }
+}
 void Resource::RemoveEmbeddedResource(Resource *embeddedResource)
 {
-     m_nameToEmbeddedResource.RemoveValues(RH<Resource>(embeddedResource));
-     m_embeddedResourceToName.Remove(embeddedResource);
-     m_GUIDToEmbeddedResource.RemoveValues(embeddedResource);
-     embeddedResource->SetParentResource(nullptr);
+    m_embeddedResourceToName.Remove(embeddedResource);
+    m_nameToEmbeddedResource.RemoveValues(embeddedResource);
+    m_GUIDToEmbeddedResource.RemoveValues(embeddedResource);
+    embeddedResource->SetParentResource(nullptr);
+
+    for (const RH<Resource> &res : m_embeddedResources)
+    {
+        if (res.Get() == embeddedResource)
+        {
+            m_embeddedResources.Remove(res);
+            break;
+        }
+    }
 }
 void Resource::RemoveEmbeddedResource(const String &embeddedResourceName)
 {
     if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
     {
         Resource *embeddedResource = m_nameToEmbeddedResource.Get(
-                                        embeddedResourceName).Get();
+                                                    embeddedResourceName);
         RemoveEmbeddedResource(embeddedResource);
     }
 }
@@ -43,9 +76,9 @@ Resource* Resource::GetParentResource() const
     return p_parentResource.Get();
 }
 
-const Map<String, RH<Resource> > &Resource::GetEmbeddedResources() const
+const Array< RH<Resource> > &Resource::GetEmbeddedResources() const
 {
-    return m_nameToEmbeddedResource;
+    return m_embeddedResources;
 }
 
 void Resource::PropagateResourceChanged()
@@ -76,7 +109,7 @@ Resource *Resource::GetEmbeddedResource(const String &embeddedResourceName) cons
     if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
     {
         Resource *embeddedResource =
-                    m_nameToEmbeddedResource.Get(embeddedResourceName).Get();
+                    m_nameToEmbeddedResource.Get(embeddedResourceName);
         return embeddedResource;
     }
     return nullptr;
@@ -105,9 +138,9 @@ void Resource::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    for (const auto &pair : GetEmbeddedResources())
+    for (const auto &pair : m_nameToEmbeddedResource)
     {
-        if (Resource *embeddedRes = pair.second.Get())
+        if (Resource *embeddedRes = pair.second)
         {
             const String &embeddedResName = pair.first;
             if (const MetaNode *embeddedResMetaNode =
@@ -123,9 +156,9 @@ void Resource::ExportMeta(MetaNode *metaNode) const
 {
     Serializable::ExportMeta(metaNode);
 
-    for (const auto &pair : GetEmbeddedResources())
+    for (const auto &pair : m_nameToEmbeddedResource)
     {
-        if (Resource *embeddedRes = pair.second.Get())
+        if (Resource *embeddedRes = pair.second)
         {
             const String &embeddedResName = pair.first;
             MetaNode embeddedResMeta = embeddedRes->GetMeta();
@@ -143,6 +176,20 @@ void Resource::Import_(const Path &resourceFilepath)
 
     EventEmitter<IEventsResource>::PropagateToListeners(
                 &IEventsResource::OnImported, this);
+}
+
+void Resource::ClearEmbeddedResources()
+{
+    while (!m_embeddedResources.IsEmpty())
+    {
+        Resource *embeddedResource = m_embeddedResources.Back().Get();
+        RemoveEmbeddedResource(embeddedResource);
+    }
+
+    m_nameToEmbeddedResource.Clear();
+    m_embeddedResourceToName.Clear();
+    m_GUIDToEmbeddedResource.Clear();
+    m_nextNewEmbeddedResourceGUID = 1;
 }
 
 GUID::GUIDType Resource::GetNewEmbeddedResourceGUID() const

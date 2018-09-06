@@ -29,9 +29,9 @@ public:
     static Path CreateEnginePath(const String &path);
     static Path CreateProjectPath(const String &path);
 
-    static List<Path> GetEngineIncludeDirs();
-    static List<Path> GetAllProjectSubDirs();
-    static List<Path> GetProjectIncludeDirs();
+    static Array<Path> GetEngineIncludeDirs();
+    static Array<Path> GetAllProjectSubDirs();
+    static Array<Path> GetProjectIncludeDirs();
 
     static const Path& GetProjectDir();
     static Path GetProjectAssetsDir();
@@ -40,12 +40,12 @@ public:
     static void SetEngineRoot(const Path &engineRootDir);
 
     static Path GetResolvedPath(const Path &path);
-    static void SortPathsByName(List<Path> *paths, bool caseSensitive = false);
-    static void SortPathsByExtension(List<Path> *paths);
-    static void FilterByExtension(List<Path> *paths,
+    static void SortPathsByName(Array<Path> *paths, bool caseSensitive = false);
+    static void SortPathsByExtension(Array<Path> *paths);
+    static void FilterByExtension(Array<Path> *paths,
                                   const Array<String>& extensions);
-    static void RemoveFilesFromList(List<Path> *paths);
-    static void RemoveDirectoriesFromList(List<Path> *paths);
+    static void RemoveFilesFromArray(Array<Path> *paths);
+    static void RemoveDirectoriesFromArray(Array<Path> *paths);
 
     static void SetProjectRoot(const Path &projectRootDir);
 

@@ -53,6 +53,10 @@ public:
         Set(nullptr);
     }
 
+    bool operator==(const Resource *res) const
+    {
+        return Get() == res;
+    }
     bool operator==(const ResourceHandle &rhs) const
     {
         return Get() == rhs.Get();
@@ -83,9 +87,7 @@ public:
             {
                 // Must be done in two steps, so that we avoid unset loops
                 Resource *prevResource = p_resource;
-
                 p_resource = nullptr;
-
                 OnResourceUnSet(prevResource);
             }
 
@@ -98,7 +100,7 @@ public:
     }
 
 private:
-    ResourceClass* p_resource = nullptr;
+    ResourceClass *p_resource = nullptr;
 
     friend class Resources;
 };

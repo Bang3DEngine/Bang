@@ -21,7 +21,7 @@ public:
 
     Path GetResourceFilepath() const;
     Resource* GetParentResource() const;
-    const Map<String, RH<Resource>>& GetEmbeddedResources() const;
+    const Array<RH<Resource>>& GetEmbeddedResources() const;
     Resource* GetEmbeddedResource(const GUID &embeddedResGUID) const;
     Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
     Resource* GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const;
@@ -30,6 +30,8 @@ public:
 protected:
     Resource();
     virtual ~Resource();
+
+    void ClearEmbeddedResources();
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode);
@@ -42,38 +44,20 @@ protected:
 private:
     // Embedded resource related variables
     RH<Resource> p_parentResource;
-    Map<String, RH<Resource>> m_nameToEmbeddedResource;
+    Array< RH<Resource> > m_embeddedResources;
+    Map<String, Resource*> m_nameToEmbeddedResource;
     Map<Resource*, String> m_embeddedResourceToName;
     Map<GUID, Resource*> m_GUIDToEmbeddedResource;
     mutable GUID::GUIDType m_nextNewEmbeddedResourceGUID = 1;
 
-    template<class T>
     void AddEmbeddedResource(const String &embeddedResourceName,
-                             T *embeddedResource);
+                             Resource *embeddedResource);
     GUID::GUIDType GetNewEmbeddedResourceGUID() const;
 
     void SetParentResource(Resource *parentResource);
 
     friend class Resources;
 };
-
-template<class T>
-void Resource::AddEmbeddedResource(const String &embeddedResourceName,
-                                   T *embeddedResource)
-{
-    m_nameToEmbeddedResource.Add(embeddedResourceName,
-                                 RH<Resource>( SCAST<Resource*>(embeddedResource) ));
-    m_embeddedResourceToName.Add(embeddedResource, embeddedResourceName);
-    m_GUIDToEmbeddedResource.Add(embeddedResource->GetGUID(),
-                                                 embeddedResource);
-
-    RH<Resource> prevParentResource( embeddedResource->GetParentResource() );
-    if (prevParentResource)
-    {
-        prevParentResource.Get()->RemoveEmbeddedResource(embeddedResource);
-    }
-    embeddedResource->SetParentResource(this);
-}
 
 #define RESOURCE(CLASSNAME) \
     SERIALIZABLE(CLASSNAME) \

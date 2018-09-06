@@ -102,17 +102,17 @@ Path Paths::CreateEnginePath(const String &path)
 }
 
 
-List<Path> Paths::GetAllProjectSubDirs()
+Array<Path> Paths::GetAllProjectSubDirs()
 {
-    List<Path> subdirs = Paths::GetProjectDir()
+    Array<Path> subdirs = Paths::GetProjectDir()
                          .GetSubDirectories(Path::FindFlag::RECURSIVE);
     subdirs.PushFront(Paths::GetProjectDir());
     return subdirs;
 }
 
-List<Path> Paths::GetProjectIncludeDirs()
+Array<Path> Paths::GetProjectIncludeDirs()
 {
-    List<Path> incDirs = Paths::GetProjectAssetsDir()
+    Array<Path> incDirs = Paths::GetProjectAssetsDir()
                         .GetSubDirectories(Path::FindFlag::RECURSIVE);
     incDirs.PushBack( Paths::GetProjectAssetsDir() );
     return incDirs;
@@ -143,14 +143,14 @@ void Paths::SetProjectRoot(const Path &projectRootDir)
     Paths::GetInstance()->m_projectRoot = projectRootDir;
 }
 
-List<Path> Paths::GetEngineIncludeDirs()
+Array<Path> Paths::GetEngineIncludeDirs()
 {
-    List<Path> incPaths;
+    Array<Path> incPaths;
     incPaths.PushBack( Paths::GetEngineIncludeDir() );
 
     Path physxRootDir = Paths::GetEngineDir().
                         Append("Build/BuildDependencies/ThirdParty/PhysX/");
-    List<Path> physxDirs = physxRootDir.GetSubDirectories(Path::FindFlag::RECURSIVE);
+    Array<Path> physxDirs = physxRootDir.GetSubDirectories(Path::FindFlag::RECURSIVE);
     for (const Path &physxDir : physxDirs)
     {
         incPaths.PushBack(physxDir);
@@ -171,60 +171,73 @@ void Paths::SetEngineRoot(const Path &engineRootDir)
 Path Paths::GetResolvedPath(const Path &path_)
 {
     Path path = path_;
-    if (!path.IsAbsolute()) { path = Paths::GetExecutableDir().Append(path); }
+    if (!path.IsAbsolute())
+    {
+        path = Paths::GetExecutableDir().Append(path);
+    }
 
-    List<String> pathParts = path.GetAbsolute().Split<List>('/');
+    Array<String> pathParts = path.GetAbsolute().Split<Array>('/');
     pathParts.RemoveAll(".");
 
     int skipNext = 0;
-    List<String> resolvedPathParts;
+    Array<String> resolvedPathParts;
     for (auto it = pathParts.RBegin(); it != pathParts.REnd(); ++it)
     {
         const String &pathPart = *it;
-        if (skipNext > 0)  { --skipNext;  continue; }
+        if (skipNext > 0)
+        {
+            --skipNext;
+            continue;
+        }
 
-        if (pathPart == "..") { ++skipNext; }
-        else { resolvedPathParts.PushFront(pathPart); }
+        if (pathPart == "..")
+        {
+            ++skipNext;
+        }
+        else
+        {
+            resolvedPathParts.PushFront(pathPart);
+        }
     }
     Path resolvedPath = Path( String::Join(resolvedPathParts, "/") );
     return resolvedPath;
 }
 
-void Paths::SortPathsByName(List<Path> *paths, bool caseSensitive)
+void Paths::SortPathsByName(Array<Path> *paths, bool caseSensitive)
 {
-    Array<Path> pathsArr;
-    pathsArr.PushBack(paths->Begin(), paths->End());
-    std::stable_sort(
-        pathsArr.Begin(), pathsArr.End(),
-        [caseSensitive](const Path &lhs, const Path &rhs)
-        {
-            return caseSensitive ?
-                    lhs.GetNameExt() < rhs.GetNameExt() :
-                    (lhs.GetNameExt().ToUpper() <  rhs.GetNameExt().ToUpper());
-        }
-    );
-
-    paths->Clear();
-    paths->Insert(paths->End(), pathsArr.Begin(), pathsArr.End());
+    if (!paths->IsEmpty())
+    {
+        Array<Path> pathsArr;
+        pathsArr.PushBack(paths->Begin(), paths->End());
+        Containers::StableSort(
+            paths->Begin(), paths->End(),
+            [caseSensitive](const Path &lhs, const Path &rhs)
+            {
+                return caseSensitive ?
+                        lhs.GetNameExt() < rhs.GetNameExt() :
+                        (lhs.GetNameExt().ToUpper() <
+                         rhs.GetNameExt().ToUpper());
+            }
+        );
+    }
 }
 
-void Paths::SortPathsByExtension(List<Path> *paths)
+void Paths::SortPathsByExtension(Array<Path> *paths)
 {
-    Array<Path> pathsArr;
-    pathsArr.PushBack(paths->Begin(), paths->End());
-    std::stable_sort(
-        pathsArr.Begin(), pathsArr.End(),
-        [](const Path &lhs, const Path &rhs)
-        {
-            return lhs.GetExtension().ToUpper() < rhs.GetExtension().ToUpper();
-        }
-    );
-
-    paths->Clear();
-    paths->Insert(paths->End(), pathsArr.Begin(), pathsArr.End());
+    if (!paths->IsEmpty())
+    {
+        Containers::StableSort(
+            paths->Begin(), paths->End(),
+            [](const Path &lhs, const Path &rhs)
+            {
+                return lhs.GetExtension().ToUpper() <
+                       rhs.GetExtension().ToUpper();
+            }
+        );
+    }
 }
 
-void Paths::FilterByExtension(List<Path> *paths, const Array<String>& extensions)
+void Paths::FilterByExtension(Array<Path> *paths, const Array<String>& extensions)
 {
     for (auto it = paths->Begin(); it != paths->End(); )
     {
@@ -233,27 +246,42 @@ void Paths::FilterByExtension(List<Path> *paths, const Array<String>& extensions
         {
             it = paths->Remove(it);
         }
-        else { ++it; }
+        else
+        {
+            ++it;
+        }
     }
 }
 
-void Paths::RemoveFilesFromList(List<Path> *paths)
+void Paths::RemoveFilesFromArray(Array<Path> *paths)
 {
     for (auto it = paths->Begin(); it != paths->End(); )
     {
         const Path &p = *it;
-        if (p.IsFile()) { it = paths->Remove(it); }
-        else { ++it; }
+        if (p.IsFile())
+        {
+            it = paths->Remove(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 
-void Paths::RemoveDirectoriesFromList(List<Path> *paths)
+void Paths::RemoveDirectoriesFromArray(Array<Path> *paths)
 {
     for (auto it = paths->Begin(); it != paths->End(); )
     {
         const Path &p = *it;
-        if (p.IsDir()) { it = paths->Remove(it); }
-        else { ++it; }
+        if (p.IsDir())
+        {
+            it = paths->Remove(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

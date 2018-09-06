@@ -55,7 +55,10 @@ void UIImageRenderer::SetImageTexture(const Path &imagePath)
         RH<Texture2D> tex = Resources::Load<Texture2D>(imagePath);
         SetImageTexture(tex.Get());
     }
-    else { SetImageTexture(nullptr); }
+    else
+    {
+        SetImageTexture(nullptr);
+    }
 }
 
 void UIImageRenderer::SetImageTexture(Texture2D* imageTexture)

@@ -20,19 +20,18 @@ public:
     void UnTrackPath(const Path &path);
     void Clear();
 
-    void Update(bool forceCheckNow);
+    void CheckFiles();
 
-    void SetCheckFrequencySeconds(float checkFrequencySeconds);
-
-    float GetCheckFrequencySeconds() const;
+    const USet<Path>& GetTrackedPaths() const;
+    Array<Path> GetTrackedPathsWithExtensions(
+                        const Array<String> &extensions) const;
+    Array<Path> GetTrackedPathsWithLastExtension(
+                        const Array<String> &extensions) const;
 
 private:
+    USet<Path> m_trackedPaths;
     USet<Path> m_pathsJustRecentlyTracked;
-    UMap<Path, double> m_pathsToTrackToModificationTime;
-    float m_checkFrequencySeconds = 5.0f;
-    double m_lastCheckTime = 0.0;
-
-    bool NeedsCheck() const;
+    UMap<Path, Time::TimeT> m_pathsToTrackToModificationTime;
 };
 
 NAMESPACE_BANG_END

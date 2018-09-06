@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "Bang/List.h"
+#include "Bang/Array.h"
 #include "Bang/Paths.h"
 #include "Bang/Array.h"
 #include "Bang/Extensions.h"
@@ -47,22 +47,28 @@ void Path::SetPath(const String &path)
 
 bool Path::IsDir() const
 {
-    if (!Exists()) { return false; }
-    return !IsFile();
+    struct stat path_stat;
+    if (stat(GetAbsolute().ToCString(), &path_stat) == 0)
+    {
+        return S_ISDIR(path_stat.st_mode);
+    }
+    return false;
 }
 
 bool Path::IsFile() const
 {
-    if (!Exists()) { return false; }
-
     struct stat path_stat;
-    stat(GetAbsolute().ToCString(), &path_stat);
-    return S_ISREG(path_stat.st_mode);
+    if (stat(GetAbsolute().ToCString(), &path_stat) == 0)
+    {
+        return S_ISREG(path_stat.st_mode);
+    }
+    return false;
 }
 
 bool Path::Exists() const
 {
-    return access(GetAbsolute().ToCString(), F_OK) != -1;
+    struct stat path_stat;
+    return (stat(GetAbsolute().ToCString(), &path_stat) == 0);
 }
 
 bool Path::IsSubPathOf(const Path &path) const
@@ -70,83 +76,87 @@ bool Path::IsSubPathOf(const Path &path) const
     return GetAbsolute().BeginsWith(path.GetAbsolute());
 }
 
-List<Path> Path::GetFiles(Path::FindFlags findFlags,
+Array<Path> Path::GetFiles(Path::FindFlags findFlags,
                           const Array<String> &extensions) const
 {
-    if (!IsDir()) { return {}; }
-
-    List<Path> subFilesList;
-    List<Path> subPathsList = GetSubPaths(findFlags);
-    for (const Path &subPath : subPathsList)
+    Array<Path> subFilesArray;
+    if (IsDir())
     {
-        bool extMatches = extensions.IsEmpty() ||
-                          subPath.HasExtension(extensions);
-        if (subPath.IsDir())
+        Array<Path> subPathsArray = GetSubPaths(findFlags);
+        for (const Path &subPath : subPathsArray)
         {
-            if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+            bool extMatches = extensions.IsEmpty() ||
+                              subPath.HasExtension(extensions);
+            if (subPath.IsDir())
             {
-                subFilesList.PushBack( subPath.GetFiles(findFlags, extensions) );
+                if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+                {
+                    subFilesArray.PushBack( subPath.GetFiles(findFlags, extensions) );
+                }
             }
-        }
-        else if ( /*subPath.IsFile() &&*/ extMatches )
-        {
-            subFilesList.PushBack(subPath);
-        }
-    }
-    return subFilesList;
-}
-
-List<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
-{
-    if (!IsDir()) { return {}; }
-
-    List<Path> subDirsList;
-    List<Path> subPathsList = GetSubPaths(findFlags);
-    for (const Path &subPath : subPathsList)
-    {
-        if (subPath.IsDir())
-        {
-            subDirsList.PushBack(subPath);
-            if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+            else if ( /*subPath.IsFile() &&*/ extMatches )
             {
-                subDirsList.PushBack( subPath.GetSubDirectories(findFlags) );
+                subFilesArray.PushBack(subPath);
             }
         }
     }
-    return subDirsList;
+    return subFilesArray;
 }
 
-List<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
+Array<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
 {
+    Array<Path> subDirsArray;
+    if (IsDir())
+    {
+        Array<Path> subPathsArray = GetSubPaths(findFlags);
+        for (const Path &subPath : subPathsArray)
+        {
+            if (subPath.IsDir())
+            {
+                subDirsArray.PushBack(subPath);
+                if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+                {
+                    subDirsArray.PushBack( subPath.GetSubDirectories(findFlags) );
+                }
+            }
+        }
+    }
+    return subDirsArray;
+}
+
+Array<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
+{
+    Array<Path> subPathsArray;
+
     struct dirent *dir;
-    DIR *d = opendir(GetAbsolute().ToCString());
-    if (!d) { return {}; }
-
-    List<Path> subPathsList;
-    while ((dir = readdir(d)) != nullptr)
+    if (DIR *d = opendir(GetAbsolute().ToCString()))
     {
-        String subName = dir->d_name;
-        if (findFlags.IsOff(Path::FindFlag::HIDDEN) &&
-            (subName.BeginsWith("."))) { continue; }
-
-        if (subName != "." && subName != "..")
+        while ((dir = readdir(d)) != nullptr)
         {
-            Path subPath = this->Append(subName);
-            subPathsList.PushBack(subPath);
+            String subName = dir->d_name;
+            if (findFlags.IsOn(Path::FindFlag::HIDDEN) || !subName.BeginsWith("."))
+            {
+                if (subName != "." && subName != "..")
+                {
+                    Path subPath = this->Append(subName);
+                    subPathsArray.PushBack(subPath);
+                }
+            }
         }
+        closedir(d);
     }
-    closedir(d);
 
-    return subPathsList;
+    return subPathsArray;
 }
 
-uint64_t Path::GetModificationTimeSeconds() const
+Time::TimeT Path::GetModificationTimeSeconds() const
 {
-    if (!Exists()) { return 0; }
-
     struct stat attr;
-    stat(GetAbsolute().ToCString(), &attr);
-    return attr.st_mtim.tv_sec;
+    if (stat(GetAbsolute().ToCString(), &attr) == 0)
+    {
+        return attr.st_mtim.tv_sec;
+    }
+    return 0;
 }
 
 String Path::GetName() const
@@ -156,10 +166,26 @@ String Path::GetName() const
     const String nameExt = GetNameExt();
     for (int i = 0; i < nameExt.Size(); ++i)
     {
-        if (nameExt[i] != '.') { iteratingFirstDots = false; }
-        if (iteratingFirstDots) { name += nameExt[i]; }
-        else if (nameExt[i] != '.') { name += nameExt[i]; }
-        else { break; }
+        const char c = nameExt[i];
+        if (iteratingFirstDots)
+        {
+            if (c != '.')
+            {
+                iteratingFirstDots = false;
+            }
+        }
+
+        if (!iteratingFirstDots)
+        {
+            if (c != '.')
+            {
+                name += c;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
     return name;
 }
@@ -171,7 +197,10 @@ bool Path::IsAbsolute() const
 
 String Path::GetNameExt() const
 {
-    if (IsEmpty()) { return ""; }
+    if (IsEmpty())
+    {
+        return "";
+    }
 
     String filename = GetAbsolute();
     const size_t lastSlash = GetAbsolute().RFind('/');
@@ -184,19 +213,55 @@ String Path::GetNameExt() const
 
 String Path::GetExtension() const
 {
-    if (IsEmpty()) { return ""; }
-    List<String> parts = GetNameExt().Split<List>('.');
-    if (parts.IsEmpty()) { return ""; }
-    parts.PopFront();
-    return String::Join(parts, ".");
+    String fullExtension = "";
+    bool firstDotFound = false;
+    const String &absPath = GetAbsolute();
+    for (int i = 0; i < absPath.Size(); ++i)
+    {
+        char c = absPath[i];
+        if (firstDotFound)
+        {
+            fullExtension += c;
+        }
+        else
+        {
+            if (c == '.')
+            {
+                firstDotFound = true;
+            }
+        }
+    }
+    return fullExtension;
+}
+
+String Path::GetLastExtension() const
+{
+    String lastExtension = "";
+    const String &absPath = GetAbsolute();
+    for (int i = (absPath.Size() - 1); i >= 0; --i)
+    {
+        char c = absPath[i];
+        if (c == '.')
+        {
+            break;
+        }
+        lastExtension.Prepend(c);
+    }
+    return lastExtension;
 }
 
 Array<String> Path::GetExtensions() const
 {
-    if (IsEmpty()) { return {}; }
-    List<String> parts = GetNameExt().Split<List>('.');
-    if (!parts.IsEmpty()) { parts.PopFront(); }
-    return parts.To<Array>();
+    Array<String> parts;
+    if (!IsEmpty())
+    {
+        parts = GetNameExt().Split<Array>('.');
+        if (!parts.IsEmpty())
+        {
+            parts.PopFront();
+        }
+    }
+    return parts;
 }
 
 Path Path::GetRelativePath(const Path &prefix) const
@@ -229,7 +294,10 @@ const String &Path::GetAbsolute() const
 
 Path Path::GetDuplicatePath() const
 {
-    if (IsEmpty()) { return Path::Empty; }
+    if (IsEmpty())
+    {
+        return Path::Empty;
+    }
 
     Path resultPath(*this);
     while (resultPath.Exists())
@@ -257,8 +325,16 @@ bool Path::BeginsWith(const String &path) const
 Path Path::Append(const Path &pathRHS) const
 {
     String str = pathRHS.GetAbsolute();
-    if (str.BeginsWith("./")) { str.Remove(0, 1); }
-    while (str.BeginsWith("/")) { str.Remove(0, 1); }
+    if (str.BeginsWith("./"))
+    {
+        str.Remove(0, 1);
+    }
+
+    while (str.BeginsWith("/"))
+    {
+        str.Remove(0, 1);
+    }
+
     return this->AppendRaw("/" + str);
 }
 
@@ -274,20 +350,31 @@ Path Path::AppendRaw(const String &str) const
 
 Path Path::AppendExtension(const String &extension) const
 {
-    if (HasExtension(extension) || extension.IsEmpty()) { return Path(*this); }
+    if (HasExtension(extension) || extension.IsEmpty())
+    {
+        return (*this);
+    }
     return Path(GetAbsolute() + "." + extension);
 }
 
 bool Path::IsHiddenFile() const
 {
-    return IsFile() && GetName().BeginsWith(".");
+    return IsFile() && GetNameExt().BeginsWith(".");
 }
 
 Path Path::WithHidden(bool hidden) const
 {
     String nameExt = GetNameExt();
-    if ( hidden && !nameExt.BeginsWith(".")) { nameExt.Insert(0, "."); }
-    if (!hidden &&  nameExt.BeginsWith(".")) { nameExt.Remove(0, 1); }
+    if ( hidden && !nameExt.BeginsWith("."))
+    {
+        nameExt.Insert(0, ".");
+    }
+
+    if (!hidden &&  nameExt.BeginsWith("."))
+    {
+        nameExt.Remove(0, 1);
+    }
+
     return GetDirectory().Append(nameExt);
 }
 
@@ -304,24 +391,13 @@ Path Path::WithExtension(const String &extension) const
 
 bool Path::HasExtension(const String &extensions) const
 {
-    Array<String> extensionsList = extensions.Split<Array>(' ', true);
-    return HasExtension(extensionsList);
+    Array<String> extensionsArray = extensions.Split<Array>(' ', true);
+    return HasExtension(extensionsArray);
 }
 
 bool Path::HasExtension(const Array<String> &extensions) const
 {
-    Array<String> thisExtensions = GetExtensions();
-    for (const String &extension : extensions)
-    {
-        for (const String &thisExtension : thisExtensions)
-        {
-            if (Extensions::Equals(extension, thisExtension))
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+    return Extensions::Equals(GetExtension(), extensions);
 }
 
 Path::operator String() const
@@ -356,8 +432,8 @@ Path Path::GetNextDuplicatePath(const Path &filepath)
     int number = 1;
     if (splitted.Size() > 1)
     {
-        String numberString = splitted[splitted.Size() - 1];
         bool ok = false;
+        String numberString = splitted[splitted.Size() - 1];
         int readNumber = String::ToInt(numberString, &ok);
         if (ok)
         {
@@ -377,4 +453,7 @@ Path Path::GetNextDuplicatePath(const Path &filepath)
     return result;
 }
 
-Path Path::EmptyPath() { return Path(); }
+Path Path::EmptyPath()
+{
+    return Path();
+}

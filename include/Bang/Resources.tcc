@@ -108,8 +108,7 @@ RH<ResourceClass> Resources::CreateEmbeddedResource(
       Resources::Create<ResourceClass, Args...>(newResourceEmbeddedResFullGUID,
                                                 args...);
 
-    parentResource->AddEmbeddedResource<ResourceClass>(embeddedResourceName,
-                                                       embeddedRes.Get());
+    parentResource->AddEmbeddedResource(embeddedResourceName, embeddedRes.Get());
 
     return embeddedRes;
 }

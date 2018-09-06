@@ -21,6 +21,7 @@ public:
     static Array<String> GetTTFExtensions();
     static Array<String> GetImageExtensions();
     static Array<String> GetModelExtensions();
+    static Array<String> GetShaderExtensions();
     static Array<String> GetAudioClipExtensions();
     static Array<String> GetTextFileExtensions();
     static Array<String> GetBehaviourExtensions();

@@ -37,10 +37,10 @@ public:
     bool Exists() const;
     bool IsSubPathOf(const Path &path) const;
 
-    List<Path> GetFiles(FindFlags findFlags = FindFlag::DEFAULT,
+    Array<Path> GetFiles(FindFlags findFlags = FindFlag::DEFAULT,
                         const Array<String> &extensions = {}) const;
-    List<Path> GetSubDirectories(FindFlags findFlags) const;
-    List<Path> GetSubPaths(FindFlags findFlags) const;
+    Array<Path> GetSubDirectories(FindFlags findFlags) const;
+    Array<Path> GetSubPaths(FindFlags findFlags) const;
 
     Time::TimeT GetModificationTimeSeconds() const;
 
@@ -49,6 +49,7 @@ public:
     bool IsAbsolute() const;
     String GetNameExt() const;
     String GetExtension() const;
+    String GetLastExtension() const;
     Array<String> GetExtensions() const;
     Path GetRelativePath(const Path &prefix) const;
     const String& GetAbsolute() const;

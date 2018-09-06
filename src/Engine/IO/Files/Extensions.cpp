@@ -63,6 +63,19 @@ Array<String> Extensions::GetModelExtensions()
             "q3d", "q3s", "nff", "off", "raw", "ter", "mdl", "hmp", "ndo"};
 }
 
+Array<String> Extensions::GetShaderExtensions()
+{
+    return {"vert", "geom", "frag", "glsl"};
+}
+Array<String> Extensions::GetVertexShaderExtensions()
+{
+    return {"vert"};
+}
+Array<String> Extensions::GetFragmentShaderExtensions()
+{
+    return {"frag"};
+}
+
 Array<String> Extensions::GetAudioClipExtensions()
 {
     return {"ogg", "wav"};
@@ -81,16 +94,6 @@ Array<String> Extensions::GetBehaviourExtensions()
 Array<String> Extensions::GetSourceFileExtensions()
 {
     return {"c", "cpp"};
-}
-
-Array<String> Extensions::GetVertexShaderExtensions()
-{
-    return {"vert", "vert_*"};
-}
-
-Array<String> Extensions::GetFragmentShaderExtensions()
-{
-    return {"frag", "frag_*"};
 }
 
 Array<String> Extensions::GetSharedLibraryFileExtensions()

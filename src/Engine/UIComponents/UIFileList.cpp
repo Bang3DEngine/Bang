@@ -92,7 +92,7 @@ const Array<String> &UIFileList::GetFileExtensions() const
 
 void UIFileList::UpdateEntries()
 {
-    List<Path> paths = GetCurrentPath().GetSubPaths(Path::FindFlag::SIMPLE);
+    Array<Path> paths = GetCurrentPath().GetSubPaths(Path::FindFlag::SIMPLE);
 
     if (!GetFileExtensions().IsEmpty())
     {
@@ -100,7 +100,10 @@ void UIFileList::UpdateEntries()
     }
     Paths::SortPathsByName(&paths);
 
-    if (GetShowOnlyDirectories()) { Paths::RemoveFilesFromList(&paths); }
+    if (GetShowOnlyDirectories())
+    {
+        Paths::RemoveFilesFromArray(&paths);
+    }
     paths.PushFront( Path("..") );
 
     UIList *uiList = GetGameObject()->GetComponent<UIList>();

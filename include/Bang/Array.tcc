@@ -47,7 +47,16 @@ Array<T>::Array(const Container<T> &container)
 
 
 template<class T>
-void Array<T>::PushBack(const T &x)  { m_vector.push_back(x);  }
+void Array<T>::PushBack(const T &x)
+{
+    m_vector.push_back(x);
+}
+
+template<class T>
+void Array<T>::PushFront(const T &x)
+{
+    Insert(x, 0);
+}
 
 template<class T>
 template <template <class OtherT> class Container, class OtherT>
@@ -153,11 +162,15 @@ void Array<T>::RemoveAll(const T &x)
 }
 
 template<class T>
-T &Array<T>::PopBack()
+void Array<T>::PopBack()
 {
-    T& back = Back();
     m_vector.pop_back();
-    return back;
+}
+
+template<class T>
+void Array<T>::PopFront()
+{
+    RemoveByIndex(0);
 }
 
 template<class T>

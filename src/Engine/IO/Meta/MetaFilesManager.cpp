@@ -29,10 +29,10 @@ void MetaFilesManager::CreateMissingMetaFiles(const Path &directory)
     // with duplicated GUIDs.
     MetaFilesManager::LoadMetaFilepathGUIDs(directory);
 
-    List<Path> assetFile = directory.GetFiles(Path::FindFlag::RECURSIVE);
+    Array<Path> assetFiles = directory.GetFiles(Path::FindFlag::RECURSIVE);
 
     USet<Path> files;
-    files.Add(assetFile.Begin(), assetFile.End());
+    files.Add(assetFiles.Begin(), assetFiles.End());
 
     for (const Path &filepath : files)
     {
@@ -46,8 +46,8 @@ void MetaFilesManager::CreateMissingMetaFiles(const Path &directory)
 void MetaFilesManager::LoadMetaFilepathGUIDs(const Path &directory)
 {
     Array<String> extensions = {GetMetaExtension()};
-    List<Path> metaFilepaths = directory.GetFiles(Path::FindFlag::RECURSIVE_HIDDEN,
-                                                  extensions);
+    Array<Path> metaFilepaths = directory.GetFiles(Path::FindFlag::RECURSIVE_HIDDEN,
+                                                   extensions);
 
     // Remove alone .meta files
     for (const Path &metaFilepath : metaFilepaths)
@@ -250,7 +250,7 @@ Path MetaFilesManager::GetMetaFilepath(const GUID &guid)
 }
 
 void MetaFilesManager::OnFilepathRenamed(const Path &oldPath,
-                                           const Path &newPath)
+                                         const Path &newPath)
 {
     Path oldMetaFilepath = MetaFilesManager::GetMetaFilepath(oldPath);
     MetaFilesManager::UnRegisterMetaFilepath(oldMetaFilepath);

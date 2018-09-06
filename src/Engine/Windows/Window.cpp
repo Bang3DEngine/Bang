@@ -115,12 +115,23 @@ bool Window::HandleEvent(const SDL_Event &sdlEvent)
             {
                 switch (sdlEvent.window.event)
                 {
-                    case SDL_WINDOWEVENT_CLOSE: return false;
+                    case SDL_WINDOWEVENT_CLOSE:
+                    return false;
                 }
             }
 
             switch (sdlEvent.window.event)
             {
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    EventEmitter<IEventsWindow>::PropagateToListeners(
+                                &IEventsWindow::OnFocusGained, this);
+                break;
+
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+                    EventEmitter<IEventsWindow>::PropagateToListeners(
+                                &IEventsWindow::OnFocusLost, this);
+                break;
+
                 case SDL_WINDOWEVENT_SIZE_CHANGED:
                 case SDL_WINDOWEVENT_RESIZED:
                     m_newSize = Vector2i(sdlEvent.window.data1,

@@ -35,6 +35,7 @@ public:
     void Insert(const T& x, int index);
 
     void PushBack(const T& x);
+    void PushFront(const T& x);
 
     template<class IteratorClass>
     void PushBack(IteratorClass itBegin, IteratorClass itEnd);
@@ -61,7 +62,8 @@ public:
     Iterator RemoveByIndex(std::size_t i);
     void RemoveAll(const T& x);
 
-    T& PopBack();
+    void PopBack();
+    void PopFront();
 
     int IndexOf(const T& x) const;
 
@@ -101,17 +103,6 @@ public:
 private:
     std::vector<T> m_vector;
 };
-
-template<class T, class... Args>
-Array<const T&> MakeArray(const T& x, Args&&... args)
-{
-    if (sizeof...(args) == 0) { return Array<const T&>(); }
-
-    Array<const T&> res;
-    res.PushBack( Cast<const T&>(x) );
-    for (auto arg : {args...}) { res.PushBack( Cast<const T&>(arg) ); }
-    return res;
-}
 
 NAMESPACE_BANG_END
 

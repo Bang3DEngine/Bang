@@ -142,6 +142,7 @@ const Map<String, Mesh::Bone> &Model::GetAllBones() const
 void Model::Import(const Path &modelFilepath)
 {
     m_modelScene.Clear();
+    ClearEmbeddedResources();
     if (!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
     {
         Debug_Error("Can not load model " << modelFilepath << ". " <<

@@ -70,7 +70,10 @@ void ImageIO::Import(const Path &filepath, Imageb *img, bool *_ok)
                     << "'");
     }
 
-    if (_ok) { *_ok = ok; }
+    if (_ok)
+    {
+        *_ok = ok;
+    }
 }
 
 void ImageIO::Import(const Path &filepath, Imageb *img, Texture2D *tex, bool *_ok)

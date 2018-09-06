@@ -4,7 +4,10 @@
 #include <stack>
 
 #include "Bang/List.h"
+#include "Bang/IEvents.h"
 #include "Bang/Vector2.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
 
 FORWARD union  SDL_Event;
 FORWARD struct SDL_Window;
@@ -14,12 +17,21 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Time;
 FORWARD class Input;
+FORWARD class Window;
 FORWARD class GEngine;
 FORWARD class Resources;
 FORWARD class Texture2D;
 FORWARD class SceneManager;
 
-class Window
+class IEventsWindow
+{
+    IEVENTS(IEventsWindow)
+public:
+    virtual void OnFocusGained(Window *w) { (void) w; }
+    virtual void OnFocusLost(Window *w) { (void) w; }
+};
+
+class Window : public EventEmitter<IEventsWindow>
 {
 public:
     Window();

@@ -18,8 +18,10 @@ Resource::~Resource()
         GetParentResource()->RemoveEmbeddedResource(this);
     }
 
+    #ifdef DEBUG
     bool stillOnResources = Resources::Contains(GetGUID());
-    ASSERT( !stillOnResources )
+    ASSERT( !stillOnResources );
+    #endif
 }
 
 void Resource::AddEmbeddedResource(const String &embeddedResourceName,

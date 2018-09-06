@@ -78,6 +78,7 @@ void CapsuleCollider::CloneInto(ICloneable *clone) const
     CapsuleCollider *ccClone = SCAST<CapsuleCollider*>(clone);
     ccClone->SetRadius( GetRadius() );
     ccClone->SetHeight( GetHeight() );
+    ccClone->SetAxis( GetAxis() );
 }
 
 void CapsuleCollider::ImportMeta(const MetaNode &metaNode)

@@ -22,11 +22,17 @@ void ObjectGatherer<ObjectType, RECURSIVE>::SetRoot(GameObject *root)
             UnRegisterEventsAndRemoveObjects(GetRoot());
         }
         ASSERT(m_gatheredObjects.IsEmpty());
+
+        #ifdef DEBUG
         ASSERT(m_processedGameObjects.IsEmpty());
+        #endif
 
         p_root = root;
         m_gatheredObjects.Clear();
+
+        #ifdef DEBUG
         m_processedGameObjects.Clear();
+        #endif
 
         if (GetRoot())
         {

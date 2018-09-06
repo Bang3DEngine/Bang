@@ -277,7 +277,10 @@ Path Path::GetRelativePath(const Path &prefix) const
 
 Path Path::GetDirectory() const
 {
-    if (IsEmpty()) { return Path::Empty; }
+    if (IsEmpty())
+    {
+        return Path::Empty;
+    }
 
     const size_t lastSlash = GetAbsolute().RFind('/');
     if (lastSlash != String::npos)

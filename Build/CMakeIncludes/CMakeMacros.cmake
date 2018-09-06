@@ -74,6 +74,7 @@ macro(add_bang_compilation_flags __TARGET)
     target_compile_options(${__TARGET} PUBLIC -Wswitch)
     target_compile_options(${__TARGET} PUBLIC -Wl,--export-dynamic)
     target_compile_options(${__TARGET} PUBLIC -pthread)
+    target_compile_definitions(${__TARGET} PUBLIC -DBANG_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 
     if (NOT ${BUILD_SHARED_LIBS})
         target_compile_definitions(${__TARGET} PUBLIC -DBUILD_STATIC)

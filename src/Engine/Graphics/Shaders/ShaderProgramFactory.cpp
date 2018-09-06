@@ -21,12 +21,6 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
     return ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass::SCENE);
 }
 
-Path ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath()
-{
-    return ShaderProgramFactory::GetEngineShadersDir().Append(
-                "DefaultAnimated.vert");
-}
-
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 {
     switch (renderPass)
@@ -56,12 +50,6 @@ ShaderProgram *ShaderProgramFactory::GetDefault(RenderPass renderPass)
 {
     return Get(ShaderProgramFactory::GetDefaultVertexShaderPath(renderPass),
                ShaderProgramFactory::GetDefaultFragmentShaderPath(renderPass));
-}
-
-ShaderProgram *ShaderProgramFactory::GetDefaultAnimated()
-{
-    return Get(ShaderProgramFactory::GetDefaultAnimatedVertexShaderPath(),
-        ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass::SCENE));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDefaultPostProcess()

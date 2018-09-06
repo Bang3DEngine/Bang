@@ -93,7 +93,6 @@ private:
     static void ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                        const Path& modelDirectory,
                                        Model *model,
-                                       bool forAnimation,
                                        RH<Material> *outMaterial,
                                        String *outMaterialName);
 };

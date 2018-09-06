@@ -23,7 +23,8 @@ public:
     static const Path& GetEngineAssetsDir();
     static Path GetEngineBuildDir();
     static Path GetEngineResourcesDir();
-    static Path GetEngineLibrariesDir(BinType binaryType);
+    static Path GetEngineLibrariesDir();
+    static const String& GetBuildType();
     static bool IsEnginePath(const Path &path);
 
     static Path CreateEnginePath(const String &path);

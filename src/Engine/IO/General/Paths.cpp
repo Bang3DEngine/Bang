@@ -88,12 +88,15 @@ Path Paths::GetEngineBuildDir()
     return Paths::GetEngineDir().Append("Build");
 }
 
-Path Paths::GetEngineLibrariesDir(BinType binaryType)
+Path Paths::GetEngineLibrariesDir()
 {
-    return GetEngineDir().
-           Append("bin").
-           Append(binaryType == BinType::BIN_DEBUG ? "Debug" : "Release").
-           Append("lib");
+    return GetEngineDir().Append("Libraries").Append(Paths::GetBuildType());
+}
+
+const String &Paths::GetBuildType()
+{
+    static const String BuildType = BANG_BUILD_TYPE;
+    return BuildType;
 }
 
 Path Paths::CreateEnginePath(const String &path)

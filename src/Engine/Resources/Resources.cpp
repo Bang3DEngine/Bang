@@ -230,10 +230,6 @@ void Resources::Remove(const GUID &guid)
 
     if (resource)
     {
-        if (resource->GetGUID().GetEmbeddedResourceGUID() == 1)
-        {
-            int a = 2;
-        }
         delete resource;
     }
 }

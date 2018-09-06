@@ -146,8 +146,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
     }
 
     // Load materials
-    Array< String > unorderedMaterialNames;
-    Array< RH<Material> > unorderedMaterials;
     for (int i = 0; i < SCAST<int>(aScene->mNumMaterials); ++i)
     {
         String materialName;
@@ -155,11 +153,10 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         ModelIO::ImportEmbeddedMaterial(aScene->mMaterials[i],
                                         modelFilepath.GetDirectory(),
                                         model,
-                                        false,
                                         &materialRH,
                                         &materialName);
-        unorderedMaterials.PushBack(materialRH);
-        unorderedMaterialNames.PushBack(materialName);
+        modelScene->materials.PushBack(materialRH);
+        modelScene->materialsNames.PushBack(materialName);
     }
 
 
@@ -178,10 +175,8 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
 
         uint matIndex = aScene->mMeshes[i]->mMaterialIndex;
 
-        RH<Material> material = unorderedMaterials[matIndex];
-        const String &materialName = unorderedMaterialNames[matIndex];
-        modelScene->materials.PushBack(material);
-        modelScene->materialsNames.PushBack(materialName);
+        RH<Material> material = model->GetMaterials()[matIndex];
+        const String &materialName = model->GetMaterialsNames()[matIndex];
 
         // Update global bones
         for (const auto &it : meshRH.Get()->GetBonesPool())
@@ -197,9 +192,9 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         String animationName = AiStringToString(aAnimation->mName);
         if (animationName.IsEmpty())
         {
-            animationName = "__Animation";
+            animationName = "Animation";
         }
-        animationName += String::ToString(model->GetAnimationsNames().Size());
+        animationName += String::ToString(i);
         animationName.Append("." + Extensions::GetAnimationExtension());
         RH<Animation> animationRH = Resources::CreateEmbeddedResource<Animation>(
                                                     model,
@@ -566,7 +561,6 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
 void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                      const Path& modelDirectory,
                                      Model *model,
-                                     bool forAnimation,
                                      RH<Material> *outMaterial,
                                      String *outMaterialName)
 {
@@ -575,24 +569,14 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     String materialName = AiStringToString(aMatName);
     if (materialName.IsEmpty())
     {
-        materialName = "__Material";
+        materialName = "Material";
     }
     materialName += String::ToString(model->GetMaterialsNames().Size());
-    if (forAnimation)
-    {
-        materialName += "_Anim";
-    }
     materialName.Append("." + Extensions::GetMaterialExtension());
 
     *outMaterialName = materialName;
     *outMaterial =  Resources::CreateEmbeddedResource<Material>(model,
                                                                 materialName);
-
-    if (forAnimation)
-    {
-        outMaterial->Get()->SetShaderProgram(
-                                ShaderProgramFactory::GetDefaultAnimated() );
-    }
 
     aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
     aiColor3D aDiffuseColor  = aiColor3D(1.0f, 1.0f, 1.0f);
@@ -637,7 +621,7 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
     String meshName = AiStringToString(aMeshName);
     if (meshName.IsEmpty())
     {
-        meshName = "__Mesh";
+        meshName = "Mesh";
     }
     meshName += String::ToString(model->GetMeshesNames().Size());
     meshName.Append("." + Extensions::GetMeshExtension());

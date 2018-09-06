@@ -1,8 +1,12 @@
-#ifndef BANGFORWARD_H
-#define BANGFORWARD_H
+#ifndef BANGDEFINES_H
+#define BANGDEFINES_H
 
 #include <cstdint>
 #include <stddef.h>
+
+#ifndef BANG_BUILD_TYPE
+    #define BANG_BUILD_TYPE "NoBuildType"
+#endif
 
 #define NAMESPACE_NAME       Bang
 #define USING_NAMESPACE_BANG using namespace NAMESPACE_NAME;
@@ -133,4 +137,4 @@ struct EnumClassHash
 
 NAMESPACE_BANG_END
 
-#endif // BANGFORWARD_H
+#endif // BANGDEFINES_H

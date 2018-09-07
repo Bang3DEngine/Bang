@@ -1,5 +1,4 @@
-#ifndef GLUNIFORMS_TCC
-#define GLUNIFORMS_TCC
+#pragma once
 
 #include "Bang/GLUniforms.h"
 
@@ -197,8 +196,8 @@ inline Vector4 GLUniforms::GetUniform(GLId program, int uniformLocation)
 }
 template<>
 inline Array<Color> GLUniforms::GetUniformArray(GLId program,
-                                                  int uniformLocation,
-                                                  int numElements)
+                                                int uniformLocation,
+                                                int numElements)
 {
     ASSERT(numElements >= 1);
     Array<Color> res;
@@ -252,4 +251,3 @@ inline Matrix4 GLUniforms::GetUniform(GLId program, int uniformLocation)
 
 NAMESPACE_BANG_END
 
-#endif // GL_UNIFORMS_TCC

@@ -63,8 +63,15 @@ AARect PointLight::GetRenderRect(Camera *cam) const
     return cam->GetViewportBoundingAARectNDC(bbox);
 }
 
-void PointLight::SetRange(float range) { m_range = range; }
-float PointLight::GetRange() const { return m_range; }
+void PointLight::SetRange(float range)
+{
+    m_range = range;
+}
+
+float PointLight::GetRange() const
+{
+    return m_range;
+}
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {

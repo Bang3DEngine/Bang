@@ -17,24 +17,24 @@ FORWARD class GBuffer;
 FORWARD class Texture2D;
 FORWARD class ShaderProgram;
 
+enum class CameraProjectionMode
+{
+    ORTHOGRAPHIC,
+    PERSPECTIVE
+};
+
+enum class CameraClearMode
+{
+    COLOR,
+    SKY_BOX
+};
+
 class Camera : public Component,
                public EventListener<IEventsDestroy>
 {
     COMPONENT(Camera)
 
 public:
-    enum class ProjectionMode
-    {
-        ORTHOGRAPHIC,
-        PERSPECTIVE
-    };
-
-    enum class ClearMode
-    {
-        COLOR,
-        SKY_BOX
-    };
-
     virtual void Bind() const;
     virtual void UnBind() const;
 
@@ -52,12 +52,12 @@ public:
     void SetFovDegrees(float fovDegrees);
     void SetZNear(float zNear);
     void SetZFar(float zFar);
-    void SetProjectionMode(ProjectionMode projMode);
+    void SetProjectionMode(CameraProjectionMode projMode);
     void AddRenderPass(RenderPass renderPass);
     void RemoveRenderPass(RenderPass renderPass);
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
                           bool createFilteredCubeMapsForIBL = true);
-    void SetClearMode(ClearMode clearMode);
+    void SetClearMode(CameraClearMode clearMode);
 
     const Color& GetClearColor() const;
     float GetAspectRatio() const;
@@ -66,7 +66,7 @@ public:
     float GetFovDegrees() const;
     float GetZNear() const;
     float GetZFar() const;
-    ClearMode GetClearMode() const;
+    CameraClearMode GetClearMode() const;
     float GetGammaCorrection() const;
     RenderFlags GetRenderFlags() const;
     bool MustRenderPass(RenderPass renderPass) const;
@@ -74,7 +74,7 @@ public:
     Matrix4 GetViewMatrix() const;
     Matrix4 GetProjectionMatrix() const;
     bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
-    ProjectionMode GetProjectionMode() const;
+    CameraProjectionMode GetProjectionMode() const;
     AARect GetViewportBoundingAARectNDC(const AABox &bbox) const;
     GBuffer *GetGBuffer() const;
     const Vector2i &GetRenderSize() const;
@@ -114,14 +114,14 @@ private:
     RH<TextureCubeMap> p_skyboxSpecularTextureCM;
     RH<TextureCubeMap> p_skyboxDiffuseTextureCM;
 
+    CameraProjectionMode m_projMode = CameraProjectionMode::PERSPECTIVE;
+    CameraClearMode m_clearMode = CameraClearMode::COLOR;
     Color m_clearColor = Color(Color(0.3f), 1);
-    ClearMode m_clearMode = ClearMode::COLOR;
     float m_orthoHeight  = 25.0f;
     float m_fovDegrees = 60.0f;
     float m_zNear = 0.1f;
     float m_zFar = 100.0f;
     float m_gammaCorrection = 1.0f / 2.2f;
-    ProjectionMode m_projMode = ProjectionMode::PERSPECTIVE;
 
     friend class Scene;
 };

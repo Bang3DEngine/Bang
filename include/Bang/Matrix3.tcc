@@ -1,5 +1,4 @@
-#ifndef MATRIX3_TCC
-#define MATRIX3_TCC
+#pragma once
 
 #include <iostream>
 
@@ -173,5 +172,3 @@ bool operator!=(const Matrix3G<T> &m1, const Matrix3G<T>& m2)
 }
 
 NAMESPACE_BANG_END
-
-#endif // MATRIX3_TCC

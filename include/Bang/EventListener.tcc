@@ -1,5 +1,4 @@
-#ifndef EVENTLISTENER_TCC
-#define EVENTLISTENER_TCC
+#pragma once
 
 #include "Bang/EventListener.h"
 
@@ -46,5 +45,3 @@ void EventListener<T>::RemoveEmitter(EventEmitter<T> *emitter)
 {
     m_emitters.Remove(emitter);
 }
-
-#endif // EVENTLISTENER_TCC

@@ -1,5 +1,4 @@
-#ifndef ARRAY_TCC
-#define ARRAY_TCC
+#pragma once
 
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
@@ -326,5 +325,3 @@ const Array<T>& Array<T>::Empty()
 }
 
 NAMESPACE_BANG_END
-
-#endif // ARRAY_TCC

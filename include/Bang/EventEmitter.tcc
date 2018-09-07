@@ -1,5 +1,4 @@
-#ifndef EVENTEMITTER_TCC
-#define EVENTEMITTER_TCC
+#pragma once
 
 #include "Bang/EventEmitter.h"
 
@@ -137,4 +136,3 @@ const Array<EventListener<T>*>& EventEmitter<T>::GetListeners() const
     return m_listeners;
 }
 
-#endif // EVENTEMITTER_TCC

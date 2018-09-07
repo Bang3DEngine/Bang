@@ -1,16 +1,19 @@
-#ifndef UMAP_TCC
-#define UMAP_TCC
+#pragma once
 
 #include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
-UMap<Key, Value, Hash, Pred, Alloc>::UMap() {}
+UMap<Key, Value, Hash, Pred, Alloc>::UMap()
+{
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 UMap<Key, Value, Hash, Pred, Alloc>::
-UMap(const std::unordered_map<Key, Value, Hash, Pred, Alloc> &m) : m_umap(m) {}
+UMap(const std::unordered_map<Key, Value, Hash, Pred, Alloc> &m) : m_umap(m)
+{
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 void UMap<Key, Value, Hash, Pred, Alloc>::
@@ -38,8 +41,14 @@ void UMap<Key, Value, Hash, Pred, Alloc>::RemoveValues(const Value &value)
 {
     for (auto it = Begin(); it != End(); )
     {
-        if (it->second == value) { it = Remove(it); }
-        else { ++it; }
+        if (it->second == value)
+        {
+            it = Remove(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 
@@ -85,7 +94,10 @@ ContainsValue(const Value &value) const
 {
     for (auto it = Begin(); it != End(); ++it)
     {
-        if (it->second == value) return true;
+        if (it->second == value)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -111,7 +123,10 @@ GetKeysWithValue(const Value &v) const
     List<Key> result;
     for (auto it = Begin(); it != End(); ++it)
     {
-        if (it->second == v) { result.PushBack(it->first); }
+        if (it->second == v)
+        {
+            result.PushBack(it->first);
+        }
     }
     return result;
 }
@@ -120,7 +135,10 @@ template<class Key, class Value, class Hash, class Pred, class Alloc>
 List<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeys() const
 {
     List<Key> result;
-    for (const auto& it : *this) { result.PushBack(it.first); }
+    for (const auto& it : *this)
+    {
+        result.PushBack(it.first);
+    }
     return result;
 }
 
@@ -143,51 +161,87 @@ const Value &UMap<Key, Value, Hash, Pred, Alloc>::operator[](const Key &k) const
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::Begin() { return m_umap.begin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::Begin()
+{
+    return m_umap.begin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::Begin() const { return CBegin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::Begin() const
+{
+    return CBegin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::CBegin() const { return m_umap.cbegin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::CBegin() const
+{
+    return m_umap.cbegin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::End() { return m_umap.end(); }
+UMap<Key, Value, Hash, Pred, Alloc>::End()
+{
+    return m_umap.end();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::End() const { return CEnd(); }
+UMap<Key, Value, Hash, Pred, Alloc>::End() const
+{
+    return CEnd();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::CEnd() const { return m_umap.cend(); }
+UMap<Key, Value, Hash, Pred, Alloc>::CEnd() const
+{
+    return m_umap.cend();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::begin() { return m_umap.begin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::begin()
+{
+    return m_umap.begin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::end() { return m_umap.end(); }
+UMap<Key, Value, Hash, Pred, Alloc>::end()
+{
+    return m_umap.end();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::begin() const { return this->CBegin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::begin() const
+{
+    return this->CBegin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::end() const { return this->CEnd(); }
+UMap<Key, Value, Hash, Pred, Alloc>::end() const
+{
+    return this->CEnd();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::cbegin() const { return m_umap.cbegin(); }
+UMap<Key, Value, Hash, Pred, Alloc>::cbegin() const
+{
+    return m_umap.cbegin();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 typename UMap<Key, Value, Hash, Pred, Alloc>::Const_Iterator
-UMap<Key, Value, Hash, Pred, Alloc>::cend() const { return m_umap.cend(); }
+UMap<Key, Value, Hash, Pred, Alloc>::cend() const
+{
+    return m_umap.cend();
+}
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
 Value &UMap<Key, Value, Hash, Pred, Alloc>::operator[](const Key &k)
@@ -196,6 +250,4 @@ Value &UMap<Key, Value, Hash, Pred, Alloc>::operator[](const Key &k)
 }
 
 NAMESPACE_BANG_END
-
-#endif // MAP_TCC
 

@@ -17,6 +17,7 @@ public:
 
 protected:
     IUniformBuffer();
+    mutable void *m_mappedMemory = nullptr;
 
 private:
     GLuint m_bindingPoint = -1;

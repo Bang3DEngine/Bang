@@ -111,7 +111,7 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
     if (B_MaterialReceivesLighting)
     {
         vec3 N = pixelNormalWorld.xyz;
-        vec3 V = normalize(B_Camera_WorldPos - pixelPosWorld);
+        vec3 V = normalize(B_Camera_WorldPos.xyz - pixelPosWorld);
         vec3 R = reflect(-V, N);
 
         bool useReflectionProbeAsCubeMap = false;

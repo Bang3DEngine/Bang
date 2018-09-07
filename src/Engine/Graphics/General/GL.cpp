@@ -1032,29 +1032,45 @@ void GL::Uniform(const String &name, const Array<Matrix4> &value)
 
 void GL::Uniform(int location, int value)
 {
-    if (location >= 0) { GL_CALL( glUniform1i(location, value) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1i(location, value) );
+    }
 }
 void GL::Uniform(int location, float value)
 {
-    if (location >= 0) { GL_CALL( glUniform1f(location, value) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1f(location, value) );
+    }
 }
 void GL::Uniform(int location, double value)
 {
-    if (location >= 0) { GL_CALL( glUniform1f(location, value) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1f(location, value) );
+    }
 }
 void GL::Uniform(int location, bool value)
 {
-    if (location >= 0) { GL_CALL( glUniform1i(location, value ? 1 : 0) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1i(location, value ? 1 : 0) );
+    }
 }
 void GL::Uniform(int location, const Matrix3f& value)
 {
-    if (location >= 0) { GL_CALL( glUniformMatrix3fv(location, 1, false,
-                                                     value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniformMatrix3fv(location, 1, false, value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Matrix4f& value)
 {
-    if (location >= 0) { GL_CALL( glUniformMatrix4fv(location, 1, false,
-                                                     value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniformMatrix4fv(location, 1, false, value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Color &value)
 {
@@ -1062,69 +1078,109 @@ void GL::Uniform(int location, const Color &value)
 }
 void GL::Uniform(int location, const Vector2 &value)
 {
-    if (location >= 0) { GL_CALL( glUniform2fv(location, 1, value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform2fv(location, 1, value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Vector3 &value)
 {
-    if (location >= 0) { GL_CALL( glUniform3fv(location, 1, value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform3fv(location, 1, value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Vector4 &value)
 {
-    if (location >= 0) { GL_CALL( glUniform4fv(location, 1, value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform4fv(location, 1, value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Array<int> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform1iv(location, value.Size(),
-                                               value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1iv(location, value.Size(), value.Data()) );
+    }
 }
 void GL::Uniform(int location, const Array<bool> &value)
 {
     Array<int> valueInts;
-    for (bool b : value) { valueInts.PushBack(b ? 1 : 0); }
-    if (location >= 0) { GL_CALL( glUniform1iv(location, value.Size(),
-                                               valueInts.Data()) ); }
+    for (bool b : value)
+    {
+        valueInts.PushBack(b ? 1 : 0);
+    }
+
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1iv(location, value.Size(), valueInts.Data()) );
+    }
 }
 void GL::Uniform(int location, const Array<float> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform1fv(location, value.Size(),
-                                               value.Data()) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1fv(location, value.Size(), value.Data()) );
+    }
 }
 
 void GL::Uniform(int location, const Array<double> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform1dv(location, value.Size(),
-                                   RCAST<const GLdouble*>(value.Data())) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform1dv(location, value.Size(),
+                              RCAST<const GLdouble*>(value.Data())) );
+    }
 }
 
 void GL::Uniform(int location, const Array<Color> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform4fv(location, value.Size(),
-                                   RCAST<const GLfloat*>(value.Data())) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform4fv(location, value.Size(),
+                              RCAST<const GLfloat*>(value.Data())) );
+    }
 }
 void GL::Uniform(int location, const Array<Vector2> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform2fv(location, value.Size(),
-                                   RCAST<const GLfloat*>(value.Data()) ) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform2fv(location, value.Size(),
+                              RCAST<const GLfloat*>(value.Data()) ) );
+    }
 }
 void GL::Uniform(int location, const Array<Vector3> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform3fv(location, value.Size(),
-                                   RCAST<const GLfloat*>(value.Data()) ) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform3fv(location, value.Size(),
+                              RCAST<const GLfloat*>(value.Data()) ) );
+   }
 }
 void GL::Uniform(int location, const Array<Vector4> &value)
 {
-    if (location >= 0) { GL_CALL( glUniform4fv(location, value.Size(),
-                                   RCAST<const GLfloat*>(value.Data()) ) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniform4fv(location, value.Size(),
+                              RCAST<const GLfloat*>(value.Data()) ) );
+    }
 }
 void GL::Uniform(int location, const Array<Matrix3> &value)
 {
-    if (location >= 0) { GL_CALL( glUniformMatrix3fv(location, value.Size(), false,
-                                   RCAST<const GLfloat*>(value.Data()) ) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniformMatrix3fv(location, value.Size(), false,
+                                    RCAST<const GLfloat*>(value.Data()) ) );
+    }
 }
 void GL::Uniform(int location, const Array<Matrix4> &value)
 {
-    if (location >= 0) { GL_CALL( glUniformMatrix4fv(location, value.Size(), false,
-                                   RCAST<const GLfloat*>(value.Data()) ) ); }
+    if (location >= 0)
+    {
+        GL_CALL( glUniformMatrix4fv(location, value.Size(), false,
+                                    RCAST<const GLfloat*>(value.Data()) ) );
+    }
 }
 
 void GL::PixelStore(GL::Enum pixelStoreEnum, int n)
@@ -1236,6 +1292,33 @@ void GL::GetBoolean(GL::Enum glEnum, bool *values)
     GLboolean result;
     GL_CALL( glGetBooleanv(GLCAST(glEnum), &result) );
     *values = result;
+}
+
+void GL::BindUniformBlock(GLId programId,
+                          const String &uniformBlockName,
+                          GLuint bindingPoint)
+{
+    GLuint ubLocation = GL::GetUniformBlockIndex(programId, uniformBlockName);
+    if (ubLocation != SCAST<GLuint>(-1))
+    {
+        GL::UniformBlockBinding(programId, ubLocation, bindingPoint);
+    }
+}
+
+void GL::UniformBlockBinding(GLId programId,
+                             GLuint uniformBlockLocation,
+                             GLuint bindingPoint)
+{
+    GL_CALL(
+       glUniformBlockBinding(programId, uniformBlockLocation, bindingPoint) );
+}
+
+GLuint GL::GetUniformBlockIndex(GLId programId,
+                                const String &uniformBlockName)
+{
+   GL_CALL(GLuint index =
+           glGetUniformBlockIndex(programId, uniformBlockName.ToCString()));
+   return index;
 }
 
 int GL::GetInteger(GL::Enum glEnum)
@@ -1436,10 +1519,20 @@ void GL::BindBuffer(GL::BindTarget target, GLId bufferId)
     GL_CALL( glBindBuffer(GLCAST(target), bufferId) );
 }
 
-void GL::BufferData(GL::BindTarget target, int dataSize,
-                    const void *data, GL::UsageHint usageHint)
+void GL::BufferData(GL::BindTarget target,
+                    GLuint dataSize,
+                    const void *data,
+                    GL::UsageHint usageHint)
 {
     GL_CALL( glBufferData(GLCAST(target), dataSize, data, GLCAST(usageHint)) );
+}
+
+void GL::BufferSubData(GL::BindTarget target,
+                       GLuint offset,
+                       GLuint dataSize,
+                       const void *data)
+{
+    GL_CALL( glBufferSubData(GLCAST(target), offset, dataSize, data) );
 }
 
 void GL::SetColorMask(const std::array<bool, 4> &colorMask)

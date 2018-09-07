@@ -1,5 +1,4 @@
-#ifndef SET_TCC
-#define SET_TCC
+#pragma once
 
 #include "Bang/Set.h"
 
@@ -132,5 +131,3 @@ typename Set<Key,Compare>::Const_Iterator
 Set<Key,Compare>::end() const { return m_set.cend(); }
 
 NAMESPACE_BANG_END
-
-#endif // SET_TCC

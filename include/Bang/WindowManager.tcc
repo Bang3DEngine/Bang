@@ -1,5 +1,4 @@
-#ifndef WINDOWMANAGER_TCC
-#define WINDOWMANAGER_TCC
+#pragma once
 
 #include "Bang.h"
 #include "Bang/Window.h"
@@ -16,6 +15,4 @@ WinT* WindowManager::CreateWindow(uint flags)
 }
 
 NAMESPACE_BANG_END
-
-#endif // WINDOWMANAGER_TCC
 

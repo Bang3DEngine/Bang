@@ -51,8 +51,16 @@ void Camera::Bind() const
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::VIEW_MATRIX);
     GL::Push(GL::Pushable::PROJECTION_MATRIX);
+
+    if (Transform *tr = GetGameObject()->GetTransform())
+    {
+        GLUniforms::SetCameraWorldPosition( tr->GetPosition() );
+    }
+    GLUniforms::SetCameraClearColor( GetClearColor() );
+    GLUniforms::SetCameraClearMode( GetClearMode() );
     GLUniforms::SetViewMatrix( GetViewMatrix() );
     GLUniforms::SetProjectionMatrix( GetProjectionMatrix() );
+
     GL::SetViewport(0, 0, GetRenderSize().x, GetRenderSize().y);
     GetGBuffer()->Bind();
 }
@@ -128,7 +136,10 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
 {
     Transform *tr = GetGameObject()->GetTransform();
     Vector3 camPosition = tr->GetPosition();
-    if ( aaBBoxWorld.Contains(camPosition) ) { return AARect::NDCRect; }
+    if ( aaBBoxWorld.Contains(camPosition) )
+    {
+        return AARect::NDCRect;
+    }
 
     Array<Vector3> intPoints;
     intPoints.PushBack(Geometry::IntersectQuadAABox(GetFrustumTopQuad(),   aaBBoxWorld));
@@ -141,7 +152,10 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
     Array<Vector3> boxPoints = aaBBoxWorld.GetPoints();
     for (const Vector3 &bp : boxPoints)
     {
-        if (IsPointInsideFrustum(bp)) { intPoints.PushBack(bp); }
+        if (IsPointInsideFrustum(bp))
+        {
+            intPoints.PushBack(bp);
+        }
     }
 
 
@@ -157,13 +171,32 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
     return boundingRect;
 }
 
-void Camera::SetOrthoHeight(float orthoHeight) { m_orthoHeight = orthoHeight; }
-void Camera::SetClearColor(const Color &color) { m_clearColor = color; }
-void Camera::SetFovDegrees(float fovDegrees) { this->m_fovDegrees = fovDegrees; }
-void Camera::SetZNear(float zNear) { this->m_zNear = zNear; }
-void Camera::SetZFar(float zFar) { this->m_zFar = zFar; }
+void Camera::SetOrthoHeight(float orthoHeight)
+{
+    m_orthoHeight = orthoHeight;
+}
 
-void Camera::SetProjectionMode(Camera::ProjectionMode projMode)
+void Camera::SetClearColor(const Color &color)
+{
+    m_clearColor = color;
+}
+
+void Camera::SetFovDegrees(float fovDegrees)
+{
+    m_fovDegrees = fovDegrees;
+}
+
+void Camera::SetZNear(float zNear)
+{
+    m_zNear = zNear;
+}
+
+void Camera::SetZFar(float zFar)
+{
+    m_zFar = zFar;
+}
+
+void Camera::SetProjectionMode(CameraProjectionMode projMode)
 {
     m_projMode = projMode;
 }
@@ -204,23 +237,42 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
     }
 }
 
-void Camera::SetClearMode(Camera::ClearMode clearMode)
+void Camera::SetClearMode(CameraClearMode clearMode)
 {
     m_clearMode = clearMode;
 }
 
-const Color &Camera::GetClearColor() const { return m_clearColor; }
+const Color &Camera::GetClearColor() const
+{
+    return m_clearColor;
+}
 
 float Camera::GetAspectRatio() const
 {
     return SCAST<float>(GetRenderSize().x) / Math::Max(GetRenderSize().y, 1);
 }
-float Camera::GetOrthoHeight() const { return m_orthoHeight; }
-float Camera::GetFovDegrees() const { return m_fovDegrees; }
-float Camera::GetZNear() const { return m_zNear; }
-float Camera::GetZFar() const { return m_zFar; }
 
-Camera::ClearMode Camera::GetClearMode() const
+float Camera::GetOrthoHeight() const
+{
+    return m_orthoHeight;
+}
+
+float Camera::GetFovDegrees() const
+{
+    return m_fovDegrees;
+}
+
+float Camera::GetZNear() const
+{
+    return m_zNear;
+}
+
+float Camera::GetZFar() const
+{
+    return m_zFar;
+}
+
+CameraClearMode Camera::GetClearMode() const
 {
     return m_clearMode;
 }
@@ -329,7 +381,11 @@ Camera *Camera::GetActive()
     }
     return cam;
 }
-Camera::ProjectionMode Camera::GetProjectionMode() const { return m_projMode; }
+
+CameraProjectionMode Camera::GetProjectionMode() const
+{
+    return m_projMode;
+}
 
 float Camera::GetOrthoWidth() const
 {
@@ -346,9 +402,10 @@ Matrix4 Camera::GetViewMatrix() const
 
 Matrix4 Camera::GetProjectionMatrix() const
 {
-    if (m_projMode == ProjectionMode::PERSPECTIVE)
+    if (m_projMode == CameraProjectionMode::PERSPECTIVE)
     {
-        if (GetAspectRatio() == 0.0 || GetFovDegrees() == 0.0 ||
+        if (GetAspectRatio() == 0.0 ||
+            GetFovDegrees()  == 0.0 ||
             GetZNear() == GetZFar())
         {
             return Matrix4::Identity;
@@ -376,7 +433,8 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
 void Camera::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Camera *cam = Cast<Camera*>(clone);
+
+    Camera *cam = SCAST<Camera*>(clone);
     cam->SetZFar(GetZFar());
     cam->SetZNear(GetZNear());
     cam->SetFovDegrees(GetFovDegrees());
@@ -413,12 +471,12 @@ void Camera::ImportMeta(const MetaNode &meta)
 
     if (meta.Contains("ProjectionMode"))
     {
-        SetProjectionMode( meta.Get<ProjectionMode>("ProjectionMode") );
+        SetProjectionMode( meta.Get<CameraProjectionMode>("ProjectionMode") );
     }
 
     if (meta.Contains("ClearMode"))
     {
-        SetClearMode( meta.Get<ClearMode>("ClearMode") );
+        SetClearMode( meta.Get<CameraClearMode>("ClearMode") );
     }
 
     if (meta.Contains("ClearColor"))

@@ -14,7 +14,7 @@ vec3 GetLightColorApportation()
     return GetDirectionalLightColorApportation(B_LightForwardWorld,
                                                B_LightIntensity,
                                                B_LightColor.rgb,
-                                               B_Camera_WorldPos,
+                                               B_Camera_WorldPos.xyz,
                                                pixelPosWorld,
                                                pixelNormalWorld,
                                                pixelAlbedo,

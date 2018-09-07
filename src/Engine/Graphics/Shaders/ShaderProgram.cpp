@@ -115,7 +115,10 @@ bool ShaderProgram::Link()
         return false;
     }
 
-    if (m_idGL > 0) { GL::DeleteProgram(m_idGL); }
+    if (m_idGL > 0)
+    {
+        GL::DeleteProgram(m_idGL);
+    }
     m_isLinked = false;
 
     m_idGL = GL::CreateProgram();
@@ -157,6 +160,8 @@ bool ShaderProgram::Link()
     m_uniformCacheMatrix3.Clear();
     m_uniformCacheMatrix4.Clear();
     m_namesToTexture.Clear();
+
+    GLUniforms::GetActive()->BindUniformBuffers(this);
 
     return true;
 }
@@ -324,7 +329,10 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
     int uniformLocation = GetUniformLocation(name);
     if (uniformLocation < 0)
     {
-        if (warn) { Debug_Warn("Texture uniform '" << name << "' not found."); }
+        if (warn)
+        {
+            Debug_Warn("Texture uniform '" << name << "' not found.");
+        }
         return false;
     }
 
@@ -349,7 +357,10 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
             needToRefreshTexture = false;
         }
     }
-    else { needToRefreshTexture = true; }
+    else
+    {
+        needToRefreshTexture = true;
+    }
 
     if (needToRefreshTexture)
     {

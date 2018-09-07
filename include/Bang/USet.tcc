@@ -1,5 +1,4 @@
-#ifndef USET_TCC
-#define USET_TCC
+#pragma once
 
 #include "Bang/USet.h"
 
@@ -130,8 +129,6 @@ USet<Key, Hash, Pred, Alloc>::end() const
     return m_uset.end();
 }
 
-
 NAMESPACE_BANG_END
 
-#endif // USET_TCC
 

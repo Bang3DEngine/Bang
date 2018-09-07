@@ -45,7 +45,7 @@ void main()
     vec3 normal = -normalize( cross(neighbor0Position - position,
                                     neighbor1Position - position) );
 
-    vec3 viewVector = normalize(position - B_Camera_WorldPos);
+    vec3 viewVector = normalize(position - B_Camera_WorldPos.xyz);
     vec3 reflectedViewVector = reflect(viewVector, normal);
 
     vec4 finalColor = GetIBLAmbientColor(position, normal, WaterColor,

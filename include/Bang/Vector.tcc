@@ -1,5 +1,4 @@
-#ifndef VECTOR_TCC
-#define VECTOR_TCC
+#pragma once
 
 #include "Bang/Math.h"
 #include "Bang/Axis.h"
@@ -452,5 +451,3 @@ VECTOR_G<T> operator-(const VECTOR_G<T> &v) \
 { \
     return v * SCAST<T>(-1); \
 }
-
-#endif // VECTOR_H

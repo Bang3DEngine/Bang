@@ -1,5 +1,4 @@
-#ifndef MATRIX4_TCC
-#define MATRIX4_TCC
+#pragma once
 
 #include "Bang/Matrix4.h"
 #include "Bang/Quaternion.h"
@@ -601,4 +600,3 @@ template<class T>
 void operator-=(Matrix4G<T>& m, const Matrix4G<T>& rhs) { m = m - rhs; }
 NAMESPACE_BANG_END
 
-#endif // MATRIX4_TCC

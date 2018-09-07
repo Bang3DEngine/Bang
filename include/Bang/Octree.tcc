@@ -1,5 +1,4 @@
-#ifndef OCTREE_TCC
-#define OCTREE_TCC
+#pragma once
 
 #include <array>
 #include <queue>
@@ -186,6 +185,4 @@ Octree<T, ClassifyFunctor>::GetChildrenAtLevel(
     }
     return childrenAtLevelResult;
 }
-
-#endif // OCTREE_TCC
 

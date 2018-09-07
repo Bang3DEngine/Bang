@@ -84,7 +84,7 @@ public:
     template<class T = int, class T2>
     static constexpr T Round(const T2 &value)
     {
-        return std::round(value);
+        return SCAST<T>( std::round(value) );
     }
 
     template<class T>
@@ -283,13 +283,13 @@ private:
 };
 
 template<>
-inline constexpr double Math::NaN()
+inline double Math::NaN()
 {
     return std::nan("");
 }
 
 template<>
-inline constexpr float Math::NaN()
+inline float Math::NaN()
 {
     return std::nanf("");
 }

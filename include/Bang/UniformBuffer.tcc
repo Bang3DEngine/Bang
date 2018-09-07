@@ -1,5 +1,4 @@
-#ifndef UNIFORM_BUFFER_TCC
-#define UNIFORM_BUFFER_TCC
+#pragma once
 
 #include "Bang/UniformBuffer.h"
 
@@ -12,8 +11,9 @@ UniformBuffer<BufferStruct>::UniformBuffer()
 
     Bind();
     GL::BufferData(GL::BindTarget::UNIFORM_BUFFER,
-                   sizeof(BufferStruct), &m_data,
-                   GL::UsageHint::DYNAMIC_DRAW);
+                   sizeof(BufferStruct),
+                   nullptr,
+                   GL::UsageHint::STATIC_DRAW);
     UnBind();
 }
 
@@ -26,37 +26,29 @@ UniformBuffer<BufferStruct>::~UniformBuffer()
 template<class BufferStruct>
 void UniformBuffer<BufferStruct>::Set(const BufferStruct &data)
 {
-    m_data = data;
-    UpdateBuffer();
+    SetSubData(data, 0);
 }
 
 template<class BufferStruct>
-BufferStruct* const UniformBuffer<BufferStruct>::GetData()
-{
-    return &m_data;
-}
-template<class BufferStruct>
-const BufferStruct* const UniformBuffer<BufferStruct>::GetData() const
-{
-    return &m_data;
-}
-
-template<class BufferStruct>
-void UniformBuffer<BufferStruct>::UpdateBuffer() const
+void UniformBuffer<BufferStruct>::SetSubData(const void *data,
+                                             GLuint offset,
+                                             GLuint size)
 {
     Bind();
-
-    GLvoid* p = GL::MapBuffer( GetGLBindTarget(), GL::WRITE_ONLY );
-    memcpy(p, GetData(), sizeof(BufferStruct));
-    GL::UnMapBuffer( GetGLBindTarget() );
-
+    GL::BufferSubData(GetGLBindTarget(), offset, size, data);
     UnBind();
 }
+
+template<class BufferStruct>
+template<class T>
+void UniformBuffer<BufferStruct>::SetSubData(const T &data, GLuint offset)
+{
+    SetSubData(&data, offset, sizeof(data));
+}
+
 
 template<class BufferStruct>
 GL::BindTarget UniformBuffer<BufferStruct>::GetGLBindTarget() const
 {
     return GL::BindTarget::UNIFORM_BUFFER;
 }
-
-#endif // UNIFORM_BUFFER_TCC

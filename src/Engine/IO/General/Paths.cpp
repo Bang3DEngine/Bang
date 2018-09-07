@@ -187,19 +187,20 @@ Path Paths::GetResolvedPath(const Path &path_)
     for (auto it = pathParts.RBegin(); it != pathParts.REnd(); ++it)
     {
         const String &pathPart = *it;
-        if (skipNext > 0)
-        {
-            --skipNext;
-            continue;
-        }
-
         if (pathPart == "..")
         {
             ++skipNext;
         }
         else
         {
-            resolvedPathParts.PushFront(pathPart);
+            if (skipNext > 0)
+            {
+                --skipNext;
+            }
+            else
+            {
+                resolvedPathParts.PushFront(pathPart);
+            }
         }
     }
     Path resolvedPath = Path( String::Join(resolvedPathParts, "/") );

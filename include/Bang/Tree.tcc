@@ -1,5 +1,4 @@
-#ifndef TREE_TCC
-#define TREE_TCC
+#pragma once
 
 #include "Bang/Tree.h"
 
@@ -140,4 +139,3 @@ Tree<T>* Tree<T>::GetDeepCopy() const
 
 NAMESPACE_BANG_END
 
-#endif // TREE_TCC

@@ -1,5 +1,4 @@
-#ifndef MAP_TCC
-#define MAP_TCC
+#pragma once
 
 #include "Bang/Map.h"
 
@@ -213,6 +212,4 @@ template<class Key, class Value, class Compare>
 Value &Map<Key,Value,Compare>::operator[](const Key &k) { return m_map[k]; }
 
 NAMESPACE_BANG_END
-
-#endif // MAP_TCC
 

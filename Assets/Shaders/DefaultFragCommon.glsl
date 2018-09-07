@@ -32,7 +32,10 @@ void main()
     if (B_HasAlbedoTexture)
     {
         texColor = texture(B_AlbedoTexture, B_FIn_AlbedoUv);
-        if (texColor.a < B_AlphaCutoff) { discard; }
+        if (texColor.a < B_AlphaCutoff)
+        {
+            discard;
+        }
     }
     vec4 finalAlbedo = B_MaterialAlbedoColor * texColor;
 
@@ -59,14 +62,15 @@ void main()
                                              finalAlbedo.rgb,
                                              pixelRoughness,
                                              pixelMetalness), 0);
-    B_GIn_Color = finalColor;
 
     #elif defined(BANG_DEFERRED_RENDERING)
 
     float receivesLighting = B_MaterialReceivesLighting ? 0.25 : 0;
-    if (receivesLighting > 0 && B_ReceivesShadows) { receivesLighting = 0.75; }
+    if (receivesLighting > 0 && B_ReceivesShadows)
+    {
+        receivesLighting = 0.75;
+    }
 
-    B_GIn_Color  = finalColor;
     B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);
     B_GIn_Normal = vec4(finalNormal * 0.5f + 0.5f, 0);
     B_GIn_Misc   = vec4(receivesLighting,
@@ -75,4 +79,6 @@ void main()
                         0);
 
     #endif
+
+    B_GIn_Color = finalColor;
 }

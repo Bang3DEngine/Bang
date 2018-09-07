@@ -1,5 +1,4 @@
-#ifndef LIST_TCC
-#define LIST_TCC
+#pragma once
 
 #include "Bang/List.h"
 #include "Bang/Assert.h"
@@ -292,4 +291,3 @@ Container<OtherT> List<T>::To() const
 
 NAMESPACE_BANG_END
 
-#endif // LIST_TCC

@@ -1,5 +1,4 @@
-#ifndef GAMEOBJECT_TCC
-#define GAMEOBJECT_TCC
+#pragma once
 
 #include "Bang/GameObject.h"
 #include "Bang/ComponentFactory.h"
@@ -297,4 +296,3 @@ void GameObject::PropagateToComponents(TReturn TListener::*func,
 
 NAMESPACE_BANG_END
 
-#endif // GAMEOBJECT_TCC

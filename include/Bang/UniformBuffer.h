@@ -13,16 +13,15 @@ public:
 	virtual ~UniformBuffer();
 
     void Set(const BufferStruct &data);
-    BufferStruct* const GetData();
-    const BufferStruct* const GetData() const;
 
-    void UpdateBuffer() const;
+    void SetSubData(const void *data, GLuint offset, GLuint size);
+
+    template <class T>
+    void SetSubData(const T &data, GLuint offset);
 
     virtual GL::BindTarget GetGLBindTarget() const;
 
 private:
-    BufferStruct m_data;
-
     friend class GLUniforms;
 };
 

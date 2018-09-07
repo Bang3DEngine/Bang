@@ -274,7 +274,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             GL::ClearColorBuffer(Color::Zero); // Clear all except color
         }
 
-        if (camera->GetClearMode() == Camera::ClearMode::SKY_BOX)
+        if (camera->GetClearMode() == CameraClearMode::SKY_BOX)
         {
             GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
             GL::Push(GL::BindTarget::SHADER_PROGRAM);

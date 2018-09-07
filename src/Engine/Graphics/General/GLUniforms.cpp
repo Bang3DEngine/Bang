@@ -4,11 +4,12 @@
 #include "Bang/Settings.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/TextureFactory.h"
 
 USING_NAMESPACE_BANG
 
+const String GLUniforms::UniformBlockName_Camera = "B_CameraUniformBuffer";
 const String GLUniforms::UniformName_ReceivesShadows = "B_ReceivesShadows";
 const String GLUniforms::UniformName_MaterialAlbedoColor = "B_MaterialAlbedoColor";
 const String GLUniforms::UniformName_AlbedoUvOffset = "B_AlbedoUvOffset";
@@ -38,7 +39,6 @@ const String GLUniforms::UniformName_ProjectionInv = "B_ProjectionInv";
 const String GLUniforms::UniformName_ProjectionView = "B_ProjectionView";
 const String GLUniforms::UniformName_PVMInv = "B_PVMInv";
 const String GLUniforms::UniformName_PVM = "B_PVM";
-const String GLUniforms::UniformName_Camera_WorldForward = "B_Camera_WorldForward";
 const String GLUniforms::UniformName_Camera_WorldPos = "B_Camera_WorldPos";
 const String GLUniforms::UniformName_Camera_ClearColor = "B_Camera_ClearColor";
 const String GLUniforms::UniformName_Camera_ClearMode = "B_Camera_ClearMode";
@@ -48,12 +48,17 @@ const String GLUniforms::UniformName_SkyBoxSpecular = "B_SkyBoxSpecular";
 const String GLUniforms::UniformName_Viewport_MinPos = "B_Viewport_MinPos";
 const String GLUniforms::UniformName_Viewport_Size = "B_Viewport_Size";
 
+GLUniforms::GLUniforms()
+{
+    m_cameraUniformBuffer.SetBindingPoint(0);
+}
+
 GLUniforms::ViewportUniforms *GLUniforms::GetViewportUniforms()
 {
     return &GLUniforms::GetActive()->m_viewportUniforms;
 }
 
-GLUniforms::MatrixUniforms *GLUniforms::GetMatrixUniforms()
+GLUniforms::ModelMatrixUniforms *GLUniforms::GetModelMatricesUniforms()
 {
     return &GLUniforms::GetActive()->m_matrixUniforms;
 }
@@ -65,38 +70,33 @@ Matrix4 GLUniforms::GetCanvasProjectionMatrix()
     return ortho;
 }
 
+void GLUniforms::BindUniformBuffers(ShaderProgram *sp)
+{
+    m_cameraUniformBuffer.Bind();
+    GL::BindUniformBlock(sp->GetGLId(),
+                         GLUniforms::UniformBlockName_Camera,
+                         m_cameraUniformBuffer.GetBindingPoint());
+    m_cameraUniformBuffer.UnBind();
+}
+
 void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
 {
     ASSERT (GL::IsBound(sp->GetGLBindTarget(), sp->GetGLId()));
 
-    MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
+    ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
 
-    sp->SetFloat(GLUniforms::UniformName_TimeSeconds, Time::GetEllapsed_Seconds());
+    sp->SetDouble(GLUniforms::UniformName_TimeSeconds, Time::GetEllapsed_Seconds());
     sp->SetMatrix4(GLUniforms::UniformName_Model,          matrices->model);
     sp->SetMatrix4(GLUniforms::UniformName_ModelInv,       matrices->modelInv);
     sp->SetMatrix4(GLUniforms::UniformName_Normal,         matrices->normal);
-    sp->SetMatrix4(GLUniforms::UniformName_View,           matrices->view);
-    sp->SetMatrix4(GLUniforms::UniformName_ViewInv,        matrices->viewInv);
-    sp->SetMatrix4(GLUniforms::UniformName_Projection,     matrices->proj);
-    sp->SetMatrix4(GLUniforms::UniformName_ProjectionInv,  matrices->projInv);
-    sp->SetMatrix4(GLUniforms::UniformName_ProjectionView, matrices->projView);
-    sp->SetMatrix4(GLUniforms::UniformName_PVMInv,         matrices->pvmInv);
     sp->SetMatrix4(GLUniforms::UniformName_PVM,            matrices->pvm);
+    sp->SetMatrix4(GLUniforms::UniformName_PVMInv,         matrices->pvmInv);
 
     Camera *cam = Camera::GetActive();
-    Transform *camTR = (cam ? cam->GetGameObject()->GetTransform() : nullptr);
-    sp->SetVector3(GLUniforms::UniformName_Camera_WorldForward,
-                   (camTR ? camTR->GetForward() : Vector3::Zero));
-    sp->SetVector3(GLUniforms::UniformName_Camera_WorldPos,
-                   (camTR ? camTR->GetPosition() : Vector3::Zero));
-    sp->SetColor(GLUniforms::UniformName_Camera_ClearColor,
-                 (cam ? cam->GetClearColor() : Color::Pink));
-    sp->SetBool(GLUniforms::UniformName_Camera_ClearMode,
-                cam ? int(cam->GetClearMode()) : -1);
 
-    TextureCubeMap *skyBox    = cam ? cam->GetSkyBoxTexture()         : nullptr;
-    TextureCubeMap *sSkyBox   = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
-    TextureCubeMap *dSkyBox   = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
+    TextureCubeMap *skyBox  = cam ? cam->GetSkyBoxTexture()         : nullptr;
+    TextureCubeMap *sSkyBox = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
+    TextureCubeMap *dSkyBox = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBox,         skyBox);
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxSpecular, sSkyBox);
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxDiffuse,  dSkyBox);
@@ -106,9 +106,42 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->SetVector2(GLUniforms::UniformName_Viewport_Size,   viewportUniforms->size);
 }
 
+void GLUniforms::SetCameraWorldPosition(const Vector3 &camWorldPosition)
+{
+    if (GLUniforms *glu = GLUniforms::GetActive())
+    {
+        glu->m_cameraUniforms.worldPos = Vector4(camWorldPosition, 0);
+        glu->m_cameraUniformBuffer.SetSubData(Vector4(camWorldPosition, 0),
+                                              5 * sizeof(Matrix4) +
+                                              0 * sizeof(Vector4));
+    }
+}
+
+void GLUniforms::SetCameraClearColor(const Color &camClearColor)
+{
+    if (GLUniforms *glu = GLUniforms::GetActive())
+    {
+        glu->m_cameraUniforms.clearColor = camClearColor.ToVector4();
+        glu->m_cameraUniformBuffer.SetSubData(camClearColor.ToVector4(),
+                                              5 * sizeof(Matrix4) +
+                                              1 * sizeof(Vector4));
+    }
+}
+
+void GLUniforms::SetCameraClearMode(const CameraClearMode &camClearMode)
+{
+    if (GLUniforms *glu = GLUniforms::GetActive())
+    {
+        glu->m_cameraUniforms.clearMode = SCAST<int>(camClearMode);
+        glu->m_cameraUniformBuffer.SetSubData(camClearMode,
+                                              5 * sizeof(Matrix4) +
+                                              2 * sizeof(Vector4));
+    }
+}
+
 void GLUniforms::SetModelMatrix(const Matrix4 &model)
 {
-    MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
+    ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
     if (model != matrices->model)
     {
         matrices->model = model;
@@ -119,32 +152,42 @@ void GLUniforms::SetModelMatrix(const Matrix4 &model)
 }
 void GLUniforms::SetViewMatrix(const Matrix4 &view)
 {
-    MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
-    if (view != matrices->view)
+    if (GLUniforms *glu = GLUniforms::GetActive())
     {
-        matrices->view    = view;
-        matrices->viewInv = view.Inversed();
-        GLUniforms::UpdatePVMMatrix();
+        if (view != glu->m_cameraUniforms.view)
+        {
+            Matrix4 viewInv = view.Inversed();
+            glu->m_cameraUniforms.view    = view;
+            glu->m_cameraUniforms.viewInv = viewInv;
+            glu->m_cameraUniformBuffer.SetSubData(view,    0 * sizeof(Matrix4));
+            glu->m_cameraUniformBuffer.SetSubData(viewInv, 1 * sizeof(Matrix4));
+            GLUniforms::UpdatePVMMatrix();
+        }
     }
 }
 void GLUniforms::SetProjectionMatrix(const Matrix4 &projection)
 {
-    MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
-    if (projection != matrices->proj)
+    if (GLUniforms *glu = GLUniforms::GetActive())
     {
-        matrices->proj    = projection;
-        matrices->projInv = projection.Inversed();
-        GLUniforms::UpdatePVMMatrix();
+        if (projection != glu->m_cameraUniforms.proj)
+        {
+            Matrix4 projectionInv = projection.Inversed();
+            glu->m_cameraUniforms.proj    = projection;
+            glu->m_cameraUniforms.projInv = projectionInv;
+            glu->m_cameraUniformBuffer.SetSubData(projection,    2 * sizeof(Matrix4));
+            glu->m_cameraUniformBuffer.SetSubData(projectionInv, 3 * sizeof(Matrix4));
+            GLUniforms::UpdatePVMMatrix();
+        }
     }
 }
 
 void GLUniforms::UpdatePVMMatrix()
 {
-    MatrixUniforms *matrices = GLUniforms::GetMatrixUniforms();
+    ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
     GLUniforms *glu = GLUniforms::GetActive();
 
     const Matrix4 &model = matrices->model;
-    Matrix4 viewModel = matrices->view * matrices->model;
+    Matrix4 viewModel = (glu->m_cameraUniforms.view * matrices->model);
 
     Matrix4 normalMatrix = model.Inversed().Transposed();
     matrices->normal = normalMatrix;
@@ -154,19 +197,22 @@ void GLUniforms::UpdatePVMMatrix()
     switch (glu->GetViewProjMode())
     {
         case GL::ViewProjMode::WORLD:
-            pvmMatrix = matrices->proj * viewModel;
-            projViewMatrix = matrices->proj * matrices->view;
+            pvmMatrix = glu->m_cameraUniforms.proj * viewModel;
+            projViewMatrix = glu->m_cameraUniforms.proj *
+                             glu->m_cameraUniforms.view;
         break;
 
         case GL::ViewProjMode::CANVAS:
         {
-            Matrix4 proj = GLUniforms::GetCanvasProjectionMatrix();
-            pvmMatrix = proj * model;
-            projViewMatrix = proj * matrices->view;
+            Matrix4 canvasProj = GLUniforms::GetCanvasProjectionMatrix();
+            pvmMatrix = canvasProj * model;
+            projViewMatrix = canvasProj * glu->m_cameraUniforms.view;
         }
         break;
     }
-    matrices->projView    = projViewMatrix;
+
+    glu->m_cameraUniforms.projView = projViewMatrix;
+    glu->m_cameraUniformBuffer.SetSubData(projViewMatrix, 4 * sizeof(Matrix4));
     matrices->pvm = pvmMatrix;
     matrices->pvmInv = matrices->pvm.Inversed();
 }
@@ -182,12 +228,12 @@ void GLUniforms::SetViewProjMode(GL::ViewProjMode viewProjMode)
 
 const Matrix4 &GLUniforms::GetModelMatrix()
 {
-    return GLUniforms::GetActive()->GetMatrixUniforms()->model;
+    return GLUniforms::GetActive()->GetModelMatricesUniforms()->model;
 }
 
 const Matrix4 &GLUniforms::GetViewMatrix()
 {
-    return GLUniforms::GetActive()->GetMatrixUniforms()->view;
+    return GLUniforms::GetActive()->m_cameraUniforms.view;
 }
 
 Matrix4 GLUniforms::GetProjectionMatrix()
@@ -200,7 +246,7 @@ Matrix4 GLUniforms::GetProjectionMatrix(GL::ViewProjMode viewProjMode)
 {
     GLUniforms *glu = GLUniforms::GetActive();
     return (viewProjMode == GL::ViewProjMode::WORLD) ?
-                glu->GetMatrixUniforms()->proj :
+                glu->m_cameraUniforms.proj :
                 GLUniforms::GetCanvasProjectionMatrix();
 }
 

@@ -207,7 +207,7 @@ void RenderFactory::RenderIcon(Texture2D *texture,
 
             Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
             float distScale = 1.0f;
-            if (cam->GetProjectionMode() == Camera::ProjectionMode::PERSPECTIVE)
+            if (cam->GetProjectionMode() == CameraProjectionMode::PERSPECTIVE)
             {
                distScale = Vector3::Distance(camPos, paramsCpy.position);
             }

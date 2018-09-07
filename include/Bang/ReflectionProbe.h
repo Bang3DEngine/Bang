@@ -26,7 +26,7 @@ public:
 
     void SetCamerasClearColor(const Color &clearColor);
     void SetCamerasSkyBoxTexture(TextureCubeMap *skybox);
-    void SetCamerasClearMode(Camera::ClearMode clearMode);
+    void SetCamerasClearMode(CameraClearMode clearMode);
     void SetCamerasZNear(float zNear);
     void SetCamerasZFar(float zFar);
     void SetRenderSize(int size);
@@ -47,7 +47,7 @@ public:
     const std::array<Camera*, 6> &GetCameras() const;
 
     const Color& GetCamerasClearColor() const;
-    Camera::ClearMode GetCamerasClearMode() const;
+    CameraClearMode GetCamerasClearMode() const;
     TextureCubeMap* GetCamerasSkyBoxTexture() const;
     float GetCamerasZNear() const;
     float GetCamerasZFar() const;
@@ -71,7 +71,7 @@ private:
     float m_camerasZNear = -1.0f;
     float m_camerasZFar  = -1.0f;
     Color m_camerasClearColor = -Color::One;
-    Camera::ClearMode m_camerasClearMode = Undef<Camera::ClearMode>();
+    CameraClearMode m_camerasClearMode = Undef<CameraClearMode>();
     RH<TextureCubeMap> m_camerasSkyBoxTexture;
 
     std::array<Camera*, 6> m_cameras;

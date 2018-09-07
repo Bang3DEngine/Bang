@@ -22,7 +22,10 @@ void IUniformBuffer::SetBindingPoint(int bindingPoint)
     }
 }
 
-GLuint IUniformBuffer::GetBindingPoint() const { return m_bindingPoint; }
+GLuint IUniformBuffer::GetBindingPoint() const
+{
+    return m_bindingPoint;
+}
 
 GL::BindTarget IUniformBuffer::GetGLBindTarget() const
 {

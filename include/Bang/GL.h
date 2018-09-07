@@ -632,8 +632,13 @@ public:
 
     static void BindBuffer(GL::BindTarget target, GLId bufferId);
     static void BufferData(GL::BindTarget target,
-                           int dataSize, const void *data,
+                           GLuint dataSize,
+                           const void *data,
                            GL::UsageHint usageHint);
+    static void BufferSubData(GL::BindTarget target,
+                              GLuint offset,
+                              GLuint dataSize,
+                              const void *data);
     static void SetColorMask(const std::array<bool, 4> &colorMask);
     static void SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA);
     static void SetViewProjMode(GL::ViewProjMode mode);
@@ -705,6 +710,14 @@ public:
     static bool GetBoolean(GL::Enum glEnum);
     static void GetBoolean(GL::Enum glEnum, bool *values);
 
+    static void BindUniformBlock(GLId programId,
+                                 const String &uniformBlockName,
+                                 GLuint bindingPoint);
+    static void UniformBlockBinding(GLId programId,
+                                    GLuint uniformBlockLocation,
+                                    GLuint bindingPoint);
+    static GLuint GetUniformBlockIndex(GLId programId,
+                                       const String &uniformBlockName);
     static int GetUniformLocation(const String &uniformName);
     static int GetUniformLocation(GLId programId, const String &uniformName);
     static int GetUniformsListSize(GLId shaderProgramId);

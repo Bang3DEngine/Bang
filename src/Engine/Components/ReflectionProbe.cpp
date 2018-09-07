@@ -66,7 +66,7 @@ ReflectionProbe::ReflectionProbe()
     SetCamerasZNear(0.01f);
     SetCamerasZFar(100.0f);
     SetCamerasClearColor(Color::Gray);
-    SetCamerasClearMode(Camera::ClearMode::COLOR);
+    SetCamerasClearMode(CameraClearMode::COLOR);
     SetCamerasSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap() );
 }
 
@@ -169,7 +169,7 @@ void ReflectionProbe::SetCamerasSkyBoxTexture(TextureCubeMap *skyBoxTexture)
     }
 }
 
-void ReflectionProbe::SetCamerasClearMode(Camera::ClearMode clearMode)
+void ReflectionProbe::SetCamerasClearMode(CameraClearMode clearMode)
 {
     if (clearMode != GetCamerasClearMode())
     {
@@ -284,7 +284,7 @@ const Color &ReflectionProbe::GetCamerasClearColor() const
     return m_camerasClearColor;
 }
 
-Camera::ClearMode ReflectionProbe::GetCamerasClearMode() const
+CameraClearMode ReflectionProbe::GetCamerasClearMode() const
 {
     return m_camerasClearMode;
 }
@@ -431,7 +431,7 @@ void ReflectionProbe::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("CamerasClearMode"))
     {
-        SetCamerasClearMode( SCAST<Camera::ClearMode>(
+        SetCamerasClearMode( SCAST<CameraClearMode>(
                                  metaNode.Get<int>("CamerasClearMode")) );
     }
 

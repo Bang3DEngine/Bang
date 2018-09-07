@@ -17,7 +17,7 @@ void main()
                                               B_LightRange,
                                               B_LightIntensity,
                                               B_LightColor.rgb,
-                                              B_Camera_WorldPos,
+                                              B_Camera_WorldPos.xyz,
                                               pixelPosWorld,
                                               pixelNormalWorld,
                                               pixelAlbedo,

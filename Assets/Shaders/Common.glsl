@@ -7,22 +7,28 @@ const float PI = 3.14159265359;
 uniform mat4 B_Model;
 uniform mat4 B_ModelInv;
 uniform mat4 B_Normal;
-uniform mat4 B_View;
-uniform mat4 B_ViewInv;
-uniform mat4 B_Projection;
-uniform mat4 B_ProjectionInv;
-uniform mat4 B_ProjectionView;
 uniform mat4 B_PVM;
 uniform mat4 B_PVMInv;
 //////////////////////////////////////////////
 
-// Camera related ///////////////////////////
 const int CAMERA_CLEARMODE_COLOR  = 0;
 const int CAMERA_CLEARMODE_SKYBOX = 1;
-uniform vec3        B_Camera_WorldPos;
-uniform int         B_Camera_ClearMode;
-uniform vec4        B_Camera_ClearColor;
-uniform vec3        B_Camera_WorldForward;
+
+layout (std140) uniform B_CameraUniformBuffer
+{
+    uniform mat4 B_View;
+    uniform mat4 B_ViewInv;
+    uniform mat4 B_Projection;
+    uniform mat4 B_ProjectionInv;
+    uniform mat4 B_ProjectionView;
+
+    uniform vec4 B_Camera_WorldPos;
+    uniform vec4 B_Camera_ClearColor;
+    uniform int  B_Camera_ClearMode;
+};
+
+
+// Camera related ///////////////////////////
 uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;

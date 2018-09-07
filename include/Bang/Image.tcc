@@ -1,5 +1,4 @@
-#ifndef IMAGE_TCC
-#define IMAGE_TCC
+#pragma once
 
 #include "Bang/Image.h"
 
@@ -306,13 +305,22 @@ Color Image<T>::GetPixel(int x, int y) const
 }
 
 template<class T>
-int Image<T>::GetWidth() const { return m_size.x; }
+int Image<T>::GetWidth() const
+{
+    return m_size.x;
+}
 
 template<class T>
-int Image<T>::GetHeight() const { return m_size.y; }
+int Image<T>::GetHeight() const
+{
+    return m_size.y;
+}
 
 template<class T>
-const Vector2i& Image<T>::GetSize() const { return m_size; }
+const Vector2i& Image<T>::GetSize() const
+{
+    return m_size;
+}
 
 template<class T>
 Image<T> Image<T>::InvertedVertically()
@@ -459,5 +467,3 @@ Color Image<float>::GetPixel(int x, int y) const
 }
 
 NAMESPACE_BANG_END
-
-#endif // IMAGE_TCC

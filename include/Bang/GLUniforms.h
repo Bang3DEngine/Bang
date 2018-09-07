@@ -12,10 +12,12 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class ShaderProgram;
+FORWARD enum class CameraClearMode;
 
 class GLUniforms
 {
 public:
+    static const String UniformBlockName_Camera;
     static const String UniformName_ReceivesShadows;
     static const String UniformName_MaterialAlbedoColor;
     static const String UniformName_AlbedoUvOffset;
@@ -55,18 +57,25 @@ public:
     static const String UniformName_Viewport_MinPos;
     static const String UniformName_Viewport_Size;
 
-    struct MatrixUniforms
+    struct ModelMatrixUniforms
     {
         Matrix4 model;
         Matrix4 modelInv;
         Matrix4 normal;
+        Matrix4 pvm;
+        Matrix4 pvmInv;
+    };
+
+    struct CameraUniforms
+    {
         Matrix4 view;
         Matrix4 viewInv;
         Matrix4 proj;
         Matrix4 projInv;
         Matrix4 projView;
-        Matrix4 pvm;
-        Matrix4 pvmInv;
+        Vector4 worldPos;
+        Vector4 clearColor;
+        int     clearMode;
     };
 
     struct ViewportUniforms
@@ -113,8 +122,12 @@ public:
     template <class T>
     static GLSLVar<T> GetUniformAt(GLId shaderProgramId, GLuint uniformIndex);
 
+    void BindUniformBuffers(ShaderProgram *shaderProgram);
     static void SetAllUniformsToShaderProgram(ShaderProgram *sp);
 
+    static void SetCameraWorldPosition(const Vector3 &camWorldPosition);
+    static void SetCameraClearColor(const Color &camClearColor);
+    static void SetCameraClearMode(const CameraClearMode &camClearMode);
     static void SetModelMatrix(const Matrix4 &model);
     static void SetViewMatrix(const Matrix4 &view);
     static void SetProjectionMatrix(const Matrix4 &projection);
@@ -131,17 +144,20 @@ public:
     static GLUniforms *GetActive();
 
 private:
+    UniformBuffer<CameraUniforms> m_cameraUniformBuffer;
+
+    CameraUniforms m_cameraUniforms;
     ViewportUniforms m_viewportUniforms;
-    MatrixUniforms m_matrixUniforms;
+    ModelMatrixUniforms m_matrixUniforms;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::CANVAS;
 
-    GLUniforms() = default;
+    GLUniforms();
     virtual ~GLUniforms() = default;
 
     static void OnViewportChanged(const AARecti &newViewport);
 
     static ViewportUniforms* GetViewportUniforms();
-    static MatrixUniforms *GetMatrixUniforms();
+    static ModelMatrixUniforms *GetModelMatricesUniforms();
     static Matrix4 GetCanvasProjectionMatrix();
 
     friend class GL;

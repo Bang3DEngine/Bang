@@ -1,5 +1,4 @@
-#ifndef OBJECTGATHERER_TCC
-#define OBJECTGATHERER_TCC
+#pragma once
 
 #include "Bang/Component.h"
 #include "Bang/GameObject.h"
@@ -223,6 +222,4 @@ ObjectGatherer::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 }
 
 NAMESPACE_BANG_END
-
-#endif // OBJECTGATHERER_TCC
 

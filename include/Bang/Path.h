@@ -54,6 +54,13 @@ public:
     Path GetRelativePath(const Path &prefix) const;
     const String& GetAbsolute() const;
     Path GetDuplicatePath() const;
+    static Path GetDuplicatePath(const Path &path);
+    static Path GetNextDuplicatePath(const Path &path);
+    static String GetDuplicateStringWithExtension(const String &string,
+                                                  const Array<String> &existingStrings);
+    static String GetDuplicateString(const String &string,
+                                     const Array<String> &existingStrings);
+    static String GetNextDuplicateString(const String &string);
 
     bool IsEmpty() const;
 
@@ -84,7 +91,6 @@ public:
 private:
     String m_absolutePath = "";
 
-    static Path GetNextDuplicatePath(const Path &path);
 };
 
 NAMESPACE_BANG_END

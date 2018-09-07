@@ -297,12 +297,17 @@ const String &Path::GetAbsolute() const
 
 Path Path::GetDuplicatePath() const
 {
-    if (IsEmpty())
+    return GetDuplicatePath( *this );
+}
+
+Path Path::GetDuplicatePath(const Path &path)
+{
+    if (path.IsEmpty())
     {
         return Path::Empty;
     }
 
-    Path resultPath(*this);
+    Path resultPath = path;
     while (resultPath.Exists())
     {
         resultPath = Path::GetNextDuplicatePath(resultPath);
@@ -425,14 +430,61 @@ bool Path::operator<(const Path &rhs) const
 
 Path Path::GetNextDuplicatePath(const Path &filepath)
 {
-    if (filepath.IsEmpty()) { return Path::Empty; }
+    if (filepath.IsEmpty())
+    {
+        return Path::Empty;
+    }
 
     Path fileDir         = filepath.GetDirectory();
     String fileName      = filepath.GetName();
     String fileExtension = filepath.GetExtension();
 
-    Array<String> splitted = fileName.Split<Array>('_');
-    int number = 1;
+    String duplicateFileName = GetNextDuplicateString(fileName);
+
+    Path result = fileDir.Append(duplicateFileName)
+                         .AppendExtension(fileExtension);
+    return result;
+}
+
+String Path::GetDuplicateStringWithExtension(const String &string,
+                                             const Array<String> &existingStrings)
+{
+    if (string.IsEmpty())
+    {
+        return "";
+    }
+
+    Path resultPath = Path(string);
+    const Array<Path> existingPaths = existingStrings.To<Array, Path>();
+    while (existingPaths.Contains(resultPath))
+    {
+        resultPath = Path(Path::GetNextDuplicatePath(resultPath).GetNameExt());
+    }
+
+    return resultPath.GetAbsolute();
+}
+
+String Path::GetDuplicateString(const String &string,
+                                const Array<String> &existingStrings)
+{
+    if (string.IsEmpty())
+    {
+        return "";
+    }
+
+    String resultString = string;
+    while (existingStrings.Contains(string))
+    {
+        resultString = Path::GetNextDuplicateString(string);
+    }
+    return resultString;
+}
+
+String Path::GetNextDuplicateString(const String &string)
+{
+    int duplicationNumber = 1;
+    String duplicateString = string;
+    Array<String> splitted = duplicateString.Split<Array>('_');
     if (splitted.Size() > 1)
     {
         bool ok = false;
@@ -440,20 +492,20 @@ Path Path::GetNextDuplicatePath(const Path &filepath)
         int readNumber = String::ToInt(numberString, &ok);
         if (ok)
         {
-            number = readNumber + 1;
+            duplicationNumber = readNumber + 1;
             splitted.PopBack();
 
-            int lastUnderscorePos = fileName.RFind('_');
+            int lastUnderscorePos = duplicateString.RFind('_');
             if (lastUnderscorePos != -1) // Strip _[number] from fileName
             {
-                fileName = fileName.SubString(0, lastUnderscorePos-1);
+                duplicateString = duplicateString.SubString(0, lastUnderscorePos-1);
             }
         }
     }
 
-    Path result = fileDir.Append(fileName + "_" + String::ToString(number))
-                         .AppendExtension(fileExtension);
-    return result;
+    duplicateString = (duplicateString + "_" +
+                       String::ToString(duplicationNumber));
+    return duplicateString;
 }
 
 Path Path::EmptyPath()

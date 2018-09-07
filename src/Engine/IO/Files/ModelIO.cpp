@@ -173,11 +173,6 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         modelScene->meshes.PushBack(meshRH);
         modelScene->meshesNames.PushBack(meshName);
 
-        uint matIndex = aScene->mMeshes[i]->mMaterialIndex;
-
-        RH<Material> material = model->GetMaterials()[matIndex];
-        const String &materialName = model->GetMaterialsNames()[matIndex];
-
         // Update global bones
         for (const auto &it : meshRH.Get()->GetBonesPool())
         {
@@ -194,8 +189,9 @@ bool ModelIO::ImportModel(const Path& modelFilepath,
         {
             animationName = "Animation";
         }
-        animationName += String::ToString(i);
         animationName.Append("." + Extensions::GetAnimationExtension());
+        animationName = Path::GetDuplicateStringWithExtension(animationName,
+                                                 model->GetAnimationsNames());
         RH<Animation> animationRH = Resources::CreateEmbeddedResource<Animation>(
                                                     model,
                                                     animationName);
@@ -571,8 +567,9 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     {
         materialName = "Material";
     }
-    materialName += String::ToString(model->GetMaterialsNames().Size());
     materialName.Append("." + Extensions::GetMaterialExtension());
+    materialName = Path::GetDuplicateStringWithExtension(materialName,
+                                            model->GetMaterialsNames());
 
     *outMaterialName = materialName;
     *outMaterial =  Resources::CreateEmbeddedResource<Material>(model,
@@ -623,8 +620,9 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
     {
         meshName = "Mesh";
     }
-    meshName += String::ToString(model->GetMeshesNames().Size());
     meshName.Append("." + Extensions::GetMeshExtension());
+    meshName = Path::GetDuplicateStringWithExtension(meshName,
+                                                     model->GetMeshesNames());
 
     *outMeshRH =  Resources::CreateEmbeddedResource<Mesh>(model, meshName);
     *outMeshName = meshName;

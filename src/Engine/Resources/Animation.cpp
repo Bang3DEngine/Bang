@@ -305,7 +305,7 @@ Animation::GetBoneNameToScaleKeyFrames() const
 
 void Animation::Import(const Path &animationFilepath)
 {
-    (void) animationFilepath;
+    BANG_UNUSED(animationFilepath);
 }
 
 void Animation::ImportMeta(const MetaNode &metaNode)

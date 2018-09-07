@@ -32,7 +32,8 @@ UIEventResult
 UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
                        const UIEvent &event)
 {
-    (void) focusable;
+    BANG_UNUSED(focusable);
+
     if (!IsBlocked())
     {
         switch (event.type)

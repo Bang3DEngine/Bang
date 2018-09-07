@@ -14,12 +14,12 @@ class IEventsResource
 public:
     virtual void OnResourceChanged(Resource *res)
     {
-        (void) res;
+        BANG_UNUSED(res);
     }
 
     virtual void OnImported(Resource *res)
     {
-        (void) res;
+        BANG_UNUSED(res);
     }
 };
 

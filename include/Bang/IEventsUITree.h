@@ -17,9 +17,7 @@ public:
                              GameObject *parentItem,
                              int indexInsideParent)
     {
-        (void) item;
-        (void) parentItem;
-        (void) indexInsideParent;
+        BANG_UNUSED_3(item, parentItem, indexInsideParent);
     }
 
     virtual void OnItemMoved(GameObject *item,
@@ -28,35 +26,30 @@ public:
                              GameObject *newParentItem,
                              int newIndexInsideParent)
     {
-        (void) item;
-        (void) oldParentItem;
-        (void) oldIndexInsideParent;
-        (void) newParentItem;
-        (void) newIndexInsideParent;
+        BANG_UNUSED_5(item, oldParentItem, oldIndexInsideParent,
+                      newParentItem, newIndexInsideParent);
     }
 
     virtual void OnItemRemoved(GameObject *item)
     {
-        (void) item;
+        BANG_UNUSED(item);
     }
 
     virtual void OnDropOutside(UIDragDroppable *dropped)
     {
-        (void) dropped;
+        BANG_UNUSED(dropped);
     }
 
     virtual void OnDropFromOutside(UIDragDroppable *dropped,
                                    GameObject *newParentItem,
                                    int newIndexInsideParent)
     {
-        (void) dropped;
-        (void) newParentItem;
-        (void) newIndexInsideParent;
+        BANG_UNUSED_3(dropped, newParentItem, newIndexInsideParent);
     }
 
     virtual bool AcceptDragOrDrop(UIDragDroppable *dd)
     {
-        (void) dd;
+        BANG_UNUSED(dd);
         return true;
     }
 };

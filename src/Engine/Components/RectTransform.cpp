@@ -532,26 +532,27 @@ const Matrix4 &RectTransform::GetRectLocalToWorldMatrixInv() const
 void RectTransform::OnRender(RenderPass rp)
 {
     Transform::OnRender(rp);
-    if (rp != RenderPass::OVERLAY) { return; }
+    if (rp == RenderPass::OVERLAY)
+    {
+        /*
+        AARect r = GetViewportAARectNDC(); BANG_UNUSED(r);
+        DebugRenderer::RenderAARectNDC(r, Color::Green, 0.1f, 1.0f, false);
 
-    /*
-    AARect r = GetViewportAARectNDC(); (void)r;
-    DebugRenderer::RenderAARectNDC(r, Color::Green, 0.1f, 1.0f, false);
+        DebugRenderer::SetColor(Color::Yellow);
+        DebugRenderer::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
+        DebugRenderer::SetColor(Color::Yellow);
+        DebugRenderer::RenderScreenLine(r.GetMinXMinY(), r.GetMaxXMaxY());
+        float size = GL::FromViewportAmountToViewportAmountNDC(Vector2(2)).x;
+        DebugRenderer::SetColor(Color::Red);
+        DebugRenderer::RenderRect(Rect(r.GetCenter() - Vector2(size),
+                                r.GetCenter() + Vector2(size)));
 
-    DebugRenderer::SetColor(Color::Yellow);
-    DebugRenderer::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());
-    DebugRenderer::SetColor(Color::Yellow);
-    DebugRenderer::RenderScreenLine(r.GetMinXMinY(), r.GetMaxXMaxY());
-    float size = GL::FromViewportAmountToViewportAmountNDC(Vector2(2)).x;
-    DebugRenderer::SetColor(Color::Red);
-    DebugRenderer::RenderRect(Rect(r.GetCenter() - Vector2(size),
-                            r.GetCenter() + Vector2(size)));
-
-    DebugRenderer::SetColor(Color::Blue);
-    Rect anchorRect = FromLocalNDCToViewportNDC(
-                                Rect(GetAnchorMin(), GetAnchorMax()));
-    DebugRenderer::RenderRect(anchorRect);
-    */
+        DebugRenderer::SetColor(Color::Blue);
+        Rect anchorRect = FromLocalNDCToViewportNDC(
+                                    Rect(GetAnchorMin(), GetAnchorMax()));
+        DebugRenderer::RenderRect(anchorRect);
+        */
+    }
 }
 
 void RectTransform::CloneInto(ICloneable *clone) const

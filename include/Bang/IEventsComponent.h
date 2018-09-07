@@ -9,20 +9,18 @@ FORWARD class Component;
 
 class IEventsComponent
 {
-    IEVENTS(IEventsComponent);
+    IEVENTS(IEventsComponent)
 
 public:
     virtual void OnComponentAdded(Component *addedComponent, int index)
     {
-        (void) addedComponent;
-        (void) index;
+        BANG_UNUSED_2(addedComponent, index);
     }
 
     virtual void OnComponentRemoved(Component *removedComponent,
                                     GameObject *previousGameObject)
     {
-        (void) removedComponent;
-        (void) previousGameObject;
+        BANG_UNUSED_2(removedComponent, previousGameObject);
     }
 };
 

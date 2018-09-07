@@ -14,20 +14,17 @@ class IEventsUIList
 public:
     virtual void OnItemAdded(GameObject *item, int index)
     {
-        (void) item;
-        (void) index;
+        BANG_UNUSED_2(item, index);
     }
 
     virtual void OnItemMoved(GameObject *item, int oldIndex, int newIndex)
     {
-        (void) item;
-        (void) oldIndex;
-        (void) newIndex;
+        BANG_UNUSED_3(item, oldIndex, newIndex);
     }
 
     virtual void OnItemRemoved(GameObject *item)
     {
-        (void) item;
+        BANG_UNUSED(item);
     }
 };
 

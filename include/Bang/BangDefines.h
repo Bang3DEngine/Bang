@@ -13,6 +13,12 @@
 #define NAMESPACE_BANG_BEGIN namespace NAMESPACE_NAME {
 #define NAMESPACE_BANG_END   }
 
+#define BANG_UNUSED(v1) ((void) v1)
+#define BANG_UNUSED_2(v1, v2) BANG_UNUSED(v1); ((void) v2)
+#define BANG_UNUSED_3(v1, v2, v3) BANG_UNUSED_2(v1, v2); ((void) v3)
+#define BANG_UNUSED_4(v1, v2, v3, v4) BANG_UNUSED_3(v1, v2, v3); ((void) v4)
+#define BANG_UNUSED_5(v1, v2, v3, v4, v5) BANG_UNUSED_4(v1, v2, v3, v4); ((void) v5)
+
 NAMESPACE_BANG_BEGIN
 
 // Casts ===============================================

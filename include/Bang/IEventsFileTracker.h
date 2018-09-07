@@ -14,17 +14,17 @@ class IEventsFileTracker
 public:
     virtual void OnPathAdded(const Path &addedPath)
     {
-        (void) addedPath;
+        BANG_UNUSED(addedPath);
     }
 
     virtual void OnPathModified(const Path &modifiedPath)
     {
-        (void) modifiedPath;
+        BANG_UNUSED(modifiedPath);
     }
 
     virtual void OnPathRemoved(const Path &removedPath)
     {
-        (void) removedPath;
+        BANG_UNUSED(removedPath);
     }
 };
 

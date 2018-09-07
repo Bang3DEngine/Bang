@@ -9,25 +9,22 @@ FORWARD class GameObject;
 
 class IEventsChildren
 {
-    IEVENTS(IEventsChildren);
+    IEVENTS(IEventsChildren)
 
 public:
     virtual void OnChildAdded(GameObject *addedChild, GameObject *parent)
     {
-        (void) addedChild;
-        (void) parent;
+        BANG_UNUSED_2(addedChild, parent);
     }
 
     virtual void OnChildRemoved(GameObject *removedChild, GameObject *parent)
     {
-        (void) removedChild;
-        (void) parent;
+        BANG_UNUSED_2(removedChild, parent);
     }
 
     virtual void OnParentChanged(GameObject *oldParent, GameObject *newParent)
     {
-        (void) oldParent;
-        (void) newParent;
+        BANG_UNUSED_2(oldParent, newParent);
     }
 };
 

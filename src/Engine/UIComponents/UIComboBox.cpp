@@ -85,7 +85,7 @@ void UIComboBox::AddItem(const String &label, int value)
 {
     GameObject *itemGo = GameObjectFactory::CreateUIGameObject();
     UIHorizontalLayout *hl = itemGo->AddComponent<UIHorizontalLayout>();
-    (void) hl;
+    BANG_UNUSED(hl);
 
     GameObject *checkGo = GameObjectFactory::CreateUIGameObject();
 

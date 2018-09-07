@@ -27,8 +27,8 @@ class IEventsWindow
 {
     IEVENTS(IEventsWindow)
 public:
-    virtual void OnFocusGained(Window *w) { (void) w; }
-    virtual void OnFocusLost(Window *w) { (void) w; }
+    virtual void OnFocusGained(Window *w) { BANG_UNUSED(w); }
+    virtual void OnFocusLost(Window *w) { BANG_UNUSED(w); }
 };
 
 class Window : public EventEmitter<IEventsWindow>

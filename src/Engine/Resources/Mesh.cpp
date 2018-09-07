@@ -513,7 +513,7 @@ void Mesh::Import(const Path &meshFilepath)
 {
     ASSERT_MSG(false, "Load the Model, and from there retrieve the mesh. "
                       "Or use MeshFactory.");
-    (void) meshFilepath;
+    BANG_UNUSED(meshFilepath);
 }
 
 

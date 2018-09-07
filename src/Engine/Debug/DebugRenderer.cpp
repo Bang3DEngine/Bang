@@ -245,7 +245,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                         Quad quad(drp->p0, drp->p1, drp->p2, drp->p3);
                         for (int i : {0,1,2,3,4,5})
                         {
-                            (void)(i);
+                            BANG_UNUSED(i);
                             normals.PushBack(quad.GetNormal());
                             uvs.PushBack(Vector2(0,0));
                         }

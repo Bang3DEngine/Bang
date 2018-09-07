@@ -64,8 +64,7 @@ class IEventsFocus
 public:
     virtual void OnEvent(IFocusable *focusable, const UIEvent &event)
     {
-        (void) focusable;
-        (void) event;
+        BANG_UNUSED_2(focusable, event);
     }
 };
 

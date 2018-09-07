@@ -15,27 +15,27 @@ class IEventsGameObjectPhysics
 public:
     virtual void OnCollisionEnter(const Collision &collision)
     {
-        (void) collision;
+        BANG_UNUSED(collision);
     }
 
     virtual void OnCollisionPersists(const Collision &collision)
     {
-        (void) collision;
+        BANG_UNUSED(collision);
     }
 
     virtual void OnCollisionExit(const Collision &collision)
     {
-        (void) collision;
+        BANG_UNUSED(collision);
     }
 
     virtual void OnTriggerEnter(Collider *otherCollider)
     {
-        (void) otherCollider;
+        BANG_UNUSED(otherCollider);
     }
 
     virtual void OnTriggerExit(Collider *otherCollider)
     {
-        (void) otherCollider;
+        BANG_UNUSED(otherCollider);
     }
 };
 

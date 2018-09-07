@@ -12,18 +12,18 @@ class IEventsDragDrop
 public:
     virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDropEmitter)
     {
-        (void) dragDropEmitter;
+        BANG_UNUSED(dragDropEmitter);
     }
 
     virtual void OnDragUpdate(EventEmitter<IEventsDragDrop> *dragDropEmitter)
     {
-        (void) dragDropEmitter;
+        BANG_UNUSED(dragDropEmitter);
     }
 
     virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDropEmitter,
                         bool inside)
     {
-        (void) dragDropEmitter;
+        BANG_UNUSED(dragDropEmitter);
     }
 };
 

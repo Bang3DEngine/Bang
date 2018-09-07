@@ -152,7 +152,7 @@ void AudioManager::Play(AudioClip *audioClip, ALAudioSource *aas, float delay)
     bool started = am->m_threadPool.TryStart(player);
     if (started)
     {
-        MutexLocker ml(&am->m_mutexCurrentAudios); (void)ml;
+        MutexLocker ml(&am->m_mutexCurrentAudios); BANG_UNUSED(ml);
         aas->EventEmitter<IEventsDestroy>::RegisterListener(am);
         am->m_sourcesToPlayers.Add(aas, player);
     }

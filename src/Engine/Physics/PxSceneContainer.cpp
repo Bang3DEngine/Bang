@@ -25,12 +25,7 @@ physx::PxFilterFlags CollisionFilterShader(
                             const void *constantBlock,
                             PxU32 constantBlockSize)
 {
-    (void) attributes0;
-    (void) filterData0;
-    (void) attributes1;
-    (void) filterData1;
-    (void) constantBlock;
-    (void) constantBlockSize;
+    BANG_UNUSED_4(filterData0, filterData1, constantBlock, constantBlockSize);
 
     retPairFlags = PxPairFlag::eSOLVE_CONTACT |
                    PxPairFlag::eDETECT_DISCRETE_CONTACT |
@@ -348,20 +343,17 @@ PxActor* PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
 void PxSceneContainer::onConstraintBreak(PxConstraintInfo* constraints,
                                          PxU32 count)
 {
-    (void) constraints;
-    (void) count;
+    BANG_UNUSED_2(constraints, count);
 }
 
 void PxSceneContainer::onWake(PxActor** actors, PxU32 count)
 {
-    (void) actors;
-    (void) count;
+    BANG_UNUSED_2(actors, count);
 }
 
 void PxSceneContainer::onSleep(PxActor** actors, PxU32 count)
 {
-    (void) actors;
-    (void) count;
+    BANG_UNUSED_2(actors, count);
 }
 
 void PxSceneContainer::onContact(const PxContactPairHeader& pairHeader,
@@ -472,9 +464,7 @@ void PxSceneContainer::onAdvance(const PxRigidBody * const * bodyBuffer,
                                  const PxTransform* poseBuffer,
                                  const PxU32 count)
 {
-    (void) bodyBuffer;
-    (void) poseBuffer;
-    (void) count;
+    BANG_UNUSED_3(bodyBuffer, poseBuffer, count);
 }
 
 void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)

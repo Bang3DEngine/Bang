@@ -36,7 +36,7 @@ void WaterRenderer::CloneInto(ICloneable *clone) const
     Renderer::CloneInto(clone);
 
     WaterRenderer *wrClone = SCAST<WaterRenderer*>(clone);
-    (void) wrClone;
+    BANG_UNUSED(wrClone);
 }
 
 void WaterRenderer::ImportMeta(const MetaNode &metaNode)

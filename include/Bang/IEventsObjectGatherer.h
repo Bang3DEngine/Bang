@@ -13,14 +13,13 @@ class IEventsObjectGatherer
 public:
     virtual void OnObjectGathered(ObjectType *obj)
     {
-        (void) obj;
+        BANG_UNUSED(obj);
     }
 
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
                                     ObjectType *obj)
     {
-        (void) obj;
-        (void) previousGameObject;
+        BANG_UNUSED_2(obj, previousGameObject);
     }
 };
 

@@ -15,8 +15,7 @@ class IEventsSceneManager
 public:
     virtual void OnSceneLoaded(Scene *scene, const Path &sceneFilepath)
     {
-        (void) scene;
-        (void) sceneFilepath;
+        BANG_UNUSED_2(scene, sceneFilepath);
     }
 };
 

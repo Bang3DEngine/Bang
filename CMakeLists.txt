@@ -93,7 +93,7 @@ file(GLOB_RECURSE BANG_MATH_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Math/*.cpp")
 add_library(BangMathLib ${BANG_MATH_LIB_SOURCES})
 target_include_directories(BangMathLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 add_bang_compilation_flags(BangMathLib)
-remove_from_list_another_list(ENGINE_SRC_FILES ${BANG_MATH_LIB_SOURCES})
+remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_MATH_LIB_SOURCES}")
 
 # System lib
 set(BANG_SYSTEM_LIB_SOURCES "")
@@ -101,7 +101,7 @@ file(GLOB_RECURSE BANG_SYSTEM_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/System/*.cpp")
 add_library(BangSystemLib ${BANG_SYSTEM_LIB_SOURCES})
 target_include_directories(BangSystemLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 add_bang_compilation_flags(BangSystemLib)
-remove_from_list_another_list(ENGINE_SRC_FILES ${BANG_SYSTEM_LIB_SOURCES})
+remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_SYSTEM_LIB_SOURCES}")
 
 # Components lib
 set(BANG_COMPONENTS_LIB_SOURCES "")
@@ -110,7 +110,7 @@ file(GLOB_RECURSE BANG_COMPONENTS_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Components
 add_library(BangComponentsLib ${BANG_COMPONENTS_LIB_SOURCES})
 target_include_directories(BangComponentsLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 add_bang_compilation_flags(BangComponentsLib)
-remove_from_list_another_list(ENGINE_SRC_FILES ${BANG_COMPONENTS_LIB_SOURCES})
+remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_COMPONENTS_LIB_SOURCES}")
 
 # Graphics lib
 set(BANG_GRAPHICS_LIB_SOURCES "")
@@ -118,7 +118,7 @@ file(GLOB_RECURSE BANG_GRAPHICS_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Graphics/*.c
 add_library(BangGraphicsLib ${BANG_GRAPHICS_LIB_SOURCES})
 target_include_directories(BangGraphicsLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 add_bang_compilation_flags(BangGraphicsLib)
-remove_from_list_another_list(ENGINE_SRC_FILES ${BANG_GRAPHICS_LIB_SOURCES})
+remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_GRAPHICS_LIB_SOURCES}")
 
 #=================================================================
 # Dependencies ===================================================

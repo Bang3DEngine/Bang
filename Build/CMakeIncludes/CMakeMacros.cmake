@@ -58,9 +58,9 @@ macro(add_misc_files)
 endmacro()
 
 macro(remove_from_list_another_list __LIST_TO_REMOVE_FROM __LIST_OF_ITEMS_TO_REMOVE)
-     foreach(ITEM_TO_REMOVE ${__LIST_OF_ITEMS_TO_REMOVE})
-         list(REMOVE_ITEM ${__LIST_TO_REMOVE_FROM} ${ITEM_TO_REMOVE})
-     endforeach()
+    foreach(ITEM_TO_REMOVE ${__LIST_OF_ITEMS_TO_REMOVE})
+        list(REMOVE_ITEM ${__LIST_TO_REMOVE_FROM} ${ITEM_TO_REMOVE})
+    endforeach()
 endmacro()
 
 macro(add_bang_compilation_flags __TARGET)

@@ -232,10 +232,16 @@ void RectTransform::SetMargins(Axis axis, const Vector2i &margins)
 void RectTransform::SetMargins(Axis axis, int marginMin, int marginMax)
 {
     if (axis == Axis::VERTICAL)
-    { SetMarginBot(marginMin); SetMarginTop(marginMax); }
+    {
+        SetMarginBot(marginMin);
+        SetMarginTop(marginMax);
+    }
 
     if (axis == Axis::HORIZONTAL)
-    { SetMarginLeft(marginMin); SetMarginRight(marginMax); }
+    {
+        SetMarginLeft(marginMin);
+        SetMarginRight(marginMax);
+    }
 }
 
 void RectTransform::SetMargins(int left, int top, int right, int bot)
@@ -338,12 +344,30 @@ void RectTransform::SetHeightFromPivot(int height)
     SetMarginTop(  (GetPivotPosition().y - ( 1)) * height / 2 );
 }
 
-int RectTransform::GetMarginLeft() const { return GetMarginLeftBot().x; }
-int RectTransform::GetMarginTop() const { return GetMarginRightTop().y; }
-int RectTransform::GetMarginRight() const { return GetMarginRightTop().x; }
-int RectTransform::GetMarginBot() const { return GetMarginLeftBot().y; }
-int RectTransform::GetMarginMin(Axis axis) const { return GetMargins(axis)[0]; }
-int RectTransform::GetMarginMax(Axis axis) const { return GetMargins(axis)[1]; }
+int RectTransform::GetMarginLeft() const
+{
+    return GetMarginLeftBot().x;
+}
+int RectTransform::GetMarginTop() const
+{
+    return GetMarginRightTop().y;
+}
+int RectTransform::GetMarginRight() const
+{
+    return GetMarginRightTop().x;
+}
+int RectTransform::GetMarginBot() const
+{
+    return GetMarginLeftBot().y;
+}
+int RectTransform::GetMarginMin(Axis axis) const
+{
+    return GetMargins(axis)[0];
+}
+int RectTransform::GetMarginMax(Axis axis) const
+{
+    return GetMargins(axis)[1];
+}
 Vector2 RectTransform::GetMargins(Axis axis) const
 {
     return axis == Axis::HORIZONTAL ?
@@ -352,11 +376,26 @@ Vector2 RectTransform::GetMargins(Axis axis) const
 
 }
 
-const Vector2i& RectTransform::GetMarginLeftBot() const { return m_marginLeftBot; }
-const Vector2i& RectTransform::GetMarginRightTop() const { return m_marginRightTop; }
-const Vector2& RectTransform::GetPivotPosition() const { return m_pivotPosition; }
-const Vector2& RectTransform::GetAnchorMin() const { return m_anchorMin; }
-const Vector2& RectTransform::GetAnchorMax() const { return m_anchorMax; }
+const Vector2i& RectTransform::GetMarginLeftBot() const
+{
+    return m_marginLeftBot;
+}
+const Vector2i& RectTransform::GetMarginRightTop() const
+{
+    return m_marginRightTop;
+}
+const Vector2& RectTransform::GetPivotPosition() const
+{
+    return m_pivotPosition;
+}
+const Vector2& RectTransform::GetAnchorMin() const
+{
+    return m_anchorMin;
+}
+const Vector2& RectTransform::GetAnchorMax() const
+{
+    return m_anchorMax;
+}
 
 Rect RectTransform::GetViewportRect() const
 {
@@ -375,7 +414,10 @@ RectPoints RectTransform::GetViewportRectPointsNDC() const
 RectPoints RectTransform::GetParentViewportRectPointsNDC() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if (!parent || !parent->GetRectTransform()) { return Rect::NDCRect.GetPoints(); }
+    if (!parent || !parent->GetRectTransform())
+    {
+        return Rect::NDCRect.GetPoints();
+    }
     return parent->GetRectTransform()->GetViewportRectPointsNDC();
 }
 
@@ -393,14 +435,19 @@ AARect RectTransform::GetParentViewportAARect() const
 {
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
-    { return AARect(Vector2::Zero, Vector2( GL::GetViewportSize() )); }
+    {
+        return AARect(Vector2::Zero, Vector2( GL::GetViewportSize() ));
+    }
     return parent->GetRectTransform()->GetViewportAARect();
 }
 
 AARect RectTransform::GetParentViewportAARectNDC() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if (!parent || !parent->GetRectTransform()) { return AARect::NDCRect; }
+    if (!parent || !parent->GetRectTransform())
+    {
+        return AARect::NDCRect;
+    }
     return parent->GetRectTransform()->GetViewportAARectNDC();
 }
 
@@ -408,7 +455,9 @@ Rect RectTransform::GetParentViewportRect() const
 {
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
-    { return AARect(GL::GetViewportRect()).ToRect(); }
+    {
+        return AARect(GL::GetViewportRect()).ToRect();
+    }
     return parent->GetRectTransform()->GetViewportRect();
 }
 
@@ -576,13 +625,19 @@ void RectTransform::ImportMeta(const MetaNode &metaNode)
     }
 
     if (metaNode.Contains("PivotPosition"))
-    { SetPivotPosition( metaNode.Get<Vector2>("PivotPosition") ); }
+    {
+        SetPivotPosition( metaNode.Get<Vector2>("PivotPosition") );
+    }
 
     if (metaNode.Contains("AnchorMin"))
-    { SetAnchorMin( metaNode.Get<Vector2>("AnchorMin") ); }
+    {
+        SetAnchorMin( metaNode.Get<Vector2>("AnchorMin") );
+    }
 
     if (metaNode.Contains("AnchorMax"))
-    { SetAnchorMax( metaNode.Get<Vector2>("AnchorMax") ); }
+    {
+        SetAnchorMax( metaNode.Get<Vector2>("AnchorMax") );
+    }
 }
 
 void RectTransform::ExportMeta(MetaNode *metaNode) const

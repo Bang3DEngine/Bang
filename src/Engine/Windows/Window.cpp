@@ -297,16 +297,31 @@ void Window::OnResize(int newWidth, int newHeight)
     }
 }
 
-int Window::GetWidth() const { return GetSize().x; }
-int Window::GetHeight() const { return GetSize().y; }
+int Window::GetWidth() const
+{
+    return GetSize().x;
+}
+int Window::GetHeight() const
+{
+    return GetSize().y;
+}
 
-bool Window::HasFocus() const { return HasFlags(SDL_WINDOW_INPUT_FOCUS); }
-bool Window::IsBordered() const { return !HasFlags(SDL_WINDOW_BORDERLESS); }
+bool Window::HasFocus() const
+{
+    return HasFlags(SDL_WINDOW_INPUT_FOCUS);
+}
+bool Window::IsBordered() const
+{
+    return !HasFlags(SDL_WINDOW_BORDERLESS);
+}
 String Window::GetTitle() const
 {
     return String(SDL_GetWindowTitle(GetSDLWindow()));
 }
-bool Window::IsMouseOver() const { return HasFlags(SDL_WINDOW_MOUSE_FOCUS); }
+bool Window::IsMouseOver() const
+{
+    return HasFlags(SDL_WINDOW_MOUSE_FOCUS);
+}
 
 Vector2i Window::GetSize() const
 {

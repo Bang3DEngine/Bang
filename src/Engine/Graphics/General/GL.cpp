@@ -1419,9 +1419,12 @@ void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
 
 void GL::SetViewport(const AARect &viewportNDC)
 {
-    Vector2 minPx = GL::FromViewportPointNDCToViewportPoint(viewportNDC.GetMin());
-    Vector2 maxPx = GL::FromViewportAmountNDCToViewportAmount(viewportNDC.GetMax());
-    GL::SetViewport( AARecti(minPx.x, minPx.y, maxPx.x, maxPx.y) );
+    if (Window *window = Window::GetActive())
+    {
+        Vector2 minPx( (viewportNDC.GetMin() * 0.5f + 0.5f) * Vector2(window->GetSize()) );
+        Vector2 maxPx( (viewportNDC.GetMax() * 0.5f + 0.5f) * Vector2(window->GetSize()) );
+        GL::SetViewport( AARecti(minPx.x, minPx.y, maxPx.x, maxPx.y) );
+    }
 }
 
 void GL::SetViewport(const AARecti &viewport)

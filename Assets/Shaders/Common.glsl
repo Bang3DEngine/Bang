@@ -24,6 +24,10 @@ layout (std140) uniform B_CameraUniformBuffer
 
     uniform vec4 B_Camera_WorldPos;
     uniform vec4 B_Camera_ClearColor;
+
+    uniform vec2  B_Viewport_MinPos;
+    uniform vec2  B_Viewport_Size;
+
     uniform int  B_Camera_ClearMode;
 };
 
@@ -41,8 +45,6 @@ uniform vec3        B_ReflectionProbeSize;   // If boxed.
 /////////////////////////////////////////////
 
 uniform float B_TimeSeconds;
-uniform vec2  B_Viewport_MinPos;
-uniform vec2  B_Viewport_Size;
 
 // Material related /////////////////////////
 uniform bool      B_MaterialReceivesLighting;

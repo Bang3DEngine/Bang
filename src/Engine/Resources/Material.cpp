@@ -215,18 +215,50 @@ void Material::SetRenderPass(RenderPass renderPass)
     }
 }
 
-const Vector2 &Material::GetAlbedoUvOffset() const { return m_albedoUvOffset; }
-const Vector2 &Material::GetAlbedoUvMultiply() const { return m_albedoUvMultiply; }
-const Vector2 &Material::GetNormalMapUvOffset() const { return m_normalMapUvOffset; }
-const Vector2 &Material::GetNormalMapUvMultiply() const { return m_normalMapUvMultiply; }
-float Material::GetNormalMapMultiplyFactor() const { return m_normalMapMultiplyFactor; }
-ShaderProgram* Material::GetShaderProgram() const { return p_shaderProgram.Get(); }
-Texture2D* Material::GetAlbedoTexture() const { return p_albedoTexture.Get(); }
-bool Material::GetReceivesLighting() const { return m_receivesLighting; }
-float Material::GetMetalness() const { return m_metalness; }
-float Material::GetRoughness() const { return m_roughness; }
-const Color& Material::GetAlbedoColor() const { return m_albedoColor; }
-
+const Vector2 &Material::GetAlbedoUvOffset() const
+{
+    return m_albedoUvOffset;
+}
+const Vector2 &Material::GetAlbedoUvMultiply() const
+{
+    return m_albedoUvMultiply;
+}
+const Vector2 &Material::GetNormalMapUvOffset() const
+{
+    return m_normalMapUvOffset;
+}
+const Vector2 &Material::GetNormalMapUvMultiply() const
+{
+    return m_normalMapUvMultiply;
+}
+float Material::GetNormalMapMultiplyFactor() const
+{
+    return m_normalMapMultiplyFactor;
+}
+ShaderProgram* Material::GetShaderProgram() const
+{
+    return p_shaderProgram.Get();
+}
+Texture2D* Material::GetAlbedoTexture() const
+{
+    return p_albedoTexture.Get();
+}
+bool Material::GetReceivesLighting() const
+{
+    return m_receivesLighting;
+}
+float Material::GetMetalness() const
+{
+    return m_metalness;
+}
+float Material::GetRoughness() const
+{
+    return m_roughness;
+}
+const Color& Material::GetAlbedoColor() const
+{
+    return m_albedoColor;
+}
 Texture2D *Material::GetRoughnessTexture() const
 {
     return p_roughnessTexture.Get();
@@ -236,11 +268,26 @@ Texture2D *Material::GetMetalnessTexture() const
 {
     return p_metalnessTexture.Get();
 }
-Texture2D *Material::GetNormalMapTexture() const { return p_normalMapTexture.Get(); }
-RenderPass Material::GetRenderPass() const { return m_renderPass; }
-float Material::GetLineWidth() const { return m_lineWidth; }
-bool Material::IsRenderWireframe() const { return m_renderWireframe; }
-GL::CullFaceExt Material::GetCullFace() const { return m_cullFace; }
+Texture2D *Material::GetNormalMapTexture() const
+{
+    return p_normalMapTexture.Get();
+}
+RenderPass Material::GetRenderPass() const
+{
+    return m_renderPass;
+}
+float Material::GetLineWidth() const
+{
+    return m_lineWidth;
+}
+bool Material::IsRenderWireframe() const
+{
+    return m_renderWireframe;
+}
+GL::CullFaceExt Material::GetCullFace() const
+{
+    return m_cullFace;
+}
 
 void Material::Bind() const
 {

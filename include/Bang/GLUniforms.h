@@ -73,15 +73,13 @@ public:
         Matrix4 proj;
         Matrix4 projInv;
         Matrix4 projView;
+
         Vector4 worldPos;
         Vector4 clearColor;
-        int     clearMode;
-    };
 
-    struct ViewportUniforms
-    {
-        Vector2 minPos;
-        Vector2 size;
+        Vector2 viewportMinPos;
+        Vector2 viewportSize;
+        int clearMode;
     };
 
     template <class T>
@@ -147,7 +145,6 @@ private:
     UniformBuffer<CameraUniforms> m_cameraUniformBuffer;
 
     CameraUniforms m_cameraUniforms;
-    ViewportUniforms m_viewportUniforms;
     ModelMatrixUniforms m_matrixUniforms;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::CANVAS;
 
@@ -156,7 +153,6 @@ private:
 
     static void OnViewportChanged(const AARecti &newViewport);
 
-    static ViewportUniforms* GetViewportUniforms();
     static ModelMatrixUniforms *GetModelMatricesUniforms();
     static Matrix4 GetCanvasProjectionMatrix();
 

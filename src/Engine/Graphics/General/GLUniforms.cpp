@@ -53,11 +53,6 @@ GLUniforms::GLUniforms()
     m_cameraUniformBuffer.SetBindingPoint(0);
 }
 
-GLUniforms::ViewportUniforms *GLUniforms::GetViewportUniforms()
-{
-    return &GLUniforms::GetActive()->m_viewportUniforms;
-}
-
 GLUniforms::ModelMatrixUniforms *GLUniforms::GetModelMatricesUniforms()
 {
     return &GLUniforms::GetActive()->m_matrixUniforms;
@@ -100,10 +95,6 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBox,         skyBox);
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxSpecular, sSkyBox);
     sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxDiffuse,  dSkyBox);
-
-    ViewportUniforms *viewportUniforms = GLUniforms::GetViewportUniforms();
-    sp->SetVector2(GLUniforms::UniformName_Viewport_MinPos, viewportUniforms->minPos);
-    sp->SetVector2(GLUniforms::UniformName_Viewport_Size,   viewportUniforms->size);
 }
 
 void GLUniforms::SetCameraWorldPosition(const Vector3 &camWorldPosition)
@@ -126,6 +117,23 @@ void GLUniforms::SetCameraClearColor(const Color &camClearColor)
                                               5 * sizeof(Matrix4) +
                                               1 * sizeof(Vector4));
     }
+
+}
+void GLUniforms::OnViewportChanged(const AARecti &newViewport)
+{
+    if (GLUniforms *glu = GLUniforms::GetActive())
+    {
+        Vector2 vpMinPos = Vector2(newViewport.GetMin());
+        Vector2 vpSize   = Vector2(newViewport.GetSize());
+        glu->m_cameraUniforms.viewportMinPos = vpMinPos;
+        glu->m_cameraUniforms.viewportSize   = vpSize;
+        glu->m_cameraUniformBuffer.SetSubData(vpMinPos, 5 * sizeof(Matrix4) +
+                                                        2 * sizeof(Vector4));
+        glu->m_cameraUniformBuffer.SetSubData(vpSize, 5 * sizeof(Matrix4) +
+                                                      2 * sizeof(Vector4) +
+                                                      1 * sizeof(Vector2));
+        GLUniforms::UpdatePVMMatrix();
+    }
 }
 
 void GLUniforms::SetCameraClearMode(const CameraClearMode &camClearMode)
@@ -135,7 +143,8 @@ void GLUniforms::SetCameraClearMode(const CameraClearMode &camClearMode)
         glu->m_cameraUniforms.clearMode = SCAST<int>(camClearMode);
         glu->m_cameraUniformBuffer.SetSubData(camClearMode,
                                               5 * sizeof(Matrix4) +
-                                              2 * sizeof(Vector4));
+                                              2 * sizeof(Vector4) +
+                                              2 * sizeof(Vector2));
     }
 }
 
@@ -258,13 +267,5 @@ GL::ViewProjMode GLUniforms::GetViewProjMode() const
 GLUniforms *GLUniforms::GetActive()
 {
     return GL::GetInstance()->GetGLUniforms();
-}
-
-void GLUniforms::OnViewportChanged(const AARecti &newViewport)
-{
-    ViewportUniforms *vpUnifs = GLUniforms::GetViewportUniforms();
-    vpUnifs->minPos = Vector2(newViewport.GetMin());
-    vpUnifs->size   = Vector2(newViewport.GetSize());
-    GLUniforms::UpdatePVMMatrix();
 }
 

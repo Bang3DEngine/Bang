@@ -7,6 +7,7 @@
 #include "Bang/Vector2.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/NeededUniformFlags.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -47,6 +48,8 @@ public:
     void SetRenderWireframe(bool renderWireframe);
     void SetLineWidth(float w);
 
+    NeededUniformFlags& GetNeededUniforms();
+    const NeededUniformFlags& GetNeededUniforms() const;
     const Vector2& GetAlbedoUvOffset() const;
     const Vector2& GetAlbedoUvMultiply() const;
     const Vector2& GetNormalMapUvOffset() const;
@@ -89,19 +92,20 @@ protected:
     RH<Texture2D> p_normalMapTexture;
     RH<ShaderProgram> p_shaderProgram;
 
-    RenderPass m_renderPass         = RenderPass::SCENE;
-    Color m_albedoColor             = Color::White;
-    float m_roughness               = 1.0f;
-    float m_metalness               = 0.5f;
-    bool m_receivesLighting         = true;
-    Vector2 m_albedoUvOffset        = Vector2::Zero;
-    Vector2 m_albedoUvMultiply      = Vector2::One;
-    Vector2 m_normalMapUvOffset     = Vector2::Zero;
-    Vector2 m_normalMapUvMultiply   = Vector2::One;
-    float m_lineWidth               = 1.0f;
-    float m_normalMapMultiplyFactor = 1.0f;
-    GL::CullFaceExt m_cullFace      = GL::CullFaceExt::BACK;
-    bool m_renderWireframe          = false;
+    float m_lineWidth                   = 1.0f;
+    float m_normalMapMultiplyFactor     = 1.0f;
+    RenderPass m_renderPass             = RenderPass::SCENE;
+    Color m_albedoColor                 = Color::White;
+    Vector2 m_albedoUvOffset            = Vector2::Zero;
+    Vector2 m_albedoUvMultiply          = Vector2::One;
+    Vector2 m_normalMapUvOffset         = Vector2::Zero;
+    Vector2 m_normalMapUvMultiply       = Vector2::One;
+    GL::CullFaceExt m_cullFace          = GL::CullFaceExt::BACK;
+    float m_roughness                   = 1.0f;
+    float m_metalness                   = 0.5f;
+    NeededUniformFlags m_neededUniforms = NeededUniformFlag::ALL;
+    bool m_receivesLighting             = true;
+    bool m_renderWireframe              = false;
 
     Material();
     virtual ~Material();

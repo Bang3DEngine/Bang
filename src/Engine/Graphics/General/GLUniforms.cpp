@@ -74,27 +74,48 @@ void GLUniforms::BindUniformBuffers(ShaderProgram *sp)
     m_cameraUniformBuffer.UnBind();
 }
 
-void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp)
+void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
+                                               NeededUniformFlags neededUniforms)
 {
     ASSERT (GL::IsBound(sp->GetGLBindTarget(), sp->GetGLId()));
 
     ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
+    if (neededUniforms.IsOn(NeededUniformFlag::MODEL))
+    {
+        sp->SetMatrix4(GLUniforms::UniformName_Model, matrices->model);
+    }
+    if (neededUniforms.IsOn(NeededUniformFlag::MODEL_INV))
+    {
+        sp->SetMatrix4(GLUniforms::UniformName_ModelInv, matrices->modelInv);
+    }
+    if (neededUniforms.IsOn(NeededUniformFlag::NORMAL))
+    {
+        sp->SetMatrix4(GLUniforms::UniformName_Normal, matrices->normal);
+    }
+    if (neededUniforms.IsOn(NeededUniformFlag::PVM))
+    {
+        sp->SetMatrix4(GLUniforms::UniformName_PVM, matrices->pvm);
+    }
+    if (neededUniforms.IsOn(NeededUniformFlag::PVM_INV))
+    {
+        sp->SetMatrix4(GLUniforms::UniformName_PVMInv, matrices->pvmInv);
+    }
 
-    sp->SetDouble(GLUniforms::UniformName_TimeSeconds, Time::GetEllapsed_Seconds());
-    sp->SetMatrix4(GLUniforms::UniformName_Model,          matrices->model);
-    sp->SetMatrix4(GLUniforms::UniformName_ModelInv,       matrices->modelInv);
-    sp->SetMatrix4(GLUniforms::UniformName_Normal,         matrices->normal);
-    sp->SetMatrix4(GLUniforms::UniformName_PVM,            matrices->pvm);
-    sp->SetMatrix4(GLUniforms::UniformName_PVMInv,         matrices->pvmInv);
+    if (neededUniforms.IsOn(NeededUniformFlag::TIME))
+    {
+        sp->SetDouble(GLUniforms::UniformName_TimeSeconds, Time::GetEllapsed_Seconds());
+    }
 
-    Camera *cam = Camera::GetActive();
-
-    TextureCubeMap *skyBox  = cam ? cam->GetSkyBoxTexture()         : nullptr;
-    TextureCubeMap *sSkyBox = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
-    TextureCubeMap *dSkyBox = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
-    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBox,         skyBox);
-    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxSpecular, sSkyBox);
-    sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxDiffuse,  dSkyBox);
+    if (neededUniforms.IsOn(NeededUniformFlag::SKYBOXES))
+    {
+        Camera *cam = Camera::GetActive();
+        TextureCubeMap *skyBox  = cam ? cam->GetSkyBoxTexture()         : nullptr;
+        TextureCubeMap *sSkyBox = cam ? cam->GetSpecularSkyBoxTexture() : nullptr;
+        TextureCubeMap *dSkyBox = cam ? cam->GetDiffuseSkyBoxTexture()  : nullptr;
+        sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBox,         skyBox);
+        sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxSpecular, sSkyBox);
+        sp->SetTextureCubeMap(GLUniforms::UniformName_SkyBoxDiffuse,  dSkyBox);
+    }
 }
 
 void GLUniforms::SetCameraWorldPosition(const Vector3 &camWorldPosition)

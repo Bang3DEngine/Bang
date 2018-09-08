@@ -1,10 +1,10 @@
 #define BANG_VERTEX
 #include "Common.glsl"
+#include "MaterialPBRUniforms.glsl"
 
 const int B_MAX_NUM_BONES = 128;
 uniform bool B_HasBoneAnimations;
 uniform mat4[B_MAX_NUM_BONES] B_BoneAnimationMatrices;
-
 
 layout(location = 0) in vec3 B_VIn_Position;
 layout(location = 1) in vec3 B_VIn_Normal;

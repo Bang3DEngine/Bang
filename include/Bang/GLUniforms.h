@@ -8,6 +8,7 @@
 #include "Bang/TypeMap.h"
 #include "Bang/UniformBuffer.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/NeededUniformFlags.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -90,6 +91,7 @@ public:
         int size = -1;
         Array<T> values;
 
+        GLSLVar() = default;
         GLSLVar(const String &name_, const T &value_, int size_)
             : name(name_),
               value(value_),
@@ -97,7 +99,6 @@ public:
         {
         }
 
-        GLSLVar() {}
     };
 
     template <class T>
@@ -121,7 +122,9 @@ public:
     static GLSLVar<T> GetUniformAt(GLId shaderProgramId, GLuint uniformIndex);
 
     void BindUniformBuffers(ShaderProgram *shaderProgram);
-    static void SetAllUniformsToShaderProgram(ShaderProgram *sp);
+    static void SetAllUniformsToShaderProgram(
+                ShaderProgram *sp,
+                NeededUniformFlags neededUniforms = NeededUniformFlag::ALL);
 
     static void SetCameraWorldPosition(const Vector3 &camWorldPosition);
     static void SetCameraClearColor(const Color &camClearColor);

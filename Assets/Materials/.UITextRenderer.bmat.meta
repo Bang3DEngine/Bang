@@ -9,6 +9,7 @@ Material:
   LineWidth: 1
   Metalness: 0.5
   MetalnessTexture: 0 0 0
+  NeededUniforms: 72
   NormalMapMultiplyFactor: 1
   NormalMapTexture: 0 0 0
   NormalMapUvMultiply: (1, 1)

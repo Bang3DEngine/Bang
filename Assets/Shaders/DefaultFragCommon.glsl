@@ -2,6 +2,8 @@
 
 #include "Common.glsl"
 #include "LightCommon.glsl"
+#include "MaterialPBRUniforms.glsl"
+
 #if defined (BANG_FORWARD_RENDERING)
 #include "ForwardLightCommon.glsl"
 #endif

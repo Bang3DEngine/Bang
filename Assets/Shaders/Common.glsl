@@ -47,23 +47,12 @@ uniform vec3        B_ReflectionProbeSize;   // If boxed.
 uniform float B_TimeSeconds;
 
 // Material related /////////////////////////
-uniform bool      B_MaterialReceivesLighting;
 uniform vec4      B_MaterialAlbedoColor;
-uniform float     B_MaterialRoughness;
-uniform float     B_MaterialMetalness;
 uniform sampler2D B_AlbedoTexture;
 uniform float     B_AlphaCutoff;
 uniform vec2      B_AlbedoUvOffset;
 uniform vec2      B_AlbedoUvMultiply;
 uniform bool      B_HasAlbedoTexture;
-uniform sampler2D B_RoughnessTexture;
-uniform sampler2D B_MetalnessTexture;
-uniform sampler2D B_NormalMapTexture;
-uniform vec2      B_NormalMapUvOffset;
-uniform vec2      B_NormalMapUvMultiply;
-uniform bool      B_HasNormalMapTexture;
-uniform float     B_NormalMapMultiplyFactor;
-uniform sampler2D B_BRDF_LUT;
 // ///////////////////////////////////////
 
 // Renderer related //////////////////////

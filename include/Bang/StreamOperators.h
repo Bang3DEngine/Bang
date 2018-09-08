@@ -6,6 +6,8 @@
 #include <sstream>
 #include <utility>
 #include <unordered_map>
+
+#include "Bang/Flags.h"
 #include "Bang/TypeTraits.h"
 
 NAMESPACE_BANG_BEGIN
@@ -49,6 +51,20 @@ std::ostream& operator<<(std::ostream &log, const IToString &v);
 std::ostream& operator<<(std::ostream &log, const IToString *s);
 
 // Templated ostream operators
+template<class T>
+std::ostream& operator<<(std::ostream &log, const Flags<T> &flags)
+{
+    log << flags.GetValue();
+    return log;
+}
+
+template<class T, typename std::enable_if<std::is_enum<T>::value, T>::type >
+inline std::ostream& operator<<(std::ostream &log, const T &enumT)
+{
+    log << SCAST<uint64_t>(enumT);
+    return log;
+}
+
 template<class T>
 std::ostream& operator<<(std::ostream &log, const Vector2G<T> &v)
 {
@@ -264,6 +280,15 @@ std::ostream &operator<<(std::ostream &log, const Tree<T> &t)
 }
 
 // Templated istream operators
+template<class T, typename std::enable_if<std::is_enum<T>::value, T>::type >
+std::istream& operator>>(std::istream &is, const T &enumT)
+{
+    uint64_t v;
+    is >> v;
+    enumT = SCAST<T>(v);
+    return is;
+}
+
 template<class T>
 std::istream& operator>>(std::istream &is, Vector2G<T>& v)
 {

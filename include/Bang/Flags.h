@@ -27,22 +27,33 @@ public:
         SetOn(flagsOn);
     }
 
-    Flags SetOn(FlagsPrimitiveType f)
+    void Clear()
+    {
+        m_flags = 0;
+    }
+
+    Flags& SetTo(FlagsPrimitiveType f)
+    {
+        m_flags = f;
+        return *this;
+    }
+
+    Flags& SetOn(FlagsPrimitiveType f)
     {
         m_flags = GetValue() | f;
         return *this;
     }
-    Flags SetOn(Flag f)
+    Flags& SetOn(Flag f)
     {
         return SetOn(SCAST<FlagsPrimitiveType>(f));
     }
 
-    Flags SetOff(FlagsPrimitiveType f)
+    Flags& SetOff(FlagsPrimitiveType f)
     {
         m_flags = GetValue() & ~f;
         return *this;
     }
-    Flags SetOff(Flag f)
+    Flags& SetOff(Flag f)
     {
         return SetOff(static_cast<FlagsPrimitiveType>(f));
     }

@@ -322,8 +322,12 @@ void GL::Clear(GL::BufferBit bufferBit)
 
 void GL::SetClearColorBufferValue(const Color &clearColor)
 {
-    GL_CALL( glClearColor(clearColor.r, clearColor.g,
-                          clearColor.b, clearColor.a) );
+    if (GL::GetClearColor() != clearColor)
+    {
+        SetGLContextValue(&GL::m_clearColors, clearColor);
+        GL_CALL( glClearColor(clearColor.r, clearColor.g,
+                              clearColor.b, clearColor.a) );
+    }
 }
 
 void GL::ClearColorBuffer(const Color &clearColor,
@@ -335,14 +339,11 @@ void GL::ClearColorBuffer(const Color &clearColor,
                 (lastColorMask[2] != clearB) || (lastColorMask[3] != clearA);
 
     if (differentColorMask)
-    { GL::SetColorMask(clearR, clearG, clearB, clearA); }
-
-    if (GL::GetClearColor() != clearColor)
     {
-        SetGLContextValue(&GL::m_clearColors, clearColor);
-        GL::SetClearColorBufferValue(clearColor);
+        GL::SetColorMask(clearR, clearG, clearB, clearA);
     }
 
+    GL::SetClearColorBufferValue(clearColor);
     GL::Clear(GL::BufferBit::COLOR);
 
     if (differentColorMask)

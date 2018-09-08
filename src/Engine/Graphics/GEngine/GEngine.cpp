@@ -755,7 +755,11 @@ void GEngine::Render(Renderer *rend)
     }
 }
 
-GL *GEngine::GetGL() const { return m_gl; }
+GL *GEngine::GetGL() const
+{
+    return m_gl;
+}
+
 TextureUnitManager *GEngine::GetTextureUnitManager() const
 {
     return m_texUnitManager;

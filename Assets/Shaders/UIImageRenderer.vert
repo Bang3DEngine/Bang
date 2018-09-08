@@ -16,7 +16,8 @@ out vec2 B_FIn_AlbedoUv;
 
 void main()
 {
-    B_FIn_AlbedoUv = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
+    B_FIn_AlbedoUv = B_HasAlbedoTexture ? (B_VIn_Uv * B_AlbedoUvMultiply +
+                                           B_AlbedoUvOffset) : B_VIn_Uv;;
 
     vec3 localPos = B_VIn_Position;
     if (B_ImageMode >= MODE_SLICE_9)

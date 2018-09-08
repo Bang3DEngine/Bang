@@ -9,6 +9,8 @@ out vec2 B_FIn_AlbedoUv;
 void main()
 {
     vec4 v = B_PVM * vec4(B_VIn_Position, 1);
-    B_FIn_AlbedoUv = B_VIn_Uv * B_AlbedoUvMultiply + B_AlbedoUvOffset;
+    vec2 uv = B_HasAlbedoTexture ? (B_VIn_Uv * B_AlbedoUvMultiply +
+                                    B_AlbedoUvOffset) : B_VIn_Uv;
+    B_FIn_AlbedoUv = uv;
     gl_Position    = v;
 }

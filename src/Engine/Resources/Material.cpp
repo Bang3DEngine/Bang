@@ -326,19 +326,18 @@ void Material::Bind() const
     if ( GetNeededUniforms().IsOn(NeededUniformFlag::MATERIAL_ALBEDO) )
     {
         sp->SetColor(GLUniforms::UniformName_MaterialAlbedoColor, GetAlbedoColor());
-        sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset, GetAlbedoUvOffset());
-        sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply, GetAlbedoUvMultiply());
 
         if (Texture2D *albedoTex = GetAlbedoTexture())
         {
             sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture, albedoTex);
+            sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset, GetAlbedoUvOffset());
+            sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply, GetAlbedoUvMultiply());
             sp->SetFloat(GLUniforms::UniformName_AlphaCutoff, albedoTex->GetAlphaCutoff());
             sp->SetBool(GLUniforms::UniformName_HasAlbedoTexture, true);
         }
         else
         {
             sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture, nullptr);
-            sp->SetFloat(GLUniforms::UniformName_AlphaCutoff, -1.0f);
             sp->SetBool(GLUniforms::UniformName_HasAlbedoTexture, false);
         }
     }
@@ -349,12 +348,6 @@ void Material::Bind() const
                     GetReceivesLighting());
         sp->SetFloat(GLUniforms::UniformName_MaterialRoughness, GetRoughness());
         sp->SetFloat(GLUniforms::UniformName_MaterialMetalness, GetMetalness());
-        sp->SetVector2(GLUniforms::UniformName_NormalMapUvOffset,
-                       GetNormalMapUvOffset());
-        sp->SetVector2(GLUniforms::UniformName_NormalMapUvMultiply,
-                       GetNormalMapUvMultiply());
-        sp->SetFloat(GLUniforms::UniformName_NormalMapMultiplyFactor,
-                     GetNormalMapMultiplyFactor());
         sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
                          TextureFactory::GetBRDFLUTTexture());
 
@@ -381,6 +374,12 @@ void Material::Bind() const
         if (Texture2D *normalMapTex = GetNormalMapTexture())
         {
             sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture, normalMapTex);
+            sp->SetVector2(GLUniforms::UniformName_NormalMapUvOffset,
+                           GetNormalMapUvOffset());
+            sp->SetVector2(GLUniforms::UniformName_NormalMapUvMultiply,
+                           GetNormalMapUvMultiply());
+            sp->SetFloat(GLUniforms::UniformName_NormalMapMultiplyFactor,
+                         GetNormalMapMultiplyFactor());
             sp->SetBool(GLUniforms::UniformName_HasNormalMapTexture, true);
         }
         else

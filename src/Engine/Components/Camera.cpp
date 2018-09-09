@@ -111,6 +111,11 @@ Vector3 Camera::FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
     return res;
 }
 
+void Camera::SetReplacementGBuffer(GBuffer *gbuffer)
+{
+    p_replacementGBuffer = gbuffer;
+}
+
 void Camera::SetRenderFlags(RenderFlags renderFlags)
 {
     if (renderFlags != GetRenderFlags())
@@ -299,7 +304,7 @@ const USet<RenderPass, EnumClassHash> &Camera::GetRenderPassMask() const
 
 GBuffer *Camera::GetGBuffer() const
 {
-    return m_gbuffer;
+    return p_replacementGBuffer ? p_replacementGBuffer : m_gbuffer;
 }
 
 const Vector2i &Camera::GetRenderSize() const

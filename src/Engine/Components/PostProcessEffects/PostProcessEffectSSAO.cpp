@@ -7,6 +7,7 @@
 #include "Bang/Camera.h"
 #include "Bang/GEngine.h"
 #include "Bang/GBuffer.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/GLUniforms.h"
@@ -170,7 +171,9 @@ void PostProcessEffectSSAO::SetBlurRadius(int blurRadius)
         }
 
         for (int i = 0; i < m_blurKernel.Size(); ++i)
-        { m_blurKernel[i] /= sum; } // Normalize
+        {
+            m_blurKernel[i] /= sum; // Normalize
+        }
     }
 }
 
@@ -291,14 +294,79 @@ Texture2D* PostProcessEffectSSAO::GetSSAOTexture() const
     return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
-void PostProcessEffectSSAO::ReloadShaders()
+void PostProcessEffectSSAO::CloneInto(ICloneable *clone) const
 {
-    Resources::Import(p_ssaoShaderProgram.Get()->GetVertexShader());
-    Resources::Import(p_ssaoShaderProgram.Get()->GetFragmentShader());
-    Resources::Import(p_blurXShaderProgram.Get()->GetVertexShader());
-    Resources::Import(p_blurXShaderProgram.Get()->GetFragmentShader());
-    Resources::Import(p_blurYShaderProgram.Get()->GetVertexShader());
-    Resources::Import(p_blurYShaderProgram.Get()->GetFragmentShader());
+    PostProcessEffect::CloneInto(clone);
+
+    PostProcessEffectSSAO *ppe = SCAST<PostProcessEffectSSAO*>(clone);
+    ppe->SetBilateralBlurEnabled( GetBilateralBlurEnabled() );
+    ppe->SetBlurRadius( GetBlurRadius() );
+    ppe->SetFBSize( GetFBSize() );
+    ppe->SetNumRandomAxes( GetNumRandomAxes() );
+    ppe->SetNumRandomSamples( GetNumRandomSamples() );
+    ppe->SetSSAOIntensity( GetSSAOIntensity() );
+    ppe->SetSSAORadius( GetSSAORadius() );
+    ppe->SetSeparable( GetSeparable() );
+}
+
+void PostProcessEffectSSAO::ImportMeta(const MetaNode &metaNode)
+{
+    PostProcessEffect::ImportMeta(metaNode);
+
+    if (metaNode.Contains("BilateralBlur"))
+    {
+        SetBilateralBlurEnabled( metaNode.Get<bool>("BilateralBlur") );
+    }
+
+    if (metaNode.Contains("BlurRadius"))
+    {
+        SetBlurRadius( metaNode.Get<int>("BlurRadius") );
+    }
+
+    if (metaNode.Contains("FBSize"))
+    {
+        SetFBSize( metaNode.Get<Vector2>("FBSize") );
+    }
+
+    if (metaNode.Contains("NumRandomAxes"))
+    {
+        SetNumRandomAxes( metaNode.Get<int>("NumRandomAxes") );
+    }
+
+    if (metaNode.Contains("NumRandomSamples"))
+    {
+        SetNumRandomSamples( metaNode.Get<int>("NumRandomSamples") );
+    }
+
+    if (metaNode.Contains("Intensity"))
+    {
+        SetSSAOIntensity( metaNode.Get<float>("Intensity") );
+    }
+
+    if (metaNode.Contains("Radius"))
+    {
+        SetSSAORadius( metaNode.Get<float>("Radius") );
+    }
+
+    if (metaNode.Contains("Separable"))
+    {
+        SetSeparable( metaNode.Get<bool>("Separable") );
+    }
+
+}
+
+void PostProcessEffectSSAO::ExportMeta(MetaNode *metaNode) const
+{
+    PostProcessEffect::ExportMeta(metaNode);
+
+    metaNode->Set("BilateralBlur", GetBilateralBlurEnabled());
+    metaNode->Set("BlurRadius", GetBlurRadius());
+    metaNode->Set("FBSize", GetFBSize());
+    metaNode->Set("NumRandomAxes", GetNumRandomAxes());
+    metaNode->Set("NumRandomSamples", GetNumRandomSamples());
+    metaNode->Set("Intensity", GetSSAOIntensity());
+    metaNode->Set("Radius", GetSSAORadius());
+    metaNode->Set("Separable", GetSeparable());
 }
 
 void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)

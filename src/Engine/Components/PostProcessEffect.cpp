@@ -37,19 +37,19 @@ bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
 {
     // Only render if its gameObject contains the active camera
     Camera *activeCamera = Camera::GetActive();
-    if (!GetGameObject()->GetComponents().Contains(activeCamera)) { return false; }
-
-    switch (GetType())
+    if (GetGameObject()->GetComponents().Contains(activeCamera))
     {
-        case Type::AFTER_SCENE:
-            return (renderPass == RenderPass::SCENE_POSTPROCESS);
 
-        case Type::AFTER_CANVAS:
-            return (renderPass == RenderPass::SCENE_POSTPROCESS ||
-                    renderPass == RenderPass::CANVAS_POSTPROCESS);
+        switch (GetType())
+        {
+            case Type::AFTER_SCENE:
+                return (renderPass == RenderPass::SCENE_POSTPROCESS);
+
+            case Type::AFTER_CANVAS:
+                return (renderPass == RenderPass::SCENE_POSTPROCESS ||
+                        renderPass == RenderPass::CANVAS_POSTPROCESS);
+        }
     }
-
-    ASSERT(false);
     return false;
 }
 

@@ -37,14 +37,19 @@ public:
     const Vector2 &GetFBSize() const;
     Texture2D* GetSSAOTexture() const;
 
-    void ReloadShaders();
+    // ICloneable
+    virtual void CloneInto(ICloneable *clone) const override;
+
+    // Serializable
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
     float m_ssaoIntensity = 1.0f;
     float m_ssaoRadius = -1;
     int m_blurRadius = -1;
     int m_numAxes = -1;
-    bool m_separable = true;
+    bool m_separable = false;
     int m_numRandomOffsetsHemisphere = -1;
     bool m_bilateralBlurEnabled = true;
     Vector2 m_fbSize = Vector2::One;

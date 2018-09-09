@@ -74,6 +74,7 @@ private:
     std::stack<RH<Texture2D>> m_depthStencilTexturesStack;
 
     void RenderViewportPlane();
+    void PingPongColorBuffers();
     void ApplyPass_(ShaderProgram *sp, const AARect &mask);
 
     friend class GEngine;

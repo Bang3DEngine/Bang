@@ -44,6 +44,7 @@ public:
     Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
                                               float zFromCam) const;
 
+    void SetReplacementGBuffer(GBuffer *gbuffer);
     void SetRenderFlags(RenderFlags renderFlags);
     void SetRenderSize(const Vector2i &renderSize);
     void SetGammaCorrection(float gammaCorrection);
@@ -107,6 +108,7 @@ protected:
 
 private:
     GBuffer *m_gbuffer = nullptr;
+    GBuffer *p_replacementGBuffer = nullptr;
 
     RenderFlags m_renderFlags = RenderFlag::DEFAULT;
     USet<RenderPass, EnumClassHash> m_renderPassMask;

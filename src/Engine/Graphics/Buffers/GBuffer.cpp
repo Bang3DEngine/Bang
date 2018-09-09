@@ -108,15 +108,13 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
     // Ping pong
     if (willReadFromColor)
     {
-        m_readColorAttachment = m_drawColorAttachment;
-        m_drawColorAttachment = (m_readColorAttachment == GBuffer::AttColor0 ?
-                                     GBuffer::AttColor1 : GBuffer::AttColor0);
-        ASSERT(m_drawColorAttachment != m_readColorAttachment);
+        PingPongColorBuffers();
     }
 
     ApplyPass_(sp, mask);
 
-    m_readColorAttachment = m_drawColorAttachment; // Read again from same buffer
+    // We want to read from the updated drawn buffer from now on ;)
+    m_readColorAttachment = m_drawColorAttachment;
 }
 
 void GBuffer::SetAllDrawBuffers() const
@@ -204,8 +202,31 @@ Texture2D *GBuffer::GetDepthStencilTexture() const
     return p_currentDepthStencilTexture.Get();
 }
 
-String GBuffer::GetMiscTexName() { return "B_GTex_Misc"; }
-String GBuffer::GetColorsTexName() { return "B_GTex_Color"; }
-String GBuffer::GetNormalsTexName() { return "B_GTex_Normal"; }
-String GBuffer::GetAlbedoTexName() { return "B_GTex_AlbedoColor"; }
-String GBuffer::GetDepthStencilTexName() { return "B_GTex_DepthStencil"; }
+String GBuffer::GetMiscTexName()
+{
+    return "B_GTex_Misc";
+}
+String GBuffer::GetColorsTexName()
+{
+    return "B_GTex_Color";
+}
+String GBuffer::GetNormalsTexName()
+{
+    return "B_GTex_Normal";
+}
+String GBuffer::GetAlbedoTexName()
+{
+    return "B_GTex_AlbedoColor";
+}
+String GBuffer::GetDepthStencilTexName()
+{
+    return "B_GTex_DepthStencil";
+}
+
+void GBuffer::PingPongColorBuffers()
+{
+    m_readColorAttachment = m_drawColorAttachment;
+    m_drawColorAttachment = (m_readColorAttachment == GBuffer::AttColor0 ?
+                                 GBuffer::AttColor1 : GBuffer::AttColor0);
+    ASSERT(m_drawColorAttachment != m_readColorAttachment);
+}

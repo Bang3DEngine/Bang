@@ -37,6 +37,7 @@
 #include "Bang/BehaviourContainer.h"
 #include "Bang/UIHorizontalLayout.h"
 #include "Bang/SkinnedMeshRenderer.h"
+#include "Bang/PostProcessEffectSSAO.h"
 
 USING_NAMESPACE_BANG
 
@@ -79,6 +80,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, BehaviourContainer);
     CREATE_COMPONENT(componentClassName, UIHorizontalLayout);
     CREATE_COMPONENT(componentClassName, SkinnedMeshRenderer);
+    CREATE_COMPONENT(componentClassName, PostProcessEffectSSAO);
 
     Debug_Warn("Please register class '" << componentClassName << "' in "
                "ComponentFactory");

@@ -2,6 +2,7 @@
 
 #include "Bang/Debug.h"
 #include "Bang/Input.h"
+#include "Bang/UILabel.h"
 #include "Bang/UICanvas.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIInputText.h"
@@ -46,10 +47,12 @@ void UIInputNumber::OnUpdate()
         {
             increment = -1.0f;
         }
+
         if (increment != 0.0f)
         {
             SetValue( GetValue() + increment );
             UpdateTextFromValue();
+            GetInputText()->GetLabel()->SelectAll();
         }
     }
 }

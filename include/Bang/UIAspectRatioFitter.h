@@ -1,6 +1,7 @@
 #ifndef UIASPECTRATIOFITTER_H
 #define UIASPECTRATIOFITTER_H
 
+#include "Bang/Vector2.h"
 #include "Bang/Component.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/AspectRatioMode.h"
@@ -18,6 +19,14 @@ public:
     void SetAspectRatio(float aspectRatio);
     void SetAspectRatio(const Vector2 &size);
     void SetAspectRatio(const Vector2i &size);
+    void SetPaddings(int paddingsAll);
+    void SetPaddings(const Vector2i &paddingLeftBot,
+                     const Vector2i &paddingRightTop);
+    void SetPaddingLeftBot(const Vector2i &paddingLeftBot);
+    void SetPaddingRightTop(const Vector2i &paddingRightTop);
+
+    const Vector2i &GetPaddingLeftBot() const;
+    const Vector2i &GetPaddingRightTop() const;
     float GetAspectRatio() const;
 
     void SetAspectRatioMode(AspectRatioMode arMode);
@@ -39,6 +48,8 @@ public:
 
 private:
     float m_aspectRatio = -1.0f;
+    Vector2i m_paddingLeftBot = Vector2i::Zero;
+    Vector2i m_paddingRightTop = Vector2i::Zero;
     AspectRatioMode m_aspectRatioMode = Undef<AspectRatioMode>();
 
     UIAspectRatioFitter();

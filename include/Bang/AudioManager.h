@@ -58,7 +58,7 @@ private:
 
     ThreadPool m_threadPool;
     Mutex m_mutexCurrentAudios;
-    bool m_playOnStartBlocked = false;
+    bool m_playOnStartBlocked = true;
     UMap<ALAudioSource*, AudioPlayerRunnable*> m_sourcesToPlayers;
 
     AudioManager();

@@ -68,7 +68,11 @@ void UILabel::SetSelectable(bool selectable)
         GetFocusable()->SetCursorType(selectable ? Cursor::Type::IBEAM :
                                                    Cursor::Type::ARROW);
     }
-    if (p_selectionQuad) { p_selectionQuad->SetEnabled(selectable); }
+
+    if (p_selectionQuad)
+    {
+        p_selectionQuad->SetEnabled(selectable);
+    }
 }
 void UILabel::SetSelection(int cursorIndex, int selectionIndex)
 {
@@ -93,6 +97,7 @@ void UILabel::ResetSelection()
 void UILabel::SelectAll()
 {
     SetSelection(GetText()->GetContent().Size(), 0);
+
 }
 void UILabel::SetSelectAllOnFocus(bool selectAllOnFocus)
 {
@@ -134,7 +139,10 @@ float UILabel::GetCursorXLocalNDC(int cursorIndex) const
             localTextX = (currentCharRect.GetMax().x +
                           nextCharRect.GetMin().x) / 2.0f;
         }
-        else { localTextX = nextCharRect.GetMin().x; }
+        else
+        {
+            localTextX = nextCharRect.GetMin().x;
+        }
     }
     else if (!GetText()->GetCharRectsLocalNDC().IsEmpty()) // Begin or end
     {

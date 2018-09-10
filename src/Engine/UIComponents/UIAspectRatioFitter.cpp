@@ -36,6 +36,46 @@ void UIAspectRatioFitter::SetAspectRatio(const Vector2i &size)
     SetAspectRatio( Vector2(size) );
 }
 
+void UIAspectRatioFitter::SetPaddings(int paddingsAll)
+{
+    SetPaddings(Vector2i(paddingsAll), Vector2i(paddingsAll));
+}
+
+void UIAspectRatioFitter::SetPaddings(const Vector2i &paddingLeftBot,
+                                      const Vector2i &paddingRightTop)
+{
+    SetPaddingLeftBot( paddingLeftBot );
+    SetPaddingRightTop( paddingRightTop );
+}
+
+void UIAspectRatioFitter::SetPaddingLeftBot(const Vector2i &paddingLeftBot)
+{
+    if (paddingLeftBot != GetPaddingLeftBot())
+    {
+        m_paddingLeftBot = paddingLeftBot;
+        Invalidate();
+    }
+}
+
+void UIAspectRatioFitter::SetPaddingRightTop(const Vector2i &paddingRightTop)
+{
+    if (paddingRightTop != GetPaddingRightTop())
+    {
+        m_paddingRightTop = paddingRightTop;
+        Invalidate();
+    }
+}
+
+const Vector2i &UIAspectRatioFitter::GetPaddingLeftBot() const
+{
+    return m_paddingLeftBot;
+}
+
+const Vector2i &UIAspectRatioFitter::GetPaddingRightTop() const
+{
+    return m_paddingRightTop;
+}
+
 float UIAspectRatioFitter::GetAspectRatio() const
 {
     return m_aspectRatio;
@@ -58,21 +98,32 @@ AspectRatioMode UIAspectRatioFitter::GetAspectRatioMode() const
 void UIAspectRatioFitter::ApplyLayout(Axis axis)
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
-    if (!rt) { return; }
+    if (!rt)
+    {
+        return;
+    }
 
     GameObject *parent = GetGameObject()->GetParent();
-    if (!parent) { return; }
+    if (!parent)
+    {
+        return;
+    }
 
     RectTransform *parentRT = parent->GetRectTransform();
-    if (!parentRT) { return; }
+    if (!parentRT)
+    {
+        return;
+    }
 
-    const Vector2i parentSize = Vector2i::Max(Vector2i::One,
+    const Vector2i parentRTSize = Vector2i::Max(Vector2i::One,
                                    Vector2i(parentRT->GetViewportAARect().GetSize()));
 
     Vector2i currentSize( Vector2::Round( Vector2(GetAspectRatio(), 1) * 30000.0f ) );
     Vector2i newSize = AspectRatio::GetAspectRatioedSize(currentSize,
-                                                         parentSize,
+                                                         parentRTSize,
                                                          GetAspectRatioMode());
+    newSize -= (GetPaddingLeftBot() + GetPaddingRightTop());
+
     if (axis == Axis::VERTICAL)
     {
         rt->SetWidthFromPivot(newSize.x);
@@ -85,10 +136,24 @@ void UIAspectRatioFitter::ImportMeta(const MetaNode &metaNode)
     Component::ImportMeta(metaNode);
 
     if (metaNode.Contains("AspectRatio"))
-    { SetAspectRatio(metaNode.Get<float>("AspectRatio")); }
+    {
+        SetAspectRatio(metaNode.Get<float>("AspectRatio"));
+    }
 
     if (metaNode.Contains("AspectRatioMode"))
-    { SetAspectRatioMode(metaNode.Get<AspectRatioMode>("AspectRatioMode")); }
+    {
+        SetAspectRatioMode(metaNode.Get<AspectRatioMode>("AspectRatioMode"));
+    }
+
+    if (metaNode.Contains("PaddingLeftTop"))
+    {
+        SetPaddingLeftBot(metaNode.Get<Vector2i>("PaddingLeftTop"));
+    }
+
+    if (metaNode.Contains("PaddingRightBot"))
+    {
+        SetPaddingRightTop(metaNode.Get<Vector2i>("PaddingRightBot"));
+    }
 }
 
 void UIAspectRatioFitter::ExportMeta(MetaNode *metaNode) const
@@ -97,6 +162,8 @@ void UIAspectRatioFitter::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("AspectRatio", GetAspectRatio());
     metaNode->Set("AspectRatioMode", GetAspectRatioMode());
+    metaNode->Set("PaddingLeftBot", GetPaddingLeftBot());
+    metaNode->Set("PaddingRightTop", GetPaddingRightTop());
 }
 
 void UIAspectRatioFitter::OnTransformChanged()

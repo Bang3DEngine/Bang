@@ -379,7 +379,19 @@ void UIInputText::ReplaceSelectedText(const String &replaceStr)
 
 void UIInputText::SetBlocked(bool blocked)
 {
-    m_isBlocked = blocked;
+    if (blocked != IsBlocked())
+    {
+        m_isBlocked = blocked;
+
+        if (IsBlocked())
+        {
+            GetBackground()->SetTint(Color::White.WithValue(0.9f));
+        }
+        else
+        {
+            GetBackground()->SetTint(Color::White);
+        }
+    }
 }
 
 void UIInputText::SetAllowedCharacters(const String &allowedCharacters)

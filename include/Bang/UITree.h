@@ -34,8 +34,12 @@ public:
         BELOW_ALL
     };
 
-    void AddItem(GOItem *newItem, GOItem *parentItem, int indexInsideParent = 0);
-    void MoveItem(GOItem *item, GOItem *newParentItem, int newIndexInsideParent = 0);
+    void AddItem(GOItem *newItem,
+                 GOItem *parentItem,
+                 int indexInsideParent = 0);
+    void MoveItem(GOItem *item,
+                  GOItem *newParentItem,
+                  int newIndexInsideParent = 0);
     void RemoveItem(GOItem *itemToRemove);
     GOItem* GetSelectedItem() const;
     void Clear();
@@ -90,22 +94,24 @@ private:
     GameObject *p_dragMarker = nullptr;
     UIImageRenderer *p_dragMarkerImg = nullptr;
 
-    void AddItem_(GOItem* newItemTree, GOItem *parentItem,
-                  int indexInsideParent, bool moving);
-    void AddItem_(const Tree<GOItem*> &newItemTree, GOItem *parentItem,
-                  int indexInsideParent, bool moving);
+    GOItem* AddItem_(GOItem* newItemTree,
+                     GOItem *parentItem,
+                     int indexInsideParent,
+                     bool moving);
+    GOItem* AddItem_(const Tree<GOItem*> &newItemTree,
+                     GOItem *parentItem,
+                     int indexInsideParent,
+                     bool moving);
     void RemoveItem_(GOItem *itemToRemove, bool moving);
-    void UnCollapse(GOItem *item);
-    void UnCollapseUpwards(GOItem *item);
-    void SetItemCollapsedRecursive(GOItem *item, bool collapse);
-    void UpdateCollapsability(GOItem *item);
+    bool NeedsToBeEnabled(GOItem *item, bool recursive);
+    void UpdateCollapsabilityOnThisAndDescendants(GOItem *item);
     void IndentItem(GOItem *item);
     bool IsValidDrag(UIDragDroppable *dd,
                      GOItem *itemBeingDragged,
                      GOItem *itemOver) const;
 
     Tree<GOItem*>* GetItemTree(GOItem* item) const;
-    UITreeItemContainer* GetItemContainer(GOItem *item) const;
+    UITreeItemContainer* GetTreeItemContainer(GOItem *item) const;
 
     friend class GameObjectFactory;
 };

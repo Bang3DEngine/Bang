@@ -31,15 +31,15 @@ class AudioManager : public EventListener<IEventsDestroy>
 public:
     void Init();
 
-    static void Play(AudioClip* audioClip,
-                     ALAudioSource *alAudioSource,
-                     float delay = 0.0f);
-    static void Play(AudioClip* audioClip,
-                     const AudioParams &params,
-                     float delay = 0.0f);
-    static void Play(const Path& audioClipFilepath,
-                     const AudioParams &params,
-                     float delay = 0.0f);
+    static ALAudioSource* Play(AudioClip* audioClip,
+                               ALAudioSource *alAudioSource,
+                               float delay = 0.0f);
+    static ALAudioSource* Play(AudioClip* audioClip,
+                               const AudioParams &params,
+                               float delay = 0.0f);
+    static ALAudioSource* Play(const Path& audioClipFilepath,
+                               const AudioParams &params,
+                               float delay = 0.0f);
 
     static void PauseAllSounds();
     static void ResumeAllSounds();

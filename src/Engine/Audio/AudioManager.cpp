@@ -143,39 +143,48 @@ void AudioManager::OnAudioPlayerDestroyed(AudioPlayerRunnable *audioPlayer)
     }
 }
 
-void AudioManager::Play(AudioClip *audioClip, ALAudioSource *aas, float delay)
+ALAudioSource* AudioManager::Play(AudioClip *audioClip,
+                                  ALAudioSource *aas,
+                                  float delay)
 {
-    if (!audioClip) { return; }
-    AudioPlayerRunnable *player = new AudioPlayerRunnable(audioClip,
-                                                          aas, delay);
-    AudioManager *am = AudioManager::GetInstance();
-    bool started = am->m_threadPool.TryStart(player);
-    if (started)
+    if (audioClip)
     {
-        MutexLocker ml(&am->m_mutexCurrentAudios); BANG_UNUSED(ml);
-        aas->EventEmitter<IEventsDestroy>::RegisterListener(am);
-        am->m_sourcesToPlayers.Add(aas, player);
+        AudioPlayerRunnable *player = new AudioPlayerRunnable(audioClip,
+                                                              aas, delay);
+        AudioManager *am = AudioManager::GetInstance();
+        bool started = am->m_threadPool.TryStart(player);
+        if (started)
+        {
+            MutexLocker ml(&am->m_mutexCurrentAudios); BANG_UNUSED(ml);
+            aas->EventEmitter<IEventsDestroy>::RegisterListener(am);
+            am->m_sourcesToPlayers.Add(aas, player);
+        }
     }
+    return aas;
 }
 
-void AudioManager::Play(AudioClip *audioClip,
-                        const AudioParams &params,
-                        float delay)
+ALAudioSource* AudioManager::Play(AudioClip *audioClip,
+                                  const AudioParams &params,
+                                  float delay)
 {
-    if (!audioClip) { return; }
-    ALAudioSource *aas = new ALAudioSource();
-    aas->SetALBufferId(audioClip->GetALBufferId());
-    aas->SetParams(params);
-    aas->m_autoDelete = true;
-    AudioManager::Play(audioClip, aas, delay);
+    ALAudioSource *aas = nullptr;
+    if (audioClip)
+    {
+        aas = new ALAudioSource();
+        aas->SetALBufferId(audioClip->GetALBufferId());
+        aas->SetParams(params);
+        aas->m_autoDelete = true;
+        AudioManager::Play(audioClip, aas, delay);
+    }
+    return aas;
 }
 
-void AudioManager::Play(const Path &audioClipFilepath,
-                        const AudioParams &params,
-                        float delay)
+ALAudioSource* AudioManager::Play(const Path &audioClipFilepath,
+                                  const AudioParams &params,
+                                  float delay)
 {
     RH<AudioClip> audioClip = Resources::Load<AudioClip>(audioClipFilepath);
-    AudioManager::Play(audioClip.Get(), params, delay);
+    return AudioManager::Play(audioClip.Get(), params, delay);
 }
 
 void AudioManager::PauseAllSounds()
@@ -248,8 +257,10 @@ void AudioManager::DettachSourcesFromAudioClip(AudioClip *ac)
 void AudioManager::ClearALErrors()
 {
     alGetError();
-    ALCdevice *device = AudioManager::GetInstance()->m_alDevice;
-    if (device) { alcGetError(device); }
+    if (ALCdevice *device = AudioManager::GetInstance()->m_alDevice)
+    {
+        alcGetError(device);
+    }
 }
 
 bool AudioManager::CheckALError()

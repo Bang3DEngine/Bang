@@ -21,16 +21,34 @@ AudioPlayerRunnable::~AudioPlayerRunnable()
     AudioManager::GetInstance()->OnAudioFinishedPlaying(this);
     EventEmitter<IEventsDestroy>::PropagateToListeners(
                           &IEventsDestroy::OnDestroyed, this);
+
+    if (p_alAudioSource->m_autoDelete)
+    {
+        delete p_alAudioSource;
+    }
 }
 
-void AudioPlayerRunnable::Resume() { p_alAudioSource->Play(); }
-void AudioPlayerRunnable::Pause() { p_alAudioSource->Pause(); }
+void AudioPlayerRunnable::Resume()
+{
+    p_alAudioSource->Play();
+}
+
+void AudioPlayerRunnable::Pause()
+{
+    p_alAudioSource->Pause();
+}
+
 void AudioPlayerRunnable::Stop()
 {
     m_forceExit = true;
     p_alAudioSource->Stop();
 }
-AudioClip *AudioPlayerRunnable::GetAudioClip() const { return p_audioClip; }
+
+AudioClip *AudioPlayerRunnable::GetAudioClip() const
+{
+    return p_audioClip;
+}
+
 ALAudioSource *AudioPlayerRunnable::GetALAudioSource() const
 {
     return p_alAudioSource;
@@ -38,7 +56,10 @@ ALAudioSource *AudioPlayerRunnable::GetALAudioSource() const
 
 void AudioPlayerRunnable::Run()
 {
-    if (!p_audioClip->IsLoaded()) { return; }
+    if (!p_audioClip->IsLoaded())
+    {
+        return;
+    }
 
     if (m_delayInSeconds > 0.0f) // Wait delay
     {

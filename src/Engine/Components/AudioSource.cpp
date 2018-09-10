@@ -80,8 +80,16 @@ void AudioSource::Play(float delay)
     AudioManager::Play(GetAudioClip(), this, delay);
 }
 
-bool AudioSource::GetPlayOnStart() const { return m_playOnStart; }
-AudioClip *AudioSource::GetAudioClip() const { return p_audioClip.Get(); }
+bool AudioSource::GetPlayOnStart() const
+{
+    return m_playOnStart;
+}
+
+AudioClip *AudioSource::GetAudioClip() const
+{
+    return p_audioClip.Get();
+}
+
 float AudioSource::GetPlayProgress() const
 {
     float secondsOffset;

@@ -25,17 +25,7 @@ Scene::Scene() : GameObject("Scene")
 
 Scene::~Scene()
 {
-    GameObject::DestroyImmediate(p_debugRenderer);
-}
-
-void Scene::OnPreStart()
-{
-    GameObject::OnPreStart();
-}
-
-void Scene::Update()
-{
-    GameObject::Update();
+    GameObject::DestroyImmediate( GetDebugRenderer() );
 }
 
 void Scene::Render(RenderPass rp, bool renderChildren)
@@ -54,6 +44,7 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 
 void Scene::OnResize(int newWidth, int newHeight)
 {
+    BANG_UNUSED_2(newWidth, newHeight);
     InvalidateCanvas();
 }
 

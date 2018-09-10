@@ -19,8 +19,6 @@ class Scene : public GameObject,
     GAMEOBJECT(Scene);
 
 public:
-    virtual void OnPreStart() override;
-    virtual void Update() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
     void DestroyDelayedElements();
@@ -60,7 +58,6 @@ private:
     friend class GEngine;
     friend class Application;
     friend class SceneManager;
-    friend class RenderFactory;
     friend class DebugRenderer;
 };
 

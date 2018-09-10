@@ -82,7 +82,15 @@ public:
 
 private:
     enum class DebugRendererPrimitiveType
-    { POINT, LINE, LINE_NDC, AARECT_NDC, RECT_NDC, TRIANGLE, QUAD };
+    {
+        POINT,
+        LINE,
+        LINE_NDC,
+        AARECT_NDC,
+        RECT_NDC,
+        TRIANGLE,
+        QUAD
+    };
 
     struct DebugRenderPrimitive
     {
@@ -102,7 +110,7 @@ private:
     RH<Mesh> m_mesh;
     List<DebugRenderPrimitive> m_primitivesToRender;
 
-	DebugRenderer();
+    DebugRenderer();
 	virtual ~DebugRenderer();
 
     void RenderPrimitives(bool withDepth);

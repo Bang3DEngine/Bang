@@ -23,6 +23,7 @@ FORWARD class GBuffer;
 FORWARD class Renderer;
 FORWARD class Texture2D;
 FORWARD class Framebuffer;
+FORWARD class DebugRenderer;
 FORWARD class RenderFactory;
 FORWARD class ShaderProgram;
 FORWARD class TextureCubeMap;
@@ -72,6 +73,8 @@ public:
                                  int mipMapLevel = 0);
 
     static GBuffer *GetActiveGBuffer();
+
+    DebugRenderer *GetDebugRenderer() const;
     RenderFactory *GetRenderFactory() const;
     Material* GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
@@ -87,6 +90,7 @@ public:
 
 private:
     GL *m_gl = nullptr;
+    DebugRenderer *m_debugRenderer = nullptr;
     RenderFactory *m_renderFactory = nullptr;
     TextureUnitManager *m_texUnitManager = nullptr;
 

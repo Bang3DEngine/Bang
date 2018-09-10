@@ -22,6 +22,7 @@
 #include "Bang/MeshFactory.h"
 #include "Bang/RenderFlags.h"
 #include "Bang/SceneManager.h"
+#include "Bang/DebugRenderer.h"
 #include "Bang/RenderFactory.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/RectTransform.h"
@@ -39,6 +40,11 @@ GEngine::GEngine()
 
 GEngine::~GEngine()
 {
+    if (m_debugRenderer)
+    {
+        GameObject::DestroyImmediate(m_debugRenderer);
+    }
+
     if (m_renderFactory)
     {
         delete m_renderFactory;
@@ -68,6 +74,7 @@ void GEngine::Init()
     m_texUnitManager = new TextureUnitManager();
 
     m_renderFactory = new RenderFactory();
+    m_debugRenderer = GameObject::Create<DebugRenderer>();
 
     p_windowPlaneMesh = MeshFactory::GetUIPlane();
     p_renderTextureToViewportSP.Set( ShaderProgramFactory::GetRenderTextureToViewport() );
@@ -159,7 +166,10 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
     Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
     for (Light *light : lights)
     {
-        if (!light->IsActive()) { continue; }
+        if (!light->IsActive())
+        {
+            continue;
+        }
 
         uint lightType = 0;
         Transform *lightTR = light->GetGameObject()->GetTransform();
@@ -177,7 +187,10 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
         m_currentForwardRenderingLightIntensities.PushBack(light->GetIntensity());
         m_currentForwardRenderingLightRanges.PushBack(range);
 
-        if (++i == 128) { break; }
+        if (++i == 128)
+        {
+            break;
+        }
     }
 }
 
@@ -232,6 +245,11 @@ GBuffer *GEngine::GetActiveGBuffer()
 {
     Camera *cam = GEngine::GetActiveRenderingCamera();
     return cam ? cam->GetGBuffer() : nullptr;
+}
+
+DebugRenderer *GEngine::GetDebugRenderer() const
+{
+    return m_debugRenderer;
 }
 
 RenderFactory *GEngine::GetRenderFactory() const

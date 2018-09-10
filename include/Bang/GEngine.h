@@ -23,6 +23,7 @@ FORWARD class GBuffer;
 FORWARD class Renderer;
 FORWARD class Texture2D;
 FORWARD class Framebuffer;
+FORWARD class RenderFactory;
 FORWARD class ShaderProgram;
 FORWARD class TextureCubeMap;
 FORWARD class ReflectionProbe;
@@ -71,6 +72,7 @@ public:
                                  int mipMapLevel = 0);
 
     static GBuffer *GetActiveGBuffer();
+    RenderFactory *GetRenderFactory() const;
     Material* GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
 
@@ -85,13 +87,15 @@ public:
 
 private:
     GL *m_gl = nullptr;
-    RH<ShaderProgram> m_renderSkySP;
-    RH<Material> m_replacementMaterial;
+    RenderFactory *m_renderFactory = nullptr;
+    TextureUnitManager *m_texUnitManager = nullptr;
+
+    RenderRoutine m_renderRoutine;
     StackAndValue<Camera*> p_renderingCameras;
     USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
-    TextureUnitManager *m_texUnitManager = nullptr;
-    RenderRoutine m_renderRoutine;
 
+    RH<ShaderProgram> m_renderSkySP;
+    RH<Material> m_replacementMaterial;
     RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
     Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
 

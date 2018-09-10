@@ -44,7 +44,6 @@ public:
 
 protected:
     Camera *p_camera = nullptr;
-    RenderFactory *m_gizmos = nullptr;
     DebugRenderer *p_debugRenderer = nullptr;
 
     Array<GameObject*> m_gameObjectsToDestroyDelayed;
@@ -53,7 +52,6 @@ protected:
     Scene();
     virtual ~Scene();
 
-    RenderFactory *GetGizmos() const;
     DebugRenderer *GetDebugRenderer() const;
 
 private:

@@ -22,6 +22,7 @@
 #include "Bang/MeshFactory.h"
 #include "Bang/RenderFlags.h"
 #include "Bang/SceneManager.h"
+#include "Bang/RenderFactory.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
@@ -38,6 +39,11 @@ GEngine::GEngine()
 
 GEngine::~GEngine()
 {
+    if (m_renderFactory)
+    {
+        delete m_renderFactory;
+    }
+
     if (m_texUnitManager)
     {
         delete m_texUnitManager;
@@ -60,6 +66,8 @@ void GEngine::Init()
     m_gl->Init();
 
     m_texUnitManager = new TextureUnitManager();
+
+    m_renderFactory = new RenderFactory();
 
     p_windowPlaneMesh = MeshFactory::GetUIPlane();
     p_renderTextureToViewportSP.Set( ShaderProgramFactory::GetRenderTextureToViewport() );
@@ -224,6 +232,11 @@ GBuffer *GEngine::GetActiveGBuffer()
 {
     Camera *cam = GEngine::GetActiveRenderingCamera();
     return cam ? cam->GetGBuffer() : nullptr;
+}
+
+RenderFactory *GEngine::GetRenderFactory() const
+{
+    return m_renderFactory;
 }
 
 void SetDrawBuffersToClearFromFlags(GBuffer *gbuffer, RenderFlags renderFlags)

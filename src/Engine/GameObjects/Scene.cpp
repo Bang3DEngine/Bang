@@ -18,7 +18,6 @@ USING_NAMESPACE_BANG
 
 Scene::Scene() : GameObject("Scene")
 {
-    m_gizmos = new RenderFactory();
     p_debugRenderer = GameObject::Create<DebugRenderer>();
 
     Physics::GetInstance()->RegisterScene(this);
@@ -26,7 +25,6 @@ Scene::Scene() : GameObject("Scene")
 
 Scene::~Scene()
 {
-    delete m_gizmos;
     GameObject::DestroyImmediate(p_debugRenderer);
 }
 
@@ -74,10 +72,6 @@ void Scene::DestroyDelayedElements()
     }
 }
 
-RenderFactory *Scene::GetGizmos() const
-{
-    return m_gizmos;
-}
 DebugRenderer *Scene::GetDebugRenderer() const
 {
     return p_debugRenderer;

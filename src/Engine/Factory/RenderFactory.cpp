@@ -32,8 +32,8 @@ USING_NAMESPACE_BANG
 
 RenderFactory::RenderFactory()
 {
-    m_gizmosGo = GameObjectFactory::CreateGameObject();
-    m_gizmosGo->SetName("Gizmos");
+    m_renderGo = GameObjectFactory::CreateGameObject();
+    m_renderGo->SetName("Gizmos");
 
     m_boxMesh = MeshFactory::GetCube();
     m_planeMesh = MeshFactory::GetUIPlane();
@@ -42,22 +42,22 @@ RenderFactory::RenderFactory()
                 ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                 EPATH("Shaders/GizmosOutline.frag")) );
 
-    m_lineRenderer = m_gizmosGo->AddComponent<LineRenderer>();
-    m_meshRenderer = m_gizmosGo->AddComponent<MeshRenderer>();
-    m_renderers    = m_gizmosGo->GetComponents<Renderer>();
+    m_lineRenderer = m_renderGo->AddComponent<LineRenderer>();
+    m_meshRenderer = m_renderGo->AddComponent<MeshRenderer>();
+    m_renderers    = m_renderGo->GetComponents<Renderer>();
 
     for (Renderer *rend : m_renderers)
     {
         rend->SetMaterial(MaterialFactory::GetGizmosUnLightedOverlay().Get());
     }
 
-    m_gizmosGo->Start();
-    m_gizmosGo->GetHideFlags().SetOn(HideFlag::DONT_SERIALIZE);
+    m_renderGo->Start();
+    m_renderGo->GetHideFlags().SetOn(HideFlag::DONT_SERIALIZE);
 }
 
 RenderFactory::~RenderFactory()
 {
-    GameObject::Destroy(m_gizmosGo);
+    GameObject::Destroy(m_renderGo);
 }
 
 void RenderFactory::RenderCustomMesh(Mesh *m,
@@ -458,7 +458,7 @@ void RenderFactory::RenderWireframeSphere(float radius,
             rf->m_meshRenderer->SetEnabled(true);
             rf->m_meshRenderer->SetMesh( rf->m_sphereMesh.Get() );
             RenderFactory::ApplyRenderParameters(rf->m_meshRenderer, paramsCpy);
-            RenderFactory::RenderOutline( rf->m_gizmosGo, paramsCpy );
+            RenderFactory::RenderOutline( rf->m_renderGo, paramsCpy );
 
             for (Renderer *r : rf->m_renderers)
             {
@@ -612,7 +612,7 @@ void RenderFactory::RenderPoint(const Vector3 &point,
 
 GameObject *RenderFactory::GetGameObject() const
 {
-    return m_gizmosGo;
+    return m_renderGo;
 }
 
 void RenderFactory::Render(Renderer *rend,
@@ -624,8 +624,11 @@ void RenderFactory::Render(Renderer *rend,
 
 RenderFactory* RenderFactory::GetInstance()
 {
-    Scene *scene = SceneManager::GetActiveScene();
-    return scene ? scene->GetGizmos() : nullptr;
+    if (GEngine *ge = GEngine::GetInstance())
+    {
+        return ge->GetRenderFactory();
+    }
+    return nullptr;
 }
 
 void RenderFactory::ApplyRenderParameters(Renderer *rend,

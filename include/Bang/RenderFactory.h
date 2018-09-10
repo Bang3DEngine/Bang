@@ -100,13 +100,12 @@ public:
     static RenderFactory *GetInstance();
 
 private:
-    GameObject *m_gizmosGo = nullptr;
+    GameObject *m_renderGo = nullptr;
 
     RH<Mesh> m_boxMesh;
     RH<Mesh> m_planeMesh;
     RH<Mesh> m_sphereMesh;
     RH<ShaderProgram> m_outlineShaderProgram;
-
 
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;
@@ -120,7 +119,7 @@ private:
     static void Render(Renderer *rend,
                        const RenderFactory::Parameters &params);
 
-    friend class Scene;
+    friend class GEngine;
 };
 
 NAMESPACE_BANG_END

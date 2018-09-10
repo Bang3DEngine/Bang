@@ -24,9 +24,19 @@ SkinnedMeshRenderer::~SkinnedMeshRenderer()
 }
 
 Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
-                                    GameObject *boneGameObject,
-                                    const Matrix4 &transformInBoneSpace) const
+                GameObject *boneGameObject,
+                const Matrix4 &transformInBoneSpace,
+                UMap<GameObject*, Matrix4> *boneTransformInRootSpaceCache) const
 {
+    ASSERT(boneTransformInRootSpaceCache);
+    {
+        auto it = boneTransformInRootSpaceCache->Find(boneGameObject);
+        if (it != boneTransformInRootSpaceCache->End())
+        {
+            return it->second;
+        }
+    }
+
     if (!boneGameObject || boneGameObject == GetRootBoneGameObject())
     {
         return Matrix4::Identity;
@@ -55,19 +65,22 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
     Matrix4 parentBoneSpaceToRootSpace = Matrix4::Identity;
     if (GetBoneGameObject(parentBoneGoName))
     {
-        parentBoneSpaceToRootSpace =
-                               GetBoneSpaceToRootSpaceMatrix(parentBoneGoName);
+        parentBoneSpaceToRootSpace = GetBoneSpaceToRootSpaceMatrix(parentBoneGoName);
     }
 
     Matrix4 parentBoneTransformInRootSpace =
-                    GetBoneTransformMatrixFor(parentBoneGo,
-                                              parentBoneGo->GetTransform()->
-                                              GetLocalToParentMatrix());
+                GetBoneTransformMatrixFor(parentBoneGo,
+                                          parentBoneGo->GetTransform()->
+                                          GetLocalToParentMatrix(),
+                                          boneTransformInRootSpaceCache);
 
     Matrix4 boneTransformInRootSpace = parentBoneTransformInRootSpace *
                                        parentBoneSpaceToRootSpace *
                                        transformInBoneSpace *
                                        rootSpaceToBoneSpace;
+
+    boneTransformInRootSpaceCache->Add(boneGameObject, boneTransformInRootSpace);
+
     return boneTransformInRootSpace;
 }
 
@@ -108,6 +121,7 @@ void SkinnedMeshRenderer::BindBoneMatrices()
 void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
 {
     Map<String, Matrix4> bonesMatrices;
+    UMap<GameObject*, Matrix4> bonesTransformsCache;
     for (const String &boneName : GetBonesNames())
     {
         if (GetActiveMesh())
@@ -117,8 +131,9 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
                 Matrix4 localToParent = boneGameObject->GetTransform()->
                                         GetLocalToParentMatrix();
                 Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
-                                                              boneGameObject,
-                                                              localToParent);
+                                                  boneGameObject,
+                                                  localToParent,
+                                                  &bonesTransformsCache);
                 bonesMatrices.Add(boneName, boneTransformMatrix);
             }
         }
@@ -140,15 +155,19 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatricesIfNeeded()
 
     if (updateBonesMatricesFromTransformMatrices)
     {
-        for (const String &boneName : GetBonesNames())
-        {
-            if (GameObject *go = GetBoneGameObject(boneName))
-            {
-                go->GetTransform()->FillFromMatrix(
-                                GetInitialTransformMatrixFor(boneName) );
-            }
-        }
         UpdateBonesMatricesFromTransformMatrices();
+    }
+}
+
+void SkinnedMeshRenderer::UpdateTransformMatricesFromInitialBonePosition()
+{
+    for (const String &boneName : GetBonesNames())
+    {
+        if (GameObject *go = GetBoneGameObject(boneName))
+        {
+            go->GetTransform()->FillFromMatrix(
+                            GetInitialTransformMatrixFor(boneName) );
+        }
     }
 }
 
@@ -169,8 +188,11 @@ void SkinnedMeshRenderer::SetRootBoneGameObjectName(
 {
     if (rootBoneGameObjectName != GetRootBoneGameObjectName())
     {
+        p_rootBoneGameObject = nullptr; // Reset cached root bone gameObject
         m_rootBoneGameObjectName = rootBoneGameObjectName;
         m_gameObjectGatherer->SetRoot( GetRootBoneGameObject() );
+        UpdateTransformMatricesFromInitialBonePosition();
+        UpdateBonesMatricesFromTransformMatrices();
     }
 }
 
@@ -236,9 +258,10 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
         {
             const String &boneName = pair.first;
             const Matrix4 &boneMatrix = pair.second;
-            if (mesh->GetBonesIndices().ContainsKey(boneName))
+            auto it = mesh->GetBonesIndices().Find(boneName);
+            if (it != mesh->GetBonesIndices().End())
             {
-                uint boneIdx = mesh->GetBonesIndices().Get(boneName);
+                uint boneIdx = it->second;
                 if (boneIdx < boneMatricesArray.Size())
                 {
                     boneMatricesArray[boneIdx] = boneMatrix;

@@ -15,7 +15,10 @@ void main()
 {
     if (B_HasAlbedoTexture)
     {
-        if (texture(B_AlbedoTexture, B_FIn_AlbedoUv).a < B_AlphaCutoff) { discard; }
+        if (texture(B_AlbedoTexture, B_FIn_AlbedoUv).a < B_AlphaCutoff)
+        {
+            discard;
+        }
     }
     fragColor = selectionColor;
 }

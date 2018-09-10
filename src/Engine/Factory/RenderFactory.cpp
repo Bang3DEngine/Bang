@@ -518,8 +518,8 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             GBuffer *gbuffer = GEngine::GetActiveGBuffer();
             if (gbuffer)
             {
-                sp->SetTexture2D("B_SceneDepthTexture",
-                                 gbuffer->GetSceneDepthStencilTexture(), false);
+                Texture2D *depthStencilTex = gbuffer->GetSceneDepthStencilTexture();
+                sp->SetTexture2D("B_SceneDepthTexture", depthStencilTex, false);
             }
 
             gbuffer->SetColorDrawBuffer();

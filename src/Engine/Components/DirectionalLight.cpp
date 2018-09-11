@@ -87,8 +87,11 @@ void DirectionalLight::RenderShadowMaps_()
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
-                                               false);
+        if (shadowCaster->IsEnabled(true))
+        {
+            GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
+                                                   false);
+        }
     }
 
     ge->PopActiveRenderingCamera();

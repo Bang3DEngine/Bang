@@ -105,49 +105,49 @@ AnimationWrapMode Animation::GetWrapMode() const
 template<class T>
 Array<Animation::KeyFrame<T>>
 GetConsecutiveKeyFrames(const Array<Animation::KeyFrame<T>> &keyFrames,
-                        AnimationWrapMode animationWrapMode,
-                        float durationInFrames,
-                        float timeInFrames_)
+                         float timeInFrames)
 {
-    if (durationInFrames > 0.0f)
+    const uint numKF = keyFrames.Size();
+    for (uint i = 0; i < numKF - 1; ++i)
     {
-        float timeInFrames = timeInFrames_;
-        switch (animationWrapMode)
+        const Animation::KeyFrame<T> &prevPosKF = keyFrames[i];
+        const Animation::KeyFrame<T> &nextPosKF = keyFrames[i + 1];
+        if (timeInFrames >= prevPosKF.timeInFrames &&
+            timeInFrames <= nextPosKF.timeInFrames)
         {
-            case AnimationWrapMode::CLAMP:
-                timeInFrames = Math::Clamp(timeInFrames, 0.0f, durationInFrames);
-            break;
-
-            case AnimationWrapMode::REPEAT:
-                timeInFrames = Math::Modf(timeInFrames, durationInFrames);
-            break;
-
-            case AnimationWrapMode::PING_PONG:
-            {
-                timeInFrames = Math::Modf(timeInFrames, durationInFrames);
-                int parity = SCAST<int>(timeInFrames / durationInFrames);
-                if ((parity % 2) == 1)
-                {
-                    timeInFrames = durationInFrames - timeInFrames;
-                }
-            }
-            break;
-        }
-
-
-        const uint numKF = keyFrames.Size();
-        for (uint i = 0; i < numKF - 1; ++i)
-        {
-            const Animation::KeyFrame<T> &prevPosKF = keyFrames[i];
-            const Animation::KeyFrame<T> &nextPosKF = keyFrames[i + 1];
-            if (timeInFrames >= prevPosKF.timeInFrames &&
-                timeInFrames <= nextPosKF.timeInFrames)
-            {
-                return {{prevPosKF, nextPosKF}};
-            }
+            return {{prevPosKF, nextPosKF}};
         }
     }
     return {{}};
+}
+
+float WrapTime(float time,
+               float totalDuration,
+               AnimationWrapMode animationWrapMode)
+{
+    float wrappedTime = -1.0f;
+    switch (animationWrapMode)
+    {
+        case AnimationWrapMode::CLAMP:
+            wrappedTime = Math::Clamp(time, 0.0f, totalDuration);
+        break;
+
+        case AnimationWrapMode::REPEAT:
+            wrappedTime = Math::FModAbs(time, totalDuration);
+        break;
+
+        case AnimationWrapMode::PING_PONG:
+        {
+            wrappedTime = Math::FModAbs(time, totalDuration);
+            int parity = SCAST<int>(wrappedTime / totalDuration);
+            if ((parity % 2) == 1)
+            {
+                wrappedTime = totalDuration - wrappedTime;
+            }
+        }
+        break;
+    }
+    return wrappedTime;
 }
 
 Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs) const
@@ -158,7 +158,10 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         return bonesMatrices;
     }
 
-    float timeInFrames = timeSecs * GetFramesPerSecond();
+    float timeInFrames = (timeSecs * GetFramesPerSecond());
+    timeInFrames = WrapTime(timeInFrames,
+                            GetDurationInFrames(),
+                            GetWrapMode());
 
     Map<String, Matrix4> bonesPositionMatrices;
     for (const auto &it : GetBoneNameToPositionKeyFrames())
@@ -169,10 +172,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         bonesMatrices.Add(boneName, Matrix4::Identity);
 
         Array< KeyFrame<Vector3> > positionInterpKeyFrames =
-                        GetConsecutiveKeyFrames(posKeyFrames,
-                                                GetWrapMode(),
-                                                GetDurationInFrames(),
-                                                timeInFrames);
+                        GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
 
         if (positionInterpKeyFrames.Size() == 2)
         {
@@ -204,10 +204,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         bonesMatrices.Add(boneName, Matrix4::Identity);
 
         Array< KeyFrame<Quaternion> > rotationInterpKeyFrames =
-                        GetConsecutiveKeyFrames(rotKeyFrames,
-                                                GetWrapMode(),
-                                                GetDurationInFrames(),
-                                                timeInFrames);
+                        GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
 
         if (rotationInterpKeyFrames.Size() == 2)
         {

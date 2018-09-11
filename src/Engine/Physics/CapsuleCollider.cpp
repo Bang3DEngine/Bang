@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 
 CapsuleCollider::CapsuleCollider()
 {
+    Debug_Log("Created CapsuleCollider");
     SetPhysicsObjectType( PhysicsObject::Type::CAPSULE_COLLIDER );
 }
 
@@ -134,8 +135,10 @@ void CapsuleCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
+    Debug_Log("UpdatePxShape");
     if (GetPxShape())
     {
+        Debug_Log("We are in :)");
         ASSERT(GetPxRigidBody());
         ASSERT(GetPxShape());
 

@@ -207,6 +207,7 @@ void Physics::RegisterScene(Scene *scene)
 {
     ASSERT(scene);
 
+    Debug_Log("Registered scene " << scene);
     PxSceneContainer *pxSceneContainer = new PxSceneContainer(scene);
     m_sceneToPxSceneContainer.Add(scene, pxSceneContainer);
     scene->EventEmitter<IEventsDestroy>::RegisterListener(this);

@@ -118,15 +118,18 @@ void PointLight::RenderShadowMaps_()
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        AABox shadowCasterAABoxWorld = shadowCaster->GetAABBoxWorld(false);
-        Vector3 closestPointInAABox = shadowCasterAABoxWorld.
-                                           GetClosestPointInAABB(pointLightPos);
-        bool isCompletelyOutside = Vector3::Distance(closestPointInAABox,
-                                                     pointLightPos) > rangeLimit;
-        if (!isCompletelyOutside)
+        if (shadowCaster->IsEnabled(true))
         {
-            GEngine::GetInstance()->RenderWithPass(shadowCaster,
-                                                 RenderPass::SCENE, false);
+            AABox shadowCasterAABoxWorld = shadowCaster->GetAABBoxWorld(false);
+            Vector3 closestPointInAABox = shadowCasterAABoxWorld.
+                                               GetClosestPointInAABB(pointLightPos);
+            bool isCompletelyOutside = Vector3::Distance(closestPointInAABox,
+                                                         pointLightPos) > rangeLimit;
+            if (!isCompletelyOutside)
+            {
+                GEngine::GetInstance()->RenderWithPass(shadowCaster,
+                                                     RenderPass::SCENE, false);
+            }
         }
     }
     ge->PopActiveRenderingCamera();

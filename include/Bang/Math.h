@@ -215,9 +215,18 @@ public:
     }
 
     template<class T>
-    static constexpr T Modf(const T &value, const T &length)
+    static constexpr T FMod(const T &value, const T &length)
     {
         return std::fmod(value, length);
+    }
+
+    template<class T>
+    static constexpr T FModAbs(const T &value, const T &length)
+    {
+        return (value < 0 ?
+                  Math::FMod(Math::FMod(value, length) + length, length) :
+                  Math::FMod(value, length)
+               );
     }
 
     template<class T>

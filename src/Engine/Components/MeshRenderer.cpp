@@ -35,6 +35,7 @@ void MeshRenderer::SetMesh(Mesh *m)
         p_mesh.Set(nullptr);
     }
 }
+
 Mesh* MeshRenderer::GetMesh() const
 {
     if (!p_mesh)
@@ -46,7 +47,11 @@ Mesh* MeshRenderer::GetMesh() const
     }
     return p_mesh.Get();
 }
-Mesh *MeshRenderer::GetSharedMesh() const { return p_sharedMesh.Get(); }
+
+Mesh *MeshRenderer::GetSharedMesh() const
+{
+    return p_sharedMesh.Get();
+}
 
 void MeshRenderer::Bind()
 {

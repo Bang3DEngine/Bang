@@ -21,6 +21,9 @@ public:
     const Array<Vector3>& GetPoints() const;
     virtual AABox GetAABBox() const override;
 
+    // Renderer
+    void Bind() override;
+
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 

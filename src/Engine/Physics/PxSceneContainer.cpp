@@ -67,6 +67,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
     pxScene->setSimulationEventCallback(this);
 
     m_physicsObjectGatherer = new ObjectGatherer<PhysicsObject, true>();
+    Debug_Log("m_physicsObjectGatherer created" << scene);
 
     p_scene = scene;
     p_pxScene = pxScene;
@@ -472,6 +473,7 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     GameObject *phObjGo = Physics::GetGameObjectFromPhysicsObject(phObj);
     ASSERT(phObjGo);
 
+    Debug_Log("Gathered " << phObj << ", " << phObj->GetPhysicsObjectType());
     SynchronizePxActorCreationReleasingWithPhysX(phObjGo);
 }
 

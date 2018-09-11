@@ -7,6 +7,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
@@ -29,9 +30,11 @@ void LineRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    if (p_mesh.Get()->GetNumVertices() <= 0) { return; }
-    GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(),
-               p_mesh.Get()->GetNumVertices());
+    if (p_mesh.Get()->GetNumVertices() > 0)
+    {
+        GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(),
+                   p_mesh.Get()->GetNumVertices());
+    }
 }
 
 void LineRenderer::SetPoint(int i, const Vector3 &point)
@@ -39,8 +42,14 @@ void LineRenderer::SetPoint(int i, const Vector3 &point)
     Array<Vector3> newPoints = m_points;
     ASSERT(i >= 0 && i <= newPoints.Size());
 
-    if (i == newPoints.Size()) { newPoints.PushBack(point); }
-    else { newPoints[i] = point; }
+    if (i == newPoints.Size())
+    {
+        newPoints.PushBack(point);
+    }
+    else
+    {
+        newPoints[i] = point;
+    }
 
     SetPoints(newPoints);
 }
@@ -58,7 +67,11 @@ void LineRenderer::SetPoints(const Array<Vector3> &points)
     }
 }
 
-const Array<Vector3> &LineRenderer::GetPoints() const { return m_points; }
+const Array<Vector3> &LineRenderer::GetPoints() const
+{
+    return m_points;
+}
+
 AABox LineRenderer::GetAABBox() const
 {
     if (m_points.IsEmpty())
@@ -79,6 +92,19 @@ AABox LineRenderer::GetAABBox() const
     minp -= Vector3(strokeAdd);
     maxp += Vector3(strokeAdd);
     return AABox(minp, maxp);
+}
+
+void LineRenderer::Bind()
+{
+    Renderer::Bind();
+    if (Material *mat = GetActiveMaterial())
+    {
+        if (ShaderProgram *sp = mat->GetShaderProgram())
+        {
+            sp->Bind();
+            sp->SetBool("B_HasBoneAnimations", false);
+        }
+    }
 }
 
 void LineRenderer::CloneInto(ICloneable *clone) const

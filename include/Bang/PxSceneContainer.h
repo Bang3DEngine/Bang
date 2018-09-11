@@ -34,7 +34,6 @@ public:
     void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
 
     physx::PxActor* GetAncestorOrThisPxActor(GameObject *go);
-    void SynchronizePxActorCreationReleasingWithPhysX(GameObject *go);
 
 private:
     Time::TimeT m_lastStepTimeMillis = 0;
@@ -60,6 +59,8 @@ private:
     void onAdvance(const physx::PxRigidBody * const * bodyBuffer,
                    const physx::PxTransform* poseBuffer,
                    const physx::PxU32 count) override;
+
+    static physx::PxMaterial *GetDefaultPxMaterial();
 
     // IEventsObjectGatherer
     virtual void OnObjectGathered(PhysicsObject *phObj) override;

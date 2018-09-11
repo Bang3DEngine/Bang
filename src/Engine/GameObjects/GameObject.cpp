@@ -228,16 +228,16 @@ void GameObject::RemoveComponent(Component *component)
 void GameObject::OnEnabled(Object *object)
 {
     Object::OnEnabled(object);
-    PropagateToArray(&EventListener<IObjectEvents>::OnEnabled,
-                    GetComponents<EventListener<IObjectEvents>>(), object);
-    PropagateToChildren(&EventListener<IObjectEvents>::OnEnabled, object);
+    PropagateToArray(&EventListener<IEventsObject>::OnEnabled,
+                    GetComponents<EventListener<IEventsObject>>(), object);
+    PropagateToChildren(&EventListener<IEventsObject>::OnEnabled, object);
 }
 void GameObject::OnDisabled(Object *object)
 {
     Object::OnDisabled(object);
-    PropagateToArray(&EventListener<IObjectEvents>::OnDisabled,
-                    GetComponents<EventListener<IObjectEvents>>(), object);
-    PropagateToChildren(&EventListener<IObjectEvents>::OnDisabled, object);
+    PropagateToArray(&EventListener<IEventsObject>::OnDisabled,
+                    GetComponents<EventListener<IEventsObject>>(), object);
+    PropagateToChildren(&EventListener<IEventsObject>::OnDisabled, object);
 }
 
 void GameObject::UpdateChildrenIndicesForAdd(int addIndex)

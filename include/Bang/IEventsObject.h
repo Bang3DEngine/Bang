@@ -7,9 +7,9 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Object;
 
-class IObjectEvents
+class IEventsObject
 {
-    IEVENTS(IObjectEvents);
+    IEVENTS(IEventsObject);
 
 public:
     virtual void OnStarted(Object *obj)

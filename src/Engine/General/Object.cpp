@@ -28,8 +28,8 @@ void Object::Start()
     {
         OnStart();
         m_started = true;
-        EventEmitter<IObjectEvents>::
-                PropagateToListeners(&IObjectEvents::OnStarted, this);
+        EventEmitter<IEventsObject>::
+                PropagateToListeners(&IEventsObject::OnStarted, this);
     }
 }
 
@@ -37,13 +37,13 @@ void Object::OnPreStart() {}
 void Object::OnStart() {}
 void Object::OnEnabled(Object *object)
 {
-    EventEmitter<IObjectEvents>::
-            PropagateToListeners(&IObjectEvents::OnEnabled, object);
+    EventEmitter<IEventsObject>::
+            PropagateToListeners(&IEventsObject::OnEnabled, object);
 }
 void Object::OnDisabled(Object *object)
 {
-    EventEmitter<IObjectEvents>::
-            PropagateToListeners(&IObjectEvents::OnDisabled, object);
+    EventEmitter<IEventsObject>::
+            PropagateToListeners(&IEventsObject::OnDisabled, object);
 }
 void Object::OnDestroy() {}
 
@@ -72,14 +72,14 @@ void Object::SetEnabled(bool enabled)
         if (IsEnabled())
         {
             OnEnabled(this);
-            EventEmitter<IObjectEvents>::PropagateToListeners(
-                        &IObjectEvents::OnEnabled, this);
+            EventEmitter<IEventsObject>::PropagateToListeners(
+                        &IEventsObject::OnEnabled, this);
         }
         else
         {
             OnDisabled(this);
-            EventEmitter<IObjectEvents>::PropagateToListeners(
-                        &IObjectEvents::OnDisabled, this);
+            EventEmitter<IEventsObject>::PropagateToListeners(
+                        &IEventsObject::OnDisabled, this);
         }
     }
 }

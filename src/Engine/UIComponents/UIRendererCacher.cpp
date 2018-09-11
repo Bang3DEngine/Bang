@@ -143,7 +143,7 @@ void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
             child->GetTransform()->EventEmitter<IEventsTransform>::RegisterListener(this);
         }
 
-        child->EventEmitter<IObjectEvents>::RegisterListener(this);
+        child->EventEmitter<IEventsObject>::RegisterListener(this);
         child->EventEmitter<IEventsChildren>::RegisterListener(this);
         child->EventEmitter<IEventsGameObjectVisibilityChanged>::RegisterListener(this);
     }

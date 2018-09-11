@@ -762,10 +762,10 @@ void UICanvas::RegisterForEvents(IFocusable *focusable)
         destroyable->RegisterListener(this);
     }
 
-    if (EventEmitter<IObjectEvents> *focusableObj =
-                        DCAST<EventEmitter<IObjectEvents>*>(focusable))
+    if (EventEmitter<IEventsObject> *focusableObj =
+                        DCAST<EventEmitter<IEventsObject>*>(focusable))
     {
-        focusableObj->EventEmitter<IObjectEvents>::RegisterListener(this);
+        focusableObj->EventEmitter<IEventsObject>::RegisterListener(this);
     }
 }
 
@@ -807,10 +807,10 @@ void UICanvas::UnRegisterForEvents(IFocusable *focusable)
         }
     }
 
-    if (EventEmitter<IObjectEvents> *focusableObj =
-            DCAST<EventEmitter<IObjectEvents>*>(focusable))
+    if (EventEmitter<IEventsObject> *focusableObj =
+            DCAST<EventEmitter<IEventsObject>*>(focusable))
     {
-        focusableObj->EventEmitter<IObjectEvents>::UnRegisterListener(this);
+        focusableObj->EventEmitter<IEventsObject>::UnRegisterListener(this);
     }
 }
 

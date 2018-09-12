@@ -82,7 +82,7 @@ template<class T>
 void EventEmitter<T>::PropagateToListeners_(
               std::function<void(EventListener<T>*)> listenerCall) const
 {
-    if (IsEmittingEvents())
+    if (GetListeners().Size() > 0 && IsEmittingEvents())
     {
         ++m_iterationDepth;
 

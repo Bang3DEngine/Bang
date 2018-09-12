@@ -69,7 +69,10 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     if (addAnimator && modelScene.animations.Size() >= 1)
     {
         Animator *animator = gameObject->AddComponent<Animator>(1);
-        animator->SetAnimation( modelScene.animations[0].Get() );
+        for (const RH<Animation> &animationRH : modelScene.animations)
+        {
+            animator->AddAnimation( animationRH.Get() );
+        }
     }
 
     // Add children

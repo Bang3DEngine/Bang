@@ -23,6 +23,7 @@ public:
     static Texture2D* GetInnerShadow();
     static Texture2D* GetOuterShadow();
     static Texture2D* GetRightArrowIcon();
+    static Texture2D* GetUpArrowIcon();
     static Texture2D* GetDownArrowIcon();
     static Texture2D* GetCheckIcon();
     static Texture2D* GetAudioIcon();

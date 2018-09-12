@@ -57,6 +57,11 @@ Texture2D* TextureFactory::GetRightArrowIcon()
     return GetTexture2D("RightArrow.png");
 }
 
+Texture2D *TextureFactory::GetUpArrowIcon()
+{
+    return GetTexture2D("UpArrow.png");
+}
+
 Texture2D* TextureFactory::GetDownArrowIcon()
 {
     return GetTexture2D("DownArrow.png");

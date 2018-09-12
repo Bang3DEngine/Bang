@@ -25,13 +25,23 @@ public:
     void OnUpdate() override;
     void OnRender(RenderPass rp) override;
 
-    void SetAnimation(Animation *animation);
+    void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
+    void RemoveAnimation(Animation *animation);
+    void RemoveAnimation(uint animationIndex);
+    void SetAnimation(uint animationIndex, Animation *animation);
+    void ChangeCurrentAnimation(uint animationIndex);
+    void ClearCurrentAnimation();
+
+    void SetPlayOnStart(bool playOnStart);
+
     void Play();
     void Stop();
     void Pause();
 
     bool IsPlaying() const;
-    Animation* GetAnimation() const;
+    bool GetPlayOnStart() const;
+    Animation* GetAnimation(uint animationIndex) const;
+    const Array< RH<Animation> >& GetAnimations() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -45,8 +55,12 @@ private:
     float m_animationTimeSeconds = 0.0f;
     Time::TimeT m_prevFrameTimeMillis = 0;
 
-    RH<Animation> p_animation;
+    Array< RH<Animation> > p_animations;
+    uint m_currentAnimationIndex = 0;
+    bool m_playOnStart = true;
 
+    uint GetCurrentAnimationIndex() const;
+    Animation *GetCurrentAnimation() const;
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                 const Map<String, Matrix4> &boneAnimMatrices);
 };

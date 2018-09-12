@@ -13,6 +13,7 @@
 #include "Bang/Physics.h"
 #include "Bang/Library.h"
 #include "Bang/Physics.h"
+#include "Bang/Animator.h"
 #include "Bang/Renderer.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"

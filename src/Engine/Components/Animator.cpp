@@ -24,9 +24,13 @@ void Animator::OnStart()
 
     m_prevFrameTimeMillis = Time::GetNow_Millis();
     m_animationTimeSeconds = 0.0f;
+
+    if (GetPlayOnStart())
+    {
+        Play();
+    }
 }
 
-#include "Bang/Input.h"
 void Animator::OnUpdate()
 {
     Component::OnUpdate();
@@ -34,24 +38,13 @@ void Animator::OnUpdate()
     Time::TimeT passedTimeMillis = (Time::GetNow_Millis() - m_prevFrameTimeMillis);
     m_prevFrameTimeMillis = Time::GetNow_Millis();
 
-    if (Input::GetKeyDown(Key::X))
-    {
-        if (IsPlaying())
-        {
-            Stop();
-        }
-        else
-        {
-            Play();
-        }
-    }
-
-    if (GetAnimation() && IsPlaying())
+    if (GetCurrentAnimation() && IsPlaying())
     {
         double passedTimeSeconds = (passedTimeMillis / double(1e3));
-        m_animationTimeSeconds += passedTimeSeconds * GetAnimation()->GetSpeed();
+        m_animationTimeSeconds += passedTimeSeconds *
+                                  GetCurrentAnimation()->GetSpeed();
 
-        Map< String, Matrix4 > boneNameToCurrentMatrices = GetAnimation()->
+        Map< String, Matrix4 > boneNameToCurrentMatrices = GetCurrentAnimation()->
                  GetBoneAnimationMatricesForSecond(m_animationTimeSeconds);
         SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
     }
@@ -60,6 +53,64 @@ void Animator::OnUpdate()
 void Animator::OnRender(RenderPass rp)
 {
     Component::OnRender(rp);
+}
+
+void Animator::AddAnimation(Animation *animation, uint index_)
+{
+    RH<Animation> animationRH(animation);
+
+    uint index = Math::Clamp(index_, 0, GetAnimations().Size());
+    p_animations.Insert(animationRH, index);
+
+    const bool setCurrentAnimation = (GetAnimations().Size() == 1);
+    if (setCurrentAnimation)
+    {
+        ChangeCurrentAnimation(0);
+    }
+}
+
+void Animator::RemoveAnimation(Animation *animation)
+{
+    uint index = SCAST<uint>(GetAnimations().IndexOf(RH<Animation>(animation)));
+    if (index != -1u)
+    {
+        RemoveAnimation(index);
+    }
+}
+
+void Animator::RemoveAnimation(uint animationIndex)
+{
+    ASSERT(animationIndex < GetAnimations().Size());
+    if (GetCurrentAnimationIndex() == animationIndex)
+    {
+        ClearCurrentAnimation();
+    }
+    p_animations.RemoveByIndex(animationIndex);
+}
+
+void Animator::SetAnimation(uint animationIndex, Animation *animation)
+{
+    ASSERT(animationIndex < GetAnimations().Size());
+    p_animations[animationIndex] = RH<Animation>(animation);
+}
+
+void Animator::ChangeCurrentAnimation(uint animationIndex)
+{
+    ASSERT(animationIndex < GetAnimations().Size());
+    m_currentAnimationIndex = animationIndex;
+}
+
+void Animator::ClearCurrentAnimation()
+{
+    m_currentAnimationIndex = -1u;
+}
+
+void Animator::SetPlayOnStart(bool playOnStart)
+{
+    if (playOnStart != GetPlayOnStart())
+    {
+        m_playOnStart = playOnStart;
+    }
 }
 
 void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
@@ -88,15 +139,6 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
     }
 }
 
-void Animator::SetAnimation(Animation *animation)
-{
-    if (animation != GetAnimation())
-    {
-        Stop();
-        p_animation.Set(animation);
-    }
-}
-
 void Animator::Play()
 {
     m_playing = true;
@@ -118,27 +160,47 @@ bool Animator::IsPlaying() const
     return m_playing;
 }
 
-Animation *Animator::GetAnimation() const
+bool Animator::GetPlayOnStart() const
 {
-    return p_animation.Get();
+    return m_playOnStart;
+}
+
+Animation* Animator::GetAnimation(uint animationIndex) const
+{
+    ASSERT(animationIndex < GetAnimations().Size());
+    return p_animations[animationIndex].Get();
+}
+
+const Array<RH<Animation> > &Animator::GetAnimations() const
+{
+    return p_animations;
 }
 
 void Animator::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
     Animator *animatorClone = SCAST<Animator*>(clone);
-    animatorClone->SetAnimation( GetAnimation() );
+    for (const RH<Animation> &animationRH : GetAnimations())
+    {
+        animatorClone->AddAnimation( animationRH.Get() );
+    }
 }
 
 void Animator::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Animation"))
+    Array<GUID> animationGUIDs = metaNode.GetArray<GUID>("Animations");
+    for (const GUID &animationGUID : animationGUIDs)
     {
-        RH<Animation> animation = Resources::Load<Animation>(
-                                             metaNode.Get<GUID>("Animation") );
-        SetAnimation( animation.Get() );
+        RH<Animation> animationRH = Resources::Load<Animation>(animationGUID);
+        AddAnimation(animationRH.Get());
+    }
+
+
+    if (metaNode.Contains("PlayOnStart"))
+    {
+        SetPlayOnStart( metaNode.Get<bool>("PlayOnStart") );
     }
 }
 
@@ -146,7 +208,28 @@ void Animator::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    metaNode->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
-                                                GUID::Empty());
+    Array<GUID> animationGUIDs;
+    for (const RH<Animation> &animationRH : GetAnimations())
+    {
+        Animation *animation = animationRH.Get();
+        animationGUIDs.PushBack( animation ? animation->GetGUID() : GUID::Empty());
+    }
+    metaNode->SetArray("Animations", animationGUIDs);
+
+    metaNode->Set("PlayOnStart", GetPlayOnStart());
+}
+
+uint Animator::GetCurrentAnimationIndex() const
+{
+    return m_currentAnimationIndex;
+}
+
+Animation *Animator::GetCurrentAnimation() const
+{
+    if (GetCurrentAnimationIndex() < GetAnimations().Size())
+    {
+        return GetAnimations()[m_currentAnimationIndex].Get();
+    }
+    return nullptr;
 }
 

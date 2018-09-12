@@ -340,8 +340,15 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
     const Vector2i size(15);
     UIButton *btn = GameObjectFactory::CreateUIButton();
 
-    if (!text.IsEmpty()) { btn->GetText()->SetContent(text); }
-    if (icon) { btn->SetIcon(icon, size, 5); }
+    if (!text.IsEmpty())
+    {
+        btn->GetText()->SetContent(text);
+    }
+
+    if (icon)
+    {
+        btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
+    }
 
     constexpr int BigPadding    = 10;
     constexpr int MediumPadding = 6;
@@ -358,7 +365,7 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
-        btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
+        btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
     else if (text.IsEmpty() && icon)
     {

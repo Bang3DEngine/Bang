@@ -82,6 +82,11 @@ RH<Resource> Resources::Load_(std::function<Resource*()> creator,
         return RH<Resource>(nullptr);
     }
 
+    if (filepath.IsEmpty())
+    {
+        return RH<Resource>(nullptr);
+    }
+
     if (!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
     {
         Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");

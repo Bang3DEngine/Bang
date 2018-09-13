@@ -129,7 +129,6 @@ BehaviourManager *BehaviourManager::GetActive()
 void BehaviourManager::SetBehavioursLibrary(const Path &libPath)
 {
     Library *behavioursLib = new Library(libPath);
-    behavioursLib->Load();
     SetBehavioursLibrary(behavioursLib);
 }
 
@@ -150,7 +149,7 @@ void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
             // Debug_DLog("Going to load BehavioursLibrary " <<
             //            GetBehavioursLibrary()->GetLibraryPath());
 
-            if(!GetBehavioursLibrary()->Load())
+            if (!GetBehavioursLibrary()->Load())
             {
                 Debug_Error(GetBehavioursLibrary()->GetErrorString());
             }

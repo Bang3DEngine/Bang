@@ -12,6 +12,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Debug.h"
+#include "Bang/Mutex.h"
 #include "Bang/Thread.h"
 
 USING_NAMESPACE_BANG
@@ -43,8 +44,13 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
     // Debug_DLog("Executing command: " << command << " " <<
     //            String::Join(extraArgs, " "));
     // Debug_DLog("LD_PRELOAD: " << std::getenv("LD_PRELOAD"));
+    static Mutex mutex;
+    while (!mutex.TryLock())
+    {
+    }
     char ldPreloadEmpty[] = "LD_PRELOAD=";
     putenv(ldPreloadEmpty);
+    mutex.UnLock();
 
     m_oldFileDescriptors[IN]  = dup(Channel::STDIN);
     m_oldFileDescriptors[OUT] = dup(Channel::STDOUT);

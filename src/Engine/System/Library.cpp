@@ -22,7 +22,8 @@ bool Library::Load()
 {
     ClearError();
     m_libHandle = dlopen(GetLibraryPath().GetAbsolute().ToCString(),
-                         RTLD_NOW | RTLD_GLOBAL);
+                         // RTLD_NOW | RTLD_GLOBAL);
+                         RTLD_NOW | RTLD_LOCAL);
     FetchError();
     return !TheresError();
 }
@@ -30,7 +31,10 @@ bool Library::Load()
 bool Library::UnLoad()
 {
     ClearError();
-    if ( IsLoaded() ) { dlclose(m_libHandle); }
+    if ( IsLoaded() )
+    {
+        dlclose(m_libHandle);
+    }
     FetchError();
     return !TheresError();
 }

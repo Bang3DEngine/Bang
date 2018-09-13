@@ -114,6 +114,16 @@ void FileTracker::CheckFiles()
     }
 }
 
+Time::TimeT FileTracker::GetModificationTime(const Path &path) const
+{
+    auto it = m_pathsToTrackToModificationTime.Find(path);
+    if (it != m_pathsToTrackToModificationTime.End())
+    {
+        return it->second;
+    }
+    return 0;
+}
+
 const USet<Path> &FileTracker::GetTrackedPaths() const
 {
     return m_trackedPaths;

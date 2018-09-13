@@ -2,6 +2,7 @@
 #define BEHAVIOURCONTAINER_H
 
 #include "Bang/Path.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Component.h"
 
 FORWARD NAMESPACE_BANG_BEGIN
@@ -23,12 +24,15 @@ public:
 
     String GetBehaviourName() const;
     const Path& GetSourceFilepath() const;
+    const MetaNode& GetInitializationMeta() const;
 
     void TryToSubstituteByBehaviourInstance();
+    void SetInitializationMeta(const MetaNode &metaNode);
     void SubstituteByBehaviourInstance(Library *behavioursLibrary);
 
 private:
     Path m_sourceFilepath;
+    MetaNode m_initializationMeta;
     Behaviour *p_behaviour = nullptr;
 
     BehaviourContainer();

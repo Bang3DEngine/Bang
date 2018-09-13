@@ -5,6 +5,7 @@
 #include "Bang/Extensions.h"
 #include "Bang/Application.h"
 #include "Bang/BehaviourManager.h"
+#include "Bang/BPReflectedStruct.h"
 
 USING_NAMESPACE_BANG
 
@@ -15,4 +16,10 @@ Behaviour::Behaviour()
 
 Behaviour::~Behaviour()
 {
+}
+
+const BPReflectedStruct& Behaviour::GetReflectionInfo() const
+{
+    static BPReflectedStruct EmptyReflStruct;
+    return EmptyReflStruct;
 }

@@ -65,7 +65,7 @@ void BPReflectedVariable::FromString(
         std::cerr << "BP Error: Expected a variable name" << std::endl;
         return;
     }
-    outProperty->m_variableName = String(nameBegin, nameEnd);
+    outProperty->m_variableCodeName = String(nameBegin, nameEnd);
 
     String::Iterator assignBegin = std::find(nameEnd, propEnd, '=');
     if (assignBegin != propEnd)
@@ -83,35 +83,20 @@ String BPReflectedVariable::GetInitializationCode(const String &rvarInitVarName)
     String src = R"VERBATIM(
             RVAR_VARIABLE_NAME.SetName("RVAR_NAME");
             RVAR_VARIABLE_NAME.SetVariableType("VARIABLE_TYPE");
-            RVAR_VARIABLE_NAME.SetVariableName("VARIABLE_NAME");
+            RVAR_VARIABLE_NAME.SetVariableCodeName("VARIABLE_CODE_NAME");
             RVAR_VARIABLE_NAME.SetVariableInitValue("VARIABLE_INIT_VALUE");
     )VERBATIM";
     src.ReplaceInSitu("RVAR_VARIABLE_NAME",  rvarInitVarName);
     src.ReplaceInSitu("RVAR_NAME",           GetName());
     src.ReplaceInSitu("VARIABLE_TYPE",       GetVariableType());
-    src.ReplaceInSitu("VARIABLE_NAME",       GetVariableName());
+    src.ReplaceInSitu("VARIABLE_CODE_NAME",  GetVariableCodeName());
     src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetVariableInitValue());
     return src;
 }
 
-bool BPReflectedVariable::IsInt() const
+bool BPReflectedVariable::IsOfType(const Array<String> &varTypeArray) const
 {
-    return BP::VarTypeInt.Contains(GetVariableType());
-}
-
-bool BPReflectedVariable::IsFloat() const
-{
-    return BP::VarTypeFloat.Contains(GetVariableType());
-}
-
-bool BPReflectedVariable::IsDouble() const
-{
-    return BP::VarTypeDouble.Contains(GetVariableType());
-}
-
-bool BPReflectedVariable::IsString() const
-{
-    return BP::VarTypeString.Contains(GetVariableType());
+    return varTypeArray.Contains( GetVariableType() );
 }
 
 void BPReflectedVariable::SetName(const String &name)
@@ -124,9 +109,9 @@ void BPReflectedVariable::SetVariableType(const String &varType)
     m_variableType = varType;
 }
 
-void BPReflectedVariable::SetVariableName(const String &varName)
+void BPReflectedVariable::SetVariableCodeName(const String &varCodeName)
 {
-    m_variableName = varName;
+    m_variableCodeName = varCodeName;
 }
 
 void BPReflectedVariable::SetVariableInitValue(const String &initValue)
@@ -144,9 +129,9 @@ const String &BPReflectedVariable::GetVariableType() const
     return m_variableType;
 }
 
-const String &BPReflectedVariable::GetVariableName() const
+const String &BPReflectedVariable::GetVariableCodeName() const
 {
-    return m_variableName;
+    return m_variableCodeName;
 }
 
 const String &BPReflectedVariable::GetVariableInitValue() const
@@ -158,7 +143,7 @@ String BPReflectedVariable::ToString() const
 {
     return "(" + GetName() + ", " +
                  GetVariableType() + ", " +
-                 GetVariableName() + " = " +
+                 GetVariableCodeName() + " = " +
                  GetVariableInitValue() +
             ")";
 }

@@ -3,6 +3,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/String.h"
+#include "Bang/BPReflectedStruct.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -13,6 +14,8 @@ public:
     static void Preprocess(const String &source,
                            String *reflectionHeaderSource,
                            bool *preprocessedSomething);
+    static Array<BPReflectedStruct> GetReflectStructs(const Path &sourcePath);
+    static Array<BPReflectedStruct> GetReflectStructs(const String &source);
 
 public:
     const static Array<String> VarTypeInt;

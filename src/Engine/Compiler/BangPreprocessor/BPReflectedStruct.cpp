@@ -121,7 +121,7 @@ String BPReflectedStruct::GetInitializationCode() const
 String BPReflectedStruct::GetGetReflectionInfoCode() const
 {
     String src = R"VERBATIM(
-     const BPReflectedStruct& GetReflectionInfo() const override
+     const BPReflectedStruct& GetReflectionInfo() const
      {
         static BPReflectedStruct REFLECT_VAR_NAME;
         static bool inited = false;
@@ -142,7 +142,7 @@ String BPReflectedStruct::GetGetReflectionInfoCode() const
 String BPReflectedStruct::GetWriteReflectionCode() const
 {
     String src = R"VERBATIM(
-        void WriteReflection(MetaNode *metaNode) const override
+        void ExportMeta(MetaNode *metaNode) const override
         {
             VARS_SETS
         }
@@ -159,7 +159,7 @@ String BPReflectedStruct::GetWriteReflectionCode() const
         if (varType.IsEmpty()) { continue; }
         varSetSrc.ReplaceInSitu("SET_FUNC", "Set<" + varType + ">");
         varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varSetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableName());
+        varSetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableCodeName());
 
         varsSetsSrc += varSetSrc;
     }
@@ -170,7 +170,7 @@ String BPReflectedStruct::GetWriteReflectionCode() const
 String BPReflectedStruct::GetReadReflectionCode() const
 {
     String src = R"VERBATIM(
-        void ReadReflection(const MetaNode &metaNode) override
+        void ImportMeta(const MetaNode &metaNode) override
         {
             VARS_GETS
         }
@@ -187,7 +187,7 @@ String BPReflectedStruct::GetReadReflectionCode() const
         if (varType.IsEmpty()) { continue; }
         varGetSrc.ReplaceInSitu("GET_FUNC", "Get<" + varType + ">");
         varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varGetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableName());
+        varGetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableCodeName());
 
         varsGetsSrc += varGetSrc;
     }

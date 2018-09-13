@@ -135,22 +135,25 @@ void BehaviourManager::SetBehavioursLibrary(const Path &libPath)
 
 void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
 {
-    if (GetBehavioursLibrary())
+    if (behavioursLibrary != GetBehavioursLibrary())
     {
-        DestroyBehavioursUsingCurrentLibrary();
-        delete GetBehavioursLibrary();
-    }
-
-    m_behavioursLibrary = behavioursLibrary;
-
-    if (GetBehavioursLibrary())
-    {
-        // Debug_DLog("Going to load BehavioursLibrary " <<
-        //            GetBehavioursLibrary()->GetLibraryPath());
-
-        if(!GetBehavioursLibrary()->Load())
+        if (GetBehavioursLibrary())
         {
-            Debug_Error(GetBehavioursLibrary()->GetErrorString());
+            DestroyBehavioursUsingCurrentLibrary();
+            delete GetBehavioursLibrary();
+        }
+
+        m_behavioursLibrary = behavioursLibrary;
+
+        if (GetBehavioursLibrary())
+        {
+            // Debug_DLog("Going to load BehavioursLibrary " <<
+            //            GetBehavioursLibrary()->GetLibraryPath());
+
+            if(!GetBehavioursLibrary()->Load())
+            {
+                Debug_Error(GetBehavioursLibrary()->GetErrorString());
+            }
         }
     }
 }

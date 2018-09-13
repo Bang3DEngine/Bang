@@ -111,31 +111,9 @@ void BangPreprocessor::Preprocess(const String &source,
              #include "Bang/BPReflectedVariable.h"
           )VERBATIM";
 
-    String src = source;
-    BP::RemoveComments(&src);
-    String::Iterator it = src.Begin();
-    while (true)
+    Array<BPReflectedStruct> reflectStructs = BangPreprocessor::GetReflectStructs(source);
+    for (const BPReflectedStruct &reflStruct : reflectStructs)
     {
-        // Find Structure/Class annotation
-        String::Iterator itStructBegin = BP::Find(it, src.End(),
-                                                  BP::RStructPrefixes);
-        if (itStructBegin == src.End()) { break; }
-
-        String::Iterator itStructScopeBegin, itStructScopeEnd;
-        BP::GetNextScope(itStructBegin,
-                         src.End(),
-                         &itStructScopeBegin,
-                         &itStructScopeEnd,
-                         '{',
-                         '}');
-        it = itStructScopeEnd;
-        if (itStructScopeBegin == src.End()) { break; }
-
-        bool ok;
-        BPReflectedStruct reflStruct;
-        BPReflectedStruct::FromString(itStructBegin, itStructScopeEnd,
-                                      &reflStruct, &ok);
-
         String reflectDefineCode =
                 "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
         reflectDefineCode += R"VERBATIM( public:
@@ -164,6 +142,52 @@ void BangPreprocessor::Preprocess(const String &source,
         reflectionHeaderSource += reflectDefineCode;
         *preprocessedSomething = true;
     }
+}
+
+Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(const Path &sourcePath)
+{
+    String source = File::GetContents(sourcePath);
+    return BangPreprocessor::GetReflectStructs(source);
+}
+
+Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(const String &source)
+{
+    Array<BPReflectedStruct> reflectStructsArray;
+
+    String src = source;
+    BP::RemoveComments(&src);
+    String::Iterator it = src.Begin();
+    while (true)
+    {
+        // Find Structure/Class annotation
+        String::Iterator itStructBegin = BP::Find(it, src.End(),
+                                                  BP::RStructPrefixes);
+        if (itStructBegin == src.End())
+        {
+            break;
+        }
+
+        String::Iterator itStructScopeBegin, itStructScopeEnd;
+        BP::GetNextScope(itStructBegin,
+                         src.End(),
+                         &itStructScopeBegin,
+                         &itStructScopeEnd,
+                         '{',
+                         '}');
+        it = itStructScopeEnd;
+        if (itStructScopeBegin == src.End())
+        {
+            break;
+        }
+
+        bool ok;
+        BPReflectedStruct reflStruct;
+        BPReflectedStruct::FromString(itStructBegin, itStructScopeEnd,
+                                      &reflStruct, &ok);
+        reflectStructsArray.PushBack(reflStruct);
+    }
+
+    return reflectStructsArray;
 }
 
 void BangPreprocessor::RemoveComments(String *source)

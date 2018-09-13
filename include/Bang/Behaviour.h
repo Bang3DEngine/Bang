@@ -43,6 +43,8 @@ class Behaviour : public Component,
 public:
     Behaviour();
     virtual ~Behaviour();
+
+    virtual const BPReflectedStruct& GetReflectionInfo() const;
 };
 
 // DEFINES

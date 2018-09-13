@@ -22,6 +22,7 @@ public:
 
     void CheckFiles();
 
+    Time::TimeT GetModificationTime(const Path &path) const;
     const USet<Path>& GetTrackedPaths() const;
     Array<Path> GetTrackedPathsWithExtensions(
                         const Array<String> &extensions) const;

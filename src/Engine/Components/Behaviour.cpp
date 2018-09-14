@@ -20,6 +20,5 @@ Behaviour::~Behaviour()
 
 const BPReflectedStruct& Behaviour::GetReflectionInfo() const
 {
-    static BPReflectedStruct EmptyReflStruct;
-    return EmptyReflStruct;
+    return m_reflectionInfo;
 }

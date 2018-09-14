@@ -48,7 +48,7 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     for (uint i = 0; i < modelNode.meshIndices.Size(); ++i)
     {
         Mesh *mesh = modelScene.meshes[ modelNode.meshIndices[i] ].Get();
-        Material *material = modelScene.materials[ modelNode.meshIndices[i] ].Get();
+        Material *material = modelScene.materials[ modelNode.meshMaterialIndices[i] ].Get();
 
         MeshRenderer *mr = nullptr;
         if (mesh->GetBonesPool().IsEmpty())

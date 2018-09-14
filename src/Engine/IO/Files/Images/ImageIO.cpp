@@ -64,6 +64,10 @@ void ImageIO::Import(const Path &filepath, Imageb *img, bool *_ok)
     {
         ImageIO::ImportTGA(filepath, img, &ok);
     }
+    else if (filepath.HasExtension( Array<String>({"dds"})) )
+    {
+        // These textures are thought for GPU only, skip
+    }
     else
     {
         Debug_Error("Unrecognized image format for '" << filepath.GetAbsolute()

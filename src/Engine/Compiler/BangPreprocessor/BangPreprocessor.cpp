@@ -60,7 +60,7 @@ const Array<String> BP::RStructPrefixes =
 };
 
 const String BP::ReflectDefinitionsDefineName = "BP_REFLECT_DEFINITIONS";
-const String BP::ReflectionInfoVarName = "BP_ReflectionInfo";
+const String BP::ReflectionInfoVarName = "m_reflectionInfo";
 
 void BangPreprocessor::Preprocess(const Path &filepath)
 {

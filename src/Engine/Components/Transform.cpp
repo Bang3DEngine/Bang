@@ -27,11 +27,14 @@ void Transform::SetLocalPosition(const Vector3 &p)
 }
 void Transform::SetPosition(const Vector3 &p)
 {
-    if (!GetGameObject()->GetParent()) SetLocalPosition(p);
+    if (GameObject *parent = GetGameObject()->GetParent())
+    {
+        ASSERT(parent->GetTransform());
+        SetLocalPosition(parent->GetTransform()->FromWorldToLocalPoint(p));
+    }
     else
     {
-        SetLocalPosition(GetGameObject()->GetParent()->
-                         GetTransform()->FromWorldToLocalPoint(p));
+        SetLocalPosition(p);
     }
 }
 void Transform::TranslateLocal(const Vector3 &translation)
@@ -67,21 +70,27 @@ void Transform::SetLocalEuler(float x, float y, float z)
 
 void Transform::SetRotation(const Quaternion &q)
 {
-    if (!GetGameObject()->GetParent()) SetLocalRotation(q.Normalized());
+    if (GameObject *parent = GetGameObject()->GetParent())
+    {
+        ASSERT(parent->GetTransform());
+        SetLocalRotation( Quaternion(
+           parent->GetTransform()->GetRotation().Inversed() * q.Normalized()));
+    }
     else
     {
-        SetLocalRotation(
-            Quaternion(GetGameObject()->GetParent()->GetTransform()->
-                       GetRotation().Inversed() * q.Normalized()));
+        SetLocalRotation(q.Normalized());
     }
 }
 void Transform::SetEuler(const Vector3 &degreesEuler)
 {
-    if (!GetGameObject()->GetParent()) SetLocalEuler(degreesEuler);
+    if (GameObject *parent = GetGameObject()->GetParent())
+    {
+        ASSERT(parent->GetTransform());
+        SetLocalEuler(-parent->GetTransform()->GetEuler() + degreesEuler);
+    }
     else
     {
-        SetLocalEuler(-GetGameObject()->GetParent()->GetTransform()->
-                      GetEuler() + degreesEuler);
+        SetLocalEuler(degreesEuler);
     }
 }
 void Transform::SetEuler(float x, float y, float z)
@@ -290,16 +299,14 @@ const Vector3& Transform::GetLocalPosition() const
 
 Vector3 Transform::GetPosition() const
 {
-    if (!GetGameObject()->GetParent() ||
-        !GetGameObject()->GetParent()->GetTransform())
+    if (GameObject *parent = GetGameObject()->GetParent())
     {
-        return GetLocalPosition();
+        if (Transform *tr = parent->GetTransform())
+        {
+            return tr->FromLocalToWorldPoint(GetLocalPosition());
+        }
     }
-    else
-    {
-        return GetGameObject()->GetParent()->GetTransform()->
-               FromLocalToWorldPoint(GetLocalPosition());
-    }
+    return GetLocalPosition();
 }
 
 const Quaternion& Transform::GetLocalRotation() const
@@ -309,16 +316,14 @@ const Quaternion& Transform::GetLocalRotation() const
 
 Quaternion Transform::GetRotation() const
 {
-    if (!GetGameObject()->GetParent() ||
-        !GetGameObject()->GetParent()->GetTransform())
+    if (GameObject *parent = GetGameObject()->GetParent())
     {
-        return GetLocalRotation();
+        if (Transform *tr = parent->GetTransform())
+        {
+            return tr->GetRotation() * GetLocalRotation();
+        }
     }
-    else
-    {
-        return GetGameObject()->GetParent()->GetTransform()->
-               GetRotation() * GetLocalRotation();
-    }
+    return GetLocalRotation();
 }
 
 Vector3 Transform::GetLocalEuler() const
@@ -395,7 +400,10 @@ void Transform::OnTransformChanged()
     InvalidateTransform();
 
     GameObject *go = GetGameObject();
-    if (!go) { return; }
+    if (!go)
+    {
+        return;
+    }
 
     EventEmitter<IEventsTransform>::
        PropagateToListeners(&EventListener<IEventsTransform>::OnTransformChanged);

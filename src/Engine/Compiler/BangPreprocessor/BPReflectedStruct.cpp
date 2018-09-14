@@ -123,13 +123,7 @@ String BPReflectedStruct::GetGetReflectionInfoCode() const
     String src = R"VERBATIM(
      const BPReflectedStruct& GetReflectionInfo() const
      {
-        static BPReflectedStruct REFLECT_VAR_NAME;
-        static bool inited = false;
-        if (!inited)
-        {
-           inited = true;
-           INIT_CODE
-        }
+        INIT_CODE
         return REFLECT_VAR_NAME;
      }
     )VERBATIM";

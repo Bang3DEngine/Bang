@@ -29,6 +29,7 @@
 #include "Bang/DebugRenderer.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UIImageRenderer.h"
+#include "Bang/BPReflectedStruct.h"
 #include "Bang/IEventsGameObjectPhysics.h"
 
 USING_NAMESPACE_BANG
@@ -45,6 +46,9 @@ public:
     virtual ~Behaviour();
 
     virtual const BPReflectedStruct& GetReflectionInfo() const;
+
+public:
+    mutable BPReflectedStruct m_reflectionInfo;
 };
 
 // DEFINES

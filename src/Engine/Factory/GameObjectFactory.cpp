@@ -112,6 +112,8 @@ void GameObjectFactory::CreateUISceneInto(Scene *scene)
 
 Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
 {
+    ASSERT(scene->GetTransform());
+
     GameObject *cube = GameObjectFactory::CreateGameObjectNamed("Cube");
     MeshRenderer *mr = cube->AddComponent<MeshRenderer>();
     mr->SetMesh(MeshFactory::GetCube().Get());

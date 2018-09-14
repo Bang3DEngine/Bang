@@ -29,8 +29,8 @@ struct ModelIONode
     String name;
     Matrix4 localToParent;
 
-    Array<uint> meshIndices;
-    Array<uint> meshMaterialIndices;
+    Array<uint> meshIndices;         // Which meshes this node has
+    Array<uint> meshMaterialIndices; // Which material does each mesh have
 };
 
 struct ModelIOScene

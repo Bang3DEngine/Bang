@@ -122,6 +122,8 @@ Tree<ModelIONode>* ReadModelNode(const aiScene *scene, aiNode *node)
     {
         uint meshIndex = node->mMeshes[i];
         modelNode.meshIndices.PushBack(meshIndex);
+        modelNode.meshMaterialIndices.PushBack(
+                    scene->mMeshes[meshIndex]->mMaterialIndex);
     }
 
     for (int i = 0; i < node->mNumChildren; ++i)
@@ -591,6 +593,10 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     {
         matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
     }
+    if (albedoTexturePath.HasExtension("dds"))
+    {
+        outMaterial->Get()->SetAlbedoUvMultiply(Vector2(1,-1));
+    }
 
     aiString aNormalsTexturePath;
     aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
@@ -601,6 +607,11 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     {
         matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
     }
+    if (normalsTexturePath.HasExtension("dds"))
+    {
+        outMaterial->Get()->SetNormalMapUvMultiply(Vector2(1,-1));
+    }
+
     outMaterial->Get()->SetRoughness( 0.5f );
     outMaterial->Get()->SetMetalness( 0.1f );
     outMaterial->Get()->SetAlbedoTexture( matAlbedoTexture.Get() );

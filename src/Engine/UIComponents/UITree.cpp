@@ -175,11 +175,22 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     {
         if (markPosition == MouseItemRelativePosition::BELOW_ALL)
         {
-            GameObject *lastItem = GetUIList()->GetItems().Back();
-            AARect lastItemRect = lastItem->GetRectTransform()->GetViewportAARect();
-            dragMarkerPos     = lastItemRect.GetMinXMinY();
-            dragMarkerSize    = lastItemRect.GetMaxXMinY() - dragMarkerPos;
-            dragMarkerSize.y += MarkStroke;
+            GameObject *lastItem = nullptr;
+            for (GameObject *item : GetUIList()->GetItems())
+            {
+                if (item->IsActive())
+                {
+                    lastItem = item;
+                }
+            }
+
+            if (lastItem)
+            {
+                AARect lastItemRect = lastItem->GetRectTransform()->GetViewportAARect();
+                dragMarkerPos     = lastItemRect.GetMinXMinY();
+                dragMarkerSize    = lastItemRect.GetMaxXMinY() - dragMarkerPos;
+                dragMarkerSize.y += MarkStroke;
+            }
         }
     }
 

@@ -62,6 +62,17 @@ private:
     friend class Thread;
 };
 
+class ThreadRunnableLambda : public ThreadRunnable
+{
+public:
+    ThreadRunnableLambda(const std::function<void()> &runFunction);
+
+    void Run() override;
+
+private:
+    std::function<void()> m_runFunction;
+};
+
 NAMESPACE_BANG_END
 
 #endif // THREAD_H

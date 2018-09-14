@@ -43,7 +43,6 @@ public:
 
     void BindBoneMatrices();
     void UpdateBonesMatricesFromTransformMatrices();
-    void UpdateBonesMatricesFromTransformMatricesIfNeeded();
     void UpdateTransformMatricesFromInitialBonePosition();
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                     const Map<String, Matrix4> &boneMatrices);

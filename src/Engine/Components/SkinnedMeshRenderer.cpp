@@ -141,24 +141,6 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
     SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
 }
 
-void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatricesIfNeeded()
-{
-    bool updateBonesMatricesFromTransformMatrices = true;
-    Array<Animator*> animators = GetGameObject()->GetComponents<Animator>();
-    for (Animator *animator : animators)
-    {
-        if (animator->IsPlaying())
-        {
-            updateBonesMatricesFromTransformMatrices = false;
-        }
-    }
-
-    if (updateBonesMatricesFromTransformMatrices)
-    {
-        UpdateBonesMatricesFromTransformMatrices();
-    }
-}
-
 void SkinnedMeshRenderer::UpdateTransformMatricesFromInitialBonePosition()
 {
     for (const String &boneName : GetBonesNames())
@@ -179,7 +161,7 @@ void SkinnedMeshRenderer::OnRender()
 void SkinnedMeshRenderer::Bind()
 {
     MeshRenderer::Bind();
-    UpdateBonesMatricesFromTransformMatricesIfNeeded();
+    UpdateBonesMatricesFromTransformMatrices();
     BindBoneMatrices();
 }
 

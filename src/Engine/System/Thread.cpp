@@ -117,4 +117,14 @@ Thread *ThreadRunnable::GetThread() const
     return p_thread;
 }
 
+ThreadRunnableLambda::ThreadRunnableLambda(const std::function<void()> &runFunction)
+{
+    m_runFunction = runFunction;
+}
+
+void ThreadRunnableLambda::Run()
+{
+    m_runFunction();
+}
+
 NAMESPACE_BANG_END

@@ -110,12 +110,12 @@ GetConsecutiveKeyFrames(const Array<Animation::KeyFrame<T>> &keyFrames,
     const uint numKF = keyFrames.Size();
     for (uint i = 0; i < numKF - 1; ++i)
     {
-        const Animation::KeyFrame<T> &prevPosKF = keyFrames[i];
-        const Animation::KeyFrame<T> &nextPosKF = keyFrames[i + 1];
-        if (timeInFrames >= prevPosKF.timeInFrames &&
-            timeInFrames <= nextPosKF.timeInFrames)
+        const Animation::KeyFrame<T> &prevKF = keyFrames[i];
+        const Animation::KeyFrame<T> &nextKF = keyFrames[i + 1];
+        if (timeInFrames >= prevKF.timeInFrames &&
+            timeInFrames <= nextKF.timeInFrames)
         {
-            return {{prevPosKF, nextPosKF}};
+            return {{prevKF, nextKF}};
         }
     }
     return {{}};
@@ -227,23 +227,59 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs
         }
     }
 
+    Map<String, Matrix4> bonesScaleMatrices;
+    for (const auto &it : GetBoneNameToScaleKeyFrames())
+    {
+        const String &boneName = it.first;
+        const auto &scaleKeyFrames = it.second;
+
+        bonesMatrices.Add(boneName, Matrix4::Identity);
+
+        Array< KeyFrame<Vector3> > scaleInterpKeyFrames =
+                        GetConsecutiveKeyFrames(scaleKeyFrames, timeInFrames);
+
+        if (scaleInterpKeyFrames.Size() == 2)
+        {
+            Matrix4 boneMatrix;
+            const KeyFrame<Vector3> &prevScaleKF = scaleInterpKeyFrames[0];
+            const KeyFrame<Vector3> &nextScaleKF = scaleInterpKeyFrames[1];
+            float timeBetweenPrevNext = (nextScaleKF.timeInFrames -
+                                         prevScaleKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
+
+            float timePassedSincePrev = (timeInFrames - prevScaleKF.timeInFrames);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
+
+            Vector3 scale = Vector3::Lerp(prevScaleKF.value,
+                                          nextScaleKF.value,
+                                          interpFactor);
+            boneMatrix = Matrix4::ScaleMatrix(scale);
+            bonesScaleMatrices.Add(boneName, boneMatrix);
+        }
+    }
+
     for (auto &it : bonesMatrices)
     {
         const String &boneName = it.first;
 
-        Matrix4 positionMatrix;
+        Matrix4 positionMatrix = Matrix4::Identity;
         if (bonesPositionMatrices.ContainsKey(boneName))
         {
             positionMatrix = bonesPositionMatrices.Get(boneName);
         }
 
-        Matrix4 rotationMatrix;
+        Matrix4 rotationMatrix = Matrix4::Identity;
         if (bonesRotationMatrices.ContainsKey(boneName))
         {
             rotationMatrix = bonesRotationMatrices.Get(boneName);
         }
 
         Matrix4 scaleMatrix = Matrix4::Identity;
+        if (bonesScaleMatrices.ContainsKey(boneName))
+        {
+            scaleMatrix = bonesScaleMatrices.Get(boneName);
+        }
 
         Matrix4 &boneMatrix = it.second;
         boneMatrix = positionMatrix * rotationMatrix * scaleMatrix;

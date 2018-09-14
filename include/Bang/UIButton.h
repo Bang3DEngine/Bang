@@ -61,7 +61,7 @@ private:
 
     // IEventsFocus
     UIEventResult OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                               const UIEventExt &event);
+                               const UIEvent &event);
     void OnMouseEnter();
     void OnMouseExit();
 

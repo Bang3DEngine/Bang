@@ -204,31 +204,36 @@ int UILabel::GetCursorIndex() const
 {
     return m_cursorIndex;
 }
+
 int UILabel::GetSelectionIndex() const
 {
     return m_selectionIndex;
 }
+
 bool UILabel::IsSelectingWithMouse() const
 {
     return m_selectingWithMouse;
 }
+
 UIRectMask *UILabel::GetMask() const
 {
     return p_mask;
 }
+
 UITextRenderer *UILabel::GetText() const
 {
     return p_text;
 }
-IFocusable *UILabel::GetFocusable() const
+
+UIFocusable *UILabel::GetFocusable() const
 {
     return p_focusable;
 }
 
-void UILabel::OnUIEvent(IFocusable*, const UIEventExt &event)
+void UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEventExt::Type::FOCUS_TAKEN ||
-        event.type == UIEventExt::Type::MOUSE_CLICK_DOUBLE)
+    if (event.type == UIEvent::Type::FOCUS_TAKEN ||
+        event.type == UIEvent::Type::MOUSE_CLICK_DOUBLE)
     {
         if (GetSelectAllOnFocus() && IsSelectable())
         {
@@ -240,13 +245,13 @@ void UILabel::OnUIEvent(IFocusable*, const UIEventExt &event)
         }
         UpdateSelectionQuadRenderer();
     }
-    else if (event.type == UIEventExt::Type::FOCUS_LOST)
+    else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         ResetSelection();
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();
     }
-    else if (event.type == UIEventExt::Type::MOUSE_CLICK_DOWN)
+    else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
     {
         if (GetFocusable() && GetFocusable()->HasFocus())
         {
@@ -263,7 +268,7 @@ void UILabel::OnUIEvent(IFocusable*, const UIEventExt &event)
             UpdateSelectionQuadRenderer();
         }
     }
-    else if (event.type == UIEventExt::Type::MOUSE_CLICK_UP)
+    else if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
     {
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();

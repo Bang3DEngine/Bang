@@ -74,7 +74,7 @@ public:
     bool SomeChildHasFocus() const;
     int GetSelectedIndex() const;
     GOItem* GetSelectedItem() const;
-    IFocusable* GetFocusable() const;
+    UIFocusable* GetFocusable() const;
 
     void SetWideSelectionMode(bool wideSelectionMode);
 
@@ -98,7 +98,7 @@ protected:
 
 private:
     Array<GOItem*> p_items;
-    IFocusable *p_focusable = nullptr;
+    UIFocusable *p_focusable = nullptr;
     UMap<GOItem*, UIImageRenderer*> p_itemsBackground;
 
     int m_selectionIndex = -1;
@@ -117,7 +117,7 @@ private:
     void HandleShortcuts();
 
     // IEventsFocus
-    UIEventResult UIEventCallback(IFocusable *focusable, const UIEventExt &event);
+    UIEventResult UIEventCallback(UIFocusable *focusable, const UIEvent &event);
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);

@@ -5,7 +5,6 @@
 #include "Bang/AARect.h"
 #include "Bang/Material.h"
 #include "Bang/UICanvas.h"
-#include "Bang/IFocusable.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIScrollBar.h"
@@ -76,13 +75,13 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 {
     ASSERT(index >= 0 && index <= GetNumItems());
 
-    Array<IFocusable*> newItemFocusables =
-                       newItem->GetComponentsInDescendantsAndThis<IFocusable>();
+    Array<UIFocusable*> newItemFocusables =
+                       newItem->GetComponentsInDescendantsAndThis<UIFocusable>();
 
     UIImageRenderer *itemBg = newItem->AddComponent<UIImageRenderer>(0);
     itemBg->SetTint( GetIdleColor() );
 
-    for (IFocusable* newItemFocusable : newItemFocusables)
+    for (UIFocusable* newItemFocusable : newItemFocusables)
     {
         newItemFocusable->EventEmitter<IEventsFocus>::RegisterListener(this);
     }
@@ -442,25 +441,25 @@ void UIList::HandleShortcuts()
 
 }
 
-UIEventResult UIList::UIEventCallback(IFocusable*, const UIEventExt &event)
+UIEventResult UIList::UIEventCallback(UIFocusable *, const UIEvent &event)
 {
     switch (event.type)
     {
-        case UIEventExt::Type::MOUSE_EXIT:
+        case UIEvent::Type::MOUSE_EXIT:
         if (p_itemUnderMouse)
         {
             return OnMouseMove();
         }
         break;
 
-        case UIEventExt::Type::MOUSE_ENTER:
-        case UIEventExt::Type::MOUSE_MOVE:
+        case UIEvent::Type::MOUSE_ENTER:
+        case UIEvent::Type::MOUSE_MOVE:
         {
             return OnMouseMove();
         }
         break;
 
-        case UIEventExt::Type::MOUSE_CLICK_DOWN:
+        case UIEvent::Type::MOUSE_CLICK_DOWN:
             if (p_itemUnderMouse)
             {
                 if (event.mouse.button == MouseButton::LEFT)
@@ -477,7 +476,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEventExt &event)
             }
         break;
 
-        case UIEventExt::Type::MOUSE_CLICK_UP:
+        case UIEvent::Type::MOUSE_CLICK_UP:
             if (p_itemUnderMouse)
             {
                 if (event.mouse.button == MouseButton::LEFT)
@@ -488,7 +487,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEventExt &event)
             }
         break;
 
-        case UIEventExt::Type::MOUSE_CLICK_DOUBLE:
+        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
         if (p_itemUnderMouse)
         {
             CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
@@ -531,7 +530,7 @@ GOItem *UIList::GetSelectedItem() const
     return GetItem( GetSelectedIndex() );
 }
 
-IFocusable *UIList::GetFocusable() const
+UIFocusable *UIList::GetFocusable() const
 {
     return p_focusable;
 }
@@ -599,8 +598,8 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     dirLayout->SetChildrenHorizontalStretch(Stretch::FULL);
 
     list->p_focusable = container->AddComponent<UIFocusable>();
-    list->p_focusable->AddEventCallback([list](IFocusable *focusable,
-                                               const UIEventExt &event)
+    list->p_focusable->AddEventCallback([list](UIFocusable *focusable,
+                                               const UIEvent &event)
     {
         return list->UIEventCallback(focusable, event);
     });

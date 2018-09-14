@@ -10,7 +10,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
-FORWARD class IFocusable;
 FORWARD class Framebuffer;
 FORWARD class UIImageRenderer;
 
@@ -27,17 +26,17 @@ public:
     // Component
     void OnUpdate() override;
 
-    void SetFocusable(IFocusable *focusable);
+    void SetFocusable(UIFocusable *focusable);
     void SetShowDragDropGameObject(bool showDragDropObject);
 
     bool IsBeingDragged() const;
-    IFocusable *GetFocusable() const;
+    UIFocusable *GetFocusable() const;
     bool IsShowDragDropGameObject() const;
 
 private:
     static const float DragInitTime;
 
-    IFocusable *p_focusable = nullptr;
+    UIFocusable *p_focusable = nullptr;
 
     bool m_beingPressed = false;
     bool m_beingDragged = false;
@@ -57,7 +56,7 @@ private:
     void MoveDragDropGameObjectTo(const Vector2i &pos);
 
     // IFocusable
-    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event) override;
+    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
 
     friend class UICanvas;
 };

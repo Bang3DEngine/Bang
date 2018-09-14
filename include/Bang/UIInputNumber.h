@@ -38,7 +38,7 @@ public:
     bool HasFocus() const;
 
     // IEventsFocus
-    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event) override;
+    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
 
 private:
     float m_value            = 0.0f;

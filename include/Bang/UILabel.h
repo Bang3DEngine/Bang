@@ -2,7 +2,6 @@
 #define UILABEL_H
 
 #include "Bang/Component.h"
-#include "Bang/IFocusable.h"
 #include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
@@ -45,11 +44,11 @@ public:
     UIRectMask *GetMask() const;
     String GetSelectedText() const;
     UITextRenderer *GetText() const;
-    IFocusable *GetFocusable() const;
+    UIFocusable *GetFocusable() const;
     bool GetSelectAllOnFocus() const;
 
     // IEventsFocus
-    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event) override;
+    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
 
 private:
     int m_cursorIndex = 0;
@@ -60,7 +59,7 @@ private:
 
     UIRectMask *p_mask = nullptr;
     UITextRenderer *p_text = nullptr;
-    IFocusable *p_focusable = nullptr;
+    UIFocusable *p_focusable = nullptr;
     GameObject *p_selectionQuad = nullptr;
 
     UILabel();

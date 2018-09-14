@@ -10,7 +10,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
-FORWARD class IFocusable;
 FORWARD class UIDragDroppable;
 FORWARD class UILayoutManager;
 FORWARD class IEventsDragDrop;
@@ -33,15 +32,15 @@ public:
     void InvalidateCanvas();
 
     void ClearFocus();
-    void SetFocus(IFocusable *focusable);
+    void SetFocus(UIFocusable *focusable);
 
-    IFocusable* GetFocus();
+    UIFocusable* GetFocus();
     const Vector2i& GetLastMousePosition() const;
-    IFocusable* GetFocusableUnderMouseTopMost() const;
-    bool HasFocusFocusable(const IFocusable *focusable);
+    UIFocusable* GetFocusableUnderMouseTopMost() const;
+    bool HasFocusFocusable(const UIFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
     bool HasFocus(const GameObject *go, bool recursive = false);
-    bool IsMouseOverFocusable(const IFocusable *focusable);
+    bool IsMouseOverFocusable(const UIFocusable *focusable);
     bool IsMouseOver(const Component *comp, bool recursive = false);
     bool IsMouseOver(const GameObject *go, bool recursive = false);
 
@@ -67,27 +66,27 @@ private:
 
     Vector2i m_lastMousePosition = Vector2i(-1);
 
-    IFocusable *p_focus = nullptr;
-    Set<IFocusable*> p_focusablesUnderMouse;
+    UIFocusable *p_focus = nullptr;
+    Set<UIFocusable*> p_focusablesUnderMouse;
     UIDragDroppable *p_ddBeingDragged = nullptr;
-    IFocusable *p_focusableUnderMouseTopMost = nullptr;
-    Set<IFocusable*> p_focusablesPotentiallyBeingPressed;
+    UIFocusable *p_focusableUnderMouseTopMost = nullptr;
+    Set<UIFocusable*> p_focusablesPotentiallyBeingPressed;
 
     // IObjectEvents
     void OnDisabled(Object *object) override;
 
-    void RegisterForEvents(IFocusable *focusable);
-    void UnRegisterForEvents(IFocusable *focusable);
+    void RegisterForEvents(UIFocusable *focusable);
+    void UnRegisterForEvents(UIFocusable *focusable);
 
     List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,
-            Array< std::pair<IFocusable*, AARecti> > *sortedCandidates) const;
+            Array< std::pair<UIFocusable*, AARecti> > *sortedCandidates) const;
 
     void GetSortedFocusCandidatesByPaintOrder(
             const GameObject *go,
-            Array< std::pair<IFocusable*, AARecti> > *sortedCandidates,
+            Array< std::pair<UIFocusable*, AARecti> > *sortedCandidates,
             std::stack<AARecti> *maskRectStack) const;
 };
 

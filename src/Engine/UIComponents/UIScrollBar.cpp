@@ -7,7 +7,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Texture2D.h"
 #include "Bang/GameObject.h"
-#include "Bang/IFocusable.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/RectTransform.h"
@@ -266,13 +265,13 @@ GameObject *UIScrollBar::GetBar() const
     return p_bar;
 }
 
-void UIScrollBar::OnUIEvent(IFocusable*, const UIEventExt &event)
+void UIScrollBar::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEventExt::Type::MOUSE_ENTER)
+    if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
         OnMouseEnter();
     }
-    else if (event.type == UIEventExt::Type::MOUSE_EXIT)
+    else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
         OnMouseExit();
     }

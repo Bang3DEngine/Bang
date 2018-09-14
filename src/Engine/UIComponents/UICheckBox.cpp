@@ -3,9 +3,9 @@
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
@@ -94,7 +94,7 @@ UILayoutElement *UICheckBox::GetLayoutElement() const
     return p_layoutElement;
 }
 
-IFocusable *UICheckBox::GetFocusable() const
+UIFocusable *UICheckBox::GetFocusable() const
 {
     return p_focusable;
 }
@@ -118,9 +118,9 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([checkBox](IFocusable*, const UIEventExt &event)
+    focusable->AddEventCallback([checkBox](UIFocusable*, const UIEvent &event)
     {
-        if (event.type == UIEventExt::Type::MOUSE_CLICK_FULL)
+        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
         {
             checkBox->SetChecked( !checkBox->IsChecked() );
             return UIEventResult::INTERCEPT;

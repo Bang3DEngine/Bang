@@ -8,7 +8,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class IFocusable;
+FORWARD class UIFocusable;
 
 enum class UIEventResult
 {
@@ -16,7 +16,7 @@ enum class UIEventResult
     INTERCEPT
 };
 
-struct UIEventExt
+struct UIEvent
 {
     enum class Type
     {
@@ -62,7 +62,7 @@ class IEventsFocus
     IEVENTS(IEventsFocus);
 
 public:
-    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event)
+    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event)
     {
         BANG_UNUSED_2(focusable, event);
     }

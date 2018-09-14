@@ -8,8 +8,8 @@
 #include "Bang/Material.h"
 #include "Bang/UICanvas.h"
 #include "Bang/GameObject.h"
-#include "Bang/IFocusable.h"
 #include "Bang/Framebuffer.h"
+#include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutIgnorer.h"
@@ -33,7 +33,10 @@ void UIDragDroppable::OnUpdate()
 
     // Drag start detection here
 
-    if (GetFocusable()) { m_beingPressed = GetFocusable()->IsBeingPressed(); }
+    if (GetFocusable())
+    {
+        m_beingPressed = GetFocusable()->IsBeingPressed();
+    }
     else
     {
         if (Input::GetMouseButtonDown(MouseButton::LEFT))
@@ -69,7 +72,7 @@ void UIDragDroppable::OnUpdate()
     }
 }
 
-void UIDragDroppable::SetFocusable(IFocusable *focusable)
+void UIDragDroppable::SetFocusable(UIFocusable *focusable)
 {
     if (focusable != GetFocusable())
     {
@@ -102,7 +105,7 @@ bool UIDragDroppable::IsBeingDragged() const
     return m_beingDragged;
 }
 
-IFocusable *UIDragDroppable::GetFocusable() const
+UIFocusable* UIDragDroppable::GetFocusable() const
 {
     return p_focusable;
 }
@@ -217,11 +220,11 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnUIEvent(IFocusable *focusable, const UIEventExt &event)
+void UIDragDroppable::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
-    if (event.type == UIEventExt::Type::MOUSE_CLICK_DOWN)
+    if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
     {
         OnDragStarted();
     }

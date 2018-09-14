@@ -1,7 +1,7 @@
 #include "Bang/UIAutoFocuser.h"
 
 #include "Bang/UICanvas.h"
-#include "Bang/IFocusable.h"
+#include "Bang/UIFocusable.h"
 
 USING_NAMESPACE_BANG
 
@@ -25,12 +25,12 @@ void UIAutoFocuser::OnUpdate()
     }
 }
 
-void UIAutoFocuser::SetFocusableToAutoFocus(IFocusable *focusable)
+void UIAutoFocuser::SetFocusableToAutoFocus(UIFocusable *focusable)
 {
     p_focusableToAutoFocus = focusable;
 }
 
-IFocusable *UIAutoFocuser::GetFocusableToAutoFocus() const
+UIFocusable *UIAutoFocuser::GetFocusableToAutoFocus() const
 {
     return p_focusableToAutoFocus;
 }

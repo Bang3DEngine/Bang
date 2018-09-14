@@ -5,7 +5,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class IFocusable;
+FORWARD class UIFocusable;
 
 class UIAutoFocuser : public Component
 {
@@ -16,12 +16,12 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
-    void SetFocusableToAutoFocus(IFocusable* focusable);
-    IFocusable* GetFocusableToAutoFocus() const;
+    void SetFocusableToAutoFocus(UIFocusable* focusable);
+    UIFocusable* GetFocusableToAutoFocus() const;
 
 private:
     int m_frames = 0;
-    IFocusable* p_focusableToAutoFocus = nullptr;
+    UIFocusable* p_focusableToAutoFocus = nullptr;
 
     UIAutoFocuser() = default;
     virtual ~UIAutoFocuser() = default;

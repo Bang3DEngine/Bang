@@ -8,7 +8,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class IFocusable;
 FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
@@ -32,7 +31,7 @@ public:
     UIImageRenderer *GetTickImage() const;
     UIImageRenderer *GetBackgroundImage() const;
     UILayoutElement *GetLayoutElement() const;
-    IFocusable *GetFocusable() const;
+    UIFocusable *GetFocusable() const;
 
 private:
     static Color IdleColor;

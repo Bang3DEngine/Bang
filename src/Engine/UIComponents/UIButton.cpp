@@ -30,7 +30,7 @@ UIButton::~UIButton()
 
 UIEventResult
 UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                       const UIEvent &event)
+                       const UIEventExt &event)
 {
     BANG_UNUSED(focusable);
 
@@ -38,14 +38,14 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
     {
         switch (event.type)
         {
-            case UIEvent::Type::MOUSE_CLICK_DOWN:
+            case UIEventExt::Type::MOUSE_CLICK_DOWN:
                 if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
                     OnMouseEnter();
                     return UIEventResult::INTERCEPT;
                 }
             break;
-            case UIEvent::Type::MOUSE_CLICK_FULL:
+            case UIEventExt::Type::MOUSE_CLICK_FULL:
                 if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
                     OnMouseEnter();
@@ -57,11 +57,11 @@ UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
                 }
             break;
 
-            case UIEvent::Type::STARTED_BEING_PRESSED:
-            case UIEvent::Type::FINISHED_BEING_PRESSED:
-            case UIEvent::Type::MOUSE_CLICK_UP:
-            case UIEvent::Type::MOUSE_ENTER:
-            case UIEvent::Type::MOUSE_EXIT:
+            case UIEventExt::Type::STARTED_BEING_PRESSED:
+            case UIEventExt::Type::FINISHED_BEING_PRESSED:
+            case UIEventExt::Type::MOUSE_CLICK_UP:
+            case UIEventExt::Type::MOUSE_ENTER:
+            case UIEventExt::Type::MOUSE_EXIT:
                 if (GetFocusable()->IsMouseOver())
                 {
                     OnMouseEnter();
@@ -107,7 +107,7 @@ void UIButton::OnStart()
 {
     Component::OnStart();
     GetFocusable()->AddEventCallback([this](EventEmitter<IEventsFocus> *focusable,
-                                            const UIEvent &event)
+                                            const UIEventExt &event)
     {
         return OnFocusEvent(focusable, event);
     });
@@ -115,8 +115,8 @@ void UIButton::OnStart()
 
 void UIButton::Click()
 {
-    UIEvent event;
-    event.type = UIEvent::Type::MOUSE_CLICK_FULL;
+    UIEventExt event;
+    event.type = UIEventExt::Type::MOUSE_CLICK_FULL;
     event.mouse.button = MouseButton::LEFT;
     GetFocusable()->ProcessEvent(event);
 }

@@ -39,7 +39,10 @@ void Input::OnFrameFinished()
             m_keysUp.Remove(it->first);
             it = m_keyInfos.Remove(it);
         }
-        else { ++it; }
+        else
+        {
+            ++it;
+        }
     }
     //
 
@@ -56,11 +59,15 @@ void Input::OnFrameFinished()
         {
             it = m_mouseInfo.Remove(it);
         }
-        else { ++it; }
+        else
+        {
+            ++it;
+        }
     }
     //
 
     m_lastMouseWheelDelta = Vector2::Zero;
+    m_eventInfoQueue.Clear();
 }
 
 void Input::ProcessEventInfo(const EventInfo &ei)
@@ -173,7 +180,10 @@ void Input::ProcessMouseUpEventInfo(const EventInfo &ei)
 void Input::ProcessKeyDownEventInfo(const EventInfo &ei)
 {
     Key k = ei.key;
-    if (!m_keyInfos.ContainsKey(k)) { m_keyInfos[k] = ButtonInfo(); }
+    if (!m_keyInfos.ContainsKey(k))
+    {
+        m_keyInfos[k] = ButtonInfo();
+    }
     m_keyInfos[k].down       = true;
     m_keyInfos[k].pressed    = true;
     m_keyInfos[k].autoRepeat = ei.autoRepeat;
@@ -184,7 +194,11 @@ void Input::ProcessKeyDownEventInfo(const EventInfo &ei)
         m_keysDown.PushBack(k);
         m_keysUp.Remove(k);
     }
-    if (!m_keysDownRepeat.Contains(k)) { m_keysDownRepeat.PushBack(k); }
+
+    if (!m_keysDownRepeat.Contains(k))
+    {
+        m_keysDownRepeat.PushBack(k);
+    }
 }
 
 void Input::ProcessKeyUpEventInfo(const EventInfo &ei)
@@ -192,7 +206,10 @@ void Input::ProcessKeyUpEventInfo(const EventInfo &ei)
     if (ei.autoRepeat) return;
 
     Key k = ei.key;
-    if (!m_keyInfos.ContainsKey(k)) { m_keyInfos[k] = ButtonInfo(); }
+    if (!m_keyInfos.ContainsKey(k))
+    {
+        m_keyInfos[k] = ButtonInfo();
+    }
     m_keyInfos[k].up = true;
 
     m_pressedKeys.Remove(k);
@@ -201,28 +218,35 @@ void Input::ProcessKeyUpEventInfo(const EventInfo &ei)
     m_keysDownRepeat.Remove(k);
 }
 
-void Input::PeekEvent(const SDL_Event &event, const Window *window)
+void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
 {
-    if (!window->HasFocus()) { Reset(); return; }
+    if (!window->HasFocus())
+    {
+        Reset();
+        return;
+    }
+
     m_isMouseInside = window->HasFocus() && window->IsMouseOver();
 
     bool enqueue = false;
     EventInfo eventInfo;
+
+    eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
+    eventInfo.mousePosWindow = Input::GetMousePositionWindowWithoutInvertY();
+
     switch (event.type)
     {
         case SDL_KEYDOWN:
             eventInfo.type       = EventInfo::Type::KEY_DOWN;
             eventInfo.autoRepeat = event.key.repeat;
-            eventInfo.key        = Cast<Key>(event.key.keysym.sym);
-            eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
+            eventInfo.key        = SCAST<Key>(event.key.keysym.sym);
             enqueue = true;
         break;
 
         case SDL_KEYUP:
-            eventInfo.type       = EventInfo::Type::KEY_UP;
-            eventInfo.autoRepeat = event.key.repeat;
-            eventInfo.key        = Cast<Key>(event.key.keysym.sym);
-            eventInfo.timestampSecs = event.key.timestamp / 1000.0f;
+            eventInfo.type           = EventInfo::Type::KEY_UP;
+            eventInfo.autoRepeat     = event.key.repeat;
+            eventInfo.key            = SCAST<Key>(event.key.keysym.sym);
             enqueue = true;
         break;
 
@@ -231,41 +255,39 @@ void Input::PeekEvent(const SDL_Event &event, const Window *window)
         break;
 
         case SDL_MOUSEBUTTONDOWN:
-            eventInfo.type        = EventInfo::Type::MOUSE_DOWN;
-            eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
-            eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
+            eventInfo.type           = EventInfo::Type::MOUSE_DOWN;
+            eventInfo.mouseButton    = SCAST<MouseButton>(event.button.button);
+            eventInfo.mousePosWindow = Vector2i(event.button.x, event.button.y);
             enqueue = true;
         break;
 
         case SDL_MOUSEBUTTONUP:
             eventInfo.type        = EventInfo::Type::MOUSE_UP;
-            eventInfo.mouseButton = Cast<MouseButton>(event.button.button);
-            eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
+            eventInfo.mouseButton = SCAST<MouseButton>(event.button.button);
+            eventInfo.mousePosWindow = Vector2i(event.button.x, event.button.y);
             enqueue = true;
         break;
 
         case SDL_MOUSEWHEEL:
             eventInfo.type       = EventInfo::Type::WHEEL;
             eventInfo.wheelDelta = Vector2(event.wheel.x, event.wheel.y);
-            eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
+            eventInfo.mousePosWindow = Vector2i(event.button.x, event.button.y);
             enqueue = true;
         break;
 
         case SDL_MOUSEMOTION:
             eventInfo.type      = EventInfo::Type::MOUSE_MOVE;
-            eventInfo.x         = event.motion.x;
-            eventInfo.y         = event.motion.y;
-            eventInfo.timestampSecs = event.button.timestamp / 1000.0f;
+            eventInfo.wheelDelta = Vector2(event.wheel.x, event.wheel.y);
+            eventInfo.mousePosWindow = Vector2i(event.button.x, event.button.y);
             enqueue = true;
         break;
     }
 
-    if (enqueue) { EnqueueEvent(eventInfo); }
-}
-
-void Input::EnqueueEvent(const EventInfo &eventInfo)
-{
-    m_eventInfoQueue.PushBack(eventInfo);
+    if (enqueue)
+    {
+        eventInfo.mousePosWindow = GetWindowPosInvertedY(eventInfo.mousePosWindow);
+        m_eventInfoQueue.PushBack(eventInfo);
+    }
 }
 
 void Input::ProcessEnqueuedEvents()
@@ -274,7 +296,6 @@ void Input::ProcessEnqueuedEvents()
     {
         ProcessEventInfo(ei);
     }
-    m_eventInfoQueue.Clear();
 }
 
 Input *Input::GetActive()
@@ -285,7 +306,7 @@ Input *Input::GetActive()
 
 String KeyToString(Key k)
 {
-    return String( SDL_GetKeyName( Cast<SDL_Keycode>(k) ) );
+    return String( SDL_GetKeyName( SCAST<SDL_Keycode>(k) ) );
 }
 
 bool Input::GetKey(Key k)
@@ -333,6 +354,11 @@ const Array<Key> &Input::GetKeysDownRepeat()
     return Input::GetActive()->m_keysDownRepeat;
 }
 
+const Array<Input::EventInfo> &Input::GetEnqueuedEvents()
+{
+    return Input::GetActive()->m_eventInfoQueue;
+}
+
 Vector2 Input::GetMouseWheel()
 {
     Input *inp = Input::GetActive();
@@ -345,7 +371,10 @@ Array<MouseButton> Input::GetMouseButtons()
     Input *inp = Input::GetActive();
     for (auto it : inp->m_mouseInfo)
     {
-        if (it.second.pressed) { mouseButtons.PushBack(it.first); }
+        if (it.second.pressed)
+        {
+            mouseButtons.PushBack(it.first);
+        }
     }
     return mouseButtons;
 }
@@ -355,7 +384,10 @@ Array<MouseButton> Input::GetMouseButtonsUp()
     Input *inp = Input::GetActive();
     for (auto it : inp->m_mouseInfo)
     {
-        if (it.second.up) { mouseButtons.PushBack(it.first); }
+        if (it.second.up)
+        {
+            mouseButtons.PushBack(it.first);
+        }
     }
     return mouseButtons;
 }
@@ -365,7 +397,10 @@ Array<MouseButton> Input::GetMouseButtonsDown()
     Input *inp = Input::GetActive();
     for (auto it : inp->m_mouseInfo)
     {
-        if (it.second.down) { mouseButtons.PushBack(it.first); }
+        if (it.second.down)
+        {
+            mouseButtons.PushBack(it.first);
+        }
     }
     return mouseButtons;
 }
@@ -420,7 +455,10 @@ int Input::GetMouseDeltaX()
     Input *inp = Input::GetActive();
     int delta = inp->GetMousePositionWindow().x -
                 Input::GetPreviousMousePositionWindow().x;
-    if (Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f) { delta = 0; }
+    if (Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f)
+    {
+        delta = 0;
+    }
     return delta;
 }
 
@@ -429,7 +467,10 @@ int Input::GetMouseDeltaY()
     Input *inp = Input::GetActive();
     int delta = inp->GetMousePositionWindow().y -
                 Input::GetPreviousMousePositionWindow().y;
-    if (Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f) { delta = 0; }
+    if (Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f)
+    {
+        delta = 0;
+    }
     return delta;
 }
 
@@ -484,11 +525,19 @@ Vector2 Input::GetMousePositionNDC()
 
 Vector2i Input::GetMousePositionWindow()
 {
-    Window *win = Window::GetActive();
-    Vector2i pos;
-    SDL_GetMouseState(&pos.x, &pos.y);
-    pos.y = (win->GetHeight()-1) - pos.y; // Invert Y
-    return pos;
+    Vector2i winPosInvertedY = GetWindowPosInvertedY(
+                                    GetMousePositionWindowWithoutInvertY() );
+    return winPosInvertedY;
+}
+
+Vector2i Input::GetWindowPosInvertedY(const Vector2i &winPos)
+{
+    Vector2i winPosInverted = winPos;
+    if (Window *win = Window::GetActive())
+    {
+        winPosInverted.y = (win->GetHeight()-1) - winPos.y; // Invert Y
+    }
+    return winPosInverted;
 }
 
 Vector2 Input::GetMousePositionWindowNDC()
@@ -500,6 +549,13 @@ Vector2i Input::GetPreviousMousePositionWindow()
 {
     Input *inp = Input::GetActive();
     return inp->m_lastMousePosWindow;
+}
+
+Vector2i Input::GetMousePositionWindowWithoutInvertY()
+{
+    Vector2i winPos;
+    SDL_GetMouseState(&winPos.x, &winPos.y);
+    return winPos;
 }
 
 void Input::StartTextInput()

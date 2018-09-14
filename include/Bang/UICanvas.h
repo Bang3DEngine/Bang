@@ -83,12 +83,12 @@ private:
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,
-            Array< std::pair<IFocusable*, AARect> > *sortedCandidates) const;
+            Array< std::pair<IFocusable*, AARecti> > *sortedCandidates) const;
 
     void GetSortedFocusCandidatesByPaintOrder(
             const GameObject *go,
-            Array< std::pair<IFocusable*, AARect> > *sortedCandidates,
-            std::stack<AARect> *maskRectStack) const;
+            Array< std::pair<IFocusable*, AARecti> > *sortedCandidates,
+            std::stack<AARecti> *maskRectStack) const;
 };
 
 NAMESPACE_BANG_END

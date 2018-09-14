@@ -21,6 +21,67 @@ FORWARD class Window;
 class Input
 {
 public:
+    struct EventInfo
+    {
+        enum class Type
+        {
+            NONE,
+            KEY_DOWN,
+            KEY_UP,
+            MOUSE_DOWN,
+            MOUSE_UP,
+            MOUSE_MOVE,
+            WHEEL
+        };
+
+        Type type               = Type::NONE;
+        Key key                 = Key::NONE;
+        MouseButton mouseButton = MouseButton::NONE;
+        bool autoRepeat         = false;
+        float timestampSecs     = 0;
+        Vector2i mousePosWindow = Vector2i::Zero;
+        Vector2 wheelDelta      = Vector2::Zero;
+
+        bool IsMouseType() const
+        {
+            return (type == Type::MOUSE_DOWN ||
+                    type == Type::MOUSE_MOVE ||
+                    type == Type::MOUSE_UP);
+        }
+
+        Vector2i GetMousePosWindow() const
+        {
+            if (IsMouseType())
+            {
+                return mousePosWindow;
+            }
+            return Input::GetMousePositionWindow();
+        }
+
+    };
+
+
+    struct ButtonInfo
+    {
+        bool up = false;         // Just one frame
+        bool down = false;       // Just one frame
+        bool pressed = false;    // Long duration
+        bool autoRepeat = false;
+
+        ButtonInfo()
+        {
+            up = down = pressed = false;
+        }
+
+        ButtonInfo(bool up, bool down, bool pressed)
+        {
+            this->up = up;
+            this->down = down;
+            this->pressed = pressed;
+        }
+    };
+
+public:
     static String KeyToString(Key k);
 
     static bool GetKey(Key k);
@@ -32,6 +93,7 @@ public:
     static const Array<Key>& GetKeysDown();
     static const Array<Key>& GetPressedKeys();
     static const Array<Key>& GetKeysDownRepeat();
+    static const Array<EventInfo>& GetEnqueuedEvents();
 
     static Vector2 GetMouseWheel();
 
@@ -66,6 +128,8 @@ public:
     static Vector2i GetMousePositionWindow();
     static Vector2  GetMousePositionWindowNDC();
     static Vector2i GetPreviousMousePositionWindow();
+    static Vector2i GetMousePositionWindowWithoutInvertY();
+    static Vector2i GetWindowPosInvertedY(const Vector2i &winPos);
 
     static void StartTextInput();
     static String PollInputText();
@@ -98,48 +162,6 @@ private:
     Input();
     virtual ~Input();
 
-    struct EventInfo : public IToString
-    {
-        enum class Type
-        { NONE, KEY_DOWN, KEY_UP, MOUSE_DOWN, MOUSE_UP, MOUSE_MOVE, WHEEL };
-
-        Type type               = Type::NONE;
-        Key key                 = Key::NONE;
-        MouseButton mouseButton = MouseButton::NONE;
-        bool autoRepeat         = false;
-        int x                   = 0;
-        int y                   = 0;
-        float timestampSecs     = 0;
-        Vector2 wheelDelta      = Vector2::Zero;
-
-        String ToString() const override { return String::ToString(type); }
-    };
-
-
-    struct ButtonInfo : public IToString
-    {
-        bool up = false;         // Just one frame
-        bool down = false;       // Just one frame
-        bool pressed = false;    // Long duration
-        bool autoRepeat = false;
-
-        ButtonInfo() { up = down = pressed = false; }
-        ButtonInfo(bool up, bool down, bool pressed)
-        {
-            this->up = up;
-            this->down = down;
-            this->pressed = pressed;
-        }
-
-        String ToString() const override
-        {
-            std::ostringstream oss;
-            oss << "(Up: " << up << ", Down: " << down <<
-                   ", Pressed: " << pressed << ")";
-            return String(oss.str());
-        }
-    };
-
     UMap<Key, ButtonInfo, EnumClassHash> m_keyInfos;
     UMap<MouseButton, ButtonInfo, EnumClassHash> m_mouseInfo;
     Array<EventInfo> m_eventInfoQueue;
@@ -151,8 +173,7 @@ private:
     void ProcessKeyDownEventInfo(const EventInfo &ei);
     void ProcessKeyUpEventInfo(const EventInfo &ei);
 
-    void PeekEvent(const SDL_Event &event, const Window *window);
-    void EnqueueEvent(const EventInfo &eventInfo);
+    void EnqueueEvent(const SDL_Event &event, const Window *window);
     void ProcessEventInfo(const EventInfo &eventInfo);
 
     void ProcessEnqueuedEvents();

@@ -29,7 +29,7 @@ public:
     Axis GetAxis() const;
 
     // IEventsFocus
-    virtual void OnEvent(IFocusable *focusable, const UIEvent &event) override;
+    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event) override;
 
     static UIDirLayoutMovableSeparator *CreateInto(GameObject *go);
 

@@ -14,9 +14,9 @@ class IFocusable : public EventEmitter<IEventsFocus>
 {
 public:
     using EventCallback = std::function<UIEventResult(IFocusable*,
-                                                      const UIEvent&)>;
+                                                      const UIEventExt&)>;
 
-    UIEventResult ProcessEvent(const UIEvent &event);
+    UIEventResult ProcessEvent(const UIEventExt &event);
 
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);

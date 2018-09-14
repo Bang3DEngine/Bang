@@ -363,11 +363,11 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->AddEventCallback([comboBox](IFocusable*,
-                                           const UIEvent &event)
+                                           const UIEventExt &event)
     {
         if (!comboBox->m_listRecentlyToggled)
         {
-            if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
+            if (event.type == UIEventExt::Type::MOUSE_CLICK_UP)
             {
                 if (comboBox->IsListBeingShown() &&
                     comboBox->GetList()->GetFocusable()->IsMouseOver() &&
@@ -376,7 +376,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
                     comboBox->m_listRecentlyToggled = true;
                 }
             }
-            else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
+            else if (event.type == UIEventExt::Type::MOUSE_CLICK_DOWN)
             {
                 if (!comboBox->IsListBeingShown())
                 {

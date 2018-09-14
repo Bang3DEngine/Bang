@@ -99,7 +99,10 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
                     &IEventsUIList::OnItemAdded, newItem, index);
     }
 
-    if (index <= m_selectionIndex) { ++m_selectionIndex; }
+    if (index <= m_selectionIndex)
+    {
+        ++m_selectionIndex;
+    }
 }
 
 void UIList::RemoveItem_(GOItem *item, bool moving)
@@ -439,25 +442,25 @@ void UIList::HandleShortcuts()
 
 }
 
-UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
+UIEventResult UIList::UIEventCallback(IFocusable*, const UIEventExt &event)
 {
     switch (event.type)
     {
-        case UIEvent::Type::MOUSE_EXIT:
+        case UIEventExt::Type::MOUSE_EXIT:
         if (p_itemUnderMouse)
         {
             return OnMouseMove();
         }
         break;
 
-        case UIEvent::Type::MOUSE_ENTER:
-        case UIEvent::Type::MOUSE_MOVE:
+        case UIEventExt::Type::MOUSE_ENTER:
+        case UIEventExt::Type::MOUSE_MOVE:
         {
             return OnMouseMove();
         }
         break;
 
-        case UIEvent::Type::MOUSE_CLICK_DOWN:
+        case UIEventExt::Type::MOUSE_CLICK_DOWN:
             if (p_itemUnderMouse)
             {
                 if (event.mouse.button == MouseButton::LEFT)
@@ -474,7 +477,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
             }
         break;
 
-        case UIEvent::Type::MOUSE_CLICK_UP:
+        case UIEventExt::Type::MOUSE_CLICK_UP:
             if (p_itemUnderMouse)
             {
                 if (event.mouse.button == MouseButton::LEFT)
@@ -485,7 +488,7 @@ UIEventResult UIList::UIEventCallback(IFocusable*, const UIEvent &event)
             }
         break;
 
-        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
+        case UIEventExt::Type::MOUSE_CLICK_DOUBLE:
         if (p_itemUnderMouse)
         {
             CallSelectionCallback(p_itemUnderMouse, Action::DOUBLE_CLICKED_LEFT);
@@ -597,7 +600,7 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
 
     list->p_focusable = container->AddComponent<UIFocusable>();
     list->p_focusable->AddEventCallback([list](IFocusable *focusable,
-                                               const UIEvent &event)
+                                               const UIEventExt &event)
     {
         return list->UIEventCallback(focusable, event);
     });

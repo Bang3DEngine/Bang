@@ -18,25 +18,25 @@ void IFocusable::UpdateFromCanvas()
 {
 }
 
-UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
+UIEventResult IFocusable::ProcessEvent(const UIEventExt &event)
 {
     switch (event.type)
     {
-        case UIEvent::Type::MOUSE_ENTER:
+        case UIEventExt::Type::MOUSE_ENTER:
             SetIsMouseOver(true);
         break;
 
-        case UIEvent::Type::MOUSE_EXIT:
+        case UIEventExt::Type::MOUSE_EXIT:
             SetIsMouseOver(false);
         break;
 
-        case UIEvent::Type::STARTED_BEING_PRESSED:
+        case UIEventExt::Type::STARTED_BEING_PRESSED:
             SetBeingPressed(true);
         break;
 
-        case UIEvent::Type::MOUSE_CLICK_FULL:
-        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
-        case UIEvent::Type::FINISHED_BEING_PRESSED:
+        case UIEventExt::Type::MOUSE_CLICK_FULL:
+        case UIEventExt::Type::MOUSE_CLICK_DOUBLE:
+        case UIEventExt::Type::FINISHED_BEING_PRESSED:
             SetBeingPressed(false);
         break;
 
@@ -56,7 +56,7 @@ UIEventResult IFocusable::ProcessEvent(const UIEvent &event)
                 finalResult = UIEventResult::INTERCEPT;
             }
         }
-        EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnEvent,
+        EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnUIEvent,
                                                          this, event);
     }
 

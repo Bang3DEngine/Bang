@@ -26,9 +26,18 @@ class UIList : public Component,
     COMPONENT(UIList)
 
 public:
-    enum Action { SELECTION_IN, SELECTION_OUT, MOUSE_OVER, MOUSE_OUT,
-                  PRESSED, DOUBLE_CLICKED_LEFT, MOUSE_LEFT_DOWN, MOUSE_LEFT_UP,
-                  MOUSE_RIGHT_DOWN };
+    enum Action
+    {
+        SELECTION_IN,
+        SELECTION_OUT,
+        MOUSE_OVER,
+        MOUSE_OUT,
+        PRESSED,
+        DOUBLE_CLICKED_LEFT,
+        MOUSE_LEFT_DOWN,
+        MOUSE_LEFT_UP,
+        MOUSE_RIGHT_DOWN
+    };
 
     // Component
     void OnUpdate() override;
@@ -108,7 +117,7 @@ private:
     void HandleShortcuts();
 
     // IEventsFocus
-    UIEventResult UIEventCallback(IFocusable *focusable, const UIEvent &event);
+    UIEventResult UIEventCallback(IFocusable *focusable, const UIEventExt &event);
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);

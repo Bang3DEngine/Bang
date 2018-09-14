@@ -60,8 +60,15 @@ bool WindowManager::MainLoopIteration()
 {
     bool exit = false;
 
-    if (!HandleEvents())        { exit = true; }
-    if (GetCurrentWindows().IsEmpty()) { exit = true; }
+    if (!HandleEvents())
+    {
+        exit = true;
+    }
+
+    if (GetCurrentWindows().IsEmpty())
+    {
+        exit = true;
+    }
     DestroyQueuedWindows();
 
     for (Window *w : GetCurrentWindows())

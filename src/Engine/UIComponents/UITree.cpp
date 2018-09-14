@@ -87,9 +87,9 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnEvent(IFocusable *focusable, const UIEvent &event)
+void UITree::OnUIEvent(IFocusable *focusable, const UIEventExt &event)
 {
-    if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
+    if (event.type == UIEventExt::Type::MOUSE_CLICK_FULL)
     {
         IFocusable *collapseButton = DCAST<IFocusable*>(focusable);
         Component *cCollapseButton = DCAST<Component*>(collapseButton);

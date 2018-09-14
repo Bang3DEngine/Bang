@@ -266,13 +266,13 @@ GameObject *UIScrollBar::GetBar() const
     return p_bar;
 }
 
-void UIScrollBar::OnEvent(IFocusable*, const UIEvent &event)
+void UIScrollBar::OnUIEvent(IFocusable*, const UIEventExt &event)
 {
-    if (event.type == UIEvent::Type::MOUSE_ENTER)
+    if (event.type == UIEventExt::Type::MOUSE_ENTER)
     {
         OnMouseEnter();
     }
-    else if (event.type == UIEvent::Type::MOUSE_EXIT)
+    else if (event.type == UIEventExt::Type::MOUSE_EXIT)
     {
         OnMouseExit();
     }

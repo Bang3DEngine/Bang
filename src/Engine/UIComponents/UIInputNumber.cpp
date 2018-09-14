@@ -164,13 +164,13 @@ bool UIInputNumber::HasFocus() const
     return m_hasFocus;
 }
 
-void UIInputNumber::OnEvent(IFocusable*, const UIEvent &event)
+void UIInputNumber::OnUIEvent(IFocusable*, const UIEventExt &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    if (event.type == UIEventExt::Type::FOCUS_TAKEN)
     {
         m_hasFocus = true;
     }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
+    else if (event.type == UIEventExt::Type::FOCUS_LOST)
     {
         m_hasFocus = false;
         UpdateTextFromValue();

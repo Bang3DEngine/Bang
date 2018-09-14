@@ -522,21 +522,41 @@ void RectTransform::CalculateRectTransformLocalToWorldMatrix() const
 
 bool RectTransform::IsMouseOver(bool recursive) const
 {
-    if (!Input::IsMouseInsideWindow()) { return false; }
+    return IsMouseOver(Input::GetMousePositionWindow(), recursive);
+}
 
-    if (IsActive() && GetGameObject()->IsActive() &&
-        GetViewportAARect().Contains( Vector2(Input::GetMousePosition()) ))
-    {
-        return true;
-    }
+bool RectTransform::IsMouseOver(const Vector2i &mousePosWindow,
+                                bool recursive) const
+{
+    Vector2i mousePosVP( GL::FromWindowPointToViewportPoint(
+                            Vector2(mousePosWindow),
+                            m_vpInWhichRectTransformLocalToWorldWasCalc) );
+    return IsMouseOverVP(mousePosVP, recursive);
+}
 
-    if (recursive)
+bool RectTransform::IsMouseOverVP(const Vector2i &mousePosVP,
+                                  bool recursive) const
+{
+    if (Input::IsMouseInsideWindow())
     {
-        Array<RectTransform*> childrenRTs =
-             GetGameObject()->GetComponentsInDescendants<RectTransform>();
-        for (RectTransform *childRT : childrenRTs)
+        if (IsActive() &&
+            GetGameObject()->IsActive() &&
+            GetViewportAARect().Contains( Vector2(mousePosVP) ))
         {
-            if (childRT->IsMouseOver(recursive)) { return true; }
+            return true;
+        }
+
+        if (recursive)
+        {
+            Array<RectTransform*> childrenRTs =
+                 GetGameObject()->GetComponentsInDescendants<RectTransform>();
+            for (RectTransform *childRT : childrenRTs)
+            {
+                if (childRT->IsMouseOver(mousePosVP, recursive))
+                {
+                    return true;
+                }
+            }
         }
     }
     return false;

@@ -245,10 +245,10 @@ void UILabel::SetFocusable(IFocusable *focusable)
     }
 }
 
-void UILabel::OnEvent(IFocusable*, const UIEvent &event)
+void UILabel::OnUIEvent(IFocusable*, const UIEventExt &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN ||
-        event.type == UIEvent::Type::MOUSE_CLICK_DOUBLE)
+    if (event.type == UIEventExt::Type::FOCUS_TAKEN ||
+        event.type == UIEventExt::Type::MOUSE_CLICK_DOUBLE)
     {
         if (GetSelectAllOnFocus() && IsSelectable())
         {
@@ -260,13 +260,13 @@ void UILabel::OnEvent(IFocusable*, const UIEvent &event)
         }
         UpdateSelectionQuadRenderer();
     }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
+    else if (event.type == UIEventExt::Type::FOCUS_LOST)
     {
         ResetSelection();
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();
     }
-    else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
+    else if (event.type == UIEventExt::Type::MOUSE_CLICK_DOWN)
     {
         if (GetFocusable() && GetFocusable()->HasFocus())
         {
@@ -283,7 +283,7 @@ void UILabel::OnEvent(IFocusable*, const UIEvent &event)
             UpdateSelectionQuadRenderer();
         }
     }
-    else if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
+    else if (event.type == UIEventExt::Type::MOUSE_CLICK_UP)
     {
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();

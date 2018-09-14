@@ -16,7 +16,7 @@ enum class UIEventResult
     INTERCEPT
 };
 
-struct UIEvent
+struct UIEventExt
 {
     enum class Type
     {
@@ -36,7 +36,7 @@ struct UIEvent
     };
 
     Type type;
-    Vector2i mousePosition;
+    Vector2i mousePosWindow;
     struct
     {
         MouseButton button;
@@ -62,7 +62,7 @@ class IEventsFocus
     IEVENTS(IEventsFocus);
 
 public:
-    virtual void OnEvent(IFocusable *focusable, const UIEvent &event)
+    virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event)
     {
         BANG_UNUSED_2(focusable, event);
     }

@@ -294,6 +294,11 @@ Quaternion Matrix4G<T>::GetRotation() const
 {
     Vector3 scale = GetScale();
 
+    constexpr float Eps = 1e-3f;
+    if (Math::Abs(scale.x) <= Eps) { scale.x = Math::Sign(scale.x) * Eps; }
+    if (Math::Abs(scale.y) <= Eps) { scale.y = Math::Sign(scale.y) * Eps; }
+    if (Math::Abs(scale.z) <= Eps) { scale.z = Math::Sign(scale.z) * Eps; }
+
     Matrix4 rotMatrix;
     rotMatrix.c0 = Vector4(c0.xyz() / scale.x, 0);
     rotMatrix.c1 = Vector4(c1.xyz() / scale.y, 0);

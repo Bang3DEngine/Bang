@@ -6,6 +6,7 @@
 #include "Bang/Debug.h"
 #include "Bang/Input.h"
 #include "Bang/Scene.h"
+#include "Bang/Thread.h"
 #include "Bang/GEngine.h"
 #include "Bang/GBuffer.h"
 #include "Bang/Resources.h"
@@ -84,6 +85,7 @@ bool Window::MainLoopIteration()
     Render();
 
     GetInput()->OnFrameFinished();
+    // Thread::SleepCurrentThread(0.5f);
     SwapBuffers();
 
     return true;
@@ -103,7 +105,7 @@ bool Window::HandleEvent(const SDL_Event &sdlEvent)
 {
     if (!IsBlockedByChildren())
     {
-        GetInput()->PeekEvent(sdlEvent, this);
+        GetInput()->EnqueueEvent(sdlEvent, this);
     }
 
     switch (sdlEvent.type)

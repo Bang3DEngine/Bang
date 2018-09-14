@@ -118,9 +118,9 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([checkBox](IFocusable*, const UIEvent &event)
+    focusable->AddEventCallback([checkBox](IFocusable*, const UIEventExt &event)
     {
-        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
+        if (event.type == UIEventExt::Type::MOUSE_CLICK_FULL)
         {
             checkBox->SetChecked( !checkBox->IsChecked() );
             return UIEventResult::INTERCEPT;

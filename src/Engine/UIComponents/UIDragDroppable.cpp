@@ -217,11 +217,11 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnEvent(IFocusable *focusable, const UIEvent &event)
+void UIDragDroppable::OnUIEvent(IFocusable *focusable, const UIEventExt &event)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
-    if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
+    if (event.type == UIEventExt::Type::MOUSE_CLICK_DOWN)
     {
         OnDragStarted();
     }

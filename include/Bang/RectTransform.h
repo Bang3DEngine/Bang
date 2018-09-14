@@ -95,6 +95,8 @@ public:
     Vector2 FromLocalPointNDCToViewportPoint(const Vector2 &localPointNDC) const;
 
     bool IsMouseOver(bool recursive = false) const;
+    bool IsMouseOver(const Vector2i &mousePosWindow, bool recursive = false) const;
+    bool IsMouseOverVP(const Vector2i &mousePosVP, bool recursive = false) const;
 
     // Transform
     const Matrix4& GetLocalToWorldMatrix() const override;

@@ -85,9 +85,16 @@ const Array< RH<Resource> > &Resource::GetEmbeddedResources() const
 
 void Resource::PropagateResourceChanged()
 {
-    EventEmitter<IEventsResource>::PropagateToListeners(
-                                        &IEventsResource::OnResourceChanged,
-                                        this);
+    if (EventEmitter<IEventsResource>::IsEmittingEvents())
+    {
+        EventEmitter<IEventsResource>::PropagateToListeners(
+                                            &IEventsResource::OnResourceChanged,
+                                            this);
+        if (GetParentResource())
+        {
+            GetParentResource()->PropagateResourceChanged();
+        }
+    }
 }
 
 // Resource

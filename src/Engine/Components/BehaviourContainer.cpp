@@ -21,18 +21,16 @@ void BehaviourContainer::OnPreStart()
     TryToSubstituteByBehaviourInstance();
 }
 
-void BehaviourContainer::OnGameObjectChanged(GameObject *previousGameObject,
-                                             GameObject *newGameObject)
-{
-    Component::OnGameObjectChanged(previousGameObject, newGameObject);
-    // TryToSubstituteByBehaviourInstance();
-}
-
 void BehaviourContainer::SetSourceFilepath(const Path &sourceFilepath)
 {
-    if (sourceFilepath != GetSourceFilepath())
+    SetSourceFilepathGUID( MetaFilesManager::GetGUID(sourceFilepath) );
+}
+
+void BehaviourContainer::SetSourceFilepathGUID(const GUID &sourceFilepathGUID)
+{
+    if (sourceFilepathGUID != GetSourceFilepathGUID())
     {
-        m_sourceFilepath = sourceFilepath;
+        m_sourceFilepathGUID = sourceFilepathGUID;
     }
 }
 
@@ -47,9 +45,14 @@ String BehaviourContainer::GetBehaviourName() const
     return GetSourceFilepath().GetName();
 }
 
-const Path &BehaviourContainer::GetSourceFilepath() const
+Path BehaviourContainer::GetSourceFilepath() const
 {
-    return m_sourceFilepath;
+    return MetaFilesManager::GetFilepath( GetSourceFilepathGUID() );
+}
+
+const GUID &BehaviourContainer::GetSourceFilepathGUID() const
+{
+    return m_sourceFilepathGUID;
 }
 
 const MetaNode &BehaviourContainer::GetInitializationMeta() const
@@ -93,7 +96,7 @@ void BehaviourContainer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
     BehaviourContainer *bc = Cast<BehaviourContainer*>(clone);
-    bc->SetSourceFilepath( GetSourceFilepath() );
+    bc->SetSourceFilepathGUID( GetSourceFilepathGUID() );
     bc->SetInitializationMeta( GetInitializationMeta() );
 }
 
@@ -101,9 +104,9 @@ void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("SourceFilepath"))
+    if (metaNode.Contains("SourceFilepathGUID"))
     {
-        SetSourceFilepath( metaNode.Get<Path>("SourceFilepath") );
+        SetSourceFilepathGUID( metaNode.Get<GUID>("SourceFilepathGUID") );
     }
 
     if (metaNode.Contains("InitializationMeta"))
@@ -119,6 +122,6 @@ void BehaviourContainer::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    metaNode->Set("SourceFilepath", GetSourceFilepath());
+    metaNode->Set("SourceFilepathGUID", GetSourceFilepathGUID());
     metaNode->Set("InitializationMeta", GetInitializationMeta().ToString());
 }

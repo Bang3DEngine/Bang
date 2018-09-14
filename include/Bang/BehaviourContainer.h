@@ -20,10 +20,12 @@ class BehaviourContainer : public Component
 
 public:
     void SetSourceFilepath(const Path &sourceFilepath);
+    void SetSourceFilepathGUID(const GUID &sourceFilepathGUID);
     Behaviour* CreateBehaviourInstance(Library *behavioursLibrary) const;
 
     String GetBehaviourName() const;
-    const Path& GetSourceFilepath() const;
+    Path GetSourceFilepath() const;
+    const GUID& GetSourceFilepathGUID() const;
     const MetaNode& GetInitializationMeta() const;
 
     void TryToSubstituteByBehaviourInstance();
@@ -31,7 +33,7 @@ public:
     void SubstituteByBehaviourInstance(Library *behavioursLibrary);
 
 private:
-    Path m_sourceFilepath;
+    GUID m_sourceFilepathGUID;
     MetaNode m_initializationMeta;
     Behaviour *p_behaviour = nullptr;
 
@@ -40,8 +42,6 @@ private:
 
     // Component
     void OnPreStart() override;
-    void OnGameObjectChanged(GameObject *previousGameObject,
-                             GameObject *newGameObject) override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

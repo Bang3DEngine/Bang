@@ -128,35 +128,35 @@ void MetaFilesManager::RegisterMetaFilepath(const Path &metaFilepath)
         GUID guid = metaNode.Get<GUID>("GUID");
         if (!guid.IsEmpty())
         {
-            MetaFilesManager *ifm = MetaFilesManager::GetInstance();
-            if (ifm->m_GUIDToFilepath.ContainsKey(guid) &&
-                ifm->m_GUIDToFilepath.Get(guid) != filepath)
+            MetaFilesManager *mfm = MetaFilesManager::GetInstance();
+            if (mfm->m_GUIDToFilepath.ContainsKey(guid) &&
+                mfm->m_GUIDToFilepath.Get(guid) != filepath)
             {
                 Debug_Error("Found conflicting GUID: " << guid <<
                             "(Files '" << filepath << "' and '" <<
-                            ifm->m_GUIDToFilepath.Get(guid) << "'");
+                            mfm->m_GUIDToFilepath.Get(guid) << "'");
             }
 
-            ifm->m_GUIDToFilepath.Add(guid, filepath);
-            ifm->m_filepathToGUID.Add(filepath, guid);
+            mfm->m_GUIDToFilepath.Add(guid, filepath);
+            mfm->m_filepathToGUID.Add(filepath, guid);
         }
     }
 }
 
 void MetaFilesManager::UnRegisterMetaFilepath(const Path &metaFilepath)
 {
-    MetaFilesManager *ifm = MetaFilesManager::GetInstance();
+    MetaFilesManager *mfm = MetaFilesManager::GetInstance();
     Path filepath = GetFilepath(metaFilepath);
-    ifm->m_GUIDToFilepath.RemoveValues(filepath);
-    ifm->m_filepathToGUID.Remove(filepath);
+    mfm->m_GUIDToFilepath.RemoveValues(filepath);
+    mfm->m_filepathToGUID.Remove(filepath);
 }
 
 GUID MetaFilesManager::GetGUID(const Path& filepath)
 {
-    MetaFilesManager *ifm = MetaFilesManager::GetInstance();
-    if (ifm->m_filepathToGUID.ContainsKey(filepath))
+    MetaFilesManager *mfm = MetaFilesManager::GetInstance();
+    if (mfm->m_filepathToGUID.ContainsKey(filepath))
     {
-        return ifm->m_filepathToGUID.Get(filepath);
+        return mfm->m_filepathToGUID.Get(filepath);
     }
     else
     {
@@ -168,7 +168,7 @@ GUID MetaFilesManager::GetGUID(const Path& filepath)
                 MetaNode metaNode;
                 metaNode.Import(metaFilepath);
                 GUID guid = metaNode.Get<GUID>("GUID");
-                ifm->m_filepathToGUID.Add(filepath, guid);
+                mfm->m_filepathToGUID.Add(filepath, guid);
                 return guid;
             }
         }
@@ -191,10 +191,10 @@ GUID MetaFilesManager::GetGUID(const Path& filepath)
 
 Path MetaFilesManager::GetFilepath(const GUID &guid)
 {
-    MetaFilesManager *ifm = MetaFilesManager::GetInstance();
-    if (ifm->m_GUIDToFilepath.ContainsKey(guid))
+    MetaFilesManager *mfm = MetaFilesManager::GetInstance();
+    if (mfm->m_GUIDToFilepath.ContainsKey(guid))
     {
-        Path path = ifm->m_GUIDToFilepath.Get(guid);
+        Path path = mfm->m_GUIDToFilepath.Get(guid);
         return path;
     }
     else

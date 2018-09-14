@@ -42,6 +42,7 @@ void Application::Init(const Path &engineRootPath)
 
     m_time = new Time();
 
+    m_systemUtils = new SystemUtils();
     m_debug = CreateDebug();
 
     m_paths = CreatePaths();
@@ -77,6 +78,7 @@ Application::~Application()
     delete m_time;
     delete m_debug;
     delete m_paths;
+    delete m_systemUtils;
 
     delete m_physics; m_physics = nullptr;
 
@@ -182,6 +184,11 @@ Settings *Application::GetSettings() const
 Resources *Application::GetResources() const
 {
     return m_resources;
+}
+
+SystemUtils *Application::GetSystemUtils() const
+{
+    return m_systemUtils;
 }
 
 AudioManager *Application::GetAudioManager() const

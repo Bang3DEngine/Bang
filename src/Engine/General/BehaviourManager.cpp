@@ -146,8 +146,8 @@ void BehaviourManager::SetBehavioursLibrary(Library *behavioursLibrary)
 
         if (GetBehavioursLibrary())
         {
-            // Debug_DLog("Going to load BehavioursLibrary " <<
-            //            GetBehavioursLibrary()->GetLibraryPath());
+            Debug_DLog("Going to load BehavioursLibrary " <<
+                       GetBehavioursLibrary()->GetLibraryPath());
 
             if (!GetBehavioursLibrary()->Load())
             {

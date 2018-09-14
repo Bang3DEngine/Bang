@@ -2,9 +2,14 @@
 
 #include "Bang/Debug.h"
 #include "Bang/Library.h"
+#include "Bang/Application.h"
 #include "Bang/SystemProcess.h"
 
 USING_NAMESPACE_BANG
+
+SystemUtils::SystemUtils()
+{
+}
 
 void SystemUtils::System(const String &command,
                          const List<String> &argsList,
@@ -23,8 +28,18 @@ void SystemUtils::System(const String &command,
 
     if (success)
     {
-        *success = process.FinishedOk();
+        *success = (process.GetExitCode() == 0);
     }
 
     process.Close();
+}
+
+Mutex *SystemUtils::GetMutex()
+{
+    return &(SystemUtils::GetInstance()->m_mutex);
+}
+
+SystemUtils *SystemUtils::GetInstance()
+{
+    return Application::GetInstance()->GetSystemUtils();
 }

@@ -14,6 +14,7 @@
 USING_NAMESPACE_BANG
 
 const String Debug::c_logPrefix    = "[   LOG   ]: ";
+const String Debug::c_dlogPrefix   = "[  DLOG   ]: ";
 const String Debug::c_warnPrefix   = "[ WARNING ]: ";
 const String Debug::c_errorPrefix  = "[  ERROR  ]: ";
 
@@ -21,23 +22,24 @@ Debug::Debug() { }
 Debug::~Debug() { }
 
 void Debug::Message(DebugMessageType msgType,
-                    const String &str, int line,
+                    const String &str,
+                    int line,
                     const String &fileName)
 {
     String prefix = "";
     switch (msgType)
     {
         case DebugMessageType::LOG:   prefix = c_logPrefix;   break;
+        case DebugMessageType::DLOG:  prefix = c_dlogPrefix;  break;
         case DebugMessageType::WARN:  prefix = c_warnPrefix;  break;
         case DebugMessageType::ERROR: prefix = c_errorPrefix; break;
     }
 
-    std::cerr << prefix << str << " | " << fileName <<
-                 "(" << line << ")" <<  std::endl;
-    std::cerr.flush();
+    std::ostream &os = (msgType == DebugMessageType::ERROR ? std::cerr : std::cout);
+    os << prefix << str << " | " << fileName << "(" << line << ")" <<  std::endl;
+    os.flush();
 
-    Debug *dbg = Debug::GetInstance();
-    if (dbg)
+    if (Debug *dbg = Debug::GetInstance())
     {
         dbg->EventEmitter<IEventsDebug>::PropagateToListeners(
                     &IEventsDebug::OnMessage,
@@ -49,6 +51,11 @@ void Debug::Message(DebugMessageType msgType,
 void Debug::Log(const String &str, int line, const String &fileName)
 {
     Debug::Message(DebugMessageType::LOG, str, line, fileName);
+}
+
+void Debug::DLog(const String &str, int line, const String &fileName)
+{
+    Debug::Message(DebugMessageType::DLOG, str, line, fileName);
 }
 
 void Debug::Warn(const String &str, int line, const String &fileName)
@@ -70,9 +77,7 @@ void PrintUniform(const String &varName,
                   int uniformIdx,
                   const String &varValueString)
 {
-    Debug_Log(varName <<
-              " (" << uniformIdx << "): " <<
-              varValueString);
+    Debug_Log(varName << " (" << uniformIdx << "): " << varValueString);
 }
 
 template <class T>

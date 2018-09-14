@@ -8,6 +8,7 @@ NAMESPACE_BANG_BEGIN
 enum class DebugMessageType
 {
     LOG,
+    DLOG,
     WARN,
     ERROR
 };

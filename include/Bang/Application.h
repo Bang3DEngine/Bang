@@ -5,6 +5,7 @@
 
 #include "Bang/List.h"
 #include "Bang/Path.h"
+#include "Bang/SystemUtils.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -42,6 +43,7 @@ public:
     Physics          *GetPhysics() const;
     Settings         *GetSettings() const;
     Resources        *GetResources() const;
+    SystemUtils      *GetSystemUtils() const;
     AudioManager     *GetAudioManager() const;
     WindowManager    *GetWindowManager() const;
     MetaFilesManager *GetMetaFilesManager() const;
@@ -61,9 +63,10 @@ protected:
     GEngine          *m_gEngine            = nullptr;
     Settings         *m_settings           = nullptr;
     Resources        *m_resources          = nullptr;
+    SystemUtils      *m_systemUtils        = nullptr;
     AudioManager     *m_audioManager       = nullptr;
     WindowManager    *m_windowManager      = nullptr;
-    MetaFilesManager *m_metaFilesManager = nullptr;
+    MetaFilesManager *m_metaFilesManager   = nullptr;
 
     String m_mainThreadId = "";
 

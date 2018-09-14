@@ -168,7 +168,11 @@ bool Animator::GetPlayOnStart() const
 Animation* Animator::GetAnimation(uint animationIndex) const
 {
     ASSERT(animationIndex < GetAnimations().Size());
-    return p_animations[animationIndex].Get();
+    if (animationIndex < GetAnimations().Size())
+    {
+        return p_animations[animationIndex].Get();
+    }
+    return nullptr;
 }
 
 const Array<RH<Animation> > &Animator::GetAnimations() const
@@ -226,10 +230,6 @@ uint Animator::GetCurrentAnimationIndex() const
 
 Animation *Animator::GetCurrentAnimation() const
 {
-    if (GetCurrentAnimationIndex() < GetAnimations().Size())
-    {
-        return GetAnimations()[m_currentAnimationIndex].Get();
-    }
-    return nullptr;
+    return GetAnimation( GetCurrentAnimationIndex() );
 }
 

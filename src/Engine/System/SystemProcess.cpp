@@ -13,239 +13,134 @@
 #include "Bang/Array.h"
 #include "Bang/Debug.h"
 #include "Bang/Mutex.h"
+#include "Bang/Paths.h"
 #include "Bang/Thread.h"
+#include "Bang/SystemUtils.h"
+
+using namespace TinyProcessLib;
+
+constexpr int SystemProcess::MaxBuffSize;
 
 USING_NAMESPACE_BANG
 
-enum
-{
-    IN = 0,
-    OUT = 1,
-    ERR = 2
-};
-
-enum
-{
-    WRITE = OUT,
-    READ = IN
-};
-
 SystemProcess::SystemProcess()
 {
-
 }
 
 SystemProcess::~SystemProcess()
 {
+    Close();
+}
+
+void SystemProcess::ReadOutErr(String *buffer, const char *str, int size)
+{
+    constexpr int MaxBuffSize = 4096;
+    char buff[MaxBuffSize+1];
+    int sizeToRead = Math::Min(MaxBuffSize, size);
+    memcpy(buff, str, static_cast<std::size_t>(sizeToRead));
+    buff[sizeToRead] = 0;
+    *buffer += String(buff);
+}
+
+void SystemProcess::ReadOut(const char *str, int size)
+{
+    ReadOutErr(&m_out, str, size);
+}
+
+void SystemProcess::ReadErr(const char *str, int size)
+{
+    ReadOutErr(&m_err, str, size);
 }
 
 bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
 {
-    // Debug_DLog("Executing command: " << command << " " <<
-    //            String::Join(extraArgs, " "));
-    // Debug_DLog("LD_PRELOAD: " << std::getenv("LD_PRELOAD"));
-    static Mutex mutex;
-    while (!mutex.TryLock())
-    {
-    }
-    char ldPreloadEmpty[] = "LD_PRELOAD=";
-    putenv(ldPreloadEmpty);
-    mutex.UnLock();
+    String fullCommand =
+          "LD_PRELOAD=\"\" ; " + command + " " + String::Join(extraArgs, " ");
 
-    m_oldFileDescriptors[IN]  = dup(Channel::STDIN);
-    m_oldFileDescriptors[OUT] = dup(Channel::STDOUT);
-    m_oldFileDescriptors[ERR] = dup(Channel::STDERR);
-
-    if (pipe(m_childToParentOutFD) != 0 ||
-        pipe(m_childToParentErrFD) != 0 ||
-        pipe(m_parentToChildFD)    != 0)
-    {
-        m_exitCode = -1;
-        return false;
-    }
-
-    int pid = fork();
-    if (pid == 0) // Child process
-    {
-        // Set up parent to child(this) input
-        close(m_parentToChildFD[WRITE]);    // We won't write to ourselves
-        close(m_childToParentOutFD[READ]);  // We won't read from parent
-        close(m_childToParentErrFD[READ]);  // We won't read from parent
-
-        // Input from stdin now will go to our pipe m_parentToChildFD[READ]
-        // stdout/stderr now will go to our pipe m_childToParentXXXFD[WRITE]
-        dup2(m_parentToChildFD[READ],     Channel::STDIN);
-        dup2(m_childToParentOutFD[WRITE], Channel::STDOUT);
-        dup2(m_childToParentErrFD[WRITE], Channel::STDERR);
-
-        // Execute the command, and its in/out will come to our pipes
-        String fullCommand = command + " " + String::Join(extraArgs, " ");
-        String fc = fullCommand.Split<Array>(' ').Back().Replace("/", "_").Replace(" ", "_");
-
-        // EXECUTE!
-        execl("/bin/sh", "sh", "-c", fullCommand.ToCString(), nullptr);
-    }
-    else if (pid != -1) // Parent process
-    {
-        m_childPID = pid;
-        close(m_childToParentOutFD[WRITE]); // We won't write this
-        close(m_childToParentErrFD[WRITE]); // We won't write this
-        close(m_parentToChildFD[READ]);     // We won't read this
-
-        // Specify NonBlocking read
-        fcntl(m_childToParentOutFD[READ], F_SETFL,
-        fcntl(m_childToParentOutFD[READ], F_GETFL) | O_NONBLOCK);
-        fcntl(m_childToParentErrFD[READ], F_SETFL,
-        fcntl(m_childToParentErrFD[READ], F_GETFL) | O_NONBLOCK);
-    }
-    else
-    {
-        Debug_Error("There was an error forking to execute SystemProcess.");
-        return false;
-    }
+    m_process =
+       new Process(fullCommand,
+                   Paths::GetExecutableDir().GetAbsolute(),
+                   [this](const char *str, int size) { ReadOut(str, size); },
+                   [this](const char *str, int size) { ReadErr(str, size); },
+                   true,
+                   SystemProcess::MaxBuffSize);
 
     return true;
 }
 
-long long unsigned int GetNow()
+void SystemProcess::WaitUntilFinished(float seconds,
+                                      bool *finishedOut,
+                                      int *statusOut)
 {
-    return std::chrono::duration_cast< std::chrono::milliseconds >(
-            std::chrono::system_clock::now().time_since_epoch()).count();
-}
-
-bool SystemProcess::WaitUntilFinished(float seconds)
-{
-    m_readOutputWhileWaiting = "";
-    m_readErrorWhileWaiting  = "";
-
-    auto beginning = GetNow();
-
-    // Get its return value
-    int status;
-    bool exited = false;
-    bool signaled = false;
-    bool finished = false;
-    while ( (GetNow() - beginning) / 1000.0f < seconds )
+    if (m_process)
     {
-        m_readOutputWhileWaiting += ReadStandardOutputRaw();
-        m_readErrorWhileWaiting  += ReadStandardErrorRaw();
-
-        /*
-        if (m_readOutputWhileWaiting.Size() >= 1)
+        int status = 0;
+        bool finished = false;
+        auto beginning = Time::GetNow_Seconds();
+        while ( !finished && ((Time::GetNow_Seconds() - beginning) < seconds) )
         {
-            Debug_DLog(m_readOutputWhileWaiting);
-        }
-        if (m_readErrorWhileWaiting.Size() >= 1)
-        {
-            Debug_DLog(m_readErrorWhileWaiting);
-        }
-        */
-
-        status = -1;
-        int waitpidStatus = waitpid(m_childPID, &status, WNOHANG);
-        if ( waitpidStatus < 0 )
-        {
-            Debug_Error("Waitpid error: " << strerror(errno));
-            break;
+            Thread::SleepCurrentThread( Math::Max(seconds / 10.0f, 0.1f) );
+            finished = m_process->try_get_exit_status(status);
         }
 
-        if (status >= 0)
+        if (finishedOut)
         {
-            exited   = WIFEXITED(status);
-            signaled = WIFSIGNALED(status);
-            if (exited || signaled)
-            {
-                finished = true;
-                break;
-            }
+            *finishedOut = finished;
         }
-        Thread::SleepCurrentThread(0.05f);
+
+        if (statusOut)
+        {
+            *statusOut = status;
+        }
     }
-
-    if (finished)
-    {
-        if (status >= 0)
-        {
-            if (exited) { m_exitCode = WEXITSTATUS(status); }
-            if (signaled) { m_exitCode = -2; }
-        }
-        else { m_exitCode = -1; }
-    }
-    return finished;
 }
 
 void SystemProcess::Close()
 {
-    // Close non-closed channels
-    close(m_childToParentOutFD[READ]);
-    close(m_childToParentErrFD[READ]);
-    close(m_parentToChildFD[WRITE]);
-
-    // Restore stdin / stdout / stderr
-    dup2(Channel::STDIN,    m_oldFileDescriptors[IN]);
-    dup2(Channel::STDOUT,   m_oldFileDescriptors[OUT]);
-    dup2(Channel::STDERR, m_oldFileDescriptors[ERR]);
-    close(m_oldFileDescriptors[IN]);
-    close(m_oldFileDescriptors[OUT]);
-    close(m_oldFileDescriptors[ERR]);
+    if (m_process)
+    {
+        Kill(true);
+        m_process = nullptr;
+        delete m_process;
+    }
 }
 
 void SystemProcess::Write(const String &str)
 {
-    write(m_parentToChildFD[WRITE],
-          (str).ToCString(),
-          sizeof(char) * (str.Size() + 1));
+    if (m_process)
+    {
+        m_process->write(str);
+    }
 }
 
 void SystemProcess::CloseWriteChannel()
 {
-    close(m_parentToChildFD[WRITE]);
+    if (m_process)
+    {
+        m_process->close_stdin();
+    }
 }
 
 String SystemProcess::ReadStandardOutput()
 {
-    return m_readOutputWhileWaiting + ReadStandardOutputRaw();
+    WaitUntilFinished();
+    return m_out;
 }
 String SystemProcess::ReadStandardError()
 {
-    return m_readErrorWhileWaiting + ReadStandardErrorRaw();
-
-}
-String SystemProcess::ReadStandardOutputRaw()
-{
-    return ReadFileDescriptor(m_childToParentOutFD[READ]);
-}
-String SystemProcess::ReadStandardErrorRaw()
-{
-    return ReadFileDescriptor(m_childToParentErrFD[READ]);
+    WaitUntilFinished();
+    return m_err;
 }
 
-String SystemProcess::ReadFileDescriptor(FileDescriptor fd)
+void SystemProcess::Kill(bool force)
 {
-    String output = "";
-
-    constexpr int bufferSize = 4096;
-    char buffer[bufferSize];
-    memset(buffer, 0, bufferSize);
-    int readBytes = 0;
-    while ( (readBytes = read(fd, buffer, bufferSize-1)) > 0 )
+    if (m_process)
     {
-        String readChunk(buffer);
-        String::Iterator readChunkEnd = readChunk.Begin();
-        std::advance(readChunkEnd, readBytes);
-        String readChunkN(readChunk.Begin(), readChunkEnd);
-        output += readChunkN;
-        memset(buffer, 0, bufferSize);
+        m_process->kill(force);
     }
-    return output;
 }
 
 int SystemProcess::GetExitCode() const
 {
-    return m_exitCode;
-}
-
-bool SystemProcess::FinishedOk() const
-{
-    return GetExitCode() == 0;
+    return m_process ? m_process->get_exit_status() : 0;
 }

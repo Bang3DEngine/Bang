@@ -22,6 +22,7 @@ class Debug : public EventEmitter<IEventsDebug>
 {
 public:
     static void Log(const String &str, int line, const String &fileName);
+    static void DLog(const String &str, int line, const String &fileName);
     static void Warn(const String &str, int line, const String &fileName);
     static void Error(const String &str, int line, const String &fileName);
 
@@ -47,6 +48,7 @@ protected:
 
 private:
     static const String c_logPrefix;
+    static const String c_dlogPrefix;
     static const String c_warnPrefix;
     static const String c_errorPrefix;
 
@@ -61,13 +63,15 @@ private:
     Debug::Log(log.str(), __LINE__, __FILE__); \
 } while (0)
 
-#ifdef DEBUG
-#define Debug_DLog(msg) Debug_Log(msg)
-#else
-#define Debug_DLog(msg)
-#endif
+#define Debug_DLog(msg) do{\
+    std::ostringstream log;\
+    log << std::boolalpha << msg;\
+    log.flush();\
+    Debug::DLog(log.str(), __LINE__, __FILE__); \
+} while (0)
 
-#define Debug_Peek(varName) Debug_Log(#varName << ": " << (varName))
+#define Debug_Peek(varName)   Debug_Log(#varName << ": " << (varName))
+#define Debug_DPeek(varName) Debug_DLog(#varName << ": " << (varName))
 
 #define Debug_Warn(msg) do{\
     std::ostringstream log;\

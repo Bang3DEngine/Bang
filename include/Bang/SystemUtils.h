@@ -9,6 +9,7 @@
 #include <sys/types.h>
 
 #include "Bang/List.h"
+#include "Bang/Mutex.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
@@ -24,9 +25,16 @@ public:
                        String *output = nullptr,
                        bool *success = nullptr);
 
-private:
-    SystemUtils() {}
+    static Mutex* GetMutex();
 
+private:
+    Mutex m_mutex;
+
+    SystemUtils();
+
+    static SystemUtils* GetInstance();
+
+    friend class Application;
 };
 
 NAMESPACE_BANG_END

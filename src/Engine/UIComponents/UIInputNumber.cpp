@@ -23,8 +23,8 @@ UIInputNumber::~UIInputNumber()
 void UIInputNumber::OnStart()
 {
     UIInputText *inputText = GetGameObject()->GetComponent<UIInputText>();
-    inputText->EventEmitter<IEventsFocus>::RegisterListener(this);
     inputText->EventEmitter<IEventsValueChanged>::RegisterListener(this);
+    inputText->EventEmitter<IEventsFocus>::RegisterListener(this);
 }
 
 void UIInputNumber::OnUpdate()

@@ -361,22 +361,26 @@ void UICanvas::OnUpdate()
     // Tabbing
     if (Input::GetKeyDownRepeat(Key::TAB))
     {
-        IFocusable *focus = GetFocus();
-        if (focus)
+        if (IFocusable *focus = GetFocus())
         {
-            const int n = focusables.Size();
+            const uint numFocusables = focusables.Size();
             int indexOfFocus = focusables.IndexOf(focus);
             bool shift = Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
             int newFocusIndex = indexOfFocus;
 
             while (true)
             {
-                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + n) % n;
-                if (newFocusIndex == indexOfFocus) { break; } // Complete loop
+                const uint nf = numFocusables;
+                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + nf) % nf;
+                if (newFocusIndex == indexOfFocus)
+                {
+                    break; // Complete loop
+                }
 
                 IFocusable *newFocus = focusables.At(newFocusIndex);
-                Component *newFocusComp = Cast<Component*>(newFocus);
+                Component *newFocusComp = DCAST<Component*>(newFocus);
                 const bool isValid = newFocus->IsFocusEnabled() &&
+                                     newFocus->GetConsiderForTabbing() &&
                                      (!newFocusComp ||
                                        newFocusComp->IsEnabled(true));
                 if (isValid)

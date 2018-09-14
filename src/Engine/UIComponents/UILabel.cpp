@@ -6,6 +6,7 @@
 #include "Bang/UICanvas.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIRectMask.h"
+#include "Bang/UIFocusable.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/SystemClipboard.h"
@@ -19,9 +20,8 @@ USING_NAMESPACE_BANG
 
 UILabel::UILabel()
 {
-    SetSelectable(false);
-    SetFocusable(this);
     ResetSelection();
+    SetSelectable(false);
     SetSelectAllOnFocus(true);
 }
 
@@ -225,26 +225,6 @@ IFocusable *UILabel::GetFocusable() const
     return p_focusable;
 }
 
-void UILabel::SetFocusable(IFocusable *focusable)
-{
-    if (focusable != GetFocusable())
-    {
-        if (GetFocusable())
-        {
-            GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(this);
-        }
-
-        p_focusable = focusable;
-        SetFocusEnabled (GetFocusable() == this);
-
-        if (GetFocusable())
-        {
-            GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
-            GetFocusable()->SetCursorType( Cursor::Type::IBEAM );
-        }
-    }
-}
-
 void UILabel::OnUIEvent(IFocusable*, const UIEventExt &event)
 {
     if (event.type == UIEventExt::Type::FOCUS_TAKEN ||
@@ -387,7 +367,11 @@ UILabel *UILabel::CreateInto(GameObject *go)
     UIImageRenderer *selectionQuad = selectionQuadGo->AddComponent<UIImageRenderer>();
     selectionQuad->SetTint(Color::LightBlue);
 
+    UIFocusable *focusable = go->AddComponent<UIFocusable>();
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(label);
+
     label->p_text = text;
+    label->p_focusable = focusable;
     label->p_selectionQuad = selectionQuadGo;
 
     selectionQuadGo->SetParent(go);

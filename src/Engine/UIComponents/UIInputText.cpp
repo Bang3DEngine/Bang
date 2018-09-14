@@ -464,9 +464,10 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     label->GetMask()->SetMasking(false);
     label->GetGameObject()->GetRectTransform()->
                             SetMargins(MarginX, MarginY, MarginX, MarginY);
-    label->SetFocusable( inputText->p_focusable );
+    label->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(inputText);
+    label->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
+    label->GetFocusable()->SetConsiderForTabbing(true);
     inputText->p_label = label;
-    inputText->p_label->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     label->GetGameObject()->SetParent(scrollArea->GetContainer());
     cursorGo->SetParent(label->GetGameObject());
@@ -506,21 +507,38 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
     const String &content = GetText()->GetContent();
     const int fwdInc = (forward ? 1 : -1);
 
-    if (cursorIndex == 0              && !forward) { return 0; }
-    if (cursorIndex == content.Size() &&  forward) { return content.Size(); }
+    if (cursorIndex == 0 && !forward)
+    {
+        return 0;
+    }
+
+    if (cursorIndex == content.Size() &&  forward)
+    {
+        return content.Size();
+    }
 
     int i = cursorIndex;
-    if (forward) { i += fwdInc; }
+    if (forward)
+    {
+        i += fwdInc;
+    }
     while (i >= 0 && i < content.Size())
     {
         if ( (i + fwdInc) < 0 || (i + fwdInc) == content.Size())
-        { i += fwdInc; break; }
+        {
+            i += fwdInc;
+            break;
+        }
 
         const int minIndex  = Math::Min(i + fwdInc, i);
         const int maxIndex  = Math::Max(i + fwdInc, i);
         const char prevChar = content[minIndex];
         const char nextChar = content[maxIndex];
-        if (IsWordBoundary(prevChar, nextChar)) { i += fwdInc; break; }
+        if (IsWordBoundary(prevChar, nextChar))
+        {
+            i += fwdInc;
+            break;
+        }
 
         i += fwdInc;
     }

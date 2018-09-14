@@ -20,6 +20,7 @@ public:
 
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
+    void SetConsiderForTabbing(bool considerForTabbing);
     void AddEventCallback(IFocusable::EventCallback eventCallback);
     void ClearEventCallbacks();
 
@@ -29,6 +30,7 @@ public:
     bool IsBeingPressed() const;
     bool IsMouseOver() const;
     Cursor::Type GetCursorType() const;
+    bool GetConsiderForTabbing() const;
 
 protected:
     IFocusable();
@@ -39,6 +41,7 @@ private:
     bool m_hasFocus = false;
     bool m_isMouseOver = false;
     bool m_focusEnabled = true;
+    bool m_considerForTabbing = false;
     bool m_hasJustFocusChanged = false;
     bool m_lastMouseDownWasHere = false;
     Cursor::Type m_cursorType = Cursor::Type::ARROW;

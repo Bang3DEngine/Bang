@@ -13,7 +13,6 @@ FORWARD class RectTransform;
 FORWARD class UITextRenderer;
 
 class UILabel : public Component,
-                public IFocusable,
                 public EventListener<IEventsFocus>
 {
     COMPONENT(UILabel)
@@ -27,7 +26,6 @@ public:
     void SetSelectionIndex(int index);
     void SetSelectable(bool selectable);
     void SetSelection(int cursorIndex, int selectionIndex);
-    String GetSelectedText() const;
 
     void SelectAll();
     void ResetSelection();
@@ -42,14 +40,13 @@ public:
     float GetCursorXViewportNDC(int cursorIndex) const;
     float GetCursorXLocalNDC(int cursorIndex) const;
 
-    bool GetSelectAllOnFocus() const;
     bool IsSelectingWithMouse() const;
 
     UIRectMask *GetMask() const;
+    String GetSelectedText() const;
     UITextRenderer *GetText() const;
     IFocusable *GetFocusable() const;
-
-    void SetFocusable(IFocusable *focusable);
+    bool GetSelectAllOnFocus() const;
 
     // IEventsFocus
     virtual void OnUIEvent(IFocusable *focusable, const UIEventExt &event) override;

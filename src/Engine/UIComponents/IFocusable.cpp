@@ -82,6 +82,11 @@ Cursor::Type IFocusable::GetCursorType() const
     return m_cursorType;
 }
 
+bool IFocusable::GetConsiderForTabbing() const
+{
+    return m_considerForTabbing;
+}
+
 bool IFocusable::IsMouseOver() const
 {
     return m_isMouseOver;
@@ -95,6 +100,11 @@ void IFocusable::SetFocusEnabled(bool focusEnabled)
 void IFocusable::SetCursorType(Cursor::Type cursorType)
 {
     m_cursorType = cursorType;
+}
+
+void IFocusable::SetConsiderForTabbing(bool considerForTabbing)
+{
+    m_considerForTabbing = considerForTabbing;
 }
 
 bool IFocusable::HasFocus() const

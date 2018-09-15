@@ -55,16 +55,6 @@ void UIScrollPanel::UpdateScrollUI()
     Vector2i scrolling (scrollingPercent * scrollMaxAmount);
     if (contentSize.x > containerSize.x || contentSize.y > containerSize.y)
     {
-        // MouseWheel scrolling
-        if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
-        {
-            Vector2i mouseWheelPx(Input::GetMouseWheel() * WheelScrollSpeedPx);
-            Vector2 mouseWheelPercent = Vector2(mouseWheelPx) / contentSize;
-            scrollingPercent -= mouseWheelPercent;
-            scrollingPercent = Vector2::Clamp(scrollingPercent,
-                                              Vector2::Zero, Vector2::One);
-        }
-
         // Apply scrollings
         Vector2i scrollEnabledMask(IsHorizontalScrollEnabledAndNoFit() ? 1 : 0,
                                    IsVerticalScrollEnabledAndNoFit()   ? 1 : 0);
@@ -80,7 +70,6 @@ void UIScrollPanel::UpdateScrollUI()
 void UIScrollPanel::OnUpdate()
 {
     Component::OnUpdate();
-
     UpdateScrollUI();
 }
 
@@ -169,9 +158,14 @@ void UIScrollPanel::SetHorizontalShowScrollMode(ShowScrollMode showScrollMode)
 }
 
 void UIScrollPanel::SetVerticalScrollEnabled(bool enabled)
-{ m_verticalScrollEnabled = enabled; }
+{
+    m_verticalScrollEnabled = enabled;
+}
+
 void UIScrollPanel::SetHorizontalScrollEnabled(bool enabled)
-{ m_horizontalScrollEnabled = enabled; }
+{
+    m_horizontalScrollEnabled = enabled;
+}
 
 void UIScrollPanel::SetScrolling(const Vector2i &scrolling)
 {
@@ -194,23 +188,49 @@ void UIScrollPanel::SetScrollingPercent(const Vector2 &scrollPerc)
 }
 
 Vector2i UIScrollPanel::GetScrolling() const
-{ return GetScrollArea()->GetScrolling(); }
+{
+    return GetScrollArea()->GetScrolling();
+}
+
 bool UIScrollPanel::GetForceVerticalFit() const
-{ return m_forceVerticalFit; }
+{
+    return m_forceVerticalFit;
+}
+
 bool UIScrollPanel::GetForceHorizontalFit() const
-{ return m_forceHorizontalFit; }
+{
+    return m_forceHorizontalFit;
+}
+
 HorizontalSide UIScrollPanel::GetVerticalScrollBarSide() const
-{ return m_verticalScrollBarSide; }
+{
+    return m_verticalScrollBarSide;
+}
+
 VerticalSide UIScrollPanel::GetHorizontalScrollBarSide() const
-{ return m_horizontalScrollBarSide; }
+{
+    return m_horizontalScrollBarSide;
+}
+
 ShowScrollMode UIScrollPanel::GetVerticalShowScrollMode() const
-{ return m_verticalShowScrollMode; }
+{
+    return m_verticalShowScrollMode;
+}
+
 ShowScrollMode UIScrollPanel::GetHorizontalShowScrollMode() const
-{ return m_horizontalShowScrollMode; }
+{
+    return m_horizontalShowScrollMode;
+}
+
 bool UIScrollPanel::IsVerticalScrollEnabled() const
-{ return m_verticalScrollEnabled; }
+{
+    return m_verticalScrollEnabled;
+}
+
 bool UIScrollPanel::IsHorizontalScrollEnabled() const
-{ return m_horizontalScrollEnabled; }
+{
+    return m_horizontalScrollEnabled;
+}
 
 Vector2 UIScrollPanel::GetContentSize() const
 {
@@ -229,11 +249,67 @@ Vector2 UIScrollPanel::GetMaxScrollLength() const
     return Vector2::Max(GetContentSize() - GetContainerSize(), Vector2::Zero);
 }
 
-UIScrollArea *UIScrollPanel::GetScrollArea() const { return p_scrollArea; }
+UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
+                                       const UIEvent &event)
+{
+    BANG_UNUSED(focusable);
+
+    if (event.type == UIEvent::Type::WHEEL)
+    {
+        Vector2 contentSize = Vector2::Max(GetContentSize(), Vector2::One);
+        Vector2 containerSize = GetContainerSize();
+
+        Vector2 scrollMaxAmount = GetMaxScrollLength();
+
+        Vector2 scrollingPercent =
+                Vector2(GetHorizontalScrollBar()->GetScrollingPercent(),
+                        GetVerticalScrollBar()->GetScrollingPercent());
+        scrollingPercent = Vector2::Clamp(scrollingPercent,
+                                          Vector2::Zero, Vector2::One);
+        Vector2i scrolling (scrollingPercent * scrollMaxAmount);
+        if (contentSize.x > containerSize.x || contentSize.y > containerSize.y)
+        {
+            // MouseWheel scrolling
+            if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
+            {
+                Vector2i mouseWheelPx(event.wheel.amount * WheelScrollSpeedPx);
+                Vector2 mouseWheelPercent = Vector2(mouseWheelPx) / contentSize;
+                scrollingPercent -= mouseWheelPercent;
+                scrollingPercent = Vector2::Clamp(scrollingPercent,
+                                                  Vector2::Zero, Vector2::One);
+            }
+
+            // Apply scrollings
+            Vector2i scrollEnabledMask(IsHorizontalScrollEnabledAndNoFit() ? 1 : 0,
+                                       IsVerticalScrollEnabledAndNoFit()   ? 1 : 0);
+            scrollingPercent *= Vector2(scrollEnabledMask);
+
+            scrolling = Vector2i(scrollingPercent * scrollMaxAmount);
+            scrolling = Vector2i::Min(scrolling, Vector2i(contentSize));
+        }
+
+        SetScrolling(scrolling);
+
+        return UIEventResult::INTERCEPT;
+    }
+
+    return UIEventResult::IGNORE;
+}
+
+UIScrollArea *UIScrollPanel::GetScrollArea() const
+{
+    return p_scrollArea;
+}
+
 UIScrollBar *UIScrollPanel::GetVerticalScrollBar() const
-{ return p_verticalScrollBar; }
+{
+    return p_verticalScrollBar;
+}
+
 UIScrollBar *UIScrollPanel::GetHorizontalScrollBar() const
-{ return p_horizontalScrollBar; }
+{
+    return p_horizontalScrollBar;
+}
 
 void UIScrollPanel::HandleScrollAreaRectTransform()
 {
@@ -313,20 +389,30 @@ void UIScrollPanel::HandleScrollShowMode(const Vector2& contentSize,
     bool showHorizontal = false;
     switch (GetHorizontalShowScrollMode())
     {
-        case ShowScrollMode::NEVER: showHorizontal = false; break;
+        case ShowScrollMode::NEVER:
+            showHorizontal = false;
+        break;
         case ShowScrollMode::WHEN_NEEDED:
-            showHorizontal = (contentSize.x > containerSize.x); break;
-        case ShowScrollMode::ALWAYS: showHorizontal = true; break;
+            showHorizontal = (contentSize.x > containerSize.x);
+        break;
+        case ShowScrollMode::ALWAYS:
+            showHorizontal = true;
+        break;
     }
     showHorizontal = showHorizontal && IsHorizontalScrollEnabledAndNoFit();
 
     bool showVertical = false;
     switch (GetVerticalShowScrollMode())
     {
-        case ShowScrollMode::NEVER: showVertical = false; break;
+        case ShowScrollMode::NEVER:
+            showVertical = false;
+        break;
         case ShowScrollMode::WHEN_NEEDED:
-            showVertical = (contentSize.y > containerSize.y); break;
-        case ShowScrollMode::ALWAYS: showVertical = true; break;
+            showVertical = (contentSize.y > containerSize.y);
+        break;
+        case ShowScrollMode::ALWAYS:
+            showVertical = true;
+        break;
     }
     showVertical = showVertical && IsVerticalScrollEnabledAndNoFit();
 
@@ -367,6 +453,9 @@ UIScrollPanel *UIScrollPanel::CreateInto(GameObject *go)
     GameObject *innerBorderGo = GameObjectFactory::CreateUIGameObject();
     GameObjectFactory::AddInnerBorder(innerBorderGo, Vector2i(1));
     innerBorderGo->SetParent(go);
+
+    UIFocusable *focusable = go->AddComponent<UIFocusable>();
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(scrollPanel);
 
     scrollPanel->SetVerticalShowScrollMode(ShowScrollMode::ALWAYS);
     scrollPanel->SetHorizontalShowScrollMode(ShowScrollMode::ALWAYS);

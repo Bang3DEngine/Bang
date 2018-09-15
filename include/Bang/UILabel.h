@@ -12,7 +12,8 @@ FORWARD class RectTransform;
 FORWARD class UITextRenderer;
 
 class UILabel : public Component,
-                public EventListener<IEventsFocus>
+                public EventListener<IEventsFocus>,
+                public EventListener<IEventsDestroy>
 {
     COMPONENT(UILabel)
 
@@ -48,7 +49,11 @@ public:
     bool GetSelectAllOnFocus() const;
 
     // IEventsFocus
-    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 private:
     int m_cursorIndex = 0;

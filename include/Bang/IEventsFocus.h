@@ -62,9 +62,10 @@ class IEventsFocus
     IEVENTS(IEventsFocus);
 
 public:
-    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable, const UIEvent &event)
     {
         BANG_UNUSED_2(focusable, event);
+        return UIEventResult::IGNORE;
     }
 };
 

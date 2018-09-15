@@ -3,15 +3,23 @@
 
 #include "Bang/Alignment.h"
 #include "Bang/Component.h"
+#include "Bang/IEventsFocus.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class UIFocusable;
 FORWARD class UIScrollBar;
 FORWARD class UIScrollArea;
 
-enum class ShowScrollMode { NEVER = 0, WHEN_NEEDED = 1, ALWAYS = 2 };
+enum class ShowScrollMode
+{
+    NEVER,
+    WHEN_NEEDED,
+    ALWAYS
+};
 
-class UIScrollPanel : public Component
+class UIScrollPanel : public Component,
+                      public EventListener<IEventsFocus>
 {
     COMPONENT(UIScrollPanel)
 
@@ -47,6 +55,11 @@ public:
     Vector2 GetContentSize() const;
     Vector2 GetContainerSize() const;
     Vector2 GetMaxScrollLength() const;
+
+    // IEventsFocus
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
 
 private:
     const static float WheelScrollSpeedPx;

@@ -65,7 +65,7 @@ void UIInputText::OnUpdate()
 void UIInputText::UpdateCursorRenderer()
 {
     // Cursor "I" position update
-    if (GetLabel())
+    if (GetLabel() && GetText())
     {
         float cursorX = GetLabel()->GetCursorXViewportNDC( GetCursorIndex() );
         float fontHeight =
@@ -95,7 +95,7 @@ void UIInputText::UpdateCursorRenderer()
 
 void UIInputText::UpdateTextScrolling()
 {
-    if (p_scrollArea)
+    if (p_scrollArea && GetText())
     {
         Vector2i prevScrollPx = p_scrollArea->GetScrolling();
         p_scrollArea->SetScrolling( Vector2i::Zero );
@@ -159,7 +159,10 @@ void UIInputText::HandleTyping()
         bool selecting = GetSelectedText().Size() > 0;
         if (Input::GetKeyDownRepeat(Key::DELETE))
         {
-            if (selecting) { offsetSelection += -1; }
+            if (selecting)
+            {
+                offsetSelection += -1;
+            }
             removeText = true;
         }
         else if (Input::GetKeyDownRepeat(Key::BACKSPACE))
@@ -546,19 +549,30 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
     return i;
 }
 
-void UIInputText::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
+                                     const UIEvent &event)
 {
     if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
         Input::PollInputText();
+        return UIEventResult::INTERCEPT;
     }
     else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         UpdateCursorRenderer();
+        return UIEventResult::INTERCEPT;
     }
 
-    EventEmitter<IEventsFocus>::
-            PropagateToListeners(&IEventsFocus::OnUIEvent, focusable, event);
+    Array<UIEventResult> eventResults =
+                EventEmitter<IEventsFocus>::
+                    PropagateToListenersAndGatherResult<UIEventResult>(
+                        &IEventsFocus::OnUIEvent, focusable, event);
+    if (eventResults.Contains(UIEventResult::INTERCEPT))
+    {
+        return UIEventResult::INTERCEPT;
+    }
+
+    return UIEventResult::IGNORE;
 }
 
 void UIInputText::OnDestroyed(EventEmitter<IEventsDestroy> *object)

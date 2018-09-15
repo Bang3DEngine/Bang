@@ -82,13 +82,17 @@ void UILabel::SetSelection(int cursorIndex, int selectionIndex)
 
 String UILabel::GetSelectedText() const
 {
-    if (GetCursorIndex() == GetSelectionIndex() ||
-        GetSelectionBeginIndex() >= GetSelectionEndIndex())
+    if (GetText())
     {
-        return "";
+        if (GetCursorIndex() == GetSelectionIndex() ||
+            GetSelectionBeginIndex() >= GetSelectionEndIndex())
+        {
+            return "";
+        }
+        return GetText()->GetContent().SubString(GetSelectionBeginIndex(),
+                                                 GetSelectionEndIndex()-1);
     }
-    return GetText()->GetContent().SubString(GetSelectionBeginIndex(),
-                                             GetSelectionEndIndex()-1);
+    return "";
 }
 void UILabel::ResetSelection()
 {
@@ -122,12 +126,21 @@ int UILabel::GetSelectionEndIndex() const
 
 float UILabel::GetCursorXViewportNDC(int cursorIndex) const
 {
-    return GetTextParentRT()->FromLocalPointNDCToViewportPointNDC(
-                            Vector2(GetCursorXLocalNDC(cursorIndex), 0) ).x;
+    if (GetText())
+    {
+        return GetTextParentRT()->FromLocalPointNDCToViewportPointNDC(
+                                Vector2(GetCursorXLocalNDC(cursorIndex), 0) ).x;
+    }
+    return 0.0f;
 }
 
 float UILabel::GetCursorXLocalNDC(int cursorIndex) const
 {
+    if (!GetText())
+    {
+        return 0.0f;
+    }
+
     float localTextX = 0.0f;
     const int textLength = GetText()->GetContent().Size();
     if (cursorIndex > 0 && cursorIndex < textLength) // Between two chars
@@ -230,30 +243,38 @@ UIFocusable *UILabel::GetFocusable() const
     return p_focusable;
 }
 
-void UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
     if (event.type == UIEvent::Type::FOCUS_TAKEN ||
         event.type == UIEvent::Type::MOUSE_CLICK_DOUBLE)
     {
-        if (GetSelectAllOnFocus() && IsSelectable())
+        if (GetFocusable() && GetFocusable()->IsFocusEnabled())
         {
-            SelectAll();
+            if (GetSelectAllOnFocus() && IsSelectable())
+            {
+                SelectAll();
+            }
+            else
+            {
+                ResetSelection();
+            }
+            UpdateSelectionQuadRenderer();
+
+            return UIEventResult::INTERCEPT;
         }
-        else
-        {
-            ResetSelection();
-        }
-        UpdateSelectionQuadRenderer();
     }
     else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
         ResetSelection();
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();
+
+        return UIEventResult::INTERCEPT;
     }
     else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
     {
-        if (GetFocusable() && GetFocusable()->HasFocus())
+        if (GetFocusable() && GetFocusable()->HasFocus() &&
+            GetFocusable()->IsFocusEnabled())
         {
             if (IsSelectable())
             {
@@ -266,17 +287,47 @@ void UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
                 ResetSelection();
             }
             UpdateSelectionQuadRenderer();
+
+            return UIEventResult::INTERCEPT;
         }
     }
     else if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
     {
         m_selectingWithMouse = false;
         UpdateSelectionQuadRenderer();
+
+        return UIEventResult::INTERCEPT;
+    }
+
+    return UIEventResult::IGNORE;
+}
+
+void UILabel::OnDestroyed(EventEmitter<IEventsDestroy> *object)
+{
+    if (object == GetText())
+    {
+        p_text = nullptr;
+    }
+    else if (object == p_selectionQuad)
+    {
+        p_selectionQuad = nullptr;
+    }
+    else if (object == GetFocusable())
+    {
+        p_focusable = nullptr;
+    }
+    else if (object == GetMask())
+    {
+        p_mask = nullptr;
     }
 }
 
 RectTransform *UILabel::GetTextParentRT() const
 {
+    if (!GetText())
+    {
+        return nullptr;
+    }
     return GetText()->GetGameObject()->GetParent()->GetRectTransform();
 }
 bool UILabel::IsShiftPressed() const
@@ -326,20 +377,23 @@ void UILabel::HandleMouseSelection()
 
 void UILabel::UpdateSelectionQuadRenderer()
 {
-    GetText()->RegenerateCharQuadsVAO();
-    float cursorX     = GetCursorXViewportNDC( GetCursorIndex() );
-    float selectionX  = GetCursorXViewportNDC( GetSelectionIndex() );
+    if (GetText() && p_selectionQuad)
+    {
+        GetText()->RegenerateCharQuadsVAO();
+        float cursorX     = GetCursorXViewportNDC( GetCursorIndex() );
+        float selectionX  = GetCursorXViewportNDC( GetSelectionIndex() );
 
-    AARect r ( GetGameObject()->GetRectTransform()->GetViewportAARectNDC() );
-    Vector2 p1(Math::Min(cursorX, selectionX), r.GetMin().y );
-    Vector2 p2(Math::Max(cursorX, selectionX), r.GetMax().y );
+        AARect r ( GetGameObject()->GetRectTransform()->GetViewportAARectNDC() );
+        Vector2 p1(Math::Min(cursorX, selectionX), r.GetMin().y );
+        Vector2 p2(Math::Max(cursorX, selectionX), r.GetMax().y );
 
-    RectTransform *textParentRT = GetTextParentRT();
-    p1 = textParentRT->FromViewportPointNDCToLocalPointNDC(p1);
-    p2 = textParentRT->FromViewportPointNDCToLocalPointNDC(p2);
+        RectTransform *textParentRT = GetTextParentRT();
+        p1 = textParentRT->FromViewportPointNDCToLocalPointNDC(p1);
+        p2 = textParentRT->FromViewportPointNDCToLocalPointNDC(p2);
 
-    RectTransform *quadRT = p_selectionQuad->GetRectTransform();
-    quadRT->SetAnchors( Vector2::Min(p1, p2), Vector2::Max(p1, p2) );
+        RectTransform *quadRT = p_selectionQuad->GetRectTransform();
+        quadRT->SetAnchors( Vector2::Min(p1, p2), Vector2::Max(p1, p2) );
+    }
 }
 
 UILabel *UILabel::CreateInto(GameObject *go)
@@ -378,6 +432,11 @@ UILabel *UILabel::CreateInto(GameObject *go)
     label->p_text = text;
     label->p_focusable = focusable;
     label->p_selectionQuad = selectionQuadGo;
+
+    label->p_text->EventEmitter<IEventsDestroy>::RegisterListener(label);
+    label->p_mask->EventEmitter<IEventsDestroy>::RegisterListener(label);
+    label->p_focusable->EventEmitter<IEventsDestroy>::RegisterListener(label);
+    label->p_selectionQuad->EventEmitter<IEventsDestroy>::RegisterListener(label);
 
     selectionQuadGo->SetParent(go);
     textGO->SetParent(go);

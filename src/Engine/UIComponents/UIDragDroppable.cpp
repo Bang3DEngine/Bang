@@ -220,14 +220,17 @@ void UIDragDroppable::OnDropped()
     }
 }
 
-void UIDragDroppable::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
+                                         const UIEvent &event)
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
     if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
     {
         OnDragStarted();
+        return UIEventResult::INTERCEPT;
     }
+    return UIEventResult::IGNORE;
 }
 
 void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)

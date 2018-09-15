@@ -215,16 +215,20 @@ Axis UIDirLayoutMovableSeparator::GetAxis() const
     return m_axis;
 }
 
-void UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable*,
+                                                     const UIEvent &event)
 {
     if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
+        return UIEventResult::INTERCEPT;
     }
     else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
+        return UIEventResult::INTERCEPT;
     }
+    return UIEventResult::IGNORE;
 }
 
 UIDirLayoutMovableSeparator*

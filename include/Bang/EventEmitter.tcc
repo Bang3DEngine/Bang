@@ -123,10 +123,11 @@ EventEmitter<T>::PropagateToListenersAndGatherResult(const TFunction &func,
                                                      const Args&... args) const
 {
     Array<TResult> gatheredResult;
-    PropagateToListeners_([&](EventListener<T> *listener)
-                          {
-                              gatheredResult.PushBack( (listener->*func)(args...) );
-                          });
+    PropagateToListeners_(
+             [&](EventListener<T> *listener)
+             {
+                 gatheredResult.PushBack( (listener->*func)(args...) );
+             });
     return gatheredResult;
 }
 

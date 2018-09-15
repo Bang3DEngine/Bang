@@ -52,8 +52,18 @@ UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
                 finalResult = UIEventResult::INTERCEPT;
             }
         }
-        EventEmitter<IEventsFocus>::PropagateToListeners(&IEventsFocus::OnUIEvent,
-                                                         this, event);
+
+        Array<UIEventResult> eventListenerResults =
+                    EventEmitter<IEventsFocus>::
+                        PropagateToListenersAndGatherResult<UIEventResult>(
+                                    &IEventsFocus::OnUIEvent, this, event);
+        for (UIEventResult eventListenerResult : eventListenerResults)
+        {
+            if (eventListenerResult == UIEventResult::INTERCEPT)
+            {
+                finalResult = UIEventResult::INTERCEPT;
+            }
+        }
     }
 
     return finalResult;

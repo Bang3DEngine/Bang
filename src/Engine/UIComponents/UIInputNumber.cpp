@@ -25,6 +25,8 @@ void UIInputNumber::OnStart()
     UIInputText *inputText = GetGameObject()->GetComponent<UIInputText>();
     inputText->EventEmitter<IEventsValueChanged>::RegisterListener(this);
     inputText->EventEmitter<IEventsFocus>::RegisterListener(this);
+    inputText->GetLabel()->GetFocusable()->EventEmitter<IEventsFocus>::
+                                           RegisterListener(this);
 }
 
 void UIInputNumber::OnUpdate()
@@ -127,7 +129,10 @@ void UIInputNumber::UpdateValueFromText()
 void UIInputNumber::UpdateTextFromValue()
 {
     String vStr = String::ToString(GetValue(), GetDecimalPlaces());
-    GetInputText()->GetText()->SetContent(vStr);
+    if (GetInputText()->GetText())
+    {
+        GetInputText()->GetText()->SetContent(vStr);
+    }
 }
 
 void UIInputNumber::ChangeTextColorBasedOnMinMax()
@@ -137,7 +142,10 @@ void UIInputNumber::ChangeTextColorBasedOnMinMax()
     float textValue = String::ToFloat(GetInputText()->GetText()->GetContent());
     bool isOutOfRange = (textValue < GetMinValue() || textValue > GetMaxValue());
     Color textColor = isOutOfRange ? Color::Red : Color::Black;
-    GetInputText()->GetText()->SetTextColor(textColor);
+    if (GetInputText()->GetText())
+    {
+        GetInputText()->GetText()->SetTextColor(textColor);
+    }
 }
 
 UIInputText *UIInputNumber::GetInputText() const
@@ -161,20 +169,24 @@ const Vector2 &UIInputNumber::GetMinMaxValues() const
 }
 bool UIInputNumber::HasFocus() const
 {
-    return m_hasFocus;
+    return GetInputText()->GetLabel()->GetFocusable() ?
+                GetInputText()->GetLabel()->GetFocusable()->HasFocus() :
+                false;
 }
 
-void UIInputNumber::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UIInputNumber::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
     if (event.type == UIEvent::Type::FOCUS_TAKEN)
     {
-        m_hasFocus = true;
+        return UIEventResult::INTERCEPT;
     }
     else if (event.type == UIEvent::Type::FOCUS_LOST)
     {
-        m_hasFocus = false;
         UpdateTextFromValue();
+        return UIEventResult::INTERCEPT;
     }
+
+    return UIEventResult::IGNORE;
 }
 
 void UIInputNumber::OnValueChanged(EventEmitter<IEventsValueChanged> *object)

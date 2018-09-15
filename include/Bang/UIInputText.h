@@ -42,7 +42,9 @@ public:
     void SetAllowedCharacters(const String &allowedCharacters);
 
     // IEventsFocus
-    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
 
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;

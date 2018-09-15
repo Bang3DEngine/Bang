@@ -87,7 +87,7 @@ void UITree::OnUpdate()
     }
 }
 
-void UITree::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+UIEventResult UITree::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
 {
     if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
     {
@@ -101,7 +101,11 @@ void UITree::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
             SetItemCollapsed(itemContainer->GetContainedItem(),
                              !itemContainer->IsCollapsed());
         }
+
+        return UIEventResult::INTERCEPT;
     }
+
+    return UIEventResult::IGNORE;
 }
 
 void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)

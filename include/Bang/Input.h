@@ -18,49 +18,34 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Window;
 
+struct InputEvent
+{
+    enum class Type
+    {
+        NONE,
+        KEY_DOWN,
+        KEY_UP,
+        MOUSE_DOWN,
+        MOUSE_UP,
+        MOUSE_MOVE,
+        WHEEL
+    };
+
+    Type type               = Type::NONE;
+    Key key                 = Key::NONE;
+    MouseButton mouseButton = MouseButton::NONE;
+    bool autoRepeat         = false;
+    float timestampSecs     = 0;
+    Vector2i mousePosWindow = Vector2i::Zero;
+    Vector2 wheelDelta      = Vector2::Zero;
+
+    bool IsMouseType() const;
+    Vector2i GetMousePosWindow() const;
+};
+
 class Input
 {
 public:
-    struct EventInfo
-    {
-        enum class Type
-        {
-            NONE,
-            KEY_DOWN,
-            KEY_UP,
-            MOUSE_DOWN,
-            MOUSE_UP,
-            MOUSE_MOVE,
-            WHEEL
-        };
-
-        Type type               = Type::NONE;
-        Key key                 = Key::NONE;
-        MouseButton mouseButton = MouseButton::NONE;
-        bool autoRepeat         = false;
-        float timestampSecs     = 0;
-        Vector2i mousePosWindow = Vector2i::Zero;
-        Vector2 wheelDelta      = Vector2::Zero;
-
-        bool IsMouseType() const
-        {
-            return (type == Type::MOUSE_DOWN ||
-                    type == Type::MOUSE_MOVE ||
-                    type == Type::MOUSE_UP);
-        }
-
-        Vector2i GetMousePosWindow() const
-        {
-            if (IsMouseType())
-            {
-                return mousePosWindow;
-            }
-            return Input::GetMousePositionWindow();
-        }
-
-    };
-
-
     struct ButtonInfo
     {
         bool up = false;         // Just one frame
@@ -68,17 +53,8 @@ public:
         bool pressed = false;    // Long duration
         bool autoRepeat = false;
 
-        ButtonInfo()
-        {
-            up = down = pressed = false;
-        }
-
-        ButtonInfo(bool up, bool down, bool pressed)
-        {
-            this->up = up;
-            this->down = down;
-            this->pressed = pressed;
-        }
+        ButtonInfo() = default;
+        ButtonInfo(bool up, bool down, bool pressed);
     };
 
 public:
@@ -93,7 +69,7 @@ public:
     static const Array<Key>& GetKeysDown();
     static const Array<Key>& GetPressedKeys();
     static const Array<Key>& GetKeysDownRepeat();
-    static const Array<EventInfo>& GetEnqueuedEvents();
+    static const Array<InputEvent>& GetEnqueuedEvents();
 
     static Vector2 GetMouseWheel();
 
@@ -164,17 +140,17 @@ private:
 
     UMap<Key, ButtonInfo, EnumClassHash> m_keyInfos;
     UMap<MouseButton, ButtonInfo, EnumClassHash> m_mouseInfo;
-    Array<EventInfo> m_eventInfoQueue;
+    Array<InputEvent> m_eventInfoQueue;
 
-    void ProcessMouseWheelEventInfo(const EventInfo &ei);
-    void ProcessMouseMoveEventInfo(const EventInfo &ei);
-    void ProcessMouseDownEventInfo(const EventInfo &ei);
-    void ProcessMouseUpEventInfo(const EventInfo &ei);
-    void ProcessKeyDownEventInfo(const EventInfo &ei);
-    void ProcessKeyUpEventInfo(const EventInfo &ei);
+    void ProcessMouseWheelEventInfo(const InputEvent &iev);
+    void ProcessMouseMoveEventInfo(const InputEvent &iev);
+    void ProcessMouseDownEventInfo(const InputEvent &iev);
+    void ProcessMouseUpEventInfo(const InputEvent &iev);
+    void ProcessKeyDownEventInfo(const InputEvent &iev);
+    void ProcessKeyUpEventInfo(const InputEvent &iev);
 
     void EnqueueEvent(const SDL_Event &event, const Window *window);
-    void ProcessEventInfo(const EventInfo &eventInfo);
+    void ProcessEventInfo(const InputEvent &inputEvent);
 
     void ProcessEnqueuedEvents();
     void OnFrameFinished();

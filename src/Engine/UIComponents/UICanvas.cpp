@@ -98,30 +98,29 @@ void UICanvas::OnUpdate()
 {
     Component::OnUpdate();
 
-
     Array<std::pair<UIFocusable*, AARecti>> focusablesAndRectsVP;
     GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
                                              &focusablesAndRectsVP);
 
     auto PropagateIFocusableEvent = [&](UIFocusable *focusable,
                                         UIEvent::Type type,
-                                        const Input::EventInfo &eventInfo)
+                                        const InputEvent &inputEvent)
     {
         UIEvent event;
         event.type = type;
-        event.mouse.button = eventInfo.mouseButton;
-        event.mousePosWindow = eventInfo.GetMousePosWindow();
+        event.mouse.button = inputEvent.mouseButton;
+        event.mousePosWindow = inputEvent.GetMousePosWindow();
         event.mouse.delta = (event.mousePosWindow - GetLastMousePosition());
-        event.key.key = eventInfo.key;
-        event.wheel.amount = eventInfo.wheelDelta;
+        event.key.key = inputEvent.key;
+        event.wheel.amount = inputEvent.wheelDelta;
         PropagateUIEvent(focusable, event);
     };
 
     Vector2i currentMousePosVP   = Input::GetMousePosition();
     Vector2 currentMousePosVPNDC = Input::GetMousePositionNDC();
     Vector2i currentMouseWindow  = Input::GetMousePositionWindow();
-    const Array<Input::EventInfo> &events = Input::GetEnqueuedEvents();
-    for (const Input::EventInfo &event : events)
+    const Array<InputEvent> &events = Input::GetEnqueuedEvents();
+    for (const InputEvent &event : events)
     {
         currentMouseWindow = event.GetMousePosWindow();
         currentMousePosVP = Vector2i(GL::FromWindowPointToViewportPoint(
@@ -209,8 +208,23 @@ void UICanvas::OnUpdate()
             }
         }
 
+        if (event.type == InputEvent::Type::WHEEL)
+        {
+            if (GetFocusableUnderMouseTopMost())
+            {
+                PropagateIFocusableEvent(GetFocusableUnderMouseTopMost(),
+                                         UIEvent::Type::WHEEL,
+                                         event);
 
-        if (event.type == Input::EventInfo::Type::MOUSE_MOVE)
+                // We can lose the focusable when propagating event, so recheck
+                if (GetFocusableUnderMouseTopMost())
+                {
+                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                }
+            }
+        }
+
+        if (event.type == InputEvent::Type::MOUSE_MOVE)
         {
             if (GetFocusableUnderMouseTopMost())
             {
@@ -233,7 +247,7 @@ void UICanvas::OnUpdate()
             RegisterForEvents( focusableUnderMouse );
         }
 
-        if (event.type == Input::EventInfo::Type::MOUSE_DOWN)
+        if (event.type == InputEvent::Type::MOUSE_DOWN)
         {
             if (GetFocusableUnderMouseTopMost())
             {
@@ -244,7 +258,7 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (event.type == Input::EventInfo::Type::MOUSE_UP)
+        if (event.type == InputEvent::Type::MOUSE_UP)
         {
             if (GetFocusableUnderMouseTopMost())
             {
@@ -255,7 +269,7 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (event.type == Input::EventInfo::Type::MOUSE_DOWN &&
+        if (event.type == InputEvent::Type::MOUSE_DOWN &&
             event.mouseButton == MouseButton::LEFT)
         {
             if (GetFocusableUnderMouseTopMost())
@@ -267,7 +281,7 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (event.type == Input::EventInfo::Type::MOUSE_DOWN &&
+        if (event.type == InputEvent::Type::MOUSE_DOWN &&
             event.mouseButton == MouseButton::LEFT)
         {
             SetFocus( GetFocusableUnderMouseTopMost() );
@@ -284,7 +298,7 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (event.type == Input::EventInfo::Type::MOUSE_UP &&
+        if (event.type == InputEvent::Type::MOUSE_UP &&
             event.mouseButton == MouseButton::LEFT)
         {
             if (GetFocus() && GetFocus()->IsBeingPressed())

@@ -17,7 +17,7 @@ class UIDragDroppable : public Component,
                         public EventEmitter<IEventsDragDrop>,
                         public EventListener<IEventsFocus>
 {
-    COMPONENT(UIDragDroppable);
+    COMPONENT(UIDragDroppable)
 
 public:
 	UIDragDroppable();
@@ -56,7 +56,9 @@ private:
     void MoveDragDropGameObjectTo(const Vector2i &pos);
 
     // IFocusable
-    virtual void OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
 
     friend class UICanvas;
 };

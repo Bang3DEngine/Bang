@@ -39,7 +39,6 @@ void UILabel::OnUpdate()
         {
             HandleMouseSelection();
         }
-        HandleClipboardCopy();
     }
 }
 
@@ -245,58 +244,80 @@ UIFocusable *UILabel::GetFocusable() const
 
 UIEventResult UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN ||
-        event.type == UIEvent::Type::MOUSE_CLICK_DOUBLE)
+    switch (event.type)
     {
-        if (GetFocusable() && GetFocusable()->IsFocusEnabled())
+        case UIEvent::Type::KEY_DOWN:
+            if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+            {
+                if (event.key.key == Key::C)
+                {
+                    String selectedText = GetSelectedText();
+                    SystemClipboard::Set( selectedText );
+                    return UIEventResult::INTERCEPT;
+                }
+            }
+        break;
+
+        case UIEvent::Type::FOCUS_TAKEN:
+        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
+            if (GetFocusable() && GetFocusable()->IsFocusEnabled())
+            {
+                if (GetSelectAllOnFocus() && IsSelectable())
+                {
+                    SelectAll();
+                }
+                else
+                {
+                    ResetSelection();
+                }
+                UpdateSelectionQuadRenderer();
+
+                return UIEventResult::INTERCEPT;
+            }
+        break;
+
+        case UIEvent::Type::FOCUS_LOST:
         {
-            if (GetSelectAllOnFocus() && IsSelectable())
-            {
-                SelectAll();
-            }
-            else
-            {
-                ResetSelection();
-            }
+            ResetSelection();
+            m_selectingWithMouse = false;
             UpdateSelectionQuadRenderer();
 
             return UIEventResult::INTERCEPT;
         }
-    }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
-    {
-        ResetSelection();
-        m_selectingWithMouse = false;
-        UpdateSelectionQuadRenderer();
+        break;
 
-        return UIEventResult::INTERCEPT;
-    }
-    else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
-    {
-        if (GetFocusable() && GetFocusable()->HasFocus() &&
-            GetFocusable()->IsFocusEnabled())
+        case UIEvent::Type::MOUSE_CLICK_DOWN:
         {
-            if (IsSelectable())
+            if (GetFocusable() && GetFocusable()->HasFocus() &&
+                GetFocusable()->IsFocusEnabled())
             {
-                HandleMouseSelection();
-                HandleClipboardCopy();
-                m_selectingWithMouse = true;
+                if (IsSelectable())
+                {
+                    HandleMouseSelection();
+                    m_selectingWithMouse = true;
+                }
+                else
+                {
+                    ResetSelection();
+                }
+                UpdateSelectionQuadRenderer();
+
+                return UIEventResult::INTERCEPT;
             }
-            else
-            {
-                ResetSelection();
-            }
+        }
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_UP:
+        {
+            m_selectingWithMouse = false;
             UpdateSelectionQuadRenderer();
 
             return UIEventResult::INTERCEPT;
         }
-    }
-    else if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
-    {
-        m_selectingWithMouse = false;
-        UpdateSelectionQuadRenderer();
+        break;
 
-        return UIEventResult::INTERCEPT;
+        default:
+        break;
     }
 
     return UIEventResult::IGNORE;
@@ -333,18 +354,6 @@ RectTransform *UILabel::GetTextParentRT() const
 bool UILabel::IsShiftPressed() const
 {
     return Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
-}
-
-void UILabel::HandleClipboardCopy()
-{
-    if ( (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL)) )
-    {
-        String selectedText = GetSelectedText();
-        if ( Input::GetKeyDown(Key::C) && selectedText.Size() > 0 )
-        {
-            SystemClipboard::Set( selectedText );
-        }
-    }
 }
 
 void UILabel::HandleMouseSelection()

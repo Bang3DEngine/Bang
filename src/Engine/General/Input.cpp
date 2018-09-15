@@ -240,16 +240,23 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
     switch (event.type)
     {
         case SDL_KEYDOWN:
-            inputEvent.type       = InputEvent::Type::KEY_DOWN;
-            inputEvent.autoRepeat = event.key.repeat;
-            inputEvent.key        = SCAST<Key>(event.key.keysym.sym);
-            enqueue = true;
-        break;
-
         case SDL_KEYUP:
-            inputEvent.type           = InputEvent::Type::KEY_UP;
-            inputEvent.autoRepeat     = event.key.repeat;
-            inputEvent.key            = SCAST<Key>(event.key.keysym.sym);
+            switch (event.type)
+            {
+                case SDL_KEYDOWN:
+                    inputEvent.type = InputEvent::Type::KEY_DOWN;
+                break;
+
+                case SDL_KEYUP:
+                    inputEvent.type = InputEvent::Type::KEY_UP;
+                break;
+
+                default:
+                break;
+            }
+            inputEvent.autoRepeat   = event.key.repeat;
+            inputEvent.key          = SCAST<Key>(event.key.keysym.sym);
+            inputEvent.keyModifiers = SCAST<KeyModifiers>(event.key.keysym.mod);
             enqueue = true;
         break;
 

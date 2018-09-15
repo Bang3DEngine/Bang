@@ -2,6 +2,8 @@
 #define KEY_H
 
 #include "Bang/Bang.h"
+#include "Bang/Flags.h"
+
 #include BANG_SDL2_INCLUDE(SDL.h)
 #include <SDL2/SDL.h>
 
@@ -56,6 +58,24 @@ enum class Key
     LPAREN = SDLK_LEFTPAREN, RPAREN = SDLK_RIGHTPAREN,
     BACKSPACE = SDLK_BACKSPACE
 };
+
+enum class KeyModifier
+{
+    NONE    = SDL_Keymod::KMOD_NONE,
+    LCTRL   = SDL_Keymod::KMOD_LCTRL,
+    RCTRL   = SDL_Keymod::KMOD_RCTRL,
+    LALT    = SDL_Keymod::KMOD_LALT,
+    RALT    = SDL_Keymod::KMOD_RALT,
+    LSHIFT  = SDL_Keymod::KMOD_LSHIFT,
+    RSHIFT  = SDL_Keymod::KMOD_RSHIFT,
+    LGUI    = SDL_Keymod::KMOD_LGUI,
+    RGUI    = SDL_Keymod::KMOD_RGUI,
+    CAPS    = SDL_Keymod::KMOD_CAPS,
+    NUM     = SDL_Keymod::KMOD_NUM,
+    MODE    = SDL_Keymod::KMOD_MODE,
+    DEFAULT = NONE
+};
+CREATE_FLAGS(KeyModifiers, KeyModifier);
 
 NAMESPACE_BANG_END
 

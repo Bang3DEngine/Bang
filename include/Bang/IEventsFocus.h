@@ -31,7 +31,8 @@ struct UIEvent
         MOUSE_EXIT,
         FOCUS_TAKEN,
         FOCUS_LOST,
-        KEY,
+        KEY_DOWN,
+        KEY_UP,
         WHEEL
     };
 
@@ -47,6 +48,7 @@ struct UIEvent
     struct
     {
         Key key;
+        KeyModifiers modifiers;
     }
     key;
 

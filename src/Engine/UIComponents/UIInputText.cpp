@@ -197,24 +197,6 @@ void UIInputText::HandleTyping()
         resetSelection = true;
     }
 
-    if ( (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL)) )
-    {
-        String selectedText = GetSelectedText();
-        if ( Input::GetKeyDown(Key::X) && selectedText.Size() > 0 )
-        {
-            SystemClipboard::Set(selectedText);
-            ReplaceSelectedText("");
-        }
-        else if ( Input::GetKeyDownRepeat(Key::V) )
-        {
-            String clipboardText = SystemClipboard::Get();
-            clipboardText = FilterAllowedInputText(clipboardText);
-            ReplaceSelectedText(clipboardText);
-            SetCursorIndex( GetCursorIndex() + clipboardText.Size());
-            resetSelection = true;
-        }
-    }
-
     if (Input::GetKeyDown(Key::END))
     {
         resetSelection = !IsSelecting();
@@ -552,15 +534,45 @@ int UIInputText::GetCtrlStopIndex(int cursorIndex, bool forward) const
 UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
                                      const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    switch (event.type)
     {
-        Input::PollInputText();
-        return UIEventResult::INTERCEPT;
-    }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
-    {
-        UpdateCursorRenderer();
-        return UIEventResult::INTERCEPT;
+        case UIEvent::Type::FOCUS_TAKEN:
+            Input::PollInputText();
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::FOCUS_LOST:
+            UpdateCursorRenderer();
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::KEY_DOWN:
+            if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+            {
+                if (event.key.key == Key::V)
+                {
+                    String clipboardText = SystemClipboard::Get();
+                    clipboardText = FilterAllowedInputText(clipboardText);
+                    ReplaceSelectedText(clipboardText);
+                    SetCursorIndex( GetCursorIndex() + clipboardText.Size());
+                    GetLabel()->ResetSelection();
+                    return UIEventResult::INTERCEPT;
+                }
+                else if (event.key.key == Key::X)
+                {
+                    String selectedText = GetSelectedText();
+                    if (selectedText.Size() > 0)
+                    {
+                        SystemClipboard::Set(selectedText);
+                        ReplaceSelectedText("");
+                        return UIEventResult::INTERCEPT;
+                    }
+                }
+            }
+        break;
+
+        default:
+        break;
     }
 
     Array<UIEventResult> eventResults =
@@ -581,14 +593,17 @@ void UIInputText::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     {
         p_label = nullptr;
     }
+
     if (object == p_cursor)
     {
         p_cursor = nullptr;
     }
+
     if (object == p_focusable)
     {
         p_focusable = nullptr;
     }
+
     if (object == p_scrollArea)
     {
         p_scrollArea = nullptr;

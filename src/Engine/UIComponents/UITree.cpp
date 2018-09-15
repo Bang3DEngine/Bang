@@ -551,6 +551,7 @@ void UITree::SetSelection(GOItem *item)
         itemContainer->SetEnabled(true);
         SetItemCollapsed(item, itemContainer->IsCollapsed());
     }
+
     GetUIList()->SetSelection(itemContainer);
 }
 

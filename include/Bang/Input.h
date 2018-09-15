@@ -31,13 +31,14 @@ struct InputEvent
         WHEEL
     };
 
-    Type type               = Type::NONE;
-    Key key                 = Key::NONE;
-    MouseButton mouseButton = MouseButton::NONE;
-    bool autoRepeat         = false;
-    float timestampSecs     = 0;
-    Vector2i mousePosWindow = Vector2i::Zero;
-    Vector2 wheelDelta      = Vector2::Zero;
+    Type type                 = Type::NONE;
+    Key key                   = Key::NONE;
+    KeyModifiers keyModifiers = KeyModifier::NONE;
+    MouseButton mouseButton   = MouseButton::NONE;
+    bool autoRepeat           = false;
+    float timestampSecs       = 0;
+    Vector2i mousePosWindow   = Vector2i::Zero;
+    Vector2 wheelDelta        = Vector2::Zero;
 
     bool IsMouseType() const;
     Vector2i GetMousePosWindow() const;

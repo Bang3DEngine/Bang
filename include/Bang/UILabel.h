@@ -70,7 +70,6 @@ private:
     UILabel();
 
     int GetClosestCharIndexTo(const Vector2 &coordsLocalNDC);
-    void HandleClipboardCopy();
     void HandleMouseSelection();
     void UpdateSelectionQuadRenderer();
 

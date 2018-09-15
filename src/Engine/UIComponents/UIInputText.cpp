@@ -41,9 +41,7 @@ void UIInputText::OnUpdate()
 {
     Component::OnUpdate();
 
-    UICanvas *canvas = UICanvas::GetActive(this);
-    bool hasFocus = canvas->HasFocus( GetLabel() );
-    hasFocus = (hasFocus || canvas->HasFocus(this));
+    bool hasFocus = GetLabel()->GetFocusable()->HasFocus();
     if (hasFocus)
     {
         HandleTyping();
@@ -140,68 +138,11 @@ void UIInputText::HandleTyping()
     String inputText = Input::PollInputText();
     inputText = FilterAllowedInputText(inputText);
 
-    bool resetSelection = false;
-
-    // First we handle text deletion
-    if (!GetText()->GetContent().IsEmpty())
-    {
-        int offsetCursor = 0;
-        int offsetSelection = 1;
-        bool removeText = false;
-        bool selecting = GetSelectedText().Size() > 0;
-        if (Input::GetKeyDownRepeat(Key::DELETE))
-        {
-            if (selecting)
-            {
-                offsetSelection += -1;
-            }
-            removeText = true;
-        }
-        else if (Input::GetKeyDownRepeat(Key::BACKSPACE))
-        {
-            offsetCursor    += (selecting ? 0 : -1);
-            offsetSelection += -1;
-            removeText = true;
-        }
-
-        if (removeText)
-        {
-            if (GetCursorIndex() > GetSelectionIndex()) // Swap indices
-            {
-                int oldSelectionIndex = GetSelectionIndex();
-                GetLabel()->SetSelectionIndex( GetCursorIndex() );
-                SetCursorIndex(oldSelectionIndex);
-            }
-
-            SetCursorIndex( GetCursorIndex() + offsetCursor);
-            GetLabel()->SetSelectionIndex(GetSelectionIndex() + offsetSelection);
-            ReplaceSelectedText("");
-
-            resetSelection = true;
-        }
-    }
-
     // Key typing handling
     if (!inputText.IsEmpty())
     {
         ReplaceSelectedText(inputText);
         SetCursorIndex( GetCursorIndex() + inputText.Size() );
-        resetSelection = true;
-    }
-
-    if (Input::GetKeyDown(Key::END))
-    {
-        resetSelection = !IsSelecting();
-        SetCursorIndex( GetText()->GetContent().Size() );
-    }
-    else if (Input::GetKeyDown(Key::HOME))
-    {
-        resetSelection = !IsSelecting();
-        SetCursorIndex(0);
-    }
-
-    if (resetSelection)
-    {
         GetLabel()->ResetSelection();
     }
 }
@@ -547,6 +488,71 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
                     {
                         GetLabel()->ResetSelection();
                     }
+                    return UIEventResult::INTERCEPT;
+                }
+                break;
+
+                case Key::DELETE:
+                case Key::BACKSPACE:
+                {
+                    if (!GetText()->GetContent().IsEmpty())
+                    {
+                        int offsetCursor = 0;
+                        int offsetSelection = 1;
+                        bool removeText = false;
+                        bool selecting = GetSelectedText().Size() > 0;
+                        switch (event.key.key)
+                        {
+                            case Key::DELETE:
+                                if (selecting)
+                                {
+                                    offsetSelection += -1;
+                                }
+                                removeText = true;
+                            break;
+
+                            case Key::BACKSPACE:
+                                offsetCursor    += (selecting ? 0 : -1);
+                                offsetSelection += -1;
+                                removeText = true;
+                            break;
+
+                            default:
+                            break;
+                        }
+
+                        if (removeText)
+                        {
+                            if (GetCursorIndex() > GetSelectionIndex())
+                            {
+                                 // Swap indices
+                                int oldSelectionIndex = GetSelectionIndex();
+                                GetLabel()->SetSelectionIndex( GetCursorIndex() );
+                                SetCursorIndex(oldSelectionIndex);
+                            }
+
+                            SetCursorIndex( GetCursorIndex() + offsetCursor);
+                            GetLabel()->SetSelectionIndex(GetSelectionIndex() +
+                                                          offsetSelection);
+                            ReplaceSelectedText("");
+                            GetLabel()->ResetSelection();
+                            return UIEventResult::INTERCEPT;
+                        }
+                    }
+                }
+                break;
+
+                case Key::END:
+                case Key::HOME:
+                {
+                    int index = (event.key.key == Key::HOME ?
+                                     0 : GetText()->GetContent().Size());
+                    SetCursorIndex(index);
+                    if (!IsSelecting())
+                    {
+                        GetLabel()->ResetSelection();
+                    }
+                    return UIEventResult::INTERCEPT;
                 }
                 break;
 

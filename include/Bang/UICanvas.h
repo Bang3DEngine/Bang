@@ -35,7 +35,6 @@ public:
     void SetFocus(UIFocusable *focusable);
 
     UIFocusable* GetFocus();
-    const Vector2i& GetLastMousePosition() const;
     UIFocusable* GetFocusableUnderMouseTopMost() const;
     bool HasFocusFocusable(const UIFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
@@ -63,8 +62,6 @@ public:
 
 private:
     UILayoutManager *m_uiLayoutManager = nullptr;
-
-    Vector2i m_lastMousePosition = Vector2i(-1);
 
     UIFocusable *p_focus = nullptr;
     Set<UIFocusable*> p_focusablesUnderMouse;

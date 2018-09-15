@@ -158,6 +158,7 @@ public:
     bool IsChildOf(const GameObject *_parent, bool recursive = true) const;
 
     bool IsVisible() const;
+    bool IsVisible(bool recursive) const;
     bool IsDontDestroyOnLoad() const;
     AARect GetBoundingViewportRect(Camera *cam, bool includeChildren = true) const;
     AABox GetLocalAABBox(bool includeChildren = true) const;

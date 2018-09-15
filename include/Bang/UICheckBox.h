@@ -33,6 +33,10 @@ public:
     UILayoutElement *GetLayoutElement() const;
     UIFocusable *GetFocusable() const;
 
+    // IEventsFocus
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
 private:
     static Color IdleColor;
     static Color OverColor;
@@ -40,6 +44,7 @@ private:
     int m_size = -1;
     bool m_isChecked = true;
     UIFocusable *p_focusable = nullptr;
+    UIImageRenderer *p_border = nullptr;
     UIImageRenderer *p_tickImage = nullptr;
     UIImageRenderer *p_checkBgImage = nullptr;
     UILayoutElement *p_layoutElement = nullptr;

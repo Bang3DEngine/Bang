@@ -110,25 +110,34 @@ void UICanvas::OnUpdate()
         event.type = type;
         event.mouse.button = inputEvent.mouseButton;
         event.mousePosWindow = inputEvent.GetMousePosWindow();
-        event.mouse.delta = (event.mousePosWindow - GetLastMousePosition());
         event.key.key = inputEvent.key;
         event.key.modifiers = inputEvent.keyModifiers;
         event.wheel.amount = inputEvent.wheelDelta;
         PropagateUIEvent(focusable, event);
     };
 
+    // Process all enqueued InputEvents, transform them to UIEvents and
+    // propagate them as we need.
+
+    Array<UIFocusable*> focusables;
+    for (const auto& focusableAndRectVP : focusablesAndRectsVP)
+    {
+        focusables.PushBack(focusableAndRectVP.first);
+    }
+
     Vector2i currentMousePosVP   = Input::GetMousePosition();
     Vector2 currentMousePosVPNDC = Input::GetMousePositionNDC();
     Vector2i currentMouseWindow  = Input::GetMousePositionWindow();
     const Array<InputEvent> &events = Input::GetEnqueuedEvents();
-    for (const InputEvent &event : events)
+    for (const InputEvent &inputEvent : events)
     {
-        currentMouseWindow = event.GetMousePosWindow();
+        currentMouseWindow = inputEvent.GetMousePosWindow();
         currentMousePosVP = Vector2i(GL::FromWindowPointToViewportPoint(
                                         currentMouseWindow));
         currentMousePosVPNDC = GL::FromViewportPointToViewportPointNDC(
                                     currentMousePosVP);
 
+        // First of all, know which focusable is under mouse top most
         UIFocusable *focusableUnderMouseTopMost = nullptr;
         for (const auto &pair : focusablesAndRectsVP)
         {
@@ -149,6 +158,7 @@ void UICanvas::OnUpdate()
             }
         }
 
+        // Do changes if the focusable under mouse has changed
         if (focusableUnderMouseTopMost != GetFocusableUnderMouseTopMost())
         {
             Map<UIFocusable*, AARecti> focusableToAARectVPMasks;
@@ -183,7 +193,7 @@ void UICanvas::OnUpdate()
             {
                 PropagateFocusableUIEvent(focusableNotUnderAnymore,
                                           UIEvent::Type::MOUSE_EXIT,
-                                          event);
+                                          inputEvent);
                 UnRegisterForEvents(focusableNotUnderAnymore);
                 p_focusablesUnderMouse.Remove(focusableNotUnderAnymore);
             }
@@ -198,7 +208,7 @@ void UICanvas::OnUpdate()
             {
                 PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
                                           UIEvent::Type::MOUSE_ENTER,
-                                          event);
+                                          inputEvent);
 
                 // We can lose the focusable when propagating event, so recheck
                 if (GetFocusableUnderMouseTopMost())
@@ -209,133 +219,200 @@ void UICanvas::OnUpdate()
             }
         }
 
-        if (event.type == InputEvent::Type::WHEEL)
-        {
-            if (GetFocusableUnderMouseTopMost())
-            {
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::WHEEL,
-                                          event);
-
-                // We can lose the focusable when propagating event, so recheck
-                if (GetFocusableUnderMouseTopMost())
-                {
-                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                }
-            }
-        }
-
-        if (event.type == InputEvent::Type::MOUSE_MOVE)
-        {
-            if (GetFocusableUnderMouseTopMost())
-            {
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::MOUSE_MOVE,
-                                          event);
-
-                // We can lose the focusable when propagating event, so recheck
-                if (GetFocusableUnderMouseTopMost())
-                {
-                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                }
-            }
-        }
-
-        m_lastMousePosition = currentMousePosVP;
-
         for (UIFocusable *focusableUnderMouse : p_focusablesUnderMouse)
         {
             RegisterForEvents( focusableUnderMouse );
         }
 
-        if (event.type == InputEvent::Type::MOUSE_DOWN)
+        switch (inputEvent.type)
         {
-            if (GetFocusableUnderMouseTopMost())
+            case InputEvent::Type::WHEEL:
             {
-                RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::MOUSE_CLICK_DOWN,
-                                          event);
-            }
-        }
-
-        if (event.type == InputEvent::Type::MOUSE_UP)
-        {
-            if (GetFocusableUnderMouseTopMost())
-            {
-                RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::MOUSE_CLICK_UP,
-                                          event);
-            }
-        }
-
-        if (event.type == InputEvent::Type::MOUSE_DOWN &&
-            event.mouseButton == MouseButton::LEFT)
-        {
-            if (GetFocusableUnderMouseTopMost())
-            {
-                RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::STARTED_BEING_PRESSED,
-                                          event);
-            }
-        }
-
-        if (event.type == InputEvent::Type::MOUSE_DOWN &&
-            event.mouseButton == MouseButton::LEFT)
-        {
-            SetFocus( GetFocusableUnderMouseTopMost() );
-
-            p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
-            for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
-            {
-                RegisterForEvents(focusable);
-            }
-
-            if (GetFocusableUnderMouseTopMost())
-            {
-                RegisterForEvents( GetFocusableUnderMouseTopMost() );
-            }
-        }
-
-        if (event.type == InputEvent::Type::MOUSE_UP &&
-            event.mouseButton == MouseButton::LEFT)
-        {
-            if (GetFocus() && GetFocus()->IsBeingPressed())
-            {
-                if (GameObject *focusGo = GetFocus()->GetGameObject())
+                if (GetFocusableUnderMouseTopMost())
                 {
-                    if (RectTransform *rt = focusGo->GetRectTransform())
+                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                              UIEvent::Type::WHEEL,
+                                              inputEvent);
+
+                    if (GetFocusableUnderMouseTopMost())
                     {
-                        if (rt->IsMouseOver(currentMousePosVP, false))
-                        {
-                            RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                            PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                                      UIEvent::Type::MOUSE_CLICK_FULL,
-                                                      event);
-                        }
+                        RegisterForEvents( GetFocusableUnderMouseTopMost() );
                     }
                 }
             }
+            break;
 
-            for (UIFocusable *focusablePotentiallyBeingPressed :
-                    p_focusablesPotentiallyBeingPressed)
+            case InputEvent::Type::MOUSE_MOVE:
             {
-                if (focusablePotentiallyBeingPressed->IsBeingPressed())
+                if (GetFocusableUnderMouseTopMost())
                 {
-                    RegisterForEvents( focusablePotentiallyBeingPressed );
-                    PropagateFocusableUIEvent(focusablePotentiallyBeingPressed,
-                                              UIEvent::Type::FINISHED_BEING_PRESSED,
-                                              event);
+                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                              UIEvent::Type::MOUSE_MOVE,
+                                              inputEvent);
+
+                    if (GetFocusableUnderMouseTopMost())
+                    {
+                        RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                    }
                 }
             }
+            break;
 
-            for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
+            case InputEvent::Type::MOUSE_DOWN:
             {
-                UnRegisterForEvents(focusable);
+                if (GetFocusableUnderMouseTopMost())
+                {
+                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                              UIEvent::Type::MOUSE_CLICK_DOWN,
+                                              inputEvent);
+                }
+
+                if (GetFocusableUnderMouseTopMost())
+                {
+                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                              UIEvent::Type::STARTED_BEING_PRESSED,
+                                              inputEvent);
+                }
+
+                if (inputEvent.mouseButton == MouseButton::LEFT)
+                {
+                    SetFocus( GetFocusableUnderMouseTopMost() );
+
+                    p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
+                    for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
+                    {
+                        RegisterForEvents(focusable);
+                    }
+
+                    if (GetFocusableUnderMouseTopMost())
+                    {
+                        RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                    }
+                }
             }
-            p_focusablesPotentiallyBeingPressed.Clear();
+            break;
+
+            case InputEvent::Type::MOUSE_UP:
+            {
+                if (GetFocusableUnderMouseTopMost())
+                {
+                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                              UIEvent::Type::MOUSE_CLICK_UP,
+                                              inputEvent);
+                }
+
+                if (inputEvent.mouseButton == MouseButton::LEFT)
+                {
+                    if (GetFocus() && GetFocus()->IsBeingPressed())
+                    {
+                        if (GameObject *focusGo = GetFocus()->GetGameObject())
+                        {
+                            if (RectTransform *rt = focusGo->GetRectTransform())
+                            {
+                                if (rt->IsMouseOver(currentMousePosVP, false))
+                                {
+                                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
+                                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                                              UIEvent::Type::MOUSE_CLICK_FULL,
+                                                              inputEvent);
+                                }
+                            }
+                        }
+                    }
+
+                    for (UIFocusable *focusablePotentiallyBeingPressed :
+                            p_focusablesPotentiallyBeingPressed)
+                    {
+                        if (focusablePotentiallyBeingPressed->IsBeingPressed())
+                        {
+                            RegisterForEvents( focusablePotentiallyBeingPressed );
+                            PropagateFocusableUIEvent(focusablePotentiallyBeingPressed,
+                                                      UIEvent::Type::FINISHED_BEING_PRESSED,
+                                                      inputEvent);
+                        }
+                    }
+
+                    for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
+                    {
+                        UnRegisterForEvents(focusable);
+                    }
+                    p_focusablesPotentiallyBeingPressed.Clear();
+                }
+            }
+            break;
+
+            case InputEvent::Type::KEY_DOWN:
+            {
+                if (GetFocus())
+                {
+                    RegisterForEvents( GetFocus() );
+                    PropagateFocusableUIEvent(GetFocus(),
+                                              UIEvent::Type::KEY_DOWN,
+                                              inputEvent);
+                }
+
+                switch (inputEvent.key)
+                {
+                    // Tabbing
+                    case Key::TAB:
+                    {
+                        if (UIFocusable *focus = GetFocus())
+                        {
+                            const uint numFocusables = focusables.Size();
+                            int indexOfFocus = focusables.IndexOf(focus);
+                            bool shift =
+                               (inputEvent.keyModifiers.IsOn(KeyModifier::LSHIFT) ||
+                                inputEvent.keyModifiers.IsOn(KeyModifier::RSHIFT));
+
+                            int newFocusIndex = indexOfFocus;
+                            while (true)
+                            {
+                                const uint nf = numFocusables;
+                                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + nf) % nf;
+                                if (newFocusIndex == indexOfFocus)
+                                {
+                                    break; // Complete loop
+                                }
+
+                                UIFocusable *newFocus = focusables.At(newFocusIndex);
+                                const bool isValid =
+                                    newFocus->IsFocusEnabled() &&
+                                    newFocus->GetConsiderForTabbing() &&
+                                    newFocus->GetGameObject()->IsVisible() &&
+                                    newFocus->IsEnabled(true);
+                                if (isValid)
+                                {
+                                    break;
+                                }
+                            }
+                            SetFocus( focusables.At(newFocusIndex) );
+                        }
+                    }
+                    break;
+
+                    default:
+                    break;
+                }
+            }
+            break;
+
+            case InputEvent::Type::KEY_UP:
+            {
+                if (GetFocus())
+                {
+                    RegisterForEvents( GetFocus() );
+                    PropagateFocusableUIEvent(GetFocus(),
+                                              UIEvent::Type::KEY_UP,
+                                              inputEvent);
+                }
+            }
+            break;
+
+            default:
+            break;
         }
 
         if (GetFocusableUnderMouseTopMost() &&
@@ -344,68 +421,7 @@ void UICanvas::OnUpdate()
             RegisterForEvents( GetFocusableUnderMouseTopMost() );
             PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
                                       UIEvent::Type::MOUSE_CLICK_DOUBLE,
-                                      event);
-        }
-
-        if (event.type == InputEvent::Type::KEY_DOWN)
-        {
-            if (GetFocus())
-            {
-                RegisterForEvents( GetFocus() );
-                PropagateFocusableUIEvent(GetFocus(),
-                                          UIEvent::Type::KEY_DOWN,
-                                          event);
-            }
-        }
-
-        if (event.type == InputEvent::Type::KEY_UP)
-        {
-            if (GetFocus())
-            {
-                RegisterForEvents( GetFocus() );
-                PropagateFocusableUIEvent(GetFocus(),
-                                          UIEvent::Type::KEY_UP,
-                                          event);
-            }
-        }
-    }
-
-
-    Array<UIFocusable*> focusables;
-    for (const auto& focusableAndRectVP : focusablesAndRectsVP)
-    {
-        focusables.PushBack(focusableAndRectVP.first);
-    }
-
-    // Tabbing
-    if (Input::GetKeyDownRepeat(Key::TAB))
-    {
-        if (UIFocusable *focus = GetFocus())
-        {
-            const uint numFocusables = focusables.Size();
-            int indexOfFocus = focusables.IndexOf(focus);
-            bool shift = Input::GetKey(Key::LSHIFT) || Input::GetKey(Key::RSHIFT);
-            int newFocusIndex = indexOfFocus;
-
-            while (true)
-            {
-                const uint nf = numFocusables;
-                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + nf) % nf;
-                if (newFocusIndex == indexOfFocus)
-                {
-                    break; // Complete loop
-                }
-
-                UIFocusable *newFocus = focusables.At(newFocusIndex);
-                const bool isValid = newFocus->IsFocusEnabled() &&
-                                     newFocus->GetConsiderForTabbing() &&
-                                     newFocus->IsEnabled(true);
-                if (isValid)
-                {
-                    break;
-                }
-            }
-            SetFocus( focusables.At(newFocusIndex) );
+                                      inputEvent);
         }
     }
 
@@ -723,10 +739,6 @@ UIFocusable* UICanvas::GetFocus()
     return p_focus;
 }
 
-const Vector2i &UICanvas::GetLastMousePosition() const
-{
-    return m_lastMousePosition;
-}
 UIFocusable* UICanvas::GetFocusableUnderMouseTopMost() const
 {
     return p_focusableUnderMouseTopMost;

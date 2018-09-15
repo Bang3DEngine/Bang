@@ -596,6 +596,16 @@ bool GameObject::IsVisible() const
     return m_visible;
 }
 
+bool GameObject::IsVisible(bool recursive) const
+{
+    if (recursive)
+    {
+        return IsVisible(false) &&
+              (!GetParent() || GetParent()->IsVisible(recursive));
+    }
+    return IsVisible();
+}
+
 void GameObject::SetParent(GameObject *newParent,
                            int index_,
                            bool keepWorldTransform)

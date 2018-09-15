@@ -41,7 +41,6 @@ struct UIEvent
     struct
     {
         MouseButton button;
-        Vector2i delta;
     }
     mouse;
 

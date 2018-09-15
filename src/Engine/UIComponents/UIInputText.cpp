@@ -396,7 +396,7 @@ UITextRenderer *UIInputText::GetText() const
 
 UIFocusable *UIInputText::GetFocusable() const
 {
-    return p_focusable;
+    return GetLabel()->GetFocusable();
 }
 
 UIImageRenderer *UIInputText::GetBackground() const
@@ -422,12 +422,6 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_background = bg;
     inputText->p_background->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
-
-    UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->EventEmitter<IEventsFocus>::RegisterListener(inputText);
-    inputText->p_focusable = focusable;
-    inputText->p_focusable->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
-
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
     scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(Vector2::Zero);
     scrollArea->GetMask()->SetMasking(true);
@@ -435,8 +429,8 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_scrollArea = scrollArea;
     inputText->p_scrollArea->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
-    GameObjectFactory::AddInnerBorder(go, Vector2i(1));
-    GameObjectFactory::AddInnerShadow(go, Vector2i(3));
+    inputText->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
+    // GameObjectFactory::AddInnerShadow(go, Vector2i(3));
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();
     UITextCursor *cursor = cursorGo->AddComponent<UITextCursor>();
@@ -537,11 +531,14 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
     switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
+            p_border->SetTint(Color::Orange);
             Input::PollInputText();
+            GetLabel()->SelectAll();
             return UIEventResult::INTERCEPT;
         break;
 
         case UIEvent::Type::FOCUS_LOST:
+            p_border->SetTint(Color::Black);
             UpdateCursorRenderer();
             return UIEventResult::INTERCEPT;
         break;
@@ -599,16 +596,12 @@ void UIInputText::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         p_cursor = nullptr;
     }
 
-    if (object == p_focusable)
-    {
-        p_focusable = nullptr;
-    }
-
     if (object == p_scrollArea)
     {
         p_scrollArea = nullptr;
     }
-    else if (object == p_background)
+
+    if (object == p_background)
     {
         p_background = nullptr;
     }

@@ -497,7 +497,7 @@ UIImageRenderer* GameObjectFactory::AddInnerShadow(GameObject *uiGo,
     innerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     innerShadowImg->SetImageTexture( TextureFactory::GetInnerShadow() );
     innerShadowImg->SetSlice9BorderStrokePx( size );
-    innerShadowImg->SetTint(Color::One.WithAlpha(alpha));
+    innerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
     innerShadowImg->SetDepthMask(false);
     // innerShadowGo->GetTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
     innerShadowGo->SetParent(uiGo);
@@ -513,7 +513,7 @@ UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
     outerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     outerShadowImg->SetImageTexture( TextureFactory::GetOuterShadow() );
     outerShadowImg->SetSlice9BorderStrokePx( size );
-    outerShadowImg->SetTint(Color::One.WithAlpha(alpha));
+    outerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
     outerShadowImg->SetDepthMask(false);
     outerShadowGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.001f) );
     outerShadowGo->GetRectTransform()->SetMargins(-size.x,

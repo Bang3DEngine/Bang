@@ -13,14 +13,12 @@ FORWARD class UITextRenderer;
 FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
 
-class UIButton : public Component
+class UIButton : public Component,
+                 public EventListener<IEventsFocus>
 {
     COMPONENT(UIButton)
 
 public:
-    // Component
-    void OnStart() override;
-
     void Click();
     void SetBlocked(bool blocked);
     void SetIconSize(const Vector2i &size);
@@ -60,8 +58,9 @@ private:
     void ChangeAspectToBlocked();
 
     // IEventsFocus
-    UIEventResult OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                               const UIEvent &event);
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
+
     void OnMouseEnter();
     void OnMouseExit();
 

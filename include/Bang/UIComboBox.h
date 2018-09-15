@@ -46,6 +46,9 @@ public:
     int GetSelectedValuesForFlag() const;
     const Array<int>& GetSelectedIndices() const;
 
+    // IEventsFocus
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event) override;
 protected:
     UIComboBox();
     virtual ~UIComboBox();
@@ -72,6 +75,7 @@ private:
     float m_secondsWithListShown = 0.0f;
 
     UIList *p_list = nullptr;
+    UIImageRenderer *p_border = nullptr;
     UITextRenderer *p_selectedItemText = nullptr;
 
 

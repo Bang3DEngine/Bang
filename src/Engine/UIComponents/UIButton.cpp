@@ -28,97 +28,60 @@ UIButton::~UIButton()
 
 }
 
-UIEventResult
-UIButton::OnFocusEvent(EventEmitter<IEventsFocus> *focusable,
-                       const UIEvent &event)
-{
-    BANG_UNUSED(focusable);
-
-    if (!IsBlocked())
-    {
-        switch (event.type)
-        {
-            case UIEvent::Type::MOUSE_CLICK_DOWN:
-                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
-                {
-                    OnMouseEnter();
-                    return UIEventResult::INTERCEPT;
-                }
-            break;
-            case UIEvent::Type::MOUSE_CLICK_FULL:
-                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
-                {
-                    OnMouseEnter();
-                    for (auto clickedCallback : m_clickedCallbacks)
-                    {
-                        clickedCallback();
-                    }
-                    return UIEventResult::INTERCEPT;
-                }
-            break;
-
-            case UIEvent::Type::STARTED_BEING_PRESSED:
-            case UIEvent::Type::FINISHED_BEING_PRESSED:
-            case UIEvent::Type::MOUSE_CLICK_UP:
-            case UIEvent::Type::MOUSE_ENTER:
-            case UIEvent::Type::MOUSE_EXIT:
-                if (GetFocusable()->IsMouseOver())
-                {
-                    OnMouseEnter();
-                }
-                else
-                {
-                    OnMouseExit();
-                }
-                return UIEventResult::INTERCEPT;
-            break;
-
-            default: break;
-        }
-    }
-    return UIEventResult::IGNORE;
-}
-
 void UIButton::OnMouseEnter()
 {
-    if (GetFocusable()->IsBeingPressed())
+    if (IsBlocked())
     {
-        ChangeAspectToPressed();
+        ChangeAspectToBlocked();
     }
     else
     {
-        ChangeAspectToOver();
+        if (GetFocusable()->IsBeingPressed())
+        {
+            ChangeAspectToPressed();
+        }
+        else
+        {
+            ChangeAspectToOver();
+        }
     }
 }
 
 void UIButton::OnMouseExit()
 {
-    if (GetFocusable()->IsBeingPressed())
+    if (IsBlocked())
     {
-        ChangeAspectToPressed();
+        ChangeAspectToBlocked();
     }
     else
     {
-        ChangeAspectToIdle();
+        if (GetFocusable()->IsBeingPressed())
+        {
+            ChangeAspectToPressed();
+        }
+        else
+        {
+            ChangeAspectToIdle();
+        }
     }
-}
-
-void UIButton::OnStart()
-{
-    Component::OnStart();
-    GetFocusable()->AddEventCallback([this](EventEmitter<IEventsFocus> *focusable,
-                                            const UIEvent &event)
-    {
-        return OnFocusEvent(focusable, event);
-    });
 }
 
 void UIButton::Click()
 {
     UIEvent event;
+
     event.type = UIEvent::Type::MOUSE_CLICK_FULL;
     event.mouse.button = MouseButton::LEFT;
     GetFocusable()->ProcessEvent(event);
+
+    if (GetFocusable()->IsMouseOver())
+    {
+        OnMouseEnter();
+    }
+    else
+    {
+        OnMouseExit();
+    }
 }
 
 void UIButton::SetBlocked(bool blocked)
@@ -127,7 +90,6 @@ void UIButton::SetBlocked(bool blocked)
     {
         m_isBlocked = blocked;
 
-        GetFocusable()->EventEmitter<IEventsFocus>::SetEmitEvents( !IsBlocked() );
         if (!IsBlocked())
         {
             if (GetFocusable()->IsMouseOver())
@@ -243,6 +205,99 @@ void UIButton::ChangeAspectToBlocked()
     GetFocusable()->SetCursorType( Cursor::Type::NO );
 }
 
+UIEventResult UIButton::OnUIEvent(UIFocusable*, const UIEvent &event)
+{
+    switch (event.type)
+    {
+        case UIEvent::Type::FOCUS_TAKEN:
+            GetBorder()->SetTint(Color::Orange);
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::FOCUS_LOST:
+            GetBorder()->SetTint(Color::Black);
+            return UIEventResult::INTERCEPT;
+        break;
+
+        default:
+        break;
+    }
+
+    if (!IsBlocked())
+    {
+        switch (event.type)
+        {
+            case UIEvent::Type::MOUSE_CLICK_DOWN:
+                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
+                {
+                    OnMouseEnter();
+                    return UIEventResult::INTERCEPT;
+                }
+            break;
+
+            case UIEvent::Type::MOUSE_CLICK_FULL:
+                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
+                {
+                    OnMouseEnter();
+                    for (auto clickedCallback : m_clickedCallbacks)
+                    {
+                        clickedCallback();
+                    }
+                    return UIEventResult::INTERCEPT;
+                }
+            break;
+
+            case UIEvent::Type::STARTED_BEING_PRESSED:
+            case UIEvent::Type::FINISHED_BEING_PRESSED:
+            case UIEvent::Type::MOUSE_CLICK_UP:
+            case UIEvent::Type::MOUSE_ENTER:
+            case UIEvent::Type::MOUSE_EXIT:
+                if (GetFocusable()->IsMouseOver())
+                {
+                    OnMouseEnter();
+                }
+                else
+                {
+                    OnMouseExit();
+                }
+                return UIEventResult::INTERCEPT;
+            break;
+
+            case UIEvent::Type::KEY_DOWN:
+                switch (event.key.key)
+                {
+                    case Key::SPACE:
+                    case Key::ENTER:
+                        ChangeAspectToPressed();
+                        return UIEventResult::INTERCEPT;
+                    break;
+
+                    default:
+                    break;
+                }
+            break;
+
+            case UIEvent::Type::KEY_UP:
+                switch (event.key.key)
+                {
+                    case Key::SPACE:
+                    case Key::ENTER:
+                        Click();
+                        return UIEventResult::INTERCEPT;
+                    break;
+
+                    default:
+                    break;
+                }
+            break;
+
+            default:
+            break;
+        }
+    }
+    return UIEventResult::IGNORE;
+}
+
 UIButton* UIButton::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
@@ -262,7 +317,9 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     button->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
 
-    UIFocusable *btn = go->AddComponent<UIFocusable>();
+    UIFocusable *focusable = go->AddComponent<UIFocusable>();
+    focusable->SetConsiderForTabbing(true);
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(button);
 
     UILabel *label = GameObjectFactory::CreateUILabel();
     label->GetText()->SetTextColor(Color::Black);
@@ -277,7 +334,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
 
     button->p_icon = icon;
     button->p_background = bgImg;
-    button->p_focusable = btn;
+    button->p_focusable = focusable;
     button->p_text = label->GetText();
     button->p_layoutElement = le;
 

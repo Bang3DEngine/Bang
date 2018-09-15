@@ -305,6 +305,90 @@ const Array<int> &UIComboBox::GetSelectedIndices() const
     return m_selectedIndices;
 }
 
+UIEventResult UIComboBox::OnUIEvent(UIFocusable*, const UIEvent &event)
+{
+    switch (event.type)
+    {
+        case UIEvent::Type::FOCUS_TAKEN:
+            p_border->SetTint(Color::Orange);
+        break;
+
+        case UIEvent::Type::FOCUS_LOST:
+            p_border->SetTint(Color::Black);
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_UP:
+        {
+            if (!m_listRecentlyToggled)
+            {
+                if (IsListBeingShown() &&
+                    GetList()->GetFocusable()->IsMouseOver() &&
+                    m_secondsWithListShown > 0.3f)
+                {
+                    m_listRecentlyToggled = true;
+                }
+            }
+            return UIEventResult::INTERCEPT;
+        }
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_DOWN:
+        {
+            if (!m_listRecentlyToggled)
+            {
+                if (!IsListBeingShown())
+                {
+                    m_listRecentlyToggled = true;
+                    ShowList();
+                }
+                else
+                {
+                    if (!GetList()->GetFocusable()->IsMouseOver())
+                    {
+                        HideList();
+                    }
+                }
+            }
+            return UIEventResult::INTERCEPT;
+        }
+        break;
+
+        case UIEvent::Type::KEY_DOWN:
+            switch (event.key.key)
+            {
+                case Key::SPACE:
+                case Key::ENTER:
+                    if (IsListBeingShown())
+                    {
+                        HideList();
+                    }
+                    else
+                    {
+                        ShowList();
+                    }
+                    return UIEventResult::INTERCEPT;
+                break;
+
+                case Key::DOWN:
+                case Key::UP:
+                {
+                    int numItems = GetNumItems();
+                    int displacement = (event.key.key == Key::DOWN ? 1 : -1);
+                    int oldIndex = GetSelectedIndex();
+                    int newIndex = (oldIndex + displacement + numItems) % numItems;
+                    SetSelectionByIndex(newIndex);
+                    return UIEventResult::INTERCEPT;
+                }
+                break;
+            }
+        break;
+
+        default:
+        break;
+    }
+    return UIEventResult::IGNORE;
+}
+
 String UIComboBox::GetSelectedLabel() const
 {
     if (GetSelectedIndex() >= 0 && GetSelectedIndex() < int( m_indexToValue.Size() ))
@@ -362,39 +446,9 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     hl->SetSpacing(8);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([comboBox](UIFocusable*,
-                                           const UIEvent &event)
-    {
-        if (!comboBox->m_listRecentlyToggled)
-        {
-            if (event.type == UIEvent::Type::MOUSE_CLICK_UP)
-            {
-                if (comboBox->IsListBeingShown() &&
-                    comboBox->GetList()->GetFocusable()->IsMouseOver() &&
-                    comboBox->m_secondsWithListShown > 0.3f)
-                {
-                    comboBox->m_listRecentlyToggled = true;
-                }
-            }
-            else if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
-            {
-                if (!comboBox->IsListBeingShown())
-                {
-                    comboBox->m_listRecentlyToggled = true;
-                    comboBox->ShowList();
-                }
-                else
-                {
-                    if (!comboBox->GetList()->GetFocusable()->IsMouseOver())
-                    {
-                        comboBox->HideList();
-                    }
-                }
-            }
-        }
-        return UIEventResult::IGNORE;
-    });
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(comboBox);
     focusable->SetCursorType(Cursor::Type::HAND);
+    focusable->SetConsiderForTabbing(true);
 
     GameObject *currentItemTextGo = GameObjectFactory::CreateUIGameObject();
     UITextRenderer *currentItemText = currentItemTextGo->AddComponent<UITextRenderer>();
@@ -406,7 +460,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     // bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
     bg->SetTint(Color::White);
-    GameObjectFactory::AddInnerBorder(go, Vector2i(1));
+    UIImageRenderer *border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
 
     UIImageRenderer *downArrowIcon = GameObjectFactory::CreateUIImage();
     downArrowIcon->SetImageTexture( TextureFactory::GetDownArrowIcon() );
@@ -450,6 +504,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     downArrowIconGo->SetParent(go);
     listGo->SetParent(go);
 
+    comboBox->p_border = border;
     comboBox->p_selectedItemText = currentItemText;
     comboBox->p_list = list;
 

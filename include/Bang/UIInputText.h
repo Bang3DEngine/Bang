@@ -69,8 +69,8 @@ private:
 
     UILabel *p_label = nullptr;
     UITextCursor *p_cursor = nullptr;
-    UIFocusable *p_focusable = nullptr;
     UIScrollArea *p_scrollArea = nullptr;
+    UIImageRenderer *p_border = nullptr;
     UIImageRenderer *p_background = nullptr;
 
     UIInputText();

@@ -99,6 +99,45 @@ UIFocusable *UICheckBox::GetFocusable() const
     return p_focusable;
 }
 
+UIEventResult UICheckBox::OnUIEvent(UIFocusable*, const UIEvent &event)
+{
+    switch (event.type)
+    {
+        case UIEvent::Type::FOCUS_TAKEN:
+            p_border->SetTint(Color::Orange);
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::FOCUS_LOST:
+            p_border->SetTint(Color::Black);
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::MOUSE_CLICK_FULL:
+            SetChecked( !IsChecked() );
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::KEY_DOWN:
+            switch (event.key.key)
+            {
+                case Key::SPACE:
+                case Key::ENTER:
+                    SetChecked( !IsChecked() );
+                    return UIEventResult::INTERCEPT;
+                break;
+
+                default:
+                break;
+            }
+        break;
+
+        default:
+        break;
+    }
+    return UIEventResult::IGNORE;
+}
+
 UICheckBox *UICheckBox::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
@@ -118,16 +157,9 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
-    focusable->AddEventCallback([checkBox](UIFocusable*, const UIEvent &event)
-    {
-        if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
-        {
-            checkBox->SetChecked( !checkBox->IsChecked() );
-            return UIEventResult::INTERCEPT;
-        }
-        return UIEventResult::IGNORE;
-    });
+    focusable->EventEmitter<IEventsFocus>::RegisterListener(checkBox);
     focusable->SetCursorType(Cursor::Type::HAND);
+    focusable->SetConsiderForTabbing(true);
 
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
@@ -135,8 +167,9 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     tickImg->SetTint(Color::Black);
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
-    GameObjectFactory::AddInnerBorder(checkBgImgGo, Vector2i(1));
-    GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(3));
+    checkBox->p_border = GameObjectFactory::AddInnerBorder(checkBgImgGo,
+                                                           Vector2i(1));
+    // GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(3));
 
     checkBox->p_focusable = focusable;
     checkBox->p_tickImage = tickImg;

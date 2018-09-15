@@ -28,7 +28,6 @@ class UIInputText : public Component,
     COMPONENT(UIInputText)
 
 public:
-    void OnStart() override;
     void OnUpdate() override;
 
     void SetCursorIndex(int index);
@@ -77,7 +76,6 @@ private:
     virtual ~UIInputText();
 
     void HandleTyping();
-    void HandleKeySelection(bool existedSelection);
     void HandleCursorIndices(bool existedSelection);
     String FilterAllowedInputText(const String &inputText);
 

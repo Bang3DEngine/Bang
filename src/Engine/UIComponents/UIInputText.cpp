@@ -37,11 +37,6 @@ UIInputText::~UIInputText()
 {
 }
 
-void UIInputText::OnStart()
-{
-    Component::OnStart();
-}
-
 void UIInputText::OnUpdate()
 {
     Component::OnUpdate();
@@ -51,10 +46,7 @@ void UIInputText::OnUpdate()
     hasFocus = (hasFocus || canvas->HasFocus(this));
     if (hasFocus)
     {
-        const bool existedSelection = (GetCursorIndex() != GetSelectionIndex());
-
         HandleTyping();
-        HandleCursorIndices(existedSelection);
         UpdateTextScrolling();
         UpdateCursorRenderer();
     }
@@ -174,8 +166,8 @@ void UIInputText::HandleTyping()
 
         if (removeText)
         {
-            if (GetCursorIndex() > GetSelectionIndex())
-            {   // Swap indices
+            if (GetCursorIndex() > GetSelectionIndex()) // Swap indices
+            {
                 int oldSelectionIndex = GetSelectionIndex();
                 GetLabel()->SetSelectionIndex( GetCursorIndex() );
                 SetCursorIndex(oldSelectionIndex);
@@ -214,15 +206,12 @@ void UIInputText::HandleTyping()
     }
 }
 
-void UIInputText::HandleCursorIndices(bool existedSelection)
-{
-    // Here we will move the selection indices either by arrows...
-    HandleKeySelection(existedSelection);
-}
-
 String UIInputText::FilterAllowedInputText(const String &inputText)
 {
-    if (m_allowedCharacters.IsEmpty()) { return inputText; }
+    if (m_allowedCharacters.IsEmpty())
+    {
+        return inputText;
+    }
 
     String allowedText = "";
     for (char c : inputText)
@@ -270,53 +259,6 @@ RectTransform *UIInputText::GetTextRT() const
 RectTransform *UIInputText::GetRT() const
 {
     return GetGameObject()->GetRectTransform();
-}
-
-void UIInputText::HandleKeySelection(bool existedSelection)
-{
-    // Get cursor advance 1/-1
-    int indexAdvance = 0;
-    if (Input::GetKeyDownRepeat(Key::RIGHT))
-    {
-        indexAdvance = 1;
-    }
-
-    if (Input::GetKeyDownRepeat(Key::LEFT))
-    {
-        indexAdvance = -1;
-    }
-
-    if (indexAdvance != 0)
-    {
-        if (Input::GetKey(Key::LCTRL) || Input::GetKey(Key::RCTRL))
-        {
-            bool fwd = (indexAdvance > 0);
-            int startIdx = GetCursorIndex() + (fwd ? 0 : -1);
-            indexAdvance = GetCtrlStopIndex(startIdx, fwd) - GetCursorIndex();
-            indexAdvance += (fwd ? 0 : 1);
-        }
-
-        int newIndex;
-        if (existedSelection && !IsSelecting())
-        {
-            const int leadingIndex = indexAdvance > 0 ?
-                    Math::Max(GetCursorIndex(), GetSelectionIndex()) :
-                    Math::Min(GetCursorIndex(), GetSelectionIndex());
-            newIndex = leadingIndex;
-        }
-        else
-        {
-            newIndex = GetCursorIndex() + indexAdvance;
-        }
-        newIndex = Math::Clamp(newIndex, 0, GetText()->GetContent().Size());
-        SetCursorIndex(newIndex);
-
-        // Selection resetting handling
-        if (!IsSelecting())
-        {
-            GetLabel()->ResetSelection();
-        }
-    }
 }
 
 void UIInputText::SetCursorIndex(int index)
@@ -544,28 +486,74 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
         break;
 
         case UIEvent::Type::KEY_DOWN:
-            if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+        {
+            switch (event.key.key)
             {
-                if (event.key.key == Key::V)
-                {
-                    String clipboardText = SystemClipboard::Get();
-                    clipboardText = FilterAllowedInputText(clipboardText);
-                    ReplaceSelectedText(clipboardText);
-                    SetCursorIndex( GetCursorIndex() + clipboardText.Size());
-                    GetLabel()->ResetSelection();
-                    return UIEventResult::INTERCEPT;
-                }
-                else if (event.key.key == Key::X)
-                {
-                    String selectedText = GetSelectedText();
-                    if (selectedText.Size() > 0)
+                case Key::V:
+                    if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
                     {
-                        SystemClipboard::Set(selectedText);
-                        ReplaceSelectedText("");
+                        String clipboardText = SystemClipboard::Get();
+                        clipboardText = FilterAllowedInputText(clipboardText);
+                        ReplaceSelectedText(clipboardText);
+                        SetCursorIndex( GetCursorIndex() + clipboardText.Size());
+                        GetLabel()->ResetSelection();
                         return UIEventResult::INTERCEPT;
                     }
+                break;
+
+                case Key::X:
+                    if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+                    {
+                        String selectedText = GetSelectedText();
+                        if (selectedText.Size() > 0)
+                        {
+                            SystemClipboard::Set(selectedText);
+                            ReplaceSelectedText("");
+                            return UIEventResult::INTERCEPT;
+                        }
+                    }
+                break;
+
+                case Key::LEFT:
+                case Key::RIGHT:
+                {
+                    int indexAdvance = (event.key.key == Key::LEFT ? -1 : 1);
+
+                    if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+                    {
+                        bool fwd = (indexAdvance > 0);
+                        int startIdx = GetCursorIndex() + (fwd ? 0 : -1);
+                        indexAdvance = GetCtrlStopIndex(startIdx, fwd) -
+                                       GetCursorIndex();
+                        indexAdvance += (fwd ? 0 : 1);
+                    }
+
+                    int newIndex;
+                    if (GetSelectedText().Size() >= 1 && !IsSelecting())
+                    {
+                        const int leadingIndex = indexAdvance > 0 ?
+                                Math::Max(GetCursorIndex(), GetSelectionIndex()) :
+                                Math::Min(GetCursorIndex(), GetSelectionIndex());
+                        newIndex = leadingIndex;
+                    }
+                    else
+                    {
+                        newIndex = GetCursorIndex() + indexAdvance;
+                    }
+                    newIndex = Math::Clamp(newIndex, 0, GetText()->GetContent().Size());
+                    SetCursorIndex(newIndex);
+
+                    if (!IsSelecting()) // Selection resetting handling
+                    {
+                        GetLabel()->ResetSelection();
+                    }
                 }
+                break;
+
+                default:
+                break;
             }
+        }
         break;
 
         default:

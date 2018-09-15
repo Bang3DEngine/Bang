@@ -10,6 +10,7 @@ NAMESPACE_BANG_BEGIN
 FORWARD class UIFocusable;
 FORWARD class UIScrollBar;
 FORWARD class UIScrollArea;
+FORWARD class UIImageRenderer;
 
 enum class ShowScrollMode
 {
@@ -41,6 +42,7 @@ public:
     void SetScrollingPercent(const Vector2 &scrollingPercent);
 
     Vector2i GetScrolling() const;
+    Vector2 GetScrollingPercent() const;
     bool GetForceVerticalFit() const;
     bool GetForceHorizontalFit() const;
     HorizontalSide GetVerticalScrollBarSide() const;
@@ -67,6 +69,7 @@ private:
     bool m_forceVerticalFit = false;
     bool m_forceHorizontalFit = false;
 
+    UIImageRenderer *p_border = nullptr;
     UIScrollArea *p_scrollArea = nullptr;
     UIScrollBar  *p_verticalScrollBar = nullptr;
     UIScrollBar  *p_horizontalScrollBar = nullptr;

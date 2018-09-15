@@ -20,45 +20,6 @@ UIInputNumber::~UIInputNumber()
 {
 }
 
-void UIInputNumber::OnStart()
-{
-    UIInputText *inputText = GetGameObject()->GetComponent<UIInputText>();
-    inputText->EventEmitter<IEventsValueChanged>::RegisterListener(this);
-    inputText->EventEmitter<IEventsFocus>::RegisterListener(this);
-    inputText->GetLabel()->GetFocusable()->EventEmitter<IEventsFocus>::
-                                           RegisterListener(this);
-}
-
-void UIInputNumber::OnUpdate()
-{
-    Component::OnUpdate();
-
-    if (HasFocus())
-    {
-        if (Input::GetKeyDown(Key::ENTER))
-        {
-            UICanvas::GetActive(this)->SetFocus(nullptr);
-        }
-
-        float increment = 0.0f;
-        if (Input::GetKeyDownRepeat(Key::UP))
-        {
-            increment =  1.0f;
-        }
-        if (Input::GetKeyDownRepeat(Key::DOWN))
-        {
-            increment = -1.0f;
-        }
-
-        if (increment != 0.0f)
-        {
-            SetValue( GetValue() + increment );
-            UpdateTextFromValue();
-            GetInputText()->GetLabel()->SelectAll();
-        }
-    }
-}
-
 void UIInputNumber::SetValue(float v)
 {
     const float clampedValue = Math::Clamp(v, GetMinValue(), GetMaxValue());
@@ -176,16 +137,44 @@ bool UIInputNumber::HasFocus() const
 
 UIEventResult UIInputNumber::OnUIEvent(UIFocusable*, const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::FOCUS_TAKEN)
+    switch (event.type)
     {
-        return UIEventResult::INTERCEPT;
-    }
-    else if (event.type == UIEvent::Type::FOCUS_LOST)
-    {
-        UpdateTextFromValue();
-        return UIEventResult::INTERCEPT;
-    }
+        case UIEvent::Type::FOCUS_TAKEN:
+            return UIEventResult::INTERCEPT;
+        break;
 
+        case UIEvent::Type::FOCUS_LOST:
+            UpdateTextFromValue();
+            return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::KEY_DOWN:
+            switch (event.key.key)
+            {
+                case Key::ENTER:
+                    UICanvas::GetActive(this)->SetFocus(nullptr);
+                    return UIEventResult::INTERCEPT;
+                break;
+
+                case Key::UP:
+                case Key::DOWN:
+                {
+                    float increment = (event.key.key == Key::DOWN ? -1 : 1);
+                    SetValue( GetValue() + increment );
+                    UpdateTextFromValue();
+                    GetInputText()->GetLabel()->SelectAll();
+                    return UIEventResult::INTERCEPT;
+                }
+                break;
+
+                default:
+                break;
+            }
+        break;
+
+        default:
+        break;
+    }
     return UIEventResult::IGNORE;
 }
 
@@ -207,6 +196,9 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
     inputText->SetAllowedCharacters("0123456789.,-+");
     inputText->GetText()->SetHorizontalAlign(HorizontalAlignment::LEFT);
     inputText->GetText()->SetTextSize(12);
+
+    inputText->EventEmitter<IEventsValueChanged>::RegisterListener(inputNumber);
+    inputText->EventEmitter<IEventsFocus>::RegisterListener(inputNumber);
 
     inputNumber->p_inputText = inputText;
 

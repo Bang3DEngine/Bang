@@ -21,9 +21,6 @@ public:
     UIInputNumber();
     virtual ~UIInputNumber();
 
-    void OnStart() override;
-    void OnUpdate() override;
-
     void SetValue(float v);
     void SetMinMaxValues(float min, float max);
     void SetDecimalPlaces(uint decimalPlaces);

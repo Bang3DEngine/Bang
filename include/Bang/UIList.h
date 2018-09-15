@@ -39,9 +39,6 @@ public:
         MOUSE_RIGHT_DOWN
     };
 
-    // Component
-    void OnUpdate() override;
-
     void AddItem(GOItem *newItem);
     void AddItem(GOItem *newItem, int index);
     void MoveItem(GOItem *item, int index);
@@ -114,9 +111,8 @@ private:
 
     bool m_wideSelectionMode = true;
 
-    void HandleShortcuts();
-
     // IEventsFocus
+    UIEventResult OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
     UIEventResult UIEventCallback(UIFocusable *focusable, const UIEvent &event);
 
     static UIList* CreateInto(GameObject *go, bool withScrollPanel);

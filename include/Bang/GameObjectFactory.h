@@ -4,6 +4,7 @@
 #include "Bang/Color.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
+#include "Bang/UITheme.h"
 #include "Bang/LayoutSizeType.h"
 
 NAMESPACE_BANG_BEGIN
@@ -116,12 +117,17 @@ public:
     static UIImageRenderer* AddOuterShadow(GameObject *uiGo,
                                            const Vector2i &size = Vector2i(20),
                                            float alpha = 1.0f);
+    static UIImageRenderer* AddOuterBorder(GameObject *uiGo);
     static UIImageRenderer* AddOuterBorder(GameObject *uiGo,
-                                           const Vector2i &size = Vector2i(1),
-                                           const Color &color = Color::Black);
+                                           const Vector2i &size,
+                                           const Color &color);
+    static UIImageRenderer* AddInnerBorder(GameObject *uiGo);
     static UIImageRenderer* AddInnerBorder(GameObject *uiGo,
-                                           const Vector2i &size = Vector2i(1),
-                                           const Color &color = Color::Black);
+                                           const Vector2i &size,
+                                           const Color &color);
+
+    static void MakeBorderFocused(UIImageRenderer *border);
+    static void MakeBorderNotFocused(UIImageRenderer *border);
 
     static String GetGameObjectDuplicateName(const GameObject *go);
 

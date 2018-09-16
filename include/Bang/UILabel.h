@@ -1,6 +1,7 @@
 #ifndef UILABEL_H
 #define UILABEL_H
 
+#include "Bang/DPtr.h"
 #include "Bang/Component.h"
 #include "Bang/IEventsFocus.h"
 
@@ -12,8 +13,7 @@ FORWARD class RectTransform;
 FORWARD class UITextRenderer;
 
 class UILabel : public Component,
-                public EventListener<IEventsFocus>,
-                public EventListener<IEventsDestroy>
+                public EventListener<IEventsFocus>
 {
     COMPONENT(UILabel)
 
@@ -52,9 +52,6 @@ public:
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-    // IEventsDestroy
-    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
-
 private:
     int m_cursorIndex = 0;
     int m_selectionIndex = 0;
@@ -62,10 +59,10 @@ private:
     bool m_selectable = Undef<bool>();
     bool m_selectAllOnFocusTaken = false;
 
-    UIRectMask *p_mask = nullptr;
-    UITextRenderer *p_text = nullptr;
-    UIFocusable *p_focusable = nullptr;
-    GameObject *p_selectionQuad = nullptr;
+    DPtr<UIRectMask> p_mask;
+    DPtr<UITextRenderer> p_text;
+    DPtr<UIFocusable> p_focusable;
+    DPtr<GameObject> p_selectionQuad;
 
     UILabel();
 

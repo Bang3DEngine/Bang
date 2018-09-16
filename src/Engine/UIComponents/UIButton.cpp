@@ -89,6 +89,7 @@ void UIButton::SetBlocked(bool blocked)
     if (blocked != IsBlocked())
     {
         m_isBlocked = blocked;
+        GetFocusable()->SetConsiderForTabbing( !IsBlocked() );
 
         if (!IsBlocked())
         {
@@ -175,34 +176,46 @@ UIDirLayout *UIButton::GetDirLayout() const
 
 void UIButton::ChangeAspectToIdle()
 {
-    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
-    GetBackground()->SetTint( Color::White.WithValue(1.2f) );
-    GetText()->SetTextColor(Color::Black);
-    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    if (GetBackground() && GetText())
+    {
+        GetBackground()->SetImageTexture(nullptr);
+        GetBackground()->SetTint( Color::White.WithValue(1.2f) );
+        GetText()->SetTextColor(Color::Black);
+        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    }
 }
 
 void UIButton::ChangeAspectToOver()
 {
-    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
-    GetBackground()->SetTint( Color::LightBlue );
-    GetText()->SetTextColor(Color::Black);
-    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    if (GetBackground() && GetText())
+    {
+        GetBackground()->SetImageTexture(nullptr);
+        GetBackground()->SetTint( UITheme::GetOverColor() );
+        GetText()->SetTextColor(Color::Black);
+        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    }
 }
 
 void UIButton::ChangeAspectToPressed()
 {
-    GetBackground()->SetImageTexture( TextureFactory::GetButtonDown() );
-    GetBackground()->SetTint( Color::LightBlue );
-    GetText()->SetTextColor(Color::Black);
-    GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    if (GetBackground() && GetText())
+    {
+        GetBackground()->SetImageTexture(nullptr);
+        GetBackground()->SetTint( UITheme::GetSelectedColor() );
+        GetText()->SetTextColor( Color::Black );
+        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+    }
 }
 
 void UIButton::ChangeAspectToBlocked()
 {
-    GetBackground()->SetImageTexture( TextureFactory::GetButtonIdle() );
-    GetBackground()->SetTint( Color::White.WithValue(0.75f) );
-    GetText()->SetTextColor(Color::DarkGray);
-    GetFocusable()->SetCursorType( Cursor::Type::NO );
+    if (GetBackground() && GetText())
+    {
+        GetBackground()->SetImageTexture(nullptr);
+        GetBackground()->SetTint( UITheme::GetInputTextBlockedBackgroundColor() );
+        GetText()->SetTextColor( Color::DarkGray );
+        GetFocusable()->SetCursorType( Cursor::Type::NO );
+    }
 }
 
 UIEventResult UIButton::OnUIEvent(UIFocusable*, const UIEvent &event)
@@ -210,12 +223,15 @@ UIEventResult UIButton::OnUIEvent(UIFocusable*, const UIEvent &event)
     switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            GetBorder()->SetTint(Color::Orange);
+            if (!IsBlocked())
+            {
+                GameObjectFactory::MakeBorderFocused(p_border);
+            }
             return UIEventResult::INTERCEPT;
         break;
 
         case UIEvent::Type::FOCUS_LOST:
-            GetBorder()->SetTint(Color::Black);
+            GameObjectFactory::MakeBorderNotFocused(p_border);
             return UIEventResult::INTERCEPT;
         break;
 
@@ -268,20 +284,6 @@ UIEventResult UIButton::OnUIEvent(UIFocusable*, const UIEvent &event)
                 {
                     case Key::SPACE:
                     case Key::ENTER:
-                        ChangeAspectToPressed();
-                        return UIEventResult::INTERCEPT;
-                    break;
-
-                    default:
-                    break;
-                }
-            break;
-
-            case UIEvent::Type::KEY_UP:
-                switch (event.key.key)
-                {
-                    case Key::SPACE:
-                    case Key::ENTER:
                         Click();
                         return UIEventResult::INTERCEPT;
                     break;
@@ -315,7 +317,7 @@ UIButton* UIButton::CreateInto(GameObject *go)
     // bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     bgImg->SetMode(UIImageRenderer::Mode::SLICE_9_INV_UVY);
 
-    button->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
+    button->p_border = GameObjectFactory::AddInnerBorder(go);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->SetConsiderForTabbing(true);

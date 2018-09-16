@@ -524,6 +524,14 @@ UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
     return outerShadowImg;
 }
 
+UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo)
+{
+    return GameObjectFactory::AddOuterBorder(
+                                uiGo,
+                                Vector2i(UITheme::GetNotFocusedBorderStroke()),
+                                UITheme::GetNotFocusedBorderColor());
+}
+
 UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
                                                    const Vector2i &size,
                                                    const Color &color)
@@ -543,6 +551,14 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
     return outerBorderImg;
 }
 
+UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo)
+{
+    return GameObjectFactory::AddInnerBorder(
+                                uiGo,
+                                Vector2i(UITheme::GetNotFocusedBorderStroke()),
+                                UITheme::GetNotFocusedBorderColor());
+}
+
 UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
                                                    const Vector2i &size,
                                                    const Color &color)
@@ -553,6 +569,20 @@ UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
     innerBorderImg->SetSlice9BorderStrokePx( size );
     innerBorderImg->SetTint(color);
     return innerBorderImg;
+}
+
+void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
+{
+    border->SetTint( UITheme::GetFocusedBorderColor() );
+    border->SetSlice9BorderStrokePx(
+                Vector2i(UITheme::GetFocusedBorderStroke()) );
+}
+
+void GameObjectFactory::MakeBorderNotFocused(UIImageRenderer *border)
+{
+    border->SetTint( UITheme::GetNotFocusedBorderColor() );
+    border->SetSlice9BorderStrokePx(
+                Vector2i(UITheme::GetNotFocusedBorderStroke()) );
 }
 
 

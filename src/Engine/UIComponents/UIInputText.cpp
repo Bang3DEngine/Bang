@@ -7,6 +7,7 @@
 #include "Bang/Input.h"
 #include "Bang/Cursor.h"
 #include "Bang/UILabel.h"
+#include "Bang/UITheme.h"
 #include "Bang/UICanvas.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
@@ -250,14 +251,15 @@ void UIInputText::SetBlocked(bool blocked)
     if (blocked != IsBlocked())
     {
         m_isBlocked = blocked;
+        GetFocusable()->SetConsiderForTabbing( !IsBlocked() );
 
         if (IsBlocked())
         {
-            GetBackground()->SetTint(Color::White.WithValue(0.9f));
+            GetBackground()->SetTint(UITheme::GetInputTextBlockedBackgroundColor());
         }
         else
         {
-            GetBackground()->SetTint(Color::White);
+            GetBackground()->SetTint(UITheme::GetInputTextBackgroundColor());
         }
     }
 }
@@ -301,24 +303,21 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
     // bg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // bg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    bg->SetTint(Color::White);
+    bg->SetTint(UITheme::GetInputTextBackgroundColor());
     inputText->p_background = bg;
-    inputText->p_background->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
     scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(Vector2::Zero);
     scrollArea->GetMask()->SetMasking(true);
     scrollArea->GetBackground()->SetTint(Color::Zero);
     inputText->p_scrollArea = scrollArea;
-    inputText->p_scrollArea->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
 
-    inputText->p_border = GameObjectFactory::AddInnerBorder(go, Vector2i(1));
+    inputText->p_border = GameObjectFactory::AddInnerBorder(go);
     // GameObjectFactory::AddInnerShadow(go, Vector2i(3));
 
     GameObject *cursorGo = GameObjectFactory::CreateUIGameObject();
     UITextCursor *cursor = cursorGo->AddComponent<UITextCursor>();
     inputText->p_cursor = cursor;
-    inputText->p_cursor->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
     cursor->SetEnabled(false);
 
     UILabel *label = GameObjectFactory::CreateUILabel();
@@ -327,7 +326,6 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     label->GetGameObject()->GetRectTransform()->
                             SetMargins(MarginX, MarginY, MarginX, MarginY);
     label->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(inputText);
-    label->EventEmitter<IEventsDestroy>::RegisterListener(inputText);
     label->GetFocusable()->SetConsiderForTabbing(true);
     inputText->p_label = label;
 
@@ -414,14 +412,17 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
     switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            p_border->SetTint(Color::Orange);
-            Input::PollInputText();
+            if (!IsBlocked())
+            {
+                GameObjectFactory::MakeBorderFocused(p_border);
+                Input::PollInputText();
+            }
             GetLabel()->SelectAll();
             return UIEventResult::INTERCEPT;
         break;
 
         case UIEvent::Type::FOCUS_LOST:
-            p_border->SetTint(Color::Black);
+            GameObjectFactory::MakeBorderNotFocused(p_border);
             UpdateCursorRenderer();
             return UIEventResult::INTERCEPT;
         break;
@@ -576,29 +577,6 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
     }
 
     return UIEventResult::IGNORE;
-}
-
-void UIInputText::OnDestroyed(EventEmitter<IEventsDestroy> *object)
-{
-    if (object == p_label)
-    {
-        p_label = nullptr;
-    }
-
-    if (object == p_cursor)
-    {
-        p_cursor = nullptr;
-    }
-
-    if (object == p_scrollArea)
-    {
-        p_scrollArea = nullptr;
-    }
-
-    if (object == p_background)
-    {
-        p_background = nullptr;
-    }
 }
 
 void UIInputText::CalculateLayout(Axis axis)

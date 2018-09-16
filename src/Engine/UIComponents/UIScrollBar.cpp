@@ -198,10 +198,10 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
     barFocusable->SetCursorType(Cursor::Type::HAND);
 
-    GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject(), Vector2i(2));
-    GameObjectFactory::AddInnerBorder(scrollArea->GetGameObject(), Vector2i(1));
+    // GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject());
+    GameObjectFactory::AddInnerBorder(scrollArea->GetGameObject());
     // GameObjectFactory::AddOuterShadow(bar, Vector2i(1, 5));
-    GameObjectFactory::AddInnerBorder(bar, Vector2i(1));
+    GameObjectFactory::AddInnerBorder(bar);
 
     UIFocusable *scrollAreaFocusable = scrollArea->GetGameObject()->
                                        AddComponent<UIFocusable>();

@@ -5,6 +5,7 @@
 
 #include "Bang/UMap.h"
 #include "Bang/Array.h"
+#include "Bang/UITheme.h"
 #include "Bang/Component.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsUIList.h"
@@ -106,8 +107,8 @@ private:
     UIScrollPanel *p_scrollPanel = nullptr;
 
     Color m_idleColor = Color::Zero;
-    Color m_overColor = Color::VeryLightBlue;
-    Color m_selectedColor = Color::LightBlue;
+    Color m_overColor = UITheme::GetOverColor();
+    Color m_selectedColor = UITheme::GetSelectedColor();
 
     bool m_wideSelectionMode = true;
 

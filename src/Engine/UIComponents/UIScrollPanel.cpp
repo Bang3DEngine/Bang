@@ -514,8 +514,7 @@ UIScrollPanel *UIScrollPanel::CreateInto(GameObject *go)
     GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject(), Vector2i(10), 0.3f);
 
     GameObject *innerBorderGo = GameObjectFactory::CreateUIGameObject();
-    scrollPanel->p_border = GameObjectFactory::AddInnerBorder(innerBorderGo,
-                                                              Vector2i(1));
+    scrollPanel->p_border = GameObjectFactory::AddInnerBorder(innerBorderGo);
     innerBorderGo->SetParent(go);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();

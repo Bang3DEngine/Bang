@@ -1,10 +1,11 @@
 #ifndef UIINPUTTEXT_H
 #define UIINPUTTEXT_H
 
+#include "Bang/DPtr.h"
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/ILayoutElement.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/ILayoutElement.h"
 #include "Bang/IEventsValueChanged.h"
 
 NAMESPACE_BANG_BEGIN
@@ -22,7 +23,6 @@ class UIInputText : public Component,
                     public EventEmitter<IEventsValueChanged>,
                     public EventEmitter<IEventsFocus>,
                     public EventListener<IEventsFocus>,
-                    public EventListener<IEventsDestroy>,
                     public ILayoutElement
 {
     COMPONENT(UIInputText)
@@ -44,10 +44,6 @@ public:
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-
-    // IEventsDestroy
-    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
-
     // ILayoutElement
     virtual void CalculateLayout(Axis axis) override;
 
@@ -66,11 +62,11 @@ private:
     bool m_isBlocked = false;
     String m_allowedCharacters = "";
 
-    UILabel *p_label = nullptr;
-    UITextCursor *p_cursor = nullptr;
-    UIScrollArea *p_scrollArea = nullptr;
-    UIImageRenderer *p_border = nullptr;
-    UIImageRenderer *p_background = nullptr;
+    DPtr<UILabel> p_label;
+    DPtr<UITextCursor> p_cursor;
+    DPtr<UIImageRenderer> p_border;
+    DPtr<UIScrollArea> p_scrollArea;
+    DPtr<UIImageRenderer> p_background;
 
     UIInputText();
     virtual ~UIInputText();

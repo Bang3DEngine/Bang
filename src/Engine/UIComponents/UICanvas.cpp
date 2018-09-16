@@ -139,6 +139,7 @@ void UICanvas::OnUpdate()
                                     currentMousePosVP);
 
         // First of all, know which focusable is under mouse top most
+        UIFocusable *focusableUnderMouseTopMost = nullptr;
         for (const auto &pair : focusablesAndRectsVP)
         {
             UIFocusable *focusable = pair.first;
@@ -151,13 +152,13 @@ void UICanvas::OnUpdate()
                         rt->IsMouseOver(currentMouseWindow, false) &&
                         focusable->IsFocusEnabled())
                     {
-                         SetFocusableUnderMouseTopMost(focusable,
-                                                       inputEvent);
-                         break;
+                        focusableUnderMouseTopMost = focusable;
+                        break;
                     }
                 }
             }
         }
+        SetFocusableUnderMouseTopMost(focusableUnderMouseTopMost, inputEvent);
 
         switch (inputEvent.type)
         {
@@ -211,7 +212,7 @@ void UICanvas::OnUpdate()
                                               inputEvent);
                 }
 
-                if (inputEvent.mouseButton == MouseButton::LEFT)
+                // if (inputEvent.mouseButton == MouseButton::LEFT)
                 {
                     SetFocus( GetFocusableUnderMouseTopMost() );
                     if (GetFocusableUnderMouseTopMost())

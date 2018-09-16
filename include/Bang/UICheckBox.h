@@ -1,6 +1,7 @@
 #ifndef UICHECKBOX_H
 #define UICHECKBOX_H
 
+#include "Bang/DPtr.h"
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/IEventsFocus.h"
@@ -38,16 +39,13 @@ public:
                                     const UIEvent &event) override;
 
 private:
-    static Color IdleColor;
-    static Color OverColor;
-
     int m_size = -1;
     bool m_isChecked = true;
-    UIFocusable *p_focusable = nullptr;
-    UIImageRenderer *p_border = nullptr;
-    UIImageRenderer *p_tickImage = nullptr;
-    UIImageRenderer *p_checkBgImage = nullptr;
-    UILayoutElement *p_layoutElement = nullptr;
+    DPtr<UIFocusable> p_focusable;
+    DPtr<UIImageRenderer> p_border;
+    DPtr<UIImageRenderer> p_tickImage;
+    DPtr<UIImageRenderer> p_checkBgImage;
+    DPtr<UILayoutElement> p_layoutElement;
 
     UICheckBox();
     virtual ~UICheckBox();

@@ -1,6 +1,7 @@
 #ifndef UIBUTTONDRIVER_H
 #define UIBUTTONDRIVER_H
 
+#include "Bang/DPtr.h"
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/IEventsFocus.h"
@@ -41,12 +42,12 @@ public:
 
 private:
     bool m_isBlocked = false;
-    UIImageRenderer *p_icon          = nullptr;
-    UITextRenderer  *p_text          = nullptr;
-    UIImageRenderer *p_border        = nullptr;
-    UIImageRenderer *p_background    = nullptr;
-    UILayoutElement *p_layoutElement = nullptr;
-    UIFocusable     *p_focusable     = nullptr;
+    DPtr<UIImageRenderer> p_icon;
+    DPtr<UITextRenderer>  p_text;
+    DPtr<UIImageRenderer> p_border;
+    DPtr<UIFocusable>     p_focusable;
+    DPtr<UIImageRenderer> p_background;
+    DPtr<UILayoutElement> p_layoutElement;
     Array<ClickedCallback> m_clickedCallbacks;
 
     UIButton();

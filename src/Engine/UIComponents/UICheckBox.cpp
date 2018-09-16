@@ -15,9 +15,6 @@
 
 USING_NAMESPACE_BANG
 
-Color UICheckBox::IdleColor = Color(1,1,1,1);
-Color UICheckBox::OverColor = Color(0.8, 0.95,  1,  1);
-
 UICheckBox::UICheckBox()
 {
 }
@@ -32,11 +29,11 @@ void UICheckBox::OnUpdate()
 
     if (GetFocusable()->IsMouseOver())
     {
-        GetBackgroundImage()->SetTint( UICheckBox::OverColor );
+        GetBackgroundImage()->SetTint( UITheme::GetOverColor() );
     }
     else
     {
-        GetBackgroundImage()->SetTint( UICheckBox::IdleColor );
+        GetBackgroundImage()->SetTint( UITheme::GetInputsBackgroundColor() );
     }
 }
 
@@ -104,12 +101,12 @@ UIEventResult UICheckBox::OnUIEvent(UIFocusable*, const UIEvent &event)
     switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            p_border->SetTint(Color::Orange);
+            GameObjectFactory::MakeBorderFocused(p_border);
             return UIEventResult::INTERCEPT;
         break;
 
         case UIEvent::Type::FOCUS_LOST:
-            p_border->SetTint(Color::Black);
+            GameObjectFactory::MakeBorderNotFocused(p_border);
             return UIEventResult::INTERCEPT;
         break;
 
@@ -153,7 +150,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     UIImageRenderer *checkBgImg = checkBgImgGo->AddComponent<UIImageRenderer>();
     // checkBgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     // checkBgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    checkBgImg->SetTint(UICheckBox::IdleColor);
+    checkBgImg->SetTint( UITheme::GetCheckBoxBackgroundColor() );
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
@@ -164,11 +161,10 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
     tickImg->SetImageTexture( TextureFactory::GetCheckIcon() );
-    tickImg->SetTint(Color::Black);
+    tickImg->SetTint( UITheme::GetTickColor() );
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
-    checkBox->p_border = GameObjectFactory::AddInnerBorder(checkBgImgGo,
-                                                           Vector2i(1));
+    checkBox->p_border = GameObjectFactory::AddInnerBorder(checkBgImgGo);
     // GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(3));
 
     checkBox->p_focusable = focusable;

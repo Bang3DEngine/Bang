@@ -1,6 +1,7 @@
 #ifndef UISLIDER_H
 #define UISLIDER_H
 
+#include "Bang/UITheme.h"
 #include "Bang/Component.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/EventEmitter.h"
@@ -38,8 +39,8 @@ public:
 
 private:
     Color m_idleColor    = Color::White;
-    Color m_overColor    = Color::VeryLightBlue;
-    Color m_pressedColor = Color::Blue;
+    Color m_overColor    = UITheme::GetOverColor();
+    Color m_pressedColor = UITheme::GetSelectedColor();
 
     UIImageRenderer *p_guideRenderer  = nullptr;
     UIImageRenderer *p_handleRenderer = nullptr;

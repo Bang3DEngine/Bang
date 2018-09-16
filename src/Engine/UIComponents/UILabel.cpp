@@ -3,6 +3,7 @@
 #include "Bang/Font.h"
 #include "Bang/Input.h"
 #include "Bang/Cursor.h"
+#include "Bang/UITheme.h"
 #include "Bang/UICanvas.h"
 #include "Bang/GameObject.h"
 #include "Bang/UIRectMask.h"
@@ -323,26 +324,6 @@ UIEventResult UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
     return UIEventResult::IGNORE;
 }
 
-void UILabel::OnDestroyed(EventEmitter<IEventsDestroy> *object)
-{
-    if (object == GetText())
-    {
-        p_text = nullptr;
-    }
-    else if (object == p_selectionQuad)
-    {
-        p_selectionQuad = nullptr;
-    }
-    else if (object == GetFocusable())
-    {
-        p_focusable = nullptr;
-    }
-    else if (object == GetMask())
-    {
-        p_mask = nullptr;
-    }
-}
-
 RectTransform *UILabel::GetTextParentRT() const
 {
     if (!GetText())
@@ -433,7 +414,7 @@ UILabel *UILabel::CreateInto(GameObject *go)
 
     GameObject *selectionQuadGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *selectionQuad = selectionQuadGo->AddComponent<UIImageRenderer>();
-    selectionQuad->SetTint(Color::LightBlue);
+    selectionQuad->SetTint(UITheme::GetSelectionTextColor());
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->EventEmitter<IEventsFocus>::RegisterListener(label);
@@ -441,11 +422,6 @@ UILabel *UILabel::CreateInto(GameObject *go)
     label->p_text = text;
     label->p_focusable = focusable;
     label->p_selectionQuad = selectionQuadGo;
-
-    label->p_text->EventEmitter<IEventsDestroy>::RegisterListener(label);
-    label->p_mask->EventEmitter<IEventsDestroy>::RegisterListener(label);
-    label->p_focusable->EventEmitter<IEventsDestroy>::RegisterListener(label);
-    label->p_selectionQuad->EventEmitter<IEventsDestroy>::RegisterListener(label);
 
     selectionQuadGo->SetParent(go);
     textGO->SetParent(go);

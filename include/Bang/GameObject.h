@@ -99,13 +99,22 @@ public:
     template <class T>
     T* GetComponent() const;
     template <class T>
-    T* GetComponentInParent(bool recursive = true) const;
+    T* GetComponentInParent() const;
     template <class T>
-    T* GetComponentInParentAndThis(bool recursive = true) const;
+    T* GetComponentInParentAndThis() const;
     template <class T>
-    T* GetComponentInChildren(bool recursive = true) const;
+    T* GetComponentInAncestors() const;
     template <class T>
-    T* GetComponentInChildrenAndThis(bool recursive = true) const;
+    T* GetComponentInAncestorsAndThis() const;
+
+    template <class T>
+    T* GetComponentInChildren() const;
+    template <class T>
+    T* GetComponentInChildrenAndThis() const;
+    template <class T>
+    T* GetComponentInDescendants() const;
+    template <class T>
+    T* GetComponentInDescendantsAndThis() const;
 
     template <class T>
     Array<T*> GetComponents() const;

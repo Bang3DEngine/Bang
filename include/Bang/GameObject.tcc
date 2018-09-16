@@ -34,35 +34,50 @@ T* GameObject::GetComponent() const
 }
 
 template <class T>
-T* GameObject::GetComponentInParent(bool recursive) const
+T* GameObject::GetComponentInParent() const
 {
-    if (GetParent())
+    if (GameObject *parent = GetParent())
     {
-        if (T *comp = GetParent()->GetComponent<T>())
+        if (T *comp = parent->GetComponent<T>())
         {
             return comp;
-        }
-
-        if (recursive)
-        {
-            return GetParent()->GetComponentInParent<T>(true);
         }
     }
     return nullptr;
 }
 
 template <class T>
-T* GameObject::GetComponentInParentAndThis(bool recursive) const
+T* GameObject::GetComponentInParentAndThis() const
 {
     if (T* comp = GetComponent<T>())
     {
         return comp;
     }
-    return GetComponentInParent<T>(recursive);
+    return GetComponentInParent<T>();
 }
 
 template <class T>
-T* GameObject::GetComponentInChildren(bool recursive) const
+T* GameObject::GetComponentInAncestors() const
+{
+    if (T* comp = GetComponentInParent<T>())
+    {
+        return comp;
+    }
+    return GetParent() ? GetParent()->GetComponentInAncestors<T>() : nullptr;
+}
+
+template <class T>
+T* GameObject::GetComponentInAncestorsAndThis() const
+{
+    if (T* comp = GetComponent<T>())
+    {
+        return comp;
+    }
+    return GetComponentInAncestors<T>();
+}
+
+template <class T>
+T* GameObject::GetComponentInChildren() const
 {
     for (GameObject *child : GetChildren())
     {
@@ -70,26 +85,41 @@ T* GameObject::GetComponentInChildren(bool recursive) const
         {
             return comp;
         }
-
-        if (recursive)
-        {
-            if (T *comp = child->GetComponentInChildren<T>(true))
-            {
-                return comp;
-            }
-        }
     }
     return nullptr;
 }
 template <class T>
-T* GameObject::GetComponentInChildrenAndThis(bool recursive) const
+T* GameObject::GetComponentInChildrenAndThis() const
 {
     if (T* comp = GetComponent<T>())
     {
         return comp;
     }
-    return GetComponentInChildren<T>(recursive);
+    return GetComponentInChildren<T>();
 }
+template <class T>
+T* GameObject::GetComponentInDescendants() const
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (T *comp = child->GetComponentInDescendantsAndThis<T>())
+        {
+            return comp;
+        }
+    }
+    return nullptr;
+}
+
+template <class T>
+T* GameObject::GetComponentInDescendantsAndThis() const
+{
+    if (T* comp = GetComponent<T>())
+    {
+        return comp;
+    }
+    return GetComponentInDescendants<T>();
+}
+
 
 template <class T>
 Array<T*> GameObject::GetComponents() const

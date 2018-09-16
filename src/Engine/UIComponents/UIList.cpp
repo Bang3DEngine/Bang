@@ -334,7 +334,7 @@ int UIList::GetNumItems() const
 
 UIDirLayout *UIList::GetDirLayout() const
 {
-    return GetGameObject()->GetComponentInChildrenAndThis<UIDirLayout>();
+    return GetGameObject()->GetComponentInDescendantsAndThis<UIDirLayout>();
 }
 
 void UIList::SetSelection(int index)

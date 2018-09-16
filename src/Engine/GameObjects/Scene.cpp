@@ -79,7 +79,7 @@ void Scene::SetCamera(Camera *cam)
 
 void Scene::SetFirstFoundCamera()
 {
-    Camera *sceneCamera = GetComponentInChildrenAndThis<Camera>();
+    Camera *sceneCamera = GetComponentInDescendantsAndThis<Camera>();
     SetCamera(sceneCamera);
 }
 

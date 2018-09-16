@@ -25,6 +25,7 @@
 #include "Bang/MeshRenderer.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/UITextCursor.h"
+#include "Bang/UIToolButton.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIInputNumber.h"
 #include "Bang/UIScrollPanel.h"
@@ -341,6 +342,68 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
 {
     const Vector2i size(15);
     UIButton *btn = GameObjectFactory::CreateUIButton();
+
+    if (!text.IsEmpty())
+    {
+        btn->GetText()->SetContent(text);
+    }
+
+    if (icon)
+    {
+        btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
+    }
+
+    constexpr int BigPadding    = 10;
+    constexpr int MediumPadding = 6;
+    constexpr int SmallPadding  = 3;
+    if (!text.IsEmpty() && !icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingRight(BigPadding);
+        btn->GetDirLayout()->SetPaddingLeft (BigPadding);
+    }
+    else if (!text.IsEmpty() && icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
+        btn->GetDirLayout()->SetPaddingRight(SmallPadding);
+    }
+    else if (text.IsEmpty() && icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(SmallPadding);
+        btn->GetDirLayout()->SetPaddingTop(SmallPadding);
+        btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
+        btn->GetDirLayout()->SetPaddingRight(SmallPadding);
+    }
+    else if (text.IsEmpty() && !icon)
+    {
+        btn->GetDirLayout()->SetPaddingBot(MediumPadding);
+        btn->GetDirLayout()->SetPaddingTop(MediumPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
+        btn->GetDirLayout()->SetPaddingRight(BigPadding);
+    }
+
+    return btn;
+}
+
+UIToolButton *GameObjectFactory::CreateUIToolButton()
+{
+    GameObject *go = GameObjectFactory::CreateUIGameObject();
+    return GameObjectFactory::CreateUIToolButtonInto(go);
+}
+
+UIToolButton *GameObjectFactory::CreateUIToolButtonInto(GameObject *go)
+{
+    return UIToolButton::CreateInto(go);
+}
+
+UIToolButton *GameObjectFactory::CreateUIToolButton(const String &text,
+                                                    Texture2D *icon)
+{
+    const Vector2i size(15);
+    UIToolButton *btn = GameObjectFactory::CreateUIToolButton();
 
     if (!text.IsEmpty())
     {

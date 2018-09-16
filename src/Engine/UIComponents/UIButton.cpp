@@ -69,7 +69,6 @@ void UIButton::OnMouseExit()
 void UIButton::Click()
 {
     UIEvent event;
-
     event.type = UIEvent::Type::MOUSE_CLICK_FULL;
     event.mouse.button = MouseButton::LEFT;
     GetFocusable()->ProcessEvent(event);
@@ -178,7 +177,6 @@ void UIButton::ChangeAspectToIdle()
 {
     if (GetBackground() && GetText())
     {
-        GetBackground()->SetImageTexture(nullptr);
         GetBackground()->SetTint( Color::White.WithValue(1.2f) );
         GetText()->SetTextColor(Color::Black);
         GetFocusable()->SetCursorType( Cursor::Type::HAND );
@@ -189,7 +187,6 @@ void UIButton::ChangeAspectToOver()
 {
     if (GetBackground() && GetText())
     {
-        GetBackground()->SetImageTexture(nullptr);
         GetBackground()->SetTint( UITheme::GetOverColor() );
         GetText()->SetTextColor(Color::Black);
         GetFocusable()->SetCursorType( Cursor::Type::HAND );
@@ -200,7 +197,6 @@ void UIButton::ChangeAspectToPressed()
 {
     if (GetBackground() && GetText())
     {
-        GetBackground()->SetImageTexture(nullptr);
         GetBackground()->SetTint( UITheme::GetSelectedColor() );
         GetText()->SetTextColor( Color::Black );
         GetFocusable()->SetCursorType( Cursor::Type::HAND );
@@ -211,7 +207,6 @@ void UIButton::ChangeAspectToBlocked()
 {
     if (GetBackground() && GetText())
     {
-        GetBackground()->SetImageTexture(nullptr);
         GetBackground()->SetTint( UITheme::GetInputTextBlockedBackgroundColor() );
         GetText()->SetTextColor( Color::DarkGray );
         GetFocusable()->SetCursorType( Cursor::Type::NO );
@@ -300,7 +295,7 @@ UIEventResult UIButton::OnUIEvent(UIFocusable*, const UIEvent &event)
     return UIEventResult::IGNORE;
 }
 
-UIButton* UIButton::CreateInto(GameObject *go)
+UIButton *UIButton::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
 
@@ -314,7 +309,6 @@ UIButton* UIButton::CreateInto(GameObject *go)
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
-    // bgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
     bgImg->SetMode(UIImageRenderer::Mode::SLICE_9_INV_UVY);
 
     button->p_border = GameObjectFactory::AddInnerBorder(go);

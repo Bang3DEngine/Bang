@@ -24,6 +24,7 @@ FORWARD class UIComboBox;
 FORWARD class UIInputText;
 FORWARD class UIScrollBar;
 FORWARD class UIScrollArea;
+FORWARD class UIToolButton;
 FORWARD class UIScrollPanel;
 FORWARD class UIInputNumber;
 FORWARD class UIImageRenderer;
@@ -73,10 +74,14 @@ public:
     static UIInputNumber*      CreateUIInputNumber();
     static UIRendererCacher*   CreateUIRendererCacherInto(GameObject *go);
     static UIRendererCacher*   CreateUIRendererCacher();
-    static UIButton*           CreateUIButtonInto(GameObject *go);
     static UIButton*           CreateUIButton();
+    static UIButton*           CreateUIButtonInto(GameObject *go);
     static UIButton*           CreateUIButton(const String &text,
                                               Texture2D *icon = nullptr);
+    static UIToolButton*       CreateUIToolButton();
+    static UIToolButton*       CreateUIToolButtonInto(GameObject *go);
+    static UIToolButton*       CreateUIToolButton(const String &text,
+                                                  Texture2D *icon = nullptr);
     static UILabel*            CreateUILabel();
     static UILabel*            CreateUILabelInto(GameObject *go);
     static UIScrollArea*       CreateUIScrollAreaInto(GameObject *go);

@@ -1,5 +1,5 @@
-#ifndef UIBUTTONDRIVER_H
-#define UIBUTTONDRIVER_H
+#ifndef UIBUTTON_H
+#define UIBUTTON_H
 
 #include "Bang/DPtr.h"
 #include "Bang/Component.h"
@@ -42,8 +42,8 @@ public:
 
 private:
     bool m_isBlocked = false;
-    DPtr<UIImageRenderer> p_icon;
     DPtr<UITextRenderer>  p_text;
+    DPtr<UIImageRenderer> p_icon;
     DPtr<UIImageRenderer> p_border;
     DPtr<UIFocusable>     p_focusable;
     DPtr<UIImageRenderer> p_background;
@@ -72,4 +72,4 @@ private:
 
 NAMESPACE_BANG_END
 
-#endif // UIBUTTONDRIVER_H
+#endif // UIBUTTON_H

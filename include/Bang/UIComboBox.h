@@ -75,6 +75,7 @@ private:
     float m_secondsWithListShown = 0.0f;
 
     UIList *p_list = nullptr;
+    UIFocusable *p_focusable = nullptr;
     UIImageRenderer *p_border = nullptr;
     UITextRenderer *p_selectedItemText = nullptr;
 

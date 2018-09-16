@@ -94,6 +94,21 @@ void PropagateUIEvent(UIFocusable *focusable, const UIEvent &event)
     }
 }
 
+void PropagateFocusableUIEvent(UIFocusable *focusable,
+                               UIEvent::Type type,
+                               const InputEvent &inputEvent)
+{
+    UIEvent event;
+    event.type = type;
+    event.mouse.button = inputEvent.mouseButton;
+    event.mousePosWindow = inputEvent.GetMousePosWindow();
+    event.key.key = inputEvent.key;
+    event.key.modifiers = inputEvent.keyModifiers;
+    event.wheel.amount = inputEvent.wheelDelta;
+    PropagateUIEvent(focusable, event);
+};
+
+
 void UICanvas::OnUpdate()
 {
     Component::OnUpdate();
@@ -101,20 +116,6 @@ void UICanvas::OnUpdate()
     Array<std::pair<UIFocusable*, AARecti>> focusablesAndRectsVP;
     GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
                                              &focusablesAndRectsVP);
-
-    auto PropagateFocusableUIEvent = [&](UIFocusable *focusable,
-                                         UIEvent::Type type,
-                                         const InputEvent &inputEvent)
-    {
-        UIEvent event;
-        event.type = type;
-        event.mouse.button = inputEvent.mouseButton;
-        event.mousePosWindow = inputEvent.GetMousePosWindow();
-        event.key.key = inputEvent.key;
-        event.key.modifiers = inputEvent.keyModifiers;
-        event.wheel.amount = inputEvent.wheelDelta;
-        PropagateUIEvent(focusable, event);
-    };
 
     // Process all enqueued InputEvents, transform them to UIEvents and
     // propagate them as we need.
@@ -138,7 +139,6 @@ void UICanvas::OnUpdate()
                                     currentMousePosVP);
 
         // First of all, know which focusable is under mouse top most
-        UIFocusable *focusableUnderMouseTopMost = nullptr;
         for (const auto &pair : focusablesAndRectsVP)
         {
             UIFocusable *focusable = pair.first;
@@ -151,77 +151,12 @@ void UICanvas::OnUpdate()
                         rt->IsMouseOver(currentMouseWindow, false) &&
                         focusable->IsFocusEnabled())
                     {
-                         focusableUnderMouseTopMost = focusable;
+                         SetFocusableUnderMouseTopMost(focusable,
+                                                       inputEvent);
                          break;
                     }
                 }
             }
-        }
-
-        // Do changes if the focusable under mouse has changed
-        if (focusableUnderMouseTopMost != GetFocusableUnderMouseTopMost())
-        {
-            Map<UIFocusable*, AARecti> focusableToAARectVPMasks;
-            for (const auto &pair : focusablesAndRectsVP)
-            {
-                focusableToAARectVPMasks.Add(pair.first, pair.second);
-            }
-
-            Set<UIFocusable*> focusablesNotUnderAnymore;
-            for (UIFocusable *focusableUnderMouse : p_focusablesUnderMouse)
-            {
-                if (focusableToAARectVPMasks.ContainsKey(focusableUnderMouse))
-                {
-                    const AARecti &aaRectMaskVP =
-                                 focusableToAARectVPMasks.Get(focusableUnderMouse);
-                    if (GameObject *focusableGo =
-                                        focusableUnderMouse->GetGameObject())
-                    {
-                        if (RectTransform *rt = focusableGo->GetRectTransform())
-                        {
-                            if (!aaRectMaskVP.Contains(currentMousePosVP) ||
-                                !rt->IsMouseOver(currentMouseWindow, false))
-                            {
-                                focusablesNotUnderAnymore.Add(focusableUnderMouse);
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (UIFocusable *focusableNotUnderAnymore : focusablesNotUnderAnymore)
-            {
-                PropagateFocusableUIEvent(focusableNotUnderAnymore,
-                                          UIEvent::Type::MOUSE_EXIT,
-                                          inputEvent);
-                UnRegisterForEvents(focusableNotUnderAnymore);
-                p_focusablesUnderMouse.Remove(focusableNotUnderAnymore);
-            }
-
-            if (GetFocusableUnderMouseTopMost())
-            {
-                UnRegisterForEvents(GetFocusableUnderMouseTopMost());
-            }
-
-            p_focusableUnderMouseTopMost = focusableUnderMouseTopMost;
-            if (GetFocusableUnderMouseTopMost())
-            {
-                PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                          UIEvent::Type::MOUSE_ENTER,
-                                          inputEvent);
-
-                // We can lose the focusable when propagating event, so recheck
-                if (GetFocusableUnderMouseTopMost())
-                {
-                    p_focusablesUnderMouse.Add(GetFocusableUnderMouseTopMost());
-                    RegisterForEvents(GetFocusableUnderMouseTopMost());
-                }
-            }
-        }
-
-        for (UIFocusable *focusableUnderMouse : p_focusablesUnderMouse)
-        {
-            RegisterForEvents( focusableUnderMouse );
         }
 
         switch (inputEvent.type)
@@ -279,13 +214,6 @@ void UICanvas::OnUpdate()
                 if (inputEvent.mouseButton == MouseButton::LEFT)
                 {
                     SetFocus( GetFocusableUnderMouseTopMost() );
-
-                    p_focusablesPotentiallyBeingPressed = p_focusablesUnderMouse;
-                    for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
-                    {
-                        RegisterForEvents(focusable);
-                    }
-
                     if (GetFocusableUnderMouseTopMost())
                     {
                         RegisterForEvents( GetFocusableUnderMouseTopMost() );
@@ -323,23 +251,13 @@ void UICanvas::OnUpdate()
                         }
                     }
 
-                    for (UIFocusable *focusablePotentiallyBeingPressed :
-                            p_focusablesPotentiallyBeingPressed)
+                    if (GetFocus() && GetFocus()->IsBeingPressed())
                     {
-                        if (focusablePotentiallyBeingPressed->IsBeingPressed())
-                        {
-                            RegisterForEvents( focusablePotentiallyBeingPressed );
-                            PropagateFocusableUIEvent(focusablePotentiallyBeingPressed,
-                                                      UIEvent::Type::FINISHED_BEING_PRESSED,
-                                                      inputEvent);
-                        }
+                        RegisterForEvents( GetFocus() );
+                        PropagateFocusableUIEvent(GetFocus(),
+                                                  UIEvent::Type::FINISHED_BEING_PRESSED,
+                                                  inputEvent);
                     }
-
-                    for (UIFocusable *focusable : p_focusablesPotentiallyBeingPressed)
-                    {
-                        UnRegisterForEvents(focusable);
-                    }
-                    p_focusablesPotentiallyBeingPressed.Clear();
                 }
             }
             break;
@@ -616,9 +534,6 @@ void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         {
             p_focusableUnderMouseTopMost = nullptr;
         }
-
-        p_focusablesUnderMouse.Remove(destroyedFocusable);
-        p_focusablesPotentiallyBeingPressed.Remove(destroyedFocusable);
     }
 
     if (UIDragDroppable *dd = DCAST<UIDragDroppable*>(object))
@@ -803,9 +718,36 @@ void UICanvas::OnDisabled(Object *object)
             p_focusableUnderMouseTopMost = nullptr;
         }
 
-        p_focusablesUnderMouse.Remove(disabledFocusable);
-        p_focusablesPotentiallyBeingPressed.Remove(disabledFocusable);
         UnRegisterForEvents(disabledFocusable);
+    }
+}
+
+void UICanvas::SetFocusableUnderMouseTopMost(UIFocusable *focusable,
+                                             const InputEvent &inputEvent)
+{
+    if (focusable != GetFocusableUnderMouseTopMost())
+    {
+        if (GetFocusableUnderMouseTopMost())
+        {
+            PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                      UIEvent::Type::MOUSE_EXIT,
+                                      inputEvent);
+            UnRegisterForEvents(GetFocusableUnderMouseTopMost());
+        }
+
+        p_focusableUnderMouseTopMost = focusable;
+        if (GetFocusableUnderMouseTopMost())
+        {
+            PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
+                                      UIEvent::Type::MOUSE_ENTER,
+                                      inputEvent);
+
+            // We can lose the focusable when propagating event, so recheck
+            if (GetFocusableUnderMouseTopMost())
+            {
+                RegisterForEvents(GetFocusableUnderMouseTopMost());
+            }
+        }
     }
 }
 
@@ -825,18 +767,12 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
     {
         ++numReferencesTrackingThisFocusable;
     }
+
     if (focusable == GetFocusableUnderMouseTopMost())
     {
         ++numReferencesTrackingThisFocusable;
     }
-    if (p_focusablesUnderMouse.Contains(focusable))
-    {
-        ++numReferencesTrackingThisFocusable;
-    }
-    if (p_focusablesPotentiallyBeingPressed.Contains(focusable))
-    {
-        ++numReferencesTrackingThisFocusable;
-    }
+
     if (UIDragDroppable *dd = DCAST<UIDragDroppable*>(focusable))
     {
         if (dd == p_ddBeingDragged)

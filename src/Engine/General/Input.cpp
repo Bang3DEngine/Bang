@@ -10,6 +10,8 @@
 
 USING_NAMESPACE_BANG
 
+constexpr float Input::DoubleClickMaxSeconds;
+
 Input::Input()
 {
     Input::StartTextInput();

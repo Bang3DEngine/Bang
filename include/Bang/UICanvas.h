@@ -10,6 +10,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
+FORWARD class InputEvent;
 FORWARD class UIDragDroppable;
 FORWARD class UILayoutManager;
 FORWARD class IEventsDragDrop;
@@ -64,13 +65,14 @@ private:
     UILayoutManager *m_uiLayoutManager = nullptr;
 
     UIFocusable *p_focus = nullptr;
-    Set<UIFocusable*> p_focusablesUnderMouse;
     UIDragDroppable *p_ddBeingDragged = nullptr;
     UIFocusable *p_focusableUnderMouseTopMost = nullptr;
-    Set<UIFocusable*> p_focusablesPotentiallyBeingPressed;
 
     // IObjectEvents
     void OnDisabled(Object *object) override;
+
+    void SetFocusableUnderMouseTopMost(UIFocusable *focusable,
+                                       const InputEvent &inputEvent);
 
     void RegisterForEvents(UIFocusable *focusable);
     void UnRegisterForEvents(UIFocusable *focusable);

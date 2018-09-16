@@ -217,6 +217,8 @@ void UIComboBox::SetMultiCheck(bool multicheck)
         {
             GetList()->ClearSelection();
         }
+
+        p_focusable->SetConsiderForTabbing( !GetMultiCheck() );
     }
 }
 
@@ -315,6 +317,7 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable*, const UIEvent &event)
 
         case UIEvent::Type::FOCUS_LOST:
             p_border->SetTint(Color::Black);
+            HideList();
         break;
 
         case UIEvent::Type::MOUSE_CLICK_UP:
@@ -379,6 +382,9 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable*, const UIEvent &event)
                     SetSelectionByIndex(newIndex);
                     return UIEventResult::INTERCEPT;
                 }
+                break;
+
+                default:
                 break;
             }
         break;
@@ -505,6 +511,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     listGo->SetParent(go);
 
     comboBox->p_border = border;
+    comboBox->p_focusable = focusable;
     comboBox->p_selectedItemText = currentItemText;
     comboBox->p_list = list;
 

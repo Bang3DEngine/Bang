@@ -92,7 +92,7 @@ const Array<String> &UIFileList::GetFileExtensions() const
 
 void UIFileList::UpdateEntries()
 {
-    Array<Path> paths = GetCurrentPath().GetSubPaths(Path::FindFlag::SIMPLE);
+    Array<Path> paths = GetCurrentPath().GetSubPaths(FindFlag::SIMPLE);
 
     if (!GetFileExtensions().IsEmpty())
     {

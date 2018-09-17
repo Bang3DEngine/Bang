@@ -108,7 +108,7 @@ Path Paths::CreateEnginePath(const String &path)
 Array<Path> Paths::GetAllProjectSubDirs()
 {
     Array<Path> subdirs = Paths::GetProjectDir()
-                         .GetSubDirectories(Path::FindFlag::RECURSIVE);
+                         .GetSubDirectories(FindFlag::RECURSIVE);
     subdirs.PushFront(Paths::GetProjectDir());
     return subdirs;
 }
@@ -116,7 +116,7 @@ Array<Path> Paths::GetAllProjectSubDirs()
 Array<Path> Paths::GetProjectIncludeDirs()
 {
     Array<Path> incDirs = Paths::GetProjectAssetsDir()
-                        .GetSubDirectories(Path::FindFlag::RECURSIVE);
+                        .GetSubDirectories(FindFlag::RECURSIVE);
     incDirs.PushBack( Paths::GetProjectAssetsDir() );
     return incDirs;
 }
@@ -153,7 +153,7 @@ Array<Path> Paths::GetEngineIncludeDirs()
 
     Path physxRootDir = Paths::GetEngineDir().
                         Append("Build/BuildDependencies/ThirdParty/PhysX/");
-    Array<Path> physxDirs = physxRootDir.GetSubDirectories(Path::FindFlag::RECURSIVE);
+    Array<Path> physxDirs = physxRootDir.GetSubDirectories(FindFlag::RECURSIVE);
     for (const Path &physxDir : physxDirs)
     {
         incPaths.PushBack(physxDir);

@@ -541,6 +541,9 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     UIButton *buttonCancel = GameObjectFactory::CreateUIButton("Cancel");
     buttonCancel->AddClickedCallback(Dialog::OnCancelClicked);
 
+    UIAutoFocuser *autoFocus = scene->AddComponent<UIAutoFocuser>();
+    autoFocus->SetFocusableToAutoFocus( buttonYes->GetFocusable() );
+
     container->SetParent(scene);
      mainVLayoutGo->SetParent(container);
       hLayoutGo->SetParent(mainVLayoutGo);

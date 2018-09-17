@@ -72,7 +72,7 @@ bool File::DuplicateDir(const Path &srcDirpath,
     if (!File::CreateDirectory(dstDirPath)) { return false; }
 
 
-    Array<Path> filepaths = srcDirpath.GetFiles(Path::FindFlag::SIMPLE_HIDDEN);
+    Array<Path> filepaths = srcDirpath.GetFiles(FindFlag::SIMPLE_HIDDEN);
     for(const Path& filepath : filepaths)
     {
         String fileName = filepath.GetNameExt();
@@ -85,7 +85,7 @@ bool File::DuplicateDir(const Path &srcDirpath,
         }
     }
 
-    Array<Path> subdirs = srcDirpath.GetSubDirectories(Path::FindFlag::SIMPLE_HIDDEN);
+    Array<Path> subdirs = srcDirpath.GetSubDirectories(FindFlag::SIMPLE_HIDDEN);
     for (const Path &subdir : subdirs)
     {
         if (subdir.IsSubPathOf(dstDirPath)) { continue; }
@@ -129,13 +129,13 @@ bool File::Remove(const Path &path)
     }
     else
     {
-        Array<Path> subDirs = path.GetSubDirectories(Path::FindFlag::SIMPLE_HIDDEN);
+        Array<Path> subDirs = path.GetSubDirectories(FindFlag::SIMPLE_HIDDEN);
         for (const Path &subDir : subDirs)
         {
             File::Remove(subDir);
         }
 
-        Array<Path> subFiles = path.GetFiles(Path::FindFlag::SIMPLE_HIDDEN);
+        Array<Path> subFiles = path.GetFiles(FindFlag::SIMPLE_HIDDEN);
         for (const Path &subFile : subFiles)
         {
             File::Remove(subFile);

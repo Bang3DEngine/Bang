@@ -76,7 +76,7 @@ bool Path::IsSubPathOf(const Path &path) const
     return GetAbsolute().BeginsWith(path.GetAbsolute());
 }
 
-Array<Path> Path::GetFiles(Path::FindFlags findFlags,
+Array<Path> Path::GetFiles(FindFlags findFlags,
                           const Array<String> &extensions) const
 {
     Array<Path> subFilesArray;
@@ -89,7 +89,7 @@ Array<Path> Path::GetFiles(Path::FindFlags findFlags,
                               subPath.HasExtension(extensions);
             if (subPath.IsDir())
             {
-                if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+                if (findFlags.IsOn(FindFlag::RECURSIVE))
                 {
                     subFilesArray.PushBack( subPath.GetFiles(findFlags, extensions) );
                 }
@@ -103,7 +103,7 @@ Array<Path> Path::GetFiles(Path::FindFlags findFlags,
     return subFilesArray;
 }
 
-Array<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
+Array<Path> Path::GetSubDirectories(FindFlags findFlags) const
 {
     Array<Path> subDirsArray;
     if (IsDir())
@@ -114,7 +114,7 @@ Array<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
             if (subPath.IsDir())
             {
                 subDirsArray.PushBack(subPath);
-                if (findFlags.IsOn(Path::FindFlag::RECURSIVE))
+                if (findFlags.IsOn(FindFlag::RECURSIVE))
                 {
                     subDirsArray.PushBack( subPath.GetSubDirectories(findFlags) );
                 }
@@ -124,7 +124,7 @@ Array<Path> Path::GetSubDirectories(Path::FindFlags findFlags) const
     return subDirsArray;
 }
 
-Array<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
+Array<Path> Path::GetSubPaths(FindFlags findFlags) const
 {
     Array<Path> subPathsArray;
 
@@ -134,7 +134,7 @@ Array<Path> Path::GetSubPaths(Path::FindFlags findFlags) const
         while ((dir = readdir(d)) != nullptr)
         {
             String subName = dir->d_name;
-            if (findFlags.IsOn(Path::FindFlag::HIDDEN) || !subName.BeginsWith("."))
+            if (findFlags.IsOn(FindFlag::HIDDEN) || !subName.BeginsWith("."))
             {
                 if (subName != "." && subName != "..")
                 {

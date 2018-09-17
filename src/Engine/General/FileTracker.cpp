@@ -20,7 +20,7 @@ void FileTracker::TrackPath(const Path &path)
 {
     if (path.IsDir())
     {
-        Array<Path> dirSubPaths = path.GetSubPaths(Path::FindFlag::RECURSIVE_HIDDEN);
+        Array<Path> dirSubPaths = path.GetSubPaths(FindFlag::RECURSIVE_HIDDEN);
         for (const Path &subPath : dirSubPaths)
         {
             TrackPath(subPath);
@@ -46,7 +46,7 @@ void FileTracker::UnTrackPath(const Path &path)
 {
     if (path.IsDir())
     {
-        Array<Path> subpaths = path.GetSubPaths(Path::FindFlag::RECURSIVE_HIDDEN);
+        Array<Path> subpaths = path.GetSubPaths(FindFlag::RECURSIVE_HIDDEN);
         for (const Path &subpath : subpaths)
         {
             UnTrackPath(subpath);

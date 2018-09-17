@@ -9,22 +9,22 @@
 
 NAMESPACE_BANG_BEGIN
 
+enum FindFlag
+{
+    NONE      = 0,
+    RECURSIVE = 1,
+    HIDDEN    = 2,
+
+    SIMPLE           = FindFlag::NONE,
+    SIMPLE_HIDDEN    = FindFlag::SIMPLE | FindFlag::HIDDEN,
+    RECURSIVE_HIDDEN = FindFlag::RECURSIVE | FindFlag::HIDDEN,
+    DEFAULT          = FindFlag::SIMPLE_HIDDEN
+};
+CREATE_FLAGS(FindFlags, FindFlag);
+
 class Path
 {
 public:
-    enum FindFlag
-    {
-        NONE      = 0,
-        RECURSIVE = 1,
-        HIDDEN    = 2,
-
-        SIMPLE           = FindFlag::NONE,
-        SIMPLE_HIDDEN    = FindFlag::SIMPLE | FindFlag::HIDDEN,
-        RECURSIVE_HIDDEN = FindFlag::RECURSIVE | FindFlag::HIDDEN,
-        DEFAULT          = FindFlag::SIMPLE_HIDDEN
-    };
-    CREATE_FLAGS(FindFlags, FindFlag);
-
     static const Path Empty;
 
     Path();

@@ -116,7 +116,24 @@ private:
     FlagsPrimitiveType m_flags = SCAST<FlagsPrimitiveType>(Flag::DEFAULT);
 };
 
-#define CREATE_FLAGS(FlagsName, FlagType) using FlagsName = Flags<FlagType>
+#define CREATE_FLAGS(FlagsName, FlagType) \
+inline FlagType operator|(FlagType lhs, FlagType rhs) \
+{ \
+  return SCAST<FlagType>(SCAST<FlagsPrimitiveType>(lhs) | \
+                         SCAST<FlagsPrimitiveType>(rhs)); \
+} \
+\
+inline FlagType operator^(FlagType lhs, FlagType rhs) \
+{ \
+ return SCAST<FlagType>(SCAST<FlagsPrimitiveType>(lhs) ^ \
+                        SCAST<FlagsPrimitiveType>(rhs)); \
+} \
+\
+inline FlagType operator~(FlagType f) \
+{ \
+ return SCAST<FlagType>(~SCAST<FlagsPrimitiveType>(f)); \
+} \
+using FlagsName = Flags<FlagType> \
 
 NAMESPACE_BANG_END
 

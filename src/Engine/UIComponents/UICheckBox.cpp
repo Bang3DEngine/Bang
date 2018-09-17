@@ -1,5 +1,6 @@
 #include "Bang/UICheckBox.h"
 
+#include "Bang/UITheme.h"
 #include "Bang/Material.h"
 #include "Bang/Resources.h"
 #include "Bang/GameObject.h"

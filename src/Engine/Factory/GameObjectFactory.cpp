@@ -7,6 +7,7 @@
 #include "Bang/UIList.h"
 #include "Bang/UIMask.h"
 #include "Bang/UILabel.h"
+#include "Bang/UITheme.h"
 #include "Bang/Material.h"
 #include "Bang/UIButton.h"
 #include "Bang/UICanvas.h"

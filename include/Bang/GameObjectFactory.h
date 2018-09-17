@@ -4,7 +4,6 @@
 #include "Bang/Color.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
-#include "Bang/UITheme.h"
 #include "Bang/LayoutSizeType.h"
 
 NAMESPACE_BANG_BEGIN

@@ -8,6 +8,7 @@
 #include "Bang/UIMask.h"
 #include "Bang/UILabel.h"
 #include "Bang/UITheme.h"
+#include "Bang/Physics.h"
 #include "Bang/Material.h"
 #include "Bang/UIButton.h"
 #include "Bang/UICanvas.h"
@@ -110,6 +111,7 @@ void GameObjectFactory::CreateUISceneInto(Scene *scene)
     scene->SetCamera(cam);
     GameObjectFactory::CreateUIGameObjectInto(scene);
     GameObjectFactory::CreateUICanvasInto(scene);
+    Physics::GetInstance()->UnRegisterScene(scene);
 }
 
 Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)

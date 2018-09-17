@@ -153,22 +153,22 @@ void Physics::Step(Scene *scene, float simulationTime)
 
 void Physics::StepIfNeeded(Scene *scene)
 {
-    PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene);
-    ASSERT(pxSceneContainer);
-
-    Time::TimeT nowMillis = Time::GetNow_Millis();
-    float secondsSinceLastStep =
-                (nowMillis - pxSceneContainer->m_lastStepTimeMillis) / 1000.0f;
-    if (secondsSinceLastStep >= GetStepSleepTimeSeconds())
+    if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
-        if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
+        Time::TimeT nowMillis = Time::GetNow_Millis();
+        float secondsSinceLastStep =
+                    (nowMillis - pxSceneContainer->m_lastStepTimeMillis) / 1000.0f;
+        if (secondsSinceLastStep >= GetStepSleepTimeSeconds())
         {
-            Step(scene, secondsSinceLastStep);
-        }
-        else
-        {
-            pxSceneContainer->ResetStepTimeReference();
-            --pxSceneContainer->m_numFramesLeftToIgnore;
+            if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
+            {
+                Step(scene, secondsSinceLastStep);
+            }
+            else
+            {
+                pxSceneContainer->ResetStepTimeReference();
+                --pxSceneContainer->m_numFramesLeftToIgnore;
+            }
         }
     }
 }
@@ -210,6 +210,17 @@ void Physics::RegisterScene(Scene *scene)
     PxSceneContainer *pxSceneContainer = new PxSceneContainer(scene);
     m_sceneToPxSceneContainer.Add(scene, pxSceneContainer);
     scene->EventEmitter<IEventsDestroy>::RegisterListener(this);
+}
+
+void Physics::UnRegisterScene(Scene *scene)
+{
+    if (m_sceneToPxSceneContainer.ContainsKey(scene))
+    {
+        PxSceneContainer *pxSceneCont = m_sceneToPxSceneContainer.Get(scene);
+        delete pxSceneCont;
+
+        m_sceneToPxSceneContainer.Remove(scene);
+    }
 }
 
 void Physics::RegisterPhysicsMaterial(PhysicsMaterial *physicsMaterial)

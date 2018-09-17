@@ -19,7 +19,6 @@ USING_NAMESPACE_BANG
 Scene::Scene() : GameObject("Scene")
 {
     p_debugRenderer = GameObject::Create<DebugRenderer>();
-
     Physics::GetInstance()->RegisterScene(this);
 }
 

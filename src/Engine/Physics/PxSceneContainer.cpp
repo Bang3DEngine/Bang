@@ -58,9 +58,9 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
 
     PxSceneDesc sceneDesc(ph->GetPxPhysics()->getTolerancesScale());
     sceneDesc.gravity = Physics::GetPxVec3FromVector3(ph->GetGravity());
-    sceneDesc.cpuDispatcher	= PxDefaultCpuDispatcherCreate(2);
+    sceneDesc.cpuDispatcher	= PxDefaultCpuDispatcherCreate(1);
+    sceneDesc.filterShader = CollisionFilterShader;
     sceneDesc.simulationEventCallback = this;
-    sceneDesc.filterShader	= CollisionFilterShader;
 
     PxScene *pxScene = ph->GetPxPhysics()->createScene(sceneDesc);
     pxScene->setFlag(PxSceneFlag::eENABLE_ACTIVE_ACTORS, true);

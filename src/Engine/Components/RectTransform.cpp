@@ -528,9 +528,18 @@ bool RectTransform::IsMouseOver(bool recursive) const
 bool RectTransform::IsMouseOver(const Vector2i &mousePosWindow,
                                 bool recursive) const
 {
-    Vector2i mousePosVP( GL::FromWindowPointToViewportPoint(
-                            Vector2(mousePosWindow),
-                            m_vpInWhichRectTransformLocalToWorldWasCalc) );
+    AARecti vpRect = m_vpInWhichRectTransformLocalToWorldWasCalc;
+    if (vpRect == AARecti::Zero)
+    {
+        vpRect = m_vpInWhichRectLocalToWorldWasCalc;
+        if (vpRect == AARecti::Zero)
+        {
+            return false;
+        }
+    }
+
+    Vector2i mousePosVP(
+        GL::FromWindowPointToViewportPoint( Vector2(mousePosWindow), vpRect) );
     return IsMouseOverVP(mousePosVP, recursive);
 }
 

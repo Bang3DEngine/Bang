@@ -77,7 +77,7 @@ void PrintUniform(const String &varName,
                   int uniformIdx,
                   const String &varValueString)
 {
-    Debug_Log(varName << " (" << uniformIdx << "): " << varValueString);
+    Debug_DLog(varName << " (" << uniformIdx << "): " << varValueString);
 }
 
 template <class T>

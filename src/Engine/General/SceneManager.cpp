@@ -61,7 +61,6 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
             scene->PostUpdate();
         }
         scene->DestroyDelayedElements();
-        Time::SetDeltaTimeReferenceToNow();
     }
 }
 

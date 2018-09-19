@@ -80,7 +80,14 @@ ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                ShaderProgramFactory::GetEngineShadersDir().Append(
-                        "RenderTexture.frag"));
+                   "RenderTexture.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewportGamma()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "RenderTextureGamma.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetDirectionalLightDeferredScreenPass()

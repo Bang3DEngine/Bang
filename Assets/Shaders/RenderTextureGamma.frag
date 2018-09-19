@@ -1,6 +1,7 @@
 #define BANG_FRAGMENT
 #include "Common.glsl"
 
+uniform float B_GammaCorrection;
 uniform sampler2D B_RenderTexture_Texture;
 
 in vec2 B_FIn_AlbedoUv;
@@ -11,5 +12,8 @@ void main()
 {
     vec2 uv = B_FIn_AlbedoUv;
     vec3 color = texture(B_RenderTexture_Texture, uv).rgb;
-    gl_FragColor = vec4(color.rgb, 1);
+
+    float gammaCorrection = B_GammaCorrection;
+    vec3 gammaCorrectedColor = pow(color.rgb, vec3(gammaCorrection));
+    gl_FragColor = vec4(gammaCorrectedColor, 1);
 }

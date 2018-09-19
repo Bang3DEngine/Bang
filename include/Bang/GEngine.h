@@ -44,6 +44,7 @@ public:
     void Render(Scene *scene);
     void Render(Scene *scene, Camera *camera);
     void RenderTexture(Texture2D *texture);
+    void RenderTexture(Texture2D *texture, float gammaCorrection);
     void RenderWithPass(GameObject *go,
                         RenderPass renderPass,
                         bool renderChildren = true);
@@ -117,9 +118,11 @@ private:
 
     RH<Mesh> p_windowPlaneMesh;
     RH<ShaderProgram> p_renderTextureToViewportSP;
+    RH<ShaderProgram> p_renderTextureToViewportGammaSP;
 
     void Render(Renderer *rend);
     void RenderShadowMaps(GameObject *go);
+    void RenderTexture_(Texture2D *texture, float gammaCorrection);
     void RenderReflectionProbes(GameObject *go);
     void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);

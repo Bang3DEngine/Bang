@@ -2,7 +2,7 @@
 
 void main()
 {
-    vec4 texColor = texture(B_AlbedoTexture, B_FIn_AlbedoUv);
+    float texA = texture(B_AlbedoTexture, B_FIn_AlbedoUv).a;
     B_GIn_Color  = vec4(B_MaterialAlbedoColor.rgb,
-                        B_MaterialAlbedoColor.a * texColor.a);
+                        B_MaterialAlbedoColor.a * texA);
 }

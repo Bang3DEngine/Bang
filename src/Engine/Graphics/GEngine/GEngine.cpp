@@ -77,7 +77,10 @@ void GEngine::Init()
     m_debugRenderer = GameObject::Create<DebugRenderer>();
 
     p_windowPlaneMesh = MeshFactory::GetUIPlane();
-    p_renderTextureToViewportSP.Set( ShaderProgramFactory::GetRenderTextureToViewport() );
+    p_renderTextureToViewportSP.Set(
+                ShaderProgramFactory::GetRenderTextureToViewport() );
+    p_renderTextureToViewportGammaSP.Set(
+                ShaderProgramFactory::GetRenderTextureToViewportGamma() );
     m_renderSkySP.Set( ShaderProgramFactory::Get(
                         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
                            EPATH("Shaders/RenderSky.frag")) );
@@ -489,8 +492,6 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
     sp->Bind();
     sp->SetVector2("B_AlbedoUvOffset",           Vector2::Zero, false);
     sp->SetVector2("B_AlbedoUvMultiply",          Vector2::One, false);
-    sp->SetVector2("B_destRectMinCoord", destRectMask.GetMin(), false);
-    sp->SetVector2("B_destRectMaxCoord", destRectMask.GetMax(), false);
 
     RenderViewportPlane(); // Renduurrr
 
@@ -504,27 +505,43 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 
     gbuffer->Bind();
 
-    ShaderProgram *sp = p_renderTextureToViewportSP.Get();
+    ShaderProgram *sp = p_renderTextureToViewportGammaSP.Get();
     sp->Bind();
     sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
-    gbuffer->ApplyPass(p_renderTextureToViewportSP.Get(), true);
+    sp->SetTexture2D("B_RenderTexture_Texture",
+                     gbuffer->GetLastDrawnColorTexture(),
+                     false);
+    gbuffer->ApplyPass(p_renderTextureToViewportGammaSP.Get(), true);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
-void GEngine::RenderTexture(Texture2D *texture)
+
+void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)
 {
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
-    ShaderProgram *sp = p_renderTextureToViewportSP.Get();
-
+    bool useGammaCorrection = (gammaCorrection != 1.0f);
+    ShaderProgram *sp = (useGammaCorrection ? p_renderTextureToViewportGammaSP.Get() :
+                                              p_renderTextureToViewportSP.Get());
     sp->Bind();
-    sp->SetFloat("B_GammaCorrection", 1.0f, false);
-    sp->SetTexture2D(GBuffer::GetColorsTexName(), texture, false);
+    if (useGammaCorrection)
+    {
+        sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
+    }
+    sp->SetTexture2D("B_RenderTexture_Texture", texture, false);
     GEngine::RenderViewportRect(sp, AARect::NDCRect);
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+}
+void GEngine::RenderTexture(Texture2D *texture)
+{
+    RenderTexture(texture, 1.0f);
+}
+void GEngine::RenderTexture(Texture2D *texture, float gammaCorrection)
+{
+    RenderTexture_(texture, gammaCorrection);
 }
 
 void GEngine::RenderWithAllPasses(GameObject *go)
@@ -561,18 +578,16 @@ void GEngine::RenderTransparentPass(GameObject *go)
     {
         const Transform *lhsTrans = lhs->GetTransform();
         const Transform *rhsTrans = rhs->GetTransform();
-        if (!lhsTrans || !rhsTrans)
+        if (lhsTrans && rhsTrans)
         {
-            return false;
+            const Vector3 lhsPos = lhsTrans->GetPosition();
+            const Vector3 rhsPos = rhsTrans->GetPosition();
+            const Vector3 lhsCamPosDiff = (lhsPos - camPos);
+            const Vector3 rhsCamPosDiff = (rhsPos - camPos);
+            const float lhsDistToCamSq = Vector3::Dot(lhsCamPosDiff, lhsCamPosDiff);
+            const float rhsDistToCamSq = Vector3::Dot(rhsCamPosDiff, rhsCamPosDiff);
+            return lhsDistToCamSq > rhsDistToCamSq;
         }
-
-        const Vector3 lhsPos = lhsTrans->GetPosition();
-        const Vector3 rhsPos = rhsTrans->GetPosition();
-        const Vector3 lhsCamPosDiff = (lhsPos - camPos);
-        const Vector3 rhsCamPosDiff = (rhsPos - camPos);
-        const float lhsDistToCamSq = Vector3::Dot(lhsCamPosDiff, lhsCamPosDiff);
-        const float rhsDistToCamSq = Vector3::Dot(rhsCamPosDiff, rhsCamPosDiff);
-        return lhsDistToCamSq > rhsDistToCamSq;
     });
 
     // Render back to front

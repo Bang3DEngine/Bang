@@ -105,6 +105,7 @@ private:
     RH<Mesh> m_boxMesh;
     RH<Mesh> m_planeMesh;
     RH<Mesh> m_sphereMesh;
+    RH<Texture2D> m_depthOutlineTexture;
     RH<ShaderProgram> m_outlineShaderProgram;
 
     LineRenderer *m_lineRenderer = nullptr;

@@ -481,29 +481,23 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
         GL::Push(GL::BindTarget::SHADER_PROGRAM);
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
-        GBuffer *gbuffer = GEngine::GetActiveGBuffer();
-        if (gbuffer)
+        if (GBuffer *gbuffer = GEngine::GetActiveGBuffer())
         {
-            // Save before drawing the first pass, because it could happen that it
-            // draws to gizmos and change the gizmos color and thickness.
-
             gbuffer->PushDrawAttachments();
             gbuffer->PushDepthStencilTexture();
             gbuffer->Bind();
-            gbuffer->SetOverlayDepthStencil();
+            gbuffer->SetOverlayDepthStencil(); // Pick an unused gbuffer d/s tex
 
             // Render depth
             gbuffer->SetDrawBuffers({});
-            GL::ClearDepthBuffer(1);
+            GL::ClearDepthBuffer();
             GL::SetDepthMask(true);
             GL::SetDepthFunc(GL::Function::ALWAYS);
+            GL::SetStencilFunc(GL::Function::ALWAYS);
             GL::SetStencilOp(GL::StencilOperation::KEEP);
             GL::SetColorMask(false, false, false, false);
 
-            // GEngine::GetInstance()->SetReplacementMaterial(
-            //                          MaterialFactory::GetDefaultUnLighted().Get());
             GEngine::GetInstance()->RenderWithPass(gameObject, RenderPass::SCENE);
-            GEngine::GetInstance()->SetReplacementMaterial(nullptr);
 
             // Render outline
             GL::SetDepthMask(false);
@@ -515,18 +509,18 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             sp->SetColor("B_OutlineColor", params.color);
             sp->SetInt("B_OutlineThickness", params.thickness);
             sp->SetFloat("B_AlphaFadeOnDepth", alphaDepthOnFade);
-            GBuffer *gbuffer = GEngine::GetActiveGBuffer();
-            if (gbuffer)
-            {
-                Texture2D *depthStencilTex = gbuffer->GetSceneDepthStencilTexture();
-                sp->SetTexture2D("B_SceneDepthTexture", depthStencilTex, false);
-            }
+            sp->SetTexture2D("B_OutlineDepthTexture",
+                             gbuffer->GetDepthStencilTexture(),
+                             false);
+            sp->SetTexture2D("B_SceneDepthTexture",
+                             gbuffer->GetSceneDepthStencilTexture(),
+                             false);
 
             gbuffer->SetColorDrawBuffer();
+            gbuffer->SetSceneDepthStencil();
             gbuffer->ApplyPass(sp, false);
 
-            GL::SetDepthMask(true);
-            GL::ClearDepthBuffer(1);
+            GL::ClearDepthBuffer();
 
             gbuffer->PopDepthStencilTexture();
             gbuffer->PopDrawAttachments();

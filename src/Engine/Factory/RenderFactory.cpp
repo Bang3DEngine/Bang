@@ -493,7 +493,7 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             GL::ClearDepthBuffer();
             GL::SetDepthMask(true);
             GL::SetDepthFunc(GL::Function::ALWAYS);
-            GL::SetStencilFunc(GL::Function::ALWAYS);
+            GL::SetStencilFunc(GL::Function::NEVER);
             GL::SetStencilOp(GL::StencilOperation::KEEP);
             GL::SetColorMask(false, false, false, false);
 

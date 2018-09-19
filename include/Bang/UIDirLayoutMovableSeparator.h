@@ -17,7 +17,7 @@ FORWARD class GameObject;
 class UIDirLayoutMovableSeparator : public Component,
                                     public EventListener<IEventsFocus>
 {
-    COMPONENT(UIDirLayoutMovableSeparator)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDirLayoutMovableSeparator)
 
 public:
 	UIDirLayoutMovableSeparator();

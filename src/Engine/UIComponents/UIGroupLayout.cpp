@@ -8,6 +8,7 @@ USING_NAMESPACE_BANG
 
 UIGroupLayout::UIGroupLayout()
 {
+    CONSTRUCT_CLASS_ID(UIGroupLayout)
     SetChildrenHorizontalAlignment(HorizontalAlignment::CENTER);
     SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
     SetChildrenHorizontalStretch(Stretch::FULL);

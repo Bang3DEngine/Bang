@@ -22,6 +22,7 @@ const int UITree::IndentationPx = 10;
 
 UITree::UITree()
 {
+    CONSTRUCT_CLASS_ID(UITree)
     m_rootTree.SetData(nullptr);
 }
 

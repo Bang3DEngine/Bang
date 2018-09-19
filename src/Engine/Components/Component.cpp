@@ -12,6 +12,7 @@ USING_NAMESPACE_BANG
 
 Component::Component()
 {
+    m_classId = GetInvalidClassId();
 }
 
 Component::~Component()

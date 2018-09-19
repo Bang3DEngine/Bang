@@ -18,7 +18,7 @@ FORWARD class IEventsDragDrop;
 class UICanvas : public Component,
                  public EventListener<IEventsDestroy>
 {
-    COMPONENT(UICanvas)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UICanvas)
 
 public:
     UICanvas();

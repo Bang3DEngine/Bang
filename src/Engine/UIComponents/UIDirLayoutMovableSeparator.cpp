@@ -17,6 +17,7 @@ USING_NAMESPACE_BANG
 
 UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator()
 {
+    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)
 }
 
 UIDirLayoutMovableSeparator::~UIDirLayoutMovableSeparator()

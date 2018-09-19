@@ -12,7 +12,7 @@ FORWARD class UIImageRenderer;
 
 class UIScrollArea : public Component
 {
-    COMPONENT(UIScrollArea)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollArea)
 
 public:
     virtual ~UIScrollArea();

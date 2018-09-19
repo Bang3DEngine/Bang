@@ -15,6 +15,8 @@ FORWARD class ShaderProgram;
 
 class Light : public Component
 {
+    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(Light)
+
 public:
     enum class ShadowType { NONE = 0, HARD, SOFT };
 

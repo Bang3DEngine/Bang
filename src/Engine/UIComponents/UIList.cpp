@@ -24,6 +24,7 @@ USING_NAMESPACE_BANG
 
 UIList::UIList()
 {
+    CONSTRUCT_CLASS_ID(UIList)
 }
 
 UIList::~UIList()
@@ -334,7 +335,7 @@ int UIList::GetNumItems() const
 
 UIDirLayout *UIList::GetDirLayout() const
 {
-    return GetGameObject()->GetComponentInDescendantsAndThis<UIDirLayout>();
+    return p_dirLayout;
 }
 
 void UIList::SetSelection(int index)
@@ -582,6 +583,7 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     }
     dirLayout->SetChildrenVerticalStretch(Stretch::NONE);
     dirLayout->SetChildrenHorizontalStretch(Stretch::FULL);
+    list->p_dirLayout = dirLayout;
 
     list->p_focusable = container->AddComponent<UIFocusable>();
     list->p_focusable->EventEmitter<IEventsFocus>::RegisterListener(list);

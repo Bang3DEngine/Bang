@@ -7,7 +7,10 @@
 #include "Bang/Serializable.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/ComponentFactory.h"
+#include "Bang/ComponentClassIds.h"
 #include "Bang/IEventsComponentChangeGameObject.h"
 
 NAMESPACE_BANG_BEGIN
@@ -15,26 +18,13 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Collider;
 FORWARD class Collision;
 
-#define REQUIRE_COMPONENT(gameObject, ComponentClass) \
-    ASSERT(gameObject->HasComponent<ComponentClass>())
-
-#define COMPONENT_NO_FRIEND(ClassName) \
-    public: virtual ClassName *Clone() const override {\
-        ClassName *clone = Component::Create<ClassName>();\
-        CloneInto(clone);\
-        return clone;\
-    }\
-    SERIALIZABLE(ClassName)
-
-#define COMPONENT(ClassName) \
-    COMPONENT_NO_FRIEND(ClassName) \
-    friend class Component;
-
 class Component : public Object,
                   public IToString,
                   public EventEmitter<IEventsComponentChangeGameObject>
 {
-    COMPONENT_NO_FRIEND(Component)
+    SERIALIZABLE(Component)
+    CLONEABLE_COMPONENT(Component)
+    SET_CLASS_ID_AS_ROOT()
 
 public:
     template <class T, class... Args>

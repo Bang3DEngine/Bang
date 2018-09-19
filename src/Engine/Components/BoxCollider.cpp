@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 
 BoxCollider::BoxCollider()
 {
+    CONSTRUCT_CLASS_ID(BoxCollider)
     SetPhysicsObjectType( PhysicsObject::Type::BOX_COLLIDER );
 }
 

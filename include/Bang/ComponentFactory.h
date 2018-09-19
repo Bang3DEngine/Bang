@@ -7,6 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class Component;
 
+
 class ComponentFactory
 {
 protected:

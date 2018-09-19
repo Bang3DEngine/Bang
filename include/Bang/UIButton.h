@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIButton : public UIButtonBase
 {
-    COMPONENT(UIButton)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIButton)
 
 private:
     UIButton();

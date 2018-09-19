@@ -5,6 +5,11 @@
 
 USING_NAMESPACE_BANG
 
+UIAutoFocuser::UIAutoFocuser()
+{
+    CONSTRUCT_CLASS_ID(UIAutoFocuser);
+}
+
 void UIAutoFocuser::OnStart()
 {
     Component::OnStart();

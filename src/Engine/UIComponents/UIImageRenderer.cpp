@@ -18,6 +18,8 @@ USING_NAMESPACE_BANG
 
 UIImageRenderer::UIImageRenderer()
 {
+    CONSTRUCT_CLASS_ID(UIImageRenderer)
+
     SetMaterial(MaterialFactory::GetUIImage().Get());
     SetMode(Mode::TEXTURE_INV_UVY);
 }

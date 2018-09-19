@@ -15,7 +15,7 @@ FORWARD class UITextRenderer;
 class UILabel : public Component,
                 public EventListener<IEventsFocus>
 {
-    COMPONENT(UILabel)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UILabel)
 
 public:
 	virtual ~UILabel();

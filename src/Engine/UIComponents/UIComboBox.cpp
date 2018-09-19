@@ -27,6 +27,7 @@ USING_NAMESPACE_BANG
 
 UIComboBox::UIComboBox()
 {
+    CONSTRUCT_CLASS_ID(UIComboBox)
 }
 
 UIComboBox::~UIComboBox()

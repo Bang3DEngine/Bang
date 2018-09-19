@@ -16,7 +16,7 @@ FORWARD class Behaviour;
 
 class BehaviourContainer : public Component
 {
-    COMPONENT(BehaviourContainer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(BehaviourContainer)
 
 public:
     void SetSourceFilepath(const Path &sourceFilepath);

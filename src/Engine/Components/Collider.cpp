@@ -15,6 +15,7 @@ USING_NAMESPACE_BANG
 
 Collider::Collider()
 {
+    CONSTRUCT_CLASS_ID(Collider)
     SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 

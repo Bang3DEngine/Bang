@@ -8,6 +8,7 @@ USING_NAMESPACE_BANG
 
 UIFocusable::UIFocusable()
 {
+    CONSTRUCT_CLASS_ID(UIFocusable);
 }
 
 UIFocusable::~UIFocusable()

@@ -12,7 +12,7 @@ FORWARD class Framebuffer;
 
 class DirectionalLight : public Light
 {
-    COMPONENT(DirectionalLight)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(DirectionalLight)
 
 public:
     void SetShadowDistance(float shadowDistance);

@@ -12,7 +12,7 @@ FORWARD class Mesh;
 
 class LineRenderer : public Renderer
 {
-    COMPONENT(LineRenderer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(LineRenderer)
 
 public:
     virtual void SetPoint(int i, const Vector3& point);

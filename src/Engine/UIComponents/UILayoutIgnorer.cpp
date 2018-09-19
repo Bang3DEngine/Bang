@@ -4,6 +4,7 @@ USING_NAMESPACE_BANG
 
 UILayoutIgnorer::UILayoutIgnorer()
 {
+    CONSTRUCT_CLASS_ID(UILayoutIgnorer)
 }
 
 UILayoutIgnorer::~UILayoutIgnorer()

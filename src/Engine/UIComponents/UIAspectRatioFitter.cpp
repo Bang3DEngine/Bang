@@ -10,6 +10,7 @@ USING_NAMESPACE_BANG
 
 UIAspectRatioFitter::UIAspectRatioFitter()
 {
+    CONSTRUCT_CLASS_ID(UIAspectRatioFitter);
     SetAspectRatioMode(AspectRatioMode::KEEP);
 }
 

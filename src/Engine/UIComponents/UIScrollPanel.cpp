@@ -19,6 +19,7 @@ const float UIScrollPanel::WheelScrollSpeedPx = 200.0f;
 
 UIScrollPanel::UIScrollPanel()
 {
+    CONSTRUCT_CLASS_ID(UIScrollPanel)
 }
 
 UIScrollPanel::~UIScrollPanel()

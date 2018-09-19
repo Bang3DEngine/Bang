@@ -20,6 +20,8 @@ USING_NAMESPACE_BANG
 
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
+    CONSTRUCT_CLASS_ID(PostProcessEffectSSAO)
+
     m_ssaoFB = new Framebuffer();
     m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR0,
                                GL::ColorFormat::RGB10_A2);

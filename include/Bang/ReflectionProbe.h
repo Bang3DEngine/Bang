@@ -16,7 +16,7 @@ FORWARD class Renderer;
 
 class ReflectionProbe : public Component
 {
-    COMPONENT(ReflectionProbe)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(ReflectionProbe)
 
 public:
 	ReflectionProbe();

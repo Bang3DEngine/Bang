@@ -18,6 +18,7 @@ USING_NAMESPACE_BANG
 
 MeshRenderer::MeshRenderer()
 {
+    CONSTRUCT_CLASS_ID(MeshRenderer);
     SetRenderPrimitive( GL::Primitive::TRIANGLES );
     SetMaterial( MaterialFactory::GetDefault().Get() );
     SetMesh( MeshFactory::GetCube().Get() );

@@ -11,7 +11,7 @@ FORWARD class ShaderProgram;
 
 class PostProcessEffect : public Component
 {
-    COMPONENT(PostProcessEffect)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffect)
 
 public:
     enum class Type { AFTER_SCENE = 0, AFTER_CANVAS };

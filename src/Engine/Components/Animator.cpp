@@ -12,6 +12,7 @@ USING_NAMESPACE_BANG
 
 Animator::Animator()
 {
+    CONSTRUCT_CLASS_ID(Animator)
 }
 
 Animator::~Animator()

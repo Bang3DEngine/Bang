@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIVerticalLayout : public UIDirLayout
 {
-    COMPONENT(UIVerticalLayout)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIVerticalLayout)
 
 public:
     UIVerticalLayout();

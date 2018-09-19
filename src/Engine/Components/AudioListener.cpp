@@ -10,6 +10,7 @@ USING_NAMESPACE_BANG
 
 AudioListener::AudioListener()
 {
+    CONSTRUCT_CLASS_ID(AudioListener)
 }
 
 AudioListener::~AudioListener()

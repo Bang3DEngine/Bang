@@ -25,7 +25,7 @@ class UIInputText : public Component,
                     public EventListener<IEventsFocus>,
                     public ILayoutElement
 {
-    COMPONENT(UIInputText)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIInputText)
 
 public:
     void OnUpdate() override;

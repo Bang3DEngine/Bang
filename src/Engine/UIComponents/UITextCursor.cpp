@@ -11,6 +11,8 @@ USING_NAMESPACE_BANG
 
 UITextCursor::UITextCursor()
 {
+    CONSTRUCT_CLASS_ID(UITextCursor)
+
     SetMaterial(MaterialFactory::GetUIImage().Get());
     GetMaterial()->SetAlbedoColor(Color::Black);
     SetViewProjMode(GL::ViewProjMode::CANVAS);

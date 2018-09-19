@@ -39,7 +39,7 @@ NAMESPACE_BANG_BEGIN
 class Behaviour : public Component,
                   public EventListener<IEventsGameObjectPhysics>
 {
-    COMPONENT(Behaviour)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Behaviour)
 
 public:
     Behaviour();

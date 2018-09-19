@@ -29,7 +29,7 @@ class Transform : public Component,
                   public EventListener<IEventsChildren>,
                   public EventEmitter<IEventsTransform>
 {
-    COMPONENT(Transform)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Transform)
 
 public:
     void LookAt(const Vector3 &target, const Vector3 &up = Vector3::Up);

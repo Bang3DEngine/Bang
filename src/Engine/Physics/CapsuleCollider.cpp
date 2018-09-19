@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 
 CapsuleCollider::CapsuleCollider()
 {
+    CONSTRUCT_CLASS_ID(CapsuleCollider)
     SetPhysicsObjectType( PhysicsObject::Type::CAPSULE_COLLIDER );
 }
 

@@ -12,7 +12,7 @@ NAMESPACE_BANG_BEGIN
 class UIAspectRatioFitter : public Component,
                             public ILayoutSelfController
 {
-    COMPONENT(UIAspectRatioFitter)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIAspectRatioFitter)
 
 public:
 

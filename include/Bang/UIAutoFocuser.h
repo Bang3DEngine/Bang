@@ -9,7 +9,7 @@ FORWARD class UIFocusable;
 
 class UIAutoFocuser : public Component
 {
-    COMPONENT(UIAutoFocuser)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIAutoFocuser)
 
 public:
     // Component
@@ -23,7 +23,7 @@ private:
     int m_frames = 0;
     UIFocusable* p_focusableToAutoFocus = nullptr;
 
-    UIAutoFocuser() = default;
+    UIAutoFocuser();
     virtual ~UIAutoFocuser() = default;
 };
 

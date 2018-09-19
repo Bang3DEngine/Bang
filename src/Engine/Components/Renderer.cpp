@@ -21,6 +21,7 @@ USING_NAMESPACE_BANG
 
 Renderer::Renderer()
 {
+    CONSTRUCT_CLASS_ID(Renderer);
     SetMaterial(MaterialFactory::GetDefault().Get());
 }
 
@@ -30,7 +31,10 @@ Renderer::~Renderer()
 
 Material *Renderer::GetActiveMaterial() const
 {
-    if (p_material) { return GetMaterial(); }
+    if (p_material)
+    {
+        return GetMaterial();
+    }
     return GetSharedMaterial();
 }
 

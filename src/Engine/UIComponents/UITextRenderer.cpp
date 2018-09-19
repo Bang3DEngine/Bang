@@ -22,6 +22,8 @@ USING_NAMESPACE_BANG
 
 UITextRenderer::UITextRenderer() : UIRenderer()
 {
+    CONSTRUCT_CLASS_ID(UITextRenderer)
+
     p_mesh = Resources::Create<Mesh>();
     SetMaterial(MaterialFactory::GetUIText().Get());
 

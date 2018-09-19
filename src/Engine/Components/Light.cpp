@@ -16,8 +16,14 @@
 
 USING_NAMESPACE_BANG
 
-Light::Light() { }
-Light::~Light() { }
+Light::Light()
+{
+    CONSTRUCT_CLASS_ID(Light)
+}
+
+Light::~Light()
+{
+}
 
 void Light::SetColor(const Color &color) { m_color = color; }
 void Light::SetIntensity(float intensity) { m_intensity = intensity; }

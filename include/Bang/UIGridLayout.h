@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIGridLayout : public UIGroupLayout
 {
-    COMPONENT(UIGridLayout)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIGridLayout)
 
 public:
     void SetCellSize(const Vector2i &cellSize);

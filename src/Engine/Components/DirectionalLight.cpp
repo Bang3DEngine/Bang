@@ -27,6 +27,8 @@ USING_NAMESPACE_BANG
 
 DirectionalLight::DirectionalLight()
 {
+    CONSTRUCT_CLASS_ID(DirectionalLight)
+
     m_shadowMapFramebuffer = new Framebuffer(1,1);
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
                                                   GL::ColorFormat::DEPTH16);

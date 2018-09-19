@@ -30,6 +30,8 @@ USING_NAMESPACE_BANG
 
 Camera::Camera()
 {
+    CONSTRUCT_CLASS_ID(Camera)
+
     AddRenderPass(RenderPass::SCENE);
     AddRenderPass(RenderPass::SCENE_TRANSPARENT);
     AddRenderPass(RenderPass::SCENE_POSTPROCESS);

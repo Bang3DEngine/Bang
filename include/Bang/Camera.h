@@ -32,7 +32,7 @@ enum class CameraClearMode
 class Camera : public Component,
                public EventListener<IEventsDestroy>
 {
-    COMPONENT(Camera)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Camera)
 
 public:
     virtual void Bind() const;

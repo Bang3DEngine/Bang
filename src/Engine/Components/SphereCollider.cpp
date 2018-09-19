@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 
 SphereCollider::SphereCollider()
 {
+    CONSTRUCT_CLASS_ID(SphereCollider)
     SetPhysicsObjectType( PhysicsObject::Type::SPHERE_COLLIDER );
 }
 

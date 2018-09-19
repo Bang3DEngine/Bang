@@ -10,6 +10,7 @@ USING_NAMESPACE_BANG
 
 UIGridLayout::UIGridLayout()
 {
+    CONSTRUCT_CLASS_ID(UIGridLayout)
 }
 
 UIGridLayout::~UIGridLayout()

@@ -22,6 +22,7 @@ USING_NAMESPACE_BANG
 
 UIButtonBase::UIButtonBase()
 {
+    CONSTRUCT_CLASS_ID(UIButtonBase)
 }
 
 UIButtonBase::~UIButtonBase()

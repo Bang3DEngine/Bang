@@ -15,13 +15,15 @@ FORWARD namespace physx
 NAMESPACE_BANG_BEGIN
 
 #define COLLIDER(className) \
-            COMPONENT(className) \
-            friend class Physics; \
-            friend class PxSceneContainer;
+        COMPONENT_WITH_FAST_DYNAMIC_CAST(className) \
+        friend class Physics; \
+        friend class PxSceneContainer;
 
 class Collider : public PhysicsObject,
                  public Component
 {
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Collider)
+
 public:
 	Collider();
     virtual ~Collider();

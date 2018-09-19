@@ -21,6 +21,7 @@ USING_NAMESPACE_BANG
 
 UICanvas::UICanvas()
 {
+    CONSTRUCT_CLASS_ID(UICanvas)
     m_uiLayoutManager = new UILayoutManager();
 }
 

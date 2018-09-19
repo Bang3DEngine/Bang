@@ -7,6 +7,7 @@ USING_NAMESPACE_BANG
 
 RigidBody::RigidBody()
 {
+    CONSTRUCT_CLASS_ID(RigidBody)
     SetPhysicsObjectType( PhysicsObject::Type::RIGIDBODY );
 }
 

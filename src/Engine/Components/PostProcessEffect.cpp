@@ -15,6 +15,7 @@ USING_NAMESPACE_BANG
 
 PostProcessEffect::PostProcessEffect()
 {
+    CONSTRUCT_CLASS_ID(PostProcessEffect)
     p_shaderProgram.Set( ShaderProgramFactory::GetDefaultPostProcess() );
 }
 

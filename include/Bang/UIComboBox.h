@@ -17,7 +17,7 @@ class UIComboBox : public Component,
                    public EventEmitter<IEventsFocus>,
                    public EventListener<IEventsFocus>
 {
-    COMPONENT(UIComboBox)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIComboBox)
 
 public:
     void AddItem(const String &label, int value);

@@ -9,7 +9,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIMask : public Component
 {
-    COMPONENT(UIMask)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIMask)
 
 public:
     UIMask();

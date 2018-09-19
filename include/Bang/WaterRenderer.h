@@ -12,7 +12,7 @@ FORWARD class Mesh;
 
 class WaterRenderer : public Renderer
 {
-    COMPONENT(WaterRenderer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(WaterRenderer)
 
 public:
 	WaterRenderer();

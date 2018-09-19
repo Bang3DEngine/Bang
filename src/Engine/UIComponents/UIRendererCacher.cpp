@@ -18,6 +18,8 @@ USING_NAMESPACE_BANG
 
 UIRendererCacher::UIRendererCacher()
 {
+    CONSTRUCT_CLASS_ID(UIRendererCacher)
+
     p_cacheFramebuffer = new Framebuffer(1, 1);
     p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
                                               GL::ColorFormat::RGBA8);

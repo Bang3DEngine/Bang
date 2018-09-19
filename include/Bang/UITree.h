@@ -23,7 +23,7 @@ class UITree : public Component,
                public EventListener<IEventsDragDrop>,
                public EventEmitter<IEventsUITree>
 {
-    COMPONENT(UITree)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UITree)
 
 public:
     enum class MouseItemRelativePosition

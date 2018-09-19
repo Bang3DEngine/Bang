@@ -15,6 +15,7 @@ USING_NAMESPACE_BANG
 
 AudioSource::AudioSource()
 {
+    CONSTRUCT_CLASS_ID(AudioSource)
 }
 
 AudioSource::~AudioSource()

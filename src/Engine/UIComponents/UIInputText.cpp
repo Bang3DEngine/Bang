@@ -32,6 +32,7 @@ const int UIInputText::MarginY = 2;
 
 UIInputText::UIInputText()
 {
+    CONSTRUCT_CLASS_ID(UIInputText)
 }
 
 UIInputText::~UIInputText()

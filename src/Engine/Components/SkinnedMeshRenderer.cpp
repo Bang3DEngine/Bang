@@ -14,6 +14,8 @@ USING_NAMESPACE_BANG
 
 SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
+    CONSTRUCT_CLASS_ID(SkinnedMeshRenderer);
+
     m_gameObjectGatherer = new ObjectGatherer<GameObject, true>();
     m_gameObjectGatherer->RegisterListener(this);
 }

@@ -17,6 +17,7 @@ USING_NAMESPACE_BANG
 
 UIFileList::UIFileList()
 {
+    CONSTRUCT_CLASS_ID(UIFileList)
 }
 
 UIFileList::~UIFileList()

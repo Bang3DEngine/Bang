@@ -12,6 +12,7 @@ USING_NAMESPACE_BANG
 
 UIContentSizeFitter::UIContentSizeFitter()
 {
+    CONSTRUCT_CLASS_ID(UIContentSizeFitter)
 }
 
 UIContentSizeFitter::~UIContentSizeFitter()

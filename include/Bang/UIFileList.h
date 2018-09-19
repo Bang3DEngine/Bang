@@ -13,7 +13,7 @@ FORWARD class UIImageRenderer;
 
 class UIFileList : public Component
 {
-    COMPONENT(UIFileList)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIFileList)
 
 public:
     UIFileList();

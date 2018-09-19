@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UITextCursor : public LineRenderer
 {
-    COMPONENT(UITextCursor)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UITextCursor)
 
 public:
     UITextCursor();

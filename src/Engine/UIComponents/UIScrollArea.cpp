@@ -11,6 +11,7 @@ USING_NAMESPACE_BANG
 
 UIScrollArea::UIScrollArea()
 {
+    CONSTRUCT_CLASS_ID(UIScrollArea)
 }
 
 UIScrollArea::~UIScrollArea()

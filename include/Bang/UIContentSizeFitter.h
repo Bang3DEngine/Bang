@@ -10,7 +10,7 @@ NAMESPACE_BANG_BEGIN
 class UIContentSizeFitter : public Component,
                             public ILayoutSelfController
 {
-    COMPONENT(UIContentSizeFitter)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIContentSizeFitter)
 
 public:
     void SetHorizontalSizeType(LayoutSizeType sizeType);

@@ -9,7 +9,7 @@ NAMESPACE_BANG_BEGIN
 class UILayoutElement : public Component,
                         public ILayoutElement
 {
-    COMPONENT(UILayoutElement)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutElement)
 
 public:
     UILayoutElement();

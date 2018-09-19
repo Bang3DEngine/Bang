@@ -11,7 +11,7 @@ FORWARD class RectTransform;
 
 class UIDirLayout : public UIGroupLayout
 {
-    COMPONENT(UIDirLayout)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDirLayout)
 
 public:
     // ILayoutController

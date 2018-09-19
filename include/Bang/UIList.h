@@ -24,7 +24,7 @@ class UIList : public Component,
                public EventListener<IEventsDestroy>,
                public EventEmitter<IEventsUIList>
 {
-    COMPONENT(UIList)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIList)
 
 public:
     enum Action
@@ -96,6 +96,7 @@ protected:
 
 private:
     Array<GOItem*> p_items;
+    UIDirLayout *p_dirLayout = nullptr;
     UIFocusable *p_focusable = nullptr;
     UMap<GOItem*, UIImageRenderer*> p_itemsBackground;
 

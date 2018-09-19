@@ -10,7 +10,7 @@ FORWARD class VAO;
 
 class MeshRenderer : public Renderer
 {
-    COMPONENT(MeshRenderer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(MeshRenderer)
 
 public:
     void SetMesh(Mesh* m);

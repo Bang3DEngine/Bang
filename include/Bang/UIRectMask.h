@@ -9,7 +9,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIRectMask : public Component
 {
-    COMPONENT(UIRectMask)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIRectMask)
 
 public:
     UIRectMask();

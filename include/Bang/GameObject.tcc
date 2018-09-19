@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Bang/GameObject.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/ComponentFactory.h"
 
 NAMESPACE_BANG_BEGIN
@@ -133,7 +134,7 @@ void GameObject::GetComponents(Array<T*> *components) const
 {
     for (Component *comp : GetComponents())
     {
-        if (T *tcomp = DCAST<T*>(comp))
+        if (T *tcomp = FastDynamicCast<T*>(comp))
         {
             components->PushBack(tcomp);
         }

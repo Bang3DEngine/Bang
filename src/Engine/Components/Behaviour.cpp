@@ -11,6 +11,7 @@ USING_NAMESPACE_BANG
 
 Behaviour::Behaviour()
 {
+    CONSTRUCT_CLASS_ID(Behaviour)
     BehaviourManager::GetActive()->RegisterBehaviour(this);
 }
 

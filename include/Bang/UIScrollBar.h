@@ -14,7 +14,7 @@ FORWARD class UIImageRenderer;
 class UIScrollBar : public Component,
                     public EventListener<IEventsFocus>
 {
-    COMPONENT(UIScrollBar)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollBar)
 
 public:
 	UIScrollBar();

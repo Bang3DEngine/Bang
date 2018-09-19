@@ -21,6 +21,8 @@ USING_NAMESPACE_BANG
 
 UILabel::UILabel()
 {
+    CONSTRUCT_CLASS_ID(UILabel)
+
     ResetSelection();
     SetSelectable(false);
     SetSelectAllOnFocus(true);

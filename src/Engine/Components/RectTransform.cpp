@@ -19,6 +19,7 @@ USING_NAMESPACE_BANG
 
 RectTransform::RectTransform()
 {
+    CONSTRUCT_CLASS_ID(Transform);
 }
 
 RectTransform::~RectTransform()

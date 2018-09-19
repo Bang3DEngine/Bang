@@ -9,6 +9,7 @@ USING_NAMESPACE_BANG
 
 BehaviourContainer::BehaviourContainer()
 {
+    CONSTRUCT_CLASS_ID(BehaviourContainer)
 }
 
 BehaviourContainer::~BehaviourContainer()

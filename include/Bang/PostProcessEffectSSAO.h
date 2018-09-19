@@ -12,7 +12,7 @@ FORWARD class Framebuffer;
 
 class PostProcessEffectSSAO : public PostProcessEffect
 {
-    COMPONENT(PostProcessEffectSSAO);
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectSSAO);
 
 public:
     // Component

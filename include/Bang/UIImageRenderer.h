@@ -11,7 +11,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIImageRenderer : public UIRenderer
 {
-    COMPONENT(UIImageRenderer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIImageRenderer)
 
 public:
     enum class Mode

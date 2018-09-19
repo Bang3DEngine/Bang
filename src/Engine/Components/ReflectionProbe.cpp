@@ -18,6 +18,8 @@ USING_NAMESPACE_BANG
 
 ReflectionProbe::ReflectionProbe()
 {
+    CONSTRUCT_CLASS_ID(ReflectionProbe);
+
     p_textureCubeMapWithoutFiltering.Set(new TextureCubeMap());
     p_textureCubeMapDiffuse.Set(new TextureCubeMap());
     p_textureCubeMapSpecular.Set(new TextureCubeMap());

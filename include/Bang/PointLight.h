@@ -12,7 +12,7 @@ FORWARD class Framebuffer;
 
 class PointLight : public Light
 {
-    COMPONENT(PointLight)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(PointLight)
 
 public:
     void SetRange(float range);

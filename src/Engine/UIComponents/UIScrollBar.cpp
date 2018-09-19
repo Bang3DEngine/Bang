@@ -18,6 +18,7 @@ USING_NAMESPACE_BANG
 
 UIScrollBar::UIScrollBar()
 {
+    CONSTRUCT_CLASS_ID(UIScrollBar)
 }
 
 UIScrollBar::~UIScrollBar()

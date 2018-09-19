@@ -21,6 +21,7 @@ USING_NAMESPACE_BANG
 
 UIButton::UIButton()
 {
+    CONSTRUCT_CLASS_ID(UIButton)
 }
 
 UIButton::~UIButton()

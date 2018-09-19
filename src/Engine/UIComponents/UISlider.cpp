@@ -18,12 +18,12 @@ USING_NAMESPACE_BANG
 
 UISlider::UISlider()
 {
+    CONSTRUCT_CLASS_ID(UISlider)
 }
 
 UISlider::~UISlider()
 {
 }
-
 
 void UISlider::OnUpdate()
 {

@@ -38,7 +38,7 @@ NAMESPACE_BANG_BEGIN
 class RigidBody : public PhysicsObject,
                   public Component
 {
-    COMPONENT(RigidBody)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(RigidBody)
 
 public:
 	RigidBody();

@@ -14,7 +14,7 @@ NAMESPACE_BANG_BEGIN
 class UIFocusable : public Component,
                     public EventEmitter<IEventsFocus>
 {
-    COMPONENT(UIFocusable)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIFocusable)
 
 public:
     using EventCallback = std::function<UIEventResult(UIFocusable*,

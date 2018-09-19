@@ -8,6 +8,7 @@ USING_NAMESPACE_BANG
 
 UILayoutElement::UILayoutElement()
 {
+    CONSTRUCT_CLASS_ID(UILayoutElement)
     SetLayoutPriority(1);
 }
 

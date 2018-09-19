@@ -14,6 +14,7 @@ USING_NAMESPACE_BANG
 
 UIInputNumber::UIInputNumber()
 {
+    CONSTRUCT_CLASS_ID(UIInputNumber)
 }
 
 UIInputNumber::~UIInputNumber()

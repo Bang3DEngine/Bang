@@ -13,7 +13,7 @@ FORWARD class AudioClip;
 class AudioSource : public Component,
                     public ALAudioSource
 {
-    COMPONENT(AudioSource)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioSource)
 
 public:
     virtual ~AudioSource();

@@ -14,6 +14,8 @@ USING_NAMESPACE_BANG
 
 LineRenderer::LineRenderer()
 {
+    CONSTRUCT_CLASS_ID(LineRenderer);
+
     p_mesh = Resources::Create<Mesh>();
 
     SetCastsShadows(false);

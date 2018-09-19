@@ -12,6 +12,8 @@ USING_NAMESPACE_BANG
 
 WaterRenderer::WaterRenderer()
 {
+    CONSTRUCT_CLASS_ID(WaterRenderer);
+
     p_planeMesh = MeshFactory::GetPlane();
     SetMaterial( MaterialFactory::GetWater().Get() );
 

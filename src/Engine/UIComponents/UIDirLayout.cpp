@@ -13,6 +13,7 @@ USING_NAMESPACE_BANG
 
 UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
 {
+    CONSTRUCT_CLASS_ID(UIDirLayout)
 }
 
 UIDirLayout::UIDirLayout(Axis axis) : m_axis(axis)

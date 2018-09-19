@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class AudioListener : public Component
 {
-    COMPONENT(AudioListener)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioListener)
 
 public:
     AudioListener();

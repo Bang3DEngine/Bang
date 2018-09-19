@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIToolButton : public UIButtonBase
 {
-    COMPONENT(UIToolButton)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIToolButton)
 
 public:
 

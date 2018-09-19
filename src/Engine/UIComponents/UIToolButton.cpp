@@ -6,6 +6,7 @@ USING_NAMESPACE_BANG
 
 UIToolButton::UIToolButton()
 {
+    CONSTRUCT_CLASS_ID(UIToolButton)
 }
 
 UIToolButton::~UIToolButton()

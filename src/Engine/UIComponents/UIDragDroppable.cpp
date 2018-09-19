@@ -21,6 +21,7 @@ const float UIDragDroppable::DragInitTime = 0.3f;
 
 UIDragDroppable::UIDragDroppable()
 {
+    CONSTRUCT_CLASS_ID(UIDragDroppable)
 }
 
 UIDragDroppable::~UIDragDroppable()

@@ -12,7 +12,7 @@ NAMESPACE_BANG_BEGIN
 
 class RectTransform : public Transform
 {
-    COMPONENT(RectTransform)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(RectTransform)
 
 public:
     RectTransform();

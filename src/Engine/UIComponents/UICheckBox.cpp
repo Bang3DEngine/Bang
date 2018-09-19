@@ -18,6 +18,7 @@ USING_NAMESPACE_BANG
 
 UICheckBox::UICheckBox()
 {
+    CONSTRUCT_CLASS_ID(UICheckBox)
 }
 
 UICheckBox::~UICheckBox()

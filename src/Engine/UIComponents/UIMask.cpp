@@ -11,8 +11,14 @@
 
 USING_NAMESPACE_BANG
 
-UIMask::UIMask() {}
-UIMask::~UIMask() {}
+UIMask::UIMask()
+{
+    CONSTRUCT_CLASS_ID(UIMask)
+}
+
+UIMask::~UIMask()
+{
+}
 
 void UIMask::OnRender(RenderPass renderPass)
 {

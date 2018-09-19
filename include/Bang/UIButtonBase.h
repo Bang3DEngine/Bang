@@ -17,7 +17,7 @@ FORWARD class UILayoutElement;
 class UIButtonBase : public Component,
                      public EventListener<IEventsFocus>
 {
-    COMPONENT(UIButtonBase)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIButtonBase)
 
 public:
     void Click();

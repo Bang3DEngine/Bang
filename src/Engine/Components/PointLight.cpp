@@ -22,6 +22,8 @@ USING_NAMESPACE_BANG
 
 PointLight::PointLight() : Light()
 {
+    CONSTRUCT_CLASS_ID(PointLight)
+
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::DEPTH,
                                                        GL::ColorFormat::DEPTH16);

@@ -8,8 +8,14 @@
 
 USING_NAMESPACE_BANG
 
-UIRectMask::UIRectMask() {}
-UIRectMask::~UIRectMask() {}
+UIRectMask::UIRectMask()
+{
+    CONSTRUCT_CLASS_ID(UIRectMask)
+}
+
+UIRectMask::~UIRectMask()
+{
+}
 
 void UIRectMask::OnBeforeChildrenRender(RenderPass renderPass)
 {

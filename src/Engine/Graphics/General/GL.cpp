@@ -96,8 +96,8 @@ void GL::Init()
     // Create shared context.
     // For this, create a window, get context, and destroy window
 
-    int VersionsMajors[] = {4, 4, 4, 4, 4, 3, 3, 3};
-    int VersionsMinors[] = {6, 5, 4, 3, 2, 3, 2, 1};
+    int VersionsMajors[] = {4, 4, 3, 3, 3};
+    int VersionsMinors[] = {3, 2, 3, 2, 1};
     constexpr int NumVersionsToTry = sizeof(VersionsMajors) / sizeof(int);
     for (int i = 0; i < NumVersionsToTry; ++i)
     {

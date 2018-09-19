@@ -12,7 +12,7 @@ NAMESPACE_BANG_BEGIN
 
 class Animator : public Component
 {
-    COMPONENT(Animator);
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator);
 
 public:
     static constexpr int MaxNumBones = 128;

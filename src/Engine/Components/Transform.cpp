@@ -11,6 +11,7 @@ USING_NAMESPACE_BANG
 
 Transform::Transform()
 {
+    CONSTRUCT_CLASS_ID(Transform);
 }
 
 Transform::~Transform()

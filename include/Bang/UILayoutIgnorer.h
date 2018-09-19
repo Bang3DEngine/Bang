@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UILayoutIgnorer : public Component
 {
-    COMPONENT(UILayoutIgnorer)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutIgnorer)
 
 public:
 	UILayoutIgnorer();

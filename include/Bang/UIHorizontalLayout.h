@@ -7,7 +7,7 @@ NAMESPACE_BANG_BEGIN
 
 class UIHorizontalLayout : public UIDirLayout
 {
-    COMPONENT(UIHorizontalLayout)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIHorizontalLayout)
 
 public:
     UIHorizontalLayout();

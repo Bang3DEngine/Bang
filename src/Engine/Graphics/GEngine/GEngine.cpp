@@ -588,6 +588,7 @@ void GEngine::RenderTransparentPass(GameObject *go)
             const float rhsDistToCamSq = Vector3::Dot(rhsCamPosDiff, rhsCamPosDiff);
             return lhsDistToCamSq > rhsDistToCamSq;
         }
+        return false;
     });
 
     // Render back to front

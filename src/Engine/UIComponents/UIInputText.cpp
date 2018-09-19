@@ -433,7 +433,7 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
             switch (event.key.key)
             {
                 case Key::V:
-                    if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+                    if (!IsBlocked() && event.key.modifiers.IsOn(KeyModifier::LCTRL))
                     {
                         String clipboardText = SystemClipboard::Get();
                         clipboardText = FilterAllowedInputText(clipboardText);
@@ -445,7 +445,7 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
                 break;
 
                 case Key::X:
-                    if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
+                    if (!IsBlocked() && event.key.modifiers.IsOn(KeyModifier::LCTRL))
                     {
                         String selectedText = GetSelectedText();
                         if (selectedText.Size() > 0)
@@ -497,7 +497,7 @@ UIEventResult UIInputText::OnUIEvent(UIFocusable *focusable,
                 case Key::DELETE:
                 case Key::BACKSPACE:
                 {
-                    if (!GetText()->GetContent().IsEmpty())
+                    if (!IsBlocked() && !GetText()->GetContent().IsEmpty())
                     {
                         int offsetCursor = 0;
                         int offsetSelection = 1;

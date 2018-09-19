@@ -59,7 +59,7 @@ void Physics::UpdateFromTransforms(Scene *scene)
     if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
         const auto &allPhObjs = pxSceneContainer->m_physicsObjectGatherer->
-                                GetGatheredArray();
+                                GetGatheredObjects();
         for (PhysicsObject *phObj : allPhObjs)
         {
             if (Component *comp = DCAST<Component*>(phObj))

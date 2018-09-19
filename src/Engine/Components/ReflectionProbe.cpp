@@ -472,7 +472,8 @@ ReflectionProbe *ReflectionProbe::GetClosestReflectionProbe(Renderer *renderer)
 
     ReflectionProbe *closestReflProbe = nullptr;
     float closestReflProbeSqDist = Math::Infinity<float>();
-    Array<ReflectionProbe*> reflProbes = ge->GetCurrentReflectionProbes();
+    const Array<ReflectionProbe*> &reflProbes =
+            ge->GetReflectionProbesFor(renderer->GetGameObject()->GetScene());
     for (ReflectionProbe *reflProbe : reflProbes)
     {
         if (reflProbe->IsActive())

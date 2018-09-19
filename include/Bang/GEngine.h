@@ -11,6 +11,7 @@
 #include "Bang/StackAndValue.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/MultiObjectGatherer.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -54,8 +55,6 @@ public:
     void ApplyGammaCorrection(GBuffer *gbuffer,
                               float gammaCorrection);
 
-    Array<ReflectionProbe*> GetCurrentReflectionProbes() const;
-
     void SetReplacementMaterial(Material *material);
     void SetRenderRoutine(RenderRoutine renderRoutine);
 
@@ -78,6 +77,7 @@ public:
     RenderFactory *GetRenderFactory() const;
     Material* GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
+    const Array<ReflectionProbe*>& GetReflectionProbesFor(Scene *scene) const;
 
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
@@ -94,6 +94,9 @@ private:
     RenderFactory *m_renderFactory = nullptr;
     TextureUnitManager *m_texUnitManager = nullptr;
 
+    MultiObjectGatherer<ReflectionProbe, true> m_reflProbesCache;
+    MultiObjectGatherer<Light, true> m_lightsCache;
+
     RenderRoutine m_renderRoutine;
     StackAndValue<Camera*> p_renderingCameras;
     USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
@@ -102,8 +105,6 @@ private:
     RH<Material> m_replacementMaterial;
     RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
     Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
-
-    Array<ReflectionProbe*> m_currentReflectionProbes;
 
     // Forward rendering arrays
     bool m_currentlyForwardRendering = false;

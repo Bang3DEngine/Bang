@@ -28,7 +28,7 @@ public:
     void SetRoot(GameObject *root);
 
     GameObject* GetRoot() const;
-    const Array<ObjectType*>& GetGatheredArray() const;
+    const Array<ObjectType*>& GetGatheredObjects() const;
 
 private:
     GameObject *p_root = nullptr;

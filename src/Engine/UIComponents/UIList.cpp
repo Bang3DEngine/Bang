@@ -348,25 +348,25 @@ void UIList::SetSelection(int index)
             GetItemBg(prevSelectedItem)->SetTint( GetIdleColor() );
             CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT);
         }
-    }
 
-    if (GetSelectedIndex() != index && index >= 0 && index < GetNumItems())
-    {
-        m_selectionIndex = index;
-        GOItem *selectedItem = GetSelectedItem();
-        if (selectedItem)
+        if (index >= 0 && index < GetNumItems())
         {
-            ScrollTo(selectedItem);
-            GetItemBg(selectedItem)->SetTint( GetSelectedColor() );
-            CallSelectionCallback(selectedItem, Action::SELECTION_IN);
+            m_selectionIndex = index;
+            GOItem *selectedItem = GetSelectedItem();
+            if (selectedItem)
+            {
+                ScrollTo(selectedItem);
+                GetItemBg(selectedItem)->SetTint( GetSelectedColor() );
+                CallSelectionCallback(selectedItem, Action::SELECTION_IN);
+            }
         }
-    }
-    else if (index == -1)
-    {
-        m_selectionIndex = -1;
-    }
+        else if (index == -1)
+        {
+            m_selectionIndex = -1;
+        }
 
-    OnMouseMove(true, false);
+        OnMouseMove(true, false);
+    }
 }
 
 UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)

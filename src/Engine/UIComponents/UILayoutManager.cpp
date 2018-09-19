@@ -20,6 +20,48 @@ UILayoutManager::UILayoutManager()
 {
 }
 
+template <class T>
+const Array<T*> &GetGatheredArrayOf(
+                        UILayoutManager *layoutMgr,
+                        GameObject *gameObject,
+                        UMap<GameObject*, ObjectGatherer<T, false>*> &gatherMap)
+{
+    if (gameObject)
+    {
+        auto it = gatherMap.Find(gameObject);
+        if (it == gatherMap.End())
+        {
+            ObjectGatherer<T, false> *objGatherer = new ObjectGatherer<T, false>();
+            objGatherer->SetRoot(gameObject);
+            gatherMap.Add(gameObject, objGatherer);
+            gameObject->EventEmitter<IEventsDestroy>::RegisterListener(layoutMgr);
+            return gatherMap.Get(gameObject)->GetGatheredObjects();
+        }
+        else
+        {
+            return it->second->GetGatheredObjects();
+        }
+    }
+    return Array<T*>::Empty();
+}
+
+const Array<ILayoutElement*> &UILayoutManager::
+GetLayoutElementsIn(GameObject *gameObject)
+{
+    return GetGatheredArrayOf<ILayoutElement>(this,
+                                              gameObject,
+                                              m_iLayoutElementsPerGameObject);
+}
+
+const Array<ILayoutController*> &UILayoutManager::
+GetLayoutControllersIn(GameObject *gameObject)
+{
+    return GetGatheredArrayOf<ILayoutController>(
+                                      this,
+                                      gameObject,
+                                      m_iLayoutControllersPerGameObject);
+}
+
 void UILayoutManager::PropagateInvalidation(ILayoutElement *element)
 {
     Component *comp = DCAST<Component*>(element);
@@ -236,48 +278,6 @@ void UILayoutManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     m_iLayoutElementsPerGameObject.Remove( DCAST<GameObject*>(object) );
     m_iLayoutControllersPerGameObject.Remove( DCAST<GameObject*>(object) );
-}
-
-template <class T>
-const Array<T*> &GetGatheredArrayOf(
-                        UILayoutManager *layoutMgr,
-                        GameObject *gameObject,
-                        UMap<GameObject*, ObjectGatherer<T, false>*> &gatherMap)
-{
-    if (gameObject)
-    {
-        auto it = gatherMap.Find(gameObject);
-        if (it == gatherMap.End())
-        {
-            ObjectGatherer<T, false> *objGatherer = new ObjectGatherer<T, false>();
-            objGatherer->SetRoot(gameObject);
-            gatherMap.Add(gameObject, objGatherer);
-            gameObject->EventEmitter<IEventsDestroy>::RegisterListener(layoutMgr);
-            return gatherMap.Get(gameObject)->GetGatheredArray();
-        }
-        else
-        {
-            return it->second->GetGatheredArray();
-        }
-    }
-    return Array<T*>::Empty();
-}
-
-const Array<ILayoutElement*> &UILayoutManager::
-GetLayoutElementsIn(GameObject *gameObject)
-{
-    return GetGatheredArrayOf<ILayoutElement>(this,
-                                              gameObject,
-                                              m_iLayoutElementsPerGameObject);
-}
-
-const Array<ILayoutController*> &UILayoutManager::
-GetLayoutControllersIn(GameObject *gameObject)
-{
-    return GetGatheredArrayOf<ILayoutController>(
-                                      this,
-                                      gameObject,
-                                      m_iLayoutControllersPerGameObject);
 }
 
 UILayoutManager *UILayoutManager::GetActive(GameObject *go)

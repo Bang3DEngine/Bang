@@ -11,22 +11,22 @@
 
 NAMESPACE_BANG_BEGIN
 
-using TypeId = String;
+using TypeId = std::size_t;
 template <class T>
-static TypeId GetTypeId() { return typeid(T).name(); }
+static TypeId GetTypeId() { return typeid(T).hash_code(); }
 
 template <class T>
 static TypeId GetTypeId(const T& x,
                         typename std::enable_if<!std::is_pointer<T>::value, T>::type = 0)
 {
-    return typeid(x).name();
+    return typeid(x).hash_code();
 }
 
 template <class T>
 static TypeId GetTypeId(const T& x,
                         typename std::enable_if<std::is_pointer<T>::value, T>::type = 0)
 {
-    return x ? typeid(*x).name() : "";
+    return x ? typeid(*x).hash_code() : -1;
 }
 
 template <class Value>

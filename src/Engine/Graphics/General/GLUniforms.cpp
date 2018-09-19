@@ -79,6 +79,15 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
 {
     ASSERT (GL::IsBound(sp->GetGLBindTarget(), sp->GetGLId()));
 
+    UpdatePVMMatrix();
+
+    GLUniforms *glu = GLUniforms::GetActive();
+    if (glu->m_cameraUniformBufferOutdated)
+    {
+        glu->m_cameraUniformBuffer.Set( glu->m_cameraUniforms );
+        glu->m_cameraUniformBufferOutdated = false;
+    }
+
     ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
     if (neededUniforms.IsOn(NeededUniformFlag::MODEL))
     {
@@ -123,9 +132,7 @@ void GLUniforms::SetCameraWorldPosition(const Vector3 &camWorldPosition)
     if (GLUniforms *glu = GLUniforms::GetActive())
     {
         glu->m_cameraUniforms.worldPos = Vector4(camWorldPosition, 0);
-        glu->m_cameraUniformBuffer.SetSubData(Vector4(camWorldPosition, 0),
-                                              5 * sizeof(Matrix4) +
-                                              0 * sizeof(Vector4));
+        glu->m_cameraUniformBufferOutdated = true;
     }
 }
 
@@ -134,9 +141,7 @@ void GLUniforms::SetCameraClearColor(const Color &camClearColor)
     if (GLUniforms *glu = GLUniforms::GetActive())
     {
         glu->m_cameraUniforms.clearColor = camClearColor.ToVector4();
-        glu->m_cameraUniformBuffer.SetSubData(camClearColor.ToVector4(),
-                                              5 * sizeof(Matrix4) +
-                                              1 * sizeof(Vector4));
+        glu->m_cameraUniformBufferOutdated = true;
     }
 
 }
@@ -148,12 +153,7 @@ void GLUniforms::OnViewportChanged(const AARecti &newViewport)
         Vector2 vpSize   = Vector2(newViewport.GetSize());
         glu->m_cameraUniforms.viewportMinPos = vpMinPos;
         glu->m_cameraUniforms.viewportSize   = vpSize;
-        glu->m_cameraUniformBuffer.SetSubData(vpMinPos, 5 * sizeof(Matrix4) +
-                                                        2 * sizeof(Vector4));
-        glu->m_cameraUniformBuffer.SetSubData(vpSize, 5 * sizeof(Matrix4) +
-                                                      2 * sizeof(Vector4) +
-                                                      1 * sizeof(Vector2));
-        GLUniforms::UpdatePVMMatrix();
+        glu->m_cameraUniformBufferOutdated = true;
     }
 }
 
@@ -162,10 +162,7 @@ void GLUniforms::SetCameraClearMode(const CameraClearMode &camClearMode)
     if (GLUniforms *glu = GLUniforms::GetActive())
     {
         glu->m_cameraUniforms.clearMode = SCAST<int>(camClearMode);
-        glu->m_cameraUniformBuffer.SetSubData(camClearMode,
-                                              5 * sizeof(Matrix4) +
-                                              2 * sizeof(Vector4) +
-                                              2 * sizeof(Vector2));
+        glu->m_cameraUniformBufferOutdated = true;
     }
 }
 
@@ -176,7 +173,7 @@ void GLUniforms::SetModelMatrix(const Matrix4 &model)
     {
         matrices->model = model;
         matrices->modelInv = model.Inversed();
-        GLUniforms::UpdatePVMMatrix();
+        matrices->normal = matrices->model.Inversed().Transposed();
     }
 
 }
@@ -189,9 +186,9 @@ void GLUniforms::SetViewMatrix(const Matrix4 &view)
             Matrix4 viewInv = view.Inversed();
             glu->m_cameraUniforms.view    = view;
             glu->m_cameraUniforms.viewInv = viewInv;
-            glu->m_cameraUniformBuffer.SetSubData(view,    0 * sizeof(Matrix4));
-            glu->m_cameraUniformBuffer.SetSubData(viewInv, 1 * sizeof(Matrix4));
-            GLUniforms::UpdatePVMMatrix();
+            glu->m_cameraUniforms.projView = glu->m_cameraUniforms.proj *
+                                             glu->m_cameraUniforms.view;
+            glu->m_cameraUniformBufferOutdated = true;
         }
     }
 }
@@ -204,9 +201,9 @@ void GLUniforms::SetProjectionMatrix(const Matrix4 &projection)
             Matrix4 projectionInv = projection.Inversed();
             glu->m_cameraUniforms.proj    = projection;
             glu->m_cameraUniforms.projInv = projectionInv;
-            glu->m_cameraUniformBuffer.SetSubData(projection,    2 * sizeof(Matrix4));
-            glu->m_cameraUniformBuffer.SetSubData(projectionInv, 3 * sizeof(Matrix4));
-            GLUniforms::UpdatePVMMatrix();
+            glu->m_cameraUniforms.projView = glu->m_cameraUniforms.proj *
+                                             glu->m_cameraUniforms.view;
+            glu->m_cameraUniformBufferOutdated = true;
         }
     }
 }
@@ -216,34 +213,23 @@ void GLUniforms::UpdatePVMMatrix()
     ModelMatrixUniforms *matrices = GLUniforms::GetModelMatricesUniforms();
     GLUniforms *glu = GLUniforms::GetActive();
 
-    const Matrix4 &model = matrices->model;
-    Matrix4 viewModel = (glu->m_cameraUniforms.view * matrices->model);
-
-    Matrix4 normalMatrix = model.Inversed().Transposed();
-    matrices->normal = normalMatrix;
-
-    Matrix4 pvmMatrix;
     Matrix4 projViewMatrix;
     switch (glu->GetViewProjMode())
     {
         case GL::ViewProjMode::WORLD:
-            pvmMatrix = glu->m_cameraUniforms.proj * viewModel;
-            projViewMatrix = glu->m_cameraUniforms.proj *
-                             glu->m_cameraUniforms.view;
+            matrices->pvm = glu->m_cameraUniforms.proj *
+                            glu->m_cameraUniforms.view *
+                            matrices->model;
         break;
 
         case GL::ViewProjMode::CANVAS:
         {
             Matrix4 canvasProj = GLUniforms::GetCanvasProjectionMatrix();
-            pvmMatrix = canvasProj * model;
-            projViewMatrix = canvasProj * glu->m_cameraUniforms.view;
+            glu->m_cameraUniforms.projView = canvasProj * glu->m_cameraUniforms.view;
+            matrices->pvm = canvasProj * matrices->model;
         }
         break;
     }
-
-    glu->m_cameraUniforms.projView = projViewMatrix;
-    glu->m_cameraUniformBuffer.SetSubData(projViewMatrix, 4 * sizeof(Matrix4));
-    matrices->pvm = pvmMatrix;
     matrices->pvmInv = matrices->pvm.Inversed();
 }
 
@@ -252,7 +238,7 @@ void GLUniforms::SetViewProjMode(GL::ViewProjMode viewProjMode)
     if (viewProjMode != GetViewProjMode())
     {
         m_viewProjMode = viewProjMode;
-        GLUniforms::UpdatePVMMatrix();
+        m_cameraUniformBufferOutdated = true;
     }
 }
 

@@ -48,7 +48,7 @@ GameObject* ObjectGatherer<ObjectType, RECURSIVE>::GetRoot() const
 
 template <class ObjectType, bool RECURSIVE>
 const Array<ObjectType*>&
-ObjectGatherer<ObjectType, RECURSIVE>::GetGatheredArray() const
+ObjectGatherer<ObjectType, RECURSIVE>::GetGatheredObjects() const
 {
     return m_gatheredObjects;
 }

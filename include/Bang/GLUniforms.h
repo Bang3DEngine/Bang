@@ -98,7 +98,6 @@ public:
               size(size_)
         {
         }
-
     };
 
     template <class T>
@@ -132,7 +131,6 @@ public:
     static void SetModelMatrix(const Matrix4 &model);
     static void SetViewMatrix(const Matrix4 &view);
     static void SetProjectionMatrix(const Matrix4 &projection);
-    static void UpdatePVMMatrix();
 
     void SetViewProjMode(GL::ViewProjMode viewProjMode);
     GL::ViewProjMode GetViewProjMode() const;
@@ -145,7 +143,9 @@ public:
     static GLUniforms *GetActive();
 
 private:
+    bool m_cameraUniformBufferOutdated = true;
     UniformBuffer<CameraUniforms> m_cameraUniformBuffer;
+    static void UpdatePVMMatrix();
 
     CameraUniforms m_cameraUniforms;
     ModelMatrixUniforms m_matrixUniforms;

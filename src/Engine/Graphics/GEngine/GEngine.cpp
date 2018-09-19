@@ -117,9 +117,6 @@ void GEngine::Render(Scene *scene)
 
 void GEngine::Render(Scene *scene, Camera *camera)
 {
-    m_currentReflectionProbes =
-                scene->GetComponentsInDescendantsAndThis<ReflectionProbe>();
-
     if (scene)
     {
         PushActiveRenderingCamera();
@@ -143,10 +140,13 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     GL::SetStencilFunc(GL::Function::EQUAL);
     GL::SetStencilValue(1);
 
-    Array<Light*> lights = lightsContainer->GetComponentsInChildrenAndThis<Light>();
+    const Array<Light*> &lights = m_lightsCache.GetGatheredArray(lightsContainer);
     for (Light *light : lights)
     {
-        if (!light || !light->IsEnabled(true)) { continue; }
+        if (!light || !light->IsEnabled(true))
+        {
+            continue;
+        }
         light->ApplyLight(camera, maskRectNDC);
     }
 
@@ -163,33 +163,31 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
     m_currentForwardRenderingLightRanges.Clear();
 
     int i = 0;
-    Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
+    const Array<Light*> &lights = m_lightsCache.GetGatheredArray(go);
     for (Light *light : lights)
     {
-        if (!light->IsActive())
+        if (light->IsActive())
         {
-            continue;
-        }
+            uint lightType = 0;
+            Transform *lightTR = light->GetGameObject()->GetTransform();
+            float range = 0.0f;
+            if (PointLight *pl = DCAST<PointLight*>(light))
+            {
+                range = pl->GetRange();
+                lightType = 1;
+            }
 
-        uint lightType = 0;
-        Transform *lightTR = light->GetGameObject()->GetTransform();
-        float range = 0.0f;
-        if (PointLight *pl = DCAST<PointLight*>(light))
-        {
-            range = pl->GetRange();
-            lightType = 1;
-        }
+            m_currentForwardRenderingLightTypes.PushBack(lightType);
+            m_currentForwardRenderingLightColors.PushBack(light->GetColor());
+            m_currentForwardRenderingLightPositions.PushBack(lightTR->GetPosition());
+            m_currentForwardRenderingLightForwardDirs.PushBack(lightTR->GetForward());
+            m_currentForwardRenderingLightIntensities.PushBack(light->GetIntensity());
+            m_currentForwardRenderingLightRanges.PushBack(range);
 
-        m_currentForwardRenderingLightTypes.PushBack(lightType);
-        m_currentForwardRenderingLightColors.PushBack(light->GetColor());
-        m_currentForwardRenderingLightPositions.PushBack(lightTR->GetPosition());
-        m_currentForwardRenderingLightForwardDirs.PushBack(lightTR->GetForward());
-        m_currentForwardRenderingLightIntensities.PushBack(light->GetIntensity());
-        m_currentForwardRenderingLightRanges.PushBack(range);
-
-        if (++i == 128)
-        {
-            break;
+            if (++i == 128)
+            {
+                break;
+            }
         }
     }
 }
@@ -239,6 +237,11 @@ Camera *GEngine::GetActiveRenderingCamera()
 {
     GEngine *ge = GEngine::GetInstance();
     return ge ? ge->p_renderingCameras.currentValue : nullptr;
+}
+
+const Array<ReflectionProbe*>& GEngine::GetReflectionProbesFor(Scene *scene) const
+{
+    return m_reflProbesCache.GetGatheredArray(scene);
 }
 
 GBuffer *GEngine::GetActiveGBuffer()
@@ -327,7 +330,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         }
     };
 
-    auto ClearDepthStencilIfNeeded = [this](RenderFlags renderFlags)
+    auto ClearDepthStencilIfNeeded = [](RenderFlags renderFlags)
     {
         if (renderFlags.IsOn(RenderFlag::CLEAR_DEPTH_STENCIL))
         {
@@ -510,11 +513,6 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
-Array<ReflectionProbe *> GEngine::GetCurrentReflectionProbes() const
-{
-    return m_currentReflectionProbes;
-}
-
 void GEngine::RenderTexture(Texture2D *texture)
 {
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
@@ -617,7 +615,7 @@ void GEngine::RenderShadowMaps(GameObject *go)
 {
     if (go->IsActive())
     {
-        Array<Light*> lights = go->GetComponentsInDescendantsAndThis<Light>();
+        const Array<Light*> &lights = m_lightsCache.GetGatheredArray(go);
         for (Light *light : lights)
         {
             if (light->IsEnabled(true))
@@ -632,8 +630,8 @@ void GEngine::RenderReflectionProbes(GameObject *go)
 {
     if (go->IsActive())
     {
-        Array<ReflectionProbe*> reflProbes =
-                     go->GetComponentsInDescendantsAndThis<ReflectionProbe>();
+        const Array<ReflectionProbe*> &reflProbes =
+              m_reflProbesCache.GetGatheredArray(go);
         for (ReflectionProbe *reflProbe : reflProbes)
         {
             if (reflProbe->IsEnabled(true))

@@ -210,7 +210,9 @@ Path MetaFilesManager::GetFilepath(const GUID &guid)
                 {
                     String name = resRH.Get()->GetEmbeddedResourceName(
                                                 guid.GetEmbeddedResourceGUID() );
-                    return parentPath.Append(name);
+                    Path path = parentPath.Append(name);
+                    mfm->m_GUIDToFilepath.Add(guid, path);
+                    return path;
                 }
             }
         }

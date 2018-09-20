@@ -3,7 +3,6 @@
 
 #include "Bang/Map.h"
 #include "Bang/List.h"
-#include "Bang/IToString.h"
 #include "Bang/MetaAttribute.h"
 #include "Bang/StreamOperators.h"
 
@@ -15,7 +14,7 @@ FORWARD namespace YAML
 
 NAMESPACE_BANG_BEGIN
 
-class MetaNode : public IToString
+class MetaNode
 {
 public:
     MetaNode(const String &nodeName = "NoName");
@@ -82,7 +81,7 @@ public:
 
     const MetaNode *GetChild(const String &name) const;
     void SetName(const String name);
-    String ToString() const override;
+    String ToString() const;
     void ToString(YAML::Emitter &out) const;
 
     const String& GetName() const;

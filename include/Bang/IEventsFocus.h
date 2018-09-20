@@ -16,6 +16,12 @@ enum class UIEventResult
     INTERCEPT
 };
 
+enum class FocusType
+{
+    MOUSE,
+    AUTO_TAB
+};
+
 struct UIEvent
 {
     enum class Type
@@ -50,6 +56,12 @@ struct UIEvent
         KeyModifiers modifiers;
     }
     key;
+
+    struct
+    {
+        FocusType type = FocusType::MOUSE;
+    }
+    focus;
 
     struct
     {

@@ -194,7 +194,7 @@ Path MetaFilesManager::GetFilepath(const GUID &guid)
     MetaFilesManager *mfm = MetaFilesManager::GetInstance();
     if (mfm->m_GUIDToFilepath.ContainsKey(guid))
     {
-        Path path = mfm->m_GUIDToFilepath.Get(guid);
+        const Path &path = mfm->m_GUIDToFilepath.Get(guid);
         return path;
     }
     else

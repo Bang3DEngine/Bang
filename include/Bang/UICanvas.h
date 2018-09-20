@@ -33,7 +33,8 @@ public:
     void InvalidateCanvas();
 
     void ClearFocus();
-    void SetFocus(UIFocusable *focusable);
+    void SetFocus(UIFocusable *focusable,
+                  FocusType focusType = FocusType::MOUSE);
 
     UIFocusable* GetFocus();
     UIFocusable* GetFocusableUnderMouseTopMost() const;

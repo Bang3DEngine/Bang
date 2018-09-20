@@ -215,7 +215,7 @@ void UICanvas::OnUpdate()
 
                 // if (inputEvent.mouseButton == MouseButton::LEFT)
                 {
-                    SetFocus( GetFocusableUnderMouseTopMost() );
+                    SetFocus( GetFocusableUnderMouseTopMost(), FocusType::MOUSE );
                     if (GetFocusableUnderMouseTopMost())
                     {
                         RegisterForEvents( GetFocusableUnderMouseTopMost() );
@@ -308,7 +308,8 @@ void UICanvas::OnUpdate()
                                     break;
                                 }
                             }
-                            SetFocus( focusables.At(newFocusIndex) );
+                            SetFocus( focusables.At(newFocusIndex),
+                                      FocusType::AUTO_TAB);
                         }
                     }
                     break;
@@ -424,7 +425,7 @@ void UICanvas::InvalidateCanvas()
     }
 }
 
-void UICanvas::SetFocus(UIFocusable *newFocusable_)
+void UICanvas::SetFocus(UIFocusable *newFocusable_, FocusType focusType)
 {
     UIFocusable *newFocusable = newFocusable_;
     if (newFocusable && newFocusable->IsWaitingToBeDestroyed())
@@ -453,6 +454,7 @@ void UICanvas::SetFocus(UIFocusable *newFocusable_)
 
             UIEvent focusTakenEvent;
             focusTakenEvent.type = UIEvent::Type::FOCUS_TAKEN;
+            focusTakenEvent.focus.type = focusType;
             GetFocus()->ProcessEvent(focusTakenEvent);
 
             RegisterForEvents(GetFocus());

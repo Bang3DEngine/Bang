@@ -392,8 +392,6 @@ UILabel *UILabel::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
 
-    GameObjectFactory::CreateUIRendererCacherInto(go);
-
     UILabel *label = go->AddComponent<UILabel>();
 
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();

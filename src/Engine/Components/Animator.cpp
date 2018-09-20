@@ -70,16 +70,16 @@ void Animator::AddAnimation(Animation *animation, uint index_)
     }
 }
 
-void Animator::RemoveAnimation(Animation *animation)
+void Animator::RemoveAnimationByIndex(Animation *animation)
 {
     uint index = SCAST<uint>(GetAnimations().IndexOf(RH<Animation>(animation)));
     if (index != -1u)
     {
-        RemoveAnimation(index);
+        RemoveAnimationByIndex(index);
     }
 }
 
-void Animator::RemoveAnimation(uint animationIndex)
+void Animator::RemoveAnimationByIndex(uint animationIndex)
 {
     ASSERT(animationIndex < GetAnimations().Size());
     if (GetCurrentAnimationIndex() == animationIndex)
@@ -195,13 +195,43 @@ void Animator::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    Array<GUID> animationGUIDs = metaNode.GetArray<GUID>("Animations");
-    for (const GUID &animationGUID : animationGUIDs)
+
+    Array<GUID> newAnimationGUIDs = metaNode.GetArray<GUID>("Animations");
+    bool someAnimationDiffers = (GetAnimations().Size() != newAnimationGUIDs.Size());
+    if (!someAnimationDiffers)
     {
-        RH<Animation> animationRH = Resources::Load<Animation>(animationGUID);
-        AddAnimation(animationRH.Get());
+        for (int i = 0; i < GetAnimations().Size(); ++i)
+        {
+            const GUID &newAnimationGUID = newAnimationGUIDs[i];
+            GUID currentAnimationGUID = GUID::Empty();
+            if (Animation *currentAnimation = GetAnimations()[i].Get())
+            {
+                currentAnimationGUID = currentAnimation->GetGUID();
+            }
+
+            someAnimationDiffers = (newAnimationGUID != currentAnimationGUID);
+            if (someAnimationDiffers)
+            {
+                break;
+            }
+        }
     }
 
+    if (someAnimationDiffers)
+    {
+        // Clear animations
+        while (!GetAnimations().IsEmpty())
+        {
+            RemoveAnimationByIndex(0u);
+        }
+
+        // Add all new animations
+        for (const GUID &newAnimationGUID : newAnimationGUIDs)
+        {
+            RH<Animation> newAnimationRH = Resources::Load<Animation>(newAnimationGUID);
+            AddAnimation(newAnimationRH.Get());
+        }
+    }
 
     if (metaNode.Contains("PlayOnStart"))
     {

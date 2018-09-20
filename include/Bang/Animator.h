@@ -26,8 +26,8 @@ public:
     void OnRender(RenderPass rp) override;
 
     void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
-    void RemoveAnimation(Animation *animation);
-    void RemoveAnimation(uint animationIndex);
+    void RemoveAnimationByIndex(Animation *animation);
+    void RemoveAnimationByIndex(uint animationIndex);
     void SetAnimation(uint animationIndex, Animation *animation);
     void ChangeCurrentAnimation(uint animationIndex);
     void ClearCurrentAnimation();

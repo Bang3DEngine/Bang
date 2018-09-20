@@ -170,6 +170,10 @@ Color Color::ToRGB() const
     // In:  HSV([0,1], [0,1], [0,1], [0,1])
     // Out: RGB([0,1], [0,1], [0,1], [0,1])
 
+    const float &h = r;
+    const float &s = g;
+    const float &v = b;
+
     int   i = SCAST<int>( Math::Floor(h * 6) );
     float f = h * 6 - i;
     float p = v * (1 - s);

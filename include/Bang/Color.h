@@ -8,12 +8,7 @@ NAMESPACE_BANG_BEGIN
 class Color
 {
 public:
-    union
-    {
-        struct { float r, g, b; };
-        struct { float h, s, v; };
-    };
-    float a;
+    float r, g, b, a;
 
     Color();
     explicit Color(float m);

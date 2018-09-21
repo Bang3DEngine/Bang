@@ -174,14 +174,40 @@ bool Renderer::GetDepthMask() const
 {
     return m_depthMask;
 }
-Material* Renderer::GetSharedMaterial() const { return p_sharedMaterial.Get(); }
+Material* Renderer::GetSharedMaterial() const
+{
+    return p_sharedMaterial.Get();
+}
 
-void Renderer::OnResourceChanged(Resource*) { PropagateRendererChanged(); }
-AABox Renderer::GetAABBox() const { return AABox::Empty; }
-bool Renderer::GetCastsShadows() const { return m_castsShadows; }
-bool Renderer::GetReceivesShadows() const { return m_receivesShadows; }
-GL::ViewProjMode Renderer::GetViewProjMode() const { return m_viewProjMode; }
-GL::Primitive Renderer::GetRenderPrimitive() const { return m_renderPrimitive; }
+void Renderer::OnResourceChanged(Resource*)
+{
+    PropagateRendererChanged();
+}
+
+AABox Renderer::GetAABBox() const
+{
+    return AABox::Empty;
+}
+
+bool Renderer::GetCastsShadows() const
+{
+    return m_castsShadows;
+}
+
+bool Renderer::GetReceivesShadows() const
+{
+    return m_receivesShadows;
+}
+
+GL::ViewProjMode Renderer::GetViewProjMode() const
+{
+    return m_viewProjMode;
+}
+
+GL::Primitive Renderer::GetRenderPrimitive() const
+{
+    return m_renderPrimitive;
+}
 
 bool Renderer::GetUseReflectionProbes() const
 {

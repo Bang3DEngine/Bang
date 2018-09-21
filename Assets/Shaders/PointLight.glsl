@@ -23,9 +23,16 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
 
         // If facing away, complete shadow directly
         vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
-        if (dot(pixelNormalWorld, pixelDirWorld) >= 0) { return 0.0f; }
+        if (dot(pixelNormalWorld, pixelDirWorld) >= 0)
+        {
+            return 0.0f;
+        }
 
-        if (pixelDistSq > B_LightRange*B_LightRange) { return 0.0f; }
+        if (pixelDistSq > B_LightRange*B_LightRange)
+        {
+            return 0.0f;
+        }
+
         float pixelDistance = sqrt(pixelDistSq);
         float pixelDistanceNorm = pixelDistance / B_PointLightZFar;
 
@@ -33,7 +40,10 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
         if (B_LightShadowType == SHADOW_HARD)
         {
             float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
-            if (shadowMapDistance == 1.0f) { return 1.0f; }
+            if (shadowMapDistance == 1.0f)
+            {
+                return 1.0f;
+            }
             float depthDiff = (biasedPixelDistance - shadowMapDistance);
             return (depthDiff > 0.0) ? 0.0 : 1.0;
         }

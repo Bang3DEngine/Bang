@@ -31,6 +31,7 @@ PointLight::PointLight() : Light()
     GL::Push(GL::BindTarget::TEXTURE_2D);
     GetShadowMapTexture()->Bind();
     GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
+    GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
     GL::TexParameteri( GetShadowMapTexture()->GetTextureTarget(),
                        GL::TexParameter::TEXTURE_COMPARE_MODE,
                        GL_COMPARE_REF_TO_TEXTURE );

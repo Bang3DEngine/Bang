@@ -24,12 +24,18 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
         float ShadowDist = B_ShadowDistance * 2;
 
         // If facing away, complete shadow directly
-        if (dot(pixelNormalWorld, -lightForwardWorld) < 0) { return 0.0f; }
+        if (dot(pixelNormalWorld, -lightForwardWorld) < 0)
+        {
+            return 0.0f;
+        }
 
         // If further than shadow distance, 1.0f lightness directly (no shadow)
         vec3 camPosWorld = B_GetCameraPositionWorld();
         float distPixelToCamPosWorld = distance(pixelPosWorld, camPosWorld);
-        if (distPixelToCamPosWorld > ShadowDist) { return 1.0f; }
+        if (distPixelToCamPosWorld > ShadowDist)
+        {
+            return 1.0f;
+        }
 
         // Get uvs in shadow map, and sample the shadow map depth
         vec2 shadowMapUv = (B_WorldToShadowMapMatrix * vec4(pixelPosWorld,1)).xy;
@@ -51,7 +57,10 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
         if (B_LightShadowType == SHADOW_HARD)
         {
             float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
-            if (shadowMapDepth == 1.0f) { return 1.0f; }
+            if (shadowMapDepth == 1.0f)
+            {
+                return 1.0f;
+            }
             float depthAlbedo = (shadowMapDepth - biasedWorldDepth);
             lightness = (depthAlbedo > 0.0) ? 1.0 : 0.0;
         }

@@ -15,6 +15,7 @@ public:
     static void CreateMissingMetaFiles(const Path &directory);
     static void LoadMetaFilepathGUIDs(const Path &directory);
 
+    static void OnPathAdded(const Path &filepath);
     static std::pair<Path, GUID> CreateMetaFileIfMissing(const Path &filepath);
     static bool HasMetaFile(const Path &filepath);
     static bool IsMetaFile(const Path &filepath);

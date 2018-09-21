@@ -66,6 +66,15 @@ void MetaFilesManager::LoadMetaFilepathGUIDs(const Path &directory)
     }
 }
 
+void MetaFilesManager::OnPathAdded(const Path &filepath)
+{
+    if (!MetaFilesManager::IsMetaFile(filepath))
+    {
+        std::pair<Path, GUID> pathToGUID = CreateMetaFileIfMissing(filepath);
+        RegisterMetaFilepath( MetaFilesManager::GetMetaFilepath(filepath) );
+    }
+}
+
 std::pair<Path, GUID> MetaFilesManager::CreateMetaFileIfMissing(const Path &filepath)
 {
     Path metaFilepath = GetMetaFilepath(filepath);

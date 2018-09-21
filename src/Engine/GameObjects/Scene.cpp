@@ -105,6 +105,28 @@ void Scene::InvalidateCanvas()
     }
 }
 
+void Scene::CloneInto(ICloneable *clone) const
+{
+    GameObject::CloneInto(clone);
+
+    Scene *cloneScene = SCAST<Scene*>(clone);
+
+    // Find cloned camera by GUID.
+    if (GetCamera())
+    {
+        Array<Camera*> cams = GetComponentsInDescendantsAndThis<Camera>();
+        Array<Camera*> cloneCams = cloneScene->GetComponentsInDescendantsAndThis<Camera>();
+        ASSERT(cams.Size() == cloneCams.Size());
+
+        uint camIdx = cams.IndexOf(GetCamera());
+        ASSERT(camIdx != -1u);
+
+        Camera *cloneCam = cloneCams[camIdx];
+        cloneScene->SetCamera( cloneCam);
+    }
+
+}
+
 void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == GetCamera())

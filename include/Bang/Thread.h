@@ -2,6 +2,7 @@
 #define THREAD_H
 
 #include <thread>
+#include <functional>
 
 #include "Bang/String.h"
 

@@ -7,19 +7,29 @@
 NAMESPACE_BANG_BEGIN
 
 template<class T>
-Array<T>::Array() {}
+Array<T>::Array()
+{
+}
 
 template<class T>
-Array<T>::Array(const std::vector<T> &v) : m_vector(v) {}
+Array<T>::Array(const std::vector<T> &v) : m_vector(v)
+{
+}
 
 template<class T>
-Array<T>::Array(int size) : m_vector(size) {}
+Array<T>::Array(int size) : m_vector(size)
+{
+}
 
 template<class T>
-Array<T>::Array(int size, const T &initValue) : m_vector(size, initValue) {}
+Array<T>::Array(int size, const T &initValue) : m_vector(size, initValue)
+{
+}
 
 template<class T>
-Array<T>::Array(std::initializer_list<T> l) : m_vector(l) {}
+Array<T>::Array(std::initializer_list<T> l) : m_vector(l)
+{
+}
 
 template<class T>
 void Array<T>::Insert(const T &x, int index)
@@ -37,12 +47,16 @@ void Array<T>::Insert(const T &x, int index)
 template<class T>
 template <class OtherIterator>
 Array<T>::Array(OtherIterator begin, OtherIterator end)
-    : m_vector(begin, end) {}
+    : m_vector(begin, end)
+{
+}
 
 template<class T>
 template < template<class> class Container>
 Array<T>::Array(const Container<T> &container)
-    : Array(container.begin(), container.end()) {}
+    : Array(container.begin(), container.end())
+{
+}
 
 
 template<class T>
@@ -68,9 +82,16 @@ void Array<T>::PushBack(const Container<OtherT>& container)
 }
 
 template<class T>
-T *Array<T>::Data() { return m_vector.data(); }
+T *Array<T>::Data()
+{
+    return m_vector.data();
+}
+
 template<class T>
-const T *Array<T>::Data() const { return m_vector.data(); }
+const T *Array<T>::Data() const
+{
+    return m_vector.data();
+}
 
 template<class T>
 typename Array<T>::Const_Iterator Array<T>::Find(const T &x) const
@@ -106,16 +127,28 @@ bool Array<T>::Contains(const T &x) const
 }
 
 template<class T>
-const T &Array<T>::Front() const { return m_vector.front(); }
+const T &Array<T>::Front() const
+{
+    return m_vector.front();
+}
 
 template<class T>
-const T &Array<T>::Back() const  { return m_vector.back(); }
+const T &Array<T>::Back() const
+{
+    return m_vector.back();
+}
 
 template<class T>
-T &Array<T>::Front() { return m_vector.front(); }
+T &Array<T>::Front()
+{
+    return m_vector.front();
+}
 
 template<class T>
-T &Array<T>::Back()  { return m_vector.back(); }
+T &Array<T>::Back()
+{
+    return m_vector.back();
+}
 
 template<class T>
 typename Array<T>::Iterator
@@ -134,7 +167,10 @@ template<class T>
 typename Array<T>::Iterator Array<T>::Remove(const T &x)
 {
     Iterator it = Find(x);
-    if (it != End()) { return Remove(it); }
+    if (it != End())
+    {
+        return Remove(it);
+    }
     return End();
 }
 
@@ -155,8 +191,14 @@ void Array<T>::RemoveAll(const T &x)
 {
     for (Iterator it = Begin(); it != End(); )
     {
-        if (*it == x) { it = Remove(it); }
-        else { ++it; }
+        if (*it == x)
+        {
+            it = Remove(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 
@@ -178,23 +220,44 @@ int Array<T>::IndexOf(const T &x) const
     int i = 0;
     for (const T& y : *this)
     {
-        if (x == y)  { return i; }
+        if (x == y)
+        {
+            return i;
+        }
         ++i;
     }
     return -1;
 }
 
 template<class T>
-void Array<T>::Resize(int n)   { m_vector.resize(n); }
+void Array<T>::Reserve(std::size_t n)
+{
+    m_vector.reserve(n);
+}
 
 template<class T>
-uint Array<T>::Size() const    { return m_vector.size(); }
+void Array<T>::Resize(int n)
+{
+    m_vector.resize(n);
+}
 
 template<class T>
-void Array<T>::Clear()         { m_vector.clear(); }
+uint Array<T>::Size() const
+{
+    return m_vector.size();
+}
 
 template<class T>
-bool Array<T>::IsEmpty() const { return Size() == 0; }
+void Array<T>::Clear()
+{
+    m_vector.clear();
+}
+
+template<class T>
+bool Array<T>::IsEmpty() const
+{
+    return Size() == 0;
+}
 
 
 template<class T>
@@ -259,51 +322,90 @@ template< template <class> class Container, class OtherT>
 Container<OtherT> Array<T>::To() const
 {
     Container<OtherT> cont;
-    for (const T &x : *this) { cont.PushBack( OtherT(x) ); }
+    for (const T &x : *this)
+    {
+        cont.PushBack( OtherT(x) );
+    }
     return cont;
 }
 
 template<class T>
-typename Array<T>::Iterator Array<T>::Begin() { return m_vector.begin(); }
+typename Array<T>::Iterator Array<T>::Begin()
+{
+    return m_vector.begin();
+}
 
 template<class T>
-typename Array<T>::Iterator Array<T>::End() { return m_vector.end();   }
+typename Array<T>::Iterator Array<T>::End()
+{
+    return m_vector.end();
+}
 
 template<class T>
 typename Array<T>::Const_Iterator
-Array<T>::Begin() const { return m_vector.cbegin(); }
+Array<T>::Begin() const
+{
+    return m_vector.cbegin();
+}
 
 template<class T>
 typename Array<T>::Const_Iterator
-Array<T>::End() const { return m_vector.cend(); }
+Array<T>::End() const
+{
+    return m_vector.cend();
+}
 
 template<class T>
-typename Array<T>::RIterator Array<T>::RBegin() { return m_vector.rbegin(); }
+typename Array<T>::RIterator Array<T>::RBegin()
+{
+    return m_vector.rbegin();
+}
 
 template<class T>
-typename Array<T>::RIterator Array<T>::REnd() { return m_vector.rend(); }
+typename Array<T>::RIterator Array<T>::REnd()
+{
+    return m_vector.rend();
+}
 
 template<class T>
 typename Array<T>::Const_RIterator
-Array<T>::RBegin() const { return m_vector.crbegin(); }
+Array<T>::RBegin() const
+{
+    return m_vector.crbegin();
+}
 
 template<class T>
 typename Array<T>::Const_RIterator
-Array<T>::REnd() const { return m_vector.crend(); }
+Array<T>::REnd() const
+{
+    return m_vector.crend();
+}
 
 template<class T>
-typename Array<T>::Iterator Array<T>::begin() { return m_vector.begin(); }
+typename Array<T>::Iterator Array<T>::begin()
+{
+    return m_vector.begin();
+}
 
 template<class T>
-typename Array<T>::Iterator Array<T>::end() { return m_vector.end(); }
+typename Array<T>::Iterator Array<T>::end()
+{
+    return m_vector.end();
+}
 
 template<class T>
 typename Array<T>::Const_Iterator
-Array<T>::begin() const { return m_vector.cbegin(); }
+Array<T>::begin() const
+{
+    return m_vector.cbegin();
+}
 
 template<class T>
 typename Array<T>::Const_Iterator
-Array<T>::end() const { return m_vector.cend(); }
+Array<T>::end() const
+{
+    return m_vector.cend();
+}
 
 template<class T>
 template<class IteratorClass>

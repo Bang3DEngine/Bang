@@ -91,7 +91,7 @@ void GameObjectFactory::CreateUIGameObjectInto(GameObject *go,  bool addComps)
 Scene *GameObjectFactory::CreateScene(bool addTransform)
 {
     Scene *scene = GameObject::Create<Scene>();
-    if (addTransform && !scene->HasComponent<Transform>())
+    if (addTransform && !scene->GetTransform())
     {
         scene->AddComponent<Transform>();
     }

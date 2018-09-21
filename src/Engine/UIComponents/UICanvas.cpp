@@ -99,14 +99,17 @@ void PropagateFocusableUIEvent(UIFocusable *focusable,
                                UIEvent::Type type,
                                const InputEvent &inputEvent)
 {
-    UIEvent event;
-    event.type = type;
-    event.mouse.button = inputEvent.mouseButton;
-    event.mousePosWindow = inputEvent.GetMousePosWindow();
-    event.key.key = inputEvent.key;
-    event.key.modifiers = inputEvent.keyModifiers;
-    event.wheel.amount = inputEvent.wheelDelta;
-    PropagateUIEvent(focusable, event);
+    if (!focusable->IsWaitingToBeDestroyed())
+    {
+        UIEvent event;
+        event.type = type;
+        event.mouse.button = inputEvent.mouseButton;
+        event.mousePosWindow = inputEvent.GetMousePosWindow();
+        event.key.key = inputEvent.key;
+        event.key.modifiers = inputEvent.keyModifiers;
+        event.wheel.amount = inputEvent.wheelDelta;
+        PropagateUIEvent(focusable, event);
+    }
 };
 
 
@@ -436,7 +439,7 @@ void UICanvas::SetFocus(UIFocusable *newFocusable_, FocusType focusType)
 
     if (newFocusable != GetFocus())
     {
-        if (GetFocus())
+        if (GetFocus() && !GetFocus()->IsWaitingToBeDestroyed())
         {
             GetFocus()->ClearFocus();
 
@@ -448,7 +451,7 @@ void UICanvas::SetFocus(UIFocusable *newFocusable_, FocusType focusType)
         }
 
         p_focus = newFocusable;
-        if (GetFocus())
+        if (GetFocus() && !GetFocus()->IsWaitingToBeDestroyed())
         {
             GetFocus()->SetFocus();
 

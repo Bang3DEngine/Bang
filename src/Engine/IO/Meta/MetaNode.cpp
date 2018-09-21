@@ -191,8 +191,16 @@ void MetaNode::Import(const String &metaString)
     {
         const YAML::Node &rootNameYAMLNode = yamlNode.begin()->first;
         const YAML::Node &rootMapYAMLNode  = yamlNode.begin()->second;
-        SetName( rootNameYAMLNode.Scalar() );
-        Import(rootMapYAMLNode);
+
+        if (rootNameYAMLNode.IsDefined())
+        {
+            SetName( rootNameYAMLNode.Scalar() );
+        }
+
+        if (rootMapYAMLNode.IsDefined())
+        {
+            Import(rootMapYAMLNode);
+        }
     }
 }
 

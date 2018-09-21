@@ -67,6 +67,7 @@ public:
 
     int IndexOf(const T& x) const;
 
+    void Reserve(std::size_t n);
     void Resize(int n);
     uint Size() const;
     void Clear();

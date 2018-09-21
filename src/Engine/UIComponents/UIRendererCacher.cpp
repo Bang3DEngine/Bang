@@ -159,13 +159,16 @@ void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject*)
     children.PushBack(removedChild);
     for (GameObject *child : children)
     {
-        Array<Renderer*> renderers = child->GetComponents<Renderer>();
-        for (Renderer *rend : renderers)
+        if (child)
         {
-            rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
+            Array<Renderer*> renderers = child->GetComponents<Renderer>();
+            for (Renderer *rend : renderers)
+            {
+                rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
+            }
+            child->EventEmitter<IEventsChildren>::UnRegisterListener(this);
+            child->EventEmitter<IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
         }
-        child->EventEmitter<IEventsChildren>::UnRegisterListener(this);
-        child->EventEmitter<IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
     }
 
     OnChanged();

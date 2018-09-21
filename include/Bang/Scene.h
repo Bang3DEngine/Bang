@@ -32,6 +32,9 @@ public:
 
     void InvalidateCanvas();
 
+    // ICloneable
+    virtual void CloneInto(ICloneable *clone) const override;
+
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;

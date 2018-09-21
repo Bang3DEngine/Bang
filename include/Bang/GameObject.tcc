@@ -26,9 +26,12 @@ T* GameObject::GetComponent() const
 {
     for (Component *comp : m_components)
     {
-        if (T *tcomp = FastDynamicCast<T*>(comp))
+        if (comp)
         {
-            return tcomp;
+            if (T *tcomp = FastDynamicCast<T*>(comp))
+            {
+                return tcomp;
+            }
         }
     }
     return nullptr;
@@ -82,9 +85,12 @@ T* GameObject::GetComponentInChildren() const
 {
     for (GameObject *child : GetChildren())
     {
-        if (T *comp = child->GetComponent<T>())
+        if (child)
         {
-            return comp;
+            if (T *comp = child->GetComponent<T>())
+            {
+                return comp;
+            }
         }
     }
     return nullptr;
@@ -103,9 +109,12 @@ T* GameObject::GetComponentInDescendants() const
 {
     for (GameObject *child : GetChildren())
     {
-        if (T *comp = child->GetComponentInDescendantsAndThis<T>())
+        if (child)
         {
-            return comp;
+            if (T *comp = child->GetComponentInDescendantsAndThis<T>())
+            {
+                return comp;
+            }
         }
     }
     return nullptr;
@@ -134,9 +143,12 @@ void GameObject::GetComponents(Array<T*> *components) const
 {
     for (Component *comp : GetComponents())
     {
-        if (T *tcomp = FastDynamicCast<T*>(comp))
+        if (comp)
         {
-            components->PushBack(tcomp);
+            if (T *tcomp = FastDynamicCast<T*>(comp))
+            {
+                components->PushBack(tcomp);
+            }
         }
     }
 }
@@ -212,7 +224,10 @@ void GameObject::GetComponentsInChildren(Array<T*> *componentsOut) const
 {
     for (GameObject *child : GetChildren())
     {
-        child->GetComponents<T>(componentsOut);
+        if (child)
+        {
+            child->GetComponents<T>(componentsOut);
+        }
     }
 }
 template <class T>
@@ -240,8 +255,11 @@ void GameObject::GetComponentsInDescendants(Array<T*> *componentsOut) const
 {
     for (GameObject *child : GetChildren())
     {
-        child->GetComponents<T>(componentsOut);
-        child->GetComponentsInDescendants<T>(componentsOut);
+        if (child)
+        {
+            child->GetComponents<T>(componentsOut);
+            child->GetComponentsInDescendants<T>(componentsOut);
+        }
     }
 }
 template <class T>

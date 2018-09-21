@@ -172,7 +172,6 @@ Component* GameObject::AddComponent(Component *component, int _index)
 
         const int index = (_index != -1 ? _index : GetComponents().Size());
         m_components.Insert(component, index);
-        UpdateComponentIndicesForAdd(index);
 
         if (transformComp)
         {
@@ -196,7 +195,6 @@ void GameObject::AddChild(GameObject *child, int index)
     ASSERT(!GetChildren().Contains(child));
 
     m_children.Insert(child, index);
-    UpdateChildrenIndicesForAdd(index);
     ChildAdded(child, this);
 }
 
@@ -205,8 +203,8 @@ void GameObject::RemoveChild(GameObject *child)
     int i = m_children.IndexOf(child);
     if (i >= 0)
     {
-        m_children.RemoveByIndex(i);
-        UpdateChildrenIndicesForRemove(i);
+        m_children[i] = nullptr;
+        TryToClearDeletedChildren();
         ChildRemoved(child, this);
     }
 }
@@ -216,8 +214,7 @@ void GameObject::RemoveComponent(Component *component)
     int i = m_components.IndexOf(component);
     if (i >= 0)
     {
-        m_components.RemoveByIndex(i);
-        UpdateComponentIndicesForRemove(i);
+        m_components[i] = nullptr;
 
         EventEmitter<IEventsComponent>::PropagateToListeners(
                     &IEventsComponent::OnComponentRemoved, component, this);
@@ -249,46 +246,30 @@ void GameObject::OnDisabled(Object *object)
     PropagateToChildren(&EventListener<IEventsObject>::OnDisabled, object);
 }
 
-void GameObject::UpdateChildrenIndicesForAdd(int addIndex)
+void GameObject::TryToClearDeletedChildren()
 {
-    UpdateIndicesForAdd(m_childrenIterationIndices, addIndex);
-}
-
-void GameObject::UpdateChildrenIndicesForRemove(int removeIndex)
-{
-    UpdateIndicesForRemove(m_childrenIterationIndices, removeIndex);
-}
-
-void GameObject::UpdateComponentIndicesForAdd(int addIndex)
-{
-    UpdateIndicesForAdd(m_componentIterationIndices, addIndex);
-}
-
-void GameObject::UpdateComponentIndicesForRemove(int removeIndex)
-{
-    UpdateIndicesForRemove(m_componentIterationIndices, removeIndex);
-}
-
-void GameObject::UpdateIndicesForAdd(Array<int> &iterationIndices, int addIndex)
-{
-    for (int &idx : iterationIndices)
+    Array<GameObject*> newChildren;
+    for (GameObject *child : m_children)
     {
-        if (addIndex <= idx)
+        if (child)
         {
-            ++idx;
+            newChildren.PushBack(child);
         }
     }
+    m_children = newChildren;
 }
 
-void GameObject::UpdateIndicesForRemove(Array<int> &iterationIndices, int removeIndex)
+void GameObject::TryToClearDeletedComponents()
 {
-    for (int &idx : iterationIndices)
+    Array<Component*> newComponents;
+    for (Component *comp : m_components)
     {
-        if (removeIndex < idx)
+        if (comp)
         {
-            --idx;
+            newComponents.PushBack(comp);
         }
     }
+    m_components = newComponents;
 }
 
 void GameObject::DestroyImmediate(GameObject *gameObject)
@@ -301,16 +282,22 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
         while (!gameObject->GetChildren().IsEmpty())
         {
-            GameObject *go = gameObject->GetChildren().Back();
-            ASSERT(!go->IsWaitingToBeDestroyed());
-            GameObject::DestroyImmediate(go);
+            if (GameObject *go = gameObject->GetChildren().Back())
+            {
+                ASSERT(!go->IsWaitingToBeDestroyed());
+                GameObject::DestroyImmediate(go);
+            }
+            gameObject->TryToClearDeletedChildren();
         }
 
         while (!gameObject->GetComponents().IsEmpty())
         {
-            Component *comp = gameObject->GetComponents().Back();
-            ASSERT(!comp->IsWaitingToBeDestroyed());
-            Component::DestroyImmediate(comp);
+            if (Component *comp = gameObject->GetComponents().Back())
+            {
+                ASSERT(!comp->IsWaitingToBeDestroyed());
+                Component::DestroyImmediate(comp);
+            }
+            gameObject->TryToClearDeletedComponents();
         }
 
         delete gameObject;
@@ -418,9 +405,12 @@ GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
 {
     for (GameObject *child : GetChildren())
     {
-        if (GameObject *found = child->FindInChildrenAndThis(guid, recursive))
+        if (child)
         {
-            return found;
+            if (GameObject *found = child->FindInChildrenAndThis(guid, recursive))
+            {
+                return found;
+            }
         }
     }
     return nullptr;
@@ -430,9 +420,12 @@ GameObject *GameObject::FindInChildren(const String &name, bool recursive)
 {
     for (GameObject *child : GetChildren())
     {
-        if (GameObject *found = child->FindInChildrenAndThis(name, recursive))
+        if (child)
         {
-            return found;
+            if (GameObject *found = child->FindInChildrenAndThis(name, recursive))
+            {
+                return found;
+            }
         }
     }
     return nullptr;
@@ -447,7 +440,7 @@ GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
 
     for (GameObject *child : GetChildren())
     {
-        if (child->GetGUID() == guid)
+        if (child && child->GetGUID() == guid)
         {
             return child;
         }
@@ -471,7 +464,7 @@ GameObject *GameObject::FindInChildrenAndThis(const String &name, bool recursive
 
     for (GameObject *child : GetChildren())
     {
-        if (child->GetName() == name)
+        if (child && child->GetName() == name)
         {
             return child;
         }
@@ -538,7 +531,7 @@ GameObject *GameObject::GetChild(const GUID &guid) const
 {
     for (GameObject *go : GetChildren())
     {
-        if (go->GetGUID() == guid)
+        if (go && go->GetGUID() == guid)
         {
             return go;
         }
@@ -550,7 +543,7 @@ GameObject *GameObject::GetChild(const String &name) const
 {
     for (GameObject *child : GetChildren())
     {
-        if (child->GetName() == name)
+        if (child && child->GetName() == name)
         {
             return child;
         }
@@ -576,8 +569,11 @@ void GameObject::GetChildrenRecursively(Array<GameObject*> *children) const
 {
     for (GameObject *child : GetChildren())
     {
-        children->PushBack(child);
-        child->GetChildrenRecursively(children);
+        if (child)
+        {
+            children->PushBack(child);
+            child->GetChildrenRecursively(children);
+        }
     }
 }
 
@@ -776,34 +772,40 @@ Sphere GameObject::GetBoundingSphere(bool includeChildren) const
 
 void GameObject::PropagateToChildren(std::function<void(GameObject*)> func)
 {
-    m_childrenIterationIndices.PushBack(0);
-    for (int &i = m_childrenIterationIndices.Back();
-         i < GetChildren().Size();
-         ++i)
+    ++m_childrenIterationDepth;
+
+    const Array<GameObject*>& children = GetChildren();
+    for (GameObject *child : children)
     {
-        GameObject *child = GetChildren()[i];
-        if (child->IsEnabled())
+        if (child && child->IsEnabled())
         {
             func(child);
         }
     }
-    m_childrenIterationIndices.PopBack();
+
+    if (--m_childrenIterationDepth == 0)
+    {
+        TryToClearDeletedChildren();
+    }
 }
 
 void GameObject::PropagateToComponents(std::function<void(Component*)> func)
 {
-    m_componentIterationIndices.PushBack(0);
-    for (int &i = m_componentIterationIndices.Back();
-         i < GetComponents().Size();
-         ++i)
+    ++m_componentsIterationDepth;
+
+    const Array<Component*>& components = GetComponents();
+    for (Component *comp : components)
     {
-        Component *comp = GetComponents()[i];
-        if (comp->IsEnabled())
+        if (comp && comp->IsEnabled())
         {
             func(comp);
         }
     }
-    m_componentIterationIndices.PopBack();
+
+    if (--m_componentsIterationDepth == 0)
+    {
+        TryToClearDeletedComponents();
+    }
 }
 
 template<class T>
@@ -828,7 +830,7 @@ void GameObject::CloneInto(ICloneable *clone) const
 
     for (GameObject *child : GetChildren())
     {
-        if (!child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
+        if (child && !child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             GameObject *childClone = child->Clone();
             childClone->SetParent(go);
@@ -837,7 +839,7 @@ void GameObject::CloneInto(ICloneable *clone) const
 
     for (Component *comp : GetComponents())
     {
-        if (!comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
+        if (comp && !comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             go->AddComponent(comp->Clone());
         }
@@ -850,7 +852,10 @@ void GameObject::Print(const String &indent) const
     Debug_Log(indent << this);
     for (GameObject *child : GetChildren())
     {
-        child->Print(indent2);
+        if (child)
+        {
+            child->Print(indent2);
+        }
     }
 }
 
@@ -863,7 +868,10 @@ String GameObject::ToStringStructure(bool recursive, const String &indent)
         oss << "\n";
         for (GameObject *child : GetChildren())
         {
-            oss << child->ToStringStructure(true, indent + "  ");
+            if (child)
+            {
+                oss << child->ToStringStructure(true, indent + "  ");
+            }
         }
     }
     return String(oss.str());
@@ -923,7 +931,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
             for (GameObject *containedChild : GetChildren())
             {
                 // See if it is already contained
-                if (containedChild->GetGUID() == guid)
+                if (containedChild && containedChild->GetGUID() == guid)
                 {
                     child = containedChild;
                     childrenToRemove.Remove(child);
@@ -948,7 +956,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
             for (Component *containedComp : GetComponents())
             {
                 // See if it is already contained
-                if (containedComp->GetGUID() == guid)
+                if (containedComp && containedComp->GetGUID() == guid)
                 {
                     comp = containedComp;
                     componentsToRemove.Remove(comp);
@@ -972,11 +980,18 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
     // Remove non existing gameObjects and components in meta
     for (GameObject *childToRemove : childrenToRemove)
     {
-        GameObject::DestroyImmediate(childToRemove);
+        if (childToRemove)
+        {
+            GameObject::DestroyImmediate(childToRemove);
+        }
     }
+
     for (Component *compToRemove : componentsToRemove)
     {
-        Component::DestroyImmediate(compToRemove);
+        if (compToRemove)
+        {
+            Component::DestroyImmediate(compToRemove);
+        }
     }
 }
 
@@ -991,7 +1006,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
 
     for (Component *c : GetComponents())
     {
-        if (c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
+        if (c && c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             MetaNode compMeta;
             c->ExportMeta(&compMeta);
@@ -1001,7 +1016,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
 
     for (GameObject *child : GetChildren())
     {
-        if (child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
+        if (child && child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             MetaNode childMeta;
             child->ExportMeta(&childMeta);

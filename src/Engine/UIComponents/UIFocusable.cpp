@@ -17,56 +17,58 @@ UIFocusable::~UIFocusable()
 
 UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
 {
-    switch (event.type)
-    {
-        case UIEvent::Type::MOUSE_ENTER:
-            SetIsMouseOver(true);
-        break;
-
-        case UIEvent::Type::MOUSE_EXIT:
-            SetIsMouseOver(false);
-        break;
-
-        case UIEvent::Type::STARTED_BEING_PRESSED:
-            SetBeingPressed(true);
-        break;
-
-        case UIEvent::Type::MOUSE_CLICK_FULL:
-        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
-        case UIEvent::Type::FINISHED_BEING_PRESSED:
-            SetBeingPressed(false);
-        break;
-
-        default:
-        break;
-    }
-
-    // Propagate events
     UIEventResult finalResult = UIEventResult::IGNORE;
-    if (EventEmitter<IEventsFocus>::IsEmittingEvents() && IsFocusEnabled())
+    if (!IsWaitingToBeDestroyed())
     {
-        for (EventCallback eventCallback : m_eventCallbacks)
+        switch (event.type)
         {
-            UIEventResult propagationResult = eventCallback(this, event);
-            if (propagationResult == UIEventResult::INTERCEPT)
-            {
-                finalResult = UIEventResult::INTERCEPT;
-            }
+            case UIEvent::Type::MOUSE_ENTER:
+                SetIsMouseOver(true);
+            break;
+
+            case UIEvent::Type::MOUSE_EXIT:
+                SetIsMouseOver(false);
+            break;
+
+            case UIEvent::Type::STARTED_BEING_PRESSED:
+                SetBeingPressed(true);
+            break;
+
+            case UIEvent::Type::MOUSE_CLICK_FULL:
+            case UIEvent::Type::MOUSE_CLICK_DOUBLE:
+            case UIEvent::Type::FINISHED_BEING_PRESSED:
+                SetBeingPressed(false);
+            break;
+
+            default:
+            break;
         }
 
-        Array<UIEventResult> eventListenerResults =
-                    EventEmitter<IEventsFocus>::
-                        PropagateToListenersAndGatherResult<UIEventResult>(
-                                    &IEventsFocus::OnUIEvent, this, event);
-        for (UIEventResult eventListenerResult : eventListenerResults)
+        // Propagate events
+        if (EventEmitter<IEventsFocus>::IsEmittingEvents() && IsFocusEnabled())
         {
-            if (eventListenerResult == UIEventResult::INTERCEPT)
+            for (EventCallback eventCallback : m_eventCallbacks)
             {
-                finalResult = UIEventResult::INTERCEPT;
+                UIEventResult propagationResult = eventCallback(this, event);
+                if (propagationResult == UIEventResult::INTERCEPT)
+                {
+                    finalResult = UIEventResult::INTERCEPT;
+                }
+            }
+
+            Array<UIEventResult> eventListenerResults =
+                        EventEmitter<IEventsFocus>::
+                            PropagateToListenersAndGatherResult<UIEventResult>(
+                                        &IEventsFocus::OnUIEvent, this, event);
+            for (UIEventResult eventListenerResult : eventListenerResults)
+            {
+                if (eventListenerResult == UIEventResult::INTERCEPT)
+                {
+                    finalResult = UIEventResult::INTERCEPT;
+                }
             }
         }
     }
-
     return finalResult;
 }
 

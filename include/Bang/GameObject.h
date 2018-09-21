@@ -248,15 +248,11 @@ private:
     Transform *p_transform = nullptr;
     RectTransform *p_rectTransform = nullptr;
 
-    // Concurrent modification when iterating stuff
-    Array<int> m_childrenIterationIndices;
-    Array<int> m_componentIterationIndices;
-    void UpdateChildrenIndicesForAdd(int addIndex);
-    void UpdateChildrenIndicesForRemove(int removeIndex);
-    void UpdateComponentIndicesForAdd(int addIndex);
-    void UpdateComponentIndicesForRemove(int removeIndex);
-    void UpdateIndicesForAdd(Array<int> &iterationIndices, int addIndex);
-    void UpdateIndicesForRemove(Array<int> &iterationIndices, int removeIndex);
+    // Concurrent iteration
+    int m_childrenIterationDepth;
+    int m_componentsIterationDepth;
+    void TryToClearDeletedChildren();
+    void TryToClearDeletedComponents();
 
     void AddChild(GameObject *child, int index);
     void RemoveChild(GameObject *child);

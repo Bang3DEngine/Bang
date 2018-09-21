@@ -24,7 +24,6 @@ public:
     void DestroyDelayedElements();
 
     void SetCamera(Camera *cam);
-    void SetFirstFoundCamera();
 
     void AddGameObjectToDestroyDelayed(GameObject *go);
     void AddComponentToDestroyDelayed(Component *comp);

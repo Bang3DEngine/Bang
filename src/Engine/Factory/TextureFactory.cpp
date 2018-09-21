@@ -150,7 +150,7 @@ TextureCubeMap* TextureFactory::GetWhiteTextureCubeMap()
                                               m_whiteTextureCMPath );
 }
 
-TextureCubeMap* TextureFactory::GetDefaultTextureCubeMap()
+TextureCubeMap* TextureFactory::GetDefaultSkybox()
 {
     return TextureFactory::GetTextureCubeMap("DefaultSkybox.texcm");
 }

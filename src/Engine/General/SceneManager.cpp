@@ -216,7 +216,6 @@ void SceneManager::LoadSceneInstantly_()
     Scene *loadedScene = GetLoadedScene();
     if (loadedScene)
     {
-        loadedScene->SetFirstFoundCamera();
         loadedScene->InvalidateCanvas();
     }
 

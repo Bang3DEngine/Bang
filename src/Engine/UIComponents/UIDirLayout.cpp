@@ -18,6 +18,7 @@ UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
 
 UIDirLayout::UIDirLayout(Axis axis) : m_axis(axis)
 {
+    CONSTRUCT_CLASS_ID(UIDirLayout)
 }
 
 UIDirLayout::~UIDirLayout()

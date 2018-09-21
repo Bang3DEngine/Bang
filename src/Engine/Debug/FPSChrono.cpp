@@ -28,14 +28,20 @@ void FPSChrono::SetMeanSamples(int meanSamples)
 
 double FPSChrono::GetMeanFPS() const
 {
-    if (m_latestDeltaTimes.IsEmpty()) { return 0.0; }
+    if (m_latestDeltaTimes.IsEmpty())
+    {
+        return 0.0;
+    }
 
     return (1.0 / Math::Max(0.00001, GetMeanSeconds()));
 }
 
 double FPSChrono::GetMeanSeconds() const
 {
-    if (m_latestDeltaTimes.IsEmpty()) { return 0.0; }
+    if (m_latestDeltaTimes.IsEmpty())
+    {
+        return 0.0;
+    }
 
     float meanDeltas = 0.0;
     for (float delta : m_latestDeltaTimes) { meanDeltas += delta; }

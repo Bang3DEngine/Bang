@@ -398,8 +398,6 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     GameObjectFactory::CreateUIHSpacer(LayoutSizeType::PREFERRED, 5)->SetParent(botHLGo);
     openButton->GetGameObject()->SetParent(botHLGo);
 
-    scene->SetFirstFoundCamera();
-
     Path initDirPath = initialDirPath;
     if (!initDirPath.IsDir()) { initDirPath = Paths::GetEngineDir(); }
     fileList->SetCurrentPath(initDirPath);

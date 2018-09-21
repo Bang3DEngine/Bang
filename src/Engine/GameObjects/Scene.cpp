@@ -76,12 +76,6 @@ void Scene::SetCamera(Camera *cam)
     }
 }
 
-void Scene::SetFirstFoundCamera()
-{
-    Camera *sceneCamera = GetComponentInDescendantsAndThis<Camera>();
-    SetCamera(sceneCamera);
-}
-
 void Scene::AddGameObjectToDestroyDelayed(GameObject *go)
 {
     if (!go->IsWaitingToBeDestroyed() &&
@@ -137,11 +131,23 @@ Camera *Scene::GetCamera() const
 void Scene::ImportMeta(const MetaNode &metaNode)
 {
     GameObject::ImportMeta(metaNode);
-    SetFirstFoundCamera();
+
+    if (metaNode.Contains("CameraGameObjectGUID"))
+    {
+        GUID camGoGUID = metaNode.Get<GUID>("CameraGameObjectGUID");
+        if (GameObject *camGo = FindInChildrenAndThis(camGoGUID, true))
+        {
+            SetCamera( camGo->GetComponent<Camera>() );
+        }
+    }
 }
 
 void Scene::ExportMeta(MetaNode *metaNode) const
 {
     GameObject::ExportMeta(metaNode);
     metaNode->SetName("Scene");
+
+    GUID camGoGUID = GetCamera() ? GetCamera()->GetGameObject()->GetGUID() :
+                                   GUID::Empty();
+    metaNode->Set("CameraGameObjectGUID", camGoGUID);
 }

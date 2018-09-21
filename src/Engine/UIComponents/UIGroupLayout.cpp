@@ -20,7 +20,10 @@ Bang::UIGroupLayout::~UIGroupLayout()
 
 }
 
-void UIGroupLayout::SetSpacing(int spacingPx) { m_spacingPx = spacingPx; }
+void UIGroupLayout::SetSpacing(int spacingPx)
+{
+    m_spacingPx = spacingPx;
+}
 void UIGroupLayout::SetPaddingLeft(int paddingLeft)
 {
     SetPaddings(paddingLeft, GetPaddingBot(), GetPaddingRight(), GetPaddingTop());

@@ -26,7 +26,7 @@ T* GameObject::GetComponent() const
 {
     for (Component *comp : m_components)
     {
-        if (T *tcomp = DCAST<T*>(comp))
+        if (T *tcomp = FastDynamicCast<T*>(comp))
         {
             return tcomp;
         }

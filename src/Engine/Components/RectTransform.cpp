@@ -19,7 +19,7 @@ USING_NAMESPACE_BANG
 
 RectTransform::RectTransform()
 {
-    CONSTRUCT_CLASS_ID(Transform);
+    CONSTRUCT_CLASS_ID(RectTransform);
 }
 
 RectTransform::~RectTransform()

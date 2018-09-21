@@ -69,7 +69,7 @@ ReflectionProbe::ReflectionProbe()
     SetCamerasZFar(100.0f);
     SetCamerasClearColor(Color::Gray);
     SetCamerasClearMode(CameraClearMode::COLOR);
-    SetCamerasSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap() );
+    SetCamerasSkyBoxTexture( TextureFactory::GetDefaultSkybox() );
 }
 
 ReflectionProbe::~ReflectionProbe()

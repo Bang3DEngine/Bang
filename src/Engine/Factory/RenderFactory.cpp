@@ -493,17 +493,14 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             GL::ClearDepthBuffer();
             GL::SetDepthMask(true);
             GL::SetDepthFunc(GL::Function::ALWAYS);
-            GL::SetStencilFunc(GL::Function::NEVER);
             GL::SetStencilOp(GL::StencilOperation::KEEP);
+            GL::SetEnabled(GL::Enablable::STENCIL_TEST, false);
             GL::SetColorMask(false, false, false, false);
 
+            // Mark the depth buffer drawing the object
             GEngine::GetInstance()->RenderWithPass(gameObject, RenderPass::SCENE);
 
-            // Render outline
-            GL::SetDepthMask(false);
-            GL::SetDepthFunc(GL::Function::ALWAYS);
-            GL::SetColorMask(true, true, true, true);
-
+            // Prepare masks and uniforms to actually draw the outline
             ShaderProgram *sp = rf->m_outlineShaderProgram.Get();
             sp->Bind();
             sp->SetColor("B_OutlineColor", params.color);
@@ -516,10 +513,16 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
                              gbuffer->GetSceneDepthStencilTexture(),
                              false);
 
+            GL::SetDepthMask(false);
+            GL::SetDepthFunc(GL::Function::ALWAYS);
+            GL::SetColorMask(true, true, true, true);
             gbuffer->SetColorDrawBuffer();
             gbuffer->SetSceneDepthStencil();
-            gbuffer->ApplyPass(sp, false);
+            gbuffer->ApplyPass(sp, false); // Apply pass to render the outline
 
+            // Clear depth buffer to leave it as it was (maybe xD)
+            GL::SetDepthMask(true);
+            gbuffer->SetOverlayDepthStencil();
             GL::ClearDepthBuffer();
 
             gbuffer->PopDepthStencilTexture();

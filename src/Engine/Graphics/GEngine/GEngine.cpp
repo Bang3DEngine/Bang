@@ -120,11 +120,11 @@ void GEngine::Render(Scene *scene)
 
 void GEngine::Render(Scene *scene, Camera *camera)
 {
-    if (scene)
+    if (scene && camera)
     {
         PushActiveRenderingCamera();
-        SetActiveRenderingCamera(camera);
 
+        SetActiveRenderingCamera(camera);
         Render(scene);
 
         PopActiveRenderingCamera();

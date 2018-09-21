@@ -242,8 +242,11 @@ private:
     bool m_visible = true;
     bool m_dontDestroyOnLoad = false;
 
-    Transform *p_transform = nullptr;
     GameObject* p_parent = nullptr;
+
+    // Convencience cached components
+    Transform *p_transform = nullptr;
+    RectTransform *p_rectTransform = nullptr;
 
     // Concurrent modification when iterating stuff
     Array<int> m_childrenIterationIndices;

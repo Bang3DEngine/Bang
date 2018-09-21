@@ -163,7 +163,7 @@ Component* GameObject::AddComponent(Component *component, int _index)
 {
     if (component && !GetComponents().Contains(component))
     {
-        Transform *transformComp = DCAST<Transform*>(component);
+        Transform *transformComp = FastDynamicCast<Transform*>(component);
         if (transformComp)
         {
             ASSERT_SOFT_MSG(!HasComponent<Transform>(),
@@ -177,6 +177,10 @@ Component* GameObject::AddComponent(Component *component, int _index)
         if (transformComp)
         {
             p_transform = transformComp;
+            if (RectTransform *rt = FastDynamicCast<RectTransform*>(component))
+            {
+                p_rectTransform = rt;
+            }
         }
 
         component->SetGameObject(this);
@@ -221,6 +225,11 @@ void GameObject::RemoveComponent(Component *component)
         if (component == p_transform)
         {
             p_transform = nullptr;
+        }
+
+        if (component == p_rectTransform)
+        {
+            p_rectTransform = nullptr;
         }
     }
 }
@@ -380,7 +389,7 @@ Transform *GameObject::GetTransform() const
 }
 RectTransform *GameObject::GetRectTransform() const
 {
-    return GetTransform() ? DCAST<RectTransform*>(GetTransform()) : nullptr;
+    return p_rectTransform;
 }
 
 void GameObject::SetName(const String &name)
@@ -393,7 +402,11 @@ void GameObject::SetName(const String &name)
                     &IEventsName::OnNameChanged, this, oldName, GetName());
     }
 }
-const String& GameObject::GetName() const { return m_name; }
+
+const String& GameObject::GetName() const
+{
+    return m_name;
+}
 
 GameObject *GameObject::Find(const String &name)
 {
@@ -440,8 +453,7 @@ GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
         }
         else if (recursive)
         {
-            GameObject *found = child->FindInChildren(guid, true);
-            if (found)
+            if (GameObject *found = child->FindInChildren(guid, true))
             {
                 return found;
             }
@@ -810,7 +822,7 @@ void GameObject::CloneInto(ICloneable *clone) const
 {
     Object::CloneInto(clone);
 
-    GameObject *go = DCAST<GameObject*>(clone);
+    GameObject *go = SCAST<GameObject*>(clone);
     go->SetName(m_name);
     go->SetParent(nullptr);
 

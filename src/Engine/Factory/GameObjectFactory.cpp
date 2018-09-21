@@ -122,6 +122,14 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     MeshRenderer *mr = cube->AddComponent<MeshRenderer>();
     mr->SetMesh(MeshFactory::GetCube().Get());
 
+    GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");
+    Camera *cam = GameObjectFactory::CreateDefaultCameraInto(cameraGo);
+    cameraGo->GetTransform()->SetPosition( Vector3(5,4,3) );
+    cameraGo->GetTransform()->LookAt( Vector3::Zero );
+    scene->SetCamera(cam);
+
+    /*
+
     GameObject *sphere = GameObjectFactory::CreateGameObjectNamed("Sphere-Child");
     sphere->GetTransform()->SetLocalPosition(Vector3(1,1,1));
     sphere->GetTransform()->SetLocalScale( Vector3(0.3f) );
@@ -133,7 +141,6 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     MeshRenderer *mr3 = cube2->AddComponent<MeshRenderer>();
     mr3->SetMesh(MeshFactory::GetCube().Get());
 
-    /*
     GameObject *lightGo = GameObjectFactory::CreateGameObjectNamed("Light");
     PointLight *pl = lightGo->AddComponent<PointLight>();
     pl->SetRange(20.0f);
@@ -147,7 +154,6 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     pl2->SetColor(Color::Purple);
     light2Go->GetTransform()->SetPosition( Vector3(-7,4,-2) );
     light2Go->GetTransform()->LookAt( Vector3::Zero );
-    */
 
     GameObject *light3Go = GameObjectFactory::CreateGameObjectNamed("Light3");
     PointLight *pl3 = light3Go->AddComponent<PointLight>();
@@ -173,15 +179,6 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     wall2->GetTransform()->SetLocalRotation( Quaternion::AngleAxis(Math::Pi/2, Vector3::Up) );
     wall2->GetTransform()->SetLocalScale( Vector3(0.2f, 10.0f, 10.0f));
 
-    GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");
-    cameraGo->GetTransform()->SetPosition( Vector3(5,4,3) );
-    cameraGo->GetTransform()->LookAt( Vector3::Zero );
-    Camera *cam = cameraGo->AddComponent<Camera>();
-    cam->SetClearMode(CameraClearMode::SKY_BOX);
-    cam->SetSkyBoxTexture( TextureFactory::GetDefaultTextureCubeMap() );
-    cam->SetClearColor(Color::LightBlue);
-    scene->SetCamera(cam);
-
     for (int i = 0; i < 0; ++i)
     {
         GameObjectFactory::CreateGameObjectNamed("GO_" + String(i))->SetParent(scene);
@@ -193,11 +190,28 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     floor->SetParent(scene);
     wall1->SetParent(scene);
     wall2->SetParent(scene);
-    cube->SetParent(scene);
     sphere->SetParent(cube);
     cube2->SetParent(sphere);
+    */
+
+    cube->SetParent(scene);
     cameraGo->SetParent(scene);
+
     return scene;
+}
+
+Camera *GameObjectFactory::CreateDefaultCameraInto(GameObject *go)
+{
+    Camera *cam = go->AddComponent<Camera>();
+    return CreateDefaultCameraInto(cam);
+}
+
+Camera *GameObjectFactory::CreateDefaultCameraInto(Camera *cam)
+{
+    cam->SetClearMode(CameraClearMode::SKY_BOX);
+    cam->SetClearColor( Color(0.5f, 0.8f, 1.0f) );
+    cam->SetSkyBoxTexture( TextureFactory::GetDefaultSkybox() );
+    return cam;
 }
 
 UICanvas *GameObjectFactory::CreateUICanvas()

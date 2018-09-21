@@ -41,7 +41,7 @@ public:
     static Texture2D* Get9SliceRoundRectBorderTexture();
 
     static TextureCubeMap* GetWhiteTextureCubeMap();
-    static TextureCubeMap* GetDefaultTextureCubeMap();
+    static TextureCubeMap* GetDefaultSkybox();
 
     static Texture2D* GetTexture2D(const String &filename);
     static Texture2D* GetTexture2D(const String &filename, const Path &dir);

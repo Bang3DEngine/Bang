@@ -1,5 +1,5 @@
-#ifndef UIButtonBaseBASE_H
-#define UIButtonBaseBASE_H
+#ifndef UIBUTTONBASE_H
+#define UIBUTTONBASE_H
 
 #include "Bang/DPtr.h"
 #include "Bang/Component.h"
@@ -76,5 +76,5 @@ private:
 
 NAMESPACE_BANG_END
 
-#endif // UIButtonBaseBASE_H
+#endif // UIBUTTONBASE_H
 

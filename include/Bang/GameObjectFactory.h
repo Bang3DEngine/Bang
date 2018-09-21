@@ -49,6 +49,9 @@ public:
     static void   CreateUISceneInto(Scene *scene);
     static Scene* CreateDefaultSceneInto(Scene *scene);
 
+    static Camera *CreateDefaultCameraInto(GameObject *go);
+    static Camera *CreateDefaultCameraInto(Camera *cam);
+
     static UICanvas*           CreateUICanvas();
     static UICanvas*           CreateUICanvasInto(GameObject *go);
     static UIImageRenderer*    CreateUIImage(const Color &color = Color::White);

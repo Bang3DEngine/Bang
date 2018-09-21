@@ -48,14 +48,15 @@ SET_COMPONENT_IDS(Component, 0, 10000000);
     SET_COMPONENT_IDS(UICheckBox,                   1701, 1800);
     SET_COMPONENT_IDS(UIComboBox,                   1801, 1900);
     SET_COMPONENT_IDS(UIContentSizeFitter,          1901, 2000);
-    SET_COMPONENT_IDS(UIDirLayout,                  2001, 2100);
     SET_COMPONENT_IDS(UIDirLayoutMovableSeparator,  2101, 2200);
     SET_COMPONENT_IDS(UIDragDroppable,              2201, 2300);
     SET_COMPONENT_IDS(UIFileList,                   2301, 2400);
     SET_COMPONENT_IDS(UIFocusable,                  2401, 2500);
-    SET_COMPONENT_IDS(UIGridLayout,                 2501, 2600);
     SET_COMPONENT_IDS(UIGroupLayout,                2601, 2700);
-    SET_COMPONENT_IDS(UIHorizontalLayout,           2701, 2800);
+        SET_COMPONENT_IDS(UIDirLayout,                  2610, 2620);
+            SET_COMPONENT_IDS(UIHorizontalLayout,           2611, 2612);
+            SET_COMPONENT_IDS(UIVerticalLayout,             2613, 2614);
+        SET_COMPONENT_IDS(UIGridLayout,                 2621, 2630);
     SET_COMPONENT_IDS(UIInputNumber,                2801, 2900);
     SET_COMPONENT_IDS(UIInputText,                  2901, 3000);
     SET_COMPONENT_IDS(UILabel,                      3001, 3100);
@@ -71,7 +72,6 @@ SET_COMPONENT_IDS(Component, 0, 10000000);
     SET_COMPONENT_IDS(UISlider,                     4001, 4100);
     SET_COMPONENT_IDS(UITextCursor,                 4101, 4200);
     SET_COMPONENT_IDS(UITree,                       4301, 4400);
-    SET_COMPONENT_IDS(UIVerticalLayout,             4401, 4500);
     SET_COMPONENT_IDS(Camera,                       4501, 4600);
 
 NAMESPACE_BANG_END

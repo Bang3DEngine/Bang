@@ -508,10 +508,6 @@ void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 {
     if (PhysicsObject *phObj = DCAST<PhysicsObject*>(ee))
     {
-        if (Component *comp = DCAST<Component*>(phObj))
-        {
-        }
-
         switch (phObj->GetPhysicsObjectType())
         {
             case PhysicsObject::Type::RIGIDBODY:

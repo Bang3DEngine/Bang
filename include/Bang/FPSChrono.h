@@ -24,7 +24,7 @@ public:
 private:
     List<double> m_latestDeltaTimes;
     double m_beginTimeSeconds = 0.0;
-    int m_meanSamples = 30;
+    int m_meanSamples = 100;
 };
 
 NAMESPACE_BANG_END

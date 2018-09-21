@@ -40,7 +40,7 @@ Camera::Camera()
 
     m_gbuffer = new GBuffer(1,1);
 
-    SetSkyBoxTexture(nullptr);
+    SetSkyBoxTexture( TextureFactory::GetDefaultSkybox() );
 }
 
 Camera::~Camera()

@@ -67,6 +67,10 @@ void RigidBody::SetLinearVelocity(const Vector3 &linearVelocity)
         GetPxRigidDynamic()->setLinearVelocity(
                             Physics::GetPxVec3FromVector3(linearVelocity));
     }
+    else
+    {
+        m_initLinearVelocity = linearVelocity;
+    }
 }
 
 void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
@@ -76,6 +80,10 @@ void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
         GetPxRigidDynamic()->setAngularVelocity(
                             Physics::GetPxVec3FromVector3(angularVelocity));
     }
+    else
+    {
+        m_initAngularVelocity = angularVelocity;
+    }
 }
 
 void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
@@ -83,6 +91,10 @@ void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
     if (GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setMaxAngularVelocity(maxAngularVelocity);
+    }
+    else
+    {
+        m_initMaxAngularVelocity = maxAngularVelocity;
     }
 }
 
@@ -309,6 +321,13 @@ void RigidBody::UpdatePxRigidDynamicValues()
           SCAST<physx::PxRigidDynamicLockFlags>(GetConstraints().GetValue()) );
         GetPxRigidDynamic()->setLinearDamping( GetDrag() );
         GetPxRigidDynamic()->setAngularDamping( GetAngularDrag() );
+
+        if (m_initRigidDynamic)
+        {
+            SetLinearVelocity(m_initLinearVelocity);
+            SetAngularVelocity(m_initAngularVelocity);
+            SetMaxAngularVelocity(m_initMaxAngularVelocity);
+        }
     }
 }
 
@@ -316,6 +335,7 @@ void RigidBody::SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic)
 {
     if (pxRigidDynamic != GetPxRigidDynamic())
     {
+        m_initRigidDynamic = true;
         p_pxRigidDynamic = pxRigidDynamic;
         UpdatePxRigidDynamicValues();
     }

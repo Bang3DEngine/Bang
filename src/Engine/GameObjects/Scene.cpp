@@ -119,10 +119,11 @@ void Scene::CloneInto(ICloneable *clone) const
         ASSERT(cams.Size() == cloneCams.Size());
 
         uint camIdx = cams.IndexOf(GetCamera());
-        ASSERT(camIdx != -1u);
-
-        Camera *cloneCam = cloneCams[camIdx];
-        cloneScene->SetCamera( cloneCam);
+        if (camIdx != -1u)
+        {
+            Camera *cloneCam = cloneCams[camIdx];
+            cloneScene->SetCamera( cloneCam );
+        }
     }
 
 }

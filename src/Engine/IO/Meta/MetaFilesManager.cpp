@@ -138,13 +138,13 @@ void MetaFilesManager::RegisterMetaFilepath(const Path &metaFilepath)
         if (!guid.IsEmpty())
         {
             MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-            if (mfm->m_GUIDToFilepath.ContainsKey(guid) &&
-                mfm->m_GUIDToFilepath.Get(guid) != filepath)
-            {
-                Debug_Error("Found conflicting GUID: " << guid <<
-                            "(Files '" << filepath << "' and '" <<
-                            mfm->m_GUIDToFilepath.Get(guid) << "'");
-            }
+            // if (mfm->m_GUIDToFilepath.ContainsKey(guid) &&
+            //     mfm->m_GUIDToFilepath.Get(guid) != filepath)
+            // {
+            //     Debug_Error("Found conflicting GUID: " << guid <<
+            //                 "(Files '" << filepath << "' and '" <<
+            //                 mfm->m_GUIDToFilepath.Get(guid) << "'");
+            // }
 
             mfm->m_GUIDToFilepath.Add(guid, filepath);
             mfm->m_filepathToGUID.Add(filepath, guid);

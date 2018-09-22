@@ -132,6 +132,7 @@ void Light::SetLightScreenPassShaderProgram(ShaderProgram *sp)
 
 AARect Light::GetRenderRect(Camera *camera) const
 {
+    BANG_UNUSED(camera);
     return AARect::NDCRect;
 }
 
@@ -151,19 +152,29 @@ void Light::ImportMeta(const MetaNode &metaNode)
     Component::ImportMeta(metaNode);
 
     if (metaNode.Contains("Intensity"))
-    { SetIntensity(metaNode.Get<float>("Intensity")); }
+    {
+        SetIntensity(metaNode.Get<float>("Intensity"));
+    }
 
     if (metaNode.Contains("Color"))
-    { SetColor(metaNode.Get<Color>("Color")); }
+    {
+        SetColor(metaNode.Get<Color>("Color"));
+    }
 
     if (metaNode.Contains("ShadowBias"))
-    { SetShadowBias(metaNode.Get<float>("ShadowBias")); }
+    {
+        SetShadowBias(metaNode.Get<float>("ShadowBias"));
+    }
 
     if (metaNode.Contains("ShadowType"))
-    { SetShadowType(metaNode.Get<ShadowType>("ShadowType")); }
+    {
+        SetShadowType(metaNode.Get<ShadowType>("ShadowType"));
+    }
 
     if (metaNode.Contains("ShadowMapSize"))
-    { SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize")); }
+    {
+        SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize"));
+    }
 }
 
 void Light::ExportMeta(MetaNode *metaNode) const

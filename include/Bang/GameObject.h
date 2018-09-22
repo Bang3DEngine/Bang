@@ -67,7 +67,6 @@ public:
 
     template <class T>
     T* AddComponent(int index = -1);
-    Component* AddComponent(const String &componentClassName, int _index = -1);
     Component* AddComponent(Component *c, int index = -1);
 
     static GameObject *Find(const String &name);
@@ -80,7 +79,7 @@ public:
 
     void SetVisible(bool visible);
     void SetParent(GameObject *newParent,
-                   int _index = -1,
+                   int index = -1,
                    bool keepWorldTransform = false);
     void SetDontDestroyOnLoad(bool dontDestroyOnLoad);
 
@@ -157,7 +156,6 @@ public:
 
     template <class T>
     bool HasComponent() const;
-    bool HasComponent(const String &className) const;
 
     void RemoveComponent(Component *component);
     Scene* GetScene() const;
@@ -249,13 +247,26 @@ private:
     RectTransform *p_rectTransform = nullptr;
 
     // Concurrent iteration
-    int m_childrenIterationDepth;
-    int m_componentsIterationDepth;
+    struct ChildToAdd
+    {
+        GameObject *child;
+        int index;
+        bool keepWorldTransform;
+    };
+    int m_childrenIterationDepth = 0;
+    int m_componentsIterationDepth = 0;
+    Array< ChildToAdd > m_childrenToAdd;
+    Array< std::pair<Component*, int> > m_componentsToAdd;
+    void TryToAddQueuedChildren();
+    void TryToAddQueuedComponents();
     void TryToClearDeletedChildren();
     void TryToClearDeletedComponents();
 
-    void AddChild(GameObject *child, int index);
+    void AddChild(GameObject *child, int index, bool keepWorldTransform);
+    void AddChild_(GameObject *child, int index, bool keepWorldTransform);
     void RemoveChild(GameObject *child);
+
+    Component* AddComponent_(Component *c, int index);
 
     friend class Scene;
     friend class Prefab;

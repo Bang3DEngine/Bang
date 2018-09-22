@@ -16,6 +16,7 @@
 #include "Bang/SceneManager.h"
 #include "Bang/RectTransform.h"
 #include "Bang/IEventsObject.h"
+#include "Bang/ComponentFactory.h"
 #include "Bang/GameObjectFactory.h"
 
 USING_NAMESPACE_BANG
@@ -152,15 +153,87 @@ void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
                     removedChild, parent);
 }
 
-Component *GameObject::AddComponent(const String &componentClassName,
-                                    int _index)
+Component* GameObject::AddComponent(Component *component, int index_)
 {
-    Component *component = ComponentFactory::Create(componentClassName);
-    return AddComponent(component, _index);
+    m_componentsToAdd.PushBack( std::make_pair(component, index_) );
+    TryToAddQueuedComponents();
+    return component;
 }
 
-Component* GameObject::AddComponent(Component *component, int _index)
+void GameObject::AddChild(GameObject *child, int index, bool keepWorldTransform)
 {
+    ChildToAdd childToAdd;
+    childToAdd.child = child;
+    childToAdd.index = index;
+    childToAdd.keepWorldTransform = keepWorldTransform;
+    m_childrenToAdd.PushBack(childToAdd);
+    TryToAddQueuedChildren();
+}
+
+void GameObject::AddChild_(GameObject *child,
+                           int index_,
+                           bool keepWorldTransform)
+{
+    ASSERT( child );
+    ASSERT( child != this );
+
+    int index = (index_ != -1 ? index_ : GetChildren().Size());
+    ASSERT(index >= 0 && index <= GetChildren().Size());
+    if (child->GetParent() != this) // Parent change
+    {
+        Matrix4 prevWorldTransform = Matrix4::Identity;
+        if (keepWorldTransform && child->GetTransform())
+        {
+            prevWorldTransform = child->GetTransform()->GetLocalToWorldMatrix();
+        }
+
+        GameObject *oldParent = child->GetParent();
+
+        child->p_parent = this;
+        if (keepWorldTransform && GetTransform() && child->GetTransform())
+        {
+            child->GetTransform()->FillFromMatrix(GetTransform()->
+                                                  GetLocalToWorldMatrixInv() *
+                                                  prevWorldTransform);
+        }
+
+        m_children.Insert(child, index);
+        ChildAdded(child, this);
+
+        EventEmitter<IEventsChildren>::
+               PropagateToListeners(&IEventsChildren::OnParentChanged,
+                                    oldParent, this);
+        PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
+                        GetComponents<EventListener<IEventsChildren>>(),
+                        oldParent,
+                        this);
+    }
+    else // Its a movement
+    {
+        int oldIndex = GetChildren().IndexOf(this);
+        if (oldIndex != index)
+        {
+            index =  (oldIndex < index) ? (index-1) : index;
+            m_children.Remove(child);
+            m_children.Insert(child, index);
+        }
+    }
+}
+
+void GameObject::RemoveChild(GameObject *child)
+{
+    int i = m_children.IndexOf(child);
+    if (i >= 0)
+    {
+        m_children[i] = nullptr;
+        TryToClearDeletedChildren();
+        ChildRemoved(child, this);
+    }
+}
+
+Component *GameObject::AddComponent_(Component *component, int index_)
+{
+    ASSERT(m_componentsIterationDepth == 0);
     if (component && !GetComponents().Contains(component))
     {
         Transform *transformComp = FastDynamicCast<Transform*>(component);
@@ -170,7 +243,7 @@ Component* GameObject::AddComponent(Component *component, int _index)
                             "A GameObject can not have more than one transform");
         }
 
-        const int index = (_index != -1 ? _index : GetComponents().Size());
+        const int index = (index_ != -1 ? index_ : GetComponents().Size());
         m_components.Insert(component, index);
 
         if (transformComp)
@@ -188,25 +261,6 @@ Component* GameObject::AddComponent(Component *component, int _index)
                     &IEventsComponent::OnComponentAdded, component, index);
     }
     return component;
-}
-
-void GameObject::AddChild(GameObject *child, int index)
-{
-    ASSERT(!GetChildren().Contains(child));
-
-    m_children.Insert(child, index);
-    ChildAdded(child, this);
-}
-
-void GameObject::RemoveChild(GameObject *child)
-{
-    int i = m_children.IndexOf(child);
-    if (i >= 0)
-    {
-        m_children[i] = nullptr;
-        TryToClearDeletedChildren();
-        ChildRemoved(child, this);
-    }
 }
 
 void GameObject::RemoveComponent(Component *component)
@@ -244,6 +298,35 @@ void GameObject::OnDisabled(Object *object)
     PropagateToArray(&EventListener<IEventsObject>::OnDisabled,
                     GetComponents<EventListener<IEventsObject>>(), object);
     PropagateToChildren(&EventListener<IEventsObject>::OnDisabled, object);
+}
+
+void GameObject::TryToAddQueuedChildren()
+{
+    if (m_childrenIterationDepth == 0)
+    {
+        for (const auto &childToAddStruct : m_childrenToAdd)
+        {
+            GameObject *childToAdd = childToAddStruct.child;
+            int idx = childToAddStruct.index;
+            bool keepWorldTransform = childToAddStruct.keepWorldTransform;
+            AddChild_(childToAdd, idx, keepWorldTransform);
+        }
+        m_childrenToAdd.Clear();
+    }
+}
+
+void GameObject::TryToAddQueuedComponents()
+{
+    if (m_componentsIterationDepth == 0)
+    {
+        for (const auto &pair : m_componentsToAdd)
+        {
+            Component *compToAdd = pair.first;
+            uint idx = pair.second;
+            AddComponent_(compToAdd, idx);
+        }
+        m_componentsToAdd.Clear();
+    }
 }
 
 void GameObject::TryToClearDeletedChildren()
@@ -333,18 +416,6 @@ bool GameObject::IsEnabled(bool recursive) const
 const Array<Component *> &GameObject::GetComponents() const
 {
     return m_components;
-}
-
-bool GameObject::HasComponent(const String &className) const
-{
-    for (Component *comp : GetComponents())
-    {
-        if (comp->GetClassName() == className)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 Component *GameObject::GetComponentByGUID(const GUID &guid) const
@@ -615,63 +686,28 @@ bool GameObject::IsVisible(bool recursive) const
 }
 
 void GameObject::SetParent(GameObject *newParent,
-                           int index_,
+                           int index,
                            bool keepWorldTransform)
 {
-    ASSERT( newParent != this );
-    ASSERT( !newParent || !newParent->IsChildOf(this, true) );
-
-    int index = newParent ? (index_ != -1 ? index_ :
-                              newParent->GetChildren().Size()) : -1;
-    if (newParent != GetParent())
+    if (newParent != GetParent()) // Parent change
     {
-        if (newParent && newParent->IsWaitingToBeDestroyed())
-        {
-            Debug_Warn("Trying to set as parent a destroyed object. "
-                       "Not setting parent...");
-            return;
-        }
-
-        Matrix4 prevWorldTransform = Matrix4::Identity;
-        if (keepWorldTransform && GetTransform())
-        {
-            prevWorldTransform = GetTransform()->GetLocalToWorldMatrix();
-        }
-
-        GameObject *oldParent = GetParent();
-        if (oldParent)
-        {
-            oldParent->RemoveChild(this);
-        }
-
-        p_parent = newParent;
-        if (newParent)
-        {
-            if (keepWorldTransform && newParent->GetTransform())
-            {
-                GetTransform()->FillFromMatrix(newParent->GetTransform()->
-                                               GetLocalToWorldMatrixInv() *
-                                               prevWorldTransform);
-            }
-            newParent->AddChild(this, index);
-        }
-
-        EventEmitter<IEventsChildren>::
-               PropagateToListeners(&IEventsChildren::OnParentChanged,
-                                    oldParent, newParent);
-        PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
-                        GetComponents<EventListener<IEventsChildren>>(),
-                        oldParent,
-                        newParent);
-    }
-    else if (GetParent())
-    {
-        // Is it a movement inside the same parent ?
-        int oldIndex = GetParent()->GetChildren().IndexOf(this);
-        if (oldIndex != index)
+        if (GetParent())
         {
             GetParent()->RemoveChild(this);
-            GetParent()->AddChild(this, (oldIndex < index) ? (index-1) : index);
+            p_parent = nullptr;
+        }
+
+        if (newParent)
+        {
+            newParent->AddChild(this, index, keepWorldTransform);
+        }
+    }
+    else if (GetParent()) // Movement in same parent
+    {
+        ASSERT(newParent == GetParent());
+        if (GetParent()->GetChildren().IndexOf(this) != index)
+        {
+            GetParent()->AddChild(this, index, keepWorldTransform);
         }
     }
 }
@@ -785,6 +821,7 @@ void GameObject::PropagateToChildren(std::function<void(GameObject*)> func)
 
     if (--m_childrenIterationDepth == 0)
     {
+        TryToAddQueuedChildren();
         TryToClearDeletedChildren();
     }
 }
@@ -804,6 +841,7 @@ void GameObject::PropagateToComponents(std::function<void(Component*)> func)
 
     if (--m_componentsIterationDepth == 0)
     {
+        TryToAddQueuedComponents();
         TryToClearDeletedComponents();
     }
 }
@@ -966,7 +1004,8 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
 
             if (!comp)
             {
-                comp = AddComponent(tagName);
+                comp = ComponentFactory::Create(tagName);
+                AddComponent(comp);
             }
             else
             {

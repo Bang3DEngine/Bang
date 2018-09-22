@@ -17,7 +17,7 @@ template <class T>
 T* GameObject::AddComponent(int index)
 {
     T *c = Component::Create<T>();
-    this->AddComponent(c, index);
+    AddComponent(c, index);
     return c;
 }
 

@@ -35,8 +35,8 @@ enum class ForceMode
 
 NAMESPACE_BANG_BEGIN
 
-class RigidBody : public PhysicsObject,
-                  public Component
+class RigidBody : public Component,
+                  public PhysicsObject
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(RigidBody)
 
@@ -90,6 +90,9 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
+    physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
+
+    // Saved properties
     float m_mass = 1.0f;
     float m_drag = 0.0f;
     float m_angularDrag = 0.05f;
@@ -97,7 +100,11 @@ private:
     bool m_isKinematic = false;
     RigidBodyConstraints m_constraints = RigidBodyConstraint::NONE;
 
-    physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
+    // Properties only saved to init the rigidbody when registered
+    bool m_initRigidDynamic = true;
+    Vector3 m_initLinearVelocity = Vector3::Zero;
+    Vector3 m_initAngularVelocity = Vector3::Zero;
+    float m_initMaxAngularVelocity = 0.0f;
 
     void UpdatePxRigidDynamicValues();
     void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);

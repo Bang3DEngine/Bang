@@ -36,7 +36,6 @@ public:
     void RegisterScene(Scene *scene);
     void UnRegisterScene(Scene *scene);
     void RegisterPhysicsMaterial(PhysicsMaterial *physicsMaterial);
-    void UpdateRigidbodyValues(RigidBody *rb);
 
     void SetStepSleepTime(float stepSleepTimeSeconds);
     void SetMaxSubSteps(int maxSubSteps);

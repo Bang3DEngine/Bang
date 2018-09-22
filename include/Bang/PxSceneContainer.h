@@ -42,9 +42,9 @@ private:
     int m_numFramesLeftToIgnore = 0;
     physx::PxScene *p_pxScene = nullptr;
     ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
-    Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
-    Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
     Map<physx::PxShape*, Collider*> m_pxShapeToCollider;
+    mutable Map<GameObject*, physx::PxActor*> m_gameObjectToPxActor;
+    mutable Map<physx::PxActor*, GameObject*> m_pxActorToGameObject;
 
     // PxSimulationEventCallback
     void onConstraintBreak(physx::PxConstraintInfo* constraints,

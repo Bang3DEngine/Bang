@@ -84,6 +84,7 @@ private:
     physx::PxPhysics* GetPxPhysics() const;
 
     physx::PxMaterial* CreateNewMaterial();
+    physx::PxRigidDynamic *CreateNewPxRigidDynamic(Transform *transform = nullptr);
 
     static GameObject* GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
@@ -91,6 +92,7 @@ private:
                                              const physx::PxTransform &pxTransform);
     static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
 
+    friend class RigidBody;
     friend class PxSceneContainer;
 };
 

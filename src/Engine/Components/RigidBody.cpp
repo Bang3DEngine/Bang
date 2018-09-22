@@ -1,14 +1,24 @@
 #include "Bang/RigidBody.h"
 
+#include "PxPhysicsAPI.h"
+
 #include "Bang/Physics.h"
 #include "Bang/MetaNode.h"
 
 USING_NAMESPACE_BANG
+using namespace physx;
 
 RigidBody::RigidBody()
 {
     CONSTRUCT_CLASS_ID(RigidBody)
     SetPhysicsObjectType( PhysicsObject::Type::RIGIDBODY );
+
+    // Create pxActor
+    if (Physics *ph = Physics::GetInstance())
+    {
+        SetPxRigidDynamic( ph->CreateNewPxRigidDynamic() );
+        SetIsKinematic(false);
+    }
 }
 
 RigidBody::~RigidBody()
@@ -67,10 +77,6 @@ void RigidBody::SetLinearVelocity(const Vector3 &linearVelocity)
         GetPxRigidDynamic()->setLinearVelocity(
                             Physics::GetPxVec3FromVector3(linearVelocity));
     }
-    else
-    {
-        m_initLinearVelocity = linearVelocity;
-    }
 }
 
 void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
@@ -80,10 +86,6 @@ void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
         GetPxRigidDynamic()->setAngularVelocity(
                             Physics::GetPxVec3FromVector3(angularVelocity));
     }
-    else
-    {
-        m_initAngularVelocity = angularVelocity;
-    }
 }
 
 void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
@@ -91,10 +93,6 @@ void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
     if (GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setMaxAngularVelocity(maxAngularVelocity);
-    }
-    else
-    {
-        m_initMaxAngularVelocity = maxAngularVelocity;
     }
 }
 
@@ -308,6 +306,7 @@ void RigidBody::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Constraints", GetConstraints().GetValue());
 }
 
+#include "Bang/GameObject.h"
 void RigidBody::UpdatePxRigidDynamicValues()
 {
     if (GetPxRigidDynamic())
@@ -322,27 +321,14 @@ void RigidBody::UpdatePxRigidDynamicValues()
         GetPxRigidDynamic()->setLinearDamping( GetDrag() );
         GetPxRigidDynamic()->setAngularDamping( GetAngularDrag() );
 
-        if (m_initRigidDynamic)
+        if (GetGameObject() && GetGameObject()->GetName() == "AAA")
         {
-            SetLinearVelocity(m_initLinearVelocity);
-            SetAngularVelocity(m_initAngularVelocity);
-            SetMaxAngularVelocity(m_initMaxAngularVelocity);
+            Debug_DLog( Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getLinearVelocity()) );
         }
     }
 }
 
-void RigidBody::SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic)
+void RigidBody::OnPxRigidDynamicSet()
 {
-    if (pxRigidDynamic != GetPxRigidDynamic())
-    {
-        m_initRigidDynamic = true;
-        p_pxRigidDynamic = pxRigidDynamic;
-        UpdatePxRigidDynamicValues();
-    }
+    UpdatePxRigidDynamicValues();
 }
-
-physx::PxRigidDynamic *RigidBody::GetPxRigidDynamic() const
-{
-    return p_pxRigidDynamic;
-}
-

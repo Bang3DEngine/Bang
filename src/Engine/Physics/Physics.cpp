@@ -11,6 +11,7 @@
 #include "Bang/PhysicsObject.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/CapsuleCollider.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PxSceneContainer.h"
 
@@ -312,6 +313,27 @@ PxMaterial *Physics::CreateNewMaterial()
     return GetPxPhysics()->createMaterial(0.5f, 0.5f, 0.02f);
 }
 
+PxRigidDynamic *Physics::CreateNewPxRigidDynamic(Transform *transform)
+{
+    PxMaterial *pxDefaultMat =
+            MaterialFactory::GetDefaultPhysicsMaterial().Get()->GetPxMaterial();
+
+    PxTransform pxTransform = GetPxTransformFromTransform(transform);
+    PxRigidDynamic *pxRD =  PxCreateDynamic(*GetPxPhysics(),
+                                            pxTransform,
+                                            PxSphereGeometry(0.01f),
+                                            *pxDefaultMat,
+                                            10.0f);
+    pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+
+    // Remove default initial shape
+    PxShape *shape;
+    pxRD->getShapes(&shape, 1);
+    pxRD->detachShape(*shape);
+
+    return pxRD;
+}
+
 Vector2 Physics::GetVector2FromPxVec2(const PxVec2 &v)
 {
     return Vector2(v.x, v.y);
@@ -364,11 +386,15 @@ void Physics::FillTransformFromPxTransform(Transform *transform,
 
 PxTransform Physics::GetPxTransformFromTransform(Transform *tr)
 {
-    PxTransform pxTransform;
+    PxTransform pxTransform(PxIdentity);
     if (tr)
     {
         pxTransform.p = Physics::GetPxVec3FromVector3( tr->GetPosition() );
         pxTransform.q = Physics::GetPxQuatFromQuaternion( tr->GetRotation() );
+        if (!pxTransform.isValid())
+        {
+            pxTransform = PxTransform(PxIdentity);
+        }
     }
     return pxTransform;
 }
@@ -388,9 +414,5 @@ const PxSceneContainer *Physics::GetPxSceneContainerFromScene(Scene *scene) cons
 
 GameObject *Physics::GetGameObjectFromPhysicsObject(PhysicsObject *phObj)
 {
-    if (Component *comp = DCAST<Component*>(phObj))
-    {
-        return comp->GetGameObject();
-    }
-    return nullptr;
+    return DCAST<Component*>(phObj)->GetGameObject();
 }

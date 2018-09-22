@@ -90,26 +90,18 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
-
     // Saved properties
     float m_mass = 1.0f;
     float m_drag = 0.0f;
     float m_angularDrag = 0.05f;
     bool m_useGravity = true;
-    bool m_isKinematic = false;
+    bool m_isKinematic = true;
     RigidBodyConstraints m_constraints = RigidBodyConstraint::NONE;
 
-    // Properties only saved to init the rigidbody when registered
-    bool m_initRigidDynamic = true;
-    Vector3 m_initLinearVelocity = Vector3::Zero;
-    Vector3 m_initAngularVelocity = Vector3::Zero;
-    float m_initMaxAngularVelocity = 0.0f;
-
     void UpdatePxRigidDynamicValues();
-    void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);
 
-    physx::PxRigidDynamic* GetPxRigidDynamic() const;
+    // PhysicsObject
+    virtual void OnPxRigidDynamicSet() override;
 
     friend class Physics;
     friend class PxSceneContainer;

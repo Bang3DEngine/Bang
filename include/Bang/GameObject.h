@@ -202,6 +202,8 @@ public:
                                        const Args&... args);
 
 
+    static GameObject *Instantiate();
+
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 

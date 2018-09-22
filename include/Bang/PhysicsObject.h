@@ -3,6 +3,11 @@
 
 #include "Bang/Bang.h"
 
+FORWARD namespace physx
+{
+    FORWARD class PxRigidDynamic;
+};
+
 NAMESPACE_BANG_BEGIN
 
 class PhysicsObject
@@ -20,11 +25,15 @@ public:
 	PhysicsObject();
 	virtual ~PhysicsObject();
 
+    physx::PxRigidDynamic *GetPxRigidDynamic() const;
     PhysicsObject::Type GetPhysicsObjectType() const;
 
 protected:
+    physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
     PhysicsObject::Type m_physicsObjectType = PhysicsObject::Type::NONE;
 
+    virtual void OnPxRigidDynamicSet();
+    void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);
     void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
 };
 

@@ -138,7 +138,7 @@ void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
     EventEmitter<IEventsChildren>::
           PropagateToListeners(&IEventsChildren::OnChildAdded,
                                addedChild, parent);
-    PropagateToArray(&EventListener<IEventsChildren>::OnChildAdded,
+    PropagateToArray(&IEventsChildren::OnChildAdded,
                     GetComponents< EventListener<IEventsChildren> >(),
                     addedChild, parent);
 }
@@ -146,16 +146,16 @@ void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
 void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
 {
     EventEmitter<IEventsChildren>::
-          PropagateToListeners(&EventListener<IEventsChildren>::OnChildRemoved,
+          PropagateToListeners(&IEventsChildren::OnChildRemoved,
                                removedChild, parent);
-    PropagateToArray(&EventListener<IEventsChildren>::OnChildRemoved,
+    PropagateToArray(&IEventsChildren::OnChildRemoved,
                     GetComponents< EventListener<IEventsChildren> >(),
                     removedChild, parent);
 }
 
-Component* GameObject::AddComponent(Component *component, int index_)
+Component* GameObject::AddComponent(Component *component, int index)
 {
-    m_componentsToAdd.PushBack( std::make_pair(component, index_) );
+    m_componentsToAdd.PushBack( std::make_pair(component, index) );
     TryToAddQueuedComponents();
     return component;
 }
@@ -844,6 +844,13 @@ void GameObject::PropagateToComponents(std::function<void(Component*)> func)
         TryToAddQueuedComponents();
         TryToClearDeletedComponents();
     }
+}
+
+GameObject *GameObject::Instantiate()
+{
+    GameObject *go = GameObjectFactory::CreateGameObject(true);
+    go->SetParent( SceneManager::GetActiveScene() );
+    return go;
 }
 
 template<class T>

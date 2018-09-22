@@ -81,11 +81,11 @@ PxSceneContainer::~PxSceneContainer()
 
     delete m_physicsObjectGatherer;
 
-    for (auto &it : m_gameObjectToPxActor)
-    {
-        PxActor *pxActor = it.second;
-        pxActor->release();
-    }
+    // for (auto &it : m_gameObjectToPxActor)
+    // {
+    //     PxActor *pxActor = it.second;
+    //     pxActor->release();
+    // }
     m_gameObjectToPxActor.Clear();
     m_pxActorToGameObject.Clear();
 
@@ -191,11 +191,20 @@ PxActor *PxSceneContainer::GetAncestorOrThisPxActor(GameObject *go)
 
 PxActor* PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
 {
-    if (m_gameObjectToPxActor.ContainsKey(go))
+    if (!m_gameObjectToPxActor.ContainsKey(go))
     {
-        return m_gameObjectToPxActor.Get(go);
+        Array<PhysicsObject*> phObjs = go->GetComponents<PhysicsObject>();
+        for (PhysicsObject *phObj : phObjs)
+        {
+            if (PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
+            {
+                m_gameObjectToPxActor.Add(go, SCAST<PxActor*>(pxRD));
+                return pxRD;
+            }
+        }
     }
-    return nullptr;
+    return m_gameObjectToPxActor.Get(go);
+
 }
 
 void PxSceneContainer::onConstraintBreak(PxConstraintInfo* constraints,
@@ -352,104 +361,90 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     // Does this gameObject need a pxActor for him to be created?
     // You need to create a pxActor when you hold a PhysicsObject component,
     // but neither do you or your ancestors
-    bool hasSomePhysicsObject = phObjGo->HasComponent<PhysicsObject>();
-    if (hasSomePhysicsObject)
+    ASSERT(phObjGo->HasComponent<PhysicsObject>());
+
+    PxMaterial *pxDefaultMat = PxSceneContainer::GetDefaultPxMaterial();
+    PxRigidDynamic *pxRD = SCAST<PxRigidDynamic*>(GetAncestorOrThisPxActor(phObjGo));
+    if (!pxRD)
     {
-        PxMaterial *pxDefaultMat = PxSceneContainer::GetDefaultPxMaterial();
-        bool hasPxActorInAncestors = (GetAncestorOrThisPxActor(phObjGo) != nullptr);
-        bool needsToCreatePxActor = (hasSomePhysicsObject && !hasPxActorInAncestors);
-        if (needsToCreatePxActor)
+        ASSERT(!GetPxActorFromGameObject(phObjGo));
+        pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
+    }
+
+    if (!m_pxActorToGameObject.ContainsKey(pxRD))
+    {
+        m_pxActorToGameObject.Add(pxRD, phObjGo);
+        GetPxScene()->addActor(*pxRD);
+    }
+
+    if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
+    {
+        m_gameObjectToPxActor.Add(phObjGo, pxRD);
+    }
+
+    ASSERT(pxRD);
+
+    // For each physics object, check that it is indeed synchronized with
+    // this actor. Otherwise, synchronize it.
+    for (PhysicsObject *phObj : phObjsInDescendants)
+    {
+        if (phObj->GetPhysicsObjectType() == PhysicsObject::Type::RIGIDBODY)
         {
-            ASSERT(!GetPxActorFromGameObject(phObjGo));
+            RigidBody *rb = SCAST<RigidBody*>(phObj);
+            rb->SetPxRigidDynamic(pxRD);
 
-            PxTransform pxTransform = Physics::GetPxTransformFromTransform(
-                                                      phObjGo->GetTransform());
-
-            // Create pxActor
-            PxRigidDynamic *pxRD =  PxCreateDynamic(*ph->GetPxPhysics(),
-                                                    pxTransform,
-                                                    PxSphereGeometry(0.01f),
-                                                    *pxDefaultMat,
-                                                    10.0f);
-            pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-
-            // Remove default initial shape
-            PxShape *shape;
-            pxRD->getShapes(&shape, 1);
-            pxRD->detachShape(*shape);
-
-            GetPxScene()->addActor(*pxRD);
-
-            m_gameObjectToPxActor.Add(phObjGo, pxRD);
-            m_pxActorToGameObject.Add(pxRD, phObjGo);
+            pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+            rb->UpdatePxRigidDynamicValues();
         }
-
-        PxRigidDynamic *pxRD = DCAST<PxRigidDynamic*>(
-                                            GetAncestorOrThisPxActor(phObjGo));
-        ASSERT(pxRD);
-
-        // For each physics object, check that it is indeed synchronized with
-        // this actor. Otherwise, synchronize it.
-        for (PhysicsObject *phObj : phObjsInDescendants)
+        else // Collider
         {
-            if (phObj->GetPhysicsObjectType() == PhysicsObject::Type::RIGIDBODY)
+            ASSERT(DCAST<Collider*>(phObj));
+
+            Collider *collider = SCAST<Collider*>(phObj);
+            bool isAlreadySynchronized = (collider->GetPxRigidBody() == pxRD);
+
+            if (!isAlreadySynchronized)
             {
-                RigidBody *rb = SCAST<RigidBody*>(phObj);
-                rb->SetPxRigidDynamic(pxRD);
-
-                pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-                rb->UpdatePxRigidDynamicValues();
-            }
-            else // Collider
-            {
-                ASSERT(DCAST<Collider*>(phObj));
-
-                Collider *collider = SCAST<Collider*>(phObj);
-                bool isAlreadySynchronized = (collider->GetPxRigidBody() == pxRD);
-
-                if (!isAlreadySynchronized)
+                PxShape *pxShapeToAdd = nullptr;
+                switch (phObj->GetPhysicsObjectType())
                 {
-                    PxShape *pxShapeToAdd = nullptr;
-                    switch (phObj->GetPhysicsObjectType())
+                    case PhysicsObject::Type::BOX_COLLIDER:
                     {
-                        case PhysicsObject::Type::BOX_COLLIDER:
-                        {
-                            PxBoxGeometry pxBoxGeom = PxBoxGeometry(0.1f, 0.1f, 0.1f);
-                            pxShapeToAdd = pxRD->createShape(pxBoxGeom, *pxDefaultMat);
-                        }
-                        break;
-
-                        case PhysicsObject::Type::SPHERE_COLLIDER:
-                        {
-
-                            PxSphereGeometry pxSphereGeom = PxSphereGeometry(0.1f);
-                            pxShapeToAdd = pxRD->createShape(pxSphereGeom, *pxDefaultMat);
-                        }
-                        break;
-
-                        case PhysicsObject::Type::CAPSULE_COLLIDER:
-                        {
-                            PxCapsuleGeometry pxCapsuleGeom = PxCapsuleGeometry(0.1f, 0.1f);
-                            pxShapeToAdd = pxRD->createShape(pxCapsuleGeom, *pxDefaultMat);
-                        }
-                        break;
-
-                        default:
-                            ASSERT(false);
+                        PxBoxGeometry pxBoxGeom = PxBoxGeometry(0.1f, 0.1f, 0.1f);
+                        pxShapeToAdd = pxRD->createShape(pxBoxGeom, *pxDefaultMat);
                     }
+                    break;
 
-                    if (pxShapeToAdd)
+                    case PhysicsObject::Type::SPHERE_COLLIDER:
                     {
-                        // Synchronize with this new pxShape :D
-                        collider->SetPxRigidBody( pxRD );
-                        collider->SetPxShape( pxShapeToAdd );
-                        collider->UpdatePxShape();
-                        m_pxShapeToCollider.Add(pxShapeToAdd, collider);
 
-                        if (Component *comp = DCAST<Component*>(phObj))
-                        {
-                            comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
-                        }
+                        PxSphereGeometry pxSphereGeom = PxSphereGeometry(0.1f);
+                        pxShapeToAdd = pxRD->createShape(pxSphereGeom, *pxDefaultMat);
+                    }
+                    break;
+
+                    case PhysicsObject::Type::CAPSULE_COLLIDER:
+                    {
+                        PxCapsuleGeometry pxCapsuleGeom = PxCapsuleGeometry(0.1f, 0.1f);
+                        pxShapeToAdd = pxRD->createShape(pxCapsuleGeom, *pxDefaultMat);
+                    }
+                    break;
+
+                    default:
+                        ASSERT(false);
+                }
+
+                if (pxShapeToAdd)
+                {
+                    // Synchronize with this new pxShape :D
+                    collider->SetPxRigidBody( pxRD );
+                    collider->SetPxShape( pxShapeToAdd );
+                    collider->UpdatePxShape();
+                    m_pxShapeToCollider.Add(pxShapeToAdd, collider);
+
+                    if (Component *comp = DCAST<Component*>(phObj))
+                    {
+                        comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
                     }
                 }
             }

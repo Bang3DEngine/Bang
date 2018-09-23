@@ -20,6 +20,7 @@ ReflectionProbe::ReflectionProbe()
 {
     CONSTRUCT_CLASS_ID(ReflectionProbe);
 
+    m_restTime.SetSeconds(0.5);
     p_textureCubeMapWithoutFiltering.Set(new TextureCubeMap());
     p_textureCubeMapDiffuse.Set(new TextureCubeMap());
     p_textureCubeMapSpecular.Set(new TextureCubeMap());
@@ -82,8 +83,7 @@ ReflectionProbe::~ReflectionProbe()
 
 void ReflectionProbe::RenderReflectionProbe(bool force)
 {
-    bool hasRested = ((Time::GetNow_Millis() - m_lastRenderTimeMillis) / 1000.0f >=
-                       GetRestTimeSeconds());
+    bool hasRested = ((Time::GetNow() - m_lastRenderTime) >= GetRestTime());
     if (hasRested || force)
     {
         // Render from each of the 6 cameras...
@@ -123,7 +123,7 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
                                             64);
         }
 
-        m_lastRenderTimeMillis = Time::GetNow_Millis();
+        m_lastRenderTime = Time::GetNow();
     }
 
 #undef __GET_TEX
@@ -223,12 +223,12 @@ void ReflectionProbe::SetIsBoxed(bool isBoxed)
     }
 }
 
-void ReflectionProbe::SetRestTimeSeconds(float restTimeSeconds)
+void ReflectionProbe::SetRestTimeSeconds(double restTimeSeconds)
 {
-    if (restTimeSeconds != GetRestTimeSeconds())
+    if (restTimeSeconds != GetRestTime().GetSeconds())
     {
-        m_restTimeSeconds = restTimeSeconds;
-        m_lastRenderTimeMillis = 0;
+        m_restTime.SetSeconds(restTimeSeconds);
+        m_lastRenderTime.SetNanos(0);
     }
 }
 
@@ -250,9 +250,9 @@ bool ReflectionProbe::GetIsBoxed() const
     return m_isBoxed;
 }
 
-float ReflectionProbe::GetRestTimeSeconds() const
+const Time& ReflectionProbe::GetRestTime() const
 {
-    return m_restTimeSeconds;
+    return m_restTime;
 }
 
 bool ReflectionProbe::GetFilterForIBL() const
@@ -378,7 +378,7 @@ void ReflectionProbe::CloneInto(ICloneable *clone) const
     rpClone->SetSize( GetSize() );
     rpClone->SetRenderSize( GetRenderSize() );
     rpClone->SetFilterForIBL( GetFilterForIBL() );
-    rpClone->SetRestTimeSeconds( GetRestTimeSeconds() );
+    rpClone->SetRestTimeSeconds( GetRestTime().GetSeconds() );
     rpClone->SetIsBoxed( GetIsBoxed() );
     rpClone->SetCamerasZNear( GetCamerasZNear() );
     rpClone->SetCamerasZFar( GetCamerasZFar() );
@@ -452,7 +452,7 @@ void ReflectionProbe::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("IsBoxed", GetIsBoxed());
     metaNode->Set("RenderSize", GetRenderSize());
     metaNode->Set("FilterForIBL", GetFilterForIBL());
-    metaNode->Set("RestTimeSeconds", GetRestTimeSeconds());
+    metaNode->Set("RestTimeSeconds", GetRestTime().GetSeconds());
 
     metaNode->Set("CamerasZFar", GetCamerasZFar());
     metaNode->Set("CamerasZNear", GetCamerasZNear());

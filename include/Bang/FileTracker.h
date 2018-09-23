@@ -22,7 +22,7 @@ public:
 
     void CheckFiles();
 
-    Time::TimeT GetModificationTime(const Path &path) const;
+    Time GetModificationTime(const Path &path) const;
     const USet<Path>& GetTrackedPaths() const;
     Array<Path> GetTrackedPathsWithExtensions(
                         const Array<String> &extensions) const;
@@ -32,7 +32,7 @@ public:
 private:
     USet<Path> m_trackedPaths;
     USet<Path> m_pathsJustRecentlyTracked;
-    UMap<Path, Time::TimeT> m_pathsToTrackToModificationTime;
+    UMap<Path, Time> m_pathsToTrackToModificationTime;
 };
 
 NAMESPACE_BANG_END

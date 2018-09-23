@@ -72,7 +72,7 @@ private:
     Array<int> m_selectedIndices;
     Array<UIImageRenderer*> m_checkImgs;
     bool m_listRecentlyToggled = false;
-    float m_secondsWithListShown = 0.0f;
+    Time m_timeWithListShown;
 
     UIList *p_list = nullptr;
     UIFocusable *p_focusable = nullptr;

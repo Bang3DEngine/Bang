@@ -33,13 +33,13 @@ public:
     void SetSize(const Vector3 &size);
     void SetIsBoxed(bool isBoxed);
     void SetFilterForIBL(bool filterForIBL);
-    void SetRestTimeSeconds(float restTimeSeconds);
+    void SetRestTimeSeconds(double restTimeSeconds);
 
     bool GetIsBoxed() const;
     int GetRenderSize() const;
     bool GetFilterForIBL() const;
     const Vector3 &GetSize() const;
-    float GetRestTimeSeconds() const;
+    const Time& GetRestTime() const;
     TextureCubeMap *GetTextureCubeMapDiffuse() const;
     TextureCubeMap *GetTextureCubeMapSpecular() const;
     TextureCubeMap *GetTextureCubeMapWithoutFiltering() const;
@@ -65,7 +65,7 @@ private:
     bool m_isBoxed = false;
     bool m_filterForIBL = true;
     Vector3 m_size = Vector3::One;
-    float m_restTimeSeconds = 0.5f;
+    Time m_restTime;
 
     int m_renderSize = -1;
     float m_camerasZNear = -1.0f;
@@ -74,8 +74,8 @@ private:
     CameraClearMode m_camerasClearMode = Undef<CameraClearMode>();
     RH<TextureCubeMap> m_camerasSkyBoxTexture;
 
+    Time m_lastRenderTime;
     std::array<Camera*, 6> m_cameras;
-    Time::TimeT m_lastRenderTimeMillis = 0;
     Framebuffer *m_textureCubeMapFB = nullptr;
     RH<TextureCubeMap> p_textureCubeMapWithoutFiltering;
     RH<TextureCubeMap> p_textureCubeMapDiffuse;

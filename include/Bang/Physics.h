@@ -4,6 +4,7 @@
 #include "PxPhysicsAPI.h"
 
 #include "Bang/Map.h"
+#include "Bang/Time.h"
 #include "Bang/Vector3.h"
 #include "Bang/RayCastInfo.h"
 #include "Bang/EventEmitter.h"
@@ -27,7 +28,7 @@ public:
 
     void Init();
 
-    void Step(Scene *scene, float simulationTime);
+    void Step(Scene *scene, Time simulationTime);
     void StepIfNeeded(Scene *scene);
     void ResetStepTimeReference(Scene *scene);
     void UpdateFromTransforms(Scene *scene);
@@ -37,12 +38,12 @@ public:
     void UnRegisterScene(Scene *scene);
     void RegisterPhysicsMaterial(PhysicsMaterial *physicsMaterial);
 
-    void SetStepSleepTime(float stepSleepTimeSeconds);
+    void SetStepSleepTime(Time stepSleepTime);
     void SetMaxSubSteps(int maxSubSteps);
     void SetGravity(const Vector3 &gravity);
 
     int GetMaxSubSteps() const;
-    float GetStepSleepTimeSeconds() const;
+    Time GetStepSleepTime() const;
     const Vector3& GetGravity() const;
     PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
     const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
@@ -73,7 +74,7 @@ private:
     physx::PxPhysics *m_pxPhysics = nullptr;
 
     int m_maxSubSteps = 10;
-    float m_stepSleepTimeSeconds = (1.0f/60.0f);
+    Time m_stepSleepTime;
     Vector3 m_gravity = Vector3(0.0f, -30.0f, 0.0f);
 
     Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;

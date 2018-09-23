@@ -76,8 +76,8 @@ void SystemProcess::WaitUntilFinished(float seconds,
     {
         int status = 0;
         bool finished = false;
-        auto beginning = Time::GetNow_Seconds();
-        while ( !finished && ((Time::GetNow_Seconds() - beginning) < seconds) )
+        Time beginning = Time::GetNow();
+        while ( !finished && ((Time::GetNow() - beginning).GetSeconds() < seconds) )
         {
             Thread::SleepCurrentThread( Math::Max(seconds / 10.0f, 0.1f) );
             finished = m_process->try_get_exit_status(status);

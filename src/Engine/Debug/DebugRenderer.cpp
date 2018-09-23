@@ -167,7 +167,7 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
     drp.p2 = (points.Size() >= 3 ? points[2] : Vector3::Zero);
     drp.p3 = (points.Size() >= 4 ? points[3] : Vector3::Zero);
     drp.color = color;
-    drp.destroyTimestamp = Time::GetNow_Seconds() + time;
+    drp.destroyTime = Time::GetNow() + time;
     drp.thickness = thickness;
     drp.wireframe = wireframe;
     drp.cullFace = (culling ? GL::CullFaceExt::BACK : GL::CullFaceExt::NONE);
@@ -191,8 +191,7 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         {
             ++it;
         }
-        else if (Time::GetNow_Seconds() >= drp->destroyTimestamp &&
-                 drp->renderedOnce)
+        else if (Time::GetNow() >= drp->destroyTime && drp->renderedOnce)
         {
             it = m_primitivesToRender.Remove(it);
         }

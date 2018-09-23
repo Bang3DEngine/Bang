@@ -47,11 +47,11 @@ void Animation::AddScaleKeyFrame(const String &boneName,
     PropagateResourceChanged();
 }
 
-void Animation::SetDurationInFrames(float durationInSeconds)
+void Animation::SetDurationInFrames(float durationInFrames)
 {
-    if (durationInSeconds != GetDurationInFrames())
+    if (durationInFrames != GetDurationInFrames())
     {
-        m_durationInFrames = durationInSeconds;
+        m_durationInFrames = durationInFrames;
         PropagateResourceChanged();
     }
 }
@@ -151,14 +151,14 @@ float WrapTime(float time,
     return wrappedTime;
 }
 
-Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(
-                                    float animationSeconds) const
+Map<String, Matrix4> Animation::GetBoneAnimationMatricesForTime(
+                                                Time animationTime) const
 {
     Map<String, Matrix4> bonesMatrices;
 
     Map<String, BoneTransformation> bonesTransformations;
     Animation::GetBoneCrossFadeAnimationTransformations(this,
-                                                        animationSeconds,
+                                                        animationTime,
                                                         &bonesTransformations);
     for (auto &it : bonesTransformations)
     {
@@ -253,7 +253,7 @@ void Animation::ExportMeta(MetaNode *metaNode) const
 
 void Animation::GetBoneCrossFadeAnimationTransformations(
                         const Animation *anim,
-                        double animationSeconds,
+                        Time animationTime,
                         Map<String, BoneTransformation> *boneTransformationsPtr)
 {
     ASSERT(boneTransformationsPtr);
@@ -263,7 +263,7 @@ void Animation::GetBoneCrossFadeAnimationTransformations(
         return;
     }
 
-    double timeInFrames = (animationSeconds * anim->GetFramesPerSecond());
+    double timeInFrames = (animationTime.GetSeconds() * anim->GetFramesPerSecond());
     timeInFrames = WrapTime(timeInFrames,
                             anim->GetDurationInFrames(),
                             anim->GetWrapMode());
@@ -362,27 +362,28 @@ void Animation::GetBoneCrossFadeAnimationTransformations(
 
 Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
                                         const Animation *prevAnimation,
-                                        double prevAnimationSeconds,
+                                        Time prevAnimationTime,
                                         const Animation *nextAnimation,
-                                        double currentCrossFadeSeconds,
-                                        double totalCrossFadeSeconds_)
+                                        Time currentCrossFadeTime,
+                                        Time totalCrossFadeTime)
 {
     Map<String, Matrix4> boneCrossFadeAnimMatrices;
 
-    double totalCrossFadeSeconds = Math::Max(totalCrossFadeSeconds_, 0.01);
-    float nextPonderation = (currentCrossFadeSeconds / totalCrossFadeSeconds);
-    float prevPonderation = (1.0f - nextPonderation);
+    double totalCrossFadeSeconds = Math::Max(totalCrossFadeTime.GetSeconds(),
+                                             0.01);
+    float nextPonderation = (currentCrossFadeTime.GetSeconds() /
+                             totalCrossFadeSeconds);
 
     // Gather the prev animation bone transformations
     Map<String, BoneTransformation> prevBoneTransformations;
     Animation::GetBoneCrossFadeAnimationTransformations(prevAnimation,
-                                                        prevAnimationSeconds,
+                                                        prevAnimationTime,
                                                         &prevBoneTransformations);
 
     // Gather the next animation bone transformations
     Map<String, BoneTransformation> nextBoneTransformations;
     Animation::GetBoneCrossFadeAnimationTransformations(nextAnimation,
-                                                        currentCrossFadeSeconds,
+                                                        currentCrossFadeTime,
                                                         &nextBoneTransformations);
 
     // Gather bone names

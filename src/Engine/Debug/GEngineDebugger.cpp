@@ -29,7 +29,7 @@ void GEngineDebugger::TakeGBufferShot(GBuffer *gbuffer,
 {
     if (Input::GetKeyDown(Key::Q))
     {
-        String fileName = String::ToString( int(Time::GetNow_Millis()) ) + "_"
+        String fileName = String::ToString( int(Time::GetNow().GetMillis()) ) + "_"
                           + screenshotName;
         Path filepath = GEngineDebugger::c_debugDir
                             .Append(fileName).AppendExtension("bmp");

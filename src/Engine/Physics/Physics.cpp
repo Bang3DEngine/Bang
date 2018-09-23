@@ -20,6 +20,7 @@ USING_NAMESPACE_BANG
 
 Physics::Physics()
 {
+    m_stepSleepTime.SetSeconds( 1.0 / 60.0 );
 }
 
 Physics::~Physics()
@@ -90,7 +91,7 @@ void Physics::SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore)
     }
 }
 
-void Physics::Step(Scene *scene, float simulationTime)
+void Physics::Step(Scene *scene, Time simulationTime)
 {
     PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene);
     ASSERT(pxSceneContainer);
@@ -99,18 +100,20 @@ void Physics::Step(Scene *scene, float simulationTime)
     ASSERT(pxScene);
 
     // Step
-    constexpr float MaxSimulationTime = 0.1f;
-    simulationTime = Math::Min(simulationTime, MaxSimulationTime);
+    constexpr double MaxSimulationTimeSeconds = 0.1;
+    simulationTime.SetSeconds( Math::Min(simulationTime.GetSeconds(),
+                                         MaxSimulationTimeSeconds) );
     int subStepsToBeDone =
         Math::Min(
-           SCAST<int>(Math::Ceil(simulationTime / GetStepSleepTimeSeconds())),
+           SCAST<int>(Math::Ceil(simulationTime.GetSeconds() /
+                                 GetStepSleepTime().GetSeconds())),
            GetMaxSubSteps());
     subStepsToBeDone = Math::Max(subStepsToBeDone, 1);
 
-    float subStepTime = (simulationTime / subStepsToBeDone);
+    Time subStepTime = (simulationTime / subStepsToBeDone);
     for (int i = 0; i < subStepsToBeDone; ++i)
     {
-        pxScene->simulate(subStepTime);
+        pxScene->simulate(subStepTime.GetSeconds());
         pxScene->fetchResults(true);
     }
     ResetStepTimeReference(scene);
@@ -156,14 +159,13 @@ void Physics::StepIfNeeded(Scene *scene)
 {
     if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
-        Time::TimeT nowMillis = Time::GetNow_Millis();
-        float secondsSinceLastStep =
-                    (nowMillis - pxSceneContainer->m_lastStepTimeMillis) / 1000.0f;
-        if (secondsSinceLastStep >= GetStepSleepTimeSeconds())
+        Time now = Time::GetNow();
+        Time timeSinceLastStep = (now - pxSceneContainer->m_lastStepTime);
+        if (timeSinceLastStep >= GetStepSleepTime())
         {
             if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
             {
-                Step(scene, secondsSinceLastStep);
+                Step(scene, timeSinceLastStep);
             }
             else
             {
@@ -174,11 +176,11 @@ void Physics::StepIfNeeded(Scene *scene)
     }
 }
 
-void Physics::SetStepSleepTime(float stepSleepTimeSeconds)
+void Physics::SetStepSleepTime(Time stepSleepTime)
 {
-    if (stepSleepTimeSeconds != GetStepSleepTimeSeconds())
+    if (stepSleepTime != GetStepSleepTime())
     {
-        m_stepSleepTimeSeconds = stepSleepTimeSeconds;
+        m_stepSleepTime = stepSleepTime;
     }
 }
 
@@ -236,9 +238,9 @@ int Physics::GetMaxSubSteps() const
     return m_maxSubSteps;
 }
 
-float Physics::GetStepSleepTimeSeconds() const
+Time Physics::GetStepSleepTime() const
 {
-    return m_stepSleepTimeSeconds;
+    return m_stepSleepTime;
 }
 
 const Vector3 &Physics::GetGravity() const

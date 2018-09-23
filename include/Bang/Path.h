@@ -42,7 +42,7 @@ public:
     Array<Path> GetSubDirectories(FindFlags findFlags) const;
     Array<Path> GetSubPaths(FindFlags findFlags) const;
 
-    Time::TimeT GetModificationTimeSeconds() const;
+    Time GetModificationTime() const;
 
     Path GetDirectory() const;
     String GetName() const;

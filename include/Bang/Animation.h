@@ -43,7 +43,7 @@ public:
                              const Animation::KeyFrame<Quaternion> &keyFrame);
     void AddScaleKeyFrame(const String &boneName,
                           const Animation::KeyFrame<Vector3> &keyFrame);
-    void SetDurationInFrames(float durationInSeconds);
+    void SetDurationInFrames(float durationInFrames);
     void SetFramesPerSecond(float framesPerSecond);
     void SetWrapMode(AnimationWrapMode wrapMode);
     void SetSpeed(float speed);
@@ -52,7 +52,7 @@ public:
     float GetFramesPerSecond() const;
     float GetDurationInFrames() const;
     AnimationWrapMode GetWrapMode() const;
-    Map<String, Matrix4> GetBoneAnimationMatricesForSecond(float second) const;
+    Map<String, Matrix4> GetBoneAnimationMatricesForTime(Time time) const;
 
     const Array< Animation::KeyFrame<Vector3> > &
     GetPositionKeyFrames(const String &boneName) const;
@@ -82,15 +82,15 @@ public:
 
     static void GetBoneCrossFadeAnimationTransformations(
                     const Animation *animation,
-                    double animationSeconds,
+                    Time animationTime,
                     Map<String, BoneTransformation> *boneTransformations);
 
     static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
                                             const Animation *prevAnimation,
-                                            double prevAnimationSeconds,
+                                            Time prevAnimationTime,
                                             const Animation *nextAnimation,
-                                            double currentCrossFadeSeconds,
-                                            double totalCrossFadeSeconds);
+                                            Time currentCrossFadeTime,
+                                            Time totalCrossFadeTime);
 
 private:
     Animation();

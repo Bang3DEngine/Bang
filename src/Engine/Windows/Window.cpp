@@ -13,6 +13,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Application.h"
 #include "Bang/SceneManager.h"
+#include "Bang/TimeSingleton.h"
 #include "Bang/UILayoutManager.h"
 
 USING_NAMESPACE_BANG
@@ -82,7 +83,7 @@ bool Window::MainLoopIteration()
     GetInput()->ProcessEnqueuedEvents();
 
     Update();
-    Time::SetDeltaTimeReferenceToNow();
+    TimeSingleton::SetDeltaTimeReferenceToNow();
     Render();
 
     GetInput()->OnFrameFinished();

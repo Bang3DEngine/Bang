@@ -100,7 +100,7 @@ private:
         AARect aaRectNDC;
         Color color;
         float thickness;
-        double destroyTimestamp;
+        Time destroyTime;
         bool wireframe;
         GL::CullFaceExt cullFace;
         bool depthTest;

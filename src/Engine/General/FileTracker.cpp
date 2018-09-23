@@ -30,7 +30,7 @@ void FileTracker::TrackPath(const Path &path)
     if (path.Exists())
     {
         bool wasBeingTracked = (m_pathsToTrackToModificationTime.ContainsKey(path));
-        Time::TimeT modTime = path.GetModificationTimeSeconds();
+        Time modTime = path.GetModificationTime();
         m_pathsToTrackToModificationTime.Add(path, modTime);
         m_trackedPaths.Add(path);
         if (!wasBeingTracked)
@@ -66,8 +66,7 @@ void FileTracker::Clear()
 
 void FileTracker::CheckFiles()
 {
-    const UMap<Path, Time::TimeT> previousPathsToTrack =
-                                    m_pathsToTrackToModificationTime;
+    const UMap<Path, Time> previousPathsToTrack = m_pathsToTrackToModificationTime;
 
     // Check for removed paths
     for (const auto &previousPathToModTime : previousPathsToTrack)
@@ -100,8 +99,8 @@ void FileTracker::CheckFiles()
         {
             ASSERT(previousPathsToTrack.ContainsKey(path));
 
-            const Time::TimeT prevModTime = previousPathsToTrack.Get(path);
-            const Time::TimeT newModTime  = path.GetModificationTimeSeconds();
+            const Time prevModTime = previousPathsToTrack.Get(path);
+            const Time newModTime  = path.GetModificationTime();
             if (newModTime != prevModTime)
             {
                 m_pathsToTrackToModificationTime.Add(path, newModTime);
@@ -114,14 +113,14 @@ void FileTracker::CheckFiles()
     }
 }
 
-Time::TimeT FileTracker::GetModificationTime(const Path &path) const
+Time FileTracker::GetModificationTime(const Path &path) const
 {
     auto it = m_pathsToTrackToModificationTime.Find(path);
     if (it != m_pathsToTrackToModificationTime.End())
     {
         return it->second;
     }
-    return 0;
+    return Time();
 }
 
 const USet<Path> &FileTracker::GetTrackedPaths() const

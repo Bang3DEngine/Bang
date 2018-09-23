@@ -29,6 +29,8 @@ public:
     void SetAnimation(uint animationIndex, Animation *animation);
     void ChangeCurrentAnimation(uint animationIndex);
     void ChangeCurrentAnimationCrossFade(uint animationIndex,
+                                         Time crossFadeTime);
+    void ChangeCurrentAnimationCrossFade(uint animationIndex,
                                          double crossFadeTimeSeconds);
     void ClearCurrentAnimation();
 
@@ -52,14 +54,14 @@ public:
 
 private:
     bool m_playing = false;
-    float m_animationTimeSeconds = 0.0f;
-    Time::TimeT m_prevFrameTimeMillis = 0;
+    Time m_animationTime;
+    Time m_prevFrameTime;
 
     Array< RH<Animation> > p_animations;
     uint m_currentAnimationIndex = -1u;
     uint m_currentTargetCrossFadeAnimationIndex = -1u;
-    double m_initCrossFadeTime = Math::Infinity<double>();
-    double m_endCrossFadeTime = Math::Infinity<double>();;
+    Time m_initCrossFadeTime;
+    Time m_endCrossFadeTime;
     bool m_playOnStart = true;
 
     void EndCrossFade();
@@ -72,13 +74,13 @@ private:
                                 const Map<String, Matrix4> &boneAnimMatrices);
 
     static Map<String, Matrix4> GetBoneAnimationMatrices(Animation *animation,
-                                                         double animationSeconds);
+                                                         Time animationTime);
     static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
                                                 Animation *prevAnimation,
-                                                double prevAnimationSeconds,
+                                                Time prevAnimationTime,
                                                 Animation *nextAnimation,
-                                                double currentCrossFadeSeconds,
-                                                double totalCrossFadeSeconds);
+                                                Time currentCrossFadeTime,
+                                                Time totalCrossFadeTime);
 };
 
 NAMESPACE_BANG_END

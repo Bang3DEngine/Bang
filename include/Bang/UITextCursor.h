@@ -18,14 +18,14 @@ public:
     void ResetTickTime();
 
     void SetStroke(float cursorWidth);
-    void SetTickTime(float cursorTickTime);
+    void SetTickTime(Time cursorTickTime);
 
     float GetStroke() const;
-    float GetTickTime() const;
+    Time GetTickTime() const;
 
 private:
-    float m_cursorTime = 0.0f;
-    float m_cursorTickTime = 0.5f;
+    Time m_cursorTime;
+    Time m_cursorTickTime;
 };
 
 NAMESPACE_BANG_END

@@ -15,11 +15,11 @@ void Chrono::MarkEvent(const String &eventName)
 {
     ChronoEvent ce;
     ce.eventName = eventName;
-    ce.time = Time::GetNow_Millis();
+    ce.time = Time::GetNow();
     if (!m_events.IsEmpty())
     {
         ChronoEvent &previousEvent = m_events.Back();
-        previousEvent.timeSinceLastEvent = Time::GetNow_Millis() - previousEvent.time;
+        previousEvent.timeSinceLastEvent = Time::GetNow() - previousEvent.time;
     }
     m_events.PushBack(ce);
 }
@@ -32,15 +32,15 @@ void Chrono::Log()
 
     std::cerr << "Chrono " <<  m_chronoName
               << " -------------------" << std::endl;
-    long totalTime = 0;
+    Time totalTime;
     for (int i = 0; i < m_events.Size() - 1; ++i)
     {
         ChronoEvent &ce = m_events[i];
-        double intervalSecs = ce.timeSinceLastEvent / 1000.0;
+        double intervalSecs = ce.timeSinceLastEvent.GetSeconds();
         totalTime += ce.timeSinceLastEvent;
         std::cerr << "  " <<
                      ce.eventName << ": " <<  intervalSecs << " s." << std::endl;
     }
-    std::cerr << "  Total: " << totalTime / 1000.0 <<
+    std::cerr << "  Total: " << totalTime.GetSeconds() <<
                  " s.  ----------------" << std::endl << std::endl;
 }

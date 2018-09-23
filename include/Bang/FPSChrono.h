@@ -2,6 +2,7 @@
 #define FPSCHRONO_H
 
 #include "Bang/List.h"
+#include "Bang/Time.h"
 #include "Bang/ChronoGL.h"
 
 NAMESPACE_BANG_BEGIN
@@ -22,8 +23,8 @@ public:
     int GetMeanSamples() const;
 
 private:
-    List<double> m_latestDeltaTimes;
-    double m_beginTimeSeconds = 0.0;
+    List<Time> m_latestDeltaTimes;
+    Time m_beginTime;
     int m_meanSamples = 100;
 };
 

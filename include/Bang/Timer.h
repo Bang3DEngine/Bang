@@ -19,10 +19,10 @@ public:
     void OnUpdate() override;
 
     void AddCallback(std::function<void()> callback);
-    void SetInterval(float intervalSecs);
+    void SetInterval(Time interval);
 
     bool IsRunning() const;
-    float GetInterval() const;
+    Time GetInterval() const;
 
 protected:
 	Timer();
@@ -30,10 +30,10 @@ protected:
 
 private:
     bool m_running = true;
-    float m_intervalSecs = 1.0f;
-    Time::TimeT m_lastTickTimestampSecs = 0;
+    Time m_interval;
+    Time m_lastTickTime;
 
-    List<std::function<void()>> m_callbacksList;
+    Array<std::function<void()>> m_callbacks;
 
     void Tick();
     void ResetTimestamp();

@@ -99,7 +99,7 @@ PxSceneContainer::~PxSceneContainer()
 
 void PxSceneContainer::ResetStepTimeReference()
 {
-    m_lastStepTimeMillis = Time::GetNow_Millis();
+    m_lastStepTime = Time::GetNow();
 }
 
 Scene *PxSceneContainer::GetScene() const

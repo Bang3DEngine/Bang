@@ -36,7 +36,7 @@ public:
     physx::PxActor* GetAncestorOrThisPxActor(GameObject *go);
 
 private:
-    Time::TimeT m_lastStepTimeMillis = 0;
+    Time m_lastStepTime;
 
     Scene *p_scene = nullptr;
     int m_numFramesLeftToIgnore = 0;

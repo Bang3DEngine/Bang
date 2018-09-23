@@ -21,6 +21,7 @@ FORWARD class Resources;
 FORWARD class AudioManager;
 FORWARD class DialogWindow;
 FORWARD class SceneManager;
+FORWARD class TimeSingleton;
 FORWARD class WindowManager;
 FORWARD class MetaFilesManager;
 
@@ -36,7 +37,7 @@ public:
     bool MainLoopIteration();
     void BlockingWait(Window *win);
 
-    Time             *GetTime() const;
+    TimeSingleton    *GetTime() const;
     Paths            *GetPaths() const;
     Debug            *GetDebug() const;
     GEngine          *GetGEngine() const;
@@ -56,7 +57,7 @@ public:
     static void Exit(int returnCode, bool immediate = false);
 
 protected:
-    Time             *m_time               = nullptr;
+    TimeSingleton    *m_time               = nullptr;
     Debug            *m_debug              = nullptr;
     Paths            *m_paths              = nullptr;
     Physics          *m_physics            = nullptr;

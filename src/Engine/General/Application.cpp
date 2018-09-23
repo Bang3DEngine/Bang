@@ -20,6 +20,7 @@
 #include "Bang/AudioManager.h"
 #include "Bang/DialogWindow.h"
 #include "Bang/SceneManager.h"
+#include "Bang/TimeSingleton.h"
 #include "Bang/WindowManager.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/FontSheetCreator.h"
@@ -40,7 +41,7 @@ void Application::Init(const Path &engineRootPath)
     Application::s_appSingleton = this;
     m_mainThreadId = Thread::GetCurrentThreadId();
 
-    m_time = new Time();
+    m_time = new TimeSingleton();
 
     m_systemUtils = new SystemUtils();
     m_debug = CreateDebug();
@@ -124,7 +125,7 @@ void StopProfiling()
 int Application::MainLoop()
 {
     InitBeforeLoop();
-    Time::SetDeltaTimeReferenceToNow();
+    TimeSingleton::SetDeltaTimeReferenceToNow();
 
     bool exit = false;
     while (!exit && !m_forcedExit)
@@ -151,7 +152,7 @@ void Application::BlockingWait(Window *win)
     GetWindowManager()->OnBlockingWaitEnd();
 }
 
-Time *Application::GetTime() const
+TimeSingleton *Application::GetTime() const
 {
     return m_time;
 }

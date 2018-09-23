@@ -38,7 +38,7 @@ void UIComboBox::OnUpdate()
 {
     Component::OnUpdate();
 
-    m_secondsWithListShown += Time::GetDeltaTime();
+    m_timeWithListShown += Time::GetDeltaTime();
     m_listRecentlyToggled = false;
 
     // Close when click outside
@@ -249,7 +249,7 @@ void UIComboBox::ShowList()
 {
     if (!IsListBeingShown())
     {
-        m_secondsWithListShown = 0.0f;
+        m_timeWithListShown.SetNanos(0);
         SCAST<UIFocusable*>(GetList()->GetFocusable())->SetEnabled(true);
         GetList()->GetGameObject()->SetEnabled(true);
     }
@@ -269,7 +269,7 @@ void UIComboBox::HideList()
 {
     if (IsListBeingShown())
     {
-        m_secondsWithListShown = 0.0f;
+        m_timeWithListShown.SetNanos(0);
         SCAST<UIFocusable*>(GetList()->GetFocusable())->SetEnabled(false);
         GetList()->GetGameObject()->SetEnabled(false);
     }
@@ -327,7 +327,7 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable*, const UIEvent &event)
             {
                 if (IsListBeingShown() &&
                     GetList()->GetFocusable()->IsMouseOver() &&
-                    m_secondsWithListShown > 0.3f)
+                    m_timeWithListShown.GetSeconds() > 0.3)
                 {
                     m_listRecentlyToggled = true;
                 }
@@ -529,7 +529,7 @@ void UIComboBox::OnListSelectionCallback(GameObject *item, UIList::Action action
         case UIList::Action::MOUSE_LEFT_UP:
             if (IsListBeingShown() &&
                 GetList()->GetFocusable()->IsMouseOver() &&
-                m_secondsWithListShown > 0.3f)
+                m_timeWithListShown.GetSeconds() > 0.3)
             {
                 if (!GetMultiCheck())
                 {

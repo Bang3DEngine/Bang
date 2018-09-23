@@ -17,7 +17,7 @@
 
 USING_NAMESPACE_BANG
 
-const float UIDragDroppable::DragInitTime = 0.3f;
+const Time UIDragDroppable::DragInitTime = Time::Seconds(0.3);
 
 UIDragDroppable::UIDragDroppable()
 {
@@ -58,10 +58,10 @@ void UIDragDroppable::OnUpdate()
 
     if (m_beingPressed)
     {
-        if (m_secondsSinceMouseIsDown < UIDragDroppable::DragInitTime)
+        if (m_timeSinceMouseIsDown < UIDragDroppable::DragInitTime)
         {
-            m_secondsSinceMouseIsDown += Time::GetDeltaTime();
-            if (m_secondsSinceMouseIsDown >= UIDragDroppable::DragInitTime)
+            m_timeSinceMouseIsDown += Time::GetDeltaTime();
+            if (m_timeSinceMouseIsDown >= UIDragDroppable::DragInitTime)
             {
                 OnDragStarted();
             }
@@ -69,7 +69,7 @@ void UIDragDroppable::OnUpdate()
     }
     else
     {
-        m_secondsSinceMouseIsDown = 0.0f;
+        m_timeSinceMouseIsDown.SetNanos(0);
     }
 }
 

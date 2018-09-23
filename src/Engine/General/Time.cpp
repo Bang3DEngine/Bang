@@ -2,66 +2,82 @@
 
 #include <chrono>
 
-#include "Bang/Application.h"
+#include "Bang/TimeSingleton.h"
 
 USING_NAMESPACE_BANG
 
-float Time::GetDeltaTime()
+Time::Time(uint64_t timeNanos)
 {
-    Time *time = Time::GetInstance();
-    return (Time::GetNow_Millis() - time->m_deltaTimeReferenceNanos) / 1000.0f;
+    m_timeNanos = timeNanos;
 }
 
-double Time::GetNow_Seconds()
+void Time::SetSeconds(double seconds)
 {
-    return GetNow_Nanos() / SCAST<double>(1e9);
+    m_timeNanos = SCAST<uint64_t>(seconds * 1e9);
 }
 
-Time::TimeT Time::GetNow_Millis()
+void Time::SetMillis(uint64_t millis)
 {
-    return GetNow_Nanos() / 1e6;
+    m_timeNanos = SCAST<uint64_t>(millis * 1e6);
 }
 
-Time::TimeT Time::GetNow_Nanos()
+void Time::SetNanos(uint64_t nanos)
 {
-    return std::chrono::system_clock::now().time_since_epoch() /
-           std::chrono::nanoseconds(1);
+    m_timeNanos = nanos;
 }
 
-double Time::GetEllapsed_Seconds()
+void Time::SetInfinity()
 {
-    return Time::GetEllapsed_Nanos() / SCAST<double>(1e9);
+    m_timeNanos = SCAST<uint64_t>(-1);
 }
 
-Time::TimeT Time::GetEllapsed_Millis()
+double Time::GetSeconds() const
 {
-    return Time::GetEllapsed_Nanos() / 1e6;
+    return GetNanos() / SCAST<double>(1e9);
 }
 
-Time::TimeT Time::GetEllapsed_Nanos()
+uint64_t Time::GetMillis() const
 {
-    return (std::chrono::system_clock::now().time_since_epoch() /
-            std::chrono::nanoseconds(1)) -
-           Time::GetInstance()->m_initialTimeNanos;
+    return GetNanos() / 1e6;
 }
 
-void Time::SetDeltaTime(double seconds)
+uint64_t Time::GetNanos() const
 {
-    Time::GetInstance()->m_deltaTimeReferenceNanos = Time::GetNow_Millis() -
-                                                     (seconds * 1000);
+    return m_timeNanos;
 }
 
-void Time::SetDeltaTimeReferenceToNow()
+Time Time::Seconds(double seconds)
 {
-    Time::GetInstance()->m_deltaTimeReferenceNanos = Time::GetNow_Millis();
+    Time time;
+    time.SetSeconds(seconds);
+    return time;
 }
 
-Time::Time()
+Time Time::Millis(uint64_t millis)
 {
-    m_initialTimeNanos = Time::GetNow_Nanos();
+    Time time;
+    time.SetMillis(millis);
+    return time;
 }
 
-Time *Time::GetInstance()
+Time Time::Nanos(uint64_t nanos)
 {
-    return Application::GetInstance()->GetTime();
+    Time time;
+    time.SetNanos(nanos);
+    return time;
+}
+
+Time Time::GetNow()
+{
+    return TimeSingleton::GetInstance()->GetNow();
+}
+
+Time Time::GetEllapsed()
+{
+    return TimeSingleton::GetInstance()->GetEllapsed();
+}
+
+Time Time::GetDeltaTime()
+{
+    return TimeSingleton::GetInstance()->GetDeltaTime();
 }

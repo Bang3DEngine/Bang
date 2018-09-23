@@ -6,6 +6,7 @@ void Timer::Run()
 {
     ResetTimestamp();
     m_running = true;
+    m_interval.SetSeconds(1);
 }
 
 void Timer::Stop()
@@ -19,9 +20,8 @@ void Timer::OnUpdate()
 
     if (IsRunning())
     {
-        float secsSinceLastTick =
-                            (Time::GetNow_Seconds() - m_lastTickTimestampSecs);
-        if (secsSinceLastTick > GetInterval())
+        Time timeSinceLastTick = (Time::GetNow() - m_lastTickTime);
+        if (timeSinceLastTick > GetInterval())
         {
             Tick();
         }
@@ -30,27 +30,37 @@ void Timer::OnUpdate()
 
 void Timer::Tick()
 {
-    for (auto callback : m_callbacksList) { callback(); }
+    for (auto callback : m_callbacks)
+    {
+        callback();
+    }
     ResetTimestamp();
 }
 
 void Timer::ResetTimestamp()
 {
-    m_lastTickTimestampSecs = Time::GetNow_Seconds();
+    m_lastTickTime = Time::GetNow();
 }
 
 void Timer::AddCallback(std::function<void ()> callback)
 {
-    m_callbacksList.PushBack(callback);
+    m_callbacks.PushBack(callback);
 }
 
-void Timer::SetInterval(float intervalSecs)
+void Timer::SetInterval(Time interval)
 {
-    m_intervalSecs = intervalSecs;
+    m_interval = interval;
 }
 
-bool Timer::IsRunning() const { return m_running; }
-float Timer::GetInterval() const { return m_intervalSecs; }
+bool Timer::IsRunning() const
+{
+    return m_running;
+}
+
+Time Timer::GetInterval() const
+{
+    return m_interval;
+}
 
 Timer::Timer()
 {

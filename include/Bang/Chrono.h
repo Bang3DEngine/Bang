@@ -1,6 +1,7 @@
 #ifndef CHRONO_H
 #define CHRONO_H
 
+#include "Bang/Time.h"
 #include "Bang/Array.h"
 #include "Bang/String.h"
 
@@ -18,8 +19,8 @@ private:
     struct ChronoEvent
     {
         String eventName        = "";
-        long time               = 0;
-        long timeSinceLastEvent = 0;
+        Time time;
+        Time timeSinceLastEvent;
     };
 
     String m_chronoName = "";

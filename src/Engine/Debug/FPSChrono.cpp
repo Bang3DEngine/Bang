@@ -8,7 +8,7 @@ USING_NAMESPACE_BANG
 
 void FPSChrono::MarkBegin()
 {
-    m_beginTimeSeconds = Time::GetNow_Seconds();
+    m_beginTime = Time::GetNow();
 }
 
 void FPSChrono::MarkEnd()
@@ -18,7 +18,7 @@ void FPSChrono::MarkEnd()
         m_latestDeltaTimes.PopBack();
     }
 
-    m_latestDeltaTimes.PushFront( Time::GetNow_Seconds() - m_beginTimeSeconds );
+    m_latestDeltaTimes.PushFront( Time::GetNow() - m_beginTime );
 }
 
 void FPSChrono::SetMeanSamples(int meanSamples)
@@ -43,10 +43,13 @@ double FPSChrono::GetMeanSeconds() const
         return 0.0;
     }
 
-    float meanDeltas = 0.0;
-    for (float delta : m_latestDeltaTimes) { meanDeltas += delta; }
+    Time meanDeltas;
+    for (Time delta : m_latestDeltaTimes)
+    {
+        meanDeltas += delta;
+    }
     meanDeltas /= m_latestDeltaTimes.Size();
-    return meanDeltas;
+    return meanDeltas.GetSeconds();
 }
 
 int FPSChrono::GetMeanSamples() const

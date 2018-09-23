@@ -112,7 +112,8 @@ void GLUniforms::SetAllUniformsToShaderProgram(ShaderProgram *sp,
 
     if (neededUniforms.IsOn(NeededUniformFlag::TIME))
     {
-        sp->SetDouble(GLUniforms::UniformName_TimeSeconds, Time::GetEllapsed_Seconds());
+        sp->SetDouble(GLUniforms::UniformName_TimeSeconds,
+                      Time::GetEllapsed().GetSeconds());
     }
 
     if (neededUniforms.IsOn(NeededUniformFlag::SKYBOXES))

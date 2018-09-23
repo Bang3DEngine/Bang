@@ -8,34 +8,156 @@ NAMESPACE_BANG_BEGIN
 class Time
 {
 public:
-    using TimeT = uint64_t;
+    Time() = default;
+    explicit Time(uint64_t timeNanos);
 
-    static float GetDeltaTime();
-    static double GetNow_Seconds();
-    static TimeT  GetNow_Millis();
-    static TimeT  GetNow_Nanos();
-    static double GetEllapsed_Seconds();
-    static TimeT  GetEllapsed_Millis();
-    static TimeT  GetEllapsed_Nanos();
-    static void SetDeltaTime(double seconds);
-    static void SetDeltaTimeReferenceToNow();
+    ~Time() = default;
+
+    void SetSeconds(double seconds);
+    void SetMillis(uint64_t millis);
+    void SetNanos(uint64_t nanos);
+    void SetInfinity();
+
+    double GetSeconds() const;
+    uint64_t GetMillis() const;
+    uint64_t GetNanos() const;
+
+    static Time Seconds(double seconds);
+    static Time Millis(uint64_t millis);
+    static Time Nanos(uint64_t nanos);
+
+    static Time GetNow();
+    static Time GetEllapsed();
+    static Time GetDeltaTime();
 
 private:
-    double m_time = 0.0;
-
-    TimeT m_ellapsedTimeNanos = 0;
-    TimeT m_initialTimeNanos  = 0;
-
-    float m_deltaTime               = 0.0f;
-    TimeT m_deltaTimeReferenceNanos = 0;
-
-    Time();
-    virtual ~Time() = default;
-
-    static Time *GetInstance();
-
-    friend class Application;
+    uint64_t m_timeNanos = 0;
 };
+
+inline Time operator*(const Time &lhs, const Time &rhs)
+{
+    return Time(lhs.GetNanos() * rhs.GetNanos());
+}
+inline Time operator/(const Time &lhs, const Time &rhs)
+{
+    return Time(lhs.GetNanos() / rhs.GetNanos());
+}
+inline Time operator-(const Time &lhs, const Time &rhs)
+{
+    return Time(lhs.GetNanos() - rhs.GetNanos());
+}
+inline Time operator+(const Time &lhs, const Time &rhs)
+{
+    return Time(lhs.GetNanos() + rhs.GetNanos());
+}
+inline bool operator==(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() == rhs.GetNanos());
+}
+inline bool operator!=(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() != rhs.GetNanos());
+}
+inline bool operator<(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() < rhs.GetNanos());
+}
+inline bool operator<=(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() <= rhs.GetNanos());
+}
+inline bool operator>(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() > rhs.GetNanos());
+}
+inline bool operator>=(const Time &lhs, const Time &rhs)
+{
+    return (lhs.GetNanos() >= rhs.GetNanos());
+}
+inline Time& operator+=(Time &lhs, const Time &rhs)
+{
+    lhs = (lhs + rhs);
+    return lhs;
+}
+inline Time& operator-=(Time &lhs, const Time &rhs)
+{
+    lhs = (lhs - rhs);
+    return lhs;
+}
+inline Time& operator*=(Time &lhs, const Time &rhs)
+{
+    lhs = (lhs * rhs);
+    return lhs;
+}
+inline Time& operator/=(Time &lhs, const Time &rhs)
+{
+    lhs = (lhs / rhs);
+    return lhs;
+}
+template <class T>
+inline Time operator+(const Time &lhs, const T& rhs)
+{
+    return Time(lhs.GetNanos() + rhs);
+}
+template <class T>
+inline Time operator+(const T& lhs, const Time &rhs)
+{
+    return Time(rhs.GetNanos() + lhs);
+}
+template <class T>
+inline Time operator-(const Time &lhs, const T& rhs)
+{
+    return Time(lhs.GetNanos() - rhs);
+}
+template <class T>
+inline Time operator-(const T& lhs, const Time &rhs)
+{
+    return Time(rhs.GetNanos() - lhs);
+}
+template <class T>
+inline Time operator*(const Time &lhs, const T& rhs)
+{
+    return Time(lhs.GetNanos() * rhs);
+}
+template <class T>
+inline Time operator*(const T& lhs, const Time &rhs)
+{
+    return Time(rhs.GetNanos() * lhs);
+}
+template <class T>
+inline Time operator/(const Time &lhs, const T& rhs)
+{
+    return Time(lhs.GetNanos() / rhs);
+}
+template <class T>
+inline Time operator/(const T& lhs, const Time &rhs)
+{
+    return Time(rhs.GetNanos() / lhs);
+}
+template <class T>
+inline Time& operator+=(Time &lhs, const T& rhs)
+{
+    lhs.SetNanos(lhs.GetNanos() + rhs);
+    return lhs;
+}
+template <class T>
+inline Time& operator-=(Time &lhs, const T& rhs)
+{
+    lhs.SetNanos(lhs.GetNanos() - rhs);
+    return lhs;
+}
+template <class T>
+inline Time& operator*=(Time &lhs, const T& rhs)
+{
+    lhs.SetNanos(lhs.GetNanos() * rhs);
+    return lhs;
+}
+template <class T>
+inline Time& operator/=(Time &lhs, const T& rhs)
+{
+    lhs.SetNanos(lhs.GetNanos() / rhs);
+    return lhs;
+}
 
 NAMESPACE_BANG_END
 

@@ -18,6 +18,8 @@ UITextCursor::UITextCursor()
     SetViewProjMode(GL::ViewProjMode::CANVAS);
     SetStroke(1.0f);
 
+    m_cursorTickTime.SetSeconds(0.5);
+
     constexpr float limit = 1.0f;
     SetPoints({Vector3(0, -limit, 0), Vector3(0,  limit, 0)});
 }
@@ -32,12 +34,15 @@ void UITextCursor::OnUpdate()
 
     m_cursorTime += Time::GetDeltaTime();
     SetVisible( m_cursorTime <= m_cursorTickTime );
-    if (m_cursorTime >= m_cursorTickTime * 2) { m_cursorTime = 0.0f; }
+    if (m_cursorTime >= m_cursorTickTime * 2)
+    {
+        m_cursorTime.SetNanos(0);
+    }
 }
 
 void UITextCursor::ResetTickTime()
 {
-    m_cursorTime = 0.0f;
+    m_cursorTime.SetNanos(0);
     SetVisible(true);
 }
 
@@ -46,7 +51,7 @@ void UITextCursor::SetStroke(float cursorWidth)
     GetMaterial()->SetLineWidth(cursorWidth);
 }
 
-void UITextCursor::SetTickTime(float cursorTickTime)
+void UITextCursor::SetTickTime(Time cursorTickTime)
 {
     m_cursorTickTime = cursorTickTime;
 }
@@ -56,7 +61,7 @@ float UITextCursor::GetStroke() const
     return GetActiveMaterial()->GetLineWidth();
 }
 
-float UITextCursor::GetTickTime() const
+Time UITextCursor::GetTickTime() const
 {
     return m_cursorTickTime;
 }

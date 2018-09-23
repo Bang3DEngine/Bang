@@ -149,14 +149,17 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
     return subPathsArray;
 }
 
-Time::TimeT Path::GetModificationTimeSeconds() const
+Time Path::GetModificationTime() const
 {
+    Time time;
+
     struct stat attr;
     if (stat(GetAbsolute().ToCString(), &attr) == 0)
     {
-        return attr.st_mtim.tv_sec;
+        time.SetMillis(attr.st_mtim.tv_sec);
     }
-    return 0;
+
+    return time;
 }
 
 String Path::GetName() const

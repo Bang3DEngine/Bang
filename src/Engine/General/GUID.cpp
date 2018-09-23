@@ -4,9 +4,16 @@ USING_NAMESPACE_BANG
 
 const GUID::GUIDType GUID::EmptyGUID = 0;
 
-const GUID &GUID::Empty() { static GUID emptyGUID; return emptyGUID; }
+const GUID &GUID::Empty()
+{
+    static GUID emptyGUID;
+    return emptyGUID;
+}
 
-bool GUID::IsEmpty() const { return *this == Empty(); }
+bool GUID::IsEmpty() const
+{
+    return *this == Empty();
+}
 
 void GUID::SetEmbeddedResourceGUID(const GUIDType &guid)
 {
@@ -16,7 +23,7 @@ void GUID::SetEmbeddedResourceGUID(const GUIDType &guid)
 GUID GUID::GetRandomGUID()
 {
     GUID guid;
-    guid.m_timeGUID = Time::GetNow_Nanos();
+    guid.m_timeGUID = Time::GetNow().GetNanos();
     guid.m_randGUID = Random::GetRange<GUIDType>(1, Math::Max<GUIDType>());
     guid.m_embeddedResourceGUID = GUID::EmptyGUID;
     return guid;
@@ -51,11 +58,20 @@ GUID GUID::WithoutEmbeddedResourceGUID() const
 
 std::istream &GUID::operator>>(std::istream &is)
 {
-    if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_timeGUID; }
+    if (is.peek() != EOF && std::isdigit(is.peek()))
+    {
+        is >> m_timeGUID;
+    }
     is >> std::ws;
-    if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_randGUID; }
+    if (is.peek() != EOF && std::isdigit(is.peek()))
+    {
+        is >> m_randGUID;
+    }
     is >> std::ws;
-    if (is.peek() != EOF && std::isdigit(is.peek())) { is >> m_embeddedResourceGUID; }
+    if (is.peek() != EOF && std::isdigit(is.peek()))
+    {
+        is >> m_embeddedResourceGUID;
+    }
     return is;
 }
 
@@ -73,12 +89,24 @@ bool GUID::operator!=(const GUID &rhs) const
 
 bool GUID::operator<(const GUID &rhs) const
 {
-    if (GetTimeGUID() < rhs.GetTimeGUID()) { return true; }
-    else if (GetTimeGUID() > rhs.GetTimeGUID()) { return false; }
+    if (GetTimeGUID() < rhs.GetTimeGUID())
+    {
+        return true;
+    }
+    else if (GetTimeGUID() > rhs.GetTimeGUID())
+    {
+        return false;
+    }
     else
     {
-        if (GetRandGUID() < rhs.GetRandGUID()) { return true; }
-        else if (GetRandGUID() > rhs.GetRandGUID()) { return false; }
+        if (GetRandGUID() < rhs.GetRandGUID())
+        {
+            return true;
+        }
+        else if (GetRandGUID() > rhs.GetRandGUID())
+        {
+            return false;
+        }
         else
         {
             return (GetEmbeddedResourceGUID() < rhs.GetEmbeddedResourceGUID());

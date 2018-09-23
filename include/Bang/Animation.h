@@ -30,6 +30,13 @@ public:
         T value;
     };
 
+    struct BoneTransformation
+    {
+        Vector3 position;
+        Quaternion rotation;
+        Vector3 scale;
+    };
+
     void AddPositionKeyFrame(const String &boneName,
                              const Animation::KeyFrame<Vector3> &keyFrame);
     void AddRotationKeyFrame(const String &boneName,
@@ -71,6 +78,19 @@ public:
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
+
+
+    static void GetBoneCrossFadeAnimationTransformations(
+                    const Animation *animation,
+                    double animationSeconds,
+                    Map<String, BoneTransformation> *boneTransformations);
+
+    static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
+                                            const Animation *prevAnimation,
+                                            double prevAnimationSeconds,
+                                            const Animation *nextAnimation,
+                                            double currentCrossFadeSeconds,
+                                            double totalCrossFadeSeconds);
 
 private:
     Animation();

@@ -1,4 +1,4 @@
-#ifndef ANIMATOR_H
+﻿#ifndef ANIMATOR_H
 #define ANIMATOR_H
 
 #include "Bang/Bang.h"
@@ -8,7 +8,6 @@
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
-
 
 class Animator : public Component
 {
@@ -23,13 +22,14 @@ public:
     // Component
     void OnStart() override;
     void OnUpdate() override;
-    void OnRender(RenderPass rp) override;
 
     void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
     void RemoveAnimationByIndex(Animation *animation);
     void RemoveAnimationByIndex(uint animationIndex);
     void SetAnimation(uint animationIndex, Animation *animation);
     void ChangeCurrentAnimation(uint animationIndex);
+    void ChangeCurrentAnimationCrossFade(uint animationIndex,
+                                         double crossFadeTimeSeconds);
     void ClearCurrentAnimation();
 
     void SetPlayOnStart(bool playOnStart);
@@ -56,13 +56,29 @@ private:
     Time::TimeT m_prevFrameTimeMillis = 0;
 
     Array< RH<Animation> > p_animations;
-    uint m_currentAnimationIndex = 0;
+    uint m_currentAnimationIndex = -1u;
+    uint m_currentTargetCrossFadeAnimationIndex = -1u;
+    double m_initCrossFadeTime = Math::Infinity<double>();
+    double m_endCrossFadeTime = Math::Infinity<double>();;
     bool m_playOnStart = true;
+
+    void EndCrossFade();
 
     uint GetCurrentAnimationIndex() const;
     Animation *GetCurrentAnimation() const;
+    uint GetCurrentTargetCrossFadeAnimationIndex() const;
+    Animation *GetCurrentTargetCrossFadeAnimation() const;
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                 const Map<String, Matrix4> &boneAnimMatrices);
+
+    static Map<String, Matrix4> GetBoneAnimationMatrices(Animation *animation,
+                                                         double animationSeconds);
+    static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
+                                                Animation *prevAnimation,
+                                                double prevAnimationSeconds,
+                                                Animation *nextAnimation,
+                                                double currentCrossFadeSeconds,
+                                                double totalCrossFadeSeconds);
 };
 
 NAMESPACE_BANG_END

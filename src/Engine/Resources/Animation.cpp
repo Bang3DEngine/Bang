@@ -1,5 +1,6 @@
 #include "Bang/Animation.h"
 
+#include "Bang/Set.h"
 #include "Bang/MetaNode.h"
 
 USING_NAMESPACE_BANG
@@ -150,139 +151,25 @@ float WrapTime(float time,
     return wrappedTime;
 }
 
-Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(float timeSecs) const
+Map<String, Matrix4> Animation::GetBoneAnimationMatricesForSecond(
+                                    float animationSeconds) const
 {
     Map<String, Matrix4> bonesMatrices;
-    if (GetDurationInFrames() <= 0.0f)
-    {
-        return bonesMatrices;
-    }
 
-    float timeInFrames = (timeSecs * GetFramesPerSecond());
-    timeInFrames = WrapTime(timeInFrames,
-                            GetDurationInFrames(),
-                            GetWrapMode());
-
-    Map<String, Matrix4> bonesPositionMatrices;
-    for (const auto &it : GetBoneNameToPositionKeyFrames())
+    Map<String, BoneTransformation> bonesTransformations;
+    Animation::GetBoneCrossFadeAnimationTransformations(this,
+                                                        animationSeconds,
+                                                        &bonesTransformations);
+    for (auto &it : bonesTransformations)
     {
         const String &boneName = it.first;
-        const auto &posKeyFrames = it.second;
+        const BoneTransformation &boneTransformation = it.second;
+        const BoneTransformation &bt = boneTransformation;
 
-        bonesMatrices.Add(boneName, Matrix4::Identity);
-
-        Array< KeyFrame<Vector3> > positionInterpKeyFrames =
-                        GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
-
-        if (positionInterpKeyFrames.Size() == 2)
-        {
-            Matrix4 boneMatrix;
-            const KeyFrame<Vector3> &prevPosKF = positionInterpKeyFrames[0];
-            const KeyFrame<Vector3> &nextPosKF = positionInterpKeyFrames[1];
-            float timeBetweenPrevNext = (nextPosKF.timeInFrames -
-                                         prevPosKF.timeInFrames);
-            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
-
-            float timePassedSincePrev = (timeInFrames - prevPosKF.timeInFrames);
-            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
-            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
-
-            Vector3 position = Vector3::Lerp(prevPosKF.value,
-                                             nextPosKF.value,
-                                             interpFactor);
-            boneMatrix = Matrix4::TranslateMatrix(position);
-            bonesPositionMatrices.Add(boneName, boneMatrix);
-        }
-    }
-
-    Map<String, Matrix4> bonesRotationMatrices;
-    for (const auto &it : GetBoneNameToRotationKeyFrames())
-    {
-        const String &boneName = it.first;
-        const auto &rotKeyFrames = it.second;
-
-        bonesMatrices.Add(boneName, Matrix4::Identity);
-
-        Array< KeyFrame<Quaternion> > rotationInterpKeyFrames =
-                        GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
-
-        if (rotationInterpKeyFrames.Size() == 2)
-        {
-            Matrix4 boneMatrix;
-            const KeyFrame<Quaternion> &prevRotKF = rotationInterpKeyFrames[0];
-            const KeyFrame<Quaternion> &nextRotKF = rotationInterpKeyFrames[1];
-            float timeBetweenPrevNext = (nextRotKF.timeInFrames -
-                                         prevRotKF.timeInFrames);
-            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
-
-            float timePassedSincePrev = (timeInFrames - prevRotKF.timeInFrames);
-            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
-            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
-
-            Quaternion rotation = Quaternion::SLerp(prevRotKF.value,
-                                                    nextRotKF.value,
-                                                    interpFactor);
-            boneMatrix = Matrix4::RotateMatrix(rotation);
-            bonesRotationMatrices.Add(boneName, boneMatrix);
-        }
-    }
-
-    Map<String, Matrix4> bonesScaleMatrices;
-    for (const auto &it : GetBoneNameToScaleKeyFrames())
-    {
-        const String &boneName = it.first;
-        const auto &scaleKeyFrames = it.second;
-
-        bonesMatrices.Add(boneName, Matrix4::Identity);
-
-        Array< KeyFrame<Vector3> > scaleInterpKeyFrames =
-                        GetConsecutiveKeyFrames(scaleKeyFrames, timeInFrames);
-
-        if (scaleInterpKeyFrames.Size() == 2)
-        {
-            Matrix4 boneMatrix;
-            const KeyFrame<Vector3> &prevScaleKF = scaleInterpKeyFrames[0];
-            const KeyFrame<Vector3> &nextScaleKF = scaleInterpKeyFrames[1];
-            float timeBetweenPrevNext = (nextScaleKF.timeInFrames -
-                                         prevScaleKF.timeInFrames);
-            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
-
-            float timePassedSincePrev = (timeInFrames - prevScaleKF.timeInFrames);
-            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
-            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
-
-            Vector3 scale = Vector3::Lerp(prevScaleKF.value,
-                                          nextScaleKF.value,
-                                          interpFactor);
-            boneMatrix = Matrix4::ScaleMatrix(scale);
-            bonesScaleMatrices.Add(boneName, boneMatrix);
-        }
-    }
-
-    for (auto &it : bonesMatrices)
-    {
-        const String &boneName = it.first;
-
-        Matrix4 positionMatrix = Matrix4::Identity;
-        if (bonesPositionMatrices.ContainsKey(boneName))
-        {
-            positionMatrix = bonesPositionMatrices.Get(boneName);
-        }
-
-        Matrix4 rotationMatrix = Matrix4::Identity;
-        if (bonesRotationMatrices.ContainsKey(boneName))
-        {
-            rotationMatrix = bonesRotationMatrices.Get(boneName);
-        }
-
-        Matrix4 scaleMatrix = Matrix4::Identity;
-        if (bonesScaleMatrices.ContainsKey(boneName))
-        {
-            scaleMatrix = bonesScaleMatrices.Get(boneName);
-        }
-
-        Matrix4 &boneMatrix = it.second;
-        boneMatrix = positionMatrix * rotationMatrix * scaleMatrix;
+        Matrix4 boneMatrix = Matrix4::TranslateMatrix(bt.position) *
+                             Matrix4::RotateMatrix(bt.rotation) *
+                             Matrix4::ScaleMatrix(bt.scale);
+        bonesMatrices.Add(boneName, boneMatrix);
     }
 
     return bonesMatrices;
@@ -362,5 +249,186 @@ void Animation::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Speed", SCAST<float>(GetSpeed()));
     metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));
+}
+
+void Animation::GetBoneCrossFadeAnimationTransformations(
+                        const Animation *anim,
+                        double animationSeconds,
+                        Map<String, BoneTransformation> *boneTransformationsPtr)
+{
+    ASSERT(boneTransformationsPtr);
+
+    if (anim->GetDurationInFrames() <= 0.0f)
+    {
+        return;
+    }
+
+    double timeInFrames = (animationSeconds * anim->GetFramesPerSecond());
+    timeInFrames = WrapTime(timeInFrames,
+                            anim->GetDurationInFrames(),
+                            anim->GetWrapMode());
+
+
+    Map<String, BoneTransformation> &boneTransformations = *boneTransformationsPtr;
+
+    for (const auto &it : anim->GetBoneNameToPositionKeyFrames())
+    {
+        const String &boneName = it.first;
+        const auto &posKeyFrames = it.second;
+
+        Vector3 bonePosition = Vector3::Zero;
+
+        Array< KeyFrame<Vector3> > positionInterpKeyFrames =
+                        GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
+
+        if (positionInterpKeyFrames.Size() == 2)
+        {
+            const KeyFrame<Vector3> &prevPosKF = positionInterpKeyFrames[0];
+            const KeyFrame<Vector3> &nextPosKF = positionInterpKeyFrames[1];
+            float timeBetweenPrevNext = (nextPosKF.timeInFrames -
+                                         prevPosKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
+
+            float timePassedSincePrev = (timeInFrames - prevPosKF.timeInFrames);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
+
+            bonePosition = Vector3::Lerp(prevPosKF.value,
+                                         nextPosKF.value,
+                                         interpFactor);
+        }
+        boneTransformations[boneName].position = bonePosition;
+    }
+
+    Map<String, Quaternion> bonesRotations;
+    for (const auto &it : anim->GetBoneNameToRotationKeyFrames())
+    {
+        const String &boneName = it.first;
+        const auto &rotKeyFrames = it.second;
+
+        Quaternion boneRotation = Quaternion::Identity;
+
+        Array< KeyFrame<Quaternion> > rotationInterpKeyFrames =
+                        GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
+
+        if (rotationInterpKeyFrames.Size() == 2)
+        {
+            const KeyFrame<Quaternion> &prevRotKF = rotationInterpKeyFrames[0];
+            const KeyFrame<Quaternion> &nextRotKF = rotationInterpKeyFrames[1];
+            float timeBetweenPrevNext = (nextRotKF.timeInFrames -
+                                         prevRotKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
+
+            float timePassedSincePrev = (timeInFrames - prevRotKF.timeInFrames);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
+
+            boneRotation = Quaternion::SLerp(prevRotKF.value,
+                                             nextRotKF.value,
+                                             interpFactor);
+        }
+        boneTransformations[boneName].rotation = boneRotation;
+    }
+
+    Map<String, Vector3> bonesScales;
+    for (const auto &it : anim->GetBoneNameToScaleKeyFrames())
+    {
+        const String &boneName = it.first;
+        const auto &scaleKeyFrames = it.second;
+
+        Vector3 boneScale = Vector3::One;
+        Array< KeyFrame<Vector3> > scaleInterpKeyFrames =
+                        GetConsecutiveKeyFrames(scaleKeyFrames, timeInFrames);
+
+        if (scaleInterpKeyFrames.Size() == 2)
+        {
+            const KeyFrame<Vector3> &prevScaleKF = scaleInterpKeyFrames[0];
+            const KeyFrame<Vector3> &nextScaleKF = scaleInterpKeyFrames[1];
+            float timeBetweenPrevNext = (nextScaleKF.timeInFrames -
+                                         prevScaleKF.timeInFrames);
+            timeBetweenPrevNext = Math::Max(timeBetweenPrevNext, 0.0001f);
+
+            float timePassedSincePrev = (timeInFrames - prevScaleKF.timeInFrames);
+            float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
+            interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
+
+            boneScale = Vector3::Lerp(prevScaleKF.value,
+                                      nextScaleKF.value,
+                                      interpFactor);
+        }
+        boneTransformations[boneName].scale = boneScale;
+    }
+}
+
+Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
+                                        const Animation *prevAnimation,
+                                        double prevAnimationSeconds,
+                                        const Animation *nextAnimation,
+                                        double currentCrossFadeSeconds,
+                                        double totalCrossFadeSeconds_)
+{
+    Map<String, Matrix4> boneCrossFadeAnimMatrices;
+
+    double totalCrossFadeSeconds = Math::Max(totalCrossFadeSeconds_, 0.01);
+    float nextPonderation = (currentCrossFadeSeconds / totalCrossFadeSeconds);
+    float prevPonderation = (1.0f - nextPonderation);
+
+    // Gather the prev animation bone transformations
+    Map<String, BoneTransformation> prevBoneTransformations;
+    Animation::GetBoneCrossFadeAnimationTransformations(prevAnimation,
+                                                        prevAnimationSeconds,
+                                                        &prevBoneTransformations);
+
+    // Gather the next animation bone transformations
+    Map<String, BoneTransformation> nextBoneTransformations;
+    Animation::GetBoneCrossFadeAnimationTransformations(nextAnimation,
+                                                        currentCrossFadeSeconds,
+                                                        &nextBoneTransformations);
+
+    // Gather bone names
+    Set<String> allBoneNames;
+    for (const auto &pair : prevBoneTransformations)
+    {
+        allBoneNames.Add(pair.first);
+    }
+    for (const auto &pair : nextBoneTransformations)
+    {
+        allBoneNames.Add(pair.first);
+    }
+
+    // Interpolate transformations
+    for (const String &boneName : allBoneNames)
+    {
+        BoneTransformation prevBoneTransformation;
+        auto prevTransformationIt = prevBoneTransformations.Find(boneName);
+        if (prevTransformationIt != prevBoneTransformations.End())
+        {
+            prevBoneTransformation = prevTransformationIt->second;
+        }
+
+        BoneTransformation nextBoneTransformation;
+        auto nextTransformationIt = nextBoneTransformations.Find(boneName);
+        if (nextTransformationIt != nextBoneTransformations.End())
+        {
+            nextBoneTransformation = nextTransformationIt->second;
+        }
+
+        Vector3 interpPos = Vector3::Lerp(prevBoneTransformation.position,
+                                          nextBoneTransformation.position,
+                                          nextPonderation);
+        Quaternion interpRot = Quaternion::SLerp(prevBoneTransformation.rotation,
+                                                 nextBoneTransformation.rotation,
+                                                 nextPonderation);
+        Vector3 interpScale = Vector3::Lerp(prevBoneTransformation.scale,
+                                            nextBoneTransformation.scale,
+                                            nextPonderation);
+
+        Matrix4 transformMat = Matrix4::TranslateMatrix(interpPos) *
+                               Matrix4::RotateMatrix(interpRot) *
+                               Matrix4::ScaleMatrix(interpScale);
+        boneCrossFadeAnimMatrices.Add(boneName, transformMat);
+    }
+
+    return boneCrossFadeAnimMatrices;
 }
 

@@ -10,11 +10,11 @@
 #include "Bang/DPtr.h"
 #include "Bang/UMap.h"
 #include "Bang/Array.h"
+#include "Bang/AARect.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
 #include "Bang/IToString.h"
 #include "Bang/MouseButton.h"
-#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -61,6 +61,12 @@ public:
         ButtonInfo(bool up, bool down, bool pressed);
     };
 
+    struct Context
+    {
+        AARecti rect;
+        UIFocusable *focus = nullptr;
+    };
+
 public:
     static String KeyToString(Key k);
 
@@ -98,10 +104,13 @@ public:
     static void SetMouseWrapping(bool isMouseWrapping);
     static bool IsMouseWrapping();
 
+    static void SetContext(const Input::Context &context);
+    static const Input::Context& GetContext();
+    static AARecti GetContextRect();
+    static void ClearContext();
+
     static void LockMouseMovement(bool lock);
     static bool IsLockMouseMovement();
-
-    static void LimitInputIfFocused(UIFocusable *focusable);
 
     static void SetMousePositionWindow(int windowMousePosX,  int windowMousePosY);
     static void SetMousePositionWindow(const Vector2i &windowMousePosition);
@@ -112,6 +121,7 @@ public:
     static Vector2i GetPreviousMousePositionWindow();
     static Vector2i GetMousePositionWindowWithoutInvertY();
     static Vector2i GetWindowPosInvertedY(const Vector2i &winPos);
+    static Vector2i FromWindowPositionToContextPosition(const Vector2i &windowPos);
 
     static void StartTextInput();
     static String PollInputText();
@@ -124,13 +134,14 @@ public:
 private:
     static constexpr float DoubleClickMaxSeconds = 0.25f;
 
+    Context m_context;
+
     float m_lastMouseDownTimestamp = 0;
     bool m_isMouseWrapping         = false;
     bool m_isADoubleClick          = false;
     bool m_lockMouseMovement       = false;
     bool m_isMouseInside           = false;
     Vector2 m_lastMouseWheelDelta  = Vector2::Zero;
-    DPtr<UIFocusable> p_focusableInputIsLimitedTo = nullptr;
 
     String m_inputText = "";
 
@@ -149,8 +160,8 @@ private:
     UMap<MouseButton, ButtonInfo, EnumClassHash> m_mouseInfo;
     Array<InputEvent> m_eventInfoQueue;
 
-    bool IsInputInFocusableLimit() const;
-    bool IsInputOverFocusableLimit() const;
+    bool IsInsideContext() const;
+    bool IsInsideContextFocus() const;
     void ProcessMouseWheelEventInfo(const InputEvent &iev);
     void ProcessMouseMoveEventInfo(const InputEvent &iev);
     void ProcessMouseDownEventInfo(const InputEvent &iev);

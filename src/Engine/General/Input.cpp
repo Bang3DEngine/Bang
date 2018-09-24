@@ -22,14 +22,15 @@ Input::~Input()
 {
 }
 
-bool Input::IsInputInFocusableLimit() const
+bool Input::IsInsideContextFocus() const
 {
-    return !p_focusableInputIsLimitedTo || p_focusableInputIsLimitedTo->HasFocus();
+    return !m_context.focus || m_context.focus->HasFocus();
 }
 
-bool Input::IsInputOverFocusableLimit() const
+bool Input::IsInsideContext() const
 {
-    return !p_focusableInputIsLimitedTo || p_focusableInputIsLimitedTo->IsMouseOver();
+    return m_context.rect == AARecti::Zero ||
+           m_context.rect.Contains( Input::GetMousePositionWindow() );
 }
 
 void Input::OnFrameFinished()
@@ -335,7 +336,7 @@ String KeyToString(Key k)
 bool Input::GetKey(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].pressed :
                 false;
 }
@@ -343,7 +344,7 @@ bool Input::GetKey(Key k)
 bool Input::GetKeyUp(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 inp->m_keyInfos.ContainsKey(k) && inp-> m_keyInfos[k].up :
                 false;
 }
@@ -351,7 +352,7 @@ bool Input::GetKeyUp(Key k)
 bool Input::GetKeyDown(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 (inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down &&
                 !inp->m_keyInfos[k].autoRepeat) :
                 false;
@@ -360,7 +361,7 @@ bool Input::GetKeyDown(Key k)
 bool Input::GetKeyDownRepeat(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down :
                 false;
 }
@@ -368,50 +369,49 @@ bool Input::GetKeyDownRepeat(Key k)
 const Array<Key> &Input::GetKeysUp()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ? inp->m_keysUp :
-                                            Array<Key>::Empty();
+    return inp->IsInsideContextFocus() ? inp->m_keysUp :
+                                         Array<Key>::Empty();
 }
 
 const Array<Key> &Input::GetKeysDown()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ? inp->m_keysDown :
-                                            Array<Key>::Empty();
+    return inp->IsInsideContextFocus() ? inp->m_keysDown :
+                                         Array<Key>::Empty();
 }
 
 const Array<Key>& Input::GetPressedKeys()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ? inp->m_pressedKeys :
-                                            Array<Key>::Empty();
+    return inp->IsInsideContextFocus() ? inp->m_pressedKeys :
+                                         Array<Key>::Empty();
 }
 
 const Array<Key> &Input::GetKeysDownRepeat()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ? inp->m_keysDownRepeat :
-                                            Array<Key>::Empty();
+    return inp->IsInsideContextFocus() ? inp->m_keysDownRepeat :
+                                         Array<Key>::Empty();
 }
 
 const Array<InputEvent> &Input::GetEnqueuedEvents()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ? inp->m_eventInfoQueue :
-                                            Array<InputEvent>::Empty();
+    return inp->IsInsideContextFocus() ? inp->m_eventInfoQueue :
+                                         Array<InputEvent>::Empty();
 }
 
 Vector2 Input::GetMouseWheel()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputOverFocusableLimit() ? inp->m_lastMouseWheelDelta :
-                                              Vector2::Zero;
+    return inp->IsInsideContext() ? inp->m_lastMouseWheelDelta : Vector2::Zero;
 }
 
 Array<MouseButton> Input::GetMouseButtons()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if (inp->IsInputInFocusableLimit())
+    if (inp->IsInsideContextFocus())
     {
         for (auto it : inp->m_mouseInfo)
         {
@@ -427,7 +427,7 @@ Array<MouseButton> Input::GetMouseButtonsUp()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if (inp->IsInputInFocusableLimit())
+    if (inp->IsInsideContextFocus())
     {
         for (auto it : inp->m_mouseInfo)
         {
@@ -443,7 +443,7 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if (inp->IsInputInFocusableLimit())
+    if (inp->IsInsideContextFocus())
     {
         for (auto it : inp->m_mouseInfo)
         {
@@ -460,7 +460,7 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 bool Input::GetMouseButton(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
             inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].pressed :
             false;
 }
@@ -468,7 +468,7 @@ bool Input::GetMouseButton(MouseButton mb)
 bool Input::GetMouseButtonUp(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].up :
                 false;
 }
@@ -476,7 +476,7 @@ bool Input::GetMouseButtonUp(MouseButton mb)
 bool Input::GetMouseButtonDown(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].down :
                 false;
 }
@@ -484,7 +484,7 @@ bool Input::GetMouseButtonDown(MouseButton mb)
 bool Input::GetMouseButtonDoubleClick(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 Input::GetMouseButtonUp(mb) && inp->m_isADoubleClick :
                 false;
 }
@@ -497,12 +497,14 @@ bool Input::IsMouseInsideWindow()
 
 float Input::GetMouseAxisX()
 {
-    return SCAST<float>(Input::GetMouseDeltaX()) / GL::GetViewportSize().x;
+    AARecti contextRect = Input::GetContextRect();
+    return SCAST<float>(Input::GetMouseDeltaX()) / contextRect.GetSize().x;
 }
 
 float Input::GetMouseAxisY()
 {
-    return SCAST<float>(Input::GetMouseDeltaY()) / GL::GetViewportSize().y;
+    AARecti contextRect = Input::GetContextRect();
+    return SCAST<float>(Input::GetMouseDeltaY()) / contextRect.GetSize().y;
 }
 
 Vector2 Input::GetMouseAxis()
@@ -514,7 +516,7 @@ int Input::GetMouseDeltaX()
 {
     Input *inp = Input::GetActive();
     int delta = 0;
-    if (inp->IsInputInFocusableLimit())
+    if (inp->IsInsideContextFocus())
     {
         delta = inp->GetMousePositionWindow().x -
                 Input::GetPreviousMousePositionWindow().x;
@@ -530,7 +532,7 @@ int Input::GetMouseDeltaY()
 {
     Input *inp = Input::GetActive();
     int delta = 0;
-    if (inp->IsInputInFocusableLimit())
+    if (inp->IsInsideContextFocus())
     {
         delta = inp->GetMousePositionWindow().y -
                 Input::GetPreviousMousePositionWindow().y;
@@ -545,7 +547,7 @@ int Input::GetMouseDeltaY()
 Vector2i Input::GetMouseDelta()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInputInFocusableLimit() ?
+    return inp->IsInsideContextFocus() ?
                 Vector2i(Input::GetMouseDeltaX(), Input::GetMouseDeltaY()) :
                 Vector2i::Zero;
 }
@@ -560,6 +562,33 @@ bool Input::IsMouseWrapping()
     return Input::GetActive()->m_isMouseWrapping;
 }
 
+void Input::SetContext(const Input::Context &context)
+{
+    Input *inp = Input::GetActive();
+    inp->m_context = context;
+}
+
+const Input::Context &Input::GetContext()
+{
+    Input *inp = Input::GetActive();
+    return inp->m_context;
+}
+
+AARecti Input::GetContextRect()
+{
+    Input::Context context = Input::GetContext();
+    if (context.rect == AARecti::Zero)
+    {
+        return AARecti(Vector2i::Zero, Window::GetActive()->GetSize());
+    }
+    return context.rect;
+}
+
+void Input::ClearContext()
+{
+    Input::SetContext( Input::Context() );
+}
+
 void Input::LockMouseMovement(bool lock)
 {
     Input *inp = Input::GetActive();
@@ -570,12 +599,6 @@ bool Input::IsLockMouseMovement()
 {
     Input *inp = Input::GetActive();
     return inp->m_lockMouseMovement;
-}
-
-void Input::LimitInputIfFocused(UIFocusable *focusable)
-{
-    Input *inp = Input::GetActive();
-    inp->p_focusableInputIsLimitedTo = focusable;
 }
 
 void Input::SetMousePositionWindow(int windowMousePosX, int windowMousePosY)
@@ -592,12 +615,13 @@ void Input::SetMousePositionWindow(const Vector2i &windowMousePosition)
 
 Vector2i Input::GetMousePosition()
 {
-    return Vector2i(
-              GL::FromWindowPointToViewportPoint( GetMousePositionWindow() ) );
+    return Vector2i( Input::FromWindowPositionToContextPosition(
+                            Input::GetMousePositionWindow() ) );
 }
 Vector2 Input::GetMousePositionNDC()
 {
-    return GL::FromViewportPointToViewportPointNDC( Input::GetMousePosition() );
+    return GL::FromPointToPointNDC( Vector2(Input::GetMousePosition()),
+                                    Vector2(Input::GetContextRect().GetSize()) );
 }
 
 Vector2i Input::GetMousePositionWindow()
@@ -615,6 +639,13 @@ Vector2i Input::GetWindowPosInvertedY(const Vector2i &winPos)
         winPosInverted.y = (win->GetHeight()-1) - winPos.y; // Invert Y
     }
     return winPosInverted;
+}
+
+Vector2i Input::FromWindowPositionToContextPosition(const Vector2i &windowPos)
+{
+    Input::Context context = Input::GetContext();
+    Vector2i contextPos = windowPos - context.rect.GetMin();
+    return contextPos;
 }
 
 Vector2 Input::GetMousePositionWindowNDC()

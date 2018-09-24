@@ -607,6 +607,33 @@ void RenderFactory::RenderPoint(const Vector3 &point,
     }
 }
 
+void RenderFactory::RenderPointNDC(const Vector2 &pointNDC,
+                                   const RenderFactory::Parameters &params_)
+{
+    if (RenderFactory *rf = RenderFactory::GetInstance())
+    {
+        GL::Push(GL::Pushable::VIEWPROJ_MODE);
+
+        Vector2i pointVP( GL::FromViewportPointNDCToViewportPoint(pointNDC) );
+        RH<Mesh> rhm = Resources::Create<Mesh>();
+        Mesh *m = rhm.Get();
+        m->SetPositionsPool( {Vector3(pointVP, 0)} );
+        m->UpdateVAOs();
+
+        rf->m_meshRenderer->SetMesh(m);
+        rf->m_meshRenderer->SetRenderPrimitive(GL::Primitive::POINTS);
+
+        RenderFactory::Parameters params = params_;
+        params.cullFace = GL::CullFaceExt::NONE;
+        params.viewProjMode = GL::ViewProjMode::CANVAS;
+        Render(rf->m_meshRenderer, params);
+
+        rf->m_meshRenderer->SetRenderPrimitive(GL::Primitive::TRIANGLES);
+
+        GL::Pop(GL::Pushable::VIEWPROJ_MODE);
+    }
+}
+
 GameObject *RenderFactory::GetGameObject() const
 {
     return m_renderGo;

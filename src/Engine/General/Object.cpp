@@ -33,8 +33,14 @@ void Object::Start()
     }
 }
 
-void Object::OnPreStart() {}
-void Object::OnStart() {}
+void Object::OnPreStart()
+{
+}
+
+void Object::OnStart()
+{
+}
+
 void Object::OnEnabled(Object *object)
 {
     EventEmitter<IEventsObject>::
@@ -84,9 +90,18 @@ void Object::SetEnabled(bool enabled)
     }
 }
 
-bool Object::IsEnabled() const { return m_enabled; }
-bool Object::IsStarted() const { return m_started; }
-bool Object::IsWaitingToBeDestroyed() const { return m_waitingToBeDestroyed; }
+bool Object::IsEnabled() const
+{
+    return m_enabled;
+}
+bool Object::IsStarted() const
+{
+    return m_started;
+}
+bool Object::IsWaitingToBeDestroyed() const
+{
+    return m_waitingToBeDestroyed;
+}
 
 void Object::CloneInto(ICloneable *clone) const
 {

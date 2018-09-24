@@ -95,6 +95,8 @@ public:
                               const RenderFactory::Parameters &params);
     static void RenderPoint(const Vector3 &point,
                             const RenderFactory::Parameters &params);
+    static void RenderPointNDC(const Vector2 &pointNDC,
+                               const RenderFactory::Parameters &params);
 
     GameObject *GetGameObject() const;
     static RenderFactory *GetInstance();

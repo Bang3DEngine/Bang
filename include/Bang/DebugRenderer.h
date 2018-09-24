@@ -38,6 +38,11 @@ public:
                             float thickness = 1.0f,
                             bool depthTest = false);
 
+    static void RenderPointNDC(const Vector2 &point,
+                               const Color &color = Color::Green,
+                               float time = 1.0f,
+                               float thickness = 1.0f);
+
     static void RenderLineNDC(const Vector2 &originNDC,
                               const Vector2 &endNDC,
                               const Color &color = Color::Green,
@@ -84,6 +89,7 @@ private:
     enum class DebugRendererPrimitiveType
     {
         POINT,
+        POINT_NDC,
         LINE,
         LINE_NDC,
         AARECT_NDC,

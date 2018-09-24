@@ -51,6 +51,16 @@ void DebugRenderer::RenderPoint(const Vector3 &point,
                                color, time, thickness, false, false, depthTest);
 }
 
+void DebugRenderer::RenderPointNDC(const Vector2 &point,
+                                   const Color &color,
+                                   float time,
+                                   float thickness)
+{
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::POINT_NDC,
+                               {Vector3(point, 0)},
+                               color, time, thickness, false, false, false);
+}
+
 void DebugRenderer::RenderLineNDC(const Vector2 &originNDC,
                                   const Vector2 &endNDC,
                                   const Color &color,
@@ -167,7 +177,7 @@ DebugRenderer::CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
     drp.p2 = (points.Size() >= 3 ? points[2] : Vector3::Zero);
     drp.p3 = (points.Size() >= 4 ? points[3] : Vector3::Zero);
     drp.color = color;
-    drp.destroyTime = Time::GetNow() + time;
+    drp.destroyTime = Time::GetNow() + Time::Seconds(time);
     drp.thickness = thickness;
     drp.wireframe = wireframe;
     drp.cullFace = (culling ? GL::CullFaceExt::BACK : GL::CullFaceExt::NONE);
@@ -219,9 +229,13 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                 break;
 
                 case DebugRendererPrimitiveType::POINT:
-                    RenderFactory::RenderPoint(drp->p0,
-                                               params);
+                    RenderFactory::RenderPoint(drp->p0, params);
                 break;
+
+                case DebugRendererPrimitiveType::POINT_NDC:
+                    RenderFactory::RenderPointNDC(drp->p0.xy(), params);
+                break;
+
 
                 case DebugRendererPrimitiveType::TRIANGLE:
                 case DebugRendererPrimitiveType::QUAD:
@@ -279,7 +293,8 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     RenderFactory::RenderRectNDC(drp->rectNDCPoints, params);
                 break;
 
-                default: ASSERT(false); break;
+                default:
+                break;
             }
             drp->renderedOnce = true;
             ++it;

@@ -7,6 +7,7 @@
 #include "Bang/Debug.h"
 #include "Bang/Window.h"
 #include "Bang/Application.h"
+#include "Bang/UIFocusable.h"
 
 USING_NAMESPACE_BANG
 
@@ -19,6 +20,16 @@ Input::Input()
 
 Input::~Input()
 {
+}
+
+bool Input::IsInputInFocusableLimit() const
+{
+    return !p_focusableInputIsLimitedTo || p_focusableInputIsLimitedTo->HasFocus();
+}
+
+bool Input::IsInputOverFocusableLimit() const
+{
+    return !p_focusableInputIsLimitedTo || p_focusableInputIsLimitedTo->IsMouseOver();
 }
 
 void Input::OnFrameFinished()
@@ -324,68 +335,90 @@ String KeyToString(Key k)
 bool Input::GetKey(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].pressed;
+    return inp->IsInputInFocusableLimit() ?
+                inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].pressed :
+                false;
 }
 
 bool Input::GetKeyUp(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->m_keyInfos.ContainsKey(k) && inp-> m_keyInfos[k].up;
+    return inp->IsInputInFocusableLimit() ?
+                inp->m_keyInfos.ContainsKey(k) && inp-> m_keyInfos[k].up :
+                false;
 }
 
 bool Input::GetKeyDown(Key k)
 {
     Input *inp = Input::GetActive();
-    return  inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down &&
-           !inp->m_keyInfos[k].autoRepeat;
+    return inp->IsInputInFocusableLimit() ?
+                (inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down &&
+                !inp->m_keyInfos[k].autoRepeat) :
+                false;
 }
 
 bool Input::GetKeyDownRepeat(Key k)
 {
     Input *inp = Input::GetActive();
-    return inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down;
+    return inp->IsInputInFocusableLimit() ?
+                inp->m_keyInfos.ContainsKey(k) && inp->m_keyInfos[k].down :
+                false;
 }
 
 const Array<Key> &Input::GetKeysUp()
 {
-    return Input::GetActive()->m_keysUp;
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ? inp->m_keysUp :
+                                            Array<Key>::Empty();
 }
 
 const Array<Key> &Input::GetKeysDown()
 {
-    return Input::GetActive()->m_keysDown;
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ? inp->m_keysDown :
+                                            Array<Key>::Empty();
 }
 
 const Array<Key>& Input::GetPressedKeys()
 {
-    return Input::GetActive()->m_pressedKeys;
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ? inp->m_pressedKeys :
+                                            Array<Key>::Empty();
 }
 
 const Array<Key> &Input::GetKeysDownRepeat()
 {
-    return Input::GetActive()->m_keysDownRepeat;
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ? inp->m_keysDownRepeat :
+                                            Array<Key>::Empty();
 }
 
 const Array<InputEvent> &Input::GetEnqueuedEvents()
 {
-    return Input::GetActive()->m_eventInfoQueue;
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ? inp->m_eventInfoQueue :
+                                            Array<InputEvent>::Empty();
 }
 
 Vector2 Input::GetMouseWheel()
 {
     Input *inp = Input::GetActive();
-    return inp->m_lastMouseWheelDelta;
+    return inp->IsInputOverFocusableLimit() ? inp->m_lastMouseWheelDelta :
+                                              Vector2::Zero;
 }
 
 Array<MouseButton> Input::GetMouseButtons()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    for (auto it : inp->m_mouseInfo)
+    if (inp->IsInputInFocusableLimit())
     {
-        if (it.second.pressed)
+        for (auto it : inp->m_mouseInfo)
         {
-            mouseButtons.PushBack(it.first);
+            if (it.second.pressed)
+            {
+                mouseButtons.PushBack(it.first);
+            }
         }
     }
     return mouseButtons;
@@ -394,11 +427,14 @@ Array<MouseButton> Input::GetMouseButtonsUp()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    for (auto it : inp->m_mouseInfo)
+    if (inp->IsInputInFocusableLimit())
     {
-        if (it.second.up)
+        for (auto it : inp->m_mouseInfo)
         {
-            mouseButtons.PushBack(it.first);
+            if (it.second.up)
+            {
+                mouseButtons.PushBack(it.first);
+            }
         }
     }
     return mouseButtons;
@@ -407,11 +443,14 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    for (auto it : inp->m_mouseInfo)
+    if (inp->IsInputInFocusableLimit())
     {
-        if (it.second.down)
+        for (auto it : inp->m_mouseInfo)
         {
-            mouseButtons.PushBack(it.first);
+            if (it.second.down)
+            {
+                mouseButtons.PushBack(it.first);
+            }
         }
     }
     return mouseButtons;
@@ -421,30 +460,39 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 bool Input::GetMouseButton(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].pressed;
+    return inp->IsInputInFocusableLimit() ?
+            inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].pressed :
+            false;
 }
 
 bool Input::GetMouseButtonUp(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].up;
+    return inp->IsInputInFocusableLimit() ?
+                inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].up :
+                false;
 }
 
 bool Input::GetMouseButtonDown(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].down;
+    return inp->IsInputInFocusableLimit() ?
+                inp->m_mouseInfo.ContainsKey(mb) && inp->m_mouseInfo[mb].down :
+                false;
 }
 
 bool Input::GetMouseButtonDoubleClick(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return Input::GetMouseButtonUp(mb) && inp->m_isADoubleClick;
+    return inp->IsInputInFocusableLimit() ?
+                Input::GetMouseButtonUp(mb) && inp->m_isADoubleClick :
+                false;
 }
 
 bool Input::IsMouseInsideWindow()
 {
-    return Input::GetActive()->m_isMouseInside;
+    Input *inp = Input::GetActive();
+    return inp->m_isMouseInside;
 }
 
 float Input::GetMouseAxisX()
@@ -465,11 +513,15 @@ Vector2 Input::GetMouseAxis()
 int Input::GetMouseDeltaX()
 {
     Input *inp = Input::GetActive();
-    int delta = inp->GetMousePositionWindow().x -
-                Input::GetPreviousMousePositionWindow().x;
-    if (Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f)
+    int delta = 0;
+    if (inp->IsInputInFocusableLimit())
     {
-        delta = 0;
+        delta = inp->GetMousePositionWindow().x -
+                Input::GetPreviousMousePositionWindow().x;
+        if (Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f)
+        {
+            delta = 0;
+        }
     }
     return delta;
 }
@@ -477,18 +529,25 @@ int Input::GetMouseDeltaX()
 int Input::GetMouseDeltaY()
 {
     Input *inp = Input::GetActive();
-    int delta = inp->GetMousePositionWindow().y -
-                Input::GetPreviousMousePositionWindow().y;
-    if (Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f)
+    int delta = 0;
+    if (inp->IsInputInFocusableLimit())
     {
-        delta = 0;
+        delta = inp->GetMousePositionWindow().y -
+                Input::GetPreviousMousePositionWindow().y;
+        if (Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f)
+        {
+            delta = 0;
+        }
     }
     return delta;
 }
 
 Vector2i Input::GetMouseDelta()
 {
-    return Vector2i(Input::GetMouseDeltaX(), Input::GetMouseDeltaY());
+    Input *inp = Input::GetActive();
+    return inp->IsInputInFocusableLimit() ?
+                Vector2i(Input::GetMouseDeltaX(), Input::GetMouseDeltaY()) :
+                Vector2i::Zero;
 }
 
 void Input::SetMouseWrapping(bool isMouseWrapping)
@@ -511,6 +570,12 @@ bool Input::IsLockMouseMovement()
 {
     Input *inp = Input::GetActive();
     return inp->m_lockMouseMovement;
+}
+
+void Input::LimitInputIfFocused(UIFocusable *focusable)
+{
+    Input *inp = Input::GetActive();
+    inp->p_focusableInputIsLimitedTo = focusable;
 }
 
 void Input::SetMousePositionWindow(int windowMousePosX, int windowMousePosY)

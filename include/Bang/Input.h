@@ -7,16 +7,19 @@
 #include BANG_SDL2_INCLUDE(SDL.h)
 
 #include "Bang/Key.h"
+#include "Bang/DPtr.h"
 #include "Bang/UMap.h"
 #include "Bang/Array.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
 #include "Bang/IToString.h"
 #include "Bang/MouseButton.h"
+#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Window;
+FORWARD class UIFocusable;
 
 struct InputEvent
 {
@@ -98,6 +101,8 @@ public:
     static void LockMouseMovement(bool lock);
     static bool IsLockMouseMovement();
 
+    static void LimitInputIfFocused(UIFocusable *focusable);
+
     static void SetMousePositionWindow(int windowMousePosX,  int windowMousePosY);
     static void SetMousePositionWindow(const Vector2i &windowMousePosition);
     static Vector2i GetMousePosition();
@@ -125,6 +130,7 @@ private:
     bool m_lockMouseMovement       = false;
     bool m_isMouseInside           = false;
     Vector2 m_lastMouseWheelDelta  = Vector2::Zero;
+    DPtr<UIFocusable> p_focusableInputIsLimitedTo = nullptr;
 
     String m_inputText = "";
 
@@ -143,6 +149,8 @@ private:
     UMap<MouseButton, ButtonInfo, EnumClassHash> m_mouseInfo;
     Array<InputEvent> m_eventInfoQueue;
 
+    bool IsInputInFocusableLimit() const;
+    bool IsInputOverFocusableLimit() const;
     void ProcessMouseWheelEventInfo(const InputEvent &iev);
     void ProcessMouseMoveEventInfo(const InputEvent &iev);
     void ProcessMouseDownEventInfo(const InputEvent &iev);

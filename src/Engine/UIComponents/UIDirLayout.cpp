@@ -50,22 +50,11 @@ void UIDirLayout::ApplyLayout(Axis axis)
 
         FillChildrenMinSizes(paddedLayoutRectSize, children,
                              &childrenRTSizes, &availableSpace);
-        if (GetGameObject()->GetName() == "HEHE")
-        {
-            // Debug_Log("Min: " << childrenRTSizes);
-        }
+
         FillChildrenPreferredSizes(paddedLayoutRectSize, children,
                                    &childrenRTSizes, &availableSpace);
-        if (GetGameObject()->GetName() == "HEHE")
-        {
-            // Debug_Log("Pref: " << childrenRTSizes);
-        }
         FillChildrenFlexibleSizes(paddedLayoutRectSize, children,
                                   &childrenRTSizes, &availableSpace);
-        if (GetGameObject()->GetName() == "HEHE")
-        {
-            // Debug_Log("Flex: " << childrenRTSizes);
-        }
         ApplyStretches(paddedLayoutRectSize, &childrenRTSizes);
     }
 
@@ -191,20 +180,6 @@ void UIDirLayout::FillChildrenPreferredSizes(const Vector2i &layoutRectSize,
         pxToAdd = Vector2i::Max(pxToAdd, Vector2i::Zero);
         totalPrefPxToAdd += pxToAdd;
         prefSizes.PushBack(prefSize);
-    }
-    if (GetGameObject()->GetName() == "HEHE")
-    {
-        Array<int> childLayoutPrioritiesForFirstElement;
-        Array<Vector2i> childPrefSizesForFirstElement;
-        auto lElms = children[0]->GetComponents<UILayoutElement>();
-        for (UILayoutElement *lElm : lElms)
-        {
-            childPrefSizesForFirstElement.PushBack( lElm->GetPreferredSize() );
-            childLayoutPrioritiesForFirstElement.PushBack( lElm->GetLayoutPriority() );
-        }
-        // Debug_Peek(childPrefSizesForFirstElement);
-        // Debug_Peek(childLayoutPrioritiesForFirstElement);
-        // Debug_Peek(prefSizes);
     }
     totalPrefPxToAdd = Vector2i::Max(totalPrefPxToAdd, Vector2i::One);
 

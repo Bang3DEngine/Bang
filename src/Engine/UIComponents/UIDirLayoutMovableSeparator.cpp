@@ -35,30 +35,23 @@ void UIDirLayoutMovableSeparator::OnUpdate()
     for (GameObject *child : parent->GetChildren())
     {
         UILayoutElement *auxLE = nullptr;
-        // if (!child->HasComponent<UIDirLayoutMovableSeparator>())
+        for (UILayoutElement *le : child->GetComponents<UILayoutElement>())
         {
-            for (UILayoutElement *le : child->GetComponents<UILayoutElement>())
+            if (le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
             {
-                if (le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
-                {
-                    auxLE = le;
-                    // Debug_Log(child << " Min: " << auxLE->GetMinSize()); //  << " for " << (isPrev ? "prev" : "next"));
-                    // Debug_Log(child << " Pref: " << auxLE->GetPreferredSize()); //  << " for " << (isPrev ? "prev" : "next"));
-                    // Debug_Log(child << " Flex: " << auxLE->GetFlexibleSize()); //  << " for " << (isPrev ? "prev" : "next"));
-                    break;
-                }
+                auxLE = le;
+                break;
             }
-            // Debug_Log("-");
+        }
 
-            if (RectTransform *childRT = child->GetRectTransform())
+        if (RectTransform *childRT = child->GetRectTransform())
+        {
+            // If not existing, create the auxiliar layout element,
+            // when we have a valid start size
+            if (!auxLE)
             {
-                // If not existing, create the auxiliar layout element,
-                // when we have a valid start size
-                if (!auxLE)
-                {
-                    auxLE = child->AddComponent<UILayoutElement>();
-                    auxLE->SetLayoutPriority( AuxiliarLayoutElementPriority );
-                }
+                auxLE = child->AddComponent<UILayoutElement>();
+                auxLE->SetLayoutPriority( AuxiliarLayoutElementPriority );
             }
         }
         childToAuxLE.Add(child, auxLE);
@@ -162,13 +155,8 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                         // Change preferred size to steal :)
                         auxLE->SetPreferredSizeInAxis(
                             newPrefSizeAfterBeingStolen[GetAxis()], GetAxis());
-                        // Debug_Log("Setting because of stealing prefSize of " << j << " to " <<
-                        //           newPrefSizeAfterBeingStolen);
 
                         neededRoomForNewSize -= roomToBeStolen;
-
-                        // Debug_Log("Stealing " << roomToBeStolen << " from " << j << " for " <<
-                        //           (isPrev ? "prev" : "next"));
                     }
                 }
                 j += (isPrev ? 1 : -1);
@@ -197,21 +185,30 @@ void UIDirLayoutMovableSeparator::OnUpdate()
             if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
             {
                 auxLE->SetPreferredSizeInAxis(newPrefSize[GetAxis()], GetAxis());
-                // Debug_Log("Setting newPrefSize " << newPrefSize << " for " <<
-                //           (isPrev ? "prev" : "next"));
-                // Debug_Log("Min: " << auxLE->GetMinSize() << " for " << (isPrev ? "prev" : "next"));
-                // Debug_Log("Pref: " << auxLE->GetPreferredSize() << " for " << (isPrev ? "prev" : "next"));
-                // Debug_Log("Flex: " << auxLE->GetFlexibleSize() << " for " << (isPrev ? "prev" : "next"));
+            }
+        }
+    }
+
+    bool isSomeSiblingSeparatorBeingUsed = false;
+    for (GameObject *sibling : parent->GetChildren())
+    {
+        auto movableSeps = sibling->GetComponents<UIDirLayoutMovableSeparator>();
+        for (UIDirLayoutMovableSeparator *movableSep : movableSeps)
+        {
+            if (movableSep->p_focusable->IsBeingPressed())
+            {
+                isSomeSiblingSeparatorBeingUsed = true;
+                break;
             }
         }
 
-        // DebugRenderer::RenderAARectNDC( prevRT->GetViewportAARectNDC(), Color::Green,
-        //                                 0.1f, 1.0f, false);
-        // DebugRenderer::RenderAARectNDC( nextRT->GetViewportAARectNDC(), Color::Red,
-        //                                 0.1f, 1.0f, false);
-        // Debug_Log("=========");
+        if (isSomeSiblingSeparatorBeingUsed)
+        {
+            break;
+        }
     }
-    else
+
+    if (!isSomeSiblingSeparatorBeingUsed)
     {
         // Update auxiliar layout elements preferred sizes
         uint separatorIndex = parent->GetChildren().IndexOf( GetGameObject() );

@@ -51,6 +51,7 @@ public:
     float GetSpeed() const;
     float GetFramesPerSecond() const;
     float GetDurationInFrames() const;
+    float GetDurationInSeconds() const;
     AnimationWrapMode GetWrapMode() const;
     Map<String, Matrix4> GetBoneAnimationMatricesForTime(Time time) const;
 
@@ -71,6 +72,10 @@ public:
 
     const Map< String, Array< Animation::KeyFrame<Vector3> > > &
     GetBoneNameToScaleKeyFrames() const;
+
+    static float WrapTime(float time,
+                          float totalDuration,
+                          AnimationWrapMode animationWrapMode);
 
     // Resource
     void Import(const Path &animationFilepath) override;

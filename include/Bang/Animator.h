@@ -5,11 +5,14 @@
 #include "Bang/Time.h"
 #include "Bang/Animation.h"
 #include "Bang/Component.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/IEventsAnimator.h"
 
 NAMESPACE_BANG_BEGIN
 
-class Animator : public Component
+class Animator : public Component,
+                 public EventEmitter<IEventsAnimator>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator);
 
@@ -65,6 +68,9 @@ private:
     bool m_playOnStart = true;
 
     void EndCrossFade();
+
+    void PropagateAnimatorEvents(uint currentAnimationIndex,
+                                 Time currentAnimationTime);
 
     uint GetCurrentAnimationIndex() const;
     Animation *GetCurrentAnimation() const;

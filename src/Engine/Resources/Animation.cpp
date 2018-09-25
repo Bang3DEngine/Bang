@@ -93,6 +93,11 @@ float Animation::GetDurationInFrames() const
     return m_durationInFrames;
 }
 
+float Animation::GetDurationInSeconds() const
+{
+    return GetDurationInFrames() / Math::Max(GetFramesPerSecond(), 0.00001f);
+}
+
 float Animation::GetFramesPerSecond() const
 {
     return m_framesPerSecond;
@@ -122,9 +127,9 @@ GetConsecutiveKeyFrames(const Array<Animation::KeyFrame<T>> &keyFrames,
     return {{}};
 }
 
-float WrapTime(float time,
-               float totalDuration,
-               AnimationWrapMode animationWrapMode)
+float Animation::WrapTime(float time,
+                          float totalDuration,
+                          AnimationWrapMode animationWrapMode)
 {
     float wrappedTime = -1.0f;
     switch (animationWrapMode)

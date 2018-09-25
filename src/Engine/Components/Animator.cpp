@@ -45,6 +45,8 @@ void Animator::OnUpdate()
     if (GetCurrentAnimation() && IsPlaying())
     {
         m_animationTime += passedTime * GetCurrentAnimation()->GetSpeed();
+        PropagateAnimatorEvents(GetCurrentAnimationIndex(),
+                                m_animationTime);
 
         if (now >= m_endCrossFadeTime)
         {
@@ -56,14 +58,21 @@ void Animator::OnUpdate()
         {
             if (GetCurrentTargetCrossFadeAnimation())
             {
+                Time crossFadeAnimationTime = (now - m_initCrossFadeTime);
+                Time crossFadeAnimationTotalTime = (m_endCrossFadeTime -
+                                                    m_initCrossFadeTime);
+
                 // Cross-fade
                 boneNameToCurrentMatrices =
                      Animation::GetBoneCrossFadeAnimationMatrices(
                         GetCurrentAnimation(),
                         m_animationTime,
                         GetCurrentTargetCrossFadeAnimation(),
-                        (now - m_initCrossFadeTime),
-                        (m_endCrossFadeTime - m_initCrossFadeTime));
+                        crossFadeAnimationTime,
+                        crossFadeAnimationTotalTime);
+
+                PropagateAnimatorEvents(GetCurrentTargetCrossFadeAnimationIndex(),
+                                        crossFadeAnimationTime);
             }
             else
             {
@@ -330,6 +339,22 @@ void Animator::EndCrossFade()
     m_animationTime = (m_endCrossFadeTime - m_initCrossFadeTime);
     m_initCrossFadeTime.SetInfinity();
     m_endCrossFadeTime.SetInfinity();
+}
+
+void Animator::PropagateAnimatorEvents(uint currentAnimationIndex,
+                                       Time currentAnimationTime)
+{
+    Animation *currentAnimation = GetAnimation(currentAnimationIndex);
+
+    EventEmitter<IEventsAnimator>::PropagateToListeners(
+        &IEventsAnimator::OnAnimationTick,
+        this,
+        currentAnimation,
+        currentAnimationIndex,
+        Time::Seconds(Animation::WrapTime(currentAnimationTime.GetSeconds(),
+                                          currentAnimation->GetDurationInSeconds(),
+                                          currentAnimation->GetWrapMode())),
+        currentAnimationTime);
 }
 
 uint Animator::GetCurrentAnimationIndex() const

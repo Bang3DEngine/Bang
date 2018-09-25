@@ -28,55 +28,69 @@ void UIDirLayoutMovableSeparator::OnUpdate()
 {
     Component::OnUpdate();
 
+    // Add auxiliar layout elements to children, if needed. Update them also.
+    constexpr int AuxiliarLayoutElementPriority = 147;
+    GameObject *parent = GetGameObject()->GetParent();
+    UMap<GameObject*, UILayoutElement*> childToAuxLE;
+    for (GameObject *child : parent->GetChildren())
+    {
+        UILayoutElement *auxLE = nullptr;
+        // if (!child->HasComponent<UIDirLayoutMovableSeparator>())
+        {
+            for (UILayoutElement *le : child->GetComponents<UILayoutElement>())
+            {
+                if (le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
+                {
+                    auxLE = le;
+                    // Debug_Log(child << " Min: " << auxLE->GetMinSize()); //  << " for " << (isPrev ? "prev" : "next"));
+                    // Debug_Log(child << " Pref: " << auxLE->GetPreferredSize()); //  << " for " << (isPrev ? "prev" : "next"));
+                    // Debug_Log(child << " Flex: " << auxLE->GetFlexibleSize()); //  << " for " << (isPrev ? "prev" : "next"));
+                    break;
+                }
+            }
+            // Debug_Log("-");
+
+            if (RectTransform *childRT = child->GetRectTransform())
+            {
+                // If not existing, create the auxiliar layout element,
+                // when we have a valid start size
+                if (!auxLE)
+                {
+                    auxLE = child->AddComponent<UILayoutElement>();
+                    auxLE->SetLayoutPriority( AuxiliarLayoutElementPriority );
+                }
+            }
+        }
+        childToAuxLE.Add(child, auxLE);
+    }
+
     if (p_focusable->IsBeingPressed())
     {
-        GameObject *parent = GetGameObject()->GetParent();
         RectTransform *parentRT = parent->GetRectTransform();
         const int thisIndexInParent = parent->GetChildren().IndexOf( GetGameObject() );
-        if (thisIndexInParent <= 0) { return; }
-        if (thisIndexInParent >= parent->GetChildren().Size() - 1) { return; }
+        if ((thisIndexInParent <= 0) ||
+            (thisIndexInParent >= parent->GetChildren().Size() - 1))
+        {
+            return;
+        }
 
         const int prevSiblingIndex = thisIndexInParent - 1;
         const int nextSiblingIndex = thisIndexInParent + 1;
         GameObject *prevSibling = parent->GetChild(prevSiblingIndex);
         GameObject *nextSibling = parent->GetChild(nextSiblingIndex);
-        if (!prevSibling || !nextSibling) { return; }
+        if (!prevSibling || !nextSibling)
+        {
+            return;
+        }
 
         RectTransform *prevRT = prevSibling->GetRectTransform();
         RectTransform *nextRT = nextSibling->GetRectTransform();
-        if (!prevRT || !nextRT) { return; }
-
-        UILayoutElement *prevLE = prevSibling->GetComponent<UILayoutElement>();
-        UILayoutElement *nextLE = nextSibling->GetComponent<UILayoutElement>();
-        if (!prevLE || !nextLE) { return; }
-
-        constexpr int AuxiliarLayoutElementPriority = 147;
-        const bool horizontal = (GetAxis() == Axis::HORIZONTAL);
-
-        // Prepare siblings, by setting preferred and flexible
-        UMap<GameObject*, UILayoutElement*> childToAuxLE;
-        for (GameObject *child : parent->GetChildren())
+        if (!prevRT || !nextRT)
         {
-            UILayoutElement *auxLE = nullptr;
-            for (UILayoutElement *le : child->GetComponents<UILayoutElement>())
-            {
-                if (le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
-                { auxLE = le; }
-            }
-
-            if (!auxLE) // If not existing, create the auxiliar layout element
-            {
-                auxLE = child->AddComponent<UILayoutElement>();
-                auxLE->SetLayoutPriority( AuxiliarLayoutElementPriority );
-            }
-
-            const RectTransform *childRT = child->GetRectTransform();
-            const Vector2i prefSize (childRT->GetViewportAARect().GetSize());
-            if (horizontal) { auxLE->SetPreferredWidth(prefSize.x); }
-            else { auxLE->SetPreferredHeight(prefSize.y); }
-
-            childToAuxLE.Add(child, auxLE);
+            return;
         }
+
+        const bool horizontal = (GetAxis() == Axis::HORIZONTAL);
 
         Vector2i mousePos ( Input::GetMousePosition() );
         RectTransform *separatorRT = GetGameObject()->GetRectTransform();
@@ -87,21 +101,21 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         Vector2i prevCurrentSize (prevRT->GetViewportAARect().GetSize());
         Vector2i nextCurrentSize (nextRT->GetViewportAARect().GetSize());
 
-        Vector2i prevIdealNewPrefSize = prevCurrentSize + prevIdealSizeIncrease;
-        Vector2i nextIdealNewPrefSize = nextCurrentSize + nextIdealSizeIncrease;
+        Vector2i prevIdealNewPrefSize = (prevCurrentSize + prevIdealSizeIncrease);
+        Vector2i nextIdealNewPrefSize = (nextCurrentSize + nextIdealSizeIncrease);
 
         // Make room decreasing preferred sizes from all previous/next children
         // For prevSibling, we will have to steal room from all next siblings
         // For nextSibling, we will have to steal room from all prev siblings
-        Array<Vector2i> prevNextIdealNewPrefSize =
-          {prevIdealNewPrefSize, nextIdealNewPrefSize};
+        Array<Vector2i> prevNextIdealNewPrefSize = {prevIdealNewPrefSize,
+                                                    nextIdealNewPrefSize};
 
         Array<Vector2i> prevNextIdealNeededRoomForNewSize =
           {Vector2i::Max(prevIdealNewPrefSize - prevCurrentSize, Vector2i::Zero),
            Vector2i::Max(nextIdealNewPrefSize - nextCurrentSize, Vector2i::Zero)};
 
         Array<GameObject*> prevNextSiblings = {prevSibling, nextSibling};
-        for (int prevOrNext = 0; prevOrNext <= 1; ++prevOrNext)
+        for (int prevOrNext : {0, 1})
         {
             bool isPrev = (prevOrNext==0);
             const Array<GameObject*> &siblings = parent->GetChildren();
@@ -110,55 +124,64 @@ void UIDirLayoutMovableSeparator::OnUpdate()
 
             Vector2i neededRoomForNewSize = totalIdealNeededRoomForNewSize;
 
-            // First take into account that we have free space from the
-            // displacement itself
-
-            // Then take parent free space if any
+            // Take parent free space if any
             Vector2i parentFreeSize ( parentRT->GetViewportAARect().GetSize() );
             for (GameObject *child : parent->GetChildren())
             {
-                RectTransform *childRT = child->GetRectTransform();
-                if (childRT)
+                if (RectTransform *childRT = child->GetRectTransform())
                 {
                     parentFreeSize -= Vector2i(childRT->GetViewportAARect().GetSize());
                 }
             }
             neededRoomForNewSize -= Vector2i::Max(parentFreeSize, Vector2i::Zero);
 
-            auto it = siblings.Begin();
-            std::advance(it, (isPrev ? nextSiblingIndex : prevSiblingIndex));
-            while (true)
+            int j = (isPrev ? nextSiblingIndex : prevSiblingIndex);
+            while (j >= 0 && j <= siblings.Size() - 1)
             {
-                if (neededRoomForNewSize.GetAxis( GetAxis() ) <= 0) { break; }
-                if (isPrev && it == siblings.End()) { break; }
+                if (neededRoomForNewSize[GetAxis()] <= 0)
+                {
+                    break;
+                }
 
-                GameObject *sibling = *it;
-                RectTransform *sbRT = sibling->GetRectTransform();
-                Vector2i sbSize ( sbRT->GetViewportAARect().GetSize() );
-                Vector2i sbMinSize = UILayoutManager::GetMinSize(sibling);
-                Vector2i availableRoom = sbSize - sbMinSize;
-                Vector2i roomToBeStolen = Math::Clamp(availableRoom,
-                                                      Vector2i::Zero,
-                                                      neededRoomForNewSize);
-                UILayoutElement *auxLE = childToAuxLE.Get(sibling);
-                Vector2i newPrefSize = sbSize - roomToBeStolen;
+                // Steal room from siblings hihihi
+                GameObject *sibling = siblings[j];
+                if (RectTransform *sbRT = sibling->GetRectTransform())
+                {
+                    Vector2i sbSize ( sbRT->GetViewportAARect().GetSize() );
+                    Vector2i sbMinSize = UILayoutManager::GetMinSize(sibling);
+                    Vector2i availableRoom = (sbSize - sbMinSize);
+                    Vector2i roomToBeStolen = Vector2i::Clamp(availableRoom,
+                                                              Vector2i::Zero,
+                                                              neededRoomForNewSize);
 
-                if (horizontal) { auxLE->SetPreferredWidth(newPrefSize.x); }
-                else { auxLE->SetPreferredHeight(newPrefSize.y); }
+                    if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
+                    {
+                        Vector2i newPrefSizeAfterBeingStolen =
+                                Vector2i::Max(sbSize - roomToBeStolen, Vector2i::One);
 
-                neededRoomForNewSize -= roomToBeStolen;
+                        // Change preferred size to steal :)
+                        auxLE->SetPreferredSizeInAxis(
+                            newPrefSizeAfterBeingStolen[GetAxis()], GetAxis());
+                        // Debug_Log("Setting because of stealing prefSize of " << j << " to " <<
+                        //           newPrefSizeAfterBeingStolen);
 
-                if (!isPrev && it == siblings.Begin()) { break; }
-                if (isPrev) { ++it; } else { --it; }
+                        neededRoomForNewSize -= roomToBeStolen;
+
+                        // Debug_Log("Stealing " << roomToBeStolen << " from " << j << " for " <<
+                        //           (isPrev ? "prev" : "next"));
+                    }
+                }
+                j += (isPrev ? 1 : -1);
             }
 
             Vector2i newPrefSize;
             GameObject *sibling = prevNextSiblings[prevOrNext];
             RectTransform *siblingRT = sibling->GetRectTransform();
-            Vector2i currentSize ( siblingRT->GetViewportAARect().GetSize() );
             if (totalIdealNeededRoomForNewSize.GetAxis( GetAxis() ) > 0)
             {
-                // How much room that we needed we have not been to get?
+                Vector2i currentSize ( siblingRT->GetViewportAARect().GetSize() );
+
+                // How much room that we needed we have not been able to get?
                 Vector2i neededRoomLeft = Vector2i::Max(neededRoomForNewSize,
                                                         Vector2i::Zero);
 
@@ -171,15 +194,43 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                 newPrefSize = prevNextIdealNewPrefSize[prevOrNext];
             }
 
-            UILayoutElement *auxLE = childToAuxLE.Get(sibling);
-            if (horizontal) { auxLE->SetPreferredWidth(newPrefSize.x); }
-            else { auxLE->SetPreferredHeight(newPrefSize.y); }
+            if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
+            {
+                auxLE->SetPreferredSizeInAxis(newPrefSize[GetAxis()], GetAxis());
+                // Debug_Log("Setting newPrefSize " << newPrefSize << " for " <<
+                //           (isPrev ? "prev" : "next"));
+                // Debug_Log("Min: " << auxLE->GetMinSize() << " for " << (isPrev ? "prev" : "next"));
+                // Debug_Log("Pref: " << auxLE->GetPreferredSize() << " for " << (isPrev ? "prev" : "next"));
+                // Debug_Log("Flex: " << auxLE->GetFlexibleSize() << " for " << (isPrev ? "prev" : "next"));
+            }
         }
 
         // DebugRenderer::RenderAARectNDC( prevRT->GetViewportAARectNDC(), Color::Green,
         //                                 0.1f, 1.0f, false);
         // DebugRenderer::RenderAARectNDC( nextRT->GetViewportAARectNDC(), Color::Red,
         //                                 0.1f, 1.0f, false);
+        // Debug_Log("=========");
+    }
+    else
+    {
+        // Update auxiliar layout elements preferred sizes
+        uint separatorIndex = parent->GetChildren().IndexOf( GetGameObject() );
+        for (int k : {-1, 1})
+        {
+            int neighborIndex = (separatorIndex + k);
+            if (neighborIndex >= 0 && neighborIndex < parent->GetChildren().Size())
+            {
+                GameObject *neighbor = parent->GetChildren()[separatorIndex + k];
+                if (UILayoutElement *auxLE = childToAuxLE.Get(neighbor))
+                {
+                    if (RectTransform *childRT = neighbor->GetRectTransform())
+                    {
+                        const Vector2i prefSize (childRT->GetViewportAARect().GetSize());
+                        auxLE->SetPreferredSizeInAxis(prefSize[GetAxis()], GetAxis());
+                    }
+                }
+            }
+        }
     }
 }
 

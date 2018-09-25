@@ -18,12 +18,15 @@ public:
     void SetMinWidth(int minWidth);
     void SetMinHeight(int minHeight);
     void SetMinSize(const Vector2i& minSize);
+    void SetMinSizeInAxis(int minMagnitude, Axis axis);
     void SetPreferredWidth(int preferredWidth);
     void SetPreferredHeight(int preferredHeight);
     void SetPreferredSize(const Vector2i& preferredSize);
+    void SetPreferredSizeInAxis(int preferredMagnitude, Axis axis);
     void SetFlexibleWidth(float flexibleWidth);
     void SetFlexibleHeight(float flexibleHeight);
     void SetFlexibleSize(const Vector2& flexibleSize);
+    void SetFlexibleSizeInAxis(float flexibleMagnitude, Axis axis);
 
     int GetMinWidth() const;
     int GetMinHeight() const;

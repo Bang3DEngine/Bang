@@ -37,6 +37,13 @@ void UILayoutElement::SetMinSize(const Vector2i &minSize)
     }
 }
 
+void UILayoutElement::SetMinSizeInAxis(int minMagnitude, Axis axis)
+{
+    Vector2i minSize = GetMinSize();
+    minSize[axis] = minMagnitude;
+    SetMinSize( minSize );
+}
+
 void UILayoutElement::SetPreferredWidth(int preferredWidth)
 {
     SetPreferredSize( Vector2i(preferredWidth, GetPreferredHeight()) );
@@ -56,6 +63,13 @@ void UILayoutElement::SetPreferredSize(const Vector2i &preferredSize)
     }
 }
 
+void UILayoutElement::SetPreferredSizeInAxis(int preferredMagnitude, Axis axis)
+{
+    Vector2i preferredSize = GetPreferredSize();
+    preferredSize[axis] = preferredMagnitude;
+    SetPreferredSize( preferredSize );
+}
+
 void UILayoutElement::SetFlexibleWidth(float flexibleWidth)
 {
     SetFlexibleSize( Vector2(flexibleWidth, GetFlexibleHeight()) );
@@ -73,6 +87,13 @@ void UILayoutElement::SetFlexibleSize(const Vector2 &flexibleSize)
         m_flexibleSize = flexibleSize;
         OnChanged();
     }
+}
+
+void UILayoutElement::SetFlexibleSizeInAxis(float flexibleMagnitude, Axis axis)
+{
+    Vector2 flexibleSize = GetFlexibleSize();
+    flexibleSize[axis] = flexibleMagnitude;
+    SetFlexibleSize( flexibleSize );
 }
 
 
@@ -123,7 +144,8 @@ Vector2 UILayoutElement::GetFlexibleSize() const
 
 void UILayoutElement::CalculateLayout(Axis axis)
 {
-    SetCalculatedLayout(axis, GetMinSize().GetAxis(axis),
+    SetCalculatedLayout(axis,
+                        GetMinSize().GetAxis(axis),
                         GetPreferredSize().GetAxis(axis));
 }
 

@@ -31,7 +31,7 @@ protected:
 private:
     Axis m_axis = Axis::HORIZONTAL;
 
-    Vector2i GetTotalSpacing(const List<GameObject*> &children) const;
+    Vector2i GetTotalSpacing(const Array<GameObject*> &children) const;
 
     void ApplyLayoutToChildRectTransform(Axis rebuildPassAxis,
                                          const Vector2i &layoutRectSize,
@@ -40,15 +40,15 @@ private:
                                          const Vector2i &childRTSize);
 
     void FillChildrenMinSizes(const Vector2i &layoutRectSize,
-                              const List<GameObject*> &children,
+                              const Array<GameObject*> &children,
                               Array<Vector2i> *childrenRTSizes,
                               Vector2i *availableSpace);
     void FillChildrenPreferredSizes(const Vector2i &layoutRectSize,
-                                    const List<GameObject*> &children,
+                                    const Array<GameObject*> &children,
                                     Array<Vector2i> *childrenRTSizes,
                                     Vector2i *availableSpace);
     void FillChildrenFlexibleSizes(const Vector2i &layoutRectSize,
-                                   const List<GameObject*> &children,
+                                   const Array<GameObject*> &children,
                                    Array<Vector2i> *childrenRTSizes,
                                    Vector2i *availableSpace);
     void ApplyStretches(const Vector2i &layoutRectSize,

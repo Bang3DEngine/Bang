@@ -135,7 +135,7 @@ Vector2 UILayoutManager::GetFlexibleSize(GameObject *go)
 Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
 {
     // Retrieve layout elements and their respective priority
-    Map<int, List<ILayoutElement*> > priorLayoutElms;
+    Map<int, Array<ILayoutElement*> > priorLayoutElms;
     Array<ILayoutElement*> les = go->GetComponents<ILayoutElement>();
     if (les.IsEmpty())
     {
@@ -147,10 +147,11 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
         int prior = le->GetLayoutPriority();
         if (!priorLayoutElms.ContainsKey(prior))
         {
-            priorLayoutElms.Add(prior, List<ILayoutElement*>());
+            priorLayoutElms.Add(prior, Array<ILayoutElement*>());
         }
         priorLayoutElms.Get(prior).PushBack(le);
     }
+
     if (priorLayoutElms.IsEmpty())
     {
         return Vector2::Zero;
@@ -162,7 +163,7 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
     bool sizeXFound = false, sizeYFound = false;
     for (auto it = priorLayoutElms.RBegin(); it != priorLayoutElms.REnd(); ++it)
     {
-        const List<ILayoutElement*> &les = (*it).second;
+        const Array<ILayoutElement*> &les = (*it).second;
         for (ILayoutElement *le : les)
         {
             Vector2 leSize =  le->GetSize(sizeType);
@@ -196,9 +197,9 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
     return Vector2::Max(size, Vector2::Zero);
 }
 
-List<GameObject *> UILayoutManager::GetLayoutableChildrenList(GameObject *go)
+Array<GameObject *> UILayoutManager::GetLayoutableChildrenList(GameObject *go)
 {
-    List<GameObject*> childrenList;
+    Array<GameObject*> childrenList;
     for (GameObject *child : go->GetChildren())
     {
         UILayoutIgnorer *ltIgnorer = child->GetComponent<UILayoutIgnorer>();

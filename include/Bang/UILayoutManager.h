@@ -38,7 +38,7 @@ public:
     static Vector2  GetFlexibleSize(GameObject *go);
     static Vector2  GetSize(GameObject *go, LayoutSizeType sizeType);
 
-    static List<GameObject*> GetLayoutableChildrenList(GameObject *go);
+    static Array<GameObject*> GetLayoutableChildrenList(GameObject *go);
 
     static UILayoutManager* GetActive(GameObject *go);
     static UILayoutManager* GetActive(Component *comp);

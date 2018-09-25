@@ -20,7 +20,7 @@ UIGridLayout::~UIGridLayout()
 void UIGridLayout::ApplyLayout(Axis axis)
 {
     BANG_UNUSED(axis);
-    List<GameObject*> children =
+    Array<GameObject*> children =
             UILayoutManager::GetLayoutableChildrenList(GetGameObject());
 
     uint i = 0;
@@ -71,10 +71,13 @@ const Vector2i &UIGridLayout::GetCellSize() const
 
 int UIGridLayout::GetNumRows() const
 {
-    List<GameObject*> children =
+    Array<GameObject*> children =
                 UILayoutManager::GetLayoutableChildrenList(GetGameObject());
     const int numColumns = GetNumColumns();
-    if (children.Size() == 0 || numColumns == 0) { return 0; }
+    if (children.Size() == 0 || numColumns == 0)
+    {
+        return 0;
+    }
     return numColumns > 0 ? ((children.Size() - 1) / numColumns + 1) : 0;
 }
 

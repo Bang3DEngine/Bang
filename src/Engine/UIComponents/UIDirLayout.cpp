@@ -163,7 +163,6 @@ void UIDirLayout::FillChildrenMinSizes(const Vector2i &layoutRectSize,
     }
 }
 
-#include "Bang/UILayoutElement.h"
 void UIDirLayout::FillChildrenPreferredSizes(const Vector2i &layoutRectSize,
                                              const Array<GameObject*> &children,
                                              Array<Vector2i> *childrenRTSizes,

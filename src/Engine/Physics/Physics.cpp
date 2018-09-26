@@ -64,7 +64,7 @@ void Physics::UpdateFromTransforms(Scene *scene)
                                 GetGatheredObjects();
         for (PhysicsObject *phObj : allPhObjs)
         {
-            if (Component *comp = DCAST<Component*>(phObj))
+            if (Component *comp = FastDynamicCast<Component*>(phObj))
             {
                 if (GameObject *phObjGo = comp->GetGameObject())
                 {
@@ -73,6 +73,10 @@ void Physics::UpdateFromTransforms(Scene *scene)
                     {
                         if (Transform *tr = phObjGo->GetTransform())
                         {
+                            if (phObjGo->GetName() == "Cube")
+                            {
+                                int a = 2;
+                            }
                             PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
                             pxRB->setGlobalPose( GetPxTransformFromTransform(tr) );
                         }

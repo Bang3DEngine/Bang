@@ -17,6 +17,7 @@ RigidBody::RigidBody()
     if (Physics *ph = Physics::GetInstance())
     {
         SetPxRigidDynamic( ph->CreateNewPxRigidDynamic() );
+        Debug_Log ("Creating new pxRD for " << this << " (pxRD:" << GetPxRigidDynamic() << ")");
         SetIsKinematic(false);
     }
 }

@@ -222,8 +222,13 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                 {
                     if (RectTransform *childRT = neighbor->GetRectTransform())
                     {
-                        const Vector2i prefSize (childRT->GetViewportAARect().GetSize());
-                        auxLE->SetPreferredSizeInAxis(prefSize[GetAxis()], GetAxis());
+                        if (!childRT->IInvalidatableTransformLocal::IsInvalid() &&
+                            !childRT->IInvalidatableTransformWorld::IsInvalid() &&
+                            !auxLE->IsInvalid())
+                        {
+                            const Vector2i prefSize (childRT->GetViewportAARect().GetSize());
+                            auxLE->SetPreferredSizeInAxis(prefSize[GetAxis()], GetAxis());
+                        }
                     }
                 }
             }

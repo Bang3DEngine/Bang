@@ -203,8 +203,11 @@ PxActor* PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
             }
         }
     }
-    return m_gameObjectToPxActor.Get(go);
-
+    else
+    {
+        return m_gameObjectToPxActor.Get(go);
+    }
+    return nullptr;
 }
 
 void PxSceneContainer::onConstraintBreak(PxConstraintInfo* constraints,
@@ -353,6 +356,8 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     Array<PhysicsObject*> phObjsInDescendants =
                     phObjGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
 
+    // Debug_Log("Gathered: " << phObjGo->GetName());
+
     // Remove all orphan PxShapes that do not have a parent pxActor
     // for (PhysicsObject *phObj : phObjsInDescendants)
     // {
@@ -369,6 +374,11 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     {
         ASSERT(!GetPxActorFromGameObject(phObjGo));
         pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
+        Debug_Log("I need to create pxActor " << pxRD << " for ");
+    }
+    else
+    {
+        Debug_Log("Reusing pxActor " << pxRD);
     }
 
     if (!m_pxActorToGameObject.ContainsKey(pxRD))

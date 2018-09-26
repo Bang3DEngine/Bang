@@ -523,34 +523,16 @@ void RectTransform::CalculateRectTransformLocalToWorldMatrix() const
 
 bool RectTransform::IsMouseOver(bool recursive) const
 {
-    return IsMouseOver(Input::GetMousePositionWindow(), recursive);
+    return IsMouseOver(Input::GetMousePosition(), recursive);
 }
 
-bool RectTransform::IsMouseOver(const Vector2i &mousePosWindow,
-                                bool recursive) const
-{
-    AARecti vpRect = m_vpInWhichRectTransformLocalToWorldWasCalc;
-    if (vpRect == AARecti::Zero)
-    {
-        vpRect = m_vpInWhichRectLocalToWorldWasCalc;
-        if (vpRect == AARecti::Zero)
-        {
-            return false;
-        }
-    }
-
-    Vector2i mousePosVP(
-        GL::FromWindowPointToViewportPoint( Vector2(mousePosWindow), vpRect) );
-    return IsMouseOverVP(mousePosVP, recursive);
-}
-
-bool RectTransform::IsMouseOverVP(const Vector2i &mousePosVP,
-                                  bool recursive) const
+bool RectTransform::IsMouseOver(const Vector2i &mousePosVP, bool recursive) const
 {
     if (Input::IsMouseInsideWindow())
     {
         if (IsActive() &&
             GetGameObject()->IsActive() &&
+            GetGameObject()->IsEnabled(true) &&
             GetViewportAARect().Contains( Vector2(mousePosVP) ))
         {
             return true;

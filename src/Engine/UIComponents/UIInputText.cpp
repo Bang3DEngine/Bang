@@ -43,15 +43,18 @@ void UIInputText::OnUpdate()
 {
     Component::OnUpdate();
 
-    bool hasFocus = GetLabel()->GetFocusable()->HasFocus();
-    if (hasFocus)
+    if (GetLabel())
     {
-        HandleTyping();
-        UpdateTextScrolling();
-        UpdateCursorRenderer();
-    }
+        bool hasFocus = GetLabel()->GetFocusable()->HasFocus();
+        if (hasFocus)
+        {
+            HandleTyping();
+            UpdateTextScrolling();
+            UpdateCursorRenderer();
+        }
 
-    p_cursor->SetEnabled(hasFocus);
+        p_cursor->SetEnabled(hasFocus);
+    }
 }
 
 void UIInputText::UpdateCursorRenderer()

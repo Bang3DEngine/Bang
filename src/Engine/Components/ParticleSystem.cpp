@@ -6,6 +6,8 @@
 #include "Bang/Physics.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
+#include "Bang/Transform.h"
+#include "Bang/GameObject.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/ReflectionProbe.h"
@@ -20,6 +22,8 @@ ParticleSystem::ParticleSystem()
 
     p_particlePositionsVBO = new VBO();
     SetNumParticles(100);
+
+    m_lifeTime.SetRangeValues(0.1f, 3.0f);
 
     SetMesh( MeshFactory::GetCube().Get() );
 }
@@ -139,7 +143,7 @@ void ParticleSystem::SetMesh(Mesh *mesh)
     }
 }
 
-void ParticleSystem::SetLifeTime(float lifeTime)
+void ParticleSystem::SetLifeTime(const ComplexRandom &lifeTime)
 {
     if (lifeTime != GetLifeTime())
     {
@@ -160,6 +164,14 @@ void ParticleSystem::SetInitialVelocityMultiplier(float initialVelocityMultiplie
     if (initialVelocityMultiplier != GetInitialVelocityMultiplier())
     {
         m_initialVelocityMultiplier = initialVelocityMultiplier;
+    }
+}
+
+void ParticleSystem::SetGenerationShapeConeFOVRads(float coneFOVRads)
+{
+    if (coneFOVRads != GetGenerationShapeConeFOVRads())
+    {
+        m_generationShapeConeFOVRads = coneFOVRads;
     }
 }
 
@@ -209,7 +221,7 @@ ParticleGenerationShape ParticleSystem::GetGenerationShape() const
     return m_generationShape;
 }
 
-float ParticleSystem::GetLifeTime() const
+const ComplexRandom& ParticleSystem::GetLifeTime() const
 {
     return m_lifeTime;
 }
@@ -232,6 +244,11 @@ float ParticleSystem::GetGravityMultiplier() const
 float ParticleSystem::GetInitialVelocityMultiplier() const
 {
     return m_initialVelocityMultiplier;
+}
+
+float ParticleSystem::GetGenerationShapeConeFOVRads() const
+{
+    return m_generationShapeConeFOVRads;
 }
 
 Mesh *ParticleSystem::GetMesh() const
@@ -268,7 +285,7 @@ void ParticleSystem::InitParticle(uint i)
     particleData.position = GetParticleInitialPosition();
     particleData.velocity = GetParticleInitialVelocity();
     particleData.gravityMultiplier = GetGravityMultiplier();
-    particleData.remainingLifeTime = GetLifeTime();
+    particleData.remainingLifeTime = GetLifeTime().GenerateRandom();
 
     m_particlesPositions[i] = particleData.position;
 }
@@ -282,6 +299,10 @@ Vector3 ParticleSystem::GetParticleInitialPosition() const
             particleInitialPosition = Random::GetRandomVector3() *
                                       (GetGenerationShapeBoxSize() * 0.5f);
         break;
+
+        case ParticleGenerationShape::CONE:
+            particleInitialPosition = Vector3::Zero;
+        break;
     }
     return particleInitialPosition;
 }
@@ -292,9 +313,27 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
     switch (GetGenerationShape())
     {
         case ParticleGenerationShape::BOX:
-            particleInitialVelocity = Vector3::Up * GetInitialVelocityMultiplier();
+            particleInitialVelocity = Vector3::Forward;
+        break;
+
+        case ParticleGenerationShape::CONE:
+        {
+            float hFovR = GetGenerationShapeConeFOVRads() * 0.5f;
+            particleInitialVelocity =
+                Vector3(( Math::Tan( Random::GetRange(-hFovR, hFovR) ) ),
+                        ( Math::Tan( Random::GetRange(-hFovR, hFovR) ) ),
+                        -1.0f).
+                    Normalized();
+        }
         break;
     }
+
+    Transform *tr = GetGameObject() ? GetGameObject()->GetTransform() : nullptr;
+    Quaternion rot = tr ? tr->GetRotation() : Quaternion::Identity;
+
+    particleInitialVelocity *= GetInitialVelocityMultiplier();
+    particleInitialVelocity = rot * particleInitialVelocity;
+
     return particleInitialVelocity;
 }
 
@@ -332,7 +371,7 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("LifeTime"))
     {
-        SetLifeTime( metaNode.Get<float>("LifeTime") );
+        SetLifeTime( metaNode.Get<ComplexRandom>("LifeTime") );
     }
 
     if (metaNode.Contains("NumParticles"))

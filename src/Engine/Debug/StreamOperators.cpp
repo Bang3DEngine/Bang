@@ -8,6 +8,7 @@
 #include "Bang/String.h"
 #include "Bang/Triangle.h"
 #include "Bang/IToString.h"
+#include "Bang/ComplexRandom.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -87,6 +88,36 @@ std::ostream &operator<<(std::ostream &log, const GUID &guid)
     log << guid.GetTimeGUID() << " " <<
            guid.GetRandGUID() << " " <<
            guid.GetEmbeddedResourceGUID();
+    return log;
+}
+
+std::istream &operator>>(std::istream &is, ComplexRandom &cr)
+{
+    uint type = 0;
+    float constantValue = 0.0f;
+    float minRangeValue = 0.0f;
+    float maxRangeValue = 0.0f;
+    is >> constantValue;
+    is >> minRangeValue;
+    is >> maxRangeValue;
+    is >> type;
+
+    cr.SetConstantValue(constantValue);
+    cr.SetRangeValues(minRangeValue, maxRangeValue);
+
+    ComplexRandomType crType = SCAST<ComplexRandomType>(type);
+    cr.SetType(crType);
+
+    return is;
+}
+
+std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr)
+{
+    log << cr.GetConstantValue() << " ";
+    log << cr.GetMinRangeValue() << " ";
+    log << cr.GetMaxRangeValue() << " ";
+    log << SCAST<uint>(cr.GetType()) << " ";
+
     return log;
 }
 

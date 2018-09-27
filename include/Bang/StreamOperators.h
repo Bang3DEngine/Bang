@@ -36,10 +36,12 @@ FORWARD_T     class Matrix3G;
 FORWARD_T     class Matrix4G;
 FORWARD       class IToString;
 FORWARD_T     class QuaternionG;
+FORWARD       class ComplexRandom;
 
 std::istream& operator>>(std::istream& is, GUID &guid);
 std::istream& operator>>(std::istream& is, Path &p);
 std::istream& operator>>(std::istream& is, Color &c);
+std::istream& operator>>(std::istream& is, ComplexRandom &cr);
 std::ostream& operator<<(std::ostream &log, const ObjectId &objectId);
 std::ostream& operator<<(std::ostream &log, const Path  &p);
 std::ostream& operator<<(std::ostream &log, const Color &v);
@@ -49,6 +51,7 @@ std::ostream& operator<<(std::ostream &log, const GUID &guid);
 std::ostream& operator<<(std::ostream &log, const Triangle &v);
 std::ostream& operator<<(std::ostream &log, const IToString &v);
 std::ostream& operator<<(std::ostream &log, const IToString *s);
+std::ostream& operator<<(std::ostream &log, const ComplexRandom &cr);
 
 // Templated ostream operators
 template<class T>

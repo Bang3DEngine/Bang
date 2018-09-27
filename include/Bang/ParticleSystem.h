@@ -3,6 +3,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/ComplexRandom.h"
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
@@ -12,7 +13,8 @@ FORWARD class VBO;
 
 enum class ParticleGenerationShape
 {
-    BOX
+    BOX,
+    CONE
 };
 
 class ParticleSystem : public Renderer
@@ -39,20 +41,22 @@ public:
     void Restart();
 
     void SetMesh(Mesh *mesh);
-    void SetLifeTime(float lifeTime);
+    void SetLifeTime(const ComplexRandom &lifeTime);
     void SetNumParticles(uint numParticles);
     void SetGenerationShape(ParticleGenerationShape shape);
     void SetGenerationShapeBoxSize(const Vector3 &boxSize);
     void SetGravityMultiplier(float gravityMultiplier);
     void SetInitialVelocityMultiplier(float initialVelocityMultiplier);
+    void SetGenerationShapeConeFOVRads(float coneFOVRads);
 
     Mesh *GetMesh() const;
     uint GetNumParticles() const;
     const Vector3 &GetGenerationShapeBoxSize() const;
     ParticleGenerationShape GetGenerationShape() const;
-    float GetLifeTime() const;
+    const ComplexRandom& GetLifeTime() const;
     float GetGravityMultiplier() const;
     float GetInitialVelocityMultiplier() const;
+    float GetGenerationShapeConeFOVRads() const;
 
     // Renderer
     virtual void Bind() override;
@@ -77,8 +81,9 @@ private:
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
+    float m_generationShapeConeFOVRads = Math::Pi/4;
 
-    float m_lifeTime = 1.0f;
+    ComplexRandom m_lifeTime;
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 

@@ -693,17 +693,33 @@ public:
     static Vector2    FromViewportPointNDCToViewportPoint(const Vector2  &vpPoint);
 
     static void Render(const VAO* vao,
-                       GL::Primitive renderMode,
+                       GL::Primitive primitivesMode,
                        int elementsCount,
                        int startElementIndex = 0);
     static void DrawArrays(const VAO* vao,
-                           GL::Primitive renderMode,
-                           int elementsCount,
-                           int startElementIndex = 0);
+                           GL::Primitive primitivesMode,
+                           int verticesCount,
+                           int startVertexIndex = 0);
     static void DrawElements(const VAO* vao,
                              GL::Primitive primitivesMode,
                              int elementsCount,
                              int startElementIndex = 0);
+    static void RenderInstanced(const VAO* vao,
+                                GL::Primitive primitivesMode,
+                                int elementsCount,
+                                int instanceAmount);
+    static void DrawArraysInstanced(const VAO* vao,
+                                    GL::Primitive primitivesMode,
+                                    int verticesCount,
+                                    int instanceAmount,
+                                    int instanceStartIndex);
+    static void DrawElementsInstanced(const VAO* vao,
+                                      GL::Primitive primitivesMode,
+                                      int elementsCount,
+                                      int instanceAmount);
+
+    static void VertexAttribDivisor(uint location,
+                                    uint divisor);
 
     static int GetInteger(GL::Enum glEnum);
     static void GetInteger(GL::Enum glEnum, int *values);

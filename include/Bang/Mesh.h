@@ -61,6 +61,21 @@ public:
     IBO *GetVertexIndicesIBO() const;
     VBO *GetVertexAttributesVBO() const;
     int GetNumVertices() const;
+
+    uint GetPositionsBytesSize() const;
+    uint GetNormalsBytesSize() const;
+    uint GetUvsBytesSize() const;
+    uint GetTangentsBytesSize() const;
+    uint GetBonesIndicesBytesSize() const;
+    uint GetBonesWeightsBytesSize() const;
+    uint GetVBOPositionsOffset() const;
+    uint GetVBONormalsOffset() const;
+    uint GetVBOUvsOffset() const;
+    uint GetVBOTangentsOffset() const;
+    uint GetVBOBonesIndicesOffset() const;
+    uint GetVBOBonesWeightsOffset() const;
+    uint GetVBOStride() const;
+
     const AABox& GetAABBox() const;
     const Sphere& GetBoundingSphere() const;
     const Array<VertexId>& GetVertexIndices() const;

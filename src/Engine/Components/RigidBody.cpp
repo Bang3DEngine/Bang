@@ -8,6 +8,8 @@
 USING_NAMESPACE_BANG
 using namespace physx;
 
+
+#include "Bang/GameObject.h"
 RigidBody::RigidBody()
 {
     CONSTRUCT_CLASS_ID(RigidBody)
@@ -17,7 +19,8 @@ RigidBody::RigidBody()
     if (Physics *ph = Physics::GetInstance())
     {
         SetPxRigidDynamic( ph->CreateNewPxRigidDynamic() );
-        Debug_Log ("Creating new pxRD for " << this << " (pxRD:" << GetPxRigidDynamic() << ")");
+        Debug_Log ("Creating new pxRD for " << this << " go " <<
+                   " (pxRD:" << GetPxRigidDynamic() << ")");
         SetIsKinematic(false);
     }
 }

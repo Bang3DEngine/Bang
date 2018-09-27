@@ -368,17 +368,26 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     // but neither do you or your ancestors
     ASSERT(phObjGo->HasComponent<PhysicsObject>());
 
-    PxMaterial *pxDefaultMat = PxSceneContainer::GetDefaultPxMaterial();
+    PxMaterial *pxDefaultMat = GetDefaultPxMaterial();
     PxRigidDynamic *pxRD = SCAST<PxRigidDynamic*>(GetAncestorOrThisPxActor(phObjGo));
     if (!pxRD)
     {
         ASSERT(!GetPxActorFromGameObject(phObjGo));
         pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
-        Debug_Log("I need to create pxActor " << pxRD << " for ");
+        phObj->SetPxRigidDynamic(pxRD);
+        Debug_Log("I need to create pxActor " << pxRD << " for go " <<
+                  phObjGo->GetName() << " for comp " << phObj);
     }
     else
     {
-        Debug_Log("Reusing pxActor " << pxRD);
+        Debug_Log("Reusing pxActor " << pxRD << " for go " << phObjGo->GetName() <<
+                  " for comp " << phObj);
+    }
+    ASSERT(pxRD);
+
+    if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
+    {
+        m_gameObjectToPxActor.Add(phObjGo, pxRD);
     }
 
     if (!m_pxActorToGameObject.ContainsKey(pxRD))
@@ -386,13 +395,8 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
         m_pxActorToGameObject.Add(pxRD, phObjGo);
         GetPxScene()->addActor(*pxRD);
     }
-
-    if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
-    {
-        m_gameObjectToPxActor.Add(phObjGo, pxRD);
-    }
-
-    ASSERT(pxRD);
+    ASSERT(GetPxActorFromGameObject(phObjGo));
+    ASSERT(m_pxActorToGameObject.ContainsKey(pxRD));
 
     // For each physics object, check that it is indeed synchronized with
     // this actor. Otherwise, synchronize it.

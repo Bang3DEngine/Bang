@@ -64,12 +64,20 @@ void Renderer::Bind()
 
     if (Material *mat = GetActiveMaterial())
     {
-        mat->Bind();
         if (ShaderProgram *sp = mat->GetShaderProgram())
         {
-            sp->SetBool(GLUniforms::UniformName_ReceivesShadows, GetReceivesShadows());
+            if (sp->IsLinked())
+            {
+                mat->Bind();
+                SetUniformsOnBind(sp);
+            }
         }
     }
+}
+
+void Renderer::SetUniformsOnBind(ShaderProgram *sp)
+{
+    sp->SetBool(GLUniforms::UniformName_ReceivesShadows, GetReceivesShadows());
 }
 
 void Renderer::UnBind()

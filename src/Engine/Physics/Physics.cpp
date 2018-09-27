@@ -73,10 +73,6 @@ void Physics::UpdateFromTransforms(Scene *scene)
                     {
                         if (Transform *tr = phObjGo->GetTransform())
                         {
-                            if (phObjGo->GetName() == "Cube")
-                            {
-                                int a = 2;
-                            }
                             PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
                             pxRB->setGlobalPose( GetPxTransformFromTransform(tr) );
                         }

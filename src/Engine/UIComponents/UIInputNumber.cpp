@@ -42,15 +42,22 @@ void UIInputNumber::SetValue(float v)
     ChangeTextColorBasedOnMinMax();
 }
 
+void UIInputNumber::SetMinValue(float min)
+{
+    m_minMaxValues.x = Math::Min(min, GetMaxValue());
+    SetValue( GetValue() );
+}
+
+void UIInputNumber::SetMaxValue(float max)
+{
+    m_minMaxValues.y = Math::Max(GetMinValue(), max);
+    SetValue( GetValue() );
+}
+
 void UIInputNumber::SetMinMaxValues(float min, float max)
 {
-    if (max < min)
-    {
-        Debug_Warn("Max and min are swapped! Correcting them...");
-    }
-
-    m_minMaxValues = Vector2(Math::Min(min, max), Math::Max(min, max));
-    SetValue( GetValue() );
+    SetMinValue(min);
+    SetMaxValue(max);
 }
 
 void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)

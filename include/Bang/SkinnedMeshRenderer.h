@@ -24,6 +24,7 @@ public:
     // MeshRenderer
     void OnRender() override;
     virtual void Bind() override;
+    virtual void SetUniformsOnBind(ShaderProgram *sp) override;
     Matrix4 GetModelMatrixUniform() const override;
 
     void SetRootBoneGameObjectName(const String &rootBoneGameObjectName);
@@ -41,7 +42,7 @@ public:
     const Map<String, Matrix4> &GetInitialTransforms() const;
     const Set<String> &GetBonesNames() const;
 
-    void BindBoneMatrices();
+    void SetBoneUniforms(ShaderProgram *sp);
     void UpdateBonesMatricesFromTransformMatrices();
     void UpdateTransformMatricesFromInitialBonePosition();
     void SetSkinnedMeshRendererCurrentBoneMatrices(

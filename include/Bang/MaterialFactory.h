@@ -14,6 +14,7 @@ public:
     static RH<Material> GetDefault(RenderPass renderPass = RenderPass::SCENE);
     static RH<Material> GetDefaultUnLighted();
     static RH<Material> GetGizmosUnLightedOverlay();
+    static RH<Material> GetDefaultParticles();
     static RH<Material> GetWater();
 
     static RH<PhysicsMaterial> GetDefaultPhysicsMaterial();

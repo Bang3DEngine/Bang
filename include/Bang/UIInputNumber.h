@@ -22,6 +22,8 @@ public:
     virtual ~UIInputNumber();
 
     void SetValue(float v);
+    void SetMinValue(float min);
+    void SetMaxValue(float max);
     void SetMinMaxValues(float min, float max);
     void SetDecimalPlaces(uint decimalPlaces);
 

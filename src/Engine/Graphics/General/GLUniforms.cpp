@@ -218,9 +218,9 @@ void GLUniforms::UpdatePVMMatrix()
     switch (glu->GetViewProjMode())
     {
         case GL::ViewProjMode::WORLD:
-            matrices->pvm = glu->m_cameraUniforms.proj *
-                            glu->m_cameraUniforms.view *
-                            matrices->model;
+            glu->m_cameraUniforms.projView = glu->m_cameraUniforms.proj *
+                                             glu->m_cameraUniforms.view;
+            matrices->pvm = glu->m_cameraUniforms.projView * matrices->model;
         break;
 
         case GL::ViewProjMode::CANVAS:

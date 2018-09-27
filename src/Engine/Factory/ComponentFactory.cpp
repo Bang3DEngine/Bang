@@ -27,6 +27,7 @@
 #include "Bang/RectTransform.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/UITextRenderer.h"
+#include "Bang/ParticleSystem.h"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/UIImageRenderer.h"
@@ -66,6 +67,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, LineRenderer);
     CREATE_COMPONENT(componentClassName, MeshRenderer);
     CREATE_COMPONENT(componentClassName, WaterRenderer);
+    CREATE_COMPONENT(componentClassName, ParticleSystem);
     CREATE_COMPONENT(componentClassName, UIScrollArea);
     CREATE_COMPONENT(componentClassName, AudioListener);
     CREATE_COMPONENT(componentClassName, RectTransform);

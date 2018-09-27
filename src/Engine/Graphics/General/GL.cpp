@@ -1414,7 +1414,10 @@ void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
     // Unbind objects if they were bound
     for (int i = 0; i < n; ++i)
     {
-        if (GL::GetBoundId(bindTarget) == glIds[i]) { GL::UnBind(bindTarget); }
+        if (GL::GetBoundId(bindTarget) == glIds[i])
+        {
+            GL::UnBind(bindTarget);
+        }
     }
 }
 
@@ -1544,19 +1547,15 @@ void GL::SetColorMask(const std::array<bool, 4> &colorMask)
     GL::SetColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
 }
 
-void GL::Render(const VAO *vao, GL::Primitive renderMode,
-                int elementsCount, int startElementIndex)
+void GL::Render(const VAO *vao,
+                GL::Primitive renderMode,
+                int elementsCount,
+                int startElementIndex)
 {
     #ifdef DEBUG
     GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
     ASSERT( boundShaderProgram > 0 );
-    bool programValidateOk = GL::ValidateProgram(boundShaderProgram);
-    if (!programValidateOk)
-    {
-        // TextureUnitManager::PrintTextureUnits();
-        Debug::PrintAllUniforms();
-    }
-    ASSERT(programValidateOk);
+    ASSERT( GL::ValidateProgram(boundShaderProgram) );
     #endif
 
     if (vao->IsIndexed())
@@ -1569,16 +1568,22 @@ void GL::Render(const VAO *vao, GL::Primitive renderMode,
     }
 }
 
-void GL::DrawArrays(const VAO *vao, GL::Primitive primitivesMode,
-                    int elementsCount, int startIndex)
+void GL::DrawArrays(const VAO *vao,
+                    GL::Primitive primitivesMode,
+                    int verticesCount,
+                    int startVertexIndex)
 {
     vao->Bind();
-    GL_CALL( glDrawArrays( GLCAST(primitivesMode), startIndex, elementsCount) );
+    GL_CALL( glDrawArrays( GLCAST(primitivesMode),
+                           startVertexIndex,
+                           verticesCount) );
     vao->UnBind();
 }
 
-void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
-                      int elementsCount, int startElementIndex)
+void GL::DrawElements(const VAO *vao,
+                      GL::Primitive primitivesMode,
+                      int elementsCount,
+                      int startElementIndex)
 {
     vao->Bind();
     GL_CALL( glDrawElements( GLCAST(primitivesMode),
@@ -1588,9 +1593,70 @@ void GL::DrawElements(const VAO *vao, GL::Primitive primitivesMode,
     vao->UnBind();
 }
 
+void GL::RenderInstanced(const VAO *vao,
+                         GL::Primitive primitivesMode,
+                         int elementsCount,
+                         int instanceAmount)
+{
+    #ifdef DEBUG
+    GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
+    ASSERT( boundShaderProgram > 0 );
+    ASSERT( GL::ValidateProgram(boundShaderProgram) );
+    #endif
+
+    if (vao->IsIndexed())
+    {
+        GL::DrawElementsInstanced(vao,
+                                  primitivesMode,
+                                  elementsCount,
+                                  instanceAmount);
+    }
+    else
+    {
+        GL::DrawArraysInstanced(vao,
+                                primitivesMode,
+                                elementsCount,
+                                instanceAmount,
+                                0);
+    }
+}
+
+void GL::DrawArraysInstanced(const VAO *vao,
+                             GL::Primitive primitivesMode,
+                             int verticesCount,
+                             int instanceAmount,
+                             int instanceStartIndex)
+{
+    vao->Bind();
+    GL_CALL( glDrawArraysInstanced(GLCAST(primitivesMode),
+                                   instanceStartIndex,
+                                   verticesCount,
+                                   instanceAmount) );
+    vao->UnBind();
+}
+
+void GL::DrawElementsInstanced(const VAO *vao,
+                               GL::Primitive primitivesMode,
+                               int elementsCount,
+                               int instanceAmount)
+{
+    vao->Bind();
+    GL_CALL( glDrawElementsInstanced(GLCAST(primitivesMode),
+                                     elementsCount,
+                                     GLCAST(GL::DataType::UNSIGNED_INT),
+                                     RCAST<void*>(0),
+                                     instanceAmount) );
+    vao->UnBind();
+}
+
+void GL::VertexAttribDivisor(uint location, uint divisor)
+{
+    GL_CALL( glVertexAttribDivisor(location, divisor) );
+}
+
 uint GL::GetLineWidth()
 {
-    return GetGLContextValue(&GL::m_lineWidths);
+    return SCAST<uint>( GetGLContextValue(&GL::m_lineWidths) );
 }
 
 uint GL::GetStencilMask()
@@ -1961,13 +2027,31 @@ std::array<bool, 4> GL::GetColorMask()
 {
     return GetGLContextValue(&GL::m_colorMasks);
 }
-bool GL::IsColorMaskR()  { return GL::GetColorMask()[0];  }
-bool GL::IsColorMaskG()  { return GL::GetColorMask()[1];  }
-bool GL::IsColorMaskB()  { return GL::GetColorMask()[2];  }
-bool GL::IsColorMaskA()  { return GL::GetColorMask()[3];  }
+bool GL::IsColorMaskR()
+{
+    return GL::GetColorMask()[0];
+}
+bool GL::IsColorMaskG()
+{
+    return GL::GetColorMask()[1];
+}
+bool GL::IsColorMaskB()
+{
+    return GL::GetColorMask()[2];
+}
+bool GL::IsColorMaskA()
+{
+    return GL::GetColorMask()[3];
+}
 
-bool GL::GetDepthMask()  { return GetGLContextValue(&GL::m_depthMasks); }
-GL::Function GL::GetDepthFunc() { return GetGLContextValue(&GL::m_depthFuncs); }
+bool GL::GetDepthMask()
+{
+    return GetGLContextValue(&GL::m_depthMasks);
+}
+GL::Function GL::GetDepthFunc()
+{
+    return GetGLContextValue(&GL::m_depthFuncs);
+}
 
 bool GL::IsWireframe()
 {

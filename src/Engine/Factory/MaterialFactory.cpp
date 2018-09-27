@@ -11,11 +11,9 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     {
         case RenderPass::SCENE:
             return MaterialFactory::LoadMaterial("Materials/Default.bmat");
-        break;
 
         case RenderPass::SCENE_TRANSPARENT:
             return MaterialFactory::LoadMaterial("Materials/DefaultTransparent.bmat");
-        break;
 
         default: break;
     }
@@ -29,6 +27,11 @@ RH<Material> MaterialFactory::GetDefaultUnLighted()
 RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
     return MaterialFactory::LoadMaterial("Materials/GizmosUnLightedOverlay.bmat");
+}
+
+RH<Material> MaterialFactory::GetDefaultParticles()
+{
+    return MaterialFactory::LoadMaterial("Materials/DefaultParticles.bmat");
 }
 RH<Bang::Material> Bang::MaterialFactory::GetWater()
 {

@@ -25,6 +25,8 @@ public:
 
     static Vector2 GetInsideUnitCircle();
     static Vector3 GetInsideUnitSphere();
+    static Vector2 GetRandomVector2();
+    static Vector3 GetRandomVector3();
     static Vector4 GetRandomVector4();
     static Quaternion GetRotation();
     static Color GetColor();

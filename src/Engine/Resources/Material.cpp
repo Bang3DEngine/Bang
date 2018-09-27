@@ -302,7 +302,7 @@ GL::CullFaceExt Material::GetCullFace() const
 void Material::Bind() const
 {
     ShaderProgram *sp = GetShaderProgram();
-    if (!sp)
+    if (!sp || !sp->IsLinked())
     {
         return;
     }

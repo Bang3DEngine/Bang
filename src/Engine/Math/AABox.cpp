@@ -171,8 +171,19 @@ void AABox::AddPoint(const Vector3 &point)
 
 AABox AABox::Union(const AABox &b1, const AABox &b2)
 {
-    return AABox(Vector3::Min(b1.GetMin(), b2.GetMin()),
-                 Vector3::Max(b1.GetMax(), b2.GetMax()));
+    if (b1 == AABox::Empty)
+    {
+        return b2;
+    }
+
+    if (b2 == AABox::Empty)
+    {
+        return b1;
+    }
+
+    AABox unionBox = AABox(Vector3::Min(b1.GetMin(), b2.GetMin()),
+                           Vector3::Max(b1.GetMax(), b2.GetMax()));
+    return unionBox;
 }
 
 void AABox::CreateFromPositions(const Array<Vector3> &positions)

@@ -24,6 +24,7 @@ class Renderer : public Component,
 
 public:
     virtual void Bind();
+    virtual void SetUniformsOnBind(ShaderProgram *sp);
     virtual void OnRender();
     virtual void UnBind();
 

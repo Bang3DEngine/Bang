@@ -18,8 +18,6 @@ public:
     Mesh* GetActiveMesh() const;
     Mesh* GetSharedMesh() const;
 
-    virtual void Bind() override;
-
     void SetCurrentLOD(int lod);
     void SetAutoLOD(bool autoLOD);
 
@@ -28,6 +26,8 @@ public:
     Mesh *GetCurrentLODActiveMesh() const;
 
     // Renderer
+    virtual void Bind() override;
+    virtual void SetUniformsOnBind(ShaderProgram *sp) override;
     virtual AABox GetAABBox() const override;
 
     // ICloneable

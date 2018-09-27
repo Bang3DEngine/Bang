@@ -105,19 +105,12 @@ const Set<String> &SkinnedMeshRenderer::GetBonesNames() const
     return m_bonesNames;
 }
 
-void SkinnedMeshRenderer::BindBoneMatrices()
+void SkinnedMeshRenderer::SetBoneUniforms(ShaderProgram *sp)
 {
-    if (Material *mat = GetActiveMaterial())
-    {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
-        {
-            sp->Bind();
-            sp->SetBool("B_HasBoneAnimations", true);
-            sp->SetMatrix4Array("B_BoneAnimationMatrices",
-                                m_bonesTransformsMatricesArrayUniform,
-                                false);
-        }
-    }
+    sp->SetBool("B_HasBoneAnimations", true);
+    sp->SetMatrix4Array("B_BoneAnimationMatrices",
+                        m_bonesTransformsMatricesArrayUniform,
+                        false);
 }
 
 void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
@@ -163,8 +156,13 @@ void SkinnedMeshRenderer::OnRender()
 void SkinnedMeshRenderer::Bind()
 {
     MeshRenderer::Bind();
+}
+
+void SkinnedMeshRenderer::SetUniformsOnBind(ShaderProgram *sp)
+{
+    MeshRenderer::SetUniformsOnBind(sp);
     UpdateBonesMatricesFromTransformMatrices();
-    BindBoneMatrices();
+    SetBoneUniforms(sp);
 }
 
 void SkinnedMeshRenderer::SetRootBoneGameObjectName(

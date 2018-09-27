@@ -9,6 +9,8 @@ NAMESPACE_BANG_BEGIN
 class TimeSingleton
 {
 public:
+    TimeSingleton();
+
     static void SetDeltaTimeReferenceToNow();
 
 private:

@@ -52,7 +52,8 @@ public:
     float GetCamerasZNear() const;
     float GetCamerasZFar() const;
 
-    static void SetRendererUniforms(Renderer *renderer);
+    static void SetRendererUniforms(Renderer *renderer,
+                                    ShaderProgram *sp);
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

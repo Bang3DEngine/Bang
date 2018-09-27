@@ -57,15 +57,14 @@ Mesh *MeshRenderer::GetSharedMesh() const
 void MeshRenderer::Bind()
 {
     Renderer::Bind();
-    if (Material *mat = GetActiveMaterial())
-    {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
-        {
-            sp->Bind();
-            sp->SetBool("B_HasBoneAnimations", false);
-        }
-    }
-    ReflectionProbe::SetRendererUniforms(this);
+}
+
+void MeshRenderer::SetUniformsOnBind(ShaderProgram *sp)
+{
+    Renderer::SetUniformsOnBind(sp);
+
+    sp->SetBool("B_HasBoneAnimations", false);
+    ReflectionProbe::SetRendererUniforms(this, sp);
 }
 
 void MeshRenderer::SetCurrentLOD(int lod)

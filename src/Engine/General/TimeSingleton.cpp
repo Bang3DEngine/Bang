@@ -4,6 +4,11 @@
 
 USING_NAMESPACE_BANG
 
+TimeSingleton::TimeSingleton()
+{
+    m_initialTime = GetNow();
+}
+
 Time TimeSingleton::GetNow()
 {
     Time now;

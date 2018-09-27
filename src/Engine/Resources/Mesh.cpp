@@ -43,7 +43,10 @@ void Mesh::SetVertexIndices(const Array<Mesh::VertexId> &faceIndices)
 {
     m_vertexIndices = faceIndices;
 
-    if (m_vertexIndicesIBO) { delete m_vertexIndicesIBO; }
+    if (m_vertexIndicesIBO)
+    {
+        delete m_vertexIndicesIBO;
+    }
 
     m_vertexIndicesIBO = new IBO();
     m_vertexIndicesIBO->Fill((void*)(&m_vertexIndices[0]),
@@ -118,8 +121,10 @@ void Mesh::UpdateVAOs()
                 float weight;
                 uint id;
                 String ToString() const override
-                { return "Bone(" + String::ToString(id) + ": " +
-                                   String::ToString(weight) + ")"; }
+                {
+                    return "Bone(" + String::ToString(id) + ": " +
+                                     String::ToString(weight) + ")";
+                }
             };
 
             Array<BoneExt> vertexBonesExt;
@@ -232,94 +237,74 @@ void Mesh::UpdateVAOs()
 
     if (interleavedAttributes.Size() >= 1)
     {
-        GetVertexAttributesVBO()->Fill((void*)(&interleavedAttributes[0]),
-                                       interleavedAttributes.Size() *
-                                       sizeof(float));
+        GetVertexAttributesVBO()->CreateAndFill(
+                               SCAST<void*>(&interleavedAttributes[0]),
+                               interleavedAttributes.Size() * sizeof(float));
     }
 
-    const int posBytesSize                  = hasPos      ? (3 * sizeof(float)) : 0;
-    const int normalsBytesSize              = hasNormals  ? (3 * sizeof(float)) : 0;
-    const int uvsBytesSize                  = hasUvs      ? (2 * sizeof(float)) : 0;
-    const int tangentsBytesSize             = hasTangents ? (3 * sizeof(float)) : 0;
-    const int vertexToBonesIndicesBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
-    const int vertexToBonesWeightsBytesSize = hasBones    ? (4 * sizeof(float)) : 0;
-
-    int totalStride = posBytesSize +
-                      normalsBytesSize +
-                      uvsBytesSize +
-                      tangentsBytesSize +
-                      vertexToBonesIndicesBytesSize +
-                      vertexToBonesWeightsBytesSize;
-
-    const int posOffset      = 0;
-    const int normalsOffset  = posOffset + posBytesSize;
-    const int uvsOffset      = normalsOffset + normalsBytesSize;
-    const int tangentsOffset = uvsOffset + uvsBytesSize;
-    const int vertexToBonesIndicesOffset = tangentsOffset + tangentsBytesSize;
-    const int vertexToBonesWeightsOffset = vertexToBonesIndicesOffset +
-                                           vertexToBonesIndicesBytesSize;
+    int vboStride = GetVBOStride();
 
     if (hasPos)
     {
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultPositionsVBOLocation,
-                                         3,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         false,
-                                         totalStride,
-                                         posOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultPositionsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
+                         GetVBOPositionsOffset());
     }
 
     if (hasNormals)
     {
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultNormalsVBOLocation,
-                                         3,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         true,
-                                         totalStride,
-                                         normalsOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultNormalsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         true,
+                         vboStride,
+                         GetVBONormalsOffset());
     }
 
     if (hasUvs)
     {
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultUvsVBOLocation,
-                                         2,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         false,
-                                         totalStride,
-                                         uvsOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultUvsVBOLocation,
+                         2,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
+                         GetVBOUvsOffset());
     }
 
     if (hasTangents)
     {
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultTangentsVBOLocation,
-                                         3,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         false,
-                                         totalStride,
-                                         tangentsOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultTangentsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
+                         GetVBOTangentsOffset());
     }
 
     if (hasBones)
     {
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultVertexToBonesIndicesVBOLocation,
-                                         4,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         false,
-                                         totalStride,
-                                         vertexToBonesIndicesOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultVertexToBonesIndicesVBOLocation,
+                         4,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
+                         GetVBOBonesIndicesOffset());
 
-        GetVAO()->AddVertexAttribPointer(GetVertexAttributesVBO(),
-                                         Mesh::DefaultVertexToBonesWeightsVBOLocation,
-                                         4,
-                                         GL::VertexAttribDataType::FLOAT,
-                                         false,
-                                         totalStride,
-                                         vertexToBonesWeightsOffset);
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultVertexToBonesWeightsVBOLocation,
+                         4,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
+                         GetVBOBonesWeightsOffset());
     }
 }
 
@@ -415,6 +400,76 @@ int Mesh::GetNumVertices() const
 {
     return GetVertexIndicesIBO() ? GetVertexIndices().Size() :
                                    GetPositionsPool().Size();
+}
+
+uint Mesh::GetPositionsBytesSize() const
+{
+    return GetPositionsPool().Size() >= 1 ? (3 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetNormalsBytesSize() const
+{
+    return GetNormalsPool().Size() >= 1 ? (3 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetUvsBytesSize() const
+{
+    return GetUvsPool().Size() >= 1 ? (2 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetTangentsBytesSize() const
+{
+    return GetTangentsPool().Size() >= 1 ? (3 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetBonesIndicesBytesSize() const
+{
+    return GetBonesPool().Size() >= 1 ? (4 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetBonesWeightsBytesSize() const
+{
+    return GetBonesPool().Size() >= 1 ? (4 * sizeof(float)) : 0;
+}
+
+uint Mesh::GetVBOPositionsOffset() const
+{
+    return 0;
+}
+
+uint Mesh::GetVBONormalsOffset() const
+{
+    return GetVBOPositionsOffset() + GetPositionsBytesSize();
+}
+
+uint Mesh::GetVBOUvsOffset() const
+{
+    return GetVBONormalsOffset() + GetNormalsBytesSize();
+}
+
+uint Mesh::GetVBOTangentsOffset() const
+{
+    return GetVBOUvsOffset() + GetUvsBytesSize();
+}
+
+uint Mesh::GetVBOBonesIndicesOffset() const
+{
+    return GetVBOTangentsOffset() + GetTangentsBytesSize();
+}
+
+uint Mesh::GetVBOBonesWeightsOffset() const
+{
+    return GetVBOBonesIndicesOffset() + GetBonesWeightsBytesSize();
+}
+
+uint Mesh::GetVBOStride() const
+{
+    return GetPositionsBytesSize() +
+           GetNormalsBytesSize() +
+           GetUvsBytesSize() +
+           GetTangentsBytesSize() +
+           GetBonesIndicesBytesSize() +
+           GetBonesWeightsBytesSize();
 }
 
 

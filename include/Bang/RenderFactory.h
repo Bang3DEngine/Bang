@@ -1,4 +1,4 @@
-#ifndef RENDERFACTORY_H
+    #ifndef RENDERFACTORY_H
 #define RENDERFACTORY_H
 
 #include "Bang/Texture2D.h"

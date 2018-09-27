@@ -301,55 +301,50 @@ float ReflectionProbe::GetCamerasZFar() const
     return m_camerasZFar;
 }
 
-void ReflectionProbe::SetRendererUniforms(Renderer *renderer)
+void ReflectionProbe::SetRendererUniforms(Renderer *renderer,
+                                          ShaderProgram *sp)
 {
-    if (Material *mat = renderer->GetActiveMaterial())
+    bool usingReflectionProbes = false;
+    if (renderer->GetUseReflectionProbes())
     {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
+        if (ReflectionProbe *closestReflProbe =
+            GetClosestReflectionProbe(renderer))
         {
-            bool usingReflectionProbes = false;
-            if (renderer->GetUseReflectionProbes())
+            if (closestReflProbe->GetIsBoxed())
             {
-                if (ReflectionProbe *closestReflProbe =
-                    GetClosestReflectionProbe(renderer))
-                {
-                    if (closestReflProbe->GetIsBoxed())
-                    {
-                        sp->SetVector3("B_ReflectionProbeCenter",
-                                       closestReflProbe->GetGameObject()->
-                                       GetTransform()->GetPosition(),
-                                       false);
-                        sp->SetVector3("B_ReflectionProbeSize",
-                                       closestReflProbe->GetSize(),
-                                       false);
-                    }
-                    else
-                    {
-                        sp->SetVector3("B_ReflectionProbeSize", -Vector3::One, false);
-                    }
-
-                    sp->SetBool("B_UseReflectionProbe", true, false);
-                    sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                                          closestReflProbe->GetTextureCubeMapDiffuse(),
-                                          false);
-                    sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                                          closestReflProbe->GetTextureCubeMapSpecular(),
-                                          false);
-                    usingReflectionProbes = true;
-                }
+                sp->SetVector3("B_ReflectionProbeCenter",
+                               closestReflProbe->GetGameObject()->
+                               GetTransform()->GetPosition(),
+                               false);
+                sp->SetVector3("B_ReflectionProbeSize",
+                               closestReflProbe->GetSize(),
+                               false);
+            }
+            else
+            {
+                sp->SetVector3("B_ReflectionProbeSize", -Vector3::One, false);
             }
 
-            if (!usingReflectionProbes)
-            {
-                sp->SetBool("B_UseReflectionProbe", false, false);
-                sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                                      TextureFactory::GetWhiteTextureCubeMap(),
-                                      false);
-                sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                                      TextureFactory::GetWhiteTextureCubeMap(),
-                                      false);
-            }
+            sp->SetBool("B_UseReflectionProbe", true, false);
+            sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
+                                  closestReflProbe->GetTextureCubeMapDiffuse(),
+                                  false);
+            sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
+                                  closestReflProbe->GetTextureCubeMapSpecular(),
+                                  false);
+            usingReflectionProbes = true;
         }
+    }
+
+    if (!usingReflectionProbes)
+    {
+        sp->SetBool("B_UseReflectionProbe", false, false);
+        sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
+                              TextureFactory::GetWhiteTextureCubeMap(),
+                              false);
+        sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
+                              TextureFactory::GetWhiteTextureCubeMap(),
+                              false);
     }
 }
 

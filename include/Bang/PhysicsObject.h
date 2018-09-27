@@ -35,6 +35,8 @@ protected:
     virtual void OnPxRigidDynamicSet();
     void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);
     void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
+
+    friend class PxSceneContainer;
 };
 
 NAMESPACE_BANG_END

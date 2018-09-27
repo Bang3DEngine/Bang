@@ -14,12 +14,13 @@ layout(location = 4) in vec4 B_VIn_VertexBonesIds; // Max 4 bones per vertex
 layout(location = 5) in vec4 B_VIn_VertexBonesWeights;
 
 #ifndef ONLY_OUT_MODEL_POS_VEC4
-out vec3 B_FIn_Position;
-out vec3 B_FIn_Normal;
-out vec2 B_FIn_AlbedoUv;
-out vec2 B_FIn_NormalMapUv;
-out vec3 B_FIn_Tangent;
-out mat3 B_TBN;
+    out vec3 B_FIn_Position;
+    out vec3 B_FIn_Normal;
+    out vec2 B_FIn_AlbedoUv;
+    #ifdef BANG_NORMAL_MAPPING
+        out vec2 B_FIn_NormalMapUv;
+        out mat3 B_TBN;
+    #endif
 #endif
 
 void main()
@@ -50,35 +51,26 @@ void main()
     }
 
     #ifndef ONLY_OUT_MODEL_POS_VEC4
+        B_FIn_Position    = (B_Model  * modelPosition).xyz;
+        B_FIn_Normal      = (B_Normal * modelNormal).xyz;
+        B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
+        B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
+        gl_Position       = B_PVM * modelPosition;
 
-    B_FIn_Position    = (B_Model  * modelPosition).xyz;
-    B_FIn_Normal      = (B_Normal * modelNormal).xyz;
-    B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
-    B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
-    gl_Position       = B_PVM * modelPosition;
-
-    // Calculate TBN for normal mapping
-    if (B_HasNormalMapTexture)
-    {
-        B_FIn_Tangent = normalize(B_Normal * vec4(B_VIn_Tangent, 0)).xyz;
-        vec3 T = (B_FIn_Tangent);
-        vec3 N = (B_FIn_Normal);
-        vec3 B = cross(N, T);
-        if (dot(cross(N, T), B) >= 0.0)
+        // Calculate TBN for normal mapping
+        if (B_HasNormalMapTexture)
         {
-            T *= -1; // Ensure RH coord. system
+            vec3 tangent = normalize(B_Normal * vec4(B_VIn_Tangent, 0)).xyz;
+            vec3 T = (tangent);
+            vec3 N = (B_FIn_Normal);
+            vec3 B = cross(N, T);
+            if (dot(cross(N, T), B) >= 0.0)
+            {
+                T *= -1; // Ensure RH coord. system
+            }
+            B_TBN = mat3(T, B, N);
         }
-        B_TBN = mat3(T, B, N);
-    }
-    else
-    {
-        // B_FIn_Tangent = vec3(0);
-        // B_TBN = mat3(0);
-    }
-
     #else
-
-    gl_Position = B_Model * modelPosition;
-
+        gl_Position = B_Model * modelPosition;
     #endif
 }

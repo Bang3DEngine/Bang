@@ -197,6 +197,7 @@ void GameObject::AddChild_(GameObject *child,
                                                   prevWorldTransform);
         }
 
+        index = Math::Clamp(index, 0, m_children.Size());
         m_children.Insert(child, index);
         ChildAdded(child, this);
 
@@ -213,8 +214,14 @@ void GameObject::AddChild_(GameObject *child,
         int oldIndex = GetChildren().IndexOf(this);
         if (oldIndex != index)
         {
-            index =  (oldIndex < index) ? (index-1) : index;
+            if (oldIndex >= 0)
+            {
+                index = (oldIndex < index) ? (index-1) : index;
+            }
+
             m_children.Remove(child);
+
+            index = Math::Clamp(index, 0, m_children.Size());
             m_children.Insert(child, index);
         }
     }

@@ -18,17 +18,20 @@ public:
     virtual ~VAO();
 
     void Bind() const override;
-    void AddVertexAttribPointer(const VBO *vbo,
-                                int location,
-                                int dataComponentsCount,
-                                GL::VertexAttribDataType dataType,
-                                bool dataNormalized   = false,
-                                int dataStride        = 0,
-                                int dataOffset        = 0);
+    void UnBind() const override;
+
+    void SetVBO(const VBO *vbo,
+                int location,
+                int dataComponentsCount,
+                GL::VertexAttribDataType dataType,
+                bool dataNormalized   = false,
+                int dataStride        = 0,
+                int dataOffset        = 0);
+    void SetVertexAttribDivisor(uint location,
+                                uint divisor);
     void SetIBO(IBO *ibo);
 
-    void UnBind() const override;
-    void UnBindVBO(GLint location);
+    void RemoveVBO(GLint location);
 
     IBO *GetIBO() const;
     bool IsIndexed() const;

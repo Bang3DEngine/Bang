@@ -21,6 +21,7 @@ SET_COMPONENT_IDS(Component, 0, 10000000);
             SET_COMPONENT_IDS(UIImageRenderer, 32, 35);
             SET_COMPONENT_IDS(UITextRenderer,  36, 39);
         SET_COMPONENT_IDS(WaterRenderer, 41, 50);
+        SET_COMPONENT_IDS(ParticleSystem, 51, 60);
     SET_COMPONENT_IDS(Animator,           101, 200);
     SET_COMPONENT_IDS(AudioListener,      201, 300);
     SET_COMPONENT_IDS(AudioSource,        301, 400);

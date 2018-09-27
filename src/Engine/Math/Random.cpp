@@ -18,17 +18,25 @@ void Random::SetSeed(const String &seedStr)
 
 Vector2 Random::GetInsideUnitCircle()
 {
-    return Vector2(Random::GetRange(-1.0f, 1.0f),
-                   Random::GetRange(-1.0f, 1.0f));
+    return Random::GetRandomVector2().NormalizedSafe();
 }
 
 Vector3 Random::GetInsideUnitSphere()
+{
+    return Random::GetRandomVector3().NormalizedSafe();
+}
+
+Vector2 Random::GetRandomVector2()
+{
+    return Vector2(Random::GetRange(-1.0f, 1.0f),
+                   Random::GetRange(-1.0f, 1.0f));
+}
+Vector3 Random::GetRandomVector3()
 {
     return Vector3(Random::GetRange(-1.0f, 1.0f),
                    Random::GetRange(-1.0f, 1.0f),
                    Random::GetRange(-1.0f, 1.0f));
 }
-
 Vector4 Random::GetRandomVector4()
 {
     return Vector4(Random::GetRange(-1.0f, 1.0f),

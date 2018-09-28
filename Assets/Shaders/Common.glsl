@@ -93,8 +93,14 @@ vec2 B_GetViewportStep()
 }
 
 #if defined(BANG_FRAGMENT)
-vec2 B_GetViewportPos() { return gl_FragCoord.xy - B_Viewport_MinPos; }
-vec2 B_GetViewportUv()  { return B_GetViewportPos() / B_Viewport_Size; }
+vec2 B_GetViewportPos()
+{
+    return gl_FragCoord.xy - B_Viewport_MinPos;
+}
+vec2 B_GetViewportUv()
+{
+    return B_GetViewportPos() / B_Viewport_Size;
+}
 vec3 B_ComputeWorldPosition(float depth)
 {
     return B_ComputeWorldPosition(depth, B_GetViewportUv());
@@ -107,53 +113,133 @@ vec3 B_ComputeWorldPosition(float depth)
 #if defined(BANG_FRAGMENT)
 
 // #if defined(BANG_DEFERRED_RENDERING)
-vec4  B_SampleColor(vec2 uv) { return texture(B_GTex_Color, uv); }
+vec4  B_SampleColor(vec2 uv)
+{
+    return texture(B_GTex_Color, uv);
+}
 vec3  B_SampleNormal(vec2 uv)
 {
     return normalize( texture(B_GTex_Normal, uv).xyz * 2.0f - 1.0f );
 }
-vec4  B_SampleAlbedoColor(vec2 uv)      { return texture(B_GTex_AlbedoColor, uv); }
-bool  B_SampleReceivesLight (vec2 uv)   { return texture(B_GTex_Misc, uv).r > 0.1; }
-bool  B_SampleReceivesShadows (vec2 uv) { return texture(B_GTex_Misc, uv).r > 0.5; }
-float B_SampleRoughness (vec2 uv)       { return texture(B_GTex_Misc, uv).g; }
-float B_SampleMetalness (vec2 uv)       { return texture(B_GTex_Misc, uv).b; }
-float B_SampleDepth(vec2 uv)            { return texture(B_GTex_DepthStencil, uv).r; }
-float B_SampleStencil(vec2 uv)          { return texture(B_GTex_DepthStencil, uv).a; }
-float B_SampleFlags(vec2 uv)            { return texture(B_GTex_Misc, uv).z; }
+vec4  B_SampleAlbedoColor(vec2 uv)
+{
+    return texture(B_GTex_AlbedoColor, uv);
+}
+bool  B_SampleReceivesLight (vec2 uv)
+{
+    return texture(B_GTex_Misc, uv).r > 0.1;
+}
+bool  B_SampleReceivesShadows (vec2 uv)
+{
+    return texture(B_GTex_Misc, uv).r > 0.5;
+}
+float B_SampleRoughness (vec2 uv)
+{
+    return texture(B_GTex_Misc, uv).g;
+}
+float B_SampleMetalness (vec2 uv)
+{
+    return texture(B_GTex_Misc, uv).b;
+}
+float B_SampleDepth(vec2 uv)
+{
+    return texture(B_GTex_DepthStencil, uv).r;
+}
+float B_SampleStencil(vec2 uv)
+{
+    return texture(B_GTex_DepthStencil, uv).a;
+}
+float B_SampleFlags(vec2 uv)
+{
+    return texture(B_GTex_Misc, uv).z;
+}
 
-vec4  B_SampleColor()           { return B_SampleColor(B_GetViewportUv()); }
-vec3  B_SampleNormal()          { return B_SampleNormal(B_GetViewportUv()); }
-vec4  B_SampleAlbedoColor()     { return B_SampleAlbedoColor(B_GetViewportUv()); }
-bool  B_SampleReceivesLight()   { return B_SampleReceivesLight(B_GetViewportUv()); }
-bool  B_SampleReceivesShadows() { return B_SampleReceivesShadows(B_GetViewportUv()); }
-float B_SampleRoughness ()      { return B_SampleRoughness(B_GetViewportUv()); }
-float B_SampleMetalness ()      { return B_SampleMetalness(B_GetViewportUv()); }
-float B_SampleDepth()           { return B_SampleDepth(B_GetViewportUv()); }
-float B_SampleStencil()         { return B_SampleStencil(B_GetViewportUv()); }
-float B_SampleFlags()           { return B_SampleFlags(B_GetViewportUv()); }
+vec4 B_SampleColor()
+{
+    return B_SampleColor(B_GetViewportUv());
+}
+vec3 B_SampleNormal()
+{
+    return B_SampleNormal(B_GetViewportUv());
+}
+vec4 B_SampleAlbedoColor()
+{
+    return B_SampleAlbedoColor(B_GetViewportUv());
+}
+bool B_SampleReceivesLight()
+{
+    return B_SampleReceivesLight(B_GetViewportUv());
+}
+bool B_SampleReceivesShadows()
+{
+    return B_SampleReceivesShadows(B_GetViewportUv());
+}
+float B_SampleRoughness()
+{
+    return B_SampleRoughness(B_GetViewportUv());
+}
+float B_SampleMetalness()
+{
+    return B_SampleMetalness(B_GetViewportUv());
+}
+float B_SampleDepth()
+{
+    return B_SampleDepth(B_GetViewportUv());
+}
+float B_SampleStencil()
+{
+    return B_SampleStencil(B_GetViewportUv());
+}
+float B_SampleFlags()
+{
+    return B_SampleFlags(B_GetViewportUv());
+}
 
-vec4  B_SampleColorOffset(vec2 pixOffset)
-{ return B_SampleColor(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
-vec3  B_SampleNormalOffset(vec2 pixOffset)
-{ return B_SampleNormal(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
-vec4  B_SampleAlbedoColorOffset(vec2 pixOffset)
-{ return B_SampleAlbedoColor(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
-bool  B_SampleReceivesLightOffset(vec2 pixOffset)
-{ return B_SampleReceivesLight(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
-bool  B_SampleReceivesShadowsOffset(vec2 pixOffset)
-{ return B_SampleReceivesShadows(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+vec4 B_SampleColorOffset(vec2 pixOffset)
+{
+    return B_SampleColor(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
+vec3 B_SampleNormalOffset(vec2 pixOffset)
+{
+    return B_SampleNormal(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
+vec4 B_SampleAlbedoColorOffset(vec2 pixOffset)
+{
+    return B_SampleAlbedoColor(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
+bool B_SampleReceivesLightOffset(vec2 pixOffset)
+{
+    return B_SampleReceivesLight(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
+bool B_SampleReceivesShadowsOffset(vec2 pixOffset)
+{
+    return B_SampleReceivesShadows(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 float B_SampleRoughnessOffset(vec2 pixOffset)
-{ return B_SampleRoughness(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+{
+    return B_SampleRoughness(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 float B_SampleMetalnessOffset(vec2 pixOffset)
-{ return B_SampleMetalness(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+{
+    return B_SampleMetalness(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 float B_SampleDepthOffset(vec2 pixOffset)
-{ return B_SampleDepth(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+{
+    return B_SampleDepth(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 float B_SampleStencilOffset(vec2 pixOffset)
-{ return B_SampleStencil(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+{
+    return B_SampleStencil(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 float B_SampleFlagsOffset(vec2 pixOffset)
-{ return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset); }
+{
+    return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
 
-vec3 B_ComputeWorldPosition() { return B_ComputeWorldPosition( B_SampleDepth() ); }
+vec3 B_ComputeWorldPosition()
+{
+    return B_ComputeWorldPosition( B_SampleDepth() );
+}
 // #endif
 
 #endif

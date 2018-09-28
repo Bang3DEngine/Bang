@@ -115,6 +115,14 @@ void ParticleSystem::SetStartSize(const ComplexRandom &startSize)
     }
 }
 
+void ParticleSystem::SetBillboard(bool billboard)
+{
+    if (billboard != GetBillboard())
+    {
+        m_billboard = billboard;
+    }
+}
+
 void ParticleSystem::SetGravityMultiplier(float gravityMultiplier)
 {
     if (gravityMultiplier != GetGravityMultiplier())
@@ -284,6 +292,11 @@ Mesh *ParticleSystem::GetMesh() const
     return m_particleMesh.Get();
 }
 
+bool ParticleSystem::GetBillboard() const
+{
+    return m_billboard;
+}
+
 void ParticleSystem::Bind()
 {
     Renderer::Bind();
@@ -319,19 +332,43 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
 {
     Renderer::SetUniformsOnBind(sp);
 
+    Transform *tr = GetGameObject()->GetTransform();
     Matrix4 modelMat = Matrix4::Identity;
-    switch (GetSimulationSpace())
+    if (GetBillboard())
     {
-        case ParticleSimulationSpace::LOCAL:
-            modelMat = GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-        break;
+        Vector3 trPos   = Vector3::Zero;
+        Vector3 trScale = Vector3::One;
+        Quaternion rot  = Quaternion::Identity;
+        if (GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
+        {
+            trPos = tr->GetPosition();
+            trScale = tr->GetScale();
+        }
 
-        case ParticleSimulationSpace::WORLD:
-        break;
+        if (Camera *cam = Camera::GetActive())
+        {
+            if (Transform *camTR = cam->GetGameObject()->GetTransform())
+            {
+                rot = camTR->GetRotation();
+            }
+        }
+
+        modelMat = Matrix4::TranslateMatrix(trPos) *
+                   Matrix4::RotateMatrix(rot) *
+                   Matrix4::ScaleMatrix(trScale);
     }
-    Matrix4 normalMat = GLUniforms::CalculateNormalMatrix(modelMat);
-    sp->SetMatrix4(GLUniforms::UniformName_Model,  modelMat);
-    sp->SetMatrix4(GLUniforms::UniformName_Normal, normalMat);
+    else
+    {
+        if (GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
+        {
+            modelMat = tr->GetLocalToWorldMatrix();
+        }
+    }
+
+    GLUniforms::SetModelMatrix(modelMat);
+    GLUniforms::SetAllUniformsToShaderProgram(sp,
+                                              NeededUniformFlag::MODEL |
+                                              NeededUniformFlag::NORMAL);
 }
 
 void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
@@ -633,6 +670,7 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     psClone->SetLifeTime( GetLifeTime() );
     psClone->SetStartTime( GetStartTime() );
     psClone->SetStartSize( GetStartSize() );
+    psClone->SetBillboard( GetBillboard() );
     psClone->SetStartColor( GetStartColor() );
     psClone->SetEndColor( GetEndColor() );
     psClone->SetNumParticles( GetNumParticles() );
@@ -664,6 +702,16 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("StartTime"))
     {
         SetStartTime( metaNode.Get<ComplexRandom>("StartTime") );
+    }
+
+    if (metaNode.Contains("StartSize"))
+    {
+        SetStartSize( metaNode.Get<ComplexRandom>("StartSize") );
+    }
+
+    if (metaNode.Contains("Billboard"))
+    {
+        SetBillboard( metaNode.Get<bool>("Billboard") );
     }
 
     if (metaNode.Contains("StartColor"))
@@ -735,6 +783,8 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Mesh", GetMesh() ? GetMesh()->GetGUID() : GUID::Empty());
     metaNode->Set("LifeTime", GetLifeTime());
     metaNode->Set("StartTime", GetStartTime());
+    metaNode->Set("StartSize", GetStartTime());
+    metaNode->Set("Billboard", GetBillboard());
     metaNode->Set("StartColor", GetStartColor());
     metaNode->Set("EndColor", GetEndColor());
     metaNode->Set("ParticleSize", GetStartSize());

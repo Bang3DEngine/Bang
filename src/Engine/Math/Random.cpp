@@ -47,7 +47,7 @@ Vector4 Random::GetRandomVector4()
 
 Quaternion Random::GetRotation()
 {
-    const float angle = Random::GetRange(0.0f, 360.0f);
+    const float angle = Random::GetRange(0.0f, 2.0f * SCAST<float>(Math::Pi));
     return Quaternion::AngleAxis(angle, Random::GetInsideUnitSphere());
 }
 

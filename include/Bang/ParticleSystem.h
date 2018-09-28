@@ -70,6 +70,7 @@ public:
     void SetLifeTime(const ComplexRandom &lifeTime);
     void SetStartTime(const ComplexRandom &startTime);
     void SetStartSize(const ComplexRandom &startSize);
+    void SetBillboard(bool billboard);
     void SetNumParticles(uint numParticles);
     void SetGenerationShape(ParticleGenerationShape shape);
     void SetGenerationShapeBoxSize(const Vector3 &boxSize);
@@ -82,6 +83,7 @@ public:
     void SetSimulationSpace(ParticleSimulationSpace simulationSpace);
 
     Mesh *GetMesh() const;
+    bool GetBillboard() const;
     uint GetNumParticles() const;
     const Vector3 &GetGenerationShapeBoxSize() const;
     ParticleGenerationShape GetGenerationShape() const;
@@ -132,6 +134,7 @@ private:
     Vector3 m_generationShapeBoxSize = Vector3::One;
     float m_generationShapeConeFOVRads = Math::Pi/4;
 
+    bool m_billboard = true;
     Color m_startColor = Color::White;
     Color m_endColor   = Color::White;
     ComplexRandom m_lifeTime  = ComplexRandom(0.1f, 3.0f);

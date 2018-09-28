@@ -17,7 +17,9 @@ out vec4 B_FIn_ParticleColor;
 void main()
 {
     vec4 modelPosition = vec4(B_VIn_Position, 1);
-    vec4 worldPosition = B_Model * vec4(vec3(B_ParticleSize), 1) * modelPosition;
+    vec4 worldPosition = B_Model *
+                         (vec4(vec3(B_ParticleSize), 1) *
+                          modelPosition);
     worldPosition.xyz += B_ParticlePos;
 
     vec4 finalPos = (B_ProjectionView * worldPosition);

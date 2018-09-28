@@ -25,7 +25,7 @@ in vec2 B_FIn_AlbedoUv;
     layout(location = 3) out vec4 B_GIn_Misc;
 #endif
 
-void main()
+void DefaultFragCommonMain(vec4 albedoColor)
 {
     vec4 texColor = vec4(1);
     if (B_HasAlbedoTexture)
@@ -36,7 +36,7 @@ void main()
             discard;
         }
     }
-    vec4 finalAlbedo = B_MaterialAlbedoColor * texColor;
+    vec4 finalAlbedo = albedoColor * texColor;
 
     vec3 finalNormal = (B_FIn_Normal.xyz);
     #ifdef BANG_NORMAL_MAPPING
@@ -79,3 +79,10 @@ void main()
 
     B_GIn_Color = finalColor;
 }
+
+#ifndef BANG_SUPPRESS_MAIN
+void main()
+{
+    DefaultFragCommonMain(B_MaterialAlbedoColor);
+}
+#endif

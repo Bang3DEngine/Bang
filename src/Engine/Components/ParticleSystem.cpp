@@ -29,10 +29,8 @@ ParticleSystem::ParticleSystem()
     SetRenderPrimitive( GL::Primitive::TRIANGLES );
     SetMaterial( MaterialFactory::GetDefaultParticles().Get() );
 
-    p_particlePositionsVBO = new VBO();
+    p_particleDataVBO = new VBO();
     SetNumParticles(100);
-
-    m_lifeTime.SetRangeValues(0.1f, 3.0f);
 
     SetMesh( MeshFactory::GetCube().Get() );
 }
@@ -43,13 +41,18 @@ ParticleSystem::~ParticleSystem()
     {
         delete p_particlesVAO;
     }
+
+    if (p_particleDataVBO)
+    {
+        delete p_particleDataVBO;
+    }
 }
 
 void ParticleSystem::OnStart()
 {
     Component::OnStart();
 
-    Restart();
+    Reset();
     OnGameObjectChanged(nullptr, nullptr);
 }
 
@@ -66,17 +69,17 @@ void ParticleSystem::OnUpdate()
     {
         UpdateParticleData(i, dt, gravity, sceneColliders);
     }
-    UpdateVBOData();
+    UpdateDataVBO();
 }
 
-void ParticleSystem::Restart()
+void ParticleSystem::Reset()
 {
     const Vector3 &gravity = Physics::GetInstance()->GetGravity();
     for (uint i = 0; i < GetNumParticles(); ++i)
     {
         InitParticle(i, gravity);
     }
-    UpdateVBOData();
+    UpdateDataVBO();
 }
 
 void ParticleSystem::SetMesh(Mesh *mesh)
@@ -84,57 +87,7 @@ void ParticleSystem::SetMesh(Mesh *mesh)
     if (m_particleMesh.Get() != mesh)
     {
         m_particleMesh.Set(mesh);
-
-        if (p_particlesVAO)
-        {
-            delete p_particlesVAO;
-            p_particlesVAO = nullptr;
-        }
-
-        if (GetMesh())
-        {
-            const VAO *meshVAO = GetMesh()->GetVAO();
-            const VBO *particleMeshPositionsVBO =
-                    meshVAO->GetVBOByLocation(Mesh::DefaultPositionsVBOLocation);
-            const VBO *particleMeshNormalsVBO   =
-                    meshVAO->GetVBOByLocation(Mesh::DefaultNormalsVBOLocation);
-            const VBO *particleMeshUvsVBO       =
-                    meshVAO->GetVBOByLocation(Mesh::DefaultUvsVBOLocation);
-
-            p_particlesVAO = new VAO();
-            {
-                uint meshVBOStride = GetMesh()->GetVBOStride();
-
-                int particlesPosBytesSize = 3 * sizeof(float);
-                uint particlesPosVBOStride = particlesPosBytesSize;
-
-                p_particlesVAO->SetVBO(particleMeshPositionsVBO,
-                                       Mesh::DefaultPositionsVBOLocation,
-                                       3, GL::VertexAttribDataType::FLOAT,
-                                       false,
-                                       meshVBOStride,
-                                       GetMesh()->GetVBOPositionsOffset());
-                p_particlesVAO->SetVBO(particleMeshNormalsVBO,
-                                       Mesh::DefaultNormalsVBOLocation,
-                                       3, GL::VertexAttribDataType::FLOAT,
-                                       true,
-                                       meshVBOStride,
-                                       GetMesh()->GetVBONormalsOffset());
-                p_particlesVAO->SetVBO(particleMeshUvsVBO,
-                                       Mesh::DefaultUvsVBOLocation,
-                                       2, GL::VertexAttribDataType::FLOAT,
-                                       false,
-                                       meshVBOStride,
-                                       GetMesh()->GetVBOUvsOffset());
-                p_particlesVAO->SetVBO(p_particlePositionsVBO, 3,
-                                       3, GL::VertexAttribDataType::FLOAT,
-                                       false,
-                                       particlesPosVBOStride,
-                                       0);
-                p_particlesVAO->SetVertexAttribDivisor(3, 1);
-                p_particlesVAO->SetIBO(meshVAO->GetIBO());
-            }
-        }
+        RecreateVAOForMesh();
     }
 }
 
@@ -143,6 +96,22 @@ void ParticleSystem::SetLifeTime(const ComplexRandom &lifeTime)
     if (lifeTime != GetLifeTime())
     {
         m_lifeTime = lifeTime;
+    }
+}
+
+void ParticleSystem::SetStartTime(const ComplexRandom &startTime)
+{
+    if (startTime != GetStartTime())
+    {
+        m_startTime = startTime;
+    }
+}
+
+void ParticleSystem::SetStartSize(const ComplexRandom &startSize)
+{
+    if (startSize != GetStartSize())
+    {
+        m_startSize = startSize;
     }
 }
 
@@ -170,6 +139,22 @@ void ParticleSystem::SetGenerationShapeConeFOVRads(float coneFOVRads)
     }
 }
 
+void ParticleSystem::SetStartColor(const Color &startColor)
+{
+    if (startColor != GetStartColor())
+    {
+        m_startColor = startColor;
+    }
+}
+
+void ParticleSystem::SetEndColor(const Color &endColor)
+{
+    if (endColor != GetEndColor())
+    {
+        m_endColor = endColor;
+    }
+}
+
 void ParticleSystem::SetSimulationSpace(ParticleSimulationSpace simulationSpace)
 {
     if (simulationSpace != GetSimulationSpace())
@@ -188,7 +173,7 @@ void ParticleSystem::SetNumParticles(uint numParticles)
         const Vector3 &gravity = Physics::GetInstance()->GetGravity();
 
         // Resize arrays
-        m_particlesPositions.Resize( GetNumParticles() );
+        m_particlesVBOData.Resize( GetNumParticles() );
         m_particlesData.Resize( GetNumParticles() );
 
         // Initialize values
@@ -198,10 +183,10 @@ void ParticleSystem::SetNumParticles(uint numParticles)
         }
 
         // Initialize VBOs
-        p_particlePositionsVBO->CreateAndFill(
-                                 m_particlesPositions.Data(),
-                                 m_particlesPositions.Size() * sizeof(Vector3),
-                                 GL::UsageHint::DYNAMIC_DRAW);
+        p_particleDataVBO->CreateAndFill(
+                         m_particlesVBOData.Data(),
+                         m_particlesVBOData.Size() * sizeof(ParticleVBOData),
+                         GL::UsageHint::DYNAMIC_DRAW);
     }
 }
 
@@ -237,6 +222,26 @@ ParticleGenerationShape ParticleSystem::GetGenerationShape() const
 const ComplexRandom& ParticleSystem::GetLifeTime() const
 {
     return m_lifeTime;
+}
+
+const ComplexRandom &ParticleSystem::GetStartTime() const
+{
+    return m_startTime;
+}
+
+const ComplexRandom &ParticleSystem::GetStartSize() const
+{
+    return m_startSize;
+}
+
+const Color &ParticleSystem::GetStartColor() const
+{
+    return m_startColor;
+}
+
+const Color &ParticleSystem::GetEndColor() const
+{
+    return m_endColor;
 }
 
 const Vector3 &ParticleSystem::GetGenerationShapeBoxSize() const
@@ -337,10 +342,17 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     ParticleData &particleData = m_particlesData[i];
     particleData.position = GetParticleInitialPosition();
     particleData.velocity = GetParticleInitialVelocity();
-    particleData.remainingLifeTime = GetLifeTime().GenerateRandom();
+    particleData.totalLifeTime = GetLifeTime().GenerateRandom();
+    particleData.remainingLifeTime = particleData.totalLifeTime;
+    particleData.remainingStartTime = GetStartTime().GenerateRandom();
     particleData.force = (GetGravityMultiplier() * gravity);
+    particleData.size = GetStartSize().GenerateRandom();
+    particleData.startColor = GetStartColor();
+    particleData.endColor = GetEndColor();
 
-    m_particlesPositions[i] = particleData.position;
+    m_particlesVBOData[i].position = Vector3::Infinity;
+    m_particlesVBOData[i].size = 0.0f;
+    m_particlesVBOData[i].color = Color::Zero;
 }
 
 void ParticleSystem::UpdateParticleData(uint i,
@@ -349,39 +361,55 @@ void ParticleSystem::UpdateParticleData(uint i,
                                         const Array<Collider*> &sceneColliders)
 {
     ParticleData &particleData = m_particlesData[i];
-    particleData.remainingLifeTime -= dt;
-    if (particleData.remainingLifeTime > 0.0f)
+    if (particleData.remainingStartTime <= 0.0f)
     {
-        constexpr float pMass = 1.0f;
-
-        const Vector3 pPrevPos  = particleData.position;
-        Vector3 pPosition = particleData.position;
-        Vector3 pVelocity = particleData.velocity;
-        Vector3 pForce    = particleData.force;
-        Vector3 pAcc      = (pForce / pMass);
-
-        pPosition += pVelocity * dt;
-        pVelocity += pAcc * dt;
-
-        if (sceneColliders.Size() >= 1)
+        particleData.remainingLifeTime -= dt;
+        if (particleData.remainingLifeTime > 0.0f)
         {
-            Vector3 pPositionNoInt = pPosition;
-            Vector3 pVelocityNoInt = pVelocity;
-            for (Collider *collider : sceneColliders)
-            {
-                CollideParticle(i, collider,
-                                pPrevPos, pPositionNoInt, pVelocityNoInt,
-                                &pPosition, &pVelocity);
-            }
-        }
+            float lifeTimePercent = 1.0f - (particleData.remainingLifeTime /
+                                            particleData.totalLifeTime);
 
-        particleData.position  = pPosition;
-        particleData.velocity  = pVelocity;
-        m_particlesPositions[i] = pPosition;
+            Color pColor = Color::Lerp(particleData.startColor,
+                                       particleData.endColor,
+                                       lifeTimePercent);
+
+            constexpr float pMass = 1.0f;
+
+            const Vector3 pPrevPos  = particleData.position;
+            Vector3 pPosition = particleData.position;
+            Vector3 pVelocity = particleData.velocity;
+            Vector3 pForce    = particleData.force;
+            Vector3 pAcc      = (pForce / pMass);
+
+            pPosition += pVelocity * dt;
+            pVelocity += pAcc * dt;
+
+            if (sceneColliders.Size() >= 1)
+            {
+                Vector3 pPositionNoInt = pPosition;
+                Vector3 pVelocityNoInt = pVelocity;
+                for (Collider *collider : sceneColliders)
+                {
+                    CollideParticle(i, collider,
+                                    pPrevPos, pPositionNoInt, pVelocityNoInt,
+                                    &pPosition, &pVelocity);
+                }
+            }
+
+            particleData.position  = pPosition;
+            particleData.velocity  = pVelocity;
+            m_particlesVBOData[i].position = pPosition;
+            m_particlesVBOData[i].size = particleData.size;
+            m_particlesVBOData[i].color = pColor;
+        }
+        else
+        {
+            InitParticle(i, gravity);
+        }
     }
     else
     {
-        InitParticle(i, gravity);
+        particleData.remainingStartTime -= dt;
     }
 }
 
@@ -454,6 +482,89 @@ void ParticleSystem::CollideParticle(uint i,
     }
 }
 
+void ParticleSystem::RecreateVAOForMesh()
+{
+    if (p_particlesVAO)
+    {
+        delete p_particlesVAO;
+        p_particlesVAO = nullptr;
+    }
+
+    if (GetMesh())
+    {
+        p_particlesVAO = new VAO();
+
+        {
+            const VAO *meshVAO = GetMesh()->GetVAO();
+            const VBO *particleMeshPositionsVBO =
+                    meshVAO->GetVBOByLocation(Mesh::DefaultPositionsVBOLocation);
+            const VBO *particleMeshNormalsVBO   =
+                    meshVAO->GetVBOByLocation(Mesh::DefaultNormalsVBOLocation);
+            const VBO *particleMeshUvsVBO       =
+                    meshVAO->GetVBOByLocation(Mesh::DefaultUvsVBOLocation);
+
+            uint meshVBOStride = GetMesh()->GetVBOStride();
+
+            p_particlesVAO->SetVBO(particleMeshPositionsVBO,
+                                   Mesh::DefaultPositionsVBOLocation,
+                                   3, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBOPositionsOffset());
+            p_particlesVAO->SetVBO(particleMeshNormalsVBO,
+                                   Mesh::DefaultNormalsVBOLocation,
+                                   3, GL::VertexAttribDataType::FLOAT,
+                                   true,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBONormalsOffset());
+            p_particlesVAO->SetVBO(particleMeshUvsVBO,
+                                   Mesh::DefaultUvsVBOLocation,
+                                   2, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBOUvsOffset());
+            p_particlesVAO->SetIBO(meshVAO->GetIBO());
+        }
+
+        {
+            int particlesPosBytesSize   = (3 * sizeof(float));
+            int particlesSizeBytesSize  = (1 * sizeof(float));
+            int particlesColorBytesSize = (4 * sizeof(float));
+            uint particlesPosVBOOffset = 0;
+            uint particlesSizeVBOOffset = particlesPosVBOOffset +
+                                          particlesPosBytesSize;
+            uint particlesColorVBOOffset = particlesSizeVBOOffset +
+                                           particlesSizeBytesSize;
+            uint particlesDataVBOStride = particlesPosBytesSize +
+                                          particlesSizeBytesSize +
+                                          particlesColorBytesSize;
+
+
+            // Particle specific attributes
+            p_particlesVAO->SetVBO(p_particleDataVBO, 3,
+                                   3, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesPosVBOOffset);
+            p_particlesVAO->SetVertexAttribDivisor(3, 1);
+
+            p_particlesVAO->SetVBO(p_particleDataVBO, 4,
+                                   1, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesSizeVBOOffset);
+            p_particlesVAO->SetVertexAttribDivisor(4, 1);
+
+            p_particlesVAO->SetVBO(p_particleDataVBO, 5,
+                                   4, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesColorVBOOffset);
+            p_particlesVAO->SetVertexAttribDivisor(5, 1);
+        }
+    }
+}
+
 Vector3 ParticleSystem::GetParticleInitialPosition() const
 {
     Vector3 particleInitialPosition = Vector3::Zero;
@@ -506,11 +617,11 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
     return particleInitialVelocity;
 }
 
-void ParticleSystem::UpdateVBOData()
+void ParticleSystem::UpdateDataVBO()
 {
-    p_particlePositionsVBO->Update(m_particlesPositions.Data(),
-                                   m_particlesPositions.Size() * sizeof(Vector3),
-                                   0);
+    p_particleDataVBO->Update(m_particlesVBOData.Data(),
+                              m_particlesVBOData.Size() * sizeof(ParticleVBOData),
+                              0);
 }
 
 void ParticleSystem::CloneInto(ICloneable *clone) const
@@ -520,6 +631,10 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     ParticleSystem *psClone = SCAST<ParticleSystem*>(clone);
     psClone->SetMesh( GetMesh() );
     psClone->SetLifeTime( GetLifeTime() );
+    psClone->SetStartTime( GetStartTime() );
+    psClone->SetStartSize( GetStartSize() );
+    psClone->SetStartColor( GetStartColor() );
+    psClone->SetEndColor( GetEndColor() );
     psClone->SetNumParticles( GetNumParticles() );
     psClone->SetGenerationShape( GetGenerationShape() );
     psClone->SetGenerationShapeBoxSize( GetGenerationShapeBoxSize() );
@@ -546,9 +661,29 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
         SetLifeTime( metaNode.Get<ComplexRandom>("LifeTime") );
     }
 
+    if (metaNode.Contains("StartTime"))
+    {
+        SetStartTime( metaNode.Get<ComplexRandom>("StartTime") );
+    }
+
+    if (metaNode.Contains("StartColor"))
+    {
+        SetStartColor( metaNode.Get<Color>("StartColor") );
+    }
+
+    if (metaNode.Contains("EndColor"))
+    {
+        SetEndColor( metaNode.Get<Color>("EndColor") );
+    }
+
     if (metaNode.Contains("NumParticles"))
     {
         SetNumParticles( metaNode.Get<uint>("NumParticles") );
+    }
+
+    if (metaNode.Contains("ParticleSize"))
+    {
+        SetStartTime( metaNode.Get<ComplexRandom>("ParticleSize") );
     }
 
     if (metaNode.Contains("GenerationShape"))
@@ -599,6 +734,10 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Mesh", GetMesh() ? GetMesh()->GetGUID() : GUID::Empty());
     metaNode->Set("LifeTime", GetLifeTime());
+    metaNode->Set("StartTime", GetStartTime());
+    metaNode->Set("StartColor", GetStartColor());
+    metaNode->Set("EndColor", GetEndColor());
+    metaNode->Set("ParticleSize", GetStartSize());
     metaNode->Set("NumParticles", GetNumParticles());
     metaNode->Set("GenerationShape", GetGenerationShape());
     metaNode->Set("GenerationShapeBoxSize", GetGenerationShapeBoxSize());

@@ -153,6 +153,7 @@ UIEventResult UIInputNumber::OnUIEvent(UIFocusable*, const UIEvent &event)
 
         case UIEvent::Type::FOCUS_LOST:
             UpdateTextFromValue();
+            ChangeTextColorBasedOnMinMax();
             return UIEventResult::INTERCEPT;
         break;
 
@@ -206,7 +207,8 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
     inputText->GetText()->SetTextSize(12);
 
     inputText->EventEmitter<IEventsValueChanged>::RegisterListener(inputNumber);
-    inputText->EventEmitter<IEventsFocus>::RegisterListener(inputNumber);
+    inputText->GetFocusable()->EventEmitter<IEventsFocus>::
+               RegisterListener(inputNumber);
 
     inputNumber->p_inputText = inputText;
 

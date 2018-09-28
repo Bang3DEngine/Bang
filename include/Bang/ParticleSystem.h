@@ -2,8 +2,10 @@
 #define PARTICLESYSTEM_H
 
 #include "Bang/Bang.h"
+#include "Bang/Collider.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ComplexRandom.h"
+#include "Bang/ObjectGatherer.h"
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
@@ -11,10 +13,23 @@ NAMESPACE_BANG_BEGIN
 FORWARD class VAO;
 FORWARD class VBO;
 
+enum class ParticlePhysicsStepMode
+{
+    EULER,
+    EULER_SEMI,
+    VERLET
+};
+
 enum class ParticleGenerationShape
 {
     BOX,
     CONE
+};
+
+enum class ParticleSimulationSpace
+{
+    LOCAL,
+    WORLD
 };
 
 class ParticleSystem : public Renderer
@@ -26,8 +41,8 @@ private:
     {
         Vector3 position;
         Vector3 velocity;
+        Vector3 force;
         float remainingLifeTime;
-        float   gravityMultiplier;
     };
 
 public:
@@ -45,9 +60,11 @@ public:
     void SetNumParticles(uint numParticles);
     void SetGenerationShape(ParticleGenerationShape shape);
     void SetGenerationShapeBoxSize(const Vector3 &boxSize);
+    void SetPhysicsStepMode(ParticlePhysicsStepMode stepMode);
     void SetGravityMultiplier(float gravityMultiplier);
     void SetInitialVelocityMultiplier(float initialVelocityMultiplier);
     void SetGenerationShapeConeFOVRads(float coneFOVRads);
+    void SetSimulationSpace(ParticleSimulationSpace simulationSpace);
 
     Mesh *GetMesh() const;
     uint GetNumParticles() const;
@@ -57,11 +74,18 @@ public:
     float GetGravityMultiplier() const;
     float GetInitialVelocityMultiplier() const;
     float GetGenerationShapeConeFOVRads() const;
+    ParticlePhysicsStepMode GetPhysicsStepMode() const;
+    ParticleSimulationSpace GetSimulationSpace() const;
 
     // Renderer
     virtual void Bind() override;
     virtual void OnRender() override;
+    virtual void SetUniformsOnBind(ShaderProgram *sp);
     AABox GetAABBox() const override;
+
+    // Component
+    void OnGameObjectChanged(GameObject *prevGameObject,
+                             GameObject *newGameObject);
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -71,6 +95,8 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
+    ObjectGatherer<Collider, true> m_sceneCollidersGatherer;
+
     VAO *p_particlesVAO = nullptr;
     VBO *p_particlePositionsVBO = nullptr;
     Array<Vector3> m_particlesPositions;
@@ -78,6 +104,10 @@ private:
 
     RH<Mesh> m_particleMesh;
     uint m_numParticles = 0;
+
+    ParticleSimulationSpace m_simulationSpace =
+                            ParticleSimulationSpace::WORLD;
+    ParticlePhysicsStepMode m_physicsStepMode = ParticlePhysicsStepMode::EULER;
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
@@ -87,7 +117,19 @@ private:
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 
-    void InitParticle(uint i);
+    void InitParticle(uint i, const Vector3 &gravity);
+    void UpdateParticleData(uint i,
+                            float deltaTimeSecs,
+                            const Vector3 &gravity,
+                            const Array<Collider*> &sceneColliders);
+    void CollideParticle(uint i,
+                         Collider *collider,
+                         const Vector3 &prevPositionNoInt,
+                         const Vector3 &newPositionNoInt,
+                         const Vector3 &newVelocityNoInt,
+                         Vector3 *newPositionAfterInt,
+                         Vector3 *newVelocityAfterInt);
+
     Vector3 GetParticleInitialPosition() const;
     Vector3 GetParticleInitialVelocity() const;
     void UpdateVBOData();

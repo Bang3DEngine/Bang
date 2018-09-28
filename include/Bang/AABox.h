@@ -1,5 +1,5 @@
-#ifndef BOX_H
-#define BOX_H
+#ifndef AABOX_H
+#define AABOX_H
 
 #include <cmath>
 
@@ -75,4 +75,4 @@ bool operator!=(const AABox &b1, const AABox &b2);
 
 NAMESPACE_BANG_END
 
-#endif // BOX_H
+#endif // AABOX_H

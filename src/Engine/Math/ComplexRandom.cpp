@@ -11,13 +11,15 @@ ComplexRandom::ComplexRandom()
 
 ComplexRandom::ComplexRandom(float constantValue)
 {
+    SetType( ComplexRandomType::CONSTANT_VALUE );
     SetConstantValue(constantValue);
 }
 
 ComplexRandom::ComplexRandom(float minRangeValue, float maxRangeValue)
 {
+    SetType( ComplexRandomType::RANDOM_RANGE );
     SetMinRangeValue(minRangeValue);
-    SetMaxRangeValue(minRangeValue);
+    SetMaxRangeValue(maxRangeValue);
 }
 
 ComplexRandom::~ComplexRandom()
@@ -31,19 +33,16 @@ void ComplexRandom::SetType(ComplexRandomType type)
 
 void ComplexRandom::SetConstantValue(float constantValue)
 {
-    SetType( ComplexRandomType::CONSTANT_VALUE );
     m_constantValue = constantValue;
 }
 
 void ComplexRandom::SetMinRangeValue(float minRangeValue)
 {
-    SetType( ComplexRandomType::RANDOM_RANGE );
     m_minRangeValue = minRangeValue;
 }
 
 void ComplexRandom::SetMaxRangeValue(float maxRangeValue)
 {
-    SetType( ComplexRandomType::RANDOM_RANGE );
     m_maxRangeValue = maxRangeValue;
 }
 

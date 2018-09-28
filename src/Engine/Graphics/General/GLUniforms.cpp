@@ -174,7 +174,7 @@ void GLUniforms::SetModelMatrix(const Matrix4 &model)
     {
         matrices->model = model;
         matrices->modelInv = model.Inversed();
-        matrices->normal = matrices->model.Inversed().Transposed();
+        matrices->normal = GLUniforms::CalculateNormalMatrix(matrices->model);
     }
 
 }
@@ -265,6 +265,11 @@ Matrix4 GLUniforms::GetProjectionMatrix(GL::ViewProjMode viewProjMode)
     return (viewProjMode == GL::ViewProjMode::WORLD) ?
                 glu->m_cameraUniforms.proj :
                 GLUniforms::GetCanvasProjectionMatrix();
+}
+
+Matrix4 GLUniforms::CalculateNormalMatrix(const Matrix4 &modelMatrix)
+{
+    return modelMatrix.Inversed().Transposed();
 }
 
 GL::ViewProjMode GLUniforms::GetViewProjMode() const

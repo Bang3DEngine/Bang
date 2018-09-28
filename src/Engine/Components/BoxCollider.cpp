@@ -17,18 +17,30 @@ BoxCollider::~BoxCollider()
 {
 }
 
-void BoxCollider::SetHalfExtents(const Vector3 &halfExtents)
+void BoxCollider::SetExtents(const Vector3 &extents)
 {
-    if (halfExtents != GetHalfExtents())
+    if (extents != GetExtents())
     {
-        m_halfExtents = halfExtents;
+        m_extents = extents;
         UpdatePxShape();
     }
 }
 
-const Vector3 &BoxCollider::GetHalfExtents() const
+Box BoxCollider::GetBoxWorld() const
 {
-    return m_halfExtents;
+    Transform *tr = GetGameObject()->GetTransform();
+
+    Box box;
+    box.SetCenter( tr->GetPosition() + GetCenter() );
+    box.SetOrientation( tr->GetRotation() );
+    box.SetLocalExtents( tr->GetScale() * GetExtents() );
+
+    return box;
+}
+
+const Vector3 &BoxCollider::GetExtents() const
+{
+    return m_extents;
 }
 
 void BoxCollider::CloneInto(ICloneable *clone) const
@@ -36,16 +48,16 @@ void BoxCollider::CloneInto(ICloneable *clone) const
     Collider::CloneInto(clone);
 
     BoxCollider *bcClone = SCAST<BoxCollider*>(clone);
-    bcClone->SetHalfExtents( GetHalfExtents() );
+    bcClone->SetExtents( GetExtents() );
 }
 
 void BoxCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if (metaNode.Contains("HalfExtents"))
+    if (metaNode.Contains("Extents"))
     {
-        SetHalfExtents( metaNode.Get<Vector3>("HalfExtents") );
+        SetExtents( metaNode.Get<Vector3>("Extents") );
     }
 }
 
@@ -53,7 +65,7 @@ void BoxCollider::ExportMeta(MetaNode *metaNode) const
 {
     Collider::ExportMeta(metaNode);
 
-    metaNode->Set("HalfExtents", GetHalfExtents());
+    metaNode->Set("Extents", GetExtents());
 }
 
 void BoxCollider::UpdatePxShape()
@@ -65,10 +77,10 @@ void BoxCollider::UpdatePxShape()
         ASSERT(GetPxRigidBody());
         ASSERT(GetPxShape());
 
-        Vector3 halfExtents = GetHalfExtents() *
-                              GetGameObject()->GetTransform()->GetScale();
+        Transform *tr = GetGameObject()->GetTransform();
+        Vector3 extents = GetExtents() * tr->GetScale();
         physx::PxBoxGeometry boxGeometry;
-        boxGeometry.halfExtents = Physics::GetPxVec3FromVector3( halfExtents );
+        boxGeometry.halfExtents = Physics::GetPxVec3FromVector3( extents );
         GetPxShape()->setGeometry(boxGeometry);
 
         physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);

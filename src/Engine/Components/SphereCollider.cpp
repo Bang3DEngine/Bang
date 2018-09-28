@@ -1,5 +1,6 @@
 #include "Bang/SphereCollider.h"
 
+#include "Bang/Sphere.h"
 #include "Bang/Physics.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
@@ -31,6 +32,16 @@ float SphereCollider::GetScaledRadius() const
     Vector3 scale = GetGameObject()->GetTransform()->GetScale();
     float maxScale = Math::Max( Math::Max(scale.x, scale.y), scale.z );
     return maxScale * GetRadius();
+}
+
+Sphere SphereCollider::GetSphereWorld() const
+{
+    Transform *tr = GetGameObject()->GetTransform();
+
+    Sphere sphere;
+    sphere.SetRadius( GetScaledRadius() );
+    sphere.SetCenter( tr->GetPosition() + GetCenter() );
+    return sphere;
 }
 
 float SphereCollider::GetRadius() const

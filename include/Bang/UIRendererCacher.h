@@ -7,6 +7,7 @@
 #include "Bang/RenderPass.h"
 #include "Bang/UIRenderer.h"
 #include "Bang/IEventsChildren.h"
+#include "Bang/IEventsComponent.h"
 #include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsGameObjectVisibilityChanged.h"
 
@@ -19,6 +20,7 @@ FORWARD class UIImageRenderer;
 class UIRendererCacher : public Component,
                          public EventListener<IEventsChildren>,
                          public EventListener<IEventsTransform>,
+                         public EventListener<IEventsComponent>,
                          public EventListener<IEventsRendererChanged>,
                          public EventListener<IEventsGameObjectVisibilityChanged>
 {
@@ -38,6 +40,11 @@ public:
     GameObject *GetContainer() const;
 
     void OnChanged();
+
+    // IEventsComponent
+    virtual void OnComponentAdded(Component *addedComponent, int index);
+    virtual void OnComponentRemoved(Component *removedComponent,
+                                    GameObject *previousGameObject);
 
     // IEventsChildren
     void OnChildAdded(GameObject *addedChild, GameObject *parent) override;

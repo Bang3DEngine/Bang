@@ -19,8 +19,8 @@ NAMESPACE_BANG_BEGIN
         friend class Physics; \
         friend class PxSceneContainer;
 
-class Collider : public PhysicsObject,
-                 public Component
+class Collider : public Component,
+                 public PhysicsObject
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Collider)
 

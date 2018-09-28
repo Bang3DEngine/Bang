@@ -23,6 +23,11 @@ float Segment::GetLength() const
     return (GetDestiny() - GetOrigin()).Length();
 }
 
+float Segment::GetSqLength() const
+{
+    return (GetDestiny() - GetOrigin()).SqLength();
+}
+
 Vector3 Segment::GetDirection() const
 {
     return (GetDestiny() - GetOrigin()).NormalizedSafe();

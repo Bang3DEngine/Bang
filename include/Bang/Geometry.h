@@ -6,6 +6,7 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Ray;
+FORWARD class Box;
 FORWARD class Quad;
 FORWARD class Plane;
 FORWARD class Ray2D;
@@ -18,7 +19,12 @@ FORWARD class Segment2D;
 class Geometry
 {
 public:
-    enum Orientation { LEFT, MIDDLE, RIGHT };
+    enum class Orientation
+    {
+        NEGATIVE,
+        ZERO,
+        POSITIVE
+    };
 
     static void IntersectSegment2DSegment2D(const Segment2D& segment0,
                                             const Segment2D& segment1,
@@ -36,6 +42,10 @@ public:
                                   const Plane& plane,
                                   bool *intersected,
                                   Vector3 *intersectionPoint);
+    static void IntersectSegmentPlane(const Segment &segment,
+                                      const Plane& plane,
+                                      bool *intersected,
+                                      Vector3 *intersectionPoint);
 
     // Computes the intersection between a ray and a sphere
     static void IntersectRaySphere(const Ray &ray,
@@ -55,6 +65,11 @@ public:
                                         const Polygon &poly,
                                         bool *intersected,
                                         Vector3 *intersection);
+    static void IntersectSegmentBox(const Segment &segment,
+                                    const Box &box,
+                                    bool *intersected,
+                                    Vector3 *intersection,
+                                    Vector3 *intersectionNormal);
     static Array<Vector3> IntersectSegmentPolygon(const Segment &segment,
                                                   const Polygon &poly);
     static Array<Vector3> IntersectPolygonPolygon(const Polygon &poly0,

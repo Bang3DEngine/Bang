@@ -17,6 +17,7 @@ public:
     void SetDestiny(const Vector3& p);
 
     float GetLength() const;
+    float GetSqLength() const;
     Vector3 GetDirection() const;
     const Vector3& GetOrigin() const;
     const Vector3& GetDestiny() const;

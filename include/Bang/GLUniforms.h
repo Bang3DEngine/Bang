@@ -139,6 +139,7 @@ public:
     static const Matrix4 &GetViewMatrix();
     static       Matrix4  GetProjectionMatrix();
     static       Matrix4  GetProjectionMatrix(GL::ViewProjMode viewProjMode);
+    static Matrix4 CalculateNormalMatrix(const Matrix4 &modelMatrix);
 
     static GLUniforms *GetActive();
 

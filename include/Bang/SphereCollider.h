@@ -18,6 +18,7 @@ public:
 
     float GetRadius() const;
     float GetScaledRadius() const;
+    Sphere GetSphereWorld() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

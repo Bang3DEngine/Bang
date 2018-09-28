@@ -1,7 +1,7 @@
 #ifndef BOXCOLLIDER_H
 #define BOXCOLLIDER_H
 
-#include "Bang/Bang.h"
+#include "Bang/Box.h"
 #include "Bang/Collider.h"
 
 NAMESPACE_BANG_BEGIN
@@ -14,9 +14,10 @@ public:
 	BoxCollider();
     virtual ~BoxCollider();
 
-    void SetHalfExtents(const Vector3 &halfExtents);
+    void SetExtents(const Vector3 &extents);
 
-    const Vector3& GetHalfExtents() const;
+    Box GetBoxWorld() const;
+    const Vector3& GetExtents() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -26,7 +27,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
-    Vector3 m_halfExtents = Vector3(0.5f);
+    Vector3 m_extents = Vector3(0.5f);
 
     // Collider
     void UpdatePxShape() override;

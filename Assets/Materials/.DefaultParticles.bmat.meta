@@ -3,7 +3,7 @@ Material:
   AlbedoTexture: 0 0 0
   AlbedoUvMultiply: (1, 1)
   AlbedoUvOffset: (0, 0)
-  CullFace: 1029
+  CullFace: 0
   FragmentShader: 1537963745311928072 4664026620200222721 0
   GUID: 1537967037061785862 10663516764962291713 0
   LineWidth: 1

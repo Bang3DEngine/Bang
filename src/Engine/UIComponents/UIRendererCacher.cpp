@@ -129,6 +129,23 @@ void UIRendererCacher::OnChanged()
     m_needNewImageToSnapshot = true;
 }
 
+void UIRendererCacher::OnComponentAdded(Component *addedComponent, int)
+{
+    if (Renderer *rend = DCAST<Renderer*>(addedComponent))
+    {
+        rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
+    }
+}
+
+void UIRendererCacher::OnComponentRemoved(Component *removedComponent,
+                                          GameObject*)
+{
+    if (Renderer *rend = DCAST<Renderer*>(removedComponent))
+    {
+        rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
+    }
+}
+
 void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
 {
     Array<GameObject*> children = GetContainer()->GetChildrenRecursively();
@@ -147,6 +164,7 @@ void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
 
         child->EventEmitter<IEventsObject>::RegisterListener(this);
         child->EventEmitter<IEventsChildren>::RegisterListener(this);
+        child->EventEmitter<IEventsComponent>::RegisterListener(this);
         child->EventEmitter<IEventsGameObjectVisibilityChanged>::RegisterListener(this);
     }
 
@@ -167,6 +185,7 @@ void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject*)
                 rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
             }
             child->EventEmitter<IEventsChildren>::UnRegisterListener(this);
+            child->EventEmitter<IEventsComponent>::UnRegisterListener(this);
             child->EventEmitter<IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
         }
     }
@@ -222,8 +241,8 @@ UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)
     rendererCacher->p_uiRenderersContainer = container;
 
     container->SetParent(go);
-    container->EventEmitter<IEventsChildren>::RegisterListener(rendererCacher);
-    rendererCacher->OnChildAdded(container, go);
+    // container->EventEmitter<IEventsChildren>::RegisterListener(rendererCacher);
+    // rendererCacher->OnChildAdded(container, go);
 
     return rendererCacher;
 }

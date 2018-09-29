@@ -26,6 +26,12 @@ enum class ParticleGenerationShape
     CONE
 };
 
+enum class ParticleRenderMode
+{
+    ADDITIVE,
+    MESH
+};
+
 enum class ParticleSimulationSpace
 {
     LOCAL,
@@ -80,6 +86,7 @@ public:
     void SetGenerationShapeConeFOVRads(float coneFOVRads);
     void SetStartColor(const Color &startColor);
     void SetEndColor(const Color &endColor);
+    void SetParticleRenderMode(ParticleRenderMode particleRenderMode);
     void SetSimulationSpace(ParticleSimulationSpace simulationSpace);
 
     Mesh *GetMesh() const;
@@ -95,6 +102,7 @@ public:
     float GetGravityMultiplier() const;
     float GetInitialVelocityMultiplier() const;
     float GetGenerationShapeConeFOVRads() const;
+    ParticleRenderMode GetParticleRenderMode() const;
     ParticlePhysicsStepMode GetPhysicsStepMode() const;
     ParticleSimulationSpace GetSimulationSpace() const;
 
@@ -133,6 +141,8 @@ private:
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
     float m_generationShapeConeFOVRads = Math::Pi/4;
+
+    ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
     bool m_billboard = true;
     Color m_startColor = Color::White;

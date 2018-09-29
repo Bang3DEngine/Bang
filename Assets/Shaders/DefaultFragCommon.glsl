@@ -80,7 +80,7 @@ void DefaultFragCommonMain(vec4 albedoColor)
     B_GIn_Color = finalColor;
 }
 
-#ifndef BANG_SUPPRESS_MAIN
+#ifndef BANG_SUPPRESS_DEFAULT_FRAG_COMMON_MAIN
 void main()
 {
     DefaultFragCommonMain(B_MaterialAlbedoColor);

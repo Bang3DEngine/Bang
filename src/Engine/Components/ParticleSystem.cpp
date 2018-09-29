@@ -27,12 +27,12 @@ ParticleSystem::ParticleSystem()
 {
     CONSTRUCT_CLASS_ID(ParticleSystem);
     SetRenderPrimitive( GL::Primitive::TRIANGLES );
-    SetMaterial( MaterialFactory::GetDefaultParticles().Get() );
 
     p_particleDataVBO = new VBO();
     SetNumParticles(100);
 
-    SetMesh( MeshFactory::GetCube().Get() );
+    SetMesh( MeshFactory::GetPlane().Get() );
+    SetParticleRenderMode( ParticleRenderMode::ADDITIVE );
 }
 
 ParticleSystem::~ParticleSystem()
@@ -163,6 +163,28 @@ void ParticleSystem::SetEndColor(const Color &endColor)
     }
 }
 
+void ParticleSystem::SetParticleRenderMode(ParticleRenderMode particleRenderMode)
+{
+    if (particleRenderMode != GetParticleRenderMode())
+    {
+        m_particleRenderMode = particleRenderMode;
+
+        Material *newMaterial = nullptr;
+        switch (GetParticleRenderMode())
+        {
+            case ParticleRenderMode::ADDITIVE:
+                newMaterial = MaterialFactory::GetParticlesAdditive().Get();
+            break;
+
+            case ParticleRenderMode::MESH:
+                newMaterial = MaterialFactory::GetParticlesMesh().Get();
+            break;
+        }
+
+        SetMaterial(newMaterial);
+    }
+}
+
 void ParticleSystem::SetSimulationSpace(ParticleSimulationSpace simulationSpace)
 {
     if (simulationSpace != GetSimulationSpace())
@@ -275,6 +297,11 @@ float ParticleSystem::GetInitialVelocityMultiplier() const
 float ParticleSystem::GetGenerationShapeConeFOVRads() const
 {
     return m_generationShapeConeFOVRads;
+}
+
+ParticleRenderMode ParticleSystem::GetParticleRenderMode() const
+{
+    return m_particleRenderMode;
 }
 
 ParticlePhysicsStepMode ParticleSystem::GetPhysicsStepMode() const
@@ -671,6 +698,7 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     psClone->SetStartTime( GetStartTime() );
     psClone->SetStartSize( GetStartSize() );
     psClone->SetBillboard( GetBillboard() );
+    psClone->SetParticleRenderMode( GetParticleRenderMode() );
     psClone->SetStartColor( GetStartColor() );
     psClone->SetEndColor( GetEndColor() );
     psClone->SetNumParticles( GetNumParticles() );
@@ -712,6 +740,12 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("Billboard"))
     {
         SetBillboard( metaNode.Get<bool>("Billboard") );
+    }
+
+    if (metaNode.Contains("ParticleRenderMode"))
+    {
+        SetParticleRenderMode(
+                    metaNode.Get<ParticleRenderMode>("ParticleRenderMode") );
     }
 
     if (metaNode.Contains("StartColor"))
@@ -785,6 +819,7 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("StartTime", GetStartTime());
     metaNode->Set("StartSize", GetStartTime());
     metaNode->Set("Billboard", GetBillboard());
+    metaNode->Set("ParticleRenderMode", GetParticleRenderMode());
     metaNode->Set("StartColor", GetStartColor());
     metaNode->Set("EndColor", GetEndColor());
     metaNode->Set("ParticleSize", GetStartSize());

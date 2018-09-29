@@ -29,9 +29,13 @@ RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
     return MaterialFactory::LoadMaterial("Materials/GizmosUnLightedOverlay.bmat");
 }
 
-RH<Material> MaterialFactory::GetDefaultParticles()
+RH<Material> MaterialFactory::GetParticlesAdditive()
 {
-    return MaterialFactory::LoadMaterial("Materials/DefaultParticles.bmat");
+    return MaterialFactory::LoadMaterial("Materials/ParticlesAdditive.bmat");
+}
+RH<Material> MaterialFactory::GetParticlesMesh()
+{
+    return MaterialFactory::LoadMaterial("Materials/ParticlesMesh.bmat");
 }
 RH<Bang::Material> Bang::MaterialFactory::GetWater()
 {

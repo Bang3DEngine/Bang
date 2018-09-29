@@ -44,7 +44,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
             }
         }
 
-        if (RectTransform *childRT = child->GetRectTransform())
+        if (child->GetRectTransform())
         {
             // If not existing, create the auxiliar layout element,
             // when we have a valid start size

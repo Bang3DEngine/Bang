@@ -91,6 +91,31 @@ void ParticleSystem::SetMesh(Mesh *mesh)
     }
 }
 
+void ParticleSystem::SetTexture(Texture2D *texture)
+{
+    if (texture != GetTexture())
+    {
+        p_texture.Set(texture);
+        GetMaterial()->SetAlbedoTexture( GetTexture() );
+    }
+}
+
+void ParticleSystem::SetAnimationSheetSize(const Vector2i &animationSheetSize)
+{
+    if (animationSheetSize != GetAnimationSheetSize())
+    {
+        m_animationSheetSize = animationSheetSize;
+    }
+}
+
+void ParticleSystem::SetAnimationSpeed(float animationSpeed)
+{
+    if (animationSpeed != GetAnimationSpeed())
+    {
+        m_animationSpeed = animationSpeed;
+    }
+}
+
 void ParticleSystem::SetLifeTime(const ComplexRandom &lifeTime)
 {
     if (lifeTime != GetLifeTime())
@@ -163,6 +188,14 @@ void ParticleSystem::SetEndColor(const Color &endColor)
     }
 }
 
+void ParticleSystem::SetComputeCollisions(bool computeCollisions)
+{
+    if (computeCollisions != GetComputeCollisions())
+    {
+        m_computeCollisions = computeCollisions;
+    }
+}
+
 void ParticleSystem::SetParticleRenderMode(ParticleRenderMode particleRenderMode)
 {
     if (particleRenderMode != GetParticleRenderMode())
@@ -182,6 +215,7 @@ void ParticleSystem::SetParticleRenderMode(ParticleRenderMode particleRenderMode
         }
 
         SetMaterial(newMaterial);
+        GetMaterial()->SetAlbedoTexture( GetTexture() );
     }
 }
 
@@ -274,6 +308,26 @@ const Color &ParticleSystem::GetEndColor() const
     return m_endColor;
 }
 
+Texture2D *ParticleSystem::GetTexture() const
+{
+    return p_texture.Get();
+}
+
+const Vector2i &ParticleSystem::GetAnimationSheetSize() const
+{
+    return m_animationSheetSize;
+}
+
+float ParticleSystem::GetAnimationSpeed() const
+{
+    return m_animationSpeed;
+}
+
+bool ParticleSystem::GetComputeCollisions() const
+{
+    return m_computeCollisions;
+}
+
 const Vector3 &ParticleSystem::GetGenerationShapeBoxSize() const
 {
     return m_generationShapeBoxSize;
@@ -349,10 +403,36 @@ void ParticleSystem::OnRender()
 {
     Renderer::OnRender();
 
+    switch (GetParticleRenderMode())
+    {
+        case ParticleRenderMode::ADDITIVE:
+            GL::Push( GL::Pushable::DEPTH_STATES );
+            GL::Push( GL::Pushable::BLEND_STATES );
+            GL::SetDepthMask(false);
+            GL::BlendEquation(GL::BlendEquationE::FUNC_ADD);
+            GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
+                          GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+        break;
+
+        default:
+        break;
+    }
+
     GL::RenderInstanced(p_particlesVAO,
                         GL::Primitive::TRIANGLES,
                         m_particleMesh.Get()->GetNumVertices(),
                         m_numParticles);
+
+    switch (GetParticleRenderMode())
+    {
+        case ParticleRenderMode::ADDITIVE:
+            GL::Pop( GL::Pushable::BLEND_STATES );
+            GL::Pop( GL::Pushable::DEPTH_STATES );
+        break;
+
+        default:
+        break;
+    }
 }
 
 void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
@@ -392,6 +472,7 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
         }
     }
 
+    sp->SetVector2("B_AnimationSheetSize", Vector2(GetAnimationSheetSize()));
     GLUniforms::SetModelMatrix(modelMat);
     GLUniforms::SetAllUniformsToShaderProgram(sp,
                                               NeededUniformFlag::MODEL |
@@ -414,9 +495,10 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     particleData.startColor = GetStartColor();
     particleData.endColor = GetEndColor();
 
-    m_particlesVBOData[i].position = Vector3::Infinity;
-    m_particlesVBOData[i].size = 0.0f;
-    m_particlesVBOData[i].color = Color::Zero;
+    m_particlesVBOData[i].position       = Vector3::Infinity;
+    m_particlesVBOData[i].size           = 0.0f;
+    m_particlesVBOData[i].color          = Color::Zero;
+    m_particlesVBOData[i].animationFrame = 0;
 }
 
 void ParticleSystem::UpdateParticleData(uint i,
@@ -448,7 +530,7 @@ void ParticleSystem::UpdateParticleData(uint i,
             pPosition += pVelocity * dt;
             pVelocity += pAcc * dt;
 
-            if (sceneColliders.Size() >= 1)
+            if (GetComputeCollisions() && sceneColliders.Size() >= 1)
             {
                 Vector3 pPositionNoInt = pPosition;
                 Vector3 pVelocityNoInt = pVelocity;
@@ -460,11 +542,21 @@ void ParticleSystem::UpdateParticleData(uint i,
                 }
             }
 
+            int animationFrame;
+            {
+                float passedLifeTime = (particleData.totalLifeTime -
+                                        particleData.remainingLifeTime);
+                const Vector2i &sheetSize = GetAnimationSheetSize();
+                animationFrame = SCAST<int>(passedLifeTime * GetAnimationSpeed());
+                animationFrame = animationFrame % (sheetSize.x * sheetSize.y);
+            }
+
             particleData.position  = pPosition;
             particleData.velocity  = pVelocity;
             m_particlesVBOData[i].position = pPosition;
             m_particlesVBOData[i].size = particleData.size;
             m_particlesVBOData[i].color = pColor;
+            m_particlesVBOData[i].animationFrame = animationFrame;
         }
         else
         {
@@ -591,17 +683,21 @@ void ParticleSystem::RecreateVAOForMesh()
         }
 
         {
-            int particlesPosBytesSize   = (3 * sizeof(float));
-            int particlesSizeBytesSize  = (1 * sizeof(float));
-            int particlesColorBytesSize = (4 * sizeof(float));
+            int particlesPosBytesSize            = (3 * sizeof(float));
+            int particlesSizeBytesSize           = (1 * sizeof(float));
+            int particlesColorBytesSize          = (4 * sizeof(float));
+            int particlesAnimationFrameBytesSize = (1 * sizeof(float));
             uint particlesPosVBOOffset = 0;
             uint particlesSizeVBOOffset = particlesPosVBOOffset +
                                           particlesPosBytesSize;
             uint particlesColorVBOOffset = particlesSizeVBOOffset +
                                            particlesSizeBytesSize;
+            uint particlesAnimationFrameVBOOffset = particlesColorVBOOffset +
+                                                    particlesColorBytesSize;
             uint particlesDataVBOStride = particlesPosBytesSize +
                                           particlesSizeBytesSize +
-                                          particlesColorBytesSize;
+                                          particlesColorBytesSize +
+                                          particlesAnimationFrameBytesSize;
 
 
             // Particle specific attributes
@@ -625,6 +721,13 @@ void ParticleSystem::RecreateVAOForMesh()
                                    particlesDataVBOStride,
                                    particlesColorVBOOffset);
             p_particlesVAO->SetVertexAttribDivisor(5, 1);
+
+            p_particlesVAO->SetVBO(p_particleDataVBO, 6,
+                                   1, GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesAnimationFrameVBOOffset);
+            p_particlesVAO->SetVertexAttribDivisor(6, 1);
         }
     }
 }
@@ -695,9 +798,12 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     ParticleSystem *psClone = SCAST<ParticleSystem*>(clone);
     psClone->SetMesh( GetMesh() );
     psClone->SetLifeTime( GetLifeTime() );
+    psClone->SetTexture( GetTexture() );
     psClone->SetStartTime( GetStartTime() );
     psClone->SetStartSize( GetStartSize() );
     psClone->SetBillboard( GetBillboard() );
+    psClone->SetAnimationSpeed( GetAnimationSpeed() );
+    psClone->SetAnimationSheetSize( GetAnimationSheetSize() );
     psClone->SetParticleRenderMode( GetParticleRenderMode() );
     psClone->SetStartColor( GetStartColor() );
     psClone->SetEndColor( GetEndColor() );
@@ -737,6 +843,13 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
         SetStartSize( metaNode.Get<ComplexRandom>("StartSize") );
     }
 
+    if (metaNode.Contains("Texture"))
+    {
+        RH<Texture2D> tex = Resources::Load<Texture2D>(
+                                        metaNode.Get<GUID>("Texture"));
+        SetTexture(tex.Get());
+    }
+
     if (metaNode.Contains("Billboard"))
     {
         SetBillboard( metaNode.Get<bool>("Billboard") );
@@ -746,6 +859,16 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
     {
         SetParticleRenderMode(
                     metaNode.Get<ParticleRenderMode>("ParticleRenderMode") );
+    }
+
+    if (metaNode.Contains("AnimationSpeed"))
+    {
+        SetAnimationSpeed( metaNode.Get<float>("AnimationSpeed") );
+    }
+
+    if (metaNode.Contains("AnimationSheetSize"))
+    {
+        SetAnimationSheetSize( metaNode.Get<Vector2i>("AnimationSheetSize") );
     }
 
     if (metaNode.Contains("StartColor"))
@@ -818,6 +941,9 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("LifeTime", GetLifeTime());
     metaNode->Set("StartTime", GetStartTime());
     metaNode->Set("StartSize", GetStartTime());
+    metaNode->Set("AnimationSpeed", GetAnimationSpeed());
+    metaNode->Set("AnimationSheetSize", GetAnimationSheetSize());
+    metaNode->Set("Texture", GetTexture() ? GetTexture()->GetGUID() : GUID::Empty());
     metaNode->Set("Billboard", GetBillboard());
     metaNode->Set("ParticleRenderMode", GetParticleRenderMode());
     metaNode->Set("StartColor", GetStartColor());

@@ -46,15 +46,21 @@ UIEventResult UIToolButton::OnUIEvent(UIFocusable *focusable,
     {
         switch (event.type)
         {
+            case UIEvent::Type::STARTED_BEING_PRESSED:
+            case UIEvent::Type::FINISHED_BEING_PRESSED:
+            case UIEvent::Type::MOUSE_CLICK_DOWN:
             case UIEvent::Type::MOUSE_CLICK_UP:
+            case UIEvent::Type::MOUSE_ENTER:
+            case UIEvent::Type::MOUSE_EXIT:
                 return UIEventResult::INTERCEPT;
             break;
 
             case UIEvent::Type::MOUSE_CLICK_FULL:
                 if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
-                    SetOn(!GetOn());
+                    SetOn( !GetOn() );
                 }
+                return UIEventResult::INTERCEPT;
             break;
 
             default:

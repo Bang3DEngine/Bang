@@ -12,6 +12,7 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class VAO;
 FORWARD class VBO;
+FORWARD class Texture2D;
 
 enum class ParticlePhysicsStepMode
 {
@@ -60,6 +61,7 @@ private:
         Vector3 position;
         float size;
         Color color;
+        float animationFrame;
     };
 
 public:
@@ -73,6 +75,9 @@ public:
     void Reset();
 
     void SetMesh(Mesh *mesh);
+    void SetTexture(Texture2D *texture);
+    void SetAnimationSheetSize(const Vector2i &animationSheetSize);
+    void SetAnimationSpeed(float animationSpeed);
     void SetLifeTime(const ComplexRandom &lifeTime);
     void SetStartTime(const ComplexRandom &startTime);
     void SetStartSize(const ComplexRandom &startSize);
@@ -86,6 +91,7 @@ public:
     void SetGenerationShapeConeFOVRads(float coneFOVRads);
     void SetStartColor(const Color &startColor);
     void SetEndColor(const Color &endColor);
+    void SetComputeCollisions(bool computeCollisions);
     void SetParticleRenderMode(ParticleRenderMode particleRenderMode);
     void SetSimulationSpace(ParticleSimulationSpace simulationSpace);
 
@@ -99,6 +105,10 @@ public:
     const ComplexRandom& GetStartSize() const;
     const Color &GetStartColor() const;
     const Color &GetEndColor() const;
+    Texture2D *GetTexture() const;
+    const Vector2i &GetAnimationSheetSize() const;
+    float GetAnimationSpeed() const;
+    bool GetComputeCollisions() const;
     float GetGravityMultiplier() const;
     float GetInitialVelocityMultiplier() const;
     float GetGenerationShapeConeFOVRads() const;
@@ -144,14 +154,21 @@ private:
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
+    RH<Texture2D> p_texture;
+    Vector2i m_animationSheetSize = Vector2i::One;
+    float m_animationSpeed = 24.0f;
+
     bool m_billboard = true;
     Color m_startColor = Color::White;
     Color m_endColor   = Color::White;
     ComplexRandom m_lifeTime  = ComplexRandom(0.1f, 3.0f);
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);
+
+    bool m_computeCollisions = false;
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
+
 
     void InitParticle(uint i, const Vector3 &gravity);
     void UpdateParticleData(uint i,

@@ -4,6 +4,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -11,6 +12,7 @@ CapsuleCollider::CapsuleCollider()
 {
     CONSTRUCT_CLASS_ID(CapsuleCollider)
     SetPhysicsObjectType( PhysicsObject::Type::CAPSULE_COLLIDER );
+    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 
 CapsuleCollider::~CapsuleCollider()
@@ -112,6 +114,14 @@ void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Axis3D", SCAST<int>(GetAxis()));
 }
 
+physx::PxShape *CapsuleCollider::CreatePxShape() const
+{
+    return GetPxRigidDynamic() ?
+            GetPxRigidDynamic()->createShape(physx::PxCapsuleGeometry(1, 1),
+                                             *Physics::GetDefaultPxMaterial()) :
+            nullptr;
+}
+
 Quaternion CapsuleCollider::GetInternalRotation() const
 {
     switch (GetAxis())
@@ -137,8 +147,7 @@ void CapsuleCollider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidBody());
-        ASSERT(GetPxShape());
+        ASSERT(GetPxRigidDynamic());
 
         float scaledRadius = GetScaledRadius();
         float scaledHeight = GetScaledHeight();
@@ -147,7 +156,7 @@ void CapsuleCollider::UpdatePxShape()
         capsuleGeometry.halfHeight = scaledHeight * 0.5f;
         GetPxShape()->setGeometry(capsuleGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
+        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
     }
 }
 

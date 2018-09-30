@@ -55,7 +55,8 @@ public:
     uint GetNumTriangles() const;
     String GetBoneName(uint boneIndex) const;
     uint GetBoneIndex(const String &boneName) const;
-    std::array<VertexId, 3> GetTriangleVertexIndices(int triIndex) const;
+    Triangle GetTriangle(uint triIndex) const;
+    std::array<VertexId, 3> GetTriangleVertexIndices(uint triIndex) const;
 
     VAO *GetVAO() const;
     IBO *GetVertexIndicesIBO() const;

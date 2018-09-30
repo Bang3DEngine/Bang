@@ -101,7 +101,9 @@ private:
     void UpdatePxRigidDynamicValues();
 
     // PhysicsObject
-    virtual void OnPxRigidDynamicSet() override;
+    void OnPxRigidDynamicChanged(
+                        physx::PxRigidDynamic *prevPxRigidDynamic,
+                        physx::PxRigidDynamic *newPxRigidDynamic) override;
 
     friend class Physics;
     friend class PxSceneContainer;

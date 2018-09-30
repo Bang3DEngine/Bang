@@ -1,23 +1,22 @@
-#ifndef BOXCOLLIDER_H
-#define BOXCOLLIDER_H
+#ifndef MESHCOLLIDER_H
+#define MESHCOLLIDER_H
 
-#include "Bang/Box.h"
+#include "Bang/Bang.h"
 #include "Bang/Collider.h"
 
 NAMESPACE_BANG_BEGIN
 
-class BoxCollider : public Collider
+class MeshCollider : public Collider
 {
-    COLLIDER(BoxCollider)
+    COLLIDER(MeshCollider)
 
 public:
-	BoxCollider();
-    virtual ~BoxCollider();
+	MeshCollider();
+	virtual ~MeshCollider();
 
-    void SetExtents(const Vector3 &extents);
+    void SetMesh(Mesh *mesh);
 
-    Box GetBoxWorld() const;
-    const Vector3& GetExtents() const;
+    Mesh *GetMesh() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -26,15 +25,17 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-protected:
-    Vector3 m_extents = Vector3(0.5f);
+private:
+    RH<Mesh> p_mesh;
 
     // Collider
+    virtual bool CanBeTriggerShape() override;
+    virtual bool CanBeSimulationShape() override;
     physx::PxShape* CreatePxShape() const override;
     void UpdatePxShape() override;
 };
 
 NAMESPACE_BANG_END
 
-#endif // BOXCOLLIDER_H
+#endif // MESHCOLLIDER_H
 

@@ -88,25 +88,7 @@ void Geometry:: IntersectRayPlane(const Ray &ray,
                                   bool *intersected,
                                   float *distanceFromIntersectionToRayOrigin)
 {
-    const Vector3& planePoint  = plane.GetPoint();
     const Vector3& planeNormal = plane.GetNormal();
-
-    /*
-    float denom = Vector3::Dot(plane.GetNormal(), ray.GetDirection());
-    if (Math::Abs(denom) > 0.001f)
-    {
-        float planeD = -(planeNormal.x * planePoint.x +
-                         planeNormal.y * planePoint.y +
-                         planeNormal.z * planePoint.z);
-        float nom = Vector3::Dot(plane.GetNormal(), ray.GetOrigin()) - planeD;
-        *distanceFromIntersectionToRayOrigin = -(nom/denom);
-        *intersected = (*distanceFromIntersectionToRayOrigin >= 0.0f);
-    }
-    else
-    {
-        *intersected = false;
-    }
-    */
     float dot = Vector3::Dot(planeNormal, ray.GetDirection());
     if (Math::Abs(dot) > 0.001f)
     {
@@ -297,7 +279,6 @@ void Geometry::IntersectSegmentBox(const Segment &segment,
 {
     *intersected = false;
 
-    const Vector3 segmDir = segment.GetDirection();
     Vector3 extX     = box.GetExtentX();
     Vector3 extY     = box.GetExtentY();
     Vector3 extZ     = box.GetExtentZ();

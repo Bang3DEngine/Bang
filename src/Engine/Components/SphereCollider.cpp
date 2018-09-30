@@ -5,6 +5,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -12,6 +13,7 @@ SphereCollider::SphereCollider()
 {
     CONSTRUCT_CLASS_ID(SphereCollider)
     SetPhysicsObjectType( PhysicsObject::Type::SPHERE_COLLIDER );
+    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 
 SphereCollider::~SphereCollider()
@@ -74,20 +76,27 @@ void SphereCollider::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Radius", GetRadius());
 }
 
+physx::PxShape *SphereCollider::CreatePxShape() const
+{
+    return GetPxRigidDynamic() ?
+            GetPxRigidDynamic()->createShape(physx::PxSphereGeometry(1),
+                                             *Physics::GetDefaultPxMaterial()) :
+            nullptr;
+}
+
 void SphereCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidBody());
-        ASSERT(GetPxShape());
+        ASSERT(GetPxRigidDynamic());
 
         float scaledRadius = GetScaledRadius();
         physx::PxSphereGeometry sphereGeometry;
         sphereGeometry.radius = scaledRadius;
         GetPxShape()->setGeometry(sphereGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
+        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
     }
 }

@@ -60,8 +60,6 @@ private:
                    const physx::PxTransform* poseBuffer,
                    const physx::PxU32 count) override;
 
-    static physx::PxMaterial *GetDefaultPxMaterial();
-
     // IEventsObjectGatherer
     virtual void OnObjectGathered(PhysicsObject *phObj) override;
     virtual void OnObjectUnGathered(GameObject *previousGameObject,

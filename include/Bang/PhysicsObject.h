@@ -19,7 +19,8 @@ public:
         RIGIDBODY,
         BOX_COLLIDER,
         SPHERE_COLLIDER,
-        CAPSULE_COLLIDER
+        CAPSULE_COLLIDER,
+        MESH_COLLIDER
     };
 
 	PhysicsObject();
@@ -32,9 +33,12 @@ protected:
     physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
     PhysicsObject::Type m_physicsObjectType = PhysicsObject::Type::NONE;
 
-    virtual void OnPxRigidDynamicSet();
     void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);
     void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
+
+    virtual void OnPxRigidDynamicChanged(
+                            physx::PxRigidDynamic *prevPxRigidDynamic,
+                            physx::PxRigidDynamic *newPxRigidDynamic);
 
     friend class PxSceneContainer;
 };

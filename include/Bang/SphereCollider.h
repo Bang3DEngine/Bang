@@ -31,6 +31,7 @@ protected:
     float m_radius = 1.0f;
 
     // Collider
+    physx::PxShape* CreatePxShape() const override;
     void UpdatePxShape() override;
 
 };

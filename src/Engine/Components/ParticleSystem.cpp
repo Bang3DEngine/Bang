@@ -16,6 +16,7 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/BoxCollider.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/MeshCollider.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/MaterialFactory.h"
@@ -536,7 +537,7 @@ void ParticleSystem::UpdateParticleData(uint i,
                 Vector3 pVelocityNoInt = pVelocity;
                 for (Collider *collider : sceneColliders)
                 {
-                    CollideParticle(i, collider,
+                    CollideParticle(collider,
                                     pPrevPos, pPositionNoInt, pVelocityNoInt,
                                     &pPosition, &pVelocity);
                 }
@@ -569,8 +570,7 @@ void ParticleSystem::UpdateParticleData(uint i,
     }
 }
 
-void ParticleSystem::CollideParticle(uint i,
-                                     Collider *collider,
+void ParticleSystem::CollideParticle(Collider *collider,
                                      const Vector3 &prevPositionNoInt,
                                      const Vector3 &newPositionNoInt,
                                      const Vector3 &newVelocityNoInt,
@@ -622,6 +622,30 @@ void ParticleSystem::CollideParticle(uint i,
                                           &collided,
                                           &collisionPoint,
                                           &collisionNormal);
+        }
+        break;
+
+        case PhysicsObject::Type::MESH_COLLIDER:
+        {
+            MeshCollider *meshCol = SCAST<MeshCollider*>(collider);
+            if (Mesh *mesh = meshCol->GetMesh())
+            {
+                for (int triIdx = 0; triIdx < mesh->GetNumTriangles(); ++triIdx)
+                {
+                    Triangle tri = mesh->GetTriangle(triIdx);
+                    Transform *tr = collider->GetGameObject()->GetTransform();
+                    tri = tr->GetLocalToWorldMatrix() * tri;
+
+                    Geometry::IntersectSegmentTriangle(dispSegment,
+                                                       tri,
+                                                       &collided,
+                                                       &collisionPoint);
+                    if (collided)
+                    {
+                        collisionNormal = tri.GetNormal();
+                    }
+                }
+            }
         }
         break;
 
@@ -813,6 +837,7 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     psClone->SetGenerationShapeConeFOVRads( GetGenerationShapeConeFOVRads() );
     psClone->SetSimulationSpace( GetSimulationSpace() );
     psClone->SetPhysicsStepMode( GetPhysicsStepMode() );
+    psClone->SetComputeCollisions( GetComputeCollisions() );
     psClone->SetInitialVelocityMultiplier( GetInitialVelocityMultiplier() );
     psClone->SetGravityMultiplier( GetGravityMultiplier() );
 }
@@ -921,6 +946,11 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
                     metaNode.Get<ParticlePhysicsStepMode>("PhysicsStepMode") );
     }
 
+    if (metaNode.Contains("ComputeCollisions"))
+    {
+        SetComputeCollisions( metaNode.Get<bool>("ComputeCollisions") );
+    }
+
     if (metaNode.Contains("GravityMultiplier"))
     {
         SetGravityMultiplier( metaNode.Get<float>("GravityMultiplier") );
@@ -955,6 +985,7 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("GenerationShapeConeFOV", GetGenerationShapeConeFOVRads());
     metaNode->Set("SimulationSpace", GetSimulationSpace());
     metaNode->Set("PhysicsStepMode", GetPhysicsStepMode());
+    metaNode->Set("ComputeCollisions", GetComputeCollisions());
     metaNode->Set("GravityMultiplier", GetGravityMultiplier());
     metaNode->Set("InitialVelocityMultiplier", GetInitialVelocityMultiplier());
 }

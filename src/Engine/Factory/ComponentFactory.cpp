@@ -18,6 +18,7 @@
 #include "Bang/Application.h"
 #include "Bang/AudioSource.h"
 #include "Bang/UIInputText.h"
+#include "Bang/MeshCollider.h"
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/UITextCursor.h"
@@ -64,6 +65,7 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, BoxCollider);
     CREATE_COMPONENT(componentClassName, AudioSource);
     CREATE_COMPONENT(componentClassName, UIInputText);
+    CREATE_COMPONENT(componentClassName, MeshCollider);
     CREATE_COMPONENT(componentClassName, LineRenderer);
     CREATE_COMPONENT(componentClassName, MeshRenderer);
     CREATE_COMPONENT(componentClassName, WaterRenderer);

@@ -22,7 +22,7 @@ NAMESPACE_BANG_BEGIN
 class Collider : public Component,
                  public PhysicsObject
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Collider)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(Collider)
 
 public:
 	Collider();
@@ -49,14 +49,12 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
+    virtual physx::PxShape* CreatePxShape() const = 0;
+
     Matrix4 GetShapeTransformWithRespectToPxActor() const;
     virtual Quaternion GetInternalRotation() const;
     virtual void UpdatePxShape();
 
-    void SetPxRigidBody(physx::PxRigidBody *pxRB);
-    void SetPxShape(physx::PxShape *pxShape);
-
-    physx::PxRigidBody* GetPxRigidBody() const;
     physx::PxShape* GetPxShape() const;
 
     // Object
@@ -71,7 +69,12 @@ private:
     RH<PhysicsMaterial> p_sharedPhysicsMaterial;
 
     physx::PxShape *p_pxShape = nullptr;
-    physx::PxRigidBody *p_pxRigidBody = nullptr;
+
+    // PhysicsObject
+    virtual bool CanBeSimulationShape();
+    virtual bool CanBeTriggerShape();
+    virtual void OnPxRigidDynamicChanged(physx::PxRigidDynamic *prevPxRD,
+                                         physx::PxRigidDynamic *newPxRD) override;
 
     friend class Physics;
     friend class PxSceneContainer;

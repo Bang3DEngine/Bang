@@ -2,6 +2,7 @@
 
 #include "PxPhysicsAPI.h"
 
+#include "Bang/Mesh.h"
 #include "Bang/Scene.h"
 #include "Bang/RigidBody.h"
 #include "Bang/Transform.h"
@@ -40,12 +41,32 @@ void Physics::Init()
     m_pxFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION,
                                         m_pxAllocator,
                                         m_pxErrorCallback);
+    if (!m_pxFoundation)
+    {
+        Debug_Error("PxFoundation creation failed!");
+        Application::Exit(1, true);
+    }
 
     m_pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION,
                                   *m_pxFoundation,
                                   PxTolerancesScale(),
                                   true,
                                   nullptr);
+    if (!m_pxPhysics)
+    {
+        Debug_Error("PxPhysics creation failed!");
+        Application::Exit(1, true);
+    }
+
+
+    m_pxCooking = PxCreateCooking(PX_PHYSICS_VERSION,
+                                  *m_pxFoundation,
+                                  PxCookingParams( PxTolerancesScale() ));
+    if (!m_pxCooking)
+    {
+        Debug_Error("PxCooking creation failed!");
+        Application::Exit(1, true);
+    }
 }
 
 void Physics::ResetStepTimeReference(Scene *scene)
@@ -246,6 +267,53 @@ Time Physics::GetStepSleepTime() const
 const Vector3 &Physics::GetGravity() const
 {
     return m_gravity;
+}
+
+PxTriangleMesh* Physics::CreatePxTriangleMesh(Mesh *mesh) const
+{
+    PxTriangleMesh* pxTriangleMesh = nullptr;
+    if (mesh)
+    {
+        PxTolerancesScale scale;
+        PxCookingParams params(scale);
+        params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+        params.meshPreprocessParams |=
+                PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+        params.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
+
+        m_pxCooking->setParams(params);
+
+        PxTriangleMeshDesc meshDesc;
+        meshDesc.points.count     = mesh->GetPositionsPool().Size();
+        meshDesc.points.stride    = sizeof(Vector3);
+        meshDesc.points.data      = mesh->GetPositionsPool().Data();
+
+        meshDesc.triangles.count  = mesh->GetNumTriangles();
+        meshDesc.triangles.stride = 3 * sizeof(uint);
+        meshDesc.triangles.data   = mesh->GetVertexIndices().Data();
+
+        #ifdef DEBUG
+        if (!m_pxCooking->validateTriangleMesh(meshDesc))
+        {
+            Debug_Warn("Triangle mesh " << mesh << " not optimal for collider.");
+        }
+        #endif
+
+        pxTriangleMesh =
+                m_pxCooking->createTriangleMesh(
+                                meshDesc,
+                                GetPxPhysics()->getPhysicsInsertionCallback());
+    }
+
+    return pxTriangleMesh;
+}
+
+PxMaterial *Physics::GetDefaultPxMaterial()
+{
+    PhysicsMaterial *phDefaultMat = MaterialFactory::
+                                    GetDefaultPhysicsMaterial().Get();
+    PxMaterial *pxDefaultMat = phDefaultMat->GetPxMaterial();
+    return pxDefaultMat;
 }
 
 void Physics::RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo)

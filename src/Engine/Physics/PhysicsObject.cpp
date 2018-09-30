@@ -14,14 +14,18 @@ void PhysicsObject::SetPhysicsObjectType(PhysicsObject::Type physicsObjectType)
 {
     m_physicsObjectType = physicsObjectType;
 }
+
 void PhysicsObject::SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic)
 {
     if (pxRigidDynamic != GetPxRigidDynamic())
     {
+        physx::PxRigidDynamic *prevPxRD = GetPxRigidDynamic();
+
         p_pxRigidDynamic = pxRigidDynamic;
+
+        OnPxRigidDynamicChanged(prevPxRD, GetPxRigidDynamic());
     }
 }
-
 
 physx::PxRigidDynamic *PhysicsObject::GetPxRigidDynamic() const
 {
@@ -33,8 +37,9 @@ PhysicsObject::Type PhysicsObject::GetPhysicsObjectType() const
     return m_physicsObjectType;
 }
 
-void PhysicsObject::OnPxRigidDynamicSet()
+void PhysicsObject::OnPxRigidDynamicChanged(
+                            physx::PxRigidDynamic *prevPxRigidDynamic,
+                            physx::PxRigidDynamic *newPxRigidDynamic)
 {
-    // Empty;
+    BANG_UNUSED_2(prevPxRigidDynamic, newPxRigidDynamic);
 }
-

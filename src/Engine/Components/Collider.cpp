@@ -16,7 +16,6 @@ USING_NAMESPACE_BANG
 Collider::Collider()
 {
     CONSTRUCT_CLASS_ID(Collider)
-    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 
 Collider::~Collider()
@@ -102,9 +101,12 @@ void Collider::OnEnabled(Object *)
 {
     if (GetPxShape())
     {
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
+                              CanBeSimulationShape() && !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
+                              CanBeTriggerShape() && GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
+                              !GetIsTrigger());
     }
 }
 
@@ -118,19 +120,32 @@ void Collider::OnDisabled(Object *)
     }
 }
 
-void Collider::SetPxRigidBody(physx::PxRigidBody *pxRB)
+bool Collider::CanBeSimulationShape()
 {
-    p_pxRigidBody = pxRB;
+    return true;
 }
 
-void Collider::SetPxShape(physx::PxShape *pxShape)
+bool Collider::CanBeTriggerShape()
 {
-    p_pxShape = pxShape;
+    return true;
 }
 
-physx::PxRigidBody *Collider::GetPxRigidBody() const
+void Collider::OnPxRigidDynamicChanged(physx::PxRigidDynamic *prevPxRD,
+                                       physx::PxRigidDynamic *newPxRD)
 {
-    return p_pxRigidBody;
+    if (prevPxRD)
+    {
+        if (GetPxShape())
+        {
+            prevPxRD->detachShape(*GetPxShape());
+            p_pxShape = nullptr;
+        }
+    }
+
+    if (newPxRD)
+    {
+        UpdatePxShape();
+    }
 }
 
 physx::PxShape *Collider::GetPxShape() const
@@ -147,7 +162,7 @@ Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
 {
     Matrix4 shapeTransformWithRespectToPxActor =
             GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-    if (physx::PxActor *pxActor = GetPxRigidBody())
+    if (physx::PxActor *pxActor = GetPxRigidDynamic())
     {
         Physics *ph = Physics::GetInstance();
         if (PxSceneContainer *pxSceneCont = ph->GetPxSceneContainerFromScene(
@@ -166,6 +181,18 @@ Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
 
 void Collider::UpdatePxShape()
 {
+    if (!GetPxShape())
+    {
+        if (GetPxRigidDynamic())
+        {
+            physx::PxShape *pxShape = CreatePxShape();
+            if ( (p_pxShape = pxShape) )
+            {
+                GetPxRigidDynamic()->attachShape(*GetPxShape());
+            }
+        }
+    }
+
     if (GetPxShape())
     {
         Vector3 shapeLocalPosFromPxActor = GetCenter();
@@ -183,8 +210,10 @@ void Collider::UpdatePxShape()
                                                     shapeLocalRotFromPxActor );
         GetPxShape()->setLocalPose( pxLocalTransform );
 
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
+                              CanBeSimulationShape() && !GetIsTrigger());
+        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
+                              CanBeTriggerShape() && GetIsTrigger());
 
         if (GetActivePhysicsMaterial())
         {
@@ -193,7 +222,7 @@ void Collider::UpdatePxShape()
             GetPxShape()->setMaterials(&material, 1);
         }
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
+        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
     }
 }
 

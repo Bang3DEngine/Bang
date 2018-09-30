@@ -45,6 +45,7 @@ public:
     int GetMaxSubSteps() const;
     Time GetStepSleepTime() const;
     const Vector3& GetGravity() const;
+
     PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
     const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
 
@@ -53,6 +54,9 @@ public:
                         const Vector3 &direction,
                         float maxDistance,
                         RayCastHitInfo *hitInfo);
+
+    physx::PxTriangleMesh* CreatePxTriangleMesh(Mesh *mesh) const;
+    static physx::PxMaterial *GetDefaultPxMaterial();
 
     static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
     static Vector3 GetVector3FromPxVec3(const physx::PxVec3 &v);
@@ -72,6 +76,7 @@ private:
     physx::PxDefaultErrorCallback m_pxErrorCallback;
     physx::PxFoundation *m_pxFoundation = nullptr;
     physx::PxPhysics *m_pxPhysics = nullptr;
+    physx::PxCooking *m_pxCooking = nullptr;
 
     int m_maxSubSteps = 10;
     Time m_stepSleepTime;

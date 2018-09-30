@@ -38,6 +38,7 @@ protected:
     Axis3D m_axis = Axis3D::Y;
 
     // Collider
+    physx::PxShape* CreatePxShape() const override;
     void UpdatePxShape() override;
     Quaternion GetInternalRotation() const override;
 };

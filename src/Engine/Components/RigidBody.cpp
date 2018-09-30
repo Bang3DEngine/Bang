@@ -327,12 +327,15 @@ void RigidBody::UpdatePxRigidDynamicValues()
 
         if (GetGameObject() && GetGameObject()->GetName() == "AAA")
         {
-            Debug_DLog( Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getLinearVelocity()) );
+            Debug_DLog( Physics::GetVector3FromPxVec3(
+                            GetPxRigidDynamic()->getLinearVelocity()) );
         }
     }
 }
 
-void RigidBody::OnPxRigidDynamicSet()
+void RigidBody::OnPxRigidDynamicChanged(PxRigidDynamic *prevPxRigidDynamic,
+                                        PxRigidDynamic *newPxRigidDynamic)
 {
+    BANG_UNUSED_2(prevPxRigidDynamic, newPxRigidDynamic);
     UpdatePxRigidDynamicValues();
 }

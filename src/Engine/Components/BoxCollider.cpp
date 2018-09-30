@@ -4,6 +4,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
 #include "Bang/GameObject.h"
+#include "Bang/MaterialFactory.h"
 
 USING_NAMESPACE_BANG
 
@@ -11,6 +12,7 @@ BoxCollider::BoxCollider()
 {
     CONSTRUCT_CLASS_ID(BoxCollider)
     SetPhysicsObjectType( PhysicsObject::Type::BOX_COLLIDER );
+    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
 }
 
 BoxCollider::~BoxCollider()
@@ -68,14 +70,21 @@ void BoxCollider::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Extents", GetExtents());
 }
 
+physx::PxShape *BoxCollider::CreatePxShape() const
+{
+    return GetPxRigidDynamic() ?
+            GetPxRigidDynamic()->createShape(physx::PxBoxGeometry(1, 1, 1),
+                                             *Physics::GetDefaultPxMaterial()) :
+            nullptr;
+}
+
 void BoxCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidBody());
-        ASSERT(GetPxShape());
+        ASSERT(GetPxRigidDynamic());
 
         Transform *tr = GetGameObject()->GetTransform();
         Vector3 extents = GetExtents() * tr->GetScale();
@@ -83,6 +92,6 @@ void BoxCollider::UpdatePxShape()
         boxGeometry.halfExtents = Physics::GetPxVec3FromVector3( extents );
         GetPxShape()->setGeometry(boxGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidBody(), 1.0f);
+        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
     }
 }

@@ -31,6 +31,7 @@ SET_COMPONENT_IDS(Component, 0, 10000000);
         SET_COMPONENT_IDS(BoxCollider,       602, 610);
         SET_COMPONENT_IDS(SphereCollider,    611, 620);
         SET_COMPONENT_IDS(CapsuleCollider,   621, 630);
+        SET_COMPONENT_IDS(MeshCollider,      631, 641);
     SET_COMPONENT_IDS(Light,              701, 800);
         SET_COMPONENT_IDS(DirectionalLight,  702, 710);
         SET_COMPONENT_IDS(PointLight,        711, 720);

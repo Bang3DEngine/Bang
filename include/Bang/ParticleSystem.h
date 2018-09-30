@@ -175,8 +175,7 @@ private:
                             float deltaTimeSecs,
                             const Vector3 &gravity,
                             const Array<Collider*> &sceneColliders);
-    void CollideParticle(uint i,
-                         Collider *collider,
+    void CollideParticle(Collider *collider,
                          const Vector3 &prevPositionNoInt,
                          const Vector3 &newPositionNoInt,
                          const Vector3 &newVelocityNoInt,

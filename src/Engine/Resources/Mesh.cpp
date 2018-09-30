@@ -387,9 +387,23 @@ uint Mesh::GetBoneIndex(const String &boneName) const
     return SCAST<uint>(-1);
 }
 
-std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(int triIndex) const
+Triangle Mesh::GetTriangle(uint triIndex) const
 {
-    ASSERT(triIndex >= 0 && triIndex < GetNumTriangles());
+    ASSERT(triIndex < GetNumTriangles());
+    VertexId vId0 = GetVertexIndices()[triIndex * 3 + 0];
+    VertexId vId1 = GetVertexIndices()[triIndex * 3 + 1];
+    VertexId vId2 = GetVertexIndices()[triIndex * 3 + 2];
+
+    Triangle tri;
+    tri.SetPoint(0, GetPositionsPool()[vId0]);
+    tri.SetPoint(1, GetPositionsPool()[vId1]);
+    tri.SetPoint(2, GetPositionsPool()[vId2]);
+    return tri;
+}
+
+std::array<Mesh::VertexId, 3> Mesh::GetTriangleVertexIndices(uint triIndex) const
+{
+    ASSERT(triIndex < GetNumTriangles());
     const VertexId triVertex0Index = GetVertexIndices()[triIndex * 3 + 0];
     const VertexId triVertex1Index = GetVertexIndices()[triIndex * 3 + 1];
     const VertexId triVertex2Index = GetVertexIndices()[triIndex * 3 + 2];

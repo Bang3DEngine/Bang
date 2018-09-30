@@ -21,22 +21,41 @@ void UIToolButton::SetOn(bool on)
         if (!IsBlocked())
         {
             m_on = on;
-
-            if (GetOn())
-            {
-                ChangeAspectToPressed();
-            }
-            else
-            {
-                ChangeAspectToIdle();
-            }
+            ChangeAspectIfItsOnOrNot();
         }
     }
 }
 
+void UIToolButton::ChangeAspectIfItsOnOrNot()
+{
+    if (GetOn())
+    {
+        ChangeAspectToPressed();
+    }
+    else
+    {
+        ChangeAspectToIdle();
+    }
+}
+
+void UIToolButton::OnBlockedChanged()
+{
+    if (!IsBlocked())
+    {
+        ChangeAspectIfItsOnOrNot();
+    }
+}
+
+
 bool UIToolButton::GetOn() const
 {
     return m_on;
+}
+
+void UIToolButton::Click()
+{
+    SetOn( !GetOn() );
+    CallClickCallback();
 }
 
 UIEventResult UIToolButton::OnUIEvent(UIFocusable *focusable,
@@ -52,14 +71,6 @@ UIEventResult UIToolButton::OnUIEvent(UIFocusable *focusable,
             case UIEvent::Type::MOUSE_CLICK_UP:
             case UIEvent::Type::MOUSE_ENTER:
             case UIEvent::Type::MOUSE_EXIT:
-                return UIEventResult::INTERCEPT;
-            break;
-
-            case UIEvent::Type::MOUSE_CLICK_FULL:
-                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
-                {
-                    SetOn( !GetOn() );
-                }
                 return UIEventResult::INTERCEPT;
             break;
 

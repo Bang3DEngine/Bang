@@ -14,11 +14,19 @@ public:
     void SetOn(bool on);
     bool GetOn() const;
 
+    // UIButtonBase
+    virtual void Click() override;
+
 private:
     bool m_on = false;
 
     UIToolButton();
     virtual ~UIToolButton();
+
+    void ChangeAspectIfItsOnOrNot();
+
+    // UIButtonBase
+    virtual void OnBlockedChanged() override;
 
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,

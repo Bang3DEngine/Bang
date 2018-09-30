@@ -30,6 +30,19 @@ UIButtonBase::~UIButtonBase()
 
 }
 
+void UIButtonBase::ClickBase()
+{
+    if (!IsBlocked())
+    {
+        Click();
+    }
+}
+
+void UIButtonBase::OnBlockedChanged()
+{
+    // Empty
+}
+
 void UIButtonBase::OnMouseEnter()
 {
     if (IsBlocked())
@@ -68,23 +81,6 @@ void UIButtonBase::OnMouseExit()
     }
 }
 
-void UIButtonBase::Click()
-{
-    UIEvent event;
-    event.type = UIEvent::Type::MOUSE_CLICK_FULL;
-    event.mouse.button = MouseButton::LEFT;
-    GetFocusable()->ProcessEvent(event);
-
-    if (GetFocusable()->IsMouseOver())
-    {
-        OnMouseEnter();
-    }
-    else
-    {
-        OnMouseExit();
-    }
-}
-
 void UIButtonBase::SetBlocked(bool blocked)
 {
     if (blocked != IsBlocked())
@@ -107,6 +103,8 @@ void UIButtonBase::SetBlocked(bool blocked)
         {
             ChangeAspectToBlocked();
         }
+
+        OnBlockedChanged();
     }
 }
 
@@ -249,13 +247,9 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
             break;
 
             case UIEvent::Type::MOUSE_CLICK_FULL:
-                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
+                if (event.mouse.button == MouseButton::LEFT)
                 {
-                    OnMouseEnter();
-                    for (auto clickedCallback : m_clickedCallbacks)
-                    {
-                        clickedCallback();
-                    }
+                    ClickBase();
                     return UIEventResult::INTERCEPT;
                 }
             break;
@@ -281,7 +275,7 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
                 {
                     case Key::SPACE:
                     case Key::ENTER:
-                        Click();
+                        ClickBase();
                         return UIEventResult::INTERCEPT;
                     break;
 
@@ -347,4 +341,12 @@ UIButtonBase *UIButtonBase::CreateInto(
     button->ChangeAspectToIdle();
 
     return button;
+}
+
+void UIButtonBase::CallClickCallback()
+{
+    for (auto clickedCallback : m_clickedCallbacks)
+    {
+        clickedCallback();
+    }
 }

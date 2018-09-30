@@ -17,10 +17,10 @@ FORWARD class UILayoutElement;
 class UIButtonBase : public Component,
                      public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIButtonBase)
+    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(UIButtonBase)
 
 public:
-    void Click();
+    virtual void Click() = 0;
     void SetBlocked(bool blocked);
     void SetIconSize(const Vector2i &size);
     void SetIconTexture(Texture2D *texture);
@@ -44,6 +44,9 @@ protected:
     UIButtonBase();
     virtual ~UIButtonBase();
 
+    void ClickBase();
+    virtual void OnBlockedChanged();
+
     void ChangeAspectToIdle();
     void ChangeAspectToOver();
     void ChangeAspectToPressed();
@@ -60,6 +63,8 @@ protected:
             std::function<UIButtonBase*(GameObject*)> createBtnFunc,
             GameObject *go);
 
+protected:
+    void CallClickCallback();
 
 private:
     bool m_isBlocked = false;

@@ -9,6 +9,9 @@ class UIButton : public UIButtonBase
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIButton)
 
+public:
+    virtual void Click() override;
+
 private:
     UIButton();
     virtual ~UIButton();

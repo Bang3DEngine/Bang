@@ -28,6 +28,21 @@ UIButton::~UIButton()
 {
 }
 
+void UIButton::Click()
+{
+    ChangeAspectToPressed();
+    CallClickCallback();
+
+    if (GetFocusable()->IsMouseOver())
+    {
+        OnMouseEnter();
+    }
+    else
+    {
+        OnMouseExit();
+    }
+}
+
 UIEventResult UIButton::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
 {
     return UIButtonBase::OnUIEvent(focusable, event);

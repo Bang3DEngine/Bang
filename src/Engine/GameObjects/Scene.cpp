@@ -69,10 +69,15 @@ DebugRenderer *Scene::GetDebugRenderer() const
 
 void Scene::SetCamera(Camera *cam)
 {
-    p_camera = cam;
-    if (p_camera)
+    if (GetCamera())
     {
-        p_camera->EventEmitter<IEventsDestroy>::RegisterListener(this);
+        GetCamera()->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+    }
+
+    p_camera = cam;
+    if (GetCamera())
+    {
+        GetCamera()->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 }
 

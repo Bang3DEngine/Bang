@@ -28,7 +28,7 @@ public:
     void AddGameObjectToDestroyDelayed(GameObject *go);
     void AddComponentToDestroyDelayed(Component *comp);
 
-    virtual Camera *GetCamera() const;
+    Camera *GetCamera() const;
 
     void InvalidateCanvas();
 

@@ -10,27 +10,20 @@ class UIToolButton : public UIButtonBase
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIToolButton)
 
 public:
-
     void SetOn(bool on);
     bool GetOn() const;
 
     // UIButtonBase
     virtual void Click() override;
 
+protected:
+    virtual void UpdateAspect() override;
+
 private:
     bool m_on = false;
 
     UIToolButton();
     virtual ~UIToolButton();
-
-    void ChangeAspectIfItsOnOrNot();
-
-    // UIButtonBase
-    virtual void OnBlockedChanged() override;
-
-    // IEventsFocus
-    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
-                                    const UIEvent &event) override;
 
     static UIToolButton *CreateInto(GameObject *go);
 

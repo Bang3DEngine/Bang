@@ -32,20 +32,33 @@ void UIButton::Click()
 {
     ChangeAspectToPressed();
     CallClickCallback();
+    UpdateAspect();
+}
 
-    if (GetFocusable()->IsMouseOver())
+void UIButton::UpdateAspect()
+{
+    if (!IsBlocked())
     {
-        OnMouseEnter();
+        if (GetFocusable()->IsBeingPressed())
+        {
+            ChangeAspectToPressed();
+        }
+        else
+        {
+            if (GetFocusable()->IsMouseOver())
+            {
+                ChangeAspectToOver();
+            }
+            else
+            {
+                ChangeAspectToIdle();
+            }
+        }
     }
     else
     {
-        OnMouseExit();
+        ChangeAspectToBlocked();
     }
-}
-
-UIEventResult UIButton::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
-{
-    return UIButtonBase::OnUIEvent(focusable, event);
 }
 
 UIButton *UIButton::CreateInto(GameObject *gameObject)

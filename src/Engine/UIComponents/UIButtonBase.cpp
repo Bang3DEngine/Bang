@@ -36,49 +36,7 @@ void UIButtonBase::ClickBase()
     {
         Click();
     }
-}
-
-void UIButtonBase::OnBlockedChanged()
-{
-    // Empty
-}
-
-void UIButtonBase::OnMouseEnter()
-{
-    if (IsBlocked())
-    {
-        ChangeAspectToBlocked();
-    }
-    else
-    {
-        if (GetFocusable()->IsBeingPressed())
-        {
-            ChangeAspectToPressed();
-        }
-        else
-        {
-            ChangeAspectToOver();
-        }
-    }
-}
-
-void UIButtonBase::OnMouseExit()
-{
-    if (IsBlocked())
-    {
-        ChangeAspectToBlocked();
-    }
-    else
-    {
-        if (GetFocusable()->IsBeingPressed())
-        {
-            ChangeAspectToPressed();
-        }
-        else
-        {
-            ChangeAspectToIdle();
-        }
-    }
+    UpdateAspect();
 }
 
 void UIButtonBase::SetBlocked(bool blocked)
@@ -88,23 +46,7 @@ void UIButtonBase::SetBlocked(bool blocked)
         m_isBlocked = blocked;
         GetFocusable()->SetConsiderForTabbing( !IsBlocked() );
 
-        if (!IsBlocked())
-        {
-            if (GetFocusable()->IsMouseOver())
-            {
-                OnMouseEnter();
-            }
-            else
-            {
-                OnMouseExit();
-            }
-        }
-        else
-        {
-            ChangeAspectToBlocked();
-        }
-
-        OnBlockedChanged();
+        UpdateAspect();
     }
 }
 
@@ -241,7 +183,7 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
             case UIEvent::Type::MOUSE_CLICK_DOWN:
                 if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
-                    OnMouseEnter();
+                    UpdateAspect();
                     return UIEventResult::INTERCEPT;
                 }
             break;
@@ -259,14 +201,7 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
             case UIEvent::Type::MOUSE_CLICK_UP:
             case UIEvent::Type::MOUSE_ENTER:
             case UIEvent::Type::MOUSE_EXIT:
-                if (GetFocusable()->IsMouseOver())
-                {
-                    OnMouseEnter();
-                }
-                else
-                {
-                    OnMouseExit();
-                }
+                UpdateAspect();
                 return UIEventResult::INTERCEPT;
             break;
 
@@ -338,8 +273,7 @@ UIButtonBase *UIButtonBase::CreateInto(
     button->GetText()->SetContent("");
     button->SetIcon(nullptr, Vector2i::Zero, 0);
 
-    button->ChangeAspectToIdle();
-
+    button->UpdateAspect();
     return button;
 }
 

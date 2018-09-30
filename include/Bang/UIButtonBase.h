@@ -45,15 +45,12 @@ protected:
     virtual ~UIButtonBase();
 
     void ClickBase();
-    virtual void OnBlockedChanged();
+    virtual void UpdateAspect() = 0;
 
     void ChangeAspectToIdle();
     void ChangeAspectToOver();
     void ChangeAspectToPressed();
     void ChangeAspectToBlocked();
-
-    void OnMouseEnter();
-    void OnMouseExit();
 
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,

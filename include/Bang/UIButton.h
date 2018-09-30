@@ -12,13 +12,12 @@ class UIButton : public UIButtonBase
 public:
     virtual void Click() override;
 
+protected:
+    virtual void UpdateAspect() override;
+
 private:
     UIButton();
     virtual ~UIButton();
-
-    // IEventsFocus
-    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
-                                    const UIEvent &event) override;
 
     static UIButton *CreateInto(GameObject *go);
 

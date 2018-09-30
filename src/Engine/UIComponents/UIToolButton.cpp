@@ -21,31 +21,10 @@ void UIToolButton::SetOn(bool on)
         if (!IsBlocked())
         {
             m_on = on;
-            ChangeAspectIfItsOnOrNot();
+            UpdateAspect();
         }
     }
 }
-
-void UIToolButton::ChangeAspectIfItsOnOrNot()
-{
-    if (GetOn())
-    {
-        ChangeAspectToPressed();
-    }
-    else
-    {
-        ChangeAspectToIdle();
-    }
-}
-
-void UIToolButton::OnBlockedChanged()
-{
-    if (!IsBlocked())
-    {
-        ChangeAspectIfItsOnOrNot();
-    }
-}
-
 
 bool UIToolButton::GetOn() const
 {
@@ -58,28 +37,37 @@ void UIToolButton::Click()
     CallClickCallback();
 }
 
-UIEventResult UIToolButton::OnUIEvent(UIFocusable *focusable,
-                                      const UIEvent &event)
+void UIToolButton::UpdateAspect()
 {
     if (!IsBlocked())
     {
-        switch (event.type)
+        if (GetOn())
         {
-            case UIEvent::Type::STARTED_BEING_PRESSED:
-            case UIEvent::Type::FINISHED_BEING_PRESSED:
-            case UIEvent::Type::MOUSE_CLICK_DOWN:
-            case UIEvent::Type::MOUSE_CLICK_UP:
-            case UIEvent::Type::MOUSE_ENTER:
-            case UIEvent::Type::MOUSE_EXIT:
-                return UIEventResult::INTERCEPT;
-            break;
-
-            default:
-            break;
+            ChangeAspectToPressed();
+        }
+        else
+        {
+            if (GetFocusable()->IsBeingPressed())
+            {
+                ChangeAspectToPressed();
+            }
+            else
+            {
+                if (GetFocusable()->IsMouseOver())
+                {
+                    ChangeAspectToOver();
+                }
+                else
+                {
+                    ChangeAspectToIdle();
+                }
+            }
         }
     }
-
-    return UIButtonBase::OnUIEvent(focusable, event);
+    else
+    {
+        ChangeAspectToBlocked();
+    }
 }
 
 UIToolButton *UIToolButton::CreateInto(GameObject *gameObject)

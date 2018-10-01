@@ -78,7 +78,7 @@ private:
     void RegisterForEvents(UIFocusable *focusable);
     void UnRegisterForEvents(UIFocusable *focusable);
 
-    List<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
+    Array<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,

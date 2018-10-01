@@ -17,7 +17,7 @@
 
 USING_NAMESPACE_BANG
 
-const Time UIDragDroppable::DragInitTime = Time::Seconds(0.3);
+const Time UIDragDroppable::DragInitTime = Time::Seconds(0.15);
 
 UIDragDroppable::UIDragDroppable()
 {
@@ -31,8 +31,6 @@ UIDragDroppable::~UIDragDroppable()
 void UIDragDroppable::OnUpdate()
 {
     Component::OnUpdate();
-
-    // Drag start detection here
 
     if (GetFocusable())
     {
@@ -51,7 +49,7 @@ void UIDragDroppable::OnUpdate()
         }
     }
 
-    if (Input::GetMouseButtonUp(MouseButton::LEFT))
+    if (!Input::GetMouseButton(MouseButton::LEFT))
     {
         m_beingPressed = false;
     }
@@ -70,6 +68,11 @@ void UIDragDroppable::OnUpdate()
     else
     {
         m_timeSinceMouseIsDown.SetNanos(0);
+    }
+
+    if (IsBeingDragged() && !m_beingPressed)
+    {
+        OnDropped();
     }
 }
 
@@ -121,7 +124,10 @@ void UIDragDroppable::OnDragStarted()
     m_beingDragged = true;
 
     UICanvas *canvas = UICanvas::GetActive(this);
-    if (!canvas) { return; }
+    if (!canvas)
+    {
+        return;
+    }
 
     canvas->NotifyDragStarted(this);
     EventEmitter<IEventsDragDrop>::PropagateToListeners(
@@ -208,16 +214,18 @@ void UIDragDroppable::OnDragUpdate()
 
 void UIDragDroppable::OnDropped()
 {
-    m_beingDragged = false;
-
-    if (m_dragDropGameObject)
+    if (m_beingDragged)
     {
-        EventEmitter<IEventsDragDrop>::PropagateToListeners(
-                            &IEventsDragDrop::OnDrop, this, true);
+        m_beingDragged = false;
+        if (m_dragDropGameObject)
+        {
+            EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                                &IEventsDragDrop::OnDrop, this, true);
 
-        GameObject::Destroy(m_dragDropGameObject);
-        m_dragDropGameObject = nullptr;
-        p_dragDropImageRenderer = nullptr;
+            GameObject::Destroy(m_dragDropGameObject);
+            m_dragDropGameObject = nullptr;
+            p_dragDropImageRenderer = nullptr;
+        }
     }
 }
 
@@ -236,23 +244,31 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
 
 void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)
 {
-    if (!m_dragDropGameObject) { return; }
+    if (m_dragDropGameObject)
+    {
+        RectTransform *thisRT = GetGameObject()->GetRectTransform();
+        AARecti thisRect( thisRT->GetViewportAARect() );
 
-    RectTransform *thisRT = GetGameObject()->GetRectTransform();
-    AARecti thisRect( thisRT->GetViewportAARect() );
-
-    Vector2i offsetedPos = pos - m_dragGrabOffset;
-    RectTransform *ddGoRT = m_dragDropGameObject->GetRectTransform();
-    ddGoRT->SetPivotPosition(Vector2::Zero);
-    ddGoRT->SetMarginLeftBot( offsetedPos );
-    ddGoRT->SetMarginRightTop( -ddGoRT->GetMarginLeftBot() +
-                               -thisRect.GetSize());
-    ddGoRT->SetAnchorMin( -Vector2::One );
-    ddGoRT->SetAnchorMax( -Vector2::One );
-    ddGoRT->SetPosition( Vector3::Zero ); // thisRT->GetPosition() );
-    ddGoRT->SetRotation( thisRT->GetRotation() );
-    ddGoRT->SetScale( thisRT->GetScale() );
-    ddGoRT->TranslateLocal( Vector3(0, 0, -0.3f) );
+        Vector2i offsetedPos = pos - m_dragGrabOffset;
+        RectTransform *ddGoRT = m_dragDropGameObject->GetRectTransform();
+        ddGoRT->SetPivotPosition(Vector2::Zero);
+        ddGoRT->SetMarginLeftBot( offsetedPos );
+        ddGoRT->SetMarginRightTop( -ddGoRT->GetMarginLeftBot() +
+                                   -thisRect.GetSize());
+        ddGoRT->SetAnchorMin( -Vector2::One );
+        ddGoRT->SetAnchorMax( -Vector2::One );
+        ddGoRT->SetPosition( Vector3::Zero ); // thisRT->GetPosition() );
+        ddGoRT->SetRotation( thisRT->GetRotation() );
+        ddGoRT->SetScale( thisRT->GetScale() );
+        ddGoRT->TranslateLocal( Vector3(0, 0, -0.3f) );
+    }
 }
 
-
+void UIDragDroppable::OnDestroy()
+{
+    Object::OnDestroy();
+    if (IsBeingDragged())
+    {
+        OnDropped();
+    }
+}

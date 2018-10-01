@@ -185,11 +185,7 @@ void Collider::UpdatePxShape()
     {
         if (GetPxRigidDynamic())
         {
-            physx::PxShape *pxShape = CreatePxShape();
-            if ( (p_pxShape = pxShape) )
-            {
-                GetPxRigidDynamic()->attachShape(*GetPxShape());
-            }
+            p_pxShape = CreatePxShape();
         }
     }
 

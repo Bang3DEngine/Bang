@@ -45,7 +45,6 @@ private:
     Vector2i m_dragGrabOffset = Vector2i::Zero;
 
     RH<Texture2D> m_dragDropTexture;
-    Framebuffer *m_dragDropFB = nullptr;
     GameObject *m_dragDropGameObject = nullptr;
     UIImageRenderer *p_dragDropImageRenderer = nullptr;
 
@@ -54,6 +53,9 @@ private:
     void OnDropped();
 
     void MoveDragDropGameObjectTo(const Vector2i &pos);
+
+    // Object
+    virtual void OnDestroy() override;
 
     // IFocusable
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,

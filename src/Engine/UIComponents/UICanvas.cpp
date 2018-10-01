@@ -247,10 +247,15 @@ void UICanvas::OnUpdate()
                             {
                                 if (rt->IsMouseOver(currentMousePosVP, false))
                                 {
-                                    RegisterForEvents( GetFocusableUnderMouseTopMost() );
-                                    PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
-                                                              UIEvent::Type::MOUSE_CLICK_FULL,
-                                                              inputEvent);
+                                    if (GetFocusableUnderMouseTopMost())
+                                    {
+                                        RegisterForEvents(
+                                             GetFocusableUnderMouseTopMost() );
+                                        PropagateFocusableUIEvent(
+                                             GetFocusableUnderMouseTopMost(),
+                                             UIEvent::Type::MOUSE_CLICK_FULL,
+                                             inputEvent);
+                                    }
                                 }
                             }
                         }
@@ -382,7 +387,7 @@ void UICanvas::OnUpdate()
     // Drag drop
     if (p_ddBeingDragged)
     {
-        List<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
+        Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
         if (Input::GetMouseButton(MouseButton::LEFT))
         {
             p_ddBeingDragged->OnDragUpdate();
@@ -465,9 +470,9 @@ void UICanvas::SetFocus(UIFocusable *newFocusable_, FocusType focusType)
     }
 }
 
-List<EventListener<IEventsDragDrop>*> UICanvas::GetDragDropListeners() const
+Array<EventListener<IEventsDragDrop>*> UICanvas::GetDragDropListeners() const
 {
-    List<EventListener<IEventsDragDrop>*> dragDropListeners;
+    Array<EventListener<IEventsDragDrop>*> dragDropListeners;
 
     std::queue<GameObject*> gos;
     gos.push(GetGameObject());
@@ -644,9 +649,20 @@ bool UICanvas::IsMouseOver(const GameObject *go, bool recursive)
 
 void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
 {
+    if (p_ddBeingDragged)
+    {
+        p_ddBeingDragged->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+        p_ddBeingDragged->OnDropped();
+    }
+
     p_ddBeingDragged = dragDroppable;
 
-    List<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
+    if (p_ddBeingDragged)
+    {
+        p_ddBeingDragged->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
+
+    Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
     for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
     {
         if (ddListener->IsReceivingEvents())

@@ -115,7 +115,6 @@ const T* DPtr<T>::operator->() const
 template<class T>
 void DPtr<T>::OnDestroyed(EventEmitter<IEventsDestroy> *)
 {
-    ASSERT(p_ptr);
     Set(nullptr);
 }
 

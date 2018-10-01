@@ -78,11 +78,15 @@ physx::PxShape *MeshCollider::CreatePxShape() const
         PxTriangleMesh *pxTriMesh =
                     Physics::GetInstance()->CreatePxTriangleMesh( GetMesh() );
         PxTriangleMeshGeometry triMeshGeom(pxTriMesh, scale);
-        PxShape *shape = PxRigidActorExt::createExclusiveShape(
-                                          *pxRD,
-                                          triMeshGeom,
-                                          *Physics::GetDefaultPxMaterial(),
-                                          physx::PxShapeFlag::eTRIGGER_SHAPE);
+        PxShape *shape = nullptr;
+        if (triMeshGeom.isValid())
+        {
+            shape = PxRigidActorExt::createExclusiveShape(
+                                      *pxRD,
+                                      triMeshGeom,
+                                      *Physics::GetDefaultPxMaterial(),
+                                      physx::PxShapeFlag::eSCENE_QUERY_SHAPE);
+        }
         return shape;
     }
     else

@@ -33,7 +33,10 @@ void Thread::Start()
     {
         m_thread = std::thread(ThreadFunc, p_runnable, this);
     }
-    else { Debug_Error("Trying to start Thread with no ThreadRunnable set."); }
+    else
+    {
+        Debug_Error("Trying to start Thread with no ThreadRunnable set.");
+    }
 }
 
 void Thread::Join()
@@ -65,12 +68,19 @@ void Thread::SetRunnable(ThreadRunnable *runnable)
     p_runnable->p_thread = this;
 }
 
-const String &Thread::GetName() const { return m_threadName; }
-ThreadRunnable *Thread::GetRunnable() const { return p_runnable; }
+const String &Thread::GetName() const
+{
+    return m_threadName;
+}
+
+ThreadRunnable *Thread::GetRunnable() const
+{
+    return p_runnable;
+}
 
 void Thread::SleepCurrentThread(float seconds)
 {
-    int millis = Cast<int>(seconds * 1000);
+    int millis = SCAST<int>(seconds * 1000);
     std::this_thread::sleep_for( std::chrono::milliseconds(millis) );
 }
 
@@ -86,10 +96,16 @@ int ThreadFunc(ThreadRunnable *runnable, Thread *thread)
     if (runnable)
     {
         runnable->Run();
-        if (runnable->IsAutoDelete()) { delete runnable; }
+        if (runnable->IsAutoDelete())
+        {
+            delete runnable;
+        }
     }
 
-    if (thread) { thread->m_hasFinished = true; }
+    if (thread)
+    {
+        thread->m_hasFinished = true;
+    }
 
     return 0;
 }

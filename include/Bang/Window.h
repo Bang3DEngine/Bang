@@ -4,6 +4,7 @@
 #include <stack>
 
 #include "Bang/List.h"
+#include "Bang/Time.h"
 #include "Bang/IEvents.h"
 #include "Bang/Vector2.h"
 #include "Bang/EventEmitter.h"
@@ -27,8 +28,15 @@ class IEventsWindow
 {
     IEVENTS(IEventsWindow)
 public:
-    virtual void OnFocusGained(Window *w) { BANG_UNUSED(w); }
-    virtual void OnFocusLost(Window *w) { BANG_UNUSED(w); }
+    virtual void OnFocusGained(Window *w)
+    {
+        BANG_UNUSED(w);
+    }
+
+    virtual void OnFocusLost(Window *w)
+    {
+        BANG_UNUSED(w);
+    }
 };
 
 class Window : public EventEmitter<IEventsWindow>
@@ -62,11 +70,13 @@ public:
     void SetPosition(int newPosX, int newPosY);
     void SetTitle(const String &title);
     void SetSize(int newWidth, int newHeight);
+    void SetSleepTimeOnBackground(Time sleepTimeOnBackground);
     static void SetActive(Window *window);
 
     int GetWidth() const;
     int GetHeight() const;
     bool HasFocus() const;
+    bool HasFocusRecursive() const;
     bool IsBordered() const;
     String GetTitle() const;
     bool IsMouseOver() const;
@@ -80,6 +90,7 @@ public:
     bool HasFlags(uint flags) const;
     int GetGLMajorVersion() const;
     int GetGLMinorVersion() const;
+    Time GetSleepTimeOnBackground() const;
 
     static float GetAspectRatioS();
     static int GetHeightS();
@@ -92,7 +103,7 @@ public:
     SDL_Window *GetSDLWindow() const;
     uint GetSDLWindowID() const;
     Window *GetParentWindow() const;
-    const List<Window*>& GetChildren() const;
+    const Array<Window*>& GetChildren() const;
 
     static Window *GetActive();
 
@@ -102,13 +113,14 @@ protected:
 private:
     SDL_Window *m_sdlWindow = nullptr;
 
-    List<Window*> p_children;
+    Array<Window*> p_children;
     Window* p_parent = nullptr;
 
     SDL_GLContext   m_sdlGLContext  = nullptr;
     Input          *m_input         = nullptr;
     SceneManager   *m_sceneManager  = nullptr;
 
+    Time m_sleepTimeInBackground;
     Vector2i m_minSize = Vector2i::Zero;
     Vector2i m_maxSize = Vector2i(4096);
     Vector2i m_prevSize = Vector2i::Zero;

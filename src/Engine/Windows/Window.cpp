@@ -87,7 +87,13 @@ bool Window::MainLoopIteration()
     Render();
 
     GetInput()->OnFrameFinished();
-    // Thread::SleepCurrentThread(0.5f);
+    if (!HasFocusRecursive())
+    {
+        if (GetSleepTimeOnBackground().GetNanos() > 0)
+        {
+            Thread::SleepCurrentThread( GetSleepTimeOnBackground().GetSeconds() );
+        }
+    }
     SwapBuffers();
 
     return true;
@@ -291,6 +297,11 @@ void Window::SetSize(int w, int h)
     OnResize(w, h);
 }
 
+void Window::SetSleepTimeOnBackground(Time sleepTimeOnBackground)
+{
+    m_sleepTimeInBackground = sleepTimeOnBackground;
+}
+
 void Window::OnResize(int newWidth, int newHeight)
 {
     if (m_newSize != m_prevSize)
@@ -314,14 +325,35 @@ bool Window::HasFocus() const
 {
     return HasFlags(SDL_WINDOW_INPUT_FOCUS);
 }
+
+bool Window::HasFocusRecursive() const
+{
+    if (HasFocus())
+    {
+        return true;
+    }
+
+    for (Window *childWindow : GetChildren())
+    {
+        if (childWindow->HasFocusRecursive())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Window::IsBordered() const
 {
     return !HasFlags(SDL_WINDOW_BORDERLESS);
 }
+
 String Window::GetTitle() const
 {
     return String(SDL_GetWindowTitle(GetSDLWindow()));
 }
+
 bool Window::IsMouseOver() const
 {
     return HasFlags(SDL_WINDOW_MOUSE_FOCUS);
@@ -385,6 +417,11 @@ int Window::GetGLMinorVersion() const
     return v;
 }
 
+Time Window::GetSleepTimeOnBackground() const
+{
+    return m_sleepTimeInBackground;
+}
+
 int Window::GetHeightS()
 {
     return Window::GetActive()->GetHeight();
@@ -423,6 +460,11 @@ uint Window::GetSDLWindowID() const
 Window *Window::GetParentWindow() const
 {
     return p_parent;
+}
+
+const Array<Window*> &Window::GetChildren() const
+{
+    return p_children;
 }
 
 SceneManager *Window::CreateSceneManager() const

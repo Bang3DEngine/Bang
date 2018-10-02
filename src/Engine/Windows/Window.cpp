@@ -83,7 +83,6 @@ bool Window::MainLoopIteration()
     GetInput()->ProcessEnqueuedEvents();
 
     Update();
-    TimeSingleton::SetDeltaTimeReferenceToNow();
     Render();
 
     GetInput()->OnFrameFinished();

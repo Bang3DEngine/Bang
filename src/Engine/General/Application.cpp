@@ -127,7 +127,6 @@ void StopProfiling()
 int Application::MainLoop()
 {
     InitBeforeLoop();
-    TimeSingleton::SetDeltaTimeReferenceToNow();
 
     bool exit = false;
     while (!exit && !m_forcedExit)

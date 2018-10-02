@@ -27,6 +27,26 @@ Scene::~Scene()
     GameObject::DestroyImmediate( GetDebugRenderer() );
 }
 
+void Scene::Start()
+{
+    if (!IsStarted())
+    {
+        m_lastUpdateTime = Time::GetNow();
+    }
+    GameObject::Start();
+}
+
+void Scene::Update()
+{
+    GameObject::Update();
+}
+
+void Scene::PostUpdate()
+{
+    GameObject::PostUpdate();
+    m_lastUpdateTime = Time::GetNow();
+}
+
 void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
@@ -99,6 +119,11 @@ void Scene::AddComponentToDestroyDelayed(Component *comp)
         m_componentsToDestroyDelayed.PushBack(comp);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
+}
+
+Time Scene::GetDeltaTime() const
+{
+    return Time::GetNow() - m_lastUpdateTime;
 }
 
 void Scene::InvalidateCanvas()

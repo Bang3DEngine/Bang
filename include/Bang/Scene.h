@@ -19,6 +19,9 @@ class Scene : public GameObject,
     GAMEOBJECT(Scene);
 
 public:
+    virtual void Start() override;
+    virtual void Update() override;
+    virtual void PostUpdate() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
     void DestroyDelayedElements();
@@ -28,6 +31,7 @@ public:
     void AddGameObjectToDestroyDelayed(GameObject *go);
     void AddComponentToDestroyDelayed(Component *comp);
 
+    Time GetDeltaTime() const;
     Camera *GetCamera() const;
 
     void InvalidateCanvas();
@@ -43,18 +47,19 @@ public:
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 protected:
-    Camera *p_camera = nullptr;
-    DebugRenderer *p_debugRenderer = nullptr;
-
-    Array<GameObject*> m_gameObjectsToDestroyDelayed;
-    Array<Component*> m_componentsToDestroyDelayed;
-
     Scene();
     virtual ~Scene();
 
     DebugRenderer *GetDebugRenderer() const;
 
 private:
+    Time m_lastUpdateTime;
+
+    Camera *p_camera = nullptr;
+    DebugRenderer *p_debugRenderer = nullptr;
+
+    Array<GameObject*> m_gameObjectsToDestroyDelayed;
+    Array<Component*> m_componentsToDestroyDelayed;
 
     friend class Window;
     friend class GEngine;

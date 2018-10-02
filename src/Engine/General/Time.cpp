@@ -2,6 +2,8 @@
 
 #include <chrono>
 
+#include "Bang/Scene.h"
+#include "Bang/SceneManager.h"
 #include "Bang/TimeSingleton.h"
 
 USING_NAMESPACE_BANG
@@ -84,5 +86,9 @@ Time Time::GetEllapsed()
 
 Time Time::GetDeltaTime()
 {
-    return TimeSingleton::GetInstance()->GetDeltaTime();
+    if (Scene *scene = SceneManager::GetActiveScene())
+    {
+        return scene->GetDeltaTime();
+    }
+    return Time(0);
 }

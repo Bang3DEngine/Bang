@@ -26,19 +26,9 @@ Time TimeSingleton::GetEllapsed()
     return TimeSingleton::GetNow() - TimeSingleton::GetInit();
 }
 
-Time TimeSingleton::GetDeltaTime()
-{
-    return Time::GetNow() - TimeSingleton::GetInstance()->m_deltaTimeReference;
-}
-
 void TimeSingleton::SetInitTime(Time time)
 {
     TimeSingleton::GetInstance()->m_initialTime = time;
-}
-
-void TimeSingleton::SetDeltaTimeReferenceToNow()
-{
-    TimeSingleton::GetInstance()->m_deltaTimeReference = TimeSingleton::GetNow();
 }
 
 TimeSingleton *TimeSingleton::GetInstance()

@@ -60,6 +60,8 @@ void Application::Init(const Path &engineRootPath)
     m_windowManager = new WindowManager();
     GetWindowManager()->Init();
 
+    m_time->SetInitTime( Time::GetNow() - Time::Millis(SDL_GetTicks()) );
+
     m_metaFilesManager = new MetaFilesManager();
     MetaFilesManager::CreateMissingMetaFiles(Paths::GetEngineAssetsDir());
     MetaFilesManager::LoadMetaFilepathGUIDs(Paths::GetEngineAssetsDir());

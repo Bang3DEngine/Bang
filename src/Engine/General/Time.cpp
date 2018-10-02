@@ -72,6 +72,11 @@ Time Time::GetNow()
     return TimeSingleton::GetInstance()->GetNow();
 }
 
+Time Time::GetInit()
+{
+    return TimeSingleton::GetInstance()->GetInit();
+}
+
 Time Time::GetEllapsed()
 {
     return TimeSingleton::GetInstance()->GetEllapsed();

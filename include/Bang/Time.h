@@ -27,6 +27,7 @@ public:
     static Time Nanos(uint64_t nanos);
 
     static Time GetNow();
+    static Time GetInit();
     static Time GetEllapsed();
     static Time GetDeltaTime();
 

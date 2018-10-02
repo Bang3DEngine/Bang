@@ -46,6 +46,7 @@ class ParticleSystem : public Renderer
 private:
     struct ParticleData
     {
+        Vector3 prevPosition;
         Vector3 position;
         Vector3 velocity;
         Vector3 force;
@@ -54,8 +55,10 @@ private:
         float totalLifeTime;
         float remainingLifeTime;
         float remainingStartTime;
+        float prevDeltaTimeSecs;
         float size;
     };
+
     struct ParticleVBOData
     {
         Vector3 position;
@@ -159,8 +162,8 @@ private:
     float m_animationSpeed = 24.0f;
 
     bool m_billboard = true;
-    Color m_startColor = Color::White;
-    Color m_endColor   = Color::White;
+    Color m_startColor   = Color::White;
+    Color m_endColor     = Color::White;
     ComplexRandom m_lifeTime  = ComplexRandom(0.1f, 3.0f);
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);
@@ -175,6 +178,9 @@ private:
                             float deltaTimeSecs,
                             const Vector3 &gravity,
                             const Array<Collider*> &sceneColliders);
+    void StepParticlePositionAndVelocity(ParticleData *pData,
+                                         float dt);
+
     void CollideParticle(Collider *collider,
                          const Vector3 &prevPositionNoInt,
                          const Vector3 &newPositionNoInt,

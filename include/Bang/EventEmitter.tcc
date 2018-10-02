@@ -78,17 +78,45 @@ Array<EventListener<T>*> &EventEmitter<T>::GetListeners()
     return m_listeners;
 }
 
-template<class T>
-void EventEmitter<T>::PropagateToListeners_(
-              std::function<void(EventListener<T>*)> listenerCall) const
+template <class T>
+template<class TFunction, class... Args>
+void EventEmitter<T>::
+PropagateToArray(const Array<EventListener<T>*> &array,
+                 const TFunction &func,
+                 const Args&... args) const
 {
-    if (GetListeners().Size() > 0 && IsEmittingEvents())
-    {
-        ++m_iterationDepth;
+    PropagateToArrayFunctor(array,
+                      [&](EventListener<T> *listener)
+                      {
+                          (listener->*func)(args...);
+                      });
+}
 
-        for (int i = 0; i < GetListeners().Size(); ++i)
+template <class T>
+template<class TFunction, class... Args>
+void EventEmitter<T>::
+PropagateToListeners(const TFunction &func, const Args&... args) const
+{
+    PropagateToArray(GetListeners(), func, args...);
+}
+
+template<class T>
+void  EventEmitter<T>::PropagateToArrayFunctor(
+            const Array<EventListener<T>*> &array,
+            std::function<void(EventListener<T>*)> listenerCall) const
+{
+    bool propagatingToListeners = (&array == &m_listeners);
+    const std::size_t arraySize = array.Size();
+    if (arraySize > 0 && IsEmittingEvents())
+    {
+        if (propagatingToListeners)
         {
-            if (EventListener<T> *listener = GetListeners()[i])
+            ++m_iterationDepth;
+        }
+
+        for (int i = 0; i < arraySize; ++i)
+        {
+            if (EventListener<T> *listener = array[i])
             {
                 if (listener->IsReceivingEvents())
                 {
@@ -97,37 +125,30 @@ void EventEmitter<T>::PropagateToListeners_(
             }
         }
 
-        if (--m_iterationDepth == 0)
+        if (propagatingToListeners)
         {
-            EventEmitter<T> *ncThis = const_cast<EventEmitter<T>*>(this);
-            ncThis->ClearDeletedListeners();
+            if (--m_iterationDepth == 0)
+            {
+                EventEmitter<T> *ncThis = const_cast<EventEmitter<T>*>(this);
+                ncThis->ClearDeletedListeners();
+            }
         }
     }
-}
-
-template <class T>
-template<class TFunction, class... Args>
-void EventEmitter<T>::
-PropagateToListeners(const TFunction &func, const Args&... args) const
-{
-    PropagateToListeners_([&](EventListener<T> *listener)
-                          {
-                              (listener->*func)(args...);
-                          });
 }
 
 template<class T>
 template<class TResult, class TFunction, class... Args>
 Array<TResult>
-EventEmitter<T>::PropagateToListenersAndGatherResult(const TFunction &func,
-                                                     const Args&... args) const
+EventEmitter<T>::
+PropagateToListenersAndGatherResult(const TFunction &func,
+                                    const Args&... args) const
 {
     Array<TResult> gatheredResult;
-    PropagateToListeners_(
-             [&](EventListener<T> *listener)
-             {
-                 gatheredResult.PushBack( (listener->*func)(args...) );
-             });
+    PropagateToArrayFunctor(GetListeners(),
+                      [&](EventListener<T> *listener)
+                      {
+                          gatheredResult.PushBack( (listener->*func)(args...) );
+                      });
     return gatheredResult;
 }
 

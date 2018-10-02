@@ -2,6 +2,7 @@
 
 #include "Bang/GL.h"
 #include "Bang/Input.h"
+#include "Bang/Scene.h"
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -10,6 +11,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/UIFocusable.h"
+#include "Bang/SceneManager.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutIgnorer.h"
@@ -17,11 +19,12 @@
 
 USING_NAMESPACE_BANG
 
-const Time UIDragDroppable::DragInitTime = Time::Seconds(0.15);
+const Time UIDragDroppable::DragInitTime = Time::Seconds(0.25);
 
 UIDragDroppable::UIDragDroppable()
 {
-    CONSTRUCT_CLASS_ID(UIDragDroppable)
+    CONSTRUCT_CLASS_ID(UIDragDroppable);
+    m_pressTime.SetInfinity();
 }
 
 UIDragDroppable::~UIDragDroppable()
@@ -32,47 +35,50 @@ void UIDragDroppable::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (GetFocusable())
+    if ( GetFocusable() )
     {
-        m_beingPressed = GetFocusable()->IsBeingPressed();
-    }
-    else
-    {
-        if (Input::GetMouseButtonDown(MouseButton::LEFT))
+        const Array<InputEvent> &events = Input::GetEnqueuedEvents();
+        for (const InputEvent &inputEvent : events)
         {
-            RectTransform *thisRT = GetGameObject()->GetRectTransform();
-            const AARecti thisRect( thisRT->GetViewportAARect() );
-            m_dragGrabOffset = (Input::GetMousePosition() - thisRect.GetMin());
-            m_beingPressed = thisRT->IsMouseOver() &&
-                             UICanvas::GetActive(GetGameObject())->
-                                       IsMouseOver(GetGameObject(), true);
+            if (GetFocusable()->IsMouseOver())
+            {
+                if (inputEvent.type == InputEvent::Type::MOUSE_DOWN &&
+                    inputEvent.mouseButton == MouseButton::LEFT)
+                {
+                    m_pressTime = inputEvent.timestamp;
+
+                    RectTransform *thisRT = GetGameObject()->GetRectTransform();
+                    const AARecti thisRect( thisRT->GetViewportAARect() );
+                    m_dragGrabOffset = (inputEvent.mousePosWindow -
+                                        thisRect.GetMin());
+                }
+            }
+
+            if (inputEvent.type == InputEvent::Type::MOUSE_UP &&
+                inputEvent.mouseButton == MouseButton::LEFT)
+            {
+                m_pressTime.SetInfinity();
+                m_beingDragged = false;
+            }
         }
-    }
 
-    if (!Input::GetMouseButton(MouseButton::LEFT))
-    {
-        m_beingPressed = false;
-    }
-
-    if (m_beingPressed)
-    {
-        if (m_timeSinceMouseIsDown < UIDragDroppable::DragInitTime)
+        if (GetFocusable()->IsBeingPressed())
         {
-            m_timeSinceMouseIsDown += Time::GetDeltaTime();
-            if (m_timeSinceMouseIsDown >= UIDragDroppable::DragInitTime)
+            Time passedPressedTime = (Time::GetNow() - m_pressTime);
+            if (passedPressedTime >= UIDragDroppable::DragInitTime)
             {
                 OnDragStarted();
             }
         }
-    }
-    else
-    {
-        m_timeSinceMouseIsDown.SetNanos(0);
-    }
+        else
+        {
+            m_pressTime.SetInfinity();
+        }
 
-    if (IsBeingDragged() && !m_beingPressed)
-    {
-        OnDropped();
+        if (IsBeingDragged() && !GetFocusable()->IsBeingPressed())
+        {
+            OnDropped();
+        }
     }
 }
 
@@ -97,8 +103,7 @@ void UIDragDroppable::SetFocusable(UIFocusable *focusable)
 void UIDragDroppable::SetShowDragDropGameObject(bool showDragDropObject)
 {
     m_showDragDropGameObject = showDragDropObject;
-
-    if (!IsShowDragDropGameObject() && m_dragDropGameObject)
+    if (!GetShowDragDropGameObject() && m_dragDropGameObject)
     {
         GameObject::Destroy(m_dragDropGameObject);
     }
@@ -114,7 +119,7 @@ UIFocusable* UIDragDroppable::GetFocusable() const
     return p_focusable;
 }
 
-bool UIDragDroppable::IsShowDragDropGameObject() const
+bool UIDragDroppable::GetShowDragDropGameObject() const
 {
     return m_showDragDropGameObject;
 }
@@ -124,82 +129,33 @@ void UIDragDroppable::OnDragStarted()
     m_beingDragged = true;
 
     UICanvas *canvas = UICanvas::GetActive(this);
-    if (!canvas)
+    if (canvas)
     {
-        return;
+        canvas->NotifyDragStarted(this);
+        EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                            &IEventsDragDrop::OnDragStarted, this);
     }
 
-    canvas->NotifyDragStarted(this);
-    EventEmitter<IEventsDragDrop>::PropagateToListeners(
-                        &IEventsDragDrop::OnDragStarted, this);
-
-    /*
-    if (!m_dragDropFB)
+    if (GetShowDragDropGameObject())
     {
-        m_dragDropFB = new Framebuffer();
-        m_dragDropFB->CreateAttachmentTex2D(GL::Attachment::Color0,
-                                            GL::ColorFormat::RGBA_UByte8);
-        m_dragDropFB->CreateAttachmentTex2D(GL::Attachment::Depth,
-                                            GL::ColorFormat::Depth16);
+        if (!m_dragDropGameObject)
+        {
+            m_dragDropGameObject = GameObjectFactory::CreateUIGameObject();
+            m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
+            m_dragDropGameObject->Start();
 
-        m_dragDropTexture.Add(m_dragDropFB->GetAttachmentTex2D(GL::Attachment::Color0));
-        m_dragDropTexture.Get()->SetWrapMode(GL::WrapMode::Repeat);
-        m_dragDropTexture.Get()->SetAlphaCutoff(1.0f);
-        m_dragDropTexture.Get()->SetFilterMode(GL::FilterMode::Nearest);
+            p_dragDropImageRenderer = m_dragDropGameObject->
+                                      AddComponent<UIImageRenderer>();
+            p_dragDropImageRenderer->SetTint(Color::White.WithAlpha(0.5f));
+            p_dragDropImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
 
-        Vector2 fbSize = thisRT->GetViewportAARect().GetSize();
-        m_dragDropFB->Resize(fbSize.x, fbSize.y);
-    }*/
-
-    if (IsShowDragDropGameObject())
-    {
-        m_dragDropGameObject = GameObjectFactory::CreateUIGameObject();
-        m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
-        m_dragDropGameObject->Start();
-
+            if (canvas)
+            {
+                m_dragDropGameObject->SetParent(canvas->GetGameObject());
+            }
+        }
         MoveDragDropGameObjectTo( Input::GetMousePosition() );
-
-        p_dragDropImageRenderer = m_dragDropGameObject->AddComponent<UIImageRenderer>();
-        // p_dragDropImageRenderer->SetImageTexture(m_dragDropTexture.Get());
-        p_dragDropImageRenderer->SetTint(Color::White.WithAlpha(0.5f));
-        p_dragDropImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
-
-        m_dragDropGameObject->SetParent(canvas->GetGameObject());
     }
-
-    /*
-    // Save previous state
-    GL::Push( GL::Pushable::BLEND_STATES );
-    GL::Push( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
-
-    m_dragDropFB->Bind();
-
-    Camera *cam = GEngine::GetActiveRenderingCamera();
-    GBuffer *gbuffer = GEngine::GetActiveRenderingCamera()->GetGBuffer();
-    AARect rtRectNDC(GetGameObject()->GetRectTransform()->GetViewportAARectNDC());
-    m_dragDropFB->Resize(gbuffer->GetWidth(), gbuffer->GetHeight());
-
-    GL::ReadBuffer( GBuffer::AttColor );
-    GL::DrawBuffers( {GL::Attachment::Color0} );
-    GL::ClearColorBuffer(Color::Zero);
-    GL::ClearDepthBuffer(1.0f);
-    GL::ClearStencilBuffer(0);
-
-    Vector2 rtSize = rtRectNDC.GetSize();
-    Vector2 rtOri = rtRectNDC.GetMinXMinY() * 0.5f + 0.5f;
-    Vector2 rtOriInvY = Vector2(rtOri.x, rtOri.y);
-    p_dragDropImageRenderer->GetActiveMaterial()->SetAlbedoUvOffset( rtOriInvY );
-    p_dragDropImageRenderer->GetActiveMaterial()->SetAlbedoUvMultiply( rtSize * 0.5f );
-
-    GL::BlendFuncSeparate(GL::BlendFactor::SrcAlpha,
-                          GL::BlendFactor::OneMinusSrcAlpha,
-                          GL::BlendFactor::One,
-                          GL::BlendFactor::OneMinusSrcAlpha);
-    GetGameObject()->Render(RenderPass::Canvas);
-
-    GL::Pop( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
-    GL::Pop( GL::Pushable::BLEND_STATES );
-    */
 }
 
 void UIDragDroppable::OnDragUpdate()
@@ -221,6 +177,10 @@ void UIDragDroppable::OnDropped()
         {
             EventEmitter<IEventsDragDrop>::PropagateToListeners(
                                 &IEventsDragDrop::OnDrop, this, true);
+            if (UICanvas *canvas = UICanvas::GetActive(this))
+            {
+                canvas->NotifyDragStopped(this);
+            }
 
             GameObject::Destroy(m_dragDropGameObject);
             m_dragDropGameObject = nullptr;
@@ -234,11 +194,11 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
-    if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
-    {
-        OnDragStarted();
-        return UIEventResult::INTERCEPT;
-    }
+    // if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
+    // {
+    //     OnDragStarted();
+    //     return UIEventResult::INTERCEPT;
+    // }
     return UIEventResult::IGNORE;
 }
 

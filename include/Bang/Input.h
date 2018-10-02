@@ -8,6 +8,7 @@
 
 #include "Bang/Key.h"
 #include "Bang/DPtr.h"
+#include "Bang/Time.h"
 #include "Bang/UMap.h"
 #include "Bang/Array.h"
 #include "Bang/AARect.h"
@@ -39,7 +40,7 @@ struct InputEvent
     KeyModifiers keyModifiers = KeyModifier::NONE;
     MouseButton mouseButton   = MouseButton::NONE;
     bool autoRepeat           = false;
-    float timestampSecs       = 0;
+    Time timestamp;
     Vector2i mousePosWindow   = Vector2i::Zero;
     Vector2 wheelDelta        = Vector2::Zero;
 
@@ -132,11 +133,11 @@ public:
     static Input* GetActive();
 
 private:
-    static constexpr float DoubleClickMaxSeconds = 0.25f;
+    static const Time DoubleClickMaxTime;
 
     Context m_context;
 
-    float m_lastMouseDownTimestamp = 0;
+    Time m_lastMouseDownTimestamp;
     bool m_isMouseWrapping         = false;
     bool m_isADoubleClick          = false;
     bool m_lockMouseMovement       = false;

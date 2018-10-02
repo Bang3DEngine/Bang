@@ -6,7 +6,6 @@ USING_NAMESPACE_BANG
 
 TimeSingleton::TimeSingleton()
 {
-    m_initialTime = GetNow();
 }
 
 Time TimeSingleton::GetNow()
@@ -17,14 +16,24 @@ Time TimeSingleton::GetNow()
     return now;
 }
 
+Time TimeSingleton::GetInit()
+{
+    return TimeSingleton::GetInstance()->m_initialTime;
+}
+
 Time TimeSingleton::GetEllapsed()
 {
-    return TimeSingleton::GetNow() - TimeSingleton::GetInstance()->m_initialTime;
+    return TimeSingleton::GetNow() - TimeSingleton::GetInit();
 }
 
 Time TimeSingleton::GetDeltaTime()
 {
     return Time::GetNow() - TimeSingleton::GetInstance()->m_deltaTimeReference;
+}
+
+void TimeSingleton::SetInitTime(Time time)
+{
+    TimeSingleton::GetInstance()->m_initialTime = time;
 }
 
 void TimeSingleton::SetDeltaTimeReferenceToNow()

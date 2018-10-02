@@ -31,20 +31,19 @@ public:
 
     bool IsBeingDragged() const;
     UIFocusable *GetFocusable() const;
-    bool IsShowDragDropGameObject() const;
+    bool GetShowDragDropGameObject() const;
 
 private:
     static const Time DragInitTime;
 
     UIFocusable *p_focusable = nullptr;
 
-    bool m_beingPressed = false;
+    Time m_pressTime;
     bool m_beingDragged = false;
     bool m_showDragDropGameObject = true;
-    Time m_timeSinceMouseIsDown;
     Vector2i m_dragGrabOffset = Vector2i::Zero;
 
-    RH<Texture2D> m_dragDropTexture;
+    Time m_dragStartTime;
     GameObject *m_dragDropGameObject = nullptr;
     UIImageRenderer *p_dragDropImageRenderer = nullptr;
 

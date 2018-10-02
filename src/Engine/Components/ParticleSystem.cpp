@@ -488,6 +488,8 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     ParticleData &particleData = m_particlesData[i];
     particleData.position = GetParticleInitialPosition();
     particleData.velocity = GetParticleInitialVelocity();
+    particleData.prevPosition = particleData.position - particleData.velocity;
+    particleData.prevDeltaTimeSecs = 1.0f;
     particleData.totalLifeTime = GetLifeTime().GenerateRandom();
     particleData.remainingLifeTime = particleData.totalLifeTime;
     particleData.remainingStartTime = GetStartTime().GenerateRandom();
@@ -516,33 +518,10 @@ void ParticleSystem::UpdateParticleData(uint i,
             float lifeTimePercent = 1.0f - (particleData.remainingLifeTime /
                                             particleData.totalLifeTime);
 
+            // Render related
             Color pColor = Color::Lerp(particleData.startColor,
                                        particleData.endColor,
                                        lifeTimePercent);
-
-            constexpr float pMass = 1.0f;
-
-            const Vector3 pPrevPos  = particleData.position;
-            Vector3 pPosition = particleData.position;
-            Vector3 pVelocity = particleData.velocity;
-            Vector3 pForce    = particleData.force;
-            Vector3 pAcc      = (pForce / pMass);
-
-            pPosition += pVelocity * dt;
-            pVelocity += pAcc * dt;
-
-            if (GetComputeCollisions() && sceneColliders.Size() >= 1)
-            {
-                Vector3 pPositionNoInt = pPosition;
-                Vector3 pVelocityNoInt = pVelocity;
-                for (Collider *collider : sceneColliders)
-                {
-                    CollideParticle(collider,
-                                    pPrevPos, pPositionNoInt, pVelocityNoInt,
-                                    &pPosition, &pVelocity);
-                }
-            }
-
             int animationFrame;
             {
                 float passedLifeTime = (particleData.totalLifeTime -
@@ -552,11 +531,39 @@ void ParticleSystem::UpdateParticleData(uint i,
                 animationFrame = animationFrame % (sheetSize.x * sheetSize.y);
             }
 
-            particleData.position  = pPosition;
-            particleData.velocity  = pVelocity;
-            m_particlesVBOData[i].position = pPosition;
-            m_particlesVBOData[i].size = particleData.size;
-            m_particlesVBOData[i].color = pColor;
+            // Physics related
+            const Vector3 pPrevPos = particleData.position;
+            StepParticlePositionAndVelocity(&particleData, dt);
+            if (GetComputeCollisions() && sceneColliders.Size() >= 1)
+            {
+                Vector3 posAfterCollision             = particleData.position;
+                Vector3 velocityAfterCollision        = particleData.velocity;
+                const Vector3 pPositionWithoutCollide = particleData.position;
+                const Vector3 pVelocityWithoutCollide = particleData.velocity;
+                for (Collider *collider : sceneColliders)
+                {
+                    CollideParticle(collider,
+                                    pPrevPos,
+                                    pPositionWithoutCollide,
+                                    pVelocityWithoutCollide,
+                                    &posAfterCollision,
+                                    &velocityAfterCollision);
+                }
+
+                if (posAfterCollision != pPositionWithoutCollide)
+                {
+                    particleData.prevPosition = posAfterCollision -
+                                                (velocityAfterCollision * dt);
+                }
+
+                particleData.position = posAfterCollision;
+                particleData.velocity = velocityAfterCollision;
+            }
+            particleData.prevDeltaTimeSecs = dt;
+
+            m_particlesVBOData[i].position       = particleData.position;
+            m_particlesVBOData[i].size           = particleData.size;
+            m_particlesVBOData[i].color          = pColor;
             m_particlesVBOData[i].animationFrame = animationFrame;
         }
         else
@@ -568,6 +575,46 @@ void ParticleSystem::UpdateParticleData(uint i,
     {
         particleData.remainingStartTime -= dt;
     }
+}
+
+void ParticleSystem::StepParticlePositionAndVelocity(ParticleData *pData,
+                                                     float dt)
+{
+    constexpr float pMass       = 1.0f;
+    const Vector3 pPrevPrevPos  = pData->prevPosition;
+    const Vector3 pPrevPos      = pData->position;
+    const Vector3 pPrevVelocity = pData->velocity;
+    const Vector3 pForce        = pData->force;
+    const Vector3 pAcc          = (pForce / pMass);
+
+    Vector3 pNewPosition = Vector3::Zero;
+    Vector3 pNewVelocity = Vector3::Zero;
+    switch (GetPhysicsStepMode())
+    {
+        case ParticlePhysicsStepMode::EULER:
+            pNewPosition = pPrevPos + (pPrevVelocity * dt);
+            pNewVelocity = pPrevVelocity + (pAcc * dt);
+        break;
+
+        case ParticlePhysicsStepMode::EULER_SEMI:
+            pNewVelocity = pPrevVelocity + (pAcc * dt);
+            pNewPosition = pPrevPos + (pNewVelocity * dt);
+        break;
+
+        case ParticlePhysicsStepMode::VERLET:
+        {
+            float timeStepRatio = (dt / pData->prevDeltaTimeSecs);
+            pNewPosition = pPrevPos +
+                           timeStepRatio * (pPrevPos - pPrevPrevPos) +
+                           (pAcc * (dt*dt));
+            pNewVelocity = (pNewPosition - pPrevPos) / dt;
+        }
+        break;
+    }
+
+    pData->position     = pNewPosition;
+    pData->velocity     = pNewVelocity;
+    pData->prevPosition = pPrevPos;
 }
 
 void ParticleSystem::CollideParticle(Collider *collider,
@@ -911,11 +958,6 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
         SetNumParticles( metaNode.Get<uint>("NumParticles") );
     }
 
-    if (metaNode.Contains("ParticleSize"))
-    {
-        SetStartTime( metaNode.Get<ComplexRandom>("ParticleSize") );
-    }
-
     if (metaNode.Contains("GenerationShape"))
     {
         SetGenerationShape(
@@ -970,7 +1012,7 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Mesh", GetMesh() ? GetMesh()->GetGUID() : GUID::Empty());
     metaNode->Set("LifeTime", GetLifeTime());
     metaNode->Set("StartTime", GetStartTime());
-    metaNode->Set("StartSize", GetStartTime());
+    metaNode->Set("StartSize", GetStartSize());
     metaNode->Set("AnimationSpeed", GetAnimationSpeed());
     metaNode->Set("AnimationSheetSize", GetAnimationSheetSize());
     metaNode->Set("Texture", GetTexture() ? GetTexture()->GetGUID() : GUID::Empty());
@@ -978,7 +1020,6 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("ParticleRenderMode", GetParticleRenderMode());
     metaNode->Set("StartColor", GetStartColor());
     metaNode->Set("EndColor", GetEndColor());
-    metaNode->Set("ParticleSize", GetStartSize());
     metaNode->Set("NumParticles", GetNumParticles());
     metaNode->Set("GenerationShape", GetGenerationShape());
     metaNode->Set("GenerationShapeBoxSize", GetGenerationShapeBoxSize());

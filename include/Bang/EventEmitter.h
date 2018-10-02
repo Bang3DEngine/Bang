@@ -24,6 +24,15 @@ public:
     void ClearDeletedListeners();
 
     template<class TFunction, class... Args>
+    void PropagateToArray(const Array<EventListener<T>*> &array,
+                          const TFunction &func,
+                          const Args&... args) const;
+
+    void PropagateToArrayFunctor(
+                const Array<EventListener<T>*> &array,
+                std::function<void(EventListener<T>*)> listenerCall) const;
+
+    template<class TFunction, class... Args>
     void PropagateToListeners(const TFunction &func, const Args&... args) const;
 
     template<class TResult, class TFunction, class... Args>
@@ -41,9 +50,6 @@ private:
     bool m_emitEvents = true;
     mutable int m_iterationDepth = 0;
     Array<EventListener<T>*> m_listeners;
-
-    void PropagateToListeners_(
-                std::function<void(EventListener<T>*)> listenerCall) const;
 };
 
 NAMESPACE_BANG_END

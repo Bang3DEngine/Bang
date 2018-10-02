@@ -771,9 +771,6 @@ void GEngine::Render(Renderer *rend)
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
         }
 
-        ASSERT( GL::IsBound(GetActiveRenderingCamera()->GetGBuffer()) ||
-                GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) > 0 );
-
         // Render with the renderer!
         rend->Bind();
 

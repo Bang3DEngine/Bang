@@ -11,11 +11,12 @@
 
 USING_NAMESPACE_BANG
 
-constexpr float Input::DoubleClickMaxSeconds;
+const Time Input::DoubleClickMaxTime = Time::Seconds(0.25f);
 
 Input::Input()
 {
     Input::StartTextInput();
+    m_lastMouseDownTimestamp.SetNanos(0);
 }
 
 Input::~Input()
@@ -164,13 +165,13 @@ void Input::ProcessMouseDownEventInfo(const InputEvent &iev)
     m_isADoubleClick = false; // Reset double click
 
     m_mouseInfo.Add(mb, ButtonInfo(up, true, true));
-    if ((iev.timestampSecs - m_lastMouseDownTimestamp) <= DoubleClickMaxSeconds)
+    if ((iev.timestamp - m_lastMouseDownTimestamp) <= DoubleClickMaxTime)
     {
         m_isADoubleClick = true;
     }
 
     m_lastClickMousePos = GetMousePosition();
-    m_lastMouseDownTimestamp = iev.timestampSecs;
+    m_lastMouseDownTimestamp = iev.timestamp;
 }
 
 void Input::ProcessMouseUpEventInfo(const InputEvent &iev)
@@ -248,8 +249,9 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
     bool enqueue = false;
     InputEvent inputEvent;
 
-    inputEvent.timestampSecs = event.key.timestamp / 1000.0f;
     inputEvent.mousePosWindow = Input::GetMousePositionWindowWithoutInvertY();
+    inputEvent.timestamp = Time::Millis(event.common.timestamp) +
+                           Time::GetInit();
 
     switch (event.type)
     {
@@ -268,9 +270,9 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
                 default:
                 break;
             }
-            inputEvent.autoRepeat   = event.key.repeat;
-            inputEvent.key          = SCAST<Key>(event.key.keysym.sym);
-            inputEvent.keyModifiers = SCAST<KeyModifiers>(event.key.keysym.mod);
+            inputEvent.autoRepeat    = event.key.repeat;
+            inputEvent.key           = SCAST<Key>(event.key.keysym.sym);
+            inputEvent.keyModifiers  = SCAST<KeyModifiers>(event.key.keysym.mod);
             enqueue = true;
         break;
 
@@ -689,7 +691,7 @@ void Input::Reset()
     m_isADoubleClick = m_lockMouseMovement = m_isMouseInside = false;
     m_lastMouseWheelDelta = Vector2::Zero;
     m_lastMousePosWindow = Vector2i(-1);
-    m_lastMouseDownTimestamp = 0.0f;
+    m_lastMouseDownTimestamp.SetNanos(0);
     m_inputText = "";
 
     m_keysUp.Clear();

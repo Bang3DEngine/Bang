@@ -390,43 +390,50 @@ void UICanvas::OnUpdate()
         Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
         if (Input::GetMouseButton(MouseButton::LEFT))
         {
-            p_ddBeingDragged->OnDragUpdate();
-            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
+            p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
+                              PropagateToArray(ddListeners,
+                                               &IEventsDragDrop::OnDragUpdate,
+                                               p_ddBeingDragged);
+            if (p_ddBeingDragged)
             {
-                if (ddListener->IsReceivingEvents())
-                {
-                    ddListener->OnDragUpdate(p_ddBeingDragged);
-                }
+                p_ddBeingDragged->OnDragUpdate();
             }
         }
         else
         {
-            for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
+            p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
+            PropagateToArrayFunctor(
+            ddListeners,
+            [&](EventListener<IEventsDragDrop>* ddListener)
             {
-                if (ddListener->IsReceivingEvents())
+                bool inside = false;
+                if (Component *comp = DCAST<Component*>(ddListener))
                 {
-                    bool inside = false;
-                    if (Component *comp = DCAST<Component*>(ddListener))
-                    {
-                        inside = UICanvas::IsMouseOver(comp->GetGameObject(), true);
-                    }
-                    else if (GameObject *go = DCAST<GameObject*>(ddListener))
-                    {
-                        inside = UICanvas::IsMouseOver(go, true);
-                    }
+                    inside = UICanvas::IsMouseOver(comp->GetGameObject(), true);
+                }
+                else if (GameObject *go = DCAST<GameObject*>(ddListener))
+                {
+                    inside = UICanvas::IsMouseOver(go, true);
+                }
+
+                if (p_ddBeingDragged)
+                {
                     ddListener->OnDrop(p_ddBeingDragged, inside);
                 }
+            });
+
+            if (p_ddBeingDragged)
+            {
+                p_ddBeingDragged->OnDropped();
+                p_ddBeingDragged = nullptr;
             }
-            p_ddBeingDragged->OnDropped();
-            p_ddBeingDragged = nullptr;
         }
     }
 }
 
 void UICanvas::InvalidateCanvas()
 {
-    Array<RectTransform*> rts = GetGameObject()->
-                                GetComponentsInDescendantsAndThis<RectTransform>();
+    auto rts = GetGameObject()->GetComponentsInDescendantsAndThis<RectTransform>();
     for (RectTransform *rt : rts)
     {
         rt->InvalidateTransform();
@@ -440,7 +447,6 @@ void UICanvas::SetFocus(UIFocusable *newFocusable_, FocusType focusType)
     {
         newFocusable = nullptr;
     }
-
 
     if (newFocusable != GetFocus())
     {
@@ -548,12 +554,9 @@ void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         }
     }
 
-    if (UIDragDroppable *dd = DCAST<UIDragDroppable*>(object))
+    if (object == p_ddBeingDragged)
     {
-        if (dd == p_ddBeingDragged)
-        {
-            p_ddBeingDragged = nullptr;
-        }
+        p_ddBeingDragged = nullptr;
     }
 }
 
@@ -651,8 +654,8 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
 {
     if (p_ddBeingDragged)
     {
-        p_ddBeingDragged->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
         p_ddBeingDragged->OnDropped();
+        p_ddBeingDragged->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
 
     p_ddBeingDragged = dragDroppable;
@@ -660,16 +663,21 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
     if (p_ddBeingDragged)
     {
         p_ddBeingDragged->EventEmitter<IEventsDestroy>::RegisterListener(this);
-    }
-
-    Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
-    for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
-    {
-        if (ddListener->IsReceivingEvents())
+        Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
+        for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
         {
-            ddListener->OnDragStarted(p_ddBeingDragged);
+            if (ddListener->IsReceivingEvents())
+            {
+                ddListener->OnDragStarted(p_ddBeingDragged);
+            }
         }
     }
+}
+
+void UICanvas::NotifyDragStopped(UIDragDroppable *dragDroppable)
+{
+    ASSERT(p_ddBeingDragged == dragDroppable);
+    p_ddBeingDragged = nullptr;
 }
 
 UIFocusable* UICanvas::GetFocus()

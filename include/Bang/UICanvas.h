@@ -46,6 +46,9 @@ public:
     bool IsMouseOver(const GameObject *go, bool recursive = false);
 
     void NotifyDragStarted(UIDragDroppable *dragDroppable);
+    void NotifyDragStopped(UIDragDroppable *dragDroppable);
+
+    Array<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -77,8 +80,6 @@ private:
 
     void RegisterForEvents(UIFocusable *focusable);
     void UnRegisterForEvents(UIFocusable *focusable);
-
-    Array<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,

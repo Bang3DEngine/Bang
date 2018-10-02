@@ -20,10 +20,12 @@ private:
     Time m_deltaTimeReference;
 
     static Time GetNow();
+    static Time GetInit();
     static Time GetEllapsed();
     static Time GetDeltaTime();
 
     static void SetDeltaTime(Time time);
+    static void SetInitTime(Time time);
 
     static TimeSingleton *GetInstance();
 

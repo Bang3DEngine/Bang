@@ -867,9 +867,11 @@ UITreeItemContainer::UITreeItemContainer()
     p_collapseButton->GetBorder()->SetVisible(false);
     p_collapseButton->GetBackground()->SetVisible(false);    
 
+    UIFocusable *focusable = AddComponent<UIFocusable>();
+
     p_dragDroppable = AddComponent<UIDragDroppable>();
     p_dragDroppable->SetShowDragDropGameObject(false);
-    p_dragDroppable->SetFocusable(nullptr);
+    p_dragDroppable->SetFocusable(focusable);
 
     p_indentSpacer->SetParent(this);
     p_collapseButton->GetGameObject()->SetParent(this);

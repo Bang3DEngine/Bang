@@ -204,7 +204,7 @@ Array<GameObject *> UILayoutManager::GetLayoutableChildrenList(GameObject *go)
     {
         UILayoutIgnorer *ltIgnorer = child->GetComponent<UILayoutIgnorer>();
         bool ignoreLayout = ltIgnorer ? ltIgnorer->IsIgnoreLayout() : false;
-        if (child->IsEnabled() &&
+        if (child->IsEnabledRecursively() &&
             child->HasComponent<ILayoutElement>() &&
             !ignoreLayout)
         {

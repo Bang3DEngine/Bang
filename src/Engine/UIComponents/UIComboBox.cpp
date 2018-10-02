@@ -257,7 +257,7 @@ void UIComboBox::ShowList()
 
 bool UIComboBox::IsListBeingShown() const
 {
-    return GetList()->GetGameObject()->IsEnabled();
+    return GetList()->GetGameObject()->IsEnabledRecursively();
 }
 
 bool UIComboBox::IsSelectedByIndex(int index) const
@@ -429,7 +429,7 @@ int UIComboBox::GetSelectedValuesForFlag() const
 
 bool UIComboBox::HasFocus() const
 {
-    return GetList()->GetGameObject()->IsEnabled();
+    return GetList()->GetGameObject()->IsEnabledRecursively();
 }
 
 UIComboBox *UIComboBox::CreateInto(GameObject *go)

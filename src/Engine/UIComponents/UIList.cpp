@@ -159,7 +159,7 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate,
                                      GetViewportAARectNDC() );
         for (GOItem *childItem : p_items)
         {
-            if (!childItem->IsActive())
+            if (!childItem->IsActiveRecursively())
             {
                 continue;
             }
@@ -445,7 +445,7 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
                         }
                     }
                     while (newSelectedIndex != GetSelectedIndex() &&
-                           !newSelectedItem->IsEnabled());
+                           !newSelectedItem->IsEnabledRecursively());
                 }
                 break;
 

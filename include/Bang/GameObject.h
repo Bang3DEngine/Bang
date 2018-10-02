@@ -60,8 +60,6 @@ public:
     static void Destroy(GameObject *gameObject);
     static void DestroyImmediate(GameObject *gameObject);
 
-    bool IsEnabled(bool recursive = false) const;
-
     void SetName(const String &m_name);
     const String& GetName() const;
 
@@ -165,7 +163,7 @@ public:
     bool IsChildOf(const GameObject *_parent, bool recursive = true) const;
 
     bool IsVisible() const;
-    bool IsVisible(bool recursive) const;
+    bool IsVisibleRecursively() const;
     bool IsDontDestroyOnLoad() const;
     AARect GetBoundingViewportRect(Camera *cam, bool includeChildren = true) const;
     AABox GetLocalAABBox(bool includeChildren = true) const;
@@ -220,8 +218,6 @@ protected:
     GameObject(const String &name = "GameObject");
     virtual ~GameObject();
 
-    virtual void PreUpdate();
-    virtual void BeforeChildrenUpdate();
     virtual void AfterChildrenUpdate();
     virtual void PostUpdate();
     virtual void BeforeRender();
@@ -239,8 +235,11 @@ private:
     Array<Component*> m_components;
 
     String m_name = "";
-    bool m_visible = true;
     bool m_dontDestroyOnLoad = false;
+
+    bool m_visible = true;
+    mutable bool m_visibleRecursively      = false;
+    mutable bool m_visibleRecursivelyValid = false;
 
     GameObject* p_parent = nullptr;
 
@@ -259,6 +258,7 @@ private:
     int m_componentsIterationDepth = 0;
     Array< ChildToAdd > m_childrenToAdd;
     Array< std::pair<Component*, int> > m_componentsToAdd;
+
     void TryToAddQueuedChildren();
     void TryToAddQueuedComponents();
     void TryToClearDeletedChildren();
@@ -268,7 +268,17 @@ private:
     void AddChild_(GameObject *child, int index, bool keepWorldTransform);
     void RemoveChild(GameObject *child);
 
+
     Component* AddComponent_(Component *c, int index);
+
+    // Object
+    bool CalculateEnabledRecursively() const override;
+    bool CalculateStartedRecursively() const override;
+    bool CalculateVisibleRecursively() const;
+    void OnEnabledRecursivelyInvalidated() override;
+    void OnStartedRecursivelyInvalidated() override;
+    void OnVisibleRecursivelyInvalidated();
+    void InvalidateVisibleRecursively();
 
     friend class Scene;
     friend class Prefab;

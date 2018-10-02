@@ -28,6 +28,8 @@ void Object::Start()
     {
         OnStart();
         m_started = true;
+        InvalidateStartedRecursively();
+
         EventEmitter<IEventsObject>::
                 PropagateToListeners(&IEventsObject::OnStarted, this);
     }
@@ -46,12 +48,34 @@ void Object::OnEnabled(Object *object)
     EventEmitter<IEventsObject>::
             PropagateToListeners(&IEventsObject::OnEnabled, object);
 }
+
 void Object::OnDisabled(Object *object)
 {
     EventEmitter<IEventsObject>::
             PropagateToListeners(&IEventsObject::OnDisabled, object);
 }
-void Object::OnDestroy() {}
+
+void Object::OnDestroy()
+{
+}
+
+void Object::InvalidateEnabledRecursively()
+{
+    if (m_enabledRecursivelyValid)
+    {
+        m_enabledRecursivelyValid = false;
+        OnEnabledRecursivelyInvalidated();
+    }
+}
+
+void Object::InvalidateStartedRecursively()
+{
+    if (m_startedRecursivelyValid)
+    {
+        m_startedRecursivelyValid = false;
+        OnStartedRecursivelyInvalidated();
+    }
+}
 
 void Object::PropagateObjectDestruction(Object *object)
 {
@@ -65,6 +89,16 @@ void Object::PropagateObjectDestruction(Object *object)
     }
 }
 
+void Object::OnEnabledRecursivelyInvalidated()
+{
+    // Empty
+}
+
+void Object::OnStartedRecursivelyInvalidated()
+{
+    // Empty
+}
+
 const ObjectId& Object::GetObjectId() const
 {
     return m_objectId;
@@ -75,6 +109,8 @@ void Object::SetEnabled(bool enabled)
     if (enabled != IsEnabled())
     {
         m_enabled = enabled;
+        InvalidateEnabledRecursively();
+
         if (IsEnabled())
         {
             OnEnabled(this);
@@ -94,10 +130,39 @@ bool Object::IsEnabled() const
 {
     return m_enabled;
 }
+
 bool Object::IsStarted() const
 {
     return m_started;
 }
+
+bool Object::IsActiveRecursively() const
+{
+    return IsActive() &&
+           IsEnabledRecursively() &&
+           IsStartedRecursively();
+}
+
+bool Object::IsEnabledRecursively() const
+{
+    if (!m_enabledRecursivelyValid)
+    {
+        m_enabledRecursively = CalculateEnabledRecursively();
+        m_enabledRecursivelyValid = true;
+    }
+    return m_enabledRecursively;
+}
+
+bool Object::IsStartedRecursively() const
+{
+    if (!m_startedRecursivelyValid)
+    {
+        m_startedRecursively = CalculateStartedRecursively();
+        m_startedRecursivelyValid = true;
+    }
+    return m_startedRecursively;
+}
+
 bool Object::IsWaitingToBeDestroyed() const
 {
     return m_waitingToBeDestroyed;
@@ -105,7 +170,7 @@ bool Object::IsWaitingToBeDestroyed() const
 
 void Object::CloneInto(ICloneable *clone) const
 {
-    Object *obj = Cast<Object*>(clone);
+    Object *obj = SCAST<Object*>(clone);
     obj->SetEnabled( IsEnabled() );
 }
 

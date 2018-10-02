@@ -299,7 +299,8 @@ void UICanvas::OnUpdate()
                             while (true)
                             {
                                 const uint nf = numFocusables;
-                                newFocusIndex = (newFocusIndex + (shift ? 1 : -1) + nf) % nf;
+                                newFocusIndex = (newFocusIndex +
+                                                 (shift ? 1 : -1) + nf) % nf;
                                 if (newFocusIndex == indexOfFocus)
                                 {
                                     break; // Complete loop
@@ -309,8 +310,8 @@ void UICanvas::OnUpdate()
                                 const bool isValid =
                                     newFocus->IsFocusEnabled() &&
                                     newFocus->GetConsiderForTabbing() &&
-                                    newFocus->GetGameObject()->IsVisible() &&
-                                    newFocus->IsEnabled(true);
+                                    newFocus->GetGameObject()->IsVisibleRecursively() &&
+                                    newFocus->IsEnabledRecursively();
                                 if (isValid)
                                 {
                                     break;
@@ -654,8 +655,8 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
 {
     if (p_ddBeingDragged)
     {
-        p_ddBeingDragged->OnDropped();
         p_ddBeingDragged->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+        p_ddBeingDragged->OnDropped();
     }
 
     p_ddBeingDragged = dragDroppable;
@@ -666,7 +667,7 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
         Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
         for (EventListener<IEventsDragDrop>* ddListener : ddListeners)
         {
-            if (ddListener->IsReceivingEvents())
+            if (ddListener->IsReceivingEvents() && p_ddBeingDragged)
             {
                 ddListener->OnDragStarted(p_ddBeingDragged);
             }
@@ -860,11 +861,13 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
     for (auto it = children.RBegin(); it != children.REnd(); ++it)
     {
         GameObject *child = *it;
-        if (child->IsActive())
+        if (child->IsActiveRecursively())
         {
             UIRectMask *rectMask = child->GetComponent<UIRectMask>();
             AARecti maskedRectVP = maskRectStack->top();
-            if (rectMask && rectMask->IsActive() && rectMask->IsMasking())
+            if (rectMask &&
+                rectMask->IsActiveRecursively() &&
+                rectMask->IsMasking())
             {
                 AARecti childRectVP(child->GetRectTransform()->GetViewportAARect());
                 maskedRectVP = AARecti::Intersection(maskedRectVP, childRectVP);

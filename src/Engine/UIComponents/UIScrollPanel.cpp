@@ -383,7 +383,7 @@ void UIScrollPanel::HandleScrollAreaRectTransform()
     // Set margins to make room for the vertical scroll bar
     UIScrollBar *vScrollBar = GetVerticalScrollBar();
     GameObject *vScrollBarGo = vScrollBar->GetGameObject();
-    int vScrollBarThickness = (vScrollBarGo->IsEnabled() ?
+    int vScrollBarThickness = (vScrollBarGo->IsEnabledRecursively() ?
                                vScrollBar->GetThickness() : 0 );
     if (GetVerticalScrollBarSide() == HorizontalSide::RIGHT)
     {
@@ -400,7 +400,7 @@ void UIScrollPanel::HandleScrollAreaRectTransform()
     UIScrollBar *hScrollBar = GetHorizontalScrollBar();
     GameObject *hScrollBarGo = hScrollBar->GetGameObject();
     RectTransform *vScrollBarRT = vScrollBarGo->GetRectTransform();
-    int hScrollBarThickness = (hScrollBarGo->IsEnabled() ?
+    int hScrollBarThickness = (hScrollBarGo->IsEnabledRecursively() ?
                                hScrollBar->GetThickness() : 0 );
     if (GetHorizontalScrollBarSide() == VerticalSide::BOT)
     {

@@ -105,7 +105,7 @@ List<GameObject*> Light::GetActiveSceneShadowCasters() const
                         scene->GetComponentsInDescendantsAndThis<Renderer>();
     for (Renderer *rend : renderers )
     {
-        if (rend->IsActive() && rend->GetCastsShadows())
+        if (rend->IsActiveRecursively() && rend->GetCastsShadows())
         {
             bool isValidShadowCaster = false;
             if (const Material *mat = rend->GetActiveMaterial())

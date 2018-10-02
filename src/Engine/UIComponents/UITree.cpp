@@ -183,7 +183,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
             GameObject *lastItem = nullptr;
             for (GameObject *item : GetUIList()->GetItems())
             {
-                if (item->IsActive())
+                if (item->IsActiveRecursively())
                 {
                     lastItem = item;
                 }
@@ -624,7 +624,10 @@ void UITree::GetMousePositionInTree(
                 GameObject *itChildItemCont = GetUIList()->GetItems()[i];
                 UITreeItemContainer *childItemCont =
                                  SCAST<UITreeItemContainer*>(itChildItemCont);
-                if (!childItemCont->IsActive()) { continue; }
+                if (!childItemCont->IsActiveRecursively())
+                {
+                    continue;
+                }
 
                 RectTransform *childItemContRT = childItemCont->GetRectTransform();
                 AARect childItemContRect = childItemContRT->GetViewportAARect();

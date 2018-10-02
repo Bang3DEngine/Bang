@@ -54,7 +54,6 @@ void SceneManager::OnNewFrame(Scene *scene, bool update)
         scene->Start();
         if (update)
         {
-            scene->PreUpdate();
             scene->Update();
             Physics::GetInstance()->UpdateFromTransforms(scene);
             Physics::GetInstance()->StepIfNeeded(scene);

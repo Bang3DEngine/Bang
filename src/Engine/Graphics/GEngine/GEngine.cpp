@@ -146,7 +146,7 @@ void GEngine::ApplyStenciledDeferredLightsToGBuffer(GameObject *lightsContainer,
     const Array<Light*> &lights = m_lightsCache.GetGatheredArray(lightsContainer);
     for (Light *light : lights)
     {
-        if (!light || !light->IsEnabled(true))
+        if (!light || !light->IsEnabledRecursively())
         {
             continue;
         }
@@ -169,7 +169,7 @@ void GEngine::RetrieveForwardRenderingInformation(GameObject *go)
     const Array<Light*> &lights = m_lightsCache.GetGatheredArray(go);
     for (Light *light : lights)
     {
-        if (light->IsActive())
+        if (light->IsActiveRecursively())
         {
             uint lightType = 0;
             Transform *lightTR = light->GetGameObject()->GetTransform();
@@ -474,26 +474,22 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
 
 bool GEngine::CanRenderNow(Renderer *rend, RenderPass renderPass) const
 {
-    if (!rend->IsVisible())
+    if (rend->GetGameObject()->IsVisibleRecursively() && rend->IsVisible())
     {
-        return false;
+        Material *mat = GetReplacementMaterial() ? GetReplacementMaterial() :
+                                                   rend->GetActiveMaterial();
+        return (mat && (mat->GetRenderPass() == renderPass));
     }
-
-    Material *mat = GetReplacementMaterial() ? GetReplacementMaterial() :
-                                               rend->GetActiveMaterial();
-    return (mat && (mat->GetRenderPass() == renderPass));
+    return false;
 }
 
 void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 {
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
-    // Set state, bind and draw
     sp->Bind();
-    sp->SetVector2("B_AlbedoUvOffset",           Vector2::Zero, false);
-    sp->SetVector2("B_AlbedoUvMultiply",          Vector2::One, false);
-
-    RenderViewportPlane(); // Renduurrr
+    BANG_UNUSED(destRectMask);
+    RenderViewportPlane();
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
@@ -629,31 +625,25 @@ GEngine* GEngine::GetInstance()
 
 void GEngine::RenderShadowMaps(GameObject *go)
 {
-    if (go->IsActive())
+    const Array<Light*> &lights = m_lightsCache.GetGatheredArray(go);
+    for (Light *light : lights)
     {
-        const Array<Light*> &lights = m_lightsCache.GetGatheredArray(go);
-        for (Light *light : lights)
+        if (light->IsActiveRecursively())
         {
-            if (light->IsEnabled(true))
-            {
-                light->RenderShadowMaps();
-            }
+            light->RenderShadowMaps();
         }
     }
 }
 
 void GEngine::RenderReflectionProbes(GameObject *go)
 {
-    if (go->IsActive())
+    const Array<ReflectionProbe*> &reflProbes =
+          m_reflProbesCache.GetGatheredArray(go);
+    for (ReflectionProbe *reflProbe : reflProbes)
     {
-        const Array<ReflectionProbe*> &reflProbes =
-              m_reflProbesCache.GetGatheredArray(go);
-        for (ReflectionProbe *reflProbe : reflProbes)
+        if (reflProbe->IsActiveRecursively())
         {
-            if (reflProbe->IsEnabled(true))
-            {
-                reflProbe->RenderReflectionProbe();
-            }
+            reflProbe->RenderReflectionProbe();
         }
     }
 }

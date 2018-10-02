@@ -471,7 +471,7 @@ ReflectionProbe *ReflectionProbe::GetClosestReflectionProbe(Renderer *renderer)
             ge->GetReflectionProbesFor(renderer->GetGameObject()->GetScene());
     for (ReflectionProbe *reflProbe : reflProbes)
     {
-        if (reflProbe->IsActive())
+        if (reflProbe->IsActiveRecursively())
         {
             Vector3 reflProbePos = reflProbe->GetGameObject()->
                                    GetTransform()->GetPosition();

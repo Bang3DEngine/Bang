@@ -36,8 +36,6 @@ public:
 
     GameObject *GetGameObject() const;
 
-    bool IsEnabled(bool recursive = false) const;
-
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
 
@@ -54,8 +52,6 @@ protected:
 
     virtual void OnPreStart() override;
     virtual void OnStart() override;
-    virtual void OnPreUpdate();
-    virtual void OnBeforeChildrenUpdate();
     virtual void OnUpdate();
     virtual void OnAfterChildrenUpdate();
     virtual void OnPostUpdate();
@@ -65,8 +61,6 @@ protected:
     virtual void OnAfterChildrenRender(RenderPass renderPass);
     virtual void OnDestroy() override;
 
-    void PreUpdate();
-    void BeforeChildrenUpdate();
     void Update();
     void AfterChildrenUpdate();
     void PostUpdate();
@@ -74,15 +68,19 @@ protected:
     void BeforeChildrenRender(RenderPass renderPass);
     void Render(RenderPass renderPass);
     void AfterChildrenRender(RenderPass renderPass);
-    void SetGameObjectForced(GameObject *gameObject);
 
     virtual void OnGameObjectChanged(GameObject *previousGameObject,
                                      GameObject *newGameObject);
-
     virtual bool CanBeRepeatedInGameObject() const;
+
+    // Object
+    bool CalculateEnabledRecursively() const override;
+    bool CalculateStartedRecursively() const override;
 
 private:
     GameObject *p_gameObject = nullptr;
+
+    void SetGameObjectForced(GameObject *gameObject);
 
     friend class GameObject;
     friend class PxSceneContainer;

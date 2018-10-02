@@ -158,7 +158,7 @@ void Physics::Step(Scene *scene, Time simulationTime)
                 case PhysicsObject::Type::RIGIDBODY:
                 {
                     RigidBody *rb = SCAST<RigidBody*>(phObj);
-                    if (rb->IsActive())
+                    if (rb->IsActiveRecursively())
                     {
                         PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
                         if (Transform *tr = go->GetTransform())

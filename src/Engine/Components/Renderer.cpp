@@ -176,7 +176,10 @@ void Renderer::SetReceivesShadows(bool receivesShadows)
     }
 }
 
-bool Renderer::IsVisible() const { return m_visible; }
+bool Renderer::IsVisible() const
+{
+    return m_visible;
+}
 
 bool Renderer::GetDepthMask() const
 {

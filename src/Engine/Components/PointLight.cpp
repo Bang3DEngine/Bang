@@ -121,7 +121,7 @@ void PointLight::RenderShadowMaps_()
     const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
     for (GameObject *shadowCaster : shadowCasters)
     {
-        if (shadowCaster->IsEnabled(true))
+        if (shadowCaster->IsActiveRecursively())
         {
             AABox shadowCasterAABoxWorld = shadowCaster->GetAABBoxWorld(false);
             Vector3 closestPointInAABox = shadowCasterAABoxWorld.

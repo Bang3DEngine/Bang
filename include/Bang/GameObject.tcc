@@ -292,20 +292,8 @@ bool CanEventBePropagated(const T& x)
 
     const Object *object = DCAST<const Object*>(x);
     return !object ||
-           (object->IsEnabled() &&
+           (object->IsEnabledRecursively() &&
            !object->IsWaitingToBeDestroyed());
-}
-
-
-template<class TListener, class TListenerInnerT, class TReturn, class... Args>
-void GameObject::PropagateSingle(TReturn TListenerInnerT::*func,
-                                 TListener *receiver,
-                                 const Args&... args)
-{
-    if (CanEventBePropagated(receiver))
-    {
-        (receiver->*func)(args...);
-    }
 }
 
 template<class TListener, class TListenerInnerT, class TReturn, class... Args>

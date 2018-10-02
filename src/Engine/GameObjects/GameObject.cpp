@@ -49,29 +49,11 @@ void GameObject::Start()
     Object::Start();
 }
 
-void GameObject::PreUpdate()
-{
-    if (IsActive())
-    {
-        PropagateToComponents(&Component::PreUpdate);
-        PropagateToChildren(&GameObject::PreUpdate);
-    }
-}
-
-void GameObject::BeforeChildrenUpdate()
-{
-    if (IsActive())
-    {
-        PropagateToComponents(&Component::BeforeChildrenUpdate);
-    }
-}
-
 void GameObject::Update()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::Update);
-        BeforeChildrenUpdate();
         PropagateToChildren(&GameObject::Update);
         AfterChildrenUpdate();
     }
@@ -79,7 +61,7 @@ void GameObject::Update()
 
 void GameObject::AfterChildrenUpdate()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnAfterChildrenUpdate);
     }
@@ -87,7 +69,7 @@ void GameObject::AfterChildrenUpdate()
 
 void GameObject::PostUpdate()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnPostUpdate);
         PropagateToChildren(&GameObject::PostUpdate);
@@ -96,7 +78,7 @@ void GameObject::PostUpdate()
 
 void GameObject::BeforeRender()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnBeforeRender);
         PropagateToChildren(&GameObject::BeforeRender);
@@ -105,7 +87,7 @@ void GameObject::BeforeRender()
 
 void GameObject::Render(RenderPass renderPass, bool renderChildren)
 {
-    if (IsActive() && IsVisible())
+    if (IsActiveRecursively() && IsVisibleRecursively())
     {
         PropagateToComponents(&Component::OnRender, renderPass);
         if (renderChildren)
@@ -118,8 +100,8 @@ void GameObject::Render(RenderPass renderPass, bool renderChildren)
 }
 
 void GameObject::BeforeChildrenRender(RenderPass renderPass)
-{   
-    if (IsActive())
+{
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnBeforeChildrenRender, renderPass);
     }
@@ -127,7 +109,7 @@ void GameObject::BeforeChildrenRender(RenderPass renderPass)
 
 void GameObject::AfterChildrenRender(RenderPass renderPass)
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnAfterChildrenRender, renderPass);
     }
@@ -190,6 +172,10 @@ void GameObject::AddChild_(GameObject *child,
         GameObject *oldParent = child->GetParent();
 
         child->p_parent = this;
+        child->InvalidateStartedRecursively();
+        child->InvalidateEnabledRecursively();
+        child->InvalidateVisibleRecursively();
+
         if (keepWorldTransform && GetTransform() && child->GetTransform())
         {
             child->GetTransform()->FillFromMatrix(GetTransform()->
@@ -200,6 +186,7 @@ void GameObject::AddChild_(GameObject *child,
         index = Math::Clamp(index, 0, m_children.Size());
         m_children.Insert(child, index);
         ChildAdded(child, this);
+
 
         EventEmitter<IEventsChildren>::
                PropagateToListeners(&IEventsChildren::OnParentChanged,
@@ -238,6 +225,15 @@ void GameObject::RemoveChild(GameObject *child)
     }
 }
 
+void GameObject::InvalidateVisibleRecursively()
+{
+    if (m_visibleRecursivelyValid)
+    {
+        m_visibleRecursivelyValid = false;
+        OnVisibleRecursivelyInvalidated();
+    }
+}
+
 Component *GameObject::AddComponent_(Component *component, int index_)
 {
     ASSERT(m_componentsIterationDepth == 0);
@@ -268,6 +264,70 @@ Component *GameObject::AddComponent_(Component *component, int index_)
                     &IEventsComponent::OnComponentAdded, component, index);
     }
     return component;
+}
+
+bool GameObject::CalculateEnabledRecursively() const
+{
+    return IsEnabled() &&
+           (GetParent() ? GetParent()->IsEnabledRecursively() : true);
+}
+
+bool GameObject::CalculateStartedRecursively() const
+{
+    return IsStarted() &&
+           (GetParent() ? GetParent()->IsStartedRecursively() : true);
+}
+
+bool GameObject::CalculateVisibleRecursively() const
+{
+    return IsVisible() &&
+            (GetParent() ? GetParent()->IsVisibleRecursively() : true);
+}
+
+void GameObject::OnEnabledRecursivelyInvalidated()
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (child)
+        {
+           child->InvalidateEnabledRecursively();
+        }
+    }
+
+    for (Component *comp : GetComponents())
+    {
+        if (comp)
+        {
+            comp->InvalidateEnabledRecursively();
+        }
+    }
+}
+
+void GameObject::OnStartedRecursivelyInvalidated()
+{
+    for (GameObject *child : GetChildren())
+    {
+        if (child)
+        {
+           child->InvalidateStartedRecursively();
+        }
+    }
+
+    for (Component *comp : GetComponents())
+    {
+        if (comp)
+        {
+            comp->InvalidateStartedRecursively();
+        }
+    }
+}
+
+void GameObject::OnVisibleRecursivelyInvalidated()
+{
+    for (GameObject *child : GetChildren())
+    {
+        child->InvalidateVisibleRecursively();
+    }
 }
 
 void GameObject::RemoveComponent(Component *component)
@@ -407,19 +467,6 @@ void GameObject::Destroy(GameObject *gameObject)
     }
 }
 
-bool GameObject::IsEnabled(bool recursive) const
-{
-    if (!recursive)
-    {
-        return Object::IsEnabled();
-    }
-    else
-    {
-        return IsEnabled(false) &&
-               (!GetParent() || GetParent()->IsEnabled(true));
-    }
-}
-
 const Array<Component *> &GameObject::GetComponents() const
 {
     return m_components;
@@ -548,8 +595,7 @@ GameObject *GameObject::FindInChildrenAndThis(const String &name, bool recursive
         }
         else if (recursive)
         {
-            GameObject *found = child->FindInChildren(name, true);
-            if (found)
+            if ( GameObject *found = child->FindInChildren(name, true))
             {
                 return found;
             }
@@ -600,6 +646,8 @@ void GameObject::SetVisible(bool visible)
     if (visible != IsVisible())
     {
         m_visible = visible;
+        InvalidateVisibleRecursively();
+
         EventEmitter<IEventsGameObjectVisibilityChanged>::PropagateToListeners(
             &IEventsGameObjectVisibilityChanged::OnVisibilityChanged, this);
     }
@@ -671,8 +719,7 @@ bool GameObject::IsChildOf(const GameObject *parent, bool recursive) const
 
     if (recursive)
     {
-        return IsChildOf(parent, false) ||
-               GetParent()->IsChildOf(parent, true);
+        return IsChildOf(parent, false) || GetParent()->IsChildOf(parent, true);
     }
     return GetParent() == parent;
 }
@@ -682,14 +729,14 @@ bool GameObject::IsVisible() const
     return m_visible;
 }
 
-bool GameObject::IsVisible(bool recursive) const
+bool GameObject::IsVisibleRecursively() const
 {
-    if (recursive)
+    if (!m_visibleRecursivelyValid)
     {
-        return IsVisible(false) &&
-              (!GetParent() || GetParent()->IsVisible(recursive));
+        m_visibleRecursively = CalculateVisibleRecursively();
+        m_visibleRecursivelyValid = true;
     }
-    return IsVisible();
+    return m_visibleRecursively;
 }
 
 void GameObject::SetParent(GameObject *newParent,
@@ -702,6 +749,10 @@ void GameObject::SetParent(GameObject *newParent,
         {
             GetParent()->RemoveChild(this);
             p_parent = nullptr;
+
+            InvalidateStartedRecursively();
+            InvalidateEnabledRecursively();
+            InvalidateVisibleRecursively();
         }
 
         if (newParent)
@@ -752,39 +803,41 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam, bool includeChildren) co
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
 {
     AABox aabBox = AABox::Empty;
-    Array<Renderer*> rends = GetComponents<Renderer>();
-    for (Renderer *rend : rends)
+    if (IsEnabledRecursively() && IsVisibleRecursively())
     {
-        if (rend && rend->IsEnabled() && rend->GetActiveMaterial())
+        Array<Renderer*> rends = GetComponents<Renderer>();
+        for (Renderer *rend : rends)
         {
-            RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
-            if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
+            if (rend && rend->IsEnabledRecursively() && rend->GetActiveMaterial())
             {
-                const AABox rendAABox = rend->GetAABBox();
-                aabBox = AABox::Union(aabBox, rendAABox);
-            }
-        }
-    }
-
-    if (includeChildren)
-    {
-        for (GameObject *child : GetChildren())
-        {
-            AABox aabBoxChild = child->GetLocalAABBox(true);
-            if (aabBoxChild != AABox::Empty)
-            {
-                Matrix4 mat;
-                const Transform *childT = child->GetTransform();
-                if (childT)
+                RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
+                if (rp == RenderPass::SCENE || rp == RenderPass::SCENE_TRANSPARENT)
                 {
-                    mat = childT->GetLocalToParentMatrix();
+                    const AABox rendAABox = rend->GetAABBox();
+                    aabBox = AABox::Union(aabBox, rendAABox);
                 }
-                aabBoxChild = mat * aabBoxChild;
-                aabBox = AABox::Union(aabBox, aabBoxChild);
+            }
+        }
+
+        if (includeChildren)
+        {
+            for (GameObject *child : GetChildren())
+            {
+                AABox aabBoxChild = child->GetLocalAABBox(true);
+                if (aabBoxChild != AABox::Empty)
+                {
+                    Matrix4 mat;
+                    const Transform *childT = child->GetTransform();
+                    if (childT)
+                    {
+                        mat = childT->GetLocalToParentMatrix();
+                    }
+                    aabBoxChild = mat * aabBoxChild;
+                    aabBox = AABox::Union(aabBox, aabBoxChild);
+                }
             }
         }
     }
-
     return aabBox;
 }
 
@@ -820,7 +873,7 @@ void GameObject::PropagateToChildren(std::function<void(GameObject*)> func)
     const Array<GameObject*>& children = GetChildren();
     for (GameObject *child : children)
     {
-        if (child && child->IsEnabled())
+        if (child && child->IsEnabledRecursively())
         {
             func(child);
         }
@@ -840,7 +893,7 @@ void GameObject::PropagateToComponents(std::function<void(Component*)> func)
     const Array<Component*>& components = GetComponents();
     for (Component *comp : components)
     {
-        if (comp && comp->IsEnabled())
+        if (comp && comp->IsEnabledRecursively())
         {
             func(comp);
         }
@@ -863,13 +916,13 @@ GameObject *GameObject::Instantiate()
 template<class T>
 bool CanEventBePropagatedToGameObject(const GameObject *go)
 {
-    return go->IsEnabled() && go->T::IsReceivingEvents();
+    return go->IsEnabledRecursively() && go->T::IsReceivingEvents();
 }
 
 template<class T>
 bool CanEventBePropagatedToComponent(const Component *comp)
 {
-    return comp->IsEnabled() && comp->T::IsReceivingEvents();
+    return comp->IsEnabledRecursively() && comp->T::IsReceivingEvents();
 }
 
 void GameObject::CloneInto(ICloneable *clone) const
@@ -932,7 +985,7 @@ String GameObject::ToStringStructure(bool recursive, const String &indent)
 String GameObject::ToString() const
 {
     std::ostringstream oss;
-    oss << "GameObject: " << GetName() << "(" << ((void*)this) << ")";
+    oss << "GameObject: " << GetName() << "(" << RCAST<const void*>(this) << ")";
     return oss.str();
 }
 

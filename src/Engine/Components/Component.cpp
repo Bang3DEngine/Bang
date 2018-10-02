@@ -83,7 +83,8 @@ void Component::SetGameObjectForced(GameObject *newGameObject)
         }
 
         p_gameObject = newGameObject;
-
+        InvalidateStartedRecursively();
+        InvalidateEnabledRecursively();
         OnGameObjectChanged(previousGameObject, newGameObject);
     }
 }
@@ -97,12 +98,6 @@ void Component::OnPreStart()
 {
 }
 void Component::OnStart()
-{
-}
-void Component::OnPreUpdate()
-{
-}
-void Component::OnBeforeChildrenUpdate()
 {
 }
 void Component::OnUpdate()
@@ -130,58 +125,44 @@ void Component::OnDestroy()
 {
 }
 
-void Component::PreUpdate()
-{
-    if (IsActive())
-    {
-        OnPreUpdate();
-    }
-}
-void Component::BeforeChildrenUpdate()
-{
-    if (IsActive())
-    {
-        OnBeforeChildrenUpdate();
-    }
-}
 void Component::Update()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnUpdate();
     }
 }
 void Component::AfterChildrenUpdate()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnAfterChildrenUpdate();
     }
 }
 void Component::BeforeRender()
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnBeforeRender();
     }
 }
 void Component::BeforeChildrenRender(RenderPass rp)
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnBeforeChildrenRender(rp);
     }
 }
 void Component::Render(RenderPass rp)
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnRender(rp);
     }
 }
 void Component::AfterChildrenRender(RenderPass rp)
 {
-    if (IsActive())
+    if (IsActiveRecursively())
     {
         OnAfterChildrenRender(rp);
     }
@@ -202,11 +183,16 @@ bool Component::CanBeRepeatedInGameObject() const
     return true;
 }
 
-bool Component::IsEnabled(bool recursive) const
+bool Component::CalculateEnabledRecursively() const
 {
-    return recursive ?
-             (Object::IsEnabled() && GetGameObject()->IsEnabled(true)) :
-              Object::IsEnabled();
+    return IsEnabled() &&
+           (GetGameObject() ? GetGameObject()->IsEnabledRecursively() : true);
+}
+
+bool Component::CalculateStartedRecursively() const
+{
+    return IsStarted() &&
+           (GetGameObject() ? GetGameObject()->IsStartedRecursively() : true);
 }
 
 void Component::CloneInto(ICloneable *clone) const

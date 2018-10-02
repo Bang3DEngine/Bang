@@ -17,7 +17,7 @@ AABox ShadowMapper::GetSceneCastersAABox(Scene *scene)
                      scene->GetComponentsInDescendantsAndThis<Renderer>();
     for (Renderer *rend : renderers)
     {
-        if (rend->IsActive() && rend->GetCastsShadows())
+        if (rend->IsActiveRecursively() && rend->GetCastsShadows())
         {
             Material *mat = rend->GetActiveMaterial();
             if (mat && mat->GetRenderPass() == RenderPass::SCENE)

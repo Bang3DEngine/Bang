@@ -87,6 +87,10 @@ void SceneManager::Render()
             ge->Render(activeScene, camera);
             ge->RenderTexture( camera->GetGBuffer()->GetLastDrawnColorTexture() );
         }
+        else
+        {
+            GL::ClearColorBuffer( Color::Black );
+        }
     }
 }
 

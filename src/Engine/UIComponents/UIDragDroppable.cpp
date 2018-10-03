@@ -58,26 +58,17 @@ void UIDragDroppable::OnUpdate()
                 inputEvent.mouseButton == MouseButton::LEFT)
             {
                 m_pressTime.SetInfinity();
-                m_beingDragged = false;
             }
+
         }
 
-        if (GetFocusable()->IsBeingPressed())
+        if (!IsBeingDragged() && GetFocusable()->IsBeingPressed())
         {
-            Time passedPressedTime = (Time::GetNow() - m_pressTime);
+            Time passedPressedTime = Time::GetPassedTimeSince(m_pressTime);
             if (passedPressedTime >= UIDragDroppable::DragInitTime)
             {
                 OnDragStarted();
             }
-        }
-        else
-        {
-            m_pressTime.SetInfinity();
-        }
-
-        if (IsBeingDragged() && !GetFocusable()->IsBeingPressed())
-        {
-            OnDropped();
         }
     }
 }
@@ -126,35 +117,38 @@ bool UIDragDroppable::GetShowDragDropGameObject() const
 
 void UIDragDroppable::OnDragStarted()
 {
-    m_beingDragged = true;
-
-    UICanvas *canvas = UICanvas::GetActive(this);
-    if (canvas)
+    if (!IsBeingDragged())
     {
-        canvas->NotifyDragStarted(this);
-        EventEmitter<IEventsDragDrop>::PropagateToListeners(
-                            &IEventsDragDrop::OnDragStarted, this);
-    }
+        m_beingDragged = true;
 
-    if (GetShowDragDropGameObject())
-    {
-        if (!m_dragDropGameObject)
+        UICanvas *canvas = UICanvas::GetActive(this);
+        if (canvas)
         {
-            m_dragDropGameObject = GameObjectFactory::CreateUIGameObject();
-            m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
-            m_dragDropGameObject->Start();
-
-            p_dragDropImageRenderer = m_dragDropGameObject->
-                                      AddComponent<UIImageRenderer>();
-            p_dragDropImageRenderer->SetTint(Color::White.WithAlpha(0.5f));
-            p_dragDropImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
-
-            if (canvas)
-            {
-                m_dragDropGameObject->SetParent(canvas->GetGameObject());
-            }
+            canvas->NotifyDragStarted(this);
+            EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                                &IEventsDragDrop::OnDragStarted, this);
         }
-        MoveDragDropGameObjectTo( Input::GetMousePosition() );
+
+        if (GetShowDragDropGameObject())
+        {
+            if (!m_dragDropGameObject)
+            {
+                m_dragDropGameObject = GameObjectFactory::CreateUIGameObject();
+                m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
+                m_dragDropGameObject->Start();
+
+                p_dragDropImageRenderer = m_dragDropGameObject->
+                                          AddComponent<UIImageRenderer>();
+                p_dragDropImageRenderer->SetTint(Color::White.WithAlpha(0.5f));
+                p_dragDropImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
+
+                if (canvas)
+                {
+                    m_dragDropGameObject->SetParent(canvas->GetGameObject());
+                }
+            }
+            MoveDragDropGameObjectTo( Input::GetMousePosition() );
+        }
     }
 }
 
@@ -170,18 +164,16 @@ void UIDragDroppable::OnDragUpdate()
 
 void UIDragDroppable::OnDropped()
 {
-    if (m_beingDragged)
+    if (IsBeingDragged())
     {
         m_beingDragged = false;
+        m_pressTime.SetInfinity();
+
+        EventEmitter<IEventsDragDrop>::PropagateToListeners(
+                            &IEventsDragDrop::OnDrop, this);
+
         if (m_dragDropGameObject)
         {
-            EventEmitter<IEventsDragDrop>::PropagateToListeners(
-                                &IEventsDragDrop::OnDrop, this, true);
-            if (UICanvas *canvas = UICanvas::GetActive(this))
-            {
-                canvas->NotifyDragStopped(this);
-            }
-
             GameObject::Destroy(m_dragDropGameObject);
             m_dragDropGameObject = nullptr;
             p_dragDropImageRenderer = nullptr;

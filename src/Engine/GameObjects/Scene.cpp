@@ -123,7 +123,7 @@ void Scene::AddComponentToDestroyDelayed(Component *comp)
 
 Time Scene::GetDeltaTime() const
 {
-    return Time::GetNow() - m_lastUpdateTime;
+    return Time::GetPassedTimeSince(m_lastUpdateTime);
 }
 
 void Scene::InvalidateCanvas()

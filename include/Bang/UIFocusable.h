@@ -22,6 +22,8 @@ public:
 
     UIEventResult ProcessEvent(const UIEvent &event);
 
+    void OnPostUpdate() override;
+
     void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
     void SetConsiderForTabbing(bool considerForTabbing);

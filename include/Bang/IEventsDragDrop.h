@@ -20,8 +20,7 @@ public:
         BANG_UNUSED(dragDropEmitter);
     }
 
-    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDropEmitter,
-                        bool inside)
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDropEmitter)
     {
         BANG_UNUSED(dragDropEmitter);
     }

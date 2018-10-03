@@ -211,13 +211,13 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     p_dragMarkerImg->SetTint(isValidDrag ? Color::Blue : Color::Red);
 }
 
-void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_, bool inside)
+void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 {
-    IEventsDragDrop::OnDrop(dd_, inside);
+    IEventsDragDrop::OnDrop(dd_);
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable*>(dd_);
 
-    if (inside)
+    if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
     {
         GOItem *itemOver = nullptr;
         MouseItemRelativePosition relPos;

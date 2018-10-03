@@ -28,15 +28,6 @@ UICheckBox::~UICheckBox()
 void UICheckBox::OnUpdate()
 {
     Component::OnUpdate();
-
-    if (GetFocusable()->IsMouseOver())
-    {
-        GetBackgroundImage()->SetTint( UITheme::GetOverColor() );
-    }
-    else
-    {
-        GetBackgroundImage()->SetTint( UITheme::GetInputsBackgroundColor() );
-    }
 }
 
 void UICheckBox::SetSize(int size)
@@ -110,6 +101,14 @@ UIEventResult UICheckBox::OnUIEvent(UIFocusable*, const UIEvent &event)
         case UIEvent::Type::FOCUS_LOST:
             GameObjectFactory::MakeBorderNotFocused(p_border);
             return UIEventResult::INTERCEPT;
+        break;
+
+        case UIEvent::Type::MOUSE_ENTER:
+            GetBackgroundImage()->SetTint( UITheme::GetOverColor() );
+        break;
+
+        case UIEvent::Type::MOUSE_EXIT:
+            GetBackgroundImage()->SetTint( UITheme::GetInputsBackgroundColor() );
         break;
 
         case UIEvent::Type::MOUSE_CLICK_FULL:

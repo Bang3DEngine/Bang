@@ -72,8 +72,7 @@ public:
     // IEventsDragDrop
     virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;
     virtual void OnDragUpdate(EventEmitter<IEventsDragDrop> *dragDroppable) override;
-    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable,
-                        bool inside) override;
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;

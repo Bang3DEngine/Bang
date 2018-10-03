@@ -83,7 +83,7 @@ ReflectionProbe::~ReflectionProbe()
 
 void ReflectionProbe::RenderReflectionProbe(bool force)
 {
-    bool hasRested = ((Time::GetNow() - m_lastRenderTime) >= GetRestTime());
+    bool hasRested = (Time::GetPassedTimeSince(m_lastRenderTime) >= GetRestTime());
     if (hasRested || force)
     {
         // Render from each of the 6 cameras...

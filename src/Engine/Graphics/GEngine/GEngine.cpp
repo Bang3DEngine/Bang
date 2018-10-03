@@ -489,6 +489,8 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
     sp->Bind();
     BANG_UNUSED(destRectMask);
+    sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset, Vector2::Zero, false);
+    sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply, Vector2::One, false);
     RenderViewportPlane();
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);

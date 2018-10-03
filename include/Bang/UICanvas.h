@@ -46,7 +46,7 @@ public:
     bool IsMouseOver(const GameObject *go, bool recursive = false);
 
     void NotifyDragStarted(UIDragDroppable *dragDroppable);
-    void NotifyDragStopped(UIDragDroppable *dragDroppable);
+    void DropCurrentDragDroppable();
 
     Array<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
 
@@ -66,6 +66,7 @@ public:
     static UICanvas *GetActive(const Component *comp);
 
 private:
+    Set<UIFocusable*> p_focusablesBeingPressed;
     UILayoutManager *m_uiLayoutManager = nullptr;
 
     UIFocusable *p_focus = nullptr;
@@ -80,6 +81,8 @@ private:
 
     void RegisterForEvents(UIFocusable *focusable);
     void UnRegisterForEvents(UIFocusable *focusable);
+    void RegisterFocusableBeingPressed(UIFocusable *focusable);
+    void RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable);
 
     void GetSortedFocusCandidatesByOcclusionOrder(
             const GameObject *go,
@@ -89,6 +92,8 @@ private:
             const GameObject *go,
             Array< std::pair<UIFocusable*, AARecti> > *sortedCandidates,
             std::stack<AARecti> *maskRectStack) const;
+
+    friend class UIFocusable;
 };
 
 NAMESPACE_BANG_END

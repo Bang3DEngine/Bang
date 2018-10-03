@@ -20,7 +20,7 @@ void Timer::OnUpdate()
 
     if (IsRunning())
     {
-        Time timeSinceLastTick = (Time::GetNow() - m_lastTickTime);
+        Time timeSinceLastTick = (Time::GetPassedTimeSince(m_lastTickTime));
         if (timeSinceLastTick > GetInterval())
         {
             Tick();

@@ -18,7 +18,7 @@ void FPSChrono::MarkEnd()
         m_latestDeltaTimes.PopBack();
     }
 
-    m_latestDeltaTimes.PushFront( Time::GetNow() - m_beginTime );
+    m_latestDeltaTimes.PushFront( Time::GetPassedTimeSince(m_beginTime) );
 }
 
 void FPSChrono::SetMeanSamples(int meanSamples)

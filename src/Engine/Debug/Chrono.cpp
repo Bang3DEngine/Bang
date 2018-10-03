@@ -19,7 +19,8 @@ void Chrono::MarkEvent(const String &eventName)
     if (!m_events.IsEmpty())
     {
         ChronoEvent &previousEvent = m_events.Back();
-        previousEvent.timeSinceLastEvent = Time::GetNow() - previousEvent.time;
+        previousEvent.timeSinceLastEvent = Time::GetPassedTimeSince(
+                                                    previousEvent.time);
     }
     m_events.PushBack(ce);
 }

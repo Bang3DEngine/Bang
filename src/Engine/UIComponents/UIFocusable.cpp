@@ -1,6 +1,7 @@
 #include "Bang/UIFocusable.h"
 
 #include "Bang/Input.h"
+#include "Bang/UICanvas.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 
@@ -13,6 +14,11 @@ UIFocusable::UIFocusable()
 
 UIFocusable::~UIFocusable()
 {
+}
+
+void UIFocusable::OnPostUpdate()
+{
+    Component::OnPostUpdate();
 }
 
 UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
@@ -152,6 +158,17 @@ void UIFocusable::SetBeingPressed(bool beingPressed)
     if (beingPressed != IsBeingPressed())
     {
         m_beingPressed = beingPressed;
+        if (UICanvas *canvas = UICanvas::GetActive(this))
+        {
+            if (IsBeingPressed())
+            {
+                canvas->RegisterFocusableBeingPressed(this);
+            }
+            else
+            {
+                canvas->RegisterFocusableNotBeingPressedAnymore(this);
+            }
+        }
     }
 }
 

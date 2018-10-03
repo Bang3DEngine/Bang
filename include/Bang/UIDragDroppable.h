@@ -2,8 +2,8 @@
 #define UIDRAGDROPPABLE_H
 
 #include "Bang/Bang.h"
-#include "Bang/Component.h"
 #include "Bang/Texture2D.h"
+#include "Bang/Component.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsDragDrop.h"
 

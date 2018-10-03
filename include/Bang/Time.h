@@ -30,6 +30,7 @@ public:
     static Time GetInit();
     static Time GetEllapsed();
     static Time GetDeltaTime();
+    static Time GetPassedTimeSince(Time refTime);
 
 private:
     uint64_t m_timeNanos = 0;

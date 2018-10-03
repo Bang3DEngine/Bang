@@ -268,6 +268,26 @@ void UICanvas::OnUpdate()
                                                   UIEvent::Type::FINISHED_BEING_PRESSED,
                                                   inputEvent);
                     }
+
+                    if (inputEvent.mouseButton == MouseButton::LEFT)
+                    {
+                        while (!p_focusablesBeingPressed.IsEmpty())
+                        {
+                            UIFocusable *focusable = *(p_focusablesBeingPressed.Begin());
+                            PropagateFocusableUIEvent(
+                                 focusable,
+                                 UIEvent::Type::FINISHED_BEING_PRESSED,
+                                 inputEvent);
+                            p_focusablesBeingPressed.Remove(focusable);
+                        }
+                        p_focusablesBeingPressed.Clear();
+                    }
+
+                    if (p_ddBeingDragged &&
+                        inputEvent.mouseButton == MouseButton::LEFT)
+                    {
+                        DropCurrentDragDroppable();
+                    }
                 }
             }
             break;
@@ -389,45 +409,18 @@ void UICanvas::OnUpdate()
     if (p_ddBeingDragged)
     {
         Array<EventListener<IEventsDragDrop>*> ddListeners = GetDragDropListeners();
-        if (Input::GetMouseButton(MouseButton::LEFT))
+        p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
+                          PropagateToArray(ddListeners,
+                                           &IEventsDragDrop::OnDragUpdate,
+                                           p_ddBeingDragged);
+        if (p_ddBeingDragged)
         {
-            p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
-                              PropagateToArray(ddListeners,
-                                               &IEventsDragDrop::OnDragUpdate,
-                                               p_ddBeingDragged);
-            if (p_ddBeingDragged)
-            {
-                p_ddBeingDragged->OnDragUpdate();
-            }
+            p_ddBeingDragged->OnDragUpdate();
         }
-        else
+
+        if (!Input::GetMouseButton(MouseButton::LEFT))
         {
-            p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
-            PropagateToArrayFunctor(
-            ddListeners,
-            [&](EventListener<IEventsDragDrop>* ddListener)
-            {
-                bool inside = false;
-                if (Component *comp = DCAST<Component*>(ddListener))
-                {
-                    inside = UICanvas::IsMouseOver(comp->GetGameObject(), true);
-                }
-                else if (GameObject *go = DCAST<GameObject*>(ddListener))
-                {
-                    inside = UICanvas::IsMouseOver(go, true);
-                }
-
-                if (p_ddBeingDragged)
-                {
-                    ddListener->OnDrop(p_ddBeingDragged, inside);
-                }
-            });
-
-            if (p_ddBeingDragged)
-            {
-                p_ddBeingDragged->OnDropped();
-                p_ddBeingDragged = nullptr;
-            }
+            DropCurrentDragDroppable();
         }
     }
 }
@@ -553,6 +546,8 @@ void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         {
             p_focusableUnderMouseTopMost = nullptr;
         }
+
+        p_focusablesBeingPressed.Remove(destroyedFocusable);
     }
 
     if (object == p_ddBeingDragged)
@@ -675,10 +670,32 @@ void UICanvas::NotifyDragStarted(UIDragDroppable *dragDroppable)
     }
 }
 
-void UICanvas::NotifyDragStopped(UIDragDroppable *dragDroppable)
+void UICanvas::DropCurrentDragDroppable()
 {
-    ASSERT(p_ddBeingDragged == dragDroppable);
-    p_ddBeingDragged = nullptr;
+    if (p_ddBeingDragged)
+    {
+        p_ddBeingDragged->OnDropped();
+
+        if (p_ddBeingDragged)
+        {
+            auto ddListeners = GetDragDropListeners();
+            p_ddBeingDragged->EventEmitter<IEventsDragDrop>::
+            PropagateToArrayFunctor(ddListeners,
+                [&](EventListener<IEventsDragDrop>* ddListener)
+                {
+                    if (p_ddBeingDragged)
+                    {
+                        ddListener->OnDrop(p_ddBeingDragged);
+                    }
+                });
+        }
+
+        if (p_ddBeingDragged)
+        {
+            p_ddBeingDragged->OnDropped();
+            p_ddBeingDragged = nullptr;
+        }
+    }
 }
 
 UIFocusable* UICanvas::GetFocus()
@@ -818,6 +835,16 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
     }
 
     focusable->EventEmitter<IEventsObject>::UnRegisterListener(this);
+}
+
+void UICanvas::RegisterFocusableBeingPressed(UIFocusable *focusable)
+{
+    p_focusablesBeingPressed.Add(focusable);
+}
+
+void UICanvas::RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable)
+{
+    p_focusablesBeingPressed.Remove(focusable);
 }
 
 struct GameObjectZComparer

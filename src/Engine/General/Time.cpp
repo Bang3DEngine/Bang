@@ -92,3 +92,13 @@ Time Time::GetDeltaTime()
     }
     return Time(0);
 }
+
+Time Time::GetPassedTimeSince(Time refTime)
+{
+    Time now = Time::GetNow();
+    if (now <= refTime)
+    {
+        return Time(0);
+    }
+    return (now - refTime);
+}

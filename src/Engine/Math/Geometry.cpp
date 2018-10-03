@@ -387,20 +387,21 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
     const Vector3 &v1 = triangle.GetPoint(1);
     const Vector3 &v2 = triangle.GetPoint(2);
 
-    Vector3 v1v0 = v1 - v0;
-    Vector3 v2v0 = v2 - v0;
+    Vector3 v1v0(v1 - v0);
+    Vector3 v2v0(v2 - v0);
 
     Vector3 h = Vector3::Cross(rayDir, v2v0);
     float   a = Vector3::Dot(v1v0, h);
 
-    if (a > -0.00001 && a < 0.00001)
+    constexpr float Epsilon = 1e-7;
+    if (a > -Epsilon && a < Epsilon)
     {
         *intersected = false;
         return;
     }
 
-    float   f = 1.0f / a;
-    Vector3 s = rayOrig - v0;
+    float   f = 1.0 / a;
+    Vector3 s (rayOrig - v0);
     float   u = f * Vector3::Dot(s, h);
 
     if (u < 0.0 || u > 1.0)
@@ -420,7 +421,7 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
 
     // At this stage we can compute t to find out where
     // the intersection point is on the line
-    t = f * Vector3::Dot(v2v0, q);
+    t = (f * Vector3::Dot(v2v0, q));
     if (t < 0.00001)
     {
         *intersected = false;

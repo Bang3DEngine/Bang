@@ -30,7 +30,7 @@ void WaterRenderer::OnRender()
 
     GL::Render(p_planeMesh.Get()->GetVAO(),
                GL::Primitive::TRIANGLES,
-               p_planeMesh.Get()->GetNumVertices());
+               p_planeMesh.Get()->GetNumVerticesIds());
 }
 
 void WaterRenderer::CloneInto(ICloneable *clone) const

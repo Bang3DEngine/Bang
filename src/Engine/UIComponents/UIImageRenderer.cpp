@@ -45,8 +45,9 @@ void UIImageRenderer::OnRender()
 
     if (GetTint().a > 0.0f)
     {
-        GL::Render(p_quadMesh.Get()->GetVAO(), GetRenderPrimitive(),
-                   p_quadMesh.Get()->GetNumVertices());
+        GL::Render(p_quadMesh.Get()->GetVAO(),
+                   GetRenderPrimitive(),
+                   p_quadMesh.Get()->GetNumVerticesIds());
     }
 }
 

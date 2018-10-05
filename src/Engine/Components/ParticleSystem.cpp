@@ -421,7 +421,7 @@ void ParticleSystem::OnRender()
 
     GL::RenderInstanced(p_particlesVAO,
                         GL::Primitive::TRIANGLES,
-                        m_particleMesh.Get()->GetNumVertices(),
+                        m_particleMesh.Get()->GetNumVerticesIds(),
                         m_numParticles);
 
     switch (GetParticleRenderMode())

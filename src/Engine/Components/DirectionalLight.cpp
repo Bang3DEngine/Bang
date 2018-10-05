@@ -92,7 +92,8 @@ void DirectionalLight::RenderShadowMaps_()
     {
         if (shadowCaster->IsActiveRecursively())
         {
-            GEngine::GetInstance()->RenderWithPass(shadowCaster, RenderPass::SCENE,
+            GEngine::GetInstance()->RenderWithPass(shadowCaster,
+                                                   RenderPass::SCENE,
                                                    false);
         }
     }

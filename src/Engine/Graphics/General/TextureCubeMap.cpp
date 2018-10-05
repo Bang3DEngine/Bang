@@ -35,18 +35,20 @@ void TextureCubeMap::CreateEmpty(const Vector2i &size)
     }
 }
 
-void TextureCubeMap::Resize(const Vector2i &size)
+bool TextureCubeMap::Resize(const Vector2i &size)
 {
     ASSERT_MSG(size.x == size.y, "CubeMaps must have the same width and height.");
     if (size != GetSize())
     {
         CreateEmpty(size.x, size.y);
+        return true;
     }
+    return false;
 }
 
-void TextureCubeMap::Resize(int size)
+bool TextureCubeMap::Resize(int size)
 {
-    Resize(size, size);
+    return Resize(size, size);
 }
 
 void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,

@@ -32,6 +32,7 @@ ParticleSystem::ParticleSystem()
     p_particleDataVBO = new VBO();
     SetNumParticles(100);
 
+    SetCastsShadows(false);
     SetMesh( MeshFactory::GetPlane().Get() );
     SetParticleRenderMode( ParticleRenderMode::ADDITIVE );
 }

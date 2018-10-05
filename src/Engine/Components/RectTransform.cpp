@@ -530,8 +530,10 @@ bool RectTransform::IsMouseOver(const Vector2i &mousePosVP, bool recursive) cons
 {
     if (Input::IsMouseInsideWindow())
     {
+        AARect vpRect = GetViewportAARect();
         if (IsActiveRecursively() &&
-            GetViewportAARect().Contains( Vector2(mousePosVP) ))
+            vpRect.IsValid() &&
+            vpRect.Contains( Vector2(mousePosVP) ))
         {
             return true;
         }

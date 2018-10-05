@@ -18,7 +18,7 @@ public:
     using Texture::Resize;
     using Texture::CreateEmpty;
     void CreateEmpty(const Vector2i &size) override;
-    void Resize(const Vector2i &size) override;
+    bool Resize(const Vector2i &size) override;
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,
               int width, int height,

@@ -508,14 +508,10 @@ void UICanvas::OnAfterChildrenUpdate()
 }
 
 
-void UICanvas::OnRender(RenderPass renderPass)
+void UICanvas::OnPostUpdate()
 {
-    Component::OnRender(renderPass);
-
-    if (renderPass == RenderPass::CANVAS)
-    {
-        GetLayoutManager()->RebuildLayout( GetGameObject() );
-    }
+    Component::OnPostUpdate();
+    GetLayoutManager()->RebuildLayout( GetGameObject() );
 }
 
 void UICanvas::CloneInto(ICloneable *clone) const

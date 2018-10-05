@@ -128,7 +128,14 @@ void Camera::SetRenderFlags(RenderFlags renderFlags)
 
 void Camera::SetRenderSize(const Vector2i &renderSize)
 {
-    GetGBuffer()->Resize( renderSize );
+    if (GetGBuffer()->Resize( renderSize ))
+    {
+        GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+        GetGBuffer()->Bind();
+        GetGBuffer()->SetAllDrawBuffers();
+        GL::ClearColorStencilDepthBuffers();
+        GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    }
 }
 
 void Camera::SetGammaCorrection(float gammaCorrection)

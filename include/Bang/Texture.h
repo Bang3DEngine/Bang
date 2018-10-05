@@ -19,13 +19,12 @@ class Texture : public GLObject,
 public:
     Texture();
     Texture(GL::TextureTarget texTarget);
-    Texture(const Texture &t);
     virtual ~Texture();
 
     virtual void CreateEmpty(const Vector2i &size) = 0;
-    virtual void Resize(const Vector2i &size) = 0;
+    virtual bool Resize(const Vector2i &size) = 0;
     void CreateEmpty(int width, int height);
-    void Resize(int width, int height);
+    bool Resize(int width, int height);
     void GenerateMipMaps() const;
 
     void SetFormat(GL::ColorFormat internalFormat);

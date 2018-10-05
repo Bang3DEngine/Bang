@@ -37,12 +37,14 @@ void Texture2D::CreateEmpty(const Vector2i &size)
     Fill(nullptr, size.x, size.y, GetColorComp(), GetDataType());
 }
 
-void Texture2D::Resize(const Vector2i &size)
+bool Texture2D::Resize(const Vector2i &size)
 {
     if (size != GetSize())
     {
         CreateEmpty(size.x, size.y);
+        return true;
     }
+    return false;
 }
 
 void Texture2D::Fill(const Color &fillColor, int width, int height)

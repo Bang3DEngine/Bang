@@ -103,8 +103,7 @@ void MeshRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    Mesh *baseMeshToRender = GetActiveMesh();
-    if (baseMeshToRender)
+    if (Mesh *baseMeshToRender = GetActiveMesh())
     {
         Mesh *lodMeshToRender =
                 baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();

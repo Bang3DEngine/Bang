@@ -210,21 +210,25 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
     return readColor;
 }
 
-void Framebuffer::Resize(const Vector2i &size)
+bool Framebuffer::Resize(const Vector2i &size)
 {
     m_size = Vector2i::Max(size, Vector2i::One);
 
+    bool resized = false;
     for (const auto &it : m_attachments_To_Texture)
     {
-        Texture *t = it.second.Get();
-        if (t) { t->Resize(GetSize()); }
+        if (Texture *tex = it.second.Get())
+        {
+            resized |= tex->Resize(GetSize());
+        }
     }
+    return resized;
 }
 
 
-void Framebuffer::Resize(int width, int height)
+bool Framebuffer::Resize(int width, int height)
 {
-    Resize( Vector2i(width, height) );
+    return Resize( Vector2i(width, height) );
 }
 
 int Framebuffer::GetWidth() const

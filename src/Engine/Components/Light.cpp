@@ -5,6 +5,7 @@
 #include "Bang/AARect.h"
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Material.h"
 #include "Bang/Renderer.h"

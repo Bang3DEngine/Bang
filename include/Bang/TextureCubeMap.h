@@ -28,7 +28,7 @@ public:
     using Texture::Resize;
     using Texture::CreateEmpty;
     void CreateEmpty(int size);
-    void Resize(int size);
+    bool Resize(int size);
     void Fill(GL::CubeMapDir cubeMapDir,
               const Byte *newData,
               int size,
@@ -59,7 +59,7 @@ private:
     std::array<RH<Texture2D>, 6> m_sideTextures;
 
     void CreateEmpty(const Vector2i &size) override;
-    void Resize(const Vector2i &size) override;
+    bool Resize(const Vector2i &size) override;
 
     void FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);

@@ -799,6 +799,15 @@ GameObject *GameObjectFactory::CreateCapsuleGameObject()
     return go;
 }
 
+GameObject *GameObjectFactory::CreateCylinderGameObject()
+{
+    RH<Mesh> mesh = MeshFactory::GetCylinder();
+    GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cylinder");
+    BoxCollider *col = go->AddComponent<BoxCollider>();
+    col->SetExtents( Vector3::One );
+    return go;
+}
+
 GameObject* GameObjectFactory::CreateSphereGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetSphere();

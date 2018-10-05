@@ -144,6 +144,7 @@ public:
     static GameObject* CreatePlaneGameObject();
     static GameObject* CreateCubeGameObject();
     static GameObject* CreateCapsuleGameObject();
+    static GameObject* CreateCylinderGameObject();
     static GameObject* CreateSphereGameObject();
     static GameObject* CreateConeGameObject();
 

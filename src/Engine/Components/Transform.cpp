@@ -195,7 +195,10 @@ Vector3 Transform::FromWorldToLocalDirection(const Vector3 &dir) const
     return InverseTransformDirection(dir);
 }
 
-bool Transform::CanBeRepeatedInGameObject() const { return false; }
+bool Transform::CanBeRepeatedInGameObject() const
+{
+    return false;
+}
 
 void Transform::RecalculateParentMatricesIfNeeded() const
 {

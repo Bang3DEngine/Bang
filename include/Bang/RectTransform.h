@@ -52,6 +52,7 @@ public:
 
     void SetWidthFromPivot(int width);
     void SetHeightFromPivot(int height);
+    void SetSizeFromPivot(const Vector2i &size);
 
     int GetMarginLeft()  const;
     int GetMarginTop()   const;
@@ -71,8 +72,12 @@ public:
     RectPoints GetParentViewportRectPointsNDC() const;
     AARect GetViewportAARect() const;
     AARect GetViewportAARectNDC() const;
+    AARect GetViewportAARectWithoutTransform() const;
+    AARect GetViewportAARectWithoutTransformNDC() const;
     AARect GetParentViewportAARect() const;
     AARect GetParentViewportAARectNDC() const;
+    AARect GetParentViewportAARectWithoutTransform() const;
+    AARect GetParentViewportAARectWithoutTransformNDC() const;
 
     // Conversion functions
     AARect  FromViewportAARectNDCToLocalAARectNDC(const AARect &vpAARectNDC) const;

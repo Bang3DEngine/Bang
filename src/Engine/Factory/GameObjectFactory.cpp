@@ -653,16 +653,22 @@ UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
 
 void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
 {
-    border->SetTint( UITheme::GetFocusedBorderColor() );
-    border->SetSlice9BorderStrokePx(
-                Vector2i(UITheme::GetFocusedBorderStroke()) );
+    if (border)
+    {
+        border->SetTint( UITheme::GetFocusedBorderColor() );
+        border->SetSlice9BorderStrokePx(
+                    Vector2i(UITheme::GetFocusedBorderStroke()) );
+    }
 }
 
 void GameObjectFactory::MakeBorderNotFocused(UIImageRenderer *border)
 {
-    border->SetTint( UITheme::GetNotFocusedBorderColor() );
-    border->SetSlice9BorderStrokePx(
-                Vector2i(UITheme::GetNotFocusedBorderStroke()) );
+    if (border)
+    {
+        border->SetTint( UITheme::GetNotFocusedBorderColor() );
+        border->SetSlice9BorderStrokePx(
+                    Vector2i(UITheme::GetNotFocusedBorderStroke()) );
+    }
 }
 
 

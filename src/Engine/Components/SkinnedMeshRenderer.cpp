@@ -240,8 +240,8 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
         {
             const String &boneName = pair.first;
             const Matrix4 &boneMatrix = pair.second;
-            auto it = mesh->GetBonesIndices().Find(boneName);
-            if (it != mesh->GetBonesIndices().End())
+            auto it = mesh->GetBonesIds().Find(boneName);
+            if (it != mesh->GetBonesIds().End())
             {
                 uint boneIdx = it->second;
                 if (boneIdx < boneMatricesArray.Size())

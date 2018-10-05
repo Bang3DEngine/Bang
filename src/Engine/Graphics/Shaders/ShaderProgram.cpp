@@ -517,21 +517,16 @@ void ShaderProgram::UnBind() const
 
 void ShaderProgram::Bind()
 {
-    #ifdef DEBUG
-    if (!IsLinked())
+    if (IsLinked())
     {
-        Debug_Warn("Binding a non-linked shader!");
-        return;
-    }
-    #endif
+        if (!GL::IsBound(this))
+        {
+            GL::Bind(this);
+        }
 
-    if (!GL::IsBound(this))
-    {
-        GL::Bind(this);
+        GLUniforms::SetAllUniformsToShaderProgram(this);
+        BindAllTexturesToUnits();
     }
-
-    GLUniforms::SetAllUniformsToShaderProgram(this);
-    BindAllTexturesToUnits();
 }
 
 void ShaderProgram::UnBind()

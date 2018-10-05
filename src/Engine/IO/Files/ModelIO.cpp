@@ -531,7 +531,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
             aiFace *aFace = &(aMesh->mFaces[tri]);
             aFace->mNumIndices = 3;
             aFace->mIndices = new unsigned int[aFace->mNumIndices];
-            const auto triIndices = mesh->GetTriangleVertexIndices(tri);
+            const auto triIndices = mesh->GetVertexIdsFromTriangle(tri);
             for (int i = 0; i < 3; ++i) { aFace->mIndices[i] = triIndices[i]; }
         }
     }
@@ -660,9 +660,9 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
     outMesh->SetNormalsPool(vertexNormalsPool);
     outMesh->SetUvsPool(vertexUvsPool);
     outMesh->SetTangentsPool(vertexTangentsPool);
-    outMesh->SetVertexIndices(vertexIndices);
+    outMesh->SetTrianglesVertexIds(vertexIndices);
     outMesh->SetBonesPool(bonesPool);
-    outMesh->SetBonesIndices(bonesIndices);
+    outMesh->SetBonesIds(bonesIndices);
     outMesh->UpdateVAOs();
 }
 

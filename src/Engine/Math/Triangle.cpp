@@ -20,6 +20,16 @@ void Triangle::SetPoint(int i, const Vector3 &point)
     (*this)[i] = point;
 }
 
+float Triangle::GetArea() const
+{
+    float a = Vector3::Distance(GetPoint(0), GetPoint(1));
+    float b = Vector3::Distance(GetPoint(1), GetPoint(2));
+    float c = Vector3::Distance(GetPoint(2), GetPoint(0));
+    float s = (a + b + c) / 2;
+    float area = Math::Sqrt(s * (s-a) * (s-b) * (s-c));
+    return area;
+}
+
 Plane Triangle::GetPlane() const
 {
     return Plane(GetPoint(0), GetNormal());
@@ -33,7 +43,7 @@ Vector3 Triangle::GetNormal() const
 
 const Vector3 &Triangle::GetPoint(int i) const
 {
-    return GetPoints()[i];
+    return (*this)[i];
 }
 
 Polygon Triangle::ToPolygon() const

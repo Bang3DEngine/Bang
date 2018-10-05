@@ -21,23 +21,23 @@ public:
     void UnBind() const override;
 
     void SetVBO(const VBO *vbo,
-                int location,
-                int dataComponentsCount,
+                uint location,
+                uint dataComponentsCount,
                 GL::VertexAttribDataType dataType,
                 bool dataNormalized   = false,
-                int dataStride        = 0,
-                int dataOffset        = 0);
+                uint dataStride        = 0,
+                uint dataOffset        = 0);
     void SetVertexAttribDivisor(uint location,
                                 uint divisor);
     void SetIBO(IBO *ibo);
 
-    void RemoveVBO(GLint location);
+    void RemoveVBO(uint location);
 
     IBO *GetIBO() const;
     bool IsIndexed() const;
     int GetVBOCount() const;
     GL::BindTarget GetGLBindTarget() const override;
-    const VBO *GetVBOByLocation(int location) const;
+    const VBO *GetVBOByLocation(uint location) const;
 
 private:
     Array<const VBO*> p_vbos;

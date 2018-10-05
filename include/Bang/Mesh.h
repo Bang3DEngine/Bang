@@ -23,6 +23,7 @@ class Mesh : public Asset,
 
 public:
     using TriangleId = uint;
+    using CornerId = uint;
     using VertexId = uint;
     struct Bone
     {
@@ -30,11 +31,11 @@ public:
         Matrix4 rootNodeSpaceToBoneBindSpace;
     };
 
-    static constexpr uint DefaultPositionsVBOLocation = 0;
-    static constexpr uint DefaultNormalsVBOLocation   = 1;
-    static constexpr uint DefaultUvsVBOLocation       = 2;
-    static constexpr uint DefaultTangentsVBOLocation  = 3;
-    static constexpr uint DefaultVertexToBonesIndicesVBOLocation = 4;
+    static constexpr uint DefaultPositionsVBOLocation            = 0;
+    static constexpr uint DefaultNormalsVBOLocation              = 1;
+    static constexpr uint DefaultUvsVBOLocation                  = 2;
+    static constexpr uint DefaultTangentsVBOLocation             = 3;
+    static constexpr uint DefaultVertexToBonesIdsVBOLocation     = 4;
     static constexpr uint DefaultVertexToBonesWeightsVBOLocation = 5;
 
     void SetPositionsPool(const Array<Vector3>& positions);
@@ -42,53 +43,84 @@ public:
     void SetUvsPool(const Array<Vector2>& uvs);
     void SetTangentsPool(const Array<Vector3>& tangents);
     void SetBonesPool(const Map<String, Mesh::Bone> &bones);
-    void SetVertexIndices(const Array<VertexId>& vertexIndices);
-    void SetBonesIndices(const Map<String, uint>& bonesIndices);
+    void SetTrianglesVertexIds(const Array<VertexId>& triangleVertexIds);
+    void SetBonesIds(const Map<String, uint>& bonesIds);
 
     void UpdateVAOs();
-    void CalculateVertexNormals();
+    void UpdateCornerTables();
+    void UpdateVertexNormals();
+    void UpdateVAOsAndTables();
 
     void CalculateLODs();
     int GetNumLODs() const;
     RH<Mesh> GetLODMesh(int lod) const;
     const Array<RH<Mesh>> GetLODMeshes() const;
-    uint GetNumTriangles() const;
-    String GetBoneName(uint boneIndex) const;
-    uint GetBoneIndex(const String &boneName) const;
-    Triangle GetTriangle(uint triIndex) const;
-    std::array<VertexId, 3> GetTriangleVertexIndices(uint triIndex) const;
+    String GetBoneName(uint boneId) const;
+    uint GetBoneId(const String &boneName) const;
 
     VAO *GetVAO() const;
-    IBO *GetVertexIndicesIBO() const;
+    IBO *GetTriangleVertexIdsIBO() const;
     VBO *GetVertexAttributesVBO() const;
-    int GetNumVertices() const;
 
     uint GetPositionsBytesSize() const;
     uint GetNormalsBytesSize() const;
     uint GetUvsBytesSize() const;
     uint GetTangentsBytesSize() const;
-    uint GetBonesIndicesBytesSize() const;
+    uint GetBonesIdsBytesSize() const;
     uint GetBonesWeightsBytesSize() const;
     uint GetVBOPositionsOffset() const;
     uint GetVBONormalsOffset() const;
     uint GetVBOUvsOffset() const;
     uint GetVBOTangentsOffset() const;
-    uint GetVBOBonesIndicesOffset() const;
+    uint GetVBOBonesIdsOffset() const;
     uint GetVBOBonesWeightsOffset() const;
     uint GetVBOStride() const;
 
+    // Triangles related
+    bool IsIndexed() const;
+    uint GetNumCorners() const;
+    uint GetNumVertices() const;
+    uint GetNumTriangles() const;
+    uint GetNumVerticesIds() const;
+    Triangle GetTriangle(TriangleId triId) const;
+    std::array<VertexId, 3> GetVertexIdsFromTriangle(TriangleId triId) const;
+    VertexId GetRemainingVertexId(TriangleId triangleId,
+                                  VertexId oneVertex,
+                                  VertexId anotherVertex) const;
+    VertexId GetRemainingVertexIdUnique(TriangleId triangleId,
+                                        VertexId oneVertex,
+                                        VertexId anotherVertex) const;
+    CornerId GetCornerIdFromTriangle(TriangleId triangleId, uint i) const;
+    std::array<CornerId, 3> GetCornerIdsFromTriangle(TriangleId triangleId) const;
+    CornerId GetTriangleIdFromCornerId(CornerId cornerId) const;
+    VertexId GetVertexIdFromCornerId(CornerId cId) const;
+    VertexId GetVertexIdUniqueFromCornerId(CornerId cId) const;
+    VertexId GetVertexIdUnique(VertexId vId) const;
+    CornerId GetNextCornerId(CornerId cId) const;
+    CornerId GetPreviousCornerId(CornerId cId) const;
+    CornerId GetOppositeCornerId(CornerId cId) const;
+    float GetCornerAngleRads(CornerId cId) const;
+    const Array<CornerId>& GetCornerIdsFromVertexId(VertexId vId) const;
+    Array<CornerId> GetNeighborCornerIds(CornerId cId) const;
+    Array<VertexId> GetNeighborVertexIds(VertexId vId) const;
+    Array<TriangleId> GetAdjacentTriangleIds(TriangleId triId) const;
+    Array<TriangleId> GetNeighborTriangleIdsFromVertexId(VertexId vId) const;
+    float GetVertexGaussianCurvature(VertexId centralVId);
+    float GetVertexMeanCurvature(VertexId centralVId);
+    bool HasCornerTablesComputed() const;
+
     const AABox& GetAABBox() const;
     const Sphere& GetBoundingSphere() const;
-    const Array<VertexId>& GetVertexIndices() const;
+    const Array<VertexId>& GetTrianglesVertexIds() const;
     const Array<Vector3>& GetPositionsPool() const;
     const Array<Vector3>& GetNormalsPool() const;
     const Array<Vector2>& GetUvsPool() const;
     const Array<Vector3>& GetTangentsPool() const;
-    const Map<String, uint>& GetBonesIndices() const;
+    const Map<String, uint>& GetBonesIds() const;
     const Map<String, Mesh::Bone>& GetBonesPool() const;
     const Path &GetModelFilepath() const;
 
-    UMap<VertexId, Array<TriangleId>> GetVertexIndicesToTriangleIndices() const;
+    UMap<VertexId, Array<TriangleId>> GetVertexIdsToTriangleIds() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -103,21 +135,27 @@ public:
 private:
     bool m_areLodsValid = false;
     Array< RH<Mesh> > m_lodMeshes;
-    Array<VertexId> m_vertexIndices;
     Array<Vector3> m_positionsPool;
     Array<Vector3> m_normalsPool;
     Array<Vector2> m_uvsPool;
     Array<Vector3> m_tangentsPool;
+    Array<VertexId> m_triangleVertexIds;
 
-    Map<String, Bone> m_bonesPool;
-    Map<String, uint> m_bonesIndices;
-    Map<uint, String> m_indexToBone;
-    Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIndicesPool;
-    Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
     RH<Animation> m_animations;
+    Map<String, Bone> m_bonesPool;
+    Map<uint, String> m_idToBone;
+    Map<String, uint> m_bonesIds;
+    Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIdsPool;
+    Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
+
+    // (i, j, k) hold the opposite corners of the corners (0, 1, 2) of the
+    // triangle 3*(i/3)
+    Array<CornerId> m_cornerIdToOppositeCornerId;
+    Array< Array<CornerId> > m_vertexIdToCornerIds;
+    Array<VertexId> m_vertexIdToSamePositionMinimumVertexId;
 
     mutable VAO *m_vao = nullptr;
-    IBO *m_vertexIndicesIBO = nullptr;
+    IBO *m_vertexIdsIBO = nullptr;
     VBO *m_vertexAttributesVBO = nullptr;
 
     AABox m_bBox;

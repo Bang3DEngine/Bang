@@ -22,6 +22,7 @@ public:
 
     void SetPoint(int i, const Vector3 &point);
 
+    float GetArea() const;
     Plane GetPlane() const;
     Vector3 GetNormal() const;
     const std::array<Vector3, 3>& GetPoints() const;

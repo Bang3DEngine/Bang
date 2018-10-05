@@ -111,9 +111,9 @@ Map<Key,Value,Compare>::Find(const Key &key) const
 }
 
 template<class Key, class Value, class Compare>
-List<Key> Map<Key,Value,Compare>::GetKeysWithValue(const Value &v) const
+Array<Key> Map<Key,Value,Compare>::GetKeysWithValue(const Value &v) const
 {
-    List<Key> result;
+    Array<Key> result;
     for (auto it = Begin(); it != End(); ++it)
     {
         if (it->second == v) { result.PushBack(it->first); }
@@ -122,17 +122,17 @@ List<Key> Map<Key,Value,Compare>::GetKeysWithValue(const Value &v) const
 }
 
 template<class Key, class Value, class Compare>
-List<Key> Map<Key,Value,Compare>::GetKeys() const
+Array<Key> Map<Key,Value,Compare>::GetKeys() const
 {
-    List<Key> result;
+    Array<Key> result;
     for (const auto& it : *this) { result.PushBack(it.first); }
     return result;
 }
 
 template<class Key, class Value, class Compare>
-List<Value> Map<Key,Value,Compare>::GetValues() const
+Array<Value> Map<Key,Value,Compare>::GetValues() const
 {
-    List<Value> result;
+    Array<Value> result;
     for (auto it = Begin(); it != End(); ++it)
     {
         result.PushBack(it->second);

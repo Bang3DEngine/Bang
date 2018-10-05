@@ -18,6 +18,7 @@ public:
     static RH<Mesh> GetUIPlane3x3();
     static RH<Mesh> GetUIPlane3x3InvUVY();
     static RH<Mesh> GetCube();
+    static RH<Mesh> GetCylinder();
     static RH<Mesh> GetCapsule();
     static RH<Mesh> GetSphere();
     static RH<Mesh> GetCone();

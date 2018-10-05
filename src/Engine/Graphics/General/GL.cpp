@@ -1554,8 +1554,10 @@ void GL::Render(const VAO *vao,
 {
     #ifdef DEBUG
     GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    ASSERT( boundShaderProgram > 0 );
-    ASSERT( GL::ValidateProgram(boundShaderProgram) );
+    if ( boundShaderProgram > 0 )
+    {
+        ASSERT( GL::ValidateProgram(boundShaderProgram) );
+    }
     #endif
 
     if (vao->IsIndexed())

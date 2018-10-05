@@ -72,9 +72,9 @@ bool Set<Key,Compare>::Contains(const Key &key) const
 }
 
 template<class Key, class Compare>
-List<Key> Set<Key,Compare>::GetKeys() const
+Array<Key> Set<Key,Compare>::GetKeys() const
 {
-    List<Key> result;
+    Array<Key> result;
     for (Const_Iterator cit = this->Begin(); cit != this->End(); ++cit)
     {
         result.PushBack(*cit);

@@ -32,10 +32,10 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
     Array<OctreeData> octreeData; // Retrieve all the octree data
     {
-        for (int i = 0; i < mesh->GetNumVertices(); ++i)
+        for (int i = 0; i < mesh->GetNumVerticesIds(); ++i)
         {
-            const int vIndex = (mesh->GetVertexIndicesIBO() ?
-                                        mesh->GetVertexIndices()[i] : i);
+            const int vIndex = (mesh->GetTriangleVertexIdsIBO() ?
+                                        mesh->GetTrianglesVertexIds()[i] : i);
             const Vector3 &position = mesh->GetPositionsPool()[vIndex];
             octreeData.PushBack( std::make_pair(vIndex, position) );
         }
@@ -58,7 +58,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     for (uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
     {
         const std::array<Mesh::VertexId, 3> triVertexIndices =
-                                mesh->GetTriangleVertexIndices(tri);
+                                mesh->GetVertexIdsFromTriangle(tri);
         for (uint i = 0; i < 3; ++i)
         {
             const Mesh::VertexId currentVertexIndex =
@@ -85,7 +85,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     UMap<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
     if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
     {
-        vertexIdxsToTriIdxs = mesh->GetVertexIndicesToTriangleIndices();
+        vertexIdxsToTriIdxs = mesh->GetVertexIdsToTriangleIds();
     }
 
     int octreeDepth = octree.GetDepth();
@@ -301,7 +301,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         }
 
         // Finally calculate vertexIndices with all previous info!
-        Array<Mesh::VertexId> vertexClusterTrisIndices;
+        Array<Mesh::VertexId> vertexClusterTriVertsIndices;
         for (ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
         {
             if (!clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(cId))
@@ -347,23 +347,23 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                     }
 
                     // Add triangle indices
-                    vertexClusterTrisIndices.PushBack(triClusterIds[0]);
-                    vertexClusterTrisIndices.PushBack(triClusterIds[1]);
-                    vertexClusterTrisIndices.PushBack(triClusterIds[2]);
+                    vertexClusterTriVertsIndices.PushBack(triClusterIds[0]);
+                    vertexClusterTriVertsIndices.PushBack(triClusterIds[1]);
+                    vertexClusterTriVertsIndices.PushBack(triClusterIds[2]);
                 }
             }
         }
 
-        simplifiedMesh.Get()->SetVertexIndices(vertexClusterTrisIndices);
-        simplifiedMesh.Get()->CalculateVertexNormals();
-        simplifiedMesh.Get()->UpdateVAOs();
+        simplifiedMesh.Get()->SetTrianglesVertexIds(vertexClusterTriVertsIndices);
+        simplifiedMesh.Get()->UpdateVertexNormals();
+        simplifiedMesh.Get()->UpdateVAOsAndTables();
 
-        Debug_Log("Level " << level << ": " << vertexClusterTrisIndices.Size() <<
-                  "/" << mesh->GetNumVertices());
+        Debug_Log("Level " << level << ": " << vertexClusterTriVertsIndices.Size() <<
+                  "/" << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
 
-        if (vertexClusterTrisIndices.Size() == mesh->GetNumVertices())
+        if (vertexClusterTriVertsIndices.Size() == mesh->GetNumVerticesIds())
         {
             // This was the max level, going further makes no sense
             break;
@@ -445,7 +445,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
                 ++numTrisComputed;
 
                 const std::array<Mesh::VertexId, 3> triVertsIds =
-                                        mesh.GetTriangleVertexIndices(triId);
+                                        mesh.GetVertexIdsFromTriangle(triId);
                 const Mesh::VertexId triVId0 = triVertsIds[0];
                 const Mesh::VertexId triVId1 = triVertsIds[1];
                 const Mesh::VertexId triVId2 = triVertsIds[2];

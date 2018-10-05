@@ -17,12 +17,12 @@ Array<T>::Array(const std::vector<T> &v) : m_vector(v)
 }
 
 template<class T>
-Array<T>::Array(int size) : m_vector(size)
+Array<T>::Array(std::size_t size) : m_vector(size)
 {
 }
 
 template<class T>
-Array<T>::Array(int size, const T &initValue) : m_vector(size, initValue)
+Array<T>::Array(std::size_t size, const T &initValue) : m_vector(size, initValue)
 {
 }
 
@@ -236,7 +236,7 @@ void Array<T>::Reserve(std::size_t n)
 }
 
 template<class T>
-void Array<T>::Resize(int n)
+void Array<T>::Resize(std::size_t n)
 {
     m_vector.resize(n);
 }

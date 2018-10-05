@@ -24,8 +24,8 @@ public:
 
     Array();
     Array(const std::vector<T> &v);
-    Array(int size);
-    Array(int size, const T& initValue);
+    Array(std::size_t size);
+    Array(std::size_t size, const T& initValue);
     Array(std::initializer_list<T> l);
     template <class OtherIterator>
     explicit Array(OtherIterator begin, OtherIterator end);
@@ -68,7 +68,7 @@ public:
     int IndexOf(const T& x) const;
 
     void Reserve(std::size_t n);
-    void Resize(int n);
+    void Resize(std::size_t n);
     uint Size() const;
     void Clear();
     bool IsEmpty() const;

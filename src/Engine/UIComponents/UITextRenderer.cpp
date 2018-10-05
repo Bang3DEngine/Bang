@@ -187,7 +187,7 @@ void UITextRenderer::OnRender()
     UIRenderer::OnRender();
     RegenerateCharQuadsVAO();
 
-    int vertCount = p_mesh.Get()->GetNumVertices();
+    int vertCount = p_mesh.Get()->GetNumVerticesIds();
     if (vertCount >= 3)
     {
         GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(), vertCount);

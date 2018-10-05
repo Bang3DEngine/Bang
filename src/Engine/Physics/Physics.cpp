@@ -290,7 +290,7 @@ PxTriangleMesh* Physics::CreatePxTriangleMesh(Mesh *mesh) const
 
         meshDesc.triangles.count  = mesh->GetNumTriangles();
         meshDesc.triangles.stride = 3 * sizeof(uint);
-        meshDesc.triangles.data   = mesh->GetVertexIndices().Data();
+        meshDesc.triangles.data   = mesh->GetTrianglesVertexIds().Data();
 
         #ifdef DEBUG
         if (!m_pxCooking->validateTriangleMesh(meshDesc))

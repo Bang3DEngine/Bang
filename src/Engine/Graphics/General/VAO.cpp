@@ -27,12 +27,12 @@ void VAO::UnBind() const
 }
 
 void VAO::SetVBO(const VBO *vbo,
-                 int location,
-                 int dataComponentsCount,
+                 uint location,
+                 uint dataComponentsCount,
                  GL::VertexAttribDataType dataType,
                  bool dataNormalized,
-                 int dataStride,
-                 int dataOffset)
+                 uint dataStride,
+                 uint dataOffset)
 {
     GL::Push(GL::Pushable::VAO);
     GL::Push(GL::Pushable::VBO);
@@ -40,13 +40,13 @@ void VAO::SetVBO(const VBO *vbo,
 
     Bind();
     vbo->Bind();
-    GL::EnableVertexAttribArray(location);
-    GL::VertexAttribPointer(location,
-                            dataComponentsCount,
+    GL::EnableVertexAttribArray( SCAST<GLint>(location) );
+    GL::VertexAttribPointer(SCAST<GLint>(location),
+                            SCAST<GLint>(dataComponentsCount),
                             dataType,
-                            dataNormalized,
-                            dataStride,
-                            dataOffset);
+                            SCAST<GLint>(dataNormalized),
+                            SCAST<GLint>(dataStride),
+                            SCAST<GLint>(dataOffset));
     GL::Pop(GL::Pushable::VBO);
     GL::Pop(GL::Pushable::VAO);
 
@@ -77,14 +77,14 @@ void VAO::SetIBO(IBO *ibo)
     GL::Pop(GL::Pushable::VAO);
 }
 
-void VAO::RemoveVBO(GLint location)
+void VAO::RemoveVBO(uint location)
 {
-    if (location >= 0 && location < p_vbos.Size())
+    if (location < p_vbos.Size())
     {
         GL::Push(GL::Pushable::VAO);
 
         Bind();
-        GL::DisableVertexAttribArray(location);
+        GL::DisableVertexAttribArray( SCAST<GLint>(location) );
 
         GL::Pop(GL::Pushable::VAO);
 
@@ -107,7 +107,7 @@ bool VAO::IsIndexed() const
     return (GetIBO() != nullptr);
 }
 
-const VBO* VAO::GetVBOByLocation(GLint location) const
+const VBO* VAO::GetVBOByLocation(uint location) const
 {
     if (location >= p_vbos.Size())
     {

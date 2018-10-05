@@ -393,7 +393,8 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
     Vector3 h = Vector3::Cross(rayDir, v2v0);
     float   a = Vector3::Dot(v1v0, h);
 
-    if (a > -0.00001 && a < 0.00001)
+    constexpr float Epsilon = 1e-7;
+    if (a > -Epsilon && a < Epsilon)
     {
         *intersected = false;
         return;

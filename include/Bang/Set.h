@@ -6,7 +6,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD_T class List;
+FORWARD_T class Array;
 
 template<class Key, class Compare = std::less<Key>>
 class Set
@@ -36,7 +36,7 @@ public:
     bool IsEmpty() const;
     bool Contains(const Key &key) const;
 
-    List<Key> GetKeys() const;
+    Array<Key> GetKeys() const;
 
     Iterator Begin();
     Iterator End();

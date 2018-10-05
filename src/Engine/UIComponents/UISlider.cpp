@@ -105,7 +105,7 @@ float UISlider::GetValuePercent() const
     const float range = (maxValue - minValue);
     const float percent = (range != 0.0f) ?
                             ((GetValue() - minValue) / range) : 0.0f;
-    ASSERT(percent >= 0.0f && percent <= 1.0f);
+    ASSERT(percent >= -0.001f && percent <= 1.001f);
     return percent;
 }
 

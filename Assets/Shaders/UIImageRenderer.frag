@@ -2,13 +2,16 @@
 
 void main()
 {
+    vec4 color = B_MaterialAlbedoColor;
+
     if (B_HasAlbedoTexture)
     {
-        B_GIn_Color = B_MaterialAlbedoColor * texture(B_AlbedoTexture,
-                                                      B_FIn_AlbedoUv);
+        color *= texture(B_AlbedoTexture, B_FIn_AlbedoUv);
     }
-    else
+
+    if (color.a <= B_AlphaCutoff)
     {
-        B_GIn_Color = B_MaterialAlbedoColor;
+        discard;
     }
+    B_GIn_Color = color;
 }

@@ -208,7 +208,8 @@ void UICanvas::OnUpdate()
                                               inputEvent);
                 }
 
-                if (GetFocusableUnderMouseTopMost())
+                if (GetFocusableUnderMouseTopMost() &&
+                    inputEvent.mouseButton == MouseButton::LEFT)
                 {
                     RegisterForEvents( GetFocusableUnderMouseTopMost() );
                     PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),

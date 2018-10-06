@@ -185,7 +185,6 @@ Texture2D *TextureFactory::GetTexture2D(const Path &path)
 
             texRH.Get()->Bind();
             texRH.Get()->GenerateMipMaps();
-            texRH.Get()->SetAlphaCutoff(0.5f);
             texRH.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
             texRH.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 

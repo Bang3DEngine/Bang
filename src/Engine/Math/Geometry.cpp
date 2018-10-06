@@ -22,6 +22,19 @@
 
 USING_NAMESPACE_BANG
 
+float Geometry::GetPointToLineDistance2D(const Vector2 &point,
+                                         const Vector2 &lineP0,
+                                         const Vector2 &lineP1)
+{
+    Vector2 lineP0ToPoint  = (point - lineP0);
+    Vector2 lineDir = (lineP1 - lineP0).NormalizedSafe();
+    float lengthOfPointToLineP0OnLine = Vector2::Dot(lineP0ToPoint, lineDir);
+    float a = lineP0ToPoint.SqLength();
+    float b = Math::Pow(lengthOfPointToLineP0OnLine, 2.0f);
+    float distance = Math::Sqrt( Math::Abs(a-b) );
+    return distance;
+}
+
 void Geometry::IntersectSegment2DSegment2D(const Segment2D &segment0,
                                            const Segment2D &segment1,
                                            bool *intersected,

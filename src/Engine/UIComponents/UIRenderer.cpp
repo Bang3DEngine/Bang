@@ -36,7 +36,10 @@ void UIRenderer::OnRender(RenderPass renderPass)
         }
     }
 
-    if (render) { Renderer::OnRender(renderPass); }
+    if (render)
+    {
+        Renderer::OnRender(renderPass);
+    }
 }
 
 void UIRenderer::SetCullByRectTransform(bool cullByRectTransform)

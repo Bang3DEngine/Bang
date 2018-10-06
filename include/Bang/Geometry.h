@@ -26,6 +26,10 @@ public:
         POSITIVE
     };
 
+    static float GetPointToLineDistance2D(const Vector2 &point,
+                                          const Vector2 &lineP0,
+                                          const Vector2 &lineP1);
+
     static void IntersectSegment2DSegment2D(const Segment2D& segment0,
                                             const Segment2D& segment1,
                                             bool *intersected,

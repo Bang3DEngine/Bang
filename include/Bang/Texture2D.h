@@ -47,7 +47,7 @@ public:
 
 protected:
     Imageb m_image;
-    float m_alphaCutoff = 0.1f;
+    float m_alphaCutoff = 0.0f;
 
     Texture2D();
     virtual ~Texture2D();

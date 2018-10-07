@@ -56,20 +56,17 @@ AnimatorStateMachine *AnimatorStateMachineConnection::GetStateMachine() const
     return p_stateMachine;
 }
 
-AnimatorStateMachineNode*
-AnimatorStateMachineConnection::GetSMNode(uint idx) const
+AnimatorStateMachineNode *AnimatorStateMachineConnection::GetSMNode(uint idx) const
 {
     if (GetStateMachine())
     {
-        if (idx < GetStateMachine()->GetNodes().Size())
-        {
-            return &(GetStateMachine()->GetNodes()[idx]);
-        }
+        return GetStateMachine()->GetNode(idx);
     }
     return nullptr;
 }
 
-uint AnimatorStateMachineConnection::GetSMNodeIdx(AnimatorStateMachineNode *node) const
+uint AnimatorStateMachineConnection::GetSMNodeIdx(
+                                const AnimatorStateMachineNode *node) const
 {
     for (uint i = 0; i < GetStateMachine()->GetNodes().Size(); ++i)
     {

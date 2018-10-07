@@ -3,14 +3,17 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Array.h"
+#include "Bang/Resource.h"
 #include "Bang/AnimatorStateMachineNode.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Animator;
 
-class AnimatorStateMachine
+class AnimatorStateMachine : public Resource
 {
+    RESOURCE(AnimatorStateMachine)
+
 public:
 	AnimatorStateMachine();
 	virtual ~AnimatorStateMachine();
@@ -23,13 +26,16 @@ public:
     void RemoveNode(AnimatorStateMachineNode *node);
     void RemoveNode(uint idx);
 
-    void SetAnimator(Animator *animator);
-
-    Animator* GetAnimator() const;
     const Array<AnimatorStateMachineNode>& GetNodes() const;
 
+    // Resource
+    virtual void Import(const Path &resourceFilepath) override;
+
+    // Serializable
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
+
 private:
-    Animator *p_animator = nullptr;
     AnimatorStateMachineNode m_entryNode;
     Array<AnimatorStateMachineNode> m_nodes;
 

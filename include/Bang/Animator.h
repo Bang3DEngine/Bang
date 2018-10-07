@@ -50,7 +50,7 @@ public:
 
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
-    AnimatorStateMachine* GetStateMachine();
+    AnimatorStateMachine* GetStateMachine() const;
     const AnimatorStateMachine* GetStateMachine() const;
     Animation* GetAnimation(uint animationIndex) const;
     const Array< RH<Animation> >& GetAnimations() const;
@@ -67,7 +67,7 @@ private:
     Time m_animationTime;
     Time m_prevFrameTime;
 
-    AnimatorStateMachine m_stateMachine;
+    RH<AnimatorStateMachine> m_stateMachine;
     AnimatorStateMachineNode *p_currentNode = nullptr;
 
     Array< RH<Animation> > p_animations;

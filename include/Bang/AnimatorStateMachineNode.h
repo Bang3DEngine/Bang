@@ -15,8 +15,8 @@ public:
 	virtual ~AnimatorStateMachineNode();
 
     void SetName(const String &name);
-    AnimatorStateMachineConnection* CreateConnection(uint nodeToIdx);
-    AnimatorStateMachineConnection* CreateConnection(
+    AnimatorStateMachineConnection* CreateConnectionTo(uint nodeToIdx);
+    AnimatorStateMachineConnection* CreateConnectionTo(
                                             AnimatorStateMachineNode *nodeTo);
     const AnimatorStateMachineConnection* GetConnection(uint connectionIdx) const;
     AnimatorStateMachineConnection* GetConnection(uint connectionIdx);

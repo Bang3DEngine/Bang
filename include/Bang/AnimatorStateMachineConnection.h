@@ -31,7 +31,7 @@ private:
     AnimatorStateMachine *p_stateMachine = nullptr;
 
     AnimatorStateMachineNode *GetSMNode(uint idx) const;
-    uint GetSMNodeIdx(AnimatorStateMachineNode *node) const;
+    uint GetSMNodeIdx(const AnimatorStateMachineNode *node) const;
     void SetAnimatorStateMachine(AnimatorStateMachine *stateMachine);
 
     friend class AnimatorStateMachine;

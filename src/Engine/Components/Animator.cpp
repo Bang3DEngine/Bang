@@ -18,7 +18,6 @@ Animator::Animator()
     m_initCrossFadeTime.SetInfinity();
     m_endCrossFadeTime.SetInfinity();
 
-    GetStateMachine()->SetAnimator(this);
     SetCurrentNode( GetStateMachine()->GetEntryNode() );
 }
 
@@ -47,46 +46,49 @@ void Animator::OnUpdate()
     Time passedTime = (now - m_prevFrameTime);
     m_prevFrameTime = now;
 
-    if (GetCurrentAnimation() && IsPlaying())
+    if (GetStateMachine())
     {
-        m_animationTime += passedTime * GetCurrentAnimation()->GetSpeed();
-        PropagateAnimatorEvents(GetCurrentAnimationIndex(),
-                                m_animationTime);
-
-        if (now >= m_endCrossFadeTime)
+        if (GetCurrentAnimation() && IsPlaying())
         {
-            EndCrossFade();
-        }
+            m_animationTime += passedTime * GetCurrentAnimation()->GetSpeed();
+            PropagateAnimatorEvents(GetCurrentAnimationIndex(),
+                                    m_animationTime);
 
-        Map< String, Matrix4 > boneNameToCurrentMatrices;
-        if (GetCurrentAnimation())
-        {
-            if (GetCurrentTargetCrossFadeAnimation())
+            if (now >= m_endCrossFadeTime)
             {
-                Time crossFadeAnimationTime = (now - m_initCrossFadeTime);
-                Time crossFadeAnimationTotalTime = (m_endCrossFadeTime -
-                                                    m_initCrossFadeTime);
-
-                // Cross-fade
-                boneNameToCurrentMatrices =
-                     Animation::GetBoneCrossFadeAnimationMatrices(
-                        GetCurrentAnimation(),
-                        m_animationTime,
-                        GetCurrentTargetCrossFadeAnimation(),
-                        crossFadeAnimationTime,
-                        crossFadeAnimationTotalTime);
-
-                PropagateAnimatorEvents(GetCurrentTargetCrossFadeAnimationIndex(),
-                                        crossFadeAnimationTime);
+                EndCrossFade();
             }
-            else
+
+            Map< String, Matrix4 > boneNameToCurrentMatrices;
+            if (GetCurrentAnimation())
             {
-                // Direct
-                boneNameToCurrentMatrices = GetCurrentAnimation()->
-                     GetBoneAnimationMatricesForTime(m_animationTime);
+                if (GetCurrentTargetCrossFadeAnimation())
+                {
+                    Time crossFadeAnimationTime = (now - m_initCrossFadeTime);
+                    Time crossFadeAnimationTotalTime = (m_endCrossFadeTime -
+                                                        m_initCrossFadeTime);
+
+                    // Cross-fade
+                    boneNameToCurrentMatrices =
+                         Animation::GetBoneCrossFadeAnimationMatrices(
+                            GetCurrentAnimation(),
+                            m_animationTime,
+                            GetCurrentTargetCrossFadeAnimation(),
+                            crossFadeAnimationTime,
+                            crossFadeAnimationTotalTime);
+
+                    PropagateAnimatorEvents(GetCurrentTargetCrossFadeAnimationIndex(),
+                                            crossFadeAnimationTime);
+                }
+                else
+                {
+                    // Direct
+                    boneNameToCurrentMatrices = GetCurrentAnimation()->
+                         GetBoneAnimationMatricesForTime(m_animationTime);
+                }
             }
+            SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
         }
-        SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
     }
 }
 
@@ -260,14 +262,9 @@ bool Animator::GetPlayOnStart() const
     return m_playOnStart;
 }
 
-AnimatorStateMachine* Animator::GetStateMachine()
+AnimatorStateMachine* Animator::GetStateMachine() const
 {
-    return &m_stateMachine;
-}
-
-const AnimatorStateMachine* Animator::GetStateMachine() const
-{
-    return &m_stateMachine;
+    return m_stateMachine.Get();
 }
 
 Animation* Animator::GetAnimation(uint animationIndex) const

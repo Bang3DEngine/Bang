@@ -17,6 +17,7 @@ public:
     static String GetShaderProgramExtension();
     static String GetTextureCubeMapExtension();
     static String GetPhysicsMaterialExtension();
+    static String GetAnimatorStateMachineExtension();
 
     static Array<String> GetTTFExtensions();
     static Array<String> GetImageExtensions();

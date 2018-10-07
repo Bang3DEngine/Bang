@@ -100,12 +100,22 @@ void AnimatorStateMachine::RemoveNode(uint idxToRemove)
     }
 }
 
-Animator *AnimatorStateMachine::GetAnimator() const
-{
-    return p_animator;
-}
-
 const Array<AnimatorStateMachineNode>& AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
+}
+
+void AnimatorStateMachine::Import(const Path &resourceFilepath)
+{
+    BANG_UNUSED(resourceFilepath);
+}
+
+void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
+{
+    Resource::ImportMeta(metaNode);
+}
+
+void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
+{
+    Resource::ExportMeta(metaNode);
 }

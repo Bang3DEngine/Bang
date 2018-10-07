@@ -1,5 +1,7 @@
 #include "Bang/AnimatorStateMachineNode.h"
 
+#include "Bang/AnimatorStateMachine.h"
+
 USING_NAMESPACE_BANG
 
 AnimatorStateMachineNode::AnimatorStateMachineNode()
@@ -16,13 +18,17 @@ void AnimatorStateMachineNode::SetName(const String &name)
 }
 
 AnimatorStateMachineConnection*
-AnimatorStateMachineNode::CreateConnection(uint nodeToIdx)
+AnimatorStateMachineNode::CreateConnectionTo(uint nodeToIdx)
 {
-
+    if (GetStateMachine())
+    {
+        return CreateConnectionTo( GetStateMachine()->GetNode(nodeToIdx) );
+    }
+    return nullptr;
 }
 
 AnimatorStateMachineConnection*
-AnimatorStateMachineNode::CreateConnection(AnimatorStateMachineNode *nodeTo)
+AnimatorStateMachineNode::CreateConnectionTo(AnimatorStateMachineNode *nodeTo)
 {
     AnimatorStateMachineConnection newConnection;
     newConnection.SetNodeTo(nodeTo);

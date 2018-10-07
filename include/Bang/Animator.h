@@ -8,13 +8,14 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/IEventsAnimator.h"
+#include "Bang/AnimatorStateMachine.h"
 
 NAMESPACE_BANG_BEGIN
 
 class Animator : public Component,
                  public EventEmitter<IEventsAnimator>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator);
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator)
 
 public:
     static constexpr int MaxNumBones = 128;
@@ -25,6 +26,10 @@ public:
     // Component
     void OnStart() override;
     void OnUpdate() override;
+
+    void SetCurrentNode(AnimatorStateMachineNode *node);
+
+    AnimatorStateMachineNode* GetCurrentNode() const;
 
     void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
     void RemoveAnimationByIndex(Animation *animation);
@@ -45,6 +50,8 @@ public:
 
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
+    AnimatorStateMachine* GetStateMachine();
+    const AnimatorStateMachine* GetStateMachine() const;
     Animation* GetAnimation(uint animationIndex) const;
     const Array< RH<Animation> >& GetAnimations() const;
 
@@ -59,6 +66,9 @@ private:
     bool m_playing = false;
     Time m_animationTime;
     Time m_prevFrameTime;
+
+    AnimatorStateMachine m_stateMachine;
+    AnimatorStateMachineNode *p_currentNode = nullptr;
 
     Array< RH<Animation> > p_animations;
     uint m_currentAnimationIndex = -1u;

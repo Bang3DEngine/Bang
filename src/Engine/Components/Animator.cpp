@@ -7,6 +7,8 @@
 #include "Bang/GameObject.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/SkinnedMeshRenderer.h"
+#include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachineConnection.h"
 
 USING_NAMESPACE_BANG
 
@@ -15,6 +17,9 @@ Animator::Animator()
     CONSTRUCT_CLASS_ID(Animator);
     m_initCrossFadeTime.SetInfinity();
     m_endCrossFadeTime.SetInfinity();
+
+    GetStateMachine()->SetAnimator(this);
+    SetCurrentNode( GetStateMachine()->GetEntryNode() );
 }
 
 Animator::~Animator()
@@ -83,6 +88,16 @@ void Animator::OnUpdate()
         }
         SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
     }
+}
+
+void Animator::SetCurrentNode(AnimatorStateMachineNode *node)
+{
+    p_currentNode = node;
+}
+
+AnimatorStateMachineNode *Animator::GetCurrentNode() const
+{
+    return p_currentNode;
 }
 
 void Animator::AddAnimation(Animation *animation, uint index_)
@@ -245,6 +260,16 @@ bool Animator::GetPlayOnStart() const
     return m_playOnStart;
 }
 
+AnimatorStateMachine* Animator::GetStateMachine()
+{
+    return &m_stateMachine;
+}
+
+const AnimatorStateMachine* Animator::GetStateMachine() const
+{
+    return &m_stateMachine;
+}
+
 Animation* Animator::GetAnimation(uint animationIndex) const
 {
     if (animationIndex < GetAnimations().Size())
@@ -267,12 +292,14 @@ void Animator::CloneInto(ICloneable *clone) const
     {
         animatorClone->AddAnimation( animationRH.Get() );
     }
+
+    animatorClone->m_stateMachine = m_stateMachine;
+    animatorClone->m_stateMachine.SetAnimator(animatorClone);
 }
 
 void Animator::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
-
 
     Array<GUID> newAnimationGUIDs = metaNode.GetArray<GUID>("Animations");
     bool someAnimationDiffers = (GetAnimations().Size() != newAnimationGUIDs.Size());
@@ -364,7 +391,8 @@ uint Animator::GetCurrentAnimationIndex() const
 
 Animation *Animator::GetCurrentAnimation() const
 {
-    return GetAnimation( GetCurrentAnimationIndex() );
+    return GetCurrentNode() ? GetCurrentNode()->GetAnimation() :
+                              nullptr; // GetAnimation( GetCurrentAnimationIndex() );
 }
 
 uint Animator::GetCurrentTargetCrossFadeAnimationIndex() const

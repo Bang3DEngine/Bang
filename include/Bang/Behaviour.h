@@ -35,7 +35,9 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/DirectionalLight.h"
 #include "Bang/BPReflectedStruct.h"
+#include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/IEventsGameObjectPhysics.h"
+#include "Bang/AnimatorStateMachineConnection.h"
 
 USING_NAMESPACE_BANG
 

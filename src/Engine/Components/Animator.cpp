@@ -17,8 +17,6 @@ Animator::Animator()
     CONSTRUCT_CLASS_ID(Animator);
     m_initCrossFadeTime.SetInfinity();
     m_endCrossFadeTime.SetInfinity();
-
-    SetCurrentNode( GetStateMachine()->GetEntryNode() );
 }
 
 Animator::~Animator()
@@ -92,14 +90,12 @@ void Animator::OnUpdate()
     }
 }
 
-void Animator::SetCurrentNode(AnimatorStateMachineNode *node)
+void Animator::SetStateMachine(AnimatorStateMachine *stateMachine)
 {
-    p_currentNode = node;
-}
-
-AnimatorStateMachineNode *Animator::GetCurrentNode() const
-{
-    return p_currentNode;
+    if (stateMachine != GetStateMachine())
+    {
+        m_stateMachine.Set(stateMachine);
+    }
 }
 
 void Animator::AddAnimation(Animation *animation, uint index_)
@@ -291,7 +287,6 @@ void Animator::CloneInto(ICloneable *clone) const
     }
 
     animatorClone->m_stateMachine = m_stateMachine;
-    animatorClone->m_stateMachine.SetAnimator(animatorClone);
 }
 
 void Animator::ImportMeta(const MetaNode &metaNode)
@@ -388,8 +383,9 @@ uint Animator::GetCurrentAnimationIndex() const
 
 Animation *Animator::GetCurrentAnimation() const
 {
-    return GetCurrentNode() ? GetCurrentNode()->GetAnimation() :
-                              nullptr; // GetAnimation( GetCurrentAnimationIndex() );
+    return GetStateMachine() ?
+                GetStateMachine()->GetCurrentNode()->GetAnimation() :
+                nullptr;
 }
 
 uint Animator::GetCurrentTargetCrossFadeAnimationIndex() const

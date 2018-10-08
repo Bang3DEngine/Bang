@@ -56,6 +56,30 @@ AnimatorStateMachine *AnimatorStateMachineConnection::GetStateMachine() const
     return p_stateMachine;
 }
 
+uint AnimatorStateMachineConnection::GetIndexInsideNodeConnections(
+                                                uint nodeIdx) const
+{
+    if (auto smNode = GetSMNode(nodeIdx))
+    {
+        for (uint i = 0; i < smNode->GetConnections().Size(); ++i)
+        {
+            if (smNode->GetConnection(i) == this)
+            {
+                return i;
+            }
+        }
+    }
+    return -1u;
+}
+
+void AnimatorStateMachineConnection::CloneInto(
+                    AnimatorStateMachineConnection *cloneConnection) const
+{
+    cloneConnection->SetNodeFromIndex( GetNodeFromIndex() );
+    cloneConnection->SetNodeToIndex( GetNodeToIndex() );
+    cloneConnection->SetStateMachine( GetStateMachine() );
+}
+
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetSMNode(uint idx) const
 {
     if (GetStateMachine())
@@ -78,7 +102,7 @@ uint AnimatorStateMachineConnection::GetSMNodeIdx(
     return -1u;
 }
 
-void AnimatorStateMachineConnection::SetAnimatorStateMachine(
+void AnimatorStateMachineConnection::SetStateMachine(
                                             AnimatorStateMachine *stateMachine)
 {
     p_stateMachine = stateMachine;

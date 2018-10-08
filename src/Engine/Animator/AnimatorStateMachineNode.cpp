@@ -6,6 +6,8 @@ USING_NAMESPACE_BANG
 
 AnimatorStateMachineNode::AnimatorStateMachineNode()
 {
+    static int i = 0;
+    SetName("Node " + String::ToString(i++));
 }
 
 AnimatorStateMachineNode::~AnimatorStateMachineNode()
@@ -31,6 +33,8 @@ AnimatorStateMachineConnection*
 AnimatorStateMachineNode::CreateConnectionTo(AnimatorStateMachineNode *nodeTo)
 {
     AnimatorStateMachineConnection newConnection;
+    newConnection.SetStateMachine( GetStateMachine() );
+    newConnection.SetNodeFrom(this);
     newConnection.SetNodeTo(nodeTo);
     return AddConnection(newConnection);
 }
@@ -55,18 +59,33 @@ AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
 void AnimatorStateMachineNode::RemoveConnection(uint connectionIdx)
 {
     ASSERT(connectionIdx < GetConnections().Size());
+
+    auto removedConnection = &m_connections[connectionIdx];
+
+    EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
+                &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
+                this, removedConnection);
+
     m_connections.RemoveByIndex(connectionIdx);
 }
 
 AnimatorStateMachineConnection *AnimatorStateMachineNode::AddConnection(
                                 AnimatorStateMachineConnection newConnection)
 {
-    newConnection.SetAnimatorStateMachine( GetStateMachine() );
+    newConnection.SetStateMachine( GetStateMachine() );
     ASSERT(newConnection.GetNodeFrom() == this);
     ASSERT(newConnection.GetNodeTo() != nullptr);
     ASSERT(newConnection.GetNodeTo() != this);
+
     m_connections.PushBack(newConnection);
-    return &m_connections.Back();
+
+    AnimatorStateMachineConnection *newConnectionPtr = &m_connections.Back();
+
+    EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
+                &IEventsAnimatorStateMachineNode::OnConnectionAdded,
+                this, newConnectionPtr);
+
+    return newConnectionPtr;
 }
 
 void AnimatorStateMachineNode::SetAnimatorStateMachine(
@@ -128,4 +147,22 @@ const Array<AnimatorStateMachineConnection>&
 AnimatorStateMachineNode::GetConnections() const
 {
     return m_connections;
+}
+
+void AnimatorStateMachineNode::CloneInto(
+                            AnimatorStateMachineNode *nodeToCloneTo) const
+{
+    nodeToCloneTo->SetName( GetName() );
+    nodeToCloneTo->SetAnimation( GetAnimation() );
+    for (const AnimatorStateMachineConnection &conn : GetConnections())
+    {
+        AnimatorStateMachineNode *connNodeFrom = conn.GetNodeFrom();
+        AnimatorStateMachineNode *connNodeTo   = conn.GetNodeTo();
+        connNodeFrom = (connNodeFrom == this ? nodeToCloneTo : connNodeFrom);
+        connNodeTo   = (connNodeTo   == this ? nodeToCloneTo : connNodeTo);
+
+        AnimatorStateMachineConnection *newConn =
+                    connNodeFrom->CreateConnectionTo( connNodeTo );
+        BANG_UNUSED(newConn);
+    }
 }

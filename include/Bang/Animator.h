@@ -27,9 +27,7 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
-    void SetCurrentNode(AnimatorStateMachineNode *node);
-
-    AnimatorStateMachineNode* GetCurrentNode() const;
+    void SetStateMachine(AnimatorStateMachine *stateMachine);
 
     void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
     void RemoveAnimationByIndex(Animation *animation);
@@ -51,7 +49,6 @@ public:
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
     AnimatorStateMachine* GetStateMachine() const;
-    const AnimatorStateMachine* GetStateMachine() const;
     Animation* GetAnimation(uint animationIndex) const;
     const Array< RH<Animation> >& GetAnimations() const;
 
@@ -68,7 +65,6 @@ private:
     Time m_prevFrameTime;
 
     RH<AnimatorStateMachine> m_stateMachine;
-    AnimatorStateMachineNode *p_currentNode = nullptr;
 
     Array< RH<Animation> > p_animations;
     uint m_currentAnimationIndex = -1u;

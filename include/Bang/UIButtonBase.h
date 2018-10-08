@@ -29,7 +29,7 @@ public:
                  int spacingWithText = 0);
 
     using ClickedCallback = std::function<void()>;
-    void AddClickedCallback(ClickedCallback clickedCallback);
+    void AddClickedCallback(std::function<void()> clickedCallback);
 
     bool IsBlocked() const;
     UIImageRenderer *GetBorder() const;
@@ -71,7 +71,7 @@ private:
     DPtr<UIFocusable>     p_focusable;
     DPtr<UIImageRenderer> p_background;
     DPtr<UILayoutElement> p_layoutElement;
-    Array<ClickedCallback> m_clickedCallbacks;
+    Array<std::function<void()>> m_clickedCallbacks;
 
     friend class GameObjectFactory;
 };

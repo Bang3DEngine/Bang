@@ -24,6 +24,9 @@ public:
     AnimatorStateMachineNode* GetNodeTo() const;
     AnimatorStateMachineNode* GetNodeFrom() const;
     AnimatorStateMachine *GetStateMachine() const;
+    uint GetIndexInsideNodeConnections(uint nodeIdx) const;
+
+    void CloneInto(AnimatorStateMachineConnection *cloneConnection) const;
 
 private:
     uint m_nodeToIndex   = -1u;
@@ -32,7 +35,7 @@ private:
 
     AnimatorStateMachineNode *GetSMNode(uint idx) const;
     uint GetSMNodeIdx(const AnimatorStateMachineNode *node) const;
-    void SetAnimatorStateMachine(AnimatorStateMachine *stateMachine);
+    void SetStateMachine(AnimatorStateMachine *stateMachine);
 
     friend class AnimatorStateMachine;
     friend class AnimatorStateMachineNode;

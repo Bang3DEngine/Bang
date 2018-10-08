@@ -133,6 +133,14 @@ struct EnumClassHash
 };
 // ======================================================
 
+#define __DISABLE_SSE__
+#define SDL_DISABLE_MM3DNOW_H
+#define SDL_DISABLE_IMMINTRIN_H
+#define SDL_DISABLE_MMINTRIN_H
+#define SDL_DISABLE_XMMINTRIN_H
+#define SDL_DISABLE_EMMINTRIN_H
+#define SDL_DISABLE_PMMINTRIN_H
+
 #ifdef BUILD_STATIC
     #define BANG_SDL2_INCLUDE(file)     <file>
     #define BANG_SDL2_TTF_INCLUDE(file) <file>

@@ -7,16 +7,17 @@ USING_NAMESPACE_BANG
 
 AnimatorStateMachine::AnimatorStateMachine()
 {
-    CreateNodeInto(&m_entryNode);
+    AnimatorStateMachineNode *entryNode = CreateAndAddNode();
+    entryNode->SetName("Entry");
 }
 
 AnimatorStateMachine::~AnimatorStateMachine()
 {
 }
 
-void AnimatorStateMachine::SetAnimator(Animator *animator)
+uint AnimatorStateMachine::GetCurrentNodeIndex() const
 {
-    p_animator = animator;
+    return m_currentNodeIndex;
 }
 
 void AnimatorStateMachine::CreateNodeInto(AnimatorStateMachineNode *node)
@@ -24,21 +25,35 @@ void AnimatorStateMachine::CreateNodeInto(AnimatorStateMachineNode *node)
     node->SetAnimatorStateMachine(this);
 }
 
-AnimatorStateMachineNode *AnimatorStateMachine::CreateNode()
+AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
 {
     AnimatorStateMachineNode smNode;
     CreateNodeInto(&smNode);
     m_nodes.PushBack(smNode);
-    return &m_nodes.Back();
+
+    AnimatorStateMachineNode *newNode = &m_nodes.Back();
+
+    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+                &IEventsAnimatorStateMachine::OnNodeCreated,
+                this,
+                m_nodes.Size()-1,
+                newNode);
+
+    return newNode;
 }
 
-AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode()
+AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode()
 {
-    return &m_entryNode;
+    if (GetCurrentNodeIndex() < GetNodes().Size())
+    {
+        return GetNode( GetCurrentNodeIndex() );
+    }
+    return nullptr;
 }
-const AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode() const
+
+const AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode() const
 {
-    return &m_entryNode;
+    return const_cast<AnimatorStateMachine*>(this)->GetCurrentNode();
 }
 
 const AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx) const
@@ -55,21 +70,14 @@ AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx)
     return nullptr;
 }
 
-void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *node)
-{
-    for (uint i = 0; i < m_nodes.Size(); ++i)
-    {
-        if (node == &m_nodes[i])
-        {
-            RemoveNode(i);
-            break;
-        }
-    }
-}
-
 void AnimatorStateMachine::RemoveNode(uint idxToRemove)
 {
     ASSERT(idxToRemove < m_nodes.Size());
+
+    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+                &IEventsAnimatorStateMachine::OnNodeRemoved,
+                this, idxToRemove, &m_nodes[idxToRemove]);
+
     m_nodes.RemoveByIndex(idxToRemove);
 
     for (AnimatorStateMachineNode& node : m_nodes)
@@ -97,6 +105,11 @@ void AnimatorStateMachine::RemoveNode(uint idxToRemove)
                 ++i;
             }
         }
+    }
+
+    if (idxToRemove == GetCurrentNodeIndex())
+    {
+        m_currentNodeIndex = -1u;
     }
 }
 

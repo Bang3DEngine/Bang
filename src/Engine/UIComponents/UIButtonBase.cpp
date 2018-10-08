@@ -75,7 +75,7 @@ void UIButtonBase::SetIcon(Texture2D *texture, const Vector2i &size,
     SetIconSpacingWithText(spacingWithText);
 }
 
-void UIButtonBase::AddClickedCallback(UIButtonBase::ClickedCallback clickedCallback)
+void UIButtonBase::AddClickedCallback(std::function<void()> clickedCallback)
 {
     m_clickedCallbacks.PushBack(clickedCallback);
 }

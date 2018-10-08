@@ -4,13 +4,16 @@
 #include "Bang/Bang.h"
 #include "Bang/Array.h"
 #include "Bang/Resource.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/IEventsAnimatorStateMachine.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Animator;
 
-class AnimatorStateMachine : public Resource
+class AnimatorStateMachine : public Resource,
+                             public EventEmitter<IEventsAnimatorStateMachine>
 {
     RESOURCE(AnimatorStateMachine)
 
@@ -18,12 +21,12 @@ public:
 	AnimatorStateMachine();
 	virtual ~AnimatorStateMachine();
 
-    AnimatorStateMachineNode* CreateNode();
-    AnimatorStateMachineNode* GetEntryNode();
-    const AnimatorStateMachineNode* GetEntryNode() const;
+    uint GetCurrentNodeIndex() const;
+    AnimatorStateMachineNode* CreateAndAddNode();
+    AnimatorStateMachineNode* GetCurrentNode();
+    const AnimatorStateMachineNode* GetCurrentNode() const;
     const AnimatorStateMachineNode* GetNode(uint nodeIdx) const;
     AnimatorStateMachineNode* GetNode(uint nodeIdx);
-    void RemoveNode(AnimatorStateMachineNode *node);
     void RemoveNode(uint idx);
 
     const Array<AnimatorStateMachineNode>& GetNodes() const;
@@ -36,7 +39,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    AnimatorStateMachineNode m_entryNode;
+    uint m_currentNodeIndex = -1u;
     Array<AnimatorStateMachineNode> m_nodes;
 
     void CreateNodeInto(AnimatorStateMachineNode *node);

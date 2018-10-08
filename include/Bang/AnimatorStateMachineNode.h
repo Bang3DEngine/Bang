@@ -5,10 +5,12 @@
 #include "Bang/Animation.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/IEventsAnimatorStateMachineNode.h"
 
 NAMESPACE_BANG_BEGIN
 
-class AnimatorStateMachineNode
+class AnimatorStateMachineNode :
+                public EventEmitter<IEventsAnimatorStateMachineNode>
 {
 public:
 	AnimatorStateMachineNode();
@@ -32,6 +34,8 @@ public:
     Array<const AnimatorStateMachineConnection*> GetConnectionsTo(
                                       AnimatorStateMachineNode *nodeTo) const;
     const Array<AnimatorStateMachineConnection>& GetConnections() const;
+
+    void CloneInto(AnimatorStateMachineNode *clone) const;
 
 private:
     String m_name = "Node";

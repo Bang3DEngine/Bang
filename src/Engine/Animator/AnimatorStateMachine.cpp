@@ -1,6 +1,7 @@
 #include "Bang/AnimatorStateMachine.h"
 
-#include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/AnimatorStateMachineNode.h"
 
 USING_NAMESPACE_BANG
@@ -113,6 +114,16 @@ void AnimatorStateMachine::RemoveNode(uint idxToRemove)
     }
 }
 
+void AnimatorStateMachine::Clear()
+{
+    m_currentNodeIndex = -1u;
+
+    while (!m_nodes.IsEmpty())
+    {
+        RemoveNode( m_nodes.Size()-1 );
+    }
+}
+
 const Array<AnimatorStateMachineNode>& AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
@@ -120,15 +131,42 @@ const Array<AnimatorStateMachineNode>& AnimatorStateMachine::GetNodes() const
 
 void AnimatorStateMachine::Import(const Path &resourceFilepath)
 {
-    BANG_UNUSED(resourceFilepath);
+    ImportMetaFromFile( MetaFilesManager::GetMetaFilepath(resourceFilepath) );
 }
 
 void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
+
+    if (metaNode.GetChildren().Size() >= 1)
+    {
+        Clear();
+
+        // First just create the nodes (so that indices work nice)...
+        for (uint i = 0; i < metaNode.GetChildren().Size(); ++i)
+        {
+            CreateAndAddNode();
+        }
+
+        // Now import nodes meta
+        uint i = 0;
+        for (const MetaNode &childMetaNode : metaNode.GetChildren())
+        {
+            AnimatorStateMachineNode *node = GetNode(i);
+            node->ImportMeta(childMetaNode);
+            ++i;
+        }
+    }
 }
 
 void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
+
+    for (const AnimatorStateMachineNode &smNode : GetNodes())
+    {
+        MetaNode smNodeMeta;
+        smNode.ExportMeta(&smNodeMeta);
+        metaNode->AddChild(smNodeMeta);
+    }
 }

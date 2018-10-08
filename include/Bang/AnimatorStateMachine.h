@@ -29,6 +29,7 @@ public:
     AnimatorStateMachineNode* GetNode(uint nodeIdx);
     void RemoveNode(uint idx);
 
+    void Clear();
     const Array<AnimatorStateMachineNode>& GetNodes() const;
 
     // Resource

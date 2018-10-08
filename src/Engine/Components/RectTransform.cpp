@@ -507,8 +507,8 @@ void RectTransform::CalculateLocalToParentMatrix() const
     m_localToParentMatrix = Matrix4::TranslateMatrix( GetLocalPosition() ) *
                             translateToPivot.Inversed() *
                             Matrix4::RotateMatrix( GetLocalRotation() ) *
-                            translateToPivot *
-                            Matrix4::ScaleMatrix( GetLocalScale() );
+                            Matrix4::ScaleMatrix( GetLocalScale() ) *
+                            translateToPivot;
     m_localToParentMatrixInv = m_localToParentMatrix.Inversed();
 }
 
@@ -637,7 +637,7 @@ void RectTransform::OnRender(RenderPass rp)
     {
         /*
         AARect r = GetViewportAARectNDC(); BANG_UNUSED(r);
-        DebugRenderer::RenderAARectNDC(r, Color::Green, 0.1f, 1.0f, false);
+        DebugRenderer::RenderAARectNDC(r, Color::Green, 0.0f, 1.0f, false);
 
         DebugRenderer::SetColor(Color::Yellow);
         DebugRenderer::RenderScreenLine(r.GetMinXMaxY(), r.GetMaxXMinY());

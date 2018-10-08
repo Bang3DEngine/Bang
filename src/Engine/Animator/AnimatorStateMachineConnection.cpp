@@ -1,5 +1,6 @@
 #include "Bang/AnimatorStateMachineConnection.h"
 
+#include "Bang/MetaNode.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineNode.h"
 
@@ -72,14 +73,6 @@ uint AnimatorStateMachineConnection::GetIndexInsideNodeConnections(
     return -1u;
 }
 
-void AnimatorStateMachineConnection::CloneInto(
-                    AnimatorStateMachineConnection *cloneConnection) const
-{
-    cloneConnection->SetNodeFromIndex( GetNodeFromIndex() );
-    cloneConnection->SetNodeToIndex( GetNodeToIndex() );
-    cloneConnection->SetStateMachine( GetStateMachine() );
-}
-
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetSMNode(uint idx) const
 {
     if (GetStateMachine())
@@ -106,4 +99,35 @@ void AnimatorStateMachineConnection::SetStateMachine(
                                             AnimatorStateMachine *stateMachine)
 {
     p_stateMachine = stateMachine;
+}
+
+void AnimatorStateMachineConnection::CloneInto(
+                    AnimatorStateMachineConnection *cloneConnection) const
+{
+    cloneConnection->SetNodeFromIndex( GetNodeFromIndex() );
+    cloneConnection->SetNodeToIndex( GetNodeToIndex() );
+    cloneConnection->SetStateMachine( GetStateMachine() );
+}
+
+void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
+{
+    Serializable::ImportMeta(metaNode);
+
+    if (metaNode.Contains("NodeToIndex"))
+    {
+        SetNodeToIndex( metaNode.Get<uint>("NodeToIndex") );
+    }
+
+    if (metaNode.Contains("NodeFromIndex"))
+    {
+        SetNodeFromIndex( metaNode.Get<uint>("NodeFromIndex") );
+    }
+}
+
+void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
+{
+    Serializable::ExportMeta(metaNode);
+
+    metaNode->Set("NodeToIndex", GetNodeToIndex());
+    metaNode->Set("NodeFromIndex", GetNodeFromIndex());
 }

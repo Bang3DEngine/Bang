@@ -3,6 +3,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Animation.h"
+#include "Bang/Serializable.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/AnimatorStateMachineConnection.h"
 #include "Bang/IEventsAnimatorStateMachineNode.h"
@@ -10,8 +11,11 @@
 NAMESPACE_BANG_BEGIN
 
 class AnimatorStateMachineNode :
+                public Serializable,
                 public EventEmitter<IEventsAnimatorStateMachineNode>
 {
+    SERIALIZABLE(AnimatorStateMachineNode);
+
 public:
 	AnimatorStateMachineNode();
 	virtual ~AnimatorStateMachineNode();
@@ -36,6 +40,10 @@ public:
     const Array<AnimatorStateMachineConnection>& GetConnections() const;
 
     void CloneInto(AnimatorStateMachineNode *clone) const;
+
+    // Serializable
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
     String m_name = "Node";

@@ -1,5 +1,6 @@
 #include "Bang/AnimatorStateMachineNode.h"
 
+#include "Bang/MetaNode.h"
 #include "Bang/AnimatorStateMachine.h"
 
 USING_NAMESPACE_BANG
@@ -154,15 +155,46 @@ void AnimatorStateMachineNode::CloneInto(
 {
     nodeToCloneTo->SetName( GetName() );
     nodeToCloneTo->SetAnimation( GetAnimation() );
-    for (const AnimatorStateMachineConnection &conn : GetConnections())
-    {
-        AnimatorStateMachineNode *connNodeFrom = conn.GetNodeFrom();
-        AnimatorStateMachineNode *connNodeTo   = conn.GetNodeTo();
-        connNodeFrom = (connNodeFrom == this ? nodeToCloneTo : connNodeFrom);
-        connNodeTo   = (connNodeTo   == this ? nodeToCloneTo : connNodeTo);
+    // for (const AnimatorStateMachineConnection &conn : GetConnections())
+    // {
+    //     AnimatorStateMachineNode *connNodeFrom = conn.GetNodeFrom();
+    //     AnimatorStateMachineNode *connNodeTo   = conn.GetNodeTo();
+    //     connNodeFrom = (connNodeFrom == this ? nodeToCloneTo : connNodeFrom);
+    //     connNodeTo   = (connNodeTo   == this ? nodeToCloneTo : connNodeTo);
+    //
+    //     AnimatorStateMachineConnection *newConn =
+    //                 connNodeFrom->CreateConnectionTo( connNodeTo );
+    //     BANG_UNUSED(newConn);
+    // }
+}
 
-        AnimatorStateMachineConnection *newConn =
-                    connNodeFrom->CreateConnectionTo( connNodeTo );
-        BANG_UNUSED(newConn);
+void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
+{
+    Serializable::ImportMeta(metaNode);
+
+    if (metaNode.Contains("NodeName"))
+    {
+        SetName( metaNode.Get<String>("NodeName") );
+    }
+
+    for (const MetaNode &childMetaNode : metaNode.GetChildren())
+    {
+        AnimatorStateMachineConnection newConnection;
+        newConnection.ImportMeta(childMetaNode);
+        AddConnection(newConnection);
     }
 }
+
+void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
+{
+    Serializable::ExportMeta(metaNode);
+
+    metaNode->Set("NodeName", GetName());
+    for (const AnimatorStateMachineConnection &smConn : GetConnections())
+    {
+        MetaNode smConnMeta;
+        smConn.ExportMeta(&smConnMeta);
+        metaNode->AddChild(smConnMeta);
+    }
+}
+

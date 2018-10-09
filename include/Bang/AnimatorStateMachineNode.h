@@ -12,32 +12,31 @@ NAMESPACE_BANG_BEGIN
 
 class AnimatorStateMachineNode :
                 public Serializable,
+                public EventEmitter<IEventsDestroy>,
                 public EventEmitter<IEventsAnimatorStateMachineNode>
 {
     SERIALIZABLE(AnimatorStateMachineNode);
 
 public:
-	AnimatorStateMachineNode();
+    AnimatorStateMachineNode(AnimatorStateMachine *stateMachine);
 	virtual ~AnimatorStateMachineNode();
 
     void SetName(const String &name);
-    AnimatorStateMachineConnection* CreateConnectionTo(uint nodeToIdx);
     AnimatorStateMachineConnection* CreateConnectionTo(
                                             AnimatorStateMachineNode *nodeTo);
     const AnimatorStateMachineConnection* GetConnection(uint connectionIdx) const;
     AnimatorStateMachineConnection* GetConnection(uint connectionIdx);
-    void RemoveConnection(uint connectionIdx);
+    void RemoveConnection(AnimatorStateMachineConnection *connection);
 
     void SetAnimation(Animation *animation);
 
     const String &GetName() const;
     Animation* GetAnimation() const;
-    AnimatorStateMachine *GetStateMachine() const;
     Array<AnimatorStateMachineConnection*> GetConnectionsTo(
                                       AnimatorStateMachineNode *nodeTo);
     Array<const AnimatorStateMachineConnection*> GetConnectionsTo(
                                       AnimatorStateMachineNode *nodeTo) const;
-    const Array<AnimatorStateMachineConnection>& GetConnections() const;
+    const Array<AnimatorStateMachineConnection*>& GetConnections() const;
 
     void CloneInto(AnimatorStateMachineNode *clone) const;
 
@@ -48,14 +47,11 @@ public:
 private:
     String m_name = "Node";
     RH<Animation> p_animation;
-    AnimatorStateMachine *p_stateMachine = nullptr;
-    Array<AnimatorStateMachineConnection> m_connections;
+    DPtr<AnimatorStateMachine> p_stateMachine;
+    Array<AnimatorStateMachineConnection*> m_connections;
 
     AnimatorStateMachineConnection* AddConnection(
-                        AnimatorStateMachineConnection connection);
-    void SetAnimatorStateMachine(AnimatorStateMachine *stateMachine);
-
-    friend class AnimatorStateMachine;
+                        AnimatorStateMachineConnection *connection);
 };
 
 NAMESPACE_BANG_END

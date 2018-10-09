@@ -6,107 +6,43 @@
 
 USING_NAMESPACE_BANG
 
-AnimatorStateMachineConnection::AnimatorStateMachineConnection()
+AnimatorStateMachineConnection::AnimatorStateMachineConnection(
+                                    AnimatorStateMachine *stateMachine)
 {
+    p_stateMachine = stateMachine;
 }
 
 AnimatorStateMachineConnection::~AnimatorStateMachineConnection()
 {
-}
-
-void AnimatorStateMachineConnection::SetNodeToIndex(uint nodeToIdx)
-{
-    m_nodeToIndex = nodeToIdx;
-}
-void AnimatorStateMachineConnection::SetNodeFromIndex(uint nodeFromIdx)
-{
-    m_nodeFromIndex = nodeFromIdx;
+    EventEmitter<IEventsDestroy>::PropagateToListeners(
+                                        &IEventsDestroy::OnDestroyed, this);
 }
 
 void AnimatorStateMachineConnection::SetNodeTo(AnimatorStateMachineNode *nodeTo)
 {
-    SetNodeToIndex( GetSMNodeIdx(nodeTo) );
+    p_nodeTo = nodeTo;
 }
 void AnimatorStateMachineConnection::SetNodeFrom(AnimatorStateMachineNode *nodeFrom)
 {
-    SetNodeFromIndex( GetSMNodeIdx(nodeFrom) );
-}
-
-uint AnimatorStateMachineConnection::GetNodeToIndex() const
-{
-    return m_nodeToIndex;
-}
-
-uint AnimatorStateMachineConnection::GetNodeFromIndex() const
-{
-    return m_nodeFromIndex;
+    p_nodeFrom = nodeFrom;
 }
 
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeTo() const
 {
-    return GetSMNode(GetNodeToIndex());
+    return p_nodeTo;
 }
 
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeFrom() const
 {
-    return GetSMNode(GetNodeFromIndex());
-}
-
-AnimatorStateMachine *AnimatorStateMachineConnection::GetStateMachine() const
-{
-    return p_stateMachine;
-}
-
-uint AnimatorStateMachineConnection::GetIndexInsideNodeConnections(
-                                                uint nodeIdx) const
-{
-    if (auto smNode = GetSMNode(nodeIdx))
-    {
-        for (uint i = 0; i < smNode->GetConnections().Size(); ++i)
-        {
-            if (smNode->GetConnection(i) == this)
-            {
-                return i;
-            }
-        }
-    }
-    return -1u;
-}
-
-AnimatorStateMachineNode *AnimatorStateMachineConnection::GetSMNode(uint idx) const
-{
-    if (GetStateMachine())
-    {
-        return GetStateMachine()->GetNode(idx);
-    }
-    return nullptr;
-}
-
-uint AnimatorStateMachineConnection::GetSMNodeIdx(
-                                const AnimatorStateMachineNode *node) const
-{
-    for (uint i = 0; i < GetStateMachine()->GetNodes().Size(); ++i)
-    {
-        if (node == &(GetStateMachine()->GetNodes()[i]))
-        {
-            return i;
-        }
-    }
-    return -1u;
-}
-
-void AnimatorStateMachineConnection::SetStateMachine(
-                                            AnimatorStateMachine *stateMachine)
-{
-    p_stateMachine = stateMachine;
+    return p_nodeFrom;
 }
 
 void AnimatorStateMachineConnection::CloneInto(
                     AnimatorStateMachineConnection *cloneConnection) const
 {
-    cloneConnection->SetNodeFromIndex( GetNodeFromIndex() );
-    cloneConnection->SetNodeToIndex( GetNodeToIndex() );
-    cloneConnection->SetStateMachine( GetStateMachine() );
+    cloneConnection->SetNodeFrom( GetNodeFrom() );
+    cloneConnection->SetNodeTo( GetNodeTo() );
+    cloneConnection->p_stateMachine = p_stateMachine;
 }
 
 void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
@@ -115,12 +51,14 @@ void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("NodeToIndex"))
     {
-        SetNodeToIndex( metaNode.Get<uint>("NodeToIndex") );
+        uint idx = metaNode.Get<uint>("NodeToIndex");
+        SetNodeTo( p_stateMachine->GetNodes()[idx] );
     }
 
     if (metaNode.Contains("NodeFromIndex"))
     {
-        SetNodeFromIndex( metaNode.Get<uint>("NodeFromIndex") );
+        uint idx = metaNode.Get<uint>("NodeFromIndex");
+        SetNodeFrom( p_stateMachine->GetNodes()[idx] );
     }
 }
 
@@ -128,6 +66,8 @@ void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
 {
     Serializable::ExportMeta(metaNode);
 
-    metaNode->Set("NodeToIndex", GetNodeToIndex());
-    metaNode->Set("NodeFromIndex", GetNodeFromIndex());
+    metaNode->Set("NodeToIndex",
+                  p_stateMachine->GetNodes().IndexOf( GetNodeTo() ) );
+    metaNode->Set("NodeFromIndex",
+                  p_stateMachine->GetNodes().IndexOf( GetNodeFrom() ));
 }

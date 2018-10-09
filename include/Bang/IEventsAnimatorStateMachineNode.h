@@ -13,14 +13,14 @@ class IEventsAnimatorStateMachineNode
     IEVENTS(IEventsAnimatorStateMachineNode)
 
 public:
-    virtual void OnConnectionAdded(const AnimatorStateMachineNode *node,
-                                   const AnimatorStateMachineConnection *connection)
+    virtual void OnConnectionAdded(AnimatorStateMachineNode *node,
+                                   AnimatorStateMachineConnection *connection)
     {
         BANG_UNUSED_2(node, connection);
     }
 
-    virtual void OnConnectionRemoved(const AnimatorStateMachineNode *node,
-                                     const AnimatorStateMachineConnection *connection)
+    virtual void OnConnectionRemoved(AnimatorStateMachineNode *node,
+                                     AnimatorStateMachineConnection *connection)
     {
         BANG_UNUSED_2(node, connection);
     }

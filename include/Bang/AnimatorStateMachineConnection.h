@@ -2,6 +2,7 @@
 #define ANIMATORSTATEMACHINECONNECTION_H
 
 #include "Bang/Bang.h"
+#include "Bang/DPtr.h"
 #include "Bang/Serializable.h"
 
 NAMESPACE_BANG_BEGIN
@@ -9,25 +10,20 @@ NAMESPACE_BANG_BEGIN
 FORWARD class AnimatorStateMachine;
 FORWARD class AnimatorStateMachineNode;
 
-class AnimatorStateMachineConnection : public Serializable
+class AnimatorStateMachineConnection : public Serializable,
+                                       public EventEmitter<IEventsDestroy>
 {
     SERIALIZABLE(AnimatorStateMachineConnection)
 
 public:
-    AnimatorStateMachineConnection();
+    AnimatorStateMachineConnection(AnimatorStateMachine *stateMachine);
     virtual ~AnimatorStateMachineConnection();
 
-    void SetNodeToIndex(uint nodeToIdx);
-    void SetNodeFromIndex(uint nodeFromIdx);
     void SetNodeTo(AnimatorStateMachineNode* node);
     void SetNodeFrom(AnimatorStateMachineNode* node);
 
-    uint GetNodeToIndex() const;
-    uint GetNodeFromIndex() const;
     AnimatorStateMachineNode* GetNodeTo() const;
     AnimatorStateMachineNode* GetNodeFrom() const;
-    AnimatorStateMachine *GetStateMachine() const;
-    uint GetIndexInsideNodeConnections(uint nodeIdx) const;
 
     void CloneInto(AnimatorStateMachineConnection *cloneConnection) const;
 
@@ -36,16 +32,9 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    uint m_nodeToIndex   = -1u;
-    uint m_nodeFromIndex = -1u;
-    AnimatorStateMachine *p_stateMachine = nullptr;
-
-    AnimatorStateMachineNode *GetSMNode(uint idx) const;
-    uint GetSMNodeIdx(const AnimatorStateMachineNode *node) const;
-    void SetStateMachine(AnimatorStateMachine *stateMachine);
-
-    friend class AnimatorStateMachine;
-    friend class AnimatorStateMachineNode;
+    DPtr<AnimatorStateMachineNode> p_nodeTo;
+    DPtr<AnimatorStateMachineNode> p_nodeFrom;
+    DPtr<AnimatorStateMachine> p_stateMachine;
 };
 
 NAMESPACE_BANG_END

@@ -14,42 +14,33 @@ AnimatorStateMachine::AnimatorStateMachine()
 
 AnimatorStateMachine::~AnimatorStateMachine()
 {
-}
+    EventEmitter<IEventsDestroy>::PropagateToListeners(
+                                        &IEventsDestroy::OnDestroyed, this);
 
-uint AnimatorStateMachine::GetCurrentNodeIndex() const
-{
-    return m_currentNodeIndex;
-}
-
-void AnimatorStateMachine::CreateNodeInto(AnimatorStateMachineNode *node)
-{
-    node->SetAnimatorStateMachine(this);
+    while (!m_nodes.IsEmpty())
+    {
+        delete m_nodes.Back();
+        m_nodes.PopBack();
+    }
 }
 
 AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
 {
-    AnimatorStateMachineNode smNode;
-    CreateNodeInto(&smNode);
-    m_nodes.PushBack(smNode);
-
-    AnimatorStateMachineNode *newNode = &m_nodes.Back();
+    AnimatorStateMachineNode *newSMNode = new AnimatorStateMachineNode(this);
+    m_nodes.PushBack(newSMNode);
 
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
                 &IEventsAnimatorStateMachine::OnNodeCreated,
                 this,
                 m_nodes.Size()-1,
-                newNode);
+                newSMNode);
 
-    return newNode;
+    return newSMNode;
 }
 
 AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode()
 {
-    if (GetCurrentNodeIndex() < GetNodes().Size())
-    {
-        return GetNode( GetCurrentNodeIndex() );
-    }
-    return nullptr;
+    return p_currentNode;
 }
 
 const AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode() const
@@ -66,65 +57,53 @@ AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx)
 {
     if (nodeIdx < m_nodes.Size())
     {
-        return &(m_nodes[nodeIdx]);
+        return m_nodes[nodeIdx];
     }
     return nullptr;
 }
 
-void AnimatorStateMachine::RemoveNode(uint idxToRemove)
+void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 {
-    ASSERT(idxToRemove < m_nodes.Size());
-
-    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-                &IEventsAnimatorStateMachine::OnNodeRemoved,
-                this, idxToRemove, &m_nodes[idxToRemove]);
-
-    m_nodes.RemoveByIndex(idxToRemove);
-
-    for (AnimatorStateMachineNode& node : m_nodes)
+    for (AnimatorStateMachineNode *node : m_nodes)
     {
-        for (uint i = 0; i < node.GetConnections().Size();)
+        for (uint i = 0; i < node->GetConnections().Size();)
         {
-            AnimatorStateMachineConnection *conn = node.GetConnection(i);
-            ASSERT(conn);
-
-            if (conn->GetNodeToIndex() == i || conn->GetNodeFromIndex() == i)
+            AnimatorStateMachineConnection *conn = node->GetConnection(i);
+            if (conn->GetNodeTo()   == nodeToRemove ||
+                conn->GetNodeFrom() == nodeToRemove)
             {
-                // Must remove connection
-                node.RemoveConnection(i);
+                node->RemoveConnection(conn);
             }
             else
             {
-                if (conn->GetNodeToIndex() > i)
-                {
-                    conn->SetNodeToIndex( conn->GetNodeToIndex() - 1 );
-                }
-                if (conn->GetNodeFromIndex() > i)
-                {
-                    conn->SetNodeFromIndex( conn->GetNodeFromIndex() - 1 );
-                }
                 ++i;
             }
         }
     }
 
-    if (idxToRemove == GetCurrentNodeIndex())
+    if (p_currentNode == GetCurrentNode())
     {
-        m_currentNodeIndex = -1u;
+        p_currentNode = nullptr;
     }
+
+    const uint idxToRemove = GetNodes().IndexOf(nodeToRemove);
+
+    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+                &IEventsAnimatorStateMachine::OnNodeRemoved,
+                this, idxToRemove, nodeToRemove);
+    m_nodes.Remove(nodeToRemove);
 }
 
 void AnimatorStateMachine::Clear()
 {
-    m_currentNodeIndex = -1u;
-
+    p_currentNode = nullptr;
     while (!m_nodes.IsEmpty())
     {
-        RemoveNode( m_nodes.Size()-1 );
+        RemoveNode( m_nodes.Back() );
     }
 }
 
-const Array<AnimatorStateMachineNode>& AnimatorStateMachine::GetNodes() const
+const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
 }
@@ -163,10 +142,10 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
 
-    for (const AnimatorStateMachineNode &smNode : GetNodes())
+    for (const AnimatorStateMachineNode *smNode : GetNodes())
     {
         MetaNode smNodeMeta;
-        smNode.ExportMeta(&smNodeMeta);
+        smNode->ExportMeta(&smNodeMeta);
         metaNode->AddChild(smNodeMeta);
     }
 }

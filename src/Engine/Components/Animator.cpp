@@ -280,59 +280,25 @@ const Array<RH<Animation> > &Animator::GetAnimations() const
 void Animator::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Animator *animatorClone = SCAST<Animator*>(clone);
-    for (const RH<Animation> &animationRH : GetAnimations())
-    {
-        animatorClone->AddAnimation( animationRH.Get() );
-    }
 
-    animatorClone->m_stateMachine = m_stateMachine;
+    Animator *animatorClone = SCAST<Animator*>(clone);
+    animatorClone->SetPlayOnStart( GetPlayOnStart() );
+    animatorClone->SetStateMachine( GetStateMachine() );
 }
 
 void Animator::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    Array<GUID> newAnimationGUIDs = metaNode.GetArray<GUID>("Animations");
-    bool someAnimationDiffers = (GetAnimations().Size() != newAnimationGUIDs.Size());
-    if (!someAnimationDiffers)
-    {
-        for (int i = 0; i < GetAnimations().Size(); ++i)
-        {
-            const GUID &newAnimationGUID = newAnimationGUIDs[i];
-            GUID currentAnimationGUID = GUID::Empty();
-            if (Animation *currentAnimation = GetAnimations()[i].Get())
-            {
-                currentAnimationGUID = currentAnimation->GetGUID();
-            }
-
-            someAnimationDiffers = (newAnimationGUID != currentAnimationGUID);
-            if (someAnimationDiffers)
-            {
-                break;
-            }
-        }
-    }
-
-    if (someAnimationDiffers)
-    {
-        // Clear animations
-        while (!GetAnimations().IsEmpty())
-        {
-            RemoveAnimationByIndex(0u);
-        }
-
-        // Add all new animations
-        for (const GUID &newAnimationGUID : newAnimationGUIDs)
-        {
-            RH<Animation> newAnimationRH = Resources::Load<Animation>(newAnimationGUID);
-            AddAnimation(newAnimationRH.Get());
-        }
-    }
-
     if (metaNode.Contains("PlayOnStart"))
     {
         SetPlayOnStart( metaNode.Get<bool>("PlayOnStart") );
+    }
+
+    if (metaNode.Contains("StateMachine"))
+    {
+        SetStateMachine( Resources::Load<AnimatorStateMachine>(
+                             metaNode.Get<GUID>("StateMachine") ).Get() );
     }
 }
 
@@ -340,14 +306,9 @@ void Animator::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    Array<GUID> animationGUIDs;
-    for (const RH<Animation> &animationRH : GetAnimations())
-    {
-        Animation *animation = animationRH.Get();
-        animationGUIDs.PushBack( animation ? animation->GetGUID() : GUID::Empty());
-    }
-    metaNode->SetArray("Animations", animationGUIDs);
-
+    metaNode->Set("StateMachine",
+                  GetStateMachine() ? GetStateMachine()->GetGUID() :
+                                      GUID::Empty());
     metaNode->Set("PlayOnStart", GetPlayOnStart());
 }
 
@@ -383,9 +344,14 @@ uint Animator::GetCurrentAnimationIndex() const
 
 Animation *Animator::GetCurrentAnimation() const
 {
-    return GetStateMachine() ?
-                GetStateMachine()->GetCurrentNode()->GetAnimation() :
-                nullptr;
+    if (GetStateMachine())
+    {
+        if (GetStateMachine()->GetCurrentNode())
+        {
+            return GetStateMachine()->GetCurrentNode()->GetAnimation();
+        }
+    }
+    return nullptr;
 }
 
 uint Animator::GetCurrentTargetCrossFadeAnimationIndex() const

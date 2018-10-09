@@ -1,6 +1,7 @@
 #include "Bang/AnimatorStateMachineNode.h"
 
 #include "Bang/MetaNode.h"
+#include "Bang/Resources.h"
 #include "Bang/AnimatorStateMachine.h"
 
 USING_NAMESPACE_BANG
@@ -147,6 +148,12 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
         SetName( metaNode.Get<String>("NodeName") );
     }
 
+    if (metaNode.Contains("Animation"))
+    {
+        SetAnimation( Resources::Load<Animation>(
+                            metaNode.Get<GUID>("Animation")).Get() );
+    }
+
     for (const MetaNode &childMetaNode : metaNode.GetChildren())
     {
         auto newConnection = new AnimatorStateMachineConnection(p_stateMachine);
@@ -160,6 +167,8 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     Serializable::ExportMeta(metaNode);
 
     metaNode->Set("NodeName", GetName());
+    metaNode->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
+                                                GUID::Empty());
     for (const AnimatorStateMachineConnection *smConn : GetConnections())
     {
         MetaNode smConnMeta;

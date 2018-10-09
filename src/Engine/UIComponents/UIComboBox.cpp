@@ -494,8 +494,10 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     focusable->SetCursorType(Cursor::Type::HAND);
     focusable->SetConsiderForTabbing(true);
 
-    GameObject *currentItemTextGo = GameObjectFactory::CreateUIGameObject();
-    UITextRenderer *currentItemText = currentItemTextGo->AddComponent<UITextRenderer>();
+    UILabel *currentItemLabel = GameObjectFactory::CreateUILabel();
+    currentItemLabel->SetSelectable(false);
+    currentItemLabel->GetFocusable()->SetFocusEnabled(false);
+    UITextRenderer *currentItemText = currentItemLabel->GetText();
     currentItemText->SetContent("Current");
     currentItemText->SetTextSize(12);
     currentItemText->SetHorizontalAlign(HorizontalAlignment::RIGHT);
@@ -544,7 +546,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     csf->SetHorizontalSizeType(LayoutSizeType::PREFERRED);
     csf->SetVerticalSizeType(LayoutSizeType::PREFERRED);
 
-    currentItemTextGo->SetParent(go);
+    currentItemLabel->GetGameObject()->SetParent(go);
     downArrowIconGo->SetParent(go);
     listGo->SetParent(go);
 

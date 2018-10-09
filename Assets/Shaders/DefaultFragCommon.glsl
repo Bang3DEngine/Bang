@@ -31,7 +31,7 @@ void DefaultFragCommonMain(vec4 albedoColor)
     if (B_HasAlbedoTexture)
     {
         texColor = texture(B_AlbedoTexture, B_FIn_AlbedoUv);
-        if (texColor.a < B_AlphaCutoff)
+        if (texColor.a <= B_AlphaCutoff)
         {
             discard;
         }

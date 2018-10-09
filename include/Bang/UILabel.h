@@ -11,6 +11,7 @@ FORWARD class UIRectMask;
 FORWARD class UIFocusable;
 FORWARD class RectTransform;
 FORWARD class UITextRenderer;
+FORWARD class UILayoutElement;
 
 class UILabel : public Component,
                 public EventListener<IEventsFocus>
@@ -63,6 +64,7 @@ private:
     DPtr<UITextRenderer> p_text;
     DPtr<UIFocusable> p_focusable;
     DPtr<GameObject> p_selectionQuad;
+    DPtr<UILayoutElement> p_layoutElement;
 
     UILabel();
 

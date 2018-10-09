@@ -30,12 +30,13 @@ public:
 
     int GetMinWidth() const;
     int GetMinHeight() const;
-    const Vector2i& GetMinSize() const;
     int GetPreferredWidth() const;
     int GetPreferredHeight() const;
-    Vector2i GetPreferredSize() const;
     float GetFlexibleWidth() const;
     float GetFlexibleHeight() const;
+
+    Vector2i GetMinSize() const override;
+    Vector2i GetPreferredSize() const override;
     Vector2 GetFlexibleSize() const override;
 
 protected:

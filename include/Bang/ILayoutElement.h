@@ -18,6 +18,12 @@ public:
     void SetLayoutPriority(int layoutPriority);
     int GetLayoutPriority() const;
 
+    virtual Vector2i GetMinSize()       const;
+    virtual Vector2i GetPreferredSize() const;
+    virtual Vector2  GetFlexibleSize()  const;
+
+    Vector2 GetSize(LayoutSizeType sizeType) const;
+
 protected:
     ILayoutElement();
     virtual ~ILayoutElement();
@@ -35,12 +41,6 @@ private:
 
     virtual void CalculateLayout(Axis axis) = 0;
     void _CalculateLayout(Axis axis);
-
-    Vector2i GetMinSize()             const;
-    Vector2i GetPreferredSize()       const;
-    virtual Vector2 GetFlexibleSize() const;
-
-    Vector2 GetSize(LayoutSizeType sizeType) const;
 
     friend class UILayoutManager;
 };

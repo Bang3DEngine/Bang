@@ -36,6 +36,12 @@ void UILabel::OnUpdate()
 {
     Component::OnUpdate();
 
+    if (p_layoutElement && GetText())
+    {
+        p_layoutElement->SetMinSize( GetText()->GetPreferredSize() );
+        p_layoutElement->SetPreferredSize( GetText()->GetPreferredSize() );
+    }
+
     if (GetFocusable() && GetFocusable()->HasFocus())
     {
         if (m_selectingWithMouse)
@@ -399,8 +405,8 @@ UILabel *UILabel::CreateInto(GameObject *go)
     hl->SetChildrenVerticalStretch(Stretch::FULL);
     hl->SetChildrenHorizontalStretch(Stretch::FULL);
 
-    UILayoutElement *le = go->AddComponent<UILayoutElement>();
-    le->SetFlexibleSize( Vector2::One );
+    label->p_layoutElement = go->AddComponent<UILayoutElement>();
+    label->p_layoutElement->SetFlexibleSize( Vector2::One );
 
     UIRectMask *mask = go->AddComponent<UIRectMask>();
     label->p_mask = mask;

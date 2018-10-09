@@ -107,7 +107,7 @@ int UILayoutElement::GetMinHeight() const
     return GetMinSize().y;
 }
 
-const Vector2i& UILayoutElement::GetMinSize() const
+Vector2i UILayoutElement::GetMinSize() const
 {
     return m_minSize;
 }

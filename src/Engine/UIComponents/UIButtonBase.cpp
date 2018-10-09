@@ -236,6 +236,8 @@ UIButtonBase *UIButtonBase::CreateInto(
 
     UIButtonBase *button = createBtnFunc(go);
 
+    go->AddComponent<UIRectMask>();
+
     UIHorizontalLayout *hl = go->AddComponent<UIHorizontalLayout>();
     hl->SetSpacing(0);
 
@@ -244,7 +246,6 @@ UIButtonBase *UIButtonBase::CreateInto(
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
-    bgImg->SetMode(UIImageRenderer::Mode::SLICE_9_INV_UVY);
 
     button->p_border = GameObjectFactory::AddInnerBorder(go);
 

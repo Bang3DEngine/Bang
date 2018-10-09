@@ -22,9 +22,34 @@ void AnimatorStateMachineConnection::SetNodeTo(AnimatorStateMachineNode *nodeTo)
 {
     p_nodeTo = nodeTo;
 }
-void AnimatorStateMachineConnection::SetNodeFrom(AnimatorStateMachineNode *nodeFrom)
+void AnimatorStateMachineConnection::SetNodeFrom(
+                                        AnimatorStateMachineNode *nodeFrom)
 {
     p_nodeFrom = nodeFrom;
+}
+
+ASMCTransitionCondition*
+            AnimatorStateMachineConnection::CreateAndAddTransitionCondition()
+{
+    ASMCTransitionCondition *condition = new ASMCTransitionCondition();
+    m_transitionConditions.PushBack(condition);
+    return condition;
+}
+
+void AnimatorStateMachineConnection::RemoveTransitionCondition(
+                                     ASMCTransitionCondition *transitionCond)
+{
+    RemoveTransitionCondition( m_transitionConditions.IndexOf(transitionCond) );
+}
+
+void AnimatorStateMachineConnection::RemoveTransitionCondition(uint idx)
+{
+    if (idx < m_transitionConditions.Size())
+    {
+        ASMCTransitionCondition *transitionCond = m_transitionConditions[idx];
+        m_transitionConditions.RemoveByIndex(idx);
+        delete transitionCond;
+    }
 }
 
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeTo() const
@@ -35,6 +60,12 @@ AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeTo() const
 AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeFrom() const
 {
     return p_nodeFrom;
+}
+
+const Array<ASMCTransitionCondition*>&
+AnimatorStateMachineConnection::GetTransitionConditions() const
+{
+    return m_transitionConditions;
 }
 
 void AnimatorStateMachineConnection::CloneInto(

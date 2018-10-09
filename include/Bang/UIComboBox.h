@@ -23,13 +23,17 @@ public:
     void AddItem(const String &label, int value);
     void SetSelectionByIndex(int index, bool selected);
     void SetSelectionByValue(int value, bool selected);
+    void SetSelectionByLabel(const String &label, bool selected);
     void SetSelectionByIndex(int index);
     void SetSelectionByValue(int value);
+    void SetSelectionByLabel(const String &label);
     void SetSelectionForFlag(int flagValue);
     void SetMultiCheck(bool multicheck);
     void ClearSelectionByIndex(int index);
     void ClearSelectionByValue(int value);
     void ClearSelection();
+    void ClearItems();
+    void RemoveItem(const String &label);
 
     void ShowList();
     void HideList();

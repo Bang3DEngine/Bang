@@ -174,12 +174,20 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
 
 void UIComboBox::SetSelectionByValue(int value, bool selected)
 {
-    int indexOfValue = 0;
-    if (m_indexToValue.Contains(value))
+    uint indexOfValue = m_indexToValue.IndexOf(value);
+    if (indexOfValue != -1u)
     {
-        indexOfValue = m_indexToValue.IndexOf(value);
+        SetSelectionByIndex(indexOfValue, selected);
     }
-    SetSelectionByIndex(indexOfValue, selected);
+}
+
+void UIComboBox::SetSelectionByLabel(const String &label, bool selected)
+{
+    uint indexOfLabel = m_indexToLabel.IndexOf(label);
+    if (indexOfLabel != -1u)
+    {
+        SetSelectionByIndex(indexOfLabel, selected);
+    }
 }
 
 void UIComboBox::SetSelectionByIndex(int index)
@@ -190,6 +198,11 @@ void UIComboBox::SetSelectionByIndex(int index)
 void UIComboBox::SetSelectionByValue(int value)
 {
     SetSelectionByValue(value, true);
+}
+
+void UIComboBox::SetSelectionByLabel(const String &label)
+{
+    SetSelectionByLabel(label, true);
 }
 
 void UIComboBox::SetSelectionForFlag(int flagValue)
@@ -242,6 +255,30 @@ void UIComboBox::ClearSelection()
         EventEmitter<IEventsValueChanged>::SetEmitEvents(true);
         EventEmitter<IEventsValueChanged>::PropagateToListeners(
                     &IEventsValueChanged::OnValueChanged, this);
+    }
+}
+
+void UIComboBox::ClearItems()
+{
+    HideList();
+    while (!m_indexToLabel.IsEmpty())
+    {
+        const String label = m_indexToLabel.Back();
+        RemoveItem(label);
+        m_indexToLabel.PopBack();
+    }
+}
+
+void UIComboBox::RemoveItem(const String &label)
+{
+    uint indexOfLabel = m_indexToLabel.IndexOf(label);
+    if (indexOfLabel != -1u)
+    {
+        m_indexToValue.RemoveByIndex(indexOfLabel);
+        m_indexToLabel.RemoveByIndex(indexOfLabel);
+        m_selectedIndices.Remove(indexOfLabel);
+        m_selectedIndices.RemoveByIndex(indexOfLabel);
+        p_list->RemoveItem( p_list->GetItem(indexOfLabel) );
     }
 }
 

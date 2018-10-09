@@ -54,6 +54,7 @@ void UIButtonBase::SetIconSize(const Vector2i &size)
 {
     UILayoutElement *le = GetIcon()->GetGameObject()->
                           GetComponent<UILayoutElement>();
+    le->SetMinSize(size);
     le->SetPreferredSize(size);
 }
 
@@ -67,8 +68,9 @@ void UIButtonBase::SetIconSpacingWithText(int spacingWithText)
     GetGameObject()->GetComponent<UIDirLayout>()->SetSpacing(spacingWithText);
 }
 
-void UIButtonBase::SetIcon(Texture2D *texture, const Vector2i &size,
-                       int spacingWithText)
+void UIButtonBase::SetIcon(Texture2D *texture,
+                           const Vector2i &size,
+                           int spacingWithText)
 {
     SetIconTexture(texture);
     SetIconSize(size);
@@ -256,7 +258,6 @@ UIButtonBase *UIButtonBase::CreateInto(
     label->GetMask()->SetMasking(false);
 
     UIImageRenderer *icon = GameObjectFactory::CreateUIImage();
-
     GameObject *iconGo = icon->GetGameObject();
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();
     iconLE->SetFlexibleSize(Vector2::Zero);

@@ -4,6 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/DPtr.h"
 #include "Bang/Serializable.h"
+#include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -22,9 +23,14 @@ public:
     void SetNodeTo(AnimatorStateMachineNode* node);
     void SetNodeFrom(AnimatorStateMachineNode* node);
 
+    ASMCTransitionCondition* CreateAndAddTransitionCondition();
+    void RemoveTransitionCondition(ASMCTransitionCondition *transitionCond);
+    void RemoveTransitionCondition(uint idx);
+
     AnimatorStateMachineNode* GetNodeTo() const;
     AnimatorStateMachineNode* GetNodeFrom() const;
 
+    const Array<ASMCTransitionCondition*>& GetTransitionConditions() const;
     void CloneInto(AnimatorStateMachineConnection *cloneConnection) const;
 
     // Serializable
@@ -35,6 +41,7 @@ private:
     DPtr<AnimatorStateMachineNode> p_nodeTo;
     DPtr<AnimatorStateMachineNode> p_nodeFrom;
     DPtr<AnimatorStateMachine> p_stateMachine;
+    Array<ASMCTransitionCondition*> m_transitionConditions;
 };
 
 NAMESPACE_BANG_END

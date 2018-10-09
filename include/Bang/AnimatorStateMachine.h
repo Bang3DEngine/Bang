@@ -7,6 +7,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineVariable.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -27,8 +28,17 @@ public:
     const AnimatorStateMachineNode* GetNode(uint nodeIdx) const;
     void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
 
-    const Array<AnimatorStateMachineNode*>& GetNodes() const;
+    void SetVariableFloat(const String &varName, const float value);
+    void SetVariableBool(const String &varName, const bool value);
     void Clear();
+
+    AnimatorStateMachineVariable* GetVariable(const String &varName) const;
+    float GetVariableFloat(const String &varName) const;
+    bool  GetVariableBool(const String &varName) const;
+
+    const Array<AnimatorStateMachineNode*>& GetNodes() const;
+    Array<AnimatorStateMachineVariable*> GetVariables() const;
+    const Map<String, AnimatorStateMachineVariable*>& GetNameToVariables() const;
 
     // Resource
     virtual void Import(const Path &resourceFilepath) override;
@@ -39,6 +49,9 @@ public:
 
 private:
     Array<AnimatorStateMachineNode*> m_nodes;
+    Map<String, AnimatorStateMachineVariable*> m_nameToVariable;
+
+    AnimatorStateMachineVariable* AddOrGetVariable(const String &varName);
 };
 
 NAMESPACE_BANG_END

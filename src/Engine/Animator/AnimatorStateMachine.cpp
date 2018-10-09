@@ -80,6 +80,56 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
     m_nodes.Remove(nodeToRemove);
 }
 
+AnimatorStateMachineVariable* AnimatorStateMachine::AddOrGetVariable(
+                                                        const String &varName)
+{
+    AnimatorStateMachineVariable *var = nullptr;
+    if (m_nameToVariable.ContainsKey(varName))
+    {
+        var = m_nameToVariable.Get(varName);
+    }
+    else
+    {
+        AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
+        m_nameToVariable.Add(varName, var);
+    }
+    return var;
+}
+
+void AnimatorStateMachine::SetVariableFloat(const String &varName,
+                                            const float value)
+{
+    AnimatorStateMachineVariable *var = AddOrGetVariable(varName);
+    var->SetType(AnimatorStateMachineVariable::Type::FLOAT);
+    var->SetValueFloat(value);
+}
+
+void AnimatorStateMachine::SetVariableBool(const String &varName,
+                                           const bool value)
+{
+    AnimatorStateMachineVariable *var = AddOrGetVariable(varName);
+    var->SetType(AnimatorStateMachineVariable::Type::BOOL);
+    var->SetValueBool(value);
+}
+
+float AnimatorStateMachine::GetVariableFloat(const String &varName) const
+{
+    if (m_nameToVariable.ContainsKey(varName))
+    {
+        return m_nameToVariable.Get(varName)->GetValueFloat();
+    }
+    return 0.0f;
+}
+
+bool AnimatorStateMachine::GetVariableBool(const String &varName) const
+{
+    if (m_nameToVariable.ContainsKey(varName))
+    {
+        return m_nameToVariable.Get(varName)->GetValueBool();
+    }
+    return false;
+}
+
 void AnimatorStateMachine::Clear()
 {
     while (!m_nodes.IsEmpty())
@@ -88,9 +138,30 @@ void AnimatorStateMachine::Clear()
     }
 }
 
+AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
+                                                const String &varName) const
+{
+    if (m_nameToVariable.ContainsKey(varName))
+    {
+        return m_nameToVariable.Get(varName);
+    }
+    return nullptr;
+}
+
 const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
+}
+
+Array<AnimatorStateMachineVariable*> AnimatorStateMachine::GetVariables() const
+{
+    return m_nameToVariable.GetValues();
+}
+
+const Map<String, AnimatorStateMachineVariable*>&
+      AnimatorStateMachine::GetNameToVariables() const
+{
+    return m_nameToVariable;
 }
 
 void AnimatorStateMachine::Import(const Path &resourceFilepath)

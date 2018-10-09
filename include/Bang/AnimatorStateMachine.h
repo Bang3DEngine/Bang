@@ -23,14 +23,12 @@ public:
 	virtual ~AnimatorStateMachine();
 
     AnimatorStateMachineNode* CreateAndAddNode();
-    AnimatorStateMachineNode* GetCurrentNode();
-    const AnimatorStateMachineNode* GetCurrentNode() const;
     AnimatorStateMachineNode* GetNode(uint nodeIdx);
     const AnimatorStateMachineNode* GetNode(uint nodeIdx) const;
     void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
 
-    void Clear();
     const Array<AnimatorStateMachineNode*>& GetNodes() const;
+    void Clear();
 
     // Resource
     virtual void Import(const Path &resourceFilepath) override;
@@ -40,7 +38,6 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    AnimatorStateMachineNode *p_currentNode = nullptr;
     Array<AnimatorStateMachineNode*> m_nodes;
 };
 

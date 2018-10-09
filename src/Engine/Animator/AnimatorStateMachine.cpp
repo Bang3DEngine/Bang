@@ -3,6 +3,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachineConnection.h"
 
 USING_NAMESPACE_BANG
 
@@ -38,16 +39,6 @@ AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
     return newSMNode;
 }
 
-AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode()
-{
-    return p_currentNode;
-}
-
-const AnimatorStateMachineNode *AnimatorStateMachine::GetCurrentNode() const
-{
-    return const_cast<AnimatorStateMachine*>(this)->GetCurrentNode();
-}
-
 const AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx) const
 {
     return const_cast<AnimatorStateMachine*>(this)->GetNode(nodeIdx);
@@ -81,11 +72,6 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
         }
     }
 
-    if (p_currentNode == GetCurrentNode())
-    {
-        p_currentNode = nullptr;
-    }
-
     const uint idxToRemove = GetNodes().IndexOf(nodeToRemove);
 
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
@@ -96,7 +82,6 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 
 void AnimatorStateMachine::Clear()
 {
-    p_currentNode = nullptr;
     while (!m_nodes.IsEmpty())
     {
         RemoveNode( m_nodes.Back() );

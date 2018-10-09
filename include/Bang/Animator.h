@@ -7,13 +7,13 @@
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/IEventsAnimator.h"
 #include "Bang/AnimatorStateMachine.h"
 
 NAMESPACE_BANG_BEGIN
 
-class Animator : public Component,
-                 public EventEmitter<IEventsAnimator>
+FORWARD class AnimatorStateMachinePlayer;
+
+class Animator : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator)
 
@@ -29,17 +29,6 @@ public:
 
     void SetStateMachine(AnimatorStateMachine *stateMachine);
 
-    void AddAnimation(Animation *animation, uint index = SCAST<uint>(-1));
-    void RemoveAnimationByIndex(Animation *animation);
-    void RemoveAnimationByIndex(uint animationIndex);
-    void SetAnimation(uint animationIndex, Animation *animation);
-    void ChangeCurrentAnimation(uint animationIndex);
-    void ChangeCurrentAnimationCrossFade(uint animationIndex,
-                                         Time crossFadeTime);
-    void ChangeCurrentAnimationCrossFade(uint animationIndex,
-                                         double crossFadeTimeSeconds);
-    void ClearCurrentAnimation();
-
     void SetPlayOnStart(bool playOnStart);
 
     void Play();
@@ -49,8 +38,6 @@ public:
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
     AnimatorStateMachine* GetStateMachine() const;
-    Animation* GetAnimation(uint animationIndex) const;
-    const Array< RH<Animation> >& GetAnimations() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -60,28 +47,16 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    bool m_playing = false;
     Time m_animationTime;
     Time m_prevFrameTime;
 
+    AnimatorStateMachinePlayer *m_animationStateMachinePlayer = nullptr;
     RH<AnimatorStateMachine> m_stateMachine;
-
-    Array< RH<Animation> > p_animations;
-    uint m_currentAnimationIndex = -1u;
-    uint m_currentTargetCrossFadeAnimationIndex = -1u;
-    Time m_initCrossFadeTime;
-    Time m_endCrossFadeTime;
     bool m_playOnStart = true;
+    bool m_playing = false;
 
-    void EndCrossFade();
+    AnimatorStateMachinePlayer *GetPlayer() const;
 
-    void PropagateAnimatorEvents(uint currentAnimationIndex,
-                                 Time currentAnimationTime);
-
-    uint GetCurrentAnimationIndex() const;
-    Animation *GetCurrentAnimation() const;
-    uint GetCurrentTargetCrossFadeAnimationIndex() const;
-    Animation *GetCurrentTargetCrossFadeAnimation() const;
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                 const Map<String, Matrix4> &boneAnimMatrices);
 

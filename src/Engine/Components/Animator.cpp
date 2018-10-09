@@ -8,6 +8,7 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/SkinnedMeshRenderer.h"
 #include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachinePlayer.h"
 #include "Bang/AnimatorStateMachineConnection.h"
 
 USING_NAMESPACE_BANG
@@ -15,12 +16,12 @@ USING_NAMESPACE_BANG
 Animator::Animator()
 {
     CONSTRUCT_CLASS_ID(Animator);
-    m_initCrossFadeTime.SetInfinity();
-    m_endCrossFadeTime.SetInfinity();
+    m_animationStateMachinePlayer = new AnimatorStateMachinePlayer();
 }
 
 Animator::~Animator()
 {
+    delete m_animationStateMachinePlayer;
 }
 
 void Animator::OnStart()
@@ -44,46 +45,22 @@ void Animator::OnUpdate()
     Time passedTime = (now - m_prevFrameTime);
     m_prevFrameTime = now;
 
-    if (GetStateMachine())
+    AnimatorStateMachine *sm = GetStateMachine();
+    if (sm && IsPlaying())
     {
-        if (GetCurrentAnimation() && IsPlaying())
+        ASSERT( GetPlayer() );
+        GetPlayer()->Step(passedTime);
+
+        AnimatorStateMachineNode *currentNode = GetPlayer()->GetCurrentNode();
+        if (currentNode)
         {
-            m_animationTime += passedTime * GetCurrentAnimation()->GetSpeed();
-            PropagateAnimatorEvents(GetCurrentAnimationIndex(),
-                                    m_animationTime);
-
-            if (now >= m_endCrossFadeTime)
-            {
-                EndCrossFade();
-            }
-
             Map< String, Matrix4 > boneNameToCurrentMatrices;
-            if (GetCurrentAnimation())
+            Animation *currentAnim = currentNode->GetAnimation();
+            if (currentAnim)
             {
-                if (GetCurrentTargetCrossFadeAnimation())
-                {
-                    Time crossFadeAnimationTime = (now - m_initCrossFadeTime);
-                    Time crossFadeAnimationTotalTime = (m_endCrossFadeTime -
-                                                        m_initCrossFadeTime);
-
-                    // Cross-fade
-                    boneNameToCurrentMatrices =
-                         Animation::GetBoneCrossFadeAnimationMatrices(
-                            GetCurrentAnimation(),
-                            m_animationTime,
-                            GetCurrentTargetCrossFadeAnimation(),
-                            crossFadeAnimationTime,
-                            crossFadeAnimationTotalTime);
-
-                    PropagateAnimatorEvents(GetCurrentTargetCrossFadeAnimationIndex(),
-                                            crossFadeAnimationTime);
-                }
-                else
-                {
-                    // Direct
-                    boneNameToCurrentMatrices = GetCurrentAnimation()->
-                         GetBoneAnimationMatricesForTime(m_animationTime);
-                }
+                Time currentNodeTime = GetPlayer()->GetCurrentNodeTime();
+                boneNameToCurrentMatrices = currentAnim->
+                     GetBoneAnimationMatricesForTime(currentNodeTime);
             }
             SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
         }
@@ -95,79 +72,8 @@ void Animator::SetStateMachine(AnimatorStateMachine *stateMachine)
     if (stateMachine != GetStateMachine())
     {
         m_stateMachine.Set(stateMachine);
+        GetPlayer()->SetStateMachine( GetStateMachine() );
     }
-}
-
-void Animator::AddAnimation(Animation *animation, uint index_)
-{
-    RH<Animation> animationRH(animation);
-
-    uint index = Math::Clamp(index_, 0, GetAnimations().Size());
-    p_animations.Insert(animationRH, index);
-
-    const bool setCurrentAnimation = (GetAnimations().Size() == 1);
-    if (setCurrentAnimation)
-    {
-        ChangeCurrentAnimation(0);
-    }
-}
-
-void Animator::RemoveAnimationByIndex(Animation *animation)
-{
-    uint index = SCAST<uint>(GetAnimations().IndexOf(RH<Animation>(animation)));
-    if (index != -1u)
-    {
-        RemoveAnimationByIndex(index);
-    }
-}
-
-void Animator::RemoveAnimationByIndex(uint animationIndex)
-{
-    ASSERT(animationIndex < GetAnimations().Size());
-    if (GetCurrentAnimationIndex() == animationIndex)
-    {
-        ClearCurrentAnimation();
-    }
-    p_animations.RemoveByIndex(animationIndex);
-}
-
-void Animator::SetAnimation(uint animationIndex, Animation *animation)
-{
-    ASSERT(animationIndex < GetAnimations().Size());
-    p_animations[animationIndex] = RH<Animation>(animation);
-}
-
-void Animator::ChangeCurrentAnimation(uint animationIndex)
-{
-    ASSERT(animationIndex < GetAnimations().Size());
-    m_currentAnimationIndex = animationIndex;
-    m_currentTargetCrossFadeAnimationIndex = -1u;
-}
-
-void Animator::ChangeCurrentAnimationCrossFade(uint animationIndex,
-                                               Time crossFadeTime)
-{
-    ASSERT(animationIndex < GetAnimations().Size());
-    if (animationIndex != GetCurrentAnimationIndex() &&
-        animationIndex != GetCurrentTargetCrossFadeAnimationIndex())
-    {
-        m_currentTargetCrossFadeAnimationIndex = animationIndex;
-        Time now = Time::GetNow();
-        m_initCrossFadeTime = now;
-        m_endCrossFadeTime  = (now + crossFadeTime);
-    }
-}
-
-void Animator::ChangeCurrentAnimationCrossFade(uint animationIndex,
-                                               double crossFadeTimeSeconds)
-{
-    ChangeCurrentAnimationCrossFade(animationIndex,
-                                    Time::Seconds(crossFadeTimeSeconds));
-}
-
-void Animator::ClearCurrentAnimation()
-{
-    m_currentAnimationIndex = -1u;
 }
 
 void Animator::SetPlayOnStart(bool playOnStart)
@@ -263,20 +169,6 @@ AnimatorStateMachine* Animator::GetStateMachine() const
     return m_stateMachine.Get();
 }
 
-Animation* Animator::GetAnimation(uint animationIndex) const
-{
-    if (animationIndex < GetAnimations().Size())
-    {
-        return p_animations[animationIndex].Get();
-    }
-    return nullptr;
-}
-
-const Array<RH<Animation> > &Animator::GetAnimations() const
-{
-    return p_animations;
-}
-
 void Animator::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
@@ -312,59 +204,7 @@ void Animator::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("PlayOnStart", GetPlayOnStart());
 }
 
-void Animator::EndCrossFade()
+AnimatorStateMachinePlayer *Animator::GetPlayer() const
 {
-    m_currentAnimationIndex = GetCurrentTargetCrossFadeAnimationIndex();
-    m_currentTargetCrossFadeAnimationIndex = -1u;
-    m_animationTime = (m_endCrossFadeTime - m_initCrossFadeTime);
-    m_initCrossFadeTime.SetInfinity();
-    m_endCrossFadeTime.SetInfinity();
+    return m_animationStateMachinePlayer;
 }
-
-void Animator::PropagateAnimatorEvents(uint currentAnimationIndex,
-                                       Time currentAnimationTime)
-{
-    Animation *currentAnimation = GetAnimation(currentAnimationIndex);
-
-    EventEmitter<IEventsAnimator>::PropagateToListeners(
-        &IEventsAnimator::OnAnimationTick,
-        this,
-        currentAnimation,
-        currentAnimationIndex,
-        Time::Seconds(Animation::WrapTime(currentAnimationTime.GetSeconds(),
-                                          currentAnimation->GetDurationInSeconds(),
-                                          currentAnimation->GetWrapMode())),
-        currentAnimationTime);
-}
-
-uint Animator::GetCurrentAnimationIndex() const
-{
-    return m_currentAnimationIndex;
-}
-
-Animation *Animator::GetCurrentAnimation() const
-{
-    if (GetStateMachine())
-    {
-        if (GetStateMachine()->GetCurrentNode())
-        {
-            return GetStateMachine()->GetCurrentNode()->GetAnimation();
-        }
-    }
-    return nullptr;
-}
-
-uint Animator::GetCurrentTargetCrossFadeAnimationIndex() const
-{
-    return m_currentTargetCrossFadeAnimationIndex;
-}
-
-Animation *Animator::GetCurrentTargetCrossFadeAnimation() const
-{
-    if (GetCurrentTargetCrossFadeAnimationIndex() <= GetAnimations().Size())
-    {
-        return GetAnimations()[GetCurrentTargetCrossFadeAnimationIndex()].Get();
-    }
-    return nullptr;
-}
-

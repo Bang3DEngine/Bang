@@ -68,11 +68,11 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
 
     if (addAnimator && modelScene.animations.Size() >= 1)
     {
+        RH<AnimatorStateMachine> animatorSM =
+                                    Resources::Create<AnimatorStateMachine>();
+
         Animator *animator = gameObject->AddComponent<Animator>(1);
-        for (const RH<Animation> &animationRH : modelScene.animations)
-        {
-            animator->AddAnimation( animationRH.Get() );
-        }
+        animator->SetStateMachine(animatorSM.Get());
     }
 
     // Add children

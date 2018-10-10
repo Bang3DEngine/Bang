@@ -1,7 +1,6 @@
 #include "Bang/AnimatorStateMachineVariable.h"
 
 #include "Bang/MetaNode.h"
-#include "Bang/AnimatorStateMachine.h"
 
 USING_NAMESPACE_BANG
 
@@ -59,9 +58,7 @@ void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("VariableName"))
     {
-        ASSERT(p_animatorSM);
-        String newVarName = metaNode.Get<String>("VariableName");
-        p_animatorSM->SetVariableName(this, newVarName);
+        SetName( metaNode.Get<String>("VariableName") );
     }
 
     if (metaNode.Contains("VariableType"))

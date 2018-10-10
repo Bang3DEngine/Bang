@@ -6,8 +6,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class AnimatorStateMachine;
-
 class AnimatorStateMachineVariable : public Serializable
 {
     SERIALIZABLE(AnimatorStateMachineVariable)
@@ -22,6 +20,7 @@ public:
 	AnimatorStateMachineVariable();
     virtual ~AnimatorStateMachineVariable();
 
+    void SetName(const String &varName);
     void SetType(AnimatorStateMachineVariable::Type type);
     void SetValueFloat(float value);
     void SetValueBool(bool value);
@@ -36,9 +35,6 @@ private:
     Type m_type = Type::FLOAT;
     float m_valueFloat = 0.0f;
     bool m_valueBool = false;
-    AnimatorStateMachine *p_animatorSM = nullptr;
-
-    void SetName(const String &varName);
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

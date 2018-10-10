@@ -31,20 +31,17 @@ public:
     AnimatorStateMachineVariable* CreateNewVariable();
     void SetVariableFloat(const String &varName, const float value);
     void SetVariableBool(const String &varName, const bool value);
-    bool SetVariableName(AnimatorStateMachineVariable *var,
-                         const String &newVarName);
     void RemoveVariable(AnimatorStateMachineVariable *var);
+    void RemoveVariable(uint varIdx);
     void Clear();
 
     AnimatorStateMachineVariable* GetVariable(const String &varName) const;
-    String GetVariableName(AnimatorStateMachineVariable* var);
     float GetVariableFloat(const String &varName) const;
     bool  GetVariableBool(const String &varName) const;
 
     const Array<AnimatorStateMachineNode*>& GetNodes() const;
-    Array<AnimatorStateMachineVariable*> GetVariables() const;
+    const Array<AnimatorStateMachineVariable*>& GetVariables() const;
     Array<String> GetVariablesNames() const;
-    const Map<String, AnimatorStateMachineVariable*>& GetNameToVariables() const;
 
     // Resource
     virtual void Import(const Path &resourceFilepath) override;
@@ -55,8 +52,7 @@ public:
 
 private:
     Array<AnimatorStateMachineNode*> m_nodes;
-    Map<String, AnimatorStateMachineVariable*> m_nameToVariable;
-    Map<AnimatorStateMachineVariable*, String> m_variableToName;
+    Array<AnimatorStateMachineVariable*> m_variables;
 
     AnimatorStateMachineVariable* CreateOrGetVariable(const String &varName);
 };

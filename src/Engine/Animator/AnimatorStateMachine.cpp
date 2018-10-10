@@ -17,12 +17,7 @@ AnimatorStateMachine::~AnimatorStateMachine()
 {
     EventEmitter<IEventsDestroy>::PropagateToListeners(
                                         &IEventsDestroy::OnDestroyed, this);
-
-    while (!m_nodes.IsEmpty())
-    {
-        delete m_nodes.Back();
-        m_nodes.PopBack();
-    }
+    Clear();
 }
 
 AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
@@ -77,20 +72,20 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
                 &IEventsAnimatorStateMachine::OnNodeRemoved,
                 this, idxToRemove, nodeToRemove);
+
     m_nodes.Remove(nodeToRemove);
+    delete nodeToRemove;
 }
 
 AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
 {
     AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
-    var->p_animatorSM = this;
 
     String varName = "NewVariable";
     varName = Path::GetDuplicateString(varName, GetVariablesNames());
     var->SetName(varName);
 
-    m_nameToVariable.Add(varName, var);
-    m_variableToName.Add(var, varName);
+    m_variables.PushBack(var);
 
     return var;
 }
@@ -98,14 +93,11 @@ AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
 AnimatorStateMachineVariable* AnimatorStateMachine::CreateOrGetVariable(
                                                         const String &varName)
 {
-    AnimatorStateMachineVariable *var = nullptr;
-    if (m_nameToVariable.ContainsKey(varName))
-    {
-        var = m_nameToVariable.Get(varName);
-    }
-    else
+    AnimatorStateMachineVariable *var = GetVariable(varName);
+    if (!var)
     {
         var = CreateNewVariable();
+        var->SetName(varName);
     }
     return var;
 }
@@ -126,50 +118,34 @@ void AnimatorStateMachine::SetVariableBool(const String &varName,
     var->SetValueBool(value);
 }
 
-bool AnimatorStateMachine::SetVariableName(AnimatorStateMachineVariable *var,
-                                           const String &newVarName)
-{
-    if (m_variableToName.ContainsKey(var))
-    {
-        if (!m_nameToVariable.ContainsKey(newVarName))
-        {
-            String oldVarName = m_variableToName.Get(var);
-            ASSERT(m_nameToVariable.ContainsKey(oldVarName) &&
-                   m_nameToVariable.Get(oldVarName) == var);
-            m_nameToVariable.Remove(oldVarName);
-
-            var->SetName(newVarName);
-            m_variableToName.Add(var, newVarName);
-            m_nameToVariable.Add(newVarName, var);
-        }
-    }
-    return false;
-}
-
 void AnimatorStateMachine::RemoveVariable(AnimatorStateMachineVariable *var)
 {
-    if (m_variableToName.ContainsKey(var))
+    RemoveVariable( m_variables.IndexOf(var) );
+}
+
+void AnimatorStateMachine::RemoveVariable(uint varIdx)
+{
+    if (varIdx < m_variables.Size())
     {
-        String varName = GetVariableName(var);
-        m_variableToName.Remove(var);
-        m_nameToVariable.Remove(varName);
+        delete m_variables[varIdx];
+        m_variables.RemoveByIndex(varIdx);
     }
 }
 
 float AnimatorStateMachine::GetVariableFloat(const String &varName) const
 {
-    if (m_nameToVariable.ContainsKey(varName))
+    if (AnimatorStateMachineVariable *var = GetVariable(varName))
     {
-        return m_nameToVariable.Get(varName)->GetValueFloat();
+        return var->GetValueBool();
     }
     return 0.0f;
 }
 
 bool AnimatorStateMachine::GetVariableBool(const String &varName) const
 {
-    if (m_nameToVariable.ContainsKey(varName))
+    if (AnimatorStateMachineVariable *var = GetVariable(varName))
     {
-        return m_nameToVariable.Get(varName)->GetValueBool();
+        return var->GetValueBool();
     }
     return false;
 }
@@ -179,28 +155,25 @@ void AnimatorStateMachine::Clear()
     while (!m_nodes.IsEmpty())
     {
         RemoveNode( m_nodes.Back() );
-        m_nameToVariable.Clear();
-        m_variableToName.Clear();
+    }
+
+    while (!m_variables.IsEmpty())
+    {
+        RemoveVariable( m_variables.Size() - 1 );
     }
 }
 
 AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
                                                 const String &varName) const
 {
-    if (m_nameToVariable.ContainsKey(varName))
+    for (AnimatorStateMachineVariable *var : m_variables)
     {
-        return m_nameToVariable.Get(varName);
+        if (var->GetName() == varName)
+        {
+            return var;
+        }
     }
     return nullptr;
-}
-
-String AnimatorStateMachine::GetVariableName(AnimatorStateMachineVariable *var)
-{
-    if (m_variableToName.ContainsKey(var))
-    {
-        return m_variableToName.Get(var);
-    }
-    return "";
 }
 
 const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
@@ -208,20 +181,19 @@ const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
     return m_nodes;
 }
 
-Array<AnimatorStateMachineVariable*> AnimatorStateMachine::GetVariables() const
+const Array<AnimatorStateMachineVariable*>& AnimatorStateMachine::GetVariables() const
 {
-    return m_nameToVariable.GetValues();
+    return m_variables;
 }
 
 Array<String> AnimatorStateMachine::GetVariablesNames() const
 {
-    return m_nameToVariable.GetKeys();
-}
-
-const Map<String, AnimatorStateMachineVariable*>&
-      AnimatorStateMachine::GetNameToVariables() const
-{
-    return m_nameToVariable;
+    Array<String> varNames;
+    for (AnimatorStateMachineVariable *var : m_variables)
+    {
+        varNames.PushBack(var->GetName());
+    }
+    return varNames;
 }
 
 void AnimatorStateMachine::Import(const Path &resourceFilepath)

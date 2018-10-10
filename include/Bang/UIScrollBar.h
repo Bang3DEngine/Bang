@@ -20,7 +20,6 @@ public:
 	UIScrollBar();
 	virtual ~UIScrollBar();
 
-    void OnStart() override;
     void OnUpdate() override;
 
     void SetSide(Side side);

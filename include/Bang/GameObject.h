@@ -241,7 +241,7 @@ private:
     mutable bool m_visibleRecursively      = false;
     mutable bool m_visibleRecursivelyValid = false;
 
-    GameObject* p_parent = nullptr;
+    GameObject *p_parent = nullptr;
 
     // Convencience cached components
     Transform *p_transform = nullptr;
@@ -273,10 +273,8 @@ private:
 
     // Object
     bool CalculateEnabledRecursively() const override;
-    bool CalculateStartedRecursively() const override;
     bool CalculateVisibleRecursively() const;
     void OnEnabledRecursivelyInvalidated() override;
-    void OnStartedRecursivelyInvalidated() override;
     void OnVisibleRecursivelyInvalidated();
     void InvalidateVisibleRecursively();
 

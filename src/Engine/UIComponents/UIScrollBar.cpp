@@ -25,12 +25,6 @@ UIScrollBar::~UIScrollBar()
 {
 }
 
-void UIScrollBar::OnStart()
-{
-    Component::OnStart();
-    GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
-}
-
 void UIScrollBar::OnUpdate()
 {
     Component::OnUpdate();
@@ -198,6 +192,7 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
 
     UIFocusable *barFocusable = bar->AddComponent<UIFocusable>();
     barFocusable->SetCursorType(Cursor::Type::HAND);
+    barFocusable->EventEmitter<IEventsFocus>::RegisterListener(scrollBar);
 
     // GameObjectFactory::AddInnerShadow(scrollArea->GetGameObject());
     GameObjectFactory::AddInnerBorder(scrollArea->GetGameObject());
@@ -283,5 +278,8 @@ UIEventResult UIScrollBar::OnUIEvent(UIFocusable*, const UIEvent &event)
     return UIEventResult::IGNORE;
 }
 
-UIFocusable *UIScrollBar::GetFocusable() const { return p_barFocusable; }
+UIFocusable *UIScrollBar::GetFocusable() const
+{
+    return p_barFocusable;
+}
 

@@ -27,7 +27,7 @@ public:
     void Update();
     void Render();
     void OnResize(int width, int height);
-    static void OnNewFrame(Scene *scene, bool update);
+    static void OnNewFrame(Scene *scene);
 
     static Scene* GetActiveScene();
     static SceneManager* GetActive();

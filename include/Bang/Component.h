@@ -75,7 +75,6 @@ protected:
 
     // Object
     bool CalculateEnabledRecursively() const override;
-    bool CalculateStartedRecursively() const override;
 
 private:
     GameObject *p_gameObject = nullptr;

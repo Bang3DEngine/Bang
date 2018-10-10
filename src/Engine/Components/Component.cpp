@@ -83,7 +83,6 @@ void Component::SetGameObjectForced(GameObject *newGameObject)
         }
 
         p_gameObject = newGameObject;
-        InvalidateStartedRecursively();
         InvalidateEnabledRecursively();
         OnGameObjectChanged(previousGameObject, newGameObject);
     }
@@ -187,12 +186,6 @@ bool Component::CalculateEnabledRecursively() const
 {
     return IsEnabled() &&
            (GetGameObject() ? GetGameObject()->IsEnabledRecursively() : true);
-}
-
-bool Component::CalculateStartedRecursively() const
-{
-    return IsStarted() &&
-           (GetGameObject() ? GetGameObject()->IsStartedRecursively() : true);
 }
 
 void Component::CloneInto(ICloneable *clone) const

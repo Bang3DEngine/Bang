@@ -172,7 +172,6 @@ void GameObject::AddChild_(GameObject *child,
         GameObject *oldParent = child->GetParent();
 
         child->p_parent = this;
-        child->InvalidateStartedRecursively();
         child->InvalidateEnabledRecursively();
         child->InvalidateVisibleRecursively();
 
@@ -272,12 +271,6 @@ bool GameObject::CalculateEnabledRecursively() const
            (GetParent() ? GetParent()->IsEnabledRecursively() : true);
 }
 
-bool GameObject::CalculateStartedRecursively() const
-{
-    return IsStarted() &&
-           (GetParent() ? GetParent()->IsStartedRecursively() : true);
-}
-
 bool GameObject::CalculateVisibleRecursively() const
 {
     return IsVisible() &&
@@ -299,25 +292,6 @@ void GameObject::OnEnabledRecursivelyInvalidated()
         if (comp)
         {
             comp->InvalidateEnabledRecursively();
-        }
-    }
-}
-
-void GameObject::OnStartedRecursivelyInvalidated()
-{
-    for (GameObject *child : GetChildren())
-    {
-        if (child)
-        {
-           child->InvalidateStartedRecursively();
-        }
-    }
-
-    for (Component *comp : GetComponents())
-    {
-        if (comp)
-        {
-            comp->InvalidateStartedRecursively();
         }
     }
 }
@@ -746,7 +720,6 @@ void GameObject::SetParent(GameObject *newParent,
             GetParent()->RemoveChild(this);
             p_parent = nullptr;
 
-            InvalidateStartedRecursively();
             InvalidateEnabledRecursively();
             InvalidateVisibleRecursively();
         }

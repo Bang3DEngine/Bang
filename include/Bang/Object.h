@@ -24,7 +24,6 @@ public:
     bool IsStarted() const;
     bool IsActiveRecursively() const;
     bool IsEnabledRecursively() const;
-    bool IsStartedRecursively() const;
     bool IsWaitingToBeDestroyed() const;
 
     // ICloneable
@@ -44,7 +43,6 @@ protected:
     virtual void OnDestroy();
 
     void InvalidateEnabledRecursively();
-    void InvalidateStartedRecursively();
 
     static void PropagateObjectDestruction(Object *object);
 
@@ -55,14 +53,10 @@ private:
     bool m_waitingToBeDestroyed = false;
 
     mutable bool m_enabledRecursivelyValid = false;
-    mutable bool m_startedRecursivelyValid = false;
     mutable bool m_enabledRecursively = false;
-    mutable bool m_startedRecursively = false;
 
     virtual bool CalculateEnabledRecursively() const = 0;
-    virtual bool CalculateStartedRecursively() const = 0;
     virtual void OnEnabledRecursivelyInvalidated();
-    virtual void OnStartedRecursivelyInvalidated();
 };
 
 

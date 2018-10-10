@@ -46,19 +46,18 @@ SceneManager *SceneManager::GetActive()
     return win ? win->GetSceneManager() : nullptr;
 }
 
-void SceneManager::OnNewFrame(Scene *scene, bool update)
+void SceneManager::OnNewFrame(Scene *scene)
 {
     if (scene)
     {
         scene->PreStart();
         scene->Start();
-        if (update)
-        {
-            scene->Update();
-            Physics::GetInstance()->UpdateFromTransforms(scene);
-            Physics::GetInstance()->StepIfNeeded(scene);
-            scene->PostUpdate();
-        }
+
+        scene->Update();
+        Physics::GetInstance()->UpdateFromTransforms(scene);
+        Physics::GetInstance()->StepIfNeeded(scene);
+        scene->PostUpdate();
+
         scene->DestroyDelayedElements();
     }
 }
@@ -70,7 +69,7 @@ void SceneManager::Update()
     {
         LoadSceneInstantly_();
     }
-    SceneManager::OnNewFrame( GetActiveScene_(), true );
+    SceneManager::OnNewFrame( GetActiveScene_() );
 }
 
 void SceneManager::Render()

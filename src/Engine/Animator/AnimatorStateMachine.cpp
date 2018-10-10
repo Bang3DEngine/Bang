@@ -80,7 +80,22 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
     m_nodes.Remove(nodeToRemove);
 }
 
-AnimatorStateMachineVariable* AnimatorStateMachine::AddOrGetVariable(
+AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
+{
+    AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
+    var->p_animatorSM = this;
+
+    String varName = "NewVariable";
+    varName = Path::GetDuplicateString(varName, GetVariablesNames());
+    var->SetName(varName);
+
+    m_nameToVariable.Add(varName, var);
+    m_variableToName.Add(var, varName);
+
+    return var;
+}
+
+AnimatorStateMachineVariable* AnimatorStateMachine::CreateOrGetVariable(
                                                         const String &varName)
 {
     AnimatorStateMachineVariable *var = nullptr;
@@ -90,8 +105,7 @@ AnimatorStateMachineVariable* AnimatorStateMachine::AddOrGetVariable(
     }
     else
     {
-        AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
-        m_nameToVariable.Add(varName, var);
+        var = CreateNewVariable();
     }
     return var;
 }
@@ -99,7 +113,7 @@ AnimatorStateMachineVariable* AnimatorStateMachine::AddOrGetVariable(
 void AnimatorStateMachine::SetVariableFloat(const String &varName,
                                             const float value)
 {
-    AnimatorStateMachineVariable *var = AddOrGetVariable(varName);
+    AnimatorStateMachineVariable *var = CreateOrGetVariable(varName);
     var->SetType(AnimatorStateMachineVariable::Type::FLOAT);
     var->SetValueFloat(value);
 }
@@ -107,9 +121,39 @@ void AnimatorStateMachine::SetVariableFloat(const String &varName,
 void AnimatorStateMachine::SetVariableBool(const String &varName,
                                            const bool value)
 {
-    AnimatorStateMachineVariable *var = AddOrGetVariable(varName);
+    AnimatorStateMachineVariable *var = CreateOrGetVariable(varName);
     var->SetType(AnimatorStateMachineVariable::Type::BOOL);
     var->SetValueBool(value);
+}
+
+bool AnimatorStateMachine::SetVariableName(AnimatorStateMachineVariable *var,
+                                           const String &newVarName)
+{
+    if (m_variableToName.ContainsKey(var))
+    {
+        if (!m_nameToVariable.ContainsKey(newVarName))
+        {
+            String oldVarName = m_variableToName.Get(var);
+            ASSERT(m_nameToVariable.ContainsKey(oldVarName) &&
+                   m_nameToVariable.Get(oldVarName) == var);
+            m_nameToVariable.Remove(oldVarName);
+
+            var->SetName(newVarName);
+            m_variableToName.Add(var, newVarName);
+            m_nameToVariable.Add(newVarName, var);
+        }
+    }
+    return false;
+}
+
+void AnimatorStateMachine::RemoveVariable(AnimatorStateMachineVariable *var)
+{
+    if (m_variableToName.ContainsKey(var))
+    {
+        String varName = GetVariableName(var);
+        m_variableToName.Remove(var);
+        m_nameToVariable.Remove(varName);
+    }
 }
 
 float AnimatorStateMachine::GetVariableFloat(const String &varName) const
@@ -135,6 +179,8 @@ void AnimatorStateMachine::Clear()
     while (!m_nodes.IsEmpty())
     {
         RemoveNode( m_nodes.Back() );
+        m_nameToVariable.Clear();
+        m_variableToName.Clear();
     }
 }
 
@@ -148,6 +194,15 @@ AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
     return nullptr;
 }
 
+String AnimatorStateMachine::GetVariableName(AnimatorStateMachineVariable *var)
+{
+    if (m_variableToName.ContainsKey(var))
+    {
+        return m_variableToName.Get(var);
+    }
+    return "";
+}
+
 const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
@@ -156,6 +211,11 @@ const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
 Array<AnimatorStateMachineVariable*> AnimatorStateMachine::GetVariables() const
 {
     return m_nameToVariable.GetValues();
+}
+
+Array<String> AnimatorStateMachine::GetVariablesNames() const
+{
+    return m_nameToVariable.GetKeys();
 }
 
 const Map<String, AnimatorStateMachineVariable*>&

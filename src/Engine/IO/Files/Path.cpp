@@ -476,9 +476,9 @@ String Path::GetDuplicateString(const String &string,
     }
 
     String resultString = string;
-    while (existingStrings.Contains(string))
+    while (existingStrings.Contains(resultString))
     {
-        resultString = Path::GetNextDuplicateString(string);
+        resultString = Path::GetNextDuplicateString(resultString);
     }
     return resultString;
 }
@@ -508,6 +508,7 @@ String Path::GetNextDuplicateString(const String &string)
 
     duplicateString = (duplicateString + "_" +
                        String::ToString(duplicationNumber));
+    ASSERT(duplicateString != string);
     return duplicateString;
 }
 

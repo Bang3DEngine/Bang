@@ -138,17 +138,18 @@ void MetaNode::ToStringInner(YAML::Emitter &out) const
             out << YAML::Value << attr.GetStringValue();
         }
 
-        out << YAML::Key << "Children";
-        out << YAML::Value << YAML::BeginMap;
         for (const auto &pair : GetAllChildren())
         {
-            const auto &children = pair.second;
-            for (const MetaNode &childMeta : children)
+            const String &childrenContainerName = pair.first;
+            const auto &childrenMetas = pair.second;
+            out << YAML::Key << childrenContainerName;
+            out << YAML::Value << YAML::BeginMap;
+            for (const MetaNode &childMeta : childrenMetas)
             {
                 childMeta.ToStringInner(out);
             }
+            out << YAML::EndMap;
         }
-        out << YAML::EndMap;
 
     out << YAML::EndMap;
 }

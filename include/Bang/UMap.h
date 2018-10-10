@@ -7,7 +7,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD_T class List;
+FORWARD_T class Array;
 
 template <class Key,
           class Value,
@@ -33,9 +33,9 @@ public:
 
     Value& Get(const Key &key);
     const Value& Get(const Key &key) const;
-    List<Key> GetKeysWithValue(const Value& v) const;
-    List<Key> GetKeys() const;
-    List<Value> GetValues() const;
+    Array<Key> GetKeysWithValue(const Value& v) const;
+    Array<Key> GetKeys() const;
+    Array<Value> GetValues() const;
 
     void Clear();
     int Size() const;

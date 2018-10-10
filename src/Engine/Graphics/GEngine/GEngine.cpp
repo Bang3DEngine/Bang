@@ -633,7 +633,7 @@ void GEngine::RenderShadowMaps(GameObject *go)
     {
         if (light->IsActiveRecursively())
         {
-            light->RenderShadowMaps();
+            light->RenderShadowMaps(go);
         }
     }
 }

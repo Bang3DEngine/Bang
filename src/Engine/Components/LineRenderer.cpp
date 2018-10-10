@@ -34,7 +34,8 @@ void LineRenderer::OnRender()
 
     if (p_mesh.Get()->GetNumVertices() > 0)
     {
-        GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(),
+        GL::Render(p_mesh.Get()->GetVAO(),
+                   GetRenderPrimitive(),
                    p_mesh.Get()->GetNumVertices());
     }
 }

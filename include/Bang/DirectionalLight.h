@@ -39,15 +39,19 @@ protected:
     DirectionalLight();
     virtual ~DirectionalLight();
 
-    // Light
-    void RenderShadowMaps_() override;
+    AABox GetShadowCastersAABox(
+            const Array<Renderer*> &shadowCastersRenderers) const;
 
-    void GetWorldToShadowMapMatrices(Scene *scene,
-                                     Matrix4 *viewMatrix,
-                                     Matrix4 *projMatrix) const;
-    Matrix4 GetShadowMapMatrix(Scene *scene) const;
+    // Light
+    void RenderShadowMaps_(GameObject *go) override;
+
+    void GetWorldToShadowMapMatrices(
+                        Matrix4 *viewMatrix,
+                        Matrix4 *projMatrix,
+                        const Array<Renderer*> &shadowCastersRenderers) const;
     Matrix4 GetLightToWorldMatrix() const;
-    AABox GetShadowMapOrthoBox(Scene *scene) const;
+    AABox GetShadowMapOrthoBox(
+                        const Array<Renderer*> &shadowCastersRenderers) const;
 };
 
 NAMESPACE_BANG_END

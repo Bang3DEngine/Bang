@@ -982,51 +982,21 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
         SetDontDestroyOnLoad( metaNode.Get<bool>("DontDestroyOnLoad") );
     }
 
-    USet<GameObject*> childrenToRemove;
-    for (GameObject *child : GetChildren())
+    // Read components
     {
-        childrenToRemove.Add(child);
-    }
-
-    USet<Component*> componentsToRemove;
-    for (Component *comp : GetComponents())
-    {
-        componentsToRemove.Add(comp);
-    }
-
-    const Array<MetaNode> &childreMetaNodes = metaNode.GetChildren("Children");
-    for (const MetaNode& childMeta : childreMetaNodes)
-    {
-        const GUID guid = childMeta.Get<GUID>("GUID");
-        const String& tagName = childMeta.GetName();
-
-        if (tagName == GameObject::GetClassNameStatic())
+        USet<Component*> componentsToRemove;
+        for (Component *comp : GetComponents())
         {
-            GameObject *child = nullptr;
-            for (GameObject *containedChild : GetChildren())
-            {
-                // See if it is already contained
-                if (containedChild && containedChild->GetGUID() == guid)
-                {
-                    child = containedChild;
-                    childrenToRemove.Remove(child);
-                    break;
-                }
-            }
-
-            if (!child)
-            {
-                child = GameObjectFactory::CreateGameObject(false);
-            }
-            else
-            {
-                child->SetParent(nullptr); // To reorder
-            }
-            child->SetParent(this);
-            child->ImportMeta(childMeta);
+            componentsToRemove.Add(comp);
         }
-        else
+
+        const Array<MetaNode> &componentsMetaNodes =
+                                    metaNode.GetChildren("Components");
+        for (const MetaNode& childMeta : componentsMetaNodes)
         {
+            const GUID guid = childMeta.Get<GUID>("GUID");
+            const String& tagName = childMeta.GetName();
+
             Component *comp = nullptr;
             for (Component *containedComp : GetComponents())
             {
@@ -1051,22 +1021,64 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
             }
             comp->ImportMeta(childMeta);
         }
-    }
 
-    // Remove non existing gameObjects and components in meta
-    for (GameObject *childToRemove : childrenToRemove)
-    {
-        if (childToRemove)
+        // Remove non existing components in meta
+        for (Component *compToRemove : componentsToRemove)
         {
-            GameObject::DestroyImmediate(childToRemove);
+            if (compToRemove)
+            {
+                Component::DestroyImmediate(compToRemove);
+            }
         }
     }
 
-    for (Component *compToRemove : componentsToRemove)
+    // Read children
     {
-        if (compToRemove)
+        USet<GameObject*> childrenToRemove;
+        for (GameObject *child : GetChildren())
         {
-            Component::DestroyImmediate(compToRemove);
+            childrenToRemove.Add(child);
+        }
+
+        const Array<MetaNode> &childreMetaNodes =
+                                metaNode.GetChildren("GameObjectChildren");
+        for (const MetaNode& childMeta : childreMetaNodes)
+        {
+            const GUID guid = childMeta.Get<GUID>("GUID");
+            const String& tagName = childMeta.GetName();
+            ASSERT(tagName == GameObject::GetClassNameStatic());
+
+            GameObject *child = nullptr;
+            for (GameObject *containedChild : GetChildren())
+            {
+                // See if it is already contained
+                if (containedChild && containedChild->GetGUID() == guid)
+                {
+                    child = containedChild;
+                    childrenToRemove.Remove(child);
+                    break;
+                }
+            }
+
+            if (!child)
+            {
+                child = GameObjectFactory::CreateGameObject(false);
+            }
+            else
+            {
+                child->SetParent(nullptr); // To reorder
+            }
+            child->SetParent(this);
+            child->ImportMeta(childMeta);
+        }
+
+        // Remove non existing gameObjects in meta
+        for (GameObject *childToRemove : childrenToRemove)
+        {
+            if (childToRemove)
+            {
+                GameObject::DestroyImmediate(childToRemove);
+            }
         }
     }
 }
@@ -1077,7 +1089,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Enabled", IsEnabled());
     metaNode->Set("Visible", IsVisible());
-    metaNode->Set("Name", GetName());
+    metaNode->Set("Name",    GetName());
     metaNode->Set("DontDestroyOnLoad", IsDontDestroyOnLoad());
 
     for (Component *c : GetComponents())
@@ -1086,7 +1098,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
         {
             MetaNode compMeta;
             c->ExportMeta(&compMeta);
-            metaNode->AddChild(compMeta, "Children");
+            metaNode->AddChild(compMeta, "Components");
         }
     }
 
@@ -1096,7 +1108,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
         {
             MetaNode childMeta;
             child->ExportMeta(&childMeta);
-            metaNode->AddChild(childMeta, "Children");
+            metaNode->AddChild(childMeta, "GameObjectChildren");
         }
     }
 }

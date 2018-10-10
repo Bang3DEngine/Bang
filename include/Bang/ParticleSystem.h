@@ -2,6 +2,7 @@
 #define PARTICLESYSTEM_H
 
 #include "Bang/Bang.h"
+#include "Bang/AABox.h"
 #include "Bang/Collider.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ComplexRandom.h"
@@ -137,6 +138,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
+    AABox m_aabox;
     bool m_emitOnStart = true;
     bool m_isEmitting  = false;
 

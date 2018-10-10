@@ -10,6 +10,7 @@
 #include "Bang/Segment.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Geometry.h"
+#include "Bang/Renderer.h"
 #include "Bang/Triangle.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Segment2D.h"
@@ -17,10 +18,9 @@
 #include "Bang/Transform.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/TextureFactory.h"
-#include "Bang/ShadowMapper.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/DebugRenderer.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgramFactory.h"
 
 USING_NAMESPACE_BANG
@@ -53,7 +53,28 @@ DirectionalLight::~DirectionalLight()
     delete m_shadowMapFramebuffer;
 }
 
-void DirectionalLight::RenderShadowMaps_()
+AABox DirectionalLight::GetShadowCastersAABox(
+                const Array<Renderer*> &shadowCastersRenderers) const
+{
+    Array<Vector3> casterPoints;
+    for (Renderer *shadowCasterRend : shadowCastersRenderers)
+    {
+        Matrix4 localToWorld = shadowCasterRend->GetGameObject()->
+                               GetTransform()->GetLocalToWorldMatrix();
+        AABox rendAABox = shadowCasterRend->GetAABBox();
+        if (rendAABox != AABox::Empty)
+        {
+            AABox rendAABoxWorld = localToWorld * rendAABox;
+            casterPoints.PushBack( rendAABoxWorld.GetPoints() );
+        }
+    }
+
+    AABox sceneAABox;
+    sceneAABox.CreateFromPositions(casterPoints);
+    return sceneAABox;
+}
+
+void DirectionalLight::RenderShadowMaps_(GameObject *go)
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -73,9 +94,11 @@ void DirectionalLight::RenderShadowMaps_()
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
 
     // Set up shadow map matrices
-    Scene *scene = GetGameObject()->GetScene();
+    const Array<Renderer*> shadowCastersRenderers = GetShadowCastersIn(go);
     Matrix4 shadowMapViewMatrix, shadowMapProjMatrix;
-    GetWorldToShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
+    GetWorldToShadowMapMatrices(&shadowMapViewMatrix,
+                                &shadowMapProjMatrix,
+                                shadowCastersRenderers);
     GLUniforms::SetModelMatrix(Matrix4::Identity);
     GLUniforms::SetViewMatrix( shadowMapViewMatrix );
     GLUniforms::SetProjectionMatrix( shadowMapProjMatrix );
@@ -87,15 +110,9 @@ void DirectionalLight::RenderShadowMaps_()
     GL::SetDepthFunc(GL::Function::LEQUAL);
     GL::SetDepthMask(true);
 
-    const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
-    for (GameObject *shadowCaster : shadowCasters)
+    for (Renderer *rend : shadowCastersRenderers)
     {
-        if (shadowCaster->IsActiveRecursively())
-        {
-            GEngine::GetInstance()->RenderWithPass(shadowCaster,
-                                                   RenderPass::SCENE,
-                                                   false);
-        }
+        rend->OnRender(RenderPass::SCENE);
     }
 
     ge->PopActiveRenderingCamera();
@@ -139,13 +156,14 @@ void DirectionalLight::CloneInto(ICloneable *clone) const
     dl->SetShadowDistance( GetShadowDistance() );
 }
 
-void DirectionalLight::GetWorldToShadowMapMatrices(Scene *scene,
-                                                   Matrix4 *viewMatrix,
-                                                   Matrix4 *projMatrix) const
+void DirectionalLight::GetWorldToShadowMapMatrices(
+                     Matrix4 *viewMatrix,
+                     Matrix4 *projMatrix,
+                     const Array<Renderer*> &shadowCastersRenderers) const
 {
     // The ortho box will be the AABox in light space of the AABox of the
     // scene in world space
-    AABox orthoBoxInLightSpace = GetShadowMapOrthoBox(scene);
+    AABox orthoBoxInLightSpace = GetShadowMapOrthoBox(shadowCastersRenderers);
     Vector3 orthoBoxExtents = orthoBoxInLightSpace.GetExtents();
     Matrix4 lightToWorld = GetLightToWorldMatrix();
     Vector3 fwd = lightToWorld.TransformedVector(Vector3::Forward);
@@ -163,14 +181,8 @@ void DirectionalLight::GetWorldToShadowMapMatrices(Scene *scene,
                                  -orthoBoxExtents.z, orthoBoxExtents.z);
 }
 
-Matrix4 DirectionalLight::GetShadowMapMatrix(Scene *scene) const
-{
-    Matrix4 shadowMapViewMatrix, shadowMapProjMatrix;
-    GetWorldToShadowMapMatrices(scene, &shadowMapViewMatrix, &shadowMapProjMatrix);
-    return shadowMapProjMatrix * shadowMapViewMatrix;
-}
-
-AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
+AABox DirectionalLight::GetShadowMapOrthoBox(
+                     const Array<Renderer*> &shadowCastersRenderers) const
 {
     // Adjust zFar so that we take into account shadow distance, and get our
     // camera frustum quads, then restore zFar
@@ -209,7 +221,7 @@ AABox DirectionalLight::GetShadowMapOrthoBox(Scene *scene) const
     }
 
     // Get scene AABox
-    const AABox sceneAABox = ShadowMapper::GetSceneCastersAABox(scene);
+    const AABox sceneAABox = GetShadowCastersAABox(shadowCastersRenderers);
 
     // Extend light box in y and z back and forth, so that we can intersect in
     // the next step

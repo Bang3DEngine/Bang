@@ -12,6 +12,7 @@ UIRenderer::UIRenderer()
     CONSTRUCT_CLASS_ID(UIRenderer)
     SetViewProjMode(GL::ViewProjMode::CANVAS);
     SetCullByRectTransform(false);
+    SetCastsShadows(false);
 }
 
 UIRenderer::~UIRenderer()

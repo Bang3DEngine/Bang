@@ -81,7 +81,7 @@ TextureCubeMap *PointLight::GetShadowMapTexture() const
     return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(GL::Attachment::DEPTH);
 }
 
-void PointLight::RenderShadowMaps_()
+void PointLight::RenderShadowMaps_(GameObject *go)
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -118,21 +118,20 @@ void PointLight::RenderShadowMaps_()
 
     float rangeLimit = Math::Pow(GetRange(), 1.0f);
     const Vector3 pointLightPos = GetGameObject()->GetTransform()->GetPosition();
-    const List<GameObject*> shadowCasters = GetActiveSceneShadowCasters();
-    for (GameObject *shadowCaster : shadowCasters)
+    const Array<Renderer*> shadowCastersRenderers = GetShadowCastersIn(go);
+    for (Renderer *shadowCasterRend : shadowCastersRenderers)
     {
-        if (shadowCaster->IsActiveRecursively())
+        AABox shadowCasterAABoxWorld =
+                            shadowCasterRend->GetGameObject()->
+                            GetTransform()->GetLocalToWorldMatrix() *
+                            shadowCasterRend->GetAABBox();
+        Vector3 closestPointInAABox = shadowCasterAABoxWorld.
+                                      GetClosestPointInAABB(pointLightPos);
+        bool isCompletelyOutside = Vector3::Distance(closestPointInAABox,
+                                                     pointLightPos) > rangeLimit;
+        if (!isCompletelyOutside)
         {
-            AABox shadowCasterAABoxWorld = shadowCaster->GetAABBoxWorld(false);
-            Vector3 closestPointInAABox = shadowCasterAABoxWorld.
-                                               GetClosestPointInAABB(pointLightPos);
-            bool isCompletelyOutside = Vector3::Distance(closestPointInAABox,
-                                                         pointLightPos) > rangeLimit;
-            if (!isCompletelyOutside)
-            {
-                GEngine::GetInstance()->RenderWithPass(shadowCaster,
-                                                     RenderPass::SCENE, false);
-            }
+            shadowCasterRend->OnRender(RenderPass::SCENE);
         }
     }
     ge->PopActiveRenderingCamera();

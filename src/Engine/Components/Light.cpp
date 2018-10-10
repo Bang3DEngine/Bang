@@ -42,11 +42,11 @@ Light::ShadowType Light::GetShadowType() const { return m_shadowType; }
 const Vector2i &Light::GetShadowMapSize() const { return m_shadowMapSize; }
 Texture *Light::GetShadowMapTexture() const { return nullptr; }
 
-void Light::RenderShadowMaps()
+void Light::RenderShadowMaps(GameObject *go)
 {
     if (GetShadowType() != ShadowType::NONE)
     {
-        RenderShadowMaps_();
+        RenderShadowMaps_(go);
     }
 }
 
@@ -98,32 +98,32 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
     }
 }
 
-List<GameObject*> Light::GetActiveSceneShadowCasters() const
+Array<Renderer*> Light::GetShadowCastersIn(GameObject *go) const
 {
-    USet<GameObject*> shadowCastersSet;
-    Scene *scene = SceneManager::GetActiveScene();
-    Array<Renderer*> renderers =
-                        scene->GetComponentsInDescendantsAndThis<Renderer>();
-    for (Renderer *rend : renderers )
+    Array<Renderer*> validShadowCastersRends;
+
+    Array<Renderer*> shadowCastersRends =
+                            go->GetComponentsInDescendantsAndThis<Renderer>();
+    for (Renderer *rend : shadowCastersRends)
     {
         if (rend->IsActiveRecursively() && rend->GetCastsShadows())
         {
             bool isValidShadowCaster = false;
             if (const Material *mat = rend->GetActiveMaterial())
             {
-                isValidShadowCaster = (mat->GetRenderPass() == RenderPass::SCENE &&
-                                       rend->GetCastsShadows());
+                isValidShadowCaster =
+                        (mat->GetRenderPass() == RenderPass::SCENE &&
+                         rend->GetCastsShadows());
             }
 
             if (isValidShadowCaster)
             {
-                shadowCastersSet.Add(rend->GetGameObject());
+                validShadowCastersRends.PushBack(rend);
             }
         }
     }
 
-    List<GameObject*> shadowCastersList = shadowCastersSet.GetKeys();
-    return shadowCastersList;
+    return validShadowCastersRends;
 }
 
 void Light::SetLightScreenPassShaderProgram(ShaderProgram *sp)

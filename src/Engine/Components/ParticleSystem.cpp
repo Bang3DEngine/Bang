@@ -32,7 +32,7 @@ ParticleSystem::ParticleSystem()
     p_particleDataVBO = new VBO();
     SetNumParticles(100);
 
-    SetCastsShadows(false);
+    SetCastsShadows(true);
     SetMesh( MeshFactory::GetPlane().Get() );
     SetParticleRenderMode( ParticleRenderMode::ADDITIVE );
 }
@@ -88,6 +88,17 @@ void ParticleSystem::OnUpdate()
                 UpdateParticleData(i, fixedDeltaTime, gravity, sceneColliders);
             }
         }
+
+        // AABox
+        {
+            Array<Vector3> particlePositions;
+            for (uint i = 0; i < GetNumParticles(); ++i)
+            {
+                particlePositions.PushBack( m_particlesData[i].position );
+            }
+            m_aabox.CreateFromPositions(particlePositions);
+        }
+
         UpdateDataVBO();
     }
 }
@@ -405,7 +416,7 @@ void ParticleSystem::Bind()
 
 AABox ParticleSystem::GetAABBox() const
 {
-    return AABox::Empty;
+    return m_isEmitting ? m_aabox : AABox::Empty;
 }
 
 void ParticleSystem::OnGameObjectChanged(GameObject*, GameObject*)

@@ -39,7 +39,7 @@ protected:
     float GetLightZFar() const;
 
     // Light
-    void RenderShadowMaps_() override;
+    void RenderShadowMaps_(GameObject *go) override;
     Array<Matrix4> GetWorldToShadowMapMatrices() const;
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const override;
 

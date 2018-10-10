@@ -33,7 +33,7 @@ public:
     const Vector2i& GetShadowMapSize() const;
     virtual Texture *GetShadowMapTexture() const;
 
-    void RenderShadowMaps();
+    void RenderShadowMaps(GameObject *go);
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -46,8 +46,8 @@ protected:
     Light();
     virtual ~Light();
 
-    List<GameObject*> GetActiveSceneShadowCasters() const;
     void SetLightScreenPassShaderProgram(ShaderProgram* sp);
+    Array<Renderer*> GetShadowCastersIn(GameObject *go) const;
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const;
 
 private:
@@ -62,7 +62,7 @@ private:
 
     void ApplyLight(Camera *camera, const AARect &renderRect) const;
     virtual AARect GetRenderRect(Camera *camera) const;
-    virtual void RenderShadowMaps_() = 0;
+    virtual void RenderShadowMaps_(GameObject *go) = 0;
 
     friend class GEngine;
 };

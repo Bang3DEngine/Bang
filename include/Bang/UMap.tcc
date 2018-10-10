@@ -117,10 +117,10 @@ UMap<Key, Value, Hash, Pred, Alloc>::Find(const Key &key) const
 }
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
-List<Key> UMap<Key, Value, Hash, Pred, Alloc>::
+Array<Key> UMap<Key, Value, Hash, Pred, Alloc>::
 GetKeysWithValue(const Value &v) const
 {
-    List<Key> result;
+    Array<Key> result;
     for (auto it = Begin(); it != End(); ++it)
     {
         if (it->second == v)
@@ -132,9 +132,9 @@ GetKeysWithValue(const Value &v) const
 }
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
-List<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeys() const
+Array<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeys() const
 {
-    List<Key> result;
+    Array<Key> result;
     for (const auto& it : *this)
     {
         result.PushBack(it.first);
@@ -143,9 +143,9 @@ List<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeys() const
 }
 
 template<class Key, class Value, class Hash, class Pred, class Alloc>
-List<Value> UMap<Key, Value, Hash, Pred, Alloc>::GetValues() const
+Array<Value> UMap<Key, Value, Hash, Pred, Alloc>::GetValues() const
 {
-    List<Value> result;
+    Array<Value> result;
     for (auto it = Begin(); it != End(); ++it)
     {
         result.PushBack(it->second);

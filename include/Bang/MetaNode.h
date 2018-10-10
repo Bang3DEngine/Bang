@@ -2,7 +2,7 @@
 #define METANODE_H
 
 #include "Bang/Map.h"
-#include "Bang/List.h"
+#include "Bang/Array.h"
 #include "Bang/MetaAttribute.h"
 #include "Bang/StreamOperators.h"
 
@@ -17,10 +17,12 @@ NAMESPACE_BANG_BEGIN
 class MetaNode
 {
 public:
-    MetaNode(const String &nodeName = "NoName");
+    MetaNode();
+    MetaNode(const String &nodeName);
     virtual ~MetaNode();
 
-    void AddChild(const MetaNode &node);
+    void AddChild(const MetaNode &childNode,
+                  const String &childrenContainerName);
 
     void UpdateAttributeValue(const String &attributeName,
                               const String &newAttributeValue);
@@ -30,50 +32,19 @@ public:
     void Set(const String &attributeName, const String &attributeValue);
 
     template <class T>
-    void Set(const String &attributeName, const T& value)
-    {
-        MetaAttribute attr;
-        attr.Set<T>(attributeName, value);
-        Set(attr);
-    }
+    void Set(const String &attributeName, const T& value);
 
     template <class T>
-    void SetArray(const String &name, const Array<T>& array)
-    {
-        for (int i = 0; i < array.Size(); ++i)
-        {
-            const T& x = array[i];
-            Set(name + "_" + String::ToString(i), x);
-        }
-    }
+    void SetArray(const String &name, const Array<T>& array);
 
     template<class T>
-    T Get(const String &attributeName, const T& defaultValue) const
-    {
-        MetaAttribute *attr = GetAttribute(attributeName);
-        return attr ? attr->Get<T>() : defaultValue;
-    }
+    T Get(const String &attributeName) const;
 
     template<class T>
-    Array<T> GetArray(const String &attributeName) const
-    {
-        int i = 0;
-        Array<T> result;
-        while (true)
-        {
-            const String attrNamei = attributeName + "_" + String::ToString(i);
-            if (!Contains(attrNamei)) { break; }
-            result.PushBack( Get<T>(attrNamei) );
-            ++i;
-        }
-        return result;
-    }
+    T Get(const String &attributeName, const T& defaultValue) const;
 
     template<class T>
-    T Get(const String &attributeName) const
-    {
-        return Get<T>(attributeName, T());
-    }
+    Array<T> GetArray(const String &attributeName) const;
 
     void RemoveAttribute(const String& attributeName);
     MetaAttribute* GetAttribute(const String& attributeName) const;
@@ -86,24 +57,23 @@ public:
 
     const String& GetName() const;
     const Map<String, MetaAttribute>& GetAttributes() const;
-    const List<String>& GetAttributesOrderList() const;
-    List< std::pair<String, MetaAttribute*> > GetAttributesListInOrder() const;
-    const List<MetaNode>& GetChildren() const;
-    List<MetaNode>& GetChildren();
+    const Array<MetaNode>& GetChildren(const String &childrenContainerName) const;
+    const Map<String, Array<MetaNode>>& GetAllChildren() const;
 
     void Import(const String &metaString);
     void Import(const YAML::Node &yamlNode);
     void Import(const Path &filepath);
 
 private:
-    String m_name;
-    List<MetaNode> m_children;
-    mutable List<String> m_attributeOrder;
+    String m_name = "NoName";
+    mutable Map<String, Array<MetaNode>> m_children;
     mutable Map<String, MetaAttribute> m_attributes;
 
     void ToStringInner(YAML::Emitter &out) const;
 };
 
 NAMESPACE_BANG_END
+
+#include "Bang/MetaNode.tcc"
 
 #endif // METANODE_H

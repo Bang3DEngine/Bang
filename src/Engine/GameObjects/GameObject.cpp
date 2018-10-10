@@ -994,7 +994,8 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
         componentsToRemove.Add(comp);
     }
 
-    for (const MetaNode& childMeta : metaNode.GetChildren())
+    const Array<MetaNode> &childreMetaNodes = metaNode.GetChildren("Children");
+    for (const MetaNode& childMeta : childreMetaNodes)
     {
         const GUID guid = childMeta.Get<GUID>("GUID");
         const String& tagName = childMeta.GetName();
@@ -1085,7 +1086,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
         {
             MetaNode compMeta;
             c->ExportMeta(&compMeta);
-            metaNode->AddChild(compMeta);
+            metaNode->AddChild(compMeta, "Children");
         }
     }
 
@@ -1095,7 +1096,7 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
         {
             MetaNode childMeta;
             child->ExportMeta(&childMeta);
-            metaNode->AddChild(childMeta);
+            metaNode->AddChild(childMeta, "Children");
         }
     }
 }

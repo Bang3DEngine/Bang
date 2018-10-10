@@ -205,19 +205,19 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
-    if (metaNode.GetChildren().Size() >= 1)
+    if (metaNode.GetChildren("Children").Size() >= 1)
     {
         Clear();
 
         // First just create the nodes (so that indices work nice)...
-        for (uint i = 0; i < metaNode.GetChildren().Size(); ++i)
+        for (uint i = 0; i < metaNode.GetChildren("Children").Size(); ++i)
         {
             CreateAndAddNode();
         }
 
         // Now import nodes meta
         uint i = 0;
-        for (const MetaNode &childMetaNode : metaNode.GetChildren())
+        for (const MetaNode &childMetaNode : metaNode.GetChildren("Children"))
         {
             AnimatorStateMachineNode *node = GetNode(i);
             node->ImportMeta(childMetaNode);
@@ -234,6 +234,6 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
     {
         MetaNode smNodeMeta;
         smNode->ExportMeta(&smNodeMeta);
-        metaNode->AddChild(smNodeMeta);
+        metaNode->AddChild(smNodeMeta, "Children");
     }
 }

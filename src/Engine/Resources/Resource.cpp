@@ -172,7 +172,7 @@ void Resource::ExportMeta(MetaNode *metaNode) const
             const String &embeddedResName = pair.first;
             MetaNode embeddedResMeta = embeddedRes->GetMeta();
             embeddedResMeta.SetName(embeddedResName);
-            metaNode->AddChild(embeddedResMeta);
+            metaNode->AddChild(embeddedResMeta, "Children");
         }
     }
 }

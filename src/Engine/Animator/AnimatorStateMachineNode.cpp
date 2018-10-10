@@ -154,7 +154,7 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
                             metaNode.Get<GUID>("Animation")).Get() );
     }
 
-    for (const MetaNode &childMetaNode : metaNode.GetChildren())
+    for (const MetaNode &childMetaNode : metaNode.GetChildren("Children"))
     {
         auto newConnection = new AnimatorStateMachineConnection(p_stateMachine);
         newConnection->ImportMeta(childMetaNode);
@@ -173,7 +173,7 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     {
         MetaNode smConnMeta;
         smConn->ExportMeta(&smConnMeta);
-        metaNode->AddChild(smConnMeta);
+        metaNode->AddChild(smConnMeta, "Children");
     }
 }
 

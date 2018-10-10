@@ -8,6 +8,10 @@
 
 USING_NAMESPACE_BANG
 
+MetaNode::MetaNode()
+{
+}
+
 MetaNode::MetaNode(const String &name)
 {
     SetName(name);
@@ -17,16 +21,16 @@ MetaNode::~MetaNode()
 {
 }
 
-void MetaNode::AddChild(const MetaNode &node)
+void MetaNode::AddChild(const MetaNode &childNode,
+                        const String &childrenContainerName)
 {
-    m_children.PushBack(node);
+    m_children[childrenContainerName].PushBack(childNode);
 }
 
 void MetaNode::UpdateAttributeValue(const String &attributeName,
                                     const String &newAttributeValue)
 {
-    MetaAttribute *attr = GetAttribute(attributeName);
-    if (attr)
+    if (MetaAttribute *attr = GetAttribute(attributeName))
     {
         attr->SetValue(newAttributeValue);
     }
@@ -42,7 +46,6 @@ void MetaNode::Set(const MetaAttribute &attribute)
     MetaAttribute *attr = GetAttribute(attribute.GetName());
     if (!attr)
     {
-        m_attributeOrder.PushBack(attribute.GetName());
         m_attributes[attribute.GetName()] = attribute;
     }
     else
@@ -65,7 +68,6 @@ void MetaNode::RemoveAttribute(const String &attributeName)
         if (attr.GetName() == attributeName)
         {
             m_attributes.Remove(it++);
-            m_attributeOrder.Remove(attr.GetName());
         }
         else
         {
@@ -74,7 +76,7 @@ void MetaNode::RemoveAttribute(const String &attributeName)
     }
 }
 
-MetaAttribute *MetaNode::GetAttribute(const String &attributeName) const
+MetaAttribute* MetaNode::GetAttribute(const String &attributeName) const
 {
     for (auto& itPair : m_attributes)
     {
@@ -96,13 +98,17 @@ String MetaNode::GetAttributeValue(const String &attributeName) const
     return "";
 }
 
-const MetaNode *MetaNode::GetChild(const String &name) const
+const MetaNode* MetaNode::GetChild(const String &name) const
 {
-    for (const MetaNode& node : m_children)
+    for (const auto& pair : m_children)
     {
-        if (node.GetName() == name)
+        const Array<MetaNode> &childrenNodes = pair.second;
+        for (const MetaNode &childNode : childrenNodes)
         {
-            return &node;
+            if (childNode.GetName() == name)
+            {
+                return &childNode;
+            }
         }
     }
     return nullptr;
@@ -134,9 +140,13 @@ void MetaNode::ToStringInner(YAML::Emitter &out) const
 
         out << YAML::Key << "Children";
         out << YAML::Value << YAML::BeginMap;
-        for (const MetaNode &childMeta : GetChildren())
+        for (const auto &pair : GetAllChildren())
         {
-            childMeta.ToStringInner(out);
+            const auto &children = pair.second;
+            for (const MetaNode &childMeta : children)
+            {
+                childMeta.ToStringInner(out);
+            }
         }
         out << YAML::EndMap;
 
@@ -159,29 +169,15 @@ const Map<String, MetaAttribute> &MetaNode::GetAttributes() const
     return m_attributes;
 }
 
-const List<String> &MetaNode::GetAttributesOrderList() const
-{
-    return m_attributeOrder;
-}
-
-List<std::pair<String, MetaAttribute*> > MetaNode::GetAttributesListInOrder() const
-{
-    List< std::pair<String, MetaAttribute*> > attributes;
-    for (const String& attrName : m_attributeOrder)
-    {
-        attributes.PushBack( std::make_pair(attrName, &m_attributes[attrName]) );
-    }
-    return attributes;
-}
-
-const List<MetaNode> &MetaNode::GetChildren() const
+const Map<String, Array<MetaNode> >& MetaNode::GetAllChildren() const
 {
     return m_children;
 }
 
-List<MetaNode> &MetaNode::GetChildren()
+const Array<MetaNode>&
+MetaNode::GetChildren(const String &childrenContainerName) const
 {
-    return m_children;
+    return m_children[childrenContainerName];
 }
 
 void MetaNode::Import(const String &metaString)
@@ -212,12 +208,11 @@ void MetaNode::Import(const YAML::Node &yamlNode)
         {
             const YAML::Node &attrYAMLName = attrYAMLPair.first;
             const YAML::Node &attrYAMLNode = attrYAMLPair.second;
-            if (attrYAMLName.Scalar() != "Children")
+
+            bool isAChildrenContainer = attrYAMLNode.IsMap();
+            if (isAChildrenContainer)
             {
-                Set(attrYAMLName.Scalar(), attrYAMLNode.Scalar());
-            }
-            else
-            {
+                const String &childrenContainerName = attrYAMLName.Scalar();
                 const YAML::Node &childrenYAMLNode = attrYAMLNode;
                 for (const auto &childYAMLPair : childrenYAMLNode)
                 {
@@ -226,8 +221,12 @@ void MetaNode::Import(const YAML::Node &yamlNode)
                     MetaNode childMetaNode;
                     childMetaNode.SetName(childYAMLName.Scalar());
                     childMetaNode.Import(childYAMLNode);
-                    AddChild(childMetaNode);
+                    AddChild(childMetaNode, childrenContainerName);
                 }
+            }
+            else
+            {
+                Set(attrYAMLName.Scalar(), attrYAMLNode.Scalar());
             }
         }
     }

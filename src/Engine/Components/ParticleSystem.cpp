@@ -54,24 +54,42 @@ void ParticleSystem::OnStart()
 {
     Component::OnStart();
 
-    Reset();
-    OnGameObjectChanged(nullptr, nullptr);
+    if (m_emitOnStart)
+    {
+        m_isEmitting = true;
+
+        Reset();
+        OnGameObjectChanged(nullptr, nullptr);
+    }
+    else
+    {
+        m_isEmitting = false;
+    }
 }
 
 void ParticleSystem::OnUpdate()
 {
     Component::OnUpdate();
 
-    const Array<Collider*> &sceneColliders = m_sceneCollidersGatherer.
-                                             GetGatheredObjects();
-    const Vector3 &gravity = Physics::GetInstance()->GetGravity();
-    float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds());
-
-    for (int i = 0; i < GetNumParticles(); ++i)
+    if (m_isEmitting)
     {
-        UpdateParticleData(i, dt, gravity, sceneColliders);
+        const Array<Collider*> &sceneColliders = m_sceneCollidersGatherer.
+                                                 GetGatheredObjects();
+        const Vector3 &gravity = Physics::GetInstance()->GetGravity();
+
+        float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds());
+        float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
+
+        uint stepsToSimulate = Math::Max(uint(dt / fixedDeltaTime), 1u);
+        for (uint step = 0; step < stepsToSimulate; ++step)
+        {
+            for (int i = 0; i < GetNumParticles(); ++i)
+            {
+                UpdateParticleData(i, fixedDeltaTime, gravity, sceneColliders);
+            }
+        }
+        UpdateDataVBO();
     }
-    UpdateDataVBO();
 }
 
 void ParticleSystem::Reset()
@@ -405,35 +423,38 @@ void ParticleSystem::OnRender()
 {
     Renderer::OnRender();
 
-    switch (GetParticleRenderMode())
+    if (m_isEmitting)
     {
-        case ParticleRenderMode::ADDITIVE:
-            GL::Push( GL::Pushable::DEPTH_STATES );
-            GL::Push( GL::Pushable::BLEND_STATES );
-            GL::SetDepthMask(false);
-            GL::BlendEquation(GL::BlendEquationE::FUNC_ADD);
-            GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
-                          GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
-        break;
+        switch (GetParticleRenderMode())
+        {
+            case ParticleRenderMode::ADDITIVE:
+                GL::Push( GL::Pushable::DEPTH_STATES );
+                GL::Push( GL::Pushable::BLEND_STATES );
+                GL::SetDepthMask(false);
+                GL::BlendEquation(GL::BlendEquationE::FUNC_ADD);
+                GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
+                              GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+            break;
 
-        default:
-        break;
-    }
+            default:
+            break;
+        }
 
-    GL::RenderInstanced(p_particlesVAO,
-                        GL::Primitive::TRIANGLES,
-                        m_particleMesh.Get()->GetNumVerticesIds(),
-                        m_numParticles);
+        GL::RenderInstanced(p_particlesVAO,
+                            GL::Primitive::TRIANGLES,
+                            m_particleMesh.Get()->GetNumVerticesIds(),
+                            m_numParticles);
 
-    switch (GetParticleRenderMode())
-    {
-        case ParticleRenderMode::ADDITIVE:
-            GL::Pop( GL::Pushable::BLEND_STATES );
-            GL::Pop( GL::Pushable::DEPTH_STATES );
-        break;
+        switch (GetParticleRenderMode())
+        {
+            case ParticleRenderMode::ADDITIVE:
+                GL::Pop( GL::Pushable::BLEND_STATES );
+                GL::Pop( GL::Pushable::DEPTH_STATES );
+            break;
 
-        default:
-        break;
+            default:
+            break;
+        }
     }
 }
 
@@ -486,23 +507,26 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     ASSERT(i >= 0);
     ASSERT(i < GetNumParticles());
 
-    ParticleData &particleData = m_particlesData[i];
-    particleData.position = GetParticleInitialPosition();
-    particleData.velocity = GetParticleInitialVelocity();
-    particleData.prevPosition = particleData.position - particleData.velocity;
-    particleData.prevDeltaTimeSecs = 1.0f;
-    particleData.totalLifeTime = GetLifeTime().GenerateRandom();
-    particleData.remainingLifeTime = particleData.totalLifeTime;
-    particleData.remainingStartTime = GetStartTime().GenerateRandom();
-    particleData.force = (GetGravityMultiplier() * gravity);
-    particleData.size = GetStartSize().GenerateRandom();
-    particleData.startColor = GetStartColor();
-    particleData.endColor = GetEndColor();
+    if (m_isEmitting)
+    {
+        ParticleData &particleData = m_particlesData[i];
+        particleData.position = GetParticleInitialPosition();
+        particleData.velocity = GetParticleInitialVelocity();
+        particleData.prevPosition = particleData.position - particleData.velocity;
+        particleData.prevDeltaTimeSecs = 1.0f;
+        particleData.totalLifeTime = GetLifeTime().GenerateRandom();
+        particleData.remainingLifeTime = particleData.totalLifeTime;
+        particleData.remainingStartTime = GetStartTime().GenerateRandom();
+        particleData.force = (GetGravityMultiplier() * gravity);
+        particleData.size = GetStartSize().GenerateRandom();
+        particleData.startColor = GetStartColor();
+        particleData.endColor = GetEndColor();
 
-    m_particlesVBOData[i].position       = Vector3::Infinity;
-    m_particlesVBOData[i].size           = 0.0f;
-    m_particlesVBOData[i].color          = Color::Zero;
-    m_particlesVBOData[i].animationFrame = 0;
+        m_particlesVBOData[i].position       = Vector3::Infinity;
+        m_particlesVBOData[i].size           = 0.0f;
+        m_particlesVBOData[i].color          = Color::Zero;
+        m_particlesVBOData[i].animationFrame = 0;
+    }
 }
 
 void ParticleSystem::UpdateParticleData(uint i,

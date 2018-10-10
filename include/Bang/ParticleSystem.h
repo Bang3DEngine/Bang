@@ -137,7 +137,8 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    ObjectGatherer<Collider, true> m_sceneCollidersGatherer;
+    bool m_emitOnStart = true;
+    bool m_isEmitting  = false;
 
     VAO *p_particlesVAO = nullptr;
     VBO *p_particleDataVBO = nullptr;
@@ -149,7 +150,6 @@ private:
 
     ParticleSimulationSpace m_simulationSpace =
                             ParticleSimulationSpace::WORLD;
-    ParticlePhysicsStepMode m_physicsStepMode = ParticlePhysicsStepMode::EULER;
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
@@ -160,18 +160,21 @@ private:
     RH<Texture2D> p_texture;
     Vector2i m_animationSheetSize = Vector2i::One;
     float m_animationSpeed = 24.0f;
-
     bool m_billboard = true;
+
     Color m_startColor   = Color::White;
     Color m_endColor     = Color::White;
     ComplexRandom m_lifeTime  = ComplexRandom(0.1f, 3.0f);
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);
 
-    bool m_computeCollisions = false;
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 
+    uint m_stepsPerSecond = 60;
+    bool m_computeCollisions = false;
+    ParticlePhysicsStepMode m_physicsStepMode = ParticlePhysicsStepMode::EULER;
+    ObjectGatherer<Collider, true> m_sceneCollidersGatherer;
 
     void InitParticle(uint i, const Vector3 &gravity);
     void UpdateParticleData(uint i,

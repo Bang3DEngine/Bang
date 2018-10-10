@@ -27,7 +27,7 @@ public:
     // Component
     virtual void OnStart() override;
     virtual void OnUpdate() override;
-    virtual void OnPostUpdate() override;
+    virtual void OnBeforeChildrenRender(RenderPass rp) override;
     virtual void OnAfterChildrenUpdate() override;
 
     void InvalidateCanvas();

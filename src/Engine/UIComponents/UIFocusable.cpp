@@ -16,11 +16,6 @@ UIFocusable::~UIFocusable()
 {
 }
 
-void UIFocusable::OnPostUpdate()
-{
-    Component::OnPostUpdate();
-}
-
 UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
 {
     UIEventResult finalResult = UIEventResult::IGNORE;

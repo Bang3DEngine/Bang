@@ -38,7 +38,7 @@ void UILabel::OnUpdate()
 
     if (p_layoutElement && GetText())
     {
-        p_layoutElement->SetMinSize( GetText()->GetPreferredSize() );
+        p_layoutElement->SetMinWidth( GetText()->GetPreferredSize().x );
         p_layoutElement->SetPreferredSize( GetText()->GetPreferredSize() );
     }
 

@@ -25,20 +25,21 @@ void UIRenderer::OnRender()
 
 void UIRenderer::OnRender(RenderPass renderPass)
 {
-    bool render = true;
-    if (GetCullByRectTransform())
+    if (RectTransform *rt = GetGameObject()->GetRectTransform())
     {
-        if (RectTransform *rt = GetGameObject()->GetRectTransform())
+        bool render = true;
+        if (GetCullByRectTransform())
         {
             const AARect rectNDC = rt->GetViewportAARectNDC();
             render = (rectNDC != AARect::Zero &&
-                      AARect::Intersection(AARect::NDCRect, rectNDC) != AARect::Zero);
+                      AARect::Intersection(AARect::NDCRect, rectNDC) !=
+                      AARect::Zero);
         }
-    }
 
-    if (render)
-    {
-        Renderer::OnRender(renderPass);
+        if (render)
+        {
+            Renderer::OnRender(renderPass);
+        }
     }
 }
 

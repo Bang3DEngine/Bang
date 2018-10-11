@@ -15,8 +15,8 @@ class LineRenderer : public Renderer
     COMPONENT_WITH_FAST_DYNAMIC_CAST(LineRenderer)
 
 public:
-    virtual void SetPoint(int i, const Vector3& point);
-    virtual void SetPoints(const Array<Vector3>& points);
+    void SetPoint(int i, const Vector3& point);
+    void SetPoints(const Array<Vector3>& points);
 
     const Array<Vector3>& GetPoints() const;
     virtual AABox GetAABBox() const override;

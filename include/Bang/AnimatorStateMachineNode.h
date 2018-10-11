@@ -34,10 +34,6 @@ public:
     const String &GetName() const;
     Animation* GetAnimation() const;
     bool GetImmediateTransition() const;
-    Array<AnimatorStateMachineConnection*> GetConnectionsTo(
-                                      AnimatorStateMachineNode *nodeTo);
-    Array<const AnimatorStateMachineConnection*> GetConnectionsTo(
-                                      AnimatorStateMachineNode *nodeTo) const;
     const Array<AnimatorStateMachineConnection*>& GetConnections() const;
 
     void CloneInto(AnimatorStateMachineNode *clone) const;

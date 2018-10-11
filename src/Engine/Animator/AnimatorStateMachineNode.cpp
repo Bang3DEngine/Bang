@@ -97,35 +97,6 @@ const String &AnimatorStateMachineNode::GetName() const
     return m_name;
 }
 
-Array<AnimatorStateMachineConnection*>
-AnimatorStateMachineNode::GetConnectionsTo(AnimatorStateMachineNode *nodeTo)
-{
-    Array<AnimatorStateMachineConnection*> connectionsToNode;
-    for (AnimatorStateMachineConnection *connection : GetConnections())
-    {
-        if (connection->GetNodeTo() == nodeTo)
-        {
-            connectionsToNode.PushBack(connection);
-        }
-    }
-    return connectionsToNode;
-}
-Array<const AnimatorStateMachineConnection*>
-AnimatorStateMachineNode::GetConnectionsTo(AnimatorStateMachineNode *nodeTo) const
-{
-    Array<AnimatorStateMachineConnection*> connectionsTo =
-        const_cast<AnimatorStateMachineNode*>(this)->GetConnectionsTo(nodeTo);
-
-    Array<const AnimatorStateMachineConnection*> connectionsToConst;
-    for (AnimatorStateMachineConnection *conn : connectionsTo)
-    {
-        connectionsToConst.PushBack(conn);
-    }
-
-    return connectionsToConst;
-}
-
-
 Animation *AnimatorStateMachineNode::GetAnimation() const
 {
     return p_animation.Get();

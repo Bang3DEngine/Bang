@@ -40,16 +40,16 @@ public:
 
     bool IsFulfilled(AnimatorStateMachine *stateMachine) const;
 
-private:
-    String m_varName = "Variable";
-    AnimatorStateMachineVariable::Type m_varType =
-                        AnimatorStateMachineVariable::Type::FLOAT;
-    Comparator m_comparator;
-    float m_compareValueFloat;
-
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
+
+private:
+    String m_varName = "";
+    AnimatorStateMachineVariable::Type m_varType =
+                        AnimatorStateMachineVariable::Type::FLOAT;
+    Comparator m_comparator = Comparator::GREATER;
+    float m_compareValueFloat = 0.0f;
 };
 
 NAMESPACE_BANG_END

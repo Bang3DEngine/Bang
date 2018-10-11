@@ -205,23 +205,33 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
-    if (metaNode.GetChildren("Children").Size() >= 1)
+    if (metaNode.GetChildren("Nodes").Size() >= 1)
     {
         Clear();
 
         // First just create the nodes (so that indices work nice)...
-        for (uint i = 0; i < metaNode.GetChildren("Children").Size(); ++i)
         {
-            CreateAndAddNode();
+            const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
+            for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
+            {
+                CreateAndAddNode();
+            }
+
+            // Now import nodes meta
+            uint i = 0;
+            for (const MetaNode &childMetaNode : childrenMetaNodes)
+            {
+                AnimatorStateMachineNode *node = GetNode(i);
+                node->ImportMeta(childMetaNode);
+                ++i;
+            }
         }
 
-        // Now import nodes meta
-        uint i = 0;
-        for (const MetaNode &childMetaNode : metaNode.GetChildren("Children"))
+        const auto &varsMetaNodes = metaNode.GetChildren("Variables");
+        for (const MetaNode &varMetaNode : varsMetaNodes)
         {
-            AnimatorStateMachineNode *node = GetNode(i);
-            node->ImportMeta(childMetaNode);
-            ++i;
+            AnimatorStateMachineVariable *var = CreateNewVariable();
+            var->ImportMeta(varMetaNode);
         }
     }
 }
@@ -232,8 +242,13 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 
     for (const AnimatorStateMachineNode *smNode : GetNodes())
     {
-        MetaNode smNodeMeta;
-        smNode->ExportMeta(&smNodeMeta);
-        metaNode->AddChild(smNodeMeta, "Children");
+        MetaNode smNodeMeta = smNode->GetMeta();
+        metaNode->AddChild(smNodeMeta, "Nodes");
+    }
+
+    for (const AnimatorStateMachineVariable *var : GetVariables())
+    {
+        MetaNode varMeta = var->GetMeta();
+        metaNode->AddChild(varMeta, "Variables");
     }
 }

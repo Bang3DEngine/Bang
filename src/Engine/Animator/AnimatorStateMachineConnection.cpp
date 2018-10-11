@@ -91,6 +91,13 @@ void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
         uint idx = metaNode.Get<uint>("NodeFromIndex");
         SetNodeFrom( p_stateMachine->GetNodes()[idx] );
     }
+
+    const auto &transitionCondMetas = metaNode.GetChildren("TransitionConditions");
+    for (const MetaNode &transCondMeta : transitionCondMetas)
+    {
+        ASMCTransitionCondition *transCond = CreateAndAddTransitionCondition();
+        transCond->ImportMeta(transCondMeta);
+    }
 }
 
 void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
@@ -101,4 +108,11 @@ void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
                   p_stateMachine->GetNodes().IndexOf( GetNodeTo() ) );
     metaNode->Set("NodeFromIndex",
                   p_stateMachine->GetNodes().IndexOf( GetNodeFrom() ));
+
+    for (const AnimatorStateMachineConnectionTransitionCondition *transitionCond :
+         GetTransitionConditions())
+    {
+        MetaNode transCondMeta = transitionCond->GetMeta();
+        metaNode->AddChild(transCondMeta, "TransitionConditions");
+    }
 }

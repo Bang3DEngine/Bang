@@ -265,7 +265,6 @@ void UIComboBox::ClearItems()
     {
         const String label = m_indexToLabel.Back();
         RemoveItem(label);
-        m_indexToLabel.PopBack();
     }
 }
 
@@ -274,6 +273,7 @@ void UIComboBox::RemoveItem(const String &label)
     uint indexOfLabel = m_indexToLabel.IndexOf(label);
     if (indexOfLabel != -1u)
     {
+        m_checkImgs.RemoveByIndex(indexOfLabel);
         m_indexToValue.RemoveByIndex(indexOfLabel);
         m_indexToLabel.RemoveByIndex(indexOfLabel);
         m_selectedIndices.Remove(indexOfLabel);

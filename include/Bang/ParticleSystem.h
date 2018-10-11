@@ -174,6 +174,7 @@ private:
     float m_initialVelocityMultiplier = 1.0f;
 
     uint m_stepsPerSecond = 60;
+    Time m_remainingTimeToSimulate;
     bool m_computeCollisions = false;
     ParticlePhysicsStepMode m_physicsStepMode = ParticlePhysicsStepMode::EULER;
     ObjectGatherer<Collider, true> m_sceneCollidersGatherer;

@@ -73,20 +73,27 @@ void ParticleSystem::OnUpdate()
 
     if (m_isEmitting)
     {
-        const Array<Collider*> &sceneColliders = m_sceneCollidersGatherer.
-                                                 GetGatheredObjects();
-        const Vector3 &gravity = Physics::GetInstance()->GetGravity();
-
-        float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds());
-        float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
-
-        uint stepsToSimulate = Math::Max(uint(dt / fixedDeltaTime), 1u);
-        for (uint step = 0; step < stepsToSimulate; ++step)
+        if (GetComputeCollisions())
         {
-            for (int i = 0; i < GetNumParticles(); ++i)
+            const Array<Collider*> &sceneColliders = m_sceneCollidersGatherer.
+                                                     GetGatheredObjects();
+            const Vector3 &gravity = Physics::GetInstance()->GetGravity();
+
+            float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds() +
+                                    m_remainingTimeToSimulate.GetSeconds());
+            float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
+
+            uint stepsToSimulate = Math::Max(uint(dt / fixedDeltaTime), 1u);
+            for (uint step = 0; step < stepsToSimulate; ++step)
             {
-                UpdateParticleData(i, fixedDeltaTime, gravity, sceneColliders);
+                for (int i = 0; i < GetNumParticles(); ++i)
+                {
+                    UpdateParticleData(i, fixedDeltaTime, gravity, sceneColliders);
+                }
             }
+            float totalSimulatedTime = (fixedDeltaTime * stepsToSimulate);
+            m_remainingTimeToSimulate = Time::Seconds(
+                                        Math::Max(dt - totalSimulatedTime, 0.0f));
         }
 
         // AABox
@@ -110,6 +117,7 @@ void ParticleSystem::Reset()
     {
         InitParticle(i, gravity);
     }
+    m_remainingTimeToSimulate = Time(0);
     UpdateDataVBO();
 }
 

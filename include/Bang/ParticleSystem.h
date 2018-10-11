@@ -86,6 +86,7 @@ public:
     void SetStartTime(const ComplexRandom &startTime);
     void SetStartSize(const ComplexRandom &startSize);
     void SetBillboard(bool billboard);
+    void SetBounciness(float bounciness);
     void SetNumParticles(uint numParticles);
     void SetGenerationShape(ParticleGenerationShape shape);
     void SetGenerationShapeBoxSize(const Vector3 &boxSize);
@@ -111,6 +112,7 @@ public:
     const Color &GetEndColor() const;
     Texture2D *GetTexture() const;
     const Vector2i &GetAnimationSheetSize() const;
+    float GetBounciness() const;
     float GetAnimationSpeed() const;
     bool GetComputeCollisions() const;
     float GetGravityMultiplier() const;
@@ -173,6 +175,7 @@ private:
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 
+    float m_bounciness = 1.0f;
     uint m_stepsPerSecond = 60;
     Time m_remainingTimeToSimulate;
     bool m_computeCollisions = false;

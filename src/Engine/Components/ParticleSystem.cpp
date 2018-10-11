@@ -4,6 +4,7 @@
 #include "Bang/VBO.h"
 #include "Bang/Box.h"
 #include "Bang/Scene.h"
+#include "Bang/Plane.h"
 #include "Bang/Random.h"
 #include "Bang/Physics.h"
 #include "Bang/Segment.h"
@@ -83,7 +84,8 @@ void ParticleSystem::OnUpdate()
                                     m_remainingTimeToSimulate.GetSeconds());
             float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
 
-            uint stepsToSimulate = Math::Max(uint(dt / fixedDeltaTime), 1u);
+            uint stepsToSimulate =
+                    Math::Max(uint(Math::Round(dt / fixedDeltaTime)), 1u);
             for (uint step = 0; step < stepsToSimulate; ++step)
             {
                 for (int i = 0; i < GetNumParticles(); ++i)
@@ -94,9 +96,10 @@ void ParticleSystem::OnUpdate()
             float totalSimulatedTime = (fixedDeltaTime * stepsToSimulate);
             m_remainingTimeToSimulate = Time::Seconds(
                                         Math::Max(dt - totalSimulatedTime, 0.0f));
+            m_remainingTimeToSimulate = Time(0);
         }
 
-        // AABox
+        // AABBox
         {
             Array<Vector3> particlePositions;
             for (uint i = 0; i < GetNumParticles(); ++i)
@@ -184,6 +187,14 @@ void ParticleSystem::SetBillboard(bool billboard)
     if (billboard != GetBillboard())
     {
         m_billboard = billboard;
+    }
+}
+
+void ParticleSystem::SetBounciness(float bounciness)
+{
+    if (bounciness != GetBounciness())
+    {
+        m_bounciness = bounciness;
     }
 }
 
@@ -355,6 +366,11 @@ Texture2D *ParticleSystem::GetTexture() const
 const Vector2i &ParticleSystem::GetAnimationSheetSize() const
 {
     return m_animationSheetSize;
+}
+
+float ParticleSystem::GetBounciness() const
+{
+    return m_bounciness;
 }
 
 float ParticleSystem::GetAnimationSpeed() const
@@ -746,10 +762,18 @@ void ParticleSystem::CollideParticle(Collider *collider,
 
     if (collided)
     {
-        Vector3 correctedDisp = (newPositionNoInt - collisionPoint);
-        newVelocityAfterInt = Vector3::Reflect(newVelocityNoInt, collisionNormal);
-        newPositionAfterInt = collisionPoint +
-            (newVelocityAfterInt.NormalizedSafe() * correctedDisp.Length());
+        const Vector3 cpos = collisionPoint;
+        const Vector3 cnorm = collisionNormal;
+        const float bouncinessEpsilon = (1.0f + GetBounciness());
+        Plane collisionPlane(collisionPoint, collisionNormal);
+        Vector3 newPos = newPositionNoInt - bouncinessEpsilon *
+                         collisionPlane.GetDistanceTo(newPositionNoInt) * cnorm;
+        newPositionAfterInt = newPos;
+
+        Vector3 newVel = newVelocityNoInt -
+                         bouncinessEpsilon * cnorm *
+                         collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
+        newVelocityAfterInt = newVel;
     }
 }
 
@@ -927,6 +951,7 @@ void ParticleSystem::CloneInto(ICloneable *clone) const
     psClone->SetGenerationShapeBoxSize( GetGenerationShapeBoxSize() );
     psClone->SetGenerationShapeConeFOVRads( GetGenerationShapeConeFOVRads() );
     psClone->SetSimulationSpace( GetSimulationSpace() );
+    psClone->SetBounciness( GetBounciness() );
     psClone->SetPhysicsStepMode( GetPhysicsStepMode() );
     psClone->SetComputeCollisions( GetComputeCollisions() );
     psClone->SetInitialVelocityMultiplier( GetInitialVelocityMultiplier() );
@@ -997,6 +1022,11 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
         SetEndColor( metaNode.Get<Color>("EndColor") );
     }
 
+    if (metaNode.Contains("Bounciness"))
+    {
+        SetBounciness( metaNode.Get<float>("Bounciness") );
+    }
+
     if (metaNode.Contains("NumParticles"))
     {
         SetNumParticles( metaNode.Get<uint>("NumParticles") );
@@ -1061,6 +1091,7 @@ void ParticleSystem::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("AnimationSheetSize", GetAnimationSheetSize());
     metaNode->Set("Texture", GetTexture() ? GetTexture()->GetGUID() : GUID::Empty());
     metaNode->Set("Billboard", GetBillboard());
+    metaNode->Set("Bounciness", GetBounciness());
     metaNode->Set("ParticleRenderMode", GetParticleRenderMode());
     metaNode->Set("StartColor", GetStartColor());
     metaNode->Set("EndColor", GetEndColor());

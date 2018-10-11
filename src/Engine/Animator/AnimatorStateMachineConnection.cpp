@@ -28,6 +28,19 @@ void AnimatorStateMachineConnection::SetNodeFrom(
     p_nodeFrom = nodeFrom;
 }
 
+bool AnimatorStateMachineConnection::AreTransitionConditionsFulfilled(
+        AnimatorStateMachine *animatorSM) const
+{
+    for (auto transCond : GetTransitionConditions())
+    {
+        if (!transCond->IsFulfilled(animatorSM))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 ASMCTransitionCondition*
             AnimatorStateMachineConnection::CreateAndAddTransitionCondition()
 {

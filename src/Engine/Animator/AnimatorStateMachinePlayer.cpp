@@ -54,14 +54,19 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
     {
         m_currentNodeTime += deltaTime;
 
-        if (GetCurrentNodeTime().GetSeconds() >=
-            currentNode->GetAnimation()->GetDurationInSeconds())
+        bool hasFinishedAnimation =
+                (GetCurrentNodeTime().GetSeconds() >=
+                 currentNode->GetAnimation()->GetDurationInSeconds());
+        if (hasFinishedAnimation || currentNode->GetImmediateTransition())
         {
             for (AnimatorStateMachineConnection *conn :
                  currentNode->GetConnections())
             {
-                SetCurrentNode( conn->GetNodeTo() );
-                break;
+                if (conn->AreTransitionConditionsFulfilled(sm))
+                {
+                    SetCurrentNode( conn->GetNodeTo() );
+                    break;
+                }
             }
         }
     }

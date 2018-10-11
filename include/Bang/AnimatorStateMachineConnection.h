@@ -22,6 +22,8 @@ public:
 
     void SetNodeTo(AnimatorStateMachineNode* node);
     void SetNodeFrom(AnimatorStateMachineNode* node);
+    bool AreTransitionConditionsFulfilled(
+                        AnimatorStateMachine *animatorSM) const;
 
     ASMCTransitionCondition* CreateAndAddTransitionCondition();
     void RemoveTransitionCondition(ASMCTransitionCondition *transitionCond);

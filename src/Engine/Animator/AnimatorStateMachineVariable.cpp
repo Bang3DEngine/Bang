@@ -1,6 +1,7 @@
 #include "Bang/AnimatorStateMachineVariable.h"
 
 #include "Bang/MetaNode.h"
+#include "Bang/AnimatorStateMachine.h"
 
 USING_NAMESPACE_BANG
 
@@ -49,7 +50,15 @@ float AnimatorStateMachineVariable::GetValueFloat() const
 
 void AnimatorStateMachineVariable::SetName(const String &varName)
 {
+    String prevName = GetName();
+
     m_name = varName;
+
+    p_animatorSM->EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+                &IEventsAnimatorStateMachine::OnVariableNameChanged,
+                this,
+                prevName,
+                varName);
 }
 
 void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)

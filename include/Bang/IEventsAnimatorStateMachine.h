@@ -10,6 +10,7 @@ FORWARD class Animator;
 FORWARD class Animation;
 FORWARD class AnimatorStateMachine;
 FORWARD class AnimatorStateMachineNode;
+FORWARD class AnimatorStateMachineVariable;
 
 class IEventsAnimatorStateMachine
 {
@@ -28,6 +29,13 @@ public:
                                AnimatorStateMachineNode *removedNode)
     {
         BANG_UNUSED_3(stateMachine, removedNodeIdx, removedNode);
+    }
+
+    virtual void OnVariableNameChanged(AnimatorStateMachineVariable *variable,
+                                       const String &prevVariableName,
+                                       const String &nextVariableName)
+    {
+        BANG_UNUSED_3(variable, prevVariableName, nextVariableName);
     }
 
     virtual void OnAnimationTick(Animator *animator,

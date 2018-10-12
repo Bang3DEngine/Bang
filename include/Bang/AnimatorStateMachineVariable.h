@@ -6,6 +6,8 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class AnimatorStateMachine;
+
 class AnimatorStateMachineVariable : public Serializable
 {
     SERIALIZABLE(AnimatorStateMachineVariable)
@@ -31,6 +33,7 @@ public:
     float GetValueFloat() const;
 
 private:
+    AnimatorStateMachine *p_animatorSM = nullptr;
     String m_name = "EmptyName";
     Type m_type = Type::FLOAT;
     float m_valueFloat = 0.0f;

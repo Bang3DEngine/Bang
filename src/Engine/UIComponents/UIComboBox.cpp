@@ -441,6 +441,11 @@ String UIComboBox::GetSelectedLabel() const
     return "";
 }
 
+const Array<int> &UIComboBox::GetValues() const
+{
+    return m_indexToValue;
+}
+
 Array<int> UIComboBox::GetSelectedValues() const
 {
     Array<int> selectedValues;
@@ -461,6 +466,11 @@ int UIComboBox::GetSelectedValuesForFlag() const
         bitwiseOr |= selectedValue;
     }
     return bitwiseOr;
+}
+
+const Array<String> &UIComboBox::GetLabels() const
+{
+    return m_indexToLabel;
 }
 
 bool UIComboBox::HasFocus() const

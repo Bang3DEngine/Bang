@@ -46,8 +46,10 @@ public:
     int GetSelectedValue() const;
     int GetSelectedIndex() const;
     String GetSelectedLabel() const;
+    const Array<int>& GetValues() const;
     Array<int> GetSelectedValues() const;
     int GetSelectedValuesForFlag() const;
+    const Array<String>& GetLabels() const;
     const Array<int>& GetSelectedIndices() const;
 
     // IEventsFocus

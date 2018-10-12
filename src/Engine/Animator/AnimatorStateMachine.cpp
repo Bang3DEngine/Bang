@@ -11,6 +11,8 @@ AnimatorStateMachine::AnimatorStateMachine()
 {
     AnimatorStateMachineNode *entryNode = CreateAndAddNode();
     entryNode->SetName("Entry");
+
+    EventEmitter<IEventsAnimatorStateMachine>::RegisterListener(this);
 }
 
 AnimatorStateMachine::~AnimatorStateMachine()
@@ -80,6 +82,7 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
 {
     AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
+    var->p_animatorSM = this;
 
     String varName = "NewVariable";
     varName = Path::GetDuplicateString(varName, GetVariablesNames());
@@ -100,6 +103,27 @@ AnimatorStateMachineVariable* AnimatorStateMachine::CreateOrGetVariable(
         var->SetName(varName);
     }
     return var;
+}
+
+void AnimatorStateMachine::OnVariableNameChanged(
+                                    AnimatorStateMachineVariable *variable,
+                                    const String &prevVariableName,
+                                    const String &nextVariableName)
+{
+    BANG_UNUSED(variable);
+    for (AnimatorStateMachineNode *node : GetNodes())
+    {
+        for (AnimatorStateMachineConnection *conn : node->GetConnections())
+        {
+            for (auto transCond : conn->GetTransitionConditions())
+            {
+                if (transCond->GetVariableName() == prevVariableName)
+                {
+                    transCond->SetVariableName(nextVariableName);
+                }
+            }
+        }
+    }
 }
 
 void AnimatorStateMachine::SetVariableFloat(const String &varName,

@@ -15,7 +15,8 @@ FORWARD class Animator;
 
 class AnimatorStateMachine : public Resource,
                              public EventEmitter<IEventsDestroy>,
-                             public EventEmitter<IEventsAnimatorStateMachine>
+                             public EventEmitter<IEventsAnimatorStateMachine>,
+                             public EventListener<IEventsAnimatorStateMachine>
 {
     RESOURCE(AnimatorStateMachine)
 
@@ -55,6 +56,11 @@ private:
     Array<AnimatorStateMachineVariable*> m_variables;
 
     AnimatorStateMachineVariable* CreateOrGetVariable(const String &varName);
+
+    // IEventsAnimatorStateMachine
+    virtual void OnVariableNameChanged(AnimatorStateMachineVariable *variable,
+                                       const String &prevVariableName,
+                                       const String &nextVariableName) override;
 };
 
 NAMESPACE_BANG_END

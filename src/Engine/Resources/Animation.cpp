@@ -111,7 +111,7 @@ AnimationWrapMode Animation::GetWrapMode() const
 template<class T>
 Array<Animation::KeyFrame<T>>
 GetConsecutiveKeyFrames(const Array<Animation::KeyFrame<T>> &keyFrames,
-                         float timeInFrames)
+                        float timeInFrames)
 {
     const uint numKF = keyFrames.Size();
     for (uint i = 0; i < numKF - 1; ++i)
@@ -162,9 +162,9 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForTime(
     Map<String, Matrix4> bonesMatrices;
 
     Map<String, BoneTransformation> bonesTransformations;
-    Animation::GetBoneCrossFadeAnimationTransformations(this,
-                                                        animationTime,
-                                                        &bonesTransformations);
+    Animation::GetBoneAnimationTransformations(this,
+                                               animationTime,
+                                               &bonesTransformations);
     for (auto &it : bonesTransformations)
     {
         const String &boneName = it.first;
@@ -256,7 +256,7 @@ void Animation::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));
 }
 
-void Animation::GetBoneCrossFadeAnimationTransformations(
+void Animation::GetBoneAnimationTransformations(
                         const Animation *anim,
                         Time animationTime,
                         Map<String, BoneTransformation> *boneTransformationsPtr)
@@ -268,14 +268,15 @@ void Animation::GetBoneCrossFadeAnimationTransformations(
         return;
     }
 
-    double timeInFrames = (animationTime.GetSeconds() * anim->GetFramesPerSecond());
+    double timeInFrames = (animationTime.GetSeconds() *
+                           anim->GetFramesPerSecond());
     timeInFrames = WrapTime(timeInFrames,
                             anim->GetDurationInFrames(),
                             anim->GetWrapMode());
+    timeInFrames = Math::Max(timeInFrames, 0.00001);
 
 
     Map<String, BoneTransformation> &boneTransformations = *boneTransformationsPtr;
-
     for (const auto &it : anim->GetBoneNameToPositionKeyFrames())
     {
         const String &boneName = it.first;
@@ -305,7 +306,6 @@ void Animation::GetBoneCrossFadeAnimationTransformations(
         boneTransformations[boneName].position = bonePosition;
     }
 
-    Map<String, Quaternion> bonesRotations;
     for (const auto &it : anim->GetBoneNameToRotationKeyFrames())
     {
         const String &boneName = it.first;
@@ -335,7 +335,6 @@ void Animation::GetBoneCrossFadeAnimationTransformations(
         boneTransformations[boneName].rotation = boneRotation;
     }
 
-    Map<String, Vector3> bonesScales;
     for (const auto &it : anim->GetBoneNameToScaleKeyFrames())
     {
         const String &boneName = it.first;
@@ -381,13 +380,13 @@ Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
 
     // Gather the prev animation bone transformations
     Map<String, BoneTransformation> prevBoneTransformations;
-    Animation::GetBoneCrossFadeAnimationTransformations(prevAnimation,
+    Animation::GetBoneAnimationTransformations(prevAnimation,
                                                         prevAnimationTime,
                                                         &prevBoneTransformations);
 
     // Gather the next animation bone transformations
     Map<String, BoneTransformation> nextBoneTransformations;
-    Animation::GetBoneCrossFadeAnimationTransformations(nextAnimation,
+    Animation::GetBoneAnimationTransformations(nextAnimation,
                                                         currentCrossFadeTime,
                                                         &nextBoneTransformations);
 

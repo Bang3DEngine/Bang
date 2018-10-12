@@ -85,7 +85,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 
-    static void GetBoneCrossFadeAnimationTransformations(
+    static void GetBoneAnimationTransformations(
                     const Animation *animation,
                     Time animationTime,
                     Map<String, BoneTransformation> *boneTransformations);

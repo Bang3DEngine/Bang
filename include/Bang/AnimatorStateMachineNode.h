@@ -28,12 +28,10 @@ public:
     AnimatorStateMachineConnection* GetConnection(uint connectionIdx);
     void RemoveConnection(AnimatorStateMachineConnection *connection);
 
-    void SetImmediateTransition(bool immediateTransition);
     void SetAnimation(Animation *animation);
 
     const String &GetName() const;
     Animation* GetAnimation() const;
-    bool GetImmediateTransition() const;
     Array<AnimatorStateMachineConnection*> GetConnectionsTo(
                                    AnimatorStateMachineNode *nodeTo) const;
     const Array<AnimatorStateMachineConnection*>& GetConnections() const;
@@ -47,7 +45,6 @@ public:
 private:
     String m_name = "Node";
     RH<Animation> p_animation;
-    bool m_immediateTransition = false;
     DPtr<AnimatorStateMachine> p_stateMachine;
     Array<AnimatorStateMachineConnection*> m_connections;
 

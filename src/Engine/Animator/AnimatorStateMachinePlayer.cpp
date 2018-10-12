@@ -57,10 +57,10 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
         bool hasFinishedAnimation =
                 (GetCurrentNodeTime().GetSeconds() >=
                  currentNode->GetAnimation()->GetDurationInSeconds());
-        if (hasFinishedAnimation || currentNode->GetImmediateTransition())
+        for (AnimatorStateMachineConnection *conn :
+             currentNode->GetConnections())
         {
-            for (AnimatorStateMachineConnection *conn :
-                 currentNode->GetConnections())
+            if (hasFinishedAnimation || conn->GetImmediateTransition())
             {
                 if (conn->AreTransitionConditionsFulfilled(sm))
                 {

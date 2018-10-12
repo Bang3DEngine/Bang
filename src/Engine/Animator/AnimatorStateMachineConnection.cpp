@@ -41,6 +41,12 @@ bool AnimatorStateMachineConnection::AreTransitionConditionsFulfilled(
     return true;
 }
 
+void AnimatorStateMachineConnection::SetImmediateTransition(
+                                                bool immediateTransition)
+{
+    m_immediateTransition = immediateTransition;
+}
+
 ASMCTransitionCondition*
             AnimatorStateMachineConnection::CreateAndAddTransitionCondition()
 {
@@ -75,6 +81,11 @@ AnimatorStateMachineNode *AnimatorStateMachineConnection::GetNodeFrom() const
     return p_nodeFrom;
 }
 
+bool AnimatorStateMachineConnection::GetImmediateTransition() const
+{
+    return m_immediateTransition;
+}
+
 const Array<ASMCTransitionCondition*>&
 AnimatorStateMachineConnection::GetTransitionConditions() const
 {
@@ -86,6 +97,7 @@ void AnimatorStateMachineConnection::CloneInto(
 {
     cloneConnection->SetNodeFrom( GetNodeFrom() );
     cloneConnection->SetNodeTo( GetNodeTo() );
+    cloneConnection->SetImmediateTransition( GetImmediateTransition() );
     cloneConnection->p_stateMachine = p_stateMachine;
 }
 
@@ -105,6 +117,11 @@ void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
         SetNodeFrom( p_stateMachine->GetNodes()[idx] );
     }
 
+    if (metaNode.Contains("ImmediateTransition"))
+    {
+        SetImmediateTransition( metaNode.Get<bool>("ImmediateTransition") );
+    }
+
     const auto &transitionCondMetas = metaNode.GetChildren("TransitionConditions");
     for (const MetaNode &transCondMeta : transitionCondMetas)
     {
@@ -119,6 +136,7 @@ void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("NodeToIndex",
                   p_stateMachine->GetNodes().IndexOf( GetNodeTo() ) );
+    metaNode->Set("ImmediateTransition", GetImmediateTransition());
     metaNode->Set("NodeFromIndex",
                   p_stateMachine->GetNodes().IndexOf( GetNodeFrom() ));
 

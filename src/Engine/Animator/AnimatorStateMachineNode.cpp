@@ -10,9 +10,7 @@ AnimatorStateMachineNode::AnimatorStateMachineNode(
                                     AnimatorStateMachine *stateMachine)
 {
     p_stateMachine = stateMachine;
-
-    static int i = 0;
-    SetName("Node " + String::ToString(i++));
+    SetName("Node");
 }
 
 AnimatorStateMachineNode::~AnimatorStateMachineNode()
@@ -70,11 +68,6 @@ void AnimatorStateMachineNode::RemoveConnection(
     }
 }
 
-void AnimatorStateMachineNode::SetImmediateTransition(bool immediateTransition)
-{
-    m_immediateTransition = immediateTransition;
-}
-
 AnimatorStateMachineConnection *AnimatorStateMachineNode::AddConnection(
                                 AnimatorStateMachineConnection *newConnection)
 {
@@ -105,11 +98,6 @@ Animation *AnimatorStateMachineNode::GetAnimation() const
     return p_animation.Get();
 }
 
-bool AnimatorStateMachineNode::GetImmediateTransition() const
-{
-    return m_immediateTransition;
-}
-
 Array<AnimatorStateMachineConnection*>
 AnimatorStateMachineNode::GetConnectionsTo(AnimatorStateMachineNode *nodeTo) const
 {
@@ -136,7 +124,6 @@ void AnimatorStateMachineNode::CloneInto(
 {
     nodeToCloneTo->SetName( GetName() );
     nodeToCloneTo->SetAnimation( GetAnimation() );
-    nodeToCloneTo->SetImmediateTransition( GetImmediateTransition() );
 }
 
 void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
@@ -146,11 +133,6 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("NodeName"))
     {
         SetName( metaNode.Get<String>("NodeName") );
-    }
-
-    if (metaNode.Contains("ImmediateTransition"))
-    {
-        SetImmediateTransition( metaNode.Get<bool>("ImmediateTransition") );
     }
 
     if (metaNode.Contains("Animation"))
@@ -172,7 +154,6 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     Serializable::ExportMeta(metaNode);
 
     metaNode->Set("NodeName", GetName());
-    metaNode->Set("ImmediateTransition", GetImmediateTransition());
     metaNode->Set("Animation", GetAnimation() ? GetAnimation()->GetGUID() :
                                                 GUID::Empty());
     for (const AnimatorStateMachineConnection *smConn : GetConnections())

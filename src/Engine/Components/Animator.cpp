@@ -51,8 +51,7 @@ void Animator::OnUpdate()
         ASSERT( GetPlayer() );
         GetPlayer()->Step(passedTime);
 
-        AnimatorStateMachineNode *currentNode = GetPlayer()->GetCurrentNode();
-        if (currentNode)
+        if (AnimatorStateMachineNode *currentNode = GetPlayer()->GetCurrentNode())
         {
             Map< String, Matrix4 > boneNameToCurrentMatrices;
             Animation *currentAnim = currentNode->GetAnimation();

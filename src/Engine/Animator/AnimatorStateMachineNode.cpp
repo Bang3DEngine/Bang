@@ -21,8 +21,7 @@ AnimatorStateMachineNode::~AnimatorStateMachineNode()
                                         &IEventsDestroy::OnDestroyed, this);
     while (!m_connections.IsEmpty())
     {
-        delete m_connections.Back();
-        m_connections.PopBack();
+        RemoveConnection( m_connections.Back() );
     }
 }
 
@@ -60,11 +59,15 @@ AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
 void AnimatorStateMachineNode::RemoveConnection(
                             AnimatorStateMachineConnection *connectionToRemove)
 {
-    EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
-                &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
-                this, connectionToRemove);
+    if (m_connections.Contains(connectionToRemove))
+    {
+        EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
+                    &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
+                    this, connectionToRemove);
 
-    m_connections.Remove(connectionToRemove);
+        m_connections.Remove(connectionToRemove);
+        delete connectionToRemove;
+    }
 }
 
 void AnimatorStateMachineNode::SetImmediateTransition(bool immediateTransition)
@@ -106,6 +109,21 @@ bool AnimatorStateMachineNode::GetImmediateTransition() const
 {
     return m_immediateTransition;
 }
+
+Array<AnimatorStateMachineConnection*>
+AnimatorStateMachineNode::GetConnectionsTo(AnimatorStateMachineNode *nodeTo) const
+{
+    Array<AnimatorStateMachineConnection*> connectionsToNode;
+    for (AnimatorStateMachineConnection *connection : GetConnections())
+    {
+        if (connection->GetNodeTo() == nodeTo)
+        {
+            connectionsToNode.PushBack(connection);
+        }
+    }
+    return connectionsToNode;
+}
+
 
 const Array<AnimatorStateMachineConnection*>&
 AnimatorStateMachineNode::GetConnections() const

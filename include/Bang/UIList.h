@@ -27,7 +27,7 @@ class UIList : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIList)
 
 public:
-    enum Action
+    enum class Action
     {
         SELECTION_IN,
         SELECTION_OUT,
@@ -80,7 +80,8 @@ public:
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     using SelectionCallback = std::function<void(GOItem *item, Action action)>;
-    void SetSelectionCallback(SelectionCallback selectionCallback);
+    void SetSelectionCallback(std::function<void(GOItem *item, Action action)>
+                              selectionCallback);
     void ClearSelectionCallback();
 
 protected:

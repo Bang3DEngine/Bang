@@ -18,9 +18,9 @@ public:
     void SetLayoutPriority(int layoutPriority);
     int GetLayoutPriority() const;
 
-    virtual Vector2i GetMinSize()       const;
-    virtual Vector2i GetPreferredSize() const;
-    virtual Vector2  GetFlexibleSize()  const;
+    Vector2i GetMinSize()       const;
+    Vector2i GetPreferredSize() const;
+    Vector2  GetFlexibleSize()  const;
 
     Vector2 GetSize(LayoutSizeType sizeType) const;
 

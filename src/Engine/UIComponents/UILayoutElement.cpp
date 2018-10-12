@@ -146,7 +146,8 @@ void UILayoutElement::CalculateLayout(Axis axis)
 {
     SetCalculatedLayout(axis,
                         GetMinSize().GetAxis(axis),
-                        GetPreferredSize().GetAxis(axis));
+                        GetPreferredSize().GetAxis(axis),
+                        GetFlexibleSize().GetAxis(axis));
 }
 
 void UILayoutElement::OnChanged()

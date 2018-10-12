@@ -567,23 +567,14 @@ UIList* UIList::CreateInto(GameObject *go, bool withScrollPanel)
     UIList *list = go->AddComponent<UIList>();
     go->SetName("UIList");
 
-    const bool vertical = true;
     GameObject *container = withScrollPanel ?
                                 GameObjectFactory::CreateUIGameObject() : go;
     container->SetName("UIList");
 
-    UIDirLayout *dirLayout = nullptr;
-    if (vertical)
-    {
-        dirLayout = container->AddComponent<UIVerticalLayout>();
-    }
-    else
-    {
-        dirLayout = container->AddComponent<UIHorizontalLayout>();
-    }
-    dirLayout->SetChildrenVerticalStretch(Stretch::NONE);
-    dirLayout->SetChildrenHorizontalStretch(Stretch::FULL);
-    list->p_dirLayout = dirLayout;
+    UIVerticalLayout *containerVL = container->AddComponent<UIVerticalLayout>();
+    containerVL->SetChildrenVerticalStretch(Stretch::NONE);
+    containerVL->SetChildrenHorizontalStretch(Stretch::FULL);
+    list->p_dirLayout = containerVL;
 
     list->p_focusable = container->AddComponent<UIFocusable>();
     list->p_focusable->EventEmitter<IEventsFocus>::RegisterListener(list);

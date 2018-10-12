@@ -35,9 +35,9 @@ public:
     float GetFlexibleWidth() const;
     float GetFlexibleHeight() const;
 
-    Vector2i GetMinSize() const override;
-    Vector2i GetPreferredSize() const override;
-    Vector2 GetFlexibleSize() const override;
+    Vector2i GetMinSize() const;
+    Vector2i GetPreferredSize() const;
+    Vector2 GetFlexibleSize() const;
 
 protected:
     virtual void CalculateLayout(Axis axis) override;

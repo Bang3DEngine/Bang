@@ -37,6 +37,7 @@ public:
 
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
+    AnimatorStateMachinePlayer *GetPlayer() const;
     AnimatorStateMachine* GetStateMachine() const;
 
     // ICloneable
@@ -55,7 +56,6 @@ private:
     bool m_playOnStart = true;
     bool m_playing = false;
 
-    AnimatorStateMachinePlayer *GetPlayer() const;
 
     void SetSkinnedMeshRendererCurrentBoneMatrices(
                                 const Map<String, Matrix4> &boneAnimMatrices);

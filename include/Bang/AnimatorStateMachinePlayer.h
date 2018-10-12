@@ -26,12 +26,24 @@ public:
 
     void Step(Time deltaTime);
     void SetCurrentNode(AnimatorStateMachineNode *node);
-    void SetNextNode(AnimatorStateMachineNode *node);
+    void SetCurrentNode(AnimatorStateMachineNode *node, Time nodeTime);
+
+    void StartTransition(AnimatorStateMachineConnection *connection,
+                         Time prevNodeTime,
+                         Time startTransitionTime = Time(0));
+    void FinishCurrentTransition();
 
     AnimatorStateMachineNode* GetCurrentNode() const;
-    AnimatorStateMachineNode* GetNextNode() const;
+    Animation* GetCurrentAnimation() const;
     Time GetCurrentNodeTime() const;
+
+    AnimatorStateMachineNode* GetNextNode() const;
+    Animation* GetNextAnimation() const;
     Time GetNextNodeTime() const;
+
+    AnimatorStateMachineConnection *GetCurrentTransition() const;
+    Time GetCurrentTransitionTime() const;
+    Time GetCurrentTransitionDuration() const;
 
     AnimatorStateMachine *GetStateMachine() const;
 
@@ -41,9 +53,8 @@ private:
     Time m_currentNodeTime;
     AnimatorStateMachineNode *p_currentNode = nullptr;
 
-    Time m_nextNodeTime;
-    AnimatorStateMachineNode *p_nextNode = nullptr;
-
+    Time m_currentTransitionTime;
+    AnimatorStateMachineConnection *p_currentTransition = nullptr;
 
     // IEventsAnimatorStateMachine
     virtual void OnNodeCreated(AnimatorStateMachine *stateMachine,

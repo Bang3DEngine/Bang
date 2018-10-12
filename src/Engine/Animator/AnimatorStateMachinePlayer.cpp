@@ -18,8 +18,9 @@ void AnimatorStateMachinePlayer::SetStateMachine(AnimatorStateMachine *stateMach
     {
         if (GetStateMachine())
         {
+            p_currentTransition = nullptr;
+            m_currentTransitionTime = Time(0);
             SetCurrentNode(nullptr);
-            SetNextNode(nullptr);
             GetStateMachine()->EventEmitter<IEventsAnimatorStateMachine>::
                                UnRegisterListener(this);
         }
@@ -50,29 +51,78 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
         }
     }
 
-    if (AnimatorStateMachineNode *currentNode = GetCurrentNode())
+    if (GetCurrentNode())
     {
+        if (GetCurrentTransition())
+        {
+            ASSERT(GetNextNode());
+            m_currentTransitionTime += deltaTime;
+            if (GetCurrentTransitionTime() >= GetCurrentTransitionDuration())
+            {
+                FinishCurrentTransition();
+            }
+        }
+
         m_currentNodeTime += deltaTime;
 
-        bool hasFinishedAnimation =
-                (GetCurrentNodeTime().GetSeconds() >=
-                 currentNode->GetAnimation()->GetDurationInSeconds());
-        for (AnimatorStateMachineConnection *conn :
-             currentNode->GetConnections())
+        // If we are NOT doing a transition, check if we can pick one of them
+        if (!GetCurrentTransition())
         {
-            if (hasFinishedAnimation || conn->GetImmediateTransition())
+            bool hasFinishedAnimation =
+                    (GetCurrentNodeTime().GetSeconds() >=
+                     GetCurrentNode()->GetAnimation()->GetDurationInSeconds());
+            for (AnimatorStateMachineConnection *conn :
+                 GetCurrentNode()->GetConnections())
             {
-                if (conn->AreTransitionConditionsFulfilled(sm))
+                if (hasFinishedAnimation || conn->GetImmediateTransition())
                 {
-                    SetCurrentNode( conn->GetNodeTo() );
-                    break;
+                    if (conn->AreTransitionConditionsFulfilled(sm))
+                    {
+                        StartTransition(conn, GetCurrentNodeTime(), Time(0));
+                        break;
+                    }
                 }
             }
         }
     }
 }
 
+void AnimatorStateMachinePlayer::StartTransition(
+                            AnimatorStateMachineConnection *connection,
+                            Time prevNodeTime,
+                            Time startTransitionTime)
+{
+    AnimatorStateMachineNode *prevNode = connection->GetNodeFrom();
+    ASSERT(prevNode);
+
+    AnimatorStateMachineNode *nextNode = connection->GetNodeTo();
+    ASSERT(nextNode);
+
+    p_currentTransition = connection;
+    m_currentTransitionTime = startTransitionTime;
+
+    SetCurrentNode(prevNode, prevNodeTime);
+}
+
+void AnimatorStateMachinePlayer::FinishCurrentTransition()
+{
+    // Next node becomes the current node now
+    if (GetCurrentTransition())
+    {
+        SetCurrentNode(GetNextNode(), GetNextNodeTime());
+
+        p_currentTransition = nullptr;
+        m_currentTransitionTime = Time(0);
+    }
+}
+
 void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node)
+{
+    SetCurrentNode(node, Time(0));
+}
+
+void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node,
+                                                Time nodeTime)
 {
     if (node != GetCurrentNode())
     {
@@ -83,33 +133,12 @@ void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node)
         }
 
         p_currentNode = node;
-        m_currentNodeTime = Time(0);
+        m_currentNodeTime = nodeTime;
 
         if (GetCurrentNode())
         {
             GetCurrentNode()->EventEmitter<IEventsAnimatorStateMachineNode>::
                               RegisterListener(this);
-        }
-    }
-}
-
-void AnimatorStateMachinePlayer::SetNextNode(AnimatorStateMachineNode *node)
-{
-    if (node != GetNextNode())
-    {
-        if (GetNextNode())
-        {
-            GetNextNode()->EventEmitter<IEventsAnimatorStateMachineNode>::
-                           UnRegisterListener(this);
-        }
-
-        p_nextNode = node;
-        m_nextNodeTime = Time(0);
-
-        if (GetNextNode())
-        {
-            GetNextNode()->EventEmitter<IEventsAnimatorStateMachineNode>::
-                           RegisterListener(this);
         }
     }
 }
@@ -121,7 +150,18 @@ AnimatorStateMachineNode *AnimatorStateMachinePlayer::GetCurrentNode() const
 
 AnimatorStateMachineNode *AnimatorStateMachinePlayer::GetNextNode() const
 {
-    return p_nextNode;
+    return GetCurrentTransition() ? GetCurrentTransition()->GetNodeTo() :
+                                    nullptr;
+}
+
+Animation *AnimatorStateMachinePlayer::GetCurrentAnimation() const
+{
+    return (GetCurrentNode() ? GetCurrentNode()->GetAnimation() : nullptr);
+}
+
+Animation *AnimatorStateMachinePlayer::GetNextAnimation() const
+{
+    return (GetNextNode() ? GetNextNode()->GetAnimation() : nullptr);
 }
 
 Time AnimatorStateMachinePlayer::GetCurrentNodeTime() const
@@ -131,7 +171,24 @@ Time AnimatorStateMachinePlayer::GetCurrentNodeTime() const
 
 Time AnimatorStateMachinePlayer::GetNextNodeTime() const
 {
-    return m_nextNodeTime;
+    return m_currentTransitionTime;
+}
+
+AnimatorStateMachineConnection*
+AnimatorStateMachinePlayer::GetCurrentTransition() const
+{
+    return p_currentTransition;
+}
+
+Time AnimatorStateMachinePlayer::GetCurrentTransitionTime() const
+{
+    return m_currentTransitionTime;
+}
+
+Time AnimatorStateMachinePlayer::GetCurrentTransitionDuration() const
+{
+    return GetCurrentTransition() ?
+                GetCurrentTransition()->GetTransitionDuration() : Time(0);
 }
 
 AnimatorStateMachine *AnimatorStateMachinePlayer::GetStateMachine() const
@@ -153,6 +210,7 @@ void AnimatorStateMachinePlayer::OnNodeRemoved(
                                     uint removedNodeIdx,
                                     AnimatorStateMachineNode *removedNode)
 {
+    BANG_UNUSED(removedNodeIdx);
     ASSERT(stateMachine == GetStateMachine());
     if (removedNode == GetCurrentNode())
     {

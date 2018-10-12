@@ -25,15 +25,16 @@ public:
     bool AreTransitionConditionsFulfilled(
                         AnimatorStateMachine *animatorSM) const;
 
+    void SetTransitionDuration(Time transitionDuration);
     void SetImmediateTransition(bool immediateTransition);
     ASMCTransitionCondition* CreateAndAddTransitionCondition();
     void RemoveTransitionCondition(ASMCTransitionCondition *transitionCond);
     void RemoveTransitionCondition(uint idx);
 
-
     AnimatorStateMachineNode* GetNodeTo() const;
     AnimatorStateMachineNode* GetNodeFrom() const;
     bool GetImmediateTransition() const;
+    Time GetTransitionDuration() const;
 
     const Array<ASMCTransitionCondition*>& GetTransitionConditions() const;
     void CloneInto(AnimatorStateMachineConnection *cloneConnection) const;
@@ -43,12 +44,13 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    bool m_immediateTransition = false;
-
     DPtr<AnimatorStateMachineNode> p_nodeTo;
     DPtr<AnimatorStateMachineNode> p_nodeFrom;
-    DPtr<AnimatorStateMachine> p_stateMachine;
+    Time m_transitionDuration = Time::Seconds(0.5);
+    bool m_immediateTransition = false;
     Array<ASMCTransitionCondition*> m_transitionConditions;
+
+    DPtr<AnimatorStateMachine> p_stateMachine;
 };
 
 NAMESPACE_BANG_END

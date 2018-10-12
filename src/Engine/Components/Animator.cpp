@@ -51,16 +51,30 @@ void Animator::OnUpdate()
         ASSERT( GetPlayer() );
         GetPlayer()->Step(passedTime);
 
-        if (AnimatorStateMachineNode *currentNode = GetPlayer()->GetCurrentNode())
+        if (Animation *currentAnim = GetPlayer()->GetCurrentAnimation())
         {
+            const Time currentAnimTime = GetPlayer()->GetCurrentNodeTime();
+
             Map< String, Matrix4 > boneNameToCurrentMatrices;
-            Animation *currentAnim = currentNode->GetAnimation();
-            if (currentAnim)
+            if (Animation *nextAnim = GetPlayer()->GetNextAnimation())
             {
-                Time currentNodeTime = GetPlayer()->GetCurrentNodeTime();
-                boneNameToCurrentMatrices = currentAnim->
-                     GetBoneAnimationMatricesForTime(currentNodeTime);
+                // Cross fading
+                ASSERT(GetPlayer()->GetCurrentTransition());
+                boneNameToCurrentMatrices =
+                    Animation::GetBoneCrossFadeAnimationMatrices(
+                            currentAnim,
+                            currentAnimTime,
+                            nextAnim,
+                            GetPlayer()->GetCurrentTransitionTime(),
+                            GetPlayer()->GetCurrentTransitionDuration());
             }
+            else
+            {
+                // Simple animation
+                boneNameToCurrentMatrices =
+                  currentAnim->GetBoneAnimationMatricesForTime(currentAnimTime);
+            }
+
             SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToCurrentMatrices);
         }
     }

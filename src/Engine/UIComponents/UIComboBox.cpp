@@ -277,7 +277,6 @@ void UIComboBox::RemoveItem(const String &label)
         m_indexToValue.RemoveByIndex(indexOfLabel);
         m_indexToLabel.RemoveByIndex(indexOfLabel);
         m_selectedIndices.Remove(indexOfLabel);
-        m_selectedIndices.RemoveByIndex(indexOfLabel);
         p_list->RemoveItem( p_list->GetItem(indexOfLabel) );
     }
 }

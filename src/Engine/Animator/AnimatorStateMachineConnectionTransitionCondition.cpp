@@ -69,7 +69,7 @@ bool ASMCTransitionCondition::IsFulfilled(AnimatorStateMachine *stateMachine) co
                 switch (GetComparator())
                 {
                     case Comparator::GREATER:
-                        return (var->GetValueFloat() >= GetCompareValueFloat());
+                        return (var->GetValueFloat() > GetCompareValueFloat());
 
                     case Comparator::LESS:
                         return (var->GetValueFloat() < GetCompareValueFloat());

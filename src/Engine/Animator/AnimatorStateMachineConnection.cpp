@@ -41,6 +41,11 @@ bool AnimatorStateMachineConnection::AreTransitionConditionsFulfilled(
     return true;
 }
 
+void AnimatorStateMachineConnection::SetTransitionDuration(Time transitionDuration)
+{
+    m_transitionDuration = transitionDuration;
+}
+
 void AnimatorStateMachineConnection::SetImmediateTransition(
                                                 bool immediateTransition)
 {
@@ -86,6 +91,11 @@ bool AnimatorStateMachineConnection::GetImmediateTransition() const
     return m_immediateTransition;
 }
 
+Time AnimatorStateMachineConnection::GetTransitionDuration() const
+{
+    return m_transitionDuration;
+}
+
 const Array<ASMCTransitionCondition*>&
 AnimatorStateMachineConnection::GetTransitionConditions() const
 {
@@ -97,6 +107,7 @@ void AnimatorStateMachineConnection::CloneInto(
 {
     cloneConnection->SetNodeFrom( GetNodeFrom() );
     cloneConnection->SetNodeTo( GetNodeTo() );
+    cloneConnection->SetTransitionDuration( GetTransitionDuration() );
     cloneConnection->SetImmediateTransition( GetImmediateTransition() );
     cloneConnection->p_stateMachine = p_stateMachine;
 }
@@ -115,6 +126,11 @@ void AnimatorStateMachineConnection::ImportMeta(const MetaNode &metaNode)
     {
         uint idx = metaNode.Get<uint>("NodeFromIndex");
         SetNodeFrom( p_stateMachine->GetNodes()[idx] );
+    }
+
+    if (metaNode.Contains("TransitionDuration"))
+    {
+        SetTransitionDuration( metaNode.Get<Time>("TransitionDuration") );
     }
 
     if (metaNode.Contains("ImmediateTransition"))
@@ -137,6 +153,7 @@ void AnimatorStateMachineConnection::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NodeToIndex",
                   p_stateMachine->GetNodes().IndexOf( GetNodeTo() ) );
     metaNode->Set("ImmediateTransition", GetImmediateTransition());
+    metaNode->Set("TransitionDuration", GetTransitionDuration());
     metaNode->Set("NodeFromIndex",
                   p_stateMachine->GetNodes().IndexOf( GetNodeFrom() ));
 

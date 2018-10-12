@@ -12,6 +12,12 @@
 
 NAMESPACE_BANG_BEGIN
 
+std::ostream& operator<<(std::ostream &log, const Time &t)
+{
+    log << t.GetNanos();
+    return log;
+}
+
 std::ostream& operator<<(std::ostream &log, const Path &p)
 {
     log << p.GetAbsolute();
@@ -60,6 +66,14 @@ std::ostream &operator<<(std::ostream &log, const IToString &v)
 {
     log << (&v);
     return log;
+}
+
+std::istream &operator>>(std::istream &is, Time &t)
+{
+    uint64_t timeNanos;
+    is >> timeNanos;
+    t.SetNanos(timeNanos);
+    return is;
 }
 
 std::istream &operator>>(std::istream &is, Color &c)

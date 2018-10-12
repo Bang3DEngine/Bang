@@ -435,6 +435,10 @@ void GameObject::Destroy(GameObject *gameObject)
         scene->AddGameObjectToDestroyDelayed(gameObject);
         gameObject->SetParent(nullptr);
     }
+    else
+    {
+        GameObject::DestroyImmediate(gameObject);
+    }
 }
 
 const Array<Component *> &GameObject::GetComponents() const

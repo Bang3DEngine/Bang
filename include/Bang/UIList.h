@@ -114,6 +114,8 @@ private:
 
     bool m_wideSelectionMode = true;
 
+    void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);
+
     // IEventsFocus
     UIEventResult OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
     UIEventResult UIEventCallback(UIFocusable *focusable, const UIEvent &event);

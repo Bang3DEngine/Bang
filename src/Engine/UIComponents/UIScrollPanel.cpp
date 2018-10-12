@@ -106,16 +106,25 @@ void UIScrollPanel::OnPostUpdate()
             toConvertRT->SetAnchorMaxY( newAnchorMax.y );
         }
     }
+    UpdateScrollUI();
 }
 
 void UIScrollPanel::SetForceVerticalFit(bool forceVerticalFit)
 {
-    m_forceVerticalFit = forceVerticalFit;
+    if (forceVerticalFit != m_forceVerticalFit)
+    {
+        m_forceVerticalFit = forceVerticalFit;
+        UpdateScrollUI();
+    }
 }
 
 void UIScrollPanel::SetForceHorizontalFit(bool forceHorizontalFit)
 {
-    m_forceHorizontalFit = forceHorizontalFit;
+    if (forceHorizontalFit != m_forceHorizontalFit)
+    {
+        m_forceHorizontalFit = forceHorizontalFit;
+        UpdateScrollUI();
+    }
 }
 
 void UIScrollPanel::SetVerticalScrollBarSide(HorizontalSide side)
@@ -125,6 +134,7 @@ void UIScrollPanel::SetVerticalScrollBarSide(HorizontalSide side)
         GetVerticalScrollBar()->SetSide(side == HorizontalSide::LEFT ? Side::LEFT :
                                                                        Side::RIGHT);
         m_verticalScrollBarSide = side;
+        UpdateScrollUI();
     }
 }
 
@@ -135,6 +145,7 @@ void UIScrollPanel::SetHorizontalScrollBarSide(VerticalSide side)
         GetHorizontalScrollBar()->SetSide(side == VerticalSide::TOP ? Side::TOP :
                                                                       Side::BOT);
         m_horizontalScrollBarSide = side;
+        UpdateScrollUI();
     }
 }
 
@@ -143,6 +154,7 @@ void UIScrollPanel::SetVerticalShowScrollMode(ShowScrollMode showScrollMode)
     if (GetVerticalShowScrollMode() != showScrollMode)
     {
         m_verticalShowScrollMode = showScrollMode;
+        UpdateScrollUI();
     }
 }
 
@@ -151,17 +163,26 @@ void UIScrollPanel::SetHorizontalShowScrollMode(ShowScrollMode showScrollMode)
     if (GetHorizontalShowScrollMode() != showScrollMode)
     {
         m_horizontalShowScrollMode = showScrollMode;
+        UpdateScrollUI();
     }
 }
 
 void UIScrollPanel::SetVerticalScrollEnabled(bool enabled)
 {
-    m_verticalScrollEnabled = enabled;
+    if (m_verticalScrollEnabled != enabled)
+    {
+        m_verticalScrollEnabled = enabled;
+        UpdateScrollUI();
+    }
 }
 
 void UIScrollPanel::SetHorizontalScrollEnabled(bool enabled)
 {
-    m_horizontalScrollEnabled = enabled;
+    if (m_horizontalScrollEnabled != enabled)
+    {
+        m_horizontalScrollEnabled = enabled;
+        UpdateScrollUI();
+    }
 }
 
 void UIScrollPanel::SetScrolling(const Vector2i &scrolling)

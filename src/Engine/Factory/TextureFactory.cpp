@@ -14,32 +14,32 @@ TextureFactory::TextureFactory()
 
 Texture2D* TextureFactory::GetBangB64Icon()
 {
-    return GetTexture2D("LogoBang_B_64.png");
+    return TextureFactory::GetTexture2D("LogoBang_B_64.png");
 }
 
 Texture2D* TextureFactory::GetBangB512Icon()
 {
-    return GetTexture2D("LogoBang_B_512.png");
+    return TextureFactory::GetTexture2D("LogoBang_B_512.png");
 }
 
 Texture2D* TextureFactory::GetBangB2048Icon()
 {
-    return GetTexture2D("LogoBang_B_2048.png");
+    return TextureFactory::GetTexture2D("LogoBang_B_2048.png");
 }
 
 Texture2D* TextureFactory::GetBang2048Icon()
 {
-    return GetTexture2D("LogoBang_2048.png");
+    return TextureFactory::GetTexture2D("LogoBang_2048.png");
 }
 
 Texture2D *TextureFactory::GetButtonIdle()
 {
-    return GetTexture2D("ButtonIdle.png");
+    return TextureFactory::GetTexture2D("ButtonIdle.png");
 }
 
 Texture2D *TextureFactory::GetButtonDown()
 {
-    return GetTexture2D("ButtonDown.png");
+    return TextureFactory::GetTexture2D("ButtonDown.png");
 }
 
 Texture2D *TextureFactory::GetInnerShadow()
@@ -54,57 +54,57 @@ Texture2D *TextureFactory::GetOuterShadow()
 
 Texture2D* TextureFactory::GetRightArrowIcon()
 {
-    return GetTexture2D("RightArrow.png");
+    return TextureFactory::GetTexture2D("RightArrow.png");
 }
 
 Texture2D *TextureFactory::GetUpArrowIcon()
 {
-    return GetTexture2D("UpArrow.png");
+    return TextureFactory::GetTexture2D("UpArrow.png");
 }
 
 Texture2D* TextureFactory::GetDownArrowIcon()
 {
-    return GetTexture2D("DownArrow.png");
+    return TextureFactory::GetTexture2D("DownArrow.png");
 }
 
 Texture2D* TextureFactory::GetCheckIcon()
 {
-    return GetTexture2D("Check.png");
+    return TextureFactory::GetTexture2D("Check.png");
 }
 
 Texture2D* TextureFactory::GetAudioIcon()
 {
-    return GetTexture2D("Audio.png");
+    return TextureFactory::GetTexture2D("Audio.png");
 }
 
 Texture2D* TextureFactory::GetCircleIcon()
 {
-    return GetTexture2D("Circle.png");
+    return TextureFactory::GetTexture2D("Circle.png");
 }
 
 Texture2D* TextureFactory::GetSunIcon()
 {
-    return GetTexture2D("Sun.png");
+    return TextureFactory::GetTexture2D("Sun.png");
 }
 
 Texture2D* TextureFactory::GetLightBulbIcon()
 {
-    return GetTexture2D("LightBulb.png");
+    return TextureFactory::GetTexture2D("LightBulb.png");
 }
 
 Texture2D* Bang::TextureFactory::GetInfoIcon()
 {
-    return GetTexture2D("Info.png");
+    return TextureFactory::GetTexture2D("Info.png");
 }
 
 Texture2D* TextureFactory::GetWarningIcon()
 {
-    return GetTexture2D("Warn.png");
+    return TextureFactory::GetTexture2D("Warn.png");
 }
 
 Texture2D* Bang::TextureFactory::GetErrorIcon()
 {
-    return GetTexture2D("Error.png");
+    return TextureFactory::GetTexture2D("Error.png");
 
 }
 

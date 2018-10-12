@@ -291,9 +291,7 @@ bool CanEventBePropagated(const T& x)
     }
 
     const Object *object = DCAST<const Object*>(x);
-    return !object ||
-           (object->IsEnabledRecursively() &&
-           !object->IsWaitingToBeDestroyed());
+    return !object || !object->IsWaitingToBeDestroyed();
 }
 
 template<class TListener, class TListenerInnerT, class TReturn, class... Args>

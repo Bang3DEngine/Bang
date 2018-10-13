@@ -706,7 +706,7 @@ void ParticleSystem::CollideParticle(Collider *collider,
                                          &collisionPoint);
             if (collided)
             {
-                collided = Vector3::SqDistance(dispSegment.GetDestiny(),
+                collided = Vector3::SqDistance(dispSegment.GetOrigin(),
                                                collisionPoint) <=
                                         dispSegment.GetSqLength();
                 if (collided)
@@ -714,7 +714,6 @@ void ParticleSystem::CollideParticle(Collider *collider,
                     Vector3 c = sphere.GetCenter();
                     collisionNormal = (collisionPoint - c).NormalizedSafe();
                 }
-
             }
         }
         break;

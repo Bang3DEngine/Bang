@@ -414,7 +414,6 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
         {
             if (GameObject *go = gameObject->GetChildren().Back())
             {
-                ASSERT(!go->IsWaitingToBeDestroyed());
                 GameObject::DestroyImmediate(go);
             }
             gameObject->TryToClearDeletedChildren();
@@ -424,7 +423,6 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
         {
             if (Component *comp = gameObject->GetComponents().Back())
             {
-                ASSERT(!comp->IsWaitingToBeDestroyed());
                 Component::DestroyImmediate(comp);
             }
             gameObject->TryToClearDeletedComponents();

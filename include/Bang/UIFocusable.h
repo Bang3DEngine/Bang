@@ -22,14 +22,12 @@ public:
 
     UIEventResult ProcessEvent(const UIEvent &event);
 
-    void SetFocusEnabled(bool focusEnabled);
     void SetCursorType(Cursor::Type cursorType);
     void SetConsiderForTabbing(bool considerForTabbing);
     void AddEventCallback(UIFocusable::EventCallback eventCallback);
     void ClearEventCallbacks();
 
     bool HasFocus() const;
-    bool IsFocusEnabled() const;
     bool HasJustFocusChanged() const;
     bool IsBeingPressed() const;
     bool IsMouseOver() const;
@@ -39,11 +37,8 @@ public:
 private:
     bool m_hasFocus = false;
     bool m_isMouseOver = false;
-    bool m_focusEnabled = true;
     bool m_beingPressed = false;
     bool m_considerForTabbing = false;
-    bool m_hasJustFocusChanged = false;
-    bool m_lastMouseDownWasHere = false;
     Cursor::Type m_cursorType = Cursor::Type::ARROW;
 
     Array<EventCallback> m_eventCallbacks;

@@ -53,7 +53,7 @@ void UITree::OnUpdate()
             if (selItemCont)
             {
                 UITreeItemContainer *selectedItemCont =
-                                        Cast<UITreeItemContainer*>(selItemCont);
+                                        DCAST<UITreeItemContainer*>(selItemCont);
                 GOItem *selectedItem = selectedItemCont->GetContainedItem();
 
                 bool isCollapsed = selectedItemCont->IsCollapsed();

@@ -436,14 +436,18 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
 void GameObject::Destroy(GameObject *gameObject)
 {
-    if (GameObject *parent = gameObject->GetParent())
+    if (!gameObject->IsWaitingToBeDestroyed())
     {
-        parent->AddGameObjectToDestroyDelayed(gameObject);
-        gameObject->SetParent(nullptr);
-    }
-    else
-    {
-        GameObject::DestroyImmediate(gameObject);
+        gameObject->SetWaitingToBeDestroyed();
+        if (GameObject *parent = gameObject->GetParent())
+        {
+            parent->AddGameObjectToDestroyDelayed(gameObject);
+            gameObject->SetParent(nullptr);
+        }
+        else
+        {
+            GameObject::DestroyImmediate(gameObject);
+        }
     }
 }
 

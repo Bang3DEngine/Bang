@@ -505,7 +505,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
 
     UILabel *currentItemLabel = GameObjectFactory::CreateUILabel();
     currentItemLabel->SetSelectable(false);
-    currentItemLabel->GetFocusable()->SetFocusEnabled(false);
+    currentItemLabel->GetFocusable()->SetEnabled(false);
     UITextRenderer *currentItemText = currentItemLabel->GetText();
     currentItemText->SetContent("Current");
     currentItemText->SetTextSize(12);

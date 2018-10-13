@@ -66,7 +66,7 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
 
     for (UIFocusable *focusableInGo : focusablesInGo)
     {
-        if (focusableInGo->IsFocusEnabled())
+        if (focusableInGo->IsEnabledRecursively())
         {
             UIEventResult propagationResult = focusableInGo->ProcessEvent(event);
             if (propagationResult == UIEventResult::INTERCEPT)
@@ -155,7 +155,7 @@ void UICanvas::OnUpdate()
                 {
                     if (aaRectMaskVP.Contains(currentMousePosVP) &&
                         rt->IsMouseOver(currentMouseWindow, false) &&
-                        focusable->IsFocusEnabled())
+                        focusable->IsEnabledRecursively())
                     {
                         focusableUnderMouseTopMost = focusable;
                         break;
@@ -330,7 +330,6 @@ void UICanvas::OnUpdate()
 
                                 UIFocusable *newFocus = focusables.At(newFocusIndex);
                                 const bool isValid =
-                                    newFocus->IsFocusEnabled() &&
                                     newFocus->GetConsiderForTabbing() &&
                                     newFocus->GetGameObject()->IsVisibleRecursively() &&
                                     newFocus->IsEnabledRecursively();
@@ -499,16 +498,6 @@ Array<EventListener<IEventsDragDrop>*> UICanvas::GetDragDropListeners() const
     }
     return dragDropListeners;
 }
-
-void UICanvas::OnAfterChildrenUpdate()
-{
-    Component::OnAfterChildrenUpdate();
-    if (GetFocus())
-    {
-        GetFocus()->m_hasJustFocusChanged = false;
-    }
-}
-
 
 void UICanvas::OnBeforeChildrenRender(RenderPass rp)
 {

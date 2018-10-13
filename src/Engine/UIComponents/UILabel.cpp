@@ -269,7 +269,7 @@ UIEventResult UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
 
         case UIEvent::Type::FOCUS_TAKEN:
         case UIEvent::Type::MOUSE_CLICK_DOUBLE:
-            if (GetFocusable() && GetFocusable()->IsFocusEnabled())
+            if (GetFocusable() && GetFocusable()->IsEnabledRecursively())
             {
                 if (GetSelectAllOnFocus() && IsSelectable())
                 {
@@ -298,7 +298,7 @@ UIEventResult UILabel::OnUIEvent(UIFocusable*, const UIEvent &event)
         case UIEvent::Type::MOUSE_CLICK_DOWN:
         {
             if (GetFocusable() && GetFocusable()->HasFocus() &&
-                GetFocusable()->IsFocusEnabled())
+                GetFocusable()->IsEnabledRecursively())
             {
                 if (IsSelectable())
                 {

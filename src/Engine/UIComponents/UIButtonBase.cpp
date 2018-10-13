@@ -255,7 +255,7 @@ UIButtonBase *UIButtonBase::CreateInto(
 
     UILabel *label = GameObjectFactory::CreateUILabel();
     label->GetText()->SetTextColor(Color::Black);
-    label->GetFocusable()->SetFocusEnabled(false);
+    label->GetFocusable()->SetEnabled(false);
     label->GetMask()->SetMasking(false);
 
     UIImageRenderer *icon = GameObjectFactory::CreateUIImage();

@@ -42,6 +42,7 @@ protected:
     virtual void OnDisabled(Object *object) override;
     virtual void OnDestroy();
 
+    void SetWaitingToBeDestroyed();
     void InvalidateEnabledRecursively();
 
     static void PropagateObjectDestruction(Object *object);

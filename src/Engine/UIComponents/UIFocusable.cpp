@@ -46,7 +46,7 @@ UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
         }
 
         // Propagate events
-        if (EventEmitter<IEventsFocus>::IsEmittingEvents() && IsFocusEnabled())
+        if (EventEmitter<IEventsFocus>::IsEmittingEvents())
         {
             for (EventCallback eventCallback : m_eventCallbacks)
             {
@@ -102,11 +102,6 @@ bool UIFocusable::IsMouseOver() const
     return m_isMouseOver;
 }
 
-void UIFocusable::SetFocusEnabled(bool focusEnabled)
-{
-    m_focusEnabled = focusEnabled;
-}
-
 void UIFocusable::SetCursorType(Cursor::Type cursorType)
 {
     m_cursorType = cursorType;
@@ -121,21 +116,12 @@ bool UIFocusable::HasFocus() const
 {
     return m_hasFocus;
 }
-bool UIFocusable::IsFocusEnabled() const
-{
-    return m_focusEnabled;
-}
-bool UIFocusable::HasJustFocusChanged() const
-{
-    return m_hasJustFocusChanged;
-}
 
 void UIFocusable::SetFocus()
 {
     if (!HasFocus())
     {
         m_hasFocus = true;
-        m_hasJustFocusChanged = true;
     }
 }
 
@@ -144,7 +130,6 @@ void UIFocusable::ClearFocus()
     if (HasFocus())
     {
         m_hasFocus = false;
-        m_hasJustFocusChanged = true;
     }
 }
 

@@ -58,6 +58,11 @@ void Object::OnDestroy()
 {
 }
 
+void Object::SetWaitingToBeDestroyed()
+{
+    m_waitingToBeDestroyed = true;
+}
+
 void Object::InvalidateEnabledRecursively()
 {
     if (m_enabledRecursivelyValid)
@@ -71,7 +76,7 @@ void Object::PropagateObjectDestruction(Object *object)
 {
     if (!object->IsWaitingToBeDestroyed())
     {
-        object->m_waitingToBeDestroyed = true;
+        object->SetWaitingToBeDestroyed();
 
         object->OnDestroy();
         object->EventEmitter<IEventsDestroy>::

@@ -33,14 +33,18 @@ void Component::DestroyImmediate(Component *component)
 
 void Component::Destroy(Component *component)
 {
-    if (GameObject *go = component->GetGameObject())
+    if (!component->IsWaitingToBeDestroyed())
     {
-        go->AddComponentToDestroyDelayed(component);
-        component->SetGameObject(nullptr);
-    }
-    else
-    {
-        Component::DestroyImmediate(component);
+        component->SetWaitingToBeDestroyed();
+        if (GameObject *go = component->GetGameObject())
+        {
+            go->AddComponentToDestroyDelayed(component);
+            component->SetGameObject(nullptr);
+        }
+        else
+        {
+            Component::DestroyImmediate(component);
+        }
     }
 }
 

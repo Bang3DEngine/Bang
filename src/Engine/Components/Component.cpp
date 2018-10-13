@@ -33,9 +33,9 @@ void Component::DestroyImmediate(Component *component)
 
 void Component::Destroy(Component *component)
 {
-    if (Scene *scene = SceneManager::GetActiveScene())
+    if (GameObject *go = component->GetGameObject())
     {
-        scene->AddComponentToDestroyDelayed(component);
+        go->AddComponentToDestroyDelayed(component);
         component->SetGameObject(nullptr);
     }
     else

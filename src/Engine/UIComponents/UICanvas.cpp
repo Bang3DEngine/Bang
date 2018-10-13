@@ -43,13 +43,14 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
 
     Array<UIFocusable*> focusablesInGo = focusableGo->GetComponents<UIFocusable>();
 
-    class DestroyTracker : public GameObject,
-                           public EventListener<IEventsDestroy>
+    class DestroyTracker : public GameObject
     {
     public:
         Array<UIFocusable*> *focusables = nullptr;
         void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override
         {
+            GameObject::OnDestroyed(ee);
+
             ASSERT(focusables);
             focusables->Remove( SCAST<UIFocusable*>(ee) );
         }

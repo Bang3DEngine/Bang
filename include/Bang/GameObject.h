@@ -42,6 +42,7 @@ FORWARD class RectTransform;
 class GameObject : public Object,
                    public IToString,
                    public EventListener<IEventsChildren>,
+                   public EventListener<IEventsDestroy>,
                    public EventEmitter<IEventsName>,
                    public EventEmitter<IEventsChildren>,
                    public EventEmitter<IEventsComponent>,
@@ -230,6 +231,9 @@ protected:
     virtual void OnEnabled(Object *object) override;
     virtual void OnDisabled(Object *object) override;
 
+    // IEventsDestroy
+    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
+
 private:
     Array<GameObject*> m_children;
     Array<Component*> m_components;
@@ -259,15 +263,21 @@ private:
     Array< ChildToAdd > m_childrenToAdd;
     Array< std::pair<Component*, int> > m_componentsToAdd;
 
+    Array<GameObject*> m_gameObjectsToDestroyDelayed;
+    Array<Component*> m_componentsToDestroyDelayed;
+
     void TryToAddQueuedChildren();
     void TryToAddQueuedComponents();
     void TryToClearDeletedChildren();
     void TryToClearDeletedComponents();
 
+    void AddGameObjectToDestroyDelayed(GameObject *go);
+    void AddComponentToDestroyDelayed(Component *comp);
+    void DestroyDelayedObjects();
+
     void AddChild(GameObject *child, int index, bool keepWorldTransform);
     void AddChild_(GameObject *child, int index, bool keepWorldTransform);
     void RemoveChild(GameObject *child);
-
 
     Component* AddComponent_(Component *c, int index);
 

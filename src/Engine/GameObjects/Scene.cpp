@@ -67,21 +67,6 @@ void Scene::OnResize(int newWidth, int newHeight)
     InvalidateCanvas();
 }
 
-void Scene::DestroyDelayedElements()
-{
-    while (!m_componentsToDestroyDelayed.IsEmpty())
-    {
-        Component *comp = m_componentsToDestroyDelayed.Back();
-        Component::DestroyImmediate(comp);
-    }
-
-    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
-    {
-        GameObject *go = m_gameObjectsToDestroyDelayed.Back();
-        GameObject::DestroyImmediate(go);
-    }
-}
-
 DebugRenderer *Scene::GetDebugRenderer() const
 {
     return p_debugRenderer;
@@ -98,26 +83,6 @@ void Scene::SetCamera(Camera *cam)
     if (GetCamera())
     {
         GetCamera()->EventEmitter<IEventsDestroy>::RegisterListener(this);
-    }
-}
-
-void Scene::AddGameObjectToDestroyDelayed(GameObject *go)
-{
-    if (!go->IsWaitingToBeDestroyed() &&
-        !m_gameObjectsToDestroyDelayed.Contains(go))
-    {
-        m_gameObjectsToDestroyDelayed.PushBack(go);
-        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
-    }
-}
-
-void Scene::AddComponentToDestroyDelayed(Component *comp)
-{
-    if (!comp->IsWaitingToBeDestroyed() &&
-        !m_componentsToDestroyDelayed.Contains(comp))
-    {
-        m_componentsToDestroyDelayed.PushBack(comp);
-        comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 }
 
@@ -160,19 +125,11 @@ void Scene::CloneInto(ICloneable *clone) const
 
 void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
+    GameObject::OnDestroyed(object);
+
     if (object == GetCamera())
     {
         SetCamera(nullptr);
-    }
-
-    if (Component *comp = DCAST<Component*>(object))
-    {
-        m_componentsToDestroyDelayed.Remove(comp);
-    }
-
-    if (GameObject *go = DCAST<GameObject*>(object))
-    {
-        m_gameObjectsToDestroyDelayed.Remove(go);
     }
 }
 

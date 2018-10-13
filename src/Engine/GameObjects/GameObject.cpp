@@ -265,6 +265,12 @@ Component *GameObject::AddComponent_(Component *component, int index_)
     return component;
 }
 
+void GameObject::OnDestroyed(EventEmitter<IEventsDestroy> *object)
+{
+    m_gameObjectsToDestroyDelayed.Remove(SCAST<GameObject*>(object));
+    m_componentsToDestroyDelayed.Remove(SCAST<Component*>(object));
+}
+
 bool GameObject::CalculateEnabledRecursively() const
 {
     return IsEnabled() &&
@@ -430,9 +436,9 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
 void GameObject::Destroy(GameObject *gameObject)
 {
-    if (Scene *scene = SceneManager::GetActiveScene())
+    if (GameObject *parent = gameObject->GetParent())
     {
-        scene->AddGameObjectToDestroyDelayed(gameObject);
+        parent->AddGameObjectToDestroyDelayed(gameObject);
         gameObject->SetParent(nullptr);
     }
     else
@@ -856,6 +862,7 @@ void GameObject::PropagateToChildren(std::function<void(GameObject*)> func)
     {
         TryToAddQueuedChildren();
         TryToClearDeletedChildren();
+        DestroyDelayedObjects();
     }
 }
 
@@ -876,6 +883,7 @@ void GameObject::PropagateToComponents(std::function<void(Component*)> func)
     {
         TryToAddQueuedComponents();
         TryToClearDeletedComponents();
+        DestroyDelayedObjects();
     }
 }
 
@@ -884,6 +892,41 @@ GameObject *GameObject::Instantiate()
     GameObject *go = GameObjectFactory::CreateGameObject(true);
     go->SetParent( SceneManager::GetActiveScene() );
     return go;
+}
+
+void GameObject::AddGameObjectToDestroyDelayed(GameObject *go)
+{
+    if (!go->IsWaitingToBeDestroyed() &&
+        !m_gameObjectsToDestroyDelayed.Contains(go))
+    {
+        m_gameObjectsToDestroyDelayed.PushBack(go);
+        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
+}
+
+void GameObject::AddComponentToDestroyDelayed(Component *comp)
+{
+    if (!comp->IsWaitingToBeDestroyed() &&
+        !m_componentsToDestroyDelayed.Contains(comp))
+    {
+        m_componentsToDestroyDelayed.PushBack(comp);
+        comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
+}
+
+void GameObject::DestroyDelayedObjects()
+{
+    while (!m_componentsToDestroyDelayed.IsEmpty())
+    {
+        Component *comp = m_componentsToDestroyDelayed.Back();
+        Component::DestroyImmediate(comp);
+    }
+
+    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
+    {
+        GameObject *go = m_gameObjectsToDestroyDelayed.Back();
+        GameObject::DestroyImmediate(go);
+    }
 }
 
 template<class T>

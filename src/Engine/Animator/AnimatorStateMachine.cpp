@@ -214,7 +214,7 @@ AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNodeOrFirstFound() const
 {
     if (AnimatorStateMachineNode *entryNode = GetEntryNode())
     {
-        return  entryNode;
+        return entryNode;
     }
     return ((m_nodes.Size() >= 1) ? m_nodes.Front() : nullptr);
 }

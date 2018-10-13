@@ -13,8 +13,7 @@ FORWARD class Camera;
 FORWARD class RenderFactory;
 FORWARD class DebugRenderer;
 
-class Scene : public GameObject,
-              public EventListener<IEventsDestroy>
+class Scene : public GameObject
 {
     GAMEOBJECT(Scene);
 
@@ -24,12 +23,8 @@ public:
     virtual void PostUpdate() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
-    void DestroyDelayedElements();
 
     void SetCamera(Camera *cam);
-
-    void AddGameObjectToDestroyDelayed(GameObject *go);
-    void AddComponentToDestroyDelayed(Component *comp);
 
     Time GetDeltaTime() const;
     Camera *GetCamera() const;
@@ -57,9 +52,6 @@ private:
 
     Camera *p_camera = nullptr;
     DebugRenderer *p_debugRenderer = nullptr;
-
-    Array<GameObject*> m_gameObjectsToDestroyDelayed;
-    Array<Component*> m_componentsToDestroyDelayed;
 
     friend class Window;
     friend class GEngine;

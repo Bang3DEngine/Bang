@@ -59,11 +59,12 @@ void AnimatorStateMachineNode::RemoveConnection(
 {
     if (m_connections.Contains(connectionToRemove))
     {
+        m_connections.Remove(connectionToRemove);
+
         EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
                     &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
                     this, connectionToRemove);
 
-        m_connections.Remove(connectionToRemove);
         delete connectionToRemove;
     }
 }

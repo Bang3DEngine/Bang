@@ -28,6 +28,8 @@ public:
     AnimatorStateMachineNode* GetNode(uint nodeIdx);
     const AnimatorStateMachineNode* GetNode(uint nodeIdx) const;
     void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
+    void SetEntryNode(AnimatorStateMachineNode *entryNode);
+    void SetEntryNodeIdx(uint entryNodeIdx);
 
     AnimatorStateMachineVariable* CreateNewVariable();
     void SetVariableFloat(const String &varName, const float value);
@@ -39,6 +41,9 @@ public:
     AnimatorStateMachineVariable* GetVariable(const String &varName) const;
     float GetVariableFloat(const String &varName) const;
     bool  GetVariableBool(const String &varName) const;
+    AnimatorStateMachineNode* GetEntryNodeOrFirstFound() const;
+    AnimatorStateMachineNode* GetEntryNode() const;
+    uint GetEntryNodeIdx() const;
 
     const Array<AnimatorStateMachineNode*>& GetNodes() const;
     const Array<AnimatorStateMachineVariable*>& GetVariables() const;
@@ -52,6 +57,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
+    uint m_entryNodeIdx = -1u;
     Array<AnimatorStateMachineNode*> m_nodes;
     Array<AnimatorStateMachineVariable*> m_variables;
 

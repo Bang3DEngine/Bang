@@ -27,6 +27,11 @@ AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
     AnimatorStateMachineNode *newSMNode = new AnimatorStateMachineNode(this);
     m_nodes.PushBack(newSMNode);
 
+    if (!GetEntryNode())
+    {
+        SetEntryNode(newSMNode);
+    }
+
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
                 &IEventsAnimatorStateMachine::OnNodeCreated,
                 this,
@@ -77,6 +82,28 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 
     m_nodes.Remove(nodeToRemove);
     delete nodeToRemove;
+
+    if (idxToRemove == GetEntryNodeIdx())
+    {
+        SetEntryNodeIdx(0);
+    }
+}
+
+void AnimatorStateMachine::SetEntryNode(AnimatorStateMachineNode *entryNode)
+{
+    SetEntryNodeIdx( GetNodes().IndexOf( entryNode ) );
+}
+
+void AnimatorStateMachine::SetEntryNodeIdx(uint entryNodeIdx)
+{
+    if (entryNodeIdx < GetNodes().Size())
+    {
+        m_entryNodeIdx = entryNodeIdx;
+    }
+    else
+    {
+        m_entryNodeIdx = -1u;
+    }
 }
 
 AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
@@ -174,6 +201,29 @@ bool AnimatorStateMachine::GetVariableBool(const String &varName) const
     return false;
 }
 
+AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode() const
+{
+    if (GetEntryNodeIdx() < GetNodes().Size())
+    {
+        return GetNodes()[GetEntryNodeIdx()];
+    }
+    return nullptr;
+}
+
+AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNodeOrFirstFound() const
+{
+    if (AnimatorStateMachineNode *entryNode = GetEntryNode())
+    {
+        return  entryNode;
+    }
+    return ((m_nodes.Size() >= 1) ? m_nodes.Front() : nullptr);
+}
+
+uint AnimatorStateMachine::GetEntryNodeIdx() const
+{
+    return m_entryNodeIdx;
+}
+
 void AnimatorStateMachine::Clear()
 {
     while (!m_nodes.IsEmpty())
@@ -229,6 +279,11 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
+    if (metaNode.Contains("EntryNodeIdx"))
+    {
+        SetEntryNodeIdx( metaNode.Get<uint>("EntryNodeIdx") );
+    }
+
     if (metaNode.GetChildren("Nodes").Size() >= 1)
     {
         Clear();
@@ -263,6 +318,8 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
+
+    metaNode->Set("EntryNodeIdx", GetEntryNodeIdx());
 
     for (const AnimatorStateMachineNode *smNode : GetNodes())
     {

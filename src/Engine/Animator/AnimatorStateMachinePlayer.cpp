@@ -29,6 +29,7 @@ void AnimatorStateMachinePlayer::SetStateMachine(AnimatorStateMachine *stateMach
 
         if (GetStateMachine())
         {
+            SetCurrentNode( GetStateMachine()->GetEntryNodeOrFirstFound() );
             GetStateMachine()->EventEmitter<IEventsAnimatorStateMachine>::
                                RegisterListener(this);
         }

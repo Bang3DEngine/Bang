@@ -117,36 +117,6 @@ private:
     friend class GameObjectFactory;
 };
 
-
-// UITreeItemContainer
-class UITreeItemContainer : public GameObject
-{
-public:
-    UITreeItemContainer();
-    virtual ~UITreeItemContainer();
-
-    void SetCollapsable(bool collapsable);
-    void SetCollapsed(bool collapsed);
-    void SetContainedItem(GOItem *item);
-    void SetIndentation(int indentationPx);
-
-    bool IsCollapsed() const;
-    int GetIndentationPx() const;
-    GOItem *GetContainedItem() const;
-    UIButton *GetCollapseButton() const;
-    UIDragDroppable *GetDragDroppable() const;
-
-private:
-    bool m_collapsed = false;
-
-    int m_indentationPx = 0;
-    GameObject *p_userItemContainer = nullptr;
-    UIButton *p_collapseButton = nullptr;
-    GOItem *p_containedGameObject = nullptr;
-    GameObject *p_indentSpacer = nullptr;
-    UIDragDroppable *p_dragDroppable = nullptr;
-};
-
 NAMESPACE_BANG_END
 
 #endif // UITREE_H

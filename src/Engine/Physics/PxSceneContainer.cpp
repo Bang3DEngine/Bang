@@ -366,8 +366,8 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
         ASSERT(!GetPxActorFromGameObject(phObjGo));
         pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
         phObj->SetPxRigidDynamic(pxRD);
-        Debug_Log("I need to create pxActor " << pxRD << " for go " <<
-                  phObjGo->GetName() << " for comp " << phObj);
+        // Debug_Log("I need to create pxActor " << pxRD << " for go " <<
+        //           phObjGo->GetName() << " for comp " << phObj);
     }
     else
     {

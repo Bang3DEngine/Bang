@@ -4,6 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/AABox.h"
 #include "Bang/Collider.h"
+#include "Bang/Particle.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ComplexRandom.h"
 #include "Bang/ObjectGatherer.h"
@@ -14,13 +15,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class VAO;
 FORWARD class VBO;
 FORWARD class Texture2D;
-
-enum class ParticlePhysicsStepMode
-{
-    EULER,
-    EULER_SEMI,
-    VERLET
-};
 
 enum class ParticleGenerationShape
 {
@@ -45,21 +39,6 @@ class ParticleSystem : public Renderer
     COMPONENT_WITH_FAST_DYNAMIC_CAST(ParticleSystem)
 
 private:
-    struct ParticleData
-    {
-        Vector3 prevPosition;
-        Vector3 position;
-        Vector3 velocity;
-        Vector3 force;
-        Color startColor;
-        Color endColor;
-        float totalLifeTime;
-        float remainingLifeTime;
-        float remainingStartTime;
-        float prevDeltaTimeSecs;
-        float size;
-    };
-
     struct ParticleVBOData
     {
         Vector3 position;
@@ -90,7 +69,7 @@ public:
     void SetNumParticles(uint numParticles);
     void SetGenerationShape(ParticleGenerationShape shape);
     void SetGenerationShapeBoxSize(const Vector3 &boxSize);
-    void SetPhysicsStepMode(ParticlePhysicsStepMode stepMode);
+    void SetPhysicsStepMode(Particle::PhysicsStepMode stepMode);
     void SetGravityMultiplier(float gravityMultiplier);
     void SetInitialVelocityMultiplier(float initialVelocityMultiplier);
     void SetGenerationShapeConeFOVRads(float coneFOVRads);
@@ -119,7 +98,8 @@ public:
     float GetInitialVelocityMultiplier() const;
     float GetGenerationShapeConeFOVRads() const;
     ParticleRenderMode GetParticleRenderMode() const;
-    ParticlePhysicsStepMode GetPhysicsStepMode() const;
+    const Particle::Parameters &GetParticlesParameters() const;
+    Particle::PhysicsStepMode GetPhysicsStepMode() const;
     ParticleSimulationSpace GetSimulationSpace() const;
 
     // Renderer
@@ -146,12 +126,13 @@ private:
 
     VAO *p_particlesVAO = nullptr;
     VBO *p_particleDataVBO = nullptr;
+    Array<Particle::Data> m_particlesData;
     Array<ParticleVBOData> m_particlesVBOData;
-    Array<ParticleData> m_particlesData;
 
     RH<Mesh> m_particleMesh;
     uint m_numParticles = 0;
 
+    Particle::Parameters m_particlesParameters;
     ParticleSimulationSpace m_simulationSpace =
                             ParticleSimulationSpace::WORLD;
 
@@ -162,8 +143,6 @@ private:
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
     RH<Texture2D> p_texture;
-    Vector2i m_animationSheetSize = Vector2i::One;
-    float m_animationSpeed = 24.0f;
     bool m_billboard = true;
 
     Color m_startColor   = Color::White;
@@ -175,27 +154,11 @@ private:
     float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 
-    float m_bounciness = 1.0f;
     uint m_stepsPerSecond = 60;
-    Time m_remainingTimeToSimulate;
-    bool m_computeCollisions = false;
-    ParticlePhysicsStepMode m_physicsStepMode = ParticlePhysicsStepMode::EULER;
     ObjectGatherer<Collider, true> m_sceneCollidersGatherer;
 
     void InitParticle(uint i, const Vector3 &gravity);
-    void UpdateParticleData(uint i,
-                            float deltaTimeSecs,
-                            const Vector3 &gravity,
-                            const Array<Collider*> &sceneColliders);
-    void StepParticlePositionAndVelocity(ParticleData *pData,
-                                         float dt);
-
-    void CollideParticle(Collider *collider,
-                         const Vector3 &prevPositionNoInt,
-                         const Vector3 &newPositionNoInt,
-                         const Vector3 &newVelocityNoInt,
-                         Vector3 *newPositionAfterInt,
-                         Vector3 *newVelocityAfterInt);
+    bool IsParticleActive(uint i) const;
     void RecreateVAOForMesh();
     void UpdateDataVBO();
 

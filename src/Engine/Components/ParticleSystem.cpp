@@ -74,27 +74,30 @@ void ParticleSystem::OnUpdate()
 
     if (m_isEmitting)
     {
-        const Array<Collider*> &sceneColliders = m_sceneCollidersGatherer.
-                                                 GetGatheredObjects();
-        const Vector3 &gravity = Physics::GetInstance()->GetGravity();
+        m_particlesParameters.gravity   = Physics::GetInstance()->GetGravity();
+        m_particlesParameters.colliders = m_sceneCollidersGatherer.
+                                          GetGatheredObjects();
 
-        float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds() +
-                                m_remainingTimeToSimulate.GetSeconds());
+        float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds());
         float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
 
-        uint stepsToSimulate =
-                Math::Max(uint(Math::Round(dt / fixedDeltaTime)), 1u);
+        uint stepsToSimulate = uint(Math::Round(dt / fixedDeltaTime));
+        stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
+        // fixedDeltaTime = (dt / stepsToSimulate);
         for (uint step = 0; step < stepsToSimulate; ++step)
         {
             for (int i = 0; i < GetNumParticles(); ++i)
             {
-                UpdateParticleData(i, fixedDeltaTime, gravity, sceneColliders);
+                Particle::Data &pData = m_particlesData[i];
+                Particle::Step(&pData, fixedDeltaTime, m_particlesParameters);
+
+                if (pData.remainingStartTime <= 0 &&
+                    pData.remainingLifeTime <= 0.0f)
+                {
+                    InitParticle(i, m_particlesParameters.gravity);
+                }
             }
         }
-        float totalSimulatedTime = (fixedDeltaTime * stepsToSimulate);
-        m_remainingTimeToSimulate = Time::Seconds(
-                                    Math::Max(dt - totalSimulatedTime, 0.0f));
-        m_remainingTimeToSimulate = Time(0);
 
         // AABBox
         {
@@ -117,7 +120,6 @@ void ParticleSystem::Reset()
     {
         InitParticle(i, gravity);
     }
-    m_remainingTimeToSimulate = Time(0);
     UpdateDataVBO();
 }
 
@@ -143,7 +145,7 @@ void ParticleSystem::SetAnimationSheetSize(const Vector2i &animationSheetSize)
 {
     if (animationSheetSize != GetAnimationSheetSize())
     {
-        m_animationSheetSize = animationSheetSize;
+        m_particlesParameters.animationSheetSize = animationSheetSize;
     }
 }
 
@@ -151,7 +153,7 @@ void ParticleSystem::SetAnimationSpeed(float animationSpeed)
 {
     if (animationSpeed != GetAnimationSpeed())
     {
-        m_animationSpeed = animationSpeed;
+        m_particlesParameters.animationSpeed = animationSpeed;
     }
 }
 
@@ -191,7 +193,7 @@ void ParticleSystem::SetBounciness(float bounciness)
 {
     if (bounciness != GetBounciness())
     {
-        m_bounciness = bounciness;
+        m_particlesParameters.bounciness = bounciness;
     }
 }
 
@@ -239,7 +241,7 @@ void ParticleSystem::SetComputeCollisions(bool computeCollisions)
 {
     if (computeCollisions != GetComputeCollisions())
     {
-        m_computeCollisions = computeCollisions;
+        m_particlesParameters.computeCollisions = computeCollisions;
     }
 }
 
@@ -317,11 +319,11 @@ void ParticleSystem::SetGenerationShapeBoxSize(const Vector3 &boxSize)
     }
 }
 
-void ParticleSystem::SetPhysicsStepMode(ParticlePhysicsStepMode stepMode)
+void ParticleSystem::SetPhysicsStepMode(Particle::PhysicsStepMode stepMode)
 {
     if (stepMode != GetPhysicsStepMode())
     {
-        m_physicsStepMode = stepMode;
+        m_particlesParameters.physicsStepMode = stepMode;
     }
 }
 
@@ -362,22 +364,22 @@ Texture2D *ParticleSystem::GetTexture() const
 
 const Vector2i &ParticleSystem::GetAnimationSheetSize() const
 {
-    return m_animationSheetSize;
+    return GetParticlesParameters().animationSheetSize;
 }
 
 float ParticleSystem::GetBounciness() const
 {
-    return m_bounciness;
+    return GetParticlesParameters().bounciness;
 }
 
 float ParticleSystem::GetAnimationSpeed() const
 {
-    return m_animationSpeed;
+    return GetParticlesParameters().animationSpeed;
 }
 
 bool ParticleSystem::GetComputeCollisions() const
 {
-    return m_computeCollisions;
+    return GetParticlesParameters().computeCollisions;
 }
 
 const Vector3 &ParticleSystem::GetGenerationShapeBoxSize() const
@@ -410,9 +412,14 @@ ParticleRenderMode ParticleSystem::GetParticleRenderMode() const
     return m_particleRenderMode;
 }
 
-ParticlePhysicsStepMode ParticleSystem::GetPhysicsStepMode() const
+const Particle::Parameters &ParticleSystem::GetParticlesParameters() const
 {
-    return m_physicsStepMode;
+    return m_particlesParameters;
+}
+
+Particle::PhysicsStepMode ParticleSystem::GetPhysicsStepMode() const
+{
+    return GetParticlesParameters().physicsStepMode;
 }
 
 ParticleSimulationSpace ParticleSystem::GetSimulationSpace() const
@@ -539,241 +546,27 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     ASSERT(i >= 0);
     ASSERT(i < GetNumParticles());
 
-    if (m_isEmitting)
-    {
-        ParticleData &particleData = m_particlesData[i];
-        particleData.position = GetParticleInitialPosition();
-        particleData.velocity = GetParticleInitialVelocity();
-        particleData.prevPosition = particleData.position - particleData.velocity;
-        particleData.prevDeltaTimeSecs = 1.0f;
-        particleData.totalLifeTime = GetLifeTime().GenerateRandom();
-        particleData.remainingLifeTime = particleData.totalLifeTime;
-        particleData.remainingStartTime = GetStartTime().GenerateRandom();
-        particleData.force = (GetGravityMultiplier() * gravity);
-        particleData.size = GetStartSize().GenerateRandom();
-        particleData.startColor = GetStartColor();
-        particleData.endColor = GetEndColor();
+    Particle::Data &particleData = m_particlesData[i];
+    particleData.position = GetParticleInitialPosition();
+    particleData.velocity = GetParticleInitialVelocity();
+    particleData.prevPosition = particleData.position - particleData.velocity;
+    particleData.prevDeltaTimeSecs = 1.0f;
+    particleData.totalLifeTime = GetLifeTime().GenerateRandom();
+    particleData.remainingLifeTime = particleData.totalLifeTime;
+    particleData.remainingStartTime = GetStartTime().GenerateRandom();
+    particleData.force = (GetGravityMultiplier() * gravity);
+    particleData.size = GetStartSize().GenerateRandom();
+    particleData.startColor = GetStartColor();
+    particleData.endColor = GetEndColor();
 
-        m_particlesVBOData[i].position       = Vector3::Infinity;
-        m_particlesVBOData[i].size           = 0.0f;
-        m_particlesVBOData[i].color          = Color::Zero;
-        m_particlesVBOData[i].animationFrame = 0;
-    }
+    particleData.currentColor = particleData.startColor;
+    particleData.currentFrame = 0;
 }
 
-void ParticleSystem::UpdateParticleData(uint i,
-                                        float dt,
-                                        const Vector3 &gravity,
-                                        const Array<Collider*> &sceneColliders)
+bool ParticleSystem::IsParticleActive(uint i) const
 {
-    ParticleData &particleData = m_particlesData[i];
-    if (particleData.remainingStartTime <= 0.0f)
-    {
-        particleData.remainingLifeTime -= dt;
-        if (particleData.remainingLifeTime > 0.0f)
-        {
-            float lifeTimePercent = 1.0f - (particleData.remainingLifeTime /
-                                            particleData.totalLifeTime);
-
-            // Render related
-            Color pColor = Color::Lerp(particleData.startColor,
-                                       particleData.endColor,
-                                       lifeTimePercent);
-            int animationFrame;
-            {
-                float passedLifeTime = (particleData.totalLifeTime -
-                                        particleData.remainingLifeTime);
-                const Vector2i &sheetSize = GetAnimationSheetSize();
-                animationFrame = SCAST<int>(passedLifeTime * GetAnimationSpeed());
-                animationFrame = animationFrame % (sheetSize.x * sheetSize.y);
-            }
-
-            // Physics related
-            const Vector3 pPrevPos = particleData.position;
-            StepParticlePositionAndVelocity(&particleData, dt);
-            if (GetComputeCollisions() && sceneColliders.Size() >= 1)
-            {
-                Vector3 posAfterCollision             = particleData.position;
-                Vector3 velocityAfterCollision        = particleData.velocity;
-                const Vector3 pPositionWithoutCollide = particleData.position;
-                const Vector3 pVelocityWithoutCollide = particleData.velocity;
-                for (Collider *collider : sceneColliders)
-                {
-                    if (collider->IsEnabledRecursively())
-                    {
-                        CollideParticle(collider,
-                                        pPrevPos,
-                                        pPositionWithoutCollide,
-                                        pVelocityWithoutCollide,
-                                        &posAfterCollision,
-                                        &velocityAfterCollision);
-                    }
-                }
-
-                if (posAfterCollision != pPositionWithoutCollide)
-                {
-                    particleData.prevPosition = posAfterCollision -
-                                                (velocityAfterCollision * dt);
-                }
-
-                particleData.position = posAfterCollision;
-                particleData.velocity = velocityAfterCollision;
-            }
-            particleData.prevDeltaTimeSecs = dt;
-
-            m_particlesVBOData[i].position       = particleData.position;
-            m_particlesVBOData[i].size           = particleData.size;
-            m_particlesVBOData[i].color          = pColor;
-            m_particlesVBOData[i].animationFrame = animationFrame;
-        }
-        else
-        {
-            InitParticle(i, gravity);
-        }
-    }
-    else
-    {
-        particleData.remainingStartTime -= dt;
-    }
-}
-
-void ParticleSystem::StepParticlePositionAndVelocity(ParticleData *pData,
-                                                     float dt)
-{
-    constexpr float pMass       = 1.0f;
-    const Vector3 pPrevPrevPos  = pData->prevPosition;
-    const Vector3 pPrevPos      = pData->position;
-    const Vector3 pPrevVelocity = pData->velocity;
-    const Vector3 pForce        = pData->force;
-    const Vector3 pAcc          = (pForce / pMass);
-
-    Vector3 pNewPosition = Vector3::Zero;
-    Vector3 pNewVelocity = Vector3::Zero;
-    switch (GetPhysicsStepMode())
-    {
-        case ParticlePhysicsStepMode::EULER:
-            pNewPosition = pPrevPos + (pPrevVelocity * dt);
-            pNewVelocity = pPrevVelocity + (pAcc * dt);
-        break;
-
-        case ParticlePhysicsStepMode::EULER_SEMI:
-            pNewVelocity = pPrevVelocity + (pAcc * dt);
-            pNewPosition = pPrevPos + (pNewVelocity * dt);
-        break;
-
-        case ParticlePhysicsStepMode::VERLET:
-        {
-            float timeStepRatio = (dt / pData->prevDeltaTimeSecs);
-            pNewPosition = pPrevPos +
-                           timeStepRatio * (pPrevPos - pPrevPrevPos) +
-                           (pAcc * (dt*dt));
-            pNewVelocity = (pNewPosition - pPrevPos) / dt;
-        }
-        break;
-    }
-
-    pData->position     = pNewPosition;
-    pData->velocity     = pNewVelocity;
-    pData->prevPosition = pPrevPos;
-}
-
-void ParticleSystem::CollideParticle(Collider *collider,
-                                     const Vector3 &prevPositionNoInt,
-                                     const Vector3 &newPositionNoInt,
-                                     const Vector3 &newVelocityNoInt,
-                                     Vector3 *newPositionAfterInt_,
-                                     Vector3 *newVelocityAfterInt_)
-{
-    Vector3 &newPositionAfterInt = *newPositionAfterInt_;
-    Vector3 &newVelocityAfterInt = *newVelocityAfterInt_;
-
-    Segment dispSegment(prevPositionNoInt, newPositionNoInt);
-
-    bool collided = false;
-    Vector3 collisionPoint;
-    Vector3 collisionNormal;
-    switch (collider->GetPhysicsObjectType())
-    {
-        case PhysicsObject::Type::SPHERE_COLLIDER:
-        {
-            SphereCollider *spCol = SCAST<SphereCollider*>(collider);
-            Sphere sphere = spCol->GetSphereWorld();
-
-            Ray dispRay(dispSegment.GetOrigin(), dispSegment.GetDirection());
-            Geometry::IntersectRaySphere(dispRay,
-                                         sphere,
-                                         &collided,
-                                         &collisionPoint);
-            if (collided)
-            {
-                collided = Vector3::SqDistance(dispSegment.GetOrigin(),
-                                               collisionPoint) <=
-                                        dispSegment.GetSqLength();
-                if (collided)
-                {
-                    Vector3 c = sphere.GetCenter();
-                    collisionNormal = (collisionPoint - c).NormalizedSafe();
-                }
-            }
-        }
-        break;
-
-        case PhysicsObject::Type::BOX_COLLIDER:
-        {
-            BoxCollider *boxCol = SCAST<BoxCollider*>(collider);
-            Box box = boxCol->GetBoxWorld();
-
-            Geometry::IntersectSegmentBox(dispSegment,
-                                          box,
-                                          &collided,
-                                          &collisionPoint,
-                                          &collisionNormal);
-        }
-        break;
-
-        case PhysicsObject::Type::MESH_COLLIDER:
-        {
-            MeshCollider *meshCol = SCAST<MeshCollider*>(collider);
-            if (Mesh *mesh = meshCol->GetMesh())
-            {
-                for (int triIdx = 0; triIdx < mesh->GetNumTriangles(); ++triIdx)
-                {
-                    Triangle tri = mesh->GetTriangle(triIdx);
-                    Transform *tr = collider->GetGameObject()->GetTransform();
-                    tri = tr->GetLocalToWorldMatrix() * tri;
-
-                    Geometry::IntersectSegmentTriangle(dispSegment,
-                                                       tri,
-                                                       &collided,
-                                                       &collisionPoint);
-                    if (collided)
-                    {
-                        collisionNormal = tri.GetNormal();
-                    }
-                }
-            }
-        }
-        break;
-
-        default:
-        break;
-    }
-
-    if (collided)
-    {
-        const Vector3 cpos = collisionPoint;
-        const Vector3 cnorm = collisionNormal;
-        const float bouncinessEpsilon = (1.0f + GetBounciness());
-        Plane collisionPlane(collisionPoint, collisionNormal);
-        Vector3 newPos = newPositionNoInt - bouncinessEpsilon *
-                         collisionPlane.GetDistanceTo(newPositionNoInt) * cnorm;
-        newPositionAfterInt = newPos;
-
-        Vector3 newVel = newVelocityNoInt -
-                         bouncinessEpsilon * cnorm *
-                         collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
-        newVelocityAfterInt = newVel;
-    }
+    return (m_particlesData[i].remainingLifeTime > 0 &&
+            m_particlesData[i].remainingStartTime <= 0);
 }
 
 void ParticleSystem::RecreateVAOForMesh()
@@ -924,6 +717,25 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
 
 void ParticleSystem::UpdateDataVBO()
 {
+    for (uint i = 0; i < GetNumParticles(); ++i)
+    {
+        const Particle::Data &pData = m_particlesData[i];
+        if (IsParticleActive(i))
+        {
+            m_particlesVBOData[i].position       = pData.position;
+            m_particlesVBOData[i].size           = pData.size;
+            m_particlesVBOData[i].color          = pData.currentColor;
+            m_particlesVBOData[i].animationFrame = pData.currentFrame;
+        }
+        else
+        {
+            m_particlesVBOData[i].position       = Vector3::Infinity;
+            m_particlesVBOData[i].size           = 0.0f;
+            m_particlesVBOData[i].color          = Color::Zero;
+            m_particlesVBOData[i].animationFrame = 0;
+        }
+    }
+
     p_particleDataVBO->Update(m_particlesVBOData.Data(),
                               m_particlesVBOData.Size() * sizeof(ParticleVBOData),
                               0);
@@ -1058,7 +870,7 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("PhysicsStepMode"))
     {
         SetPhysicsStepMode(
-                    metaNode.Get<ParticlePhysicsStepMode>("PhysicsStepMode") );
+                    metaNode.Get<Particle::PhysicsStepMode>("PhysicsStepMode") );
     }
 
     if (metaNode.Contains("ComputeCollisions"))

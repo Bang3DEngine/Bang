@@ -20,7 +20,6 @@ class Scene : public GameObject
 public:
     virtual void Start() override;
     virtual void Update() override;
-    virtual void PostUpdate() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
     virtual void OnResize(int newWidth, int newHeight);
 
@@ -48,6 +47,7 @@ protected:
     DebugRenderer *GetDebugRenderer() const;
 
 private:
+    Time m_deltaTime;
     Time m_lastUpdateTime;
 
     Camera *p_camera = nullptr;

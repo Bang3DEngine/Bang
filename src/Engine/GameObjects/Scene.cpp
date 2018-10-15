@@ -38,13 +38,9 @@ void Scene::Start()
 
 void Scene::Update()
 {
-    GameObject::Update();
-}
-
-void Scene::PostUpdate()
-{
-    GameObject::PostUpdate();
+    m_deltaTime = Time::GetPassedTimeSince(m_lastUpdateTime);
     m_lastUpdateTime = Time::GetNow();
+    GameObject::Update();
 }
 
 void Scene::Render(RenderPass rp, bool renderChildren)
@@ -88,7 +84,7 @@ void Scene::SetCamera(Camera *cam)
 
 Time Scene::GetDeltaTime() const
 {
-    return Time::GetPassedTimeSince(m_lastUpdateTime);
+    return m_deltaTime;
 }
 
 void Scene::InvalidateCanvas()

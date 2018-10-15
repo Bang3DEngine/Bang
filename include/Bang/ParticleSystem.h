@@ -7,7 +7,6 @@
 #include "Bang/Particle.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ComplexRandom.h"
-#include "Bang/ObjectGatherer.h"
 #include "Bang/ResourceHandle.h"
 
 NAMESPACE_BANG_BEGIN
@@ -107,7 +106,6 @@ public:
     virtual void OnRender() override;
     virtual void SetUniformsOnBind(ShaderProgram *sp) override;
     AABox GetAABBox() const override;
-
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

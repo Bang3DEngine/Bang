@@ -38,6 +38,7 @@ public:
 
     struct Parameters
     {
+        float damping = 1.0f;
         float bounciness = 1.0f;
         Array<Collider*> colliders;
         bool computeCollisions = false;
@@ -48,20 +49,34 @@ public:
         Vector2i animationSheetSize  = Vector2i::One;
     };
 
+    static void ExecuteFixedStepped(
+                            Time totalDeltaTime,
+                            Time fixedStepDeltaTime,
+                            std::function<void(Time fixedDeltaTime)> func);
+
     static void FixedStepAll(
-        Array<Particle::Data> *pData,
+        Array<Particle::Data> *particlesDatas,
         Time totalDeltaTime,
         Time fixedStepDeltaTime,
         const Particle::Parameters &params,
         std::function<void(uint, const Particle::Parameters&)> initParticleFunc);
 
     static void FixedStepAll(
-        Array<Particle::Data> *pData,
+        Array<Particle::Data> *particlesDatas,
         Time totalDeltaTime,
         Time fixedStepDeltaTime,
         const Particle::Parameters &params,
         std::function<void(uint, const Particle::Parameters&)> initParticleFunc,
         std::function<bool(uint)> canUpdateParticleFunc);
+
+    static void FixedStepAll(
+        Array<Particle::Data> *particlesDatas,
+        Time totalDeltaTime,
+        Time fixedStepDeltaTime,
+        const Particle::Parameters &params,
+        std::function<void(uint i, const Particle::Parameters&)> initParticleFunc,
+        std::function<bool(uint i)> canUpdateParticleFunc,
+        std::function<void(Time dt)> extraFuncToExecuteEveryStep);
 
     static void Step(Particle::Data *pData,
                      Time dt,

@@ -92,6 +92,21 @@ void Particle::Step(Particle::Data *pData_,
     }
 }
 
+void Particle::ExecuteFixedStepped(Time totalDeltaTime,
+                                   Time fixedStepDeltaTime,
+                                   std::function<void (Time)> func)
+{
+    double dtSecs = totalDeltaTime.GetSeconds();
+    double fixedDeltaTimeSecs = fixedStepDeltaTime.GetSeconds();
+
+    uint stepsToSimulate = uint(Math::Round(dtSecs / fixedDeltaTimeSecs));
+    stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
+    for (uint step = 0; step < stepsToSimulate; ++step)
+    {
+        func(fixedStepDeltaTime);
+    }
+}
+
 void Particle::FixedStepAll(
       Array<Particle::Data> *particlesDatas,
       Time totalDeltaTime,
@@ -107,36 +122,55 @@ void Particle::FixedStepAll(
                            initParticleFunc,
                            [](uint){ return true; });
 }
+
 void Particle::FixedStepAll(
       Array<Particle::Data> *particlesDatas,
       Time totalDeltaTime,
       Time fixedStepDeltaTime,
       const Particle::Parameters &params,
       std::function<void(uint, const Particle::Parameters&)> initParticleFunc,
-        std::function<bool(uint)> canUpdateParticleFunc)
+      std::function<bool(uint)> canUpdateParticleFunc)
 {
-    double dtSecs = totalDeltaTime.GetSeconds();
-    double fixedDeltaTimeSecs = fixedStepDeltaTime.GetSeconds();
+    Particle::FixedStepAll(particlesDatas,
+                           totalDeltaTime,
+                           fixedStepDeltaTime,
+                           params,
+                           initParticleFunc,
+                           canUpdateParticleFunc,
+                           [](Time){});
+}
 
-    uint stepsToSimulate = uint(Math::Round(dtSecs / fixedDeltaTimeSecs));
-    stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
-    for (uint step = 0; step < stepsToSimulate; ++step)
-    {
-        for (uint i = 0; i < particlesDatas->Size(); ++i)
-        {
-            if (canUpdateParticleFunc(i))
+void Particle::FixedStepAll(
+   Array<Particle::Data> *particlesDatas,
+   Time totalDeltaTime,
+   Time fixedStepDeltaTime,
+   const Particle::Parameters &params,
+   std::function<void (uint i, const Particle::Parameters &)> initParticleFunc,
+   std::function<bool (uint i)> canUpdateParticleFunc,
+   std::function<void (Time dt)> extraFuncToExecuteEveryStep)
+{
+    Particle::ExecuteFixedStepped(
+            totalDeltaTime,
+            fixedStepDeltaTime,
+            [&](Time dt)
             {
-                Particle::Data &pData = particlesDatas->At(i);
-                Particle::Step(&pData, fixedStepDeltaTime, params);
-
-                if (pData.remainingStartTime <= 0 &&
-                    pData.remainingLifeTime <= 0.0f)
+                for (uint i = 0; i < particlesDatas->Size(); ++i)
                 {
-                    initParticleFunc(i, params);
+                    if (canUpdateParticleFunc(i))
+                    {
+                        Particle::Data &pData = particlesDatas->At(i);
+                        Particle::Step(&pData, dt, params);
+
+                        if (pData.remainingStartTime <= 0 &&
+                            pData.remainingLifeTime <= 0.0f)
+                        {
+                            initParticleFunc(i, params);
+                        }
+                    }
                 }
+                extraFuncToExecuteEveryStep(dt);
             }
-        }
-    }
+    );
 }
 
 void Particle::StepPositionAndVelocity(Particle::Data *pData,
@@ -157,19 +191,22 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
         case Particle::PhysicsStepMode::EULER:
             pNewPosition = pPrevPos + (pPrevVelocity * dt);
             pNewVelocity = pPrevVelocity + (pAcc * dt);
+            pNewVelocity *= params.damping;
         break;
 
         case Particle::PhysicsStepMode::EULER_SEMI:
             pNewVelocity = pPrevVelocity + (pAcc * dt);
+            pNewVelocity *= params.damping;
             pNewPosition = pPrevPos + (pNewVelocity * dt);
         break;
 
         case Particle::PhysicsStepMode::VERLET:
         {
             float timeStepRatio = (dt / pData->prevDeltaTimeSecs);
-            pNewPosition = pPrevPos +
-                           timeStepRatio * (pPrevPos - pPrevPrevPos) +
-                           (pAcc * (dt*dt));
+            Vector3 disp = timeStepRatio * (pPrevPos - pPrevPrevPos);
+            disp += (pAcc * (dt*dt));
+            disp *= params.damping;
+            pNewPosition = pPrevPos + disp;
             pNewVelocity = (pNewPosition - pPrevPos) / dt;
         }
         break;

@@ -30,7 +30,12 @@ void Time::SetNanos(uint64_t nanos)
 
 void Time::SetInfinity()
 {
-    m_timeNanos = SCAST<uint64_t>(-1);
+    *this = Time::Infinity();
+}
+
+void Time::SetZero()
+{
+    *this = Time::Zero();
 }
 
 double Time::GetSeconds() const
@@ -46,6 +51,16 @@ uint64_t Time::GetMillis() const
 uint64_t Time::GetNanos() const
 {
     return m_timeNanos;
+}
+
+Time Time::Zero()
+{
+    return Time(0);
+}
+
+Time Time::Infinity()
+{
+    return Time( SCAST<uint64_t>(-1u) );
 }
 
 Time Time::Seconds(double seconds)

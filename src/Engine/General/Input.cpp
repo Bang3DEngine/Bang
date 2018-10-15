@@ -250,8 +250,11 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
     InputEvent inputEvent;
 
     inputEvent.mousePosWindow = Input::GetMousePositionWindowWithoutInvertY();
-    inputEvent.timestamp = Time::Millis(event.common.timestamp) +
-                           Time::GetInit();
+    if (event.common.timestamp != -1u)
+    {
+        inputEvent.timestamp = Time::Millis(event.common.timestamp) +
+                               Time::GetInit();
+    }
 
     switch (event.type)
     {

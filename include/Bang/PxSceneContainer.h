@@ -27,6 +27,7 @@ public:
 
     Scene *GetScene() const;
     physx::PxScene* GetPxScene() const;
+    Array<Collider*> GetColliders() const;
     physx::PxActor* GetPxActorFromGameObject(GameObject *go) const;
     Collider* GetColliderFromPxShape(physx::PxShape *pxShape) const;
     GameObject* GetGameObjectFromPxActor(physx::PxActor *pxActor) const;

@@ -40,7 +40,7 @@ struct InputEvent
     KeyModifiers keyModifiers = KeyModifier::NONE;
     MouseButton mouseButton   = MouseButton::NONE;
     bool autoRepeat           = false;
-    Time timestamp;
+    Time timestamp            = Time::Infinity();
     Vector2i mousePosWindow   = Vector2i::Zero;
     Vector2 wheelDelta        = Vector2::Zero;
 

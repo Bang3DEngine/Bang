@@ -21,20 +21,19 @@ public:
 
     struct Data
     {
-        Vector3 prevPosition;
-        Color startColor;
-        Color endColor;
-        float totalLifeTime;
-        float remainingLifeTime;
-        float remainingStartTime;
-        float prevDeltaTimeSecs;
-        float size;
-
-        Vector3 position;
-        Vector3 velocity;
-        Vector3 force;
-        uint currentFrame;
-        Color currentColor;
+        Vector3 prevPosition      = Vector3::Zero;
+        Vector3 position          = Vector3::Zero;
+        Vector3 velocity          = Vector3::Zero;
+        Vector3 force             = Vector3::Zero;
+        Color startColor          = Color::White;
+        Color endColor            = Color::White;
+        Color currentColor        = Color::White;
+        float totalLifeTime       = Math::Infinity<float>();
+        float remainingLifeTime   = Math::Infinity<float>();
+        float remainingStartTime  = 0.0f;
+        float prevDeltaTimeSecs   = 1.0f;
+        float size                = 1.0f;
+        uint currentFrame         = 0;
     };
 
     struct Parameters
@@ -43,13 +42,30 @@ public:
         Array<Collider*> colliders;
         bool computeCollisions = false;
         Vector3 gravity = Vector3::Zero;
-        PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
+        Particle::PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
 
         float animationSpeed = 0.0f;
         Vector2i animationSheetSize  = Vector2i::One;
     };
 
-    static void Step(Particle::Data *pData, float dt, const Parameters &params);
+    static void FixedStepAll(
+        Array<Particle::Data> *pData,
+        Time totalDeltaTime,
+        Time fixedStepDeltaTime,
+        const Particle::Parameters &params,
+        std::function<void(uint, const Particle::Parameters&)> initParticleFunc);
+
+    static void FixedStepAll(
+        Array<Particle::Data> *pData,
+        Time totalDeltaTime,
+        Time fixedStepDeltaTime,
+        const Particle::Parameters &params,
+        std::function<void(uint, const Particle::Parameters&)> initParticleFunc,
+        std::function<bool(uint)> canUpdateParticleFunc);
+
+    static void Step(Particle::Data *pData,
+                     Time dt,
+                     const Particle::Parameters &params);
 
     Particle() = delete;
     virtual ~Particle() = delete;
@@ -57,8 +73,8 @@ public:
 private:
     static void StepPositionAndVelocity(Particle::Data *pData,
                                         float dt,
-                                        const Parameters &params);
-    static void CollideParticle(Collider *collider,
+                                        const Particle::Parameters &params);
+    static bool CollideParticle(Collider *collider,
                                 const Parameters &params,
                                 const Vector3 &prevPositionNoInt,
                                 const Vector3 &newPositionNoInt,

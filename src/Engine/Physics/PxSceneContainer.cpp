@@ -112,6 +112,21 @@ PxScene *PxSceneContainer::GetPxScene() const
     return p_pxScene;
 }
 
+Array<Collider *> PxSceneContainer::GetColliders() const
+{
+    Array<Collider*> colliders;
+    const Array<PhysicsObject*>& phObjs =
+                                m_physicsObjectGatherer->GetGatheredObjects();
+    for (PhysicsObject *phObj : phObjs)
+    {
+        if (Collider *coll = FastDynamicCast<Collider*>(phObj))
+        {
+            colliders.PushBack(coll);
+        }
+    }
+    return colliders;
+}
+
 Collider* PxSceneContainer::GetColliderFromPxShape(physx::PxShape *pxShape) const
 {
     if (m_pxShapeToCollider.ContainsKey(pxShape))
@@ -371,8 +386,8 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     }
     else
     {
-        Debug_Log("Reusing pxActor " << pxRD << " for go " << phObjGo->GetName() <<
-                  " for comp " << phObj);
+        // Debug_Log("Reusing pxActor " << pxRD << " for go " << phObjGo->GetName() <<
+        //           " for comp " << phObj);
     }
     ASSERT(pxRD);
 

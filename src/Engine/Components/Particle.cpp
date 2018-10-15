@@ -17,13 +17,15 @@
 USING_NAMESPACE_BANG
 
 void Particle::Step(Particle::Data *pData_,
-                    float dt,
+                    Time dt,
                     const Parameters &params)
 {
+    float dtSecs = SCAST<float>(dt.GetSeconds());
+
     Particle::Data &pData = *pData_;
     if (pData.remainingStartTime <= 0.0f)
     {
-        pData.remainingLifeTime -= dt;
+        pData.remainingLifeTime -= dtSecs;
         if (pData.remainingLifeTime > 0.0f)
         {
             float lifeTimePercent = 1.0f - (pData.remainingLifeTime /
@@ -44,44 +46,96 @@ void Particle::Step(Particle::Data *pData_,
                 pData.currentFrame = animationFrame;
             }
 
-            const Vector3 pPrevPos = pData.position;
-            Particle::StepPositionAndVelocity(&pData, dt, params);
+            Vector3 pPrevPos = pData.position;
+            Particle::StepPositionAndVelocity(&pData, dtSecs, params);
 
             if (params.computeCollisions && params.colliders.Size() >= 1)
             {
-                Vector3 posAfterCollision             = pData.position;
-                Vector3 velocityAfterCollision        = pData.velocity;
-                const Vector3 pPositionWithoutCollide = pData.position;
-                const Vector3 pVelocityWithoutCollide = pData.velocity;
                 for (Collider *collider : params.colliders)
                 {
                     if (collider->IsEnabledRecursively())
                     {
-                        CollideParticle(collider,
-                                        params,
-                                        pPrevPos,
-                                        pPositionWithoutCollide,
-                                        pVelocityWithoutCollide,
-                                        &posAfterCollision,
-                                        &velocityAfterCollision);
+                        const Vector3 pPositionWithoutCollide = pData.position;
+                        const Vector3 pVelocityWithoutCollide = pData.velocity;
+
+                        Vector3 posAfterCollision;
+                        Vector3 velocityAfterCollision;
+                        const bool collided =
+                                CollideParticle(collider,
+                                                params,
+                                                pPrevPos,
+                                                pPositionWithoutCollide,
+                                                pVelocityWithoutCollide,
+                                                &posAfterCollision,
+                                                &velocityAfterCollision);
+                        if (collided)
+                        {
+                            if (posAfterCollision != pPositionWithoutCollide)
+                            {
+                                pData.prevPosition =
+                                            posAfterCollision -
+                                            (velocityAfterCollision * dtSecs);
+                            }
+
+                            pData.position = posAfterCollision;
+                            pData.velocity = velocityAfterCollision;
+                        }
                     }
                 }
-
-                if (posAfterCollision != pPositionWithoutCollide)
-                {
-                    pData.prevPosition = posAfterCollision -
-                                                (velocityAfterCollision * dt);
-                }
-
-                pData.position = posAfterCollision;
-                pData.velocity = velocityAfterCollision;
             }
-            pData.prevDeltaTimeSecs = dt;
+            pData.prevDeltaTimeSecs = dtSecs;
         }
     }
     else
     {
-        pData.remainingStartTime -= dt;
+        pData.remainingStartTime -= dtSecs;
+    }
+}
+
+void Particle::FixedStepAll(
+      Array<Particle::Data> *particlesDatas,
+      Time totalDeltaTime,
+      Time fixedStepDeltaTime,
+      const Particle::Parameters &params,
+      std::function<void(uint, const Particle::Parameters&)> initParticleFunc)
+
+{
+    Particle::FixedStepAll(particlesDatas,
+                           totalDeltaTime,
+                           fixedStepDeltaTime,
+                           params,
+                           initParticleFunc,
+                           [](uint){ return true; });
+}
+void Particle::FixedStepAll(
+      Array<Particle::Data> *particlesDatas,
+      Time totalDeltaTime,
+      Time fixedStepDeltaTime,
+      const Particle::Parameters &params,
+      std::function<void(uint, const Particle::Parameters&)> initParticleFunc,
+        std::function<bool(uint)> canUpdateParticleFunc)
+{
+    double dtSecs = totalDeltaTime.GetSeconds();
+    double fixedDeltaTimeSecs = fixedStepDeltaTime.GetSeconds();
+
+    uint stepsToSimulate = uint(Math::Round(dtSecs / fixedDeltaTimeSecs));
+    stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
+    for (uint step = 0; step < stepsToSimulate; ++step)
+    {
+        for (uint i = 0; i < particlesDatas->Size(); ++i)
+        {
+            if (canUpdateParticleFunc(i))
+            {
+                Particle::Data &pData = particlesDatas->At(i);
+                Particle::Step(&pData, fixedStepDeltaTime, params);
+
+                if (pData.remainingStartTime <= 0 &&
+                    pData.remainingLifeTime <= 0.0f)
+                {
+                    initParticleFunc(i, params);
+                }
+            }
+        }
     }
 }
 
@@ -126,7 +180,7 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
     pData->prevPosition = pPrevPos;
 }
 
-void Particle::CollideParticle(Collider *collider,
+bool Particle::CollideParticle(Collider *collider,
                                const Parameters &params,
                                const Vector3 &prevPositionNoInt,
                                const Vector3 &newPositionNoInt,
@@ -224,4 +278,6 @@ void Particle::CollideParticle(Collider *collider,
                          collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
         newVelocityAfterInt = newVel;
     }
+
+    return collided;
 }

@@ -17,10 +17,14 @@ public:
     void SetMillis(uint64_t millis);
     void SetNanos(uint64_t nanos);
     void SetInfinity();
+    void SetZero();
 
     double GetSeconds() const;
     uint64_t GetMillis() const;
     uint64_t GetNanos() const;
+
+    static Time Zero();
+    static Time Infinity();
 
     static Time Seconds(double seconds);
     static Time Millis(uint64_t millis);

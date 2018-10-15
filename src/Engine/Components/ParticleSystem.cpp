@@ -22,6 +22,7 @@
 #include "Bang/SphereCollider.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/ReflectionProbe.h"
+#include "Bang/PxSceneContainer.h"
 
 USING_NAMESPACE_BANG
 
@@ -60,7 +61,6 @@ void ParticleSystem::OnStart()
         m_isEmitting = true;
 
         Reset();
-        OnGameObjectChanged(nullptr, nullptr);
     }
     else
     {
@@ -74,30 +74,21 @@ void ParticleSystem::OnUpdate()
 
     if (m_isEmitting)
     {
-        m_particlesParameters.gravity   = Physics::GetInstance()->GetGravity();
-        m_particlesParameters.colliders = m_sceneCollidersGatherer.
-                                          GetGatheredObjects();
+        Physics *ph = Physics::GetInstance();
+        m_particlesParameters.gravity   = ph->GetGravity();
+        m_particlesParameters.colliders =
+                ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())->
+                GetColliders();
 
-        float dt = SCAST<float>(Time::GetDeltaTime().GetSeconds());
-        float fixedDeltaTime = (1.0f / Math::Max(m_stepsPerSecond, 1u) );
-
-        uint stepsToSimulate = uint(Math::Round(dt / fixedDeltaTime));
-        stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
-        // fixedDeltaTime = (dt / stepsToSimulate);
-        for (uint step = 0; step < stepsToSimulate; ++step)
-        {
-            for (int i = 0; i < GetNumParticles(); ++i)
-            {
-                Particle::Data &pData = m_particlesData[i];
-                Particle::Step(&pData, fixedDeltaTime, m_particlesParameters);
-
-                if (pData.remainingStartTime <= 0 &&
-                    pData.remainingLifeTime <= 0.0f)
-                {
-                    InitParticle(i, m_particlesParameters.gravity);
-                }
-            }
-        }
+        Time fixedDeltaTime = Time::Seconds(1.0f / Math::Max(m_stepsPerSecond, 1u) );
+        Particle::FixedStepAll(&m_particlesData,
+                               Time::GetDeltaTime(),
+                               fixedDeltaTime,
+                               m_particlesParameters,
+                               [this](uint i, const Particle::Parameters &params)
+                               {
+                                   InitParticle(i, params.gravity);
+                               });
 
         // AABBox
         {
@@ -445,17 +436,6 @@ void ParticleSystem::Bind()
 AABox ParticleSystem::GetAABBox() const
 {
     return m_isEmitting ? m_aabox : AABox::Empty;
-}
-
-void ParticleSystem::OnGameObjectChanged(GameObject*, GameObject*)
-{
-    if (GetGameObject())
-    {
-        if (Scene *scene = GetGameObject()->GetScene())
-        {
-            m_sceneCollidersGatherer.SetRoot( SCAST<GameObject*>(scene) );
-        }
-    }
 }
 
 void ParticleSystem::OnRender()

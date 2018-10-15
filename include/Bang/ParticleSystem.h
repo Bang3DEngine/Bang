@@ -105,12 +105,9 @@ public:
     // Renderer
     virtual void Bind() override;
     virtual void OnRender() override;
-    virtual void SetUniformsOnBind(ShaderProgram *sp);
+    virtual void SetUniformsOnBind(ShaderProgram *sp) override;
     AABox GetAABBox() const override;
 
-    // Component
-    void OnGameObjectChanged(GameObject *prevGameObject,
-                             GameObject *newGameObject);
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -155,7 +152,6 @@ private:
     float m_initialVelocityMultiplier = 1.0f;
 
     uint m_stepsPerSecond = 60;
-    ObjectGatherer<Collider, true> m_sceneCollidersGatherer;
 
     void InitParticle(uint i, const Vector3 &gravity);
     bool IsParticleActive(uint i) const;

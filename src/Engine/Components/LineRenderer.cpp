@@ -59,15 +59,9 @@ void LineRenderer::SetPoint(int i, const Vector3 &point)
 
 void LineRenderer::SetPoints(const Array<Vector3> &points)
 {
-    if ((points.IsEmpty() && GetPoints().IsEmpty()) ||
-        points.Size() != GetPoints().Size() ||
-        !Containers::Equal(points.Begin(), points.End(), GetPoints().Begin()))
-    {
-        m_points = points;
-        p_mesh.Get()->SetPositionsPool(GetPoints());
-        p_mesh.Get()->UpdateVAOs();
-        PropagateRendererChanged();
-    }
+    m_points = points;
+    p_mesh.Get()->SetPositionsPool(GetPoints());
+    p_mesh.Get()->UpdateVAOs();
 }
 
 const Array<Vector3> &LineRenderer::GetPoints() const
@@ -79,7 +73,7 @@ AABox LineRenderer::GetAABBox() const
 {
     if (m_points.IsEmpty())
     {
-        return GetGameObject()->GetTransform()->GetPosition();
+        return AABox::Empty;
     }
 
     Vector3 minp = m_points.Front();

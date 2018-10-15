@@ -120,6 +120,7 @@ void UIDragDroppable::OnDragStarted()
     if (!IsBeingDragged())
     {
         m_beingDragged = true;
+        m_pressTime.SetInfinity();
 
         UICanvas *canvas = UICanvas::GetActive(this);
         if (canvas)

@@ -1,5 +1,6 @@
 #include "Bang/ComponentFactory.h"
 
+#include "Bang/Rope.h"
 #include "Bang/Debug.h"
 #include "Bang/Light.h"
 #include "Bang/UIMask.h"
@@ -53,6 +54,7 @@ USING_NAMESPACE_BANG
 
 Component* ComponentFactory::Create(const String &componentClassName)
 {
+    CREATE_COMPONENT(componentClassName, Rope);
     CREATE_COMPONENT(componentClassName, Camera);
     CREATE_COMPONENT(componentClassName, UIMask);
     CREATE_COMPONENT(componentClassName, Renderer);

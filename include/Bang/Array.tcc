@@ -236,9 +236,9 @@ void Array<T>::Reserve(std::size_t n)
 }
 
 template<class T>
-void Array<T>::Resize(std::size_t n)
+void Array<T>::Resize(std::size_t n, const T& value)
 {
-    m_vector.resize(n);
+    m_vector.resize(n, value);
 }
 
 template<class T>

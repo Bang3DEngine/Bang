@@ -70,13 +70,10 @@ void Particle::Step(Particle::Data *pData_,
                                                 &velocityAfterCollision);
                         if (collided)
                         {
-                            if (posAfterCollision != pPositionWithoutCollide)
-                            {
-                                pData.prevPosition =
-                                            posAfterCollision -
-                                            (velocityAfterCollision * dtSecs);
-                            }
-
+                            pPrevPos = pData.position;
+                            pData.prevPosition =
+                                        posAfterCollision -
+                                        (velocityAfterCollision * dtSecs);
                             pData.position = posAfterCollision;
                             pData.velocity = velocityAfterCollision;
                         }
@@ -306,9 +303,18 @@ bool Particle::CollideParticle(Collider *collider,
         const Vector3 cnorm = collisionNormal;
         const float bouncinessEpsilon = (1.0f + params.bounciness);
         Plane collisionPlane(collisionPoint, collisionNormal);
-        Vector3 newPos = newPositionNoInt - bouncinessEpsilon *
-                         collisionPlane.GetDistanceTo(newPositionNoInt) * cnorm;
+        float planePointNoIntDist = collisionPlane.GetDistanceTo(newPositionNoInt);
+        float correctionDist = Math::Sign(planePointNoIntDist) *
+                               Math::Max(Math::Abs(planePointNoIntDist), 0.1f);
+        Vector3 newPos = newPositionNoInt -
+                         bouncinessEpsilon * correctionDist * cnorm;
         newPositionAfterInt = newPos;
+
+        #ifdef DEBUG
+        float distanceBefore = collisionPlane.GetDistanceTo(newPositionNoInt);
+        float distanceAfter  = collisionPlane.GetDistanceTo(newPositionAfterInt);
+        ASSERT(Math::Sign(distanceBefore) != Math::Sign(distanceAfter));
+        #endif
 
         Vector3 newVel = newVelocityNoInt -
                          bouncinessEpsilon * cnorm *

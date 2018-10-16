@@ -25,6 +25,7 @@ public:
     void OnUpdate() override;
 
     // Renderer
+    void Bind() override;
     void OnRender() override;
     virtual AABox GetAABBox() const override;
     void SetUniformsOnBind(ShaderProgram *sp) override;
@@ -68,7 +69,6 @@ private:
 
     bool m_seeDebugPoints = false;
     RH<Mesh> m_ropeDebugPointsMesh;
-    RH<Material> m_ropeDebugPointsMaterial;
 
     bool m_validLineRendererPoints = false;
 

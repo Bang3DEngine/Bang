@@ -2,6 +2,7 @@
 
 #include "Bang/VAO.h"
 #include "Bang/Mesh.h"
+#include "Bang/GEngine.h"
 #include "Bang/Physics.h"
 #include "Bang/Material.h"
 #include "Bang/MetaNode.h"
@@ -19,11 +20,9 @@ Rope::Rope()
     SetFixedPoint(0, true);
     GetMaterial()->SetLineWidth(3.0f);
 
-    m_seeDebugPoints = true;
     m_ropeDebugPointsMesh = Resources::Create<Mesh>();
-    m_ropeDebugPointsMaterial = Resources::Create<Material>();
 
-    m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
+    m_particleParams.physicsStepMode = Particle::PhysicsStepMode::EULER;
     m_particleParams.computeCollisions = true;
 }
 
@@ -84,6 +83,16 @@ void Rope::OnUpdate()
     m_validLineRendererPoints = false;
 }
 
+void Rope::Bind()
+{
+    LineRenderer::Bind();
+}
+
+void Rope::SetUniformsOnBind(ShaderProgram *sp)
+{
+    LineRenderer::SetUniformsOnBind(sp);
+}
+
 void Rope::OnRender()
 {
     if (!m_validLineRendererPoints)
@@ -92,14 +101,21 @@ void Rope::OnRender()
         m_validLineRendererPoints = true;
     }
 
+    if (GetActiveMaterial())
+    {
+        GetActiveMaterial()->SetAlbedoColor(Color::White);
+        GetActiveMaterial()->Bind();
+    }
     LineRenderer::OnRender();
 
     if (m_seeDebugPoints && IsStarted())
     {
-        Material *pointsMat = m_ropeDebugPointsMaterial.Get();
-        pointsMat->SetAlbedoColor(Color::Red);
-        pointsMat->SetReceivesLighting(false);
-        pointsMat->Bind();
+        if (GetActiveMaterial())
+        {
+            GetActiveMaterial()->SetAlbedoColor(Color::Red);
+            GetActiveMaterial()->SetReceivesLighting(false);
+            GetActiveMaterial()->Bind();
+        }
 
         GL::Push(GL::Pushable::DEPTH_STATES);
         GL::SetDepthFunc(GL::Function::ALWAYS);
@@ -124,11 +140,6 @@ AABox Rope::GetAABBox() const
         return aaBox;
     }
     return AABox::Empty;
-}
-
-void Rope::SetUniformsOnBind(ShaderProgram *sp)
-{
-    LineRenderer::SetUniformsOnBind(sp);
 }
 
 void Rope::Reset()
@@ -167,10 +178,9 @@ void Rope::SetFixedPoints(const Array<bool> pointsFixed)
     SetNumPoints(m_fixedPoints.Size());
 }
 
-void Rope::SetNumPoints(uint numPoints)
+void Rope::SetNumPoints(uint numPoints_)
 {
-    ASSERT(numPoints >= 2);
-
+    uint numPoints = Math::Max(numPoints_, 2u);
     if (numPoints != GetNumPoints())
     {
         m_points.Resize(numPoints, Vector3::Zero);

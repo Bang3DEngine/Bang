@@ -1,6 +1,11 @@
 #ifndef UIGRIDLAYOUT_H
 #define UIGRIDLAYOUT_H
 
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/String.h"
 #include "Bang/UIGroupLayout.h"
 
 NAMESPACE_BANG_BEGIN

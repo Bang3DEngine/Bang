@@ -1,12 +1,15 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include <string>
-#include <vector>
-#include <sstream>
 #include <cstring>
+#include <sstream>
+#include <string>
+#include <system_error>
+#include <vector>
 
+#include "Bang/Array.h"
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/StreamOperators.h"
 
 NAMESPACE_BANG_BEGIN

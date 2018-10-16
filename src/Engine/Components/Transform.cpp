@@ -1,11 +1,22 @@
 #include "Bang/Transform.h"
 
-#include <sstream>
-#include <ostream>
-
-#include "Bang/MetaNode.h"
+#include "Bang/Assert.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/ICloneable.h"
+#include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Quaternion.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
 
 USING_NAMESPACE_BANG
 

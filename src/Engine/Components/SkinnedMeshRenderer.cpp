@@ -1,14 +1,36 @@
 #include "Bang/SkinnedMeshRenderer.h"
 
-#include "Bang/Mesh.h"
-#include "Bang/Model.h"
-#include "Bang/Scene.h"
-#include "Bang/Material.h"
-#include "Bang/MetaNode.h"
+#include <ext/alloc_traits.h>
+#include <map>
+#include <unordered_map>
+#include <utility>
+
 #include "Bang/Animator.h"
-#include "Bang/Transform.h"
+#include "Bang/Assert.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/IEventsName.h"
+#include "Bang/IEventsObjectGatherer.h"
+#include "Bang/Map.tcc"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Model.h"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/ObjectGatherer.tcc"
+#include "Bang/Set.tcc"
 #include "Bang/ShaderProgram.h"
+#include "Bang/Transform.h"
+#include "Bang/UMap.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class Resource;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

@@ -2,9 +2,22 @@
 #define MESHCOLLIDER_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+
+FORWARD namespace physx
+{
+FORWARD class PxShape;
+}
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class ICloneable;
+FORWARD class Mesh;
 
 class MeshCollider : public Collider
 {

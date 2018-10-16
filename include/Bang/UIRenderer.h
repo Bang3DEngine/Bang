@@ -1,16 +1,32 @@
 #ifndef UIRENDERER_H
 #define UIRENDERER_H
 
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Renderer.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEventsObject.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
+#include "Bang/IEventsObject.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/RenderPass.h"
+#include "Bang/Renderer.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Camera;
+FORWARD class GameObject;
+FORWARD class IEventsChildren;
+FORWARD class IEventsTransform;
+FORWARD class Object;
 
 class UIRenderer : public Renderer,
                    public EventListener<IEventsChildren>,

@@ -1,8 +1,10 @@
 #include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
 
-#include "Bang/MetaNode.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineVariable.h"
+#include "Bang/Assert.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 
 USING_NAMESPACE_BANG
 

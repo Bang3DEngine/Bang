@@ -1,17 +1,31 @@
 #ifndef ANIMATORSTATEMACHINE_H
 #define ANIMATORSTATEMACHINE_H
 
-#include "Bang/Bang.h"
-#include "Bang/Array.h"
-#include "Bang/Resource.h"
-#include "Bang/EventEmitter.h"
+#include <vector>
+
 #include "Bang/AnimatorStateMachineNode.h"
-#include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineVariable.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
+#include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Resource.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Animator;
+FORWARD class AnimatorStateMachineNode;
+FORWARD class AnimatorStateMachineVariable;
+FORWARD class IEventsAnimatorStateMachine;
+FORWARD class IEventsDestroy;
+FORWARD class Path;
 
 class AnimatorStateMachine : public Resource,
                              public EventEmitter<IEventsDestroy>,

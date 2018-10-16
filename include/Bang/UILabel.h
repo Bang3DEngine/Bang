@@ -1,17 +1,33 @@
 #ifndef UILABEL_H
 #define UILABEL_H
 
-#include "Bang/DPtr.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GameObject.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/String.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UILayoutElement.h"
+#include "Bang/UIRectMask.h"
+#include "Bang/UITextRenderer.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class UIRectMask;
-FORWARD class UIFocusable;
 FORWARD class RectTransform;
-FORWARD class UITextRenderer;
+FORWARD class UIFocusable;
 FORWARD class UILayoutElement;
+FORWARD class UIRectMask;
+FORWARD class UITextRenderer;
 
 class UILabel : public Component,
                 public EventListener<IEventsFocus>

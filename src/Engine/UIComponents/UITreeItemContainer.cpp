@@ -1,14 +1,24 @@
 #include "Bang/UITreeItemContainer.h"
 
-#include "Bang/UIButton.h"
+#include "Bang/Color.h"
+#include "Bang/DPtr.tcc"
+#include "Bang/GameObject.tcc"
+#include "Bang/GameObjectFactory.h"
 #include "Bang/ITreeItem.h"
-#include "Bang/UIFocusable.h"
+#include "Bang/LayoutSizeType.h"
+#include "Bang/Stretch.h"
+#include "Bang/String.h"
 #include "Bang/TextureFactory.h"
+#include "Bang/UIButton.h"
 #include "Bang/UIDragDroppable.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIHorizontalLayout.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
-#include "Bang/GameObjectFactory.h"
-#include "Bang/UIHorizontalLayout.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Texture2D;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

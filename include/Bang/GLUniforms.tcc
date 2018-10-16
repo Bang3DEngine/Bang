@@ -2,6 +2,10 @@
 
 #include "Bang/GLUniforms.h"
 
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Color;
+FORWARD NAMESPACE_BANG_END
+
 USING_NAMESPACE_BANG
 
 template <class T>

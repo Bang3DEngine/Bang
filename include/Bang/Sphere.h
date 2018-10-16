@@ -2,9 +2,13 @@
 #define SPHERE_H
 
 #include "Bang/AABox.h"
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class AABox;
 
 class Sphere
 {

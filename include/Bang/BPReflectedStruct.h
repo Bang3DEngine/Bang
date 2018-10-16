@@ -2,9 +2,10 @@
 #define BPSTRUCT_H
 
 #include "Bang/Array.h"
-#include "Bang/String.h"
-#include "Bang/IToString.h"
 #include "Bang/BPReflectedVariable.h"
+#include "Bang/BangDefines.h"
+#include "Bang/IToString.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

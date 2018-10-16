@@ -1,20 +1,38 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "Bang/GL.h"
+#include <vector>
+
+#include "Bang/AABox.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/RenderPass.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GL.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsResource.h"
+#include "Bang/MetaNode.h"
+#include "Bang/RenderPass.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
+FORWARD class ICloneable;
+FORWARD class IEventsRendererChanged;
+FORWARD class IEventsResource;
+FORWARD class Resource;
+FORWARD class ShaderProgram;
 FORWARD class Material;
-FORWARD class SceneManager;
 FORWARD class ReflectionProbe;
+FORWARD class SceneManager;
 
 class Renderer : public Component,
                  public EventListener<IEventsResource>,

@@ -1,6 +1,9 @@
 #include "Bang/Cursor.h"
 
+#include <SDL2/SDL_mouse.h>
+
 #include "Bang/UMap.h"
+#include "Bang/UMap.tcc"
 
 USING_NAMESPACE_BANG
 

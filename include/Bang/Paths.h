@@ -1,8 +1,11 @@
 #ifndef PATHS_H
 #define PATHS_H
 
-#include "Bang/Path.h"
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/BinType.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

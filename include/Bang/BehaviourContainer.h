@@ -1,18 +1,21 @@
 #ifndef BEHAVIOURCONTAINER_H
 #define BEHAVIOURCONTAINER_H
 
-#include "Bang/Path.h"
-#include "Bang/MetaNode.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD NAMESPACE_BANG_END
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/GUID.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Behaviour;
+FORWARD class ICloneable;
 FORWARD class Library;
 FORWARD class MetaNode;
-FORWARD class Behaviour;
 
 class BehaviourContainer : public Component
 {

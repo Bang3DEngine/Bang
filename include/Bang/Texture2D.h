@@ -2,10 +2,18 @@
 #define TEXTURE2D_H
 
 #include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
+#include "Bang/GL.h"
 #include "Bang/Image.h"
+#include "Bang/ImageIO.h"
+#include "Bang/MetaNode.h"
+#include "Bang/String.h"
 #include "Bang/Texture.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Color;
+FORWARD class Path;
 
 class Texture2D : public Texture
 {

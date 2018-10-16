@@ -1,6 +1,5 @@
 #include "Bang/ResourceHandle.h"
 
-#include "Bang/Resource.h"
 #include "Bang/Resources.h"
 
 NAMESPACE_BANG_BEGIN

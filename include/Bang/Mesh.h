@@ -1,18 +1,32 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "Bang/UMap.h"
+#include <array>
+#include <functional>
+
 #include "Bang/AABox.h"
+#include "Bang/Animation.h"
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ICloneable.h"
+#include "Bang/Map.h"
+#include "Bang/Map.tcc"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
 #include "Bang/Sphere.h"
+#include "Bang/String.h"
+#include "Bang/Triangle.h"
+#include "Bang/UMap.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
-#include "Bang/Animation.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Animation;
 FORWARD class IBO;
+FORWARD class Path;
 FORWARD class VAO;
 FORWARD class VBO;
 

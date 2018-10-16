@@ -1,19 +1,27 @@
 #include "Bang/Light.h"
 
-#include "Bang/GL.h"
-#include "Bang/Scene.h"
-#include "Bang/AARect.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GBuffer.h"
-#include "Bang/GEngine.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Material.h"
-#include "Bang/Renderer.h"
-#include "Bang/Transform.h"
+#include "Bang/GL.h"
 #include "Bang/GameObject.h"
-#include "Bang/GLUniforms.h"
-#include "Bang/SceneManager.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/ICloneable.h"
+#include "Bang/Material.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/RenderPass.h"
+#include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/Transform.h"
+#include "Bang/TypeTraits.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Texture2D;
+FORWARD class TextureCubeMap;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

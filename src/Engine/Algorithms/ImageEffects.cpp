@@ -1,5 +1,10 @@
 #include "Bang/ImageEffects.h"
 
+#include "Bang/Color.h"
+#include "Bang/Image.tcc"
+#include "Bang/Math.h"
+#include "Bang/Vector.tcc"
+
 USING_NAMESPACE_BANG
 
 void ImageEffects::SignedDistanceField(const Imageb &inputImageBW,

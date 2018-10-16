@@ -1,15 +1,28 @@
 #ifndef ANIMATORSTATEMACHINECONNECTION_H
 #define ANIMATORSTATEMACHINECONNECTION_H
 
-#include "Bang/Bang.h"
-#include "Bang/DPtr.h"
-#include "Bang/Serializable.h"
+#include <vector>
+
 #include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/DPtr.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Serializable.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class AnimatorStateMachine;
 FORWARD class AnimatorStateMachineNode;
+FORWARD class IEventsDestroy;
 
 class AnimatorStateMachineConnection : public Serializable,
                                        public EventEmitter<IEventsDestroy>

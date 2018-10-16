@@ -1,9 +1,9 @@
 #include "Bang/UIFocusable.h"
 
-#include "Bang/Input.h"
-#include "Bang/UICanvas.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/UICanvas.h"
 
 USING_NAMESPACE_BANG
 

@@ -1,11 +1,16 @@
 #ifndef METAFILESMANAGER_H
 #define METAFILESMANAGER_H
 
-#include "Bang/Map.h"
-#include "Bang/UMap.h"
+#include <functional>
+#include <utility>
+
+#include "Bang/BangDefines.h"
 #include "Bang/GUID.h"
-#include "Bang/Path.h"
 #include "Bang/GUIDManager.h"
+#include "Bang/Map.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 

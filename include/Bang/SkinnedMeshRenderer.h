@@ -1,15 +1,35 @@
 #ifndef SKINNEDMESHRENDERER_H
 #define SKINNEDMESHRENDERER_H
 
-#include "Bang/Set.h"
-#include "Bang/Map.h"
+#include <functional>
+#include <vector>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsName.h"
+#include "Bang/Map.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/MetaNode.h"
 #include "Bang/ObjectGatherer.h"
+#include "Bang/Set.h"
+#include "Bang/String.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Model;
+FORWARD   class GameObject;
+FORWARD   class ICloneable;
+FORWARD   class IEventsName;
+FORWARD   class Model;
+FORWARD   class ShaderProgram;
+FORWARD   template <class ObjectType, bool RECURSIVE> class ObjectGatherer;
+FORWARD_T class IEventsObjectGatherer;
 
 class SkinnedMeshRenderer : public MeshRenderer,
                             public EventListener<IEventsName>,

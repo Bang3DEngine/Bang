@@ -1,34 +1,36 @@
 #ifndef GAMEOBJECTFACTORY_H
 #define GAMEOBJECTFACTORY_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
+#include "Bang/LayoutSizeType.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
-#include "Bang/LayoutSizeType.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
 FORWARD class Camera;
-FORWARD class UIList;
-FORWARD class UITree;
-FORWARD class UILabel;
+FORWARD class GameObject;
+FORWARD class Scene;
+FORWARD class Mesh;
+FORWARD class Texture2D;
 FORWARD class UIButton;
 FORWARD class UICanvas;
-FORWARD class UISlider;
-FORWARD class Texture2D;
-FORWARD class GameObject;
 FORWARD class UICheckBox;
 FORWARD class UIComboBox;
-FORWARD class UIInputText;
-FORWARD class UIScrollBar;
-FORWARD class UIScrollArea;
-FORWARD class UIToolButton;
-FORWARD class UIScrollPanel;
-FORWARD class UIInputNumber;
-FORWARD class UIImageRenderer;
-FORWARD class UIRendererCacher;
 FORWARD class UIDirLayoutMovableSeparator;
+FORWARD class UIImageRenderer;
+FORWARD class UIInputNumber;
+FORWARD class UIInputText;
+FORWARD class UILabel;
+FORWARD class UIList;
+FORWARD class UIRendererCacher;
+FORWARD class UIScrollArea;
+FORWARD class UIScrollBar;
+FORWARD class UIScrollPanel;
+FORWARD class UISlider;
+FORWARD class UIToolButton;
+FORWARD class UITree;
 
 class GameObjectFactory
 {

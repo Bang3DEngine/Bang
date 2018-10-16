@@ -1,6 +1,9 @@
 #include "Bang/ImageIODDS.h"
 
 #include "Bang/GL.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
+#include "Bang/Texture2D.h"
 #include "Bang/nv_dds.h"
 
 USING_NAMESPACE_BANG

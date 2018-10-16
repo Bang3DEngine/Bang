@@ -1,35 +1,53 @@
 #ifndef GENGINE_H
 #define GENGINE_H
 
-#include "Bang/USet.h"
-#include "Bang/Array.h"
-#include "Bang/Flags.h"
+#include <functional>
+#include <vector>
+
 #include "Bang/AARect.h"
-#include "Bang/RenderPass.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/StackAndValue.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/Flags.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/Light.h"
+#include "Bang/Map.tcc"
 #include "Bang/MultiObjectGatherer.h"
+#include "Bang/ObjectGatherer.tcc"
+#include "Bang/ReflectionProbe.h"
+#include "Bang/RenderPass.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/StackAndValue.h"
+#include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class GL;
-FORWARD class Light;
-FORWARD class Scene;
-FORWARD class Camera;
-FORWARD class Texture;
-FORWARD class GBuffer;
-FORWARD class Renderer;
-FORWARD class Texture2D;
-FORWARD class Framebuffer;
-FORWARD class DebugRenderer;
-FORWARD class RenderFactory;
-FORWARD class ShaderProgram;
-FORWARD class TextureCubeMap;
-FORWARD class ReflectionProbe;
-FORWARD class TextureUnitManager;
+FORWARD   class Camera;
+FORWARD   class DebugRenderer;
+FORWARD_T class EventEmitter;
+FORWARD   class Framebuffer;
+FORWARD   class GameObject;
+FORWARD   class GBuffer;
+FORWARD   class GL;
+FORWARD   class IEventsDestroy;
+FORWARD   class Light;
+FORWARD   class Material;
+FORWARD   class Mesh;
+FORWARD   class ReflectionProbe;
+FORWARD   class RenderFactory;
+FORWARD   class Renderer;
+FORWARD   class Scene;
+FORWARD   class ShaderProgram;
+FORWARD   class Texture2D;
+FORWARD   class Texture;
+FORWARD   class TextureCubeMap;
+FORWARD   class TextureUnitManager;
 
 class GEngine : public EventListener<IEventsDestroy>
 {

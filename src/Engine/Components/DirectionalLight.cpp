@@ -1,27 +1,39 @@
 ﻿#include "Bang/DirectionalLight.h"
 
-#include "Bang/Quad.h"
+#include <GL/glew.h>
+#include <array>
+#include <vector>
+
 #include "Bang/AABox.h"
-#include "Bang/Ray2D.h"
-#include "Bang/Scene.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/GEngine.h"
-#include "Bang/Polygon.h"
-#include "Bang/Segment.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Geometry.h"
-#include "Bang/Renderer.h"
-#include "Bang/Triangle.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Segment2D.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/GLUniforms.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/Framebuffer.h"
+#include "Bang/GEngine.h"
+#include "Bang/GL.h"
+#include "Bang/GLUniforms.h"
+#include "Bang/GameObject.h"
+#include "Bang/Geometry.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Quad.h"
+#include "Bang/RenderPass.h"
+#include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/DebugRenderer.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

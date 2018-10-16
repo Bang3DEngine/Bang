@@ -1,19 +1,55 @@
 #include "Bang/PxSceneContainer.h"
 
-#include "Bang/Scene.h"
-#include "Bang/Physics.h"
+#include <stdint.h>
+
+#include "Bang/Assert.h"
 #include "Bang/Collider.h"
 #include "Bang/Collision.h"
-#include "Bang/RigidBody.h"
+#include "Bang/CollisionContact.h"
+#include "Bang/Component.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/BoxCollider.h"
-#include "Bang/SphereCollider.h"
-#include "Bang/CapsuleCollider.h"
-#include "Bang/MaterialFactory.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsObjectGatherer.h"
 #include "Bang/IEventsGameObjectPhysics.h"
+#include "Bang/Map.tcc"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/ObjectGatherer.tcc"
+#include "Bang/Physics.h"
+#include "Bang/PhysicsObject.h"
+#include "Bang/RayCastHitInfo.h"
+#include "Bang/RayCastInfo.h"
+#include "Bang/Scene.h"
+#include "Bang/Vector.tcc"
+#include "PxActor.h"
+#include "PxFiltering.h"
+#include "PxPhysics.h"
+#include "PxQueryFiltering.h"
+#include "PxQueryReport.h"
+#include "PxRigidActor.h"
+#include "PxRigidDynamic.h"
+#include "PxScene.h"
+#include "PxSceneDesc.h"
+#include "extensions/PxDefaultCpuDispatcher.h"
+#include "foundation/PxFlags.h"
+#include "foundation/PxSimpleTypes.h"
+#include "foundation/PxVec3.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class IEventsGameObjectPhysics;
+FORWARD NAMESPACE_BANG_END
+
+FORWARD namespace physx
+{
+FORWARD class PxRigidBody;
+FORWARD class PxShape;
+FORWARD class PxTransform;
+}
 
 USING_NAMESPACE_BANG
-
 using namespace physx;
 
 physx::PxFilterFlags CollisionFilterShader(

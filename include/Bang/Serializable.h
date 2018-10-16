@@ -1,13 +1,17 @@
 #ifndef SERIALIZABLE_H
 #define SERIALIZABLE_H
 
-#include "Bang/String.h"
+#include "Bang/BangDefines.h"
 #include "Bang/HideFlags.h"
-#include "Bang/IGUIDable.h"
 #include "Bang/ICloneable.h"
+#include "Bang/IGUIDable.h"
 #include "Bang/IReflectable.h"
+#include "Bang/MetaNode.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
 
 #define SERIALIZABLE(CLASS) \
         public: \

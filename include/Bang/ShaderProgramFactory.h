@@ -1,13 +1,19 @@
 #ifndef SHADERPROGRAMFACTORY_H
 #define SHADERPROGRAMFACTORY_H
 
+#include <functional>
 #include <tuple>
 
+#include "Bang/BangDefines.h"
+#include "Bang/Map.h"
+#include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/ShaderProgram.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class ShaderProgram;
 
 class ShaderProgramFactory
 {

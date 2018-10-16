@@ -1,5 +1,7 @@
 #include "Bang/Timer.h"
 
+#include "Bang/Array.tcc"
+
 USING_NAMESPACE_BANG
 
 void Timer::Run()

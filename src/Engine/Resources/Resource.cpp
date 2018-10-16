@@ -1,8 +1,13 @@
 #include "Bang/Resource.h"
 
+#include <utility>
+
+#include "Bang/EventEmitter.tcc"
+#include "Bang/IEventsResource.h"
+#include "Bang/Map.tcc"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
-#include "Bang/MetaFilesManager.h"
 
 USING_NAMESPACE_BANG
 

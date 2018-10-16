@@ -1,14 +1,30 @@
 #ifndef UICHECKBOX_H
 #define UICHECKBOX_H
 
-#include "Bang/DPtr.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/String.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIImageRenderer.h"
+#include "Bang/UILayoutElement.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
+FORWARD class IEventsValueChanged;
 FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;

@@ -1,18 +1,30 @@
 #ifndef UITEXTRENDERER_H
 #define UITEXTRENDERER_H
 
-#include "Bang/Mesh.h"
 #include "Bang/AARect.h"
-#include "Bang/String.h"
-#include "Bang/Vector2.h"
 #include "Bang/Alignment.h"
-#include "Bang/UIRenderer.h"
-#include "Bang/ILayoutElement.h"
+#include "Bang/Array.h"
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/IInvalidatable.h"
+#include "Bang/ILayoutElement.h"
+#include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/UIRenderer.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Camera;
+FORWARD class Color;
 FORWARD class Font;
+FORWARD class ICloneable;
+FORWARD class Mesh;
 
 class UITextRenderer : public UIRenderer,
                        public ILayoutElement,

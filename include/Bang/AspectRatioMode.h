@@ -2,6 +2,7 @@
 #define ASPECTRATIOMODE
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Math.h"
 #include "Bang/Vector2.h"
 

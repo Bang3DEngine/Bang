@@ -1,7 +1,5 @@
 #include "Bang/ObjectId.h"
 
-#include "Bang/Debug.h"
-
 USING_NAMESPACE_BANG
 
 ObjectId ObjectId::Empty = ObjectId();

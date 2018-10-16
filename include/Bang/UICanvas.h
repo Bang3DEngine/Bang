@@ -1,19 +1,38 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+#include <functional>
 #include <stack>
+#include <utility>
+#include <vector>
 
-#include "Bang/Set.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/MetaNode.h"
+#include "Bang/RenderPass.h"
+#include "Bang/Set.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class GameObject;
-FORWARD class InputEvent;
-FORWARD class UIDragDroppable;
-FORWARD class UILayoutManager;
-FORWARD class IEventsDragDrop;
+FORWARD_T class EventEmitter;
+FORWARD   class GameObject;
+FORWARD   class ICloneable;
+FORWARD   class IEventsDestroy;
+FORWARD   class IEventsDragDrop;
+FORWARD   class InputEvent;
+FORWARD   class Object;
+FORWARD   class UIFocusable;
+FORWARD   class UIDragDroppable;
+FORWARD   class UILayoutManager;
 
 class UICanvas : public Component,
                  public EventListener<IEventsDestroy>

@@ -1,15 +1,23 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+#include <functional>
 #include <utility>
 
-#include "Bang/Map.h"
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
-#include "Bang/String.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Map.h"
 #include "Bang/Matrix4.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Quaternion.h"
+#include "Bang/String.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
+FORWARD class Time;
 
 enum class AnimationWrapMode
 {

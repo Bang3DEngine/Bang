@@ -3,14 +3,18 @@
 
 #include <stack>
 
-#include "Bang/GL.h"
-#include "Bang/Color.h"
 #include "Bang/AARect.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/Framebuffer.h"
+#include "Bang/GL.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class ShaderProgram;
+FORWARD class Texture2D;
 
 class GBuffer : public Framebuffer
 {

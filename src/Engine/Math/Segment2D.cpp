@@ -1,5 +1,8 @@
 #include "Bang/Segment2D.h"
 
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
 USING_NAMESPACE_BANG
 
 Segment2D::Segment2D(const Vector2 &origin, const Vector2 &destiny)

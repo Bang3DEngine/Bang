@@ -1,9 +1,12 @@
 #ifndef ILAYOUTELEMENT_H
 #define ILAYOUTELEMENT_H
 
-#include "Bang/Vector2.h"
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/LayoutSizeType.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

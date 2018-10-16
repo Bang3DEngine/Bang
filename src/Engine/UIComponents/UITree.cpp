@@ -1,21 +1,43 @@
 ﻿#include "Bang/UITree.h"
 
-#include <stack>
-#include <queue>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <ostream>
+#include <unordered_map>
+#include <utility>
 
+#include "Bang/Array.h"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
 #include "Bang/Debug.h"
-#include "Bang/Input.h"
-#include "Bang/Scene.h"
-#include "Bang/UIButton.h"
-#include "Bang/UICanvas.h"
-#include "Bang/RectTransform.h"
-#include "Bang/TextureFactory.h"
-#include "Bang/UIDragDroppable.h"
-#include "Bang/UIImageRenderer.h"
-#include "Bang/UILayoutElement.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
-#include "Bang/UIHorizontalLayout.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsDragDrop.h"
+#include "Bang/IEventsUITree.h"
+#include "Bang/Input.h"
+#include "Bang/Key.h"
+#include "Bang/List.tcc"
+#include "Bang/Math.h"
+#include "Bang/RectTransform.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Scene.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TextureFactory.h"
+#include "Bang/Tree.tcc"
+#include "Bang/TypeTraits.h"
+#include "Bang/UIButton.h"
+#include "Bang/UIDragDroppable.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIImageRenderer.h"
 #include "Bang/UITreeItemContainer.h"
+#include "Bang/UMap.tcc"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

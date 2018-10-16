@@ -1,26 +1,33 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 
+#include <functional>
 #include <sstream>
 
+#include "Bang/Array.h"
+#include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
+#include "Bang/GUID.h"
+#include "Bang/IToString.h"
+#include "Bang/MetaFilesManager.h"
+#include "Bang/Path.h"
+#include "Bang/Paths.h"
+#include "Bang/Resource.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Serializable.h"
+#include "Bang/String.h"
+#include "Bang/TypeMap.h"
 #include "Bang/UMap.h"
 #include "Bang/USet.h"
-#include "Bang/Asset.h"
-#include "Bang/Paths.h"
-#include "Bang/TypeMap.h"
-#include "Bang/Resource.h"
-#include "Bang/Serializable.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/MetaFilesManager.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Asset;
-FORWARD class MeshFactory;
-FORWARD class TextureFactory;
-FORWARD class MaterialFactory;
 FORWARD class CubeMapIBLGenerator;
+FORWARD class MaterialFactory;
+FORWARD class MeshFactory;
 FORWARD class ShaderProgramFactory;
+FORWARD class TextureFactory;
 
 class Resources
 {

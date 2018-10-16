@@ -2,10 +2,14 @@
 #define BANGPREPROCESSOR_H
 
 #include "Bang/Array.h"
-#include "Bang/String.h"
 #include "Bang/BPReflectedStruct.h"
+#include "Bang/BangDefines.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class BPReflectedStruct;
+FORWARD class Path;
 
 class BangPreprocessor
 {

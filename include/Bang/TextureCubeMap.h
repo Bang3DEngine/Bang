@@ -1,19 +1,33 @@
 #ifndef TEXTURECUBEMAP_H
 #define TEXTURECUBEMAP_H
 
-#include "Bang/Bang.h"
+#include <array>
+#include <vector>
 
-#include "Bang/GL.h"
+#include "Bang/Array.tcc"
 #include "Bang/Asset.h"
-#include "Bang/Image.h"
-#include "Bang/Texture2D.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/GL.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsResource.h"
+#include "Bang/Image.h"
+#include "Bang/ImageIO.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/Texture.h"
+#include "Bang/Texture2D.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Path;
-FORWARD class MetaNode;
+FORWARD   class IEventsResource;
+FORWARD_T class Image;
+FORWARD   class MetaNode;
+FORWARD   class Path;
+FORWARD   class Resource;
+FORWARD   class Texture2D;
 
 class TextureCubeMap : public Texture,
                        public EventListener<IEventsResource>

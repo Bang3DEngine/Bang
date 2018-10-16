@@ -1,6 +1,7 @@
 #ifndef DIALOGWINDOW_H
 #define DIALOGWINDOW_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Window.h"
 
 NAMESPACE_BANG_BEGIN

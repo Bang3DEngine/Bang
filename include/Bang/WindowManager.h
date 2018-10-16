@@ -4,13 +4,14 @@
 #include <stack>
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/Window.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Window;
 FORWARD class DialogWindow;
+FORWARD class Window;
 
 class WindowManager
 {

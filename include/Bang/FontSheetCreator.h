@@ -1,8 +1,13 @@
 #ifndef FONTSHEETCREATOR_H
 #define FONTSHEETCREATOR_H
 
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/Font.h"
 #include "Bang/Image.h"
+#include "Bang/ImageIO.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

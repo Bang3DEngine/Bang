@@ -1,10 +1,16 @@
 #include "Bang/TextFormatter.h"
 
+#include <memory>
+#include <vector>
+
+#include "Bang/AARect.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Font.h"
-#include "Bang/Debug.h"
+#include "Bang/Math.h"
 #include "Bang/String.h"
+#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
-#include "Bang/RectTransform.h"
 
 USING_NAMESPACE_BANG
 

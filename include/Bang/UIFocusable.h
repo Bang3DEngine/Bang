@@ -1,13 +1,22 @@
 ﻿#ifndef UIFOCUSABLE_H
 #define UIFOCUSABLE_H
 
-#include "Bang/Key.h"
+#include <functional>
+#include <vector>
+
 #include "Bang/Array.h"
-#include "Bang/Cursor.h"
-#include "Bang/Vector2.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
 #include "Bang/IEventsFocus.h"
+#include "Bang/Key.h"
+#include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

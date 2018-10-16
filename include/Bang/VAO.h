@@ -4,12 +4,14 @@
 #include <GL/glew.h>
 
 #include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/GL.h"
 #include "Bang/GLObject.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class VBO;
 FORWARD class IBO;
+FORWARD class VBO;
 
 class VAO : public GLObject
 {

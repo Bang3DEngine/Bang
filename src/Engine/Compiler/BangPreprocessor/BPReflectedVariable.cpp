@@ -1,8 +1,10 @@
 #include "Bang/BPReflectedVariable.h"
 
-#include <regex>
+#include <algorithm>
+#include <iostream>
+#include <string>
 
-#include "Bang/List.h"
+#include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
 
 USING_NAMESPACE_BANG

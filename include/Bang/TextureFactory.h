@@ -1,8 +1,13 @@
 #ifndef TEXTUREFACTORY_H
 #define TEXTUREFACTORY_H
 
+#include <functional>
+
+#include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Path.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
 

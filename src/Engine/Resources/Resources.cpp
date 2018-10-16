@@ -1,19 +1,30 @@
 #include "Bang/Resources.h"
 
-#include "Bang/File.h"
-#include "Bang/Asset.h"
-#include "Bang/Debug.h"
-#include "Bang/Paths.h"
-#include "Bang/Model.h"
-#include "Bang/Object.h"
-#include "Bang/Random.h"
-#include "Bang/Extensions.h"
+#include <sstream>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
 #include "Bang/Application.h"
-#include "Bang/MeshFactory.h"
-#include "Bang/TextureFactory.h"
-#include "Bang/MaterialFactory.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/Debug.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
+#include "Bang/Extensions.h"
+#include "Bang/File.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/MaterialFactory.h"
+#include "Bang/MeshFactory.h"
+#include "Bang/MetaFilesManager.h"
+#include "Bang/Model.h"
+#include "Bang/Paths.h"
+#include "Bang/Resources.tcc"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/TextureFactory.h"
+#include "Bang/UMap.tcc"
 
 USING_NAMESPACE_BANG
 

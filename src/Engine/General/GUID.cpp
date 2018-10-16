@@ -1,5 +1,12 @@
 #include "Bang/GUID.h"
 
+#include <stdio.h>
+#include <cctype>
+
+#include "Bang/Math.h"
+#include "Bang/Random.h"
+#include "Bang/Time.h"
+
 USING_NAMESPACE_BANG
 
 const GUID::GUIDType GUID::EmptyGUID = 0;

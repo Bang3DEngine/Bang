@@ -1,10 +1,26 @@
 #include "Bang/BoxCollider.h"
 
-#include "Bang/Physics.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Transform.h"
+#include "Bang/Assert.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
+#include "Bang/PhysicsObject.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+#include "PxRigidDynamic.h"
+#include "PxShape.h"
+#include "extensions/PxRigidBodyExt.h"
+#include "foundation/PxVec3.h"
+#include "geometry/PxBoxGeometry.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

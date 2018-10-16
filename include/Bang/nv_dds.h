@@ -1,12 +1,13 @@
 #ifndef NV_DDS_H
 #define NV_DDS_H
 
-#include <string>
+#include <assert.h>
+#include <ext/alloc_traits.h>
+#include <stdint.h>
 #include <deque>
 #include <istream>
-
-#include <assert.h>
-#include <stdint.h>
+#include <memory>
+#include <string>
 
 #ifndef NV_DDS_NO_GL_SUPPORT
     #ifdef __APPLE__

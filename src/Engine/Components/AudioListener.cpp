@@ -2,9 +2,12 @@
 
 #include <AL/al.h>
 
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
-#include "Bang/GameObject.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
 
 USING_NAMESPACE_BANG
 

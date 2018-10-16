@@ -1,6 +1,5 @@
 #include "Bang/ComplexRandom.h"
 
-#include "Bang/Assert.h"
 #include "Bang/Random.h"
 
 USING_NAMESPACE_BANG

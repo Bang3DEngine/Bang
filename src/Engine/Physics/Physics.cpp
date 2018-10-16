@@ -1,20 +1,62 @@
 #include "Bang/Physics.h"
 
-#include "PxPhysicsAPI.h"
+#include <stdint.h>
+#include <utility>
 
-#include "Bang/Mesh.h"
-#include "Bang/Scene.h"
-#include "Bang/RigidBody.h"
-#include "Bang/Transform.h"
 #include "Bang/Application.h"
-#include "Bang/BoxCollider.h"
-#include "Bang/SceneManager.h"
-#include "Bang/PhysicsObject.h"
-#include "Bang/SphereCollider.h"
-#include "Bang/CapsuleCollider.h"
+#include "Bang/Array.h"
+#include "Bang/Assert.h"
+#include "Bang/Component.h"
+#include "Bang/Debug.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/Map.tcc"
 #include "Bang/MaterialFactory.h"
+#include "Bang/Math.h"
+#include "Bang/Mesh.h"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/ObjectGatherer.tcc"
 #include "Bang/PhysicsMaterial.h"
+#include "Bang/PhysicsObject.h"
 #include "Bang/PxSceneContainer.h"
+#include "Bang/RayCastInfo.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/RigidBody.h"
+#include "Bang/Scene.h"
+#include "Bang/SceneManager.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "PxPhysics.h"
+#include "PxPhysicsVersion.h"
+#include "PxRigidBody.h"
+#include "PxRigidDynamic.h"
+#include "PxScene.h"
+#include "common/PxCoreUtilityTypes.h"
+#include "common/PxTolerancesScale.h"
+#include "cooking/PxBVH33MidphaseDesc.h"
+#include "cooking/PxCooking.h"
+#include "cooking/PxTriangleMeshDesc.h"
+#include "extensions/PxSimpleFactory.h"
+#include "foundation/Px.h"
+#include "foundation/PxFoundation.h"
+#include "foundation/PxFoundationVersion.h"
+#include "geometry/PxSphereGeometry.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD struct RayCastHitInfo;
+FORWARD NAMESPACE_BANG_END
+
+FORWARD namespace physx
+{
+FORWARD class PxActor;
+FORWARD class PxMaterial;
+FORWARD class PxShape;
+FORWARD class PxTriangleMesh;
+}
 
 using namespace physx;
 USING_NAMESPACE_BANG

@@ -1,20 +1,25 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include <array>
+
+#include "Bang/Array.h"
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Ray;
+FORWARD class AABox;
 FORWARD class Box;
-FORWARD class Quad;
 FORWARD class Plane;
-FORWARD class Ray2D;
-FORWARD class Sphere;
 FORWARD class Polygon;
-FORWARD class Segment;
-FORWARD class Triangle;
+FORWARD class Quad;
+FORWARD class Ray2D;
+FORWARD class Ray;
 FORWARD class Segment2D;
+FORWARD class Segment;
+FORWARD class Sphere;
+FORWARD class Triangle;
 
 class Geometry
 {

@@ -1,7 +1,9 @@
 #include "Bang/ALAudioSource.h"
 
-#include "Bang/AudioManager.h"
-#include "Bang/EventListener.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/Math.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

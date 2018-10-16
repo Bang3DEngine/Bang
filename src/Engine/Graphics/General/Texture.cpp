@@ -1,5 +1,8 @@
 #include "Bang/Texture.h"
 
+#include <sys/types.h>
+
+#include "Bang/Assert.h"
 #include "Bang/GL.h"
 
 USING_NAMESPACE_BANG

@@ -1,15 +1,36 @@
 #include "Bang/Collider.h"
 
-#include "PxPhysicsAPI.h"
-
-#include "Bang/Physics.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GUID.h"
 #include "Bang/GameObject.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/MaterialFactory.h"
 #include "Bang/PxSceneContainer.h"
+#include "Bang/Quaternion.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "PxRigidDynamic.h"
+#include "PxShape.h"
+#include "extensions/PxRigidBodyExt.h"
+#include "foundation/PxQuat.h"
+#include "foundation/PxTransform.h"
+#include "foundation/PxVec3.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class Object;
+FORWARD NAMESPACE_BANG_END
+
+FORWARD namespace physx
+{
+FORWARD class PxActor;
+FORWARD class PxMaterial;
+}
 
 USING_NAMESPACE_BANG
 

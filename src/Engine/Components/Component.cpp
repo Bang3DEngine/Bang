@@ -1,12 +1,17 @@
 #include "Bang/Component.h"
 
+#include <ostream>
+
+#include "Bang/Assert.h"
 #include "Bang/Debug.h"
-#include "Bang/Scene.h"
-#include "Bang/String.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Transform.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/GameObject.h"
-#include "Bang/SceneManager.h"
+#include "Bang/ICloneable.h"
+#include "Bang/IEventsComponentChangeGameObject.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/String.h"
+#include "Bang/TypeTraits.h"
 
 USING_NAMESPACE_BANG
 

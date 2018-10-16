@@ -1,5 +1,8 @@
 #include "Bang/TimeSingleton.h"
 
+#include <chrono>
+#include <ratio>
+
 #include "Bang/Application.h"
 
 USING_NAMESPACE_BANG

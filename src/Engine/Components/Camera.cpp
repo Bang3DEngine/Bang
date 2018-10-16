@@ -1,30 +1,47 @@
 #include "Bang/Camera.h"
 
-#include "Bang/GL.h"
-#include "Bang/Math.h"
-#include "Bang/Mesh.h"
+#include <list>
+#include <unordered_map>
+
 #include "Bang/AABox.h"
-#include "Bang/Scene.h"
-#include "Bang/AARect.h"
-#include "Bang/Window.h"
+#include "Bang/Array.h"
+#include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Geometry.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/Texture2D.h"
-#include "Bang/GameObject.h"
+#include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
-#include "Bang/MeshFactory.h"
+#include "Bang/GUID.h"
+#include "Bang/GameObject.h"
+#include "Bang/Geometry.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/List.h"
+#include "Bang/List.tcc"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Quad.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureFactory.h"
-#include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/Transform.h"
+#include "Bang/USet.tcc"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD   class ICloneable;
+FORWARD_T class EventEmitter;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

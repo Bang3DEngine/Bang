@@ -1,19 +1,48 @@
 #ifndef PXSCENECONTAINER_H
 #define PXSCENECONTAINER_H
 
-#include "PxPhysicsAPI.h"
+#include <functional>
+#include <vector>
 
-#include "Bang/Map.h"
-#include "Bang/Time.h"
-#include "Bang/RayCastInfo.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/PhysicsObject.h"
-#include "Bang/ObjectGatherer.h"
-#include "Bang/RayCastHitInfo.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
+#include "Bang/Map.h"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/PhysicsObject.h"
+#include "Bang/RayCastHitInfo.h"
+#include "Bang/RayCastInfo.h"
+#include "Bang/Time.h"
+#include "PxPhysicsAPI.h"
+#include "PxSimulationEventCallback.h"
+#include "foundation/Px.h"
+
+FORWARD namespace physx
+{
+FORWARD class PxActor;
+FORWARD class PxRigidBody;
+FORWARD class PxScene;
+FORWARD class PxShape;
+FORWARD class PxTransform;
+}
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD   class  Collider;
+FORWARD   class  GameObject;
+FORWARD   class  IEventsDestroy;
+FORWARD   class  PhysicsObject;
+FORWARD   class  Scene;
+FORWARD   struct RayCastHitInfo;
+FORWARD   struct RayCastInfo;
+FORWARD_T class  EventEmitter;
+FORWARD_T class  IEventsObjectGatherer;
+FORWARD   template <class ObjectType, bool RECURSIVE> class ObjectGatherer;
 
 class PxSceneContainer : public EventListener<IEventsObjectGatherer<PhysicsObject>>,
                          public EventListener<IEventsDestroy>,

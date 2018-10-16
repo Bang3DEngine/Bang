@@ -1,5 +1,10 @@
 #include "Bang/ThreadPool.h"
 
+#include <list>
+
+#include "Bang/List.tcc"
+#include "Bang/Thread.h"
+
 USING_NAMESPACE_BANG
 
 ThreadPool::ThreadPool()

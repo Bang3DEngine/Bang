@@ -3,27 +3,30 @@
 
 #include <chrono>
 
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/Path.h"
+#include "Bang/String.h"
 #include "Bang/SystemUtils.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Time;
-FORWARD class Debug;
-FORWARD class Scene;
-FORWARD class Paths;
-FORWARD class Window;
-FORWARD class GEngine;
-FORWARD class Physics;
-FORWARD class Settings;
-FORWARD class Resources;
 FORWARD class AudioManager;
+FORWARD class Debug;
 FORWARD class DialogWindow;
-FORWARD class SceneManager;
-FORWARD class TimeSingleton;
-FORWARD class WindowManager;
+FORWARD class GEngine;
 FORWARD class MetaFilesManager;
+FORWARD class Paths;
+FORWARD class Physics;
+FORWARD class Resources;
+FORWARD class Scene;
+FORWARD class SceneManager;
+FORWARD class Settings;
+FORWARD class SystemUtils;
+FORWARD class Time;
+FORWARD class TimeSingleton;
+FORWARD class Window;
+FORWARD class WindowManager;
 
 class Application
 {

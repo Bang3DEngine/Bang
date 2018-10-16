@@ -1,30 +1,53 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include <functional>
 #include <queue>
 #include <stack>
 #include <tuple>
+#include <utility>
+#include <vector>
 
-#include "Bang/List.h"
-#include "Bang/Object.h"
+#include "Bang/AABox.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/IToString.h"
-#include "Bang/RenderPass.h"
-#include "Bang/IsContainer.h"
-#include "Bang/Serializable.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/IEventsName.h"
-#include "Bang/IEventsDestroy.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsComponent.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsGameObjectVisibilityChanged.h"
+#include "Bang/IEventsName.h"
+#include "Bang/IToString.h"
+#include "Bang/IsContainer.h"
+#include "Bang/List.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Object.h"
+#include "Bang/RenderPass.h"
+#include "Bang/Serializable.h"
+#include "Bang/Sphere.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
 FORWARD class Camera;
 FORWARD class Component;
+FORWARD class GUID;
+FORWARD class GameObject;
+FORWARD class ICloneable;
+FORWARD class IEventsChildren;
+FORWARD class IEventsComponent;
+FORWARD class IEventsDestroy;
+FORWARD class IEventsGameObjectVisibilityChanged;
+FORWARD class IEventsName;
 FORWARD class RectTransform;
+FORWARD class Scene;
+FORWARD class Transform;
 
 #define GAMEOBJECT_NO_FRIEND(ClassName) \
     public: virtual ClassName* Clone() const override {\

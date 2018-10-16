@@ -1,6 +1,12 @@
 #include "Bang/Box.h"
 
 #include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/Quad.h"
+#include "Bang/Quaternion.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
 
 USING_NAMESPACE_BANG
 

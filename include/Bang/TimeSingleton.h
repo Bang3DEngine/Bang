@@ -2,6 +2,7 @@
 #define TIMESINGLETON_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN

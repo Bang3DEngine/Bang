@@ -1,17 +1,25 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
+FORWARD class GameObject;
 FORWARD class GBuffer;
-FORWARD class Texture;
+FORWARD class ICloneable;
 FORWARD class Renderer;
 FORWARD class ShaderProgram;
+FORWARD class Texture;
 
 class Light : public Component
 {

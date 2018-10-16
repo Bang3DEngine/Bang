@@ -1,24 +1,54 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "PxPhysicsAPI.h"
+#include <functional>
+#include <vector>
 
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/Map.h"
+#include "Bang/RayCastHitInfo.h"
+#include "Bang/RayCastInfo.h"
 #include "Bang/Time.h"
 #include "Bang/Vector3.h"
-#include "Bang/RayCastInfo.h"
-#include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
-#include "Bang/RayCastHitInfo.h"
-#include "Bang/IEventsDestroy.h"
+#include "PxPhysicsAPI.h"
+#include "extensions/PxDefaultAllocator.h"
+#include "extensions/PxDefaultErrorCallback.h"
+#include "foundation/PxQuat.h"
+#include "foundation/PxTransform.h"
+#include "foundation/PxVec2.h"
+#include "foundation/PxVec3.h"
+#include "foundation/PxVec4.h"
+
+FORWARD namespace physx
+{
+FORWARD class PxCooking;
+FORWARD class PxFoundation;
+FORWARD class PxMaterial;
+FORWARD class PxPhysics;
+FORWARD class PxRigidDynamic;
+FORWARD class PxTriangleMesh;
+}
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
-FORWARD class RigidBody;
-FORWARD class PhysicsObject;
-FORWARD class PhysicsMaterial;
-FORWARD class PxSceneContainer;
+FORWARD   class  GameObject;
+FORWARD   class  IEventsDestroy;
+FORWARD   class  Mesh;
+FORWARD   class  PhysicsMaterial;
+FORWARD   class  PhysicsObject;
+FORWARD   class  PxSceneContainer;
+FORWARD   class  Scene;
+FORWARD   class  Transform;
+FORWARD   struct RayCastHitInfo;
+FORWARD   struct RayCastInfo;
+FORWARD   class  RigidBody;
+FORWARD_T class  EventEmitter;
 
 class Physics : public EventListener<IEventsDestroy>
 {

@@ -1,10 +1,23 @@
 #include "Bang/MetaNode.h"
 
-#include "Bang/File.h"
-#include "Bang/Debug.h"
-#include "Bang/Paths.h"
+#include <map>
+#include <ostream>
+#include <string>
+#include <utility>
 
-#include "yaml-cpp/yaml.h"
+#include "Bang/Debug.h"
+#include "Bang/File.h"
+#include "Bang/Map.tcc"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Path.h"
+#include "Bang/StreamOperators.h"
+#include "yaml-cpp/emitter.h"
+#include "yaml-cpp/emittermanip.h"
+#include "yaml-cpp/node/detail/iterator.h"
+#include "yaml-cpp/node/impl.h"
+#include "yaml-cpp/node/iterator.h"
+#include "yaml-cpp/node/node.h"
+#include "yaml-cpp/node/parse.h"
 
 USING_NAMESPACE_BANG
 

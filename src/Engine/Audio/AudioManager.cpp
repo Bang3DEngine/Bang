@@ -3,21 +3,31 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <cstring>
+#include <ostream>
+#include <unordered_map>
+#include <utility>
 
-#include "Bang/Path.h"
-#include "Bang/Scene.h"
-#include "Bang/Debug.h"
-#include "Bang/Vector3.h"
-#include "Bang/Resources.h"
-#include "Bang/AudioClip.h"
-#include "Bang/GameObject.h"
-#include "Bang/Application.h"
-#include "Bang/SceneManager.h"
 #include "Bang/ALAudioSource.h"
-#include "Bang/AudioListener.h"
+#include "Bang/Application.h"
+#include "Bang/Array.h"
+#include "Bang/Assert.h"
+#include "Bang/AudioClip.h"
 #include "Bang/AudioPlayerRunnable.h"
+#include "Bang/Debug.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/List.tcc"
+#include "Bang/MutexLocker.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/UMap.tcc"
+
 
 USING_NAMESPACE_BANG
+
+FORWARD struct AudioParams;
 
 AudioManager::AudioManager()
 {

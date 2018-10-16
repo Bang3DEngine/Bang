@@ -1,15 +1,12 @@
 #include "Bang/Path.h"
 
-#include <ctime>
-#include <cstdio>
 #include <dirent.h>
-#include <unistd.h>
 #include <sys/stat.h>
-#include <sys/types.h>
+#include <ctime>
+#include <vector>
 
 #include "Bang/Array.h"
-#include "Bang/Paths.h"
-#include "Bang/Array.h"
+#include "Bang/Assert.h"
 #include "Bang/Extensions.h"
 
 USING_NAMESPACE_BANG

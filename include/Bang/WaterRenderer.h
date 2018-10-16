@@ -2,13 +2,19 @@
 #define WATERRENDERER_H
 
 #include "Bang/Array.h"
-#include "Bang/Vector3.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class ICloneable;
 FORWARD class Mesh;
+FORWARD class MetaNode;
 
 class WaterRenderer : public Renderer
 {

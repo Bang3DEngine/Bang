@@ -1,5 +1,6 @@
 #include "Bang/Color.h"
 
+#include <math.h>
 #include <sstream>
 
 #include "Bang/Math.h"

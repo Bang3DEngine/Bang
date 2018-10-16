@@ -1,21 +1,9 @@
 #include "Bang/UIButton.h"
 
-#include "Bang/Input.h"
-#include "Bang/Paths.h"
-#include "Bang/Cursor.h"
-#include "Bang/UILabel.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Resources.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIRectMask.h"
-#include "Bang/RectTransform.h"
-#include "Bang/TextureFactory.h"
-#include "Bang/UITextRenderer.h"
-#include "Bang/MaterialFactory.h"
-#include "Bang/UIImageRenderer.h"
-#include "Bang/UILayoutElement.h"
-#include "Bang/GameObjectFactory.h"
-#include "Bang/UIHorizontalLayout.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/UIFocusable.h"
 
 USING_NAMESPACE_BANG
 

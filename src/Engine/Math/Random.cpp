@@ -1,6 +1,8 @@
 #include "Bang/Random.h"
 
+#include "Bang/Math.h"
 #include "Bang/String.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

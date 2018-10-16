@@ -1,12 +1,15 @@
 #include "Bang/GBuffer.h"
 
-#include "Bang/GL.h"
-#include "Bang/Math.h"
-#include "Bang/Color.h"
-#include "Bang/AARect.h"
+#include <memory>
+
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/GEngine.h"
-#include "Bang/Texture2D.h"
+#include "Bang/GL.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
+#include "Bang/Texture2D.h"
 
 USING_NAMESPACE_BANG
 

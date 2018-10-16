@@ -1,7 +1,9 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

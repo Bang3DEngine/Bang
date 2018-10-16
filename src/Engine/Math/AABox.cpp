@@ -1,14 +1,12 @@
 #include "Bang/AABox.h"
 
-#include "Bang/List.h"
-#include "Bang/Math.h"
 #include "Bang/Array.h"
-#include "Bang/AARect.h"
-#include "Bang/Camera.h"
+#include "Bang/Array.tcc"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.tcc"
 #include "Bang/Sphere.h"
-#include "Bang/Vector2.h"
-#include "Bang/Transform.h"
-#include "Bang/GameObject.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector4.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,17 +1,31 @@
 #ifndef UISLIDER_H
 #define UISLIDER_H
 
-#include "Bang/UITheme.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/UIFocusable.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/String.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UITheme.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class IEventsValueChanged;
+FORWARD class GameObject;
 FORWARD class RectTransform;
-FORWARD class UIInputNumber;
+FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
+FORWARD class UIInputNumber;
 
 class UISlider : public Component,
                  public EventListener<IEventsValueChanged>,

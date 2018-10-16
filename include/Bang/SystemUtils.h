@@ -8,7 +8,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
+#include "Bang/List.tcc"
 #include "Bang/Mutex.h"
 #include "Bang/String.h"
 

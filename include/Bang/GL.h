@@ -3,14 +3,16 @@
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-
-#include <stack>
 #include <array>
+#include <stack>
 
-#include "Bang/UMap.h"
-#include "Bang/Color.h"
 #include "Bang/AARect.h"
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/StackAndValue.h"
+#include "Bang/String.h"
+#include "Bang/UMap.h"
 
 FORWARD class SDL_Window;
 
@@ -33,12 +35,12 @@ NAMESPACE_BANG_BEGIN
 #define GL_CheckError() // Empty
 #endif
 
-FORWARD class VAO;
-FORWARD class Texture;
 FORWARD class GLObject;
 FORWARD class GLUniforms;
-FORWARD class ShaderProgram;
 FORWARD class IUniformBuffer;
+FORWARD class ShaderProgram;
+FORWARD class Texture;
+FORWARD class VAO;
 
 class GL
 {

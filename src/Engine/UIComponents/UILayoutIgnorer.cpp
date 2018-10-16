@@ -1,5 +1,7 @@
 #include "Bang/UILayoutIgnorer.h"
 
+#include "Bang/FastDynamicCast.h"
+
 USING_NAMESPACE_BANG
 
 UILayoutIgnorer::UILayoutIgnorer()

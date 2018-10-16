@@ -1,10 +1,15 @@
 #ifndef THREADPOOL_H
 #define THREADPOOL_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
+#include "Bang/String.h"
 #include "Bang/Thread.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Thread;
+FORWARD class ThreadRunnable;
 
 class ThreadPool
 {

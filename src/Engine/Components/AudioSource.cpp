@@ -1,15 +1,22 @@
 #include "Bang/AudioSource.h"
 
-#include "Bang/MetaNode.h"
+#include <AL/al.h>
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/AudioClip.h"
-#include "Bang/Transform.h"
-#include "Bang/AudioClip.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Resources.h"
+#include "Bang/AudioManager.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
-#include "Bang/AudioManager.h"
-#include "Bang/TextureFactory.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Transform.h"
+#include "Bang/TypeTraits.h"
 
 USING_NAMESPACE_BANG
 

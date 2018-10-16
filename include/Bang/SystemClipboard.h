@@ -1,6 +1,7 @@
 #ifndef SYSTEMCLIPBOARD_H
 #define SYSTEMCLIPBOARD_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

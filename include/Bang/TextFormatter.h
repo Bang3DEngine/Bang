@@ -2,10 +2,15 @@
 #define TEXTFORMATTER_H
 
 #include <functional>
+#include <ostream>
 
-#include "Bang/Font.h"
 #include "Bang/AARect.h"
 #include "Bang/Alignment.h"
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Font.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

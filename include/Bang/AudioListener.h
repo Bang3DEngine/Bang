@@ -1,7 +1,12 @@
 #ifndef AUDIOLISTENER_H
 #define AUDIOLISTENER_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

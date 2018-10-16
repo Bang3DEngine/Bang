@@ -1,8 +1,11 @@
 #include "Bang/UIGroupLayout.h"
 
+#include <istream>
+
+#include "Bang/FastDynamicCast.h"
 #include "Bang/MetaNode.h"
-#include "Bang/GameObject.h"
-#include "Bang/UILayoutManager.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

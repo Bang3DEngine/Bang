@@ -1,42 +1,58 @@
 #include "Bang/ModelIO.h"
 
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <stdio.h>
-#include <cstring>
-#include <iostream>
-
+#include <assimp/Importer.hpp>
+#include <assimp/anim.h>
+#include <assimp/cexport.h>
+#include <assimp/color4.h>
+#include <assimp/material.h>
+#include <assimp/material.inl>
+#include <assimp/matrix4x4.h>
+#include <assimp/matrix4x4.inl>
+#include <assimp/mesh.h>
+#include <assimp/postprocess.h>
+#include <assimp/quaternion.h>
 // Avoid asserts when reading meshes...
 #include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
+#include <assimp/types.h>
+#include <assimp/vector3.h>
+#include <sys/types.h>
+#include <array>
+#include <fstream>
+#include <unordered_map>
+#include <utility>
 #ifndef FROM_TRAVIS
 #include <assimp/Exporter.hpp>
 #endif
 
-#include "Bang/UMap.h"
-#include "Bang/USet.h"
-#include "Bang/Path.h"
-#include "Bang/Mesh.h"
-#include "Bang/Model.h"
-#include "Bang/Paths.h"
-#include "Bang/Scene.h"
-#include "Bang/Debug.h"
+#include "Bang/Animation.h"
 #include "Bang/Array.h"
-#include "Bang/Shader.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Material.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/Texture2D.h"
+#include "Bang/Color.h"
+#include "Bang/Debug.h"
 #include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/List.tcc"
+#include "Bang/Material.h"
+#include "Bang/Mesh.h"
 #include "Bang/MeshRenderer.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/ShaderProgramFactory.h"
+#include "Bang/Model.h"
+#include "Bang/Path.h"
+#include "Bang/Quaternion.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/StreamOperators.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Transform.h"
+#include "Bang/Tree.h"
+#include "Bang/Tree.tcc"
+#include "Bang/UMap.h"
+#include "Bang/UMap.tcc"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
 
 USING_NAMESPACE_BANG
 

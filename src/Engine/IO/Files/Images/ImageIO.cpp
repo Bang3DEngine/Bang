@@ -1,22 +1,29 @@
 #include "Bang/ImageIO.h"
 
+#include <GL/glew.h>
+// #include <jmorecfg.h>
+#include <jpeglib.h>
 #include <png.h>
-#include <string>
+#include <pngconf.h>
+#include <setjmp.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <fstream>
-#include <stdlib.h>
 
-#include <setjmp.h>
-#include <jpeglib.h>
-
-#include "Bang/List.h"
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Image.h"
-#include "Bang/Paths.h"
-#include "Bang/Texture2D.h"
-#include "Bang/ImageIOTGA.h"
+#include "Bang/Image.tcc"
 #include "Bang/ImageIODDS.h"
+#include "Bang/ImageIOTGA.h"
+#include "Bang/Path.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/String.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TypeTraits.h"
 
 USING_NAMESPACE_BANG
 

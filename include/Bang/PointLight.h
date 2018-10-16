@@ -1,14 +1,26 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
+
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
 FORWARD class Framebuffer;
+FORWARD class GameObject;
+FORWARD class ICloneable;
+FORWARD class Material;
+FORWARD class ShaderProgram;
 
 class PointLight : public Light
 {

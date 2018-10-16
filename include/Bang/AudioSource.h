@@ -1,14 +1,20 @@
 #ifndef AUDIOSOURCE_H
 #define AUDIOSOURCE_H
 
-#include "Bang/Component.h"
-#include "Bang/AudioManager.h"
 #include "Bang/ALAudioSource.h"
+#include "Bang/AudioManager.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class AudioClip;
+FORWARD class ICloneable;
 
 class AudioSource : public Component,
                     public ALAudioSource

@@ -4,7 +4,6 @@
 #include <functional>
 
 #include "Bang/Array.h"
-#include "Bang/EventEmitter.h"
 
 NAMESPACE_BANG_BEGIN
 

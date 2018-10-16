@@ -15,6 +15,8 @@
 
 #include "Bang/ImageIOTGA.h"
 
+#include <stdlib.h>
+
 USING_NAMESPACE_BANG
 
 static const TGA_ORDER _TGA_READER_ARGB = {16, 8, 0, 24};

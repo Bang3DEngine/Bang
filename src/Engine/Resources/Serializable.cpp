@@ -1,15 +1,12 @@
 #include "Bang/Serializable.h"
 
-#include <istream>
-#include <ostream>
-#include <sstream>
-#include <fstream>
-
-#include "Bang/Path.h"
 #include "Bang/File.h"
-#include "Bang/String.h"
-#include "Bang/MetaNode.h"
+#include "Bang/GUID.h"
 #include "Bang/GUIDManager.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 USING_NAMESPACE_BANG
 

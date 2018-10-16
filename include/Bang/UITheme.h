@@ -2,6 +2,7 @@
 #define UITHEME_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 
 NAMESPACE_BANG_BEGIN

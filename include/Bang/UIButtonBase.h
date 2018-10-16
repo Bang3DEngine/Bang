@@ -1,18 +1,35 @@
 #ifndef UIBUTTONBASE_H
 #define UIBUTTONBASE_H
 
-#include "Bang/DPtr.h"
+#include <functional>
+#include <vector>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/UIFocusable.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/String.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIImageRenderer.h"
+#include "Bang/UILayoutElement.h"
+#include "Bang/UITextRenderer.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
 FORWARD class Texture2D;
 FORWARD class UIDirLayout;
-FORWARD class UITextRenderer;
 FORWARD class UIImageRenderer;
 FORWARD class UILayoutElement;
+FORWARD class UITextRenderer;
 
 class UIButtonBase : public Component,
                      public EventListener<IEventsFocus>

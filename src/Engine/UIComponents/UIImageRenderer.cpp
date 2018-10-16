@@ -1,18 +1,27 @@
 ﻿#include "Bang/UIImageRenderer.h"
 
+#include <istream>
+
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
-#include "Bang/Mesh.h"
-#include "Bang/Image.h"
+#include "Bang/GUID.h"
+#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Texture2D.h"
-#include "Bang/GameObject.h"
-#include "Bang/MeshFactory.h"
-#include "Bang/RectTransform.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/UILayoutManager.h"
+#include "Bang/Mesh.h"
+#include "Bang/MeshFactory.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Path.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/ShaderProgram.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TypeTraits.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Camera;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

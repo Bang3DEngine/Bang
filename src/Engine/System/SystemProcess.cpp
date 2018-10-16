@@ -1,27 +1,19 @@
 #include "Bang/SystemProcess.h"
 
-#include <chrono>
-#include <fcntl.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <sys/types.h>
+#include <cstddef>
+#include <functional>
 
-#include "Bang/Array.h"
-#include "Bang/Debug.h"
-#include "Bang/Mutex.h"
+#include "Bang/Path.h"
 #include "Bang/Paths.h"
 #include "Bang/Thread.h"
-#include "Bang/SystemUtils.h"
+#include "Bang/Time.h"
+#include "Bang/process.hpp"
 
+USING_NAMESPACE_BANG
 using namespace TinyProcessLib;
 
 constexpr int SystemProcess::MaxBuffSize;
-
-USING_NAMESPACE_BANG
 
 SystemProcess::SystemProcess()
 {

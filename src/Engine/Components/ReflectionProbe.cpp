@@ -1,18 +1,38 @@
 #include "Bang/ReflectionProbe.h"
 
-#include "Bang/Scene.h"
+#include <istream>
+
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Renderer.h"
-#include "Bang/Material.h"
-#include "Bang/Transform.h"
+#include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/TextureFactory.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
-#include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/Math.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/RenderFlags.h"
+#include "Bang/RenderPass.h"
+#include "Bang/Renderer.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Scene.h"
+#include "Bang/ShaderProgram.h"
+#include "Bang/TextureCubeMap.h"
+#include "Bang/TextureFactory.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD   class ICloneable;
+FORWARD_T class Array;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

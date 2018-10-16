@@ -1,19 +1,30 @@
 #include "Bang/RectTransform.h"
 
-#include "Bang/GL.h"
-#include "Bang/Rect.h"
-#include "Bang/Debug.h"
-#include "Bang/Input.h"
+#include <array>
+
 #include "Bang/AARect.h"
-#include "Bang/Window.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Transform.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Debug.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GL.h"
 #include "Bang/GameObject.h"
-#include "Bang/DebugRenderer.h"
-#include "Bang/RenderFactory.h"
-#include "Bang/UILayoutManager.h"
-#include "Bang/IEventsTransform.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/ICloneable.h"
+#include "Bang/Input.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Rect.h"
+#include "Bang/Transform.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/Vector4.h"
+#include "Bang/Window.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Object;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

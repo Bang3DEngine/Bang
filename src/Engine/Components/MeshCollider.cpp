@@ -1,15 +1,36 @@
 #include "Bang/MeshCollider.h"
 
-#include "Bang/Mesh.h"
-#include "Bang/Physics.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GUID.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
+#include "Bang/PhysicsObject.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "PxRigidDynamic.h"
+#include "PxShape.h"
+#include "extensions/PxRigidActorExt.h"
+#include "foundation/Px.h"
+#include "foundation/PxQuat.h"
+#include "foundation/PxVec3.h"
+#include "geometry/PxMeshScale.h"
+#include "geometry/PxTriangleMeshGeometry.h"
 
-using namespace physx;
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
+
+FORWARD namespace physx
+{
+FORWARD class PxTriangleMesh;
+}
 
 USING_NAMESPACE_BANG
-
+using namespace physx;
 
 MeshCollider::MeshCollider()
 {

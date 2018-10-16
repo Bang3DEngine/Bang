@@ -1,15 +1,23 @@
 #include "Bang/Debug.h"
 
-#include "Bang/Path.h"
+#include "Bang/Application.h"
+#include "Bang/Array.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/GL.h"
+#include "Bang/GLUniforms.h"
+#include "Bang/GLUniforms.tcc"
+#include "Bang/IEventsDebug.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix3.h"
+#include "Bang/Matrix3.tcc"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
 #include "Bang/Shader.h"
 #include "Bang/String.h"
-#include "Bang/Matrix3.h"
-#include "Bang/Matrix4.h"
+#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
-#include "Bang/GLUniforms.h"
-#include "Bang/Application.h"
 
 USING_NAMESPACE_BANG
 

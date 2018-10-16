@@ -1,5 +1,8 @@
 #include "Bang/AspectRatioMode.h"
 
+#include "Bang/Math.h"
+#include "Bang/TypeTraits.h"
+
 USING_NAMESPACE_BANG
 
 Vector2i AspectRatio::GetAspectRatioedSize(const Vector2i &currentSize,

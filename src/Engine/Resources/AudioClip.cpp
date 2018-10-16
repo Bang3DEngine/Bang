@@ -1,12 +1,16 @@
 #include "Bang/AudioClip.h"
 
 #include <sndfile.h>
+#include <stddef.h>
+#include <ostream>
+#include <vector>
 
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/AudioManager.h"
 #include "Bang/Debug.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/AudioSource.h"
-#include "Bang/AudioManager.h"
+#include "Bang/StreamOperators.h"
 
 USING_NAMESPACE_BANG
 

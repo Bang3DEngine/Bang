@@ -1,16 +1,29 @@
 ﻿#ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
-#include "Bang/Path.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsSceneManager.h"
+#include "Bang/List.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
+
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
 FORWARD class BehaviourManager;
+FORWARD class GameObject;
+FORWARD class IEventsDestroy;
+FORWARD class IEventsSceneManager;
+FORWARD class Scene;
 
 class SceneManager : public EventEmitter<IEventsSceneManager>,
                      public EventListener<IEventsDestroy>

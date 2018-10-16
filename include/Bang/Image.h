@@ -1,14 +1,18 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "Bang/Path.h"
 #include "Bang/Array.h"
-#include "Bang/Color.h"
-#include "Bang/Vector2.h"
-#include "Bang/Resource.h"
 #include "Bang/AspectRatioMode.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
+#include "Bang/Path.h"
+#include "Bang/Resource.h"
+#include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
 
 enum class ImageResizeMode { NEAREST, LINEAR };
 

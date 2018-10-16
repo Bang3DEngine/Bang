@@ -1,8 +1,6 @@
 #include "Bang/UILayoutElement.h"
 
-#include "Bang/GameObject.h"
-#include "Bang/UILayoutManager.h"
-#include "Bang/ILayoutController.h"
+#include "Bang/FastDynamicCast.h"
 
 USING_NAMESPACE_BANG
 

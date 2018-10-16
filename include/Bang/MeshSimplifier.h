@@ -1,12 +1,18 @@
 #ifndef MESHSIMPLIFIER_H
 #define MESHSIMPLIFIER_H
 
-#include "Bang/UMap.h"
+#include "Bang/Array.h"
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Mesh.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/UMap.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD_T class ResourceHandle;
 
 class MeshSimplifier
 {

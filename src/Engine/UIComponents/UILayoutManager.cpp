@@ -1,18 +1,30 @@
 #include "Bang/UILayoutManager.h"
 
-#include "Bang/Map.h"
-#include "Bang/Set.h"
-#include "Bang/UMap.h"
-#include "Bang/Scene.h"
-#include "Bang/AARect.h"
-#include "Bang/UICanvas.h"
+#include <functional>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <unordered_map>
+#include <utility>
+
+#include "Bang/Component.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/GameObject.h"
-#include "Bang/Application.h"
-#include "Bang/SceneManager.h"
-#include "Bang/RectTransform.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/ILayoutController.h"
+#include "Bang/ILayoutElement.h"
+#include "Bang/Map.h"
+#include "Bang/Map.tcc"
+#include "Bang/Math.h"
+#include "Bang/ObjectGatherer.h"
+#include "Bang/ObjectGatherer.tcc"
+#include "Bang/StreamOperators.h"
+#include "Bang/UICanvas.h"
 #include "Bang/UILayoutIgnorer.h"
-#include "Bang/IEventsTransform.h"
-#include "Bang/ILayoutSelfController.h"
+#include "Bang/UMap.h"
+#include "Bang/UMap.tcc"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

@@ -1,10 +1,18 @@
 #include "Bang/UIAspectRatioFitter.h"
 
-#include "Bang/Rect.h"
-#include "Bang/AARect.h"
-#include "Bang/MetaNode.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/IInvalidatable.h"
+#include "Bang/Math.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ILayoutController;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

@@ -1,8 +1,12 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
+#include "Bang/List.tcc"
 #include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

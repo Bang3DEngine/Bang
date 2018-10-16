@@ -1,7 +1,8 @@
 #include "Bang/Asset.h"
 
-#include "Bang/Paths.h"
-#include "Bang/Resources.h"
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class MetaNode;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

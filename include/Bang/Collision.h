@@ -1,13 +1,15 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "Bang/Bang.h"
 #include "Bang/Array.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/CollisionContact.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Collider;
+FORWARD class GameObject;
 FORWARD class RigidBody;
 
 class Collision

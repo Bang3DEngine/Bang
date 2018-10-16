@@ -1,6 +1,15 @@
 #include "Bang/AnimatorStateMachinePlayer.h"
 
+#include "Bang/Animation.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/Array.h"
+#include "Bang/Assert.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/IEventsAnimatorStateMachineNode.h"
 
 USING_NAMESPACE_BANG
 

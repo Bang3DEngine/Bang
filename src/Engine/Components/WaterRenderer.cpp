@@ -1,12 +1,15 @@
 #include "Bang/WaterRenderer.h"
 
-#include "Bang/MeshFactory.h"
-#include "Bang/MaterialFactory.h"
-#include "Bang/ShaderProgramFactory.h"
-
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
-#include "Bang/VAO.h"
+#include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
+#include "Bang/MeshFactory.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class MetaNode;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

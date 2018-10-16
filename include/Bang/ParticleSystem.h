@@ -1,19 +1,32 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-#include "Bang/Bang.h"
 #include "Bang/AABox.h"
+#include "Bang/Array.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
-#include "Bang/Particle.h"
-#include "Bang/MeshRenderer.h"
+#include "Bang/Color.h"
 #include "Bang/ComplexRandom.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/Math.h"
+#include "Bang/MeshRenderer.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Particle.h"
+#include "Bang/Renderer.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class ICloneable;
+FORWARD class Mesh;
+FORWARD class ShaderProgram;
+FORWARD class Texture2D;
 FORWARD class VAO;
 FORWARD class VBO;
-FORWARD class Texture2D;
 
 enum class ParticleGenerationShape
 {

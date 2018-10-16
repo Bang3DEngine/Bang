@@ -1,15 +1,23 @@
 #ifndef UITREEITEMCONTAINER_H
 #define UITREEITEMCONTAINER_H
 
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
 #include "Bang/GameObject.h"
+#include "Bang/IEvents.h"
+#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class UIButton;
-FORWARD class UIFocusable;
 FORWARD class UIDragDroppable;
+FORWARD class UIFocusable;
 
 class UITreeItemContainer : public GameObject
 {

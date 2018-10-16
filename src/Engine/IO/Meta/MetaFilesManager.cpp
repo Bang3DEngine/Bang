@@ -1,17 +1,20 @@
 #include "Bang/MetaFilesManager.h"
 
-#include "Bang/Set.h"
-#include "Bang/File.h"
-#include "Bang/List.h"
-#include "Bang/USet.h"
-#include "Bang/Debug.h"
-#include "Bang/Paths.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Application.h"
-#include "Bang/ResourceHandle.h"
+#include <vector>
 
-#include "yaml-cpp/yaml.h"
+#include "Bang/Application.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/File.h"
+#include "Bang/Map.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resource.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
 
 USING_NAMESPACE_BANG
 

@@ -1,15 +1,23 @@
 #ifndef UIFILELIST_H
 #define UIFILELIST_H
 
-#include "Bang/Path.h"
-#include "Bang/GameObject.h"
+#include <functional>
+
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/GameObject.h"
+#include "Bang/List.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class UITextRenderer;
 FORWARD class UIFileListItem;
 FORWARD class UIImageRenderer;
+FORWARD class UITextRenderer;
 
 class UIFileList : public Component
 {

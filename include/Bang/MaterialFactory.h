@@ -1,12 +1,18 @@
 #ifndef MATERIALFACTORY_H
 #define MATERIALFACTORY_H
 
-#include "Bang/UMap.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Material.h"
-#include "Bang/ResourceHandle.h"
 #include "Bang/PhysicsMaterial.h"
+#include "Bang/RenderPass.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Material;
+FORWARD class PhysicsMaterial;
 
 class MaterialFactory
 {

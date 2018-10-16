@@ -1,16 +1,25 @@
 #include "Bang/LineRenderer.h"
 
-#include "Bang/GL.h"
-#include "Bang/Mesh.h"
+#include <ext/alloc_traits.h>
+
 #include "Bang/AABox.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GL.h"
+#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/GameObject.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/Mesh.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/ShaderProgram.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
+
+FORWARD class MetaNode;
 
 LineRenderer::LineRenderer()
 {

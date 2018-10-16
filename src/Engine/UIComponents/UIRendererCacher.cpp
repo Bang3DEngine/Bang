@@ -1,18 +1,36 @@
 #include "Bang/UIRendererCacher.h"
 
-#include "Bang/GL.h"
-#include "Bang/Rect.h"
+#include "Bang/Array.h"
 #include "Bang/Camera.h"
+#include "Bang/Color.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
+#include "Bang/GL.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIRenderer.h"
-#include "Bang/Framebuffer.h"
-#include "Bang/RectTransform.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/MaterialFactory.h"
-#include "Bang/UIImageRenderer.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsComponent.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
+#include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsTransform.h"
+#include "Bang/Material.h"
+#include "Bang/RectTransform.h"
+#include "Bang/Renderer.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Transform.h"
+#include "Bang/UIImageRenderer.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class IEventsObject;
+FORWARD class Object;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

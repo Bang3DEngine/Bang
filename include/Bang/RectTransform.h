@@ -1,14 +1,25 @@
 ﻿#ifndef RECTTRANSFORM_H
 #define RECTTRANSFORM_H
 
-#include "Bang/Rect.h"
 #include "Bang/AARect.h"
-#include "Bang/Vector2.h"
-#include "Bang/Transform.h"
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/IEventsObject.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Rect.h"
+#include "Bang/RenderPass.h"
+#include "Bang/String.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class ICloneable;
+FORWARD class Object;
 
 class RectTransform : public Transform
 {

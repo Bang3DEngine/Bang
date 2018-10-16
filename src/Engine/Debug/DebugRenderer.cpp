@@ -1,15 +1,22 @@
 #include "Bang/DebugRenderer.h"
 
+#include <list>
+
+#include "Bang/AABox.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Debug.h"
 #include "Bang/GL.h"
+#include "Bang/List.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/Quad.h"
-#include "Bang/Debug.h"
-#include "Bang/AABox.h"
-#include "Bang/Scene.h"
-#include "Bang/Triangle.h"
-#include "Bang/Resources.h"
-#include "Bang/SceneManager.h"
 #include "Bang/RenderFactory.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Scene.h"
+#include "Bang/SceneManager.h"
+#include "Bang/Triangle.h"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

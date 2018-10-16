@@ -1,10 +1,14 @@
 #ifndef IMAGEIODDS_H
 #define IMAGEIODDS_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Path.h"
 #include "Bang/Texture2D.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
+FORWARD class Texture2D;
 
 class ImageIODDS
 {

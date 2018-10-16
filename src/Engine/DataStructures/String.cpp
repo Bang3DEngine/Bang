@@ -1,15 +1,13 @@
 #include "Bang/String.h"
 
 #include <ctype.h>
-#include <sstream>
+#include <algorithm>
 #include <iomanip>
-#include <iostream>
+#include <iterator>
+#include <sstream>
 
-#include "Bang/Map.h"
-#include "Bang/List.h"
-#include "Bang/Math.h"
 #include "Bang/Array.h"
-#include "Bang/IToString.h"
+#include "Bang/Array.tcc"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,13 +1,21 @@
 #ifndef MESHFACTORY_H
 #define MESHFACTORY_H
 
-#include "Bang/Set.h"
+#include <functional>
+
+#include "Bang/BangDefines.h"
 #include "Bang/Mesh.h"
-#include "Bang/Path.h"
 #include "Bang/Model.h"
+#include "Bang/Path.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/Set.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Mesh;
+FORWARD class Model;
+FORWARD class Path;
 
 class MeshFactory
 {

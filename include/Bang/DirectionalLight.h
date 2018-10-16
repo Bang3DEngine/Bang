@@ -1,14 +1,25 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
+#include "Bang/AABox.h"
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
 #include "Bang/Matrix4.h"
+#include "Bang/MetaNode.h"
+#include "Bang/String.h"
 #include "Bang/Texture2D.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
 FORWARD class Framebuffer;
+FORWARD class GameObject;
+FORWARD class ICloneable;
+FORWARD class Renderer;
+FORWARD class ShaderProgram;
+FORWARD class Scene;
 
 class DirectionalLight : public Light
 {

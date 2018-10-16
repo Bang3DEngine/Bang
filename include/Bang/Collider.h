@@ -2,17 +2,28 @@
 #define COLLIDER_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
 #include "Bang/PhysicsMaterial.h"
+#include "Bang/PhysicsObject.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 FORWARD namespace physx
 {
-    FORWARD class PxShape;
-    FORWARD class PxRigidBody;
+FORWARD class PxRigidDynamic;
+FORWARD class PxRigidBody;
+FORWARD class PxShape;
 }
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class ICloneable;
+FORWARD class Object;
+FORWARD class PhysicsMaterial;
 
 #define COLLIDER(className) \
         COMPONENT_WITH_FAST_DYNAMIC_CAST(className) \

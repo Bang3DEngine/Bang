@@ -1,15 +1,21 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "Bang/UMap.h"
 #include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
+#include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/Texture2D.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class TextureCubeMap;
+FORWARD   class Path;
+FORWARD   class Texture;
+FORWARD   class Texture2D;
+FORWARD   class TextureCubeMap;
+FORWARD_T class ResourceHandle;
 
 class Framebuffer : public GLObject
 {

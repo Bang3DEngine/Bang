@@ -1,7 +1,12 @@
 #ifndef UITEXTCURSOR_H
 #define UITEXTCURSOR_H
 
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/LineRenderer.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 

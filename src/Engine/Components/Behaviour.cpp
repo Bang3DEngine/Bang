@@ -1,11 +1,9 @@
 #include "Bang/Behaviour.h"
 
-#include "Bang/File.h"
-#include "Bang/Time.h"
-#include "Bang/Extensions.h"
-#include "Bang/Application.h"
 #include "Bang/BehaviourManager.h"
-#include "Bang/BPReflectedStruct.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/IEventsGameObjectPhysics.h"
 
 USING_NAMESPACE_BANG
 

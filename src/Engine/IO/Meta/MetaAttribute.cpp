@@ -1,12 +1,5 @@
 #include "Bang/MetaAttribute.h"
 
-#include <iostream>
-#include <functional>
-
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
-
 USING_NAMESPACE_BANG
 
 MetaAttribute::MetaAttribute()

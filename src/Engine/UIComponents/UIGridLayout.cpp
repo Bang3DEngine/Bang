@@ -1,10 +1,15 @@
 #include "Bang/UIGridLayout.h"
 
-#include "Bang/Rect.h"
-#include "Bang/AARect.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/ILayoutController.h"
+#include "Bang/Math.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

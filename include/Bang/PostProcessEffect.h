@@ -1,11 +1,21 @@
 #ifndef POSTPROCESSEFFECT_H
 #define POSTPROCESSEFFECT_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Path.h"
+#include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/Shader.h"
+#include "Bang/ShaderProgram.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class ICloneable;
 FORWARD class Shader;
 FORWARD class ShaderProgram;
 

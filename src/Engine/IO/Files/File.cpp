@@ -1,17 +1,21 @@
 #include "Bang/File.h"
 
+#include <errno.h>
+#include <sys/stat.h>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include "Bang/USet.h"
-#include "Bang/List.h"
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/List.h"
+#include "Bang/List.tcc"
+#include "Bang/StreamOperators.h"
 #include "Bang/String.h"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
 
 USING_NAMESPACE_BANG
 

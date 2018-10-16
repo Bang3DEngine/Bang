@@ -1,12 +1,19 @@
 #include "Bang/MeshFactory.h"
 
+#include <memory>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
 #include "Bang/Mesh.h"
-#include "Bang/Material.h"
+#include "Bang/Model.h"
+#include "Bang/Paths.h"
 #include "Bang/Resources.h"
-#include "Bang/GameObject.h"
-#include "Bang/MeshRenderer.h"
-#include "Bang/MaterialFactory.h"
-#include "Bang/GameObjectFactory.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Set.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

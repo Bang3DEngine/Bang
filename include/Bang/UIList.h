@@ -2,20 +2,36 @@
 #define UILIST_H
 
 #include <functional>
+#include <vector>
 
-#include "Bang/UMap.h"
 #include "Bang/Array.h"
-#include "Bang/UITheme.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GameObject.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsUIList.h"
+#include "Bang/String.h"
+#include "Bang/UITheme.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class IEventsDestroy;
+FORWARD class IEventsUIList;
 FORWARD class UIDirLayout;
+FORWARD class UIFocusable;
+FORWARD class UIImageRenderer;
 FORWARD class UIScrollArea;
 FORWARD class UIScrollPanel;
-FORWARD class UIImageRenderer;
 
 using GOItem = GameObject;
 

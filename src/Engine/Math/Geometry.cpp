@@ -1,24 +1,27 @@
 #include "Bang/Geometry.h"
 
+#include <algorithm>
 #include <array>
+#include <vector>
 
+#include "Bang/AABox.h"
+#include "Bang/Array.tcc"
+#include "Bang/Axis.h"
 #include "Bang/Box.h"
-#include "Bang/Set.h"
-#include "Bang/Ray.h"
-#include "Bang/List.h"
-#include "Bang/Quad.h"
-#include "Bang/Debug.h"
-#include "Bang/Ray2D.h"
+#include "Bang/Math.h"
 #include "Bang/Plane.h"
-#include "Bang/Sphere.h"
+#include "Bang/Polygon.h"
+#include "Bang/Polygon2D.h"
+#include "Bang/Quad.h"
+#include "Bang/Ray.h"
+#include "Bang/Ray2D.h"
 #include "Bang/Segment.h"
+#include "Bang/Segment2D.h"
+#include "Bang/Sphere.h"
+#include "Bang/Triangle.h"
+#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
-#include "Bang/Polygon.h"
-#include "Bang/Triangle.h"
-#include "Bang/Polygon2D.h"
-#include "Bang/Segment2D.h"
-#include "Bang/DebugRenderer.h"
 
 USING_NAMESPACE_BANG
 
@@ -95,7 +98,6 @@ void Geometry::IntersectRay2DSegment2D(const Ray2D &ray,
 }
 
 
-#include "Bang/Physics.h"
 void Geometry:: IntersectRayPlane(const Ray &ray,
                                   const Plane &plane,
                                   bool *intersected,

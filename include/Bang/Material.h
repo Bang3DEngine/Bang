@@ -1,18 +1,31 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "Bang/GL.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Vector2.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/GL.h"
+#include "Bang/ICloneable.h"
+#include "Bang/IEvents.h"
+#include "Bang/MetaNode.h"
+#include "Bang/NeededUniformFlags.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/NeededUniformFlags.h"
+#include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Texture2D;
+FORWARD class IEventsResource;
+FORWARD class Path;
+FORWARD class Resource;
 FORWARD class ShaderProgram;
+FORWARD class Texture2D;
 
 class Material : public Asset,
                  public ICloneable,

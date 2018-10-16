@@ -1,9 +1,15 @@
 #ifndef UITOOLBUTTON_H
 #define UITOOLBUTTON_H
 
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/String.h"
 #include "Bang/UIButtonBase.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class GameObject;
 
 class UIToolButton : public UIButtonBase
 {

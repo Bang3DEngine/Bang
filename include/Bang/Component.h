@@ -1,22 +1,32 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "Bang/Object.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentFactory.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/IEventsComponentChangeGameObject.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Object.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
-#include "Bang/EventEmitter.h"
-#include "Bang/IEventsDestroy.h"
-#include "Bang/FastDynamicCast.h"
-#include "Bang/ComponentMacros.h"
-#include "Bang/ComponentFactory.h"
-#include "Bang/ComponentClassIds.h"
-#include "Bang/IEventsComponentChangeGameObject.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Collider;
 FORWARD class Collision;
+FORWARD class GameObject;
+FORWARD class ICloneable;
+FORWARD class IEventsComponentChangeGameObject;
 
 class Component : public Object,
                   public IToString,

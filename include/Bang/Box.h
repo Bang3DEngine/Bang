@@ -4,10 +4,13 @@
 #include <array>
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Quad.h"
 #include "Bang/Quaternion.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Quad;
 
 class Box
 {

@@ -1,11 +1,16 @@
 #ifndef UIGROUPLAYOUT_H
 #define UIGROUPLAYOUT_H
 
-#include "Bang/Stretch.h"
 #include "Bang/Alignment.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/ILayoutElement.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/ILayoutController.h"
+#include "Bang/ILayoutElement.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Stretch.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,7 +1,11 @@
 #ifndef CODEPREPROCESSOR_H
 #define CODEPREPROCESSOR_H
 
+#include "Bang/Array.h"
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,6 +1,7 @@
 #ifndef GLOBJECT_H
 #define GLOBJECT_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 
 NAMESPACE_BANG_BEGIN

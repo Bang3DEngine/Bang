@@ -1,5 +1,8 @@
 #include "Bang/Segment.h"
 
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+
 USING_NAMESPACE_BANG
 
 Segment::Segment(const Vector3 &origin, const Vector3 &destiny)

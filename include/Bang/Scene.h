@@ -3,15 +3,23 @@
 
 #include <queue>
 
-#include "Bang/List.h"
+#include "Bang/BangDefines.h"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/List.h"
+#include "Bang/MetaNode.h"
+#include "Bang/RenderPass.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Camera;
-FORWARD class RenderFactory;
-FORWARD class DebugRenderer;
+FORWARD   class Camera;
+FORWARD   class DebugRenderer;
+FORWARD   class ICloneable;
+FORWARD   class IEventsDestroy;
+FORWARD_T class EventEmitter;
+FORWARD   class RenderFactory;
 
 class Scene : public GameObject
 {

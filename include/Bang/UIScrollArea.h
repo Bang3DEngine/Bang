@@ -1,14 +1,18 @@
 #ifndef UISCROLLAREA_H
 #define UISCROLLAREA_H
 
-#include "Bang/Vector2.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
-FORWARD class UIRectMask;
 FORWARD class UIImageRenderer;
+FORWARD class UIRectMask;
 
 class UIScrollArea : public Component
 {

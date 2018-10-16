@@ -1,10 +1,21 @@
 #include "Bang/FileTracker.h"
 
+#include <unordered_map>
+#include <utility>
+
+#include "Bang/Assert.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/Extensions.h"
+#include "Bang/IEventsFileTracker.h"
+#include "Bang/Path.h"
 #include "Bang/Time.h"
 #include "Bang/UMap.h"
-#include "Bang/List.h"
-#include "Bang/Debug.h"
-#include "Bang/Extensions.h"
+#include "Bang/UMap.tcc"
+#include "Bang/USet.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class String;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

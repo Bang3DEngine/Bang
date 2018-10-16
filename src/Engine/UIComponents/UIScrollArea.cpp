@@ -1,11 +1,15 @@
 #include "Bang/UIScrollArea.h"
 
+#include "Bang/Color.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIRectMask.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/GameObjectFactory.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIImageRenderer.h"
-#include "Bang/GameObjectFactory.h"
-#include "Bang/UIContentSizeFitter.h"
+#include "Bang/UIRectMask.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

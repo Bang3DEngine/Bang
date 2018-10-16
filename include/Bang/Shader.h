@@ -3,12 +3,16 @@
 
 #include <GL/glew.h>
 
-#include "Bang/Path.h"
-#include "Bang/String.h"
-#include "Bang/Resource.h"
+#include "Bang/BangDefines.h"
+#include "Bang/GL.h"
 #include "Bang/GLObject.h"
+#include "Bang/Path.h"
+#include "Bang/Resource.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
 
 class Shader : public GLObject,
                public Resource

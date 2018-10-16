@@ -1,7 +1,8 @@
 #include "Bang/Quad.h"
 
+#include "Bang/Assert.h"
+#include "Bang/Matrix4.tcc"
 #include "Bang/Plane.h"
-#include "Bang/Matrix4.h"
 #include "Bang/Polygon.h"
 #include "Bang/Triangle.h"
 

@@ -1,16 +1,21 @@
 #include "Bang/FontSheetCreator.h"
 
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_surface.h>
+
 #include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
 
-#include "Bang/GL.h"
-#include "Bang/Math.h"
 #include "Bang/Array.h"
-#include "Bang/Debug.h"
-#include "Bang/AARect.h"
-#include "Bang/Vector2.h"
-#include "Bang/Resources.h"
+#include "Bang/Array.tcc"
+#include "Bang/AspectRatioMode.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GL.h"
+#include "Bang/Image.tcc"
+#include "Bang/Math.h"
 #include "Bang/Texture2D.h"
-#include "Bang/ImageEffects.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

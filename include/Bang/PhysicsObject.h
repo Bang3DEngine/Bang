@@ -2,11 +2,12 @@
 #define PHYSICSOBJECT_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 
 FORWARD namespace physx
 {
-    FORWARD class PxRigidDynamic;
-};
+FORWARD class PxRigidDynamic;
+}
 
 NAMESPACE_BANG_BEGIN
 

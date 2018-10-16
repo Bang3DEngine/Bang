@@ -1,15 +1,20 @@
 #ifndef AUDIOPLAYERRUNNABLE_H
 #define AUDIOPLAYERRUNNABLE_H
 
-#include "Bang/Thread.h"
+#include <vector>
 
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/Thread.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class AudioClip;
 FORWARD class ALAudioSource;
+FORWARD class AudioClip;
+FORWARD class IEventsDestroy;
 
 class AudioPlayerRunnable : public ThreadRunnable,
                             public EventEmitter<IEventsDestroy>

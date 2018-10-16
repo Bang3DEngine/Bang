@@ -1,13 +1,21 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "Bang/Bang.h"
-#include "Bang/Color.h"
+#include <functional>
+
 #include "Bang/Array.h"
-#include "Bang/Vector3.h"
+#include "Bang/Array.tcc"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
+#include "Bang/Color.h"
+#include "Bang/Math.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Collider;
+FORWARD class Time;
 
 class Particle
 {

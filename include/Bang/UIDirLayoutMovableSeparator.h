@@ -1,18 +1,30 @@
 #ifndef UIDIRLAYOUTMOVABLESEPARATOR_H
 #define UIDIRLAYOUTMOVABLESEPARATOR_H
 
-#include "Bang/Bang.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/Axis.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/UIFocusable.h"
-#include "Bang/LineRenderer.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
-#include "Bang/LayoutSizeType.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/LayoutSizeType.h"
+#include "Bang/LineRenderer.h"
+#include "Bang/String.h"
+#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
+FORWARD class LineRenderer;
+FORWARD class UIFocusable;
 
 class UIDirLayoutMovableSeparator : public Component,
                                     public EventListener<IEventsFocus>

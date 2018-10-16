@@ -159,8 +159,9 @@
 
 #include "Bang/nv_dds.h"
 
+#include <algorithm>
+#include <cstdint>
 #include <cstring>
-#include <cassert>
 #include <fstream>
 #include <stdexcept>
 

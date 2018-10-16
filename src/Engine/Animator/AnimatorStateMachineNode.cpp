@@ -1,8 +1,17 @@
 #include "Bang/AnimatorStateMachineNode.h"
 
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
+#include "Bang/Animation.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/Assert.h"
+#include "Bang/DPtr.tcc"
+#include "Bang/GUID.h"
+#include "Bang/IEventsAnimatorStateMachineNode.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
 
 USING_NAMESPACE_BANG
 

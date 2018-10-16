@@ -1,9 +1,5 @@
 #include "Bang/ChronoGL.h"
 
-#include <iostream>
-
-#include "Bang/Time.h"
-
 USING_NAMESPACE_BANG
 
 ChronoGL::ChronoGL()

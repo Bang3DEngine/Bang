@@ -1,23 +1,40 @@
 #ifndef UIINPUTTEXT_H
 #define UIINPUTTEXT_H
 
-#include "Bang/DPtr.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
-#include "Bang/ILayoutElement.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/ILayoutElement.h"
+#include "Bang/String.h"
+#include "Bang/UIImageRenderer.h"
+#include "Bang/UILabel.h"
+#include "Bang/UIScrollArea.h"
+#include "Bang/UITextCursor.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class UILabel;
 FORWARD class GameObject;
-FORWARD class UIFocusable;
-FORWARD class UITextCursor;
-FORWARD class UIScrollArea;
+FORWARD class IEventsValueChanged;
 FORWARD class RectTransform;
-FORWARD class UITextRenderer;
+FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
+FORWARD class UILabel;
+FORWARD class UIScrollArea;
+FORWARD class UITextCursor;
+FORWARD class UITextRenderer;
 
 class UIInputText : public Component,
                     public EventEmitter<IEventsValueChanged>,

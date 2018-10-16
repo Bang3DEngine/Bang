@@ -1,15 +1,30 @@
 #include "Bang/Framebuffer.h"
 
-#include <GL/glew.h>
-#include <GL/glu.h>
-#include <GL/gl.h>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
+#include "Bang/AARect.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
+#include "Bang/Image.tcc"
+#include "Bang/ImageIO.h"
 #include "Bang/Math.h"
-#include "Bang/Vector2.h"
+#include "Bang/ResourceHandle.h"
 #include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/UMap.tcc"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

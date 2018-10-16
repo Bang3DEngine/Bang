@@ -1,13 +1,26 @@
 #ifndef UIIMAGERENDERER_H
 #define UIIMAGERENDERER_H
 
-#include "Bang/Texture2D.h"
 #include "Bang/Alignment.h"
-#include "Bang/UIRenderer.h"
 #include "Bang/AspectRatioMode.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/Texture2D.h"
+#include "Bang/UIRenderer.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Camera;
+FORWARD class ICloneable;
+FORWARD class Mesh;
+FORWARD class Path;
+FORWARD class Texture2D;
 
 class UIImageRenderer : public UIRenderer
 {

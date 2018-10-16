@@ -1,15 +1,31 @@
 #include "Bang/Animator.h"
 
-#include "Bang/Mesh.h"
-#include "Bang/Material.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Transform.h"
-#include "Bang/GameObject.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/SkinnedMeshRenderer.h"
-#include "Bang/AnimatorStateMachineNode.h"
+#include <functional>
+#include <utility>
+
+#include "Bang/Animation.h"
+#include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachinePlayer.h"
-#include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GUID.h"
+#include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/Map.tcc"
+#include "Bang/Matrix4.tcc"
+#include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/SkinnedMeshRenderer.h"
+#include "Bang/Transform.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

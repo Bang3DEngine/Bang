@@ -1,9 +1,16 @@
 #include "Bang/Texture2D.h"
 
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Color.h"
 #include "Bang/GL.h"
+#include "Bang/Image.tcc"
 #include "Bang/ImageIO.h"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Path.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

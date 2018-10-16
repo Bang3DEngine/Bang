@@ -1,16 +1,31 @@
 #include "Bang/MeshSimplifier.h"
 
+#include <algorithm>
+#include <array>
+#include <functional>
+#include <ostream>
 #include <utility>
 
-#include "Bang/Map.h"
-#include "Bang/Set.h"
-#include "Bang/Mesh.h"
+#include "Bang/AABox.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Debug.h"
-#include "Bang/Plane.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/Mesh.h"
 #include "Bang/Octree.h"
-#include "Bang/Triangle.h"
+#include "Bang/Octree.tcc"
+#include "Bang/Plane.h"
+#include "Bang/ResourceHandle.h"
 #include "Bang/Resources.h"
-#include "Bang/DebugRenderer.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Set.h"
+#include "Bang/Set.tcc"
+#include "Bang/Triangle.h"
+#include "Bang/UMap.tcc"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector4.h"
 
 USING_NAMESPACE_BANG
 

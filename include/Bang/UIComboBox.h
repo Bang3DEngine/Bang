@@ -1,15 +1,31 @@
 #ifndef UICOMBOBOX_H
 #define UICOMBOBOX_H
 
-#include "Bang/Map.h"
-#include "Bang/UIList.h"
+#include <vector>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/Map.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
+#include "Bang/UIList.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
+FORWARD class IEventsValueChanged;
+FORWARD class UIFocusable;
+FORWARD class UIImageRenderer;
 FORWARD class UITextRenderer;
 
 class UIComboBox : public Component,

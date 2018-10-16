@@ -1,13 +1,10 @@
 #include "Bang/UIMask.h"
 
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
-#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIRenderer.h"
-
-#include "Bang/Image.h"
-#include "Bang/GEngine.h"
-#include "Bang/GBuffer.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 
 USING_NAMESPACE_BANG
 

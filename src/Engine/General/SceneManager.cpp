@@ -1,19 +1,27 @@
 #include "Bang/SceneManager.h"
 
-#include "Bang/File.h"
-#include "Bang/Debug.h"
-#include "Bang/Paths.h"
-#include "Bang/Scene.h"
-#include "Bang/Camera.h"
-#include "Bang/String.h"
-#include "Bang/Window.h"
-#include "Bang/GBuffer.h"
-#include "Bang/GEngine.h"
-#include "Bang/Physics.h"
-#include "Bang/Extensions.h"
+#include <ostream>
+
+#include "Bang/Assert.h"
 #include "Bang/AudioManager.h"
 #include "Bang/BehaviourManager.h"
+#include "Bang/Camera.h"
+#include "Bang/Color.h"
+#include "Bang/Debug.h"
+#include "Bang/Extensions.h"
+#include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
+#include "Bang/GL.h"
+#include "Bang/GameObject.h"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsSceneManager.h"
+#include "Bang/List.tcc"
+#include "Bang/Paths.h"
+#include "Bang/Physics.h"
+#include "Bang/Scene.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Window.h"
 
 USING_NAMESPACE_BANG
 

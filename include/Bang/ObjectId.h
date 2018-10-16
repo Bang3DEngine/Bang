@@ -5,6 +5,7 @@
 #include <ostream>
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/TypeTraits.h"
 
 NAMESPACE_BANG_BEGIN

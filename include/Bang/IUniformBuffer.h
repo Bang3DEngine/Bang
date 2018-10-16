@@ -1,6 +1,10 @@
 #ifndef IUNIFORMBUFFER_H
 #define IUNIFORMBUFFER_H
 
+#include <GL/glew.h>
+
+#include "Bang/BangDefines.h"
+#include "Bang/GL.h"
 #include "Bang/GLObject.h"
 
 NAMESPACE_BANG_BEGIN

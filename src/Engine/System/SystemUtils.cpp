@@ -1,7 +1,5 @@
 #include "Bang/SystemUtils.h"
 
-#include "Bang/Debug.h"
-#include "Bang/Library.h"
 #include "Bang/Application.h"
 #include "Bang/SystemProcess.h"
 

@@ -1,8 +1,12 @@
 #include "Bang/Triangle.h"
 
+#include "Bang/Assert.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.tcc"
 #include "Bang/Plane.h"
-#include "Bang/Matrix4.h"
 #include "Bang/Polygon.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
 
 USING_NAMESPACE_BANG
 

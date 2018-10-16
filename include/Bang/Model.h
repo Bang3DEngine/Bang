@@ -2,12 +2,23 @@
 #define MODEL_H
 
 #include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Map.h"
+#include "Bang/Mesh.h"
 #include "Bang/ModelIO.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD struct ModelIONode;
+FORWARD   class  Animation;
+FORWARD   class  GameObject;
+FORWARD   class  Material;
+FORWARD   class  MetaNode;
+FORWARD   struct ModelIONode;
+FORWARD   class  Path;
+FORWARD_T class  Array;
+FORWARD_T class  ResourceHandle;
 
 class Model : public Asset
 {

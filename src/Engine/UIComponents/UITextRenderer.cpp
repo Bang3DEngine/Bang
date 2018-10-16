@@ -1,22 +1,35 @@
 #include "Bang/UITextRenderer.h"
 
-#include "Bang/Math.h"
+#include <ostream>
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/Color.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/Font.h"
-#include "Bang/Scene.h"
-#include "Bang/Camera.h"
-#include "Bang/MetaNode.h"
+#include "Bang/GL.h"
+#include "Bang/GUID.h"
+#include "Bang/GameObject.h"
+#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
-#include "Bang/Transform.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Resources.h"
-#include "Bang/GLUniforms.h"
-#include "Bang/SceneManager.h"
-#include "Bang/RectTransform.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/RenderFactory.h"
-#include "Bang/TextFormatter.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/UILayoutManager.h"
+#include "Bang/Math.h"
+#include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Paths.h"
+#include "Bang/RectTransform.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/TextFormatter.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Camera;
+FORWARD class Texture2D;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

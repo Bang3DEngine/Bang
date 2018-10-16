@@ -1,7 +1,11 @@
 #include "Bang/BPReflectedStruct.h"
 
-#include "Bang/StreamOperators.h"
+#include <iostream>
+#include <string>
+
+#include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
+#include "Bang/StreamOperators.h"
 
 USING_NAMESPACE_BANG
 

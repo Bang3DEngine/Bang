@@ -1,17 +1,18 @@
 #include "Bang/UIFileList.h"
 
-#include "Bang/Paths.h"
-#include "Bang/Input.h"
-#include "Bang/UIList.h"
 #include "Bang/Alignment.h"
+#include "Bang/Array.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIFocusable.h"
-#include "Bang/RectTransform.h"
-#include "Bang/UITextRenderer.h"
-#include "Bang/UIImageRenderer.h"
-#include "Bang/UILayoutElement.h"
-#include "Bang/UIVerticalLayout.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/List.tcc"
+#include "Bang/Paths.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIList.h"
+#include "Bang/UITextRenderer.h"
+#include "Bang/UIVerticalLayout.h"
 
 USING_NAMESPACE_BANG
 

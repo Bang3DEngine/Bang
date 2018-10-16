@@ -1,12 +1,18 @@
 #ifndef UIDIRLAYOUT_H
 #define UIDIRLAYOUT_H
 
+#include "Bang/Array.h"
 #include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/List.h"
+#include "Bang/String.h"
 #include "Bang/UIGroupLayout.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
 FORWARD class RectTransform;
 
 class UIDirLayout : public UIGroupLayout

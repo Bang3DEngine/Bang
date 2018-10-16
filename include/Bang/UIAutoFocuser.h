@@ -1,7 +1,11 @@
 #ifndef UIAUTOFOCUSER_H
 #define UIAUTOFOCUSER_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

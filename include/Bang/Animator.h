@@ -1,17 +1,26 @@
 ﻿#ifndef ANIMATOR_H
 #define ANIMATOR_H
 
-#include "Bang/Bang.h"
-#include "Bang/Time.h"
 #include "Bang/Animation.h"
-#include "Bang/Component.h"
-#include "Bang/EventEmitter.h"
-#include "Bang/ResourceHandle.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/Map.h"
+#include "Bang/MetaNode.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class Animation;
+FORWARD class AnimatorStateMachine;
 FORWARD class AnimatorStateMachinePlayer;
+FORWARD class ICloneable;
 
 class Animator : public Component
 {

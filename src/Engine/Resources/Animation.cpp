@@ -1,7 +1,26 @@
 #include "Bang/Animation.h"
 
-#include "Bang/Set.h"
+#include <sys/types.h>
+#include <istream>
+#include <map>
+#include <utility>
+
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Map.tcc"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Set.h"
+#include "Bang/Set.tcc"
+#include "Bang/Time.h"
+#include "Bang/Vector.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

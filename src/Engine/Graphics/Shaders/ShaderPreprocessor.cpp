@@ -1,9 +1,12 @@
 #include "Bang/ShaderPreprocessor.h"
 
-#include "Bang/List.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/CodePreprocessor.h"
+#include "Bang/Path.h"
 #include "Bang/Paths.h"
 #include "Bang/Resources.h"
-#include "Bang/CodePreprocessor.h"
+#include "Bang/String.h"
 
 USING_NAMESPACE_BANG
 

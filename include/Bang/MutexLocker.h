@@ -1,9 +1,12 @@
 #ifndef MUTEXLOCKER_H
 #define MUTEXLOCKER_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Mutex.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Mutex;
 
 class MutexLocker
 {

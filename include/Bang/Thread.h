@@ -1,9 +1,10 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-#include <thread>
 #include <functional>
+#include <thread>
 
+#include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

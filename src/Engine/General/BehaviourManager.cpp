@@ -1,12 +1,21 @@
 #include "Bang/BehaviourManager.h"
 
-#include "Bang/Debug.h"
-#include "Bang/Scene.h"
-#include "Bang/String.h"
-#include "Bang/Library.h"
-#include "Bang/Behaviour.h"
 #include "Bang/Application.h"
+#include "Bang/Assert.h"
+#include "Bang/Behaviour.h"
+#include "Bang/Component.h"
+#include "Bang/Debug.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/Library.h"
 #include "Bang/SceneManager.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/String.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

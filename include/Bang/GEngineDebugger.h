@@ -1,9 +1,15 @@
 #ifndef GRAPHICPIPELINEDEBUGGER_H
 #define GRAPHICPIPELINEDEBUGGER_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/GBuffer.h"
+#include "Bang/GL.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class GBuffer;
+FORWARD class Path;
 
 class GEngineDebugger
 {

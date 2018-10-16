@@ -1,12 +1,15 @@
 #ifndef IMAGEIO_H
 #define IMAGEIO_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/Path.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD   class Texture2D;
 FORWARD_T class Image;
+FORWARD   class Path;
+FORWARD   class Texture2D;
+
 using Imageb = Image<Byte>;
 
 class ImageIO

@@ -1,5 +1,8 @@
 #include "Bang/Plane.h"
 
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+
 USING_NAMESPACE_BANG
 
 Plane::Plane(const Vector3 &point, const Vector3 &normal)

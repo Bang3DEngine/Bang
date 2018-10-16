@@ -1,14 +1,24 @@
 #include "Bang/UIInputNumber.h"
 
-#include "Bang/Debug.h"
-#include "Bang/Input.h"
-#include "Bang/UILabel.h"
-#include "Bang/UICanvas.h"
+#include <sys/types.h>
+#include <istream>
+
+#include "Bang/Alignment.h"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIInputText.h"
-#include "Bang/RectTransform.h"
-#include "Bang/UITextRenderer.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/IEventsValueChanged.h"
+#include "Bang/Key.h"
+#include "Bang/RectTransform.h"
+#include "Bang/UICanvas.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIInputText.h"
+#include "Bang/UILabel.h"
+#include "Bang/UITextRenderer.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

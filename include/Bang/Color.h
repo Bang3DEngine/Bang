@@ -2,6 +2,8 @@
 #define COLOR_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

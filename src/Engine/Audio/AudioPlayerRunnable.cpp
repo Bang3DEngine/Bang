@@ -1,8 +1,10 @@
 #include "Bang/AudioPlayerRunnable.h"
 
+#include "Bang/ALAudioSource.h"
 #include "Bang/AudioClip.h"
 #include "Bang/AudioManager.h"
-#include "Bang/ALAudioSource.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/IEventsDestroy.h"
 
 USING_NAMESPACE_BANG
 

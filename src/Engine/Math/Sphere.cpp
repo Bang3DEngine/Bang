@@ -1,7 +1,11 @@
 #include "Bang/Sphere.h"
 
-#include "Bang/Math.h"
+#include "Bang/AABox.h"
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Math.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
 
 USING_NAMESPACE_BANG
 

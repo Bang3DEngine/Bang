@@ -1,6 +1,7 @@
 #ifndef IGUIDABLE_H
 #define IGUIDABLE_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/GUID.h"
 
 NAMESPACE_BANG_BEGIN

@@ -1,9 +1,15 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "Bang/List.h"
-#include "Bang/Time.h"
+#include <functional>
+
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/List.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,11 +1,14 @@
 #include "Bang/UITextCursor.h"
 
-#include "Bang/Time.h"
+#include "Bang/Array.tcc"
+#include "Bang/Color.h"
+#include "Bang/Component.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GL.h"
 #include "Bang/Material.h"
-#include "Bang/LineRenderer.h"
-#include "Bang/RectTransform.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/ComponentFactory.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Time.h"
 
 USING_NAMESPACE_BANG
 

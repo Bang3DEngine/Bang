@@ -1,8 +1,13 @@
-#include "Bang/Collision.h"
+#include <stdint.h>
 
+#include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
-#include "Bang/GameObject.h"
 #include "Bang/RayCastHitInfo.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD   class GameObject;
+FORWARD_T class Array;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

@@ -1,9 +1,14 @@
 #include "Bang/BehaviourContainer.h"
 
-#include "Bang/MetaNode.h"
 #include "Bang/Behaviour.h"
-#include "Bang/Application.h"
 #include "Bang/BehaviourManager.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GameObject.h"
+#include "Bang/ICloneable.h"
+#include "Bang/MetaFilesManager.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/TypeTraits.h"
 
 USING_NAMESPACE_BANG
 

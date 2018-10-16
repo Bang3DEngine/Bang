@@ -1,8 +1,9 @@
 #ifndef GUIDMANAGER_H
 #define GUIDMANAGER_H
 
-#include "Bang/USet.h"
+#include "Bang/BangDefines.h"
 #include "Bang/GUID.h"
+#include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,5 +1,7 @@
 #include "Bang/Ray2D.h"
 
+#include "Bang/Vector.tcc"
+
 USING_NAMESPACE_BANG
 
 Ray2D::Ray2D()

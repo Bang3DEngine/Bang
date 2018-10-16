@@ -1,15 +1,33 @@
 #include "Bang/Rope.h"
 
-#include "Bang/VAO.h"
-#include "Bang/Mesh.h"
-#include "Bang/GEngine.h"
-#include "Bang/Physics.h"
+#include <ext/alloc_traits.h>
+#include <sys/types.h>
+#include <memory>
+
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
+#include "Bang/GL.h"
+#include "Bang/GameObject.h"
 #include "Bang/Material.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/GLUniforms.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Time.h"
+#include "Bang/Transform.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class ShaderProgram;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

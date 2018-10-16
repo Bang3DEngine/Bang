@@ -1,3 +1,4 @@
-#include "Bang/IEventsDestroy.h"
+
+#include "Bang/BangDefines.h"
 
 USING_NAMESPACE_BANG

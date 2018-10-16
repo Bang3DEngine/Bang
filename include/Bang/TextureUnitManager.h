@@ -4,15 +4,23 @@
 #include <queue>
 #include <stack>
 #include <unordered_map>
+#include <vector>
 
-#include "Bang/GL.h"
-#include "Bang/Map.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GL.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/Map.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Texture;
+FORWARD_T class EventEmitter;
+FORWARD   class IEventsDestroy;
+FORWARD   class Texture;
 
 class TextureUnitManager : public EventListener<IEventsDestroy>
 {

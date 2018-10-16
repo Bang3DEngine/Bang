@@ -1,8 +1,23 @@
 #include "Bang/TextureCubeMap.h"
 
-#include "Bang/Path.h"
+#include "Bang/Assert.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GUID.h"
+#include "Bang/IEventsResource.h"
+#include "Bang/Image.h"
+#include "Bang/Image.tcc"
+#include "Bang/Math.h"
 #include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 #include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Texture2D.h"
+#include "Bang/Vector.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Resource;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

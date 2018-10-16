@@ -1,9 +1,11 @@
 #include "Bang/VAO.h"
 
+#include <GL/glew.h>
+
+#include "Bang/Array.tcc"
 #include "Bang/GL.h"
 #include "Bang/IBO.h"
 #include "Bang/VBO.h"
-#include "Bang/ShaderProgram.h"
 
 USING_NAMESPACE_BANG
 

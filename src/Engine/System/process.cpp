@@ -1,3 +1,6 @@
+#include <stddef.h>
+#include <algorithm>
+
 #include "Bang/process.hpp"
 
 namespace TinyProcessLib {

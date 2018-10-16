@@ -1,9 +1,12 @@
 #ifndef SHADERPREPROCESSOR_H
 #define SHADERPREPROCESSOR_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class String;
 
 class ShaderPreprocessor
 {

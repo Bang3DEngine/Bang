@@ -1,20 +1,38 @@
 #ifndef UITREE_H
 #define UITREE_H
 
-#include "Bang/List.h"
-#include "Bang/Tree.h"
-#include "Bang/UMap.h"
-#include "Bang/UIList.h"
-#include "Bang/UIButton.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
 #include "Bang/GameObject.h"
+#include "Bang/IEvents.h"
+#include "Bang/IEventsDragDrop.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsUITree.h"
-#include "Bang/IEventsDragDrop.h"
+#include "Bang/List.h"
+#include "Bang/String.h"
+#include "Bang/Tree.h"
+#include "Bang/UIButton.h"
+#include "Bang/UIList.h"
+#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
+FORWARD class IEventsDestroy;
+FORWARD class IEventsDragDrop;
+FORWARD class IEventsUITree;
 FORWARD class UIDragDroppable;
+FORWARD class UIFocusable;
+FORWARD class UIImageRenderer;
 FORWARD class UITreeItemContainer;
 
 class UITree : public Component,

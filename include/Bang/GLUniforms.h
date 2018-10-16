@@ -1,18 +1,25 @@
 #ifndef GLUNIFORMS_H
 #define GLUNIFORMS_H
 
-#include "Bang/GL.h"
+#include <GL/glew.h>
+
 #include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/GL.h"
 #include "Bang/Matrix4.h"
-#include "Bang/Vector2.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/NeededUniformFlags.h"
+#include "Bang/String.h"
+#include "Bang/TextureCubeMap.h"
 #include "Bang/TypeMap.h"
 #include "Bang/UniformBuffer.h"
-#include "Bang/TextureCubeMap.h"
-#include "Bang/NeededUniformFlags.h"
+#include "Bang/UniformBuffer.tcc"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class ShaderProgram;
+
 FORWARD enum class CameraClearMode;
 
 class GLUniforms

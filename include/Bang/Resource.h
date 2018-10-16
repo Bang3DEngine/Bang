@@ -1,15 +1,28 @@
 ﻿#ifndef RESOURCE_H
 #define RESOURCE_H
 
-#include "Bang/Map.h"
-#include "Bang/IGUIDable.h"
+#include <functional>
+#include <vector>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/Serializable.h"
 #include "Bang/EventListener.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GUID.h"
 #include "Bang/IEventsResource.h"
+#include "Bang/IGUIDable.h"
+#include "Bang/Map.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Path.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Serializable.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class IEventsResource;
 
 class Resource : public Serializable,
                  public EventEmitter<IEventsResource>

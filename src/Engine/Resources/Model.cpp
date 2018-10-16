@@ -1,23 +1,40 @@
 #include "Bang/Model.h"
 
-#include "Bang/Mesh.h"
-#include "Bang/ModelIO.h"
+#include <sys/types.h>
+#include <functional>
+#include <memory>
+#include <ostream>
+
 #include "Bang/Animator.h"
-#include "Bang/Material.h"
-#include "Bang/Resources.h"
-#include "Bang/Transform.h"
-#include "Bang/Extensions.h"
+#include "Bang/AnimatorStateMachine.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Debug.h"
 #include "Bang/GameObject.h"
-#include "Bang/GUIDManager.h"
-#include "Bang/MeshRenderer.h"
-#include "Bang/ShaderProgram.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/Map.tcc"
+#include "Bang/Mesh.h"
+#include "Bang/MeshRenderer.h"
+#include "Bang/ModelIO.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
 #include "Bang/SkinnedMeshRenderer.h"
-#include "Bang/ShaderProgramFactory.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Transform.h"
+#include "Bang/Tree.h"
+#include "Bang/Tree.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Animation;
+FORWARD class Material;
+FORWARD class MetaNode;
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 
-// Model
 Model::Model()
 {
 }

@@ -1,6 +1,7 @@
 #ifndef COMPONENTFACTORY_H
 #define COMPONENTFACTORY_H
 
+#include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

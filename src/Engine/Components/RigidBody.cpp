@@ -1,15 +1,24 @@
 #include "Bang/RigidBody.h"
 
-#include "PxPhysicsAPI.h"
+#include <istream>
 
-#include "Bang/Physics.h"
+#include "Bang/Debug.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
+#include "PxActor.h"
+#include "PxRigidBody.h"
+#include "extensions/PxRigidBodyExt.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 using namespace physx;
 
-
-#include "Bang/GameObject.h"
 RigidBody::RigidBody()
 {
     CONSTRUCT_CLASS_ID(RigidBody)
@@ -310,7 +319,6 @@ void RigidBody::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Constraints", GetConstraints().GetValue());
 }
 
-#include "Bang/GameObject.h"
 void RigidBody::UpdatePxRigidDynamicValues()
 {
     if (GetPxRigidDynamic())

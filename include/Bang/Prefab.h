@@ -2,9 +2,14 @@
 #define BANGFAB_H
 
 #include "Bang/Asset.h"
+#include "Bang/BangDefines.h"
+#include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class GameObject;
+FORWARD class Path;
 
 class Prefab : public Asset
 {

@@ -1,15 +1,27 @@
 #ifndef UISCROLLBAR_H
 #define UISCROLLBAR_H
 
+#include <vector>
+
 #include "Bang/Alignment.h"
+#include "Bang/Array.tcc"
+#include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class GameObject;
 FORWARD class UIFocusable;
-FORWARD class UIScrollArea;
 FORWARD class UIImageRenderer;
+FORWARD class UIScrollArea;
 
 class UIScrollBar : public Component,
                     public EventListener<IEventsFocus>

@@ -1,16 +1,23 @@
 #ifndef ROPE_H
 #define ROPE_H
 
+#include "Bang/AABox.h"
+#include "Bang/Array.h"
 #include "Bang/Bang.h"
-
-#include "Bang/Particle.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentMacros.h"
 #include "Bang/LineRenderer.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Particle.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class ICloneable;
 FORWARD class Mesh;
+FORWARD class ShaderProgram;
 
 class Rope : public LineRenderer
 {

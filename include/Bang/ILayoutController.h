@@ -1,14 +1,24 @@
 #ifndef ILAYOUTCONTROLLER_H
 #define ILAYOUTCONTROLLER_H
 
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/Axis.h"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IInvalidatable.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/IInvalidatable.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class GameObject;
+FORWARD class IEventsChildren;
+FORWARD class IEventsTransform;
 
 class ILayoutController : public IInvalidatable<ILayoutController>,
                           public EventListener<IEventsChildren>,

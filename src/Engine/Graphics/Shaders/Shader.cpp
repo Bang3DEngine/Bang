@@ -1,15 +1,13 @@
 #include "Bang/Shader.h"
 
-#include <sstream>
 #include <fstream>
-#include <iostream>
 
-#include "Bang/GL.h"
-#include "Bang/File.h"
-#include "Bang/Path.h"
-#include "Bang/Array.h"
 #include "Bang/Debug.h"
+#include "Bang/File.h"
+#include "Bang/GL.h"
+#include "Bang/Path.h"
 #include "Bang/ShaderPreprocessor.h"
+#include "Bang/StreamOperators.h"
 
 USING_NAMESPACE_BANG
 

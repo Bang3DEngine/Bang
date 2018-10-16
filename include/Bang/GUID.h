@@ -1,10 +1,14 @@
 #ifndef GUID_H
 #define GUID_H
 
+#include <stdint.h>
 #include <istream>
+#include <system_error>
+#include <unordered_map>
 
-#include "Bang/Time.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Random.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 

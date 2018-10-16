@@ -1,21 +1,26 @@
 #include "Bang/UIDragDroppable.h"
 
-#include "Bang/GL.h"
-#include "Bang/Input.h"
-#include "Bang/Scene.h"
-#include "Bang/Camera.h"
-#include "Bang/GBuffer.h"
-#include "Bang/GEngine.h"
-#include "Bang/Material.h"
-#include "Bang/UICanvas.h"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/Framebuffer.h"
-#include "Bang/UIFocusable.h"
-#include "Bang/SceneManager.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/GameObjectFactory.h"
+#include "Bang/IEventsDragDrop.h"
+#include "Bang/Input.h"
+#include "Bang/MouseButton.h"
+#include "Bang/Object.h"
 #include "Bang/RectTransform.h"
+#include "Bang/UICanvas.h"
+#include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutIgnorer.h"
-#include "Bang/GameObjectFactory.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD_T class Array;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

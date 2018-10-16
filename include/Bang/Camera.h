@@ -1,21 +1,38 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Bang/Ray.h"
-#include "Bang/USet.h"
-#include "Bang/Color.h"
+#include <vector>
+
 #include "Bang/AARect.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Ray.h"
 #include "Bang/RenderFlags.h"
+#include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Quad;
-FORWARD class GBuffer;
-FORWARD class Texture2D;
-FORWARD class ShaderProgram;
+FORWARD   class AABox;
+FORWARD_T class EventEmitter;
+FORWARD   class GBuffer;
+FORWARD   class ICloneable;
+FORWARD   class IEventsDestroy;
+FORWARD   class Quad;
+FORWARD   class ShaderProgram;
+FORWARD   class Texture2D;
+FORWARD   class TextureCubeMap;
 
 enum class CameraProjectionMode
 {

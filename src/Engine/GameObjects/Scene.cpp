@@ -1,18 +1,28 @@
 #include "Bang/Scene.h"
 
-#include "Bang/Debug.h"
+#include <vector>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Physics.h"
-#include "Bang/GEngine.h"
-#include "Bang/UICanvas.h"
-#include "Bang/Transform.h"
-#include "Bang/GameObject.h"
-#include "Bang/SceneManager.h"
 #include "Bang/DebugRenderer.h"
-#include "Bang/RectTransform.h"
-#include "Bang/RenderFactory.h"
-#include "Bang/GameObjectFactory.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
+#include "Bang/GUID.h"
+#include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/IEvents.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
+#include "Bang/UICanvas.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class IEventsDestroy;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

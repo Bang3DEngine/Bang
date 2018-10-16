@@ -1,15 +1,18 @@
 #ifndef ANIMATORSTATEMACHINECONNECTIONTRANSITIONCONDITION_H
 #define ANIMATORSTATEMACHINECONNECTIONTRANSITIONCONDITION_H
 
-#include "Bang/Bang.h"
-#include "Bang/String.h"
-#include "Bang/Serializable.h"
 #include "Bang/AnimatorStateMachineVariable.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Serializable.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class AnimatorStateMachine;
 FORWARD class AnimatorStateMachineConnectionTransitionCondition;
+
 using ASMCTransitionCondition = AnimatorStateMachineConnectionTransitionCondition;
 
 class AnimatorStateMachineConnectionTransitionCondition : public Serializable

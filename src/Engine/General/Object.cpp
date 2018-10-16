@@ -1,6 +1,8 @@
 #include "Bang/Object.h"
 
-#include "Bang/Debug.h"
+#include "Bang/Assert.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsObject.h"
 
 USING_NAMESPACE_BANG
 

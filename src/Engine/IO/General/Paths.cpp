@@ -1,15 +1,18 @@
 #include "Bang/Paths.h"
 
 #include <limits.h>
-
-#include <sys/types.h>
-#include <unistd.h>
 #include <pwd.h>
+#include <unistd.h>
+#include <ostream>
+#include <string>
+#include <vector>
 
-#include "Bang/Debug.h"
-#include "Bang/String.h"
 #include "Bang/Application.h"
-#include "Bang/SystemUtils.h"
+#include "Bang/Array.tcc"
+#include "Bang/Containers.h"
+#include "Bang/Debug.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/String.h"
 
 USING_NAMESPACE_BANG
 

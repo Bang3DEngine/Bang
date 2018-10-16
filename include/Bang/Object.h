@@ -1,13 +1,25 @@
 ﻿#ifndef OBJECT_H
 #define OBJECT_H
 
-#include "Bang/ObjectId.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/Serializable.h"
-#include "Bang/IEventsObject.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/ICloneable.h"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsObject.h"
+#include "Bang/ObjectId.h"
+#include "Bang/Serializable.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class IEventsDestroy;
+FORWARD class IEventsObject;
 
 class Object : public Serializable,
                public ICloneable,

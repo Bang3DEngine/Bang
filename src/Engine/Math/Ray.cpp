@@ -1,10 +1,6 @@
 #include "Bang/Ray.h"
 
-#include <algorithm>
-
-#include "Bang/Plane.h"
-#include "Bang/Sphere.h"
-#include "Bang/Geometry.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

@@ -1,20 +1,35 @@
 #include "Bang/PostProcessEffectSSAO.h"
 
-#include "Bang/GL.h"
-#include "Bang/Scene.h"
-#include "Bang/Shader.h"
-#include "Bang/AARect.h"
-#include "Bang/Camera.h"
-#include "Bang/GEngine.h"
-#include "Bang/GBuffer.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Texture2D.h"
-#include "Bang/GLUniforms.h"
+#include <cmath>
+#include <istream>
+
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Color.h"
+#include "Bang/Component.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/Framebuffer.h"
-#include "Bang/SceneManager.h"
+#include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
+#include "Bang/GL.h"
+#include "Bang/Image.tcc"
+#include "Bang/ImageIO.h"
+#include "Bang/Math.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Paths.h"
+#include "Bang/Random.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 
@@ -57,7 +72,6 @@ PostProcessEffectSSAO::~PostProcessEffectSSAO()
     delete m_ssaoFB;
 }
 
-#include "Bang/Input.h"
 void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);

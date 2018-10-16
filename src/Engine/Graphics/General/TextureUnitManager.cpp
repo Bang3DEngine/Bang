@@ -1,9 +1,18 @@
 #include "Bang/TextureUnitManager.h"
 
-#include "Bang/GL.h"
-#include "Bang/USet.h"
-#include "Bang/Texture.h"
+#include <GL/glew.h>
+#include <ostream>
+#include <utility>
+
+#include "Bang/Assert.h"
+#include "Bang/Debug.h"
+#include "Bang/EventEmitter.h"
 #include "Bang/GEngine.h"
+#include "Bang/GL.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/Texture.h"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
 
 USING_NAMESPACE_BANG
 

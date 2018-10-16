@@ -2,6 +2,7 @@
 #define SEGMENT_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN

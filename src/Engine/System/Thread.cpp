@@ -1,6 +1,9 @@
 #include "Bang/Thread.h"
 
 #include <pthread.h>
+#include <chrono>
+#include <ostream>
+#include <ratio>
 
 #include "Bang/Debug.h"
 

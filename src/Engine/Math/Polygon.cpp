@@ -1,8 +1,13 @@
 #include "Bang/Polygon.h"
 
+#include <ext/alloc_traits.h>
+
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
 #include "Bang/Plane.h"
-#include "Bang/Triangle.h"
 #include "Bang/Polygon2D.h"
+#include "Bang/Triangle.h"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

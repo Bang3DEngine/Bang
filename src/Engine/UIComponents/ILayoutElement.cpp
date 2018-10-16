@@ -1,7 +1,5 @@
 #include "Bang/ILayoutElement.h"
 
-#include "Bang/GameObject.h"
-#include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
 
 USING_NAMESPACE_BANG

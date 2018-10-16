@@ -2,7 +2,10 @@
 #define ANIMATORSTATEMACHINEVARIABLE_H
 
 #include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Serializable.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

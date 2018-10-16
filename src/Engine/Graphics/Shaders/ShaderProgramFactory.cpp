@@ -1,5 +1,11 @@
 #include "Bang/ShaderProgramFactory.h"
 
+#include "Bang/Map.tcc"
+#include "Bang/Paths.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/ShaderProgram.h"
+
 USING_NAMESPACE_BANG
 
 Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)

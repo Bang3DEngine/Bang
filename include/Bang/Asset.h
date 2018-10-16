@@ -1,13 +1,24 @@
 #ifndef ASSET_H
 #define ASSET_H
 
-#include "Bang/Path.h"
-#include "Bang/Object.h"
-#include "Bang/Resource.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
 #include "Bang/IToString.h"
+#include "Bang/Object.h"
+#include "Bang/Path.h"
+#include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class IEventsDestroy;
+FORWARD class MetaNode;
 
 #define ASSET(CLASSNAME) \
     RESOURCE(CLASSNAME) \

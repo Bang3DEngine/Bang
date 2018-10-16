@@ -3,11 +3,16 @@
 
 #include <unistd.h>
 
-#include "Bang/Math.h"
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
+#include "Bang/List.tcc"
+#include "Bang/Math.h"
 #include "Bang/String.h"
-
 #include "process.hpp"
+
+namespace TinyProcessLib {
+class Process;
+}  // namespace TinyProcessLib
 
 NAMESPACE_BANG_BEGIN
 

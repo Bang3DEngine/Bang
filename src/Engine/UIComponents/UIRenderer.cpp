@@ -1,9 +1,19 @@
 #include "Bang/UIRenderer.h"
 
-#include "Bang/Rect.h"
 #include "Bang/AARect.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GL.h"
 #include "Bang/GameObject.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
 #include "Bang/RectTransform.h"
+#include "Bang/Vector.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Camera;
+FORWARD class Object;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

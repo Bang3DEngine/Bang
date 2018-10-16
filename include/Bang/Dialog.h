@@ -1,22 +1,26 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <stack>
 #include <functional>
+#include <stack>
 
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
 #include "Bang/Bang.h"
-#include "Bang/Path.h"
+#include "Bang/BangDefines.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/Path.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Scene;
-FORWARD class Window;
-FORWARD class UIButton;
+FORWARD class DialogWindow;
 FORWARD class IFocusable;
+FORWARD class Scene;
+FORWARD class UIButton;
 FORWARD class UIFileList;
 FORWARD class UIInputText;
-FORWARD class DialogWindow;
+FORWARD class Window;
 
 class Dialog
 {

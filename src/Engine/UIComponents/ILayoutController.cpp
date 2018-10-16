@@ -1,6 +1,10 @@
 #include "Bang/ILayoutController.h"
 
-#include "Bang/ILayoutElement.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/GameObject.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
 #include "Bang/UILayoutManager.h"
 
 USING_NAMESPACE_BANG

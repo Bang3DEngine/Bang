@@ -1,9 +1,15 @@
 #ifndef UIRECTMASK_H
 #define UIRECTMASK_H
 
-#include "Bang/GL.h"
 #include "Bang/Array.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/GL.h"
+#include "Bang/MetaNode.h"
+#include "Bang/RenderPass.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

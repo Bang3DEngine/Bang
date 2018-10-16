@@ -1,12 +1,17 @@
 #include "Bang/UIContentSizeFitter.h"
 
-#include "Bang/AARect.h"
-#include "Bang/MetaNode.h"
-#include "Bang/UIRenderer.h"
+#include "Bang/Assert.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/IInvalidatable.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
-#include "Bang/UILayoutElement.h"
 #include "Bang/UILayoutManager.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ILayoutController;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

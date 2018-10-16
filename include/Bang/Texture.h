@@ -4,10 +4,14 @@
 #include <GL/glew.h>
 
 #include "Bang/Asset.h"
-#include "Bang/Image.h"
-#include "Bang/Vector2.h"
-#include "Bang/GLObject.h"
+#include "Bang/BangDefines.h"
+#include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
+#include "Bang/GL.h"
+#include "Bang/GLObject.h"
+#include "Bang/Image.h"
+#include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

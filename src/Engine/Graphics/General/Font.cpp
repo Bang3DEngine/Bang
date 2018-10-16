@@ -1,19 +1,30 @@
 #include "Bang/Font.h"
 
-#include "Bang/Bang.h"
+#include <SDL2/SDL_error.h>
+#include <string.h>
+#include <ostream>
+#include <unordered_map>
+#include <utility>
+
 #include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
 
-#include "Bang/Path.h"
-#include "Bang/Debug.h"
 #include "Bang/AARect.h"
-#include "Bang/Thread.h"
-#include "Bang/Vector2.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Resources.h"
-#include "Bang/MutexLocker.h"
-#include "Bang/StreamOperators.h"
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Debug.h"
 #include "Bang/FontSheetCreator.h"
+#include "Bang/GL.h"
+#include "Bang/Math.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Path.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/StreamOperators.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 
 USING_NAMESPACE_BANG
 

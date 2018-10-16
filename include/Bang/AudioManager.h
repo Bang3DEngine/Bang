@@ -3,28 +3,39 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <vector>
 
-#include "Bang/Set.h"
-#include "Bang/Math.h"
+#include "Bang/Array.tcc"
+#include "Bang/AudioParams.h"
+#include "Bang/BangDefines.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/IEvents.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/List.h"
+#include "Bang/Math.h"
+#include "Bang/Mutex.h"
+#include "Bang/MutexLocker.h"
+#include "Bang/ResourceHandle.h"
+#include "Bang/Set.h"
+#include "Bang/String.h"
+#include "Bang/ThreadPool.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector3.h"
-#include "Bang/ThreadPool.h"
-#include "Bang/MutexLocker.h"
-#include "Bang/AudioParams.h"
-#include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/IEventsDestroy.h"
+
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Path;
-FORWARD class AudioClip;
-FORWARD class GameObject;
-FORWARD class AudioSource;
-FORWARD class ALAudioSource;
-FORWARD class AudioPlayerRunnable;
+FORWARD   struct AudioParams;
+FORWARD   class  ALAudioSource;
+FORWARD   class  AudioClip;
+FORWARD   class  AudioPlayerRunnable;
+FORWARD   class  AudioSource;
+FORWARD_T class  EventEmitter;
+FORWARD   class  GameObject;
+FORWARD   class  IEventsDestroy;
+FORWARD   class  Path;
 
 class AudioManager : public EventListener<IEventsDestroy>
 {

@@ -1,7 +1,7 @@
 #include "Bang/UIAutoFocuser.h"
 
+#include "Bang/FastDynamicCast.h"
 #include "Bang/UICanvas.h"
-#include "Bang/UIFocusable.h"
 
 USING_NAMESPACE_BANG
 

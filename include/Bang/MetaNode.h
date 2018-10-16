@@ -1,18 +1,25 @@
 #ifndef METANODE_H
 #define METANODE_H
 
-#include "Bang/Map.h"
+#include <functional>
+
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
+#include "Bang/Map.h"
 #include "Bang/MetaAttribute.h"
 #include "Bang/StreamOperators.h"
+#include "Bang/String.h"
 
 FORWARD namespace YAML
 {
-    FORWARD class Node;
-    FORWARD class Emitter;
+FORWARD class Emitter;
+FORWARD class Node;
 }
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
 
 class MetaNode
 {

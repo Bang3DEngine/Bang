@@ -1,12 +1,17 @@
 #ifndef PHYSICSMATERIAL_H
 #define PHYSICSMATERIAL_H
 
-#include "Bang/Bang.h"
 #include "Bang/Asset.h"
-
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ICloneable.h"
+#include "Bang/MetaNode.h"
+#include "Bang/String.h"
 #include "PxMaterial.h"
 
 NAMESPACE_BANG_BEGIN
+
+FORWARD class Path;
 
 class PhysicsMaterial : public Asset,
                         public ICloneable

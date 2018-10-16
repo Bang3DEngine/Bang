@@ -1,11 +1,20 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
+#include "Bang/AABox.h"
+#include "Bang/BangDefines.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Renderer.h"
 #include "Bang/ResourceHandle.h"
+#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD class ICloneable;
+FORWARD class Mesh;
+FORWARD class ShaderProgram;
 FORWARD class VAO;
 
 class MeshRenderer : public Renderer

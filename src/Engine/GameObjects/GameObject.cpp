@@ -2,22 +2,42 @@
 
 #include <iostream>
 
-#include "Bang/GL.h"
 #include "Bang/AABox.h"
-#include "Bang/Debug.h"
-#include "Bang/Scene.h"
-#include "Bang/Sphere.h"
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Renderer.h"
-#include "Bang/Material.h"
 #include "Bang/Component.h"
-#include "Bang/Transform.h"
-#include "Bang/SceneManager.h"
-#include "Bang/RectTransform.h"
-#include "Bang/IEventsObject.h"
 #include "Bang/ComponentFactory.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/Debug.h"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GUID.h"
+#include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/HideFlags.h"
+#include "Bang/IEventsChildren.h"
+#include "Bang/IEventsComponent.h"
+#include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
+#include "Bang/IEventsName.h"
+#include "Bang/IEventsObject.h"
+#include "Bang/Material.h"
+#include "Bang/Math.h"
+#include "Bang/Matrix4.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/RectTransform.h"
+#include "Bang/Renderer.h"
+#include "Bang/Scene.h"
+#include "Bang/SceneManager.h"
+#include "Bang/Sphere.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Transform.h"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

@@ -1,16 +1,31 @@
 #ifndef UIDRAGDROPPABLE_H
 #define UIDRAGDROPPABLE_H
 
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/Bang.h"
-#include "Bang/Texture2D.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/IEventsFocus.h"
+#include "Bang/ComponentClassIds.h"
+#include "Bang/ComponentMacros.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEvents.h"
 #include "Bang/IEventsDragDrop.h"
+#include "Bang/IEventsFocus.h"
+#include "Bang/String.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class GameObject;
 FORWARD class Framebuffer;
+FORWARD class GameObject;
+FORWARD class IEventsDragDrop;
+FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
 
 class UIDragDroppable : public Component,

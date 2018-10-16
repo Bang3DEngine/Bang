@@ -1,21 +1,30 @@
 #include "Bang/Renderer.h"
 
-#include <functional>
-
-#include "Bang/GL.h"
 #include "Bang/AABox.h"
-#include "Bang/AARect.h"
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/GBuffer.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GEngine.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Transform.h"
-#include "Bang/Resources.h"
+#include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/ShaderProgram.h"
-#include "Bang/TextureFactory.h"
+#include "Bang/ICloneable.h"
+#include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsResource.h"
+#include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/ShaderProgram.h"
+#include "Bang/Transform.h"
+#include "Bang/TypeTraits.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Resource;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

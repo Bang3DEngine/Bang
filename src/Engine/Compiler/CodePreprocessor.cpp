@@ -1,14 +1,18 @@
 #include "Bang/CodePreprocessor.h"
 
-#include <algorithm>
+#include <iterator>
+#include <list>
+#include <ostream>
+#include <vector>
 
-#include "Bang/List.h"
-#include "Bang/Path.h"
-#include "Bang/File.h"
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
 #include "Bang/Debug.h"
-#include "Bang/Paths.h"
-#include "Bang/Array.h"
+#include "Bang/File.h"
+#include "Bang/List.h"
+#include "Bang/List.tcc"
+#include "Bang/Path.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 
 USING_NAMESPACE_BANG

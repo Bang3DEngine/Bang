@@ -1,15 +1,24 @@
 #include "Bang/PostProcessEffect.h"
 
-#include "Bang/Paths.h"
+#include <istream>
+
+#include "Bang/Array.h"
+#include "Bang/Array.tcc"
 #include "Bang/Camera.h"
-#include "Bang/Shader.h"
-#include "Bang/MetaNode.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/Resources.h"
+#include "Bang/GUID.h"
 #include "Bang/GameObject.h"
+#include "Bang/ICloneable.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/TypeTraits.h"
 
 USING_NAMESPACE_BANG
 

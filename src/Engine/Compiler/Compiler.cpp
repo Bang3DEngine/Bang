@@ -1,8 +1,9 @@
 #include "Bang/Compiler.h"
 
-#include "Bang/Debug.h"
+#include <vector>
+
+#include "Bang/Array.tcc"
 #include "Bang/SystemUtils.h"
-#include "Bang/BangPreprocessor.h"
 
 USING_NAMESPACE_BANG
 

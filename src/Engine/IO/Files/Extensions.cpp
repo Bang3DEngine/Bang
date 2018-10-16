@@ -1,7 +1,7 @@
 #include "Bang/Extensions.h"
 
-#include "Bang/Path.h"
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

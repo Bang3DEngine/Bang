@@ -1,7 +1,15 @@
 #include "Bang/AnimatorStateMachineVariable.h"
 
-#include "Bang/MetaNode.h"
+#include <vector>
+
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/Array.tcc"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventEmitter.tcc"
+#include "Bang/EventListener.tcc"
+#include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 
 USING_NAMESPACE_BANG
 

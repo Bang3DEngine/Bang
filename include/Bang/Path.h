@@ -1,11 +1,17 @@
 #ifndef PATH_H
 #define PATH_H
 
-#include "Bang/Time.h"
+#include <cstddef>
+#include <string>
+#include <system_error>
+
 #include "Bang/Array.h"
+#include "Bang/Array.tcc"
+#include "Bang/BangDefines.h"
 #include "Bang/Flags.h"
-#include "Bang/String.h"
 #include "Bang/IToString.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 

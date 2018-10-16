@@ -1,9 +1,12 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "Bang/Bang.h"
-#include "Bang/Axis.h"
+#include <cstddef>
+
 #include "Bang/Array.h"
+#include "Bang/Axis.h"
+#include "Bang/Bang.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN

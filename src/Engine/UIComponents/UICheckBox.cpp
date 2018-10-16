@@ -1,18 +1,20 @@
 #include "Bang/UICheckBox.h"
 
-#include "Bang/UITheme.h"
-#include "Bang/Material.h"
-#include "Bang/Resources.h"
+#include "Bang/Cursor.h"
+#include "Bang/DPtr.tcc"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIFocusable.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/GameObjectFactory.h"
+#include "Bang/IEventsValueChanged.h"
+#include "Bang/Key.h"
 #include "Bang/RectTransform.h"
 #include "Bang/TextureFactory.h"
-#include "Bang/MaterialFactory.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UIHorizontalLayout.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
-#include "Bang/UIVerticalLayout.h"
-#include "Bang/GameObjectFactory.h"
-#include "Bang/UIHorizontalLayout.h"
+#include "Bang/UITheme.h"
 
 USING_NAMESPACE_BANG
 

@@ -1,11 +1,15 @@
 #include "Bang/Prefab.h"
 
-#include "Bang/Scene.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
 #include "Bang/GameObject.h"
-#include "Bang/SceneManager.h"
 #include "Bang/GameObjectFactory.h"
+#include "Bang/MetaFilesManager.h"
+#include "Bang/MetaNode.h"
+#include "Bang/Scene.h"
+#include "Bang/SceneManager.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

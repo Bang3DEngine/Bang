@@ -1,16 +1,27 @@
 #include "Bang/Material.h"
 
-#include "Bang/Paths.h"
-#include "Bang/Shader.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Vector4.h"
-#include "Bang/Texture.h"
-#include "Bang/Texture2D.h"
-#include "Bang/Resources.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/Flags.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/GUID.h"
+#include "Bang/IEventsResource.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Resources.h"
+#include "Bang/Resources.tcc"
+#include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/TextureFactory.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TextureFactory.h"
+#include "Bang/TypeTraits.h"
+#include "Bang/Vector.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD class Resource;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

@@ -1,7 +1,8 @@
 #include "Bang/GUIDManager.h"
 
-#include "Bang/Resources.h"
+#include "Bang/Assert.h"
 #include "Bang/MetaFilesManager.h"
+#include "Bang/USet.tcc"
 
 USING_NAMESPACE_BANG
 

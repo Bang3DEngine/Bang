@@ -1,10 +1,18 @@
 #ifdef __linux
 
-#include "Bang/process.hpp"
-#include <cstdlib>
-#include <unistd.h>
 #include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <algorithm>
+#include <cstdlib>
+#include <functional>
+#include <memory>
+#include <mutex>
 #include <stdexcept>
+#include <string>
+#include <thread>
+
+#include "Bang/process.hpp"
 
 namespace TinyProcessLib {
 

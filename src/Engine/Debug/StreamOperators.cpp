@@ -1,14 +1,15 @@
 #include "Bang/StreamOperators.h"
 
-#include "Bang/GUID.h"
-#include "Bang/Path.h"
-#include "Bang/Quad.h"
 #include "Bang/AABox.h"
 #include "Bang/Color.h"
-#include "Bang/String.h"
-#include "Bang/Triangle.h"
-#include "Bang/IToString.h"
 #include "Bang/ComplexRandom.h"
+#include "Bang/GUID.h"
+#include "Bang/IToString.h"
+#include "Bang/Path.h"
+#include "Bang/Quad.h"
+#include "Bang/String.h"
+#include "Bang/Time.h"
+#include "Bang/Triangle.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -1,13 +1,16 @@
 #include "Bang/BangPreprocessor.h"
 
+#include <algorithm>
 #include <iostream>
+#include <string>
 
-#include "Bang/Path.h"
-#include "Bang/File.h"
 #include "Bang/Array.h"
-#include "Bang/SystemProcess.h"
+#include "Bang/Array.tcc"
 #include "Bang/BPReflectedStruct.h"
-#include "Bang/BPReflectedVariable.h"
+#include "Bang/File.h"
+#include "Bang/List.tcc"
+#include "Bang/Path.h"
+#include "Bang/SystemProcess.h"
 
 USING_NAMESPACE_BANG
 
@@ -106,9 +109,10 @@ void BangPreprocessor::Preprocess(const String &source,
     *preprocessedSomething = false;
     String &reflectionHeaderSource = *_reflectionHeaderSource;
     reflectionHeaderSource = R"VERBATIM(
-             #include "Bang/MetaNode.h"
              #include "Bang/BPReflectedStruct.h"
              #include "Bang/BPReflectedVariable.h"
+             #include "Bang/MetaNode.h"
+
           )VERBATIM";
 
     Array<BPReflectedStruct> reflectStructs = BangPreprocessor::GetReflectStructs(source);

@@ -1,6 +1,9 @@
 #include "Bang/UIToolButton.h"
 
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/UIFocusable.h"
 
 USING_NAMESPACE_BANG
 

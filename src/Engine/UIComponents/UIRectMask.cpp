@@ -1,10 +1,12 @@
 #include "Bang/UIRectMask.h"
 
+#include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
-#include "Bang/Rect.h"
-#include "Bang/MetaNode.h"
 #include "Bang/GameObject.h"
+#include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
+#include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
 

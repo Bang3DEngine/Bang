@@ -1,19 +1,35 @@
 #include "Bang/Mesh.h"
 
-#include <GL/glew.h>
+#include <sys/types.h>
+#include <memory>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
+#include "Bang/Animation.h"
+#include "Bang/Array.tcc"
+#include "Bang/Assert.h"
+#include "Bang/Containers.h"
+#include "Bang/GL.h"
 #include "Bang/IBO.h"
+#include "Bang/IToString.h"
+#include "Bang/Math.h"
+#include "Bang/MeshSimplifier.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Set.h"
+#include "Bang/Set.tcc"
+#include "Bang/Triangle.h"
+#include "Bang/UMap.tcc"
+#include "Bang/USet.h"
+#include "Bang/USet.tcc"
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
-#include "Bang/Debug.h"
-#include "Bang/ModelIO.h"
-#include "Bang/Material.h"
-#include "Bang/Triangle.h"
-#include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/MeshSimplifier.h"
-#include "Bang/MetaFilesManager.h"
+#include "Bang/Vector.tcc"
+#include "Bang/Vector3.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

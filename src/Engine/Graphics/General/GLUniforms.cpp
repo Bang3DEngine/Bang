@@ -1,11 +1,16 @@
 #include "Bang/GLUniforms.h"
 
+#include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/Settings.h"
-#include "Bang/Transform.h"
-#include "Bang/GameObject.h"
+#include "Bang/Color.h"
+#include "Bang/Matrix4.h"
 #include "Bang/ShaderProgram.h"
-#include "Bang/TextureFactory.h"
+#include "Bang/Time.h"
+#include "Bang/Vector.tcc"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class TextureCubeMap;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

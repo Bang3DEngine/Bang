@@ -1,7 +1,5 @@
 #include "Bang/Time.h"
 
-#include <chrono>
-
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/TimeSingleton.h"

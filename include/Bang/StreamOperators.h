@@ -1,43 +1,49 @@
 #ifndef STREAMOPERATORS_H
 #define STREAMOPERATORS_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include <array>
 #include <queue>
 #include <sstream>
-#include <utility>
+#include <type_traits>
 #include <unordered_map>
+#include <utility>
 
+#include "Bang/BangDefines.h"
 #include "Bang/Flags.h"
 #include "Bang/TypeTraits.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD_TT    class Set;
-FORWARD_TTT   class Map;
 FORWARD_TTTTT class UMap;
 FORWARD_TTTT  class USet;
-FORWARD       class Path;
-FORWARD       class Time;
-FORWARD_T     class Tree;
-FORWARD       class GUID;
-FORWARD_T     class List;
-FORWARD       class Quad;
-FORWARD       class AABox;
-FORWARD_T     class Array;
-FORWARD       class Color;
-FORWARD_T     class RectG;
-FORWARD       class String;
+FORWARD_TTT   class Map;
+FORWARD_TT    class Set;
+FORWARD_T     class Flags;
 FORWARD_T     class AARectG;
-FORWARD       class ObjectId;
-FORWARD       class Triangle;
+FORWARD_T     class Array;
+FORWARD_T     class List;
+FORWARD_T     class Matrix3G;
+FORWARD_T     class Matrix4G;
+FORWARD_T     class QuaternionG;
+FORWARD_T     class RectG;
+FORWARD_T     class Tree;
 FORWARD_T     class Vector2G;
 FORWARD_T     class Vector3G;
 FORWARD_T     class Vector4G;
-FORWARD_T     class Matrix3G;
-FORWARD_T     class Matrix4G;
-FORWARD       class IToString;
-FORWARD_T     class QuaternionG;
+FORWARD       class AABox;
+FORWARD       class Color;
 FORWARD       class ComplexRandom;
+FORWARD       class GUID;
+FORWARD       class IToString;
+FORWARD       class ObjectId;
+FORWARD       class Path;
+FORWARD       class Quad;
+FORWARD       class String;
+FORWARD       class Time;
+FORWARD       class Triangle;
 
 std::istream& operator>>(std::istream& is, GUID &guid);
 std::istream& operator>>(std::istream& is, Path &p);

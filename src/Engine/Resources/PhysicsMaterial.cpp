@@ -1,7 +1,14 @@
 #include "Bang/PhysicsMaterial.h"
 
-#include "Bang/Physics.h"
+#include <ostream>
+
 #include "Bang/MetaNode.h"
+#include "Bang/MetaNode.tcc"
+#include "Bang/Physics.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class Path;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

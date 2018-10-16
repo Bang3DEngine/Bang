@@ -1,8 +1,14 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "Bang/USet.h"
+#include <cstddef>
+
+#include "Bang/Array.h"
+#include "Bang/BangDefines.h"
+#include "Bang/List.h"
 #include "Bang/Path.h"
+#include "Bang/String.h"
+#include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN
 

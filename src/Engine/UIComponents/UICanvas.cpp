@@ -1,21 +1,39 @@
 #include "Bang/UICanvas.h"
 
-#include "Bang/Rect.h"
-#include "Bang/Input.h"
-#include "Bang/Scene.h"
-#include "Bang/AARect.h"
-#include "Bang/Cursor.h"
-#include "Bang/MetaNode.h"
+#include <map>
+#include <queue>
+
+#include "Bang/Assert.h"
 #include "Bang/Component.h"
+#include "Bang/Containers.h"
+#include "Bang/Cursor.h"
+#include "Bang/EventEmitter.h"
+#include "Bang/EventListener.tcc"
+#include "Bang/FastDynamicCast.h"
+#include "Bang/GL.h"
 #include "Bang/GameObject.h"
-#include "Bang/UIRectMask.h"
-#include "Bang/UIFocusable.h"
-#include "Bang/SceneManager.h"
-#include "Bang/DebugRenderer.h"
-#include "Bang/RectTransform.h"
-#include "Bang/UIDragDroppable.h"
-#include "Bang/UILayoutManager.h"
+#include "Bang/GameObject.tcc"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsDragDrop.h"
+#include "Bang/Input.h"
+#include "Bang/Key.h"
+#include "Bang/List.h"
+#include "Bang/List.tcc"
+#include "Bang/MetaNode.h"
+#include "Bang/MouseButton.h"
+#include "Bang/RectTransform.h"
+#include "Bang/Set.tcc"
+#include "Bang/Transform.h"
+#include "Bang/UIDragDroppable.h"
+#include "Bang/UIFocusable.h"
+#include "Bang/UILayoutManager.h"
+#include "Bang/UIRectMask.h"
+
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD class ICloneable;
+FORWARD class IEventsObject;
+FORWARD class Object;
+FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG
 

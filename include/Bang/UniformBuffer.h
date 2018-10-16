@@ -10,7 +10,7 @@ class UniformBuffer : public IUniformBuffer
 {
 public:
 	UniformBuffer();
-	virtual ~UniformBuffer();
+	virtual ~UniformBuffer() override;
 
     void Set(const BufferStruct &data);
 

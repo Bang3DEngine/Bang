@@ -36,7 +36,7 @@ private:
     Prefab();
     Prefab(GameObject *go);
     Prefab(const String &gameObjectMetaInfoContent);
-    virtual ~Prefab();
+    virtual ~Prefab() override;
 };
 
 NAMESPACE_BANG_END

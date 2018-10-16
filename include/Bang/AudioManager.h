@@ -73,7 +73,7 @@ private:
     UMap<ALAudioSource*, AudioPlayerRunnable*> m_sourcesToPlayers;
 
     AudioManager();
-    virtual ~AudioManager();
+    virtual ~AudioManager() override;
 
     bool InitAL();
     static List<String> GetAudioDevicesList();

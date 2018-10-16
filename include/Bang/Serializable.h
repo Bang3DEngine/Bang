@@ -21,7 +21,7 @@ FORWARD class Path;
 class Serializable : public IGUIDable
 {
 public:
-    virtual ~Serializable();
+    virtual ~Serializable() override;
     Serializable(const Serializable &rhs);
 
     void ImportMeta(const String &metaNodeString);

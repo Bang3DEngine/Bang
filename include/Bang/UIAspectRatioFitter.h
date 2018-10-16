@@ -59,7 +59,7 @@ private:
     AspectRatioMode m_aspectRatioMode = Undef<AspectRatioMode>();
 
     UIAspectRatioFitter();
-    virtual ~UIAspectRatioFitter();
+    virtual ~UIAspectRatioFitter() override;
 };
 
 NAMESPACE_BANG_END

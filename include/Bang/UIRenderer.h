@@ -58,7 +58,7 @@ public:
 
 protected:
     UIRenderer();
-    virtual ~UIRenderer();
+    virtual ~UIRenderer() override;
 
 private:
     bool m_cullByRectTransform = true;

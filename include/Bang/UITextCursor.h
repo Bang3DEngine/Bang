@@ -16,7 +16,7 @@ class UITextCursor : public LineRenderer
 
 public:
     UITextCursor();
-    virtual ~UITextCursor();
+    virtual ~UITextCursor() override;
 
     virtual void OnUpdate() override;
 

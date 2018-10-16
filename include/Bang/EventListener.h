@@ -5,7 +5,7 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD template<class T> class EventEmitter;
+FORWARD_T class EventEmitter;
 
 template <class T>
 class EventListener : public T,

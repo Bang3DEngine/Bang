@@ -25,7 +25,7 @@ class Rope : public LineRenderer
 
 public:
 	Rope();
-	virtual ~Rope();
+	virtual ~Rope() override;
 
     // Component
     void OnStart() override;

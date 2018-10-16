@@ -24,7 +24,7 @@ class CapsuleCollider : public Collider
 
 public:
 	CapsuleCollider();
-	virtual ~CapsuleCollider();
+	virtual ~CapsuleCollider() override;
 
     void SetRadius(float radius);
     void SetHeight(float height);

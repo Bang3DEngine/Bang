@@ -25,7 +25,7 @@ class MeshCollider : public Collider
 
 public:
 	MeshCollider();
-	virtual ~MeshCollider();
+	virtual ~MeshCollider() override;
 
     void SetMesh(Mesh *mesh);
 

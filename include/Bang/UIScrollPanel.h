@@ -36,7 +36,7 @@ class UIScrollPanel : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollPanel)
 
 public:
-	virtual ~UIScrollPanel();
+	virtual ~UIScrollPanel() override;
 
     void OnUpdate() override;
     void OnPostUpdate() override;

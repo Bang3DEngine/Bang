@@ -25,7 +25,7 @@ public:
     using GOItem = GameObject;
 
     UITreeItemContainer();
-    virtual ~UITreeItemContainer();
+    virtual ~UITreeItemContainer() override;
 
     void SetCollapsable(bool collapsable);
     void SetCollapsed(bool collapsed);

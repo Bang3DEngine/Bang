@@ -13,7 +13,7 @@ class BPReflectedStruct : public IToString
 {
 public:
     BPReflectedStruct();
-    virtual ~BPReflectedStruct();
+    virtual ~BPReflectedStruct() override;
 
     void AddProperty(const BPReflectedVariable &prop);
 

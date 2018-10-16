@@ -39,7 +39,7 @@ class SkinnedMeshRenderer : public MeshRenderer,
 
 public:
 	SkinnedMeshRenderer();
-	virtual ~SkinnedMeshRenderer();
+	virtual ~SkinnedMeshRenderer() override;
 
     // MeshRenderer
     void OnRender() override;

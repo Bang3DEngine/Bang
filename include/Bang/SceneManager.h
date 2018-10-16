@@ -48,7 +48,7 @@ public:
 
 protected:
     SceneManager();
-    virtual ~SceneManager();
+    virtual ~SceneManager() override;
 
     void LoadSceneInstantly_();
 

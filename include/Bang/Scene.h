@@ -50,7 +50,7 @@ public:
 
 protected:
     Scene();
-    virtual ~Scene();
+    virtual ~Scene() override;
 
     DebugRenderer *GetDebugRenderer() const;
 

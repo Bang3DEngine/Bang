@@ -54,7 +54,7 @@ class Physics : public EventListener<IEventsDestroy>
 {
 public:
 	Physics();
-	virtual ~Physics();
+	virtual ~Physics() override;
 
     void Init();
 

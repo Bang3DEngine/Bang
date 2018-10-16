@@ -10,7 +10,7 @@ FORWARD class Collider;
 
 class IEventsGameObjectPhysics
 {
-    IEVENTS(IEventsGameObjectPhysics)
+    IEVENTS(IEventsGameObjectPhysics);
 
 public:
     virtual void OnCollisionEnter(const Collision &collision)

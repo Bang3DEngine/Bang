@@ -9,7 +9,7 @@ FORWARD class GameObject;
 
 class IEventsChildren
 {
-    IEVENTS(IEventsChildren)
+    IEVENTS(IEventsChildren);
 
 public:
     virtual void OnChildAdded(GameObject *addedChild, GameObject *parent)

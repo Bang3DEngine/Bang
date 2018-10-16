@@ -10,7 +10,7 @@ class DialogWindow : public Window
 {
 public:
     DialogWindow(Window *parentWindow, bool resizable);
-    virtual ~DialogWindow();
+    virtual ~DialogWindow() override;
 
     virtual void Create(uint flags) override;
     void CenterInParent();

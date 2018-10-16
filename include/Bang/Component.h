@@ -58,7 +58,7 @@ public:
 
 protected:
     Component();
-    virtual ~Component();
+    virtual ~Component() override;
 
     virtual void OnPreStart() override;
     virtual void OnStart() override;

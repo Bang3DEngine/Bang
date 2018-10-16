@@ -17,7 +17,7 @@ class WindowManager
 {
 public:
 	WindowManager();
-	virtual ~WindowManager();
+    virtual ~WindowManager();
 
     void Init();
     int  MainLoop();

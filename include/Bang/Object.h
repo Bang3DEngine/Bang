@@ -43,7 +43,7 @@ public:
 
 protected:
     Object() = default;
-    virtual ~Object();
+    virtual ~Object() override;
 
     virtual void PreStart();
     virtual void Start();

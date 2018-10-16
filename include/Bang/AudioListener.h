@@ -16,7 +16,7 @@ class AudioListener : public Component
 
 public:
     AudioListener();
-    virtual ~AudioListener();
+    virtual ~AudioListener() override;
 
     // Component
     virtual void OnUpdate() override;

@@ -62,7 +62,7 @@ private:
     UIInputNumber *p_inputNumber      = nullptr;
 
 	UISlider();
-    virtual ~UISlider();
+    virtual ~UISlider() override;
 
     // Component
     void OnUpdate() override;

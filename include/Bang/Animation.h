@@ -107,7 +107,7 @@ public:
 
 private:
     Animation();
-    virtual ~Animation();
+    virtual ~Animation() override;
 
     float m_speed = 1.0f;
     float m_durationInFrames = 0.0f;

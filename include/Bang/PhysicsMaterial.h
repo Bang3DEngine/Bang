@@ -29,7 +29,7 @@ public:
     };
 
 	PhysicsMaterial();
-	virtual ~PhysicsMaterial();
+	virtual ~PhysicsMaterial() override;
 
     void SetStaticFriction(float staticFrictionCoeff);
     void SetDynamicFriction(float dynamicFrictionCoeff);

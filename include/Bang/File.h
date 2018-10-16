@@ -18,7 +18,7 @@ public:
     File();
     File(const Path &filepath);
     File(const String &filepath);
-    virtual ~File();
+    ~File();
 
     String GetContents() const;
     const Path& GetPath() const;

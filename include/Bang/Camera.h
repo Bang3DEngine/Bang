@@ -121,7 +121,7 @@ public:
 
 protected:
     Camera();
-    virtual ~Camera();
+    virtual ~Camera() override;
 
 private:
     GBuffer *m_gbuffer = nullptr;

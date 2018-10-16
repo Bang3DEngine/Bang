@@ -42,7 +42,7 @@ public:
 
 protected:
     ILayoutController();
-    virtual ~ILayoutController();
+    virtual ~ILayoutController() override;
 
 private:
     virtual void ApplyLayout(Axis axis) = 0;

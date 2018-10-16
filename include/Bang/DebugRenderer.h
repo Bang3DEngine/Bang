@@ -123,7 +123,7 @@ private:
     List<DebugRenderPrimitive> m_primitivesToRender;
 
     DebugRenderer();
-	virtual ~DebugRenderer();
+	virtual ~DebugRenderer() override;
 
     void RenderPrimitives(bool withDepth);
 

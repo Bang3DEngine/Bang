@@ -35,7 +35,7 @@ class UIInputNumber : public Component,
 
 public:
     UIInputNumber();
-    virtual ~UIInputNumber();
+    virtual ~UIInputNumber() override;
 
     void SetValue(float v);
     void SetMinValue(float min);

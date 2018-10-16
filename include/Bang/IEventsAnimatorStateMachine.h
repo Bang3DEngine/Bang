@@ -14,7 +14,7 @@ FORWARD class AnimatorStateMachineVariable;
 
 class IEventsAnimatorStateMachine
 {
-    IEVENTS(IEventsAnimatorStateMachine)
+    IEVENTS(IEventsAnimatorStateMachine);
 
 public:
     virtual void OnNodeCreated(AnimatorStateMachine *stateMachine,

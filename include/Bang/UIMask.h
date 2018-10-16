@@ -21,7 +21,7 @@ class UIMask : public Component
 
 public:
     UIMask();
-    virtual ~UIMask();
+    virtual ~UIMask() override;
 
     virtual void OnRender(RenderPass renderPass) override;
     virtual void OnBeforeChildrenRender(RenderPass renderPass) override;

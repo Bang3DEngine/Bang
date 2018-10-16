@@ -240,7 +240,7 @@ public:
 
 protected:
     GameObject(const String &name = "GameObject");
-    virtual ~GameObject();
+    virtual ~GameObject() override;
 
     virtual void AfterChildrenUpdate();
     virtual void PostUpdate();

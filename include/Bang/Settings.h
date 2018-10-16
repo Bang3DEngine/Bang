@@ -14,7 +14,7 @@ public:
 
 private:
 	Settings();
-	virtual ~Settings();
+    virtual ~Settings();
 
     friend class Application;
 };

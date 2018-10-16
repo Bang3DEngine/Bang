@@ -53,7 +53,7 @@ private:
     Array<EventCallback> m_eventCallbacks;
 
     UIFocusable();
-    virtual ~UIFocusable();
+    virtual ~UIFocusable() override;
 
     // Component
     bool CanBeRepeatedInGameObject() const override;

@@ -31,7 +31,7 @@ private:
     Vector2i m_cellSize = Vector2i(40);
 
     UIGridLayout();
-    virtual ~UIGridLayout();
+    virtual ~UIGridLayout() override;
 
     Vector2i GetTotalSpacing() const;
 };

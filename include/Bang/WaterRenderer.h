@@ -22,7 +22,7 @@ class WaterRenderer : public Renderer
 
 public:
 	WaterRenderer();
-	virtual ~WaterRenderer();
+    virtual ~WaterRenderer() override;
 
     // Renderer
     virtual void OnRender() override;

@@ -36,7 +36,7 @@ class UIDragDroppable : public Component,
 
 public:
 	UIDragDroppable();
-	virtual ~UIDragDroppable();
+	virtual ~UIDragDroppable() override;
 
     // Component
     void OnUpdate() override;

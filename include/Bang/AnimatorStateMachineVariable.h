@@ -23,7 +23,7 @@ public:
     };
 
 	AnimatorStateMachineVariable();
-    virtual ~AnimatorStateMachineVariable();
+    virtual ~AnimatorStateMachineVariable() override;
 
     void SetName(const String &varName);
     void SetType(AnimatorStateMachineVariable::Type type);

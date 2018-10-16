@@ -64,7 +64,7 @@ private:
     DPtr<UILayoutElement> p_layoutElement;
 
     UICheckBox();
-    virtual ~UICheckBox();
+    virtual ~UICheckBox() override;
 
     static UICheckBox *CreateInto(GameObject *go);
 

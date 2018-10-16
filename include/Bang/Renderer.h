@@ -85,7 +85,7 @@ public:
 
 protected:
     Renderer();
-    virtual ~Renderer();
+    virtual ~Renderer() override;
 
     void PropagateRendererChanged();
 

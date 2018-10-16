@@ -10,7 +10,7 @@ class IGUIDable
 {
 public:
 	IGUIDable();
-	virtual ~IGUIDable();
+    virtual ~IGUIDable();
 
     const GUID& GetGUID() const;
     GUID& GetGUID();

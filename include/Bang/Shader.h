@@ -22,7 +22,7 @@ class Shader : public GLObject,
 public:
     Shader();
     Shader(GL::ShaderType t);
-    virtual ~Shader();
+    virtual ~Shader() override;
 
     bool Compile();
 

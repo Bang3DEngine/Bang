@@ -138,7 +138,7 @@ protected:
     mutable Matrix4 m_localToParentMatrixInv;
 
     Transform();
-    virtual ~Transform();
+    virtual ~Transform() override;
 
     // IInvalidatable
     void OnInvalidatedWorld() override;

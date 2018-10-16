@@ -12,7 +12,7 @@ class VBO : public GLObject
 {
 public:
     VBO();
-    virtual ~VBO();
+    virtual ~VBO() override;
 
     void CreateAndFill(const void *data,
                        uint dataSize,

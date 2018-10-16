@@ -86,7 +86,7 @@ private:
     DPtr<UIImageRenderer> p_background;
 
     UIInputText();
-    virtual ~UIInputText();
+    virtual ~UIInputText() override;
 
     void HandleTyping();
     void HandleCursorIndices(bool existedSelection);

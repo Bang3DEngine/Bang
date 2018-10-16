@@ -45,7 +45,7 @@ class UIRendererCacher : public Component,
 
 public:
 	UIRendererCacher();
-	virtual ~UIRendererCacher();
+	virtual ~UIRendererCacher() override;
 
     void OnStart() override;
     void OnRender(RenderPass renderPass) override;

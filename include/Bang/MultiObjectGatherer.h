@@ -24,7 +24,7 @@ public:
     using ObjectGathererT = ObjectGatherer<ObjectType, RECURSIVE>;
 
     MultiObjectGatherer()  = default;
-    virtual ~MultiObjectGatherer();
+    virtual ~MultiObjectGatherer() override;
 
     const Array<ObjectType*>& GetGatheredArray(GameObject *go) const;
 

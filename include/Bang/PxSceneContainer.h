@@ -50,7 +50,7 @@ class PxSceneContainer : public EventListener<IEventsObjectGatherer<PhysicsObjec
 {
 public:
     PxSceneContainer(Scene *scene);
-    virtual ~PxSceneContainer();
+    virtual ~PxSceneContainer() override;
 
     void ResetStepTimeReference();
 

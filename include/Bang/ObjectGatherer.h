@@ -23,7 +23,7 @@ class ObjectGatherer : public EventListener<IEventsDestroy>,
 {
 public:
     ObjectGatherer()  = default;
-    virtual ~ObjectGatherer();
+    virtual ~ObjectGatherer() override;
 
     void SetRoot(GameObject *root);
 

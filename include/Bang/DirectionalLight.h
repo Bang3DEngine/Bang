@@ -48,7 +48,7 @@ protected:
     float m_shadowDistance = 100.0f;
 
     DirectionalLight();
-    virtual ~DirectionalLight();
+    virtual ~DirectionalLight() override;
 
     AABox GetShadowCastersAABox(
             const Array<Renderer*> &shadowCastersRenderers) const;

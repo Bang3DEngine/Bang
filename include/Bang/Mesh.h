@@ -176,7 +176,7 @@ private:
     Sphere m_bSphere;
 
     Mesh();
-    virtual ~Mesh();
+    virtual ~Mesh() override;
 };
 
 NAMESPACE_BANG_END

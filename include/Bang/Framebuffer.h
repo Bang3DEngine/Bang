@@ -22,7 +22,7 @@ class Framebuffer : public GLObject
 public:
     Framebuffer();
     Framebuffer(int width, int height);
-    virtual ~Framebuffer();
+    virtual ~Framebuffer() override;
 
     void CreateAttachmentTex2D(GL::Attachment attachment,
                                GL::ColorFormat texFormat);

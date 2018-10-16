@@ -58,7 +58,7 @@ protected:
     float m_alphaCutoff = 0.0f;
 
     Texture2D();
-    virtual ~Texture2D();
+    virtual ~Texture2D() override;
 
     void OnFormatChanged() override;
 };

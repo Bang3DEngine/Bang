@@ -27,7 +27,7 @@ public:
     };
 
     ALAudioSource();
-    virtual ~ALAudioSource();
+    virtual ~ALAudioSource() override;
 
     void Play();
     void Pause();

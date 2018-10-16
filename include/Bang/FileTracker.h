@@ -24,7 +24,7 @@ class FileTracker : public EventEmitter<IEventsFileTracker>
 {
 public:
 	FileTracker();
-	virtual ~FileTracker();
+	virtual ~FileTracker() override;
 
     void TrackPath(const Path &path);
     void UnTrackPath(const Path &path);

@@ -27,7 +27,7 @@ class RectTransform : public Transform
 
 public:
     RectTransform();
-    virtual ~RectTransform();
+    virtual ~RectTransform() override;
 
     void OnRender(RenderPass rp) override;
 

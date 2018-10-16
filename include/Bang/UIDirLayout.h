@@ -32,7 +32,7 @@ public:
 protected:
     UIDirLayout();
     UIDirLayout(Axis axis);
-    virtual ~UIDirLayout();
+    virtual ~UIDirLayout() override;
 
 private:
     Axis m_axis = Axis::HORIZONTAL;

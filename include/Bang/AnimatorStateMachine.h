@@ -36,7 +36,7 @@ class AnimatorStateMachine : public Resource,
 
 public:
 	AnimatorStateMachine();
-	virtual ~AnimatorStateMachine();
+	virtual ~AnimatorStateMachine() override;
 
     AnimatorStateMachineNode* CreateAndAddNode();
     AnimatorStateMachineNode* GetNode(uint nodeIdx);

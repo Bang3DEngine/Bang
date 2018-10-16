@@ -102,7 +102,7 @@ public:
 
 protected:
     UIList();
-    virtual ~UIList();
+    virtual ~UIList() override;
 
     void AddItem_(GOItem *newItem, int index, bool moving);
     void RemoveItem_(GOItem *item, bool moving);

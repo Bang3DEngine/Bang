@@ -121,7 +121,7 @@ protected:
     bool m_renderWireframe              = false;
 
     Material();
-    virtual ~Material();
+    virtual ~Material() override;
 };
 
 NAMESPACE_BANG_END

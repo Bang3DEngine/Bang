@@ -77,7 +77,7 @@ private:
     void GenerateRandomAxesTexture(int numAxes);
 
 	PostProcessEffectSSAO();
-	virtual ~PostProcessEffectSSAO();
+	virtual ~PostProcessEffectSSAO() override;
 };
 
 NAMESPACE_BANG_END

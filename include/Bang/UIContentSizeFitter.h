@@ -40,7 +40,7 @@ private:
     LayoutSizeType m_horizontalSizeType = LayoutSizeType::NONE;
 
     UIContentSizeFitter();
-    virtual ~UIContentSizeFitter();
+    virtual ~UIContentSizeFitter() override;
 };
 
 NAMESPACE_BANG_END

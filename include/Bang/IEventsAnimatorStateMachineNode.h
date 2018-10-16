@@ -10,7 +10,7 @@ FORWARD class AnimatorStateMachineConnection;
 
 class IEventsAnimatorStateMachineNode
 {
-    IEVENTS(IEventsAnimatorStateMachineNode)
+    IEVENTS(IEventsAnimatorStateMachineNode);
 
 public:
     virtual void OnConnectionAdded(AnimatorStateMachineNode *node,

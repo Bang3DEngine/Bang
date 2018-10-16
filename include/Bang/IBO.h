@@ -12,7 +12,7 @@ class IBO : public GLObject
 {
 public:
     IBO();
-    virtual ~IBO();
+    virtual ~IBO() override;
 
     void Fill(const void *data, int dataSize,
               GL::UsageHint usage = GL::UsageHint::STATIC_DRAW);

@@ -8,7 +8,7 @@ NAMESPACE_BANG_BEGIN
 template<class ObjectType>
 class IEventsObjectGatherer
 {
-    IEVENTS(IEventsObjectGatherer)
+    IEVENTS(IEventsObjectGatherer);
 
 public:
     virtual void OnObjectGathered(ObjectType *obj)

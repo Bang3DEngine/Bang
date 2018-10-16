@@ -42,7 +42,7 @@ public:
 
 protected:
     Resource();
-    virtual ~Resource();
+    virtual ~Resource() override;
 
     void ClearEmbeddedResources();
 

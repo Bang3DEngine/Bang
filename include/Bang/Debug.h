@@ -42,7 +42,7 @@ public:
 
 protected:
     Debug();
-    virtual ~Debug();
+    virtual ~Debug() override;
 
     static void Message(DebugMessageType msgType,
                         const String &str,

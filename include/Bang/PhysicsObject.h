@@ -25,7 +25,7 @@ public:
     };
 
 	PhysicsObject();
-	virtual ~PhysicsObject();
+    virtual ~PhysicsObject();
 
     physx::PxRigidDynamic *GetPxRigidDynamic() const;
     PhysicsObject::Type GetPhysicsObjectType() const;

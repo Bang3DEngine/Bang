@@ -41,7 +41,7 @@ private:
     Behaviour *p_behaviour = nullptr;
 
     BehaviourContainer();
-    virtual ~BehaviourContainer();
+    virtual ~BehaviourContainer() override;
 
     // Component
     void OnPreStart() override;

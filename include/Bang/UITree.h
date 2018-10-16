@@ -97,7 +97,7 @@ public:
 
 protected:
     UITree();
-    virtual ~UITree();
+    virtual ~UITree() override;
 
     static UITree* CreateInto(GameObject *go);
 

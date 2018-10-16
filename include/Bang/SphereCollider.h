@@ -24,7 +24,7 @@ class SphereCollider : public Collider
 
 public:
 	SphereCollider();
-	virtual ~SphereCollider();
+	virtual ~SphereCollider() override;
 
     void SetRadius(float radius);
 

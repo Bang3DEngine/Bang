@@ -79,7 +79,7 @@ private:
     mutable UMap<int, String> m_cachedAtlasChars;
 
     Font();
-    virtual ~Font();
+    virtual ~Font() override;
 
     TTF_Font *GetReferenceFont() const;
     TTF_Font *GetTTFFont(int fontSize) const;

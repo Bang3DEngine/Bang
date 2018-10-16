@@ -23,7 +23,7 @@ class BoxCollider : public Collider
 
 public:
 	BoxCollider();
-    virtual ~BoxCollider();
+    virtual ~BoxCollider() override;
 
     void SetExtents(const Vector3 &extents);
 

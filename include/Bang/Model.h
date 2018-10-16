@@ -26,7 +26,7 @@ class Model : public Asset
 
 public:
 	Model();
-	virtual ~Model();
+	virtual ~Model() override;
 
     GameObject *CreateGameObjectFromModel() const;
 

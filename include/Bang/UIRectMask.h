@@ -19,7 +19,7 @@ class UIRectMask : public Component
 
 public:
     UIRectMask();
-    virtual ~UIRectMask();
+    virtual ~UIRectMask() override;
 
     void OnBeforeChildrenRender(RenderPass renderPass) override;
     void OnAfterChildrenRender(RenderPass renderPass) override;

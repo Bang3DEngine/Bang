@@ -9,7 +9,7 @@ FORWARD class Component;
 
 class IEventsComponent
 {
-    IEVENTS(IEventsComponent)
+    IEVENTS(IEventsComponent);
 
 public:
     virtual void OnComponentAdded(Component *addedComponent, int index)

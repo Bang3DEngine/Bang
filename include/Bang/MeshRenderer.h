@@ -54,7 +54,7 @@ protected:
     int m_currentLOD = 0;
 
     MeshRenderer();
-    virtual ~MeshRenderer();
+    virtual ~MeshRenderer() override;
 
     // Renderer
     virtual void OnRender() override;

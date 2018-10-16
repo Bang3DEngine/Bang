@@ -23,7 +23,7 @@ class Texture : public GLObject,
 public:
     Texture();
     Texture(GL::TextureTarget texTarget);
-    virtual ~Texture();
+    virtual ~Texture() override;
 
     virtual void CreateEmpty(const Vector2i &size) = 0;
     virtual bool Resize(const Vector2i &size) = 0;

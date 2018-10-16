@@ -40,7 +40,7 @@ private:
     Path m_soundFilepath;
 
     AudioClip();
-    virtual ~AudioClip();
+    virtual ~AudioClip() override;
 
     void FreeBuffer();
     ALuint GetALBufferId() const;

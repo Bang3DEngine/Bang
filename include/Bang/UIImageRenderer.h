@@ -36,7 +36,7 @@ public:
     };
 
     UIImageRenderer();
-    virtual ~UIImageRenderer();
+    virtual ~UIImageRenderer() override;
 
     // UIRenderer
     virtual void OnRender() override;

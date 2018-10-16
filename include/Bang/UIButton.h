@@ -23,7 +23,7 @@ protected:
 
 private:
     UIButton();
-    virtual ~UIButton();
+    virtual ~UIButton() override;
 
     static UIButton *CreateInto(GameObject *go);
 

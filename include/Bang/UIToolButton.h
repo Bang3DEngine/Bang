@@ -29,7 +29,7 @@ private:
     bool m_on = false;
 
     UIToolButton();
-    virtual ~UIToolButton();
+    virtual ~UIToolButton() override;
 
     static UIToolButton *CreateInto(GameObject *go);
 

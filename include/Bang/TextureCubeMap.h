@@ -36,7 +36,7 @@ class TextureCubeMap : public Texture,
 
 public:
     TextureCubeMap();
-    virtual ~TextureCubeMap();
+    virtual ~TextureCubeMap() override;
 
     // Texture
     using Texture::Resize;

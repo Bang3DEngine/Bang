@@ -9,7 +9,7 @@ FORWARD class Component;
 
 class IEventsComponentChangeGameObject
 {
-    IEVENTS(IEventsComponentChangeGameObject)
+    IEVENTS(IEventsComponentChangeGameObject);
 
 public:
     virtual void OnComponentChangedGameObject(GameObject *previousGameObject,

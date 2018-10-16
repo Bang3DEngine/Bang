@@ -17,7 +17,7 @@ class VAO : public GLObject
 {
 public:
     VAO();
-    virtual ~VAO();
+    virtual ~VAO() override;
 
     void Bind() const override;
     void UnBind() const override;

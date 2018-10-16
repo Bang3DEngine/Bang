@@ -37,7 +37,7 @@ class AnimatorStateMachineNode :
 
 public:
     AnimatorStateMachineNode(AnimatorStateMachine *stateMachine);
-	virtual ~AnimatorStateMachineNode();
+	virtual ~AnimatorStateMachineNode() override;
 
     void SetName(const String &name);
     AnimatorStateMachineConnection* CreateConnectionTo(

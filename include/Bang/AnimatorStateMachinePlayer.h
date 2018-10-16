@@ -31,7 +31,7 @@ class AnimatorStateMachinePlayer :
 {
 public:
 	AnimatorStateMachinePlayer();
-	virtual ~AnimatorStateMachinePlayer();
+	virtual ~AnimatorStateMachinePlayer() override;
 
     void SetStateMachine(AnimatorStateMachine *stateMachine);
 

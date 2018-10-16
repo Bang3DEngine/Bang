@@ -20,7 +20,7 @@ class UILayoutElement : public Component,
 
 public:
     UILayoutElement();
-    virtual ~UILayoutElement();
+    virtual ~UILayoutElement() override;
 
     void SetMinWidth(int minWidth);
     void SetMinHeight(int minHeight);

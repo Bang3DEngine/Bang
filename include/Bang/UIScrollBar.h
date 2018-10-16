@@ -30,7 +30,7 @@ class UIScrollBar : public Component,
 
 public:
 	UIScrollBar();
-	virtual ~UIScrollBar();
+	virtual ~UIScrollBar() override;
 
     void OnUpdate() override;
 

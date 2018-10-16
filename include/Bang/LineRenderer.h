@@ -40,7 +40,7 @@ public:
 
 protected:
     LineRenderer();
-    virtual ~LineRenderer();
+    virtual ~LineRenderer() override;
 
     // Renderer
     virtual void OnRender() override;

@@ -3,23 +3,22 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
+FORWARD NAMESPACE_BANG_BEGIN
+FORWARD_T class EventEmitter;
+FORWARD_T class EventListener;
+FORWARD NAMESPACE_BANG_END
 
-#define _IEVENTS_COMMON(ClassName) \
+#define IEVENTS_COMMON_(ClassName) \
     private: \
         ClassName() = default; \
         virtual ~ClassName() = default; \
 
 #define IEVENTS(ClassName) \
-    _IEVENTS_COMMON(ClassName) \
-    template<class> friend class EventListener;
+    IEVENTS_COMMON_(ClassName) \
+    template<class> friend class EventListener
 
 #define IEVENTS_NS(ClassName) \
-    _IEVENTS_COMMON(ClassName) \
-    template<class> friend class Bang::EventListener;
-
-FORWARD template<class> class EventEmitter;
-
-NAMESPACE_BANG_END
+    IEVENTS_COMMON_(ClassName) \
+    template<class> friend class Bang::EventListener
 
 #endif // IEVENTS_H

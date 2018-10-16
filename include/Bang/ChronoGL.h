@@ -13,7 +13,7 @@ class ChronoGL
 {
 public:
     ChronoGL();
-    virtual ~ChronoGL();
+    ~ChronoGL();
 
     void MarkBegin();
     void MarkEnd();

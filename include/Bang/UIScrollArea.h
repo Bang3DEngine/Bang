@@ -19,7 +19,7 @@ class UIScrollArea : public Component
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollArea)
 
 public:
-    virtual ~UIScrollArea();
+    virtual ~UIScrollArea() override;
 
     void OnUpdate() override;
 

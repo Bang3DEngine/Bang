@@ -35,7 +35,7 @@ class UILabel : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UILabel)
 
 public:
-	virtual ~UILabel();
+	virtual ~UILabel() override;
 
     void OnUpdate() override;
 

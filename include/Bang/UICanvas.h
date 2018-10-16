@@ -41,7 +41,7 @@ class UICanvas : public Component,
 
 public:
     UICanvas();
-    virtual ~UICanvas();
+    virtual ~UICanvas() override;
 
     // Component
     virtual void OnStart() override;

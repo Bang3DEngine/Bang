@@ -73,7 +73,7 @@ public:
                                     const UIEvent &event) override;
 protected:
     UIComboBox();
-    virtual ~UIComboBox();
+    virtual ~UIComboBox() override;
 
     void OnUpdate() override;
 

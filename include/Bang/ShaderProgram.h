@@ -127,7 +127,7 @@ private:
     ShaderProgram(const Path& vShaderPath,
                   const Path& gShaderPath,
                   const Path& fShaderPath);
-    virtual ~ShaderProgram();
+    virtual ~ShaderProgram() override;
 
     void Bind() const override;
     void UnBind() const override;

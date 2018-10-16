@@ -59,7 +59,7 @@ public:
 
 protected:
     UIButtonBase();
-    virtual ~UIButtonBase();
+    virtual ~UIButtonBase() override;
 
     void ClickBase();
     virtual void UpdateAspect() = 0;

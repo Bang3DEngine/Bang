@@ -22,7 +22,7 @@ class AudioSource : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioSource)
 
 public:
-    virtual ~AudioSource();
+    virtual ~AudioSource() override;
 
     void SetAudioClip(AudioClip *audioClip);
     void SetPlayOnStart(bool playOnStart);

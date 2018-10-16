@@ -51,7 +51,7 @@ class RigidBody : public Component,
 
 public:
 	RigidBody();
-    virtual ~RigidBody();
+    virtual ~RigidBody() override;
 
     void AddForce(const Vector3 &force, ForceMode forceMode = ForceMode::FORCE);
     void AddTorque(const Vector3 &torque, ForceMode forceMode = ForceMode::FORCE);

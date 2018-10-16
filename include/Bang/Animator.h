@@ -30,7 +30,7 @@ public:
     static constexpr int MaxNumBones = 128;
 
     Animator();
-	virtual ~Animator();
+	virtual ~Animator() override;
 
     // Component
     void OnStart() override;

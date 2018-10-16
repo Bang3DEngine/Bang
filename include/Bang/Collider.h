@@ -37,7 +37,7 @@ class Collider : public Component,
 
 public:
 	Collider();
-    virtual ~Collider();
+    virtual ~Collider() override;
 
     // Component
     void OnUpdate() override;

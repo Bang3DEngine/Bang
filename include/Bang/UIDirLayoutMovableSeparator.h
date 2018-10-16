@@ -33,7 +33,7 @@ class UIDirLayoutMovableSeparator : public Component,
 
 public:
 	UIDirLayoutMovableSeparator();
-	virtual ~UIDirLayoutMovableSeparator();
+	virtual ~UIDirLayoutMovableSeparator() override;
 
     void OnUpdate() override;
 

@@ -46,7 +46,7 @@ protected:
     Framebuffer *m_shadowMapFramebuffer = nullptr;
 
     PointLight();
-    virtual ~PointLight();
+    virtual ~PointLight() override;
 
     float GetLightZFar() const;
 

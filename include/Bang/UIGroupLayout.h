@@ -22,7 +22,7 @@ class UIGroupLayout : public Component,
 
 public:
     UIGroupLayout();
-    virtual ~UIGroupLayout();
+    virtual ~UIGroupLayout() override;
 
     void SetSpacing(int spacingPx);
     void SetPaddingLeft(int paddingLeft);

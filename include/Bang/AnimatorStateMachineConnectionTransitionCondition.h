@@ -29,7 +29,7 @@ public:
     };
 
 	AnimatorStateMachineConnectionTransitionCondition();
-	virtual ~AnimatorStateMachineConnectionTransitionCondition();
+	virtual ~AnimatorStateMachineConnectionTransitionCondition() override;
 
     void SetVariableName(const String &variableName);
     void SetVariableType(AnimatorStateMachineVariable::Type type);

@@ -25,7 +25,7 @@ class UIFileList : public Component
 
 public:
     UIFileList();
-    virtual ~UIFileList();
+    virtual ~UIFileList() override;
 
     void OnStart() override;
     void OnUpdate() override;
@@ -64,7 +64,7 @@ public:
 
 protected:
     UIFileListItem();
-    virtual ~UIFileListItem();
+    virtual ~UIFileListItem() override;
 
 private:
     Path m_path = Path::Empty;

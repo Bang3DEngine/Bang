@@ -32,7 +32,7 @@ public:
 
 protected:
 	Timer();
-	virtual ~Timer();
+	virtual ~Timer() override;
 
 private:
     bool m_running = true;

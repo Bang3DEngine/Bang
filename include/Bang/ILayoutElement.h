@@ -29,7 +29,7 @@ public:
 
 protected:
     ILayoutElement();
-    virtual ~ILayoutElement();
+    virtual ~ILayoutElement() override;
 
     void SetCalculatedLayout(Axis axis,
                              int min,

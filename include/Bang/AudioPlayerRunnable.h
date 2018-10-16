@@ -23,7 +23,7 @@ public:
     AudioPlayerRunnable(AudioClip *clip,
                         ALAudioSource *alAudioSource,
                         float delayInSeconds = 0.0f);
-    virtual ~AudioPlayerRunnable();
+    virtual ~AudioPlayerRunnable() override;
 
     void Resume();
     void Pause();

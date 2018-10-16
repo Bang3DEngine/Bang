@@ -15,7 +15,7 @@ class UILayoutIgnorer : public Component
 
 public:
 	UILayoutIgnorer();
-	virtual ~UILayoutIgnorer();
+	virtual ~UILayoutIgnorer() override;
 
     void SetIgnoreLayout(bool ignoreLayout);
     bool IsIgnoreLayout() const;

@@ -26,7 +26,7 @@ class BehaviourManager : public EventListener<IEventsDestroy>
 {
 public:
 	BehaviourManager();
-	virtual ~BehaviourManager();
+	virtual ~BehaviourManager() override;
 
     static Behaviour* CreateBehaviourInstance(const String &behaviourName,
                                               Library *behavioursLibrary);

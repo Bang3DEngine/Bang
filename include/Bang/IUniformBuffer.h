@@ -12,7 +12,7 @@ NAMESPACE_BANG_BEGIN
 class IUniformBuffer : public GLObject
 {
 public:
-    virtual ~IUniformBuffer();
+    virtual ~IUniformBuffer() override;
 
     void SetBindingPoint(int bindingPoint);
     GLuint GetBindingPoint() const;

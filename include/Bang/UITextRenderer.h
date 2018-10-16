@@ -95,7 +95,7 @@ private:
     mutable Array<AARect> m_charRectsLocalNDC;
 
     UITextRenderer();
-    virtual ~UITextRenderer();
+    virtual ~UITextRenderer() override;
 
     void OnChanged();
 };

@@ -31,7 +31,7 @@ class AnimatorStateMachineConnection : public Serializable,
 
 public:
     AnimatorStateMachineConnection(AnimatorStateMachine *stateMachine);
-    virtual ~AnimatorStateMachineConnection();
+    virtual ~AnimatorStateMachineConnection() override;
 
     void SetNodeTo(AnimatorStateMachineNode* node);
     void SetNodeFrom(AnimatorStateMachineNode* node);

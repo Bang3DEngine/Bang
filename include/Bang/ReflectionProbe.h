@@ -32,7 +32,7 @@ class ReflectionProbe : public Component
 
 public:
 	ReflectionProbe();
-	virtual ~ReflectionProbe();
+	virtual ~ReflectionProbe() override;
 
     void RenderReflectionProbe(bool force = false);
 

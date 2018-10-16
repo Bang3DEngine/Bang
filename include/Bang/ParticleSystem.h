@@ -61,7 +61,7 @@ private:
 
 public:
 	ParticleSystem();
-	virtual ~ParticleSystem();
+	virtual ~ParticleSystem() override;
 
     // Component
     virtual void OnStart() override;

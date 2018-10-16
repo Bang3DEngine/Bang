@@ -55,7 +55,7 @@ public:
     using RenderRoutine = std::function<void(Renderer*)>;
 
     GEngine();
-    virtual ~GEngine();
+    virtual ~GEngine() override;
 
     void Init();
 

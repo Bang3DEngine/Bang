@@ -52,7 +52,7 @@ public:
 
 protected:
     Light();
-    virtual ~Light();
+    virtual ~Light() override;
 
     void SetLightScreenPassShaderProgram(ShaderProgram* sp);
     Array<Renderer*> GetShadowCastersIn(GameObject *go) const;

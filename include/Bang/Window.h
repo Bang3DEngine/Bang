@@ -33,7 +33,8 @@ FORWARD class Window;
 
 class IEventsWindow
 {
-    IEVENTS(IEventsWindow)
+    IEVENTS(IEventsWindow);
+
 public:
     virtual void OnFocusGained(Window *w)
     {
@@ -50,7 +51,7 @@ class Window : public EventEmitter<IEventsWindow>
 {
 public:
     Window();
-    virtual ~Window();
+    virtual ~Window() override;
 
     virtual void Create(uint flags);
     void SwapBuffers() const;

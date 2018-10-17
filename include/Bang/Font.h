@@ -3,21 +3,15 @@
 
 #include <SDL2/SDL_ttf.h>
 
-#include "Bang/AARect.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/FontStyle.h"
-#include "Bang/Map.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Mutex.h"
 #include "Bang/Path.h"
-#include "Bang/Resource.h"
 #include "Bang/String.h"
+#include "Bang/AARect.h"
 #include "Bang/UMap.h"
-#include "Bang/UMap.tcc"
 #include "Bang/Vector2.h"
 
-FORWARD struct _TTF_Font;
 using TTF_Font = _TTF_Font;
 
 NAMESPACE_BANG_BEGIN

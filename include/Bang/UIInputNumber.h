@@ -12,19 +12,17 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEvents.h"
-#include "Bang/IEventsFocus.h"
 #include "Bang/IEventsValueChanged.h"
+#include "Bang/IEventsFocus.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
-#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
 FORWARD class IEventsValueChanged;
-FORWARD class UIInputText;
 FORWARD class UIFocusable;
+FORWARD class UIInputText;
 
 class UIInputNumber : public Component,
                       public EventEmitter<IEventsValueChanged>,

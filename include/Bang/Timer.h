@@ -7,7 +7,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
-#include "Bang/List.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 

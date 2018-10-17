@@ -1,7 +1,6 @@
 #ifndef VBO_H
 #define VBO_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"

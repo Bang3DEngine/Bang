@@ -14,9 +14,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEventsFocus.h"
-#include "Bang/Key.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

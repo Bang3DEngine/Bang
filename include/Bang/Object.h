@@ -10,8 +10,6 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/ICloneable.h"
-#include "Bang/IEvents.h"
-#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObject.h"
 #include "Bang/ObjectId.h"
 #include "Bang/Serializable.h"

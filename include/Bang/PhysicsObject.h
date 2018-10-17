@@ -1,7 +1,6 @@
 #ifndef PHYSICSOBJECT_H
 #define PHYSICSOBJECT_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 
 FORWARD namespace physx

@@ -2,13 +2,11 @@
 #define ANIMATION_H
 
 #include <functional>
-#include <utility>
 
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
-#include "Bang/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"

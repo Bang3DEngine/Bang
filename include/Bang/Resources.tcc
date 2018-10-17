@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Bang/Resources.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/GUIDManager.h"
 
 #include "Bang/Debug.h"
 

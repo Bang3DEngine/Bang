@@ -2,19 +2,15 @@
 #define AABOX_H
 
 #include <array>
-#include <cmath>
 
-#include "Bang/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Matrix4.h"
 #include "Bang/Quad.h"
 #include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Camera;
 FORWARD class Sphere;
 
 class AABox

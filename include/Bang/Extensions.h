@@ -2,7 +2,6 @@
 #define EXTENSIONS_H
 
 #include "Bang/Array.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 

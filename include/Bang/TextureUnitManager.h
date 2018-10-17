@@ -2,7 +2,6 @@
 #define TEXTUREUNITMANAGER_H
 
 #include <queue>
-#include <stack>
 #include <unordered_map>
 #include <vector>
 
@@ -12,9 +11,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/Map.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -2,18 +2,14 @@
 #define AUDIOCLIP_H
 
 #include <AL/al.h>
-#include <AL/alc.h>
 
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/List.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
-
-FORWARD class AudioSource;
 
 class AudioClip : public Asset
 {

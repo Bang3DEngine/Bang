@@ -2,27 +2,23 @@
 #define RESOURCES_H
 
 #include <functional>
-#include <sstream>
 
 #include "Bang/Array.h"
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/GUID.h"
 #include "Bang/IToString.h"
-#include "Bang/MetaFilesManager.h"
 #include "Bang/Path.h"
-#include "Bang/Paths.h"
 #include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/Serializable.h"
 #include "Bang/String.h"
-#include "Bang/TypeMap.h"
 #include "Bang/UMap.h"
 #include "Bang/USet.h"
 
+namespace Bang {
+class GUID;
+}  // namespace Bang
+
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Asset;
 FORWARD class CubeMapIBLGenerator;
 FORWARD class MaterialFactory;
 FORWARD class MeshFactory;
@@ -144,6 +140,6 @@ private:
 
 NAMESPACE_BANG_END
 
-#include "Resources.tcc"
+#include "Bang/Resources.tcc"
 
 #endif // RESOURCES_H

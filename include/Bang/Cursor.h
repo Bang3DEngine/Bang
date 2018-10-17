@@ -1,7 +1,6 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 
 #include BANG_SDL2_INCLUDE(SDL_mouse.h)

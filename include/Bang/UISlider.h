@@ -12,16 +12,14 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsValueChanged.h"
 #include "Bang/String.h"
-#include "Bang/UIFocusable.h"
 #include "Bang/UITheme.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class IEventsValueChanged;
 FORWARD class GameObject;
+FORWARD class IEventsValueChanged;
 FORWARD class RectTransform;
 FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;

@@ -7,6 +7,7 @@
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/PhysicsMaterial.h"
 #include "Bang/Physics.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/ResourceHandle.h"

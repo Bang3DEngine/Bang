@@ -4,7 +4,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/String.h"
-#include "Bang/Thread.h"
 
 NAMESPACE_BANG_BEGIN
 

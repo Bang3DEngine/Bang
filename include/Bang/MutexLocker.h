@@ -2,7 +2,6 @@
 #define MUTEXLOCKER_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Mutex.h"
 
 NAMESPACE_BANG_BEGIN
 

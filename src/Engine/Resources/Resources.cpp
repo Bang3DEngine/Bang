@@ -15,6 +15,7 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/Extensions.h"
 #include "Bang/File.h"
+#include "Bang/GUID.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/MeshFactory.h"

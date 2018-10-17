@@ -1,11 +1,8 @@
 #ifndef CUBEMAPIBLGENERATOR_H
 #define CUBEMAPIBLGENERATOR_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Framebuffer.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/TextureCubeMap.h"
 
 NAMESPACE_BANG_BEGIN
 

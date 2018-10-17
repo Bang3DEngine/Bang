@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Bang/GameObject.h"
+#include "Bang/Component.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/ComponentFactory.h"
 

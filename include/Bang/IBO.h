@@ -1,7 +1,6 @@
 #ifndef IBO_H
 #define IBO_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"

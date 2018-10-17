@@ -3,12 +3,9 @@
 
 #include <ostream>
 
-#include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/IToString.h"
 #include "Bang/Path.h"
-#include "Bang/Paths.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

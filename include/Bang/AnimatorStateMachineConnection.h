@@ -6,7 +6,6 @@
 #include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.h"

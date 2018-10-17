@@ -1,8 +1,12 @@
 #include "Bang/Random.h"
 
+#include "Bang/Color.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
-#include "Bang/Vector.tcc"
+#include "Bang/Quaternion.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
 
 USING_NAMESPACE_BANG
 

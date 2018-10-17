@@ -1,7 +1,6 @@
 #ifndef RAY2D_H
 #define RAY2D_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Vector2.h"
 

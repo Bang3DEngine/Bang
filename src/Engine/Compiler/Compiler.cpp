@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/StreamOperators.h"
 #include "Bang/SystemUtils.h"
 
 USING_NAMESPACE_BANG

@@ -2,9 +2,7 @@
 #define ICLONEABLE_H
 
 #include "Bang/Assert.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Debug.h"
 
 NAMESPACE_BANG_BEGIN
 

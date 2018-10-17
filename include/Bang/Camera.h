@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "Bang/AARect.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
@@ -19,19 +18,16 @@
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
-#include "Bang/TextureCubeMap.h"
 #include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD   class AABox;
 FORWARD_T class EventEmitter;
+FORWARD   class AABox;
 FORWARD   class GBuffer;
 FORWARD   class ICloneable;
 FORWARD   class IEventsDestroy;
 FORWARD   class Quad;
-FORWARD   class ShaderProgram;
-FORWARD   class Texture2D;
 FORWARD   class TextureCubeMap;
 
 enum class CameraProjectionMode

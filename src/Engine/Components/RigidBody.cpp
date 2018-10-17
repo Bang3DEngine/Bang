@@ -5,6 +5,7 @@
 #include "Bang/Debug.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"

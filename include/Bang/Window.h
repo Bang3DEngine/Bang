@@ -1,34 +1,28 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <stack>
 #include <vector>
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
-#include "Bang/List.h"
+#include "Bang/Vector2.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Vector2.h"
 
 FORWARD struct SDL_Window;
 FORWARD union  SDL_Event;
+
 using SDL_GLContext = void*;
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class GEngine;
 FORWARD class Input;
 FORWARD class Path;
-FORWARD class Resources;
 FORWARD class SceneManager;
-FORWARD class Texture2D;
-FORWARD class Time;
 FORWARD class Window;
 
 class IEventsWindow

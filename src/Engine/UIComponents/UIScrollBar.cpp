@@ -2,6 +2,7 @@
 
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
+#include "Bang/Rect.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"

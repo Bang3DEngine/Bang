@@ -2,7 +2,6 @@
 #define ALAUDIOSOURCE_H
 
 #include <AL/al.h>
-#include <AL/alc.h>
 #include <vector>
 
 #include "Bang/Array.tcc"
@@ -10,7 +9,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEventsDestroy.h"
 
 NAMESPACE_BANG_BEGIN
 

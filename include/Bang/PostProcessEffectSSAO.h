@@ -2,7 +2,6 @@
 #define POSTPROCESSEFFECTSSAO_H
 
 #include "Bang/Array.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
@@ -10,13 +9,12 @@
 #include "Bang/PostProcessEffect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class ICloneable;
 FORWARD class Framebuffer;
+FORWARD class ICloneable;
 FORWARD class ShaderProgram;
 FORWARD class Texture2D;
 

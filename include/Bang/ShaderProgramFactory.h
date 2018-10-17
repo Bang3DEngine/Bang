@@ -9,7 +9,6 @@
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/ShaderProgram.h"
 
 NAMESPACE_BANG_BEGIN
 

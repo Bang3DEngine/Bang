@@ -16,7 +16,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class UIFileListItem;
-FORWARD class UIImageRenderer;
 FORWARD class UITextRenderer;
 
 class UIFileList : public Component

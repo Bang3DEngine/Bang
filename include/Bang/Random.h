@@ -5,12 +5,8 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/TypeTraits.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
 
 NAMESPACE_BANG_BEGIN
 

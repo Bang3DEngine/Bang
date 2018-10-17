@@ -7,8 +7,6 @@
 #include <unordered_map>
 
 #include "Bang/BangDefines.h"
-#include "Bang/Random.h"
-#include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -25,10 +25,12 @@
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
 #include "Bang/Vector.tcc"
+#include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 
 FORWARD NAMESPACE_BANG_BEGIN
 FORWARD class Path;
+
 FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG

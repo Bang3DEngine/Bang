@@ -9,7 +9,6 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/AspectRatioMode.h"
-#include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
 #include "Bang/Image.tcc"
 #include "Bang/Math.h"

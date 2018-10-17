@@ -2,17 +2,17 @@
 #define GAMEOBJECTFACTORY_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/Vector2.h"
 #include "Bang/Color.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
 FORWARD class GameObject;
-FORWARD class Scene;
 FORWARD class Mesh;
+FORWARD class Scene;
 FORWARD class Texture2D;
 FORWARD class UIButton;
 FORWARD class UICanvas;
@@ -58,7 +58,7 @@ public:
     static UICanvas*           CreateUICanvasInto(GameObject *go);
     static UIImageRenderer*    CreateUIImage(const Color &color = Color::White);
     static UIImageRenderer*    CreateUIImage(const Color &color,
-                                          const Vector2i &size);
+                                             const Vector2i &size);
     static UIList*             CreateUIListInto(GameObject *go,
                                              bool withScrollPanel = true);
     static UIList*             CreateUIList(bool withScrollPanel = true);

@@ -5,7 +5,6 @@
 #include <functional>
 
 #include "Bang/AABox.h"
-#include "Bang/Animation.h"
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
@@ -19,8 +18,6 @@
 #include "Bang/String.h"
 #include "Bang/Triangle.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 

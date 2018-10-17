@@ -5,18 +5,13 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Vector3.h"
 #include "Bang/BangDefines.h"
-#include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Map.h"
-#include "Bang/RayCastHitInfo.h"
-#include "Bang/RayCastInfo.h"
 #include "Bang/Time.h"
-#include "Bang/Vector3.h"
-#include "PxPhysicsAPI.h"
 #include "extensions/PxDefaultAllocator.h"
 #include "extensions/PxDefaultErrorCallback.h"
 #include "foundation/PxQuat.h"
@@ -37,6 +32,7 @@ FORWARD class PxTriangleMesh;
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD_T class  EventEmitter;
 FORWARD   class  GameObject;
 FORWARD   class  IEventsDestroy;
 FORWARD   class  Mesh;
@@ -47,8 +43,6 @@ FORWARD   class  Scene;
 FORWARD   class  Transform;
 FORWARD   struct RayCastHitInfo;
 FORWARD   struct RayCastInfo;
-FORWARD   class  RigidBody;
-FORWARD_T class  EventEmitter;
 
 class Physics : public EventListener<IEventsDestroy>
 {

@@ -10,7 +10,6 @@
 #include "Bang/Map.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
-#include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -3,7 +3,6 @@
 
 #include <array>
 
-#include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"

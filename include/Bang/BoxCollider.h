@@ -7,10 +7,10 @@
 #include "Bang/ComponentClassIds.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
+#include "PxShape.h"
 
 FORWARD namespace physx
 {
-FORWARD class PxShape;
 }
 
 NAMESPACE_BANG_BEGIN

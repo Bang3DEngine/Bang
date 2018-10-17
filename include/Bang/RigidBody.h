@@ -1,14 +1,12 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Flags.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Physics.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/String.h"
 #include "PxForceMode.h"
@@ -16,7 +14,6 @@
 
 FORWARD namespace physx
 {
-FORWARD class PxRigidDynamic;
 }
 
 enum class RigidBodyConstraint

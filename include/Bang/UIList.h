@@ -18,7 +18,6 @@
 #include "Bang/GameObject.h"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
-#include "Bang/IEventsUIList.h"
 #include "Bang/String.h"
 #include "Bang/UITheme.h"
 #include "Bang/UMap.h"
@@ -30,7 +29,6 @@ FORWARD class IEventsUIList;
 FORWARD class UIDirLayout;
 FORWARD class UIFocusable;
 FORWARD class UIImageRenderer;
-FORWARD class UIScrollArea;
 FORWARD class UIScrollPanel;
 
 using GOItem = GameObject;

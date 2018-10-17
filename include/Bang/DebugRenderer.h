@@ -1,27 +1,21 @@
 #ifndef DEBUGRENDERER_H
 #define DEBUGRENDERER_H
 
-#include "Bang/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
-#include "Bang/Mesh.h"
-#include "Bang/Rect.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/Set.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class AABox;
-FORWARD class LineRenderer;
-FORWARD class Quad;
 FORWARD class Mesh;
+FORWARD class Quad;
 FORWARD class Triangle;
 
 class DebugRenderer : public GameObject

@@ -1,12 +1,11 @@
 #include "Bang/AnimatorStateMachineConnection.h"
 
-#include <ostream>
-
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/MetaNode.tcc"
 
 USING_NAMESPACE_BANG

@@ -27,9 +27,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class GameObject;
 FORWARD class Texture2D;
 FORWARD class UIDirLayout;
-FORWARD class UIImageRenderer;
-FORWARD class UILayoutElement;
-FORWARD class UITextRenderer;
 
 class UIButtonBase : public Component,
                      public EventListener<IEventsFocus>

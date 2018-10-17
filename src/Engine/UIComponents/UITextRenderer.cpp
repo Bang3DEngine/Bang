@@ -1,6 +1,5 @@
 #include "Bang/UITextRenderer.h"
 
-#include <ostream>
 #include <vector>
 
 #include "Bang/Array.tcc"
@@ -23,12 +22,14 @@
 #include "Bang/Resources.tcc"
 #include "Bang/TextFormatter.h"
 #include "Bang/TypeTraits.h"
+#include "Bang/Rect.h"
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 FORWARD NAMESPACE_BANG_BEGIN
 FORWARD class Camera;
 FORWARD class Texture2D;
+
 FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG

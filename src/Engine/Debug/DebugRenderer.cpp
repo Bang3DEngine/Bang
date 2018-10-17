@@ -4,6 +4,7 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
+#include "Bang/Rect.h"
 #include "Bang/Assert.h"
 #include "Bang/Debug.h"
 #include "Bang/GL.h"

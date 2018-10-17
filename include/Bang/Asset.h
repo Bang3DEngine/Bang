@@ -8,11 +8,9 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.tcc"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
-#include "Bang/Object.h"
-#include "Bang/Path.h"
 #include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN

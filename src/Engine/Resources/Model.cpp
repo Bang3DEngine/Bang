@@ -6,6 +6,7 @@
 #include <ostream>
 
 #include "Bang/Animator.h"
+#include "Bang/Material.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"

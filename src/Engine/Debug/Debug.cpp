@@ -11,7 +11,6 @@
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix3.tcc"
 #include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
 #include "Bang/Shader.h"
 #include "Bang/String.h"
 #include "Bang/Vector.tcc"

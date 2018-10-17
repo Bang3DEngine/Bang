@@ -16,8 +16,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class ICloneable;
-FORWARD class Shader;
-FORWARD class ShaderProgram;
 
 class PostProcessEffect : public Component
 {

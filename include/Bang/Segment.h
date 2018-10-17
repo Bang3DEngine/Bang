@@ -1,7 +1,6 @@
 #ifndef SEGMENT_H
 #define SEGMENT_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 

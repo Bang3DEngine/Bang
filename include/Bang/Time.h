@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 
 NAMESPACE_BANG_BEGIN

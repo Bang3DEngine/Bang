@@ -5,10 +5,8 @@
 #include "Bang/AspectRatioMode.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Path.h"
 #include "Bang/Resource.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -103,7 +101,5 @@ using Imageb = Image<Byte>;
 using Imagef = Image<float>;
 
 NAMESPACE_BANG_END
-
-#include "Bang/Image.tcc"
 
 #endif // IMAGE_H

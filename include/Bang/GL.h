@@ -2,12 +2,11 @@
 #define GL_H
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include <array>
 #include <stack>
 
-#include "Bang/AARect.h"
 #include "Bang/Array.h"
+#include "Bang/AARect.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/StackAndValue.h"
@@ -39,7 +38,6 @@ FORWARD class GLObject;
 FORWARD class GLUniforms;
 FORWARD class IUniformBuffer;
 FORWARD class ShaderProgram;
-FORWARD class Texture;
 FORWARD class VAO;
 
 class GL

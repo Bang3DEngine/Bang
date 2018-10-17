@@ -3,19 +3,15 @@
 
 #include <functional>
 
-#include "Bang/Animation.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
-#include "Bang/Material.h"
-#include "Bang/Matrix4.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
-#include "Bang/Tree.h"
 
 FORWARD class aiMaterial;
 FORWARD class aiMesh;
@@ -29,14 +25,12 @@ FORWARD class Importer;
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD_T class Tree;
 FORWARD   class Animation;
 FORWARD   class GameObject;
 FORWARD   class Material;
 FORWARD   class Model;
 FORWARD   class Path;
-FORWARD   class Scene;
-FORWARD   class Texture2D;
-FORWARD_T class Tree;
 
 struct ModelIONode
 {

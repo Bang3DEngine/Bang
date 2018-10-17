@@ -2,7 +2,6 @@
 #define PHYSICSMATERIAL_H
 
 #include "Bang/Asset.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"

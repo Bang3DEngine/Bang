@@ -19,7 +19,6 @@
 #include "Bang/Math.h"
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"
-#include "Bang/StreamOperators.h"
 #include "Bang/UICanvas.h"
 #include "Bang/UILayoutIgnorer.h"
 #include "Bang/UMap.h"

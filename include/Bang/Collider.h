@@ -1,13 +1,12 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/Vector3.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
-#include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
@@ -15,7 +14,6 @@
 FORWARD namespace physx
 {
 FORWARD class PxRigidDynamic;
-FORWARD class PxRigidBody;
 FORWARD class PxShape;
 }
 

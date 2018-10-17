@@ -1,14 +1,11 @@
 #ifndef SYSTEMPROCESS_H
 #define SYSTEMPROCESS_H
 
-#include <unistd.h>
-
 #include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/List.tcc"
 #include "Bang/Math.h"
 #include "Bang/String.h"
-#include "process.hpp"
 
 namespace TinyProcessLib {
 class Process;

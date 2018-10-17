@@ -6,6 +6,7 @@
 #include "Bang/GL.h"
 #include "Bang/Image.tcc"
 #include "Bang/ImageIO.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

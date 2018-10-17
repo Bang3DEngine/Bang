@@ -9,7 +9,6 @@
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/Flags.h"
-#include "Bang/IToString.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 

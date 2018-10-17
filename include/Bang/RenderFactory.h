@@ -1,14 +1,12 @@
-    #ifndef RENDERFACTORY_H
+#ifndef RENDERFACTORY_H
 #define RENDERFACTORY_H
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/EventEmitter.h"
+#include "Bang/Quaternion.h"
 #include "Bang/GL.h"
-#include "Bang/GameObject.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 
 NAMESPACE_BANG_BEGIN
@@ -16,12 +14,10 @@ NAMESPACE_BANG_BEGIN
 FORWARD class AABox;
 FORWARD class GameObject;
 FORWARD class LineRenderer;
-FORWARD class Material;
 FORWARD class Mesh;
 FORWARD class MeshRenderer;
 FORWARD class Renderer;
 FORWARD class ShaderProgram;
-FORWARD class Texture2D;
 
 class RenderFactory
 {

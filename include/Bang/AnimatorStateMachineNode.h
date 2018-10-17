@@ -3,18 +3,14 @@
 
 #include <vector>
 
-#include "Bang/Animation.h"
-#include "Bang/AnimatorStateMachineConnection.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
-#include "Bang/IEventsAnimatorStateMachineNode.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Serializable.h"

@@ -27,8 +27,6 @@
 
 USING_NAMESPACE_BANG
 
-FORWARD struct AudioParams;
-
 AudioManager::AudioManager()
 {
 }

@@ -6,7 +6,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
-#include "Bang/List.h"
 #include "Bang/String.h"
 #include "Bang/UIGroupLayout.h"
 

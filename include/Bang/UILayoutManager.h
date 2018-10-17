@@ -6,35 +6,23 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Axis.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/ILayoutController.h"
-#include "Bang/ILayoutElement.h"
-#include "Bang/ILayoutSelfController.h"
 #include "Bang/LayoutSizeType.h"
-#include "Bang/List.h"
-#include "Bang/Object.h"
-#include "Bang/ObjectGatherer.h"
-#include "Bang/Set.h"
 #include "Bang/UMap.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD    class Component;
 FORWARD_T  class EventEmitter;
+FORWARD    class Component;
 FORWARD    class GameObject;
-FORWARD    class IEventsTransform;
 FORWARD    class IEventsDestroy;
 FORWARD    class ILayoutController;
 FORWARD    class ILayoutElement;
 FORWARD    template <class ObjectType, bool RECURSIVE> class ObjectGatherer;
-FORWARD    class RectTransform;
-FORWARD    class Scene;
 
 class UILayoutManager : public EventListener<IEventsDestroy>
 {

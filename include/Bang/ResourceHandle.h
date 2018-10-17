@@ -1,7 +1,6 @@
 #ifndef RESOURCEHANDLE_H
 #define RESOURCEHANDLE_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 
 NAMESPACE_BANG_BEGIN
@@ -11,23 +10,77 @@ FORWARD class Resource;
 void OnResourceSet(Resource *resource);
 void OnResourceUnSet(Resource *resource);
 
+class ResourceHandleBase
+{
+protected:
+    ResourceHandleBase() = default;
+    virtual ~ResourceHandleBase();
+
+    bool operator==(const Resource *res) const;
+    bool operator==(const ResourceHandleBase &rhs) const;
+    bool operator!=(const ResourceHandleBase &rhs) const;
+    bool operator< (const ResourceHandleBase &rhs) const;
+    operator bool() const;
+
+    Resource* Get() const;
+
+    void Set(Resource* resource);
+
+private:
+    Resource *p_resource = nullptr;
+};
+
 template <class ResourceClass>
-class ResourceHandle
+class ResourceHandle : public ResourceHandleBase
 {
 public:
-    ResourceHandle()
-    {
-    }
-    explicit ResourceHandle(ResourceClass *res)
+    ResourceHandle() = default;
+
+    explicit ResourceHandle(ResourceClass *res) : ResourceHandleBase()
     {
         Set(res);
     }
-    ResourceHandle(const ResourceHandle &rhs)
+    ResourceHandle(ResourceHandle<ResourceClass> &&rhs)
+    {
+       *this = rhs;
+    }
+    ResourceHandle(const ResourceHandle<ResourceClass> &rhs)
     {
         *this = rhs;
     }
 
-    ResourceHandle& operator=(const ResourceHandle &rhs)
+    void Set(ResourceClass* resource)
+    {
+        ResourceHandleBase::Set( SCAST<Resource*>(resource) );
+    }
+
+    ResourceClass *Get() const
+    {
+        return SCAST<ResourceClass*>(ResourceHandleBase::Get());
+    }
+
+    bool operator==(const ResourceClass *res) const
+    {
+        return ResourceHandleBase::operator=(res);
+    }
+    bool operator==(const ResourceHandleBase &rhs) const
+    {
+        return ResourceHandleBase::operator==(rhs);
+    }
+    bool operator!=(const ResourceHandleBase &rhs) const
+    {
+        return ResourceHandleBase::operator!=(rhs);
+    }
+    bool operator< (const ResourceHandleBase &rhs) const
+    {
+        return ResourceHandleBase::operator<(rhs);
+    }
+    operator bool() const
+    {
+        return ResourceHandleBase::operator bool();
+    }
+
+    ResourceHandle<ResourceClass>& operator=(const ResourceHandle<ResourceClass> &rhs)
     {
         if (&rhs != this)
         {
@@ -35,73 +88,18 @@ public:
         }
         return *this;
     }
-    ResourceHandle(ResourceHandle &&rhs)
-    {
-       *this = rhs;
-    }
-    ResourceHandle& operator=(ResourceHandle &&rhs)
+
+    ResourceHandle& operator=(ResourceHandle<ResourceClass> &&rhs)
     {
         if (&rhs != this)
         {
-            p_resource = rhs.Get();
-            rhs.p_resource = nullptr;
+            Set(rhs.Get());
+            rhs.Set(nullptr);
         }
         return *this;
     }
 
-    ~ResourceHandle()
-    {
-        Set(nullptr);
-    }
-
-    bool operator==(const Resource *res) const
-    {
-        return Get() == res;
-    }
-    bool operator==(const ResourceHandle &rhs) const
-    {
-        return Get() == rhs.Get();
-    }
-    bool operator!=(const ResourceHandle &rhs) const
-    {
-        return !(*this == rhs);
-    }
-    bool operator< (const ResourceHandle &rhs) const
-    {
-        return Get() < rhs.Get();
-    }
-    operator bool() const
-    {
-        return (Get() != nullptr);
-    }
-
-    ResourceClass* Get() const
-    {
-        return p_resource;
-    }
-
-    void Set(ResourceClass* resource)
-    {
-        if (Get() != resource)
-        {
-            if (Get())
-            {
-                // Must be done in two steps, so that we avoid unset loops
-                Resource *prevResource = p_resource;
-                p_resource = nullptr;
-                OnResourceUnSet(prevResource);
-            }
-
-            p_resource = resource;
-            if (Get())
-            {
-                OnResourceSet(Get());
-            }
-        }
-    }
-
 private:
-    ResourceClass *p_resource = nullptr;
 
     friend class Resources;
 };

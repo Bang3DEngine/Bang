@@ -7,7 +7,6 @@
 #include "Bang/AARect.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
-#include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
 #include "Bang/Image.tcc"
 #include "Bang/ImageIO.h"
@@ -24,6 +23,7 @@
 
 FORWARD NAMESPACE_BANG_BEGIN
 FORWARD class Path;
+
 FORWARD NAMESPACE_BANG_END
 
 USING_NAMESPACE_BANG

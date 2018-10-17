@@ -1,7 +1,6 @@
 #ifndef SEGMENT2D_H
 #define SEGMENT2D_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Vector2.h"
 

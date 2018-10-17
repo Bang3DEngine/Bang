@@ -1,7 +1,6 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 

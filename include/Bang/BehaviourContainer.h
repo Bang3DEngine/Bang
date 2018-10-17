@@ -15,7 +15,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Behaviour;
 FORWARD class ICloneable;
 FORWARD class Library;
-FORWARD class MetaNode;
 
 class BehaviourContainer : public Component
 {

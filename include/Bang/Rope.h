@@ -3,9 +3,7 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/LineRenderer.h"
 #include "Bang/MetaNode.h"

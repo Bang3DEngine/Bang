@@ -2,7 +2,6 @@
 #define BANGPREPROCESSOR_H
 
 #include "Bang/Array.h"
-#include "Bang/BPReflectedStruct.h"
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 

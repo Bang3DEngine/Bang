@@ -6,6 +6,7 @@
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/StreamOperators.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"

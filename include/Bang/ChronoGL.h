@@ -3,9 +3,7 @@
 
 #include <GL/glew.h>
 
-#include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 

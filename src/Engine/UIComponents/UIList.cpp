@@ -9,6 +9,7 @@
 #include "Bang/GameObjectFactory.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsUIList.h"
+#include "Bang/Rect.h"
 #include "Bang/Input.h"
 #include "Bang/Key.h"
 #include "Bang/LayoutSizeType.h"

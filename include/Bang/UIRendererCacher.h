@@ -1,7 +1,6 @@
 #ifndef UIRENDERERCACHER_H
 #define UIRENDERERCACHER_H
 
-#include <unordered_map>
 #include <vector>
 
 #include "Bang/Array.tcc"
@@ -11,14 +10,13 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
+#include "Bang/IEventsTransform.h"
 #include "Bang/IEventsComponent.h"
-#include "Bang/IEventsGameObjectVisibilityChanged.h"
 #include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
-#include "Bang/UIRenderer.h"
 
 NAMESPACE_BANG_BEGIN
 
@@ -30,7 +28,6 @@ FORWARD class IEventsGameObjectVisibilityChanged;
 FORWARD class IEventsRendererChanged;
 FORWARD class IEventsTransform;
 FORWARD class Object;
-FORWARD class ShaderProgram;
 FORWARD class Renderer;
 FORWARD class UIImageRenderer;
 

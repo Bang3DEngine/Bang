@@ -2,7 +2,6 @@
 #define IMAGEEFFECTS_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 
 NAMESPACE_BANG_BEGIN

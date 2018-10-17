@@ -6,36 +6,26 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/AudioParams.h"
 #include "Bang/BangDefines.h"
-#include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/List.h"
-#include "Bang/Math.h"
 #include "Bang/Mutex.h"
-#include "Bang/MutexLocker.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Set.h"
 #include "Bang/String.h"
 #include "Bang/ThreadPool.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector3.h"
 
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD   struct AudioParams;
+FORWARD_T class  EventEmitter;
 FORWARD   class  ALAudioSource;
 FORWARD   class  AudioClip;
 FORWARD   class  AudioPlayerRunnable;
-FORWARD   class  AudioSource;
-FORWARD_T class  EventEmitter;
-FORWARD   class  GameObject;
 FORWARD   class  IEventsDestroy;
 FORWARD   class  Path;
+FORWARD   struct AudioParams;
 
 class AudioManager : public EventListener<IEventsDestroy>
 {

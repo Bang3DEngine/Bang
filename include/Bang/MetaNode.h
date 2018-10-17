@@ -8,8 +8,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/MetaAttribute.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/String.h"
+#include "Bang/StreamOperators.h"
 
 FORWARD namespace YAML
 {
@@ -80,7 +80,5 @@ private:
 };
 
 NAMESPACE_BANG_END
-
-#include "Bang/MetaNode.tcc"
 
 #endif // METANODE_H

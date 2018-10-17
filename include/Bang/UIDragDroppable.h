@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
@@ -14,15 +13,12 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
-#include "Bang/IEventsDragDrop.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
-#include "Bang/Texture2D.h"
 #include "Bang/Time.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Framebuffer;
 FORWARD class GameObject;
 FORWARD class IEventsDragDrop;
 FORWARD class UIFocusable;

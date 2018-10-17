@@ -6,15 +6,15 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
-#include "Bang/Matrix4.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/String.h"
-#include "Bang/TextureCubeMap.h"
-#include "Bang/TypeMap.h"
 #include "Bang/UniformBuffer.h"
 #include "Bang/UniformBuffer.tcc"
-#include "Bang/Vector2.h"
+
+namespace Bang {
+class Color;
+}  // namespace Bang
 
 NAMESPACE_BANG_BEGIN
 
@@ -171,8 +171,6 @@ private:
 };
 
 NAMESPACE_BANG_END
-
-#include "Bang/GLUniforms.tcc"
 
 #endif // GLUNIFORMS_H
 

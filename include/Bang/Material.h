@@ -11,13 +11,12 @@
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
 #include "Bang/ICloneable.h"
-#include "Bang/IEvents.h"
+#include "Bang/IEventsResource.h"
 #include "Bang/MetaNode.h"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

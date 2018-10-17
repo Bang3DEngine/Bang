@@ -2,8 +2,6 @@
 #define MATERIALFACTORY_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Material.h"
-#include "Bang/PhysicsMaterial.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"

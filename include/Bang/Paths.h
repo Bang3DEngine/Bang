@@ -3,7 +3,6 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/BinType.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
 

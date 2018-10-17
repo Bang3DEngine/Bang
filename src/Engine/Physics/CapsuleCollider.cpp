@@ -11,6 +11,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsMaterial.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"

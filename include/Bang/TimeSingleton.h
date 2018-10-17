@@ -1,7 +1,6 @@
 #ifndef TIMESINGLETON_H
 #define TIMESINGLETON_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Time.h"
 

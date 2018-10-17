@@ -8,6 +8,7 @@
 #include "Bang/Debug.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/ICloneable.h"

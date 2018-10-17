@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <ostream>
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/TypeTraits.h"
 

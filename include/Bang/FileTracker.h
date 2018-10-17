@@ -8,10 +8,9 @@
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEventsFileTracker.h"
-#include "Bang/Path.h"
 #include "Bang/Time.h"
 #include "Bang/UMap.h"
+#include "Bang/Path.h"
 #include "Bang/USet.h"
 
 NAMESPACE_BANG_BEGIN

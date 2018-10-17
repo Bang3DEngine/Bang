@@ -2,7 +2,6 @@
 #define AUDIOSOURCE_H
 
 #include "Bang/ALAudioSource.h"
-#include "Bang/AudioManager.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"

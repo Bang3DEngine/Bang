@@ -4,6 +4,7 @@
 
 #include "Bang/Assert.h"
 #include "Bang/Collider.h"
+#include "Bang/IEventsGameObjectPhysics.h"
 #include "Bang/Collision.h"
 #include "Bang/CollisionContact.h"
 #include "Bang/Component.h"
@@ -14,7 +15,6 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObjectGatherer.h"
-#include "Bang/IEventsGameObjectPhysics.h"
 #include "Bang/Map.tcc"
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"
@@ -40,6 +40,7 @@
 
 FORWARD NAMESPACE_BANG_BEGIN
 FORWARD class IEventsGameObjectPhysics;
+
 FORWARD NAMESPACE_BANG_END
 
 FORWARD namespace physx

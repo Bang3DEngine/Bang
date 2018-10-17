@@ -1,12 +1,8 @@
 ﻿#ifndef SCENE_H
 #define SCENE_H
 
-#include <queue>
-
 #include "Bang/BangDefines.h"
 #include "Bang/GameObject.h"
-#include "Bang/IEventsDestroy.h"
-#include "Bang/List.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
@@ -14,12 +10,11 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD_T class EventEmitter;
 FORWARD   class Camera;
 FORWARD   class DebugRenderer;
 FORWARD   class ICloneable;
 FORWARD   class IEventsDestroy;
-FORWARD_T class EventEmitter;
-FORWARD   class RenderFactory;
 
 class Scene : public GameObject
 {

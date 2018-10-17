@@ -3,20 +3,17 @@
 
 #include <array>
 
-#include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Camera.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
-#include "Bang/Framebuffer.h"
 #include "Bang/GL.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -15,7 +15,6 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
-#include "Bang/IEventsValueChanged.h"
 #include "Bang/String.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
@@ -25,9 +24,6 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class GameObject;
 FORWARD class IEventsValueChanged;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UILayoutElement;
 
 class UICheckBox : public Component,
                    public EventEmitter<IEventsValueChanged>,

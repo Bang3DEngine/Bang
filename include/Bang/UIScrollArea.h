@@ -6,7 +6,6 @@
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

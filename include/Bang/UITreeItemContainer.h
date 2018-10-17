@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"
@@ -17,7 +16,6 @@ NAMESPACE_BANG_BEGIN
 
 FORWARD class UIButton;
 FORWARD class UIDragDroppable;
-FORWARD class UIFocusable;
 
 class UITreeItemContainer : public GameObject
 {

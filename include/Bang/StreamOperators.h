@@ -3,7 +3,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <array>
 #include <queue>
 #include <sstream>
 #include <type_traits>
@@ -11,7 +10,6 @@
 #include <utility>
 
 #include "Bang/BangDefines.h"
-#include "Bang/Flags.h"
 #include "Bang/TypeTraits.h"
 #include "Bang/Vector2.h"
 
@@ -21,16 +19,15 @@ FORWARD_TTTTT class UMap;
 FORWARD_TTTT  class USet;
 FORWARD_TTT   class Map;
 FORWARD_TT    class Set;
-FORWARD_T     class Flags;
 FORWARD_T     class AARectG;
 FORWARD_T     class Array;
+FORWARD_T     class Flags;
 FORWARD_T     class List;
 FORWARD_T     class Matrix3G;
 FORWARD_T     class Matrix4G;
 FORWARD_T     class QuaternionG;
 FORWARD_T     class RectG;
 FORWARD_T     class Tree;
-FORWARD_T     class Vector2G;
 FORWARD_T     class Vector3G;
 FORWARD_T     class Vector4G;
 FORWARD       class AABox;
@@ -41,7 +38,6 @@ FORWARD       class IToString;
 FORWARD       class ObjectId;
 FORWARD       class Path;
 FORWARD       class Quad;
-FORWARD       class String;
 FORWARD       class Time;
 FORWARD       class Triangle;
 

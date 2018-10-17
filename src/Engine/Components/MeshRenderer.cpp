@@ -3,6 +3,7 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
+#include "Bang/Material.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"

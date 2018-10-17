@@ -2,7 +2,6 @@
 #define FPSCHRONO_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/ChronoGL.h"
 #include "Bang/List.h"
 #include "Bang/Time.h"
 

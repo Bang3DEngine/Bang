@@ -1,6 +1,8 @@
 #include "Bang/UIScrollPanel.h"
 
 #include "Bang/Color.h"
+#include "Bang/AARect.h"
+#include "Bang/Rect.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/FastDynamicCast.h"

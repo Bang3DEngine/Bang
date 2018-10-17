@@ -15,7 +15,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class ICloneable;
 FORWARD class Mesh;
 FORWARD class ShaderProgram;
-FORWARD class VAO;
 
 class MeshRenderer : public Renderer
 {

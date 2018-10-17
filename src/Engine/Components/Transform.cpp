@@ -9,6 +9,7 @@
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/Matrix4.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

@@ -5,7 +5,6 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Axis.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
@@ -14,11 +13,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
-#include "Bang/IEventsValueChanged.h"
-#include "Bang/LayoutSizeType.h"
-#include "Bang/LineRenderer.h"
 #include "Bang/String.h"
-#include "Bang/UIFocusable.h"
 
 NAMESPACE_BANG_BEGIN
 

@@ -3,11 +3,11 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
+#include "Bang/Matrix4.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
-#include "Bang/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
@@ -19,7 +19,6 @@ FORWARD class GameObject;
 FORWARD class ICloneable;
 FORWARD class Renderer;
 FORWARD class ShaderProgram;
-FORWARD class Scene;
 
 class DirectionalLight : public Light
 {

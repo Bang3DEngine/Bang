@@ -3,6 +3,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/FastDynamicCast.h"
+#include "Bang/Rect.h"
 #include "Bang/GameObject.h"
 #include "Bang/ILayoutController.h"
 #include "Bang/Math.h"

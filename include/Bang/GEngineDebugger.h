@@ -2,7 +2,6 @@
 #define GRAPHICPIPELINEDEBUGGER_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/GBuffer.h"
 #include "Bang/GL.h"
 #include "Bang/String.h"
 

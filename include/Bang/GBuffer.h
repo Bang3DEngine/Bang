@@ -3,9 +3,7 @@
 
 #include <stack>
 
-#include "Bang/AARect.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GL.h"
 #include "Bang/ResourceHandle.h"

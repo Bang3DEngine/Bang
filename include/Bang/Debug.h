@@ -2,25 +2,18 @@
 #define DEBUG_H
 
 #include <iostream>
-#include <sstream>
-#include <string>
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Assert.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DebugMessageType.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEventsDebug.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class IEventsDebug;
-FORWARD class Object;
 FORWARD class Shader;
 
 class Debug : public EventEmitter<IEventsDebug>

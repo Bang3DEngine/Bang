@@ -5,9 +5,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Axis.h"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 

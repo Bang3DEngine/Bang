@@ -6,20 +6,17 @@
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
+#include "Bang/Matrix4.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
-#include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
+#include "Bang/IEventsChildren.h"
 #include "Bang/IInvalidatable.h"
-#include "Bang/Matrix4.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Quaternion.h"
 #include "Bang/String.h"
-#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 

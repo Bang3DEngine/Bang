@@ -1,10 +1,12 @@
 #include "Bang/Color.h"
 
-#include <math.h>
+#include <cmath>
 #include <sstream>
 
+#include "Bang/Color.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
+#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"

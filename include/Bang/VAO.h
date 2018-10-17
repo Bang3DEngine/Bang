@@ -1,8 +1,6 @@
 #ifndef VAO_H
 #define VAO_H
 
-#include <GL/glew.h>
-
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"

@@ -3,9 +3,7 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/HideFlags.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IGUIDable.h"
-#include "Bang/IReflectable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 

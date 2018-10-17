@@ -1,14 +1,10 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
-
-FORWARD class Plane;
-FORWARD class Sphere;
 
 class Ray
 {

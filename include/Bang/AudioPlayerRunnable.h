@@ -7,7 +7,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEventsDestroy.h"
 #include "Bang/Thread.h"
 
 NAMESPACE_BANG_BEGIN

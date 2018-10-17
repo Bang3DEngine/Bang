@@ -5,6 +5,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/MetaNode.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"

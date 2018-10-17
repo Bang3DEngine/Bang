@@ -1,12 +1,9 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <GL/glew.h>
-
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
-#include "Bang/Path.h"
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 

@@ -1,17 +1,13 @@
 #ifndef UIIMAGERENDERER_H
 #define UIIMAGERENDERER_H
 
-#include "Bang/Alignment.h"
-#include "Bang/AspectRatioMode.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
-#include "Bang/IEventsTransform.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
-#include "Bang/Texture2D.h"
 #include "Bang/UIRenderer.h"
 
 NAMESPACE_BANG_BEGIN

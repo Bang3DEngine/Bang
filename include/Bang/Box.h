@@ -3,10 +3,9 @@
 
 #include <array>
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Quad.h"
 #include "Bang/Quaternion.h"
+#include "Bang/Vector3.h"
 
 NAMESPACE_BANG_BEGIN
 

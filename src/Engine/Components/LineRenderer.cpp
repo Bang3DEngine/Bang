@@ -11,6 +11,7 @@
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
+#include "Bang/MetaNode.h"
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
@@ -18,8 +19,6 @@
 #include "Bang/Vector.tcc"
 
 USING_NAMESPACE_BANG
-
-FORWARD class MetaNode;
 
 LineRenderer::LineRenderer()
 {

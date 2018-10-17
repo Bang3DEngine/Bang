@@ -3,7 +3,6 @@
 
 #include <stack>
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/Window.h"
@@ -11,7 +10,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class DialogWindow;
-FORWARD class Window;
 
 class WindowManager
 {
@@ -48,8 +46,6 @@ private:
 };
 
 NAMESPACE_BANG_END
-
-#include "WindowManager.tcc"
 
 #endif // WINDOWMANAGER_H
 

@@ -24,10 +24,6 @@
 NAMESPACE_BANG_BEGIN
 
 FORWARD class RectTransform;
-FORWARD class UIFocusable;
-FORWARD class UILayoutElement;
-FORWARD class UIRectMask;
-FORWARD class UITextRenderer;
 
 class UILabel : public Component,
                 public EventListener<IEventsFocus>

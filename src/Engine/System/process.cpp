@@ -1,5 +1,7 @@
 #include <stddef.h>
 #include <algorithm>
+#include <functional>
+#include <string>
 
 #include "Bang/process.hpp"
 

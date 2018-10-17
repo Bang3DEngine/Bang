@@ -4,7 +4,9 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
+#include "Bang/Rect.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/AARect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Vector.tcc"
 

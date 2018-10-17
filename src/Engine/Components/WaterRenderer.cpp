@@ -4,6 +4,7 @@
 #include "Bang/GL.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
+#include "Bang/Material.h"
 #include "Bang/MeshFactory.h"
 
 FORWARD NAMESPACE_BANG_BEGIN

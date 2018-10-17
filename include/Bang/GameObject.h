@@ -2,9 +2,6 @@
 #define GAMEOBJECT_H
 
 #include <functional>
-#include <queue>
-#include <stack>
-#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -12,20 +9,14 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
-#include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
-#include "Bang/IEventsChildren.h"
-#include "Bang/IEventsComponent.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/IEventsGameObjectVisibilityChanged.h"
-#include "Bang/IEventsName.h"
+#include "Bang/IEventsChildren.h"
 #include "Bang/IToString.h"
-#include "Bang/IsContainer.h"
-#include "Bang/List.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Object.h"
 #include "Bang/RenderPass.h"
@@ -38,7 +29,6 @@ NAMESPACE_BANG_BEGIN
 FORWARD class Camera;
 FORWARD class Component;
 FORWARD class GUID;
-FORWARD class GameObject;
 FORWARD class ICloneable;
 FORWARD class IEventsChildren;
 FORWARD class IEventsComponent;
@@ -320,7 +310,5 @@ private:
 };
 
 NAMESPACE_BANG_END
-
-#include "GameObject.tcc"
 
 #endif // GAMEOBJECT_H

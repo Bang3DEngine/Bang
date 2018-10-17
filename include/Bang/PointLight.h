@@ -8,7 +8,6 @@
 #include "Bang/Light.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
-#include "Bang/ShaderProgram.h"
 #include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
 

@@ -8,10 +8,8 @@
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/ILayoutSelfController.h"
-#include "Bang/LayoutSizeType.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 

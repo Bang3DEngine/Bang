@@ -16,6 +16,7 @@
 #include "Bang/Texture.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/Vector4.h"
 #include "Bang/GLObject.h"
 #include "Bang/GLUniforms.h"

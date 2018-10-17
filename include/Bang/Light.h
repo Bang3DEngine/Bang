@@ -10,12 +10,12 @@
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
+#include "Bang/Vector2.h"
 
 NAMESPACE_BANG_BEGIN
 
 FORWARD class Camera;
 FORWARD class GameObject;
-FORWARD class GBuffer;
 FORWARD class ICloneable;
 FORWARD class Renderer;
 FORWARD class ShaderProgram;

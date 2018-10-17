@@ -4,18 +4,14 @@
 #include <functional>
 #include <vector>
 
-#include "Bang/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/Flags.h"
 #include "Bang/IEvents.h"
-#include "Bang/IEventsDestroy.h"
 #include "Bang/Light.h"
 #include "Bang/Map.tcc"
 #include "Bang/MultiObjectGatherer.h"
@@ -28,24 +24,21 @@
 
 NAMESPACE_BANG_BEGIN
 
+FORWARD_T class EventEmitter;
 FORWARD   class Camera;
 FORWARD   class DebugRenderer;
-FORWARD_T class EventEmitter;
 FORWARD   class Framebuffer;
-FORWARD   class GameObject;
 FORWARD   class GBuffer;
 FORWARD   class GL;
+FORWARD   class GameObject;
 FORWARD   class IEventsDestroy;
-FORWARD   class Light;
 FORWARD   class Material;
 FORWARD   class Mesh;
-FORWARD   class ReflectionProbe;
 FORWARD   class RenderFactory;
 FORWARD   class Renderer;
 FORWARD   class Scene;
 FORWARD   class ShaderProgram;
 FORWARD   class Texture2D;
-FORWARD   class Texture;
 FORWARD   class TextureCubeMap;
 FORWARD   class TextureUnitManager;
 

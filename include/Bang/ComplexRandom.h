@@ -1,7 +1,6 @@
 #ifndef COMPLEXRANDOM_H
 #define COMPLEXRANDOM_H
 
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 
 NAMESPACE_BANG_BEGIN

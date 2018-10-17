@@ -3,16 +3,12 @@
 
 #include <vector>
 
-#include "Bang/AnimatorStateMachineNode.h"
-#include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resource.h"
@@ -20,7 +16,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Animator;
 FORWARD class AnimatorStateMachineNode;
 FORWARD class AnimatorStateMachineVariable;
 FORWARD class IEventsAnimatorStateMachine;

@@ -5,6 +5,7 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

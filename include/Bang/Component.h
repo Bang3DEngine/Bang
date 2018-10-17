@@ -5,14 +5,10 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
-#include "Bang/ComponentFactory.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/FastDynamicCast.h"
-#include "Bang/IEventsComponentChangeGameObject.h"
-#include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Object.h"
@@ -22,8 +18,6 @@
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD class Collider;
-FORWARD class Collision;
 FORWARD class GameObject;
 FORWARD class ICloneable;
 FORWARD class IEventsComponentChangeGameObject;

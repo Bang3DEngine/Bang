@@ -5,19 +5,16 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Bang.h"
 #include "Bang/BangDefines.h"
-#include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/String.h"
 
 NAMESPACE_BANG_BEGIN
 
-FORWARD   class Behaviour;
 FORWARD_T class EventEmitter;
+FORWARD   class Behaviour;
 FORWARD   class IEventsDestroy;
 FORWARD   class Library;
 FORWARD   class Path;

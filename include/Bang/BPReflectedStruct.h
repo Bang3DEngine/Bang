@@ -23,6 +23,9 @@ public:
 
     String ToString() const override;
 
+    bool operator==(const BPReflectedStruct &rhs) const;
+    bool operator!=(const BPReflectedStruct &rhs) const;
+
 private:
     String m_structName = "";
     String m_structVariableName = "";

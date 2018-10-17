@@ -453,7 +453,6 @@ void GameObject::Destroy(GameObject *gameObject)
 {
     if(!gameObject->IsWaitingToBeDestroyed())
     {
-        gameObject->SetWaitingToBeDestroyed();
         if(GameObject *parent = gameObject->GetParent())
         {
             parent->AddGameObjectToDestroyDelayed(gameObject);

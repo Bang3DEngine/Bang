@@ -57,7 +57,8 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
         return;
     }
 
-    outReflectedVar->SetType(BPReflectedVariable::GetTypeFromString(variableTypeStr));
+    outReflectedVar->SetType(
+        BPReflectedVariable::GetTypeFromString(variableTypeStr));
 
     String::Iterator nameBegin, nameEnd;
     BP::FindNextWord(wordEnd, propEnd, &nameBegin, &nameEnd);
@@ -90,8 +91,9 @@ String BPReflectedVariable::GetInitializationCode(
     )VERBATIM";
     src.ReplaceInSitu("RVAR_VARIABLE_NAME", rvarInitVarName);
     src.ReplaceInSitu("RVAR_NAME", GetName());
-    src.ReplaceInSitu("VARIABLE_TYPE",
-                      BPReflectedVariable::GetTypeToString(GetType()).ToUpper());
+    src.ReplaceInSitu(
+        "VARIABLE_TYPE",
+        BPReflectedVariable::GetTypeToString(GetType()).ToUpper());
     src.ReplaceInSitu("VARIABLE_CODE_NAME", GetCodeName());
     src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetInitValue());
     return src;
@@ -139,62 +141,63 @@ const String &BPReflectedVariable::GetInitValue() const
 
 String BPReflectedVariable::GetTypeToString(BPReflectedVariable::Type type)
 {
-    switch (type)
+    switch(type)
     {
-        case BPReflectedVariable::Type::FLOAT:      return "float";
-        case BPReflectedVariable::Type::DOUBLE:     return "double";
-        case BPReflectedVariable::Type::INT:        return "int";
-        case BPReflectedVariable::Type::BOOL:       return "bool";
-        case BPReflectedVariable::Type::COLOR:      return "Color";
-        case BPReflectedVariable::Type::STRING:     return "String";
-        case BPReflectedVariable::Type::VECTOR2:    return "Vector2";
-        case BPReflectedVariable::Type::VECTOR3:    return "Vector3";
-        case BPReflectedVariable::Type::VECTOR4:    return "Vector4";
+        case BPReflectedVariable::Type::FLOAT: return "float";
+        case BPReflectedVariable::Type::DOUBLE: return "double";
+        case BPReflectedVariable::Type::INT: return "int";
+        case BPReflectedVariable::Type::BOOL: return "bool";
+        case BPReflectedVariable::Type::COLOR: return "Color";
+        case BPReflectedVariable::Type::STRING: return "String";
+        case BPReflectedVariable::Type::VECTOR2: return "Vector2";
+        case BPReflectedVariable::Type::VECTOR3: return "Vector3";
+        case BPReflectedVariable::Type::VECTOR4: return "Vector4";
         case BPReflectedVariable::Type::QUATERNION: return "Quaternion";
         default: break;
     }
     return "None";
 }
 
-BPReflectedVariable::Type BPReflectedVariable::GetTypeFromString(const String &typeStr)
+BPReflectedVariable::Type BPReflectedVariable::GetTypeFromString(
+    const String &typeStr)
 {
-    if (typeStr == "float")
+    if(typeStr == "float")
     {
         return BPReflectedVariable::Type::FLOAT;
     }
-    else if (typeStr == "double")
+    else if(typeStr == "double")
     {
         return BPReflectedVariable::Type::DOUBLE;
     }
-    else if (typeStr == "int")
+    else if(typeStr == "int")
     {
         return BPReflectedVariable::Type::INT;
     }
-    else if (typeStr == "bool")
+    else if(typeStr == "bool")
     {
         return BPReflectedVariable::Type::BOOL;
     }
-    else if (typeStr == "Color")
+    else if(typeStr == "Color")
     {
         return BPReflectedVariable::Type::COLOR;
     }
-    else if (typeStr == "String")
+    else if(typeStr == "String")
     {
         return BPReflectedVariable::Type::STRING;
     }
-    else if (typeStr == "Vector2")
+    else if(typeStr == "Vector2")
     {
         return BPReflectedVariable::Type::VECTOR2;
     }
-    else if (typeStr == "Vector3")
+    else if(typeStr == "Vector3")
     {
         return BPReflectedVariable::Type::VECTOR3;
     }
-    else if (typeStr == "Vector4")
+    else if(typeStr == "Vector4")
     {
         return BPReflectedVariable::Type::VECTOR4;
     }
-    else if (typeStr == "Quaternion")
+    else if(typeStr == "Quaternion")
     {
         return BPReflectedVariable::Type::QUATERNION;
     }
@@ -207,9 +210,22 @@ bool BPReflectedVariable::ExistsType(const String &typeStr)
             BPReflectedVariable::Type::NONE);
 }
 
+bool BPReflectedVariable::operator==(const BPReflectedVariable &rhs) const
+{
+    return GetName() == rhs.GetName() &&
+           GetCodeName() == rhs.GetCodeName() &&
+           GetType() == rhs.GetType() &&
+           GetInitValue() == rhs.GetInitValue();
+}
+
+bool BPReflectedVariable::operator!=(const BPReflectedVariable &rhs) const
+{
+    return !(*this ==  rhs);
+}
+
 String BPReflectedVariable::ToString() const
 {
     return "(" + GetName() + ", " +
-            BPReflectedVariable::GetTypeToString(GetType()) + ", " +
-            GetCodeName() + " = " + GetInitValue() + ")";
+           BPReflectedVariable::GetTypeToString(GetType()) + ", " +
+           GetCodeName() + " = " + GetInitValue() + ")";
 }

@@ -49,6 +49,9 @@ public:
     static BPReflectedVariable::Type GetTypeFromString(const String &typeStr);
     static bool ExistsType(const String &typeStr);
 
+    bool operator==(const BPReflectedVariable &rhs) const;
+    bool operator!=(const BPReflectedVariable &rhs) const;
+
 private:
     String m_name = "";
     BPReflectedVariable::Type m_variableType = BPReflectedVariable::Type::FLOAT;

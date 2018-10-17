@@ -6,6 +6,11 @@ using namespace Bang;
 
 const BPReflectedStruct &IReflectable::GetReflectionInfo() const
 {
+    if (!m_alreadyReflected)
+    {
+        Reflect();
+        m_alreadyReflected = true;
+    }
     return m_reflectionInfo;
 }
 

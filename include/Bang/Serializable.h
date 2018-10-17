@@ -23,8 +23,7 @@ public:                                          \
         return #CLASS;                           \
     }
 
-class Serializable : public IGUIDable,
-                     public IReflectable
+class Serializable : public IGUIDable, public IReflectable
 {
 public:
     virtual ~Serializable() override;

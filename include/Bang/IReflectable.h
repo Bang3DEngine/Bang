@@ -1,8 +1,8 @@
 #ifndef IREFLECTABLE_H
 #define IREFLECTABLE_H
 
-#include "Bang/BangDefines.h"
 #include "Bang/BPReflectedStruct.h"
+#include "Bang/BangDefines.h"
 
 namespace Bang
 {
@@ -26,6 +26,7 @@ protected:
     BPReflectedStruct *GetReflectionInfoPtr() const;
 
 private:
+    mutable bool m_alreadyReflected = false;
     mutable BPReflectedStruct m_reflectionInfo;
 };
 }

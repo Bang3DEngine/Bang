@@ -19,6 +19,18 @@ BPReflectedStruct::~BPReflectedStruct()
 {
 }
 
+bool BPReflectedStruct::operator==(const BPReflectedStruct &rhs) const
+{
+    return GetStructName() == rhs.GetStructName() &&
+           GetStructVariableName() == rhs.GetStructVariableName() &&
+           GetVariables() == rhs.GetVariables();
+}
+
+bool BPReflectedStruct::operator!=(const BPReflectedStruct &rhs) const
+{
+    return !(*this == rhs);
+}
+
 void BPReflectedStruct::FromString(String::Iterator structBegin,
                                    String::Iterator structEnd,
                                    BPReflectedStruct *outStruct,
@@ -123,7 +135,8 @@ String BPReflectedStruct::GetInitializationCode() const
         varInitCode.ReplaceInSitu("RVAR_NAME", rVarName);
         varInitCode.ReplaceInSitu("RVAR_INIT_CODE",
                                   rVar.GetInitializationCode(rVarName));
-        varInitCode.ReplaceInSitu("REFL_INFO", BP::GetReflectionInfoPtrFuncName);
+        varInitCode.ReplaceInSitu("REFL_INFO",
+                                  BP::GetReflectionInfoPtrFuncName);
         src += varInitCode;
     }
     return src;
@@ -164,7 +177,8 @@ String BPReflectedStruct::GetWriteReflectionCode() const
         {
             continue;
         }
-        varSetSrc.ReplaceInSitu("SET_FUNC",
+        varSetSrc.ReplaceInSitu(
+            "SET_FUNC",
             "Set<" + BPReflectedVariable::GetTypeToString(varType) + ">");
         varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varSetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
@@ -196,7 +210,8 @@ String BPReflectedStruct::GetReadReflectionCode() const
         {
             continue;
         }
-        varGetSrc.ReplaceInSitu("GET_FUNC",
+        varGetSrc.ReplaceInSitu(
+            "GET_FUNC",
             "Get<" + BPReflectedVariable::GetTypeToString(varType) + ">");
         varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varGetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());

@@ -40,7 +40,6 @@ void Component::Destroy(Component *component)
 {
     if(!component->IsWaitingToBeDestroyed())
     {
-        component->SetWaitingToBeDestroyed();
         if(GameObject *go = component->GetGameObject())
         {
             go->AddComponentToDestroyDelayed(component);
@@ -55,7 +54,7 @@ void Component::Destroy(Component *component)
 
 void Component::SetGameObject(GameObject *newGameObject)
 {
-    if(!IsWaitingToBeDestroyed())
+    if (!IsWaitingToBeDestroyed())
     {
         SetGameObjectForced(newGameObject);
     }

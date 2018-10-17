@@ -42,7 +42,8 @@ echo "\
 
 #include \"Bang/Bang.h\"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
 
 class ${CLASS_NAME}
 {
@@ -51,7 +52,7 @@ public:
 	virtual ~${CLASS_NAME}();
 };
 
-NAMESPACE_BANG_END
+}
 
 #endif // ${CLASS_INC}
 " > "${CLASS_HEADER}"
@@ -59,7 +60,7 @@ NAMESPACE_BANG_END
 echo "\
 #include \"Bang/${CLASS_NAME}.h\"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ${CLASS_NAME}::${CLASS_NAME}()
 {

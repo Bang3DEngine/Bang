@@ -32,9 +32,9 @@ void PostProcessEffect::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if(MustBeRendered(renderPass))
+    if (MustBeRendered(renderPass))
     {
-        if(p_postProcessShader && p_shaderProgram.Get()->IsLinked())
+        if (p_postProcessShader && p_shaderProgram.Get()->IsLinked())
         {
             p_shaderProgram.Get()->Bind();
             GEngine::GetActiveGBuffer()->ApplyPass(p_shaderProgram.Get(), true);
@@ -47,9 +47,9 @@ bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
 {
     // Only render if its gameObject contains the active camera
     Camera *activeCamera = Camera::GetActive();
-    if(GetGameObject()->GetComponents().Contains(activeCamera))
+    if (GetGameObject()->GetComponents().Contains(activeCamera))
     {
-        switch(GetType())
+        switch (GetType())
         {
             case Type::AFTER_SCENE:
                 return (renderPass == RenderPass::SCENE_POSTPROCESS);
@@ -72,11 +72,11 @@ void PostProcessEffect::SetPriority(int priority)
 }
 void PostProcessEffect::SetPostProcessShader(Shader *postProcessShader)
 {
-    if(!postProcessShader)
+    if (!postProcessShader)
     {
         return;
     }
-    if(postProcessShader == p_postProcessShader.Get())
+    if (postProcessShader == p_postProcessShader.Get())
     {
         return;
     }
@@ -127,17 +127,17 @@ void PostProcessEffect::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Priority"))
+    if (metaNode.Contains("Priority"))
     {
         SetPriority(metaNode.Get<int>("Priority"));
     }
 
-    if(metaNode.Contains("Type"))
+    if (metaNode.Contains("Type"))
     {
         SetType(metaNode.Get<Type>("Type"));
     }
 
-    if(metaNode.Contains("PostProcessShader"))
+    if (metaNode.Contains("PostProcessShader"))
     {
         GUID shaderGUID = metaNode.Get<GUID>("PostProcessShader");
         RH<Shader> ppShader = Resources::Load<Shader>(shaderGUID);
@@ -149,7 +149,7 @@ void PostProcessEffect::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    if(GetPostProcessShader())
+    if (GetPostProcessShader())
     {
         metaNode->Set("PostProcessShader", GetPostProcessShader()->GetGUID());
     }

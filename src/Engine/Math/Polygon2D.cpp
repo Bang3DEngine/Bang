@@ -36,7 +36,7 @@ bool Polygon2D::Contains(const Vector2 &p)
 
     Vector2 minPoint = GetPoint(0);
     Vector2 maxPoint = GetPoint(0);
-    for(const Vector2 &point : GetPoints())
+    for (const Vector2 &point : GetPoints())
     {
         minPoint = Vector2::Min(minPoint, point);
         maxPoint = Vector2::Max(maxPoint, point);
@@ -45,15 +45,15 @@ bool Polygon2D::Contains(const Vector2 &p)
 
     int intersectionCount = 0;
     Ray2D testRay(p, p + Vector2(VeryFar));
-    for(int i = 0; i < GetPoints().Size(); ++i)
+    for (int i = 0; i < GetPoints().Size(); ++i)
     {
         const Segment2D segment(GetPoint(i),
                                 GetPoint((i + 1) % GetPoints().Size()));
 
         bool intersected;
         Vector2 intersPoint;
-        Geometry::IntersectRay2DSegment2D(testRay, segment, &intersected,
-                                          &intersPoint);
+        Geometry::IntersectRay2DSegment2D(
+            testRay, segment, &intersected, &intersPoint);
         intersectionCount += (intersected ? 1 : 0);
     }
     return (intersectionCount % 2) == 1;

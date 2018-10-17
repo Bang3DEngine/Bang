@@ -75,7 +75,7 @@ template <class Key, class Compare>
 Array<Key> Set<Key, Compare>::GetKeys() const
 {
     Array<Key> result;
-    for(Const_Iterator cit = this->Begin(); cit != this->End(); ++cit)
+    for (Const_Iterator cit = this->Begin(); cit != this->End(); ++cit)
     {
         result.PushBack(*cit);
     }

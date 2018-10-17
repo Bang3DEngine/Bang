@@ -175,7 +175,7 @@ Texture2D *TextureFactory::GetTexture2D(const Path &path)
     TextureFactory *tf = TextureFactory::GetInstance();
     Texture2D *tex = nullptr;
 
-    if(tf->m_texture2DCache.ContainsKey(path))
+    if (tf->m_texture2DCache.ContainsKey(path))
     {
         tex = tf->m_texture2DCache.Get(path).Get();
     }
@@ -183,7 +183,7 @@ Texture2D *TextureFactory::GetTexture2D(const Path &path)
     {
         bool initialized = (Resources::GetCached<Texture2D>(path) != nullptr);
         RH<Texture2D> texRH = Resources::Load<Texture2D>(path);
-        if(texRH && !initialized)
+        if (texRH && !initialized)
         {
             GL::Push(GL::BindTarget::TEXTURE_2D);
 
@@ -217,9 +217,9 @@ TextureCubeMap *TextureFactory::GetTextureCubeMap(const String &filename,
 TextureCubeMap *TextureFactory::GetTextureCubeMap(const Path &path)
 {
     TextureCubeMap *texCM = nullptr;
-    if(TextureFactory *tf = TextureFactory::GetInstance())
+    if (TextureFactory *tf = TextureFactory::GetInstance())
     {
-        if(tf->m_textureCubeMapsCache.ContainsKey(path))
+        if (tf->m_textureCubeMapsCache.ContainsKey(path))
         {
             texCM = tf->m_textureCubeMapsCache.Get(path).Get();
         }

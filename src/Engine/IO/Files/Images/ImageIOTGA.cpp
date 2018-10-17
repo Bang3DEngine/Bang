@@ -101,32 +101,44 @@ int *Bang::tgaRead(const unsigned char *buffer, const TGA_ORDER *order)
     int *pixels = NULL;
 
     // data
-    switch(type)
+    switch (type)
     {
         case COLORMAP:
         {
             int imageDataOffset = 18 + (colormapDepth / 8) * colormapLength;
-            pixels = createPixelsFromColormap(
-                width, height, colormapDepth, buffer, imageDataOffset, buffer,
-                colormapOrigin, descriptor, order);
+            pixels = createPixelsFromColormap(width,
+                                              height,
+                                              colormapDepth,
+                                              buffer,
+                                              imageDataOffset,
+                                              buffer,
+                                              colormapOrigin,
+                                              descriptor,
+                                              order);
         }
         break;
         case RGB:
-            pixels = createPixelsFromRGB(width, height, depth, buffer, 18,
-                                         descriptor, order);
+            pixels = createPixelsFromRGB(
+                width, height, depth, buffer, 18, descriptor, order);
             break;
         case GRAYSCALE:
-            pixels = createPixelsFromGrayscale(width, height, depth, buffer, 18,
-                                               descriptor, order);
+            pixels = createPixelsFromGrayscale(
+                width, height, depth, buffer, 18, descriptor, order);
             break;
         case COLORMAP_RLE:
         {
             int imageDataOffset = 18 + (colormapDepth / 8) * colormapLength;
             unsigned char *decodeBuffer =
                 decodeRLE(width, height, depth, buffer, imageDataOffset);
-            pixels = createPixelsFromColormap(
-                width, height, colormapDepth, decodeBuffer, 0, buffer,
-                colormapOrigin, descriptor, order);
+            pixels = createPixelsFromColormap(width,
+                                              height,
+                                              colormapDepth,
+                                              decodeBuffer,
+                                              0,
+                                              buffer,
+                                              colormapOrigin,
+                                              descriptor,
+                                              order);
             tgaFree(decodeBuffer);
         }
         break;
@@ -134,8 +146,8 @@ int *Bang::tgaRead(const unsigned char *buffer, const TGA_ORDER *order)
         {
             unsigned char *decodeBuffer =
                 decodeRLE(width, height, depth, buffer, 18);
-            pixels = createPixelsFromRGB(width, height, depth, decodeBuffer, 0,
-                                         descriptor, order);
+            pixels = createPixelsFromRGB(
+                width, height, depth, decodeBuffer, 0, descriptor, order);
             tgaFree(decodeBuffer);
         }
         break;
@@ -166,20 +178,20 @@ static unsigned char *decodeRLE(int width,
     unsigned char *decodeBuffer =
         (unsigned char *)tgaMalloc(decodeBufferLength);
     int decoded = 0;
-    while(decoded < decodeBufferLength)
+    while (decoded < decodeBufferLength)
     {
         int packet = buffer[offset++] & 0xFF;
-        if((packet & 0x80) != 0)
+        if ((packet & 0x80) != 0)
         {  // RLE
             int i, j, count;
-            for(i = 0; i < elementCount; i++)
+            for (i = 0; i < elementCount; i++)
             {
                 elements[i] = buffer[offset++];
             }
             count = (packet & 0x7F) + 1;
-            for(i = 0; i < count; i++)
+            for (i = 0; i < count; i++)
             {
-                for(j = 0; j < elementCount; j++)
+                for (j = 0; j < elementCount; j++)
                 {
                     decodeBuffer[decoded++] = elements[j];
                 }
@@ -189,7 +201,7 @@ static unsigned char *decodeRLE(int width,
         {  // RAW
             int count = (packet + 1) * elementCount;
             int i;
-            for(i = 0; i < count; i++)
+            for (i = 0; i < count; i++)
             {
                 decodeBuffer[decoded++] = buffer[offset++];
             }
@@ -213,25 +225,25 @@ static int *createPixelsFromColormap(int width,
     int gs = order->greenShift;
     int bs = order->blueShift;
     int as = order->alphaShift;
-    switch(depth)
+    switch (depth)
     {
         case 24:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 3 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -249,15 +261,15 @@ static int *createPixelsFromColormap(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 3 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -275,19 +287,19 @@ static int *createPixelsFromColormap(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 3 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -305,15 +317,15 @@ static int *createPixelsFromColormap(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 3 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -331,21 +343,21 @@ static int *createPixelsFromColormap(int width,
             break;
         case 32:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 4 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -363,15 +375,15 @@ static int *createPixelsFromColormap(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 4 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -389,19 +401,19 @@ static int *createPixelsFromColormap(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 4 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -419,15 +431,15 @@ static int *createPixelsFromColormap(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int colormapIndex =
                                 (bytes[offset + width * i + j] & 0xFF) -
                                 colormapOrigin;
                             int color = 0xFFFFFFFF;
-                            if(colormapIndex >= 0)
+                            if (colormapIndex >= 0)
                             {
                                 int index = 4 * colormapIndex + 18;
                                 int b = palette[index + 0] & 0xFF;
@@ -461,19 +473,19 @@ static int *createPixelsFromRGB(int width,
     int gs = order->greenShift;
     int bs = order->blueShift;
     int as = order->alphaShift;
-    switch(depth)
+    switch (depth)
     {
         case 24:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 3 * width * i + 3 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -489,9 +501,9 @@ static int *createPixelsFromRGB(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 3 * width * i + 3 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -506,13 +518,13 @@ static int *createPixelsFromRGB(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 3 * width * i + 3 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -528,9 +540,9 @@ static int *createPixelsFromRGB(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 3 * width * i + 3 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -546,15 +558,15 @@ static int *createPixelsFromRGB(int width,
             break;
         case 32:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 4 * width * i + 4 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -570,9 +582,9 @@ static int *createPixelsFromRGB(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 4 * width * i + 4 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -587,13 +599,13 @@ static int *createPixelsFromRGB(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 4 * width * i + 4 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -609,9 +621,9 @@ static int *createPixelsFromRGB(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int index = offset + 4 * width * i + 4 * j;
                             int b = bytes[index + 0] & 0xFF;
@@ -643,19 +655,19 @@ static int *createPixelsFromGrayscale(int width,
     int gs = order->greenShift;
     int bs = order->blueShift;
     int as = order->alphaShift;
-    switch(depth)
+    switch (depth)
     {
         case 8:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + width * i + j] & 0xFF;
                             int a = 0xFF;
@@ -668,9 +680,9 @@ static int *createPixelsFromGrayscale(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + width * i + j] & 0xFF;
                             int a = 0xFF;
@@ -682,13 +694,13 @@ static int *createPixelsFromGrayscale(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + width * i + j] & 0xFF;
                             int a = 0xFF;
@@ -701,9 +713,9 @@ static int *createPixelsFromGrayscale(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + width * i + j] & 0xFF;
                             int a = 0xFF;
@@ -716,15 +728,15 @@ static int *createPixelsFromGrayscale(int width,
             break;
         case 16:
             pixels = (int *)tgaMalloc(4 * width * height);
-            if((descriptor & RIGHT_ORIGIN) != 0)
+            if ((descriptor & RIGHT_ORIGIN) != 0)
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + 2 * width * i + 2 * j + 0] &
                                     0xFF;
@@ -739,9 +751,9 @@ static int *createPixelsFromGrayscale(int width,
                 {
                     // LowerRight
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + 2 * width * i + 2 * j + 0] &
                                     0xFF;
@@ -755,13 +767,13 @@ static int *createPixelsFromGrayscale(int width,
             }
             else
             {
-                if((descriptor & UPPER_ORIGIN) != 0)
+                if ((descriptor & UPPER_ORIGIN) != 0)
                 {
                     // UpperLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + 2 * width * i + 2 * j + 0] &
                                     0xFF;
@@ -776,9 +788,9 @@ static int *createPixelsFromGrayscale(int width,
                 {
                     // LowerLeft
                     int i, j;
-                    for(i = 0; i < height; i++)
+                    for (i = 0; i < height; i++)
                     {
-                        for(j = 0; j < width; j++)
+                        for (j = 0; j < width; j++)
                         {
                             int e = bytes[offset + 2 * width * i + 2 * j + 0] &
                                     0xFF;

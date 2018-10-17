@@ -18,7 +18,7 @@ Resource::Resource()
 
 Resource::~Resource()
 {
-    if(GetParentResource())
+    if (GetParentResource())
     {
         GetParentResource()->RemoveEmbeddedResource(this);
     }
@@ -32,7 +32,7 @@ Resource::~Resource()
 void Resource::AddEmbeddedResource(const String &embeddedResourceName,
                                    Resource *embeddedResource)
 {
-    if(!m_embeddedResourceToName.ContainsKey(embeddedResource))
+    if (!m_embeddedResourceToName.ContainsKey(embeddedResource))
     {
         m_embeddedResourceToName.Add(embeddedResource);
         m_nameToEmbeddedResource.Add(embeddedResourceName, embeddedResource);
@@ -41,7 +41,7 @@ void Resource::AddEmbeddedResource(const String &embeddedResourceName,
                                      embeddedResource);
 
         RH<Resource> prevParentResource(embeddedResource->GetParentResource());
-        if(prevParentResource)
+        if (prevParentResource)
         {
             prevParentResource.Get()->RemoveEmbeddedResource(embeddedResource);
         }
@@ -55,9 +55,9 @@ void Resource::RemoveEmbeddedResource(Resource *embeddedResource)
     m_GUIDToEmbeddedResource.RemoveValues(embeddedResource);
     embeddedResource->SetParentResource(nullptr);
 
-    for(const RH<Resource> &res : m_embeddedResources)
+    for (const RH<Resource> &res : m_embeddedResources)
     {
-        if(res.Get() == embeddedResource)
+        if (res.Get() == embeddedResource)
         {
             m_embeddedResources.Remove(res);
             break;
@@ -66,7 +66,7 @@ void Resource::RemoveEmbeddedResource(Resource *embeddedResource)
 }
 void Resource::RemoveEmbeddedResource(const String &embeddedResourceName)
 {
-    if(m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
+    if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
     {
         Resource *embeddedResource =
             m_nameToEmbeddedResource.Get(embeddedResourceName);
@@ -91,11 +91,11 @@ const Array<RH<Resource>> &Resource::GetEmbeddedResources() const
 
 void Resource::PropagateResourceChanged()
 {
-    if(EventEmitter<IEventsResource>::IsEmittingEvents())
+    if (EventEmitter<IEventsResource>::IsEmittingEvents())
     {
         EventEmitter<IEventsResource>::PropagateToListeners(
             &IEventsResource::OnResourceChanged, this);
-        if(GetParentResource())
+        if (GetParentResource())
         {
             GetParentResource()->PropagateResourceChanged();
         }
@@ -110,7 +110,7 @@ Path Resource::GetResourceFilepath() const
 
 Resource *Resource::GetEmbeddedResource(const GUID &embeddedResGUID) const
 {
-    if(m_GUIDToEmbeddedResource.ContainsKey(embeddedResGUID))
+    if (m_GUIDToEmbeddedResource.ContainsKey(embeddedResGUID))
     {
         Resource *embeddedResource =
             m_GUIDToEmbeddedResource.Get(embeddedResGUID);
@@ -122,7 +122,7 @@ Resource *Resource::GetEmbeddedResource(const GUID &embeddedResGUID) const
 Resource *Resource::GetEmbeddedResource(
     const String &embeddedResourceName) const
 {
-    if(m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
+    if (m_nameToEmbeddedResource.ContainsKey(embeddedResourceName))
     {
         Resource *embeddedResource =
             m_nameToEmbeddedResource.Get(embeddedResourceName);
@@ -141,9 +141,9 @@ Resource *Resource::GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const
 String Resource::GetEmbeddedResourceName(GUID::GUIDType embeddedResGUID) const
 {
     Resource *embeddedResource = GetEmbeddedResource(embeddedResGUID);
-    if(embeddedResource)
+    if (embeddedResource)
     {
-        if(m_embeddedResourceToName.ContainsKey(embeddedResource))
+        if (m_embeddedResourceToName.ContainsKey(embeddedResource))
         {
             return m_embeddedResourceToName.Get(embeddedResource);
         }
@@ -155,13 +155,13 @@ void Resource::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    for(const auto &pair : m_nameToEmbeddedResource)
+    for (const auto &pair : m_nameToEmbeddedResource)
     {
-        if(Resource *embeddedRes = pair.second)
+        if (Resource *embeddedRes = pair.second)
         {
             const String &embeddedResName = pair.first;
-            if(const MetaNode *embeddedResMetaNode =
-                   metaNode.GetChild(embeddedResName))
+            if (const MetaNode *embeddedResMetaNode =
+                    metaNode.GetChild(embeddedResName))
             {
                 embeddedRes->ImportMeta(*embeddedResMetaNode);
             }
@@ -173,9 +173,9 @@ void Resource::ExportMeta(MetaNode *metaNode) const
 {
     Serializable::ExportMeta(metaNode);
 
-    for(const auto &pair : m_nameToEmbeddedResource)
+    for (const auto &pair : m_nameToEmbeddedResource)
     {
-        if(Resource *embeddedRes = pair.second)
+        if (Resource *embeddedRes = pair.second)
         {
             const String &embeddedResName = pair.first;
             MetaNode embeddedResMeta = embeddedRes->GetMeta();
@@ -197,7 +197,7 @@ void Resource::Import_(const Path &resourceFilepath)
 
 void Resource::ClearEmbeddedResources()
 {
-    while(!m_embeddedResources.IsEmpty())
+    while (!m_embeddedResources.IsEmpty())
     {
         Resource *embeddedResource = m_embeddedResources.Back().Get();
         RemoveEmbeddedResource(embeddedResource);

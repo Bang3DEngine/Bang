@@ -26,10 +26,10 @@ void Particle::Step(Particle::Data *pData_, Time dt, const Parameters &params)
     float dtSecs = SCAST<float>(dt.GetSeconds());
 
     Particle::Data &pData = *pData_;
-    if(pData.remainingStartTime <= 0.0f)
+    if (pData.remainingStartTime <= 0.0f)
     {
         pData.remainingLifeTime -= dtSecs;
-        if(pData.remainingLifeTime > 0.0f)
+        if (pData.remainingLifeTime > 0.0f)
         {
             float lifeTimePercent =
                 1.0f - (pData.remainingLifeTime / pData.totalLifeTime);
@@ -51,22 +51,26 @@ void Particle::Step(Particle::Data *pData_, Time dt, const Parameters &params)
             Vector3 pPrevPos = pData.position;
             Particle::StepPositionAndVelocity(&pData, dtSecs, params);
 
-            if(params.computeCollisions && params.colliders.Size() >= 1)
+            if (params.computeCollisions && params.colliders.Size() >= 1)
             {
-                for(Collider *collider : params.colliders)
+                for (Collider *collider : params.colliders)
                 {
-                    if(collider->IsEnabledRecursively())
+                    if (collider->IsEnabledRecursively())
                     {
                         const Vector3 pPositionWithoutCollide = pData.position;
                         const Vector3 pVelocityWithoutCollide = pData.velocity;
 
                         Vector3 posAfterCollision;
                         Vector3 velocityAfterCollision;
-                        const bool collided = CollideParticle(
-                            collider, params, pPrevPos, pPositionWithoutCollide,
-                            pVelocityWithoutCollide, &posAfterCollision,
-                            &velocityAfterCollision);
-                        if(collided)
+                        const bool collided =
+                            CollideParticle(collider,
+                                            params,
+                                            pPrevPos,
+                                            pPositionWithoutCollide,
+                                            pVelocityWithoutCollide,
+                                            &posAfterCollision,
+                                            &velocityAfterCollision);
+                        if (collided)
                         {
                             pPrevPos = pData.position;
                             pData.prevPosition =
@@ -96,7 +100,7 @@ void Particle::ExecuteFixedStepped(Time totalDeltaTime,
 
     uint stepsToSimulate = uint(Math::Round(dtSecs / fixedDeltaTimeSecs));
     stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
-    for(uint step = 0; step < stepsToSimulate; ++step)
+    for (uint step = 0; step < stepsToSimulate; ++step)
     {
         func(fixedStepDeltaTime);
     }
@@ -110,8 +114,12 @@ void Particle::FixedStepAll(
     std::function<void(uint, const Particle::Parameters &)> initParticleFunc)
 
 {
-    Particle::FixedStepAll(particlesDatas, totalDeltaTime, fixedStepDeltaTime,
-                           params, initParticleFunc, [](uint) { return true; });
+    Particle::FixedStepAll(particlesDatas,
+                           totalDeltaTime,
+                           fixedStepDeltaTime,
+                           params,
+                           initParticleFunc,
+                           [](uint) { return true; });
 }
 
 void Particle::FixedStepAll(
@@ -122,8 +130,12 @@ void Particle::FixedStepAll(
     std::function<void(uint, const Particle::Parameters &)> initParticleFunc,
     std::function<bool(uint)> canUpdateParticleFunc)
 {
-    Particle::FixedStepAll(particlesDatas, totalDeltaTime, fixedStepDeltaTime,
-                           params, initParticleFunc, canUpdateParticleFunc,
+    Particle::FixedStepAll(particlesDatas,
+                           totalDeltaTime,
+                           fixedStepDeltaTime,
+                           params,
+                           initParticleFunc,
+                           canUpdateParticleFunc,
                            [](Time) {});
 }
 
@@ -138,15 +150,15 @@ void Particle::FixedStepAll(
 {
     Particle::ExecuteFixedStepped(
         totalDeltaTime, fixedStepDeltaTime, [&](Time dt) {
-            for(uint i = 0; i < particlesDatas->Size(); ++i)
+            for (uint i = 0; i < particlesDatas->Size(); ++i)
             {
-                if(canUpdateParticleFunc(i))
+                if (canUpdateParticleFunc(i))
                 {
                     Particle::Data &pData = particlesDatas->At(i);
                     Particle::Step(&pData, dt, params);
 
-                    if(pData.remainingStartTime <= 0 &&
-                       pData.remainingLifeTime <= 0.0f)
+                    if (pData.remainingStartTime <= 0 &&
+                        pData.remainingLifeTime <= 0.0f)
                     {
                         initParticleFunc(i, params);
                     }
@@ -169,7 +181,7 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
 
     Vector3 pNewPosition;
     Vector3 pNewVelocity;
-    switch(params.physicsStepMode)
+    switch (params.physicsStepMode)
     {
         case Particle::PhysicsStepMode::EULER:
             pNewPosition = pPrevPos + (pPrevVelocity * dt);
@@ -216,7 +228,7 @@ bool Particle::CollideParticle(Collider *collider,
     bool collided = false;
     Vector3 collisionPoint;
     Vector3 collisionNormal;
-    switch(collider->GetPhysicsObjectType())
+    switch (collider->GetPhysicsObjectType())
     {
         case PhysicsObject::Type::SPHERE_COLLIDER:
         {
@@ -224,14 +236,14 @@ bool Particle::CollideParticle(Collider *collider,
             Sphere sphere = spCol->GetSphereWorld();
 
             Ray dispRay(dispSegment.GetOrigin(), dispSegment.GetDirection());
-            Geometry::IntersectRaySphere(dispRay, sphere, &collided,
-                                         &collisionPoint);
-            if(collided)
+            Geometry::IntersectRaySphere(
+                dispRay, sphere, &collided, &collisionPoint);
+            if (collided)
             {
                 collided = Vector3::SqDistance(dispSegment.GetOrigin(),
                                                collisionPoint) <=
                            dispSegment.GetSqLength();
-                if(collided)
+                if (collided)
                 {
                     Vector3 c = sphere.GetCenter();
                     collisionNormal = (collisionPoint - c).NormalizedSafe();
@@ -245,17 +257,17 @@ bool Particle::CollideParticle(Collider *collider,
             BoxCollider *boxCol = SCAST<BoxCollider *>(collider);
             Box box = boxCol->GetBoxWorld();
 
-            Geometry::IntersectSegmentBox(dispSegment, box, &collided,
-                                          &collisionPoint, &collisionNormal);
+            Geometry::IntersectSegmentBox(
+                dispSegment, box, &collided, &collisionPoint, &collisionNormal);
         }
         break;
 
         case PhysicsObject::Type::MESH_COLLIDER:
         {
             MeshCollider *meshCol = SCAST<MeshCollider *>(collider);
-            if(Mesh *mesh = meshCol->GetMesh())
+            if (Mesh *mesh = meshCol->GetMesh())
             {
-                for(int triIdx = 0; triIdx < mesh->GetNumTriangles(); ++triIdx)
+                for (int triIdx = 0; triIdx < mesh->GetNumTriangles(); ++triIdx)
                 {
                     Triangle tri = mesh->GetTriangle(triIdx);
                     Transform *tr = collider->GetGameObject()->GetTransform();
@@ -263,7 +275,7 @@ bool Particle::CollideParticle(Collider *collider,
 
                     Geometry::IntersectSegmentTriangle(
                         dispSegment, tri, &collided, &collisionPoint);
-                    if(collided)
+                    if (collided)
                     {
                         collisionNormal = tri.GetNormal();
                     }
@@ -275,7 +287,7 @@ bool Particle::CollideParticle(Collider *collider,
         default: break;
     }
 
-    if(collided)
+    if (collided)
     {
         const Vector3 cpos = collisionPoint;
         const Vector3 cnorm = collisionNormal;

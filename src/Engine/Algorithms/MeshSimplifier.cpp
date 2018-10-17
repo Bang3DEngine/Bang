@@ -43,14 +43,14 @@ struct ClassifyPoints
 Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                                                Method simplificationMethod)
 {
-    if(!mesh)
+    if (!mesh)
     {
         return Array<RH<Mesh>>();
     }
 
     Array<OctreeData> octreeData;  // Retrieve all the octree data
     {
-        for(int i = 0; i < mesh->GetNumVerticesIds(); ++i)
+        for (int i = 0; i < mesh->GetNumVerticesIds(); ++i)
         {
             const int vIndex = (mesh->GetTriangleVertexIdsIBO()
                                     ? mesh->GetTrianglesVertexIds()[i]
@@ -75,11 +75,11 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     using VertexIdPair = std::pair<Mesh::VertexId, Mesh::VertexId>;
     UMap<Mesh::VertexId, Set<VertexIdPair>>
         vertexIndexToTriangleOtherVerticesIndices;
-    for(uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
+    for (uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
     {
         const std::array<Mesh::VertexId, 3> triVertexIndices =
             mesh->GetVertexIdsFromTriangle(tri);
-        for(uint i = 0; i < 3; ++i)
+        for (uint i = 0; i < 3; ++i)
         {
             const Mesh::VertexId currentVertexIndex =
                 triVertexIndices[((i + 0) % 3)];
@@ -92,8 +92,8 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
             const VertexIdPair otherTriVertexIndices =
                 std::minmax(otherVertexIndex0, otherVertexIndex1);
 
-            if(!vertexIndexToTriangleOtherVerticesIndices.ContainsKey(
-                   currentVertexIndex))
+            if (!vertexIndexToTriangleOtherVerticesIndices.ContainsKey(
+                    currentVertexIndex))
             {
                 vertexIndexToTriangleOtherVerticesIndices[currentVertexIndex] =
                     Set<VertexIdPair>();
@@ -104,7 +104,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     }
 
     UMap<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
-    if(simplificationMethod == Method::QUADRIC_ERROR_METRICS)
+    if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
     {
         vertexIdxsToTriIdxs = mesh->GetVertexIdsToTriangleIds();
     }
@@ -112,14 +112,14 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     int octreeDepth = octree.GetDepth();
     int numLevelsToGenerate = Math::Min(octreeDepth, 6);
     Array<int> levelsToGenerate;
-    for(int i = 0; i < numLevelsToGenerate; ++i)
+    for (int i = 0; i < numLevelsToGenerate; ++i)
     {
         levelsToGenerate.PushBack((octreeDepth / numLevelsToGenerate) * i);
     }
 
     // For each level of detail
     Array<RH<Mesh>> simplifiedMeshesArray;
-    for(int level : levelsToGenerate)
+    for (int level : levelsToGenerate)
     {
         // Get the octree nodes at that level (and leaves pruned before)
         Array<const SimplOctree *> octreeNodesInLevel =
@@ -133,7 +133,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         UMap<Mesh::VertexId, ClusterId> vertexIndexToClusterIndex;
 
         // Make clusters for each octree node in this level...
-        for(const SimplOctree *octNodeInLevel : octreeNodesInLevel)
+        for (const SimplOctree *octNodeInLevel : octreeNodesInLevel)
         {
             const Array<OctreeData> octNodeLevelData =
                 octNodeInLevel->GetElementsRecursive();
@@ -144,10 +144,10 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
             // quadrants of the 8 possible.
             // So, we can have up to 8 subclusters here.
             const bool shapePreserving = true;
-            for(int i = 0; i < (shapePreserving ? 8 : 1); ++i)
+            for (int i = 0; i < (shapePreserving ? 8 : 1); ++i)
             {
                 Vector3 nDir;
-                switch(i)
+                switch (i)
                 {
                     case 0: nDir = Vector3(-1, -1, -1); break;
                     case 1: nDir = Vector3(-1, -1, 1); break;
@@ -162,11 +162,11 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                 // aligned to form part of this cluster
 
                 VertexCluster vertexCluster;
-                for(const OctreeData &octNodeData : octNodeLevelData)
+                for (const OctreeData &octNodeData : octNodeLevelData)
                 {
                     const Mesh::VertexId vertexIndex = octNodeData.first;
                     Vector3 vNormal;
-                    if(vertexIndex < mesh->GetNormalsPool().Size())
+                    if (vertexIndex < mesh->GetNormalsPool().Size())
                     {
                         vNormal = mesh->GetNormalsPool()[vertexIndex];
                     }
@@ -175,13 +175,13 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                         (Math::Sign(vNormal.x) == Math::Sign(nDir.x)) &&
                         (Math::Sign(vNormal.y) == Math::Sign(nDir.y)) &&
                         (Math::Sign(vNormal.z) == Math::Sign(nDir.z));
-                    if(!shapePreserving || coincidingNormal)
+                    if (!shapePreserving || coincidingNormal)
                     {
-                        if(!vertexCluster.ContainsKey(vertexIndex) &&
-                           !vertexIndexToClusterIndex.ContainsKey(vertexIndex))
+                        if (!vertexCluster.ContainsKey(vertexIndex) &&
+                            !vertexIndexToClusterIndex.ContainsKey(vertexIndex))
                         {
                             VertexData vData;
-                            if(vertexIndex < mesh->GetPositionsPool().Size())
+                            if (vertexIndex < mesh->GetPositionsPool().Size())
                             {
                                 vData.pos =
                                     mesh->GetPositionsPool()[vertexIndex];
@@ -189,12 +189,12 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
                             vData.normal = vNormal;
 
-                            if(vertexIndex < mesh->GetUvsPool().Size())
+                            if (vertexIndex < mesh->GetUvsPool().Size())
                             {
                                 vData.uv = mesh->GetUvsPool()[vertexIndex];
                             }
 
-                            if(vertexIndex < mesh->GetTangentsPool().Size())
+                            if (vertexIndex < mesh->GetTangentsPool().Size())
                             {
                                 vData.tangent =
                                     mesh->GetTangentsPool()[vertexIndex];
@@ -209,7 +209,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                     }
                 }
 
-                if(!vertexCluster.IsEmpty())
+                if (!vertexCluster.IsEmpty())
                 {
                     vertexClusters.PushBack(vertexCluster);
                 }
@@ -224,13 +224,15 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         Array<Vector2> uvsLOD;
         Array<Vector3> tangentsLOD;
         RH<Mesh> simplifiedMesh = Resources::Create<Mesh>();
-        for(const VertexCluster &vertexCluster : vertexClusters)
+        for (const VertexCluster &vertexCluster : vertexClusters)
         {
             ASSERT(!vertexCluster.IsEmpty());
 
             VertexData vertexRepresentativeData =
                 MeshSimplifier::GetVertexRepresentativeForCluster(
-                    *mesh, vertexCluster, vertexIdxsToTriIdxs,
+                    *mesh,
+                    vertexCluster,
+                    vertexIdxsToTriIdxs,
                     simplificationMethod);
             positionsLOD.PushBack(vertexRepresentativeData.pos);
             normalsLOD.PushBack(vertexRepresentativeData.normal);
@@ -266,11 +268,11 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
             clusterIdToOtherClusterIdsThatFormATriangleWithIt;
 
         // For each cluster
-        for(ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
+        for (ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
         {
             // For each vertex in each vertex cluster
             const VertexCluster &vertexCluster = vertexClusters[cId];
-            for(const auto &pair : vertexCluster)
+            for (const auto &pair : vertexCluster)
             {
                 const Mesh::VertexId &vertexInClusterIndex = pair.first;
 
@@ -290,8 +292,8 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
                 // For each vertex pair that forms a tri with each vertex in
                 // each vertex cluster
-                for(const VertexIdPair &otherTriVertexIndices :
-                    otherVertexIndicesThatFormATri)
+                for (const VertexIdPair &otherTriVertexIndices :
+                     otherVertexIndicesThatFormATri)
                 {
                     // We use minmax so that order doesnt matter in set
                     const VertexIdPair otherVertexIndicesThatFormATri =
@@ -299,15 +301,15 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                                     otherTriVertexIndices.second);
                     const VertexIdPair &vp = otherVertexIndicesThatFormATri;
 
-                    if(!clusterIdToOtherClusterIdsThatFormATriangleWithIt
-                            .ContainsKey(vCId))
+                    if (!clusterIdToOtherClusterIdsThatFormATriangleWithIt
+                             .ContainsKey(vCId))
                     {
                         clusterIdToOtherClusterIdsThatFormATriangleWithIt
                             [vCId] = Set<ClusterIdPair>();
                     }
 
-                    if(!vertexIndexToClusterIndex.ContainsKey(vp.first) ||
-                       !vertexIndexToClusterIndex.ContainsKey(vp.second))
+                    if (!vertexIndexToClusterIndex.ContainsKey(vp.first) ||
+                        !vertexIndexToClusterIndex.ContainsKey(vp.second))
                     {
                         continue;
                     }
@@ -331,10 +333,10 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
         // Finally calculate vertexIndices with all previous info!
         Array<Mesh::VertexId> vertexClusterTriVertsIndices;
-        for(ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
+        for (ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
         {
-            if(!clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(
-                   cId))
+            if (!clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(
+                    cId))
             {
                 continue;
             }
@@ -344,15 +346,15 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                     cId));
             const Set<ClusterIdPair> &otherClusterIdsThatFormATriWithThis =
                 clusterIdToOtherClusterIdsThatFormATriangleWithIt[cId];
-            for(const ClusterIdPair &otherTriVerticesClusterIdPair :
-                otherClusterIdsThatFormATriWithThis)
+            for (const ClusterIdPair &otherTriVerticesClusterIdPair :
+                 otherClusterIdsThatFormATriWithThis)
             {
                 const ClusterId otherCId0 = otherTriVerticesClusterIdPair.first;
                 const ClusterId otherCId1 =
                     otherTriVerticesClusterIdPair.second;
                 // This if is to avoid triplicates vvv
-                if(cId < otherCId0 && (otherCId0 < otherCId1) &&
-                   cId < otherCId1)
+                if (cId < otherCId0 && (otherCId0 < otherCId1) &&
+                    cId < otherCId1)
                 {
                     ASSERT(cId < vertexClusters.Size());
                     ASSERT(otherCId0 < vertexClusters.Size());
@@ -374,8 +376,8 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                     const Vector3 &norm1 = normalsLOD[triClusterIds[1]];
                     const Vector3 &norm2 = normalsLOD[triClusterIds[2]];
                     const Vector3 &normal = (norm0 + norm1 + norm2) / 3.0f;
-                    if(Vector3::Dot(Vector3::Cross(pos1 - pos0, pos2 - pos0),
-                                    normal) < 0)
+                    if (Vector3::Dot(Vector3::Cross(pos1 - pos0, pos2 - pos0),
+                                     normal) < 0)
                     {
                         std::swap(triClusterIds[1], triClusterIds[2]);
                     }
@@ -394,12 +396,13 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         simplifiedMesh.Get()->UpdateVAOsAndTables();
 
         Debug_Log("Level " << level << ": "
-                           << vertexClusterTriVertsIndices.Size() << "/"
+                           << vertexClusterTriVertsIndices.Size()
+                           << "/"
                            << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
 
-        if(vertexClusterTriVertsIndices.Size() == mesh->GetNumVerticesIds())
+        if (vertexClusterTriVertsIndices.Size() == mesh->GetNumVerticesIds())
         {
             // This was the max level, going further makes no sense
             break;
@@ -420,16 +423,16 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     vertexRepresentativeData.uv = Vector2::Zero;
     vertexRepresentativeData.tangent = Vector3::Zero;
 
-    if(vertexCluster.IsEmpty())
+    if (vertexCluster.IsEmpty())
     {
         return vertexRepresentativeData;
     }
 
-    switch(simplificationMethod)
+    switch (simplificationMethod)
     {
         case Method::CLUSTERING:
         {
-            for(const auto &pair : vertexCluster)
+            for (const auto &pair : vertexCluster)
             {
                 const VertexData &vData = pair.second;
                 vertexRepresentativeData.pos += vData.pos;
@@ -454,7 +457,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
             Matrix4 verticesTotalQuadricMatrix = Matrix4(0.0f);
             Set<Mesh::TriangleId> visitedTriangles;
             AABox clusterAABox;
-            for(const auto &pair : vertexCluster)
+            for (const auto &pair : vertexCluster)
             {
                 const Mesh::VertexId &vId = pair.first;
                 const VertexData &vData = pair.second;
@@ -475,9 +478,9 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
                 /*/
                 const Array<Mesh::TriangleId> &neighborTriIds =
                     vertexIdxsToTriIdxs.Get(vId);
-                for(Mesh::TriangleId triId : neighborTriIds)
+                for (Mesh::TriangleId triId : neighborTriIds)
                 {
-                    if(visitedTriangles.Contains(triId))
+                    if (visitedTriangles.Contains(triId))
                     {
                         continue;
                     }
@@ -500,9 +503,22 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
                     const float b = n.y;
                     const float c = n.z;
                     const float d = -(a * triP0.x + b * triP0.y + c * triP0.z);
-                    const Matrix4 vertexQuadricMatrix = Matrix4(
-                        a * a, a * b, a * c, a * d, b * a, b * b, b * c, b * d,
-                        c * a, c * b, c * c, c * d, d * a, d * b, d * c, d * d);
+                    const Matrix4 vertexQuadricMatrix = Matrix4(a * a,
+                                                                a * b,
+                                                                a * c,
+                                                                a * d,
+                                                                b * a,
+                                                                b * b,
+                                                                b * c,
+                                                                b * d,
+                                                                c * a,
+                                                                c * b,
+                                                                c * c,
+                                                                c * d,
+                                                                d * a,
+                                                                d * b,
+                                                                d * c,
+                                                                d * d);
                     verticesTotalQuadricMatrix += vertexQuadricMatrix;
                 }
                 //*/
@@ -533,8 +549,8 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
             // To get normal, uvs, etc. use the clustering method.
             vertexRepresentativeData = GetVertexRepresentativeForCluster(
                 mesh, vertexCluster, vertexIdxsToTriIdxs, Method::CLUSTERING);
-            if(isInvertible &&
-               clusterAABox.Contains(minimumQuadricErrorPosition))
+            if (isInvertible &&
+                clusterAABox.Contains(minimumQuadricErrorPosition))
             {
                 vertexRepresentativeData.pos = minimumQuadricErrorPosition;
             }

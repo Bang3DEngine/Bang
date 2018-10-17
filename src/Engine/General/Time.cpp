@@ -99,7 +99,7 @@ Time Time::GetEllapsed()
 
 Time Time::GetDeltaTime()
 {
-    if(Scene *scene = SceneManager::GetActiveScene())
+    if (Scene *scene = SceneManager::GetActiveScene())
     {
         return scene->GetDeltaTime();
     }
@@ -109,7 +109,7 @@ Time Time::GetDeltaTime()
 Time Time::GetPassedTimeSince(Time refTime)
 {
     Time now = Time::GetNow();
-    if(now <= refTime)
+    if (now <= refTime)
     {
         return Time(0);
     }

@@ -17,7 +17,7 @@ String::String() : m_str("")
 
 String::String(const char *cstr)
 {
-    if(cstr != nullptr)
+    if (cstr != nullptr)
     {
         m_str = cstr;
     }
@@ -117,17 +117,17 @@ long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 
 String String::SubString(long startIndexInclusive, long endIndexInclusive) const
 {
-    if((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
+    if ((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
     {
         return "";
     }
 
-    if(endIndexInclusive >= Size())
+    if (endIndexInclusive >= Size())
     {
         endIndexInclusive = (Size() - 1);
     }
 
-    if(endIndexInclusive == String::npos)
+    if (endIndexInclusive == String::npos)
     {
         return m_str.substr(startIndexInclusive);
     }
@@ -172,24 +172,24 @@ int String::ReplaceInSitu(const String &from,
                           const String &to,
                           int maxNumberOfReplacements)
 {
-    if(from.IsEmpty())
+    if (from.IsEmpty())
     {
         return 0;
     }
 
     int lastIndex = 0;
     int numReplacements = 0;
-    while(lastIndex != -1 && lastIndex + from.Size() <= Size())
+    while (lastIndex != -1 && lastIndex + from.Size() <= Size())
     {
         lastIndex = IndexOf(from, lastIndex);
-        if(lastIndex >= 0)
+        if (lastIndex >= 0)
         {
             Remove(lastIndex, lastIndex + from.Size());
             Insert(lastIndex, to);
             lastIndex += to.Size();
             ++numReplacements;
-            if(maxNumberOfReplacements != -1 &&
-               numReplacements >= maxNumberOfReplacements)
+            if (maxNumberOfReplacements != -1 &&
+                numReplacements >= maxNumberOfReplacements)
             {
                 break;
             }
@@ -211,10 +211,10 @@ String String::Elide(int length, bool elideRight) const
 {
     int maxLength = std::min(int(Size()), length);
     String result = (*this);
-    if(result.Size() > length)
+    if (result.Size() > length)
     {
         result = result.SubString(result.Size() - maxLength, result.Size() - 1);
-        if(elideRight)
+        if (elideRight)
         {
             result = result + "...";
         }
@@ -254,14 +254,14 @@ String String::Trim() const
 String String::AddInFrontOfWords(String particle) const
 {
     String result = *this;
-    if(!result.IsEmpty() && result.At(0) != ' ')
+    if (!result.IsEmpty() && result.At(0) != ' ')
     {
         result.Insert(0, particle);
     }
 
-    for(int i = 0; i < result.Size() - 1; ++i)
+    for (int i = 0; i < result.Size() - 1; ++i)
     {
-        if(result.At(i) == ' ' && result.At(i + 1) != ' ')
+        if (result.At(i) == ' ' && result.At(i + 1) != ' ')
         {
             result.Insert(i + 1, particle);
             i += 2;
@@ -306,7 +306,7 @@ int String::ToInt(const String &str, bool *ok)
     std::istringstream iss(number);
     int v;
     iss >> v;
-    if(ok)
+    if (ok)
         *ok = !iss.fail();
     return v;
 }
@@ -317,7 +317,7 @@ float String::ToFloat(const String &str, bool *ok)
     std::istringstream iss(number);
     float v;
     iss >> v;
-    if(ok)
+    if (ok)
         *ok = !iss.fail();
     return v;
 }
@@ -339,7 +339,7 @@ bool String::IsEmpty() const
 
 bool String::Contains(const String &str, bool caseSensitive) const
 {
-    if(!caseSensitive)
+    if (!caseSensitive)
     {
         auto it = std::search(
             Begin(), End(), str.Begin(), str.End(), [](char ch1, char ch2) {
@@ -352,14 +352,14 @@ bool String::Contains(const String &str, bool caseSensitive) const
 
 bool String::BeginsWith(const String &str) const
 {
-    if(str.Size() > Size())
+    if (str.Size() > Size())
     {
         return false;
     }
 
-    for(int i = 0; i < str.Size(); ++i)
+    for (int i = 0; i < str.Size(); ++i)
     {
-        if(At(i) != str[i])
+        if (At(i) != str[i])
         {
             return false;
         }
@@ -376,7 +376,7 @@ bool String::EndsWith(const String &str) const
 String String::ToUpper() const
 {
     String result = *this;
-    for(int i = 0; i < Size(); ++i)
+    for (int i = 0; i < Size(); ++i)
     {
         result[i] = String::ToUpper(result[i]);
     }
@@ -386,7 +386,7 @@ String String::ToUpper() const
 String String::ToLower() const
 {
     String result = *this;
-    for(int i = 0; i < Size(); ++i)
+    for (int i = 0; i < Size(); ++i)
     {
         result[i] = String::ToLower(result[i]);
     }
@@ -401,7 +401,7 @@ String String::ToString(float f, int decimalPlaces)
 String String::ToString(double f, int decimalPlaces)
 {
     String str = "";
-    if(decimalPlaces >= 0)
+    if (decimalPlaces >= 0)
     {
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(decimalPlaces) << f;

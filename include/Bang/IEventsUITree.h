@@ -26,7 +26,10 @@ public:
                              GameObject *newParentItem,
                              int newIndexInsideParent)
     {
-        BANG_UNUSED_5(item, oldParentItem, oldIndexInsideParent, newParentItem,
+        BANG_UNUSED_5(item,
+                      oldParentItem,
+                      oldIndexInsideParent,
+                      newParentItem,
                       newIndexInsideParent);
     }
 

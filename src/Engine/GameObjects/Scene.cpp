@@ -40,7 +40,7 @@ Scene::~Scene()
 
 void Scene::Start()
 {
-    if(!IsStarted())
+    if (!IsStarted())
     {
         m_lastUpdateTime = Time::GetNow();
     }
@@ -58,11 +58,11 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
 
-    if(rp == RenderPass::SCENE)
+    if (rp == RenderPass::SCENE)
     {
         GetDebugRenderer()->RenderPrimitives(true);
     }
-    else if(rp == RenderPass::OVERLAY)
+    else if (rp == RenderPass::OVERLAY)
     {
         GetDebugRenderer()->RenderPrimitives(false);
     }
@@ -81,13 +81,13 @@ DebugRenderer *Scene::GetDebugRenderer() const
 
 void Scene::SetCamera(Camera *cam)
 {
-    if(GetCamera())
+    if (GetCamera())
     {
         GetCamera()->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
 
     p_camera = cam;
-    if(GetCamera())
+    if (GetCamera())
     {
         GetCamera()->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
@@ -101,7 +101,7 @@ Time Scene::GetDeltaTime() const
 void Scene::InvalidateCanvas()
 {
     Array<UICanvas *> canvases = GetComponentsInDescendantsAndThis<UICanvas>();
-    for(UICanvas *canvas : canvases)
+    for (UICanvas *canvas : canvases)
     {
         canvas->InvalidateCanvas();
     }
@@ -114,7 +114,7 @@ void Scene::CloneInto(ICloneable *clone) const
     Scene *cloneScene = SCAST<Scene *>(clone);
 
     // Find cloned camera by GUID.
-    if(GetCamera())
+    if (GetCamera())
     {
         Array<Camera *> cams = GetComponentsInDescendantsAndThis<Camera>();
         Array<Camera *> cloneCams =
@@ -122,7 +122,7 @@ void Scene::CloneInto(ICloneable *clone) const
         ASSERT(cams.Size() == cloneCams.Size());
 
         uint camIdx = cams.IndexOf(GetCamera());
-        if(camIdx != -1u)
+        if (camIdx != -1u)
         {
             Camera *cloneCam = cloneCams[camIdx];
             cloneScene->SetCamera(cloneCam);
@@ -134,7 +134,7 @@ void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     GameObject::OnDestroyed(object);
 
-    if(object == GetCamera())
+    if (object == GetCamera())
     {
         SetCamera(nullptr);
     }
@@ -149,10 +149,10 @@ void Scene::ImportMeta(const MetaNode &metaNode)
 {
     GameObject::ImportMeta(metaNode);
 
-    if(metaNode.Contains("CameraGameObjectGUID"))
+    if (metaNode.Contains("CameraGameObjectGUID"))
     {
         GUID camGoGUID = metaNode.Get<GUID>("CameraGameObjectGUID");
-        if(GameObject *camGo = FindInChildrenAndThis(camGoGUID, true))
+        if (GameObject *camGo = FindInChildrenAndThis(camGoGUID, true))
         {
             SetCamera(camGo->GetComponent<Camera>());
         }

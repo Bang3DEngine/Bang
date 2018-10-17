@@ -35,7 +35,7 @@ void BehaviourContainer::SetSourceFilepath(const Path &sourceFilepath)
 
 void BehaviourContainer::SetSourceFilepathGUID(const GUID &sourceFilepathGUID)
 {
-    if(sourceFilepathGUID != GetSourceFilepathGUID())
+    if (sourceFilepathGUID != GetSourceFilepathGUID())
     {
         m_sourceFilepathGUID = sourceFilepathGUID;
     }
@@ -71,8 +71,8 @@ const MetaNode &BehaviourContainer::GetInitializationMeta() const
 void BehaviourContainer::TryToSubstituteByBehaviourInstance()
 {
     BehaviourManager *behaviourManager = BehaviourManager::GetActive();
-    if(behaviourManager && behaviourManager->IsInstanceCreationAllowed() &&
-       !IsWaitingToBeDestroyed() && !GetBehaviourName().IsEmpty())
+    if (behaviourManager && behaviourManager->IsInstanceCreationAllowed() &&
+        !IsWaitingToBeDestroyed() && !GetBehaviourName().IsEmpty())
     {
         Library *behLib = behaviourManager->GetBehavioursLibrary();
         SubstituteByBehaviourInstance(behLib);
@@ -87,10 +87,10 @@ void BehaviourContainer::SetInitializationMeta(const MetaNode &metaNode)
 void BehaviourContainer::SubstituteByBehaviourInstance(
     Library *behavioursLibrary)
 {
-    if(Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
+    if (Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
     {
         behaviour->ImportMeta(GetInitializationMeta());
-        if(GetGameObject())
+        if (GetGameObject())
         {
             GetGameObject()->AddComponent(behaviour);
             Component::Destroy(this);
@@ -110,12 +110,12 @@ void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("SourceFilepathGUID"))
+    if (metaNode.Contains("SourceFilepathGUID"))
     {
         SetSourceFilepathGUID(metaNode.Get<GUID>("SourceFilepathGUID"));
     }
 
-    if(metaNode.Contains("InitializationMeta"))
+    if (metaNode.Contains("InitializationMeta"))
     {
         String metaStr = metaNode.Get<String>("InitializationMeta");
         MetaNode initializationMeta;

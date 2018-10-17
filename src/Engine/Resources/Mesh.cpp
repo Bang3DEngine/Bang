@@ -42,17 +42,17 @@ Mesh::Mesh() : m_bBox(Vector3::Zero)
 
 Mesh::~Mesh()
 {
-    if(m_vao)
+    if (m_vao)
     {
         delete m_vao;
     }
 
-    if(m_vertexIdsIBO)
+    if (m_vertexIdsIBO)
     {
         delete m_vertexIdsIBO;
     }
 
-    if(m_vertexAttributesVBO)
+    if (m_vertexAttributesVBO)
     {
         delete m_vertexAttributesVBO;
     }
@@ -62,7 +62,7 @@ void Mesh::SetTrianglesVertexIds(const Array<Mesh::VertexId> &trisVerticesIds)
 {
     m_triangleVertexIds = trisVerticesIds;
 
-    if(m_vertexIdsIBO)
+    if (m_vertexIdsIBO)
     {
         delete m_vertexIdsIBO;
     }
@@ -79,7 +79,7 @@ void Mesh::SetTrianglesVertexIds(const Array<Mesh::VertexId> &trisVerticesIds)
 void Mesh::SetBonesIds(const Map<String, uint> &bonesIds)
 {
     m_bonesIds = bonesIds;
-    for(const auto &pair : bonesIds)
+    for (const auto &pair : bonesIds)
     {
         m_idToBone.Add(pair.second, pair.first);
     }
@@ -87,7 +87,7 @@ void Mesh::SetBonesIds(const Map<String, uint> &bonesIds)
 
 void Mesh::UpdateVAOs()
 {
-    if(m_vertexAttributesVBO)
+    if (m_vertexAttributesVBO)
     {
         delete m_vertexAttributesVBO;
     }
@@ -99,10 +99,10 @@ void Mesh::UpdateVAOs()
     bool hasTangents = !GetTangentsPool().IsEmpty();
     bool hasBones = !GetBonesPool().IsEmpty();
 
-    if(hasBones)
+    if (hasBones)
     {
         // Pick 4 most relevant bones per vertex
-        for(VertexId vid = 0; vid < GetTrianglesVertexIds().Size(); ++vid)
+        for (VertexId vid = 0; vid < GetTrianglesVertexIds().Size(); ++vid)
         {
             struct BoneExt : public IToString
             {
@@ -116,11 +116,11 @@ void Mesh::UpdateVAOs()
             };
 
             Array<BoneExt> vertexBonesExt;
-            for(const auto &it : GetBonesPool())
+            for (const auto &it : GetBonesPool())
             {
                 const String &boneName = it.first;
                 const Mesh::Bone &bone = it.second;
-                if(bone.weights.ContainsKey(vid))
+                if (bone.weights.ContainsKey(vid))
                 {
                     ASSERT(GetBonesIds().ContainsKey(boneName));
 
@@ -138,10 +138,11 @@ void Mesh::UpdateVAOs()
                 // std::array<float, 4>({{0,0,0,0}}));
                 std::array<float, 4>({{0, 0, 0, 0}}));
 
-            if(!vertexBonesExt.IsEmpty())
+            if (!vertexBonesExt.IsEmpty())
             {
                 Containers::Sort(
-                    vertexBonesExt.Begin(), vertexBonesExt.End(),
+                    vertexBonesExt.Begin(),
+                    vertexBonesExt.End(),
                     [](const BoneExt &lhs, const BoneExt &rhs) -> bool {
                         return lhs.weight > rhs.weight;
                     });
@@ -149,12 +150,12 @@ void Mesh::UpdateVAOs()
                 uint numImportantBones = Math::Min(4u, vertexBonesExt.Size());
 
                 float weightSum = 0.0f;
-                for(uint i = 0; i < numImportantBones; ++i)
+                for (uint i = 0; i < numImportantBones; ++i)
                 {
                     weightSum += vertexBonesExt[i].weight;  // To norm later
                 }
 
-                for(uint i = 0; i < numImportantBones; ++i)
+                for (uint i = 0; i < numImportantBones; ++i)
                 {
                     m_vertexIdToImportantBonesIdsPool.Get(vid)[i] =
                         vertexBonesExt[i].id;
@@ -171,9 +172,9 @@ void Mesh::UpdateVAOs()
     }
 
     Array<float> interleavedAttributes;
-    for(uint i = 0; i < GetPositionsPool().Size(); ++i)
+    for (uint i = 0; i < GetPositionsPool().Size(); ++i)
     {
-        if(i < GetPositionsPool().Size())
+        if (i < GetPositionsPool().Size())
         {
             const Vector3 &position = GetPositionsPool()[i];
             interleavedAttributes.PushBack(position.x);
@@ -181,7 +182,7 @@ void Mesh::UpdateVAOs()
             interleavedAttributes.PushBack(position.z);
         }
 
-        if(i < GetNormalsPool().Size())
+        if (i < GetNormalsPool().Size())
         {
             const Vector3 &normal = GetNormalsPool()[i];
             interleavedAttributes.PushBack(normal.x);
@@ -189,14 +190,14 @@ void Mesh::UpdateVAOs()
             interleavedAttributes.PushBack(normal.z);
         }
 
-        if(i < GetUvsPool().Size())
+        if (i < GetUvsPool().Size())
         {
             const Vector2 &uv = GetUvsPool()[i];
             interleavedAttributes.PushBack(uv.x);
             interleavedAttributes.PushBack(uv.y);
         }
 
-        if(i < GetTangentsPool().Size())
+        if (i < GetTangentsPool().Size())
         {
             const Vector3 &tangent = GetTangentsPool()[i];
             interleavedAttributes.PushBack(tangent.x);
@@ -204,7 +205,7 @@ void Mesh::UpdateVAOs()
             interleavedAttributes.PushBack(tangent.z);
         }
 
-        if(i < m_vertexIdToImportantBonesIdsPool.Size())
+        if (i < m_vertexIdToImportantBonesIdsPool.Size())
         {
             const auto &vertexIdToImportantBonesIds =
                 m_vertexIdToImportantBonesIdsPool.Get(i);
@@ -214,7 +215,7 @@ void Mesh::UpdateVAOs()
             interleavedAttributes.PushBack(vertexIdToImportantBonesIds[3]);
         }
 
-        if(i < m_vertexIdToImportantBonesWeightsPool.Size())
+        if (i < m_vertexIdToImportantBonesWeightsPool.Size())
         {
             const auto &vertexIdToImportantBonesWeights =
                 m_vertexIdToImportantBonesWeightsPool.Get(i);
@@ -225,7 +226,7 @@ void Mesh::UpdateVAOs()
         }
     }
 
-    if(interleavedAttributes.Size() >= 1)
+    if (interleavedAttributes.Size() >= 1)
     {
         GetVertexAttributesVBO()->CreateAndFill(
             SCAST<void *>(&interleavedAttributes[0]),
@@ -234,47 +235,66 @@ void Mesh::UpdateVAOs()
 
     uint vboStride = GetVBOStride();
 
-    if(hasPos)
+    if (hasPos)
     {
         GetVAO()->SetVBO(GetVertexAttributesVBO(),
-                         Mesh::DefaultPositionsVBOLocation, 3,
-                         GL::VertexAttribDataType::FLOAT, false, vboStride,
+                         Mesh::DefaultPositionsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
                          GetVBOPositionsOffset());
     }
 
-    if(hasNormals)
+    if (hasNormals)
     {
         GetVAO()->SetVBO(GetVertexAttributesVBO(),
-                         Mesh::DefaultNormalsVBOLocation, 3,
-                         GL::VertexAttribDataType::FLOAT, true, vboStride,
+                         Mesh::DefaultNormalsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         true,
+                         vboStride,
                          GetVBONormalsOffset());
     }
 
-    if(hasUvs)
+    if (hasUvs)
     {
-        GetVAO()->SetVBO(GetVertexAttributesVBO(), Mesh::DefaultUvsVBOLocation,
-                         2, GL::VertexAttribDataType::FLOAT, false, vboStride,
+        GetVAO()->SetVBO(GetVertexAttributesVBO(),
+                         Mesh::DefaultUvsVBOLocation,
+                         2,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
                          GetVBOUvsOffset());
     }
 
-    if(hasTangents)
+    if (hasTangents)
     {
         GetVAO()->SetVBO(GetVertexAttributesVBO(),
-                         Mesh::DefaultTangentsVBOLocation, 3,
-                         GL::VertexAttribDataType::FLOAT, false, vboStride,
+                         Mesh::DefaultTangentsVBOLocation,
+                         3,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
                          GetVBOTangentsOffset());
     }
 
-    if(hasBones)
+    if (hasBones)
     {
         GetVAO()->SetVBO(GetVertexAttributesVBO(),
-                         Mesh::DefaultVertexToBonesIdsVBOLocation, 4,
-                         GL::VertexAttribDataType::FLOAT, false, vboStride,
+                         Mesh::DefaultVertexToBonesIdsVBOLocation,
+                         4,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
                          GetVBOBonesIdsOffset());
 
         GetVAO()->SetVBO(GetVertexAttributesVBO(),
-                         Mesh::DefaultVertexToBonesWeightsVBOLocation, 4,
-                         GL::VertexAttribDataType::FLOAT, false, vboStride,
+                         Mesh::DefaultVertexToBonesWeightsVBOLocation,
+                         4,
+                         GL::VertexAttribDataType::FLOAT,
+                         false,
+                         vboStride,
                          GetVBOBonesWeightsOffset());
     }
 }
@@ -321,11 +341,11 @@ void Mesh::UpdateVertexNormals()
     UMap<VertexId, Array<TriangleId>> vertexIdToTriId =
         GetVertexIdsToTriangleIds();
     Array<Vector3> normalsPool;
-    for(int vi = 0; vi < GetTrianglesVertexIds().Size(); ++vi)
+    for (int vi = 0; vi < GetTrianglesVertexIds().Size(); ++vi)
     {
         Vector3 vNormal = Vector3::Zero;
         const Array<TriangleId> &vTriIds = vertexIdToTriId.Get(vi);
-        for(TriangleId vTriId : vTriIds)
+        for (TriangleId vTriId : vTriIds)
         {
             std::array<Mesh::VertexId, 3> triVertexIds =
                 GetVertexIdsFromTriangle(vTriId);
@@ -374,7 +394,7 @@ struct PairVector3Comparator
         return false;
         */
         Vector3::LexicographicCompare LexicoCompare;
-        if(lhs.first != rhs.first)
+        if (lhs.first != rhs.first)
         {
             return LexicoCompare(lhs.first, rhs.first);
         }
@@ -384,7 +404,7 @@ struct PairVector3Comparator
 
 void Mesh::UpdateCornerTables()
 {
-    if(!IsIndexed())
+    if (!IsIndexed())
     {
         return;
     }
@@ -393,7 +413,7 @@ void Mesh::UpdateCornerTables()
 
     m_cornerIdToOppositeCornerId.Clear();
     m_cornerIdToOppositeCornerId.Resize(GetNumCorners());
-    for(uint i = 0; i < m_cornerIdToOppositeCornerId.Size(); ++i)
+    for (uint i = 0; i < m_cornerIdToOppositeCornerId.Size(); ++i)
     {
         m_cornerIdToOppositeCornerId[i] = -1u;
     }
@@ -408,9 +428,9 @@ void Mesh::UpdateCornerTables()
     Vector3::LexicographicCompare LexicoCompare;
     Map<std::pair<Vector3, Vector3>, TriMapInfo, PairVector3Comparator>
         connectedVertexIdPairs;
-    for(TriangleId triId = 0; triId < numTriangles; ++triId)
+    for (TriangleId triId = 0; triId < numTriangles; ++triId)
     {
-        for(uint i = 0; i < 3; ++i)
+        for (uint i = 0; i < 3; ++i)
         {
             VertexId triFirstVId =
                 GetTrianglesVertexIds()[(triId * 3) + ((i + 0) % 3)];
@@ -424,7 +444,7 @@ void Mesh::UpdateCornerTables()
                 (LexicoCompare(triFirstVertexPos, triSecondVertexPos))
                     ? std::make_pair(triFirstVertexPos, triSecondVertexPos)
                     : std::make_pair(triSecondVertexPos, triFirstVertexPos);
-            if(connectedVertexIdPairs.ContainsKey(orderedVertexPositions))
+            if (connectedVertexIdPairs.ContainsKey(orderedVertexPositions))
             {
                 // There was already another tri with this edge:
                 // Consequently, this and the other are adjacent
@@ -433,9 +453,10 @@ void Mesh::UpdateCornerTables()
 
                 VertexId triOppVId =
                     GetRemainingVertexId(triId, triFirstVId, triSecondVId);
-                VertexId otherTriOppVId = GetRemainingVertexId(
-                    otherTriInfo.triangleId, otherTriInfo.firstVertexId,
-                    otherTriInfo.secondVertexId);
+                VertexId otherTriOppVId =
+                    GetRemainingVertexId(otherTriInfo.triangleId,
+                                         otherTriInfo.firstVertexId,
+                                         otherTriInfo.secondVertexId);
                 m_cornerIdToOppositeCornerId[triOppVId] = otherTriOppVId;
                 m_cornerIdToOppositeCornerId[otherTriOppVId] = triOppVId;
             }
@@ -452,7 +473,7 @@ void Mesh::UpdateCornerTables()
 
     Map<Vector3, Array<VertexId>, Vector3::LexicographicCompare>
         vertexPositionToVertexIdsInThatPosition;
-    for(uint i = 0; i < GetNumVertices(); ++i)
+    for (uint i = 0; i < GetNumVertices(); ++i)
     {
         const Vector3 &vertexPos = GetPositionsPool()[i];
         vertexPositionToVertexIdsInThatPosition[vertexPos].PushBack(i);
@@ -461,14 +482,14 @@ void Mesh::UpdateCornerTables()
     m_vertexIdToCornerIds.Clear();
     m_vertexIdToCornerIds.Resize(GetNumVertices());
     m_vertexIdToSamePositionMinimumVertexId.Resize(GetNumVerticesIds());
-    for(CornerId cId = 0; cId < GetNumCorners(); ++cId)
+    for (CornerId cId = 0; cId < GetNumCorners(); ++cId)
     {
         VertexId vIdOfcId = GetVertexIdFromCornerId(cId);
         const Vector3 &vertexPos = GetPositionsPool()[vIdOfcId];
         const Array<VertexId> &vertexIdsInThisPosition =
             vertexPositionToVertexIdsInThatPosition[vertexPos];
         VertexId minVId = -1u;
-        for(VertexId vId : vertexIdsInThisPosition)
+        for (VertexId vId : vertexIdsInThisPosition)
         {
             m_vertexIdToCornerIds[vId].PushBack(cId);
             minVId = Math::Min(vId, minVId);
@@ -479,7 +500,7 @@ void Mesh::UpdateCornerTables()
 
 void Mesh::CalculateLODs()
 {
-    if(!m_areLodsValid)
+    if (!m_areLodsValid)
     {
         m_lodMeshes = MeshSimplifier::GetAllMeshLODs(
             this,
@@ -496,7 +517,7 @@ int Mesh::GetNumLODs() const
 
 RH<Mesh> Mesh::GetLODMesh(int lod) const
 {
-    if(GetLODMeshes().IsEmpty())
+    if (GetLODMeshes().IsEmpty())
     {
         return RH<Mesh>(const_cast<Mesh *>(this));
     }
@@ -522,7 +543,7 @@ uint Mesh::GetNumVerticesIds() const
 
 String Mesh::GetBoneName(uint boneId) const
 {
-    if(m_idToBone.ContainsKey(boneId))
+    if (m_idToBone.ContainsKey(boneId))
     {
         return m_idToBone.Get(boneId);
     }
@@ -531,7 +552,7 @@ String Mesh::GetBoneName(uint boneId) const
 
 uint Mesh::GetBoneId(const String &boneName) const
 {
-    if(m_bonesIds.ContainsKey(boneName))
+    if (m_bonesIds.ContainsKey(boneName))
     {
         return m_bonesIds.Get(boneName);
     }
@@ -662,10 +683,10 @@ Mesh::VertexId Mesh::GetRemainingVertexId(Mesh::TriangleId triangleId,
     const VertexId beginVId = (triangleId * 3);
     ASSERT(beginVId < GetNumVerticesIds());
 
-    for(uint i = 0; i < 3; ++i)
+    for (uint i = 0; i < 3; ++i)
     {
         VertexId vId = GetTrianglesVertexIds()[beginVId + i];
-        if(vId != oneVertex && vId != anotherVertex)
+        if (vId != oneVertex && vId != anotherVertex)
         {
             return vId;
         }
@@ -685,11 +706,11 @@ Mesh::VertexId Mesh::GetRemainingVertexIdUnique(
     ASSERT(beginVId < GetNumVerticesIds());
     VertexId uniqueOneVId = GetVertexIdUnique(oneVertexId);
     VertexId uniqueAnotherVId = GetVertexIdUnique(anotherVertexId);
-    for(uint i = 0; i < 3; ++i)
+    for (uint i = 0; i < 3; ++i)
     {
         VertexId vId = GetTrianglesVertexIds()[beginVId + i];
         VertexId uniqueVId = GetVertexIdUnique(vId);
-        if(uniqueVId != uniqueOneVId && uniqueVId != uniqueAnotherVId)
+        if (uniqueVId != uniqueOneVId && uniqueVId != uniqueAnotherVId)
         {
             return uniqueVId;
         }
@@ -776,7 +797,7 @@ Array<Mesh::CornerId> Mesh::GetNeighborCornerIds(Mesh::CornerId cId) const
     Set<CornerId> neighborCornerIdsSet;
     VertexId vId = GetVertexIdFromCornerId(cId);
     const Array<CornerId> &sameVertexCornerIds = GetCornerIdsFromVertexId(vId);
-    for(CornerId sameVertexCornerId : sameVertexCornerIds)
+    for (CornerId sameVertexCornerId : sameVertexCornerIds)
     {
         neighborCornerIdsSet.Add(GetNextCornerId(sameVertexCornerId));
         neighborCornerIdsSet.Add(GetPreviousCornerId(sameVertexCornerId));
@@ -791,7 +812,7 @@ Array<Mesh::VertexId> Mesh::GetNeighborVertexIds(Mesh::VertexId vId) const
     Array<VertexId> neighborVertexIds;
     Array<CornerId> neighborCornerIds =
         GetNeighborCornerIds(GetVertexIdFromCornerId(vId));
-    for(CornerId neighborCornerId : neighborCornerIds)
+    for (CornerId neighborCornerId : neighborCornerIds)
     {
         neighborVertexIds.PushBack(GetVertexIdFromCornerId(neighborCornerId));
     }
@@ -804,10 +825,10 @@ Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIds(
     Array<TriangleId> neighborTriangleIds;
 
     const auto triCorners = GetCornerIdsFromTriangle(triId);
-    for(CornerId cornerId : triCorners)
+    for (CornerId cornerId : triCorners)
     {
         CornerId oppositeCornerId = GetOppositeCornerId(cornerId);
-        if(oppositeCornerId != -1u)
+        if (oppositeCornerId != -1u)
         {
             neighborTriangleIds.PushBack(
                 GetTriangleIdFromCornerId(oppositeCornerId));
@@ -822,7 +843,7 @@ Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
 {
     Array<TriangleId> neighborTriangleIds;
     Array<CornerId> cIds = GetCornerIdsFromVertexId(vId);
-    for(CornerId cId : cIds)
+    for (CornerId cId : cIds)
     {
         neighborTriangleIds.PushBack(GetTriangleIdFromCornerId(cId));
     }
@@ -834,7 +855,7 @@ float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId)
     float cornerAreasSum = 0.0f;
     float cornerAnglesSum = 0.0f;
     Array<CornerId> vertexCornerIds = GetCornerIdsFromVertexId(centralVId);
-    for(CornerId cId : vertexCornerIds)
+    for (CornerId cId : vertexCornerIds)
     {
         float cornerAngle = GetCornerAngleRads(cId);
         float cornerArea =
@@ -858,16 +879,16 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId)
     Vector3 edgesFactorSum = Vector3::Zero;
     Vector3 centralVertexPos = GetPositionsPool()[centralVId];
     Array<CornerId> vertexCornerIds = GetCornerIdsFromVertexId(centralVId);
-    for(CornerId centralCId : vertexCornerIds)
+    for (CornerId centralCId : vertexCornerIds)
     {
         ASSERT(GetVertexIdUnique(centralVId) ==
                GetVertexIdUniqueFromCornerId(centralCId));
 
         CornerId firstCId = GetPreviousCornerId(centralCId);
-        if(!processedVertexIds.Contains(centralCId))
+        if (!processedVertexIds.Contains(centralCId))
         {
             CornerId oppositeCId = GetOppositeCornerId(firstCId);
-            if(oppositeCId != -1u)
+            if (oppositeCId != -1u)
             {
                 ++processedTris;
 
@@ -965,13 +986,13 @@ UMap<Mesh::VertexId, Array<Mesh::TriangleId>> Mesh::GetVertexIdsToTriangleIds()
     const
 {
     UMap<VertexId, Array<Mesh::TriangleId>> vertexIdsToTriIds;
-    for(int ti = 0; ti < GetNumTriangles(); ++ti)
+    for (int ti = 0; ti < GetNumTriangles(); ++ti)
     {
         std::array<Mesh::VertexId, 3> tiVerticesIds =
             GetVertexIdsFromTriangle(ti);
-        for(Mesh::VertexId tivi : tiVerticesIds)
+        for (Mesh::VertexId tivi : tiVerticesIds)
         {
-            if(!vertexIdsToTriIds.ContainsKey(tivi))
+            if (!vertexIdsToTriIds.ContainsKey(tivi))
             {
                 vertexIdsToTriIds.Add(tivi, {});
             }
@@ -988,7 +1009,7 @@ void Mesh::CloneInto(ICloneable *clone) const
     mClone->m_bBox = m_bBox;
     mClone->m_bSphere = m_bSphere;
 
-    if(mClone->m_vao)
+    if (mClone->m_vao)
     {
         delete mClone->m_vao;
     }

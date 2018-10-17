@@ -25,7 +25,7 @@ void UIRectMask::OnBeforeChildrenRender(RenderPass renderPass)
 {
     Component::OnBeforeChildrenRender(renderPass);
 
-    if(IsMasking() && renderPass == RenderPass::CANVAS)
+    if (IsMasking() && renderPass == RenderPass::CANVAS)
     {
         m_wasScissorEnabled = GL::IsEnabled(GL::Enablable::SCISSOR_TEST);
         m_prevScissor = GL::GetScissorRect();
@@ -41,7 +41,7 @@ void UIRectMask::OnAfterChildrenRender(RenderPass renderPass)
 {
     Component::OnAfterChildrenRender(renderPass);
 
-    if(IsMasking() && renderPass == RenderPass::CANVAS)
+    if (IsMasking() && renderPass == RenderPass::CANVAS)
     {
         // Restore
         GL::Scissor(m_prevScissor);
@@ -62,7 +62,7 @@ void UIRectMask::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Masking"))
+    if (metaNode.Contains("Masking"))
     {
         SetMasking(metaNode.Get<bool>("Masking"));
     }

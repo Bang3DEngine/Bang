@@ -68,7 +68,7 @@ float ComplexRandom::GetMaxRangeValue() const
 
 float ComplexRandom::GenerateRandom() const
 {
-    switch(GetType())
+    switch (GetType())
     {
         case ComplexRandomType::CONSTANT_VALUE:
             return GetConstantValue();

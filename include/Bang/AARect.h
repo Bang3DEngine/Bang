@@ -142,12 +142,12 @@ public:
     template <class Iterator>
     static AARectG<T> Union(Iterator begin, Iterator end)
     {
-        if(begin == end)
+        if (begin == end)
         {
             return AARectG<T>::Zero;
         }
         AARectG<T> unionRect = *begin;
-        for(auto it = begin; it != end; ++it)
+        for (auto it = begin; it != end; ++it)
         {
             unionRect = AARectG<T>::Union(unionRect, *it);
         }
@@ -161,7 +161,7 @@ public:
         T maxx = Math::Min(r1.GetMax().x, r2.GetMax().x);
         T maxy = Math::Min(r1.GetMax().y, r2.GetMax().y);
 
-        if(minx > maxx || miny > maxy)
+        if (minx > maxx || miny > maxy)
         {
             return AARectG<T>::Zero;
         }
@@ -172,12 +172,12 @@ public:
     template <class Iterator>
     static AARectG<T> Intersection(Iterator begin, Iterator end)
     {
-        if(begin == end)
+        if (begin == end)
         {
             return AARectG<T>::Zero;
         }
         AARectG<T> intersectionRect = *begin;
-        for(auto it = begin; it != end; ++it)
+        for (auto it = begin; it != end; ++it)
         {
             intersectionRect = AARectG<T>::Intersection(intersectionRect, *it);
         }
@@ -187,13 +187,13 @@ public:
     template <class Iterator>
     static AARectG<T> GetBoundingRectFromPositions(Iterator begin, Iterator end)
     {
-        if(begin == end)
+        if (begin == end)
         {
             return AARectG<T>::Zero;
         }
 
         Vector2G<T> minv = *begin, maxv = *begin;
-        for(auto it = begin; it != end; ++it)
+        for (auto it = begin; it != end; ++it)
         {
             const Vector2G<T> &p = *it;
             minv = Vector2G<T>::Min(p, minv);
@@ -205,9 +205,10 @@ public:
     template <class OtherT = T>
     RectG<OtherT> ToRect() const
     {
-        return RectG<OtherT>(
-            Vector2G<OtherT>(GetCenter()), Vector2G<OtherT>::Right,
-            SCAST<OtherT>(GetWidth() * 0.5), SCAST<OtherT>(GetHeight() * 0.5));
+        return RectG<OtherT>(Vector2G<OtherT>(GetCenter()),
+                             Vector2G<OtherT>::Right,
+                             SCAST<OtherT>(GetWidth() * 0.5),
+                             SCAST<OtherT>(GetHeight() * 0.5));
     }
 
     template <class S>

@@ -23,13 +23,13 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
     *success = false;
 
     String::Iterator propListBegin, propListEnd;
-    BP::GetNextScope(propBegin, propEnd, &propListBegin, &propListEnd, '(',
-                     ')');
+    BP::GetNextScope(
+        propBegin, propEnd, &propListBegin, &propListEnd, '(', ')');
 
     // Process property list
     String propertyListStr(propListBegin + 1, propListEnd - 1);
     Array<String> propertyList = propertyListStr.Split<Array>(',', true);
-    if(propertyList.Size() == 0)
+    if (propertyList.Size() == 0)
     {
         std::cerr << "BP Error: BANG_REFLECT_VARIABLE has 0 properties,"
                      " but must have at least a name"
@@ -46,10 +46,10 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
         String::Iterator wordBegin;
         BP::FindNextWord(wordEnd, propEnd, &wordBegin, &wordEnd);
         nextWord = String(wordBegin, wordEnd);
-    } while(BP::Modifiers.Contains(nextWord));
+    } while (BP::Modifiers.Contains(nextWord));
 
     String variableTypeStr = nextWord;
-    if(!BPReflectedVariable::ExistsType(variableTypeStr))
+    if (!BPReflectedVariable::ExistsType(variableTypeStr))
     {
         std::cerr << "BP Error: Expected a variable type,"
                      "but got '"
@@ -62,7 +62,7 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
 
     String::Iterator nameBegin, nameEnd;
     BP::FindNextWord(wordEnd, propEnd, &nameBegin, &nameEnd);
-    if(nameBegin == propEnd || nameEnd == propEnd)
+    if (nameBegin == propEnd || nameEnd == propEnd)
     {
         std::cerr << "BP Error: Expected a variable name" << std::endl;
         return;
@@ -70,7 +70,7 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
     outReflectedVar->m_codeName = String(nameBegin, nameEnd);
 
     String::Iterator assignBegin = std::find(nameEnd, propEnd, '=');
-    if(assignBegin != propEnd)
+    if (assignBegin != propEnd)
     {
         String initValue(assignBegin + 1, propEnd - 1);
         initValue = initValue.Trim({' ', '"'});
@@ -141,7 +141,7 @@ const String &BPReflectedVariable::GetInitValue() const
 
 String BPReflectedVariable::GetTypeToString(BPReflectedVariable::Type type)
 {
-    switch(type)
+    switch (type)
     {
         case BPReflectedVariable::Type::FLOAT: return "float";
         case BPReflectedVariable::Type::DOUBLE: return "double";
@@ -161,43 +161,43 @@ String BPReflectedVariable::GetTypeToString(BPReflectedVariable::Type type)
 BPReflectedVariable::Type BPReflectedVariable::GetTypeFromString(
     const String &typeStr)
 {
-    if(typeStr == "float")
+    if (typeStr == "float")
     {
         return BPReflectedVariable::Type::FLOAT;
     }
-    else if(typeStr == "double")
+    else if (typeStr == "double")
     {
         return BPReflectedVariable::Type::DOUBLE;
     }
-    else if(typeStr == "int")
+    else if (typeStr == "int")
     {
         return BPReflectedVariable::Type::INT;
     }
-    else if(typeStr == "bool")
+    else if (typeStr == "bool")
     {
         return BPReflectedVariable::Type::BOOL;
     }
-    else if(typeStr == "Color")
+    else if (typeStr == "Color")
     {
         return BPReflectedVariable::Type::COLOR;
     }
-    else if(typeStr == "String")
+    else if (typeStr == "String")
     {
         return BPReflectedVariable::Type::STRING;
     }
-    else if(typeStr == "Vector2")
+    else if (typeStr == "Vector2")
     {
         return BPReflectedVariable::Type::VECTOR2;
     }
-    else if(typeStr == "Vector3")
+    else if (typeStr == "Vector3")
     {
         return BPReflectedVariable::Type::VECTOR3;
     }
-    else if(typeStr == "Vector4")
+    else if (typeStr == "Vector4")
     {
         return BPReflectedVariable::Type::VECTOR4;
     }
-    else if(typeStr == "Quaternion")
+    else if (typeStr == "Quaternion")
     {
         return BPReflectedVariable::Type::QUATERNION;
     }
@@ -212,15 +212,13 @@ bool BPReflectedVariable::ExistsType(const String &typeStr)
 
 bool BPReflectedVariable::operator==(const BPReflectedVariable &rhs) const
 {
-    return GetName() == rhs.GetName() &&
-           GetCodeName() == rhs.GetCodeName() &&
-           GetType() == rhs.GetType() &&
-           GetInitValue() == rhs.GetInitValue();
+    return GetName() == rhs.GetName() && GetCodeName() == rhs.GetCodeName() &&
+           GetType() == rhs.GetType() && GetInitValue() == rhs.GetInitValue();
 }
 
 bool BPReflectedVariable::operator!=(const BPReflectedVariable &rhs) const
 {
-    return !(*this ==  rhs);
+    return !(*this == rhs);
 }
 
 String BPReflectedVariable::ToString() const

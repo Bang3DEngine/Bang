@@ -57,7 +57,7 @@ UITextRenderer::~UITextRenderer()
 
 void UITextRenderer::CalculateLayout(Axis axis)
 {
-    if(!GetFont())
+    if (!GetFont())
     {
         SetCalculatedLayout(axis, 0, 0);
         return;
@@ -65,7 +65,7 @@ void UITextRenderer::CalculateLayout(Axis axis)
 
     Vector2i minSize = Vector2i::Zero;
     Vector2i prefSize = Vector2i::Zero;
-    if(axis == Axis::HORIZONTAL)
+    if (axis == Axis::HORIZONTAL)
     {
         prefSize = TextFormatter::GetMinimumHeightTextSize(
             GetContent(), GetFont(), GetTextSize(), GetSpacingMultiplier());
@@ -76,13 +76,18 @@ void UITextRenderer::CalculateLayout(Axis axis)
         RectTransform *rt = GetGameObject()->GetRectTransform();
         Array<TextFormatter::CharRect> charRects =
             TextFormatter::GetFormattedTextPositions(
-                GetContent(), GetFont(), GetTextSize(),
-                AARecti(rt->GetViewportRect()), GetSpacingMultiplier(),
-                GetHorizontalAlignment(), GetVerticalAlignment(), IsWrapping(),
+                GetContent(),
+                GetFont(),
+                GetTextSize(),
+                AARecti(rt->GetViewportRect()),
+                GetSpacingMultiplier(),
+                GetHorizontalAlignment(),
+                GetVerticalAlignment(),
+                IsWrapping(),
                 &numLines);
         AARect rect =
             charRects.Size() > 0 ? charRects.Front().rectPx : AARect::Zero;
-        for(const TextFormatter::CharRect &cr : charRects)
+        for (const TextFormatter::CharRect &cr : charRects)
         {
             rect = AARect::Union(rect, cr.rectPx);
         }
@@ -98,13 +103,13 @@ void UITextRenderer::CalculateLayout(Axis axis)
 
 void UITextRenderer::RegenerateCharQuadsVAO() const
 {
-    if(!IInvalidatable<UITextRenderer>::IsInvalid())
+    if (!IInvalidatable<UITextRenderer>::IsInvalid())
     {
         return;
     }
     IInvalidatable<UITextRenderer>::Validate();
 
-    if(!GetFont())
+    if (!GetFont())
     {
         p_mesh.Get()->SetPositionsPool({});
         p_mesh.Get()->SetUvsPool({});
@@ -113,22 +118,26 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
     }
 
     // Get the quad positions of the rects of each char
-    if(!GetGameObject())
+    if (!GetGameObject())
     {
         return;
     }
     RectTransform *rt = GetGameObject()->GetRectTransform();
-    if(!rt)
+    if (!rt)
     {
         return;
     }
 
     Array<TextFormatter::CharRect> textCharRects =
-        TextFormatter::GetFormattedTextPositions(
-            GetContent(), GetFont(), GetTextSize(),
-            AARecti(rt->GetViewportRect()), GetSpacingMultiplier(),
-            GetHorizontalAlignment(), GetVerticalAlignment(), IsWrapping(),
-            &m_numberOfLines);
+        TextFormatter::GetFormattedTextPositions(GetContent(),
+                                                 GetFont(),
+                                                 GetTextSize(),
+                                                 AARecti(rt->GetViewportRect()),
+                                                 GetSpacingMultiplier(),
+                                                 GetHorizontalAlignment(),
+                                                 GetVerticalAlignment(),
+                                                 IsWrapping(),
+                                                 &m_numberOfLines);
 
     // Generate quad positions and uvs for the mesh, and load them
     Array<Vector2> textQuadUvs;
@@ -136,9 +145,9 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
     Array<Vector3> textQuadPos3D;
 
     m_charRectsLocalNDC.Clear();
-    for(const TextFormatter::CharRect &cr : textCharRects)
+    for (const TextFormatter::CharRect &cr : textCharRects)
     {
-        if(!GetFont()->HasCharacter(cr.character))
+        if (!GetFont()->HasCharacter(cr.character))
         {
             continue;
         }
@@ -197,7 +206,7 @@ void UITextRenderer::Bind()
 {
     UIRenderer::Bind();
 
-    if(GetFont())
+    if (GetFont())
     {
         const int textSize = Math::Max(GetTextSize(), 1);
         Texture2D *fontAtlas = GetFont()->GetFontAtlas(textSize);
@@ -211,7 +220,7 @@ void UITextRenderer::OnRender()
     RegenerateCharQuadsVAO();
 
     int vertCount = p_mesh.Get()->GetNumVerticesIds();
-    if(vertCount >= 3)
+    if (vertCount >= 3)
     {
         GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(), vertCount);
     }
@@ -224,7 +233,7 @@ void UITextRenderer::UnBind()
 
 void UITextRenderer::SetHorizontalAlign(HorizontalAlignment horizontalAlignment)
 {
-    if(GetHorizontalAlignment() != horizontalAlignment)
+    if (GetHorizontalAlignment() != horizontalAlignment)
     {
         m_horizontalAlignment = horizontalAlignment;
         OnChanged();
@@ -233,7 +242,7 @@ void UITextRenderer::SetHorizontalAlign(HorizontalAlignment horizontalAlignment)
 
 void UITextRenderer::SetVerticalAlign(VerticalAlignment verticalAlignment)
 {
-    if(GetVerticalAlignment() != verticalAlignment)
+    if (GetVerticalAlignment() != verticalAlignment)
     {
         m_verticalAlignment = verticalAlignment;
         OnChanged();
@@ -242,7 +251,7 @@ void UITextRenderer::SetVerticalAlign(VerticalAlignment verticalAlignment)
 
 void UITextRenderer::SetFont(Font *font)
 {
-    if(GetFont() != font)
+    if (GetFont() != font)
     {
         p_font.Set(font);
         OnChanged();
@@ -251,7 +260,7 @@ void UITextRenderer::SetFont(Font *font)
 
 void UITextRenderer::SetKerning(bool kerning)
 {
-    if(IsKerning() != kerning)
+    if (IsKerning() != kerning)
     {
         m_kerning = kerning;
         OnChanged();
@@ -260,7 +269,7 @@ void UITextRenderer::SetKerning(bool kerning)
 
 void UITextRenderer::SetWrapping(bool wrapping)
 {
-    if(IsWrapping() != wrapping)
+    if (IsWrapping() != wrapping)
     {
         m_wrapping = wrapping;
         OnChanged();
@@ -269,7 +278,7 @@ void UITextRenderer::SetWrapping(bool wrapping)
 
 void UITextRenderer::SetContent(const String &content)
 {
-    if(GetContent() != content)
+    if (GetContent() != content)
     {
         m_content = content;
         OnChanged();
@@ -278,7 +287,7 @@ void UITextRenderer::SetContent(const String &content)
 
 void UITextRenderer::SetTextSize(int size)
 {
-    if(GetTextSize() != size)
+    if (GetTextSize() != size)
     {
         m_textSize = Math::Max(size, 1);
         OnChanged();
@@ -287,7 +296,7 @@ void UITextRenderer::SetTextSize(int size)
 
 void UITextRenderer::SetSpacingMultiplier(const Vector2 &spacingMultiplier)
 {
-    if(GetSpacingMultiplier() != spacingMultiplier)
+    if (GetSpacingMultiplier() != spacingMultiplier)
     {
         m_spacingMultiplier = spacingMultiplier;
         OnChanged();
@@ -296,7 +305,7 @@ void UITextRenderer::SetSpacingMultiplier(const Vector2 &spacingMultiplier)
 
 void UITextRenderer::SetTextColor(const Color &textColor)
 {
-    if(textColor != GetTextColor())
+    if (textColor != GetTextColor())
     {
         GetMaterial()->SetAlbedoColor(textColor);
         OnChanged();
@@ -390,47 +399,47 @@ void UITextRenderer::ImportMeta(const MetaNode &meta)
 {
     UIRenderer::ImportMeta(meta);
 
-    if(meta.Contains("Font"))
+    if (meta.Contains("Font"))
     {
         SetFont(Resources::Load<Font>(meta.Get<GUID>("Font")).Get());
     }
 
-    if(meta.Contains("Content"))
+    if (meta.Contains("Content"))
     {
         SetContent(meta.Get<String>("Content"));
     }
 
-    if(meta.Contains("TextSize"))
+    if (meta.Contains("TextSize"))
     {
         SetTextSize(meta.Get<float>("TextSize"));
     }
 
-    if(meta.Contains("SpacingMultiplier"))
+    if (meta.Contains("SpacingMultiplier"))
     {
         SetSpacingMultiplier(meta.Get<Vector2>("SpacingMultiplier"));
     }
 
-    if(meta.Contains("Kerning"))
+    if (meta.Contains("Kerning"))
     {
         SetKerning(meta.Get<bool>("Kerning"));
     }
 
-    if(meta.Contains("TextColor"))
+    if (meta.Contains("TextColor"))
     {
         SetTextColor(meta.Get<Color>("TextColor"));
     }
 
-    if(meta.Contains("Wrapping"))
+    if (meta.Contains("Wrapping"))
     {
         SetWrapping(meta.Get<bool>("Wrapping"));
     }
 
-    if(meta.Contains("VerticalAlign"))
+    if (meta.Contains("VerticalAlign"))
     {
         SetVerticalAlign(meta.Get<VerticalAlignment>("VerticalAlign"));
     }
 
-    if(meta.Contains("HorizontalAlign"))
+    if (meta.Contains("HorizontalAlign"))
     {
         SetHorizontalAlign(meta.Get<HorizontalAlignment>("HorizontalAlign"));
     }

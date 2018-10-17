@@ -83,7 +83,7 @@ public:
     ResourceHandle<ResourceClass> &operator=(
         const ResourceHandle<ResourceClass> &rhs)
     {
-        if(&rhs != this)
+        if (&rhs != this)
         {
             Set(rhs.Get());
         }
@@ -92,7 +92,7 @@ public:
 
     ResourceHandle &operator=(ResourceHandle<ResourceClass> &&rhs)
     {
-        if(&rhs != this)
+        if (&rhs != this)
         {
             Set(rhs.Get());
             rhs.Set(nullptr);

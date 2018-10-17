@@ -73,7 +73,7 @@ void Camera::Bind() const
     GL::Push(GL::Pushable::VIEW_MATRIX);
     GL::Push(GL::Pushable::PROJECTION_MATRIX);
 
-    if(Transform *tr = GetGameObject()->GetTransform())
+    if (Transform *tr = GetGameObject()->GetTransform())
     {
         GLUniforms::SetCameraWorldPosition(tr->GetPosition());
     }
@@ -142,7 +142,7 @@ void Camera::SetReplacementGBuffer(GBuffer *gbuffer)
 
 void Camera::SetRenderFlags(RenderFlags renderFlags)
 {
-    if(renderFlags != GetRenderFlags())
+    if (renderFlags != GetRenderFlags())
     {
         m_renderFlags = renderFlags;
     }
@@ -150,7 +150,7 @@ void Camera::SetRenderFlags(RenderFlags renderFlags)
 
 void Camera::SetRenderSize(const Vector2i &renderSize)
 {
-    if(GetGBuffer()->Resize(renderSize))
+    if (GetGBuffer()->Resize(renderSize))
     {
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
         GetGBuffer()->Bind();
@@ -162,7 +162,7 @@ void Camera::SetRenderSize(const Vector2i &renderSize)
 
 void Camera::SetGammaCorrection(float gammaCorrection)
 {
-    if(gammaCorrection != GetGammaCorrection())
+    if (gammaCorrection != GetGammaCorrection())
     {
         m_gammaCorrection = gammaCorrection;
     }
@@ -172,7 +172,7 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
 {
     Transform *tr = GetGameObject()->GetTransform();
     Vector3 camPosition = tr->GetPosition();
-    if(aaBBoxWorld.Contains(camPosition))
+    if (aaBBoxWorld.Contains(camPosition))
     {
         return AARect::NDCRect;
     }
@@ -192,16 +192,16 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
         Geometry::IntersectQuadAABox(GetFrustumFarQuad(), aaBBoxWorld));
 
     Array<Vector3> boxPoints = aaBBoxWorld.GetPoints();
-    for(const Vector3 &bp : boxPoints)
+    for (const Vector3 &bp : boxPoints)
     {
-        if(IsPointInsideFrustum(bp))
+        if (IsPointInsideFrustum(bp))
         {
             intPoints.PushBack(bp);
         }
     }
 
     List<Vector2> viewportPoints;
-    for(const Vector3 &p : intPoints)
+    for (const Vector3 &p : intPoints)
     {
         Vector2 viewportPoint = FromWorldPointToViewportPointNDC(p).xy();
         viewportPoints.PushBack(viewportPoint);
@@ -255,11 +255,11 @@ void Camera::RemoveRenderPass(RenderPass renderPass)
 void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
                               bool createFilteredCubeMapsForIBL)
 {
-    if(GetSkyBoxTexture() != skyBoxTextureCM)
+    if (GetSkyBoxTexture() != skyBoxTextureCM)
     {
         p_skyboxTextureCM.Set(skyBoxTextureCM);
 
-        if(createFilteredCubeMapsForIBL)
+        if (createFilteredCubeMapsForIBL)
         {
             // If new, generate the IBL specular and diffuse textures!
             RH<TextureCubeMap> diffuseIBLCubeMap =
@@ -416,7 +416,7 @@ Quad Camera::GetFrustumBotQuad() const
 Camera *Camera::GetActive()
 {
     Camera *cam = GEngine::GetActiveRenderingCamera();
-    if(!cam)
+    if (!cam)
     {
         Scene *activeScene = SceneManager::GetActiveScene();
         cam = activeScene ? activeScene->GetCamera() : nullptr;
@@ -444,21 +444,26 @@ Matrix4 Camera::GetViewMatrix() const
 
 Matrix4 Camera::GetProjectionMatrix() const
 {
-    if(m_projMode == CameraProjectionMode::PERSPECTIVE)
+    if (m_projMode == CameraProjectionMode::PERSPECTIVE)
     {
-        if(GetAspectRatio() == 0.0 || GetFovDegrees() == 0.0 ||
-           GetZNear() == GetZFar())
+        if (GetAspectRatio() == 0.0 || GetFovDegrees() == 0.0 ||
+            GetZNear() == GetZFar())
         {
             return Matrix4::Identity;
         }
 
         return Matrix4::Perspective(Math::DegToRad(GetFovDegrees()),
-                                    GetAspectRatio(), GetZNear(), GetZFar());
+                                    GetAspectRatio(),
+                                    GetZNear(),
+                                    GetZFar());
     }
     else  // Ortho
     {
-        return Matrix4::Ortho(-GetOrthoWidth(), GetOrthoWidth(),
-                              -GetOrthoHeight(), GetOrthoHeight(), GetZNear(),
+        return Matrix4::Ortho(-GetOrthoWidth(),
+                              GetOrthoWidth(),
+                              -GetOrthoHeight(),
+                              GetOrthoHeight(),
+                              GetZNear(),
                               GetZFar());
     }
 }
@@ -489,42 +494,42 @@ void Camera::ImportMeta(const MetaNode &meta)
 {
     Component::ImportMeta(meta);
 
-    if(meta.Contains("FOVDegrees"))
+    if (meta.Contains("FOVDegrees"))
     {
         SetFovDegrees(meta.Get<float>("FOVDegrees"));
     }
 
-    if(meta.Contains("ZNear"))
+    if (meta.Contains("ZNear"))
     {
         SetZNear(meta.Get<float>("ZNear"));
     }
 
-    if(meta.Contains("ZFar"))
+    if (meta.Contains("ZFar"))
     {
         SetZFar(meta.Get<float>("ZFar"));
     }
 
-    if(meta.Contains("OrthoHeight"))
+    if (meta.Contains("OrthoHeight"))
     {
         SetOrthoHeight(meta.Get<float>("OrthoHeight"));
     }
 
-    if(meta.Contains("ProjectionMode"))
+    if (meta.Contains("ProjectionMode"))
     {
         SetProjectionMode(meta.Get<CameraProjectionMode>("ProjectionMode"));
     }
 
-    if(meta.Contains("ClearMode"))
+    if (meta.Contains("ClearMode"))
     {
         SetClearMode(meta.Get<CameraClearMode>("ClearMode"));
     }
 
-    if(meta.Contains("ClearColor"))
+    if (meta.Contains("ClearColor"))
     {
         SetClearColor(meta.Get<Color>("ClearColor"));
     }
 
-    if(meta.Contains("SkyBoxTexture"))
+    if (meta.Contains("SkyBoxTexture"))
     {
         RH<TextureCubeMap> skyCM =
             Resources::Load<TextureCubeMap>(meta.Get<GUID>("SkyBoxTexture"));

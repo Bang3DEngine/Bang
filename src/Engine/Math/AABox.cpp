@@ -135,13 +135,13 @@ bool AABox::CheckCollision(const Sphere &sphere,
     const Vector3 &sCenter = sphere.GetCenter();
     float dCenterClosest = Vector3::Distance(closestPointToAABox, sCenter);
     bool collides = (dCenterClosest <= sRadius * sRadius);
-    if(collides)
+    if (collides)
     {
-        if(point)
+        if (point)
         {
             *point = closestPointToAABox;
         }
-        if(normal)
+        if (normal)
         {
             *normal = (closestPointToAABox - sCenter).Normalized();
         }
@@ -174,12 +174,12 @@ void AABox::AddPoint(const Vector3 &point)
 
 AABox AABox::Union(const AABox &b1, const AABox &b2)
 {
-    if(b1 == AABox::Empty)
+    if (b1 == AABox::Empty)
     {
         return b2;
     }
 
-    if(b2 == AABox::Empty)
+    if (b2 == AABox::Empty)
     {
         return b1;
     }
@@ -192,7 +192,7 @@ AABox AABox::Union(const AABox &b1, const AABox &b2)
 void AABox::CreateFromPositions(const Array<Vector3> &positions)
 {
     *this = AABox::Empty;
-    for(const Vector3 &v : positions)
+    for (const Vector3 &v : positions)
     {
         AddPoint(v);
     }
@@ -230,7 +230,7 @@ Quad AABox::GetQuad(Axis3D axis, bool sign) const
     const Vector3 &ctr = GetCenter();
     const Vector3 &ext = GetExtents();
     int xs0, xs1, xs2, xs3, ys0, ys1, ys2, ys3, zs0, zs1, zs2, zs3;
-    switch(axis)  // Given in CCW order out facing the AABox
+    switch (axis)  // Given in CCW order out facing the AABox
     {
         case Axis3D::X:
             xs0 = (sign ? 1 : -1);
@@ -309,9 +309,12 @@ Quad AABox::GetBackQuad() const
 }
 std::array<Quad, 6> AABox::GetQuads() const
 {
-    const std::array<Quad, 6> aaBoxQuads = {{GetBotQuad(), GetTopQuad(),
-                                             GetLeftQuad(), GetRightQuad(),
-                                             GetFrontQuad(), GetBackQuad()}};
+    const std::array<Quad, 6> aaBoxQuads = {{GetBotQuad(),
+                                             GetTopQuad(),
+                                             GetLeftQuad(),
+                                             GetRightQuad(),
+                                             GetFrontQuad(),
+                                             GetBackQuad()}};
     return aaBoxQuads;
 }
 
@@ -319,10 +322,14 @@ AABox operator*(const Matrix4 &m, const AABox &b)
 {
     Array<Vector3> points = b.GetPoints();
     Array<Vector3> newTransformedBoxPoints = {
-        (m * Vector4(points[0], 1)).xyz(), (m * Vector4(points[1], 1)).xyz(),
-        (m * Vector4(points[2], 1)).xyz(), (m * Vector4(points[3], 1)).xyz(),
-        (m * Vector4(points[4], 1)).xyz(), (m * Vector4(points[5], 1)).xyz(),
-        (m * Vector4(points[6], 1)).xyz(), (m * Vector4(points[7], 1)).xyz()};
+        (m * Vector4(points[0], 1)).xyz(),
+        (m * Vector4(points[1], 1)).xyz(),
+        (m * Vector4(points[2], 1)).xyz(),
+        (m * Vector4(points[3], 1)).xyz(),
+        (m * Vector4(points[4], 1)).xyz(),
+        (m * Vector4(points[5], 1)).xyz(),
+        (m * Vector4(points[6], 1)).xyz(),
+        (m * Vector4(points[7], 1)).xyz()};
 
     AABox br(newTransformedBoxPoints.Front());
     br.CreateFromPositions(newTransformedBoxPoints);

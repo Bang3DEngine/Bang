@@ -133,7 +133,7 @@ void PointLight::RenderShadowMaps_(GameObject *go)
     const Vector3 pointLightPos =
         GetGameObject()->GetTransform()->GetPosition();
     const Array<Renderer *> shadowCastersRenderers = GetShadowCastersIn(go);
-    for(Renderer *shadowCasterRend : shadowCastersRenderers)
+    for (Renderer *shadowCasterRend : shadowCastersRenderers)
     {
         AABox shadowCasterAABoxWorld = shadowCasterRend->GetGameObject()
                                            ->GetTransform()
@@ -143,7 +143,7 @@ void PointLight::RenderShadowMaps_(GameObject *go)
             shadowCasterAABoxWorld.GetClosestPointInAABB(pointLightPos);
         bool isCompletelyOutside =
             Vector3::Distance(closestPointInAABox, pointLightPos) > rangeLimit;
-        if(!isCompletelyOutside)
+        if (!isCompletelyOutside)
         {
             shadowCasterRend->OnRender(RenderPass::SCENE);
         }
@@ -172,8 +172,8 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
 
     const Transform *tr = GetGameObject()->GetTransform();
     const Vector3 pos = tr->GetPosition();
-    const Matrix4 pers = Matrix4::Perspective(Math::DegToRad(90.0f), 1.0f,
-                                              0.05f, GetLightZFar());
+    const Matrix4 pers = Matrix4::Perspective(
+        Math::DegToRad(90.0f), 1.0f, 0.05f, GetLightZFar());
     const Vector3 up = Vector3::Up, down = Vector3::Down, left = Vector3::Left,
                   right = Vector3::Right, fwd = Vector3::Forward,
                   back = Vector3::Back;
@@ -198,7 +198,7 @@ void PointLight::CloneInto(ICloneable *clone) const
 void PointLight::ImportMeta(const MetaNode &metaNode)
 {
     Light::ImportMeta(metaNode);
-    if(metaNode.Contains("Range"))
+    if (metaNode.Contains("Range"))
     {
         SetRange(metaNode.Get<float>("Range"));
     }

@@ -165,11 +165,11 @@ Matrix4G<T> Matrix4G<T>::Inversed(float invertiblePrecision,
                 m.c0.w * inv.c3.x;
 
     bool isInvertible = (Math::Abs(det) > invertiblePrecision);
-    if(isInvertibleOut)
+    if (isInvertibleOut)
     {
         *isInvertibleOut = isInvertible;
     }
-    if(!isInvertible)
+    if (!isInvertible)
     {
         return *this;
     }
@@ -270,15 +270,15 @@ Quaternion Matrix4G<T>::GetRotation() const
     Vector3 scale = GetScale();
 
     constexpr float Eps = 1e-3f;
-    if(Math::Abs(scale.x) <= Eps)
+    if (Math::Abs(scale.x) <= Eps)
     {
         scale.x = Math::Sign(scale.x) * Eps;
     }
-    if(Math::Abs(scale.y) <= Eps)
+    if (Math::Abs(scale.y) <= Eps)
     {
         scale.y = Math::Sign(scale.y) * Eps;
     }
-    if(Math::Abs(scale.z) <= Eps)
+    if (Math::Abs(scale.z) <= Eps)
     {
         scale.z = Math::Sign(scale.z) * Eps;
     }
@@ -411,17 +411,17 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
 
     int biggestIndex = 0;
     T fourBiggestSquaredMinus1 = fourWSquaredMinus1;
-    if(fourXSquaredMinus1 > fourBiggestSquaredMinus1)
+    if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
     {
         fourBiggestSquaredMinus1 = fourXSquaredMinus1;
         biggestIndex = 1;
     }
-    if(fourYSquaredMinus1 > fourBiggestSquaredMinus1)
+    if (fourYSquaredMinus1 > fourBiggestSquaredMinus1)
     {
         fourBiggestSquaredMinus1 = fourYSquaredMinus1;
         biggestIndex = 2;
     }
-    if(fourZSquaredMinus1 > fourBiggestSquaredMinus1)
+    if (fourZSquaredMinus1 > fourBiggestSquaredMinus1)
     {
         fourBiggestSquaredMinus1 = fourZSquaredMinus1;
         biggestIndex = 3;
@@ -432,7 +432,7 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
     float mult = SCAST<T>(0.25) / biggestVal;
 
     QuaternionG<T> res;
-    switch(biggestIndex)
+    switch (biggestIndex)
     {
         case 0:
             res.x = (m.c1[2] - m.c2[1]) * mult;
@@ -492,7 +492,7 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
 template <class T>
 Vector4G<T> &Matrix4G<T>::operator[](std::size_t i)
 {
-    switch(i)
+    switch (i)
     {
         case 0: return c0;
         case 1: return c1;
@@ -513,11 +513,11 @@ namespace Bang
 template <class T>
 bool operator==(const Matrix4G<T> &m1, const Matrix4G<T> &m2)
 {
-    for(int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
-        for(int j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; ++j)
         {
-            if(m1[i][j] != m2[i][j])
+            if (m1[i][j] != m2[i][j])
             {
                 return false;
             }
@@ -535,14 +535,14 @@ bool operator!=(const Matrix4G<T> &m1, const Matrix4G<T> &m2)
 template <class T>
 Matrix4G<T> operator+(const Matrix4G<T> &m1, const Matrix4G<T> &m2)
 {
-    return Matrix4G<T>(m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2],
-                       m1[3] + m2[3]);
+    return Matrix4G<T>(
+        m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3]);
 }
 template <class T>
 Matrix4G<T> operator-(const Matrix4G<T> &m1, const Matrix4G<T> &m2)
 {
-    return Matrix4G<T>(m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2],
-                       m1[3] - m2[3]);
+    return Matrix4G<T>(
+        m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3]);
 }
 template <class T>
 Matrix4G<T> operator-(const Matrix4G<T> &m)

@@ -17,7 +17,7 @@ GEngineDebugger::GEngineDebugger()
 
 void GEngineDebugger::Reset()
 {
-    if(Input::GetKeyDown(Key::Q))
+    if (Input::GetKeyDown(Key::Q))
     {
         File::Remove(GEngineDebugger::c_debugDir);
         File::CreateDirectory(GEngineDebugger::c_debugDir);
@@ -28,7 +28,7 @@ void GEngineDebugger::TakeGBufferShot(GBuffer *gbuffer,
                                       GL::Attachment att,
                                       const String &screenshotName)
 {
-    if(Input::GetKeyDown(Key::Q))
+    if (Input::GetKeyDown(Key::Q))
     {
         String fileName = String::ToString(int(Time::GetNow().GetMillis())) +
                           "_" + screenshotName;

@@ -54,7 +54,7 @@ Resources::~Resources()
 RH<Resource> Resources::LoadFromExtension(const Path &path)
 {
     RH<Resource> resRH;
-    if(path.HasExtension(Extensions::GetModelExtensions()))
+    if (path.HasExtension(Extensions::GetModelExtensions()))
     {
         resRH.Set(Resources::Load<Model>(path).Get());
     }
@@ -70,7 +70,7 @@ Array<Resource *> Resources::GetAllResources()
 {
     Array<Resource *> result;
     Resources *rs = Resources::GetInstance();
-    for(const auto &it : rs->m_resourcesCache)
+    for (const auto &it : rs->m_resourcesCache)
     {
         result.PushBack(it.second.resource);
     }
@@ -89,17 +89,17 @@ void Resources::CreateResourceMetaAndImportFile(const Resource *resource,
 RH<Resource> Resources::Load_(std::function<Resource *()> creator,
                               const Path &filepath)
 {
-    if(m_beingDestroyed)
+    if (m_beingDestroyed)
     {
         return RH<Resource>(nullptr);
     }
 
-    if(filepath.IsEmpty())
+    if (filepath.IsEmpty())
     {
         return RH<Resource>(nullptr);
     }
 
-    if(!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
+    if (!Resources::IsEmbeddedResource(filepath) && !filepath.IsFile())
     {
         Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");
         return RH<Resource>(nullptr);
@@ -108,7 +108,7 @@ RH<Resource> Resources::Load_(std::function<Resource *()> creator,
     RH<Resource> resRH;
     Resource *res = GetCached_(filepath);
     resRH.Set(res);  // Register as soon as possible
-    if(!res)
+    if (!res)
     {
         res = creator();
 
@@ -125,18 +125,18 @@ RH<Resource> Resources::Load_(std::function<Resource *()> creator,
 RH<Resource> Resources::Load_(std::function<Resource *()> creator,
                               const GUID &guid)
 {
-    if(guid.IsEmpty())
+    if (guid.IsEmpty())
     {
         return RH<Resource>(nullptr);
     }
 
     RH<Resource> resRH(GetCached_(guid));
-    if(!resRH)
+    if (!resRH)
     {
-        if(!Resources::IsEmbeddedResource(guid))
+        if (!Resources::IsEmbeddedResource(guid))
         {
             Path resPath = MetaFilesManager::GetMetaFilepath(guid);
-            if(resPath.IsFile())
+            if (resPath.IsFile())
             {
                 resRH.Set(Load_(creator, resPath).Get());
             }
@@ -145,10 +145,10 @@ RH<Resource> Resources::Load_(std::function<Resource *()> creator,
         {
             GUID parentGUID = guid.WithoutEmbeddedResourceGUID();
             Path parentPath = MetaFilesManager::GetFilepath(parentGUID);
-            if(parentPath.IsFile())
+            if (parentPath.IsFile())
             {
-                if(RH<Resource> parentResRH =
-                       Resources::LoadFromExtension(parentPath))
+                if (RH<Resource> parentResRH =
+                        Resources::LoadFromExtension(parentPath))
                 {
                     resRH.Set(parentResRH.Get()->GetEmbeddedResource(guid));
                 }
@@ -160,7 +160,7 @@ RH<Resource> Resources::Load_(std::function<Resource *()> creator,
 
 Resource *Resources::GetCached_(const GUID &guid) const
 {
-    if(m_resourcesCache.ContainsKey(guid))
+    if (m_resourcesCache.ContainsKey(guid))
     {
         return m_resourcesCache.Get(guid).resource;
     }
@@ -230,10 +230,10 @@ void Resources::Remove(const GUID &guid)
     ASSERT(resEntry.usageCount == 0);
 
     Resource *resource = resEntry.resource;
-    if(resource)
+    if (resource)
     {
-        if(EventEmitter<IEventsDestroy> *destroyable =
-               DCAST<EventEmitter<IEventsDestroy> *>(resource))
+        if (EventEmitter<IEventsDestroy> *destroyable =
+                DCAST<EventEmitter<IEventsDestroy> *>(resource))
         {
             destroyable->EventEmitter<IEventsDestroy>::PropagateToListeners(
                 &IEventsDestroy::OnDestroyed, destroyable);
@@ -244,9 +244,9 @@ void Resources::Remove(const GUID &guid)
     {
         rss->m_resourcesCache.Remove(it);
         it = rss->m_resourcesCache.Find(guid);
-    } while(it != rss->m_resourcesCache.End());
+    } while (it != rss->m_resourcesCache.End());
 
-    if(resource)
+    if (resource)
     {
         delete resource;
     }
@@ -263,7 +263,7 @@ void Resources::RegisterResourceUsage(Resource *resource)
     ASSERT(!guid.IsEmpty());
 
     Resources *rs = Resources::GetInstance();
-    if(!rs->GetCached_(guid))
+    if (!rs->GetCached_(guid))
     {
         Resources::Add(resource);
     }
@@ -272,7 +272,7 @@ void Resources::RegisterResourceUsage(Resource *resource)
 
 void Resources::UnRegisterResourceUsage(Resource *res)
 {
-    if(Resources *rs = Resources::GetInstance())
+    if (Resources *rs = Resources::GetInstance())
     {
         const GUID &guid = res->GetGUID();
         ASSERT(!guid.IsEmpty());
@@ -282,7 +282,7 @@ void Resources::UnRegisterResourceUsage(Resource *res)
         ASSERT(*resourcesUsage >= 1);
         --(*resourcesUsage);
 
-        if(*resourcesUsage == 0)
+        if (*resourcesUsage == 0)
         {
             Resources::Remove(guid);
         }
@@ -292,7 +292,7 @@ void Resources::UnRegisterResourceUsage(Resource *res)
 Path Resources::GetResourcePath(const Resource *resource)
 {
     Path resourcePath;
-    if(resource)
+    if (resource)
     {
         resourcePath = MetaFilesManager::GetFilepath(resource->GetGUID());
     }
@@ -329,7 +329,7 @@ void Resources::Destroy()
     m_beingDestroyed = true;
 
 #define B_DESTROY_AND_NULL(p) \
-    if(p)                     \
+    if (p)                    \
     {                         \
         delete p;             \
         p = nullptr;          \

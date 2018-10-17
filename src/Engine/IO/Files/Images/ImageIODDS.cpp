@@ -23,7 +23,7 @@ void ImageIODDS::ImportDDS(const Path &filepath, Texture2D *tex, bool *ok)
 
     GL::Pop(tex->GetGLBindTarget());
 
-    if(ok)
+    if (ok)
     {
         *ok = true;
     }

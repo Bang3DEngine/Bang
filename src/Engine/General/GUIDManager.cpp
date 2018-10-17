@@ -17,7 +17,7 @@ GUID GUIDManager::GetNewGUID()
     do
     {
         guid = GUID::GetRandomGUID();
-    } while(GUIDManager::IsBeingUsed(guid));
+    } while (GUIDManager::IsBeingUsed(guid));
 
     GUIDManager::GetInstance()->m_guids.Add(guid);
     return guid;

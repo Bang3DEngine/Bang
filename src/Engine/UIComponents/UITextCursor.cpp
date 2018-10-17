@@ -37,7 +37,7 @@ void UITextCursor::OnUpdate()
 
     m_cursorTime += Time::GetDeltaTime();
     SetVisible(m_cursorTime <= m_cursorTickTime);
-    if(m_cursorTime >= m_cursorTickTime * 2)
+    if (m_cursorTime >= m_cursorTickTime * 2)
     {
         m_cursorTime.SetNanos(0);
     }

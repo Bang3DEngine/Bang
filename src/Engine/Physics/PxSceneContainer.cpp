@@ -69,14 +69,14 @@ physx::PxFilterFlags CollisionFilterShader(
         PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_PERSISTS |
         PxPairFlag::eNOTIFY_TOUCH_LOST | PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
-    if(PxFilterObjectIsKinematic(attributes0) &&
-       PxFilterObjectIsKinematic(attributes1))
+    if (PxFilterObjectIsKinematic(attributes0) &&
+        PxFilterObjectIsKinematic(attributes1))
     {
         retPairFlags.clear(PxPairFlag::eSOLVE_CONTACT);
     }
 
-    if(PxFilterObjectIsTrigger(attributes0) &&
-       PxFilterObjectIsTrigger(attributes1))
+    if (PxFilterObjectIsTrigger(attributes0) &&
+        PxFilterObjectIsTrigger(attributes1))
     {
         retPairFlags.clear(PxPairFlag::eNOTIFY_TOUCH_PERSISTS);
     }
@@ -152,9 +152,9 @@ Array<Collider *> PxSceneContainer::GetColliders() const
     Array<Collider *> colliders;
     const Array<PhysicsObject *> &phObjs =
         m_physicsObjectGatherer->GetGatheredObjects();
-    for(PhysicsObject *phObj : phObjs)
+    for (PhysicsObject *phObj : phObjs)
     {
-        if(Collider *coll = FastDynamicCast<Collider *>(phObj))
+        if (Collider *coll = FastDynamicCast<Collider *>(phObj))
         {
             colliders.PushBack(coll);
         }
@@ -165,7 +165,7 @@ Array<Collider *> PxSceneContainer::GetColliders() const
 Collider *PxSceneContainer::GetColliderFromPxShape(
     physx::PxShape *pxShape) const
 {
-    if(m_pxShapeToCollider.ContainsKey(pxShape))
+    if (m_pxShapeToCollider.ContainsKey(pxShape))
     {
         return m_pxShapeToCollider.Get(pxShape);
     }
@@ -174,7 +174,7 @@ Collider *PxSceneContainer::GetColliderFromPxShape(
 
 GameObject *PxSceneContainer::GetGameObjectFromPxActor(PxActor *pxActor) const
 {
-    if(m_pxActorToGameObject.ContainsKey(pxActor))
+    if (m_pxActorToGameObject.ContainsKey(pxActor))
     {
         return m_pxActorToGameObject.Get(pxActor);
     }
@@ -184,7 +184,7 @@ GameObject *PxSceneContainer::GetGameObjectFromPxActor(PxActor *pxActor) const
 void PxSceneContainer::RayCast(const RayCastInfo &rcInfo,
                                RayCastHitInfo *hitInfo)
 {
-    if(!hitInfo)
+    if (!hitInfo)
     {
         return;
     }
@@ -202,10 +202,13 @@ void PxSceneContainer::RayCast(const RayCastInfo &rcInfo,
     fd.flags = (PxQueryFlag::eNO_BLOCK | PxQueryFlag::eDYNAMIC);
 
     pxScene->raycast(Physics::GetPxVec3FromVector3(rcInfo.origin),
-                     Physics::GetPxVec3FromVector3(unitDir), rcInfo.maxDistance,
-                     hitOutBuffer, hf, fd);
+                     Physics::GetPxVec3FromVector3(unitDir),
+                     rcInfo.maxDistance,
+                     hitOutBuffer,
+                     hf,
+                     fd);
 
-    for(uint32_t i = 0; i < hitOutBuffer.getNbTouches(); ++i)
+    for (uint32_t i = 0; i < hitOutBuffer.getNbTouches(); ++i)
     {
         const PxRaycastHit &pxRCHit = hitOutBuffer.getTouch(i);
 
@@ -224,9 +227,9 @@ void PxSceneContainer::RayCast(const RayCastInfo &rcInfo,
 
 PxActor *PxSceneContainer::GetAncestorOrThisPxActor(GameObject *go)
 {
-    if(go)
+    if (go)
     {
-        if(PxActor *pxActor = GetPxActorFromGameObject(go))
+        if (PxActor *pxActor = GetPxActorFromGameObject(go))
         {
             return pxActor;
         }
@@ -240,12 +243,12 @@ PxActor *PxSceneContainer::GetAncestorOrThisPxActor(GameObject *go)
 
 PxActor *PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
 {
-    if(!m_gameObjectToPxActor.ContainsKey(go))
+    if (!m_gameObjectToPxActor.ContainsKey(go))
     {
         Array<PhysicsObject *> phObjs = go->GetComponents<PhysicsObject>();
-        for(PhysicsObject *phObj : phObjs)
+        for (PhysicsObject *phObj : phObjs)
         {
-            if(PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
+            if (PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
             {
                 m_gameObjectToPxActor.Add(go, SCAST<PxActor *>(pxRD));
                 return pxRD;
@@ -279,19 +282,19 @@ void PxSceneContainer::onContact(const PxContactPairHeader &pairHeader,
                                  const PxContactPair *pairs,
                                  PxU32 nbPairs)
 {
-    for(uint i = 0; i < nbPairs; i++)
+    for (uint i = 0; i < nbPairs; i++)
     {
         const PxContactPair &cp = pairs[i];
-        if(cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_FOUND) ||
-           cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_PERSISTS) ||
-           cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_LOST))
+        if (cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_FOUND) ||
+            cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_PERSISTS) ||
+            cp.events.isSet(PxPairFlag::eNOTIFY_TOUCH_LOST))
         {
             PxActor *pxActor0 = pairHeader.actors[0];
             PxActor *pxActor1 = pairHeader.actors[1];
             GameObject *go0 = GetGameObjectFromPxActor(pxActor0);
             GameObject *go1 = GetGameObjectFromPxActor(pxActor1);
 
-            if(go0 && go1)
+            if (go0 && go1)
             {
                 Collider *collider0 = GetColliderFromPxShape(cp.shapes[0]);
                 Collider *collider1 = GetColliderFromPxShape(cp.shapes[1]);
@@ -303,7 +306,7 @@ void PxSceneContainer::onContact(const PxContactPairHeader &pairHeader,
                 Collision collisionFor1;
                 PxU32 nbContacts =
                     pairs[i].extractContacts(contacts, bufferSize);
-                for(PxU32 j = 0; j < nbContacts; j++)
+                for (PxU32 j = 0; j < nbContacts; j++)
                 {
                     CollisionContact cContact;
                     cContact.m_point =
@@ -332,11 +335,11 @@ void PxSceneContainer::onContact(const PxContactPairHeader &pairHeader,
                               ? &EEPH::OnCollisionPersists
                               : &EEPH::OnCollisionExit;
 
-                for(EEPH *listener : go0->GetComponents<EEPH>())
+                for (EEPH *listener : go0->GetComponents<EEPH>())
                 {
                     (listener->*collisionCallback)(collisionFor0);
                 }
-                for(EEPH *listener : go1->GetComponents<EEPH>())
+                for (EEPH *listener : go1->GetComponents<EEPH>())
                 {
                     (listener->*collisionCallback)(collisionFor1);
                 }
@@ -347,18 +350,18 @@ void PxSceneContainer::onContact(const PxContactPairHeader &pairHeader,
 
 void PxSceneContainer::onTrigger(PxTriggerPair *pairs, PxU32 nbPairs)
 {
-    for(uint i = 0; i < nbPairs; i++)
+    for (uint i = 0; i < nbPairs; i++)
     {
         const PxTriggerPair &tp = pairs[i];
-        if(tp.status == PxPairFlag::eNOTIFY_TOUCH_FOUND ||
-           tp.status == PxPairFlag::eNOTIFY_TOUCH_LOST)
+        if (tp.status == PxPairFlag::eNOTIFY_TOUCH_FOUND ||
+            tp.status == PxPairFlag::eNOTIFY_TOUCH_LOST)
         {
             PxActor *otherPxActor = tp.otherActor;
             PxActor *triggerPxActor = tp.triggerActor;
             GameObject *otherGo = GetGameObjectFromPxActor(otherPxActor);
             GameObject *triggerGo = GetGameObjectFromPxActor(triggerPxActor);
 
-            if(otherGo && triggerGo)
+            if (otherGo && triggerGo)
             {
                 Collider *otherCollider = GetColliderFromPxShape(tp.otherShape);
                 Collider *triggerCollider =
@@ -370,11 +373,11 @@ void PxSceneContainer::onTrigger(PxTriggerPair *pairs, PxU32 nbPairs)
                         ? &EEPH::OnTriggerEnter
                         : &EEPH::OnTriggerExit;
 
-                for(auto listener : otherGo->GetComponents<EEPH>())
+                for (auto listener : otherGo->GetComponents<EEPH>())
                 {
                     (listener->*triggerCallback)(triggerCollider);
                 }
-                for(auto listener : triggerGo->GetComponents<EEPH>())
+                for (auto listener : triggerGo->GetComponents<EEPH>())
                 {
                     (listener->*triggerCallback)(otherCollider);
                 }
@@ -415,7 +418,7 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
 
     PxRigidDynamic *pxRD =
         SCAST<PxRigidDynamic *>(GetAncestorOrThisPxActor(phObjGo));
-    if(!pxRD)
+    if (!pxRD)
     {
         ASSERT(!GetPxActorFromGameObject(phObjGo));
         pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
@@ -431,12 +434,12 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     }
     ASSERT(pxRD);
 
-    if(!m_gameObjectToPxActor.ContainsKey(phObjGo))
+    if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
     {
         m_gameObjectToPxActor.Add(phObjGo, pxRD);
     }
 
-    if(!m_pxActorToGameObject.ContainsKey(pxRD))
+    if (!m_pxActorToGameObject.ContainsKey(pxRD))
     {
         m_pxActorToGameObject.Add(pxRD, phObjGo);
         GetPxScene()->addActor(*pxRD);
@@ -445,14 +448,14 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     ASSERT(m_pxActorToGameObject.ContainsKey(pxRD));
 
     // For each physics object in descendants, update its pxActor
-    for(PhysicsObject *phObj : phObjsInDescendants)
+    for (PhysicsObject *phObj : phObjsInDescendants)
     {
         phObj->SetPxRigidDynamic(pxRD);
-        if(phObj->GetPhysicsObjectType() != PhysicsObject::Type::RIGIDBODY)
+        if (phObj->GetPhysicsObjectType() != PhysicsObject::Type::RIGIDBODY)
         {
             // Collider
             Collider *collider = SCAST<Collider *>(phObj);
-            if(collider->GetPxShape())
+            if (collider->GetPxShape())
             {
                 m_pxShapeToCollider.Add(collider->GetPxShape(), collider);
             }
@@ -463,11 +466,11 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     }
 
     // Does this gameObject need to release the pxActor if it had one?
-    if(PxActor *pxActor = GetPxActorFromGameObject(phObjGo))
+    if (PxActor *pxActor = GetPxActorFromGameObject(phObjGo))
     {
         Array<PhysicsObject *> phObjs =
             phObjGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
-        if(phObjs.Size() == 0)
+        if (phObjs.Size() == 0)
         {
             pxActor->release();
             m_gameObjectToPxActor.Remove(phObjGo);
@@ -485,9 +488,9 @@ void PxSceneContainer::OnObjectUnGathered(GameObject *prevGo,
 
 void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 {
-    if(PhysicsObject *phObj = DCAST<PhysicsObject *>(ee))
+    if (PhysicsObject *phObj = DCAST<PhysicsObject *>(ee))
     {
-        switch(phObj->GetPhysicsObjectType())
+        switch (phObj->GetPhysicsObjectType())
         {
             case PhysicsObject::Type::RIGIDBODY:
             {

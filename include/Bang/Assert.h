@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 #define ASSERT_MSG(assertion, msg)                                          \
-    if(!(assertion))                                                        \
+    if (!(assertion))                                                       \
     {                                                                       \
         std::cerr << "BANG ASSERTION FAILED: '" << msg << "'" << std::endl; \
         std::abort();                                                       \
@@ -15,7 +15,7 @@
 #endif
 
 #define ASSERT_SOFT_MSG(assertion, msg)                            \
-    if(!(assertion))                                               \
+    if (!(assertion))                                              \
     {                                                              \
         std::cerr << "BANG SOFT ASSERTION FAILED: '" << msg << "'" \
                   << std::endl;                                    \

@@ -57,7 +57,7 @@ Matrix3G<T> Matrix3G<T>::Inversed() const
                    m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2]) +
                    m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]));
 
-    if(div < SCAST<T>(10e-9))
+    if (div < SCAST<T>(10e-9))
     {
         return m;
     }  // Non invertible
@@ -113,7 +113,7 @@ const T *Matrix3G<T>::Data() const
 template <class T>
 Vector3G<T> &Matrix3G<T>::operator[](std::size_t i)
 {
-    switch(i)
+    switch (i)
     {
         case 0: return c0;
         case 1: return c1;
@@ -171,11 +171,11 @@ Matrix3G<T> operator*(const Matrix3G<T> &m1, const Matrix3G<OtherT> &m2)
 template <class T>
 bool operator==(const Matrix3G<T> &m1, const Matrix3G<T> &m2)
 {
-    for(int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; ++i)
     {
-        for(int j = 0; j < 3; ++j)
+        for (int j = 0; j < 3; ++j)
         {
-            if(m1[i][j] != m2[i][j])
+            if (m1[i][j] != m2[i][j])
             {
                 return false;
             }

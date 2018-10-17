@@ -80,7 +80,8 @@ namespace Bang
 {
 Triangle operator*(const Matrix4 &m, const Triangle &t)
 {
-    return Triangle(m.TransformedPoint(t[0]), m.TransformedPoint(t[1]),
+    return Triangle(m.TransformedPoint(t[0]),
+                    m.TransformedPoint(t[1]),
                     m.TransformedPoint(t[2]));
 }
 }

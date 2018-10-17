@@ -72,7 +72,7 @@ void GameObject::Start()
 
 void GameObject::Update()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::Update);
         PropagateToChildren(&GameObject::Update);
@@ -82,7 +82,7 @@ void GameObject::Update()
 
 void GameObject::AfterChildrenUpdate()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnAfterChildrenUpdate);
     }
@@ -90,7 +90,7 @@ void GameObject::AfterChildrenUpdate()
 
 void GameObject::PostUpdate()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnPostUpdate);
         PropagateToChildren(&GameObject::PostUpdate);
@@ -99,7 +99,7 @@ void GameObject::PostUpdate()
 
 void GameObject::BeforeRender()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnBeforeRender);
         PropagateToChildren(&GameObject::BeforeRender);
@@ -108,10 +108,10 @@ void GameObject::BeforeRender()
 
 void GameObject::Render(RenderPass renderPass, bool renderChildren)
 {
-    if(IsActiveRecursively() && IsVisibleRecursively())
+    if (IsActiveRecursively() && IsVisibleRecursively())
     {
         PropagateToComponents(&Component::OnRender, renderPass);
-        if(renderChildren)
+        if (renderChildren)
         {
             BeforeChildrenRender(renderPass);
             PropagateToChildren(&GameObject::Render, renderPass, true);
@@ -122,7 +122,7 @@ void GameObject::Render(RenderPass renderPass, bool renderChildren)
 
 void GameObject::BeforeChildrenRender(RenderPass renderPass)
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnBeforeChildrenRender, renderPass);
     }
@@ -130,7 +130,7 @@ void GameObject::BeforeChildrenRender(RenderPass renderPass)
 
 void GameObject::AfterChildrenRender(RenderPass renderPass)
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         PropagateToComponents(&Component::OnAfterChildrenRender, renderPass);
     }
@@ -142,7 +142,8 @@ void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
         &IEventsChildren::OnChildAdded, addedChild, parent);
     PropagateToArray(&IEventsChildren::OnChildAdded,
                      GetComponents<EventListener<IEventsChildren>>(),
-                     addedChild, parent);
+                     addedChild,
+                     parent);
 }
 
 void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
@@ -151,7 +152,8 @@ void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
         &IEventsChildren::OnChildRemoved, removedChild, parent);
     PropagateToArray(&IEventsChildren::OnChildRemoved,
                      GetComponents<EventListener<IEventsChildren>>(),
-                     removedChild, parent);
+                     removedChild,
+                     parent);
 }
 
 Component *GameObject::AddComponent(Component *component, int index)
@@ -180,10 +182,10 @@ void GameObject::AddChild_(GameObject *child,
 
     int index = (index_ != -1 ? index_ : GetChildren().Size());
     ASSERT(index >= 0 && index <= GetChildren().Size());
-    if(child->GetParent() != this)  // Parent change
+    if (child->GetParent() != this)  // Parent change
     {
         Matrix4 prevWorldTransform = Matrix4::Identity;
-        if(keepWorldTransform && child->GetTransform())
+        if (keepWorldTransform && child->GetTransform())
         {
             prevWorldTransform = child->GetTransform()->GetLocalToWorldMatrix();
         }
@@ -194,7 +196,7 @@ void GameObject::AddChild_(GameObject *child,
         child->InvalidateEnabledRecursively();
         child->InvalidateVisibleRecursively();
 
-        if(keepWorldTransform && GetTransform() && child->GetTransform())
+        if (keepWorldTransform && GetTransform() && child->GetTransform())
         {
             child->GetTransform()->FillFromMatrix(
                 GetTransform()->GetLocalToWorldMatrixInv() *
@@ -209,14 +211,15 @@ void GameObject::AddChild_(GameObject *child,
             &IEventsChildren::OnParentChanged, oldParent, this);
         PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
                          GetComponents<EventListener<IEventsChildren>>(),
-                         oldParent, this);
+                         oldParent,
+                         this);
     }
     else  // Its a movement
     {
         int oldIndex = GetChildren().IndexOf(this);
-        if(oldIndex != index)
+        if (oldIndex != index)
         {
-            if(oldIndex >= 0)
+            if (oldIndex >= 0)
             {
                 index = (oldIndex < index) ? (index - 1) : index;
             }
@@ -232,7 +235,7 @@ void GameObject::AddChild_(GameObject *child,
 void GameObject::RemoveChild(GameObject *child)
 {
     int i = m_children.IndexOf(child);
-    if(i >= 0)
+    if (i >= 0)
     {
         m_children[i] = nullptr;
         TryToClearDeletedChildren();
@@ -242,7 +245,7 @@ void GameObject::RemoveChild(GameObject *child)
 
 void GameObject::InvalidateVisibleRecursively()
 {
-    if(m_visibleRecursivelyValid)
+    if (m_visibleRecursivelyValid)
     {
         m_visibleRecursivelyValid = false;
         OnVisibleRecursivelyInvalidated();
@@ -252,10 +255,10 @@ void GameObject::InvalidateVisibleRecursively()
 Component *GameObject::AddComponent_(Component *component, int index_)
 {
     ASSERT(m_componentsIterationDepth == 0);
-    if(component && !GetComponents().Contains(component))
+    if (component && !GetComponents().Contains(component))
     {
         Transform *transformComp = FastDynamicCast<Transform *>(component);
-        if(transformComp)
+        if (transformComp)
         {
             ASSERT_SOFT_MSG(
                 !HasComponent<Transform>(),
@@ -265,10 +268,10 @@ Component *GameObject::AddComponent_(Component *component, int index_)
         const int index = (index_ != -1 ? index_ : GetComponents().Size());
         m_components.Insert(component, index);
 
-        if(transformComp)
+        if (transformComp)
         {
             p_transform = transformComp;
-            if(RectTransform *rt = FastDynamicCast<RectTransform *>(component))
+            if (RectTransform *rt = FastDynamicCast<RectTransform *>(component))
             {
                 p_rectTransform = rt;
             }
@@ -302,17 +305,17 @@ bool GameObject::CalculateVisibleRecursively() const
 
 void GameObject::OnEnabledRecursivelyInvalidated()
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
             child->InvalidateEnabledRecursively();
         }
     }
 
-    for(Component *comp : GetComponents())
+    for (Component *comp : GetComponents())
     {
-        if(comp)
+        if (comp)
         {
             comp->InvalidateEnabledRecursively();
         }
@@ -321,7 +324,7 @@ void GameObject::OnEnabledRecursivelyInvalidated()
 
 void GameObject::OnVisibleRecursivelyInvalidated()
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
         child->InvalidateVisibleRecursively();
     }
@@ -330,19 +333,19 @@ void GameObject::OnVisibleRecursivelyInvalidated()
 void GameObject::RemoveComponent(Component *component)
 {
     int i = m_components.IndexOf(component);
-    if(i >= 0)
+    if (i >= 0)
     {
         m_components[i] = nullptr;
 
         EventEmitter<IEventsComponent>::PropagateToListeners(
             &IEventsComponent::OnComponentRemoved, component, this);
 
-        if(component == p_transform)
+        if (component == p_transform)
         {
             p_transform = nullptr;
         }
 
-        if(component == p_rectTransform)
+        if (component == p_rectTransform)
         {
             p_rectTransform = nullptr;
         }
@@ -353,22 +356,24 @@ void GameObject::OnEnabled(Object *object)
 {
     Object::OnEnabled(object);
     PropagateToArray(&EventListener<IEventsObject>::OnEnabled,
-                     GetComponents<EventListener<IEventsObject>>(), object);
+                     GetComponents<EventListener<IEventsObject>>(),
+                     object);
     PropagateToChildren(&EventListener<IEventsObject>::OnEnabled, object);
 }
 void GameObject::OnDisabled(Object *object)
 {
     Object::OnDisabled(object);
     PropagateToArray(&EventListener<IEventsObject>::OnDisabled,
-                     GetComponents<EventListener<IEventsObject>>(), object);
+                     GetComponents<EventListener<IEventsObject>>(),
+                     object);
     PropagateToChildren(&EventListener<IEventsObject>::OnDisabled, object);
 }
 
 void GameObject::TryToAddQueuedChildren()
 {
-    if(m_childrenIterationDepth == 0)
+    if (m_childrenIterationDepth == 0)
     {
-        for(const auto &childToAddStruct : m_childrenToAdd)
+        for (const auto &childToAddStruct : m_childrenToAdd)
         {
             GameObject *childToAdd = childToAddStruct.child;
             int idx = childToAddStruct.index;
@@ -381,9 +386,9 @@ void GameObject::TryToAddQueuedChildren()
 
 void GameObject::TryToAddQueuedComponents()
 {
-    if(m_componentsIterationDepth == 0)
+    if (m_componentsIterationDepth == 0)
     {
-        for(const auto &pair : m_componentsToAdd)
+        for (const auto &pair : m_componentsToAdd)
         {
             Component *compToAdd = pair.first;
             uint idx = pair.second;
@@ -396,9 +401,9 @@ void GameObject::TryToAddQueuedComponents()
 void GameObject::TryToClearDeletedChildren()
 {
     Array<GameObject *> newChildren;
-    for(GameObject *child : m_children)
+    for (GameObject *child : m_children)
     {
-        if(child)
+        if (child)
         {
             newChildren.PushBack(child);
         }
@@ -409,9 +414,9 @@ void GameObject::TryToClearDeletedChildren()
 void GameObject::TryToClearDeletedComponents()
 {
     Array<Component *> newComponents;
-    for(Component *comp : m_components)
+    for (Component *comp : m_components)
     {
-        if(comp)
+        if (comp)
         {
             newComponents.PushBack(comp);
         }
@@ -423,22 +428,22 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 {
     ASSERT(gameObject);
 
-    if(!gameObject->IsWaitingToBeDestroyed())
+    if (!gameObject->IsWaitingToBeDestroyed())
     {
         Object::PropagateObjectDestruction(gameObject);
 
-        while(!gameObject->GetChildren().IsEmpty())
+        while (!gameObject->GetChildren().IsEmpty())
         {
-            if(GameObject *go = gameObject->GetChildren().Back())
+            if (GameObject *go = gameObject->GetChildren().Back())
             {
                 GameObject::DestroyImmediate(go);
             }
             gameObject->TryToClearDeletedChildren();
         }
 
-        while(!gameObject->GetComponents().IsEmpty())
+        while (!gameObject->GetComponents().IsEmpty())
         {
-            if(Component *comp = gameObject->GetComponents().Back())
+            if (Component *comp = gameObject->GetComponents().Back())
             {
                 Component::DestroyImmediate(comp);
             }
@@ -451,9 +456,9 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
 void GameObject::Destroy(GameObject *gameObject)
 {
-    if(!gameObject->IsWaitingToBeDestroyed())
+    if (!gameObject->IsWaitingToBeDestroyed())
     {
-        if(GameObject *parent = gameObject->GetParent())
+        if (GameObject *parent = gameObject->GetParent())
         {
             parent->AddGameObjectToDestroyDelayed(gameObject);
             gameObject->SetParent(nullptr);
@@ -472,9 +477,9 @@ const Array<Component *> &GameObject::GetComponents() const
 
 Component *GameObject::GetComponentByGUID(const GUID &guid) const
 {
-    for(Component *comp : GetComponents())
+    for (Component *comp : GetComponents())
     {
-        if(comp->GetGUID() == guid)
+        if (comp->GetGUID() == guid)
         {
             return comp;
         }
@@ -484,7 +489,7 @@ Component *GameObject::GetComponentByGUID(const GUID &guid) const
 
 Scene *GameObject::GetScene() const
 {
-    if(Scene *scene = DCAST<Scene *>(const_cast<GameObject *>(this)))
+    if (Scene *scene = DCAST<Scene *>(const_cast<GameObject *>(this)))
     {
         return scene;
     }
@@ -504,7 +509,7 @@ RectTransform *GameObject::GetRectTransform() const
 
 void GameObject::SetName(const String &name)
 {
-    if(name != GetName())
+    if (name != GetName())
     {
         String oldName = GetName();
         m_name = name;
@@ -526,12 +531,12 @@ GameObject *GameObject::Find(const String &name)
 
 GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
-            if(GameObject *found =
-                   child->FindInChildrenAndThis(guid, recursive))
+            if (GameObject *found =
+                    child->FindInChildrenAndThis(guid, recursive))
             {
                 return found;
             }
@@ -542,12 +547,12 @@ GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
 
 GameObject *GameObject::FindInChildren(const String &name, bool recursive)
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
-            if(GameObject *found =
-                   child->FindInChildrenAndThis(name, recursive))
+            if (GameObject *found =
+                    child->FindInChildrenAndThis(name, recursive))
             {
                 return found;
             }
@@ -558,20 +563,20 @@ GameObject *GameObject::FindInChildren(const String &name, bool recursive)
 
 GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
 {
-    if(GetGUID() == guid)
+    if (GetGUID() == guid)
     {
         return this;
     }
 
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child && child->GetGUID() == guid)
+        if (child && child->GetGUID() == guid)
         {
             return child;
         }
-        else if(recursive)
+        else if (recursive)
         {
-            if(GameObject *found = child->FindInChildren(guid, true))
+            if (GameObject *found = child->FindInChildren(guid, true))
             {
                 return found;
             }
@@ -583,20 +588,20 @@ GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
 GameObject *GameObject::FindInChildrenAndThis(const String &name,
                                               bool recursive)
 {
-    if(GetName() == name)
+    if (GetName() == name)
     {
         return this;
     }
 
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child && child->GetName() == name)
+        if (child && child->GetName() == name)
         {
             return child;
         }
-        else if(recursive)
+        else if (recursive)
         {
-            if(GameObject *found = child->FindInChildren(name, true))
+            if (GameObject *found = child->FindInChildren(name, true))
             {
                 return found;
             }
@@ -614,24 +619,24 @@ GameObject *GameObject::FindInAncestors(const String &name, bool broadSearch)
 GameObject *GameObject::FindInAncestorsAndThis(const String &name,
                                                bool broadSearch)
 {
-    if(GetName() == name)
+    if (GetName() == name)
     {
         return this;
     }
 
-    if(broadSearch)
+    if (broadSearch)
     {
-        if(GetParent())
+        if (GetParent())
         {
-            for(GameObject *siblingOrThis : GetParent()->GetChildren())
+            for (GameObject *siblingOrThis : GetParent()->GetChildren())
             {
-                if(siblingOrThis->GetName() == name)
+                if (siblingOrThis->GetName() == name)
                 {
                     return this;
                 }
 
-                if(GameObject *found =
-                       siblingOrThis->FindInAncestors(name, true))
+                if (GameObject *found =
+                        siblingOrThis->FindInAncestors(name, true))
                 {
                     return found;
                 }
@@ -645,7 +650,7 @@ GameObject *GameObject::FindInAncestorsAndThis(const String &name,
 
 void GameObject::SetVisible(bool visible)
 {
-    if(visible != IsVisible())
+    if (visible != IsVisible())
     {
         m_visible = visible;
         InvalidateVisibleRecursively();
@@ -657,9 +662,9 @@ void GameObject::SetVisible(bool visible)
 
 GameObject *GameObject::GetChild(const GUID &guid) const
 {
-    for(GameObject *go : GetChildren())
+    for (GameObject *go : GetChildren())
     {
-        if(go && go->GetGUID() == guid)
+        if (go && go->GetGUID() == guid)
         {
             return go;
         }
@@ -669,9 +674,9 @@ GameObject *GameObject::GetChild(const GUID &guid) const
 
 GameObject *GameObject::GetChild(const String &name) const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child && child->GetName() == name)
+        if (child && child->GetName() == name)
         {
             return child;
         }
@@ -686,7 +691,7 @@ const Array<GameObject *> &GameObject::GetChildren() const
 
 GameObject *GameObject::GetChild(uint index) const
 {
-    if(index >= GetChildren().Size())
+    if (index >= GetChildren().Size())
     {
         return nullptr;
     }
@@ -695,9 +700,9 @@ GameObject *GameObject::GetChild(uint index) const
 
 void GameObject::GetChildrenRecursively(Array<GameObject *> *children) const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
             children->PushBack(child);
             child->GetChildrenRecursively(children);
@@ -714,12 +719,12 @@ Array<GameObject *> GameObject::GetChildrenRecursively() const
 
 bool GameObject::IsChildOf(const GameObject *parent, bool recursive) const
 {
-    if(!GetParent())
+    if (!GetParent())
     {
         return false;
     }
 
-    if(recursive)
+    if (recursive)
     {
         return IsChildOf(parent, false) || GetParent()->IsChildOf(parent, true);
     }
@@ -733,7 +738,7 @@ bool GameObject::IsVisible() const
 
 bool GameObject::IsVisibleRecursively() const
 {
-    if(!m_visibleRecursivelyValid)
+    if (!m_visibleRecursivelyValid)
     {
         m_visibleRecursively = CalculateVisibleRecursively();
         m_visibleRecursivelyValid = true;
@@ -745,9 +750,9 @@ void GameObject::SetParent(GameObject *newParent,
                            int index,
                            bool keepWorldTransform)
 {
-    if(newParent != GetParent())  // Parent change
+    if (newParent != GetParent())  // Parent change
     {
-        if(GetParent())
+        if (GetParent())
         {
             GetParent()->RemoveChild(this);
             p_parent = nullptr;
@@ -756,15 +761,15 @@ void GameObject::SetParent(GameObject *newParent,
             InvalidateVisibleRecursively();
         }
 
-        if(newParent)
+        if (newParent)
         {
             newParent->AddChild(this, index, keepWorldTransform);
         }
     }
-    else if(GetParent())  // Movement in same parent
+    else if (GetParent())  // Movement in same parent
     {
         ASSERT(newParent == GetParent());
-        if(GetParent()->GetChildren().IndexOf(this) != index)
+        if (GetParent()->GetChildren().IndexOf(this) != index)
         {
             GetParent()->AddChild(this, index, keepWorldTransform);
         }
@@ -783,7 +788,7 @@ void GameObject::SetDontDestroyOnLoad(bool dontDestroyOnLoad)
 
 int GameObject::GetIndexInsideParent() const
 {
-    if(GameObject *parent = GetParent())
+    if (GameObject *parent = GetParent())
     {
         return parent->GetChildren().IndexOf(const_cast<GameObject *>(this));
     }
@@ -805,17 +810,17 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam,
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
 {
     AABox aabBox = AABox::Empty;
-    if(IsEnabledRecursively() && IsVisibleRecursively())
+    if (IsEnabledRecursively() && IsVisibleRecursively())
     {
         Array<Renderer *> rends = GetComponents<Renderer>();
-        for(Renderer *rend : rends)
+        for (Renderer *rend : rends)
         {
-            if(rend && rend->IsEnabledRecursively() &&
-               rend->GetActiveMaterial())
+            if (rend && rend->IsEnabledRecursively() &&
+                rend->GetActiveMaterial())
             {
                 RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
-                if(rp == RenderPass::SCENE ||
-                   rp == RenderPass::SCENE_TRANSPARENT)
+                if (rp == RenderPass::SCENE ||
+                    rp == RenderPass::SCENE_TRANSPARENT)
                 {
                     const AABox rendAABox = rend->GetAABBox();
                     aabBox = AABox::Union(aabBox, rendAABox);
@@ -823,16 +828,16 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
             }
         }
 
-        if(includeChildren)
+        if (includeChildren)
         {
-            for(GameObject *child : GetChildren())
+            for (GameObject *child : GetChildren())
             {
                 AABox aabBoxChild = child->GetLocalAABBox(true);
-                if(aabBoxChild != AABox::Empty)
+                if (aabBoxChild != AABox::Empty)
                 {
                     Matrix4 mat;
                     const Transform *childT = child->GetTransform();
-                    if(childT)
+                    if (childT)
                     {
                         mat = childT->GetLocalToParentMatrix();
                     }
@@ -848,10 +853,10 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
 AABox GameObject::GetAABBoxWorld(bool includeChildren) const
 {
     AABox b = GetLocalAABBox(includeChildren);
-    if(b != AABox::Empty)
+    if (b != AABox::Empty)
     {
         Matrix4 mat = Matrix4::Identity;
-        if(GetTransform())
+        if (GetTransform())
         {
             mat = GetTransform()->GetLocalToWorldMatrix();
         }
@@ -875,15 +880,15 @@ void GameObject::PropagateToChildren(std::function<void(GameObject *)> func)
     ++m_childrenIterationDepth;
 
     const Array<GameObject *> &children = GetChildren();
-    for(GameObject *child : children)
+    for (GameObject *child : children)
     {
-        if(child && child->IsEnabledRecursively())
+        if (child && child->IsEnabledRecursively())
         {
             func(child);
         }
     }
 
-    if(--m_childrenIterationDepth == 0)
+    if (--m_childrenIterationDepth == 0)
     {
         TryToAddQueuedChildren();
         TryToClearDeletedChildren();
@@ -896,15 +901,15 @@ void GameObject::PropagateToComponents(std::function<void(Component *)> func)
     ++m_componentsIterationDepth;
 
     const Array<Component *> &components = GetComponents();
-    for(Component *comp : components)
+    for (Component *comp : components)
     {
-        if(comp && comp->IsEnabledRecursively())
+        if (comp && comp->IsEnabledRecursively())
         {
             func(comp);
         }
     }
 
-    if(--m_componentsIterationDepth == 0)
+    if (--m_componentsIterationDepth == 0)
     {
         TryToAddQueuedComponents();
         TryToClearDeletedComponents();
@@ -921,8 +926,8 @@ GameObject *GameObject::Instantiate()
 
 void GameObject::AddGameObjectToDestroyDelayed(GameObject *go)
 {
-    if(!go->IsWaitingToBeDestroyed() &&
-       !m_gameObjectsToDestroyDelayed.Contains(go))
+    if (!go->IsWaitingToBeDestroyed() &&
+        !m_gameObjectsToDestroyDelayed.Contains(go))
     {
         m_gameObjectsToDestroyDelayed.PushBack(go);
         go->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -931,8 +936,8 @@ void GameObject::AddGameObjectToDestroyDelayed(GameObject *go)
 
 void GameObject::AddComponentToDestroyDelayed(Component *comp)
 {
-    if(!comp->IsWaitingToBeDestroyed() &&
-       !m_componentsToDestroyDelayed.Contains(comp))
+    if (!comp->IsWaitingToBeDestroyed() &&
+        !m_componentsToDestroyDelayed.Contains(comp))
     {
         m_componentsToDestroyDelayed.PushBack(comp);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -941,13 +946,13 @@ void GameObject::AddComponentToDestroyDelayed(Component *comp)
 
 void GameObject::DestroyDelayedObjects()
 {
-    while(!m_componentsToDestroyDelayed.IsEmpty())
+    while (!m_componentsToDestroyDelayed.IsEmpty())
     {
         Component *comp = m_componentsToDestroyDelayed.Back();
         Component::DestroyImmediate(comp);
     }
 
-    while(!m_gameObjectsToDestroyDelayed.IsEmpty())
+    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
     {
         GameObject *go = m_gameObjectsToDestroyDelayed.Back();
         GameObject::DestroyImmediate(go);
@@ -974,18 +979,18 @@ void GameObject::CloneInto(ICloneable *clone) const
     go->SetName(m_name);
     go->SetParent(nullptr);
 
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child && !child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
+        if (child && !child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             GameObject *childClone = child->Clone();
             childClone->SetParent(go);
         }
     }
 
-    for(Component *comp : GetComponents())
+    for (Component *comp : GetComponents())
     {
-        if(comp && !comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
+        if (comp && !comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
             go->AddComponent(comp->Clone());
         }
@@ -997,9 +1002,9 @@ void GameObject::Print(const String &indent) const
     String indent2 = indent;
     indent2 += "   ";
     Debug_Log(indent << this);
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
             child->Print(indent2);
         }
@@ -1010,12 +1015,12 @@ String GameObject::ToStringStructure(bool recursive, const String &indent)
 {
     std::ostringstream oss;
     oss << indent << " - " << GetName() << " " << GetComponents();
-    if(recursive)
+    if (recursive)
     {
         oss << "\n";
-        for(GameObject *child : GetChildren())
+        for (GameObject *child : GetChildren())
         {
-            if(child)
+            if (child)
             {
                 oss << child->ToStringStructure(true, indent + "  ");
             }
@@ -1036,22 +1041,22 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Enabled"))
+    if (metaNode.Contains("Enabled"))
     {
         SetEnabled(metaNode.Get<bool>("Enabled"));
     }
 
-    if(metaNode.Contains("Visible"))
+    if (metaNode.Contains("Visible"))
     {
         SetVisible(metaNode.Get<bool>("Visible"));
     }
 
-    if(metaNode.Contains("Name"))
+    if (metaNode.Contains("Name"))
     {
         SetName(metaNode.Get<String>("Name"));
     }
 
-    if(metaNode.Contains("DontDestroyOnLoad"))
+    if (metaNode.Contains("DontDestroyOnLoad"))
     {
         SetDontDestroyOnLoad(metaNode.Get<bool>("DontDestroyOnLoad"));
     }
@@ -1059,23 +1064,23 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
     // Read components
     {
         USet<Component *> componentsToRemove;
-        for(Component *comp : GetComponents())
+        for (Component *comp : GetComponents())
         {
             componentsToRemove.Add(comp);
         }
 
         const Array<MetaNode> &componentsMetaNodes =
             metaNode.GetChildren("Components");
-        for(const MetaNode &childMeta : componentsMetaNodes)
+        for (const MetaNode &childMeta : componentsMetaNodes)
         {
             const GUID guid = childMeta.Get<GUID>("GUID");
             const String &tagName = childMeta.GetName();
 
             Component *comp = nullptr;
-            for(Component *containedComp : GetComponents())
+            for (Component *containedComp : GetComponents())
             {
                 // See if it is already contained
-                if(containedComp && containedComp->GetGUID() == guid)
+                if (containedComp && containedComp->GetGUID() == guid)
                 {
                     comp = containedComp;
                     componentsToRemove.Remove(comp);
@@ -1083,7 +1088,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
                 }
             }
 
-            if(!comp)
+            if (!comp)
             {
                 comp = ComponentFactory::Create(tagName);
                 AddComponent(comp);
@@ -1097,9 +1102,9 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
         }
 
         // Remove non existing components in meta
-        for(Component *compToRemove : componentsToRemove)
+        for (Component *compToRemove : componentsToRemove)
         {
-            if(compToRemove)
+            if (compToRemove)
             {
                 Component::DestroyImmediate(compToRemove);
             }
@@ -1109,24 +1114,24 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
     // Read children
     {
         USet<GameObject *> childrenToRemove;
-        for(GameObject *child : GetChildren())
+        for (GameObject *child : GetChildren())
         {
             childrenToRemove.Add(child);
         }
 
         const Array<MetaNode> &childreMetaNodes =
             metaNode.GetChildren("GameObjectChildren");
-        for(const MetaNode &childMeta : childreMetaNodes)
+        for (const MetaNode &childMeta : childreMetaNodes)
         {
             const GUID guid = childMeta.Get<GUID>("GUID");
             const String &tagName = childMeta.GetName();
             ASSERT(tagName == GameObject::GetClassNameStatic());
 
             GameObject *child = nullptr;
-            for(GameObject *containedChild : GetChildren())
+            for (GameObject *containedChild : GetChildren())
             {
                 // See if it is already contained
-                if(containedChild && containedChild->GetGUID() == guid)
+                if (containedChild && containedChild->GetGUID() == guid)
                 {
                     child = containedChild;
                     childrenToRemove.Remove(child);
@@ -1134,7 +1139,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
                 }
             }
 
-            if(!child)
+            if (!child)
             {
                 child = GameObjectFactory::CreateGameObject(false);
             }
@@ -1147,9 +1152,9 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
         }
 
         // Remove non existing gameObjects in meta
-        for(GameObject *childToRemove : childrenToRemove)
+        for (GameObject *childToRemove : childrenToRemove)
         {
-            if(childToRemove)
+            if (childToRemove)
             {
                 GameObject::DestroyImmediate(childToRemove);
             }
@@ -1166,9 +1171,9 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Name", GetName());
     metaNode->Set("DontDestroyOnLoad", IsDontDestroyOnLoad());
 
-    for(Component *c : GetComponents())
+    for (Component *c : GetComponents())
     {
-        if(c && c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
+        if (c && c->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             MetaNode compMeta;
             c->ExportMeta(&compMeta);
@@ -1176,9 +1181,9 @@ void GameObject::ExportMeta(MetaNode *metaNode) const
         }
     }
 
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child && child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
+        if (child && child->GetHideFlags().IsOff(HideFlag::DONT_SERIALIZE))
         {
             MetaNode childMeta;
             child->ExportMeta(&childMeta);

@@ -125,7 +125,7 @@ int Application::MainLoop()
     InitBeforeLoop();
 
     bool exit = false;
-    while(!exit && !m_forcedExit)
+    while (!exit && !m_forcedExit)
     {
         exit = MainLoopIteration();
         FlushProfiling();
@@ -221,7 +221,7 @@ void Application::SetApplicationSingleton(Application *app)
 
 void Application::Exit(int returnCode, bool immediate)
 {
-    if(immediate)
+    if (immediate)
     {
         std::exit(returnCode);
     }

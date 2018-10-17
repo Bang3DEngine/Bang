@@ -20,10 +20,10 @@ void Timer::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(IsRunning())
+    if (IsRunning())
     {
         Time timeSinceLastTick = (Time::GetPassedTimeSince(m_lastTickTime));
-        if(timeSinceLastTick > GetInterval())
+        if (timeSinceLastTick > GetInterval())
         {
             Tick();
         }
@@ -32,7 +32,7 @@ void Timer::OnUpdate()
 
 void Timer::Tick()
 {
-    for(auto callback : m_callbacks)
+    for (auto callback : m_callbacks)
     {
         callback();
     }

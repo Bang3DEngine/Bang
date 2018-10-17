@@ -10,7 +10,7 @@ using namespace Bang;
 
 Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 {
-    switch(renderPass)
+    switch (renderPass)
     {
         case RenderPass::SCENE:
             return ShaderProgramFactory::GetEngineShadersDir().Append(
@@ -29,7 +29,7 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 {
-    switch(renderPass)
+    switch (renderPass)
     {
         case RenderPass::SCENE:
             return ShaderProgramFactory::GetEngineShadersDir().Append(
@@ -131,10 +131,10 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
     std::tuple<Path, Path, Path> shaderPathsTuple =
         std::make_tuple(vShaderPath, gShaderPath, fShaderPath);
 
-    if(!spf->m_cache.ContainsKey(shaderPathsTuple))
+    if (!spf->m_cache.ContainsKey(shaderPathsTuple))
     {
         RH<ShaderProgram> shaderProgram;
-        if(useGeometryShader)
+        if (useGeometryShader)
         {
             shaderProgram = Resources::Create<ShaderProgram>(
                 vShaderPath, gShaderPath, fShaderPath);

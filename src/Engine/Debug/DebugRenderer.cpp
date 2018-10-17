@@ -44,8 +44,14 @@ void DebugRenderer::RenderLine(const Vector3 &origin,
                                float thickness,
                                bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LINE, {origin, end},
-                               color, time, thickness, false, false, depthTest);
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LINE,
+                               {origin, end},
+                               color,
+                               time,
+                               thickness,
+                               false,
+                               false,
+                               depthTest);
 }
 
 void DebugRenderer::RenderPoint(const Vector3 &point,
@@ -54,8 +60,14 @@ void DebugRenderer::RenderPoint(const Vector3 &point,
                                 float thickness,
                                 bool depthTest)
 {
-    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::POINT, {point},
-                               color, time, thickness, false, false, depthTest);
+    CreateDebugRenderPrimitive(DebugRendererPrimitiveType::POINT,
+                               {point},
+                               color,
+                               time,
+                               thickness,
+                               false,
+                               false,
+                               depthTest);
 }
 
 void DebugRenderer::RenderPointNDC(const Vector2 &point,
@@ -64,8 +76,13 @@ void DebugRenderer::RenderPointNDC(const Vector2 &point,
                                    float thickness)
 {
     CreateDebugRenderPrimitive(DebugRendererPrimitiveType::POINT_NDC,
-                               {Vector3(point, 0)}, color, time, thickness,
-                               false, false, false);
+                               {Vector3(point, 0)},
+                               color,
+                               time,
+                               thickness,
+                               false,
+                               false,
+                               false);
 }
 
 void DebugRenderer::RenderLineNDC(const Vector2 &originNDC,
@@ -77,7 +94,12 @@ void DebugRenderer::RenderLineNDC(const Vector2 &originNDC,
 {
     CreateDebugRenderPrimitive(DebugRendererPrimitiveType::LINE_NDC,
                                {Vector3(originNDC, 0), Vector3(endNDC, 0)},
-                               color, time, thickness, false, false, depthTest);
+                               color,
+                               time,
+                               thickness,
+                               false,
+                               false,
+                               depthTest);
 }
 
 void DebugRenderer::RenderAABox(const AABox &aaBox,
@@ -89,18 +111,48 @@ void DebugRenderer::RenderAABox(const AABox &aaBox,
                                 bool depthTest,
                                 const Color &bordersColor)
 {
-    DebugRenderer::RenderQuad(aaBox.GetLeftQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
-    DebugRenderer::RenderQuad(aaBox.GetRightQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
-    DebugRenderer::RenderQuad(aaBox.GetTopQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
-    DebugRenderer::RenderQuad(aaBox.GetBotQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
-    DebugRenderer::RenderQuad(aaBox.GetBackQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
-    DebugRenderer::RenderQuad(aaBox.GetFrontQuad(), color, time, wireframe,
-                              culling, depthTest, bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetLeftQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetRightQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetTopQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetBotQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetBackQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
+    DebugRenderer::RenderQuad(aaBox.GetFrontQuad(),
+                              color,
+                              time,
+                              wireframe,
+                              culling,
+                              depthTest,
+                              bordersColor);
 }
 
 void DebugRenderer::RenderTriangle(const Triangle &triangle,
@@ -111,8 +163,13 @@ void DebugRenderer::RenderTriangle(const Triangle &triangle,
                                    bool depthTest)
 {
     CreateDebugRenderPrimitive(DebugRendererPrimitiveType::TRIANGLE,
-                               {triangle[0], triangle[1], triangle[2]}, color,
-                               time, -1.0f, wireframe, culling, depthTest);
+                               {triangle[0], triangle[1], triangle[2]},
+                               color,
+                               time,
+                               -1.0f,
+                               wireframe,
+                               culling,
+                               depthTest);
 }
 
 void DebugRenderer::RenderQuad(const Quad &quad,
@@ -124,10 +181,15 @@ void DebugRenderer::RenderQuad(const Quad &quad,
                                const Color &bordersColor)
 {
     CreateDebugRenderPrimitive(DebugRendererPrimitiveType::QUAD,
-                               {quad[0], quad[1], quad[2], quad[3]}, color,
-                               time, -1.0f, wireframe, culling, depthTest);
+                               {quad[0], quad[1], quad[2], quad[3]},
+                               color,
+                               time,
+                               -1.0f,
+                               wireframe,
+                               culling,
+                               depthTest);
 
-    if(bordersColor != Color::Zero)
+    if (bordersColor != Color::Zero)
     {
         RenderLine(quad[0], quad[1], bordersColor, time, 1.0f, depthTest);
         RenderLine(quad[1], quad[2], bordersColor, time, 1.0f, depthTest);
@@ -142,10 +204,16 @@ void DebugRenderer::RenderAARectNDC(const AARect &rectNDC,
                                     float thickness,
                                     bool depthTest)
 {
-    DebugRenderer::DebugRenderPrimitive *drp = CreateDebugRenderPrimitive(
-        DebugRendererPrimitiveType::AARECT_NDC, {}, color, time, thickness,
-        false, false, depthTest);
-    if(drp)
+    DebugRenderer::DebugRenderPrimitive *drp =
+        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::AARECT_NDC,
+                                   {},
+                                   color,
+                                   time,
+                                   thickness,
+                                   false,
+                                   false,
+                                   depthTest);
+    if (drp)
     {
         drp->aaRectNDC = GL::FromViewportRectToViewportRectNDC(rectNDC);
     }
@@ -157,10 +225,16 @@ void DebugRenderer::RenderRectNDC(const Rect &rectNDC,
                                   float thickness,
                                   bool depthTest)
 {
-    DebugRenderer::DebugRenderPrimitive *drp = CreateDebugRenderPrimitive(
-        DebugRendererPrimitiveType::RECT_NDC, {}, color, time, thickness, false,
-        false, depthTest);
-    if(drp)
+    DebugRenderer::DebugRenderPrimitive *drp =
+        CreateDebugRenderPrimitive(DebugRendererPrimitiveType::RECT_NDC,
+                                   {},
+                                   color,
+                                   time,
+                                   thickness,
+                                   false,
+                                   false,
+                                   depthTest);
+    if (drp)
     {
         drp->rectNDCPoints = rectNDC.GetPoints();
     }
@@ -177,7 +251,7 @@ DebugRenderer::DebugRenderPrimitive *DebugRenderer::CreateDebugRenderPrimitive(
     bool depthTest)
 {
     DebugRenderer *dr = DebugRenderer::GetActive();
-    if(!dr)
+    if (!dr)
     {
         Debug_Error("No active DebugRenderer!");
         return nullptr;
@@ -207,15 +281,15 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
     GL::Push(GL::Pushable::DEPTH_STATES);
     GL::Push(GL::Pushable::SHADER_PROGRAM);
 
-    for(auto it = m_primitivesToRender.Begin();
-        it != m_primitivesToRender.End();)
+    for (auto it = m_primitivesToRender.Begin();
+         it != m_primitivesToRender.End();)
     {
         DebugRenderPrimitive *drp = &(*it);
-        if(drp->depthTest != withDepth)
+        if (drp->depthTest != withDepth)
         {
             ++it;
         }
-        else if(Time::GetNow() >= drp->destroyTime && drp->renderedOnce)
+        else if (Time::GetNow() >= drp->destroyTime && drp->renderedOnce)
         {
             it = m_primitivesToRender.Remove(it);
         }
@@ -223,22 +297,22 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
         {
             RenderFactory::Parameters params;
             params.color = drp->color;
-            if(drp->thickness >= 0.0f)
+            if (drp->thickness >= 0.0f)
             {
                 params.thickness = drp->thickness;
             }
 
             GL::SetDepthFunc(drp->depthTest ? GL::Function::LEQUAL
                                             : GL::Function::ALWAYS);
-            switch(drp->primitive)
+            switch (drp->primitive)
             {
                 case DebugRendererPrimitiveType::LINE:
                     RenderFactory::RenderLine(drp->p0, drp->p1, params);
                     break;
 
                 case DebugRendererPrimitiveType::LINE_NDC:
-                    RenderFactory::RenderViewportLineNDC(drp->p0.xy(),
-                                                         drp->p1.xy(), params);
+                    RenderFactory::RenderViewportLineNDC(
+                        drp->p0.xy(), drp->p1.xy(), params);
                     break;
 
                 case DebugRendererPrimitiveType::POINT:
@@ -255,20 +329,20 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                     // Load mesh
                     Array<Vector3> positions, normals;
                     Array<Vector2> uvs;
-                    if(drp->primitive == DebugRendererPrimitiveType::TRIANGLE)
+                    if (drp->primitive == DebugRendererPrimitiveType::TRIANGLE)
                     {
                         Triangle tri(drp->p0, drp->p1, drp->p2);
-                        for(int i : {0, 1, 2})
+                        for (int i : {0, 1, 2})
                         {
                             positions.PushBack(tri[i]);
                             normals.PushBack(tri.GetNormal());
                             uvs.PushBack(Vector2(0, 0));
                         }
                     }
-                    else if(drp->primitive == DebugRendererPrimitiveType::QUAD)
+                    else if (drp->primitive == DebugRendererPrimitiveType::QUAD)
                     {
                         Quad quad(drp->p0, drp->p1, drp->p2, drp->p3);
-                        for(int i : {0, 1, 2, 3, 4, 5})
+                        for (int i : {0, 1, 2, 3, 4, 5})
                         {
                             BANG_UNUSED(i);
                             normals.PushBack(quad.GetNormal());
@@ -276,11 +350,11 @@ void DebugRenderer::RenderPrimitives(bool withDepth)
                         }
                         Triangle t0, t1;
                         quad.GetTriangles(&t0, &t1);
-                        for(int i : {0, 1, 2})
+                        for (int i : {0, 1, 2})
                         {
                             positions.PushBack(t0[i]);
                         }
-                        for(int i : {0, 1, 2})
+                        for (int i : {0, 1, 2})
                         {
                             positions.PushBack(t1[i]);
                         }

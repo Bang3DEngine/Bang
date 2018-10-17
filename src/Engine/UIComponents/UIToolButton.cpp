@@ -18,9 +18,9 @@ UIToolButton::~UIToolButton()
 
 void UIToolButton::SetOn(bool on)
 {
-    if(on != GetOn())
+    if (on != GetOn())
     {
-        if(!IsBlocked())
+        if (!IsBlocked())
         {
             m_on = on;
             UpdateAspect();
@@ -41,21 +41,21 @@ void UIToolButton::Click()
 
 void UIToolButton::UpdateAspect()
 {
-    if(!IsBlocked())
+    if (!IsBlocked())
     {
-        if(GetOn())
+        if (GetOn())
         {
             ChangeAspectToPressed();
         }
         else
         {
-            if(GetFocusable()->IsBeingPressed())
+            if (GetFocusable()->IsBeingPressed())
             {
                 ChangeAspectToPressed();
             }
             else
             {
-                if(GetFocusable()->IsMouseOver())
+                if (GetFocusable()->IsMouseOver())
                 {
                     ChangeAspectToOver();
                 }

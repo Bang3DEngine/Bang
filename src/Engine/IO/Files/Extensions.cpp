@@ -119,11 +119,11 @@ bool Extensions::Equals(const String &fullExtension,
                         const Array<String> &otherExtensions)
 {
     Array<String> extensions = fullExtension.Split<Array>('.');
-    for(const String &otherExtension : otherExtensions)
+    for (const String &otherExtension : otherExtensions)
     {
-        for(const String &extension : extensions)
+        for (const String &extension : extensions)
         {
-            if(extension.EqualsNoCase(otherExtension))
+            if (extension.EqualsNoCase(otherExtension))
             {
                 return true;
             }

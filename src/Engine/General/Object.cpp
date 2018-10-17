@@ -18,7 +18,7 @@ bool Object::IsActive() const
 
 void Object::PreStart()
 {
-    if(!IsStarted())
+    if (!IsStarted())
     {
         OnPreStart();
     }
@@ -26,7 +26,7 @@ void Object::PreStart()
 
 void Object::Start()
 {
-    if(!IsStarted())
+    if (!IsStarted())
     {
         OnStart();
         m_started = true;
@@ -67,7 +67,7 @@ void Object::SetWaitingToBeDestroyed()
 
 void Object::InvalidateEnabledRecursively()
 {
-    if(m_enabledRecursivelyValid)
+    if (m_enabledRecursivelyValid)
     {
         m_enabledRecursivelyValid = false;
         OnEnabledRecursivelyInvalidated();
@@ -76,7 +76,7 @@ void Object::InvalidateEnabledRecursively()
 
 void Object::PropagateObjectDestruction(Object *object)
 {
-    if(!object->IsWaitingToBeDestroyed())
+    if (!object->IsWaitingToBeDestroyed())
     {
         object->SetWaitingToBeDestroyed();
 
@@ -98,12 +98,12 @@ const ObjectId &Object::GetObjectId() const
 
 void Object::SetEnabled(bool enabled)
 {
-    if(enabled != IsEnabled())
+    if (enabled != IsEnabled())
     {
         m_enabled = enabled;
         InvalidateEnabledRecursively();
 
-        if(IsEnabled())
+        if (IsEnabled())
         {
             OnEnabled(this);
             EventEmitter<IEventsObject>::PropagateToListeners(
@@ -135,7 +135,7 @@ bool Object::IsActiveRecursively() const
 
 bool Object::IsEnabledRecursively() const
 {
-    if(!m_enabledRecursivelyValid)
+    if (!m_enabledRecursivelyValid)
     {
         m_enabledRecursively = CalculateEnabledRecursively();
         m_enabledRecursivelyValid = true;

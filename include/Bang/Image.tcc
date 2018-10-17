@@ -30,9 +30,9 @@ template <class T>
 void Image<T>::Create(int width, int height, const Color &backgroundColor)
 {
     Create(width, height);
-    for(int i = 0; i < GetHeight(); ++i)
+    for (int i = 0; i < GetHeight(); ++i)
     {
-        for(int j = 0; j < GetWidth(); ++j)
+        for (int j = 0; j < GetWidth(); ++j)
         {
             SetPixel(j, i, backgroundColor);
         }
@@ -44,12 +44,14 @@ Image<T> Image<T>::GetSubImage(const AARecti &subCoords) const
 {
     Vector2i subSize = subCoords.GetSize();
     Image<T> subImage(subSize.x, subSize.y);
-    for(int y = 0; y < subSize.y; ++y)
+    for (int y = 0; y < subSize.y; ++y)
     {
-        for(int x = 0; x < subSize.x; ++x)
+        for (int x = 0; x < subSize.x; ++x)
         {
-            subImage.SetPixel(x, y, GetPixel(x + subCoords.GetMin().x,
-                                             y + subCoords.GetMin().y));
+            subImage.SetPixel(
+                x,
+                y,
+                GetPixel(x + subCoords.GetMin().x, y + subCoords.GetMin().y));
         }
     }
     return subImage;
@@ -70,11 +72,12 @@ void Image<T>::Copy(const Image<T> &image,
 
     Vector2i dstSize = dstRect.GetSize();
     resizedImage.Resize(dstSize, resizeMode);
-    for(int y = 0; y < dstSize.y; ++y)
+    for (int y = 0; y < dstSize.y; ++y)
     {
-        for(int x = 0; x < dstSize.x; ++x)
+        for (int x = 0; x < dstSize.x; ++x)
         {
-            SetPixel(dstRect.GetMin().x + x, dstRect.GetMin().y + y,
+            SetPixel(dstRect.GetMin().x + x,
+                     dstRect.GetMin().y + y,
                      resizedImage.GetPixel(x, y));
         }
     }
@@ -101,7 +104,8 @@ void Image<T>::AddMargins(const Vector2i &margins,
     Vector2i newSize = AspectRatio::GetAspectRatioedSize(
         GetSize(), (margins * 2) + GetSize(), arMode);
     Create(newSize.x, newSize.y, marginColor);
-    Copy(original, AARecti(Vector2i::Zero, original.GetSize()),
+    Copy(original,
+         AARecti(Vector2i::Zero, original.GetSize()),
          AARecti(newSize / 2 - original.GetSize() / 2,
                  newSize / 2 + (original.GetSize() + 1) / 2));
 }
@@ -118,7 +122,7 @@ void Image<T>::AddMarginsToMatchAspectRatio(float aspectRatio,
                                             const Color &marginColor)
 {
     Vector2i newSize = GetSize();
-    if(aspectRatio > 1.0f)
+    if (aspectRatio > 1.0f)
     {
         newSize.x = (GetHeight() * aspectRatio);
     }
@@ -135,8 +139,8 @@ void Image<T>::ResizeToMatchAspectRatio(const Vector2i &arSizes,
                                         bool makeBigger,
                                         ImageResizeMode resizeMode)
 {
-    ResizeToMatchAspectRatio(arSizes.x / float(arSizes.y), makeBigger,
-                             resizeMode);
+    ResizeToMatchAspectRatio(
+        arSizes.x / float(arSizes.y), makeBigger, resizeMode);
 }
 
 template <class T>
@@ -146,7 +150,7 @@ void Image<T>::ResizeToMatchAspectRatio(float aspectRatio,
 {
     Vector2i newSize = GetSize();
     bool modifyWidth = ((aspectRatio > 1.0f) == makeBigger);
-    if(modifyWidth)
+    if (modifyWidth)
     {
         newSize.x = (GetHeight() * aspectRatio);
     }
@@ -180,7 +184,7 @@ void Image<T>::Resize(int _newWidth,
     // First pick the new (width,height), depending on the AspectRatioMode
     Vector2i newSize = AspectRatio::GetAspectRatioedSize(
         GetSize(), Vector2i(_newWidth, _newHeight), arMode);
-    if(newSize.x == GetWidth() && newSize.y == GetHeight())
+    if (newSize.x == GetWidth() && newSize.y == GetHeight())
     {
         return;
     }
@@ -192,12 +196,12 @@ void Image<T>::Resize(int _newWidth,
                      original.GetHeight() / Cast<float>(newSize.y));
 
     Create(newSize.x, newSize.y);
-    for(int y = 0; y < newSize.y; ++y)
+    for (int y = 0; y < newSize.y; ++y)
     {
-        for(int x = 0; x < newSize.x; ++x)
+        for (int x = 0; x < newSize.x; ++x)
         {
             Color newColor;
-            if(resizeMode == ImageResizeMode::NEAREST)
+            if (resizeMode == ImageResizeMode::NEAREST)
             {
                 // Pick nearest original pixel
                 Vector2 oriCoord = Vector2(x, y) * sizeProp;
@@ -218,9 +222,9 @@ void Image<T>::Resize(int _newWidth,
                 oriBotRight = Vector2i::Min(oriBotRight, original.GetSize());
 
                 newColor = Color::Zero;
-                for(int oriY = oriTopLeft.y; oriY < oriBotRight.y; ++oriY)
+                for (int oriY = oriTopLeft.y; oriY < oriBotRight.y; ++oriY)
                 {
-                    for(int oriX = oriTopLeft.x; oriX < oriBotRight.x; ++oriX)
+                    for (int oriX = oriTopLeft.x; oriX < oriBotRight.x; ++oriX)
                     {
                         newColor += original.GetPixel(oriX, oriY);
                     }
@@ -240,12 +244,12 @@ Image<T> Image<T>::Rotated90DegreesRight() const
 {
     Image<T> result;
     result.Create(GetHeight(), GetWidth());
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
-            result.SetPixel(GetHeight() - y - 1, GetWidth() - x - 1,
-                            GetPixel(x, y));
+            result.SetPixel(
+                GetHeight() - y - 1, GetWidth() - x - 1, GetPixel(x, y));
         }
     }
     return result;
@@ -256,12 +260,12 @@ Image<T> Image<T>::Rotated180DegreesRight() const
 {
     Image<T> result;
     result.Create(GetWidth(), GetHeight());
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
-            result.SetPixel(GetWidth() - x - 1, GetHeight() - y - 1,
-                            GetPixel(x, y));
+            result.SetPixel(
+                GetWidth() - x - 1, GetHeight() - y - 1, GetPixel(x, y));
         }
     }
     return result;
@@ -271,9 +275,9 @@ Image<T> Image<T>::Rotated270DegreesRight() const
 {
     Image<T> result;
     result.Create(GetHeight(), GetWidth());
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
             result.SetPixel(y, x, GetPixel(x, y));
         }
@@ -284,11 +288,11 @@ Image<T> Image<T>::Rotated270DegreesRight() const
 template <class T>
 void Image<T>::FillTransparentPixels(const Color &color)
 {
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
-            if(GetPixel(x, y).a == 0)
+            if (GetPixel(x, y).a == 0)
             {
                 SetPixel(x, y, color);
             }
@@ -343,9 +347,9 @@ template <class T>
 Image<T> Image<T>::InvertedVertically()
 {
     Image<T> img = *this;
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
             Color c = GetPixel(x, y);
             img.SetPixel(x, GetHeight() - y - 1, c);
@@ -358,9 +362,9 @@ template <class T>
 Image<T> Image<T>::InvertedHorizontally()
 {
     Image<T> img = *this;
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
             Color c = GetPixel(x, y);
             img.SetPixel(GetWidth() - x - 1, y, c);
@@ -385,9 +389,9 @@ template <class OtherT>
 Image<OtherT> Image<T>::To() const
 {
     Image<OtherT> otherImg(GetWidth(), GetHeight());
-    for(int y = 0; y < GetHeight(); ++y)
+    for (int y = 0; y < GetHeight(); ++y)
     {
-        for(int x = 0; x < GetWidth(); ++x)
+        for (int x = 0; x < GetWidth(); ++x)
         {
             otherImg.SetPixel(x, y, GetPixel(x, y));
         }
@@ -467,8 +471,10 @@ Color Image<Byte>::GetPixel(int x, int y) const
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
     const std::size_t coord = (y * GetWidth() + x) * 4;
-    return Color(m_pixels[coord + 0] / 255.0f, m_pixels[coord + 1] / 255.0f,
-                 m_pixels[coord + 2] / 255.0f, m_pixels[coord + 3] / 255.0f);
+    return Color(m_pixels[coord + 0] / 255.0f,
+                 m_pixels[coord + 1] / 255.0f,
+                 m_pixels[coord + 2] / 255.0f,
+                 m_pixels[coord + 3] / 255.0f);
 }
 
 template <>
@@ -477,7 +483,9 @@ Color Image<float>::GetPixel(int x, int y) const
     ASSERT_MSG(x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight(),
                "Pixel (" << x << ", " << y << ") out of bounds");
     const std::size_t coord = (y * GetWidth() + x) * 4;
-    return Color(m_pixels[coord + 0], m_pixels[coord + 1], m_pixels[coord + 2],
+    return Color(m_pixels[coord + 0],
+                 m_pixels[coord + 1],
+                 m_pixels[coord + 2],
                  m_pixels[coord + 3]);
 }
 }

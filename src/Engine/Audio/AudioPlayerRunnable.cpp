@@ -24,7 +24,7 @@ AudioPlayerRunnable::~AudioPlayerRunnable()
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
 
-    if(p_alAudioSource->m_autoDelete)
+    if (p_alAudioSource->m_autoDelete)
     {
         delete p_alAudioSource;
     }
@@ -58,12 +58,12 @@ ALAudioSource *AudioPlayerRunnable::GetALAudioSource() const
 
 void AudioPlayerRunnable::Run()
 {
-    if(!p_audioClip->IsLoaded())
+    if (!p_audioClip->IsLoaded())
     {
         return;
     }
 
-    if(m_delayInSeconds > 0.0f)  // Wait delay
+    if (m_delayInSeconds > 0.0f)  // Wait delay
     {
         Thread::SleepCurrentThread(m_delayInSeconds);
     }
@@ -72,5 +72,5 @@ void AudioPlayerRunnable::Run()
     do
     {
         Thread::SleepCurrentThread(0.3f);
-    } while(!m_forceExit && !p_alAudioSource->IsStopped());
+    } while (!m_forceExit && !p_alAudioSource->IsStopped());
 }

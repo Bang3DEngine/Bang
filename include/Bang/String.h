@@ -223,15 +223,15 @@ private:
 template <template <class String> class Container>
 String String::Trim(Container<char> trimChars) const
 {
-    if(IsEmpty())
+    if (IsEmpty())
     {
         return "";
     }
 
     int i = 0;
-    for(; i < Size(); ++i)
+    for (; i < Size(); ++i)
     {
-        if(!trimChars.Contains(At(i)))
+        if (!trimChars.Contains(At(i)))
             break;
     }
     return (i == Size()) ? "" : SubString(i, Size());
@@ -240,15 +240,15 @@ String String::Trim(Container<char> trimChars) const
 template <template <class String> class Container>
 String String::TrimRight(Container<char> trimChars) const
 {
-    if(IsEmpty())
+    if (IsEmpty())
     {
         return "";
     }
 
     int i = Size() - 1;
-    for(; i >= 0; --i)
+    for (; i >= 0; --i)
     {
-        if(!trimChars.Contains(At(i)))
+        if (!trimChars.Contains(At(i)))
             break;
     }
     return (i < 0) ? "" : SubString(0, i);
@@ -265,11 +265,11 @@ String String::Join(const Container<String> &parts, String joiner)
 {
     int i = 0;
     String all = "";
-    for(auto it = parts.Begin(); it != parts.End(); ++it)
+    for (auto it = parts.Begin(); it != parts.End(); ++it)
     {
         const String &part = *it;
         all += part;
-        if(i < parts.Size() - 1)
+        if (i < parts.Size() - 1)
         {
             all += joiner;
         }
@@ -294,30 +294,30 @@ template <template <class String> class Container>
 Container<String> String::Split(char splitter, bool trimResults) const
 {
     Container<String> result;
-    if(IsEmpty())
+    if (IsEmpty())
     {
         return result;
     }
 
     bool lastParticle = false;
     long lastIndexFound = 0;
-    while(!lastParticle)
+    while (!lastParticle)
     {
         long indexFound = IndexOf(splitter, lastIndexFound);
-        if(indexFound == -1)
+        if (indexFound == -1)
         {
             lastParticle = true;
             indexFound = Size();
         }
 
-        if(indexFound == lastIndexFound)
+        if (indexFound == lastIndexFound)
         {
             result.PushBack("");
         }
         else
         {
             String particle = SubString(lastIndexFound, indexFound - 1);
-            if(trimResults)
+            if (trimResults)
             {
                 particle = particle.Trim();
             }

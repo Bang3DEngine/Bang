@@ -38,7 +38,7 @@ public:
     QuaternionG<T> Normalized() const
     {
         T length = Length();
-        if(length == 0.0f)
+        if (length == 0.0f)
         {
             return QuaternionG<T>::Identity;
         }
@@ -62,8 +62,8 @@ public:
 
     T GetYaw() const
     {
-        return Math::ASin(Math::Clamp(SCAST<T>(-2) * (x * z - w * y),
-                                      SCAST<T>(-1), SCAST<T>(1)));
+        return Math::ASin(Math::Clamp(
+            SCAST<T>(-2) * (x * z - w * y), SCAST<T>(-1), SCAST<T>(1)));
     }
 
     T GetRoll() const
@@ -94,7 +94,7 @@ public:
         float sqrt = Math::Sqrt(1.0f - w2);
 
         Vector3 axis;
-        if(sqrt != 0)
+        if (sqrt != 0)
         {
             axis = Vector3(x / sqrt, y / sqrt, z / sqrt);
         }
@@ -127,11 +127,12 @@ public:
     {
         T cosTheta = QuaternionG<T>::Dot(from, to);
 
-        if(cosTheta > SCAST<T>(1) - SCAST<T>(0.01))
+        if (cosTheta > SCAST<T>(1) - SCAST<T>(0.01))
         {
-            return QuaternionG(
-                Math::Lerp(from.x, to.x, t), Math::Lerp(from.y, to.y, t),
-                Math::Lerp(from.z, to.z, t), Math::Lerp(from.w, to.w, t));
+            return QuaternionG(Math::Lerp(from.x, to.x, t),
+                               Math::Lerp(from.y, to.y, t),
+                               Math::Lerp(from.z, to.z, t),
+                               Math::Lerp(from.w, to.w, t));
         }
         else
         {
@@ -154,17 +155,18 @@ public:
         // If cosTheta < 0, the interpolation will take the long way around the
         // sphere.
         // To fix this, one quat must be negated.
-        if(cosTheta < SCAST<T>(0))
+        if (cosTheta < SCAST<T>(0))
         {
             to = -_to;
             cosTheta = -cosTheta;
         }
 
-        if(cosTheta > SCAST<T>(1) - SCAST<T>(0.01))
+        if (cosTheta > SCAST<T>(1) - SCAST<T>(0.01))
         {
-            return QuaternionG<T>(
-                Math::Lerp(from.x, to.x, t), Math::Lerp(from.y, to.y, t),
-                Math::Lerp(from.z, to.z, t), Math::Lerp(from.w, to.w, t));
+            return QuaternionG<T>(Math::Lerp(from.x, to.x, t),
+                                  Math::Lerp(from.y, to.y, t),
+                                  Math::Lerp(from.z, to.z, t),
+                                  Math::Lerp(from.w, to.w, t));
         }
         else
         {
@@ -180,15 +182,15 @@ public:
         Vector3G<T> v1 = to.Normalized();
 
         const T d = Vector3G<T>::Dot(v0, v1);
-        if(d >= 1.0f)
+        if (d >= 1.0f)
         {
             return QuaternionG<T>::Identity;
         }
-        else if(d <= -1.0f)
+        else if (d <= -1.0f)
         {
             Vector3G<T> axis(1, 0, 0);
             axis = Vector3G<T>::Cross(axis, v0);
-            if(axis.Length() == 0)
+            if (axis.Length() == 0)
             {
                 axis = Vector3G<T>(0, 1, 0);
                 axis = Vector3G<T>::Cross(axis, v0);
@@ -210,8 +212,8 @@ public:
         Vector3G<T> forward = _forward.NormalizedSafe();
         Vector3G<T> up = _up.NormalizedSafe();
 
-        if(Vector3G<T>::Dot(forward, up) >= SCAST<T>(0.99) ||
-           Vector3G<T>::Dot(forward, -up) >= SCAST<T>(0.99))
+        if (Vector3G<T>::Dot(forward, up) >= SCAST<T>(0.99) ||
+            Vector3G<T>::Dot(forward, -up) >= SCAST<T>(0.99))
         {
             return QuaternionG<T>::Identity;
         }
@@ -223,7 +225,8 @@ public:
     static QuaternionG<T> AngleAxis(T angleRads, const Vector3G<OtherT> &axis)
     {
         const T s = Math::Sin(angleRads * SCAST<T>(0.5));
-        return QuaternionG<T>(SCAST<T>(axis.x) * s, SCAST<T>(axis.y) * s,
+        return QuaternionG<T>(SCAST<T>(axis.x) * s,
+                              SCAST<T>(axis.y) * s,
                               SCAST<T>(axis.z) * s,
                               Math::Cos(angleRads * SCAST<T>(0.5)))
             .Normalized();
@@ -274,15 +277,19 @@ QuaternionG<T> operator*(const QuaternionG<T> &q, OtherT a)
 template <class T, class OtherT>
 QuaternionG<T> operator*(OtherT a, const QuaternionG<T> &q)
 {
-    return QuaternionG<T>(q.x * SCAST<T>(a), q.y * SCAST<T>(a),
-                          q.z * SCAST<T>(a), q.w * SCAST<T>(a));
+    return QuaternionG<T>(q.x * SCAST<T>(a),
+                          q.y * SCAST<T>(a),
+                          q.z * SCAST<T>(a),
+                          q.w * SCAST<T>(a));
 }
 
 template <class T, class OtherT>
 QuaternionG<T> operator/(OtherT a, const QuaternionG<T> &q)
 {
-    return QuaternionG<T>(SCAST<T>(a) / q.x, SCAST<T>(a) / q.y,
-                          SCAST<T>(a) / q.z, SCAST<T>(a) / q.w);
+    return QuaternionG<T>(SCAST<T>(a) / q.x,
+                          SCAST<T>(a) / q.y,
+                          SCAST<T>(a) / q.z,
+                          SCAST<T>(a) / q.w);
 }
 
 template <class T, class OtherT>

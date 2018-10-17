@@ -26,7 +26,7 @@ void UILayoutElement::SetMinHeight(int minHeight)
 
 void UILayoutElement::SetMinSize(const Vector2i &minSize)
 {
-    if(minSize != m_minSize)
+    if (minSize != m_minSize)
     {
         m_minSize = minSize;
         OnChanged();
@@ -53,7 +53,7 @@ void UILayoutElement::SetPreferredHeight(int preferredHeight)
 
 void UILayoutElement::SetPreferredSize(const Vector2i &preferredSize)
 {
-    if(preferredSize != m_preferredSize)
+    if (preferredSize != m_preferredSize)
     {
         m_preferredSize = preferredSize;
         OnChanged();
@@ -79,7 +79,7 @@ void UILayoutElement::SetFlexibleHeight(float flexibleHeight)
 
 void UILayoutElement::SetFlexibleSize(const Vector2 &flexibleSize)
 {
-    if(flexibleSize != m_flexibleSize)
+    if (flexibleSize != m_flexibleSize)
     {
         m_flexibleSize = flexibleSize;
         OnChanged();
@@ -140,7 +140,8 @@ Vector2 UILayoutElement::GetFlexibleSize() const
 
 void UILayoutElement::CalculateLayout(Axis axis)
 {
-    SetCalculatedLayout(axis, GetMinSize().GetAxis(axis),
+    SetCalculatedLayout(axis,
+                        GetMinSize().GetAxis(axis),
                         GetPreferredSize().GetAxis(axis),
                         GetFlexibleSize().GetAxis(axis));
 }

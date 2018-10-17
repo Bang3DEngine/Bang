@@ -9,7 +9,7 @@ namespace Bang
 {
 inline int GetAxisIndex(Axis3D axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3D::X: return 0;
         case Axis3D::Y: return 1;
@@ -20,7 +20,7 @@ inline int GetAxisIndex(Axis3D axis)
 }
 inline int GetAxisIndex(Axis3DExt axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:
@@ -42,7 +42,7 @@ inline std::pair<int, int> GetOtherAxisIndex(Axis3D axis)
 
 inline Color GetAxisColor(Axis3D axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3D::X: return Color::Red;
         case Axis3D::Y: return Color::Green;
@@ -53,7 +53,7 @@ inline Color GetAxisColor(Axis3D axis)
 }
 inline Color GetAxisColor(Axis3DExt axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:
@@ -69,7 +69,7 @@ inline Color GetAxisColor(Axis3DExt axis)
 
 inline Vector3 GetAxisVector(Axis3D axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3D::X: return Vector3::Right;
         case Axis3D::Y: return Vector3::Up;
@@ -80,7 +80,7 @@ inline Vector3 GetAxisVector(Axis3D axis)
 }
 inline Vector3 GetAxisVector(Axis3DExt axis)
 {
-    switch(axis)
+    switch (axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:

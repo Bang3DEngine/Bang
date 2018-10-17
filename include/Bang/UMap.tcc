@@ -40,9 +40,9 @@ UMap<Key, Value, Hash, Pred, Alloc>::Remove(
 template <class Key, class Value, class Hash, class Pred, class Alloc>
 void UMap<Key, Value, Hash, Pred, Alloc>::RemoveValues(const Value &value)
 {
-    for(auto it = Begin(); it != End();)
+    for (auto it = Begin(); it != End();)
     {
-        if(it->second == value)
+        if (it->second == value)
         {
             it = Remove(it);
         }
@@ -93,9 +93,9 @@ template <class Key, class Value, class Hash, class Pred, class Alloc>
 bool UMap<Key, Value, Hash, Pred, Alloc>::ContainsValue(
     const Value &value) const
 {
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
-        if(it->second == value)
+        if (it->second == value)
         {
             return true;
         }
@@ -122,9 +122,9 @@ Array<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeysWithValue(
     const Value &v) const
 {
     Array<Key> result;
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
-        if(it->second == v)
+        if (it->second == v)
         {
             result.PushBack(it->first);
         }
@@ -136,7 +136,7 @@ template <class Key, class Value, class Hash, class Pred, class Alloc>
 Array<Key> UMap<Key, Value, Hash, Pred, Alloc>::GetKeys() const
 {
     Array<Key> result;
-    for(const auto &it : *this)
+    for (const auto &it : *this)
     {
         result.PushBack(it.first);
     }
@@ -147,7 +147,7 @@ template <class Key, class Value, class Hash, class Pred, class Alloc>
 Array<Value> UMap<Key, Value, Hash, Pred, Alloc>::GetValues() const
 {
     Array<Value> result;
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
         result.PushBack(it->second);
     }

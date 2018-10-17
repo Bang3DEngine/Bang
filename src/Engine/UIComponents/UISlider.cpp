@@ -33,7 +33,7 @@ void UISlider::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(GetSliderFocusable()->IsBeingPressed())
+    if (GetSliderFocusable()->IsBeingPressed())
     {
         GetHandleRenderer()->SetTint(GetPressedColor());
         SetValuePercent(GetMouseRelativePercent());

@@ -42,15 +42,15 @@ void UIDragDroppable::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(GetFocusable())
+    if (GetFocusable())
     {
         const Array<InputEvent> &events = Input::GetEnqueuedEvents();
-        for(const InputEvent &inputEvent : events)
+        for (const InputEvent &inputEvent : events)
         {
-            if(GetFocusable()->IsMouseOver())
+            if (GetFocusable()->IsMouseOver())
             {
-                if(inputEvent.type == InputEvent::Type::MOUSE_DOWN &&
-                   inputEvent.mouseButton == MouseButton::LEFT)
+                if (inputEvent.type == InputEvent::Type::MOUSE_DOWN &&
+                    inputEvent.mouseButton == MouseButton::LEFT)
                 {
                     m_pressTime = inputEvent.timestamp;
 
@@ -61,17 +61,17 @@ void UIDragDroppable::OnUpdate()
                 }
             }
 
-            if(inputEvent.type == InputEvent::Type::MOUSE_UP &&
-               inputEvent.mouseButton == MouseButton::LEFT)
+            if (inputEvent.type == InputEvent::Type::MOUSE_UP &&
+                inputEvent.mouseButton == MouseButton::LEFT)
             {
                 m_pressTime.SetInfinity();
             }
         }
 
-        if(!IsBeingDragged() && GetFocusable()->IsBeingPressed())
+        if (!IsBeingDragged() && GetFocusable()->IsBeingPressed())
         {
             Time passedPressedTime = Time::GetPassedTimeSince(m_pressTime);
-            if(passedPressedTime >= UIDragDroppable::DragInitTime)
+            if (passedPressedTime >= UIDragDroppable::DragInitTime)
             {
                 OnDragStarted();
             }
@@ -81,9 +81,9 @@ void UIDragDroppable::OnUpdate()
 
 void UIDragDroppable::SetFocusable(UIFocusable *focusable)
 {
-    if(focusable != GetFocusable())
+    if (focusable != GetFocusable())
     {
-        if(GetFocusable())
+        if (GetFocusable())
         {
             GetFocusable()->EventEmitter<IEventsFocus>::UnRegisterListener(
                 this);
@@ -91,7 +91,7 @@ void UIDragDroppable::SetFocusable(UIFocusable *focusable)
 
         p_focusable = focusable;
 
-        if(GetFocusable())
+        if (GetFocusable())
         {
             GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(this);
         }
@@ -101,7 +101,7 @@ void UIDragDroppable::SetFocusable(UIFocusable *focusable)
 void UIDragDroppable::SetShowDragDropGameObject(bool showDragDropObject)
 {
     m_showDragDropGameObject = showDragDropObject;
-    if(!GetShowDragDropGameObject() && m_dragDropGameObject)
+    if (!GetShowDragDropGameObject() && m_dragDropGameObject)
     {
         GameObject::Destroy(m_dragDropGameObject);
     }
@@ -124,22 +124,22 @@ bool UIDragDroppable::GetShowDragDropGameObject() const
 
 void UIDragDroppable::OnDragStarted()
 {
-    if(!IsBeingDragged())
+    if (!IsBeingDragged())
     {
         m_beingDragged = true;
         m_pressTime.SetInfinity();
 
         UICanvas *canvas = UICanvas::GetActive(this);
-        if(canvas)
+        if (canvas)
         {
             canvas->NotifyDragStarted(this);
             EventEmitter<IEventsDragDrop>::PropagateToListeners(
                 &IEventsDragDrop::OnDragStarted, this);
         }
 
-        if(GetShowDragDropGameObject())
+        if (GetShowDragDropGameObject())
         {
-            if(!m_dragDropGameObject)
+            if (!m_dragDropGameObject)
             {
                 m_dragDropGameObject = GameObjectFactory::CreateUIGameObject();
                 m_dragDropGameObject->AddComponent<UILayoutIgnorer>();
@@ -151,7 +151,7 @@ void UIDragDroppable::OnDragStarted()
                 p_dragDropImageRenderer->SetMode(
                     UIImageRenderer::Mode::TEXTURE);
 
-                if(canvas)
+                if (canvas)
                 {
                     m_dragDropGameObject->SetParent(canvas->GetGameObject());
                 }
@@ -163,7 +163,7 @@ void UIDragDroppable::OnDragStarted()
 
 void UIDragDroppable::OnDragUpdate()
 {
-    if(m_dragDropGameObject)
+    if (m_dragDropGameObject)
     {
         MoveDragDropGameObjectTo(Input::GetMousePosition());
         EventEmitter<IEventsDragDrop>::PropagateToListeners(
@@ -173,7 +173,7 @@ void UIDragDroppable::OnDragUpdate()
 
 void UIDragDroppable::OnDropped()
 {
-    if(IsBeingDragged())
+    if (IsBeingDragged())
     {
         m_beingDragged = false;
         m_pressTime.SetInfinity();
@@ -181,7 +181,7 @@ void UIDragDroppable::OnDropped()
         EventEmitter<IEventsDragDrop>::PropagateToListeners(
             &IEventsDragDrop::OnDrop, this);
 
-        if(m_dragDropGameObject)
+        if (m_dragDropGameObject)
         {
             GameObject::Destroy(m_dragDropGameObject);
             m_dragDropGameObject = nullptr;
@@ -205,7 +205,7 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
 
 void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)
 {
-    if(m_dragDropGameObject)
+    if (m_dragDropGameObject)
     {
         RectTransform *thisRT = GetGameObject()->GetRectTransform();
         AARecti thisRect(thisRT->GetViewportAARect());
@@ -228,7 +228,7 @@ void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)
 void UIDragDroppable::OnDestroy()
 {
     Object::OnDestroy();
-    if(IsBeingDragged())
+    if (IsBeingDragged())
     {
         OnDropped();
     }

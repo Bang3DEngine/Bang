@@ -125,7 +125,7 @@ DialogWindow *Dialog::BeginDialogCreation(const String &title,
     Dialog::s_dialogCreation_prevActiveWindows.push(Window::GetActive());
     Dialog::s_dialogCreation_modalBooleans.push(modal);
     Window *topWindow = WindowManager::GetTopWindow();
-    if(topWindow)
+    if (topWindow)
     {
         Input::GetActive()->Reset();
 
@@ -155,7 +155,7 @@ void Dialog::EndDialogCreation(Scene *scene)
     Dialog::s_dialogCreation_prevActiveWindows.pop();
     Dialog::s_dialogCreation_modalBooleans.pop();
 
-    if(modal)
+    if (modal)
     {
         Application::GetInstance()->BlockingWait(dialogWindow);
     }
@@ -167,7 +167,7 @@ void Dialog::EndDialogCreation(Scene *scene)
 
 void Dialog::EndCurrentDialog()
 {
-    if(Dialog::s_currentDialog)
+    if (Dialog::s_currentDialog)
     {
         WindowManager::GetInstance()->DestroyWindow(Dialog::s_currentDialog);
         Dialog::s_currentDialog = nullptr;
@@ -183,8 +183,11 @@ void Dialog::CreateSaveFilePathSceneInto(Scene *scene,
     UIButton *cancelButton, *botLeftButton;
     UIInputText *botInputText;
 
-    Dialog::CreateFilePathBaseSceneInto(scene, initialDirPath, &fileList,
-                                        &cancelButton, &botLeftButton,
+    Dialog::CreateFilePathBaseSceneInto(scene,
+                                        initialDirPath,
+                                        &fileList,
+                                        &cancelButton,
+                                        &botLeftButton,
                                         &botInputText);
 
     fileList->SetFileExtensions({extension});
@@ -212,10 +215,10 @@ void Dialog::CreateSaveFilePathSceneInto(Scene *scene,
             Component::OnUpdate();
 
             Path currPath = p_fileList->GetCurrentSelectedPath();
-            if(currPath.IsFile())
+            if (currPath.IsFile())
             {
                 String currContent = currPath.GetNameExt();
-                if(currContent != m_prevContent)
+                if (currContent != m_prevContent)
                 {
                     p_inputText->GetText()->SetContent(currContent);
                     m_prevContent = currContent;
@@ -243,8 +246,11 @@ void Dialog::CreateOpenFilePathSceneInto(Scene *scene,
     UIButton *cancelButton, *botRightButton;
     UIInputText *botInputText;
 
-    Dialog::CreateFilePathBaseSceneInto(scene, initialDirPath, &fileList,
-                                        &cancelButton, &botRightButton,
+    Dialog::CreateFilePathBaseSceneInto(scene,
+                                        initialDirPath,
+                                        &fileList,
+                                        &cancelButton,
+                                        &botRightButton,
                                         &botInputText);
 
     fileList->SetFileExtensions(extensions);
@@ -276,7 +282,7 @@ void Dialog::CreateOpenFilePathSceneInto(Scene *scene,
                 m_openDir ? !currPath.IsDir() : !currPath.IsFile();
             p_openButton->SetBlocked(buttonBlocked);
 
-            if(m_openDir)
+            if (m_openDir)
             {
                 p_openButton->GetText()->SetContent("Open " +
                                                     currPath.GetAbsolute());
@@ -361,12 +367,12 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     UIButton *goButton = GameObjectFactory::CreateUIButton("Go");
     goButton->AddClickedCallback([inputPathText, fileList]() {
         Path inputPath(inputPathText->GetText()->GetContent());
-        if(inputPath.IsFile())
+        if (inputPath.IsFile())
         {
             inputPath = inputPath.GetDirectory();
         }
 
-        if(inputPath.IsDir())
+        if (inputPath.IsDir())
         {
             fileList->SetCurrentPath(inputPath);
         }
@@ -412,26 +418,26 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     openButton->GetGameObject()->SetParent(botHLGo);
 
     Path initDirPath = initialDirPath;
-    if(!initDirPath.IsDir())
+    if (!initDirPath.IsDir())
     {
         initDirPath = Paths::GetEngineDir();
     }
     fileList->SetCurrentPath(initDirPath);
 
     // Params
-    if(outFileList)
+    if (outFileList)
     {
         *outFileList = fileList;
     }
-    if(outBotLeftButton)
+    if (outBotLeftButton)
     {
         *outBotLeftButton = cancelButton;
     }
-    if(outBotRightButton)
+    if (outBotRightButton)
     {
         *outBotRightButton = openButton;
     }
-    if(outBotInputText)
+    if (outBotInputText)
     {
         *outBotInputText = botInputText;
     }
@@ -496,7 +502,7 @@ Scene *Dialog::CreateGetStringScene(const String &msg, const String &hint)
         void OnUpdate() override
         {
             Component::OnUpdate();
-            if(Input::GetKeyDown(Key::ENTER))
+            if (Input::GetKeyDown(Key::ENTER))
             {
                 m_okButton->Click();
             }

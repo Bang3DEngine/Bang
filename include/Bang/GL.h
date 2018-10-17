@@ -25,8 +25,8 @@ namespace Bang
 #define GL_ClearError() GL::ClearError()
 #define GL_CheckError()                                                     \
     ASSERT_SOFT_MSG(                                                        \
-        GL::CheckError(__LINE__, String(SCAST<const char *>(__FUNCTION__)), \
-                       __FILE__),                                           \
+        GL::CheckError(                                                     \
+            __LINE__, String(SCAST<const char *>(__FUNCTION__)), __FILE__), \
         "There was an OpenGL error, see previous message.");
 #else
 #define GL_CALL(CALL) CALL

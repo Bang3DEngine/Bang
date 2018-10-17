@@ -39,7 +39,7 @@ CapsuleCollider::~CapsuleCollider()
 
 void CapsuleCollider::SetRadius(float radius)
 {
-    if(radius != GetRadius())
+    if (radius != GetRadius())
     {
         m_radius = radius;
         UpdatePxShape();
@@ -48,7 +48,7 @@ void CapsuleCollider::SetRadius(float radius)
 
 void CapsuleCollider::SetHeight(float height)
 {
-    if(height != GetHeight())
+    if (height != GetHeight())
     {
         m_height = height;
         UpdatePxShape();
@@ -57,7 +57,7 @@ void CapsuleCollider::SetHeight(float height)
 
 void CapsuleCollider::SetAxis(Axis3D axis)
 {
-    if(axis != GetAxis())
+    if (axis != GetAxis())
     {
         m_axis = axis;
         UpdatePxShape();
@@ -106,17 +106,17 @@ void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Radius"))
+    if (metaNode.Contains("Radius"))
     {
         SetRadius(metaNode.Get<float>("Radius"));
     }
 
-    if(metaNode.Contains("Height"))
+    if (metaNode.Contains("Height"))
     {
         SetHeight(metaNode.Get<float>("Height"));
     }
 
-    if(metaNode.Contains("Axis"))
+    if (metaNode.Contains("Axis"))
     {
         SetAxis(SCAST<Axis3D>(metaNode.Get<int>("Axis")));
     }
@@ -142,7 +142,7 @@ physx::PxShape *CapsuleCollider::CreatePxShape() const
 
 Quaternion CapsuleCollider::GetInternalRotation() const
 {
-    switch(GetAxis())
+    switch (GetAxis())
     {
         case Axis3D::X: return Quaternion::Identity; break;
 
@@ -161,7 +161,7 @@ void CapsuleCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if(GetPxShape())
+    if (GetPxShape())
     {
         ASSERT(GetPxRigidDynamic());
 

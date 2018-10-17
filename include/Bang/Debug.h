@@ -60,7 +60,7 @@ private:
         log << std::boolalpha << msg;              \
         log.flush();                               \
         Debug::Log(log.str(), __LINE__, __FILE__); \
-    } while(0)
+    } while (0)
 
 #define Debug_DLog(msg)                             \
     do                                              \
@@ -69,7 +69,7 @@ private:
         log << std::boolalpha << msg;               \
         log.flush();                                \
         Debug::DLog(log.str(), __LINE__, __FILE__); \
-    } while(0)
+    } while (0)
 
 #define Debug_Peek(varName) Debug_Log(#varName << ": " << (varName))
 #define Debug_DPeek(varName) Debug_DLog(#varName << ": " << (varName))
@@ -81,7 +81,7 @@ private:
         log << std::boolalpha << msg;               \
         log.flush();                                \
         Debug::Warn(log.str(), __LINE__, __FILE__); \
-    } while(0)
+    } while (0)
 
 #define Debug_Error(msg)                             \
     do                                               \
@@ -90,7 +90,7 @@ private:
         log << std::boolalpha << msg;                \
         log.flush();                                 \
         Debug::Error(log.str(), __LINE__, __FILE__); \
-    } while(0)
+    } while (0)
 }
 
 #endif  // DEBUG_H

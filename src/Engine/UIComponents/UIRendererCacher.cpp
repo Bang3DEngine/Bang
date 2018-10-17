@@ -58,7 +58,7 @@ void UIRendererCacher::OnStart()
     // Prepare image renderer
     Texture2D *tex =
         p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
-    if(p_cachedImageRenderer)
+    if (p_cachedImageRenderer)
     {
         tex->SetWrapMode(GL::WrapMode::REPEAT);
         p_cachedImageRenderer->SetImageTexture(tex);
@@ -74,9 +74,9 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if(renderPass == RenderPass::CANVAS)
+    if (renderPass == RenderPass::CANVAS)
     {
-        if(IsCachingEnabled() && m_needNewImageToSnapshot)
+        if (IsCachingEnabled() && m_needNewImageToSnapshot)
         {
             GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
             GL::Push(GL::Pushable::BLEND_STATES);
@@ -117,7 +117,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             p_cachedImageRenderer->SetVisible(true);
             SetContainerVisible(false);
         }
-        else if(!IsCachingEnabled())
+        else if (!IsCachingEnabled())
         {
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);
@@ -132,7 +132,7 @@ void UIRendererCacher::OnAfterChildrenRender(RenderPass renderPass)
 
 void UIRendererCacher::SetCachingEnabled(bool enabled)
 {
-    if(enabled != IsCachingEnabled())
+    if (enabled != IsCachingEnabled())
     {
         m_cachingEnabled = enabled;
         p_cachedImageRenderer->SetEnabled(IsCachingEnabled());
@@ -156,7 +156,7 @@ void UIRendererCacher::OnChanged()
 
 void UIRendererCacher::OnComponentAdded(Component *addedComponent, int)
 {
-    if(Renderer *rend = DCAST<Renderer *>(addedComponent))
+    if (Renderer *rend = DCAST<Renderer *>(addedComponent))
     {
         rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
     }
@@ -165,7 +165,7 @@ void UIRendererCacher::OnComponentAdded(Component *addedComponent, int)
 void UIRendererCacher::OnComponentRemoved(Component *removedComponent,
                                           GameObject *)
 {
-    if(Renderer *rend = DCAST<Renderer *>(removedComponent))
+    if (Renderer *rend = DCAST<Renderer *>(removedComponent))
     {
         rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
     }
@@ -174,15 +174,15 @@ void UIRendererCacher::OnComponentRemoved(Component *removedComponent,
 void UIRendererCacher::OnChildAdded(GameObject *, GameObject *)
 {
     Array<GameObject *> children = GetContainer()->GetChildrenRecursively();
-    for(GameObject *child : children)
+    for (GameObject *child : children)
     {
         Array<Renderer *> renderers = child->GetComponents<Renderer>();
-        for(Renderer *rend : renderers)
+        for (Renderer *rend : renderers)
         {
             rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
         }
 
-        if(child->GetTransform())
+        if (child->GetTransform())
         {
             child->GetTransform()
                 ->EventEmitter<IEventsTransform>::RegisterListener(this);
@@ -202,12 +202,12 @@ void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject *)
 {
     Array<GameObject *> children = removedChild->GetChildrenRecursively();
     children.PushBack(removedChild);
-    for(GameObject *child : children)
+    for (GameObject *child : children)
     {
-        if(child)
+        if (child)
         {
             Array<Renderer *> renderers = child->GetComponents<Renderer>();
-            for(Renderer *rend : renderers)
+            for (Renderer *rend : renderers)
             {
                 rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(
                     this);

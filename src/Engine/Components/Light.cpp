@@ -86,7 +86,7 @@ Texture *Light::GetShadowMapTexture() const
 
 void Light::RenderShadowMaps(GameObject *go)
 {
-    if(GetShadowType() != ShadowType::NONE)
+    if (GetShadowType() != ShadowType::NONE)
     {
         RenderShadowMaps_(go);
     }
@@ -105,7 +105,9 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
     AARect improvedRenderRect =
         AARect::Intersection(GetRenderRect(camera), renderRect);
     // Additive blend
-    gbuffer->ApplyPassBlend(lightSP, GL::BlendFactor::ONE, GL::BlendFactor::ONE,
+    gbuffer->ApplyPassBlend(lightSP,
+                            GL::BlendFactor::ONE,
+                            GL::BlendFactor::ONE,
                             improvedRenderRect);
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
@@ -122,7 +124,7 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
     sp->SetColor("B_LightColor", GetColor());
     sp->SetVector3("B_LightForwardWorld", tr->GetForward());
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
-    if(DCAST<Texture2D *>(GetShadowMapTexture()))
+    if (DCAST<Texture2D *>(GetShadowMapTexture()))
     {
         sp->SetTexture2D("B_LightShadowMap",
                          SCAST<Texture2D *>(GetShadowMapTexture()));
@@ -144,19 +146,19 @@ Array<Renderer *> Light::GetShadowCastersIn(GameObject *go) const
 
     Array<Renderer *> shadowCastersRends =
         go->GetComponentsInDescendantsAndThis<Renderer>();
-    for(Renderer *rend : shadowCastersRends)
+    for (Renderer *rend : shadowCastersRends)
     {
-        if(rend->IsActiveRecursively() && rend->GetCastsShadows())
+        if (rend->IsActiveRecursively() && rend->GetCastsShadows())
         {
             bool isValidShadowCaster = false;
-            if(const Material *mat = rend->GetActiveMaterial())
+            if (const Material *mat = rend->GetActiveMaterial())
             {
                 isValidShadowCaster =
                     (mat->GetRenderPass() == RenderPass::SCENE &&
                      rend->GetCastsShadows());
             }
 
-            if(isValidShadowCaster)
+            if (isValidShadowCaster)
             {
                 validShadowCastersRends.PushBack(rend);
             }
@@ -192,27 +194,27 @@ void Light::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Intensity"))
+    if (metaNode.Contains("Intensity"))
     {
         SetIntensity(metaNode.Get<float>("Intensity"));
     }
 
-    if(metaNode.Contains("Color"))
+    if (metaNode.Contains("Color"))
     {
         SetColor(metaNode.Get<Color>("Color"));
     }
 
-    if(metaNode.Contains("ShadowBias"))
+    if (metaNode.Contains("ShadowBias"))
     {
         SetShadowBias(metaNode.Get<float>("ShadowBias"));
     }
 
-    if(metaNode.Contains("ShadowType"))
+    if (metaNode.Contains("ShadowType"))
     {
         SetShadowType(metaNode.Get<ShadowType>("ShadowType"));
     }
 
-    if(metaNode.Contains("ShadowMapSize"))
+    if (metaNode.Contains("ShadowMapSize"))
     {
         SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize"));
     }

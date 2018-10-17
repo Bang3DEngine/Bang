@@ -37,10 +37,10 @@ void UIRenderer::OnRender()
 
 void UIRenderer::OnRender(RenderPass renderPass)
 {
-    if(RectTransform *rt = GetGameObject()->GetRectTransform())
+    if (RectTransform *rt = GetGameObject()->GetRectTransform())
     {
         bool render = true;
-        if(GetCullByRectTransform())
+        if (GetCullByRectTransform())
         {
             const AARect rectNDC = rt->GetViewportAARectNDC();
             render = (rectNDC != AARect::Zero &&
@@ -48,7 +48,7 @@ void UIRenderer::OnRender(RenderPass renderPass)
                           AARect::Zero);
         }
 
-        if(render)
+        if (render)
         {
             Renderer::OnRender(renderPass);
         }

@@ -39,17 +39,17 @@ void Input::OnFrameFinished()
     m_lastMousePosWindow = GetMousePosition();
 
     // KEYS
-    for(auto it = m_keyInfos.Begin(); it != m_keyInfos.End();)
+    for (auto it = m_keyInfos.Begin(); it != m_keyInfos.End();)
     {
         ButtonInfo &kInfo = it->second;
-        if(kInfo.down)
+        if (kInfo.down)
         {
             kInfo.down = false;  // Not down anymore, just pressed.
             m_keysDown.Remove(it->first);
             m_keysDownRepeat.Remove(it->first);
         }
 
-        if(kInfo.up)  // After a frame where it was Up
+        if (kInfo.up)  // After a frame where it was Up
         {
             m_keysUp.Remove(it->first);
             it = m_keyInfos.Remove(it);
@@ -62,15 +62,15 @@ void Input::OnFrameFinished()
     //
 
     // MOUSE
-    for(auto it = m_mouseInfo.Begin(); it != m_mouseInfo.End();)
+    for (auto it = m_mouseInfo.Begin(); it != m_mouseInfo.End();)
     {
         ButtonInfo &mbInfo = it->second;
-        if(mbInfo.down)
+        if (mbInfo.down)
         {
             mbInfo.down = false;  // Not down anymore, just pressed.
         }
 
-        if(mbInfo.up)
+        if (mbInfo.up)
         {
             it = m_mouseInfo.Remove(it);
         }
@@ -87,27 +87,27 @@ void Input::OnFrameFinished()
 
 void Input::ProcessEventInfo(const InputEvent &iev)
 {
-    if(iev.type == InputEvent::Type::WHEEL)
+    if (iev.type == InputEvent::Type::WHEEL)
     {
         ProcessMouseWheelEventInfo(iev);
     }
-    else if(iev.type == InputEvent::Type::MOUSE_MOVE)
+    else if (iev.type == InputEvent::Type::MOUSE_MOVE)
     {
         ProcessMouseMoveEventInfo(iev);
     }
-    else if(iev.type == InputEvent::Type::MOUSE_DOWN)
+    else if (iev.type == InputEvent::Type::MOUSE_DOWN)
     {
         ProcessMouseDownEventInfo(iev);
     }
-    else if(iev.type == InputEvent::Type::MOUSE_UP)
+    else if (iev.type == InputEvent::Type::MOUSE_UP)
     {
         ProcessMouseUpEventInfo(iev);
     }
-    else if(iev.type == InputEvent::Type::KEY_DOWN)
+    else if (iev.type == InputEvent::Type::KEY_DOWN)
     {
         ProcessKeyDownEventInfo(iev);
     }
-    else if(iev.type == InputEvent::Type::KEY_UP)
+    else if (iev.type == InputEvent::Type::KEY_UP)
     {
         ProcessKeyUpEventInfo(iev);
     }
@@ -123,29 +123,29 @@ void Input::ProcessMouseMoveEventInfo(const InputEvent &iev)
     BANG_UNUSED(iev);
 
     // Mouse wrapping
-    if(m_isMouseWrapping)
+    if (m_isMouseWrapping)
     {
         Window *window = Window::GetActive();
         Vector2i windowSize = window->GetSize();
         Vector2i mouseCoords = Input::GetMousePosition();
 
         constexpr int wrapPxMargin = 2;
-        if(mouseCoords.x < wrapPxMargin)
+        if (mouseCoords.x < wrapPxMargin)
         {
             Input::SetMousePositionWindow(windowSize.x - wrapPxMargin - 1,
                                           mouseCoords.y);
         }
-        else if(mouseCoords.x > (windowSize.x - wrapPxMargin))
+        else if (mouseCoords.x > (windowSize.x - wrapPxMargin))
         {
             Input::SetMousePositionWindow(wrapPxMargin + 1, mouseCoords.y);
         }
 
-        if(mouseCoords.y < wrapPxMargin)
+        if (mouseCoords.y < wrapPxMargin)
         {
             Input::SetMousePositionWindow(mouseCoords.x,
                                           windowSize.y - wrapPxMargin - 1);
         }
-        else if(mouseCoords.y > (windowSize.y - wrapPxMargin))
+        else if (mouseCoords.y > (windowSize.y - wrapPxMargin))
         {
             Input::SetMousePositionWindow(mouseCoords.x, wrapPxMargin + 1);
         }
@@ -156,14 +156,14 @@ void Input::ProcessMouseDownEventInfo(const InputEvent &iev)
 {
     MouseButton mb = iev.mouseButton;
     bool up = false;
-    if(m_mouseInfo.ContainsKey(mb))
+    if (m_mouseInfo.ContainsKey(mb))
     {
         up = m_mouseInfo.Get(mb).up;
     }
     m_isADoubleClick = false;  // Reset double click
 
     m_mouseInfo.Add(mb, ButtonInfo(up, true, true));
-    if((iev.timestamp - m_lastMouseDownTimestamp) <= DoubleClickMaxTime)
+    if ((iev.timestamp - m_lastMouseDownTimestamp) <= DoubleClickMaxTime)
     {
         m_isADoubleClick = true;
     }
@@ -175,14 +175,16 @@ void Input::ProcessMouseDownEventInfo(const InputEvent &iev)
 void Input::ProcessMouseUpEventInfo(const InputEvent &iev)
 {
     MouseButton mb = iev.mouseButton;
-    if(m_mouseInfo.ContainsKey(mb))
+    if (m_mouseInfo.ContainsKey(mb))
     {
         // We use these ifs, because down & pressed & up can happen
         // in the same frame (this does happen sometimes)
-        if(m_mouseInfo[mb].down)
+        if (m_mouseInfo[mb].down)
         {
-            m_mouseInfo.Add(mb, ButtonInfo(true, m_mouseInfo[mb].down,
-                                           m_mouseInfo[mb].pressed));
+            m_mouseInfo.Add(
+                mb,
+                ButtonInfo(
+                    true, m_mouseInfo[mb].down, m_mouseInfo[mb].pressed));
         }
         else
         {
@@ -194,7 +196,7 @@ void Input::ProcessMouseUpEventInfo(const InputEvent &iev)
 void Input::ProcessKeyDownEventInfo(const InputEvent &iev)
 {
     Key k = iev.key;
-    if(!m_keyInfos.ContainsKey(k))
+    if (!m_keyInfos.ContainsKey(k))
     {
         m_keyInfos[k] = ButtonInfo();
     }
@@ -202,14 +204,14 @@ void Input::ProcessKeyDownEventInfo(const InputEvent &iev)
     m_keyInfos[k].pressed = true;
     m_keyInfos[k].autoRepeat = iev.autoRepeat;
 
-    if(!iev.autoRepeat)
+    if (!iev.autoRepeat)
     {
         m_pressedKeys.PushBack(k);
         m_keysDown.PushBack(k);
         m_keysUp.Remove(k);
     }
 
-    if(!m_keysDownRepeat.Contains(k))
+    if (!m_keysDownRepeat.Contains(k))
     {
         m_keysDownRepeat.PushBack(k);
     }
@@ -217,11 +219,11 @@ void Input::ProcessKeyDownEventInfo(const InputEvent &iev)
 
 void Input::ProcessKeyUpEventInfo(const InputEvent &iev)
 {
-    if(iev.autoRepeat)
+    if (iev.autoRepeat)
         return;
 
     Key k = iev.key;
-    if(!m_keyInfos.ContainsKey(k))
+    if (!m_keyInfos.ContainsKey(k))
     {
         m_keyInfos[k] = ButtonInfo();
     }
@@ -235,7 +237,7 @@ void Input::ProcessKeyUpEventInfo(const InputEvent &iev)
 
 void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
 {
-    if(!window->HasFocus())
+    if (!window->HasFocus())
     {
         Reset();
         return;
@@ -247,17 +249,17 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
     InputEvent inputEvent;
 
     inputEvent.mousePosWindow = Input::GetMousePositionWindowWithoutInvertY();
-    if(event.common.timestamp != -1u)
+    if (event.common.timestamp != -1u)
     {
         inputEvent.timestamp =
             Time::Millis(event.common.timestamp) + Time::GetInit();
     }
 
-    switch(event.type)
+    switch (event.type)
     {
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-            switch(event.type)
+            switch (event.type)
             {
                 case SDL_KEYDOWN:
                     inputEvent.type = InputEvent::Type::KEY_DOWN;
@@ -310,7 +312,7 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
             break;
     }
 
-    if(enqueue)
+    if (enqueue)
     {
         inputEvent.mousePosWindow =
             GetWindowPosInvertedY(inputEvent.mousePosWindow);
@@ -320,7 +322,7 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
 
 void Input::ProcessEnqueuedEvents()
 {
-    for(const InputEvent &iev : m_eventInfoQueue)
+    for (const InputEvent &iev : m_eventInfoQueue)
     {
         ProcessEventInfo(iev);
     }
@@ -413,11 +415,11 @@ Array<MouseButton> Input::GetMouseButtons()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if(inp->IsInsideContextFocus())
+    if (inp->IsInsideContextFocus())
     {
-        for(auto it : inp->m_mouseInfo)
+        for (auto it : inp->m_mouseInfo)
         {
-            if(it.second.pressed)
+            if (it.second.pressed)
             {
                 mouseButtons.PushBack(it.first);
             }
@@ -429,11 +431,11 @@ Array<MouseButton> Input::GetMouseButtonsUp()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if(inp->IsInsideContextFocus())
+    if (inp->IsInsideContextFocus())
     {
-        for(auto it : inp->m_mouseInfo)
+        for (auto it : inp->m_mouseInfo)
         {
-            if(it.second.up)
+            if (it.second.up)
             {
                 mouseButtons.PushBack(it.first);
             }
@@ -445,11 +447,11 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 {
     Array<MouseButton> mouseButtons;
     Input *inp = Input::GetActive();
-    if(inp->IsInsideContextFocus())
+    if (inp->IsInsideContextFocus())
     {
-        for(auto it : inp->m_mouseInfo)
+        for (auto it : inp->m_mouseInfo)
         {
-            if(it.second.down)
+            if (it.second.down)
             {
                 mouseButtons.PushBack(it.first);
             }
@@ -518,11 +520,11 @@ int Input::GetMouseDeltaX()
 {
     Input *inp = Input::GetActive();
     int delta = 0;
-    if(inp->IsInsideContextFocus())
+    if (inp->IsInsideContextFocus())
     {
         delta = inp->GetMousePositionWindow().x -
                 Input::GetPreviousMousePositionWindow().x;
-        if(Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f)
+        if (Math::Abs(delta) > Window::GetActive()->GetWidth() * 0.8f)
         {
             delta = 0;
         }
@@ -534,11 +536,11 @@ int Input::GetMouseDeltaY()
 {
     Input *inp = Input::GetActive();
     int delta = 0;
-    if(inp->IsInsideContextFocus())
+    if (inp->IsInsideContextFocus())
     {
         delta = inp->GetMousePositionWindow().y -
                 Input::GetPreviousMousePositionWindow().y;
-        if(Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f)
+        if (Math::Abs(delta) > Window::GetActive()->GetHeight() * 0.8f)
         {
             delta = 0;
         }
@@ -579,7 +581,7 @@ const Input::Context &Input::GetContext()
 AARecti Input::GetContextRect()
 {
     Input::Context context = Input::GetContext();
-    if(context.rect == AARecti::Zero)
+    if (context.rect == AARecti::Zero)
     {
         return AARecti(Vector2i::Zero, Window::GetActive()->GetSize());
     }
@@ -606,8 +608,8 @@ bool Input::IsLockMouseMovement()
 void Input::SetMousePositionWindow(int windowMousePosX, int windowMousePosY)
 {
     Window *window = Window::GetActive();
-    SDL_WarpMouseInWindow(window->GetSDLWindow(), windowMousePosX,
-                          windowMousePosY);
+    SDL_WarpMouseInWindow(
+        window->GetSDLWindow(), windowMousePosX, windowMousePosY);
 }
 
 void Input::SetMousePositionWindow(const Vector2i &windowMousePosition)
@@ -636,7 +638,7 @@ Vector2i Input::GetMousePositionWindow()
 Vector2i Input::GetWindowPosInvertedY(const Vector2i &winPos)
 {
     Vector2i winPosInverted = winPos;
-    if(Window *win = Window::GetActive())
+    if (Window *win = Window::GetActive())
     {
         winPosInverted.y = (win->GetHeight() - 1) - winPos.y;  // Invert Y
     }
@@ -712,7 +714,7 @@ bool InputEvent::IsMouseType() const
 
 Vector2i InputEvent::GetMousePosWindow() const
 {
-    if(IsMouseType())
+    if (IsMouseType())
     {
         return mousePosWindow;
     }

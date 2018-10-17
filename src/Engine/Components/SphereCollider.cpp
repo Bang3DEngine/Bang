@@ -40,7 +40,7 @@ SphereCollider::~SphereCollider()
 
 void SphereCollider::SetRadius(float radius)
 {
-    if(radius != GetRadius())
+    if (radius != GetRadius())
     {
         m_radius = radius;
         UpdatePxShape();
@@ -81,7 +81,7 @@ void SphereCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Radius"))
+    if (metaNode.Contains("Radius"))
     {
         SetRadius(metaNode.Get<float>("Radius"));
     }
@@ -107,7 +107,7 @@ void SphereCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if(GetPxShape())
+    if (GetPxShape())
     {
         ASSERT(GetPxRigidDynamic());
 

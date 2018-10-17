@@ -77,18 +77,18 @@ std::array<Quad, 6> Box::GetQuads() const
     Vector3 ey = GetExtentY();
     Vector3 ez = GetExtentZ();
     std::array<Quad, 6> quads;
-    Quad leftQuad = Quad(c - ex + ey + ez, c - ex + ey - ez, c - ex - ey - ez,
-                         c - ex - ey + ez);
-    Quad rightQuad = Quad(c + ex + ey + ez, c + ex + ey - ez, c + ex - ey - ez,
-                          c + ex - ey + ez);
-    Quad topQuad = Quad(c + ex + ey + ez, c + ex + ey - ez, c - ex + ey - ez,
-                        c - ex + ey + ez);
-    Quad botQuad = Quad(c + ex - ey + ez, c + ex - ey - ez, c - ex - ey - ez,
-                        c - ex - ey + ez);
-    Quad frontQuad = Quad(c + ex + ey - ez, c + ex - ey - ez, c - ex - ey - ez,
-                          c - ex + ey - ez);
-    Quad backQuad = Quad(c + ex + ey + ez, c + ex - ey + ez, c - ex - ey + ez,
-                         c - ex + ey + ez);
+    Quad leftQuad = Quad(
+        c - ex + ey + ez, c - ex + ey - ez, c - ex - ey - ez, c - ex - ey + ez);
+    Quad rightQuad = Quad(
+        c + ex + ey + ez, c + ex + ey - ez, c + ex - ey - ez, c + ex - ey + ez);
+    Quad topQuad = Quad(
+        c + ex + ey + ez, c + ex + ey - ez, c - ex + ey - ez, c - ex + ey + ez);
+    Quad botQuad = Quad(
+        c + ex - ey + ez, c + ex - ey - ez, c - ex - ey - ez, c - ex - ey + ez);
+    Quad frontQuad = Quad(
+        c + ex + ey - ez, c + ex - ey - ez, c - ex - ey - ez, c - ex + ey - ez);
+    Quad backQuad = Quad(
+        c + ex + ey + ez, c + ex - ey + ez, c - ex - ey + ez, c - ex + ey + ez);
 
     quads[0] = leftQuad;
     quads[1] = rightQuad;

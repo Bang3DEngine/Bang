@@ -36,14 +36,14 @@ void UIScrollBar::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(IsBeingGrabbed())
+    if (IsBeingGrabbed())
     {
         p_barImg->SetTint(Color::White.WithValue(0.8f));
 
         Vector2 mouseCoordsPx(Input::GetMousePosition());
         AARect scrollRectPx = GetScrollingRect();
         AARect barRectPx(GetBar()->GetRectTransform()->GetViewportRect());
-        if(!m_wasGrabbed)
+        if (!m_wasGrabbed)
         {
             m_grabOffsetPx = (mouseCoordsPx - barRectPx.GetMin());
         }
@@ -65,9 +65,9 @@ void UIScrollBar::OnUpdate()
     }
     m_wasGrabbed = IsBeingGrabbed();
 
-    if(Input::GetMouseButtonUp(MouseButton::LEFT))
+    if (Input::GetMouseButtonUp(MouseButton::LEFT))
     {
-        if(GetFocusable()->IsMouseOver())
+        if (GetFocusable()->IsMouseOver())
         {
             OnMouseEnter();
         }
@@ -80,7 +80,7 @@ void UIScrollBar::OnUpdate()
 
 void UIScrollBar::SetSide(Side side)
 {
-    if(side != GetSide())
+    if (side != GetSide())
     {
         m_side = side;
         UpdateLengthThicknessMargins();
@@ -107,7 +107,7 @@ void UIScrollBar::SetScrollingPercent(float _percent)
 
 void UIScrollBar::SetLength(int lengthPx)
 {
-    if(lengthPx != GetLength())
+    if (lengthPx != GetLength())
     {
         m_length = lengthPx;
         UpdateLengthThicknessMargins();
@@ -123,7 +123,7 @@ void UIScrollBar::SetLengthPercent(float lengthPercent)
 
 void UIScrollBar::SetThickness(int thickPx)
 {
-    if(thickPx != GetThickness())
+    if (thickPx != GetThickness())
     {
         m_thickness = thickPx;
         UpdateLengthThicknessMargins();
@@ -154,7 +154,7 @@ int UIScrollBar::GetThickness() const
 }
 Axis UIScrollBar::GetScrollAxis() const
 {
-    switch(GetSide())
+    switch (GetSide())
     {
         case Side::LEFT:
         case Side::RIGHT: return Axis::VERTICAL;
@@ -174,7 +174,7 @@ void UIScrollBar::UpdateLengthThicknessMargins()
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
     RectTransform *barRT = GetBar()->GetRectTransform();
-    if(GetScrollAxis() == Axis::HORIZONTAL)
+    if (GetScrollAxis() == Axis::HORIZONTAL)
     {
         bool bot = (GetSide() == Side::BOT);
         rt->SetAnchorX(Vector2(-1, 1));
@@ -249,7 +249,7 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
 
 void UIScrollBar::OnMouseEnter()
 {
-    if(!IsBeingGrabbed())
+    if (!IsBeingGrabbed())
     {
         p_barImg->SetTint(Color::White.WithValue(1.0f));
     }
@@ -257,7 +257,7 @@ void UIScrollBar::OnMouseEnter()
 
 void UIScrollBar::OnMouseExit()
 {
-    if(!IsBeingGrabbed())
+    if (!IsBeingGrabbed())
     {
         p_barImg->SetTint(Color::White.WithValue(0.9f));
     }
@@ -265,7 +265,7 @@ void UIScrollBar::OnMouseExit()
 
 int UIScrollBar::GetScrollingSpacePx() const
 {
-    if(!IsEnabledRecursively())
+    if (!IsEnabledRecursively())
     {
         return 0;
     }
@@ -293,12 +293,12 @@ GameObject *UIScrollBar::GetBar() const
 
 UIEventResult UIScrollBar::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    if(event.type == UIEvent::Type::MOUSE_ENTER)
+    if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
         OnMouseEnter();
         return UIEventResult::INTERCEPT;
     }
-    else if(event.type == UIEvent::Type::MOUSE_EXIT)
+    else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
         OnMouseExit();
         return UIEventResult::INTERCEPT;

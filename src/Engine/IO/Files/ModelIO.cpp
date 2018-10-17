@@ -95,15 +95,41 @@ aiColor4D ColorToAiColor4(const Color &c)
 }
 aiMatrix4x4 Matrix4ToAiMatrix4(const Matrix4 &m)
 {
-    return aiMatrix4x4(m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1],
-                       m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2],
-                       m[0][3], m[1][3], m[2][3], m[3][3]);
+    return aiMatrix4x4(m[0][0],
+                       m[1][0],
+                       m[2][0],
+                       m[3][0],
+                       m[0][1],
+                       m[1][1],
+                       m[2][1],
+                       m[3][1],
+                       m[0][2],
+                       m[1][2],
+                       m[2][2],
+                       m[3][2],
+                       m[0][3],
+                       m[1][3],
+                       m[2][3],
+                       m[3][3]);
 }
 Matrix4 AiMatrix4ToMatrix4(const aiMatrix4x4 &m)
 {
-    return Matrix4(m[0][0], m[0][1], m[0][2], m[0][3], m[1][0], m[1][1],
-                   m[1][2], m[1][3], m[2][0], m[2][1], m[2][2], m[2][3],
-                   m[3][0], m[3][1], m[3][2], m[3][3]);
+    return Matrix4(m[0][0],
+                   m[0][1],
+                   m[0][2],
+                   m[0][3],
+                   m[1][0],
+                   m[1][1],
+                   m[1][2],
+                   m[1][3],
+                   m[2][0],
+                   m[2][1],
+                   m[2][2],
+                   m[2][3],
+                   m[3][0],
+                   m[3][1],
+                   m[3][2],
+                   m[3][3]);
 }
 // ==================================================
 
@@ -111,12 +137,12 @@ int ModelIO::GetModelNumTriangles(const Path &modelFilepath)
 {
     Assimp::Importer importer;
     const aiScene *scene = ImportScene(&importer, modelFilepath);
-    if(!scene)
+    if (!scene)
     {
         return 0;
     }
 
-    if(scene && scene->HasMeshes())
+    if (scene && scene->HasMeshes())
     {
         return scene->mMeshes[0]->mNumFaces;
     }
@@ -132,7 +158,7 @@ Tree<ModelIONode> *ReadModelNode(const aiScene *scene, aiNode *node)
     modelNode.localToParent = AiMatrix4ToMatrix4(node->mTransformation);
 
     // Set mesh indices
-    for(int i = 0; i < node->mNumMeshes; ++i)
+    for (int i = 0; i < node->mNumMeshes; ++i)
     {
         uint meshIndex = node->mMeshes[i];
         modelNode.meshIndices.PushBack(meshIndex);
@@ -140,7 +166,7 @@ Tree<ModelIONode> *ReadModelNode(const aiScene *scene, aiNode *node)
             scene->mMeshes[meshIndex]->mMaterialIndex);
     }
 
-    for(int i = 0; i < node->mNumChildren; ++i)
+    for (int i = 0; i < node->mNumChildren; ++i)
     {
         aiNode *child = node->mChildren[i];
         Tree<ModelIONode> *childModelTree = ReadModelNode(scene, child);
@@ -156,47 +182,49 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
 {
     Assimp::Importer importer;
     const aiScene *aScene = ImportScene(&importer, modelFilepath);
-    if(!aScene)
+    if (!aScene)
     {
         return false;
     }
 
     // Load materials
-    for(int i = 0; i < SCAST<int>(aScene->mNumMaterials); ++i)
+    for (int i = 0; i < SCAST<int>(aScene->mNumMaterials); ++i)
     {
         String materialName;
         RH<Material> materialRH;
         ModelIO::ImportEmbeddedMaterial(aScene->mMaterials[i],
-                                        modelFilepath.GetDirectory(), model,
-                                        &materialRH, &materialName);
+                                        modelFilepath.GetDirectory(),
+                                        model,
+                                        &materialRH,
+                                        &materialName);
         modelScene->materials.PushBack(materialRH);
         modelScene->materialsNames.PushBack(materialName);
     }
 
     // Load meshes
     Map<String, Mesh::Bone> allBones;
-    for(int i = 0; i < SCAST<int>(aScene->mNumMeshes); ++i)
+    for (int i = 0; i < SCAST<int>(aScene->mNumMeshes); ++i)
     {
         RH<Mesh> meshRH;
         String meshName;
-        ModelIO::ImportEmbeddedMesh(aScene->mMeshes[i], model, &meshRH,
-                                    &meshName);
+        ModelIO::ImportEmbeddedMesh(
+            aScene->mMeshes[i], model, &meshRH, &meshName);
         modelScene->meshes.PushBack(meshRH);
         modelScene->meshesNames.PushBack(meshName);
 
         // Update global bones
-        for(const auto &it : meshRH.Get()->GetBonesPool())
+        for (const auto &it : meshRH.Get()->GetBonesPool())
         {
             allBones.Add(it.first, it.second);
         }
     }
 
     // Load animations and store them into arrays
-    for(int i = 0; i < SCAST<int>(aScene->mNumAnimations); ++i)
+    for (int i = 0; i < SCAST<int>(aScene->mNumAnimations); ++i)
     {
         aiAnimation *aAnimation = aScene->mAnimations[i];
         String animationName = AiStringToString(aAnimation->mName);
-        if(animationName.IsEmpty())
+        if (animationName.IsEmpty())
         {
             animationName = "Animation";
         }
@@ -209,13 +237,13 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
         double animDuration = aAnimation->mDuration;
         animation->SetDurationInFrames(animDuration);
         animation->SetFramesPerSecond(aAnimation->mTicksPerSecond);
-        for(int j = 0; j < SCAST<int>(aAnimation->mNumChannels); ++j)
+        for (int j = 0; j < SCAST<int>(aAnimation->mNumChannels); ++j)
         {
             aiNodeAnim *aNodeAnim = aAnimation->mChannels[j];
             String boneName = AiStringToString(aNodeAnim->mNodeName);
 
-            for(uint k = 0; k < aNodeAnim->mNumPositionKeys;
-                ++k)  // Position keys
+            for (uint k = 0; k < aNodeAnim->mNumPositionKeys;
+                 ++k)  // Position keys
             {
                 Animation::KeyFrame<Vector3> keyFrame;
                 keyFrame.timeInFrames = aNodeAnim->mPositionKeys[k].mTime;
@@ -224,8 +252,8 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
                 animation->AddPositionKeyFrame(boneName, keyFrame);
             }
 
-            for(uint k = 0; k < aNodeAnim->mNumRotationKeys;
-                ++k)  // Rotation keys
+            for (uint k = 0; k < aNodeAnim->mNumRotationKeys;
+                 ++k)  // Rotation keys
             {
                 Animation::KeyFrame<Quaternion> keyFrame;
                 keyFrame.timeInFrames = aNodeAnim->mRotationKeys[k].mTime;
@@ -234,7 +262,7 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
                 animation->AddRotationKeyFrame(boneName, keyFrame);
             }
 
-            for(uint k = 0; k < aNodeAnim->mNumScalingKeys; ++k)  // Scale keys
+            for (uint k = 0; k < aNodeAnim->mNumScalingKeys; ++k)  // Scale keys
             {
                 Animation::KeyFrame<Vector3> keyFrame;
                 keyFrame.timeInFrames = aNodeAnim->mScalingKeys[k].mTime;
@@ -263,9 +291,9 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
                             Map<String, Mesh::Bone> *bones,
                             Map<String, uint> *bonesIndices)
 {
-    for(int i = 0; i < SCAST<int>(aMesh->mNumFaces); ++i)
+    for (int i = 0; i < SCAST<int>(aMesh->mNumFaces); ++i)
     {
-        for(int j = 0; j < aMesh->mFaces[i].mNumIndices; ++j)
+        for (int j = 0; j < aMesh->mFaces[i].mNumIndices; ++j)
         {
             Mesh::VertexId vIndex = aMesh->mFaces[i].mIndices[j];
             vertexIndices->PushBack(vIndex);
@@ -273,23 +301,23 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     }
 
     // Positions
-    for(int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+    for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
     {
         Vector3 pos = AiVec3ToVec3(aMesh->mVertices[i]);
         vertexPositionsPool->PushBack(pos);
     }
 
     // Normals
-    for(int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+    for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
     {
         Vector3 normal = AiVec3ToVec3(aMesh->mNormals[i]);
         vertexNormalsPool->PushBack(normal);
     }
 
     // Uvs
-    if(aMesh->GetNumUVChannels() > 0)
+    if (aMesh->GetNumUVChannels() > 0)
     {
-        for(int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+        for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
         {
             Vector3 uvs = AiVec3ToVec3(aMesh->mTextureCoords[0][i]);
             vertexUvsPool->PushBack(uvs.xy());
@@ -297,9 +325,9 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     }
 
     // Tangents
-    if(aMesh->HasTangentsAndBitangents())
+    if (aMesh->HasTangentsAndBitangents())
     {
-        for(int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+        for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
         {
             Vector3 tangent = AiVec3ToVec3(aMesh->mTangents[i]);
             vertexTangentsPool->PushBack(tangent);
@@ -307,16 +335,16 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     }
 
     // Bones
-    if(aMesh->HasBones())
+    if (aMesh->HasBones())
     {
-        for(uint boneIdx = 0; boneIdx < aMesh->mNumBones; ++boneIdx)
+        for (uint boneIdx = 0; boneIdx < aMesh->mNumBones; ++boneIdx)
         {
             Mesh::Bone bone;
             aiBone *aBone = aMesh->mBones[boneIdx];
             String boneName = AiStringToString(aBone->mName);
 
             // Set weights
-            for(int j = 0; j < aBone->mNumWeights; ++j)
+            for (int j = 0; j < aBone->mNumWeights; ++j)
             {
                 const aiVertexWeight &aVertWeight = aBone->mWeights[j];
                 bone.weights.Add(aVertWeight.mVertexId, aVertWeight.mWeight);
@@ -347,22 +375,22 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     {
         Array<MeshRenderer *> rootMRs =
             rootGameObject->GetComponentsInDescendantsAndThis<MeshRenderer>();
-        for(MeshRenderer *mr : rootMRs)
+        for (MeshRenderer *mr : rootMRs)
         {
-            if(Mesh *mesh = mr->GetCurrentLODActiveMesh())
+            if (Mesh *mesh = mr->GetCurrentLODActiveMesh())
             {
                 sceneMeshes.Add(mesh);
                 meshRendererToMesh.Add(mr, mesh);
 
                 Material *material = mr->GetActiveMaterial();
-                if(material)
+                if (material)
                 {
                     sceneMeshToMaterial.Add(mesh, material);
 
                     sceneMaterials.Add(material);
                     meshRendererToMaterial.Add(mr, material);
 
-                    if(material->GetAlbedoTexture())
+                    if (material->GetAlbedoTexture())
                     {
                         sceneTextures.Add(material->GetAlbedoTexture());
                     }
@@ -371,7 +399,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         }
     }
 
-    if(sceneMeshes.IsEmpty())
+    if (sceneMeshes.IsEmpty())
     {
         return;
     }
@@ -380,7 +408,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     Array<Texture2D *> sceneTexturesArray(sceneTextures.Begin(),
                                           sceneTextures.End());
     Array<Material *> sceneMaterialsArray;
-    if(sceneMaterials.Size() > 0)
+    if (sceneMaterials.Size() > 0)
     {
         sceneMaterialsArray =
             Array<Material *>(sceneMaterials.Begin(), sceneMaterials.End());
@@ -388,10 +416,10 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
 
     // Create materials
     scene.mNumMaterials = sceneMaterialsArray.Size();
-    if(scene.mNumMaterials > 0)
+    if (scene.mNumMaterials > 0)
     {
         scene.mMaterials = new aiMaterial *[scene.mNumMaterials];
-        for(int i = 0; i < scene.mNumMaterials; ++i)
+        for (int i = 0; i < scene.mNumMaterials; ++i)
         {
             Material *material = sceneMaterialsArray[i];
             aiMaterial *aMaterial = MaterialToAiMaterial(material);
@@ -402,14 +430,14 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
 
     // Create meshes
     scene.mNumMeshes = sceneMeshesArray.Size();
-    if(scene.mNumMeshes > 0)
+    if (scene.mNumMeshes > 0)
     {
         scene.mMeshes = new aiMesh *[scene.mNumMeshes];
-        for(int i = 0; i < scene.mNumMeshes; ++i)
+        for (int i = 0; i < scene.mNumMeshes; ++i)
         {
             Mesh *mesh = sceneMeshesArray[i];
             aiMesh *aMesh = MeshToAiMesh(mesh);
-            if(sceneMeshToMaterial.ContainsKey(mesh))
+            if (sceneMeshToMaterial.ContainsKey(mesh))
             {
                 Material *meshMaterial = sceneMeshToMaterial[mesh];
                 aMesh->mMaterialIndex =
@@ -430,7 +458,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     const int result = exporter.Export(
         &scene, extensionId, meshExportPath.GetAbsolute().ToCString());
 
-    if(result != AI_SUCCESS)
+    if (result != AI_SUCCESS)
     {
         Debug_Error("Error exporting to " << meshExportPath << ": "
                                           << exporter.GetErrorString());
@@ -442,11 +470,11 @@ String ModelIO::GetExtensionIdFromExtension(const String &extension)
 {
 #ifndef FROM_TRAVIS
     Assimp::Exporter exporter;
-    for(int i = 0; i < exporter.GetExportFormatCount(); ++i)
+    for (int i = 0; i < exporter.GetExportFormatCount(); ++i)
     {
         const aiExportFormatDesc *fmtDesc =
             exporter.GetExportFormatDescription(i);
-        if(extension.EqualsNoCase(fmtDesc->fileExtension))
+        if (extension.EqualsNoCase(fmtDesc->fileExtension))
         {
             return String(fmtDesc->id);
         }
@@ -468,19 +496,19 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
 
     // Meshes
     goNode->mNumMeshes = 0;  // Count number of meshes
-    for(MeshRenderer *mr : mrs)
+    for (MeshRenderer *mr : mrs)
     {
         goNode->mNumMeshes += (mr->GetCurrentLODActiveMesh() ? 1 : 0);
     }
-    if(goNode->mNumMeshes > 0)
+    if (goNode->mNumMeshes > 0)
     {
         goNode->mMeshes = new unsigned int[goNode->mNumMeshes];
     }
 
     int i = 0;  // Populate meshes indices
-    for(MeshRenderer *mr : mrs)
+    for (MeshRenderer *mr : mrs)
     {
-        if(mr->GetCurrentLODActiveMesh())
+        if (mr->GetCurrentLODActiveMesh())
         {
             goNode->mMeshes[i] =
                 sceneMeshes.IndexOf(mr->GetCurrentLODActiveMesh());
@@ -488,10 +516,10 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
     }
 
     // Add children if any
-    if(goNode->mNumChildren > 0)
+    if (goNode->mNumChildren > 0)
     {
         goNode->mChildren = new aiNode *[goNode->mNumChildren];
-        for(int i = 0; i < goNode->mNumChildren; ++i)
+        for (int i = 0; i < goNode->mNumChildren; ++i)
         {
             GameObject *child = gameObject->GetChild(i);
             aiNode *childNode = GameObjectToAiNode(child, sceneMeshes);
@@ -500,7 +528,7 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
         }
     }
 
-    if(Transform *tr = gameObject->GetTransform())
+    if (Transform *tr = gameObject->GetTransform())
     {
         goNode->mTransformation =
             Matrix4ToAiMatrix4(tr->GetLocalToParentMatrix());
@@ -513,7 +541,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
 {
     aiMesh *aMesh = new aiMesh();
     aMesh->mNumVertices = mesh->GetPositionsPool().Size();
-    if(aMesh->mNumVertices > 0)
+    if (aMesh->mNumVertices > 0)
     {
         aMesh->mPrimitiveTypes = 1;
         aMesh->mNumUVComponents[0] = 1;
@@ -522,7 +550,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
         aMesh->mTextureCoords[0] = new aiVector3D[aMesh->mNumVertices];
 
         // Populate vertices
-        for(int i = 0; i < aMesh->mNumVertices; ++i)
+        for (int i = 0; i < aMesh->mNumVertices; ++i)
         {
             Vector3 posi = (mesh->GetPositionsPool().Size() > i
                                 ? mesh->GetPositionsPool()[i]
@@ -542,13 +570,13 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
 
         aMesh->mNumFaces = mesh->GetNumTriangles();
         aMesh->mFaces = new aiFace[aMesh->mNumFaces];
-        for(int tri = 0; tri < aMesh->mNumFaces; ++tri)
+        for (int tri = 0; tri < aMesh->mNumFaces; ++tri)
         {
             aiFace *aFace = &(aMesh->mFaces[tri]);
             aFace->mNumIndices = 3;
             aFace->mIndices = new unsigned int[aFace->mNumIndices];
             const auto triIndices = mesh->GetVertexIdsFromTriangle(tri);
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 aFace->mIndices[i] = triIndices[i];
             }
@@ -585,7 +613,7 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     aiString aMatName;
     aiGetMaterialString(aMaterial, AI_MATKEY_NAME, &aMatName);
     String materialName = AiStringToString(aMatName);
-    if(materialName.IsEmpty())
+    if (materialName.IsEmpty())
     {
         materialName = "Material";
     }
@@ -609,11 +637,11 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     Path albedoTexturePath(String(aAlbedoTexturePath.C_Str()));
     albedoTexturePath = modelDirectory.Append(albedoTexturePath);
     RH<Texture2D> matAlbedoTexture;
-    if(albedoTexturePath.IsFile())
+    if (albedoTexturePath.IsFile())
     {
         matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
     }
-    if(albedoTexturePath.HasExtension("dds"))
+    if (albedoTexturePath.HasExtension("dds"))
     {
         outMaterial->Get()->SetAlbedoUvMultiply(Vector2(1, -1));
     }
@@ -623,11 +651,11 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     Path normalsTexturePath(String(aNormalsTexturePath.C_Str()));
     normalsTexturePath = modelDirectory.Append(normalsTexturePath);
     RH<Texture2D> matNormalTexture;
-    if(normalsTexturePath.IsFile())
+    if (normalsTexturePath.IsFile())
     {
         matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
     }
-    if(normalsTexturePath.HasExtension("dds"))
+    if (normalsTexturePath.HasExtension("dds"))
     {
         outMaterial->Get()->SetNormalMapUvMultiply(Vector2(1, -1));
     }
@@ -647,7 +675,7 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
 {
     aiString aMeshName = aMesh->mName;
     String meshName = AiStringToString(aMeshName);
-    if(meshName.IsEmpty())
+    if (meshName.IsEmpty())
     {
         meshName = "Mesh";
     }
@@ -666,9 +694,14 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
     Map<String, Mesh::Bone> bonesPool;
     Map<String, uint> bonesIndices;
 
-    ModelIO::ImportMeshRaw(aMesh, &vertexIndices, &vertexPositionsPool,
-                           &vertexNormalsPool, &vertexUvsPool,
-                           &vertexTangentsPool, &bonesPool, &bonesIndices);
+    ModelIO::ImportMeshRaw(aMesh,
+                           &vertexIndices,
+                           &vertexPositionsPool,
+                           &vertexNormalsPool,
+                           &vertexUvsPool,
+                           &vertexTangentsPool,
+                           &bonesPool,
+                           &bonesIndices);
 
     Mesh *outMesh = outMeshRH->Get();
     outMesh->SetPositionsPool(vertexPositionsPool);
@@ -684,7 +717,7 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
 const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
                                     const Path &modelFilepath)
 {
-    if(!modelFilepath.IsFile())
+    if (!modelFilepath.IsFile())
     {
         return nullptr;
     }
@@ -695,7 +728,7 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
                                aiProcess_CalcTangentSpace);
 
     String errorStr = importer->GetErrorString();
-    if(!errorStr.IsEmpty())
+    if (!errorStr.IsEmpty())
     {
         Debug_Error(errorStr);
     }
@@ -717,7 +750,7 @@ void ModelIOScene::Clear()
     animations.Clear();
     animationsNames.Clear();
 
-    if(modelTree)
+    if (modelTree)
     {
         delete modelTree;
         modelTree = nullptr;

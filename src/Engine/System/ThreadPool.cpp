@@ -18,10 +18,10 @@ ThreadPool::~ThreadPool()
 bool ThreadPool::TryStart(ThreadRunnable *runnable)
 {
     auto it = m_threadList.Begin();
-    while(it != m_threadList.End())
+    while (it != m_threadList.End())
     {
         Thread *thread = *it;
-        if(thread->HasFinished())
+        if (thread->HasFinished())
         {
             it = m_threadList.Remove(it);
         }
@@ -31,7 +31,7 @@ bool ThreadPool::TryStart(ThreadRunnable *runnable)
         }
     }
 
-    if(m_threadList.Size() >= m_maxThreadCount)
+    if (m_threadList.Size() >= m_maxThreadCount)
     {
         return false;
     }
@@ -46,7 +46,7 @@ bool ThreadPool::TryStart(ThreadRunnable *runnable)
 
 void ThreadPool::SetName(const String &name)
 {
-    if(name != GetName())
+    if (name != GetName())
     {
         m_threadsName = name;
     }

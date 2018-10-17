@@ -38,7 +38,7 @@ void Debug::Message(DebugMessageType msgType,
                     const String &fileName)
 {
     String prefix = "";
-    switch(msgType)
+    switch (msgType)
     {
         case DebugMessageType::LOG: prefix = c_logPrefix; break;
         case DebugMessageType::DLOG: prefix = c_dlogPrefix; break;
@@ -51,7 +51,7 @@ void Debug::Message(DebugMessageType msgType,
     os << prefix << str << " | " << fileName << "(" << line << ")" << std::endl;
     os.flush();
 
-    if(Debug *dbg = Debug::GetInstance())
+    if (Debug *dbg = Debug::GetInstance())
     {
         dbg->EventEmitter<IEventsDebug>::PropagateToListeners(
             &IEventsDebug::OnMessage, msgType, str, line, fileName);
@@ -97,7 +97,7 @@ void PrintUniformsAllElements(GLId programId,
 {
     Array<T> allElements =
         GLUniforms::GetUniformArray<T>(programId, var.name, var.size);
-    for(int i = 0; i < allElements.Size(); ++i)
+    for (int i = 0; i < allElements.Size(); ++i)
     {
         const T &value = allElements[i];
         String idxStr = String::ToString(i);
@@ -112,7 +112,7 @@ void Debug::PrintUniforms(uint programId,
 {
     bool wasProgramBound =
         GL::IsBound(GL::BindTarget::SHADER_PROGRAM, programId);
-    if(!wasProgramBound)
+    if (!wasProgramBound)
     {
         GL::Push(GL::Pushable::SHADER_PROGRAM);
         GL::Bind(GL::BindTarget::SHADER_PROGRAM, programId);
@@ -120,17 +120,17 @@ void Debug::PrintUniforms(uint programId,
 
     uint uniformsCount = GL::GetUniformsListSize(programId);
     uint maxIndex = Math::Min(uniformsCount, SCAST<uint>(toUniformIdx + 1));
-    for(uint i = fromUniformIdx; i < maxIndex; ++i)
+    for (uint i = fromUniformIdx; i < maxIndex; ++i)
     {
         GL::UniformType type = GL::GetUniformTypeAt(programId, i);
-        switch(type)
+        switch (type)
         {
             case GL::UniformType::FLOAT:
             case GL::UniformType::DOUBLE:
             {
                 GLUniforms::GLSLVar<float> var =
                     GLUniforms::GetUniformAt<float>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -145,7 +145,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Byte> var =
                     GLUniforms::GetUniformAt<Byte>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -160,7 +160,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<short> var =
                     GLUniforms::GetUniformAt<short>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -174,7 +174,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Vector2> var =
                     GLUniforms::GetUniformAt<Vector2>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -188,7 +188,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Vector3> var =
                     GLUniforms::GetUniformAt<Vector3>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -202,7 +202,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Vector4> var =
                     GLUniforms::GetUniformAt<Vector4>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -216,7 +216,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Matrix3> var =
                     GLUniforms::GetUniformAt<Matrix3>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -230,7 +230,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<Matrix4> var =
                     GLUniforms::GetUniformAt<Matrix4>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -255,7 +255,7 @@ void Debug::PrintUniforms(uint programId,
             {
                 GLUniforms::GLSLVar<int> var =
                     GLUniforms::GetUniformAt<int>(programId, i);
-                if(fromUniformIdx < toUniformIdx)
+                if (fromUniformIdx < toUniformIdx)
                 {
                     PrintUniformsAllElements(programId, i, var);
                 }
@@ -270,7 +270,7 @@ void Debug::PrintUniforms(uint programId,
         }
     }
 
-    if(!wasProgramBound)
+    if (!wasProgramBound)
     {
         GL::Pop(GL::Pushable::SHADER_PROGRAM);
     }

@@ -23,9 +23,9 @@ DPtr<T>::~DPtr()
 template <class T>
 void DPtr<T>::Set(T *ptr)
 {
-    if(ptr != p_ptr)
+    if (ptr != p_ptr)
     {
-        if(p_ptr)
+        if (p_ptr)
         {
             p_ptr->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
         }
@@ -34,12 +34,12 @@ void DPtr<T>::Set(T *ptr)
         T *newPtr = ptr;
 
         p_ptr = ptr;
-        if(p_ptr)
+        if (p_ptr)
         {
             p_ptr->EventEmitter<IEventsDestroy>::RegisterListener(this);
         }
 
-        if(m_changedCallback)
+        if (m_changedCallback)
         {
             m_changedCallback(oldPtr, newPtr);
         }

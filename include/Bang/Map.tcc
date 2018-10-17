@@ -43,9 +43,9 @@ typename Map<Key, Value, Compare>::Iterator Map<Key, Value, Compare>::Remove(
 template <class Key, class Value, class Compare>
 void Map<Key, Value, Compare>::RemoveValues(const Value &value)
 {
-    for(auto it = Begin(); it != End();)
+    for (auto it = Begin(); it != End();)
     {
-        if(it->second == value)
+        if (it->second == value)
         {
             it = Remove(it);
         }
@@ -95,9 +95,9 @@ bool Map<Key, Value, Compare>::ContainsKey(const Key &key) const
 template <class Key, class Value, class Compare>
 bool Map<Key, Value, Compare>::ContainsValue(const Value &value) const
 {
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
-        if(it->second == value)
+        if (it->second == value)
             return true;
     }
     return false;
@@ -121,9 +121,9 @@ template <class Key, class Value, class Compare>
 Array<Key> Map<Key, Value, Compare>::GetKeysWithValue(const Value &v) const
 {
     Array<Key> result;
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
-        if(it->second == v)
+        if (it->second == v)
         {
             result.PushBack(it->first);
         }
@@ -135,7 +135,7 @@ template <class Key, class Value, class Compare>
 Array<Key> Map<Key, Value, Compare>::GetKeys() const
 {
     Array<Key> result;
-    for(const auto &it : *this)
+    for (const auto &it : *this)
     {
         result.PushBack(it.first);
     }
@@ -146,7 +146,7 @@ template <class Key, class Value, class Compare>
 Array<Value> Map<Key, Value, Compare>::GetValues() const
 {
     Array<Value> result;
-    for(auto it = Begin(); it != End(); ++it)
+    for (auto it = Begin(); it != End(); ++it)
     {
         result.PushBack(it->second);
     }

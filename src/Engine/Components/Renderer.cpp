@@ -41,7 +41,7 @@ Renderer::~Renderer()
 
 Material *Renderer::GetActiveMaterial() const
 {
-    if(p_material)
+    if (p_material)
     {
         return GetMaterial();
     }
@@ -55,7 +55,7 @@ void Renderer::OnRender(RenderPass renderPass)
     GEngine *ge = GEngine::GetInstance();
     ASSERT(ge);
 
-    if(ge->CanRenderNow(this, renderPass))
+    if (ge->CanRenderNow(this, renderPass))
     {
         ge->Render(this);
     }
@@ -72,11 +72,11 @@ void Renderer::Bind()
     GLUniforms::SetModelMatrix(GetModelMatrixUniform());
     GL::SetDepthMask(GetDepthMask());
 
-    if(Material *mat = GetActiveMaterial())
+    if (Material *mat = GetActiveMaterial())
     {
-        if(ShaderProgram *sp = mat->GetShaderProgram())
+        if (ShaderProgram *sp = mat->GetShaderProgram())
         {
-            if(sp->IsLinked())
+            if (sp->IsLinked())
             {
                 mat->Bind();
                 SetUniformsOnBind(sp);
@@ -97,7 +97,7 @@ void Renderer::UnBind()
 
 void Renderer::SetVisible(bool visible)
 {
-    if(visible != IsVisible())
+    if (visible != IsVisible())
     {
         m_visible = visible;
         PropagateRendererChanged();
@@ -106,15 +106,15 @@ void Renderer::SetVisible(bool visible)
 
 void Renderer::SetMaterial(Material *mat)
 {
-    if(GetSharedMaterial() != mat)
+    if (GetSharedMaterial() != mat)
     {
-        if(GetSharedMaterial())
+        if (GetSharedMaterial())
         {
             GetSharedMaterial()
                 ->EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
 
-        if(p_material.Get())
+        if (p_material.Get())
         {
             p_material.Get()->EventEmitter<IEventsResource>::UnRegisterListener(
                 this);
@@ -123,7 +123,7 @@ void Renderer::SetMaterial(Material *mat)
 
         p_sharedMaterial.Set(mat);
 
-        if(GetSharedMaterial())
+        if (GetSharedMaterial())
         {
             GetSharedMaterial()
                 ->EventEmitter<IEventsResource>::RegisterListener(this);
@@ -135,7 +135,7 @@ void Renderer::SetMaterial(Material *mat)
 
 void Renderer::SetDepthMask(bool depthMask)
 {
-    if(depthMask != GetDepthMask())
+    if (depthMask != GetDepthMask())
     {
         m_depthMask = depthMask;
         PropagateRendererChanged();
@@ -144,7 +144,7 @@ void Renderer::SetDepthMask(bool depthMask)
 
 void Renderer::SetViewProjMode(GL::ViewProjMode viewProjMode)
 {
-    if(viewProjMode != GetViewProjMode())
+    if (viewProjMode != GetViewProjMode())
     {
         m_viewProjMode = viewProjMode;
         PropagateRendererChanged();
@@ -152,7 +152,7 @@ void Renderer::SetViewProjMode(GL::ViewProjMode viewProjMode)
 }
 void Renderer::SetRenderPrimitive(GL::Primitive renderPrimitive)
 {
-    if(renderPrimitive != GetRenderPrimitive())
+    if (renderPrimitive != GetRenderPrimitive())
     {
         m_renderPrimitive = renderPrimitive;
         PropagateRendererChanged();
@@ -161,7 +161,7 @@ void Renderer::SetRenderPrimitive(GL::Primitive renderPrimitive)
 
 void Renderer::SetUseReflectionProbes(bool useReflectionProbes)
 {
-    if(useReflectionProbes != GetUseReflectionProbes())
+    if (useReflectionProbes != GetUseReflectionProbes())
     {
         m_useReflectionProbes = useReflectionProbes;
         PropagateRendererChanged();
@@ -169,7 +169,7 @@ void Renderer::SetUseReflectionProbes(bool useReflectionProbes)
 }
 void Renderer::SetCastsShadows(bool castsShadows)
 {
-    if(castsShadows != GetCastsShadows())
+    if (castsShadows != GetCastsShadows())
     {
         m_castsShadows = castsShadows;
         PropagateRendererChanged();
@@ -177,7 +177,7 @@ void Renderer::SetCastsShadows(bool castsShadows)
 }
 void Renderer::SetReceivesShadows(bool receivesShadows)
 {
-    if(receivesShadows != GetReceivesShadows())
+    if (receivesShadows != GetReceivesShadows())
     {
         m_receivesShadows = receivesShadows;
         PropagateRendererChanged();
@@ -234,9 +234,9 @@ bool Renderer::GetUseReflectionProbes() const
 }
 Material *Renderer::GetMaterial() const
 {
-    if(!p_material)
+    if (!p_material)
     {
-        if(GetSharedMaterial())
+        if (GetSharedMaterial())
         {
             p_material = Resources::Clone<Material>(GetSharedMaterial());
             p_material.Get()->EventEmitter<IEventsResource>::RegisterListener(
@@ -281,33 +281,33 @@ void Renderer::ImportMeta(const MetaNode &meta)
 {
     Component::ImportMeta(meta);
 
-    if(meta.Contains("DepthMask"))
+    if (meta.Contains("DepthMask"))
     {
         SetDepthMask(meta.Get<bool>("DepthMask"));
     }
 
-    if(meta.Contains("Visible"))
+    if (meta.Contains("Visible"))
     {
         SetVisible(meta.Get<bool>("Visible"));
     }
 
-    if(meta.Contains("Material"))
+    if (meta.Contains("Material"))
     {
         SetMaterial(
             Resources::Load<Material>(meta.Get<GUID>("Material")).Get());
     }
 
-    if(meta.Contains("UseReflectionProbes"))
+    if (meta.Contains("UseReflectionProbes"))
     {
         SetUseReflectionProbes(meta.Get<bool>("UseReflectionProbes"));
     }
 
-    if(meta.Contains("CastsShadows"))
+    if (meta.Contains("CastsShadows"))
     {
         SetCastsShadows(meta.Get<bool>("CastsShadows"));
     }
 
-    if(meta.Contains("ReceivesShadows"))
+    if (meta.Contains("ReceivesShadows"))
     {
         SetReceivesShadows(meta.Get<bool>("ReceivesShadows"));
     }

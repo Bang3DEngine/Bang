@@ -42,25 +42,27 @@ void UIImageRenderer::OnRender()
 {
     UIRenderer::OnRender();
 
-    if(GetActiveMaterial() && GetActiveMaterial()->GetShaderProgram())
+    if (GetActiveMaterial() && GetActiveMaterial()->GetShaderProgram())
     {
         GetActiveMaterial()->GetShaderProgram()->SetInt(
             "B_ImageMode", SCAST<int>(GetMode()), false);
         GetActiveMaterial()->GetShaderProgram()->SetVector2(
-            "B_Slice9BorderStrokePx", Vector2(GetSlice9BorderStrokePx()),
+            "B_Slice9BorderStrokePx",
+            Vector2(GetSlice9BorderStrokePx()),
             false);
     }
 
-    if(GetTint().a > 0.0f)
+    if (GetTint().a > 0.0f)
     {
-        GL::Render(p_quadMesh.Get()->GetVAO(), GetRenderPrimitive(),
+        GL::Render(p_quadMesh.Get()->GetVAO(),
+                   GetRenderPrimitive(),
                    p_quadMesh.Get()->GetNumVerticesIds());
     }
 }
 
 void UIImageRenderer::SetImageTexture(const Path &imagePath)
 {
-    if(imagePath.IsFile())
+    if (imagePath.IsFile())
     {
         RH<Texture2D> tex = Resources::Load<Texture2D>(imagePath);
         SetImageTexture(tex.Get());
@@ -73,7 +75,7 @@ void UIImageRenderer::SetImageTexture(const Path &imagePath)
 
 void UIImageRenderer::SetImageTexture(Texture2D *imageTexture)
 {
-    if(imageTexture != GetImageTexture())
+    if (imageTexture != GetImageTexture())
     {
         p_imageTexture.Set(imageTexture);
         GetMaterial()->SetAlbedoTexture(GetImageTexture());
@@ -82,7 +84,7 @@ void UIImageRenderer::SetImageTexture(Texture2D *imageTexture)
 
 void UIImageRenderer::SetTint(const Color &tint)
 {
-    if(tint != GetTint())
+    if (tint != GetTint())
     {
         m_tint = tint;
         GetMaterial()->SetAlbedoColor(GetTint());
@@ -91,10 +93,10 @@ void UIImageRenderer::SetTint(const Color &tint)
 
 void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
 {
-    if(mode != GetMode())
+    if (mode != GetMode())
     {
         m_mode = mode;
-        switch(GetMode())
+        switch (GetMode())
         {
             case Mode::TEXTURE: p_quadMesh = MeshFactory::GetUIPlane(); break;
 
@@ -162,24 +164,24 @@ void UIImageRenderer::ImportMeta(const MetaNode &metaNode)
 {
     UIRenderer::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Image"))
+    if (metaNode.Contains("Image"))
     {
         RH<Texture2D> tex =
             Resources::Load<Texture2D>(metaNode.Get<GUID>("Image"));
         SetImageTexture(tex.Get());
     }
 
-    if(metaNode.Contains("Tint"))
+    if (metaNode.Contains("Tint"))
     {
         SetTint(metaNode.Get<Color>("Tint"));
     }
 
-    if(metaNode.Contains("Mode"))
+    if (metaNode.Contains("Mode"))
     {
         SetMode(SCAST<UIImageRenderer::Mode>(metaNode.Get<int>("Mode")));
     }
 
-    if(metaNode.Contains("Slice9BorderStrokePx"))
+    if (metaNode.Contains("Slice9BorderStrokePx"))
     {
         SetSlice9BorderStrokePx(metaNode.Get<Vector2i>("Slice9BorderStrokePx"));
     }

@@ -65,17 +65,17 @@ GUID GUID::WithoutEmbeddedResourceGUID() const
 
 std::istream &GUID::operator>>(std::istream &is)
 {
-    if(is.peek() != EOF && std::isdigit(is.peek()))
+    if (is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_timeGUID;
     }
     is >> std::ws;
-    if(is.peek() != EOF && std::isdigit(is.peek()))
+    if (is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_randGUID;
     }
     is >> std::ws;
-    if(is.peek() != EOF && std::isdigit(is.peek()))
+    if (is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_embeddedResourceGUID;
     }
@@ -96,21 +96,21 @@ bool GUID::operator!=(const GUID &rhs) const
 
 bool GUID::operator<(const GUID &rhs) const
 {
-    if(GetTimeGUID() < rhs.GetTimeGUID())
+    if (GetTimeGUID() < rhs.GetTimeGUID())
     {
         return true;
     }
-    else if(GetTimeGUID() > rhs.GetTimeGUID())
+    else if (GetTimeGUID() > rhs.GetTimeGUID())
     {
         return false;
     }
     else
     {
-        if(GetRandGUID() < rhs.GetRandGUID())
+        if (GetRandGUID() < rhs.GetRandGUID())
         {
             return true;
         }
-        else if(GetRandGUID() > rhs.GetRandGUID())
+        else if (GetRandGUID() > rhs.GetRandGUID())
         {
             return false;
         }

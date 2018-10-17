@@ -29,7 +29,7 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     auto depthStencilTexs = {m_sceneDepthStencilTexture.Get(),
                              m_canvasDepthStencilTexture.Get(),
                              m_overlayDepthStencilTexture.Get()};
-    for(Texture2D *depthStencilTex : depthStencilTexs)
+    for (Texture2D *depthStencilTex : depthStencilTexs)
     {
         depthStencilTex->Bind();
         depthStencilTex->SetFormat(GL::ColorFormat::DEPTH24_STENCIL8);
@@ -58,15 +58,19 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     ASSERT(GL::IsBound(sp));
 
     sp->SetTexture2D(GBuffer::GetNormalsTexName(),
-                     GetAttachmentTex2D(GBuffer::AttNormal), false);
+                     GetAttachmentTex2D(GBuffer::AttNormal),
+                     false);
     sp->SetTexture2D(GBuffer::GetAlbedoTexName(),
-                     GetAttachmentTex2D(GBuffer::AttAlbedo), false);
-    sp->SetTexture2D(GBuffer::GetMiscTexName(),
-                     GetAttachmentTex2D(GBuffer::AttMisc), false);
+                     GetAttachmentTex2D(GBuffer::AttAlbedo),
+                     false);
+    sp->SetTexture2D(
+        GBuffer::GetMiscTexName(), GetAttachmentTex2D(GBuffer::AttMisc), false);
     sp->SetTexture2D(GBuffer::GetColorsTexName(),
-                     GetAttachmentTex2D(m_readColorAttachment), false);
+                     GetAttachmentTex2D(m_readColorAttachment),
+                     false);
     sp->SetTexture2D(GBuffer::GetDepthStencilTexName(),
-                     GetAttachmentTex2D(GBuffer::AttDepthStencil), false);
+                     GetAttachmentTex2D(GBuffer::AttDepthStencil),
+                     false);
 }
 
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
@@ -107,7 +111,7 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
     ASSERT(GL::IsBound(sp));
 
     // Ping pong
-    if(willReadFromColor)
+    if (willReadFromColor)
     {
         PingPongColorBuffers();
     }
@@ -120,8 +124,10 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
 
 void GBuffer::SetAllDrawBuffers() const
 {
-    SetDrawBuffers({{m_drawColorAttachment, GBuffer::AttAlbedo,
-                     GBuffer::AttNormal, GBuffer::AttMisc}});
+    SetDrawBuffers({{m_drawColorAttachment,
+                     GBuffer::AttAlbedo,
+                     GBuffer::AttNormal,
+                     GBuffer::AttMisc}});
 }
 
 void GBuffer::SetAllDrawBuffersExceptColor()
@@ -137,10 +143,10 @@ void GBuffer::SetColorDrawBuffer()
 
 void GBuffer::SetDepthStencilTexture(Texture2D *depthStencilTexture)
 {
-    if(depthStencilTexture != GetDepthStencilTexture())
+    if (depthStencilTexture != GetDepthStencilTexture())
     {
         SetAttachmentTexture(depthStencilTexture, GBuffer::AttDepthStencil);
-        if(GetWidth() > 0 && GetHeight() > 0)
+        if (GetWidth() > 0 && GetHeight() > 0)
         {
             Resize(GetWidth(), GetHeight());
         }

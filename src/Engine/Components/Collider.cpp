@@ -52,7 +52,7 @@ void Collider::OnUpdate()
 
 void Collider::SetIsTrigger(bool isTrigger)
 {
-    if(isTrigger != GetIsTrigger())
+    if (isTrigger != GetIsTrigger())
     {
         m_isTrigger = isTrigger;
         UpdatePxShape();
@@ -61,7 +61,7 @@ void Collider::SetIsTrigger(bool isTrigger)
 
 void Collider::SetCenter(const Vector3 &center)
 {
-    if(center != GetCenter())
+    if (center != GetCenter())
     {
         m_center = center;
         UpdatePxShape();
@@ -70,9 +70,9 @@ void Collider::SetCenter(const Vector3 &center)
 
 void Collider::SetPhysicsMaterial(PhysicsMaterial *physicsMaterial)
 {
-    if(physicsMaterial != GetSharedPhysicsMaterial())
+    if (physicsMaterial != GetSharedPhysicsMaterial())
     {
-        if(p_physicsMaterial.Get())
+        if (p_physicsMaterial.Get())
         {
             p_physicsMaterial.Set(nullptr);
         }
@@ -99,7 +99,7 @@ PhysicsMaterial *Collider::GetSharedPhysicsMaterial() const
 
 PhysicsMaterial *Collider::GetActivePhysicsMaterial() const
 {
-    if(p_physicsMaterial.Get())
+    if (p_physicsMaterial.Get())
     {
         return GetPhysicsMaterial();
     }
@@ -108,9 +108,9 @@ PhysicsMaterial *Collider::GetActivePhysicsMaterial() const
 
 PhysicsMaterial *Collider::GetPhysicsMaterial() const
 {
-    if(!p_physicsMaterial)
+    if (!p_physicsMaterial)
     {
-        if(GetSharedPhysicsMaterial())
+        if (GetSharedPhysicsMaterial())
         {
             p_physicsMaterial =
                 Resources::Clone<PhysicsMaterial>(GetSharedPhysicsMaterial());
@@ -121,7 +121,7 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
 
 void Collider::OnEnabled(Object *)
 {
-    if(GetPxShape())
+    if (GetPxShape())
     {
         GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
                               CanBeSimulationShape() && !GetIsTrigger());
@@ -134,7 +134,7 @@ void Collider::OnEnabled(Object *)
 
 void Collider::OnDisabled(Object *)
 {
-    if(GetPxShape())
+    if (GetPxShape())
     {
         GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
         GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
@@ -155,16 +155,16 @@ bool Collider::CanBeTriggerShape()
 void Collider::OnPxRigidDynamicChanged(physx::PxRigidDynamic *prevPxRD,
                                        physx::PxRigidDynamic *newPxRD)
 {
-    if(prevPxRD)
+    if (prevPxRD)
     {
-        if(GetPxShape())
+        if (GetPxShape())
         {
             prevPxRD->detachShape(*GetPxShape());
             p_pxShape = nullptr;
         }
     }
 
-    if(newPxRD)
+    if (newPxRD)
     {
         UpdatePxShape();
     }
@@ -184,14 +184,14 @@ Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
 {
     Matrix4 shapeTransformWithRespectToPxActor =
         GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-    if(physx::PxActor *pxActor = GetPxRigidDynamic())
+    if (physx::PxActor *pxActor = GetPxRigidDynamic())
     {
         Physics *ph = Physics::GetInstance();
-        if(PxSceneContainer *pxSceneCont =
-               ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene()))
+        if (PxSceneContainer *pxSceneCont =
+                ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene()))
         {
-            if(GameObject *pxActorGo =
-                   pxSceneCont->GetGameObjectFromPxActor(pxActor))
+            if (GameObject *pxActorGo =
+                    pxSceneCont->GetGameObjectFromPxActor(pxActor))
             {
                 shapeTransformWithRespectToPxActor =
                     pxActorGo->GetTransform()->GetLocalToWorldMatrixInv() *
@@ -204,15 +204,15 @@ Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
 
 void Collider::UpdatePxShape()
 {
-    if(!GetPxShape())
+    if (!GetPxShape())
     {
-        if(GetPxRigidDynamic())
+        if (GetPxRigidDynamic())
         {
             p_pxShape = CreatePxShape();
         }
     }
 
-    if(GetPxShape())
+    if (GetPxShape())
     {
         Vector3 shapeLocalPosFromPxActor = GetCenter();
         Quaternion shapeLocalRotFromPxActor = GetInternalRotation();
@@ -237,7 +237,7 @@ void Collider::UpdatePxShape()
         GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
                               CanBeTriggerShape() && GetIsTrigger());
 
-        if(GetActivePhysicsMaterial())
+        if (GetActivePhysicsMaterial())
         {
             physx::PxMaterial *material =
                 GetActivePhysicsMaterial()->GetPxMaterial();
@@ -262,17 +262,17 @@ void Collider::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("IsTrigger"))
+    if (metaNode.Contains("IsTrigger"))
     {
         SetIsTrigger(metaNode.Get<bool>("IsTrigger"));
     }
 
-    if(metaNode.Contains("Center"))
+    if (metaNode.Contains("Center"))
     {
         SetCenter(metaNode.Get<Vector3>("Center"));
     }
 
-    if(metaNode.Contains("PhysicsMaterial"))
+    if (metaNode.Contains("PhysicsMaterial"))
     {
         RH<PhysicsMaterial> phMat = Resources::Load<PhysicsMaterial>(
             metaNode.Get<GUID>("PhysicsMaterial"));
@@ -286,7 +286,8 @@ void Collider::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Center", GetCenter());
     metaNode->Set("IsTrigger", GetIsTrigger());
-    metaNode->Set("PhysicsMaterial", GetSharedPhysicsMaterial()
-                                         ? GetSharedPhysicsMaterial()->GetGUID()
-                                         : GUID::Empty());
+    metaNode->Set("PhysicsMaterial",
+                  GetSharedPhysicsMaterial()
+                      ? GetSharedPhysicsMaterial()->GetGUID()
+                      : GUID::Empty());
 }

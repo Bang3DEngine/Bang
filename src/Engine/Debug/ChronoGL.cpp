@@ -14,7 +14,7 @@ ChronoGL::~ChronoGL()
 
 void ChronoGL::MarkBegin()
 {
-    if(IsQueryResultAvailable())
+    if (IsQueryResultAvailable())
     {
         m_prevTimeNanos = GetQueryResultNanos();
     }
@@ -28,7 +28,7 @@ void ChronoGL::MarkEnd()
 
 double ChronoGL::GetEllapsedSeconds() const
 {
-    if(IsQueryResultAvailable())
+    if (IsQueryResultAvailable())
     {
         m_prevTimeNanos = GetQueryResultNanos();
     }

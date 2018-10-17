@@ -29,20 +29,20 @@ UIContentSizeFitter::~UIContentSizeFitter()
 void UIContentSizeFitter::ApplyLayout(Axis axis)
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
-    if(!rt)
+    if (!rt)
     {
         return;
     }
 
-    if(axis == Axis::HORIZONTAL &&
-       GetHorizontalSizeType() != LayoutSizeType::NONE)
+    if (axis == Axis::HORIZONTAL &&
+        GetHorizontalSizeType() != LayoutSizeType::NONE)
     {
         Vector2i hSize(
             UILayoutManager::GetSize(GetGameObject(), GetHorizontalSizeType()));
         rt->SetWidthFromPivot(hSize.x);
     }
 
-    if(axis == Axis::VERTICAL && GetVerticalSizeType() != LayoutSizeType::NONE)
+    if (axis == Axis::VERTICAL && GetVerticalSizeType() != LayoutSizeType::NONE)
     {
         Vector2i vSize(
             UILayoutManager::GetSize(GetGameObject(), GetVerticalSizeType()));
@@ -56,7 +56,7 @@ void UIContentSizeFitter::SetHorizontalSizeType(LayoutSizeType sizeType)
            sizeType == LayoutSizeType::MIN ||
            sizeType == LayoutSizeType::PREFERRED);
 
-    if(sizeType != GetHorizontalSizeType())
+    if (sizeType != GetHorizontalSizeType())
     {
         m_horizontalSizeType = sizeType;
         Invalidate();
@@ -69,7 +69,7 @@ void UIContentSizeFitter::SetVerticalSizeType(LayoutSizeType sizeType)
            sizeType == LayoutSizeType::MIN ||
            sizeType == LayoutSizeType::PREFERRED);
 
-    if(sizeType != GetVerticalSizeType())
+    if (sizeType != GetVerticalSizeType())
     {
         m_verticalSizeType = sizeType;
         Invalidate();
@@ -90,13 +90,13 @@ void UIContentSizeFitter::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("HorizontalSizeType"))
+    if (metaNode.Contains("HorizontalSizeType"))
     {
         SetHorizontalSizeType(
             metaNode.Get<LayoutSizeType>("HorizontalSizeType"));
     }
 
-    if(metaNode.Contains("VerticalSizeType"))
+    if (metaNode.Contains("VerticalSizeType"))
     {
         SetVerticalSizeType(metaNode.Get<LayoutSizeType>("VerticalSizeType"));
     }

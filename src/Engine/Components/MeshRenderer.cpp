@@ -33,7 +33,7 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::SetMesh(Mesh *m)
 {
-    if(GetSharedMesh() != m)
+    if (GetSharedMesh() != m)
     {
         p_sharedMesh.Set(m);
         p_mesh.Set(nullptr);
@@ -42,9 +42,9 @@ void MeshRenderer::SetMesh(Mesh *m)
 
 Mesh *MeshRenderer::GetMesh() const
 {
-    if(!p_mesh)
+    if (!p_mesh)
     {
-        if(GetSharedMesh())
+        if (GetSharedMesh())
         {
             p_mesh = Resources::Clone<Mesh>(GetSharedMesh());
         }
@@ -106,18 +106,19 @@ void MeshRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    if(Mesh *baseMeshToRender = GetActiveMesh())
+    if (Mesh *baseMeshToRender = GetActiveMesh())
     {
         Mesh *lodMeshToRender =
             baseMeshToRender->GetLODMesh(GetCurrentLOD()).Get();
-        GL::Render(lodMeshToRender->GetVAO(), GetRenderPrimitive(),
+        GL::Render(lodMeshToRender->GetVAO(),
+                   GetRenderPrimitive(),
                    lodMeshToRender->GetNumVerticesIds());
     }
 }
 
 Mesh *MeshRenderer::GetActiveMesh() const
 {
-    if(p_mesh)
+    if (p_mesh)
     {
         return GetMesh();
     }
@@ -134,7 +135,7 @@ void MeshRenderer::CloneInto(ICloneable *clone) const
 void MeshRenderer::ImportMeta(const MetaNode &metaNode)
 {
     Renderer::ImportMeta(metaNode);
-    if(metaNode.Contains("Mesh"))
+    if (metaNode.Contains("Mesh"))
     {
         RH<Mesh> mesh = Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh"));
         SetMesh(mesh.Get());

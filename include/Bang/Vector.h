@@ -82,13 +82,13 @@
             bool operator()(const VECTOR_G<T> &lhs,                           \
                             const VECTOR_G<T> &rhs) const                     \
             {                                                                 \
-                for(int i = 0; i < N; ++i)                                    \
+                for (int i = 0; i < N; ++i)                                   \
                 {                                                             \
-                    if(lhs[i] < rhs[i])                                       \
+                    if (lhs[i] < rhs[i])                                      \
                     {                                                         \
                         return true;                                          \
                     }                                                         \
-                    else if(lhs[i] > rhs[i])                                  \
+                    else if (lhs[i] > rhs[i])                                 \
                     {                                                         \
                         return false;                                         \
                     }                                                         \

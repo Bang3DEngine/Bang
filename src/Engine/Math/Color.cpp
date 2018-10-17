@@ -70,8 +70,8 @@ Color::Color(const Color &c, float a) : Color(c.r, c.g, c.b, a)
 
 Color Color::Lerp(const Color &c1, const Color &c2, float t)
 {
-    return Color(Vector4::Lerp(Vector4(c1.r, c1.g, c1.b, c1.a),
-                               Vector4(c2.r, c2.g, c2.b, c2.a), t));
+    return Color(Vector4::Lerp(
+        Vector4(c1.r, c1.g, c1.b, c1.a), Vector4(c2.r, c2.g, c2.b, c2.a), t));
 }
 
 Color Color::WithAlpha(float alpha) const
@@ -136,13 +136,13 @@ Color Color::ToHSV() const
     float fDelta = fCMax - fCMin;
 
     float h, s, v;
-    if(fDelta > 0)
+    if (fDelta > 0)
     {
-        if(fCMax == r)
+        if (fCMax == r)
         {
             h = 60 * (fmod(((g - b) / fDelta), 6));
         }
-        else if(fCMax == g)
+        else if (fCMax == g)
         {
             h = 60 * (((b - r) / fDelta) + 2);
         }
@@ -151,7 +151,7 @@ Color Color::ToHSV() const
             h = 60 * (((r - g) / fDelta) + 4);
         }
 
-        if(fCMax > 0)
+        if (fCMax > 0)
         {
             s = fDelta / fCMax;
         }
@@ -168,7 +168,7 @@ Color Color::ToHSV() const
         v = fCMax;
     }
 
-    if(h < 0)
+    if (h < 0)
     {
         h = 360 + h;
     }
@@ -193,7 +193,7 @@ Color Color::ToRGB() const
     float t = v * (1 - (1 - f) * s);
 
     float newR, newG, newB;
-    switch(i % 6)
+    switch (i % 6)
     {
         case 0:
             newR = v;

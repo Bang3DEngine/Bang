@@ -26,7 +26,7 @@ AnimatorStateMachineNode::~AnimatorStateMachineNode()
 {
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
-    while(!m_connections.IsEmpty())
+    while (!m_connections.IsEmpty())
     {
         RemoveConnection(m_connections.Back());
     }
@@ -56,7 +56,7 @@ const AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
 AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
     uint connectionIdx)
 {
-    if(connectionIdx < GetConnections().Size())
+    if (connectionIdx < GetConnections().Size())
     {
         return m_connections[connectionIdx];
     }
@@ -66,12 +66,13 @@ AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
 void AnimatorStateMachineNode::RemoveConnection(
     AnimatorStateMachineConnection *connectionToRemove)
 {
-    if(m_connections.Contains(connectionToRemove))
+    if (m_connections.Contains(connectionToRemove))
     {
         m_connections.Remove(connectionToRemove);
 
         EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
-            &IEventsAnimatorStateMachineNode::OnConnectionRemoved, this,
+            &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
+            this,
             connectionToRemove);
 
         delete connectionToRemove;
@@ -87,7 +88,8 @@ AnimatorStateMachineConnection *AnimatorStateMachineNode::AddConnection(
 
     m_connections.PushBack(newConnection);
     EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
-        &IEventsAnimatorStateMachineNode::OnConnectionAdded, this,
+        &IEventsAnimatorStateMachineNode::OnConnectionAdded,
+        this,
         newConnection);
 
     return newConnection;
@@ -113,9 +115,9 @@ AnimatorStateMachineNode::GetConnectionsTo(
     AnimatorStateMachineNode *nodeTo) const
 {
     Array<AnimatorStateMachineConnection *> connectionsToNode;
-    for(AnimatorStateMachineConnection *connection : GetConnections())
+    for (AnimatorStateMachineConnection *connection : GetConnections())
     {
-        if(connection->GetNodeTo() == nodeTo)
+        if (connection->GetNodeTo() == nodeTo)
         {
             connectionsToNode.PushBack(connection);
         }
@@ -140,18 +142,18 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    if(metaNode.Contains("NodeName"))
+    if (metaNode.Contains("NodeName"))
     {
         SetName(metaNode.Get<String>("NodeName"));
     }
 
-    if(metaNode.Contains("Animation"))
+    if (metaNode.Contains("Animation"))
     {
         SetAnimation(
             Resources::Load<Animation>(metaNode.Get<GUID>("Animation")).Get());
     }
 
-    for(const MetaNode &childMetaNode : metaNode.GetChildren("Connections"))
+    for (const MetaNode &childMetaNode : metaNode.GetChildren("Connections"))
     {
         auto newConnection = new AnimatorStateMachineConnection(p_stateMachine);
         newConnection->ImportMeta(childMetaNode);
@@ -166,7 +168,7 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NodeName", GetName());
     metaNode->Set("Animation",
                   GetAnimation() ? GetAnimation()->GetGUID() : GUID::Empty());
-    for(const AnimatorStateMachineConnection *smConn : GetConnections())
+    for (const AnimatorStateMachineConnection *smConn : GetConnections())
     {
         MetaNode smConnMeta = smConn->GetMeta();
         metaNode->AddChild(smConnMeta, "Connections");

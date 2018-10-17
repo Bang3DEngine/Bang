@@ -23,7 +23,7 @@ PhysicsMaterial::~PhysicsMaterial()
 
 void PhysicsMaterial::SetStaticFriction(float staticFrictionCoeff)
 {
-    if(staticFrictionCoeff != GetStaticFriction())
+    if (staticFrictionCoeff != GetStaticFriction())
     {
         m_staticFriction = staticFrictionCoeff;
         UpdatePxMaterial();
@@ -32,7 +32,7 @@ void PhysicsMaterial::SetStaticFriction(float staticFrictionCoeff)
 
 void PhysicsMaterial::SetDynamicFriction(float dynamicFrictionCoeff)
 {
-    if(dynamicFrictionCoeff != GetDynamicFriction())
+    if (dynamicFrictionCoeff != GetDynamicFriction())
     {
         m_dynamicFriction = dynamicFrictionCoeff;
         UpdatePxMaterial();
@@ -41,7 +41,7 @@ void PhysicsMaterial::SetDynamicFriction(float dynamicFrictionCoeff)
 
 void PhysicsMaterial::SetRestitution(float restitutionCoeff)
 {
-    if(restitutionCoeff != GetRestitution())
+    if (restitutionCoeff != GetRestitution())
     {
         m_restitution = restitutionCoeff;
         UpdatePxMaterial();
@@ -50,7 +50,7 @@ void PhysicsMaterial::SetRestitution(float restitutionCoeff)
 
 void PhysicsMaterial::SetFrictionCombineMode(CombineMode combineMode)
 {
-    if(combineMode != GetFrictionCombineMode())
+    if (combineMode != GetFrictionCombineMode())
     {
         m_frictionCombineMode = combineMode;
         UpdatePxMaterial();
@@ -59,7 +59,7 @@ void PhysicsMaterial::SetFrictionCombineMode(CombineMode combineMode)
 
 void PhysicsMaterial::SetRestitutionCombineMode(CombineMode combineMode)
 {
-    if(combineMode != GetRestitutionCombineMode())
+    if (combineMode != GetRestitutionCombineMode())
     {
         m_restitutionCombineMode = combineMode;
         UpdatePxMaterial();
@@ -110,28 +110,28 @@ void PhysicsMaterial::ImportMeta(const MetaNode &metaNode)
 {
     Asset::ImportMeta(metaNode);
 
-    if(metaNode.Contains("StaticFriction"))
+    if (metaNode.Contains("StaticFriction"))
     {
         SetStaticFriction(metaNode.Get<float>("StaticFriction"));
     }
 
-    if(metaNode.Contains("DynamicFriction"))
+    if (metaNode.Contains("DynamicFriction"))
     {
         SetDynamicFriction(metaNode.Get<float>("DynamicFriction"));
     }
 
-    if(metaNode.Contains("Restitution"))
+    if (metaNode.Contains("Restitution"))
     {
         SetRestitution(metaNode.Get<float>("Restitution"));
     }
 
-    if(metaNode.Contains("FrictionCombineMode"))
+    if (metaNode.Contains("FrictionCombineMode"))
     {
         SetFrictionCombineMode(
             metaNode.Get<CombineMode>("FrictionCombineMode"));
     }
 
-    if(metaNode.Contains("RestitutionCombineMode"))
+    if (metaNode.Contains("RestitutionCombineMode"))
     {
         SetRestitutionCombineMode(
             metaNode.Get<CombineMode>("RestitutionCombineMode"));
@@ -162,7 +162,7 @@ physx::PxMaterial *PhysicsMaterial::GetPxMaterial() const
 
 void PhysicsMaterial::UpdatePxMaterial() const
 {
-    if(GetPxMaterial())
+    if (GetPxMaterial())
     {
         GetPxMaterial()->setStaticFriction(GetStaticFriction());
         GetPxMaterial()->setDynamicFriction(GetDynamicFriction());

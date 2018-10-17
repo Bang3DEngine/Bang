@@ -53,13 +53,13 @@ inline TCastTo FastDynamicCast(
             typename std::remove_pointer<TCastFrom>::type>::value>::type * = 0)
 {
     ClassIdType objClassId = obj->GetClassId();
-    if(CanFastDynamicCast(objClassId))
+    if (CanFastDynamicCast(objClassId))
     {
         // Is the object class id in the range of the class ids of the class
         // we want to cast to?
-        if(objClassId >=
-               std::remove_pointer<TCastTo>::type::GetClassIdBegin() &&
-           objClassId < std::remove_pointer<TCastTo>::type::GetClassIdEnd())
+        if (objClassId >=
+                std::remove_pointer<TCastTo>::type::GetClassIdBegin() &&
+            objClassId < std::remove_pointer<TCastTo>::type::GetClassIdEnd())
         {
             return RCAST<TCastTo>(obj);
         }

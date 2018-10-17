@@ -30,23 +30,23 @@ FileTracker::~FileTracker()
 
 void FileTracker::TrackPath(const Path &path)
 {
-    if(path.IsDir())
+    if (path.IsDir())
     {
         Array<Path> dirSubPaths = path.GetSubPaths(FindFlag::RECURSIVE_HIDDEN);
-        for(const Path &subPath : dirSubPaths)
+        for (const Path &subPath : dirSubPaths)
         {
             TrackPath(subPath);
         }
     }
 
-    if(path.Exists())
+    if (path.Exists())
     {
         bool wasBeingTracked =
             (m_pathsToTrackToModificationTime.ContainsKey(path));
         Time modTime = path.GetModificationTime();
         m_pathsToTrackToModificationTime.Add(path, modTime);
         m_trackedPaths.Add(path);
-        if(!wasBeingTracked)
+        if (!wasBeingTracked)
         {
             m_pathsJustRecentlyTracked.Add(path);
             EventEmitter<IEventsFileTracker>::PropagateToListeners(
@@ -57,10 +57,10 @@ void FileTracker::TrackPath(const Path &path)
 
 void FileTracker::UnTrackPath(const Path &path)
 {
-    if(path.IsDir())
+    if (path.IsDir())
     {
         Array<Path> subpaths = path.GetSubPaths(FindFlag::RECURSIVE_HIDDEN);
-        for(const Path &subpath : subpaths)
+        for (const Path &subpath : subpaths)
         {
             UnTrackPath(subpath);
         }
@@ -83,10 +83,10 @@ void FileTracker::CheckFiles()
         m_pathsToTrackToModificationTime;
 
     // Check for removed paths
-    for(const auto &previousPathToModTime : previousPathsToTrack)
+    for (const auto &previousPathToModTime : previousPathsToTrack)
     {
         const Path &previousPath = previousPathToModTime.first;
-        if(!previousPath.Exists())
+        if (!previousPath.Exists())
         {
             EventEmitter<IEventsFileTracker>::PropagateToListeners(
                 &IEventsFileTracker::OnPathRemoved, previousPath);
@@ -97,24 +97,24 @@ void FileTracker::CheckFiles()
     m_pathsJustRecentlyTracked.Clear();  // Clear just tracked paths
 
     // Check for new paths and add them to track
-    for(const auto &pathToModTime : previousPathsToTrack)
+    for (const auto &pathToModTime : previousPathsToTrack)
     {
         const Path &path = pathToModTime.first;
         TrackPath(path);
     }
 
     // Check for modified paths
-    for(const auto &pathToModTime : m_pathsToTrackToModificationTime)
+    for (const auto &pathToModTime : m_pathsToTrackToModificationTime)
     {
         const Path &path = pathToModTime.first;
         bool isNewPath = (m_pathsJustRecentlyTracked.Contains(path));
-        if(!isNewPath)
+        if (!isNewPath)
         {
             ASSERT(previousPathsToTrack.ContainsKey(path));
 
             const Time prevModTime = previousPathsToTrack.Get(path);
             const Time newModTime = path.GetModificationTime();
-            if(newModTime != prevModTime)
+            if (newModTime != prevModTime)
             {
                 m_pathsToTrackToModificationTime.Add(path, newModTime);
 
@@ -128,7 +128,7 @@ void FileTracker::CheckFiles()
 Time FileTracker::GetModificationTime(const Path &path) const
 {
     auto it = m_pathsToTrackToModificationTime.Find(path);
-    if(it != m_pathsToTrackToModificationTime.End())
+    if (it != m_pathsToTrackToModificationTime.End())
     {
         return it->second;
     }
@@ -144,9 +144,9 @@ Array<Path> FileTracker::GetTrackedPathsWithExtensions(
     const Array<String> &extensions) const
 {
     Array<Path> paths;
-    for(const Path &trackedPath : GetTrackedPaths())
+    for (const Path &trackedPath : GetTrackedPaths())
     {
-        if(Extensions::Equals(trackedPath.GetExtension(), extensions))
+        if (Extensions::Equals(trackedPath.GetExtension(), extensions))
         {
             paths.PushBack(trackedPath);
         }
@@ -158,9 +158,9 @@ Array<Path> FileTracker::GetTrackedPathsWithLastExtension(
     const Array<String> &extensions) const
 {
     Array<Path> paths;
-    for(const Path &trackedPath : GetTrackedPaths())
+    for (const Path &trackedPath : GetTrackedPaths())
     {
-        if(Extensions::Equals(trackedPath.GetLastExtension(), extensions))
+        if (Extensions::Equals(trackedPath.GetLastExtension(), extensions))
         {
             paths.PushBack(trackedPath);
         }

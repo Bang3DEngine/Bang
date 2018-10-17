@@ -19,9 +19,9 @@ UIFocusable::~UIFocusable()
 UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
 {
     UIEventResult finalResult = UIEventResult::IGNORE;
-    if(!IsWaitingToBeDestroyed())
+    if (!IsWaitingToBeDestroyed())
     {
-        switch(event.type)
+        switch (event.type)
         {
             case UIEvent::Type::MOUSE_ENTER: SetIsMouseOver(true); break;
 
@@ -41,12 +41,12 @@ UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
         }
 
         // Propagate events
-        if(EventEmitter<IEventsFocus>::IsEmittingEvents())
+        if (EventEmitter<IEventsFocus>::IsEmittingEvents())
         {
-            for(EventCallback eventCallback : m_eventCallbacks)
+            for (EventCallback eventCallback : m_eventCallbacks)
             {
                 UIEventResult propagationResult = eventCallback(this, event);
-                if(propagationResult == UIEventResult::INTERCEPT)
+                if (propagationResult == UIEventResult::INTERCEPT)
                 {
                     finalResult = UIEventResult::INTERCEPT;
                 }
@@ -55,9 +55,9 @@ UIEventResult UIFocusable::ProcessEvent(const UIEvent &event)
             Array<UIEventResult> eventListenerResults =
                 EventEmitter<IEventsFocus>::PropagateToListenersAndGatherResult<
                     UIEventResult>(&IEventsFocus::OnUIEvent, this, event);
-            for(UIEventResult eventListenerResult : eventListenerResults)
+            for (UIEventResult eventListenerResult : eventListenerResults)
             {
-                if(eventListenerResult == UIEventResult::INTERCEPT)
+                if (eventListenerResult == UIEventResult::INTERCEPT)
                 {
                     finalResult = UIEventResult::INTERCEPT;
                 }
@@ -113,7 +113,7 @@ bool UIFocusable::HasFocus() const
 
 void UIFocusable::SetFocus()
 {
-    if(!HasFocus())
+    if (!HasFocus())
     {
         m_hasFocus = true;
     }
@@ -121,7 +121,7 @@ void UIFocusable::SetFocus()
 
 void UIFocusable::ClearFocus()
 {
-    if(HasFocus())
+    if (HasFocus())
     {
         m_hasFocus = false;
     }
@@ -129,12 +129,12 @@ void UIFocusable::ClearFocus()
 
 void UIFocusable::SetBeingPressed(bool beingPressed)
 {
-    if(beingPressed != IsBeingPressed())
+    if (beingPressed != IsBeingPressed())
     {
         m_beingPressed = beingPressed;
-        if(UICanvas *canvas = UICanvas::GetActive(this))
+        if (UICanvas *canvas = UICanvas::GetActive(this))
         {
-            if(IsBeingPressed())
+            if (IsBeingPressed())
             {
                 canvas->RegisterFocusableBeingPressed(this);
             }
@@ -148,7 +148,7 @@ void UIFocusable::SetBeingPressed(bool beingPressed)
 
 void UIFocusable::SetIsMouseOver(bool isMouseOver)
 {
-    if(isMouseOver != IsMouseOver())
+    if (isMouseOver != IsMouseOver())
     {
         m_isMouseOver = isMouseOver;
     }

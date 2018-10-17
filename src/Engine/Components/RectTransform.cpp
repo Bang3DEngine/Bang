@@ -160,7 +160,7 @@ Vector2 RectTransform::FromLocalPointNDCToLocalPoint(
 
 void RectTransform::SetMarginLeft(int marginLeft)
 {
-    if(GetMarginLeft() != marginLeft)
+    if (GetMarginLeft() != marginLeft)
     {
         m_marginLeftBot.x = marginLeft;
         InvalidateTransform();
@@ -169,7 +169,7 @@ void RectTransform::SetMarginLeft(int marginLeft)
 
 void RectTransform::SetMarginTop(int marginTop)
 {
-    if(GetMarginTop() != marginTop)
+    if (GetMarginTop() != marginTop)
     {
         m_marginRightTop.y = marginTop;
         InvalidateTransform();
@@ -178,7 +178,7 @@ void RectTransform::SetMarginTop(int marginTop)
 
 void RectTransform::SetMarginRight(int marginRight)
 {
-    if(GetMarginRight() != marginRight)
+    if (GetMarginRight() != marginRight)
     {
         m_marginRightTop.x = marginRight;
         InvalidateTransform();
@@ -187,7 +187,7 @@ void RectTransform::SetMarginRight(int marginRight)
 
 void RectTransform::SetMarginBot(int marginBot)
 {
-    if(GetMarginBot() != marginBot)
+    if (GetMarginBot() != marginBot)
     {
         m_marginLeftBot.y = marginBot;
         InvalidateTransform();
@@ -254,13 +254,13 @@ void RectTransform::SetMargins(Axis axis, const Vector2i &margins)
 
 void RectTransform::SetMargins(Axis axis, int marginMin, int marginMax)
 {
-    if(axis == Axis::VERTICAL)
+    if (axis == Axis::VERTICAL)
     {
         SetMarginBot(marginMin);
         SetMarginTop(marginMax);
     }
 
-    if(axis == Axis::HORIZONTAL)
+    if (axis == Axis::HORIZONTAL)
     {
         SetMarginLeft(marginMin);
         SetMarginRight(marginMax);
@@ -277,7 +277,7 @@ void RectTransform::SetMargins(int left, int top, int right, int bot)
 
 void RectTransform::SetPivotPosition(const Vector2 &pivotPosition)
 {
-    if(m_pivotPosition != pivotPosition)
+    if (m_pivotPosition != pivotPosition)
     {
         m_pivotPosition = pivotPosition;
         InvalidateTransform();
@@ -336,19 +336,19 @@ void RectTransform::SetAnchors(const Vector2 &anchorMin,
 {
     bool changed = false;
 
-    if(GetAnchorMin() != anchorMin)
+    if (GetAnchorMin() != anchorMin)
     {
         m_anchorMin = anchorMin;
         changed = true;
     }
 
-    if(GetAnchorMax() != anchorMax)
+    if (GetAnchorMax() != anchorMax)
     {
         m_anchorMax = anchorMax;
         changed = true;
     }
 
-    if(changed)
+    if (changed)
     {
         WarnWrongAnchorsIfNeeded();
         InvalidateTransform();
@@ -431,7 +431,7 @@ Rect RectTransform::GetViewportRect() const
 RectPoints RectTransform::GetViewportRectPointsNDC() const
 {
     RectPoints vpRectPoints = GetViewportRect().GetPoints();
-    for(int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         vpRectPoints[i] =
             GL::FromViewportPointToViewportPointNDC(vpRectPoints[i]);
@@ -442,7 +442,7 @@ RectPoints RectTransform::GetViewportRectPointsNDC() const
 RectPoints RectTransform::GetParentViewportRectPointsNDC() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return Rect::NDCRect.GetPoints();
     }
@@ -472,7 +472,7 @@ AARect RectTransform::GetViewportAARectWithoutTransformNDC() const
 AARect RectTransform::GetParentViewportAARect() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return AARect(Vector2::Zero, Vector2(GL::GetViewportSize()));
     }
@@ -482,7 +482,7 @@ AARect RectTransform::GetParentViewportAARect() const
 AARect RectTransform::GetParentViewportAARectNDC() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return AARect::NDCRect;
     }
@@ -492,7 +492,7 @@ AARect RectTransform::GetParentViewportAARectNDC() const
 AARect RectTransform::GetParentViewportAARectWithoutTransform() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return AARect(Vector2::Zero, Vector2(GL::GetViewportSize()));
     }
@@ -502,7 +502,7 @@ AARect RectTransform::GetParentViewportAARectWithoutTransform() const
 AARect RectTransform::GetParentViewportAARectWithoutTransformNDC() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return AARect::NDCRect;
     }
@@ -512,7 +512,7 @@ AARect RectTransform::GetParentViewportAARectWithoutTransformNDC() const
 Rect RectTransform::GetParentViewportRect() const
 {
     GameObject *parent = GetGameObject()->GetParent();
-    if(!parent || !parent->GetRectTransform())
+    if (!parent || !parent->GetRectTransform())
     {
         return AARect(GL::GetViewportRect()).ToRect();
     }
@@ -595,22 +595,22 @@ bool RectTransform::IsMouseOver(bool recursive) const
 bool RectTransform::IsMouseOver(const Vector2i &mousePosVP,
                                 bool recursive) const
 {
-    if(Input::IsMouseInsideWindow())
+    if (Input::IsMouseInsideWindow())
     {
         AARect vpRect = GetViewportAARect();
-        if(IsActiveRecursively() && vpRect.IsValid() &&
-           vpRect.Contains(Vector2(mousePosVP)))
+        if (IsActiveRecursively() && vpRect.IsValid() &&
+            vpRect.Contains(Vector2(mousePosVP)))
         {
             return true;
         }
 
-        if(recursive)
+        if (recursive)
         {
             Array<RectTransform *> childrenRTs =
                 GetGameObject()->GetComponentsInDescendants<RectTransform>();
-            for(RectTransform *childRT : childrenRTs)
+            for (RectTransform *childRT : childrenRTs)
             {
-                if(childRT->IsMouseOver(mousePosVP, recursive))
+                if (childRT->IsMouseOver(mousePosVP, recursive))
                 {
                     return true;
                 }
@@ -622,7 +622,7 @@ bool RectTransform::IsMouseOver(const Vector2i &mousePosVP,
 
 const Matrix4 &RectTransform::GetLocalToWorldMatrix() const
 {
-    if(m_vpInWhichRectTransformLocalToWorldWasCalc != GL::GetViewportRect())
+    if (m_vpInWhichRectTransformLocalToWorldWasCalc != GL::GetViewportRect())
     {
         CalculateRectTransformLocalToWorldMatrix();
     }
@@ -631,7 +631,7 @@ const Matrix4 &RectTransform::GetLocalToWorldMatrix() const
 
 const Matrix4 &RectTransform::GetLocalToWorldMatrixInv() const
 {
-    if(m_vpInWhichRectTransformLocalToWorldWasCalc != GL::GetViewportRect())
+    if (m_vpInWhichRectTransformLocalToWorldWasCalc != GL::GetViewportRect())
     {
         CalculateRectTransformLocalToWorldMatrix();
     }
@@ -640,7 +640,7 @@ const Matrix4 &RectTransform::GetLocalToWorldMatrixInv() const
 
 const Matrix4 &RectTransform::GetRectLocalToWorldMatrix() const
 {
-    if(m_vpInWhichRectLocalToWorldWasCalc != GL::GetViewportRect())
+    if (m_vpInWhichRectLocalToWorldWasCalc != GL::GetViewportRect())
     {
         CalculateRectLocalToWorldMatrix();
     }
@@ -649,7 +649,7 @@ const Matrix4 &RectTransform::GetRectLocalToWorldMatrix() const
 
 const Matrix4 &RectTransform::GetRectLocalToWorldMatrixInv() const
 {
-    if(m_vpInWhichRectLocalToWorldWasCalc != GL::GetViewportRect())
+    if (m_vpInWhichRectLocalToWorldWasCalc != GL::GetViewportRect())
     {
         CalculateRectLocalToWorldMatrix();
     }
@@ -659,7 +659,7 @@ const Matrix4 &RectTransform::GetRectLocalToWorldMatrixInv() const
 void RectTransform::OnRender(RenderPass rp)
 {
     Transform::OnRender(rp);
-    if(rp == RenderPass::OVERLAY)
+    if (rp == RenderPass::OVERLAY)
     {
         /*
         AARect r = GetViewportAARectNDC(); BANG_UNUSED(r);
@@ -696,23 +696,23 @@ void RectTransform::ImportMeta(const MetaNode &metaNode)
 {
     Transform::ImportMeta(metaNode);
 
-    if(metaNode.Contains("MarginLeftBot"))
+    if (metaNode.Contains("MarginLeftBot"))
     {
         SetMargins(metaNode.Get<Vector2i>("MarginLeftBot"),
                    metaNode.Get<Vector2i>("MarginRightTop"));
     }
 
-    if(metaNode.Contains("PivotPosition"))
+    if (metaNode.Contains("PivotPosition"))
     {
         SetPivotPosition(metaNode.Get<Vector2>("PivotPosition"));
     }
 
-    if(metaNode.Contains("AnchorMin"))
+    if (metaNode.Contains("AnchorMin"))
     {
         SetAnchorMin(metaNode.Get<Vector2>("AnchorMin"));
     }
 
-    if(metaNode.Contains("AnchorMax"))
+    if (metaNode.Contains("AnchorMax"))
     {
         SetAnchorMax(metaNode.Get<Vector2>("AnchorMax"));
     }
@@ -733,19 +733,19 @@ void RectTransform::ExportMeta(MetaNode *metaNode) const
 void RectTransform::WarnWrongAnchorsIfNeeded()
 {
     constexpr float Eps = 0.001f;
-    if(GetAnchorMin().x > GetAnchorMax().x + Eps)
+    if (GetAnchorMin().x > GetAnchorMax().x + Eps)
     {
         Debug_Warn("AnchorMin.x > AnchorMax.x!");
     }
-    if(GetAnchorMin().y > GetAnchorMax().y + Eps)
+    if (GetAnchorMin().y > GetAnchorMax().y + Eps)
     {
         Debug_Warn("AnchorMin.y > AnchorMax.y!");
     }
-    if(GetAnchorMax().x < GetAnchorMin().x - Eps)
+    if (GetAnchorMax().x < GetAnchorMin().x - Eps)
     {
         Debug_Warn("AnchorMax.x < AnchorMin.x!");
     }
-    if(GetAnchorMax().y < GetAnchorMin().y - Eps)
+    if (GetAnchorMax().y < GetAnchorMin().y - Eps)
     {
         Debug_Warn("AnchorMax.x < AnchorMin.y!");
     }

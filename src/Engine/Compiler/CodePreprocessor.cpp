@@ -20,10 +20,10 @@ using namespace Bang;
 String CodePreprocessor::GetIncludeString(const String &includeDirective)
 {
     Array<String> includeParts = includeDirective.Split<Array>('"', true);
-    if(includeParts.Size() < 2)
+    if (includeParts.Size() < 2)
     {
         includeParts = includeDirective.Split<Array>('<', true);
-        if(includeParts.Size() < 2)
+        if (includeParts.Size() < 2)
         {
             return "";
         }
@@ -40,17 +40,17 @@ Path CodePreprocessor::GetIncludePath(const String &includeDirective,
 
     // Search if the include file combined with any of the include paths
     // gives us an existing file. Return the first found.
-    for(const Path &includePath : includeDirPathCombinations)
+    for (const Path &includePath : includeDirPathCombinations)
     {
-        if(includePath.IsFile())
+        if (includePath.IsFile())
         {
             return includePath;
         }
     }
 
-    Debug_Error("Could not find include: '"
-                << includeDirective << "'. "
-                << "Using directories: " << includeDirs);
+    Debug_Error("Could not find include: '" << includeDirective << "'. "
+                                            << "Using directories: "
+                                            << includeDirs);
     return Path::Empty;
 }
 
@@ -61,7 +61,7 @@ Array<Path> CodePreprocessor::GetIncludePathCombinations(
     String includeStr = CodePreprocessor::GetIncludeString(includeDirective);
 
     Array<Path> combinations;
-    for(const Path &includeDirPath : includeDirs)
+    for (const Path &includeDirPath : includeDirs)
     {
         Path completeFilepath = includeDirPath.Append(includeStr);
         combinations.PushBack(completeFilepath);
@@ -75,7 +75,7 @@ String CodePreprocessor::GetIncludeContents(const String &includeDirective,
 {
     Path includePath =
         CodePreprocessor::GetIncludePath(includeDirective, includeDirs);
-    if(includePath.IsFile())
+    if (includePath.IsFile())
     {
         return File::GetContents(includePath);
     }
@@ -92,10 +92,10 @@ void CodePreprocessor::PreprocessCode(String *srcCode,
 
     // Keep track of the user's source line number, to use #line directive
     int originalLineNum = 1;
-    for(auto it = lines.Begin(); it != lines.End();)
+    for (auto it = lines.Begin(); it != lines.End();)
     {
         String line = (*it).Trim();
-        if(line.BeginsWith("#include"))
+        if (line.BeginsWith("#include"))
         {
             it = lines.Remove(it);
             String includeContent = GetIncludeContents(line, includeDirs);
@@ -103,8 +103,8 @@ void CodePreprocessor::PreprocessCode(String *srcCode,
 
             List<String> contentLines = includeContent.Split<List>('\n', false);
             contentLines.PushBack("#line " + String(originalLineNum - 1));
-            lines.Splice(it, contentLines, contentLines.Begin(),
-                         contentLines.End());
+            lines.Splice(
+                it, contentLines, contentLines.Begin(), contentLines.End());
             std::advance(it, contentLines.Size());
         }
         else
@@ -115,9 +115,9 @@ void CodePreprocessor::PreprocessCode(String *srcCode,
         ++originalLineNum;
     }
 
-    if(lines.Size() > 0)
+    if (lines.Size() > 0)
     {
-        if(lines.Front().BeginsWith("#version"))
+        if (lines.Front().BeginsWith("#version"))
         {
             lines.Insert("#line 1\n", 1);
         }
@@ -135,9 +135,9 @@ Array<String> CodePreprocessor::GetSourceIncludeDirectives(
 {
     Array<String> includes;
     Array<String> lines = srcCode.Split<Array>('\n');
-    for(const String &line : lines)
+    for (const String &line : lines)
     {
-        if(line.Replace(" ", "").BeginsWith("#include"))
+        if (line.Replace(" ", "").BeginsWith("#include"))
         {
             includes.PushBack(line);
         }
@@ -150,8 +150,8 @@ Array<Path> CodePreprocessor::GetSourceIncludePaths(
     const Array<Path> &includeDirs,
     bool onlyExisting)
 {
-    return CodePreprocessor::GetSourceIncludePaths(File::GetContents(srcPath),
-                                                   includeDirs, onlyExisting);
+    return CodePreprocessor::GetSourceIncludePaths(
+        File::GetContents(srcPath), includeDirs, onlyExisting);
 }
 
 Array<Path> CodePreprocessor::GetSourceIncludePaths(
@@ -163,13 +163,13 @@ Array<Path> CodePreprocessor::GetSourceIncludePaths(
 
     Array<String> includeDirectives =
         CodePreprocessor::GetSourceIncludeDirectives(srcCode);
-    for(const String &includeDirective : includeDirectives)
+    for (const String &includeDirective : includeDirectives)
     {
         Path incPath;
-        if(!onlyExisting)
+        if (!onlyExisting)
         {
             CodePreprocessor::GetIncludePath(includeDirective, includeDirs);
-            if(incPath.IsFile())
+            if (incPath.IsFile())
             {
                 sourceIncludePaths.PushBack(incPath);
             }

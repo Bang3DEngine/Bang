@@ -16,7 +16,7 @@ void Chrono::MarkEvent(const String &eventName)
     ChronoEvent ce;
     ce.eventName = eventName;
     ce.time = Time::GetNow();
-    if(!m_events.IsEmpty())
+    if (!m_events.IsEmpty())
     {
         ChronoEvent &previousEvent = m_events.Back();
         previousEvent.timeSinceLastEvent =
@@ -27,7 +27,7 @@ void Chrono::MarkEvent(const String &eventName)
 
 void Chrono::Log()
 {
-    if(m_events.IsEmpty())
+    if (m_events.IsEmpty())
     {
         return;
     }
@@ -37,7 +37,7 @@ void Chrono::Log()
     std::cerr << "Chrono " << m_chronoName << " -------------------"
               << std::endl;
     Time totalTime;
-    for(int i = 0; i < m_events.Size() - 1; ++i)
+    for (int i = 0; i < m_events.Size() - 1; ++i)
     {
         ChronoEvent &ce = m_events[i];
         double intervalSecs = ce.timeSinceLastEvent.GetSeconds();

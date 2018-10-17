@@ -28,7 +28,7 @@ Component::~Component()
 
 void Component::DestroyImmediate(Component *component)
 {
-    if(!component->IsWaitingToBeDestroyed())
+    if (!component->IsWaitingToBeDestroyed())
     {
         Object::PropagateObjectDestruction(component);
         component->SetGameObjectForced(nullptr);
@@ -38,9 +38,9 @@ void Component::DestroyImmediate(Component *component)
 
 void Component::Destroy(Component *component)
 {
-    if(!component->IsWaitingToBeDestroyed())
+    if (!component->IsWaitingToBeDestroyed())
     {
-        if(GameObject *go = component->GetGameObject())
+        if (GameObject *go = component->GetGameObject())
         {
             go->AddComponentToDestroyDelayed(component);
             component->SetGameObject(nullptr);
@@ -62,28 +62,27 @@ void Component::SetGameObject(GameObject *newGameObject)
 
 void Component::SetGameObjectForced(GameObject *newGameObject)
 {
-    if(newGameObject != GetGameObject())
+    if (newGameObject != GetGameObject())
     {
         GameObject *previousGameObject = GetGameObject();
 
-        if(newGameObject && newGameObject->IsWaitingToBeDestroyed())
+        if (newGameObject && newGameObject->IsWaitingToBeDestroyed())
         {
-            Debug_Warn(
-                "Trying to set as gameObject a destroyed gameObject. "
-                "Not setting gameObject");
+            Debug_Warn("Trying to set as gameObject a destroyed gameObject. "
+                       "Not setting gameObject");
             return;
         }
 
-        if(GetGameObject())
+        if (GetGameObject())
         {
             GetGameObject()->RemoveComponent(this);
         }
 
-        if(newGameObject && !CanBeRepeatedInGameObject())
+        if (newGameObject && !CanBeRepeatedInGameObject())
         {
-            for(Component *comp : newGameObject->GetComponents())
+            for (Component *comp : newGameObject->GetComponents())
             {
-                if(comp != this && comp->GetClassName() == GetClassName())
+                if (comp != this && comp->GetClassName() == GetClassName())
                 {
                     Debug_Error(comp->GetClassName()
                                 << " should not be repeated "
@@ -136,42 +135,42 @@ void Component::OnDestroy()
 
 void Component::Update()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnUpdate();
     }
 }
 void Component::AfterChildrenUpdate()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnAfterChildrenUpdate();
     }
 }
 void Component::BeforeRender()
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnBeforeRender();
     }
 }
 void Component::BeforeChildrenRender(RenderPass rp)
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnBeforeChildrenRender(rp);
     }
 }
 void Component::Render(RenderPass rp)
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnRender(rp);
     }
 }
 void Component::AfterChildrenRender(RenderPass rp)
 {
-    if(IsActiveRecursively())
+    if (IsActiveRecursively())
     {
         OnAfterChildrenRender(rp);
     }
@@ -182,7 +181,9 @@ void Component::OnGameObjectChanged(GameObject *previousGameObject,
 {
     EventEmitter<IEventsComponentChangeGameObject>::PropagateToListeners(
         &IEventsComponentChangeGameObject::OnComponentChangedGameObject,
-        previousGameObject, newGameObject, this);
+        previousGameObject,
+        newGameObject,
+        this);
 }
 
 bool Component::CanBeRepeatedInGameObject() const
@@ -213,7 +214,7 @@ String Component::ToString() const
 void Component::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
-    if(metaNode.Contains("Enabled"))
+    if (metaNode.Contains("Enabled"))
     {
         SetEnabled(metaNode.Get<bool>("Enabled", true));
     }

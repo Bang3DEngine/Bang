@@ -32,7 +32,7 @@ void UIGridLayout::ApplyLayout(Axis axis)
     uint i = 0;
     // const int numRows = GetNumRows();
     const int numColumns = GetNumColumns();
-    for(GameObject *child : children)
+    for (GameObject *child : children)
     {
         RectTransform *childRT = child->GetRectTransform();
         childRT->SetAnchorX(Vector2(-1));
@@ -63,7 +63,7 @@ void UIGridLayout::CalculateLayout(Axis axis)
 
 void UIGridLayout::SetCellSize(const Vector2i &cellSize)
 {
-    if(cellSize != GetCellSize())
+    if (cellSize != GetCellSize())
     {
         m_cellSize = cellSize;
         ILayoutController::Invalidate();
@@ -80,7 +80,7 @@ int UIGridLayout::GetNumRows() const
     Array<GameObject *> children =
         UILayoutManager::GetLayoutableChildrenList(GetGameObject());
     const int numColumns = GetNumColumns();
-    if(children.Size() == 0 || numColumns == 0)
+    if (children.Size() == 0 || numColumns == 0)
     {
         return 0;
     }

@@ -45,25 +45,25 @@ MetaAttribute MetaAttribute::FromString(const String &string)
 
     const String TokenSpace = " \t\n";
     int nameBegin = str.IndexOfOneNotOf(TokenSpace, 0);
-    if(nameBegin == -1)
+    if (nameBegin == -1)
     {
         return attribute;
     }
 
     int nameEnd = str.IndexOfOneOf(TokenSpace + ":" + "=", nameBegin + 1);
-    if(nameEnd == -1)
+    if (nameEnd == -1)
     {
         return attribute;
     }
 
     int valueBegin = str.IndexOfOneOf("\"", nameEnd + 1) + 1;
-    if(valueBegin == -1)
+    if (valueBegin == -1)
     {
         return attribute;
     }
 
     int valueEnd = str.IndexOfOneOf("\"", valueBegin + 1);
-    if(valueEnd == -1)
+    if (valueEnd == -1)
     {
         return attribute;
     }

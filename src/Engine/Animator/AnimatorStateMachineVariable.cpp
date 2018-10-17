@@ -64,7 +64,9 @@ void AnimatorStateMachineVariable::SetName(const String &varName)
 
     p_animatorSM
         ->EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-            &IEventsAnimatorStateMachine::OnVariableNameChanged, this, prevName,
+            &IEventsAnimatorStateMachine::OnVariableNameChanged,
+            this,
+            prevName,
             varName);
 }
 
@@ -72,23 +74,23 @@ void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    if(metaNode.Contains("VariableName"))
+    if (metaNode.Contains("VariableName"))
     {
         SetName(metaNode.Get<String>("VariableName"));
     }
 
-    if(metaNode.Contains("VariableType"))
+    if (metaNode.Contains("VariableType"))
     {
         SetType(
             metaNode.Get<AnimatorStateMachineVariable::Type>("VariableType"));
     }
 
-    if(metaNode.Contains("ValueFloat"))
+    if (metaNode.Contains("ValueFloat"))
     {
         SetValueFloat(metaNode.Get<float>("ValueFloat"));
     }
 
-    if(metaNode.Contains("ValueBool"))
+    if (metaNode.Contains("ValueBool"))
     {
         SetValueBool(metaNode.Get<bool>("ValueBool"));
     }

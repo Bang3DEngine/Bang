@@ -26,7 +26,7 @@ Collider *Collision::GetThisCollider() const
 GameObject *Collision::GetOtherGameObject() const
 {
     GameObject *otherGo = nullptr;
-    if(GetContacts().Size() >= 1)
+    if (GetContacts().Size() >= 1)
     {
         otherGo = GetContacts().Front().GetOtherCollider()->GetGameObject();
     }

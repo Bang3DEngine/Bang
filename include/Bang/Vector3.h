@@ -41,7 +41,7 @@ class Vector2G;
     }                                                                          \
     Vector2G<T> ProjectedOnAxis(Axis3D axis) const                             \
     {                                                                          \
-        switch(axis)                                                           \
+        switch (axis)                                                          \
         {                                                                      \
             case Axis3D::X: return Vector2G<T>(y, z);                          \
             case Axis3D::Y: return Vector2G<T>(x, z);                          \

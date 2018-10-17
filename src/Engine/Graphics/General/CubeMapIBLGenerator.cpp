@@ -34,8 +34,8 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
     uint IBLCubeMapSize,
     uint sampleCount)
 {
-    return GenerateIBLCubeMap(textureCubeMap, IBLType::DIFFUSE, IBLCubeMapSize,
-                              sampleCount);
+    return GenerateIBLCubeMap(
+        textureCubeMap, IBLType::DIFFUSE, IBLCubeMapSize, sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
@@ -43,8 +43,8 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
     uint IBLCubeMapSize,
     uint sampleCount)
 {
-    return GenerateIBLCubeMap(textureCubeMap, IBLType::SPECULAR, IBLCubeMapSize,
-                              sampleCount);
+    return GenerateIBLCubeMap(
+        textureCubeMap, IBLType::SPECULAR, IBLCubeMapSize, sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
@@ -75,7 +75,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     iblCubeMap->Bind();
     iblCubeMap->Resize(IBLCubeMapSize);
     iblCubeMap->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-    if(iblType == IBLType::SPECULAR)
+    if (iblType == IBLType::SPECULAR)
     {
         iblCubeMap->GenerateMipMaps();
         iblCubeMap->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
@@ -91,7 +91,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
                                                textureCubeMap);
 
     // Draw to cubemap
-    if(iblType == IBLType::DIFFUSE)
+    if (iblType == IBLType::DIFFUSE)
     {
         GL::SetViewport(0, 0, IBLCubeMapSize, IBLCubeMapSize);
         cmg->m_iblFramebuffer->SetAttachmentTexture(iblCubeMap,
@@ -107,12 +107,13 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
         const uint MaxMipLevels =
             Math::Round(Math::Log10(float(IBLCubeMapSize)) / Math::Log10(2.0f));
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
-                          GL::TexParameter::TEXTURE_BASE_LEVEL, 0);
+                          GL::TexParameter::TEXTURE_BASE_LEVEL,
+                          0);
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
                           GL::TexParameter::TEXTURE_MAX_LEVEL,
                           MaxMipLevels - 1);
 
-        for(uint mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
+        for (uint mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
         {
             const float mipMapLevelF = SCAST<float>(mipMapLevel);
             const uint mipSize = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);

@@ -14,9 +14,9 @@ ObjectGatherer<ObjectType, RECURSIVE>::~ObjectGatherer()
 template <class ObjectType, bool RECURSIVE>
 void ObjectGatherer<ObjectType, RECURSIVE>::SetRoot(GameObject *root)
 {
-    if(root != GetRoot())
+    if (root != GetRoot())
     {
-        if(GetRoot())
+        if (GetRoot())
         {
             UnRegisterEventsAndRemoveObjects(GetRoot());
         }
@@ -33,7 +33,7 @@ void ObjectGatherer<ObjectType, RECURSIVE>::SetRoot(GameObject *root)
         m_processedGameObjects.Clear();
 #endif
 
-        if(GetRoot())
+        if (GetRoot())
         {
             RegisterEventsAndGather(GetRoot());
         }
@@ -67,15 +67,15 @@ void ObjectGatherer<ObjectType, RECURSIVE>::RegisterEventsAndGather(
 
     Array<ObjectType *> goObjectsOfTheType;
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
-    for(ObjectType *obj : goObjectsOfTheType)
+    for (ObjectType *obj : goObjectsOfTheType)
     {
         AddGatheredObject(obj);
     }
 
-    if(RECURSIVE)
+    if (RECURSIVE)
     {
         go->EventEmitter<IEventsChildren>::RegisterListener(this);
-        for(GameObject *child : go->GetChildren())
+        for (GameObject *child : go->GetChildren())
         {
             RegisterEventsAndGather(child);
         }
@@ -87,7 +87,7 @@ void ObjectGatherer<ObjectType, RECURSIVE>::UnRegisterEventsAndRemoveObjects(
     GameObject *go)
 {
 #ifdef DEBUG
-    if(RECURSIVE)
+    if (RECURSIVE)
     {
         // ASSERT(m_processedGameObjects.Contains(go));
     }
@@ -103,15 +103,15 @@ void ObjectGatherer<ObjectType, RECURSIVE>::UnRegisterEventsAndRemoveObjects(
 
     Array<ObjectType *> goObjectsOfTheType;
     GatherObjectsOfTheType(&goObjectsOfTheType, go);
-    for(ObjectType *obj : goObjectsOfTheType)
+    for (ObjectType *obj : goObjectsOfTheType)
     {
         RemoveGatheredObject(obj, go);
     }
 
-    if(RECURSIVE)
+    if (RECURSIVE)
     {
         go->EventEmitter<IEventsChildren>::UnRegisterListener(this);
-        for(GameObject *child : go->GetChildren())
+        for (GameObject *child : go->GetChildren())
         {
             UnRegisterEventsAndRemoveObjects(child);
         }
@@ -123,14 +123,14 @@ void ObjectGatherer<ObjectType, RECURSIVE>::GatherObjectsOfTheType(
     Array<ObjectType *> *gatheredObjects,
     GameObject *go)
 {
-    if(ObjectType *obj = DCAST<ObjectType *>(go))
+    if (ObjectType *obj = DCAST<ObjectType *>(go))
     {
         gatheredObjects->PushBack(obj);
     }
 
-    for(Component *comp : go->GetComponents())
+    for (Component *comp : go->GetComponents())
     {
-        if(ObjectType *obj = DCAST<ObjectType *>(comp))
+        if (ObjectType *obj = DCAST<ObjectType *>(comp))
         {
             gatheredObjects->PushBack(obj);
         }
@@ -159,7 +159,7 @@ void ObjectGatherer<ObjectType, RECURSIVE>::OnComponentAdded(
     Component *addedComponent,
     int)
 {
-    if(ObjectType *obj = DCAST<ObjectType *>(addedComponent))
+    if (ObjectType *obj = DCAST<ObjectType *>(addedComponent))
     {
         AddGatheredObject(obj);
     }
@@ -170,7 +170,7 @@ void ObjectGatherer<ObjectType, RECURSIVE>::OnComponentRemoved(
     Component *removedComponent,
     GameObject *previousGameObject)
 {
-    if(ObjectType *obj = DCAST<ObjectType *>(removedComponent))
+    if (ObjectType *obj = DCAST<ObjectType *>(removedComponent))
     {
         RemoveGatheredObject(obj, previousGameObject);
     }
@@ -192,7 +192,8 @@ void ObjectGatherer<ObjectType, RECURSIVE>::RemoveGatheredObject(
     m_gatheredObjects.Remove(obj);
     EventEmitter<IEventsObjectGatherer<ObjectType>>::PropagateToListeners(
         &IEventsObjectGatherer<ObjectType>::OnObjectUnGathered,
-        previousGameObject, obj);
+        previousGameObject,
+        obj);
 }
 
 template <class ObjectType, bool RECURSIVE>
@@ -202,22 +203,22 @@ void ObjectGatherer<ObjectType, RECURSIVE>::ObjectGatherer::OnDestroyed(
     GameObject *go = DCAST<GameObject *>(object);
 
     Array<GameObject *> gosToUnRegister;
-    if(RECURSIVE)
+    if (RECURSIVE)
     {
         Array<GameObject *> childrenRecursive;
-        for(GameObject *child : childrenRecursive)
+        for (GameObject *child : childrenRecursive)
         {
             gosToUnRegister.PushBack(child);
         }
     }
 
     gosToUnRegister.PushBack(go);
-    for(GameObject *childOrGo : gosToUnRegister)
+    for (GameObject *childOrGo : gosToUnRegister)
     {
         UnRegisterEventsAndRemoveObjects(childOrGo);
     }
 
-    if(go == GetRoot())
+    if (go == GetRoot())
     {
         SetRoot(nullptr);
     }

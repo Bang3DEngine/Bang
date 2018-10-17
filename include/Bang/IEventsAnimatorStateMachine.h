@@ -44,7 +44,10 @@ public:
                                  Time animationTimeWrapped,
                                  Time animationTime)
     {
-        BANG_UNUSED_5(animator, animationIndex, animation, animationTimeWrapped,
+        BANG_UNUSED_5(animator,
+                      animationIndex,
+                      animation,
+                      animationTimeWrapped,
                       animationTime);
     }
 };

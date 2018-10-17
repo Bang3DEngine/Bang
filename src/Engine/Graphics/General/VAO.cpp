@@ -44,13 +44,15 @@ void VAO::SetVBO(const VBO *vbo,
     vbo->Bind();
     GL::EnableVertexAttribArray(SCAST<GLint>(location));
     GL::VertexAttribPointer(SCAST<GLint>(location),
-                            SCAST<GLint>(dataComponentsCount), dataType,
+                            SCAST<GLint>(dataComponentsCount),
+                            dataType,
                             SCAST<GLint>(dataNormalized),
-                            SCAST<GLint>(dataStride), SCAST<GLint>(dataOffset));
+                            SCAST<GLint>(dataStride),
+                            SCAST<GLint>(dataOffset));
     GL::Pop(GL::Pushable::VBO);
     GL::Pop(GL::Pushable::VAO);
 
-    while(p_vbos.Size() <= location)
+    while (p_vbos.Size() <= location)
     {
         p_vbos.PushBack(nullptr);
     }
@@ -79,7 +81,7 @@ void VAO::SetIBO(IBO *ibo)
 
 void VAO::RemoveVBO(uint location)
 {
-    if(location < p_vbos.Size())
+    if (location < p_vbos.Size())
     {
         GL::Push(GL::Pushable::VAO);
 
@@ -109,7 +111,7 @@ bool VAO::IsIndexed() const
 
 const VBO *VAO::GetVBOByLocation(uint location) const
 {
-    if(location >= p_vbos.Size())
+    if (location >= p_vbos.Size())
     {
         return nullptr;
     }

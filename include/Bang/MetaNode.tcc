@@ -15,7 +15,7 @@ void MetaNode::Set(const String &attributeName, const T &value)
 template <class T>
 void MetaNode::SetArray(const String &name, const Array<T> &array)
 {
-    for(int i = 0; i < array.Size(); ++i)
+    for (int i = 0; i < array.Size(); ++i)
     {
         const T &x = array[i];
         Set(name + "_" + String::ToString(i), x);
@@ -34,10 +34,10 @@ Array<T> MetaNode::GetArray(const String &attributeName) const
 {
     int i = 0;
     Array<T> result;
-    while(true)
+    while (true)
     {
         const String attrNamei = attributeName + "_" + String::ToString(i);
-        if(!Contains(attrNamei))
+        if (!Contains(attrNamei))
         {
             break;
         }

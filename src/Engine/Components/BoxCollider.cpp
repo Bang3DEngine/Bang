@@ -40,7 +40,7 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::SetExtents(const Vector3 &extents)
 {
-    if(extents != GetExtents())
+    if (extents != GetExtents())
     {
         m_extents = extents;
         UpdatePxShape();
@@ -76,7 +76,7 @@ void BoxCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Extents"))
+    if (metaNode.Contains("Extents"))
     {
         SetExtents(metaNode.Get<Vector3>("Extents"));
     }
@@ -102,7 +102,7 @@ void BoxCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if(GetPxShape())
+    if (GetPxShape())
     {
         ASSERT(GetPxRigidDynamic());
 

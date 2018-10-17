@@ -62,9 +62,9 @@ public:
     static uint Count(Iterator begin, Iterator end, const T &x)
     {
         int count = 0;
-        for(Iterator it = begin; it != end; ++it)
+        for (Iterator it = begin; it != end; ++it)
         {
-            if(x == *it)
+            if (x == *it)
             {
                 ++count;
             }

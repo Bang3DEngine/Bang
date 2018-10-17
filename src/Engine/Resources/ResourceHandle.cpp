@@ -51,9 +51,9 @@ Resource *ResourceHandleBase::Get() const
 
 void ResourceHandleBase::Set(Resource *resource)
 {
-    if(Get() != resource)
+    if (Get() != resource)
     {
-        if(Get())
+        if (Get())
         {
             // Must be done in two steps, so that we avoid unset loops
             Resource *prevResource = p_resource;
@@ -62,7 +62,7 @@ void ResourceHandleBase::Set(Resource *resource)
         }
 
         p_resource = resource;
-        if(Get())
+        if (Get())
         {
             OnResourceSet(Get());
         }

@@ -51,7 +51,7 @@ std::ostream &operator<<(std::ostream &log, const AABox &b)
 
 std::ostream &operator<<(std::ostream &log, const IToString *s)
 {
-    if(!s)
+    if (!s)
     {
         log << "Null";
     }

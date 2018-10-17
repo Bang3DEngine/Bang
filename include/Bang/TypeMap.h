@@ -78,10 +78,10 @@ public:
     List<Value> GetAllDerived()
     {
         List<Value> values;
-        for(const auto &it : *this)
+        for (const auto &it : *this)
         {
             Class *v = Cast<Class *>(it.second);
-            if(v)
+            if (v)
             {
                 values.PushBack(Cast<Class *>(v));
             }

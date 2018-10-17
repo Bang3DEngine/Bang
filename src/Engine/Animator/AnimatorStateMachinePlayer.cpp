@@ -24,9 +24,9 @@ AnimatorStateMachinePlayer::~AnimatorStateMachinePlayer()
 void AnimatorStateMachinePlayer::SetStateMachine(
     AnimatorStateMachine *stateMachine)
 {
-    if(stateMachine != GetStateMachine())
+    if (stateMachine != GetStateMachine())
     {
-        if(GetStateMachine())
+        if (GetStateMachine())
         {
             p_currentTransition = nullptr;
             m_currentTransitionTime = Time(0);
@@ -38,7 +38,7 @@ void AnimatorStateMachinePlayer::SetStateMachine(
 
         p_stateMachine.Set(stateMachine);
 
-        if(GetStateMachine())
+        if (GetStateMachine())
         {
             SetCurrentNode(GetStateMachine()->GetEntryNodeOrFirstFound());
             GetStateMachine()
@@ -51,26 +51,26 @@ void AnimatorStateMachinePlayer::SetStateMachine(
 void AnimatorStateMachinePlayer::Step(Time deltaTime)
 {
     AnimatorStateMachine *sm = GetStateMachine();
-    if(!sm)
+    if (!sm)
     {
         return;
     }
 
-    if(!GetCurrentNode())
+    if (!GetCurrentNode())
     {
-        if(sm->GetNodes().Size() >= 1)
+        if (sm->GetNodes().Size() >= 1)
         {
             SetCurrentNode(sm->GetNodes().Front());
         }
     }
 
-    if(GetCurrentNode())
+    if (GetCurrentNode())
     {
-        if(GetCurrentTransition())
+        if (GetCurrentTransition())
         {
             ASSERT(GetNextNode());
             m_currentTransitionTime += deltaTime;
-            if(GetCurrentTransitionTime() >= GetCurrentTransitionDuration())
+            if (GetCurrentTransitionTime() >= GetCurrentTransitionDuration())
             {
                 FinishCurrentTransition();
             }
@@ -79,17 +79,17 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
         m_currentNodeTime += deltaTime;
 
         // If we are NOT doing a transition, check if we can pick one of them
-        if(!GetCurrentTransition())
+        if (!GetCurrentTransition())
         {
             bool hasFinishedAnimation =
                 (GetCurrentNodeTime().GetSeconds() >=
                  GetCurrentNode()->GetAnimation()->GetDurationInSeconds());
-            for(AnimatorStateMachineConnection *conn :
-                GetCurrentNode()->GetConnections())
+            for (AnimatorStateMachineConnection *conn :
+                 GetCurrentNode()->GetConnections())
             {
-                if(hasFinishedAnimation || conn->GetImmediateTransition())
+                if (hasFinishedAnimation || conn->GetImmediateTransition())
                 {
-                    if(conn->AreTransitionConditionsFulfilled(sm))
+                    if (conn->AreTransitionConditionsFulfilled(sm))
                     {
                         StartTransition(conn, GetCurrentNodeTime(), Time(0));
                         break;
@@ -120,7 +120,7 @@ void AnimatorStateMachinePlayer::StartTransition(
 void AnimatorStateMachinePlayer::FinishCurrentTransition()
 {
     // Next node becomes the current node now
-    if(GetCurrentTransition())
+    if (GetCurrentTransition())
     {
         SetCurrentNode(GetNextNode(), GetNextNodeTime());
 
@@ -137,9 +137,9 @@ void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node)
 void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node,
                                                 Time nodeTime)
 {
-    if(node != GetCurrentNode())
+    if (node != GetCurrentNode())
     {
-        if(GetCurrentNode())
+        if (GetCurrentNode())
         {
             GetCurrentNode()
                 ->EventEmitter<
@@ -149,7 +149,7 @@ void AnimatorStateMachinePlayer::SetCurrentNode(AnimatorStateMachineNode *node,
         p_currentNode = node;
         m_currentNodeTime = nodeTime;
 
-        if(GetCurrentNode())
+        if (GetCurrentNode())
         {
             GetCurrentNode()
                 ->EventEmitter<
@@ -228,7 +228,7 @@ void AnimatorStateMachinePlayer::OnNodeRemoved(
 {
     BANG_UNUSED(removedNodeIdx);
     ASSERT(stateMachine == GetStateMachine());
-    if(removedNode == GetCurrentNode())
+    if (removedNode == GetCurrentNode())
     {
         SetCurrentNode(nullptr);
     }

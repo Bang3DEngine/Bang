@@ -10,8 +10,10 @@ UniformBuffer<BufferStruct>::UniformBuffer()
     GL::GenBuffers(1, &m_idGL);
 
     Bind();
-    GL::BufferData(GL::BindTarget::UNIFORM_BUFFER, sizeof(BufferStruct),
-                   nullptr, GL::UsageHint::STATIC_DRAW);
+    GL::BufferData(GL::BindTarget::UNIFORM_BUFFER,
+                   sizeof(BufferStruct),
+                   nullptr,
+                   GL::UsageHint::STATIC_DRAW);
     UnBind();
 }
 

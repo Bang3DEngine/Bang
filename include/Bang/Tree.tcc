@@ -46,7 +46,7 @@ void Tree<T>::SetData(const T &data)
 template <class T>
 void Tree<T>::SetParent(Tree<T> *parentTree)
 {
-    if(parentTree)
+    if (parentTree)
     {
         SetParent(parentTree, parentTree->GetChildren().Size());
     }
@@ -59,24 +59,24 @@ void Tree<T>::SetParent(Tree<T> *parentTree)
 template <class T>
 void Tree<T>::SetParent(Tree<T> *parentTree, int index)
 {
-    if(GetParent() != parentTree)
+    if (GetParent() != parentTree)
     {
-        if(GetParent())
+        if (GetParent())
         {
             GetParent()->m_subTrees.Remove(this);
         }
 
         p_parent = parentTree;
-        if(GetParent())
+        if (GetParent())
         {
             GetParent()->m_subTrees.Insert(this, index);
         }
     }
-    else if(GetParent())  // Position change inside same parent
+    else if (GetParent())  // Position change inside same parent
     {
         int oldIndex = GetParent()->GetChildren().IndexOf(this);
         ASSERT(oldIndex >= 0);
-        if(oldIndex != index)
+        if (oldIndex != index)
         {
             int newIndex = (oldIndex < index) ? (index - 1) : index;
             GetParent()->GetChildren().Remove(this);
@@ -88,7 +88,7 @@ void Tree<T>::SetParent(Tree<T> *parentTree, int index)
 template <class T>
 void Tree<T>::Clear()
 {
-    while(!m_subTrees.IsEmpty())
+    while (!m_subTrees.IsEmpty())
     {
         Tree<T> *child = m_subTrees.Front();
         m_subTrees.PopFront();
@@ -119,7 +119,7 @@ template <class T>
 List<Tree<T> *> Tree<T>::GetChildrenRecursive() const
 {
     List<Tree<T> *> result = GetChildren();
-    for(Tree<T> *child : GetChildren())
+    for (Tree<T> *child : GetChildren())
     {
         result.PushBack(child->GetChildrenRecursive());
     }
@@ -149,7 +149,7 @@ Tree<T> *Tree<T>::GetDeepCopy() const
 {
     Tree<T> *cpy = new Tree<T>();
     cpy->SetData(m_data);
-    for(const Tree<T> *child : GetChildren())
+    for (const Tree<T> *child : GetChildren())
     {
         Tree<T> *childCpy = child->GetDeepCopy();
         childCpy->SetParent(cpy, 0);

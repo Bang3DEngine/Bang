@@ -37,9 +37,9 @@ void MetaFilesManager::CreateMissingMetaFiles(const Path &directory)
     USet<Path> files;
     files.Add(assetFiles.Begin(), assetFiles.End());
 
-    for(const Path &filepath : files)
+    for (const Path &filepath : files)
     {
-        if(!IsMetaFile(filepath) && !HasMetaFile(filepath))
+        if (!IsMetaFile(filepath) && !HasMetaFile(filepath))
         {
             MetaFilesManager::CreateMetaFileIfMissing(filepath);
         }
@@ -53,16 +53,16 @@ void MetaFilesManager::LoadMetaFilepathGUIDs(const Path &directory)
         directory.GetFiles(FindFlag::RECURSIVE_HIDDEN, extensions);
 
     // Remove alone .meta files
-    for(const Path &metaFilepath : metaFilepaths)
+    for (const Path &metaFilepath : metaFilepaths)
     {
-        if(IsMetaFile(metaFilepath) && !GetFilepath(metaFilepath).IsFile())
+        if (IsMetaFile(metaFilepath) && !GetFilepath(metaFilepath).IsFile())
         {
             File::Remove(metaFilepath);
         }
     }
 
     // Load GUID's of meta files!
-    for(const Path &metaFilepath : metaFilepaths)
+    for (const Path &metaFilepath : metaFilepaths)
     {
         RegisterMetaFilepath(metaFilepath);
     }
@@ -70,7 +70,7 @@ void MetaFilesManager::LoadMetaFilepathGUIDs(const Path &directory)
 
 void MetaFilesManager::OnPathAdded(const Path &filepath)
 {
-    if(!MetaFilesManager::IsMetaFile(filepath))
+    if (!MetaFilesManager::IsMetaFile(filepath))
     {
         std::pair<Path, GUID> pathToGUID = CreateMetaFileIfMissing(filepath);
         RegisterMetaFilepath(MetaFilesManager::GetMetaFilepath(filepath));
@@ -82,7 +82,7 @@ std::pair<Path, GUID> MetaFilesManager::CreateMetaFileIfMissing(
 {
     Path metaFilepath = GetMetaFilepath(filepath);
     GUID newGUID = GUID::Empty();
-    if(!IsMetaFile(filepath) && !HasMetaFile(filepath))
+    if (!IsMetaFile(filepath) && !HasMetaFile(filepath))
     {
         MetaNode metaNode;
         newGUID = GUIDManager::GetNewGUID();
@@ -130,14 +130,14 @@ GUIDManager *MetaFilesManager::GetGUIDManager()
 
 void MetaFilesManager::RegisterMetaFilepath(const Path &metaFilepath)
 {
-    if(IsMetaFile(metaFilepath))
+    if (IsMetaFile(metaFilepath))
     {
         MetaNode metaNode;
         metaNode.Import(metaFilepath);
 
         Path filepath = GetFilepath(metaFilepath);
         GUID guid = metaNode.Get<GUID>("GUID");
-        if(!guid.IsEmpty())
+        if (!guid.IsEmpty())
         {
             MetaFilesManager *mfm = MetaFilesManager::GetInstance();
             // if (mfm->m_GUIDToFilepath.ContainsKey(guid) &&
@@ -165,16 +165,16 @@ void MetaFilesManager::UnRegisterMetaFilepath(const Path &metaFilepath)
 GUID MetaFilesManager::GetGUID(const Path &filepath)
 {
     MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-    if(mfm->m_filepathToGUID.ContainsKey(filepath))
+    if (mfm->m_filepathToGUID.ContainsKey(filepath))
     {
         return mfm->m_filepathToGUID.Get(filepath);
     }
     else
     {
-        if(!Resources::IsEmbeddedResource(filepath))
+        if (!Resources::IsEmbeddedResource(filepath))
         {
             Path metaFilepath = GetMetaFilepath(filepath);
-            if(metaFilepath.IsFile())
+            if (metaFilepath.IsFile())
             {
                 MetaNode metaNode;
                 metaNode.Import(metaFilepath);
@@ -187,10 +187,10 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
         {
             Path parentResPath = filepath.GetDirectory();
             Resource *parentRes = Resources::GetCached(parentResPath);
-            if(parentRes)
+            if (parentRes)
             {
-                if(Resource *embeddedRes =
-                       parentRes->GetEmbeddedResource(filepath.GetNameExt()))
+                if (Resource *embeddedRes =
+                        parentRes->GetEmbeddedResource(filepath.GetNameExt()))
                 {
                     return embeddedRes->GetGUID();
                 }
@@ -203,21 +203,21 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
 Path MetaFilesManager::GetFilepath(const GUID &guid)
 {
     MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-    if(mfm->m_GUIDToFilepath.ContainsKey(guid))
+    if (mfm->m_GUIDToFilepath.ContainsKey(guid))
     {
         const Path &path = mfm->m_GUIDToFilepath.Get(guid);
         return path;
     }
     else
     {
-        if(Resources::IsEmbeddedResource(guid))
+        if (Resources::IsEmbeddedResource(guid))
         {
             Path parentPath = MetaFilesManager::GetFilepath(
                 guid.WithoutEmbeddedResourceGUID());
-            if(parentPath.IsFile())
+            if (parentPath.IsFile())
             {
                 RH<Resource> resRH = Resources::LoadFromExtension(parentPath);
-                if(resRH)
+                if (resRH)
                 {
                     String name = resRH.Get()->GetEmbeddedResourceName(
                         guid.GetEmbeddedResourceGUID());
@@ -236,13 +236,13 @@ Path MetaFilesManager::GetFilepath(const Path &metaFilepath)
     Path filepath = metaFilepath.WithHidden(false);
 
     String strPath = filepath.GetAbsolute();
-    if(strPath.BeginsWith("."))
+    if (strPath.BeginsWith("."))
     {
         strPath.Remove(0, 1);
     }
 
     String ending = "." + GetMetaExtension();
-    if(strPath.EndsWith(ending))
+    if (strPath.EndsWith(ending))
     {
         strPath.Remove(strPath.Size() - ending.Size(), strPath.Size());
     }

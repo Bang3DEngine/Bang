@@ -17,10 +17,10 @@ void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
     Array<Path> includeDirs;
     includeDirs.PushBack(EPATH("Shaders"));
     includeDirs.PushBack(EPATH("Shaders/Include"));
-    if(Resources::GetInstance())
+    if (Resources::GetInstance())
     {
         Array<Path> lookUpPaths = Resources::GetInstance()->GetLookUpPaths();
-        for(const Path &p : lookUpPaths)
+        for (const Path &p : lookUpPaths)
         {
             includeDirs.PushBack(p);
         }
@@ -30,7 +30,7 @@ void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
     CodePreprocessor::PreprocessCode(shaderSourceCode, includeDirs);
 
     String &code = *shaderSourceCode;
-    if(addVersion)
+    if (addVersion)
     {
         code.Prepend(ShaderPreprocessor::GLSLVersionString + "\n");
     }

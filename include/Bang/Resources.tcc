@@ -19,19 +19,20 @@ RH<ResourceClass> Resources::Load(const Path &filepath)
     RH<ResourceClass> resultRH;
     {
         RH<Resource> resRH = rss->Load_(creator, filepath);
-        if(resRH)
+        if (resRH)
         {
-            if(ResourceClass *res = DCAST<ResourceClass *>(resRH.Get()))
+            if (ResourceClass *res = DCAST<ResourceClass *>(resRH.Get()))
             {
                 resultRH = RH<ResourceClass>(res);
             }
-            else if(!Resources::IsEmbeddedResource(filepath))
+            else if (!Resources::IsEmbeddedResource(filepath))
             {
-                ASSERT_MSG(res, "Resource "
-                                    << filepath
-                                    << " being loaded "
-                                       "as two different types of resources. "
-                                       "This is forbidden");
+                ASSERT_MSG(res,
+                           "Resource "
+                               << filepath
+                               << " being loaded "
+                                  "as two different types of resources. "
+                                  "This is forbidden");
             }
         }
     }
@@ -49,19 +50,20 @@ RH<ResourceClass> Resources::Load(const GUID &guid)
     RH<ResourceClass> resultRH;
     {
         RH<Resource> resRH = rss->Load_(creator, guid);
-        if(resRH)
+        if (resRH)
         {
-            if(ResourceClass *res = DCAST<ResourceClass *>(resRH.Get()))
+            if (ResourceClass *res = DCAST<ResourceClass *>(resRH.Get()))
             {
                 resultRH = RH<ResourceClass>(res);
             }
             else
             {
-                ASSERT_MSG(res, "Resource "
-                                    << guid
-                                    << " being loaded "
-                                       "as two different types of resources. "
-                                       "This is forbidden");
+                ASSERT_MSG(res,
+                           "Resource "
+                               << guid
+                               << " being loaded "
+                                  "as two different types of resources. "
+                                  "This is forbidden");
             }
         }
     }
@@ -121,11 +123,11 @@ Array<ResourceClass *> Resources::GetAll()
 {
     Array<ResourceClass *> result;
     Array<Resource *> resources = Resources::GetAllResources();
-    for(Resource *res : resources)
+    for (Resource *res : resources)
     {
-        if(res)
+        if (res)
         {
-            if(ResourceClass *rc = DCAST<ResourceClass *>(res))
+            if (ResourceClass *rc = DCAST<ResourceClass *>(res))
             {
                 result.PushBack(rc);
             }
@@ -157,7 +159,7 @@ template <class ResourceClass>
 RH<ResourceClass> Resources::Clone(const ResourceClass *src)
 {
     RH<ResourceClass> rh;
-    if(src)
+    if (src)
     {
         rh = Resources::Create<ResourceClass>();
         src->CloneInto(rh.Get());

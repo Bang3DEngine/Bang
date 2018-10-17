@@ -57,7 +57,7 @@ public:
     void SetAxis(const Vector2G<T> &axis0)
     {
         m_axis0 = axis0;
-        if(m_axis0.SqLength() != 1.0f)
+        if (m_axis0.SqLength() != 1.0f)
         {
             m_axis0 = m_axis0.NormalizedSafe();
         }
@@ -65,11 +65,11 @@ public:
 
     void SetHalfSize(int i, const T &halfSize)
     {
-        if(i == 0)
+        if (i == 0)
         {
             m_halfSizeAxis0 = halfSize;
         }
-        else if(i == 1)
+        else if (i == 1)
         {
             m_halfSizeAxis1 = halfSize;
         }
@@ -88,7 +88,7 @@ public:
 
     Vector2G<T> GetAxis(int i) const
     {
-        if(i == 0)
+        if (i == 0)
         {
             return m_axis0;
         }
@@ -97,7 +97,7 @@ public:
 
     T GetHalfSize(int i) const
     {
-        if(i == 0)
+        if (i == 0)
         {
             return m_halfSizeAxis0;
         }
@@ -126,19 +126,19 @@ public:
 
         const Vector2G<T> e = (b - a);
         const Vector2G<T> f = (d - a);
-        if((point.x - a.x) * e.x + (point.y - a.y) * e.y < 0.0)
+        if ((point.x - a.x) * e.x + (point.y - a.y) * e.y < 0.0)
         {
             return false;
         }
-        if((point.x - b.x) * e.x + (point.y - b.y) * e.y > 0.0)
+        if ((point.x - b.x) * e.x + (point.y - b.y) * e.y > 0.0)
         {
             return false;
         }
-        if((point.x - a.x) * f.x + (point.y - a.y) * f.y < 0.0)
+        if ((point.x - a.x) * f.x + (point.y - a.y) * f.y < 0.0)
         {
             return false;
         }
-        if((point.x - d.x) * f.x + (point.y - d.y) * f.y > 0.0)
+        if ((point.x - d.x) * f.x + (point.y - d.y) * f.y > 0.0)
         {
             return false;
         }
@@ -307,21 +307,27 @@ RectG<T> operator*(const Matrix4G<T> &m, const RectG<T> &r)
 template <class T>
 RectG<T> operator/(T a, const RectG<T> &r)
 {
-    return RectG<T>(a / r.GetCenter(), r.GetAxis(0), a / r.GetHalfSize(0),
+    return RectG<T>(a / r.GetCenter(),
+                    r.GetAxis(0),
+                    a / r.GetHalfSize(0),
                     a / r.GetHalfSize(1));
 }
 
 template <class T>
 RectG<T> operator/(const RectG<T> &r, T a)
 {
-    return RectG<T>(r.GetCenter() / a, r.GetAxis(0), r.GetHalfSize(0) / a,
+    return RectG<T>(r.GetCenter() / a,
+                    r.GetAxis(0),
+                    r.GetHalfSize(0) / a,
                     r.GetHalfSize(1) / a);
 }
 
 template <class T>
 RectG<T> operator*(T a, const RectG<T> &r)
 {
-    return RectG<T>(a * r.GetCenter(), r.GetAxis(0), a * r.GetHalfSize(0),
+    return RectG<T>(a * r.GetCenter(),
+                    r.GetAxis(0),
+                    a * r.GetHalfSize(0),
                     a * r.GetHalfSize(1));
 }
 
@@ -334,7 +340,9 @@ RectG<T> operator*(const RectG<T> &r, T a)
 template <class T>
 RectG<T> operator*(const Vector2G<T> &v, const RectG<T> &r)
 {
-    return RectG<T>(v * r.GetCenter(), r.GetAxis(0), v[0] * r.GetHalfSize(0),
+    return RectG<T>(v * r.GetCenter(),
+                    r.GetAxis(0),
+                    v[0] * r.GetHalfSize(0),
                     v[1] * r.GetHalfSize(1));
 }
 
@@ -347,14 +355,18 @@ RectG<T> operator*(const RectG<T> &r, const Vector2G<T> &v)
 template <class T>
 RectG<T> operator/(const Vector2G<T> &v, const RectG<T> &r)
 {
-    return RectG<T>(v / r.GetCenter(), r.GetAxis(0), v[0] / r.GetHalfSize(0),
+    return RectG<T>(v / r.GetCenter(),
+                    r.GetAxis(0),
+                    v[0] / r.GetHalfSize(0),
                     v[1] / r.GetHalfSize(1));
 }
 
 template <class T>
 RectG<T> operator/(const RectG<T> &r, const Vector2G<T> &v)
 {
-    return RectG<T>(r.GetCenter() / v, r.GetAxis(0), r.GetHalfSize(0) / v[0],
+    return RectG<T>(r.GetCenter() / v,
+                    r.GetAxis(0),
+                    r.GetHalfSize(0) / v[0],
                     r.GetHalfSize(1) / v[1]);
 }
 
@@ -373,14 +385,18 @@ RectG<T> operator-(const RectG<T> &r, T a)
 template <class T>
 RectG<T> operator-(const Vector2G<T> &v, const RectG<T> &r)
 {
-    return RectG<T>(v - r.GetCenter(), r.GetAxis(0), v[0] - r.GetHalfSize(0),
+    return RectG<T>(v - r.GetCenter(),
+                    r.GetAxis(0),
+                    v[0] - r.GetHalfSize(0),
                     v[1] - r.GetHalfSize(1));
 }
 
 template <class T>
 RectG<T> operator-(const RectG<T> &r, const Vector2G<T> &v)
 {
-    return RectG<T>(r.GetCenter() - v, r.GetAxis(0), r.GetHalfSize(0) - v[0],
+    return RectG<T>(r.GetCenter() - v,
+                    r.GetAxis(0),
+                    r.GetHalfSize(0) - v[0],
                     r.GetHalfSize(1) - v[1]);
 }
 

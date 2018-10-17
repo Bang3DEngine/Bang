@@ -77,7 +77,7 @@ void UITreeItemContainer::SetCollapsable(bool collapsable)
 
 void UITreeItemContainer::SetCollapsed(bool collapsed)
 {
-    if(collapsed != IsCollapsed())
+    if (collapsed != IsCollapsed())
     {
         m_collapsed = collapsed;
         Texture2D *iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon()
@@ -117,11 +117,11 @@ int UITreeItemContainer::GetIndentationPx() const
 
 UIFocusable *UITreeItemContainer::GetFocusable() const
 {
-    if(GOItem *item = GetContainedItem())
+    if (GOItem *item = GetContainedItem())
     {
-        if(ITreeItem *treeItem = DCAST<ITreeItem *>(item))
+        if (ITreeItem *treeItem = DCAST<ITreeItem *>(item))
         {
-            if(UIFocusable *itemFocusable = treeItem->GetTreeItemFocusable())
+            if (UIFocusable *itemFocusable = treeItem->GetTreeItemFocusable())
             {
                 return itemFocusable;
             }

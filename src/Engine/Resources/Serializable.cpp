@@ -47,7 +47,7 @@ void Serializable::ImportMeta(const String &metaNodeString)
 
 void Serializable::ImportMeta(const MetaNode &metaNode)
 {
-    if(metaNode.Contains("GUID"))
+    if (metaNode.Contains("GUID"))
     {
         SetGUID(metaNode.Get<GUID>("GUID"));
     }
@@ -61,7 +61,7 @@ void Serializable::ExportMeta(MetaNode *metaNode) const
 
 bool Serializable::ImportMetaFromFile(const Path &path)
 {
-    if(path.Exists())
+    if (path.Exists())
     {
         String fileContents = File::GetContents(path);
         ImportMeta(fileContents);

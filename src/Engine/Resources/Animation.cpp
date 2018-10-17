@@ -38,7 +38,7 @@ void Animation::AddPositionKeyFrame(
     const String &boneName,
     const Animation::KeyFrame<Vector3> &keyFrame)
 {
-    if(!GetBoneNameToPositionKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToPositionKeyFrames().ContainsKey(boneName))
     {
         m_boneNameToPositionKeyFrames.Add(boneName, {{}});
     }
@@ -50,7 +50,7 @@ void Animation::AddRotationKeyFrame(
     const String &boneName,
     const Animation::KeyFrame<Quaternion> &keyFrame)
 {
-    if(!GetBoneNameToRotationKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToRotationKeyFrames().ContainsKey(boneName))
     {
         m_boneNameToRotationKeyFrames.Add(boneName, {{}});
     }
@@ -61,7 +61,7 @@ void Animation::AddRotationKeyFrame(
 void Animation::AddScaleKeyFrame(const String &boneName,
                                  const Animation::KeyFrame<Vector3> &keyFrame)
 {
-    if(!GetBoneNameToScaleKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToScaleKeyFrames().ContainsKey(boneName))
     {
         m_boneNameToScaleKeyFrames.Add(boneName, {{}});
     }
@@ -71,7 +71,7 @@ void Animation::AddScaleKeyFrame(const String &boneName,
 
 void Animation::SetDurationInFrames(float durationInFrames)
 {
-    if(durationInFrames != GetDurationInFrames())
+    if (durationInFrames != GetDurationInFrames())
     {
         m_durationInFrames = durationInFrames;
         PropagateResourceChanged();
@@ -80,7 +80,7 @@ void Animation::SetDurationInFrames(float durationInFrames)
 
 void Animation::SetFramesPerSecond(float framesPerSecond)
 {
-    if(framesPerSecond != GetFramesPerSecond())
+    if (framesPerSecond != GetFramesPerSecond())
     {
         m_framesPerSecond = framesPerSecond;
         PropagateResourceChanged();
@@ -89,7 +89,7 @@ void Animation::SetFramesPerSecond(float framesPerSecond)
 
 void Animation::SetWrapMode(AnimationWrapMode wrapMode)
 {
-    if(wrapMode != GetWrapMode())
+    if (wrapMode != GetWrapMode())
     {
         m_wrapMode = wrapMode;
         PropagateResourceChanged();
@@ -98,7 +98,7 @@ void Animation::SetWrapMode(AnimationWrapMode wrapMode)
 
 void Animation::SetSpeed(float speed)
 {
-    if(speed != GetSpeed())
+    if (speed != GetSpeed())
     {
         m_speed = speed;
         PropagateResourceChanged();
@@ -136,12 +136,12 @@ Array<Animation::KeyFrame<T>> GetConsecutiveKeyFrames(
     float timeInFrames)
 {
     const uint numKF = keyFrames.Size();
-    for(uint i = 0; i < numKF - 1; ++i)
+    for (uint i = 0; i < numKF - 1; ++i)
     {
         const Animation::KeyFrame<T> &prevKF = keyFrames[i];
         const Animation::KeyFrame<T> &nextKF = keyFrames[i + 1];
-        if(timeInFrames >= prevKF.timeInFrames &&
-           timeInFrames <= nextKF.timeInFrames)
+        if (timeInFrames >= prevKF.timeInFrames &&
+            timeInFrames <= nextKF.timeInFrames)
         {
             return {{prevKF, nextKF}};
         }
@@ -154,7 +154,7 @@ float Animation::WrapTime(float time,
                           AnimationWrapMode animationWrapMode)
 {
     float wrappedTime = -1.0f;
-    switch(animationWrapMode)
+    switch (animationWrapMode)
     {
         case AnimationWrapMode::CLAMP:
             wrappedTime = Math::Clamp(time, 0.0f, totalDuration);
@@ -168,7 +168,7 @@ float Animation::WrapTime(float time,
         {
             wrappedTime = Math::FModAbs(time, totalDuration);
             int parity = SCAST<int>(wrappedTime / totalDuration);
-            if((parity % 2) == 1)
+            if ((parity % 2) == 1)
             {
                 wrappedTime = totalDuration - wrappedTime;
             }
@@ -184,9 +184,9 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForTime(
     Map<String, Matrix4> bonesMatrices;
 
     Map<String, BoneTransformation> bonesTransformations;
-    Animation::GetBoneAnimationTransformations(this, animationTime,
-                                               &bonesTransformations);
-    for(auto &it : bonesTransformations)
+    Animation::GetBoneAnimationTransformations(
+        this, animationTime, &bonesTransformations);
+    for (auto &it : bonesTransformations)
     {
         const String &boneName = it.first;
         const BoneTransformation &boneTransformation = it.second;
@@ -204,7 +204,7 @@ Map<String, Matrix4> Animation::GetBoneAnimationMatricesForTime(
 const Array<Animation::KeyFrame<Vector3>> &Animation::GetPositionKeyFrames(
     const String &boneName) const
 {
-    if(!GetBoneNameToPositionKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToPositionKeyFrames().ContainsKey(boneName))
     {
         return Array<Animation::KeyFrame<Vector3>>::Empty();
     }
@@ -214,7 +214,7 @@ const Array<Animation::KeyFrame<Vector3>> &Animation::GetPositionKeyFrames(
 const Array<Animation::KeyFrame<Quaternion>> &Animation::GetRotationKeyFrames(
     const String &boneName) const
 {
-    if(!GetBoneNameToRotationKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToRotationKeyFrames().ContainsKey(boneName))
     {
         return Array<Animation::KeyFrame<Quaternion>>::Empty();
     }
@@ -224,7 +224,7 @@ const Array<Animation::KeyFrame<Quaternion>> &Animation::GetRotationKeyFrames(
 const Array<Animation::KeyFrame<Vector3>> &Animation::GetScaleKeyFrames(
     const String &boneName) const
 {
-    if(!GetBoneNameToScaleKeyFrames().ContainsKey(boneName))
+    if (!GetBoneNameToScaleKeyFrames().ContainsKey(boneName))
     {
         return Array<Animation::KeyFrame<Vector3>>::Empty();
     }
@@ -258,12 +258,12 @@ void Animation::ImportMeta(const MetaNode &metaNode)
 {
     Asset::ImportMeta(metaNode);
 
-    if(metaNode.Contains("WrapMode"))
+    if (metaNode.Contains("WrapMode"))
     {
         SetWrapMode(SCAST<AnimationWrapMode>(metaNode.Get<int>("WrapMode")));
     }
 
-    if(metaNode.Contains("Speed"))
+    if (metaNode.Contains("Speed"))
     {
         SetSpeed(metaNode.Get<float>("Speed"));
     }
@@ -284,20 +284,20 @@ void Animation::GetBoneAnimationTransformations(
 {
     ASSERT(boneTransformationsPtr);
 
-    if(anim->GetDurationInFrames() <= 0.0f)
+    if (anim->GetDurationInFrames() <= 0.0f)
     {
         return;
     }
 
     double timeInFrames =
         (animationTime.GetSeconds() * anim->GetFramesPerSecond());
-    timeInFrames = WrapTime(timeInFrames, anim->GetDurationInFrames(),
-                            anim->GetWrapMode());
+    timeInFrames = WrapTime(
+        timeInFrames, anim->GetDurationInFrames(), anim->GetWrapMode());
     timeInFrames = Math::Max(timeInFrames, 0.00001);
 
     Map<String, BoneTransformation> &boneTransformations =
         *boneTransformationsPtr;
-    for(const auto &it : anim->GetBoneNameToPositionKeyFrames())
+    for (const auto &it : anim->GetBoneNameToPositionKeyFrames())
     {
         const String &boneName = it.first;
         const auto &posKeyFrames = it.second;
@@ -307,7 +307,7 @@ void Animation::GetBoneAnimationTransformations(
         Array<KeyFrame<Vector3>> positionInterpKeyFrames =
             GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
 
-        if(positionInterpKeyFrames.Size() == 2)
+        if (positionInterpKeyFrames.Size() == 2)
         {
             const KeyFrame<Vector3> &prevPosKF = positionInterpKeyFrames[0];
             const KeyFrame<Vector3> &nextPosKF = positionInterpKeyFrames[1];
@@ -325,7 +325,7 @@ void Animation::GetBoneAnimationTransformations(
         boneTransformations[boneName].position = bonePosition;
     }
 
-    for(const auto &it : anim->GetBoneNameToRotationKeyFrames())
+    for (const auto &it : anim->GetBoneNameToRotationKeyFrames())
     {
         const String &boneName = it.first;
         const auto &rotKeyFrames = it.second;
@@ -335,7 +335,7 @@ void Animation::GetBoneAnimationTransformations(
         Array<KeyFrame<Quaternion>> rotationInterpKeyFrames =
             GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
 
-        if(rotationInterpKeyFrames.Size() == 2)
+        if (rotationInterpKeyFrames.Size() == 2)
         {
             const KeyFrame<Quaternion> &prevRotKF = rotationInterpKeyFrames[0];
             const KeyFrame<Quaternion> &nextRotKF = rotationInterpKeyFrames[1];
@@ -347,13 +347,13 @@ void Animation::GetBoneAnimationTransformations(
             float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
             interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
-            boneRotation = Quaternion::SLerp(prevRotKF.value, nextRotKF.value,
-                                             interpFactor);
+            boneRotation = Quaternion::SLerp(
+                prevRotKF.value, nextRotKF.value, interpFactor);
         }
         boneTransformations[boneName].rotation = boneRotation;
     }
 
-    for(const auto &it : anim->GetBoneNameToScaleKeyFrames())
+    for (const auto &it : anim->GetBoneNameToScaleKeyFrames())
     {
         const String &boneName = it.first;
         const auto &scaleKeyFrames = it.second;
@@ -362,7 +362,7 @@ void Animation::GetBoneAnimationTransformations(
         Array<KeyFrame<Vector3>> scaleInterpKeyFrames =
             GetConsecutiveKeyFrames(scaleKeyFrames, timeInFrames);
 
-        if(scaleInterpKeyFrames.Size() == 2)
+        if (scaleInterpKeyFrames.Size() == 2)
         {
             const KeyFrame<Vector3> &prevScaleKF = scaleInterpKeyFrames[0];
             const KeyFrame<Vector3> &nextScaleKF = scaleInterpKeyFrames[1];
@@ -375,8 +375,8 @@ void Animation::GetBoneAnimationTransformations(
             float interpFactor = (timePassedSincePrev / timeBetweenPrevNext);
             interpFactor = Math::Clamp(interpFactor, 0.0f, 1.0f);
 
-            boneScale = Vector3::Lerp(prevScaleKF.value, nextScaleKF.value,
-                                      interpFactor);
+            boneScale = Vector3::Lerp(
+                prevScaleKF.value, nextScaleKF.value, interpFactor);
         }
         boneTransformations[boneName].scale = boneScale;
     }
@@ -398,8 +398,8 @@ Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
 
     // Gather the prev animation bone transformations
     Map<String, BoneTransformation> prevBoneTransformations;
-    Animation::GetBoneAnimationTransformations(prevAnimation, prevAnimationTime,
-                                               &prevBoneTransformations);
+    Animation::GetBoneAnimationTransformations(
+        prevAnimation, prevAnimationTime, &prevBoneTransformations);
 
     // Gather the next animation bone transformations
     Map<String, BoneTransformation> nextBoneTransformations;
@@ -408,41 +408,42 @@ Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
 
     // Gather bone names
     Set<String> allBoneNames;
-    for(const auto &pair : prevBoneTransformations)
+    for (const auto &pair : prevBoneTransformations)
     {
         allBoneNames.Add(pair.first);
     }
-    for(const auto &pair : nextBoneTransformations)
+    for (const auto &pair : nextBoneTransformations)
     {
         allBoneNames.Add(pair.first);
     }
 
     // Interpolate transformations
-    for(const String &boneName : allBoneNames)
+    for (const String &boneName : allBoneNames)
     {
         BoneTransformation prevBoneTransformation;
         auto prevTransformationIt = prevBoneTransformations.Find(boneName);
-        if(prevTransformationIt != prevBoneTransformations.End())
+        if (prevTransformationIt != prevBoneTransformations.End())
         {
             prevBoneTransformation = prevTransformationIt->second;
         }
 
         BoneTransformation nextBoneTransformation;
         auto nextTransformationIt = nextBoneTransformations.Find(boneName);
-        if(nextTransformationIt != nextBoneTransformations.End())
+        if (nextTransformationIt != nextBoneTransformations.End())
         {
             nextBoneTransformation = nextTransformationIt->second;
         }
 
-        Vector3 interpPos =
-            Vector3::Lerp(prevBoneTransformation.position,
-                          nextBoneTransformation.position, nextPonderation);
+        Vector3 interpPos = Vector3::Lerp(prevBoneTransformation.position,
+                                          nextBoneTransformation.position,
+                                          nextPonderation);
         Quaternion interpRot =
             Quaternion::SLerp(prevBoneTransformation.rotation,
-                              nextBoneTransformation.rotation, nextPonderation);
-        Vector3 interpScale =
-            Vector3::Lerp(prevBoneTransformation.scale,
-                          nextBoneTransformation.scale, nextPonderation);
+                              nextBoneTransformation.rotation,
+                              nextPonderation);
+        Vector3 interpScale = Vector3::Lerp(prevBoneTransformation.scale,
+                                            nextBoneTransformation.scale,
+                                            nextPonderation);
 
         Matrix4 transformMat = Matrix4::TranslateMatrix(interpPos) *
                                Matrix4::RotateMatrix(interpRot) *

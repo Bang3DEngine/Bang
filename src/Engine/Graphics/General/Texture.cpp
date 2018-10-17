@@ -40,7 +40,7 @@ bool Texture::Resize(int width, int height)
 
 void Texture::SetFormat(GL::ColorFormat glFormat)
 {
-    if(glFormat != GetFormat())
+    if (glFormat != GetFormat())
     {
         m_glFormat = glFormat;
         OnFormatChanged();
@@ -50,7 +50,7 @@ void Texture::SetFormat(GL::ColorFormat glFormat)
 
 void Texture::SetTarget(GL::TextureTarget target)
 {
-    if(target != GetTextureTarget())
+    if (target != GetTextureTarget())
     {
         m_target = target;
         PropagateResourceChanged();
@@ -59,7 +59,7 @@ void Texture::SetTarget(GL::TextureTarget target)
 
 void Texture::SetFilterMode(GL::FilterMode filterMode)
 {
-    if(filterMode != GetFilterMode())
+    if (filterMode != GetFilterMode())
     {
         m_filterMode = filterMode;
 
@@ -67,14 +67,14 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
 
         Bind();
 
-        if(GetFilterMode() == GL::FilterMode::NEAREST ||
-           GetFilterMode() == GL::FilterMode::BILINEAR)
+        if (GetFilterMode() == GL::FilterMode::NEAREST ||
+            GetFilterMode() == GL::FilterMode::BILINEAR)
         {
-            GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::MAG,
-                                   GetFilterMode());
+            GL::TexParameterFilter(
+                GetTextureTarget(), GL::FilterMagMin::MAG, GetFilterMode());
         }
-        GL::TexParameterFilter(GetTextureTarget(), GL::FilterMagMin::MIN,
-                               GetFilterMode());
+        GL::TexParameterFilter(
+            GetTextureTarget(), GL::FilterMagMin::MIN, GetFilterMode());
 
         GL::Pop(GetGLBindTarget());
 
@@ -84,19 +84,19 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
 
 void Texture::SetWrapMode(GL::WrapMode wrapMode)
 {
-    if(wrapMode != GetWrapMode())
+    if (wrapMode != GetWrapMode())
     {
         m_wrapMode = wrapMode;
 
         GL::Push(GetGLBindTarget());
 
         Bind();
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_S,
-                             GetWrapMode());
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_T,
-                             GetWrapMode());
-        GL::TexParameterWrap(GetTextureTarget(), GL::WrapCoord::WRAP_R,
-                             GetWrapMode());
+        GL::TexParameterWrap(
+            GetTextureTarget(), GL::WrapCoord::WRAP_S, GetWrapMode());
+        GL::TexParameterWrap(
+            GetTextureTarget(), GL::WrapCoord::WRAP_T, GetWrapMode());
+        GL::TexParameterWrap(
+            GetTextureTarget(), GL::WrapCoord::WRAP_R, GetWrapMode());
 
         GL::Pop(GetGLBindTarget());
 
@@ -161,8 +161,10 @@ Color Texture::GetColorFromFloatArray(const float *pixels, int i)
 
 Color Texture::GetColorFromByteArray(const Byte *pixels, int i)
 {
-    return Color(pixels[i + 0] / 255.0f, pixels[i + 1] / 255.0f,
-                 pixels[i + 2] / 255.0f, pixels[i + 3] / 255.0f);
+    return Color(pixels[i + 0] / 255.0f,
+                 pixels[i + 1] / 255.0f,
+                 pixels[i + 2] / 255.0f,
+                 pixels[i + 3] / 255.0f);
 }
 
 void Texture::OnFormatChanged()
@@ -176,7 +178,7 @@ int Texture::GetNumComponents() const
 
 void Texture::SetWidth(int width)
 {
-    if(width != GetWidth())
+    if (width != GetWidth())
     {
         m_size.x = width;
         PropagateResourceChanged();
@@ -184,7 +186,7 @@ void Texture::SetWidth(int width)
 }
 void Texture::SetHeight(int height)
 {
-    if(height != GetHeight())
+    if (height != GetHeight())
     {
         m_size.y = height;
         PropagateResourceChanged();

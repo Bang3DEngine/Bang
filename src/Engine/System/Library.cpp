@@ -31,7 +31,7 @@ bool Library::Load()
 bool Library::UnLoad()
 {
     ClearError();
-    if(IsLoaded())
+    if (IsLoaded())
     {
         dlclose(m_libHandle);
     }
@@ -76,7 +76,7 @@ void Library::ClearError()
 void Library::FetchError()
 {
     const char *error = dlerror();
-    if(error)
+    if (error)
     {
         m_errorString = String(error);
     }

@@ -29,7 +29,7 @@ void UIScrollArea::OnUpdate()
 
 void UIScrollArea::SetScrolling(const Vector2i &scrollPx)
 {
-    if(m_scrollingPx != scrollPx)
+    if (m_scrollingPx != scrollPx)
     {
         m_scrollingPx = scrollPx;
         UpdatePaddings();
@@ -48,15 +48,15 @@ void UIScrollArea::SetScrollingY(int scrollPxY)
 
 void UIScrollArea::SetContainedGameObject(GameObject *go)
 {
-    if(GetContainedGameObject() != go)
+    if (GetContainedGameObject() != go)
     {
-        if(GetContainedGameObject())
+        if (GetContainedGameObject())
         {
             GetContainedGameObject()->SetParent(nullptr);
         }
 
         p_containedGo = go;
-        if(GetContainedGameObject())
+        if (GetContainedGameObject())
         {
             GetContainedGameObject()->SetParent(GetContainer());
         }

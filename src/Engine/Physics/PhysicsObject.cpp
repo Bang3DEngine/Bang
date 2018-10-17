@@ -17,7 +17,7 @@ void PhysicsObject::SetPhysicsObjectType(PhysicsObject::Type physicsObjectType)
 
 void PhysicsObject::SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic)
 {
-    if(pxRigidDynamic != GetPxRigidDynamic())
+    if (pxRigidDynamic != GetPxRigidDynamic())
     {
         physx::PxRigidDynamic *prevPxRD = GetPxRigidDynamic();
 

@@ -30,7 +30,7 @@ void ILayoutController::Invalidate()
 void ILayoutController::OnInvalidated()
 {
     IInvalidatable<ILayoutController>::OnInvalidated();
-    if(UILayoutManager *uilm = UILayoutManager::GetActive(this))
+    if (UILayoutManager *uilm = UILayoutManager::GetActive(this))
     {
         uilm->PropagateInvalidation(this);
     }
@@ -38,10 +38,10 @@ void ILayoutController::OnInvalidated()
 
 void ILayoutController::_ApplyLayout(Axis axis)
 {
-    if(IInvalidatable<ILayoutController>::IsInvalid())
+    if (IInvalidatable<ILayoutController>::IsInvalid())
     {
         ApplyLayout(axis);
-        if(axis == Axis::VERTICAL)
+        if (axis == Axis::VERTICAL)
         {
             Validate();
         }

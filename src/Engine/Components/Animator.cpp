@@ -48,7 +48,7 @@ void Animator::OnStart()
     m_prevFrameTime = Time::GetNow();
     m_animationTime.SetNanos(0);
 
-    if(GetPlayOnStart())
+    if (GetPlayOnStart())
     {
         Play();
     }
@@ -63,23 +63,25 @@ void Animator::OnUpdate()
     m_prevFrameTime = now;
 
     AnimatorStateMachine *sm = GetStateMachine();
-    if(sm && IsPlaying())
+    if (sm && IsPlaying())
     {
         ASSERT(GetPlayer());
         GetPlayer()->Step(passedTime);
 
-        if(Animation *currentAnim = GetPlayer()->GetCurrentAnimation())
+        if (Animation *currentAnim = GetPlayer()->GetCurrentAnimation())
         {
             const Time currentAnimTime = GetPlayer()->GetCurrentNodeTime();
 
             Map<String, Matrix4> boneNameToCurrentMatrices;
-            if(Animation *nextAnim = GetPlayer()->GetNextAnimation())
+            if (Animation *nextAnim = GetPlayer()->GetNextAnimation())
             {
                 // Cross fading
                 ASSERT(GetPlayer()->GetCurrentTransition());
                 boneNameToCurrentMatrices =
                     Animation::GetBoneCrossFadeAnimationMatrices(
-                        currentAnim, currentAnimTime, nextAnim,
+                        currentAnim,
+                        currentAnimTime,
+                        nextAnim,
                         GetPlayer()->GetCurrentTransitionTime(),
                         GetPlayer()->GetCurrentTransitionDuration());
             }
@@ -99,7 +101,7 @@ void Animator::OnUpdate()
 
 void Animator::SetStateMachine(AnimatorStateMachine *stateMachine)
 {
-    if(stateMachine != GetStateMachine())
+    if (stateMachine != GetStateMachine())
     {
         m_stateMachine.Set(stateMachine);
         GetPlayer()->SetStateMachine(GetStateMachine());
@@ -108,7 +110,7 @@ void Animator::SetStateMachine(AnimatorStateMachine *stateMachine)
 
 void Animator::SetPlayOnStart(bool playOnStart)
 {
-    if(playOnStart != GetPlayOnStart())
+    if (playOnStart != GetPlayOnStart())
     {
         m_playOnStart = playOnStart;
     }
@@ -119,22 +121,22 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
 {
     Array<SkinnedMeshRenderer *> smrs =
         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
-    for(SkinnedMeshRenderer *smr : smrs)
+    for (SkinnedMeshRenderer *smr : smrs)
     {
-        for(const auto &pair : boneAnimMatrices)
+        for (const auto &pair : boneAnimMatrices)
         {
             const String &boneName = pair.first;
             const Matrix4 &boneAnimMatrix = pair.second;
             GameObject *boneGo = smr->GetBoneGameObject(boneName);
-            if(boneGo &&
-               smr->GetActiveMesh()->GetBonesPool().ContainsKey(boneName))
+            if (boneGo &&
+                smr->GetActiveMesh()->GetBonesPool().ContainsKey(boneName))
             {
                 boneGo->GetTransform()->FillFromMatrix(boneAnimMatrix);
             }
         }
     }
 
-    for(SkinnedMeshRenderer *smr : smrs)
+    for (SkinnedMeshRenderer *smr : smrs)
     {
         smr->UpdateBonesMatricesFromTransformMatrices();
     }
@@ -144,7 +146,7 @@ Map<String, Matrix4> Animator::GetBoneAnimationMatrices(Animation *animation,
                                                         Time animationTime)
 {
     Map<String, Matrix4> boneNameToAnimationMatrices;
-    if(animation)
+    if (animation)
     {
         boneNameToAnimationMatrices =
             animation->GetBoneAnimationMatricesForTime(animationTime);
@@ -160,9 +162,11 @@ Map<String, Matrix4> Animator::GetBoneCrossFadeAnimationMatrices(
     Time totalCrossFadeTime)
 {
     Map<String, Matrix4> boneCrossFadeAnimationMatrices =
-        Animation::GetBoneCrossFadeAnimationMatrices(
-            prevAnimation, prevAnimationTime, nextAnimation,
-            currentCrossFadeTime, totalCrossFadeTime);
+        Animation::GetBoneCrossFadeAnimationMatrices(prevAnimation,
+                                                     prevAnimationTime,
+                                                     nextAnimation,
+                                                     currentCrossFadeTime,
+                                                     totalCrossFadeTime);
     return boneCrossFadeAnimationMatrices;
 }
 
@@ -210,12 +214,12 @@ void Animator::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if(metaNode.Contains("PlayOnStart"))
+    if (metaNode.Contains("PlayOnStart"))
     {
         SetPlayOnStart(metaNode.Get<bool>("PlayOnStart"));
     }
 
-    if(metaNode.Contains("StateMachine"))
+    if (metaNode.Contains("StateMachine"))
     {
         SetStateMachine(Resources::Load<AnimatorStateMachine>(
                             metaNode.Get<GUID>("StateMachine"))
@@ -227,9 +231,9 @@ void Animator::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    metaNode->Set("StateMachine", GetStateMachine()
-                                      ? GetStateMachine()->GetGUID()
-                                      : GUID::Empty());
+    metaNode->Set(
+        "StateMachine",
+        GetStateMachine() ? GetStateMachine()->GetGUID() : GUID::Empty());
     metaNode->Set("PlayOnStart", GetPlayOnStart());
 }
 

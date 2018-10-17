@@ -38,7 +38,7 @@ void ALAudioSource::Stop()
 
 void ALAudioSource::SetVolume(float volume)
 {
-    if(volume != GetVolume())
+    if (volume != GetVolume())
     {
         m_audioParams.volume = volume;
         alSourcef(GetALSourceId(), AL_GAIN, GetVolume());
@@ -47,7 +47,7 @@ void ALAudioSource::SetVolume(float volume)
 void ALAudioSource::SetPitch(float pitch)
 {
     float clampedPitch = Math::Max(pitch, 0.01f);
-    if(clampedPitch != GetPitch())
+    if (clampedPitch != GetPitch())
     {
         m_audioParams.pitch = clampedPitch;
         alSourcef(GetALSourceId(), AL_PITCH, GetPitch());
@@ -55,7 +55,7 @@ void ALAudioSource::SetPitch(float pitch)
 }
 void ALAudioSource::SetRange(float range)
 {
-    if(range != GetRange())
+    if (range != GetRange())
     {
         m_audioParams.range = range;
         alSourcef(m_alSourceId, AL_MAX_DISTANCE, GetRange());
@@ -64,7 +64,7 @@ void ALAudioSource::SetRange(float range)
 }
 void ALAudioSource::SetLooping(bool looping)
 {
-    if(looping != GetLooping())
+    if (looping != GetLooping())
     {
         m_audioParams.looping = looping;
         alSourcef(GetALSourceId(), AL_LOOPING, GetLooping());
@@ -73,7 +73,7 @@ void ALAudioSource::SetLooping(bool looping)
 
 void ALAudioSource::SetPosition(const Vector3 &position)
 {
-    if(position != GetPosition())
+    if (position != GetPosition())
     {
         m_audioParams.position = position;
         alSourcefv(GetALSourceId(), AL_POSITION, GetPosition().Data());

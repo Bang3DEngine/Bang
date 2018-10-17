@@ -16,7 +16,9 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-const Array<String> BP::Modifiers = {"const", "constexpr", "volatile",
+const Array<String> BP::Modifiers = {"const",
+                                     "constexpr",
+                                     "volatile",
                                      "static"};
 
 const Array<String> BP::RVariablePrefixes = {"BANG_REFLECT_VARIABLE"};
@@ -33,8 +35,8 @@ void BangPreprocessor::Preprocess(const Path &filepath)
     String srcContents = file.GetContents();
     String reflHeaderContents;
     bool preprocessedSomething;
-    BangPreprocessor::Preprocess(srcContents, &reflHeaderContents,
-                                 &preprocessedSomething);
+    BangPreprocessor::Preprocess(
+        srcContents, &reflHeaderContents, &preprocessedSomething);
 
     String originalExt = filepath.GetExtension();
     Path reflFilepath = filepath.GetDirectory()
@@ -43,17 +45,17 @@ void BangPreprocessor::Preprocess(const Path &filepath)
                             .AppendExtension(originalExt);
 
     bool writePreprocessedFile = true;
-    if(reflFilepath.Exists())
+    if (reflFilepath.Exists())
     {
         String oldReflContents = File(reflFilepath).GetContents();
         writePreprocessedFile = (oldReflContents != reflHeaderContents);
     }
 
-    if(writePreprocessedFile)
+    if (writePreprocessedFile)
     {
         File::Write(reflFilepath, reflHeaderContents);
 
-        if(preprocessedSomething)
+        if (preprocessedSomething)
         {
             std::cout << "  File '" << filepath.GetAbsolute().ToCString()
                       << "' successfully preprocessed into '"
@@ -78,7 +80,7 @@ void BangPreprocessor::Preprocess(const String &source,
 
     Array<BPReflectedStruct> reflectStructs =
         BangPreprocessor::GetReflectStructs(source);
-    for(const BPReflectedStruct &reflStruct : reflectStructs)
+    for (const BPReflectedStruct &reflStruct : reflectStructs)
     {
         String reflectDefineCode =
             "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
@@ -126,29 +128,33 @@ Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
     String src = source;
     BP::RemoveComments(&src);
     String::Iterator it = src.Begin();
-    while(true)
+    while (true)
     {
         // Find Structure/Class annotation
         String::Iterator itStructBegin =
             BP::Find(it, src.End(), BP::RStructPrefixes);
-        if(itStructBegin == src.End())
+        if (itStructBegin == src.End())
         {
             break;
         }
 
         String::Iterator itStructScopeBegin, itStructScopeEnd;
-        BP::GetNextScope(itStructBegin, src.End(), &itStructScopeBegin,
-                         &itStructScopeEnd, '{', '}');
+        BP::GetNextScope(itStructBegin,
+                         src.End(),
+                         &itStructScopeBegin,
+                         &itStructScopeEnd,
+                         '{',
+                         '}');
         it = itStructScopeEnd;
-        if(itStructScopeBegin == src.End())
+        if (itStructScopeBegin == src.End())
         {
             break;
         }
 
         bool ok;
         BPReflectedStruct reflStruct;
-        BPReflectedStruct::FromString(itStructBegin, itStructScopeEnd,
-                                      &reflStruct, &ok);
+        BPReflectedStruct::FromString(
+            itStructBegin, itStructScopeEnd, &reflStruct, &ok);
         reflectStructsArray.PushBack(reflStruct);
     }
 
@@ -169,7 +175,7 @@ void BangPreprocessor::RemoveComments(String *source)
     String output = gCompilerProcess.ReadStandardOutput();
     gCompilerProcess.Close();
 
-    if(output.Size() >= 1)
+    if (output.Size() >= 1)
     {
         output.Remove(output.Begin(),
                       output.Find('\n') + 2);  // Remove first line
@@ -181,11 +187,11 @@ String::Iterator BangPreprocessor::Find(String::Iterator begin,
                                         String::Iterator end,
                                         const Array<String> &toFindList)
 {
-    for(const String &toFind : toFindList)
+    for (const String &toFind : toFindList)
     {
         String::Iterator itFound =
             std::search(begin, end, toFind.Begin(), toFind.End());
-        if(itFound != end)
+        if (itFound != end)
         {
             return itFound;
         }
@@ -202,20 +208,20 @@ void BangPreprocessor::GetNextScope(String::Iterator begin,
 {
     int insideness = 0;
     String::Iterator it = begin;
-    for(; it != end; ++it)
+    for (; it != end; ++it)
     {
-        if(*it == openingBrace)
+        if (*it == openingBrace)
         {
-            if(insideness == 0)
+            if (insideness == 0)
             {
                 *scopeBegin = it;
             }
             ++insideness;
         }
-        else if(*it == closingBrace)
+        else if (*it == closingBrace)
         {
             --insideness;
-            if(insideness == 0)
+            if (insideness == 0)
             {
                 *scopeEnd = it + 1;
                 break;
@@ -223,7 +229,7 @@ void BangPreprocessor::GetNextScope(String::Iterator begin,
         }
     }
 
-    if(insideness != 0)
+    if (insideness != 0)
     {
         *scopeBegin = *scopeEnd = end;
     }
@@ -232,10 +238,10 @@ void BangPreprocessor::GetNextScope(String::Iterator begin,
 void BangPreprocessor::SkipBlanks(String::Iterator *it, String::Iterator end)
 {
     char c = *(*it);
-    while(c == '\n' || c == '\r' || c == '\t' || c == ' ')
+    while (c == '\n' || c == '\r' || c == '\t' || c == ' ')
     {
         ++(*it);
-        if(*it == end)
+        if (*it == end)
         {
             break;
         }
@@ -254,10 +260,10 @@ void BangPreprocessor::SkipUntilNext(String::Iterator *it,
                                      const Array<String> &particles)
 {
     String c(std::string(1, *(*it)));
-    while(!particles.Contains(c))
+    while (!particles.Contains(c))
     {
         ++(*it);
-        if(*it == end)
+        if (*it == end)
         {
             break;
         }
@@ -275,10 +281,10 @@ void BangPreprocessor::FindNextWord(String::Iterator begin,
 
     *wordEnd = (*wordBegin + 1);
     char c = *(*wordEnd);
-    while(String::IsLetter(c) || String::IsNumber(c) || c == '_')
+    while (String::IsLetter(c) || String::IsNumber(c) || c == '_')
     {
         ++(*wordEnd);
-        if(*wordEnd == end)
+        if (*wordEnd == end)
         {
             break;
         }

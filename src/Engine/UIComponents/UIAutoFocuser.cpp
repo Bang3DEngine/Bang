@@ -19,10 +19,10 @@ void UIAutoFocuser::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(++m_frames == 2 && p_focusableToAutoFocus)
+    if (++m_frames == 2 && p_focusableToAutoFocus)
     {
         UICanvas *canvas = UICanvas::GetActive(GetGameObject());
-        if(canvas)
+        if (canvas)
         {
             canvas->SetFocus(p_focusableToAutoFocus);
         }

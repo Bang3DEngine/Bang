@@ -38,14 +38,14 @@ void UIInputNumber::SetValue(float v)
     const float finalValue =
         SCAST<float>(Math::Round(clampedValue * placesMult)) / placesMult;
 
-    if(finalValue != GetValue())
+    if (finalValue != GetValue())
     {
         m_value = finalValue;
         EventEmitter<IEventsValueChanged>::PropagateToListeners(
             &IEventsValueChanged::OnValueChanged, this);
     }
 
-    if(!HasFocus())
+    if (!HasFocus())
     {
         UpdateTextFromValue();
     }
@@ -75,7 +75,7 @@ void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
     m_decimalPlaces = decimalPlaces;
 
     String allowedChars = "0123456789+-";
-    if(GetDecimalPlaces() > 0)
+    if (GetDecimalPlaces() > 0)
     {
         allowedChars += ",.";
     }
@@ -97,7 +97,7 @@ void UIInputNumber::UpdateValueFromText()
 {
     float value = 0.0f;
     const String &content = GetInputText()->GetText()->GetContent();
-    if(!content.IsEmpty())
+    if (!content.IsEmpty())
     {
         std::istringstream iss(content);
         iss >> value;
@@ -108,7 +108,7 @@ void UIInputNumber::UpdateValueFromText()
 void UIInputNumber::UpdateTextFromValue()
 {
     String vStr = String::ToString(GetValue(), GetDecimalPlaces());
-    if(GetInputText()->GetText())
+    if (GetInputText()->GetText())
     {
         GetInputText()->GetText()->SetContent(vStr);
     }
@@ -122,7 +122,7 @@ void UIInputNumber::ChangeTextColorBasedOnMinMax()
     bool isOutOfRange =
         (textValue < GetMinValue() || textValue > GetMaxValue());
     Color textColor = isOutOfRange ? Color::Red : Color::Black;
-    if(GetInputText()->GetText())
+    if (GetInputText()->GetText())
     {
         GetInputText()->GetText()->SetTextColor(textColor);
     }
@@ -156,7 +156,7 @@ bool UIInputNumber::HasFocus() const
 
 UIEventResult UIInputNumber::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch(event.type)
+    switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN: return UIEventResult::INTERCEPT; break;
 
@@ -167,7 +167,7 @@ UIEventResult UIInputNumber::OnUIEvent(UIFocusable *, const UIEvent &event)
             break;
 
         case UIEvent::Type::KEY_DOWN:
-            switch(event.key.key)
+            switch (event.key.key)
             {
                 case Key::ENTER:
                     UICanvas::GetActive(this)->SetFocus(nullptr);

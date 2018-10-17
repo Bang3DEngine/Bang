@@ -11,7 +11,7 @@ class IInvalidatable
 public:
     virtual void Invalidate()
     {
-        if(!IsInvalid() || IsFirstInvalidation())
+        if (!IsInvalid() || IsFirstInvalidation())
         {
             m_isFirstInvalidation = false;
             SetInvalid(true);

@@ -50,7 +50,7 @@ void Font::Import(const Path &ttfFilepath)
         TTF_OpenFont(m_ttfFilepath.GetAbsolute().ToCString(), RefFontSize);
 
     bool error = (CatchTTFError() || !GetReferenceFont());
-    if(!error)
+    if (!error)
     {
         m_referenceFontDataCache.height =
             float(TTF_FontHeight(GetReferenceFont()));
@@ -62,18 +62,23 @@ void Font::Import(const Path &ttfFilepath)
             float(TTF_FontLineSkip(GetReferenceFont()));
 
         unsigned int c = 0;
-        while(c <= 255)
+        while (c <= 255)
         {
             int minx, maxx, miny, maxy, advance;
-            TTF_GlyphMetrics(GetReferenceFont(), SCAST<unsigned char>(c), &minx,
-                             &maxx, &miny, &maxy, &advance);
+            TTF_GlyphMetrics(GetReferenceFont(),
+                             SCAST<unsigned char>(c),
+                             &minx,
+                             &maxx,
+                             &miny,
+                             &maxy,
+                             &advance);
 
             GlyphMetrics cm;
             cm.size = Vector2((maxx - minx), (maxy - miny));
             cm.bearing = Vector2(minx, maxy);
             cm.advance = float(advance);
 
-            if(c == ' ')
+            if (c == ' ')
             {
                 cm.size =
                     Vector2(cm.advance, m_referenceFontDataCache.lineSkip);
@@ -113,7 +118,7 @@ void Font::ClearTTFError()
 bool Font::CatchTTFError()
 {
     const char *err = TTF_GetError();
-    if(strcmp(err, "") != 0)
+    if (strcmp(err, "") != 0)
     {
         Debug_Error("TTF Error: " << err);
         return true;
@@ -134,21 +139,20 @@ Vector2 Font::ScaleMagnitude(int fontSize, const Vector2 &magnitude)
 
 Texture2D *Font::GetFontAtlas(int fontSize) const
 {
-    if(!HasFontSizeLoaded(fontSize))
+    if (!HasFontSizeLoaded(fontSize))
     {
         // Create atlas
         Array<AARecti> charRects;
         RH<Texture2D> atlasTex = Resources::Create<Texture2D>();
-        String chars =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "0123456789.,-;:_?!+*#<>[]{}@$%&=/\\()|\"'";
+        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                       "0123456789.,-;:_?!+*#<>[]{}@$%&=/\\()|\"'";
 
-        FontSheetCreator::LoadAtlasTexture(GetTTFFont(fontSize), atlasTex.Get(),
-                                           chars, &charRects, 1);
+        FontSheetCreator::LoadAtlasTexture(
+            GetTTFFont(fontSize), atlasTex.Get(), chars, &charRects, 1);
 
         m_cachedAtlas[fontSize] = atlasTex;
         m_cachedAtlasChars[fontSize] = chars;
-        for(uint i = 0; i < chars.Size() && i < charRects.Size(); ++i)
+        for (uint i = 0; i < chars.Size() && i < charRects.Size(); ++i)
         {
             m_cachedAtlasCharRects[fontSize].Add(chars[i], charRects[i]);
         }
@@ -162,11 +166,11 @@ Texture2D *Font::GetFontAtlas(int fontSize) const
 Font::GlyphMetrics Font::GetCharMetrics(int fontSize, char c) const
 {
     Font::GlyphMetrics cm;
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return cm;
     }
-    if(!m_referenceFontDataCache.charMetrics.ContainsKey(c))
+    if (!m_referenceFontDataCache.charMetrics.ContainsKey(c))
     {
         return cm;
     }
@@ -182,7 +186,7 @@ Font::GlyphMetrics Font::GetCharMetrics(int fontSize, char c) const
 Vector2 Font::GetCharMaxUv(int fontSize, char c) const
 {
     ASSERT(HasFontSizeLoaded(fontSize));
-    if(m_cachedAtlasCharRects.Get(fontSize).ContainsKey(c))
+    if (m_cachedAtlasCharRects.Get(fontSize).ContainsKey(c))
     {
         return Vector2(m_cachedAtlasCharRects.Get(fontSize).Get(c).GetMax()) /
                Vector2(m_cachedAtlas.Get(fontSize).Get()->GetSize());
@@ -195,7 +199,7 @@ Vector2 Font::GetCharMaxUv(int fontSize, char c) const
 Vector2 Font::GetCharMinUv(int fontSize, char c) const
 {
     ASSERT(HasFontSizeLoaded(fontSize));
-    if(m_cachedAtlasCharRects.Get(fontSize).ContainsKey(c))
+    if (m_cachedAtlasCharRects.Get(fontSize).ContainsKey(c))
     {
         return Vector2(m_cachedAtlasCharRects.Get(fontSize).Get(c).GetMin()) /
                Vector2(m_cachedAtlas.Get(fontSize).Get()->GetSize());
@@ -219,7 +223,7 @@ float Font::GetKerning(int fontSize, char leftChar, char rightChar) const
 
 float Font::GetLineSkip(int fontSize) const
 {
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return 0.0f;
     }
@@ -228,7 +232,7 @@ float Font::GetLineSkip(int fontSize) const
 
 float Font::GetFontAscent(int fontSize) const
 {
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return 0.0f;
     }
@@ -237,7 +241,7 @@ float Font::GetFontAscent(int fontSize) const
 
 float Font::GetFontDescent(int fontSize) const
 {
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return 0.0f;
     }
@@ -246,7 +250,7 @@ float Font::GetFontDescent(int fontSize) const
 
 float Font::GetFontHeight(int fontSize) const
 {
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return 0.0f;
     }
@@ -255,7 +259,7 @@ float Font::GetFontHeight(int fontSize) const
 
 Vector2i Font::GetAtlasCharRectSize(int fontSize, char c) const
 {
-    if(!GetReferenceFont())
+    if (!GetReferenceFont())
     {
         return Vector2i::Zero;
     }
@@ -276,7 +280,7 @@ TTF_Font *Font::GetReferenceFont() const
 
 TTF_Font *Font::GetTTFFont(int fontSize) const
 {
-    if(!m_openFonts.ContainsKey(fontSize))
+    if (!m_openFonts.ContainsKey(fontSize))
     {
         ClearTTFError();
         TTF_Font *font =
@@ -291,7 +295,7 @@ TTF_Font *Font::GetTTFFont(int fontSize) const
 
 void Font::Free()
 {
-    for(const auto &it : m_openFonts)
+    for (const auto &it : m_openFonts)
     {
         ClearTTFError();
         TTF_CloseFont(it.second);

@@ -33,7 +33,8 @@ void WaterRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    GL::Render(p_planeMesh.Get()->GetVAO(), GL::Primitive::TRIANGLES,
+    GL::Render(p_planeMesh.Get()->GetVAO(),
+               GL::Primitive::TRIANGLES,
                p_planeMesh.Get()->GetNumVerticesIds());
 }
 

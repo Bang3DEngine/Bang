@@ -18,7 +18,7 @@ DialogWindow::~DialogWindow()
 void DialogWindow::Create(uint flags)
 {
     uint newFlags = flags;
-    if(!m_resizable)
+    if (!m_resizable)
     {
         newFlags &= ~SDL_WINDOW_RESIZABLE;
     }
@@ -27,7 +27,7 @@ void DialogWindow::Create(uint flags)
 
 void DialogWindow::CenterInParent()
 {
-    if(GetParentWindow())
+    if (GetParentWindow())
     {
         Vector2i centeredPos = GetParentWindow()->GetPosition() +
                                GetParentWindow()->GetSize() / 2 - GetSize() / 2;

@@ -34,7 +34,7 @@ void UICheckBox::OnUpdate()
 
 void UICheckBox::SetSize(int size)
 {
-    if(size != GetSize())
+    if (size != GetSize())
     {
         constexpr int CheckBoxPaddings = 2;
         m_size = size;
@@ -51,7 +51,7 @@ void UICheckBox::SetSize(int size)
 
 void UICheckBox::SetChecked(bool checked)
 {
-    if(checked != IsChecked())
+    if (checked != IsChecked())
     {
         m_isChecked = checked;
 
@@ -93,7 +93,7 @@ UIFocusable *UICheckBox::GetFocusable() const
 
 UIEventResult UICheckBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch(event.type)
+    switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
             GameObjectFactory::MakeBorderFocused(p_border);
@@ -119,7 +119,7 @@ UIEventResult UICheckBox::OnUIEvent(UIFocusable *, const UIEvent &event)
             break;
 
         case UIEvent::Type::KEY_DOWN:
-            switch(event.key.key)
+            switch (event.key.key)
             {
                 case Key::SPACE:
                 case Key::ENTER:

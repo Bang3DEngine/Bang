@@ -33,7 +33,7 @@ UIButtonBase::~UIButtonBase()
 
 void UIButtonBase::ClickBase()
 {
-    if(!IsBlocked())
+    if (!IsBlocked())
     {
         Click();
     }
@@ -42,7 +42,7 @@ void UIButtonBase::ClickBase()
 
 void UIButtonBase::SetBlocked(bool blocked)
 {
-    if(blocked != IsBlocked())
+    if (blocked != IsBlocked())
     {
         m_isBlocked = blocked;
         GetFocusable()->SetConsiderForTabbing(!IsBlocked());
@@ -120,7 +120,7 @@ UIDirLayout *UIButtonBase::GetDirLayout() const
 
 void UIButtonBase::ChangeAspectToIdle()
 {
-    if(GetBackground() && GetText())
+    if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(Color::White.WithValue(1.2f));
         GetText()->SetTextColor(Color::Black);
@@ -130,7 +130,7 @@ void UIButtonBase::ChangeAspectToIdle()
 
 void UIButtonBase::ChangeAspectToOver()
 {
-    if(GetBackground() && GetText())
+    if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetOverColor());
         GetText()->SetTextColor(Color::Black);
@@ -140,7 +140,7 @@ void UIButtonBase::ChangeAspectToOver()
 
 void UIButtonBase::ChangeAspectToPressed()
 {
-    if(GetBackground() && GetText())
+    if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetSelectedColor());
         GetText()->SetTextColor(Color::Black);
@@ -150,7 +150,7 @@ void UIButtonBase::ChangeAspectToPressed()
 
 void UIButtonBase::ChangeAspectToBlocked()
 {
-    if(GetBackground() && GetText())
+    if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetInputTextBlockedBackgroundColor());
         GetText()->SetTextColor(Color::DarkGray);
@@ -160,10 +160,10 @@ void UIButtonBase::ChangeAspectToBlocked()
 
 UIEventResult UIButtonBase::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch(event.type)
+    switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            if(!IsBlocked())
+            if (!IsBlocked())
             {
                 GameObjectFactory::MakeBorderFocused(p_border);
             }
@@ -178,12 +178,12 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable *, const UIEvent &event)
         default: break;
     }
 
-    if(!IsBlocked())
+    if (!IsBlocked())
     {
-        switch(event.type)
+        switch (event.type)
         {
             case UIEvent::Type::MOUSE_CLICK_DOWN:
-                if(event.mouse.button == MouseButton::LEFT && !IsBlocked())
+                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
                     UpdateAspect();
                     return UIEventResult::INTERCEPT;
@@ -191,7 +191,7 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable *, const UIEvent &event)
                 break;
 
             case UIEvent::Type::MOUSE_CLICK_FULL:
-                if(event.mouse.button == MouseButton::LEFT)
+                if (event.mouse.button == MouseButton::LEFT)
                 {
                     ClickBase();
                     return UIEventResult::INTERCEPT;
@@ -208,7 +208,7 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable *, const UIEvent &event)
                 break;
 
             case UIEvent::Type::KEY_DOWN:
-                switch(event.key.key)
+                switch (event.key.key)
                 {
                     case Key::SPACE:
                     case Key::ENTER:
@@ -279,7 +279,7 @@ UIButtonBase *UIButtonBase::CreateInto(
 
 void UIButtonBase::CallClickCallback()
 {
-    for(auto clickedCallback : m_clickedCallbacks)
+    for (auto clickedCallback : m_clickedCallbacks)
     {
         clickedCallback();
     }

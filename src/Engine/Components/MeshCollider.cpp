@@ -47,7 +47,7 @@ MeshCollider::~MeshCollider()
 
 void MeshCollider::SetMesh(Mesh *mesh)
 {
-    if(mesh != GetMesh())
+    if (mesh != GetMesh())
     {
         p_mesh.Set(mesh);
         UpdatePxShape();
@@ -71,7 +71,7 @@ void MeshCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Mesh"))
+    if (metaNode.Contains("Mesh"))
     {
         SetMesh(Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh")).Get());
     }
@@ -95,17 +95,19 @@ bool MeshCollider::CanBeSimulationShape()
 
 physx::PxShape *MeshCollider::CreatePxShape() const
 {
-    if(PxRigidDynamic *pxRD = GetPxRigidDynamic())
+    if (PxRigidDynamic *pxRD = GetPxRigidDynamic())
     {
         PxMeshScale scale(PxVec3(1, 1, 1), PxQuat(PxIdentity));
         PxTriangleMesh *pxTriMesh =
             Physics::GetInstance()->CreatePxTriangleMesh(GetMesh());
         PxTriangleMeshGeometry triMeshGeom(pxTriMesh, scale);
         PxShape *shape = nullptr;
-        if(triMeshGeom.isValid())
+        if (triMeshGeom.isValid())
         {
             shape = PxRigidActorExt::createExclusiveShape(
-                *pxRD, triMeshGeom, *Physics::GetDefaultPxMaterial(),
+                *pxRD,
+                triMeshGeom,
+                *Physics::GetDefaultPxMaterial(),
                 physx::PxShapeFlag::eSCENE_QUERY_SHAPE);
         }
         return shape;
@@ -120,7 +122,7 @@ void MeshCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if(GetPxShape())
+    if (GetPxShape())
     {
     }
 }

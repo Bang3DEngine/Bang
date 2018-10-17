@@ -58,12 +58,12 @@ ParticleSystem::ParticleSystem()
 
 ParticleSystem::~ParticleSystem()
 {
-    if(p_particlesVAO)
+    if (p_particlesVAO)
     {
         delete p_particlesVAO;
     }
 
-    if(p_particleDataVBO)
+    if (p_particleDataVBO)
     {
         delete p_particleDataVBO;
     }
@@ -73,7 +73,7 @@ void ParticleSystem::OnStart()
 {
     Component::OnStart();
 
-    if(m_emitOnStart)
+    if (m_emitOnStart)
     {
         m_isEmitting = true;
 
@@ -89,7 +89,7 @@ void ParticleSystem::OnUpdate()
 {
     Component::OnUpdate();
 
-    if(m_isEmitting)
+    if (m_isEmitting)
     {
         Physics *ph = Physics::GetInstance();
         m_particlesParameters.gravity = ph->GetGravity();
@@ -100,7 +100,9 @@ void ParticleSystem::OnUpdate()
         Time fixedDeltaTime =
             Time::Seconds(1.0f / Math::Max(m_stepsPerSecond, 1u));
         Particle::FixedStepAll(
-            &m_particlesData, Time::GetDeltaTime(), fixedDeltaTime,
+            &m_particlesData,
+            Time::GetDeltaTime(),
+            fixedDeltaTime,
             m_particlesParameters,
             [this](uint i, const Particle::Parameters &params) {
                 InitParticle(i, params.gravity);
@@ -109,7 +111,7 @@ void ParticleSystem::OnUpdate()
         // AABBox
         {
             Array<Vector3> particlePositions;
-            for(uint i = 0; i < GetNumParticles(); ++i)
+            for (uint i = 0; i < GetNumParticles(); ++i)
             {
                 particlePositions.PushBack(m_particlesData[i].position);
             }
@@ -123,7 +125,7 @@ void ParticleSystem::OnUpdate()
 void ParticleSystem::Reset()
 {
     const Vector3 &gravity = Physics::GetInstance()->GetGravity();
-    for(uint i = 0; i < GetNumParticles(); ++i)
+    for (uint i = 0; i < GetNumParticles(); ++i)
     {
         InitParticle(i, gravity);
     }
@@ -132,7 +134,7 @@ void ParticleSystem::Reset()
 
 void ParticleSystem::SetMesh(Mesh *mesh)
 {
-    if(m_particleMesh.Get() != mesh)
+    if (m_particleMesh.Get() != mesh)
     {
         m_particleMesh.Set(mesh);
         RecreateVAOForMesh();
@@ -141,7 +143,7 @@ void ParticleSystem::SetMesh(Mesh *mesh)
 
 void ParticleSystem::SetTexture(Texture2D *texture)
 {
-    if(texture != GetTexture())
+    if (texture != GetTexture())
     {
         p_texture.Set(texture);
         GetMaterial()->SetAlbedoTexture(GetTexture());
@@ -150,7 +152,7 @@ void ParticleSystem::SetTexture(Texture2D *texture)
 
 void ParticleSystem::SetAnimationSheetSize(const Vector2i &animationSheetSize)
 {
-    if(animationSheetSize != GetAnimationSheetSize())
+    if (animationSheetSize != GetAnimationSheetSize())
     {
         m_particlesParameters.animationSheetSize = animationSheetSize;
     }
@@ -158,7 +160,7 @@ void ParticleSystem::SetAnimationSheetSize(const Vector2i &animationSheetSize)
 
 void ParticleSystem::SetAnimationSpeed(float animationSpeed)
 {
-    if(animationSpeed != GetAnimationSpeed())
+    if (animationSpeed != GetAnimationSpeed())
     {
         m_particlesParameters.animationSpeed = animationSpeed;
     }
@@ -166,7 +168,7 @@ void ParticleSystem::SetAnimationSpeed(float animationSpeed)
 
 void ParticleSystem::SetLifeTime(const ComplexRandom &lifeTime)
 {
-    if(lifeTime != GetLifeTime())
+    if (lifeTime != GetLifeTime())
     {
         m_lifeTime = lifeTime;
     }
@@ -174,7 +176,7 @@ void ParticleSystem::SetLifeTime(const ComplexRandom &lifeTime)
 
 void ParticleSystem::SetStartTime(const ComplexRandom &startTime)
 {
-    if(startTime != GetStartTime())
+    if (startTime != GetStartTime())
     {
         m_startTime = startTime;
     }
@@ -182,7 +184,7 @@ void ParticleSystem::SetStartTime(const ComplexRandom &startTime)
 
 void ParticleSystem::SetStartSize(const ComplexRandom &startSize)
 {
-    if(startSize != GetStartSize())
+    if (startSize != GetStartSize())
     {
         m_startSize = startSize;
     }
@@ -190,7 +192,7 @@ void ParticleSystem::SetStartSize(const ComplexRandom &startSize)
 
 void ParticleSystem::SetBillboard(bool billboard)
 {
-    if(billboard != GetBillboard())
+    if (billboard != GetBillboard())
     {
         m_billboard = billboard;
     }
@@ -198,7 +200,7 @@ void ParticleSystem::SetBillboard(bool billboard)
 
 void ParticleSystem::SetBounciness(float bounciness)
 {
-    if(bounciness != GetBounciness())
+    if (bounciness != GetBounciness())
     {
         m_particlesParameters.bounciness = bounciness;
     }
@@ -206,7 +208,7 @@ void ParticleSystem::SetBounciness(float bounciness)
 
 void ParticleSystem::SetGravityMultiplier(float gravityMultiplier)
 {
-    if(gravityMultiplier != GetGravityMultiplier())
+    if (gravityMultiplier != GetGravityMultiplier())
     {
         m_gravityMultiplier = gravityMultiplier;
     }
@@ -215,7 +217,7 @@ void ParticleSystem::SetGravityMultiplier(float gravityMultiplier)
 void ParticleSystem::SetInitialVelocityMultiplier(
     float initialVelocityMultiplier)
 {
-    if(initialVelocityMultiplier != GetInitialVelocityMultiplier())
+    if (initialVelocityMultiplier != GetInitialVelocityMultiplier())
     {
         m_initialVelocityMultiplier = initialVelocityMultiplier;
     }
@@ -223,7 +225,7 @@ void ParticleSystem::SetInitialVelocityMultiplier(
 
 void ParticleSystem::SetGenerationShapeConeFOVRads(float coneFOVRads)
 {
-    if(coneFOVRads != GetGenerationShapeConeFOVRads())
+    if (coneFOVRads != GetGenerationShapeConeFOVRads())
     {
         m_generationShapeConeFOVRads = coneFOVRads;
     }
@@ -231,7 +233,7 @@ void ParticleSystem::SetGenerationShapeConeFOVRads(float coneFOVRads)
 
 void ParticleSystem::SetStartColor(const Color &startColor)
 {
-    if(startColor != GetStartColor())
+    if (startColor != GetStartColor())
     {
         m_startColor = startColor;
     }
@@ -239,7 +241,7 @@ void ParticleSystem::SetStartColor(const Color &startColor)
 
 void ParticleSystem::SetEndColor(const Color &endColor)
 {
-    if(endColor != GetEndColor())
+    if (endColor != GetEndColor())
     {
         m_endColor = endColor;
     }
@@ -247,7 +249,7 @@ void ParticleSystem::SetEndColor(const Color &endColor)
 
 void ParticleSystem::SetComputeCollisions(bool computeCollisions)
 {
-    if(computeCollisions != GetComputeCollisions())
+    if (computeCollisions != GetComputeCollisions())
     {
         m_particlesParameters.computeCollisions = computeCollisions;
     }
@@ -256,12 +258,12 @@ void ParticleSystem::SetComputeCollisions(bool computeCollisions)
 void ParticleSystem::SetParticleRenderMode(
     ParticleRenderMode particleRenderMode)
 {
-    if(particleRenderMode != GetParticleRenderMode())
+    if (particleRenderMode != GetParticleRenderMode())
     {
         m_particleRenderMode = particleRenderMode;
 
         Material *newMaterial = nullptr;
-        switch(GetParticleRenderMode())
+        switch (GetParticleRenderMode())
         {
             case ParticleRenderMode::ADDITIVE:
                 newMaterial = MaterialFactory::GetParticlesAdditive().Get();
@@ -279,7 +281,7 @@ void ParticleSystem::SetParticleRenderMode(
 
 void ParticleSystem::SetSimulationSpace(ParticleSimulationSpace simulationSpace)
 {
-    if(simulationSpace != GetSimulationSpace())
+    if (simulationSpace != GetSimulationSpace())
     {
         m_simulationSpace = simulationSpace;
     }
@@ -287,7 +289,7 @@ void ParticleSystem::SetSimulationSpace(ParticleSimulationSpace simulationSpace)
 
 void ParticleSystem::SetNumParticles(uint numParticles)
 {
-    if(numParticles != GetNumParticles())
+    if (numParticles != GetNumParticles())
     {
         uint prevNumParticles = GetNumParticles();
         m_numParticles = numParticles;
@@ -299,7 +301,7 @@ void ParticleSystem::SetNumParticles(uint numParticles)
         m_particlesData.Resize(GetNumParticles());
 
         // Initialize values
-        for(uint i = prevNumParticles; i < GetNumParticles(); ++i)
+        for (uint i = prevNumParticles; i < GetNumParticles(); ++i)
         {
             InitParticle(i, gravity);
         }
@@ -314,7 +316,7 @@ void ParticleSystem::SetNumParticles(uint numParticles)
 
 void ParticleSystem::SetGenerationShape(ParticleGenerationShape shape)
 {
-    if(shape != GetGenerationShape())
+    if (shape != GetGenerationShape())
     {
         m_generationShape = shape;
     }
@@ -322,7 +324,7 @@ void ParticleSystem::SetGenerationShape(ParticleGenerationShape shape)
 
 void ParticleSystem::SetGenerationShapeBoxSize(const Vector3 &boxSize)
 {
-    if(boxSize != GetGenerationShapeBoxSize())
+    if (boxSize != GetGenerationShapeBoxSize())
     {
         m_generationShapeBoxSize = boxSize;
     }
@@ -330,7 +332,7 @@ void ParticleSystem::SetGenerationShapeBoxSize(const Vector3 &boxSize)
 
 void ParticleSystem::SetPhysicsStepMode(Particle::PhysicsStepMode stepMode)
 {
-    if(stepMode != GetPhysicsStepMode())
+    if (stepMode != GetPhysicsStepMode())
     {
         m_particlesParameters.physicsStepMode = stepMode;
     }
@@ -460,9 +462,9 @@ void ParticleSystem::OnRender()
 {
     Renderer::OnRender();
 
-    if(m_isEmitting)
+    if (m_isEmitting)
     {
-        switch(GetParticleRenderMode())
+        switch (GetParticleRenderMode())
         {
             case ParticleRenderMode::ADDITIVE:
                 GL::Push(GL::Pushable::DEPTH_STATES);
@@ -476,11 +478,12 @@ void ParticleSystem::OnRender()
             default: break;
         }
 
-        GL::RenderInstanced(p_particlesVAO, GL::Primitive::TRIANGLES,
+        GL::RenderInstanced(p_particlesVAO,
+                            GL::Primitive::TRIANGLES,
                             m_particleMesh.Get()->GetNumVerticesIds(),
                             m_numParticles);
 
-        switch(GetParticleRenderMode())
+        switch (GetParticleRenderMode())
         {
             case ParticleRenderMode::ADDITIVE:
                 GL::Pop(GL::Pushable::BLEND_STATES);
@@ -498,20 +501,20 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
 
     Transform *tr = GetGameObject()->GetTransform();
     Matrix4 modelMat = Matrix4::Identity;
-    if(GetBillboard())
+    if (GetBillboard())
     {
         Vector3 trPos = Vector3::Zero;
         Vector3 trScale = Vector3::One;
         Quaternion rot = Quaternion::Identity;
-        if(GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
+        if (GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
         {
             trPos = tr->GetPosition();
             trScale = tr->GetScale();
         }
 
-        if(Camera *cam = Camera::GetActive())
+        if (Camera *cam = Camera::GetActive())
         {
-            if(Transform *camTR = cam->GetGameObject()->GetTransform())
+            if (Transform *camTR = cam->GetGameObject()->GetTransform())
             {
                 rot = camTR->GetRotation();
             }
@@ -522,7 +525,7 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
     }
     else
     {
-        if(GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
+        if (GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
         {
             modelMat = tr->GetLocalToWorldMatrix();
         }
@@ -564,13 +567,13 @@ bool ParticleSystem::IsParticleActive(uint i) const
 
 void ParticleSystem::RecreateVAOForMesh()
 {
-    if(p_particlesVAO)
+    if (p_particlesVAO)
     {
         delete p_particlesVAO;
         p_particlesVAO = nullptr;
     }
 
-    if(GetMesh())
+    if (GetMesh())
     {
         p_particlesVAO = new VAO();
 
@@ -585,18 +588,27 @@ void ParticleSystem::RecreateVAOForMesh()
 
             uint meshVBOStride = GetMesh()->GetVBOStride();
 
-            p_particlesVAO->SetVBO(
-                particleMeshPositionsVBO, Mesh::DefaultPositionsVBOLocation, 3,
-                GL::VertexAttribDataType::FLOAT, false, meshVBOStride,
-                GetMesh()->GetVBOPositionsOffset());
-            p_particlesVAO->SetVBO(
-                particleMeshNormalsVBO, Mesh::DefaultNormalsVBOLocation, 3,
-                GL::VertexAttribDataType::FLOAT, true, meshVBOStride,
-                GetMesh()->GetVBONormalsOffset());
+            p_particlesVAO->SetVBO(particleMeshPositionsVBO,
+                                   Mesh::DefaultPositionsVBOLocation,
+                                   3,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBOPositionsOffset());
+            p_particlesVAO->SetVBO(particleMeshNormalsVBO,
+                                   Mesh::DefaultNormalsVBOLocation,
+                                   3,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   true,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBONormalsOffset());
             p_particlesVAO->SetVBO(particleMeshUvsVBO,
-                                   Mesh::DefaultUvsVBOLocation, 2,
-                                   GL::VertexAttribDataType::FLOAT, false,
-                                   meshVBOStride, GetMesh()->GetVBOUvsOffset());
+                                   Mesh::DefaultUvsVBOLocation,
+                                   2,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   meshVBOStride,
+                                   GetMesh()->GetVBOUvsOffset());
             p_particlesVAO->SetIBO(meshVAO->GetIBO());
         }
 
@@ -617,24 +629,40 @@ void ParticleSystem::RecreateVAOForMesh()
                 particlesColorBytesSize + particlesAnimationFrameBytesSize;
 
             // Particle specific attributes
-            p_particlesVAO->SetVBO(
-                p_particleDataVBO, 3, 3, GL::VertexAttribDataType::FLOAT, false,
-                particlesDataVBOStride, particlesPosVBOOffset);
+            p_particlesVAO->SetVBO(p_particleDataVBO,
+                                   3,
+                                   3,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesPosVBOOffset);
             p_particlesVAO->SetVertexAttribDivisor(3, 1);
 
-            p_particlesVAO->SetVBO(
-                p_particleDataVBO, 4, 1, GL::VertexAttribDataType::FLOAT, false,
-                particlesDataVBOStride, particlesSizeVBOOffset);
+            p_particlesVAO->SetVBO(p_particleDataVBO,
+                                   4,
+                                   1,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesSizeVBOOffset);
             p_particlesVAO->SetVertexAttribDivisor(4, 1);
 
-            p_particlesVAO->SetVBO(
-                p_particleDataVBO, 5, 4, GL::VertexAttribDataType::FLOAT, false,
-                particlesDataVBOStride, particlesColorVBOOffset);
+            p_particlesVAO->SetVBO(p_particleDataVBO,
+                                   5,
+                                   4,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesColorVBOOffset);
             p_particlesVAO->SetVertexAttribDivisor(5, 1);
 
-            p_particlesVAO->SetVBO(
-                p_particleDataVBO, 6, 1, GL::VertexAttribDataType::FLOAT, false,
-                particlesDataVBOStride, particlesAnimationFrameVBOOffset);
+            p_particlesVAO->SetVBO(p_particleDataVBO,
+                                   6,
+                                   1,
+                                   GL::VertexAttribDataType::FLOAT,
+                                   false,
+                                   particlesDataVBOStride,
+                                   particlesAnimationFrameVBOOffset);
             p_particlesVAO->SetVertexAttribDivisor(6, 1);
         }
     }
@@ -643,7 +671,7 @@ void ParticleSystem::RecreateVAOForMesh()
 Vector3 ParticleSystem::GetParticleInitialPosition() const
 {
     Vector3 particleInitialPosition = Vector3::Zero;
-    switch(GetGenerationShape())
+    switch (GetGenerationShape())
     {
         case ParticleGenerationShape::BOX:
             particleInitialPosition = Random::GetRandomVector3() *
@@ -665,7 +693,7 @@ Vector3 ParticleSystem::GetParticleInitialPosition() const
 Vector3 ParticleSystem::GetParticleInitialVelocity() const
 {
     Vector3 particleInitialVelocity = Vector3::Zero;
-    switch(GetGenerationShape())
+    switch (GetGenerationShape())
     {
         case ParticleGenerationShape::BOX:
             particleInitialVelocity = Vector3::Forward;
@@ -676,7 +704,8 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
             float hFovR = GetGenerationShapeConeFOVRads() * 0.5f;
             particleInitialVelocity =
                 Vector3((Math::Tan(Random::GetRange(-hFovR, hFovR))),
-                        (Math::Tan(Random::GetRange(-hFovR, hFovR))), -1.0f)
+                        (Math::Tan(Random::GetRange(-hFovR, hFovR))),
+                        -1.0f)
                     .Normalized();
         }
         break;
@@ -693,10 +722,10 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
 
 void ParticleSystem::UpdateDataVBO()
 {
-    for(uint i = 0; i < GetNumParticles(); ++i)
+    for (uint i = 0; i < GetNumParticles(); ++i)
     {
         const Particle::Data &pData = m_particlesData[i];
-        if(IsParticleActive(i))
+        if (IsParticleActive(i))
         {
             m_particlesVBOData[i].position = pData.position;
             m_particlesVBOData[i].size = pData.size;
@@ -714,7 +743,8 @@ void ParticleSystem::UpdateDataVBO()
 
     p_particleDataVBO->Update(
         m_particlesVBOData.Data(),
-        m_particlesVBOData.Size() * sizeof(ParticleVBOData), 0);
+        m_particlesVBOData.Size() * sizeof(ParticleVBOData),
+        0);
 }
 
 void ParticleSystem::CloneInto(ICloneable *clone) const
@@ -749,117 +779,117 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
 {
     Renderer::ImportMeta(metaNode);
 
-    if(metaNode.Contains("Mesh"))
+    if (metaNode.Contains("Mesh"))
     {
         GUID meshGUID = metaNode.Get<GUID>("Mesh");
         RH<Mesh> mesh = Resources::Load<Mesh>(meshGUID);
         SetMesh(mesh.Get());
     }
 
-    if(metaNode.Contains("LifeTime"))
+    if (metaNode.Contains("LifeTime"))
     {
         SetLifeTime(metaNode.Get<ComplexRandom>("LifeTime"));
     }
 
-    if(metaNode.Contains("StartTime"))
+    if (metaNode.Contains("StartTime"))
     {
         SetStartTime(metaNode.Get<ComplexRandom>("StartTime"));
     }
 
-    if(metaNode.Contains("StartSize"))
+    if (metaNode.Contains("StartSize"))
     {
         SetStartSize(metaNode.Get<ComplexRandom>("StartSize"));
     }
 
-    if(metaNode.Contains("Texture"))
+    if (metaNode.Contains("Texture"))
     {
         RH<Texture2D> tex =
             Resources::Load<Texture2D>(metaNode.Get<GUID>("Texture"));
         SetTexture(tex.Get());
     }
 
-    if(metaNode.Contains("Billboard"))
+    if (metaNode.Contains("Billboard"))
     {
         SetBillboard(metaNode.Get<bool>("Billboard"));
     }
 
-    if(metaNode.Contains("ParticleRenderMode"))
+    if (metaNode.Contains("ParticleRenderMode"))
     {
         SetParticleRenderMode(
             metaNode.Get<ParticleRenderMode>("ParticleRenderMode"));
     }
 
-    if(metaNode.Contains("AnimationSpeed"))
+    if (metaNode.Contains("AnimationSpeed"))
     {
         SetAnimationSpeed(metaNode.Get<float>("AnimationSpeed"));
     }
 
-    if(metaNode.Contains("AnimationSheetSize"))
+    if (metaNode.Contains("AnimationSheetSize"))
     {
         SetAnimationSheetSize(metaNode.Get<Vector2i>("AnimationSheetSize"));
     }
 
-    if(metaNode.Contains("StartColor"))
+    if (metaNode.Contains("StartColor"))
     {
         SetStartColor(metaNode.Get<Color>("StartColor"));
     }
 
-    if(metaNode.Contains("EndColor"))
+    if (metaNode.Contains("EndColor"))
     {
         SetEndColor(metaNode.Get<Color>("EndColor"));
     }
 
-    if(metaNode.Contains("Bounciness"))
+    if (metaNode.Contains("Bounciness"))
     {
         SetBounciness(metaNode.Get<float>("Bounciness"));
     }
 
-    if(metaNode.Contains("NumParticles"))
+    if (metaNode.Contains("NumParticles"))
     {
         SetNumParticles(metaNode.Get<uint>("NumParticles"));
     }
 
-    if(metaNode.Contains("GenerationShape"))
+    if (metaNode.Contains("GenerationShape"))
     {
         SetGenerationShape(
             metaNode.Get<ParticleGenerationShape>("GenerationShape"));
     }
 
-    if(metaNode.Contains("GenerationShapeBoxSize"))
+    if (metaNode.Contains("GenerationShapeBoxSize"))
     {
         SetGenerationShapeBoxSize(
             metaNode.Get<Vector3>("GenerationShapeBoxSize"));
     }
 
-    if(metaNode.Contains("GenerationShapeConeFOV"))
+    if (metaNode.Contains("GenerationShapeConeFOV"))
     {
         SetGenerationShapeConeFOVRads(
             metaNode.Get<float>("GenerationShapeConeFOV"));
     }
 
-    if(metaNode.Contains("SimulationSpace"))
+    if (metaNode.Contains("SimulationSpace"))
     {
         SetSimulationSpace(
             metaNode.Get<ParticleSimulationSpace>("SimulationSpace"));
     }
 
-    if(metaNode.Contains("PhysicsStepMode"))
+    if (metaNode.Contains("PhysicsStepMode"))
     {
         SetPhysicsStepMode(
             metaNode.Get<Particle::PhysicsStepMode>("PhysicsStepMode"));
     }
 
-    if(metaNode.Contains("ComputeCollisions"))
+    if (metaNode.Contains("ComputeCollisions"))
     {
         SetComputeCollisions(metaNode.Get<bool>("ComputeCollisions"));
     }
 
-    if(metaNode.Contains("GravityMultiplier"))
+    if (metaNode.Contains("GravityMultiplier"))
     {
         SetGravityMultiplier(metaNode.Get<float>("GravityMultiplier"));
     }
 
-    if(metaNode.Contains("InitialVelocityMultiplier"))
+    if (metaNode.Contains("InitialVelocityMultiplier"))
     {
         SetInitialVelocityMultiplier(
             metaNode.Get<float>("InitialVelocityMultiplier"));

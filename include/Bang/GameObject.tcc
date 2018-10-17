@@ -25,11 +25,11 @@ T *GameObject::AddComponent(int index)
 template <class T>
 T *GameObject::GetComponent() const
 {
-    for(Component *comp : m_components)
+    for (Component *comp : m_components)
     {
-        if(comp)
+        if (comp)
         {
-            if(T *tcomp = FastDynamicCast<T *>(comp))
+            if (T *tcomp = FastDynamicCast<T *>(comp))
             {
                 return tcomp;
             }
@@ -41,9 +41,9 @@ T *GameObject::GetComponent() const
 template <class T>
 T *GameObject::GetComponentInParent() const
 {
-    if(GameObject *parent = GetParent())
+    if (GameObject *parent = GetParent())
     {
-        if(T *comp = parent->GetComponent<T>())
+        if (T *comp = parent->GetComponent<T>())
         {
             return comp;
         }
@@ -54,7 +54,7 @@ T *GameObject::GetComponentInParent() const
 template <class T>
 T *GameObject::GetComponentInParentAndThis() const
 {
-    if(T *comp = GetComponent<T>())
+    if (T *comp = GetComponent<T>())
     {
         return comp;
     }
@@ -64,7 +64,7 @@ T *GameObject::GetComponentInParentAndThis() const
 template <class T>
 T *GameObject::GetComponentInAncestors() const
 {
-    if(T *comp = GetComponentInParent<T>())
+    if (T *comp = GetComponentInParent<T>())
     {
         return comp;
     }
@@ -74,7 +74,7 @@ T *GameObject::GetComponentInAncestors() const
 template <class T>
 T *GameObject::GetComponentInAncestorsAndThis() const
 {
-    if(T *comp = GetComponent<T>())
+    if (T *comp = GetComponent<T>())
     {
         return comp;
     }
@@ -84,11 +84,11 @@ T *GameObject::GetComponentInAncestorsAndThis() const
 template <class T>
 T *GameObject::GetComponentInChildren() const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
-            if(T *comp = child->GetComponent<T>())
+            if (T *comp = child->GetComponent<T>())
             {
                 return comp;
             }
@@ -99,7 +99,7 @@ T *GameObject::GetComponentInChildren() const
 template <class T>
 T *GameObject::GetComponentInChildrenAndThis() const
 {
-    if(T *comp = GetComponent<T>())
+    if (T *comp = GetComponent<T>())
     {
         return comp;
     }
@@ -108,11 +108,11 @@ T *GameObject::GetComponentInChildrenAndThis() const
 template <class T>
 T *GameObject::GetComponentInDescendants() const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
-            if(T *comp = child->GetComponentInDescendantsAndThis<T>())
+            if (T *comp = child->GetComponentInDescendantsAndThis<T>())
             {
                 return comp;
             }
@@ -124,7 +124,7 @@ T *GameObject::GetComponentInDescendants() const
 template <class T>
 T *GameObject::GetComponentInDescendantsAndThis() const
 {
-    if(T *comp = GetComponent<T>())
+    if (T *comp = GetComponent<T>())
     {
         return comp;
     }
@@ -141,11 +141,11 @@ Array<T *> GameObject::GetComponents() const
 template <class T>
 void GameObject::GetComponents(Array<T *> *components) const
 {
-    for(Component *comp : GetComponents())
+    for (Component *comp : GetComponents())
     {
-        if(comp)
+        if (comp)
         {
-            if(T *tcomp = FastDynamicCast<T *>(comp))
+            if (T *tcomp = FastDynamicCast<T *>(comp))
             {
                 components->PushBack(tcomp);
             }
@@ -163,7 +163,7 @@ Array<T *> GameObject::GetComponentsInParent() const
 template <class T>
 void GameObject::GetComponentsInParent(Array<T *> *componentsOut) const
 {
-    if(GetParent())
+    if (GetParent())
     {
         GetParent()->GetComponents<T>(componentsOut);
     }
@@ -192,7 +192,7 @@ Array<T *> GameObject::GetComponentsInAncestors() const
 template <class T>
 void GameObject::GetComponentsInAncestors(Array<T *> *componentsOut) const
 {
-    if(GetParent())
+    if (GetParent())
     {
         GetParent()->GetComponents<T>(componentsOut);
         GetParent()->GetComponentsInAncestors<T>(componentsOut);
@@ -223,9 +223,9 @@ Array<T *> GameObject::GetComponentsInChildren() const
 template <class T>
 void GameObject::GetComponentsInChildren(Array<T *> *componentsOut) const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
             child->GetComponents<T>(componentsOut);
         }
@@ -254,9 +254,9 @@ Array<T *> GameObject::GetComponentsInDescendants() const
 template <class T>
 void GameObject::GetComponentsInDescendants(Array<T *> *componentsOut) const
 {
-    for(GameObject *child : GetChildren())
+    for (GameObject *child : GetChildren())
     {
-        if(child)
+        if (child)
         {
             child->GetComponents<T>(componentsOut);
             child->GetComponentsInDescendants<T>(componentsOut);
@@ -287,7 +287,7 @@ bool GameObject::HasComponent() const
 template <class T>
 bool CanEventBePropagated(const T &x)
 {
-    if(!x)
+    if (!x)
     {
         return false;
     }
@@ -301,9 +301,9 @@ void GameObject::PropagateToArray(TReturn TListenerInnerT::*func,
                                   const Array<TListener *> &list,
                                   const Args &... args)
 {
-    for(TListener *listener : list)
+    for (TListener *listener : list)
     {
-        if(CanEventBePropagated(listener) && listener->IsReceivingEvents())
+        if (CanEventBePropagated(listener) && listener->IsReceivingEvents())
         {
             (listener->*func)(args...);
         }

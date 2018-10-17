@@ -19,20 +19,20 @@ class Vector3G;
     }                                                                          \
                                                                                \
     template <class OtherT1, class OtherT2, class OtherT3>                     \
-    explicit Vector4G(const Vector2G<OtherT1> &v, const OtherT2 &_z,           \
-                      const OtherT3 &_w)                                       \
+    explicit Vector4G(                                                         \
+        const Vector2G<OtherT1> &v, const OtherT2 &_z, const OtherT3 &_w)      \
         : x(SCAST<T>(v.x)), y(SCAST<T>(v.y)), z(SCAST<T>(_z)), w(SCAST<T>(_w)) \
     {                                                                          \
     }                                                                          \
     template <class OtherT1, class OtherT2, class OtherT3>                     \
-    explicit Vector4G(const OtherT1 &_x, const Vector2G<OtherT2> &v,           \
-                      const OtherT3 &_w)                                       \
+    explicit Vector4G(                                                         \
+        const OtherT1 &_x, const Vector2G<OtherT2> &v, const OtherT3 &_w)      \
         : x(SCAST<T>(_x)), y(SCAST<T>(v.y)), z(SCAST<T>(v.z)), w(SCAST<T>(_w)) \
     {                                                                          \
     }                                                                          \
     template <class OtherT1, class OtherT2, class OtherT3>                     \
-    explicit Vector4G(const OtherT1 &_x, const OtherT2 &_y,                    \
-                      const Vector2G<OtherT3> &v)                              \
+    explicit Vector4G(                                                         \
+        const OtherT1 &_x, const OtherT2 &_y, const Vector2G<OtherT3> &v)      \
         : x(SCAST<T>(_x)), y(SCAST<T>(_y)), z(SCAST<T>(v.z)), w(SCAST<T>(v.w)) \
     {                                                                          \
     }                                                                          \

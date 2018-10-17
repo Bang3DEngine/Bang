@@ -28,7 +28,7 @@ AudioClip::~AudioClip()
 
 void AudioClip::Import(const Path &soundFilepath)
 {
-    if(!soundFilepath.Exists() || !soundFilepath.IsFile())
+    if (!soundFilepath.Exists() || !soundFilepath.IsFile())
     {
         return;
     }
@@ -42,7 +42,7 @@ void AudioClip::Import(const Path &soundFilepath)
     SF_INFO soundInfo;
     SNDFILE *soundFile =
         sf_open(soundFilepath.GetAbsolute().ToCString(), SFM_READ, &soundInfo);
-    if(!soundFile)
+    if (!soundFile)
     {
         Debug_Error("Error loading sound file '" << soundFilepath << "'");
         return;
@@ -51,10 +51,10 @@ void AudioClip::Import(const Path &soundFilepath)
     constexpr int bufferSize = 4096;
     Array<short> buffer(bufferSize);
     Array<short> readData;
-    while(true)
+    while (true)
     {
         size_t readSize = sf_read_short(soundFile, &buffer.Front(), bufferSize);
-        if(readSize <= 0)
+        if (readSize <= 0)
         {
             break;
         }
@@ -62,13 +62,15 @@ void AudioClip::Import(const Path &soundFilepath)
     }
 
     AudioManager::ClearALErrors();
-    alBufferData(m_alBufferId, soundInfo.channels == 1 ? AL_FORMAT_MONO16
-                                                       : AL_FORMAT_STEREO16,
-                 &readData.Front(), readData.Size() * sizeof(short),
-                 soundInfo.samplerate);
+    alBufferData(
+        m_alBufferId,
+        soundInfo.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+        &readData.Front(),
+        readData.Size() * sizeof(short),
+        soundInfo.samplerate);
     bool hasError = AudioManager::CheckALError();
 
-    if(!hasError)
+    if (!hasError)
     {
         m_soundFilepath = soundFilepath;
     }
@@ -80,7 +82,7 @@ void AudioClip::Import(const Path &soundFilepath)
 
 int AudioClip::GetChannels() const
 {
-    if(!IsLoaded())
+    if (!IsLoaded())
     {
         return 0;
     }
@@ -92,7 +94,7 @@ int AudioClip::GetChannels() const
 
 int AudioClip::GetBufferSize() const
 {
-    if(!IsLoaded())
+    if (!IsLoaded())
     {
         return 0;
     }
@@ -104,7 +106,7 @@ int AudioClip::GetBufferSize() const
 
 int AudioClip::GetBitDepth() const
 {
-    if(!IsLoaded())
+    if (!IsLoaded())
     {
         return 0;
     }
@@ -116,7 +118,7 @@ int AudioClip::GetBitDepth() const
 
 int AudioClip::GetFrequency() const
 {
-    if(!IsLoaded())
+    if (!IsLoaded())
     {
         return 0;
     }
@@ -128,7 +130,7 @@ int AudioClip::GetFrequency() const
 
 float AudioClip::GetLength() const
 {
-    if(!IsLoaded())
+    if (!IsLoaded())
     {
         return 0.0f;
     }
@@ -154,7 +156,7 @@ const Path &AudioClip::GetSoundFilepath() const
 
 void AudioClip::FreeBuffer()
 {
-    if(IsLoaded())
+    if (IsLoaded())
     {
         alDeleteBuffers(1, &m_alBufferId);
         m_alBufferId = 0;

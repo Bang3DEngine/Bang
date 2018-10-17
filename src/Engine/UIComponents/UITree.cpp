@@ -58,22 +58,22 @@ void UITree::OnUpdate()
     Component::OnUpdate();
 
     // Collapse with left-right buttons
-    if(GetUIList()->SomeChildHasFocus())
+    if (GetUIList()->SomeChildHasFocus())
     {
         int collapseOnOff = 0;
-        if(Input::GetKeyDownRepeat(Key::LEFT))
+        if (Input::GetKeyDownRepeat(Key::LEFT))
         {
             collapseOnOff = -1;
         }
-        else if(Input::GetKeyDownRepeat(Key::RIGHT))
+        else if (Input::GetKeyDownRepeat(Key::RIGHT))
         {
             collapseOnOff = 1;
         }
 
-        if(collapseOnOff != 0)
+        if (collapseOnOff != 0)
         {
             GOItem *selItemCont = GetUIList()->GetSelectedItem();
-            if(selItemCont)
+            if (selItemCont)
             {
                 UITreeItemContainer *selectedItemCont =
                     DCAST<UITreeItemContainer *>(selItemCont);
@@ -85,17 +85,17 @@ void UITree::OnUpdate()
 
                 int newSelIndex = GetUIList()->GetSelectedIndex();
 
-                if((numChildren == 0 || !isCollapsed) && collapseOnOff == 1)
+                if ((numChildren == 0 || !isCollapsed) && collapseOnOff == 1)
                 {
                     ++newSelIndex;
                 }
-                else if((numChildren == 0 || isCollapsed) &&
-                        collapseOnOff == -1)
+                else if ((numChildren == 0 || isCollapsed) &&
+                         collapseOnOff == -1)
                 {
                     --newSelIndex;
                 }
 
-                if(newSelIndex == GetUIList()->GetSelectedIndex())
+                if (newSelIndex == GetUIList()->GetSelectedIndex())
                 {
                     // Normal Collapse/UnCollapse
                     GOItem *selectedItem = selectedItemCont->GetContainedItem();
@@ -104,8 +104,8 @@ void UITree::OnUpdate()
                 else
                 {
                     // "Redundant" Collapse/UnCollapse. Go Up or Down
-                    newSelIndex = Math::Clamp(newSelIndex, 0,
-                                              GetUIList()->GetNumItems() - 1);
+                    newSelIndex = Math::Clamp(
+                        newSelIndex, 0, GetUIList()->GetNumItems() - 1);
                     GetUIList()->SetSelection(newSelIndex);
                 }
             }
@@ -115,13 +115,13 @@ void UITree::OnUpdate()
 
 UIEventResult UITree::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
 {
-    if(event.type == UIEvent::Type::MOUSE_CLICK_FULL)
+    if (event.type == UIEvent::Type::MOUSE_CLICK_FULL)
     {
         UIFocusable *collapseButton = DCAST<UIFocusable *>(focusable);
         Component *cCollapseButton = DCAST<Component *>(collapseButton);
         UITreeItemContainer *itemContainer = SCAST<UITreeItemContainer *>(
             cCollapseButton->GetGameObject()->GetParent());
-        if(itemContainer)
+        if (itemContainer)
         {
             SetItemCollapsed(itemContainer->GetContainedItem(),
                              !itemContainer->IsCollapsed());
@@ -138,8 +138,8 @@ void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
     IEventsDragDrop::OnDragStarted(dd_);
 
     UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
-    if(UITreeItemContainer *treeItemCont =
-           DCAST<UITreeItemContainer *>(dd->GetGameObject()))
+    if (UITreeItemContainer *treeItemCont =
+            DCAST<UITreeItemContainer *>(dd->GetGameObject()))
     {
         p_itemBeingDragged = treeItemCont->GetContainedItem();
     }
@@ -165,7 +165,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     constexpr int MarkStroke = 2;
     Vector2 dragMarkerPos, dragMarkerSize;
     UIImageRenderer::Mode markImgMode = UIImageRenderer::Mode::TEXTURE_INV_UVY;
-    if(childItemOver)
+    if (childItemOver)
     {
         UITreeItemContainer *childItemCont =
             GetTreeItemContainer(childItemOver);
@@ -176,7 +176,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
                                                   ->GetGameObject()
                                                   ->GetRectTransform()
                                                   ->GetViewportAARect();
-        switch(markPosition)
+        switch (markPosition)
         {
             case MouseItemRelativePosition::ABOVE:
                 dragMarkerPos.x = contCollapseButtonRect.GetMax().x;
@@ -207,18 +207,18 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     }
     else
     {
-        if(markPosition == MouseItemRelativePosition::BELOW_ALL)
+        if (markPosition == MouseItemRelativePosition::BELOW_ALL)
         {
             GameObject *lastItem = nullptr;
-            for(GameObject *item : GetUIList()->GetItems())
+            for (GameObject *item : GetUIList()->GetItems())
             {
-                if(item->IsActiveRecursively())
+                if (item->IsActiveRecursively())
                 {
                     lastItem = item;
                 }
             }
 
-            if(lastItem)
+            if (lastItem)
             {
                 AARect lastItemRect =
                     lastItem->GetRectTransform()->GetViewportAARect();
@@ -246,7 +246,7 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
 
-    if(GetGameObject()->GetRectTransform()->IsMouseOver(false))
+    if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
     {
         GOItem *itemOver = nullptr;
         MouseItemRelativePosition relPos;
@@ -254,7 +254,7 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 
         GOItem *newParentItem = nullptr;
         int newIndexInParent = 0;
-        switch(relPos)
+        switch (relPos)
         {
             case MouseItemRelativePosition::ABOVE:
                 newParentItem = GetParentItem(itemOver);
@@ -279,23 +279,25 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
                 break;
         }
 
-        if(UITreeItemContainer *draggedItemCont =
-               DCAST<UITreeItemContainer *>(dragDroppable->GetGameObject()))
+        if (UITreeItemContainer *draggedItemCont =
+                DCAST<UITreeItemContainer *>(dragDroppable->GetGameObject()))
         {
-            if(Contains(draggedItemCont))
+            if (Contains(draggedItemCont))
             {
-                if(p_itemBeingDragged &&
-                   IsValidDrag(dragDroppable, p_itemBeingDragged, itemOver))
+                if (p_itemBeingDragged &&
+                    IsValidDrag(dragDroppable, p_itemBeingDragged, itemOver))
                 {
-                    MoveItem(p_itemBeingDragged, newParentItem,
-                             newIndexInParent);
+                    MoveItem(
+                        p_itemBeingDragged, newParentItem, newIndexInParent);
                 }
             }
         }
         else
         {
             EventEmitter<IEventsUITree>::PropagateToListeners(
-                &IEventsUITree::OnDropFromOutside, dragDroppable, newParentItem,
+                &IEventsUITree::OnDropFromOutside,
+                dragDroppable,
+                newParentItem,
                 newIndexInParent);
         }
     }
@@ -318,7 +320,7 @@ void UITree::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 List<GOItem *> UITree::GetTopChildrenItems() const
 {
     List<GOItem *> childrenItems;
-    for(const auto &pair : m_itemToTree)
+    for (const auto &pair : m_itemToTree)
     {
         childrenItems.PushBack(pair.first);
     }
@@ -330,12 +332,12 @@ List<GOItem *> UITree::GetChildrenItems(GOItem *item) const
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
     List<GOItem *> childrenItems;
-    if(m_itemToTree.ContainsKey(item) || !item)
+    if (m_itemToTree.ContainsKey(item) || !item)
     {
         const Tree<GOItem *> *itemTree =
             item ? m_itemToTree.Get(item) : &m_rootTree;
         const List<Tree<GOItem *> *> &childrenTrees = itemTree->GetChildren();
-        for(const Tree<GOItem *> *childTree : childrenTrees)
+        for (const Tree<GOItem *> *childTree : childrenTrees)
         {
             childrenItems.PushBack(childTree->GetData());
         }
@@ -345,7 +347,7 @@ List<GOItem *> UITree::GetChildrenItems(GOItem *item) const
 
 bool UITree::ItemIsChildOfRecursive(GOItem *item, GOItem *parent) const
 {
-    if(!item)
+    if (!item)
     {
         return false;
     }
@@ -382,9 +384,9 @@ void UITree::MoveItem(GOItem *itemToMove,
         oldParentItemTree->GetChildren().IndexOf(itemToMoveTree);
     ASSERT(oldIndexInParent >= 0);
 
-    if(oldParentItem == newParentItem)
+    if (oldParentItem == newParentItem)
     {
-        if(oldIndexInParent < newIndexInsideParent)
+        if (oldIndexInParent < newIndexInsideParent)
         {
             newIndexInsideParent -= 1;
         }
@@ -394,23 +396,23 @@ void UITree::MoveItem(GOItem *itemToMove,
     UMap<GOItem *, bool> itemToCollapsed;
 
     std::function<void(GOItem *)> FillCollapsedMap;
-    FillCollapsedMap = [this, &itemToCollapsed,
-                        &FillCollapsedMap](GOItem *item) {
-        Tree<GOItem *> *itemTree = GetItemTree(item);
-        UITreeItemContainer *itemTreeCont = GetTreeItemContainer(item);
-        itemToCollapsed.Add(item, itemTreeCont->IsCollapsed());
-        for(Tree<GOItem *> *itemChildTree : itemTree->GetChildren())
-        {
-            GOItem *childItem = itemChildTree->GetData();
-            FillCollapsedMap(childItem);
-        }
-    };
+    FillCollapsedMap =
+        [this, &itemToCollapsed, &FillCollapsedMap](GOItem *item) {
+            Tree<GOItem *> *itemTree = GetItemTree(item);
+            UITreeItemContainer *itemTreeCont = GetTreeItemContainer(item);
+            itemToCollapsed.Add(item, itemTreeCont->IsCollapsed());
+            for (Tree<GOItem *> *itemChildTree : itemTree->GetChildren())
+            {
+                GOItem *childItem = itemChildTree->GetData();
+                FillCollapsedMap(childItem);
+            }
+        };
     FillCollapsedMap(itemToMove);
 
     RemoveItem_(itemToMove, true);
     AddItem_(*itemToMoveTreeCpy, newParentItem, newIndexInsideParent, true);
 
-    for(const auto &pair : itemToCollapsed)
+    for (const auto &pair : itemToCollapsed)
     {
         GOItem *item = pair.first;
         bool collapsed = pair.second;
@@ -420,8 +422,12 @@ void UITree::MoveItem(GOItem *itemToMove,
     delete itemToMoveTreeCpy;
 
     EventEmitter<IEventsUITree>::PropagateToListeners(
-        &IEventsUITree::OnItemMoved, itemToMove, oldParentItem,
-        oldIndexInParent, newParentItem, newIndexInsideParent);
+        &IEventsUITree::OnItemMoved,
+        itemToMove,
+        oldParentItem,
+        oldIndexInParent,
+        newParentItem,
+        newIndexInsideParent);
 }
 
 void UITree::RemoveItem(GOItem *item)
@@ -441,7 +447,7 @@ GOItem *UITree::AddItem_(GOItem *newItem,
         indexInsideParent >= 0
             ? indexInsideParent
             : (parentItem ? parentTree->GetChildren().Size() : 0);
-    if(parentTree && !m_itemToTree.ContainsKey(newItem))
+    if (parentTree && !m_itemToTree.ContainsKey(newItem))
     {
         int newItemFlatListIndex =
             GetFlatUIListIndex(parentItem, newIndexInsideParent);
@@ -467,7 +473,7 @@ GOItem *UITree::AddItem_(GOItem *newItem,
 
         // Update collapsabilities
         UpdateCollapsabilityOnThisAndDescendants(newItem);
-        if(parentItem)
+        if (parentItem)
         {
             UpdateCollapsabilityOnThisAndDescendants(parentItem);
         }
@@ -475,10 +481,12 @@ GOItem *UITree::AddItem_(GOItem *newItem,
         IndentItem(newItem);  // Indent
         SetItemCollapsed(newItem, true);
 
-        if(!moving)
+        if (!moving)
         {
             EventEmitter<IEventsUITree>::PropagateToListeners(
-                &IEventsUITree::OnItemAdded, newItem, parentItem,
+                &IEventsUITree::OnItemAdded,
+                newItem,
+                parentItem,
                 indexInsideParent);
         }
     }
@@ -500,7 +508,7 @@ GOItem *UITree::AddItem_(const Tree<GOItem *> &newItemTree,
     AddItem_(rootItem, parentItem, indexInsideParent, moving);
 
     // Add children items
-    for(Tree<GOItem *> *childTree : newItemTree.GetChildren())
+    for (Tree<GOItem *> *childTree : newItemTree.GetChildren())
     {
         AddItem_(*childTree, rootItem, 0, moving);
     }
@@ -513,7 +521,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
     Tree<GOItem *> *itemTree = GetItemTree(item);
-    if(itemTree)
+    if (itemTree)
     {
         // Get some info before deleting
         GOItem *parentItem = GetParentItem(item);
@@ -524,7 +532,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 
         Array<GOItem *> itemsToRemove;
         Array<UITreeItemContainer *> itemsContToRemove;
-        for(Tree<GOItem *> *treeChild : treeChildrenRec)
+        for (Tree<GOItem *> *treeChild : treeChildrenRec)
         {
             GOItem *itemToRemove = treeChild->GetData();
             UITreeItemContainer *itemCont = GetTreeItemContainer(itemToRemove);
@@ -535,7 +543,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 
         // Remove needed stuff from list, remove from map, and delete the item
         // tree (which recursively deletes its children)
-        for(int i = 0; i < itemsToRemove.Size(); ++i)
+        for (int i = 0; i < itemsToRemove.Size(); ++i)
         {
             GOItem *itemToRemove = itemsToRemove[i];
             UITreeItemContainer *itemContToRemove = itemsContToRemove[i];
@@ -544,14 +552,14 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
         }
         delete itemTree;
 
-        if(!moving)
+        if (!moving)
         {
             EventEmitter<IEventsUITree>::PropagateToListeners(
                 &IEventsUITree::OnItemRemoved, item);
         }
 
         // Update parent collapsability
-        if(parentItem)
+        if (parentItem)
         {
             UpdateCollapsabilityOnThisAndDescendants(parentItem);
         }
@@ -561,7 +569,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 GOItem *UITree::GetSelectedItem() const
 {
     GOItem *selectedItem = GetUIList()->GetSelectedItem();
-    if(selectedItem)
+    if (selectedItem)
     {
         UITreeItemContainer *selectedItemCont =
             Cast<UITreeItemContainer *>(selectedItem);
@@ -572,7 +580,7 @@ GOItem *UITree::GetSelectedItem() const
 
 void UITree::Clear()
 {
-    while(!m_rootTree.GetChildren().IsEmpty())
+    while (!m_rootTree.GetChildren().IsEmpty())
     {
         RemoveItem(m_rootTree.GetChildren().Front()->GetData());
     }
@@ -587,7 +595,7 @@ void UITree::SetSelection(GOItem *item)
 
     SetItemCollapsed(GetParentItem(item), false);
     UITreeItemContainer *itemContainer = GetTreeItemContainer(item);
-    if(itemContainer)
+    if (itemContainer)
     {
         itemContainer->SetEnabled(true);
         SetItemCollapsed(item, itemContainer->IsCollapsed());
@@ -600,14 +608,14 @@ void UITree::SetItemCollapsed(GOItem *item, bool collapse)
 {
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
-    if(UITreeItemContainer *treeItemCont = GetTreeItemContainer(item))
+    if (UITreeItemContainer *treeItemCont = GetTreeItemContainer(item))
     {
         treeItemCont->SetCollapsed(collapse);
         UpdateCollapsabilityOnThisAndDescendants(item);
 
-        if(!collapse)
+        if (!collapse)
         {
-            if(GOItem *parentItem = GetParentItem(item))
+            if (GOItem *parentItem = GetParentItem(item))
             {
                 SetItemCollapsed(parentItem, collapse);
             }
@@ -618,13 +626,13 @@ void UITree::SetItemCollapsed(GOItem *item, bool collapse)
 bool UITree::NeedsToBeEnabled(GOItem *item, bool recursive)
 {
     bool needsToBeEnabled = true;
-    if(GOItem *parentItem = GetParentItem(item))
+    if (GOItem *parentItem = GetParentItem(item))
     {
-        if(UITreeItemContainer *parentItemCont =
-               GetTreeItemContainer(parentItem))
+        if (UITreeItemContainer *parentItemCont =
+                GetTreeItemContainer(parentItem))
         {
             needsToBeEnabled = !parentItemCont->IsCollapsed();
-            if(recursive)
+            if (recursive)
             {
                 needsToBeEnabled =
                     needsToBeEnabled && NeedsToBeEnabled(parentItem, recursive);
@@ -654,18 +662,18 @@ void UITree::GetMousePositionInTree(
     GOItem **itemOverOut,
     UITree::MouseItemRelativePosition *itemRelPosOut) const
 {
-    if(GetGameObject()->GetRectTransform()->IsMouseOver())
+    if (GetGameObject()->GetRectTransform()->IsMouseOver())
     {
-        if(!GetUIList()->GetItems().IsEmpty())
+        if (!GetUIList()->GetItems().IsEmpty())
         {
             bool foundItemOver = false;
             const Vector2i mousePos = Input::GetMousePosition();
-            for(int i = 0; i < GetUIList()->GetNumItems(); ++i)
+            for (int i = 0; i < GetUIList()->GetNumItems(); ++i)
             {
                 GameObject *itChildItemCont = GetUIList()->GetItems()[i];
                 UITreeItemContainer *childItemCont =
                     SCAST<UITreeItemContainer *>(itChildItemCont);
-                if(!childItemCont->IsActiveRecursively())
+                if (!childItemCont->IsActiveRecursively())
                 {
                     continue;
                 }
@@ -673,15 +681,16 @@ void UITree::GetMousePositionInTree(
                 RectTransform *childItemContRT =
                     childItemCont->GetRectTransform();
                 AARect childItemContRect = childItemContRT->GetViewportAARect();
-                if(childItemContRect.Contains(Vector2(mousePos)))
+                if (childItemContRect.Contains(Vector2(mousePos)))
                 {
                     constexpr int BoundaryEps = 4;
-                    if(mousePos.y >= childItemContRect.GetMax().y - BoundaryEps)
+                    if (mousePos.y >=
+                        childItemContRect.GetMax().y - BoundaryEps)
                     {
                         *itemRelPosOut = MouseItemRelativePosition::ABOVE;
                     }
-                    else if(mousePos.y <=
-                            childItemContRect.GetMin().y + BoundaryEps)
+                    else if (mousePos.y <=
+                             childItemContRect.GetMin().y + BoundaryEps)
                     {
                         *itemRelPosOut = MouseItemRelativePosition::BELOW;
                     }
@@ -698,15 +707,15 @@ void UITree::GetMousePositionInTree(
                 }
             }
 
-            if(!foundItemOver && !GetUIList()->GetItems().IsEmpty())
+            if (!foundItemOver && !GetUIList()->GetItems().IsEmpty())
             {
                 UITreeItemContainer *firstItemCont =
                     SCAST<UITreeItemContainer *>(
                         GetUIList()->GetItems().Front());
                 RectTransform *firstItemContRT =
                     firstItemCont->GetRectTransform();
-                if(mousePos.y >=
-                   firstItemContRT->GetViewportAARect().GetMax().y)
+                if (mousePos.y >=
+                    firstItemContRT->GetViewportAARect().GetMax().y)
                 {
                     *itemOverOut =
                         firstItemCont->GetContainedItem();  // Above all items
@@ -734,8 +743,8 @@ int UITree::GetFlatUIListIndex(GOItem *parentItem, int indexInsideParent)
 {
     Tree<GOItem *> *parentTree = GetItemTree(parentItem);
     int newItemFlatListIndex;
-    if(!parentTree->GetChildren().IsEmpty() && indexInsideParent > 0 &&
-       indexInsideParent <= int(parentTree->GetChildren().Size()))
+    if (!parentTree->GetChildren().IsEmpty() && indexInsideParent > 0 &&
+        indexInsideParent <= int(parentTree->GetChildren().Size()))
     {
         auto it = parentTree->GetChildren().Begin();
         std::advance(it, indexInsideParent - 1);
@@ -779,7 +788,7 @@ UITree *UITree::CreateInto(GameObject *go)
     uiTree->GetUIList()->SetSelectionCallback([uiTree](GOItem *item,
                                                        UIList::Action action) {
         // Forward selectionCallback from itemContainer to actual item
-        if(uiTree->m_selectionCallback)
+        if (uiTree->m_selectionCallback)
         {
             UITreeItemContainer *itemCont = Cast<UITreeItemContainer *>(item);
             uiTree->m_selectionCallback(itemCont->GetContainedItem(), action);
@@ -803,7 +812,7 @@ void UITree::UpdateCollapsabilityOnThisAndDescendants(GOItem *item)
 {
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
-    if(Tree<GOItem *> *itemTree = GetItemTree(item))
+    if (Tree<GOItem *> *itemTree = GetItemTree(item))
     {
         UITreeItemContainer *treeItemContainer = GetTreeItemContainer(item);
         ASSERT(treeItemContainer);
@@ -814,7 +823,7 @@ void UITree::UpdateCollapsabilityOnThisAndDescendants(GOItem *item)
         bool needsToBeEnabled = NeedsToBeEnabled(item, true);
         treeItemContainer->SetEnabled(needsToBeEnabled);
 
-        for(Tree<GOItem *> *itemChildTree : itemTree->GetChildren())
+        for (Tree<GOItem *> *itemChildTree : itemTree->GetChildren())
         {
             GOItem *itemChild = itemChildTree->GetData();
             UpdateCollapsabilityOnThisAndDescendants(itemChild);
@@ -844,9 +853,9 @@ bool UITree::IsValidDrag(UIDragDroppable *dd,
     Array<bool> listenerDragAcceptances =
         EventEmitter<IEventsUITree>::PropagateToListenersAndGatherResult<bool>(
             &IEventsUITree::AcceptDragOrDrop, dd);
-    for(bool acceptance : listenerDragAcceptances)
+    for (bool acceptance : listenerDragAcceptances)
     {
-        if(!acceptance)
+        if (!acceptance)
         {
             allListenersAccept = false;
             break;
@@ -854,7 +863,7 @@ bool UITree::IsValidDrag(UIDragDroppable *dd,
     }
 
     bool isValidDrag = allListenersAccept;
-    if(isValidDrag && itemBeingDragged)
+    if (isValidDrag && itemBeingDragged)
     {
         isValidDrag &= (itemBeingDragged != itemOver) &&
                        !ItemIsChildOfRecursive(itemOver, itemBeingDragged);
@@ -868,13 +877,13 @@ GOItem *UITree::GetParentItem(GOItem *item) const
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
     Tree<GOItem *> *itemTree = GetItemTree(item);
-    if(!itemTree)
+    if (!itemTree)
     {
         return nullptr;
     }
 
     Tree<GOItem *> *parentTree = itemTree ? itemTree->GetParent() : nullptr;
-    if(!parentTree)
+    if (!parentTree)
     {
         return nullptr;
     }
@@ -886,13 +895,13 @@ Tree<GOItem *> *UITree::GetItemTree(GOItem *item) const
 {
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
-    if(!item)
+    if (!item)
     {
         return &((const_cast<UITree *>(this))->m_rootTree);
     }
 
     // Make sure item belongs to this UITree
-    if(m_itemToTree.ContainsKey(item))
+    if (m_itemToTree.ContainsKey(item))
     {
         return m_itemToTree.Get(item);
     }

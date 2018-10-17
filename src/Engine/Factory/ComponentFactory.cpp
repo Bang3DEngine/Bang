@@ -41,16 +41,16 @@
 
 using namespace Bang;
 
-#define CREATE_COMPONENT(className, ComponentClass)         \
-    if((className) == ComponentClass::GetClassNameStatic()) \
-    {                                                       \
-        return Component::Create<ComponentClass>();         \
+#define CREATE_COMPONENT(className, ComponentClass)          \
+    if ((className) == ComponentClass::GetClassNameStatic()) \
+    {                                                        \
+        return Component::Create<ComponentClass>();          \
     }
 
-#define EXISTS_COMPONENT(componentClassName, ComponentClass)         \
-    if((componentClassName) == ComponentClass::GetClassNameStatic()) \
-    {                                                                \
-        return true;                                                 \
+#define EXISTS_COMPONENT(componentClassName, ComponentClass)          \
+    if ((componentClassName) == ComponentClass::GetClassNameStatic()) \
+    {                                                                 \
+        return true;                                                  \
     }
 
 Component *ComponentFactory::Create(const String &componentClassName)

@@ -76,12 +76,12 @@ RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
     RH<Model> modelRH = Resources::Load<Model>(fullPath);
     Model *model = modelRH.Get();
 
-    if(model)
+    if (model)
     {
         MeshFactory *mf = MeshFactory::GetActive();
         mf->m_modelCache.Add(modelRH);
 
-        if(model->GetMeshes().Size() >= 1)
+        if (model->GetMeshes().Size() >= 1)
         {
             Mesh *firstMesh = model->GetMeshes()[0].Get();
             meshRH.Set(firstMesh);

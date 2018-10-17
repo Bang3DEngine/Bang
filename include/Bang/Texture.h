@@ -77,14 +77,14 @@ Image<T> Texture::ToImage(GL::TextureTarget texTarget) const
 
     GL::Push(GL::BindTarget::TEXTURE_2D);
     Bind();
-    GL::GetTexImage(texTarget, GL::ColorComp::RGBA, GL::DataType::UNSIGNED_BYTE,
-                    pixels);
+    GL::GetTexImage(
+        texTarget, GL::ColorComp::RGBA, GL::DataType::UNSIGNED_BYTE, pixels);
     GL::Pop(GL::BindTarget::TEXTURE_2D);
 
     Image<T> img(width, height);
-    for(int y = 0; y < height; ++y)
+    for (int y = 0; y < height; ++y)
     {
-        for(int x = 0; x < width; ++x)
+        for (int x = 0; x < width; ++x)
         {
             const int coords = (y * width + x) * numComps;
             Color pixelColor = GetColorFromByteArray(pixels, coords);

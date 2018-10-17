@@ -77,7 +77,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if(MustBeRendered(renderPass))
+    if (MustBeRendered(renderPass))
     {
         GL::Push(GL::Pushable::VIEWPORT);
         GL::Push(GL::BindTarget::SHADER_PROGRAM);
@@ -118,7 +118,7 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
         }
 
         // Then blur separatedly, first X, then Y
-        if(GetBlurRadius() > 0)
+        if (GetBlurRadius() > 0)
         {
             // Blur in X
             p_blurXShaderProgram.Get()->Bind();
@@ -180,21 +180,21 @@ void PostProcessEffectSSAO::SetSSAOIntensity(float ssaoIntensity)
 
 void PostProcessEffectSSAO::SetBlurRadius(int blurRadius)
 {
-    if(blurRadius != GetBlurRadius())
+    if (blurRadius != GetBlurRadius())
     {
         m_blurRadius = blurRadius;
 
         // Recompute blur kernel
         double sum = 0.0;
         m_blurKernel.Clear();
-        for(int i = -GetBlurRadius(); i <= GetBlurRadius(); ++i)
+        for (int i = -GetBlurRadius(); i <= GetBlurRadius(); ++i)
         {
             float k = std::exp(-0.5 * Math::Pow(double(i), 2.0) / 3);
             m_blurKernel.PushBack(k);
             sum += m_blurKernel.Back();
         }
 
-        for(int i = 0; i < m_blurKernel.Size(); ++i)
+        for (int i = 0; i < m_blurKernel.Size(); ++i)
         {
             m_blurKernel[i] /= sum;  // Normalize
         }
@@ -203,7 +203,7 @@ void PostProcessEffectSSAO::SetBlurRadius(int blurRadius)
 
 void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
 {
-    if(numRandomSamples != GetNumRandomSamples())
+    if (numRandomSamples != GetNumRandomSamples())
     {
         m_numRandomOffsetsHemisphere = numRandomSamples;
 
@@ -212,10 +212,10 @@ void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
         // blur will do the effect of merging the two separable planes. A bit
         // weird but should work
         m_randomHemisphereOffsets.Clear();
-        for(int i = 0; i < GetNumRandomSamples(); ++i)
+        for (int i = 0; i < GetNumRandomSamples(); ++i)
         {
             Vector3 randV = Vector3::Zero;
-            if(GetSeparable())
+            if (GetSeparable())
             {
                 int j = (i > GetNumRandomSamples() / 2) ? 1 : 0;
                 randV[j] = Random::GetRange(-1.0f, 1.0f);
@@ -242,7 +242,7 @@ void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
 
 void PostProcessEffectSSAO::SetNumRandomAxes(int numAxes)
 {
-    if(numAxes != GetNumRandomAxes())
+    if (numAxes != GetNumRandomAxes())
     {
         m_numAxes = numAxes;
         GenerateRandomAxesTexture(GetNumRandomAxes());
@@ -251,7 +251,7 @@ void PostProcessEffectSSAO::SetNumRandomAxes(int numAxes)
 
 void PostProcessEffectSSAO::SetSeparable(bool separable)
 {
-    if(separable != GetSeparable())
+    if (separable != GetSeparable())
     {
         m_separable = separable;
 
@@ -337,42 +337,42 @@ void PostProcessEffectSSAO::ImportMeta(const MetaNode &metaNode)
 {
     PostProcessEffect::ImportMeta(metaNode);
 
-    if(metaNode.Contains("BilateralBlur"))
+    if (metaNode.Contains("BilateralBlur"))
     {
         SetBilateralBlurEnabled(metaNode.Get<bool>("BilateralBlur"));
     }
 
-    if(metaNode.Contains("BlurRadius"))
+    if (metaNode.Contains("BlurRadius"))
     {
         SetBlurRadius(metaNode.Get<int>("BlurRadius"));
     }
 
-    if(metaNode.Contains("FBSize"))
+    if (metaNode.Contains("FBSize"))
     {
         SetFBSize(metaNode.Get<Vector2>("FBSize"));
     }
 
-    if(metaNode.Contains("NumRandomAxes"))
+    if (metaNode.Contains("NumRandomAxes"))
     {
         SetNumRandomAxes(metaNode.Get<int>("NumRandomAxes"));
     }
 
-    if(metaNode.Contains("NumRandomSamples"))
+    if (metaNode.Contains("NumRandomSamples"))
     {
         SetNumRandomSamples(metaNode.Get<int>("NumRandomSamples"));
     }
 
-    if(metaNode.Contains("Intensity"))
+    if (metaNode.Contains("Intensity"))
     {
         SetSSAOIntensity(metaNode.Get<float>("Intensity"));
     }
 
-    if(metaNode.Contains("Radius"))
+    if (metaNode.Contains("Radius"))
     {
         SetSSAORadius(metaNode.Get<float>("Radius"));
     }
 
-    if(metaNode.Contains("Separable"))
+    if (metaNode.Contains("Separable"))
     {
         SetSeparable(metaNode.Get<bool>("Separable"));
     }
@@ -396,7 +396,7 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
 {
     // Generate random axes vectors
     Array<Vector3> randomValuesInOrthogonalPlanes;
-    for(int i = 0; i < numAxes; ++i)
+    for (int i = 0; i < numAxes; ++i)
     {
         Vector3 randomAxesVector(Random::GetRange(0.0f, 1.0f),
                                  Random::GetRange(0.0f, 1.0f),
@@ -410,7 +410,7 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
     // Create an image with the random vectors
     Imageb randomsImg;
     randomsImg.Create(imgSize, imgSize);
-    for(int i = 0; i < numAxes; ++i)
+    for (int i = 0; i < numAxes; ++i)
     {
         const int x = i % imgSize;
         const int y = i / imgSize;

@@ -110,7 +110,9 @@ namespace Bang
 {
 Quad operator*(const Matrix4 &m, const Quad &q)
 {
-    return Quad(m.TransformedPoint(q[0]), m.TransformedPoint(q[1]),
-                m.TransformedPoint(q[2]), m.TransformedPoint(q[3]));
+    return Quad(m.TransformedPoint(q[0]),
+                m.TransformedPoint(q[1]),
+                m.TransformedPoint(q[2]),
+                m.TransformedPoint(q[3]));
 }
 }

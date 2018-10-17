@@ -32,11 +32,11 @@ void Sphere::SetRadius(float radius)
 Array<Vector3> Sphere::GetPoints() const
 {
     Array<Vector3> points;
-    for(int i = -1; i <= 1; ++i)
+    for (int i = -1; i <= 1; ++i)
     {
-        for(int j = -1; j <= 1; ++j)
+        for (int j = -1; j <= 1; ++j)
         {
-            for(int k = -1; k <= 1; ++k)
+            for (int k = -1; k <= 1; ++k)
             {
                 Vector3 dir = Vector3(i, j, k).NormalizedSafe();
                 points.PushBack(m_center + m_radius * dir);

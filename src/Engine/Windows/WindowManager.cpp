@@ -21,11 +21,11 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
-    for(Window *w : GetCurrentWindows())
+    for (Window *w : GetCurrentWindows())
     {
         delete w;
     }
-    for(Window *w : p_windowsToBeDestroyed)
+    for (Window *w : p_windowsToBeDestroyed)
     {
         delete w;
     }
@@ -44,7 +44,7 @@ void SignalHandler(int signal)
 
 void WindowManager::Init()
 {
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
     {
         Debug_Error("Failed to init SDL");
     }
@@ -53,7 +53,7 @@ void WindowManager::Init()
     signal(SIGINT, SignalHandler);
 #endif
 
-    if(TTF_Init())
+    if (TTF_Init())
     {
         Debug_Error("Could not init FreeType library: Error(" << TTF_GetError()
                                                               << ")");
@@ -66,18 +66,18 @@ bool WindowManager::MainLoopIteration()
 {
     bool exit = false;
 
-    if(!HandleEvents())
+    if (!HandleEvents())
     {
         exit = true;
     }
 
-    if(GetCurrentWindows().IsEmpty())
+    if (GetCurrentWindows().IsEmpty())
     {
         exit = true;
     }
     DestroyQueuedWindows();
 
-    for(Window *w : GetCurrentWindows())
+    for (Window *w : GetCurrentWindows())
     {
         Window::SetActive(w);
         w->MainLoopIteration();
@@ -117,7 +117,7 @@ DialogWindow *WindowManager::CreateDialogWindow(Window *parentWindow,
 Window *WindowManager::GetTopWindow()
 {
     WindowManager *wm = WindowManager::GetInstance();
-    if(!wm)
+    if (!wm)
     {
         return nullptr;
     }
@@ -139,29 +139,29 @@ bool WindowManager::HandleEvents()
 {
     SDL_Event sdlEvent;
     constexpr int AreThereMoreEvents = 1;
-    while(SDL_PollEvent(&sdlEvent) == AreThereMoreEvents)
+    while (SDL_PollEvent(&sdlEvent) == AreThereMoreEvents)
     {
-        switch(sdlEvent.type)
+        switch (sdlEvent.type)
         {
             default:
             {
                 List<Window *> windowsToBeClosed;
-                for(Window *w : GetCurrentWindows())
+                for (Window *w : GetCurrentWindows())
                 {
                     Window::SetActive(w);
                     bool hasNotClosed = w->HandleEvent(sdlEvent);
-                    if(!hasNotClosed)
+                    if (!hasNotClosed)
                     {
                         windowsToBeClosed.PushBack(w);
                     }
                     Window::SetActive(nullptr);
                 }
 
-                for(Window *w : windowsToBeClosed)
+                for (Window *w : windowsToBeClosed)
                 {
                     Window::SetActive(w);
                     bool canCloseWindow = w->OnClosed();
-                    if(canCloseWindow)
+                    if (canCloseWindow)
                     {
                         GetCurrentWindows().Remove(w);
                         delete w;
@@ -172,7 +172,7 @@ bool WindowManager::HandleEvents()
         }
     }
 
-    for(Window *w : GetCurrentWindows())
+    for (Window *w : GetCurrentWindows())
     {
         Window::SetActive(w);
         w->OnHandleEventsFinished();
@@ -184,7 +184,7 @@ bool WindowManager::HandleEvents()
 void WindowManager::DestroyQueuedWindows()
 {
     Window *latestWindow = Window::GetActive();
-    for(Window *w : p_windowsToBeDestroyed)
+    for (Window *w : p_windowsToBeDestroyed)
     {
         Window::SetActive(w);
         GetCurrentWindows().Remove(w);

@@ -38,7 +38,7 @@ void Array<T>::Insert(const T &x, int index)
     ASSERT(index >= 0 && index <= Size());
     Resize(Size() + 1);
 
-    for(int i = Size() - 1; i > index; --i)
+    for (int i = Size() - 1; i > index; --i)
     {
         this->At(i) = this->At(i - 1);
     }
@@ -74,7 +74,7 @@ template <class T>
 template <template <class OtherT> class Container, class OtherT>
 void Array<T>::PushBack(const Container<OtherT> &container)
 {
-    for(auto it = container.Begin(); it != container.End(); ++it)
+    for (auto it = container.Begin(); it != container.End(); ++it)
     {
         PushBack(*it);
     }
@@ -107,9 +107,9 @@ typename Array<T>::Iterator Array<T>::Find(const T &x)
 template <class T>
 typename Array<T>::Iterator Array<T>::FindLast(const T &x)
 {
-    for(auto it = m_vector.RBegin(); it != m_vector.REnd(); ++it)
+    for (auto it = m_vector.RBegin(); it != m_vector.REnd(); ++it)
     {
-        if(*it == x)
+        if (*it == x)
         {
             Iterator res = it.base();
             std::advance(res, -1);
@@ -166,7 +166,7 @@ template <class T>
 typename Array<T>::Iterator Array<T>::Remove(const T &x)
 {
     Iterator it = Find(x);
-    if(it != End())
+    if (it != End())
     {
         return Remove(it);
     }
@@ -178,7 +178,7 @@ typename Array<T>::Iterator Array<T>::RemoveByIndex(std::size_t i)
 {
     Iterator it = Begin();
     std::advance(it, i);
-    if(it != End())
+    if (it != End())
     {
         return Remove(it);
     }
@@ -188,9 +188,9 @@ typename Array<T>::Iterator Array<T>::RemoveByIndex(std::size_t i)
 template <class T>
 void Array<T>::RemoveAll(const T &x)
 {
-    for(Iterator it = Begin(); it != End();)
+    for (Iterator it = Begin(); it != End();)
     {
-        if(*it == x)
+        if (*it == x)
         {
             it = Remove(it);
         }
@@ -217,9 +217,9 @@ template <class T>
 int Array<T>::IndexOf(const T &x) const
 {
     int i = 0;
-    for(const T &y : *this)
+    for (const T &y : *this)
     {
-        if(x == y)
+        if (x == y)
         {
             return i;
         }
@@ -261,7 +261,7 @@ bool Array<T>::IsEmpty() const
 template <class T>
 void Array<T>::Sort()
 {
-    if(!IsEmpty())
+    if (!IsEmpty())
     {
         Containers::Sort(Begin(), End());
     }
@@ -271,7 +271,7 @@ template <class T>
 template <class StrictWeakOrdering>
 void Array<T>::Sort(const StrictWeakOrdering &sortClass)
 {
-    if(!IsEmpty())
+    if (!IsEmpty())
     {
         Containers::Sort(Begin(), End(), sortClass);
     }
@@ -304,13 +304,13 @@ typename Array<T>::ConstRef Array<T>::operator[](std::size_t i) const
 template <class T>
 bool Array<T>::operator==(const Array<T> &rhs) const
 {
-    if(Size() != rhs.Size())
+    if (Size() != rhs.Size())
     {
         return false;
     }
-    for(int i = 0; i < Size(); ++i)
+    for (int i = 0; i < Size(); ++i)
     {
-        if(At(i) != rhs.At(i))
+        if (At(i) != rhs.At(i))
         {
             return false;
         }
@@ -323,7 +323,7 @@ template <template <class> class Container, class OtherT>
 Container<OtherT> Array<T>::To() const
 {
     Container<OtherT> cont;
-    for(const T &x : *this)
+    for (const T &x : *this)
     {
         cont.PushBack(OtherT(x));
     }
@@ -407,7 +407,7 @@ template <class IteratorClass>
 void Array<T>::PushBack(IteratorClass itBegin, IteratorClass itEnd)
 {
     IteratorClass it = itBegin;
-    while(it != itEnd)
+    while (it != itEnd)
     {
         PushBack(*it);
         ++it;

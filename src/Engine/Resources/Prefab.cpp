@@ -43,7 +43,7 @@ GameObject *Prefab::InstantiateRaw() const
 {
     GameObject *go = GameObjectFactory::CreateGameObject(false);
 
-    if(!GetMetaContent().IsEmpty())
+    if (!GetMetaContent().IsEmpty())
     {
         MetaNode metaNode;
         metaNode.Import(GetMetaContent());
@@ -54,7 +54,7 @@ GameObject *Prefab::InstantiateRaw() const
 
 void Prefab::SetGameObject(GameObject *go)
 {
-    if(go)
+    if (go)
     {
         m_gameObjectMetaInfoContent = go->GetSerializedString();
     }
@@ -79,7 +79,7 @@ void Prefab::ImportMeta(const MetaNode &metaNode)
     Asset::ImportMeta(metaNode);
 
     String newMetaInfo = metaNode.ToString();
-    if(newMetaInfo != GetMetaContent())
+    if (newMetaInfo != GetMetaContent())
     {
         m_gameObjectMetaInfoContent = newMetaInfo;
     }

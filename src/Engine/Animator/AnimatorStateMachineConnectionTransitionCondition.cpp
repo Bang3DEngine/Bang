@@ -65,15 +65,15 @@ float ASMCTransitionCondition::GetCompareValueFloat() const
 bool ASMCTransitionCondition::IsFulfilled(
     AnimatorStateMachine *stateMachine) const
 {
-    if(stateMachine)
+    if (stateMachine)
     {
-        if(AnimatorStateMachineVariable *var =
-               stateMachine->GetVariable(GetVariableName()))
+        if (AnimatorStateMachineVariable *var =
+                stateMachine->GetVariable(GetVariableName()))
         {
-            switch(var->GetType())
+            switch (var->GetType())
             {
                 case AnimatorStateMachineVariable::Type::FLOAT:
-                    switch(GetComparator())
+                    switch (GetComparator())
                     {
                         case Comparator::GREATER:
                             return (var->GetValueFloat() >
@@ -88,7 +88,7 @@ bool ASMCTransitionCondition::IsFulfilled(
                     break;
 
                 case AnimatorStateMachineVariable::Type::BOOL:
-                    switch(GetComparator())
+                    switch (GetComparator())
                     {
                         case Comparator::IS_TRUE: return (var->GetValueBool());
                         case Comparator::IS_FALSE:
@@ -107,17 +107,17 @@ void AnimatorStateMachineConnectionTransitionCondition::ImportMeta(
 {
     Serializable::ImportMeta(metaNode);
 
-    if(metaNode.Contains("VariableName"))
+    if (metaNode.Contains("VariableName"))
     {
         SetVariableName(metaNode.Get<String>("VariableName"));
     }
 
-    if(metaNode.Contains("Comparator"))
+    if (metaNode.Contains("Comparator"))
     {
         SetComparator(SCAST<Comparator>(metaNode.Get<uint>("Comparator")));
     }
 
-    if(metaNode.Contains("CompareValueFloat"))
+    if (metaNode.Contains("CompareValueFloat"))
     {
         SetCompareValueFloat(metaNode.Get<float>("CompareValueFloat"));
     }

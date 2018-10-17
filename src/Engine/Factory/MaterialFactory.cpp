@@ -11,7 +11,7 @@ using namespace Bang;
 
 RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 {
-    switch(renderPass)
+    switch (renderPass)
     {
         case RenderPass::SCENE:
             return MaterialFactory::LoadMaterial("Materials/Default.bmat");
@@ -69,7 +69,7 @@ RH<Material> MaterialFactory::GetUIImage()
 RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePath)
 {
     MaterialFactory *mf = MaterialFactory::GetActive();
-    if(!mf->m_cacheMaterials.ContainsKey(matEnginePath))
+    if (!mf->m_cacheMaterials.ContainsKey(matEnginePath))
     {
         mf->m_cacheMaterials.Add(
             matEnginePath, Resources::Load<Material>(EPATH(matEnginePath)));
@@ -81,7 +81,7 @@ RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
     const String &phMatEnginePath)
 {
     MaterialFactory *mf = MaterialFactory::GetActive();
-    if(!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))
+    if (!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))
     {
         mf->m_cachePhysicsMaterials.Add(
             phMatEnginePath,

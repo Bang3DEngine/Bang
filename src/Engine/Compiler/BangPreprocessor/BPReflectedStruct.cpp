@@ -40,13 +40,17 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
 
     // Parse the struct/class reflected annotation
     String::Iterator structPropertyListBegin, structPropertyListEnd;
-    BP::GetNextScope(structBegin, structEnd, &structPropertyListBegin,
-                     &structPropertyListEnd, '(', ')');
+    BP::GetNextScope(structBegin,
+                     structEnd,
+                     &structPropertyListBegin,
+                     &structPropertyListEnd,
+                     '(',
+                     ')');
 
     String propertyListStr(structPropertyListBegin + 1,
                            structPropertyListEnd - 1);
     Array<String> propertyList = propertyListStr.Split<Array>(',', true);
-    if(propertyList.Size() == 0)
+    if (propertyList.Size() == 0)
     {
         std::cerr << "BP Error: BP_CLASS has 0 properties, but must have at"
                      "least a name"
@@ -57,10 +61,12 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
 
     // Find and skip "class"/"struct"
     String::Iterator structKeywordBegin, structKeywordEnd;
-    BP::FindNextWord(structPropertyListEnd, structEnd, &structKeywordBegin,
+    BP::FindNextWord(structPropertyListEnd,
+                     structEnd,
+                     &structKeywordBegin,
                      &structKeywordEnd);
     String keyword(structKeywordBegin, structKeywordEnd);
-    if(keyword != "class" && keyword != "struct")
+    if (keyword != "class" && keyword != "struct")
     {
         std::cerr << "BP Error: 'class' or 'struct' keyword expected after"
                      " BANG_CLASS(...)"
@@ -70,32 +76,32 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
 
     // Get class/struct variable name (XXX in  "class XXX { ... }")
     String::Iterator structVarNameBegin, structVarNameEnd;
-    BP::FindNextWord(structKeywordEnd, structEnd, &structVarNameBegin,
-                     &structVarNameEnd);
+    BP::FindNextWord(
+        structKeywordEnd, structEnd, &structVarNameBegin, &structVarNameEnd);
     outStruct->SetStructVariableName(
         String(structVarNameBegin, structVarNameEnd));
 
     String::Iterator it = structVarNameEnd;
-    while(it != structEnd)
+    while (it != structEnd)
     {
         String::Iterator propertyBegin =
             BP::Find(it, structEnd, BP::RVariablePrefixes);
-        if(propertyBegin == structEnd)
+        if (propertyBegin == structEnd)
         {
             break;
         }
 
         String::Iterator propertyEnd = propertyBegin;
         BP::SkipUntilNext(&propertyEnd, structEnd, {";"});
-        if(propertyEnd == structEnd)
+        if (propertyEnd == structEnd)
         {
             break;
         }
         propertyEnd += 1;
 
         BPReflectedVariable bProperty;
-        BPReflectedVariable::FromString(propertyBegin, propertyEnd, &bProperty,
-                                        success);
+        BPReflectedVariable::FromString(
+            propertyBegin, propertyEnd, &bProperty, success);
         outStruct->AddVariable(bProperty);
 
         it = propertyEnd;
@@ -123,7 +129,7 @@ String BPReflectedStruct::GetInitializationCode() const
 {
     int i = 0;
     String src = "";
-    for(const BPReflectedVariable &rVar : GetVariables())
+    for (const BPReflectedVariable &rVar : GetVariables())
     {
         String varInitCode = R"VERBATIM(
               BPReflectedVariable RVAR_NAME;
@@ -166,14 +172,14 @@ String BPReflectedStruct::GetWriteReflectionCode() const
         )VERBATIM";
 
     String varsSetsSrc = "";
-    for(const BPReflectedVariable &var : GetVariables())
+    for (const BPReflectedVariable &var : GetVariables())
     {
         String varSetSrc = R"VERBATIM(
                     metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
             )VERBATIM";
 
         BPReflectedVariable::Type varType = var.GetType();
-        if(varType == BPReflectedVariable::Type::NONE)
+        if (varType == BPReflectedVariable::Type::NONE)
         {
             continue;
         }
@@ -199,14 +205,14 @@ String BPReflectedStruct::GetReadReflectionCode() const
         )VERBATIM";
 
     String varsGetsSrc = "";
-    for(const BPReflectedVariable &var : GetVariables())
+    for (const BPReflectedVariable &var : GetVariables())
     {
         String varGetSrc = R"VERBATIM(
                     VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
             )VERBATIM";
 
         BPReflectedVariable::Type varType = var.GetType();
-        if(varType == BPReflectedVariable::Type::NONE)
+        if (varType == BPReflectedVariable::Type::NONE)
         {
             continue;
         }

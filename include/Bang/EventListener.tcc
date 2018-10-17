@@ -7,7 +7,7 @@ using namespace Bang;
 template <class T>
 EventListener<T>::~EventListener()
 {
-    while(!m_emitters.IsEmpty())
+    while (!m_emitters.IsEmpty())
     {
         m_emitters.Front()->UnRegisterListener(this);
     }
@@ -34,7 +34,7 @@ bool EventListener<T>::IsReceivingEvents() const
 template <class T>
 void EventListener<T>::AddEmitter(EventEmitter<T> *emitter)
 {
-    if(!m_emitters.Contains(emitter))
+    if (!m_emitters.Contains(emitter))
     {
         m_emitters.PushBack(emitter);
     }

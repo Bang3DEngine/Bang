@@ -25,15 +25,15 @@ void UIButton::Click()
 
 void UIButton::UpdateAspect()
 {
-    if(!IsBlocked())
+    if (!IsBlocked())
     {
-        if(GetFocusable()->IsBeingPressed())
+        if (GetFocusable()->IsBeingPressed())
         {
             ChangeAspectToPressed();
         }
         else
         {
-            if(GetFocusable()->IsMouseOver())
+            if (GetFocusable()->IsMouseOver())
             {
                 ChangeAspectToOver();
             }

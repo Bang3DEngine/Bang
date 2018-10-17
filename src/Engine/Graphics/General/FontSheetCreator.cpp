@@ -24,22 +24,22 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
                                         Array<AARecti> *imagesOutputRects,
                                         int extraMargin)
 {
-    if(!ttfFont)
+    if (!ttfFont)
     {
         return false;
     }
 
     Array<Imageb> charImages;
-    for(const char c : charsToLoad)
+    for (const char c : charsToLoad)
     {
-        if(TTF_GlyphIsProvided(ttfFont, c))
+        if (TTF_GlyphIsProvided(ttfFont, c))
         {
             // Create bitmap
             constexpr SDL_Color WhiteColor = {255, 255, 255, 255};
             TTF_SetFontHinting(ttfFont, TTF_HINTING_LIGHT);
             SDL_Surface *charBitmap =
                 TTF_RenderGlyph_Blended(ttfFont, c, WhiteColor);
-            if(!charBitmap)
+            if (!charBitmap)
             {
                 continue;
             }
@@ -47,9 +47,9 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
             SDL_PixelFormat *fmt = charBitmap->format;
             Uint32 *charPixels = SCAST<Uint32 *>(charBitmap->pixels);
             Imageb charImage(charBitmap->w, charBitmap->h);
-            for(int y = 0; y < charBitmap->h; ++y)
+            for (int y = 0; y < charBitmap->h; ++y)
             {
-                for(int x = 0; x < charBitmap->w; ++x)
+                for (int x = 0; x < charBitmap->w; ++x)
                 {
                     Uint32 color32 = charPixels[y * charBitmap->w + x];
                     Uint32 alpha = ((color32 & fmt->Amask) >> fmt->Ashift)
@@ -74,12 +74,12 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
     }
 
     // Resize the atlas to fit only the used area
-    Imageb atlasImage = FontSheetCreator::PackImages(charImages, extraMargin,
-                                                     imagesOutputRects);
+    Imageb atlasImage = FontSheetCreator::PackImages(
+        charImages, extraMargin, imagesOutputRects);
     // atlasImage.Export(Path("font_" + String(atlasImage.GetWidth()) +
     // ".png"));
 
-    if(atlasTexture)  // Create final atlas texture
+    if (atlasTexture)  // Create final atlas texture
     {
         GL::PixelStore(GL::UNPACK_ALIGNMENT, 1);
         atlasTexture->Import(atlasImage);
@@ -101,7 +101,7 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
 {
     int maxImgWidth = 0;
     int maxImgHeight = 0;
-    for(const Imageb &img : images)
+    for (const Imageb &img : images)
     {
         maxImgWidth = Math::Max(maxImgWidth, img.GetWidth());
         maxImgHeight = Math::Max(maxImgHeight, img.GetHeight());
@@ -117,10 +117,10 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
     maxImgHeight = 0;
     int currentRowImages = 0;
     Vector2i penPosTopLeft(0, margin);
-    for(const Imageb &img : images)
+    for (const Imageb &img : images)
     {
-        if(penPosTopLeft.x + img.GetWidth() + margin * 2 > totalWidth ||
-           currentRowImages >= imagesPerSide)
+        if (penPosTopLeft.x + img.GetWidth() + margin * 2 > totalWidth ||
+            currentRowImages >= imagesPerSide)
         {
             penPosTopLeft.x = 0;  // Go to next line
             penPosTopLeft.y += maxImgHeight + margin * 2;
@@ -131,7 +131,7 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
         penPosTopLeft.x += margin;
 
         AARecti imgRect = AARecti(penPosTopLeft, penPosTopLeft + img.GetSize());
-        if(imagesOutputRects)
+        if (imagesOutputRects)
         {
             imagesOutputRects->PushBack(imgRect);
         }
@@ -143,11 +143,11 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
 
     Vector2i minPixel = result.GetSize();
     Vector2i maxPixel = Vector2i::Zero;
-    for(int y = 0; y < result.GetHeight(); ++y)
+    for (int y = 0; y < result.GetHeight(); ++y)
     {
-        for(int x = 0; x < result.GetWidth(); ++x)
+        for (int x = 0; x < result.GetWidth(); ++x)
         {
-            if(result.GetPixel(x, y).a > 0)
+            if (result.GetPixel(x, y).a > 0)
             {
                 Vector2i xy(x, y);
                 minPixel = Vector2i::Min(minPixel, xy);
@@ -163,7 +163,7 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
     fittedResult.FillTransparentPixels(bgColor);
 
     Imageb fittedResultMargined = fittedResult;
-    fittedResultMargined.AddMargins(Vector2i(margin), bgColor,
-                                    AspectRatioMode::IGNORE);
+    fittedResultMargined.AddMargins(
+        Vector2i(margin), bgColor, AspectRatioMode::IGNORE);
     return fittedResultMargined;
 }

@@ -32,7 +32,7 @@ Thread::~Thread()
 
 void Thread::Start()
 {
-    if(p_runnable)
+    if (p_runnable)
     {
         m_thread = std::thread(ThreadFunc, p_runnable, this);
     }
@@ -59,7 +59,7 @@ bool Thread::HasFinished() const
 
 void Thread::SetName(const String &threadName)
 {
-    if(threadName != GetName())
+    if (threadName != GetName())
     {
         m_threadName = threadName;
         pthread_setname_np(m_thread.native_handle(), GetName().ToCString());
@@ -96,16 +96,16 @@ String Thread::GetCurrentThreadId()
 
 int ThreadFunc(ThreadRunnable *runnable, Thread *thread)
 {
-    if(runnable)
+    if (runnable)
     {
         runnable->Run();
-        if(runnable->IsAutoDelete())
+        if (runnable->IsAutoDelete())
         {
             delete runnable;
         }
     }
 
-    if(thread)
+    if (thread)
     {
         thread->m_hasFinished = true;
     }

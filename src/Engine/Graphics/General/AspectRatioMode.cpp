@@ -10,7 +10,7 @@ Vector2i AspectRatio::GetAspectRatioedSize(const Vector2i &currentSize,
                                            AspectRatioMode aspectRatioMode)
 {
     Vector2i finalSize = targetSize;
-    if(aspectRatioMode != AspectRatioMode::IGNORE)
+    if (aspectRatioMode != AspectRatioMode::IGNORE)
     {
         Vector2 aspectRatio(Cast<float>(targetSize.x) / currentSize.x,
                             Cast<float>(targetSize.y) / currentSize.y);

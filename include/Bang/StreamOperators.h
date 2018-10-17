@@ -169,7 +169,7 @@ template <class T, size_t N>
 std::ostream &operator<<(std::ostream &log, const std::array<T, N> &a)
 {
     log << "{";
-    for(int i = 0; i < N; ++i)
+    for (int i = 0; i < N; ++i)
     {
         log << a[i] << ((i == N - 1) ? "" : ", ");
     }
@@ -183,7 +183,7 @@ std::ostream &operator<<(std::ostream &log, const std::queue<T> &q)
     int i = 0;
     std::queue<T> qc = q;
     const int N = q.size();
-    while(!qc.empty())
+    while (!qc.empty())
     {
         const auto &x = qc.front();
         qc.pop();
@@ -198,7 +198,7 @@ std::ostream &operator<<(std::ostream &log, const std::unordered_map<K, V> &m)
     log << "{";
     int i = 0;
     const int N = m.size();
-    for(const auto &p : m)
+    for (const auto &p : m)
     {
         log << p.first << ": " << p.second << ((i++ == N - 1) ? "" : ", ");
     }
@@ -219,9 +219,9 @@ std::ostream &operator<<(std::ostream &log, const List<T> &l)
 {
     log << "(";
     bool first = true;
-    for(auto it = l.Begin(); it != l.End(); ++it)
+    for (auto it = l.Begin(); it != l.End(); ++it)
     {
-        if(!first)
+        if (!first)
             log << ", ";
         log << (*it);
         first = false;
@@ -234,9 +234,9 @@ template <class T>
 std::ostream &operator<<(std::ostream &log, const Array<T> &v)
 {
     log << "[";
-    for(int i = 0; i < v.Size(); ++i)
+    for (int i = 0; i < v.Size(); ++i)
     {
-        if(i != 0)
+        if (i != 0)
             log << ", ";
         log << v[i];
     }
@@ -248,9 +248,9 @@ template <class T, class S, class C>
 std::ostream &operator<<(std::ostream &log, const Map<T, S, C> &m)
 {
     log << "{";
-    for(auto it = m.CBegin(); it != m.CEnd(); ++it)
+    for (auto it = m.CBegin(); it != m.CEnd(); ++it)
     {
-        if(it != m.cbegin())
+        if (it != m.cbegin())
             log << ", ";
         log << (it->first) << ": " << (it->second);
     }
@@ -263,9 +263,9 @@ std::ostream &operator<<(std::ostream &log,
                          const UMap<Key, Value, Hash, Pred, Alloc> &m)
 {
     log << "{";
-    for(auto it = m.CBegin(); it != m.CEnd(); ++it)
+    for (auto it = m.CBegin(); it != m.CEnd(); ++it)
     {
-        if(it != m.cbegin())
+        if (it != m.cbegin())
             log << ", ";
         log << (it->first) << ": " << (it->second);
     }
@@ -277,9 +277,9 @@ template <class T, class C>
 std::ostream &operator<<(std::ostream &log, const Set<T, C> &s)
 {
     log << "{";
-    for(auto it = s.Begin(); it != s.End(); ++it)
+    for (auto it = s.Begin(); it != s.End(); ++it)
     {
-        if(it != s.Begin())
+        if (it != s.Begin())
             log << ", ";
         log << (*it);
     }
@@ -292,9 +292,9 @@ std::ostream &operator<<(std::ostream &log,
                          const USet<Key, Hash, Pred, Alloc> &s)
 {
     log << "{";
-    for(auto it = s.Begin(); it != s.End(); ++it)
+    for (auto it = s.Begin(); it != s.End(); ++it)
     {
-        if(it != s.Begin())
+        if (it != s.Begin())
             log << ", ";
         log << (*it);
     }
@@ -308,7 +308,7 @@ std::ostream &operator<<(std::ostream &log, const Tree<T> &t)
     log << "(" << t.GetData();
     bool first = true;
     List<T> &children = t.GetChildren();
-    for(const T &child : children)
+    for (const T &child : children)
     {
         log << (first ? "" : ", ") << child;
         first = false;

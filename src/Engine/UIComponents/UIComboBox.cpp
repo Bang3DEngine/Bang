@@ -49,11 +49,11 @@ void UIComboBox::OnUpdate()
     m_listRecentlyToggled = false;
 
     // Close when click outside
-    if(IsListBeingShown())
+    if (IsListBeingShown())
     {
-        if(Input::GetMouseButtonDown(MouseButton::LEFT))
+        if (Input::GetMouseButtonDown(MouseButton::LEFT))
         {
-            if(!UICanvas::GetActive(this)->IsMouseOver(this, true))
+            if (!UICanvas::GetActive(this)->IsMouseOver(this, true))
             {
                 HideList();
             }
@@ -64,13 +64,13 @@ void UIComboBox::OnUpdate()
 void UIComboBox::UpdateSelectedItemTopText()
 {
     String content = "";
-    if(GetMultiCheck())
+    if (GetMultiCheck())
     {
-        if(GetSelectedIndices().Size() == 0)
+        if (GetSelectedIndices().Size() == 0)
         {
             content = "- None -";
         }
-        else if(GetSelectedIndices().Size() == 1)
+        else if (GetSelectedIndices().Size() == 1)
         {
             content = m_indexToLabel[GetSelectedIndex()];
         }
@@ -81,7 +81,7 @@ void UIComboBox::UpdateSelectedItemTopText()
     }
     else
     {
-        if(GetSelectedIndex() >= 0)
+        if (GetSelectedIndex() >= 0)
         {
             content = m_indexToLabel[GetSelectedIndex()];
         }
@@ -121,7 +121,7 @@ void UIComboBox::AddItem(const String &label, int value)
     m_indexToLabel.PushBack(label);
     m_checkImgs.PushBack(checkIcon);
 
-    if(m_selectedIndices.IsEmpty() && !GetMultiCheck())
+    if (m_selectedIndices.IsEmpty() && !GetMultiCheck())
     {
         SetSelectionByIndex(0);
     }
@@ -132,11 +132,11 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
 {
     ASSERT(index >= 0 && index < int(m_indexToValue.Size()));
 
-    if(selected)
+    if (selected)
     {
-        if(!m_selectedIndices.Contains(index))
+        if (!m_selectedIndices.Contains(index))
         {
-            if(GetMultiCheck())
+            if (GetMultiCheck())
             {
                 m_checkImgs[index]->SetTint(UITheme::GetTickColor());
             }
@@ -155,18 +155,18 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
     }
     else
     {
-        if(m_selectedIndices.Contains(index))
+        if (m_selectedIndices.Contains(index))
         {
             m_selectedIndices.Remove(index);
-            if(GetMultiCheck())
+            if (GetMultiCheck())
             {
                 m_checkImgs[index]->SetTint(Color::White);
-                if(m_selectedIndices.IsEmpty())
+                if (m_selectedIndices.IsEmpty())
                 {
                     GetList()->ClearSelection();
                 }
             }
-            else if(m_selectedIndices.IsEmpty())
+            else if (m_selectedIndices.IsEmpty())
             {
                 m_selectedIndices.PushBack(0);
             }
@@ -182,7 +182,7 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
 void UIComboBox::SetSelectionByValue(int value, bool selected)
 {
     uint indexOfValue = m_indexToValue.IndexOf(value);
-    if(indexOfValue != -1u)
+    if (indexOfValue != -1u)
     {
         SetSelectionByIndex(indexOfValue, selected);
     }
@@ -191,7 +191,7 @@ void UIComboBox::SetSelectionByValue(int value, bool selected)
 void UIComboBox::SetSelectionByLabel(const String &label, bool selected)
 {
     uint indexOfLabel = m_indexToLabel.IndexOf(label);
-    if(indexOfLabel != -1u)
+    if (indexOfLabel != -1u)
     {
         SetSelectionByIndex(indexOfLabel, selected);
     }
@@ -214,9 +214,9 @@ void UIComboBox::SetSelectionByLabel(const String &label)
 
 void UIComboBox::SetSelectionForFlag(int flagValue)
 {
-    for(int i = 0; i < GetNumItems(); ++i)
+    for (int i = 0; i < GetNumItems(); ++i)
     {
-        if(flagValue & (1 << i))
+        if (flagValue & (1 << i))
         {
             SetSelectionByIndex(i);
         }
@@ -225,16 +225,16 @@ void UIComboBox::SetSelectionForFlag(int flagValue)
 
 void UIComboBox::SetMultiCheck(bool multicheck)
 {
-    if(multicheck != GetMultiCheck())
+    if (multicheck != GetMultiCheck())
     {
         m_multiCheck = multicheck;
 
-        for(UIImageRenderer *checkImg : m_checkImgs)
+        for (UIImageRenderer *checkImg : m_checkImgs)
         {
             checkImg->GetGameObject()->SetEnabled(GetMultiCheck());
         }
 
-        if(!GetMultiCheck())
+        if (!GetMultiCheck())
         {
             GetList()->ClearSelection();
         }
@@ -255,7 +255,7 @@ void UIComboBox::ClearSelectionByValue(int value)
 
 void UIComboBox::ClearSelection()
 {
-    for(int index : m_selectedIndices)
+    for (int index : m_selectedIndices)
     {
         EventEmitter<IEventsValueChanged>::SetEmitEvents(false);
         ClearSelectionByIndex(index);
@@ -268,7 +268,7 @@ void UIComboBox::ClearSelection()
 void UIComboBox::ClearItems()
 {
     HideList();
-    while(!m_indexToLabel.IsEmpty())
+    while (!m_indexToLabel.IsEmpty())
     {
         const String label = m_indexToLabel.Back();
         RemoveItem(label);
@@ -278,7 +278,7 @@ void UIComboBox::ClearItems()
 void UIComboBox::RemoveItem(const String &label)
 {
     uint indexOfLabel = m_indexToLabel.IndexOf(label);
-    if(indexOfLabel != -1u)
+    if (indexOfLabel != -1u)
     {
         m_checkImgs.RemoveByIndex(indexOfLabel);
         m_indexToValue.RemoveByIndex(indexOfLabel);
@@ -290,7 +290,7 @@ void UIComboBox::RemoveItem(const String &label)
 
 void UIComboBox::ShowList()
 {
-    if(!IsListBeingShown())
+    if (!IsListBeingShown())
     {
         m_timeWithListShown.SetNanos(0);
         SCAST<UIFocusable *>(GetList()->GetFocusable())->SetEnabled(true);
@@ -310,7 +310,7 @@ bool UIComboBox::IsSelectedByIndex(int index) const
 
 void UIComboBox::HideList()
 {
-    if(IsListBeingShown())
+    if (IsListBeingShown())
     {
         m_timeWithListShown.SetNanos(0);
         SCAST<UIFocusable *>(GetList()->GetFocusable())->SetEnabled(false);
@@ -330,8 +330,8 @@ bool UIComboBox::GetMultiCheck() const
 
 int UIComboBox::GetSelectedValue() const
 {
-    if(GetSelectedIndex() >= 0 &&
-       GetSelectedIndex() < int(m_indexToValue.Size()))
+    if (GetSelectedIndex() >= 0 &&
+        GetSelectedIndex() < int(m_indexToValue.Size()))
     {
         return m_indexToValue[GetSelectedIndex()];
     }
@@ -340,7 +340,7 @@ int UIComboBox::GetSelectedValue() const
 
 int UIComboBox::GetSelectedIndex() const
 {
-    if(m_selectedIndices.Size() >= 1)
+    if (m_selectedIndices.Size() >= 1)
     {
         return m_selectedIndices[0];
     }
@@ -354,7 +354,7 @@ const Array<int> &UIComboBox::GetSelectedIndices() const
 
 UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch(event.type)
+    switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
             GameObjectFactory::MakeBorderFocused(p_border);
@@ -367,11 +367,11 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 
         case UIEvent::Type::MOUSE_CLICK_UP:
         {
-            if(!m_listRecentlyToggled)
+            if (!m_listRecentlyToggled)
             {
-                if(IsListBeingShown() &&
-                   GetList()->GetFocusable()->IsMouseOver() &&
-                   m_timeWithListShown.GetSeconds() > 0.3)
+                if (IsListBeingShown() &&
+                    GetList()->GetFocusable()->IsMouseOver() &&
+                    m_timeWithListShown.GetSeconds() > 0.3)
                 {
                     m_listRecentlyToggled = true;
                 }
@@ -382,16 +382,16 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 
         case UIEvent::Type::MOUSE_CLICK_DOWN:
         {
-            if(!m_listRecentlyToggled)
+            if (!m_listRecentlyToggled)
             {
-                if(!IsListBeingShown())
+                if (!IsListBeingShown())
                 {
                     m_listRecentlyToggled = true;
                     ShowList();
                 }
                 else
                 {
-                    if(!GetList()->GetFocusable()->IsMouseOver())
+                    if (!GetList()->GetFocusable()->IsMouseOver())
                     {
                         HideList();
                     }
@@ -402,11 +402,11 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
         break;
 
         case UIEvent::Type::KEY_DOWN:
-            switch(event.key.key)
+            switch (event.key.key)
             {
                 case Key::SPACE:
                 case Key::ENTER:
-                    if(IsListBeingShown())
+                    if (IsListBeingShown())
                     {
                         HideList();
                     }
@@ -441,8 +441,8 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 
 String UIComboBox::GetSelectedLabel() const
 {
-    if(GetSelectedIndex() >= 0 &&
-       GetSelectedIndex() < int(m_indexToValue.Size()))
+    if (GetSelectedIndex() >= 0 &&
+        GetSelectedIndex() < int(m_indexToValue.Size()))
     {
         return m_indexToLabel[GetSelectedIndex()];
     }
@@ -458,7 +458,7 @@ Array<int> UIComboBox::GetSelectedValues() const
 {
     Array<int> selectedValues;
     const Array<int> &selectedIndices = GetSelectedIndices();
-    for(int selectedIndex : selectedIndices)
+    for (int selectedIndex : selectedIndices)
     {
         selectedValues.PushBack(m_indexToValue[selectedIndex]);
     }
@@ -469,7 +469,7 @@ int UIComboBox::GetSelectedValuesForFlag() const
 {
     int bitwiseOr = 0;
     auto selectedValues = GetSelectedValues();
-    for(int selectedValue : selectedValues)
+    for (int selectedValue : selectedValues)
     {
         bitwiseOr |= selectedValue;
     }
@@ -583,13 +583,14 @@ void UIComboBox::OnListSelectionCallback(GameObject *item,
     int indexOfItem = p_list->GetItems().IndexOf(item);
     ASSERT(indexOfItem >= 0);
 
-    switch(action)
+    switch (action)
     {
         case UIList::Action::MOUSE_LEFT_UP:
-            if(IsListBeingShown() && GetList()->GetFocusable()->IsMouseOver() &&
-               m_timeWithListShown.GetSeconds() > 0.3)
+            if (IsListBeingShown() &&
+                GetList()->GetFocusable()->IsMouseOver() &&
+                m_timeWithListShown.GetSeconds() > 0.3)
             {
-                if(!GetMultiCheck())
+                if (!GetMultiCheck())
                 {
                     SetSelectionByIndex(indexOfItem, true);
                     HideList();
@@ -598,7 +599,7 @@ void UIComboBox::OnListSelectionCallback(GameObject *item,
             break;
 
         case UIList::Action::SELECTION_IN:
-            if(GetMultiCheck())
+            if (GetMultiCheck())
             {
                 SetSelectionByIndex(indexOfItem,
                                     !IsSelectedByIndex(indexOfItem));

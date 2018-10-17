@@ -50,7 +50,7 @@ GameObject *CreateGameObjectFromModelNodeTree(
     const Tree<ModelIONode> *modelTree)
 {
     GameObject *gameObject = GameObjectFactory::CreateGameObject();
-    if(!modelTree)
+    if (!modelTree)
     {
         return gameObject;
     }
@@ -65,14 +65,14 @@ GameObject *CreateGameObjectFromModelNodeTree(
 
     // Add mesh renderers
     bool addAnimator = false;
-    for(uint i = 0; i < modelNode.meshIndices.Size(); ++i)
+    for (uint i = 0; i < modelNode.meshIndices.Size(); ++i)
     {
         Mesh *mesh = modelScene.meshes[modelNode.meshIndices[i]].Get();
         Material *material =
             modelScene.materials[modelNode.meshMaterialIndices[i]].Get();
 
         MeshRenderer *mr = nullptr;
-        if(mesh->GetBonesPool().IsEmpty())
+        if (mesh->GetBonesPool().IsEmpty())
         {
             mr = gameObject->AddComponent<MeshRenderer>();
         }
@@ -87,7 +87,7 @@ GameObject *CreateGameObjectFromModelNodeTree(
         mr->SetMaterial(material);
     }
 
-    if(addAnimator && modelScene.animations.Size() >= 1)
+    if (addAnimator && modelScene.animations.Size() >= 1)
     {
         RH<AnimatorStateMachine> animatorSM =
             Resources::Create<AnimatorStateMachine>();
@@ -97,7 +97,7 @@ GameObject *CreateGameObjectFromModelNodeTree(
     }
 
     // Add children
-    for(const Tree<ModelIONode> *childTree : modelTree->GetChildren())
+    for (const Tree<ModelIONode> *childTree : modelTree->GetChildren())
     {
         GameObject *childGo =
             CreateGameObjectFromModelNodeTree(modelScene, childTree);
@@ -115,7 +115,7 @@ GameObject *Model::CreateGameObjectFromModel() const
     // If skinned mesh renderer, set bone references to gameObjects
     Array<SkinnedMeshRenderer *> smrs =
         modelGo->GetComponentsInDescendantsAndThis<SkinnedMeshRenderer>();
-    for(SkinnedMeshRenderer *smr : smrs)
+    for (SkinnedMeshRenderer *smr : smrs)
     {
         smr->RetrieveBonesBindPoseFromCurrentHierarchy();
     }
@@ -166,7 +166,7 @@ void Model::Import(const Path &modelFilepath)
 {
     m_modelScene.Clear();
     ClearEmbeddedResources();
-    if(!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
+    if (!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
     {
         Debug_Error("Can not load model " << modelFilepath << ". "
                                           << "Look for errors above.");

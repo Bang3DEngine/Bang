@@ -13,7 +13,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     List<String> args;
 
     // Output mode
-    switch(job.outputMode)
+    switch (job.outputMode)
     {
         case OutputType::OBJECT:
         case OutputType::EXECUTABLE: args.PushBack("-c"); break;
@@ -29,7 +29,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
 
     // Include paths
     List<String> incPaths = job.includePaths.To<List, String>();
-    for(String &incPath : incPaths)
+    for (String &incPath : incPaths)
     {
         incPath.Prepend("-I\"");
         incPath.Append("\"");
@@ -38,7 +38,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
 
     // Library directories
     List<String> libDirs = job.libDirs.To<List, String>();
-    for(String &libDir : libDirs)
+    for (String &libDir : libDirs)
     {
         libDir.Prepend("-L\"");
         libDir.Append("\"");
@@ -47,7 +47,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
 
     // Libraries
     List<String> libs = job.libraries.To<List, String>();
-    for(String &lib : libs)
+    for (String &lib : libs)
     {
         lib.Prepend("-l");
     }
@@ -74,7 +74,7 @@ void Compiler::Job::AddInputFile(const Path &path)
 
 void Compiler::Job::AddInputFiles(const Array<Path> &paths)
 {
-    for(const Path &p : paths)
+    for (const Path &p : paths)
     {
         AddInputFile(p);
     }

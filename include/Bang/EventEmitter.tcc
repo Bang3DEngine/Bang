@@ -8,9 +8,9 @@ template <class T>
 EventEmitter<T>::~EventEmitter()
 {
     ++m_iterationDepth;
-    for(EventListener<T> *listener : GetListeners())
+    for (EventListener<T> *listener : GetListeners())
     {
-        if(listener)
+        if (listener)
         {
             UnRegisterListener(listener);
         }
@@ -32,7 +32,7 @@ bool EventEmitter<T>::IsEmittingEvents() const
 template <class T>
 void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 {
-    if(!m_listeners.Contains(listener))
+    if (!m_listeners.Contains(listener))
     {
         m_listeners.PushBack(listener);
         listener->AddEmitter(this);
@@ -42,7 +42,7 @@ void EventEmitter<T>::RegisterListener(EventListener<T> *listener)
 template <class T>
 void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 {
-    if(m_iterationDepth == 0)
+    if (m_iterationDepth == 0)
     {
         m_listeners.Remove(listener);
     }
@@ -56,9 +56,9 @@ void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 template <class T>
 void EventEmitter<T>::MarkListenerAsDeleted(EventListener<T> *listener)
 {
-    for(int i = 0; i < GetListeners().Size(); ++i)
+    for (int i = 0; i < GetListeners().Size(); ++i)
     {
-        if(GetListeners()[i] == listener)
+        if (GetListeners()[i] == listener)
         {
             GetListeners()[i] = nullptr;
         }
@@ -103,27 +103,27 @@ void EventEmitter<T>::PropagateToArrayFunctor(
 {
     bool propagatingToListeners = (&array == &m_listeners);
     const std::size_t arraySize = array.Size();
-    if(arraySize > 0 && IsEmittingEvents())
+    if (arraySize > 0 && IsEmittingEvents())
     {
-        if(propagatingToListeners)
+        if (propagatingToListeners)
         {
             ++m_iterationDepth;
         }
 
-        for(int i = 0; i < arraySize; ++i)
+        for (int i = 0; i < arraySize; ++i)
         {
-            if(EventListener<T> *listener = array[i])
+            if (EventListener<T> *listener = array[i])
             {
-                if(listener->IsReceivingEvents())
+                if (listener->IsReceivingEvents())
                 {
                     listenerCall(listener);
                 }
             }
         }
 
-        if(propagatingToListeners)
+        if (propagatingToListeners)
         {
-            if(--m_iterationDepth == 0)
+            if (--m_iterationDepth == 0)
             {
                 EventEmitter<T> *ncThis = const_cast<EventEmitter<T> *>(this);
                 ncThis->ClearDeletedListeners();

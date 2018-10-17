@@ -38,7 +38,7 @@ void AudioManager::Init()
 
 AudioManager::~AudioManager()
 {
-    for(const auto &pair : m_sourcesToPlayers)
+    for (const auto &pair : m_sourcesToPlayers)
     {
         AudioPlayerRunnable *audioPlayer = pair.second;
         ALuint sourceId = audioPlayer->GetALAudioSource()->GetALSourceId();
@@ -53,7 +53,7 @@ AudioManager::~AudioManager()
 bool AudioManager::InitAL()
 {
     bool extIsPresent = alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT");
-    if(!extIsPresent)
+    if (!extIsPresent)
     {
         Debug_Error("Enumeration extension not available.");
         return false;
@@ -63,7 +63,7 @@ bool AudioManager::InitAL()
         alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER);
 
     m_alDevice = alcOpenDevice(defaultDeviceName.ToCString());
-    if(!m_alDevice)
+    if (!m_alDevice)
     {
         Debug_Error("Could not start OpenAL Device '" << defaultDeviceName
                                                       << "'");
@@ -71,14 +71,14 @@ bool AudioManager::InitAL()
     }
 
     m_alContext = alcCreateContext(m_alDevice, nullptr);
-    if(!m_alContext)
+    if (!m_alContext)
     {
         Debug_Error("Could not start OpenAL Context");
         return false;
     }
 
     bool currentContextResult = alcMakeContextCurrent(m_alContext);
-    if(!currentContextResult)
+    if (!currentContextResult)
     {
         Debug_Error("Could not set OpenAL Context");
         return false;
@@ -89,7 +89,7 @@ bool AudioManager::InitAL()
 
 String AudioManager::GetALErrorEnumString(ALenum errorEnum)
 {
-    switch(errorEnum)
+    switch (errorEnum)
     {
         case AL_NO_ERROR: return "AL_NO_ERROR";
         case AL_INVALID_NAME: return "AL_INVALID_NAME";
@@ -104,7 +104,7 @@ String AudioManager::GetALErrorEnumString(ALenum errorEnum)
 
 String AudioManager::GetALCErrorEnumString(ALCenum errorEnum)
 {
-    switch(errorEnum)
+    switch (errorEnum)
     {
         case ALC_NO_ERROR: return "ALC_NO_ERROR";
         case ALC_INVALID_DEVICE: return "ALC_INVALID_DEVICE";
@@ -119,12 +119,12 @@ String AudioManager::GetALCErrorEnumString(ALCenum errorEnum)
 
 void AudioManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    if(ALAudioSource *alAudioSource = DCAST<ALAudioSource *>(object))
+    if (ALAudioSource *alAudioSource = DCAST<ALAudioSource *>(object))
     {
         OnALAudioSourceDestroyed(alAudioSource);
     }
-    else if(AudioPlayerRunnable *audioPlayer =
-                DCAST<AudioPlayerRunnable *>(object))
+    else if (AudioPlayerRunnable *audioPlayer =
+                 DCAST<AudioPlayerRunnable *>(object))
     {
         OnAudioPlayerDestroyed(audioPlayer);
     }
@@ -133,7 +133,7 @@ void AudioManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 void AudioManager::OnALAudioSourceDestroyed(ALAudioSource *alAudioSource)
 {
     alAudioSource->Stop();
-    if(m_sourcesToPlayers.ContainsKey(alAudioSource))
+    if (m_sourcesToPlayers.ContainsKey(alAudioSource))
     {
         AudioPlayerRunnable *audioPlayer =
             m_sourcesToPlayers.Get(alAudioSource);
@@ -143,7 +143,7 @@ void AudioManager::OnALAudioSourceDestroyed(ALAudioSource *alAudioSource)
 
 void AudioManager::OnAudioPlayerDestroyed(AudioPlayerRunnable *audioPlayer)
 {
-    if(m_sourcesToPlayers.ContainsValue(audioPlayer))
+    if (m_sourcesToPlayers.ContainsValue(audioPlayer))
     {
         ALAudioSource *audioSource =
             m_sourcesToPlayers.GetKeysWithValue(audioPlayer).Front();
@@ -155,13 +155,13 @@ ALAudioSource *AudioManager::Play(AudioClip *audioClip,
                                   ALAudioSource *aas,
                                   float delay)
 {
-    if(audioClip)
+    if (audioClip)
     {
         AudioPlayerRunnable *player =
             new AudioPlayerRunnable(audioClip, aas, delay);
         AudioManager *am = AudioManager::GetInstance();
         bool started = am->m_threadPool.TryStart(player);
-        if(started)
+        if (started)
         {
             MutexLocker ml(&am->m_mutexCurrentAudios);
             BANG_UNUSED(ml);
@@ -177,7 +177,7 @@ ALAudioSource *AudioManager::Play(AudioClip *audioClip,
                                   float delay)
 {
     ALAudioSource *aas = nullptr;
-    if(audioClip)
+    if (audioClip)
     {
         aas = new ALAudioSource();
         aas->SetALBufferId(audioClip->GetALBufferId());
@@ -199,7 +199,7 @@ ALAudioSource *AudioManager::Play(const Path &audioClipFilepath,
 void AudioManager::PauseAllSounds()
 {
     AudioManager *am = AudioManager::GetInstance();
-    for(const auto &pair : am->m_sourcesToPlayers)
+    for (const auto &pair : am->m_sourcesToPlayers)
     {
         AudioPlayerRunnable *audioPlayer = pair.second;
         audioPlayer->Pause();
@@ -209,7 +209,7 @@ void AudioManager::PauseAllSounds()
 void AudioManager::ResumeAllSounds()
 {
     AudioManager *am = AudioManager::GetInstance();
-    for(const auto &pair : am->m_sourcesToPlayers)
+    for (const auto &pair : am->m_sourcesToPlayers)
     {
         AudioPlayerRunnable *audioPlayer = pair.second;
         audioPlayer->Resume();
@@ -219,7 +219,7 @@ void AudioManager::ResumeAllSounds()
 void AudioManager::StopAllSounds()
 {
     AudioManager *am = AudioManager::GetInstance();
-    for(const auto &pair : am->m_sourcesToPlayers)
+    for (const auto &pair : am->m_sourcesToPlayers)
     {
         AudioPlayerRunnable *audioPlayer = pair.second;
         audioPlayer->Stop();
@@ -252,10 +252,10 @@ void AudioManager::DettachSourcesFromAudioClip(AudioClip *ac)
     // Dettach all audioSources using this AudioClip.
     // Otherwise OpenAL throws error.
     AudioManager *am = AudioManager::GetInstance();
-    for(const auto &pair : am->m_sourcesToPlayers)
+    for (const auto &pair : am->m_sourcesToPlayers)
     {
         AudioPlayerRunnable *audioPlayer = pair.second;
-        if(audioPlayer->GetAudioClip() == ac)
+        if (audioPlayer->GetAudioClip() == ac)
         {
             audioPlayer->Stop();
             audioPlayer->GetALAudioSource()->SetALBufferId(0);
@@ -266,7 +266,7 @@ void AudioManager::DettachSourcesFromAudioClip(AudioClip *ac)
 void AudioManager::ClearALErrors()
 {
     alGetError();
-    if(ALCdevice *device = AudioManager::GetInstance()->m_alDevice)
+    if (ALCdevice *device = AudioManager::GetInstance()->m_alDevice)
     {
         alcGetError(device);
     }
@@ -278,27 +278,29 @@ bool AudioManager::CheckALError()
     {
         ALenum error = alGetError();
         bool hasError = (error != AL_NO_ERROR);
-        if(hasError)
+        if (hasError)
         {
             const char *errorStr = alGetString(error);
             Debug_Error("OpenAL al error("
                         << AudioManager::GetALErrorEnumString(error)
-                        << "): " << errorStr);
+                        << "): "
+                        << errorStr);
             someError = true;
         }
     }
 
     ALCdevice *device = AudioManager::GetInstance()->m_alDevice;
-    if(device)
+    if (device)
     {
         ALenum error = alcGetError(device);
         bool hasError = (error != AL_NO_ERROR);
-        if(hasError)
+        if (hasError)
         {
             const char *errorStr = alcGetString(device, error);
             Debug_Error("OpenAL alc error("
                         << AudioManager::GetALCErrorEnumString(error)
-                        << "): " << errorStr);
+                        << "): "
+                        << errorStr);
             someError = true;
         }
         alcGetError(device);
@@ -315,7 +317,7 @@ List<String> AudioManager::GetAudioDevicesList()
     const ALCchar *currentChar = devices;
     const ALCchar *nextChar = currentChar + 1;
 
-    while(currentChar && *currentChar != '\0' && nextChar && *nextChar != '\0')
+    while (currentChar && *currentChar != '\0' && nextChar && *nextChar != '\0')
     {
         String currentDevice = String(currentChar);
         audioDevicesList.PushBack(currentDevice);

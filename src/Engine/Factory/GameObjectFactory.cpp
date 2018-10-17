@@ -50,7 +50,7 @@ using namespace Bang;
 GameObject *GameObjectFactory::CreateGameObject(bool addTransform)
 {
     GameObject *go = GameObject::Create<GameObject>();
-    if(addTransform && !go->HasComponent<Transform>())
+    if (addTransform && !go->HasComponent<Transform>())
     {
         go->AddComponent<Transform>();
     }
@@ -80,9 +80,9 @@ GameObject *GameObjectFactory::CreateUIGameObjectNamed(const String &name)
 
 void GameObjectFactory::CreateUIGameObjectInto(GameObject *go, bool addComps)
 {
-    if(addComps)
+    if (addComps)
     {
-        if(!go->HasComponent<RectTransform>())
+        if (!go->HasComponent<RectTransform>())
         {
             go->AddComponent<RectTransform>();
         }
@@ -92,7 +92,7 @@ void GameObjectFactory::CreateUIGameObjectInto(GameObject *go, bool addComps)
 Scene *GameObjectFactory::CreateScene(bool addTransform)
 {
     Scene *scene = GameObject::Create<Scene>();
-    if(addTransform && !scene->GetTransform())
+    if (addTransform && !scene->GetTransform())
     {
         scene->AddComponent<Transform>();
     }
@@ -366,12 +366,12 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
     const Vector2i size(15);
     UIButton *btn = GameObjectFactory::CreateUIButton();
 
-    if(!text.IsEmpty())
+    if (!text.IsEmpty())
     {
         btn->GetText()->SetContent(text);
     }
 
-    if(icon)
+    if (icon)
     {
         btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
     }
@@ -379,28 +379,28 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
     constexpr int BigPadding = 10;
     constexpr int MediumPadding = 6;
     constexpr int SmallPadding = 3;
-    if(!text.IsEmpty() && !icon)
+    if (!text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingRight(BigPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
     }
-    else if(!text.IsEmpty() && icon)
+    else if (!text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if(text.IsEmpty() && icon)
+    else if (text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(SmallPadding);
         btn->GetDirLayout()->SetPaddingTop(SmallPadding);
         btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if(text.IsEmpty() && !icon)
+    else if (text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
@@ -428,12 +428,12 @@ UIToolButton *GameObjectFactory::CreateUIToolButton(const String &text,
     const Vector2i size(15);
     UIToolButton *btn = GameObjectFactory::CreateUIToolButton();
 
-    if(!text.IsEmpty())
+    if (!text.IsEmpty())
     {
         btn->GetText()->SetContent(text);
     }
 
-    if(icon)
+    if (icon)
     {
         btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
     }
@@ -441,28 +441,28 @@ UIToolButton *GameObjectFactory::CreateUIToolButton(const String &text,
     constexpr int BigPadding = 10;
     constexpr int MediumPadding = 6;
     constexpr int SmallPadding = 3;
-    if(!text.IsEmpty() && !icon)
+    if (!text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingRight(BigPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
     }
-    else if(!text.IsEmpty() && icon)
+    else if (!text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if(text.IsEmpty() && icon)
+    else if (text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(SmallPadding);
         btn->GetDirLayout()->SetPaddingTop(SmallPadding);
         btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if(text.IsEmpty() && !icon)
+    else if (text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
@@ -556,11 +556,11 @@ GameObject *GameObjectFactory::CreateUISpacer(LayoutSizeType sizeType,
     le->SetPreferredSize(Vector2i(0));
     le->SetFlexibleSize(Vector2(0));
 
-    if(sizeType == LayoutSizeType::MIN)
+    if (sizeType == LayoutSizeType::MIN)
     {
         le->SetMinSize(Vector2i(space));
     }
-    else if(sizeType == LayoutSizeType::PREFERRED)
+    else if (sizeType == LayoutSizeType::PREFERRED)
     {
         le->SetPreferredSize(Vector2i(space));
     }
@@ -615,8 +615,8 @@ UIImageRenderer *GameObjectFactory::AddOuterShadow(GameObject *uiGo,
     outerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
     outerShadowImg->SetDepthMask(false);
     outerShadowGo->GetRectTransform()->TranslateLocal(Vector3(0, 0, 0.001f));
-    outerShadowGo->GetRectTransform()->SetMargins(-size.x, -size.y, -size.x,
-                                                  -size.y);
+    outerShadowGo->GetRectTransform()->SetMargins(
+        -size.x, -size.y, -size.x, -size.y);
     outerShadowGo->SetParent(uiGo);
     return outerShadowImg;
 }
@@ -624,7 +624,8 @@ UIImageRenderer *GameObjectFactory::AddOuterShadow(GameObject *uiGo,
 UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddOuterBorder(
-        uiGo, Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        uiGo,
+        Vector2i(UITheme::GetNotFocusedBorderStroke()),
         UITheme::GetNotFocusedBorderColor());
 }
 
@@ -640,8 +641,8 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
     outerBorderImg->SetSlice9BorderStrokePx(size);
     outerBorderImg->SetTint(color);
     outerBorderGo->GetRectTransform()->TranslateLocal(Vector3(0, 0, -0.00001f));
-    outerBorderGo->GetRectTransform()->SetMargins(-size.x, -size.y, -size.x,
-                                                  -size.y);
+    outerBorderGo->GetRectTransform()->SetMargins(
+        -size.x, -size.y, -size.x, -size.y);
     outerBorderGo->SetParent(uiGo);
     return outerBorderImg;
 }
@@ -649,7 +650,8 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
 UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddInnerBorder(
-        uiGo, Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        uiGo,
+        Vector2i(UITheme::GetNotFocusedBorderStroke()),
         UITheme::GetNotFocusedBorderColor());
 }
 
@@ -667,7 +669,7 @@ UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
 
 void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
 {
-    if(border)
+    if (border)
     {
         border->SetTint(UITheme::GetFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
@@ -677,7 +679,7 @@ void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
 
 void GameObjectFactory::MakeBorderNotFocused(UIImageRenderer *border)
 {
-    if(border)
+    if (border)
     {
         border->SetTint(UITheme::GetNotFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
@@ -691,10 +693,10 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 
     String duplicateNameNumber = "";
     bool isDuplicatedName = false;
-    for(int i = originalName.Size() - 1; i >= 0; --i)
+    for (int i = originalName.Size() - 1; i >= 0; --i)
     {
         char c = originalName[i];
-        if(String::IsNumber(c))
+        if (String::IsNumber(c))
         {
             isDuplicatedName = true;
             duplicateNameNumber.Prepend(String(c));
@@ -707,7 +709,7 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
     }
 
     String duplicateName;
-    if(isDuplicatedName)
+    if (isDuplicatedName)
     {
         int duplicateNumber = String::ToInt(duplicateNameNumber);
         duplicateName = originalName.SubString(
@@ -750,7 +752,7 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();
     le->SetPreferredSize(Vector2i::Max(space, Vector2i::One));
     bool horizontal = (space.x == 0);
-    if(horizontal)
+    if (horizontal)
     {
         le->SetFlexibleSize(Vector2(99999999, 0));
         lr->SetPoints(

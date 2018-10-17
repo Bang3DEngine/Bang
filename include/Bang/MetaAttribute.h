@@ -76,7 +76,7 @@ inline String MetaAttribute::Get() const
 template <>
 inline Path MetaAttribute::Get() const
 {
-    if(GetStringValue().IsEmpty())
+    if (GetStringValue().IsEmpty())
     {
         return Path::Empty;
     }

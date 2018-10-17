@@ -115,7 +115,7 @@ template <class T>
 List<T> List<T>::Concat(const List<T> &l) const
 {
     List<T> result = *this;
-    for(const T &x : l)
+    for (const T &x : l)
     {
         result.PushBack(x);
     }
@@ -132,7 +132,7 @@ template <class T>
 template <template <class OtherT> class Container, class OtherT>
 void List<T>::PushBack(const Container<OtherT> &container)
 {
-    for(auto it = container.Begin(); it != container.End(); ++it)
+    for (auto it = container.Begin(); it != container.End(); ++it)
     {
         PushBack(*it);
     }
@@ -148,7 +148,7 @@ template <class T>
 template <class StrictWeakOrdering>
 void List<T>::Sort(const StrictWeakOrdering &sortClass)
 {
-    if(!IsEmpty())
+    if (!IsEmpty())
     {
         m_list.sort(sortClass);
     }
@@ -182,9 +182,9 @@ template <class T>
 int List<T>::IndexOf(const T &x) const
 {
     int i = 0;
-    for(const T &y : *this)
+    for (const T &y : *this)
     {
-        if(x == y)
+        if (x == y)
         {
             return i;
         }
@@ -202,9 +202,9 @@ void List<T>::PopBack()
 template <class T>
 void List<T>::RemoveAll(const T &x)
 {
-    for(Iterator it = Begin(); it != End();)
+    for (Iterator it = Begin(); it != End();)
     {
-        if(*it == x)
+        if (*it == x)
         {
             it = Remove(it);
         }
@@ -236,9 +236,9 @@ typename List<T>::Iterator List<T>::Find(const T &x)
 template <class T>
 typename List<T>::Iterator List<T>::FindLast(const T &x)
 {
-    for(auto it = RBegin(); it != REnd(); ++it)
+    for (auto it = RBegin(); it != REnd(); ++it)
     {
-        if(*it == x)
+        if (*it == x)
         {
             Iterator res = it.base();
             std::advance(res, -1);
@@ -296,7 +296,7 @@ template <class T>
 typename List<T>::Iterator List<T>::Remove(const T &x)
 {
     Iterator it = Find(x);
-    if(it != End())
+    if (it != End())
     {
         return Remove(it);
     }
@@ -380,7 +380,7 @@ template <template <class> class Container, class OtherT>
 Container<OtherT> List<T>::To() const
 {
     Container<OtherT> cont;
-    for(const T &x : *this)
+    for (const T &x : *this)
     {
         cont.PushBack(Cast<OtherT>(x));
     }

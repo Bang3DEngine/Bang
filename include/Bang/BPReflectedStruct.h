@@ -15,7 +15,7 @@ public:
     BPReflectedStruct();
     virtual ~BPReflectedStruct() override;
 
-    void AddProperty(const BPReflectedVariable &prop);
+    void AddVariable(const BPReflectedVariable &prop);
 
     const String &GetStructName() const;
     const String &GetStructVariableName() const;

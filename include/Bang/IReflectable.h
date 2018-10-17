@@ -2,28 +2,31 @@
 #define IREFLECTABLE_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/BPReflectedStruct.h"
 
 namespace Bang
 {
-#define BP_REFLECT_VARIABLE(...)
-#define BP_REFLECT_CLASS(...)
-#define BP_REFLECT_STRUCT(...)
-#define BP_REFLECT_DEFINITIONS(...)
+#define BANG_REFLECT_VARIABLE(...)
+#define BANG_REFLECT_CLASS(...)
+#define BANG_REFLECT_STRUCT(...)
+#define BANG_REFLECT_DEFINITIONS(...)
 
 class BPReflectedStruct;
 
 class IReflectable
 {
 public:
-    virtual const BPReflectedStruct &GetReflectionInfo() const;
+    const BPReflectedStruct &GetReflectionInfo() const;
 
 protected:
-    IReflectable()
-    {
-    }
-    virtual ~IReflectable()
-    {
-    }
+    IReflectable() = default;
+    virtual ~IReflectable() = default;
+
+    virtual void Reflect() const;
+    BPReflectedStruct *GetReflectionInfoPtr() const;
+
+private:
+    mutable BPReflectedStruct m_reflectionInfo;
 };
 }
 

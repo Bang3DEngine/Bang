@@ -4,6 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/HideFlags.h"
 #include "Bang/IGUIDable.h"
+#include "Bang/IReflectable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
@@ -22,7 +23,8 @@ public:                                          \
         return #CLASS;                           \
     }
 
-class Serializable : public IGUIDable
+class Serializable : public IGUIDable,
+                     public IReflectable
 {
 public:
     virtual ~Serializable() override;

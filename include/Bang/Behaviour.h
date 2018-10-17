@@ -27,11 +27,6 @@ class Behaviour : public Component,
 public:
     Behaviour();
     virtual ~Behaviour() override;
-
-    virtual const BPReflectedStruct &GetReflectionInfo() const;
-
-public:
-    mutable BPReflectedStruct m_reflectionInfo;
 };
 
 // DEFINES

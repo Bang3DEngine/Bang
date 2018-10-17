@@ -16,8 +16,3 @@ Behaviour::Behaviour()
 Behaviour::~Behaviour()
 {
 }
-
-const BPReflectedStruct &Behaviour::GetReflectionInfo() const
-{
-    return m_reflectionInfo;
-}

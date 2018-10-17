@@ -16,42 +16,16 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-const Array<String> BP::VarTypeInt = {"int"};
-const Array<String> BP::VarTypeBool = {"bool"};
-const Array<String> BP::VarTypeColor = {"Color"};
-const Array<String> BP::VarTypeFloat = {"float"};
-const Array<String> BP::VarTypeDouble = {"double"};
-const Array<String> BP::VarTypeString = {"std::string", "string", "String"};
-const Array<String> BP::VarTypeVector2 = {"Vector2"};
-const Array<String> BP::VarTypeVector3 = {"Vector3"};
-const Array<String> BP::VarTypeVector4 = {"Vector4"};
-const Array<String> BP::VarTypeQuaternion = {"Quaternion"};
-
 const Array<String> BP::Modifiers = {"const", "constexpr", "volatile",
                                      "static"};
 
-const Array<String> BP::VarTypes = {BP::VarTypeInt[0],
-                                    BP::VarTypeBool[0],
-                                    BP::VarTypeColor[0],
-                                    BP::VarTypeFloat[0],
-                                    BP::VarTypeDouble[0],
-                                    BP::VarTypeString[0],
-                                    BP::VarTypeString[1],
-                                    BP::VarTypeString[2],
-                                    BP::VarTypeVector2[0],
-                                    BP::VarTypeVector3[0],
-                                    BP::VarTypeVector4[0],
-                                    BP::VarTypeQuaternion[0],
-                                    "struct",
-                                    "class"};
+const Array<String> BP::RVariablePrefixes = {"BANG_REFLECT_VARIABLE"};
 
-const Array<String> BP::RVariablePrefixes = {"BP_REFLECT_VARIABLE"};
+const Array<String> BP::RStructPrefixes = {"BANG_REFLECT_CLASS",
+                                           "BANG_REFLECT_STRUCT"};
 
-const Array<String> BP::RStructPrefixes = {"BP_REFLECT_CLASS",
-                                           "BP_REFLECT_STRUCT"};
-
-const String BP::ReflectDefinitionsDefineName = "BP_REFLECT_DEFINITIONS";
-const String BP::ReflectionInfoVarName = "m_reflectionInfo";
+const String BP::ReflectDefinitionsDefineName = "BANG_REFLECT_DEFINITIONS";
+const String BP::GetReflectionInfoPtrFuncName = "GetReflectionInfoPtr()";
 
 void BangPreprocessor::Preprocess(const Path &filepath)
 {
@@ -310,8 +284,4 @@ void BangPreprocessor::FindNextWord(String::Iterator begin,
         }
         c = *(*wordEnd);
     }
-}
-
-BangPreprocessor::BangPreprocessor()
-{
 }

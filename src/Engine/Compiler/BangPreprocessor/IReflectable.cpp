@@ -6,6 +6,15 @@ using namespace Bang;
 
 const BPReflectedStruct &IReflectable::GetReflectionInfo() const
 {
-    static BPReflectedStruct empty;
-    return empty;
+    return m_reflectionInfo;
+}
+
+void IReflectable::Reflect() const
+{
+    // Empty
+}
+
+BPReflectedStruct *IReflectable::GetReflectionInfoPtr() const
+{
+    return &m_reflectionInfo;
 }

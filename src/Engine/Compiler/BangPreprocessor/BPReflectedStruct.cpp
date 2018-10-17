@@ -84,7 +84,7 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
         BPReflectedVariable bProperty;
         BPReflectedVariable::FromString(propertyBegin, propertyEnd, &bProperty,
                                         success);
-        outStruct->AddProperty(bProperty);
+        outStruct->AddVariable(bProperty);
 
         it = propertyEnd;
     }
@@ -102,7 +102,7 @@ void BPReflectedStruct::SetStructVariableName(const String &structVarName)
     m_structVariableName = structVarName;
 }
 
-void BPReflectedStruct::AddProperty(const BPReflectedVariable &prop)
+void BPReflectedStruct::AddVariable(const BPReflectedVariable &prop)
 {
     m_variables.PushBack(prop);
 }
@@ -116,14 +116,14 @@ String BPReflectedStruct::GetInitializationCode() const
         String varInitCode = R"VERBATIM(
               BPReflectedVariable RVAR_NAME;
               RVAR_INIT_CODE
-              REFL_INFO.AddProperty(RVAR_NAME);
+              REFL_INFO->AddVariable(RVAR_NAME);
           )VERBATIM";
 
-        String rVarName = "prop" + String(i++);
+        String rVarName = "var" + String(i++);
         varInitCode.ReplaceInSitu("RVAR_NAME", rVarName);
         varInitCode.ReplaceInSitu("RVAR_INIT_CODE",
                                   rVar.GetInitializationCode(rVarName));
-        varInitCode.ReplaceInSitu("REFL_INFO", BP::ReflectionInfoVarName);
+        varInitCode.ReplaceInSitu("REFL_INFO", BP::GetReflectionInfoPtrFuncName);
         src += varInitCode;
     }
     return src;
@@ -132,14 +132,13 @@ String BPReflectedStruct::GetInitializationCode() const
 String BPReflectedStruct::GetGetReflectionInfoCode() const
 {
     String src = R"VERBATIM(
-     const BPReflectedStruct& GetReflectionInfo() const
+     void Reflect() const override
      {
         INIT_CODE
-        return REFLECT_VAR_NAME;
      }
     )VERBATIM";
 
-    src.ReplaceInSitu("REFLECT_VAR_NAME", BP::ReflectionInfoVarName);
+    src.ReplaceInSitu("REFLECT_VAR_NAME", BP::GetReflectionInfoPtrFuncName);
     src.ReplaceInSitu("INIT_CODE", GetInitializationCode());
     return src;
 }
@@ -160,14 +159,15 @@ String BPReflectedStruct::GetWriteReflectionCode() const
                     metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
             )VERBATIM";
 
-        String varType = var.GetVariableType();
-        if(varType.IsEmpty())
+        BPReflectedVariable::Type varType = var.GetType();
+        if(varType == BPReflectedVariable::Type::NONE)
         {
             continue;
         }
-        varSetSrc.ReplaceInSitu("SET_FUNC", "Set<" + varType + ">");
+        varSetSrc.ReplaceInSitu("SET_FUNC",
+            "Set<" + BPReflectedVariable::GetTypeToString(varType) + ">");
         varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varSetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableCodeName());
+        varSetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
         varsSetsSrc += varSetSrc;
     }
@@ -191,14 +191,15 @@ String BPReflectedStruct::GetReadReflectionCode() const
                     VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
             )VERBATIM";
 
-        String varType = var.GetVariableType();
-        if(varType.IsEmpty())
+        BPReflectedVariable::Type varType = var.GetType();
+        if(varType == BPReflectedVariable::Type::NONE)
         {
             continue;
         }
-        varGetSrc.ReplaceInSitu("GET_FUNC", "Get<" + varType + ">");
+        varGetSrc.ReplaceInSitu("GET_FUNC",
+            "Get<" + BPReflectedVariable::GetTypeToString(varType) + ">");
         varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varGetSrc.ReplaceInSitu("VAR_NAME", var.GetVariableCodeName());
+        varGetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
         varsGetsSrc += varGetSrc;
     }

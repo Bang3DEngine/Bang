@@ -13,6 +13,12 @@ class Path;
 class BangPreprocessor
 {
 public:
+    const static Array<String> Modifiers;
+    const static Array<String> RVariablePrefixes;
+    const static Array<String> RStructPrefixes;
+    const static String ReflectDefinitionsDefineName;
+    const static String GetReflectionInfoPtrFuncName;
+
     static void Preprocess(const Path &filepath);
     static void Preprocess(const String &source,
                            String *reflectionHeaderSource,
@@ -20,24 +26,7 @@ public:
     static Array<BPReflectedStruct> GetReflectStructs(const Path &sourcePath);
     static Array<BPReflectedStruct> GetReflectStructs(const String &source);
 
-public:
-    const static Array<String> VarTypeInt;
-    const static Array<String> VarTypeBool;
-    const static Array<String> VarTypeFloat;
-    const static Array<String> VarTypeColor;
-    const static Array<String> VarTypeDouble;
-    const static Array<String> VarTypeString;
-    const static Array<String> VarTypeVector2;
-    const static Array<String> VarTypeVector3;
-    const static Array<String> VarTypeVector4;
-    const static Array<String> VarTypeQuaternion;
-
-    const static Array<String> Modifiers;
-    const static Array<String> VarTypes;
-    const static Array<String> RVariablePrefixes;
-    const static Array<String> RStructPrefixes;
-    const static String ReflectDefinitionsDefineName;
-    const static String ReflectionInfoVarName;
+    BangPreprocessor() = delete;
 
     static void RemoveComments(String *source);
 
@@ -62,8 +51,6 @@ public:
                              String::Iterator end,
                              String::Iterator *wordBegin,
                              String::Iterator *wordEnd);
-
-    BangPreprocessor();
 };
 }
 

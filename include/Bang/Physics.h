@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Vector3.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Map.h"
 #include "Bang/Time.h"
+#include "Bang/Vector3.h"
 #include "extensions/PxDefaultAllocator.h"
 #include "extensions/PxDefaultErrorCallback.h"
 #include "foundation/PxQuat.h"
@@ -20,35 +20,36 @@
 #include "foundation/PxVec3.h"
 #include "foundation/PxVec4.h"
 
-FORWARD namespace physx
+namespace physx
 {
-FORWARD class PxCooking;
-FORWARD class PxFoundation;
-FORWARD class PxMaterial;
-FORWARD class PxPhysics;
-FORWARD class PxRigidDynamic;
-FORWARD class PxTriangleMesh;
+class PxCooking;
+class PxFoundation;
+class PxMaterial;
+class PxPhysics;
+class PxRigidDynamic;
+class PxTriangleMesh;
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class  EventEmitter;
-FORWARD   class  GameObject;
-FORWARD   class  IEventsDestroy;
-FORWARD   class  Mesh;
-FORWARD   class  PhysicsMaterial;
-FORWARD   class  PhysicsObject;
-FORWARD   class  PxSceneContainer;
-FORWARD   class  Scene;
-FORWARD   class  Transform;
-FORWARD   struct RayCastHitInfo;
-FORWARD   struct RayCastInfo;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class GameObject;
+class IEventsDestroy;
+class Mesh;
+class PhysicsMaterial;
+class PhysicsObject;
+class PxSceneContainer;
+class Scene;
+class Transform;
+struct RayCastHitInfo;
+struct RayCastInfo;
 
 class Physics : public EventListener<IEventsDestroy>
 {
 public:
-	Physics();
-	virtual ~Physics() override;
+    Physics();
+    virtual ~Physics() override;
 
     void Init();
 
@@ -68,10 +69,10 @@ public:
 
     int GetMaxSubSteps() const;
     Time GetStepSleepTime() const;
-    const Vector3& GetGravity() const;
+    const Vector3 &GetGravity() const;
 
-    PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene);
-    const PxSceneContainer* GetPxSceneContainerFromScene(Scene *scene) const;
+    PxSceneContainer *GetPxSceneContainerFromScene(Scene *scene);
+    const PxSceneContainer *GetPxSceneContainerFromScene(Scene *scene) const;
 
     static void RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo);
     static void RayCast(const Vector3 &origin,
@@ -79,7 +80,7 @@ public:
                         float maxDistance,
                         RayCastHitInfo *hitInfo);
 
-    physx::PxTriangleMesh* CreatePxTriangleMesh(Mesh *mesh) const;
+    physx::PxTriangleMesh *CreatePxTriangleMesh(Mesh *mesh) const;
     static physx::PxMaterial *GetDefaultPxMaterial();
 
     static Vector2 GetVector2FromPxVec2(const physx::PxVec2 &v);
@@ -106,28 +107,27 @@ private:
     Time m_stepSleepTime;
     Vector3 m_gravity = Vector3(0.0f, -30.0f, 0.0f);
 
-    Map<Scene*, PxSceneContainer*> m_sceneToPxSceneContainer;
+    Map<Scene *, PxSceneContainer *> m_sceneToPxSceneContainer;
 
-    Scene* GetSceneFromPhysicsObject(PhysicsObject *phObj) const;
+    Scene *GetSceneFromPhysicsObject(PhysicsObject *phObj) const;
 
-    physx::PxFoundation* GetPxFoundation() const;
-    physx::PxPhysics* GetPxPhysics() const;
+    physx::PxFoundation *GetPxFoundation() const;
+    physx::PxPhysics *GetPxPhysics() const;
 
-    physx::PxMaterial* CreateNewMaterial();
-    physx::PxRigidDynamic *CreateNewPxRigidDynamic(Transform *transform = nullptr);
+    physx::PxMaterial *CreateNewMaterial();
+    physx::PxRigidDynamic *CreateNewPxRigidDynamic(
+        Transform *transform = nullptr);
 
-    static GameObject* GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
+    static GameObject *GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
-    static void FillTransformFromPxTransform(Transform *transform,
-                                             const physx::PxTransform &pxTransform);
+    static void FillTransformFromPxTransform(
+        Transform *transform,
+        const physx::PxTransform &pxTransform);
     static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
 
     friend class RigidBody;
     friend class PxSceneContainer;
 };
+}
 
-
-NAMESPACE_BANG_END
-
-#endif // PHYSICS_H
-
+#endif  // PHYSICS_H

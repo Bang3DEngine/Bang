@@ -7,34 +7,33 @@
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 using BP = BangPreprocessor;
 
 BPReflectedVariable::BPReflectedVariable()
 {
-
 }
 
-void BPReflectedVariable::FromString(
-                            String::Iterator propBegin,
-                            String::Iterator propEnd,
-                            BPReflectedVariable *outProperty,
-                            bool *success)
+void BPReflectedVariable::FromString(String::Iterator propBegin,
+                                     String::Iterator propEnd,
+                                     BPReflectedVariable *outProperty,
+                                     bool *success)
 {
     *success = false;
 
     String::Iterator propListBegin, propListEnd;
-    BP::GetNextScope(propBegin, propEnd, &propListBegin, &propListEnd,
-                     '(', ')');
+    BP::GetNextScope(propBegin, propEnd, &propListBegin, &propListEnd, '(',
+                     ')');
 
     // Process property list
     String propertyListStr(propListBegin + 1, propListEnd - 1);
     Array<String> propertyList = propertyListStr.Split<Array>(',', true);
-    if (propertyList.Size() == 0)
+    if(propertyList.Size() == 0)
     {
         std::cerr << "BP Error: BP_REFLECT_VARIABLE has 0 properties,"
-                     " but must have at least a name" << std::endl;
+                     " but must have at least a name"
+                  << std::endl;
         return;
     }
     outProperty->m_name = propertyList[0];
@@ -47,14 +46,14 @@ void BPReflectedVariable::FromString(
         String::Iterator wordBegin;
         BP::FindNextWord(wordEnd, propEnd, &wordBegin, &wordEnd);
         nextWord = String(wordBegin, wordEnd);
-    }
-    while ( BP::Modifiers.Contains(nextWord) );
+    } while(BP::Modifiers.Contains(nextWord));
 
     String variableType = nextWord;
-    if (!BP::VarTypes.Contains(variableType))
+    if(!BP::VarTypes.Contains(variableType))
     {
         std::cerr << "BP Error: Expected a variable type,"
-                     "but got '" << variableType << "'" << std::endl;
+                     "but got '"
+                  << variableType << "'" << std::endl;
         return;
     }
 
@@ -62,7 +61,7 @@ void BPReflectedVariable::FromString(
 
     String::Iterator nameBegin, nameEnd;
     BP::FindNextWord(wordEnd, propEnd, &nameBegin, &nameEnd);
-    if (nameBegin == propEnd || nameEnd == propEnd)
+    if(nameBegin == propEnd || nameEnd == propEnd)
     {
         std::cerr << "BP Error: Expected a variable name" << std::endl;
         return;
@@ -70,9 +69,9 @@ void BPReflectedVariable::FromString(
     outProperty->m_variableCodeName = String(nameBegin, nameEnd);
 
     String::Iterator assignBegin = std::find(nameEnd, propEnd, '=');
-    if (assignBegin != propEnd)
+    if(assignBegin != propEnd)
     {
-        String initValue (assignBegin + 1, propEnd - 1);
+        String initValue(assignBegin + 1, propEnd - 1);
         initValue = initValue.Trim({' ', '"'});
         outProperty->m_variableInitValue = initValue;
     }
@@ -80,7 +79,8 @@ void BPReflectedVariable::FromString(
     *success = true;
 }
 
-String BPReflectedVariable::GetInitializationCode(const String &rvarInitVarName) const
+String BPReflectedVariable::GetInitializationCode(
+    const String &rvarInitVarName) const
 {
     String src = R"VERBATIM(
             RVAR_VARIABLE_NAME.SetName("RVAR_NAME");
@@ -88,17 +88,17 @@ String BPReflectedVariable::GetInitializationCode(const String &rvarInitVarName)
             RVAR_VARIABLE_NAME.SetVariableCodeName("VARIABLE_CODE_NAME");
             RVAR_VARIABLE_NAME.SetVariableInitValue("VARIABLE_INIT_VALUE");
     )VERBATIM";
-    src.ReplaceInSitu("RVAR_VARIABLE_NAME",  rvarInitVarName);
-    src.ReplaceInSitu("RVAR_NAME",           GetName());
-    src.ReplaceInSitu("VARIABLE_TYPE",       GetVariableType());
-    src.ReplaceInSitu("VARIABLE_CODE_NAME",  GetVariableCodeName());
+    src.ReplaceInSitu("RVAR_VARIABLE_NAME", rvarInitVarName);
+    src.ReplaceInSitu("RVAR_NAME", GetName());
+    src.ReplaceInSitu("VARIABLE_TYPE", GetVariableType());
+    src.ReplaceInSitu("VARIABLE_CODE_NAME", GetVariableCodeName());
     src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetVariableInitValue());
     return src;
 }
 
 bool BPReflectedVariable::IsOfType(const Array<String> &varTypeArray) const
 {
-    return varTypeArray.Contains( GetVariableType() );
+    return varTypeArray.Contains(GetVariableType());
 }
 
 void BPReflectedVariable::SetName(const String &name)
@@ -143,9 +143,6 @@ const String &BPReflectedVariable::GetVariableInitValue() const
 
 String BPReflectedVariable::ToString() const
 {
-    return "(" + GetName() + ", " +
-                 GetVariableType() + ", " +
-                 GetVariableCodeName() + " = " +
-                 GetVariableInitValue() +
-            ")";
+    return "(" + GetName() + ", " + GetVariableType() + ", " +
+           GetVariableCodeName() + " = " + GetVariableInitValue() + ")";
 }

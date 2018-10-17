@@ -3,9 +3,6 @@
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/Texture2D.h"
-#include "Bang/TextureCubeMap.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GL.h"
@@ -18,15 +15,19 @@
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TextureCubeMap.h"
 #include "Bang/Transform.h"
 #include "Bang/TypeTraits.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Texture2D;
-FORWARD class TextureCubeMap;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Texture2D;
+class TextureCubeMap;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Light::Light()
 {
@@ -37,25 +38,55 @@ Light::~Light()
 {
 }
 
-void Light::SetColor(const Color &color) { m_color = color; }
-void Light::SetIntensity(float intensity) { m_intensity = intensity; }
-void Light::SetShadowBias(float shadowBias) { m_shadowBias = shadowBias; }
-void Light::SetShadowType(ShadowType shadowType) { m_shadowType = shadowType; }
+void Light::SetColor(const Color &color)
+{
+    m_color = color;
+}
+void Light::SetIntensity(float intensity)
+{
+    m_intensity = intensity;
+}
+void Light::SetShadowBias(float shadowBias)
+{
+    m_shadowBias = shadowBias;
+}
+void Light::SetShadowType(ShadowType shadowType)
+{
+    m_shadowType = shadowType;
+}
 void Light::SetShadowMapSize(const Vector2i &shadowMapSize)
 {
     m_shadowMapSize = shadowMapSize;
 }
 
-Color Light::GetColor() const { return m_color; }
-float Light::GetIntensity() const { return m_intensity; }
-float Light::GetShadowBias() const { return m_shadowBias; }
-Light::ShadowType Light::GetShadowType() const { return m_shadowType; }
-const Vector2i &Light::GetShadowMapSize() const { return m_shadowMapSize; }
-Texture *Light::GetShadowMapTexture() const { return nullptr; }
+Color Light::GetColor() const
+{
+    return m_color;
+}
+float Light::GetIntensity() const
+{
+    return m_intensity;
+}
+float Light::GetShadowBias() const
+{
+    return m_shadowBias;
+}
+Light::ShadowType Light::GetShadowType() const
+{
+    return m_shadowType;
+}
+const Vector2i &Light::GetShadowMapSize() const
+{
+    return m_shadowMapSize;
+}
+Texture *Light::GetShadowMapTexture() const
+{
+    return nullptr;
+}
 
 void Light::RenderShadowMaps(GameObject *go)
 {
-    if (GetShadowType() != ShadowType::NONE)
+    if(GetShadowType() != ShadowType::NONE)
     {
         RenderShadowMaps_(go);
     }
@@ -71,63 +102,61 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 
     // Intersect with light rect to draw exactly what we need
     GBuffer *gbuffer = camera->GetGBuffer();
-    AARect improvedRenderRect = AARect::Intersection(GetRenderRect(camera),
-                                                     renderRect);
+    AARect improvedRenderRect =
+        AARect::Intersection(GetRenderRect(camera), renderRect);
     // Additive blend
-    gbuffer->ApplyPassBlend(lightSP,
-                            GL::BlendFactor::ONE,
-                            GL::BlendFactor::ONE,
+    gbuffer->ApplyPassBlend(lightSP, GL::BlendFactor::ONE, GL::BlendFactor::ONE,
                             improvedRenderRect);
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 
-void Light::SetUniformsBeforeApplyingLight(ShaderProgram* sp) const
+void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
 {
     ASSERT(GL::IsBound(sp))
 
     Transform *tr = GetGameObject()->GetTransform();
-    sp->SetInt    ("B_LightShadowType",    int( GetShadowType() ));
-    sp->SetFloat  ("B_LightShadowBias",    GetShadowBias());
-    sp->SetFloat  ("B_LightIntensity",     GetIntensity());
-    sp->SetColor  ("B_LightColor",         GetColor());
-    sp->SetVector3("B_LightForwardWorld",  tr->GetForward());
+    sp->SetInt("B_LightShadowType", int(GetShadowType()));
+    sp->SetFloat("B_LightShadowBias", GetShadowBias());
+    sp->SetFloat("B_LightIntensity", GetIntensity());
+    sp->SetColor("B_LightColor", GetColor());
+    sp->SetVector3("B_LightForwardWorld", tr->GetForward());
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
-    if (DCAST<Texture2D*>(GetShadowMapTexture()))
+    if(DCAST<Texture2D *>(GetShadowMapTexture()))
     {
         sp->SetTexture2D("B_LightShadowMap",
-                         SCAST<Texture2D*>(GetShadowMapTexture()));
+                         SCAST<Texture2D *>(GetShadowMapTexture()));
         sp->SetTexture2D("B_LightShadowMapSoft",
-                         SCAST<Texture2D*>(GetShadowMapTexture()));
+                         SCAST<Texture2D *>(GetShadowMapTexture()));
     }
     else
     {
         sp->SetTextureCubeMap("B_LightShadowMap",
-                              SCAST<TextureCubeMap*>(GetShadowMapTexture()));
+                              SCAST<TextureCubeMap *>(GetShadowMapTexture()));
         sp->SetTextureCubeMap("B_LightShadowMapSoft",
-                              SCAST<TextureCubeMap*>(GetShadowMapTexture()));
+                              SCAST<TextureCubeMap *>(GetShadowMapTexture()));
     }
 }
 
-Array<Renderer*> Light::GetShadowCastersIn(GameObject *go) const
+Array<Renderer *> Light::GetShadowCastersIn(GameObject *go) const
 {
-    Array<Renderer*> validShadowCastersRends;
+    Array<Renderer *> validShadowCastersRends;
 
-    Array<Renderer*> shadowCastersRends =
-                            go->GetComponentsInDescendantsAndThis<Renderer>();
-    for (Renderer *rend : shadowCastersRends)
+    Array<Renderer *> shadowCastersRends =
+        go->GetComponentsInDescendantsAndThis<Renderer>();
+    for(Renderer *rend : shadowCastersRends)
     {
-        if (rend->IsActiveRecursively() && rend->GetCastsShadows())
+        if(rend->IsActiveRecursively() && rend->GetCastsShadows())
         {
             bool isValidShadowCaster = false;
-            if (const Material *mat = rend->GetActiveMaterial())
+            if(const Material *mat = rend->GetActiveMaterial())
             {
                 isValidShadowCaster =
-                        (mat->GetRenderPass() == RenderPass::SCENE &&
-                         rend->GetCastsShadows());
+                    (mat->GetRenderPass() == RenderPass::SCENE &&
+                     rend->GetCastsShadows());
             }
 
-            if (isValidShadowCaster)
+            if(isValidShadowCaster)
             {
                 validShadowCastersRends.PushBack(rend);
             }
@@ -151,39 +180,39 @@ AARect Light::GetRenderRect(Camera *camera) const
 void Light::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Light *l = Cast<Light*>(clone);
+    Light *l = Cast<Light *>(clone);
     l->SetIntensity(GetIntensity());
     l->SetColor(GetColor());
-    l->SetShadowBias( GetShadowBias() );
-    l->SetShadowType( GetShadowType() );
-    l->SetShadowMapSize( GetShadowMapSize() );
+    l->SetShadowBias(GetShadowBias());
+    l->SetShadowType(GetShadowType());
+    l->SetShadowMapSize(GetShadowMapSize());
 }
 
 void Light::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Intensity"))
+    if(metaNode.Contains("Intensity"))
     {
         SetIntensity(metaNode.Get<float>("Intensity"));
     }
 
-    if (metaNode.Contains("Color"))
+    if(metaNode.Contains("Color"))
     {
         SetColor(metaNode.Get<Color>("Color"));
     }
 
-    if (metaNode.Contains("ShadowBias"))
+    if(metaNode.Contains("ShadowBias"))
     {
         SetShadowBias(metaNode.Get<float>("ShadowBias"));
     }
 
-    if (metaNode.Contains("ShadowType"))
+    if(metaNode.Contains("ShadowType"))
     {
         SetShadowType(metaNode.Get<ShadowType>("ShadowType"));
     }
 
-    if (metaNode.Contains("ShadowMapSize"))
+    if(metaNode.Contains("ShadowMapSize"))
     {
         SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize"));
     }

@@ -1,76 +1,81 @@
 #include "Bang/GL.h"
 
-#include <GL/glew.h>
 #include <GL/gl.h>
+#include <GL/glew.h>
 
 #include BANG_SDL2_INCLUDE(SDL.h)
 
-#include "Bang/VAO.h"
-#include "Bang/List.h"
-#include "Bang/Rect.h"
 #include "Bang/Debug.h"
-#include "Bang/Window.h"
 #include "Bang/GEngine.h"
-#include "Bang/Matrix3.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Texture.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/StreamOperators.h"
-#include "Bang/Vector4.h"
 #include "Bang/GLObject.h"
 #include "Bang/GLUniforms.h"
+#include "Bang/List.h"
+#include "Bang/Matrix3.h"
+#include "Bang/Matrix4.h"
+#include "Bang/Rect.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/StackAndValue.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Texture.h"
 #include "Bang/TextureUnitManager.h"
+#include "Bang/VAO.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
+#include "Bang/Window.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 // Helper functions
-template<class T>
+template <class T>
 static void SetGLContextValue(StackAndValue<T> *stackAndValue, const T &value)
 {
     stackAndValue->currentValue = value;
 }
-template<class T>
+template <class T>
 static void SetGLContextValue(StackAndValue<T> GL::*svMPtr, const T &value)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
-    SetGLContextValue( &(gl->*svMPtr), value );
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
+    SetGLContextValue(&(gl->*svMPtr), value);
 }
-template<class T>
-static T& GetGLContextValue(StackAndValue<T> &stackAndValue)
+template <class T>
+static T &GetGLContextValue(StackAndValue<T> &stackAndValue)
 {
     return stackAndValue.currentValue;
 }
-template<class T>
-static T& GetGLContextValue(StackAndValue<T> GL::*svMPtr)
+template <class T>
+static T &GetGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     return GetGLContextValue(gl->*svMPtr);
 }
-template<class T>
-static const T& GetGLContextValue(const StackAndValue<T> &stackAndValue)
+template <class T>
+static const T &GetGLContextValue(const StackAndValue<T> &stackAndValue)
 {
     return stackAndValue.currentValue;
 }
-template<class T>
-static const T& GetGLContextValue(const StackAndValue<T> GL::*svMPtr)
+template <class T>
+static const T &GetGLContextValue(const StackAndValue<T> GL::*svMPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     return GetGLContextValue(gl->*svMPtr);
 }
-template<class T>
+template <class T>
 static void PushGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
-    stackAndValue->stack.push( stackAndValue.currentValue );
+    stackAndValue->stack.push(stackAndValue.currentValue);
 }
-template<class T>
-static const T& PopAndGetGLContextValue(StackAndValue<T> GL::*svMPtr)
+template <class T>
+static const T &PopAndGetGLContextValue(StackAndValue<T> GL::*svMPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
 
     ASSERT(stackAndValue.stack.size() >= 1);
@@ -89,7 +94,7 @@ GL::~GL()
     delete m_glUniforms;
 
     SDL_DestroyWindow(m_auxiliarWindowToCreateSharedGLContext);
-    SDL_GL_DeleteContext( GL::GetSharedGLContext() );
+    SDL_GL_DeleteContext(GL::GetSharedGLContext());
 }
 
 void GL::Init()
@@ -100,16 +105,16 @@ void GL::Init()
     int VersionsMajors[] = {4, 4, 3, 3, 3};
     int VersionsMinors[] = {3, 2, 3, 2, 1};
     constexpr int NumVersionsToTry = sizeof(VersionsMajors) / sizeof(int);
-    for (int i = 0; i < NumVersionsToTry; ++i)
+    for(int i = 0; i < NumVersionsToTry; ++i)
     {
         int vMajor = VersionsMajors[i];
         int vMinor = VersionsMinors[i];
 
-        #ifdef DEBUG
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-                                SDL_GL_CONTEXT_DEBUG_FLAG |
-                                SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG);
-        #endif
+#ifdef DEBUG
+        SDL_GL_SetAttribute(
+            SDL_GL_CONTEXT_FLAGS,
+            SDL_GL_CONTEXT_DEBUG_FLAG | SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG);
+#endif
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_CORE);
@@ -118,23 +123,23 @@ void GL::Init()
         SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
         SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
         SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 
-        SDL_Window *sdlWindow = SDL_CreateWindow("BangGLContextWindow",
-                                                 0, 0, 1, 1, SDL_WINDOW_OPENGL);
+        SDL_Window *sdlWindow = SDL_CreateWindow("BangGLContextWindow", 0, 0, 1,
+                                                 1, SDL_WINDOW_OPENGL);
         m_sharedGLContext = SDL_GL_CreateContext(sdlWindow);
 
-        if (m_sharedGLContext)
+        if(m_sharedGLContext)
         {
             m_auxiliarWindowToCreateSharedGLContext = sdlWindow;
             SDL_HideWindow(sdlWindow);
-            Debug_Log("Using OpenGL context with version " <<
-                      vMajor << "." << vMinor);
+            Debug_Log("Using OpenGL context with version " << vMajor << "."
+                                                           << vMinor);
             break;
         }
         else
@@ -143,7 +148,7 @@ void GL::Init()
         }
     }
 
-    if (!m_sharedGLContext)
+    if(!m_sharedGLContext)
     {
         Debug_Error("Could not start an OpenGL context...");
     }
@@ -151,7 +156,7 @@ void GL::Init()
     // Init GLEW
     glewExperimental = true;
     GLenum glewError = glewInit();
-    if (glewError != GLEW_OK)
+    if(glewError != GLEW_OK)
     {
         Debug_Error("Glew init error: " << glewGetErrorString(glewError));
     }
@@ -189,7 +194,7 @@ void GL::Init()
     SetGLContextValue(&GL::m_clearColors, Color::Zero);
     SetGLContextValue(&GL::m_cullFaces, GL::Face::BACK);
 
-    SetGLContextValue(&GL::m_scissorRectsPx, AARecti(-1,-1,-1,-1));
+    SetGLContextValue(&GL::m_scissorRectsPx, AARecti(-1, -1, -1, -1));
     SetGLContextValue(&GL::m_frontPolygonModes, GL::FILL);
     SetGLContextValue(&GL::m_backPolygonModes, GL::FILL);
     SetGLContextValue(&GL::m_frontBackPolygonModes, GL::FILL);
@@ -210,12 +215,12 @@ const std::array<GL::CubeMapDir, 6> &GL::GetAllCubeMapDirs()
     static bool initialized = false;
     static std::array<GL::CubeMapDir, 6> AllCubeMapDirs;
 
-    if (!initialized)
+    if(!initialized)
     {
-        AllCubeMapDirs =
-            {{GL::CubeMapDir::POSITIVE_X, GL::CubeMapDir::NEGATIVE_X,
-              GL::CubeMapDir::POSITIVE_Y, GL::CubeMapDir::NEGATIVE_Y,
-              GL::CubeMapDir::POSITIVE_Z, GL::CubeMapDir::NEGATIVE_Z}};
+        AllCubeMapDirs = {
+            {GL::CubeMapDir::POSITIVE_X, GL::CubeMapDir::NEGATIVE_X,
+             GL::CubeMapDir::POSITIVE_Y, GL::CubeMapDir::NEGATIVE_Y,
+             GL::CubeMapDir::POSITIVE_Z, GL::CubeMapDir::NEGATIVE_Z}};
         initialized = true;
     }
 
@@ -224,31 +229,19 @@ const std::array<GL::CubeMapDir, 6> &GL::GetAllCubeMapDirs()
 
 int GL::GetCubeMapDirIndex(GL::CubeMapDir cmDir)
 {
-    switch (cmDir)
+    switch(cmDir)
     {
-        case GL::CubeMapDir::POSITIVE_X:
-            return 0;
-        break;
+        case GL::CubeMapDir::POSITIVE_X: return 0; break;
 
-        case GL::CubeMapDir::NEGATIVE_X:
-            return 1;
-        break;
+        case GL::CubeMapDir::NEGATIVE_X: return 1; break;
 
-        case GL::CubeMapDir::POSITIVE_Y:
-            return 2;
-        break;
+        case GL::CubeMapDir::POSITIVE_Y: return 2; break;
 
-        case GL::CubeMapDir::NEGATIVE_Y:
-            return 3;
-        break;
+        case GL::CubeMapDir::NEGATIVE_Y: return 3; break;
 
-        case GL::CubeMapDir::POSITIVE_Z:
-            return 4;
-        break;
+        case GL::CubeMapDir::POSITIVE_Z: return 4; break;
 
-        case GL::CubeMapDir::NEGATIVE_Z:
-            return 5;
-        break;
+        case GL::CubeMapDir::NEGATIVE_Z: return 5; break;
     }
 
     ASSERT(false);
@@ -263,17 +256,19 @@ void GL::ClearError()
 bool GL::CheckError(int line, const String &func, const String &file)
 {
     bool ok = true;
-    while (true)
+    while(true)
     {
         GLenum glError = glGetError();
-        if (glError == GL_NO_ERROR) { break; }
+        if(glError == GL_NO_ERROR)
+        {
+            break;
+        }
 
-        const char *err = reinterpret_cast<const char*>(gluErrorString(glError));
-        Debug_Error("OpenGL error \"" << String(err).ToUpper() <<
-                    "\" at function \"" << func << "\" in " <<
-                    file <<
-                    ":" <<
-                    line);
+        const char *err =
+            reinterpret_cast<const char *>(gluErrorString(glError));
+        Debug_Error("OpenGL error \"" << String(err).ToUpper()
+                                      << "\" at function \"" << func << "\" in "
+                                      << file << ":" << line);
         // GL::PrintGLContext();
         ok = false;
     }
@@ -284,62 +279,65 @@ bool GL::CheckFramebufferError()
 {
     const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     const bool error = (status != GL_FRAMEBUFFER_COMPLETE);
-    if (error)
+    if(error)
     {
         String errMsg = "There was a framebuffer error: ";
-        switch (status)
+        switch(status)
         {
             case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
                 errMsg += "FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-            break;
+                break;
             case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
                 errMsg += "FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
-            break;
+                break;
             case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
                 errMsg += "FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-            break;
+                break;
             case GL_FRAMEBUFFER_UNSUPPORTED:
                 errMsg += "FRAMEBUFFER_UNSUPPORTED";
-            break;
+                break;
         }
         Debug_Error(errMsg);
     }
     return !error;
 }
 
-const Color& GL::GetClearColor()
+const Color &GL::GetClearColor()
 {
     return GetGLContextValue(&GL::m_clearColors);
 }
 
 void GL::Clear(GLbitfield bufferBit)
 {
-    GL_CALL( glClear(bufferBit) );
+    GL_CALL(glClear(bufferBit));
 }
 void GL::Clear(GL::BufferBit bufferBit)
 {
-    GL::Clear( SCAST<GLbitfield>(bufferBit) );
+    GL::Clear(SCAST<GLbitfield>(bufferBit));
 }
 
 void GL::SetClearColorBufferValue(const Color &clearColor)
 {
-    if (GL::GetClearColor() != clearColor)
+    if(GL::GetClearColor() != clearColor)
     {
         SetGLContextValue(&GL::m_clearColors, clearColor);
-        GL_CALL( glClearColor(clearColor.r, clearColor.g,
-                              clearColor.b, clearColor.a) );
+        GL_CALL(glClearColor(clearColor.r, clearColor.g, clearColor.b,
+                             clearColor.a));
     }
 }
 
 void GL::ClearColorBuffer(const Color &clearColor,
-                          bool clearR, bool clearG, bool clearB, bool clearA)
+                          bool clearR,
+                          bool clearG,
+                          bool clearB,
+                          bool clearA)
 {
     std::array<bool, 4> lastColorMask = GL::GetColorMask();
     bool differentColorMask =
-                (lastColorMask[0] != clearR) || (lastColorMask[1] != clearG) ||
-                (lastColorMask[2] != clearB) || (lastColorMask[3] != clearA);
+        (lastColorMask[0] != clearR) || (lastColorMask[1] != clearG) ||
+        (lastColorMask[2] != clearB) || (lastColorMask[3] != clearA);
 
-    if (differentColorMask)
+    if(differentColorMask)
     {
         GL::SetColorMask(clearR, clearG, clearB, clearA);
     }
@@ -347,10 +345,10 @@ void GL::ClearColorBuffer(const Color &clearColor,
     GL::SetClearColorBufferValue(clearColor);
     GL::Clear(GL::BufferBit::COLOR);
 
-    if (differentColorMask)
+    if(differentColorMask)
     {
-        GL::SetColorMask(lastColorMask[0], lastColorMask[1],
-                         lastColorMask[2], lastColorMask[3]);
+        GL::SetColorMask(lastColorMask[0], lastColorMask[1], lastColorMask[2],
+                         lastColorMask[3]);
     }
 }
 
@@ -378,12 +376,12 @@ void GL::ClearStencilBuffer(int stencilValue)
 
 void GL::SetClearDepthBufferValue(float clearDepthBufferValue)
 {
-    GL_CALL( glClearDepth(clearDepthBufferValue) );
+    GL_CALL(glClearDepth(clearDepthBufferValue));
 }
 
 void GL::SetClearStencilBufferValue(int clearStencilBufferValue)
 {
-    GL_CALL( glClearStencil(clearStencilBufferValue) );
+    GL_CALL(glClearStencil(clearStencilBufferValue));
 }
 
 void GL::ClearStencilDepthBuffers(int clearStencilValue, float clearDepthValue)
@@ -403,17 +401,17 @@ void GL::ClearColorStencilDepthBuffers(const Color &clearColorValue,
     GL::SetClearDepthBufferValue(clearDepthValue);
     GL::Clear(SCAST<GLbitfield>(GL::BufferBit::DEPTH) |
               SCAST<GLbitfield>(GL::BufferBit::STENCIL) |
-              SCAST<GLbitfield>(GL::BufferBit::COLOR) );
+              SCAST<GLbitfield>(GL::BufferBit::COLOR));
 }
 
 void GL::EnableVertexAttribArray(int location)
 {
-    GL_CALL( glEnableVertexAttribArray(location) );
+    GL_CALL(glEnableVertexAttribArray(location));
 }
 
 void GL::DisableVertexAttribArray(int location)
 {
-    GL_CALL( glDisableVertexAttribArray(location) );
+    GL_CALL(glDisableVertexAttribArray(location));
 }
 
 void GL::VertexAttribPointer(int location,
@@ -423,28 +421,26 @@ void GL::VertexAttribPointer(int location,
                              int dataStride,
                              int dataOffset)
 {
-    GL_CALL(
-    glVertexAttribPointer(location,
-                          dataComponentsCount,
-                          GLCAST(dataType),
-                          dataNormalized,
-                          dataStride,
-                          RCAST<void*>(dataOffset))
-    );
+    GL_CALL(glVertexAttribPointer(location, dataComponentsCount,
+                                  GLCAST(dataType), dataNormalized, dataStride,
+                                  RCAST<void *>(dataOffset)));
 }
 
 void GL::PolygonMode(GL::Face face, GL::Enum mode)
 {
-    if (GL::GetPolygonMode(face) != mode)
+    if(GL::GetPolygonMode(face) != mode)
     {
-        switch (face)
+        switch(face)
         {
             case GL::Face::FRONT_AND_BACK:
-                SetGLContextValue(&GL::m_frontBackPolygonModes, mode); break;
+                SetGLContextValue(&GL::m_frontBackPolygonModes, mode);
+                break;
             case GL::Face::FRONT:
-                SetGLContextValue(&GL::m_frontPolygonModes, mode); break;
+                SetGLContextValue(&GL::m_frontPolygonModes, mode);
+                break;
             case GL::Face::BACK:
-                SetGLContextValue(&GL::m_backPolygonModes, mode); break;
+                SetGLContextValue(&GL::m_backPolygonModes, mode);
+                break;
             default: return;
         }
 
@@ -454,28 +450,27 @@ void GL::PolygonMode(GL::Face face, GL::Enum mode)
 
 GL::Enum GL::GetPolygonMode(GL::Face face)
 {
-    switch (face)
+    switch(face)
     {
         case GL::Face::FRONT_AND_BACK:
             return GetGLContextValue(&GL::m_frontBackPolygonModes);
         case GL::Face::FRONT:
             return GetGLContextValue(&GL::m_frontPolygonModes);
-        case GL::Face::BACK:
-            return GetGLContextValue(&GL::m_backPolygonModes);
+        case GL::Face::BACK: return GetGLContextValue(&GL::m_backPolygonModes);
         default: break;
     }
-    return  GL::FILL;
+    return GL::FILL;
 }
 
-GLvoid* GL::MapBuffer(GL::BindTarget target, GL::Enum access)
+GLvoid *GL::MapBuffer(GL::BindTarget target, GL::Enum access)
 {
-    GL_CALL( GLvoid *ret = glMapBuffer(GLCAST(target), access) );
+    GL_CALL(GLvoid *ret = glMapBuffer(GLCAST(target), access));
     return ret;
 }
 
 void GL::UnMapBuffer(GL::BindTarget target)
 {
-    GL_CALL( glUnmapBuffer( GLCAST(target) ) );
+    GL_CALL(glUnmapBuffer(GLCAST(target)));
 }
 
 int GL::GetUniformsListSize(GLId shaderProgramId)
@@ -485,19 +480,15 @@ int GL::GetUniformsListSize(GLId shaderProgramId)
 
 GL::UniformType GL::GetUniformTypeAt(GLId shaderProgramId, GLuint uniformIndex)
 {
-    if (shaderProgramId == 0) { return GL::UniformType::BYTE; }
+    if(shaderProgramId == 0)
+    {
+        return GL::UniformType::BYTE;
+    }
 
     GLint size = -1;
     GLenum type = -1;
-    GL_CALL(
-    glGetActiveUniform(shaderProgramId,
-                       SCAST<GLuint>(uniformIndex),
-                       0,
-                       NULL,
-                       &size,
-                       &type,
-                       NULL)
-    );
+    GL_CALL(glGetActiveUniform(shaderProgramId, SCAST<GLuint>(uniformIndex), 0,
+                               NULL, &size, &type, NULL));
     return SCAST<GL::UniformType>(type);
 }
 
@@ -511,19 +502,18 @@ void GL::BlendFuncSeparate(GL::BlendFactor srcFactorColor,
                            GL::BlendFactor srcFactorAlpha,
                            GL::BlendFactor dstFactorAlpha)
 {
-    if (srcFactorColor != GL::GetBlendSrcFactorColor() ||
-        dstFactorColor != GL::GetBlendDstFactorColor() ||
-        srcFactorAlpha != GL::GetBlendSrcFactorAlpha() ||
-        dstFactorAlpha != GL::GetBlendDstFactorAlpha())
+    if(srcFactorColor != GL::GetBlendSrcFactorColor() ||
+       dstFactorColor != GL::GetBlendDstFactorColor() ||
+       srcFactorAlpha != GL::GetBlendSrcFactorAlpha() ||
+       dstFactorAlpha != GL::GetBlendDstFactorAlpha())
     {
         SetGLContextValue(&GL::m_blendSrcFactorColors, srcFactorColor);
         SetGLContextValue(&GL::m_blendDstFactorColors, dstFactorColor);
         SetGLContextValue(&GL::m_blendSrcFactorAlphas, srcFactorAlpha);
         SetGLContextValue(&GL::m_blendDstFactorAlphas, dstFactorAlpha);
-        GL_CALL( glBlendFuncSeparate( GLCAST(srcFactorColor),
-                                      GLCAST(dstFactorColor),
-                                      GLCAST(srcFactorAlpha),
-                                      GLCAST(dstFactorAlpha)) );
+        GL_CALL(glBlendFuncSeparate(
+            GLCAST(srcFactorColor), GLCAST(dstFactorColor),
+            GLCAST(srcFactorAlpha), GLCAST(dstFactorAlpha)));
     }
 }
 
@@ -535,19 +525,18 @@ void GL::BlendEquation(GL::BlendEquationE blendEquation)
 void GL::BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
                                GL::BlendEquationE blendEquationAlpha)
 {
-    if (blendEquationColor != GL::GetBlendEquationColor() ||
-        blendEquationAlpha != GL::GetBlendEquationAlpha() )
+    if(blendEquationColor != GL::GetBlendEquationColor() ||
+       blendEquationAlpha != GL::GetBlendEquationAlpha())
     {
         SetGLContextValue(&GL::m_blendEquationColors, blendEquationColor);
         SetGLContextValue(&GL::m_blendEquationAlphas, blendEquationAlpha);
-        GL_CALL( glBlendEquationSeparate( GLCAST(blendEquationColor),
-                                          GLCAST(blendEquationAlpha) ) );
+        GL_CALL(glBlendEquationSeparate(GLCAST(blendEquationColor),
+                                        GLCAST(blendEquationAlpha)));
     }
 }
 
 void GL::Enable(GL::Enablable glEnablable)
 {
-
     GL::SetEnabled(glEnablable, true);
 }
 
@@ -558,15 +547,22 @@ void GL::Disable(GL::Enablable glEnablable)
 
 void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
 
-    if (enabled != GL::IsEnabled(glEnablable))
+    if(enabled != GL::IsEnabled(glEnablable))
     {
-        if (enabled) { GL_CALL( glEnable( GLCAST(glEnablable) ); ); }
-        else { GL_CALL( glDisable( GLCAST(glEnablable) ); ); }
+        if(enabled)
+        {
+            GL_CALL(glEnable(GLCAST(glEnablable)););
+        }
+        else
+        {
+            GL_CALL(glDisable(GLCAST(glEnablable)););
+        }
 
         auto &enabledisStackAndValue = gl->m_enabledVars[glEnablable];
-        for (int i = 0; i < GL::GetEnablableIndexMax(glEnablable); ++i)
+        for(int i = 0; i < GL::GetEnablableIndexMax(glEnablable); ++i)
         {
             enabledisStackAndValue.currentValue[i] = enabled;
         }
@@ -577,18 +573,26 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
 {
     ASSERT(i >= 0 && i <= GL::GetEnablableIndexMax(glEnablable));
 
-    if (enabled != GL::IsEnabledi(glEnablable, i))
+    if(enabled != GL::IsEnabledi(glEnablable, i))
     {
-        if (enabled) { GL_CALL( glEnablei( GLCAST(glEnablable), i ) ); }
-        else { GL_CALL( glDisablei( GLCAST(glEnablable), i ) ); }
+        if(enabled)
+        {
+            GL_CALL(glEnablei(GLCAST(glEnablable), i));
+        }
+        else
+        {
+            GL_CALL(glDisablei(GLCAST(glEnablable), i));
+        }
 
         GL *gl = GL::GetInstance();
-        if (gl)
+        if(gl)
         {
-            if (!gl->m_enabledVars.ContainsKey(glEnablable))
+            if(!gl->m_enabledVars.ContainsKey(glEnablable))
             {
-                auto &enabledisStackAndValue = gl->m_enabledVars.Get(glEnablable);
-                for (int i = 0; i < enabledisStackAndValue.currentValue.size(); ++i)
+                auto &enabledisStackAndValue =
+                    gl->m_enabledVars.Get(glEnablable);
+                for(int i = 0; i < enabledisStackAndValue.currentValue.size();
+                    ++i)
                 {
                     enabledisStackAndValue.currentValue[i] = false;
                 }
@@ -597,7 +601,7 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
         }
     }
 }
-void GL::Enablei (GL::Enablable glEnablable, int i)
+void GL::Enablei(GL::Enablable glEnablable, int i)
 {
     GL::SetEnabledi(glEnablable, i, true);
 }
@@ -606,16 +610,19 @@ void GL::Disablei(GL::Enablable glEnablable, int i)
     GL::SetEnabledi(glEnablable, i, false);
 }
 
-
 bool GL::IsEnabled(GL::Enablable glEnablable)
 {
     return GL::IsEnabledi(glEnablable, 0);
 }
 bool GL::IsEnabledi(GL::Enablable glEnablable, int index)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
 
-    if (!gl->m_enabledVars.ContainsKey(glEnablable)) { return false; }
+    if(!gl->m_enabledVars.ContainsKey(glEnablable))
+    {
+        return false;
+    }
     const bool isEnabledi = gl->m_enabledVars[glEnablable].currentValue[index];
     return isEnabledi;
 }
@@ -627,69 +634,71 @@ bool GL::CanEnablableBeIndexed(GL::Enablable enablable)
 
 int GL::GetEnablableIndexMax(GL::Enablable enablable)
 {
-    switch (enablable)
+    switch(enablable)
     {
         case GL::Enablable::BLEND:
             return GL::GetInstance()->m_maxDrawBuffers;
-        break;
+            break;
 
         default: break;
     }
     return 1;
 }
 
-void GL::BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
-                         int dstX0, int dstY0, int dstX1, int dstY1,
+void GL::BlitFramebuffer(int srcX0,
+                         int srcY0,
+                         int srcX1,
+                         int srcY1,
+                         int dstX0,
+                         int dstY0,
+                         int dstX1,
+                         int dstY1,
                          GL::FilterMode filterMode,
                          GL::BufferBit bufferBitMask)
 {
-    GL_CALL(
-    glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1,
-                      dstX0, dstY0, dstX1, dstY1,
-                      GLCAST(bufferBitMask),
-                      GLCAST(filterMode))
-    );
+    GL_CALL(glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1,
+                              dstY1, GLCAST(bufferBitMask),
+                              GLCAST(filterMode)));
 }
 
-void GL::BlitFramebuffer(const AARecti &srcRect, const AARecti &dstRect,
+void GL::BlitFramebuffer(const AARecti &srcRect,
+                         const AARecti &dstRect,
                          GL::FilterMode filterMode,
                          GL::BufferBit bufferBitMask)
 {
-    GL::BlitFramebuffer(srcRect.GetMin().x, srcRect.GetMin().y,
-                        srcRect.GetMax().x, srcRect.GetMax().y,
-                        dstRect.GetMin().x, dstRect.GetMin().y,
-                        dstRect.GetMax().x, dstRect.GetMax().y,
-                        filterMode, bufferBitMask);
+    GL::BlitFramebuffer(
+        srcRect.GetMin().x, srcRect.GetMin().y, srcRect.GetMax().x,
+        srcRect.GetMax().y, dstRect.GetMin().x, dstRect.GetMin().y,
+        dstRect.GetMax().x, dstRect.GetMax().y, filterMode, bufferBitMask);
 }
 
 void GL::Scissor(int x, int y, int width, int height)
 {
-    GL::Scissor( AARecti(x, y, x+width, y+height) );
+    GL::Scissor(AARecti(x, y, x + width, y + height));
 }
 
 void GL::Scissor(const AARecti &scissorRectPx)
 {
-    if (scissorRectPx != GL::GetScissorRect())
+    if(scissorRectPx != GL::GetScissorRect())
     {
-        if (scissorRectPx.IsValid())
+        if(scissorRectPx.IsValid())
         {
             SetGLContextValue(&GL::m_scissorRectsPx, scissorRectPx);
-            GL_CALL( glScissor(scissorRectPx.GetMin().x,
-                               scissorRectPx.GetMin().y,
-                               scissorRectPx.GetWidth(),
-                               scissorRectPx.GetHeight()) );
+            GL_CALL(
+                glScissor(scissorRectPx.GetMin().x, scissorRectPx.GetMin().y,
+                          scissorRectPx.GetWidth(), scissorRectPx.GetHeight()));
         }
         else
         {
             SetGLContextValue(&GL::m_scissorRectsPx, AARecti::Zero);
-            GL_CALL( glScissor(0,0,0,0) );
+            GL_CALL(glScissor(0, 0, 0, 0));
         }
     }
 }
 
 void GL::ScissorIntersecting(int x, int y, int width, int height)
 {
-    GL::ScissorIntersecting( AARecti(x, y, x+width, y+height) );
+    GL::ScissorIntersecting(AARecti(x, y, x + width, y + height));
 }
 
 void GL::ScissorIntersecting(const AARecti &scissorRectPx)
@@ -701,7 +710,7 @@ void GL::ScissorIntersecting(const AARecti &scissorRectPx)
 
 GLId GL::CreateShader(GL::ShaderType shaderType)
 {
-    GL_CALL( GLId id = glCreateShader( GLCAST(shaderType) ) );
+    GL_CALL(GLId id = glCreateShader(GLCAST(shaderType)));
     return id;
 }
 
@@ -709,21 +718,21 @@ void GL::ShaderSource(GLId shaderId, const String &sourceCode)
 {
     int sourceSize = sourceCode.Size();
     const char *src = sourceCode.ToCString();
-    GL_CALL( glShaderSource(shaderId, 1, &src, &sourceSize) );
+    GL_CALL(glShaderSource(shaderId, 1, &src, &sourceSize));
 }
 
 bool GL::CompileShader(GLId shaderId)
 {
     GL_ClearError();
     glCompileShader(shaderId);
-    GL_CALL( bool ok = GL::GetShaderInteger(shaderId, GL::COMPILE_STATUS) );
+    GL_CALL(bool ok = GL::GetShaderInteger(shaderId, GL::COMPILE_STATUS));
     return ok;
 }
 
 int GL::GetShaderInteger(GLId shaderId, GL::Enum glEnum)
 {
     int v = false;
-    GL_CALL( glGetShaderiv(shaderId, glEnum, &v) );
+    GL_CALL(glGetShaderiv(shaderId, glEnum, &v));
     return v;
 }
 
@@ -732,42 +741,43 @@ String GL::GetShaderErrorMsg(GLId shaderId)
     int maxLength = GL::GetShaderInteger(shaderId, GL::INFO_LOG_LENGTH);
 
     Array<char> v(maxLength);
-    GL_CALL( glGetShaderInfoLog(shaderId, maxLength, &maxLength, &v[0]) );
+    GL_CALL(glGetShaderInfoLog(shaderId, maxLength, &maxLength, &v[0]));
 
     return String(v.begin(), v.end());
 }
 
 void GL::DeleteShader(GLId shaderId)
 {
-    GL_CALL( glDeleteShader(shaderId) );
+    GL_CALL(glDeleteShader(shaderId));
 }
 
 GLId GL::CreateProgram()
 {
-    GL_CALL( GLId id = glCreateProgram() );
+    GL_CALL(GLId id = glCreateProgram());
     return id;
 }
 
 void GL::AttachShader(GLId programId, GLId shaderId)
 {
-    GL_CALL( glAttachShader(programId, shaderId) );
+    GL_CALL(glAttachShader(programId, shaderId));
 }
 
 bool GL::LinkProgram(GLId programId)
 {
-    GL_CALL( glLinkProgram(programId) );
+    GL_CALL(glLinkProgram(programId));
     GL_CALL(bool linkedOk = GL::GetProgramInteger(programId, GL::LINK_STATUS));
     return linkedOk;
 }
 
 bool GL::ValidateProgram(GLId programId)
 {
-    GL_CALL( glValidateProgram(programId) );
-    GL_CALL( bool isValid = GL::GetProgramInteger(programId, GL::VALIDATE_STATUS) );
-    if (!isValid)
+    GL_CALL(glValidateProgram(programId));
+    GL_CALL(bool isValid =
+                GL::GetProgramInteger(programId, GL::VALIDATE_STATUS));
+    if(!isValid)
     {
-        Debug_Error( "Invalid shader program in the current state: " <<
-                     GL::GetProgramErrorMsg(programId) );
+        Debug_Error("Invalid shader program in the current state: "
+                    << GL::GetProgramErrorMsg(programId));
     }
     return isValid;
 }
@@ -775,13 +785,13 @@ bool GL::ValidateProgram(GLId programId)
 String GL::GetProgramErrorMsg(GLId programId)
 {
     GLint errorLength = GL::GetProgramInteger(programId, GL::INFO_LOG_LENGTH);
-    if (errorLength >= 1)
+    if(errorLength >= 1)
     {
-       char* errorLog = new char[errorLength];
-       GL_CALL( glGetProgramInfoLog(programId, errorLength, NULL, errorLog) );
-       String error = String(errorLog);
-       delete[] errorLog;
-       return error;
+        char *errorLog = new char[errorLength];
+        GL_CALL(glGetProgramInfoLog(programId, errorLength, NULL, errorLog));
+        String error = String(errorLog);
+        delete[] errorLog;
+        return error;
     }
     return "";
 }
@@ -795,39 +805,40 @@ int GL::GetProgramInteger(GLId programId, GL::Enum glEnum)
 
 void GL::GetProgramIntegers(GLId programId, GL::Enum glEnum, GLint *ints)
 {
-    GL_CALL( glGetProgramiv(programId, glEnum, ints) );
+    GL_CALL(glGetProgramiv(programId, glEnum, ints));
 }
 
-void GL::BindAttribLocation(GLId programId, int location,
+void GL::BindAttribLocation(GLId programId,
+                            int location,
                             const String &attribName)
 {
-    GL_CALL( glBindAttribLocation(programId, location,
-                                  attribName.ToCString()) );
+    GL_CALL(glBindAttribLocation(programId, location, attribName.ToCString()));
 }
 
-void GL::BindFragDataLocation(GLId programId, int location,
+void GL::BindFragDataLocation(GLId programId,
+                              int location,
                               const String &fragDataName)
 {
-    GL_CALL( glBindFragDataLocation(programId, location,
-                                    fragDataName.ToCString()) );
+    GL_CALL(
+        glBindFragDataLocation(programId, location, fragDataName.ToCString()));
 }
 
 int GL::GetUniformLocation(const String &uniformName)
 {
-    return GL::GetUniformLocation(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM),
-                                  uniformName);
+    return GL::GetUniformLocation(
+        GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM), uniformName);
 }
 int GL::GetUniformLocation(GLId programId, const String &uniformName)
 {
-    GL_CALL( int location = glGetUniformLocation(programId,
-                                                 uniformName.ToCString()) );
+    GL_CALL(int location =
+                glGetUniformLocation(programId, uniformName.ToCString()));
     return location;
 }
 
 void GL::DeleteProgram(GLId programId)
 {
     GL::OnDeletedGLObjects(GL::BindTarget::SHADER_PROGRAM, 1, &programId);
-    GL_CALL( glDeleteProgram(programId) );
+    GL_CALL(glDeleteProgram(programId));
 }
 
 void GL::FramebufferTexture(GL::FramebufferTarget target,
@@ -835,12 +846,8 @@ void GL::FramebufferTexture(GL::FramebufferTarget target,
                             GLId textureId,
                             uint mipMapLevel)
 {
-    GL_CALL(
-    glFramebufferTexture(GLCAST(target),
-                         GLCAST(attachment),
-                         textureId,
-                         mipMapLevel);
-            );
+    GL_CALL(glFramebufferTexture(GLCAST(target), GLCAST(attachment), textureId,
+                                 mipMapLevel););
 }
 
 void GL::FramebufferTexture2D(GL::FramebufferTarget target,
@@ -849,29 +856,22 @@ void GL::FramebufferTexture2D(GL::FramebufferTarget target,
                               GLId textureId,
                               uint mipMapLevel)
 {
-    GL_CALL(
-    glFramebufferTexture2D(GLCAST(target),
-                           GLCAST(attachment),
-                           GLCAST(texTarget),
-                           textureId,
-                           mipMapLevel);
-            );
+    GL_CALL(glFramebufferTexture2D(GLCAST(target), GLCAST(attachment),
+                                   GLCAST(texTarget), textureId, mipMapLevel););
 }
 
 void GL::BindRenderbuffer(GL::RenderbufferTarget target, GLId renderbufferId)
 {
-    GL_CALL( glBindRenderbuffer(GLCAST(target), renderbufferId) );
+    GL_CALL(glBindRenderbuffer(GLCAST(target), renderbufferId));
 }
 
 void GL::RenderbufferStorage(GL::RenderbufferTarget target,
                              GL::RenderbufferFormat format,
-                             int width, int height)
+                             int width,
+                             int height)
 {
     GL_CALL(
-    glRenderbufferStorage(GLCAST(target),
-                          GLCAST(format),
-                          width, height)
-    );
+        glRenderbufferStorage(GLCAST(target), GLCAST(format), width, height));
 }
 
 void GL::FramebufferRenderbuffer(GL::FramebufferTarget target,
@@ -879,24 +879,21 @@ void GL::FramebufferRenderbuffer(GL::FramebufferTarget target,
                                  GL::RenderbufferTarget rbTarget,
                                  GLId renderbufferId)
 {
-    GL_CALL(
-    glFramebufferRenderbuffer(GLCAST(target),
-                              GLCAST(attachment),
-                              GLCAST(rbTarget),
-                              renderbufferId)
-    );
+    GL_CALL(glFramebufferRenderbuffer(GLCAST(target), GLCAST(attachment),
+                                      GLCAST(rbTarget), renderbufferId));
 }
 
 void GL::DrawBuffers(const Array<GL::Attachment> &drawAttachments)
 {
-    // if (!Containers::Equal(gl->m_drawBuffers.Begin(), gl->m_drawBuffers.End(),
+    // if (!Containers::Equal(gl->m_drawBuffers.Begin(),
+    // gl->m_drawBuffers.End(),
     //                        drawAttachments.Begin()))
     {
         SetGLContextValue(&GL::m_drawBuffers, drawAttachments);
-        if (drawAttachments.Size() >= 1)
+        if(drawAttachments.Size() >= 1)
         {
-            GL_CALL( glDrawBuffers(drawAttachments.Size(),
-                                   (const GLenum*)(&drawAttachments[0])) );
+            GL_CALL(glDrawBuffers(drawAttachments.Size(),
+                                  (const GLenum *)(&drawAttachments[0])));
         }
         else
         {
@@ -910,168 +907,172 @@ void GL::ReadBuffer(GL::Attachment readAttachment)
     // if (gl->m_readBuffer != readAttachment)
     {
         SetGLContextValue(&GL::m_readBuffers, readAttachment);
-        GL_CALL( glReadBuffer( GLCAST(readAttachment) ) );
+        GL_CALL(glReadBuffer(GLCAST(readAttachment)));
     }
 }
 
-void GL::ReadPixels(int x, int y, int width, int height,
-                    GL::ColorComp inputComp, GL::DataType outputDataType,
+void GL::ReadPixels(int x,
+                    int y,
+                    int width,
+                    int height,
+                    GL::ColorComp inputComp,
+                    GL::DataType outputDataType,
                     void *pixels)
 {
-    GL_CALL(
-    glReadPixels(x, y, width, height,
-                 GLCAST(inputComp),
-                 GLCAST(outputDataType),
-                 pixels);
-    );
+    GL_CALL(glReadPixels(x, y, width, height, GLCAST(inputComp),
+                         GLCAST(outputDataType), pixels););
 }
 
-void GL::ReadPixels(const AARecti &readRect, GL::ColorComp inputComp,
-                    GL::DataType outputDataType, void *pixels)
+void GL::ReadPixels(const AARecti &readRect,
+                    GL::ColorComp inputComp,
+                    GL::DataType outputDataType,
+                    void *pixels)
 {
     ASSERT(readRect.IsValid());
-    GL::ReadPixels(readRect.GetMin().x,
-                   readRect.GetMin().y,
-                   readRect.GetWidth(),
-                   readRect.GetHeight(),
-                   inputComp,
-                   outputDataType,
-                   pixels);
+    GL::ReadPixels(readRect.GetMin().x, readRect.GetMin().y,
+                   readRect.GetWidth(), readRect.GetHeight(), inputComp,
+                   outputDataType, pixels);
 }
 
-void GL::Finish() { glFinish(); }
-void GL::Flush() { glFlush(); }
+void GL::Finish()
+{
+    glFinish();
+}
+void GL::Flush()
+{
+    glFlush();
+}
 
 void GL::Uniform(const String &name, int value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, float value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, double value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, bool value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Matrix3f &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Matrix4f &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Color &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Vector2 &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Vector3 &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(const String &name, const Vector4 &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<int> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<bool> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<float> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<double> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Color> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Vector2> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Vector3> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Vector4> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Matrix3> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 void GL::Uniform(const String &name, const Array<Matrix4> &value)
 {
-    GL::Uniform( GL::GetUniformLocation(name), value);
+    GL::Uniform(GL::GetUniformLocation(name), value);
 }
 
 void GL::Uniform(int location, int value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1i(location, value) );
+        GL_CALL(glUniform1i(location, value));
     }
 }
 void GL::Uniform(int location, float value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1f(location, value) );
+        GL_CALL(glUniform1f(location, value));
     }
 }
 void GL::Uniform(int location, double value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1f(location, value) );
+        GL_CALL(glUniform1f(location, value));
     }
 }
 void GL::Uniform(int location, bool value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1i(location, value ? 1 : 0) );
+        GL_CALL(glUniform1i(location, value ? 1 : 0));
     }
 }
-void GL::Uniform(int location, const Matrix3f& value)
+void GL::Uniform(int location, const Matrix3f &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniformMatrix3fv(location, 1, false, value.Data()) );
+        GL_CALL(glUniformMatrix3fv(location, 1, false, value.Data()));
     }
 }
-void GL::Uniform(int location, const Matrix4f& value)
+void GL::Uniform(int location, const Matrix4f &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniformMatrix4fv(location, 1, false, value.Data()) );
+        GL_CALL(glUniformMatrix4fv(location, 1, false, value.Data()));
     }
 }
 void GL::Uniform(int location, const Color &value)
@@ -1080,119 +1081,119 @@ void GL::Uniform(int location, const Color &value)
 }
 void GL::Uniform(int location, const Vector2 &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform2fv(location, 1, value.Data()) );
+        GL_CALL(glUniform2fv(location, 1, value.Data()));
     }
 }
 void GL::Uniform(int location, const Vector3 &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform3fv(location, 1, value.Data()) );
+        GL_CALL(glUniform3fv(location, 1, value.Data()));
     }
 }
 void GL::Uniform(int location, const Vector4 &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform4fv(location, 1, value.Data()) );
+        GL_CALL(glUniform4fv(location, 1, value.Data()));
     }
 }
 void GL::Uniform(int location, const Array<int> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1iv(location, value.Size(), value.Data()) );
+        GL_CALL(glUniform1iv(location, value.Size(), value.Data()));
     }
 }
 void GL::Uniform(int location, const Array<bool> &value)
 {
     Array<int> valueInts;
-    for (bool b : value)
+    for(bool b : value)
     {
         valueInts.PushBack(b ? 1 : 0);
     }
 
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1iv(location, value.Size(), valueInts.Data()) );
+        GL_CALL(glUniform1iv(location, value.Size(), valueInts.Data()));
     }
 }
 void GL::Uniform(int location, const Array<float> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1fv(location, value.Size(), value.Data()) );
+        GL_CALL(glUniform1fv(location, value.Size(), value.Data()));
     }
 }
 
 void GL::Uniform(int location, const Array<double> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform1dv(location, value.Size(),
-                              RCAST<const GLdouble*>(value.Data())) );
+        GL_CALL(glUniform1dv(location, value.Size(),
+                             RCAST<const GLdouble *>(value.Data())));
     }
 }
 
 void GL::Uniform(int location, const Array<Color> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform4fv(location, value.Size(),
-                              RCAST<const GLfloat*>(value.Data())) );
+        GL_CALL(glUniform4fv(location, value.Size(),
+                             RCAST<const GLfloat *>(value.Data())));
     }
 }
 void GL::Uniform(int location, const Array<Vector2> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform2fv(location, value.Size(),
-                              RCAST<const GLfloat*>(value.Data()) ) );
+        GL_CALL(glUniform2fv(location, value.Size(),
+                             RCAST<const GLfloat *>(value.Data())));
     }
 }
 void GL::Uniform(int location, const Array<Vector3> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform3fv(location, value.Size(),
-                              RCAST<const GLfloat*>(value.Data()) ) );
-   }
+        GL_CALL(glUniform3fv(location, value.Size(),
+                             RCAST<const GLfloat *>(value.Data())));
+    }
 }
 void GL::Uniform(int location, const Array<Vector4> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniform4fv(location, value.Size(),
-                              RCAST<const GLfloat*>(value.Data()) ) );
+        GL_CALL(glUniform4fv(location, value.Size(),
+                             RCAST<const GLfloat *>(value.Data())));
     }
 }
 void GL::Uniform(int location, const Array<Matrix3> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniformMatrix3fv(location, value.Size(), false,
-                                    RCAST<const GLfloat*>(value.Data()) ) );
+        GL_CALL(glUniformMatrix3fv(location, value.Size(), false,
+                                   RCAST<const GLfloat *>(value.Data())));
     }
 }
 void GL::Uniform(int location, const Array<Matrix4> &value)
 {
-    if (location >= 0)
+    if(location >= 0)
     {
-        GL_CALL( glUniformMatrix4fv(location, value.Size(), false,
-                                    RCAST<const GLfloat*>(value.Data()) ) );
+        GL_CALL(glUniformMatrix4fv(location, value.Size(), false,
+                                   RCAST<const GLfloat *>(value.Data())));
     }
 }
 
 void GL::PixelStore(GL::Enum pixelStoreEnum, int n)
 {
-    GL_CALL( glPixelStorei(pixelStoreEnum, n) );
+    GL_CALL(glPixelStorei(pixelStoreEnum, n));
 }
 
 void GL::GenerateMipMap(GL::TextureTarget textureTarget)
 {
-    GL_CALL( glGenerateMipmap( GLCAST(textureTarget) ) );
+    GL_CALL(glGenerateMipmap(GLCAST(textureTarget)));
 }
 
 void GL::TexImage2D(GL::TextureTarget textureTarget,
@@ -1203,64 +1204,51 @@ void GL::TexImage2D(GL::TextureTarget textureTarget,
                     GL::DataType inputDataType,
                     const void *data)
 {
-    GL_CALL(
-    glTexImage2D(GLCAST(textureTarget),
-                 0,
-                 GLCAST(textureColorFormat),
-                 textureWidth,
-                 textureHeight,
-                 0,
-                 GLCAST(inputDataColorComp),
-                 GLCAST(inputDataType),
-                 data)
-                );
+    GL_CALL(glTexImage2D(GLCAST(textureTarget), 0, GLCAST(textureColorFormat),
+                         textureWidth, textureHeight, 0,
+                         GLCAST(inputDataColorComp), GLCAST(inputDataType),
+                         data));
 }
 
 void GL::TexParameteri(GL::TextureTarget textureTarget,
                        GL::TexParameter textureParameter,
                        GLint value)
 {
-    GL_CALL(
-    glTexParameteri(GLCAST(textureTarget),
-                    GLCAST(textureParameter),
-                    value); );
+    GL_CALL(glTexParameteri(GLCAST(textureTarget), GLCAST(textureParameter),
+                            value););
 }
 
 void GL::TexParameterf(GL::TextureTarget textureTarget,
                        GL::TexParameter textureParameter,
                        GLfloat value)
 {
-    GL_CALL(
-    glTexParameterf(GLCAST(textureTarget),
-                    GLCAST(textureParameter),
-                    value); );
+    GL_CALL(glTexParameterf(GLCAST(textureTarget), GLCAST(textureParameter),
+                            value););
 }
 
 void GL::TexParameterFilter(GL::TextureTarget textureTarget,
                             GL::FilterMagMin filterMagMin,
                             GL::FilterMode filterMode)
 {
-    GL_CALL(
-    GL::TexParameteri(textureTarget,
-                      SCAST<GL::TexParameter>(filterMagMin),
-                      GLCAST(filterMode)) );
+    GL_CALL(GL::TexParameteri(textureTarget,
+                              SCAST<GL::TexParameter>(filterMagMin),
+                              GLCAST(filterMode)));
 }
 
 void GL::TexParameterWrap(GL::TextureTarget textureTarget,
                           GL::WrapCoord wrapCoord,
                           GL::WrapMode wrapMode)
 {
-    GL_CALL(
-    GL::TexParameteri(textureTarget,
-                      SCAST<GL::TexParameter>(wrapCoord),
-                      GLCAST(wrapMode)) );
+    GL_CALL(GL::TexParameteri(textureTarget, SCAST<GL::TexParameter>(wrapCoord),
+                              GLCAST(wrapMode)));
 }
 
 void GL::GetTexImage(GL::TextureTarget textureTarget,
                      GL::ColorComp colorComp,
                      Byte *pixels)
 {
-    GL::GetTexImage(textureTarget, colorComp, GL::DataType::UNSIGNED_BYTE, pixels);
+    GL::GetTexImage(textureTarget, colorComp, GL::DataType::UNSIGNED_BYTE,
+                    pixels);
 }
 
 void GL::GetTexImage(GL::TextureTarget textureTarget,
@@ -1275,12 +1263,8 @@ void GL::GetTexImage(GL::TextureTarget textureTarget,
                      GL::DataType dataType,
                      void *pixels)
 {
-    GL_CALL(
-    glGetTexImage(GLCAST(textureTarget),
-                  0,
-                  GLCAST(colorComp),
-                  GLCAST(dataType),
-                  SCAST<void*>(pixels)) );
+    GL_CALL(glGetTexImage(GLCAST(textureTarget), 0, GLCAST(colorComp),
+                          GLCAST(dataType), SCAST<void *>(pixels)));
 }
 
 bool GL::GetBoolean(GL::Enum glEnum)
@@ -1292,7 +1276,7 @@ bool GL::GetBoolean(GL::Enum glEnum)
 void GL::GetBoolean(GL::Enum glEnum, bool *values)
 {
     GLboolean result;
-    GL_CALL( glGetBooleanv(GLCAST(glEnum), &result) );
+    GL_CALL(glGetBooleanv(GLCAST(glEnum), &result));
     *values = result;
 }
 
@@ -1301,7 +1285,7 @@ void GL::BindUniformBlock(GLId programId,
                           GLuint bindingPoint)
 {
     GLuint ubLocation = GL::GetUniformBlockIndex(programId, uniformBlockName);
-    if (ubLocation != SCAST<GLuint>(-1))
+    if(ubLocation != SCAST<GLuint>(-1))
     {
         GL::UniformBlockBinding(programId, ubLocation, bindingPoint);
     }
@@ -1312,15 +1296,14 @@ void GL::UniformBlockBinding(GLId programId,
                              GLuint bindingPoint)
 {
     GL_CALL(
-       glUniformBlockBinding(programId, uniformBlockLocation, bindingPoint) );
+        glUniformBlockBinding(programId, uniformBlockLocation, bindingPoint));
 }
 
-GLuint GL::GetUniformBlockIndex(GLId programId,
-                                const String &uniformBlockName)
+GLuint GL::GetUniformBlockIndex(GLId programId, const String &uniformBlockName)
 {
-   GL_CALL(GLuint index =
-           glGetUniformBlockIndex(programId, uniformBlockName.ToCString()));
-   return index;
+    GL_CALL(GLuint index = glGetUniformBlockIndex(
+                programId, uniformBlockName.ToCString()));
+    return index;
 }
 
 int GL::GetInteger(GL::Enum glEnum)
@@ -1331,91 +1314,91 @@ int GL::GetInteger(GL::Enum glEnum)
 }
 void GL::GetInteger(GL::Enum glEnum, int *values)
 {
-    GL_CALL( glGetIntegerv(glEnum, values) );
+    GL_CALL(glGetIntegerv(glEnum, values));
 }
 
 void GL::ActiveTexture(int activeTexture)
 {
     ASSERT(activeTexture >= GL_TEXTURE0);
-    GL_CALL( glActiveTexture(activeTexture) );
+    GL_CALL(glActiveTexture(activeTexture));
 }
 
 void GL::LineWidth(float lineWidth)
 {
-    if (GL::GetLineWidth() != lineWidth)
+    if(GL::GetLineWidth() != lineWidth)
     {
         SetGLContextValue(&GL::m_lineWidths, lineWidth);
-        GL_CALL( glLineWidth(lineWidth) );
+        GL_CALL(glLineWidth(lineWidth));
     }
 }
 
 void GL::PointSize(float pointSize)
 {
-    GL_CALL( glPointSize(pointSize) );
+    GL_CALL(glPointSize(pointSize));
 }
 
 void GL::GenFramebuffers(int n, GLId *glIds)
 {
-    GL_CALL( glGenFramebuffers(n, glIds) );
+    GL_CALL(glGenFramebuffers(n, glIds));
 }
 
 void GL::GenRenderBuffers(int n, GLId *glIds)
 {
-    GL_CALL( glGenRenderbuffers(n, glIds) );
+    GL_CALL(glGenRenderbuffers(n, glIds));
 }
 
 void GL::GenTextures(int n, GLId *glIds)
 {
-    GL_CALL( glGenTextures(n, glIds) );
+    GL_CALL(glGenTextures(n, glIds));
 }
 
 void GL::GenVertexArrays(int n, GLId *glIds)
 {
-    GL_CALL( glGenVertexArrays(n, glIds) );
+    GL_CALL(glGenVertexArrays(n, glIds));
 }
 
 void GL::GenBuffers(int n, GLId *glIds)
 {
-    GL_CALL( glGenBuffers(n, glIds) );
+    GL_CALL(glGenBuffers(n, glIds));
 }
 
 void GL::DeleteFramebuffers(int n, const GLId *glIds)
 {
     GL::OnDeletedGLObjects(GL::BindTarget::FRAMEBUFFER, n, glIds);
-    GL_CALL( glDeleteFramebuffers(n, glIds) );
+    GL_CALL(glDeleteFramebuffers(n, glIds));
 }
 
 void GL::DeleteRenderBuffers(int n, const GLId *glIds)
 {
-    GL_CALL( glDeleteRenderbuffers(n, glIds) );
+    GL_CALL(glDeleteRenderbuffers(n, glIds));
 }
 
 void GL::DeleteTextures(int n, const GLId *glIds)
 {
     // GL::OnDeletedGLObjects(GL::BindTarget::Texture1D,      n, glIds);
-    GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_2D,      n, glIds);
+    GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_2D, n, glIds);
     // GL::OnDeletedGLObjects(GL::BindTarget::Texture3D,      n, glIds);
     GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_CUBE_MAP, n, glIds);
-    GL_CALL( glDeleteTextures(n, glIds) );
+    GL_CALL(glDeleteTextures(n, glIds));
 }
 
 void GL::DeleteVertexArrays(int n, const GLId *glIds)
 {
     GL::OnDeletedGLObjects(GL::BindTarget::VAO, n, glIds);
-    GL_CALL( glDeleteVertexArrays(n, glIds) );
+    GL_CALL(glDeleteVertexArrays(n, glIds));
 }
 
 void GL::DeleteBuffers(int n, const GLId *glIds)
 {
-    GL_CALL( glDeleteBuffers(n, glIds) );
+    GL_CALL(glDeleteBuffers(n, glIds));
 }
 
 void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
 {
     // Unbind objects if they were bound
-    for (int i = 0; i < n; ++i)
+    for(int i = 0; i < n; ++i)
     {
-        if (GL::GetBoundId(bindTarget) == glIds[i])
+        if(GL::GetBoundId(bindTarget) == glIds[i])
         {
             GL::UnBind(bindTarget);
         }
@@ -1424,11 +1407,13 @@ void GL::OnDeletedGLObjects(GL::BindTarget bindTarget, int n, const GLId *glIds)
 
 void GL::SetViewport(const AARect &viewportNDC)
 {
-    if (Window *window = Window::GetActive())
+    if(Window *window = Window::GetActive())
     {
-        Vector2 minPx( (viewportNDC.GetMin() * 0.5f + 0.5f) * Vector2(window->GetSize()) );
-        Vector2 maxPx( (viewportNDC.GetMax() * 0.5f + 0.5f) * Vector2(window->GetSize()) );
-        GL::SetViewport( AARecti(minPx.x, minPx.y, maxPx.x, maxPx.y) );
+        Vector2 minPx((viewportNDC.GetMin() * 0.5f + 0.5f) *
+                      Vector2(window->GetSize()));
+        Vector2 maxPx((viewportNDC.GetMax() * 0.5f + 0.5f) *
+                      Vector2(window->GetSize()));
+        GL::SetViewport(AARecti(minPx.x, minPx.y, maxPx.x, maxPx.y));
     }
 }
 
@@ -1440,13 +1425,13 @@ void GL::SetViewport(const AARecti &viewport)
 
 void GL::SetViewport(int x, int y, int width, int height)
 {
-    AARecti vpRect( Vector2i(x, y), Vector2i(x+width, y+height));
-    if (GL::GetViewportRect() != vpRect)
+    AARecti vpRect(Vector2i(x, y), Vector2i(x + width, y + height));
+    if(GL::GetViewportRect() != vpRect)
     {
         SetGLContextValue(&GL::m_viewportRects, vpRect);
-        GL_CALL( glViewport(x, y, width, height) );
+        GL_CALL(glViewport(x, y, width, height));
 
-        GLUniforms::OnViewportChanged( GL::GetViewportRect() );
+        GLUniforms::OnViewportChanged(GL::GetViewportRect());
     }
 }
 
@@ -1511,11 +1496,12 @@ GL::BlendEquationE GL::GetBlendEquationAlpha()
     return GetGLContextValue(&GL::m_blendEquationAlphas);
 }
 
-const AARecti& GL::GetScissorRect()
+const AARecti &GL::GetScissorRect()
 {
     GL *gl = GL::GetInstance();
-    if (gl && (!GL::IsEnabled(GL::Enablable::SCISSOR_TEST) ||
-               GetGLContextValue(&GL::m_scissorRectsPx) == AARecti(-1,-1,-1,-1)))
+    if(gl &&
+       (!GL::IsEnabled(GL::Enablable::SCISSOR_TEST) ||
+        GetGLContextValue(&GL::m_scissorRectsPx) == AARecti(-1, -1, -1, -1)))
     {
         SetGLContextValue(&GL::m_scissorRectsPx, GL::GetViewportRect());
     }
@@ -1524,7 +1510,7 @@ const AARecti& GL::GetScissorRect()
 
 void GL::BindBuffer(GL::BindTarget target, GLId bufferId)
 {
-    GL_CALL( glBindBuffer(GLCAST(target), bufferId) );
+    GL_CALL(glBindBuffer(GLCAST(target), bufferId));
 }
 
 void GL::BufferData(GL::BindTarget target,
@@ -1532,7 +1518,7 @@ void GL::BufferData(GL::BindTarget target,
                     const void *data,
                     GL::UsageHint usageHint)
 {
-    GL_CALL( glBufferData(GLCAST(target), dataSize, data, GLCAST(usageHint)) );
+    GL_CALL(glBufferData(GLCAST(target), dataSize, data, GLCAST(usageHint)));
 }
 
 void GL::BufferSubData(GL::BindTarget target,
@@ -1540,7 +1526,7 @@ void GL::BufferSubData(GL::BindTarget target,
                        GLuint dataSize,
                        const void *data)
 {
-    GL_CALL( glBufferSubData(GLCAST(target), offset, dataSize, data) );
+    GL_CALL(glBufferSubData(GLCAST(target), offset, dataSize, data));
 }
 
 void GL::SetColorMask(const std::array<bool, 4> &colorMask)
@@ -1553,15 +1539,15 @@ void GL::Render(const VAO *vao,
                 int elementsCount,
                 int startElementIndex)
 {
-    #ifdef DEBUG
+#ifdef DEBUG
     GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    if ( boundShaderProgram > 0 )
+    if(boundShaderProgram > 0)
     {
-        ASSERT( GL::ValidateProgram(boundShaderProgram) );
+        ASSERT(GL::ValidateProgram(boundShaderProgram));
     }
-    #endif
+#endif
 
-    if (vao->IsIndexed())
+    if(vao->IsIndexed())
     {
         GL::DrawElements(vao, renderMode, elementsCount, startElementIndex);
     }
@@ -1577,9 +1563,8 @@ void GL::DrawArrays(const VAO *vao,
                     int startVertexIndex)
 {
     vao->Bind();
-    GL_CALL( glDrawArrays( GLCAST(primitivesMode),
-                           startVertexIndex,
-                           verticesCount) );
+    GL_CALL(
+        glDrawArrays(GLCAST(primitivesMode), startVertexIndex, verticesCount));
     vao->UnBind();
 }
 
@@ -1589,10 +1574,9 @@ void GL::DrawElements(const VAO *vao,
                       int startElementIndex)
 {
     vao->Bind();
-    GL_CALL( glDrawElements( GLCAST(primitivesMode),
-                             elementsCount,
-                             GLCAST(GL::DataType::UNSIGNED_INT),
-                             RCAST<const void*>(startElementIndex)) );
+    GL_CALL(glDrawElements(GLCAST(primitivesMode), elementsCount,
+                           GLCAST(GL::DataType::UNSIGNED_INT),
+                           RCAST<const void *>(startElementIndex)));
     vao->UnBind();
 }
 
@@ -1601,26 +1585,21 @@ void GL::RenderInstanced(const VAO *vao,
                          int elementsCount,
                          int instanceAmount)
 {
-    #ifdef DEBUG
+#ifdef DEBUG
     GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    ASSERT( boundShaderProgram > 0 );
-    ASSERT( GL::ValidateProgram(boundShaderProgram) );
-    #endif
+    ASSERT(boundShaderProgram > 0);
+    ASSERT(GL::ValidateProgram(boundShaderProgram));
+#endif
 
-    if (vao->IsIndexed())
+    if(vao->IsIndexed())
     {
-        GL::DrawElementsInstanced(vao,
-                                  primitivesMode,
-                                  elementsCount,
+        GL::DrawElementsInstanced(vao, primitivesMode, elementsCount,
                                   instanceAmount);
     }
     else
     {
-        GL::DrawArraysInstanced(vao,
-                                primitivesMode,
-                                elementsCount,
-                                instanceAmount,
-                                0);
+        GL::DrawArraysInstanced(vao, primitivesMode, elementsCount,
+                                instanceAmount, 0);
     }
 }
 
@@ -1631,10 +1610,8 @@ void GL::DrawArraysInstanced(const VAO *vao,
                              int instanceStartIndex)
 {
     vao->Bind();
-    GL_CALL( glDrawArraysInstanced(GLCAST(primitivesMode),
-                                   instanceStartIndex,
-                                   verticesCount,
-                                   instanceAmount) );
+    GL_CALL(glDrawArraysInstanced(GLCAST(primitivesMode), instanceStartIndex,
+                                  verticesCount, instanceAmount));
     vao->UnBind();
 }
 
@@ -1644,22 +1621,20 @@ void GL::DrawElementsInstanced(const VAO *vao,
                                int instanceAmount)
 {
     vao->Bind();
-    GL_CALL( glDrawElementsInstanced(GLCAST(primitivesMode),
-                                     elementsCount,
-                                     GLCAST(GL::DataType::UNSIGNED_INT),
-                                     RCAST<void*>(0),
-                                     instanceAmount) );
+    GL_CALL(glDrawElementsInstanced(GLCAST(primitivesMode), elementsCount,
+                                    GLCAST(GL::DataType::UNSIGNED_INT),
+                                    RCAST<void *>(0), instanceAmount));
     vao->UnBind();
 }
 
 void GL::VertexAttribDivisor(uint location, uint divisor)
 {
-    GL_CALL( glVertexAttribDivisor(location, divisor) );
+    GL_CALL(glVertexAttribDivisor(location, divisor));
 }
 
 uint GL::GetLineWidth()
 {
-    return SCAST<uint>( GetGLContextValue(&GL::m_lineWidths) );
+    return SCAST<uint>(GetGLContextValue(&GL::m_lineWidths));
 }
 
 uint GL::GetStencilMask()
@@ -1679,59 +1654,65 @@ void GL::Bind(const GLObject *bindable)
 
 void GL::Bind(GL::BindTarget bindTarget, GLId glId)
 {
-    switch (bindTarget)
+    switch(bindTarget)
     {
         case GL::BindTarget::TEXTURE_1D:
             // SetGLContextValue(&GL::m_boundTexture1DIds, glId);
-            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
-        break;
+            GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::TEXTURE_2D:
             SetGLContextValue(&GL::m_boundTexture2DIds, glId);
-            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
-        break;
+            GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::TEXTURE_3D:
             // SetGLContextValue(&GL::m_boundTexture3DIds, glId);
-            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
-        break;
+            GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::TEXTURE_CUBE_MAP:
             SetGLContextValue(&GL::m_boundTextureCubeMapIds, glId);
-            GL_CALL( glBindTexture( GLCAST(bindTarget), glId ) );
-        break;
+            GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::SHADER_PROGRAM:
-            if (GL::IsBound(bindTarget, glId)) { return; }
+            if(GL::IsBound(bindTarget, glId))
+            {
+                return;
+            }
             SetGLContextValue(&GL::m_boundShaderProgramIds, glId);
-            GL_CALL( glUseProgram(glId) );
-        break;
+            GL_CALL(glUseProgram(glId));
+            break;
         case GL::BindTarget::FRAMEBUFFER:
             SetGLContextValue(&GL::m_boundDrawFramebufferIds, glId);
             SetGLContextValue(&GL::m_boundReadFramebufferIds, glId);
-            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
-        break;
+            GL_CALL(glBindFramebuffer(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::DRAW_FRAMEBUFFER:
             SetGLContextValue(&GL::m_boundDrawFramebufferIds, glId);
-            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
-        break;
+            GL_CALL(glBindFramebuffer(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::READ_FRAMEBUFFER:
             SetGLContextValue(&GL::m_boundReadFramebufferIds, glId);
-            GL_CALL( glBindFramebuffer( GLCAST(bindTarget), glId) );
-        break;
+            GL_CALL(glBindFramebuffer(GLCAST(bindTarget), glId));
+            break;
         case GL::BindTarget::VAO:
-            if (GL::IsBound(bindTarget, glId)) { return; }
+            if(GL::IsBound(bindTarget, glId))
+            {
+                return;
+            }
             SetGLContextValue(&GL::m_boundVAOIds, glId);
-            GL_CALL( glBindVertexArray(glId) );
-        break;
+            GL_CALL(glBindVertexArray(glId));
+            break;
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
             SetGLContextValue(&GL::m_boundVBOElementsBufferIds, glId);
-            GL_CALL( GL::BindBuffer(bindTarget, glId) );
-        break;
+            GL_CALL(GL::BindBuffer(bindTarget, glId));
+            break;
         case GL::BindTarget::ARRAY_BUFFER:
             SetGLContextValue(&GL::m_boundVBOArrayBufferIds, glId);
-            GL_CALL( GL::BindBuffer(bindTarget, glId) );
-        break;
+            GL_CALL(GL::BindBuffer(bindTarget, glId));
+            break;
         case GL::BindTarget::UNIFORM_BUFFER:
             SetGLContextValue(&GL::m_boundUniformBufferIds, glId);
-            GL_CALL( GL::BindBuffer(bindTarget, glId) );
-        break;
+            GL_CALL(GL::BindBuffer(bindTarget, glId));
+            break;
 
         default: ASSERT(false); break;
     }
@@ -1749,18 +1730,19 @@ void GL::UnBind(GL::BindTarget bindTarget)
 
 bool GL::IsBound(const GLObject *bindable)
 {
-    return bindable ? GL::IsBound(bindable->GetGLBindTarget(), bindable->GetGLId()) :
-                      false;
+    return bindable
+               ? GL::IsBound(bindable->GetGLBindTarget(), bindable->GetGLId())
+               : false;
 }
 
 void GL::SetColorMask(bool maskR, bool maskG, bool maskB, bool maskA)
 {
     GL *gl = GL::GetInstance();
-    std::array<bool,4> newColorMask = {{maskR, maskG, maskB, maskA}};
-    if (!gl || (GL::GetColorMask() != newColorMask))
+    std::array<bool, 4> newColorMask = {{maskR, maskG, maskB, maskA}};
+    if(!gl || (GL::GetColorMask() != newColorMask))
     {
         SetGLContextValue(&GL::m_colorMasks, newColorMask);
-        GL_CALL( glColorMask(maskR, maskG, maskB, maskA) );
+        GL_CALL(glColorMask(maskR, maskG, maskB, maskA));
     }
 }
 
@@ -1774,7 +1756,7 @@ void GL::SetStencilOp(GL::StencilOperation fail,
                       GL::StencilOperation zPass)
 {
     SetGLContextValue(&GL::m_stencilOps, zPass);
-    GL_CALL( glStencilOp(GLCAST(fail), GLCAST(zFail), GLCAST(zPass)) );
+    GL_CALL(glStencilOp(GLCAST(fail), GLCAST(zFail), GLCAST(zPass)));
 }
 
 void GL::SetStencilFunc(GL::Function stencilFunction, uint mask)
@@ -1786,23 +1768,21 @@ void GL::SetStencilFunc(GL::Function stencilFunction,
                         Byte stencilValue,
                         uint mask)
 {
-    if (stencilFunction != GL::GetStencilFunc() ||
-        stencilValue != GL::GetStencilValue() ||
-        mask != GL::GetStencilMask())
+    if(stencilFunction != GL::GetStencilFunc() ||
+       stencilValue != GL::GetStencilValue() || mask != GL::GetStencilMask())
     {
-        SetGLContextValue(&GL::m_stencilFuncs,  stencilFunction);
+        SetGLContextValue(&GL::m_stencilFuncs, stencilFunction);
         SetGLContextValue(&GL::m_stencilValues, stencilValue);
-        SetGLContextValue(&GL::m_stencilMasks,  mask);
-        GL_CALL( glStencilFunc(GLCAST(stencilFunction), stencilValue, mask) );
+        SetGLContextValue(&GL::m_stencilMasks, mask);
+        GL_CALL(glStencilFunc(GLCAST(stencilFunction), stencilValue, mask));
     }
 }
 
 void GL::SetStencilOp(GL::StencilOperation zPass)
 {
-    if (GL::GetStencilOp() != zPass)
+    if(GL::GetStencilOp() != zPass)
     {
-        GL::SetStencilOp(GL::StencilOperation::KEEP,
-                         GL::StencilOperation::KEEP,
+        GL::SetStencilOp(GL::StencilOperation::KEEP, GL::StencilOperation::KEEP,
                          zPass);
     }
 }
@@ -1814,38 +1794,39 @@ void GL::SetStencilValue(Byte value)
 
 void GL::SetDepthMask(bool writeDepth)
 {
-    if (GL::GetInstance()->GetDepthMask() != writeDepth)
+    if(GL::GetInstance()->GetDepthMask() != writeDepth)
     {
         SetGLContextValue(&GL::m_depthMasks, writeDepth);
-        GL_CALL( glDepthMask(writeDepth) );
+        GL_CALL(glDepthMask(writeDepth));
     }
 }
 
 void GL::SetDepthFunc(GL::Function depthFunc)
 {
-    if (GL::GetDepthFunc() != depthFunc)
+    if(GL::GetDepthFunc() != depthFunc)
     {
         SetGLContextValue(&GL::m_depthFuncs, depthFunc);
-        GL_CALL( glDepthFunc( GLCAST(depthFunc) ) );
+        GL_CALL(glDepthFunc(GLCAST(depthFunc)));
     }
 }
 
 void GL::SetCullFace(GL::Face cullFace)
 {
-    if (GL::GetCullFace() != cullFace)
+    if(GL::GetCullFace() != cullFace)
     {
         SetGLContextValue(&GL::m_cullFaces, cullFace);
-        GL_CALL( glCullFace( GLCAST(cullFace) ) );
+        GL_CALL(glCullFace(GLCAST(cullFace)));
     }
 }
 
 void GL::SetWireframe(bool wireframe)
 {
-    if (GL::IsWireframe() != wireframe)
+    if(GL::IsWireframe() != wireframe)
     {
-        GL::PolygonMode(GL::Face::BACK,         wireframe ? GL::LINE : GL::FILL);
-        GL::PolygonMode(GL::Face::FRONT,        wireframe ? GL::LINE : GL::FILL);
-        GL::PolygonMode(GL::Face::FRONT_AND_BACK, wireframe ? GL::LINE : GL::FILL);
+        GL::PolygonMode(GL::Face::BACK, wireframe ? GL::LINE : GL::FILL);
+        GL::PolygonMode(GL::Face::FRONT, wireframe ? GL::LINE : GL::FILL);
+        GL::PolygonMode(GL::Face::FRONT_AND_BACK,
+                        wireframe ? GL::LINE : GL::FILL);
     }
 }
 
@@ -1859,7 +1840,8 @@ Vector2 GL::FromPointToPointNDC(const Vector2 &point, const Vector2 &rectSize)
     return (point / rectSize) * 2.0f - 1.0f;
 }
 
-Vector2 GL::FromPointNDCToPoint(const Vector2 &pointNDC, const Vector2 &rectSize)
+Vector2 GL::FromPointNDCToPoint(const Vector2 &pointNDC,
+                                const Vector2 &rectSize)
 {
     return (pointNDC * 0.5f + 0.5f) * rectSize;
 }
@@ -1867,7 +1849,7 @@ Vector2 GL::FromPointNDCToPoint(const Vector2 &pointNDC, const Vector2 &rectSize
 Vector2 GL::FromAmountToAmountNDC(const Vector2 &amount,
                                   const Vector2 &rectSize)
 {
-    return ( (amount / rectSize) * 2.0f);
+    return ((amount / rectSize) * 2.0f);
 }
 
 Vector2 GL::FromAmountNDCToAmount(const Vector2 &amountNDC,
@@ -1884,12 +1866,12 @@ Vector2 GL::FromWindowPointToViewportPoint(const Vector2 &winPoint,
 
 Vector2 GL::FromViewportPointToWindowPoint(const Vector2 &vpPoint)
 {
-    Vector2 winPoint = vpPoint + Vector2( GL::GetViewportRect().GetMin() );
+    Vector2 winPoint = vpPoint + Vector2(GL::GetViewportRect().GetMin());
     return winPoint;
 }
 Vector2 GL::FromViewportPointToWindowPoint(const Vector2i &vpPoint)
 {
-    return GL::FromViewportPointToWindowPoint( Vector2(vpPoint) );
+    return GL::FromViewportPointToWindowPoint(Vector2(vpPoint));
 }
 
 Vector2 GL::FromWindowPointToViewportPoint(const Vector2 &winPoint)
@@ -1898,7 +1880,7 @@ Vector2 GL::FromWindowPointToViewportPoint(const Vector2 &winPoint)
 }
 Vector2 GL::FromWindowPointToViewportPoint(const Vector2i &winPoint)
 {
-    return GL::FromWindowPointToViewportPoint( Vector2(winPoint) );
+    return GL::FromWindowPointToViewportPoint(Vector2(winPoint));
 }
 
 RectPoints GL::FromViewportRectToViewportRectNDCPoints(const Rect &vpRect)
@@ -1912,23 +1894,23 @@ RectPoints GL::FromViewportRectToViewportRectNDCPoints(const Rect &vpRect)
 
 Rect GL::FromViewportRectNDCToViewportRect(const Rect &vpRectNDC)
 {
-    return Rect( FromViewportPointNDCToViewportPoint(vpRectNDC.GetCenter()),
-                 vpRectNDC.GetAxis(0),
-                 FromViewportAmountNDCToViewportAmount(vpRectNDC.GetHalfSize()));
+    return Rect(FromViewportPointNDCToViewportPoint(vpRectNDC.GetCenter()),
+                vpRectNDC.GetAxis(0),
+                FromViewportAmountNDCToViewportAmount(vpRectNDC.GetHalfSize()));
 }
 
 Rect GL::FromWindowRectToWindowRectNDC(const Rect &winRect)
 {
-    return Rect( FromWindowPointToWindowPointNDC(winRect.GetCenter()),
-                 winRect.GetAxis(0),
-                 FromWindowAmountToWindowAmountNDC(winRect.GetHalfSize()));
+    return Rect(FromWindowPointToWindowPointNDC(winRect.GetCenter()),
+                winRect.GetAxis(0),
+                FromWindowAmountToWindowAmountNDC(winRect.GetHalfSize()));
 }
 
 Rect GL::FromWindowRectNDCToWindowRect(const Rect &winRectNDC)
 {
-    return Rect( FromWindowPointNDCToWindowPoint(winRectNDC.GetCenter()),
-                 winRectNDC.GetAxis(0),
-                 FromWindowAmountNDCToWindowAmount(winRectNDC.GetHalfSize()));
+    return Rect(FromWindowPointNDCToWindowPoint(winRectNDC.GetCenter()),
+                winRectNDC.GetAxis(0),
+                FromWindowAmountNDCToWindowAmount(winRectNDC.GetHalfSize()));
 }
 
 AARect GL::FromViewportRectToViewportRectNDC(const AARect &vpRect)
@@ -1971,7 +1953,7 @@ Vector2 GL::FromWindowAmountNDCToWindowAmount(const Vector2 &winAmountNDC)
 
 Vector2 GL::FromViewportAmountToViewportAmountNDC(const Vector2 &vpAmount)
 {
-    Vector2 vpSize ( Vector2i::Max(GL::GetViewportSize(), Vector2i::One) );
+    Vector2 vpSize(Vector2i::Max(GL::GetViewportSize(), Vector2i::One));
     return (vpAmount / vpSize) * 2.0f;
 }
 
@@ -1988,34 +1970,31 @@ Vector2 GL::FromWindowPointNDCToWindowPoint(const Vector2 &winPointNDC)
 
 Vector2 GL::FromWindowPointToWindowPointNDC(const Vector2 &winPoint)
 {
-    Vector2i winSize( Window::GetActive()->GetSize() );
+    Vector2i winSize(Window::GetActive()->GetSize());
     return GL::FromPointToPointNDC(winPoint, Vector2(winSize));
 }
 Vector2 GL::FromWindowPointToWindowPointNDC(const Vector2i &winPoint)
 {
-    return GL::FromWindowPointToWindowPointNDC( Vector2(winPoint) );
+    return GL::FromWindowPointToWindowPointNDC(Vector2(winPoint));
 }
 
 Vector2 GL::FromViewportPointToViewportPointNDC(const Vector2 &vpPoint)
 {
-    Vector2i vpSize = Vector2i::Max( Vector2i::One, GL::GetViewportSize() );
+    Vector2i vpSize = Vector2i::Max(Vector2i::One, GL::GetViewportSize());
     Vector2 res = GL::FromPointToPointNDC(vpPoint, Vector2(vpSize));
     return res;
 }
 
 Vector2 GL::FromViewportPointToViewportPointNDC(const Vector2i &vpPoint)
 {
-    return GL::FromViewportPointToViewportPointNDC( Vector2(vpPoint) );
+    return GL::FromViewportPointToViewportPointNDC(Vector2(vpPoint));
 }
 
 Vector2 GL::FromViewportPointNDCToViewportPoint(const Vector2 &vpPointNDC)
 {
-    Vector2 vpSize( GL::GetViewportSize() );
+    Vector2 vpSize(GL::GetViewportSize());
     return GL::FromPointNDCToPoint(vpPointNDC, vpSize);
 }
-
-
-
 
 GL::StencilOperation GL::GetStencilOp()
 {
@@ -2079,15 +2058,15 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
         case GL::BindTarget::TEXTURE_CUBE_MAP:
             return GetGLContextValue(&GL::m_boundTextureCubeMapIds);
         case GL::BindTarget::FRAMEBUFFER:
-            return ( GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) ==
-                     GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER) ) ?
-                       GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) : 0;
+            return (GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER) ==
+                    GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER))
+                       ? GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER)
+                       : 0;
         case GL::BindTarget::DRAW_FRAMEBUFFER:
             return GetGLContextValue(&GL::m_boundDrawFramebufferIds);
         case GL::BindTarget::READ_FRAMEBUFFER:
             return GetGLContextValue(&GL::m_boundReadFramebufferIds);
-        case GL::BindTarget::VAO:
-            return GetGLContextValue(&GL::m_boundVAOIds);
+        case GL::BindTarget::VAO: return GetGLContextValue(&GL::m_boundVAOIds);
         case GL::BindTarget::ARRAY_BUFFER:
             return GetGLContextValue(&GL::m_boundVBOArrayBufferIds);
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
@@ -2107,20 +2086,20 @@ bool GL::IsBound(GL::BindTarget bindTarget, GLId glId)
 
 uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
 {
-    switch (texFormat)
+    switch(texFormat)
     {
-        case GL::ColorFormat::SRGB:             return 3;
-        case GL::ColorFormat::SRGBA:            return 4;
-        case GL::ColorFormat::RGBA8:            return 4;
-        case GL::ColorFormat::RGBA16F:          return 8;
-        case GL::ColorFormat::DEPTH:            return 4;
-        case GL::ColorFormat::DEPTH16:          return 2;
-        case GL::ColorFormat::DEPTH24:          return 3;
-        case GL::ColorFormat::DEPTH32:          return 4;
-        case GL::ColorFormat::DEPTH32F:         return 16;
+        case GL::ColorFormat::SRGB: return 3;
+        case GL::ColorFormat::SRGBA: return 4;
+        case GL::ColorFormat::RGBA8: return 4;
+        case GL::ColorFormat::RGBA16F: return 8;
+        case GL::ColorFormat::DEPTH: return 4;
+        case GL::ColorFormat::DEPTH16: return 2;
+        case GL::ColorFormat::DEPTH24: return 3;
+        case GL::ColorFormat::DEPTH32: return 4;
+        case GL::ColorFormat::DEPTH32F: return 16;
         case GL::ColorFormat::DEPTH24_STENCIL8: return 4;
-        case GL::ColorFormat::RGB10_A2:         return 4;
-        case GL::ColorFormat::RGBA32F:          return 16;
+        case GL::ColorFormat::RGB10_A2: return 4;
+        case GL::ColorFormat::RGBA32F: return 16;
     }
     return 0;
 }
@@ -2132,25 +2111,20 @@ uint GL::GetPixelBytesSize(GL::ColorComp colorComp, GL::DataType dataType)
 
 uint GL::GetBytesSize(GL::DataType dataType)
 {
-    switch (dataType)
+    switch(dataType)
     {
         case GL::DataType::BYTE:
-        case GL::DataType::UNSIGNED_BYTE:
-            return sizeof(Byte);
+        case GL::DataType::UNSIGNED_BYTE: return sizeof(Byte);
 
         case GL::DataType::SHORT:
-        case GL::DataType::UNSIGNED_SHORT:
-            return sizeof(short);
+        case GL::DataType::UNSIGNED_SHORT: return sizeof(short);
 
         case GL::DataType::INT:
-        case GL::DataType::UNSIGNED_INT:
-            return sizeof(int);
+        case GL::DataType::UNSIGNED_INT: return sizeof(int);
 
-        case GL::DataType::FLOAT:
-            return sizeof(float);
+        case GL::DataType::FLOAT: return sizeof(float);
 
-        case GL::DataType::DOUBLE:
-            return sizeof(double);
+        case GL::DataType::DOUBLE: return sizeof(double);
 
         default: return -1;
     }
@@ -2160,12 +2134,11 @@ uint GL::GetBytesSize(GL::DataType dataType)
 
 uint GL::GetNumComponents(GL::ColorComp colorComp)
 {
-    switch (colorComp)
+    switch(colorComp)
     {
         case GL::ColorComp::RED:
         case GL::ColorComp::DEPTH:
-        case GL::ColorComp::DEPTH_STENCIL:
-            return 1;
+        case GL::ColorComp::DEPTH_STENCIL: return 1;
 
         case GL::ColorComp::RGB: return 3;
         case GL::ColorComp::RGBA: return 4;
@@ -2178,18 +2151,17 @@ uint GL::GetNumComponents(GL::ColorComp colorComp)
 
 uint GL::GetNumComponents(GL::ColorFormat colorFormat)
 {
-    return GL::GetNumComponents( GL::GetColorCompFrom(colorFormat) );
+    return GL::GetNumComponents(GL::GetColorCompFrom(colorFormat));
 }
 
 GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
 {
-    switch (format)
+    switch(format)
     {
         case GL::ColorFormat::SRGB:
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
-        case GL::ColorFormat::RGB10_A2:
-            return GL::DataType::UNSIGNED_BYTE;
+        case GL::ColorFormat::RGB10_A2: return GL::DataType::UNSIGNED_BYTE;
 
         case GL::ColorFormat::RGBA16F:
         case GL::ColorFormat::RGBA32F:
@@ -2198,8 +2170,7 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
         case GL::ColorFormat::DEPTH16:
         case GL::ColorFormat::DEPTH24:
         case GL::ColorFormat::DEPTH32:
-        case GL::ColorFormat::DEPTH32F:
-            return GL::DataType::FLOAT;
+        case GL::ColorFormat::DEPTH32F: return GL::DataType::FLOAT;
 
         default: break;
     }
@@ -2209,22 +2180,20 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
 
 GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
 {
-    switch (format)
+    switch(format)
     {
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
         case GL::ColorFormat::RGBA16F:
         case GL::ColorFormat::RGBA32F:
-        case GL::ColorFormat::RGB10_A2:
-            return GL::ColorComp::RGBA;
+        case GL::ColorFormat::RGB10_A2: return GL::ColorComp::RGBA;
 
         case GL::ColorFormat::DEPTH:
         case GL::ColorFormat::DEPTH16:
         case GL::ColorFormat::DEPTH24:
         case GL::ColorFormat::DEPTH32:
         case GL::ColorFormat::DEPTH32F:
-        case GL::ColorFormat::DEPTH24_STENCIL8:
-            return GL::ColorComp::DEPTH;
+        case GL::ColorFormat::DEPTH24_STENCIL8: return GL::ColorComp::DEPTH;
 
         default: break;
     }
@@ -2234,10 +2203,10 @@ GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
 
 bool GL::IsDepthFormat(GL::ColorFormat format)
 {
-    return (format == GL::ColorFormat::DEPTH    ||
-            format == GL::ColorFormat::DEPTH16  ||
-            format == GL::ColorFormat::DEPTH24  ||
-            format == GL::ColorFormat::DEPTH32  ||
+    return (format == GL::ColorFormat::DEPTH ||
+            format == GL::ColorFormat::DEPTH16 ||
+            format == GL::ColorFormat::DEPTH24 ||
+            format == GL::ColorFormat::DEPTH32 ||
             format == GL::ColorFormat::DEPTH32F ||
             format == GL::ColorFormat::DEPTH24_STENCIL8);
 }
@@ -2246,17 +2215,16 @@ void GL::BindUniformBufferToShader(const String &uniformBlockName,
                                    const ShaderProgram *sp,
                                    const IUniformBuffer *buffer)
 {
-    GL_CALL(
-    GLuint blockIndex = glGetUniformBlockIndex(sp->GetGLId(),
-                                               uniformBlockName.ToCString()) );
-    GL_CALL( glUniformBlockBinding(sp->GetGLId(), blockIndex,
-                                   buffer->GetBindingPoint()) );
+    GL_CALL(GLuint blockIndex = glGetUniformBlockIndex(
+                sp->GetGLId(), uniformBlockName.ToCString()));
+    GL_CALL(glUniformBlockBinding(sp->GetGLId(), blockIndex,
+                                  buffer->GetBindingPoint()));
 }
 
 template <class T>
 void Push_(StackAndValue<T> *stackAndValue)
 {
-    stackAndValue->stack.push( stackAndValue->currentValue );
+    stackAndValue->stack.push(stackAndValue->currentValue);
 }
 template <class T>
 void Pop_(StackAndValue<T> *stackAndValue)
@@ -2268,25 +2236,40 @@ void Pop_(StackAndValue<T> *stackAndValue)
 template <class T>
 void PushOrPop_(StackAndValue<T> *stackAndValue, bool push)
 {
-    if (push) { Push_(stackAndValue); } else { Pop_(stackAndValue); }
+    if(push)
+    {
+        Push_(stackAndValue);
+    }
+    else
+    {
+        Pop_(stackAndValue);
+    }
 }
 template <class T>
 void Push_(StackAndValue<T> GL::*stackAndValueMemberPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     Push_(&(gl->*stackAndValueMemberPtr));
 }
 template <class T>
 void Pop_(StackAndValue<T> GL::*stackAndValueMemberPtr)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
     Pop_(&(gl->*stackAndValueMemberPtr));
 }
 template <class T>
 void PushOrPop_(StackAndValue<T> GL::*stackAndValueMemberPtr, bool push)
 {
-    if (push) { Push_(stackAndValueMemberPtr); }
-    else { Pop_(stackAndValueMemberPtr); }
+    if(push)
+    {
+        Push_(stackAndValueMemberPtr);
+    }
+    else
+    {
+        Pop_(stackAndValueMemberPtr);
+    }
 }
 
 void GL::Push(GL::Pushable pushable)
@@ -2321,11 +2304,12 @@ void GL::Pop(GL::BindTarget bindTarget)
 
 void GL::PushOrPop(GL::Pushable pushable, bool push)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
-    switch (pushable)
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
+    switch(pushable)
     {
         case GL::Pushable::BLEND_STATES:
-            if (!push)
+            if(!push)
             {
                 ASSERT(gl->m_blendSrcFactorColors.stack.size() >= 1);
                 ASSERT(gl->m_blendDstFactorColors.stack.size() >= 1);
@@ -2337,54 +2321,55 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
                                       gl->m_blendDstFactorColors.stack.top(),
                                       gl->m_blendSrcFactorAlphas.stack.top(),
                                       gl->m_blendDstFactorAlphas.stack.top());
-                GL::BlendEquationSeparate(gl->m_blendEquationColors.stack.top(),
-                                          gl->m_blendEquationAlphas.stack.top());
+                GL::BlendEquationSeparate(
+                    gl->m_blendEquationColors.stack.top(),
+                    gl->m_blendEquationAlphas.stack.top());
             }
 
             PushOrPop(GL::Enablable::BLEND, push);
-            PushOrPop_(&gl->m_blendEquationAlphas,  push);
-            PushOrPop_(&gl->m_blendEquationColors,  push);
+            PushOrPop_(&gl->m_blendEquationAlphas, push);
+            PushOrPop_(&gl->m_blendEquationColors, push);
             PushOrPop_(&gl->m_blendDstFactorAlphas, push);
             PushOrPop_(&gl->m_blendDstFactorColors, push);
             PushOrPop_(&gl->m_blendSrcFactorAlphas, push);
             PushOrPop_(&gl->m_blendSrcFactorColors, push);
 
-        break;
+            break;
 
         case GL::Pushable::COLOR_MASK:
-            if (!push)
+            if(!push)
             {
                 GL::SetColorMask(gl->m_colorMasks.stack.top());
             }
             PushOrPop_(&gl->m_colorMasks, push);
-        break;
+            break;
 
         case GL::Pushable::CULL_FACE:
-            if (!push)
+            if(!push)
             {
                 GL::SetCullFace(gl->m_cullFaces.stack.top());
             }
             PushOrPop(GL::Enablable::CULL_FACE, push);
             PushOrPop_(&gl->m_cullFaces, push);
-        break;
+            break;
 
         case GL::Pushable::DEPTH_STATES:
-            PushOrPop(GL::Enablable::DEPTH_TEST,  push);
+            PushOrPop(GL::Enablable::DEPTH_TEST, push);
             PushOrPop(GL::Enablable::DEPTH_CLAMP, push);
-            if (!push)
+            if(!push)
             {
                 GL::SetDepthFunc(gl->m_depthFuncs.stack.top());
                 GL::SetDepthMask(gl->m_depthMasks.stack.top());
             }
             PushOrPop_(&gl->m_depthFuncs, push);
             PushOrPop_(&gl->m_depthMasks, push);
-        break;
+            break;
 
         case GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS:
-            if (!push)
+            if(!push)
             {
                 PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
-                if (GL::GetBoundId(GL::BindTarget::FRAMEBUFFER) > 0)
+                if(GL::GetBoundId(GL::BindTarget::FRAMEBUFFER) > 0)
                 {
                     GL::DrawBuffers(gl->m_drawBuffers.stack.top());
                     GL::ReadBuffer(gl->m_readBuffers.stack.top());
@@ -2393,141 +2378,142 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
                 {
                     // Simply update to mantain coherency (and so assert in
                     // pop does not bother)
-                    gl->m_drawBuffers.currentValue = gl->m_drawBuffers.stack.top();
-                    gl->m_readBuffers.currentValue = gl->m_readBuffers.stack.top();
+                    gl->m_drawBuffers.currentValue =
+                        gl->m_drawBuffers.stack.top();
+                    gl->m_readBuffers.currentValue =
+                        gl->m_readBuffers.stack.top();
                 }
             }
 
             PushOrPop_(&gl->m_drawBuffers, push);
             PushOrPop_(&gl->m_readBuffers, push);
 
-            if (push)
+            if(push)
             {
                 PushOrPop(GL::BindTarget::FRAMEBUFFER, push);
             }
-        break;
+            break;
 
         case GL::Pushable::SHADER_PROGRAM:
             PushOrPop(GL::BindTarget::SHADER_PROGRAM, push);
-        break;
+            break;
 
         case GL::Pushable::STENCIL_STATES:
             PushOrPop(GL::Enablable::STENCIL_TEST, push);
-            if (!push)
+            if(!push)
             {
                 GL::SetStencilFunc(gl->m_stencilFuncs.stack.top(),
                                    gl->m_stencilMasks.stack.top());
                 GL::SetStencilOp(gl->m_stencilOps.stack.top());
                 GL::SetStencilValue(gl->m_stencilValues.stack.top());
             }
-            PushOrPop_(&gl->m_stencilFuncs,  push);
-            PushOrPop_(&gl->m_stencilMasks,  push);
-            PushOrPop_(&gl->m_stencilOps,    push);
+            PushOrPop_(&gl->m_stencilFuncs, push);
+            PushOrPop_(&gl->m_stencilMasks, push);
+            PushOrPop_(&gl->m_stencilOps, push);
             PushOrPop_(&gl->m_stencilValues, push);
-        break;
+            break;
 
-        case GL::Pushable::VAO:
-            GL::PushOrPop(GL::BindTarget::VAO, push);
-        break;
+        case GL::Pushable::VAO: GL::PushOrPop(GL::BindTarget::VAO, push); break;
 
         case GL::Pushable::VBO:
             GL::PushOrPop(GL::BindTarget::ARRAY_BUFFER, push);
-        break;
+            break;
 
         case GL::Pushable::VIEWPORT:
-            if (!push)
+            if(!push)
             {
                 GL::SetViewport(gl->m_viewportRects.stack.top());
             }
             PushOrPop_(&gl->m_viewportRects, push);
-        break;
+            break;
 
         case GL::Pushable::MODEL_MATRIX:
-            if (push)
+            if(push)
             {
                 gl->m_modelMatrices.push(
-                                GLUniforms::GetActive()->GetModelMatrix() );
+                    GLUniforms::GetActive()->GetModelMatrix());
             }
             else
             {
                 ASSERT(gl->m_modelMatrices.size() >= 1);
-                GLUniforms::GetActive()->SetModelMatrix(gl->m_modelMatrices.top());
+                GLUniforms::GetActive()->SetModelMatrix(
+                    gl->m_modelMatrices.top());
                 gl->m_modelMatrices.pop();
             }
-        break;
+            break;
 
         case GL::Pushable::VIEW_MATRIX:
-            if (push)
+            if(push)
             {
                 gl->m_viewMatrices.push(
-                                    GLUniforms::GetActive()->GetViewMatrix() );
+                    GLUniforms::GetActive()->GetViewMatrix());
             }
             else
             {
                 ASSERT(gl->m_viewMatrices.size() >= 1);
                 GLUniforms::GetActive()->SetViewMatrix(
-                                                gl->m_viewMatrices.top());
+                    gl->m_viewMatrices.top());
                 gl->m_viewMatrices.pop();
             }
-        break;
+            break;
 
         case GL::Pushable::PROJECTION_MATRIX:
-            if (push)
+            if(push)
             {
                 gl->m_projectionMatrices.push(
                     GLUniforms::GetActive()->GetProjectionMatrix(
-                                                GL::ViewProjMode::WORLD) );
+                        GL::ViewProjMode::WORLD));
             }
             else
             {
                 ASSERT(gl->m_projectionMatrices.size() >= 1);
                 GLUniforms::GetActive()->SetProjectionMatrix(
-                                            gl->m_projectionMatrices.top());
+                    gl->m_projectionMatrices.top());
                 gl->m_projectionMatrices.pop();
             }
-        break;
+            break;
 
         case GL::Pushable::ALL_MATRICES:
             PushOrPop(GL::Pushable::MODEL_MATRIX, push);
             PushOrPop(GL::Pushable::VIEW_MATRIX, push);
             PushOrPop(GL::Pushable::PROJECTION_MATRIX, push);
-        break;
+            break;
 
         case GL::Pushable::VIEWPROJ_MODE:
-            if (push)
+            if(push)
             {
                 gl->m_viewProjModes.push(
-                                GLUniforms::GetActive()->GetViewProjMode() );
+                    GLUniforms::GetActive()->GetViewProjMode());
             }
             else
             {
                 ASSERT(gl->m_viewProjModes.size() >= 1);
                 GLUniforms::GetActive()->SetViewProjMode(
-                                                gl->m_viewProjModes.top());
+                    gl->m_viewProjModes.top());
                 gl->m_viewProjModes.pop();
             }
-        break;
+            break;
 
-        default:
-            ASSERT(false);
-        break;
+        default: ASSERT(false); break;
     }
 }
 
 void GL::PushOrPop(GL::Enablable enablable, bool push)
 {
-    GL *gl = GL::GetInstance(); ASSERT(gl);
+    GL *gl = GL::GetInstance();
+    ASSERT(gl);
 
-    if (!push)
+    if(!push)
     {
         ASSERT(gl->m_enabledVars.ContainsKey(enablable));
         ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
-        GL::SetEnabled(enablable, gl->m_enabledVars.Get(enablable).stack.top()[0]);
+        GL::SetEnabled(enablable,
+                       gl->m_enabledVars.Get(enablable).stack.top()[0]);
 
         ASSERT(gl->m_enabledVars.ContainsKey(enablable));
         ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
         auto &enabledIStackAndValue = gl->m_enabledVars.Get(enablable);
-        for (int i = 0; i < GL::GetEnablableIndexMax(enablable); ++i)
+        for(int i = 0; i < GL::GetEnablableIndexMax(enablable); ++i)
         {
             GL::SetEnabledi(enablable, i, enabledIStackAndValue.stack.top()[i]);
         }
@@ -2540,85 +2526,82 @@ void GL::PushOrPop(GL::Enablable enablable, bool push)
 void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
 {
     GL *gl = GL::GetInstance();
-    switch (bindTarget)
+    switch(bindTarget)
     {
         case GL::BindTarget::NONE:
         case GL::BindTarget::TEXTURE_1D:
-        case GL::BindTarget::TEXTURE_3D:
-            ASSERT(false);
-        break;
+        case GL::BindTarget::TEXTURE_3D: ASSERT(false); break;
 
         case GL::BindTarget::TEXTURE_2D:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundTexture2DIds.stack.top());
             }
             PushOrPop_(&gl->m_boundTexture2DIds, push);
-        break;
+            break;
         case GL::BindTarget::TEXTURE_CUBE_MAP:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundTextureCubeMapIds.stack.top());
             }
             PushOrPop_(&gl->m_boundTextureCubeMapIds, push);
-        break;
+            break;
         case GL::BindTarget::SHADER_PROGRAM:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundShaderProgramIds.stack.top());
             }
             PushOrPop_(&gl->m_boundShaderProgramIds, push);
-        break;
+            break;
         case GL::BindTarget::FRAMEBUFFER:
             GL::PushOrPop(GL::BindTarget::DRAW_FRAMEBUFFER, push);
             GL::PushOrPop(GL::BindTarget::READ_FRAMEBUFFER, push);
-        break;
+            break;
         case GL::BindTarget::DRAW_FRAMEBUFFER:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundDrawFramebufferIds.stack.top());
             }
             PushOrPop_(&gl->m_boundDrawFramebufferIds, push);
-        break;
+            break;
         case GL::BindTarget::READ_FRAMEBUFFER:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundReadFramebufferIds.stack.top());
             }
             PushOrPop_(&gl->m_boundReadFramebufferIds, push);
-        break;
+            break;
         case GL::BindTarget::VAO:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundVAOIds.stack.top());
             }
             PushOrPop_(&gl->m_boundVAOIds, push);
-        break;
+            break;
         case GL::BindTarget::ARRAY_BUFFER:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundVBOArrayBufferIds.stack.top());
             }
             PushOrPop_(&gl->m_boundVBOArrayBufferIds, push);
-        break;
+            break;
         case GL::BindTarget::ELEMENT_ARRAY_BUFFER:
-            if (!push)
+            if(!push)
             {
-                GL::Bind(bindTarget, gl->m_boundVBOElementsBufferIds.stack.top());
+                GL::Bind(bindTarget,
+                         gl->m_boundVBOElementsBufferIds.stack.top());
             }
             PushOrPop_(&gl->m_boundVBOElementsBufferIds, push);
-        break;
+            break;
         case GL::BindTarget::UNIFORM_BUFFER:
-            if (!push)
+            if(!push)
             {
                 GL::Bind(bindTarget, gl->m_boundUniformBufferIds.stack.top());
             }
             PushOrPop_(&gl->m_boundUniformBufferIds, push);
-        break;
+            break;
 
-        default:
-            ASSERT(false);
-        break;
+        default: ASSERT(false); break;
     }
 }
 
@@ -2636,14 +2619,13 @@ void GL::PrintGLStats()
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_GEOMETRY_UNIFORM_COMPONENTS));
     const int maxTessControlUniformsComponents =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS));
-    const int maxTessEvalUniformsComponents =
-        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS));
+    const int maxTessEvalUniformsComponents = GL::GetInteger(
+        SCAST<GL::Enum>(GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS));
     const int maxFragUniformsComponents =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS));
     const int maxTexUnits =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_IMAGE_UNITS));
-    const int maxTexSize =
-        GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_SIZE));
+    const int maxTexSize = GL::GetInteger(SCAST<GL::Enum>(GL_MAX_TEXTURE_SIZE));
     const int maxTexSize3D =
         GL::GetInteger(SCAST<GL::Enum>(GL_MAX_3D_TEXTURE_SIZE));
     const int maxFBWidth =
@@ -2676,14 +2658,14 @@ void GL::PrintGLContext()
     Debug_DLog("GL Context: ================");
     Debug_DPeek(GL::GetViewportRect());
     Debug_DPeek(GL::GetScissorRect());
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::VAO)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::ARRAY_BUFFER)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::FRAMEBUFFER)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_2D)) );
-    Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP)) );
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::VAO)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::ARRAY_BUFFER)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::FRAMEBUFFER)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_2D)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP)));
     // Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
     Debug_DPeek(GL::GetColorMask());
     Debug_DPeek(GL::GetLineWidth());
@@ -2705,8 +2687,8 @@ void GL::PrintGLContext()
     Debug_DPeek(GL::GetPolygonMode(GL::Face::FRONT_AND_BACK));
     Debug_DPeek(GL::GetStencilOp());
     Debug_DPeek(GL::GetStencilFunc());
-    Debug_DPeek( SCAST<int>(GL::GetStencilValue()) );
-    Debug_DPeek( SCAST<int>(GL::GetStencilMask()) );
+    Debug_DPeek(SCAST<int>(GL::GetStencilValue()));
+    Debug_DPeek(SCAST<int>(GL::GetStencilMask()));
     Debug_DPeek(GL::GetBlendDstFactorAlpha());
     Debug_DPeek(GL::GetBlendDstFactorColor());
     Debug_DPeek(GL::GetBlendEquationAlpha());
@@ -2734,4 +2716,7 @@ GL *GL::GetInstance()
     return ge ? ge->GetGL() : nullptr;
 }
 
-GLUniforms *GL::GetGLUniforms() const { return m_glUniforms; }
+GLUniforms *GL::GetGLUniforms() const
+{
+    return m_glUniforms;
+}

@@ -5,7 +5,7 @@
 #include "Bang/List.tcc"
 #include "Bang/Thread.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ThreadPool::ThreadPool()
 {
@@ -18,17 +18,23 @@ ThreadPool::~ThreadPool()
 bool ThreadPool::TryStart(ThreadRunnable *runnable)
 {
     auto it = m_threadList.Begin();
-    while (it != m_threadList.End())
+    while(it != m_threadList.End())
     {
         Thread *thread = *it;
-        if (thread->HasFinished())
+        if(thread->HasFinished())
         {
             it = m_threadList.Remove(it);
         }
-        else { ++it; }
+        else
+        {
+            ++it;
+        }
     }
 
-    if (m_threadList.Size() >= m_maxThreadCount) { return false; }
+    if(m_threadList.Size() >= m_maxThreadCount)
+    {
+        return false;
+    }
 
     String threadName = m_threadsName + String::ToString(m_threadList.Size());
     Thread *thread = new Thread(runnable, threadName);
@@ -40,7 +46,7 @@ bool ThreadPool::TryStart(ThreadRunnable *runnable)
 
 void ThreadPool::SetName(const String &name)
 {
-    if (name != GetName())
+    if(name != GetName())
     {
         m_threadsName = name;
     }

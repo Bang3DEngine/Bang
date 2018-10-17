@@ -11,10 +11,10 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsDebug;
-FORWARD class Shader;
+namespace Bang
+{
+class IEventsDebug;
+class Shader;
 
 class Debug : public EventEmitter<IEventsDebug>
 {
@@ -53,38 +53,44 @@ private:
     friend class Application;
 };
 
+#define Debug_Log(msg)                             \
+    do                                             \
+    {                                              \
+        std::ostringstream log;                    \
+        log << std::boolalpha << msg;              \
+        log.flush();                               \
+        Debug::Log(log.str(), __LINE__, __FILE__); \
+    } while(0)
 
-#define Debug_Log(msg) do{\
-    std::ostringstream log;\
-    log << std::boolalpha << msg;\
-    log.flush();\
-    Debug::Log(log.str(), __LINE__, __FILE__); \
-} while (0)
+#define Debug_DLog(msg)                             \
+    do                                              \
+    {                                               \
+        std::ostringstream log;                     \
+        log << std::boolalpha << msg;               \
+        log.flush();                                \
+        Debug::DLog(log.str(), __LINE__, __FILE__); \
+    } while(0)
 
-#define Debug_DLog(msg) do{\
-    std::ostringstream log;\
-    log << std::boolalpha << msg;\
-    log.flush();\
-    Debug::DLog(log.str(), __LINE__, __FILE__); \
-} while (0)
-
-#define Debug_Peek(varName)   Debug_Log(#varName << ": " << (varName))
+#define Debug_Peek(varName) Debug_Log(#varName << ": " << (varName))
 #define Debug_DPeek(varName) Debug_DLog(#varName << ": " << (varName))
 
-#define Debug_Warn(msg) do{\
-    std::ostringstream log;\
-    log << std::boolalpha << msg;\
-    log.flush();\
-    Debug::Warn(log.str(), __LINE__, __FILE__); \
-} while (0)
+#define Debug_Warn(msg)                             \
+    do                                              \
+    {                                               \
+        std::ostringstream log;                     \
+        log << std::boolalpha << msg;               \
+        log.flush();                                \
+        Debug::Warn(log.str(), __LINE__, __FILE__); \
+    } while(0)
 
-#define Debug_Error(msg) do{\
-    std::ostringstream log;\
-    log << std::boolalpha << msg;\
-    log.flush();\
-    Debug::Error(log.str(), __LINE__, __FILE__); \
-} while (0)
+#define Debug_Error(msg)                             \
+    do                                               \
+    {                                                \
+        std::ostringstream log;                      \
+        log << std::boolalpha << msg;                \
+        log.flush();                                 \
+        Debug::Error(log.str(), __LINE__, __FILE__); \
+    } while(0)
+}
 
-NAMESPACE_BANG_END
-
-#endif // DEBUG_H
+#endif  // DEBUG_H

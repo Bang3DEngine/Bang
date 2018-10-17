@@ -3,9 +3,9 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class String;
+namespace Bang
+{
+class String;
 
 class ShaderPreprocessor
 {
@@ -18,7 +18,6 @@ protected:
 private:
     ShaderPreprocessor();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SHADERPREPROCESSOR_H
+#endif  // SHADERPREPROCESSOR_H

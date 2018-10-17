@@ -5,7 +5,7 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/IEventsGameObjectPhysics.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Behaviour::Behaviour()
 {
@@ -17,7 +17,7 @@ Behaviour::~Behaviour()
 {
 }
 
-const BPReflectedStruct& Behaviour::GetReflectionInfo() const
+const BPReflectedStruct &Behaviour::GetReflectionInfo() const
 {
     return m_reflectionInfo;
 }

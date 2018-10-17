@@ -3,14 +3,14 @@
 
 #include "Bang/IUniformBuffer.h"
 
-NAMESPACE_BANG_BEGIN
-
-template<class BufferStruct>
+namespace Bang
+{
+template <class BufferStruct>
 class UniformBuffer : public IUniformBuffer
 {
 public:
-	UniformBuffer();
-	virtual ~UniformBuffer() override;
+    UniformBuffer();
+    virtual ~UniformBuffer() override;
 
     void Set(const BufferStruct &data);
 
@@ -24,10 +24,8 @@ public:
 private:
     friend class GLUniforms;
 };
-
-NAMESPACE_BANG_END
+}
 
 #include "Bang/UniformBuffer.tcc"
 
-#endif // UNIFORMBUFFER_H
-
+#endif  // UNIFORMBUFFER_H

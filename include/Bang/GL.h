@@ -5,102 +5,102 @@
 #include <array>
 #include <stack>
 
-#include "Bang/Array.h"
 #include "Bang/AARect.h"
+#include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 
-FORWARD class SDL_Window;
+class SDL_Window;
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 #ifdef DEBUG
-#define GL_CALL( CALL ) \
-        GL_ClearError(); \
-        CALL; \
-        GL_CheckError()
+#define GL_CALL(CALL) \
+    GL_ClearError();  \
+    CALL;             \
+    GL_CheckError()
 #define GL_ClearError() GL::ClearError()
-#define GL_CheckError() \
-    ASSERT_SOFT_MSG( GL::CheckError(__LINE__, \
-                                    String(SCAST<const char*>(__FUNCTION__)), \
-                                    __FILE__), \
-                     "There was an OpenGL error, see previous message.");
+#define GL_CheckError()                                                     \
+    ASSERT_SOFT_MSG(                                                        \
+        GL::CheckError(__LINE__, String(SCAST<const char *>(__FUNCTION__)), \
+                       __FILE__),                                           \
+        "There was an OpenGL error, see previous message.");
 #else
-#define GL_CALL( CALL ) CALL
-#define GL_ClearError() // Empty
-#define GL_CheckError() // Empty
+#define GL_CALL(CALL) CALL
+#define GL_ClearError()  // Empty
+#define GL_CheckError()  // Empty
 #endif
 
-FORWARD class GLObject;
-FORWARD class GLUniforms;
-FORWARD class IUniformBuffer;
-FORWARD class ShaderProgram;
-FORWARD class VAO;
+class GLObject;
+class GLUniforms;
+class IUniformBuffer;
+class ShaderProgram;
+class VAO;
 
 class GL
 {
 public:
     enum Enum
     {
-        ACTIVE_UNIFORMS          = GL_ACTIVE_UNIFORMS,
-        COMPILE_STATUS           = GL_COMPILE_STATUS,
-        VALIDATE_STATUS          = GL_VALIDATE_STATUS,
-        FILL                     = GL_FILL,
-        INFO_LOG_LENGTH          = GL_INFO_LOG_LENGTH,
-        LINE                     = GL_LINE,
-        LINK_STATUS              = GL_LINK_STATUS,
-        MAX_DRAW_BUFFERS         = GL_MAX_DRAW_BUFFERS,
-        MAX_TEXTURE_IMAGE_UNITS  = GL_MAX_TEXTURE_IMAGE_UNITS,
-        READ_ONLY                = GL_READ_ONLY,
-        READ_WRITE               = GL_READ_WRITE,
-        UNPACK_ALIGNMENT         = GL_UNPACK_ALIGNMENT,
-        VIEWPORT                 = GL_VIEWPORT,
-        WRITE_ONLY               = GL_WRITE_ONLY,
-        TEXTURE_BINDING_1D       = GL_TEXTURE_BINDING_1D,
-        TEXTURE_BINDING_2D       = GL_TEXTURE_BINDING_2D,
-        TEXTURE_BINDING_3D       = GL_TEXTURE_BINDING_3D,
+        ACTIVE_UNIFORMS = GL_ACTIVE_UNIFORMS,
+        COMPILE_STATUS = GL_COMPILE_STATUS,
+        VALIDATE_STATUS = GL_VALIDATE_STATUS,
+        FILL = GL_FILL,
+        INFO_LOG_LENGTH = GL_INFO_LOG_LENGTH,
+        LINE = GL_LINE,
+        LINK_STATUS = GL_LINK_STATUS,
+        MAX_DRAW_BUFFERS = GL_MAX_DRAW_BUFFERS,
+        MAX_TEXTURE_IMAGE_UNITS = GL_MAX_TEXTURE_IMAGE_UNITS,
+        READ_ONLY = GL_READ_ONLY,
+        READ_WRITE = GL_READ_WRITE,
+        UNPACK_ALIGNMENT = GL_UNPACK_ALIGNMENT,
+        VIEWPORT = GL_VIEWPORT,
+        WRITE_ONLY = GL_WRITE_ONLY,
+        TEXTURE_BINDING_1D = GL_TEXTURE_BINDING_1D,
+        TEXTURE_BINDING_2D = GL_TEXTURE_BINDING_2D,
+        TEXTURE_BINDING_3D = GL_TEXTURE_BINDING_3D,
         TEXTURE_BINDING_CUBE_MAP = GL_TEXTURE_BINDING_CUBE_MAP
     };
 
     enum class Primitive
     {
-        POINTS         = GL_POINTS,
-        LINES          = GL_LINES,
-        LINE_STRIP     = GL_LINE_STRIP,
-        LINE_LOOP      = GL_LINE_LOOP,
-        TRIANGLES      = GL_TRIANGLES,
+        POINTS = GL_POINTS,
+        LINES = GL_LINES,
+        LINE_STRIP = GL_LINE_STRIP,
+        LINE_LOOP = GL_LINE_LOOP,
+        TRIANGLES = GL_TRIANGLES,
         TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
-        TRIANGLE_FAN   = GL_TRIANGLE_FAN,
-        QUADS          = GL_QUADS,
-        QUAD_STRIP     = GL_QUAD_STRIP,
-        POLYGON        = GL_POLYGON
+        TRIANGLE_FAN = GL_TRIANGLE_FAN,
+        QUADS = GL_QUADS,
+        QUAD_STRIP = GL_QUAD_STRIP,
+        POLYGON = GL_POLYGON
     };
 
     enum class Enablable
     {
-        BLEND                     = GL_BLEND,
-        DEPTH_TEST                = GL_DEPTH_TEST,
-        DEPTH_CLAMP               = GL_DEPTH_CLAMP,
-        STENCIL_TEST              = GL_STENCIL_TEST,
-        SCISSOR_TEST              = GL_SCISSOR_TEST,
-        ALPHA_TEST                = GL_ALPHA_TEST,
-        CULL_FACE                 = GL_CULL_FACE,
-        FRAMEBUFFER_SRGB          = GL_FRAMEBUFFER_SRGB,
-        MULTISAMPLE               = GL_MULTISAMPLE,
+        BLEND = GL_BLEND,
+        DEPTH_TEST = GL_DEPTH_TEST,
+        DEPTH_CLAMP = GL_DEPTH_CLAMP,
+        STENCIL_TEST = GL_STENCIL_TEST,
+        SCISSOR_TEST = GL_SCISSOR_TEST,
+        ALPHA_TEST = GL_ALPHA_TEST,
+        CULL_FACE = GL_CULL_FACE,
+        FRAMEBUFFER_SRGB = GL_FRAMEBUFFER_SRGB,
+        MULTISAMPLE = GL_MULTISAMPLE,
         TEXTURE_CUBE_MAP_SEAMLESS = GL_TEXTURE_CUBE_MAP_SEAMLESS
     };
 
     enum class UsageHint
     {
-        STREAM_DRAW  = GL_STREAM_DRAW,
-        STREAM_READ  = GL_STREAM_READ,
-        STREAM_COPY  = GL_STREAM_COPY,
-        STATIC_DRAW  = GL_STATIC_DRAW,
-        STATIC_READ  = GL_STATIC_READ,
-        STATIC_COPY  = GL_STATIC_COPY,
+        STREAM_DRAW = GL_STREAM_DRAW,
+        STREAM_READ = GL_STREAM_READ,
+        STREAM_COPY = GL_STREAM_COPY,
+        STATIC_DRAW = GL_STATIC_DRAW,
+        STATIC_READ = GL_STATIC_READ,
+        STATIC_COPY = GL_STATIC_COPY,
         DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
         DYNAMIC_READ = GL_DYNAMIC_READ,
         DYNAMIC_COPY = GL_DYNAMIC_COPY
@@ -108,139 +108,139 @@ public:
 
     enum class CullFaceExt
     {
-        NONE            = GL_NONE,
-        FRONT           = GL_FRONT,
-        BACK            = GL_BACK,
+        NONE = GL_NONE,
+        FRONT = GL_FRONT,
+        BACK = GL_BACK,
         FRONT_AND_BACK = GL_FRONT_AND_BACK
     };
 
     enum class Face
     {
-        FRONT          = GL_FRONT,
-        BACK           = GL_BACK,
+        FRONT = GL_FRONT,
+        BACK = GL_BACK,
         FRONT_AND_BACK = GL_FRONT_AND_BACK
     };
 
     enum class BindTarget
     {
-        NONE                 = 0,
-        TEXTURE_1D           = GL_TEXTURE_1D,
-        TEXTURE_2D           = GL_TEXTURE_2D,
-        TEXTURE_3D           = GL_TEXTURE_3D,
-        TEXTURE_CUBE_MAP     = GL_TEXTURE_CUBE_MAP,
-        SHADER_PROGRAM       = GL_SHADER,
-        FRAMEBUFFER          = GL_FRAMEBUFFER,
-        DRAW_FRAMEBUFFER     = GL_DRAW_FRAMEBUFFER,
-        READ_FRAMEBUFFER     = GL_READ_FRAMEBUFFER,
-        VERTEX_ARRAY         = GL_VERTEX_ARRAY,
-        VAO                  = GL_VERTEX_ARRAY,
-        ARRAY_BUFFER         = GL_ARRAY_BUFFER,
-        VBO                  = GL_ARRAY_BUFFER,
+        NONE = 0,
+        TEXTURE_1D = GL_TEXTURE_1D,
+        TEXTURE_2D = GL_TEXTURE_2D,
+        TEXTURE_3D = GL_TEXTURE_3D,
+        TEXTURE_CUBE_MAP = GL_TEXTURE_CUBE_MAP,
+        SHADER_PROGRAM = GL_SHADER,
+        FRAMEBUFFER = GL_FRAMEBUFFER,
+        DRAW_FRAMEBUFFER = GL_DRAW_FRAMEBUFFER,
+        READ_FRAMEBUFFER = GL_READ_FRAMEBUFFER,
+        VERTEX_ARRAY = GL_VERTEX_ARRAY,
+        VAO = GL_VERTEX_ARRAY,
+        ARRAY_BUFFER = GL_ARRAY_BUFFER,
+        VBO = GL_ARRAY_BUFFER,
         ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER,
-        UNIFORM_BUFFER       = GL_UNIFORM_BUFFER
+        UNIFORM_BUFFER = GL_UNIFORM_BUFFER
     };
 
     enum class DataType
     {
-        BYTE             = GL_BYTE,
-        UNSIGNED_BYTE    = GL_UNSIGNED_BYTE,
-        SHORT            = GL_SHORT,
-        UNSIGNED_SHORT   = GL_UNSIGNED_SHORT,
-        INT              = GL_INT,
-        UNSIGNED_INT     = GL_UNSIGNED_INT,
-        FLOAT            = GL_FLOAT,
-        DOUBLE           = GL_DOUBLE
+        BYTE = GL_BYTE,
+        UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+        SHORT = GL_SHORT,
+        UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+        INT = GL_INT,
+        UNSIGNED_INT = GL_UNSIGNED_INT,
+        FLOAT = GL_FLOAT,
+        DOUBLE = GL_DOUBLE
     };
 
     enum class VertexAttribDataType
     {
-        BYTE                         = GL_BYTE,
-        UNSIGNED_BYTE                = GL_UNSIGNED_BYTE,
-        SHORT                        = GL_SHORT,
-        UNSIGNED_SHORT               = GL_UNSIGNED_SHORT,
-        INT                          = GL_INT,
-        UNSIGNED_INT                 = GL_UNSIGNED_INT,
-        FLOAT                        = GL_FLOAT,
-        DOUBLE                       = GL_DOUBLE,
-        HALF_FLOAT                   = GL_HALF_FLOAT,
-        FIXED                        = GL_FIXED,
-        INT_2_10_10_10_REV           = GL_INT_2_10_10_10_REV,
-        UNSIGNED_INT_2_10_10_10_REV  = GL_UNSIGNED_INT_2_10_10_10_REV,
+        BYTE = GL_BYTE,
+        UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+        SHORT = GL_SHORT,
+        UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+        INT = GL_INT,
+        UNSIGNED_INT = GL_UNSIGNED_INT,
+        FLOAT = GL_FLOAT,
+        DOUBLE = GL_DOUBLE,
+        HALF_FLOAT = GL_HALF_FLOAT,
+        FIXED = GL_FIXED,
+        INT_2_10_10_10_REV = GL_INT_2_10_10_10_REV,
+        UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV,
         UNSIGNED_INT_10F_11F_11F_REV = GL_UNSIGNED_INT_10F_11F_11F_REV
     };
 
     enum class UniformType
     {
-        BYTE                    = GL_BYTE,
-        UNSIGNED_BYTE           = GL_UNSIGNED_BYTE,
-        SHORT                   = GL_SHORT,
-        UNSIGNED_SHORT          = GL_UNSIGNED_SHORT,
-        INT                     = GL_INT,
-        UNSIGNED_INT            = GL_UNSIGNED_INT,
-        FLOAT                   = GL_FLOAT,
-        DOUBLE                  = GL_DOUBLE,
-        UNSIGNED_INT_24_8       = GL_UNSIGNED_INT_24_8,
-        VEC2                    = GL_FLOAT_VEC2,
-        VEC3                    = GL_FLOAT_VEC3,
-        VEC4                    = GL_FLOAT_VEC4,
-        MAT3                    = GL_FLOAT_MAT3,
-        MAT4                    = GL_FLOAT_MAT4,
-        SAMPLER_1D              = GL_SAMPLER_1D,
-        SAMPLER_2D              = GL_SAMPLER_2D,
-        SAMPLER_3D              = GL_SAMPLER_3D,
-        SAMPLER_CUBE            = GL_SAMPLER_CUBE,
-        SAMPLER_1D_SHADOW       = GL_SAMPLER_1D_SHADOW,
-        SAMPLER_2D_SHADOW       = GL_SAMPLER_2D_SHADOW,
-        SAMPLER_CUBE_SHADOW     = GL_SAMPLER_CUBE_SHADOW,
+        BYTE = GL_BYTE,
+        UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+        SHORT = GL_SHORT,
+        UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+        INT = GL_INT,
+        UNSIGNED_INT = GL_UNSIGNED_INT,
+        FLOAT = GL_FLOAT,
+        DOUBLE = GL_DOUBLE,
+        UNSIGNED_INT_24_8 = GL_UNSIGNED_INT_24_8,
+        VEC2 = GL_FLOAT_VEC2,
+        VEC3 = GL_FLOAT_VEC3,
+        VEC4 = GL_FLOAT_VEC4,
+        MAT3 = GL_FLOAT_MAT3,
+        MAT4 = GL_FLOAT_MAT4,
+        SAMPLER_1D = GL_SAMPLER_1D,
+        SAMPLER_2D = GL_SAMPLER_2D,
+        SAMPLER_3D = GL_SAMPLER_3D,
+        SAMPLER_CUBE = GL_SAMPLER_CUBE,
+        SAMPLER_1D_SHADOW = GL_SAMPLER_1D_SHADOW,
+        SAMPLER_2D_SHADOW = GL_SAMPLER_2D_SHADOW,
+        SAMPLER_CUBE_SHADOW = GL_SAMPLER_CUBE_SHADOW,
         SAMPLER_1D_ARRAY_SHADOW = GL_SAMPLER_1D_ARRAY_SHADOW,
         SAMPLER_2D_ARRAY_SHADOW = GL_SAMPLER_2D_ARRAY_SHADOW
     };
 
     enum class ShaderType
     {
-        VERTEX   = GL_VERTEX_SHADER,
+        VERTEX = GL_VERTEX_SHADER,
         GEOMETRY = GL_GEOMETRY_SHADER,
         FRAGMENT = GL_FRAGMENT_SHADER
     };
 
     enum class ColorComp
     {
-        RED           = GL_RED,
-        RGB           = GL_RGB,
-        RGBA          = GL_RGBA,
-        DEPTH         = GL_DEPTH_COMPONENT,
+        RED = GL_RED,
+        RGB = GL_RGB,
+        RGBA = GL_RGBA,
+        DEPTH = GL_DEPTH_COMPONENT,
         DEPTH_STENCIL = GL_DEPTH_STENCIL,
         STENCIL_INDEX = GL_STENCIL_INDEX
     };
 
     enum class ColorFormat
     {
-        SRGB              = GL_SRGB,
-        SRGBA             = GL_SRGB_ALPHA,
-        RGBA8             = GL_RGBA8,
-        RGBA16F           = GL_RGBA16F,
-        RGB10_A2          = GL_RGB10_A2,
-        RGBA32F           = GL_RGBA32F,
-        DEPTH             = GL_DEPTH_COMPONENT,
-        DEPTH16           = GL_DEPTH_COMPONENT16,
-        DEPTH24           = GL_DEPTH_COMPONENT24,
-        DEPTH32           = GL_DEPTH_COMPONENT32,
-        DEPTH32F          = GL_DEPTH_COMPONENT32F,
-        DEPTH24_STENCIL8  = GL_DEPTH24_STENCIL8
+        SRGB = GL_SRGB,
+        SRGBA = GL_SRGB_ALPHA,
+        RGBA8 = GL_RGBA8,
+        RGBA16F = GL_RGBA16F,
+        RGB10_A2 = GL_RGB10_A2,
+        RGBA32F = GL_RGBA32F,
+        DEPTH = GL_DEPTH_COMPONENT,
+        DEPTH16 = GL_DEPTH_COMPONENT16,
+        DEPTH24 = GL_DEPTH_COMPONENT24,
+        DEPTH32 = GL_DEPTH_COMPONENT32,
+        DEPTH32F = GL_DEPTH_COMPONENT32F,
+        DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8
     };
 
     enum class ViewProjMode
     {
-        WORLD  = 0,
+        WORLD = 0,
         CANVAS = 1
     };
 
     enum class TextureTarget
     {
-        TEXTURE_1D                  = GL_TEXTURE_1D,
-        TEXTURE_2D                  = GL_TEXTURE_2D,
-        TEXTURE_3D                  = GL_TEXTURE_3D,
-        TEXTURE_CUBE_MAP            = GL_TEXTURE_CUBE_MAP,
+        TEXTURE_1D = GL_TEXTURE_1D,
+        TEXTURE_2D = GL_TEXTURE_2D,
+        TEXTURE_3D = GL_TEXTURE_3D,
+        TEXTURE_CUBE_MAP = GL_TEXTURE_CUBE_MAP,
         TEXTURE_CUBE_MAP_POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
         TEXTURE_CUBE_MAP_NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
         TEXTURE_CUBE_MAP_POSITIVE_Y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
@@ -252,26 +252,26 @@ public:
     enum class CubeMapDir
     {
         POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        RIGHT      = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        RIGHT = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
         NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        LEFT       = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        LEFT = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
         POSITIVE_Y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        TOP        = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        TOP = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
         NEGATIVE_Y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        BOT        = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        BOT = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
         POSITIVE_Z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        BACK       = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        BACK = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
         NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-        FRONT      = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+        FRONT = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
 
-    static const std::array<GL::CubeMapDir, 6>& GetAllCubeMapDirs();
+    static const std::array<GL::CubeMapDir, 6> &GetAllCubeMapDirs();
     static int GetCubeMapDirIndex(GL::CubeMapDir cmDir);
 
     enum class FramebufferTarget
     {
-        DRAW      = GL_DRAW_FRAMEBUFFER,
-        READ      = GL_READ_FRAMEBUFFER,
+        DRAW = GL_DRAW_FRAMEBUFFER,
+        READ = GL_READ_FRAMEBUFFER,
         READ_DRAW = GL_FRAMEBUFFER
     };
     enum class RenderbufferTarget
@@ -281,23 +281,23 @@ public:
 
     enum class RenderbufferFormat
     {
-        DEPTH            = GL_DEPTH,
-        STENCIL          = GL_STENCIL,
+        DEPTH = GL_DEPTH,
+        STENCIL = GL_STENCIL,
         DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8
     };
 
     enum class BufferBit
     {
-        COLOR    = GL_COLOR_BUFFER_BIT,
-        DEPTH    = GL_DEPTH_BUFFER_BIT,
-        STENCIL  = GL_STENCIL_BUFFER_BIT,
-        SCISSOR  = GL_SCISSOR_BIT
+        COLOR = GL_COLOR_BUFFER_BIT,
+        DEPTH = GL_DEPTH_BUFFER_BIT,
+        STENCIL = GL_STENCIL_BUFFER_BIT,
+        SCISSOR = GL_SCISSOR_BIT
     };
 
     enum class WrapMode
     {
-        REPEAT          = GL_REPEAT,
-        CLAMP_TO_EDGE   = GL_CLAMP_TO_EDGE,
+        REPEAT = GL_REPEAT,
+        CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
         CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER
     };
     enum class WrapCoord
@@ -310,28 +310,28 @@ public:
     enum class TexParameter
     {
         DEPTH_STENCIL_TEXTURE_MODE = GL_DEPTH_STENCIL_TEXTURE_MODE,
-        TEXTURE_BORDER_COLOR       = GL_TEXTURE_BORDER_COLOR,
-        TEXTURE_COMPARE_FUNC       = GL_TEXTURE_COMPARE_FUNC,
-        TEXTURE_COMPARE_MODE       = GL_TEXTURE_COMPARE_MODE,
-        TEXTURE_LOD_BIAS           = GL_TEXTURE_LOD_BIAS,
-        TEXTURE_MIN_FILTER         = GL_TEXTURE_MIN_FILTER,
-        TEXTURE_MAG_FILTER         = GL_TEXTURE_MAG_FILTER,
-        TEXTURE_MIN_LOD            = GL_TEXTURE_MIN_LOD,
-        TEXTURE_MAX_LOD            = GL_TEXTURE_MAX_LOD,
-        TEXTURE_BASE_LEVEL         = GL_TEXTURE_BASE_LEVEL,
-        TEXTURE_MAX_LEVEL          = GL_TEXTURE_MAX_LEVEL,
-        TEXTURE_WRAP_S             = GL_TEXTURE_WRAP_S,
-        TEXTURE_WRAP_T             = GL_TEXTURE_WRAP_T,
-        TEXTURE_WRAP_R             = GL_TEXTURE_WRAP_R,
-        TEXTURE_PRIORITY           = GL_TEXTURE_PRIORITY,
-        DEPTH_TEXTURE_MODE         = GL_DEPTH_TEXTURE_MODE,
-        GENERATE_MIPMAP            = GL_GENERATE_MIPMAP
+        TEXTURE_BORDER_COLOR = GL_TEXTURE_BORDER_COLOR,
+        TEXTURE_COMPARE_FUNC = GL_TEXTURE_COMPARE_FUNC,
+        TEXTURE_COMPARE_MODE = GL_TEXTURE_COMPARE_MODE,
+        TEXTURE_LOD_BIAS = GL_TEXTURE_LOD_BIAS,
+        TEXTURE_MIN_FILTER = GL_TEXTURE_MIN_FILTER,
+        TEXTURE_MAG_FILTER = GL_TEXTURE_MAG_FILTER,
+        TEXTURE_MIN_LOD = GL_TEXTURE_MIN_LOD,
+        TEXTURE_MAX_LOD = GL_TEXTURE_MAX_LOD,
+        TEXTURE_BASE_LEVEL = GL_TEXTURE_BASE_LEVEL,
+        TEXTURE_MAX_LEVEL = GL_TEXTURE_MAX_LEVEL,
+        TEXTURE_WRAP_S = GL_TEXTURE_WRAP_S,
+        TEXTURE_WRAP_T = GL_TEXTURE_WRAP_T,
+        TEXTURE_WRAP_R = GL_TEXTURE_WRAP_R,
+        TEXTURE_PRIORITY = GL_TEXTURE_PRIORITY,
+        DEPTH_TEXTURE_MODE = GL_DEPTH_TEXTURE_MODE,
+        GENERATE_MIPMAP = GL_GENERATE_MIPMAP
     };
 
     enum class FilterMode
     {
-        NEAREST      = GL_NEAREST,
-        BILINEAR     = GL_LINEAR,
+        NEAREST = GL_NEAREST,
+        BILINEAR = GL_LINEAR,
         TRILINEAR_NN = GL_NEAREST_MIPMAP_NEAREST,
         TRILINEAR_NL = GL_NEAREST_MIPMAP_LINEAR,
         TRILINEAR_LN = GL_LINEAR_MIPMAP_NEAREST,
@@ -345,67 +345,67 @@ public:
 
     enum class StencilOperation
     {
-        ZERO      = GL_ZERO,
-        KEEP      = GL_KEEP,
-        REPLACE   = GL_REPLACE,
-        INCR      = GL_INCR,
+        ZERO = GL_ZERO,
+        KEEP = GL_KEEP,
+        REPLACE = GL_REPLACE,
+        INCR = GL_INCR,
         INCR_WRAP = GL_INCR_WRAP,
-        DECR      = GL_DECR,
+        DECR = GL_DECR,
         DECR_WRAP = GL_DECR_WRAP,
-        INVERT    = GL_INVERT
+        INVERT = GL_INVERT
     };
 
     enum class BlendFactor
     {
-        ZERO                = GL_ZERO,
-        ONE                 = GL_ONE,
-        SRC_COLOR           = GL_SRC_COLOR,
+        ZERO = GL_ZERO,
+        ONE = GL_ONE,
+        SRC_COLOR = GL_SRC_COLOR,
         ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR,
-        DST_COLOR           = GL_DST_COLOR,
+        DST_COLOR = GL_DST_COLOR,
         ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR,
-        SRC_ALPHA           = GL_SRC_ALPHA,
+        SRC_ALPHA = GL_SRC_ALPHA,
         ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
-        DST_ALPHA           = GL_DST_ALPHA,
+        DST_ALPHA = GL_DST_ALPHA,
         ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA
     };
 
     enum class BlendEquationE
     {
-        FUNC_ADD              = GL_FUNC_ADD,
-        FUNC_SUBTRACT         = GL_FUNC_SUBTRACT,
+        FUNC_ADD = GL_FUNC_ADD,
+        FUNC_SUBTRACT = GL_FUNC_SUBTRACT,
         FUNC_REVERSE_SUBTRACT = GL_FUNC_REVERSE_SUBTRACT,
-        MIN                   = GL_MIN,
-        MAX                   = GL_MAX
+        MIN = GL_MIN,
+        MAX = GL_MAX
     };
 
     enum class Function
     {
-        NEVER     = GL_NEVER,
-        LESS      = GL_LESS,
-        LEQUAL    = GL_LEQUAL,
-        GREATER   = GL_GREATER,
-        GEQUAL    = GL_GEQUAL,
-        EQUAL     = GL_EQUAL,
+        NEVER = GL_NEVER,
+        LESS = GL_LESS,
+        LEQUAL = GL_LEQUAL,
+        GREATER = GL_GREATER,
+        GEQUAL = GL_GEQUAL,
+        EQUAL = GL_EQUAL,
         NOT_EQUAL = GL_NOTEQUAL,
-        ALWAYS    = GL_ALWAYS
+        ALWAYS = GL_ALWAYS
     };
 
     enum class Attachment
     {
-        NONE          = GL_NONE,
-        COLOR0        = GL_COLOR_ATTACHMENT0,
-        COLOR1        = GL_COLOR_ATTACHMENT1,
-        COLOR2        = GL_COLOR_ATTACHMENT2,
-        COLOR3        = GL_COLOR_ATTACHMENT3,
-        COLOR4        = GL_COLOR_ATTACHMENT4,
-        COLOR5        = GL_COLOR_ATTACHMENT5,
-        COLOR6        = GL_COLOR_ATTACHMENT6,
-        COLOR7        = GL_COLOR_ATTACHMENT7,
+        NONE = GL_NONE,
+        COLOR0 = GL_COLOR_ATTACHMENT0,
+        COLOR1 = GL_COLOR_ATTACHMENT1,
+        COLOR2 = GL_COLOR_ATTACHMENT2,
+        COLOR3 = GL_COLOR_ATTACHMENT3,
+        COLOR4 = GL_COLOR_ATTACHMENT4,
+        COLOR5 = GL_COLOR_ATTACHMENT5,
+        COLOR6 = GL_COLOR_ATTACHMENT6,
+        COLOR7 = GL_COLOR_ATTACHMENT7,
         DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT,
-        STENCIL       = GL_STENCIL_ATTACHMENT,
-        DEPTH         = GL_DEPTH_ATTACHMENT,
-        BACK          = GL_BACK,
-        FRONT         = GL_FRONT
+        STENCIL = GL_STENCIL_ATTACHMENT,
+        DEPTH = GL_DEPTH_ATTACHMENT,
+        BACK = GL_BACK,
+        FRONT = GL_FRONT
     };
 
     enum class Pushable
@@ -434,9 +434,11 @@ public:
     static void Clear(GLbitfield bufferBit);
     static void Clear(GL::BufferBit bufferBit);
     static void SetClearColorBufferValue(const Color &clearColor);
-    static void ClearColorBuffer(const Color& clearColor = Color::Zero,
-                                 bool clearR = true, bool clearG = true,
-                                 bool clearB = true, bool clearA = true);
+    static void ClearColorBuffer(const Color &clearColor = Color::Zero,
+                                 bool clearR = true,
+                                 bool clearG = true,
+                                 bool clearB = true,
+                                 bool clearA = true);
     static void ClearDepthBuffer();
     static void ClearStencilBuffer();
     static void ClearDepthBuffer(float clearDepth);
@@ -446,21 +448,20 @@ public:
     static void ClearStencilDepthBuffers(int clearStencilValue = 0,
                                          float clearDepthValue = 1.0f);
     static void ClearColorStencilDepthBuffers(
-                                const Color &clearColorValue = Color::Zero,
-                                int clearStencilValue = 0,
-                                float clearDepthValue = 1.0f);
+        const Color &clearColorValue = Color::Zero,
+        int clearStencilValue = 0,
+        float clearDepthValue = 1.0f);
 
-    static void Enablei (GL::Enablable glTest, int index);
+    static void Enablei(GL::Enablable glTest, int index);
     static void Disablei(GL::Enablable glTest, int index);
-    static void Enable (GL::Enablable glTest);
+    static void Enable(GL::Enablable glTest);
     static void Disable(GL::Enablable glTest);
     static void SetEnabled(GL::Enablable glTest, bool enabled);
     static void SetEnabledi(GL::Enablable glTest, int index, bool enabled);
     static bool IsEnabled(GL::Enablable glTest);
     static bool IsEnabledi(GL::Enablable glTest, int index);
     static bool CanEnablableBeIndexed(GL::Enablable enablable);
-    static int  GetEnablableIndexMax(GL::Enablable enablable);
-
+    static int GetEnablableIndexMax(GL::Enablable enablable);
 
     static void EnableVertexAttribArray(int location);
     static void DisableVertexAttribArray(int location);
@@ -473,7 +474,7 @@ public:
 
     static void PolygonMode(GL::Face face, GL::Enum mode);
 
-    static GLvoid* MapBuffer(GL::BindTarget target, GL::Enum access);
+    static GLvoid *MapBuffer(GL::BindTarget target, GL::Enum access);
     static void UnMapBuffer(GL::BindTarget target);
 
     static void BlendFunc(GL::BlendFactor srcFactor, GL::BlendFactor dstFactor);
@@ -485,11 +486,18 @@ public:
     static void BlendEquationSeparate(GL::BlendEquationE blendEquationColor,
                                       GL::BlendEquationE blendEquationAlpha);
 
-    static void BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
-                                int dstX0, int dstY0, int dstX1, int dstY1,
+    static void BlitFramebuffer(int srcX0,
+                                int srcY0,
+                                int srcX1,
+                                int srcY1,
+                                int dstX0,
+                                int dstY0,
+                                int dstX1,
+                                int dstY1,
                                 GL::FilterMode filterMode,
                                 GL::BufferBit bufferBitMask);
-    static void BlitFramebuffer(const AARecti &srcRect, const AARecti &dstRect,
+    static void BlitFramebuffer(const AARecti &srcRect,
+                                const AARecti &dstRect,
                                 GL::FilterMode filterMode,
                                 GL::BufferBit bufferBitMask);
 
@@ -503,13 +511,14 @@ public:
     static bool CompileShader(GLId shaderId);
     static void DeleteShader(GLId shaderId);
 
-
     static GLId CreateProgram();
     static void AttachShader(GLId programId, GLId shaderId);
     static bool LinkProgram(GLId programId);
-    static void BindAttribLocation(GLId programId, int location,
+    static void BindAttribLocation(GLId programId,
+                                   int location,
                                    const String &attribName);
-    static void BindFragDataLocation(GLId programId, int location,
+    static void BindFragDataLocation(GLId programId,
+                                     int location,
                                      const String &fragDataName);
     static void DeleteProgram(GLId programId);
 
@@ -526,7 +535,8 @@ public:
                                  GLId renderbufferId);
     static void RenderbufferStorage(GL::RenderbufferTarget target,
                                     GL::RenderbufferFormat format,
-                                    int width, int height);
+                                    int width,
+                                    int height);
     static void FramebufferRenderbuffer(GL::FramebufferTarget target,
                                         GL::Attachment attachment,
                                         GL::RenderbufferTarget rbTarget,
@@ -534,7 +544,10 @@ public:
     static void DrawBuffers(const Array<GL::Attachment> &drawAttachments);
     static void ReadBuffer(GL::Attachment readAttachment);
 
-    static void ReadPixels(int x, int y, int width, int height,
+    static void ReadPixels(int x,
+                           int y,
+                           int width,
+                           int height,
                            GL::ColorComp inputComp,
                            GL::DataType outputDataType,
                            void *pixels);
@@ -623,7 +636,8 @@ public:
     static void DeleteTextures(int n, const GLId *glIds);
     static void DeleteVertexArrays(int n, const GLId *glIds);
     static void DeleteBuffers(int n, const GLId *glIds);
-    static void OnDeletedGLObjects(GL::BindTarget bindTarget, int n,
+    static void OnDeletedGLObjects(GL::BindTarget bindTarget,
+                                   int n,
                                    const GLId *glIds);
 
     static void SetViewport(const AARect &viewportNDC);
@@ -646,8 +660,7 @@ public:
     static void SetStencilOp(GL::StencilOperation fail,
                              GL::StencilOperation zFail,
                              GL::StencilOperation zPass);
-    static void SetStencilFunc(GL::Function stencilFunction,
-                               uint mask = 0xFF);
+    static void SetStencilFunc(GL::Function stencilFunction, uint mask = 0xFF);
     static void SetStencilFunc(GL::Function stencilFunction,
                                Byte stencilValue,
                                uint mask = 0xFF);
@@ -658,68 +671,71 @@ public:
     static void SetCullFace(const GL::Face cullFace);
     static void SetZNearFar(float zNear, float zFar);
 
-    static Vector2    FromPixelsPointToPixelPerfect(const Vector2& winPoint);
-    static Vector2    FromPointToPointNDC(const Vector2 &point,
-                                          const Vector2 &rectSize);
-    static Vector2    FromPointNDCToPoint(const Vector2 &pointNDC,
-                                          const Vector2 &rectSize);
-    static Vector2    FromAmountToAmountNDC(const Vector2 &amount,
-                                            const Vector2 &rectSize);
-    static Vector2    FromAmountNDCToAmount(const Vector2 &amountNDC,
-                                            const Vector2 &rectSize);
-    static Vector2    FromWindowPointToViewportPoint(const Vector2& winPoint,
-                                                     const AARecti& viewport);
-    static Vector2    FromViewportPointToWindowPoint(const Vector2& vpPoint);
-    static Vector2    FromViewportPointToWindowPoint(const Vector2i& vpPoint);
-    static Vector2    FromWindowPointToViewportPoint(const Vector2& winPoint);
-    static Vector2    FromWindowPointToViewportPoint(const Vector2i& winPoint);
-    static RectPoints FromViewportRectToViewportRectNDCPoints(const Rect &vpRect);
-    static Rect       FromViewportRectNDCToViewportRect(const Rect &vpRectNDC);
-    static Rect       FromWindowRectToWindowRectNDC(const Rect &winRect);
-    static Rect       FromWindowRectNDCToWindowRect(const Rect &winRectNDC);
-    static AARect     FromViewportRectToViewportRectNDC(const AARect &vpRect);
-    static AARect     FromViewportRectNDCToViewportRect(const AARect &vpRectNDC);
-    static AARect     FromWindowRectToWindowRectNDC(const AARect &winRect);
-    static AARect     FromWindowRectNDCToWindowRect(const AARect &winRectNDC);
-    static Vector2    FromWindowAmountToWindowAmountNDC(const Vector2 &winAmount);
-    static Vector2    FromWindowAmountNDCToWindowAmount(const Vector2 &winAmountNDC);
-    static Vector2    FromViewportAmountToViewportAmountNDC(const Vector2 &vpAmount);
-    static Vector2    FromViewportAmountNDCToViewportAmount(const Vector2 &vpAmountNDC);
-    static Vector2    FromWindowPointNDCToWindowPoint(const Vector2  &winPointNDC);
-    static Vector2    FromWindowPointToWindowPointNDC(const Vector2  &winPoint);
-    static Vector2    FromWindowPointToWindowPointNDC(const Vector2i &winPoint);
-    static Vector2    FromViewportPointToViewportPointNDC(const Vector2  &vpPoint);
-    static Vector2    FromViewportPointToViewportPointNDC(const Vector2i &vpPoint);
-    static Vector2    FromViewportPointNDCToViewportPoint(const Vector2  &vpPoint);
+    static Vector2 FromPixelsPointToPixelPerfect(const Vector2 &winPoint);
+    static Vector2 FromPointToPointNDC(const Vector2 &point,
+                                       const Vector2 &rectSize);
+    static Vector2 FromPointNDCToPoint(const Vector2 &pointNDC,
+                                       const Vector2 &rectSize);
+    static Vector2 FromAmountToAmountNDC(const Vector2 &amount,
+                                         const Vector2 &rectSize);
+    static Vector2 FromAmountNDCToAmount(const Vector2 &amountNDC,
+                                         const Vector2 &rectSize);
+    static Vector2 FromWindowPointToViewportPoint(const Vector2 &winPoint,
+                                                  const AARecti &viewport);
+    static Vector2 FromViewportPointToWindowPoint(const Vector2 &vpPoint);
+    static Vector2 FromViewportPointToWindowPoint(const Vector2i &vpPoint);
+    static Vector2 FromWindowPointToViewportPoint(const Vector2 &winPoint);
+    static Vector2 FromWindowPointToViewportPoint(const Vector2i &winPoint);
+    static RectPoints FromViewportRectToViewportRectNDCPoints(
+        const Rect &vpRect);
+    static Rect FromViewportRectNDCToViewportRect(const Rect &vpRectNDC);
+    static Rect FromWindowRectToWindowRectNDC(const Rect &winRect);
+    static Rect FromWindowRectNDCToWindowRect(const Rect &winRectNDC);
+    static AARect FromViewportRectToViewportRectNDC(const AARect &vpRect);
+    static AARect FromViewportRectNDCToViewportRect(const AARect &vpRectNDC);
+    static AARect FromWindowRectToWindowRectNDC(const AARect &winRect);
+    static AARect FromWindowRectNDCToWindowRect(const AARect &winRectNDC);
+    static Vector2 FromWindowAmountToWindowAmountNDC(const Vector2 &winAmount);
+    static Vector2 FromWindowAmountNDCToWindowAmount(
+        const Vector2 &winAmountNDC);
+    static Vector2 FromViewportAmountToViewportAmountNDC(
+        const Vector2 &vpAmount);
+    static Vector2 FromViewportAmountNDCToViewportAmount(
+        const Vector2 &vpAmountNDC);
+    static Vector2 FromWindowPointNDCToWindowPoint(const Vector2 &winPointNDC);
+    static Vector2 FromWindowPointToWindowPointNDC(const Vector2 &winPoint);
+    static Vector2 FromWindowPointToWindowPointNDC(const Vector2i &winPoint);
+    static Vector2 FromViewportPointToViewportPointNDC(const Vector2 &vpPoint);
+    static Vector2 FromViewportPointToViewportPointNDC(const Vector2i &vpPoint);
+    static Vector2 FromViewportPointNDCToViewportPoint(const Vector2 &vpPoint);
 
-    static void Render(const VAO* vao,
+    static void Render(const VAO *vao,
                        GL::Primitive primitivesMode,
                        int elementsCount,
                        int startElementIndex = 0);
-    static void DrawArrays(const VAO* vao,
+    static void DrawArrays(const VAO *vao,
                            GL::Primitive primitivesMode,
                            int verticesCount,
                            int startVertexIndex = 0);
-    static void DrawElements(const VAO* vao,
+    static void DrawElements(const VAO *vao,
                              GL::Primitive primitivesMode,
                              int elementsCount,
                              int startElementIndex = 0);
-    static void RenderInstanced(const VAO* vao,
+    static void RenderInstanced(const VAO *vao,
                                 GL::Primitive primitivesMode,
                                 int elementsCount,
                                 int instanceAmount);
-    static void DrawArraysInstanced(const VAO* vao,
+    static void DrawArraysInstanced(const VAO *vao,
                                     GL::Primitive primitivesMode,
                                     int verticesCount,
                                     int instanceAmount,
                                     int instanceStartIndex);
-    static void DrawElementsInstanced(const VAO* vao,
+    static void DrawElementsInstanced(const VAO *vao,
                                       GL::Primitive primitivesMode,
                                       int elementsCount,
                                       int instanceAmount);
 
-    static void VertexAttribDivisor(uint location,
-                                    uint divisor);
+    static void VertexAttribDivisor(uint location, uint divisor);
 
     static int GetInteger(GL::Enum glEnum);
     static void GetInteger(GL::Enum glEnum, int *values);
@@ -740,12 +756,14 @@ public:
     static GL::UniformType GetUniformTypeAt(GLId shaderProgramId,
                                             GLuint uniformIndex);
 
-    static bool   ValidateProgram(GLId programId);
+    static bool ValidateProgram(GLId programId);
     static String GetProgramErrorMsg(GLId programId);
-    static int    GetProgramInteger(GLId programId, GL::Enum glEnum);
-    static void   GetProgramIntegers(GLId programId, GL::Enum glEnum, GLint *ints);
+    static int GetProgramInteger(GLId programId, GL::Enum glEnum);
+    static void GetProgramIntegers(GLId programId,
+                                   GL::Enum glEnum,
+                                   GLint *ints);
 
-    static int  GetShaderInteger(GLId shaderId, GL::Enum glEnum);
+    static int GetShaderInteger(GLId shaderId, GL::Enum glEnum);
     static String GetShaderErrorMsg(GLId shaderId);
 
     static AARecti GetViewportRect();
@@ -753,8 +771,8 @@ public:
     static float GetViewportAspectRatio();
     static Vector2 GetViewportPixelSize();
 
-    static const Array<GL::Attachment>& GetDrawBuffers();
-    static const GL::Attachment& GetReadBuffer();
+    static const Array<GL::Attachment> &GetDrawBuffers();
+    static const GL::Attachment &GetReadBuffer();
 
     static GL::BlendFactor GetBlendSrcFactorColor();
     static GL::BlendFactor GetBlendDstFactorColor();
@@ -762,8 +780,8 @@ public:
     static GL::BlendFactor GetBlendDstFactorAlpha();
     static GL::BlendEquationE GetBlendEquationColor();
     static GL::BlendEquationE GetBlendEquationAlpha();
-    static const AARecti& GetScissorRect();
-    static const Color& GetClearColor();
+    static const AARecti &GetScissorRect();
+    static const Color &GetClearColor();
     static GL::Enum GetPolygonMode(GL::Face face);
     static uint GetLineWidth();
     static uint GetStencilMask();
@@ -829,7 +847,7 @@ public:
 
     static GL::ViewProjMode GetViewProjMode();
 
-    static GL* GetInstance();
+    static GL *GetInstance();
     GLUniforms *GetGLUniforms() const;
 
     GL();
@@ -842,31 +860,31 @@ private:
     SDL_Window *m_auxiliarWindowToCreateSharedGLContext = nullptr;
     SDL_GLContext m_sharedGLContext = nullptr;
 
-    StackAndValue<GLId>  m_boundVAOIds;
-    StackAndValue<GLId>  m_boundVBOArrayBufferIds;
-    StackAndValue<GLId>  m_boundVBOElementsBufferIds;
-    StackAndValue<GLId>  m_boundTexture2DIds;
-    StackAndValue<GLId>  m_boundTextureCubeMapIds;
-    StackAndValue<GLId>  m_boundDrawFramebufferIds;
-    StackAndValue<GLId>  m_boundReadFramebufferIds;
-    StackAndValue<GLId>  m_boundShaderProgramIds;
-    StackAndValue<GLId>  m_boundUniformBufferIds;
+    StackAndValue<GLId> m_boundVAOIds;
+    StackAndValue<GLId> m_boundVBOArrayBufferIds;
+    StackAndValue<GLId> m_boundVBOElementsBufferIds;
+    StackAndValue<GLId> m_boundTexture2DIds;
+    StackAndValue<GLId> m_boundTextureCubeMapIds;
+    StackAndValue<GLId> m_boundDrawFramebufferIds;
+    StackAndValue<GLId> m_boundReadFramebufferIds;
+    StackAndValue<GLId> m_boundShaderProgramIds;
+    StackAndValue<GLId> m_boundUniformBufferIds;
     StackAndValue<float> m_lineWidths;
-    StackAndValue<Byte>  m_stencilValues;
-    StackAndValue<uint>  m_stencilMasks;
+    StackAndValue<Byte> m_stencilValues;
+    StackAndValue<uint> m_stencilMasks;
     StackAndValue<AARecti> m_viewportRects;
-    StackAndValue< std::array<bool, 4> > m_colorMasks;
+    StackAndValue<std::array<bool, 4>> m_colorMasks;
     std::stack<Matrix4> m_modelMatrices;
     std::stack<Matrix4> m_viewMatrices;
     std::stack<Matrix4> m_projectionMatrices;
     std::stack<GL::ViewProjMode> m_viewProjModes;
 
-    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>>,
-         EnumClassHash> m_enabledVars;
+    UMap<GL::Enablable, StackAndValue<std::array<bool, 16>>, EnumClassHash>
+        m_enabledVars;
 
     uint m_maxDrawBuffers = 0;
-    StackAndValue< Array<GL::Attachment> > m_drawBuffers;
-    StackAndValue< GL::Attachment > m_readBuffers;
+    StackAndValue<Array<GL::Attachment>> m_drawBuffers;
+    StackAndValue<GL::Attachment> m_readBuffers;
 
     StackAndValue<bool> m_depthMasks;
     StackAndValue<GL::Function> m_depthFuncs;
@@ -890,7 +908,6 @@ private:
 
     friend class GEngine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GL_H
+#endif  // GL_H

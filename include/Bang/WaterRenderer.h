@@ -8,18 +8,18 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class MetaNode;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
+class MetaNode;
 
 class WaterRenderer : public Renderer
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(WaterRenderer)
 
 public:
-	WaterRenderer();
+    WaterRenderer();
     virtual ~WaterRenderer() override;
 
     // Renderer
@@ -35,8 +35,6 @@ public:
 private:
     RH<Mesh> p_planeMesh;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // WATERRENDERER_H
-
+#endif  // WATERRENDERER_H

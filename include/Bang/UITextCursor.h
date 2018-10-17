@@ -8,8 +8,8 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UITextCursor : public LineRenderer
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UITextCursor)
@@ -32,7 +32,6 @@ private:
     Time m_cursorTime;
     Time m_cursorTickTime;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITEXTCURSOR_H
+#endif  // UITEXTCURSOR_H

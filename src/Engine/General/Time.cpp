@@ -4,7 +4,7 @@
 #include "Bang/SceneManager.h"
 #include "Bang/TimeSingleton.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Time::Time(uint64_t timeNanos)
 {
@@ -58,7 +58,7 @@ Time Time::Zero()
 
 Time Time::Infinity()
 {
-    return Time( SCAST<uint64_t>(-1u) );
+    return Time(SCAST<uint64_t>(-1u));
 }
 
 Time Time::Seconds(double seconds)
@@ -99,7 +99,7 @@ Time Time::GetEllapsed()
 
 Time Time::GetDeltaTime()
 {
-    if (Scene *scene = SceneManager::GetActiveScene())
+    if(Scene *scene = SceneManager::GetActiveScene())
     {
         return scene->GetDeltaTime();
     }
@@ -109,7 +109,7 @@ Time Time::GetDeltaTime()
 Time Time::GetPassedTimeSince(Time refTime)
 {
     Time now = Time::GetNow();
-    if (now <= refTime)
+    if(now <= refTime)
     {
         return Time(0);
     }

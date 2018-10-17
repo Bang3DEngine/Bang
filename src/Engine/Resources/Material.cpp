@@ -18,16 +18,17 @@
 #include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Path;
-FORWARD class Resource;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Path;
+class Resource;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Material::Material()
 {
-    SetShaderProgram( ShaderProgramFactory::GetDefault() );
+    SetShaderProgram(ShaderProgramFactory::GetDefault());
 }
 
 Material::~Material()
@@ -36,7 +37,7 @@ Material::~Material()
 
 void Material::SetLineWidth(float w)
 {
-    if (w != GetLineWidth())
+    if(w != GetLineWidth())
     {
         m_lineWidth = w;
         PropagateResourceChanged();
@@ -55,7 +56,7 @@ const NeededUniformFlags &Material::GetNeededUniforms() const
 
 void Material::SetRenderWireframe(bool renderWireframe)
 {
-    if (renderWireframe != IsRenderWireframe())
+    if(renderWireframe != IsRenderWireframe())
     {
         m_renderWireframe = renderWireframe;
         PropagateResourceChanged();
@@ -64,7 +65,7 @@ void Material::SetRenderWireframe(bool renderWireframe)
 
 void Material::SetCullFace(GL::CullFaceExt cullFace)
 {
-    if (cullFace != GetCullFace())
+    if(cullFace != GetCullFace())
     {
         m_cullFace = cullFace;
         PropagateResourceChanged();
@@ -73,7 +74,7 @@ void Material::SetCullFace(GL::CullFaceExt cullFace)
 
 void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
 {
-    if (albedoUvOffset != GetAlbedoUvOffset())
+    if(albedoUvOffset != GetAlbedoUvOffset())
     {
         m_albedoUvOffset = albedoUvOffset;
         PropagateResourceChanged();
@@ -82,7 +83,7 @@ void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
 
 void Material::SetAlbedoUvMultiply(const Vector2 &albedoUvMultiply)
 {
-    if (albedoUvMultiply != GetAlbedoUvMultiply())
+    if(albedoUvMultiply != GetAlbedoUvMultiply())
     {
         m_albedoUvMultiply = albedoUvMultiply;
         PropagateResourceChanged();
@@ -91,7 +92,7 @@ void Material::SetAlbedoUvMultiply(const Vector2 &albedoUvMultiply)
 
 void Material::SetNormalMapUvOffset(const Vector2 &normalMapUvOffset)
 {
-    if (normalMapUvOffset != GetNormalMapUvOffset())
+    if(normalMapUvOffset != GetNormalMapUvOffset())
     {
         m_normalMapUvOffset = normalMapUvOffset;
         PropagateResourceChanged();
@@ -100,7 +101,7 @@ void Material::SetNormalMapUvOffset(const Vector2 &normalMapUvOffset)
 
 void Material::SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply)
 {
-    if (normalMapUvMultiply != GetNormalMapUvMultiply())
+    if(normalMapUvMultiply != GetNormalMapUvMultiply())
     {
         m_normalMapUvMultiply = normalMapUvMultiply;
         PropagateResourceChanged();
@@ -109,16 +110,16 @@ void Material::SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply)
 
 void Material::SetNormalMapMultiplyFactor(float normalMapMultiplyFactor)
 {
-    if (normalMapMultiplyFactor != GetNormalMapMultiplyFactor())
+    if(normalMapMultiplyFactor != GetNormalMapMultiplyFactor())
     {
         m_normalMapMultiplyFactor = normalMapMultiplyFactor;
         PropagateResourceChanged();
     }
 }
 
-void Material::SetShaderProgram(ShaderProgram* program)
+void Material::SetShaderProgram(ShaderProgram *program)
 {
-    if (p_shaderProgram.Get() != program)
+    if(p_shaderProgram.Get() != program)
     {
         p_shaderProgram.Set(program);
         PropagateResourceChanged();
@@ -127,7 +128,7 @@ void Material::SetShaderProgram(ShaderProgram* program)
 
 void Material::SetReceivesLighting(bool receivesLighting)
 {
-    if (receivesLighting != GetReceivesLighting())
+    if(receivesLighting != GetReceivesLighting())
     {
         m_receivesLighting = receivesLighting;
         PropagateResourceChanged();
@@ -136,7 +137,7 @@ void Material::SetReceivesLighting(bool receivesLighting)
 
 void Material::SetRoughness(float roughness)
 {
-    if (roughness != GetRoughness())
+    if(roughness != GetRoughness())
     {
         m_roughness = roughness;
         PropagateResourceChanged();
@@ -145,7 +146,7 @@ void Material::SetRoughness(float roughness)
 
 void Material::SetMetalness(float metalness)
 {
-    if (metalness != GetMetalness())
+    if(metalness != GetMetalness())
     {
         m_metalness = metalness;
         PropagateResourceChanged();
@@ -154,7 +155,7 @@ void Material::SetMetalness(float metalness)
 
 void Material::SetAlbedoColor(const Color &albedoColor)
 {
-    if (albedoColor != GetAlbedoColor())
+    if(albedoColor != GetAlbedoColor())
     {
         m_albedoColor = albedoColor;
         PropagateResourceChanged();
@@ -171,28 +172,28 @@ void Material::SetMetalnessTexture(Texture2D *metalnessTexture)
     p_metalnessTexture.Set(metalnessTexture);
 }
 
-void Material::SetAlbedoTexture(Texture2D* texture)
+void Material::SetAlbedoTexture(Texture2D *texture)
 {
-    if (p_albedoTexture.Get() != texture)
+    if(p_albedoTexture.Get() != texture)
     {
-        if (GetAlbedoTexture())
+        if(GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<IEventsResource>::
-                                UnRegisterListener(this);
+            GetAlbedoTexture()
+                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
 
         p_albedoTexture.Set(texture);
         ShaderProgram *sp = GetShaderProgram();
-        if (sp)
+        if(sp)
         {
             sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture,
                              GetAlbedoTexture());
         }
 
-        if (GetAlbedoTexture())
+        if(GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<IEventsResource>::
-                                RegisterListener(this);
+            GetAlbedoTexture()->EventEmitter<IEventsResource>::RegisterListener(
+                this);
         }
 
         PropagateResourceChanged();
@@ -201,26 +202,26 @@ void Material::SetAlbedoTexture(Texture2D* texture)
 
 void Material::SetNormalMapTexture(Texture2D *texture)
 {
-    if (texture != GetNormalMapTexture())
+    if(texture != GetNormalMapTexture())
     {
-        if (GetNormalMapTexture())
+        if(GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<IEventsResource>::
-                                   UnRegisterListener(this);
+            GetNormalMapTexture()
+                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
 
         p_normalMapTexture.Set(texture);
         ShaderProgram *sp = GetShaderProgram();
-        if (sp)
+        if(sp)
         {
             sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture,
                              GetNormalMapTexture());
         }
 
-        if (GetNormalMapTexture())
+        if(GetNormalMapTexture())
         {
-            GetNormalMapTexture()->EventEmitter<IEventsResource>::
-                                   RegisterListener(this);
+            GetNormalMapTexture()
+                ->EventEmitter<IEventsResource>::RegisterListener(this);
         }
 
         PropagateResourceChanged();
@@ -229,7 +230,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
 
 void Material::SetRenderPass(RenderPass renderPass)
 {
-    if (renderPass != GetRenderPass())
+    if(renderPass != GetRenderPass())
     {
         m_renderPass = renderPass;
         PropagateResourceChanged();
@@ -256,11 +257,11 @@ float Material::GetNormalMapMultiplyFactor() const
 {
     return m_normalMapMultiplyFactor;
 }
-ShaderProgram* Material::GetShaderProgram() const
+ShaderProgram *Material::GetShaderProgram() const
 {
     return p_shaderProgram.Get();
 }
-Texture2D* Material::GetAlbedoTexture() const
+Texture2D *Material::GetAlbedoTexture() const
 {
     return p_albedoTexture.Get();
 }
@@ -276,7 +277,7 @@ float Material::GetRoughness() const
 {
     return m_roughness;
 }
-const Color& Material::GetAlbedoColor() const
+const Color &Material::GetAlbedoColor() const
 {
     return m_albedoColor;
 }
@@ -313,37 +314,41 @@ GL::CullFaceExt Material::GetCullFace() const
 void Material::Bind() const
 {
     ShaderProgram *sp = GetShaderProgram();
-    if (!sp || !sp->IsLinked())
+    if(!sp || !sp->IsLinked())
     {
         return;
     }
 
     sp->Bind();
 
-    GL::SetWireframe( IsRenderWireframe() );
-    GL::LineWidth( GetLineWidth() );
-    GL::PointSize( GetLineWidth() );
+    GL::SetWireframe(IsRenderWireframe());
+    GL::LineWidth(GetLineWidth());
+    GL::PointSize(GetLineWidth());
 
-    if (GetCullFace() != GL::CullFaceExt::NONE)
+    if(GetCullFace() != GL::CullFaceExt::NONE)
     {
-        GL::Enable(GL::Enablable::CULL_FACE); // Culling states
-        GL::SetCullFace( SCAST<GL::Face>(GetCullFace()) );
+        GL::Enable(GL::Enablable::CULL_FACE);  // Culling states
+        GL::SetCullFace(SCAST<GL::Face>(GetCullFace()));
     }
     else
     {
         GL::Disable(GL::Enablable::CULL_FACE);
     }
 
-    if ( GetNeededUniforms().IsOn(NeededUniformFlag::MATERIAL_ALBEDO) )
+    if(GetNeededUniforms().IsOn(NeededUniformFlag::MATERIAL_ALBEDO))
     {
-        sp->SetColor(GLUniforms::UniformName_MaterialAlbedoColor, GetAlbedoColor());
+        sp->SetColor(GLUniforms::UniformName_MaterialAlbedoColor,
+                     GetAlbedoColor());
 
-        if (Texture2D *albedoTex = GetAlbedoTexture())
+        if(Texture2D *albedoTex = GetAlbedoTexture())
         {
             sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture, albedoTex);
-            sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset, GetAlbedoUvOffset());
-            sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply, GetAlbedoUvMultiply());
-            sp->SetFloat(GLUniforms::UniformName_AlphaCutoff, albedoTex->GetAlphaCutoff());
+            sp->SetVector2(GLUniforms::UniformName_AlbedoUvOffset,
+                           GetAlbedoUvOffset());
+            sp->SetVector2(GLUniforms::UniformName_AlbedoUvMultiply,
+                           GetAlbedoUvMultiply());
+            sp->SetFloat(GLUniforms::UniformName_AlphaCutoff,
+                         albedoTex->GetAlphaCutoff());
             sp->SetBool(GLUniforms::UniformName_HasAlbedoTexture, true);
         }
         else
@@ -353,7 +358,7 @@ void Material::Bind() const
         }
     }
 
-    if ( GetNeededUniforms().IsOn( NeededUniformFlag::MATERIAL_PBR) )
+    if(GetNeededUniforms().IsOn(NeededUniformFlag::MATERIAL_PBR))
     {
         sp->SetBool(GLUniforms::UniformName_MaterialReceivesLighting,
                     GetReceivesLighting());
@@ -362,9 +367,10 @@ void Material::Bind() const
         sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
                          TextureFactory::GetBRDFLUTTexture());
 
-        if (Texture2D *roughnessTex = GetRoughnessTexture())
+        if(Texture2D *roughnessTex = GetRoughnessTexture())
         {
-            sp->SetTexture2D(GLUniforms::UniformName_RoughnessTexture, roughnessTex);
+            sp->SetTexture2D(GLUniforms::UniformName_RoughnessTexture,
+                             roughnessTex);
         }
         else
         {
@@ -372,9 +378,10 @@ void Material::Bind() const
                              TextureFactory::GetWhiteTexture());
         }
 
-        if (Texture2D *metalnessTex = GetMetalnessTexture())
+        if(Texture2D *metalnessTex = GetMetalnessTexture())
         {
-            sp->SetTexture2D(GLUniforms::UniformName_MetalnessTexture, metalnessTex);
+            sp->SetTexture2D(GLUniforms::UniformName_MetalnessTexture,
+                             metalnessTex);
         }
         else
         {
@@ -382,9 +389,10 @@ void Material::Bind() const
                              TextureFactory::GetWhiteTexture());
         }
 
-        if (Texture2D *normalMapTex = GetNormalMapTexture())
+        if(Texture2D *normalMapTex = GetNormalMapTexture())
         {
-            sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture, normalMapTex);
+            sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture,
+                             normalMapTex);
             sp->SetVector2(GLUniforms::UniformName_NormalMapUvOffset,
                            GetNormalMapUvOffset());
             sp->SetVector2(GLUniforms::UniformName_NormalMapUvMultiply,
@@ -403,7 +411,7 @@ void Material::Bind() const
 
 void Material::UnBind() const
 {
-    if (ShaderProgram *sp = GetShaderProgram())
+    if(ShaderProgram *sp = GetShaderProgram())
     {
         sp->UnBind();
     }
@@ -411,9 +419,9 @@ void Material::UnBind() const
 
 void Material::CloneInto(ICloneable *clone) const
 {
-    Material *matClone = Cast<Material*>(clone);
+    Material *matClone = Cast<Material *>(clone);
 
-    matClone->GetNeededUniforms().SetOn( GetNeededUniforms().GetValue() );
+    matClone->GetNeededUniforms().SetOn(GetNeededUniforms().GetValue());
     matClone->SetShaderProgram(GetShaderProgram());
     matClone->SetAlbedoColor(GetAlbedoColor());
     matClone->SetReceivesLighting(GetReceivesLighting());
@@ -428,8 +436,8 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetNormalMapMultiplyFactor(GetNormalMapMultiplyFactor());
     matClone->SetRenderPass(GetRenderPass());
     matClone->SetLineWidth(GetLineWidth());
-    matClone->SetRoughnessTexture( GetRoughnessTexture() );
-    matClone->SetMetalnessTexture( GetMetalnessTexture() );
+    matClone->SetRoughnessTexture(GetRoughnessTexture());
+    matClone->SetMetalnessTexture(GetMetalnessTexture());
     matClone->SetRenderWireframe(IsRenderWireframe());
     matClone->SetCullFace(GetCullFace());
 }
@@ -448,117 +456,121 @@ void Material::ImportMeta(const MetaNode &meta)
 {
     Asset::ImportMeta(meta);
 
-    if (meta.Contains("NeededUniforms"))
+    if(meta.Contains("NeededUniforms"))
     {
-        GetNeededUniforms().SetTo(meta.Get<FlagsPrimitiveType>("NeededUniforms"));
+        GetNeededUniforms().SetTo(
+            meta.Get<FlagsPrimitiveType>("NeededUniforms"));
     }
 
-    if (meta.Contains("RenderPass"))
+    if(meta.Contains("RenderPass"))
     {
         SetRenderPass(meta.Get<RenderPass>("RenderPass"));
     }
 
-    if (meta.Contains("AlbedoColor"))
+    if(meta.Contains("AlbedoColor"))
     {
         SetAlbedoColor(meta.Get<Color>("AlbedoColor"));
     }
 
-    if (meta.Contains("Roughness"))
+    if(meta.Contains("Roughness"))
     {
         SetRoughness(meta.Get<float>("Roughness"));
     }
 
-    if (meta.Contains("Metalness"))
+    if(meta.Contains("Metalness"))
     {
         SetMetalness(meta.Get<float>("Metalness"));
     }
 
-    if (meta.Contains("ReceivesLighting"))
+    if(meta.Contains("ReceivesLighting"))
     {
         SetReceivesLighting(meta.Get<bool>("ReceivesLighting"));
     }
 
-    if (meta.Contains("AlbedoTexture"))
+    if(meta.Contains("AlbedoTexture"))
     {
         SetAlbedoTexture(
-          Resources::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
+            Resources::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
     }
 
-    if (meta.Contains("AlbedoUvOffset"))
+    if(meta.Contains("AlbedoUvOffset"))
     {
         SetAlbedoUvOffset(meta.Get<Vector2>("AlbedoUvOffset"));
     }
 
-    if (meta.Contains("AlbedoUvMultiply"))
+    if(meta.Contains("AlbedoUvMultiply"))
     {
         SetAlbedoUvMultiply(meta.Get<Vector2>("AlbedoUvMultiply"));
     }
 
-    if (meta.Contains("RoughnessTexture"))
+    if(meta.Contains("RoughnessTexture"))
     {
         SetRoughnessTexture(
-         Resources::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture")).Get());
+            Resources::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture"))
+                .Get());
     }
 
-    if (meta.Contains("MetalnessTexture"))
+    if(meta.Contains("MetalnessTexture"))
     {
         SetMetalnessTexture(
-         Resources::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture")).Get());
+            Resources::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture"))
+                .Get());
     }
 
-    if (meta.Contains("NormalMapTexture"))
+    if(meta.Contains("NormalMapTexture"))
     {
         SetNormalMapTexture(
-         Resources::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture")).Get());
+            Resources::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture"))
+                .Get());
     }
 
-    if (meta.Contains("NormalMapUvOffset"))
+    if(meta.Contains("NormalMapUvOffset"))
     {
         SetNormalMapUvOffset(meta.Get<Vector2>("NormalMapUvOffset"));
     }
 
-    if (meta.Contains("NormalMapUvMultiply"))
+    if(meta.Contains("NormalMapUvMultiply"))
     {
         SetNormalMapUvMultiply(meta.Get<Vector2>("NormalMapUvMultiply"));
     }
 
-    if (meta.Contains("NormalMapMultiplyFactor"))
+    if(meta.Contains("NormalMapMultiplyFactor"))
     {
         SetNormalMapMultiplyFactor(meta.Get<float>("NormalMapMultiplyFactor"));
     }
 
     RH<Shader> vShader;
-    if (meta.Contains("VertexShader"))
+    if(meta.Contains("VertexShader"))
     {
         vShader = Resources::Load<Shader>(meta.Get<GUID>("VertexShader"));
     }
 
     RH<Shader> fShader;
-    if (meta.Contains("FragmentShader"))
+    if(meta.Contains("FragmentShader"))
     {
         fShader = Resources::Load<Shader>(meta.Get<GUID>("FragmentShader"));
     }
 
-    if (meta.Contains("LineWidth"))
+    if(meta.Contains("LineWidth"))
     {
         SetLineWidth(meta.Get<float>("LineWidth"));
     }
 
-    if (meta.Contains("RenderWireframe"))
+    if(meta.Contains("RenderWireframe"))
     {
         SetRenderWireframe(meta.Get<bool>("RenderWireframe"));
     }
 
-    if (meta.Contains("CullFace"))
+    if(meta.Contains("CullFace"))
     {
         SetCullFace(meta.Get<GL::CullFaceExt>("CullFace"));
     }
 
-    if (vShader && fShader)
+    if(vShader && fShader)
     {
         ShaderProgram *newSp =
-                ShaderProgramFactory::Get(vShader.Get()->GetResourceFilepath(),
-                                          fShader.Get()->GetResourceFilepath());
+            ShaderProgramFactory::Get(vShader.Get()->GetResourceFilepath(),
+                                      fShader.Get()->GetResourceFilepath());
         SetShaderProgram(newSp);
     }
 }
@@ -567,37 +579,37 @@ void Material::ExportMeta(MetaNode *metaNode) const
 {
     Asset::ExportMeta(metaNode);
 
-    metaNode->Set("NeededUniforms",          GetNeededUniforms());
-    metaNode->Set("RenderPass",              GetRenderPass());
-    metaNode->Set("AlbedoColor",             GetAlbedoColor());
-    metaNode->Set("Roughness",               GetRoughness());
-    metaNode->Set("Metalness",               GetMetalness());
-    metaNode->Set("ReceivesLighting",        GetReceivesLighting());
-    metaNode->Set("AlbedoUvMultiply",        GetAlbedoUvMultiply());
-    metaNode->Set("AlbedoUvOffset",          GetAlbedoUvOffset());
-    metaNode->Set("NormalMapUvMultiply",     GetNormalMapUvMultiply());
-    metaNode->Set("NormalMapUvOffset",       GetNormalMapUvOffset());
+    metaNode->Set("NeededUniforms", GetNeededUniforms());
+    metaNode->Set("RenderPass", GetRenderPass());
+    metaNode->Set("AlbedoColor", GetAlbedoColor());
+    metaNode->Set("Roughness", GetRoughness());
+    metaNode->Set("Metalness", GetMetalness());
+    metaNode->Set("ReceivesLighting", GetReceivesLighting());
+    metaNode->Set("AlbedoUvMultiply", GetAlbedoUvMultiply());
+    metaNode->Set("AlbedoUvOffset", GetAlbedoUvOffset());
+    metaNode->Set("NormalMapUvMultiply", GetNormalMapUvMultiply());
+    metaNode->Set("NormalMapUvOffset", GetNormalMapUvOffset());
     metaNode->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
-    metaNode->Set("LineWidth",               GetLineWidth());
-    metaNode->Set("RenderWireframe",         IsRenderWireframe());
-    metaNode->Set("CullFace",                GetCullFace());
+    metaNode->Set("LineWidth", GetLineWidth());
+    metaNode->Set("RenderWireframe", IsRenderWireframe());
+    metaNode->Set("CullFace", GetCullFace());
 
-    Texture2D* albedoTex = GetAlbedoTexture();
+    Texture2D *albedoTex = GetAlbedoTexture();
     metaNode->Set("AlbedoTexture",
-                 albedoTex ? albedoTex->GetGUID() : GUID::Empty());
-    Texture2D* roughnessTex = GetRoughnessTexture();
+                  albedoTex ? albedoTex->GetGUID() : GUID::Empty());
+    Texture2D *roughnessTex = GetRoughnessTexture();
     metaNode->Set("RoughnessTexture",
-                 roughnessTex ? roughnessTex->GetGUID() : GUID::Empty());
-    Texture2D* metalnessTex = GetMetalnessTexture();
+                  roughnessTex ? roughnessTex->GetGUID() : GUID::Empty());
+    Texture2D *metalnessTex = GetMetalnessTexture();
     metaNode->Set("MetalnessTexture",
-                 metalnessTex ? metalnessTex->GetGUID() : GUID::Empty());
-    Texture2D* normalTex = GetNormalMapTexture();
+                  metalnessTex ? metalnessTex->GetGUID() : GUID::Empty());
+    Texture2D *normalTex = GetNormalMapTexture();
     metaNode->Set("NormalMapTexture",
-                 normalTex ? normalTex->GetGUID() : GUID::Empty());
+                  normalTex ? normalTex->GetGUID() : GUID::Empty());
 
     ShaderProgram *sp = GetShaderProgram();
-    Shader* vShader = (sp ? sp->GetVertexShader()   : nullptr);
-    Shader* fShader = (sp ? sp->GetFragmentShader() : nullptr);
-    metaNode->Set("VertexShader",   vShader->GetGUID());
+    Shader *vShader = (sp ? sp->GetVertexShader() : nullptr);
+    Shader *fShader = (sp ? sp->GetFragmentShader() : nullptr);
+    metaNode->Set("VertexShader", vShader->GetGUID());
     metaNode->Set("FragmentShader", fShader->GetGUID());
 }

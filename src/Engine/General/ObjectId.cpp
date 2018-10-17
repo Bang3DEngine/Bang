@@ -1,6 +1,6 @@
 #include "Bang/ObjectId.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ObjectId ObjectId::Empty = ObjectId();
 ObjectId::ObjectIdType ObjectId::NextObjectId = 0;
@@ -17,4 +17,6 @@ ObjectId::ObjectId()
 }
 
 bool operator!=(const ObjectId &lhs, const ObjectId &rhs)
-{ return !(lhs == rhs); }
+{
+    return !(lhs == rhs);
+}

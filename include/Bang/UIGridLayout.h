@@ -8,8 +8,8 @@
 #include "Bang/String.h"
 #include "Bang/UIGroupLayout.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UIGridLayout : public UIGroupLayout
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIGridLayout)
@@ -19,7 +19,7 @@ public:
 
     int GetNumRows() const;
     int GetNumColumns() const;
-    const Vector2i& GetCellSize() const;
+    const Vector2i &GetCellSize() const;
 
     // ILayoutController
     virtual void ApplyLayout(Axis axis) override;
@@ -35,8 +35,6 @@ private:
 
     Vector2i GetTotalSpacing() const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIGRIDLAYOUT_H
-
+#endif  // UIGRIDLAYOUT_H

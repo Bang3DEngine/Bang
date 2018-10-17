@@ -3,16 +3,16 @@
 
 #include <ostream>
 
+#include "Bang/AARect.h"
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
-#include "Bang/AARect.h"
 #include "Bang/BangDefines.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Font;
+namespace Bang
+{
+class Font;
 
 class TextFormatter
 {
@@ -21,59 +21,61 @@ public:
     {
         AARectf rectPx;
         char character;
-        CharRect(char _c, const AARectf &_rect) : rectPx(_rect), character(_c) {}
-        friend std::ostream& operator<<(std::ostream &os,
+        CharRect(char _c, const AARectf &_rect) : rectPx(_rect), character(_c)
+        {
+        }
+        friend std::ostream &operator<<(std::ostream &os,
                                         const TextFormatter::CharRect &cr);
     };
 
     static Array<CharRect> GetFormattedTextPositions(
-                                        const String &content,
-                                        const Font *font,
-                                        int fontSize,
-                                        const AARecti &limitsRect,
-                                        const Vector2 &spacingMultiplier,
-                                        HorizontalAlignment hAlignment,
-                                        VerticalAlignment vAlignment,
-                                        bool wrapping,
-                                        uint *numberOfLines);
+        const String &content,
+        const Font *font,
+        int fontSize,
+        const AARecti &limitsRect,
+        const Vector2 &spacingMultiplier,
+        HorizontalAlignment hAlignment,
+        VerticalAlignment vAlignment,
+        bool wrapping,
+        uint *numberOfLines);
 
     static Vector2i GetMinimumHeightTextSize(const String &content,
-                                        const Font *font,
-                                        int fontSize,
-                                        const Vector2 &spacingMultiplier);
+                                             const Font *font,
+                                             int fontSize,
+                                             const Vector2 &spacingMultiplier);
 
     TextFormatter() = delete;
 
 private:
-    static Array< Array<CharRect> > SplitCharRectsInLines(
-                                            const String &content,
-                                            const Font *font,
-                                            int fontSize,
-                                            const AARecti &limitsRect,
-                                            const Vector2 &spacingMultiplier,
-                                            const Array<CharRect> &charRects,
-                                            bool wrapping);
+    static Array<Array<CharRect>> SplitCharRectsInLines(
+        const String &content,
+        const Font *font,
+        int fontSize,
+        const AARecti &limitsRect,
+        const Vector2 &spacingMultiplier,
+        const Array<CharRect> &charRects,
+        bool wrapping);
 
-    static void ApplyAlignment(Array< Array<CharRect> > *linedCharRects,
+    static void ApplyAlignment(Array<Array<CharRect>> *linedCharRects,
                                const AARecti &limitsRect,
                                const Font *font,
                                int fontSize,
                                HorizontalAlignment hAlignment,
                                VerticalAlignment vAlignment);
 
-    static AARectf GetCharRect(char c,
-                             const Font *font,
-                             int fontSize);
+    static AARectf GetCharRect(char c, const Font *font, int fontSize);
     static float GetCharAdvanceX(const String &content,
                                  const Font *font,
                                  int fontSize,
                                  int currentCharIndex);
 };
 
-inline std::ostream& operator<<(std::ostream &os,
+inline std::ostream &operator<<(std::ostream &os,
                                 const TextFormatter::CharRect &cr)
-{ os << "(" << cr.character << ", " << cr.rectPx << ")"; return os; }
+{
+    os << "(" << cr.character << ", " << cr.rectPx << ")";
+    return os;
+}
+}
 
-NAMESPACE_BANG_END
-
-#endif // TEXTFORMATTER_H
+#endif  // TEXTFORMATTER_H

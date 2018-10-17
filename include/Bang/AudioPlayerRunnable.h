@@ -9,11 +9,11 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/Thread.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ALAudioSource;
-FORWARD class AudioClip;
-FORWARD class IEventsDestroy;
+namespace Bang
+{
+class ALAudioSource;
+class AudioClip;
+class IEventsDestroy;
 
 class AudioPlayerRunnable : public ThreadRunnable,
                             public EventEmitter<IEventsDestroy>
@@ -28,8 +28,8 @@ public:
     void Pause();
     void Stop();
 
-    AudioClip* GetAudioClip() const;
-    ALAudioSource* GetALAudioSource() const;
+    AudioClip *GetAudioClip() const;
+    ALAudioSource *GetALAudioSource() const;
 
     void Run() override;
 
@@ -39,7 +39,6 @@ private:
     ALAudioSource *p_alAudioSource = 0;
     float m_delayInSeconds = 0.0f;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AUDIOPLAYERRUNNABLE_H
+#endif  // AUDIOPLAYERRUNNABLE_H

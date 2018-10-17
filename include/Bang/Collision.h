@@ -5,15 +5,15 @@
 #include "Bang/BangDefines.h"
 #include "Bang/CollisionContact.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Collider;
-FORWARD class GameObject;
+namespace Bang
+{
+class Collider;
+class GameObject;
 
 class Collision
 {
 public:
-	Collision();
+    Collision();
     ~Collision();
 
     Collider *GetThisCollider() const;
@@ -27,8 +27,6 @@ private:
 
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COLLISION_H
-
+#endif  // COLLISION_H

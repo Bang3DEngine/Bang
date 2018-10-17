@@ -2,13 +2,15 @@
 
 #include "Bang/GL.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-GLObject::GLObject() {}
+GLObject::GLObject()
+{
+}
 
 GLId GLObject::GetGLId() const
 {
-     return m_idGL;
+    return m_idGL;
 }
 
 void GLObject::Bind()
@@ -30,4 +32,3 @@ void GLObject::UnBind() const
 {
     // GL::UnBind(this);
 }
-

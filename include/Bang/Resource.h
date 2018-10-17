@@ -10,20 +10,19 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GUID.h"
+#include "Bang/IEventsResource.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/IEventsResource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class IEventsResource;
 
-FORWARD class IEventsResource;
-
-class Resource : public Serializable,
-                 public EventEmitter<IEventsResource>
+class Resource : public Serializable, public EventEmitter<IEventsResource>
 {
 public:
     void RemoveEmbeddedResource(Resource *resource);
@@ -31,11 +30,11 @@ public:
     void PropagateResourceChanged();
 
     Path GetResourceFilepath() const;
-    Resource* GetParentResource() const;
-    const Array<RH<Resource>>& GetEmbeddedResources() const;
-    Resource* GetEmbeddedResource(const GUID &embeddedResGUID) const;
-    Resource* GetEmbeddedResource(const String &embeddedResourceName) const;
-    Resource* GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const;
+    Resource *GetParentResource() const;
+    const Array<RH<Resource>> &GetEmbeddedResources() const;
+    Resource *GetEmbeddedResource(const GUID &embeddedResGUID) const;
+    Resource *GetEmbeddedResource(const String &embeddedResourceName) const;
+    Resource *GetEmbeddedResource(GUID::GUIDType embeddedResGUID) const;
     String GetEmbeddedResourceName(GUID::GUIDType embeddedResGUID) const;
 
 protected:
@@ -55,10 +54,10 @@ protected:
 private:
     // Embedded resource related variables
     RH<Resource> p_parentResource;
-    Array< RH<Resource> > m_embeddedResources;
-    Map<String, Resource*> m_nameToEmbeddedResource;
-    Map<Resource*, String> m_embeddedResourceToName;
-    Map<GUID, Resource*> m_GUIDToEmbeddedResource;
+    Array<RH<Resource>> m_embeddedResources;
+    Map<String, Resource *> m_nameToEmbeddedResource;
+    Map<Resource *, String> m_embeddedResourceToName;
+    Map<GUID, Resource *> m_GUIDToEmbeddedResource;
     mutable GUID::GUIDType m_nextNewEmbeddedResourceGUID = 1;
 
     void AddEmbeddedResource(const String &embeddedResourceName,
@@ -73,7 +72,6 @@ private:
 #define RESOURCE(CLASSNAME) \
     SERIALIZABLE(CLASSNAME) \
     friend class Resources;
+}
 
-NAMESPACE_BANG_END
-
-#endif // RESOURCE_H
+#endif  // RESOURCE_H

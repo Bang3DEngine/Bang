@@ -4,8 +4,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class TimeSingleton
 {
 public:
@@ -25,8 +25,6 @@ private:
     friend class Time;
     friend class Application;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // TIMESINGLETON_H
-
+#endif  // TIMESINGLETON_H

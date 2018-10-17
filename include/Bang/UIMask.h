@@ -12,8 +12,8 @@
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UIMask : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIMask)
@@ -42,14 +42,13 @@ private:
     bool m_restoringStencil = false;
 
     std::array<bool, 4> m_colorMaskBefore;
-    GL::Function  m_stencilFuncBefore;
+    GL::Function m_stencilFuncBefore;
     GL::StencilOperation m_stencilOpBefore;
 
     void PrepareStencilToDrawMask();
     void PrepareStencilToDrawChildren();
     void RestoreStencilBuffer(RenderPass renderPass);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIMASK_H
+#endif  // UIMASK_H

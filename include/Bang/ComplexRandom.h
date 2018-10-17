@@ -3,8 +3,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 enum class ComplexRandomType
 {
     CONSTANT_VALUE,
@@ -14,7 +14,7 @@ enum class ComplexRandomType
 class ComplexRandom
 {
 public:
-	ComplexRandom();
+    ComplexRandom();
     ComplexRandom(float constantValue);
     ComplexRandom(float minRangeValue, float maxRangeValue);
     ~ComplexRandom();
@@ -42,8 +42,6 @@ private:
     float m_minRangeValue = 0.0f;
     float m_maxRangeValue = 1.0f;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COMPLEXRANDOM_H
-
+#endif  // COMPLEXRANDOM_H

@@ -21,21 +21,21 @@
 #include "Bang/Set.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class GameObject;
+class ICloneable;
+class IEventsDestroy;
+class IEventsDragDrop;
+class InputEvent;
+class Object;
+class UIFocusable;
+class UIDragDroppable;
+class UILayoutManager;
 
-FORWARD_T class EventEmitter;
-FORWARD   class GameObject;
-FORWARD   class ICloneable;
-FORWARD   class IEventsDestroy;
-FORWARD   class IEventsDragDrop;
-FORWARD   class InputEvent;
-FORWARD   class Object;
-FORWARD   class UIFocusable;
-FORWARD   class UIDragDroppable;
-FORWARD   class UILayoutManager;
-
-class UICanvas : public Component,
-                 public EventListener<IEventsDestroy>
+class UICanvas : public Component, public EventListener<IEventsDestroy>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UICanvas)
 
@@ -54,8 +54,8 @@ public:
     void SetFocus(UIFocusable *focusable,
                   FocusType focusType = FocusType::MOUSE);
 
-    UIFocusable* GetFocus();
-    UIFocusable* GetFocusableUnderMouseTopMost() const;
+    UIFocusable *GetFocus();
+    UIFocusable *GetFocusableUnderMouseTopMost() const;
     bool HasFocusFocusable(const UIFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
     bool HasFocus(const GameObject *go, bool recursive = false);
@@ -66,7 +66,7 @@ public:
     void NotifyDragStarted(UIDragDroppable *dragDroppable);
     void DropCurrentDragDroppable();
 
-    Array<EventListener<IEventsDragDrop>*> GetDragDropListeners() const;
+    Array<EventListener<IEventsDragDrop> *> GetDragDropListeners() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -78,13 +78,13 @@ public:
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
-    UILayoutManager* GetLayoutManager() const;
+    UILayoutManager *GetLayoutManager() const;
 
     static UICanvas *GetActive(const GameObject *go);
     static UICanvas *GetActive(const Component *comp);
 
 private:
-    Set<UIFocusable*> p_focusablesBeingPressed;
+    Set<UIFocusable *> p_focusablesBeingPressed;
     UILayoutManager *m_uiLayoutManager = nullptr;
 
     UIFocusable *p_focus = nullptr;
@@ -103,17 +103,16 @@ private:
     void RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable);
 
     void GetSortedFocusCandidatesByOcclusionOrder(
-            const GameObject *go,
-            Array< std::pair<UIFocusable*, AARecti> > *sortedCandidates) const;
+        const GameObject *go,
+        Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates) const;
 
     void GetSortedFocusCandidatesByPaintOrder(
-            const GameObject *go,
-            Array< std::pair<UIFocusable*, AARecti> > *sortedCandidates,
-            std::stack<AARecti> *maskRectStack) const;
+        const GameObject *go,
+        Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates,
+        std::stack<AARecti> *maskRectStack) const;
 
     friend class UIFocusable;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CANVAS_H
+#endif  // CANVAS_H

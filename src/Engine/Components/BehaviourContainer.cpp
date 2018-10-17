@@ -5,13 +5,13 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/StreamOperators.h"
 #include "Bang/TypeTraits.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 BehaviourContainer::BehaviourContainer()
 {
@@ -30,18 +30,19 @@ void BehaviourContainer::OnPreStart()
 
 void BehaviourContainer::SetSourceFilepath(const Path &sourceFilepath)
 {
-    SetSourceFilepathGUID( MetaFilesManager::GetGUID(sourceFilepath) );
+    SetSourceFilepathGUID(MetaFilesManager::GetGUID(sourceFilepath));
 }
 
 void BehaviourContainer::SetSourceFilepathGUID(const GUID &sourceFilepathGUID)
 {
-    if (sourceFilepathGUID != GetSourceFilepathGUID())
+    if(sourceFilepathGUID != GetSourceFilepathGUID())
     {
         m_sourceFilepathGUID = sourceFilepathGUID;
     }
 }
 
-Behaviour *BehaviourContainer::CreateBehaviourInstance(Library *behavioursLibrary) const
+Behaviour *BehaviourContainer::CreateBehaviourInstance(
+    Library *behavioursLibrary) const
 {
     return BehaviourManager::CreateBehaviourInstance(GetBehaviourName(),
                                                      behavioursLibrary);
@@ -54,7 +55,7 @@ String BehaviourContainer::GetBehaviourName() const
 
 Path BehaviourContainer::GetSourceFilepath() const
 {
-    return MetaFilesManager::GetFilepath( GetSourceFilepathGUID() );
+    return MetaFilesManager::GetFilepath(GetSourceFilepathGUID());
 }
 
 const GUID &BehaviourContainer::GetSourceFilepathGUID() const
@@ -70,11 +71,8 @@ const MetaNode &BehaviourContainer::GetInitializationMeta() const
 void BehaviourContainer::TryToSubstituteByBehaviourInstance()
 {
     BehaviourManager *behaviourManager = BehaviourManager::GetActive();
-    if ( behaviourManager &&
-         behaviourManager->IsInstanceCreationAllowed() &&
-        !IsWaitingToBeDestroyed() &&
-        !GetBehaviourName().IsEmpty()
-       )
+    if(behaviourManager && behaviourManager->IsInstanceCreationAllowed() &&
+       !IsWaitingToBeDestroyed() && !GetBehaviourName().IsEmpty())
     {
         Library *behLib = behaviourManager->GetBehavioursLibrary();
         SubstituteByBehaviourInstance(behLib);
@@ -86,12 +84,13 @@ void BehaviourContainer::SetInitializationMeta(const MetaNode &metaNode)
     m_initializationMeta = metaNode;
 }
 
-void BehaviourContainer::SubstituteByBehaviourInstance(Library *behavioursLibrary)
+void BehaviourContainer::SubstituteByBehaviourInstance(
+    Library *behavioursLibrary)
 {
-    if (Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
+    if(Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
     {
-        behaviour->ImportMeta( GetInitializationMeta() );
-        if (GetGameObject())
+        behaviour->ImportMeta(GetInitializationMeta());
+        if(GetGameObject())
         {
             GetGameObject()->AddComponent(behaviour);
             Component::Destroy(this);
@@ -102,21 +101,21 @@ void BehaviourContainer::SubstituteByBehaviourInstance(Library *behavioursLibrar
 void BehaviourContainer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    BehaviourContainer *bc = Cast<BehaviourContainer*>(clone);
-    bc->SetSourceFilepathGUID( GetSourceFilepathGUID() );
-    bc->SetInitializationMeta( GetInitializationMeta() );
+    BehaviourContainer *bc = Cast<BehaviourContainer *>(clone);
+    bc->SetSourceFilepathGUID(GetSourceFilepathGUID());
+    bc->SetInitializationMeta(GetInitializationMeta());
 }
 
 void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("SourceFilepathGUID"))
+    if(metaNode.Contains("SourceFilepathGUID"))
     {
-        SetSourceFilepathGUID( metaNode.Get<GUID>("SourceFilepathGUID") );
+        SetSourceFilepathGUID(metaNode.Get<GUID>("SourceFilepathGUID"));
     }
 
-    if (metaNode.Contains("InitializationMeta"))
+    if(metaNode.Contains("InitializationMeta"))
     {
         String metaStr = metaNode.Get<String>("InitializationMeta");
         MetaNode initializationMeta;

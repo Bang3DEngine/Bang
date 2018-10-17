@@ -8,7 +8,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Triangle::Triangle(const Vector3 &point0,
                    const Vector3 &point1,
@@ -30,7 +30,7 @@ float Triangle::GetArea() const
     float b = Vector3::Distance(GetPoint(1), GetPoint(2));
     float c = Vector3::Distance(GetPoint(2), GetPoint(0));
     float s = (a + b + c) / 2;
-    float area = Math::Sqrt(s * (s-a) * (s-b) * (s-c));
+    float area = Math::Sqrt(s * (s - a) * (s - b) * (s - c));
     return area;
 }
 
@@ -41,8 +41,8 @@ Plane Triangle::GetPlane() const
 
 Vector3 Triangle::GetNormal() const
 {
-    return Vector3::Cross(GetPoint(1)-GetPoint(0), GetPoint(2)-GetPoint(0)).
-                    NormalizedSafe();
+    return Vector3::Cross(GetPoint(1) - GetPoint(0), GetPoint(2) - GetPoint(0))
+        .NormalizedSafe();
 }
 
 const Vector3 &Triangle::GetPoint(int i) const
@@ -53,9 +53,9 @@ const Vector3 &Triangle::GetPoint(int i) const
 Polygon Triangle::ToPolygon() const
 {
     Polygon poly;
-    poly.AddPoint( GetPoint(0) );
-    poly.AddPoint( GetPoint(1) );
-    poly.AddPoint( GetPoint(2) );
+    poly.AddPoint(GetPoint(0));
+    poly.AddPoint(GetPoint(1));
+    poly.AddPoint(GetPoint(2));
     return poly;
 }
 
@@ -76,13 +76,11 @@ const Vector3 &Triangle::operator[](std::size_t i) const
     return m_points[i];
 }
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 Triangle operator*(const Matrix4 &m, const Triangle &t)
 {
-    return Triangle(m.TransformedPoint(t[0]),
-                    m.TransformedPoint(t[1]),
+    return Triangle(m.TransformedPoint(t[0]), m.TransformedPoint(t[1]),
                     m.TransformedPoint(t[2]));
 }
-
-NAMESPACE_BANG_END
+}

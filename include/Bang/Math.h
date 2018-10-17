@@ -6,8 +6,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Math
 {
 public:
@@ -15,230 +15,229 @@ public:
 
     Math() = delete;
 
-    template<class T>
+    template <class T>
     static constexpr T Min()
     {
         return std::numeric_limits<T>::min();
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Max()
     {
         return std::numeric_limits<T>::max();
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Infinity()
     {
         return std::numeric_limits<T>::infinity();
     }
 
-    template<class T>
+    template <class T>
     static constexpr T NaN()
     {
         return 0;
     }
 
-    template<class T>
+    template <class T>
     static constexpr T NegativeInfinity()
     {
         return -std::numeric_limits<T>::infinity();
     }
 
-    template<class T>
+    template <class T>
     static constexpr T IsInfinity(T value)
     {
         return std::isinf(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T IsNaN(T value)
     {
         return std::isnan(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Min(const T &a, const T &b)
     {
         return (a <= b) ? a : b;
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Max(const T &a, const T &b)
     {
         return (a >= b) ? a : b;
     }
 
-    template<class T, class T2, class T3>
+    template <class T, class T2, class T3>
     static constexpr T Clamp(const T &value, const T2 &min, const T3 &max)
     {
-        return Math::Min(Math::Max(SCAST<T>(value), SCAST<T>(min)), SCAST<T>(max));
+        return Math::Min(Math::Max(SCAST<T>(value), SCAST<T>(min)),
+                         SCAST<T>(max));
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Abs(const T &value)
     {
         return value < 0 ? -value : value;
     }
 
-    template<class T = int, class T2>
+    template <class T = int, class T2>
     static constexpr T Round(const T2 &value)
     {
-        return SCAST<T>( std::round(value) );
+        return SCAST<T>(std::round(value));
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Ceil(const T &value)
     {
         return std::ceil(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Floor(const T &value)
     {
         return std::floor(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Fract(const T &value)
     {
         return value - Math::Floor(value);
     }
 
-
-    template<class T>
+    template <class T>
     static constexpr T Pow(const T &base, const T &exponent)
     {
         return std::pow(base, exponent);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Log(const T &value)
     {
         return std::log(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Log10(const T &value)
     {
         return std::log10(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Exp(const T &x)
     {
         return std::exp(x);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Sqrt(const T &x)
     {
         return std::sqrt(x);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Sin(const T &rad)
     {
         return std::sin(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Cos(const T &rad)
     {
         return std::cos(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Tan(const T &rad)
     {
         return std::tan(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Sinh(const T &rad)
     {
         return std::sinh(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Cosh(const T &rad)
     {
         return std::cosh(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Tanh(const T &rad)
     {
         return std::tanh(rad);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ASin(const T &value)
     {
         return std::asin(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ACos(const T &value)
     {
         return std::acos(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ATan(const T &value)
     {
         return std::atan(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ASinh(const T &value)
     {
         return std::asinh(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ACosh(const T &value)
     {
         return std::acosh(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ATanh(const T &value)
     {
         return std::atanh(value);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T ATan2(const T &valueX, const T &valueY)
     {
         return std::atan2(valueX, valueY);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T FMod(const T &value, const T &length)
     {
         return std::fmod(value, length);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T FModAbs(const T &value, const T &length)
     {
-        return (value < 0 ?
-                  Math::FMod(Math::FMod(value, length) + length, length) :
-                  Math::FMod(value, length)
-               );
+        return (value < 0
+                    ? Math::FMod(Math::FMod(value, length) + length, length)
+                    : Math::FMod(value, length));
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Sign(const T &value)
     {
         return static_cast<T>(value < 0 ? -1 : 1);
     }
 
-    template<class T>
+    template <class T>
     static constexpr T Lerp(const T &a, const T &b, const T &t)
     {
-        return (b-a) * t + a;
+        return (b - a) * t + a;
     }
 
     static constexpr float Map(float value,
@@ -247,21 +246,20 @@ public:
                                float destMin,
                                float destMax)
     {
-        return ((value-srcMin) / (srcMax - srcMin)) *
-                (destMax - destMin) +
-                destMin;
+        return ((value - srcMin) / (srcMax - srcMin)) * (destMax - destMin) +
+               destMin;
     }
 
-    template<class T>
+    template <class T>
     static constexpr bool IsInt(const T &v, float tolerance = 0.0001f)
     {
-        return (Math::Abs( v - Math::Round(v) ) < tolerance);
+        return (Math::Abs(v - Math::Round(v)) < tolerance);
     }
 
-    template<class T>
+    template <class T>
     static constexpr bool IsPowerOfTwo(const T &v)
     {
-        return Math::IsInt( Math::Log10( float(v) ) / Math::Log10(2.0f) );
+        return Math::IsInt(Math::Log10(float(v)) / Math::Log10(2.0f));
     }
 
     static constexpr float DegToRad(float deg)
@@ -284,25 +282,22 @@ public:
         return rad * Math::s_RadToDeg;
     }
 
-
 private:
-
-    static constexpr double s_RadToDeg  = 180.0 / Math::Pi;
+    static constexpr double s_RadToDeg = 180.0 / Math::Pi;
     static constexpr double s_DegToRad = Math::Pi / 180.0;
 };
 
-template<>
+template <>
 inline double Math::NaN()
 {
     return std::nan("");
 }
 
-template<>
+template <>
 inline float Math::NaN()
 {
     return std::nanf("");
 }
+}
 
-NAMESPACE_BANG_END
-
-#endif // MATH_H
+#endif  // MATH_H

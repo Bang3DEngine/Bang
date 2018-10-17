@@ -13,33 +13,36 @@
 #include "Bang/EventListener.h"
 #include "Bang/IEventsName.h"
 #include "Bang/IEventsObjectGatherer.h"
-#include "Bang/ObjectGatherer.h"
 #include "Bang/Map.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/MetaNode.h"
+#include "Bang/ObjectGatherer.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+template <class>
+class IEventsObjectGatherer;
+class GameObject;
+class ICloneable;
+class IEventsName;
+class Model;
+class ShaderProgram;
+template <class ObjectType, bool RECURSIVE>
+class ObjectGatherer;
 
-FORWARD_T class IEventsObjectGatherer;
-FORWARD   class GameObject;
-FORWARD   class ICloneable;
-FORWARD   class IEventsName;
-FORWARD   class Model;
-FORWARD   class ShaderProgram;
-FORWARD   template <class ObjectType, bool RECURSIVE> class ObjectGatherer;
-
-class SkinnedMeshRenderer : public MeshRenderer,
-                            public EventListener<IEventsName>,
-                            public EventListener< IEventsObjectGatherer<GameObject> >
+class SkinnedMeshRenderer
+    : public MeshRenderer,
+      public EventListener<IEventsName>,
+      public EventListener<IEventsObjectGatherer<GameObject>>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(SkinnedMeshRenderer)
 
 public:
-	SkinnedMeshRenderer();
-	virtual ~SkinnedMeshRenderer() override;
+    SkinnedMeshRenderer();
+    virtual ~SkinnedMeshRenderer() override;
 
     // MeshRenderer
     void OnRender() override;
@@ -51,14 +54,14 @@ public:
 
     Model *GetActiveModel() const;
     GameObject *GetRootBoneGameObject() const;
-    const String& GetRootBoneGameObjectName() const;
+    const String &GetRootBoneGameObjectName() const;
     GameObject *GetBoneGameObject(const String &boneName) const;
     Matrix4 GetBoneSpaceToRootSpaceMatrix(const String &boneName) const;
     Matrix4 GetBoneTransformMatrixFor(
-                GameObject *boneGameObject,
-                const Matrix4 &transform,
-                UMap<GameObject*, Matrix4> *boneTransformInRootSpaceCache) const;
-    const Matrix4& GetInitialTransformMatrixFor(const String &boneName) const;
+        GameObject *boneGameObject,
+        const Matrix4 &transform,
+        UMap<GameObject *, Matrix4> *boneTransformInRootSpaceCache) const;
+    const Matrix4 &GetInitialTransformMatrixFor(const String &boneName) const;
     const Map<String, Matrix4> &GetInitialTransforms() const;
     const Set<String> &GetBonesNames() const;
 
@@ -66,9 +69,9 @@ public:
     void UpdateBonesMatricesFromTransformMatrices();
     void UpdateTransformMatricesFromInitialBonePosition();
     void SetSkinnedMeshRendererCurrentBoneMatrices(
-                                    const Map<String, Matrix4> &boneMatrices);
+        const Map<String, Matrix4> &boneMatrices);
     void SetSkinnedMeshRendererCurrentBoneMatrices(
-                                    const Array<Matrix4> &boneMatrices);
+        const Array<Matrix4> &boneMatrices);
 
     void RetrieveBonesBindPoseFromCurrentHierarchy();
 
@@ -99,12 +102,8 @@ private:
 
     String m_rootBoneGameObjectName = "";
     mutable GameObject *p_rootBoneGameObject = nullptr;
-    mutable Map<String, GameObject*> m_boneNameToBoneGameObject;
-
-
+    mutable Map<String, GameObject *> m_boneNameToBoneGameObject;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SKINNEDMESHRENDERER_H
-
+#endif  // SKINNEDMESHRENDERER_H

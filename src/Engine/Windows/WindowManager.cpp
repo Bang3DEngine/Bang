@@ -8,12 +8,12 @@
 #include <unistd.h>
 #endif
 
-#include "Bang/Debug.h"
-#include "Bang/Window.h"
 #include "Bang/Application.h"
+#include "Bang/Debug.h"
 #include "Bang/DialogWindow.h"
+#include "Bang/Window.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 WindowManager::WindowManager()
 {
@@ -21,8 +21,14 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
-    for (Window *w : GetCurrentWindows()) { delete w; }
-    for (Window *w : p_windowsToBeDestroyed) { delete w; }
+    for(Window *w : GetCurrentWindows())
+    {
+        delete w;
+    }
+    for(Window *w : p_windowsToBeDestroyed)
+    {
+        delete w;
+    }
 
     TTF_Quit();
     SDL_Quit();
@@ -38,40 +44,40 @@ void SignalHandler(int signal)
 
 void WindowManager::Init()
 {
-    if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0 )
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
     {
         Debug_Error("Failed to init SDL");
     }
 
-    #ifdef __linux__
-    signal(SIGINT,  SignalHandler);
-    #endif
+#ifdef __linux__
+    signal(SIGINT, SignalHandler);
+#endif
 
-    if ( TTF_Init() )
+    if(TTF_Init())
     {
-        Debug_Error("Could not init FreeType library: Error(" <<
-                    TTF_GetError() <<  ")");
+        Debug_Error("Could not init FreeType library: Error(" << TTF_GetError()
+                                                              << ")");
     }
 
-    m_windowsStack.push( {} );
+    m_windowsStack.push({});
 }
 
 bool WindowManager::MainLoopIteration()
 {
     bool exit = false;
 
-    if (!HandleEvents())
+    if(!HandleEvents())
     {
         exit = true;
     }
 
-    if (GetCurrentWindows().IsEmpty())
+    if(GetCurrentWindows().IsEmpty())
     {
         exit = true;
     }
     DestroyQueuedWindows();
 
-    for (Window *w : GetCurrentWindows())
+    for(Window *w : GetCurrentWindows())
     {
         Window::SetActive(w);
         w->MainLoopIteration();
@@ -85,14 +91,14 @@ void WindowManager::OnBlockingWaitBegin(Window *win)
 {
     GetCurrentWindows().Remove(win);
 
-    m_windowsStack.push( {win} );
+    m_windowsStack.push({win});
     Window::SetActive(win);
 }
 
 void WindowManager::OnBlockingWaitEnd()
 {
     m_windowsStack.pop();
-    Window::SetActive( GetCurrentWindows().Front() );
+    Window::SetActive(GetCurrentWindows().Front());
 }
 
 void WindowManager::DestroyWindow(Window *window)
@@ -100,7 +106,8 @@ void WindowManager::DestroyWindow(Window *window)
     p_windowsToBeDestroyed.PushBack(window);
 }
 
-DialogWindow *WindowManager::CreateDialogWindow(Window *parentWindow, bool resizable)
+DialogWindow *WindowManager::CreateDialogWindow(Window *parentWindow,
+                                                bool resizable)
 {
     DialogWindow *w = new DialogWindow(parentWindow, resizable);
     SetupWindow(w, 0);
@@ -110,15 +117,20 @@ DialogWindow *WindowManager::CreateDialogWindow(Window *parentWindow, bool resiz
 Window *WindowManager::GetTopWindow()
 {
     WindowManager *wm = WindowManager::GetInstance();
-    if (!wm) { return nullptr; }
-    return !wm->GetCurrentWindows().IsEmpty() ? wm->GetCurrentWindows().Front() : nullptr;
+    if(!wm)
+    {
+        return nullptr;
+    }
+    return !wm->GetCurrentWindows().IsEmpty() ? wm->GetCurrentWindows().Front()
+                                              : nullptr;
 }
 
 void WindowManager::SetupWindow(Window *window, uint _flags)
 {
     WindowManager::GetInstance()->GetCurrentWindows().PushBack(window);
 
-    uint flags = (_flags > 0 ?_flags : (SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL));
+    uint flags =
+        (_flags > 0 ? _flags : (SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL));
     window->Create(flags);
     window->OnResize(window->GetWidth(), window->GetHeight());
 }
@@ -127,26 +139,29 @@ bool WindowManager::HandleEvents()
 {
     SDL_Event sdlEvent;
     constexpr int AreThereMoreEvents = 1;
-    while (SDL_PollEvent(&sdlEvent) == AreThereMoreEvents)
+    while(SDL_PollEvent(&sdlEvent) == AreThereMoreEvents)
     {
-        switch (sdlEvent.type)
+        switch(sdlEvent.type)
         {
             default:
             {
-                List<Window*> windowsToBeClosed;
-                for (Window *w : GetCurrentWindows())
+                List<Window *> windowsToBeClosed;
+                for(Window *w : GetCurrentWindows())
                 {
                     Window::SetActive(w);
                     bool hasNotClosed = w->HandleEvent(sdlEvent);
-                    if (!hasNotClosed) { windowsToBeClosed.PushBack(w); }
+                    if(!hasNotClosed)
+                    {
+                        windowsToBeClosed.PushBack(w);
+                    }
                     Window::SetActive(nullptr);
                 }
 
-                for (Window *w : windowsToBeClosed)
+                for(Window *w : windowsToBeClosed)
                 {
                     Window::SetActive(w);
                     bool canCloseWindow = w->OnClosed();
-                    if (canCloseWindow)
+                    if(canCloseWindow)
                     {
                         GetCurrentWindows().Remove(w);
                         delete w;
@@ -157,7 +172,7 @@ bool WindowManager::HandleEvents()
         }
     }
 
-    for (Window *w : GetCurrentWindows())
+    for(Window *w : GetCurrentWindows())
     {
         Window::SetActive(w);
         w->OnHandleEventsFinished();
@@ -169,7 +184,7 @@ bool WindowManager::HandleEvents()
 void WindowManager::DestroyQueuedWindows()
 {
     Window *latestWindow = Window::GetActive();
-    for (Window *w : p_windowsToBeDestroyed)
+    for(Window *w : p_windowsToBeDestroyed)
     {
         Window::SetActive(w);
         GetCurrentWindows().Remove(w);
@@ -179,11 +194,11 @@ void WindowManager::DestroyQueuedWindows()
     Window::SetActive(latestWindow);
 }
 
-List<Window*> &WindowManager::GetCurrentWindows()
+List<Window *> &WindowManager::GetCurrentWindows()
 {
     return m_windowsStack.top();
 }
-const List<Window*> &WindowManager::GetCurrentWindows() const
+const List<Window *> &WindowManager::GetCurrentWindows() const
 {
     return m_windowsStack.top();
 }
@@ -192,5 +207,3 @@ WindowManager *WindowManager::GetInstance()
 {
     return Application::GetInstance()->GetWindowManager();
 }
-
-

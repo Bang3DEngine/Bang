@@ -10,7 +10,7 @@
 #include "Bang/Time.h"
 #include "Bang/process.hpp"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 using namespace TinyProcessLib;
 
 constexpr int SystemProcess::MaxBuffSize;
@@ -27,7 +27,7 @@ SystemProcess::~SystemProcess()
 void SystemProcess::ReadOutErr(String *buffer, const char *str, int size)
 {
     constexpr int MaxBuffSize = 4096;
-    char buff[MaxBuffSize+1];
+    char buff[MaxBuffSize + 1];
     int sizeToRead = Math::Min(MaxBuffSize, size);
     memcpy(buff, str, static_cast<std::size_t>(sizeToRead));
     buff[sizeToRead] = 0;
@@ -47,15 +47,13 @@ void SystemProcess::ReadErr(const char *str, int size)
 bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
 {
     String fullCommand =
-          "LD_PRELOAD=\"\" ; " + command + " " + String::Join(extraArgs, " ");
+        "LD_PRELOAD=\"\" ; " + command + " " + String::Join(extraArgs, " ");
 
     m_process =
-       new Process(fullCommand,
-                   Paths::GetExecutableDir().GetAbsolute(),
-                   [this](const char *str, int size) { ReadOut(str, size); },
-                   [this](const char *str, int size) { ReadErr(str, size); },
-                   true,
-                   SystemProcess::MaxBuffSize);
+        new Process(fullCommand, Paths::GetExecutableDir().GetAbsolute(),
+                    [this](const char *str, int size) { ReadOut(str, size); },
+                    [this](const char *str, int size) { ReadErr(str, size); },
+                    true, SystemProcess::MaxBuffSize);
 
     return true;
 }
@@ -64,24 +62,24 @@ void SystemProcess::WaitUntilFinished(float seconds,
                                       bool *finishedOut,
                                       int *statusOut)
 {
-    if (m_process)
+    if(m_process)
     {
         int status = 0;
         bool finished = false;
         Time beginning = Time::GetNow();
-        while ( !finished &&
-                (Time::GetPassedTimeSince(beginning).GetSeconds() < seconds) )
+        while(!finished &&
+              (Time::GetPassedTimeSince(beginning).GetSeconds() < seconds))
         {
-            Thread::SleepCurrentThread( Math::Max(seconds / 10.0f, 0.1f) );
+            Thread::SleepCurrentThread(Math::Max(seconds / 10.0f, 0.1f));
             finished = m_process->try_get_exit_status(status);
         }
 
-        if (finishedOut)
+        if(finishedOut)
         {
             *finishedOut = finished;
         }
 
-        if (statusOut)
+        if(statusOut)
         {
             *statusOut = status;
         }
@@ -90,7 +88,7 @@ void SystemProcess::WaitUntilFinished(float seconds,
 
 void SystemProcess::Close()
 {
-    if (m_process)
+    if(m_process)
     {
         Kill(true);
         m_process = nullptr;
@@ -100,7 +98,7 @@ void SystemProcess::Close()
 
 void SystemProcess::Write(const String &str)
 {
-    if (m_process)
+    if(m_process)
     {
         m_process->write(str);
     }
@@ -108,7 +106,7 @@ void SystemProcess::Write(const String &str)
 
 void SystemProcess::CloseWriteChannel()
 {
-    if (m_process)
+    if(m_process)
     {
         m_process->close_stdin();
     }
@@ -127,7 +125,7 @@ String SystemProcess::ReadStandardError()
 
 void SystemProcess::Kill(bool force)
 {
-    if (m_process)
+    if(m_process)
     {
         m_process->kill(force);
     }

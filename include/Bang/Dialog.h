@@ -9,22 +9,26 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class DialogWindow;
-FORWARD class Scene;
-FORWARD class UIButton;
-FORWARD class UIFileList;
-FORWARD class UIInputText;
-FORWARD class Window;
+namespace Bang
+{
+class DialogWindow;
+class Scene;
+class UIButton;
+class UIFileList;
+class UIInputText;
+class Window;
 
 class Dialog
 {
 public:
-    enum YesNoCancel { YES, NO, CANCEL };
+    enum YesNoCancel
+    {
+        YES,
+        NO,
+        CANCEL
+    };
 
-    static DialogWindow* Error(const String &title,
-                               const String &msg);
+    static DialogWindow *Error(const String &title, const String &msg);
     static String GetString(const String &title,
                             const String &msg,
                             const String &hint = "");
@@ -39,8 +43,9 @@ public:
                              const Path &initialDirPath = Path::Empty,
                              const String &initialFileName = "Unnamed");
 
-    static DialogWindow* BeginDialogCreation(const String &title,
-                                             int sizeX, int sizeY,
+    static DialogWindow *BeginDialogCreation(const String &title,
+                                             int sizeX,
+                                             int sizeY,
                                              bool resizable,
                                              bool modal);
     static void EndDialogCreation(Scene *scene);
@@ -55,12 +60,11 @@ private:
     static String s_resultString;
     static YesNoCancel s_resultYesNoCancel;
 
-    static std::stack<DialogWindow*> s_dialogCreation_dialogWindows;
-    static std::stack<Window*> s_dialogCreation_prevActiveWindows;
+    static std::stack<DialogWindow *> s_dialogCreation_dialogWindows;
+    static std::stack<Window *> s_dialogCreation_prevActiveWindows;
     static std::stack<bool> s_dialogCreation_modalBooleans;
 
     static DialogWindow *s_currentDialog;
-
 
     static void CreateSaveFilePathSceneInto(Scene *scene,
                                             const String &extension,
@@ -76,11 +80,10 @@ private:
                                             UIButton **outBotLeftButton,
                                             UIButton **outBotRightButton,
                                             UIInputText **botInputText);
-    static Scene* CreateGetStringScene(const String &msg,
-                                       const String &hint);
-    static Scene* CreateYesNoCancelScene(const String &msg);
+    static Scene *CreateGetStringScene(const String &msg, const String &hint);
+    static Scene *CreateYesNoCancelScene(const String &msg);
 
-    static Scene* CreateMsgScene(const String &msg);
+    static Scene *CreateMsgScene(const String &msg);
 
     static void OnOkClicked();
     static void OnYesClicked();
@@ -90,7 +93,6 @@ private:
     static void AcceptDialogPath(const Path &path);
     static void OnDialogPathChanged(const Path &path);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DIALOG_H
+#endif  // DIALOG_H

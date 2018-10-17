@@ -7,7 +7,7 @@
 #include "Bang/Random.h"
 #include "Bang/Time.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 const GUID::GUIDType GUID::EmptyGUID = 0;
 
@@ -59,23 +59,23 @@ GUID GUID::WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const
 GUID GUID::WithoutEmbeddedResourceGUID() const
 {
     GUID guid = *this;
-    guid.SetEmbeddedResourceGUID( GUID::EmptyGUID );
+    guid.SetEmbeddedResourceGUID(GUID::EmptyGUID);
     return guid;
 }
 
 std::istream &GUID::operator>>(std::istream &is)
 {
-    if (is.peek() != EOF && std::isdigit(is.peek()))
+    if(is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_timeGUID;
     }
     is >> std::ws;
-    if (is.peek() != EOF && std::isdigit(is.peek()))
+    if(is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_randGUID;
     }
     is >> std::ws;
-    if (is.peek() != EOF && std::isdigit(is.peek()))
+    if(is.peek() != EOF && std::isdigit(is.peek()))
     {
         is >> m_embeddedResourceGUID;
     }
@@ -84,9 +84,9 @@ std::istream &GUID::operator>>(std::istream &is)
 
 bool GUID::operator==(const GUID &rhs) const
 {
-    return  GetTimeGUID() == rhs.GetTimeGUID() &&
-            GetRandGUID() == rhs.GetRandGUID() &&
-            GetEmbeddedResourceGUID() == rhs.GetEmbeddedResourceGUID();
+    return GetTimeGUID() == rhs.GetTimeGUID() &&
+           GetRandGUID() == rhs.GetRandGUID() &&
+           GetEmbeddedResourceGUID() == rhs.GetEmbeddedResourceGUID();
 }
 
 bool GUID::operator!=(const GUID &rhs) const
@@ -96,21 +96,21 @@ bool GUID::operator!=(const GUID &rhs) const
 
 bool GUID::operator<(const GUID &rhs) const
 {
-    if (GetTimeGUID() < rhs.GetTimeGUID())
+    if(GetTimeGUID() < rhs.GetTimeGUID())
     {
         return true;
     }
-    else if (GetTimeGUID() > rhs.GetTimeGUID())
+    else if(GetTimeGUID() > rhs.GetTimeGUID())
     {
         return false;
     }
     else
     {
-        if (GetRandGUID() < rhs.GetRandGUID())
+        if(GetRandGUID() < rhs.GetRandGUID())
         {
             return true;
         }
-        else if (GetRandGUID() > rhs.GetRandGUID())
+        else if(GetRandGUID() > rhs.GetRandGUID())
         {
             return false;
         }

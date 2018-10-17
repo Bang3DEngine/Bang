@@ -6,19 +6,19 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AABox;
-FORWARD class Box;
-FORWARD class Plane;
-FORWARD class Polygon;
-FORWARD class Quad;
-FORWARD class Ray2D;
-FORWARD class Ray;
-FORWARD class Segment2D;
-FORWARD class Segment;
-FORWARD class Sphere;
-FORWARD class Triangle;
+namespace Bang
+{
+class AABox;
+class Box;
+class Plane;
+class Polygon;
+class Quad;
+class Ray2D;
+class Ray;
+class Segment2D;
+class Segment;
+class Sphere;
+class Triangle;
 
 class Geometry
 {
@@ -34,30 +34,30 @@ public:
                                           const Vector2 &lineP0,
                                           const Vector2 &lineP1);
 
-    static void IntersectSegment2DSegment2D(const Segment2D& segment0,
-                                            const Segment2D& segment1,
+    static void IntersectSegment2DSegment2D(const Segment2D &segment0,
+                                            const Segment2D &segment1,
                                             bool *intersected,
                                             Vector2 *intersPoint);
     static void IntersectRay2DSegment2D(const Ray2D &ray,
-                                        const Segment2D& segment,
+                                        const Segment2D &segment,
                                         bool *intersected,
                                         Vector2 *intersPoint);
     static void IntersectRayPlane(const Ray &ray,
-                                  const Plane& plane,
+                                  const Plane &plane,
                                   bool *intersected,
                                   float *distanceFromIntersectionToRayOrigin);
     static void IntersectRayPlane(const Ray &ray,
-                                  const Plane& plane,
+                                  const Plane &plane,
                                   bool *intersected,
                                   Vector3 *intersectionPoint);
     static void IntersectSegmentPlane(const Segment &segment,
-                                      const Plane& plane,
+                                      const Plane &plane,
                                       bool *intersected,
                                       Vector3 *intersectionPoint);
 
     // Computes the intersection between a ray and a sphere
     static void IntersectRaySphere(const Ray &ray,
-                                   const Sphere& sphere,
+                                   const Sphere &sphere,
                                    bool *intersected,
                                    Vector3 *intersectionPoint);
 
@@ -65,7 +65,7 @@ public:
     static void RayLineClosestPoints(const Ray &ray,
                                      const Vector3 &linePoint,
                                      const Vector3 &lineDirection,
-                                     Vector3 *pointOnRay  = nullptr,
+                                     Vector3 *pointOnRay = nullptr,
                                      Vector3 *pointOnLine = nullptr);
 
     // Computes the intersection between a ray and a PLANAR CONVEX polygon
@@ -84,10 +84,11 @@ public:
                                                   const Polygon &poly1);
 
     // Computes the intersection between a ray and a triangle
-    static void IntersectRayTriangle(const Ray &ray,
-                                     const Triangle &triangle,
-                                     bool *intersected,
-                                     float *distanceFromRayOriginToIntersection);
+    static void IntersectRayTriangle(
+        const Ray &ray,
+        const Triangle &triangle,
+        bool *intersected,
+        float *distanceFromRayOriginToIntersection);
     static void IntersectRayTriangle(const Ray &ray,
                                      const Triangle &triangle,
                                      bool *intersected,
@@ -146,8 +147,6 @@ public:
 private:
     static constexpr float ALMOST_ZERO = 1e-5f;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GEOMETRY_H
-
+#endif  // GEOMETRY_H

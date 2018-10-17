@@ -14,14 +14,13 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-
-NAMESPACE_BANG_BEGIN
-
-FORWARD class BehaviourManager;
-FORWARD class GameObject;
-FORWARD class IEventsDestroy;
-FORWARD class IEventsSceneManager;
-FORWARD class Scene;
+namespace Bang
+{
+class BehaviourManager;
+class GameObject;
+class IEventsDestroy;
+class IEventsSceneManager;
+class Scene;
 
 class SceneManager : public EventEmitter<IEventsSceneManager>,
                      public EventListener<IEventsDestroy>
@@ -29,7 +28,8 @@ class SceneManager : public EventEmitter<IEventsSceneManager>,
 public:
     static void LoadScene(Scene *scene, bool destroyActive = true);
     static void LoadScene(const Path &sceneFilepath, bool destroyActive = true);
-    static void LoadScene(const String &sceneFilepath, bool destroyActive = true);
+    static void LoadScene(const String &sceneFilepath,
+                          bool destroyActive = true);
 
     static void LoadSceneInstantly(Scene *scene, bool destroyActive = true);
     static void LoadSceneInstantly(const Path &sceneFilepath,
@@ -40,8 +40,8 @@ public:
     void OnResize(int width, int height);
     static void OnNewFrame(Scene *scene);
 
-    static Scene* GetActiveScene();
-    static SceneManager* GetActive();
+    static Scene *GetActiveScene();
+    static SceneManager *GetActive();
     BehaviourManager *GetBehaviourManager() const;
 
 protected:
@@ -56,8 +56,8 @@ protected:
     Scene *GetLoadedScene() const;
     Scene *GetActiveScene_() const;
     bool GetNextLoadNeeded() const;
-    Scene* GetNextLoadScene() const;
-    const Path& GetNextLoadScenePath() const;
+    Scene *GetNextLoadScene() const;
+    const Path &GetNextLoadScenePath() const;
     bool GetNextLoadDestroyPrevious() const;
     void ClearNextLoad();
 
@@ -73,10 +73,12 @@ private:
 
     void Init();
     void SetSceneVariable(Scene **sceneVariable, Scene *sceneValue);
-    virtual BehaviourManager* CreateBehaviourManager() const;
+    virtual BehaviourManager *CreateBehaviourManager() const;
 
-    void PrepareNextLoad(Scene *scene, const Path &scenePath, bool destroyActive);
-    static List<GameObject*> FindDontDestroyOnLoadGameObjects(GameObject *go);
+    void PrepareNextLoad(Scene *scene,
+                         const Path &scenePath,
+                         bool destroyActive);
+    static List<GameObject *> FindDontDestroyOnLoadGameObjects(GameObject *go);
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
@@ -84,7 +86,6 @@ private:
     friend class Window;
     friend class Application;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SCENEMANAGER_H
+#endif  // SCENEMANAGER_H

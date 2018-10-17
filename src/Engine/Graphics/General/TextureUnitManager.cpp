@@ -14,7 +14,7 @@
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 TextureUnitManager::TextureUnitManager()
 {
@@ -22,7 +22,7 @@ TextureUnitManager::TextureUnitManager()
     m_numUsableTextureUnits = m_numMaxTextureUnits - 1;
     m_voidTexUnit = m_numMaxTextureUnits - 1;
 
-    for (int i = 0; i < m_numUsableTextureUnits; ++i)
+    for(int i = 0; i < m_numUsableTextureUnits; ++i)
     {
         // All units are totally free at the beginning
         m_freeUnits.push(i);
@@ -36,15 +36,18 @@ void TextureUnitManager::BindTextureToUnit(Texture *texture,
 
     // Bind to texture unit
     GL::ActiveTexture(GL_TEXTURE0 + unit);
-    if (texture) { texture->Bind(); }
+    if(texture)
+    {
+        texture->Bind();
+    }
 
     // Bind the void unit, so that we dont make unwanted changes on occupied
     // texture units
     GL::ActiveTexture(GL_TEXTURE0 + tm->m_voidTexUnit);
 }
 
-TextureUnitManager::TexUnit
-TextureUnitManager::BindTextureToUnit(Texture *texture)
+TextureUnitManager::TexUnit TextureUnitManager::BindTextureToUnit(
+    Texture *texture)
 {
     TextureUnitManager *tm = TextureUnitManager::GetActive();
 
@@ -52,8 +55,9 @@ TextureUnitManager::BindTextureToUnit(Texture *texture)
 
     TexUnit texUnit;
     const GLId texId = texture->GetGLId();
-    const bool texIsAlreadyInUnit = (tm->m_textureIdToBoundUnit.count(texId) == 1);
-    if (texIsAlreadyInUnit)
+    const bool texIsAlreadyInUnit =
+        (tm->m_textureIdToBoundUnit.count(texId) == 1);
+    if(texIsAlreadyInUnit)
     {
         // Texture was already bound to a unit. Return the unit it
         // was bound to.
@@ -90,10 +94,10 @@ TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
 {
     TexUnit freeUnit = -1;
     uint numFreeTextures = m_freeUnits.size();
-    if (numFreeTextures > 0)
+    if(numFreeTextures > 0)
     {
         // If there is a directly free unit
-        freeUnit = m_freeUnits.front(); // Find the first free unit
+        freeUnit = m_freeUnits.front();  // Find the first free unit
         m_freeUnits.pop();
     }
     else
@@ -103,13 +107,13 @@ TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
         ASSERT(m_timestampTexIdUsed.size() >= 1);
 
         // Find the oldest used texture id
-        GLId oldestUsedTextureId        = m_timestampTexIdUsed.begin()->first;
+        GLId oldestUsedTextureId = m_timestampTexIdUsed.begin()->first;
         uint oldestUsedTextureTimestamp = m_timestampTexIdUsed.begin()->second;
-        for (const auto &pair : m_timestampTexIdUsed)
+        for(const auto &pair : m_timestampTexIdUsed)
         {
             const GLId texId = pair.first;
             const uint texUseTimestamp = pair.second;
-            if (texUseTimestamp < oldestUsedTextureTimestamp)
+            if(texUseTimestamp < oldestUsedTextureTimestamp)
             {
                 oldestUsedTextureTimestamp = texUseTimestamp;
                 oldestUsedTextureId = texId;
@@ -140,7 +144,6 @@ void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
     // CheckBindingsValidity();
 }
 
-
 int TextureUnitManager::GetNumUsableTextureUnits()
 {
     TextureUnitManager *tm = TextureUnitManager::GetActive();
@@ -150,7 +153,7 @@ int TextureUnitManager::GetNumUsableTextureUnits()
 void TextureUnitManager::UnBindAllTexturesFromAllUnits()
 {
     const int MaxTexUnits = TextureUnitManager::GetNumUsableTextureUnits();
-    for (int unit = 0; unit < MaxTexUnits; ++unit)
+    for(int unit = 0; unit < MaxTexUnits; ++unit)
     {
         GL::ActiveTexture(GL_TEXTURE0 + unit);
         GL::UnBind(GL::BindTarget::TEXTURE_1D);
@@ -162,11 +165,17 @@ void TextureUnitManager::UnBindAllTexturesFromAllUnits()
 
 int TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
 {
-    if (!texture) { return -1; }
+    if(!texture)
+    {
+        return -1;
+    }
 
     TextureUnitManager *tm = TextureUnitManager::GetActive();
     GLId texId = texture->GetGLId();
-    if (tm->m_textureIdToBoundUnit.count(texId) == 0) { return -1; }
+    if(tm->m_textureIdToBoundUnit.count(texId) == 0)
+    {
+        return -1;
+    }
     return tm->m_textureIdToBoundUnit[texId];
 }
 
@@ -184,7 +193,7 @@ void TextureUnitManager::PrintTextureUnits()
 {
     Debug_Log("===============================");
     const int NumTextureUnits = GL::GetInteger(GL::MAX_TEXTURE_IMAGE_UNITS);
-    for (int i = 0; i < NumTextureUnits; ++i)
+    for(int i = 0; i < NumTextureUnits; ++i)
     {
         Debug_Log("Texture unit " << i << " ---:");
         GL::ActiveTexture(GL_TEXTURE0 + i);
@@ -198,11 +207,23 @@ void TextureUnitManager::PrintTextureUnits()
         Debug_Log("  Texture_CubeMap: " << texCMId);
 
         uint boundToThisUnit = 0;
-        if (tex1DId > 0) { ++boundToThisUnit; }
-        if (tex2DId > 0) { ++boundToThisUnit; }
-        if (tex3DId > 0) { ++boundToThisUnit; }
-        if (texCMId > 0) { ++boundToThisUnit; }
-        if (boundToThisUnit > 1)
+        if(tex1DId > 0)
+        {
+            ++boundToThisUnit;
+        }
+        if(tex2DId > 0)
+        {
+            ++boundToThisUnit;
+        }
+        if(tex3DId > 0)
+        {
+            ++boundToThisUnit;
+        }
+        if(texCMId > 0)
+        {
+            ++boundToThisUnit;
+        }
+        if(boundToThisUnit > 1)
         {
             Debug_Error("More than one texture bound to the same unit !!!!");
         }
@@ -221,12 +242,12 @@ void TextureUnitManager::UnTrackTexture(GLId texId)
 {
     TexUnit texUnit = m_textureIdToBoundUnit[texId];
     Texture *texture = m_textureIdToTexture[texId];
-    if (m_textureIdToBoundUnit.find(texId) != m_textureIdToBoundUnit.end())
+    if(m_textureIdToBoundUnit.find(texId) != m_textureIdToBoundUnit.end())
     {
         GL::ActiveTexture(GL_TEXTURE0 + texUnit);
-        if (texture)
+        if(texture)
         {
-            GL::UnBind( SCAST<GL::BindTarget>(texture->GetTextureTarget()) );
+            GL::UnBind(SCAST<GL::BindTarget>(texture->GetTextureTarget()));
         }
         GL::ActiveTexture(GL_TEXTURE0 + m_voidTexUnit);
     }
@@ -234,7 +255,7 @@ void TextureUnitManager::UnTrackTexture(GLId texId)
     m_timestampTexIdUsed.erase(texId);
     m_textureIdToTexture.erase(texId);
     m_textureIdToBoundUnit.erase(texId);
-    if (texture)
+    if(texture)
     {
         texture->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
@@ -245,26 +266,29 @@ void TextureUnitManager::UnTrackTexture(GLId texId)
 void TextureUnitManager::CheckBindingsValidity() const
 {
     USet<TexUnit> boundUnits;
-    for (const auto &pair : m_textureIdToBoundUnit)
+    for(const auto &pair : m_textureIdToBoundUnit)
     {
-        if (boundUnits.Contains(pair.second)) { ASSERT(false); }
+        if(boundUnits.Contains(pair.second))
+        {
+            ASSERT(false);
+        }
         boundUnits.Add(pair.second);
     }
 }
 
 void TextureUnitManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    Texture *tex = DCAST<Texture*>(object);
+    Texture *tex = DCAST<Texture *>(object);
 
     int texUnitTexWasBoundTo = -1;
-    if (m_textureIdToBoundUnit.count(tex->GetGLId()) == 1)
+    if(m_textureIdToBoundUnit.count(tex->GetGLId()) == 1)
     {
         texUnitTexWasBoundTo = m_textureIdToBoundUnit[tex->GetGLId()];
     }
 
     UnTrackTexture(tex->GetGLId());
 
-    if (texUnitTexWasBoundTo >= 0)
+    if(texUnitTexWasBoundTo >= 0)
     {
         m_freeUnits.push(texUnitTexWasBoundTo);
     }

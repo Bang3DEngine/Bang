@@ -2,7 +2,7 @@
 
 #include "Bang/FastDynamicCast.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UILayoutIgnorer::UILayoutIgnorer()
 {
@@ -22,4 +22,3 @@ bool UILayoutIgnorer::IsIgnoreLayout() const
 {
     return m_ignoreLayout;
 }
-

@@ -11,7 +11,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 AnimatorStateMachineVariable::AnimatorStateMachineVariable()
 {
@@ -62,35 +62,35 @@ void AnimatorStateMachineVariable::SetName(const String &varName)
 
     m_name = varName;
 
-    p_animatorSM->EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-                &IEventsAnimatorStateMachine::OnVariableNameChanged,
-                this,
-                prevName,
-                varName);
+    p_animatorSM
+        ->EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+            &IEventsAnimatorStateMachine::OnVariableNameChanged, this, prevName,
+            varName);
 }
 
 void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    if (metaNode.Contains("VariableName"))
+    if(metaNode.Contains("VariableName"))
     {
-        SetName( metaNode.Get<String>("VariableName") );
+        SetName(metaNode.Get<String>("VariableName"));
     }
 
-    if (metaNode.Contains("VariableType"))
+    if(metaNode.Contains("VariableType"))
     {
-        SetType( metaNode.Get<AnimatorStateMachineVariable::Type>("VariableType") );
+        SetType(
+            metaNode.Get<AnimatorStateMachineVariable::Type>("VariableType"));
     }
 
-    if (metaNode.Contains("ValueFloat"))
+    if(metaNode.Contains("ValueFloat"))
     {
-        SetValueFloat( metaNode.Get<float>("ValueFloat") );
+        SetValueFloat(metaNode.Get<float>("ValueFloat"));
     }
 
-    if (metaNode.Contains("ValueBool"))
+    if(metaNode.Contains("ValueBool"))
     {
-        SetValueBool( metaNode.Get<bool>("ValueBool") );
+        SetValueBool(metaNode.Get<bool>("ValueBool"));
     }
 }
 
@@ -100,7 +100,6 @@ void AnimatorStateMachineVariable::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("VariableName", GetName());
     metaNode->Set("VariableType", GetType());
-    metaNode->Set("ValueFloat",   GetValueFloat());
-    metaNode->Set("ValueBool",    GetValueBool());
+    metaNode->Set("ValueFloat", GetValueFloat());
+    metaNode->Set("ValueBool", GetValueBool());
 }
-

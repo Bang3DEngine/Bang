@@ -7,7 +7,7 @@
 #include "Bang/IBO.h"
 #include "Bang/VBO.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 VAO::VAO()
 {
@@ -42,17 +42,15 @@ void VAO::SetVBO(const VBO *vbo,
 
     Bind();
     vbo->Bind();
-    GL::EnableVertexAttribArray( SCAST<GLint>(location) );
+    GL::EnableVertexAttribArray(SCAST<GLint>(location));
     GL::VertexAttribPointer(SCAST<GLint>(location),
-                            SCAST<GLint>(dataComponentsCount),
-                            dataType,
+                            SCAST<GLint>(dataComponentsCount), dataType,
                             SCAST<GLint>(dataNormalized),
-                            SCAST<GLint>(dataStride),
-                            SCAST<GLint>(dataOffset));
+                            SCAST<GLint>(dataStride), SCAST<GLint>(dataOffset));
     GL::Pop(GL::Pushable::VBO);
     GL::Pop(GL::Pushable::VAO);
 
-    while (p_vbos.Size() <= location)
+    while(p_vbos.Size() <= location)
     {
         p_vbos.PushBack(nullptr);
     }
@@ -81,12 +79,12 @@ void VAO::SetIBO(IBO *ibo)
 
 void VAO::RemoveVBO(uint location)
 {
-    if (location < p_vbos.Size())
+    if(location < p_vbos.Size())
     {
         GL::Push(GL::Pushable::VAO);
 
         Bind();
-        GL::DisableVertexAttribArray( SCAST<GLint>(location) );
+        GL::DisableVertexAttribArray(SCAST<GLint>(location));
 
         GL::Pop(GL::Pushable::VAO);
 
@@ -109,9 +107,9 @@ bool VAO::IsIndexed() const
     return (GetIBO() != nullptr);
 }
 
-const VBO* VAO::GetVBOByLocation(uint location) const
+const VBO *VAO::GetVBOByLocation(uint location) const
 {
-    if (location >= p_vbos.Size())
+    if(location >= p_vbos.Size())
     {
         return nullptr;
     }

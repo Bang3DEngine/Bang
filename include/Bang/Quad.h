@@ -7,11 +7,11 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Plane;
-FORWARD class Polygon;
-FORWARD class Triangle;
+namespace Bang
+{
+class Plane;
+class Polygon;
+class Triangle;
 
 class Quad
 {
@@ -30,26 +30,22 @@ public:
 
     Vector3 GetNormal() const;
     Plane GetPlane() const;
-    const Vector3& GetPoint(int i) const;
-    const std::array<Vector3, 4>& GetPoints() const;
+    const Vector3 &GetPoint(int i) const;
+    const std::array<Vector3, 4> &GetPoints() const;
     Polygon ToPolygon() const;
 
     // Returns the two triangles of this quad
     void GetTriangles(Triangle *t0, Triangle *t1) const;
 
-    Vector3& operator[](std::size_t i);
-    const Vector3& operator[](std::size_t i) const;
+    Vector3 &operator[](std::size_t i);
+    const Vector3 &operator[](std::size_t i) const;
 
 private:
-    std::array<Vector3, 4> m_points = {{Vector3::Zero,
-                                        Vector3::Zero,
-                                        Vector3::Zero,
-                                        Vector3::Zero}};
+    std::array<Vector3, 4> m_points = {
+        {Vector3::Zero, Vector3::Zero, Vector3::Zero, Vector3::Zero}};
 };
 
 Quad operator*(const Matrix4 &m, const Quad &q);
+}
 
-NAMESPACE_BANG_END
-
-#endif // QUAD_H
-
+#endif  // QUAD_H

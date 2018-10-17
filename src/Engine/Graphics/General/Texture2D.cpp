@@ -6,14 +6,14 @@
 #include "Bang/GL.h"
 #include "Bang/Image.tcc"
 #include "Bang/ImageIO.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Texture2D::Texture2D() : Texture(GL::TextureTarget::TEXTURE_2D)
 {
@@ -32,7 +32,7 @@ void Texture2D::OnFormatChanged()
 {
     Texture::OnFormatChanged();
 
-    if (GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
+    if(GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
     {
         Imageb img;
         ImageIO::Import(GetResourceFilepath(), &img);
@@ -47,7 +47,7 @@ void Texture2D::CreateEmpty(const Vector2i &size)
 
 bool Texture2D::Resize(const Vector2i &size)
 {
-    if (size != GetSize())
+    if(size != GetSize())
     {
         CreateEmpty(size.x, size.y);
         return true;
@@ -58,39 +58,38 @@ bool Texture2D::Resize(const Vector2i &size)
 void Texture2D::Fill(const Color &fillColor, int width, int height)
 {
     Array<Color> inputData = Array<Color>(width * height, fillColor);
-    Fill(RCAST<const Byte*>(inputData.Data()), width, height,
+    Fill(RCAST<const Byte *>(inputData.Data()), width, height,
          GL::ColorComp::RGBA, GL::DataType::FLOAT);
 }
 
 void Texture2D::Fill(const Byte *newData,
-                     int width, int height,
+                     int width,
+                     int height,
                      GL::ColorComp inputDataColorComp,
                      GL::DataType inputDataType)
 {
     SetWidth(width);
     SetHeight(height);
 
-    GL::Push( GetGLBindTarget() );
+    GL::Push(GetGLBindTarget());
 
     Bind();
-    GL::TexImage2D(GetTextureTarget(),
-                   GetWidth(),
-                   GetHeight(),
-                   GetFormat(),
-                   inputDataColorComp,
-                   inputDataType,
-                   newData);
+    GL::TexImage2D(GetTextureTarget(), GetWidth(), GetHeight(), GetFormat(),
+                   inputDataColorComp, inputDataType, newData);
 
-    if (newData && GetWidth() > 0 && GetHeight() > 0) { GenerateMipMaps(); }
+    if(newData && GetWidth() > 0 && GetHeight() > 0)
+    {
+        GenerateMipMaps();
+    }
 
-    GL::Pop( GetGLBindTarget() );
+    GL::Pop(GetGLBindTarget());
 
     PropagateResourceChanged();
 }
 
 void Texture2D::SetAlphaCutoff(float alphaCutoff)
 {
-    if (alphaCutoff != GetAlphaCutoff())
+    if(alphaCutoff != GetAlphaCutoff())
     {
         m_alphaCutoff = alphaCutoff;
         PropagateResourceChanged();
@@ -111,24 +110,24 @@ void Texture2D::ImportMeta(const MetaNode &metaNode)
 {
     Asset::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Format"))
+    if(metaNode.Contains("Format"))
     {
-        SetFormat( metaNode.Get<GL::ColorFormat>("Format") );
+        SetFormat(metaNode.Get<GL::ColorFormat>("Format"));
     }
 
-    if (metaNode.Contains("FilterMode"))
+    if(metaNode.Contains("FilterMode"))
     {
-        SetFilterMode( metaNode.Get<GL::FilterMode>("FilterMode") );
+        SetFilterMode(metaNode.Get<GL::FilterMode>("FilterMode"));
     }
 
-    if (metaNode.Contains("WrapMode"))
+    if(metaNode.Contains("WrapMode"))
     {
-        SetWrapMode( metaNode.Get<GL::WrapMode>("WrapMode") );
+        SetWrapMode(metaNode.Get<GL::WrapMode>("WrapMode"));
     }
 
-    if (metaNode.Contains("AlphaCutoff"))
+    if(metaNode.Contains("AlphaCutoff"))
     {
-        SetAlphaCutoff( metaNode.Get<float>("AlphaCutoff") );
+        SetAlphaCutoff(metaNode.Get<float>("AlphaCutoff"));
     }
 }
 
@@ -152,16 +151,14 @@ void Texture2D::Import(const Path &imageFilepath)
 
 void Texture2D::Import(const Image<Byte> &image)
 {
-    if (image.GetData())
+    if(image.GetData())
     {
         m_image = image;
 
         SetWidth(image.GetWidth());
         SetHeight(image.GetHeight());
 
-        Fill(image.GetData(),
-             GetWidth(), GetHeight(),
-             GL::ColorComp::RGBA,
+        Fill(image.GetData(), GetWidth(), GetHeight(), GL::ColorComp::RGBA,
              GL::DataType::UNSIGNED_BYTE);
     }
 }
@@ -170,4 +167,3 @@ GL::BindTarget Texture2D::GetGLBindTarget() const
 {
     return GL::BindTarget::TEXTURE_2D;
 }
-

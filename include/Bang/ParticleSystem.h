@@ -16,14 +16,14 @@
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class ShaderProgram;
-FORWARD class Texture2D;
-FORWARD class VAO;
-FORWARD class VBO;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
+class ShaderProgram;
+class Texture2D;
+class VAO;
+class VBO;
 
 enum class ParticleGenerationShape
 {
@@ -57,8 +57,8 @@ private:
     };
 
 public:
-	ParticleSystem();
-	virtual ~ParticleSystem() override;
+    ParticleSystem();
+    virtual ~ParticleSystem() override;
 
     // Component
     virtual void OnStart() override;
@@ -93,9 +93,9 @@ public:
     uint GetNumParticles() const;
     const Vector3 &GetGenerationShapeBoxSize() const;
     ParticleGenerationShape GetGenerationShape() const;
-    const ComplexRandom& GetLifeTime() const;
-    const ComplexRandom& GetStartTime() const;
-    const ComplexRandom& GetStartSize() const;
+    const ComplexRandom &GetLifeTime() const;
+    const ComplexRandom &GetStartTime() const;
+    const ComplexRandom &GetStartSize() const;
     const Color &GetStartColor() const;
     const Color &GetEndColor() const;
     Texture2D *GetTexture() const;
@@ -127,7 +127,7 @@ public:
 private:
     AABox m_aabox;
     bool m_emitOnStart = true;
-    bool m_isEmitting  = false;
+    bool m_isEmitting = false;
 
     VAO *p_particlesVAO = nullptr;
     VBO *p_particleDataVBO = nullptr;
@@ -138,21 +138,20 @@ private:
     uint m_numParticles = 0;
 
     Particle::Parameters m_particlesParameters;
-    ParticleSimulationSpace m_simulationSpace =
-                            ParticleSimulationSpace::WORLD;
+    ParticleSimulationSpace m_simulationSpace = ParticleSimulationSpace::WORLD;
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
-    float m_generationShapeConeFOVRads = Math::Pi/4;
+    float m_generationShapeConeFOVRads = Math::Pi / 4;
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
     RH<Texture2D> p_texture;
     bool m_billboard = true;
 
-    Color m_startColor   = Color::White;
-    Color m_endColor     = Color::White;
-    ComplexRandom m_lifeTime  = ComplexRandom(0.1f, 3.0f);
+    Color m_startColor = Color::White;
+    Color m_endColor = Color::White;
+    ComplexRandom m_lifeTime = ComplexRandom(0.1f, 3.0f);
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);
 
@@ -169,8 +168,6 @@ private:
     Vector3 GetParticleInitialPosition() const;
     Vector3 GetParticleInitialVelocity() const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // PARTICLESYSTEM_H
-
+#endif  // PARTICLESYSTEM_H

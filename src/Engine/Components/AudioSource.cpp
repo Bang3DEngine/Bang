@@ -18,7 +18,7 @@
 #include "Bang/Transform.h"
 #include "Bang/TypeTraits.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 AudioSource::AudioSource()
 {
@@ -33,7 +33,7 @@ AudioSource::~AudioSource()
 void AudioSource::OnStart()
 {
     Component::OnStart();
-    if (GetPlayOnStart() && !AudioManager::GetPlayOnStartBlocked())
+    if(GetPlayOnStart() && !AudioManager::GetPlayOnStartBlocked())
     {
         Play();
     }
@@ -43,16 +43,16 @@ void AudioSource::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (GetAudioClip())
+    if(GetAudioClip())
     {
-        if (m_currentAudioClipALBufferId != GetAudioClip()->GetALBufferId())
+        if(m_currentAudioClipALBufferId != GetAudioClip()->GetALBufferId())
         {
             SetAudioClip(GetAudioClip());
         }
     }
 
     Transform *tr = GetGameObject()->GetTransform();
-    if (tr)
+    if(tr)
     {
         ALAudioSource::SetPosition(tr->GetPosition());
     }
@@ -61,7 +61,7 @@ void AudioSource::OnUpdate()
 void AudioSource::SetAudioClip(AudioClip *audioClip)
 {
     p_audioClip.Set(audioClip);
-    if (GetAudioClip())
+    if(GetAudioClip())
     {
         SetALBufferId(audioClip->GetALBufferId());
         m_currentAudioClipALBufferId = audioClip->GetALBufferId();
@@ -109,47 +109,47 @@ float AudioSource::GetPlayProgress() const
 void AudioSource::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    AudioSource *as = Cast<AudioSource*>(clone);
-    as->SetAudioClip( GetAudioClip() );
-    as->SetVolume( GetVolume()  );
-    as->SetPitch( GetPitch() );
-    as->SetRange( GetRange() );
-    as->SetLooping( GetLooping() );
-    as->SetPlayOnStart( GetPlayOnStart() );
+    AudioSource *as = Cast<AudioSource *>(clone);
+    as->SetAudioClip(GetAudioClip());
+    as->SetVolume(GetVolume());
+    as->SetPitch(GetPitch());
+    as->SetRange(GetRange());
+    as->SetLooping(GetLooping());
+    as->SetPlayOnStart(GetPlayOnStart());
 }
 
 void AudioSource::ImportMeta(const MetaNode &meta)
 {
     Component::ImportMeta(meta);
 
-    if (meta.Contains("AudioClip"))
+    if(meta.Contains("AudioClip"))
     {
         RH<AudioClip> audioClip =
-                    Resources::Load<AudioClip>(meta.Get<GUID>("AudioClip"));
+            Resources::Load<AudioClip>(meta.Get<GUID>("AudioClip"));
         SetAudioClip(audioClip.Get());
     }
 
-    if (meta.Contains("Volume"))
+    if(meta.Contains("Volume"))
     {
         SetVolume(meta.Get<float>("Volume"));
     }
 
-    if (meta.Contains("Pitch"))
+    if(meta.Contains("Pitch"))
     {
         SetPitch(meta.Get<float>("Pitch"));
     }
 
-    if (meta.Contains("Range"))
+    if(meta.Contains("Range"))
     {
         SetRange(meta.Get<float>("Range"));
     }
 
-    if (meta.Contains("Looping"))
+    if(meta.Contains("Looping"))
     {
         SetLooping(meta.Get<bool>("Looping"));
     }
 
-    if (meta.Contains("PlayOnStart"))
+    if(meta.Contains("PlayOnStart"))
     {
         SetPlayOnStart(meta.Get<bool>("PlayOnStart"));
     }
@@ -161,10 +161,10 @@ void AudioSource::ExportMeta(MetaNode *metaNode) const
 
     AudioClip *audioClip = GetAudioClip();
     GUID audioClipGUID = audioClip ? audioClip->GetGUID() : GUID::Empty();
-    metaNode->Set("AudioClip",   audioClipGUID);
-    metaNode->Set("Volume",      GetVolume());
-    metaNode->Set("Pitch",       GetPitch());
-    metaNode->Set("Range",       GetRange());
-    metaNode->Set("Looping",     GetLooping());
+    metaNode->Set("AudioClip", audioClipGUID);
+    metaNode->Set("Volume", GetVolume());
+    metaNode->Set("Pitch", GetPitch());
+    metaNode->Set("Range", GetRange());
+    metaNode->Set("Looping", GetLooping());
     metaNode->Set("PlayOnStart", GetPlayOnStart());
 }

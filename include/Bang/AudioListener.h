@@ -8,8 +8,8 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class AudioListener : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioListener)
@@ -26,10 +26,8 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-
-   void UpdateALProperties() const;
+    void UpdateALProperties() const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AUDIOLISTENER_H
+#endif  // AUDIOLISTENER_H

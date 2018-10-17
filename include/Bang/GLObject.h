@@ -4,8 +4,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class GLObject
 {
 public:
@@ -23,7 +23,6 @@ protected:
 
     GLId m_idGL = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GLOBJECT_H
+#endif  // GLOBJECT_H

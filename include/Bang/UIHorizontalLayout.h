@@ -7,8 +7,8 @@
 #include "Bang/String.h"
 #include "Bang/UIDirLayout.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UIHorizontalLayout : public UIDirLayout
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIHorizontalLayout)
@@ -16,7 +16,6 @@ class UIHorizontalLayout : public UIDirLayout
 public:
     UIHorizontalLayout();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIHORIZONTALLAYOUT_H
+#endif  // UIHORIZONTALLAYOUT_H

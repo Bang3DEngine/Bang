@@ -15,13 +15,13 @@
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UIScrollArea;
-FORWARD class UIScrollBar;
+namespace Bang
+{
+class GameObject;
+class UIFocusable;
+class UIImageRenderer;
+class UIScrollArea;
+class UIScrollBar;
 
 enum class ShowScrollMode
 {
@@ -30,13 +30,12 @@ enum class ShowScrollMode
     ALWAYS
 };
 
-class UIScrollPanel : public Component,
-                      public EventListener<IEventsFocus>
+class UIScrollPanel : public Component, public EventListener<IEventsFocus>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollPanel)
 
 public:
-	virtual ~UIScrollPanel() override;
+    virtual ~UIScrollPanel() override;
 
     void OnUpdate() override;
     void OnPostUpdate() override;
@@ -63,8 +62,8 @@ public:
     bool IsVerticalScrollEnabled() const;
     bool IsHorizontalScrollEnabled() const;
     UIScrollArea *GetScrollArea() const;
-    UIScrollBar  *GetVerticalScrollBar() const;
-    UIScrollBar  *GetHorizontalScrollBar() const;
+    UIScrollBar *GetVerticalScrollBar() const;
+    UIScrollBar *GetHorizontalScrollBar() const;
     Vector2 GetContentSize() const;
     Vector2 GetContainerSize() const;
     Vector2 GetMaxScrollLength() const;
@@ -72,7 +71,6 @@ public:
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
-
 
 private:
     const static float WheelScrollSpeedPx;
@@ -82,8 +80,8 @@ private:
 
     UIImageRenderer *p_border = nullptr;
     UIScrollArea *p_scrollArea = nullptr;
-    UIScrollBar  *p_verticalScrollBar = nullptr;
-    UIScrollBar  *p_horizontalScrollBar = nullptr;
+    UIScrollBar *p_verticalScrollBar = nullptr;
+    UIScrollBar *p_horizontalScrollBar = nullptr;
     HorizontalSide m_verticalScrollBarSide = Undef<HorizontalSide>();
     VerticalSide m_horizontalScrollBarSide = Undef<VerticalSide>();
     ShowScrollMode m_verticalShowScrollMode = Undef<ShowScrollMode>();
@@ -96,18 +94,16 @@ private:
     void UpdateScrollUI();
 
     void HandleScrollAreaRectTransform();
-    void HandleScrollShowMode(const Vector2& contentSize,
-                              const Vector2& containerSize);
+    void HandleScrollShowMode(const Vector2 &contentSize,
+                              const Vector2 &containerSize);
 
     bool IsVerticalScrollEnabledAndNoFit() const;
     bool IsHorizontalScrollEnabledAndNoFit() const;
 
-    static UIScrollPanel* CreateInto(GameObject *go);
+    static UIScrollPanel *CreateInto(GameObject *go);
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UISCROLLPANEL_H_H
-
+#endif  // UISCROLLPANEL_H_H

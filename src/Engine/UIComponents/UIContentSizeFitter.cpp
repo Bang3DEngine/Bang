@@ -5,16 +5,17 @@
 #include "Bang/GameObject.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/MetaNode.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/UILayoutManager.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ILayoutController;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ILayoutController;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIContentSizeFitter::UIContentSizeFitter()
 {
@@ -23,30 +24,28 @@ UIContentSizeFitter::UIContentSizeFitter()
 
 UIContentSizeFitter::~UIContentSizeFitter()
 {
-
 }
 
 void UIContentSizeFitter::ApplyLayout(Axis axis)
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
-    if (!rt)
+    if(!rt)
     {
         return;
     }
 
-    if (axis == Axis::HORIZONTAL &&
-        GetHorizontalSizeType() != LayoutSizeType::NONE)
+    if(axis == Axis::HORIZONTAL &&
+       GetHorizontalSizeType() != LayoutSizeType::NONE)
     {
-        Vector2i hSize (UILayoutManager::GetSize(GetGameObject(),
-                                                 GetHorizontalSizeType()));
+        Vector2i hSize(
+            UILayoutManager::GetSize(GetGameObject(), GetHorizontalSizeType()));
         rt->SetWidthFromPivot(hSize.x);
     }
 
-    if (axis == Axis::VERTICAL &&
-        GetVerticalSizeType() != LayoutSizeType::NONE)
+    if(axis == Axis::VERTICAL && GetVerticalSizeType() != LayoutSizeType::NONE)
     {
-        Vector2i vSize (UILayoutManager::GetSize(GetGameObject(),
-                                                 GetVerticalSizeType()));
+        Vector2i vSize(
+            UILayoutManager::GetSize(GetGameObject(), GetVerticalSizeType()));
         rt->SetHeightFromPivot(vSize.y);
     }
 }
@@ -54,10 +53,10 @@ void UIContentSizeFitter::ApplyLayout(Axis axis)
 void UIContentSizeFitter::SetHorizontalSizeType(LayoutSizeType sizeType)
 {
     ASSERT(sizeType == LayoutSizeType::NONE ||
-           sizeType == LayoutSizeType::MIN  ||
+           sizeType == LayoutSizeType::MIN ||
            sizeType == LayoutSizeType::PREFERRED);
 
-    if (sizeType != GetHorizontalSizeType())
+    if(sizeType != GetHorizontalSizeType())
     {
         m_horizontalSizeType = sizeType;
         Invalidate();
@@ -67,10 +66,10 @@ void UIContentSizeFitter::SetHorizontalSizeType(LayoutSizeType sizeType)
 void UIContentSizeFitter::SetVerticalSizeType(LayoutSizeType sizeType)
 {
     ASSERT(sizeType == LayoutSizeType::NONE ||
-           sizeType == LayoutSizeType::MIN  ||
+           sizeType == LayoutSizeType::MIN ||
            sizeType == LayoutSizeType::PREFERRED);
 
-    if (sizeType != GetVerticalSizeType())
+    if(sizeType != GetVerticalSizeType())
     {
         m_verticalSizeType = sizeType;
         Invalidate();
@@ -91,11 +90,16 @@ void UIContentSizeFitter::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("HorizontalSizeType"))
-    { SetHorizontalSizeType( metaNode.Get<LayoutSizeType>("HorizontalSizeType") ); }
+    if(metaNode.Contains("HorizontalSizeType"))
+    {
+        SetHorizontalSizeType(
+            metaNode.Get<LayoutSizeType>("HorizontalSizeType"));
+    }
 
-    if (metaNode.Contains("VerticalSizeType"))
-    { SetVerticalSizeType( metaNode.Get<LayoutSizeType>("VerticalSizeType") ); }
+    if(metaNode.Contains("VerticalSizeType"))
+    {
+        SetVerticalSizeType(metaNode.Get<LayoutSizeType>("VerticalSizeType"));
+    }
 }
 
 void UIContentSizeFitter::ExportMeta(MetaNode *metaNode) const
@@ -109,7 +113,4 @@ void UIContentSizeFitter::ExportMeta(MetaNode *metaNode) const
 void UIContentSizeFitter::OnInvalidated()
 {
     IInvalidatable<ILayoutController>::OnInvalidated();
-
 }
-
-

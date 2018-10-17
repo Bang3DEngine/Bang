@@ -10,8 +10,8 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
-#include "Bang/PhysicsObject.h"
 #include "Bang/PhysicsMaterial.h"
+#include "Bang/PhysicsObject.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"
@@ -19,17 +19,18 @@
 #include "extensions/PxRigidBodyExt.h"
 #include "geometry/PxCapsuleGeometry.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ICloneable;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ICloneable;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 CapsuleCollider::CapsuleCollider()
 {
     CONSTRUCT_CLASS_ID(CapsuleCollider)
-    SetPhysicsObjectType( PhysicsObject::Type::CAPSULE_COLLIDER );
-    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
+    SetPhysicsObjectType(PhysicsObject::Type::CAPSULE_COLLIDER);
+    SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }
 
 CapsuleCollider::~CapsuleCollider()
@@ -38,7 +39,7 @@ CapsuleCollider::~CapsuleCollider()
 
 void CapsuleCollider::SetRadius(float radius)
 {
-    if (radius != GetRadius())
+    if(radius != GetRadius())
     {
         m_radius = radius;
         UpdatePxShape();
@@ -47,7 +48,7 @@ void CapsuleCollider::SetRadius(float radius)
 
 void CapsuleCollider::SetHeight(float height)
 {
-    if (height != GetHeight())
+    if(height != GetHeight())
     {
         m_height = height;
         UpdatePxShape();
@@ -56,7 +57,7 @@ void CapsuleCollider::SetHeight(float height)
 
 void CapsuleCollider::SetAxis(Axis3D axis)
 {
-    if (axis != GetAxis())
+    if(axis != GetAxis())
     {
         m_axis = axis;
         UpdatePxShape();
@@ -95,31 +96,30 @@ void CapsuleCollider::CloneInto(ICloneable *clone) const
 {
     Collider::CloneInto(clone);
 
-    CapsuleCollider *ccClone = SCAST<CapsuleCollider*>(clone);
-    ccClone->SetRadius( GetRadius() );
-    ccClone->SetHeight( GetHeight() );
-    ccClone->SetAxis( GetAxis() );
+    CapsuleCollider *ccClone = SCAST<CapsuleCollider *>(clone);
+    ccClone->SetRadius(GetRadius());
+    ccClone->SetHeight(GetHeight());
+    ccClone->SetAxis(GetAxis());
 }
 
 void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Radius"))
+    if(metaNode.Contains("Radius"))
     {
-        SetRadius( metaNode.Get<float>("Radius") );
+        SetRadius(metaNode.Get<float>("Radius"));
     }
 
-    if (metaNode.Contains("Height"))
+    if(metaNode.Contains("Height"))
     {
-        SetHeight( metaNode.Get<float>("Height") );
+        SetHeight(metaNode.Get<float>("Height"));
     }
 
-    if (metaNode.Contains("Axis"))
+    if(metaNode.Contains("Axis"))
     {
-        SetAxis( SCAST<Axis3D>( metaNode.Get<int>("Axis") ) );
+        SetAxis(SCAST<Axis3D>(metaNode.Get<int>("Axis")));
     }
-
 }
 
 void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
@@ -133,27 +133,26 @@ void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
 
 physx::PxShape *CapsuleCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic() ?
-            GetPxRigidDynamic()->createShape(physx::PxCapsuleGeometry(1, 1),
-                                             *Physics::GetDefaultPxMaterial()) :
-            nullptr;
+    return GetPxRigidDynamic()
+               ? GetPxRigidDynamic()->createShape(
+                     physx::PxCapsuleGeometry(1, 1),
+                     *Physics::GetDefaultPxMaterial())
+               : nullptr;
 }
 
 Quaternion CapsuleCollider::GetInternalRotation() const
 {
-    switch (GetAxis())
+    switch(GetAxis())
     {
-        case Axis3D::X:
-            return Quaternion::Identity;
-        break;
+        case Axis3D::X: return Quaternion::Identity; break;
 
         case Axis3D::Y:
             return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Forward);
-        break;
+            break;
 
         case Axis3D::Z:
             return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Up);
-        break;
+            break;
     }
     return Quaternion::Identity;
 }
@@ -162,7 +161,7 @@ void CapsuleCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if (GetPxShape())
+    if(GetPxShape())
     {
         ASSERT(GetPxRigidDynamic());
 
@@ -176,4 +175,3 @@ void CapsuleCollider::UpdatePxShape()
         physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
     }
 }
-

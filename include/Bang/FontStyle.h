@@ -5,8 +5,8 @@
 #include "Bang/Flags.h"
 #include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 enum class FontStyle
 {
     REGULAR,
@@ -17,7 +17,6 @@ enum class FontStyle
 };
 
 using FontStyleFlags = Flags<FontStyle>;
+}
 
-NAMESPACE_BANG_END
-
-#endif // FONT_H
+#endif  // FONT_H

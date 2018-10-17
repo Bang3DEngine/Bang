@@ -2,7 +2,7 @@
 
 #include <dlfcn.h>
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Library::Library()
 {
@@ -31,7 +31,7 @@ bool Library::Load()
 bool Library::UnLoad()
 {
     ClearError();
-    if ( IsLoaded() )
+    if(IsLoaded())
     {
         dlclose(m_libHandle);
     }
@@ -62,7 +62,7 @@ const Path &Library::GetLibraryPath() const
     return m_libPath;
 }
 
-const String& Library::GetErrorString() const
+const String &Library::GetErrorString() const
 {
     return m_errorString;
 }
@@ -76,8 +76,14 @@ void Library::ClearError()
 void Library::FetchError()
 {
     const char *error = dlerror();
-    if (error) { m_errorString = String(error); }
-    else { m_errorString = ""; }
+    if(error)
+    {
+        m_errorString = String(error);
+    }
+    else
+    {
+        m_errorString = "";
+    }
 }
 
 bool Library::TheresError() const

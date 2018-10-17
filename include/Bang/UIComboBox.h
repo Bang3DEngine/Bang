@@ -18,13 +18,13 @@
 #include "Bang/Time.h"
 #include "Bang/UIList.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsValueChanged;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UITextRenderer;
+namespace Bang
+{
+class GameObject;
+class IEventsValueChanged;
+class UIFocusable;
+class UIImageRenderer;
+class UITextRenderer;
 
 class UIComboBox : public Component,
                    public EventEmitter<IEventsValueChanged>,
@@ -60,15 +60,16 @@ public:
     int GetSelectedValue() const;
     int GetSelectedIndex() const;
     String GetSelectedLabel() const;
-    const Array<int>& GetValues() const;
+    const Array<int> &GetValues() const;
     Array<int> GetSelectedValues() const;
     int GetSelectedValuesForFlag() const;
-    const Array<String>& GetLabels() const;
-    const Array<int>& GetSelectedIndices() const;
+    const Array<String> &GetLabels() const;
+    const Array<int> &GetSelectedIndices() const;
 
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
+
 protected:
     UIComboBox();
     virtual ~UIComboBox() override;
@@ -90,7 +91,7 @@ private:
     Array<int> m_indexToValue;
     Array<String> m_indexToLabel;
     Array<int> m_selectedIndices;
-    Array<UIImageRenderer*> m_checkImgs;
+    Array<UIImageRenderer *> m_checkImgs;
     bool m_listRecentlyToggled = false;
     Time m_timeWithListShown;
 
@@ -99,11 +100,8 @@ private:
     UIImageRenderer *p_border = nullptr;
     UITextRenderer *p_selectedItemText = nullptr;
 
-
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UICOMBOBOX_H
-
+#endif  // UICOMBOBOX_H

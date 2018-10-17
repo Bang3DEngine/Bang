@@ -4,16 +4,16 @@
 #include "Bang/BangDefines.h"
 #include "Bang/GUID.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IGUIDable
 {
 public:
-	IGUIDable();
+    IGUIDable();
     virtual ~IGUIDable();
 
-    const GUID& GetGUID() const;
-    GUID& GetGUID();
+    const GUID &GetGUID() const;
+    GUID &GetGUID();
 
 protected:
     void SetGUID(const GUID &guid);
@@ -23,8 +23,6 @@ private:
 
     friend class Resources;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IGUIDABLE_H
-
+#endif  // IGUIDABLE_H

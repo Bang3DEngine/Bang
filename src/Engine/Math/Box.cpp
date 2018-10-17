@@ -8,7 +8,7 @@
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Box::Box()
 {
@@ -35,8 +35,8 @@ void Box::SetOrientation(const Quaternion &orientation)
 
 bool Box::Contains(const Vector3 &point) const
 {
-    Matrix4 transform = Matrix4::RotateMatrix( -GetOrientation() ) *
-                        Matrix4::TranslateMatrix( -GetCenter() );
+    Matrix4 transform = Matrix4::RotateMatrix(-GetOrientation()) *
+                        Matrix4::TranslateMatrix(-GetCenter());
     Vector3 localPoint = (transform * Vector4(point, 1)).xyz();
 
     const Vector3 &lExt = GetLocalExtents();
@@ -77,29 +77,17 @@ std::array<Quad, 6> Box::GetQuads() const
     Vector3 ey = GetExtentY();
     Vector3 ez = GetExtentZ();
     std::array<Quad, 6> quads;
-    Quad leftQuad  = Quad(c - ex + ey + ez,
-                          c - ex + ey - ez,
-                          c - ex - ey - ez,
-                          c - ex - ey + ez);
-    Quad rightQuad = Quad(c + ex + ey + ez,
-                          c + ex + ey - ez,
-                          c + ex - ey - ez,
+    Quad leftQuad = Quad(c - ex + ey + ez, c - ex + ey - ez, c - ex - ey - ez,
+                         c - ex - ey + ez);
+    Quad rightQuad = Quad(c + ex + ey + ez, c + ex + ey - ez, c + ex - ey - ez,
                           c + ex - ey + ez);
-    Quad topQuad = Quad(c + ex + ey + ez,
-                        c + ex + ey - ez,
-                        c - ex + ey - ez,
+    Quad topQuad = Quad(c + ex + ey + ez, c + ex + ey - ez, c - ex + ey - ez,
                         c - ex + ey + ez);
-    Quad botQuad = Quad(c + ex - ey + ez,
-                        c + ex - ey - ez,
-                        c - ex - ey - ez,
+    Quad botQuad = Quad(c + ex - ey + ez, c + ex - ey - ez, c - ex - ey - ez,
                         c - ex - ey + ez);
-    Quad frontQuad = Quad(c + ex + ey - ez,
-                          c + ex - ey - ez,
-                          c - ex - ey - ez,
+    Quad frontQuad = Quad(c + ex + ey - ez, c + ex - ey - ez, c - ex - ey - ez,
                           c - ex + ey - ez);
-    Quad backQuad = Quad(c + ex + ey + ez,
-                         c + ex - ey + ez,
-                         c - ex - ey + ez,
+    Quad backQuad = Quad(c + ex + ey + ez, c + ex - ey + ez, c - ex - ey + ez,
                          c - ex + ey + ez);
 
     quads[0] = leftQuad;
@@ -116,4 +104,3 @@ const Quaternion &Box::GetOrientation() const
 {
     return m_orientation;
 }
-

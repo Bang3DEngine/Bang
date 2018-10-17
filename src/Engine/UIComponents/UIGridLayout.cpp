@@ -3,16 +3,16 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/FastDynamicCast.h"
-#include "Bang/Rect.h"
 #include "Bang/GameObject.h"
 #include "Bang/ILayoutController.h"
 #include "Bang/Math.h"
+#include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIGridLayout::UIGridLayout()
 {
@@ -26,20 +26,20 @@ UIGridLayout::~UIGridLayout()
 void UIGridLayout::ApplyLayout(Axis axis)
 {
     BANG_UNUSED(axis);
-    Array<GameObject*> children =
-            UILayoutManager::GetLayoutableChildrenList(GetGameObject());
+    Array<GameObject *> children =
+        UILayoutManager::GetLayoutableChildrenList(GetGameObject());
 
     uint i = 0;
     // const int numRows = GetNumRows();
     const int numColumns = GetNumColumns();
-    for (GameObject *child : children)
+    for(GameObject *child : children)
     {
         RectTransform *childRT = child->GetRectTransform();
         childRT->SetAnchorX(Vector2(-1));
         childRT->SetAnchorY(Vector2(1));
 
-        Vector2i currentIndex( (i % numColumns), (i / numColumns) );
-        Vector2i currentTopLeft  = currentIndex * GetCellSize();
+        Vector2i currentIndex((i % numColumns), (i / numColumns));
+        Vector2i currentTopLeft = currentIndex * GetCellSize();
         currentTopLeft += currentIndex * GetSpacing();
         currentTopLeft += Vector2i(GetPaddingLeft(), GetPaddingTop());
 
@@ -54,7 +54,7 @@ void UIGridLayout::ApplyLayout(Axis axis)
 
 void UIGridLayout::CalculateLayout(Axis axis)
 {
-    Vector2i minSize  = Vector2i::Zero;
+    Vector2i minSize = Vector2i::Zero;
     Vector2i prefSize = GetCellSize() * Vector2i(GetNumColumns(), GetNumRows());
     prefSize += GetTotalSpacing();
     prefSize += GetPaddingSize();
@@ -63,7 +63,7 @@ void UIGridLayout::CalculateLayout(Axis axis)
 
 void UIGridLayout::SetCellSize(const Vector2i &cellSize)
 {
-    if (cellSize != GetCellSize())
+    if(cellSize != GetCellSize())
     {
         m_cellSize = cellSize;
         ILayoutController::Invalidate();
@@ -77,10 +77,10 @@ const Vector2i &UIGridLayout::GetCellSize() const
 
 int UIGridLayout::GetNumRows() const
 {
-    Array<GameObject*> children =
-                UILayoutManager::GetLayoutableChildrenList(GetGameObject());
+    Array<GameObject *> children =
+        UILayoutManager::GetLayoutableChildrenList(GetGameObject());
     const int numColumns = GetNumColumns();
-    if (children.Size() == 0 || numColumns == 0)
+    if(children.Size() == 0 || numColumns == 0)
     {
         return 0;
     }
@@ -90,13 +90,14 @@ int UIGridLayout::GetNumRows() const
 int UIGridLayout::GetNumColumns() const
 {
     RectTransform *rt = GetGameObject()->GetRectTransform();
-    float effectiveWidth = (rt->GetViewportRect().GetSize().x -
-                            GetPaddingSize().x);
+    float effectiveWidth =
+        (rt->GetViewportRect().GetSize().x - GetPaddingSize().x);
 
     int cellSizeSpaced = (GetCellSize().x + GetSpacing());
 
-    int numCols = cellSizeSpaced > 0 ?
-                  int(effectiveWidth + GetSpacing()) / cellSizeSpaced : 0;
+    int numCols = cellSizeSpaced > 0
+                      ? int(effectiveWidth + GetSpacing()) / cellSizeSpaced
+                      : 0;
     return Math::Max(numCols, 1);
 }
 
@@ -104,4 +105,3 @@ Vector2i UIGridLayout::GetTotalSpacing() const
 {
     return GetSpacing() * Vector2i(GetNumColumns() - 1, GetNumRows() - 1);
 }
-

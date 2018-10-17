@@ -3,11 +3,12 @@
 #include "Bang/Array.tcc"
 #include "Bang/Collider.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class GameObject;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class GameObject;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Collision::Collision()
 {
@@ -25,7 +26,7 @@ Collider *Collision::GetThisCollider() const
 GameObject *Collision::GetOtherGameObject() const
 {
     GameObject *otherGo = nullptr;
-    if (GetContacts().Size() >= 1)
+    if(GetContacts().Size() >= 1)
     {
         otherGo = GetContacts().Front().GetOtherCollider()->GetGameObject();
     }
@@ -36,4 +37,3 @@ const Array<CollisionContact> &Collision::GetContacts() const
 {
     return m_contacts;
 }
-

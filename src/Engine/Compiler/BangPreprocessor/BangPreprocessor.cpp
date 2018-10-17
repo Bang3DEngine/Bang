@@ -12,55 +12,43 @@
 #include "Bang/Path.h"
 #include "Bang/SystemProcess.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 using BP = BangPreprocessor;
 
-const Array<String> BP::VarTypeInt     = {"int"};
-const Array<String> BP::VarTypeBool    = {"bool"};
-const Array<String> BP::VarTypeColor   = {"Color"};
-const Array<String> BP::VarTypeFloat   = {"float"};
-const Array<String> BP::VarTypeDouble  = {"double"};
-const Array<String> BP::VarTypeString  = {"std::string", "string", "String"};
+const Array<String> BP::VarTypeInt = {"int"};
+const Array<String> BP::VarTypeBool = {"bool"};
+const Array<String> BP::VarTypeColor = {"Color"};
+const Array<String> BP::VarTypeFloat = {"float"};
+const Array<String> BP::VarTypeDouble = {"double"};
+const Array<String> BP::VarTypeString = {"std::string", "string", "String"};
 const Array<String> BP::VarTypeVector2 = {"Vector2"};
 const Array<String> BP::VarTypeVector3 = {"Vector3"};
 const Array<String> BP::VarTypeVector4 = {"Vector4"};
 const Array<String> BP::VarTypeQuaternion = {"Quaternion"};
 
-const Array<String> BP::Modifiers =
-{
-    "const",
-    "constexpr",
-    "volatile",
-    "static"
-};
+const Array<String> BP::Modifiers = {"const", "constexpr", "volatile",
+                                     "static"};
 
-const Array<String> BP::VarTypes =
-{
-    BP::VarTypeInt[0],
-    BP::VarTypeBool[0],
-    BP::VarTypeColor[0],
-    BP::VarTypeFloat[0],
-    BP::VarTypeDouble[0],
-    BP::VarTypeString[0], BP::VarTypeString[1], BP::VarTypeString[2],
-    BP::VarTypeVector2[0],
-    BP::VarTypeVector3[0],
-    BP::VarTypeVector4[0],
-    BP::VarTypeQuaternion[0],
-    "struct",
-    "class"
-};
+const Array<String> BP::VarTypes = {BP::VarTypeInt[0],
+                                    BP::VarTypeBool[0],
+                                    BP::VarTypeColor[0],
+                                    BP::VarTypeFloat[0],
+                                    BP::VarTypeDouble[0],
+                                    BP::VarTypeString[0],
+                                    BP::VarTypeString[1],
+                                    BP::VarTypeString[2],
+                                    BP::VarTypeVector2[0],
+                                    BP::VarTypeVector3[0],
+                                    BP::VarTypeVector4[0],
+                                    BP::VarTypeQuaternion[0],
+                                    "struct",
+                                    "class"};
 
-const Array<String> BP::RVariablePrefixes =
-{
-    "BP_REFLECT_VARIABLE"
-};
+const Array<String> BP::RVariablePrefixes = {"BP_REFLECT_VARIABLE"};
 
-const Array<String> BP::RStructPrefixes =
-{
-    "BP_REFLECT_CLASS",
-    "BP_REFLECT_STRUCT"
-};
+const Array<String> BP::RStructPrefixes = {"BP_REFLECT_CLASS",
+                                           "BP_REFLECT_STRUCT"};
 
 const String BP::ReflectDefinitionsDefineName = "BP_REFLECT_DEFINITIONS";
 const String BP::ReflectionInfoVarName = "m_reflectionInfo";
@@ -71,33 +59,32 @@ void BangPreprocessor::Preprocess(const Path &filepath)
     String srcContents = file.GetContents();
     String reflHeaderContents;
     bool preprocessedSomething;
-    BangPreprocessor::Preprocess(srcContents,
-                                 &reflHeaderContents,
+    BangPreprocessor::Preprocess(srcContents, &reflHeaderContents,
                                  &preprocessedSomething);
 
     String originalExt = filepath.GetExtension();
-    Path reflFilepath  = filepath.GetDirectory()
-                                 .Append("." + filepath.GetName())
-                                 .AppendExtension("refl")
-                                 .AppendExtension(originalExt);
+    Path reflFilepath = filepath.GetDirectory()
+                            .Append("." + filepath.GetName())
+                            .AppendExtension("refl")
+                            .AppendExtension(originalExt);
 
     bool writePreprocessedFile = true;
-    if (reflFilepath.Exists())
+    if(reflFilepath.Exists())
     {
         String oldReflContents = File(reflFilepath).GetContents();
         writePreprocessedFile = (oldReflContents != reflHeaderContents);
     }
 
-    if (writePreprocessedFile)
+    if(writePreprocessedFile)
     {
         File::Write(reflFilepath, reflHeaderContents);
 
-        if (preprocessedSomething)
+        if(preprocessedSomething)
         {
             std::cout << "  File '" << filepath.GetAbsolute().ToCString()
                       << "' successfully preprocessed into '"
-                      << reflFilepath.GetAbsolute().ToCString()
-                      << "'" << std::endl;
+                      << reflFilepath.GetAbsolute().ToCString() << "'"
+                      << std::endl;
         }
     }
 }
@@ -115,11 +102,12 @@ void BangPreprocessor::Preprocess(const String &source,
 
           )VERBATIM";
 
-    Array<BPReflectedStruct> reflectStructs = BangPreprocessor::GetReflectStructs(source);
-    for (const BPReflectedStruct &reflStruct : reflectStructs)
+    Array<BPReflectedStruct> reflectStructs =
+        BangPreprocessor::GetReflectStructs(source);
+    for(const BPReflectedStruct &reflStruct : reflectStructs)
     {
         String reflectDefineCode =
-                "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
+            "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
         reflectDefineCode += R"VERBATIM( public:
                     GET_REFLECTION_INFO_CODE
                     GET_READ_REFLECTION_CODE
@@ -133,9 +121,10 @@ void BangPreprocessor::Preprocess(const String &source,
                                         reflStruct.GetWriteReflectionCode());
         reflectDefineCode.ReplaceInSitu("\n", "\\\n");
 
-        reflectDefineCode += "\n"
-                "#undef REFLECT_DEFINITIONS_DEFINE_NAME \n"
-                "#define REFLECT_DEFINITIONS_DEFINE_NAME(ClassName) \
+        reflectDefineCode +=
+            "\n"
+            "#undef REFLECT_DEFINITIONS_DEFINE_NAME \n"
+            "#define REFLECT_DEFINITIONS_DEFINE_NAME(ClassName) \
                          REFLECT_DEFINITIONS_DEFINE_NAME_##ClassName()";
 
         reflectDefineCode.ReplaceInSitu("RSTRUCT_VAR_NAME",
@@ -148,38 +137,36 @@ void BangPreprocessor::Preprocess(const String &source,
     }
 }
 
-Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(const Path &sourcePath)
+Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
+    const Path &sourcePath)
 {
     String source = File::GetContents(sourcePath);
     return BangPreprocessor::GetReflectStructs(source);
 }
 
-Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(const String &source)
+Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
+    const String &source)
 {
     Array<BPReflectedStruct> reflectStructsArray;
 
     String src = source;
     BP::RemoveComments(&src);
     String::Iterator it = src.Begin();
-    while (true)
+    while(true)
     {
         // Find Structure/Class annotation
-        String::Iterator itStructBegin = BP::Find(it, src.End(),
-                                                  BP::RStructPrefixes);
-        if (itStructBegin == src.End())
+        String::Iterator itStructBegin =
+            BP::Find(it, src.End(), BP::RStructPrefixes);
+        if(itStructBegin == src.End())
         {
             break;
         }
 
         String::Iterator itStructScopeBegin, itStructScopeEnd;
-        BP::GetNextScope(itStructBegin,
-                         src.End(),
-                         &itStructScopeBegin,
-                         &itStructScopeEnd,
-                         '{',
-                         '}');
+        BP::GetNextScope(itStructBegin, src.End(), &itStructScopeBegin,
+                         &itStructScopeEnd, '{', '}');
         it = itStructScopeEnd;
-        if (itStructScopeBegin == src.End())
+        if(itStructScopeBegin == src.End())
         {
             break;
         }
@@ -208,9 +195,10 @@ void BangPreprocessor::RemoveComments(String *source)
     String output = gCompilerProcess.ReadStandardOutput();
     gCompilerProcess.Close();
 
-    if (output.Size() >= 1)
+    if(output.Size() >= 1)
     {
-        output.Remove(output.Begin(), output.Find('\n') + 2); // Remove first line
+        output.Remove(output.Begin(),
+                      output.Find('\n') + 2);  // Remove first line
     }
     *source = output;
 }
@@ -219,11 +207,14 @@ String::Iterator BangPreprocessor::Find(String::Iterator begin,
                                         String::Iterator end,
                                         const Array<String> &toFindList)
 {
-    for (const String &toFind : toFindList)
+    for(const String &toFind : toFindList)
     {
-        String::Iterator itFound = std::search(begin, end,
-                                               toFind.Begin(), toFind.End());
-        if (itFound != end) { return itFound; }
+        String::Iterator itFound =
+            std::search(begin, end, toFind.Begin(), toFind.End());
+        if(itFound != end)
+        {
+            return itFound;
+        }
     }
     return end;
 }
@@ -237,17 +228,20 @@ void BangPreprocessor::GetNextScope(String::Iterator begin,
 {
     int insideness = 0;
     String::Iterator it = begin;
-    for (; it != end; ++it)
+    for(; it != end; ++it)
     {
-        if (*it == openingBrace)
+        if(*it == openingBrace)
         {
-            if (insideness == 0) { *scopeBegin = it; }
+            if(insideness == 0)
+            {
+                *scopeBegin = it;
+            }
             ++insideness;
         }
-        else if (*it == closingBrace)
+        else if(*it == closingBrace)
         {
             --insideness;
-            if (insideness == 0)
+            if(insideness == 0)
             {
                 *scopeEnd = it + 1;
                 break;
@@ -255,17 +249,22 @@ void BangPreprocessor::GetNextScope(String::Iterator begin,
         }
     }
 
-    if (insideness != 0) { *scopeBegin = *scopeEnd = end; }
+    if(insideness != 0)
+    {
+        *scopeBegin = *scopeEnd = end;
+    }
 }
 
-void BangPreprocessor::SkipBlanks(String::Iterator *it,
-                                  String::Iterator end)
+void BangPreprocessor::SkipBlanks(String::Iterator *it, String::Iterator end)
 {
     char c = *(*it);
-    while (c == '\n' || c == '\r' || c == '\t' || c == ' ')
+    while(c == '\n' || c == '\r' || c == '\t' || c == ' ')
     {
         ++(*it);
-        if (*it == end) { break; }
+        if(*it == end)
+        {
+            break;
+        }
         c = *(*it);
     }
 }
@@ -280,12 +279,15 @@ void BangPreprocessor::SkipUntilNext(String::Iterator *it,
                                      String::Iterator end,
                                      const Array<String> &particles)
 {
-    String c( std::string(1, *(*it)) );
-    while ( !particles.Contains(c) )
+    String c(std::string(1, *(*it)));
+    while(!particles.Contains(c))
     {
         ++(*it);
-        if (*it == end) { break; }
-        c = String( std::string(1, *(*it)) );
+        if(*it == end)
+        {
+            break;
+        }
+        c = String(std::string(1, *(*it)));
     }
 }
 
@@ -299,10 +301,13 @@ void BangPreprocessor::FindNextWord(String::Iterator begin,
 
     *wordEnd = (*wordBegin + 1);
     char c = *(*wordEnd);
-    while (String::IsLetter(c) || String::IsNumber(c) || c == '_')
+    while(String::IsLetter(c) || String::IsNumber(c) || c == '_')
     {
         ++(*wordEnd);
-        if (*wordEnd == end) { break; }
+        if(*wordEnd == end)
+        {
+            break;
+        }
         c = *(*wordEnd);
     }
 }

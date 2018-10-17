@@ -7,14 +7,20 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Path;
 
-FORWARD class Path;
-
-#define SERIALIZABLE(CLASS) \
-        public: \
-        virtual String GetClassName() const override { return #CLASS; } \
-        static String GetClassNameStatic() { return #CLASS; }
+#define SERIALIZABLE(CLASS)                      \
+public:                                          \
+    virtual String GetClassName() const override \
+    {                                            \
+        return #CLASS;                           \
+    }                                            \
+    static String GetClassNameStatic()           \
+    {                                            \
+        return #CLASS;                           \
+    }
 
 class Serializable : public IGUIDable
 {
@@ -35,8 +41,8 @@ public:
     MetaNode GetMeta() const;
     String GetSerializedString() const;
 
-    HideFlags& GetHideFlags();
-    const HideFlags& GetHideFlags() const;
+    HideFlags &GetHideFlags();
+    const HideFlags &GetHideFlags() const;
 
 protected:
     Serializable();
@@ -46,7 +52,6 @@ private:
 
     friend class Resources;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SERIALIZABLE_H
+#endif  // SERIALIZABLE_H

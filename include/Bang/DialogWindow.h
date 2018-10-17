@@ -4,8 +4,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Window.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class DialogWindow : public Window
 {
 public:
@@ -19,7 +19,6 @@ private:
     bool m_resizable = false;
     Window *p_parentWindow = nullptr;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DIALOGWINDOW_H
+#endif  // DIALOGWINDOW_H

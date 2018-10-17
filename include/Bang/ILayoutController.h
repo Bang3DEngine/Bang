@@ -12,11 +12,11 @@
 #include "Bang/IEventsTransform.h"
 #include "Bang/IInvalidatable.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsChildren;
-FORWARD class IEventsTransform;
+namespace Bang
+{
+class GameObject;
+class IEventsChildren;
+class IEventsTransform;
 
 class ILayoutController : public IInvalidatable<ILayoutController>,
                           public EventListener<IEventsChildren>,
@@ -48,7 +48,6 @@ private:
 
     friend class UILayoutManager;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ILAYOUTCONTROLLER_H
+#endif  // ILAYOUTCONTROLLER_H

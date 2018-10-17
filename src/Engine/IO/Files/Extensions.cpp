@@ -4,8 +4,8 @@
 #include "Bang/Array.tcc"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 String Extensions::GetMeshExtension()
 {
     return "bmesh";
@@ -59,12 +59,12 @@ Array<String> Extensions::GetImageExtensions()
 
 Array<String> Extensions::GetModelExtensions()
 {
-    return {"obj", "ply", "fbx", "dae", "3ds", "gltf", "glb",
-            "blend", "3ds", "ase", "ifc", "xgl", "zgl", "dxf",
-            "lwo", "lws", "lxo", "stl", "x", "ac", "ms3d", "cob",
-            "scn", "bvh", "csm", "mdl", "md2", "md3", "pk3", "mdc",
-            "md5", "md5mesh", "md5anim", "smd", "vta", "ogex", "3d", "b3d",
-            "q3d", "q3s", "nff", "off", "raw", "ter", "mdl", "hmp", "ndo"};
+    return {"obj",     "ply", "fbx", "dae",  "3ds",  "gltf", "glb", "blend",
+            "3ds",     "ase", "ifc", "xgl",  "zgl",  "dxf",  "lwo", "lws",
+            "lxo",     "stl", "x",   "ac",   "ms3d", "cob",  "scn", "bvh",
+            "csm",     "mdl", "md2", "md3",  "pk3",  "mdc",  "md5", "md5mesh",
+            "md5anim", "smd", "vta", "ogex", "3d",   "b3d",  "q3d", "q3s",
+            "nff",     "off", "raw", "ter",  "mdl",  "hmp",  "ndo"};
 }
 
 Array<String> Extensions::GetShaderExtensions()
@@ -119,11 +119,11 @@ bool Extensions::Equals(const String &fullExtension,
                         const Array<String> &otherExtensions)
 {
     Array<String> extensions = fullExtension.Split<Array>('.');
-    for (const String &otherExtension : otherExtensions)
+    for(const String &otherExtension : otherExtensions)
     {
-        for (const String &extension : extensions)
+        for(const String &extension : extensions)
         {
-            if (extension.EqualsNoCase(otherExtension))
+            if(extension.EqualsNoCase(otherExtension))
             {
                 return true;
             }
@@ -137,5 +137,4 @@ bool Extensions::Equals(const String &extensionSrc, const String &extensionDst)
     Array<String> extensionsDst = {{extensionDst}};
     return Extensions::Equals(extensionSrc, extensionsDst);
 }
-
-NAMESPACE_BANG_END
+}

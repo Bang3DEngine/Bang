@@ -10,12 +10,13 @@
 #include "Bang/RectTransform.h"
 #include "Bang/Vector.tcc"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Camera;
-FORWARD class Object;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Camera;
+class Object;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIRenderer::UIRenderer()
 {
@@ -36,18 +37,18 @@ void UIRenderer::OnRender()
 
 void UIRenderer::OnRender(RenderPass renderPass)
 {
-    if (RectTransform *rt = GetGameObject()->GetRectTransform())
+    if(RectTransform *rt = GetGameObject()->GetRectTransform())
     {
         bool render = true;
-        if (GetCullByRectTransform())
+        if(GetCullByRectTransform())
         {
             const AARect rectNDC = rt->GetViewportAARectNDC();
             render = (rectNDC != AARect::Zero &&
                       AARect::Intersection(AARect::NDCRect, rectNDC) !=
-                      AARect::Zero);
+                          AARect::Zero);
         }
 
-        if (render)
+        if(render)
         {
             Renderer::OnRender(renderPass);
         }
@@ -81,17 +82,17 @@ void UIRenderer::OnTransformChanged()
     PropagateRendererChanged();
 }
 
-void UIRenderer::OnChildAdded(GameObject*, GameObject*)
+void UIRenderer::OnChildAdded(GameObject *, GameObject *)
 {
     PropagateRendererChanged();
 }
 
-void UIRenderer::OnChildRemoved(GameObject*, GameObject*)
+void UIRenderer::OnChildRemoved(GameObject *, GameObject *)
 {
     PropagateRendererChanged();
 }
 
-void UIRenderer::OnParentChanged(GameObject*, GameObject*)
+void UIRenderer::OnParentChanged(GameObject *, GameObject *)
 {
     PropagateRendererChanged();
 }

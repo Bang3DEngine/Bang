@@ -3,8 +3,8 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IEventsTransform
 {
     IEVENTS(IEventsTransform);
@@ -22,7 +22,6 @@ public:
     {
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSTRANSFORM_H
+#endif  // IEVENTSTRANSFORM_H

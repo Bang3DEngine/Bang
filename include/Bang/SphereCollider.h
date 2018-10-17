@@ -9,21 +9,21 @@
 #include "Bang/String.h"
 #include "PxShape.h"
 
-FORWARD namespace physx
+namespace physx
 {
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
+namespace Bang
+{
+class ICloneable;
 
 class SphereCollider : public Collider
 {
     COLLIDER(SphereCollider)
 
 public:
-	SphereCollider();
-	virtual ~SphereCollider() override;
+    SphereCollider();
+    virtual ~SphereCollider() override;
 
     void SetRadius(float radius);
 
@@ -42,12 +42,9 @@ protected:
     float m_radius = 1.0f;
 
     // Collider
-    physx::PxShape* CreatePxShape() const override;
+    physx::PxShape *CreatePxShape() const override;
     void UpdatePxShape() override;
-
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SPHERECOLLIDER_H
-
+#endif  // SPHERECOLLIDER_H

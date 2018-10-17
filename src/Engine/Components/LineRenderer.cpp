@@ -18,7 +18,7 @@
 #include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 LineRenderer::LineRenderer()
 {
@@ -40,10 +40,9 @@ void LineRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    if (p_mesh.Get()->GetNumVertices() > 0)
+    if(p_mesh.Get()->GetNumVertices() > 0)
     {
-        GL::Render(p_mesh.Get()->GetVAO(),
-                   GetRenderPrimitive(),
+        GL::Render(p_mesh.Get()->GetVAO(), GetRenderPrimitive(),
                    p_mesh.Get()->GetNumVertices());
     }
 }
@@ -53,7 +52,7 @@ void LineRenderer::SetPoint(int i, const Vector3 &point)
     Array<Vector3> newPoints = m_points;
     ASSERT(i >= 0 && i <= newPoints.Size());
 
-    if (i == newPoints.Size())
+    if(i == newPoints.Size())
     {
         newPoints.PushBack(point);
     }
@@ -79,17 +78,17 @@ const Array<Vector3> &LineRenderer::GetPoints() const
 
 AABox LineRenderer::GetAABBox() const
 {
-    if (m_points.IsEmpty())
+    if(m_points.IsEmpty())
     {
         return AABox::Empty;
     }
 
     Vector3 minp = m_points.Front();
     Vector3 maxp = m_points.Front();
-    for (const Vector3 &p : m_points)
+    for(const Vector3 &p : m_points)
     {
-       minp = Vector3::Min(minp, p);
-       maxp = Vector3::Max(maxp, p);
+        minp = Vector3::Min(minp, p);
+        maxp = Vector3::Max(maxp, p);
     }
 
     // Add a bit in every dimensions, to avoid flattened Rects
@@ -102,9 +101,9 @@ AABox LineRenderer::GetAABBox() const
 void LineRenderer::Bind()
 {
     Renderer::Bind();
-    if (Material *mat = GetActiveMaterial())
+    if(Material *mat = GetActiveMaterial())
     {
-        if (ShaderProgram *sp = mat->GetShaderProgram())
+        if(ShaderProgram *sp = mat->GetShaderProgram())
         {
             sp->Bind();
             sp->SetBool("B_HasBoneAnimations", false);
@@ -115,8 +114,8 @@ void LineRenderer::Bind()
 void LineRenderer::CloneInto(ICloneable *clone) const
 {
     Renderer::CloneInto(clone);
-    LineRenderer *lr = Cast<LineRenderer*>(clone);
-    lr->SetPoints( GetPoints() );
+    LineRenderer *lr = Cast<LineRenderer *>(clone);
+    lr->SetPoints(GetPoints());
 }
 
 void LineRenderer::ImportMeta(const MetaNode &metaNode)

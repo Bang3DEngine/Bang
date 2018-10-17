@@ -12,10 +12,10 @@
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Path;
-FORWARD class Time;
+namespace Bang
+{
+class Path;
+class Time;
 
 enum class AnimationWrapMode
 {
@@ -61,23 +61,23 @@ public:
     AnimationWrapMode GetWrapMode() const;
     Map<String, Matrix4> GetBoneAnimationMatricesForTime(Time time) const;
 
-    const Array< Animation::KeyFrame<Vector3> > &
-    GetPositionKeyFrames(const String &boneName) const;
+    const Array<Animation::KeyFrame<Vector3>> &GetPositionKeyFrames(
+        const String &boneName) const;
 
-    const Array< Animation::KeyFrame<Quaternion> > &
-    GetRotationKeyFrames(const String &boneName) const;
+    const Array<Animation::KeyFrame<Quaternion>> &GetRotationKeyFrames(
+        const String &boneName) const;
 
-    const Array< Animation::KeyFrame<Vector3> > &
-    GetScaleKeyFrames(const String &boneName) const;
+    const Array<Animation::KeyFrame<Vector3>> &GetScaleKeyFrames(
+        const String &boneName) const;
 
-    const Map< String, Array< Animation::KeyFrame<Vector3> > > &
-    GetBoneNameToPositionKeyFrames() const;
+    const Map<String, Array<Animation::KeyFrame<Vector3>>>
+        &GetBoneNameToPositionKeyFrames() const;
 
-    const Map< String, Array< Animation::KeyFrame<Quaternion> > > &
-    GetBoneNameToRotationKeyFrames() const;
+    const Map<String, Array<Animation::KeyFrame<Quaternion>>>
+        &GetBoneNameToRotationKeyFrames() const;
 
-    const Map< String, Array< Animation::KeyFrame<Vector3> > > &
-    GetBoneNameToScaleKeyFrames() const;
+    const Map<String, Array<Animation::KeyFrame<Vector3>>>
+        &GetBoneNameToScaleKeyFrames() const;
 
     static float WrapTime(float time,
                           float totalDuration,
@@ -90,18 +90,17 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-
     static void GetBoneAnimationTransformations(
-                    const Animation *animation,
-                    Time animationTime,
-                    Map<String, BoneTransformation> *boneTransformations);
+        const Animation *animation,
+        Time animationTime,
+        Map<String, BoneTransformation> *boneTransformations);
 
     static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
-                                            const Animation *prevAnimation,
-                                            Time prevAnimationTime,
-                                            const Animation *nextAnimation,
-                                            Time currentCrossFadeTime,
-                                            Time totalCrossFadeTime);
+        const Animation *prevAnimation,
+        Time prevAnimationTime,
+        const Animation *nextAnimation,
+        Time currentCrossFadeTime,
+        Time totalCrossFadeTime);
 
 private:
     Animation();
@@ -109,15 +108,13 @@ private:
 
     float m_speed = 1.0f;
     float m_durationInFrames = 0.0f;
-    float m_framesPerSecond  = 0.0f;
+    float m_framesPerSecond = 0.0f;
     AnimationWrapMode m_wrapMode = AnimationWrapMode::CLAMP;
 
-    Map<String, Array<KeyFrame<Vector3>>>    m_boneNameToPositionKeyFrames;
+    Map<String, Array<KeyFrame<Vector3>>> m_boneNameToPositionKeyFrames;
     Map<String, Array<KeyFrame<Quaternion>>> m_boneNameToRotationKeyFrames;
-    Map<String, Array<KeyFrame<Vector3>>>    m_boneNameToScaleKeyFrames;
+    Map<String, Array<KeyFrame<Vector3>>> m_boneNameToScaleKeyFrames;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATION_H
-
+#endif  // ANIMATION_H

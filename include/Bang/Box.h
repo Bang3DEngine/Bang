@@ -7,14 +7,14 @@
 #include "Bang/Quaternion.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Quad;
+namespace Bang
+{
+class Quad;
 
 class Box
 {
 public:
-	Box();
+    Box();
     ~Box();
 
     void SetCenter(const Vector3 &center);
@@ -35,8 +35,6 @@ private:
     Vector3 m_localExtents;
     Quaternion m_orientation;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BOX_H
-
+#endif  // BOX_H

@@ -10,11 +10,11 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Behaviour;
-FORWARD class ICloneable;
-FORWARD class Library;
+namespace Bang
+{
+class Behaviour;
+class ICloneable;
+class Library;
 
 class BehaviourContainer : public Component
 {
@@ -23,12 +23,12 @@ class BehaviourContainer : public Component
 public:
     void SetSourceFilepath(const Path &sourceFilepath);
     void SetSourceFilepathGUID(const GUID &sourceFilepathGUID);
-    Behaviour* CreateBehaviourInstance(Library *behavioursLibrary) const;
+    Behaviour *CreateBehaviourInstance(Library *behavioursLibrary) const;
 
     String GetBehaviourName() const;
     Path GetSourceFilepath() const;
-    const GUID& GetSourceFilepathGUID() const;
-    const MetaNode& GetInitializationMeta() const;
+    const GUID &GetSourceFilepathGUID() const;
+    const MetaNode &GetInitializationMeta() const;
 
     void TryToSubstituteByBehaviourInstance();
     void SetInitializationMeta(const MetaNode &metaNode);
@@ -54,8 +54,6 @@ private:
 
     friend class ComponentFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BEHAVIOURCONTAINER_H
-
+#endif  // BEHAVIOURCONTAINER_H

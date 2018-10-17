@@ -2,7 +2,7 @@
 
 #include "Bang/Application.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Settings *Settings::GetInstance()
 {
@@ -16,4 +16,3 @@ Settings::Settings()
 Settings::~Settings()
 {
 }
-

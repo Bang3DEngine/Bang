@@ -7,8 +7,8 @@
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IUniformBuffer : public GLObject
 {
 public:
@@ -26,8 +26,6 @@ protected:
 private:
     GLuint m_bindingPoint = -1;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IUNIFORMBUFFER_H
-
+#endif  // IUNIFORMBUFFER_H

@@ -1,12 +1,12 @@
 #ifndef IEVENTSGAMEOBJECTPHYSICS_H
 #define IEVENTSGAMEOBJECTPHYSICS_H
 
-#include "Bang/IEvents.h"
 #include "Bang/Collision.h"
+#include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Collider;
+namespace Bang
+{
+class Collider;
 
 class IEventsGameObjectPhysics
 {
@@ -38,7 +38,6 @@ public:
         BANG_UNUSED(otherCollider);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSGAMEOBJECTPHYSICS_H
+#endif  // IEVENTSGAMEOBJECTPHYSICS_H

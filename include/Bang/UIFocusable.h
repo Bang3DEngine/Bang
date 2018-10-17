@@ -16,16 +16,15 @@
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-class UIFocusable : public Component,
-                    public EventEmitter<IEventsFocus>
+namespace Bang
+{
+class UIFocusable : public Component, public EventEmitter<IEventsFocus>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIFocusable)
 
 public:
-    using EventCallback = std::function<UIEventResult(UIFocusable*,
-                                                      const UIEvent&)>;
+    using EventCallback =
+        std::function<UIEventResult(UIFocusable *, const UIEvent &)>;
 
     UIEventResult ProcessEvent(const UIEvent &event);
 
@@ -63,8 +62,6 @@ private:
 
     friend class UICanvas;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIFOCUSABLE_H
-
+#endif  // UIFOCUSABLE_H

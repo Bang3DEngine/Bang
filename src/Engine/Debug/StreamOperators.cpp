@@ -11,39 +11,39 @@
 #include "Bang/Time.h"
 #include "Bang/Triangle.h"
 
-NAMESPACE_BANG_BEGIN
-
-std::ostream& operator<<(std::ostream &log, const Time &t)
+namespace Bang
+{
+std::ostream &operator<<(std::ostream &log, const Time &t)
 {
     log << t.GetNanos();
     return log;
 }
 
-std::ostream& operator<<(std::ostream &log, const Path &p)
+std::ostream &operator<<(std::ostream &log, const Path &p)
 {
     log << p.GetAbsolute();
     return log;
 }
 
-std::ostream& operator<<(std::ostream &log, const Color &c)
+std::ostream &operator<<(std::ostream &log, const Color &c)
 {
     log << "(" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")";
     return log;
 }
 
-std::ostream& operator<<(std::ostream &log, const Quad &q)
+std::ostream &operator<<(std::ostream &log, const Quad &q)
 {
-    log << "(" << q[0] << ", "  << q[1] << ", " << q[2] << ", " << q[3] << ")";
+    log << "(" << q[0] << ", " << q[1] << ", " << q[2] << ", " << q[3] << ")";
     return log;
 }
 
-std::ostream& operator<<(std::ostream &log, const Triangle &t)
+std::ostream &operator<<(std::ostream &log, const Triangle &t)
 {
-    log << "(" << t[0] << ", "  << t[1] << ", " << t[2] << ")";
+    log << "(" << t[0] << ", " << t[1] << ", " << t[2] << ")";
     return log;
 }
 
-std::ostream& operator<<(std::ostream &log, const AABox &b)
+std::ostream &operator<<(std::ostream &log, const AABox &b)
 {
     log << "(" << b.GetMin() << ", " << b.GetMax() << ")";
     return log;
@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream &log, const AABox &b)
 
 std::ostream &operator<<(std::ostream &log, const IToString *s)
 {
-    if (!s)
+    if(!s)
     {
         log << "Null";
     }
@@ -100,9 +100,8 @@ std::istream &operator>>(std::istream &is, GUID &guid)
 
 std::ostream &operator<<(std::ostream &log, const GUID &guid)
 {
-    log << guid.GetTimeGUID() << " " <<
-           guid.GetRandGUID() << " " <<
-           guid.GetEmbeddedResourceGUID();
+    log << guid.GetTimeGUID() << " " << guid.GetRandGUID() << " "
+        << guid.GetEmbeddedResourceGUID();
     return log;
 }
 
@@ -135,5 +134,4 @@ std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr)
 
     return log;
 }
-
-NAMESPACE_BANG_END
+}

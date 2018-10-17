@@ -9,15 +9,14 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ShaderProgram;
-FORWARD class Texture2D;
+namespace Bang
+{
+class ShaderProgram;
+class Texture2D;
 
 class GBuffer : public Framebuffer
 {
 public:
-
     // NORMAL: (normal.x, normal.y, normal.z, 0)
     // MISC:   (receivesLighting, roughness, metalness, ---)
     //          If receivesLighting >  0 ---> receivesShadows
@@ -81,7 +80,6 @@ private:
 
     friend class GEngine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GBUFFER_H
+#endif  // GBUFFER_H

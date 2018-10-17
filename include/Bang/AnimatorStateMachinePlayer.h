@@ -12,22 +12,22 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Animation;
+class AnimatorStateMachine;
+class AnimatorStateMachineConnection;
+class AnimatorStateMachineNode;
+class IEventsAnimatorStateMachine;
+class IEventsAnimatorStateMachineNode;
 
-FORWARD class Animation;
-FORWARD class AnimatorStateMachine;
-FORWARD class AnimatorStateMachineConnection;
-FORWARD class AnimatorStateMachineNode;
-FORWARD class IEventsAnimatorStateMachine;
-FORWARD class IEventsAnimatorStateMachineNode;
-
-class AnimatorStateMachinePlayer :
-                public EventListener<IEventsAnimatorStateMachine>,
-                public EventListener<IEventsAnimatorStateMachineNode>
+class AnimatorStateMachinePlayer
+    : public EventListener<IEventsAnimatorStateMachine>,
+      public EventListener<IEventsAnimatorStateMachineNode>
 {
 public:
-	AnimatorStateMachinePlayer();
-	virtual ~AnimatorStateMachinePlayer() override;
+    AnimatorStateMachinePlayer();
+    virtual ~AnimatorStateMachinePlayer() override;
 
     void SetStateMachine(AnimatorStateMachine *stateMachine);
 
@@ -40,12 +40,12 @@ public:
                          Time startTransitionTime = Time(0));
     void FinishCurrentTransition();
 
-    AnimatorStateMachineNode* GetCurrentNode() const;
-    Animation* GetCurrentAnimation() const;
+    AnimatorStateMachineNode *GetCurrentNode() const;
+    Animation *GetCurrentAnimation() const;
     Time GetCurrentNodeTime() const;
 
-    AnimatorStateMachineNode* GetNextNode() const;
-    Animation* GetNextAnimation() const;
+    AnimatorStateMachineNode *GetNextNode() const;
+    Animation *GetNextAnimation() const;
     Time GetNextNodeTime() const;
 
     AnimatorStateMachineConnection *GetCurrentTransition() const;
@@ -71,18 +71,15 @@ private:
                                uint removedNodeIdx,
                                AnimatorStateMachineNode *removedNode) override;
 
-
     // IEventsAnimatorStateMachineNode
-    virtual void OnConnectionAdded(AnimatorStateMachineNode *node,
-                                   AnimatorStateMachineConnection *connection)
-                 override;
+    virtual void OnConnectionAdded(
+        AnimatorStateMachineNode *node,
+        AnimatorStateMachineConnection *connection) override;
 
-    virtual void OnConnectionRemoved(AnimatorStateMachineNode *node,
-                                     AnimatorStateMachineConnection *connection)
-                 override;
+    virtual void OnConnectionRemoved(
+        AnimatorStateMachineNode *node,
+        AnimatorStateMachineConnection *connection) override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATORSTATEMACHINEPLAYER_H
-
+#endif  // ANIMATORSTATEMACHINEPLAYER_H

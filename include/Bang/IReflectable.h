@@ -3,25 +3,28 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 #define BP_REFLECT_VARIABLE(...)
 #define BP_REFLECT_CLASS(...)
 #define BP_REFLECT_STRUCT(...)
 #define BP_REFLECT_DEFINITIONS(...)
 
-FORWARD class BPReflectedStruct;
+class BPReflectedStruct;
 
 class IReflectable
 {
 public:
-    virtual const BPReflectedStruct& GetReflectionInfo() const;
+    virtual const BPReflectedStruct &GetReflectionInfo() const;
 
 protected:
-    IReflectable() {}
-    virtual ~IReflectable() {}
+    IReflectable()
+    {
+    }
+    virtual ~IReflectable()
+    {
+    }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IREFLECTABLE_H
+#endif  // IREFLECTABLE_H

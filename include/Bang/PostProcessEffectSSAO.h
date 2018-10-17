@@ -11,12 +11,12 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Framebuffer;
-FORWARD class ICloneable;
-FORWARD class ShaderProgram;
-FORWARD class Texture2D;
+namespace Bang
+{
+class Framebuffer;
+class ICloneable;
+class ShaderProgram;
+class Texture2D;
 
 class PostProcessEffectSSAO : public PostProcessEffect
 {
@@ -43,7 +43,7 @@ public:
     int GetNumRandomAxes() const;
     bool GetBilateralBlurEnabled() const;
     const Vector2 &GetFBSize() const;
-    Texture2D* GetSSAOTexture() const;
+    Texture2D *GetSSAOTexture() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -74,11 +74,9 @@ private:
 
     void GenerateRandomAxesTexture(int numAxes);
 
-	PostProcessEffectSSAO();
-	virtual ~PostProcessEffectSSAO() override;
+    PostProcessEffectSSAO();
+    virtual ~PostProcessEffectSSAO() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // POSTPROCESSEFFECTSSAO_H
-
+#endif  // POSTPROCESSEFFECTSSAO_H

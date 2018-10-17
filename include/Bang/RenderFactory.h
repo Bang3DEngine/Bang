@@ -4,20 +4,20 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Quaternion.h"
 #include "Bang/GL.h"
+#include "Bang/Quaternion.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Texture2D.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AABox;
-FORWARD class GameObject;
-FORWARD class LineRenderer;
-FORWARD class Mesh;
-FORWARD class MeshRenderer;
-FORWARD class Renderer;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class AABox;
+class GameObject;
+class LineRenderer;
+class Mesh;
+class MeshRenderer;
+class Renderer;
+class ShaderProgram;
 
 class RenderFactory
 {
@@ -116,19 +116,17 @@ private:
 
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;
-    Array<Renderer*> m_renderers;
+    Array<Renderer *> m_renderers;
 
     RenderFactory();
     virtual ~RenderFactory();
 
     static void ApplyRenderParameters(Renderer *rend,
                                       const RenderFactory::Parameters &params);
-    static void Render(Renderer *rend,
-                       const RenderFactory::Parameters &params);
+    static void Render(Renderer *rend, const RenderFactory::Parameters &params);
 
     friend class GEngine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RENDERFACTORY_H
+#endif  // RENDERFACTORY_H

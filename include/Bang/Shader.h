@@ -7,12 +7,11 @@
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Path;
 
-FORWARD class Path;
-
-class Shader : public GLObject,
-               public Resource
+class Shader : public GLObject, public Resource
 {
     RESOURCE(Shader)
 
@@ -23,7 +22,7 @@ public:
 
     bool Compile();
 
-    const String& GetSourceCode() const;
+    const String &GetSourceCode() const;
     GL::ShaderType GetType() const;
     GL::BindTarget GetGLBindTarget() const override;
 
@@ -36,7 +35,6 @@ private:
 
     void RetrieveType(const Path &shaderPath);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SHADER_H
+#endif  // SHADER_H

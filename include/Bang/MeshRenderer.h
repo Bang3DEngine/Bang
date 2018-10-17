@@ -10,21 +10,21 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
+class ShaderProgram;
 
 class MeshRenderer : public Renderer
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(MeshRenderer)
 
 public:
-    void SetMesh(Mesh* m);
-    Mesh* GetMesh() const;
-    Mesh* GetActiveMesh() const;
-    Mesh* GetSharedMesh() const;
+    void SetMesh(Mesh *m);
+    Mesh *GetMesh() const;
+    Mesh *GetActiveMesh() const;
+    Mesh *GetSharedMesh() const;
 
     void SetCurrentLOD(int lod);
     void SetAutoLOD(bool autoLOD);
@@ -57,9 +57,7 @@ protected:
 
     // Renderer
     virtual void OnRender() override;
-
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MESHRENDERER_H
+#endif  // MESHRENDERER_H

@@ -6,7 +6,6 @@
 #include <ostream>
 
 #include "Bang/Animator.h"
-#include "Bang/Material.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
@@ -15,6 +14,7 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Map.tcc"
+#include "Bang/Material.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ModelIO.h"
@@ -27,14 +27,15 @@
 #include "Bang/Tree.h"
 #include "Bang/Tree.tcc"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Animation;
-FORWARD class Material;
-FORWARD class MetaNode;
-FORWARD class Path;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Animation;
+class Material;
+class MetaNode;
+class Path;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Model::Model()
 {
@@ -44,11 +45,12 @@ Model::~Model()
 {
 }
 
-GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
-                                              const Tree<ModelIONode>* modelTree)
+GameObject *CreateGameObjectFromModelNodeTree(
+    const ModelIOScene &modelScene,
+    const Tree<ModelIONode> *modelTree)
 {
     GameObject *gameObject = GameObjectFactory::CreateGameObject();
-    if (!modelTree)
+    if(!modelTree)
     {
         return gameObject;
     }
@@ -56,20 +58,21 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
     const ModelIONode &modelNode = modelTree->GetData();
 
     // Set name
-    gameObject->SetName( modelNode.name );
+    gameObject->SetName(modelNode.name);
 
     // Set transform
-    gameObject->GetTransform()->FillFromMatrix( modelNode.localToParent );
+    gameObject->GetTransform()->FillFromMatrix(modelNode.localToParent);
 
     // Add mesh renderers
     bool addAnimator = false;
-    for (uint i = 0; i < modelNode.meshIndices.Size(); ++i)
+    for(uint i = 0; i < modelNode.meshIndices.Size(); ++i)
     {
-        Mesh *mesh = modelScene.meshes[ modelNode.meshIndices[i] ].Get();
-        Material *material = modelScene.materials[ modelNode.meshMaterialIndices[i] ].Get();
+        Mesh *mesh = modelScene.meshes[modelNode.meshIndices[i]].Get();
+        Material *material =
+            modelScene.materials[modelNode.meshMaterialIndices[i]].Get();
 
         MeshRenderer *mr = nullptr;
-        if (mesh->GetBonesPool().IsEmpty())
+        if(mesh->GetBonesPool().IsEmpty())
         {
             mr = gameObject->AddComponent<MeshRenderer>();
         }
@@ -84,20 +87,20 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
         mr->SetMaterial(material);
     }
 
-    if (addAnimator && modelScene.animations.Size() >= 1)
+    if(addAnimator && modelScene.animations.Size() >= 1)
     {
         RH<AnimatorStateMachine> animatorSM =
-                                    Resources::Create<AnimatorStateMachine>();
+            Resources::Create<AnimatorStateMachine>();
 
         Animator *animator = gameObject->AddComponent<Animator>(1);
         animator->SetStateMachine(animatorSM.Get());
     }
 
     // Add children
-    for (const Tree<ModelIONode> *childTree : modelTree->GetChildren())
+    for(const Tree<ModelIONode> *childTree : modelTree->GetChildren())
     {
-        GameObject *childGo = CreateGameObjectFromModelNodeTree(modelScene,
-                                                                childTree);
+        GameObject *childGo =
+            CreateGameObjectFromModelNodeTree(modelScene, childTree);
         childGo->SetParent(gameObject);
     }
 
@@ -106,36 +109,35 @@ GameObject *CreateGameObjectFromModelNodeTree(const ModelIOScene &modelScene,
 
 GameObject *Model::CreateGameObjectFromModel() const
 {
-    GameObject *modelGo = CreateGameObjectFromModelNodeTree(
-                                                    m_modelScene,
-                                                    m_modelScene.modelTree);
+    GameObject *modelGo =
+        CreateGameObjectFromModelNodeTree(m_modelScene, m_modelScene.modelTree);
 
     // If skinned mesh renderer, set bone references to gameObjects
-    Array<SkinnedMeshRenderer*> smrs =
-            modelGo->GetComponentsInDescendantsAndThis<SkinnedMeshRenderer>();
-    for (SkinnedMeshRenderer *smr : smrs)
+    Array<SkinnedMeshRenderer *> smrs =
+        modelGo->GetComponentsInDescendantsAndThis<SkinnedMeshRenderer>();
+    for(SkinnedMeshRenderer *smr : smrs)
     {
         smr->RetrieveBonesBindPoseFromCurrentHierarchy();
     }
     return modelGo;
 }
 
-const String& Model::GetRootGameObjectName() const
+const String &Model::GetRootGameObjectName() const
 {
     return m_modelScene.rootGameObjectName;
 }
 
-const Array<RH<Mesh> > &Model::GetMeshes() const
+const Array<RH<Mesh>> &Model::GetMeshes() const
 {
     return m_modelScene.meshes;
 }
 
-const Array<RH<Material> > &Model::GetMaterials() const
+const Array<RH<Material>> &Model::GetMaterials() const
 {
     return m_modelScene.materials;
 }
 
-const Array<RH<Animation> > &Model::GetAnimations() const
+const Array<RH<Animation>> &Model::GetAnimations() const
 {
     return m_modelScene.animations;
 }
@@ -164,10 +166,10 @@ void Model::Import(const Path &modelFilepath)
 {
     m_modelScene.Clear();
     ClearEmbeddedResources();
-    if (!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
+    if(!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
     {
-        Debug_Error("Can not load model " << modelFilepath << ". " <<
-                    "Look for errors above.");
+        Debug_Error("Can not load model " << modelFilepath << ". "
+                                          << "Look for errors above.");
     }
 }
 

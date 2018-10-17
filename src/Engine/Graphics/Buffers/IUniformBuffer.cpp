@@ -1,10 +1,9 @@
 #include "Bang/IUniformBuffer.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 IUniformBuffer::IUniformBuffer()
 {
-
 }
 
 IUniformBuffer::~IUniformBuffer()
@@ -13,7 +12,7 @@ IUniformBuffer::~IUniformBuffer()
 
 void IUniformBuffer::SetBindingPoint(int bindingPoint)
 {
-    if (bindingPoint != GetBindingPoint())
+    if(bindingPoint != GetBindingPoint())
     {
         m_bindingPoint = bindingPoint;
         Bind();

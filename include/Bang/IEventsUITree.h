@@ -3,10 +3,10 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class UIDragDroppable;
+namespace Bang
+{
+class GameObject;
+class UIDragDroppable;
 
 class IEventsUITree
 {
@@ -26,8 +26,8 @@ public:
                              GameObject *newParentItem,
                              int newIndexInsideParent)
     {
-        BANG_UNUSED_5(item, oldParentItem, oldIndexInsideParent,
-                      newParentItem, newIndexInsideParent);
+        BANG_UNUSED_5(item, oldParentItem, oldIndexInsideParent, newParentItem,
+                      newIndexInsideParent);
     }
 
     virtual void OnItemRemoved(GameObject *item)
@@ -53,8 +53,6 @@ public:
         return true;
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSUITREE_H
-
+#endif  // IEVENTSUITREE_H

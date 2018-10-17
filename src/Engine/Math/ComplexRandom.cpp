@@ -2,7 +2,7 @@
 
 #include "Bang/Random.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ComplexRandom::ComplexRandom()
 {
@@ -10,13 +10,13 @@ ComplexRandom::ComplexRandom()
 
 ComplexRandom::ComplexRandom(float constantValue)
 {
-    SetType( ComplexRandomType::CONSTANT_VALUE );
+    SetType(ComplexRandomType::CONSTANT_VALUE);
     SetConstantValue(constantValue);
 }
 
 ComplexRandom::ComplexRandom(float minRangeValue, float maxRangeValue)
 {
-    SetType( ComplexRandomType::RANDOM_RANGE );
+    SetType(ComplexRandomType::RANDOM_RANGE);
     SetMinRangeValue(minRangeValue);
     SetMaxRangeValue(maxRangeValue);
 }
@@ -68,16 +68,15 @@ float ComplexRandom::GetMaxRangeValue() const
 
 float ComplexRandom::GenerateRandom() const
 {
-    switch (GetType())
+    switch(GetType())
     {
         case ComplexRandomType::CONSTANT_VALUE:
             return GetConstantValue();
-        break;
+            break;
 
         case ComplexRandomType::RANDOM_RANGE:
-            return Random::GetRange(GetMinRangeValue(),
-                                    GetMaxRangeValue());
-        break;
+            return Random::GetRange(GetMinRangeValue(), GetMaxRangeValue());
+            break;
     }
 
     return -1.0f;
@@ -100,4 +99,3 @@ bool ComplexRandom::operator!=(const ComplexRandom &rhs) const
 {
     return !(*this == rhs);
 }
-

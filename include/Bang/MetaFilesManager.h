@@ -11,8 +11,8 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class MetaFilesManager
 {
 public:
@@ -24,19 +24,18 @@ public:
     static bool HasMetaFile(const Path &filepath);
     static bool IsMetaFile(const Path &filepath);
     static void DuplicateMetaFile(const Path &filepath,
-                                    const Path &dupFilepath);
+                                  const Path &dupFilepath);
     static GUIDManager *GetGUIDManager();
     static void RegisterMetaFilepath(const Path &metaFilepath);
     static void UnRegisterMetaFilepath(const Path &metaFilepath);
 
-    static Path GetFilepath(const GUID& guid);
-    static Path GetFilepath(const Path& importFilepath);
+    static Path GetFilepath(const GUID &guid);
+    static Path GetFilepath(const Path &importFilepath);
     static Path GetMetaFilepath(const Path &filepath);
-    static Path GetMetaFilepath(const GUID& guid);
-    static GUID GetGUID(const Path& filepath);
+    static Path GetMetaFilepath(const GUID &guid);
+    static GUID GetGUID(const Path &filepath);
 
     static void OnFilepathRenamed(const Path &oldPath, const Path &newPath);
-
 
 private:
     Map<GUID, Path> m_GUIDToFilepath;
@@ -48,11 +47,10 @@ private:
     ~MetaFilesManager();
 
     static String GetMetaExtension();
-    static MetaFilesManager* GetInstance();
+    static MetaFilesManager *GetInstance();
 
     friend class Application;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // METAFILESMANAGER_H
+#endif  // METAFILESMANAGER_H

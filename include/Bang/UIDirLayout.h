@@ -9,10 +9,10 @@
 #include "Bang/String.h"
 #include "Bang/UIGroupLayout.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class RectTransform;
+namespace Bang
+{
+class GameObject;
+class RectTransform;
 
 class UIDirLayout : public UIGroupLayout
 {
@@ -36,7 +36,7 @@ protected:
 private:
     Axis m_axis = Axis::HORIZONTAL;
 
-    Vector2i GetTotalSpacing(const Array<GameObject*> &children) const;
+    Vector2i GetTotalSpacing(const Array<GameObject *> &children) const;
 
     void ApplyLayoutToChildRectTransform(Axis rebuildPassAxis,
                                          const Vector2i &layoutRectSize,
@@ -45,21 +45,20 @@ private:
                                          const Vector2i &childRTSize);
 
     void FillChildrenMinSizes(const Vector2i &layoutRectSize,
-                              const Array<GameObject*> &children,
+                              const Array<GameObject *> &children,
                               Array<Vector2i> *childrenRTSizes,
                               Vector2i *availableSpace);
     void FillChildrenPreferredSizes(const Vector2i &layoutRectSize,
-                                    const Array<GameObject*> &children,
+                                    const Array<GameObject *> &children,
                                     Array<Vector2i> *childrenRTSizes,
                                     Vector2i *availableSpace);
     void FillChildrenFlexibleSizes(const Vector2i &layoutRectSize,
-                                   const Array<GameObject*> &children,
+                                   const Array<GameObject *> &children,
                                    Array<Vector2i> *childrenRTSizes,
                                    Vector2i *availableSpace);
     void ApplyStretches(const Vector2i &layoutRectSize,
                         Array<Vector2i> *childrenRTSizes);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIDIRLAYOUT_H
+#endif  // UIDIRLAYOUT_H

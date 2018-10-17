@@ -22,14 +22,14 @@
 #include "Bang/UITheme.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsDestroy;
-FORWARD class IEventsUIList;
-FORWARD class UIDirLayout;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UIScrollPanel;
+namespace Bang
+{
+class IEventsDestroy;
+class IEventsUIList;
+class UIDirLayout;
+class UIFocusable;
+class UIImageRenderer;
+class UIScrollPanel;
 
 using GOItem = GameObject;
 
@@ -65,7 +65,7 @@ public:
     void SetOverColor(const Color &overColor);
     void SetSelectedColor(const Color &selectedColor);
 
-    const Array<GOItem*>& GetItems() const;
+    const Array<GOItem *> &GetItems() const;
     GOItem *GetItem(int i) const;
 
     void ScrollToBegin();
@@ -79,14 +79,14 @@ public:
     UIDirLayout *GetDirLayout() const;
     GameObject *GetContainer() const;
     UIScrollPanel *GetScrollPanel() const;
-    const Color& GetIdleColor() const;
-    const Color& GetOverColor() const;
-    const Color& GetSelectedColor() const;
+    const Color &GetIdleColor() const;
+    const Color &GetOverColor() const;
+    const Color &GetSelectedColor() const;
 
     bool SomeChildHasFocus() const;
     int GetSelectedIndex() const;
-    GOItem* GetSelectedItem() const;
-    UIFocusable* GetFocusable() const;
+    GOItem *GetSelectedItem() const;
+    UIFocusable *GetFocusable() const;
 
     void SetWideSelectionMode(bool wideSelectionMode);
 
@@ -94,8 +94,8 @@ public:
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
     using SelectionCallback = std::function<void(GOItem *item, Action action)>;
-    void SetSelectionCallback(std::function<void(GOItem *item, Action action)>
-                              selectionCallback);
+    void SetSelectionCallback(
+        std::function<void(GOItem *item, Action action)> selectionCallback);
     void ClearSelectionCallback();
 
 protected:
@@ -110,10 +110,10 @@ protected:
     UIImageRenderer *GetItemBg(GOItem *item) const;
 
 private:
-    Array<GOItem*> p_items;
+    Array<GOItem *> p_items;
     UIDirLayout *p_dirLayout = nullptr;
     UIFocusable *p_focusable = nullptr;
-    UMap<GOItem*, UIImageRenderer*> p_itemsBackground;
+    UMap<GOItem *, UIImageRenderer *> p_itemsBackground;
 
     int m_selectionIndex = -1;
     GOItem *p_itemUnderMouse = nullptr;
@@ -131,15 +131,15 @@ private:
     void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);
 
     // IEventsFocus
-    UIEventResult OnUIEvent(UIFocusable *focusable, const UIEvent &event) override;
+    UIEventResult OnUIEvent(UIFocusable *focusable,
+                            const UIEvent &event) override;
     UIEventResult UIEventCallback(UIFocusable *focusable, const UIEvent &event);
 
-    static UIList* CreateInto(GameObject *go, bool withScrollPanel);
+    static UIList *CreateInto(GameObject *go, bool withScrollPanel);
     void CallSelectionCallback(GameObject *item, Action action);
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UILIST_H
+#endif  // UILIST_H

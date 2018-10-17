@@ -5,15 +5,14 @@
 #include "Bang/Math.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 struct RayCastInfo
 {
     Vector3 origin = Vector3::Zero;
     Vector3 direction = Vector3::Forward;
     float maxDistance = Math::Infinity<float>();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RAYCASTINFO_H
+#endif  // RAYCASTINFO_H

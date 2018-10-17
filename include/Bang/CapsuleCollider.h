@@ -9,21 +9,21 @@
 #include "Bang/String.h"
 #include "PxShape.h"
 
-FORWARD namespace physx
+namespace physx
 {
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
+namespace Bang
+{
+class ICloneable;
 
 class CapsuleCollider : public Collider
 {
     COLLIDER(CapsuleCollider)
 
 public:
-	CapsuleCollider();
-	virtual ~CapsuleCollider() override;
+    CapsuleCollider();
+    virtual ~CapsuleCollider() override;
 
     void SetRadius(float radius);
     void SetHeight(float height);
@@ -48,12 +48,10 @@ protected:
     Axis3D m_axis = Axis3D::Y;
 
     // Collider
-    physx::PxShape* CreatePxShape() const override;
+    physx::PxShape *CreatePxShape() const override;
     void UpdatePxShape() override;
     Quaternion GetInternalRotation() const override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CAPSULECOLLIDER_H
-
+#endif  // CAPSULECOLLIDER_H

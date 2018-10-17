@@ -23,13 +23,13 @@
 #include "Bang/UIScrollArea.h"
 #include "Bang/UITextCursor.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsValueChanged;
-FORWARD class RectTransform;
-FORWARD class UIFocusable;
-FORWARD class UITextRenderer;
+namespace Bang
+{
+class GameObject;
+class IEventsValueChanged;
+class RectTransform;
+class UIFocusable;
+class UITextRenderer;
 
 class UIInputText : public Component,
                     public EventEmitter<IEventsValueChanged>,
@@ -43,8 +43,7 @@ public:
     void OnUpdate() override;
 
     void SetCursorIndex(int index);
-    void SetSelection(int selectionBeginIndex,
-                      int selectionEndIndex);
+    void SetSelection(int selectionBeginIndex, int selectionEndIndex);
 
     String GetSelectedText() const;
     void ReplaceSelectedText(const String &replaceStr);
@@ -106,7 +105,6 @@ private:
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIINPUTTEXT_H
+#endif  // UIINPUTTEXT_H

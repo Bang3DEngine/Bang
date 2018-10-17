@@ -3,13 +3,13 @@
 
 #include "Bang/IEventListenerCommon.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
+namespace Bang
+{
+template <class>
+class EventEmitter;
 
 template <class T>
-class EventListener : public T,
-                      public virtual IEventListenerCommon
+class EventListener : public T, public virtual IEventListenerCommon
 {
 public:
     void SetReceiveEvents(bool receiveEvents);
@@ -22,17 +22,16 @@ protected:
 
 private:
     bool m_receivesEvents = true;
-    Array<EventEmitter<T>*> m_emitters;
+    Array<EventEmitter<T> *> m_emitters;
 
     void AddEmitter(EventEmitter<T> *emitter);
     void RemoveEmitter(EventEmitter<T> *emitter);
 
-    template<class> friend class EventEmitter;
+    template <class>
+    friend class EventEmitter;
 };
-
-NAMESPACE_BANG_END
+}
 
 #include "Bang/EventListener.tcc"
 
-#endif // EVENTLISTENER_H
-
+#endif  // EVENTLISTENER_H

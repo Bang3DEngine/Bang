@@ -3,8 +3,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IEventListenerCommon
 {
 protected:
@@ -18,8 +18,6 @@ public:
 private:
     bool m_isReceivingEventsCommon = true;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTLISTENERCOMMON_H
-
+#endif  // IEVENTLISTENERCOMMON_H

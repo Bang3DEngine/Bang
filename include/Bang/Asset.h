@@ -13,13 +13,13 @@
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsDestroy;
-FORWARD class MetaNode;
+namespace Bang
+{
+class IEventsDestroy;
+class MetaNode;
 
 #define ASSET(CLASSNAME) \
-    RESOURCE(CLASSNAME) \
+    RESOURCE(CLASSNAME)  \
     friend class Asset;
 
 class Asset : public Resource,
@@ -36,9 +36,8 @@ public:
 
 protected:
     Asset() = default;
-    virtual ~Asset() = default;
+    virtual ~Asset() override = default;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ASSET_H
+#endif  // ASSET_H

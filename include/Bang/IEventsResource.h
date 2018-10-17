@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Resource;
+namespace Bang
+{
+class Resource;
 
 class IEventsResource
 {
@@ -22,7 +22,6 @@ public:
         BANG_UNUSED(res);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSRESOURCE_H
+#endif  // IEVENTSRESOURCE_H

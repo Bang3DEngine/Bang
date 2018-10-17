@@ -7,9 +7,9 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class UIFocusable;
+namespace Bang
+{
+class UIFocusable;
 
 class UIAutoFocuser : public Component
 {
@@ -20,18 +20,16 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
-    void SetFocusableToAutoFocus(UIFocusable* focusable);
-    UIFocusable* GetFocusableToAutoFocus() const;
+    void SetFocusableToAutoFocus(UIFocusable *focusable);
+    UIFocusable *GetFocusableToAutoFocus() const;
 
 private:
     int m_frames = 0;
-    UIFocusable* p_focusableToAutoFocus = nullptr;
+    UIFocusable *p_focusableToAutoFocus = nullptr;
 
     UIAutoFocuser();
     virtual ~UIAutoFocuser() = default;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIAUTOFOCUSER_H
-
+#endif  // UIAUTOFOCUSER_H

@@ -7,9 +7,9 @@
 #include "Bang/String.h"
 #include "Bang/UIButtonBase.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
+namespace Bang
+{
+class GameObject;
 
 class UIToolButton : public UIButtonBase
 {
@@ -35,8 +35,6 @@ private:
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITOOLBUTTON_H
-
+#endif  // UITOOLBUTTON_H

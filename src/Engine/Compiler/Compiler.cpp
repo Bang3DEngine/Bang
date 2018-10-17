@@ -6,23 +6,19 @@
 #include "Bang/StreamOperators.h"
 #include "Bang/SystemUtils.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Compiler::Result Compiler::Compile(const Compiler::Job &job)
 {
     List<String> args;
 
     // Output mode
-    switch (job.outputMode)
+    switch(job.outputMode)
     {
         case OutputType::OBJECT:
-        case OutputType::EXECUTABLE:
-            args.PushBack("-c");
-        break;
+        case OutputType::EXECUTABLE: args.PushBack("-c"); break;
 
-        case OutputType::SHARED_LIB:
-            args.PushBack("-shared");
-        break;
+        case OutputType::SHARED_LIB: args.PushBack("-shared"); break;
     }
 
     // Flags
@@ -32,8 +28,8 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     args.PushBack(job.GetInputFiles());
 
     // Include paths
-    List<String> incPaths = job.includePaths.To<List,String>();
-    for (String &incPath : incPaths)
+    List<String> incPaths = job.includePaths.To<List, String>();
+    for(String &incPath : incPaths)
     {
         incPath.Prepend("-I\"");
         incPath.Append("\"");
@@ -41,8 +37,8 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     args.PushBack(incPaths);
 
     // Library directories
-    List<String> libDirs = job.libDirs.To<List,String>();
-    for (String &libDir : libDirs)
+    List<String> libDirs = job.libDirs.To<List, String>();
+    for(String &libDir : libDirs)
     {
         libDir.Prepend("-L\"");
         libDir.Append("\"");
@@ -50,23 +46,19 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     args.PushBack(libDirs);
 
     // Libraries
-    List<String> libs = job.libraries.To<List,String>();
-    for (String &lib : libs)
+    List<String> libs = job.libraries.To<List, String>();
+    for(String &lib : libs)
     {
         lib.Prepend("-l");
     }
     args.PushBack(libs);
 
     // Output file
-    args.PushBack( List<String>({"-o", job.outputFile.GetAbsolute()}) );
-
+    args.PushBack(List<String>({"-o", job.outputFile.GetAbsolute()}));
 
     Result result;
     result.compileJob = job;
-    SystemUtils::System("/usr/bin/g++",
-                        args,
-                        &result.output,
-                        &result.success);
+    SystemUtils::System("/usr/bin/g++", args, &result.output, &result.success);
 
     return result;
 }
@@ -77,12 +69,12 @@ Compiler::Compiler()
 
 void Compiler::Job::AddInputFile(const Path &path)
 {
-    inputFiles.PushBack( "\"" + path.GetAbsolute() + "\"" );
+    inputFiles.PushBack("\"" + path.GetAbsolute() + "\"");
 }
 
 void Compiler::Job::AddInputFiles(const Array<Path> &paths)
 {
-    for (const Path &p : paths)
+    for(const Path &p : paths)
     {
         AddInputFile(p);
     }

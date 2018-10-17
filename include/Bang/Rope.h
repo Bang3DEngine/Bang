@@ -11,19 +11,19 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
+class ShaderProgram;
 
 class Rope : public LineRenderer
 {
     COMPONENT(Rope)
 
 public:
-	Rope();
-	virtual ~Rope() override;
+    Rope();
+    virtual ~Rope() override;
 
     // Component
     void OnStart() override;
@@ -78,15 +78,13 @@ private:
     bool m_validLineRendererPoints = false;
 
     void InitParticle(uint i, const Particle::Parameters &params);
-    const Particle::Parameters& GetParameters() const;
+    const Particle::Parameters &GetParameters() const;
     float GetPartLength() const;
     void AddSpringForces();
     void ConstrainPointsPositions();
 
     void UpdateLineRendererPoints();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ROPE_H
-
+#endif  // ROPE_H

@@ -9,15 +9,15 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 String::String() : m_str("")
 {
 }
 
 String::String(const char *cstr)
 {
-    if (cstr != nullptr)
+    if(cstr != nullptr)
     {
         m_str = cstr;
     }
@@ -27,8 +27,8 @@ String::String(const std::string &stdstr) : m_str(stdstr)
 {
 }
 
-String::String(std::istreambuf_iterator<char, std::char_traits<char> > begin,
-               std::istreambuf_iterator<char, std::char_traits<char> > end)
+String::String(std::istreambuf_iterator<char, std::char_traits<char>> begin,
+               std::istreambuf_iterator<char, std::char_traits<char>> end)
 {
     m_str = std::string(begin, end);
 }
@@ -117,17 +117,17 @@ long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 
 String String::SubString(long startIndexInclusive, long endIndexInclusive) const
 {
-    if ((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
+    if((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
     {
         return "";
     }
 
-    if (endIndexInclusive >= Size())
+    if(endIndexInclusive >= Size())
     {
         endIndexInclusive = (Size() - 1);
     }
 
-    if (endIndexInclusive == String::npos)
+    if(endIndexInclusive == String::npos)
     {
         return m_str.substr(startIndexInclusive);
     }
@@ -152,19 +152,18 @@ std::size_t String::Find(const String &str,
                          std::size_t fromIndex,
                          std::size_t length_) const
 {
-    std::size_t length = std::min(std::max(length_, std::size_t(0)),
-                                  std::max(std::size_t(str.Size())-fromIndex,
-                                           std::size_t(0)));
+    std::size_t length =
+        std::min(std::max(length_, std::size_t(0)),
+                 std::max(std::size_t(str.Size()) - fromIndex, std::size_t(0)));
     return m_str.find(str.ToCString(), fromIndex, length);
 }
 std::size_t String::RFind(const String &str,
                           std::size_t toIndex,
                           std::size_t length_) const
 {
-    std::size_t length = std::min(std::max(length_, std::size_t(0)),
-                                  std::max(std::min(std::size_t(str.Size()),
-                                                    toIndex),
-                                           std::size_t(0)));
+    std::size_t length = std::min(
+        std::max(length_, std::size_t(0)),
+        std::max(std::min(std::size_t(str.Size()), toIndex), std::size_t(0)));
     std::size_t idx = m_str.rfind(str.ToCString(), toIndex, length);
     return idx;
 }
@@ -173,21 +172,24 @@ int String::ReplaceInSitu(const String &from,
                           const String &to,
                           int maxNumberOfReplacements)
 {
-    if (from.IsEmpty()) { return 0; }
+    if(from.IsEmpty())
+    {
+        return 0;
+    }
 
     int lastIndex = 0;
     int numReplacements = 0;
-    while (lastIndex != -1 && lastIndex + from.Size() <= Size())
+    while(lastIndex != -1 && lastIndex + from.Size() <= Size())
     {
         lastIndex = IndexOf(from, lastIndex);
-        if (lastIndex >= 0)
+        if(lastIndex >= 0)
         {
             Remove(lastIndex, lastIndex + from.Size());
             Insert(lastIndex, to);
             lastIndex += to.Size();
             ++numReplacements;
-            if (maxNumberOfReplacements != -1 &&
-                numReplacements >= maxNumberOfReplacements)
+            if(maxNumberOfReplacements != -1 &&
+               numReplacements >= maxNumberOfReplacements)
             {
                 break;
             }
@@ -196,7 +198,8 @@ int String::ReplaceInSitu(const String &from,
     return numReplacements;
 }
 
-String String::Replace(const String &from, const String &to,
+String String::Replace(const String &from,
+                       const String &to,
                        int maxNumberOfReplacements) const
 {
     String str = *this;
@@ -208,11 +211,10 @@ String String::Elide(int length, bool elideRight) const
 {
     int maxLength = std::min(int(Size()), length);
     String result = (*this);
-    if (result.Size() > length)
+    if(result.Size() > length)
     {
-        result = result.SubString(result.Size() - maxLength,
-                                  result.Size() - 1);
-        if (elideRight)
+        result = result.SubString(result.Size() - maxLength, result.Size() - 1);
+        if(elideRight)
         {
             result = result + "...";
         }
@@ -236,35 +238,37 @@ String String::ElideLeft(int length) const
 
 String String::TrimLeft() const
 {
-    return TrimLeft( Array<char>({' ', '\t'}) );
+    return TrimLeft(Array<char>({' ', '\t'}));
 }
 
 String String::TrimRight() const
 {
-    return TrimRight( Array<char>({' ', '\t'}) );
+    return TrimRight(Array<char>({' ', '\t'}));
 }
 
 String String::Trim() const
 {
-    return Trim( Array<char>({' ', '\t'}) );
+    return Trim(Array<char>({' ', '\t'}));
 }
 
 String String::AddInFrontOfWords(String particle) const
 {
     String result = *this;
-    if (!result.IsEmpty() && result.At(0) != ' ') { result.Insert(0, particle); }
-
-    for (int i = 0; i < result.Size() - 1; ++i)
+    if(!result.IsEmpty() && result.At(0) != ' ')
     {
-        if (result.At(i) == ' ' && result.At(i+1) != ' ')
+        result.Insert(0, particle);
+    }
+
+    for(int i = 0; i < result.Size() - 1; ++i)
+    {
+        if(result.At(i) == ' ' && result.At(i + 1) != ' ')
         {
-            result.Insert(i+1, particle);
+            result.Insert(i + 1, particle);
             i += 2;
         }
     }
     return result;
 }
-
 
 bool String::IsNumber(char c)
 {
@@ -273,7 +277,7 @@ bool String::IsNumber(char c)
 
 bool String::IsLetter(char c)
 {
-    return  IsLowerCase(c) || IsUpperCase(c);
+    return IsLowerCase(c) || IsUpperCase(c);
 }
 
 bool String::IsUpperCase(char c)
@@ -302,7 +306,8 @@ int String::ToInt(const String &str, bool *ok)
     std::istringstream iss(number);
     int v;
     iss >> v;
-    if (ok) *ok = !iss.fail();
+    if(ok)
+        *ok = !iss.fail();
     return v;
 }
 
@@ -312,7 +317,8 @@ float String::ToFloat(const String &str, bool *ok)
     std::istringstream iss(number);
     float v;
     iss >> v;
-    if (ok) *ok = !iss.fail();
+    if(ok)
+        *ok = !iss.fail();
     return v;
 }
 
@@ -333,30 +339,27 @@ bool String::IsEmpty() const
 
 bool String::Contains(const String &str, bool caseSensitive) const
 {
-    if (!caseSensitive)
+    if(!caseSensitive)
     {
-        auto it = std::search(Begin(), End(), str.Begin(), str.End(),
-          [](char ch1, char ch2)
-          {
-            return String::ToUpper(ch1) == String::ToUpper(ch2);
-          }
-        );
-        return (it != End() );
+        auto it = std::search(
+            Begin(), End(), str.Begin(), str.End(), [](char ch1, char ch2) {
+                return String::ToUpper(ch1) == String::ToUpper(ch2);
+            });
+        return (it != End());
     }
     return m_str.find(str) != String::npos;
 }
 
 bool String::BeginsWith(const String &str) const
 {
-    if (str.Size() > Size())
+    if(str.Size() > Size())
     {
         return false;
-
     }
 
-    for (int i = 0; i < str.Size(); ++i)
+    for(int i = 0; i < str.Size(); ++i)
     {
-        if (At(i) != str[i])
+        if(At(i) != str[i])
         {
             return false;
         }
@@ -373,7 +376,7 @@ bool String::EndsWith(const String &str) const
 String String::ToUpper() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for(int i = 0; i < Size(); ++i)
     {
         result[i] = String::ToUpper(result[i]);
     }
@@ -383,7 +386,7 @@ String String::ToUpper() const
 String String::ToLower() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for(int i = 0; i < Size(); ++i)
     {
         result[i] = String::ToLower(result[i]);
     }
@@ -398,7 +401,7 @@ String String::ToString(float f, int decimalPlaces)
 String String::ToString(double f, int decimalPlaces)
 {
     String str = "";
-    if (decimalPlaces >= 0)
+    if(decimalPlaces >= 0)
     {
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(decimalPlaces) << f;
@@ -411,7 +414,7 @@ String String::ToString(double f, int decimalPlaces)
     return str;
 }
 
-char& String::operator[](std::size_t i)
+char &String::operator[](std::size_t i)
 {
     return m_str[i];
 }
@@ -421,25 +424,24 @@ char String::operator[](std::size_t i) const
     return m_str[i];
 }
 
-
-std::ostream& operator<<(std::ostream &os, const String &str)
+std::ostream &operator<<(std::ostream &os, const String &str)
 {
     return os << str.m_str;
 }
 
-std::istream& operator>>(std::istream &is, String &str)
+std::istream &operator>>(std::istream &is, String &str)
 {
     is >> str.m_str;
     return is;
 }
 
-String& operator+=(String &str1, const String &str2)
+String &operator+=(String &str1, const String &str2)
 {
     str1.m_str += str2.m_str;
     return str1;
 }
 
-String& operator+=(String &str1, char c)
+String &operator+=(String &str1, char c)
 {
     str1.m_str += c;
     return str1;
@@ -485,10 +487,9 @@ std::size_t String::operator()(const String &str) const
     return std::hash<std::string>()(str);
 }
 
-String& String::operator=(const char *cstr)
+String &String::operator=(const char *cstr)
 {
     m_str = cstr;
     return *this;
 }
-
-NAMESPACE_BANG_END
+}

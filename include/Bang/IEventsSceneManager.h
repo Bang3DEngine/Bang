@@ -3,10 +3,10 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Path;
-FORWARD class Scene;
+namespace Bang
+{
+class Path;
+class Scene;
 
 class IEventsSceneManager
 {
@@ -18,7 +18,6 @@ public:
         BANG_UNUSED_2(scene, sceneFilepath);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSSCENEMANAGER_H
+#endif  // IEVENTSSCENEMANAGER_H

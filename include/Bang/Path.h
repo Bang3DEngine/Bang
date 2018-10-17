@@ -12,18 +12,18 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 enum FindFlag
 {
-    NONE      = 0,
+    NONE = 0,
     RECURSIVE = 1,
-    HIDDEN    = 2,
+    HIDDEN = 2,
 
-    SIMPLE           = FindFlag::NONE,
-    SIMPLE_HIDDEN    = FindFlag::SIMPLE | FindFlag::HIDDEN,
+    SIMPLE = FindFlag::NONE,
+    SIMPLE_HIDDEN = FindFlag::SIMPLE | FindFlag::HIDDEN,
     RECURSIVE_HIDDEN = FindFlag::RECURSIVE | FindFlag::HIDDEN,
-    DEFAULT          = FindFlag::SIMPLE_HIDDEN
+    DEFAULT = FindFlag::SIMPLE_HIDDEN
 };
 CREATE_FLAGS(FindFlags, FindFlag);
 
@@ -43,7 +43,7 @@ public:
     bool IsSubPathOf(const Path &path) const;
 
     Array<Path> GetFiles(FindFlags findFlags = FindFlag::DEFAULT,
-                        const Array<String> &extensions = {}) const;
+                         const Array<String> &extensions = {}) const;
     Array<Path> GetSubDirectories(FindFlags findFlags) const;
     Array<Path> GetSubPaths(FindFlags findFlags) const;
 
@@ -57,12 +57,13 @@ public:
     String GetLastExtension() const;
     Array<String> GetExtensions() const;
     Path GetRelativePath(const Path &prefix) const;
-    const String& GetAbsolute() const;
+    const String &GetAbsolute() const;
     Path GetDuplicatePath() const;
     static Path GetDuplicatePath(const Path &path);
     static Path GetNextDuplicatePath(const Path &path);
-    static String GetDuplicateStringWithExtension(const String &string,
-                                                  const Array<String> &existingStrings);
+    static String GetDuplicateStringWithExtension(
+        const String &string,
+        const Array<String> &existingStrings);
     static String GetDuplicateString(const String &string,
                                      const Array<String> &existingStrings);
     static String GetNextDuplicateString(const String &string);
@@ -72,16 +73,16 @@ public:
     bool BeginsWith(const Path &path) const;
     bool BeginsWith(const String &path) const;
 
-    Path Append(const Path& path) const;
-    Path Append(const String& str) const;
-    Path AppendRaw(const String& str) const;
-    Path AppendExtension(const String& extension) const;
+    Path Append(const Path &path) const;
+    Path Append(const String &str) const;
+    Path AppendRaw(const String &str) const;
+    Path AppendExtension(const String &extension) const;
 
     bool IsHiddenFile() const;
 
     Path WithHidden(bool hidden) const;
-    Path WithNameExt(const String& name, const String& extension = "") const;
-    Path WithExtension(const String& extension) const;
+    Path WithNameExt(const String &name, const String &extension = "") const;
+    Path WithExtension(const String &extension) const;
 
     bool HasExtension(const String &extension) const;
     bool HasExtension(const Array<String> &extensions) const;
@@ -95,22 +96,20 @@ public:
 
 private:
     String m_absolutePath = "";
-
 };
-
-NAMESPACE_BANG_END
+}
 
 // Hash for Path
 namespace std
 {
-    template <>
-    struct hash<Bang::Path>
+template <>
+struct hash<Bang::Path>
+{
+    std::size_t operator()(const Bang::Path &path) const
     {
-        std::size_t operator()(const Bang::Path& path) const
-        {
-            return std::hash<std::string>()(path.GetAbsolute());
-        }
-    };
+        return std::hash<std::string>()(path.GetAbsolute());
+    }
+};
 }
 
-#endif // PATH_H
+#endif  // PATH_H

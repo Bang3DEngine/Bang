@@ -3,9 +3,9 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Resource;
+namespace Bang
+{
+class Resource;
 
 void OnResourceSet(Resource *resource);
 void OnResourceUnSet(Resource *resource);
@@ -19,12 +19,12 @@ protected:
     bool operator==(const Resource *res) const;
     bool operator==(const ResourceHandleBase &rhs) const;
     bool operator!=(const ResourceHandleBase &rhs) const;
-    bool operator< (const ResourceHandleBase &rhs) const;
+    bool operator<(const ResourceHandleBase &rhs) const;
     operator bool() const;
 
-    Resource* Get() const;
+    Resource *Get() const;
 
-    void Set(Resource* resource);
+    void Set(Resource *resource);
 
 private:
     Resource *p_resource = nullptr;
@@ -42,21 +42,21 @@ public:
     }
     ResourceHandle(ResourceHandle<ResourceClass> &&rhs)
     {
-       *this = rhs;
+        *this = rhs;
     }
     ResourceHandle(const ResourceHandle<ResourceClass> &rhs)
     {
         *this = rhs;
     }
 
-    void Set(ResourceClass* resource)
+    void Set(ResourceClass *resource)
     {
-        ResourceHandleBase::Set( SCAST<Resource*>(resource) );
+        ResourceHandleBase::Set(SCAST<Resource *>(resource));
     }
 
     ResourceClass *Get() const
     {
-        return SCAST<ResourceClass*>(ResourceHandleBase::Get());
+        return SCAST<ResourceClass *>(ResourceHandleBase::Get());
     }
 
     bool operator==(const ResourceClass *res) const
@@ -71,7 +71,7 @@ public:
     {
         return ResourceHandleBase::operator!=(rhs);
     }
-    bool operator< (const ResourceHandleBase &rhs) const
+    bool operator<(const ResourceHandleBase &rhs) const
     {
         return ResourceHandleBase::operator<(rhs);
     }
@@ -80,18 +80,19 @@ public:
         return ResourceHandleBase::operator bool();
     }
 
-    ResourceHandle<ResourceClass>& operator=(const ResourceHandle<ResourceClass> &rhs)
+    ResourceHandle<ResourceClass> &operator=(
+        const ResourceHandle<ResourceClass> &rhs)
     {
-        if (&rhs != this)
+        if(&rhs != this)
         {
             Set(rhs.Get());
         }
         return *this;
     }
 
-    ResourceHandle& operator=(ResourceHandle<ResourceClass> &&rhs)
+    ResourceHandle &operator=(ResourceHandle<ResourceClass> &&rhs)
     {
-        if (&rhs != this)
+        if(&rhs != this)
         {
             Set(rhs.Get());
             rhs.Set(nullptr);
@@ -100,14 +101,11 @@ public:
     }
 
 private:
-
     friend class Resources;
 };
 
-template<class T>
+template <class T>
 using RH = ResourceHandle<T>;
+}
 
-NAMESPACE_BANG_END
-
-#endif // RESOURCEHANDLE_H
-
+#endif  // RESOURCEHANDLE_H

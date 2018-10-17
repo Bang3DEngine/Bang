@@ -11,12 +11,12 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AABox;
-FORWARD class Mesh;
-FORWARD class Quad;
-FORWARD class Triangle;
+namespace Bang
+{
+class AABox;
+class Mesh;
+class Quad;
+class Triangle;
 
 class DebugRenderer : public GameObject
 {
@@ -117,27 +117,25 @@ private:
     List<DebugRenderPrimitive> m_primitivesToRender;
 
     DebugRenderer();
-	virtual ~DebugRenderer() override;
+    virtual ~DebugRenderer() override;
 
     void RenderPrimitives(bool withDepth);
 
-    static DebugRenderPrimitive*
-           CreateDebugRenderPrimitive(DebugRendererPrimitiveType primitive,
-                                      const Array<Vector3> &points,
-                                      const Color &color,
-                                      float time,
-                                      float thickness,
-                                      bool wireframe,
-                                      bool culling,
-                                      bool depthTest);
+    static DebugRenderPrimitive *CreateDebugRenderPrimitive(
+        DebugRendererPrimitiveType primitive,
+        const Array<Vector3> &points,
+        const Color &color,
+        float time,
+        float thickness,
+        bool wireframe,
+        bool culling,
+        bool depthTest);
 
     static DebugRenderer *GetActive();
 
     friend class Scene;
     friend class GameObject;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DEBUGRENDERER_H
-
+#endif  // DEBUGRENDERER_H

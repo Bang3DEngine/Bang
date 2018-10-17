@@ -4,12 +4,14 @@
 #include "Bang/Collider.h"
 #include "Bang/RayCastHitInfo.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD   class GameObject;
-FORWARD_T class Array;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class GameObject;
+template <class>
+class Array;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 const Array<RayCastHit> &RayCastHitInfo::GetHits() const
 {

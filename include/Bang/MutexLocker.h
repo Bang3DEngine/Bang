@@ -3,9 +3,9 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Mutex;
+namespace Bang
+{
+class Mutex;
 
 class MutexLocker
 {
@@ -16,7 +16,6 @@ public:
 private:
     Mutex *p_mutex;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MUTEXLOCKER_H
+#endif  // MUTEXLOCKER_H

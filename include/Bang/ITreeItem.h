@@ -3,9 +3,9 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class UIFocusable;
+namespace Bang
+{
+class UIFocusable;
 
 class ITreeItem
 {
@@ -16,7 +16,6 @@ protected:
     ITreeItem() = default;
     virtual ~ITreeItem() = default;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSRENDERERCHANGED_H
+#endif  // IEVENTSRENDERERCHANGED_H

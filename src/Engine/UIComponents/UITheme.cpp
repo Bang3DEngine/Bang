@@ -1,6 +1,6 @@
 #include "Bang/UITheme.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Color UITheme::GetOverColor()
 {
@@ -44,7 +44,7 @@ Color UITheme::GetInputsBackgroundColor()
 
 Color UITheme::GetTickColor()
 {
-    return Color::Black; // UITheme::GetBaseColor();
+    return Color::Black;  // UITheme::GetBaseColor();
 }
 
 Color UITheme::GetCheckBoxBackgroundColor()

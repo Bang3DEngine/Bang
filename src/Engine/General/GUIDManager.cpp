@@ -4,7 +4,7 @@
 #include "Bang/MetaFilesManager.h"
 #include "Bang/USet.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 GUIDManager::GUIDManager()
 {
@@ -14,8 +14,10 @@ GUID GUIDManager::GetNewGUID()
 {
     GUID guid;
 
-    do { guid = GUID::GetRandomGUID(); }
-    while ( GUIDManager::IsBeingUsed(guid) );
+    do
+    {
+        guid = GUID::GetRandomGUID();
+    } while(GUIDManager::IsBeingUsed(guid));
 
     GUIDManager::GetInstance()->m_guids.Add(guid);
     return guid;
@@ -35,7 +37,8 @@ void GUIDManager::CreateEmbeddedFileGUID(const GUID &baseGUID,
                                          GUID::GUIDType embeddedFileGUID,
                                          GUID *newGUID)
 {
-    ASSERT_MSG(embeddedFileGUID > 0, "Inner file GUID's must be greater than zero!");
+    ASSERT_MSG(embeddedFileGUID > 0,
+               "Inner file GUID's must be greater than zero!");
 
     *newGUID = baseGUID;
     newGUID->SetEmbeddedResourceGUID(embeddedFileGUID);

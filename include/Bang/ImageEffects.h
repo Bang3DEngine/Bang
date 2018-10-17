@@ -4,12 +4,11 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ImageIO.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class ImageEffects
 {
 public:
-
     // Zero  Color (0,0,0,0): background
     // Other Color:           foreground
     static void SignedDistanceField(const Imageb &inputImageBW,
@@ -22,13 +21,12 @@ public:
                         Imageb *outlineOutputImageBW);
 
     static bool Albedo(const Imageb &inputImage1,
-                     const Imageb &inputImage2,
-                     Imageb *diffOutputImage,
-                     bool diffAlpha = false);
+                       const Imageb &inputImage2,
+                       Imageb *diffOutputImage,
+                       bool diffAlpha = false);
 
     ImageEffects() = delete;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DISTANCEFIELDER_H
+#endif  // DISTANCEFIELDER_H

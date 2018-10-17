@@ -22,14 +22,13 @@
 #include "Bang/UILayoutElement.h"
 #include "Bang/UITextRenderer.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class GameObject;
+class Texture2D;
+class UIDirLayout;
 
-FORWARD class GameObject;
-FORWARD class Texture2D;
-FORWARD class UIDirLayout;
-
-class UIButtonBase : public Component,
-                     public EventListener<IEventsFocus>
+class UIButtonBase : public Component, public EventListener<IEventsFocus>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(UIButtonBase)
 
@@ -39,7 +38,8 @@ public:
     void SetIconSize(const Vector2i &size);
     void SetIconTexture(Texture2D *texture);
     void SetIconSpacingWithText(int spacingWithText);
-    void SetIcon(Texture2D *texture, const Vector2i &size,
+    void SetIcon(Texture2D *texture,
+                 const Vector2i &size,
                  int spacingWithText = 0);
 
     using ClickedCallback = std::function<void()>;
@@ -47,11 +47,11 @@ public:
 
     bool IsBlocked() const;
     UIImageRenderer *GetBorder() const;
-    UIImageRenderer* GetIcon() const;
-    UITextRenderer* GetText() const;
-    UIImageRenderer* GetBackground() const;
+    UIImageRenderer *GetIcon() const;
+    UITextRenderer *GetText() const;
+    UIImageRenderer *GetBackground() const;
     UIDirLayout *GetDirLayout() const;
-    UIFocusable* GetFocusable() const;
+    UIFocusable *GetFocusable() const;
     UILayoutElement *GetLayoutElement() const;
 
 protected:
@@ -71,26 +71,24 @@ protected:
                                     const UIEvent &event) override;
 
     static UIButtonBase *CreateInto(
-            std::function<UIButtonBase*(GameObject*)> createBtnFunc,
-            GameObject *go);
+        std::function<UIButtonBase *(GameObject *)> createBtnFunc,
+        GameObject *go);
 
 protected:
     void CallClickCallback();
 
 private:
     bool m_isBlocked = false;
-    DPtr<UITextRenderer>  p_text;
+    DPtr<UITextRenderer> p_text;
     DPtr<UIImageRenderer> p_icon;
     DPtr<UIImageRenderer> p_border;
-    DPtr<UIFocusable>     p_focusable;
+    DPtr<UIFocusable> p_focusable;
     DPtr<UIImageRenderer> p_background;
     DPtr<UILayoutElement> p_layoutElement;
     Array<std::function<void()>> m_clickedCallbacks;
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIBUTTONBASE_H
-
+#endif  // UIBUTTONBASE_H

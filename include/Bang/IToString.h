@@ -3,8 +3,8 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IToString
 {
 protected:
@@ -14,7 +14,6 @@ protected:
 public:
     virtual String ToString() const = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ITOSTRING_H
+#endif  // ITOSTRING_H

@@ -19,11 +19,12 @@
 #include "Bang/Texture2D.h"
 #include "Bang/TypeTraits.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Camera;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Camera;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIImageRenderer::UIImageRenderer()
 {
@@ -41,28 +42,25 @@ void UIImageRenderer::OnRender()
 {
     UIRenderer::OnRender();
 
-    if (GetActiveMaterial() && GetActiveMaterial()->GetShaderProgram())
+    if(GetActiveMaterial() && GetActiveMaterial()->GetShaderProgram())
     {
-        GetActiveMaterial()->GetShaderProgram()->SetInt("B_ImageMode",
-                                                        SCAST<int>( GetMode() ),
-                                                        false);
+        GetActiveMaterial()->GetShaderProgram()->SetInt(
+            "B_ImageMode", SCAST<int>(GetMode()), false);
         GetActiveMaterial()->GetShaderProgram()->SetVector2(
-                                              "B_Slice9BorderStrokePx",
-                                              Vector2(GetSlice9BorderStrokePx()),
-                                              false);
+            "B_Slice9BorderStrokePx", Vector2(GetSlice9BorderStrokePx()),
+            false);
     }
 
-    if (GetTint().a > 0.0f)
+    if(GetTint().a > 0.0f)
     {
-        GL::Render(p_quadMesh.Get()->GetVAO(),
-                   GetRenderPrimitive(),
+        GL::Render(p_quadMesh.Get()->GetVAO(), GetRenderPrimitive(),
                    p_quadMesh.Get()->GetNumVerticesIds());
     }
 }
 
 void UIImageRenderer::SetImageTexture(const Path &imagePath)
 {
-    if (imagePath.IsFile())
+    if(imagePath.IsFile())
     {
         RH<Texture2D> tex = Resources::Load<Texture2D>(imagePath);
         SetImageTexture(tex.Get());
@@ -73,51 +71,50 @@ void UIImageRenderer::SetImageTexture(const Path &imagePath)
     }
 }
 
-void UIImageRenderer::SetImageTexture(Texture2D* imageTexture)
+void UIImageRenderer::SetImageTexture(Texture2D *imageTexture)
 {
-    if (imageTexture != GetImageTexture())
+    if(imageTexture != GetImageTexture())
     {
         p_imageTexture.Set(imageTexture);
-        GetMaterial()->SetAlbedoTexture( GetImageTexture() );
+        GetMaterial()->SetAlbedoTexture(GetImageTexture());
     }
 }
 
 void UIImageRenderer::SetTint(const Color &tint)
 {
-    if (tint != GetTint())
+    if(tint != GetTint())
     {
         m_tint = tint;
-        GetMaterial()->SetAlbedoColor( GetTint() );
+        GetMaterial()->SetAlbedoColor(GetTint());
     }
 }
 
 void UIImageRenderer::SetMode(UIImageRenderer::Mode mode)
 {
-    if (mode != GetMode())
+    if(mode != GetMode())
     {
         m_mode = mode;
-        switch (GetMode())
+        switch(GetMode())
         {
-            case Mode::TEXTURE:
-            p_quadMesh = MeshFactory::GetUIPlane();
-            break;
+            case Mode::TEXTURE: p_quadMesh = MeshFactory::GetUIPlane(); break;
 
             case Mode::TEXTURE_INV_UVY:
-            p_quadMesh = MeshFactory::GetUIPlaneInvUVY();
-            break;
+                p_quadMesh = MeshFactory::GetUIPlaneInvUVY();
+                break;
 
             case Mode::SLICE_9:
-            p_quadMesh = MeshFactory::GetUIPlane3x3();
-            break;
+                p_quadMesh = MeshFactory::GetUIPlane3x3();
+                break;
 
             case Mode::SLICE_9_INV_UVY:
-            p_quadMesh = MeshFactory::GetUIPlane3x3InvUVY();
-            break;
+                p_quadMesh = MeshFactory::GetUIPlane3x3InvUVY();
+                break;
         }
     }
 }
 
-void UIImageRenderer::SetSlice9BorderStrokePx(const Vector2i& slice9borderStrokePx)
+void UIImageRenderer::SetSlice9BorderStrokePx(
+    const Vector2i &slice9borderStrokePx)
 {
     m_slice9BorderStrokePx = slice9borderStrokePx;
 }
@@ -137,7 +134,7 @@ Texture2D *UIImageRenderer::GetImageTexture() const
     return p_imageTexture.Get();
 }
 
-const Vector2i& UIImageRenderer::GetSlice9BorderStrokePx() const
+const Vector2i &UIImageRenderer::GetSlice9BorderStrokePx() const
 {
     return m_slice9BorderStrokePx;
 }
@@ -156,35 +153,35 @@ AARect UIImageRenderer::GetBoundingRect(Camera *camera) const
 void UIImageRenderer::CloneInto(ICloneable *clone) const
 {
     UIRenderer::CloneInto(clone);
-    UIImageRenderer *img = Cast<UIImageRenderer*>(clone);
-    img->SetImageTexture( GetImageTexture() );
-    img->SetTint( GetTint() );
+    UIImageRenderer *img = Cast<UIImageRenderer *>(clone);
+    img->SetImageTexture(GetImageTexture());
+    img->SetTint(GetTint());
 }
 
 void UIImageRenderer::ImportMeta(const MetaNode &metaNode)
 {
     UIRenderer::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Image"))
+    if(metaNode.Contains("Image"))
     {
-        RH<Texture2D> tex = Resources::Load<Texture2D>(
-                                            metaNode.Get<GUID>("Image"));
+        RH<Texture2D> tex =
+            Resources::Load<Texture2D>(metaNode.Get<GUID>("Image"));
         SetImageTexture(tex.Get());
     }
 
-    if (metaNode.Contains("Tint"))
+    if(metaNode.Contains("Tint"))
     {
-        SetTint( metaNode.Get<Color>("Tint") );
+        SetTint(metaNode.Get<Color>("Tint"));
     }
 
-    if (metaNode.Contains("Mode"))
+    if(metaNode.Contains("Mode"))
     {
-        SetMode( SCAST<UIImageRenderer::Mode>( metaNode.Get<int>("Mode") ) );
+        SetMode(SCAST<UIImageRenderer::Mode>(metaNode.Get<int>("Mode")));
     }
 
-    if (metaNode.Contains("Slice9BorderStrokePx"))
+    if(metaNode.Contains("Slice9BorderStrokePx"))
     {
-        SetSlice9BorderStrokePx( metaNode.Get<Vector2i>("Slice9BorderStrokePx") );
+        SetSlice9BorderStrokePx(metaNode.Get<Vector2i>("Slice9BorderStrokePx"));
     }
 }
 
@@ -198,4 +195,3 @@ void UIImageRenderer::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Mode", SCAST<int>(GetMode()));
     metaNode->Set("Slice9BorderStrokePx", GetSlice9BorderStrokePx());
 }
-

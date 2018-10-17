@@ -7,11 +7,11 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class UIImageRenderer;
-FORWARD class UIRectMask;
+namespace Bang
+{
+class GameObject;
+class UIImageRenderer;
+class UIRectMask;
 
 class UIScrollArea : public Component
 {
@@ -28,11 +28,11 @@ public:
 
     void SetContainedGameObject(GameObject *go);
 
-    UIRectMask* GetMask() const;
-    GameObject* GetContainer() const;
-    GameObject* GetContainedGameObject() const;
-    UIImageRenderer* GetBackground() const;
-    const Vector2i& GetScrolling() const;
+    UIRectMask *GetMask() const;
+    GameObject *GetContainer() const;
+    GameObject *GetContainedGameObject() const;
+    UIImageRenderer *GetBackground() const;
+    const Vector2i &GetScrolling() const;
 
 private:
     UIScrollArea();
@@ -46,11 +46,10 @@ private:
 
     void UpdatePaddings();
 
-    static UIScrollArea* CreateInto(GameObject *go);
+    static UIScrollArea *CreateInto(GameObject *go);
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UISCROLLAREA_H
+#endif  // UISCROLLAREA_H

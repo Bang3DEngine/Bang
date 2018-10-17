@@ -6,12 +6,11 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class CodePreprocessor
 {
 public:
-
     static void PreprocessCode(String *srcCode,
                                const Array<Path> &includePaths);
 
@@ -22,20 +21,20 @@ public:
     static Array<Path> GetSourceIncludePaths(const String &srcCode,
                                              const Array<Path> &includeDirs,
                                              bool onlyExisting = true);
-protected:
 
+protected:
     static String GetIncludeString(const String &includeDirective);
     static Path GetIncludePath(const String &includeDirective,
                                const Array<Path> &includeDirs);
-    static Array<Path> GetIncludePathCombinations(const String &includeDirective,
-                                                  const Array<Path> &includeDirs);
+    static Array<Path> GetIncludePathCombinations(
+        const String &includeDirective,
+        const Array<Path> &includeDirs);
     static String GetIncludeContents(const String &includeDirective,
                                      const Array<Path> &includeDirs);
 
 private:
     CodePreprocessor();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CODEPREPROCESSOR_H
+#endif  // CODEPREPROCESSOR_H

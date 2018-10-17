@@ -19,12 +19,13 @@
 #include "Bang/Physics.h"
 #include "Bang/UICanvas.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ICloneable;
-FORWARD class IEventsDestroy;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ICloneable;
+class IEventsDestroy;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Scene::Scene() : GameObject("Scene")
 {
@@ -34,12 +35,12 @@ Scene::Scene() : GameObject("Scene")
 
 Scene::~Scene()
 {
-    GameObject::DestroyImmediate( GetDebugRenderer() );
+    GameObject::DestroyImmediate(GetDebugRenderer());
 }
 
 void Scene::Start()
 {
-    if (!IsStarted())
+    if(!IsStarted())
     {
         m_lastUpdateTime = Time::GetNow();
     }
@@ -57,11 +58,11 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
 
-    if (rp == RenderPass::SCENE)
+    if(rp == RenderPass::SCENE)
     {
         GetDebugRenderer()->RenderPrimitives(true);
     }
-    else if (rp == RenderPass::OVERLAY)
+    else if(rp == RenderPass::OVERLAY)
     {
         GetDebugRenderer()->RenderPrimitives(false);
     }
@@ -80,13 +81,13 @@ DebugRenderer *Scene::GetDebugRenderer() const
 
 void Scene::SetCamera(Camera *cam)
 {
-    if (GetCamera())
+    if(GetCamera())
     {
         GetCamera()->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     }
 
     p_camera = cam;
-    if (GetCamera())
+    if(GetCamera())
     {
         GetCamera()->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
@@ -99,8 +100,8 @@ Time Scene::GetDeltaTime() const
 
 void Scene::InvalidateCanvas()
 {
-    Array<UICanvas*> canvases = GetComponentsInDescendantsAndThis<UICanvas>();
-    for (UICanvas *canvas : canvases)
+    Array<UICanvas *> canvases = GetComponentsInDescendantsAndThis<UICanvas>();
+    for(UICanvas *canvas : canvases)
     {
         canvas->InvalidateCanvas();
     }
@@ -110,30 +111,30 @@ void Scene::CloneInto(ICloneable *clone) const
 {
     GameObject::CloneInto(clone);
 
-    Scene *cloneScene = SCAST<Scene*>(clone);
+    Scene *cloneScene = SCAST<Scene *>(clone);
 
     // Find cloned camera by GUID.
-    if (GetCamera())
+    if(GetCamera())
     {
-        Array<Camera*> cams = GetComponentsInDescendantsAndThis<Camera>();
-        Array<Camera*> cloneCams = cloneScene->GetComponentsInDescendantsAndThis<Camera>();
+        Array<Camera *> cams = GetComponentsInDescendantsAndThis<Camera>();
+        Array<Camera *> cloneCams =
+            cloneScene->GetComponentsInDescendantsAndThis<Camera>();
         ASSERT(cams.Size() == cloneCams.Size());
 
         uint camIdx = cams.IndexOf(GetCamera());
-        if (camIdx != -1u)
+        if(camIdx != -1u)
         {
             Camera *cloneCam = cloneCams[camIdx];
-            cloneScene->SetCamera( cloneCam );
+            cloneScene->SetCamera(cloneCam);
         }
     }
-
 }
 
 void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     GameObject::OnDestroyed(object);
 
-    if (object == GetCamera())
+    if(object == GetCamera())
     {
         SetCamera(nullptr);
     }
@@ -148,12 +149,12 @@ void Scene::ImportMeta(const MetaNode &metaNode)
 {
     GameObject::ImportMeta(metaNode);
 
-    if (metaNode.Contains("CameraGameObjectGUID"))
+    if(metaNode.Contains("CameraGameObjectGUID"))
     {
         GUID camGoGUID = metaNode.Get<GUID>("CameraGameObjectGUID");
-        if (GameObject *camGo = FindInChildrenAndThis(camGoGUID, true))
+        if(GameObject *camGo = FindInChildrenAndThis(camGoGUID, true))
         {
-            SetCamera( camGo->GetComponent<Camera>() );
+            SetCamera(camGo->GetComponent<Camera>());
         }
     }
 }
@@ -163,7 +164,7 @@ void Scene::ExportMeta(MetaNode *metaNode) const
     GameObject::ExportMeta(metaNode);
     metaNode->SetName("Scene");
 
-    GUID camGoGUID = GetCamera() ? GetCamera()->GetGameObject()->GetGUID() :
-                                   GUID::Empty();
+    GUID camGoGUID =
+        GetCamera() ? GetCamera()->GetGameObject()->GetGUID() : GUID::Empty();
     metaNode->Set("CameraGameObjectGUID", camGoGUID);
 }

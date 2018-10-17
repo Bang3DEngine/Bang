@@ -4,10 +4,9 @@
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Component;
-
+namespace Bang
+{
+class Component;
 
 class ComponentFactory
 {
@@ -15,12 +14,11 @@ protected:
     ComponentFactory() = default;
     virtual ~ComponentFactory() = default;
 
-    static Component* Create(const String &componentClassName);
+    static Component *Create(const String &componentClassName);
 
     friend class Component;
     friend class GameObject;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COMPONENTFACTORY_H
+#endif  // COMPONENTFACTORY_H

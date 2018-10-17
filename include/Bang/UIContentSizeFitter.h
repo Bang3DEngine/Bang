@@ -11,10 +11,9 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-class UIContentSizeFitter : public Component,
-                            public ILayoutSelfController
+namespace Bang
+{
+class UIContentSizeFitter : public Component, public ILayoutSelfController
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIContentSizeFitter)
 
@@ -36,13 +35,12 @@ public:
     void OnInvalidated() override;
 
 private:
-    LayoutSizeType m_verticalSizeType   = LayoutSizeType::NONE;
+    LayoutSizeType m_verticalSizeType = LayoutSizeType::NONE;
     LayoutSizeType m_horizontalSizeType = LayoutSizeType::NONE;
 
     UIContentSizeFitter();
     virtual ~UIContentSizeFitter() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UICONTENTSIZEFITTER_H
+#endif  // UICONTENTSIZEFITTER_H

@@ -7,8 +7,8 @@
 #include "Bang/IToString.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class BPReflectedStruct : public IToString
 {
 public:
@@ -43,7 +43,6 @@ private:
 
     friend class BangPreprocessor;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BPSTRUCT_H
+#endif  // BPSTRUCT_H

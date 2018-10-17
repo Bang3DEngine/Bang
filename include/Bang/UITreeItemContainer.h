@@ -12,10 +12,10 @@
 #include "Bang/IEvents.h"
 #include "Bang/UIFocusable.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class UIButton;
-FORWARD class UIDragDroppable;
+namespace Bang
+{
+class UIButton;
+class UIDragDroppable;
 
 class UITreeItemContainer : public GameObject
 {
@@ -48,8 +48,6 @@ private:
     GameObject *p_indentSpacer = nullptr;
     UIDragDroppable *p_dragDroppable = nullptr;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITREEITEMCONTAINER_H
-
+#endif  // UITREEITEMCONTAINER_H

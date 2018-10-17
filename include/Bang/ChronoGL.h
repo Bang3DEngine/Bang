@@ -5,8 +5,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class ChronoGL
 {
 public:
@@ -25,7 +25,6 @@ private:
     bool IsQueryResultAvailable() const;
     GLuint GetQueryResultNanos() const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CHRONOGL_H
+#endif  // CHRONOGL_H

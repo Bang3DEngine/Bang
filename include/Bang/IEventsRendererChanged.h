@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Renderer;
+namespace Bang
+{
+class Renderer;
 
 class IEventsRendererChanged
 {
@@ -14,7 +14,6 @@ class IEventsRendererChanged
 public:
     virtual void OnRendererChanged(Renderer *changedRenderer) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSRENDERERCHANGED_H
+#endif  // IEVENTSRENDERERCHANGED_H

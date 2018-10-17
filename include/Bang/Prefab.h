@@ -6,25 +6,25 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class Path;
+namespace Bang
+{
+class GameObject;
+class Path;
 
 class Prefab : public Asset
 {
     ASSET(Prefab)
 
 public:
-    GameObject* Instantiate() const;
-    GameObject* InstantiateRaw() const;
+    GameObject *Instantiate() const;
+    GameObject *InstantiateRaw() const;
 
     void SetGameObject(GameObject *go);
 
-    const String& GetMetaContent() const;
+    const String &GetMetaContent() const;
 
     // Resource
-    void Import(const Path& prefabFilepath) override;
+    void Import(const Path &prefabFilepath) override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
@@ -38,7 +38,6 @@ private:
     Prefab(const String &gameObjectMetaInfoContent);
     virtual ~Prefab() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BANGFAB_H
+#endif  // BANGFAB_H

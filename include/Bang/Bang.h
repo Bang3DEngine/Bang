@@ -3,4 +3,4 @@
 
 #include "Bang/BangDefines.h"
 
-#endif // BANG_H
+#endif  // BANG_H

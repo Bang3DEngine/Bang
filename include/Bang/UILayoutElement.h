@@ -11,10 +11,9 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-NAMESPACE_BANG_BEGIN
-
-class UILayoutElement : public Component,
-                        public ILayoutElement
+namespace Bang
+{
+class UILayoutElement : public Component, public ILayoutElement
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutElement)
 
@@ -24,15 +23,15 @@ public:
 
     void SetMinWidth(int minWidth);
     void SetMinHeight(int minHeight);
-    void SetMinSize(const Vector2i& minSize);
+    void SetMinSize(const Vector2i &minSize);
     void SetMinSizeInAxis(int minMagnitude, Axis axis);
     void SetPreferredWidth(int preferredWidth);
     void SetPreferredHeight(int preferredHeight);
-    void SetPreferredSize(const Vector2i& preferredSize);
+    void SetPreferredSize(const Vector2i &preferredSize);
     void SetPreferredSizeInAxis(int preferredMagnitude, Axis axis);
     void SetFlexibleWidth(float flexibleWidth);
     void SetFlexibleHeight(float flexibleHeight);
-    void SetFlexibleSize(const Vector2& flexibleSize);
+    void SetFlexibleSize(const Vector2 &flexibleSize);
     void SetFlexibleSizeInAxis(float flexibleMagnitude, Axis axis);
 
     int GetMinWidth() const;
@@ -50,13 +49,12 @@ protected:
     virtual void CalculateLayout(Axis axis) override;
 
 private:
-    Vector2i m_minSize       = -Vector2i::One;
+    Vector2i m_minSize = -Vector2i::One;
     Vector2i m_preferredSize = -Vector2i::One;
-    Vector2  m_flexibleSize  = -Vector2::One;
+    Vector2 m_flexibleSize = -Vector2::One;
 
     void OnChanged();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UILAYOUTELEMENT_H
+#endif  // UILAYOUTELEMENT_H

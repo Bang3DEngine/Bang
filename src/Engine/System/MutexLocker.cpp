@@ -2,7 +2,7 @@
 
 #include "Bang/Mutex.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 MutexLocker::MutexLocker(Mutex *mutex)
 {

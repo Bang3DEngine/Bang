@@ -12,7 +12,7 @@
 #include "PxForceMode.h"
 #include "PxRigidDynamic.h"
 
-FORWARD namespace physx
+namespace physx
 {
 }
 
@@ -31,27 +31,27 @@ CREATE_FLAGS(RigidBodyConstraints, RigidBodyConstraint);
 
 enum class ForceMode
 {
-    FORCE           = physx::PxForceMode::eFORCE,
-    IMPULSE         = physx::PxForceMode::eIMPULSE,
-    ACCELERATION    = physx::PxForceMode::eACCELERATION,
+    FORCE = physx::PxForceMode::eFORCE,
+    IMPULSE = physx::PxForceMode::eIMPULSE,
+    ACCELERATION = physx::PxForceMode::eACCELERATION,
     VELOCITY_CHANGE = physx::PxForceMode::eVELOCITY_CHANGE
 };
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class ICloneable;
 
-FORWARD class ICloneable;
-
-class RigidBody : public Component,
-                  public PhysicsObject
+class RigidBody : public Component, public PhysicsObject
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(RigidBody)
 
 public:
-	RigidBody();
+    RigidBody();
     virtual ~RigidBody() override;
 
     void AddForce(const Vector3 &force, ForceMode forceMode = ForceMode::FORCE);
-    void AddTorque(const Vector3 &torque, ForceMode forceMode = ForceMode::FORCE);
+    void AddTorque(const Vector3 &torque,
+                   ForceMode forceMode = ForceMode::FORCE);
     void AddForceAtPos(const Vector3 &force,
                        const Vector3 &pos,
                        ForceMode forceMode = ForceMode::FORCE);
@@ -86,7 +86,7 @@ public:
     Vector3 GetLinearVelocity() const;
     Vector3 GetAngularVelocity() const;
     float GetMaxAngularVelocity() const;
-    const RigidBodyConstraints& GetConstraints() const;
+    const RigidBodyConstraints &GetConstraints() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -108,14 +108,12 @@ private:
 
     // PhysicsObject
     void OnPxRigidDynamicChanged(
-                        physx::PxRigidDynamic *prevPxRigidDynamic,
-                        physx::PxRigidDynamic *newPxRigidDynamic) override;
+        physx::PxRigidDynamic *prevPxRigidDynamic,
+        physx::PxRigidDynamic *newPxRigidDynamic) override;
 
     friend class Physics;
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RIGIDBODY_H
-
+#endif  // RIGIDBODY_H

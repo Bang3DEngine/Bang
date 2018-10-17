@@ -6,13 +6,15 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-AnimatorStateMachineConnectionTransitionCondition::AnimatorStateMachineConnectionTransitionCondition()
+AnimatorStateMachineConnectionTransitionCondition::
+    AnimatorStateMachineConnectionTransitionCondition()
 {
 }
 
-AnimatorStateMachineConnectionTransitionCondition::~AnimatorStateMachineConnectionTransitionCondition()
+AnimatorStateMachineConnectionTransitionCondition::
+    ~AnimatorStateMachineConnectionTransitionCondition()
 {
 }
 
@@ -22,13 +24,13 @@ void ASMCTransitionCondition::SetVariableName(const String &variableName)
 }
 
 void ASMCTransitionCondition::SetVariableType(
-                                    AnimatorStateMachineVariable::Type type)
+    AnimatorStateMachineVariable::Type type)
 {
     m_varType = type;
 }
 
 void ASMCTransitionCondition::SetComparator(
-                        ASMCTransitionCondition::Comparator comparator)
+    ASMCTransitionCondition::Comparator comparator)
 {
     m_comparator = comparator;
 }
@@ -43,12 +45,14 @@ const String &ASMCTransitionCondition::GetVariableName() const
     return m_varName;
 }
 
-AnimatorStateMachineVariable::Type ASMCTransitionCondition::GetVariableType() const
+AnimatorStateMachineVariable::Type ASMCTransitionCondition::GetVariableType()
+    const
 {
     return m_varType;
 }
 
-ASMCTransitionCondition::Comparator ASMCTransitionCondition::GetComparator() const
+ASMCTransitionCondition::Comparator ASMCTransitionCondition::GetComparator()
+    const
 {
     return m_comparator;
 }
@@ -58,40 +62,40 @@ float ASMCTransitionCondition::GetCompareValueFloat() const
     return m_compareValueFloat;
 }
 
-bool ASMCTransitionCondition::IsFulfilled(AnimatorStateMachine *stateMachine) const
+bool ASMCTransitionCondition::IsFulfilled(
+    AnimatorStateMachine *stateMachine) const
 {
-    if (stateMachine)
+    if(stateMachine)
     {
-        if ( AnimatorStateMachineVariable *var =
-                                stateMachine->GetVariable(GetVariableName()) )
+        if(AnimatorStateMachineVariable *var =
+               stateMachine->GetVariable(GetVariableName()))
         {
-            switch (var->GetType())
+            switch(var->GetType())
             {
                 case AnimatorStateMachineVariable::Type::FLOAT:
-                switch (GetComparator())
-                {
-                    case Comparator::GREATER:
-                        return (var->GetValueFloat() > GetCompareValueFloat());
+                    switch(GetComparator())
+                    {
+                        case Comparator::GREATER:
+                            return (var->GetValueFloat() >
+                                    GetCompareValueFloat());
 
-                    case Comparator::LESS:
-                        return (var->GetValueFloat() < GetCompareValueFloat());
+                        case Comparator::LESS:
+                            return (var->GetValueFloat() <
+                                    GetCompareValueFloat());
 
-                    default:
-                        ASSERT(false);
+                        default: ASSERT(false); break;
+                    }
                     break;
-                }
-                break;
 
                 case AnimatorStateMachineVariable::Type::BOOL:
-                switch (GetComparator())
-                {
-                    case Comparator::IS_TRUE:  return ( var->GetValueBool());
-                    case Comparator::IS_FALSE: return (!var->GetValueBool());
-                    default:
-                        ASSERT(false);
+                    switch(GetComparator())
+                    {
+                        case Comparator::IS_TRUE: return (var->GetValueBool());
+                        case Comparator::IS_FALSE:
+                            return (!var->GetValueBool());
+                        default: ASSERT(false); break;
+                    }
                     break;
-                }
-                break;
             }
         }
     }
@@ -99,34 +103,33 @@ bool ASMCTransitionCondition::IsFulfilled(AnimatorStateMachine *stateMachine) co
 }
 
 void AnimatorStateMachineConnectionTransitionCondition::ImportMeta(
-                                                    const MetaNode &metaNode)
+    const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
-    if (metaNode.Contains("VariableName"))
+    if(metaNode.Contains("VariableName"))
     {
-        SetVariableName( metaNode.Get<String>("VariableName") );
+        SetVariableName(metaNode.Get<String>("VariableName"));
     }
 
-    if (metaNode.Contains("Comparator"))
+    if(metaNode.Contains("Comparator"))
     {
-        SetComparator( SCAST<Comparator>( metaNode.Get<uint>("Comparator") ) );
+        SetComparator(SCAST<Comparator>(metaNode.Get<uint>("Comparator")));
     }
 
-    if (metaNode.Contains("CompareValueFloat"))
+    if(metaNode.Contains("CompareValueFloat"))
     {
-        SetCompareValueFloat( metaNode.Get<float>("CompareValueFloat") );
+        SetCompareValueFloat(metaNode.Get<float>("CompareValueFloat"));
     }
 }
 
 void AnimatorStateMachineConnectionTransitionCondition::ExportMeta(
-                                                    MetaNode *metaNode) const
+    MetaNode *metaNode) const
 {
     Serializable::ExportMeta(metaNode);
 
-    metaNode->Set("VariableName",      GetVariableName());
-    metaNode->Set("VariableType",      m_varType);
-    metaNode->Set("Comparator",        GetComparator());
+    metaNode->Set("VariableName", GetVariableName());
+    metaNode->Set("VariableType", m_varType);
+    metaNode->Set("Comparator", GetComparator());
     metaNode->Set("CompareValueFloat", GetCompareValueFloat());
 }
-

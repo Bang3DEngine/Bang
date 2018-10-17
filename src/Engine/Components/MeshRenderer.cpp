@@ -3,8 +3,8 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
-#include "Bang/Material.h"
 #include "Bang/ICloneable.h"
+#include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"
 #include "Bang/Mesh.h"
@@ -17,14 +17,14 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/TypeTraits.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 MeshRenderer::MeshRenderer()
 {
     CONSTRUCT_CLASS_ID(MeshRenderer);
-    SetRenderPrimitive( GL::Primitive::TRIANGLES );
-    SetMaterial( MaterialFactory::GetDefault().Get() );
-    SetMesh( MeshFactory::GetCube().Get() );
+    SetRenderPrimitive(GL::Primitive::TRIANGLES);
+    SetMaterial(MaterialFactory::GetDefault().Get());
+    SetMesh(MeshFactory::GetCube().Get());
 }
 
 MeshRenderer::~MeshRenderer()
@@ -33,18 +33,18 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::SetMesh(Mesh *m)
 {
-    if (GetSharedMesh() != m)
+    if(GetSharedMesh() != m)
     {
         p_sharedMesh.Set(m);
         p_mesh.Set(nullptr);
     }
 }
 
-Mesh* MeshRenderer::GetMesh() const
+Mesh *MeshRenderer::GetMesh() const
 {
-    if (!p_mesh)
+    if(!p_mesh)
     {
-        if (GetSharedMesh())
+        if(GetSharedMesh())
         {
             p_mesh = Resources::Clone<Mesh>(GetSharedMesh());
         }
@@ -72,7 +72,7 @@ void MeshRenderer::SetUniformsOnBind(ShaderProgram *sp)
 
 void MeshRenderer::SetCurrentLOD(int lod)
 {
-    int maxLOD = GetActiveMesh() ? GetActiveMesh()->GetNumLODs()-1 : 0;
+    int maxLOD = GetActiveMesh() ? GetActiveMesh()->GetNumLODs() - 1 : 0;
     m_currentLOD = Math::Clamp(lod, 0, maxLOD);
 }
 
@@ -93,8 +93,8 @@ int MeshRenderer::GetCurrentLOD() const
 
 Mesh *MeshRenderer::GetCurrentLODActiveMesh() const
 {
-    return GetActiveMesh() ?
-                GetActiveMesh()->GetLODMesh( GetCurrentLOD() ).Get() : nullptr;
+    return GetActiveMesh() ? GetActiveMesh()->GetLODMesh(GetCurrentLOD()).Get()
+                           : nullptr;
 }
 
 AABox MeshRenderer::GetAABBox() const
@@ -106,19 +106,18 @@ void MeshRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    if (Mesh *baseMeshToRender = GetActiveMesh())
+    if(Mesh *baseMeshToRender = GetActiveMesh())
     {
         Mesh *lodMeshToRender =
-                baseMeshToRender->GetLODMesh( GetCurrentLOD() ).Get();
-        GL::Render(lodMeshToRender->GetVAO(),
-                   GetRenderPrimitive(),
+            baseMeshToRender->GetLODMesh(GetCurrentLOD()).Get();
+        GL::Render(lodMeshToRender->GetVAO(), GetRenderPrimitive(),
                    lodMeshToRender->GetNumVerticesIds());
     }
 }
 
 Mesh *MeshRenderer::GetActiveMesh() const
 {
-    if (p_mesh)
+    if(p_mesh)
     {
         return GetMesh();
     }
@@ -128,23 +127,23 @@ Mesh *MeshRenderer::GetActiveMesh() const
 void MeshRenderer::CloneInto(ICloneable *clone) const
 {
     Renderer::CloneInto(clone);
-    MeshRenderer *mr = Cast<MeshRenderer*>(clone);
-    mr->SetMesh( GetSharedMesh() );
+    MeshRenderer *mr = Cast<MeshRenderer *>(clone);
+    mr->SetMesh(GetSharedMesh());
 }
 
 void MeshRenderer::ImportMeta(const MetaNode &metaNode)
 {
     Renderer::ImportMeta(metaNode);
-    if (metaNode.Contains("Mesh"))
+    if(metaNode.Contains("Mesh"))
     {
         RH<Mesh> mesh = Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh"));
-        SetMesh( mesh.Get() );
+        SetMesh(mesh.Get());
     }
 }
 
 void MeshRenderer::ExportMeta(MetaNode *metaNode) const
 {
     Renderer::ExportMeta(metaNode);
-    metaNode->Set("Mesh", GetSharedMesh() ? GetSharedMesh()->GetGUID() :
-                                           GUID::Empty());
+    metaNode->Set("Mesh",
+                  GetSharedMesh() ? GetSharedMesh()->GetGUID() : GUID::Empty());
 }

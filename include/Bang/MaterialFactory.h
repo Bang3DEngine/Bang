@@ -7,10 +7,10 @@
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Material;
-FORWARD class PhysicsMaterial;
+namespace Bang
+{
+class Material;
+class PhysicsMaterial;
 
 class MaterialFactory
 {
@@ -35,13 +35,13 @@ private:
 
     MaterialFactory() = default;
     static RH<Material> LoadMaterial(const String &matEnginePath);
-    static RH<PhysicsMaterial> LoadPhysicsMaterial(const String &phMatEnginePath);
+    static RH<PhysicsMaterial> LoadPhysicsMaterial(
+        const String &phMatEnginePath);
 
-    static MaterialFactory* GetActive();
+    static MaterialFactory *GetActive();
 
     friend class Resources;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MATERIALFACTORY_H
+#endif  // MATERIALFACTORY_H

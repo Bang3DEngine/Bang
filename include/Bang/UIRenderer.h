@@ -15,13 +15,13 @@
 #include "Bang/Renderer.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class GameObject;
-FORWARD class IEventsChildren;
-FORWARD class IEventsTransform;
-FORWARD class Object;
+namespace Bang
+{
+class Camera;
+class GameObject;
+class IEventsChildren;
+class IEventsTransform;
+class Object;
 
 class UIRenderer : public Renderer,
                    public EventListener<IEventsChildren>,
@@ -40,16 +40,19 @@ public:
     bool GetCullByRectTransform() const;
 
     // IEventsObject
-    virtual void OnEnabled(Object *object)  override;
+    virtual void OnEnabled(Object *object) override;
     virtual void OnDisabled(Object *object) override;
 
     // IEventsTransform
     virtual void OnTransformChanged() override;
 
     // IEventsChildren
-    virtual void OnChildAdded(GameObject *addedChild, GameObject *parent) override;
-    virtual void OnChildRemoved(GameObject *removedChild, GameObject *parent) override;
-    virtual void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
+    virtual void OnChildAdded(GameObject *addedChild,
+                              GameObject *parent) override;
+    virtual void OnChildRemoved(GameObject *removedChild,
+                                GameObject *parent) override;
+    virtual void OnParentChanged(GameObject *oldParent,
+                                 GameObject *newParent) override;
 
 protected:
     UIRenderer();
@@ -57,9 +60,7 @@ protected:
 
 private:
     bool m_cullByRectTransform = true;
-
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIRENDERER_H
+#endif  // UIRENDERER_H

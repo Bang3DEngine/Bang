@@ -5,8 +5,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Extensions
 {
 public:
@@ -36,12 +36,12 @@ public:
     static String GetDefaultBehaviourHeaderExtension();
     static String GetDefaultBehaviourSourceExtension();
 
-    static bool Equals(const String &extension, const Array<String> &extensions);
+    static bool Equals(const String &extension,
+                       const Array<String> &extensions);
     static bool Equals(const String &extensionSrc, const String &extensionDst);
 
     Extensions() = delete;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // EXTENSIONS_H
+#endif  // EXTENSIONS_H

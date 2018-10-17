@@ -9,9 +9,9 @@
 #include "Bang/Quad.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Sphere;
+namespace Bang
+{
+class Sphere;
 
 class AABox
 {
@@ -23,18 +23,21 @@ public:
     static AABox Empty;
 
     AABox();
-    AABox(float minx, float maxx,
-          float miny, float maxy,
-          float minz, float maxz);
+    AABox(float minx,
+          float maxx,
+          float miny,
+          float maxy,
+          float minz,
+          float maxz);
     explicit AABox(const Vector3 &p);
     AABox(const Vector3 &p1, const Vector3 &p2);
-    AABox(const AABox& b);
+    AABox(const AABox &b);
 
-    void SetMin(const Vector3& bMin);
-    void SetMax(const Vector3& bMax);
+    void SetMin(const Vector3 &bMin);
+    void SetMax(const Vector3 &bMax);
 
-    const Vector3& GetMin() const;
-    const Vector3& GetMax() const;
+    const Vector3 &GetMin() const;
+    const Vector3 &GetMax() const;
     Vector3 GetDiagonal() const;
     float GetWidth() const;
     float GetHeight() const;
@@ -49,20 +52,20 @@ public:
 
     Quad GetQuad(Axis3D axis, bool sign) const;
     Quad GetRightQuad() const;
-    Quad GetLeftQuad()  const;
-    Quad GetTopQuad()   const;
-    Quad GetBotQuad()   const;
+    Quad GetLeftQuad() const;
+    Quad GetTopQuad() const;
+    Quad GetBotQuad() const;
     Quad GetFrontQuad() const;
-    Quad GetBackQuad()  const;
+    Quad GetBackQuad() const;
     std::array<Quad, 6> GetQuads() const;
 
     bool CheckCollision(const Sphere &sphere,
-                        Vector3 *point  = nullptr,
+                        Vector3 *point = nullptr,
                         Vector3 *normal = nullptr) const;
     bool CheckCollision(const AABox &aabox) const;
     bool Contains(const Vector3 &point) const;
 
-    void AddPoint(const Vector3& point);
+    void AddPoint(const Vector3 &point);
     static AABox Union(const AABox &b1, const AABox &b2);
     void CreateFromPositions(const Array<Vector3> &positions);
 
@@ -73,7 +76,6 @@ public:
 AABox operator*(const Matrix4 &m, const AABox &b);
 bool operator==(const AABox &b1, const AABox &b2);
 bool operator!=(const AABox &b1, const AABox &b2);
+}
 
-NAMESPACE_BANG_END
-
-#endif // AABOX_H
+#endif  // AABOX_H

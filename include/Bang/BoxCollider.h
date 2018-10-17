@@ -9,26 +9,26 @@
 #include "Bang/String.h"
 #include "PxShape.h"
 
-FORWARD namespace physx
+namespace physx
 {
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
+namespace Bang
+{
+class ICloneable;
 
 class BoxCollider : public Collider
 {
     COLLIDER(BoxCollider)
 
 public:
-	BoxCollider();
+    BoxCollider();
     virtual ~BoxCollider() override;
 
     void SetExtents(const Vector3 &extents);
 
     Box GetBoxWorld() const;
-    const Vector3& GetExtents() const;
+    const Vector3 &GetExtents() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -41,11 +41,9 @@ protected:
     Vector3 m_extents = Vector3(0.5f);
 
     // Collider
-    physx::PxShape* CreatePxShape() const override;
+    physx::PxShape *CreatePxShape() const override;
     void UpdatePxShape() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BOXCOLLIDER_H
-
+#endif  // BOXCOLLIDER_H

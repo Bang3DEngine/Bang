@@ -46,29 +46,30 @@
 #include "foundation/PxFoundationVersion.h"
 #include "geometry/PxSphereGeometry.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD struct RayCastHitInfo;
-FORWARD NAMESPACE_BANG_END
-
-FORWARD namespace physx
+namespace Bang
 {
-FORWARD class PxActor;
-FORWARD class PxMaterial;
-FORWARD class PxShape;
-FORWARD class PxTriangleMesh;
+struct RayCastHitInfo;
+}
+
+namespace physx
+{
+class PxActor;
+class PxMaterial;
+class PxShape;
+class PxTriangleMesh;
 }
 
 using namespace physx;
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Physics::Physics()
 {
-    m_stepSleepTime.SetSeconds( 1.0 / 60.0 );
+    m_stepSleepTime.SetSeconds(1.0 / 60.0);
 }
 
 Physics::~Physics()
 {
-    for (auto &it : m_sceneToPxSceneContainer)
+    for(auto &it : m_sceneToPxSceneContainer)
     {
         PxSceneContainer *pxSceneCont = it.second;
         delete pxSceneCont;
@@ -80,31 +81,25 @@ Physics::~Physics()
 
 void Physics::Init()
 {
-    m_pxFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION,
-                                        m_pxAllocator,
+    m_pxFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, m_pxAllocator,
                                         m_pxErrorCallback);
-    if (!m_pxFoundation)
+    if(!m_pxFoundation)
     {
         Debug_Error("PxFoundation creation failed!");
         Application::Exit(1, true);
     }
 
-    m_pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION,
-                                  *m_pxFoundation,
-                                  PxTolerancesScale(),
-                                  true,
-                                  nullptr);
-    if (!m_pxPhysics)
+    m_pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pxFoundation,
+                                  PxTolerancesScale(), true, nullptr);
+    if(!m_pxPhysics)
     {
         Debug_Error("PxPhysics creation failed!");
         Application::Exit(1, true);
     }
 
-
-    m_pxCooking = PxCreateCooking(PX_PHYSICS_VERSION,
-                                  *m_pxFoundation,
-                                  PxCookingParams( PxTolerancesScale() ));
-    if (!m_pxCooking)
+    m_pxCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pxFoundation,
+                                  PxCookingParams(PxTolerancesScale()));
+    if(!m_pxCooking)
     {
         Debug_Error("PxCooking creation failed!");
         Application::Exit(1, true);
@@ -113,7 +108,7 @@ void Physics::Init()
 
 void Physics::ResetStepTimeReference(Scene *scene)
 {
-    if (PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
+    if(PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
     {
         pxSceneCont->ResetStepTimeReference();
     }
@@ -121,23 +116,24 @@ void Physics::ResetStepTimeReference(Scene *scene)
 
 void Physics::UpdateFromTransforms(Scene *scene)
 {
-    if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
+    if(PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
-        const auto &allPhObjs = pxSceneContainer->m_physicsObjectGatherer->
-                                GetGatheredObjects();
-        for (PhysicsObject *phObj : allPhObjs)
+        const auto &allPhObjs =
+            pxSceneContainer->m_physicsObjectGatherer->GetGatheredObjects();
+        for(PhysicsObject *phObj : allPhObjs)
         {
-            if (Component *comp = FastDynamicCast<Component*>(phObj))
+            if(Component *comp = FastDynamicCast<Component *>(phObj))
             {
-                if (GameObject *phObjGo = comp->GetGameObject())
+                if(GameObject *phObjGo = comp->GetGameObject())
                 {
-                    if (PxActor *pxActor =
-                        pxSceneContainer->GetPxActorFromGameObject(phObjGo))
+                    if(PxActor *pxActor =
+                           pxSceneContainer->GetPxActorFromGameObject(phObjGo))
                     {
-                        if (Transform *tr = phObjGo->GetTransform())
+                        if(Transform *tr = phObjGo->GetTransform())
                         {
-                            PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
-                            pxRB->setGlobalPose( GetPxTransformFromTransform(tr) );
+                            PxRigidBody *pxRB = SCAST<PxRigidBody *>(pxActor);
+                            pxRB->setGlobalPose(
+                                GetPxTransformFromTransform(tr));
                         }
                     }
                 }
@@ -148,7 +144,7 @@ void Physics::UpdateFromTransforms(Scene *scene)
 
 void Physics::SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore)
 {
-    if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
+    if(PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
         pxSceneContainer->m_numFramesLeftToIgnore = numNextFramesToIgnore;
     }
@@ -164,17 +160,16 @@ void Physics::Step(Scene *scene, Time simulationTime)
 
     // Step
     constexpr double MaxSimulationTimeSeconds = 0.1;
-    simulationTime.SetSeconds( Math::Min(simulationTime.GetSeconds(),
-                                         MaxSimulationTimeSeconds) );
+    simulationTime.SetSeconds(
+        Math::Min(simulationTime.GetSeconds(), MaxSimulationTimeSeconds));
     int subStepsToBeDone =
-        Math::Min(
-           SCAST<int>(Math::Ceil(simulationTime.GetSeconds() /
-                                 GetStepSleepTime().GetSeconds())),
-           GetMaxSubSteps());
+        Math::Min(SCAST<int>(Math::Ceil(simulationTime.GetSeconds() /
+                                        GetStepSleepTime().GetSeconds())),
+                  GetMaxSubSteps());
     subStepsToBeDone = Math::Max(subStepsToBeDone, 1);
 
     Time subStepTime = (simulationTime / subStepsToBeDone);
-    for (int i = 0; i < subStepsToBeDone; ++i)
+    for(int i = 0; i < subStepsToBeDone; ++i)
     {
         pxScene->simulate(subStepTime.GetSeconds());
         pxScene->fetchResults(true);
@@ -182,37 +177,38 @@ void Physics::Step(Scene *scene, Time simulationTime)
     ResetStepTimeReference(scene);
 
     uint32_t numActActorsOut;
-    PxActor** activeActors = pxScene->getActiveActors(numActActorsOut);
-    for (uint32_t i = 0; i < numActActorsOut; ++i)
+    PxActor **activeActors = pxScene->getActiveActors(numActActorsOut);
+    for(uint32_t i = 0; i < numActActorsOut; ++i)
     {
         PxActor *pxActor = activeActors[i];
         GameObject *go = pxSceneContainer->GetGameObjectFromPxActor(pxActor);
-        if (!go)
+        if(!go)
         {
             continue;
         }
 
-        Array<PhysicsObject*> physicsObjects = go->GetComponents<PhysicsObject>();
-        for (PhysicsObject *phObj : physicsObjects)
+        Array<PhysicsObject *> physicsObjects =
+            go->GetComponents<PhysicsObject>();
+        for(PhysicsObject *phObj : physicsObjects)
         {
-            switch (phObj->GetPhysicsObjectType())
+            switch(phObj->GetPhysicsObjectType())
             {
                 case PhysicsObject::Type::RIGIDBODY:
                 {
-                    RigidBody *rb = SCAST<RigidBody*>(phObj);
-                    if (rb->IsActiveRecursively())
+                    RigidBody *rb = SCAST<RigidBody *>(phObj);
+                    if(rb->IsActiveRecursively())
                     {
-                        PxRigidBody *pxRB = SCAST<PxRigidBody*>(pxActor);
-                        if (Transform *tr = go->GetTransform())
+                        PxRigidBody *pxRB = SCAST<PxRigidBody *>(pxActor);
+                        if(Transform *tr = go->GetTransform())
                         {
-                            FillTransformFromPxTransform( tr, pxRB->getGlobalPose() );
+                            FillTransformFromPxTransform(tr,
+                                                         pxRB->getGlobalPose());
                         }
                     }
                 }
                 break;
 
-                default:
-                break;
+                default: break;
             }
         }
     }
@@ -220,13 +216,13 @@ void Physics::Step(Scene *scene, Time simulationTime)
 
 void Physics::StepIfNeeded(Scene *scene)
 {
-    if (PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
+    if(PxSceneContainer *pxSceneContainer = GetPxSceneContainerFromScene(scene))
     {
         Time now = Time::GetNow();
         Time timeSinceLastStep = (now - pxSceneContainer->m_lastStepTime);
-        if (timeSinceLastStep >= GetStepSleepTime())
+        if(timeSinceLastStep >= GetStepSleepTime())
         {
-            if (pxSceneContainer->m_numFramesLeftToIgnore <= 0)
+            if(pxSceneContainer->m_numFramesLeftToIgnore <= 0)
             {
                 Step(scene, timeSinceLastStep);
             }
@@ -241,7 +237,7 @@ void Physics::StepIfNeeded(Scene *scene)
 
 void Physics::SetStepSleepTime(Time stepSleepTime)
 {
-    if (stepSleepTime != GetStepSleepTime())
+    if(stepSleepTime != GetStepSleepTime())
     {
         m_stepSleepTime = stepSleepTime;
     }
@@ -249,7 +245,7 @@ void Physics::SetStepSleepTime(Time stepSleepTime)
 
 void Physics::SetMaxSubSteps(int maxSubSteps)
 {
-    if (maxSubSteps != GetMaxSubSteps())
+    if(maxSubSteps != GetMaxSubSteps())
     {
         m_maxSubSteps = maxSubSteps;
     }
@@ -257,14 +253,14 @@ void Physics::SetMaxSubSteps(int maxSubSteps)
 
 void Physics::SetGravity(const Vector3 &gravity)
 {
-    if (gravity != GetGravity())
+    if(gravity != GetGravity())
     {
         m_gravity = gravity;
-        for (const auto &pair : m_sceneToPxSceneContainer)
+        for(const auto &pair : m_sceneToPxSceneContainer)
         {
             PxSceneContainer *pxSceneCont = pair.second;
             PxScene *pxScene = pxSceneCont->GetPxScene();
-            pxScene->setGravity( Physics::GetPxVec3FromVector3(GetGravity()) );
+            pxScene->setGravity(Physics::GetPxVec3FromVector3(GetGravity()));
         }
     }
 }
@@ -280,7 +276,7 @@ void Physics::RegisterScene(Scene *scene)
 
 void Physics::UnRegisterScene(Scene *scene)
 {
-    if (m_sceneToPxSceneContainer.ContainsKey(scene))
+    if(m_sceneToPxSceneContainer.ContainsKey(scene))
     {
         PxSceneContainer *pxSceneCont = m_sceneToPxSceneContainer.Get(scene);
         delete pxSceneCont;
@@ -311,40 +307,40 @@ const Vector3 &Physics::GetGravity() const
     return m_gravity;
 }
 
-PxTriangleMesh* Physics::CreatePxTriangleMesh(Mesh *mesh) const
+PxTriangleMesh *Physics::CreatePxTriangleMesh(Mesh *mesh) const
 {
-    PxTriangleMesh* pxTriangleMesh = nullptr;
-    if (mesh)
+    PxTriangleMesh *pxTriangleMesh = nullptr;
+    if(mesh)
     {
         PxTolerancesScale scale;
         PxCookingParams params(scale);
-        params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
         params.meshPreprocessParams |=
-                PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+            PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+        params.meshPreprocessParams |=
+            PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
         params.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
 
         m_pxCooking->setParams(params);
 
         PxTriangleMeshDesc meshDesc;
-        meshDesc.points.count     = mesh->GetPositionsPool().Size();
-        meshDesc.points.stride    = sizeof(Vector3);
-        meshDesc.points.data      = mesh->GetPositionsPool().Data();
+        meshDesc.points.count = mesh->GetPositionsPool().Size();
+        meshDesc.points.stride = sizeof(Vector3);
+        meshDesc.points.data = mesh->GetPositionsPool().Data();
 
-        meshDesc.triangles.count  = mesh->GetNumTriangles();
+        meshDesc.triangles.count = mesh->GetNumTriangles();
         meshDesc.triangles.stride = 3 * sizeof(uint);
-        meshDesc.triangles.data   = mesh->GetTrianglesVertexIds().Data();
+        meshDesc.triangles.data = mesh->GetTrianglesVertexIds().Data();
 
-        #ifdef DEBUG
-        if (!m_pxCooking->validateTriangleMesh(meshDesc))
+#ifdef DEBUG
+        if(!m_pxCooking->validateTriangleMesh(meshDesc))
         {
-            Debug_Warn("Triangle mesh " << mesh << " not optimal for collider.");
+            Debug_Warn("Triangle mesh " << mesh
+                                        << " not optimal for collider.");
         }
-        #endif
+#endif
 
-        pxTriangleMesh =
-                m_pxCooking->createTriangleMesh(
-                                meshDesc,
-                                GetPxPhysics()->getPhysicsInsertionCallback());
+        pxTriangleMesh = m_pxCooking->createTriangleMesh(
+            meshDesc, GetPxPhysics()->getPhysicsInsertionCallback());
     }
 
     return pxTriangleMesh;
@@ -352,8 +348,8 @@ PxTriangleMesh* Physics::CreatePxTriangleMesh(Mesh *mesh) const
 
 PxMaterial *Physics::GetDefaultPxMaterial()
 {
-    PhysicsMaterial *phDefaultMat = MaterialFactory::
-                                    GetDefaultPhysicsMaterial().Get();
+    PhysicsMaterial *phDefaultMat =
+        MaterialFactory::GetDefaultPhysicsMaterial().Get();
     PxMaterial *pxDefaultMat = phDefaultMat->GetPxMaterial();
     return pxDefaultMat;
 }
@@ -363,9 +359,10 @@ void Physics::RayCast(const RayCastInfo &rcInfo, RayCastHitInfo *hitInfo)
     Physics *ph = Physics::GetInstance();
     ASSERT(ph);
 
-    if (Scene *scene = SceneManager::GetActiveScene())
+    if(Scene *scene = SceneManager::GetActiveScene())
     {
-        if (PxSceneContainer *pxSceneCont = ph->GetPxSceneContainerFromScene(scene))
+        if(PxSceneContainer *pxSceneCont =
+               ph->GetPxSceneContainerFromScene(scene))
         {
             pxSceneCont->RayCast(rcInfo, hitInfo);
         }
@@ -391,9 +388,9 @@ Physics *Physics::GetInstance()
 
 void Physics::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 {
-    if (Scene *scene = DCAST<Scene*>(ee))
+    if(Scene *scene = DCAST<Scene *>(ee))
     {
-        if (PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
+        if(PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
         {
             delete pxSceneCont;
             m_sceneToPxSceneContainer.Remove(scene);
@@ -403,7 +400,7 @@ void Physics::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 
 Scene *Physics::GetSceneFromPhysicsObject(PhysicsObject *phObj) const
 {
-    if (GameObject *phObjGo = Physics::GetGameObjectFromPhysicsObject(phObj))
+    if(GameObject *phObjGo = Physics::GetGameObjectFromPhysicsObject(phObj))
     {
         return phObjGo->GetScene();
     }
@@ -428,14 +425,12 @@ PxMaterial *Physics::CreateNewMaterial()
 PxRigidDynamic *Physics::CreateNewPxRigidDynamic(Transform *transform)
 {
     PxMaterial *pxDefaultMat =
-            MaterialFactory::GetDefaultPhysicsMaterial().Get()->GetPxMaterial();
+        MaterialFactory::GetDefaultPhysicsMaterial().Get()->GetPxMaterial();
 
     PxTransform pxTransform = GetPxTransformFromTransform(transform);
-    PxRigidDynamic *pxRD =  PxCreateDynamic(*GetPxPhysics(),
-                                            pxTransform,
-                                            PxSphereGeometry(0.01f),
-                                            *pxDefaultMat,
-                                            10.0f);
+    PxRigidDynamic *pxRD =
+        PxCreateDynamic(*GetPxPhysics(), pxTransform, PxSphereGeometry(0.01f),
+                        *pxDefaultMat, 10.0f);
     pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
 
     // Remove default initial shape
@@ -489,21 +484,21 @@ PxQuat Physics::GetPxQuatFromQuaternion(const Quaternion &q)
 void Physics::FillTransformFromPxTransform(Transform *transform,
                                            const PxTransform &pxTransform)
 {
-    if (transform)
+    if(transform)
     {
-        transform->SetPosition( GetVector3FromPxVec3(pxTransform.p) );
-        transform->SetRotation( GetQuaternionFromPxQuat(pxTransform.q) );
+        transform->SetPosition(GetVector3FromPxVec3(pxTransform.p));
+        transform->SetRotation(GetQuaternionFromPxQuat(pxTransform.q));
     }
 }
 
 PxTransform Physics::GetPxTransformFromTransform(Transform *tr)
 {
     PxTransform pxTransform(PxIdentity);
-    if (tr)
+    if(tr)
     {
-        pxTransform.p = Physics::GetPxVec3FromVector3( tr->GetPosition() );
-        pxTransform.q = Physics::GetPxQuatFromQuaternion( tr->GetRotation() );
-        if (!pxTransform.isValid())
+        pxTransform.p = Physics::GetPxVec3FromVector3(tr->GetPosition());
+        pxTransform.q = Physics::GetPxQuatFromQuaternion(tr->GetRotation());
+        if(!pxTransform.isValid())
         {
             pxTransform = PxTransform(PxIdentity);
         }
@@ -513,18 +508,19 @@ PxTransform Physics::GetPxTransformFromTransform(Transform *tr)
 
 PxSceneContainer *Physics::GetPxSceneContainerFromScene(Scene *scene)
 {
-    if (m_sceneToPxSceneContainer.ContainsKey(scene))
+    if(m_sceneToPxSceneContainer.ContainsKey(scene))
     {
         return m_sceneToPxSceneContainer.Get(scene);
     }
     return nullptr;
 }
-const PxSceneContainer *Physics::GetPxSceneContainerFromScene(Scene *scene) const
+const PxSceneContainer *Physics::GetPxSceneContainerFromScene(
+    Scene *scene) const
 {
-    return const_cast<Physics*>(this)->GetPxSceneContainerFromScene(scene);
+    return const_cast<Physics *>(this)->GetPxSceneContainerFromScene(scene);
 }
 
 GameObject *Physics::GetGameObjectFromPhysicsObject(PhysicsObject *phObj)
 {
-    return DCAST<Component*>(phObj)->GetGameObject();
+    return DCAST<Component *>(phObj)->GetGameObject();
 }

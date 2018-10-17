@@ -3,10 +3,10 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AnimatorStateMachineNode;
-FORWARD class AnimatorStateMachineConnection;
+namespace Bang
+{
+class AnimatorStateMachineNode;
+class AnimatorStateMachineConnection;
 
 class IEventsAnimatorStateMachineNode
 {
@@ -25,7 +25,6 @@ public:
         BANG_UNUSED_2(node, connection);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSANIMATORSTATEMACHINENODE_H
+#endif  // IEVENTSANIMATORSTATEMACHINENODE_H

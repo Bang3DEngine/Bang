@@ -8,22 +8,21 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class ILayoutElement : public IInvalidatable<ILayoutElement>
 {
 public:
-
-    //IInvalidatable
+    // IInvalidatable
     virtual void Invalidate() override;
     virtual void OnInvalidated() override;
 
     void SetLayoutPriority(int layoutPriority);
     int GetLayoutPriority() const;
 
-    Vector2i GetMinSize()       const;
+    Vector2i GetMinSize() const;
     Vector2i GetPreferredSize() const;
-    Vector2  GetFlexibleSize()  const;
+    Vector2 GetFlexibleSize() const;
 
     Vector2 GetSize(LayoutSizeType sizeType) const;
 
@@ -33,21 +32,20 @@ protected:
 
     void SetCalculatedLayout(Axis axis,
                              int min,
-                             int preferred  = -1,
+                             int preferred = -1,
                              float flexible = -1.0f);
 
 private:
     int m_layoutPriority = 0;
-    mutable Vector2i m_calculatedMinSize       = -Vector2i::One;
+    mutable Vector2i m_calculatedMinSize = -Vector2i::One;
     mutable Vector2i m_calculatedPreferredSize = -Vector2i::One;
-    mutable Vector2  m_calculatedFlexibleSize  = -Vector2::One;
+    mutable Vector2 m_calculatedFlexibleSize = -Vector2::One;
 
     virtual void CalculateLayout(Axis axis) = 0;
     void _CalculateLayout(Axis axis);
 
     friend class UILayoutManager;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ILAYOUTELEMENT_H
+#endif  // ILAYOUTELEMENT_H

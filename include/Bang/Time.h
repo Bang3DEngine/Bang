@@ -5,8 +5,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Time
 {
 public:
@@ -82,91 +82,90 @@ inline bool operator>=(const Time &lhs, const Time &rhs)
 {
     return (lhs.GetNanos() >= rhs.GetNanos());
 }
-inline Time& operator+=(Time &lhs, const Time &rhs)
+inline Time &operator+=(Time &lhs, const Time &rhs)
 {
     lhs = (lhs + rhs);
     return lhs;
 }
-inline Time& operator-=(Time &lhs, const Time &rhs)
+inline Time &operator-=(Time &lhs, const Time &rhs)
 {
     lhs = (lhs - rhs);
     return lhs;
 }
-inline Time& operator*=(Time &lhs, const Time &rhs)
+inline Time &operator*=(Time &lhs, const Time &rhs)
 {
     lhs = (lhs * rhs);
     return lhs;
 }
-inline Time& operator/=(Time &lhs, const Time &rhs)
+inline Time &operator/=(Time &lhs, const Time &rhs)
 {
     lhs = (lhs / rhs);
     return lhs;
 }
 template <class T>
-inline Time operator+(const Time &lhs, const T& rhs)
+inline Time operator+(const Time &lhs, const T &rhs)
 {
     return Time(lhs.GetNanos() + rhs);
 }
 template <class T>
-inline Time operator+(const T& lhs, const Time &rhs)
+inline Time operator+(const T &lhs, const Time &rhs)
 {
     return Time(rhs.GetNanos() + lhs);
 }
 template <class T>
-inline Time operator-(const Time &lhs, const T& rhs)
+inline Time operator-(const Time &lhs, const T &rhs)
 {
     return Time(lhs.GetNanos() - rhs);
 }
 template <class T>
-inline Time operator-(const T& lhs, const Time &rhs)
+inline Time operator-(const T &lhs, const Time &rhs)
 {
     return Time(rhs.GetNanos() - lhs);
 }
 template <class T>
-inline Time operator*(const Time &lhs, const T& rhs)
+inline Time operator*(const Time &lhs, const T &rhs)
 {
     return Time(lhs.GetNanos() * rhs);
 }
 template <class T>
-inline Time operator*(const T& lhs, const Time &rhs)
+inline Time operator*(const T &lhs, const Time &rhs)
 {
     return Time(rhs.GetNanos() * lhs);
 }
 template <class T>
-inline Time operator/(const Time &lhs, const T& rhs)
+inline Time operator/(const Time &lhs, const T &rhs)
 {
     return Time(lhs.GetNanos() / rhs);
 }
 template <class T>
-inline Time operator/(const T& lhs, const Time &rhs)
+inline Time operator/(const T &lhs, const Time &rhs)
 {
     return Time(rhs.GetNanos() / lhs);
 }
 template <class T>
-inline Time& operator+=(Time &lhs, const T& rhs)
+inline Time &operator+=(Time &lhs, const T &rhs)
 {
     lhs.SetNanos(lhs.GetNanos() + rhs);
     return lhs;
 }
 template <class T>
-inline Time& operator-=(Time &lhs, const T& rhs)
+inline Time &operator-=(Time &lhs, const T &rhs)
 {
     lhs.SetNanos(lhs.GetNanos() - rhs);
     return lhs;
 }
 template <class T>
-inline Time& operator*=(Time &lhs, const T& rhs)
+inline Time &operator*=(Time &lhs, const T &rhs)
 {
     lhs.SetNanos(lhs.GetNanos() * rhs);
     return lhs;
 }
 template <class T>
-inline Time& operator/=(Time &lhs, const T& rhs)
+inline Time &operator/=(Time &lhs, const T &rhs)
 {
     lhs.SetNanos(lhs.GetNanos() / rhs);
     return lhs;
 }
+}
 
-NAMESPACE_BANG_END
-
-#endif // TIME_H
+#endif  // TIME_H

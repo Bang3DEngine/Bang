@@ -5,7 +5,7 @@
 
 #include "Bang/Application.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 TimeSingleton::TimeSingleton()
 {

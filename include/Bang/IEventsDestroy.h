@@ -3,8 +3,8 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IEventsDestroy
 {
     IEVENTS(IEventsDestroy);
@@ -12,8 +12,6 @@ class IEventsDestroy
 public:
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSDESTROY_H
-
+#endif  // IEVENTSDESTROY_H

@@ -1,15 +1,16 @@
 #include "Bang/Asset.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class MetaNode;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class MetaNode;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 String Asset::ToString() const
 {
     String res = GetClassName();
-    res +=  "Asset(" + String::ToString((void*)this) + ")";
+    res += "Asset(" + String::ToString((void *)this) + ")";
     return res;
 }
 

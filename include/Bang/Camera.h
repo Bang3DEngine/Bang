@@ -20,15 +20,16 @@
 #include "Bang/String.h"
 #include "Bang/USet.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
-FORWARD   class AABox;
-FORWARD   class GBuffer;
-FORWARD   class ICloneable;
-FORWARD   class IEventsDestroy;
-FORWARD   class Quad;
-FORWARD   class TextureCubeMap;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class AABox;
+class GBuffer;
+class ICloneable;
+class IEventsDestroy;
+class Quad;
+class TextureCubeMap;
 
 enum class CameraProjectionMode
 {
@@ -42,8 +43,7 @@ enum class CameraClearMode
     SKY_BOX
 };
 
-class Camera : public Component,
-               public EventListener<IEventsDestroy>
+class Camera : public Component, public EventListener<IEventsDestroy>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Camera)
 
@@ -51,18 +51,20 @@ public:
     virtual void Bind() const;
     virtual void UnBind() const;
 
-    Ray      FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const;
-    Vector3  FromWorldPointToViewportPointNDC(const Vector3 &worldPosition) const;
-    Vector3  FromViewportPointNDCToWorldPoint(const Vector3 &vpPositionNDC) const;
-    Vector3  FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
-                                              float zFromCam) const;
+    Ray FromViewportPointNDCToRay(const Vector2 &vpPointNDC) const;
+    Vector3 FromWorldPointToViewportPointNDC(
+        const Vector3 &worldPosition) const;
+    Vector3 FromViewportPointNDCToWorldPoint(
+        const Vector3 &vpPositionNDC) const;
+    Vector3 FromViewportPointNDCToWorldPoint(const Vector2 &vpPositionNDC,
+                                             float zFromCam) const;
 
     void SetReplacementGBuffer(GBuffer *gbuffer);
     void SetRenderFlags(RenderFlags renderFlags);
     void SetRenderSize(const Vector2i &renderSize);
     void SetGammaCorrection(float gammaCorrection);
     void SetOrthoHeight(float orthoHeight);
-    void SetClearColor(const Color& color);
+    void SetClearColor(const Color &color);
     void SetFovDegrees(float fovDegrees);
     void SetZNear(float zNear);
     void SetZFar(float zFar);
@@ -73,7 +75,7 @@ public:
                           bool createFilteredCubeMapsForIBL = true);
     void SetClearMode(CameraClearMode clearMode);
 
-    const Color& GetClearColor() const;
+    const Color &GetClearColor() const;
     float GetAspectRatio() const;
     float GetOrthoWidth() const;
     float GetOrthoHeight() const;
@@ -84,7 +86,7 @@ public:
     float GetGammaCorrection() const;
     RenderFlags GetRenderFlags() const;
     bool MustRenderPass(RenderPass renderPass) const;
-    const USet<RenderPass, EnumClassHash>& GetRenderPassMask() const;
+    const USet<RenderPass, EnumClassHash> &GetRenderPassMask() const;
     Matrix4 GetViewMatrix() const;
     Matrix4 GetProjectionMatrix() const;
     bool IsPointInsideFrustum(const Vector3 &worldPoint) const;
@@ -96,12 +98,12 @@ public:
     TextureCubeMap *GetSpecularSkyBoxTexture() const;
     TextureCubeMap *GetDiffuseSkyBoxTexture() const;
 
-    Quad GetFrustumNearQuad()  const;
-    Quad GetFrustumFarQuad()   const;
-    Quad GetFrustumLeftQuad()  const;
+    Quad GetFrustumNearQuad() const;
+    Quad GetFrustumFarQuad() const;
+    Quad GetFrustumLeftQuad() const;
     Quad GetFrustumRightQuad() const;
-    Quad GetFrustumTopQuad()   const;
-    Quad GetFrustumBotQuad()   const;
+    Quad GetFrustumTopQuad() const;
+    Quad GetFrustumBotQuad() const;
 
     static Camera *GetActive();
 
@@ -132,7 +134,7 @@ private:
     CameraProjectionMode m_projMode = CameraProjectionMode::PERSPECTIVE;
     CameraClearMode m_clearMode = CameraClearMode::COLOR;
     Color m_clearColor = Color(Color(0.3f), 1);
-    float m_orthoHeight  = 25.0f;
+    float m_orthoHeight = 25.0f;
     float m_fovDegrees = 60.0f;
     float m_zNear = 0.1f;
     float m_zFar = 100.0f;
@@ -140,7 +142,6 @@ private:
 
     friend class Scene;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CAMERA_H
+#endif  // CAMERA_H

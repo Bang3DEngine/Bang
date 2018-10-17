@@ -4,8 +4,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UITheme
 {
 public:
@@ -32,8 +32,6 @@ private:
 
     UITheme() = delete;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITHEME_H
-
+#endif  // UITHEME_H

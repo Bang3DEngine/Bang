@@ -5,8 +5,8 @@
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class VBO : public GLObject
 {
 public:
@@ -16,15 +16,12 @@ public:
     void CreateAndFill(const void *data,
                        uint dataSize,
                        GL::UsageHint usage = GL::UsageHint::STATIC_DRAW);
-    void Update(const void *data,
-                uint dataSize,
-                uint offset = 0);
+    void Update(const void *data, uint dataSize, uint offset = 0);
 
     GL::BindTarget GetGLBindTarget() const override;
     void Bind() const override;
     void UnBind() const override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // VBO_H
+#endif  // VBO_H

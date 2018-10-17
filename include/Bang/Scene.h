@@ -8,13 +8,14 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
-FORWARD   class Camera;
-FORWARD   class DebugRenderer;
-FORWARD   class ICloneable;
-FORWARD   class IEventsDestroy;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class Camera;
+class DebugRenderer;
+class ICloneable;
+class IEventsDestroy;
 
 class Scene : public GameObject
 {
@@ -62,7 +63,6 @@ private:
     friend class SceneManager;
     friend class DebugRenderer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SCENE_H
+#endif  // SCENE_H

@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
+namespace Bang
+{
+class GameObject;
 
 class IEventsUIList
 {
@@ -27,8 +27,6 @@ public:
         BANG_UNUSED(item);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSUILIST_H
-
+#endif  // IEVENTSUILIST_H

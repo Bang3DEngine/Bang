@@ -8,13 +8,17 @@
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Path;
 
-FORWARD class Path;
+enum class ImageResizeMode
+{
+    NEAREST,
+    LINEAR
+};
 
-enum class ImageResizeMode { NEAREST, LINEAR };
-
-template<class T>
+template <class T>
 class Image : public Resource
 {
     RESOURCE(Image)
@@ -24,20 +28,20 @@ public:
     Image(int width, int height);
 
     void Create(int width, int height);
-    void Create(int width, int height, const Color& backgroundColor);
-    void SetPixel(int x, int y, const Color& color);
+    void Create(int width, int height, const Color &backgroundColor);
+    void SetPixel(int x, int y, const Color &color);
 
     Image<T> GetSubImage(const AARecti &subImageCoordsPx) const;
-    void Copy(const Image<T> &image, const Vector2i& pos);
+    void Copy(const Image<T> &image, const Vector2i &pos);
     void Copy(const Image<T> &image,
-              const AARecti& dstRect,
+              const AARecti &dstRect,
               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
     void Copy(const Image<T> &image,
-              const AARecti& srcCopyRect,
-              const AARecti& dstCopyRect,
+              const AARecti &srcCopyRect,
+              const AARecti &dstCopyRect,
               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
 
-    void AddMargins(const Vector2i& margins,
+    void AddMargins(const Vector2i &margins,
                     const Color &marginColor = Color::Zero,
                     AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
@@ -47,43 +51,45 @@ public:
                                       const Color &marginColor = Color::Zero);
 
     void ResizeToMatchAspectRatio(
-               const Vector2i &aspectRatioSizes,
-               bool makeBigger = false,
-               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
+        const Vector2i &aspectRatioSizes,
+        bool makeBigger = false,
+        ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
     void ResizeToMatchAspectRatio(
-            float aspectRatio,
-            bool makeBigger = false,
-            ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
+        float aspectRatio,
+        bool makeBigger = false,
+        ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
 
     float GetAspectRatio() const;
 
     void Resize(const Vector2i &newSize,
                 ImageResizeMode resizeMode = ImageResizeMode::LINEAR,
                 AspectRatioMode arMode = AspectRatioMode::IGNORE);
-    void Resize(int newWidth, int newHeight,
+    void Resize(int newWidth,
+                int newHeight,
                 ImageResizeMode resizeMode = ImageResizeMode::LINEAR,
                 AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
-    Image<T> Rotated90DegreesRight()  const;
+    Image<T> Rotated90DegreesRight() const;
     Image<T> Rotated180DegreesRight() const;
     Image<T> Rotated270DegreesRight() const;
 
     void FillTransparentPixels(const Color &color);
 
-    T* GetData();
-    const T* GetData() const;
+    T *GetData();
+    const T *GetData() const;
     Color GetPixel(int x, int y) const;
     int GetWidth() const;
     int GetHeight() const;
-    const Vector2i& GetSize() const;
+    const Vector2i &GetSize() const;
 
     Image<T> InvertedVertically();
     Image<T> InvertedHorizontally();
 
-    template<class OtherT>
+    template <class OtherT>
     Image<OtherT> To() const;
     void Export(const Path &filepath) const;
-    static Image<T> LoadFromData(int width, int height,
+    static Image<T> LoadFromData(int width,
+                                 int height,
                                  const Array<T> &rgbaByteData);
 
     // Resource
@@ -99,7 +105,6 @@ template class Image<float>;
 
 using Imageb = Image<Byte>;
 using Imagef = Image<float>;
+}
 
-NAMESPACE_BANG_END
-
-#endif // IMAGE_H
+#endif  // IMAGE_H

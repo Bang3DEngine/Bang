@@ -3,13 +3,13 @@
 
 #include "Bang/BangDefines.h"
 
-FORWARD namespace physx
+namespace physx
 {
-FORWARD class PxRigidDynamic;
+class PxRigidDynamic;
 }
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class PhysicsObject
 {
 public:
@@ -23,7 +23,7 @@ public:
         MESH_COLLIDER
     };
 
-	PhysicsObject();
+    PhysicsObject();
     virtual ~PhysicsObject();
 
     physx::PxRigidDynamic *GetPxRigidDynamic() const;
@@ -37,13 +37,11 @@ protected:
     void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
 
     virtual void OnPxRigidDynamicChanged(
-                            physx::PxRigidDynamic *prevPxRigidDynamic,
-                            physx::PxRigidDynamic *newPxRigidDynamic);
+        physx::PxRigidDynamic *prevPxRigidDynamic,
+        physx::PxRigidDynamic *newPxRigidDynamic);
 
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // PHYSICSOBJECT_H
-
+#endif  // PHYSICSOBJECT_H

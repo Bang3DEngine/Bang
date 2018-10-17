@@ -11,26 +11,26 @@
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 
-NAMESPACE_BANG_BEGIN
-
-const Color Color::Red           = Color(1,      0,   0,  1);
-const Color Color::Orange        = Color(1,    0.5,   0,  1);
-const Color Color::Yellow        = Color(1,      1,   0,  1);
-const Color Color::Green         = Color(0,      1,   0,  1);
-const Color Color::Turquoise     = Color(1,      1,   0,  1);
-const Color Color::VeryLightBlue = Color(0.8, 0.95,  1,  1);
-const Color Color::LightBlue     = Color(0.7,  0.9,   1,  1);
-const Color Color::Blue          = Color(0,      0,   1,  1);
-const Color Color::DarkBlue      = Color(0,      0, 0.6,  1);
-const Color Color::Purple        = Color(0.5,    0,   1,  1);
-const Color Color::Pink          = Color(1,      0,   1,  1);
-const Color Color::Black         = Color(0,      0,   0,  1);
-const Color Color::LightGray     = Color(0.8,  0.8, 0.8,  1);
-const Color Color::DarkGray      = Color(0.3,  0.3, 0.3,  1);
-const Color Color::Gray          = Color(0.5,  0.5, 0.5,  1);
-const Color Color::White         = Color(1,      1,   1,  1);
-const Color Color::Zero          = Color(0,      0,   0,  0);
-const Color Color::One           = Color(1,      1,   1,  1);
+namespace Bang
+{
+const Color Color::Red = Color(1, 0, 0, 1);
+const Color Color::Orange = Color(1, 0.5, 0, 1);
+const Color Color::Yellow = Color(1, 1, 0, 1);
+const Color Color::Green = Color(0, 1, 0, 1);
+const Color Color::Turquoise = Color(1, 1, 0, 1);
+const Color Color::VeryLightBlue = Color(0.8, 0.95, 1, 1);
+const Color Color::LightBlue = Color(0.7, 0.9, 1, 1);
+const Color Color::Blue = Color(0, 0, 1, 1);
+const Color Color::DarkBlue = Color(0, 0, 0.6, 1);
+const Color Color::Purple = Color(0.5, 0, 1, 1);
+const Color Color::Pink = Color(1, 0, 1, 1);
+const Color Color::Black = Color(0, 0, 0, 1);
+const Color Color::LightGray = Color(0.8, 0.8, 0.8, 1);
+const Color Color::DarkGray = Color(0.3, 0.3, 0.3, 1);
+const Color Color::Gray = Color(0.5, 0.5, 0.5, 1);
+const Color Color::White = Color(1, 1, 1, 1);
+const Color Color::Zero = Color(0, 0, 0, 0);
+const Color Color::One = Color(1, 1, 1, 1);
 
 Color::Color() : Color(0)
 {
@@ -52,7 +52,7 @@ Color::Color(const Vector4 &v) : Color(v.x, v.y, v.z, v.w)
 {
 }
 
-Color::Color(float r, float g, float b)  : Color(r, g, b, 1)
+Color::Color(float r, float g, float b) : Color(r, g, b, 1)
 {
 }
 
@@ -68,17 +68,10 @@ Color::Color(const Color &c, float a) : Color(c.r, c.g, c.b, a)
 {
 }
 
-Color Color::Lerp(const Color &c1,
-                  const Color &c2,
-                  float t)
+Color Color::Lerp(const Color &c1, const Color &c2, float t)
 {
-    return Color(
-             Vector4::Lerp(
-                     Vector4(c1.r, c1.g, c1.b, c1.a),
-                     Vector4(c2.r, c2.g, c2.b, c2.a),
-                     t
-                    )
-                );
+    return Color(Vector4::Lerp(Vector4(c1.r, c1.g, c1.b, c1.a),
+                               Vector4(c2.r, c2.g, c2.b, c2.a), t));
 }
 
 Color Color::WithAlpha(float alpha) const
@@ -94,7 +87,7 @@ Color Color::WithValue(float value) const
 Color Color::WithSaturation(float saturation) const
 {
     Color c = *this;
-    float length = Math::Sqrt(c.r*c.r + c.g*c.g + c.b*c.b);
+    float length = Math::Sqrt(c.r * c.r + c.g * c.g + c.b * c.b);
 
     c.r = length + (c.r - length) * saturation;
     c.g = length + (c.g - length) * saturation;
@@ -113,9 +106,8 @@ String Color::ToStringRgb() const
 String Color::ToStringRgb255() const
 {
     std::ostringstream oss;
-    oss << "(" << int(r * 255) << ", " <<
-                  int(g * 255) << ", " <<
-                  int(b * 255) << ")";
+    oss << "(" << int(r * 255) << ", " << int(g * 255) << ", " << int(b * 255)
+        << ")";
     return oss.str();
 }
 
@@ -129,10 +121,8 @@ String Color::ToStringRgba() const
 String Color::ToStringRgba255() const
 {
     std::ostringstream oss;
-    oss << "(" << int(r * 255) << ", " <<
-                  int(g * 255) << ", " <<
-                  int(b * 255) << ", " <<
-                  int(a * 255) << ")";
+    oss << "(" << int(r * 255) << ", " << int(g * 255) << ", " << int(b * 255)
+        << ", " << int(a * 255) << ")";
     return oss.str();
 }
 
@@ -141,18 +131,34 @@ Color Color::ToHSV() const
     // In:  RGB([0,1], [0,1], [0,1], [0,1])
     // Out: HSV([0,1], [0,1], [0,1], [0,1])
 
-    float fCMax  = Math::Max( Math::Max(r, g), b );
-    float fCMin  = Math::Min( Math::Min(r, g), b );
+    float fCMax = Math::Max(Math::Max(r, g), b);
+    float fCMin = Math::Min(Math::Min(r, g), b);
     float fDelta = fCMax - fCMin;
 
     float h, s, v;
     if(fDelta > 0)
     {
-        if      (fCMax == r) { h = 60 * (fmod(((g - b) / fDelta), 6)); }
-        else if (fCMax == g) { h = 60 * (((b - r) / fDelta) + 2); }
-        else                 { h = 60 * (((r - g) / fDelta) + 4); }
+        if(fCMax == r)
+        {
+            h = 60 * (fmod(((g - b) / fDelta), 6));
+        }
+        else if(fCMax == g)
+        {
+            h = 60 * (((b - r) / fDelta) + 2);
+        }
+        else
+        {
+            h = 60 * (((r - g) / fDelta) + 4);
+        }
 
-        if(fCMax > 0) { s = fDelta / fCMax; } else { s = 0; }
+        if(fCMax > 0)
+        {
+            s = fDelta / fCMax;
+        }
+        else
+        {
+            s = 0;
+        }
         v = fCMax;
     }
     else
@@ -162,7 +168,10 @@ Color Color::ToHSV() const
         v = fCMax;
     }
 
-    if(h < 0) { h = 360 + h; }
+    if(h < 0)
+    {
+        h = 360 + h;
+    }
     h /= 360.0f;
 
     return Color(h, s, v, a);
@@ -177,21 +186,45 @@ Color Color::ToRGB() const
     const float &s = g;
     const float &v = b;
 
-    int   i = SCAST<int>( Math::Floor(h * 6) );
+    int i = SCAST<int>(Math::Floor(h * 6));
     float f = h * 6 - i;
     float p = v * (1 - s);
     float q = v * (1 - f * s);
     float t = v * (1 - (1 - f) * s);
 
     float newR, newG, newB;
-    switch (i % 6)
+    switch(i % 6)
     {
-        case 0: newR = v; newG = t; newB = p; break;
-        case 1: newR = q; newG = v; newB = p; break;
-        case 2: newR = p; newG = v; newB = t; break;
-        case 3: newR = p; newG = q; newB = v; break;
-        case 4: newR = t; newG = p; newB = v; break;
-        case 5: newR = v; newG = p; newB = q; break;
+        case 0:
+            newR = v;
+            newG = t;
+            newB = p;
+            break;
+        case 1:
+            newR = q;
+            newG = v;
+            newB = p;
+            break;
+        case 2:
+            newR = p;
+            newG = v;
+            newB = t;
+            break;
+        case 3:
+            newR = p;
+            newG = q;
+            newB = v;
+            break;
+        case 4:
+            newR = t;
+            newG = p;
+            newB = v;
+            break;
+        case 5:
+            newR = v;
+            newG = p;
+            newB = q;
+            break;
         default: newR = newG = newB = 0.0f; break;
     }
 
@@ -200,10 +233,8 @@ Color Color::ToRGB() const
 
 String Color::ToString() const
 {
-    return "(" + String(r) + ", " +
-                 String(g) + ", " +
-                 String(b) + ", " +
-                 String(a) + ")";
+    return "(" + String(r) + ", " + String(g) + ", " + String(b) + ", " +
+           String(a) + ")";
 }
 
 Vector3 Color::ToVector3() const
@@ -226,7 +257,7 @@ Color Color::FromVector4(const Vector4 &v)
     return Color(v.x, v.y, v.z, v.w);
 }
 
-Color operator+(const Color & c1, const Color &c2)
+Color operator+(const Color &c1, const Color &c2)
 {
     return Color(c1.r + c2.r, c1.g + c2.g, c1.b + c2.b, c1.a * c2.a);
 }
@@ -365,15 +396,11 @@ Color &operator/=(Color &lhs, float m)
 
 bool operator==(const Color &lhs, const Color &rhs)
 {
-    return lhs.r == rhs.r &&
-           lhs.g == rhs.g &&
-           lhs.b == rhs.b &&
-           lhs.a == rhs.a;
+    return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a;
 }
 
 bool operator!=(const Color &lhs, const Color &rhs)
 {
     return !(lhs == rhs);
 }
-
-NAMESPACE_BANG_END
+}

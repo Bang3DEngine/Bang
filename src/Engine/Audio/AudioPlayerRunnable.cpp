@@ -6,7 +6,7 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/IEventsDestroy.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 AudioPlayerRunnable::AudioPlayerRunnable(AudioClip *clip,
                                          ALAudioSource *alAudioSource,
@@ -22,9 +22,9 @@ AudioPlayerRunnable::~AudioPlayerRunnable()
 {
     AudioManager::GetInstance()->OnAudioFinishedPlaying(this);
     EventEmitter<IEventsDestroy>::PropagateToListeners(
-                          &IEventsDestroy::OnDestroyed, this);
+        &IEventsDestroy::OnDestroyed, this);
 
-    if (p_alAudioSource->m_autoDelete)
+    if(p_alAudioSource->m_autoDelete)
     {
         delete p_alAudioSource;
     }
@@ -58,20 +58,19 @@ ALAudioSource *AudioPlayerRunnable::GetALAudioSource() const
 
 void AudioPlayerRunnable::Run()
 {
-    if (!p_audioClip->IsLoaded())
+    if(!p_audioClip->IsLoaded())
     {
         return;
     }
 
-    if (m_delayInSeconds > 0.0f) // Wait delay
+    if(m_delayInSeconds > 0.0f)  // Wait delay
     {
         Thread::SleepCurrentThread(m_delayInSeconds);
     }
 
-    p_alAudioSource->Play(); // Play and wait until source is stopped
+    p_alAudioSource->Play();  // Play and wait until source is stopped
     do
     {
         Thread::SleepCurrentThread(0.3f);
-    }
-    while ( !m_forceExit && !p_alAudioSource->IsStopped() );
+    } while(!m_forceExit && !p_alAudioSource->IsStopped());
 }

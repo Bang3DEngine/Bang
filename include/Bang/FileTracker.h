@@ -8,22 +8,22 @@
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/Path.h"
 #include "Bang/Time.h"
 #include "Bang/UMap.h"
-#include "Bang/Path.h"
 #include "Bang/USet.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsFileTracker;
-FORWARD class Path;
-FORWARD class String;
+namespace Bang
+{
+class IEventsFileTracker;
+class Path;
+class String;
 
 class FileTracker : public EventEmitter<IEventsFileTracker>
 {
 public:
-	FileTracker();
-	virtual ~FileTracker() override;
+    FileTracker();
+    virtual ~FileTracker() override;
 
     void TrackPath(const Path &path);
     void UnTrackPath(const Path &path);
@@ -32,19 +32,17 @@ public:
     void CheckFiles();
 
     Time GetModificationTime(const Path &path) const;
-    const USet<Path>& GetTrackedPaths() const;
+    const USet<Path> &GetTrackedPaths() const;
     Array<Path> GetTrackedPathsWithExtensions(
-                        const Array<String> &extensions) const;
+        const Array<String> &extensions) const;
     Array<Path> GetTrackedPathsWithLastExtension(
-                        const Array<String> &extensions) const;
+        const Array<String> &extensions) const;
 
 private:
     USet<Path> m_trackedPaths;
     USet<Path> m_pathsJustRecentlyTracked;
     UMap<Path, Time> m_pathsToTrackToModificationTime;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // FILETRACKER_H
-
+#endif  // FILETRACKER_H

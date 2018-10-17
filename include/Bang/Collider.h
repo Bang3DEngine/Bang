@@ -3,38 +3,37 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/Vector3.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
+#include "Bang/Vector3.h"
 
-FORWARD namespace physx
+namespace physx
 {
-FORWARD class PxRigidDynamic;
-FORWARD class PxShape;
+class PxRigidDynamic;
+class PxShape;
 }
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class ICloneable;
+class Object;
+class PhysicsMaterial;
 
-FORWARD class ICloneable;
-FORWARD class Object;
-FORWARD class PhysicsMaterial;
+#define COLLIDER(className)                     \
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(className) \
+    friend class Physics;                       \
+    friend class PxSceneContainer;
 
-#define COLLIDER(className) \
-        COMPONENT_WITH_FAST_DYNAMIC_CAST(className) \
-        friend class Physics; \
-        friend class PxSceneContainer;
-
-class Collider : public Component,
-                 public PhysicsObject
+class Collider : public Component, public PhysicsObject
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(Collider)
 
 public:
-	Collider();
+    Collider();
     virtual ~Collider() override;
 
     // Component
@@ -45,9 +44,9 @@ public:
     void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
 
     bool GetIsTrigger() const;
-    const Vector3& GetCenter() const;
-    PhysicsMaterial* GetSharedPhysicsMaterial() const;
-    PhysicsMaterial* GetActivePhysicsMaterial() const;
+    const Vector3 &GetCenter() const;
+    PhysicsMaterial *GetSharedPhysicsMaterial() const;
+    PhysicsMaterial *GetActivePhysicsMaterial() const;
     PhysicsMaterial *GetPhysicsMaterial() const;
 
     // ICloneable
@@ -58,13 +57,13 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
-    virtual physx::PxShape* CreatePxShape() const = 0;
+    virtual physx::PxShape *CreatePxShape() const = 0;
 
     Matrix4 GetShapeTransformWithRespectToPxActor() const;
     virtual Quaternion GetInternalRotation() const;
     virtual void UpdatePxShape();
 
-    physx::PxShape* GetPxShape() const;
+    physx::PxShape *GetPxShape() const;
 
     // Object
     void OnEnabled(Object *object) override;
@@ -82,14 +81,13 @@ private:
     // PhysicsObject
     virtual bool CanBeSimulationShape();
     virtual bool CanBeTriggerShape();
-    virtual void OnPxRigidDynamicChanged(physx::PxRigidDynamic *prevPxRD,
-                                         physx::PxRigidDynamic *newPxRD) override;
+    virtual void OnPxRigidDynamicChanged(
+        physx::PxRigidDynamic *prevPxRD,
+        physx::PxRigidDynamic *newPxRD) override;
 
     friend class Physics;
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COLLIDER_H
-
+#endif  // COLLIDER_H

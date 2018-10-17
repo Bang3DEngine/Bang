@@ -9,8 +9,8 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class AudioClip : public Asset
 {
     ASSET(AudioClip)
@@ -45,7 +45,6 @@ private:
     friend class AudioManager;
     friend class AudioPlayerRunnable;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AUDIOCLIP_H
+#endif  // AUDIOCLIP_H

@@ -39,17 +39,21 @@
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/WaterRenderer.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-#define CREATE_COMPONENT(className, ComponentClass) \
-    if ((className) == ComponentClass::GetClassNameStatic()) \
-    { return Component::Create<ComponentClass>(); }
+#define CREATE_COMPONENT(className, ComponentClass)         \
+    if((className) == ComponentClass::GetClassNameStatic()) \
+    {                                                       \
+        return Component::Create<ComponentClass>();         \
+    }
 
-#define EXISTS_COMPONENT(componentClassName, ComponentClass) \
-    if ((componentClassName) == ComponentClass::GetClassNameStatic()) \
-    { return true; }
+#define EXISTS_COMPONENT(componentClassName, ComponentClass)         \
+    if((componentClassName) == ComponentClass::GetClassNameStatic()) \
+    {                                                                \
+        return true;                                                 \
+    }
 
-Component* ComponentFactory::Create(const String &componentClassName)
+Component *ComponentFactory::Create(const String &componentClassName)
 {
     CREATE_COMPONENT(componentClassName, Rope);
     CREATE_COMPONENT(componentClassName, Camera);
@@ -85,8 +89,9 @@ Component* ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, SkinnedMeshRenderer);
     CREATE_COMPONENT(componentClassName, PostProcessEffectSSAO);
 
-    Debug_Warn("Please register class '" << componentClassName << "' in "
-               "ComponentFactory");
+    Debug_Warn("Please register class '" << componentClassName
+                                         << "' in "
+                                            "ComponentFactory");
 
     return nullptr;
 }

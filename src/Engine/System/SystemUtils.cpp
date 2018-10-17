@@ -3,7 +3,7 @@
 #include "Bang/Application.h"
 #include "Bang/SystemProcess.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 SystemUtils::SystemUtils()
 {
@@ -19,12 +19,12 @@ void SystemUtils::System(const String &command,
     process.WaitUntilFinished();
 
     String out = process.ReadStandardOutput() + process.ReadStandardError();
-    if (output)
+    if(output)
     {
         *output = out;
     }
 
-    if (success)
+    if(success)
     {
         *success = (process.GetExitCode() == 0);
     }

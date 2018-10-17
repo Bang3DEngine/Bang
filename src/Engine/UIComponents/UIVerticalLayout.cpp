@@ -4,7 +4,7 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/Stretch.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIVerticalLayout::UIVerticalLayout() : UIDirLayout(Axis::VERTICAL)
 {

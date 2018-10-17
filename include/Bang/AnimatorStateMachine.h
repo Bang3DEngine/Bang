@@ -14,13 +14,13 @@
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AnimatorStateMachineNode;
-FORWARD class AnimatorStateMachineVariable;
-FORWARD class IEventsAnimatorStateMachine;
-FORWARD class IEventsDestroy;
-FORWARD class Path;
+namespace Bang
+{
+class AnimatorStateMachineNode;
+class AnimatorStateMachineVariable;
+class IEventsAnimatorStateMachine;
+class IEventsDestroy;
+class Path;
 
 class AnimatorStateMachine : public Resource,
                              public EventEmitter<IEventsDestroy>,
@@ -30,32 +30,32 @@ class AnimatorStateMachine : public Resource,
     RESOURCE(AnimatorStateMachine)
 
 public:
-	AnimatorStateMachine();
-	virtual ~AnimatorStateMachine() override;
+    AnimatorStateMachine();
+    virtual ~AnimatorStateMachine() override;
 
-    AnimatorStateMachineNode* CreateAndAddNode();
-    AnimatorStateMachineNode* GetNode(uint nodeIdx);
-    const AnimatorStateMachineNode* GetNode(uint nodeIdx) const;
+    AnimatorStateMachineNode *CreateAndAddNode();
+    AnimatorStateMachineNode *GetNode(uint nodeIdx);
+    const AnimatorStateMachineNode *GetNode(uint nodeIdx) const;
     void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
     void SetEntryNode(AnimatorStateMachineNode *entryNode);
     void SetEntryNodeIdx(uint entryNodeIdx);
 
-    AnimatorStateMachineVariable* CreateNewVariable();
+    AnimatorStateMachineVariable *CreateNewVariable();
     void SetVariableFloat(const String &varName, const float value);
     void SetVariableBool(const String &varName, const bool value);
     void RemoveVariable(AnimatorStateMachineVariable *var);
     void RemoveVariable(uint varIdx);
     void Clear();
 
-    AnimatorStateMachineVariable* GetVariable(const String &varName) const;
+    AnimatorStateMachineVariable *GetVariable(const String &varName) const;
     float GetVariableFloat(const String &varName) const;
-    bool  GetVariableBool(const String &varName) const;
-    AnimatorStateMachineNode* GetEntryNodeOrFirstFound() const;
-    AnimatorStateMachineNode* GetEntryNode() const;
+    bool GetVariableBool(const String &varName) const;
+    AnimatorStateMachineNode *GetEntryNodeOrFirstFound() const;
+    AnimatorStateMachineNode *GetEntryNode() const;
     uint GetEntryNodeIdx() const;
 
-    const Array<AnimatorStateMachineNode*>& GetNodes() const;
-    const Array<AnimatorStateMachineVariable*>& GetVariables() const;
+    const Array<AnimatorStateMachineNode *> &GetNodes() const;
+    const Array<AnimatorStateMachineVariable *> &GetVariables() const;
     Array<String> GetVariablesNames() const;
 
     // Resource
@@ -67,18 +67,16 @@ public:
 
 private:
     uint m_entryNodeIdx = -1u;
-    Array<AnimatorStateMachineNode*> m_nodes;
-    Array<AnimatorStateMachineVariable*> m_variables;
+    Array<AnimatorStateMachineNode *> m_nodes;
+    Array<AnimatorStateMachineVariable *> m_variables;
 
-    AnimatorStateMachineVariable* CreateOrGetVariable(const String &varName);
+    AnimatorStateMachineVariable *CreateOrGetVariable(const String &varName);
 
     // IEventsAnimatorStateMachine
     virtual void OnVariableNameChanged(AnimatorStateMachineVariable *variable,
                                        const String &prevVariableName,
                                        const String &nextVariableName) override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATORSTATEMACHINE_H
-
+#endif  // ANIMATORSTATEMACHINE_H

@@ -13,11 +13,12 @@
 #include "Bang/GL.h"
 #include "Bang/IEventsDestroy.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
-FORWARD   class IEventsDestroy;
-FORWARD   class Texture;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class IEventsDestroy;
+class Texture;
 
 class TextureUnitManager : public EventListener<IEventsDestroy>
 {
@@ -36,18 +37,17 @@ public:
     static GLId GetBoundTextureToUnit(GL::TextureTarget texTarget,
                                       GL::Enum textureUnit);
     static void PrintTextureUnits();
-    static TextureUnitManager* GetActive();
-
+    static TextureUnitManager *GetActive();
 
 private:
-    int m_numMaxTextureUnits    = -1;
+    int m_numMaxTextureUnits = -1;
     int m_numUsableTextureUnits = -1;
-    TexUnit m_voidTexUnit       = -1;
+    TexUnit m_voidTexUnit = -1;
 
     uint m_timestampCounter = 0;
     std::queue<TexUnit> m_freeUnits;
     std::unordered_map<GLId, uint> m_timestampTexIdUsed;
-    std::unordered_map<GLId, Texture*> m_textureIdToTexture;
+    std::unordered_map<GLId, Texture *> m_textureIdToTexture;
     std::unordered_map<GLId, TexUnit> m_textureIdToBoundUnit;
 
     TexUnit MakeRoomAndGetAFreeTextureUnit();
@@ -57,7 +57,6 @@ private:
 
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // TEXTUREUNITMANAGER_H
+#endif  // TEXTUREUNITMANAGER_H

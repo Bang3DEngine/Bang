@@ -13,10 +13,10 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class UIFileListItem;
-FORWARD class UITextRenderer;
+namespace Bang
+{
+class UIFileListItem;
+class UITextRenderer;
 
 class UIFileList : public Component
 {
@@ -29,7 +29,7 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
-    using PathCallback = std::function<void(const Path&)>;
+    using PathCallback = std::function<void(const Path &)>;
 
     void SetFileExtensions(const Array<String> &extensions);
     void SetCurrentPath(const Path &currentPath);
@@ -38,7 +38,7 @@ public:
     void SetShowOnlyDirectories(bool showOnlyDirectories);
 
     Path GetCurrentSelectedPath() const;
-    const Path& GetCurrentPath() const;
+    const Path &GetCurrentPath() const;
     bool GetShowOnlyDirectories() const;
     const Array<String> &GetFileExtensions() const;
 
@@ -59,7 +59,7 @@ class UIFileListItem : public GameObject
 
 public:
     void SetPath(const Path &path);
-    const Path& GetPath();
+    const Path &GetPath();
 
 protected:
     UIFileListItem();
@@ -69,7 +69,6 @@ private:
     Path m_path = Path::Empty;
     UITextRenderer *m_text = nullptr;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIFILELIST_H
+#endif  // UIFILELIST_H

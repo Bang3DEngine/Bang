@@ -7,7 +7,7 @@
 #include "Bang/IEventsTransform.h"
 #include "Bang/UILayoutManager.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ILayoutController::ILayoutController()
 {
@@ -30,7 +30,7 @@ void ILayoutController::Invalidate()
 void ILayoutController::OnInvalidated()
 {
     IInvalidatable<ILayoutController>::OnInvalidated();
-    if (UILayoutManager *uilm = UILayoutManager::GetActive(this))
+    if(UILayoutManager *uilm = UILayoutManager::GetActive(this))
     {
         uilm->PropagateInvalidation(this);
     }
@@ -38,18 +38,17 @@ void ILayoutController::OnInvalidated()
 
 void ILayoutController::_ApplyLayout(Axis axis)
 {
-    if (IInvalidatable<ILayoutController>::IsInvalid())
+    if(IInvalidatable<ILayoutController>::IsInvalid())
     {
         ApplyLayout(axis);
-        if (axis == Axis::VERTICAL)
+        if(axis == Axis::VERTICAL)
         {
             Validate();
         }
     }
 }
 
-void ILayoutController::OnChildAdded(GameObject *addedChild,
-                                     GameObject *parent)
+void ILayoutController::OnChildAdded(GameObject *addedChild, GameObject *parent)
 {
     Invalidate();
     addedChild->EventEmitter<IEventsChildren>::RegisterListener(this);
@@ -62,7 +61,7 @@ void ILayoutController::OnChildRemoved(GameObject *removedChild,
     removedChild->EventEmitter<IEventsChildren>::UnRegisterListener(this);
 }
 
-void ILayoutController::OnParentChanged(GameObject*, GameObject*)
+void ILayoutController::OnParentChanged(GameObject *, GameObject *)
 {
     Invalidate();
 }

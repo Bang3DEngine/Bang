@@ -15,11 +15,11 @@
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class LineRenderer;
-FORWARD class UIFocusable;
+namespace Bang
+{
+class GameObject;
+class LineRenderer;
+class UIFocusable;
 
 class UIDirLayoutMovableSeparator : public Component,
                                     public EventListener<IEventsFocus>
@@ -27,8 +27,8 @@ class UIDirLayoutMovableSeparator : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDirLayoutMovableSeparator)
 
 public:
-	UIDirLayoutMovableSeparator();
-	virtual ~UIDirLayoutMovableSeparator() override;
+    UIDirLayoutMovableSeparator();
+    virtual ~UIDirLayoutMovableSeparator() override;
 
     void OnUpdate() override;
 
@@ -39,7 +39,6 @@ public:
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-
     static UIDirLayoutMovableSeparator *CreateInto(GameObject *go);
 
 private:
@@ -49,8 +48,6 @@ private:
 
     void UpdateLayout();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIDIRLAYOUTMOVABLESEPARATOR_H
-
+#endif  // UIDIRLAYOUTMOVABLESEPARATOR_H

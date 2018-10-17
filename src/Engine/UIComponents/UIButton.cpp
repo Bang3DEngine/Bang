@@ -5,7 +5,7 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/UIFocusable.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIButton::UIButton()
 {
@@ -25,15 +25,15 @@ void UIButton::Click()
 
 void UIButton::UpdateAspect()
 {
-    if (!IsBlocked())
+    if(!IsBlocked())
     {
-        if (GetFocusable()->IsBeingPressed())
+        if(GetFocusable()->IsBeingPressed())
         {
             ChangeAspectToPressed();
         }
         else
         {
-            if (GetFocusable()->IsMouseOver())
+            if(GetFocusable()->IsMouseOver())
             {
                 ChangeAspectToOver();
             }
@@ -51,10 +51,7 @@ void UIButton::UpdateAspect()
 
 UIButton *UIButton::CreateInto(GameObject *gameObject)
 {
-    return SCAST<UIButton*>(
-    UIButtonBase::CreateInto([](GameObject *go)
-    {
-        return go->AddComponent<UIButton>();
-    },
-    gameObject));
+    return SCAST<UIButton *>(UIButtonBase::CreateInto(
+        [](GameObject *go) { return go->AddComponent<UIButton>(); },
+        gameObject));
 }

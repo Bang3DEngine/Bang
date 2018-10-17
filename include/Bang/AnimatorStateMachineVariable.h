@@ -6,9 +6,9 @@
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class AnimatorStateMachine;
+namespace Bang
+{
+class AnimatorStateMachine;
 
 class AnimatorStateMachineVariable : public Serializable
 {
@@ -21,7 +21,7 @@ public:
         BOOL
     };
 
-	AnimatorStateMachineVariable();
+    AnimatorStateMachineVariable();
     virtual ~AnimatorStateMachineVariable() override;
 
     void SetName(const String &varName);
@@ -47,8 +47,6 @@ private:
 
     friend class AnimatorStateMachine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATORSTATEMACHINEVARIABLE_H
-
+#endif  // ANIMATORSTATEMACHINEVARIABLE_H

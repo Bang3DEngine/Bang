@@ -9,21 +9,21 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
-#include "Bang/Vector2.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
+#include "Bang/Vector2.h"
 
-FORWARD struct SDL_Window;
-FORWARD union  SDL_Event;
+struct SDL_Window;
+union SDL_Event;
 
-using SDL_GLContext = void*;
+using SDL_GLContext = void *;
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Input;
-FORWARD class Path;
-FORWARD class SceneManager;
-FORWARD class Window;
+namespace Bang
+{
+class Input;
+class Path;
+class SceneManager;
+class Window;
 
 class IEventsWindow
 {
@@ -98,14 +98,14 @@ public:
     static int GetHeightS();
     static int GetWidthS();
 
-    SDL_GLContext   GetGLContext() const;
-    Input          *GetInput() const;
-    SceneManager   *GetSceneManager() const;
+    SDL_GLContext GetGLContext() const;
+    Input *GetInput() const;
+    SceneManager *GetSceneManager() const;
 
     SDL_Window *GetSDLWindow() const;
     uint GetSDLWindowID() const;
     Window *GetParentWindow() const;
-    const Array<Window*>& GetChildren() const;
+    const Array<Window *> &GetChildren() const;
 
     static Window *GetActive();
 
@@ -115,21 +115,21 @@ protected:
 private:
     SDL_Window *m_sdlWindow = nullptr;
 
-    Array<Window*> p_children;
-    Window* p_parent = nullptr;
+    Array<Window *> p_children;
+    Window *p_parent = nullptr;
 
-    SDL_GLContext   m_sdlGLContext  = nullptr;
-    Input          *m_input         = nullptr;
-    SceneManager   *m_sceneManager  = nullptr;
+    SDL_GLContext m_sdlGLContext = nullptr;
+    Input *m_input = nullptr;
+    SceneManager *m_sceneManager = nullptr;
 
     Time m_sleepTimeInBackground;
     Vector2i m_minSize = Vector2i::Zero;
     Vector2i m_maxSize = Vector2i(4096);
     Vector2i m_prevSize = Vector2i::Zero;
-    Vector2i m_newSize  = Vector2i::Zero;
+    Vector2i m_newSize = Vector2i::Zero;
     bool m_isResizable = true, m_resizableChanged = false;
 
-    static Window* s_activeWindow;
+    static Window *s_activeWindow;
 
     void RetrieveTitleBarHeight();
 
@@ -144,7 +144,6 @@ private:
     friend class Application;
     friend int EventFilter(void *userData, SDL_Event *event);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IWINDOW_H
+#endif  // IWINDOW_H

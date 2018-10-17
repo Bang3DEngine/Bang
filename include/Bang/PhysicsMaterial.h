@@ -8,12 +8,11 @@
 #include "Bang/String.h"
 #include "PxMaterial.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Path;
 
-FORWARD class Path;
-
-class PhysicsMaterial : public Asset,
-                        public ICloneable
+class PhysicsMaterial : public Asset, public ICloneable
 {
     ASSET(PhysicsMaterial)
     ICLONEABLE(PhysicsMaterial)
@@ -21,14 +20,14 @@ class PhysicsMaterial : public Asset,
 public:
     enum class CombineMode
     {
-        AVERAGE  = physx::PxCombineMode::eAVERAGE,
-        MIN      = physx::PxCombineMode::eMIN,
+        AVERAGE = physx::PxCombineMode::eAVERAGE,
+        MIN = physx::PxCombineMode::eMIN,
         MULTIPLY = physx::PxCombineMode::eMULTIPLY,
-        MAX      = physx::PxCombineMode::eMAX
+        MAX = physx::PxCombineMode::eMAX
     };
 
-	PhysicsMaterial();
-	virtual ~PhysicsMaterial() override;
+    PhysicsMaterial();
+    virtual ~PhysicsMaterial() override;
 
     void SetStaticFriction(float staticFrictionCoeff);
     void SetDynamicFriction(float dynamicFrictionCoeff);
@@ -62,7 +61,7 @@ private:
     CombineMode m_restitutionCombineMode = CombineMode::AVERAGE;
 
     void SetPxMaterial(physx::PxMaterial *pxMaterial);
-    physx::PxMaterial* GetPxMaterial() const;
+    physx::PxMaterial *GetPxMaterial() const;
 
     void UpdatePxMaterial() const;
 
@@ -70,8 +69,6 @@ private:
     friend class Collider;
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // PHYSICSMATERIAL_H
-
+#endif  // PHYSICSMATERIAL_H

@@ -20,16 +20,16 @@
 #include "Bang/UIList.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsDestroy;
-FORWARD class IEventsDragDrop;
-FORWARD class IEventsUITree;
-FORWARD class UIDragDroppable;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UITreeItemContainer;
+namespace Bang
+{
+class GameObject;
+class IEventsDestroy;
+class IEventsDragDrop;
+class IEventsUITree;
+class UIDragDroppable;
+class UIFocusable;
+class UIImageRenderer;
+class UITreeItemContainer;
 
 class UITree : public Component,
                public EventListener<IEventsFocus>,
@@ -55,24 +55,24 @@ public:
                   GOItem *newParentItem,
                   int newIndexInsideParent = 0);
     void RemoveItem(GOItem *itemToRemove);
-    GOItem* GetSelectedItem() const;
+    GOItem *GetSelectedItem() const;
     void Clear();
 
     void SetSelection(GOItem *item);
     void SetItemCollapsed(GOItem *item, bool collapsed);
     void SetSelectionCallback(UIList::SelectionCallback callback);
 
-    GOItem* GetParentItem(GOItem *item) const;
+    GOItem *GetParentItem(GOItem *item) const;
     bool IsItemCollapsed(GOItem *item) const;
-    List<GOItem*> GetTopChildrenItems() const;
+    List<GOItem *> GetTopChildrenItems() const;
     bool Contains(UITreeItemContainer *item) const;
-    List<GOItem*> GetChildrenItems(GOItem *item) const;
+    List<GOItem *> GetChildrenItems(GOItem *item) const;
     bool ItemIsChildOfRecursive(GOItem *item, GOItem *parent) const;
-    UIList* GetUIList() const;
+    UIList *GetUIList() const;
 
     void GetMousePositionInTree(
-                    GOItem **itemOverOut,
-                    UITree::MouseItemRelativePosition *itemRelPosOut) const;
+        GOItem **itemOverOut,
+        UITree::MouseItemRelativePosition *itemRelPosOut) const;
     int GetFlatUIListIndex(GOItem *parentItem, int indexInsideParent);
 
     // Component
@@ -82,10 +82,11 @@ public:
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-
     // IEventsDragDrop
-    virtual void OnDragStarted(EventEmitter<IEventsDragDrop> *dragDroppable) override;
-    virtual void OnDragUpdate(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDragStarted(
+        EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDragUpdate(
+        EventEmitter<IEventsDragDrop> *dragDroppable) override;
     virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
 
     // IEventsDestroy
@@ -95,25 +96,25 @@ protected:
     UITree();
     virtual ~UITree() override;
 
-    static UITree* CreateInto(GameObject *go);
+    static UITree *CreateInto(GameObject *go);
 
 private:
     static const int IndentationPx;
 
-    Tree<GOItem*> m_rootTree;
+    Tree<GOItem *> m_rootTree;
     UIList *p_uiList = nullptr;
     GOItem *p_itemBeingDragged = nullptr;
-    UMap<GOItem*, Tree<GOItem*>*> m_itemToTree;
+    UMap<GOItem *, Tree<GOItem *> *> m_itemToTree;
     UIList::SelectionCallback m_selectionCallback;
 
     GameObject *p_dragMarker = nullptr;
     UIImageRenderer *p_dragMarkerImg = nullptr;
 
-    GOItem* AddItem_(GOItem* newItemTree,
+    GOItem *AddItem_(GOItem *newItemTree,
                      GOItem *parentItem,
                      int indexInsideParent,
                      bool moving);
-    GOItem* AddItem_(const Tree<GOItem*> &newItemTree,
+    GOItem *AddItem_(const Tree<GOItem *> &newItemTree,
                      GOItem *parentItem,
                      int indexInsideParent,
                      bool moving);
@@ -125,13 +126,11 @@ private:
                      GOItem *itemBeingDragged,
                      GOItem *itemOver) const;
 
-    Tree<GOItem*>* GetItemTree(GOItem* item) const;
-    UITreeItemContainer* GetTreeItemContainer(GOItem *item) const;
+    Tree<GOItem *> *GetItemTree(GOItem *item) const;
+    UITreeItemContainer *GetTreeItemContainer(GOItem *item) const;
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITREE_H
-
+#endif  // UITREE_H

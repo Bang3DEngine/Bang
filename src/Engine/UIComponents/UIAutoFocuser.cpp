@@ -3,7 +3,7 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/UICanvas.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIAutoFocuser::UIAutoFocuser()
 {
@@ -19,10 +19,10 @@ void UIAutoFocuser::OnUpdate()
 {
     Component::OnUpdate();
 
-    if (++m_frames == 2 && p_focusableToAutoFocus)
+    if(++m_frames == 2 && p_focusableToAutoFocus)
     {
-        UICanvas *canvas = UICanvas::GetActive( GetGameObject() );
-        if (canvas)
+        UICanvas *canvas = UICanvas::GetActive(GetGameObject());
+        if(canvas)
         {
             canvas->SetFocus(p_focusableToAutoFocus);
         }
@@ -39,4 +39,3 @@ UIFocusable *UIAutoFocuser::GetFocusableToAutoFocus() const
 {
     return p_focusableToAutoFocus;
 }
-

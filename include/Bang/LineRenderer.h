@@ -10,21 +10,21 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class MetaNode;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
+class MetaNode;
 
 class LineRenderer : public Renderer
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(LineRenderer)
 
 public:
-    void SetPoint(int i, const Vector3& point);
-    void SetPoints(const Array<Vector3>& points);
+    void SetPoint(int i, const Vector3 &point);
+    void SetPoints(const Array<Vector3> &points);
 
-    const Array<Vector3>& GetPoints() const;
+    const Array<Vector3> &GetPoints() const;
     virtual AABox GetAABBox() const override;
 
     // Renderer
@@ -48,7 +48,6 @@ private:
     RH<Mesh> p_mesh;
     Array<Vector3> m_points;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // LINERENDERER_H
+#endif  // LINERENDERER_H

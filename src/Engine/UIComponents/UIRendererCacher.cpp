@@ -27,12 +27,13 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class IEventsObject;
-FORWARD class Object;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class IEventsObject;
+class Object;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIRendererCacher::UIRendererCacher()
 {
@@ -55,8 +56,9 @@ void UIRendererCacher::OnStart()
     Component::OnStart();
 
     // Prepare image renderer
-    Texture2D *tex = p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
-    if (p_cachedImageRenderer)
+    Texture2D *tex =
+        p_cacheFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
+    if(p_cachedImageRenderer)
     {
         tex->SetWrapMode(GL::WrapMode::REPEAT);
         p_cachedImageRenderer->SetImageTexture(tex);
@@ -64,7 +66,7 @@ void UIRendererCacher::OnStart()
         p_cachedImageRenderer->GetImageTexture()->SetAlphaCutoff(1.0f);
         p_cachedImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
         p_cachedImageRenderer->GetImageTexture()->SetFilterMode(
-                                                GL::FilterMode::NEAREST);
+            GL::FilterMode::NEAREST);
     }
 }
 
@@ -72,28 +74,33 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    if (renderPass == RenderPass::CANVAS)
+    if(renderPass == RenderPass::CANVAS)
     {
-        if (IsCachingEnabled() && m_needNewImageToSnapshot)
+        if(IsCachingEnabled() && m_needNewImageToSnapshot)
         {
-            GL::Push( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
-            GL::Push( GL::Pushable::BLEND_STATES );
+            GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+            GL::Push(GL::Pushable::BLEND_STATES);
 
             p_cacheFramebuffer->Bind();
 
-            GBuffer *gbuffer = GEngine::GetActiveRenderingCamera()->GetGBuffer();
-            AARect rtRectNDC(GetGameObject()->GetRectTransform()->GetViewportAARectNDC());
-            p_cacheFramebuffer->Resize(gbuffer->GetWidth(), gbuffer->GetHeight());
+            GBuffer *gbuffer =
+                GEngine::GetActiveRenderingCamera()->GetGBuffer();
+            AARect rtRectNDC(
+                GetGameObject()->GetRectTransform()->GetViewportAARectNDC());
+            p_cacheFramebuffer->Resize(gbuffer->GetWidth(),
+                                       gbuffer->GetHeight());
 
-            GL::ReadBuffer( gbuffer->GetLastDrawnColorAttachment() );
-            GL::DrawBuffers( {GL::Attachment::COLOR0} );
+            GL::ReadBuffer(gbuffer->GetLastDrawnColorAttachment());
+            GL::DrawBuffers({GL::Attachment::COLOR0});
             GL::ClearColorStencilDepthBuffers();
 
             Vector2 rtSize = rtRectNDC.GetSize();
             Vector2 rtOri = rtRectNDC.GetMinXMinY() * 0.5f + 0.5f;
             Vector2 rtOriInvY = Vector2(rtOri.x, rtOri.y);
-            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvOffset( rtOriInvY );
-            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvMultiply( rtSize * 0.5f );
+            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvOffset(
+                rtOriInvY);
+            p_cachedImageRenderer->GetActiveMaterial()->SetAlbedoUvMultiply(
+                rtSize * 0.5f);
 
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);
@@ -103,14 +110,14 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
                                   GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
             GetContainer()->Render(renderPass);
 
-            GL::Pop( GL::Pushable::BLEND_STATES );
-            GL::Pop( GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS );
+            GL::Pop(GL::Pushable::BLEND_STATES);
+            GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
             m_needNewImageToSnapshot = false;
             p_cachedImageRenderer->SetVisible(true);
             SetContainerVisible(false);
         }
-        else if (!IsCachingEnabled())
+        else if(!IsCachingEnabled())
         {
             SetContainerVisible(true);
             p_cachedImageRenderer->SetVisible(false);
@@ -125,10 +132,10 @@ void UIRendererCacher::OnAfterChildrenRender(RenderPass renderPass)
 
 void UIRendererCacher::SetCachingEnabled(bool enabled)
 {
-    if (enabled != IsCachingEnabled())
+    if(enabled != IsCachingEnabled())
     {
         m_cachingEnabled = enabled;
-        p_cachedImageRenderer->SetEnabled( IsCachingEnabled() );
+        p_cachedImageRenderer->SetEnabled(IsCachingEnabled());
     }
 }
 
@@ -149,62 +156,66 @@ void UIRendererCacher::OnChanged()
 
 void UIRendererCacher::OnComponentAdded(Component *addedComponent, int)
 {
-    if (Renderer *rend = DCAST<Renderer*>(addedComponent))
+    if(Renderer *rend = DCAST<Renderer *>(addedComponent))
     {
         rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
     }
 }
 
 void UIRendererCacher::OnComponentRemoved(Component *removedComponent,
-                                          GameObject*)
+                                          GameObject *)
 {
-    if (Renderer *rend = DCAST<Renderer*>(removedComponent))
+    if(Renderer *rend = DCAST<Renderer *>(removedComponent))
     {
         rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
     }
 }
 
-void UIRendererCacher::OnChildAdded(GameObject*, GameObject*)
+void UIRendererCacher::OnChildAdded(GameObject *, GameObject *)
 {
-    Array<GameObject*> children = GetContainer()->GetChildrenRecursively();
-    for (GameObject *child : children)
+    Array<GameObject *> children = GetContainer()->GetChildrenRecursively();
+    for(GameObject *child : children)
     {
-        Array<Renderer*> renderers = child->GetComponents<Renderer>();
-        for (Renderer *rend : renderers)
+        Array<Renderer *> renderers = child->GetComponents<Renderer>();
+        for(Renderer *rend : renderers)
         {
             rend->EventEmitter<IEventsRendererChanged>::RegisterListener(this);
         }
 
-        if (child->GetTransform())
+        if(child->GetTransform())
         {
-            child->GetTransform()->EventEmitter<IEventsTransform>::RegisterListener(this);
+            child->GetTransform()
+                ->EventEmitter<IEventsTransform>::RegisterListener(this);
         }
 
         child->EventEmitter<IEventsObject>::RegisterListener(this);
         child->EventEmitter<IEventsChildren>::RegisterListener(this);
         child->EventEmitter<IEventsComponent>::RegisterListener(this);
-        child->EventEmitter<IEventsGameObjectVisibilityChanged>::RegisterListener(this);
+        child->EventEmitter<
+            IEventsGameObjectVisibilityChanged>::RegisterListener(this);
     }
 
     OnChanged();
 }
 
-void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject*)
+void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject *)
 {
-    Array<GameObject*> children = removedChild->GetChildrenRecursively();
+    Array<GameObject *> children = removedChild->GetChildrenRecursively();
     children.PushBack(removedChild);
-    for (GameObject *child : children)
+    for(GameObject *child : children)
     {
-        if (child)
+        if(child)
         {
-            Array<Renderer*> renderers = child->GetComponents<Renderer>();
-            for (Renderer *rend : renderers)
+            Array<Renderer *> renderers = child->GetComponents<Renderer>();
+            for(Renderer *rend : renderers)
             {
-                rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(this);
+                rend->EventEmitter<IEventsRendererChanged>::UnRegisterListener(
+                    this);
             }
             child->EventEmitter<IEventsChildren>::UnRegisterListener(this);
             child->EventEmitter<IEventsComponent>::UnRegisterListener(this);
-            child->EventEmitter<IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
+            child->EventEmitter<
+                IEventsGameObjectVisibilityChanged>::UnRegisterListener(this);
         }
     }
 
@@ -216,7 +227,7 @@ void UIRendererCacher::OnTransformChanged()
     OnChanged();
 }
 
-void UIRendererCacher::OnRendererChanged(Renderer*)
+void UIRendererCacher::OnRendererChanged(Renderer *)
 {
     OnChanged();
 }
@@ -246,7 +257,7 @@ void UIRendererCacher::SetContainerVisible(bool visible)
     EventListener<IEventsGameObjectVisibilityChanged>::SetReceiveEvents(true);
 }
 
-UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)
+UIRendererCacher *UIRendererCacher::CreateInto(GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
 
@@ -265,7 +276,7 @@ UIRendererCacher* UIRendererCacher::CreateInto(GameObject *go)
     return rendererCacher;
 }
 
-void UIRendererCacher::OnVisibilityChanged(GameObject*)
+void UIRendererCacher::OnVisibilityChanged(GameObject *)
 {
     OnRendererChanged(nullptr);
 }

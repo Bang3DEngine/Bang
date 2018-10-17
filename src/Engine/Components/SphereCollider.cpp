@@ -7,8 +7,8 @@
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/PhysicsMaterial.h"
 #include "Bang/Physics.h"
+#include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Sphere.h"
@@ -20,17 +20,18 @@
 #include "extensions/PxRigidBodyExt.h"
 #include "geometry/PxSphereGeometry.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ICloneable;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ICloneable;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 SphereCollider::SphereCollider()
 {
     CONSTRUCT_CLASS_ID(SphereCollider)
-    SetPhysicsObjectType( PhysicsObject::Type::SPHERE_COLLIDER );
-    SetPhysicsMaterial( MaterialFactory::GetDefaultPhysicsMaterial().Get() );
+    SetPhysicsObjectType(PhysicsObject::Type::SPHERE_COLLIDER);
+    SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }
 
 SphereCollider::~SphereCollider()
@@ -39,7 +40,7 @@ SphereCollider::~SphereCollider()
 
 void SphereCollider::SetRadius(float radius)
 {
-    if (radius != GetRadius())
+    if(radius != GetRadius())
     {
         m_radius = radius;
         UpdatePxShape();
@@ -49,7 +50,7 @@ void SphereCollider::SetRadius(float radius)
 float SphereCollider::GetScaledRadius() const
 {
     Vector3 scale = GetGameObject()->GetTransform()->GetScale();
-    float maxScale = Math::Max( Math::Max(scale.x, scale.y), scale.z );
+    float maxScale = Math::Max(Math::Max(scale.x, scale.y), scale.z);
     return maxScale * GetRadius();
 }
 
@@ -58,8 +59,8 @@ Sphere SphereCollider::GetSphereWorld() const
     Transform *tr = GetGameObject()->GetTransform();
 
     Sphere sphere;
-    sphere.SetRadius( GetScaledRadius() );
-    sphere.SetCenter( tr->GetPosition() + GetCenter() );
+    sphere.SetRadius(GetScaledRadius());
+    sphere.SetCenter(tr->GetPosition() + GetCenter());
     return sphere;
 }
 
@@ -72,17 +73,17 @@ void SphereCollider::CloneInto(ICloneable *clone) const
 {
     Collider::CloneInto(clone);
 
-    SphereCollider *scClone = SCAST<SphereCollider*>(clone);
-    scClone->SetRadius( GetRadius() );
+    SphereCollider *scClone = SCAST<SphereCollider *>(clone);
+    scClone->SetRadius(GetRadius());
 }
 
 void SphereCollider::ImportMeta(const MetaNode &metaNode)
 {
     Collider::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Radius"))
+    if(metaNode.Contains("Radius"))
     {
-        SetRadius( metaNode.Get<float>("Radius") );
+        SetRadius(metaNode.Get<float>("Radius"));
     }
 }
 
@@ -95,17 +96,18 @@ void SphereCollider::ExportMeta(MetaNode *metaNode) const
 
 physx::PxShape *SphereCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic() ?
-            GetPxRigidDynamic()->createShape(physx::PxSphereGeometry(1),
-                                             *Physics::GetDefaultPxMaterial()) :
-            nullptr;
+    return GetPxRigidDynamic()
+               ? GetPxRigidDynamic()->createShape(
+                     physx::PxSphereGeometry(1),
+                     *Physics::GetDefaultPxMaterial())
+               : nullptr;
 }
 
 void SphereCollider::UpdatePxShape()
 {
     Collider::UpdatePxShape();
 
-    if (GetPxShape())
+    if(GetPxShape())
     {
         ASSERT(GetPxRigidDynamic());
 

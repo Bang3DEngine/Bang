@@ -3,10 +3,10 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Path;
-FORWARD class Texture2D;
+namespace Bang
+{
+class Path;
+class Texture2D;
 
 class ImageIODDS
 {
@@ -15,8 +15,6 @@ public:
 
     ImageIODDS() = delete;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IMAGEIODDS_H
-
+#endif  // IMAGEIODDS_H

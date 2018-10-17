@@ -1,6 +1,6 @@
 #include "Bang/IEventListenerCommon.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 void IEventListenerCommon::SetReceiveEventsCommon(bool receiveEvents)
 {
@@ -11,6 +11,3 @@ bool IEventListenerCommon::IsReceivingEventsCommon() const
 {
     return m_isReceivingEventsCommon;
 }
-
-
-

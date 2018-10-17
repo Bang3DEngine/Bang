@@ -5,8 +5,8 @@
 #include "Bang/List.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class FPSChrono
 {
 public:
@@ -27,8 +27,6 @@ private:
     Time m_beginTime;
     int m_meanSamples = 100;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // FPSCHRONO_H
-
+#endif  // FPSCHRONO_H

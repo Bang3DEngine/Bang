@@ -6,10 +6,10 @@
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IBO;
-FORWARD class VBO;
+namespace Bang
+{
+class IBO;
+class VBO;
 
 class VAO : public GLObject
 {
@@ -24,11 +24,10 @@ public:
                 uint location,
                 uint dataComponentsCount,
                 GL::VertexAttribDataType dataType,
-                bool dataNormalized   = false,
-                uint dataStride        = 0,
-                uint dataOffset        = 0);
-    void SetVertexAttribDivisor(uint location,
-                                uint divisor);
+                bool dataNormalized = false,
+                uint dataStride = 0,
+                uint dataOffset = 0);
+    void SetVertexAttribDivisor(uint location, uint divisor);
     void SetIBO(IBO *ibo);
 
     void RemoveVBO(uint location);
@@ -40,10 +39,9 @@ public:
     const VBO *GetVBOByLocation(uint location) const;
 
 private:
-    Array<const VBO*> p_vbos;
-    IBO* p_ibo = nullptr;
+    Array<const VBO *> p_vbos;
+    IBO *p_ibo = nullptr;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // VAO_H
+#endif  // VAO_H

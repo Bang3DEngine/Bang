@@ -6,8 +6,8 @@
 #include "Bang/IToString.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class BPReflectedVariable : public IToString
 {
 public:
@@ -27,10 +27,10 @@ public:
     void SetVariableCodeName(const String &varCodeName);
     void SetVariableInitValue(const String &initValue);
 
-    const String& GetName() const;
-    const String& GetVariableType() const;
-    const String& GetVariableCodeName() const;
-    const String& GetVariableInitValue() const;
+    const String &GetName() const;
+    const String &GetVariableType() const;
+    const String &GetVariableCodeName() const;
+    const String &GetVariableInitValue() const;
 
 private:
     String m_name = "";
@@ -40,7 +40,6 @@ private:
 
     String ToString() const override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BPPROPERTY_H
+#endif  // BPPROPERTY_H

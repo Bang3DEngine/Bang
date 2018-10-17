@@ -16,29 +16,29 @@
 #include "Bang/ThreadPool.h"
 #include "Bang/UMap.h"
 
-
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class  EventEmitter;
-FORWARD   class  ALAudioSource;
-FORWARD   class  AudioClip;
-FORWARD   class  AudioPlayerRunnable;
-FORWARD   class  IEventsDestroy;
-FORWARD   class  Path;
-FORWARD   struct AudioParams;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class ALAudioSource;
+class AudioClip;
+class AudioPlayerRunnable;
+class IEventsDestroy;
+class Path;
+struct AudioParams;
 
 class AudioManager : public EventListener<IEventsDestroy>
 {
 public:
     void Init();
 
-    static ALAudioSource* Play(AudioClip* audioClip,
+    static ALAudioSource *Play(AudioClip *audioClip,
                                ALAudioSource *alAudioSource,
                                float delay = 0.0f);
-    static ALAudioSource* Play(AudioClip* audioClip,
+    static ALAudioSource *Play(AudioClip *audioClip,
                                const AudioParams &params,
                                float delay = 0.0f);
-    static ALAudioSource* Play(const Path& audioClipFilepath,
+    static ALAudioSource *Play(const Path &audioClipFilepath,
                                const AudioParams &params,
                                float delay = 0.0f);
 
@@ -60,7 +60,7 @@ private:
     ThreadPool m_threadPool;
     Mutex m_mutexCurrentAudios;
     bool m_playOnStartBlocked = false;
-    UMap<ALAudioSource*, AudioPlayerRunnable*> m_sourcesToPlayers;
+    UMap<ALAudioSource *, AudioPlayerRunnable *> m_sourcesToPlayers;
 
     AudioManager();
     virtual ~AudioManager() override;
@@ -84,7 +84,6 @@ private:
     friend class Application;
     friend class AudioPlayerRunnable;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AUDIOMANAGER_H
+#endif  // AUDIOMANAGER_H

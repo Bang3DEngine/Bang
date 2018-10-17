@@ -17,19 +17,18 @@
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 File::File()
 {
 }
-
 
 File::File(const Path &filepath)
 {
     m_path = filepath;
 }
 
-File::File(const String &filepath) : File( Path(filepath) )
+File::File(const String &filepath) : File(Path(filepath))
 {
 }
 
@@ -41,22 +40,28 @@ bool File::DuplicateFile(const Path &srcFilepath,
                          const Path &dstFilepath,
                          bool overwrite)
 {
-    if (!srcFilepath.IsFile()) { return false; }
-    if (!overwrite && dstFilepath.Exists()) { return false; }
-
-    std::ifstream src(srcFilepath.GetAbsolute().ToCString(), std::ios::binary);
-    if (!src)
+    if(!srcFilepath.IsFile())
+    {
+        return false;
+    }
+    if(!overwrite && dstFilepath.Exists())
     {
         return false;
     }
 
-    if (overwrite)
+    std::ifstream src(srcFilepath.GetAbsolute().ToCString(), std::ios::binary);
+    if(!src)
+    {
+        return false;
+    }
+
+    if(overwrite)
     {
         File::Remove(dstFilepath);
     }
 
-    std::ofstream dst(dstFilepath.GetAbsolute().ToCString(),   std::ios::binary);
-    if (!dst)
+    std::ofstream dst(dstFilepath.GetAbsolute().ToCString(), std::ios::binary);
+    if(!dst)
     {
         return false;
     }
@@ -70,35 +75,49 @@ bool File::DuplicateDir(const Path &srcDirpath,
                         USet<Path> &pathsToIgnore,
                         bool overwrite)
 {
-    if (!srcDirpath.IsDir()) { return false; }
-    if (!overwrite && dstDirPath.Exists()) { return false; }
-    if (pathsToIgnore.Contains(srcDirpath)) { return true; }
-    if (!File::CreateDirectory(dstDirPath)) { return false; }
-
+    if(!srcDirpath.IsDir())
+    {
+        return false;
+    }
+    if(!overwrite && dstDirPath.Exists())
+    {
+        return false;
+    }
+    if(pathsToIgnore.Contains(srcDirpath))
+    {
+        return true;
+    }
+    if(!File::CreateDirectory(dstDirPath))
+    {
+        return false;
+    }
 
     Array<Path> filepaths = srcDirpath.GetFiles(FindFlag::SIMPLE_HIDDEN);
-    for(const Path& filepath : filepaths)
+    for(const Path &filepath : filepaths)
     {
         String fileName = filepath.GetNameExt();
         bool ok = File::DuplicateFile(srcDirpath.Append(fileName),
-                                      dstDirPath.Append(fileName),
-                                      overwrite);
-        if (!ok)
+                                      dstDirPath.Append(fileName), overwrite);
+        if(!ok)
         {
             return false;
         }
     }
 
     Array<Path> subdirs = srcDirpath.GetSubDirectories(FindFlag::SIMPLE_HIDDEN);
-    for (const Path &subdir : subdirs)
+    for(const Path &subdir : subdirs)
     {
-        if (subdir.IsSubPathOf(dstDirPath)) { continue; }
+        if(subdir.IsSubPathOf(dstDirPath))
+        {
+            continue;
+        }
 
         Path newSubDirPath = dstDirPath.Append(subdir.GetName());
         pathsToIgnore.Add(newSubDirPath);
 
-        bool ok = File::DuplicateDir(subdir, newSubDirPath, pathsToIgnore, overwrite);
-        if (!ok)
+        bool ok =
+            File::DuplicateDir(subdir, newSubDirPath, pathsToIgnore, overwrite);
+        if(!ok)
         {
             return false;
         }
@@ -122,25 +141,25 @@ void File::AddExecutablePermission(const Path &path)
 
 bool File::Remove(const Path &path)
 {
-    if (!path.Exists())
+    if(!path.Exists())
     {
         return false;
     }
 
-    if (path.IsFile())
+    if(path.IsFile())
     {
         return std::remove(path.GetAbsolute().ToCString()) == 0;
     }
     else
     {
         Array<Path> subDirs = path.GetSubDirectories(FindFlag::SIMPLE_HIDDEN);
-        for (const Path &subDir : subDirs)
+        for(const Path &subDir : subDirs)
         {
             File::Remove(subDir);
         }
 
         Array<Path> subFiles = path.GetFiles(FindFlag::SIMPLE_HIDDEN);
-        for (const Path &subFile : subFiles)
+        for(const Path &subFile : subFiles)
         {
             File::Remove(subFile);
         }
@@ -150,24 +169,30 @@ bool File::Remove(const Path &path)
 
 bool File::CreateDirectory(const Path &dirPath)
 {
-    if (dirPath.Exists()) { return true; }
+    if(dirPath.Exists())
+    {
+        return true;
+    }
     return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
 }
 
 bool File::Rename(const Path &oldPath, const Path &newPath)
 {
-    if (!oldPath.Exists()) { return false; }
+    if(!oldPath.Exists())
+    {
+        return false;
+    }
     return std::rename(oldPath.GetAbsolute().ToCString(),
                        newPath.GetAbsolute().ToCString()) != 0;
 }
 
 bool File::Duplicate(const Path &fromPath, const Path &toPath)
 {
-    if (fromPath.IsFile())
+    if(fromPath.IsFile())
     {
         return File::DuplicateFile(fromPath, toPath);
     }
-    else if (fromPath.IsDir())
+    else if(fromPath.IsDir())
     {
         return File::DuplicateDir(fromPath, toPath);
     }
@@ -177,7 +202,7 @@ bool File::Duplicate(const Path &fromPath, const Path &toPath)
 void File::Write(const Path &filepath, const String &contents)
 {
     std::ofstream out(filepath.GetAbsolute());
-    if (out)
+    if(out)
     {
         out << contents;
         out.close();
@@ -197,29 +222,29 @@ void File::Write(const Path &filepath, const List<String> &lines)
 void File::Write(const Path &filepath, const Byte *bytes, std::size_t bytesSize)
 {
     std::ofstream out(filepath.GetAbsolute(), std::ios::binary);
-    if (out)
+    if(out)
     {
-        out.write(RCAST<const char*>(bytes), bytesSize);
+        out.write(RCAST<const char *>(bytes), bytesSize);
         out.close();
     }
 }
 
 String File::GetContents(const Path &filepath)
 {
-    if (!filepath.IsFile())
+    if(!filepath.IsFile())
     {
         return "";
     }
 
     String contents = "";
     std::ifstream ifs(filepath.GetAbsolute().ToCString());
-    if (ifs.is_open() && ifs.good() && !ifs.bad() && !ifs.fail())
+    if(ifs.is_open() && ifs.good() && !ifs.bad() && !ifs.fail())
     {
         // contents = String((std::istreambuf_iterator<char>(ifs)),
         //                   std::istreambuf_iterator<char>());
 
         std::string line;
-        while ( std::getline (ifs, line) )
+        while(std::getline(ifs, line))
         {
             contents += line;
             contents += "\n";
@@ -229,15 +254,15 @@ String File::GetContents(const Path &filepath)
     }
     else
     {
-        std::cerr << "Can't open file '" << filepath << "': " <<
-                     std::strerror(errno) << std::endl;
+        std::cerr << "Can't open file '" << filepath
+                  << "': " << std::strerror(errno) << std::endl;
     }
     return contents;
 }
 
 String File::GetContents() const
 {
-    return File::GetContents( GetPath() );
+    return File::GetContents(GetPath());
 }
 
 const Path &File::GetPath() const

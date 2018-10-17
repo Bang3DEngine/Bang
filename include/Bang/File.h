@@ -10,8 +10,8 @@
 #include "Bang/String.h"
 #include "Bang/USet.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class File
 {
 public:
@@ -21,7 +21,7 @@ public:
     ~File();
 
     String GetContents() const;
-    const Path& GetPath() const;
+    const Path &GetPath() const;
 
     static bool Remove(const Path &path);
     static bool CreateDirectory(const Path &dirPath);
@@ -40,7 +40,8 @@ public:
     static void Write(const Path &filepath, const String &contents);
     static void Write(const Path &filepath, const Array<String> &lines);
     static void Write(const Path &filepath, const List<String> &lines);
-    static void Write(const Path &filepath, const Byte *bytes,
+    static void Write(const Path &filepath,
+                      const Byte *bytes,
                       std::size_t bytesSize);
 
 protected:
@@ -51,7 +52,6 @@ protected:
                              USet<Path> &pathsToIgnore,
                              bool overwrite = true);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // FILE_H
+#endif  // FILE_H

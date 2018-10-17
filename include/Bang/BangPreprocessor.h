@@ -5,10 +5,10 @@
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class BPReflectedStruct;
-FORWARD class Path;
+namespace Bang
+{
+class BPReflectedStruct;
+class Path;
 
 class BangPreprocessor
 {
@@ -52,10 +52,8 @@ public:
                              char openingBrace,
                              char closingBrace);
 
-    static void SkipBlanks(String::Iterator *it,
-                           String::Iterator end);
-    static void SkipUntilNextBlank(String::Iterator *it,
-                                   String::Iterator end);
+    static void SkipBlanks(String::Iterator *it, String::Iterator end);
+    static void SkipUntilNextBlank(String::Iterator *it, String::Iterator end);
     static void SkipUntilNext(String::Iterator *it,
                               String::Iterator end,
                               const Array<String> &particles);
@@ -67,7 +65,6 @@ public:
 
     BangPreprocessor();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // BANGPREPROCESSOR_H
+#endif  // BANGPREPROCESSOR_H

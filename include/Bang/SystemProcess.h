@@ -7,20 +7,20 @@
 #include "Bang/Math.h"
 #include "Bang/String.h"
 
-namespace TinyProcessLib {
+namespace TinyProcessLib
+{
 class Process;
 }  // namespace TinyProcessLib
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class SystemProcess
 {
 public:
     SystemProcess();
     ~SystemProcess();
 
-    bool Start(const String &command,
-               const List<String> &extraArgs = {});
+    bool Start(const String &command, const List<String> &extraArgs = {});
     bool StartDettached(const String &command,
                         const List<String> &extraArgs = {});
     void WaitUntilFinished(float seconds = Math::Infinity<float>(),
@@ -48,7 +48,6 @@ private:
     void ReadOut(const char *str, int size);
     void ReadErr(const char *str, int size);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SYSTEMPROCESS_H
+#endif  // SYSTEMPROCESS_H

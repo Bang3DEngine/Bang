@@ -17,12 +17,12 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsDragDrop;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
+namespace Bang
+{
+class GameObject;
+class IEventsDragDrop;
+class UIFocusable;
+class UIImageRenderer;
 
 class UIDragDroppable : public Component,
                         public EventEmitter<IEventsDragDrop>,
@@ -31,8 +31,8 @@ class UIDragDroppable : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDragDroppable)
 
 public:
-	UIDragDroppable();
-	virtual ~UIDragDroppable() override;
+    UIDragDroppable();
+    virtual ~UIDragDroppable() override;
 
     // Component
     void OnUpdate() override;
@@ -71,11 +71,8 @@ private:
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-
     friend class UICanvas;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIDRAGDROPPABLE_H
-
+#endif  // UIDRAGDROPPABLE_H

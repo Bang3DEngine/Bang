@@ -4,13 +4,13 @@
 #include "Bang/Cursor.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/EventEmitter.h"
-#include "Bang/RectTransform.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Key.h"
 #include "Bang/MouseButton.h"
+#include "Bang/RectTransform.h"
 #include "Bang/UIDirLayout.h"
 #include "Bang/UIHorizontalLayout.h"
 #include "Bang/UIImageRenderer.h"
@@ -20,7 +20,7 @@
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIButtonBase::UIButtonBase()
 {
@@ -29,12 +29,11 @@ UIButtonBase::UIButtonBase()
 
 UIButtonBase::~UIButtonBase()
 {
-
 }
 
 void UIButtonBase::ClickBase()
 {
-    if (!IsBlocked())
+    if(!IsBlocked())
     {
         Click();
     }
@@ -43,10 +42,10 @@ void UIButtonBase::ClickBase()
 
 void UIButtonBase::SetBlocked(bool blocked)
 {
-    if (blocked != IsBlocked())
+    if(blocked != IsBlocked())
     {
         m_isBlocked = blocked;
-        GetFocusable()->SetConsiderForTabbing( !IsBlocked() );
+        GetFocusable()->SetConsiderForTabbing(!IsBlocked());
 
         UpdateAspect();
     }
@@ -54,8 +53,8 @@ void UIButtonBase::SetBlocked(bool blocked)
 
 void UIButtonBase::SetIconSize(const Vector2i &size)
 {
-    UILayoutElement *le = GetIcon()->GetGameObject()->
-                          GetComponent<UILayoutElement>();
+    UILayoutElement *le =
+        GetIcon()->GetGameObject()->GetComponent<UILayoutElement>();
     le->SetMinSize(size);
     le->SetPreferredSize(size);
 }
@@ -121,84 +120,83 @@ UIDirLayout *UIButtonBase::GetDirLayout() const
 
 void UIButtonBase::ChangeAspectToIdle()
 {
-    if (GetBackground() && GetText())
+    if(GetBackground() && GetText())
     {
-        GetBackground()->SetTint( Color::White.WithValue(1.2f) );
+        GetBackground()->SetTint(Color::White.WithValue(1.2f));
         GetText()->SetTextColor(Color::Black);
-        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+        GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
 
 void UIButtonBase::ChangeAspectToOver()
 {
-    if (GetBackground() && GetText())
+    if(GetBackground() && GetText())
     {
-        GetBackground()->SetTint( UITheme::GetOverColor() );
+        GetBackground()->SetTint(UITheme::GetOverColor());
         GetText()->SetTextColor(Color::Black);
-        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+        GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
 
 void UIButtonBase::ChangeAspectToPressed()
 {
-    if (GetBackground() && GetText())
+    if(GetBackground() && GetText())
     {
-        GetBackground()->SetTint( UITheme::GetSelectedColor() );
-        GetText()->SetTextColor( Color::Black );
-        GetFocusable()->SetCursorType( Cursor::Type::HAND );
+        GetBackground()->SetTint(UITheme::GetSelectedColor());
+        GetText()->SetTextColor(Color::Black);
+        GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
 
 void UIButtonBase::ChangeAspectToBlocked()
 {
-    if (GetBackground() && GetText())
+    if(GetBackground() && GetText())
     {
-        GetBackground()->SetTint( UITheme::GetInputTextBlockedBackgroundColor() );
-        GetText()->SetTextColor( Color::DarkGray );
-        GetFocusable()->SetCursorType( Cursor::Type::NO );
+        GetBackground()->SetTint(UITheme::GetInputTextBlockedBackgroundColor());
+        GetText()->SetTextColor(Color::DarkGray);
+        GetFocusable()->SetCursorType(Cursor::Type::NO);
     }
 }
 
-UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UIButtonBase::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch (event.type)
+    switch(event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            if (!IsBlocked())
+            if(!IsBlocked())
             {
                 GameObjectFactory::MakeBorderFocused(p_border);
             }
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
         case UIEvent::Type::FOCUS_LOST:
             GameObjectFactory::MakeBorderNotFocused(p_border);
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
-        default:
-        break;
+        default: break;
     }
 
-    if (!IsBlocked())
+    if(!IsBlocked())
     {
-        switch (event.type)
+        switch(event.type)
         {
             case UIEvent::Type::MOUSE_CLICK_DOWN:
-                if (event.mouse.button == MouseButton::LEFT && !IsBlocked())
+                if(event.mouse.button == MouseButton::LEFT && !IsBlocked())
                 {
                     UpdateAspect();
                     return UIEventResult::INTERCEPT;
                 }
-            break;
+                break;
 
             case UIEvent::Type::MOUSE_CLICK_FULL:
-                if (event.mouse.button == MouseButton::LEFT)
+                if(event.mouse.button == MouseButton::LEFT)
                 {
                     ClickBase();
                     return UIEventResult::INTERCEPT;
                 }
-            break;
+                break;
 
             case UIEvent::Type::STARTED_BEING_PRESSED:
             case UIEvent::Type::FINISHED_BEING_PRESSED:
@@ -207,32 +205,30 @@ UIEventResult UIButtonBase::OnUIEvent(UIFocusable*, const UIEvent &event)
             case UIEvent::Type::MOUSE_EXIT:
                 UpdateAspect();
                 return UIEventResult::INTERCEPT;
-            break;
+                break;
 
             case UIEvent::Type::KEY_DOWN:
-                switch (event.key.key)
+                switch(event.key.key)
                 {
                     case Key::SPACE:
                     case Key::ENTER:
                         ClickBase();
                         return UIEventResult::INTERCEPT;
-                    break;
+                        break;
 
-                    default:
-                    break;
+                    default: break;
                 }
-            break;
+                break;
 
-            default:
-            break;
+            default: break;
         }
     }
     return UIEventResult::IGNORE;
 }
 
 UIButtonBase *UIButtonBase::CreateInto(
-        std::function<UIButtonBase*(GameObject*)> createBtnFunc,
-        GameObject *go)
+    std::function<UIButtonBase *(GameObject *)> createBtnFunc,
+    GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
 
@@ -244,7 +240,7 @@ UIButtonBase *UIButtonBase::CreateInto(
     hl->SetSpacing(0);
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();
-    le->SetFlexibleSize( Vector2::Zero );
+    le->SetFlexibleSize(Vector2::Zero);
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
@@ -283,7 +279,7 @@ UIButtonBase *UIButtonBase::CreateInto(
 
 void UIButtonBase::CallClickCallback()
 {
-    for (auto clickedCallback : m_clickedCallbacks)
+    for(auto clickedCallback : m_clickedCallbacks)
     {
         clickedCallback();
     }

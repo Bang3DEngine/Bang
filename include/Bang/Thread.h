@@ -7,9 +7,9 @@
 #include "Bang/BangDefines.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ThreadRunnable;
+namespace Bang
+{
+class ThreadRunnable;
 
 class Thread
 {
@@ -43,7 +43,6 @@ private:
     friend int ThreadFunc(ThreadRunnable *runnable, Thread *thread);
 };
 
-
 class ThreadRunnable
 {
 public:
@@ -74,7 +73,6 @@ public:
 private:
     std::function<void()> m_runFunction;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // THREAD_H
+#endif  // THREAD_H

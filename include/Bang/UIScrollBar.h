@@ -16,21 +16,20 @@
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class GameObject;
+class UIFocusable;
+class UIImageRenderer;
+class UIScrollArea;
 
-FORWARD class GameObject;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UIScrollArea;
-
-class UIScrollBar : public Component,
-                    public EventListener<IEventsFocus>
+class UIScrollBar : public Component, public EventListener<IEventsFocus>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollBar)
 
 public:
-	UIScrollBar();
-	virtual ~UIScrollBar() override;
+    UIScrollBar();
+    virtual ~UIScrollBar() override;
 
     void OnUpdate() override;
 
@@ -65,7 +64,7 @@ private:
     UIScrollArea *p_scrollArea = nullptr;
     UIFocusable *p_scrollAreaFocusable = nullptr;
 
-    static UIScrollBar* CreateInto(GameObject *go);
+    static UIScrollBar *CreateInto(GameObject *go);
 
     void OnMouseEnter();
     void OnMouseExit();
@@ -74,18 +73,15 @@ private:
     int GetScrollingSpacePx() const;
     AARect GetScrollingRect() const;
     UIScrollArea *GetScrollArea() const;
-    UIFocusable* GetFocusable() const;
-    GameObject* GetBar() const;
+    UIFocusable *GetFocusable() const;
+    GameObject *GetBar() const;
 
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
                                     const UIEvent &event) override;
 
-
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UISCROLLBAR_H_H
-
+#endif  // UISCROLLBAR_H_H

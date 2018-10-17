@@ -5,30 +5,31 @@
 #include "Bang/Debug.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
+#include "Bang/StreamOperators.h"
 #include "PxActor.h"
 #include "PxRigidBody.h"
 #include "extensions/PxRigidBodyExt.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ICloneable;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ICloneable;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 using namespace physx;
 
 RigidBody::RigidBody()
 {
     CONSTRUCT_CLASS_ID(RigidBody)
-    SetPhysicsObjectType( PhysicsObject::Type::RIGIDBODY );
+    SetPhysicsObjectType(PhysicsObject::Type::RIGIDBODY);
 
     // Create pxActor
-    if (Physics *ph = Physics::GetInstance())
+    if(Physics *ph = Physics::GetInstance())
     {
-        SetPxRigidDynamic( ph->CreateNewPxRigidDynamic() );
+        SetPxRigidDynamic(ph->CreateNewPxRigidDynamic());
         // Debug_Log ("Creating new pxRD for " << this << " go " <<
         //            " (pxRD:" << GetPxRigidDynamic() << ")");
         SetIsKinematic(false);
@@ -41,7 +42,7 @@ RigidBody::~RigidBody()
 
 void RigidBody::SetMass(float mass)
 {
-    if (mass != GetMass())
+    if(mass != GetMass())
     {
         m_mass = mass;
         UpdatePxRigidDynamicValues();
@@ -50,7 +51,7 @@ void RigidBody::SetMass(float mass)
 
 void RigidBody::SetDrag(float drag)
 {
-    if (drag != GetDrag())
+    if(drag != GetDrag())
     {
         m_drag = drag;
         UpdatePxRigidDynamicValues();
@@ -59,7 +60,7 @@ void RigidBody::SetDrag(float drag)
 
 void RigidBody::SetAngularDrag(float angularDrag)
 {
-    if (angularDrag != GetAngularDrag())
+    if(angularDrag != GetAngularDrag())
     {
         m_angularDrag = angularDrag;
         UpdatePxRigidDynamicValues();
@@ -68,7 +69,7 @@ void RigidBody::SetAngularDrag(float angularDrag)
 
 void RigidBody::SetUseGravity(bool useGravity)
 {
-    if (useGravity != GetUseGravity())
+    if(useGravity != GetUseGravity())
     {
         m_useGravity = useGravity;
         UpdatePxRigidDynamicValues();
@@ -77,7 +78,7 @@ void RigidBody::SetUseGravity(bool useGravity)
 
 void RigidBody::SetIsKinematic(bool isKinematic)
 {
-    if (isKinematic != GetIsKinematic())
+    if(isKinematic != GetIsKinematic())
     {
         m_isKinematic = isKinematic;
         UpdatePxRigidDynamicValues();
@@ -86,25 +87,25 @@ void RigidBody::SetIsKinematic(bool isKinematic)
 
 void RigidBody::SetLinearVelocity(const Vector3 &linearVelocity)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setLinearVelocity(
-                            Physics::GetPxVec3FromVector3(linearVelocity));
+            Physics::GetPxVec3FromVector3(linearVelocity));
     }
 }
 
 void RigidBody::SetAngularVelocity(const Vector3 &angularVelocity)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setAngularVelocity(
-                            Physics::GetPxVec3FromVector3(angularVelocity));
+            Physics::GetPxVec3FromVector3(angularVelocity));
     }
 }
 
 void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setMaxAngularVelocity(maxAngularVelocity);
     }
@@ -112,7 +113,7 @@ void RigidBody::SetMaxAngularVelocity(float maxAngularVelocity)
 
 void RigidBody::SetConstraints(const RigidBodyConstraints &constraints)
 {
-    if (constraints != GetConstraints())
+    if(constraints != GetConstraints())
     {
         m_constraints = constraints;
         UpdatePxRigidDynamicValues();
@@ -121,19 +122,21 @@ void RigidBody::SetConstraints(const RigidBodyConstraints &constraints)
 
 void RigidBody::AddForce(const Vector3 &force, ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
-        GetPxRigidDynamic()->addForce(Physics::GetPxVec3FromVector3(force),
-                                      SCAST<physx::PxForceMode::Enum>(forceMode));
+        GetPxRigidDynamic()->addForce(
+            Physics::GetPxVec3FromVector3(force),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
 void RigidBody::AddTorque(const Vector3 &torque, ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
-        GetPxRigidDynamic()->addTorque(Physics::GetPxVec3FromVector3(torque),
-                                       SCAST<physx::PxForceMode::Enum>(forceMode));
+        GetPxRigidDynamic()->addTorque(
+            Physics::GetPxVec3FromVector3(torque),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -141,13 +144,12 @@ void RigidBody::AddForceAtPos(const Vector3 &force,
                               const Vector3 &pos,
                               ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         physx::PxRigidBodyExt::addForceAtPos(
-                    *GetPxRigidDynamic(),
-                    Physics::GetPxVec3FromVector3(force),
-                    Physics::GetPxVec3FromVector3(pos),
-                    SCAST<physx::PxForceMode::Enum>(forceMode));
+            *GetPxRigidDynamic(), Physics::GetPxVec3FromVector3(force),
+            Physics::GetPxVec3FromVector3(pos),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -155,13 +157,12 @@ void RigidBody::AddForceAtLocalPos(const Vector3 &force,
                                    const Vector3 &pos,
                                    ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         physx::PxRigidBodyExt::addForceAtLocalPos(
-                    *GetPxRigidDynamic(),
-                    Physics::GetPxVec3FromVector3(force),
-                    Physics::GetPxVec3FromVector3(pos),
-                    SCAST<physx::PxForceMode::Enum>(forceMode));
+            *GetPxRigidDynamic(), Physics::GetPxVec3FromVector3(force),
+            Physics::GetPxVec3FromVector3(pos),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -169,13 +170,12 @@ void RigidBody::AddLocalForceAtPos(const Vector3 &force,
                                    const Vector3 &pos,
                                    ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         physx::PxRigidBodyExt::addLocalForceAtPos(
-                    *GetPxRigidDynamic(),
-                    Physics::GetPxVec3FromVector3(force),
-                    Physics::GetPxVec3FromVector3(pos),
-                    SCAST<physx::PxForceMode::Enum>(forceMode));
+            *GetPxRigidDynamic(), Physics::GetPxVec3FromVector3(force),
+            Physics::GetPxVec3FromVector3(pos),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -183,29 +183,30 @@ void RigidBody::AddLocalForceAtLocalPos(const Vector3 &force,
                                         const Vector3 &pos,
                                         ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         physx::PxRigidBodyExt::addLocalForceAtLocalPos(
-                    *GetPxRigidDynamic(),
-                    Physics::GetPxVec3FromVector3(force),
-                    Physics::GetPxVec3FromVector3(pos),
-                    SCAST<physx::PxForceMode::Enum>(forceMode));
+            *GetPxRigidDynamic(), Physics::GetPxVec3FromVector3(force),
+            Physics::GetPxVec3FromVector3(pos),
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
 void RigidBody::ClearForce(ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
-        GetPxRigidDynamic()->clearForce(SCAST<physx::PxForceMode::Enum>(forceMode));
+        GetPxRigidDynamic()->clearForce(
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
 void RigidBody::ClearTorque(ForceMode forceMode)
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
-        GetPxRigidDynamic()->clearTorque(SCAST<physx::PxForceMode::Enum>(forceMode));
+        GetPxRigidDynamic()->clearTorque(
+            SCAST<physx::PxForceMode::Enum>(forceMode));
     }
 }
 
@@ -236,25 +237,25 @@ bool RigidBody::GetIsKinematic() const
 
 Vector3 RigidBody::GetLinearVelocity() const
 {
-    return GetPxRigidDynamic() ?
-     Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getLinearVelocity()) :
-     Vector3::Zero;
+    return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
+                                     GetPxRigidDynamic()->getLinearVelocity())
+                               : Vector3::Zero;
 }
 
 Vector3 RigidBody::GetAngularVelocity() const
 {
-    return GetPxRigidDynamic() ?
-     Physics::GetVector3FromPxVec3(GetPxRigidDynamic()->getAngularVelocity()) :
-     Vector3::Zero;
+    return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
+                                     GetPxRigidDynamic()->getAngularVelocity())
+                               : Vector3::Zero;
 }
 
 float RigidBody::GetMaxAngularVelocity() const
 {
-    return GetPxRigidDynamic() ? GetPxRigidDynamic()->getMaxAngularVelocity() :
-                                 0.0f;
+    return GetPxRigidDynamic() ? GetPxRigidDynamic()->getMaxAngularVelocity()
+                               : 0.0f;
 }
 
-const RigidBodyConstraints& RigidBody::GetConstraints() const
+const RigidBodyConstraints &RigidBody::GetConstraints() const
 {
     return m_constraints;
 }
@@ -263,48 +264,48 @@ void RigidBody::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
 
-    RigidBody *rbClone = SCAST<RigidBody*>(clone);
-    rbClone->SetMass( GetMass() );
-    rbClone->SetDrag( GetDrag() );
-    rbClone->SetAngularDrag( GetAngularDrag() );
-    rbClone->SetUseGravity( GetUseGravity() );
-    rbClone->SetIsKinematic( GetIsKinematic() );
-    rbClone->SetConstraints( GetConstraints() );
+    RigidBody *rbClone = SCAST<RigidBody *>(clone);
+    rbClone->SetMass(GetMass());
+    rbClone->SetDrag(GetDrag());
+    rbClone->SetAngularDrag(GetAngularDrag());
+    rbClone->SetUseGravity(GetUseGravity());
+    rbClone->SetIsKinematic(GetIsKinematic());
+    rbClone->SetConstraints(GetConstraints());
 }
 
 void RigidBody::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Mass"))
+    if(metaNode.Contains("Mass"))
     {
-        SetMass( metaNode.Get<float>("Mass") );
+        SetMass(metaNode.Get<float>("Mass"));
     }
 
-    if (metaNode.Contains("Drag"))
+    if(metaNode.Contains("Drag"))
     {
-        SetDrag( metaNode.Get<float>("Drag") );
+        SetDrag(metaNode.Get<float>("Drag"));
     }
 
-    if (metaNode.Contains("AngularDrag"))
+    if(metaNode.Contains("AngularDrag"))
     {
-        SetAngularDrag( metaNode.Get<float>("AngularDrag") );
+        SetAngularDrag(metaNode.Get<float>("AngularDrag"));
     }
 
-    if (metaNode.Contains("UseGravity"))
+    if(metaNode.Contains("UseGravity"))
     {
-        SetUseGravity( metaNode.Get<bool>("UseGravity") );
+        SetUseGravity(metaNode.Get<bool>("UseGravity"));
     }
 
-    if (metaNode.Contains("IsKinematic"))
+    if(metaNode.Contains("IsKinematic"))
     {
-        SetIsKinematic( metaNode.Get<bool>("IsKinematic") );
+        SetIsKinematic(metaNode.Get<bool>("IsKinematic"));
     }
 
-    if (metaNode.Contains("Constraints"))
+    if(metaNode.Contains("Constraints"))
     {
-        SetConstraints( SCAST<RigidBodyConstraints>(
-                                    metaNode.Get<int>("Constraints")) );
+        SetConstraints(
+            SCAST<RigidBodyConstraints>(metaNode.Get<int>("Constraints")));
     }
 }
 
@@ -312,32 +313,32 @@ void RigidBody::ExportMeta(MetaNode *metaNode) const
 {
     Component::ExportMeta(metaNode);
 
-    metaNode->Set("Mass",        GetMass());
-    metaNode->Set("Drag",        GetDrag());
+    metaNode->Set("Mass", GetMass());
+    metaNode->Set("Drag", GetDrag());
     metaNode->Set("AngularDrag", GetAngularDrag());
-    metaNode->Set("UseGravity",  GetUseGravity());
+    metaNode->Set("UseGravity", GetUseGravity());
     metaNode->Set("IsKinematic", GetIsKinematic());
     metaNode->Set("Constraints", GetConstraints().GetValue());
 }
 
 void RigidBody::UpdatePxRigidDynamicValues()
 {
-    if (GetPxRigidDynamic())
+    if(GetPxRigidDynamic())
     {
         GetPxRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY,
                                           !GetUseGravity());
-        GetPxRigidDynamic()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC,
-                                              GetIsKinematic());
-        GetPxRigidDynamic()->setMass( GetMass() );
+        GetPxRigidDynamic()->setRigidBodyFlag(
+            physx::PxRigidBodyFlag::eKINEMATIC, GetIsKinematic());
+        GetPxRigidDynamic()->setMass(GetMass());
         GetPxRigidDynamic()->setRigidDynamicLockFlags(
-          SCAST<physx::PxRigidDynamicLockFlags>(GetConstraints().GetValue()) );
-        GetPxRigidDynamic()->setLinearDamping( GetDrag() );
-        GetPxRigidDynamic()->setAngularDamping( GetAngularDrag() );
+            SCAST<physx::PxRigidDynamicLockFlags>(GetConstraints().GetValue()));
+        GetPxRigidDynamic()->setLinearDamping(GetDrag());
+        GetPxRigidDynamic()->setAngularDamping(GetAngularDrag());
 
-        if (GetGameObject() && GetGameObject()->GetName() == "AAA")
+        if(GetGameObject() && GetGameObject()->GetName() == "AAA")
         {
-            Debug_DLog( Physics::GetVector3FromPxVec3(
-                            GetPxRigidDynamic()->getLinearVelocity()) );
+            Debug_DLog(Physics::GetVector3FromPxVec3(
+                GetPxRigidDynamic()->getLinearVelocity()));
         }
     }
 }

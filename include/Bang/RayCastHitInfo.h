@@ -5,10 +5,10 @@
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Collider;
-FORWARD class GameObject;
+namespace Bang
+{
+class Collider;
+class GameObject;
 
 struct RayCastHit
 {
@@ -16,11 +16,11 @@ public:
     float GetDistance() const;
     const Vector2 &GetUv() const;
     uint32_t GetFaceIndex() const;
-    const Vector3& GetNormal() const;
-    const Vector3& GetPosition() const;
+    const Vector3 &GetNormal() const;
+    const Vector3 &GetPosition() const;
 
-    Collider* GetCollider() const;
-    GameObject* GetGameObject() const;
+    Collider *GetCollider() const;
+    GameObject *GetGameObject() const;
 
 private:
     float m_distance = 0.0f;
@@ -37,14 +37,13 @@ private:
 struct RayCastHitInfo
 {
 public:
-    const Array<RayCastHit>& GetHits() const;
+    const Array<RayCastHit> &GetHits() const;
 
 private:
     Array<RayCastHit> m_hits;
 
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RAYCASTHITINFO_H
+#endif  // RAYCASTHITINFO_H

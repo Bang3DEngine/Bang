@@ -5,10 +5,10 @@
 #include "Bang/List.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Thread;
-FORWARD class ThreadRunnable;
+namespace Bang
+{
+class Thread;
+class ThreadRunnable;
 
 class ThreadPool
 {
@@ -26,11 +26,10 @@ public:
 
 private:
     String m_threadsName = "BangPooledThread";
-    List<Thread*> m_threadList;
+    List<Thread *> m_threadList;
 
     int m_maxThreadCount = 32;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // THREADPOOL_H
+#endif  // THREADPOOL_H

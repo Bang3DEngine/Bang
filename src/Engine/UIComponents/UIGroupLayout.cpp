@@ -7,7 +7,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIGroupLayout::UIGroupLayout()
 {
@@ -20,7 +20,6 @@ UIGroupLayout::UIGroupLayout()
 
 Bang::UIGroupLayout::~UIGroupLayout()
 {
-
 }
 
 void UIGroupLayout::SetSpacing(int spacingPx)
@@ -29,22 +28,26 @@ void UIGroupLayout::SetSpacing(int spacingPx)
 }
 void UIGroupLayout::SetPaddingLeft(int paddingLeft)
 {
-    SetPaddings(paddingLeft, GetPaddingBot(), GetPaddingRight(), GetPaddingTop());
+    SetPaddings(paddingLeft, GetPaddingBot(), GetPaddingRight(),
+                GetPaddingTop());
 }
 
 void UIGroupLayout::SetPaddingBot(int paddingBot)
 {
-    SetPaddings(GetPaddingLeft(), paddingBot, GetPaddingRight(), GetPaddingTop());
+    SetPaddings(GetPaddingLeft(), paddingBot, GetPaddingRight(),
+                GetPaddingTop());
 }
 
 void UIGroupLayout::SetPaddingRight(int paddingRight)
 {
-    SetPaddings(GetPaddingLeft(), GetPaddingBot(), paddingRight, GetPaddingTop());
+    SetPaddings(GetPaddingLeft(), GetPaddingBot(), paddingRight,
+                GetPaddingTop());
 }
 
 void UIGroupLayout::SetPaddingTop(int paddingTop)
 {
-    SetPaddings(GetPaddingLeft(), GetPaddingBot(), GetPaddingRight(), paddingTop);
+    SetPaddings(GetPaddingLeft(), GetPaddingBot(), GetPaddingRight(),
+                paddingTop);
 }
 
 void UIGroupLayout::SetPaddings(int padding)
@@ -52,22 +55,23 @@ void UIGroupLayout::SetPaddings(int padding)
     SetPaddings(padding, padding, padding, padding);
 }
 
-void UIGroupLayout::SetPaddings(int paddingLeft, int paddingBot,
-                                int paddingRight, int paddingTop)
+void UIGroupLayout::SetPaddings(int paddingLeft,
+                                int paddingBot,
+                                int paddingRight,
+                                int paddingTop)
 {
-    if (m_paddingLeftBot.x  != paddingLeft   ||
-        m_paddingLeftBot.y  != paddingBot    ||
-        m_paddingRightTop.x != paddingRight  ||
-        m_paddingRightTop.y != paddingTop)
+    if(m_paddingLeftBot.x != paddingLeft || m_paddingLeftBot.y != paddingBot ||
+       m_paddingRightTop.x != paddingRight || m_paddingRightTop.y != paddingTop)
     {
-        m_paddingLeftBot  = Vector2i(paddingLeft,  paddingBot);
+        m_paddingLeftBot = Vector2i(paddingLeft, paddingBot);
         m_paddingRightTop = Vector2i(paddingRight, paddingTop);
     }
 }
 
-void UIGroupLayout::SetChildrenHorizontalAlignment(HorizontalAlignment hAlignment)
+void UIGroupLayout::SetChildrenHorizontalAlignment(
+    HorizontalAlignment hAlignment)
 {
-    if (m_childrenHorizontalAlignment != hAlignment)
+    if(m_childrenHorizontalAlignment != hAlignment)
     {
         m_childrenHorizontalAlignment = hAlignment;
     }
@@ -75,7 +79,7 @@ void UIGroupLayout::SetChildrenHorizontalAlignment(HorizontalAlignment hAlignmen
 
 void UIGroupLayout::SetChildrenVerticalAlignment(VerticalAlignment vAlignment)
 {
-    if (m_childrenVerticalAlignment != vAlignment)
+    if(m_childrenVerticalAlignment != vAlignment)
     {
         m_childrenVerticalAlignment = vAlignment;
     }
@@ -83,7 +87,7 @@ void UIGroupLayout::SetChildrenVerticalAlignment(VerticalAlignment vAlignment)
 
 void UIGroupLayout::SetChildrenHorizontalStretch(Stretch hStretch)
 {
-    if (m_childrenHorizontalStretch != hStretch)
+    if(m_childrenHorizontalStretch != hStretch)
     {
         m_childrenHorizontalStretch = hStretch;
     }
@@ -91,13 +95,16 @@ void UIGroupLayout::SetChildrenHorizontalStretch(Stretch hStretch)
 
 void UIGroupLayout::SetChildrenVerticalStretch(Stretch vStretch)
 {
-    if (m_childrenVerticalStretch != vStretch)
+    if(m_childrenVerticalStretch != vStretch)
     {
         m_childrenVerticalStretch = vStretch;
     }
 }
 
-int UIGroupLayout::GetSpacing() const { return m_spacingPx; }
+int UIGroupLayout::GetSpacing() const
+{
+    return m_spacingPx;
+}
 HorizontalAlignment UIGroupLayout::GetChildrenHorizontalAlignment() const
 {
     return m_childrenHorizontalAlignment;
@@ -157,8 +164,10 @@ void UIGroupLayout::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("SpacingPx"))
-    { SetSpacing( metaNode.Get<int>("SpacingPx") ); }
+    if(metaNode.Contains("SpacingPx"))
+    {
+        SetSpacing(metaNode.Get<int>("SpacingPx"));
+    }
 }
 
 void UIGroupLayout::ExportMeta(MetaNode *metaNode) const

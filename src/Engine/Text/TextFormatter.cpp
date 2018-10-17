@@ -12,84 +12,87 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-Array<TextFormatter::CharRect>
-   TextFormatter::GetFormattedTextPositions(const String &content,
-                                            const Font *font,
-                                            int fontSize,
-                                            const AARecti &limitsRect,
-                                            const Vector2 &spacingMultiplier,
-                                            HorizontalAlignment hAlignment,
-                                            VerticalAlignment vAlignment,
-                                            bool wrapping,
-                                            uint *numberOfLines)
+Array<TextFormatter::CharRect> TextFormatter::GetFormattedTextPositions(
+    const String &content,
+    const Font *font,
+    int fontSize,
+    const AARecti &limitsRect,
+    const Vector2 &spacingMultiplier,
+    HorizontalAlignment hAlignment,
+    VerticalAlignment vAlignment,
+    bool wrapping,
+    uint *numberOfLines)
 {
-    if (content.IsEmpty()) { return Array<CharRect>(); }
+    if(content.IsEmpty())
+    {
+        return Array<CharRect>();
+    }
 
     // First create a list with all the character rects in the origin
     Array<CharRect> charRects;
-    for (int i = 0; i < content.Size(); ++i)
+    for(int i = 0; i < content.Size(); ++i)
     {
         const char c = content[i];
         Vector2 size = Vector2(font->GetAtlasCharRectSize(fontSize, c));
-        if (c == ' ')
+        if(c == ' ')
         {
             size = Vector2(font->GetAtlasCharRectSize(fontSize, 'a'));
         }
         AARectf charRect = AARect(Vector2(0, -size.y), Vector2(size.x, 0)) +
-                                  Vector2(0, font->GetFontAscent(fontSize));
-        charRects.PushBack( CharRect(c, charRect) );
+                           Vector2(0, font->GetFontAscent(fontSize));
+        charRects.PushBack(CharRect(c, charRect));
     }
 
-    Array< Array<CharRect> >
-    linedCharRects = SplitCharRectsInLines(content, font, fontSize, limitsRect,
-                                           spacingMultiplier,
-                                           charRects, wrapping);
+    Array<Array<CharRect>> linedCharRects =
+        SplitCharRectsInLines(content, font, fontSize, limitsRect,
+                              spacingMultiplier, charRects, wrapping);
     *numberOfLines = linedCharRects.Size();
 
-    if (limitsRect.IsValid())
+    if(limitsRect.IsValid())
     {
-        TextFormatter::ApplyAlignment(&linedCharRects, limitsRect, font, fontSize,
-                                      hAlignment, vAlignment);
+        TextFormatter::ApplyAlignment(&linedCharRects, limitsRect, font,
+                                      fontSize, hAlignment, vAlignment);
     }
 
-    Array<CharRect> finalCharRects; // Flattened result
-    for (const Array<CharRect> &line : linedCharRects)
+    Array<CharRect> finalCharRects;  // Flattened result
+    for(const Array<CharRect> &line : linedCharRects)
     {
         finalCharRects.PushBack(line);
     }
     return finalCharRects;
 }
 
-Array< Array<TextFormatter::CharRect> >
-TextFormatter::SplitCharRectsInLines(const String &content,
-                                     const Font *font,
-                                     int fontSize,
-                                     const AARecti &limitsRect,
-                                     const Vector2 &spacingMult,
-                                     const Array<CharRect> &charRects,
-                                     bool wrapping)
+Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
+    const String &content,
+    const Font *font,
+    int fontSize,
+    const AARecti &limitsRect,
+    const Vector2 &spacingMult,
+    const Array<CharRect> &charRects,
+    bool wrapping)
 {
-    Array< Array<CharRect> > linedCharRects(1); // Result
+    Array<Array<CharRect>> linedCharRects(1);  // Result
 
-    Vector2 penPosition (limitsRect.GetMinXMaxY()); // penPosition.y is baseline
+    Vector2 penPosition(limitsRect.GetMinXMaxY());  // penPosition.y is baseline
     const float lineSkip = font->GetLineSkip(fontSize);
-    for (int i = 0; i < content.Size(); ++i)
+    for(int i = 0; i < content.Size(); ++i)
     {
         const float charAdvX = GetCharAdvanceX(content, font, fontSize, i);
         bool lineBreak = (content[i] == '\n');
-        if (wrapping && !lineBreak)
+        if(wrapping && !lineBreak)
         {
             // Do we have to break line here because of wrapping?
             bool wrappingLineBreak = false;
 
             // Split the input char positions into the needed lines.
-            // Each line will contain as many words as possible (split by spaces).
-            if (content[i] != ' ')
+            // Each line will contain as many words as possible (split by
+            // spaces).
+            if(content[i] != ' ')
             {
-                wrappingLineBreak = (penPosition.x + charAdvX >
-                                     limitsRect.GetMax().x);
+                wrappingLineBreak =
+                    (penPosition.x + charAdvX > limitsRect.GetMax().x);
             }
             else
             {
@@ -97,12 +100,15 @@ TextFormatter::SplitCharRectsInLines(const String &content,
                 // Does the following word (after this space) still fits in
                 // the current line?
                 float tmpAdvX = penPosition.x + charAdvX;
-                for (int j = i+1; j < content.Size(); ++j)
+                for(int j = i + 1; j < content.Size(); ++j)
                 {
-                    if (content[j] == ' ') { break; }
-                    const float jCharAdvX = GetCharAdvanceX(content, font,
-                                                            fontSize, j);
-                    if (tmpAdvX + jCharAdvX > limitsRect.GetMax().x)
+                    if(content[j] == ' ')
+                    {
+                        break;
+                    }
+                    const float jCharAdvX =
+                        GetCharAdvanceX(content, font, fontSize, j);
+                    if(tmpAdvX + jCharAdvX > limitsRect.GetMax().x)
                     {
                         wrappingLineBreak = true;
                         break;
@@ -114,17 +120,20 @@ TextFormatter::SplitCharRectsInLines(const String &content,
             lineBreak = lineBreak || wrappingLineBreak;
         }
 
-        if (lineBreak)
+        if(lineBreak)
         {
             // Advance to next line! Add the current line to the result.
-            penPosition.x  = limitsRect.GetMin().x;
+            penPosition.x = limitsRect.GetMin().x;
             penPosition.y -= lineSkip * spacingMult.y;
-            linedCharRects.PushBack( Array<CharRect>() );
+            linedCharRects.PushBack(Array<CharRect>());
 
             // Skip all next ' '
-            if (content[i] == ' ')
+            if(content[i] == ' ')
             {
-                while (content[i] == ' ') { ++i; }
+                while(content[i] == ' ')
+                {
+                    ++i;
+                }
                 --i;
             }
         }
@@ -138,20 +147,24 @@ TextFormatter::SplitCharRectsInLines(const String &content,
     return linedCharRects;
 }
 
-Vector2i TextFormatter::GetMinimumHeightTextSize(const String &content,
-                                                 const Font *font,
-                                                 int fontSize,
-                                                 const Vector2 &spacingMultiplier)
+Vector2i TextFormatter::GetMinimumHeightTextSize(
+    const String &content,
+    const Font *font,
+    int fontSize,
+    const Vector2 &spacingMultiplier)
 {
     // Get the text size with as less height as possible
-    if (!font || content.IsEmpty() || fontSize <= 0) { return Vector2i::Zero; }
+    if(!font || content.IsEmpty() || fontSize <= 0)
+    {
+        return Vector2i::Zero;
+    }
 
     Vector2 textSize = Vector2::Zero;
     float currentLineWidth = 0.0f;
-    for (int i = 0; i < content.Size(); ++i)
+    for(int i = 0; i < content.Size(); ++i)
     {
         char c = content[i];
-        if (c == '\n')
+        if(c == '\n')
         {
             textSize.y += font->GetLineSkip(fontSize);
             currentLineWidth = 0.0f;
@@ -163,14 +176,14 @@ Vector2i TextFormatter::GetMinimumHeightTextSize(const String &content,
             textSize.x = Math::Max(textSize.x, currentLineWidth);
         }
     }
-    textSize.y += font->GetLineSkip(fontSize); // Last/first line
-    return Vector2i( Vector2::Round(textSize) );
+    textSize.y += font->GetLineSkip(fontSize);  // Last/first line
+    return Vector2i(Vector2::Round(textSize));
 }
 
-Vector2 FindMinCoord(const Array<TextFormatter::CharRect>&);
-Vector2 FindMaxCoord(const Array<TextFormatter::CharRect>&);
+Vector2 FindMinCoord(const Array<TextFormatter::CharRect> &);
+Vector2 FindMaxCoord(const Array<TextFormatter::CharRect> &);
 
-void TextFormatter::ApplyAlignment(Array< Array<CharRect> > *linesCharRects,
+void TextFormatter::ApplyAlignment(Array<Array<CharRect>> *linesCharRects,
                                    const AARecti &limitsRect,
                                    const Font *font,
                                    int fontSize,
@@ -180,28 +193,31 @@ void TextFormatter::ApplyAlignment(Array< Array<CharRect> > *linesCharRects,
     ASSERT(limitsRect.IsValid());
 
     // For each line apply the HorizontalAlign
-    for (Array<CharRect> &line : *linesCharRects)
+    for(Array<CharRect> &line : *linesCharRects)
     {
-        if (line.IsEmpty()) { continue; }
+        if(line.IsEmpty())
+        {
+            continue;
+        }
         Vector2 lineMinCoord = FindMinCoord(line);
         Vector2 lineMaxCoord = FindMaxCoord(line);
 
         float lineHorizontalOffset = 0;
-        if (hAlignment == HorizontalAlignment::LEFT)
+        if(hAlignment == HorizontalAlignment::LEFT)
         {
             lineHorizontalOffset = limitsRect.GetMin().x - lineMinCoord.x;
         }
-        else if (hAlignment == HorizontalAlignment::CENTER)
+        else if(hAlignment == HorizontalAlignment::CENTER)
         {
             lineHorizontalOffset = limitsRect.GetCenter().x -
                                    (lineMaxCoord.x + lineMinCoord.x) / 2;
         }
-        else if (hAlignment == HorizontalAlignment::RIGHT)
+        else if(hAlignment == HorizontalAlignment::RIGHT)
         {
             lineHorizontalOffset = limitsRect.GetMax().x - lineMaxCoord.x;
         }
 
-        for (CharRect &cr : line)
+        for(CharRect &cr : line)
         {
             cr.rectPx += Vector2(lineHorizontalOffset, 0);
         }
@@ -209,26 +225,27 @@ void TextFormatter::ApplyAlignment(Array< Array<CharRect> > *linesCharRects,
 
     // Vertical align all the lines at once
     float textVerticalOffset = 0;
-    const float textHeight = (linesCharRects->Size() * font->GetLineSkip(fontSize));
-    if (vAlignment == VerticalAlignment::TOP)
+    const float textHeight =
+        (linesCharRects->Size() * font->GetLineSkip(fontSize));
+    if(vAlignment == VerticalAlignment::TOP)
     {
         textVerticalOffset = -font->GetFontAscent(fontSize);
     }
-    else if (vAlignment == VerticalAlignment::CENTER)
+    else if(vAlignment == VerticalAlignment::CENTER)
     {
         textVerticalOffset = -font->GetFontDescent(fontSize) -
-                             (limitsRect.GetHeight()/2) - (textHeight/2);
+                             (limitsRect.GetHeight() / 2) - (textHeight / 2);
     }
-    else if (vAlignment == VerticalAlignment::BOT)
+    else if(vAlignment == VerticalAlignment::BOT)
     {
-        textVerticalOffset = -font->GetFontDescent(fontSize)
-                             -limitsRect.GetHeight();
+        textVerticalOffset =
+            -font->GetFontDescent(fontSize) - limitsRect.GetHeight();
     }
 
     // Apply offsets
-    for (Array<CharRect> &line : *linesCharRects)
+    for(Array<CharRect> &line : *linesCharRects)
     {
-        for (CharRect &cr : line)
+        for(CharRect &cr : line)
         {
             cr.rectPx += Vector2(0, textVerticalOffset);
         }
@@ -237,13 +254,16 @@ void TextFormatter::ApplyAlignment(Array< Array<CharRect> > *linesCharRects,
 
 AARectf TextFormatter::GetCharRect(char c, const Font *font, int fontSize)
 {
-    if (!font) { return AARectf::Zero; }
+    if(!font)
+    {
+        return AARectf::Zero;
+    }
 
     Font::GlyphMetrics charMetrics = font->GetCharMetrics(fontSize, c);
     const Font::GlyphMetrics &cm = charMetrics;
 
-    Vector2 charMin (cm.bearing.x, -(cm.size.y - cm.bearing.y));
-    Vector2 charMax (cm.bearing.x + cm.size.x, cm.bearing.y);
+    Vector2 charMin(cm.bearing.x, -(cm.size.y - cm.bearing.y));
+    Vector2 charMax(cm.bearing.x + cm.size.x, cm.bearing.y);
     return AARectf(charMin, charMax);
 }
 
@@ -253,14 +273,13 @@ float TextFormatter::GetCharAdvanceX(const String &content,
                                      int currentCharIndex)
 {
     float advance = 0;
-    if (currentCharIndex < content.Size()-1)
+    if(currentCharIndex < content.Size() - 1)
     {
-        advance = font->GetKerning(fontSize,
-                                   content[currentCharIndex],
+        advance = font->GetKerning(fontSize, content[currentCharIndex],
                                    content[currentCharIndex + 1]);
     }
 
-    if (advance <= 0)
+    if(advance <= 0)
     {
         const char c = content[currentCharIndex];
         Font::GlyphMetrics charMetrics = font->GetCharMetrics(fontSize, c);
@@ -274,10 +293,17 @@ Vector2 FindMinCoord(const Array<TextFormatter::CharRect> &rects)
 {
     Vector2 result;
     bool first = true;
-    for (const TextFormatter::CharRect &cr : rects)
+    for(const TextFormatter::CharRect &cr : rects)
     {
-        if (first) { first = false; result = cr.rectPx.GetMin(); }
-        else { result = Vector2::Min(result, cr.rectPx.GetMin()); }
+        if(first)
+        {
+            first = false;
+            result = cr.rectPx.GetMin();
+        }
+        else
+        {
+            result = Vector2::Min(result, cr.rectPx.GetMin());
+        }
     }
     return result;
 }
@@ -286,10 +312,17 @@ Vector2 FindMaxCoord(const Array<TextFormatter::CharRect> &rects)
 {
     Vector2 result;
     bool first = true;
-    for (const TextFormatter::CharRect &cr : rects)
+    for(const TextFormatter::CharRect &cr : rects)
     {
-        if (first) { first = false; result = cr.rectPx.GetMax(); }
-        else { result = Vector2::Max(result, cr.rectPx.GetMax()); }
+        if(first)
+        {
+            first = false;
+            result = cr.rectPx.GetMax();
+        }
+        else
+        {
+            result = Vector2::Max(result, cr.rectPx.GetMax());
+        }
     }
     return result;
 }

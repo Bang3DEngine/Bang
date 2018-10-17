@@ -12,7 +12,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/StreamOperators.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 AudioClip::AudioClip()
 {
@@ -28,7 +28,10 @@ AudioClip::~AudioClip()
 
 void AudioClip::Import(const Path &soundFilepath)
 {
-    if (!soundFilepath.Exists() || !soundFilepath.IsFile()) { return; }
+    if(!soundFilepath.Exists() || !soundFilepath.IsFile())
+    {
+        return;
+    }
 
     AudioManager::ClearALErrors();
     AudioManager::DettachSourcesFromAudioClip(this);
@@ -36,12 +39,10 @@ void AudioClip::Import(const Path &soundFilepath)
     alGenBuffers(1, &m_alBufferId);
     AudioManager::CheckALError();
 
-
     SF_INFO soundInfo;
-    SNDFILE *soundFile = sf_open(soundFilepath.GetAbsolute().ToCString(),
-                                 SFM_READ,
-                                 &soundInfo);
-    if (!soundFile)
+    SNDFILE *soundFile =
+        sf_open(soundFilepath.GetAbsolute().ToCString(), SFM_READ, &soundInfo);
+    if(!soundFile)
     {
         Debug_Error("Error loading sound file '" << soundFilepath << "'");
         return;
@@ -50,31 +51,39 @@ void AudioClip::Import(const Path &soundFilepath)
     constexpr int bufferSize = 4096;
     Array<short> buffer(bufferSize);
     Array<short> readData;
-    while (true)
+    while(true)
     {
-        size_t readSize = sf_read_short(soundFile,
-                                        &buffer.Front(),
-                                        bufferSize);
-        if (readSize <= 0) { break; }
+        size_t readSize = sf_read_short(soundFile, &buffer.Front(), bufferSize);
+        if(readSize <= 0)
+        {
+            break;
+        }
         readData.PushBack(buffer.begin(), buffer.begin() + readSize);
     }
 
     AudioManager::ClearALErrors();
-    alBufferData(m_alBufferId,
-                 soundInfo.channels == 1? AL_FORMAT_MONO16 :
-                                          AL_FORMAT_STEREO16,
-                 &readData.Front(),
-                 readData.Size() * sizeof(short),
+    alBufferData(m_alBufferId, soundInfo.channels == 1 ? AL_FORMAT_MONO16
+                                                       : AL_FORMAT_STEREO16,
+                 &readData.Front(), readData.Size() * sizeof(short),
                  soundInfo.samplerate);
     bool hasError = AudioManager::CheckALError();
 
-    if(!hasError) { m_soundFilepath = soundFilepath; }
-    else { m_soundFilepath = Path::Empty; }
+    if(!hasError)
+    {
+        m_soundFilepath = soundFilepath;
+    }
+    else
+    {
+        m_soundFilepath = Path::Empty;
+    }
 }
 
 int AudioClip::GetChannels() const
 {
-    if (!IsLoaded()) { return 0; }
+    if(!IsLoaded())
+    {
+        return 0;
+    }
 
     int channels;
     alGetBufferi(m_alBufferId, AL_CHANNELS, &channels);
@@ -83,7 +92,10 @@ int AudioClip::GetChannels() const
 
 int AudioClip::GetBufferSize() const
 {
-    if (!IsLoaded()) { return 0; }
+    if(!IsLoaded())
+    {
+        return 0;
+    }
 
     int bSize;
     alGetBufferi(m_alBufferId, AL_SIZE, &bSize);
@@ -92,7 +104,10 @@ int AudioClip::GetBufferSize() const
 
 int AudioClip::GetBitDepth() const
 {
-    if (!IsLoaded()) { return 0; }
+    if(!IsLoaded())
+    {
+        return 0;
+    }
 
     int bitDepth;
     alGetBufferi(m_alBufferId, AL_BITS, &bitDepth);
@@ -101,7 +116,10 @@ int AudioClip::GetBitDepth() const
 
 int AudioClip::GetFrequency() const
 {
-    if (!IsLoaded()) { return 0; }
+    if(!IsLoaded())
+    {
+        return 0;
+    }
 
     int freq;
     alGetBufferi(m_alBufferId, AL_FREQUENCY, &freq);
@@ -110,7 +128,10 @@ int AudioClip::GetFrequency() const
 
 float AudioClip::GetLength() const
 {
-    if (!IsLoaded()) { return 0.0f; }
+    if(!IsLoaded())
+    {
+        return 0.0f;
+    }
 
     const int bitChannels = (GetBitDepth() / 8) * GetChannels();
     return (float(GetBufferSize()) / bitChannels) / GetFrequency();
@@ -133,7 +154,7 @@ const Path &AudioClip::GetSoundFilepath() const
 
 void AudioClip::FreeBuffer()
 {
-    if ( IsLoaded() )
+    if(IsLoaded())
     {
         alDeleteBuffers(1, &m_alBufferId);
         m_alBufferId = 0;

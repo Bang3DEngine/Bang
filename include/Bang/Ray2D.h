@@ -4,8 +4,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Vector2.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Ray2D
 {
 public:
@@ -19,15 +19,13 @@ public:
     // Gets a point along the ray with distance t to the ray origin
     Vector2 GetPoint(float t) const;
 
-    const Vector2& GetOrigin() const;
-    const Vector2& GetDirection() const;
+    const Vector2 &GetOrigin() const;
+    const Vector2 &GetDirection() const;
 
 private:
     Vector2 m_origin = Vector2::Zero;
-    Vector2 m_direction = Vector2(1,0);
+    Vector2 m_direction = Vector2(1, 0);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RAY2D_H
-
+#endif  // RAY2D_H

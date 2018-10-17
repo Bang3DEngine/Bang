@@ -10,9 +10,9 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsDestroy;
+namespace Bang
+{
+class IEventsDestroy;
 
 class ALAudioSource : public virtual EventEmitter<IEventsDestroy>
 {
@@ -20,7 +20,7 @@ public:
     enum State
     {
         PLAYING = AL_PLAYING,
-        PAUSED  = AL_PAUSED,
+        PAUSED = AL_PAUSED,
         STOPPED = AL_STOPPED
     };
 
@@ -35,7 +35,7 @@ public:
     void SetPitch(float pitch);
     void SetRange(float range);
     void SetLooping(bool looping);
-    void SetPosition(const Vector3& position);
+    void SetPosition(const Vector3 &position);
     void SetParams(const AudioParams &audioParams);
     void SetALBufferId(ALuint bufferId);
 
@@ -44,12 +44,12 @@ public:
     bool IsStopped() const;
     State GetState() const;
     float GetVolume() const;
-    float GetPitch()  const;
-    float GetRange()  const;
+    float GetPitch() const;
+    float GetRange() const;
     ALuint GetALSourceId() const;
-    const Vector3& GetPosition() const;
-    const AudioParams& GetParams();
-    bool GetLooping()  const;
+    const Vector3 &GetPosition() const;
+    const AudioParams &GetParams();
+    bool GetLooping() const;
 
 private:
     ALuint m_alSourceId = 0;
@@ -59,7 +59,6 @@ private:
     friend class AudioManager;
     friend class AudioPlayerRunnable;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ALAUDIOSOURCE_H
+#endif  // ALAUDIOSOURCE_H

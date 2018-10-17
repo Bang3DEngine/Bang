@@ -10,13 +10,12 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class AudioClip;
+class ICloneable;
 
-FORWARD class AudioClip;
-FORWARD class ICloneable;
-
-class AudioSource : public Component,
-                    public ALAudioSource
+class AudioSource : public Component, public ALAudioSource
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioSource)
 
@@ -26,12 +25,12 @@ public:
     void SetAudioClip(AudioClip *audioClip);
     void SetPlayOnStart(bool playOnStart);
 
-    void Play(); // Hides ALAudioSource::Play()
+    void Play();  // Hides ALAudioSource::Play()
     void Play(float delay);
 
     bool GetPlayOnStart() const;
     float GetPlayProgress() const;
-    AudioClip* GetAudioClip() const;
+    AudioClip *GetAudioClip() const;
 
     // Component
     void OnStart() override;
@@ -57,7 +56,6 @@ private:
     friend class AudioClip;
     friend class AudioManager;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AUDIOSOURCE_H
+#endif  // AUDIOSOURCE_H

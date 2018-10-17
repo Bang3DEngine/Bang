@@ -10,7 +10,7 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/Time.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UITextCursor::UITextCursor()
 {
@@ -24,7 +24,7 @@ UITextCursor::UITextCursor()
     m_cursorTickTime.SetSeconds(0.5);
 
     constexpr float limit = 1.0f;
-    SetPoints({Vector3(0, -limit, 0), Vector3(0,  limit, 0)});
+    SetPoints({Vector3(0, -limit, 0), Vector3(0, limit, 0)});
 }
 
 UITextCursor::~UITextCursor()
@@ -36,8 +36,8 @@ void UITextCursor::OnUpdate()
     Component::OnUpdate();
 
     m_cursorTime += Time::GetDeltaTime();
-    SetVisible( m_cursorTime <= m_cursorTickTime );
-    if (m_cursorTime >= m_cursorTickTime * 2)
+    SetVisible(m_cursorTime <= m_cursorTickTime);
+    if(m_cursorTime >= m_cursorTickTime * 2)
     {
         m_cursorTime.SetNanos(0);
     }

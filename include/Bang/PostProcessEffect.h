@@ -13,16 +13,20 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
+namespace Bang
+{
+class ICloneable;
 
 class PostProcessEffect : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffect)
 
 public:
-    enum class Type { AFTER_SCENE = 0, AFTER_CANVAS };
+    enum class Type
+    {
+        AFTER_SCENE = 0,
+        AFTER_CANVAS
+    };
 
     PostProcessEffect();
     virtual ~PostProcessEffect() = default;
@@ -32,12 +36,12 @@ public:
 
     void SetType(Type type);
     void SetPriority(int priority);
-    void SetPostProcessShader(Shader* postProcessShader);
+    void SetPostProcessShader(Shader *postProcessShader);
 
     Type GetType() const;
     int GetPriority() const;
-    ShaderProgram* GetPostProcessShaderProgram() const;
-    Shader* GetPostProcessShader() const;
+    ShaderProgram *GetPostProcessShaderProgram() const;
+    Shader *GetPostProcessShader() const;
     Path GetPostProcessShaderFilepath() const;
 
     // ICloneable
@@ -47,8 +51,8 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-    friend bool operator<(const PostProcessEffect& lhs,
-                          const PostProcessEffect& rhs);
+    friend bool operator<(const PostProcessEffect &lhs,
+                          const PostProcessEffect &rhs);
 
 protected:
     bool MustBeRendered(RenderPass renderPass) const;
@@ -59,7 +63,6 @@ private:
     Type m_type = Type::AFTER_SCENE;
     int m_priority = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // POSTPROCESSEFFECT_H
+#endif  // POSTPROCESSEFFECT_H

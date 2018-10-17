@@ -15,21 +15,21 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Framebuffer;
-FORWARD class ICloneable;
-FORWARD class Renderer;
-FORWARD class ShaderProgram;
-FORWARD class TextureCubeMap;
+namespace Bang
+{
+class Framebuffer;
+class ICloneable;
+class Renderer;
+class ShaderProgram;
+class TextureCubeMap;
 
 class ReflectionProbe : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(ReflectionProbe)
 
 public:
-	ReflectionProbe();
-	virtual ~ReflectionProbe() override;
+    ReflectionProbe();
+    virtual ~ReflectionProbe() override;
 
     void RenderReflectionProbe(bool force = false);
 
@@ -48,21 +48,20 @@ public:
     int GetRenderSize() const;
     bool GetFilterForIBL() const;
     const Vector3 &GetSize() const;
-    const Time& GetRestTime() const;
+    const Time &GetRestTime() const;
     TextureCubeMap *GetTextureCubeMapDiffuse() const;
     TextureCubeMap *GetTextureCubeMapSpecular() const;
     TextureCubeMap *GetTextureCubeMapWithoutFiltering() const;
-    Camera* GetCamera(GL::CubeMapDir cubeMapDir) const;
-    const std::array<Camera*, 6> &GetCameras() const;
+    Camera *GetCamera(GL::CubeMapDir cubeMapDir) const;
+    const std::array<Camera *, 6> &GetCameras() const;
 
-    const Color& GetCamerasClearColor() const;
+    const Color &GetCamerasClearColor() const;
     CameraClearMode GetCamerasClearMode() const;
-    TextureCubeMap* GetCamerasSkyBoxTexture() const;
+    TextureCubeMap *GetCamerasSkyBoxTexture() const;
     float GetCamerasZNear() const;
     float GetCamerasZFar() const;
 
-    static void SetRendererUniforms(Renderer *renderer,
-                                    ShaderProgram *sp);
+    static void SetRendererUniforms(Renderer *renderer, ShaderProgram *sp);
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -79,13 +78,13 @@ private:
 
     int m_renderSize = -1;
     float m_camerasZNear = -1.0f;
-    float m_camerasZFar  = -1.0f;
+    float m_camerasZFar = -1.0f;
     Color m_camerasClearColor = -Color::One;
     CameraClearMode m_camerasClearMode = Undef<CameraClearMode>();
     RH<TextureCubeMap> m_camerasSkyBoxTexture;
 
     Time m_lastRenderTime;
-    std::array<Camera*, 6> m_cameras;
+    std::array<Camera *, 6> m_cameras;
     Framebuffer *m_textureCubeMapFB = nullptr;
     RH<TextureCubeMap> p_textureCubeMapWithoutFiltering;
     RH<TextureCubeMap> p_textureCubeMapDiffuse;
@@ -93,8 +92,6 @@ private:
 
     static ReflectionProbe *GetClosestReflectionProbe(Renderer *renderer);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // REFLECTIONPROBE_H
-
+#endif  // REFLECTIONPROBE_H

@@ -14,15 +14,17 @@
 #include "Bang/LayoutSizeType.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T  class EventEmitter;
-FORWARD    class Component;
-FORWARD    class GameObject;
-FORWARD    class IEventsDestroy;
-FORWARD    class ILayoutController;
-FORWARD    class ILayoutElement;
-FORWARD    template <class ObjectType, bool RECURSIVE> class ObjectGatherer;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class Component;
+class GameObject;
+class IEventsDestroy;
+class ILayoutController;
+class ILayoutElement;
+template <class ObjectType, bool RECURSIVE>
+class ObjectGatherer;
 
 class UILayoutManager : public EventListener<IEventsDestroy>
 {
@@ -36,20 +38,20 @@ public:
 
     static Vector2i GetMinSize(GameObject *go);
     static Vector2i GetPreferredSize(GameObject *go);
-    static Vector2  GetFlexibleSize(GameObject *go);
-    static Vector2  GetSize(GameObject *go, LayoutSizeType sizeType);
+    static Vector2 GetFlexibleSize(GameObject *go);
+    static Vector2 GetSize(GameObject *go, LayoutSizeType sizeType);
 
-    static Array<GameObject*> GetLayoutableChildrenList(GameObject *go);
+    static Array<GameObject *> GetLayoutableChildrenList(GameObject *go);
 
-    static UILayoutManager* GetActive(GameObject *go);
-    static UILayoutManager* GetActive(Component *comp);
-    static UILayoutManager* GetActive(ILayoutElement *layoutElement);
-    static UILayoutManager* GetActive(ILayoutController *layoutController);
+    static UILayoutManager *GetActive(GameObject *go);
+    static UILayoutManager *GetActive(Component *comp);
+    static UILayoutManager *GetActive(ILayoutElement *layoutElement);
+    static UILayoutManager *GetActive(ILayoutController *layoutController);
 
 private:
-    UMap<GameObject*, ObjectGatherer<ILayoutElement, false>*>
+    UMap<GameObject *, ObjectGatherer<ILayoutElement, false> *>
         m_iLayoutElementsPerGameObject;
-    UMap<GameObject*, ObjectGatherer<ILayoutController, false>*>
+    UMap<GameObject *, ObjectGatherer<ILayoutController, false> *>
         m_iLayoutControllersPerGameObject;
 
     void CalculateLayout(GameObject *gameObject, Axis axis);
@@ -58,10 +60,10 @@ private:
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
-    const Array<ILayoutElement*>& GetLayoutElementsIn(GameObject *gameObject);
-    const Array<ILayoutController*>& GetLayoutControllersIn(GameObject *gameObject);
+    const Array<ILayoutElement *> &GetLayoutElementsIn(GameObject *gameObject);
+    const Array<ILayoutController *> &GetLayoutControllersIn(
+        GameObject *gameObject);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UILAYOUTMANAGER_H
+#endif  // UILAYOUTMANAGER_H

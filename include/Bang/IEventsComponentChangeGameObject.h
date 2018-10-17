@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Component;
+namespace Bang
+{
+class Component;
 
 class IEventsComponentChangeGameObject
 {
@@ -16,7 +16,6 @@ public:
                                               GameObject *newGameObject,
                                               Component *component) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSCOMPONENT_H
+#endif  // IEVENTSCOMPONENT_H

@@ -20,15 +20,15 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class ICloneable;
-FORWARD class IEventsRendererChanged;
-FORWARD class IEventsResource;
-FORWARD class Material;
-FORWARD class Resource;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class Camera;
+class ICloneable;
+class IEventsRendererChanged;
+class IEventsResource;
+class Material;
+class Resource;
+class ShaderProgram;
 
 class Renderer : public Component,
                  public EventListener<IEventsResource>,
@@ -56,9 +56,9 @@ public:
 
     bool IsVisible() const;
     bool GetDepthMask() const;
-    Material* GetSharedMaterial() const;
-    Material* GetActiveMaterial() const;
-    Material* GetMaterial() const;
+    Material *GetSharedMaterial() const;
+    Material *GetActiveMaterial() const;
+    Material *GetMaterial() const;
     bool GetCastsShadows() const;
     bool GetReceivesShadows() const;
     GL::ViewProjMode GetViewProjMode() const;
@@ -100,10 +100,8 @@ private:
     mutable RH<Material> p_material;
     RH<Material> p_sharedMaterial;
 
-
     friend class GEngine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // RENDERER_H
+#endif  // RENDERER_H

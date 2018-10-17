@@ -11,11 +11,12 @@
 #include "Bang/Resources.tcc"
 #include "Bang/Set.tcc"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Path;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Path;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 RH<Mesh> MeshFactory::GetPlane()
 {
@@ -66,7 +67,7 @@ RH<Mesh> MeshFactory::GetCamera()
 
 RH<Mesh> MeshFactory::GetMesh(const String &enginePath)
 {
-    return MeshFactory::GetMesh( EPATH(enginePath) );
+    return MeshFactory::GetMesh(EPATH(enginePath));
 }
 
 RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
@@ -75,12 +76,12 @@ RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
     RH<Model> modelRH = Resources::Load<Model>(fullPath);
     Model *model = modelRH.Get();
 
-    if (model)
+    if(model)
     {
         MeshFactory *mf = MeshFactory::GetActive();
         mf->m_modelCache.Add(modelRH);
 
-        if (model->GetMeshes().Size() >= 1)
+        if(model->GetMeshes().Size() >= 1)
         {
             Mesh *firstMesh = model->GetMeshes()[0].Get();
             meshRH.Set(firstMesh);

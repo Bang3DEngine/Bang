@@ -16,11 +16,11 @@
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class ICloneable;
-FORWARD class IEventsComponentChangeGameObject;
+namespace Bang
+{
+class GameObject;
+class ICloneable;
+class IEventsComponentChangeGameObject;
 
 class Component : public Object,
                   public IToString,
@@ -32,7 +32,10 @@ class Component : public Object,
 
 public:
     template <class T, class... Args>
-    static T* Create(const Args&... args) { return new T(args...); }
+    static T *Create(const Args &... args)
+    {
+        return new T(args...);
+    }
     static void Destroy(Component *component);
     static void DestroyImmediate(Component *component);
 
@@ -88,7 +91,6 @@ private:
     friend class GameObject;
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COMPONENT_H
+#endif  // COMPONENT_H

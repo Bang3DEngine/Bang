@@ -16,14 +16,14 @@
 #include "Bang/String.h"
 #include "Bang/UITheme.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsValueChanged;
-FORWARD class RectTransform;
-FORWARD class UIFocusable;
-FORWARD class UIImageRenderer;
-FORWARD class UIInputNumber;
+namespace Bang
+{
+class GameObject;
+class IEventsValueChanged;
+class RectTransform;
+class UIFocusable;
+class UIImageRenderer;
+class UIInputNumber;
 
 class UISlider : public Component,
                  public EventListener<IEventsValueChanged>,
@@ -45,21 +45,21 @@ public:
     UIFocusable *GetSliderFocusable() const;
     bool HasFocus() const;
 
-    const Color& GetIdleColor() const;
-    const Color& GetOverColor() const;
-    const Color& GetPressedColor() const;
+    const Color &GetIdleColor() const;
+    const Color &GetOverColor() const;
+    const Color &GetPressedColor() const;
 
 private:
-    Color m_idleColor    = Color::White;
-    Color m_overColor    = UITheme::GetOverColor();
+    Color m_idleColor = Color::White;
+    Color m_overColor = UITheme::GetOverColor();
     Color m_pressedColor = UITheme::GetSelectedColor();
 
-    UIImageRenderer *p_guideRenderer  = nullptr;
+    UIImageRenderer *p_guideRenderer = nullptr;
     UIImageRenderer *p_handleRenderer = nullptr;
-    UIFocusable *p_sliderFocusable    = nullptr;
-    UIInputNumber *p_inputNumber      = nullptr;
+    UIFocusable *p_sliderFocusable = nullptr;
+    UIInputNumber *p_inputNumber = nullptr;
 
-	UISlider();
+    UISlider();
     virtual ~UISlider() override;
 
     // Component
@@ -72,12 +72,10 @@ private:
     void UpdateSliderHandlerFromInputNumberValue();
     RectTransform *GetHandleRectTransform() const;
 
-    static UISlider* CreateInto(GameObject *go);
+    static UISlider *CreateInto(GameObject *go);
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UISLIDER_H
-
+#endif  // UISLIDER_H

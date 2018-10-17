@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Object;
+namespace Bang
+{
+class Object;
 
 class IEventsObject
 {
@@ -24,7 +24,6 @@ public:
     {
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSOBJECT_H
+#endif  // IEVENTSOBJECT_H

@@ -5,22 +5,23 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class Array;
+namespace Bang
+{
+template <class>
+class Array;
 
 template <class Key,
           class Value,
-          class Hash  = std::hash<Key>,
-          class Pred  = std::equal_to<Key>,
-          class Alloc = std::allocator<std::pair<const Key, Value> > >
+          class Hash = std::hash<Key>,
+          class Pred = std::equal_to<Key>,
+          class Alloc = std::allocator<std::pair<const Key, Value>>>
 class UMap
 {
 public:
     using Iterator =
-    typename std::unordered_map<Key, Value, Hash, Pred, Alloc>::iterator;
-    using Const_Iterator =
-    typename std::unordered_map<Key, Value, Hash, Pred, Alloc>::const_iterator;
+        typename std::unordered_map<Key, Value, Hash, Pred, Alloc>::iterator;
+    using Const_Iterator = typename std::
+        unordered_map<Key, Value, Hash, Pred, Alloc>::const_iterator;
 
     UMap();
     UMap(const std::unordered_map<Key, Value, Hash, Pred, Alloc> &m);
@@ -31,9 +32,9 @@ public:
     Iterator Remove(Iterator it);
     void RemoveValues(const Value &value);
 
-    Value& Get(const Key &key);
-    const Value& Get(const Key &key) const;
-    Array<Key> GetKeysWithValue(const Value& v) const;
+    Value &Get(const Key &key);
+    const Value &Get(const Key &key) const;
+    Array<Key> GetKeysWithValue(const Value &v) const;
     Array<Key> GetKeys() const;
     Array<Value> GetValues() const;
 
@@ -46,8 +47,8 @@ public:
     bool ContainsKey(const Key &key) const;
     bool ContainsValue(const Value &value) const;
 
-    Value& operator[](const Key &k);
-    const Value& operator[](const Key &k) const;
+    Value &operator[](const Key &k);
+    const Value &operator[](const Key &k) const;
 
     Iterator Begin();
     Iterator End();
@@ -67,9 +68,8 @@ public:
 private:
     std::unordered_map<Key, Value, Hash, Pred, Alloc> m_umap;
 };
-
-NAMESPACE_BANG_END
+}
 
 #include "Bang/UMap.tcc"
 
-#endif // UMAP_H
+#endif  // UMAP_H

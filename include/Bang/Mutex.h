@@ -5,8 +5,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Mutex
 {
 public:
@@ -20,7 +20,6 @@ public:
 private:
     std::mutex m_mutex;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MUTEX_H
+#endif  // MUTEX_H

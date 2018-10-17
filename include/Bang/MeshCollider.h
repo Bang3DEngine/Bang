@@ -9,22 +9,22 @@
 #include "Bang/String.h"
 #include "PxShape.h"
 
-FORWARD namespace physx
+namespace physx
 {
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class ICloneable;
-FORWARD class Mesh;
+namespace Bang
+{
+class ICloneable;
+class Mesh;
 
 class MeshCollider : public Collider
 {
     COLLIDER(MeshCollider)
 
 public:
-	MeshCollider();
-	virtual ~MeshCollider() override;
+    MeshCollider();
+    virtual ~MeshCollider() override;
 
     void SetMesh(Mesh *mesh);
 
@@ -43,11 +43,9 @@ private:
     // Collider
     virtual bool CanBeTriggerShape() override;
     virtual bool CanBeSimulationShape() override;
-    physx::PxShape* CreatePxShape() const override;
+    physx::PxShape *CreatePxShape() const override;
     void UpdatePxShape() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MESHCOLLIDER_H
-
+#endif  // MESHCOLLIDER_H

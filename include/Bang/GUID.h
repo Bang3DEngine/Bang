@@ -8,8 +8,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class GUID
 {
 public:
@@ -18,14 +18,14 @@ public:
 
     GUID() = default;
 
-    static const GUID& Empty();
+    static const GUID &Empty();
     bool IsEmpty() const;
 
     static GUID GetRandomGUID();
 
-    const GUIDType& GetTimeGUID() const;
-    const GUIDType& GetRandGUID() const;
-    const GUIDType& GetEmbeddedResourceGUID() const;
+    const GUIDType &GetTimeGUID() const;
+    const GUIDType &GetRandGUID() const;
+    const GUIDType &GetEmbeddedResourceGUID() const;
 
     GUID WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const;
     GUID WithoutEmbeddedResourceGUID() const;
@@ -36,30 +36,30 @@ public:
     bool operator<(const GUID &rhs) const;
 
 private:
-    GUIDType m_timeGUID             = GUID::EmptyGUID;
-    GUIDType m_randGUID             = GUID::EmptyGUID;
+    GUIDType m_timeGUID = GUID::EmptyGUID;
+    GUIDType m_randGUID = GUID::EmptyGUID;
     GUIDType m_embeddedResourceGUID = GUID::EmptyGUID;
 
     void SetEmbeddedResourceGUID(const GUIDType &guid);
 
     friend class GUIDManager;
 };
-
-NAMESPACE_BANG_END
+}
 
 // Hash for GUID
 namespace std
 {
-    template <>
-    struct hash<Bang::GUID>
+template <>
+struct hash<Bang::GUID>
+{
+    std::size_t operator()(const Bang::GUID &guid) const
     {
-        std::size_t operator()(const Bang::GUID& guid) const
-        {
-            return std::hash<Bang::GUID::GUIDType>()(guid.GetTimeGUID()) ^
-                   std::hash<Bang::GUID::GUIDType>()(guid.GetRandGUID()) ^
-                   std::hash<Bang::GUID::GUIDType>()(guid.GetEmbeddedResourceGUID());
-        }
-    };
+        return std::hash<Bang::GUID::GUIDType>()(guid.GetTimeGUID()) ^
+               std::hash<Bang::GUID::GUIDType>()(guid.GetRandGUID()) ^
+               std::hash<Bang::GUID::GUIDType>()(
+                   guid.GetEmbeddedResourceGUID());
+    }
+};
 }
 
-#endif // GUID_H
+#endif  // GUID_H

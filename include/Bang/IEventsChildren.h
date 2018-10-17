@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
+namespace Bang
+{
+class GameObject;
 
 class IEventsChildren
 {
@@ -27,7 +27,6 @@ public:
         BANG_UNUSED_2(oldParent, newParent);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSCHILDREN_H
+#endif  // IEVENTSCHILDREN_H

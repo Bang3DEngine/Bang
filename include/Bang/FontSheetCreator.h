@@ -8,9 +8,9 @@
 #include "Bang/ImageIO.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Texture2D;
+namespace Bang
+{
+class Texture2D;
 
 class FontSheetCreator
 {
@@ -21,13 +21,13 @@ public:
                                  Array<AARecti> *imagesOutputRects = nullptr,
                                  int extraMargin = 0);
 
-    static Imageb PackImages(const Array<Imageb> &images, int margin,
+    static Imageb PackImages(const Array<Imageb> &images,
+                             int margin,
                              Array<AARecti> *imagesOutputRects = nullptr,
                              const Color &bgColor = Color::Zero);
 
     FontSheetCreator() = delete;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // FONTSHEETCREATOR_H
+#endif  // FONTSHEETCREATOR_H

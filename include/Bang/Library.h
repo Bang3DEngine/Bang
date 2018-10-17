@@ -5,30 +5,30 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Library
 {
 public:
     Library();
-    Library(const Path& libPath);
+    Library(const Path &libPath);
     ~Library();
 
     bool Load();
     bool UnLoad();
     void SetLibraryPath(const Path &libPath);
 
-    template<class T>
+    template <class T>
     T Get(const String &symbolName)
     {
-        return RCAST<T>( GetSymbol(symbolName) );
+        return RCAST<T>(GetSymbol(symbolName));
     }
 
     bool IsLoaded() const;
-    void* GetSymbol(const String &symbolName);
+    void *GetSymbol(const String &symbolName);
 
-    const Path& GetLibraryPath() const;
-    const String& GetErrorString() const;
+    const Path &GetLibraryPath() const;
+    const String &GetErrorString() const;
 
 private:
     Path m_libPath;
@@ -39,7 +39,6 @@ private:
     void FetchError();
     bool TheresError() const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // LIBRARY_H
+#endif  // LIBRARY_H

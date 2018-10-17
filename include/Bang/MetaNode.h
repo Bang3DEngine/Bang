@@ -8,18 +8,18 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/MetaAttribute.h"
-#include "Bang/String.h"
 #include "Bang/StreamOperators.h"
+#include "Bang/String.h"
 
-FORWARD namespace YAML
+namespace YAML
 {
-FORWARD class Emitter;
-FORWARD class Node;
+class Emitter;
+class Node;
 }
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Path;
+namespace Bang
+{
+class Path;
 
 class MetaNode
 {
@@ -39,33 +39,34 @@ public:
     void Set(const String &attributeName, const String &attributeValue);
 
     template <class T>
-    void Set(const String &attributeName, const T& value);
+    void Set(const String &attributeName, const T &value);
 
     template <class T>
-    void SetArray(const String &name, const Array<T>& array);
+    void SetArray(const String &name, const Array<T> &array);
 
-    template<class T>
+    template <class T>
     T Get(const String &attributeName) const;
 
-    template<class T>
-    T Get(const String &attributeName, const T& defaultValue) const;
+    template <class T>
+    T Get(const String &attributeName, const T &defaultValue) const;
 
-    template<class T>
+    template <class T>
     Array<T> GetArray(const String &attributeName) const;
 
-    void RemoveAttribute(const String& attributeName);
-    MetaAttribute* GetAttribute(const String& attributeName) const;
-    String GetAttributeValue(const String& attributeName) const;
+    void RemoveAttribute(const String &attributeName);
+    MetaAttribute *GetAttribute(const String &attributeName) const;
+    String GetAttributeValue(const String &attributeName) const;
 
     const MetaNode *GetChild(const String &name) const;
     void SetName(const String name);
     String ToString() const;
     void ToString(YAML::Emitter &out) const;
 
-    const String& GetName() const;
-    const Map<String, MetaAttribute>& GetAttributes() const;
-    const Array<MetaNode>& GetChildren(const String &childrenContainerName) const;
-    const Map<String, Array<MetaNode>>& GetAllChildren() const;
+    const String &GetName() const;
+    const Map<String, MetaAttribute> &GetAttributes() const;
+    const Array<MetaNode> &GetChildren(
+        const String &childrenContainerName) const;
+    const Map<String, Array<MetaNode>> &GetAllChildren() const;
 
     void Import(const String &metaString);
     void Import(const YAML::Node &yamlNode);
@@ -78,7 +79,6 @@ private:
 
     void ToStringInner(YAML::Emitter &out) const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // METANODE_H
+#endif  // METANODE_H

@@ -2,7 +2,7 @@
 
 #include "Bang/GL.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 IBO::IBO()
 {

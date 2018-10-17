@@ -18,8 +18,7 @@
 #include "Bang/UIInputNumber.h"
 #include "Bang/UILayoutElement.h"
 
-USING_NAMESPACE_BANG
-
+using namespace Bang;
 
 UISlider::UISlider()
 {
@@ -34,15 +33,16 @@ void UISlider::OnUpdate()
 {
     Component::OnUpdate();
 
-    if ( GetSliderFocusable()->IsBeingPressed() )
+    if(GetSliderFocusable()->IsBeingPressed())
     {
-        GetHandleRenderer()->SetTint( GetPressedColor() );
-        SetValuePercent( GetMouseRelativePercent() );
+        GetHandleRenderer()->SetTint(GetPressedColor());
+        SetValuePercent(GetMouseRelativePercent());
     }
     else
     {
-        GetHandleRenderer()->SetTint( GetSliderFocusable()->IsMouseOver() ?
-                                       GetOverColor() : GetIdleColor());
+        GetHandleRenderer()->SetTint(GetSliderFocusable()->IsMouseOver()
+                                         ? GetOverColor()
+                                         : GetIdleColor());
     }
 }
 
@@ -50,19 +50,20 @@ void UISlider::OnValueChanged(EventEmitter<IEventsValueChanged> *object)
 {
     ASSERT(object == GetInputNumber());
     EventListener<IEventsValueChanged>::SetReceiveEvents(false);
-    SetValue( GetInputNumber()->GetValue() );
+    SetValue(GetInputNumber()->GetValue());
     UpdateSliderHandlerFromInputNumberValue();
     EventEmitter<IEventsValueChanged>::PropagateToListeners(
-                &IEventsValueChanged::OnValueChanged, this);
+        &IEventsValueChanged::OnValueChanged, this);
     EventListener<IEventsValueChanged>::SetReceiveEvents(true);
 }
 
 float UISlider::GetMouseRelativePercent() const
 {
     GameObject *guide = GetGuideRenderer()->GetGameObject();
-    float mouseLocalX = guide->GetRectTransform()->
-                                FromViewportPointToLocalPointNDC(
-                                        Input::GetMousePosition() ).x;
+    float mouseLocalX =
+        guide->GetRectTransform()
+            ->FromViewportPointToLocalPointNDC(Input::GetMousePosition())
+            .x;
     mouseLocalX = Math::Clamp(mouseLocalX, -1.0f, 1.0f);
 
     float mousePercent = mouseLocalX * 0.5f + 0.5f;
@@ -72,7 +73,7 @@ float UISlider::GetMouseRelativePercent() const
 void UISlider::UpdateSliderHandlerFromInputNumberValue()
 {
     GetHandleRectTransform()->SetAnchors(
-                Vector2(GetValuePercent() * 2.0f - 1.0f, 0) );
+        Vector2(GetValuePercent() * 2.0f - 1.0f, 0));
 }
 
 RectTransform *UISlider::GetHandleRectTransform() const
@@ -94,7 +95,7 @@ void UISlider::SetValuePercent(float percent)
 {
     const float minVal = GetInputNumber()->GetMinValue();
     const float maxVal = GetInputNumber()->GetMaxValue();
-    SetValue( minVal + (maxVal - minVal) * percent);
+    SetValue(minVal + (maxVal - minVal) * percent);
     UpdateSliderHandlerFromInputNumberValue();
 }
 
@@ -108,8 +109,8 @@ float UISlider::GetValuePercent() const
     const float minValue = GetInputNumber()->GetMinValue();
     const float maxValue = GetInputNumber()->GetMaxValue();
     const float range = (maxValue - minValue);
-    const float percent = (range != 0.0f) ?
-                            ((GetValue() - minValue) / range) : 0.0f;
+    const float percent =
+        (range != 0.0f) ? ((GetValue() - minValue) / range) : 0.0f;
     ASSERT(percent >= -0.001f && percent <= 1.001f);
     return percent;
 }
@@ -136,7 +137,8 @@ UIFocusable *UISlider::GetSliderFocusable() const
 
 bool UISlider::HasFocus() const
 {
-    return GetSliderFocusable()->IsBeingPressed() || GetInputNumber()->HasFocus();
+    return GetSliderFocusable()->IsBeingPressed() ||
+           GetInputNumber()->HasFocus();
 }
 
 const Color &UISlider::GetIdleColor() const
@@ -168,20 +170,24 @@ UISlider *UISlider::CreateInto(GameObject *go)
 
     GameObject *sliderContainer = GameObjectFactory::CreateUIGameObject();
     UIFocusable *sliderFocusable = sliderContainer->AddComponent<UIFocusable>();
-    sliderFocusable->SetCursorType( Cursor::Type::HAND );
+    sliderFocusable->SetCursorType(Cursor::Type::HAND);
 
-    UILayoutElement *sliderLE = sliderContainer->AddComponent<UILayoutElement>();
-    sliderLE->SetFlexibleSize( Vector2::One );
+    UILayoutElement *sliderLE =
+        sliderContainer->AddComponent<UILayoutElement>();
+    sliderLE->SetFlexibleSize(Vector2::One);
 
-    UIImageRenderer *guideRenderer = GameObjectFactory::CreateUIImage(Color::Black);
+    UIImageRenderer *guideRenderer =
+        GameObjectFactory::CreateUIImage(Color::Black);
     RectTransform *guideRT = guideRenderer->GetGameObject()->GetRectTransform();
-    guideRT->SetAnchorMin( Vector2(-1.0f, 0.0f) );
-    guideRT->SetAnchorMax( Vector2( 1.0f, 0.0f) );
+    guideRT->SetAnchorMin(Vector2(-1.0f, 0.0f));
+    guideRT->SetAnchorMax(Vector2(1.0f, 0.0f));
     guideRT->SetMarginTop(-1);
 
-    UIImageRenderer *handleRenderer = GameObjectFactory::CreateUIImage(slider->m_idleColor);
-    handleRenderer->SetImageTexture( TextureFactory::GetCircleIcon() );
-    RectTransform *handleRT = handleRenderer->GetGameObject()->GetRectTransform();
+    UIImageRenderer *handleRenderer =
+        GameObjectFactory::CreateUIImage(slider->m_idleColor);
+    handleRenderer->SetImageTexture(TextureFactory::GetCircleIcon());
+    RectTransform *handleRT =
+        handleRenderer->GetGameObject()->GetRectTransform();
     handleRT->SetAnchors(Vector2::Zero);
     handleRT->SetMargins(-6);
 
@@ -189,10 +195,10 @@ UISlider *UISlider::CreateInto(GameObject *go)
     handleRenderer->GetGameObject()->SetParent(sliderContainer);
 
     UIInputNumber *inputNumber = GameObjectFactory::CreateUIInputNumber();
-    UILayoutElement *inputNumberLE = inputNumber->GetGameObject()
-                                     ->AddComponent<UILayoutElement>();
+    UILayoutElement *inputNumberLE =
+        inputNumber->GetGameObject()->AddComponent<UILayoutElement>();
     inputNumberLE->SetMinWidth(20);
-    inputNumberLE->SetFlexibleWidth( 0.2f );
+    inputNumberLE->SetFlexibleWidth(0.2f);
     inputNumber->EventEmitter<IEventsValueChanged>::RegisterListener(slider);
 
     slider->p_guideRenderer = guideRenderer;
@@ -208,4 +214,3 @@ UISlider *UISlider::CreateInto(GameObject *go)
 
     return slider;
 }
-

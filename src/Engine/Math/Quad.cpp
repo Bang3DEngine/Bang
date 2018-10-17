@@ -6,7 +6,7 @@
 #include "Bang/Polygon.h"
 #include "Bang/Triangle.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Quad::Quad(const Vector3 &p0,
            const Vector3 &p1,
@@ -47,10 +47,10 @@ const std::array<Vector3, 4> &Quad::GetPoints() const
 Polygon Quad::ToPolygon() const
 {
     Polygon poly;
-    poly.AddPoint( GetPoint(0) );
-    poly.AddPoint( GetPoint(1) );
-    poly.AddPoint( GetPoint(2) );
-    poly.AddPoint( GetPoint(3) );
+    poly.AddPoint(GetPoint(0));
+    poly.AddPoint(GetPoint(1));
+    poly.AddPoint(GetPoint(2));
+    poly.AddPoint(GetPoint(3));
     return poly;
 }
 
@@ -62,13 +62,15 @@ void Quad::GetTriangles(Triangle *t0, Triangle *t1) const
     /*
     int indexToFurthestToQuadPoint0 = 1;
     if ( Vector3::SqDistance(GetPoint(0), GetPoint(2)) >
-         Vector3::SqDistance(GetPoint(0), GetPoint(indexToFurthestToQuadPoint0)) )
+         Vector3::SqDistance(GetPoint(0), GetPoint(indexToFurthestToQuadPoint0))
+    )
     {
         indexToFurthestToQuadPoint0 = 2;
     }
 
     if ( Vector3::SqDistance(GetPoint(0), GetPoint(3)) >
-         Vector3::SqDistance(GetPoint(0), GetPoint(indexToFurthestToQuadPoint0)) )
+         Vector3::SqDistance(GetPoint(0), GetPoint(indexToFurthestToQuadPoint0))
+    )
     {
         indexToFurthestToQuadPoint0 = 3;
     }
@@ -104,14 +106,11 @@ const Vector3 &Quad::operator[](std::size_t i) const
     return m_points[i];
 }
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 Quad operator*(const Matrix4 &m, const Quad &q)
 {
-    return Quad(m.TransformedPoint(q[0]),
-                m.TransformedPoint(q[1]),
-                m.TransformedPoint(q[2]),
-                m.TransformedPoint(q[3]));
+    return Quad(m.TransformedPoint(q[0]), m.TransformedPoint(q[1]),
+                m.TransformedPoint(q[2]), m.TransformedPoint(q[3]));
 }
-
-NAMESPACE_BANG_END
+}

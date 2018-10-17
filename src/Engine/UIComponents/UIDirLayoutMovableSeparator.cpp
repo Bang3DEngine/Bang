@@ -24,7 +24,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator()
 {
@@ -42,38 +42,39 @@ void UIDirLayoutMovableSeparator::OnUpdate()
     // Add auxiliar layout elements to children, if needed. Update them also.
     constexpr int AuxiliarLayoutElementPriority = 147;
     GameObject *parent = GetGameObject()->GetParent();
-    UMap<GameObject*, UILayoutElement*> childToAuxLE;
-    for (GameObject *child : parent->GetChildren())
+    UMap<GameObject *, UILayoutElement *> childToAuxLE;
+    for(GameObject *child : parent->GetChildren())
     {
         UILayoutElement *auxLE = nullptr;
-        for (UILayoutElement *le : child->GetComponents<UILayoutElement>())
+        for(UILayoutElement *le : child->GetComponents<UILayoutElement>())
         {
-            if (le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
+            if(le->GetLayoutPriority() == AuxiliarLayoutElementPriority)
             {
                 auxLE = le;
                 break;
             }
         }
 
-        if (child->GetRectTransform())
+        if(child->GetRectTransform())
         {
             // If not existing, create the auxiliar layout element,
             // when we have a valid start size
-            if (!auxLE)
+            if(!auxLE)
             {
                 auxLE = child->AddComponent<UILayoutElement>();
-                auxLE->SetLayoutPriority( AuxiliarLayoutElementPriority );
+                auxLE->SetLayoutPriority(AuxiliarLayoutElementPriority);
             }
         }
         childToAuxLE.Add(child, auxLE);
     }
 
-    if (p_focusable->IsBeingPressed())
+    if(p_focusable->IsBeingPressed())
     {
         RectTransform *parentRT = parent->GetRectTransform();
-        const int thisIndexInParent = parent->GetChildren().IndexOf( GetGameObject() );
-        if ((thisIndexInParent <= 0) ||
-            (thisIndexInParent >= parent->GetChildren().Size() - 1))
+        const int thisIndexInParent =
+            parent->GetChildren().IndexOf(GetGameObject());
+        if((thisIndexInParent <= 0) ||
+           (thisIndexInParent >= parent->GetChildren().Size() - 1))
         {
             return;
         }
@@ -82,31 +83,34 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         const int nextSiblingIndex = thisIndexInParent + 1;
         GameObject *prevSibling = parent->GetChild(prevSiblingIndex);
         GameObject *nextSibling = parent->GetChild(nextSiblingIndex);
-        if (!prevSibling || !nextSibling)
+        if(!prevSibling || !nextSibling)
         {
             return;
         }
 
         RectTransform *prevRT = prevSibling->GetRectTransform();
         RectTransform *nextRT = nextSibling->GetRectTransform();
-        if (!prevRT || !nextRT)
+        if(!prevRT || !nextRT)
         {
             return;
         }
 
         const bool horizontal = (GetAxis() == Axis::HORIZONTAL);
 
-        Vector2i mousePos ( Input::GetMousePosition() );
+        Vector2i mousePos(Input::GetMousePosition());
         RectTransform *separatorRT = GetGameObject()->GetRectTransform();
-        Vector2i separatorPos (separatorRT->GetViewportAARect().GetCenter());
-        Vector2i sepDistToMouse (mousePos - separatorPos);
-        Vector2i prevIdealSizeIncrease =  sepDistToMouse * (horizontal ? 1 : -1);
-        Vector2i nextIdealSizeIncrease = -sepDistToMouse * (horizontal ? 1 : -1);
-        Vector2i prevCurrentSize (prevRT->GetViewportAARect().GetSize());
-        Vector2i nextCurrentSize (nextRT->GetViewportAARect().GetSize());
+        Vector2i separatorPos(separatorRT->GetViewportAARect().GetCenter());
+        Vector2i sepDistToMouse(mousePos - separatorPos);
+        Vector2i prevIdealSizeIncrease = sepDistToMouse * (horizontal ? 1 : -1);
+        Vector2i nextIdealSizeIncrease =
+            -sepDistToMouse * (horizontal ? 1 : -1);
+        Vector2i prevCurrentSize(prevRT->GetViewportAARect().GetSize());
+        Vector2i nextCurrentSize(nextRT->GetViewportAARect().GetSize());
 
-        Vector2i prevIdealNewPrefSize = (prevCurrentSize + prevIdealSizeIncrease);
-        Vector2i nextIdealNewPrefSize = (nextCurrentSize + nextIdealSizeIncrease);
+        Vector2i prevIdealNewPrefSize =
+            (prevCurrentSize + prevIdealSizeIncrease);
+        Vector2i nextIdealNewPrefSize =
+            (nextCurrentSize + nextIdealSizeIncrease);
 
         // Make room decreasing preferred sizes from all previous/next children
         // For prevSibling, we will have to steal room from all next siblings
@@ -114,54 +118,57 @@ void UIDirLayoutMovableSeparator::OnUpdate()
         Array<Vector2i> prevNextIdealNewPrefSize = {prevIdealNewPrefSize,
                                                     nextIdealNewPrefSize};
 
-        Array<Vector2i> prevNextIdealNeededRoomForNewSize =
-          {Vector2i::Max(prevIdealNewPrefSize - prevCurrentSize, Vector2i::Zero),
-           Vector2i::Max(nextIdealNewPrefSize - nextCurrentSize, Vector2i::Zero)};
+        Array<Vector2i> prevNextIdealNeededRoomForNewSize = {
+            Vector2i::Max(prevIdealNewPrefSize - prevCurrentSize,
+                          Vector2i::Zero),
+            Vector2i::Max(nextIdealNewPrefSize - nextCurrentSize,
+                          Vector2i::Zero)};
 
-        Array<GameObject*> prevNextSiblings = {prevSibling, nextSibling};
-        for (int prevOrNext : {0, 1})
+        Array<GameObject *> prevNextSiblings = {prevSibling, nextSibling};
+        for(int prevOrNext : {0, 1})
         {
-            bool isPrev = (prevOrNext==0);
-            const Array<GameObject*> &siblings = parent->GetChildren();
+            bool isPrev = (prevOrNext == 0);
+            const Array<GameObject *> &siblings = parent->GetChildren();
             const Vector2i totalIdealNeededRoomForNewSize =
-                                prevNextIdealNeededRoomForNewSize[prevOrNext];
+                prevNextIdealNeededRoomForNewSize[prevOrNext];
 
             Vector2i neededRoomForNewSize = totalIdealNeededRoomForNewSize;
 
             // Take parent free space if any
-            Vector2i parentFreeSize ( parentRT->GetViewportAARect().GetSize() );
-            for (GameObject *child : parent->GetChildren())
+            Vector2i parentFreeSize(parentRT->GetViewportAARect().GetSize());
+            for(GameObject *child : parent->GetChildren())
             {
-                if (RectTransform *childRT = child->GetRectTransform())
+                if(RectTransform *childRT = child->GetRectTransform())
                 {
-                    parentFreeSize -= Vector2i(childRT->GetViewportAARect().GetSize());
+                    parentFreeSize -=
+                        Vector2i(childRT->GetViewportAARect().GetSize());
                 }
             }
-            neededRoomForNewSize -= Vector2i::Max(parentFreeSize, Vector2i::Zero);
+            neededRoomForNewSize -=
+                Vector2i::Max(parentFreeSize, Vector2i::Zero);
 
             int j = (isPrev ? nextSiblingIndex : prevSiblingIndex);
-            while (j >= 0 && j <= siblings.Size() - 1)
+            while(j >= 0 && j <= siblings.Size() - 1)
             {
-                if (neededRoomForNewSize[GetAxis()] <= 0)
+                if(neededRoomForNewSize[GetAxis()] <= 0)
                 {
                     break;
                 }
 
                 // Steal room from siblings hihihi
                 GameObject *sibling = siblings[j];
-                if (RectTransform *sbRT = sibling->GetRectTransform())
+                if(RectTransform *sbRT = sibling->GetRectTransform())
                 {
-                    Vector2i sbSize ( sbRT->GetViewportAARect().GetSize() );
+                    Vector2i sbSize(sbRT->GetViewportAARect().GetSize());
                     Vector2i sbMinSize = UILayoutManager::GetMinSize(sibling);
                     Vector2i availableRoom = (sbSize - sbMinSize);
-                    Vector2i roomToBeStolen = Vector2i::Clamp(availableRoom,
-                                                              Vector2i::Zero,
-                                                              neededRoomForNewSize);
+                    Vector2i roomToBeStolen = Vector2i::Clamp(
+                        availableRoom, Vector2i::Zero, neededRoomForNewSize);
 
-                    if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
+                    if(UILayoutElement *auxLE = childToAuxLE.Get(sibling))
                     {
-                        Vector2i newPrefSizeAfterBeingStolen =
-                                Vector2i::Max(sbSize - roomToBeStolen, Vector2i::One);
+                        Vector2i newPrefSizeAfterBeingStolen = Vector2i::Max(
+                            sbSize - roomToBeStolen, Vector2i::One);
 
                         // Change preferred size to steal :)
                         auxLE->SetPreferredSizeInAxis(
@@ -176,16 +183,17 @@ void UIDirLayoutMovableSeparator::OnUpdate()
             Vector2i newPrefSize;
             GameObject *sibling = prevNextSiblings[prevOrNext];
             RectTransform *siblingRT = sibling->GetRectTransform();
-            if (totalIdealNeededRoomForNewSize.GetAxis( GetAxis() ) > 0)
+            if(totalIdealNeededRoomForNewSize.GetAxis(GetAxis()) > 0)
             {
-                Vector2i currentSize ( siblingRT->GetViewportAARect().GetSize() );
+                Vector2i currentSize(siblingRT->GetViewportAARect().GetSize());
 
                 // How much room that we needed we have not been able to get?
-                Vector2i neededRoomLeft = Vector2i::Max(neededRoomForNewSize,
-                                                        Vector2i::Zero);
+                Vector2i neededRoomLeft =
+                    Vector2i::Max(neededRoomForNewSize, Vector2i::Zero);
 
                 // Assign new preferred size to prev next
-                Vector2i stolenRoom = (totalIdealNeededRoomForNewSize - neededRoomLeft);
+                Vector2i stolenRoom =
+                    (totalIdealNeededRoomForNewSize - neededRoomLeft);
                 newPrefSize = currentSize + stolenRoom;
             }
             else
@@ -193,52 +201,60 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                 newPrefSize = prevNextIdealNewPrefSize[prevOrNext];
             }
 
-            if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
+            if(UILayoutElement *auxLE = childToAuxLE.Get(sibling))
             {
-                auxLE->SetPreferredSizeInAxis(newPrefSize[GetAxis()], GetAxis());
+                auxLE->SetPreferredSizeInAxis(newPrefSize[GetAxis()],
+                                              GetAxis());
             }
         }
     }
 
     bool isSomeSiblingSeparatorBeingUsed = false;
-    for (GameObject *sibling : parent->GetChildren())
+    for(GameObject *sibling : parent->GetChildren())
     {
-        auto movableSeps = sibling->GetComponents<UIDirLayoutMovableSeparator>();
-        for (UIDirLayoutMovableSeparator *movableSep : movableSeps)
+        auto movableSeps =
+            sibling->GetComponents<UIDirLayoutMovableSeparator>();
+        for(UIDirLayoutMovableSeparator *movableSep : movableSeps)
         {
-            if (movableSep->p_focusable->IsBeingPressed())
+            if(movableSep->p_focusable->IsBeingPressed())
             {
                 isSomeSiblingSeparatorBeingUsed = true;
                 break;
             }
         }
 
-        if (isSomeSiblingSeparatorBeingUsed)
+        if(isSomeSiblingSeparatorBeingUsed)
         {
             break;
         }
     }
 
-    if (!isSomeSiblingSeparatorBeingUsed)
+    if(!isSomeSiblingSeparatorBeingUsed)
     {
         // Update auxiliar layout elements preferred sizes
-        uint separatorIndex = parent->GetChildren().IndexOf( GetGameObject() );
-        for (int k : {-1, 1})
+        uint separatorIndex = parent->GetChildren().IndexOf(GetGameObject());
+        for(int k : {-1, 1})
         {
             int neighborIndex = (separatorIndex + k);
-            if (neighborIndex >= 0 && neighborIndex < parent->GetChildren().Size())
+            if(neighborIndex >= 0 &&
+               neighborIndex < parent->GetChildren().Size())
             {
-                GameObject *neighbor = parent->GetChildren()[separatorIndex + k];
-                if (UILayoutElement *auxLE = childToAuxLE.Get(neighbor))
+                GameObject *neighbor =
+                    parent->GetChildren()[separatorIndex + k];
+                if(UILayoutElement *auxLE = childToAuxLE.Get(neighbor))
                 {
-                    if (RectTransform *childRT = neighbor->GetRectTransform())
+                    if(RectTransform *childRT = neighbor->GetRectTransform())
                     {
-                        if (!childRT->IInvalidatableTransformLocal::IsInvalid() &&
-                            !childRT->IInvalidatableTransformWorld::IsInvalid() &&
-                            !auxLE->IsInvalid())
+                        if(!childRT
+                                ->IInvalidatableTransformLocal::IsInvalid() &&
+                           !childRT
+                                ->IInvalidatableTransformWorld::IsInvalid() &&
+                           !auxLE->IsInvalid())
                         {
-                            const Vector2i prefSize (childRT->GetViewportAARect().GetSize());
-                            auxLE->SetPreferredSizeInAxis(prefSize[GetAxis()], GetAxis());
+                            const Vector2i prefSize(
+                                childRT->GetViewportAARect().GetSize());
+                            auxLE->SetPreferredSizeInAxis(prefSize[GetAxis()],
+                                                          GetAxis());
                         }
                     }
                 }
@@ -249,7 +265,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
 
 void UIDirLayoutMovableSeparator::SetAxis(Axis axis)
 {
-    if (axis != GetAxis())
+    if(axis != GetAxis())
     {
         m_axis = axis;
 
@@ -258,19 +274,19 @@ void UIDirLayoutMovableSeparator::SetAxis(Axis axis)
         UILayoutElement *le = GetGameObject()->GetComponent<UILayoutElement>();
 
         bool horizontal = (GetAxis() == Axis::HORIZONTAL);
-        p_focusable->SetCursorType(horizontal ? Cursor::Type::SIZE_WE :
-                                                Cursor::Type::SIZE_NS);
-        if (horizontal)
+        p_focusable->SetCursorType(horizontal ? Cursor::Type::SIZE_WE
+                                              : Cursor::Type::SIZE_NS);
+        if(horizontal)
         {
-            le->SetFlexibleSize( Vector2(0, 99999999) );
-            lr->SetPoints( {Vector3(0.0f, -linePercent, 0),
-                            Vector3(0.0f,  linePercent, 0)} );
+            le->SetFlexibleSize(Vector2(0, 99999999));
+            lr->SetPoints({Vector3(0.0f, -linePercent, 0),
+                           Vector3(0.0f, linePercent, 0)});
         }
         else
         {
-            le->SetFlexibleSize( Vector2(99999999, 0) );
-            lr->SetPoints( {Vector3(-linePercent, 0.0f, 0),
-                            Vector3( linePercent, 0.0f, 0)} );
+            le->SetFlexibleSize(Vector2(99999999, 0));
+            lr->SetPoints({Vector3(-linePercent, 0.0f, 0),
+                           Vector3(linePercent, 0.0f, 0)});
         }
     }
 }
@@ -280,15 +296,15 @@ Axis UIDirLayoutMovableSeparator::GetAxis() const
     return m_axis;
 }
 
-UIEventResult UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable*,
+UIEventResult UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable *,
                                                      const UIEvent &event)
 {
-    if (event.type == UIEvent::Type::MOUSE_ENTER)
+    if(event.type == UIEvent::Type::MOUSE_ENTER)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
         return UIEventResult::INTERCEPT;
     }
-    else if (event.type == UIEvent::Type::MOUSE_EXIT)
+    else if(event.type == UIEvent::Type::MOUSE_EXIT)
     {
         p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
         return UIEventResult::INTERCEPT;
@@ -296,16 +312,16 @@ UIEventResult UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable*,
     return UIEventResult::IGNORE;
 }
 
-UIDirLayoutMovableSeparator*
-UIDirLayoutMovableSeparator::CreateInto(GameObject *go)
+UIDirLayoutMovableSeparator *UIDirLayoutMovableSeparator::CreateInto(
+    GameObject *go)
 {
     REQUIRE_COMPONENT(go, RectTransform);
     UIDirLayoutMovableSeparator *dirLayoutSep =
-            go->AddComponent<UIDirLayoutMovableSeparator>();
+        go->AddComponent<UIDirLayoutMovableSeparator>();
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();
     le->SetMinSize(Vector2i(15));
-    le->SetFlexibleSize( Vector2(0) );
+    le->SetFlexibleSize(Vector2(0));
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->EventEmitter<IEventsFocus>::RegisterListener(dirLayoutSep);
@@ -321,4 +337,3 @@ UIDirLayoutMovableSeparator::CreateInto(GameObject *go)
 
     return dirLayoutSep;
 }
-

@@ -21,17 +21,16 @@
 #include "Bang/UIRectMask.h"
 #include "Bang/UITextRenderer.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class RectTransform;
 
-FORWARD class RectTransform;
-
-class UILabel : public Component,
-                public EventListener<IEventsFocus>
+class UILabel : public Component, public EventListener<IEventsFocus>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UILabel)
 
 public:
-	virtual ~UILabel() override;
+    virtual ~UILabel() override;
 
     void OnUpdate() override;
 
@@ -91,8 +90,6 @@ private:
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UILABEL_H_H
-
+#endif  // UILABEL_H_H

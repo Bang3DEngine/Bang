@@ -10,10 +10,10 @@
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Color;
-FORWARD class Path;
+namespace Bang
+{
+class Color;
+class Path;
 
 class Texture2D : public Texture
 {
@@ -29,17 +29,18 @@ public:
     bool Resize(const Vector2i &size) override;
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,
-              int width, int height,
+              int width,
+              int height,
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
 
-    template<class T = Byte>
+    template <class T = Byte>
     Image<T> ToImage();
 
     void SetAlphaCutoff(float alphaCutoff);
 
     float GetAlphaCutoff() const;
-    const Imageb& GetImage() const;
+    const Imageb &GetImage() const;
 
     void Import(const Image<Byte> &image);
 
@@ -63,12 +64,11 @@ protected:
     void OnFormatChanged() override;
 };
 
-template<class T>
+template <class T>
 Image<T> Texture2D::ToImage()
 {
     return Texture::ToImage<T>(GL::TextureTarget::TEXTURE_2D);
 }
+}
 
-NAMESPACE_BANG_END
-
-#endif // TEXTURE2D_H
+#endif  // TEXTURE2D_H

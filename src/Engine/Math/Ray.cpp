@@ -2,7 +2,7 @@
 
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Ray::Ray()
 {
@@ -18,7 +18,10 @@ Ray::~Ray()
 {
 }
 
-void Ray::SetOrigin(const Vector3 &origin) { m_origin = origin; }
+void Ray::SetOrigin(const Vector3 &origin)
+{
+    m_origin = origin;
+}
 void Ray::SetDirection(const Vector3 &direction)
 {
     m_direction = direction.NormalizedSafe();
@@ -38,4 +41,3 @@ const Vector3 &Ray::GetDirection() const
 {
     return m_direction;
 }
-

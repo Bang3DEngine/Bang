@@ -5,16 +5,16 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/Math.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Collider;
-FORWARD class Time;
+namespace Bang
+{
+class Collider;
+class Time;
 
 class Particle
 {
@@ -28,52 +28,54 @@ public:
 
     struct Data
     {
-        Vector3 prevPosition      = Vector3::Zero;
-        Vector3 position          = Vector3::Zero;
-        Vector3 velocity          = Vector3::Zero;
-        Vector3 force             = Vector3::Zero;
-        Color startColor          = Color::White;
-        Color endColor            = Color::White;
-        Color currentColor        = Color::White;
-        float totalLifeTime       = Math::Infinity<float>();
-        float remainingLifeTime   = Math::Infinity<float>();
-        float remainingStartTime  = 0.0f;
-        float prevDeltaTimeSecs   = 1.0f;
-        float size                = 1.0f;
-        uint currentFrame         = 0;
+        Vector3 prevPosition = Vector3::Zero;
+        Vector3 position = Vector3::Zero;
+        Vector3 velocity = Vector3::Zero;
+        Vector3 force = Vector3::Zero;
+        Color startColor = Color::White;
+        Color endColor = Color::White;
+        Color currentColor = Color::White;
+        float totalLifeTime = Math::Infinity<float>();
+        float remainingLifeTime = Math::Infinity<float>();
+        float remainingStartTime = 0.0f;
+        float prevDeltaTimeSecs = 1.0f;
+        float size = 1.0f;
+        uint currentFrame = 0;
     };
 
     struct Parameters
     {
         float damping = 1.0f;
         float bounciness = 1.0f;
-        Array<Collider*> colliders;
+        Array<Collider *> colliders;
         bool computeCollisions = false;
         Vector3 gravity = Vector3::Zero;
         Particle::PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
 
         float animationSpeed = 0.0f;
-        Vector2i animationSheetSize  = Vector2i::One;
+        Vector2i animationSheetSize = Vector2i::One;
     };
 
     static void ExecuteFixedStepped(
-                            Time totalDeltaTime,
-                            Time fixedStepDeltaTime,
-                            std::function<void(Time fixedDeltaTime)> func);
+        Time totalDeltaTime,
+        Time fixedStepDeltaTime,
+        std::function<void(Time fixedDeltaTime)> func);
 
     static void FixedStepAll(
         Array<Particle::Data> *particlesDatas,
         Time totalDeltaTime,
         Time fixedStepDeltaTime,
         const Particle::Parameters &params,
-        std::function<void(uint, const Particle::Parameters&)> initParticleFunc);
+        std::function<void(uint, const Particle::Parameters &)>
+            initParticleFunc);
 
     static void FixedStepAll(
         Array<Particle::Data> *particlesDatas,
         Time totalDeltaTime,
         Time fixedStepDeltaTime,
         const Particle::Parameters &params,
-        std::function<void(uint, const Particle::Parameters&)> initParticleFunc,
+        std::function<void(uint, const Particle::Parameters &)>
+            initParticleFunc,
         std::function<bool(uint)> canUpdateParticleFunc);
 
     static void FixedStepAll(
@@ -81,7 +83,8 @@ public:
         Time totalDeltaTime,
         Time fixedStepDeltaTime,
         const Particle::Parameters &params,
-        std::function<void(uint i, const Particle::Parameters&)> initParticleFunc,
+        std::function<void(uint i, const Particle::Parameters &)>
+            initParticleFunc,
         std::function<bool(uint i)> canUpdateParticleFunc,
         std::function<void(Time dt)> extraFuncToExecuteEveryStep);
 
@@ -104,8 +107,6 @@ private:
                                 Vector3 *newPositionAfterInt,
                                 Vector3 *newVelocityAfterInt);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // PARTICLE_H
-
+#endif  // PARTICLE_H

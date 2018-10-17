@@ -4,19 +4,19 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Vector3.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Collider;
+namespace Bang
+{
+class Collider;
 
 class CollisionContact
 {
 public:
-	CollisionContact();
+    CollisionContact();
     ~CollisionContact();
 
-    const Vector3& GetPoint() const;
-    const Vector3& GetNormal() const;
-    const Vector3& GetImpulse() const;
+    const Vector3 &GetPoint() const;
+    const Vector3 &GetNormal() const;
+    const Vector3 &GetImpulse() const;
     float GetSeparation() const;
     Collider *GetOtherCollider() const;
 
@@ -29,8 +29,6 @@ private:
 
     friend class PxSceneContainer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COLLISIONCONTACT_H
-
+#endif  // COLLISIONCONTACT_H

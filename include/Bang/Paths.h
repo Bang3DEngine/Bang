@@ -6,10 +6,10 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-#define EPATH(path)  Paths::CreateEnginePath(path)  // Engine assets path
-#define PPATH(path)  Paths::CreateProjectPath(path) // Project assets path
+namespace Bang
+{
+#define EPATH(path) Paths::CreateEnginePath(path)   // Engine assets path
+#define PPATH(path) Paths::CreateProjectPath(path)  // Project assets path
 
 class Paths
 {
@@ -21,12 +21,12 @@ public:
     static Path GetExecutableDir();
     static Path GetExecutablePath();
     static Path GetEngineIncludeDir();
-    static const Path& GetEngineDir();
-    static const Path& GetEngineAssetsDir();
+    static const Path &GetEngineDir();
+    static const Path &GetEngineAssetsDir();
     static Path GetEngineBuildDir();
     static Path GetEngineResourcesDir();
     static Path GetEngineLibrariesDir();
-    static const String& GetBuildType();
+    static const String &GetBuildType();
     static bool IsEnginePath(const Path &path);
 
     static Path CreateEnginePath(const String &path);
@@ -36,7 +36,7 @@ public:
     static Array<Path> GetAllProjectSubDirs();
     static Array<Path> GetProjectIncludeDirs();
 
-    static const Path& GetProjectDir();
+    static const Path &GetProjectDir();
     static Path GetProjectAssetsDir();
     static Path GetProjectLibrariesDir();
 
@@ -46,7 +46,7 @@ public:
     static void SortPathsByName(Array<Path> *paths, bool caseSensitive = false);
     static void SortPathsByExtension(Array<Path> *paths);
     static void FilterByExtension(Array<Path> *paths,
-                                  const Array<String>& extensions);
+                                  const Array<String> &extensions);
     static void RemoveFilesFromArray(Array<Path> *paths);
     static void RemoveDirectoriesFromArray(Array<Path> *paths);
 
@@ -56,10 +56,10 @@ protected:
     Paths();
     virtual ~Paths();
 
-    static Paths* GetInstance();
+    static Paths *GetInstance();
 
 private:
-    Path m_engineRoot  = Path::Empty;
+    Path m_engineRoot = Path::Empty;
     Path m_projectRoot = Path::Empty;
 
     // Cached paths (the ones more used), to avoid Path creation every time
@@ -67,7 +67,6 @@ private:
 
     friend class Application;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // PATHS_H
+#endif  // PATHS_H

@@ -8,11 +8,11 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Serializable::Serializable()
 {
-    SetGUID( GUIDManager::GetNewGUID() );
+    SetGUID(GUIDManager::GetNewGUID());
 }
 
 Serializable::~Serializable()
@@ -47,7 +47,7 @@ void Serializable::ImportMeta(const String &metaNodeString)
 
 void Serializable::ImportMeta(const MetaNode &metaNode)
 {
-    if (metaNode.Contains("GUID"))
+    if(metaNode.Contains("GUID"))
     {
         SetGUID(metaNode.Get<GUID>("GUID"));
     }
@@ -55,13 +55,13 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
 
 void Serializable::ExportMeta(MetaNode *metaNode) const
 {
-    metaNode->SetName( GetClassName() );
-    metaNode->Set<GUID>( "GUID", GetGUID() );
+    metaNode->SetName(GetClassName());
+    metaNode->Set<GUID>("GUID", GetGUID());
 }
 
 bool Serializable::ImportMetaFromFile(const Path &path)
 {
-    if (path.Exists())
+    if(path.Exists())
     {
         String fileContents = File::GetContents(path);
         ImportMeta(fileContents);
@@ -85,4 +85,3 @@ const HideFlags &Serializable::GetHideFlags() const
 {
     return m_hideFlags;
 }
-

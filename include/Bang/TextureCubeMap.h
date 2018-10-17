@@ -16,17 +16,17 @@
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+template <class>
+class Image;
+class IEventsResource;
+class MetaNode;
+class Path;
+class Resource;
+class Texture2D;
 
-FORWARD_T class Image;
-FORWARD   class IEventsResource;
-FORWARD   class MetaNode;
-FORWARD   class Path;
-FORWARD   class Resource;
-FORWARD   class Texture2D;
-
-class TextureCubeMap : public Texture,
-                       public EventListener<IEventsResource>
+class TextureCubeMap : public Texture, public EventListener<IEventsResource>
 {
     ASSET(TextureCubeMap)
 
@@ -55,9 +55,12 @@ public:
 
     // Resource
     virtual void Import(const Path &textureCubeMapFilepath) override;
-    void Import(const Image<Byte> &topImage,   const Image<Byte> &botImage,
-                const Image<Byte> &leftImage,  const Image<Byte> &rightImage,
-                const Image<Byte> &frontImage, const Image<Byte> &backImage);
+    void Import(const Image<Byte> &topImage,
+                const Image<Byte> &botImage,
+                const Image<Byte> &leftImage,
+                const Image<Byte> &rightImage,
+                const Image<Byte> &frontImage,
+                const Image<Byte> &backImage);
 
     // GLObject
     GL::BindTarget GetGLBindTarget() const override;
@@ -74,8 +77,6 @@ private:
     void FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // TEXTURECUBEMAP_H
-
+#endif  // TEXTURECUBEMAP_H

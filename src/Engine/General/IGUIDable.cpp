@@ -2,7 +2,7 @@
 
 #include "Bang/GUIDManager.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 IGUIDable::IGUIDable()
 {
@@ -15,16 +15,15 @@ IGUIDable::~IGUIDable()
 void IGUIDable::SetGUID(const GUID &guid)
 {
     m_GUID = guid;
-    GUIDManager::RemoveGUID( GetGUID() );
+    GUIDManager::RemoveGUID(GetGUID());
 }
 
-const GUID& IGUIDable::GetGUID() const
+const GUID &IGUIDable::GetGUID() const
 {
     return m_GUID;
 }
 
-GUID& IGUIDable::GetGUID()
+GUID &IGUIDable::GetGUID()
 {
     return m_GUID;
 }
-

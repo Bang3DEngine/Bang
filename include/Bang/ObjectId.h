@@ -7,8 +7,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/TypeTraits.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 // ObjectId
 class ObjectId final
 {
@@ -32,33 +32,38 @@ private:
     friend bool operator==(ObjectIdType id, const ObjectId &rhs);
     friend bool operator!=(const ObjectId &lhs, const ObjectId &rhs);
     friend bool operator<(const ObjectId &lhs, const ObjectId &rhs);
-    friend std::ostream& operator<<(std::ostream &os, const ObjectId &objectId);
+    friend std::ostream &operator<<(std::ostream &os, const ObjectId &objectId);
 
     friend class Object;
 };
 
-
 inline bool operator==(const ObjectId &lhs, const ObjectId &rhs)
-{ return lhs.m_id == rhs.m_id; }
+{
+    return lhs.m_id == rhs.m_id;
+}
 
 inline bool operator==(typename ObjectId::ObjectIdType id, const ObjectId &rhs)
-{ return id == rhs.m_id; }
+{
+    return id == rhs.m_id;
+}
 
 inline bool operator==(const ObjectId &lhs, typename ObjectId::ObjectIdType id)
-{ return lhs.m_id == id; }
+{
+    return lhs.m_id == id;
+}
 
 bool operator!=(const ObjectId &lhs, const ObjectId &rhs);
 
 inline bool operator<(const ObjectId &lhs, const ObjectId &rhs)
-{ return lhs.m_id < rhs.m_id; }
+{
+    return lhs.m_id < rhs.m_id;
+}
 
-inline std::ostream& operator<<(std::ostream &os, const ObjectId &objectId)
-{ os << objectId.m_id; return os; }
+inline std::ostream &operator<<(std::ostream &os, const ObjectId &objectId)
+{
+    os << objectId.m_id;
+    return os;
+}
+}
 
-
-
-
-NAMESPACE_BANG_END
-
-#endif // OBJECTID_H
-
+#endif  // OBJECTID_H

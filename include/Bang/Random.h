@@ -8,18 +8,18 @@
 #include "Bang/String.h"
 #include "Bang/TypeTraits.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Random
 {
 public:
     static void SetSeed(long seed);
     static void SetSeed(const String &seed);
 
-    template<class T = float>
+    template <class T = float>
     static T GetValue();
 
-    template<class T>
+    template <class T>
     static T GetRange(T minIncluded, T maxExcluded);
 
     static Vector2 GetInsideUnitCircle();
@@ -35,18 +35,18 @@ private:
     Random();
 };
 
-template<class T>
+template <class T>
 T Random::GetValue()
 {
     return float(rand()) / RAND_MAX;
 }
 
-template<class T>
+template <class T>
 T Random::GetRange(T minIncluded, T maxExcluded)
 {
-    return Cast<T>(Random::GetValue() * (maxExcluded-minIncluded)) + minIncluded;
+    return Cast<T>(Random::GetValue() * (maxExcluded - minIncluded)) +
+           minIncluded;
+}
 }
 
-NAMESPACE_BANG_END
-
-#endif // RANDOM_H
+#endif  // RANDOM_H

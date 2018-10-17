@@ -12,21 +12,26 @@
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class GameObject;
-FORWARD class ICloneable;
-FORWARD class Renderer;
-FORWARD class ShaderProgram;
-FORWARD class Texture;
+namespace Bang
+{
+class Camera;
+class GameObject;
+class ICloneable;
+class Renderer;
+class ShaderProgram;
+class Texture;
 
 class Light : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(Light)
 
 public:
-    enum class ShadowType { NONE = 0, HARD, SOFT };
+    enum class ShadowType
+    {
+        NONE = 0,
+        HARD,
+        SOFT
+    };
 
     void SetColor(const Color &color);
     void SetIntensity(float intensity);
@@ -38,7 +43,7 @@ public:
     float GetIntensity() const;
     float GetShadowBias() const;
     ShadowType GetShadowType() const;
-    const Vector2i& GetShadowMapSize() const;
+    const Vector2i &GetShadowMapSize() const;
     virtual Texture *GetShadowMapTexture() const;
 
     void RenderShadowMaps(GameObject *go);
@@ -54,9 +59,9 @@ protected:
     Light();
     virtual ~Light() override;
 
-    void SetLightScreenPassShaderProgram(ShaderProgram* sp);
-    Array<Renderer*> GetShadowCastersIn(GameObject *go) const;
-    virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const;
+    void SetLightScreenPassShaderProgram(ShaderProgram *sp);
+    Array<Renderer *> GetShadowCastersIn(GameObject *go) const;
+    virtual void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const;
 
 private:
     float m_intensity = 1.0f;
@@ -74,7 +79,6 @@ private:
 
     friend class GEngine;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // LIGHT_H
+#endif  // LIGHT_H

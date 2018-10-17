@@ -1,7 +1,6 @@
 #include "Bang/Mutex.h"
 
-
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Mutex::Mutex()
 {

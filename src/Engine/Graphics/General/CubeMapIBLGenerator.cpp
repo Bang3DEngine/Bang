@@ -11,17 +11,17 @@
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/TextureCubeMap.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 CubeMapIBLGenerator::CubeMapIBLGenerator()
 {
     // Create framebuffer and shader program
     m_iblFramebuffer = new Framebuffer();
 
-    m_iblShaderProgram = ShaderProgramFactory::Get(
-                            EPATH("Shaders/CubeMapIBLGenerator.vert"),
-                            EPATH("Shaders/CubeMapIBLGenerator.geom"),
-                            EPATH("Shaders/CubeMapIBLGenerator.frag"));
+    m_iblShaderProgram =
+        ShaderProgramFactory::Get(EPATH("Shaders/CubeMapIBLGenerator.vert"),
+                                  EPATH("Shaders/CubeMapIBLGenerator.geom"),
+                                  EPATH("Shaders/CubeMapIBLGenerator.frag"));
 }
 
 CubeMapIBLGenerator::~CubeMapIBLGenerator()
@@ -30,36 +30,32 @@ CubeMapIBLGenerator::~CubeMapIBLGenerator()
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
-                                                TextureCubeMap *textureCubeMap,
-                                                uint IBLCubeMapSize,
-                                                uint sampleCount)
+    TextureCubeMap *textureCubeMap,
+    uint IBLCubeMapSize,
+    uint sampleCount)
 {
-    return GenerateIBLCubeMap(textureCubeMap,
-                              IBLType::DIFFUSE,
-                              IBLCubeMapSize,
+    return GenerateIBLCubeMap(textureCubeMap, IBLType::DIFFUSE, IBLCubeMapSize,
                               sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
-                                                TextureCubeMap *textureCubeMap,
-                                                uint IBLCubeMapSize,
-                                                uint sampleCount)
+    TextureCubeMap *textureCubeMap,
+    uint IBLCubeMapSize,
+    uint sampleCount)
 {
-    return GenerateIBLCubeMap(textureCubeMap,
-                              IBLType::SPECULAR,
-                              IBLCubeMapSize,
+    return GenerateIBLCubeMap(textureCubeMap, IBLType::SPECULAR, IBLCubeMapSize,
                               sampleCount);
 }
 
 RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
-                                                TextureCubeMap *textureCubeMap,
-                                                IBLType iblType,
-                                                uint IBLCubeMapSize,
-                                                uint sampleCount)
+    TextureCubeMap *textureCubeMap,
+    IBLType iblType,
+    uint IBLCubeMapSize,
+    uint sampleCount)
 {
-    #ifdef DEBUG
+#ifdef DEBUG
     ASSERT(Math::IsPowerOfTwo(IBLCubeMapSize));
-    #endif
+#endif
 
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Enablable::CULL_FACE);
@@ -79,7 +75,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     iblCubeMap->Bind();
     iblCubeMap->Resize(IBLCubeMapSize);
     iblCubeMap->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-    if (iblType == IBLType::SPECULAR)
+    if(iblType == IBLType::SPECULAR)
     {
         iblCubeMap->GenerateMipMaps();
         iblCubeMap->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
@@ -91,10 +87,11 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     cmg->m_iblShaderProgram->Bind();
     cmg->m_iblShaderProgram->SetInt("B_SampleCount", sampleCount);
     cmg->m_iblShaderProgram->SetInt("B_IBLType", SCAST<int>(iblType));
-    cmg->m_iblShaderProgram->SetTextureCubeMap("B_InputCubeMap", textureCubeMap);
+    cmg->m_iblShaderProgram->SetTextureCubeMap("B_InputCubeMap",
+                                               textureCubeMap);
 
     // Draw to cubemap
-    if (iblType == IBLType::DIFFUSE)
+    if(iblType == IBLType::DIFFUSE)
     {
         GL::SetViewport(0, 0, IBLCubeMapSize, IBLCubeMapSize);
         cmg->m_iblFramebuffer->SetAttachmentTexture(iblCubeMap,
@@ -108,24 +105,25 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
         // Fill mipmap levels of the specular skybox, each one with more
         // roughness progressively
         const uint MaxMipLevels =
-           Math::Round(Math::Log10(float(IBLCubeMapSize)) / Math::Log10(2.0f));
+            Math::Round(Math::Log10(float(IBLCubeMapSize)) / Math::Log10(2.0f));
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
                           GL::TexParameter::TEXTURE_BASE_LEVEL, 0);
         GL::TexParameteri(iblCubeMap->GetTextureTarget(),
-                          GL::TexParameter::TEXTURE_MAX_LEVEL, MaxMipLevels-1);
+                          GL::TexParameter::TEXTURE_MAX_LEVEL,
+                          MaxMipLevels - 1);
 
-        for (uint mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
+        for(uint mipMapLevel = 0; mipMapLevel < MaxMipLevels; ++mipMapLevel)
         {
             const float mipMapLevelF = SCAST<float>(mipMapLevel);
             const uint mipSize = IBLCubeMapSize * Math::Pow(0.5f, mipMapLevelF);
 
-            const float roughness = SCAST<float>(mipMapLevel) / (MaxMipLevels - 1);
+            const float roughness =
+                SCAST<float>(mipMapLevel) / (MaxMipLevels - 1);
             cmg->m_iblShaderProgram->SetFloat("B_InputRoughness", roughness);
 
             GL::SetViewport(0, 0, mipSize, mipSize);
-            cmg->m_iblFramebuffer->SetAttachmentTexture(iblCubeMap,
-                                                        GL::Attachment::COLOR0,
-                                                        mipMapLevel);
+            cmg->m_iblFramebuffer->SetAttachmentTexture(
+                iblCubeMap, GL::Attachment::COLOR0, mipMapLevel);
             cmg->m_iblFramebuffer->SetAllDrawBuffers();
             GEngine::GetInstance()->RenderViewportPlane();
         }
@@ -150,12 +148,3 @@ CubeMapIBLGenerator *CubeMapIBLGenerator::GetInstance()
 {
     return Resources::GetInstance()->GetCubeMapIBLGenerator();
 }
-
-
-
-
-
-
-
-
-

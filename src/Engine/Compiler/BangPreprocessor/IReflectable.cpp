@@ -2,7 +2,7 @@
 
 #include "Bang/BPReflectedStruct.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 const BPReflectedStruct &IReflectable::GetReflectionInfo() const
 {

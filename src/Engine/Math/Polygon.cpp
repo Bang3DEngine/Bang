@@ -9,7 +9,7 @@
 #include "Bang/Triangle.h"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 void Polygon::AddPoint(const Vector3 &p)
 {
@@ -18,7 +18,10 @@ void Polygon::AddPoint(const Vector3 &p)
 
 void Polygon::AddPoints(const Array<Vector3> &points)
 {
-    for (const Vector3 &p : points) { AddPoint(p); }
+    for(const Vector3 &p : points)
+    {
+        AddPoint(p);
+    }
 }
 
 void Polygon::SetPoint(int i, const Vector3 &p)
@@ -42,7 +45,7 @@ Vector3 Polygon::GetNormal() const
 Polygon2D Polygon::ProjectedOnAxis(Axis3D axis) const
 {
     Polygon2D projectedPoly;
-    for (int i = 0; i < GetPoints().Size(); ++i)
+    for(int i = 0; i < GetPoints().Size(); ++i)
     {
         Vector3 p = GetPoint(i);
         Vector2 projP = p.ProjectedOnAxis(axis);
@@ -71,4 +74,3 @@ const Vector3 &Polygon::operator[](std::size_t i) const
 {
     return GetPoint(i);
 }
-

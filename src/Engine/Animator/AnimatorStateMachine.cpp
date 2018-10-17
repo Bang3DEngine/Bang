@@ -14,7 +14,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 AnimatorStateMachine::AnimatorStateMachine()
 {
@@ -27,7 +27,7 @@ AnimatorStateMachine::AnimatorStateMachine()
 AnimatorStateMachine::~AnimatorStateMachine()
 {
     EventEmitter<IEventsDestroy>::PropagateToListeners(
-                                        &IEventsDestroy::OnDestroyed, this);
+        &IEventsDestroy::OnDestroyed, this);
     Clear();
 }
 
@@ -36,28 +36,27 @@ AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
     AnimatorStateMachineNode *newSMNode = new AnimatorStateMachineNode(this);
     m_nodes.PushBack(newSMNode);
 
-    if (!GetEntryNode())
+    if(!GetEntryNode())
     {
         SetEntryNode(newSMNode);
     }
 
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-                &IEventsAnimatorStateMachine::OnNodeCreated,
-                this,
-                m_nodes.Size()-1,
-                newSMNode);
+        &IEventsAnimatorStateMachine::OnNodeCreated, this, m_nodes.Size() - 1,
+        newSMNode);
 
     return newSMNode;
 }
 
-const AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx) const
+const AnimatorStateMachineNode *AnimatorStateMachine::GetNode(
+    uint nodeIdx) const
 {
-    return const_cast<AnimatorStateMachine*>(this)->GetNode(nodeIdx);
+    return const_cast<AnimatorStateMachine *>(this)->GetNode(nodeIdx);
 }
 
 AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx)
 {
-    if (nodeIdx < m_nodes.Size())
+    if(nodeIdx < m_nodes.Size())
     {
         return m_nodes[nodeIdx];
     }
@@ -66,13 +65,13 @@ AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx)
 
 void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 {
-    for (AnimatorStateMachineNode *node : m_nodes)
+    for(AnimatorStateMachineNode *node : m_nodes)
     {
-        for (uint i = 0; i < node->GetConnections().Size();)
+        for(uint i = 0; i < node->GetConnections().Size();)
         {
             AnimatorStateMachineConnection *conn = node->GetConnection(i);
-            if (conn->GetNodeTo()   == nodeToRemove ||
-                conn->GetNodeFrom() == nodeToRemove)
+            if(conn->GetNodeTo() == nodeToRemove ||
+               conn->GetNodeFrom() == nodeToRemove)
             {
                 node->RemoveConnection(conn);
             }
@@ -86,13 +85,13 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
     const uint idxToRemove = GetNodes().IndexOf(nodeToRemove);
 
     EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-                &IEventsAnimatorStateMachine::OnNodeRemoved,
-                this, idxToRemove, nodeToRemove);
+        &IEventsAnimatorStateMachine::OnNodeRemoved, this, idxToRemove,
+        nodeToRemove);
 
     m_nodes.Remove(nodeToRemove);
     delete nodeToRemove;
 
-    if (idxToRemove == GetEntryNodeIdx())
+    if(idxToRemove == GetEntryNodeIdx())
     {
         SetEntryNodeIdx(0);
     }
@@ -100,12 +99,12 @@ void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
 
 void AnimatorStateMachine::SetEntryNode(AnimatorStateMachineNode *entryNode)
 {
-    SetEntryNodeIdx( GetNodes().IndexOf( entryNode ) );
+    SetEntryNodeIdx(GetNodes().IndexOf(entryNode));
 }
 
 void AnimatorStateMachine::SetEntryNodeIdx(uint entryNodeIdx)
 {
-    if (entryNodeIdx < GetNodes().Size())
+    if(entryNodeIdx < GetNodes().Size())
     {
         m_entryNodeIdx = entryNodeIdx;
     }
@@ -129,11 +128,11 @@ AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
     return var;
 }
 
-AnimatorStateMachineVariable* AnimatorStateMachine::CreateOrGetVariable(
-                                                        const String &varName)
+AnimatorStateMachineVariable *AnimatorStateMachine::CreateOrGetVariable(
+    const String &varName)
 {
     AnimatorStateMachineVariable *var = GetVariable(varName);
-    if (!var)
+    if(!var)
     {
         var = CreateNewVariable();
         var->SetName(varName);
@@ -142,18 +141,18 @@ AnimatorStateMachineVariable* AnimatorStateMachine::CreateOrGetVariable(
 }
 
 void AnimatorStateMachine::OnVariableNameChanged(
-                                    AnimatorStateMachineVariable *variable,
-                                    const String &prevVariableName,
-                                    const String &nextVariableName)
+    AnimatorStateMachineVariable *variable,
+    const String &prevVariableName,
+    const String &nextVariableName)
 {
     BANG_UNUSED(variable);
-    for (AnimatorStateMachineNode *node : GetNodes())
+    for(AnimatorStateMachineNode *node : GetNodes())
     {
-        for (AnimatorStateMachineConnection *conn : node->GetConnections())
+        for(AnimatorStateMachineConnection *conn : node->GetConnections())
         {
-            for (auto transCond : conn->GetTransitionConditions())
+            for(auto transCond : conn->GetTransitionConditions())
             {
-                if (transCond->GetVariableName() == prevVariableName)
+                if(transCond->GetVariableName() == prevVariableName)
                 {
                     transCond->SetVariableName(nextVariableName);
                 }
@@ -180,12 +179,12 @@ void AnimatorStateMachine::SetVariableBool(const String &varName,
 
 void AnimatorStateMachine::RemoveVariable(AnimatorStateMachineVariable *var)
 {
-    RemoveVariable( m_variables.IndexOf(var) );
+    RemoveVariable(m_variables.IndexOf(var));
 }
 
 void AnimatorStateMachine::RemoveVariable(uint varIdx)
 {
-    if (varIdx < m_variables.Size())
+    if(varIdx < m_variables.Size())
     {
         delete m_variables[varIdx];
         m_variables.RemoveByIndex(varIdx);
@@ -194,7 +193,7 @@ void AnimatorStateMachine::RemoveVariable(uint varIdx)
 
 float AnimatorStateMachine::GetVariableFloat(const String &varName) const
 {
-    if (AnimatorStateMachineVariable *var = GetVariable(varName))
+    if(AnimatorStateMachineVariable *var = GetVariable(varName))
     {
         return var->GetValueBool();
     }
@@ -203,7 +202,7 @@ float AnimatorStateMachine::GetVariableFloat(const String &varName) const
 
 bool AnimatorStateMachine::GetVariableBool(const String &varName) const
 {
-    if (AnimatorStateMachineVariable *var = GetVariable(varName))
+    if(AnimatorStateMachineVariable *var = GetVariable(varName))
     {
         return var->GetValueBool();
     }
@@ -212,7 +211,7 @@ bool AnimatorStateMachine::GetVariableBool(const String &varName) const
 
 AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode() const
 {
-    if (GetEntryNodeIdx() < GetNodes().Size())
+    if(GetEntryNodeIdx() < GetNodes().Size())
     {
         return GetNodes()[GetEntryNodeIdx()];
     }
@@ -221,7 +220,7 @@ AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode() const
 
 AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNodeOrFirstFound() const
 {
-    if (AnimatorStateMachineNode *entryNode = GetEntryNode())
+    if(AnimatorStateMachineNode *entryNode = GetEntryNode())
     {
         return entryNode;
     }
@@ -235,23 +234,23 @@ uint AnimatorStateMachine::GetEntryNodeIdx() const
 
 void AnimatorStateMachine::Clear()
 {
-    while (!m_nodes.IsEmpty())
+    while(!m_nodes.IsEmpty())
     {
-        RemoveNode( m_nodes.Back() );
+        RemoveNode(m_nodes.Back());
     }
 
-    while (!m_variables.IsEmpty())
+    while(!m_variables.IsEmpty())
     {
-        RemoveVariable( m_variables.Size() - 1 );
+        RemoveVariable(m_variables.Size() - 1);
     }
 }
 
 AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
-                                                const String &varName) const
+    const String &varName) const
 {
-    for (AnimatorStateMachineVariable *var : m_variables)
+    for(AnimatorStateMachineVariable *var : m_variables)
     {
-        if (var->GetName() == varName)
+        if(var->GetName() == varName)
         {
             return var;
         }
@@ -259,12 +258,13 @@ AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
     return nullptr;
 }
 
-const Array<AnimatorStateMachineNode*>& AnimatorStateMachine::GetNodes() const
+const Array<AnimatorStateMachineNode *> &AnimatorStateMachine::GetNodes() const
 {
     return m_nodes;
 }
 
-const Array<AnimatorStateMachineVariable*>& AnimatorStateMachine::GetVariables() const
+const Array<AnimatorStateMachineVariable *>
+    &AnimatorStateMachine::GetVariables() const
 {
     return m_variables;
 }
@@ -272,7 +272,7 @@ const Array<AnimatorStateMachineVariable*>& AnimatorStateMachine::GetVariables()
 Array<String> AnimatorStateMachine::GetVariablesNames() const
 {
     Array<String> varNames;
-    for (AnimatorStateMachineVariable *var : m_variables)
+    for(AnimatorStateMachineVariable *var : m_variables)
     {
         varNames.PushBack(var->GetName());
     }
@@ -281,33 +281,33 @@ Array<String> AnimatorStateMachine::GetVariablesNames() const
 
 void AnimatorStateMachine::Import(const Path &resourceFilepath)
 {
-    ImportMetaFromFile( MetaFilesManager::GetMetaFilepath(resourceFilepath) );
+    ImportMetaFromFile(MetaFilesManager::GetMetaFilepath(resourceFilepath));
 }
 
 void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
-    if (metaNode.Contains("EntryNodeIdx"))
+    if(metaNode.Contains("EntryNodeIdx"))
     {
-        SetEntryNodeIdx( metaNode.Get<uint>("EntryNodeIdx") );
+        SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
     }
 
-    if (metaNode.GetChildren("Nodes").Size() >= 1)
+    if(metaNode.GetChildren("Nodes").Size() >= 1)
     {
         Clear();
 
         // First just create the nodes (so that indices work nice)...
         {
             const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
-            for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
+            for(uint i = 0; i < childrenMetaNodes.Size(); ++i)
             {
                 CreateAndAddNode();
             }
 
             // Now import nodes meta
             uint i = 0;
-            for (const MetaNode &childMetaNode : childrenMetaNodes)
+            for(const MetaNode &childMetaNode : childrenMetaNodes)
             {
                 AnimatorStateMachineNode *node = GetNode(i);
                 node->ImportMeta(childMetaNode);
@@ -316,7 +316,7 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
         }
 
         const auto &varsMetaNodes = metaNode.GetChildren("Variables");
-        for (const MetaNode &varMetaNode : varsMetaNodes)
+        for(const MetaNode &varMetaNode : varsMetaNodes)
         {
             AnimatorStateMachineVariable *var = CreateNewVariable();
             var->ImportMeta(varMetaNode);
@@ -330,13 +330,13 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("EntryNodeIdx", GetEntryNodeIdx());
 
-    for (const AnimatorStateMachineNode *smNode : GetNodes())
+    for(const AnimatorStateMachineNode *smNode : GetNodes())
     {
         MetaNode smNodeMeta = smNode->GetMeta();
         metaNode->AddChild(smNodeMeta, "Nodes");
     }
 
-    for (const AnimatorStateMachineVariable *var : GetVariables())
+    for(const AnimatorStateMachineVariable *var : GetVariables())
     {
         MetaNode varMeta = var->GetMeta();
         metaNode->AddChild(varMeta, "Variables");

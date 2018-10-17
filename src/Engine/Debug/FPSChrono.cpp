@@ -4,7 +4,7 @@
 #include "Bang/Math.h"
 #include "Bang/Time.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 void FPSChrono::MarkBegin()
 {
@@ -13,12 +13,12 @@ void FPSChrono::MarkBegin()
 
 void FPSChrono::MarkEnd()
 {
-    while (m_latestDeltaTimes.Size() > GetMeanSamples() - 1)
+    while(m_latestDeltaTimes.Size() > GetMeanSamples() - 1)
     {
         m_latestDeltaTimes.PopBack();
     }
 
-    m_latestDeltaTimes.PushFront( Time::GetPassedTimeSince(m_beginTime) );
+    m_latestDeltaTimes.PushFront(Time::GetPassedTimeSince(m_beginTime));
 }
 
 void FPSChrono::SetMeanSamples(int meanSamples)
@@ -28,7 +28,7 @@ void FPSChrono::SetMeanSamples(int meanSamples)
 
 double FPSChrono::GetMeanFPS() const
 {
-    if (m_latestDeltaTimes.IsEmpty())
+    if(m_latestDeltaTimes.IsEmpty())
     {
         return 0.0;
     }
@@ -38,13 +38,13 @@ double FPSChrono::GetMeanFPS() const
 
 double FPSChrono::GetMeanSeconds() const
 {
-    if (m_latestDeltaTimes.IsEmpty())
+    if(m_latestDeltaTimes.IsEmpty())
     {
         return 0.0;
     }
 
     Time meanDeltas;
-    for (Time delta : m_latestDeltaTimes)
+    for(Time delta : m_latestDeltaTimes)
     {
         meanDeltas += delta;
     }

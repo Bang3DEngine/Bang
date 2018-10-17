@@ -3,10 +3,15 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+enum class LayoutSizeType
+{
+    NONE,
+    MIN,
+    PREFERRED,
+    FLEXIBLE
+};
+}
 
-enum class LayoutSizeType { NONE, MIN, PREFERRED, FLEXIBLE };
-
-NAMESPACE_BANG_END
-
-#endif // LAYOUTSIZETYPE_H
+#endif  // LAYOUTSIZETYPE_H

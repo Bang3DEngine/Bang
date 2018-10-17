@@ -14,13 +14,13 @@
 #include "Bang/String.h"
 #include "Bang/UIRenderer.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class Color;
-FORWARD class Font;
-FORWARD class ICloneable;
-FORWARD class Mesh;
+namespace Bang
+{
+class Camera;
+class Color;
+class Font;
+class ICloneable;
+class Mesh;
 
 class UITextRenderer : public UIRenderer,
                        public ILayoutElement,
@@ -31,7 +31,7 @@ class UITextRenderer : public UIRenderer,
 public:
     void RegenerateCharQuadsVAO() const;
 
-    void SetFont (Font* font);
+    void SetFont(Font *font);
     void SetTextColor(const Color &textColor);
     void SetHorizontalAlign(HorizontalAlignment horizontalAlignment);
     void SetVerticalAlign(VerticalAlignment verticalAlignment);
@@ -41,17 +41,17 @@ public:
     void SetTextSize(int size);
     void SetSpacingMultiplier(const Vector2 &spacingMultiplier);
 
-    Font* GetFont() const;
+    Font *GetFont() const;
     bool IsKerning() const;
-    const Color& GetTextColor() const;
+    const Color &GetTextColor() const;
     bool IsWrapping() const;
     VerticalAlignment GetVerticalAlignment() const;
     HorizontalAlignment GetHorizontalAlignment() const;
-    const String& GetContent() const;
+    const String &GetContent() const;
     int GetTextSize() const;
-    const Vector2& GetSpacingMultiplier() const;
-    const Array<AARect>& GetCharRectsLocalNDC() const;
-    const AARect& GetCharRectLocalNDC(uint charIndex) const;
+    const Vector2 &GetSpacingMultiplier() const;
+    const Array<AARect> &GetCharRectsLocalNDC() const;
+    const AARect &GetCharRectLocalNDC(uint charIndex) const;
     AARect GetCharRectViewportNDC(uint charIndex) const;
     AARect GetContentViewportNDCRect() const;
     virtual AARect GetBoundingRect(Camera *camera = nullptr) const override;
@@ -76,15 +76,15 @@ public:
 
 private:
     RH<Font> p_font;
-    String m_content            = "";
-    int m_textSize              = 64;
+    String m_content = "";
+    int m_textSize = 64;
     Vector2 m_spacingMultiplier = Vector2::One;
-    bool m_kerning              = false;
-    mutable AARect m_textRectNDC  = AARect::Zero;
+    bool m_kerning = false;
+    mutable AARect m_textRectNDC = AARect::Zero;
 
     bool m_wrapping = false;
     HorizontalAlignment m_horizontalAlignment = HorizontalAlignment::CENTER;
-    VerticalAlignment m_verticalAlignment     = VerticalAlignment::CENTER;
+    VerticalAlignment m_verticalAlignment = VerticalAlignment::CENTER;
 
     RH<Mesh> p_mesh;
     mutable uint m_numberOfLines = 0;
@@ -95,7 +95,6 @@ private:
 
     void OnChanged();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UITEXTRENDERER_H
+#endif  // UITEXTRENDERER_H

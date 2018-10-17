@@ -7,12 +7,13 @@
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class AnimatorStateMachine;
+class AnimatorStateMachineConnectionTransitionCondition;
 
-FORWARD class AnimatorStateMachine;
-FORWARD class AnimatorStateMachineConnectionTransitionCondition;
-
-using ASMCTransitionCondition = AnimatorStateMachineConnectionTransitionCondition;
+using ASMCTransitionCondition =
+    AnimatorStateMachineConnectionTransitionCondition;
 
 class AnimatorStateMachineConnectionTransitionCondition : public Serializable
 {
@@ -27,8 +28,8 @@ public:
         IS_FALSE
     };
 
-	AnimatorStateMachineConnectionTransitionCondition();
-	virtual ~AnimatorStateMachineConnectionTransitionCondition() override;
+    AnimatorStateMachineConnectionTransitionCondition();
+    virtual ~AnimatorStateMachineConnectionTransitionCondition() override;
 
     void SetVariableName(const String &variableName);
     void SetVariableType(AnimatorStateMachineVariable::Type type);
@@ -49,12 +50,10 @@ public:
 private:
     String m_varName = "";
     AnimatorStateMachineVariable::Type m_varType =
-                        AnimatorStateMachineVariable::Type::FLOAT;
+        AnimatorStateMachineVariable::Type::FLOAT;
     Comparator m_comparator = Comparator::GREATER;
     float m_compareValueFloat = 0.0f;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATORSTATEMACHINECONNECTIONTRANSITIONCONDITION_H
-
+#endif  // ANIMATORSTATEMACHINECONNECTIONTRANSITIONCONDITION_H

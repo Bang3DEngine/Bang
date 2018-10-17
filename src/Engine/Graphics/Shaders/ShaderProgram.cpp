@@ -34,7 +34,7 @@
 #include "Bang/USet.tcc"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 ShaderProgram::ShaderProgram()
 {
@@ -51,8 +51,8 @@ ShaderProgram::ShaderProgram(Shader *vShader, Shader *gShader, Shader *fShader)
     Load(vShader, gShader, fShader);
 }
 
-ShaderProgram::ShaderProgram(const Path &vShaderPath,
-                             const Path &fShaderPath) : ShaderProgram()
+ShaderProgram::ShaderProgram(const Path &vShaderPath, const Path &fShaderPath)
+    : ShaderProgram()
 {
     Load(vShaderPath, fShaderPath);
 }
@@ -86,11 +86,13 @@ bool ShaderProgram::Load(const Path &vShaderPath,
     return Load(vShader.Get(), gShader.Get(), fShader.Get());
 }
 
-bool ShaderProgram::Load(Shader* vShader, Shader* fShader)
+bool ShaderProgram::Load(Shader *vShader, Shader *fShader)
 {
-    if(!vShader || !fShader) { return false; }
-    if (vShader == GetVertexShader() &&
-        fShader == GetFragmentShader())
+    if(!vShader || !fShader)
+    {
+        return false;
+    }
+    if(vShader == GetVertexShader() && fShader == GetFragmentShader())
     {
         return true;
     }
@@ -102,10 +104,12 @@ bool ShaderProgram::Load(Shader* vShader, Shader* fShader)
 
 bool ShaderProgram::Load(Shader *vShader, Shader *gShader, Shader *fShader)
 {
-    if(!vShader || !gShader || !fShader) { return false; }
-    if (vShader == GetVertexShader()   &&
-        gShader == GetGeometryShader() &&
-        fShader == GetFragmentShader())
+    if(!vShader || !gShader || !fShader)
+    {
+        return false;
+    }
+    if(vShader == GetVertexShader() && gShader == GetGeometryShader() &&
+       fShader == GetFragmentShader())
     {
         return true;
     }
@@ -118,19 +122,19 @@ bool ShaderProgram::Load(Shader *vShader, Shader *gShader, Shader *fShader)
 
 bool ShaderProgram::Link()
 {
-    if (!GetVertexShader())
+    if(!GetVertexShader())
     {
         Debug_Error("Vertex shader not set. Can't link shader program.");
         return false;
     }
 
-    if (!GetFragmentShader())
+    if(!GetFragmentShader())
     {
         Debug_Error("Fragment shader not set. Can't link shader program.");
         return false;
     }
 
-    if (m_idGL > 0)
+    if(m_idGL > 0)
     {
         GL::DeleteProgram(m_idGL);
     }
@@ -139,26 +143,30 @@ bool ShaderProgram::Link()
     m_idGL = GL::CreateProgram();
 
     GL::AttachShader(m_idGL, GetVertexShader()->GetGLId());
-    if (GetGeometryShader())
+    if(GetGeometryShader())
     {
         GL::AttachShader(m_idGL, GetGeometryShader()->GetGLId());
     }
     GL::AttachShader(m_idGL, GetFragmentShader()->GetGLId());
 
-    if (!GL::LinkProgram(m_idGL))
+    if(!GL::LinkProgram(m_idGL))
     {
-       Path vsPath = (GetVertexShader() ?
-                      GetVertexShader()->GetResourceFilepath() : Path::Empty);
-       Path gsPath = (GetGeometryShader() ?
-                      GetGeometryShader()->GetResourceFilepath() : Path::Empty);
-       Path fsPath = (GetFragmentShader() ?
-                      GetFragmentShader()->GetResourceFilepath() : Path::Empty);
-       Debug_Error("The shader program " << this << "( " <<
-                   vsPath << ", " << gsPath << ", " << fsPath <<
-                   ") did not link: " <<
-                   GL::GetProgramErrorMsg(m_idGL));
-       GL::DeleteProgram(m_idGL); m_idGL = 0;
-       return false;
+        Path vsPath =
+            (GetVertexShader() ? GetVertexShader()->GetResourceFilepath()
+                               : Path::Empty);
+        Path gsPath =
+            (GetGeometryShader() ? GetGeometryShader()->GetResourceFilepath()
+                                 : Path::Empty);
+        Path fsPath =
+            (GetFragmentShader() ? GetFragmentShader()->GetResourceFilepath()
+                                 : Path::Empty);
+        Debug_Error("The shader program "
+                    << this << "( " << vsPath << ", " << gsPath << ", "
+                    << fsPath
+                    << ") did not link: " << GL::GetProgramErrorMsg(m_idGL));
+        GL::DeleteProgram(m_idGL);
+        m_idGL = 0;
+        return false;
     }
 
     m_isLinked = true;
@@ -200,17 +208,23 @@ bool SetShaderUniformArray(ShaderProgram *sp,
     ASSERT(GL::IsBound(sp));
 
     bool update = true;
-    if (update)
+    if(update)
     {
         int location = sp->GetUniformLocation(name);
-        if (location >= 0) { GL::Uniform(location, v); }
-        else if (warn) { Debug_Warn("Uniform '" << name << "' not found"); }
+        if(location >= 0)
+        {
+            GL::Uniform(location, v);
+        }
+        else if(warn)
+        {
+            Debug_Warn("Uniform '" << name << "' not found");
+        }
         return (location >= 0);
     }
     return true;
 }
 
-template<class T, class=TT_NOT_POINTER(T)>
+template <class T, class = TT_NOT_POINTER(T)>
 bool SetShaderUniform(ShaderProgram *sp,
                       UMap<String, T> *cache,
                       const String &name,
@@ -220,28 +234,28 @@ bool SetShaderUniform(ShaderProgram *sp,
     ASSERT(GL::IsBound(sp));
 
     bool update = true;
-    if (cache)
+    if(cache)
     {
         auto it = cache->Find(name);
-        if (it != cache->End() && it->second == v)
+        if(it != cache->End() && it->second == v)
         {
             update = false;
         }
     }
 
-    if (update)
+    if(update)
     {
-        if (cache)
+        if(cache)
         {
             (*cache)[name] = v;
         }
 
         int location = sp->GetUniformLocation(name);
-        if (location >= 0)
+        if(location >= 0)
         {
             GL::Uniform(location, v);
         }
-        else if (warn)
+        else if(warn)
         {
             Debug_Warn("Uniform '" << name << "' not found");
         }
@@ -293,58 +307,78 @@ bool ShaderProgram::SetMatrix4(const String &name, const Matrix4 &v, bool warn)
     // return SetShaderUniform(this, &m_uniformCacheMatrix4, name, v, warn);
     return SetShaderUniform<Matrix4>(this, nullptr, name, v, warn);
 }
-bool ShaderProgram::SetIntArray(const String &name, const Array<int> &v, bool warn)
+bool ShaderProgram::SetIntArray(const String &name,
+                                const Array<int> &v,
+                                bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetBoolArray(const String &name, const Array<bool> &v, bool warn)
+bool ShaderProgram::SetBoolArray(const String &name,
+                                 const Array<bool> &v,
+                                 bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetFloatArray(const String &name, const Array<float> &v, bool warn)
+bool ShaderProgram::SetFloatArray(const String &name,
+                                  const Array<float> &v,
+                                  bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
 
-bool ShaderProgram::SetDoubleArray(const String &name, const Array<double> &v, bool warn)
+bool ShaderProgram::SetDoubleArray(const String &name,
+                                   const Array<double> &v,
+                                   bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetColorArray(const String &name, const Array<Color> &v, bool warn)
+bool ShaderProgram::SetColorArray(const String &name,
+                                  const Array<Color> &v,
+                                  bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetVector2Array(const String &name, const Array<Vector2> &v, bool warn)
+bool ShaderProgram::SetVector2Array(const String &name,
+                                    const Array<Vector2> &v,
+                                    bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetVector3Array(const String &name, const Array<Vector3> &v, bool warn)
+bool ShaderProgram::SetVector3Array(const String &name,
+                                    const Array<Vector3> &v,
+                                    bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetVector4Array(const String &name, const Array<Vector4> &v, bool warn)
+bool ShaderProgram::SetVector4Array(const String &name,
+                                    const Array<Vector4> &v,
+                                    bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetMatrix3Array(const String &name, const Array<Matrix3> &v, bool warn)
+bool ShaderProgram::SetMatrix3Array(const String &name,
+                                    const Array<Matrix3> &v,
+                                    bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
-bool ShaderProgram::SetMatrix4Array(const String &name, const Array<Matrix4> &v, bool warn)
+bool ShaderProgram::SetMatrix4Array(const String &name,
+                                    const Array<Matrix4> &v,
+                                    bool warn)
 {
     return SetShaderUniformArray(this, name, v, warn);
 }
 bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 {
-    if (!texture)
+    if(!texture)
     {
         return false;
     }
 
     int uniformLocation = GetUniformLocation(name);
-    if (uniformLocation < 0)
+    if(uniformLocation < 0)
     {
-        if (warn)
+        if(warn)
         {
             Debug_Warn("Texture uniform '" << name << "' not found.");
         }
@@ -353,16 +387,17 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
 
     bool needToRefreshTexture;
     auto it = m_namesToTexture.Find(name);
-    if (it != m_namesToTexture.End())
+    if(it != m_namesToTexture.End())
     {
         // Texture name was already being used...
         Texture *oldTexture = it->second;
-        if (texture != oldTexture)
+        if(texture != oldTexture)
         {
             // We are changing an existing texture. Unregister listener
-            if (oldTexture)
+            if(oldTexture)
             {
-                oldTexture->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+                oldTexture->EventEmitter<IEventsDestroy>::UnRegisterListener(
+                    this);
             }
             needToRefreshTexture = true;
         }
@@ -377,7 +412,7 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         needToRefreshTexture = true;
     }
 
-    if (needToRefreshTexture)
+    if(needToRefreshTexture)
     {
         // Texture name was not being used. Register and all stuff
         m_namesToTexture[name] = texture;
@@ -386,15 +421,17 @@ bool ShaderProgram::SetTexture(const String &name, Texture *texture, bool warn)
         texture->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 
-    if (GL::IsBound(this))
+    if(GL::IsBound(this))
     {
         BindTextureToFreeUnit(name, texture);
     }
 
-    if (m_namesToTexture.Size() >= TextureUnitManager::GetNumUsableTextureUnits())
+    if(m_namesToTexture.Size() >=
+       TextureUnitManager::GetNumUsableTextureUnits())
     {
-        Debug_Error("You are using too many textures at once. Maximum usable is: " <<
-                    TextureUnitManager::GetNumUsableTextureUnits());
+        Debug_Error(
+            "You are using too many textures at once. Maximum usable is: "
+            << TextureUnitManager::GetNumUsableTextureUnits());
     }
 
     return true;
@@ -403,19 +440,18 @@ bool ShaderProgram::SetTexture2D(const String &name,
                                  Texture2D *texture2D,
                                  bool warn)
 {
-    if (texture2D)
+    if(texture2D)
     {
-        return SetTexture(name, SCAST<Texture*>(texture2D), warn);
+        return SetTexture(name, SCAST<Texture *>(texture2D), warn);
     }
     else
     {
-        return  SetDefaultTexture2D(name, warn);
+        return SetDefaultTexture2D(name, warn);
     }
 }
 bool ShaderProgram::SetDefaultTexture2D(const String &name, bool warn)
 {
-    return SetTexture(name,
-                      SCAST<Texture*>( TextureFactory::GetWhiteTexture() ),
+    return SetTexture(name, SCAST<Texture *>(TextureFactory::GetWhiteTexture()),
                       warn);
 }
 
@@ -423,47 +459,50 @@ bool ShaderProgram::SetTextureCubeMap(const String &name,
                                       TextureCubeMap *textureCM,
                                       bool warn)
 {
-    if (textureCM)
+    if(textureCM)
     {
-        return SetTexture(name, SCAST<Texture*>(textureCM), warn);
+        return SetTexture(name, SCAST<Texture *>(textureCM), warn);
     }
     else
     {
-        return  SetDefaultTextureCubeMap(name, warn);
+        return SetDefaultTextureCubeMap(name, warn);
     }
 }
 bool ShaderProgram::SetDefaultTextureCubeMap(const String &name, bool warn)
 {
-    return SetTexture(name,
-                      SCAST<Texture*>( TextureFactory::GetWhiteTextureCubeMap() ),
-                      warn);
+    return SetTexture(
+        name, SCAST<Texture *>(TextureFactory::GetWhiteTextureCubeMap()), warn);
 }
 
 bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 {
-    if (shader && shader->GetType() != type)
+    if(shader && shader->GetType() != type)
     {
-        String typeName = (type == GL::ShaderType::VERTEX    ? "Vertex" :
-                          (type == GL::ShaderType::GEOMETRY ? "Geometry" :
-                                                               "Fragment"));
+        String typeName =
+            (type == GL::ShaderType::VERTEX
+                 ? "Vertex"
+                 : (type == GL::ShaderType::GEOMETRY ? "Geometry"
+                                                     : "Fragment"));
         Debug_Error("You are trying to set as " << typeName << " shader a "
-                    "non-" << typeName << " shader.");
+                                                               "non-"
+                                                << typeName << " shader.");
         return false;
     }
 
-    if (GetShader(type))
+    if(GetShader(type))
     {
-        GetShader(type)->EventEmitter<IEventsResource>::UnRegisterListener(this);
+        GetShader(type)->EventEmitter<IEventsResource>::UnRegisterListener(
+            this);
     }
 
-    switch (type)
+    switch(type)
     {
-        case GL::ShaderType::VERTEX:   p_vShader.Set(shader); break;
+        case GL::ShaderType::VERTEX: p_vShader.Set(shader); break;
         case GL::ShaderType::GEOMETRY: p_gShader.Set(shader); break;
         case GL::ShaderType::FRAGMENT: p_fShader.Set(shader); break;
     }
 
-    if (GetShader(type))
+    if(GetShader(type))
     {
         GetShader(type)->EventEmitter<IEventsResource>::RegisterListener(this);
     }
@@ -471,7 +510,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
     return true;
 }
 
-bool ShaderProgram::SetVertexShader(Shader* vertexShader)
+bool ShaderProgram::SetVertexShader(Shader *vertexShader)
 {
     return SetShader(vertexShader, GL::ShaderType::VERTEX);
 }
@@ -481,16 +520,16 @@ bool ShaderProgram::SetGeometryShader(Shader *geometryShader)
     return SetShader(geometryShader, GL::ShaderType::GEOMETRY);
 }
 
-bool ShaderProgram::SetFragmentShader(Shader* fragmentShader)
+bool ShaderProgram::SetFragmentShader(Shader *fragmentShader)
 {
     return SetShader(fragmentShader, GL::ShaderType::FRAGMENT);
 }
 
 Shader *ShaderProgram::GetShader(GL::ShaderType type) const
 {
-    switch (type)
+    switch(type)
     {
-        case GL::ShaderType::VERTEX:   return p_vShader.Get();
+        case GL::ShaderType::VERTEX: return p_vShader.Get();
         case GL::ShaderType::GEOMETRY: return p_gShader.Get();
         case GL::ShaderType::FRAGMENT: return p_fShader.Get();
     }
@@ -498,14 +537,23 @@ Shader *ShaderProgram::GetShader(GL::ShaderType type) const
     ASSERT(false);
     return nullptr;
 }
-Shader* ShaderProgram::GetVertexShader()   const { return p_vShader.Get(); }
-Shader *ShaderProgram::GetGeometryShader() const { return p_gShader.Get(); }
-Shader* ShaderProgram::GetFragmentShader() const { return p_fShader.Get(); }
+Shader *ShaderProgram::GetVertexShader() const
+{
+    return p_vShader.Get();
+}
+Shader *ShaderProgram::GetGeometryShader() const
+{
+    return p_gShader.Get();
+}
+Shader *ShaderProgram::GetFragmentShader() const
+{
+    return p_fShader.Get();
+}
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
 {
     auto it = m_nameToLocationCache.Find(name);
-    if (it != m_nameToLocationCache.End())
+    if(it != m_nameToLocationCache.End())
     {
         return it->second;
     }
@@ -532,9 +580,9 @@ void ShaderProgram::UnBind() const
 
 void ShaderProgram::Bind()
 {
-    if (IsLinked())
+    if(IsLinked())
     {
-        if (!GL::IsBound(this))
+        if(!GL::IsBound(this))
         {
             GL::Bind(this);
         }
@@ -553,9 +601,9 @@ void ShaderProgram::BindAllTexturesToUnits()
 {
     ASSERT(GL::IsBound(this));
 
-    for (const auto &pair : m_namesToTexture)
+    for(const auto &pair : m_namesToTexture)
     {
-        const String  &texName = pair.first;
+        const String &texName = pair.first;
         Texture *texture = pair.second;
         BindTextureToFreeUnit(texName, texture);
     }
@@ -565,66 +613,72 @@ void ShaderProgram::CheckTextureBindingsValidity() const
 {
     const int uniformsListSize = GL::GetUniformsListSize(GetGLId());
     USet<int> samplers1D, samplers2D, samplers3D, samplersCubeMap;
-    for (int i = 0; i < uniformsListSize; ++i)
+    for(int i = 0; i < uniformsListSize; ++i)
     {
         GL::UniformType uniformType = GL::GetUniformTypeAt(GetGLId(), i);
-        if (uniformType != GL::UniformType::SAMPLER_1D            &&
-            uniformType != GL::UniformType::SAMPLER_1D_SHADOW      &&
-            uniformType != GL::UniformType::SAMPLER_1D_ARRAY_SHADOW &&
-            uniformType != GL::UniformType::SAMPLER_2D            &&
-            uniformType != GL::UniformType::SAMPLER_2D_SHADOW      &&
-            uniformType != GL::UniformType::SAMPLER_2D_ARRAY_SHADOW &&
-            uniformType != GL::UniformType::SAMPLER_3D            &&
-            uniformType != GL::UniformType::SAMPLER_CUBE          &&
-            uniformType != GL::UniformType::SAMPLER_CUBE_SHADOW)
+        if(uniformType != GL::UniformType::SAMPLER_1D &&
+           uniformType != GL::UniformType::SAMPLER_1D_SHADOW &&
+           uniformType != GL::UniformType::SAMPLER_1D_ARRAY_SHADOW &&
+           uniformType != GL::UniformType::SAMPLER_2D &&
+           uniformType != GL::UniformType::SAMPLER_2D_SHADOW &&
+           uniformType != GL::UniformType::SAMPLER_2D_ARRAY_SHADOW &&
+           uniformType != GL::UniformType::SAMPLER_3D &&
+           uniformType != GL::UniformType::SAMPLER_CUBE &&
+           uniformType != GL::UniformType::SAMPLER_CUBE_SHADOW)
         {
             continue;
         }
 
         GLUniforms::GLSLVar<int> uniformVar =
-                                   GLUniforms::GetUniformAt<int>(GetGLId(), i);
+            GLUniforms::GetUniformAt<int>(GetGLId(), i);
 
         // Debug_Log(uniformVar.name << ": " << uniformVar.value);
         const int texUnit = uniformVar.value;
         const GL::UniformType samplerType = uniformType;
-        switch (samplerType)
+        switch(samplerType)
         {
             case GL::UniformType::SAMPLER_1D:
             case GL::UniformType::SAMPLER_1D_SHADOW:
             case GL::UniformType::SAMPLER_1D_ARRAY_SHADOW:
                 samplers1D.Add(texUnit);
-            break;
+                break;
 
             case GL::UniformType::SAMPLER_2D:
             case GL::UniformType::SAMPLER_2D_SHADOW:
             case GL::UniformType::SAMPLER_2D_ARRAY_SHADOW:
                 samplers2D.Add(texUnit);
-            break;
+                break;
 
-            case GL::UniformType::SAMPLER_3D:
-                samplers3D.Add(texUnit);
-            break;
+            case GL::UniformType::SAMPLER_3D: samplers3D.Add(texUnit); break;
 
             case GL::UniformType::SAMPLER_CUBE:
             case GL::UniformType::SAMPLER_CUBE_SHADOW:
                 samplersCubeMap.Add(texUnit);
-            break;
+                break;
 
             default: ASSERT(false);
         }
 
         int numDifferentSamplerTypesWhoPointToThisTexture = 0;
 
-        if (samplers1D.Contains(texUnit))
-        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
-        if (samplers2D.Contains(texUnit))
-        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
-        if (samplers3D.Contains(texUnit))
-        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
-        if (samplersCubeMap.Contains(texUnit))
-        { ++numDifferentSamplerTypesWhoPointToThisTexture; }
+        if(samplers1D.Contains(texUnit))
+        {
+            ++numDifferentSamplerTypesWhoPointToThisTexture;
+        }
+        if(samplers2D.Contains(texUnit))
+        {
+            ++numDifferentSamplerTypesWhoPointToThisTexture;
+        }
+        if(samplers3D.Contains(texUnit))
+        {
+            ++numDifferentSamplerTypesWhoPointToThisTexture;
+        }
+        if(samplersCubeMap.Contains(texUnit))
+        {
+            ++numDifferentSamplerTypesWhoPointToThisTexture;
+        }
 
-        if (texUnit != 0)
+        if(texUnit != 0)
         {
             ASSERT(numDifferentSamplerTypesWhoPointToThisTexture == 1);
         }
@@ -636,7 +690,7 @@ void ShaderProgram::BindTextureToFreeUnit(const String &texUniformName,
 {
     ASSERT(texture);
     uint unit = TextureUnitManager::BindTextureToUnit(texture);
-    SetInt(texUniformName, unit, false); // Assign unit to sampler
+    SetInt(texUniformName, unit, false);  // Assign unit to sampler
 }
 
 void ShaderProgram::UnBindAllTexturesFromUnits() const
@@ -646,12 +700,12 @@ void ShaderProgram::UnBindAllTexturesFromUnits() const
 
 void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    Array< std::pair<String, Texture*> > entriesToRestore;
-    Texture *destroyedTex = DCAST<Texture*>( object );
-    for (auto it = m_namesToTexture.begin(); it != m_namesToTexture.end(); )
+    Array<std::pair<String, Texture *>> entriesToRestore;
+    Texture *destroyedTex = DCAST<Texture *>(object);
+    for(auto it = m_namesToTexture.begin(); it != m_namesToTexture.end();)
     {
         Texture *tex = it->second;
-        if (tex == destroyedTex)
+        if(tex == destroyedTex)
         {
             const String &name = it->first;
             entriesToRestore.PushBack(std::make_pair(name, tex));
@@ -666,10 +720,10 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     }
 
     // Set default textures to those removed entries.
-    for (const auto &pair : entriesToRestore)
+    for(const auto &pair : entriesToRestore)
     {
         const String &name = pair.first;
-        if (DCAST<TextureCubeMap*>(destroyedTex))
+        if(DCAST<TextureCubeMap *>(destroyedTex))
         {
             SetDefaultTextureCubeMap(name, false);
         }
@@ -683,8 +737,7 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 void ShaderProgram::OnImported(Resource *res)
 {
     // When used shader is imported, link shaderProgram
-    ASSERT(res == GetVertexShader()   ||
-           res == GetGeometryShader() ||
+    ASSERT(res == GetVertexShader() || res == GetGeometryShader() ||
            res == GetFragmentShader());
     Link();
 }

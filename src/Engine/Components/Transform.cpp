@@ -9,17 +9,17 @@
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/Matrix4.h"
-#include "Bang/StreamOperators.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Quaternion.h"
+#include "Bang/StreamOperators.h"
 #include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Transform::Transform()
 {
@@ -32,7 +32,7 @@ Transform::~Transform()
 
 void Transform::SetLocalPosition(const Vector3 &p)
 {
-    if (GetLocalPosition() != p)
+    if(GetLocalPosition() != p)
     {
         m_localPosition = p;
         InvalidateTransform();
@@ -40,7 +40,7 @@ void Transform::SetLocalPosition(const Vector3 &p)
 }
 void Transform::SetPosition(const Vector3 &p)
 {
-    if (GameObject *parent = GetGameObject()->GetParent())
+    if(GameObject *parent = GetGameObject()->GetParent())
     {
         ASSERT(parent->GetTransform());
         SetLocalPosition(parent->GetTransform()->FromWorldToLocalPoint(p));
@@ -59,35 +59,34 @@ void Transform::Translate(const Vector3 &translation)
     SetPosition(GetPosition() + translation);
 }
 
-
-
 void Transform::SetLocalRotation(const Quaternion &q)
 {
-    if (GetLocalRotation() != q)
+    if(GetLocalRotation() != q)
     {
         m_localRotation = q.Normalized();
-        m_localEulerAnglesDegreesHint = GetLocalRotation().GetEulerAnglesDegrees();
+        m_localEulerAnglesDegreesHint =
+            GetLocalRotation().GetEulerAnglesDegrees();
         InvalidateTransform();
     }
 }
 void Transform::SetLocalEuler(const Vector3 &degreesEuler)
 {
     Vector3 eulersRads = degreesEuler.ToRadians();
-    SetLocalRotation( Quaternion::FromEulerAnglesRads(eulersRads) );
+    SetLocalRotation(Quaternion::FromEulerAnglesRads(eulersRads));
     m_localEulerAnglesDegreesHint = degreesEuler;
 }
 void Transform::SetLocalEuler(float x, float y, float z)
 {
-    SetLocalEuler(Vector3(x,y,z));
+    SetLocalEuler(Vector3(x, y, z));
 }
 
 void Transform::SetRotation(const Quaternion &q)
 {
-    if (GameObject *parent = GetGameObject()->GetParent())
+    if(GameObject *parent = GetGameObject()->GetParent())
     {
         ASSERT(parent->GetTransform());
-        SetLocalRotation( Quaternion(
-           parent->GetTransform()->GetRotation().Inversed() * q.Normalized()));
+        SetLocalRotation(Quaternion(
+            parent->GetTransform()->GetRotation().Inversed() * q.Normalized()));
     }
     else
     {
@@ -96,7 +95,7 @@ void Transform::SetRotation(const Quaternion &q)
 }
 void Transform::SetEuler(const Vector3 &degreesEuler)
 {
-    if (GameObject *parent = GetGameObject()->GetParent())
+    if(GameObject *parent = GetGameObject()->GetParent())
     {
         ASSERT(parent->GetTransform());
         SetLocalEuler(-parent->GetTransform()->GetEuler() + degreesEuler);
@@ -108,7 +107,7 @@ void Transform::SetEuler(const Vector3 &degreesEuler)
 }
 void Transform::SetEuler(float x, float y, float z)
 {
-    SetEuler(Vector3(x,y,z));
+    SetEuler(Vector3(x, y, z));
 }
 
 void Transform::RotateLocal(const Quaternion &r)
@@ -137,7 +136,7 @@ void Transform::SetScale(const Vector3 &v)
 {
     GameObject *p = GetGameObject()->GetParent();
     Vector3 parentScale = p ? p->GetTransform()->GetScale() : Vector3::One;
-    parentScale = Vector3::Max( Vector3(0.0001f), parentScale );
+    parentScale = Vector3::Max(Vector3(0.0001f), parentScale);
     SetLocalScale(1.0f / parentScale * v);
 }
 
@@ -148,7 +147,7 @@ void Transform::SetLocalScale(float s)
 
 void Transform::SetLocalScale(const Vector3 &s)
 {
-    if (GetLocalScale() != s)
+    if(GetLocalScale() != s)
     {
         m_localScale = s;
         InvalidateTransform();
@@ -214,7 +213,7 @@ bool Transform::CanBeRepeatedInGameObject() const
 
 void Transform::RecalculateParentMatricesIfNeeded() const
 {
-    if (IInvalidatableTransformLocal::IsInvalid())
+    if(IInvalidatableTransformLocal::IsInvalid())
     {
         CalculateLocalToParentMatrix();
         IInvalidatableTransformLocal::Validate();
@@ -223,7 +222,7 @@ void Transform::RecalculateParentMatricesIfNeeded() const
 
 void Transform::RecalculateWorldMatricesIfNeeded() const
 {
-    if (IInvalidatableTransformWorld::IsInvalid())
+    if(IInvalidatableTransformWorld::IsInvalid())
     {
         CalculateLocalToWorldMatrix();
         IInvalidatableTransformWorld::Validate();
@@ -232,9 +231,9 @@ void Transform::RecalculateWorldMatricesIfNeeded() const
 
 void Transform::CalculateLocalToParentMatrix() const
 {
-    Matrix4 T  = Matrix4::TranslateMatrix(GetLocalPosition());
-    Matrix4 R  = Matrix4::RotateMatrix(GetLocalRotation());
-    Matrix4 S  = Matrix4::ScaleMatrix(GetLocalScale());
+    Matrix4 T = Matrix4::TranslateMatrix(GetLocalPosition());
+    Matrix4 R = Matrix4::RotateMatrix(GetLocalRotation());
+    Matrix4 S = Matrix4::ScaleMatrix(GetLocalScale());
 
     m_localToParentMatrix = (T * R * S);
     m_localToParentMatrixInv = m_localToParentMatrix.Inversed();
@@ -244,9 +243,10 @@ void Transform::CalculateLocalToWorldMatrix() const
 {
     m_localToWorldMatrix = GetLocalToParentMatrix();
     GameObject *parent = GetGameObject()->GetParent();
-    if (parent && parent->GetTransform())
+    if(parent && parent->GetTransform())
     {
-        const Matrix4 &mp = parent->GetTransform()->Transform::GetLocalToWorldMatrix();
+        const Matrix4 &mp =
+            parent->GetTransform()->Transform::GetLocalToWorldMatrix();
         m_localToWorldMatrix = mp * m_localToWorldMatrix;
     }
     m_localToWorldMatrixInv = m_localToWorldMatrix.Inversed();
@@ -264,7 +264,7 @@ const Matrix4 &Transform::GetLocalToParentMatrixInv() const
     return m_localToParentMatrixInv;
 }
 
-const Matrix4& Transform::GetLocalToWorldMatrix() const
+const Matrix4 &Transform::GetLocalToWorldMatrix() const
 {
     RecalculateWorldMatricesIfNeeded();
     return m_localToWorldMatrix;
@@ -278,9 +278,12 @@ const Matrix4 &Transform::GetLocalToWorldMatrixInv() const
 
 void Transform::LookAt(const Vector3 &target, const Vector3 &_up)
 {
-    if(target == GetLocalPosition()) { return; }
+    if(target == GetLocalPosition())
+    {
+        return;
+    }
     Vector3 up = _up.Normalized();
-    SetRotation(Quaternion::LookDirection(target - GetPosition(), up) );
+    SetRotation(Quaternion::LookDirection(target - GetPosition(), up));
 }
 
 void Transform::LookAt(Transform *targetTransform, const Vector3 &up)
@@ -300,24 +303,24 @@ void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    Vector3 localPos    = transformMatrix.GetTranslation();
+    Vector3 localPos = transformMatrix.GetTranslation();
     Quaternion localRot = transformMatrix.GetRotation();
-    Vector3 localScale  = transformMatrix.GetScale();
-    SetLocalPosition( localPos   );
-    SetLocalRotation( localRot   );
-    SetLocalScale   ( localScale );
+    Vector3 localScale = transformMatrix.GetScale();
+    SetLocalPosition(localPos);
+    SetLocalRotation(localRot);
+    SetLocalScale(localScale);
 }
 
-const Vector3& Transform::GetLocalPosition() const
+const Vector3 &Transform::GetLocalPosition() const
 {
     return m_localPosition;
 }
 
 Vector3 Transform::GetPosition() const
 {
-    if (GameObject *parent = GetGameObject()->GetParent())
+    if(GameObject *parent = GetGameObject()->GetParent())
     {
-        if (Transform *tr = parent->GetTransform())
+        if(Transform *tr = parent->GetTransform())
         {
             return tr->FromLocalToWorldPoint(GetLocalPosition());
         }
@@ -325,16 +328,16 @@ Vector3 Transform::GetPosition() const
     return GetLocalPosition();
 }
 
-const Quaternion& Transform::GetLocalRotation() const
+const Quaternion &Transform::GetLocalRotation() const
 {
     return m_localRotation;
 }
 
 Quaternion Transform::GetRotation() const
 {
-    if (GameObject *parent = GetGameObject()->GetParent())
+    if(GameObject *parent = GetGameObject()->GetParent())
     {
-        if (Transform *tr = parent->GetTransform())
+        if(Transform *tr = parent->GetTransform())
         {
             return tr->GetRotation() * GetLocalRotation();
         }
@@ -349,10 +352,10 @@ Vector3 Transform::GetLocalEuler() const
 
 Vector3 Transform::GetEuler() const
 {
-    return FromLocalToWorldDirection( GetLocalEuler() );
+    return FromLocalToWorldDirection(GetLocalEuler());
 }
 
-const Vector3& Transform::GetLocalScale() const
+const Vector3 &Transform::GetLocalScale() const
 {
     return m_localScale;
 }
@@ -377,7 +380,7 @@ Vector3 Transform::GetBack() const
 
 Vector3 Transform::GetRight() const
 {
-    return  FromLocalToWorldDirection(Vector3::Right).Normalized();
+    return FromLocalToWorldDirection(Vector3::Right).Normalized();
 }
 
 Vector3 Transform::GetLeft() const
@@ -407,7 +410,7 @@ void Transform::OnTransformInvalidated()
 {
     OnTransformChanged();
 }
-void Transform::OnParentChanged(GameObject*, GameObject*)
+void Transform::OnParentChanged(GameObject *, GameObject *)
 {
     OnParentTransformChanged();
 }
@@ -416,19 +419,19 @@ void Transform::OnTransformChanged()
     InvalidateTransform();
 
     GameObject *go = GetGameObject();
-    if (!go)
+    if(!go)
     {
         return;
     }
 
-    EventEmitter<IEventsTransform>::
-       PropagateToListeners(&EventListener<IEventsTransform>::OnTransformChanged);
+    EventEmitter<IEventsTransform>::PropagateToListeners(
+        &EventListener<IEventsTransform>::OnTransformChanged);
 
     EventListener<IEventsTransform>::SetReceiveEvents(false);
 
     EventEmitter<IEventsTransform>::PropagateToArray(
-                go->GetComponents<EventListener<IEventsTransform>>(),
-                &EventListener<IEventsTransform>::OnTransformChanged);
+        go->GetComponents<EventListener<IEventsTransform>>(),
+        &EventListener<IEventsTransform>::OnTransformChanged);
 
     EventListener<IEventsTransform>::SetReceiveEvents(true);
 
@@ -439,9 +442,8 @@ void Transform::OnTransformChanged()
 void Transform::PropagateParentTransformChangedEventToChildren() const
 {
     GameObject *go = GetGameObject();
-    EventEmitter<IEventsTransform>::
-           PropagateToListeners(
-                &EventListener<IEventsTransform>::OnParentTransformChanged);
+    EventEmitter<IEventsTransform>::PropagateToListeners(
+        &EventListener<IEventsTransform>::OnParentTransformChanged);
     EventEmitter<IEventsTransform>::PropagateToArray(
         go->GetComponentsInChildren<EventListener<IEventsTransform>>(),
         &EventListener<IEventsTransform>::OnParentTransformChanged);
@@ -450,9 +452,8 @@ void Transform::PropagateParentTransformChangedEventToChildren() const
 void Transform::PropagateChildrenTransformChangedEventToParent() const
 {
     GameObject *go = GetGameObject();
-    EventEmitter<IEventsTransform>::
-           PropagateToListeners(
-                &EventListener<IEventsTransform>::OnChildrenTransformChanged);
+    EventEmitter<IEventsTransform>::PropagateToListeners(
+        &EventListener<IEventsTransform>::OnChildrenTransformChanged);
     EventEmitter<IEventsTransform>::PropagateToArray(
         go->GetComponentsInParent<EventListener<IEventsTransform>>(),
         &EventListener<IEventsTransform>::OnChildrenTransformChanged);
@@ -463,13 +464,14 @@ void Transform::OnParentTransformChanged()
     InvalidateTransform();
     PropagateParentTransformChangedEventToChildren();
 }
-void Transform::OnChildrenTransformChanged() {}
-
+void Transform::OnChildrenTransformChanged()
+{
+}
 
 void Transform::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    Transform *t = Cast<Transform*>(clone);
+    Transform *t = Cast<Transform *>(clone);
     t->SetLocalPosition(GetLocalPosition());
     t->SetLocalRotation(GetLocalRotation());
     t->SetLocalScale(GetLocalScale());
@@ -479,17 +481,17 @@ void Transform::ImportMeta(const MetaNode &metaNode)
 {
     Component::ImportMeta(metaNode);
 
-    if (metaNode.Contains("Position"))
+    if(metaNode.Contains("Position"))
     {
         SetLocalPosition(metaNode.Get<Vector3>("Position"));
     }
 
-    if (metaNode.Contains("Rotation"))
+    if(metaNode.Contains("Rotation"))
     {
         SetLocalRotation(metaNode.Get<Quaternion>("Rotation"));
     }
 
-    if (metaNode.Contains("Scale"))
+    if(metaNode.Contains("Scale"))
     {
         SetLocalScale(metaNode.Get<Vector3>("Scale"));
     }
@@ -500,7 +502,7 @@ void Transform::ExportMeta(MetaNode *metaNode) const
     Component::ExportMeta(metaNode);
     metaNode->Set("Position", GetLocalPosition());
     metaNode->Set("Rotation", GetLocalRotation());
-    metaNode->Set("Scale",    GetLocalScale());
+    metaNode->Set("Scale", GetLocalScale());
 }
 
 void Transform::InvalidateTransform()
@@ -508,4 +510,3 @@ void Transform::InvalidateTransform()
     IInvalidatableTransformLocal::Invalidate();
     IInvalidatableTransformWorld::Invalidate();
 }
-

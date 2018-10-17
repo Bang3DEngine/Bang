@@ -7,10 +7,10 @@
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Plane;
-FORWARD class Polygon2D;
+namespace Bang
+{
+class Plane;
+class Polygon2D;
 
 class Polygon
 {
@@ -26,17 +26,15 @@ public:
     Vector3 GetNormal() const;
     Polygon2D ProjectedOnAxis(Axis3D axis) const;
 
-    const Vector3& GetPoint(int i) const;
-    const Array<Vector3>& GetPoints() const;
+    const Vector3 &GetPoint(int i) const;
+    const Array<Vector3> &GetPoints() const;
 
-    Vector3& operator[](std::size_t i);
-    const Vector3& operator[](std::size_t i) const;
+    Vector3 &operator[](std::size_t i);
+    const Vector3 &operator[](std::size_t i) const;
 
 private:
     Array<Vector3> m_points;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // POLYGON_H
-
+#endif  // POLYGON_H

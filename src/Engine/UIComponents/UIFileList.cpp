@@ -14,7 +14,7 @@
 #include "Bang/UITextRenderer.h"
 #include "Bang/UIVerticalLayout.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIFileList::UIFileList()
 {
@@ -28,7 +28,7 @@ UIFileList::~UIFileList()
 void UIFileList::OnStart()
 {
     Component::OnStart();
-    SetCurrentPath( GetCurrentPath() );
+    SetCurrentPath(GetCurrentPath());
 }
 
 void UIFileList::OnUpdate()
@@ -54,7 +54,7 @@ void UIFileList::AddPathChangedCallback(UIFileList::PathCallback callback)
 
 void UIFileList::SetShowOnlyDirectories(bool showOnlyDirectories)
 {
-    if (m_showOnlyDirectories != showOnlyDirectories)
+    if(m_showOnlyDirectories != showOnlyDirectories)
     {
         m_showOnlyDirectories = showOnlyDirectories;
         UpdateEntries();
@@ -63,16 +63,22 @@ void UIFileList::SetShowOnlyDirectories(bool showOnlyDirectories)
 
 Path UIFileList::GetCurrentSelectedPath() const
 {
-    if (p_selectedItem) { return p_selectedItem->GetPath(); }
+    if(p_selectedItem)
+    {
+        return p_selectedItem->GetPath();
+    }
     return GetCurrentPath();
 }
 
 void UIFileList::SetCurrentPath(const Path &currentPath)
 {
-    if (m_currentPath != currentPath)
+    if(m_currentPath != currentPath)
     {
         m_currentPath = currentPath;
-        for (auto cb : m_pathChangedCallback)  { cb( GetCurrentPath() ); }
+        for(auto cb : m_pathChangedCallback)
+        {
+            cb(GetCurrentPath());
+        }
         UpdateEntries();
     }
 }
@@ -96,22 +102,22 @@ void UIFileList::UpdateEntries()
 {
     Array<Path> paths = GetCurrentPath().GetSubPaths(FindFlag::SIMPLE);
 
-    if (!GetFileExtensions().IsEmpty())
+    if(!GetFileExtensions().IsEmpty())
     {
         Paths::FilterByExtension(&paths, GetFileExtensions());
     }
     Paths::SortPathsByName(&paths);
 
-    if (GetShowOnlyDirectories())
+    if(GetShowOnlyDirectories())
     {
         Paths::RemoveFilesFromArray(&paths);
     }
-    paths.PushFront( Path("..") );
+    paths.PushFront(Path(".."));
 
     UIList *uiList = GetGameObject()->GetComponent<UIList>();
     uiList->Clear();
 
-    for (const Path &path : paths)
+    for(const Path &path : paths)
     {
         UIFileListItem *item = GameObject::Create<UIFileListItem>();
         item->SetPath(path);
@@ -121,37 +127,38 @@ void UIFileList::UpdateEntries()
     // uiList->SetSelection(1);
 
     uiList->SetSelectionCallback(
-        [this, uiList](GameObject *go, UIList::Action action)
-        {
-            UIFileListItem *item = Cast<UIFileListItem*>(go);
-            if (action == UIList::Action::SELECTION_IN)
+        [this, uiList](GameObject *go, UIList::Action action) {
+            UIFileListItem *item = Cast<UIFileListItem *>(go);
+            if(action == UIList::Action::SELECTION_IN)
             {
                 p_selectedItem = item;
             }
-            else if (action == UIList::Action::SELECTION_OUT)
+            else if(action == UIList::Action::SELECTION_OUT)
             {
                 p_selectedItem = nullptr;
             }
-            else if (action == UIList::Action::PRESSED ||
-                     action == UIList::Action::DOUBLE_CLICKED_LEFT)
+            else if(action == UIList::Action::PRESSED ||
+                    action == UIList::Action::DOUBLE_CLICKED_LEFT)
             {
                 Path itemPath = item->GetPath();
-                if (itemPath.GetAbsolute() == "..")
+                if(itemPath.GetAbsolute() == "..")
                 {
                     this->SetCurrentPath(GetCurrentPath().GetDirectory());
                 }
-                else if (itemPath.IsDir())
+                else if(itemPath.IsDir())
                 {
                     this->SetCurrentPath(itemPath);
                 }
-                else if (itemPath.IsFile())
+                else if(itemPath.IsFile())
                 {
                     this->SetCurrentPath(itemPath);
-                    for (auto cb : m_fileAcceptedCallback)  { cb(itemPath); }
+                    for(auto cb : m_fileAcceptedCallback)
+                    {
+                        cb(itemPath);
+                    }
                 }
             }
-        }
-    );
+        });
 }
 
 // UIFileListItem
@@ -173,16 +180,15 @@ UIFileListItem::UIFileListItem()
 
 UIFileListItem::~UIFileListItem()
 {
-
 }
 
 void UIFileListItem::SetPath(const Path &path)
 {
-    if (path != GetPath())
+    if(path != GetPath())
     {
         m_path = path;
-        m_text->SetContent( (path.IsFile() ? "File - " : "Dir  - ") +
-                             path.GetNameExt() );
+        m_text->SetContent((path.IsFile() ? "File - " : "Dir  - ") +
+                           path.GetNameExt());
     }
 }
 

@@ -5,19 +5,19 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
-
-template<class Key,
-         class Hash  = std::hash<Key>,
-         class Pred  = std::equal_to<Key>,
-         class Alloc = std::allocator<Key> >
+namespace Bang
+{
+template <class Key,
+          class Hash = std::hash<Key>,
+          class Pred = std::equal_to<Key>,
+          class Alloc = std::allocator<Key>>
 class USet
 {
 public:
     using Iterator =
-    typename std::unordered_set<Key, Hash, Pred, Alloc>::iterator;
+        typename std::unordered_set<Key, Hash, Pred, Alloc>::iterator;
     using Const_Iterator =
-    typename std::unordered_set<Key, Hash, Pred, Alloc>::const_iterator;
+        typename std::unordered_set<Key, Hash, Pred, Alloc>::const_iterator;
 
     USet() = default;
     USet(const std::unordered_set<Key, Hash, Pred, Alloc> &s);
@@ -25,7 +25,7 @@ public:
 
     void Add(const Key &key);
 
-    template<class OtherIterator>
+    template <class OtherIterator>
     void Add(OtherIterator itBegin, OtherIterator itEnd);
 
     void Remove(const Key &key);
@@ -52,10 +52,8 @@ public:
 private:
     std::unordered_set<Key, Hash, Pred, Alloc> m_uset;
 };
-
-NAMESPACE_BANG_END
+}
 
 #include "Bang/USet.tcc"
 
-#endif // USET_H
-
+#endif  // USET_H

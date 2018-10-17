@@ -12,17 +12,17 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/IEventsValueChanged.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/IEventsValueChanged.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsValueChanged;
-FORWARD class UIFocusable;
-FORWARD class UIInputText;
+namespace Bang
+{
+class GameObject;
+class IEventsValueChanged;
+class UIFocusable;
+class UIInputText;
 
 class UIInputNumber : public Component,
                       public EventEmitter<IEventsValueChanged>,
@@ -43,7 +43,7 @@ public:
 
     float GetValue() const;
     uint GetDecimalPlaces() const;
-    UIInputText* GetInputText() const;
+    UIInputText *GetInputText() const;
     float GetMinValue() const;
     float GetMaxValue() const;
     const Vector2 &GetMinMaxValues() const;
@@ -55,25 +55,23 @@ public:
                                     const UIEvent &event) override;
 
 private:
-    float m_value            = 0.0f;
-    uint m_decimalPlaces     = 3;
+    float m_value = 0.0f;
+    uint m_decimalPlaces = 3;
     UIInputText *p_inputText = nullptr;
-    Vector2 m_minMaxValues   = Vector2(Math::NegativeInfinity<float>(),
-                                       Math::Infinity<float>());
+    Vector2 m_minMaxValues =
+        Vector2(Math::NegativeInfinity<float>(), Math::Infinity<float>());
 
     void UpdateValueFromText();
     void UpdateTextFromValue();
     void ChangeTextColorBasedOnMinMax();
 
     // IEventsValueChanged
-    void OnValueChanged(EventEmitter<IEventsValueChanged>*) override;
+    void OnValueChanged(EventEmitter<IEventsValueChanged> *) override;
 
     static UIInputNumber *CreateInto(GameObject *go);
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIINPUTNUMBER_H
-
+#endif  // UIINPUTNUMBER_H

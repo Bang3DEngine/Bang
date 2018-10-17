@@ -19,16 +19,15 @@
 #include "Bang/Triangle.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class Animation;
+class IBO;
+class Path;
+class VAO;
+class VBO;
 
-FORWARD class Animation;
-FORWARD class IBO;
-FORWARD class Path;
-FORWARD class VAO;
-FORWARD class VBO;
-
-class Mesh : public Asset,
-             public ICloneable
+class Mesh : public Asset, public ICloneable
 {
     ASSET(Mesh)
 
@@ -42,20 +41,20 @@ public:
         Matrix4 rootNodeSpaceToBoneBindSpace;
     };
 
-    static constexpr uint DefaultPositionsVBOLocation            = 0;
-    static constexpr uint DefaultNormalsVBOLocation              = 1;
-    static constexpr uint DefaultUvsVBOLocation                  = 2;
-    static constexpr uint DefaultTangentsVBOLocation             = 3;
-    static constexpr uint DefaultVertexToBonesIdsVBOLocation     = 4;
+    static constexpr uint DefaultPositionsVBOLocation = 0;
+    static constexpr uint DefaultNormalsVBOLocation = 1;
+    static constexpr uint DefaultUvsVBOLocation = 2;
+    static constexpr uint DefaultTangentsVBOLocation = 3;
+    static constexpr uint DefaultVertexToBonesIdsVBOLocation = 4;
     static constexpr uint DefaultVertexToBonesWeightsVBOLocation = 5;
 
-    void SetPositionsPool(const Array<Vector3>& positions);
-    void SetNormalsPool(const Array<Vector3>& normals);
-    void SetUvsPool(const Array<Vector2>& uvs);
-    void SetTangentsPool(const Array<Vector3>& tangents);
+    void SetPositionsPool(const Array<Vector3> &positions);
+    void SetNormalsPool(const Array<Vector3> &normals);
+    void SetUvsPool(const Array<Vector2> &uvs);
+    void SetTangentsPool(const Array<Vector3> &tangents);
     void SetBonesPool(const Map<String, Mesh::Bone> &bones);
-    void SetTrianglesVertexIds(const Array<VertexId>& triangleVertexIds);
-    void SetBonesIds(const Map<String, uint>& bonesIds);
+    void SetTrianglesVertexIds(const Array<VertexId> &triangleVertexIds);
+    void SetBonesIds(const Map<String, uint> &bonesIds);
 
     void UpdateVAOs();
     void UpdateCornerTables();
@@ -102,7 +101,8 @@ public:
                                         VertexId oneVertex,
                                         VertexId anotherVertex) const;
     CornerId GetCornerIdFromTriangle(TriangleId triangleId, uint i) const;
-    std::array<CornerId, 3> GetCornerIdsFromTriangle(TriangleId triangleId) const;
+    std::array<CornerId, 3> GetCornerIdsFromTriangle(
+        TriangleId triangleId) const;
     CornerId GetTriangleIdFromCornerId(CornerId cornerId) const;
     VertexId GetVertexIdFromCornerId(CornerId cId) const;
     VertexId GetVertexIdUniqueFromCornerId(CornerId cId) const;
@@ -111,7 +111,7 @@ public:
     CornerId GetPreviousCornerId(CornerId cId) const;
     CornerId GetOppositeCornerId(CornerId cId) const;
     float GetCornerAngleRads(CornerId cId) const;
-    const Array<CornerId>& GetCornerIdsFromVertexId(VertexId vId) const;
+    const Array<CornerId> &GetCornerIdsFromVertexId(VertexId vId) const;
     Array<CornerId> GetNeighborCornerIds(CornerId cId) const;
     Array<VertexId> GetNeighborVertexIds(VertexId vId) const;
     Array<TriangleId> GetAdjacentTriangleIds(TriangleId triId) const;
@@ -120,15 +120,15 @@ public:
     float GetVertexMeanCurvature(VertexId centralVId);
     bool HasCornerTablesComputed() const;
 
-    const AABox& GetAABBox() const;
-    const Sphere& GetBoundingSphere() const;
-    const Array<VertexId>& GetTrianglesVertexIds() const;
-    const Array<Vector3>& GetPositionsPool() const;
-    const Array<Vector3>& GetNormalsPool() const;
-    const Array<Vector2>& GetUvsPool() const;
-    const Array<Vector3>& GetTangentsPool() const;
-    const Map<String, uint>& GetBonesIds() const;
-    const Map<String, Mesh::Bone>& GetBonesPool() const;
+    const AABox &GetAABBox() const;
+    const Sphere &GetBoundingSphere() const;
+    const Array<VertexId> &GetTrianglesVertexIds() const;
+    const Array<Vector3> &GetPositionsPool() const;
+    const Array<Vector3> &GetNormalsPool() const;
+    const Array<Vector2> &GetUvsPool() const;
+    const Array<Vector3> &GetTangentsPool() const;
+    const Map<String, uint> &GetBonesIds() const;
+    const Map<String, Mesh::Bone> &GetBonesPool() const;
     const Path &GetModelFilepath() const;
 
     UMap<VertexId, Array<TriangleId>> GetVertexIdsToTriangleIds() const;
@@ -145,7 +145,7 @@ public:
 
 private:
     bool m_areLodsValid = false;
-    Array< RH<Mesh> > m_lodMeshes;
+    Array<RH<Mesh>> m_lodMeshes;
     Array<Vector3> m_positionsPool;
     Array<Vector3> m_normalsPool;
     Array<Vector2> m_uvsPool;
@@ -156,13 +156,13 @@ private:
     Map<String, Bone> m_bonesPool;
     Map<uint, String> m_idToBone;
     Map<String, uint> m_bonesIds;
-    Map<VertexId, std::array<int,   4> > m_vertexIdToImportantBonesIdsPool;
-    Map<VertexId, std::array<float, 4> > m_vertexIdToImportantBonesWeightsPool;
+    Map<VertexId, std::array<int, 4>> m_vertexIdToImportantBonesIdsPool;
+    Map<VertexId, std::array<float, 4>> m_vertexIdToImportantBonesWeightsPool;
 
     // (i, j, k) hold the opposite corners of the corners (0, 1, 2) of the
     // triangle 3*(i/3)
     Array<CornerId> m_cornerIdToOppositeCornerId;
-    Array< Array<CornerId> > m_vertexIdToCornerIds;
+    Array<Array<CornerId>> m_vertexIdToCornerIds;
     Array<VertexId> m_vertexIdToSamePositionMinimumVertexId;
 
     mutable VAO *m_vao = nullptr;
@@ -175,7 +175,6 @@ private:
     Mesh();
     virtual ~Mesh() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MESH_H
+#endif  // MESH_H

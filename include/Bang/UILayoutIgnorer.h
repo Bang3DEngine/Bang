@@ -7,15 +7,15 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class UILayoutIgnorer : public Component
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutIgnorer)
 
 public:
-	UILayoutIgnorer();
-	virtual ~UILayoutIgnorer() override;
+    UILayoutIgnorer();
+    virtual ~UILayoutIgnorer() override;
 
     void SetIgnoreLayout(bool ignoreLayout);
     bool IsIgnoreLayout() const;
@@ -23,8 +23,6 @@ public:
 private:
     bool m_ignoreLayout = true;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UILAYOUTIGNORER_H_H
-
+#endif  // UILAYOUTIGNORER_H_H

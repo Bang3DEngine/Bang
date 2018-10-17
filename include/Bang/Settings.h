@@ -3,22 +3,19 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Settings
 {
 public:
-
     static Settings *GetInstance();
 
 private:
-	Settings();
+    Settings();
     virtual ~Settings();
 
     friend class Application;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SETTINGS_H
-
+#endif  // SETTINGS_H

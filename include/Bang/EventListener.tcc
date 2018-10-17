@@ -2,45 +2,45 @@
 
 #include "Bang/EventListener.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-template<class T>
+template <class T>
 EventListener<T>::~EventListener()
 {
-    while (!m_emitters.IsEmpty())
+    while(!m_emitters.IsEmpty())
     {
         m_emitters.Front()->UnRegisterListener(this);
     }
 }
 
-template<class T>
+template <class T>
 void EventListener<T>::SetReceiveEvents(bool receiveEvents)
 {
     m_receivesEvents = receiveEvents;
 }
 
-template<class T>
+template <class T>
 bool EventListener<T>::IsReceivingEventsNonCommon() const
 {
     return m_receivesEvents;
 }
 
-template<class T>
+template <class T>
 bool EventListener<T>::IsReceivingEvents() const
 {
     return IsReceivingEventsNonCommon() && IsReceivingEventsCommon();
 }
 
-template<class T>
+template <class T>
 void EventListener<T>::AddEmitter(EventEmitter<T> *emitter)
 {
-    if (!m_emitters.Contains(emitter))
+    if(!m_emitters.Contains(emitter))
     {
         m_emitters.PushBack(emitter);
     }
 }
 
-template<class T>
+template <class T>
 void EventListener<T>::RemoveEmitter(EventEmitter<T> *emitter)
 {
     m_emitters.Remove(emitter);

@@ -10,8 +10,8 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Timer : public Component
 {
     COMPONENT(Timer)
@@ -30,8 +30,8 @@ public:
     Time GetInterval() const;
 
 protected:
-	Timer();
-	virtual ~Timer() override;
+    Timer();
+    virtual ~Timer() override;
 
 private:
     bool m_running = true;
@@ -43,8 +43,6 @@ private:
     void Tick();
     void ResetTimestamp();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // TIMER_H
-
+#endif  // TIMER_H

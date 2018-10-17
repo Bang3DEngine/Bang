@@ -11,15 +11,14 @@
 #include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
 
-
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class Framebuffer;
-FORWARD class GameObject;
-FORWARD class ICloneable;
-FORWARD class Material;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class Camera;
+class Framebuffer;
+class GameObject;
+class ICloneable;
+class Material;
+class ShaderProgram;
 
 class PointLight : public Light
 {
@@ -30,7 +29,7 @@ public:
     float GetRange() const;
 
     // Light
-    TextureCubeMap* GetShadowMapTexture() const override;
+    TextureCubeMap *GetShadowMapTexture() const override;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -52,12 +51,12 @@ protected:
     // Light
     void RenderShadowMaps_(GameObject *go) override;
     Array<Matrix4> GetWorldToShadowMapMatrices() const;
-    virtual void SetUniformsBeforeApplyingLight(ShaderProgram* sp) const override;
+    virtual void SetUniformsBeforeApplyingLight(
+        ShaderProgram *sp) const override;
 
     // Renderer
     AARect GetRenderRect(Camera *cam) const override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // POINTLIGHT_H
+#endif  // POINTLIGHT_H

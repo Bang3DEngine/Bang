@@ -22,30 +22,31 @@
 #include "Bang/StackAndValue.h"
 #include "Bang/USet.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
-FORWARD   class Camera;
-FORWARD   class DebugRenderer;
-FORWARD   class Framebuffer;
-FORWARD   class GBuffer;
-FORWARD   class GL;
-FORWARD   class GameObject;
-FORWARD   class IEventsDestroy;
-FORWARD   class Material;
-FORWARD   class Mesh;
-FORWARD   class RenderFactory;
-FORWARD   class Renderer;
-FORWARD   class Scene;
-FORWARD   class ShaderProgram;
-FORWARD   class Texture2D;
-FORWARD   class TextureCubeMap;
-FORWARD   class TextureUnitManager;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class Camera;
+class DebugRenderer;
+class Framebuffer;
+class GBuffer;
+class GL;
+class GameObject;
+class IEventsDestroy;
+class Material;
+class Mesh;
+class RenderFactory;
+class Renderer;
+class Scene;
+class ShaderProgram;
+class Texture2D;
+class TextureCubeMap;
+class TextureUnitManager;
 
 class GEngine : public EventListener<IEventsDestroy>
 {
 public:
-    using RenderRoutine = std::function<void(Renderer*)>;
+    using RenderRoutine = std::function<void(Renderer *)>;
 
     GEngine();
     virtual ~GEngine() override;
@@ -64,8 +65,7 @@ public:
     void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderViewportPlane();
 
-    void ApplyGammaCorrection(GBuffer *gbuffer,
-                              float gammaCorrection);
+    void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
 
     void SetReplacementMaterial(Material *material);
     void SetRenderRoutine(RenderRoutine renderRoutine);
@@ -87,18 +87,17 @@ public:
 
     DebugRenderer *GetDebugRenderer() const;
     RenderFactory *GetRenderFactory() const;
-    Material* GetReplacementMaterial() const;
+    Material *GetReplacementMaterial() const;
     static Camera *GetActiveRenderingCamera();
-    const Array<ReflectionProbe*>& GetReflectionProbesFor(Scene *scene) const;
+    const Array<ReflectionProbe *> &GetReflectionProbesFor(Scene *scene) const;
 
     GL *GetGL() const;
     TextureUnitManager *GetTextureUnitManager() const;
 
-
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
-    static GEngine* GetInstance();
+    static GEngine *GetInstance();
 
 private:
     GL *m_gl = nullptr;
@@ -110,8 +109,8 @@ private:
     MultiObjectGatherer<Light, true> m_lightsCache;
 
     RenderRoutine m_renderRoutine;
-    StackAndValue<Camera*> p_renderingCameras;
-    USet<Camera*> m_stackedCamerasThatHaveBeenDestroyed;
+    StackAndValue<Camera *> p_renderingCameras;
+    USet<Camera *> m_stackedCamerasThatHaveBeenDestroyed;
 
     RH<ShaderProgram> m_renderSkySP;
     RH<Material> m_replacementMaterial;
@@ -137,13 +136,14 @@ private:
     void RenderReflectionProbes(GameObject *go);
     void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);
-    void RenderWithPassAndMarkStencilForLights(GameObject *go, RenderPass renderPass);
+    void RenderWithPassAndMarkStencilForLights(GameObject *go,
+                                               RenderPass renderPass);
     bool CanRenderNow(Renderer *rend, RenderPass renderPass) const;
 
     void ApplyStenciledDeferredLightsToGBuffer(
-                                GameObject *lightsContainer,
-                                Camera *camera,
-                                const AARect &maskRectNDC = AARect::NDCRect);
+        GameObject *lightsContainer,
+        Camera *camera,
+        const AARect &maskRectNDC = AARect::NDCRect);
 
     void RetrieveForwardRenderingInformation(GameObject *goToRender);
     void PrepareForForwardRendering(Renderer *rend);
@@ -152,7 +152,6 @@ private:
     friend class Window;
     friend class Renderer;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GENGINE_H
+#endif  // GENGINE_H

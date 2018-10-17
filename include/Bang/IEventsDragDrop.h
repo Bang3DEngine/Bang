@@ -3,8 +3,8 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class IEventsDragDrop
 {
     IEVENTS(IEventsDragDrop);
@@ -25,8 +25,6 @@ public:
         BANG_UNUSED(dragDropEmitter);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSDRAGDROP_H
-
+#endif  // IEVENTSDRAGDROP_H

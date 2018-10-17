@@ -3,7 +3,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Segment2D::Segment2D(const Vector2 &origin, const Vector2 &destiny)
 {
@@ -40,4 +40,3 @@ const Vector2 &Segment2D::GetDestiny() const
 {
     return m_destiny;
 }
-

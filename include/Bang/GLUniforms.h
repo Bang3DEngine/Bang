@@ -12,15 +12,16 @@
 #include "Bang/UniformBuffer.h"
 #include "Bang/UniformBuffer.tcc"
 
-namespace Bang {
+namespace Bang
+{
 class Color;
 }  // namespace Bang
 
-NAMESPACE_BANG_BEGIN
+namespace Bang
+{
+class ShaderProgram;
 
-FORWARD class ShaderProgram;
-
-FORWARD enum class CameraClearMode;
+enum class CameraClearMode;
 
 class GLUniforms
 {
@@ -100,9 +101,7 @@ public:
 
         GLSLVar() = default;
         GLSLVar(const String &name_, const T &value_, int size_)
-            : name(name_),
-              value(value_),
-              size(size_)
+            : name(name_), value(value_), size(size_)
         {
         }
     };
@@ -114,11 +113,13 @@ public:
     static T GetUniform(GLId program, const String &uniformName);
 
     template <class T>
-    static Array<T> GetUniformArray(GLId program, const String &uniformName,
+    static Array<T> GetUniformArray(GLId program,
+                                    const String &uniformName,
                                     int numElements);
 
     template <class T>
-    static Array<T> GetUniformArray(GLId program, int uniformLocation,
+    static Array<T> GetUniformArray(GLId program,
+                                    int uniformLocation,
                                     int numElements);
 
     template <class T>
@@ -129,8 +130,8 @@ public:
 
     void BindUniformBuffers(ShaderProgram *shaderProgram);
     static void SetAllUniformsToShaderProgram(
-                ShaderProgram *sp,
-                NeededUniformFlags neededUniforms = NeededUniformFlag::ALL);
+        ShaderProgram *sp,
+        NeededUniformFlags neededUniforms = NeededUniformFlag::ALL);
 
     static void SetCameraWorldPosition(const Vector3 &camWorldPosition);
     static void SetCameraClearColor(const Color &camClearColor);
@@ -144,8 +145,8 @@ public:
 
     static const Matrix4 &GetModelMatrix();
     static const Matrix4 &GetViewMatrix();
-    static       Matrix4  GetProjectionMatrix();
-    static       Matrix4  GetProjectionMatrix(GL::ViewProjMode viewProjMode);
+    static Matrix4 GetProjectionMatrix();
+    static Matrix4 GetProjectionMatrix(GL::ViewProjMode viewProjMode);
     static Matrix4 CalculateNormalMatrix(const Matrix4 &modelMatrix);
 
     static GLUniforms *GetActive();
@@ -169,8 +170,6 @@ private:
 
     friend class GL;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // GLUNIFORMS_H
-
+#endif  // GLUNIFORMS_H

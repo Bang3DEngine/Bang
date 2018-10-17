@@ -3,8 +3,8 @@
 
 #include "Bang/Bang.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 enum class DebugMessageType
 {
     LOG,
@@ -12,7 +12,6 @@ enum class DebugMessageType
     WARN,
     ERROR
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DEBUGMESSAGETYPE_H
+#endif  // DEBUGMESSAGETYPE_H

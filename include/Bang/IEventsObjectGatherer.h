@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-template<class ObjectType>
+namespace Bang
+{
+template <class ObjectType>
 class IEventsObjectGatherer
 {
     IEVENTS(IEventsObjectGatherer);
@@ -22,7 +22,6 @@ public:
         BANG_UNUSED_2(obj, previousGameObject);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSOBJECTGATHERER_H
+#endif  // IEVENTSOBJECTGATHERER_H

@@ -27,7 +27,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector4.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 using OctreeData = std::pair<Mesh::VertexId, Vector3>;
 
@@ -43,16 +43,20 @@ struct ClassifyPoints
 Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
                                                Method simplificationMethod)
 {
-    if (!mesh) { return Array<RH<Mesh>>(); }
-
-    Array<OctreeData> octreeData; // Retrieve all the octree data
+    if(!mesh)
     {
-        for (int i = 0; i < mesh->GetNumVerticesIds(); ++i)
+        return Array<RH<Mesh>>();
+    }
+
+    Array<OctreeData> octreeData;  // Retrieve all the octree data
+    {
+        for(int i = 0; i < mesh->GetNumVerticesIds(); ++i)
         {
-            const int vIndex = (mesh->GetTriangleVertexIdsIBO() ?
-                                        mesh->GetTrianglesVertexIds()[i] : i);
+            const int vIndex = (mesh->GetTriangleVertexIdsIBO()
+                                    ? mesh->GetTrianglesVertexIds()[i]
+                                    : i);
             const Vector3 &position = mesh->GetPositionsPool()[vIndex];
-            octreeData.PushBack( std::make_pair(vIndex, position) );
+            octreeData.PushBack(std::make_pair(vIndex, position));
         }
     }
 
@@ -62,43 +66,45 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     constexpr float PaddingPercent = 0.1f;
     SimplOctree octree;
     AABox meshAABox = mesh->GetAABBox();
-    octree.SetAABox( AABox(meshAABox.GetMin() - meshAABox.GetSize() * PaddingPercent,
-                           meshAABox.GetMax() + meshAABox.GetSize() * PaddingPercent) );
+    octree.SetAABox(
+        AABox(meshAABox.GetMin() - meshAABox.GetSize() * PaddingPercent,
+              meshAABox.GetMax() + meshAABox.GetSize() * PaddingPercent));
     octree.Fill(octreeData, MaxOctreeDepth);
 
     // Compute useful connectivity info for later
     using VertexIdPair = std::pair<Mesh::VertexId, Mesh::VertexId>;
-    UMap<Mesh::VertexId, Set<VertexIdPair> >
-                vertexIndexToTriangleOtherVerticesIndices;
-    for (uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
+    UMap<Mesh::VertexId, Set<VertexIdPair>>
+        vertexIndexToTriangleOtherVerticesIndices;
+    for(uint tri = 0; tri < mesh->GetNumTriangles(); ++tri)
     {
         const std::array<Mesh::VertexId, 3> triVertexIndices =
-                                mesh->GetVertexIdsFromTriangle(tri);
-        for (uint i = 0; i < 3; ++i)
+            mesh->GetVertexIdsFromTriangle(tri);
+        for(uint i = 0; i < 3; ++i)
         {
             const Mesh::VertexId currentVertexIndex =
-                                        triVertexIndices[ ((i + 0) % 3) ];
-            const Mesh::VertexId otherVertexIndex0  =
-                                        triVertexIndices[ ((i + 1) % 3) ];
-            const Mesh::VertexId otherVertexIndex1  =
-                                        triVertexIndices[ ((i + 2) % 3) ];
-            // We use minmax to have ordered pair (so that order does not matter in set)
+                triVertexIndices[((i + 0) % 3)];
+            const Mesh::VertexId otherVertexIndex0 =
+                triVertexIndices[((i + 1) % 3)];
+            const Mesh::VertexId otherVertexIndex1 =
+                triVertexIndices[((i + 2) % 3)];
+            // We use minmax to have ordered pair (so that order does not matter
+            // in set)
             const VertexIdPair otherTriVertexIndices =
-                    std::minmax(otherVertexIndex0, otherVertexIndex1);
+                std::minmax(otherVertexIndex0, otherVertexIndex1);
 
-            if (!vertexIndexToTriangleOtherVerticesIndices.ContainsKey(
-                                                            currentVertexIndex))
+            if(!vertexIndexToTriangleOtherVerticesIndices.ContainsKey(
+                   currentVertexIndex))
             {
                 vertexIndexToTriangleOtherVerticesIndices[currentVertexIndex] =
-                        Set<VertexIdPair>();
+                    Set<VertexIdPair>();
             }
-            vertexIndexToTriangleOtherVerticesIndices[currentVertexIndex].
-                    Add(otherTriVertexIndices);
+            vertexIndexToTriangleOtherVerticesIndices[currentVertexIndex].Add(
+                otherTriVertexIndices);
         }
     }
 
     UMap<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
-    if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
+    if(simplificationMethod == Method::QUADRIC_ERROR_METRICS)
     {
         vertexIdxsToTriIdxs = mesh->GetVertexIdsToTriangleIds();
     }
@@ -106,19 +112,19 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     int octreeDepth = octree.GetDepth();
     int numLevelsToGenerate = Math::Min(octreeDepth, 6);
     Array<int> levelsToGenerate;
-    for (int i = 0; i < numLevelsToGenerate; ++i)
+    for(int i = 0; i < numLevelsToGenerate; ++i)
     {
-        levelsToGenerate.PushBack( (octreeDepth / numLevelsToGenerate) * i );
+        levelsToGenerate.PushBack((octreeDepth / numLevelsToGenerate) * i);
     }
 
     // For each level of detail
-    Array< RH<Mesh> > simplifiedMeshesArray;
-    for (int level : levelsToGenerate)
+    Array<RH<Mesh>> simplifiedMeshesArray;
+    for(int level : levelsToGenerate)
     {
         // Get the octree nodes at that level (and leaves pruned before)
-        Array<const SimplOctree*> octreeNodesInLevel =
-                                  // octree.GetChildrenAtLevel(level, true);
-                                  octree.GetChildrenAtLevel(level, false);
+        Array<const SimplOctree *> octreeNodesInLevel =
+            // octree.GetChildrenAtLevel(level, true);
+            octree.GetChildrenAtLevel(level, false);
 
         // Get vertex clusters from octree in this level (vertex clusters are
         // just the collection of vertices at each octree node)
@@ -127,10 +133,10 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         UMap<Mesh::VertexId, ClusterId> vertexIndexToClusterIndex;
 
         // Make clusters for each octree node in this level...
-        for (const SimplOctree *octNodeInLevel : octreeNodesInLevel)
+        for(const SimplOctree *octNodeInLevel : octreeNodesInLevel)
         {
             const Array<OctreeData> octNodeLevelData =
-                                        octNodeInLevel->GetElementsRecursive();
+                octNodeInLevel->GetElementsRecursive();
 
             // Create the vertex cluster from the octree node.
             // Preserving shape algorithm here also.
@@ -138,68 +144,72 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
             // quadrants of the 8 possible.
             // So, we can have up to 8 subclusters here.
             const bool shapePreserving = true;
-            for (int i = 0; i < (shapePreserving ? 8 : 1); ++i)
+            for(int i = 0; i < (shapePreserving ? 8 : 1); ++i)
             {
                 Vector3 nDir;
-                switch (i)
+                switch(i)
                 {
-                    case 0: nDir = Vector3(-1,-1,-1); break;
-                    case 1: nDir = Vector3(-1,-1, 1); break;
-                    case 2: nDir = Vector3(-1, 1,-1); break;
+                    case 0: nDir = Vector3(-1, -1, -1); break;
+                    case 1: nDir = Vector3(-1, -1, 1); break;
+                    case 2: nDir = Vector3(-1, 1, -1); break;
                     case 3: nDir = Vector3(-1, 1, 1); break;
-                    case 4: nDir = Vector3( 1,-1,-1); break;
-                    case 5: nDir = Vector3( 1,-1, 1); break;
-                    case 6: nDir = Vector3( 1, 1,-1); break;
-                    case 7: nDir = Vector3( 1, 1, 1); break;
+                    case 4: nDir = Vector3(1, -1, -1); break;
+                    case 5: nDir = Vector3(1, -1, 1); break;
+                    case 6: nDir = Vector3(1, 1, -1); break;
+                    case 7: nDir = Vector3(1, 1, 1); break;
                 }
                 // nDir is the direction the normals of the vertices must be
                 // aligned to form part of this cluster
 
                 VertexCluster vertexCluster;
-                for (const OctreeData &octNodeData : octNodeLevelData)
+                for(const OctreeData &octNodeData : octNodeLevelData)
                 {
                     const Mesh::VertexId vertexIndex = octNodeData.first;
                     Vector3 vNormal;
-                    if (vertexIndex < mesh->GetNormalsPool().Size())
+                    if(vertexIndex < mesh->GetNormalsPool().Size())
                     {
                         vNormal = mesh->GetNormalsPool()[vertexIndex];
                     }
 
                     bool coincidingNormal =
-                            (Math::Sign(vNormal.x) == Math::Sign(nDir.x)) &&
-                            (Math::Sign(vNormal.y) == Math::Sign(nDir.y)) &&
-                            (Math::Sign(vNormal.z) == Math::Sign(nDir.z));
-                    if (!shapePreserving || coincidingNormal)
+                        (Math::Sign(vNormal.x) == Math::Sign(nDir.x)) &&
+                        (Math::Sign(vNormal.y) == Math::Sign(nDir.y)) &&
+                        (Math::Sign(vNormal.z) == Math::Sign(nDir.z));
+                    if(!shapePreserving || coincidingNormal)
                     {
-                        if (!vertexCluster.ContainsKey(vertexIndex) &&
-                            !vertexIndexToClusterIndex.ContainsKey(vertexIndex))
+                        if(!vertexCluster.ContainsKey(vertexIndex) &&
+                           !vertexIndexToClusterIndex.ContainsKey(vertexIndex))
                         {
                             VertexData vData;
-                            if (vertexIndex < mesh->GetPositionsPool().Size())
+                            if(vertexIndex < mesh->GetPositionsPool().Size())
                             {
-                                vData.pos = mesh->GetPositionsPool()[vertexIndex];
+                                vData.pos =
+                                    mesh->GetPositionsPool()[vertexIndex];
                             }
 
                             vData.normal = vNormal;
 
-                            if (vertexIndex < mesh->GetUvsPool().Size())
+                            if(vertexIndex < mesh->GetUvsPool().Size())
                             {
                                 vData.uv = mesh->GetUvsPool()[vertexIndex];
                             }
 
-                            if (vertexIndex < mesh->GetTangentsPool().Size())
+                            if(vertexIndex < mesh->GetTangentsPool().Size())
                             {
-                                vData.tangent = mesh->GetTangentsPool()[vertexIndex];
+                                vData.tangent =
+                                    mesh->GetTangentsPool()[vertexIndex];
                             }
 
-                            ASSERT(!vertexIndexToClusterIndex.ContainsKey(vertexIndex));
-                            vertexIndexToClusterIndex[vertexIndex] = vertexClusters.Size();
+                            ASSERT(!vertexIndexToClusterIndex.ContainsKey(
+                                vertexIndex));
+                            vertexIndexToClusterIndex[vertexIndex] =
+                                vertexClusters.Size();
                             vertexCluster.Add(vertexIndex, vData);
                         }
                     }
                 }
 
-                if (!vertexCluster.IsEmpty())
+                if(!vertexCluster.IsEmpty())
                 {
                     vertexClusters.PushBack(vertexCluster);
                 }
@@ -207,22 +217,21 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         }
 
         // Now actually simplify the mesh. For each cluster of vertices we will
-        // extract one single vertex averaging all the components of the cluster.
+        // extract one single vertex averaging all the components of the
+        // cluster.
         Array<Vector3> positionsLOD;
         Array<Vector3> normalsLOD;
         Array<Vector2> uvsLOD;
         Array<Vector3> tangentsLOD;
         RH<Mesh> simplifiedMesh = Resources::Create<Mesh>();
-        for (const VertexCluster &vertexCluster : vertexClusters)
+        for(const VertexCluster &vertexCluster : vertexClusters)
         {
             ASSERT(!vertexCluster.IsEmpty());
 
             VertexData vertexRepresentativeData =
-               MeshSimplifier::GetVertexRepresentativeForCluster(
-                                    *mesh,
-                                    vertexCluster,
-                                    vertexIdxsToTriIdxs,
-                                    simplificationMethod);
+                MeshSimplifier::GetVertexRepresentativeForCluster(
+                    *mesh, vertexCluster, vertexIdxsToTriIdxs,
+                    simplificationMethod);
             positionsLOD.PushBack(vertexRepresentativeData.pos);
             normalsLOD.PushBack(vertexRepresentativeData.normal);
             uvsLOD.PushBack(vertexRepresentativeData.uv);
@@ -253,110 +262,120 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         // Third:  for each vertex cluster, create a set of the pair of clusters
         //         it forms a triangle with. We can do this with the prev info.
         using ClusterIdPair = std::pair<ClusterId, ClusterId>;
-        UMap<ClusterId, Set<ClusterIdPair> >
-                clusterIdToOtherClusterIdsThatFormATriangleWithIt;
+        UMap<ClusterId, Set<ClusterIdPair>>
+            clusterIdToOtherClusterIdsThatFormATriangleWithIt;
 
         // For each cluster
-        for (ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
+        for(ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
         {
             // For each vertex in each vertex cluster
             const VertexCluster &vertexCluster = vertexClusters[cId];
-            for (const auto &pair : vertexCluster)
+            for(const auto &pair : vertexCluster)
             {
                 const Mesh::VertexId &vertexInClusterIndex = pair.first;
 
-                ASSERT(vertexIndexToClusterIndex.ContainsKey(vertexInClusterIndex));
-                ASSERT(vertexIndexToTriangleOtherVerticesIndices.ContainsKey(vertexInClusterIndex));
+                ASSERT(vertexIndexToClusterIndex.ContainsKey(
+                    vertexInClusterIndex));
+                ASSERT(vertexIndexToTriangleOtherVerticesIndices.ContainsKey(
+                    vertexInClusterIndex));
 
                 const ClusterId vCId =
-                        // cId;
-                        vertexIndexToClusterIndex[vertexInClusterIndex];
+                    // cId;
+                    vertexIndexToClusterIndex[vertexInClusterIndex];
                 ASSERT(vCId == cId);
 
                 const Set<VertexIdPair> &otherVertexIndicesThatFormATri =
-                        vertexIndexToTriangleOtherVerticesIndices.
-                            Get(vertexInClusterIndex);
+                    vertexIndexToTriangleOtherVerticesIndices.Get(
+                        vertexInClusterIndex);
 
                 // For each vertex pair that forms a tri with each vertex in
                 // each vertex cluster
-                for (const VertexIdPair &otherTriVertexIndices :
-                                            otherVertexIndicesThatFormATri)
+                for(const VertexIdPair &otherTriVertexIndices :
+                    otherVertexIndicesThatFormATri)
                 {
                     // We use minmax so that order doesnt matter in set
                     const VertexIdPair otherVertexIndicesThatFormATri =
-                                std::minmax(otherTriVertexIndices.first,
-                                            otherTriVertexIndices.second);
+                        std::minmax(otherTriVertexIndices.first,
+                                    otherTriVertexIndices.second);
                     const VertexIdPair &vp = otherVertexIndicesThatFormATri;
 
-                    if (!clusterIdToOtherClusterIdsThatFormATriangleWithIt.
-                         ContainsKey(vCId))
+                    if(!clusterIdToOtherClusterIdsThatFormATriangleWithIt
+                            .ContainsKey(vCId))
                     {
-                        clusterIdToOtherClusterIdsThatFormATriangleWithIt[vCId] =
-                                Set<ClusterIdPair>();
+                        clusterIdToOtherClusterIdsThatFormATriangleWithIt
+                            [vCId] = Set<ClusterIdPair>();
                     }
 
-                    if (!vertexIndexToClusterIndex.ContainsKey(vp.first) ||
-                        !vertexIndexToClusterIndex.ContainsKey(vp.second))
+                    if(!vertexIndexToClusterIndex.ContainsKey(vp.first) ||
+                       !vertexIndexToClusterIndex.ContainsKey(vp.second))
                     {
                         continue;
                     }
 
-                    ASSERT(clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(vCId));
+                    ASSERT(clusterIdToOtherClusterIdsThatFormATriangleWithIt
+                               .ContainsKey(vCId));
                     ASSERT(vertexIndexToClusterIndex.ContainsKey(vp.first));
                     ASSERT(vertexIndexToClusterIndex.ContainsKey(vp.second));
-                    ASSERT(vertexIndexToClusterIndex[vp.first]  < vertexClusters.Size());
-                    ASSERT(vertexIndexToClusterIndex[vp.second] < vertexClusters.Size());
+                    ASSERT(vertexIndexToClusterIndex[vp.first] <
+                           vertexClusters.Size());
+                    ASSERT(vertexIndexToClusterIndex[vp.second] <
+                           vertexClusters.Size());
                     const ClusterIdPair otherClusterIndicesThatFormATri =
                         std::minmax(vertexIndexToClusterIndex[vp.first],
                                     vertexIndexToClusterIndex[vp.second]);
-                    clusterIdToOtherClusterIdsThatFormATriangleWithIt[vCId].
-                                    Add(otherClusterIndicesThatFormATri);
+                    clusterIdToOtherClusterIdsThatFormATriangleWithIt[vCId].Add(
+                        otherClusterIndicesThatFormATri);
                 }
             }
         }
 
         // Finally calculate vertexIndices with all previous info!
         Array<Mesh::VertexId> vertexClusterTriVertsIndices;
-        for (ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
+        for(ClusterId cId = 0; cId < vertexClusters.Size(); ++cId)
         {
-            if (!clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(cId))
+            if(!clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(
+                   cId))
             {
                 continue;
             }
 
-            ASSERT(clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(cId));
+            ASSERT(
+                clusterIdToOtherClusterIdsThatFormATriangleWithIt.ContainsKey(
+                    cId));
             const Set<ClusterIdPair> &otherClusterIdsThatFormATriWithThis =
-                    clusterIdToOtherClusterIdsThatFormATriangleWithIt[cId];
-            for (const ClusterIdPair &otherTriVerticesClusterIdPair :
-                                   otherClusterIdsThatFormATriWithThis)
+                clusterIdToOtherClusterIdsThatFormATriangleWithIt[cId];
+            for(const ClusterIdPair &otherTriVerticesClusterIdPair :
+                otherClusterIdsThatFormATriWithThis)
             {
                 const ClusterId otherCId0 = otherTriVerticesClusterIdPair.first;
-                const ClusterId otherCId1 = otherTriVerticesClusterIdPair.second;
+                const ClusterId otherCId1 =
+                    otherTriVerticesClusterIdPair.second;
                 // This if is to avoid triplicates vvv
-                if (cId < otherCId0 && (otherCId0 < otherCId1) && cId < otherCId1)
+                if(cId < otherCId0 && (otherCId0 < otherCId1) &&
+                   cId < otherCId1)
                 {
-                    ASSERT(cId       < vertexClusters.Size());
+                    ASSERT(cId < vertexClusters.Size());
                     ASSERT(otherCId0 < vertexClusters.Size());
                     ASSERT(otherCId1 < vertexClusters.Size());
 
                     // Decide triangle winding based on its normal
-                    std::array<Mesh::VertexId, 3> triClusterIds =
-                                        {{cId, otherCId0, otherCId1}};
+                    std::array<Mesh::VertexId, 3> triClusterIds = {
+                        {cId, otherCId0, otherCId1}};
                     ASSERT(triClusterIds[0] < positionsLOD.Size());
                     ASSERT(triClusterIds[1] < positionsLOD.Size());
                     ASSERT(triClusterIds[2] < positionsLOD.Size());
                     ASSERT(triClusterIds[0] < normalsLOD.Size());
                     ASSERT(triClusterIds[1] < normalsLOD.Size());
                     ASSERT(triClusterIds[2] < normalsLOD.Size());
-                    const Vector3 &pos0   = positionsLOD[ triClusterIds[0] ];
-                    const Vector3 &pos1   = positionsLOD[ triClusterIds[1] ];
-                    const Vector3 &pos2   = positionsLOD[ triClusterIds[2] ];
-                    const Vector3 &norm0  =   normalsLOD[ triClusterIds[0] ];
-                    const Vector3 &norm1  =   normalsLOD[ triClusterIds[1] ];
-                    const Vector3 &norm2  =   normalsLOD[ triClusterIds[2] ];
+                    const Vector3 &pos0 = positionsLOD[triClusterIds[0]];
+                    const Vector3 &pos1 = positionsLOD[triClusterIds[1]];
+                    const Vector3 &pos2 = positionsLOD[triClusterIds[2]];
+                    const Vector3 &norm0 = normalsLOD[triClusterIds[0]];
+                    const Vector3 &norm1 = normalsLOD[triClusterIds[1]];
+                    const Vector3 &norm2 = normalsLOD[triClusterIds[2]];
                     const Vector3 &normal = (norm0 + norm1 + norm2) / 3.0f;
-                    if (Vector3::Dot(
-                            Vector3::Cross(pos1-pos0, pos2-pos0), normal) < 0)
+                    if(Vector3::Dot(Vector3::Cross(pos1 - pos0, pos2 - pos0),
+                                    normal) < 0)
                     {
                         std::swap(triClusterIds[1], triClusterIds[2]);
                     }
@@ -369,16 +388,18 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
             }
         }
 
-        simplifiedMesh.Get()->SetTrianglesVertexIds(vertexClusterTriVertsIndices);
+        simplifiedMesh.Get()->SetTrianglesVertexIds(
+            vertexClusterTriVertsIndices);
         simplifiedMesh.Get()->UpdateVertexNormals();
         simplifiedMesh.Get()->UpdateVAOsAndTables();
 
-        Debug_Log("Level " << level << ": " << vertexClusterTriVertsIndices.Size() <<
-                  "/" << mesh->GetNumVerticesIds());
+        Debug_Log("Level " << level << ": "
+                           << vertexClusterTriVertsIndices.Size() << "/"
+                           << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
 
-        if (vertexClusterTriVertsIndices.Size() == mesh->GetNumVerticesIds())
+        if(vertexClusterTriVertsIndices.Size() == mesh->GetNumVerticesIds())
         {
             // This was the max level, going further makes no sense
             break;
@@ -394,127 +415,129 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     Method simplificationMethod)
 {
     VertexData vertexRepresentativeData;
-    vertexRepresentativeData.pos     = Vector3::Zero;
-    vertexRepresentativeData.normal  = Vector3::Zero;
-    vertexRepresentativeData.uv      = Vector2::Zero;
+    vertexRepresentativeData.pos = Vector3::Zero;
+    vertexRepresentativeData.normal = Vector3::Zero;
+    vertexRepresentativeData.uv = Vector2::Zero;
     vertexRepresentativeData.tangent = Vector3::Zero;
 
-    if (vertexCluster.IsEmpty()) { return vertexRepresentativeData; }
+    if(vertexCluster.IsEmpty())
+    {
+        return vertexRepresentativeData;
+    }
 
-    switch (simplificationMethod)
+    switch(simplificationMethod)
     {
         case Method::CLUSTERING:
         {
-            for (const auto &pair : vertexCluster)
+            for(const auto &pair : vertexCluster)
             {
                 const VertexData &vData = pair.second;
-                vertexRepresentativeData.pos     += vData.pos;
-                vertexRepresentativeData.normal  += vData.normal;
-                vertexRepresentativeData.uv      += vData.uv;
+                vertexRepresentativeData.pos += vData.pos;
+                vertexRepresentativeData.normal += vData.normal;
+                vertexRepresentativeData.uv += vData.uv;
                 vertexRepresentativeData.tangent += vData.tangent;
             }
 
             const float vertexClusterSize = vertexCluster.Size();
-            vertexRepresentativeData.pos     /= vertexClusterSize;
-            vertexRepresentativeData.normal  /= vertexClusterSize;
-            vertexRepresentativeData.uv      /= vertexClusterSize;
+            vertexRepresentativeData.pos /= vertexClusterSize;
+            vertexRepresentativeData.normal /= vertexClusterSize;
+            vertexRepresentativeData.uv /= vertexClusterSize;
             vertexRepresentativeData.tangent /= vertexClusterSize;
         }
         break;
 
         case Method::QUADRIC_ERROR_METRICS:
         {
-
-        // To get the position use quadric error metrics
-        int numTrisComputed = 0;
-        Vector3 vertexPosMean = Vector3::Zero;
-        Matrix4 verticesTotalQuadricMatrix = Matrix4(0.0f);
-        Set<Mesh::TriangleId> visitedTriangles;
-        AABox clusterAABox;
-        for (const auto &pair : vertexCluster)
-        {
-            const Mesh::VertexId &vId = pair.first;
-            const VertexData &vData = pair.second;
-            vertexPosMean += vData.pos;
-            clusterAABox.AddPoint(vData.pos);
-            /*
-            Vector3 n = vData.normal.NormalizedSafe();
-            Vector4 planeVector = Vector4(n.x, n.y, n.z,
-                                          Vector3::Dot(-n, vData.pos));
-            const Vector4 &pv = planeVector;
-            const float a = pv.x, b = pv.y, c = pv.z, d = pv.w;
-            const Matrix4 vertexQuadricMatrix =
-                    Matrix4(a*a, a*b, a*c, a*d,
-                            b*a, b*b, b*c, b*d,
-                            c*a, c*b, c*c, c*d,
-                            d*a, d*b, d*c, d*d);
-            verticesTotalQuadricMatrix += vertexQuadricMatrix;
-            /*/
-            const Array<Mesh::TriangleId> &neighborTriIds =
-                                                vertexIdxsToTriIdxs.Get(vId);
-            for (Mesh::TriangleId triId : neighborTriIds)
+            // To get the position use quadric error metrics
+            int numTrisComputed = 0;
+            Vector3 vertexPosMean = Vector3::Zero;
+            Matrix4 verticesTotalQuadricMatrix = Matrix4(0.0f);
+            Set<Mesh::TriangleId> visitedTriangles;
+            AABox clusterAABox;
+            for(const auto &pair : vertexCluster)
             {
-                if (visitedTriangles.Contains(triId)) { continue; }
-
-                visitedTriangles.Add(triId);
-                ++numTrisComputed;
-
-                const std::array<Mesh::VertexId, 3> triVertsIds =
-                                        mesh.GetVertexIdsFromTriangle(triId);
-                const Mesh::VertexId triVId0 = triVertsIds[0];
-                const Mesh::VertexId triVId1 = triVertsIds[1];
-                const Mesh::VertexId triVId2 = triVertsIds[2];
-                const Vector3 &triP0 = mesh.GetPositionsPool()[triVId0];
-                const Vector3 &triP1 = mesh.GetPositionsPool()[triVId1];
-                const Vector3 &triP2 = mesh.GetPositionsPool()[triVId2];
-                const Triangle neighborTri = Triangle(triP0, triP1, triP2);
-                const Plane neighborTriPlane = neighborTri.GetPlane();
-                const Vector3 &n = neighborTriPlane.GetNormal();
-                const float a = n.x;
-                const float b = n.y;
-                const float c = n.z;
-                const float d = -(a*triP0.x + b*triP0.y + c*triP0.z);
+                const Mesh::VertexId &vId = pair.first;
+                const VertexData &vData = pair.second;
+                vertexPosMean += vData.pos;
+                clusterAABox.AddPoint(vData.pos);
+                /*
+                Vector3 n = vData.normal.NormalizedSafe();
+                Vector4 planeVector = Vector4(n.x, n.y, n.z,
+                                              Vector3::Dot(-n, vData.pos));
+                const Vector4 &pv = planeVector;
+                const float a = pv.x, b = pv.y, c = pv.z, d = pv.w;
                 const Matrix4 vertexQuadricMatrix =
                         Matrix4(a*a, a*b, a*c, a*d,
                                 b*a, b*b, b*c, b*d,
                                 c*a, c*b, c*c, c*d,
                                 d*a, d*b, d*c, d*d);
                 verticesTotalQuadricMatrix += vertexQuadricMatrix;
+                /*/
+                const Array<Mesh::TriangleId> &neighborTriIds =
+                    vertexIdxsToTriIdxs.Get(vId);
+                for(Mesh::TriangleId triId : neighborTriIds)
+                {
+                    if(visitedTriangles.Contains(triId))
+                    {
+                        continue;
+                    }
+
+                    visitedTriangles.Add(triId);
+                    ++numTrisComputed;
+
+                    const std::array<Mesh::VertexId, 3> triVertsIds =
+                        mesh.GetVertexIdsFromTriangle(triId);
+                    const Mesh::VertexId triVId0 = triVertsIds[0];
+                    const Mesh::VertexId triVId1 = triVertsIds[1];
+                    const Mesh::VertexId triVId2 = triVertsIds[2];
+                    const Vector3 &triP0 = mesh.GetPositionsPool()[triVId0];
+                    const Vector3 &triP1 = mesh.GetPositionsPool()[triVId1];
+                    const Vector3 &triP2 = mesh.GetPositionsPool()[triVId2];
+                    const Triangle neighborTri = Triangle(triP0, triP1, triP2);
+                    const Plane neighborTriPlane = neighborTri.GetPlane();
+                    const Vector3 &n = neighborTriPlane.GetNormal();
+                    const float a = n.x;
+                    const float b = n.y;
+                    const float c = n.z;
+                    const float d = -(a * triP0.x + b * triP0.y + c * triP0.z);
+                    const Matrix4 vertexQuadricMatrix = Matrix4(
+                        a * a, a * b, a * c, a * d, b * a, b * b, b * c, b * d,
+                        c * a, c * b, c * c, c * d, d * a, d * b, d * c, d * d);
+                    verticesTotalQuadricMatrix += vertexQuadricMatrix;
+                }
+                //*/
             }
-            //*/
-        }
-        vertexPosMean /= float(numTrisComputed);
+            vertexPosMean /= float(numTrisComputed);
 
-        // Regularization
-        /*
-        */
-        // verticesTotalQuadricMatrix[0][0] += 1.0f;
-        // verticesTotalQuadricMatrix[1][1] += 1.0f;
-        // verticesTotalQuadricMatrix[2][2] += 1.0f;
-        // verticesTotalQuadricMatrix[3][0] -= vertexPosMean.x;
-        // verticesTotalQuadricMatrix[3][1] -= vertexPosMean.y;
-        // verticesTotalQuadricMatrix[3][2] -= vertexPosMean.z;
-        verticesTotalQuadricMatrix[0][3] = 0.0f;
-        verticesTotalQuadricMatrix[1][3] = 0.0f;
-        verticesTotalQuadricMatrix[2][3] = 0.0f;
-        verticesTotalQuadricMatrix[3][3] = 1.0f;
-        // Debug_Peek(verticesTotalQuadricMatrix);
+            // Regularization
+            /*
+            */
+            // verticesTotalQuadricMatrix[0][0] += 1.0f;
+            // verticesTotalQuadricMatrix[1][1] += 1.0f;
+            // verticesTotalQuadricMatrix[2][2] += 1.0f;
+            // verticesTotalQuadricMatrix[3][0] -= vertexPosMean.x;
+            // verticesTotalQuadricMatrix[3][1] -= vertexPosMean.y;
+            // verticesTotalQuadricMatrix[3][2] -= vertexPosMean.z;
+            verticesTotalQuadricMatrix[0][3] = 0.0f;
+            verticesTotalQuadricMatrix[1][3] = 0.0f;
+            verticesTotalQuadricMatrix[2][3] = 0.0f;
+            verticesTotalQuadricMatrix[3][3] = 1.0f;
+            // Debug_Peek(verticesTotalQuadricMatrix);
 
-        bool isInvertible;
-        Vector3 minimumQuadricErrorPosition =
+            bool isInvertible;
+            Vector3 minimumQuadricErrorPosition =
                 (verticesTotalQuadricMatrix.Inversed(0.1f, &isInvertible) *
-                 Vector4(0,0,0,1)).xyz();
+                 Vector4(0, 0, 0, 1))
+                    .xyz();
 
-        // To get normal, uvs, etc. use the clustering method.
-        vertexRepresentativeData =
-                GetVertexRepresentativeForCluster(mesh, vertexCluster,
-                                                  vertexIdxsToTriIdxs,
-                                                  Method::CLUSTERING);
-        if (isInvertible && clusterAABox.Contains(minimumQuadricErrorPosition))
-        {
-            vertexRepresentativeData.pos = minimumQuadricErrorPosition;
-        }
-
+            // To get normal, uvs, etc. use the clustering method.
+            vertexRepresentativeData = GetVertexRepresentativeForCluster(
+                mesh, vertexCluster, vertexIdxsToTriIdxs, Method::CLUSTERING);
+            if(isInvertible &&
+               clusterAABox.Contains(minimumQuadricErrorPosition))
+            {
+                vertexRepresentativeData.pos = minimumQuadricErrorPosition;
+            }
         }
         break;
     }

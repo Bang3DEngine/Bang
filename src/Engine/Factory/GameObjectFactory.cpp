@@ -45,12 +45,12 @@
 #include "Bang/UITree.h"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 GameObject *GameObjectFactory::CreateGameObject(bool addTransform)
 {
     GameObject *go = GameObject::Create<GameObject>();
-    if (addTransform && !go->HasComponent<Transform>())
+    if(addTransform && !go->HasComponent<Transform>())
     {
         go->AddComponent<Transform>();
     }
@@ -78,11 +78,11 @@ GameObject *GameObjectFactory::CreateUIGameObjectNamed(const String &name)
     return go;
 }
 
-void GameObjectFactory::CreateUIGameObjectInto(GameObject *go,  bool addComps)
+void GameObjectFactory::CreateUIGameObjectInto(GameObject *go, bool addComps)
 {
-    if (addComps)
+    if(addComps)
     {
-        if (!go->HasComponent<RectTransform>())
+        if(!go->HasComponent<RectTransform>())
         {
             go->AddComponent<RectTransform>();
         }
@@ -92,7 +92,7 @@ void GameObjectFactory::CreateUIGameObjectInto(GameObject *go,  bool addComps)
 Scene *GameObjectFactory::CreateScene(bool addTransform)
 {
     Scene *scene = GameObject::Create<Scene>();
-    if (addTransform && !scene->GetTransform())
+    if(addTransform && !scene->GetTransform())
     {
         scene->AddComponent<Transform>();
     }
@@ -125,19 +125,21 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
 
     GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");
     Camera *cam = GameObjectFactory::CreateDefaultCameraInto(cameraGo);
-    cameraGo->GetTransform()->SetPosition( Vector3(5,4,3) );
-    cameraGo->GetTransform()->LookAt( Vector3::Zero );
+    cameraGo->GetTransform()->SetPosition(Vector3(5, 4, 3));
+    cameraGo->GetTransform()->LookAt(Vector3::Zero);
     scene->SetCamera(cam);
 
     /*
 
-    GameObject *sphere = GameObjectFactory::CreateGameObjectNamed("Sphere-Child");
+    GameObject *sphere =
+    GameObjectFactory::CreateGameObjectNamed("Sphere-Child");
     sphere->GetTransform()->SetLocalPosition(Vector3(1,1,1));
     sphere->GetTransform()->SetLocalScale( Vector3(0.3f) );
     MeshRenderer *mr2 = sphere->AddComponent<MeshRenderer>();
     mr2->SetMesh(MeshFactory::GetSphere().Get());
 
-    GameObject *cube2 = GameObjectFactory::CreateGameObjectNamed("Cube-Sphere-Child");
+    GameObject *cube2 =
+    GameObjectFactory::CreateGameObjectNamed("Cube-Sphere-Child");
     cube2->GetTransform()->SetLocalPosition(Vector3(4,0,0));
     MeshRenderer *mr3 = cube2->AddComponent<MeshRenderer>();
     mr3->SetMesh(MeshFactory::GetCube().Get());
@@ -177,12 +179,14 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     GameObject *wall2 = GameObjectFactory::CreateCubeGameObject();
     wall2->SetName("Wall2");
     wall2->GetTransform()->TranslateLocal( Vector3(0, 3, -4) );
-    wall2->GetTransform()->SetLocalRotation( Quaternion::AngleAxis(Math::Pi/2, Vector3::Up) );
+    wall2->GetTransform()->SetLocalRotation( Quaternion::AngleAxis(Math::Pi/2,
+    Vector3::Up) );
     wall2->GetTransform()->SetLocalScale( Vector3(0.2f, 10.0f, 10.0f));
 
     for (int i = 0; i < 0; ++i)
     {
-        GameObjectFactory::CreateGameObjectNamed("GO_" + String(i))->SetParent(scene);
+        GameObjectFactory::CreateGameObjectNamed("GO_" +
+    String(i))->SetParent(scene);
     }
 
     // lightGo->SetParent(scene);
@@ -210,8 +214,8 @@ Camera *GameObjectFactory::CreateDefaultCameraInto(GameObject *go)
 Camera *GameObjectFactory::CreateDefaultCameraInto(Camera *cam)
 {
     cam->SetClearMode(CameraClearMode::SKY_BOX);
-    cam->SetClearColor( Color(0.5f, 0.8f, 1.0f) );
-    cam->SetSkyBoxTexture( TextureFactory::GetDefaultSkybox() );
+    cam->SetClearColor(Color(0.5f, 0.8f, 1.0f));
+    cam->SetSkyBoxTexture(TextureFactory::GetDefaultSkybox());
     return cam;
 }
 
@@ -221,7 +225,7 @@ UICanvas *GameObjectFactory::CreateUICanvas()
     return GameObjectFactory::CreateUICanvasInto(go);
 }
 
-UICanvas* GameObjectFactory::CreateUICanvasInto(GameObject *go)
+UICanvas *GameObjectFactory::CreateUICanvasInto(GameObject *go)
 {
     UICanvas *canvas = go->AddComponent<UICanvas>();
     go->SetName("Canvas");
@@ -254,8 +258,8 @@ UIList *GameObjectFactory::CreateUIListInto(GameObject *go,
 }
 UIList *GameObjectFactory::CreateUIList(bool withScrollPanel)
 {
-    return UIList::CreateInto( GameObjectFactory::CreateUIGameObjectNamed("List"),
-                               withScrollPanel );
+    return UIList::CreateInto(
+        GameObjectFactory::CreateUIGameObjectNamed("List"), withScrollPanel);
 }
 
 UITree *GameObjectFactory::CreateUITreeInto(GameObject *go)
@@ -265,7 +269,8 @@ UITree *GameObjectFactory::CreateUITreeInto(GameObject *go)
 
 UITree *GameObjectFactory::CreateUITree()
 {
-    return UITree::CreateInto( GameObjectFactory::CreateUIGameObjectNamed("Tree") );
+    return UITree::CreateInto(
+        GameObjectFactory::CreateUIGameObjectNamed("Tree"));
 }
 
 UIInputText *GameObjectFactory::CreateUIInputTextInto(GameObject *go)
@@ -275,7 +280,7 @@ UIInputText *GameObjectFactory::CreateUIInputTextInto(GameObject *go)
 UIInputText *GameObjectFactory::CreateUIInputText()
 {
     return GameObjectFactory::CreateUIInputTextInto(
-                GameObjectFactory::CreateUIGameObjectNamed("InputText") );
+        GameObjectFactory::CreateUIGameObjectNamed("InputText"));
 }
 
 UICheckBox *GameObjectFactory::CreateUICheckBoxInto(GameObject *go)
@@ -286,7 +291,7 @@ UICheckBox *GameObjectFactory::CreateUICheckBoxInto(GameObject *go)
 UICheckBox *GameObjectFactory::CreateUICheckBox()
 {
     return GameObjectFactory::CreateUICheckBoxInto(
-                GameObjectFactory::CreateUIGameObjectNamed("CheckBox") );
+        GameObjectFactory::CreateUIGameObjectNamed("CheckBox"));
 }
 
 UIComboBox *GameObjectFactory::CreateUIComboBoxInto(GameObject *go)
@@ -297,7 +302,7 @@ UIComboBox *GameObjectFactory::CreateUIComboBoxInto(GameObject *go)
 UIComboBox *GameObjectFactory::CreateUIComboBox()
 {
     return GameObjectFactory::CreateUIComboBoxInto(
-                GameObjectFactory::CreateUIGameObjectNamed("ComboBox") );
+        GameObjectFactory::CreateUIGameObjectNamed("ComboBox"));
 }
 
 UIComboBox *GameObjectFactory::CreateUIBoolComboBoxInto(GameObject *go)
@@ -310,7 +315,7 @@ UIComboBox *GameObjectFactory::CreateUIBoolComboBoxInto(GameObject *go)
 UIComboBox *GameObjectFactory::CreateUIBoolComboBox()
 {
     return GameObjectFactory::CreateUIBoolComboBoxInto(
-                GameObjectFactory::CreateUIGameObjectNamed("BoolComboBox") );
+        GameObjectFactory::CreateUIGameObjectNamed("BoolComboBox"));
 }
 
 UISlider *GameObjectFactory::CreateUISliderInto(GameObject *go)
@@ -321,7 +326,7 @@ UISlider *GameObjectFactory::CreateUISliderInto(GameObject *go)
 UISlider *GameObjectFactory::CreateUISlider()
 {
     return GameObjectFactory::CreateUISliderInto(
-                GameObjectFactory::CreateUIGameObjectNamed("Slider") );
+        GameObjectFactory::CreateUIGameObjectNamed("Slider"));
 }
 
 UIInputNumber *GameObjectFactory::CreateUIInputNumberInto(GameObject *go)
@@ -332,7 +337,7 @@ UIInputNumber *GameObjectFactory::CreateUIInputNumberInto(GameObject *go)
 UIInputNumber *GameObjectFactory::CreateUIInputNumber()
 {
     return GameObjectFactory::CreateUIInputNumberInto(
-                GameObjectFactory::CreateUIGameObjectNamed("InputNumber") );
+        GameObjectFactory::CreateUIGameObjectNamed("InputNumber"));
 }
 
 UIRendererCacher *GameObjectFactory::CreateUIRendererCacherInto(GameObject *go)
@@ -343,17 +348,17 @@ UIRendererCacher *GameObjectFactory::CreateUIRendererCacherInto(GameObject *go)
 UIRendererCacher *GameObjectFactory::CreateUIRendererCacher()
 {
     return GameObjectFactory::CreateUIRendererCacherInto(
-                GameObjectFactory::CreateUIGameObjectNamed("UIRendererCacher") );
+        GameObjectFactory::CreateUIGameObjectNamed("UIRendererCacher"));
 }
 
 UIButton *GameObjectFactory::CreateUIButtonInto(GameObject *go)
 {
     return UIButton::CreateInto(go);
 }
-UIButton* GameObjectFactory::CreateUIButton()
+UIButton *GameObjectFactory::CreateUIButton()
 {
     return UIButton::CreateInto(
-                GameObjectFactory::CreateUIGameObjectNamed("Button") );
+        GameObjectFactory::CreateUIGameObjectNamed("Button"));
 }
 
 UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
@@ -361,41 +366,41 @@ UIButton *GameObjectFactory::CreateUIButton(const String &text, Texture2D *icon)
     const Vector2i size(15);
     UIButton *btn = GameObjectFactory::CreateUIButton();
 
-    if (!text.IsEmpty())
+    if(!text.IsEmpty())
     {
         btn->GetText()->SetContent(text);
     }
 
-    if (icon)
+    if(icon)
     {
         btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
     }
 
-    constexpr int BigPadding    = 10;
+    constexpr int BigPadding = 10;
     constexpr int MediumPadding = 6;
-    constexpr int SmallPadding  = 3;
-    if (!text.IsEmpty() && !icon)
+    constexpr int SmallPadding = 3;
+    if(!text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingRight(BigPadding);
-        btn->GetDirLayout()->SetPaddingLeft (BigPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
     }
-    else if (!text.IsEmpty() && icon)
+    else if(!text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if (text.IsEmpty() && icon)
+    else if(text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(SmallPadding);
         btn->GetDirLayout()->SetPaddingTop(SmallPadding);
         btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if (text.IsEmpty() && !icon)
+    else if(text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
@@ -423,41 +428,41 @@ UIToolButton *GameObjectFactory::CreateUIToolButton(const String &text,
     const Vector2i size(15);
     UIToolButton *btn = GameObjectFactory::CreateUIToolButton();
 
-    if (!text.IsEmpty())
+    if(!text.IsEmpty())
     {
         btn->GetText()->SetContent(text);
     }
 
-    if (icon)
+    if(icon)
     {
         btn->SetIcon(icon, size, (text.IsEmpty() ? 0 : 5));
     }
 
-    constexpr int BigPadding    = 10;
+    constexpr int BigPadding = 10;
     constexpr int MediumPadding = 6;
-    constexpr int SmallPadding  = 3;
-    if (!text.IsEmpty() && !icon)
+    constexpr int SmallPadding = 3;
+    if(!text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingRight(BigPadding);
-        btn->GetDirLayout()->SetPaddingLeft (BigPadding);
+        btn->GetDirLayout()->SetPaddingLeft(BigPadding);
     }
-    else if (!text.IsEmpty() && icon)
+    else if(!text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
         btn->GetDirLayout()->SetPaddingLeft(BigPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if (text.IsEmpty() && icon)
+    else if(text.IsEmpty() && icon)
     {
         btn->GetDirLayout()->SetPaddingBot(SmallPadding);
         btn->GetDirLayout()->SetPaddingTop(SmallPadding);
         btn->GetDirLayout()->SetPaddingLeft(SmallPadding);
         btn->GetDirLayout()->SetPaddingRight(SmallPadding);
     }
-    else if (text.IsEmpty() && !icon)
+    else if(text.IsEmpty() && !icon)
     {
         btn->GetDirLayout()->SetPaddingBot(MediumPadding);
         btn->GetDirLayout()->SetPaddingTop(MediumPadding);
@@ -474,13 +479,14 @@ UILabel *GameObjectFactory::CreateUILabelInto(GameObject *go)
 }
 UILabel *GameObjectFactory::CreateUILabel()
 {
-    return UILabel::CreateInto( GameObjectFactory::CreateUIGameObjectNamed("Label") );
+    return UILabel::CreateInto(
+        GameObjectFactory::CreateUIGameObjectNamed("Label"));
 }
 
 UIScrollArea *GameObjectFactory::CreateUIScrollArea()
 {
     return UIScrollArea::CreateInto(
-                    GameObjectFactory::CreateUIGameObjectNamed("ScrollArea") );
+        GameObjectFactory::CreateUIGameObjectNamed("ScrollArea"));
 }
 
 UIScrollBar *GameObjectFactory::CreateUIScrollBarInto(GameObject *go)
@@ -490,7 +496,7 @@ UIScrollBar *GameObjectFactory::CreateUIScrollBarInto(GameObject *go)
 UIScrollBar *GameObjectFactory::CreateUIScrollBar()
 {
     return UIScrollBar::CreateInto(
-                GameObjectFactory::CreateUIGameObjectNamed("ScrollBar") );
+        GameObjectFactory::CreateUIGameObjectNamed("ScrollBar"));
 }
 
 UIScrollPanel *GameObjectFactory::CreateUIScrollPanelInto(GameObject *go)
@@ -500,41 +506,41 @@ UIScrollPanel *GameObjectFactory::CreateUIScrollPanelInto(GameObject *go)
 UIScrollPanel *GameObjectFactory::CreateUIScrollPanel()
 {
     return GameObjectFactory::CreateUIScrollPanelInto(
-                GameObjectFactory::CreateUIGameObjectNamed("ScrollPanel") );
+        GameObjectFactory::CreateUIGameObjectNamed("ScrollPanel"));
 }
 
-UIDirLayoutMovableSeparator*
+UIDirLayoutMovableSeparator *
 GameObjectFactory::CreateUIDirLayoutMovableHSeparator()
 {
     UIDirLayoutMovableSeparator *sep =
-            GameObjectFactory::CreateUIDirLayoutMovableSeparator();
+        GameObjectFactory::CreateUIDirLayoutMovableSeparator();
     sep->SetAxis(Axis::HORIZONTAL);
     return sep;
 }
 
-UIDirLayoutMovableSeparator*
+UIDirLayoutMovableSeparator *
 GameObjectFactory::CreateUIDirLayoutMovableVSeparator()
 {
     UIDirLayoutMovableSeparator *sep =
-            GameObjectFactory::CreateUIDirLayoutMovableSeparator();
+        GameObjectFactory::CreateUIDirLayoutMovableSeparator();
     sep->SetAxis(Axis::VERTICAL);
     return sep;
 }
 
-UIDirLayoutMovableSeparator*
+UIDirLayoutMovableSeparator *
 GameObjectFactory::CreateUIDirLayoutMovableSeparator()
 {
     return GameObjectFactory::CreateUIDirLayoutMovableSeparatorInto(
-                GameObjectFactory::CreateUIGameObjectNamed("UIMovSeparator") );
+        GameObjectFactory::CreateUIGameObjectNamed("UIMovSeparator"));
 }
 
-UIDirLayoutMovableSeparator*
+UIDirLayoutMovableSeparator *
 GameObjectFactory::CreateUIDirLayoutMovableSeparatorInto(GameObject *go)
 {
     return UIDirLayoutMovableSeparator::CreateInto(go);
 }
 
-UIScrollArea* GameObjectFactory::CreateUIScrollAreaInto(GameObject *go)
+UIScrollArea *GameObjectFactory::CreateUIScrollAreaInto(GameObject *go)
 {
     return UIScrollArea::CreateInto(go);
 }
@@ -542,42 +548,53 @@ UIScrollArea* GameObjectFactory::CreateUIScrollAreaInto(GameObject *go)
 GameObject *GameObjectFactory::CreateUISpacer(LayoutSizeType sizeType,
                                               const Vector2 &space)
 {
-    GameObject *spacerGo = GameObjectFactory::CreateUIGameObjectNamed("Separator");
+    GameObject *spacerGo =
+        GameObjectFactory::CreateUIGameObjectNamed("Separator");
     UILayoutElement *le = spacerGo->AddComponent<UILayoutElement>();
 
-    le->SetMinSize( Vector2i(0) );
-    le->SetPreferredSize( Vector2i(0) );
-    le->SetFlexibleSize( Vector2(0) );
+    le->SetMinSize(Vector2i(0));
+    le->SetPreferredSize(Vector2i(0));
+    le->SetFlexibleSize(Vector2(0));
 
-    if (sizeType == LayoutSizeType::MIN) { le->SetMinSize(Vector2i(space)); }
-    else if (sizeType == LayoutSizeType::PREFERRED) { le->SetPreferredSize(Vector2i(space)); }
-    else { le->SetFlexibleSize( Vector2(space) ); }
+    if(sizeType == LayoutSizeType::MIN)
+    {
+        le->SetMinSize(Vector2i(space));
+    }
+    else if(sizeType == LayoutSizeType::PREFERRED)
+    {
+        le->SetPreferredSize(Vector2i(space));
+    }
+    else
+    {
+        le->SetFlexibleSize(Vector2(space));
+    }
     return spacerGo;
 }
 GameObject *GameObjectFactory::CreateUIHSpacer(LayoutSizeType sizeType,
                                                float spaceX)
 {
     GameObject *spacerGo =
-            GameObjectFactory::CreateUISpacer(sizeType, Vector2(spaceX, 0) );
+        GameObjectFactory::CreateUISpacer(sizeType, Vector2(spaceX, 0));
     return spacerGo;
 }
 GameObject *GameObjectFactory::CreateUIVSpacer(LayoutSizeType sizeType,
                                                float spaceY)
 {
     GameObject *spacerGo =
-            GameObjectFactory::CreateUISpacer(sizeType, Vector2(0, spaceY) );
+        GameObjectFactory::CreateUISpacer(sizeType, Vector2(0, spaceY));
     return spacerGo;
 }
 
-UIImageRenderer* GameObjectFactory::AddInnerShadow(GameObject *uiGo,
+UIImageRenderer *GameObjectFactory::AddInnerShadow(GameObject *uiGo,
                                                    const Vector2i &size,
                                                    float alpha)
 {
     GameObject *innerShadowGo = GameObjectFactory::CreateUIGameObject();
-    UIImageRenderer *innerShadowImg = innerShadowGo->AddComponent<UIImageRenderer>();
+    UIImageRenderer *innerShadowImg =
+        innerShadowGo->AddComponent<UIImageRenderer>();
     innerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    innerShadowImg->SetImageTexture( TextureFactory::GetInnerShadow() );
-    innerShadowImg->SetSlice9BorderStrokePx( size );
+    innerShadowImg->SetImageTexture(TextureFactory::GetInnerShadow());
+    innerShadowImg->SetSlice9BorderStrokePx(size);
     innerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
     innerShadowImg->SetDepthMask(false);
     // innerShadowGo->GetTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
@@ -585,21 +602,20 @@ UIImageRenderer* GameObjectFactory::AddInnerShadow(GameObject *uiGo,
     return innerShadowImg;
 }
 
-UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
+UIImageRenderer *GameObjectFactory::AddOuterShadow(GameObject *uiGo,
                                                    const Vector2i &size,
                                                    float alpha)
 {
     GameObject *outerShadowGo = GameObjectFactory::CreateUIGameObject();
-    UIImageRenderer *outerShadowImg = outerShadowGo->AddComponent<UIImageRenderer>();
+    UIImageRenderer *outerShadowImg =
+        outerShadowGo->AddComponent<UIImageRenderer>();
     outerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    outerShadowImg->SetImageTexture( TextureFactory::GetOuterShadow() );
-    outerShadowImg->SetSlice9BorderStrokePx( size );
+    outerShadowImg->SetImageTexture(TextureFactory::GetOuterShadow());
+    outerShadowImg->SetSlice9BorderStrokePx(size);
     outerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
     outerShadowImg->SetDepthMask(false);
-    outerShadowGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, 0.001f) );
-    outerShadowGo->GetRectTransform()->SetMargins(-size.x,
-                                                  -size.y,
-                                                  -size.x,
+    outerShadowGo->GetRectTransform()->TranslateLocal(Vector3(0, 0, 0.001f));
+    outerShadowGo->GetRectTransform()->SetMargins(-size.x, -size.y, -size.x,
                                                   -size.y);
     outerShadowGo->SetParent(uiGo);
     return outerShadowImg;
@@ -608,9 +624,8 @@ UIImageRenderer* GameObjectFactory::AddOuterShadow(GameObject *uiGo,
 UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddOuterBorder(
-                                uiGo,
-                                Vector2i(UITheme::GetNotFocusedBorderStroke()),
-                                UITheme::GetNotFocusedBorderColor());
+        uiGo, Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        UITheme::GetNotFocusedBorderColor());
 }
 
 UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
@@ -618,15 +633,14 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
                                                    const Color &color)
 {
     GameObject *outerBorderGo = GameObjectFactory::CreateUIGameObject();
-    UIImageRenderer *outerBorderImg = outerBorderGo->AddComponent<UIImageRenderer>();
+    UIImageRenderer *outerBorderImg =
+        outerBorderGo->AddComponent<UIImageRenderer>();
     outerBorderImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    outerBorderImg->SetImageTexture( TextureFactory::Get9SliceBorder() );
-    outerBorderImg->SetSlice9BorderStrokePx( size );
+    outerBorderImg->SetImageTexture(TextureFactory::Get9SliceBorder());
+    outerBorderImg->SetSlice9BorderStrokePx(size);
     outerBorderImg->SetTint(color);
-    outerBorderGo->GetRectTransform()->TranslateLocal( Vector3(0, 0, -0.00001f) );
-    outerBorderGo->GetRectTransform()->SetMargins(-size.x,
-                                                  -size.y,
-                                                  -size.x,
+    outerBorderGo->GetRectTransform()->TranslateLocal(Vector3(0, 0, -0.00001f));
+    outerBorderGo->GetRectTransform()->SetMargins(-size.x, -size.y, -size.x,
                                                   -size.y);
     outerBorderGo->SetParent(uiGo);
     return outerBorderImg;
@@ -635,9 +649,8 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo,
 UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddInnerBorder(
-                                uiGo,
-                                Vector2i(UITheme::GetNotFocusedBorderStroke()),
-                                UITheme::GetNotFocusedBorderColor());
+        uiGo, Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        UITheme::GetNotFocusedBorderColor());
 }
 
 UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
@@ -646,32 +659,31 @@ UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo,
 {
     UIImageRenderer *innerBorderImg = uiGo->AddComponent<UIImageRenderer>();
     innerBorderImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    innerBorderImg->SetImageTexture( TextureFactory::Get9SliceBorder() );
-    innerBorderImg->SetSlice9BorderStrokePx( size );
+    innerBorderImg->SetImageTexture(TextureFactory::Get9SliceBorder());
+    innerBorderImg->SetSlice9BorderStrokePx(size);
     innerBorderImg->SetTint(color);
     return innerBorderImg;
 }
 
 void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
 {
-    if (border)
+    if(border)
     {
-        border->SetTint( UITheme::GetFocusedBorderColor() );
+        border->SetTint(UITheme::GetFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
-                    Vector2i(UITheme::GetFocusedBorderStroke()) );
+            Vector2i(UITheme::GetFocusedBorderStroke()));
     }
 }
 
 void GameObjectFactory::MakeBorderNotFocused(UIImageRenderer *border)
 {
-    if (border)
+    if(border)
     {
-        border->SetTint( UITheme::GetNotFocusedBorderColor() );
+        border->SetTint(UITheme::GetNotFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
-                    Vector2i(UITheme::GetNotFocusedBorderStroke()) );
+            Vector2i(UITheme::GetNotFocusedBorderStroke()));
     }
 }
-
 
 String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 {
@@ -679,13 +691,13 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 
     String duplicateNameNumber = "";
     bool isDuplicatedName = false;
-    for (int i = originalName.Size()-1; i >= 0; --i)
+    for(int i = originalName.Size() - 1; i >= 0; --i)
     {
         char c = originalName[i];
-        if (String::IsNumber(c))
+        if(String::IsNumber(c))
         {
             isDuplicatedName = true;
-            duplicateNameNumber.Prepend( String(c) );
+            duplicateNameNumber.Prepend(String(c));
         }
         else
         {
@@ -694,16 +706,18 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
         }
     }
 
-
     String duplicateName;
-    if (isDuplicatedName)
+    if(isDuplicatedName)
     {
         int duplicateNumber = String::ToInt(duplicateNameNumber);
-        duplicateName = originalName.SubString(0, originalName.Size() -
-                                                  duplicateNameNumber.Size() - 2);
-        duplicateName += "_" + String(duplicateNumber+1);
+        duplicateName = originalName.SubString(
+            0, originalName.Size() - duplicateNameNumber.Size() - 2);
+        duplicateName += "_" + String(duplicateNumber + 1);
     }
-    else { duplicateName = (originalName + "_1"); }
+    else
+    {
+        duplicateName = (originalName + "_1");
+    }
 
     return duplicateName;
 }
@@ -726,25 +740,27 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
                                                  const Vector2i &space,
                                                  float linePercent)
 {
-    GameObject *sepGo = GameObjectFactory::CreateUISpacer(sizeType,
-                                                          Vector2(space));
+    GameObject *sepGo =
+        GameObjectFactory::CreateUISpacer(sizeType, Vector2(space));
     LineRenderer *lr = sepGo->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
     lr->GetMaterial()->SetAlbedoColor(Color::Black);
     lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();
-    le->SetPreferredSize( Vector2i::Max(space, Vector2i::One) );
+    le->SetPreferredSize(Vector2i::Max(space, Vector2i::One));
     bool horizontal = (space.x == 0);
-    if (horizontal)
+    if(horizontal)
     {
-        le->SetFlexibleSize( Vector2(99999999, 0) );
-        lr->SetPoints( {Vector3(-linePercent,0,0), Vector3(linePercent,0,0)} );
+        le->SetFlexibleSize(Vector2(99999999, 0));
+        lr->SetPoints(
+            {Vector3(-linePercent, 0, 0), Vector3(linePercent, 0, 0)});
     }
     else
     {
-        le->SetFlexibleSize( Vector2(0, 99999999) );
-        lr->SetPoints( {Vector3(0,-linePercent,0), Vector3(0,linePercent,0)} );
+        le->SetFlexibleSize(Vector2(0, 99999999));
+        lr->SetPoints(
+            {Vector3(0, -linePercent, 0), Vector3(0, linePercent, 0)});
     }
     return sepGo;
 }
@@ -753,22 +769,20 @@ GameObject *GameObjectFactory::CreateUIHSeparator(LayoutSizeType sizeType,
                                                   int spaceY,
                                                   float linePercent)
 {
-    GameObject *sepGo =
-            GameObjectFactory::CreateUISeparator(sizeType, Vector2i(0, spaceY),
-                                                 linePercent);
+    GameObject *sepGo = GameObjectFactory::CreateUISeparator(
+        sizeType, Vector2i(0, spaceY), linePercent);
     return sepGo;
 }
 GameObject *GameObjectFactory::CreateUIVSeparator(LayoutSizeType sizeType,
                                                   int spaceX,
                                                   float linePercent)
 {
-    GameObject *sepGo =
-            GameObjectFactory::CreateUISeparator(sizeType, Vector2i(spaceX, 0),
-                                                 linePercent);
+    GameObject *sepGo = GameObjectFactory::CreateUISeparator(
+        sizeType, Vector2i(spaceX, 0), linePercent);
     return sepGo;
 }
 
-GameObject* GameObjectFactory::CreateGameObjectWithMesh(Mesh* m,
+GameObject *GameObjectFactory::CreateGameObjectWithMesh(Mesh *m,
                                                         const String &name)
 {
     GameObject *go = GameObjectFactory::CreateGameObject(true);
@@ -782,7 +796,7 @@ GameObject* GameObjectFactory::CreateGameObjectWithMesh(Mesh* m,
     return go;
 }
 
-GameObject* GameObjectFactory::CreatePlaneGameObject()
+GameObject *GameObjectFactory::CreatePlaneGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetPlane();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Plane");
@@ -790,7 +804,7 @@ GameObject* GameObjectFactory::CreatePlaneGameObject()
     return go;
 }
 
-GameObject* GameObjectFactory::CreateCubeGameObject()
+GameObject *GameObjectFactory::CreateCubeGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetCube();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cube");
@@ -811,11 +825,11 @@ GameObject *GameObjectFactory::CreateCylinderGameObject()
     RH<Mesh> mesh = MeshFactory::GetCylinder();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cylinder");
     BoxCollider *col = go->AddComponent<BoxCollider>();
-    col->SetExtents( Vector3::One );
+    col->SetExtents(Vector3::One);
     return go;
 }
 
-GameObject* GameObjectFactory::CreateSphereGameObject()
+GameObject *GameObjectFactory::CreateSphereGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetSphere();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Sphere");
@@ -823,7 +837,7 @@ GameObject* GameObjectFactory::CreateSphereGameObject()
     return go;
 }
 
-GameObject* GameObjectFactory::CreateConeGameObject()
+GameObject *GameObjectFactory::CreateConeGameObject()
 {
     RH<Mesh> mesh = MeshFactory::GetCone();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cone");

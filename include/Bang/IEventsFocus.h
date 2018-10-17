@@ -1,14 +1,14 @@
 #ifndef IEVENTSFOCUS_H
 #define IEVENTSFOCUS_H
 
-#include "Bang/Key.h"
-#include "Bang/Vector2.h"
 #include "Bang/IEvents.h"
+#include "Bang/Key.h"
 #include "Bang/MouseButton.h"
+#include "Bang/Vector2.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class UIFocusable;
+namespace Bang
+{
+class UIFocusable;
 
 enum class UIEventResult
 {
@@ -47,27 +47,23 @@ struct UIEvent
     struct
     {
         MouseButton button;
-    }
-    mouse;
+    } mouse;
 
     struct
     {
         Key key;
         KeyModifiers modifiers;
-    }
-    key;
+    } key;
 
     struct
     {
         FocusType type = FocusType::MOUSE;
-    }
-    focus;
+    } focus;
 
     struct
     {
         Vector2 amount;
-    }
-    wheel;
+    } wheel;
 };
 
 class IEventsFocus
@@ -75,13 +71,13 @@ class IEventsFocus
     IEVENTS(IEventsFocus);
 
 public:
-    virtual UIEventResult OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+    virtual UIEventResult OnUIEvent(UIFocusable *focusable,
+                                    const UIEvent &event)
     {
         BANG_UNUSED_2(focusable, event);
         return UIEventResult::IGNORE;
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSFOCUS_H
+#endif  // IEVENTSFOCUS_H

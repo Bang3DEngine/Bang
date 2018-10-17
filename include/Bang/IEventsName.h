@@ -3,10 +3,10 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class String;
-FORWARD class GameObject;
+namespace Bang
+{
+class String;
+class GameObject;
 
 class IEventsName
 {
@@ -17,7 +17,6 @@ public:
                                const String &oldName,
                                const String &newName) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSNAME_H
+#endif  // IEVENTSNAME_H

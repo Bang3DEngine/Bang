@@ -24,12 +24,13 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class ICloneable;
-FORWARD class ShaderProgram;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class ICloneable;
+class ShaderProgram;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Rope::Rope()
 {
@@ -62,37 +63,28 @@ void Rope::OnUpdate()
     Physics *ph = Physics::GetInstance();
     m_particleParams.gravity = ph->GetGravity();
     m_particleParams.colliders =
-            ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())->
-            GetColliders();
+        ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())
+            ->GetColliders();
 
-    if (IsPointFixed(0))
+    if(IsPointFixed(0))
     {
-        m_particlesData[0].position = GetGameObject()->GetTransform()->
-                                      GetPosition();
+        m_particlesData[0].position =
+            GetGameObject()->GetTransform()->GetPosition();
     }
 
     Time fixedStepDeltaTime = Time::Seconds(1.0 / 60);
-    Particle::FixedStepAll(
-                &m_particlesData,
-                Time::GetDeltaTime(),
-                fixedStepDeltaTime,
-                GetParameters(),
-                [this](uint i, const Particle::Parameters &params)
-                {
-                    InitParticle(i, params);
-                },
-                [this](uint i)
-                {
-                    return !IsPointFixed(i);
-                },
-                [this](Time)
-                {
-                    AddSpringForces();
-                    // ConstrainPointsPositions();
-                });
+    Particle::FixedStepAll(&m_particlesData, Time::GetDeltaTime(),
+                           fixedStepDeltaTime, GetParameters(),
+                           [this](uint i, const Particle::Parameters &params) {
+                               InitParticle(i, params);
+                           },
+                           [this](uint i) { return !IsPointFixed(i); },
+                           [this](Time) {
+                               AddSpringForces();
+                               // ConstrainPointsPositions();
+                           });
 
-
-    for (uint i = 0; i < m_particlesData.Size(); ++i)
+    for(uint i = 0; i < m_particlesData.Size(); ++i)
     {
         const Particle::Data &pData = m_particlesData[i];
         m_points[i] = pData.position;
@@ -113,22 +105,22 @@ void Rope::SetUniformsOnBind(ShaderProgram *sp)
 
 void Rope::OnRender()
 {
-    if (!m_validLineRendererPoints)
+    if(!m_validLineRendererPoints)
     {
         UpdateLineRendererPoints();
         m_validLineRendererPoints = true;
     }
 
-    if (GetActiveMaterial())
+    if(GetActiveMaterial())
     {
         GetActiveMaterial()->SetAlbedoColor(Color::White);
         GetActiveMaterial()->Bind();
     }
     LineRenderer::OnRender();
 
-    if (m_seeDebugPoints && IsStarted())
+    if(m_seeDebugPoints && IsStarted())
     {
-        if (GetActiveMaterial())
+        if(GetActiveMaterial())
         {
             GetActiveMaterial()->SetAlbedoColor(Color::Red);
             GetActiveMaterial()->SetReceivesLighting(false);
@@ -138,8 +130,7 @@ void Rope::OnRender()
         GL::Push(GL::Pushable::DEPTH_STATES);
         GL::SetDepthFunc(GL::Function::ALWAYS);
         GL::PointSize(10.0f);
-        GL::Render(m_ropeDebugPointsMesh.Get()->GetVAO(),
-                   GL::Primitive::POINTS,
+        GL::Render(m_ropeDebugPointsMesh.Get()->GetVAO(), GL::Primitive::POINTS,
                    GetNumPoints());
         GL::Pop(GL::Pushable::DEPTH_STATES);
     }
@@ -147,11 +138,11 @@ void Rope::OnRender()
 
 AABox Rope::GetAABBox() const
 {
-    if (IsStarted())
+    if(IsStarted())
     {
         return LineRenderer::GetAABBox();
     }
-    else if (GetGameObject())
+    else if(GetGameObject())
     {
         AABox aaBox;
         aaBox.CreateFromPositions(m_points);
@@ -163,7 +154,7 @@ AABox Rope::GetAABBox() const
 void Rope::Reset()
 {
     const Particle::Parameters &params = GetParameters();
-    for (uint i = 0; i < GetNumPoints(); ++i)
+    for(uint i = 0; i < GetNumPoints(); ++i)
     {
         InitParticle(i, params);
     }
@@ -176,7 +167,7 @@ void Rope::SetDamping(float damping)
 
 void Rope::SetSpringsForce(float springsForce)
 {
-    if (springsForce != GetSpringsForce())
+    if(springsForce != GetSpringsForce())
     {
         m_springsForce = springsForce;
     }
@@ -184,7 +175,7 @@ void Rope::SetSpringsForce(float springsForce)
 
 void Rope::SetFixedPoint(uint i, bool fixed)
 {
-    if (i < m_fixedPoints.Size())
+    if(i < m_fixedPoints.Size())
     {
         m_fixedPoints[i] = fixed;
     }
@@ -199,7 +190,7 @@ void Rope::SetFixedPoints(const Array<bool> pointsFixed)
 void Rope::SetNumPoints(uint numPoints_)
 {
     uint numPoints = Math::Max(numPoints_, 2u);
-    if (numPoints != GetNumPoints())
+    if(numPoints != GetNumPoints())
     {
         m_points.Resize(numPoints, Vector3::Zero);
         m_fixedPoints.Resize(numPoints, false);
@@ -268,22 +259,21 @@ bool Rope::GetSeeDebugPoints() const
     return m_seeDebugPoints;
 }
 
-
 void Rope::InitParticle(uint i, const Particle::Parameters &params)
 {
-    if (GetGameObject())
+    if(GetGameObject())
     {
         Transform *tr = GetGameObject()->GetTransform();
         Particle::Data *pData = &m_particlesData[i];
         *pData = Particle::Data();
 
-        if (i == 0)
+        if(i == 0)
         {
             pData->position = tr->GetPosition();
         }
         else
         {
-            pData->position = m_particlesData[i-1].position +
+            pData->position = m_particlesData[i - 1].position +
                               Vector3::Down * GetPartLength();
         }
 
@@ -296,34 +286,35 @@ void Rope::InitParticle(uint i, const Particle::Parameters &params)
     }
 }
 
-const Particle::Parameters& Rope::GetParameters() const
+const Particle::Parameters &Rope::GetParameters() const
 {
     return m_particleParams;
 }
 
 float Rope::GetPartLength() const
 {
-    return GetRopeLength() / (GetNumPoints()-1);
+    return GetRopeLength() / (GetNumPoints() - 1);
 }
 
 void Rope::AddSpringForces()
 {
     Physics *ph = Physics::GetInstance();
     const float ropePartLength = Math::Max(GetPartLength(), 0.0001f);
-    for (uint i = 0; i < GetNumPoints(); ++i)
+    for(uint i = 0; i < GetNumPoints(); ++i)
     {
         Particle::Data *pData = &m_particlesData[i];
 
         Vector3 force = ph->GetGravity();
-        for (uint j = i-1; j < i; ++j)
+        for(uint j = i - 1; j < i; ++j)
         // for (uint j = i-1; j <= i+1; j += 2)
         {
-            if (j < m_particlesData.Size())
+            if(j < m_particlesData.Size())
             {
                 Vector3 diff = (m_particlesData[j].position - pData->position);
                 float diffLength = diff.Length();
                 Vector3 forceDir = diff.NormalizedSafe();
-                float forceMagnitude = (diffLength - ropePartLength) / ropePartLength;
+                float forceMagnitude =
+                    (diffLength - ropePartLength) / ropePartLength;
                 force += forceDir * forceMagnitude * GetSpringsForce();
             }
         }
@@ -338,14 +329,14 @@ void Rope::ConstrainPointsPositions()
     const float ropePartLength = GetPartLength();
     const float minLength = ropePartLength * (1.0f - RangeFactor);
     const float maxLength = ropePartLength * (1.0f + RangeFactor);
-    for (uint i = 1; i < GetNumPoints(); ++i)
+    for(uint i = 1; i < GetNumPoints(); ++i)
     {
-        if (!IsPointFixed(i))
+        if(!IsPointFixed(i))
         {
-            Vector3 diff = (pDatas[i].position - pDatas[i-1].position);
+            Vector3 diff = (pDatas[i].position - pDatas[i - 1].position);
             float newLength = Math::Clamp(diff.Length(), minLength, maxLength);
-            pDatas[i].position = pDatas[i-1].position +
-                                (newLength * diff.NormalizedSafe());
+            pDatas[i].position =
+                pDatas[i - 1].position + (newLength * diff.NormalizedSafe());
         }
     }
 }
@@ -353,16 +344,16 @@ void Rope::ConstrainPointsPositions()
 void Rope::UpdateLineRendererPoints()
 {
     Array<Vector3> pointsToRender;
-    for (uint i = 0; i < GetNumPoints(); ++i)
+    for(uint i = 0; i < GetNumPoints(); ++i)
     {
         const Vector3 &worldPoint = m_points[i];
         Transform *tr = GetGameObject()->GetTransform();
-        Vector3 localPoint = tr->GetLocalToWorldMatrixInv().
-                             TransformedPoint(worldPoint);
+        Vector3 localPoint =
+            tr->GetLocalToWorldMatrixInv().TransformedPoint(worldPoint);
         pointsToRender.PushBack(localPoint);
     }
 
-    if (m_seeDebugPoints)
+    if(m_seeDebugPoints)
     {
         m_ropeDebugPointsMesh.Get()->SetPositionsPool(pointsToRender);
         m_ropeDebugPointsMesh.Get()->UpdateVAOs();
@@ -374,52 +365,52 @@ void Rope::CloneInto(ICloneable *clone) const
 {
     LineRenderer::CloneInto(clone);
 
-    Rope *ropeClone = SCAST<Rope*>(clone);
+    Rope *ropeClone = SCAST<Rope *>(clone);
 
-    ropeClone->SetNumPoints( GetNumPoints() );
-    ropeClone->SetFixedPoints( m_fixedPoints );
-    ropeClone->SetPoints( GetPoints() );
+    ropeClone->SetNumPoints(GetNumPoints());
+    ropeClone->SetFixedPoints(m_fixedPoints);
+    ropeClone->SetPoints(GetPoints());
 
-    ropeClone->SetDamping( GetDamping() );
-    ropeClone->SetBounciness( GetBounciness() );
-    ropeClone->SetRopeLength( GetRopeLength() );
-    ropeClone->SetSpringsForce( GetSpringsForce() );
+    ropeClone->SetDamping(GetDamping());
+    ropeClone->SetBounciness(GetBounciness());
+    ropeClone->SetRopeLength(GetRopeLength());
+    ropeClone->SetSpringsForce(GetSpringsForce());
 
-    ropeClone->SetSeeDebugPoints( GetSeeDebugPoints() );
+    ropeClone->SetSeeDebugPoints(GetSeeDebugPoints());
 }
 
 void Rope::ImportMeta(const MetaNode &metaNode)
 {
     LineRenderer::ImportMeta(metaNode);
 
-    if (metaNode.Contains("NumPoints"))
+    if(metaNode.Contains("NumPoints"))
     {
-        SetNumPoints( metaNode.Get<uint>("NumPoints"));
+        SetNumPoints(metaNode.Get<uint>("NumPoints"));
     }
 
-    if (metaNode.Contains("SpringsForce"))
+    if(metaNode.Contains("SpringsForce"))
     {
-        SetSpringsForce( metaNode.Get<float>("SpringsForce"));
+        SetSpringsForce(metaNode.Get<float>("SpringsForce"));
     }
 
-    if (metaNode.Contains("RopeLength"))
+    if(metaNode.Contains("RopeLength"))
     {
-        SetRopeLength( metaNode.Get<float>("RopeLength"));
+        SetRopeLength(metaNode.Get<float>("RopeLength"));
     }
 
-    if (metaNode.Contains("Bounciness"))
+    if(metaNode.Contains("Bounciness"))
     {
-        SetBounciness( metaNode.Get<float>("Bounciness"));
+        SetBounciness(metaNode.Get<float>("Bounciness"));
     }
 
-    if (metaNode.Contains("Damping"))
+    if(metaNode.Contains("Damping"))
     {
-        SetDamping( metaNode.Get<float>("Damping"));
+        SetDamping(metaNode.Get<float>("Damping"));
     }
 
-    if (metaNode.Contains("SeeDebugPoints"))
+    if(metaNode.Contains("SeeDebugPoints"))
     {
-        SetSeeDebugPoints( metaNode.Get<bool>("SeeDebugPoints"));
+        SetSeeDebugPoints(metaNode.Get<bool>("SeeDebugPoints"));
     }
 }
 
@@ -434,4 +425,3 @@ void Rope::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Damping", GetDamping());
     metaNode->Set("SeeDebugPoints", GetSeeDebugPoints());
 }
-

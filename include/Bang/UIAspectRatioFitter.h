@@ -11,15 +11,13 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-class UIAspectRatioFitter : public Component,
-                            public ILayoutSelfController
+namespace Bang
+{
+class UIAspectRatioFitter : public Component, public ILayoutSelfController
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(UIAspectRatioFitter)
 
 public:
-
     void SetAspectRatio(float aspectRatio);
     void SetAspectRatio(const Vector2 &size);
     void SetAspectRatio(const Vector2i &size);
@@ -59,8 +57,6 @@ private:
     UIAspectRatioFitter();
     virtual ~UIAspectRatioFitter() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIASPECTRATIOFITTER_H
-
+#endif  // UIASPECTRATIOFITTER_H

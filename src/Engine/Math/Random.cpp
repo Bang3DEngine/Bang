@@ -2,13 +2,13 @@
 
 #include "Bang/Color.h"
 #include "Bang/Math.h"
-#include "Bang/String.h"
 #include "Bang/Quaternion.h"
+#include "Bang/String.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 void Random::SetSeed(long seed)
 {
@@ -18,7 +18,10 @@ void Random::SetSeed(long seed)
 void Random::SetSeed(const String &seedStr)
 {
     long seed = 0;
-    for (char c : seedStr) { seed += int(c); }
+    for(char c : seedStr)
+    {
+        seed += int(c);
+    }
     Random::SetSeed(seed);
 }
 
@@ -39,14 +42,12 @@ Vector2 Random::GetRandomVector2()
 }
 Vector3 Random::GetRandomVector3()
 {
-    return Vector3(Random::GetRange(-1.0f, 1.0f),
-                   Random::GetRange(-1.0f, 1.0f),
+    return Vector3(Random::GetRange(-1.0f, 1.0f), Random::GetRange(-1.0f, 1.0f),
                    Random::GetRange(-1.0f, 1.0f));
 }
 Vector4 Random::GetRandomVector4()
 {
-    return Vector4(Random::GetRange(-1.0f, 1.0f),
-                   Random::GetRange(-1.0f, 1.0f),
+    return Vector4(Random::GetRange(-1.0f, 1.0f), Random::GetRange(-1.0f, 1.0f),
                    Random::GetRange(-1.0f, 1.0f),
                    Random::GetRange(-1.0f, 1.0f));
 }
@@ -59,17 +60,14 @@ Quaternion Random::GetRotation()
 
 Color Random::GetColor()
 {
-    return Color(Random::GetValue(),
-                 Random::GetValue(),
-                 Random::GetValue(),
+    return Color(Random::GetValue(), Random::GetValue(), Random::GetValue(),
                  Random::GetValue());
 }
 
 Color Random::GetColorOpaque()
 {
-    return Color(Random::GetValue(),
-                 Random::GetValue(),
-                 Random::GetValue(), 1.0f);
+    return Color(Random::GetValue(), Random::GetValue(), Random::GetValue(),
+                 1.0f);
 }
 
 Random::Random()

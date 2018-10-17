@@ -5,7 +5,7 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/UIFocusable.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIToolButton::UIToolButton()
 {
@@ -14,14 +14,13 @@ UIToolButton::UIToolButton()
 
 UIToolButton::~UIToolButton()
 {
-
 }
 
 void UIToolButton::SetOn(bool on)
 {
-    if (on != GetOn())
+    if(on != GetOn())
     {
-        if (!IsBlocked())
+        if(!IsBlocked())
         {
             m_on = on;
             UpdateAspect();
@@ -36,27 +35,27 @@ bool UIToolButton::GetOn() const
 
 void UIToolButton::Click()
 {
-    SetOn( !GetOn() );
+    SetOn(!GetOn());
     CallClickCallback();
 }
 
 void UIToolButton::UpdateAspect()
 {
-    if (!IsBlocked())
+    if(!IsBlocked())
     {
-        if (GetOn())
+        if(GetOn())
         {
             ChangeAspectToPressed();
         }
         else
         {
-            if (GetFocusable()->IsBeingPressed())
+            if(GetFocusable()->IsBeingPressed())
             {
                 ChangeAspectToPressed();
             }
             else
             {
-                if (GetFocusable()->IsMouseOver())
+                if(GetFocusable()->IsMouseOver())
                 {
                     ChangeAspectToOver();
                 }
@@ -75,10 +74,7 @@ void UIToolButton::UpdateAspect()
 
 UIToolButton *UIToolButton::CreateInto(GameObject *gameObject)
 {
-    return SCAST<UIToolButton*>(
-    UIButtonBase::CreateInto([](GameObject *go)
-    {
-        return go->AddComponent<UIToolButton>();
-    },
-    gameObject));
+    return SCAST<UIToolButton *>(UIButtonBase::CreateInto(
+        [](GameObject *go) { return go->AddComponent<UIToolButton>(); },
+        gameObject));
 }

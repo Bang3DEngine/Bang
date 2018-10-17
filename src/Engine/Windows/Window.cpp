@@ -2,23 +2,23 @@
 
 #include BANG_SDL2_INCLUDE(SDL.h)
 
-#include "Bang/GL.h"
-#include "Bang/Debug.h"
-#include "Bang/Input.h"
-#include "Bang/Scene.h"
-#include "Bang/Thread.h"
-#include "Bang/GEngine.h"
-#include "Bang/GBuffer.h"
-#include "Bang/Resources.h"
-#include "Bang/Texture2D.h"
 #include "Bang/Application.h"
+#include "Bang/Debug.h"
+#include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
+#include "Bang/GL.h"
+#include "Bang/Input.h"
+#include "Bang/Resources.h"
+#include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Thread.h"
 #include "Bang/TimeSingleton.h"
 #include "Bang/UILayoutManager.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-Window* Window::s_activeWindow = nullptr;
+Window *Window::s_activeWindow = nullptr;
 
 Window::Window()
 {
@@ -29,19 +29,18 @@ Window::~Window()
 {
     SetParent(nullptr);
 
-    delete m_sceneManager;  m_sceneManager  = nullptr;
-    delete m_input;         m_input         = nullptr;
+    delete m_sceneManager;
+    m_sceneManager = nullptr;
+    delete m_input;
+    m_input = nullptr;
 
     SDL_DestroyWindow(m_sdlWindow);
 }
 
 SDL_Window *CreateSDLWindow(uint flags, const Vector2i &winSize)
 {
-    return SDL_CreateWindow("Bang",
-                            SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED,
-                            winSize.x,
-                            winSize.y,
+    return SDL_CreateWindow("Bang", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, winSize.x, winSize.y,
                             flags);
 }
 
@@ -58,7 +57,7 @@ void Window::Create(uint flags)
     SetMinSize(1, 1);
     SetMaxSize(99999, 99999);
 
-    m_input        = new Input();
+    m_input = new Input();
     m_sceneManager = CreateSceneManager();
 
     m_sceneManager->Init();
@@ -68,7 +67,7 @@ void Window::Create(uint flags)
 
 void Window::SwapBuffers() const
 {
-    SDL_GL_SwapWindow( GetSDLWindow() );
+    SDL_GL_SwapWindow(GetSDLWindow());
 }
 
 void Window::MakeCurrent()
@@ -86,11 +85,11 @@ bool Window::MainLoopIteration()
     Render();
 
     GetInput()->OnFrameFinished();
-    if (!HasFocusRecursive())
+    if(!HasFocusRecursive())
     {
-        if (GetSleepTimeOnBackground().GetNanos() > 0)
+        if(GetSleepTimeOnBackground().GetNanos() > 0)
         {
-            Thread::SleepCurrentThread( GetSleepTimeOnBackground().GetSeconds() );
+            Thread::SleepCurrentThread(GetSleepTimeOnBackground().GetSeconds());
         }
     }
     SwapBuffers();
@@ -110,58 +109,57 @@ void Window::Render()
 
 bool Window::HandleEvent(const SDL_Event &sdlEvent)
 {
-    if (!IsBlockedByChildren())
+    if(!IsBlockedByChildren())
     {
         GetInput()->EnqueueEvent(sdlEvent, this);
     }
 
-    switch (sdlEvent.type)
+    switch(sdlEvent.type)
     {
         case SDL_WINDOWEVENT:
-        if (sdlEvent.window.windowID == GetSDLWindowID())
-        {
-            if (!IsBlockedByChildren())
+            if(sdlEvent.window.windowID == GetSDLWindowID())
             {
-                switch (sdlEvent.window.event)
+                if(!IsBlockedByChildren())
                 {
-                    case SDL_WINDOWEVENT_CLOSE:
-                    return false;
+                    switch(sdlEvent.window.event)
+                    {
+                        case SDL_WINDOWEVENT_CLOSE: return false;
+                    }
+                }
+
+                switch(sdlEvent.window.event)
+                {
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                        EventEmitter<IEventsWindow>::PropagateToListeners(
+                            &IEventsWindow::OnFocusGained, this);
+                        break;
+
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        EventEmitter<IEventsWindow>::PropagateToListeners(
+                            &IEventsWindow::OnFocusLost, this);
+                        break;
+
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                    case SDL_WINDOWEVENT_RESIZED:
+                        m_newSize = Vector2i(sdlEvent.window.data1,
+                                             sdlEvent.window.data2);
+                        break;
                 }
             }
-
-            switch (sdlEvent.window.event)
+            else
             {
-                case SDL_WINDOWEVENT_FOCUS_GAINED:
-                    EventEmitter<IEventsWindow>::PropagateToListeners(
-                                &IEventsWindow::OnFocusGained, this);
-                break;
-
-                case SDL_WINDOWEVENT_FOCUS_LOST:
-                    EventEmitter<IEventsWindow>::PropagateToListeners(
-                                &IEventsWindow::OnFocusLost, this);
-                break;
-
-                case SDL_WINDOWEVENT_SIZE_CHANGED:
-                case SDL_WINDOWEVENT_RESIZED:
-                    m_newSize = Vector2i(sdlEvent.window.data1,
-                                         sdlEvent.window.data2);
-                    break;
+                // Other window (not this) events
+                switch(sdlEvent.window.event)
+                {
+                    case SDL_WINDOWEVENT_EXPOSED:
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                        if(IsParentWindow(sdlEvent.window.windowID))
+                        {
+                            MoveToFront();
+                        }
+                        break;
+                }
             }
-        }
-        else
-        {
-            // Other window (not this) events
-            switch (sdlEvent.window.event)
-            {
-                case SDL_WINDOWEVENT_EXPOSED:
-                case SDL_WINDOWEVENT_FOCUS_GAINED:
-                    if (IsParentWindow(sdlEvent.window.windowID))
-                    {
-                        MoveToFront();
-                    }
-                    break;
-            }
-        }
     }
 
     return true;
@@ -179,23 +177,23 @@ bool Window::OnClosed()
 
 void Window::Maximize()
 {
-    SDL_MaximizeWindow( GetSDLWindow() );
+    SDL_MaximizeWindow(GetSDLWindow());
 }
 
 void Window::Restore()
 {
-    SDL_RestoreWindow( GetSDLWindow() );
+    SDL_RestoreWindow(GetSDLWindow());
 }
 
 void Window::Minimize()
 {
-    SDL_MinimizeWindow( GetSDLWindow() );
+    SDL_MinimizeWindow(GetSDLWindow());
 }
 
 void Window::MoveToFront()
 {
     SDL_RaiseWindow(GetSDLWindow());
-    for (Window *childWindow : p_children)
+    for(Window *childWindow : p_children)
     {
         childWindow->MoveToFront();
     }
@@ -203,16 +201,16 @@ void Window::MoveToFront()
 
 void SDL_PutPixel32(SDL_Surface *surface, int x, int y, Uint32 color)
 {
-    if( SDL_MUSTLOCK(surface) )
+    if(SDL_MUSTLOCK(surface))
     {
         SDL_LockSurface(surface);
     }
 
-    Uint8 * pixel = (Uint8*)surface->pixels;
+    Uint8 *pixel = (Uint8 *)surface->pixels;
     pixel += (y * surface->pitch) + (x * sizeof(Uint32));
-    *((Uint32*)pixel) = color;
+    *((Uint32 *)pixel) = color;
 
-    if( SDL_MUSTLOCK(surface) )
+    if(SDL_MUSTLOCK(surface))
     {
         SDL_UnlockSurface(surface);
     }
@@ -223,22 +221,20 @@ void Window::SetIcon(const Path &iconPath)
     constexpr Uint32 RM = 0xff, GM = 0xff00, BM = 0xff0000, AM = 0xff000000;
     RH<Texture2D> tex = Resources::Load<Texture2D>(iconPath);
     Imageb img = tex.Get()->ToImage<Byte>();
-    SDL_Surface *icon = SDL_CreateRGBSurface(SDL_SWSURFACE,
-                                             img.GetWidth(),
-                                             img.GetHeight(),
-                                             32, RM, GM, BM, AM);
-    for (int y = 0; y < img.GetHeight(); ++y)
+    SDL_Surface *icon = SDL_CreateRGBSurface(
+        SDL_SWSURFACE, img.GetWidth(), img.GetHeight(), 32, RM, GM, BM, AM);
+    for(int y = 0; y < img.GetHeight(); ++y)
     {
-        for (int x = 0; x < img.GetWidth(); ++x)
+        for(int x = 0; x < img.GetWidth(); ++x)
         {
-            const Color color = img.GetPixel(x,y);
-            const Vector4i ci( Vector4::Round( color.ToVector4() * 255.0f ) );
-            SDL_PutPixel32(icon, x, y, SDL_MapRGBA(icon->format,
-                                                   ci[0], ci[1], ci[2], ci[3]));
+            const Color color = img.GetPixel(x, y);
+            const Vector4i ci(Vector4::Round(color.ToVector4() * 255.0f));
+            SDL_PutPixel32(icon, x, y, SDL_MapRGBA(icon->format, ci[0], ci[1],
+                                                   ci[2], ci[3]));
         }
     }
     SDL_SetWindowIcon(GetSDLWindow(), icon);
-    SDL_FreeSurface( icon );
+    SDL_FreeSurface(icon);
 }
 
 void Window::SetBordered(bool bordered)
@@ -260,11 +256,11 @@ void Window::SetMaxSize(int maxSizeX, int maxSizeY)
 
 void Window::SetResizable(bool resizable)
 {
-    if (m_isResizable != resizable)
+    if(m_isResizable != resizable)
     {
         m_isResizable = resizable;
 
-        if (IsResizable())
+        if(IsResizable())
         {
             _SetMaxSize(GetMaxSize().x, GetMaxSize().y);
             _SetMinSize(GetMinSize().x, GetMinSize().y);
@@ -273,8 +269,8 @@ void Window::SetResizable(bool resizable)
         else
         {
             Vector2i size = GetSize();
-            _SetMinSize(size.x,   size.y);
-            _SetMaxSize(size.x+1, size.y+1);
+            _SetMinSize(size.x, size.y);
+            _SetMaxSize(size.x + 1, size.y + 1);
         }
     }
 }
@@ -303,7 +299,7 @@ void Window::SetSleepTimeOnBackground(Time sleepTimeOnBackground)
 
 void Window::OnResize(int newWidth, int newHeight)
 {
-    if (m_newSize != m_prevSize)
+    if(m_newSize != m_prevSize)
     {
         m_prevSize = m_newSize;
         GL::SetViewport(0, 0, GetWidth(), GetHeight());
@@ -327,14 +323,14 @@ bool Window::HasFocus() const
 
 bool Window::HasFocusRecursive() const
 {
-    if (HasFocus())
+    if(HasFocus())
     {
         return true;
     }
 
-    for (Window *childWindow : GetChildren())
+    for(Window *childWindow : GetChildren())
     {
-        if (childWindow->HasFocusRecursive())
+        if(childWindow->HasFocusRecursive())
         {
             return true;
         }
@@ -461,7 +457,7 @@ Window *Window::GetParentWindow() const
     return p_parent;
 }
 
-const Array<Window*> &Window::GetChildren() const
+const Array<Window *> &Window::GetChildren() const
 {
     return p_children;
 }
@@ -470,7 +466,6 @@ SceneManager *Window::CreateSceneManager() const
 {
     return new SceneManager();
 }
-
 
 Window *Window::GetActive()
 {
@@ -482,9 +477,9 @@ void Window::SetParent(Window *parentWindow)
     ASSERT(parentWindow != this);
     ASSERT(!p_children.Contains(parentWindow));
 
-    if (p_parent != parentWindow)
+    if(p_parent != parentWindow)
     {
-        if (p_parent)
+        if(p_parent)
         {
             p_parent->p_children.Remove(this);
             p_parent->SetResizable(true);
@@ -492,7 +487,7 @@ void Window::SetParent(Window *parentWindow)
 
         p_parent = parentWindow;
 
-        if (p_parent)
+        if(p_parent)
         {
             p_parent->SetResizable(false);
             p_parent->p_children.PushBack(this);
@@ -527,13 +522,14 @@ Vector2i Window::_GetMaxSize() const
 bool Window::IsParentWindow(int sdlWindowId) const
 {
     return p_parent ? (p_parent->GetSDLWindowID() == sdlWindowId ||
-                       p_parent->IsParentWindow(sdlWindowId)) : false;
+                       p_parent->IsParentWindow(sdlWindowId))
+                    : false;
 }
 
 void Window::SetActive(Window *window)
 {
     Window::s_activeWindow = window;
-    if (window)
+    if(window)
     {
         window->MakeCurrent();
     }

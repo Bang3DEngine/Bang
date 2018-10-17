@@ -3,7 +3,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Segment::Segment(const Vector3 &origin, const Vector3 &destiny)
 {
@@ -45,4 +45,3 @@ const Vector3 &Segment::GetDestiny() const
 {
     return m_destiny;
 }
-

@@ -20,8 +20,8 @@
 
 #include "Bang/BangDefines.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 struct TGA_ORDER
 {
     int redShift;
@@ -39,8 +39,6 @@ void tgaFree(void *memory);
 int tgaGetWidth(const unsigned char *buffer);
 int tgaGetHeight(const unsigned char *buffer);
 int *tgaRead(const unsigned char *buffer, const TGA_ORDER *order);
-
-NAMESPACE_BANG_END
+}
 
 #endif /* __TGA_READER_H__ */
-

@@ -10,13 +10,13 @@
 #include "Bang/String.h"
 #include "Bang/UIRenderer.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Camera;
-FORWARD class ICloneable;
-FORWARD class Mesh;
-FORWARD class Path;
-FORWARD class Texture2D;
+namespace Bang
+{
+class Camera;
+class ICloneable;
+class Mesh;
+class Path;
+class Texture2D;
 
 class UIImageRenderer : public UIRenderer
 {
@@ -38,15 +38,15 @@ public:
     virtual void OnRender() override;
 
     void SetImageTexture(const Path &imagePath);
-    void SetImageTexture(Texture2D* imageTexture);
-    void SetTint(const Color& tint);
+    void SetImageTexture(Texture2D *imageTexture);
+    void SetTint(const Color &tint);
     void SetMode(UIImageRenderer::Mode mode);
-    void SetSlice9BorderStrokePx(const Vector2i& slice9borderStrokePx);
+    void SetSlice9BorderStrokePx(const Vector2i &slice9borderStrokePx);
 
     Mode GetMode() const;
-    const Color& GetTint() const;
+    const Color &GetTint() const;
     Texture2D *GetImageTexture() const;
-    const Vector2i& GetSlice9BorderStrokePx() const;
+    const Vector2i &GetSlice9BorderStrokePx() const;
 
     // IEventsTransform
     virtual void OnTransformChanged() override;
@@ -68,7 +68,6 @@ private:
     Mode m_mode = Undef<Mode>();
     Vector2i m_slice9BorderStrokePx = Vector2i(8);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIIMAGERENDERER_H
+#endif  // UIIMAGERENDERER_H

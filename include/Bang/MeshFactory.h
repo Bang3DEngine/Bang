@@ -8,11 +8,11 @@
 #include "Bang/Set.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Mesh;
-FORWARD class Model;
-FORWARD class Path;
+namespace Bang
+{
+class Mesh;
+class Model;
+class Path;
 
 class MeshFactory
 {
@@ -37,13 +37,12 @@ protected:
     virtual ~MeshFactory() = default;
 
 private:
-    Set< RH<Model> > m_modelCache;
+    Set<RH<Model>> m_modelCache;
 
-    static MeshFactory* GetActive();
+    static MeshFactory *GetActive();
 
     friend class Resources;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MESHFACTORY_H
+#endif  // MESHFACTORY_H

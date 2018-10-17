@@ -4,11 +4,11 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObject.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Object::~Object()
 {
-    ASSERT( IsWaitingToBeDestroyed() );
+    ASSERT(IsWaitingToBeDestroyed());
 }
 
 bool Object::IsActive() const
@@ -18,7 +18,7 @@ bool Object::IsActive() const
 
 void Object::PreStart()
 {
-    if (!IsStarted())
+    if(!IsStarted())
     {
         OnPreStart();
     }
@@ -26,13 +26,13 @@ void Object::PreStart()
 
 void Object::Start()
 {
-    if (!IsStarted())
+    if(!IsStarted())
     {
         OnStart();
         m_started = true;
 
-        EventEmitter<IEventsObject>::
-                PropagateToListeners(&IEventsObject::OnStarted, this);
+        EventEmitter<IEventsObject>::PropagateToListeners(
+            &IEventsObject::OnStarted, this);
     }
 }
 
@@ -46,14 +46,14 @@ void Object::OnStart()
 
 void Object::OnEnabled(Object *object)
 {
-    EventEmitter<IEventsObject>::
-            PropagateToListeners(&IEventsObject::OnEnabled, object);
+    EventEmitter<IEventsObject>::PropagateToListeners(&IEventsObject::OnEnabled,
+                                                      object);
 }
 
 void Object::OnDisabled(Object *object)
 {
-    EventEmitter<IEventsObject>::
-            PropagateToListeners(&IEventsObject::OnDisabled, object);
+    EventEmitter<IEventsObject>::PropagateToListeners(
+        &IEventsObject::OnDisabled, object);
 }
 
 void Object::OnDestroy()
@@ -67,7 +67,7 @@ void Object::SetWaitingToBeDestroyed()
 
 void Object::InvalidateEnabledRecursively()
 {
-    if (m_enabledRecursivelyValid)
+    if(m_enabledRecursivelyValid)
     {
         m_enabledRecursivelyValid = false;
         OnEnabledRecursivelyInvalidated();
@@ -76,13 +76,13 @@ void Object::InvalidateEnabledRecursively()
 
 void Object::PropagateObjectDestruction(Object *object)
 {
-    if (!object->IsWaitingToBeDestroyed())
+    if(!object->IsWaitingToBeDestroyed())
     {
         object->SetWaitingToBeDestroyed();
 
         object->OnDestroy();
-        object->EventEmitter<IEventsDestroy>::
-                PropagateToListeners(&IEventsDestroy::OnDestroyed, object);
+        object->EventEmitter<IEventsDestroy>::PropagateToListeners(
+            &IEventsDestroy::OnDestroyed, object);
     }
 }
 
@@ -91,29 +91,29 @@ void Object::OnEnabledRecursivelyInvalidated()
     // Empty
 }
 
-const ObjectId& Object::GetObjectId() const
+const ObjectId &Object::GetObjectId() const
 {
     return m_objectId;
 }
 
 void Object::SetEnabled(bool enabled)
 {
-    if (enabled != IsEnabled())
+    if(enabled != IsEnabled())
     {
         m_enabled = enabled;
         InvalidateEnabledRecursively();
 
-        if (IsEnabled())
+        if(IsEnabled())
         {
             OnEnabled(this);
             EventEmitter<IEventsObject>::PropagateToListeners(
-                        &IEventsObject::OnEnabled, this);
+                &IEventsObject::OnEnabled, this);
         }
         else
         {
             OnDisabled(this);
             EventEmitter<IEventsObject>::PropagateToListeners(
-                        &IEventsObject::OnDisabled, this);
+                &IEventsObject::OnDisabled, this);
         }
     }
 }
@@ -135,7 +135,7 @@ bool Object::IsActiveRecursively() const
 
 bool Object::IsEnabledRecursively() const
 {
-    if (!m_enabledRecursivelyValid)
+    if(!m_enabledRecursivelyValid)
     {
         m_enabledRecursively = CalculateEnabledRecursively();
         m_enabledRecursivelyValid = true;
@@ -150,8 +150,6 @@ bool Object::IsWaitingToBeDestroyed() const
 
 void Object::CloneInto(ICloneable *clone) const
 {
-    Object *obj = SCAST<Object*>(clone);
-    obj->SetEnabled( IsEnabled() );
+    Object *obj = SCAST<Object *>(clone);
+    obj->SetEnabled(IsEnabled());
 }
-
-

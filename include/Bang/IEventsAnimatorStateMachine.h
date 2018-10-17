@@ -1,16 +1,16 @@
 #ifndef IEVENTSANIMATORSTATEMACHINE_H
 #define IEVENTSANIMATORSTATEMACHINE_H
 
-#include "Bang/Time.h"
 #include "Bang/IEvents.h"
+#include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Animator;
-FORWARD class Animation;
-FORWARD class AnimatorStateMachine;
-FORWARD class AnimatorStateMachineNode;
-FORWARD class AnimatorStateMachineVariable;
+namespace Bang
+{
+class Animator;
+class Animation;
+class AnimatorStateMachine;
+class AnimatorStateMachineNode;
+class AnimatorStateMachineVariable;
 
 class IEventsAnimatorStateMachine
 {
@@ -44,14 +44,10 @@ public:
                                  Time animationTimeWrapped,
                                  Time animationTime)
     {
-        BANG_UNUSED_5(animator,
-                      animationIndex,
-                      animation,
-                      animationTimeWrapped,
+        BANG_UNUSED_5(animator, animationIndex, animation, animationTimeWrapped,
                       animationTime);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSANIMATORSTATEMACHINE_H
+#endif  // IEVENTSANIMATORSTATEMACHINE_H

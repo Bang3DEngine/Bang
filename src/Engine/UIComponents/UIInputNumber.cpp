@@ -6,13 +6,13 @@
 #include "Bang/Alignment.h"
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
-#include "Bang/RectTransform.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/IEventsValueChanged.h"
 #include "Bang/Key.h"
+#include "Bang/RectTransform.h"
 #include "Bang/UICanvas.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIInputText.h"
@@ -20,7 +20,7 @@
 #include "Bang/UITextRenderer.h"
 #include "Bang/Vector.tcc"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UIInputNumber::UIInputNumber()
 {
@@ -35,17 +35,17 @@ void UIInputNumber::SetValue(float v)
 {
     const float clampedValue = Math::Clamp(v, GetMinValue(), GetMaxValue());
     const uint placesMult = Math::Pow(10u, GetDecimalPlaces());
-    const float finalValue = SCAST<float>(
-                      Math::Round(clampedValue * placesMult) ) / placesMult;
+    const float finalValue =
+        SCAST<float>(Math::Round(clampedValue * placesMult)) / placesMult;
 
-    if (finalValue != GetValue())
+    if(finalValue != GetValue())
     {
         m_value = finalValue;
-        EventEmitter<IEventsValueChanged>::
-           PropagateToListeners(&IEventsValueChanged::OnValueChanged, this);
+        EventEmitter<IEventsValueChanged>::PropagateToListeners(
+            &IEventsValueChanged::OnValueChanged, this);
     }
 
-    if (!HasFocus())
+    if(!HasFocus())
     {
         UpdateTextFromValue();
     }
@@ -55,13 +55,13 @@ void UIInputNumber::SetValue(float v)
 void UIInputNumber::SetMinValue(float min)
 {
     m_minMaxValues.x = Math::Min(min, GetMaxValue());
-    SetValue( GetValue() );
+    SetValue(GetValue());
 }
 
 void UIInputNumber::SetMaxValue(float max)
 {
     m_minMaxValues.y = Math::Max(GetMinValue(), max);
-    SetValue( GetValue() );
+    SetValue(GetValue());
 }
 
 void UIInputNumber::SetMinMaxValues(float min, float max)
@@ -75,13 +75,13 @@ void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
     m_decimalPlaces = decimalPlaces;
 
     String allowedChars = "0123456789+-";
-    if (GetDecimalPlaces() > 0)
+    if(GetDecimalPlaces() > 0)
     {
         allowedChars += ",.";
     }
     GetInputText()->SetAllowedCharacters(allowedChars);
 
-    SetValue( GetValue() );
+    SetValue(GetValue());
 }
 
 float UIInputNumber::GetValue() const
@@ -96,8 +96,8 @@ uint UIInputNumber::GetDecimalPlaces() const
 void UIInputNumber::UpdateValueFromText()
 {
     float value = 0.0f;
-        const String &content = GetInputText()->GetText()->GetContent();
-    if (!content.IsEmpty())
+    const String &content = GetInputText()->GetText()->GetContent();
+    if(!content.IsEmpty())
     {
         std::istringstream iss(content);
         iss >> value;
@@ -108,7 +108,7 @@ void UIInputNumber::UpdateValueFromText()
 void UIInputNumber::UpdateTextFromValue()
 {
     String vStr = String::ToString(GetValue(), GetDecimalPlaces());
-    if (GetInputText()->GetText())
+    if(GetInputText()->GetText())
     {
         GetInputText()->GetText()->SetContent(vStr);
     }
@@ -119,9 +119,10 @@ void UIInputNumber::ChangeTextColorBasedOnMinMax()
     // Colorize text based on the textValue
     // (which can be different from GetValue())
     float textValue = String::ToFloat(GetInputText()->GetText()->GetContent());
-    bool isOutOfRange = (textValue < GetMinValue() || textValue > GetMaxValue());
+    bool isOutOfRange =
+        (textValue < GetMinValue() || textValue > GetMaxValue());
     Color textColor = isOutOfRange ? Color::Red : Color::Black;
-    if (GetInputText()->GetText())
+    if(GetInputText()->GetText())
     {
         GetInputText()->GetText()->SetTextColor(textColor);
     }
@@ -148,51 +149,47 @@ const Vector2 &UIInputNumber::GetMinMaxValues() const
 }
 bool UIInputNumber::HasFocus() const
 {
-    return GetInputText()->GetLabel()->GetFocusable() ?
-                GetInputText()->GetLabel()->GetFocusable()->HasFocus() :
-                false;
+    return GetInputText()->GetLabel()->GetFocusable()
+               ? GetInputText()->GetLabel()->GetFocusable()->HasFocus()
+               : false;
 }
 
-UIEventResult UIInputNumber::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UIInputNumber::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch (event.type)
+    switch(event.type)
     {
-        case UIEvent::Type::FOCUS_TAKEN:
-            return UIEventResult::INTERCEPT;
-        break;
+        case UIEvent::Type::FOCUS_TAKEN: return UIEventResult::INTERCEPT; break;
 
         case UIEvent::Type::FOCUS_LOST:
             UpdateTextFromValue();
             ChangeTextColorBasedOnMinMax();
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
         case UIEvent::Type::KEY_DOWN:
-            switch (event.key.key)
+            switch(event.key.key)
             {
                 case Key::ENTER:
                     UICanvas::GetActive(this)->SetFocus(nullptr);
                     return UIEventResult::INTERCEPT;
-                break;
+                    break;
 
                 case Key::UP:
                 case Key::DOWN:
                 {
                     float increment = (event.key.key == Key::DOWN ? -1 : 1);
-                    SetValue( GetValue() + increment );
+                    SetValue(GetValue() + increment);
                     UpdateTextFromValue();
                     GetInputText()->GetLabel()->SelectAll();
                     return UIEventResult::INTERCEPT;
                 }
                 break;
 
-                default:
-                break;
+                default: break;
             }
-        break;
+            break;
 
-        default:
-        break;
+        default: break;
     }
     return UIEventResult::IGNORE;
 }
@@ -217,8 +214,8 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
     inputText->GetText()->SetTextSize(12);
 
     inputText->EventEmitter<IEventsValueChanged>::RegisterListener(inputNumber);
-    inputText->GetFocusable()->EventEmitter<IEventsFocus>::
-               RegisterListener(inputNumber);
+    inputText->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(
+        inputNumber);
 
     inputNumber->p_inputText = inputText;
 
@@ -226,4 +223,3 @@ UIInputNumber *UIInputNumber::CreateInto(GameObject *go)
 
     return inputNumber;
 }
-

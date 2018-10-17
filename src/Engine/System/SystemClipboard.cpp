@@ -2,7 +2,7 @@
 
 #include BANG_SDL2_INCLUDE(SDL.h)
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 void SystemClipboard::Set(const String &str)
 {

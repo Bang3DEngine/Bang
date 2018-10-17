@@ -7,8 +7,8 @@
 
 #include "Bang/Debug.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 int ThreadFunc(ThreadRunnable *runnable, Thread *thread);
 
 Thread::Thread()
@@ -20,8 +20,8 @@ Thread::Thread(ThreadRunnable *runnable) : Thread()
     SetRunnable(runnable);
 }
 
-Thread::Thread(ThreadRunnable *runnable,
-               const String &threadName) : Thread(runnable)
+Thread::Thread(ThreadRunnable *runnable, const String &threadName)
+    : Thread(runnable)
 {
     SetName(threadName);
 }
@@ -32,7 +32,7 @@ Thread::~Thread()
 
 void Thread::Start()
 {
-    if (p_runnable)
+    if(p_runnable)
     {
         m_thread = std::thread(ThreadFunc, p_runnable, this);
     }
@@ -59,7 +59,7 @@ bool Thread::HasFinished() const
 
 void Thread::SetName(const String &threadName)
 {
-    if (threadName != GetName())
+    if(threadName != GetName())
     {
         m_threadName = threadName;
         pthread_setname_np(m_thread.native_handle(), GetName().ToCString());
@@ -84,7 +84,7 @@ ThreadRunnable *Thread::GetRunnable() const
 void Thread::SleepCurrentThread(float seconds)
 {
     int millis = SCAST<int>(seconds * 1000);
-    std::this_thread::sleep_for( std::chrono::milliseconds(millis) );
+    std::this_thread::sleep_for(std::chrono::milliseconds(millis));
 }
 
 String Thread::GetCurrentThreadId()
@@ -96,16 +96,16 @@ String Thread::GetCurrentThreadId()
 
 int ThreadFunc(ThreadRunnable *runnable, Thread *thread)
 {
-    if (runnable)
+    if(runnable)
     {
         runnable->Run();
-        if (runnable->IsAutoDelete())
+        if(runnable->IsAutoDelete())
         {
             delete runnable;
         }
     }
 
-    if (thread)
+    if(thread)
     {
         thread->m_hasFinished = true;
     }
@@ -136,7 +136,8 @@ Thread *ThreadRunnable::GetThread() const
     return p_thread;
 }
 
-ThreadRunnableLambda::ThreadRunnableLambda(const std::function<void()> &runFunction)
+ThreadRunnableLambda::ThreadRunnableLambda(
+    const std::function<void()> &runFunction)
 {
     m_runFunction = runFunction;
 }
@@ -145,5 +146,4 @@ void ThreadRunnableLambda::Run()
 {
     m_runFunction();
 }
-
-NAMESPACE_BANG_END
+}

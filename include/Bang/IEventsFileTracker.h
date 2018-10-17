@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Path;
+namespace Bang
+{
+class Path;
 
 class IEventsFileTracker
 {
@@ -27,7 +27,6 @@ public:
         BANG_UNUSED(removedPath);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSFILETRACKER_H
+#endif  // IEVENTSFILETRACKER_H

@@ -18,13 +18,13 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsResource;
-FORWARD class Path;
-FORWARD class Resource;
-FORWARD class ShaderProgram;
-FORWARD class Texture2D;
+namespace Bang
+{
+class IEventsResource;
+class Path;
+class Resource;
+class ShaderProgram;
+class Texture2D;
 
 class Material : public Asset,
                  public ICloneable,
@@ -41,10 +41,10 @@ public:
 
     };
 
-    void SetAlbedoUvOffset(const Vector2& albedoUvOffset);
-    void SetAlbedoUvMultiply(const Vector2& albedoUvMultiply);
-    void SetNormalMapUvOffset(const Vector2& normalMapUvOffset);
-    void SetNormalMapUvMultiply(const Vector2& normalMapUvMultiply);
+    void SetAlbedoUvOffset(const Vector2 &albedoUvOffset);
+    void SetAlbedoUvMultiply(const Vector2 &albedoUvMultiply);
+    void SetNormalMapUvOffset(const Vector2 &normalMapUvOffset);
+    void SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply);
     void SetNormalMapMultiplyFactor(float normalMapMultiplyFactor);
     void SetShaderProgram(ShaderProgram *program);
     void SetReceivesLighting(bool receivesLighting);
@@ -60,22 +60,22 @@ public:
     void SetRenderWireframe(bool renderWireframe);
     void SetLineWidth(float w);
 
-    NeededUniformFlags& GetNeededUniforms();
-    const NeededUniformFlags& GetNeededUniforms() const;
-    const Vector2& GetAlbedoUvOffset() const;
-    const Vector2& GetAlbedoUvMultiply() const;
-    const Vector2& GetNormalMapUvOffset() const;
-    const Vector2& GetNormalMapUvMultiply() const;
+    NeededUniformFlags &GetNeededUniforms();
+    const NeededUniformFlags &GetNeededUniforms() const;
+    const Vector2 &GetAlbedoUvOffset() const;
+    const Vector2 &GetAlbedoUvMultiply() const;
+    const Vector2 &GetNormalMapUvOffset() const;
+    const Vector2 &GetNormalMapUvMultiply() const;
     float GetNormalMapMultiplyFactor() const;
-    ShaderProgram* GetShaderProgram() const;
+    ShaderProgram *GetShaderProgram() const;
     bool GetReceivesLighting() const;
     float GetMetalness() const;
     float GetRoughness() const;
-    Texture2D* GetAlbedoTexture() const;
-    const Color& GetAlbedoColor() const;
-    Texture2D* GetRoughnessTexture() const;
-    Texture2D* GetMetalnessTexture() const;
-    Texture2D* GetNormalMapTexture() const;
+    Texture2D *GetAlbedoTexture() const;
+    const Color &GetAlbedoColor() const;
+    Texture2D *GetRoughnessTexture() const;
+    Texture2D *GetMetalnessTexture() const;
+    Texture2D *GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
     bool IsRenderWireframe() const;
     GL::CullFaceExt GetCullFace() const;
@@ -104,25 +104,24 @@ protected:
     RH<Texture2D> p_normalMapTexture;
     RH<ShaderProgram> p_shaderProgram;
 
-    float m_lineWidth                   = 1.0f;
-    float m_normalMapMultiplyFactor     = 1.0f;
-    RenderPass m_renderPass             = RenderPass::SCENE;
-    Color m_albedoColor                 = Color::White;
-    Vector2 m_albedoUvOffset            = Vector2::Zero;
-    Vector2 m_albedoUvMultiply          = Vector2::One;
-    Vector2 m_normalMapUvOffset         = Vector2::Zero;
-    Vector2 m_normalMapUvMultiply       = Vector2::One;
-    GL::CullFaceExt m_cullFace          = GL::CullFaceExt::BACK;
-    float m_roughness                   = 1.0f;
-    float m_metalness                   = 0.5f;
+    float m_lineWidth = 1.0f;
+    float m_normalMapMultiplyFactor = 1.0f;
+    RenderPass m_renderPass = RenderPass::SCENE;
+    Color m_albedoColor = Color::White;
+    Vector2 m_albedoUvOffset = Vector2::Zero;
+    Vector2 m_albedoUvMultiply = Vector2::One;
+    Vector2 m_normalMapUvOffset = Vector2::Zero;
+    Vector2 m_normalMapUvMultiply = Vector2::One;
+    GL::CullFaceExt m_cullFace = GL::CullFaceExt::BACK;
+    float m_roughness = 1.0f;
+    float m_metalness = 0.5f;
     NeededUniformFlags m_neededUniforms = NeededUniformFlag::ALL;
-    bool m_receivesLighting             = true;
-    bool m_renderWireframe              = false;
+    bool m_receivesLighting = true;
+    bool m_renderWireframe = false;
 
     Material();
     virtual ~Material() override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MATERIAL_H
+#endif  // MATERIAL_H

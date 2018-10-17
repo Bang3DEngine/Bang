@@ -1,13 +1,13 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include <list>
 #include <functional>
+#include <list>
 
 #include "Bang/Containers.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 template <class T>
 class List
 {
@@ -17,12 +17,12 @@ public:
     using Const_Iterator = typename std::list<T>::const_iterator;
     using Const_RIterator = typename std::list<T>::const_reverse_iterator;
 
-    static const List<T>& Empty();
+    static const List<T> &Empty();
 
     List();
     List(const std::list<T> &l);
     List(int size);
-    List(int size, const T& initValue);
+    List(int size, const T &initValue);
     List(std::initializer_list<T> l);
 
     template <class OtherIterator>
@@ -30,52 +30,54 @@ public:
 
     void Splice(Iterator insertAfter, List<T> &from);
     void Splice(Iterator insertAfter, List<T> &from, Iterator element);
-    void Splice(Iterator insertAfter, List<T> &src,
-                Iterator srcRangeBegin, Iterator srcRangeEnd);
+    void Splice(Iterator insertAfter,
+                List<T> &src,
+                Iterator srcRangeBegin,
+                Iterator srcRangeEnd);
 
-    Iterator Insert(const Iterator& it, const T& x);
+    Iterator Insert(const Iterator &it, const T &x);
 
-    Iterator Insert(const T& x, int index);
+    Iterator Insert(const T &x, int index);
 
-    Iterator Insert(const Iterator& begin, int count, const T& x);
+    Iterator Insert(const Iterator &begin, int count, const T &x);
 
     template <class OtherIterator>
-    void Insert(const Iterator& begin,
+    void Insert(const Iterator &begin,
                 const OtherIterator &otherBegin,
                 const OtherIterator &otherEnd);
 
-    void PushFront(const T& x);
+    void PushFront(const T &x);
     void PopFront();
 
     List<T> Concat(const List<T> &l) const;
 
     void Sort();
-    template<class StrictWeakOrdering>
+    template <class StrictWeakOrdering>
     void Sort(const StrictWeakOrdering &sortClass);
 
-    void PushBack(const T& x);
+    void PushBack(const T &x);
     template <template <class OtherT> class Container, class OtherT>
     void PushBack(const Container<OtherT> &container);
 
-    const T* Data() const;
+    const T *Data() const;
 
-    Const_Iterator Find(const T& x) const;
-    Iterator Find(const T& x);
-    Iterator FindLast(const T& x);
+    Const_Iterator Find(const T &x) const;
+    Iterator Find(const T &x);
+    Iterator FindLast(const T &x);
     bool Contains(const T &x) const;
 
-    const T& Front() const;
-    const T& Back() const;
-    T& Front();
-    T& Back();
+    const T &Front() const;
+    const T &Back() const;
+    T &Front();
+    T &Back();
 
     Iterator Remove(const Iterator &first, const Iterator &last);
     Iterator Remove(Iterator it);
-    Iterator Remove(const T& x);
-    void RemoveAll(const T& x);
+    Iterator Remove(const T &x);
+    void RemoveAll(const T &x);
 
     void PopBack();
-    int IndexOf(const T& x) const;
+    int IndexOf(const T &x) const;
 
     void Resize(int n);
     uint Size() const;
@@ -97,15 +99,14 @@ public:
     Const_Iterator begin() const;
     Const_Iterator end() const;
 
-    template < template <class> class Container, class OtherT = T >
+    template <template <class> class Container, class OtherT = T>
     Container<OtherT> To() const;
 
 private:
     std::list<T> m_list;
 };
-
-NAMESPACE_BANG_END
+}
 
 #include "List.tcc"
 
-#endif // LIST_H
+#endif  // LIST_H

@@ -11,12 +11,12 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Animation;
-FORWARD class AnimatorStateMachine;
-FORWARD class AnimatorStateMachinePlayer;
-FORWARD class ICloneable;
+namespace Bang
+{
+class Animation;
+class AnimatorStateMachine;
+class AnimatorStateMachinePlayer;
+class ICloneable;
 
 class Animator : public Component
 {
@@ -26,7 +26,7 @@ public:
     static constexpr int MaxNumBones = 128;
 
     Animator();
-	virtual ~Animator() override;
+    virtual ~Animator() override;
 
     // Component
     void OnStart() override;
@@ -43,7 +43,7 @@ public:
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
     AnimatorStateMachinePlayer *GetPlayer() const;
-    AnimatorStateMachine* GetStateMachine() const;
+    AnimatorStateMachine *GetStateMachine() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -61,21 +61,18 @@ private:
     bool m_playOnStart = true;
     bool m_playing = false;
 
-
     void SetSkinnedMeshRendererCurrentBoneMatrices(
-                                const Map<String, Matrix4> &boneAnimMatrices);
+        const Map<String, Matrix4> &boneAnimMatrices);
 
     static Map<String, Matrix4> GetBoneAnimationMatrices(Animation *animation,
                                                          Time animationTime);
     static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
-                                                Animation *prevAnimation,
-                                                Time prevAnimationTime,
-                                                Animation *nextAnimation,
-                                                Time currentCrossFadeTime,
-                                                Time totalCrossFadeTime);
+        Animation *prevAnimation,
+        Time prevAnimationTime,
+        Animation *nextAnimation,
+        Time currentCrossFadeTime,
+        Time totalCrossFadeTime);
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // ANIMATOR_H
-
+#endif  // ANIMATOR_H

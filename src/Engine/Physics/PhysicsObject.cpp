@@ -1,6 +1,6 @@
 #include "Bang/PhysicsObject.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 PhysicsObject::PhysicsObject()
 {
@@ -17,7 +17,7 @@ void PhysicsObject::SetPhysicsObjectType(PhysicsObject::Type physicsObjectType)
 
 void PhysicsObject::SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic)
 {
-    if (pxRigidDynamic != GetPxRigidDynamic())
+    if(pxRigidDynamic != GetPxRigidDynamic())
     {
         physx::PxRigidDynamic *prevPxRD = GetPxRigidDynamic();
 
@@ -38,8 +38,8 @@ PhysicsObject::Type PhysicsObject::GetPhysicsObjectType() const
 }
 
 void PhysicsObject::OnPxRigidDynamicChanged(
-                            physx::PxRigidDynamic *prevPxRigidDynamic,
-                            physx::PxRigidDynamic *newPxRigidDynamic)
+    physx::PxRigidDynamic *prevPxRigidDynamic,
+    physx::PxRigidDynamic *newPxRigidDynamic)
 {
     BANG_UNUSED_2(prevPxRigidDynamic, newPxRigidDynamic);
 }

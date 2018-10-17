@@ -7,8 +7,8 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Chrono
 {
 public:
@@ -20,7 +20,7 @@ public:
 private:
     struct ChronoEvent
     {
-        String eventName        = "";
+        String eventName = "";
         Time time;
         Time timeSinceLastEvent;
     };
@@ -28,7 +28,6 @@ private:
     String m_chronoName = "";
     Array<ChronoEvent> m_events = {};
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // CHRONO_H
+#endif  // CHRONO_H

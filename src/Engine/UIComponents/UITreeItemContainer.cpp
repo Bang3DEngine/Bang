@@ -16,11 +16,12 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Texture2D;
-FORWARD NAMESPACE_BANG_END
+namespace Bang
+{
+class Texture2D;
+}
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UITreeItemContainer::UITreeItemContainer()
 {
@@ -31,20 +32,21 @@ UITreeItemContainer::UITreeItemContainer()
 
     p_userItemContainer = GameObjectFactory::CreateUIGameObject();
 
-    UIHorizontalLayout *containerHLayout = p_userItemContainer->
-                                           AddComponent<UIHorizontalLayout>();
+    UIHorizontalLayout *containerHLayout =
+        p_userItemContainer->AddComponent<UIHorizontalLayout>();
     containerHLayout->SetChildrenHorizontalStretch(Stretch::FULL);
 
-    UILayoutElement *containerLE = p_userItemContainer->AddComponent<UILayoutElement>();
+    UILayoutElement *containerLE =
+        p_userItemContainer->AddComponent<UILayoutElement>();
     containerLE->SetFlexibleSize(Vector2(99999.0f));
 
-    p_indentSpacer = GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN,
-                                                       Vector2::Zero);
+    p_indentSpacer =
+        GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN, Vector2::Zero);
     p_indentSpacer->SetName("IndentSpacer");
 
     Texture2D *iconTex = TextureFactory::GetDownArrowIcon();
     p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex);
-    p_collapseButton->GetLayoutElement()->SetFlexibleSize( Vector2::Zero );
+    p_collapseButton->GetLayoutElement()->SetFlexibleSize(Vector2::Zero);
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex, Vector2i(8), 0);
     p_collapseButton->GetIcon()->SetTint(Color::Black);
@@ -64,7 +66,6 @@ UITreeItemContainer::UITreeItemContainer()
 
 UITreeItemContainer::~UITreeItemContainer()
 {
-
 }
 
 void UITreeItemContainer::SetCollapsable(bool collapsable)
@@ -76,11 +77,11 @@ void UITreeItemContainer::SetCollapsable(bool collapsable)
 
 void UITreeItemContainer::SetCollapsed(bool collapsed)
 {
-    if (collapsed != IsCollapsed())
+    if(collapsed != IsCollapsed())
     {
         m_collapsed = collapsed;
-        Texture2D *iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon() :
-                                             TextureFactory::GetDownArrowIcon();
+        Texture2D *iconTex = IsCollapsed() ? TextureFactory::GetRightArrowIcon()
+                                           : TextureFactory::GetDownArrowIcon();
         GetCollapseButton()->SetIconTexture(iconTex);
     }
 }
@@ -90,7 +91,7 @@ void UITreeItemContainer::SetContainedItem(GOItem *go)
     p_containedGameObject = go;
     p_containedGameObject->SetParent(p_userItemContainer);
     SetName("GOItemCont_" + go->GetName());
-    p_dragDroppable->SetFocusable( GetFocusable() );
+    p_dragDroppable->SetFocusable(GetFocusable());
 }
 
 GameObject *UITreeItemContainer::GetContainedItem() const
@@ -116,11 +117,11 @@ int UITreeItemContainer::GetIndentationPx() const
 
 UIFocusable *UITreeItemContainer::GetFocusable() const
 {
-    if (GOItem *item = GetContainedItem())
+    if(GOItem *item = GetContainedItem())
     {
-        if (ITreeItem *treeItem = DCAST<ITreeItem*>(item))
+        if(ITreeItem *treeItem = DCAST<ITreeItem *>(item))
         {
-            if (UIFocusable *itemFocusable = treeItem->GetTreeItemFocusable())
+            if(UIFocusable *itemFocusable = treeItem->GetTreeItemFocusable())
             {
                 return itemFocusable;
             }

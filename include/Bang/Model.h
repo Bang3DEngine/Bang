@@ -8,34 +8,36 @@
 #include "Bang/ModelIO.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class  Array;
-FORWARD_T class  ResourceHandle;
-FORWARD   class  Animation;
-FORWARD   class  GameObject;
-FORWARD   class  Material;
-FORWARD   class  MetaNode;
-FORWARD   class  Path;
+namespace Bang
+{
+template <class>
+class Array;
+template <class>
+class ResourceHandle;
+class Animation;
+class GameObject;
+class Material;
+class MetaNode;
+class Path;
 
 class Model : public Asset
 {
     ASSET(Model)
 
 public:
-	Model();
-	virtual ~Model() override;
+    Model();
+    virtual ~Model() override;
 
     GameObject *CreateGameObjectFromModel() const;
 
-    const String& GetRootGameObjectName() const;
-    const Array< RH<Mesh> >& GetMeshes() const;
-    const Array< RH<Material> >& GetMaterials() const;
-    const Array< RH<Animation> >& GetAnimations() const;
-    const Array<String>& GetMeshesNames() const;
-    const Array<String>& GetMaterialsNames() const;
-    const Array<String>& GetAnimationsNames() const;
-    const Map<String, Mesh::Bone>& GetAllBones() const;
+    const String &GetRootGameObjectName() const;
+    const Array<RH<Mesh>> &GetMeshes() const;
+    const Array<RH<Material>> &GetMaterials() const;
+    const Array<RH<Animation>> &GetAnimations() const;
+    const Array<String> &GetMeshesNames() const;
+    const Array<String> &GetMaterialsNames() const;
+    const Array<String> &GetAnimationsNames() const;
+    const Map<String, Mesh::Bone> &GetAllBones() const;
 
     // Resource
     void Import(const Path &modelFilepath) override;
@@ -47,8 +49,6 @@ public:
 private:
     ModelIOScene m_modelScene;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // MODEL_H
-
+#endif  // MODEL_H

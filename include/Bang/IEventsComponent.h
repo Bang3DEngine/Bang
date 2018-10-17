@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Component;
+namespace Bang
+{
+class Component;
 
 class IEventsComponent
 {
@@ -23,7 +23,6 @@ public:
         BANG_UNUSED_2(removedComponent, previousGameObject);
     }
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSCOMPONENT_H
+#endif  // IEVENTSCOMPONENT_H

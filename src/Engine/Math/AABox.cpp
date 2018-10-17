@@ -8,19 +8,21 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector4.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 AABox AABox::Empty = AABox();
 
 AABox::AABox()
 {
 }
 
-AABox::AABox(float minx, float maxx,
-             float miny, float maxy,
-             float minz, float maxz) :
-    AABox(Vector3(minx, miny, minz),
-          Vector3(maxx, maxy, maxz))
+AABox::AABox(float minx,
+             float maxx,
+             float miny,
+             float maxy,
+             float minz,
+             float maxz)
+    : AABox(Vector3(minx, miny, minz), Vector3(maxx, maxy, maxz))
 {
 }
 
@@ -53,12 +55,12 @@ void AABox::SetMax(const Vector3 &bMax)
     m_maxv = bMax;
 }
 
-const Vector3& AABox::GetMin() const
+const Vector3 &AABox::GetMin() const
 {
     return m_minv;
 }
 
-const Vector3& AABox::GetMax() const
+const Vector3 &AABox::GetMax() const
 {
     return m_maxv;
 }
@@ -98,9 +100,7 @@ float AABox::GetArea() const
     float w = GetWidth();
     float h = GetHeight();
     float d = GetDepth();
-    return w * h * 2 +
-           w * d * 2 +
-           h * d * 2;
+    return w * h * 2 + w * d * 2 + h * d * 2;
 }
 
 float AABox::GetVolume() const
@@ -134,11 +134,17 @@ bool AABox::CheckCollision(const Sphere &sphere,
     float sRadius = sphere.GetRadius();
     const Vector3 &sCenter = sphere.GetCenter();
     float dCenterClosest = Vector3::Distance(closestPointToAABox, sCenter);
-    bool collides = ( dCenterClosest <= sRadius * sRadius );
-    if (collides)
+    bool collides = (dCenterClosest <= sRadius * sRadius);
+    if(collides)
     {
-        if (point)  { *point = closestPointToAABox; }
-        if (normal) { *normal = (closestPointToAABox - sCenter).Normalized(); }
+        if(point)
+        {
+            *point = closestPointToAABox;
+        }
+        if(normal)
+        {
+            *normal = (closestPointToAABox - sCenter).Normalized();
+        }
     }
     return collides;
 }
@@ -149,7 +155,6 @@ bool AABox::CheckCollision(const AABox &aabox) const
     return Contains(points[0]) || Contains(points[1]) || Contains(points[2]) ||
            Contains(points[3]) || Contains(points[4]) || Contains(points[5]) ||
            Contains(points[6]) || Contains(points[7]);
-
 }
 
 bool AABox::Contains(const Vector3 &point) const
@@ -163,18 +168,18 @@ bool AABox::Contains(const Vector3 &point) const
 
 void AABox::AddPoint(const Vector3 &point)
 {
-    SetMin( Vector3::Min(GetMin(), point) );
-    SetMax( Vector3::Max(GetMax(), point) );
+    SetMin(Vector3::Min(GetMin(), point));
+    SetMax(Vector3::Max(GetMax(), point));
 }
 
 AABox AABox::Union(const AABox &b1, const AABox &b2)
 {
-    if (b1 == AABox::Empty)
+    if(b1 == AABox::Empty)
     {
         return b2;
     }
 
-    if (b2 == AABox::Empty)
+    if(b2 == AABox::Empty)
     {
         return b1;
     }
@@ -187,7 +192,7 @@ AABox AABox::Union(const AABox &b1, const AABox &b2)
 void AABox::CreateFromPositions(const Array<Vector3> &positions)
 {
     *this = AABox::Empty;
-    for (const Vector3 &v : positions)
+    for(const Vector3 &v : positions)
     {
         AddPoint(v);
     }
@@ -200,23 +205,23 @@ AABox AABox::FromPointAndSize(const Vector3 &point, const Vector3 &size)
 
 AABox AABox::FromSphere(const Sphere &sphere)
 {
-    AABox b (sphere.GetPoints().Front());
+    AABox b(sphere.GetPoints().Front());
     b.CreateFromPositions(sphere.GetPoints());
     return b;
 }
 
 Array<Vector3> AABox::GetPoints() const
 {
-    const Vector3 center  = GetCenter();
+    const Vector3 center = GetCenter();
     const Vector3 extents = GetExtents();
     const Vector3 p1 = center + extents * Vector3(-1, -1, -1);
-    const Vector3 p2 = center + extents * Vector3(-1, -1,  1);
-    const Vector3 p3 = center + extents * Vector3(-1,  1, -1);
-    const Vector3 p4 = center + extents * Vector3(-1,  1,  1);
-    const Vector3 p5 = center + extents * Vector3( 1, -1, -1);
-    const Vector3 p6 = center + extents * Vector3( 1, -1,  1);
-    const Vector3 p7 = center + extents * Vector3( 1,  1, -1);
-    const Vector3 p8 = center + extents * Vector3( 1,  1,  1);
+    const Vector3 p2 = center + extents * Vector3(-1, -1, 1);
+    const Vector3 p3 = center + extents * Vector3(-1, 1, -1);
+    const Vector3 p4 = center + extents * Vector3(-1, 1, 1);
+    const Vector3 p5 = center + extents * Vector3(1, -1, -1);
+    const Vector3 p6 = center + extents * Vector3(1, -1, 1);
+    const Vector3 p7 = center + extents * Vector3(1, 1, -1);
+    const Vector3 p8 = center + extents * Vector3(1, 1, 1);
     return {p1, p2, p3, p4, p5, p6, p7, p8};
 }
 
@@ -225,52 +230,87 @@ Quad AABox::GetQuad(Axis3D axis, bool sign) const
     const Vector3 &ctr = GetCenter();
     const Vector3 &ext = GetExtents();
     int xs0, xs1, xs2, xs3, ys0, ys1, ys2, ys3, zs0, zs1, zs2, zs3;
-    switch (axis) // Given in CCW order out facing the AABox
+    switch(axis)  // Given in CCW order out facing the AABox
     {
         case Axis3D::X:
-            xs0 = (sign ?  1 : -1); xs1 = (sign ?  1 : -1);
-            xs2 = (sign ?  1 : -1); xs3 = (sign ?  1 : -1);
-            ys0 = (sign ? -1 : -1); ys1 = (sign ? -1 : -1);
-            ys2 = (sign ?  1 :  1); ys3 = (sign ?  1 :  1);
-            zs0 = (sign ?  1 : -1); zs1 = (sign ? -1 :  1);
-            zs2 = (sign ? -1 :  1); zs3 = (sign ?  1 : -1);
-        break;
+            xs0 = (sign ? 1 : -1);
+            xs1 = (sign ? 1 : -1);
+            xs2 = (sign ? 1 : -1);
+            xs3 = (sign ? 1 : -1);
+            ys0 = (sign ? -1 : -1);
+            ys1 = (sign ? -1 : -1);
+            ys2 = (sign ? 1 : 1);
+            ys3 = (sign ? 1 : 1);
+            zs0 = (sign ? 1 : -1);
+            zs1 = (sign ? -1 : 1);
+            zs2 = (sign ? -1 : 1);
+            zs3 = (sign ? 1 : -1);
+            break;
 
         case Axis3D::Y:
-            xs0 = (sign ? -1 : -1); xs1 = (sign ?  1 : -1);
-            xs2 = (sign ?  1 :  1); xs3 = (sign ? -1 :  1);
-            ys0 = (sign ?  1 : -1); ys1 = (sign ?  1 : -1);
-            ys2 = (sign ?  1 : -1); ys3 = (sign ?  1 : -1);
-            zs0 = (sign ?  1 :  1); zs1 = (sign ?  1 : -1);
-            zs2 = (sign ? -1 : -1); zs3 = (sign ? -1 :  1);
-        break;
+            xs0 = (sign ? -1 : -1);
+            xs1 = (sign ? 1 : -1);
+            xs2 = (sign ? 1 : 1);
+            xs3 = (sign ? -1 : 1);
+            ys0 = (sign ? 1 : -1);
+            ys1 = (sign ? 1 : -1);
+            ys2 = (sign ? 1 : -1);
+            ys3 = (sign ? 1 : -1);
+            zs0 = (sign ? 1 : 1);
+            zs1 = (sign ? 1 : -1);
+            zs2 = (sign ? -1 : -1);
+            zs3 = (sign ? -1 : 1);
+            break;
 
         default:
         case Axis3D::Z:
-            xs0 = (sign ? -1 : -1); xs1 = (sign ?  1 : -1);
-            xs2 = (sign ?  1 :  1); xs3 = (sign ? -1 :  1);
-            ys0 = (sign ? -1 : -1); ys1 = (sign ? -1 :  1);
-            ys2 = (sign ?  1 :  1); ys3 = (sign ?  1 : -1);
-            zs0 = (sign ?  1 : -1); zs1 = (sign ?  1 : -1);
-            zs2 = (sign ?  1 : -1); zs3 = (sign ?  1 : -1);
-        break;
-
+            xs0 = (sign ? -1 : -1);
+            xs1 = (sign ? 1 : -1);
+            xs2 = (sign ? 1 : 1);
+            xs3 = (sign ? -1 : 1);
+            ys0 = (sign ? -1 : -1);
+            ys1 = (sign ? -1 : 1);
+            ys2 = (sign ? 1 : 1);
+            ys3 = (sign ? 1 : -1);
+            zs0 = (sign ? 1 : -1);
+            zs1 = (sign ? 1 : -1);
+            zs2 = (sign ? 1 : -1);
+            zs3 = (sign ? 1 : -1);
+            break;
     }
     return Quad(ctr + Vector3(xs0 * ext.x, ys0 * ext.y, zs0 * ext.z),
                 ctr + Vector3(xs1 * ext.x, ys1 * ext.y, zs1 * ext.z),
                 ctr + Vector3(xs2 * ext.x, ys2 * ext.y, zs2 * ext.z),
                 ctr + Vector3(xs3 * ext.x, ys3 * ext.y, zs3 * ext.z));
 }
-Quad AABox::GetRightQuad() const { return GetQuad(Axis3D::X, true); }
-Quad AABox::GetLeftQuad()  const { return GetQuad(Axis3D::X, false); }
-Quad AABox::GetTopQuad()   const { return GetQuad(Axis3D::Y, true); }
-Quad AABox::GetBotQuad()   const { return GetQuad(Axis3D::Y, false); }
-Quad AABox::GetFrontQuad() const { return GetQuad(Axis3D::Z, true); }
-Quad AABox::GetBackQuad()  const { return GetQuad(Axis3D::Z, false); }
+Quad AABox::GetRightQuad() const
+{
+    return GetQuad(Axis3D::X, true);
+}
+Quad AABox::GetLeftQuad() const
+{
+    return GetQuad(Axis3D::X, false);
+}
+Quad AABox::GetTopQuad() const
+{
+    return GetQuad(Axis3D::Y, true);
+}
+Quad AABox::GetBotQuad() const
+{
+    return GetQuad(Axis3D::Y, false);
+}
+Quad AABox::GetFrontQuad() const
+{
+    return GetQuad(Axis3D::Z, true);
+}
+Quad AABox::GetBackQuad() const
+{
+    return GetQuad(Axis3D::Z, false);
+}
 std::array<Quad, 6> AABox::GetQuads() const
 {
-    const std::array<Quad, 6> aaBoxQuads = {{GetBotQuad(),   GetTopQuad(),
-                                             GetLeftQuad(),  GetRightQuad(),
+    const std::array<Quad, 6> aaBoxQuads = {{GetBotQuad(), GetTopQuad(),
+                                             GetLeftQuad(), GetRightQuad(),
                                              GetFrontQuad(), GetBackQuad()}};
     return aaBoxQuads;
 }
@@ -278,23 +318,16 @@ std::array<Quad, 6> AABox::GetQuads() const
 AABox operator*(const Matrix4 &m, const AABox &b)
 {
     Array<Vector3> points = b.GetPoints();
-    Array<Vector3> newTransformedBoxPoints =
-        {
-            (m * Vector4(points[0], 1)).xyz(),
-            (m * Vector4(points[1], 1)).xyz(),
-            (m * Vector4(points[2], 1)).xyz(),
-            (m * Vector4(points[3], 1)).xyz(),
-            (m * Vector4(points[4], 1)).xyz(),
-            (m * Vector4(points[5], 1)).xyz(),
-            (m * Vector4(points[6], 1)).xyz(),
-            (m * Vector4(points[7], 1)).xyz()
-        };
+    Array<Vector3> newTransformedBoxPoints = {
+        (m * Vector4(points[0], 1)).xyz(), (m * Vector4(points[1], 1)).xyz(),
+        (m * Vector4(points[2], 1)).xyz(), (m * Vector4(points[3], 1)).xyz(),
+        (m * Vector4(points[4], 1)).xyz(), (m * Vector4(points[5], 1)).xyz(),
+        (m * Vector4(points[6], 1)).xyz(), (m * Vector4(points[7], 1)).xyz()};
 
-    AABox br (newTransformedBoxPoints.Front());
+    AABox br(newTransformedBoxPoints.Front());
     br.CreateFromPositions(newTransformedBoxPoints);
     return br;
 }
-
 
 bool operator==(const AABox &b1, const AABox &b2)
 {
@@ -305,5 +338,4 @@ bool operator!=(const AABox &b1, const AABox &b2)
 {
     return !(b1 == b2);
 }
-
-NAMESPACE_BANG_END
+}

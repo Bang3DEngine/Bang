@@ -1,6 +1,6 @@
 #include "Bang/CollisionContact.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 CollisionContact::CollisionContact()
 {
@@ -34,4 +34,3 @@ Collider *CollisionContact::GetOtherCollider() const
 {
     return p_otherCollider;
 }
-

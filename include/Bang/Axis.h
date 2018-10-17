@@ -4,8 +4,8 @@
 #include "Bang/Bang.h"
 #include "Bang/Flags.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 enum class Axis
 {
     VERTICAL,
@@ -29,7 +29,6 @@ enum class Axis3DExt
     YZ,
     XYZ
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // AXIS_H
+#endif  // AXIS_H

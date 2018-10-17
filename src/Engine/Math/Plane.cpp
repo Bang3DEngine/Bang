@@ -3,7 +3,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 Plane::Plane(const Vector3 &point, const Vector3 &normal)
 {
@@ -53,4 +53,3 @@ float Plane::GetDistanceTo(const Vector3 &point)
     float dist = Vector3::Dot(point - GetPoint(), GetNormal());
     return dist;
 }
-

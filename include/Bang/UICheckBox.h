@@ -20,10 +20,10 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
-FORWARD class IEventsValueChanged;
+namespace Bang
+{
+class GameObject;
+class IEventsValueChanged;
 
 class UICheckBox : public Component,
                    public EventEmitter<IEventsValueChanged>,
@@ -66,8 +66,6 @@ private:
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UICHECKBOX_H
-
+#endif  // UICHECKBOX_H

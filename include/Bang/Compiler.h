@@ -8,8 +8,8 @@
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
+namespace Bang
+{
 class Compiler
 {
 public:
@@ -33,10 +33,10 @@ public:
         void AddInputFiles(const Array<Path> &paths);
         void AddInputFile(const String &path);
         void AddInputFiles(const Array<String> &paths);
-        const List<String>& GetInputFiles() const;
+        const List<String> &GetInputFiles() const;
 
     private:
-        List<String> inputFiles; // cpp or objects
+        List<String> inputFiles;  // cpp or objects
     };
 
     struct Result
@@ -51,7 +51,6 @@ public:
 private:
     Compiler();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // COMPILER_H
+#endif  // COMPILER_H

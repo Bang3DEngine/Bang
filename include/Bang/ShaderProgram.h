@@ -5,31 +5,32 @@
 #include <vector>
 
 #include "Bang/Array.h"
-#include "Bang/Matrix3.h"
-#include "Bang/Matrix4.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
-#include "Bang/IEventsResource.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsResource.h"
+#include "Bang/Matrix3.h"
+#include "Bang/Matrix4.h"
 #include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class EventEmitter;
-FORWARD   class Color;
-FORWARD   class IEventsDestroy;
-FORWARD   class IEventsResource;
-FORWARD   class Path;
-FORWARD   class Shader;
-FORWARD   class Texture2D;
-FORWARD   class Texture;
-FORWARD   class TextureCubeMap;
+namespace Bang
+{
+template <class>
+class EventEmitter;
+class Color;
+class IEventsDestroy;
+class IEventsResource;
+class Path;
+class Shader;
+class Texture2D;
+class Texture;
+class TextureCubeMap;
 
 class ShaderProgram : public GLObject,
                       public Resource,
@@ -43,8 +44,8 @@ public:
     bool Load(const Path &vShaderPath,
               const Path &gShaderPath,
               const Path &fShaderPath);
-    bool Load(Shader* vShader, Shader* fShader);
-    bool Load(Shader* vShader, Shader* gShader, Shader* fShader);
+    bool Load(Shader *vShader, Shader *fShader);
+    bool Load(Shader *vShader, Shader *gShader, Shader *fShader);
 
     bool Link();
     bool IsLinked() const;
@@ -57,36 +58,61 @@ public:
     bool SetBool(const String &name, bool v, bool warn = false);
     bool SetFloat(const String &name, float v, bool warn = false);
     bool SetDouble(const String &name, double v, bool warn = false);
-    bool SetColor(const String &name, const Color& v, bool warn = false);
-    bool SetVector2(const String &name, const Vector2& v, bool warn = false);
-    bool SetVector3(const String &name, const Vector3& v, bool warn = false);
-    bool SetVector4(const String &name, const Vector4& v, bool warn = false);
-    bool SetMatrix3(const String &name, const Matrix3& v, bool warn = false);
-    bool SetMatrix4(const String &name, const Matrix4& v, bool warn = false);
-    bool SetTexture2D(const String &name, Texture2D *texture, bool warn = false);
-    bool SetTextureCubeMap(const String &name, TextureCubeMap *textureCubeMap,
+    bool SetColor(const String &name, const Color &v, bool warn = false);
+    bool SetVector2(const String &name, const Vector2 &v, bool warn = false);
+    bool SetVector3(const String &name, const Vector3 &v, bool warn = false);
+    bool SetVector4(const String &name, const Vector4 &v, bool warn = false);
+    bool SetMatrix3(const String &name, const Matrix3 &v, bool warn = false);
+    bool SetMatrix4(const String &name, const Matrix4 &v, bool warn = false);
+    bool SetTexture2D(const String &name,
+                      Texture2D *texture,
+                      bool warn = false);
+    bool SetTextureCubeMap(const String &name,
+                           TextureCubeMap *textureCubeMap,
                            bool warn = false);
-    bool SetIntArray(const String &name, const Array<int>& v, bool warn = false);
-    bool SetBoolArray(const String &name, const Array<bool>& v, bool warn = false);
-    bool SetFloatArray(const String &name, const Array<float>& v, bool warn = false);
-    bool SetDoubleArray(const String &name, const Array<double>& v, bool warn = false);
-    bool SetColorArray(const String &name, const Array<Color>& v, bool warn = false);
-    bool SetVector2Array(const String &name, const Array<Vector2>& v, bool warn = false);
-    bool SetVector3Array(const String &name, const Array<Vector3>& v, bool warn = false);
-    bool SetVector4Array(const String &name, const Array<Vector4>& v, bool warn = false);
-    bool SetMatrix3Array(const String &name, const Array<Matrix3>& v, bool warn = false);
-    bool SetMatrix4Array(const String &name, const Array<Matrix4>& v, bool warn = false);
-    bool SetTexture2DArray(const String &name, const Array<Texture2D*>& v, bool warn = false);
+    bool SetIntArray(const String &name,
+                     const Array<int> &v,
+                     bool warn = false);
+    bool SetBoolArray(const String &name,
+                      const Array<bool> &v,
+                      bool warn = false);
+    bool SetFloatArray(const String &name,
+                       const Array<float> &v,
+                       bool warn = false);
+    bool SetDoubleArray(const String &name,
+                        const Array<double> &v,
+                        bool warn = false);
+    bool SetColorArray(const String &name,
+                       const Array<Color> &v,
+                       bool warn = false);
+    bool SetVector2Array(const String &name,
+                         const Array<Vector2> &v,
+                         bool warn = false);
+    bool SetVector3Array(const String &name,
+                         const Array<Vector3> &v,
+                         bool warn = false);
+    bool SetVector4Array(const String &name,
+                         const Array<Vector4> &v,
+                         bool warn = false);
+    bool SetMatrix3Array(const String &name,
+                         const Array<Matrix3> &v,
+                         bool warn = false);
+    bool SetMatrix4Array(const String &name,
+                         const Array<Matrix4> &v,
+                         bool warn = false);
+    bool SetTexture2DArray(const String &name,
+                           const Array<Texture2D *> &v,
+                           bool warn = false);
 
     bool SetShader(Shader *shader, GL::ShaderType type);
-    bool SetVertexShader(Shader* vertexShader);
-    bool SetGeometryShader(Shader* geometryShader);
-    bool SetFragmentShader(Shader* fragmentShader);
+    bool SetVertexShader(Shader *vertexShader);
+    bool SetGeometryShader(Shader *geometryShader);
+    bool SetFragmentShader(Shader *fragmentShader);
 
-    Shader* GetShader(GL::ShaderType type) const;
-    Shader* GetVertexShader() const;
-    Shader* GetGeometryShader() const;
-    Shader* GetFragmentShader() const;
+    Shader *GetShader(GL::ShaderType type) const;
+    Shader *GetVertexShader() const;
+    Shader *GetGeometryShader() const;
+    Shader *GetFragmentShader() const;
 
     GLint GetUniformLocation(const String &name) const;
 
@@ -111,15 +137,15 @@ private:
     UMap<String, Matrix4> m_uniformCacheMatrix4;
 
     mutable UMap<String, int> m_nameToLocationCache;
-    mutable UMap<String, Texture*> m_namesToTexture;
+    mutable UMap<String, Texture *> m_namesToTexture;
 
     ShaderProgram();
     ShaderProgram(Shader *vShader, Shader *fShader);
     ShaderProgram(Shader *vShader, Shader *gShader, Shader *fShader);
-    ShaderProgram(const Path& vShaderPath, const Path& fShaderPath);
-    ShaderProgram(const Path& vShaderPath,
-                  const Path& gShaderPath,
-                  const Path& fShaderPath);
+    ShaderProgram(const Path &vShaderPath, const Path &fShaderPath);
+    ShaderProgram(const Path &vShaderPath,
+                  const Path &gShaderPath,
+                  const Path &fShaderPath);
     virtual ~ShaderProgram() override;
 
     void Bind() const override;
@@ -140,7 +166,6 @@ private:
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // SHADERPROGRAM_H
+#endif  // SHADERPROGRAM_H

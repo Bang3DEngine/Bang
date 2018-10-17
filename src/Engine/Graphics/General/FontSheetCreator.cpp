@@ -16,7 +16,7 @@
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
                                         Texture2D *atlasTexture,
@@ -24,22 +24,28 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
                                         Array<AARecti> *imagesOutputRects,
                                         int extraMargin)
 {
-    if (!ttfFont) { return false; }
+    if(!ttfFont)
+    {
+        return false;
+    }
 
     Array<Imageb> charImages;
-    for (const char c : charsToLoad)
+    for(const char c : charsToLoad)
     {
-        if (TTF_GlyphIsProvided(ttfFont, c))
+        if(TTF_GlyphIsProvided(ttfFont, c))
         {
             // Create bitmap
             constexpr SDL_Color WhiteColor = {255, 255, 255, 255};
             TTF_SetFontHinting(ttfFont, TTF_HINTING_LIGHT);
-            SDL_Surface *charBitmap = TTF_RenderGlyph_Blended(ttfFont, c,
-                                                              WhiteColor);
-            if (!charBitmap) { continue; }
+            SDL_Surface *charBitmap =
+                TTF_RenderGlyph_Blended(ttfFont, c, WhiteColor);
+            if(!charBitmap)
+            {
+                continue;
+            }
 
             SDL_PixelFormat *fmt = charBitmap->format;
-            Uint32 *charPixels = SCAST<Uint32*>(charBitmap->pixels);
+            Uint32 *charPixels = SCAST<Uint32 *>(charBitmap->pixels);
             Imageb charImage(charBitmap->w, charBitmap->h);
             for(int y = 0; y < charBitmap->h; ++y)
             {
@@ -47,31 +53,33 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
                 {
                     Uint32 color32 = charPixels[y * charBitmap->w + x];
                     Uint32 alpha = ((color32 & fmt->Amask) >> fmt->Ashift)
-                                    << fmt->Aloss;
+                                   << fmt->Aloss;
                     Color pxColor = Color::Zero;
                     pxColor.a = (alpha / 255.0f);
                     charImage.SetPixel(x, y, pxColor);
                 }
             }
-            // charImage.Export( Path("Char_" + String(int(c)) + "_" + String(charBitmap->w) + ".png") );
+            // charImage.Export( Path("Char_" + String(int(c)) + "_" +
+            // String(charBitmap->w) + ".png") );
 
             charImages.PushBack(charImage);
             SDL_FreeSurface(charBitmap);
         }
         else
         {
-            Imageb empty; empty.Create(1, 1, Color::Zero);
+            Imageb empty;
+            empty.Create(1, 1, Color::Zero);
             charImages.PushBack(empty);
         }
     }
 
     // Resize the atlas to fit only the used area
-    Imageb atlasImage = FontSheetCreator::PackImages(charImages,
-                                                     extraMargin,
+    Imageb atlasImage = FontSheetCreator::PackImages(charImages, extraMargin,
                                                      imagesOutputRects);
-    // atlasImage.Export(Path("font_" + String(atlasImage.GetWidth()) + ".png"));
+    // atlasImage.Export(Path("font_" + String(atlasImage.GetWidth()) +
+    // ".png"));
 
-    if (atlasTexture) // Create final atlas texture
+    if(atlasTexture)  // Create final atlas texture
     {
         GL::PixelStore(GL::UNPACK_ALIGNMENT, 1);
         atlasTexture->Import(atlasImage);
@@ -91,16 +99,16 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
                                     Array<AARecti> *imagesOutputRects,
                                     const Color &bgColor)
 {
-    int maxImgWidth  = 0;
+    int maxImgWidth = 0;
     int maxImgHeight = 0;
-    for (const Imageb &img : images)
+    for(const Imageb &img : images)
     {
-        maxImgWidth  = Math::Max(maxImgWidth,  img.GetWidth());
+        maxImgWidth = Math::Max(maxImgWidth, img.GetWidth());
         maxImgHeight = Math::Max(maxImgHeight, img.GetHeight());
     }
 
-    int imagesPerSide = Math::Sqrt(images.Size())+1;
-    int totalWidth  = (imagesPerSide) * (maxImgWidth  + (margin * 2));
+    int imagesPerSide = Math::Sqrt(images.Size()) + 1;
+    int totalWidth = (imagesPerSide) * (maxImgWidth + (margin * 2));
     int totalHeight = (imagesPerSide) * (maxImgHeight + (margin * 2));
 
     Imageb result;
@@ -109,12 +117,12 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
     maxImgHeight = 0;
     int currentRowImages = 0;
     Vector2i penPosTopLeft(0, margin);
-    for (const Imageb &img : images)
+    for(const Imageb &img : images)
     {
-        if (penPosTopLeft.x + img.GetWidth() + margin * 2 > totalWidth ||
-            currentRowImages >= imagesPerSide)
+        if(penPosTopLeft.x + img.GetWidth() + margin * 2 > totalWidth ||
+           currentRowImages >= imagesPerSide)
         {
-            penPosTopLeft.x = 0; // Go to next line
+            penPosTopLeft.x = 0;  // Go to next line
             penPosTopLeft.y += maxImgHeight + margin * 2;
             currentRowImages = 0;
             maxImgHeight = 0;
@@ -123,7 +131,10 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
         penPosTopLeft.x += margin;
 
         AARecti imgRect = AARecti(penPosTopLeft, penPosTopLeft + img.GetSize());
-        if (imagesOutputRects) { imagesOutputRects->PushBack(imgRect); }
+        if(imagesOutputRects)
+        {
+            imagesOutputRects->PushBack(imgRect);
+        }
         result.Copy(img, imgRect);
 
         maxImgHeight = Math::Max(maxImgHeight, imgRect.GetSize().y);
@@ -132,13 +143,13 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
 
     Vector2i minPixel = result.GetSize();
     Vector2i maxPixel = Vector2i::Zero;
-    for (int y = 0; y < result.GetHeight(); ++y)
+    for(int y = 0; y < result.GetHeight(); ++y)
     {
-        for (int x = 0; x < result.GetWidth(); ++x)
+        for(int x = 0; x < result.GetWidth(); ++x)
         {
-            if ( result.GetPixel(x,y).a > 0 )
+            if(result.GetPixel(x, y).a > 0)
             {
-                Vector2i xy(x,y);
+                Vector2i xy(x, y);
                 minPixel = Vector2i::Min(minPixel, xy);
                 maxPixel = Vector2i::Max(maxPixel, xy);
             }
@@ -148,7 +159,7 @@ Imageb FontSheetCreator::PackImages(const Array<Imageb> &images,
     maxPixel += Vector2i::One;
     Vector2i fittedSize = (maxPixel - minPixel);
     Imageb fittedResult(fittedSize.x, fittedSize.y);
-    fittedResult = result.GetSubImage( AARecti(minPixel, maxPixel) );
+    fittedResult = result.GetSubImage(AARecti(minPixel, maxPixel));
     fittedResult.FillTransparentPixels(bgColor);
 
     Imageb fittedResultMargined = fittedResult;

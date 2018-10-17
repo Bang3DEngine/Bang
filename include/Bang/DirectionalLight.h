@@ -3,22 +3,22 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
-#include "Bang/Matrix4.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
+#include "Bang/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Framebuffer;
-FORWARD class GameObject;
-FORWARD class ICloneable;
-FORWARD class Renderer;
-FORWARD class ShaderProgram;
+namespace Bang
+{
+class Framebuffer;
+class GameObject;
+class ICloneable;
+class Renderer;
+class ShaderProgram;
 
 class DirectionalLight : public Light
 {
@@ -29,7 +29,7 @@ public:
     float GetShadowDistance() const;
 
     // Light
-    Texture2D* GetShadowMapTexture() const override;
+    Texture2D *GetShadowMapTexture() const override;
 
     // Light
     void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const override;
@@ -50,20 +50,19 @@ protected:
     virtual ~DirectionalLight() override;
 
     AABox GetShadowCastersAABox(
-            const Array<Renderer*> &shadowCastersRenderers) const;
+        const Array<Renderer *> &shadowCastersRenderers) const;
 
     // Light
     void RenderShadowMaps_(GameObject *go) override;
 
     void GetWorldToShadowMapMatrices(
-                        Matrix4 *viewMatrix,
-                        Matrix4 *projMatrix,
-                        const Array<Renderer*> &shadowCastersRenderers) const;
+        Matrix4 *viewMatrix,
+        Matrix4 *projMatrix,
+        const Array<Renderer *> &shadowCastersRenderers) const;
     Matrix4 GetLightToWorldMatrix() const;
     AABox GetShadowMapOrthoBox(
-                        const Array<Renderer*> &shadowCastersRenderers) const;
+        const Array<Renderer *> &shadowCastersRenderers) const;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // DIRECTIONALLIGHT_H
+#endif  // DIRECTIONALLIGHT_H

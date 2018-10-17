@@ -1,12 +1,12 @@
 #ifndef IEVENTSDEBUG_H
 #define IEVENTSDEBUG_H
 
-#include "Bang/IEvents.h"
 #include "Bang/DebugMessageType.h"
+#include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class String;
+namespace Bang
+{
+class String;
 
 class IEventsDebug
 {
@@ -18,7 +18,6 @@ public:
                            int line,
                            const String &fileName) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSDEBUG_H
+#endif  // IEVENTSDEBUG_H

@@ -4,12 +4,12 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 
-FORWARD NAMESPACE_BANG_BEGIN
-FORWARD class Path;
+namespace Bang
+{
+class Path;
+}
 
-FORWARD NAMESPACE_BANG_END
-
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 PhysicsMaterial::PhysicsMaterial()
 {
@@ -23,7 +23,7 @@ PhysicsMaterial::~PhysicsMaterial()
 
 void PhysicsMaterial::SetStaticFriction(float staticFrictionCoeff)
 {
-    if (staticFrictionCoeff != GetStaticFriction())
+    if(staticFrictionCoeff != GetStaticFriction())
     {
         m_staticFriction = staticFrictionCoeff;
         UpdatePxMaterial();
@@ -32,7 +32,7 @@ void PhysicsMaterial::SetStaticFriction(float staticFrictionCoeff)
 
 void PhysicsMaterial::SetDynamicFriction(float dynamicFrictionCoeff)
 {
-    if (dynamicFrictionCoeff != GetDynamicFriction())
+    if(dynamicFrictionCoeff != GetDynamicFriction())
     {
         m_dynamicFriction = dynamicFrictionCoeff;
         UpdatePxMaterial();
@@ -41,7 +41,7 @@ void PhysicsMaterial::SetDynamicFriction(float dynamicFrictionCoeff)
 
 void PhysicsMaterial::SetRestitution(float restitutionCoeff)
 {
-    if (restitutionCoeff != GetRestitution())
+    if(restitutionCoeff != GetRestitution())
     {
         m_restitution = restitutionCoeff;
         UpdatePxMaterial();
@@ -50,7 +50,7 @@ void PhysicsMaterial::SetRestitution(float restitutionCoeff)
 
 void PhysicsMaterial::SetFrictionCombineMode(CombineMode combineMode)
 {
-    if (combineMode != GetFrictionCombineMode())
+    if(combineMode != GetFrictionCombineMode())
     {
         m_frictionCombineMode = combineMode;
         UpdatePxMaterial();
@@ -59,7 +59,7 @@ void PhysicsMaterial::SetFrictionCombineMode(CombineMode combineMode)
 
 void PhysicsMaterial::SetRestitutionCombineMode(CombineMode combineMode)
 {
-    if (combineMode != GetRestitutionCombineMode())
+    if(combineMode != GetRestitutionCombineMode())
     {
         m_restitutionCombineMode = combineMode;
         UpdatePxMaterial();
@@ -93,12 +93,12 @@ PhysicsMaterial::CombineMode PhysicsMaterial::GetRestitutionCombineMode() const
 
 void PhysicsMaterial::CloneInto(ICloneable *clone) const
 {
-    PhysicsMaterial *pMat = SCAST<PhysicsMaterial*>(clone);
-    pMat->SetStaticFriction( GetStaticFriction() );
-    pMat->SetDynamicFriction( GetDynamicFriction() );
-    pMat->SetRestitution( GetRestitution() );
-    pMat->SetFrictionCombineMode( GetFrictionCombineMode() );
-    pMat->SetRestitutionCombineMode( GetRestitutionCombineMode() );
+    PhysicsMaterial *pMat = SCAST<PhysicsMaterial *>(clone);
+    pMat->SetStaticFriction(GetStaticFriction());
+    pMat->SetDynamicFriction(GetDynamicFriction());
+    pMat->SetRestitution(GetRestitution());
+    pMat->SetFrictionCombineMode(GetFrictionCombineMode());
+    pMat->SetRestitutionCombineMode(GetRestitutionCombineMode());
 }
 
 void PhysicsMaterial::Import(const Path &physicsMaterialFilepath)
@@ -110,31 +110,31 @@ void PhysicsMaterial::ImportMeta(const MetaNode &metaNode)
 {
     Asset::ImportMeta(metaNode);
 
-    if (metaNode.Contains("StaticFriction"))
+    if(metaNode.Contains("StaticFriction"))
     {
-        SetStaticFriction( metaNode.Get<float>("StaticFriction") );
+        SetStaticFriction(metaNode.Get<float>("StaticFriction"));
     }
 
-    if (metaNode.Contains("DynamicFriction"))
+    if(metaNode.Contains("DynamicFriction"))
     {
-        SetDynamicFriction( metaNode.Get<float>("DynamicFriction") );
+        SetDynamicFriction(metaNode.Get<float>("DynamicFriction"));
     }
 
-    if (metaNode.Contains("Restitution"))
+    if(metaNode.Contains("Restitution"))
     {
-        SetRestitution( metaNode.Get<float>("Restitution") );
+        SetRestitution(metaNode.Get<float>("Restitution"));
     }
 
-    if (metaNode.Contains("FrictionCombineMode"))
+    if(metaNode.Contains("FrictionCombineMode"))
     {
         SetFrictionCombineMode(
-                    metaNode.Get<CombineMode>("FrictionCombineMode") );
+            metaNode.Get<CombineMode>("FrictionCombineMode"));
     }
 
-    if (metaNode.Contains("RestitutionCombineMode"))
+    if(metaNode.Contains("RestitutionCombineMode"))
     {
         SetRestitutionCombineMode(
-                    metaNode.Get<CombineMode>("RestitutionCombineMode") );
+            metaNode.Get<CombineMode>("RestitutionCombineMode"));
     }
 }
 
@@ -145,10 +145,9 @@ void PhysicsMaterial::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("StaticFriction", GetStaticFriction());
     metaNode->Set("DynamicFriction", GetDynamicFriction());
     metaNode->Set("Restitution", GetRestitution());
-    metaNode->Set("FrictionCombineMode",
-                 SCAST<int>(GetFrictionCombineMode()));
+    metaNode->Set("FrictionCombineMode", SCAST<int>(GetFrictionCombineMode()));
     metaNode->Set("RestitutionCombineMode",
-                 SCAST<int>(GetRestitutionCombineMode()));
+                  SCAST<int>(GetRestitutionCombineMode()));
 }
 
 void PhysicsMaterial::SetPxMaterial(physx::PxMaterial *pxMaterial)
@@ -156,22 +155,21 @@ void PhysicsMaterial::SetPxMaterial(physx::PxMaterial *pxMaterial)
     p_pxMaterial = pxMaterial;
 }
 
-physx::PxMaterial* PhysicsMaterial::GetPxMaterial() const
+physx::PxMaterial *PhysicsMaterial::GetPxMaterial() const
 {
     return p_pxMaterial;
 }
 
 void PhysicsMaterial::UpdatePxMaterial() const
 {
-    if (GetPxMaterial())
+    if(GetPxMaterial())
     {
-        GetPxMaterial()->setStaticFriction( GetStaticFriction() );
-        GetPxMaterial()->setDynamicFriction( GetDynamicFriction() );
-        GetPxMaterial()->setRestitution( GetRestitution() );
+        GetPxMaterial()->setStaticFriction(GetStaticFriction());
+        GetPxMaterial()->setDynamicFriction(GetDynamicFriction());
+        GetPxMaterial()->setRestitution(GetRestitution());
         GetPxMaterial()->setFrictionCombineMode(
-            SCAST<physx::PxCombineMode::Enum>( GetFrictionCombineMode()) );
+            SCAST<physx::PxCombineMode::Enum>(GetFrictionCombineMode()));
         GetPxMaterial()->setRestitutionCombineMode(
-            SCAST<physx::PxCombineMode::Enum>( GetRestitutionCombineMode()) );
+            SCAST<physx::PxCombineMode::Enum>(GetRestitutionCombineMode()));
     }
 }
-

@@ -14,10 +14,10 @@
 #include "Bang/ObjectId.h"
 #include "Bang/Serializable.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class IEventsDestroy;
-FORWARD class IEventsObject;
+namespace Bang
+{
+class IEventsDestroy;
+class IEventsObject;
 
 class Object : public Serializable,
                public ICloneable,
@@ -26,7 +26,7 @@ class Object : public Serializable,
                public EventEmitter<IEventsObject>
 {
 public:
-    const ObjectId& GetObjectId() const;
+    const ObjectId &GetObjectId() const;
     void SetEnabled(bool enabled);
 
     bool IsActive() const;
@@ -69,8 +69,6 @@ private:
     virtual bool CalculateEnabledRecursively() const = 0;
     virtual void OnEnabledRecursivelyInvalidated();
 };
+}
 
-
-NAMESPACE_BANG_END
-
-#endif // OBJECT_H
+#endif  // OBJECT_H

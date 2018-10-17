@@ -16,7 +16,7 @@
 #include "Bang/UILayoutElement.h"
 #include "Bang/UITheme.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
 UICheckBox::UICheckBox()
 {
@@ -34,30 +34,30 @@ void UICheckBox::OnUpdate()
 
 void UICheckBox::SetSize(int size)
 {
-    if (size != GetSize())
+    if(size != GetSize())
     {
         constexpr int CheckBoxPaddings = 2;
         m_size = size;
 
-        GetBackgroundImage()->GetGameObject()->GetRectTransform()->
-                        SetMargins( -(GetSize()/2 + CheckBoxPaddings));
+        GetBackgroundImage()->GetGameObject()->GetRectTransform()->SetMargins(
+            -(GetSize() / 2 + CheckBoxPaddings));
 
-        GetTickImage()->GetGameObject()->GetRectTransform()->
-                        SetMargins( -(GetSize()/2) );
+        GetTickImage()->GetGameObject()->GetRectTransform()->SetMargins(
+            -(GetSize() / 2));
 
-        GetLayoutElement()->SetMinSize( Vector2i(GetSize() + CheckBoxPaddings) );
+        GetLayoutElement()->SetMinSize(Vector2i(GetSize() + CheckBoxPaddings));
     }
 }
 
 void UICheckBox::SetChecked(bool checked)
 {
-    if (checked != IsChecked())
+    if(checked != IsChecked())
     {
         m_isChecked = checked;
 
-        GetTickImage()->SetEnabled( IsChecked() );
+        GetTickImage()->SetEnabled(IsChecked());
         EventEmitter<IEventsValueChanged>::PropagateToListeners(
-                    &IEventsValueChanged::OnValueChanged, this);
+            &IEventsValueChanged::OnValueChanged, this);
     }
 }
 
@@ -91,49 +91,47 @@ UIFocusable *UICheckBox::GetFocusable() const
     return p_focusable;
 }
 
-UIEventResult UICheckBox::OnUIEvent(UIFocusable*, const UIEvent &event)
+UIEventResult UICheckBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
-    switch (event.type)
+    switch(event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
             GameObjectFactory::MakeBorderFocused(p_border);
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
         case UIEvent::Type::FOCUS_LOST:
             GameObjectFactory::MakeBorderNotFocused(p_border);
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
         case UIEvent::Type::MOUSE_ENTER:
-            GetBackgroundImage()->SetTint( UITheme::GetOverColor() );
-        break;
+            GetBackgroundImage()->SetTint(UITheme::GetOverColor());
+            break;
 
         case UIEvent::Type::MOUSE_EXIT:
-            GetBackgroundImage()->SetTint( UITheme::GetInputsBackgroundColor() );
-        break;
+            GetBackgroundImage()->SetTint(UITheme::GetInputsBackgroundColor());
+            break;
 
         case UIEvent::Type::MOUSE_CLICK_FULL:
-            SetChecked( !IsChecked() );
+            SetChecked(!IsChecked());
             return UIEventResult::INTERCEPT;
-        break;
+            break;
 
         case UIEvent::Type::KEY_DOWN:
-            switch (event.key.key)
+            switch(event.key.key)
             {
                 case Key::SPACE:
                 case Key::ENTER:
-                    SetChecked( !IsChecked() );
+                    SetChecked(!IsChecked());
                     return UIEventResult::INTERCEPT;
-                break;
+                    break;
 
-                default:
-                break;
+                default: break;
             }
-        break;
+            break;
 
-        default:
-        break;
+        default: break;
     }
     return UIEventResult::IGNORE;
 }
@@ -146,14 +144,15 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     go->AddComponent<UIHorizontalLayout>();
 
-    UILayoutElement* goLE = go->AddComponent<UILayoutElement>();
-    goLE->SetFlexibleSize( Vector2::Zero );
+    UILayoutElement *goLE = go->AddComponent<UILayoutElement>();
+    goLE->SetFlexibleSize(Vector2::Zero);
 
     GameObject *checkBgImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkBgImg = checkBgImgGo->AddComponent<UIImageRenderer>();
-    // checkBgImg->SetImageTexture( TextureFactory::Get9SliceRoundRectTexture().Get() );
+    // checkBgImg->SetImageTexture(
+    // TextureFactory::Get9SliceRoundRectTexture().Get() );
     // checkBgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
-    checkBgImg->SetTint( UITheme::GetCheckBoxBackgroundColor() );
+    checkBgImg->SetTint(UITheme::GetCheckBoxBackgroundColor());
     checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
@@ -163,8 +162,8 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
 
     GameObject *tickImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
-    tickImg->SetImageTexture( TextureFactory::GetCheckIcon() );
-    tickImg->SetTint( UITheme::GetTickColor() );
+    tickImg->SetImageTexture(TextureFactory::GetCheckIcon());
+    tickImg->SetTint(UITheme::GetTickColor());
     tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
 
     checkBox->p_border = GameObjectFactory::AddInnerBorder(checkBgImgGo);

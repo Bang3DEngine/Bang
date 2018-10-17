@@ -11,38 +11,39 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsChildren.h"
-#include "Bang/IEventsTransform.h"
 #include "Bang/IEventsComponent.h"
-#include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsGameObjectVisibilityChanged.h"
+#include "Bang/IEventsRendererChanged.h"
+#include "Bang/IEventsTransform.h"
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class Framebuffer;
-FORWARD class GameObject;
-FORWARD class IEventsChildren;
-FORWARD class IEventsComponent;
-FORWARD class IEventsGameObjectVisibilityChanged;
-FORWARD class IEventsRendererChanged;
-FORWARD class IEventsTransform;
-FORWARD class Object;
-FORWARD class Renderer;
-FORWARD class UIImageRenderer;
-
-class UIRendererCacher : public Component,
-                         public EventListener<IEventsChildren>,
-                         public EventListener<IEventsTransform>,
-                         public EventListener<IEventsComponent>,
-                         public EventListener<IEventsRendererChanged>,
-                         public EventListener<IEventsGameObjectVisibilityChanged>
+namespace Bang
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST( UIRendererCacher )
+class Framebuffer;
+class GameObject;
+class IEventsChildren;
+class IEventsComponent;
+class IEventsGameObjectVisibilityChanged;
+class IEventsRendererChanged;
+class IEventsTransform;
+class Object;
+class Renderer;
+class UIImageRenderer;
+
+class UIRendererCacher
+    : public Component,
+      public EventListener<IEventsChildren>,
+      public EventListener<IEventsTransform>,
+      public EventListener<IEventsComponent>,
+      public EventListener<IEventsRendererChanged>,
+      public EventListener<IEventsGameObjectVisibilityChanged>
+{
+    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIRendererCacher)
 
 public:
-	UIRendererCacher();
-	virtual ~UIRendererCacher() override;
+    UIRendererCacher();
+    virtual ~UIRendererCacher() override;
 
     void OnStart() override;
     void OnRender(RenderPass renderPass) override;
@@ -84,15 +85,13 @@ private:
     UIImageRenderer *p_cachedImageRenderer = nullptr;
 
     void SetContainerVisible(bool visible);
-    static UIRendererCacher* CreateInto(GameObject *go);
+    static UIRendererCacher *CreateInto(GameObject *go);
 
     // IEventsGameObjectVisibilityChanged
     void OnVisibilityChanged(GameObject *go) override;
 
     friend class GameObjectFactory;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // UIRENDERERCACHER_H
-
+#endif  // UIRENDERERCACHER_H

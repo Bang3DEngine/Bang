@@ -3,21 +3,22 @@
 
 #include <SDL2/SDL_ttf.h>
 
+#include "Bang/AARect.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
-#include "Bang/AARect.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector2.h"
 
 using TTF_Font = _TTF_Font;
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD_T class ResourceHandle;
-FORWARD class Texture2D;
+namespace Bang
+{
+template <class>
+class ResourceHandle;
+class Texture2D;
 
 class Font : public Asset
 {
@@ -30,12 +31,12 @@ public:
      */
     struct GlyphMetrics
     {
-        Vector2f size    = Vector2f::Zero;
+        Vector2f size = Vector2f::Zero;
         Vector2f bearing = Vector2f::Zero;
-        float    advance = 0;
+        float advance = 0;
     };
 
-    Texture2D* GetFontAtlas(int size) const;
+    Texture2D *GetFontAtlas(int size) const;
 
     Font::GlyphMetrics GetCharMetrics(int fontSize, char c) const;
     bool HasCharacter(char c) const;
@@ -67,7 +68,7 @@ private:
 
     // For each font style
     FontDataCache m_referenceFontDataCache;
-    mutable UMap<int, TTF_Font*> m_openFonts;
+    mutable UMap<int, TTF_Font *> m_openFonts;
     mutable UMap<int, RH<Texture2D>> m_cachedAtlas;
     mutable UMap<int, UMap<char, AARecti>> m_cachedAtlasCharRects;
     mutable UMap<int, String> m_cachedAtlasChars;
@@ -87,7 +88,6 @@ private:
 
     void Free();
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // FONT_H
+#endif  // FONT_H

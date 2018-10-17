@@ -3,9 +3,9 @@
 
 #include "Bang/IEvents.h"
 
-NAMESPACE_BANG_BEGIN
-
-FORWARD class GameObject;
+namespace Bang
+{
+class GameObject;
 
 class IEventsGameObjectVisibilityChanged
 {
@@ -14,7 +14,6 @@ class IEventsGameObjectVisibilityChanged
 public:
     virtual void OnVisibilityChanged(GameObject *go) = 0;
 };
+}
 
-NAMESPACE_BANG_END
-
-#endif // IEVENTSGAMEOBJECTVISIBILITYCHANGED_H
+#endif  // IEVENTSGAMEOBJECTVISIBILITYCHANGED_H

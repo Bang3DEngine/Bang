@@ -20,9 +20,9 @@
 #include "Bang/WindowManager.h"
 #include "SDL_timer.h"
 
-USING_NAMESPACE_BANG
+using namespace Bang;
 
-Application* Application::s_appSingleton = nullptr;
+Application *Application::s_appSingleton = nullptr;
 
 Application::Application()
 {
@@ -54,7 +54,7 @@ void Application::Init(const Path &engineRootPath)
     m_windowManager = new WindowManager();
     GetWindowManager()->Init();
 
-    m_time->SetInitTime( Time::GetNow() - Time::Millis(SDL_GetTicks()) );
+    m_time->SetInitTime(Time::GetNow() - Time::Millis(SDL_GetTicks()));
 
     m_metaFilesManager = new MetaFilesManager();
     MetaFilesManager::CreateMissingMetaFiles(Paths::GetEngineAssetsDir());
@@ -69,7 +69,6 @@ void Application::Init(const Path &engineRootPath)
     m_resources->InitAfterGL();
 }
 
-
 Application::~Application()
 {
     delete m_time;
@@ -77,10 +76,12 @@ Application::~Application()
     delete m_paths;
     delete m_systemUtils;
 
-    delete m_physics; m_physics = nullptr;
+    delete m_physics;
+    m_physics = nullptr;
 
     m_resources->Destroy();
-    delete m_resources; m_resources = nullptr;
+    delete m_resources;
+    m_resources = nullptr;
 
     delete m_settings;
     delete m_audioManager;
@@ -96,10 +97,11 @@ Application::~Application()
 void Application::InitBeforeLoop()
 {
     GetWindowManager()->GetTopWindow()->SetIcon(
-                TextureFactory::GetBangB512Icon()->GetResourceFilepath() );
+        TextureFactory::GetBangB512Icon()->GetResourceFilepath());
 
-    #ifdef GPROF
-    Path profileOutFile = Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");
+#ifdef GPROF
+    Path profileOutFile =
+        Paths::GetExecutablePath().GetDirectory().Append("profiling_info.out");
     Debug_Log("Writing profiling information to: '" << profileOutFile << "'");
     ProfilerStart(profileOutFile.GetAbsolute().ToCString());
 #endif
@@ -107,15 +109,15 @@ void Application::InitBeforeLoop()
 
 void FlushProfiling()
 {
-    #ifdef GPROF
+#ifdef GPROF
     ProfilerFlush();
-    #endif
+#endif
 }
 void StopProfiling()
 {
-    #ifdef GPROF
+#ifdef GPROF
     ProfilerStop();
-    #endif
+#endif
 }
 
 int Application::MainLoop()
@@ -123,7 +125,7 @@ int Application::MainLoop()
     InitBeforeLoop();
 
     bool exit = false;
-    while (!exit && !m_forcedExit)
+    while(!exit && !m_forcedExit)
     {
         exit = MainLoopIteration();
         FlushProfiling();
@@ -219,7 +221,10 @@ void Application::SetApplicationSingleton(Application *app)
 
 void Application::Exit(int returnCode, bool immediate)
 {
-    if (immediate) { std::exit(returnCode); }
+    if(immediate)
+    {
+        std::exit(returnCode);
+    }
     else
     {
         Application *app = Application::GetInstance();

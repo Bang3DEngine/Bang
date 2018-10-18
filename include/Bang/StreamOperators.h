@@ -11,7 +11,6 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/TypeTraits.h"
-#include "Bang/Vector2.h"
 
 namespace Bang
 {
@@ -61,6 +60,7 @@ std::istream &operator>>(std::istream &is, GUID &guid);
 std::istream &operator>>(std::istream &is, Path &p);
 std::istream &operator>>(std::istream &is, Color &c);
 std::istream &operator>>(std::istream &is, Time &t);
+std::istream &operator>>(std::istream &is, Variant &variant);
 std::istream &operator>>(std::istream &is, ComplexRandom &cr);
 std::ostream &operator<<(std::ostream &log, const ObjectId &objectId);
 std::ostream &operator<<(std::ostream &log, const Variant &variant);
@@ -321,6 +321,16 @@ std::ostream &operator<<(std::ostream &log, const Tree<T> &t)
 }
 
 // Templated istream operators
+inline void ConsumeLetters_(std::istream &is)
+{
+    char c = SCAST<char>(is.peek());
+    while ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))  // While is a letter
+    {
+        is >> c;
+        c = SCAST<char>(is.peek());
+    }
+}
+
 template <class T, typename std::enable_if<std::is_enum<T>::value, T>::type>
 std::istream &operator>>(std::istream &is, const T &enumT)
 {
@@ -334,6 +344,12 @@ template <class T>
 std::istream &operator>>(std::istream &is, Vector2G<T> &v)
 {
     char _;
+    ConsumeLetters_(is);
+    if (is.peek() != '(')
+    {
+        is >> _;
+    }
+
     is >> _ >> v.x >> _ >> v.y >> _;
     return is;
 }
@@ -342,6 +358,12 @@ template <class T>
 std::istream &operator>>(std::istream &is, Vector3G<T> &v)
 {
     char _;
+    ConsumeLetters_(is);
+    if (is.peek() != '(')
+    {
+        is >> _;
+    }
+
     is >> _ >> v.x >> _ >> v.y >> _ >> v.z >> _;
     return is;
 }
@@ -350,6 +372,12 @@ template <class T>
 std::istream &operator>>(std::istream &is, Vector4G<T> &v)
 {
     char _;
+    ConsumeLetters_(is);
+    if (is.peek() != '(')
+    {
+        is >> _;
+    }
+
     is >> _ >> v.x >> _ >> v.y >> _ >> v.z >> _ >> v.w >> _;
     return is;
 }
@@ -357,6 +385,8 @@ std::istream &operator>>(std::istream &is, Vector4G<T> &v)
 template <class T>
 std::istream &operator>>(std::istream &is, QuaternionG<T> &q)
 {
+    ConsumeLetters_(is);
+
     char _;
     is >> _ >> q.x >> _ >> q.y >> _ >> q.z >> _ >> q.w >> _;
     return is;
@@ -365,6 +395,8 @@ std::istream &operator>>(std::istream &is, QuaternionG<T> &q)
 template <class T>
 std::istream &operator>>(std::istream &is, AARectG<T> &r)
 {
+    ConsumeLetters_(is);
+
     char _;
     Vector2G<T> minv, maxv;
     is >> _ >> minv >> _ >> maxv >> _;
@@ -378,7 +410,7 @@ std::istream &operator>>(std::istream &is, EnumClass &e)
 {
     int x;
     is >> x;
-    e = Cast<EnumClass>(x);
+    e = SCAST<EnumClass>(x);
     return is;
 }
 }

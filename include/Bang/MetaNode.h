@@ -68,6 +68,7 @@ public:
         const String &childrenContainerName) const;
     const Map<String, Array<MetaNode>> &GetAllChildren() const;
 
+    void Import(const MetaNode &metaNode);
     void Import(const String &metaString);
     void Import(const YAML::Node &yamlNode);
     void Import(const Path &filepath);
@@ -80,5 +81,7 @@ private:
     void ToStringInner(YAML::Emitter &out) const;
 };
 }
+
+#include "Bang/MetaNode.tcc"
 
 #endif  // METANODE_H

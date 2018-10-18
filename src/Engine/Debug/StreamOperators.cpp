@@ -12,6 +12,9 @@
 #include "Bang/Time.h"
 #include "Bang/Triangle.h"
 #include "Bang/Variant.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
+#include "Bang/Vector4.h"
 
 namespace Bang
 {
@@ -63,7 +66,6 @@ std::ostream &operator<<(std::ostream &log, const IToString *s)
     }
     return log;
 }
-//
 
 std::ostream &operator<<(std::ostream &log, const IToString &v)
 {
@@ -71,60 +73,11 @@ std::ostream &operator<<(std::ostream &log, const IToString &v)
     return log;
 }
 
-std::istream &operator>>(std::istream &is, Time &t)
-{
-    uint64_t timeNanos;
-    is >> timeNanos;
-    t.SetNanos(timeNanos);
-    return is;
-}
-
-std::istream &operator>>(std::istream &is, Color &c)
-{
-    char _;
-    is >> _ >> c.r >> _ >> c.g >> _ >> c.b >> _ >> c.a >> _;
-    return is;
-}
-
-std::istream &operator>>(std::istream &is, Path &p)
-{
-    String str;
-    is >> str;
-    p.SetPath(str);
-    return is;
-}
-
-std::istream &operator>>(std::istream &is, GUID &guid)
-{
-    guid.operator>>(is);
-    return is;
-}
-
 std::ostream &operator<<(std::ostream &log, const GUID &guid)
 {
     log << guid.GetTimeGUID() << " " << guid.GetRandGUID() << " "
         << guid.GetEmbeddedResourceGUID();
     return log;
-}
-
-std::istream &operator>>(std::istream &is, ComplexRandom &cr)
-{
-    uint type = 0;
-    float constantValue = 0.0f;
-    float minRangeValue = 0.0f;
-    float maxRangeValue = 0.0f;
-    is >> constantValue;
-    is >> minRangeValue;
-    is >> maxRangeValue;
-    is >> type;
-
-    cr.SetConstantValue(constantValue);
-    cr.SetRangeValues(minRangeValue, maxRangeValue);
-
-    ComplexRandomType crType = SCAST<ComplexRandomType>(type);
-    cr.SetType(crType);
-
-    return is;
 }
 
 std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr)
@@ -156,5 +109,176 @@ std::ostream &operator<<(std::ostream &log, const Variant &variant)
         default: ASSERT(false); break;
     }
     return log;
+}
+
+//
+
+std::istream &operator>>(std::istream &is, Time &t)
+{
+    ConsumeLetters_(is);
+
+    uint64_t timeNanos;
+    is >> timeNanos;
+    t.SetNanos(timeNanos);
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, Color &c)
+{
+    ConsumeLetters_(is);
+
+    char _;
+    if (is.peek() == ':')
+    {
+        is >> _ >> _;
+        String colorName;
+        is >> colorName;
+
+#define READ_COLOR_NAME(ColorName)  \
+    if (colorName == "" #ColorName) \
+    {                               \
+        c = Color::ColorName;       \
+        return is;                  \
+    }
+
+        READ_COLOR_NAME(Red);
+        READ_COLOR_NAME(Orange);
+        READ_COLOR_NAME(Yellow);
+        READ_COLOR_NAME(Green);
+        READ_COLOR_NAME(Turquoise);
+        READ_COLOR_NAME(VeryLightBlue);
+        READ_COLOR_NAME(LightBlue);
+        READ_COLOR_NAME(Blue);
+        READ_COLOR_NAME(DarkBlue);
+        READ_COLOR_NAME(Purple);
+        READ_COLOR_NAME(Pink);
+        READ_COLOR_NAME(Black);
+        READ_COLOR_NAME(Gray);
+        READ_COLOR_NAME(LightGray);
+        READ_COLOR_NAME(DarkGray);
+        READ_COLOR_NAME(White);
+        READ_COLOR_NAME(Zero);
+        READ_COLOR_NAME(One);
+    }
+
+    is >> _ >> c.r >> _ >> c.g >> _ >> c.b >> _ >> c.a >> _;
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, Path &p)
+{
+    String str;
+    is >> str;
+    p.SetPath(str);
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, GUID &guid)
+{
+    guid.operator>>(is);
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, ComplexRandom &cr)
+{
+    uint type = 0;
+    float constantValue = 0.0f;
+    float minRangeValue = 0.0f;
+    float maxRangeValue = 0.0f;
+    is >> constantValue;
+    is >> minRangeValue;
+    is >> maxRangeValue;
+    is >> type;
+
+    cr.SetConstantValue(constantValue);
+    cr.SetRangeValues(minRangeValue, maxRangeValue);
+
+    ComplexRandomType crType = SCAST<ComplexRandomType>(type);
+    cr.SetType(crType);
+
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, Variant &variant)
+{
+    switch (variant.GetType())
+    {
+        case Variant::Type::FLOAT:
+        {
+            float v;
+            is >> v;
+            variant.SetFloat(v);
+        }
+        break;
+        case Variant::Type::DOUBLE:
+        {
+            double v;
+            is >> v;
+            variant.SetDouble(v);
+        }
+        break;
+        case Variant::Type::INT:
+        {
+            int v;
+            is >> v;
+            variant.SetInt(v);
+        }
+        break;
+        case Variant::Type::BOOL:
+        {
+            bool v;
+            is >> v;
+            variant.SetBool(v);
+        }
+        break;
+        case Variant::Type::STRING:
+        {
+            String v;
+            is >> v;
+            variant.SetString(v);
+        }
+        break;
+        case Variant::Type::COLOR:
+        {
+            Color v;
+            is >> v;
+            variant.SetColor(v);
+        }
+        break;
+        case Variant::Type::VECTOR2:
+        {
+            Vector2 v;
+            is >> v;
+            variant.SetVector2(v);
+        }
+        break;
+        case Variant::Type::VECTOR3:
+        {
+            Vector3 v;
+            is >> v;
+            variant.SetVector3(v);
+        }
+        break;
+        case Variant::Type::VECTOR4:
+        {
+            Vector4 v;
+            is >> v;
+            variant.SetVector4(v);
+        }
+        break;
+
+        case Variant::Type::QUATERNION:
+        {
+            Quaternion v;
+            is >> v;
+            variant.SetQuaternion(v);
+        }
+        break;
+
+        case Variant::Type::NONE: break;
+
+        default: ASSERT(false); break;
+    }
+    return is;
 }
 }

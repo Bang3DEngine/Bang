@@ -16,6 +16,7 @@ public:
 
     void AddVariable(const ReflectVariable &prop);
 
+    MetaNode GetMeta() const;
     const String &GetStructName() const;
     const String &GetStructVariableName() const;
     const Array<ReflectVariable> &GetVariables() const;

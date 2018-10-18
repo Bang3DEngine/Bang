@@ -33,6 +33,7 @@ public:
     bool IsStarted() const;
     bool IsActiveRecursively() const;
     bool IsEnabledRecursively() const;
+    bool IsBeingDestroyed() const;
     bool IsWaitingToBeDestroyed() const;
 
     // ICloneable
@@ -60,6 +61,7 @@ private:
     ObjectId m_objectId;
     bool m_enabled = true;
     bool m_started = false;
+    bool m_beingDestroyed = false;
     bool m_waitingToBeDestroyed = false;
 
     mutable bool m_enabledRecursivelyValid = false;

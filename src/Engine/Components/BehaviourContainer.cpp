@@ -1,5 +1,6 @@
 #include "Bang/BehaviourContainer.h"
 
+#include "Bang/BangPreprocessor.h"
 #include "Bang/Behaviour.h"
 #include "Bang/BehaviourManager.h"
 #include "Bang/FastDynamicCast.h"
@@ -38,6 +39,10 @@ void BehaviourContainer::SetSourceFilepathGUID(const GUID &sourceFilepathGUID)
     if (sourceFilepathGUID != GetSourceFilepathGUID())
     {
         m_sourceFilepathGUID = sourceFilepathGUID;
+        m_prevTimeHeaderChanged = Time::Zero();
+        m_behaviourReflectStruct = ReflectStruct();
+        ResetInitializationModificationsMetaNode();
+        UpdateInformationFromHeaderIfNeeded();
     }
 }
 
@@ -58,14 +63,31 @@ Path BehaviourContainer::GetSourceFilepath() const
     return MetaFilesManager::GetFilepath(GetSourceFilepathGUID());
 }
 
+MetaNode *BehaviourContainer::GetIntializationModificationMetaPtr()
+{
+    return &m_initializationModificationsMeta;
+}
+
 const GUID &BehaviourContainer::GetSourceFilepathGUID() const
 {
     return m_sourceFilepathGUID;
 }
 
-const MetaNode &BehaviourContainer::GetInitializationMeta() const
+MetaNode BehaviourContainer::GetInitializationMeta() const
 {
-    return m_initializationMeta;
+    MetaNode metaNode = GetBehaviourReflectStruct().GetMeta();
+    metaNode.Import(GetInitializationModificationsMeta());
+    return metaNode;
+}
+
+const MetaNode &BehaviourContainer::GetInitializationModificationsMeta() const
+{
+    return m_initializationModificationsMeta;
+}
+
+const ReflectStruct &BehaviourContainer::GetBehaviourReflectStruct() const
+{
+    return m_behaviourReflectStruct;
 }
 
 void BehaviourContainer::TryToSubstituteByBehaviourInstance()
@@ -79,9 +101,10 @@ void BehaviourContainer::TryToSubstituteByBehaviourInstance()
     }
 }
 
-void BehaviourContainer::SetInitializationMeta(const MetaNode &metaNode)
+void BehaviourContainer::SetInitializationModificationsMeta(
+    const MetaNode &metaNode)
 {
-    m_initializationMeta = metaNode;
+    m_initializationModificationsMeta = metaNode;
 }
 
 void BehaviourContainer::SubstituteByBehaviourInstance(
@@ -89,7 +112,9 @@ void BehaviourContainer::SubstituteByBehaviourInstance(
 {
     if (Behaviour *behaviour = CreateBehaviourInstance(behavioursLibrary))
     {
+        UpdateInformationFromHeaderIfNeeded();
         behaviour->ImportMeta(GetInitializationMeta());
+        behaviour->ImportMeta(GetInitializationModificationsMeta());
         if (GetGameObject())
         {
             GetGameObject()->AddComponent(behaviour);
@@ -98,12 +123,47 @@ void BehaviourContainer::SubstituteByBehaviourInstance(
     }
 }
 
+void BehaviourContainer::UpdateInformationFromHeaderIfNeeded()
+{
+    if (GetSourceFilepath().IsFile())
+    {
+        Path headerPath = GetSourceFilepath().WithExtension("h");
+        if (headerPath.IsFile())
+        {
+            Time timeHeaderChanged = headerPath.GetModificationTime();
+            bool hasHeaderChanged =
+                (timeHeaderChanged > m_prevTimeHeaderChanged);
+            if (hasHeaderChanged)
+            {
+                Array<ReflectStruct> reflStructs =
+                    BangPreprocessor::GetReflectStructs(headerPath);
+                if (reflStructs.Size() >= 1)
+                {
+                    m_behaviourReflectStruct = reflStructs.Front();
+                }
+                else
+                {
+                    m_behaviourReflectStruct = ReflectStruct();
+                }
+
+                m_prevTimeHeaderChanged = timeHeaderChanged;
+            }
+        }
+    }
+}
+
+void BehaviourContainer::ResetInitializationModificationsMetaNode()
+{
+    SetInitializationModificationsMeta(MetaNode());
+}
+
 void BehaviourContainer::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-    BehaviourContainer *bc = Cast<BehaviourContainer *>(clone);
+    BehaviourContainer *bc = SCAST<BehaviourContainer *>(clone);
     bc->SetSourceFilepathGUID(GetSourceFilepathGUID());
-    bc->SetInitializationMeta(GetInitializationMeta());
+    bc->SetInitializationModificationsMeta(
+        GetInitializationModificationsMeta());
 }
 
 void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
@@ -115,12 +175,13 @@ void BehaviourContainer::ImportMeta(const MetaNode &metaNode)
         SetSourceFilepathGUID(metaNode.Get<GUID>("SourceFilepathGUID"));
     }
 
-    if (metaNode.Contains("InitializationMeta"))
+    if (metaNode.Contains("InitializationModificationsMeta"))
     {
-        String metaStr = metaNode.Get<String>("InitializationMeta");
-        MetaNode initializationMeta;
-        initializationMeta.Import(metaStr);
-        SetInitializationMeta(initializationMeta);
+        String metaStr =
+            metaNode.Get<String>("InitializationModificationsMeta");
+        MetaNode initializationModificationsMeta;
+        initializationModificationsMeta.Import(metaStr);
+        SetInitializationModificationsMeta(initializationModificationsMeta);
     }
 }
 
@@ -129,5 +190,6 @@ void BehaviourContainer::ExportMeta(MetaNode *metaNode) const
     Component::ExportMeta(metaNode);
 
     metaNode->Set("SourceFilepathGUID", GetSourceFilepathGUID());
-    metaNode->Set("InitializationMeta", GetInitializationMeta().ToString());
+    metaNode->Set("InitializationModificationsMeta",
+                  GetInitializationModificationsMeta().ToString());
 }

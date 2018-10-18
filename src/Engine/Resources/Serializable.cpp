@@ -58,7 +58,7 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
     }
 
     // Import reflected variables
-    ReflectStruct reflStruct = GetReflectionInfo();
+    const ReflectStruct &reflStruct = GetReflectionInfo();
     for (const ReflectVariable &reflVar : reflStruct.GetVariables())
     {
         const String &varName = reflVar.GetName();
@@ -119,18 +119,14 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
 
 void Serializable::ExportMeta(MetaNode *metaNode) const
 {
-    metaNode->SetName(GetClassName());
     metaNode->Set<GUID>("GUID", GetGUID());
 
     // Export reflected variables
-    ReflectStruct reflStruct = GetReflectionInfo();
-    for (const ReflectVariable &reflVar : reflStruct.GetVariables())
-    {
-        if (auto reflVarGetter = reflVar.GetGetter())
-        {
-            metaNode->Set(reflVar.GetName(), reflVarGetter());
-        }
-    }
+    const ReflectStruct &reflStruct = GetReflectionInfo();
+    MetaNode reflMeta = reflStruct.GetMeta();
+    metaNode->Import(reflMeta);
+
+    metaNode->SetName(GetClassName());  // Set name after, to avoid overwrites
 }
 
 bool Serializable::ImportMetaFromFile(const Path &path)

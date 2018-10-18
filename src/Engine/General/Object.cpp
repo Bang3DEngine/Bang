@@ -76,9 +76,10 @@ void Object::InvalidateEnabledRecursively()
 
 void Object::PropagateObjectDestruction(Object *object)
 {
-    if (!object->IsWaitingToBeDestroyed())
+    if (!object->IsBeingDestroyed())
     {
         object->SetWaitingToBeDestroyed();
+        object->m_beingDestroyed = true;
 
         object->OnDestroy();
         object->EventEmitter<IEventsDestroy>::PropagateToListeners(
@@ -141,6 +142,11 @@ bool Object::IsEnabledRecursively() const
         m_enabledRecursivelyValid = true;
     }
     return m_enabledRecursively;
+}
+
+bool Object::IsBeingDestroyed() const
+{
+    return m_beingDestroyed;
 }
 
 bool Object::IsWaitingToBeDestroyed() const

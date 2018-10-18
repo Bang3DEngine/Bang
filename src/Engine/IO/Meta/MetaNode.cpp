@@ -188,6 +188,11 @@ const Map<String, Array<MetaNode>> &MetaNode::GetAllChildren() const
     return m_children;
 }
 
+void MetaNode::Import(const MetaNode &metaNode)
+{
+    Import(metaNode.ToString());
+}
+
 const Array<MetaNode> &MetaNode::GetChildren(
     const String &childrenContainerName) const
 {

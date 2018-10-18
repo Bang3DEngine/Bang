@@ -86,8 +86,6 @@ void BangPreprocessor::Preprocess(const String &source,
             "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
         reflectDefineCode += R"VERBATIM( public:
                     GET_REFLECTION_INFO_CODE
-                    GET_READ_REFLECTION_CODE
-                    GET_WRITE_REFLECTION_CODE
                 private:   )VERBATIM";
         reflectDefineCode.ReplaceInSitu("GET_REFLECTION_INFO_CODE",
                                         reflStruct.GetGetReflectionInfoCode());

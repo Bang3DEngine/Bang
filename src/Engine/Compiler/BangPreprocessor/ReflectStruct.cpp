@@ -5,7 +5,10 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
+#include "Bang/MetaNode.h"
 #include "Bang/StreamOperators.h"
+#include "Bang/StreamOperators.h"
+#include "Bang/Variant.h"
 
 using namespace Bang;
 
@@ -31,29 +34,29 @@ void ReflectStruct::FromString(String::Iterator structBegin,
     *success = false;
 
     // Parse the struct/class reflected annotation
-    String::Iterator structPropertyListBegin, structPropertyListEnd;
+    String::Iterator structVariableListBegin, structVariableListEnd;
     BP::GetNextScope(structBegin,
                      structEnd,
-                     &structPropertyListBegin,
-                     &structPropertyListEnd,
+                     &structVariableListBegin,
+                     &structVariableListEnd,
                      '(',
                      ')');
 
-    String propertyListStr(structPropertyListBegin + 1,
-                           structPropertyListEnd - 1);
-    Array<String> propertyList = propertyListStr.Split<Array>(',', true);
-    if (propertyList.Size() == 0)
+    String variableListStr(structVariableListBegin + 1,
+                           structVariableListEnd - 1);
+    Array<String> variableList = variableListStr.Split<Array>(',', true);
+    if (variableList.Size() == 0)
     {
         std::cerr << "BP Error: BP_CLASS has 0 properties, but must have at"
                      "least a name"
                   << std::endl;
         return;
     }
-    outStruct->SetStructName(propertyList[0]);
+    outStruct->SetStructName(variableList[0]);
 
     // Find and skip "class"/"struct"
     String::Iterator structKeywordBegin, structKeywordEnd;
-    BP::FindNextWord(structPropertyListEnd,
+    BP::FindNextWord(structVariableListEnd,
                      structEnd,
                      &structKeywordBegin,
                      &structKeywordEnd);
@@ -76,27 +79,27 @@ void ReflectStruct::FromString(String::Iterator structBegin,
     String::Iterator it = structVarNameEnd;
     while (it != structEnd)
     {
-        String::Iterator propertyBegin =
+        String::Iterator variableBegin =
             BP::Find(it, structEnd, BP::RVariablePrefixes);
-        if (propertyBegin == structEnd)
+        if (variableBegin == structEnd)
         {
             break;
         }
 
-        String::Iterator propertyEnd = propertyBegin;
-        BP::SkipUntilNext(&propertyEnd, structEnd, {";"});
-        if (propertyEnd == structEnd)
+        String::Iterator variableEnd = variableBegin;
+        BP::SkipUntilNext(&variableEnd, structEnd, {";"});
+        if (variableEnd == structEnd)
         {
             break;
         }
-        propertyEnd += 1;
+        variableEnd += 1;
 
-        ReflectVariable bProperty;
+        ReflectVariable reflVar;
         ReflectVariable::FromString(
-            propertyBegin, propertyEnd, &bProperty, success);
-        outStruct->AddVariable(bProperty);
+            variableBegin, variableEnd, &reflVar, success);
+        outStruct->AddVariable(reflVar);
 
-        it = propertyEnd;
+        it = variableEnd;
     }
 
     *success = true;
@@ -117,12 +120,46 @@ void ReflectStruct::AddVariable(const ReflectVariable &prop)
     m_variables.PushBack(prop);
 }
 
+MetaNode ReflectStruct::GetMeta() const
+{
+    MetaNode meta;
+    for (const ReflectVariable &reflVar : GetVariables())
+    {
+        meta.Set(reflVar.GetName(), reflVar.GetCurrentValue());
+    }
+    return meta;
+}
+
 String ReflectStruct::GetInitializationCode() const
 {
-    int i = 0;
     String src = "";
-    for (const ReflectVariable &rVar : GetVariables())
+    for (const ReflectVariable &var : GetVariables())
     {
+        String varReflectionCode = R"VERBATIM(
+               ReflectVar<VAR_TYPE>(
+                           "VAR_REFL_NAME",
+                           [this](VAR_TYPE x) { VAR_NAME = x; },
+                           [this]() { return VAR_NAME; },
+                           VAR_INIT_VALUE);
+            )VERBATIM";
+
+        Variant::Type varType = var.GetVariant().GetType();
+        if (varType == Variant::Type::NONE)
+        {
+            continue;
+        }
+        varReflectionCode.ReplaceInSitu(
+            "SET_FUNC", "Set<" + Variant::GetTypeToString(varType) + ">");
+        varReflectionCode.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
+        varReflectionCode.ReplaceInSitu("VAR_NAME", var.GetCodeName());
+        varReflectionCode.ReplaceInSitu(
+            "VAR_TYPE", Variant::GetTypeToString(var.GetVariant().GetType()));
+        varReflectionCode.ReplaceInSitu("VAR_INIT_VALUE",
+                                        var.GetInitValueString());
+
+        /*
+        varsSetsSrc += varSetSrc;
+
         String varInitCode = R"VERBATIM(
               ReflectVariable RVAR_NAME;
               RVAR_INIT_CODE
@@ -135,7 +172,8 @@ String ReflectStruct::GetInitializationCode() const
                                   rVar.GetInitializationCode(rVarName));
         varInitCode.ReplaceInSitu("REFL_INFO",
                                   BP::GetReflectionInfoPtrFuncName);
-        src += varInitCode;
+                                  */
+        src += varReflectionCode;
     }
     return src;
 }

@@ -47,7 +47,6 @@ void IReflectable::ReflectVar(const String &varName,
     reflVar.SetSetterT<T>(setter);
     reflVar.SetGetterT<T>(getter);
     reflVar.GetVariant() = Variant::From<T>(initValue);
-    // reflVar.SetInitValue(initValue);
     GetReflectionInfoPtr()->AddVariable(reflVar);
 }
 }

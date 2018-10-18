@@ -6,6 +6,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
+#include "Bang/StreamOperators.h"
 
 using namespace Bang;
 
@@ -68,9 +69,9 @@ void ReflectVariable::FromString(String::Iterator propBegin,
     String::Iterator assignBegin = std::find(nameEnd, propEnd, '=');
     if (assignBegin != propEnd)
     {
-        String initValue(assignBegin + 1, propEnd - 1);
-        initValue = initValue.Trim({' ', '"'});
-        outReflectedVar->m_initValue = initValue;
+        String initValueStr(assignBegin + 1, propEnd - 1);
+        initValueStr = initValueStr.Trim({' ', '"'});
+        outReflectedVar->SetInitValueString(initValueStr);
     }
 
     *success = true;
@@ -83,7 +84,8 @@ String ReflectVariable::GetInitializationCode(
         RVAR_VARIABLE_NAME.SetName("RVAR_NAME");
         RVAR_VARIABLE_NAME.GetVariant().SetType(Variant::Type::VARIABLE_TYPE);
         RVAR_VARIABLE_NAME.SetCodeName("VARIABLE_CODE_NAME");
-        RVAR_VARIABLE_NAME.SetInitValue("VARIABLE_INIT_VALUE");
+        RVAR_VARIABLE_NAME.SetInitValueString("VARIABLE_INIT_VALUE");
+        RVAR_VARIABLE_NAME.SetInitValue(Variant::From(VARIABLE_INIT_VALUE));
     )VERBATIM";
     src.ReplaceInSitu("RVAR_VARIABLE_NAME", rvarInitVarName);
     src.ReplaceInSitu("RVAR_NAME", GetName());
@@ -91,7 +93,7 @@ String ReflectVariable::GetInitializationCode(
         "VARIABLE_TYPE",
         Variant::GetTypeToString(GetVariant().GetType()).ToUpper());
     src.ReplaceInSitu("VARIABLE_CODE_NAME", GetCodeName());
-    src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetInitValue());
+    src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetInitValueString());
     return src;
 }
 
@@ -105,9 +107,21 @@ void ReflectVariable::SetCodeName(const String &varCodeName)
     m_codeName = varCodeName;
 }
 
-void ReflectVariable::SetInitValue(const String &initValue)
+void ReflectVariable::SetInitValue(const Variant &initValueVariant)
 {
-    m_initValue = initValue;
+    GetVariant() = initValueVariant;
+
+    std::ostringstream oss;
+    oss << initValueVariant;
+    m_initValueString = oss.str();
+}
+
+void ReflectVariable::SetInitValueString(const String &initValueStr)
+{
+    m_initValueString = initValueStr;
+
+    std::istringstream iss(GetInitValueString());
+    iss >> GetVariant();
 }
 
 void ReflectVariable::SetSetter(std::function<void(const Variant &)> setter)
@@ -125,6 +139,15 @@ Variant &ReflectVariable::GetVariant()
     return m_variant;
 }
 
+Variant ReflectVariable::GetCurrentValue() const
+{
+    if (auto getter = GetGetter())
+    {
+        return getter();
+    }
+    return GetInitValue();
+}
+
 const String &ReflectVariable::GetName() const
 {
     return m_name;
@@ -140,9 +163,9 @@ const String &ReflectVariable::GetCodeName() const
     return m_codeName;
 }
 
-const String &ReflectVariable::GetInitValue() const
+const String &ReflectVariable::GetInitValueString() const
 {
-    return m_initValue;
+    return m_initValueString;
 }
 
 const ReflectVariable::SetterFunc &ReflectVariable::GetSetter() const
@@ -155,11 +178,16 @@ const ReflectVariable::GetterFunc &ReflectVariable::GetGetter() const
     return m_getter;
 }
 
+const Variant &ReflectVariable::GetInitValue() const
+{
+    return GetVariant();
+}
+
 bool ReflectVariable::operator==(const ReflectVariable &rhs) const
 {
     return GetName() == rhs.GetName() && GetCodeName() == rhs.GetCodeName() &&
            GetVariant() == rhs.GetVariant() &&
-           GetInitValue() == rhs.GetInitValue();
+           GetInitValueString() == rhs.GetInitValueString();
 }
 
 bool ReflectVariable::operator!=(const ReflectVariable &rhs) const

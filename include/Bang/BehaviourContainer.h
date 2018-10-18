@@ -25,19 +25,25 @@ public:
     void SetSourceFilepathGUID(const GUID &sourceFilepathGUID);
     Behaviour *CreateBehaviourInstance(Library *behavioursLibrary) const;
 
+    void TryToSubstituteByBehaviourInstance();
+    void SetInitializationModificationsMeta(const MetaNode &metaNode);
+    void SubstituteByBehaviourInstance(Library *behavioursLibrary);
+    void UpdateInformationFromHeaderIfNeeded();
+    void ResetInitializationModificationsMetaNode();
+
     String GetBehaviourName() const;
     Path GetSourceFilepath() const;
+    MetaNode *GetIntializationModificationMetaPtr();
     const GUID &GetSourceFilepathGUID() const;
-    const MetaNode &GetInitializationMeta() const;
-
-    void TryToSubstituteByBehaviourInstance();
-    void SetInitializationMeta(const MetaNode &metaNode);
-    void SubstituteByBehaviourInstance(Library *behavioursLibrary);
+    MetaNode GetInitializationMeta() const;
+    const MetaNode &GetInitializationModificationsMeta() const;
+    const ReflectStruct &GetBehaviourReflectStruct() const;
 
 private:
     GUID m_sourceFilepathGUID;
-    MetaNode m_initializationMeta;
-    Behaviour *p_behaviour = nullptr;
+    MetaNode m_initializationModificationsMeta;
+    ReflectStruct m_behaviourReflectStruct;
+    Time m_prevTimeHeaderChanged = Time::Zero();
 
     BehaviourContainer();
     virtual ~BehaviourContainer() override;

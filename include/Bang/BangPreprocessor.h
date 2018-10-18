@@ -7,7 +7,7 @@
 
 namespace Bang
 {
-class BPReflectedStruct;
+class ReflectStruct;
 class Path;
 
 class BangPreprocessor
@@ -23,8 +23,8 @@ public:
     static void Preprocess(const String &source,
                            String *reflectionHeaderSource,
                            bool *preprocessedSomething);
-    static Array<BPReflectedStruct> GetReflectStructs(const Path &sourcePath);
-    static Array<BPReflectedStruct> GetReflectStructs(const String &source);
+    static Array<ReflectStruct> GetReflectStructs(const Path &sourcePath);
+    static Array<ReflectStruct> GetReflectStructs(const String &source);
 
     BangPreprocessor() = delete;
 

@@ -1,4 +1,4 @@
-#include "Bang/BPReflectedVariable.h"
+#include "Bang/ReflectVariable.h"
 
 #include <algorithm>
 #include <iostream>
@@ -11,14 +11,14 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-BPReflectedVariable::BPReflectedVariable()
+ReflectVariable::ReflectVariable()
 {
 }
 
-void BPReflectedVariable::FromString(String::Iterator propBegin,
-                                     String::Iterator propEnd,
-                                     BPReflectedVariable *outReflectedVar,
-                                     bool *success)
+void ReflectVariable::FromString(String::Iterator propBegin,
+                                 String::Iterator propEnd,
+                                 ReflectVariable *outReflectedVar,
+                                 bool *success)
 {
     *success = false;
 
@@ -49,7 +49,7 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
     } while (BP::Modifiers.Contains(nextWord));
 
     String variableTypeStr = nextWord;
-    if (!BPReflectedVariable::ExistsType(variableTypeStr))
+    if (!ReflectVariable::ExistsType(variableTypeStr))
     {
         std::cerr << "BP Error: Expected a variable type,"
                      "but got '"
@@ -58,7 +58,7 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
     }
 
     outReflectedVar->SetType(
-        BPReflectedVariable::GetTypeFromString(variableTypeStr));
+        ReflectVariable::GetTypeFromString(variableTypeStr));
 
     String::Iterator nameBegin, nameEnd;
     BP::FindNextWord(wordEnd, propEnd, &nameBegin, &nameEnd);
@@ -80,150 +80,148 @@ void BPReflectedVariable::FromString(String::Iterator propBegin,
     *success = true;
 }
 
-String BPReflectedVariable::GetInitializationCode(
+String ReflectVariable::GetInitializationCode(
     const String &rvarInitVarName) const
 {
     String src = R"VERBATIM(
             RVAR_VARIABLE_NAME.SetName("RVAR_NAME");
-            RVAR_VARIABLE_NAME.SetType(BPReflectedVariable::Type::VARIABLE_TYPE);
+            RVAR_VARIABLE_NAME.SetType(ReflectVariable::Type::VARIABLE_TYPE);
             RVAR_VARIABLE_NAME.SetCodeName("VARIABLE_CODE_NAME");
             RVAR_VARIABLE_NAME.SetInitValue("VARIABLE_INIT_VALUE");
     )VERBATIM";
     src.ReplaceInSitu("RVAR_VARIABLE_NAME", rvarInitVarName);
     src.ReplaceInSitu("RVAR_NAME", GetName());
-    src.ReplaceInSitu(
-        "VARIABLE_TYPE",
-        BPReflectedVariable::GetTypeToString(GetType()).ToUpper());
+    src.ReplaceInSitu("VARIABLE_TYPE",
+                      ReflectVariable::GetTypeToString(GetType()).ToUpper());
     src.ReplaceInSitu("VARIABLE_CODE_NAME", GetCodeName());
     src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetInitValue());
     return src;
 }
 
-void BPReflectedVariable::SetName(const String &name)
+void ReflectVariable::SetName(const String &name)
 {
     m_name = name;
 }
 
-void BPReflectedVariable::SetType(BPReflectedVariable::Type type)
+void ReflectVariable::SetType(ReflectVariable::Type type)
 {
     m_variableType = type;
 }
 
-void BPReflectedVariable::SetCodeName(const String &varCodeName)
+void ReflectVariable::SetCodeName(const String &varCodeName)
 {
     m_codeName = varCodeName;
 }
 
-void BPReflectedVariable::SetInitValue(const String &initValue)
+void ReflectVariable::SetInitValue(const String &initValue)
 {
     m_initValue = initValue;
 }
 
-const String &BPReflectedVariable::GetName() const
+const String &ReflectVariable::GetName() const
 {
     return m_name;
 }
 
-BPReflectedVariable::Type BPReflectedVariable::GetType() const
+ReflectVariable::Type ReflectVariable::GetType() const
 {
     return m_variableType;
 }
 
-const String &BPReflectedVariable::GetCodeName() const
+const String &ReflectVariable::GetCodeName() const
 {
     return m_codeName;
 }
 
-const String &BPReflectedVariable::GetInitValue() const
+const String &ReflectVariable::GetInitValue() const
 {
     return m_initValue;
 }
 
-String BPReflectedVariable::GetTypeToString(BPReflectedVariable::Type type)
+String ReflectVariable::GetTypeToString(ReflectVariable::Type type)
 {
     switch (type)
     {
-        case BPReflectedVariable::Type::FLOAT: return "float";
-        case BPReflectedVariable::Type::DOUBLE: return "double";
-        case BPReflectedVariable::Type::INT: return "int";
-        case BPReflectedVariable::Type::BOOL: return "bool";
-        case BPReflectedVariable::Type::COLOR: return "Color";
-        case BPReflectedVariable::Type::STRING: return "String";
-        case BPReflectedVariable::Type::VECTOR2: return "Vector2";
-        case BPReflectedVariable::Type::VECTOR3: return "Vector3";
-        case BPReflectedVariable::Type::VECTOR4: return "Vector4";
-        case BPReflectedVariable::Type::QUATERNION: return "Quaternion";
+        case ReflectVariable::Type::FLOAT: return "float";
+        case ReflectVariable::Type::DOUBLE: return "double";
+        case ReflectVariable::Type::INT: return "int";
+        case ReflectVariable::Type::BOOL: return "bool";
+        case ReflectVariable::Type::COLOR: return "Color";
+        case ReflectVariable::Type::STRING: return "String";
+        case ReflectVariable::Type::VECTOR2: return "Vector2";
+        case ReflectVariable::Type::VECTOR3: return "Vector3";
+        case ReflectVariable::Type::VECTOR4: return "Vector4";
+        case ReflectVariable::Type::QUATERNION: return "Quaternion";
         default: break;
     }
     return "None";
 }
 
-BPReflectedVariable::Type BPReflectedVariable::GetTypeFromString(
-    const String &typeStr)
+ReflectVariable::Type ReflectVariable::GetTypeFromString(const String &typeStr)
 {
     if (typeStr == "float")
     {
-        return BPReflectedVariable::Type::FLOAT;
+        return ReflectVariable::Type::FLOAT;
     }
     else if (typeStr == "double")
     {
-        return BPReflectedVariable::Type::DOUBLE;
+        return ReflectVariable::Type::DOUBLE;
     }
     else if (typeStr == "int")
     {
-        return BPReflectedVariable::Type::INT;
+        return ReflectVariable::Type::INT;
     }
     else if (typeStr == "bool")
     {
-        return BPReflectedVariable::Type::BOOL;
+        return ReflectVariable::Type::BOOL;
     }
     else if (typeStr == "Color")
     {
-        return BPReflectedVariable::Type::COLOR;
+        return ReflectVariable::Type::COLOR;
     }
     else if (typeStr == "String")
     {
-        return BPReflectedVariable::Type::STRING;
+        return ReflectVariable::Type::STRING;
     }
     else if (typeStr == "Vector2")
     {
-        return BPReflectedVariable::Type::VECTOR2;
+        return ReflectVariable::Type::VECTOR2;
     }
     else if (typeStr == "Vector3")
     {
-        return BPReflectedVariable::Type::VECTOR3;
+        return ReflectVariable::Type::VECTOR3;
     }
     else if (typeStr == "Vector4")
     {
-        return BPReflectedVariable::Type::VECTOR4;
+        return ReflectVariable::Type::VECTOR4;
     }
     else if (typeStr == "Quaternion")
     {
-        return BPReflectedVariable::Type::QUATERNION;
+        return ReflectVariable::Type::QUATERNION;
     }
-    return BPReflectedVariable::Type::NONE;
+    return ReflectVariable::Type::NONE;
 }
 
-bool BPReflectedVariable::ExistsType(const String &typeStr)
+bool ReflectVariable::ExistsType(const String &typeStr)
 {
-    return (BPReflectedVariable::GetTypeFromString(typeStr) !=
-            BPReflectedVariable::Type::NONE);
+    return (ReflectVariable::GetTypeFromString(typeStr) !=
+            ReflectVariable::Type::NONE);
 }
 
-bool BPReflectedVariable::operator==(const BPReflectedVariable &rhs) const
+bool ReflectVariable::operator==(const ReflectVariable &rhs) const
 {
     return GetName() == rhs.GetName() && GetCodeName() == rhs.GetCodeName() &&
            GetType() == rhs.GetType() && GetInitValue() == rhs.GetInitValue();
 }
 
-bool BPReflectedVariable::operator!=(const BPReflectedVariable &rhs) const
+bool ReflectVariable::operator!=(const ReflectVariable &rhs) const
 {
     return !(*this == rhs);
 }
 
-String BPReflectedVariable::ToString() const
+String ReflectVariable::ToString() const
 {
     return "(" + GetName() + ", " +
-           BPReflectedVariable::GetTypeToString(GetType()) + ", " +
-           GetCodeName() + " = " + GetInitValue() + ")";
+           ReflectVariable::GetTypeToString(GetType()) + ", " + GetCodeName() +
+           " = " + GetInitValue() + ")";
 }

@@ -6,10 +6,10 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/BPReflectedStruct.h"
 #include "Bang/File.h"
 #include "Bang/List.tcc"
 #include "Bang/Path.h"
+#include "Bang/ReflectStruct.h"
 #include "Bang/SystemProcess.h"
 
 using namespace Bang;
@@ -72,15 +72,15 @@ void BangPreprocessor::Preprocess(const String &source,
     *preprocessedSomething = false;
     String &reflectionHeaderSource = *_reflectionHeaderSource;
     reflectionHeaderSource = R"VERBATIM(
-             #include "Bang/BPReflectedStruct.h"
-             #include "Bang/BPReflectedVariable.h"
              #include "Bang/MetaNode.h"
+             #include "Bang/ReflectStruct.h"
+             #include "Bang/ReflectVariable.h"
 
           )VERBATIM";
 
-    Array<BPReflectedStruct> reflectStructs =
+    Array<ReflectStruct> reflectStructs =
         BangPreprocessor::GetReflectStructs(source);
-    for (const BPReflectedStruct &reflStruct : reflectStructs)
+    for (const ReflectStruct &reflStruct : reflectStructs)
     {
         String reflectDefineCode =
             "#define  REFLECT_DEFINITIONS_DEFINE_NAME_RSTRUCT_VAR_NAME() ";
@@ -113,17 +113,15 @@ void BangPreprocessor::Preprocess(const String &source,
     }
 }
 
-Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
-    const Path &sourcePath)
+Array<ReflectStruct> BangPreprocessor::GetReflectStructs(const Path &sourcePath)
 {
     String source = File::GetContents(sourcePath);
     return BangPreprocessor::GetReflectStructs(source);
 }
 
-Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
-    const String &source)
+Array<ReflectStruct> BangPreprocessor::GetReflectStructs(const String &source)
 {
-    Array<BPReflectedStruct> reflectStructsArray;
+    Array<ReflectStruct> reflectStructsArray;
 
     String src = source;
     BP::RemoveComments(&src);
@@ -152,8 +150,8 @@ Array<BPReflectedStruct> BangPreprocessor::GetReflectStructs(
         }
 
         bool ok;
-        BPReflectedStruct reflStruct;
-        BPReflectedStruct::FromString(
+        ReflectStruct reflStruct;
+        ReflectStruct::FromString(
             itStructBegin, itStructScopeEnd, &reflStruct, &ok);
         reflectStructsArray.PushBack(reflStruct);
     }

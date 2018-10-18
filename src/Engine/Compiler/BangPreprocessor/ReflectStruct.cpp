@@ -1,4 +1,4 @@
-#include "Bang/BPReflectedStruct.h"
+#include "Bang/ReflectStruct.h"
 
 #include <iostream>
 #include <string>
@@ -11,30 +11,30 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-BPReflectedStruct::BPReflectedStruct()
+ReflectStruct::ReflectStruct()
 {
 }
 
-BPReflectedStruct::~BPReflectedStruct()
+ReflectStruct::~ReflectStruct()
 {
 }
 
-bool BPReflectedStruct::operator==(const BPReflectedStruct &rhs) const
+bool ReflectStruct::operator==(const ReflectStruct &rhs) const
 {
     return GetStructName() == rhs.GetStructName() &&
            GetStructVariableName() == rhs.GetStructVariableName() &&
            GetVariables() == rhs.GetVariables();
 }
 
-bool BPReflectedStruct::operator!=(const BPReflectedStruct &rhs) const
+bool ReflectStruct::operator!=(const ReflectStruct &rhs) const
 {
     return !(*this == rhs);
 }
 
-void BPReflectedStruct::FromString(String::Iterator structBegin,
-                                   String::Iterator structEnd,
-                                   BPReflectedStruct *outStruct,
-                                   bool *success)
+void ReflectStruct::FromString(String::Iterator structBegin,
+                               String::Iterator structEnd,
+                               ReflectStruct *outStruct,
+                               bool *success)
 {
     *success = false;
 
@@ -99,8 +99,8 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
         }
         propertyEnd += 1;
 
-        BPReflectedVariable bProperty;
-        BPReflectedVariable::FromString(
+        ReflectVariable bProperty;
+        ReflectVariable::FromString(
             propertyBegin, propertyEnd, &bProperty, success);
         outStruct->AddVariable(bProperty);
 
@@ -110,29 +110,29 @@ void BPReflectedStruct::FromString(String::Iterator structBegin,
     *success = true;
 }
 
-void BPReflectedStruct::SetStructName(const String &structName)
+void ReflectStruct::SetStructName(const String &structName)
 {
     m_structName = structName;
 }
 
-void BPReflectedStruct::SetStructVariableName(const String &structVarName)
+void ReflectStruct::SetStructVariableName(const String &structVarName)
 {
     m_structVariableName = structVarName;
 }
 
-void BPReflectedStruct::AddVariable(const BPReflectedVariable &prop)
+void ReflectStruct::AddVariable(const ReflectVariable &prop)
 {
     m_variables.PushBack(prop);
 }
 
-String BPReflectedStruct::GetInitializationCode() const
+String ReflectStruct::GetInitializationCode() const
 {
     int i = 0;
     String src = "";
-    for (const BPReflectedVariable &rVar : GetVariables())
+    for (const ReflectVariable &rVar : GetVariables())
     {
         String varInitCode = R"VERBATIM(
-              BPReflectedVariable RVAR_NAME;
+              ReflectVariable RVAR_NAME;
               RVAR_INIT_CODE
               REFL_INFO->AddVariable(RVAR_NAME);
           )VERBATIM";
@@ -148,7 +148,7 @@ String BPReflectedStruct::GetInitializationCode() const
     return src;
 }
 
-String BPReflectedStruct::GetGetReflectionInfoCode() const
+String ReflectStruct::GetGetReflectionInfoCode() const
 {
     String src = R"VERBATIM(
      void Reflect() const override
@@ -162,7 +162,7 @@ String BPReflectedStruct::GetGetReflectionInfoCode() const
     return src;
 }
 
-String BPReflectedStruct::GetWriteReflectionCode() const
+String ReflectStruct::GetWriteReflectionCode() const
 {
     String src = R"VERBATIM(
         void ExportMeta(MetaNode *metaNode) const override
@@ -172,20 +172,20 @@ String BPReflectedStruct::GetWriteReflectionCode() const
         )VERBATIM";
 
     String varsSetsSrc = "";
-    for (const BPReflectedVariable &var : GetVariables())
+    for (const ReflectVariable &var : GetVariables())
     {
         String varSetSrc = R"VERBATIM(
                     metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
             )VERBATIM";
 
-        BPReflectedVariable::Type varType = var.GetType();
-        if (varType == BPReflectedVariable::Type::NONE)
+        ReflectVariable::Type varType = var.GetType();
+        if (varType == ReflectVariable::Type::NONE)
         {
             continue;
         }
         varSetSrc.ReplaceInSitu(
             "SET_FUNC",
-            "Set<" + BPReflectedVariable::GetTypeToString(varType) + ">");
+            "Set<" + ReflectVariable::GetTypeToString(varType) + ">");
         varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varSetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
@@ -195,7 +195,7 @@ String BPReflectedStruct::GetWriteReflectionCode() const
     return src;
 }
 
-String BPReflectedStruct::GetReadReflectionCode() const
+String ReflectStruct::GetReadReflectionCode() const
 {
     String src = R"VERBATIM(
         void ImportMeta(const MetaNode &metaNode) override
@@ -205,20 +205,20 @@ String BPReflectedStruct::GetReadReflectionCode() const
         )VERBATIM";
 
     String varsGetsSrc = "";
-    for (const BPReflectedVariable &var : GetVariables())
+    for (const ReflectVariable &var : GetVariables())
     {
         String varGetSrc = R"VERBATIM(
                     VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
             )VERBATIM";
 
-        BPReflectedVariable::Type varType = var.GetType();
-        if (varType == BPReflectedVariable::Type::NONE)
+        ReflectVariable::Type varType = var.GetType();
+        if (varType == ReflectVariable::Type::NONE)
         {
             continue;
         }
         varGetSrc.ReplaceInSitu(
             "GET_FUNC",
-            "Get<" + BPReflectedVariable::GetTypeToString(varType) + ">");
+            "Get<" + ReflectVariable::GetTypeToString(varType) + ">");
         varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varGetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
@@ -228,22 +228,22 @@ String BPReflectedStruct::GetReadReflectionCode() const
     return src;
 }
 
-const String &BPReflectedStruct::GetStructName() const
+const String &ReflectStruct::GetStructName() const
 {
     return m_structName;
 }
 
-const String &BPReflectedStruct::GetStructVariableName() const
+const String &ReflectStruct::GetStructVariableName() const
 {
     return m_structVariableName;
 }
 
-const Array<BPReflectedVariable> &BPReflectedStruct::GetVariables() const
+const Array<ReflectVariable> &ReflectStruct::GetVariables() const
 {
     return m_variables;
 }
 
-String BPReflectedStruct::ToString() const
+String ReflectStruct::ToString() const
 {
     std::ostringstream oss;
     oss << "{ " << GetStructName() << ", " << GetStructVariableName() << ", "

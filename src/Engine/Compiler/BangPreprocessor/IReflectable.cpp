@@ -1,10 +1,10 @@
 #include "Bang/IReflectable.h"
 
-#include "Bang/BPReflectedStruct.h"
+#include "Bang/ReflectStruct.h"
 
 using namespace Bang;
 
-const BPReflectedStruct &IReflectable::GetReflectionInfo() const
+const ReflectStruct &IReflectable::GetReflectionInfo() const
 {
     if (!m_alreadyReflected)
     {
@@ -19,7 +19,7 @@ void IReflectable::Reflect() const
     // Empty
 }
 
-BPReflectedStruct *IReflectable::GetReflectionInfoPtr() const
+ReflectStruct *IReflectable::GetReflectionInfoPtr() const
 {
     return &m_reflectionInfo;
 }

@@ -1,39 +1,39 @@
-#ifndef BPSTRUCT_H
-#define BPSTRUCT_H
+#ifndef REFLECTSTRUCT_H
+#define REFLECTSTRUCT_H
 
 #include "Bang/Array.h"
-#include "Bang/BPReflectedVariable.h"
 #include "Bang/BangDefines.h"
 #include "Bang/IToString.h"
+#include "Bang/ReflectVariable.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class BPReflectedStruct : public IToString
+class ReflectStruct : public IToString
 {
 public:
-    BPReflectedStruct();
-    virtual ~BPReflectedStruct() override;
+    ReflectStruct();
+    virtual ~ReflectStruct() override;
 
-    void AddVariable(const BPReflectedVariable &prop);
+    void AddVariable(const ReflectVariable &prop);
 
     const String &GetStructName() const;
     const String &GetStructVariableName() const;
-    const Array<BPReflectedVariable> &GetVariables() const;
+    const Array<ReflectVariable> &GetVariables() const;
 
     String ToString() const override;
 
-    bool operator==(const BPReflectedStruct &rhs) const;
-    bool operator!=(const BPReflectedStruct &rhs) const;
+    bool operator==(const ReflectStruct &rhs) const;
+    bool operator!=(const ReflectStruct &rhs) const;
 
 private:
     String m_structName = "";
     String m_structVariableName = "";
-    Array<BPReflectedVariable> m_variables;
+    Array<ReflectVariable> m_variables;
 
     static void FromString(String::Iterator structBegin,
                            String::Iterator structEnd,
-                           BPReflectedStruct *outStruct,
+                           ReflectStruct *outStruct,
                            bool *success);
 
     void SetStructName(const String &structName);
@@ -48,4 +48,4 @@ private:
 };
 }
 
-#endif  // BPSTRUCT_H
+#endif  // REFLECTSTRUCT_H

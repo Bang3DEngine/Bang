@@ -1,5 +1,5 @@
-#ifndef BPPROPERTY_H
-#define BPPROPERTY_H
+#ifndef REFLECTVARIABLE_H
+#define REFLECTVARIABLE_H
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
@@ -8,7 +8,7 @@
 
 namespace Bang
 {
-class BPReflectedVariable : public IToString
+class ReflectVariable : public IToString
 {
 public:
     enum class Type
@@ -26,35 +26,35 @@ public:
         QUATERNION
     };
 
-    BPReflectedVariable();
+    ReflectVariable();
 
     static void FromString(String::Iterator propBegin,
                            String::Iterator propEnd,
-                           BPReflectedVariable *outReflectedVar,
+                           ReflectVariable *outReflectedVar,
                            bool *success);
 
     String GetInitializationCode(const String &propInitVarName) const;
 
     void SetName(const String &name);
-    void SetType(BPReflectedVariable::Type varType);
+    void SetType(ReflectVariable::Type varType);
     void SetCodeName(const String &varCodeName);
     void SetInitValue(const String &initValue);
 
     const String &GetName() const;
-    BPReflectedVariable::Type GetType() const;
+    ReflectVariable::Type GetType() const;
     const String &GetCodeName() const;
     const String &GetInitValue() const;
 
-    static String GetTypeToString(BPReflectedVariable::Type type);
-    static BPReflectedVariable::Type GetTypeFromString(const String &typeStr);
+    static String GetTypeToString(ReflectVariable::Type type);
+    static ReflectVariable::Type GetTypeFromString(const String &typeStr);
     static bool ExistsType(const String &typeStr);
 
-    bool operator==(const BPReflectedVariable &rhs) const;
-    bool operator!=(const BPReflectedVariable &rhs) const;
+    bool operator==(const ReflectVariable &rhs) const;
+    bool operator!=(const ReflectVariable &rhs) const;
 
 private:
     String m_name = "";
-    BPReflectedVariable::Type m_variableType = BPReflectedVariable::Type::FLOAT;
+    ReflectVariable::Type m_variableType = ReflectVariable::Type::FLOAT;
     String m_codeName = "";
     String m_initValue = "";
 
@@ -62,4 +62,4 @@ private:
 };
 }
 
-#endif  // BPPROPERTY_H
+#endif  // REFLECTVARIABLE_H

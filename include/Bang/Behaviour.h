@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/BPReflectedStruct.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
@@ -12,6 +11,7 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsGameObjectPhysics.h"
+#include "Bang/ReflectStruct.h"
 #include "Bang/String.h"
 
 using namespace Bang;

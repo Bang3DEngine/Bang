@@ -386,9 +386,9 @@ void Rope::Reflect() const
 {
     LineRenderer::Reflect();
 
-    BPReflectedVariable reflVar;
+    ReflectVariable reflVar;
     reflVar.SetName("Test");
-    reflVar.SetType(BPReflectedVariable::Type::BOOL);
+    reflVar.SetType(ReflectVariable::Type::BOOL);
     reflVar.SetCodeName("test");
     GetReflectionInfoPtr()->AddVariable(reflVar);
 }

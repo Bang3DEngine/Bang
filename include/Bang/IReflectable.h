@@ -1,8 +1,8 @@
 #ifndef IREFLECTABLE_H
 #define IREFLECTABLE_H
 
-#include "Bang/BPReflectedStruct.h"
 #include "Bang/BangDefines.h"
+#include "Bang/ReflectStruct.h"
 
 namespace Bang
 {
@@ -11,23 +11,23 @@ namespace Bang
 #define BANG_REFLECT_STRUCT(...)
 #define BANG_REFLECT_DEFINITIONS(...)
 
-class BPReflectedStruct;
+class ReflectStruct;
 
 class IReflectable
 {
 public:
-    const BPReflectedStruct &GetReflectionInfo() const;
+    const ReflectStruct &GetReflectionInfo() const;
 
 protected:
     IReflectable() = default;
     virtual ~IReflectable() = default;
 
     virtual void Reflect() const;
-    BPReflectedStruct *GetReflectionInfoPtr() const;
+    ReflectStruct *GetReflectionInfoPtr() const;
 
 private:
     mutable bool m_alreadyReflected = false;
-    mutable BPReflectedStruct m_reflectionInfo;
+    mutable ReflectStruct m_reflectionInfo;
 };
 }
 

@@ -110,6 +110,16 @@ void ReflectVariable::SetInitValue(const String &initValue)
     m_initValue = initValue;
 }
 
+void ReflectVariable::SetSetter(std::function<void(const Variant &)> setter)
+{
+    m_setter = setter;
+}
+
+void ReflectVariable::SetGetter(std::function<Variant()> getter)
+{
+    m_getter = getter;
+}
+
 Variant &ReflectVariable::GetVariant()
 {
     return m_variant;
@@ -133,6 +143,16 @@ const String &ReflectVariable::GetCodeName() const
 const String &ReflectVariable::GetInitValue() const
 {
     return m_initValue;
+}
+
+const ReflectVariable::SetterFunc &ReflectVariable::GetSetter() const
+{
+    return m_setter;
+}
+
+const ReflectVariable::GetterFunc &ReflectVariable::GetGetter() const
+{
+    return m_getter;
 }
 
 bool ReflectVariable::operator==(const ReflectVariable &rhs) const

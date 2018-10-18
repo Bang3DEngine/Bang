@@ -130,6 +130,76 @@ Quaternion Variant::GetQuaternion() const
     return Quaternion(v4.x, v4.y, v4.z, v4.w);
 }
 
+Variant Variant::FromFloat(float v)
+{
+    Variant variant;
+    variant.SetFloat(v);
+    return variant;
+}
+
+Variant Variant::FromDouble(double v)
+{
+    Variant variant;
+    variant.SetDouble(v);
+    return variant;
+}
+
+Variant Variant::FromInt(int v)
+{
+    Variant variant;
+    variant.SetInt(v);
+    return variant;
+}
+
+Variant Variant::FromBool(bool v)
+{
+    Variant variant;
+    variant.SetBool(v);
+    return variant;
+}
+
+Variant Variant::FromString(const String &v)
+{
+    Variant variant;
+    variant.SetString(v);
+    return variant;
+}
+
+Variant Variant::FromColor(const Color &v)
+{
+    Variant variant;
+    variant.SetColor(v);
+    return variant;
+}
+
+Variant Variant::FromVector2(const Vector2 &v)
+{
+    Variant variant;
+    variant.SetVector2(v);
+    return variant;
+}
+
+Variant Variant::FromVector3(const Vector3 &v)
+{
+    Variant variant;
+    variant.SetVector3(v);
+    return variant;
+}
+
+Variant Variant::FromVector4(const Vector4 &v)
+{
+    Variant variant;
+    variant.SetVector4(v);
+    return variant;
+}
+
+Variant Variant::FromQuaternion(const Quaternion &v)
+{
+    Variant variant;
+    variant.SetQuaternion(v);
+    return variant;
+}
+
 bool Variant::operator==(const Variant &rhs) const
 {
     if (GetType() != rhs.GetType())
@@ -150,9 +220,12 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::VECTOR4: return (GetVector4() == rhs.GetVector4());
         case Variant::Type::QUATERNION:
             return (GetQuaternion() == rhs.GetQuaternion());
+        case Variant::Type::NONE: return true;
+
         default: break;
     }
 
+    ASSERT(false);
     return true;
 }
 
@@ -175,9 +248,13 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::VECTOR3: return "Vector3";
         case Variant::Type::VECTOR4: return "Vector4";
         case Variant::Type::QUATERNION: return "Quaternion";
+        case Variant::Type::NONE: return "None";
+
         default: break;
     }
-    return "None";
+
+    ASSERT(false);
+    return "";
 }
 
 Variant::Type Variant::GetTypeFromString(const String &typeStr)

@@ -31,11 +31,6 @@ class Component : public Object,
     SET_CLASS_ID_AS_ROOT()
 
 public:
-    template <class T, class... Args>
-    static T *Create(const Args &... args)
-    {
-        return new T(args...);
-    }
     static void Destroy(Component *component);
     static void DestroyImmediate(Component *component);
 

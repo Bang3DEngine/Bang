@@ -3,6 +3,7 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/HideFlags.h"
+#include "Bang/ICloneable.h"
 #include "Bang/IGUIDable.h"
 #include "Bang/IReflectable.h"
 #include "Bang/MetaNode.h"
@@ -23,7 +24,7 @@ public:                                          \
         return #CLASS;                           \
     }
 
-class Serializable : public IGUIDable, public IReflectable
+class Serializable : public IGUIDable, public ICloneable, public IReflectable
 {
 public:
     virtual ~Serializable() override;
@@ -44,6 +45,9 @@ public:
 
     HideFlags &GetHideFlags();
     const HideFlags &GetHideFlags() const;
+
+    // ICloneable
+    virtual void CloneInto(ICloneable *cloneable) const override;
 
 protected:
     Serializable();

@@ -13,7 +13,7 @@ namespace Bang
 {
 class Texture : public GLObject, public Asset
 {
-    ASSET(Texture)
+    ASSET_ABSTRACT(Texture)
 
 public:
     Texture();

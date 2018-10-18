@@ -58,11 +58,12 @@ class UIFileListItem : public GameObject
     GAMEOBJECT(UIFileListItem);
 
 public:
+    UIFileListItem();
+
     void SetPath(const Path &path);
     const Path &GetPath();
 
 protected:
-    UIFileListItem();
     virtual ~UIFileListItem() override;
 
 private:

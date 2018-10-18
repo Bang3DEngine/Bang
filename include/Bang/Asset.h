@@ -18,9 +18,13 @@ namespace Bang
 class IEventsDestroy;
 class MetaNode;
 
-#define ASSET(CLASSNAME) \
-    RESOURCE(CLASSNAME)  \
+#define ASSET_ABSTRACT(CLASSNAME) \
+    RESOURCE(CLASSNAME)           \
     friend class Asset;
+
+#define ASSET(CLASSNAME)      \
+    ASSET_ABSTRACT(CLASSNAME) \
+    ICLONEABLE(CLASSNAME)
 
 class Asset : public Resource,
               public IToString,

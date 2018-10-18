@@ -22,6 +22,8 @@ class Scene : public GameObject
     GAMEOBJECT(Scene);
 
 public:
+    Scene();
+
     virtual void Start() override;
     virtual void Update() override;
     virtual void Render(RenderPass rp, bool renderChildren = true) override;
@@ -45,7 +47,6 @@ public:
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
 protected:
-    Scene();
     virtual ~Scene() override;
 
     DebugRenderer *GetDebugRenderer() const;

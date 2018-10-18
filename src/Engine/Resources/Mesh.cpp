@@ -1004,6 +1004,8 @@ UMap<Mesh::VertexId, Array<Mesh::TriangleId>> Mesh::GetVertexIdsToTriangleIds()
 
 void Mesh::CloneInto(ICloneable *clone) const
 {
+    Serializable::CloneInto(clone);
+
     Mesh *mClone = SCAST<Mesh *>(clone);
 
     mClone->m_bBox = m_bBox;

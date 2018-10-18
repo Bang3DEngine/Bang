@@ -419,6 +419,8 @@ void Material::UnBind() const
 
 void Material::CloneInto(ICloneable *clone) const
 {
+    Serializable::CloneInto(clone);
+
     Material *matClone = Cast<Material *>(clone);
 
     matClone->GetNeededUniforms().SetOn(GetNeededUniforms().GetValue());

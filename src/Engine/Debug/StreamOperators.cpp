@@ -7,9 +7,11 @@
 #include "Bang/IToString.h"
 #include "Bang/Path.h"
 #include "Bang/Quad.h"
+#include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 #include "Bang/Triangle.h"
+#include "Bang/Variant.h"
 
 namespace Bang
 {
@@ -132,6 +134,27 @@ std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr)
     log << cr.GetMaxRangeValue() << " ";
     log << SCAST<uint>(cr.GetType()) << " ";
 
+    return log;
+}
+
+std::ostream &operator<<(std::ostream &log, const Variant &variant)
+{
+    switch (variant.GetType())
+    {
+        case Variant::Type::FLOAT: log << variant.GetFloat(); break;
+        case Variant::Type::DOUBLE: log << variant.GetDouble(); break;
+        case Variant::Type::BOOL: log << variant.GetBool(); break;
+        case Variant::Type::INT: log << variant.GetInt(); break;
+        case Variant::Type::STRING: log << variant.GetString(); break;
+        case Variant::Type::COLOR: log << variant.GetColor(); break;
+        case Variant::Type::VECTOR2: log << variant.GetVector2(); break;
+        case Variant::Type::VECTOR3: log << variant.GetVector3(); break;
+        case Variant::Type::VECTOR4: log << variant.GetVector4(); break;
+        case Variant::Type::QUATERNION: log << variant.GetQuaternion(); break;
+        case Variant::Type::NONE: break;
+
+        default: ASSERT(false); break;
+    }
     return log;
 }
 }

@@ -119,7 +119,7 @@ void UIFileList::UpdateEntries()
 
     for (const Path &path : paths)
     {
-        UIFileListItem *item = GameObject::Create<UIFileListItem>();
+        UIFileListItem *item = new UIFileListItem();
         item->SetPath(path);
 
         uiList->AddItem(item);

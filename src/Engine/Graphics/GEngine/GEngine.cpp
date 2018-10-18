@@ -83,7 +83,7 @@ void GEngine::Init()
     m_texUnitManager = new TextureUnitManager();
 
     m_renderFactory = new RenderFactory();
-    m_debugRenderer = GameObject::Create<DebugRenderer>();
+    m_debugRenderer = new DebugRenderer();
 
     p_windowPlaneMesh = MeshFactory::GetUIPlane();
     p_renderTextureToViewportSP.Set(

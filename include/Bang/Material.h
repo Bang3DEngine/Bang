@@ -26,12 +26,9 @@ class Resource;
 class ShaderProgram;
 class Texture2D;
 
-class Material : public Asset,
-                 public ICloneable,
-                 public EventListener<IEventsResource>
+class Material : public Asset, public EventListener<IEventsResource>
 {
     ASSET(Material)
-    ICLONEABLE(Material)
 
 public:
     enum class UniformFlags

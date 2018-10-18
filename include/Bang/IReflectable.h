@@ -22,7 +22,7 @@ protected:
     IReflectable() = default;
     virtual ~IReflectable() = default;
 
-    virtual void Reflect() const;
+    virtual void Reflect();
     ReflectStruct *GetReflectionInfoPtr() const;
 
 private:

@@ -27,7 +27,7 @@ class Path;
 class VAO;
 class VBO;
 
-class Mesh : public Asset, public ICloneable
+class Mesh : public Asset
 {
     ASSET(Mesh)
 

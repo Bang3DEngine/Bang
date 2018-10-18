@@ -29,7 +29,7 @@ using namespace Bang;
 
 Scene::Scene() : GameObject("Scene")
 {
-    p_debugRenderer = GameObject::Create<DebugRenderer>();
+    p_debugRenderer = new DebugRenderer();
     Physics::GetInstance()->RegisterScene(this);
 }
 

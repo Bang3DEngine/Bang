@@ -454,7 +454,7 @@ GOItem *UITree::AddItem_(GOItem *newItem,
 
         // Create itemContainer and populate
         UITreeItemContainer *newItemContainer =
-            GameObject::Create<UITreeItemContainer>();
+            new UITreeItemContainer();
         newItemContainer->SetContainedItem(newItem);
 
         // Add

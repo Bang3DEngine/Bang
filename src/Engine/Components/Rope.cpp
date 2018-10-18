@@ -370,7 +370,6 @@ void Rope::CloneInto(ICloneable *clone) const
 
     Rope *ropeClone = SCAST<Rope *>(clone);
 
-    ropeClone->SetNumPoints(GetNumPoints());
     ropeClone->SetFixedPoints(m_fixedPoints);
     ropeClone->SetPoints(GetPoints());
 
@@ -382,25 +381,21 @@ void Rope::CloneInto(ICloneable *clone) const
     ropeClone->SetSeeDebugPoints(GetSeeDebugPoints());
 }
 
-void Rope::Reflect() const
+void Rope::Reflect()
 {
     LineRenderer::Reflect();
 
     ReflectVariable reflVar;
-    reflVar.SetName("Test");
-    reflVar.GetVariant().SetType(Variant::Type::BOOL);
-    reflVar.SetCodeName("test");
+    reflVar.SetName("Num. Points");
+    reflVar.GetVariant().SetType(Variant::Type::INT);
+    reflVar.SetSetterT<int>([this](int x) { SetNumPoints(x); });
+    reflVar.SetGetterT<int>([this]() { return GetNumPoints(); });
     GetReflectionInfoPtr()->AddVariable(reflVar);
 }
 
 void Rope::ImportMeta(const MetaNode &metaNode)
 {
     LineRenderer::ImportMeta(metaNode);
-
-    if (metaNode.Contains("NumPoints"))
-    {
-        SetNumPoints(metaNode.Get<uint>("NumPoints"));
-    }
 
     if (metaNode.Contains("SpringsForce"))
     {
@@ -432,7 +427,6 @@ void Rope::ExportMeta(MetaNode *metaNode) const
 {
     LineRenderer::ExportMeta(metaNode);
 
-    metaNode->Set("NumPoints", GetNumPoints());
     metaNode->Set("SpringsForce", GetSpringsForce());
     metaNode->Set("RopeLength", GetRopeLength());
     metaNode->Set("Bounciness", GetBounciness());

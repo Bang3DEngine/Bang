@@ -143,7 +143,7 @@ String ReflectStruct::GetInitializationCode() const
 String ReflectStruct::GetGetReflectionInfoCode() const
 {
     String src = R"VERBATIM(
-     void Reflect() const override
+     void Reflect() override
      {
         INIT_CODE
      }

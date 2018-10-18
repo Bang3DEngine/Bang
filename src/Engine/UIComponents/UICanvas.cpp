@@ -76,7 +76,7 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
         }
     };
 
-    DestroyTracker *destroyTracker = GameObject::Create<DestroyTracker>();
+    DestroyTracker *destroyTracker = new DestroyTracker();
     destroyTracker->focusables = &focusablesInGo;
 
     for (UIFocusable *focusableInGo : focusablesInGo)

@@ -150,6 +150,8 @@ bool Object::IsWaitingToBeDestroyed() const
 
 void Object::CloneInto(ICloneable *clone) const
 {
+    Serializable::CloneInto(clone);
+
     Object *obj = SCAST<Object *>(clone);
     obj->SetEnabled(IsEnabled());
 }

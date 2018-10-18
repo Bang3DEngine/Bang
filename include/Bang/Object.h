@@ -20,7 +20,6 @@ class IEventsDestroy;
 class IEventsObject;
 
 class Object : public Serializable,
-               public ICloneable,
                public EventListener<IEventsObject>,
                public EventEmitter<IEventsDestroy>,
                public EventEmitter<IEventsObject>

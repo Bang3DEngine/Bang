@@ -49,7 +49,7 @@ using namespace Bang;
 
 GameObject *GameObjectFactory::CreateGameObject(bool addTransform)
 {
-    GameObject *go = GameObject::Create<GameObject>();
+    GameObject *go = new GameObject();
     if (addTransform && !go->HasComponent<Transform>())
     {
         go->AddComponent<Transform>();
@@ -59,7 +59,7 @@ GameObject *GameObjectFactory::CreateGameObject(bool addTransform)
 
 GameObject *GameObjectFactory::CreateUIGameObject(bool addComponents)
 {
-    GameObject *go = GameObject::Create<GameObject>();
+    GameObject *go = new GameObject();
     GameObjectFactory::CreateUIGameObjectInto(go, addComponents);
     return go;
 }
@@ -91,7 +91,7 @@ void GameObjectFactory::CreateUIGameObjectInto(GameObject *go, bool addComps)
 
 Scene *GameObjectFactory::CreateScene(bool addTransform)
 {
-    Scene *scene = GameObject::Create<Scene>();
+    Scene *scene = new Scene();
     if (addTransform && !scene->GetTransform())
     {
         scene->AddComponent<Transform>();
@@ -101,7 +101,7 @@ Scene *GameObjectFactory::CreateScene(bool addTransform)
 
 Scene *GameObjectFactory::CreateUIScene()
 {
-    Scene *scene = GameObject::Create<Scene>();
+    Scene *scene = new Scene();
     CreateUISceneInto(scene);
     return scene;
 }

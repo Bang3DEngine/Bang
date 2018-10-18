@@ -39,14 +39,9 @@ class RectTransform;
 class Scene;
 class Transform;
 
-#define GAMEOBJECT_NO_FRIEND(ClassName)                     \
-public:                                                     \
-    virtual ClassName *Clone() const override               \
-    {                                                       \
-        ClassName *clone = GameObject::Create<ClassName>(); \
-        CloneInto(clone);                                   \
-        return clone;                                       \
-    }                                                       \
+#define GAMEOBJECT_NO_FRIEND(ClassName) \
+public:                                 \
+    ICLONEABLE(ClassName)               \
     SERIALIZABLE(ClassName)
 
 #define GAMEOBJECT(ClassName)       \
@@ -65,13 +60,13 @@ class GameObject : public Object,
     GAMEOBJECT_NO_FRIEND(GameObject)
 
 public:
+    GameObject(const String &name = "GameObject");
+
     virtual void PreStart() override;
     virtual void Start() override;
     virtual void Update();
     virtual void Render(RenderPass renderPass, bool renderChildren = true);
 
-    template <class T = GameObject, class... Args>
-    static T *Create(Args... args);
     static void Destroy(GameObject *gameObject);
     static void DestroyImmediate(GameObject *gameObject);
 
@@ -243,7 +238,6 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
-    GameObject(const String &name = "GameObject");
     virtual ~GameObject() override;
 
     virtual void AfterChildrenUpdate();

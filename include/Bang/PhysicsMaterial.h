@@ -12,10 +12,9 @@ namespace Bang
 {
 class Path;
 
-class PhysicsMaterial : public Asset, public ICloneable
+class PhysicsMaterial : public Asset
 {
     ASSET(PhysicsMaterial)
-    ICLONEABLE(PhysicsMaterial)
 
 public:
     enum class CombineMode

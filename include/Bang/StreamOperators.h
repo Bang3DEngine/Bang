@@ -55,6 +55,7 @@ class Path;
 class Quad;
 class Time;
 class Triangle;
+class Variant;
 
 std::istream &operator>>(std::istream &is, GUID &guid);
 std::istream &operator>>(std::istream &is, Path &p);
@@ -62,6 +63,7 @@ std::istream &operator>>(std::istream &is, Color &c);
 std::istream &operator>>(std::istream &is, Time &t);
 std::istream &operator>>(std::istream &is, ComplexRandom &cr);
 std::ostream &operator<<(std::ostream &log, const ObjectId &objectId);
+std::ostream &operator<<(std::ostream &log, const Variant &variant);
 std::ostream &operator<<(std::ostream &log, const Path &p);
 std::ostream &operator<<(std::ostream &log, const Color &v);
 std::ostream &operator<<(std::ostream &log, const AABox &v);
@@ -74,6 +76,7 @@ std::ostream &operator<<(std::ostream &log, const IToString *s);
 std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr);
 
 // Templated ostream operators
+
 template <class T>
 std::ostream &operator<<(std::ostream &log, const Flags<T> &flags)
 {

@@ -17,18 +17,20 @@ namespace Bang
 #define REQUIRE_COMPONENT(gameObject, CLASS) \
     ASSERT(gameObject->HasComponent<CLASS>())
 
-#define CLONEABLE_COMPONENT(CLASS)                 \
-public:                                            \
-    virtual CLASS *Clone() const override          \
-    {                                              \
-        CLASS *clone = Component::Create<CLASS>(); \
-        CloneInto(clone);                          \
-        return clone;                              \
+#define CLONEABLE_COMPONENT(CLASS)        \
+public:                                   \
+    virtual CLASS *Clone() const override \
+    {                                     \
+        CLASS *clone = new CLASS();       \
+        CloneInto(clone);                 \
+        return clone;                     \
     }
 
-#define COMPONENT_ABSTRACT(CLASS) \
-    SERIALIZABLE(CLASS)           \
-    friend class Component;
+#define COMPONENT_ABSTRACT(CLASS)        \
+    SERIALIZABLE(CLASS)                  \
+    friend class Bang::Component;        \
+    friend class Bang::ComponentFactory; \
+    friend class Bang::GameObject;
 
 #define COMPONENT(CLASS)       \
     CLONEABLE_COMPONENT(CLASS) \

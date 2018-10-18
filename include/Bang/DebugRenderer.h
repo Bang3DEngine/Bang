@@ -23,6 +23,8 @@ class DebugRenderer : public GameObject
     GAMEOBJECT(DebugRenderer);
 
 public:
+    DebugRenderer();
+
     static void Clear();
 
     static void RenderLine(const Vector3 &origin,
@@ -116,7 +118,6 @@ private:
     RH<Mesh> m_mesh;
     List<DebugRenderPrimitive> m_primitivesToRender;
 
-    DebugRenderer();
     virtual ~DebugRenderer() override;
 
     void RenderPrimitives(bool withDepth);

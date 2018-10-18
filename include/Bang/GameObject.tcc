@@ -7,17 +7,10 @@
 
 namespace Bang
 {
-template <class T, class... Args>
-T *GameObject::Create(Args... args)
-{
-    T *gameObject = new T(args...);
-    return gameObject;
-}
-
 template <class T>
 T *GameObject::AddComponent(int index)
 {
-    T *c = Component::Create<T>();
+    T *c = new T();
     AddComponent(c, index);
     return c;
 }

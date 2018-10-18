@@ -8,13 +8,13 @@ const ReflectStruct &IReflectable::GetReflectionInfo() const
 {
     if (!m_alreadyReflected)
     {
-        Reflect();
+        const_cast<IReflectable *>(this)->Reflect();
         m_alreadyReflected = true;
     }
     return m_reflectionInfo;
 }
 
-void IReflectable::Reflect() const
+void IReflectable::Reflect()
 {
     // Empty
 }

@@ -25,11 +25,39 @@ public:
     void SetCodeName(const String &varCodeName);
     void SetInitValue(const String &initValue);
 
+    using SetterFunc = std::function<void(const Variant &variant)>;
+    void SetSetter(std::function<void(const Variant &variant)> setter);
+
+    template <class T>
+    void SetSetterT(std::function<void(const T &v)> setter)
+    {
+        SetSetter(
+            [setter](const Variant &variant) { setter(variant.Get<T>()); });
+    }
+
+    template <class TClass, class T>
+    void SetSetterT(std::function<void(TClass *thisPtr, const T &v)> setter)
+    {
+        SetSetter(
+            [setter](const Variant &variant) { setter(variant.Get<T>()); });
+    }
+
+    using GetterFunc = std::function<Variant()>;
+    void SetGetter(std::function<Variant()> getter);
+
+    template <class T>
+    void SetGetterT(std::function<T()> getter)
+    {
+        SetGetter([getter]() { return Variant::From<T>(getter()); });
+    }
+
     Variant &GetVariant();
     const String &GetName() const;
     const Variant &GetVariant() const;
     const String &GetCodeName() const;
     const String &GetInitValue() const;
+    const SetterFunc &GetSetter() const;
+    const GetterFunc &GetGetter() const;
 
     bool operator==(const ReflectVariable &rhs) const;
     bool operator!=(const ReflectVariable &rhs) const;
@@ -40,8 +68,8 @@ private:
     String m_codeName = "";
     String m_initValue = "";
 
-    std::function<void(const Variant &variant)> m_setter;
-    std::function<const Variant &()> m_getter;
+    SetterFunc m_setter;
+    GetterFunc m_getter;
 };
 }
 

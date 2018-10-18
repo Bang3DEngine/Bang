@@ -44,7 +44,7 @@ using namespace Bang;
 #define CREATE_COMPONENT(className, ComponentClass)          \
     if ((className) == ComponentClass::GetClassNameStatic()) \
     {                                                        \
-        return Component::Create<ComponentClass>();          \
+        return new ComponentClass();                         \
     }
 
 #define EXISTS_COMPONENT(componentClassName, ComponentClass)          \

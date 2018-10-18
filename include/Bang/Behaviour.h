@@ -42,7 +42,7 @@ public:
         /* This line links the Application in the main binary        \
             to the Application in the behaviour loaded library. */   \
         Application::SetApplicationSingleton(mainBinaryApplication); \
-        return Component::Create<CLASS_NAME>();                      \
+        return new CLASS_NAME();                                     \
     }                                                                \
                                                                      \
     extern "C" void DeleteDynamically_##CLASS_NAME(Behaviour *b)     \

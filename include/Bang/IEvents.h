@@ -19,7 +19,7 @@ private:                           \
 #define IEVENTS(ClassName)     \
     IEVENTS_COMMON_(ClassName) \
     template <class>           \
-    friend class EventListener
+    friend class Bang::EventListener
 
 #define IEVENTS_NS(ClassName)  \
     IEVENTS_COMMON_(ClassName) \

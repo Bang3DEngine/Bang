@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# If you want to have this hook, copy it into .git/hooks/pre-commit
+
+# Runs clang-format on changed files before commit.
+hash clang-format 2>/dev/null
+if [ $? -ne 0 ]
+then
+    echo "ERROR: no clang-format executable found, or it is not executable. Please install it!"
+    exit 1
+fi
+
+fileList=$(git status -s)
+for file in $fileList
+do
+    if [ -f "$file" ]
+    then 
+        if [ "${file: -4}" == ".cpp" ] || [ "${file: -4}" == ".tcc" ] || [ "${file: -2}" == ".h" ]
+        then
+            ./Scripts/format-code.sh "$file"
+        fi
+    fi
+done
+
+exit 0
+

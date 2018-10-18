@@ -3,25 +3,22 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/IToString.h"
 #include "Bang/ReflectVariable.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class ReflectStruct : public IToString
+class ReflectStruct
 {
 public:
-    ReflectStruct();
-    virtual ~ReflectStruct() override;
+    ReflectStruct() = default;
+    ~ReflectStruct() = default;
 
     void AddVariable(const ReflectVariable &prop);
 
     const String &GetStructName() const;
     const String &GetStructVariableName() const;
     const Array<ReflectVariable> &GetVariables() const;
-
-    String ToString() const override;
 
     bool operator==(const ReflectStruct &rhs) const;
     bool operator!=(const ReflectStruct &rhs) const;

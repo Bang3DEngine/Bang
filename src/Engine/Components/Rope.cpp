@@ -388,7 +388,7 @@ void Rope::Reflect() const
 
     ReflectVariable reflVar;
     reflVar.SetName("Test");
-    reflVar.SetType(ReflectVariable::Type::BOOL);
+    reflVar.GetVariant().SetType(Variant::Type::BOOL);
     reflVar.SetCodeName("test");
     GetReflectionInfoPtr()->AddVariable(reflVar);
 }

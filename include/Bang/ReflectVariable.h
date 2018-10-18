@@ -3,30 +3,16 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/IToString.h"
 #include "Bang/String.h"
+#include "Bang/Variant.h"
 
 namespace Bang
 {
-class ReflectVariable : public IToString
+class ReflectVariable
 {
 public:
-    enum class Type
-    {
-        NONE,
-        FLOAT,
-        DOUBLE,
-        INT,
-        BOOL,
-        COLOR,
-        STRING,
-        VECTOR2,
-        VECTOR3,
-        VECTOR4,
-        QUATERNION
-    };
-
-    ReflectVariable();
+    ReflectVariable() = default;
+    ~ReflectVariable() = default;
 
     static void FromString(String::Iterator propBegin,
                            String::Iterator propEnd,
@@ -36,29 +22,26 @@ public:
     String GetInitializationCode(const String &propInitVarName) const;
 
     void SetName(const String &name);
-    void SetType(ReflectVariable::Type varType);
     void SetCodeName(const String &varCodeName);
     void SetInitValue(const String &initValue);
 
+    Variant &GetVariant();
     const String &GetName() const;
-    ReflectVariable::Type GetType() const;
+    const Variant &GetVariant() const;
     const String &GetCodeName() const;
     const String &GetInitValue() const;
-
-    static String GetTypeToString(ReflectVariable::Type type);
-    static ReflectVariable::Type GetTypeFromString(const String &typeStr);
-    static bool ExistsType(const String &typeStr);
 
     bool operator==(const ReflectVariable &rhs) const;
     bool operator!=(const ReflectVariable &rhs) const;
 
 private:
+    Variant m_variant;
     String m_name = "";
-    ReflectVariable::Type m_variableType = ReflectVariable::Type::FLOAT;
     String m_codeName = "";
     String m_initValue = "";
 
-    String ToString() const override;
+    std::function<void(const Variant &variant)> m_setter;
+    std::function<const Variant &()> m_getter;
 };
 }
 

@@ -11,14 +11,6 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-ReflectStruct::ReflectStruct()
-{
-}
-
-ReflectStruct::~ReflectStruct()
-{
-}
-
 bool ReflectStruct::operator==(const ReflectStruct &rhs) const
 {
     return GetStructName() == rhs.GetStructName() &&
@@ -178,14 +170,13 @@ String ReflectStruct::GetWriteReflectionCode() const
                     metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
             )VERBATIM";
 
-        ReflectVariable::Type varType = var.GetType();
-        if (varType == ReflectVariable::Type::NONE)
+        Variant::Type varType = var.GetVariant().GetType();
+        if (varType == Variant::Type::NONE)
         {
             continue;
         }
         varSetSrc.ReplaceInSitu(
-            "SET_FUNC",
-            "Set<" + ReflectVariable::GetTypeToString(varType) + ">");
+            "SET_FUNC", "Set<" + Variant::GetTypeToString(varType) + ">");
         varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varSetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
@@ -211,14 +202,13 @@ String ReflectStruct::GetReadReflectionCode() const
                     VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
             )VERBATIM";
 
-        ReflectVariable::Type varType = var.GetType();
-        if (varType == ReflectVariable::Type::NONE)
+        Variant::Type varType = var.GetVariant().GetType();
+        if (varType == Variant::Type::NONE)
         {
             continue;
         }
         varGetSrc.ReplaceInSitu(
-            "GET_FUNC",
-            "Get<" + ReflectVariable::GetTypeToString(varType) + ">");
+            "GET_FUNC", "Get<" + Variant::GetTypeToString(varType) + ">");
         varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
         varGetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
 
@@ -241,12 +231,4 @@ const String &ReflectStruct::GetStructVariableName() const
 const Array<ReflectVariable> &ReflectStruct::GetVariables() const
 {
     return m_variables;
-}
-
-String ReflectStruct::ToString() const
-{
-    std::ostringstream oss;
-    oss << "{ " << GetStructName() << ", " << GetStructVariableName() << ", "
-        << GetVariables() << " }";
-    return String(oss.str());
 }

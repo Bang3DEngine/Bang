@@ -453,8 +453,7 @@ GOItem *UITree::AddItem_(GOItem *newItem,
             GetFlatUIListIndex(parentItem, newIndexInsideParent);
 
         // Create itemContainer and populate
-        UITreeItemContainer *newItemContainer =
-            new UITreeItemContainer();
+        UITreeItemContainer *newItemContainer = new UITreeItemContainer();
         newItemContainer->SetContainedItem(newItem);
 
         // Add

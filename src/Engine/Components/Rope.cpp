@@ -385,12 +385,10 @@ void Rope::Reflect()
 {
     LineRenderer::Reflect();
 
-    ReflectVariable reflVar;
-    reflVar.SetName("Num. Points");
-    reflVar.GetVariant().SetType(Variant::Type::INT);
-    reflVar.SetSetterT<int>([this](int x) { SetNumPoints(x); });
-    reflVar.SetGetterT<int>([this]() { return GetNumPoints(); });
-    GetReflectionInfoPtr()->AddVariable(reflVar);
+    ReflectVar<int>("Num. Points",
+                    [this](int x) { SetNumPoints(x); },
+                    [this]() { return GetNumPoints(); },
+                    100);
 }
 
 void Rope::ImportMeta(const MetaNode &metaNode)

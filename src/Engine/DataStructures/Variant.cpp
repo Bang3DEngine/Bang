@@ -20,6 +20,12 @@ void Variant::SetInt(int v)
     m_type = Type::INT;
 }
 
+void Variant::SetUint(uint v)
+{
+    SetInt(SCAST<int>(v));
+    m_type = Type::UINT;
+}
+
 void Variant::SetFloat(float v)
 {
     SetDouble(SCAST<double>(v));
@@ -82,6 +88,11 @@ Variant::Type Variant::GetType() const
 int Variant::GetInt() const
 {
     return m_int;
+}
+
+uint Variant::GetUint() const
+{
+    return SCAST<uint>(GetInt());
 }
 
 float Variant::GetFloat() const
@@ -151,6 +162,13 @@ Variant Variant::FromInt(int v)
     return variant;
 }
 
+Variant Variant::FromUint(uint v)
+{
+    Variant variant;
+    variant.SetUint(v);
+    return variant;
+}
+
 Variant Variant::FromBool(bool v)
 {
     Variant variant;
@@ -212,6 +230,7 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::FLOAT: return (GetFloat() == rhs.GetFloat());
         case Variant::Type::DOUBLE: return (GetDouble() == rhs.GetDouble());
         case Variant::Type::INT: return (GetInt() == rhs.GetInt());
+        case Variant::Type::UINT: return (GetUint() == rhs.GetUint());
         case Variant::Type::BOOL: return (GetBool() == rhs.GetBool());
         case Variant::Type::STRING: return (GetString() == rhs.GetString());
         case Variant::Type::COLOR: return (GetColor() == rhs.GetColor());
@@ -241,6 +260,7 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::FLOAT: return "float";
         case Variant::Type::DOUBLE: return "double";
         case Variant::Type::INT: return "int";
+        case Variant::Type::UINT: return "uint";
         case Variant::Type::BOOL: return "bool";
         case Variant::Type::COLOR: return "Color";
         case Variant::Type::STRING: return "String";
@@ -270,6 +290,10 @@ Variant::Type Variant::GetTypeFromString(const String &typeStr)
     else if (typeStr == "int")
     {
         return Variant::Type::INT;
+    }
+    else if (typeStr == "uint")
+    {
+        return Variant::Type::UINT;
     }
     else if (typeStr == "bool")
     {

@@ -4,14 +4,14 @@
 
 using namespace Bang;
 
-const ReflectStruct &IReflectable::GetReflectionInfo() const
+const ReflectStruct &IReflectable::GetReflectStruct() const
 {
     if (!m_alreadyReflected)
     {
         const_cast<IReflectable *>(this)->Reflect();
         m_alreadyReflected = true;
     }
-    return m_reflectionInfo;
+    return m_reflectStruct;
 }
 
 void IReflectable::Reflect()
@@ -19,7 +19,7 @@ void IReflectable::Reflect()
     // Empty
 }
 
-ReflectStruct *IReflectable::GetReflectionInfoPtr() const
+ReflectStruct *IReflectable::GetReflectStructPtr() const
 {
-    return &m_reflectionInfo;
+    return &m_reflectStruct;
 }

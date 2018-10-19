@@ -98,6 +98,7 @@ std::ostream &operator<<(std::ostream &log, const Variant &variant)
         case Variant::Type::DOUBLE: log << variant.GetDouble(); break;
         case Variant::Type::BOOL: log << variant.GetBool(); break;
         case Variant::Type::INT: log << variant.GetInt(); break;
+        case Variant::Type::UINT: log << variant.GetUint(); break;
         case Variant::Type::STRING: log << variant.GetString(); break;
         case Variant::Type::COLOR: log << variant.GetColor(); break;
         case Variant::Type::VECTOR2: log << variant.GetVector2(); break;
@@ -222,6 +223,13 @@ std::istream &operator>>(std::istream &is, Variant &variant)
             int v;
             is >> v;
             variant.SetInt(v);
+        }
+        break;
+        case Variant::Type::UINT:
+        {
+            uint v;
+            is >> v;
+            variant.SetUint(v);
         }
         break;
         case Variant::Type::BOOL:

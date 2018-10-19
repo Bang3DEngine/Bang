@@ -366,68 +366,32 @@ void Rope::UpdateLineRendererPoints()
 
 void Rope::CloneInto(ICloneable *clone) const
 {
-    LineRenderer::CloneInto(clone);
-
     Rope *ropeClone = SCAST<Rope *>(clone);
 
     ropeClone->SetFixedPoints(m_fixedPoints);
     ropeClone->SetPoints(GetPoints());
 
-    ropeClone->SetDamping(GetDamping());
-    ropeClone->SetBounciness(GetBounciness());
-    ropeClone->SetRopeLength(GetRopeLength());
-    ropeClone->SetSpringsForce(GetSpringsForce());
-
-    ropeClone->SetSeeDebugPoints(GetSeeDebugPoints());
+    LineRenderer::CloneInto(clone);
 }
 
 void Rope::Reflect()
 {
     LineRenderer::Reflect();
 
-    ReflectVar<int>("Num. Points",
-                    [this](int x) { SetNumPoints(x); },
-                    [this]() { return GetNumPoints(); },
-                    100);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "Num Points", NumPoints);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "Rope Length", RopeLength);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "Springs Force", SpringsForce);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "Bounciness", Bounciness);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "Damping", Damping);
+    BANG_REFLECT_VAR_MEMBER_0(Rope, "See Debug Points", SeeDebugPoints);
 }
 
 void Rope::ImportMeta(const MetaNode &metaNode)
 {
     LineRenderer::ImportMeta(metaNode);
-
-    if (metaNode.Contains("SpringsForce"))
-    {
-        SetSpringsForce(metaNode.Get<float>("SpringsForce"));
-    }
-
-    if (metaNode.Contains("RopeLength"))
-    {
-        SetRopeLength(metaNode.Get<float>("RopeLength"));
-    }
-
-    if (metaNode.Contains("Bounciness"))
-    {
-        SetBounciness(metaNode.Get<float>("Bounciness"));
-    }
-
-    if (metaNode.Contains("Damping"))
-    {
-        SetDamping(metaNode.Get<float>("Damping"));
-    }
-
-    if (metaNode.Contains("SeeDebugPoints"))
-    {
-        SetSeeDebugPoints(metaNode.Get<bool>("SeeDebugPoints"));
-    }
 }
 
 void Rope::ExportMeta(MetaNode *metaNode) const
 {
     LineRenderer::ExportMeta(metaNode);
-
-    metaNode->Set("SpringsForce", GetSpringsForce());
-    metaNode->Set("RopeLength", GetRopeLength());
-    metaNode->Set("Bounciness", GetBounciness());
-    metaNode->Set("Damping", GetDamping());
-    metaNode->Set("SeeDebugPoints", GetSeeDebugPoints());
 }

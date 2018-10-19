@@ -64,7 +64,7 @@ inline void MetaAttribute::Set(const String &name, const bool &value)
 template <>
 inline bool MetaAttribute::Get() const
 {
-    return GetStringValue().EqualsNoCase("true");
+    return (GetStringValue() == "1") || GetStringValue().EqualsNoCase("true");
 }
 
 template <>

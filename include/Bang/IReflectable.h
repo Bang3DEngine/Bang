@@ -11,12 +11,17 @@ namespace Bang
 #define BANG_REFLECT_STRUCT(...)
 #define BANG_REFLECT_DEFINITIONS(...)
 
+#define BANG_REFLECT_VAR_MEMBER_0(Class, Name, Suffix) \
+    ReflectVarMember(Name, &Class::Set##Suffix, &Rope::Get##Suffix, this);
+#define BANG_REFLECT_VAR_MEMBER_1(Class, Name, Setter, Getter) \
+    ReflectVarMember(Name, &Class::Setter, &Rope::Getter, this);
+
 class ReflectStruct;
 
 class IReflectable
 {
 public:
-    const ReflectStruct &GetReflectionInfo() const;
+    const ReflectStruct &GetReflectStruct() const;
 
 protected:
     IReflectable() = default;
@@ -25,29 +30,48 @@ protected:
     template <class T>
     void ReflectVar(const String &varName,
                     std::function<void(T)> setter,
-                    std::function<T()> getter,
-                    const T &initValue = T());
+                    std::function<T()> getter);
+
+    template <class TClass, class T>
+    void ReflectVarMember(const String &varName,
+                          void (TClass::*setter)(T),
+                          T (TClass::*getter)() const,
+                          TClass *instance);
 
     virtual void Reflect();
-    ReflectStruct *GetReflectionInfoPtr() const;
+    ReflectStruct *GetReflectStructPtr() const;
 
 private:
     mutable bool m_alreadyReflected = false;
-    mutable ReflectStruct m_reflectionInfo;
+    mutable ReflectStruct m_reflectStruct;
 };
 
 template <class T>
 void IReflectable::ReflectVar(const String &varName,
                               std::function<void(T)> setter,
-                              std::function<T()> getter,
-                              const T &initValue)
+                              std::function<T()> getter)
 {
     ReflectVariable reflVar;
     reflVar.SetName(varName);
     reflVar.SetSetterT<T>(setter);
     reflVar.SetGetterT<T>(getter);
-    reflVar.GetVariant() = Variant::From<T>(initValue);
-    GetReflectionInfoPtr()->AddVariable(reflVar);
+    reflVar.GetVariant().Set<T>(getter ? getter() : T());
+    GetReflectStructPtr()->AddVariable(reflVar);
+}
+
+template <class TClass, class T>
+void IReflectable::ReflectVarMember(const String &varName,
+                                    void (TClass::*setter)(T),
+                                    T (TClass::*getter)() const,
+                                    TClass *instance)
+{
+    ReflectVariable reflVar;
+    reflVar.SetName(varName);
+    reflVar.SetSetterT<T>([instance, setter](T v) { (instance->*setter)(v); });
+    reflVar.SetGetterT<T>(
+        [instance, getter]() { return (instance->*getter)(); });
+    reflVar.GetVariant().Set<T>(getter ? (instance->*getter)() : T());
+    GetReflectStructPtr()->AddVariable(reflVar);
 }
 }
 

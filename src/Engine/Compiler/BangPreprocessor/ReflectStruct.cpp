@@ -139,8 +139,7 @@ String ReflectStruct::GetInitializationCode() const
                ReflectVar<VAR_TYPE>(
                            "VAR_REFL_NAME",
                            [this](VAR_TYPE x) { VAR_NAME = x; },
-                           [this]() { return VAR_NAME; },
-                           VAR_INIT_VALUE);
+                           [this]() { return VAR_NAME; });
             )VERBATIM";
 
         Variant::Type varType = var.GetVariant().GetType();
@@ -154,8 +153,6 @@ String ReflectStruct::GetInitializationCode() const
         varReflectionCode.ReplaceInSitu("VAR_NAME", var.GetCodeName());
         varReflectionCode.ReplaceInSitu(
             "VAR_TYPE", Variant::GetTypeToString(var.GetVariant().GetType()));
-        varReflectionCode.ReplaceInSitu("VAR_INIT_VALUE",
-                                        var.GetInitValueString());
 
         /*
         varsSetsSrc += varSetSrc;

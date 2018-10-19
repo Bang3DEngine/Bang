@@ -58,7 +58,7 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
     }
 
     // Import reflected variables
-    const ReflectStruct &reflStruct = GetReflectionInfo();
+    const ReflectStruct &reflStruct = GetReflectStruct();
     for (const ReflectVariable &reflVar : reflStruct.GetVariables())
     {
         const String &varName = reflVar.GetName();
@@ -79,6 +79,10 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                     case Variant::Type::INT:
                         reflVarSetter(
                             Variant::FromInt(metaNode.Get<int>(varName)));
+                        break;
+                    case Variant::Type::UINT:
+                        reflVarSetter(
+                            Variant::FromUint(metaNode.Get<uint>(varName)));
                         break;
                     case Variant::Type::BOOL:
                         reflVarSetter(
@@ -122,7 +126,7 @@ void Serializable::ExportMeta(MetaNode *metaNode) const
     metaNode->Set<GUID>("GUID", GetGUID());
 
     // Export reflected variables
-    const ReflectStruct &reflStruct = GetReflectionInfo();
+    const ReflectStruct &reflStruct = GetReflectStruct();
     MetaNode reflMeta = reflStruct.GetMeta();
     metaNode->Import(reflMeta);
 
@@ -161,8 +165,8 @@ void Serializable::CloneInto(ICloneable *cloneable) const
     Serializable *clone = SCAST<Serializable *>(cloneable);
 
     // Clone reflected variables
-    ReflectStruct thisReflStruct = GetReflectionInfo();
-    ReflectStruct cloneReflStruct = clone->GetReflectionInfo();
+    ReflectStruct thisReflStruct = GetReflectStruct();
+    ReflectStruct cloneReflStruct = clone->GetReflectStruct();
     for (uint i = 0; i < thisReflStruct.GetVariables().Size(); ++i)
     {
         const ReflectVariable &thisReflVar = thisReflStruct.GetVariables()[i];

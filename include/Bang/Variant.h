@@ -20,6 +20,7 @@ public:
         FLOAT,
         DOUBLE,
         INT,
+        UINT,
         BOOL,
         STRING,
         COLOR,
@@ -35,6 +36,7 @@ public:
     void SetType(Type type);
 
     void SetInt(int v);
+    void SetUint(uint v);
     void SetFloat(float v);
     void SetDouble(double v);
     void SetBool(bool v);
@@ -54,6 +56,7 @@ public:
 
     Type GetType() const;
     int GetInt() const;
+    uint GetUint() const;
     float GetFloat() const;
     double GetDouble() const;
     bool GetBool() const;
@@ -74,6 +77,7 @@ public:
     static Variant FromFloat(float v);
     static Variant FromDouble(double v);
     static Variant FromInt(int v);
+    static Variant FromUint(uint v);
     static Variant FromBool(bool v);
     static Variant FromString(const String &v);
     static Variant FromColor(const Color &v);
@@ -128,6 +132,11 @@ inline void Variant::Set<int>(const int &v)
     SetInt(v);
 }
 template <>
+inline void Variant::Set<uint>(const uint &v)
+{
+    SetUint(v);
+}
+template <>
 inline void Variant::Set<String>(const String &v)
 {
     SetString(v);
@@ -178,6 +187,11 @@ template <>
 inline int Variant::Get() const
 {
     return GetInt();
+}
+template <>
+inline uint Variant::Get() const
+{
+    return GetUint();
 }
 template <>
 inline String Variant::Get() const

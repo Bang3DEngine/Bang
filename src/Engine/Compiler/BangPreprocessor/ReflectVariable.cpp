@@ -124,6 +124,11 @@ void ReflectVariable::SetInitValueString(const String &initValueStr)
     iss >> GetVariant();
 }
 
+void ReflectVariable::SetHints(const ReflectVariableHints &hints)
+{
+    m_hints = hints;
+}
+
 void ReflectVariable::SetSetter(std::function<void(const Variant &)> setter)
 {
     m_setter = setter;
@@ -166,6 +171,11 @@ const String &ReflectVariable::GetCodeName() const
 const String &ReflectVariable::GetInitValueString() const
 {
     return m_initValueString;
+}
+
+const ReflectVariableHints &ReflectVariable::GetHints() const
+{
+    return m_hints;
 }
 
 const ReflectVariable::SetterFunc &ReflectVariable::GetSetter() const

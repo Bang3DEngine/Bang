@@ -3,6 +3,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
+#include "Bang/ReflectVariableHints.h"
 #include "Bang/String.h"
 #include "Bang/Variant.h"
 
@@ -25,6 +26,7 @@ public:
     void SetCodeName(const String &varCodeName);
     void SetInitValue(const Variant &initValueVariant);
     void SetInitValueString(const String &initValueStr);
+    void SetHints(const ReflectVariableHints &hints);
 
     using SetterFunc = std::function<void(const Variant &variant)>;
     void SetSetter(std::function<void(const Variant &variant)> setter);
@@ -60,6 +62,7 @@ public:
     const GetterFunc &GetGetter() const;
     const Variant &GetInitValue() const;
     const String &GetInitValueString() const;
+    const ReflectVariableHints &GetHints() const;
 
     bool operator==(const ReflectVariable &rhs) const;
     bool operator!=(const ReflectVariable &rhs) const;
@@ -69,6 +72,7 @@ private:
     String m_name = "";
     String m_codeName = "";
     String m_initValueString = "";
+    ReflectVariableHints m_hints;
 
     SetterFunc m_setter = nullptr;
     GetterFunc m_getter = nullptr;

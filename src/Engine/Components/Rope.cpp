@@ -378,12 +378,19 @@ void Rope::Reflect()
 {
     LineRenderer::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "Num Points", NumPoints);
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "Rope Length", RopeLength);
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "Springs Force", SpringsForce);
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "Bounciness", Bounciness);
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "Damping", Damping);
-    BANG_REFLECT_VAR_MEMBER_0(Rope, "See Debug Points", SeeDebugPoints);
+    BANG_REFLECT_VAR_MEMBER_HINTED(Rope,
+                                   "Num Points",
+                                   NumPoints,
+                                   BANG_REFLECT_HINT_MINMAX_VALUE(2.0f, 10.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        Rope, "Rope Length", RopeLength, BANG_REFLECT_HINT_MIN_VALUE(0.1f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        Rope, "Springs Force", SpringsForce, BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        Rope, "Bounciness", Bounciness, BANG_REFLECT_HINT_SLIDER(0.05f, 1.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        Rope, "Damping", Damping, BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
+    BANG_REFLECT_VAR_MEMBER(Rope, "See Debug Points", SeeDebugPoints);
 }
 
 void Rope::ImportMeta(const MetaNode &metaNode)

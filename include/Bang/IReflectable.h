@@ -16,12 +16,24 @@ namespace Bang
 #define BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Suffix, Hints) \
     ReflectVarMember(                                              \
         Name, &Class::Set##Suffix, &Class::Get##Suffix, this, Hints);
+
 #define BANG_REFLECT_VAR_MEMBER(Class, Name, Suffix) \
     BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Suffix, "")
-/*
-#define BANG_REFLECT_VAR_MEMBER_1(Class, Name, Setter, Getter, Hints) \
-    ReflectVarMember(Name, &Class::Setter, &Rope::Getter, this);
-*/
+
+#define BANG_REFLECT_VAR_MEMBER_ENUM(Class, Name, Suffix) \
+    ReflectVarMemberEnum(Name,                            \
+                         &Class::Set##Suffix,             \
+                         &Class::Get##Suffix,             \
+                         this,                            \
+                         BANG_REFLECT_HINT_ENUM());
+
+#define BANG_REFLECT_HINT_ENUM_FIELD(enumName, enumFieldName) \
+    GetReflectStructPtr()->AddEnumField(enumName, enumFieldName)
+
+#define BANG_REFLECT_HINT_ENUM_FIELD_VALUE(   \
+    enumName, enumFieldName, enumFieldValue)  \
+    GetReflectStructPtr()->AddEnumFieldValue( \
+        enumName, enumFieldName, enumFieldValue)
 
 class ReflectStruct;
 
@@ -40,12 +52,19 @@ protected:
                     std::function<T()> getter,
                     const String &hintsString = "");
 
-    template <class TClass, class T>
+    template <class TClass, class T, class TToCastTo = T>
     void ReflectVarMember(const String &varName,
                           void (TClass::*setter)(T),
                           T (TClass::*getter)() const,
                           TClass *instance,
                           const String &hintsString = "");
+
+    template <class TClass, class T>
+    void ReflectVarMemberEnum(const String &varName,
+                              void (TClass::*setter)(T),
+                              T (TClass::*getter)() const,
+                              TClass *instance,
+                              const String &hintsString = "");
 
     virtual void Reflect();
     ReflectStruct *GetReflectStructPtr() const;
@@ -73,24 +92,30 @@ void IReflectable::ReflectVar(const String &varName,
     GetReflectStructPtr()->AddVariable(reflVar);
 }
 
-template <class TClass, class T>
+template <class TClass, class T, class TToCastTo>
 void IReflectable::ReflectVarMember(const String &varName,
                                     void (TClass::*setter)(T),
                                     T (TClass::*getter)() const,
                                     TClass *instance,
                                     const String &hintsString)
 {
-    ReflectVariable reflVar;
-    reflVar.SetName(varName);
-    reflVar.SetSetterT<T>([instance, setter](T v) { (instance->*setter)(v); });
-    reflVar.SetGetterT<T>(
-        [instance, getter]() { return (instance->*getter)(); });
-    reflVar.GetVariant().Set<T>(getter ? (instance->*getter)() : T());
-
-    ReflectVariableHints hints(hintsString);
-    reflVar.SetHints(hints);
-
-    GetReflectStructPtr()->AddVariable(reflVar);
+    ReflectVar<TToCastTo>(
+        varName,
+        [instance, setter](TToCastTo v) { (instance->*setter)(SCAST<T>(v)); },
+        [instance, getter]() -> TToCastTo {
+            return SCAST<TToCastTo>((instance->*getter)());
+        },
+        hintsString);
+}
+template <class TClass, class T>
+void IReflectable::ReflectVarMemberEnum(const String &varName,
+                                        void (TClass::*setter)(T),
+                                        T (TClass::*getter)() const,
+                                        TClass *instance,
+                                        const String &hintsString)
+{
+    ReflectVarMember<TClass, T, int>(
+        varName, setter, getter, instance, hintsString);
 }
 }
 

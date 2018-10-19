@@ -99,7 +99,16 @@ void CapsuleCollider::CloneInto(ICloneable *clone) const
     CapsuleCollider *ccClone = SCAST<CapsuleCollider *>(clone);
     ccClone->SetRadius(GetRadius());
     ccClone->SetHeight(GetHeight());
-    ccClone->SetAxis(GetAxis());
+}
+
+void CapsuleCollider::Reflect()
+{
+    Collider::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER_ENUM(CapsuleCollider, "Axis", Axis);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "X", Axis3D::X);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Y", Axis3D::Y);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Z", Axis3D::Z);
 }
 
 void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
@@ -115,11 +124,6 @@ void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
     {
         SetHeight(metaNode.Get<float>("Height"));
     }
-
-    if (metaNode.Contains("Axis"))
-    {
-        SetAxis(SCAST<Axis3D>(metaNode.Get<int>("Axis")));
-    }
 }
 
 void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
@@ -128,7 +132,6 @@ void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Radius", GetRadius());
     metaNode->Set("Height", GetHeight());
-    metaNode->Set("Axis3D", SCAST<int>(GetAxis()));
 }
 
 physx::PxShape *CapsuleCollider::CreatePxShape() const

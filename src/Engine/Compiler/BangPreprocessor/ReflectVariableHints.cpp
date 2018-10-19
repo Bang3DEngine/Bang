@@ -7,6 +7,7 @@ using namespace Bang;
 const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
+const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
 {
@@ -51,6 +52,10 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             {
                 m_isSlider = true;
             }
+            else if (keyStr == ReflectVariableHints::KeyIsEnum)
+            {
+                m_isEnum = true;
+            }
         }
     }
 }
@@ -72,4 +77,9 @@ const Vector4 &ReflectVariableHints::GetMaxValue() const
 bool ReflectVariableHints::GetIsSlider() const
 {
     return m_isSlider;
+}
+
+bool ReflectVariableHints::GetIsEnum() const
+{
+    return m_isEnum;
 }

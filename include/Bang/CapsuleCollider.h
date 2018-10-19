@@ -42,6 +42,9 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
+    // IReflectable
+    virtual void Reflect() override;
+
 protected:
     float m_radius = 0.5f;
     float m_height = 1.0f;

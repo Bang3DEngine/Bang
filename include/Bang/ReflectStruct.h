@@ -3,6 +3,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
+#include "Bang/Map.h"
 #include "Bang/ReflectVariable.h"
 #include "Bang/String.h"
 
@@ -15,12 +16,20 @@ public:
     ~ReflectStruct() = default;
 
     void AddVariable(const ReflectVariable &prop);
+    void AddEnumField(const String &enumName, const String &enumFieldName);
+    void AddEnumFieldValue(const String &enumName,
+                           const String &enumFieldName,
+                           uint enumFieldValue);
+    template <class T>
+    void AddEnumFieldValue(const String &enumName,
+                           const String &enumFieldName,
+                           T enumFieldValue);
 
     MetaNode GetMeta() const;
     const String &GetStructName() const;
     const String &GetStructVariableName() const;
     const Array<ReflectVariable> &GetVariables() const;
-
+    const Map<String, uint> &GetEnumFields(const String &enumName) const;
     bool operator==(const ReflectStruct &rhs) const;
     bool operator!=(const ReflectStruct &rhs) const;
 
@@ -28,6 +37,8 @@ private:
     String m_structName = "";
     String m_structVariableName = "";
     Array<ReflectVariable> m_variables;
+    mutable Map<String, Map<String, uint>> m_enumFieldValues;
+    mutable Map<String, uint> m_lastAddedEnumFieldValues;
 
     static void FromString(String::Iterator structBegin,
                            String::Iterator structEnd,
@@ -44,6 +55,14 @@ private:
 
     friend class BangPreprocessor;
 };
+
+template <class T>
+void ReflectStruct::AddEnumFieldValue(const String &enumName,
+                                      const String &enumFieldName,
+                                      T enumFieldValue)
+{
+    AddEnumFieldValue(enumName, enumFieldName, SCAST<uint>(enumFieldValue));
+}
 }
 
 #endif  // REFLECTSTRUCT_H

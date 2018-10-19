@@ -120,6 +120,25 @@ void ReflectStruct::AddVariable(const ReflectVariable &prop)
     m_variables.PushBack(prop);
 }
 
+void ReflectStruct::AddEnumField(const String &enumName,
+                                 const String &enumFieldName)
+{
+    uint enumFieldValue = 0;
+    if (!m_lastAddedEnumFieldValues.ContainsKey(enumName))
+    {
+        enumFieldValue = m_lastAddedEnumFieldValues[enumName] + 1;
+    }
+    AddEnumFieldValue(enumName, enumFieldName, enumFieldValue);
+}
+
+void ReflectStruct::AddEnumFieldValue(const String &enumName,
+                                      const String &enumFieldName,
+                                      uint enumFieldValue)
+{
+    m_enumFieldValues[enumName][enumFieldName] = enumFieldValue;
+    m_lastAddedEnumFieldValues[enumName] = enumFieldValue;
+}
+
 MetaNode ReflectStruct::GetMeta() const
 {
     MetaNode meta;
@@ -266,4 +285,10 @@ const String &ReflectStruct::GetStructVariableName() const
 const Array<ReflectVariable> &ReflectStruct::GetVariables() const
 {
     return m_variables;
+}
+
+const Map<String, uint> &ReflectStruct::GetEnumFields(
+    const String &enumName) const
+{
+    return m_enumFieldValues[enumName];
 }

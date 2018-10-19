@@ -22,6 +22,9 @@
     BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) + \
         BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsSlider, true)
 
+#define BANG_REFLECT_HINT_ENUM() \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsEnum, true)
+
 namespace Bang
 {
 class ReflectVariableHints
@@ -30,6 +33,7 @@ public:
     static const String KeyMinValue;
     static const String KeyMaxValue;
     static const String KeyIsSlider;
+    static const String KeyIsEnum;
 
     ReflectVariableHints(const String &hintsString = "");
     ~ReflectVariableHints();
@@ -37,12 +41,14 @@ public:
     const Vector4 &GetMinValue() const;
     const Vector4 &GetMaxValue() const;
     bool GetIsSlider() const;
+    bool GetIsEnum() const;
 
 private:
     String m_hintsString = "";
     Vector4 m_minValue = Vector4::NInfinity;
     Vector4 m_maxValue = Vector4::Infinity;
     bool m_isSlider = false;
+    bool m_isEnum = false;
 };
 }
 

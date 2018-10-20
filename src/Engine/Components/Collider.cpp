@@ -253,14 +253,14 @@ void Collider::Reflect()
 {
     Component::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER(Collider, "IsTrigger", SetIsTrigger, GetIsTrigger);
+    BANG_REFLECT_VAR_MEMBER(Collider, "Is Trigger", SetIsTrigger, GetIsTrigger);
     BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);
 
     BANG_REFLECT_VAR_MEMBER_RESOURCE(
         Collider,
-        PhysicsMaterial,
         "Physics Material",
         SetPhysicsMaterial,
         GetSharedPhysicsMaterial,
+        PhysicsMaterial,
         BANG_REFLECT_HINT_EXTENSION(Extensions::GetPhysicsMaterialExtension()));
 }

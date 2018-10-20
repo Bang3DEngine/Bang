@@ -64,29 +64,15 @@ const Vector3 &BoxCollider::GetExtents() const
     return m_extents;
 }
 
-void BoxCollider::CloneInto(ICloneable *clone) const
+void BoxCollider::Reflect()
 {
-    Collider::CloneInto(clone);
+    Collider::Reflect();
 
-    BoxCollider *bcClone = SCAST<BoxCollider *>(clone);
-    bcClone->SetExtents(GetExtents());
-}
-
-void BoxCollider::ImportMeta(const MetaNode &metaNode)
-{
-    Collider::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Extents"))
-    {
-        SetExtents(metaNode.Get<Vector3>("Extents"));
-    }
-}
-
-void BoxCollider::ExportMeta(MetaNode *metaNode) const
-{
-    Collider::ExportMeta(metaNode);
-
-    metaNode->Set("Extents", GetExtents());
+    BANG_REFLECT_VAR_MEMBER_HINTED(BoxCollider,
+                                   "Extents",
+                                   SetExtents,
+                                   GetExtents,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.01f));
 }
 
 physx::PxShape *BoxCollider::CreatePxShape() const

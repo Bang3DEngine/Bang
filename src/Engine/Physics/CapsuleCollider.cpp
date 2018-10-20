@@ -92,46 +92,25 @@ float CapsuleCollider::GetScaledRadius() const
     return maxScaleXZ * GetRadius();
 }
 
-void CapsuleCollider::CloneInto(ICloneable *clone) const
-{
-    Collider::CloneInto(clone);
-
-    CapsuleCollider *ccClone = SCAST<CapsuleCollider *>(clone);
-    ccClone->SetRadius(GetRadius());
-    ccClone->SetHeight(GetHeight());
-}
-
 void CapsuleCollider::Reflect()
 {
     Collider::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(CapsuleCollider,
+                                   "Radius",
+                                   SetRadius,
+                                   GetRadius,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0001f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(CapsuleCollider,
+                                   "Height",
+                                   SetHeight,
+                                   GetHeight,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0001f));
 
     BANG_REFLECT_VAR_MEMBER_ENUM(CapsuleCollider, "Axis", SetAxis, GetAxis);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "X", Axis3D::X);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Y", Axis3D::Y);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Z", Axis3D::Z);
-}
-
-void CapsuleCollider::ImportMeta(const MetaNode &metaNode)
-{
-    Collider::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Radius"))
-    {
-        SetRadius(metaNode.Get<float>("Radius"));
-    }
-
-    if (metaNode.Contains("Height"))
-    {
-        SetHeight(metaNode.Get<float>("Height"));
-    }
-}
-
-void CapsuleCollider::ExportMeta(MetaNode *metaNode) const
-{
-    Collider::ExportMeta(metaNode);
-
-    metaNode->Set("Radius", GetRadius());
-    metaNode->Set("Height", GetHeight());
 }
 
 physx::PxShape *CapsuleCollider::CreatePxShape() const

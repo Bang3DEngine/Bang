@@ -30,12 +30,8 @@ public:
     Box GetBoxWorld() const;
     const Vector3 &GetExtents() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    void Reflect() override;
 
 protected:
     Vector3 m_extents = Vector3(0.5f);

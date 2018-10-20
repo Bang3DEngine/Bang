@@ -11,7 +11,7 @@
         Name, &Class::Setter, &Class::Getter, this, BANG_REFLECT_HINT_ENUM());
 
 #define BANG_REFLECT_VAR_MEMBER_RESOURCE(                                    \
-    Class, ResourceClass, Name, Setter, Getter, Hints)                       \
+    Class, Name, Setter, Getter, ResourceClass, Hints)                       \
     ReflectVar<GUID>(                                                        \
         Name,                                                                \
         [this](GUID v) { Setter(Resources::Load<ResourceClass>(v).Get()); }, \

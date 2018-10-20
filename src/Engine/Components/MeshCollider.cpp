@@ -1,5 +1,6 @@
 #include "Bang/MeshCollider.h"
 
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/Material.h"
@@ -59,28 +60,16 @@ Mesh *MeshCollider::GetMesh() const
     return p_mesh.Get();
 }
 
-void MeshCollider::CloneInto(ICloneable *clone) const
+void MeshCollider::Reflect()
 {
-    Collider::CloneInto(clone);
-
-    MeshCollider *mcClone = SCAST<MeshCollider *>(clone);
-    mcClone->SetMesh(GetMesh());
-}
-
-void MeshCollider::ImportMeta(const MetaNode &metaNode)
-{
-    Collider::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Mesh"))
-    {
-        SetMesh(Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh")).Get());
-    }
-}
-
-void MeshCollider::ExportMeta(MetaNode *metaNode) const
-{
-    Collider::ExportMeta(metaNode);
-    metaNode->Set("Mesh", GetMesh() ? GetMesh()->GetGUID() : GUID::Empty());
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        MeshCollider,
+        "Mesh",
+        SetMesh,
+        GetMesh,
+        Mesh,
+        BANG_REFLECT_HINT_EXTENSION(Extensions::GetMeshExtension()) +
+            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
 }
 
 bool MeshCollider::CanBeTriggerShape()

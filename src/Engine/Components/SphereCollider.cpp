@@ -64,34 +64,18 @@ Sphere SphereCollider::GetSphereWorld() const
     return sphere;
 }
 
+void SphereCollider::Reflect()
+{
+    BANG_REFLECT_VAR_MEMBER_HINTED(SphereCollider,
+                                   "Radius",
+                                   SetRadius,
+                                   GetRadius,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0001f));
+}
+
 float SphereCollider::GetRadius() const
 {
     return m_radius;
-}
-
-void SphereCollider::CloneInto(ICloneable *clone) const
-{
-    Collider::CloneInto(clone);
-
-    SphereCollider *scClone = SCAST<SphereCollider *>(clone);
-    scClone->SetRadius(GetRadius());
-}
-
-void SphereCollider::ImportMeta(const MetaNode &metaNode)
-{
-    Collider::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Radius"))
-    {
-        SetRadius(metaNode.Get<float>("Radius"));
-    }
-}
-
-void SphereCollider::ExportMeta(MetaNode *metaNode) const
-{
-    Collider::ExportMeta(metaNode);
-
-    metaNode->Set("Radius", GetRadius());
 }
 
 physx::PxShape *SphereCollider::CreatePxShape() const

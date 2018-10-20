@@ -3,6 +3,7 @@
 #include "Bang/AABox.h"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
@@ -266,63 +267,24 @@ Matrix4 Renderer::GetModelMatrixUniform() const
                : Matrix4::Identity;
 }
 
-void Renderer::CloneInto(ICloneable *clone) const
+void Renderer::Reflect()
 {
-    Component::CloneInto(clone);
-    Renderer *r = Cast<Renderer *>(clone);
-    r->SetMaterial(GetSharedMaterial());
-    r->SetCastsShadows(GetCastsShadows());
-    r->SetReceivesShadows(GetReceivesShadows());
-    r->SetRenderPrimitive(GetRenderPrimitive());
-    r->SetUseReflectionProbes(GetUseReflectionProbes());
-}
-
-void Renderer::ImportMeta(const MetaNode &meta)
-{
-    Component::ImportMeta(meta);
-
-    if (meta.Contains("DepthMask"))
-    {
-        SetDepthMask(meta.Get<bool>("DepthMask"));
-    }
-
-    if (meta.Contains("Visible"))
-    {
-        SetVisible(meta.Get<bool>("Visible"));
-    }
-
-    if (meta.Contains("Material"))
-    {
-        SetMaterial(
-            Resources::Load<Material>(meta.Get<GUID>("Material")).Get());
-    }
-
-    if (meta.Contains("UseReflectionProbes"))
-    {
-        SetUseReflectionProbes(meta.Get<bool>("UseReflectionProbes"));
-    }
-
-    if (meta.Contains("CastsShadows"))
-    {
-        SetCastsShadows(meta.Get<bool>("CastsShadows"));
-    }
-
-    if (meta.Contains("ReceivesShadows"))
-    {
-        SetReceivesShadows(meta.Get<bool>("ReceivesShadows"));
-    }
-}
-
-void Renderer::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    metaNode->Set("Visible", IsVisible());
-    metaNode->Set("DepthMask", GetDepthMask());
-
-    Material *sMat = GetSharedMaterial();
-    metaNode->Set("Material", sMat ? sMat->GetGUID() : GUID::Empty());
-    metaNode->Set("CastsShadows", GetCastsShadows());
-    metaNode->Set("ReceivesShadows", GetReceivesShadows());
-    metaNode->Set("UseReflectionProbes", GetUseReflectionProbes());
+    BANG_REFLECT_VAR_MEMBER(Renderer, "Visible", SetVisible, IsVisible);
+    BANG_REFLECT_VAR_MEMBER(Renderer, "Depth Mask", SetDepthMask, GetDepthMask);
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        Renderer,
+        "Material",
+        SetMaterial,
+        GetSharedMaterial,
+        Material,
+        BANG_REFLECT_HINT_EXTENSION(Extensions::GetMaterialExtension()) +
+            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
+    BANG_REFLECT_VAR_MEMBER(Renderer,
+                            "Use Refl Probes",
+                            SetUseReflectionProbes,
+                            GetUseReflectionProbes);
+    BANG_REFLECT_VAR_MEMBER(
+        Renderer, "Casts Shadows", SetCastsShadows, GetCastsShadows);
+    BANG_REFLECT_VAR_MEMBER(
+        Renderer, "Receives Shadows", SetReceivesShadows, GetReceivesShadows);
 }

@@ -42,6 +42,9 @@
 #define BANG_REFLECT_HINT_MAX_VALUE(maxValue) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyMaxValue, maxValue)
 
+#define BANG_REFLECT_HINT_HIDDEN() \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsHidden, true)
+
 #define BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) \
     BANG_REFLECT_HINT_MIN_VALUE(minValue) +                \
         BANG_REFLECT_HINT_MAX_VALUE(maxValue)

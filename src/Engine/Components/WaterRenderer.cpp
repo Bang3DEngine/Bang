@@ -38,20 +38,7 @@ void WaterRenderer::OnRender()
                p_planeMesh.Get()->GetNumVerticesIds());
 }
 
-void WaterRenderer::CloneInto(ICloneable *clone) const
+void WaterRenderer::Reflect()
 {
-    Renderer::CloneInto(clone);
-
-    WaterRenderer *wrClone = SCAST<WaterRenderer *>(clone);
-    BANG_UNUSED(wrClone);
-}
-
-void WaterRenderer::ImportMeta(const MetaNode &metaNode)
-{
-    Renderer::ImportMeta(metaNode);
-}
-
-void WaterRenderer::ExportMeta(MetaNode *metaNode) const
-{
-    Renderer::ExportMeta(metaNode);
+    Renderer::Reflect();
 }

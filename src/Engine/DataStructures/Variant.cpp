@@ -124,7 +124,7 @@ const GUID &Variant::GetGUID() const
 
 String Variant::GetString() const
 {
-    return GetString();
+    return m_string;
 }
 
 Color Variant::GetColor() const

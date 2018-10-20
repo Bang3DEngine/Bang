@@ -9,6 +9,7 @@ const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
+const String ReflectVariableHints::KeyIsHidden = "IsHidden";
 const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
@@ -66,6 +67,10 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             {
                 m_zoomablePreview = true;
             }
+            else if (keyStr == ReflectVariableHints::KeyIsHidden)
+            {
+                m_isHidden = true;
+            }
         }
     }
 }
@@ -97,6 +102,11 @@ const Vector4 &ReflectVariableHints::GetMaxValue() const
 bool ReflectVariableHints::GetIsSlider() const
 {
     return m_isSlider;
+}
+
+bool ReflectVariableHints::GetIsHidden() const
+{
+    return m_isHidden;
 }
 
 bool ReflectVariableHints::GetIsEnum() const

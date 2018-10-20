@@ -85,12 +85,8 @@ public:
                                const String &oldName,
                                const String &newName) override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    void Reflect() override;
 
 private:
     Set<String> m_bonesNames;

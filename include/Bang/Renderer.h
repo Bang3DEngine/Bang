@@ -72,12 +72,8 @@ public:
     virtual AABox GetAABBox() const;
     virtual AARect GetBoundingRect(Camera *camera) const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    virtual void Reflect() override;
 
 protected:
     Renderer();

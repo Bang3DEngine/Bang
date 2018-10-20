@@ -1,5 +1,6 @@
 #include "Bang/MeshRenderer.h"
 
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
@@ -125,26 +126,16 @@ Mesh *MeshRenderer::GetActiveMesh() const
     return GetSharedMesh();
 }
 
-void MeshRenderer::CloneInto(ICloneable *clone) const
+void MeshRenderer::Reflect()
 {
-    Renderer::CloneInto(clone);
-    MeshRenderer *mr = Cast<MeshRenderer *>(clone);
-    mr->SetMesh(GetSharedMesh());
-}
+    Renderer::Reflect();
 
-void MeshRenderer::ImportMeta(const MetaNode &metaNode)
-{
-    Renderer::ImportMeta(metaNode);
-    if (metaNode.Contains("Mesh"))
-    {
-        RH<Mesh> mesh = Resources::Load<Mesh>(metaNode.Get<GUID>("Mesh"));
-        SetMesh(mesh.Get());
-    }
-}
-
-void MeshRenderer::ExportMeta(MetaNode *metaNode) const
-{
-    Renderer::ExportMeta(metaNode);
-    metaNode->Set("Mesh",
-                  GetSharedMesh() ? GetSharedMesh()->GetGUID() : GUID::Empty());
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        MeshRenderer,
+        "Mesh",
+        SetMesh,
+        GetActiveMesh,
+        Mesh,
+        BANG_REFLECT_HINT_EXTENSION(Extensions::GetMeshExtension()) +
+            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
 }

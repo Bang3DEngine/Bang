@@ -216,8 +216,10 @@ GameObject *SkinnedMeshRenderer::GetRootBoneGameObject() const
 {
     if (!p_rootBoneGameObject)
     {
-        p_rootBoneGameObject = GetGameObject()->FindInAncestorsAndThis(
-            GetRootBoneGameObjectName(), true);
+        p_rootBoneGameObject = GetGameObject()
+                                   ? GetGameObject()->FindInAncestorsAndThis(
+                                         GetRootBoneGameObjectName(), true)
+                                   : nullptr;
     }
     return p_rootBoneGameObject;
 }
@@ -374,33 +376,15 @@ void SkinnedMeshRenderer::OnNameChanged(GameObject *,
     }
 }
 
-void SkinnedMeshRenderer::CloneInto(ICloneable *clone) const
+void SkinnedMeshRenderer::Reflect()
 {
-    MeshRenderer::CloneInto(clone);
+    MeshRenderer::Reflect();
 
-    SkinnedMeshRenderer *smrClone = SCAST<SkinnedMeshRenderer *>(clone);
-    smrClone->m_bonesNames = m_bonesNames;
-    smrClone->m_rootBoneGameObjectName = m_rootBoneGameObjectName;
-    smrClone->m_boneSpaceToRootSpaceMatrices = m_boneSpaceToRootSpaceMatrices;
-    smrClone->m_initialTransforms = m_initialTransforms;
-}
-
-void SkinnedMeshRenderer::ImportMeta(const MetaNode &metaNode)
-{
-    MeshRenderer::ImportMeta(metaNode);
-
-    if (metaNode.Contains("RootBoneGameObjectName"))
-    {
-        String rootBoneName = metaNode.Get<String>("RootBoneGameObjectName");
-        SetRootBoneGameObjectName(rootBoneName);
-    }
-}
-
-void SkinnedMeshRenderer::ExportMeta(MetaNode *metaNode) const
-{
-    MeshRenderer::ExportMeta(metaNode);
-
-    metaNode->Set("RootBoneGameObjectName", GetRootBoneGameObjectName());
+    BANG_REFLECT_VAR_MEMBER_HINTED(SkinnedMeshRenderer,
+                                   "Root Bone Name",
+                                   SetRootBoneGameObjectName,
+                                   GetRootBoneGameObjectName,
+                                   BANG_REFLECT_HINT_HIDDEN());
 }
 
 Matrix4 SkinnedMeshRenderer::GetModelMatrixUniform() const

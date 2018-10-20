@@ -29,7 +29,11 @@ public:
     virtual ~Behaviour() override;
 };
 
-// DEFINES
+#define BANG_VARIABLE(...)
+#define BANG_CLASS(...)
+#define BANG_STRUCT(...)
+#define BANG_BEHAVIOUR_DEFINITIONS(...)
+
 #define BANG_BEHAVIOUR_CLASS(CLASS_NAME)                  \
     extern "C" Behaviour *CreateDynamically_##CLASS_NAME( \
         Application *mainBinaryApplication);              \

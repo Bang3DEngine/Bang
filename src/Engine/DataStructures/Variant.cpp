@@ -1,6 +1,7 @@
 #include "Bang/Variant.h"
 
 #include "Bang/Color.h"
+#include "Bang/GUID.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -42,6 +43,12 @@ void Variant::SetBool(bool v)
 {
     SetInt(SCAST<int>(v));
     m_type = Type::BOOL;
+}
+
+void Variant::SetGUID(const GUID &guid)
+{
+    m_guid = guid;
+    m_type = Type::GUID;
 }
 
 void Variant::SetString(const String &v)
@@ -110,6 +117,11 @@ bool Variant::GetBool() const
     return SCAST<bool>(GetInt());
 }
 
+const GUID &Variant::GetGUID() const
+{
+    return m_guid;
+}
+
 String Variant::GetString() const
 {
     return GetString();
@@ -176,6 +188,13 @@ Variant Variant::FromBool(bool v)
     return variant;
 }
 
+Variant Variant::FromGUID(const GUID &v)
+{
+    Variant variant;
+    variant.SetGUID(v);
+    return variant;
+}
+
 Variant Variant::FromString(const String &v)
 {
     Variant variant;
@@ -233,6 +252,7 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::UINT: return (GetUint() == rhs.GetUint());
         case Variant::Type::BOOL: return (GetBool() == rhs.GetBool());
         case Variant::Type::STRING: return (GetString() == rhs.GetString());
+        case Variant::Type::GUID: return (GetGUID() == rhs.GetGUID());
         case Variant::Type::COLOR: return (GetColor() == rhs.GetColor());
         case Variant::Type::VECTOR2: return (GetVector2() == rhs.GetVector2());
         case Variant::Type::VECTOR3: return (GetVector3() == rhs.GetVector3());
@@ -264,6 +284,7 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::BOOL: return "bool";
         case Variant::Type::COLOR: return "Color";
         case Variant::Type::STRING: return "String";
+        case Variant::Type::GUID: return "GUID";
         case Variant::Type::VECTOR2: return "Vector2";
         case Variant::Type::VECTOR3: return "Vector3";
         case Variant::Type::VECTOR4: return "Vector4";
@@ -302,6 +323,10 @@ Variant::Type Variant::GetTypeFromString(const String &typeStr)
     else if (typeStr == "Color")
     {
         return Variant::Type::COLOR;
+    }
+    else if (typeStr == "GUID")
+    {
+        return Variant::Type::GUID;
     }
     else if (typeStr == "String")
     {

@@ -21,12 +21,11 @@ const Array<String> BP::Modifiers = {"const",
                                      "volatile",
                                      "static"};
 
-const Array<String> BP::RVariablePrefixes = {"BANG_REFLECT_VARIABLE"};
+const Array<String> BP::RVariablePrefixes = {"BANG_VARIABLE"};
 
-const Array<String> BP::RStructPrefixes = {"BANG_REFLECT_CLASS",
-                                           "BANG_REFLECT_STRUCT"};
+const Array<String> BP::RStructPrefixes = {"BANG_CLASS", "BANG_STRUCT"};
 
-const String BP::ReflectDefinitionsDefineName = "BANG_REFLECT_DEFINITIONS";
+const String BP::ReflectDefinitionsDefineName = "BANG_BEHAVIOUR_DEFINITIONS";
 const String BP::GetReflectionInfoPtrFuncName = "GetReflectionInfoPtr()";
 
 void BangPreprocessor::Preprocess(const Path &filepath)
@@ -89,10 +88,6 @@ void BangPreprocessor::Preprocess(const String &source,
                 private:   )VERBATIM";
         reflectDefineCode.ReplaceInSitu("GET_REFLECTION_INFO_CODE",
                                         reflStruct.GetGetReflectionInfoCode());
-        reflectDefineCode.ReplaceInSitu("GET_READ_REFLECTION_CODE",
-                                        reflStruct.GetReadReflectionCode());
-        reflectDefineCode.ReplaceInSitu("GET_WRITE_REFLECTION_CODE",
-                                        reflStruct.GetWriteReflectionCode());
         reflectDefineCode.ReplaceInSitu("\n", "\\\n");
 
         reflectDefineCode +=

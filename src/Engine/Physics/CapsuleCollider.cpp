@@ -105,7 +105,7 @@ void CapsuleCollider::Reflect()
 {
     Collider::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_ENUM(CapsuleCollider, "Axis", Axis);
+    BANG_REFLECT_VAR_MEMBER_ENUM(CapsuleCollider, "Axis", SetAxis, GetAxis);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "X", Axis3D::X);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Y", Axis3D::Y);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Axis", "Z", Axis3D::Z);

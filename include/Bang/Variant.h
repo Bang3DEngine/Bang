@@ -3,6 +3,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Color.h"
+#include "Bang/GUID.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -23,6 +24,7 @@ public:
         UINT,
         BOOL,
         STRING,
+        GUID,
         COLOR,
         VECTOR2,
         VECTOR3,
@@ -40,6 +42,7 @@ public:
     void SetFloat(float v);
     void SetDouble(double v);
     void SetBool(bool v);
+    void SetGUID(const GUID &guid);
     void SetString(const String &v);
     void SetColor(const Color &v);
     void SetVector2(const Vector2 &v);
@@ -60,6 +63,7 @@ public:
     float GetFloat() const;
     double GetDouble() const;
     bool GetBool() const;
+    const GUID &GetGUID() const;
     String GetString() const;
     Color GetColor() const;
     Vector2 GetVector2() const;
@@ -79,6 +83,7 @@ public:
     static Variant FromInt(int v);
     static Variant FromUint(uint v);
     static Variant FromBool(bool v);
+    static Variant FromGUID(const GUID &guid);
     static Variant FromString(const String &v);
     static Variant FromColor(const Color &v);
     static Variant FromVector2(const Vector2 &v);
@@ -107,6 +112,7 @@ private:
     int m_int = 0;
     double m_double = 0.0;
     String m_string = "";
+    GUID m_guid = GUID::Empty();
     Vector4 m_vector4 = Vector4::Zero;
 };
 
@@ -135,6 +141,11 @@ template <>
 inline void Variant::Set<uint>(const uint &v)
 {
     SetUint(v);
+}
+template <>
+inline void Variant::Set<GUID>(const GUID &v)
+{
+    SetGUID(v);
 }
 template <>
 inline void Variant::Set<String>(const String &v)
@@ -197,6 +208,11 @@ template <>
 inline String Variant::Get() const
 {
     return GetString();
+}
+template <>
+inline GUID Variant::Get() const
+{
+    return GetGUID();
 }
 template <>
 inline Color Variant::Get() const

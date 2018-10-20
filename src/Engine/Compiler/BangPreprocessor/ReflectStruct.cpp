@@ -166,6 +166,7 @@ String ReflectStruct::GetInitializationCode() const
         {
             continue;
         }
+
         varReflectionCode.ReplaceInSitu(
             "SET_FUNC", "Set<" + Variant::GetTypeToString(varType) + ">");
         varReflectionCode.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
@@ -173,22 +174,6 @@ String ReflectStruct::GetInitializationCode() const
         varReflectionCode.ReplaceInSitu(
             "VAR_TYPE", Variant::GetTypeToString(var.GetVariant().GetType()));
 
-        /*
-        varsSetsSrc += varSetSrc;
-
-        String varInitCode = R"VERBATIM(
-              ReflectVariable RVAR_NAME;
-              RVAR_INIT_CODE
-              REFL_INFO->AddVariable(RVAR_NAME);
-          )VERBATIM";
-
-        String rVarName = "var" + String(i++);
-        varInitCode.ReplaceInSitu("RVAR_NAME", rVarName);
-        varInitCode.ReplaceInSitu("RVAR_INIT_CODE",
-                                  rVar.GetInitializationCode(rVarName));
-        varInitCode.ReplaceInSitu("REFL_INFO",
-                                  BP::GetReflectionInfoPtrFuncName);
-                                  */
         src += varReflectionCode;
     }
     return src;
@@ -205,70 +190,6 @@ String ReflectStruct::GetGetReflectionInfoCode() const
 
     src.ReplaceInSitu("REFLECT_VAR_NAME", BP::GetReflectionInfoPtrFuncName);
     src.ReplaceInSitu("INIT_CODE", GetInitializationCode());
-    return src;
-}
-
-String ReflectStruct::GetWriteReflectionCode() const
-{
-    String src = R"VERBATIM(
-        void ExportMeta(MetaNode *metaNode) const override
-        {
-            VARS_SETS
-        }
-        )VERBATIM";
-
-    String varsSetsSrc = "";
-    for (const ReflectVariable &var : GetVariables())
-    {
-        String varSetSrc = R"VERBATIM(
-                    metaNode->SET_FUNC("VAR_REFL_NAME", VAR_NAME);
-            )VERBATIM";
-
-        Variant::Type varType = var.GetVariant().GetType();
-        if (varType == Variant::Type::NONE)
-        {
-            continue;
-        }
-        varSetSrc.ReplaceInSitu(
-            "SET_FUNC", "Set<" + Variant::GetTypeToString(varType) + ">");
-        varSetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varSetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
-
-        varsSetsSrc += varSetSrc;
-    }
-    src.ReplaceInSitu("VARS_SETS", varsSetsSrc);
-    return src;
-}
-
-String ReflectStruct::GetReadReflectionCode() const
-{
-    String src = R"VERBATIM(
-        void ImportMeta(const MetaNode &metaNode) override
-        {
-            VARS_GETS
-        }
-        )VERBATIM";
-
-    String varsGetsSrc = "";
-    for (const ReflectVariable &var : GetVariables())
-    {
-        String varGetSrc = R"VERBATIM(
-                    VAR_NAME = metaNode.GET_FUNC("VAR_REFL_NAME");
-            )VERBATIM";
-
-        Variant::Type varType = var.GetVariant().GetType();
-        if (varType == Variant::Type::NONE)
-        {
-            continue;
-        }
-        varGetSrc.ReplaceInSitu(
-            "GET_FUNC", "Get<" + Variant::GetTypeToString(varType) + ">");
-        varGetSrc.ReplaceInSitu("VAR_REFL_NAME", var.GetName());
-        varGetSrc.ReplaceInSitu("VAR_NAME", var.GetCodeName());
-
-        varsGetsSrc += varGetSrc;
-    }
-    src.ReplaceInSitu("VARS_GETS", varsGetsSrc);
     return src;
 }
 

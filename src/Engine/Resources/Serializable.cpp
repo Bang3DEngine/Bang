@@ -92,6 +92,10 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                         reflVarSetter(
                             Variant::FromString(metaNode.Get<String>(varName)));
                         break;
+                    case Variant::Type::GUID:
+                        reflVarSetter(
+                            Variant::FromGUID(metaNode.Get<GUID>(varName)));
+                        break;
                     case Variant::Type::COLOR:
                         reflVarSetter(
                             Variant::FromColor(metaNode.Get<Color>(varName)));

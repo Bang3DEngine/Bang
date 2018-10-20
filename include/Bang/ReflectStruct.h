@@ -50,8 +50,6 @@ private:
 
     String GetInitializationCode() const;
     String GetGetReflectionInfoCode() const;
-    String GetWriteReflectionCode() const;
-    String GetReadReflectionCode() const;
 
     friend class BangPreprocessor;
 };

@@ -1,6 +1,7 @@
 #include "Bang/IReflectable.h"
 
 #include "Bang/ReflectStruct.h"
+#include "Bang/Resources.h"
 
 using namespace Bang;
 

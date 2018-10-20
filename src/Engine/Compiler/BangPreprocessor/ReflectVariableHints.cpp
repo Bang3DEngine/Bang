@@ -7,6 +7,8 @@ using namespace Bang;
 const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
+const String ReflectVariableHints::KeyExtension = "Extension";
+const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
 const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
@@ -56,12 +58,30 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             {
                 m_isEnum = true;
             }
+            else if (keyStr == ReflectVariableHints::KeyExtension)
+            {
+                m_extensions.PushBack(valueStr);
+            }
+            else if (keyStr == ReflectVariableHints::KeyZoomablePreview)
+            {
+                m_zoomablePreview = true;
+            }
         }
     }
 }
 
 ReflectVariableHints::~ReflectVariableHints()
 {
+}
+
+bool ReflectVariableHints::GetZoomablePreview() const
+{
+    return m_zoomablePreview;
+}
+
+const Array<String> &ReflectVariableHints::GetExtensions() const
+{
+    return m_extensions;
 }
 
 const Vector4 &ReflectVariableHints::GetMinValue() const

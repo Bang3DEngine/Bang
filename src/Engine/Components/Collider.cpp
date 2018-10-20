@@ -1,5 +1,6 @@
 #include "Bang/Collider.h"
 
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
@@ -248,46 +249,18 @@ void Collider::UpdatePxShape()
     }
 }
 
-void Collider::CloneInto(ICloneable *clone) const
+void Collider::Reflect()
 {
-    Component::CloneInto(clone);
+    Component::Reflect();
 
-    Collider *colliderClone = SCAST<Collider *>(clone);
-    colliderClone->SetCenter(GetCenter());
-    colliderClone->SetIsTrigger(GetIsTrigger());
-    colliderClone->SetPhysicsMaterial(GetSharedPhysicsMaterial());
-}
+    BANG_REFLECT_VAR_MEMBER(Collider, "IsTrigger", SetIsTrigger, GetIsTrigger);
+    BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);
 
-void Collider::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
-
-    if (metaNode.Contains("IsTrigger"))
-    {
-        SetIsTrigger(metaNode.Get<bool>("IsTrigger"));
-    }
-
-    if (metaNode.Contains("Center"))
-    {
-        SetCenter(metaNode.Get<Vector3>("Center"));
-    }
-
-    if (metaNode.Contains("PhysicsMaterial"))
-    {
-        RH<PhysicsMaterial> phMat = Resources::Load<PhysicsMaterial>(
-            metaNode.Get<GUID>("PhysicsMaterial"));
-        SetPhysicsMaterial(phMat.Get());
-    }
-}
-
-void Collider::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    metaNode->Set("Center", GetCenter());
-    metaNode->Set("IsTrigger", GetIsTrigger());
-    metaNode->Set("PhysicsMaterial",
-                  GetSharedPhysicsMaterial()
-                      ? GetSharedPhysicsMaterial()->GetGUID()
-                      : GUID::Empty());
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        Collider,
+        PhysicsMaterial,
+        "Physics Material",
+        SetPhysicsMaterial,
+        GetSharedPhysicsMaterial,
+        BANG_REFLECT_HINT_EXTENSION(Extensions::GetPhysicsMaterialExtension()));
 }

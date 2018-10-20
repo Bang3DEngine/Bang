@@ -28,7 +28,7 @@ void ReflectVariable::FromString(String::Iterator propBegin,
     Array<String> propertyList = propertyListStr.Split<Array>(',', true);
     if (propertyList.Size() == 0)
     {
-        std::cerr << "BP Error: BANG_REFLECT_VARIABLE has 0 properties,"
+        std::cerr << "BP Error: BANG_VARIABLE has 0 properties,"
                      " but must have at least a name"
                   << std::endl;
         return;
@@ -75,26 +75,6 @@ void ReflectVariable::FromString(String::Iterator propBegin,
     }
 
     *success = true;
-}
-
-String ReflectVariable::GetInitializationCode(
-    const String &rvarInitVarName) const
-{
-    String src = R"VERBATIM(
-        RVAR_VARIABLE_NAME.SetName("RVAR_NAME");
-        RVAR_VARIABLE_NAME.GetVariant().SetType(Variant::Type::VARIABLE_TYPE);
-        RVAR_VARIABLE_NAME.SetCodeName("VARIABLE_CODE_NAME");
-        RVAR_VARIABLE_NAME.SetInitValueString("VARIABLE_INIT_VALUE");
-        RVAR_VARIABLE_NAME.SetInitValue(Variant::From(VARIABLE_INIT_VALUE));
-    )VERBATIM";
-    src.ReplaceInSitu("RVAR_VARIABLE_NAME", rvarInitVarName);
-    src.ReplaceInSitu("RVAR_NAME", GetName());
-    src.ReplaceInSitu(
-        "VARIABLE_TYPE",
-        Variant::GetTypeToString(GetVariant().GetType()).ToUpper());
-    src.ReplaceInSitu("VARIABLE_CODE_NAME", GetCodeName());
-    src.ReplaceInSitu("VARIABLE_INIT_VALUE", GetInitValueString());
-    return src;
 }
 
 void ReflectVariable::SetName(const String &name)

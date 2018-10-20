@@ -20,8 +20,6 @@ public:
                            ReflectVariable *outReflectedVar,
                            bool *success);
 
-    String GetInitializationCode(const String &propInitVarName) const;
-
     void SetName(const String &name);
     void SetCodeName(const String &varCodeName);
     void SetInitValue(const Variant &initValueVariant);
@@ -32,7 +30,7 @@ public:
     void SetSetter(std::function<void(const Variant &variant)> setter);
 
     template <class T>
-    void SetSetterT(std::function<void(const T &v)> setter)
+    void SetSetterT(std::function<void(T)> setter)
     {
         if (setter)
         {
@@ -49,7 +47,10 @@ public:
     {
         if (getter)
         {
-            SetGetter([getter]() { return Variant::From<T>(getter()); });
+            SetGetter([getter]() {
+                return Variant::From<typename std::remove_const<
+                    typename std::remove_reference<T>::type>::type>(getter());
+            });
         }
     }
 

@@ -85,6 +85,9 @@ public:
                                const String &oldName,
                                const String &newName) override;
 
+    // ICloneable
+    void CloneInto(ICloneable *cloneable) const override;
+
     // Serializable
     void Reflect() override;
 

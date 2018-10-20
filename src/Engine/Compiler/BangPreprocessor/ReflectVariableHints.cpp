@@ -61,7 +61,14 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             }
             else if (keyStr == ReflectVariableHints::KeyExtension)
             {
-                m_extensions.PushBack(valueStr);
+                String valueStrMod = valueStr;
+                if (valueStrMod.BeginsWith("["))
+                {
+                    valueStrMod = valueStrMod.SubString(1, valueStr.Size() - 2);
+                }
+
+                Array<String> extensions = valueStrMod.Split<Array>(',', true);
+                m_extensions.PushBack(extensions);
             }
             else if (keyStr == ReflectVariableHints::KeyZoomablePreview)
             {

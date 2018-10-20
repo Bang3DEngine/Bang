@@ -359,7 +359,7 @@ std::istream &operator>>(std::istream &is, Vector3G<T> &v)
 {
     char _;
     ConsumeLetters_(is);
-    if (is.peek() != '(')
+    while (is.peek() != '(')
     {
         is >> _;
     }

@@ -68,7 +68,7 @@ void MeshCollider::Reflect()
         SetMesh,
         GetMesh,
         Mesh,
-        BANG_REFLECT_HINT_EXTENSION(Extensions::GetMeshExtension()) +
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetMeshExtension()) +
             BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
 }
 

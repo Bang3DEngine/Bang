@@ -21,10 +21,6 @@ public:
     // Component
     virtual void OnUpdate() override;
 
-    // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
-
 private:
     void UpdateALProperties() const;
 };

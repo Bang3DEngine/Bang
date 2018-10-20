@@ -682,54 +682,6 @@ void RectTransform::OnRender(RenderPass rp)
     }
 }
 
-void RectTransform::CloneInto(ICloneable *clone) const
-{
-    Transform::CloneInto(clone);
-    RectTransform *rt = Cast<RectTransform *>(clone);
-
-    rt->SetMargins(GetMarginLeftBot(), GetMarginRightTop());
-    rt->SetAnchors(GetAnchorMin(), GetAnchorMax());
-    rt->SetPivotPosition(GetPivotPosition());
-}
-
-void RectTransform::ImportMeta(const MetaNode &metaNode)
-{
-    Transform::ImportMeta(metaNode);
-
-    if (metaNode.Contains("MarginLeftBot"))
-    {
-        SetMargins(metaNode.Get<Vector2i>("MarginLeftBot"),
-                   metaNode.Get<Vector2i>("MarginRightTop"));
-    }
-
-    if (metaNode.Contains("PivotPosition"))
-    {
-        SetPivotPosition(metaNode.Get<Vector2>("PivotPosition"));
-    }
-
-    if (metaNode.Contains("AnchorMin"))
-    {
-        SetAnchorMin(metaNode.Get<Vector2>("AnchorMin"));
-    }
-
-    if (metaNode.Contains("AnchorMax"))
-    {
-        SetAnchorMax(metaNode.Get<Vector2>("AnchorMax"));
-    }
-}
-
-void RectTransform::ExportMeta(MetaNode *metaNode) const
-{
-    Transform::ExportMeta(metaNode);
-
-    metaNode->Set("MarginLeftBot", GetMarginLeftBot());
-    metaNode->Set("MarginRightTop", GetMarginRightTop());
-
-    metaNode->Set("PivotPosition", GetPivotPosition());
-    metaNode->Set("AnchorMin", GetAnchorMin());
-    metaNode->Set("AnchorMax", GetAnchorMax());
-}
-
 void RectTransform::WarnWrongAnchorsIfNeeded()
 {
     constexpr float Eps = 0.001f;
@@ -761,4 +713,32 @@ void RectTransform::OnDisabled(Object *object)
 {
     Transform::OnDisabled(object);
     InvalidateTransform();
+}
+
+void RectTransform::Reflect()
+{
+    Transform::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER(
+        RectTransform, "MarginLeftBot", SetMarginLeftBot, GetMarginLeftBot);
+    BANG_REFLECT_VAR_MEMBER(
+        RectTransform, "MarginRightTop", SetMarginRightTop, GetMarginRightTop);
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        RectTransform,
+        "Pivot",
+        SetPivotPosition,
+        GetPivotPosition,
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        RectTransform,
+        "Anchor Min",
+        SetAnchorMin,
+        GetAnchorMin,
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        RectTransform,
+        "Anchor Max",
+        SetAnchorMax,
+        GetAnchorMax,
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
 }

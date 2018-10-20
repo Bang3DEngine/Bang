@@ -376,6 +376,16 @@ void SkinnedMeshRenderer::OnNameChanged(GameObject *,
     }
 }
 
+void SkinnedMeshRenderer::CloneInto(ICloneable *cloneable) const
+{
+    MeshRenderer::CloneInto(cloneable);
+
+    SkinnedMeshRenderer *smrClone = SCAST<SkinnedMeshRenderer *>(cloneable);
+    smrClone->m_bonesNames = m_bonesNames;
+    smrClone->m_boneSpaceToRootSpaceMatrices = m_boneSpaceToRootSpaceMatrices;
+    smrClone->m_initialTransforms = m_initialTransforms;
+}
+
 void SkinnedMeshRenderer::Reflect()
 {
     MeshRenderer::Reflect();

@@ -116,7 +116,7 @@ public:
     Vector3 GetPosition() const;
     const Quaternion &GetLocalRotation() const;
     Quaternion GetRotation() const;
-    Vector3 GetLocalEuler() const;
+    const Vector3 &GetLocalEuler() const;
     Vector3 GetEuler() const;
     const Vector3 &GetLocalScale() const;
     Vector3 GetScale() const;
@@ -129,12 +129,8 @@ public:
     void OnParentTransformChanged() override;
     void OnChildrenTransformChanged() override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    virtual void Reflect() override;
 
     virtual void InvalidateTransform();
 

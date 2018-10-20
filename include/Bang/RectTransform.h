@@ -129,12 +129,8 @@ public:
     void OnEnabled(Object *object) override;
     void OnDisabled(Object *object) override;
 
-    // ICloneable
-    void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    void Reflect() override;
 
 private:
     mutable Matrix4 m_rectLocalToWorldMatrix;

@@ -7,6 +7,7 @@
 #include "Bang/AudioClip.h"
 #include "Bang/AudioManager.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
@@ -106,65 +107,36 @@ float AudioSource::GetPlayProgress() const
     return secondsOffset / GetAudioClip()->GetLength();
 }
 
-void AudioSource::CloneInto(ICloneable *clone) const
+void AudioSource::Reflect()
 {
-    Component::CloneInto(clone);
-    AudioSource *as = Cast<AudioSource *>(clone);
-    as->SetAudioClip(GetAudioClip());
-    as->SetVolume(GetVolume());
-    as->SetPitch(GetPitch());
-    as->SetRange(GetRange());
-    as->SetLooping(GetLooping());
-    as->SetPlayOnStart(GetPlayOnStart());
-}
+    Component::Reflect();
 
-void AudioSource::ImportMeta(const MetaNode &meta)
-{
-    Component::ImportMeta(meta);
+    ReflectVar<float>("Volume",
+                      [this](float v) { SetVolume(v); },
+                      [this]() -> float { return GetVolume(); },
+                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    ReflectVar<float>("Pitch",
+                      [this](float p) { SetPitch(p); },
+                      [this]() -> float { return GetPitch(); },
+                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    ReflectVar<float>("Range",
+                      [this](float r) { SetRange(r); },
+                      [this]() -> float { return GetRange(); },
+                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    ReflectVar<bool>("Looping",
+                     [this](bool looping) { SetLooping(looping); },
+                     [this]() -> bool { return GetLooping(); },
+                     BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    ReflectVar<bool>("PlayOnStart",
+                     [this](bool playOnStart) { SetPlayOnStart(playOnStart); },
+                     [this]() -> bool { return GetPlayOnStart(); },
+                     BANG_REFLECT_HINT_MIN_VALUE(0.0f));
 
-    if (meta.Contains("AudioClip"))
-    {
-        RH<AudioClip> audioClip =
-            Resources::Load<AudioClip>(meta.Get<GUID>("AudioClip"));
-        SetAudioClip(audioClip.Get());
-    }
-
-    if (meta.Contains("Volume"))
-    {
-        SetVolume(meta.Get<float>("Volume"));
-    }
-
-    if (meta.Contains("Pitch"))
-    {
-        SetPitch(meta.Get<float>("Pitch"));
-    }
-
-    if (meta.Contains("Range"))
-    {
-        SetRange(meta.Get<float>("Range"));
-    }
-
-    if (meta.Contains("Looping"))
-    {
-        SetLooping(meta.Get<bool>("Looping"));
-    }
-
-    if (meta.Contains("PlayOnStart"))
-    {
-        SetPlayOnStart(meta.Get<bool>("PlayOnStart"));
-    }
-}
-
-void AudioSource::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    AudioClip *audioClip = GetAudioClip();
-    GUID audioClipGUID = audioClip ? audioClip->GetGUID() : GUID::Empty();
-    metaNode->Set("AudioClip", audioClipGUID);
-    metaNode->Set("Volume", GetVolume());
-    metaNode->Set("Pitch", GetPitch());
-    metaNode->Set("Range", GetRange());
-    metaNode->Set("Looping", GetLooping());
-    metaNode->Set("PlayOnStart", GetPlayOnStart());
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        AudioSource,
+        "AudioClip",
+        SetAudioClip,
+        GetAudioClip,
+        AudioClip,
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetAudioClipExtensions()));
 }

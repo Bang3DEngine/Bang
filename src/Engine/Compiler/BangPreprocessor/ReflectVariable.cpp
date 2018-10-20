@@ -19,13 +19,12 @@ void ReflectVariable::FromString(String::Iterator propBegin,
 {
     *success = false;
 
-    String::Iterator propListBegin, propListEnd;
-    BP::GetNextScope(
-        propBegin, propEnd, &propListBegin, &propListEnd, '(', ')');
+    String::Iterator varListBegin, varListEnd;
+    BP::GetNextScope(propBegin, propEnd, &varListBegin, &varListEnd, '(', ')');
 
     // Process property list
-    String propertyListStr(propListBegin + 1, propListEnd - 1);
-    Array<String> propertyList = propertyListStr.Split<Array>(',', true);
+    String varListStr(varListBegin + 1, varListEnd - 1);
+    Array<String> propertyList = varListStr.Split<Array>(',', true);
     if (propertyList.Size() == 0)
     {
         std::cerr << "BP Error: BANG_VARIABLE has 0 properties,"
@@ -37,7 +36,7 @@ void ReflectVariable::FromString(String::Iterator propBegin,
 
     // Skip modifiers
     String nextWord = "";
-    String::Iterator wordEnd = propListEnd;
+    String::Iterator wordEnd = varListEnd;
     do
     {
         String::Iterator wordBegin;

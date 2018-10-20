@@ -81,18 +81,22 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
         // If we are NOT doing a transition, check if we can pick one of them
         if (!GetCurrentTransition())
         {
-            bool hasFinishedAnimation =
-                (GetCurrentNodeTime().GetSeconds() >=
-                 GetCurrentNode()->GetAnimation()->GetDurationInSeconds());
-            for (AnimatorStateMachineConnection *conn :
-                 GetCurrentNode()->GetConnections())
+            if (GetCurrentNode()->GetAnimation())
             {
-                if (hasFinishedAnimation || conn->GetImmediateTransition())
+                bool hasFinishedAnimation =
+                    (GetCurrentNodeTime().GetSeconds() >=
+                     GetCurrentNode()->GetAnimation()->GetDurationInSeconds());
+                for (AnimatorStateMachineConnection *conn :
+                     GetCurrentNode()->GetConnections())
                 {
-                    if (conn->AreTransitionConditionsFulfilled(sm))
+                    if (hasFinishedAnimation || conn->GetImmediateTransition())
                     {
-                        StartTransition(conn, GetCurrentNodeTime(), Time(0));
-                        break;
+                        if (conn->AreTransitionConditionsFulfilled(sm))
+                        {
+                            StartTransition(
+                                conn, GetCurrentNodeTime(), Time(0));
+                            break;
+                        }
                     }
                 }
             }

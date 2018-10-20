@@ -49,8 +49,8 @@
     BANG_REFLECT_HINT_MIN_VALUE(minValue) +                \
         BANG_REFLECT_HINT_MAX_VALUE(maxValue)
 
-#define BANG_REFLECT_HINT_EXTENSION(extension) \
-    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyExtension, extension)
+#define BANG_REFLECT_HINT_EXTENSIONS(extensions) \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyExtension, extensions)
 
 #define BANG_REFLECT_HINT_SLIDER(minValue, maxValue)     \
     BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) + \

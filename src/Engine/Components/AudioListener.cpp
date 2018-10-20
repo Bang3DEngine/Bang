@@ -26,16 +26,6 @@ void AudioListener::OnUpdate()
     UpdateALProperties();
 }
 
-void AudioListener::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
-}
-
-void AudioListener::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-}
-
 void AudioListener::UpdateALProperties() const
 {
     alDistanceModel(AL_LINEAR_DISTANCE);

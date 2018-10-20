@@ -345,7 +345,7 @@ Quaternion Transform::GetRotation() const
     return GetLocalRotation();
 }
 
-Vector3 Transform::GetLocalEuler() const
+const Vector3 &Transform::GetLocalEuler() const
 {
     return m_localEulerAnglesDegreesHint;
 }
@@ -468,41 +468,20 @@ void Transform::OnChildrenTransformChanged()
 {
 }
 
-void Transform::CloneInto(ICloneable *clone) const
+void Transform::Reflect()
 {
-    Component::CloneInto(clone);
-    Transform *t = Cast<Transform *>(clone);
-    t->SetLocalPosition(GetLocalPosition());
-    t->SetLocalRotation(GetLocalRotation());
-    t->SetLocalScale(GetLocalScale());
-}
+    Component::Reflect();
 
-void Transform::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Position"))
-    {
-        SetLocalPosition(metaNode.Get<Vector3>("Position"));
-    }
-
-    if (metaNode.Contains("Rotation"))
-    {
-        SetLocalRotation(metaNode.Get<Quaternion>("Rotation"));
-    }
-
-    if (metaNode.Contains("Scale"))
-    {
-        SetLocalScale(metaNode.Get<Vector3>("Scale"));
-    }
-}
-
-void Transform::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-    metaNode->Set("Position", GetLocalPosition());
-    metaNode->Set("Rotation", GetLocalRotation());
-    metaNode->Set("Scale", GetLocalScale());
+    BANG_REFLECT_VAR_MEMBER(
+        Transform, "Position", SetLocalPosition, GetLocalPosition);
+    BANG_REFLECT_VAR_MEMBER(
+        Transform, "Rotation", SetLocalEuler, GetLocalEuler);
+    BANG_REFLECT_VAR_MEMBER_HINTED(Transform,
+                                   "RotationQuaternion",
+                                   SetLocalRotation,
+                                   GetLocalRotation,
+                                   BANG_REFLECT_HINT_HIDDEN());
+    BANG_REFLECT_VAR_MEMBER(Transform, "Scale", SetLocalScale, GetLocalScale);
 }
 
 void Transform::InvalidateTransform()

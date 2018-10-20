@@ -262,5 +262,6 @@ void Collider::Reflect()
         SetPhysicsMaterial,
         GetSharedPhysicsMaterial,
         PhysicsMaterial,
-        BANG_REFLECT_HINT_EXTENSION(Extensions::GetPhysicsMaterialExtension()));
+        BANG_REFLECT_HINT_EXTENSIONS(
+            Extensions::GetPhysicsMaterialExtension()));
 }

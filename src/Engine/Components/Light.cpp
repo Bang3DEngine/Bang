@@ -59,7 +59,7 @@ void Light::SetShadowMapSize(const Vector2i &shadowMapSize)
     m_shadowMapSize = shadowMapSize;
 }
 
-Color Light::GetColor() const
+const Color &Light::GetColor() const
 {
     return m_color;
 }
@@ -179,54 +179,31 @@ AARect Light::GetRenderRect(Camera *camera) const
     return AARect::NDCRect;
 }
 
-void Light::CloneInto(ICloneable *clone) const
+void Light::Reflect()
 {
-    Component::CloneInto(clone);
-    Light *l = Cast<Light *>(clone);
-    l->SetIntensity(GetIntensity());
-    l->SetColor(GetColor());
-    l->SetShadowBias(GetShadowBias());
-    l->SetShadowType(GetShadowType());
-    l->SetShadowMapSize(GetShadowMapSize());
-}
+    Serializable::Reflect();
 
-void Light::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
-
-    if (metaNode.Contains("Intensity"))
-    {
-        SetIntensity(metaNode.Get<float>("Intensity"));
-    }
-
-    if (metaNode.Contains("Color"))
-    {
-        SetColor(metaNode.Get<Color>("Color"));
-    }
-
-    if (metaNode.Contains("ShadowBias"))
-    {
-        SetShadowBias(metaNode.Get<float>("ShadowBias"));
-    }
-
-    if (metaNode.Contains("ShadowType"))
-    {
-        SetShadowType(metaNode.Get<ShadowType>("ShadowType"));
-    }
-
-    if (metaNode.Contains("ShadowMapSize"))
-    {
-        SetShadowMapSize(metaNode.Get<Vector2i>("ShadowMapSize"));
-    }
-}
-
-void Light::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    metaNode->Set("Intensity", GetIntensity());
-    metaNode->Set("Color", GetColor());
-    metaNode->Set("ShadowBias", GetShadowBias());
-    metaNode->Set("ShadowType", GetShadowType());
-    metaNode->Set("ShadowMapSize", GetShadowMapSize());
+    BANG_REFLECT_VAR_MEMBER_HINTED(Light,
+                                   "Intensity",
+                                   SetIntensity,
+                                   GetIntensity,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER(Light, "Color", SetColor, GetColor);
+    BANG_REFLECT_VAR_MEMBER_HINTED(Light,
+                                   "Shadow Bias",
+                                   SetShadowBias,
+                                   GetShadowBias,
+                                   BANG_REFLECT_HINT_SLIDER(0.0f, 0.1f));
+    BANG_REFLECT_VAR_MEMBER_ENUM(
+        Light, "Shadow Type", SetShadowType, GetShadowType);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Shadow Type", "None", Light::ShadowType::NONE);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Shadow Type", "Hard", Light::ShadowType::HARD);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Shadow Type", "Soft", Light::ShadowType::SOFT);
+    ReflectVar<uint>("Shadow Map Size",
+                     [this](uint size) { SetShadowMapSize(Vector2i(size)); },
+                     [this]() -> uint { return GetShadowMapSize().x; },
+                     BANG_REFLECT_HINT_MIN_VALUE(1));
 }

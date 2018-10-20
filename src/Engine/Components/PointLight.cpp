@@ -93,6 +93,17 @@ TextureCubeMap *PointLight::GetShadowMapTexture() const
         GL::Attachment::DEPTH);
 }
 
+void PointLight::Reflect()
+{
+    Light::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(PointLight,
+                                   "Range",
+                                   SetRange,
+                                   GetRange,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+}
+
 void PointLight::RenderShadowMaps_(GameObject *go)
 {
     GL::Push(GL::Pushable::VIEWPORT);
@@ -186,26 +197,4 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
     cubeMapPVMMatrices[5] = pers * Matrix4::LookAt(pos, (pos + fwd), down);
 
     return cubeMapPVMMatrices;
-}
-
-void PointLight::CloneInto(ICloneable *clone) const
-{
-    Light::CloneInto(clone);
-    PointLight *pl = Cast<PointLight *>(clone);
-    pl->SetRange(GetRange());
-}
-
-void PointLight::ImportMeta(const MetaNode &metaNode)
-{
-    Light::ImportMeta(metaNode);
-    if (metaNode.Contains("Range"))
-    {
-        SetRange(metaNode.Get<float>("Range"));
-    }
-}
-
-void PointLight::ExportMeta(MetaNode *metaNode) const
-{
-    Light::ExportMeta(metaNode);
-    metaNode->Set("Range", GetRange());
 }

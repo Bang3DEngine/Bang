@@ -39,7 +39,7 @@ public:
     void SetShadowType(ShadowType shadowType);
     void SetShadowMapSize(const Vector2i &shadowMapSize);
 
-    Color GetColor() const;
+    const Color &GetColor() const;
     float GetIntensity() const;
     float GetShadowBias() const;
     ShadowType GetShadowType() const;
@@ -48,12 +48,8 @@ public:
 
     void RenderShadowMaps(GameObject *go);
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    void Reflect() override;
 
 protected:
     Light();

@@ -1,6 +1,11 @@
 #ifndef REFLECTMACROS_H
 #define REFLECTMACROS_H
 
+#define BANG_REFLECT_VAR_HINTED(Name, Setter, Getter, Hints) \
+    ReflectVar(Name, Setter, Getter, Hints);
+#define BANG_REFLECT_VAR(Name, Setter, Getter) \
+    BANG_REFLECT_VAR_HINTED(Name, Setter, Getter, "");
+
 #define BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Setter, Getter, Hints) \
     ReflectVarMember(Name, &Class::Setter, &Class::Getter, this, Hints);
 #define BANG_REFLECT_VAR_MEMBER(Class, Name, Setter, Getter) \

@@ -147,6 +147,17 @@ void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
         "B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, false);
 }
 
+void DirectionalLight::Reflect()
+{
+    Light::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(DirectionalLight,
+                                   "Shadow Distance",
+                                   SetShadowDistance,
+                                   GetShadowDistance,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+}
+
 void DirectionalLight::SetShadowDistance(float shadowDistance)
 {
     m_shadowDistance = shadowDistance;
@@ -160,14 +171,6 @@ float DirectionalLight::GetShadowDistance() const
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
     return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::DEPTH);
-}
-
-void DirectionalLight::CloneInto(ICloneable *clone) const
-{
-    Light::CloneInto(clone);
-
-    DirectionalLight *dl = SCAST<DirectionalLight *>(clone);
-    dl->SetShadowDistance(GetShadowDistance());
 }
 
 void DirectionalLight::GetWorldToShadowMapMatrices(
@@ -345,21 +348,4 @@ Matrix4 DirectionalLight::GetLightToWorldMatrix() const
     lightToWorld[2] = Vector4(-t->GetForward().NormalizedSafe(), 0);
     lightToWorld[3] = Vector4(0, 0, 0, 1);
     return lightToWorld;
-}
-
-void DirectionalLight::ImportMeta(const MetaNode &metaNode)
-{
-    Light::ImportMeta(metaNode);
-
-    if (metaNode.Contains("ShadowDistance"))
-    {
-        SetShadowDistance(metaNode.Get<float>("ShadowDistance"));
-    }
-}
-
-void DirectionalLight::ExportMeta(MetaNode *metaNode) const
-{
-    Light::ExportMeta(metaNode);
-
-    metaNode->Set("ShadowDistance", GetShadowDistance());
 }

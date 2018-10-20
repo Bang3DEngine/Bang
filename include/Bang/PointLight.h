@@ -26,17 +26,14 @@ class PointLight : public Light
 
 public:
     void SetRange(float range);
+
     float GetRange() const;
 
     // Light
     TextureCubeMap *GetShadowMapTexture() const override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
-
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    void Reflect() override;
 
 protected:
     float m_range = 1.0f;

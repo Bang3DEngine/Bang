@@ -22,6 +22,8 @@ public:
     ReflectVariableHints(const String &hintsString = "");
     ~ReflectVariableHints();
 
+    void Update(const String &hintsString);
+
     bool GetZoomablePreview() const;
     const Array<String> &GetExtensions() const;
     const Vector4 &GetMinValue() const;
@@ -32,7 +34,6 @@ public:
 
 private:
     bool m_zoomablePreview = false;
-    String m_hintsString = "";
     Vector4 m_minValue = Vector4::NInfinity;
     Vector4 m_maxValue = Vector4::Infinity;
     Array<String> m_extensions;

@@ -56,6 +56,7 @@ public:
 
     Variant &GetVariant();
     Variant GetCurrentValue() const;
+    ReflectVariableHints *GetHintsPtr();
     const String &GetName() const;
     const Variant &GetVariant() const;
     const String &GetCodeName() const;

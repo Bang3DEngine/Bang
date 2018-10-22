@@ -208,6 +208,24 @@ const Array<ReflectVariable> &ReflectStruct::GetVariables() const
     return m_variables;
 }
 
+ReflectVariable *ReflectStruct::GetReflectVariablePtr(const String &varName)
+{
+    for (ReflectVariable &var : m_variables)
+    {
+        if (var.GetName() == varName)
+        {
+            return &var;
+        }
+    }
+    return nullptr;
+}
+
+const ReflectVariable *ReflectStruct::GetReflectVariablePtr(
+    const String &varName) const
+{
+    return const_cast<ReflectStruct *>(this)->GetReflectVariablePtr(varName);
+}
+
 const Map<String, uint> &ReflectStruct::GetEnumFields(
     const String &enumName) const
 {

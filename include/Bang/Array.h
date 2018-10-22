@@ -24,8 +24,8 @@ public:
 
     Array();
     Array(const std::vector<T> &v);
-    Array(std::size_t size);
-    Array(std::size_t size, const T &initValue);
+    explicit Array(std::size_t size);
+    explicit Array(std::size_t size, const T &initValue);
     Array(std::initializer_list<T> l);
     template <class OtherIterator>
     explicit Array(OtherIterator begin, OtherIterator end);

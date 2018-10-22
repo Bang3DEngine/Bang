@@ -60,6 +60,8 @@ Mesh::~Mesh()
 
 void Mesh::SetTrianglesVertexIds(const Array<Mesh::VertexId> &trisVerticesIds)
 {
+    m_areCornerTablesValid = false;
+
     m_triangleVertexIds = trisVerticesIds;
 
     if (m_vertexIdsIBO)
@@ -301,6 +303,11 @@ void Mesh::UpdateVAOs()
 
 void Mesh::SetPositionsPool(const Array<Vector3> &positions)
 {
+    if (positions.Size() != GetPositionsPool().Size())
+    {
+        m_areCornerTablesValid = false;
+    }
+
     m_positionsPool = positions;
     m_bBox.CreateFromPositions(m_positionsPool);
     m_bSphere.FromBox(m_bBox);
@@ -333,29 +340,26 @@ void Mesh::SetBonesPool(const Map<String, Mesh::Bone> &bones)
 void Mesh::UpdateVAOsAndTables()
 {
     UpdateVAOs();
-    UpdateCornerTables();
+    UpdateCornerTablesIfNeeded();
 }
 
 void Mesh::UpdateVertexNormals()
 {
-    UMap<VertexId, Array<TriangleId>> vertexIdToTriId =
-        GetVertexIdsToTriangleIds();
+    UpdateCornerTablesIfNeeded();
+
     Array<Vector3> normalsPool;
-    for (int vi = 0; vi < GetTrianglesVertexIds().Size(); ++vi)
+    for (VertexId vi = 0; vi < GetNumVertices(); ++vi)
     {
-        Vector3 vNormal = Vector3::Zero;
-        const Array<TriangleId> &vTriIds = vertexIdToTriId.Get(vi);
-        for (TriangleId vTriId : vTriIds)
+        Vector3 normal = Vector3::Zero;
+        const Array<CornerId> &cornerIds = GetCornerIdsFromVertexId(vi);
+        for (CornerId cornerId : cornerIds)
         {
-            std::array<Mesh::VertexId, 3> triVertexIds =
-                GetVertexIdsFromTriangle(vTriId);
-            Triangle tri = Triangle(GetPositionsPool()[triVertexIds[0]],
-                                    GetPositionsPool()[triVertexIds[1]],
-                                    GetPositionsPool()[triVertexIds[2]]);
-            vNormal += tri.GetNormal();
+            TriangleId triId = GetTriangleIdFromCornerId(cornerId);
+            Triangle tri = GetTriangle(triId);
+            normal += tri.GetNormal();
         }
-        vNormal /= float(vTriIds.Size());
-        normalsPool.PushBack(vNormal);
+        normal = normal / SCAST<float>(cornerIds.Size());
+        normalsPool.PushBack(normal);
     }
     SetNormalsPool(normalsPool);
 }
@@ -402,9 +406,9 @@ struct PairVector3Comparator
     }
 };
 
-void Mesh::UpdateCornerTables()
+void Mesh::UpdateCornerTablesIfNeeded()
 {
-    if (!IsIndexed())
+    if (!IsIndexed() || m_areCornerTablesValid)
     {
         return;
     }
@@ -496,6 +500,8 @@ void Mesh::UpdateCornerTables()
         }
         m_vertexIdToSamePositionMinimumVertexId[vIdOfcId] = minVId;
     }
+
+    m_areCornerTablesValid = true;
 }
 
 void Mesh::CalculateLODs()

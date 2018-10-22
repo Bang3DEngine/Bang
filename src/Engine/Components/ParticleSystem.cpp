@@ -146,7 +146,10 @@ void ParticleSystem::SetTexture(Texture2D *texture)
     if (texture != GetTexture())
     {
         p_texture.Set(texture);
-        GetMaterial()->SetAlbedoTexture(GetTexture());
+        if (Material *mat = GetMaterial())
+        {
+            mat->SetAlbedoTexture(GetTexture());
+        }
     }
 }
 

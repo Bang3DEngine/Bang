@@ -12,8 +12,11 @@
     BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Setter, Getter, "")
 
 #define BANG_REFLECT_VAR_MEMBER_ENUM(Class, Name, Setter, Getter) \
-    ReflectVarMemberEnum(                                         \
-        Name, &Class::Setter, &Class::Getter, this, BANG_REFLECT_HINT_ENUM());
+    ReflectVarMemberEnum(Name,                                    \
+                         &Class::Setter,                          \
+                         &Class::Getter,                          \
+                         this,                                    \
+                         BANG_REFLECT_HINT_ENUM(true));
 
 #define BANG_REFLECT_VAR_MEMBER_RESOURCE(                                    \
     Class, Name, Setter, Getter, ResourceClass, Hints)                       \
@@ -42,8 +45,8 @@
 #define BANG_REFLECT_HINT_MAX_VALUE(maxValue) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyMaxValue, maxValue)
 
-#define BANG_REFLECT_HINT_HIDDEN() \
-    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsHidden, true)
+#define BANG_REFLECT_HINT_HIDDEN(trueOrFalse) \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsHidden, trueOrFalse)
 
 #define BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) \
     BANG_REFLECT_HINT_MIN_VALUE(minValue) +                \
@@ -56,10 +59,11 @@
     BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) + \
         BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsSlider, true)
 
-#define BANG_REFLECT_HINT_ZOOMABLE_PREVIEW() \
-    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyZoomablePreview, true)
+#define BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(trueOrFalse)                   \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyZoomablePreview, \
+                                trueOrFalse)
 
-#define BANG_REFLECT_HINT_ENUM() \
-    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsEnum, true)
+#define BANG_REFLECT_HINT_ENUM(trueOrFalse) \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsEnum, trueOrFalse)
 
 #endif  // REFLECTMACROS_H

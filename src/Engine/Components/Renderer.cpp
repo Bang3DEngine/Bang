@@ -278,7 +278,7 @@ void Renderer::Reflect()
         GetSharedMaterial,
         Material,
         BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetMaterialExtension()) +
-            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
+            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
     BANG_REFLECT_VAR_MEMBER(Renderer,
                             "Use Refl Probes",
                             SetUseReflectionProbes,

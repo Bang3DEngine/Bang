@@ -8,9 +8,11 @@
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
+#include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
 #include "Bang/Math.h"
+#include "Bang/Matrix4.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
@@ -38,11 +40,14 @@ Rope::Rope()
     SetNumPoints(10);
     SetFixedPoint(0, true);
     GetMaterial()->SetLineWidth(3.0f);
+    SetCastsShadows(true);
 
     m_ropeDebugPointsMesh = Resources::Create<Mesh>();
 
-    m_particleParams.physicsStepMode = Particle::PhysicsStepMode::EULER;
+    m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
     m_particleParams.computeCollisions = true;
+    m_particleParams.bounciness = 0.05f;
+    m_particleParams.damping = 0.95f;
 }
 
 Rope::~Rope()
@@ -103,6 +108,9 @@ void Rope::Bind()
 void Rope::SetUniformsOnBind(ShaderProgram *sp)
 {
     LineRenderer::SetUniformsOnBind(sp);
+
+    GLUniforms::SetModelMatrix(Matrix4::Identity);
+    GLUniforms::SetAllUniformsToShaderProgram(sp);
 }
 
 void Rope::OnRender()
@@ -120,7 +128,7 @@ void Rope::OnRender()
     }
     LineRenderer::OnRender();
 
-    if (m_seeDebugPoints && IsStarted())
+    if (GetSeeDebugPoints() && IsStarted())
     {
         if (GetActiveMaterial())
         {
@@ -141,17 +149,9 @@ void Rope::OnRender()
 
 AABox Rope::GetAABBox() const
 {
-    if (IsStarted())
-    {
-        return LineRenderer::GetAABBox();
-    }
-    else if (GetGameObject())
-    {
-        AABox aaBox;
-        aaBox.CreateFromPositions(m_points);
-        return aaBox;
-    }
-    return AABox::Empty;
+    AABox aaBox;
+    aaBox.CreateFromPositions(m_points);
+    return aaBox;
 }
 
 void Rope::Reset()
@@ -349,11 +349,7 @@ void Rope::UpdateLineRendererPoints()
     Array<Vector3> pointsToRender;
     for (uint i = 0; i < GetNumPoints(); ++i)
     {
-        const Vector3 &worldPoint = m_points[i];
-        Transform *tr = GetGameObject()->GetTransform();
-        Vector3 localPoint =
-            tr->GetLocalToWorldMatrixInv().TransformedPoint(worldPoint);
-        pointsToRender.PushBack(localPoint);
+        pointsToRender.PushBack(m_points[i]);
     }
 
     if (m_seeDebugPoints)
@@ -387,7 +383,7 @@ void Rope::Reflect()
                                    "Rope Length",
                                    SetRopeLength,
                                    GetRopeLength,
-                                   BANG_REFLECT_HINT_MIN_VALUE(0.1f));
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.001f));
     BANG_REFLECT_VAR_MEMBER_HINTED(Rope,
                                    "Springs Force",
                                    SetSpringsForce,
@@ -405,14 +401,4 @@ void Rope::Reflect()
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
     BANG_REFLECT_VAR_MEMBER(
         Rope, "See Debug Points", SetSeeDebugPoints, GetSeeDebugPoints);
-}
-
-void Rope::ImportMeta(const MetaNode &metaNode)
-{
-    LineRenderer::ImportMeta(metaNode);
-}
-
-void Rope::ExportMeta(MetaNode *metaNode) const
-{
-    LineRenderer::ExportMeta(metaNode);
 }

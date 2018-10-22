@@ -66,6 +66,8 @@ Sphere SphereCollider::GetSphereWorld() const
 
 void SphereCollider::Reflect()
 {
+    Collider::Reflect();
+
     BANG_REFLECT_VAR_MEMBER_HINTED(SphereCollider,
                                    "Radius",
                                    SetRadius,

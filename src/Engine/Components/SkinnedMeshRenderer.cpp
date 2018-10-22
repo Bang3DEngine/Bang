@@ -394,7 +394,7 @@ void SkinnedMeshRenderer::Reflect()
                                    "Root Bone Name",
                                    SetRootBoneGameObjectName,
                                    GetRootBoneGameObjectName,
-                                   BANG_REFLECT_HINT_HIDDEN());
+                                   BANG_REFLECT_HINT_HIDDEN(true));
 }
 
 Matrix4 SkinnedMeshRenderer::GetModelMatrixUniform() const

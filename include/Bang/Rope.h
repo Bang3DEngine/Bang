@@ -61,8 +61,6 @@ public:
 
     // Serializable
     virtual void Reflect() override;
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
     Array<Vector3> m_points;

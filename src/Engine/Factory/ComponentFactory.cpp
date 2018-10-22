@@ -9,6 +9,7 @@
 #include "Bang/BoxCollider.h"
 #include "Bang/Camera.h"
 #include "Bang/CapsuleCollider.h"
+#include "Bang/Cloth.h"
 #include "Bang/Component.h"
 #include "Bang/Debug.h"
 #include "Bang/DirectionalLight.h"
@@ -47,15 +48,10 @@ using namespace Bang;
         return new ComponentClass();                         \
     }
 
-#define EXISTS_COMPONENT(componentClassName, ComponentClass)          \
-    if ((componentClassName) == ComponentClass::GetClassNameStatic()) \
-    {                                                                 \
-        return true;                                                  \
-    }
-
 Component *ComponentFactory::Create(const String &componentClassName)
 {
     CREATE_COMPONENT(componentClassName, Rope);
+    CREATE_COMPONENT(componentClassName, Cloth);
     CREATE_COMPONENT(componentClassName, Camera);
     CREATE_COMPONENT(componentClassName, UIMask);
     CREATE_COMPONENT(componentClassName, Renderer);

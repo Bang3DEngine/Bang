@@ -480,7 +480,7 @@ void Transform::Reflect()
                                    "RotationQuaternion",
                                    SetLocalRotation,
                                    GetLocalRotation,
-                                   BANG_REFLECT_HINT_HIDDEN());
+                                   BANG_REFLECT_HINT_HIDDEN(true));
     BANG_REFLECT_VAR_MEMBER(Transform, "Scale", SetLocalScale, GetLocalScale);
 }
 

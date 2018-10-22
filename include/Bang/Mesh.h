@@ -57,7 +57,7 @@ public:
     void SetBonesIds(const Map<String, uint> &bonesIds);
 
     void UpdateVAOs();
-    void UpdateCornerTables();
+    void UpdateCornerTablesIfNeeded();
     void UpdateVertexNormals();
     void UpdateVAOsAndTables();
 
@@ -161,6 +161,7 @@ private:
 
     // (i, j, k) hold the opposite corners of the corners (0, 1, 2) of the
     // triangle 3*(i/3)
+    bool m_areCornerTablesValid = false;
     Array<CornerId> m_cornerIdToOppositeCornerId;
     Array<Array<CornerId>> m_vertexIdToCornerIds;
     Array<VertexId> m_vertexIdToSamePositionMinimumVertexId;

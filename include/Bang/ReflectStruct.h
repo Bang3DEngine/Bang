@@ -29,6 +29,8 @@ public:
     const String &GetStructName() const;
     const String &GetStructVariableName() const;
     const Array<ReflectVariable> &GetVariables() const;
+    ReflectVariable *GetReflectVariablePtr(const String &varName);
+    const ReflectVariable *GetReflectVariablePtr(const String &varName) const;
     const Map<String, uint> &GetEnumFields(const String &enumName) const;
     bool operator==(const ReflectStruct &rhs) const;
     bool operator!=(const ReflectStruct &rhs) const;

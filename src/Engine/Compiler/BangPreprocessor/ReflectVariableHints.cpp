@@ -14,11 +14,22 @@ const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
 {
-    m_hintsString = hintsString;
+    Update(hintsString);
+}
 
+ReflectVariableHints::~ReflectVariableHints()
+{
+}
+
+void ReflectVariableHints::Update(const String &hintsString)
+{
     Array<String> hints = hintsString.Split<Array>(';');
     for (const String &hint : hints)
     {
+        auto IsTrue = [](const String &valueStr) {
+            return (valueStr == "1" || valueStr == "true");
+        };
+
         Array<String> keyValue = hint.Split<Array>(':');
         if (keyValue.Size() == 2)
         {
@@ -53,11 +64,11 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             }
             else if (keyStr == ReflectVariableHints::KeyIsSlider)
             {
-                m_isSlider = true;
+                m_isSlider = IsTrue(valueStr);
             }
             else if (keyStr == ReflectVariableHints::KeyIsEnum)
             {
-                m_isEnum = true;
+                m_isEnum = IsTrue(valueStr);
             }
             else if (keyStr == ReflectVariableHints::KeyExtension)
             {
@@ -72,18 +83,14 @@ ReflectVariableHints::ReflectVariableHints(const String &hintsString)
             }
             else if (keyStr == ReflectVariableHints::KeyZoomablePreview)
             {
-                m_zoomablePreview = true;
+                m_zoomablePreview = IsTrue(valueStr);
             }
             else if (keyStr == ReflectVariableHints::KeyIsHidden)
             {
-                m_isHidden = true;
+                m_isHidden = IsTrue(valueStr);
             }
         }
     }
-}
-
-ReflectVariableHints::~ReflectVariableHints()
-{
 }
 
 bool ReflectVariableHints::GetZoomablePreview() const

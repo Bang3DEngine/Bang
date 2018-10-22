@@ -132,6 +132,11 @@ Variant ReflectVariable::GetCurrentValue() const
     return GetInitValue();
 }
 
+ReflectVariableHints *ReflectVariable::GetHintsPtr()
+{
+    return &m_hints;
+}
+
 const String &ReflectVariable::GetName() const
 {
     return m_name;

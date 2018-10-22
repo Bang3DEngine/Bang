@@ -69,7 +69,7 @@ void MeshCollider::Reflect()
         GetMesh,
         Mesh,
         BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetMeshExtension()) +
-            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW());
+            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
 }
 
 bool MeshCollider::CanBeTriggerShape()

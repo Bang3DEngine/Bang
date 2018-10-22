@@ -22,6 +22,7 @@ public:
     void SetClothSize(float clothSize);
     void SetBounciness(float bounciness);
     void SetDamping(float damping);
+    void SetSpringsDamping(float springsDamping);
     void SetSubdivisions(uint subdivisions);
     void SetSpringsForce(float springsForce);
     void SetSeeDebugPoints(bool seeDebugPoints);
@@ -30,6 +31,7 @@ public:
     Mesh *GetMesh() const;
     float GetDamping() const;
     float GetBounciness() const;
+    float GetSpringsDamping() const;
     float GetClothSize() const;
     uint GetSubdivisions() const;
     bool GetSeeDebugPoints() const;
@@ -65,6 +67,7 @@ private:
     uint m_subdivisions = 0;
     float m_clothSize = 1.0f;
     float m_springsForce = 0.0f;
+    float m_springsDamping = 1.0f;
 
     RH<Mesh> m_debugPointsMesh;
     RH<Material> m_debugPointsMaterial;
@@ -73,6 +76,7 @@ private:
     void InitParticle(uint i, const Particle::Parameters &params);
     void AddSpringForces();
     void UpdateMeshPoints();
+    void ConstrainJoints();
     void RecreateMesh();
 
     uint GetTotalNumPoints() const;

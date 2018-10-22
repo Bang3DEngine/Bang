@@ -92,6 +92,13 @@ public:
                      Time dt,
                      const Particle::Parameters &params);
 
+    static void MoveParticle(Particle::Data *pData,
+                             Time dt,
+                             const Particle::Parameters &params);
+    static void CorrectParticleCollisions(Particle::Data *pData,
+                                          float dtSecs,
+                                          const Particle::Parameters &params);
+
     Particle() = delete;
     virtual ~Particle() = delete;
 

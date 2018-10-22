@@ -176,6 +176,11 @@ void Rope::SetSpringsForce(float springsForce)
     }
 }
 
+void Rope::SetSpringsDamping(float springsDamping)
+{
+    m_springsDamping = springsDamping;
+}
+
 void Rope::SetFixedPoint(uint i, bool fixed)
 {
     if (i < m_fixedPoints.Size())
@@ -262,6 +267,11 @@ bool Rope::GetSeeDebugPoints() const
     return m_seeDebugPoints;
 }
 
+float Rope::GetSpringsDamping() const
+{
+    return m_springsDamping;
+}
+
 void Rope::InitParticle(uint i, const Particle::Parameters &params)
 {
     if (GetGameObject())
@@ -319,6 +329,8 @@ void Rope::AddSpringForces()
                 float forceMagnitude =
                     (diffLength - ropePartLength) / ropePartLength;
                 force += forceDir * forceMagnitude * GetSpringsForce();
+                force += GetSpringsDamping() *
+                         (m_particlesData[j].velocity - pData->velocity);
             }
         }
         pData->force = force;
@@ -378,7 +390,7 @@ void Rope::Reflect()
                                    "Num Points",
                                    SetNumPoints,
                                    GetNumPoints,
-                                   BANG_REFLECT_HINT_MINMAX_VALUE(2.0f, 10.0f));
+                                   BANG_REFLECT_HINT_MIN_VALUE(2.0f));
     BANG_REFLECT_VAR_MEMBER_HINTED(Rope,
                                    "Rope Length",
                                    SetRopeLength,
@@ -388,6 +400,11 @@ void Rope::Reflect()
                                    "Springs Force",
                                    SetSpringsForce,
                                    GetSpringsForce,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(Rope,
+                                   "Springs Damping",
+                                   SetSpringsDamping,
+                                   GetSpringsDamping,
                                    BANG_REFLECT_HINT_MIN_VALUE(0.0f));
     BANG_REFLECT_VAR_MEMBER_HINTED(Rope,
                                    "Bounciness",

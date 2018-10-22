@@ -93,6 +93,11 @@ void Cloth::SetDamping(float damping)
     }
 }
 
+void Cloth::SetSpringsDamping(float springsDamping)
+{
+    m_springsDamping = springsDamping;
+}
+
 void Cloth::SetSubdivisions(uint subdivisions)
 {
     if (subdivisions != GetSubdivisions())
@@ -136,6 +141,11 @@ float Cloth::GetDamping() const
 float Cloth::GetBounciness() const
 {
     return GetParameters().bounciness;
+}
+
+float Cloth::GetSpringsDamping() const
+{
+    return m_springsDamping;
 }
 
 float Cloth::GetClothSize() const
@@ -183,80 +193,39 @@ void Cloth::OnUpdate()
             ->GetColliders();
 
     Time fixedStepDeltaTime = Time::Seconds(1.0 / 60);
-    // if (Input::GetKeyDownRepeat(Key::I))
-    {
-        Particle::FixedStepAll(
-            &m_particlesData,
-            Time::GetDeltaTime(),
-            fixedStepDeltaTime,
-            GetParameters(),
-            [this](uint i, const Particle::Parameters &params) {
-                InitParticle(i, params);
-            },
-            [](uint) { return true; },
-            [this](Time) { AddSpringForces(); });
-    }
+    Particle::FixedStepAll(&m_particlesData,
+                           Time::GetDeltaTime(),
+                           fixedStepDeltaTime,
+                           GetParameters(),
+                           [this](uint i, const Particle::Parameters &params) {
+                               InitParticle(i, params);
+                           },
+                           [](uint) { return true; },
+                           [this](Time) {
+                               AddSpringForces();
+                               // if (Input::GetKey(Key::R))
+                               // {
+                               //     ConstrainJoints();
+                               // }
+                           });
+    // AddSpringForces();
 
-    /*
+    // if (Input::GetKeyDownRepeat(Key::D))
+    // {
+    //     for (uint i = 0; i < m_particlesData.Size(); ++i)
+    //     {
+    //         m_particlesData[i].position += 1.0f * Vector3::Down;
+    //         Particle::CorrectParticleCollisions(
+    //             &m_particlesData[i], 1.0f, GetParameters());
+    //     }
+    // }
+
     // Relaxation
-    if (Input::GetKeyDownRepeat(Key::R))
-    {
-        // for (uint k = 0; k < 10; ++k)
-        {
-            for (uint i = 0; i < GetSubdivisions(); ++i)
-            {
-                for (uint j = 0; j < GetSubdivisions(); ++j)
-                {
-                    const uint pi = (i * GetSubdivisions()) + j;
-                    const Vector3 pPos = m_particlesData[pi].position;
-                    const Vector3 pPrevPos = m_particlesData[i].prevPosition;
-                    for (int o = 0; o < m_offsets.Size(); ++o)
-                    {
-                        const Vector2i &off = m_offsets[o];
-                        const float offLength = m_offsetsLengths[o];
-                        if ((i + off.y) < 0 ||
-                            (i + off.y) >= GetSubdivisions() ||
-                            (j + off.x) < 0 || (j + off.x) >= GetSubdivisions())
-                        {
-                            continue;
-                        }
+    // if (Input::GetKeyDownRepeat(Key::R))
+    // {
+    //     ConstrainJoints();
+    // }
 
-                        const int npi =
-                            ((i + off.y) * GetSubdivisions() + (j + off.x));
-                        const Vector3 npPos = m_particlesData[npi].position;
-                        const Vector3 npPrevPos =
-                            m_particlesData[npi].prevPosition;
-                        const Vector3 diffToNp = (npPos - pPos);
-                        const Vector3 dirToNp = diffToNp.NormalizedSafe();
-                        const float dist = diffToNp.Length();
-                        const float expectedDist =
-                            GetSubdivisionLength() * offLength;
-                        const float newDist =
-                            expectedDist;  // dist;  // expectedDist;
-                        const float distDiff = (expectedDist - dist);
-                        // Math::Clamp(dist, expectedDist * 0.9f, expectedDist *
-                        // 1.1f);
-                        const Vector3 center = (pPos + npPos) * 0.5f;
-                        m_particlesData[pi].position -=
-                            (dirToNp * distDiff * 0.1f);
-                        // m_particlesDat9a[pi].prevPosition =
-                        //     (m_particlesData[pi].position - pPos)
-                        //         .NormalizedSafe() *
-                        //     (pPos - pPrevPos).Length();
-
-                        m_particlesData[npi].position +=
-                            (dirToNp * distDiff * 0.1f);
-                        // m_particlesData[npi].prevPosition =
-                        //     (m_particlesData[npi].position - npPos)
-                        //         .NormalizedSafe() *
-                        //     (npPos - npPrevPos).Length();
-                    }
-                }
-            }
-        }
-    }
-
-    */
     for (uint i = 0; i < m_particlesData.Size(); ++i)
     {
         const Particle::Data &pData = m_particlesData[i];
@@ -385,6 +354,12 @@ void Cloth::Reflect()
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
+                                   "Springs Damping",
+                                   SetSpringsDamping,
+                                   GetSpringsDamping,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
                                    "See Debug Points",
                                    SetSeeDebugPoints,
                                    GetSeeDebugPoints,
@@ -409,7 +384,7 @@ void Cloth::InitParticle(uint i, const Particle::Parameters &params)
         pData->prevPosition = pData->position;
         pData->totalLifeTime = Math::Infinity<float>();
         pData->remainingLifeTime = pData->totalLifeTime;
-        pData->remainingStartTime = 0.001f;
+        pData->remainingStartTime = 0.0f;
         pData->force = ph->GetGravity();
         pData->size = 1.0f;
     }
@@ -434,14 +409,15 @@ void Cloth::AddSpringForces()
                 const Vector2i &offset = m_offsets[o];
                 const float offsetLength = m_offsetsLengths[o];
 
-                if ((i + offset.y) < 0 || (i + offset.y) >= GetSubdivisions() ||
-                    (j + offset.x) < 0 || (j + offset.x) >= GetSubdivisions())
+                const int ii = (i + offset.y);
+                const int jj = (j + offset.x);
+                if (ii < 0 || ii >= GetSubdivisions() || jj < 0 ||
+                    jj >= GetSubdivisions())
                 {
                     continue;
                 }
 
-                const int neighborParticleIndex =
-                    (i + offset.y) * GetSubdivisions() + (j + offset.x);
+                const int neighborParticleIndex = ii * GetSubdivisions() + jj;
                 const uint npi = neighborParticleIndex;
                 float expectedLength = clothSubdivLength * offsetLength;
 
@@ -449,9 +425,14 @@ void Cloth::AddSpringForces()
                     (m_particlesData[npi].position - pData->position);
                 float diffLength = diff.Length();
                 Vector3 forceDir = diff.NormalizedSafe();
-                float forceMagnitude =
-                    (diffLength - expectedLength) / expectedLength;
-                force += forceDir * forceMagnitude * GetSpringsForce();
+                float forceMagnitude = (diffLength - expectedLength);
+                if (Math::Abs(forceMagnitude) > 0.001f)
+                {
+                    force += forceDir * forceMagnitude * GetSpringsForce();
+                }
+
+                force += GetSpringsDamping() * (m_particlesData[npi].velocity -
+                                                m_particlesData[pi].velocity);
             }
 
             pData->force = force;
@@ -472,6 +453,58 @@ void Cloth::UpdateMeshPoints()
     }
 
     m_particlesData.Resize(GetTotalNumPoints());
+}
+
+void Cloth::ConstrainJoints()
+{
+    uint steps = 1;
+    for (uint k = 0; k < steps; ++k)
+    {
+        for (uint i = 0; i < GetSubdivisions(); ++i)
+        {
+            for (uint j = 0; j < GetSubdivisions(); ++j)
+            {
+                const uint pi = (i * GetSubdivisions()) + j;
+                const Vector3 pPos = m_particlesData[pi].position;
+                for (int o = 0; o < m_offsets.Size(); ++o)
+                {
+                    const Vector2i &off = m_offsets[o];
+                    const float offLength = m_offsetsLengths[o];
+                    if ((i + off.y) < 0 || (i + off.y) >= GetSubdivisions() ||
+                        (j + off.x) < 0 || (j + off.x) >= GetSubdivisions())
+                    {
+                        continue;
+                    }
+
+                    const int npi =
+                        ((i + off.y) * GetSubdivisions() + (j + off.x));
+                    const Vector3 npPos = m_particlesData[npi].position;
+                    const Vector3 npPrevPos = m_particlesData[npi].prevPosition;
+                    const Vector3 diffToNp = (npPos - pPos);
+                    const Vector3 dirToNp = diffToNp.NormalizedSafe();
+                    const float dist = diffToNp.Length();
+                    const float expectedDist =
+                        GetSubdivisionLength() * offLength;
+                    const float newDist = expectedDist;
+                    // Math::Clamp(dist, expectedDist * 0.9f, expectedDist *
+                    // 1.1f);
+
+                    const Vector3 center = (pPos + npPos) * 0.5f;
+                    m_particlesData[pi].position =
+                        center - (dirToNp * newDist * 0.5f);
+                    m_particlesData[npi].position =
+                        center + (dirToNp * newDist * 0.5f);
+                }
+            }
+        }
+    }
+
+    float dtSecs = Time::GetDeltaTime().GetSeconds();
+    for (uint i = 0; i < m_particlesData.Size(); ++i)
+    {
+        Particle::CorrectParticleCollisions(
+            &m_particlesData[i], dtSecs, GetParameters());
+    }
 }
 
 void Cloth::RecreateMesh()
@@ -533,7 +566,7 @@ uint Cloth::GetTotalNumPoints() const
 
 float Cloth::GetSubdivisionLength() const
 {
-    return GetClothSize() / SCAST<float>(GetSubdivisions());
+    return GetClothSize() / SCAST<float>(GetSubdivisions() - 1);
 }
 
 const Particle::Parameters &Cloth::GetParameters() const

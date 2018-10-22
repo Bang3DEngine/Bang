@@ -48,46 +48,59 @@ void Particle::Step(Particle::Data *pData_, Time dt, const Parameters &params)
                 pData.currentFrame = animationFrame;
             }
 
-            Vector3 pPrevPos = pData.position;
-            Particle::StepPositionAndVelocity(&pData, dtSecs, params);
+            Particle::MoveParticle(&pData, dt, params);
 
-            if (params.computeCollisions && params.colliders.Size() >= 1)
-            {
-                for (Collider *collider : params.colliders)
-                {
-                    if (collider->IsEnabledRecursively())
-                    {
-                        const Vector3 pPositionWithoutCollide = pData.position;
-                        const Vector3 pVelocityWithoutCollide = pData.velocity;
-
-                        Vector3 posAfterCollision;
-                        Vector3 velocityAfterCollision;
-                        const bool collided =
-                            CollideParticle(collider,
-                                            params,
-                                            pPrevPos,
-                                            pPositionWithoutCollide,
-                                            pVelocityWithoutCollide,
-                                            &posAfterCollision,
-                                            &velocityAfterCollision);
-                        if (collided)
-                        {
-                            pPrevPos = pData.position;
-                            pData.prevPosition =
-                                posAfterCollision -
-                                (velocityAfterCollision * dtSecs);
-                            pData.position = posAfterCollision;
-                            pData.velocity = velocityAfterCollision;
-                        }
-                    }
-                }
-            }
             pData.prevDeltaTimeSecs = dtSecs;
         }
     }
     else
     {
         pData.remainingStartTime -= dtSecs;
+    }
+}
+
+void Particle::MoveParticle(Particle::Data *pData,
+                            Time dt,
+                            const Particle::Parameters &params)
+{
+    double dtSecs = dt.GetSeconds();
+    Particle::StepPositionAndVelocity(pData, dtSecs, params);
+    Particle::CorrectParticleCollisions(pData, dtSecs, params);
+}
+
+void Particle::CorrectParticleCollisions(Particle::Data *pData,
+                                         float dtSecs,
+                                         const Particle::Parameters &params)
+{
+    if (params.computeCollisions && params.colliders.Size() >= 1)
+    {
+        Vector3 pPrevPos = pData->prevPosition;
+        for (Collider *collider : params.colliders)
+        {
+            if (collider->IsEnabledRecursively())
+            {
+                const Vector3 pPositionWithoutCollide = pData->position;
+                const Vector3 pVelocityWithoutCollide = pData->velocity;
+
+                Vector3 posAfterCollision;
+                Vector3 velocityAfterCollision;
+                const bool collided = CollideParticle(collider,
+                                                      params,
+                                                      pPrevPos,
+                                                      pPositionWithoutCollide,
+                                                      pVelocityWithoutCollide,
+                                                      &posAfterCollision,
+                                                      &velocityAfterCollision);
+                if (collided)
+                {
+                    pPrevPos = pData->position;
+                    pData->prevPosition =
+                        posAfterCollision - (velocityAfterCollision * dtSecs);
+                    pData->position = posAfterCollision;
+                    pData->velocity = velocityAfterCollision;
+                }
+            }
+        }
     }
 }
 
@@ -199,8 +212,7 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
         {
             float timeStepRatio = (dt / pData->prevDeltaTimeSecs);
             Vector3 disp = timeStepRatio * (pPrevPos - pPrevPrevPos);
-            disp += (pAcc * (dt * dt));
-            disp *= params.damping;
+            disp += (pAcc * (dt * dt)) * params.damping;
             pNewPosition = pPrevPos + disp;
             pNewVelocity = (pNewPosition - pPrevPos) / dt;
         }

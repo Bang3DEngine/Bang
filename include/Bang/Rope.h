@@ -42,6 +42,7 @@ public:
     void SetBounciness(float bounciness);
     void SetRopeLength(float ropeLength);
     void SetSpringsForce(float springsForce);
+    void SetSpringsDamping(float springsDamping);
 
     void SetFixedPoint(uint i, bool fixed);
     void SetFixedPoints(const Array<bool> pointsFixed);
@@ -55,6 +56,7 @@ public:
     float GetDamping() const;
     uint GetNumPoints() const;
     bool GetSeeDebugPoints() const;
+    float GetSpringsDamping() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -69,6 +71,7 @@ private:
 
     float m_ropeLength = 1.0f;
     float m_springsForce = 1.0f;
+    float m_springsDamping = 1.0f;
     Array<Particle::Data> m_particlesData;
 
     bool m_seeDebugPoints = false;

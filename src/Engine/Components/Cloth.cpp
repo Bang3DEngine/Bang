@@ -99,6 +99,16 @@ void Cloth::SetDamping(float damping)
     }
 }
 
+void Cloth::SetPoint(uint i, const Vector3 &pos)
+{
+    if (i < m_points.Size())
+    {
+        m_points[i] = pos;
+        m_particlesData[i].position = pos;
+        m_particlesData[i].prevPosition = m_particlesData[i].position;
+    }
+}
+
 void Cloth::SetSpringsDamping(float springsDamping)
 {
     m_springsDamping = springsDamping;
@@ -121,11 +131,20 @@ void Cloth::SetSpringsForce(float springsForce)
     }
 }
 
+void Cloth::SetFixedPoint(uint i, bool fixed)
+{
+    if (i < m_fixedPoints.Size())
+    {
+        m_fixedPoints[i] = fixed;
+    }
+}
+
 void Cloth::SetSeeDebugPoints(bool seeDebugPoints)
 {
     if (seeDebugPoints != GetSeeDebugPoints())
     {
         m_seeDebugPoints = seeDebugPoints;
+        m_validMeshPoints = false;
     }
 }
 
@@ -179,9 +198,24 @@ float Cloth::GetSpringsForce() const
     return m_springsForce;
 }
 
+bool Cloth::IsPointFixed(uint i) const
+{
+    return i < m_fixedPoints.Size() ? m_fixedPoints[i] : false;
+}
+
 bool Cloth::GetComputeCollisions() const
 {
     return m_particleParams.computeCollisions;
+}
+
+const Array<Vector3> &Cloth::GetPoints() const
+{
+    return m_points;
+}
+
+const Array<bool> &Cloth::GetFixedPoints() const
+{
+    return m_fixedPoints;
 }
 
 void Cloth::OnStart()
@@ -210,15 +244,8 @@ void Cloth::OnUpdate()
                            [this](uint i, const Particle::Parameters &params) {
                                InitParticle(i, params);
                            },
-                           [](uint) { return true; },
-                           [this](Time) {
-                               AddSpringForces();
-                               // if (Input::GetKey(Key::R))
-                               // {
-                               //     ConstrainJoints();
-                               // }
-                           });
-    // AddSpringForces();
+                           [this](uint i) { return !IsPointFixed(i); },
+                           [this](Time) { AddSpringForces(); });
 
     // if (Input::GetKeyDownRepeat(Key::D))
     // {
@@ -264,12 +291,6 @@ void Cloth::OnRender()
         m_validMeshPoints = true;
     }
 
-    if (GetActiveMaterial())
-    {
-        GetActiveMaterial()->SetAlbedoColor(Color::White);
-        GetActiveMaterial()->SetReceivesLighting(true);
-        GetActiveMaterial()->Bind();
-    }
     Renderer::OnRender();
 
     GL::Render(GetMesh()->GetVAO(),
@@ -278,11 +299,15 @@ void Cloth::OnRender()
 
     if (GetSeeDebugPoints())
     {
-        if (GetActiveMaterial())
+        Color prevMatAlbedoColor;
+        bool prevReceivesLighting;
+        if (GetMaterial())
         {
-            GetActiveMaterial()->SetAlbedoColor(Color::Red);
-            GetActiveMaterial()->SetReceivesLighting(false);
-            GetActiveMaterial()->Bind();
+            prevMatAlbedoColor = GetMaterial()->GetAlbedoColor();
+            prevReceivesLighting = GetMaterial()->GetReceivesLighting();
+            GetMaterial()->SetAlbedoColor(Color::Red);
+            GetMaterial()->SetReceivesLighting(false);
+            GetMaterial()->Bind();
         }
 
         GL::Push(GL::Pushable::DEPTH_STATES);
@@ -292,6 +317,12 @@ void Cloth::OnRender()
                    GL::Primitive::POINTS,
                    GetTotalNumPoints());
         GL::Pop(GL::Pushable::DEPTH_STATES);
+
+        if (GetMaterial())
+        {
+            GetMaterial()->SetAlbedoColor(prevMatAlbedoColor);
+            GetMaterial()->SetReceivesLighting(prevReceivesLighting);
+        }
     }
 }
 
@@ -321,6 +352,7 @@ void Cloth::CloneInto(ICloneable *clone) const
 
     Cloth *cloth = SCAST<Cloth *>(clone);
     cloth->m_points = m_points;
+    cloth->m_fixedPoints = m_fixedPoints;
     cloth->m_particlesData = m_particlesData;
 }
 
@@ -328,16 +360,15 @@ void Cloth::Reflect()
 {
     Renderer::Reflect();
 
-    GetReflectStructPtr()
-        ->GetReflectVariablePtr("Material")
-        ->GetHintsPtr()
-        ->Update(BANG_REFLECT_HINT_HIDDEN(true));
+    // GetReflectStructPtr()
+    //     ->GetReflectVariablePtr("Material")
+    //     ->GetHintsPtr()
+    //     ->Update(BANG_REFLECT_HINT_HIDDEN(true));
 
     ReflectVar<bool>(
         "Wireframe",
-        [this](bool w) { GetActiveMaterial()->SetRenderWireframe(w); },
-        [this]() -> bool { return GetActiveMaterial()->GetRenderWireframe(); },
-        BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+        [this](bool w) { GetMaterial()->SetRenderWireframe(w); },
+        [this]() -> bool { return GetMaterial()->GetRenderWireframe(); });
 
     BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
                                    "Size",
@@ -391,22 +422,41 @@ void Cloth::Reflect()
                             "Compute collisions",
                             SetComputeCollisions,
                             GetComputeCollisions);
+
+    ReflectVar<bool>("Top Left Fixed",
+                     [this](bool f) { SetFixedPoint(0, f); },
+                     [this]() { return IsPointFixed(0); });
+    ReflectVar<bool>(
+        "Top Right Fixed",
+        [this](bool f) { SetFixedPoint(GetSubdivisions() - 1, f); },
+        [this]() { return IsPointFixed(GetSubdivisions() - 1); });
+    ReflectVar<bool>(
+        "Bot Left Fixed",
+        [this](bool f) { SetFixedPoint(GetTotalNumPoints() - 1, f); },
+        [this]() { return IsPointFixed(GetTotalNumPoints() - 1); });
+    ReflectVar<bool>(
+        "Bot Right Fixed",
+        [this](bool f) {
+            SetFixedPoint(GetTotalNumPoints() - GetSubdivisions(), f);
+        },
+        [this]() {
+            return IsPointFixed(GetTotalNumPoints() - GetSubdivisions());
+        });
 }
 
 void Cloth::InitParticle(uint i, const Particle::Parameters &params)
 {
-    if (GetGameObject())
-    {
-        Particle::Data *pData = &m_particlesData[i];
-        *pData = Particle::Data();
+    BANG_UNUSED(params);
 
-        pData->position = m_points[i];
-        pData->prevPosition = pData->position;
-        pData->totalLifeTime = Math::Infinity<float>();
-        pData->remainingLifeTime = pData->totalLifeTime;
-        pData->remainingStartTime = 0.0f;
-        pData->size = 1.0f;
-    }
+    Particle::Data *pData = &m_particlesData[i];
+    *pData = Particle::Data();
+
+    pData->position = m_points[i];
+    pData->prevPosition = pData->position;
+    pData->totalLifeTime = Math::Infinity<float>();
+    pData->remainingLifeTime = pData->totalLifeTime;
+    pData->remainingStartTime = 0.0f;
+    pData->size = 1.0f;
 }
 
 void Cloth::AddSpringForces()
@@ -529,6 +579,7 @@ void Cloth::ConstrainJoints()
 void Cloth::RecreateMesh()
 {
     m_points.Clear();
+    m_fixedPoints.Clear();
 
     GameObject *go = GetGameObject();
     Transform *tr = (go ? go->GetTransform() : nullptr);
@@ -543,6 +594,7 @@ void Cloth::RecreateMesh()
             pos -= rot * Vector3(1, 0, 1) * (GetClothSize() * 0.5f);
             pos += center;
             m_points.PushBack(pos);
+            m_fixedPoints.PushBack(false);
         }
     }
 

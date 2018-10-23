@@ -87,14 +87,16 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
                 Vector3 posAfterCollision;
                 Vector3 velocityAfterCollision;
                 Vector3 frictionForce;
-                const bool collided = CollideParticle(collider,
-                                                      params,
-                                                      pPrevPos,
-                                                      pPositionWithoutCollide,
-                                                      pVelocityWithoutCollide,
-                                                      &posAfterCollision,
-                                                      &velocityAfterCollision,
-                                                      &frictionForce);
+                const bool collided =
+                    CollideParticle(collider,
+                                    params,
+                                    pPrevPos,
+                                    pPositionWithoutCollide,
+                                    pVelocityWithoutCollide,
+                                    pData->GetGravityForce(params),
+                                    &posAfterCollision,
+                                    &velocityAfterCollision,
+                                    &frictionForce);
                 if (collided)
                 {
                     pPrevPos = pData->position;
@@ -117,7 +119,7 @@ void Particle::ExecuteFixedStepped(Time totalDeltaTime,
     double fixedDeltaTimeSecs = fixedStepDeltaTime.GetSeconds();
 
     uint stepsToSimulate = uint(Math::Round(dtSecs / fixedDeltaTimeSecs));
-    stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 100u);
+    stepsToSimulate = Math::Clamp(stepsToSimulate, 1u, 10u);
     for (uint step = 0; step < stepsToSimulate; ++step)
     {
         func(fixedStepDeltaTime);
@@ -164,10 +166,12 @@ void Particle::FixedStepAll(
     const Particle::Parameters &params,
     std::function<void(uint i, const Particle::Parameters &)> initParticleFunc,
     std::function<bool(uint i)> canUpdateParticleFunc,
-    std::function<void(Time dt)> extraFuncToExecuteEveryStep)
+    std::function<void(Time dt)> extraFuncToExecuteBeforeEveryStep)
 {
     Particle::ExecuteFixedStepped(
         totalDeltaTime, fixedStepDeltaTime, [&](Time dt) {
+
+            extraFuncToExecuteBeforeEveryStep(dt);
             for (uint i = 0; i < particlesDatas->Size(); ++i)
             {
                 if (canUpdateParticleFunc(i))
@@ -182,7 +186,6 @@ void Particle::FixedStepAll(
                     }
                 }
             }
-            extraFuncToExecuteEveryStep(dt);
         });
 }
 
@@ -234,6 +237,7 @@ bool Particle::CollideParticle(Collider *collider,
                                const Vector3 &prevPositionNoInt,
                                const Vector3 &newPositionNoInt,
                                const Vector3 &newVelocityNoInt,
+                               const Vector3 &particleGravityForce,
                                Vector3 *newPositionAfterInt,
                                Vector3 *newVelocityAfterInt,
                                Vector3 *frictionForce)
@@ -317,22 +321,19 @@ bool Particle::CollideParticle(Collider *collider,
                          (cnorm * 0.05f);
         *newPositionAfterInt = newPos;
 
-#ifdef DEBUG
-        float distanceBefore = collisionPlane.GetDistanceTo(newPositionNoInt);
-        float distanceAfter =
-            collisionPlane.GetDistanceTo(*newPositionAfterInt);
-        ASSERT(Math::Sign(distanceBefore) != Math::Sign(distanceAfter));
-#endif
-
         Vector3 newVel =
             newVelocityNoInt -
             bouncinessEpsilon * cnorm *
                 collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
         *newVelocityAfterInt = newVel;
 
+        float normalForceLength = Math::Abs(
+            Vector3::Dot(collisionPlane.GetNormal(), particleGravityForce));
         *frictionForce =
             params.friction *
-            -collisionPlane.GetProjectedVector(*newVelocityAfterInt);
+            -collisionPlane.GetProjectedVector(*newVelocityAfterInt)
+                 .NormalizedSafe() *
+            normalForceLength;
     }
 
     return collided;
@@ -343,4 +344,11 @@ Vector3 Particle::Data::GetNetForce(const Particle::Parameters &params) const
     Physics *ph = Physics::GetInstance();
     return (ph->GetGravity() * params.gravityMultiplier) + frictionForce +
            extraForce;
+}
+
+Vector3 Particle::Data::GetGravityForce(
+    const Particle::Parameters &params) const
+{
+    Physics *ph = Physics::GetInstance();
+    return ph->GetGravity() * params.gravityMultiplier;
 }

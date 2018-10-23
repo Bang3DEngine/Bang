@@ -58,6 +58,7 @@ public:
         uint currentFrame = 0;
 
         Vector3 GetNetForce(const Particle::Parameters &params) const;
+        Vector3 GetGravityForce(const Particle::Parameters &params) const;
     };
 
     static void ExecuteFixedStepped(
@@ -90,7 +91,7 @@ public:
         std::function<void(uint i, const Particle::Parameters &)>
             initParticleFunc,
         std::function<bool(uint i)> canUpdateParticleFunc,
-        std::function<void(Time dt)> extraFuncToExecuteEveryStep);
+        std::function<void(Time dt)> extraFuncToExecuteBeforeEveryStep);
 
     static void Step(Particle::Data *pData,
                      Time dt,
@@ -115,6 +116,7 @@ private:
                                 const Vector3 &prevPositionNoInt,
                                 const Vector3 &newPositionNoInt,
                                 const Vector3 &newVelocityNoInt,
+                                const Vector3 &particleGravityForce,
                                 Vector3 *newPositionAfterInt,
                                 Vector3 *newVelocityAfterInt,
                                 Vector3 *frictionForce);

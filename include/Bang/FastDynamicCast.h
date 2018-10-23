@@ -53,7 +53,8 @@ inline TCastTo FastDynamicCast(
             typename std::remove_pointer<TCastFrom>::type>::value>::type * = 0)
 {
     ClassIdType objClassId = obj->GetClassId();
-    if (CanFastDynamicCast(objClassId))
+    if (std::remove_pointer<TCastTo>::type::CanFastDynamicCast() &&
+        CanFastDynamicCast(objClassId))
     {
         // Is the object class id in the range of the class ids of the class
         // we want to cast to?
@@ -83,6 +84,20 @@ inline TCastTo FastDynamicCast(
 }
 
 // This macro sets a class ID by adding the needed members to the class
+#define SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLASS) \
+    constexpr static inline CID GetClassIdBegin()  \
+    {                                              \
+        return GetInvalidClassId();                \
+    }                                              \
+    constexpr static inline CID GetClassIdEnd()    \
+    {                                              \
+        return GetInvalidClassId();                \
+    }                                              \
+    constexpr static bool CanFastDynamicCast()     \
+    {                                              \
+        return false;                              \
+    }
+
 #define SET_CLASS_ID(CLASS, ID_BEGIN, ID_END)     \
 public:                                           \
     constexpr static inline CID GetClassIdBegin() \
@@ -117,8 +132,6 @@ public:                                           \
     {                                             \
         return GetInvalidClassId();               \
     }                                             \
-                                                  \
-public:                                           \
     constexpr static bool CanFastDynamicCast()    \
     {                                             \
         return false;                             \

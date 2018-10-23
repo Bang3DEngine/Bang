@@ -34,7 +34,8 @@ public:                                   \
 
 #define COMPONENT(CLASS)       \
     CLONEABLE_COMPONENT(CLASS) \
-    COMPONENT_ABSTRACT(CLASS)
+    COMPONENT_ABSTRACT(CLASS)  \
+    SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLAS)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT_ABSTRACT( \
     CLASS, CIDBegin, CIDEnd)                                \
@@ -42,7 +43,8 @@ public:                                   \
     SET_CLASS_ID(CLASS, CIDBegin, CIDEnd)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT(CLASS, CIDBegin, CIDEnd) \
-    COMPONENT(CLASS)                                                       \
+    CLONEABLE_COMPONENT(CLASS)                                             \
+    COMPONENT_ABSTRACT(CLASS)                                              \
     SET_CLASS_ID(CLASS, CIDBegin, CIDEnd)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS) \

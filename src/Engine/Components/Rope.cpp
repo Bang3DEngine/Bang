@@ -189,7 +189,7 @@ void Rope::SetFixedPoint(uint i, bool fixed)
     }
 }
 
-void Rope::SetFixedPoints(const Array<bool> pointsFixed)
+void Rope::SetFixedPoints(const Array<bool> &pointsFixed)
 {
     m_fixedPoints = pointsFixed;
     SetNumPoints(m_fixedPoints.Size());

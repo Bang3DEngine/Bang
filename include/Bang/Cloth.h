@@ -23,9 +23,11 @@ public:
     void SetBounciness(float bounciness);
     void SetFriction(float friction);
     void SetDamping(float damping);
+    void SetPoint(uint i, const Vector3 &pos);
     void SetSpringsDamping(float springsDamping);
     void SetSubdivisions(uint subdivisions);
     void SetSpringsForce(float springsForce);
+    void SetFixedPoint(uint i, bool fixed);
     void SetSeeDebugPoints(bool seeDebugPoints);
     void SetComputeCollisions(bool computeCollisions);
 
@@ -38,7 +40,10 @@ public:
     uint GetSubdivisions() const;
     bool GetSeeDebugPoints() const;
     float GetSpringsForce() const;
+    bool IsPointFixed(uint i) const;
     bool GetComputeCollisions() const;
+    const Array<Vector3> &GetPoints() const;
+    const Array<bool> &GetFixedPoints() const;
 
     // Component
     void OnStart() override;
@@ -64,11 +69,12 @@ private:
     Array<Particle::Data> m_particlesData;
     Particle::Parameters m_particleParams;
     Array<Vector2i> m_offsets;
+    Array<bool> m_fixedPoints;
     Array<float> m_offsetsLengths;
 
     uint m_subdivisions = 0;
     float m_clothSize = 1.0f;
-    float m_springsForce = 0.0f;
+    float m_springsForce = 50.0f;
     float m_springsDamping = 1.0f;
 
     RH<Mesh> m_debugPointsMesh;

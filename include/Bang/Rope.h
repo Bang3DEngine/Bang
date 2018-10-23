@@ -45,7 +45,7 @@ public:
     void SetSpringsDamping(float springsDamping);
 
     void SetFixedPoint(uint i, bool fixed);
-    void SetFixedPoints(const Array<bool> pointsFixed);
+    void SetFixedPoints(const Array<bool> &pointsFixed);
     void SetPoints(const Array<Vector3> &points);
     void SetSeeDebugPoints(bool seeDebugPoints);
 

@@ -17,6 +17,14 @@ namespace Bang
     {                                                            \
         return Vector2G<T>(-y, x);                               \
     }                                                            \
+    Vector3G<T> xy0() const                                      \
+    {                                                            \
+        return Vector3G<T>(x, y, 0);                             \
+    }                                                            \
+    Vector3G<T> xy1() const                                      \
+    {                                                            \
+        return Vector3G<T>(x, y, 1);                             \
+    }                                                            \
     static T Cross(const Vector2G<T> &v1, const Vector2G<T> &v2) \
     {                                                            \
         return (v1.x * v2.y) - (v1.y * v2.x);                    \

@@ -18,10 +18,11 @@ public:
 
     const Vector3 &GetPoint() const;
     const Vector3 &GetNormal() const;
-    float GetDistanceTo(const Vector3 &point);
-    Vector3 GetMirroredPoint(const Vector3 &point);
-    Vector3 GetProjectedPoint(const Vector3 &point);
-    Vector3 GetMirroredVector(const Vector3 &vector);
+    float GetDistanceTo(const Vector3 &point) const;
+    Vector3 GetMirroredPoint(const Vector3 &point) const;
+    Vector3 GetMirroredVector(const Vector3 &vector) const;
+    Vector3 GetProjectedPoint(const Vector3 &point) const;
+    Vector3 GetProjectedVector(const Vector3 &vector) const;
 
 private:
     Vector3 m_point = Vector3::Zero;

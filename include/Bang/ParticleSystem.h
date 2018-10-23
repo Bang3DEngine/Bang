@@ -155,12 +155,11 @@ private:
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);
 
-    float m_gravityMultiplier = 0.0f;
     float m_initialVelocityMultiplier = 1.0f;
 
     uint m_stepsPerSecond = 60;
 
-    void InitParticle(uint i, const Vector3 &gravity);
+    void InitParticle(uint i, const Particle::Parameters &params);
     bool IsParticleActive(uint i) const;
     void RecreateVAOForMesh();
     void UpdateDataVBO();

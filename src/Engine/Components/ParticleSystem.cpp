@@ -92,7 +92,6 @@ void ParticleSystem::OnUpdate()
     if (m_isEmitting)
     {
         Physics *ph = Physics::GetInstance();
-        m_particlesParameters.gravity = ph->GetGravity();
         m_particlesParameters.colliders =
             ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())
                 ->GetColliders();
@@ -105,7 +104,7 @@ void ParticleSystem::OnUpdate()
             fixedDeltaTime,
             m_particlesParameters,
             [this](uint i, const Particle::Parameters &params) {
-                InitParticle(i, params.gravity);
+                InitParticle(i, params);
             });
 
         // AABBox
@@ -124,10 +123,9 @@ void ParticleSystem::OnUpdate()
 
 void ParticleSystem::Reset()
 {
-    const Vector3 &gravity = Physics::GetInstance()->GetGravity();
     for (uint i = 0; i < GetNumParticles(); ++i)
     {
-        InitParticle(i, gravity);
+        InitParticle(i, GetParticlesParameters());
     }
     UpdateDataVBO();
 }
@@ -213,7 +211,7 @@ void ParticleSystem::SetGravityMultiplier(float gravityMultiplier)
 {
     if (gravityMultiplier != GetGravityMultiplier())
     {
-        m_gravityMultiplier = gravityMultiplier;
+        m_particlesParameters.gravityMultiplier = gravityMultiplier;
     }
 }
 
@@ -297,8 +295,6 @@ void ParticleSystem::SetNumParticles(uint numParticles)
         uint prevNumParticles = GetNumParticles();
         m_numParticles = numParticles;
 
-        const Vector3 &gravity = Physics::GetInstance()->GetGravity();
-
         // Resize arrays
         m_particlesVBOData.Resize(GetNumParticles());
         m_particlesData.Resize(GetNumParticles());
@@ -306,7 +302,7 @@ void ParticleSystem::SetNumParticles(uint numParticles)
         // Initialize values
         for (uint i = prevNumParticles; i < GetNumParticles(); ++i)
         {
-            InitParticle(i, gravity);
+            InitParticle(i, GetParticlesParameters());
         }
 
         // Initialize VBOs
@@ -408,7 +404,7 @@ uint ParticleSystem::GetNumParticles() const
 
 float ParticleSystem::GetGravityMultiplier() const
 {
-    return m_gravityMultiplier;
+    return GetParticlesParameters().gravityMultiplier;
 }
 
 float ParticleSystem::GetInitialVelocityMultiplier() const
@@ -540,7 +536,7 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
         sp, NeededUniformFlag::MODEL | NeededUniformFlag::NORMAL);
 }
 
-void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
+void ParticleSystem::InitParticle(uint i, const Particle::Parameters &params)
 {
     ASSERT(i >= 0);
     ASSERT(i < GetNumParticles());
@@ -553,7 +549,6 @@ void ParticleSystem::InitParticle(uint i, const Vector3 &gravity)
     particleData.totalLifeTime = GetLifeTime().GenerateRandom();
     particleData.remainingLifeTime = particleData.totalLifeTime;
     particleData.remainingStartTime = GetStartTime().GenerateRandom();
-    particleData.force = (GetGravityMultiplier() * gravity);
     particleData.size = GetStartSize().GenerateRandom();
     particleData.startColor = GetStartColor();
     particleData.endColor = GetEndColor();

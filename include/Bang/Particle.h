@@ -26,12 +26,27 @@ public:
         VERLET
     };
 
+    struct Parameters
+    {
+        float damping = 1.0f;
+        float friction = 0.0f;
+        float bounciness = 1.0f;
+        Array<Collider *> colliders;
+        bool computeCollisions = false;
+        float gravityMultiplier = 1.0f;
+        Particle::PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
+
+        float animationSpeed = 0.0f;
+        Vector2i animationSheetSize = Vector2i::One;
+    };
+
     struct Data
     {
         Vector3 prevPosition = Vector3::Zero;
         Vector3 position = Vector3::Zero;
         Vector3 velocity = Vector3::Zero;
-        Vector3 force = Vector3::Zero;
+        Vector3 extraForce = Vector3::Zero;
+        Vector3 frictionForce = Vector3::Zero;
         Color startColor = Color::White;
         Color endColor = Color::White;
         Color currentColor = Color::White;
@@ -41,19 +56,8 @@ public:
         float prevDeltaTimeSecs = 1.0f;
         float size = 1.0f;
         uint currentFrame = 0;
-    };
 
-    struct Parameters
-    {
-        float damping = 1.0f;
-        float bounciness = 1.0f;
-        Array<Collider *> colliders;
-        bool computeCollisions = false;
-        Vector3 gravity = Vector3::Zero;
-        Particle::PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
-
-        float animationSpeed = 0.0f;
-        Vector2i animationSheetSize = Vector2i::One;
+        Vector3 GetNetForce(const Particle::Parameters &params) const;
     };
 
     static void ExecuteFixedStepped(
@@ -112,7 +116,8 @@ private:
                                 const Vector3 &newPositionNoInt,
                                 const Vector3 &newVelocityNoInt,
                                 Vector3 *newPositionAfterInt,
-                                Vector3 *newVelocityAfterInt);
+                                Vector3 *newVelocityAfterInt,
+                                Vector3 *frictionForce);
 };
 }
 

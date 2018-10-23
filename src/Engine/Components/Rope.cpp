@@ -45,6 +45,7 @@ Rope::Rope()
     m_ropeDebugPointsMesh = Resources::Create<Mesh>();
 
     m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
+    m_particleParams.gravityMultiplier = 1.0f;
     m_particleParams.computeCollisions = true;
     m_particleParams.bounciness = 0.05f;
     m_particleParams.damping = 0.95f;
@@ -66,7 +67,6 @@ void Rope::OnUpdate()
     ASSERT(GetNumPoints() >= 2);
 
     Physics *ph = Physics::GetInstance();
-    m_particleParams.gravity = ph->GetGravity();
     m_particleParams.colliders =
         ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())
             ->GetColliders();
@@ -276,6 +276,8 @@ void Rope::InitParticle(uint i, const Particle::Parameters &params)
 {
     if (GetGameObject())
     {
+        BANG_UNUSED(params);
+
         Transform *tr = GetGameObject()->GetTransform();
         Particle::Data *pData = &m_particlesData[i];
         *pData = Particle::Data();
@@ -294,7 +296,6 @@ void Rope::InitParticle(uint i, const Particle::Parameters &params)
         pData->totalLifeTime = Math::Infinity<float>();
         pData->remainingLifeTime = pData->totalLifeTime;
         pData->remainingStartTime = 0.001f;
-        pData->force = params.gravity;
         pData->size = 1.0f;
     }
 }
@@ -317,7 +318,7 @@ void Rope::AddSpringForces()
     {
         Particle::Data *pData = &m_particlesData[i];
 
-        Vector3 force = ph->GetGravity();
+        Vector3 springsForce = ph->GetGravity();
         for (uint j = i - 1; j < i; ++j)
         // for (uint j = i-1; j <= i+1; j += 2)
         {
@@ -328,12 +329,12 @@ void Rope::AddSpringForces()
                 Vector3 forceDir = diff.NormalizedSafe();
                 float forceMagnitude =
                     (diffLength - ropePartLength) / ropePartLength;
-                force += forceDir * forceMagnitude * GetSpringsForce();
-                force += GetSpringsDamping() *
-                         (m_particlesData[j].velocity - pData->velocity);
+                springsForce += forceDir * forceMagnitude * GetSpringsForce();
+                springsForce += GetSpringsDamping() *
+                                (m_particlesData[j].velocity - pData->velocity);
             }
         }
-        pData->force = force;
+        pData->extraForce = springsForce;
     }
 }
 

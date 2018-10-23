@@ -7,6 +7,7 @@
 #include "Bang/Geometry.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshCollider.h"
+#include "Bang/Physics.h"
 #include "Bang/PhysicsObject.h"
 #include "Bang/Plane.h"
 #include "Bang/Ray.h"
@@ -72,6 +73,7 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
                                          float dtSecs,
                                          const Particle::Parameters &params)
 {
+    pData->frictionForce = Vector3::Zero;
     if (params.computeCollisions && params.colliders.Size() >= 1)
     {
         Vector3 pPrevPos = pData->prevPosition;
@@ -84,13 +86,15 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
 
                 Vector3 posAfterCollision;
                 Vector3 velocityAfterCollision;
+                Vector3 frictionForce;
                 const bool collided = CollideParticle(collider,
                                                       params,
                                                       pPrevPos,
                                                       pPositionWithoutCollide,
                                                       pVelocityWithoutCollide,
                                                       &posAfterCollision,
-                                                      &velocityAfterCollision);
+                                                      &velocityAfterCollision,
+                                                      &frictionForce);
                 if (collided)
                 {
                     pPrevPos = pData->position;
@@ -98,6 +102,7 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
                         posAfterCollision - (velocityAfterCollision * dtSecs);
                     pData->position = posAfterCollision;
                     pData->velocity = velocityAfterCollision;
+                    pData->frictionForce += frictionForce;
                 }
             }
         }
@@ -186,10 +191,10 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
                                        const Parameters &params)
 {
     constexpr float pMass = 1.0f;
-    const Vector3 pPrevPos = pData->position;
+    Vector3 pPrevPos = pData->position;
     const Vector3 &pPrevPrevPos = pData->prevPosition;
     const Vector3 &pPrevVelocity = pData->velocity;
-    const Vector3 &pForce = pData->force;
+    const Vector3 pForce = pData->GetNetForce(params);
     const Vector3 pAcc = (pForce / pMass);
 
     Vector3 pNewPosition;
@@ -212,8 +217,8 @@ void Particle::StepPositionAndVelocity(Particle::Data *pData,
         {
             float timeStepRatio = (dt / pData->prevDeltaTimeSecs);
             Vector3 disp = timeStepRatio * (pPrevPos - pPrevPrevPos);
-            disp += (pAcc * (dt * dt)) * params.damping;
-            pNewPosition = pPrevPos + disp;
+            disp += (pAcc * (dt * dt));
+            pNewPosition = pPrevPos + disp * (params.damping);
             pNewVelocity = (pNewPosition - pPrevPos) / dt;
         }
         break;
@@ -229,12 +234,10 @@ bool Particle::CollideParticle(Collider *collider,
                                const Vector3 &prevPositionNoInt,
                                const Vector3 &newPositionNoInt,
                                const Vector3 &newVelocityNoInt,
-                               Vector3 *newPositionAfterInt_,
-                               Vector3 *newVelocityAfterInt_)
+                               Vector3 *newPositionAfterInt,
+                               Vector3 *newVelocityAfterInt,
+                               Vector3 *frictionForce)
 {
-    Vector3 &newPositionAfterInt = *newPositionAfterInt_;
-    Vector3 &newVelocityAfterInt = *newVelocityAfterInt_;
-
     Segment dispSegment(prevPositionNoInt, newPositionNoInt);
 
     bool collided = false;
@@ -304,18 +307,20 @@ bool Particle::CollideParticle(Collider *collider,
         const Vector3 cpos = collisionPoint;
         const Vector3 cnorm = collisionNormal;
         const float bouncinessEpsilon = (1.0f + params.bounciness);
-        Plane collisionPlane(collisionPoint, collisionNormal);
+        const Plane collisionPlane(collisionPoint, collisionNormal);
         float planePointNoIntDist =
             collisionPlane.GetDistanceTo(newPositionNoInt);
         float correctionDist = Math::Sign(planePointNoIntDist) *
                                Math::Max(Math::Abs(planePointNoIntDist), 0.1f);
-        Vector3 newPos =
-            newPositionNoInt - bouncinessEpsilon * correctionDist * cnorm;
-        newPositionAfterInt = newPos;
+        Vector3 newPos = newPositionNoInt -
+                         bouncinessEpsilon * correctionDist * cnorm +
+                         (cnorm * 0.05f);
+        *newPositionAfterInt = newPos;
 
 #ifdef DEBUG
         float distanceBefore = collisionPlane.GetDistanceTo(newPositionNoInt);
-        float distanceAfter = collisionPlane.GetDistanceTo(newPositionAfterInt);
+        float distanceAfter =
+            collisionPlane.GetDistanceTo(*newPositionAfterInt);
         ASSERT(Math::Sign(distanceBefore) != Math::Sign(distanceAfter));
 #endif
 
@@ -323,8 +328,19 @@ bool Particle::CollideParticle(Collider *collider,
             newVelocityNoInt -
             bouncinessEpsilon * cnorm *
                 collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
-        newVelocityAfterInt = newVel;
+        *newVelocityAfterInt = newVel;
+
+        *frictionForce =
+            params.friction *
+            -collisionPlane.GetProjectedVector(*newVelocityAfterInt);
     }
 
     return collided;
+}
+
+Vector3 Particle::Data::GetNetForce(const Particle::Parameters &params) const
+{
+    Physics *ph = Physics::GetInstance();
+    return (ph->GetGravity() * params.gravityMultiplier) + frictionForce +
+           extraForce;
 }

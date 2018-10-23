@@ -21,6 +21,7 @@ public:
 
     void SetClothSize(float clothSize);
     void SetBounciness(float bounciness);
+    void SetFriction(float friction);
     void SetDamping(float damping);
     void SetSpringsDamping(float springsDamping);
     void SetSubdivisions(uint subdivisions);
@@ -30,6 +31,7 @@ public:
 
     Mesh *GetMesh() const;
     float GetDamping() const;
+    float GetFriction() const;
     float GetBounciness() const;
     float GetSpringsDamping() const;
     float GetClothSize() const;

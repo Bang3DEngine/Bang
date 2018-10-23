@@ -33,6 +33,7 @@ Cloth::Cloth()
     m_debugPointsMaterial.Get()->SetReceivesLighting(false);
 
     m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
+    m_particleParams.gravityMultiplier = 1.0f;
     m_particleParams.computeCollisions = true;
     m_particleParams.bounciness = 0.05f;
     m_particleParams.damping = 0.95f;
@@ -83,6 +84,11 @@ void Cloth::SetBounciness(float bounciness)
     {
         m_particleParams.bounciness = bounciness;
     }
+}
+
+void Cloth::SetFriction(float friction)
+{
+    m_particleParams.friction = friction;
 }
 
 void Cloth::SetDamping(float damping)
@@ -138,6 +144,11 @@ float Cloth::GetDamping() const
     return GetParameters().damping;
 }
 
+float Cloth::GetFriction() const
+{
+    return GetParameters().friction;
+}
+
 float Cloth::GetBounciness() const
 {
     return GetParameters().bounciness;
@@ -187,7 +198,6 @@ void Cloth::OnUpdate()
     ASSERT(GetSubdivisions() >= 2);
 
     Physics *ph = Physics::GetInstance();
-    m_particleParams.gravity = ph->GetGravity();
     m_particleParams.colliders =
         ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene())
             ->GetColliders();
@@ -323,6 +333,12 @@ void Cloth::Reflect()
         ->GetHintsPtr()
         ->Update(BANG_REFLECT_HINT_HIDDEN(true));
 
+    ReflectVar<bool>(
+        "Wireframe",
+        [this](bool w) { GetActiveMaterial()->SetRenderWireframe(w); },
+        [this]() -> bool { return GetActiveMaterial()->GetRenderWireframe(); },
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+
     BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
                                    "Size",
                                    SetClothSize,
@@ -354,6 +370,12 @@ void Cloth::Reflect()
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
+                                   "Friction",
+                                   SetFriction,
+                                   GetFriction,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
                                    "Springs Damping",
                                    SetSpringsDamping,
                                    GetSpringsDamping,
@@ -375,8 +397,6 @@ void Cloth::InitParticle(uint i, const Particle::Parameters &params)
 {
     if (GetGameObject())
     {
-        Physics *ph = Physics::GetInstance();
-
         Particle::Data *pData = &m_particlesData[i];
         *pData = Particle::Data();
 
@@ -385,21 +405,18 @@ void Cloth::InitParticle(uint i, const Particle::Parameters &params)
         pData->totalLifeTime = Math::Infinity<float>();
         pData->remainingLifeTime = pData->totalLifeTime;
         pData->remainingStartTime = 0.0f;
-        pData->force = ph->GetGravity();
         pData->size = 1.0f;
     }
 }
 
 void Cloth::AddSpringForces()
 {
-    Physics *ph = Physics::GetInstance();
-
     const float clothSubdivLength = Math::Max(GetSubdivisionLength(), 0.0001f);
     for (int i = 0; i < GetSubdivisions(); ++i)
     {
         for (int j = 0; j < GetSubdivisions(); ++j)
         {
-            Vector3 force = ph->GetGravity();
+            Vector3 springsForce = Vector3::Zero;
 
             const uint particleIndex = (i * GetSubdivisions() + j);
             const uint pi = particleIndex;
@@ -428,14 +445,16 @@ void Cloth::AddSpringForces()
                 float forceMagnitude = (diffLength - expectedLength);
                 if (Math::Abs(forceMagnitude) > 0.001f)
                 {
-                    force += forceDir * forceMagnitude * GetSpringsForce();
+                    springsForce +=
+                        forceDir * forceMagnitude * GetSpringsForce();
                 }
 
-                force += GetSpringsDamping() * (m_particlesData[npi].velocity -
-                                                m_particlesData[pi].velocity);
+                springsForce +=
+                    GetSpringsDamping() * (m_particlesData[npi].velocity -
+                                           m_particlesData[pi].velocity);
             }
 
-            pData->force = force;
+            pData->extraForce = springsForce;
         }
     }
 }

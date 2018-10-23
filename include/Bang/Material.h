@@ -74,7 +74,7 @@ public:
     Texture2D *GetMetalnessTexture() const;
     Texture2D *GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
-    bool IsRenderWireframe() const;
+    bool GetRenderWireframe() const;
     GL::CullFaceExt GetCullFace() const;
     float GetLineWidth() const;
 

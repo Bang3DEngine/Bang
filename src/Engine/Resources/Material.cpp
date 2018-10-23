@@ -56,7 +56,7 @@ const NeededUniformFlags &Material::GetNeededUniforms() const
 
 void Material::SetRenderWireframe(bool renderWireframe)
 {
-    if (renderWireframe != IsRenderWireframe())
+    if (renderWireframe != GetRenderWireframe())
     {
         m_renderWireframe = renderWireframe;
         PropagateResourceChanged();
@@ -302,7 +302,7 @@ float Material::GetLineWidth() const
 {
     return m_lineWidth;
 }
-bool Material::IsRenderWireframe() const
+bool Material::GetRenderWireframe() const
 {
     return m_renderWireframe;
 }
@@ -321,7 +321,7 @@ void Material::Bind() const
 
     sp->Bind();
 
-    GL::SetWireframe(IsRenderWireframe());
+    GL::SetWireframe(GetRenderWireframe());
     GL::LineWidth(GetLineWidth());
     GL::PointSize(GetLineWidth());
 
@@ -440,7 +440,7 @@ void Material::CloneInto(ICloneable *clone) const
     matClone->SetLineWidth(GetLineWidth());
     matClone->SetRoughnessTexture(GetRoughnessTexture());
     matClone->SetMetalnessTexture(GetMetalnessTexture());
-    matClone->SetRenderWireframe(IsRenderWireframe());
+    matClone->SetRenderWireframe(GetRenderWireframe());
     matClone->SetCullFace(GetCullFace());
 }
 
@@ -593,7 +593,7 @@ void Material::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NormalMapUvOffset", GetNormalMapUvOffset());
     metaNode->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
     metaNode->Set("LineWidth", GetLineWidth());
-    metaNode->Set("RenderWireframe", IsRenderWireframe());
+    metaNode->Set("RenderWireframe", GetRenderWireframe());
     metaNode->Set("CullFace", GetCullFace());
 
     Texture2D *albedoTex = GetAlbedoTexture();

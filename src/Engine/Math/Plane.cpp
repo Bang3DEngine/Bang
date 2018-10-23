@@ -31,24 +31,29 @@ const Vector3 &Plane::GetNormal() const
     return m_normal;
 }
 
-Vector3 Plane::GetMirroredPoint(const Vector3 &point)
+Vector3 Plane::GetMirroredPoint(const Vector3 &point) const
 {
     Vector3 mirroredPoint = point - (GetNormal() * GetDistanceTo(point)) * 2.0f;
     return mirroredPoint;
 }
 
-Vector3 Plane::GetProjectedPoint(const Vector3 &point)
+Vector3 Plane::GetProjectedPoint(const Vector3 &point) const
 {
     Vector3 projectedPoint = point - (GetNormal() * GetDistanceTo(point));
     return projectedPoint;
 }
 
-Vector3 Plane::GetMirroredVector(const Vector3 &vector)
+Vector3 Plane::GetProjectedVector(const Vector3 &vector) const
+{
+    return Plane::GetProjectedPoint(vector);
+}
+
+Vector3 Plane::GetMirroredVector(const Vector3 &vector) const
 {
     return GetMirroredPoint(GetPoint() + vector) - GetPoint();
 }
 
-float Plane::GetDistanceTo(const Vector3 &point)
+float Plane::GetDistanceTo(const Vector3 &point) const
 {
     float dist = Vector3::Dot(point - GetPoint(), GetNormal());
     return dist;

@@ -263,3 +263,14 @@ void MetaNode::Import(const Path &filepath)
         Debug_Error("Filepath " << filepath << " not found!");
     }
 }
+
+bool MetaNode::operator==(const MetaNode &rhs) const
+{
+    return (m_name == rhs.m_name) && (m_children == rhs.m_children) &&
+           (m_attributes == m_attributes);
+}
+
+bool MetaNode::operator!=(const MetaNode &rhs) const
+{
+    return !(*this == rhs);
+}

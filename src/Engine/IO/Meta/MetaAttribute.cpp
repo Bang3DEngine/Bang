@@ -76,6 +76,16 @@ MetaAttribute MetaAttribute::FromString(const String &string)
     return attribute;
 }
 
+bool MetaAttribute::operator==(const MetaAttribute &rhs) const
+{
+    return GetName() == rhs.GetName() && m_value == rhs.m_value;
+}
+
+bool MetaAttribute::operator!=(const MetaAttribute &rhs) const
+{
+    return !(*this == rhs);
+}
+
 void MetaAttribute::SetValue(const String &value)
 {
     m_value = value;

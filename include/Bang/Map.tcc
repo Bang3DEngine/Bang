@@ -270,4 +270,18 @@ Value &Map<Key, Value, Compare>::operator[](const Key &k)
 {
     return m_map[k];
 }
+
+template <class Key, class Value, class Compare>
+bool Map<Key, Value, Compare>::operator==(
+    const Map<Key, Value, Compare> &rhs) const
+{
+    return m_map == rhs.m_map;
+}
+
+template <class Key, class Value, class Compare>
+bool Map<Key, Value, Compare>::operator!=(
+    const Map<Key, Value, Compare> &rhs) const
+{
+    return !(*this == rhs);
+}
 }

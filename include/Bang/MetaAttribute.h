@@ -44,6 +44,9 @@ public:
         return t;
     }
 
+    bool operator==(const MetaAttribute &rhs) const;
+    bool operator!=(const MetaAttribute &rhs) const;
+
 protected:
     String m_name = "";
     String m_value = "";

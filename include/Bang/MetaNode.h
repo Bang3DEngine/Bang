@@ -73,6 +73,9 @@ public:
     void Import(const YAML::Node &yamlNode);
     void Import(const Path &filepath);
 
+    bool operator==(const MetaNode &rhs) const;
+    bool operator!=(const MetaNode &rhs) const;
+
 private:
     String m_name = "NoName";
     mutable Map<String, Array<MetaNode>> m_children;

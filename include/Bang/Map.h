@@ -69,6 +69,9 @@ public:
     Const_Iterator cbegin() const;
     Const_Iterator cend() const;
 
+    bool operator==(const Map<Key, Value, Compare> &rhs) const;
+    bool operator!=(const Map<Key, Value, Compare> &rhs) const;
+
 private:
     std::map<Key, Value, Compare> m_map;
 };

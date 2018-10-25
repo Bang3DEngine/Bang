@@ -27,11 +27,13 @@ public:
     virtual ~AnimatorStateMachine();
 
     AnimatorStateMachineLayer *CreateNewLayer();
+    void MoveLayer(uint oldIndex, uint newIndex);
     void RemoveLayer(AnimatorStateMachineLayer *layer);
 
     AnimatorStateMachineVariable *CreateNewVariable();
     void SetVariableFloat(const String &varName, const float value);
     void SetVariableBool(const String &varName, const bool value);
+    void MoveVariable(uint oldIndex, uint newIndex);
     void RemoveVariable(AnimatorStateMachineVariable *var);
     void RemoveVariable(uint varIdx);
 

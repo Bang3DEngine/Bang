@@ -28,6 +28,17 @@ AnimatorStateMachineLayer *AnimatorStateMachine::CreateNewLayer()
     return layer;
 }
 
+void AnimatorStateMachine::MoveLayer(uint oldIndex, uint newIndex_)
+{
+    if (oldIndex < GetLayers().Size() && newIndex_ <= GetLayers().Size())
+    {
+        uint newIndex = newIndex_ - (newIndex_ >= oldIndex ? 1 : 0);
+        AnimatorStateMachineLayer *movingLayer = GetLayers()[oldIndex];
+        m_layers.RemoveByIndex(oldIndex);
+        m_layers.Insert(movingLayer, newIndex);
+    }
+}
+
 void AnimatorStateMachine::RemoveLayer(AnimatorStateMachineLayer *layer)
 {
     if (m_layers.Contains(layer))
@@ -103,6 +114,17 @@ void AnimatorStateMachine::SetVariableBool(const String &varName,
     AnimatorStateMachineVariable *var = CreateOrGetVariable(varName);
     var->SetType(AnimatorStateMachineVariable::Type::BOOL);
     var->SetValueBool(value);
+}
+
+void AnimatorStateMachine::MoveVariable(uint oldIndex, uint newIndex_)
+{
+    if (oldIndex < GetLayers().Size() && newIndex_ <= GetLayers().Size())
+    {
+        uint newIndex = newIndex_ - (newIndex_ >= oldIndex ? 1 : 0);
+        AnimatorStateMachineLayer *movingLayer = GetLayers()[oldIndex];
+        m_layers.RemoveByIndex(oldIndex);
+        m_layers.Insert(movingLayer, newIndex);
+    }
 }
 
 void AnimatorStateMachine::RemoveVariable(AnimatorStateMachineVariable *var)

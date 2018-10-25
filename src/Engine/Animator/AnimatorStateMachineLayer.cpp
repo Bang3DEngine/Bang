@@ -206,26 +206,22 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
         SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
     }
 
-    if (metaNode.GetChildren("Nodes").Size() >= 1)
+    Clear();
     {
-        Clear();
+        const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
 
         // First just create the nodes (so that indices work nice)...
+        for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
         {
-            const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
-            for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
-            {
-                CreateAndAddNode();
-            }
+            CreateAndAddNode();
+        }
 
-            // Now import nodes meta
-            uint i = 0;
-            for (const MetaNode &childMetaNode : childrenMetaNodes)
-            {
-                AnimatorStateMachineNode *node = GetNode(i);
-                node->ImportMeta(childMetaNode);
-                ++i;
-            }
+        // Now import nodes meta
+        for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
+        {
+            const MetaNode &childMetaNode = childrenMetaNodes[i];
+            AnimatorStateMachineNode *node = GetNode(i);
+            node->ImportMeta(childMetaNode);
         }
     }
 }
@@ -238,6 +234,7 @@ void AnimatorStateMachineLayer::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("BoneName", GetBoneName());
     metaNode->Set("EntryNodeIdx", GetEntryNodeIdx());
 
+    metaNode->CreateChildrenContainer("Nodes");
     for (const AnimatorStateMachineNode *smNode : GetNodes())
     {
         MetaNode smNodeMeta = smNode->GetMeta();

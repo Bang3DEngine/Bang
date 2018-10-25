@@ -185,6 +185,7 @@ void AnimatorStateMachineTransition::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("ImmediateTransition", GetImmediateTransition());
     metaNode->Set("TransitionDuration", GetTransitionDuration());
 
+    metaNode->CreateChildrenContainer("TransitionConditions");
     for (const AnimatorStateMachineTransitionCondition *transitionCond :
          GetTransitionConditions())
     {

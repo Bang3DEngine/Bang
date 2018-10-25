@@ -34,6 +34,14 @@ MetaNode::~MetaNode()
 {
 }
 
+void MetaNode::CreateChildrenContainer(const String &childrenContainerName)
+{
+    if (!ContainsChildren(childrenContainerName))
+    {
+        m_children[childrenContainerName] = Array<MetaNode>();
+    }
+}
+
 void MetaNode::AddChild(const MetaNode &childNode,
                         const String &childrenContainerName)
 {
@@ -127,6 +135,22 @@ const MetaNode *MetaNode::GetChild(const String &name) const
     return nullptr;
 }
 
+MetaNode *MetaNode::GetChild(const String &childrenContainerName, uint i)
+{
+    if (ContainsChildren(childrenContainerName) &&
+        i < GetChildren(childrenContainerName).Size())
+    {
+        return &(m_children[childrenContainerName][i]);
+    }
+    return nullptr;
+}
+
+const MetaNode *MetaNode::GetChild(const String &childrenContainerName,
+                                   uint i) const
+{
+    return const_cast<MetaNode *>(this)->GetChild(childrenContainerName, i);
+}
+
 void MetaNode::SetName(const String name)
 {
     m_name = name;
@@ -197,6 +221,11 @@ const Array<MetaNode> &MetaNode::GetChildren(
     const String &childrenContainerName) const
 {
     return m_children[childrenContainerName];
+}
+
+bool MetaNode::ContainsChildren(const String &childrenContainerName) const
+{
+    return m_children.ContainsKey(childrenContainerName);
 }
 
 void MetaNode::Import(const String &metaString)

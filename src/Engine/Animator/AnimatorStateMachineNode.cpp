@@ -25,6 +25,7 @@ AnimatorStateMachineNode::~AnimatorStateMachineNode()
 {
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
+
     while (!m_transitions.IsEmpty())
     {
         RemoveTransition(m_transitions.Back());
@@ -187,6 +188,8 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NodeName", GetName());
     metaNode->Set("Animation",
                   GetAnimation() ? GetAnimation()->GetGUID() : GUID::Empty());
+
+    metaNode->CreateChildrenContainer("Transitions");
     for (const AnimatorStateMachineTransition *smTransition : GetTransitions())
     {
         MetaNode smTransitionMeta = smTransition->GetMeta();

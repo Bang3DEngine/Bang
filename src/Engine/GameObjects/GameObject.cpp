@@ -287,8 +287,18 @@ Component *GameObject::AddComponent_(Component *component, int index_)
 
 void GameObject::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    m_gameObjectsToDestroyDelayed.Remove(SCAST<GameObject *>(object));
-    m_componentsToDestroyDelayed.Remove(SCAST<Component *>(object));
+    if (object)
+    {
+        if (GameObject *go = DCAST<GameObject *>(object))
+        {
+            m_gameObjectsToDestroyDelayed.Remove(go);
+        }
+
+        if (Component *comp = DCAST<Component *>(object))
+        {
+            m_componentsToDestroyDelayed.Remove(comp);
+        }
+    }
 }
 
 bool GameObject::CalculateEnabledRecursively() const

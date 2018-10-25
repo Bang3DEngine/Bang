@@ -214,12 +214,14 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
 
+    metaNode->CreateChildrenContainer("Layers");
     for (const AnimatorStateMachineLayer *layer : GetLayers())
     {
         MetaNode layerMeta = layer->GetMeta();
         metaNode->AddChild(layerMeta, "Layers");
     }
 
+    metaNode->CreateChildrenContainer("Variables");
     for (const AnimatorStateMachineVariable *var : GetVariables())
     {
         MetaNode varMeta = var->GetMeta();

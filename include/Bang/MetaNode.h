@@ -28,6 +28,7 @@ public:
     MetaNode(const String &nodeName);
     virtual ~MetaNode();
 
+    void CreateChildrenContainer(const String &childrenContainerName);
     void AddChild(const MetaNode &childNode,
                   const String &childrenContainerName);
 
@@ -58,6 +59,8 @@ public:
     String GetAttributeValue(const String &attributeName) const;
 
     const MetaNode *GetChild(const String &name) const;
+    MetaNode *GetChild(const String &childrenContainerName, uint i);
+    const MetaNode *GetChild(const String &childrenContainerName, uint i) const;
     void SetName(const String name);
     String ToString() const;
     void ToString(YAML::Emitter &out) const;
@@ -66,6 +69,7 @@ public:
     const Map<String, MetaAttribute> &GetAttributes() const;
     const Array<MetaNode> &GetChildren(
         const String &childrenContainerName) const;
+    bool ContainsChildren(const String &childrenContainerName) const;
     const Map<String, Array<MetaNode>> &GetAllChildren() const;
 
     void Import(const MetaNode &metaNode);

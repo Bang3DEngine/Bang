@@ -6,23 +6,23 @@
 namespace Bang
 {
 class AnimatorStateMachineNode;
-class AnimatorStateMachineConnection;
+class AnimatorStateMachineTransition;
 
 class IEventsAnimatorStateMachineNode
 {
     IEVENTS(IEventsAnimatorStateMachineNode);
 
 public:
-    virtual void OnConnectionAdded(AnimatorStateMachineNode *node,
-                                   AnimatorStateMachineConnection *connection)
+    virtual void OnTransitionAdded(AnimatorStateMachineNode *node,
+                                   AnimatorStateMachineTransition *transition)
     {
-        BANG_UNUSED_2(node, connection);
+        BANG_UNUSED_2(node, transition);
     }
 
-    virtual void OnConnectionRemoved(AnimatorStateMachineNode *node,
-                                     AnimatorStateMachineConnection *connection)
+    virtual void OnTransitionRemoved(AnimatorStateMachineNode *node,
+                                     AnimatorStateMachineTransition *transition)
     {
-        BANG_UNUSED_2(node, connection);
+        BANG_UNUSED_2(node, transition);
     }
 };
 }

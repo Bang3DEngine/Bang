@@ -1,127 +1,48 @@
 #include "Bang/AnimatorStateMachine.h"
 
-#include <sys/types.h>
-
-#include "Bang/AnimatorStateMachineConnection.h"
-#include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
+#include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachineTransition.h"
+#include "Bang/AnimatorStateMachineTransitionCondition.h"
 #include "Bang/AnimatorStateMachineVariable.h"
-#include "Bang/EventEmitter.tcc"
-#include "Bang/IEventsAnimatorStateMachine.h"
-#include "Bang/IEventsDestroy.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
-#include "Bang/MetaNode.tcc"
-#include "Bang/Path.h"
 
 using namespace Bang;
 
 AnimatorStateMachine::AnimatorStateMachine()
 {
-    AnimatorStateMachineNode *entryNode = CreateAndAddNode();
-    entryNode->SetName("Entry");
-
     EventEmitter<IEventsAnimatorStateMachine>::RegisterListener(this);
 }
 
 AnimatorStateMachine::~AnimatorStateMachine()
 {
-    EventEmitter<IEventsDestroy>::PropagateToListeners(
-        &IEventsDestroy::OnDestroyed, this);
-    Clear();
 }
 
-AnimatorStateMachineNode *AnimatorStateMachine::CreateAndAddNode()
+AnimatorStateMachineLayer *AnimatorStateMachine::CreateNewLayer()
 {
-    AnimatorStateMachineNode *newSMNode = new AnimatorStateMachineNode(this);
-    m_nodes.PushBack(newSMNode);
-
-    if (!GetEntryNode())
-    {
-        SetEntryNode(newSMNode);
-    }
-
-    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-        &IEventsAnimatorStateMachine::OnNodeCreated,
-        this,
-        m_nodes.Size() - 1,
-        newSMNode);
-
-    return newSMNode;
+    AnimatorStateMachineLayer *layer = new AnimatorStateMachineLayer();
+    layer->SetStateMachine(this);
+    layer->SetLayerName("New Layer");
+    m_layers.PushBack(layer);
+    return layer;
 }
 
-const AnimatorStateMachineNode *AnimatorStateMachine::GetNode(
-    uint nodeIdx) const
+void AnimatorStateMachine::RemoveLayer(AnimatorStateMachineLayer *layer)
 {
-    return const_cast<AnimatorStateMachine *>(this)->GetNode(nodeIdx);
-}
-
-AnimatorStateMachineNode *AnimatorStateMachine::GetNode(uint nodeIdx)
-{
-    if (nodeIdx < m_nodes.Size())
+    if (m_layers.Contains(layer))
     {
-        return m_nodes[nodeIdx];
-    }
-    return nullptr;
-}
+        m_layers.Remove(layer);
 
-void AnimatorStateMachine::RemoveNode(AnimatorStateMachineNode *nodeToRemove)
-{
-    for (AnimatorStateMachineNode *node : m_nodes)
-    {
-        for (uint i = 0; i < node->GetConnections().Size();)
-        {
-            AnimatorStateMachineConnection *conn = node->GetConnection(i);
-            if (conn->GetNodeTo() == nodeToRemove ||
-                conn->GetNodeFrom() == nodeToRemove)
-            {
-                node->RemoveConnection(conn);
-            }
-            else
-            {
-                ++i;
-            }
-        }
-    }
-
-    const uint idxToRemove = GetNodes().IndexOf(nodeToRemove);
-
-    EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
-        &IEventsAnimatorStateMachine::OnNodeRemoved,
-        this,
-        idxToRemove,
-        nodeToRemove);
-
-    m_nodes.Remove(nodeToRemove);
-    delete nodeToRemove;
-
-    if (idxToRemove == GetEntryNodeIdx())
-    {
-        SetEntryNodeIdx(0);
-    }
-}
-
-void AnimatorStateMachine::SetEntryNode(AnimatorStateMachineNode *entryNode)
-{
-    SetEntryNodeIdx(GetNodes().IndexOf(entryNode));
-}
-
-void AnimatorStateMachine::SetEntryNodeIdx(uint entryNodeIdx)
-{
-    if (entryNodeIdx < GetNodes().Size())
-    {
-        m_entryNodeIdx = entryNodeIdx;
-    }
-    else
-    {
-        m_entryNodeIdx = -1u;
+        EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
+            &IEventsAnimatorStateMachine::OnLayerRemoved, this, layer);
     }
 }
 
 AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
 {
     AnimatorStateMachineVariable *var = new AnimatorStateMachineVariable();
-    var->p_animatorSM = this;
+    var->SetStateMachine(this);
 
     String varName = "NewVariable";
     varName = Path::GetDuplicateString(varName, GetVariablesNames());
@@ -150,15 +71,18 @@ void AnimatorStateMachine::OnVariableNameChanged(
     const String &nextVariableName)
 {
     BANG_UNUSED(variable);
-    for (AnimatorStateMachineNode *node : GetNodes())
+    for (AnimatorStateMachineLayer *layer : GetLayers())
     {
-        for (AnimatorStateMachineConnection *conn : node->GetConnections())
+        for (AnimatorStateMachineNode *node : layer->GetNodes())
         {
-            for (auto transCond : conn->GetTransitionConditions())
+            for (AnimatorStateMachineTransition *trans : node->GetTransitions())
             {
-                if (transCond->GetVariableName() == prevVariableName)
+                for (auto transCond : trans->GetTransitionConditions())
                 {
-                    transCond->SetVariableName(nextVariableName);
+                    if (transCond->GetVariableName() == prevVariableName)
+                    {
+                        transCond->SetVariableName(nextVariableName);
+                    }
                 }
             }
         }
@@ -213,42 +137,6 @@ bool AnimatorStateMachine::GetVariableBool(const String &varName) const
     return false;
 }
 
-AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNode() const
-{
-    if (GetEntryNodeIdx() < GetNodes().Size())
-    {
-        return GetNodes()[GetEntryNodeIdx()];
-    }
-    return nullptr;
-}
-
-AnimatorStateMachineNode *AnimatorStateMachine::GetEntryNodeOrFirstFound() const
-{
-    if (AnimatorStateMachineNode *entryNode = GetEntryNode())
-    {
-        return entryNode;
-    }
-    return ((m_nodes.Size() >= 1) ? m_nodes.Front() : nullptr);
-}
-
-uint AnimatorStateMachine::GetEntryNodeIdx() const
-{
-    return m_entryNodeIdx;
-}
-
-void AnimatorStateMachine::Clear()
-{
-    while (!m_nodes.IsEmpty())
-    {
-        RemoveNode(m_nodes.Back());
-    }
-
-    while (!m_variables.IsEmpty())
-    {
-        RemoveVariable(m_variables.Size() - 1);
-    }
-}
-
 AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
     const String &varName) const
 {
@@ -262,15 +150,29 @@ AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
     return nullptr;
 }
 
-const Array<AnimatorStateMachineNode *> &AnimatorStateMachine::GetNodes() const
-{
-    return m_nodes;
-}
-
 const Array<AnimatorStateMachineVariable *>
     &AnimatorStateMachine::GetVariables() const
 {
     return m_variables;
+}
+
+const Array<AnimatorStateMachineLayer *> &AnimatorStateMachine::GetLayers()
+    const
+{
+    return m_layers;
+}
+
+void AnimatorStateMachine::Clear()
+{
+    while (!m_layers.IsEmpty())
+    {
+        RemoveLayer(m_layers.Back());
+    }
+
+    while (!m_variables.IsEmpty())
+    {
+        RemoveVariable(m_variables.Size() - 1);
+    }
 }
 
 Array<String> AnimatorStateMachine::GetVariablesNames() const
@@ -285,46 +187,26 @@ Array<String> AnimatorStateMachine::GetVariablesNames() const
 
 void AnimatorStateMachine::Import(const Path &resourceFilepath)
 {
-    ImportMetaFromFile(MetaFilesManager::GetMetaFilepath(resourceFilepath));
+    BANG_UNUSED(resourceFilepath);
+    Clear();
 }
 
 void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
-    if (metaNode.Contains("EntryNodeIdx"))
+    const auto &layersMetaNodes = metaNode.GetChildren("Layers");
+    for (const MetaNode &layerMetaNode : layersMetaNodes)
     {
-        SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
+        AnimatorStateMachineLayer *layer = CreateNewLayer();
+        layer->ImportMeta(layerMetaNode);
     }
 
-    if (metaNode.GetChildren("Nodes").Size() >= 1)
+    const auto &varsMetaNodes = metaNode.GetChildren("Variables");
+    for (const MetaNode &varMetaNode : varsMetaNodes)
     {
-        Clear();
-
-        // First just create the nodes (so that indices work nice)...
-        {
-            const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
-            for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
-            {
-                CreateAndAddNode();
-            }
-
-            // Now import nodes meta
-            uint i = 0;
-            for (const MetaNode &childMetaNode : childrenMetaNodes)
-            {
-                AnimatorStateMachineNode *node = GetNode(i);
-                node->ImportMeta(childMetaNode);
-                ++i;
-            }
-        }
-
-        const auto &varsMetaNodes = metaNode.GetChildren("Variables");
-        for (const MetaNode &varMetaNode : varsMetaNodes)
-        {
-            AnimatorStateMachineVariable *var = CreateNewVariable();
-            var->ImportMeta(varMetaNode);
-        }
+        AnimatorStateMachineVariable *var = CreateNewVariable();
+        var->ImportMeta(varMetaNode);
     }
 }
 
@@ -332,12 +214,10 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
 
-    metaNode->Set("EntryNodeIdx", GetEntryNodeIdx());
-
-    for (const AnimatorStateMachineNode *smNode : GetNodes())
+    for (const AnimatorStateMachineLayer *layer : GetLayers())
     {
-        MetaNode smNodeMeta = smNode->GetMeta();
-        metaNode->AddChild(smNodeMeta, "Nodes");
+        MetaNode layerMeta = layer->GetMeta();
+        metaNode->AddChild(layerMeta, "Layers");
     }
 
     for (const AnimatorStateMachineVariable *var : GetVariables())

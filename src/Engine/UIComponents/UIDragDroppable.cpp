@@ -52,7 +52,10 @@ void UIDragDroppable::OnUpdate()
                 if (inputEvent.type == InputEvent::Type::MOUSE_DOWN &&
                     inputEvent.mouseButton == MouseButton::LEFT)
                 {
-                    m_pressTime = inputEvent.timestamp;
+                    m_pressTime = Time::GetNow();
+                    // Cant use event timestamp because sometimes its not
+                    // correct and causes a bug in which all clicks are drags
+                    // m_pressTime = inputEvent.timestamp;
 
                     RectTransform *thisRT = GetGameObject()->GetRectTransform();
                     const AARecti thisRect(thisRT->GetViewportAARect());

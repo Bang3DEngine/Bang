@@ -2,7 +2,8 @@
 
 #include "Bang/Animation.h"
 #include "Bang/AnimatorStateMachine.h"
-#include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/AnimatorStateMachineLayer.h"
+#include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/Assert.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/GUID.h"
@@ -15,10 +16,8 @@
 
 using namespace Bang;
 
-AnimatorStateMachineNode::AnimatorStateMachineNode(
-    AnimatorStateMachine *stateMachine)
+AnimatorStateMachineNode::AnimatorStateMachineNode()
 {
-    p_stateMachine = stateMachine;
     SetName("Node");
 }
 
@@ -26,9 +25,9 @@ AnimatorStateMachineNode::~AnimatorStateMachineNode()
 {
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
-    while (!m_connections.IsEmpty())
+    while (!m_transitions.IsEmpty())
     {
-        RemoveConnection(m_connections.Back());
+        RemoveTransition(m_transitions.Back());
     }
 }
 
@@ -37,62 +36,68 @@ void AnimatorStateMachineNode::SetName(const String &name)
     m_name = name;
 }
 
-AnimatorStateMachineConnection *AnimatorStateMachineNode::CreateConnectionTo(
+AnimatorStateMachineTransition *AnimatorStateMachineNode::CreateTransitionTo(
     AnimatorStateMachineNode *nodeTo)
 {
-    auto newConnection = new AnimatorStateMachineConnection(p_stateMachine);
-    newConnection->SetNodeFrom(this);
-    newConnection->SetNodeTo(nodeTo);
-    return AddConnection(newConnection);
+    auto newTransition = new AnimatorStateMachineTransition();
+    newTransition->SetNodeFrom(this);
+    newTransition->SetNodeTo(nodeTo);
+    return AddTransition(newTransition);
 }
 
-const AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
-    uint connectionIdx) const
+const AnimatorStateMachineTransition *AnimatorStateMachineNode::GetTransition(
+    uint transitionIdx) const
 {
-    return const_cast<AnimatorStateMachineNode *>(this)->GetConnection(
-        connectionIdx);
+    return const_cast<AnimatorStateMachineNode *>(this)->GetTransition(
+        transitionIdx);
 }
 
-AnimatorStateMachineConnection *AnimatorStateMachineNode::GetConnection(
-    uint connectionIdx)
+AnimatorStateMachineTransition *AnimatorStateMachineNode::GetTransition(
+    uint transitionIdx)
 {
-    if (connectionIdx < GetConnections().Size())
+    if (transitionIdx < GetTransitions().Size())
     {
-        return m_connections[connectionIdx];
+        return m_transitions[transitionIdx];
     }
     return nullptr;
 }
 
-void AnimatorStateMachineNode::RemoveConnection(
-    AnimatorStateMachineConnection *connectionToRemove)
+void AnimatorStateMachineNode::RemoveTransition(
+    AnimatorStateMachineTransition *transitionToRemove)
 {
-    if (m_connections.Contains(connectionToRemove))
+    if (m_transitions.Contains(transitionToRemove))
     {
-        m_connections.Remove(connectionToRemove);
+        m_transitions.Remove(transitionToRemove);
 
         EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
-            &IEventsAnimatorStateMachineNode::OnConnectionRemoved,
+            &IEventsAnimatorStateMachineNode::OnTransitionRemoved,
             this,
-            connectionToRemove);
+            transitionToRemove);
 
-        delete connectionToRemove;
+        delete transitionToRemove;
     }
 }
 
-AnimatorStateMachineConnection *AnimatorStateMachineNode::AddConnection(
-    AnimatorStateMachineConnection *newConnection)
+void AnimatorStateMachineNode::SetLayer(
+    AnimatorStateMachineLayer *stateMachineLayer)
 {
-    ASSERT(newConnection->GetNodeFrom() == this);
-    ASSERT(newConnection->GetNodeTo() != nullptr);
-    ASSERT(newConnection->GetNodeTo() != this);
+    p_layer = stateMachineLayer;
+}
 
-    m_connections.PushBack(newConnection);
+AnimatorStateMachineTransition *AnimatorStateMachineNode::AddTransition(
+    AnimatorStateMachineTransition *newTransition)
+{
+    ASSERT(newTransition->GetNodeFrom() == this);
+    ASSERT(newTransition->GetNodeTo() != nullptr);
+    ASSERT(newTransition->GetNodeTo() != this);
+
+    m_transitions.PushBack(newTransition);
     EventEmitter<IEventsAnimatorStateMachineNode>::PropagateToListeners(
-        &IEventsAnimatorStateMachineNode::OnConnectionAdded,
+        &IEventsAnimatorStateMachineNode::OnTransitionAdded,
         this,
-        newConnection);
+        newTransition);
 
-    return newConnection;
+    return newTransition;
 }
 
 void AnimatorStateMachineNode::SetAnimation(Animation *animation)
@@ -110,32 +115,45 @@ Animation *AnimatorStateMachineNode::GetAnimation() const
     return p_animation.Get();
 }
 
-Array<AnimatorStateMachineConnection *>
-AnimatorStateMachineNode::GetConnectionsTo(
+Array<AnimatorStateMachineTransition *>
+AnimatorStateMachineNode::GetTransitionsTo(
     AnimatorStateMachineNode *nodeTo) const
 {
-    Array<AnimatorStateMachineConnection *> connectionsToNode;
-    for (AnimatorStateMachineConnection *connection : GetConnections())
+    Array<AnimatorStateMachineTransition *> transitionsToNode;
+    for (AnimatorStateMachineTransition *transition : GetTransitions())
     {
-        if (connection->GetNodeTo() == nodeTo)
+        if (transition->GetNodeTo() == nodeTo)
         {
-            connectionsToNode.PushBack(connection);
+            transitionsToNode.PushBack(transition);
         }
     }
-    return connectionsToNode;
+    return transitionsToNode;
 }
 
-const Array<AnimatorStateMachineConnection *>
-    &AnimatorStateMachineNode::GetConnections() const
+const Array<AnimatorStateMachineTransition *>
+    &AnimatorStateMachineNode::GetTransitions() const
 {
-    return m_connections;
+    return m_transitions;
 }
 
-void AnimatorStateMachineNode::CloneInto(
-    AnimatorStateMachineNode *nodeToCloneTo) const
+AnimatorStateMachine *AnimatorStateMachineNode::GetStateMachine() const
 {
-    nodeToCloneTo->SetName(GetName());
-    nodeToCloneTo->SetAnimation(GetAnimation());
+    return GetLayer() ? GetLayer()->GetStateMachine() : nullptr;
+}
+
+AnimatorStateMachineLayer *AnimatorStateMachineNode::GetLayer() const
+{
+    return p_layer;
+}
+
+void AnimatorStateMachineNode::CloneInto(ICloneable *clone) const
+{
+    Serializable::CloneInto(clone);
+
+    AnimatorStateMachineNode *nodeClone =
+        SCAST<AnimatorStateMachineNode *>(clone);
+    nodeClone->SetName(GetName());
+    nodeClone->SetAnimation(GetAnimation());
 }
 
 void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
@@ -153,11 +171,12 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
             Resources::Load<Animation>(metaNode.Get<GUID>("Animation")).Get());
     }
 
-    for (const MetaNode &childMetaNode : metaNode.GetChildren("Connections"))
+    for (const MetaNode &childMetaNode : metaNode.GetChildren("Transitions"))
     {
-        auto newConnection = new AnimatorStateMachineConnection(p_stateMachine);
-        newConnection->ImportMeta(childMetaNode);
-        AddConnection(newConnection);
+        auto newTransition = new AnimatorStateMachineTransition();
+        newTransition->SetNodeFrom(this);
+        newTransition->ImportMeta(childMetaNode);
+        AddTransition(newTransition);
     }
 }
 
@@ -168,9 +187,9 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NodeName", GetName());
     metaNode->Set("Animation",
                   GetAnimation() ? GetAnimation()->GetGUID() : GUID::Empty());
-    for (const AnimatorStateMachineConnection *smConn : GetConnections())
+    for (const AnimatorStateMachineTransition *smTransition : GetTransitions())
     {
-        MetaNode smConnMeta = smConn->GetMeta();
-        metaNode->AddChild(smConnMeta, "Connections");
+        MetaNode smTransitionMeta = smTransition->GetMeta();
+        metaNode->AddChild(smTransitionMeta, "Transitions");
     }
 }

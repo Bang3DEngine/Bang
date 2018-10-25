@@ -2,13 +2,13 @@
 #define IEVENTSANIMATORSTATEMACHINE_H
 
 #include "Bang/IEvents.h"
-#include "Bang/Time.h"
 
 namespace Bang
 {
 class Animator;
 class Animation;
 class AnimatorStateMachine;
+class AnimatorStateMachineLayer;
 class AnimatorStateMachineNode;
 class AnimatorStateMachineVariable;
 
@@ -17,18 +17,16 @@ class IEventsAnimatorStateMachine
     IEVENTS(IEventsAnimatorStateMachine);
 
 public:
-    virtual void OnNodeCreated(AnimatorStateMachine *stateMachine,
-                               uint newNodeIdx,
-                               AnimatorStateMachineNode *newNode)
+    virtual void OnLayerAdded(AnimatorStateMachine *stateMachine,
+                              AnimatorStateMachineLayer *stateMachineLayer)
     {
-        BANG_UNUSED_3(stateMachine, newNodeIdx, newNode);
+        BANG_UNUSED_2(stateMachine, stateMachineLayer);
     }
 
-    virtual void OnNodeRemoved(AnimatorStateMachine *stateMachine,
-                               uint removedNodeIdx,
-                               AnimatorStateMachineNode *removedNode)
+    virtual void OnLayerRemoved(AnimatorStateMachine *stateMachine,
+                                AnimatorStateMachineLayer *stateMachineLayer)
     {
-        BANG_UNUSED_3(stateMachine, removedNodeIdx, removedNode);
+        BANG_UNUSED_2(stateMachine, stateMachineLayer);
     }
 
     virtual void OnVariableNameChanged(AnimatorStateMachineVariable *variable,
@@ -36,19 +34,6 @@ public:
                                        const String &nextVariableName)
     {
         BANG_UNUSED_3(variable, prevVariableName, nextVariableName);
-    }
-
-    virtual void OnAnimationTick(Animator *animator,
-                                 Animation *animation,
-                                 uint animationIndex,
-                                 Time animationTimeWrapped,
-                                 Time animationTime)
-    {
-        BANG_UNUSED_5(animator,
-                      animationIndex,
-                      animation,
-                      animationTimeWrapped,
-                      animationTime);
     }
 };
 }

@@ -56,13 +56,24 @@ float AnimatorStateMachineVariable::GetValueFloat() const
     return m_valueFloat;
 }
 
+AnimatorStateMachine *AnimatorStateMachineVariable::GetStateMachine() const
+{
+    return p_stateMachine;
+}
+
+void AnimatorStateMachineVariable::SetStateMachine(
+    AnimatorStateMachine *stateMachine)
+{
+    p_stateMachine = stateMachine;
+}
+
 void AnimatorStateMachineVariable::SetName(const String &varName)
 {
     String prevName = GetName();
 
     m_name = varName;
 
-    p_animatorSM
+    p_stateMachine
         ->EventEmitter<IEventsAnimatorStateMachine>::PropagateToListeners(
             &IEventsAnimatorStateMachine::OnVariableNameChanged,
             this,

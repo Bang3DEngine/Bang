@@ -33,13 +33,16 @@ public:
     Type GetType() const;
     bool GetValueBool() const;
     float GetValueFloat() const;
+    AnimatorStateMachine *GetStateMachine() const;
 
 private:
-    AnimatorStateMachine *p_animatorSM = nullptr;
+    AnimatorStateMachine *p_stateMachine = nullptr;
     String m_name = "EmptyName";
     Type m_type = Type::FLOAT;
     float m_valueFloat = 0.0f;
     bool m_valueBool = false;
+
+    void SetStateMachine(AnimatorStateMachine *stateMachine);
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

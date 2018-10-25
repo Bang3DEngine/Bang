@@ -10,12 +10,10 @@
 namespace Bang
 {
 class AnimatorStateMachine;
-class AnimatorStateMachineConnectionTransitionCondition;
+class AnimatorStateMachineLayer;
+class AnimatorStateMachineTransition;
 
-using ASMCTransitionCondition =
-    AnimatorStateMachineConnectionTransitionCondition;
-
-class AnimatorStateMachineConnectionTransitionCondition : public Serializable
+class AnimatorStateMachineTransitionCondition : public Serializable
 {
     SERIALIZABLE(AnimatorStateMachineConnectionTransitionCondition)
 
@@ -28,20 +26,24 @@ public:
         IS_FALSE
     };
 
-    AnimatorStateMachineConnectionTransitionCondition();
-    virtual ~AnimatorStateMachineConnectionTransitionCondition() override;
+    AnimatorStateMachineTransitionCondition();
+    virtual ~AnimatorStateMachineTransitionCondition() override;
 
     void SetVariableName(const String &variableName);
     void SetVariableType(AnimatorStateMachineVariable::Type type);
-    void SetComparator(ASMCTransitionCondition::Comparator comparator);
+    void SetComparator(
+        AnimatorStateMachineTransitionCondition::Comparator comparator);
     void SetCompareValueFloat(float compareValueFloat);
 
+    bool IsFulfilled() const;
     const String &GetVariableName() const;
     AnimatorStateMachineVariable::Type GetVariableType() const;
-    ASMCTransitionCondition::Comparator GetComparator() const;
+    AnimatorStateMachineTransitionCondition::Comparator GetComparator() const;
     float GetCompareValueFloat() const;
 
-    bool IsFulfilled(AnimatorStateMachine *stateMachine) const;
+    AnimatorStateMachine *GetStateMachine() const;
+    AnimatorStateMachineLayer *GetLayer() const;
+    AnimatorStateMachineTransition *GetTransition() const;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
@@ -53,6 +55,11 @@ private:
         AnimatorStateMachineVariable::Type::FLOAT;
     Comparator m_comparator = Comparator::GREATER;
     float m_compareValueFloat = 0.0f;
+    AnimatorStateMachineTransition *p_transition = nullptr;
+
+    void SetTransition(AnimatorStateMachineTransition *transition);
+
+    friend class AnimatorStateMachineTransition;
 };
 }
 

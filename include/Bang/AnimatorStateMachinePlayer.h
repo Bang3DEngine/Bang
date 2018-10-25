@@ -7,7 +7,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsAnimatorStateMachineNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Time.h"
@@ -15,27 +15,25 @@
 namespace Bang
 {
 class Animation;
-class AnimatorStateMachine;
-class AnimatorStateMachineConnection;
-class AnimatorStateMachineNode;
+class AnimatorStateMachineTransition;
 class IEventsAnimatorStateMachine;
 class IEventsAnimatorStateMachineNode;
 
 class AnimatorStateMachinePlayer
-    : public EventListener<IEventsAnimatorStateMachine>,
+    : public EventListener<IEventsAnimatorStateMachineLayer>,
       public EventListener<IEventsAnimatorStateMachineNode>
 {
 public:
     AnimatorStateMachinePlayer();
     virtual ~AnimatorStateMachinePlayer() override;
 
-    void SetStateMachine(AnimatorStateMachine *stateMachine);
+    void SetStateMachineLayer(AnimatorStateMachineLayer *stateMachineLayer);
 
     void Step(Time deltaTime);
     void SetCurrentNode(AnimatorStateMachineNode *node);
     void SetCurrentNode(AnimatorStateMachineNode *node, Time nodeTime);
 
-    void StartTransition(AnimatorStateMachineConnection *connection,
+    void StartTransition(AnimatorStateMachineTransition *connection,
                          Time prevNodeTime,
                          Time startTransitionTime = Time(0));
     void FinishCurrentTransition();
@@ -48,37 +46,35 @@ public:
     Animation *GetNextAnimation() const;
     Time GetNextNodeTime() const;
 
-    AnimatorStateMachineConnection *GetCurrentTransition() const;
+    AnimatorStateMachineTransition *GetCurrentTransition() const;
     Time GetCurrentTransitionTime() const;
     Time GetCurrentTransitionDuration() const;
 
     AnimatorStateMachine *GetStateMachine() const;
+    AnimatorStateMachineLayer *GetStateMachineLayer() const;
 
 private:
-    RH<AnimatorStateMachine> p_stateMachine;
+    AnimatorStateMachineLayer *p_stateMachineLayer = nullptr;
 
     Time m_currentNodeTime;
     AnimatorStateMachineNode *p_currentNode = nullptr;
 
     Time m_currentTransitionTime;
-    AnimatorStateMachineConnection *p_currentTransition = nullptr;
+    AnimatorStateMachineTransition *p_currentTransition = nullptr;
 
-    // IEventsAnimatorStateMachine
-    virtual void OnNodeCreated(AnimatorStateMachine *stateMachine,
-                               uint newNodeIdx,
+    // IEventsAnimatorStateMachineLayer
+    virtual void OnNodeCreated(uint newNodeIdx,
                                AnimatorStateMachineNode *newNode) override;
-    virtual void OnNodeRemoved(AnimatorStateMachine *stateMachine,
-                               uint removedNodeIdx,
+    virtual void OnNodeRemoved(uint removedNodeIdx,
                                AnimatorStateMachineNode *removedNode) override;
 
     // IEventsAnimatorStateMachineNode
-    virtual void OnConnectionAdded(
+    virtual void OnTransitionAdded(
         AnimatorStateMachineNode *node,
-        AnimatorStateMachineConnection *connection) override;
-
-    virtual void OnConnectionRemoved(
+        AnimatorStateMachineTransition *transition) override;
+    virtual void OnTransitionRemoved(
         AnimatorStateMachineNode *node,
-        AnimatorStateMachineConnection *connection) override;
+        AnimatorStateMachineTransition *transition) override;
 };
 }
 

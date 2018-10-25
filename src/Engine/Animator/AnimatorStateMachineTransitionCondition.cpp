@@ -1,6 +1,8 @@
-#include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
+#include "Bang/AnimatorStateMachineTransitionCondition.h"
 
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineLayer.h"
+#include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/Assert.h"
 #include "Bang/MetaNode.h"
@@ -8,67 +10,92 @@
 
 using namespace Bang;
 
-AnimatorStateMachineConnectionTransitionCondition::
-    AnimatorStateMachineConnectionTransitionCondition()
+AnimatorStateMachineTransitionCondition::
+    AnimatorStateMachineTransitionCondition()
 {
 }
 
-AnimatorStateMachineConnectionTransitionCondition::
-    ~AnimatorStateMachineConnectionTransitionCondition()
+AnimatorStateMachineTransitionCondition::
+    ~AnimatorStateMachineTransitionCondition()
 {
 }
 
-void ASMCTransitionCondition::SetVariableName(const String &variableName)
+void AnimatorStateMachineTransitionCondition::SetTransition(
+    AnimatorStateMachineTransition *transition)
+{
+    p_transition = transition;
+}
+
+void AnimatorStateMachineTransitionCondition::SetVariableName(
+    const String &variableName)
 {
     m_varName = variableName;
 }
 
-void ASMCTransitionCondition::SetVariableType(
+void AnimatorStateMachineTransitionCondition::SetVariableType(
     AnimatorStateMachineVariable::Type type)
 {
     m_varType = type;
 }
 
-void ASMCTransitionCondition::SetComparator(
-    ASMCTransitionCondition::Comparator comparator)
+void AnimatorStateMachineTransitionCondition::SetComparator(
+    AnimatorStateMachineTransitionCondition::Comparator comparator)
 {
     m_comparator = comparator;
 }
 
-void ASMCTransitionCondition::SetCompareValueFloat(float compareValueFloat)
+void AnimatorStateMachineTransitionCondition::SetCompareValueFloat(
+    float compareValueFloat)
 {
     m_compareValueFloat = compareValueFloat;
 }
 
-const String &ASMCTransitionCondition::GetVariableName() const
+const String &AnimatorStateMachineTransitionCondition::GetVariableName() const
 {
     return m_varName;
 }
 
-AnimatorStateMachineVariable::Type ASMCTransitionCondition::GetVariableType()
-    const
+AnimatorStateMachineVariable::Type
+AnimatorStateMachineTransitionCondition::GetVariableType() const
 {
     return m_varType;
 }
 
-ASMCTransitionCondition::Comparator ASMCTransitionCondition::GetComparator()
-    const
+AnimatorStateMachineTransitionCondition::Comparator
+AnimatorStateMachineTransitionCondition::GetComparator() const
 {
     return m_comparator;
 }
 
-float ASMCTransitionCondition::GetCompareValueFloat() const
+float AnimatorStateMachineTransitionCondition::GetCompareValueFloat() const
 {
     return m_compareValueFloat;
 }
 
-bool ASMCTransitionCondition::IsFulfilled(
-    AnimatorStateMachine *stateMachine) const
+AnimatorStateMachine *AnimatorStateMachineTransitionCondition::GetStateMachine()
+    const
 {
-    if (stateMachine)
+    return GetLayer() ? GetLayer()->GetStateMachine() : nullptr;
+}
+
+AnimatorStateMachineLayer *AnimatorStateMachineTransitionCondition::GetLayer()
+    const
+{
+    return GetTransition() ? GetTransition()->GetLayer() : nullptr;
+}
+
+AnimatorStateMachineTransition *
+AnimatorStateMachineTransitionCondition::GetTransition() const
+{
+    return p_transition;
+}
+
+bool AnimatorStateMachineTransitionCondition::IsFulfilled() const
+{
+    if (GetStateMachine())
     {
         if (AnimatorStateMachineVariable *var =
-                stateMachine->GetVariable(GetVariableName()))
+                GetStateMachine()->GetVariable(GetVariableName()))
         {
             switch (var->GetType())
             {
@@ -102,7 +129,7 @@ bool ASMCTransitionCondition::IsFulfilled(
     return false;
 }
 
-void AnimatorStateMachineConnectionTransitionCondition::ImportMeta(
+void AnimatorStateMachineTransitionCondition::ImportMeta(
     const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
@@ -123,7 +150,7 @@ void AnimatorStateMachineConnectionTransitionCondition::ImportMeta(
     }
 }
 
-void AnimatorStateMachineConnectionTransitionCondition::ExportMeta(
+void AnimatorStateMachineTransitionCondition::ExportMeta(
     MetaNode *metaNode) const
 {
     Serializable::ExportMeta(metaNode);

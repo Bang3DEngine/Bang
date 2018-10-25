@@ -291,7 +291,7 @@ UITextCursor *UIInputText::GetCursor() const
 
 UITextRenderer *UIInputText::GetText() const
 {
-    return p_label->GetText();
+    return (p_label ? p_label->GetText() : nullptr);
 }
 
 UIFocusable *UIInputText::GetFocusable() const

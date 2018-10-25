@@ -33,12 +33,11 @@ using namespace Bang;
 Animator::Animator()
 {
     CONSTRUCT_CLASS_ID(Animator);
-    m_animationStateMachinePlayer = new AnimatorStateMachinePlayer();
 }
 
 Animator::~Animator()
 {
-    delete m_animationStateMachinePlayer;
+    ClearPlayers();
 }
 
 void Animator::OnStart()
@@ -65,37 +64,55 @@ void Animator::OnUpdate()
     AnimatorStateMachine *sm = GetStateMachine();
     if (sm && IsPlaying())
     {
-        ASSERT(GetPlayer());
-        GetPlayer()->Step(passedTime);
-
-        if (Animation *currentAnim = GetPlayer()->GetCurrentAnimation())
+        Map<String, Matrix4> boneNameToBoneTransform;
+        for (AnimatorStateMachinePlayer *player : GetPlayers())
         {
-            const Time currentAnimTime = GetPlayer()->GetCurrentNodeTime();
+            player->Step(passedTime);
 
-            Map<String, Matrix4> boneNameToCurrentMatrices;
-            if (Animation *nextAnim = GetPlayer()->GetNextAnimation())
+            if (Animation *currentAnim = player->GetCurrentAnimation())
             {
-                // Cross fading
-                ASSERT(GetPlayer()->GetCurrentTransition());
-                boneNameToCurrentMatrices =
-                    Animation::GetBoneCrossFadeAnimationMatrices(
-                        currentAnim,
-                        currentAnimTime,
-                        nextAnim,
-                        GetPlayer()->GetCurrentTransitionTime(),
-                        GetPlayer()->GetCurrentTransitionDuration());
-            }
-            else
-            {
-                // Simple animation
-                boneNameToCurrentMatrices =
-                    currentAnim->GetBoneAnimationMatricesForTime(
-                        currentAnimTime);
-            }
+                const Time currentAnimTime = player->GetCurrentNodeTime();
 
-            SetSkinnedMeshRendererCurrentBoneMatrices(
-                boneNameToCurrentMatrices);
+                Map<String, Matrix4> layerBoneNameToBoneTransform;
+                if (Animation *nextAnim = player->GetNextAnimation())
+                {
+                    // Cross fading
+                    ASSERT(player->GetCurrentTransition());
+                    layerBoneNameToBoneTransform =
+                        Animation::GetBoneCrossFadeAnimationMatrices(
+                            currentAnim,
+                            currentAnimTime,
+                            nextAnim,
+                            player->GetCurrentTransitionTime(),
+                            player->GetCurrentTransitionDuration());
+                }
+                else
+                {
+                    // Simple animation
+                    layerBoneNameToBoneTransform =
+                        currentAnim->GetBoneAnimationMatricesForTime(
+                            currentAnimTime);
+                }
+
+                for (const auto &pair : layerBoneNameToBoneTransform)
+                {
+                    const String &layerBoneName = pair.first;
+                    const Matrix4 &layerBoneTransform = pair.second;
+
+                    auto it = boneNameToBoneTransform.Find(layerBoneName);
+                    if (it != boneNameToBoneTransform.End())
+                    {
+                        it->second *= layerBoneTransform;
+                    }
+                    else
+                    {
+                        boneNameToBoneTransform[layerBoneName] =
+                            Matrix4::Identity;
+                    }
+                }
+            }
         }
+        SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToBoneTransform);
     }
 }
 
@@ -104,7 +121,15 @@ void Animator::SetStateMachine(AnimatorStateMachine *stateMachine)
     if (stateMachine != GetStateMachine())
     {
         m_stateMachine.Set(stateMachine);
-        GetPlayer()->SetStateMachine(GetStateMachine());
+
+        if (GetStateMachine())
+        {
+            for (AnimatorStateMachineLayer *layer :
+                 GetStateMachine()->GetLayers())
+            {
+                OnLayerAdded(GetStateMachine(), layer);
+            }
+        }
     }
 }
 
@@ -170,6 +195,31 @@ Map<String, Matrix4> Animator::GetBoneCrossFadeAnimationMatrices(
     return boneCrossFadeAnimationMatrices;
 }
 
+void Animator::OnLayerAdded(AnimatorStateMachine *stateMachine,
+                            AnimatorStateMachineLayer *stateMachineLayer)
+{
+    ASSERT(stateMachine == GetStateMachine());
+
+    AnimatorStateMachinePlayer *player = new AnimatorStateMachinePlayer();
+    player->SetStateMachineLayer(stateMachineLayer);
+    m_animatorStateMachinePlayers.PushBack(player);
+}
+
+void Animator::OnLayerRemoved(AnimatorStateMachine *stateMachine,
+                              AnimatorStateMachineLayer *stateMachineLayer)
+{
+    ASSERT(stateMachine == GetStateMachine());
+
+    for (AnimatorStateMachinePlayer *player : GetPlayers())
+    {
+        if (player->GetStateMachineLayer() == stateMachineLayer)
+        {
+            m_animatorStateMachinePlayers.Remove(player);
+            break;
+        }
+    }
+}
+
 void Animator::Play()
 {
     m_playing = true;
@@ -199,6 +249,11 @@ bool Animator::GetPlayOnStart() const
 AnimatorStateMachine *Animator::GetStateMachine() const
 {
     return m_stateMachine.Get();
+}
+
+const Array<AnimatorStateMachinePlayer *> &Animator::GetPlayers() const
+{
+    return m_animatorStateMachinePlayers;
 }
 
 void Animator::CloneInto(ICloneable *clone) const
@@ -237,7 +292,10 @@ void Animator::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("PlayOnStart", GetPlayOnStart());
 }
 
-AnimatorStateMachinePlayer *Animator::GetPlayer() const
+void Animator::ClearPlayers()
 {
-    return m_animationStateMachinePlayer;
+    for (AnimatorStateMachinePlayer *player : GetPlayers())
+    {
+        delete player;
+    }
 }

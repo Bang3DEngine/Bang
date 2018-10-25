@@ -5,6 +5,7 @@
 #include "Bang/Component.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
+#include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
@@ -18,7 +19,8 @@ class AnimatorStateMachine;
 class AnimatorStateMachinePlayer;
 class ICloneable;
 
-class Animator : public Component
+class Animator : public Component,
+                 public EventListener<IEventsAnimatorStateMachine>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator)
 
@@ -42,8 +44,8 @@ public:
 
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
-    AnimatorStateMachinePlayer *GetPlayer() const;
     AnimatorStateMachine *GetStateMachine() const;
+    const Array<AnimatorStateMachinePlayer *> &GetPlayers() const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;
@@ -56,10 +58,13 @@ private:
     Time m_animationTime;
     Time m_prevFrameTime;
 
-    AnimatorStateMachinePlayer *m_animationStateMachinePlayer = nullptr;
     RH<AnimatorStateMachine> m_stateMachine;
+    Array<AnimatorStateMachinePlayer *> m_animatorStateMachinePlayers;
+
     bool m_playOnStart = true;
     bool m_playing = false;
+
+    void ClearPlayers();
 
     void SetSkinnedMeshRendererCurrentBoneMatrices(
         const Map<String, Matrix4> &boneAnimMatrices);
@@ -72,6 +77,13 @@ private:
         Animation *nextAnimation,
         Time currentCrossFadeTime,
         Time totalCrossFadeTime);
+
+    // IEventsAnimatorStateMachine
+    void OnLayerAdded(AnimatorStateMachine *stateMachine,
+                      AnimatorStateMachineLayer *stateMachineLayer) override;
+
+    void OnLayerRemoved(AnimatorStateMachine *stateMachine,
+                        AnimatorStateMachineLayer *stateMachineLayer) override;
 };
 }
 

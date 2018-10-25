@@ -1,8 +1,6 @@
 #ifndef ANIMATORSTATEMACHINE_H
 #define ANIMATORSTATEMACHINE_H
 
-#include <vector>
-
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
@@ -10,18 +8,13 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEventsAnimatorStateMachine.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resource.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class AnimatorStateMachineNode;
-class AnimatorStateMachineVariable;
-class IEventsAnimatorStateMachine;
-class IEventsDestroy;
-class Path;
-
 class AnimatorStateMachine : public Resource,
                              public EventEmitter<IEventsDestroy>,
                              public EventEmitter<IEventsAnimatorStateMachine>,
@@ -31,32 +24,25 @@ class AnimatorStateMachine : public Resource,
 
 public:
     AnimatorStateMachine();
-    virtual ~AnimatorStateMachine() override;
+    virtual ~AnimatorStateMachine();
 
-    AnimatorStateMachineNode *CreateAndAddNode();
-    AnimatorStateMachineNode *GetNode(uint nodeIdx);
-    const AnimatorStateMachineNode *GetNode(uint nodeIdx) const;
-    void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
-    void SetEntryNode(AnimatorStateMachineNode *entryNode);
-    void SetEntryNodeIdx(uint entryNodeIdx);
+    AnimatorStateMachineLayer *CreateNewLayer();
+    void RemoveLayer(AnimatorStateMachineLayer *layer);
 
     AnimatorStateMachineVariable *CreateNewVariable();
     void SetVariableFloat(const String &varName, const float value);
     void SetVariableBool(const String &varName, const bool value);
     void RemoveVariable(AnimatorStateMachineVariable *var);
     void RemoveVariable(uint varIdx);
-    void Clear();
 
     AnimatorStateMachineVariable *GetVariable(const String &varName) const;
     float GetVariableFloat(const String &varName) const;
     bool GetVariableBool(const String &varName) const;
-    AnimatorStateMachineNode *GetEntryNodeOrFirstFound() const;
-    AnimatorStateMachineNode *GetEntryNode() const;
-    uint GetEntryNodeIdx() const;
-
-    const Array<AnimatorStateMachineNode *> &GetNodes() const;
-    const Array<AnimatorStateMachineVariable *> &GetVariables() const;
     Array<String> GetVariablesNames() const;
+    const Array<AnimatorStateMachineVariable *> &GetVariables() const;
+    const Array<AnimatorStateMachineLayer *> &GetLayers() const;
+
+    void Clear();
 
     // Resource
     virtual void Import(const Path &resourceFilepath) override;
@@ -66,8 +52,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    uint m_entryNodeIdx = -1u;
-    Array<AnimatorStateMachineNode *> m_nodes;
+    Array<AnimatorStateMachineLayer *> m_layers;
     Array<AnimatorStateMachineVariable *> m_variables;
 
     AnimatorStateMachineVariable *CreateOrGetVariable(const String &varName);

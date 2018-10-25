@@ -1,9 +1,8 @@
-#ifndef ANIMATORSTATEMACHINECONNECTION_H
-#define ANIMATORSTATEMACHINECONNECTION_H
+#ifndef ANIMATORSTATEMACHINETRANSITION_H
+#define ANIMATORSTATEMACHINETRANSITION_H
 
 #include <vector>
 
-#include "Bang/AnimatorStateMachineConnectionTransitionCondition.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
@@ -20,27 +19,29 @@
 namespace Bang
 {
 class AnimatorStateMachine;
+class AnimatorStateMachineLayer;
 class AnimatorStateMachineNode;
+class AnimatorStateMachineTransitionCondition;
 class IEventsDestroy;
 
-class AnimatorStateMachineConnection : public Serializable,
+class AnimatorStateMachineTransition : public Serializable,
                                        public EventEmitter<IEventsDestroy>
 {
     SERIALIZABLE(AnimatorStateMachineConnection)
 
 public:
-    AnimatorStateMachineConnection(AnimatorStateMachine *stateMachine);
-    virtual ~AnimatorStateMachineConnection() override;
+    AnimatorStateMachineTransition();
+    virtual ~AnimatorStateMachineTransition() override;
 
     void SetNodeTo(AnimatorStateMachineNode *node);
     void SetNodeFrom(AnimatorStateMachineNode *node);
-    bool AreTransitionConditionsFulfilled(
-        AnimatorStateMachine *animatorSM) const;
+    bool AreTransitionConditionsFulfilled() const;
 
     void SetTransitionDuration(Time transitionDuration);
     void SetImmediateTransition(bool immediateTransition);
-    ASMCTransitionCondition *CreateAndAddTransitionCondition();
-    void RemoveTransitionCondition(ASMCTransitionCondition *transitionCond);
+    AnimatorStateMachineTransitionCondition *CreateAndAddTransitionCondition();
+    void RemoveTransitionCondition(
+        AnimatorStateMachineTransitionCondition *transitionCond);
     void RemoveTransitionCondition(uint idx);
 
     AnimatorStateMachineNode *GetNodeTo() const;
@@ -48,8 +49,14 @@ public:
     bool GetImmediateTransition() const;
     Time GetTransitionDuration() const;
 
-    const Array<ASMCTransitionCondition *> &GetTransitionConditions() const;
-    void CloneInto(AnimatorStateMachineConnection *cloneConnection) const;
+    const Array<AnimatorStateMachineTransitionCondition *>
+        &GetTransitionConditions() const;
+
+    AnimatorStateMachine *GetStateMachine() const;
+    AnimatorStateMachineLayer *GetLayer() const;
+
+    // ICloneable
+    void CloneInto(ICloneable *cloneConnection) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
@@ -60,10 +67,8 @@ private:
     DPtr<AnimatorStateMachineNode> p_nodeFrom;
     Time m_transitionDuration = Time::Seconds(0.5);
     bool m_immediateTransition = false;
-    Array<ASMCTransitionCondition *> m_transitionConditions;
-
-    DPtr<AnimatorStateMachine> p_stateMachine;
+    Array<AnimatorStateMachineTransitionCondition *> m_transitionConditions;
 };
 }
 
-#endif  // ANIMATORSTATEMACHINECONNECTION_H
+#endif  // ANIMATORSTATEMACHINETRANSITION_H

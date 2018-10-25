@@ -548,10 +548,8 @@ void Cloth::ConstrainJoints()
                     const int npi =
                         ((i + off.y) * GetSubdivisions() + (j + off.x));
                     const Vector3 npPos = m_particlesData[npi].position;
-                    const Vector3 npPrevPos = m_particlesData[npi].prevPosition;
                     const Vector3 diffToNp = (npPos - pPos);
                     const Vector3 dirToNp = diffToNp.NormalizedSafe();
-                    const float dist = diffToNp.Length();
                     const float expectedDist =
                         GetSubdivisionLength() * offLength;
                     const float newDist = expectedDist;

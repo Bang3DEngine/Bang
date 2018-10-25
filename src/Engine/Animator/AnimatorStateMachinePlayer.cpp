@@ -2,8 +2,9 @@
 
 #include "Bang/Animation.h"
 #include "Bang/AnimatorStateMachine.h"
-#include "Bang/AnimatorStateMachineConnection.h"
+#include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
 #include "Bang/EventEmitter.h"
@@ -21,46 +22,46 @@ AnimatorStateMachinePlayer::~AnimatorStateMachinePlayer()
 {
 }
 
-void AnimatorStateMachinePlayer::SetStateMachine(
-    AnimatorStateMachine *stateMachine)
+void AnimatorStateMachinePlayer::SetStateMachineLayer(
+    AnimatorStateMachineLayer *stateMachineLayer)
 {
-    if (stateMachine != GetStateMachine())
+    if (stateMachineLayer != GetStateMachineLayer())
     {
-        if (GetStateMachine())
+        if (GetStateMachineLayer())
         {
             p_currentTransition = nullptr;
             m_currentTransitionTime = Time(0);
             SetCurrentNode(nullptr);
-            GetStateMachine()
-                ->EventEmitter<IEventsAnimatorStateMachine>::UnRegisterListener(
-                    this);
+            GetStateMachineLayer()
+                ->EventEmitter<
+                    IEventsAnimatorStateMachineLayer>::UnRegisterListener(this);
         }
 
-        p_stateMachine.Set(stateMachine);
+        p_stateMachineLayer = stateMachineLayer;
 
-        if (GetStateMachine())
+        if (GetStateMachineLayer())
         {
-            SetCurrentNode(GetStateMachine()->GetEntryNodeOrFirstFound());
-            GetStateMachine()
-                ->EventEmitter<IEventsAnimatorStateMachine>::RegisterListener(
-                    this);
+            SetCurrentNode(GetStateMachineLayer()->GetEntryNodeOrFirstFound());
+            GetStateMachineLayer()
+                ->EventEmitter<
+                    IEventsAnimatorStateMachineLayer>::RegisterListener(this);
         }
     }
 }
 
 void AnimatorStateMachinePlayer::Step(Time deltaTime)
 {
-    AnimatorStateMachine *sm = GetStateMachine();
-    if (!sm)
+    AnimatorStateMachineLayer *smLayer = GetStateMachineLayer();
+    if (!smLayer)
     {
         return;
     }
 
     if (!GetCurrentNode())
     {
-        if (sm->GetNodes().Size() >= 1)
+        if (smLayer->GetNodes().Size() >= 1)
         {
-            SetCurrentNode(sm->GetNodes().Front());
+            SetCurrentNode(smLayer->GetNodes().Front());
         }
     }
 
@@ -86,12 +87,12 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
                 bool hasFinishedAnimation =
                     (GetCurrentNodeTime().GetSeconds() >=
                      GetCurrentNode()->GetAnimation()->GetDurationInSeconds());
-                for (AnimatorStateMachineConnection *conn :
-                     GetCurrentNode()->GetConnections())
+                for (AnimatorStateMachineTransition *conn :
+                     GetCurrentNode()->GetTransitions())
                 {
                     if (hasFinishedAnimation || conn->GetImmediateTransition())
                     {
-                        if (conn->AreTransitionConditionsFulfilled(sm))
+                        if (conn->AreTransitionConditionsFulfilled())
                         {
                             StartTransition(
                                 conn, GetCurrentNodeTime(), Time(0));
@@ -105,7 +106,7 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
 }
 
 void AnimatorStateMachinePlayer::StartTransition(
-    AnimatorStateMachineConnection *connection,
+    AnimatorStateMachineTransition *connection,
     Time prevNodeTime,
     Time startTransitionTime)
 {
@@ -193,7 +194,7 @@ Time AnimatorStateMachinePlayer::GetNextNodeTime() const
     return m_currentTransitionTime;
 }
 
-AnimatorStateMachineConnection *
+AnimatorStateMachineTransition *
 AnimatorStateMachinePlayer::GetCurrentTransition() const
 {
     return p_currentTransition;
@@ -213,41 +214,44 @@ Time AnimatorStateMachinePlayer::GetCurrentTransitionDuration() const
 
 AnimatorStateMachine *AnimatorStateMachinePlayer::GetStateMachine() const
 {
-    return p_stateMachine.Get();
+    return GetStateMachineLayer() ? GetStateMachineLayer()->GetStateMachine()
+                                  : nullptr;
+}
+
+AnimatorStateMachineLayer *AnimatorStateMachinePlayer::GetStateMachineLayer()
+    const
+{
+    return p_stateMachineLayer;
 }
 
 void AnimatorStateMachinePlayer::OnNodeCreated(
-    AnimatorStateMachine *stateMachine,
     uint newNodeIdx,
     AnimatorStateMachineNode *newNode)
 {
-    ASSERT(stateMachine == GetStateMachine());
     BANG_UNUSED_2(newNodeIdx, newNode);
 }
 
 void AnimatorStateMachinePlayer::OnNodeRemoved(
-    AnimatorStateMachine *stateMachine,
     uint removedNodeIdx,
     AnimatorStateMachineNode *removedNode)
 {
     BANG_UNUSED(removedNodeIdx);
-    ASSERT(stateMachine == GetStateMachine());
     if (removedNode == GetCurrentNode())
     {
         SetCurrentNode(nullptr);
     }
 }
 
-void AnimatorStateMachinePlayer::OnConnectionAdded(
+void AnimatorStateMachinePlayer::OnTransitionAdded(
     AnimatorStateMachineNode *node,
-    AnimatorStateMachineConnection *connection)
+    AnimatorStateMachineTransition *transition)
 {
-    BANG_UNUSED_2(node, connection);
+    BANG_UNUSED_2(node, transition);
 }
 
-void AnimatorStateMachinePlayer::OnConnectionRemoved(
+void AnimatorStateMachinePlayer::OnTransitionRemoved(
     AnimatorStateMachineNode *node,
-    AnimatorStateMachineConnection *connection)
+    AnimatorStateMachineTransition *transition)
 {
-    BANG_UNUSED_2(node, connection);
+    BANG_UNUSED_2(node, transition);
 }

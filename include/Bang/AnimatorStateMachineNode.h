@@ -20,7 +20,8 @@ namespace Bang
 {
 class Animation;
 class AnimatorStateMachine;
-class AnimatorStateMachineConnection;
+class AnimatorStateMachineLayer;
+class AnimatorStateMachineTransition;
 class IEventsAnimatorStateMachineNode;
 class IEventsDestroy;
 
@@ -32,26 +33,30 @@ class AnimatorStateMachineNode
     SERIALIZABLE(AnimatorStateMachineNode);
 
 public:
-    AnimatorStateMachineNode(AnimatorStateMachine *stateMachine);
+    AnimatorStateMachineNode();
     virtual ~AnimatorStateMachineNode() override;
 
     void SetName(const String &name);
-    AnimatorStateMachineConnection *CreateConnectionTo(
+    AnimatorStateMachineTransition *CreateTransitionTo(
         AnimatorStateMachineNode *nodeTo);
-    const AnimatorStateMachineConnection *GetConnection(
-        uint connectionIdx) const;
-    AnimatorStateMachineConnection *GetConnection(uint connectionIdx);
-    void RemoveConnection(AnimatorStateMachineConnection *connection);
+    const AnimatorStateMachineTransition *GetTransition(
+        uint transitionIdx) const;
+    AnimatorStateMachineTransition *GetTransition(uint transitionIdx);
+    void RemoveTransition(AnimatorStateMachineTransition *transition);
 
     void SetAnimation(Animation *animation);
 
     const String &GetName() const;
     Animation *GetAnimation() const;
-    Array<AnimatorStateMachineConnection *> GetConnectionsTo(
+    Array<AnimatorStateMachineTransition *> GetTransitionsTo(
         AnimatorStateMachineNode *nodeTo) const;
-    const Array<AnimatorStateMachineConnection *> &GetConnections() const;
+    const Array<AnimatorStateMachineTransition *> &GetTransitions() const;
 
-    void CloneInto(AnimatorStateMachineNode *clone) const;
+    AnimatorStateMachine *GetStateMachine() const;
+    AnimatorStateMachineLayer *GetLayer() const;
+
+    // ICloneable
+    void CloneInto(ICloneable *clone) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
@@ -60,11 +65,15 @@ public:
 private:
     String m_name = "Node";
     RH<Animation> p_animation;
-    DPtr<AnimatorStateMachine> p_stateMachine;
-    Array<AnimatorStateMachineConnection *> m_connections;
+    AnimatorStateMachineLayer *p_layer = nullptr;
+    Array<AnimatorStateMachineTransition *> m_transitions;
 
-    AnimatorStateMachineConnection *AddConnection(
-        AnimatorStateMachineConnection *connection);
+    void SetLayer(AnimatorStateMachineLayer *stateMachineLayer);
+
+    AnimatorStateMachineTransition *AddTransition(
+        AnimatorStateMachineTransition *connection);
+
+    friend class AnimatorStateMachineLayer;
 };
 }
 

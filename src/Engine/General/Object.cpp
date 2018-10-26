@@ -10,6 +10,7 @@ Object::~Object()
 {
     ASSERT(IsBeingDestroyed());
     ASSERT(IsWaitingToBeDestroyed());
+    PropagateObjectDestruction(this);
 }
 
 bool Object::IsActive() const
@@ -61,6 +62,11 @@ void Object::OnDestroy()
 {
 }
 
+void Object::SetBeingDestroyed()
+{
+    m_beingDestroyed = true;
+}
+
 void Object::SetWaitingToBeDestroyed()
 {
     m_waitingToBeDestroyed = true;
@@ -77,10 +83,9 @@ void Object::InvalidateEnabledRecursively()
 
 void Object::PropagateObjectDestruction(Object *object)
 {
-    if (!object->IsBeingDestroyed())
+    if (!object->m_destroyPropagated)
     {
-        object->SetWaitingToBeDestroyed();
-        object->m_beingDestroyed = true;
+        object->m_destroyPropagated = true;
 
         object->OnDestroy();
         object->EventEmitter<IEventsDestroy>::PropagateToListeners(

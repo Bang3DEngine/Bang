@@ -440,6 +440,8 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
     if (!gameObject->IsBeingDestroyed())
     {
+        gameObject->SetBeingDestroyed();
+        gameObject->SetWaitingToBeDestroyed();
         Object::PropagateObjectDestruction(gameObject);
 
         while (!gameObject->GetChildren().IsEmpty())
@@ -469,6 +471,7 @@ void GameObject::Destroy(GameObject *gameObject)
     if (!gameObject->IsWaitingToBeDestroyed())
     {
         gameObject->SetWaitingToBeDestroyed();
+        Object::PropagateObjectDestruction(gameObject);
 
         if (GameObject *parent = gameObject->GetParent())
         {

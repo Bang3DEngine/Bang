@@ -30,7 +30,10 @@ void Component::DestroyImmediate(Component *component)
 {
     if (!component->IsBeingDestroyed())
     {
+        component->SetBeingDestroyed();
+        component->SetWaitingToBeDestroyed();
         Object::PropagateObjectDestruction(component);
+
         component->SetGameObjectForced(nullptr);
         delete component;
     }
@@ -41,6 +44,7 @@ void Component::Destroy(Component *component)
     if (!component->IsWaitingToBeDestroyed())
     {
         component->SetWaitingToBeDestroyed();
+        Object::PropagateObjectDestruction(component);
 
         if (GameObject *go = component->GetGameObject())
         {

@@ -53,6 +53,7 @@ protected:
     virtual void OnDisabled(Object *object) override;
     virtual void OnDestroy();
 
+    void SetBeingDestroyed();
     void SetWaitingToBeDestroyed();
     void InvalidateEnabledRecursively();
 
@@ -62,7 +63,9 @@ private:
     ObjectId m_objectId;
     bool m_enabled = true;
     bool m_started = false;
+
     bool m_beingDestroyed = false;
+    bool m_destroyPropagated = false;
     bool m_waitingToBeDestroyed = false;
 
     mutable bool m_enabledRecursivelyValid = false;

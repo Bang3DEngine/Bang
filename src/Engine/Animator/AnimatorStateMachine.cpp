@@ -119,9 +119,9 @@ void AnimatorStateMachine::MoveVariable(uint oldIndex, uint newIndex)
 {
     if (oldIndex < GetLayers().Size() && newIndex <= GetLayers().Size())
     {
-        AnimatorStateMachineLayer *movingLayer = GetLayers()[oldIndex];
-        m_layers.RemoveByIndex(oldIndex);
-        m_layers.Insert(movingLayer, newIndex);
+        AnimatorStateMachineVariable *movingVar = GetVariables()[oldIndex];
+        m_variables.RemoveByIndex(oldIndex);
+        m_variables.Insert(movingVar, newIndex);
     }
 }
 

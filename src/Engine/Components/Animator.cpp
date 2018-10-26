@@ -64,7 +64,7 @@ void Animator::OnUpdate()
     AnimatorStateMachine *sm = GetStateMachine();
     if (sm && IsPlaying())
     {
-        Map<String, Matrix4> boneNameToBoneTransform;
+        Map<String, Matrix4> totalBoneNameToBoneTransform;
         for (AnimatorStateMachinePlayer *player : GetPlayers())
         {
             player->Step(passedTime);
@@ -99,20 +99,20 @@ void Animator::OnUpdate()
                     const String &layerBoneName = pair.first;
                     const Matrix4 &layerBoneTransform = pair.second;
 
-                    auto it = boneNameToBoneTransform.Find(layerBoneName);
-                    if (it != boneNameToBoneTransform.End())
+                    auto it = totalBoneNameToBoneTransform.Find(layerBoneName);
+                    if (it != totalBoneNameToBoneTransform.End())
                     {
                         it->second *= layerBoneTransform;
                     }
                     else
                     {
-                        boneNameToBoneTransform[layerBoneName] =
+                        totalBoneNameToBoneTransform[layerBoneName] =
                             Matrix4::Identity;
                     }
                 }
             }
         }
-        SetSkinnedMeshRendererCurrentBoneMatrices(boneNameToBoneTransform);
+        SetSkinnedMeshRendererCurrentBoneMatrices(totalBoneNameToBoneTransform);
     }
 }
 

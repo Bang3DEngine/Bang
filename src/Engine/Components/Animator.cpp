@@ -5,6 +5,7 @@
 
 #include "Bang/Animation.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachinePlayer.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
@@ -64,7 +65,7 @@ void Animator::OnUpdate()
     AnimatorStateMachine *sm = GetStateMachine();
     if (sm && IsPlaying())
     {
-        Map<String, Matrix4> totalBoneNameToBoneTransform;
+        Map<String, Animation::BoneTransformation> totalBoneNameToBoneTransform;
         for (AnimatorStateMachinePlayer *player : GetPlayers())
         {
             player->Step(passedTime);
@@ -73,13 +74,20 @@ void Animator::OnUpdate()
             {
                 const Time currentAnimTime = player->GetCurrentNodeTime();
 
-                Map<String, Matrix4> layerBoneNameToBoneTransform;
+                Map<String, Animation::BoneTransformation>
+                    layerBoneNameToBoneTransform;
+
+                AnimatorStateMachineLayer *layer =
+                    player->GetStateMachineLayer();
+                ASSERT(layer);
+                Set<String> layerMask = layer->GetBoneMask(this);
+
                 if (Animation *nextAnim = player->GetNextAnimation())
                 {
                     // Cross fading
                     ASSERT(player->GetCurrentTransition());
                     layerBoneNameToBoneTransform =
-                        Animation::GetBoneCrossFadeAnimationMatrices(
+                        Animation::GetBoneCrossFadeAnimationTransformations(
                             currentAnim,
                             currentAnimTime,
                             nextAnim,
@@ -90,29 +98,44 @@ void Animator::OnUpdate()
                 {
                     // Simple animation
                     layerBoneNameToBoneTransform =
-                        currentAnim->GetBoneAnimationMatricesForTime(
-                            currentAnimTime);
+                        Animation::GetBoneAnimationTransformations(
+                            currentAnim, currentAnimTime);
                 }
 
                 for (const auto &pair : layerBoneNameToBoneTransform)
                 {
                     const String &layerBoneName = pair.first;
-                    const Matrix4 &layerBoneTransform = pair.second;
+                    const Animation::BoneTransformation &layerBoneTransform =
+                        pair.second;
 
-                    auto it = totalBoneNameToBoneTransform.Find(layerBoneName);
-                    if (it != totalBoneNameToBoneTransform.End())
+                    if (layerMask.Contains(layerBoneName))
                     {
-                        it->second *= layerBoneTransform;
-                    }
-                    else
-                    {
-                        totalBoneNameToBoneTransform[layerBoneName] =
-                            Matrix4::Identity;
+                        auto it =
+                            totalBoneNameToBoneTransform.Find(layerBoneName);
+                        if (it != totalBoneNameToBoneTransform.End())
+                        {
+                            Animation::BoneTransformation &totalBoneTransform =
+                                it->second;
+                            totalBoneTransform.position +=
+                                layerBoneTransform.position;
+                            totalBoneTransform.rotation *=
+                                layerBoneTransform.rotation;
+                            totalBoneTransform.scale *=
+                                layerBoneTransform.scale;
+                        }
+                        else
+                        {
+                            totalBoneNameToBoneTransform.Add(
+                                layerBoneName, layerBoneTransform);
+                        }
                     }
                 }
             }
         }
-        SetSkinnedMeshRendererCurrentBoneMatrices(totalBoneNameToBoneTransform);
+
+        Map<String, Matrix4> totalBoneNameToBoneMatrices =
+            Animation::GetBoneMatrices(totalBoneNameToBoneTransform);
+        SetSkinnedMeshRendererCurrentBoneMatrices(totalBoneNameToBoneMatrices);
     }
 }
 
@@ -165,34 +188,6 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
     {
         smr->UpdateBonesMatricesFromTransformMatrices();
     }
-}
-
-Map<String, Matrix4> Animator::GetBoneAnimationMatrices(Animation *animation,
-                                                        Time animationTime)
-{
-    Map<String, Matrix4> boneNameToAnimationMatrices;
-    if (animation)
-    {
-        boneNameToAnimationMatrices =
-            animation->GetBoneAnimationMatricesForTime(animationTime);
-    }
-    return boneNameToAnimationMatrices;
-}
-
-Map<String, Matrix4> Animator::GetBoneCrossFadeAnimationMatrices(
-    Animation *prevAnimation,
-    Time prevAnimationTime,
-    Animation *nextAnimation,
-    Time currentCrossFadeTime,
-    Time totalCrossFadeTime)
-{
-    Map<String, Matrix4> boneCrossFadeAnimationMatrices =
-        Animation::GetBoneCrossFadeAnimationMatrices(prevAnimation,
-                                                     prevAnimationTime,
-                                                     nextAnimation,
-                                                     currentCrossFadeTime,
-                                                     totalCrossFadeTime);
-    return boneCrossFadeAnimationMatrices;
 }
 
 void Animator::OnLayerAdded(AnimatorStateMachine *stateMachine,

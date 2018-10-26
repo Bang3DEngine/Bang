@@ -2,12 +2,14 @@
 
 #include <sys/types.h>
 
+#include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/AnimatorStateMachineTransitionCondition.h"
 #include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/EventEmitter.tcc"
+#include "Bang/GameObject.h"
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaFilesManager.h"
@@ -164,6 +166,32 @@ void AnimatorStateMachineLayer::Clear()
     {
         RemoveNode(m_nodes.Back());
     }
+}
+
+AnimatorBoneMask AnimatorStateMachineLayer::GetBoneMask(
+    Animator *animator) const
+{
+    AnimatorBoneMask boneMask;
+
+    if (animator)
+    {
+        if (GameObject *animatorGo = animator->GetGameObject())
+        {
+            GameObject *maskRootBoneGo =
+                animatorGo->GetParent()->FindInChildren(GetBoneName(), true);
+            if (maskRootBoneGo)
+            {
+                Array<GameObject *> descendants =
+                    maskRootBoneGo->GetChildrenRecursively();
+                for (GameObject *descendant : descendants)
+                {
+                    boneMask.Add(descendant->GetName());
+                }
+            }
+        }
+    }
+
+    return boneMask;
 }
 
 const String &AnimatorStateMachineLayer::GetLayerName() const

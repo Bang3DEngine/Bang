@@ -69,15 +69,6 @@ private:
     void SetSkinnedMeshRendererCurrentBoneMatrices(
         const Map<String, Matrix4> &boneAnimMatrices);
 
-    static Map<String, Matrix4> GetBoneAnimationMatrices(Animation *animation,
-                                                         Time animationTime);
-    static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
-        Animation *prevAnimation,
-        Time prevAnimationTime,
-        Animation *nextAnimation,
-        Time currentCrossFadeTime,
-        Time totalCrossFadeTime);
-
     // IEventsAnimatorStateMachine
     void OnLayerAdded(AnimatorStateMachine *stateMachine,
                       AnimatorStateMachineLayer *stateMachineLayer) override;

@@ -59,7 +59,6 @@ public:
     float GetDurationInFrames() const;
     float GetDurationInSeconds() const;
     AnimationWrapMode GetWrapMode() const;
-    Map<String, Matrix4> GetBoneAnimationMatricesForTime(Time time) const;
 
     const Array<Animation::KeyFrame<Vector3>> &GetPositionKeyFrames(
         const String &boneName) const;
@@ -90,17 +89,19 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-    static void GetBoneAnimationTransformations(
-        const Animation *animation,
-        Time animationTime,
-        Map<String, BoneTransformation> *boneTransformations);
+    static Map<String, Matrix4> GetBoneMatrices(
+        const Map<String, Animation::BoneTransformation> &bonesTransformations);
 
-    static Map<String, Matrix4> GetBoneCrossFadeAnimationMatrices(
-        const Animation *prevAnimation,
-        Time prevAnimationTime,
-        const Animation *nextAnimation,
-        Time currentCrossFadeTime,
-        Time totalCrossFadeTime);
+    static Map<String, Animation::BoneTransformation>
+    GetBoneAnimationTransformations(const Animation *animation,
+                                    Time animationTime);
+
+    static Map<String, Animation::BoneTransformation>
+    GetBoneCrossFadeAnimationTransformations(const Animation *prevAnimation,
+                                             Time prevAnimationTime,
+                                             const Animation *nextAnimation,
+                                             Time currentCrossFadeTime,
+                                             Time totalCrossFadeTime);
 
 private:
     Animation();

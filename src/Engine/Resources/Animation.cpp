@@ -178,29 +178,6 @@ float Animation::WrapTime(float time,
     return wrappedTime;
 }
 
-Map<String, Matrix4> Animation::GetBoneAnimationMatricesForTime(
-    Time animationTime) const
-{
-    Map<String, Matrix4> bonesMatrices;
-
-    Map<String, BoneTransformation> bonesTransformations;
-    Animation::GetBoneAnimationTransformations(
-        this, animationTime, &bonesTransformations);
-    for (auto &it : bonesTransformations)
-    {
-        const String &boneName = it.first;
-        const BoneTransformation &boneTransformation = it.second;
-        const BoneTransformation &bt = boneTransformation;
-
-        Matrix4 boneMatrix = Matrix4::TranslateMatrix(bt.position) *
-                             Matrix4::RotateMatrix(bt.rotation) *
-                             Matrix4::ScaleMatrix(bt.scale);
-        bonesMatrices.Add(boneName, boneMatrix);
-    }
-
-    return bonesMatrices;
-}
-
 const Array<Animation::KeyFrame<Vector3>> &Animation::GetPositionKeyFrames(
     const String &boneName) const
 {
@@ -277,16 +254,32 @@ void Animation::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));
 }
 
-void Animation::GetBoneAnimationTransformations(
-    const Animation *anim,
-    Time animationTime,
-    Map<String, BoneTransformation> *boneTransformationsPtr)
+Map<String, Matrix4> Animation::GetBoneMatrices(
+    const Map<String, Animation::BoneTransformation> &bonesTransformations)
 {
-    ASSERT(boneTransformationsPtr);
+    Map<String, Matrix4> bonesMatrices;
+    for (auto &it : bonesTransformations)
+    {
+        const String &boneName = it.first;
+        const BoneTransformation &boneTransformation = it.second;
+        const BoneTransformation &bt = boneTransformation;
+        Matrix4 transformMatrix = Matrix4::TranslateMatrix(bt.position) *
+                                  Matrix4::RotateMatrix(bt.rotation) *
+                                  Matrix4::ScaleMatrix(bt.scale);
+        bonesMatrices.Add(boneName, transformMatrix);
+    }
+    return bonesMatrices;
+}
+
+Map<String, Animation::BoneTransformation>
+Animation::GetBoneAnimationTransformations(const Animation *anim,
+                                           Time animationTime)
+{
+    Map<String, Animation::BoneTransformation> boneTransformations;
 
     if (anim->GetDurationInFrames() <= 0.0f)
     {
-        return;
+        return boneTransformations;
     }
 
     double timeInFrames =
@@ -295,8 +288,6 @@ void Animation::GetBoneAnimationTransformations(
         timeInFrames, anim->GetDurationInFrames(), anim->GetWrapMode());
     timeInFrames = Math::Max(timeInFrames, 0.00001);
 
-    Map<String, BoneTransformation> &boneTransformations =
-        *boneTransformationsPtr;
     for (const auto &it : anim->GetBoneNameToPositionKeyFrames())
     {
         const String &boneName = it.first;
@@ -380,16 +371,19 @@ void Animation::GetBoneAnimationTransformations(
         }
         boneTransformations[boneName].scale = boneScale;
     }
+
+    return boneTransformations;
 }
 
-Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
+Map<String, Animation::BoneTransformation>
+Animation::GetBoneCrossFadeAnimationTransformations(
     const Animation *prevAnimation,
     Time prevAnimationTime,
     const Animation *nextAnimation,
     Time currentCrossFadeTime,
     Time totalCrossFadeTime)
 {
-    Map<String, Matrix4> boneCrossFadeAnimMatrices;
+    Map<String, Animation::BoneTransformation> boneCrossFadeAnimTransformations;
 
     double totalCrossFadeSeconds =
         Math::Max(totalCrossFadeTime.GetSeconds(), 0.01);
@@ -397,14 +391,14 @@ Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
         (currentCrossFadeTime.GetSeconds() / totalCrossFadeSeconds);
 
     // Gather the prev animation bone transformations
-    Map<String, BoneTransformation> prevBoneTransformations;
-    Animation::GetBoneAnimationTransformations(
-        prevAnimation, prevAnimationTime, &prevBoneTransformations);
+    Map<String, BoneTransformation> prevBoneTransformations =
+        Animation::GetBoneAnimationTransformations(prevAnimation,
+                                                   prevAnimationTime);
 
     // Gather the next animation bone transformations
-    Map<String, BoneTransformation> nextBoneTransformations;
-    Animation::GetBoneAnimationTransformations(
-        nextAnimation, currentCrossFadeTime, &nextBoneTransformations);
+    Map<String, BoneTransformation> nextBoneTransformations =
+        Animation::GetBoneAnimationTransformations(nextAnimation,
+                                                   currentCrossFadeTime);
 
     // Gather bone names
     Set<String> allBoneNames;
@@ -445,11 +439,14 @@ Map<String, Matrix4> Animation::GetBoneCrossFadeAnimationMatrices(
                                             nextBoneTransformation.scale,
                                             nextPonderation);
 
-        Matrix4 transformMat = Matrix4::TranslateMatrix(interpPos) *
-                               Matrix4::RotateMatrix(interpRot) *
-                               Matrix4::ScaleMatrix(interpScale);
-        boneCrossFadeAnimMatrices.Add(boneName, transformMat);
+        BoneTransformation crossFadedTransformation;
+        crossFadedTransformation.position = interpPos;
+        crossFadedTransformation.rotation = interpRot;
+        crossFadedTransformation.scale = interpScale;
+
+        boneCrossFadeAnimTransformations.Add(boneName,
+                                             crossFadedTransformation);
     }
 
-    return boneCrossFadeAnimMatrices;
+    return boneCrossFadeAnimTransformations;
 }

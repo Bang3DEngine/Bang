@@ -10,16 +10,20 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resource.h"
+#include "Bang/Set.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
+class Animator;
 class AnimatorStateMachine;
 class AnimatorStateMachineNode;
 class AnimatorStateMachineVariable;
 class IEventsAnimatorStateMachineLayer;
 class IEventsDestroy;
 class Path;
+
+using AnimatorBoneMask = Set<String>;
 
 class AnimatorStateMachineLayer
     : public Serializable,
@@ -48,6 +52,7 @@ public:
     AnimatorStateMachineNode *GetEntryNodeOrFirstFound() const;
     AnimatorStateMachineNode *GetEntryNode() const;
     uint GetEntryNodeIdx() const;
+    AnimatorBoneMask GetBoneMask(Animator *animator) const;
 
     const Array<AnimatorStateMachineNode *> &GetNodes() const;
 

@@ -146,10 +146,10 @@ void UICanvas::OnUpdate()
     // Process all enqueued InputEvents, transform them to UIEvents and
     // propagate them as we need.
 
-    Array<UIFocusable *> focusables;
+    Array<DPtr<UIFocusable>> focusables;
     for (const auto &focusableAndRectVP : focusablesAndRectsVP)
     {
-        focusables.PushBack(focusableAndRectVP.first);
+        focusables.PushBack(DPtr<UIFocusable>(focusableAndRectVP.first));
     }
 
     Vector2i currentMousePosVP = Input::GetMousePosition();
@@ -170,16 +170,19 @@ void UICanvas::OnUpdate()
         {
             UIFocusable *focusable = pair.first;
             const AARecti &aaRectMaskVP = pair.second;
-            if (GameObject *focusableGo = focusable->GetGameObject())
+            if (focusable)
             {
-                if (RectTransform *rt = focusableGo->GetRectTransform())
+                if (GameObject *focusableGo = focusable->GetGameObject())
                 {
-                    if (aaRectMaskVP.Contains(currentMousePosVP) &&
-                        rt->IsMouseOver(currentMouseWindow, false) &&
-                        focusable->IsEnabledRecursively())
+                    if (RectTransform *rt = focusableGo->GetRectTransform())
                     {
-                        focusableUnderMouseTopMost = focusable;
-                        break;
+                        if (aaRectMaskVP.Contains(currentMousePosVP) &&
+                            rt->IsMouseOver(currentMouseWindow, false) &&
+                            focusable->IsEnabledRecursively())
+                        {
+                            focusableUnderMouseTopMost = focusable;
+                            break;
+                        }
                     }
                 }
             }
@@ -353,16 +356,18 @@ void UICanvas::OnUpdate()
                                     break;  // Complete loop
                                 }
 
-                                UIFocusable *newFocus =
-                                    focusables.At(newFocusIndex);
-                                const bool isValid =
-                                    newFocus->GetConsiderForTabbing() &&
-                                    newFocus->GetGameObject()
-                                        ->IsVisibleRecursively() &&
-                                    newFocus->IsEnabledRecursively();
-                                if (isValid)
+                                if (UIFocusable *newFocus =
+                                        focusables.At(newFocusIndex))
                                 {
-                                    break;
+                                    const bool isValid =
+                                        newFocus->GetConsiderForTabbing() &&
+                                        newFocus->GetGameObject()
+                                            ->IsVisibleRecursively() &&
+                                        newFocus->IsEnabledRecursively();
+                                    if (isValid)
+                                    {
+                                        break;
+                                    }
                                 }
                             }
                             SetFocus(focusables.At(newFocusIndex),
@@ -752,7 +757,7 @@ void UICanvas::OnDisabled(Object *object)
         p_ddBeingDragged = nullptr;
     }
 
-    List<UIFocusable *> disabledFocusables;
+    Array<UIFocusable *> disabledFocusables;
     if (UIFocusable *focusableObj = DCAST<UIFocusable *>(object))
     {
         disabledFocusables.PushBack(focusableObj);

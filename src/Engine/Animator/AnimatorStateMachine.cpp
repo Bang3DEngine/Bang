@@ -28,11 +28,10 @@ AnimatorStateMachineLayer *AnimatorStateMachine::CreateNewLayer()
     return layer;
 }
 
-void AnimatorStateMachine::MoveLayer(uint oldIndex, uint newIndex_)
+void AnimatorStateMachine::MoveLayer(uint oldIndex, uint newIndex)
 {
-    if (oldIndex < GetLayers().Size() && newIndex_ <= GetLayers().Size())
+    if (oldIndex < GetLayers().Size() && newIndex <= GetLayers().Size())
     {
-        uint newIndex = newIndex_ - (newIndex_ >= oldIndex ? 1 : 0);
         AnimatorStateMachineLayer *movingLayer = GetLayers()[oldIndex];
         m_layers.RemoveByIndex(oldIndex);
         m_layers.Insert(movingLayer, newIndex);
@@ -116,11 +115,10 @@ void AnimatorStateMachine::SetVariableBool(const String &varName,
     var->SetValueBool(value);
 }
 
-void AnimatorStateMachine::MoveVariable(uint oldIndex, uint newIndex_)
+void AnimatorStateMachine::MoveVariable(uint oldIndex, uint newIndex)
 {
-    if (oldIndex < GetLayers().Size() && newIndex_ <= GetLayers().Size())
+    if (oldIndex < GetLayers().Size() && newIndex <= GetLayers().Size())
     {
-        uint newIndex = newIndex_ - (newIndex_ >= oldIndex ? 1 : 0);
         AnimatorStateMachineLayer *movingLayer = GetLayers()[oldIndex];
         m_layers.RemoveByIndex(oldIndex);
         m_layers.Insert(movingLayer, newIndex);

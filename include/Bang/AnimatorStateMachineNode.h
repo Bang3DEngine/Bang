@@ -27,7 +27,7 @@ class IEventsDestroy;
 
 class AnimatorStateMachineNode
     : public Serializable,
-      public EventEmitter<IEventsDestroy>,
+      public EventEmitterIEventsDestroyWithCheck,
       public EventEmitter<IEventsAnimatorStateMachineNode>
 {
     SERIALIZABLE(AnimatorStateMachineNode);

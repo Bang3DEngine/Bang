@@ -81,6 +81,11 @@ void MetaNode::Set(const String &attributeName, const String &attributeValue)
     Set(attr);
 }
 
+void MetaNode::RemoveChildren(const String &childrenContainerName)
+{
+    m_children.Remove(childrenContainerName);
+}
+
 void MetaNode::RemoveAttribute(const String &attributeName)
 {
     for (auto it = m_attributes.Begin(); it != m_attributes.End();)

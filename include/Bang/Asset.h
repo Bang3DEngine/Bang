@@ -28,7 +28,7 @@ class MetaNode;
 
 class Asset : public Resource,
               public IToString,
-              public EventEmitter<IEventsDestroy>
+              public EventEmitterIEventsDestroyWithCheck
 {
 public:
     // IToString

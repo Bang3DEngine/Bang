@@ -8,6 +8,7 @@ using namespace Bang;
 
 Object::~Object()
 {
+    ASSERT(IsBeingDestroyed());
     ASSERT(IsWaitingToBeDestroyed());
 }
 

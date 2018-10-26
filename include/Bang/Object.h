@@ -10,6 +10,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/ICloneable.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObject.h"
 #include "Bang/ObjectId.h"
 #include "Bang/Serializable.h"
@@ -21,7 +22,7 @@ class IEventsObject;
 
 class Object : public Serializable,
                public EventListener<IEventsObject>,
-               public EventEmitter<IEventsDestroy>,
+               public EventEmitterIEventsDestroyWithCheck,
                public EventEmitter<IEventsObject>
 {
 public:

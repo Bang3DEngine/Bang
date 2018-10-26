@@ -18,6 +18,7 @@ DPtr<T>::DPtr(T *ptr)
 template <class T>
 DPtr<T>::~DPtr()
 {
+    Set(nullptr);
 }
 
 template <class T>

@@ -16,7 +16,7 @@
 namespace Bang
 {
 class AnimatorStateMachine : public Resource,
-                             public EventEmitter<IEventsDestroy>,
+                             public EventEmitterIEventsDestroyWithCheck,
                              public EventEmitter<IEventsAnimatorStateMachine>,
                              public EventListener<IEventsAnimatorStateMachine>
 {

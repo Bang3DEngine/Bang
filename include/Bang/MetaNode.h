@@ -54,6 +54,7 @@ public:
     template <class T>
     Array<T> GetArray(const String &attributeName) const;
 
+    void RemoveChildren(const String &childrenContainerName);
     void RemoveAttribute(const String &attributeName);
     MetaAttribute *GetAttribute(const String &attributeName) const;
     String GetAttributeValue(const String &attributeName) const;

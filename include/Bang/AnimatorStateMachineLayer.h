@@ -7,6 +7,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resource.h"
 #include "Bang/String.h"
@@ -22,7 +23,7 @@ class Path;
 
 class AnimatorStateMachineLayer
     : public Serializable,
-      public EventEmitter<IEventsDestroy>,
+      public EventEmitterIEventsDestroyWithCheck,
       public EventEmitter<IEventsAnimatorStateMachineLayer>
 {
     SERIALIZABLE(AnimatorStateMachineLayer)

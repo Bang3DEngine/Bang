@@ -24,8 +24,9 @@ class AnimatorStateMachineNode;
 class AnimatorStateMachineTransitionCondition;
 class IEventsDestroy;
 
-class AnimatorStateMachineTransition : public Serializable,
-                                       public EventEmitter<IEventsDestroy>
+class AnimatorStateMachineTransition
+    : public Serializable,
+      public EventEmitterIEventsDestroyWithCheck
 {
     SERIALIZABLE(AnimatorStateMachineConnection)
 

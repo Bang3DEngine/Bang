@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "Bang/Animation.h"
+#include "Bang/AnimatorLayerMask.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachinePlayer.h"
@@ -80,53 +81,64 @@ void Animator::OnUpdate()
                 AnimatorStateMachineLayer *layer =
                     player->GetStateMachineLayer();
                 ASSERT(layer);
-                Set<String> layerMask = layer->GetBoneMask(this);
 
-                if (Animation *nextAnim = player->GetNextAnimation())
+                if (layer->GetEnabled())
                 {
-                    // Cross fading
-                    ASSERT(player->GetCurrentTransition());
-                    layerBoneNameToBoneTransform =
-                        Animation::GetBoneCrossFadeAnimationTransformations(
-                            currentAnim,
-                            currentAnimTime,
-                            nextAnim,
-                            player->GetCurrentTransitionTime(),
-                            player->GetCurrentTransitionDuration());
-                }
-                else
-                {
-                    // Simple animation
-                    layerBoneNameToBoneTransform =
-                        Animation::GetBoneAnimationTransformations(
-                            currentAnim, currentAnimTime);
-                }
+                    bool hasLayerMask = (layer->GetLayerMask() != nullptr);
+                    Set<String> layerMask =
+                        hasLayerMask
+                            ? layer->GetLayerMask()->GetBoneMaskNamesSet(this)
+                            : Set<String>();
 
-                for (const auto &pair : layerBoneNameToBoneTransform)
-                {
-                    const String &layerBoneName = pair.first;
-                    const Animation::BoneTransformation &layerBoneTransform =
-                        pair.second;
-
-                    if (layerMask.Contains(layerBoneName))
+                    if (Animation *nextAnim = player->GetNextAnimation())
                     {
-                        auto it =
-                            totalBoneNameToBoneTransform.Find(layerBoneName);
-                        if (it != totalBoneNameToBoneTransform.End())
+                        // Cross fading
+                        ASSERT(player->GetCurrentTransition());
+                        layerBoneNameToBoneTransform =
+                            Animation::GetBoneCrossFadeAnimationTransformations(
+                                currentAnim,
+                                currentAnimTime,
+                                nextAnim,
+                                player->GetCurrentTransitionTime(),
+                                player->GetCurrentTransitionDuration());
+                    }
+                    else
+                    {
+                        // Simple animation
+                        layerBoneNameToBoneTransform =
+                            Animation::GetBoneAnimationTransformations(
+                                currentAnim, currentAnimTime);
+                    }
+
+                    for (const auto &pair : layerBoneNameToBoneTransform)
+                    {
+                        const String &layerBoneName = pair.first;
+                        const Animation::BoneTransformation
+                            &layerBoneTransform = pair.second;
+
+                        bool considerThisBone =
+                            (!hasLayerMask ||
+                             layerMask.Contains(layerBoneName));
+                        if (considerThisBone)
                         {
-                            Animation::BoneTransformation &totalBoneTransform =
-                                it->second;
-                            totalBoneTransform.position +=
-                                layerBoneTransform.position;
-                            totalBoneTransform.rotation *=
-                                layerBoneTransform.rotation;
-                            totalBoneTransform.scale *=
-                                layerBoneTransform.scale;
-                        }
-                        else
-                        {
-                            totalBoneNameToBoneTransform.Add(
-                                layerBoneName, layerBoneTransform);
+                            auto it = totalBoneNameToBoneTransform.Find(
+                                layerBoneName);
+                            if (it != totalBoneNameToBoneTransform.End())
+                            {
+                                Animation::BoneTransformation
+                                    &totalBoneTransform = it->second;
+                                totalBoneTransform.position +=
+                                    layerBoneTransform.position;
+                                totalBoneTransform.rotation *=
+                                    layerBoneTransform.rotation;
+                                totalBoneTransform.scale *=
+                                    layerBoneTransform.scale;
+                            }
+                            else
+                            {
+                                totalBoneNameToBoneTransform.Add(
+                                    layerBoneName, layerBoneTransform);
+                            }
                         }
                     }
                 }

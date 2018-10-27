@@ -16,6 +16,7 @@
 namespace Bang
 {
 class Animator;
+class AnimatorLayerMask;
 class AnimatorStateMachine;
 class AnimatorStateMachineNode;
 class AnimatorStateMachineVariable;
@@ -41,18 +42,19 @@ public:
     void SetEntryNode(AnimatorStateMachineNode *entryNode);
     void SetEntryNodeIdx(uint entryNodeIdx);
     void SetLayerName(const String &layerName);
-    void SetBoneName(const String &boneName);
+    void SetLayerMask(AnimatorLayerMask *layerMask);
+    void SetEnabled(bool enabled);
     void Clear();
 
+    bool GetEnabled() const;
     const String &GetLayerName() const;
-    const String &GetBoneName() const;
+    AnimatorLayerMask *GetLayerMask() const;
     AnimatorStateMachineNode *GetNode(uint nodeIdx);
     const AnimatorStateMachineNode *GetNode(uint nodeIdx) const;
     AnimatorStateMachine *GetStateMachine() const;
     AnimatorStateMachineNode *GetEntryNodeOrFirstFound() const;
     AnimatorStateMachineNode *GetEntryNode() const;
     uint GetEntryNodeIdx() const;
-    AnimatorBoneMask GetBoneMask(Animator *animator) const;
 
     const Array<AnimatorStateMachineNode *> &GetNodes() const;
 
@@ -61,10 +63,11 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
+    bool m_enabled = true;
     String m_layerName = "";
-    String m_boneName = "";
     RH<AnimatorStateMachine> p_stateMachine;
     uint m_entryNodeIdx = -1u;
+    RH<AnimatorLayerMask> m_layerMask;
     Array<AnimatorStateMachineNode *> m_nodes;
 
     void SetStateMachine(AnimatorStateMachine *animatorSM);

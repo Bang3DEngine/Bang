@@ -319,6 +319,12 @@ bool Array<T>::operator==(const Array<T> &rhs) const
 }
 
 template <class T>
+bool Array<T>::operator!=(const Array<T> &rhs) const
+{
+    return !(*this == rhs);
+}
+
+template <class T>
 template <template <class> class Container, class OtherT>
 Container<OtherT> Array<T>::To() const
 {

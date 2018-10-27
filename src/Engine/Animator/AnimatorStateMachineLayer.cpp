@@ -3,6 +3,7 @@
 #include <sys/types.h>
 
 #include "Bang/Animator.h"
+#include "Bang/AnimatorLayerMask.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/AnimatorStateMachineTransition.h"
@@ -16,6 +17,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
+#include "Bang/Resources.h"
 
 using namespace Bang;
 
@@ -125,9 +127,17 @@ void AnimatorStateMachineLayer::SetLayerName(const String &layerName)
     m_layerName = layerName;
 }
 
-void AnimatorStateMachineLayer::SetBoneName(const String &boneName)
+void AnimatorStateMachineLayer::SetLayerMask(AnimatorLayerMask *layerMask)
 {
-    m_boneName = boneName;
+    if (layerMask != GetLayerMask())
+    {
+        m_layerMask.Set(layerMask);
+    }
+}
+
+void AnimatorStateMachineLayer::SetEnabled(bool enabled)
+{
+    m_enabled = enabled;
 }
 
 void AnimatorStateMachineLayer::SetStateMachine(
@@ -166,32 +176,12 @@ void AnimatorStateMachineLayer::Clear()
     {
         RemoveNode(m_nodes.Back());
     }
+    SetLayerMask(nullptr);
 }
 
-AnimatorBoneMask AnimatorStateMachineLayer::GetBoneMask(
-    Animator *animator) const
+bool AnimatorStateMachineLayer::GetEnabled() const
 {
-    AnimatorBoneMask boneMask;
-
-    if (animator)
-    {
-        if (GameObject *animatorGo = animator->GetGameObject())
-        {
-            GameObject *maskRootBoneGo =
-                animatorGo->GetParent()->FindInChildren(GetBoneName(), true);
-            if (maskRootBoneGo)
-            {
-                Array<GameObject *> descendants =
-                    maskRootBoneGo->GetChildrenRecursively();
-                for (GameObject *descendant : descendants)
-                {
-                    boneMask.Add(descendant->GetName());
-                }
-            }
-        }
-    }
-
-    return boneMask;
+    return m_enabled;
 }
 
 const String &AnimatorStateMachineLayer::GetLayerName() const
@@ -199,9 +189,9 @@ const String &AnimatorStateMachineLayer::GetLayerName() const
     return m_layerName;
 }
 
-const String &AnimatorStateMachineLayer::GetBoneName() const
+AnimatorLayerMask *AnimatorStateMachineLayer::GetLayerMask() const
 {
-    return m_boneName;
+    return m_layerMask.Get();
 }
 
 AnimatorStateMachine *AnimatorStateMachineLayer::GetStateMachine() const
@@ -219,14 +209,23 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
 {
     Serializable::ImportMeta(metaNode);
 
+    Clear();
+
     if (metaNode.Contains("LayerName"))
     {
         SetLayerName(metaNode.Get<String>("LayerName"));
     }
 
-    if (metaNode.Contains("BoneName"))
+    if (metaNode.Contains("LayerMask"))
     {
-        SetBoneName(metaNode.Get<String>("BoneName"));
+        RH<AnimatorLayerMask> layerMask =
+            Resources::Load<AnimatorLayerMask>(metaNode.Get<GUID>("LayerMask"));
+        SetLayerMask(layerMask.Get());
+    }
+
+    if (metaNode.Contains("Enabled"))
+    {
+        SetEnabled(metaNode.Get<bool>("Enabled"));
     }
 
     if (metaNode.Contains("EntryNodeIdx"))
@@ -234,7 +233,6 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
         SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
     }
 
-    Clear();
     {
         const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
 
@@ -259,8 +257,10 @@ void AnimatorStateMachineLayer::ExportMeta(MetaNode *metaNode) const
     Serializable::ExportMeta(metaNode);
 
     metaNode->Set("LayerName", GetLayerName());
-    metaNode->Set("BoneName", GetBoneName());
     metaNode->Set("EntryNodeIdx", GetEntryNodeIdx());
+    metaNode->Set("Enabled", GetEnabled());
+    metaNode->Set("LayerMask",
+                  GetLayerMask() ? GetLayerMask()->GetGUID() : GUID::Empty());
 
     metaNode->CreateChildrenContainer("Nodes");
     for (const AnimatorStateMachineNode *smNode : GetNodes())

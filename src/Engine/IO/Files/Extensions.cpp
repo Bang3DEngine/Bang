@@ -30,6 +30,11 @@ String Extensions::GetPhysicsMaterialExtension()
 {
     return "bphmat";
 }
+
+String Extensions::GetAnimatorLayerMaskExtension()
+{
+    return "banimlm";
+}
 String Extensions::GetAnimatorStateMachineExtension()
 {
     return "banimsm";

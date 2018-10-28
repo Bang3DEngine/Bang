@@ -75,7 +75,7 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
 
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
-    // Save state
+    GL::Push(GL::Pushable::CULL_FACE);
     GL::Push(GL::Pushable::STENCIL_STATES);
     PushDrawAttachments();
 
@@ -83,10 +83,12 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 
     BindAttachmentsForReading(sp);
     SetColorDrawBuffer();
+    GL::Disable(GL::Enablable::CULL_FACE);
     GEngine::GetInstance()->RenderViewportRect(sp, mask);  // Render rect!
 
     PopDrawAttachments();
     GL::Pop(GL::Pushable::STENCIL_STATES);
+    GL::Pop(GL::Pushable::CULL_FACE);
 }
 
 void GBuffer::ApplyPassBlend(ShaderProgram *sp,

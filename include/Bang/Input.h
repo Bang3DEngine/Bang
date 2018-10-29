@@ -3,8 +3,8 @@
 
 #include "Bang/Bang.h"
 
-#include <iostream>
 #include <SDL2/SDL_events.h>
+#include <iostream>
 
 #include "Bang/AARect.h"
 #include "Bang/Array.h"

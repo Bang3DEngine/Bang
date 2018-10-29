@@ -74,6 +74,13 @@ set(PNG_LIB_OUTPUT_NAME "libpng.a")
 set(PNG_LIB_OUTPUT  "${PNG_LIB_OUTPUT_DIR}/${PNG_LIB_OUTPUT_NAME}")
 set(PNG_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PNG_LIB_OUTPUT_NAME}")
 
+# SNDIO
+set(SNDIO_DIR "${CMAKE_CURRENT_LIST_DIR}/sndio")
+set(SNDIO_LIB_OUTPUT_DIR  "${SNDIO_DIR}/build")
+set(SNDIO_LIB_OUTPUT_NAME "libsndio.a")
+set(SNDIO_LIB_OUTPUT  "${SNDIO_LIB_OUTPUT_DIR}/${SNDIO_LIB_OUTPUT_NAME}")
+set(SNDIO_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SNDIO_LIB_OUTPUT_NAME}")
+
 # OPENAL
 set(OPENAL_DIR "${CMAKE_CURRENT_LIST_DIR}/openal-soft")
 set(OPENAL_INCLUDE_DIR "${OPENAL_DIR}/include")
@@ -304,10 +311,31 @@ add_custom_command(
 #=================================================================
 
 #=================================================================
+# SNDIO Compile =================================================
+#=================================================================
+add_custom_command(
+  OUTPUT ${SNDIO_LIB_FINAL_OUTPUT}
+  COMMAND
+      echo "Executing SNDIO CMake ------------" &&
+      cd ${SNDIO_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake .. &&
+      make -j${NUM_COMPILE_THREADS} &&
+      /bin/bash -c "cp ${SNDIO_LIB_OUTPUT} ${SNDIO_LIB_FINAL_OUTPUT}"
+  COMMENT "Building SNDIO"
+  VERBATIM
+)
+#=================================================================
+#=================================================================
+#=================================================================
+
+#=================================================================
 # OPENAL Compile =================================================
 #=================================================================
 add_custom_command(
   OUTPUT ${OPENAL_LIB_FINAL_OUTPUT}
+  DEPENDS ${SNDIO_LIB_FINAL_OUTPUT}
   COMMAND
       echo "Executing OPENAL CMake ------------" &&
       cd ${OPENAL_DIR} &&
@@ -393,6 +421,7 @@ list(APPEND THIRD_PARTY_LIB_PATHS ${JPEG_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${PNG_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${MINIZIP_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${OPENAL_LIB_FINAL_OUTPUT})
+list(APPEND THIRD_PARTY_LIB_PATHS ${SNDIO_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${SDL2TTF_LIB_FINAL_OUTPUT})
 list(APPEND THIRD_PARTY_LIB_PATHS ${GLEW_LIB_FINAL_OUTPUT})

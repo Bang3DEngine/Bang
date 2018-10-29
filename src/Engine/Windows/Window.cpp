@@ -1,6 +1,6 @@
 #include "Bang/Window.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "Bang/Application.h"
 #include "Bang/Debug.h"

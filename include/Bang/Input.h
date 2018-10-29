@@ -3,7 +3,7 @@
 
 #include "Bang/Bang.h"
 
-#include <SDL2/SDL_events.h>
+#include <SDL_events.h>
 #include <iostream>
 
 #include "Bang/AARect.h"

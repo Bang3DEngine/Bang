@@ -1,10 +1,10 @@
 #include "Bang/FontSheetCreator.h"
 
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_surface.h>
+#include <SDL_pixels.h>
+#include <SDL_stdinc.h>
+#include <SDL_surface.h>
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"

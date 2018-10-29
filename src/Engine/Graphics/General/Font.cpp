@@ -1,12 +1,12 @@
 #include "Bang/Font.h"
 
-#include <SDL2/SDL_error.h>
 #include <string.h>
 #include <ostream>
 #include <unordered_map>
 #include <utility>
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_error.h>
+#include <SDL_ttf.h>
 
 #include "Bang/AARect.h"
 #include "Bang/Array.h"

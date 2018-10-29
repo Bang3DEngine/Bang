@@ -1,6 +1,7 @@
 #include "Bang/Input.h"
 
-#include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
 
 #include "Bang/Application.h"
 #include "Bang/Debug.h"

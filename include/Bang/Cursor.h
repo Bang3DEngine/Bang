@@ -3,7 +3,7 @@
 
 #include "Bang/BangDefines.h"
 
-#include BANG_SDL2_INCLUDE(SDL_mouse.h)
+#include <SDL2/SDL_mouse.h>
 
 namespace Bang
 {

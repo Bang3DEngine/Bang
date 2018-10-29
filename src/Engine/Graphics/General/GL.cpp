@@ -3,7 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glew.h>
 
-#include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL.h>
 
 #include "Bang/Debug.h"
 #include "Bang/GEngine.h"

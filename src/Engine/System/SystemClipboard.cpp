@@ -1,6 +1,6 @@
 #include "Bang/SystemClipboard.h"
 
-#include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL_clipboard.h>
 
 using namespace Bang;
 

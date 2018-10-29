@@ -133,22 +133,6 @@ Matrix4 AiMatrix4ToMatrix4(const aiMatrix4x4 &m)
 }
 // ==================================================
 
-int ModelIO::GetModelNumTriangles(const Path &modelFilepath)
-{
-    Assimp::Importer importer;
-    const aiScene *scene = ImportScene(&importer, modelFilepath);
-    if (!scene)
-    {
-        return 0;
-    }
-
-    if (scene && scene->HasMeshes())
-    {
-        return scene->mMeshes[0]->mNumFaces;
-    }
-    return 0;
-}
-
 Tree<ModelIONode> *ReadModelNode(const aiScene *scene, aiNode *node)
 {
     Tree<ModelIONode> *modelNodeTree = new Tree<ModelIONode>();

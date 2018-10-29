@@ -106,68 +106,63 @@ set(SDL2TTF_LIB_FINAL_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${SDL2TTF_LIB_OUTPUT_N
 #=================================================================
 # Assimp Compile =================================================
 #=================================================================
-add_custom_target(BuildAssimp ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing ASSIMP CMake ------------\"
-cd ${ASSIMP_DIR} && \
-mkdir -p build && \
-cd build && \
-cmake \
-  -DBUILD_SHARED_LIBS=OFF \
-  -DSYSTEM_IRRXML=OFF \
-  -DASSIMP_BUILD_ZLIB=OFF \
-  -DASSIMP_BUILD_TESTS=OFF \
-  -DASSIMP_BUILD_SAMPLES=OFF \
-  -DASSIMP_ASAN=OFF \
-  -DASSIMP_UBSAN=OFF \
-  -DASSIMP_NO_EXPORT=OFF \
-  -DASSIMP_BUILD_OFF_IMPORTER=OFF \
-  -DASSIMP_BUILD_OGRE_IMPORTER=OFF \
-  -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF \
-  -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF \
-  -DASSIMP_BUILD_Q3D_IMPORTER=OFF \
-  -DASSIMP_BUILD_RAW_IMPORTER=OFF \
-  -DASSIMP_BUILD_SMD_IMPORTER=OFF \
-  -DASSIMP_BUILD_SIB_IMPORTER=OFF \
-  -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF \
-  -DASSIMP_BUILD_AC_IMPORTER=OFF \
-  -DASSIMP_BUILD_AMF_IMPORTER=OFF \
-  -DASSIMP_BUILD_ASE_IMPORTER=OFF \
-  -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF \
-  -DASSIMP_BUILD_ASSXML_IMPORTER=OFF \
-  -DASSIMP_BUILD_B3D_IMPORTER=OFF \
-  -DASSIMP_BUILD_COB_IMPORTER=OFF \
-  -DASSIMP_BUILD_CSM_IMPORTER=OFF \
-  -DASSIMP_BUILD_DFX_IMPORTER=OFF \
-  -DASSIMP_BUILD_GLTF_IMPORTER=OFF \
-  -DASSIMP_BUILD_HMP_IMPORTER=OFF \
-  -DASSIMP_BUILD_IFC_IMPORTER=OFF \
-  -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF \
-  -DASSIMP_BUILD_IRR_IMPORTER=OFF \
-  -DASSIMP_BUILD_LWO_IMPORTER=OFF \
-  -DASSIMP_BUILD_LWS_IMPORTER=OFF \
-  -DASSIMP_BUILD_MD2_IMPORTER=OFF \
-  -DASSIMP_BUILD_MD3_IMPORTER=OFF \
-  -DASSIMP_BUILD_MD5_IMPORTER=OFF \
-  -DASSIMP_BUILD_MDL_IMPORTER=OFF \
-  -DASSIMP_BUILD_MMD_IMPORTER=OFF \
-  -DASSIMP_BUILD_MS3D_IMPORTER=OFF \
-  -DASSIMP_BUILD_NDO_IMPORTER=OFF \
-  -DASSIMP_BUILD_NDF_IMPORTER=OFF \
-  -DASSIMP_BUILD_X3D_IMPORTER=OFF \
-  -DASSIMP_BUILD_XGL_IMPORTER=OFF \
-  -DASSIMP_BUILD_X_IMPORTER=OFF \
-  -DBUILD_FRAMEWORK=OFF \
-  -DASSIMP_BUILD_ASSIMP_TOOLS=OFF \
-  .. \
-"
-)
 add_custom_command(
-  TARGET BuildAssimp
+  OUTPUT ${ASSIMP_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${ASSIMP_DIR}/build &&
-      make -j${NUM_COMPILE_THREADS} &&
-      /bin/bash -c "cp ${ASSIMP_LIB_OUTPUT} ${ASSIMP_LIB_FINAL_OUTPUT}"
+      echo "Executing ASSIMP CMake ------------" &&
+      cd ${ASSIMP_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake
+        -DBUILD_SHARED_LIBS=OFF
+        -DSYSTEM_IRRXML=OFF
+        -DASSIMP_BUILD_ZLIB=OFF
+        -DASSIMP_BUILD_TESTS=OFF
+        -DASSIMP_BUILD_SAMPLES=OFF
+        -DASSIMP_ASAN=OFF
+        -DASSIMP_UBSAN=OFF
+        -DASSIMP_NO_EXPORT=OFF
+        -DASSIMP_BUILD_OFF_IMPORTER=OFF
+        -DASSIMP_BUILD_OGRE_IMPORTER=OFF
+        -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF
+        -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF
+        -DASSIMP_BUILD_Q3D_IMPORTER=OFF
+        -DASSIMP_BUILD_RAW_IMPORTER=OFF
+        -DASSIMP_BUILD_SMD_IMPORTER=OFF
+        -DASSIMP_BUILD_SIB_IMPORTER=OFF
+        -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF
+        -DASSIMP_BUILD_AC_IMPORTER=OFF
+        -DASSIMP_BUILD_AMF_IMPORTER=OFF
+        -DASSIMP_BUILD_ASE_IMPORTER=OFF
+        -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF
+        -DASSIMP_BUILD_ASSXML_IMPORTER=OFF
+        -DASSIMP_BUILD_B3D_IMPORTER=OFF
+        -DASSIMP_BUILD_COB_IMPORTER=OFF
+        -DASSIMP_BUILD_CSM_IMPORTER=OFF
+        -DASSIMP_BUILD_DFX_IMPORTER=OFF
+        -DASSIMP_BUILD_GLTF_IMPORTER=OFF
+        -DASSIMP_BUILD_HMP_IMPORTER=OFF
+        -DASSIMP_BUILD_IFC_IMPORTER=OFF
+        -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF
+        -DASSIMP_BUILD_IRR_IMPORTER=OFF
+        -DASSIMP_BUILD_LWO_IMPORTER=OFF
+        -DASSIMP_BUILD_LWS_IMPORTER=OFF
+        -DASSIMP_BUILD_MD2_IMPORTER=OFF
+        -DASSIMP_BUILD_MD3_IMPORTER=OFF
+        -DASSIMP_BUILD_MD5_IMPORTER=OFF
+        -DASSIMP_BUILD_MDL_IMPORTER=OFF
+        -DASSIMP_BUILD_MMD_IMPORTER=OFF
+        -DASSIMP_BUILD_MS3D_IMPORTER=OFF
+        -DASSIMP_BUILD_NDO_IMPORTER=OFF
+        -DASSIMP_BUILD_NDF_IMPORTER=OFF
+        -DASSIMP_BUILD_X3D_IMPORTER=OFF
+        -DASSIMP_BUILD_XGL_IMPORTER=OFF
+        -DASSIMP_BUILD_X_IMPORTER=OFF
+        -DBUILD_FRAMEWORK=OFF
+        -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+        .. &&
+        make -j${NUM_COMPILE_THREADS} &&
+        /bin/bash -c "cp ${ASSIMP_LIB_OUTPUT} ${ASSIMP_LIB_FINAL_OUTPUT}"
   COMMENT "Building Assimp"
   VERBATIM
 )
@@ -178,23 +173,18 @@ add_custom_command(
 #=================================================================
 # MINIZIP Compile ================================================
 #=================================================================
-add_custom_target(BuildMiniZip ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing MINIZIP CMake ------------\" && \
-cd ${MINIZIP_DIR} && \
-mkdir -p build && \
-cd build && \
-cmake -DBUILD_SHARED_LIBS=OFF \
-      -DUSE_AES=OFF \
-      -DCMAKE_C_FLAGS=\"-fPIC\" \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-      .. \
-"
-)
 add_custom_command(
-  TARGET BuildMiniZip
+  OUTPUT ${MINIZIP_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${MINIZIP_DIR}/build &&
+      echo "Executing MINIZIP CMake ------------" &&
+      cd ${MINIZIP_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake -DBUILD_SHARED_LIBS=OFF
+            -DUSE_AES=OFF
+            -DCMAKE_C_FLAGS="-fPIC"
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            .. &&
       make -j${NUM_COMPILE_THREADS} &&
       /bin/bash -c "cp ${MINIZIP_LIB_OUTPUT} ${MINIZIP_LIB_FINAL_OUTPUT}"
   COMMENT "Building MINIZIP"
@@ -207,9 +197,9 @@ add_custom_command(
 #=================================================================
 # IRRXML Copy when Assimp has built it ===========================
 #=================================================================
-add_custom_target(BuildIRRXML ALL DEPENDS BuildAssimp)
 add_custom_command(
-  TARGET BuildIRRXML
+  OUTPUT ${IRRXML_LIB_FINAL_OUTPUT}
+  DEPENDS ${ASSIMP_LIB_FINAL_OUTPUT}
   COMMAND /bin/bash -c "cp ${IRRXML_LIB_OUTPUT} ${IRRXML_LIB_FINAL_OUTPUT}"
   VERBATIM
 )
@@ -220,22 +210,17 @@ add_custom_command(
 #=================================================================
 # Freetype Compile ===============================================
 #=================================================================
-execute_process(COMMAND /bin/bash -c " \
-echo \"Configuring FREETYPE ------------\" && \
-cd ${FREETYPE_DIR} && \
-sh autogen.sh && \
-mkdir -p ${FREETYPE_INSTALL_DIR} && \
-mkdir -p ${FREETYPE_INSTALL_DIR}/include/freetype2/freetype/internal/ && \
-./configure \
-      --prefix=${FREETYPE_INSTALL_DIR} \
-      --with-pic
-"
-)
-add_custom_target(BuildFreetype ALL)
 add_custom_command(
-  TARGET BuildFreetype
+  OUTPUT ${FREETYPE_LIB_FINAL_OUTPUT}
   COMMAND
+      echo "Configuring FREETYPE ------------" &&
       cd ${FREETYPE_DIR} &&
+      sh autogen.sh &&
+      mkdir -p ${FREETYPE_INSTALL_DIR} &&
+      mkdir -p ${FREETYPE_INSTALL_DIR}/include/freetype2/freetype/internal/ &&
+      ./configure
+            --prefix=${FREETYPE_INSTALL_DIR}
+            --with-pic &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
       /bin/bash -c "cp ${FREETYPE_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}"
@@ -249,9 +234,8 @@ add_custom_command(
 #=================================================================
 # GLEW Compile ===================================================
 #=================================================================
-add_custom_target(BuildGlew ALL)
 add_custom_command(
-  TARGET BuildGlew
+  OUTPUT ${GLEW_LIB_FINAL_OUTPUT}
   COMMAND
       cd ${GLEW_DIR} &&
       make -j${NUM_COMPILE_THREADS} &&
@@ -266,25 +250,20 @@ add_custom_command(
 #=================================================================
 # JPEG Compile ===================================================
 #=================================================================
-add_custom_target(BuildJpeg ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing JPEG CMake ------------\" && \
-cd ${JPEG_DIR} && \
-mkdir -p build && \
-cd build && \
-export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ && \
-cmake \
-      -DCMAKE_INSTALL_PREFIX=${JPEG_INSTALL_DIR} \
-      -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF \
-      -DREQUIRE_SIMD=OFF \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-      .. \
-"
-)
 add_custom_command(
-  TARGET BuildJpeg
+  OUTPUT ${JPEG_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${JPEG_DIR}/build &&
+      echo "Executing JPEG CMake ------------" &&
+      cd ${JPEG_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake
+            -DCMAKE_INSTALL_PREFIX=${JPEG_INSTALL_DIR}
+            -DBUILD_SHARED_LIBS=OFF -DWITH_SIMD=OFF
+            -DREQUIRE_SIMD=OFF
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            ..  &&
       export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
@@ -299,25 +278,20 @@ add_custom_command(
 #=================================================================
 # PNG Compile ====================================================
 #=================================================================
-add_custom_target(BuildPng ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing PNG CMake ------------\" && \
-cd ${PNG_DIR} && \
-mkdir -p build && \
-cd build && \
-export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ && \
-cmake \
-      -DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR} \
-      -DBUILD_SHARED_LIBS=OFF \
-      -DCMAKE_C_FLAGS=\"-fPIC\" \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-      .. \
-"
-)
 add_custom_command(
-  TARGET BuildPng
+  OUTPUT ${PNG_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${PNG_DIR}/build &&
+      echo "Executing PNG CMake ------------" &&
+      cd ${PNG_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
+      cmake
+            -DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR}
+            -DBUILD_SHARED_LIBS=OFF
+            -DCMAKE_C_FLAGS="-fPIC"
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            ..  &&
       export PATH=$ENV{PATH}:/usr/lib/x86_64-linux-gnu/ &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
@@ -332,24 +306,19 @@ add_custom_command(
 #=================================================================
 # OPENAL Compile =================================================
 #=================================================================
-add_custom_target(BuildOpenAL ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing OPENAL CMake ------------\" && \
-cd ${OPENAL_DIR} && \
-mkdir -p build && \
-cd build && \
-cmake -DBUILD_SHARED_LIBS=OFF \
-      -DLIBTYPE=STATIC \
-      -DCMAKE_CXX_FLAGS=-fPIC \
-      -DCMAKE_C_FLAGS=-fPIC \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-      .. \
-"
-)
 add_custom_command(
-  TARGET BuildOpenAL
+  OUTPUT ${OPENAL_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${OPENAL_DIR}/build &&
+      echo "Executing OPENAL CMake ------------" &&
+      cd ${OPENAL_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake -DBUILD_SHARED_LIBS=OFF
+            -DLIBTYPE=STATIC
+            -DCMAKE_CXX_FLAGS=-fPIC
+            -DCMAKE_C_FLAGS=-fPIC
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            ..   &&
       make -j${NUM_COMPILE_THREADS} &&
       /bin/bash -c "cp ${OPENAL_LIB_OUTPUT} ${OPENAL_LIB_FINAL_OUTPUT}"
   COMMENT "Building OpenAL"
@@ -362,28 +331,23 @@ add_custom_command(
 #=================================================================
 # SDL2 Compile ===================================================
 #=================================================================
-add_custom_target(BuildSDL2 ALL)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Executing SDL2 CMake ------------\" && \
-cd ${SDL2_DIR} && \
-mkdir -p ${SDL2_INSTALL_DIR} && \
-mkdir -p build && \
-cd build && \
-cmake \
-    -DSDL_STATIC_PIC=ON \
-    -DSNDIO=OFF \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR} \
-    -DCMAKE_CXX_FLAGS=-fPIC \
-    -DCMAKE_C_FLAGS=-fPIC \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-    .. \
-"
-)
 add_custom_command(
-  TARGET BuildSDL2
+  OUTPUT ${SDL2_LIB_FINAL_OUTPUT}
   COMMAND
-      cd ${SDL2_DIR}/build &&
+      echo "Executing SDL2 CMake ------------" &&
+      cd ${SDL2_DIR} &&
+      mkdir -p ${SDL2_INSTALL_DIR} &&
+      mkdir -p build &&
+      cd build &&
+      cmake
+          -DSDL_STATIC_PIC=ON
+          -DSNDIO=OFF
+          -DBUILD_SHARED_LIBS=OFF
+          -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_DIR}
+          -DCMAKE_CXX_FLAGS=-fPIC
+          -DCMAKE_C_FLAGS=-fPIC
+          -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+          ..  &&
       make -j${NUM_COMPILE_THREADS} &&
       make install &&
       /bin/bash -c "cp ${SDL2_LIB_OUTPUT} ${SDL2_LIB_FINAL_OUTPUT}"
@@ -397,24 +361,9 @@ add_custom_command(
 #=================================================================
 # SDL2TTF Compile ================================================
 #=================================================================
-add_custom_target(BuildSDL2TTF ALL DEPENDS BuildSDL2 DEPENDS BuildFreetype)
-execute_process(COMMAND /bin/bash -c " \
-echo \"Configuring SDL2TTF ------------\" && \
-export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} && \
-export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config && \
-cp ${FREETYPE_INSTALL_DIR}/lib*/libfreetype.so.6 ${SDL2_INSTALL_DIR}/lib*/ && \
-cd ${SDL2TTF_DIR} && \
-mkdir -p ${SDL2TTF_INSTALL_DIR} && \
-sh autogen.sh && \
-./configure CPPFLAGS=-I${SDL2_INCLUDE_DIR} \
-            --with-freetype-prefix=${FREETYPE_INSTALL_DIR} \
-            --prefix=${SDL2TTF_INSTALL_DIR} \
-            --enable-static=yes \
-            --with-pic \
-"
-)
 add_custom_command(
-  TARGET BuildSDL2TTF
+  OUTPUT ${SDL2TTF_LIB_FINAL_OUTPUT}
+  DEPENDS ${SDL2_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}
   COMMAND
       export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&
@@ -462,16 +411,16 @@ list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2_INCLUDE_DIR})
 list(APPEND THIRD_PARTY_INCLUDE_DIRS ${SDL2TTF_INCLUDE_DIR})
 
 add_custom_target(BuildThirdParty ALL
-    DEPENDS BuildAssimp
-    DEPENDS BuildPng
-    DEPENDS BuildMiniZip
-    DEPENDS BuildIRRXML
-    DEPENDS BuildJpeg
-    DEPENDS BuildOpenAL
-    DEPENDS BuildSDL2
-    DEPENDS BuildSDL2TTF
-    DEPENDS BuildGlew
-    DEPENDS BuildFreetype
+    DEPENDS ${ASSIMP_LIB_FINAL_OUTPUT}
+    DEPENDS ${PNG_LIB_FINAL_OUTPUT}
+    DEPENDS ${MINIZIP_LIB_FINAL_OUTPUT}
+    DEPENDS ${IRRXML_LIB_FINAL_OUTPUT}
+    DEPENDS ${JPEG_LIB_FINAL_OUTPUT}
+    DEPENDS ${OPENAL_LIB_FINAL_OUTPUT}
+    DEPENDS ${SDL2_LIB_FINAL_OUTPUT}
+    DEPENDS ${SDL2TTF_LIB_FINAL_OUTPUT}
+    DEPENDS ${GLEW_LIB_FINAL_OUTPUT}
+    DEPENDS ${FREETYPE_LIB_FINAL_OUTPUT}
     DEPENDS ${THIRD_PARTY_LIB_PATHS})
 #=================================================================
 #=================================================================

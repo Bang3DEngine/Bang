@@ -65,8 +65,6 @@ struct ModelIOScene
 class ModelIO
 {
 public:
-    static int GetModelNumTriangles(const Path &modelFilepath);
-
     static bool ImportModel(const Path &modelFilepath,
                             Model *model,
                             ModelIOScene *modelScene);

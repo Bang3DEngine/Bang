@@ -4,8 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/Flags.h"
 
-#include BANG_SDL2_INCLUDE(SDL.h)
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
 
 namespace Bang
 {

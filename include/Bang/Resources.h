@@ -107,8 +107,6 @@ public:
 
 private:
     bool m_beingDestroyed = false;
-    USet<Path> m_permanentResourcesPaths;
-    USet<Resource *> m_permanentResources;
     UMap<GUID, ResourceEntry> m_resourcesCache;
 
     MeshFactory *m_meshFactory = nullptr;

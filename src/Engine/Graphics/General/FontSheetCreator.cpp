@@ -4,7 +4,7 @@
 #include <SDL2/SDL_stdinc.h>
 #include <SDL2/SDL_surface.h>
 
-#include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
+#include <SDL2/SDL_ttf.h>
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"

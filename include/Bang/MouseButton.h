@@ -2,7 +2,8 @@
 #define MOUSEBUTTON_H
 
 #include "Bang/Bang.h"
-#include BANG_SDL2_INCLUDE(SDL.h)
+
+#include <SDL2/SDL_mouse.h>
 
 namespace Bang
 {

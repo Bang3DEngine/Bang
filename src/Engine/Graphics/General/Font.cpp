@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
+#include <SDL2/SDL_ttf.h>
 
 #include "Bang/AARect.h"
 #include "Bang/Array.h"

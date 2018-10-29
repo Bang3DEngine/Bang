@@ -10,6 +10,7 @@
 
 namespace Bang
 {
+class GUID;
 class Mesh;
 class Model;
 class Path;

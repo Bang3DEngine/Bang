@@ -3,7 +3,6 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Flags.h"
-#include BANG_SDL2_TTF_INCLUDE(SDL_ttf.h)
 
 namespace Bang
 {

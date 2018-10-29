@@ -4,7 +4,7 @@
 #include "Bang/Bang.h"
 
 #include <iostream>
-#include BANG_SDL2_INCLUDE(SDL.h)
+#include <SDL2/SDL_events.h>
 
 #include "Bang/AARect.h"
 #include "Bang/Array.h"

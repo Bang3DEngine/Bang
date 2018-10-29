@@ -5,6 +5,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Mesh.h"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/Model.h"
 #include "Bang/Paths.h"
 #include "Bang/Resources.h"

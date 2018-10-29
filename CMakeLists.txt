@@ -60,21 +60,23 @@ message("===========================================")
 #=================================================================
 # Add misc files =================================================
 #=================================================================
-set(BANG_ENGINE_ASSETS_DIR "${BANG_ENGINE_ROOT}/Assets")
-file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.geom"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.svg"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
-                              "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildPackage/CMakeLists.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/CMakeLists.txt"
-                              "${BANG_ENGINE_ROOT}/Build/BuildDependencies/ThirdParty/CMakeLists.txt"
-                              "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
-                              "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
-add_misc_files("${OTHER_FILES}")
+if (ADD_MISC_FILES)
+    set(BANG_ENGINE_ASSETS_DIR "${BANG_ENGINE_ROOT}/Assets")
+    file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.geom"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.svg"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
+                                  "${BANG_ENGINE_ROOT}/Build/BuildPackage/CMakeLists.txt"
+                                  "${BANG_ENGINE_ROOT}/Build/BuildDependencies/CMakeLists.txt"
+                                  "${BANG_ENGINE_ROOT}/Build/BuildDependencies/ThirdParty/CMakeLists.txt"
+                                  "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
+                                  "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
+    add_misc_files("${OTHER_FILES}")
+endif()
 #=================================================================
 #=================================================================
 #=================================================================

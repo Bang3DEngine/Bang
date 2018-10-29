@@ -1,7 +1,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #include "Bang/AARect.h"
 #include "Bang/Asset.h"

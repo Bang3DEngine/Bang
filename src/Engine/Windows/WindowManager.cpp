@@ -1,6 +1,6 @@
 #include "Bang/WindowManager.h"
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #ifdef __linux__
 #include <signal.h>

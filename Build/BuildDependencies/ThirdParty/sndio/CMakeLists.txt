@@ -44,6 +44,6 @@ include_directories("${SRC_DIR}/aucat")
 include_directories("${SRC_DIR}/midicat")
 include_directories("${SRC_DIR}/libsndio")
 
-add_library(sndio STATIC "${SNDIO_SOURCES}")
+add_library(sndio STATIC ${SNDIO_SOURCES})
 
 

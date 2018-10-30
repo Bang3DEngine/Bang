@@ -391,7 +391,7 @@ add_custom_command(
 #=================================================================
 add_custom_command(
   OUTPUT ${SDL2TTF_LIB_FINAL_OUTPUT}
-  DEPENDS ${SDL2_LIB_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}
+  DEPENDS ${SDL2_LIB_FINAL_OUTPUT} ${FREETYPE_LIB_FINAL_OUTPUT}
   COMMAND
       export PATH=$ENV{PATH}:${SDL2_INSTALL_DIR}:${SDL2TTF_INSTALL_DIR} &&
       export SDL2_CONFIG=${SDL2_INSTALL_DIR}/bin/sdl2-config &&

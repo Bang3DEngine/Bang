@@ -151,6 +151,8 @@ Array<Path> Paths::GetEngineIncludeDirs()
 {
     Array<Path> incPaths;
     incPaths.PushBack(Paths::GetEngineIncludeDir());
+    incPaths.PushBack(Path("/usr/include"));
+    incPaths.PushBack(Path("/usr/include/SDL2"));
 
     Path physxRootDir = Paths::GetEngineDir().Append(
         "Build/BuildDependencies/ThirdParty/PhysX/");

@@ -21,14 +21,6 @@ set(BANG_BUILT ON)
 #=================================================================
 
 #=================================================================
-# Check input params =============================================
-#=================================================================
-message("CMAKE_CURRENT_LIST_DIR: " ${CMAKE_CURRENT_LIST_DIR})
-#=================================================================
-#=================================================================
-#=================================================================
-
-#=================================================================
 # General variables ==============================================
 #=================================================================
 set(BANG_ENGINE_ROOT          ${CMAKE_CURRENT_LIST_DIR})
@@ -90,6 +82,11 @@ add_misc_files("${ENGINE_SRC_FILES}")
 #=================================================================
 #=================================================================
 
+#=================================================================
+# Dependencies ===================================================
+#=================================================================
+include("${CMAKE_CURRENT_LIST_DIR}/Build/BuildDependencies/CMakeLists.txt")
+
 if (${BUILD_SHARED_LIBS})
     # If shared building, split compilation into some different shared libs
 
@@ -97,7 +94,7 @@ if (${BUILD_SHARED_LIBS})
     set(BANG_MATH_LIB_SOURCES "")
     file(GLOB_RECURSE BANG_MATH_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Math/*.cpp")
     add_library(BangMathLib ${BANG_MATH_LIB_SOURCES})
-    target_include_directories(BangMathLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+    target_include_directories(BangMathLib PUBLIC ${DEPENDENCIES_INCLUDE_DIRS} ${BANG_ENGINE_INCLUDE_DIR})
     add_bang_compilation_flags(BangMathLib)
     remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_MATH_LIB_SOURCES}")
 
@@ -105,7 +102,7 @@ if (${BUILD_SHARED_LIBS})
     set(BANG_SYSTEM_LIB_SOURCES "")
     file(GLOB_RECURSE BANG_SYSTEM_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/System/*.cpp")
     add_library(BangSystemLib ${BANG_SYSTEM_LIB_SOURCES})
-    target_include_directories(BangSystemLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+    target_include_directories(BangSystemLib PUBLIC ${DEPENDENCIES_INCLUDE_DIRS} ${BANG_ENGINE_INCLUDE_DIR})
     add_bang_compilation_flags(BangSystemLib)
     remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_SYSTEM_LIB_SOURCES}")
 
@@ -114,7 +111,7 @@ if (${BUILD_SHARED_LIBS})
     file(GLOB_RECURSE BANG_COMPONENTS_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Components/*.cpp"
                                                   "${BANG_ENGINE_SRC_DIR}/UIComponents/*.cpp")
     add_library(BangComponentsLib ${BANG_COMPONENTS_LIB_SOURCES})
-    target_include_directories(BangComponentsLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+    target_include_directories(BangComponentsLib PUBLIC ${DEPENDENCIES_INCLUDE_DIRS} ${BANG_ENGINE_INCLUDE_DIR})
     add_bang_compilation_flags(BangComponentsLib)
     remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_COMPONENTS_LIB_SOURCES}")
 
@@ -122,15 +119,10 @@ if (${BUILD_SHARED_LIBS})
     set(BANG_GRAPHICS_LIB_SOURCES "")
     file(GLOB_RECURSE BANG_GRAPHICS_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Graphics/*.cpp")
     add_library(BangGraphicsLib ${BANG_GRAPHICS_LIB_SOURCES})
-    target_include_directories(BangGraphicsLib PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
+    target_include_directories(BangGraphicsLib PUBLIC ${DEPENDENCIES_INCLUDE_DIRS} ${BANG_ENGINE_INCLUDE_DIR})
     add_bang_compilation_flags(BangGraphicsLib)
     remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_GRAPHICS_LIB_SOURCES}")
 endif()
-
-#=================================================================
-# Dependencies ===================================================
-#=================================================================
-include("${CMAKE_CURRENT_LIST_DIR}/Build/BuildDependencies/CMakeLists.txt")
 
 add_library(BangEngineObjects OBJECT ${ENGINE_SRC_FILES} ${OTHER_FILES})
 if (${BUILD_SHARED_LIBS})

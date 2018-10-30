@@ -58,22 +58,14 @@ void WindowManager::Init()
                                                               << ")");
     }
 
-    m_windowsStack.push({});
+    m_windowsStack.PushBack({});
 }
 
 bool WindowManager::MainLoopIteration()
 {
     bool exit = false;
-
-    if (!HandleEvents())
-    {
-        exit = true;
-    }
-
-    if (GetCurrentWindows().IsEmpty())
-    {
-        exit = true;
-    }
+    exit |= (!HandleEvents());
+    exit |= (GetCurrentWindows().IsEmpty());
     DestroyQueuedWindows();
 
     for (Window *w : GetCurrentWindows())
@@ -88,15 +80,15 @@ bool WindowManager::MainLoopIteration()
 
 void WindowManager::OnBlockingWaitBegin(Window *win)
 {
-    GetCurrentWindows().Remove(win);
+    m_windowsStack.Back().Remove(win);
 
-    m_windowsStack.push({win});
+    m_windowsStack.PushBack({win});
     Window::SetActive(win);
 }
 
 void WindowManager::OnBlockingWaitEnd()
 {
-    m_windowsStack.pop();
+    m_windowsStack.PopBack();
     Window::SetActive(GetCurrentWindows().Front());
 }
 
@@ -126,7 +118,7 @@ Window *WindowManager::GetTopWindow()
 
 void WindowManager::SetupWindow(Window *window, uint _flags)
 {
-    WindowManager::GetInstance()->GetCurrentWindows().PushBack(window);
+    WindowManager::GetInstance()->m_windowsStack.Back().PushBack(window);
 
     uint flags =
         (_flags > 0 ? _flags : (SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL));
@@ -162,7 +154,7 @@ bool WindowManager::HandleEvents()
                     bool canCloseWindow = w->OnClosed();
                     if (canCloseWindow)
                     {
-                        GetCurrentWindows().Remove(w);
+                        m_windowsStack.Back().Remove(w);
                         delete w;
                         Window::SetActive(nullptr);
                     }
@@ -182,24 +174,32 @@ bool WindowManager::HandleEvents()
 
 void WindowManager::DestroyQueuedWindows()
 {
-    Window *latestWindow = Window::GetActive();
-    for (Window *w : p_windowsToBeDestroyed)
+    while (!p_windowsToBeDestroyed.IsEmpty())
     {
-        Window::SetActive(w);
-        GetCurrentWindows().Remove(w);
+        Window *w = p_windowsToBeDestroyed.Back();
+        p_windowsToBeDestroyed.PopBack();
+
+        for (Array<Window *> &wArr : m_windowsStack)
+        {
+            wArr.Remove(w);
+        }
+
+        if (w == Window::GetActive())
+        {
+            Window::SetActive(nullptr);
+        }
+
         delete w;
     }
-    p_windowsToBeDestroyed.Clear();
-    Window::SetActive(latestWindow);
 }
 
-List<Window *> &WindowManager::GetCurrentWindows()
+const Array<Window *> WindowManager::GetCurrentWindows() const
 {
-    return m_windowsStack.top();
-}
-const List<Window *> &WindowManager::GetCurrentWindows() const
-{
-    return m_windowsStack.top();
+    if (m_windowsStack.Size() >= 1)
+    {
+        return m_windowsStack.Back();
+    }
+    return {};
 }
 
 WindowManager *WindowManager::GetInstance()

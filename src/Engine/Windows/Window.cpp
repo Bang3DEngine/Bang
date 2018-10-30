@@ -30,9 +30,7 @@ Window::~Window()
     SetParent(nullptr);
 
     delete m_sceneManager;
-    m_sceneManager = nullptr;
     delete m_input;
-    m_input = nullptr;
 
     SDL_DestroyWindow(m_sdlWindow);
 }

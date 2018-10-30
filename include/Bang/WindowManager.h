@@ -33,16 +33,15 @@ public:
     static WindowManager *GetInstance();
 
 private:
-    std::stack<List<Window *>> m_windowsStack;
-    List<Window *> p_windowsToBeDestroyed;
+    Array<Array<Window *>> m_windowsStack;
+    Array<Window *> p_windowsToBeDestroyed;
 
     static void SetupWindow(Window *window, uint flags);
 
     bool HandleEvents();
     void DestroyQueuedWindows();
 
-    List<Window *> &GetCurrentWindows();
-    const List<Window *> &GetCurrentWindows() const;
+    const Array<Window *> GetCurrentWindows() const;
 };
 }
 

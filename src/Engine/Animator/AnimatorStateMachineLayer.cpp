@@ -118,7 +118,7 @@ void AnimatorStateMachineLayer::SetEntryNodeIdx(uint entryNodeIdx)
     }
     else
     {
-        m_entryNodeIdx = -1u;
+        m_entryNodeIdx = SCAST<uint>(-1);
     }
 }
 

@@ -97,7 +97,7 @@ void PrintUniformsAllElements(GLId programId,
 {
     Array<T> allElements =
         GLUniforms::GetUniformArray<T>(programId, var.name, var.size);
-    for (int i = 0; i < allElements.Size(); ++i)
+    for (uint i = 0; i < allElements.Size(); ++i)
     {
         const T &value = allElements[i];
         String idxStr = String::ToString(i);

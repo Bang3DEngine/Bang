@@ -15,7 +15,10 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsChildren.h"
+#include "Bang/IEventsComponent.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsGameObjectVisibilityChanged.h"
+#include "Bang/IEventsName.h"
 #include "Bang/IToString.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Object.h"
@@ -30,11 +33,6 @@ class Camera;
 class Component;
 class GUID;
 class ICloneable;
-class IEventsChildren;
-class IEventsComponent;
-class IEventsDestroy;
-class IEventsGameObjectVisibilityChanged;
-class IEventsName;
 class RectTransform;
 class Scene;
 class Transform;
@@ -316,7 +314,7 @@ private:
     friend class SceneManager;
     friend class RectTransform;
 };
-}
+}  // namespace Bang
 
 #include "Bang/GameObject.tcc"
 

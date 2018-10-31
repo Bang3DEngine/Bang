@@ -17,14 +17,10 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/Transform.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 
-AudioSource::AudioSource()
-{
-    CONSTRUCT_CLASS_ID(AudioSource)
-}
+AudioSource::AudioSource(){CONSTRUCT_CLASS_ID(AudioSource)}
 
 AudioSource::~AudioSource()
 {

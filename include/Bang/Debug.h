@@ -9,11 +9,11 @@
 #include "Bang/DebugMessageType.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/IEventsDebug.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class IEventsDebug;
 class Shader;
 
 class Debug : public EventEmitter<IEventsDebug>
@@ -91,6 +91,6 @@ private:
         log.flush();                                 \
         Debug::Error(log.str(), __LINE__, __FILE__); \
     } while (0)
-}
+}  // namespace Bang
 
 #endif  // DEBUG_H

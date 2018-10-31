@@ -2,7 +2,6 @@
 #define NV_DDS_H
 
 #include <assert.h>
-#include <ext/alloc_traits.h>
 #include <stdint.h>
 #include <deque>
 #include <istream>
@@ -309,6 +308,6 @@ private:
 
     std::deque<CTexture> m_images;
 };
-}
+}  // namespace nv_dds
 
 #endif  // NV_DDS_H

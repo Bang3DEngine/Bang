@@ -3,7 +3,6 @@
 
 #include "Bang/Axis.h"
 #include "Bang/Math.h"
-#include "Bang/TypeTraits.h"
 
 #undef XYZ_MEMBERS
 #undef EXTRA_DECLARATIONS

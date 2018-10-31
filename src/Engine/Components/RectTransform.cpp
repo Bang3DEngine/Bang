@@ -19,7 +19,6 @@
 #include "Bang/Rect.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/Vector4.h"
 #include "Bang/Window.h"
 

@@ -17,7 +17,6 @@
 #include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -155,7 +154,7 @@ AARect UIImageRenderer::GetBoundingRect(Camera *camera) const
 void UIImageRenderer::CloneInto(ICloneable *clone) const
 {
     UIRenderer::CloneInto(clone);
-    UIImageRenderer *img = Cast<UIImageRenderer *>(clone);
+    UIImageRenderer *img = SCAST<UIImageRenderer *>(clone);
     img->SetImageTexture(GetImageTexture());
     img->SetTint(GetTint());
 }

@@ -1,7 +1,6 @@
 #include "Bang/AspectRatioMode.h"
 
 #include "Bang/Math.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 
@@ -12,8 +11,8 @@ Vector2i AspectRatio::GetAspectRatioedSize(const Vector2i &currentSize,
     Vector2i finalSize = targetSize;
     if (aspectRatioMode != AspectRatioMode::IGNORE)
     {
-        Vector2 aspectRatio(Cast<float>(targetSize.x) / currentSize.x,
-                            Cast<float>(targetSize.y) / currentSize.y);
+        Vector2 aspectRatio(SCAST<float>(targetSize.x) / currentSize.x,
+                            SCAST<float>(targetSize.y) / currentSize.y);
 
         bool keepExc = (aspectRatioMode == AspectRatioMode::KEEP_EXCEEDING);
         float ar = (aspectRatio.x < aspectRatio.y)

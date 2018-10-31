@@ -56,7 +56,7 @@ void EventEmitter<T>::UnRegisterListener(EventListener<T> *listener)
 template <class T>
 void EventEmitter<T>::MarkListenerAsDeleted(EventListener<T> *listener)
 {
-    for (int i = 0; i < GetListeners().Size(); ++i)
+    for (uint i = 0; i < GetListeners().Size(); ++i)
     {
         if (GetListeners()[i] == listener)
         {
@@ -110,7 +110,7 @@ void EventEmitter<T>::PropagateToArrayFunctor(
             ++m_iterationDepth;
         }
 
-        for (int i = 0; i < arraySize; ++i)
+        for (uint i = 0; i < arraySize; ++i)
         {
             if (EventListener<T> *listener = array[i])
             {

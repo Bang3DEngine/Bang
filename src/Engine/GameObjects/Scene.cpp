@@ -23,7 +23,7 @@ namespace Bang
 {
 class ICloneable;
 class IEventsDestroy;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
@@ -122,7 +122,7 @@ void Scene::CloneInto(ICloneable *clone) const
         ASSERT(cams.Size() == cloneCams.Size());
 
         uint camIdx = cams.IndexOf(GetCamera());
-        if (camIdx != -1u)
+        if (camIdx != SCAST<uint>(-1))
         {
             Camera *cloneCam = cloneCams[camIdx];
             cloneScene->SetCamera(cloneCam);

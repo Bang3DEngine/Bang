@@ -43,7 +43,7 @@ double Time::GetSeconds() const
 
 uint64_t Time::GetMillis() const
 {
-    return GetNanos() / 1e6;
+    return SCAST<uint64_t>(GetNanos() / 1e6);
 }
 
 uint64_t Time::GetNanos() const
@@ -58,7 +58,7 @@ Time Time::Zero()
 
 Time Time::Infinity()
 {
-    return Time(SCAST<uint64_t>(-1u));
+    return Time(SCAST<uint64_t>(SCAST<uint>(-1)));
 }
 
 Time Time::Seconds(double seconds)

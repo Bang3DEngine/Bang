@@ -15,7 +15,7 @@ void MetaNode::Set(const String &attributeName, const T &value)
 template <class T>
 void MetaNode::SetArray(const String &name, const Array<T> &array)
 {
-    for (int i = 0; i < array.Size(); ++i)
+    for (uint i = 0; i < array.Size(); ++i)
     {
         const T &x = array[i];
         Set(name + "_" + String::ToString(i), x);
@@ -52,4 +52,4 @@ T MetaNode::Get(const String &attributeName) const
 {
     return Get<T>(attributeName, T());
 }
-}
+}  // namespace Bang

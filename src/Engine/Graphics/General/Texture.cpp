@@ -192,3 +192,32 @@ void Texture::SetHeight(int height)
         PropagateResourceChanged();
     }
 }
+
+Image Texture::ToImage(GL::TextureTarget texTarget) const
+{
+    const int width = GetWidth();
+    const int height = GetHeight();
+    const int numComps = GL::GetNumComponents(GL::ColorComp::RGBA);
+    Byte *pixels = new Byte[width * height * numComps];
+
+    GL::Push(GL::BindTarget::TEXTURE_2D);
+    Bind();
+    GL::GetTexImage(
+        texTarget, GL::ColorComp::RGBA, GL::DataType::UNSIGNED_BYTE, pixels);
+    GL::Pop(GL::BindTarget::TEXTURE_2D);
+
+    Image img(width, height);
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            const int coords = (y * width + x) * numComps;
+            Color pixelColor = GetColorFromByteArray(pixels, coords);
+            img.SetPixel(x, y, pixelColor);
+        }
+    }
+
+    delete[] pixels;
+
+    return img;
+}

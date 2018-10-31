@@ -250,7 +250,7 @@ void Input::EnqueueEvent(const SDL_Event &event, const Window *window)
     InputEvent inputEvent;
 
     inputEvent.mousePosWindow = Input::GetMousePositionWindowWithoutInvertY();
-    if (event.common.timestamp != -1u)
+    if (event.common.timestamp != SCAST<uint>(-1))
     {
         inputEvent.timestamp =
             Time::Millis(event.common.timestamp) + Time::GetInit();
@@ -464,10 +464,9 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 bool Input::GetMouseButton(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInsideContextFocus()
-               ? inp->m_mouseInfo.ContainsKey(mb) &&
-                     inp->m_mouseInfo[mb].pressed
-               : false;
+    return inp->IsInsideContextFocus() ? inp->m_mouseInfo.ContainsKey(mb) &&
+                                             inp->m_mouseInfo[mb].pressed
+                                       : false;
 }
 
 bool Input::GetMouseButtonUp(MouseButton mb)

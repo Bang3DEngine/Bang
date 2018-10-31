@@ -12,7 +12,7 @@
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
-#include "Bang/Image.tcc"
+#include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
@@ -408,7 +408,7 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
     ASSERT(imgSize > 0);
 
     // Create an image with the random vectors
-    Imageb randomsImg;
+    Image randomsImg;
     randomsImg.Create(imgSize, imgSize);
     for (int i = 0; i < numAxes; ++i)
     {

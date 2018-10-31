@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
@@ -20,7 +21,6 @@ namespace Bang
 {
 class AnimatorStateMachine;
 class AnimatorStateMachineLayer;
-class AnimatorStateMachineNode;
 class AnimatorStateMachineTransitionCondition;
 class IEventsDestroy;
 
@@ -70,6 +70,6 @@ private:
     bool m_immediateTransition = false;
     Array<AnimatorStateMachineTransitionCondition *> m_transitionConditions;
 };
-}
+}  // namespace Bang
 
 #endif  // ANIMATORSTATEMACHINETRANSITION_H

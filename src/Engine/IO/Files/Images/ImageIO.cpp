@@ -16,18 +16,16 @@
 #include "Bang/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Image.h"
-#include "Bang/Image.tcc"
 #include "Bang/ImageIODDS.h"
 #include "Bang/ImageIOTGA.h"
 #include "Bang/Path.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 
-void ImageIO::Export(const Path &filepath, const Imageb &img)
+void ImageIO::Export(const Path &filepath, const Image &img)
 {
     if (filepath.HasExtension("png"))
     {
@@ -51,7 +49,7 @@ void ImageIO::Export(const Path &filepath, const Imageb &img)
     }
 }
 
-void ImageIO::Import(const Path &filepath, Imageb *img, bool *_ok)
+void ImageIO::Import(const Path &filepath, Image *img, bool *_ok)
 {
     bool ok = false;
 
@@ -88,7 +86,7 @@ void ImageIO::Import(const Path &filepath, Imageb *img, bool *_ok)
 }
 
 void ImageIO::Import(const Path &filepath,
-                     Imageb *img,
+                     Image *img,
                      Texture2D *tex,
                      bool *_ok)
 {
@@ -133,11 +131,11 @@ struct BMPInfoHeader
     int32_t biClrImportant;
 };
 
-void ImageIO::ExportBMP(const Path &filepath, const Imageb &img)
+void ImageIO::ExportBMP(const Path &filepath, const Image &img)
 {
     ASSERT_MSG(false, "ExportBMP not implemented!");
 }
-void ImageIO::ImportBMP(const Path &filepath, Imageb *img, bool *ok)
+void ImageIO::ImportBMP(const Path &filepath, Image *img, bool *ok)
 {
     if (ok)
     {
@@ -228,7 +226,7 @@ void ImageIO::ImportBMP(const Path &filepath, Imageb *img, bool *ok)
     *ok = true;  // Return success code
 }
 
-void ImageIO::ExportPNG(const Path &filepath, const Imageb &img)
+void ImageIO::ExportPNG(const Path &filepath, const Image &img)
 {
     FILE *fp = fopen(filepath.GetAbsolute().ToCString(), "wb");
     if (!fp)
@@ -298,7 +296,7 @@ void ImageIO::ExportPNG(const Path &filepath, const Imageb &img)
     fclose(fp);
 }
 
-void ImageIO::ImportPNG(const Path &filepath, Imageb *img, bool *ok)
+void ImageIO::ImportPNG(const Path &filepath, Image *img, bool *ok)
 {
     *ok = false;
 
@@ -402,7 +400,7 @@ void ImageIO::ImportPNG(const Path &filepath, Imageb *img, bool *ok)
     *ok = true;
 }
 
-void ImageIO::ExportJPG(const Path &filepath, const Imageb &img, int quality)
+void ImageIO::ExportJPG(const Path &filepath, const Image &img, int quality)
 {
     struct jpeg_error_mgr jerr;
     struct jpeg_compress_struct cinfo;
@@ -440,7 +438,7 @@ void ImageIO::ExportJPG(const Path &filepath, const Imageb &img, int quality)
     jpeg_destroy_compress(&cinfo);
 }
 
-void ImageIO::ImportJPG(const Path &filepath, Imageb *img, bool *ok)
+void ImageIO::ImportJPG(const Path &filepath, Image *img, bool *ok)
 {
     *ok = false;
 
@@ -502,7 +500,7 @@ void ImageIO::ImportDDS(const Path &filepath, Texture2D *tex, bool *ok)
     ImageIODDS::ImportDDS(filepath, tex, ok);
 }
 
-void ImageIO::ExportTGA(const Path &filepath, const Imageb &img)
+void ImageIO::ExportTGA(const Path &filepath, const Image &img)
 {
     std::ofstream tgafile(filepath.GetAbsolute().ToCString(), std::ios::binary);
     if (!tgafile)
@@ -546,7 +544,7 @@ void ImageIO::ExportTGA(const Path &filepath, const Imageb &img)
     tgafile.close();
 }
 
-void ImageIO::ImportTGA(const Path &filepath, Imageb *img, bool *ok)
+void ImageIO::ImportTGA(const Path &filepath, Image *img, bool *ok)
 {
     FILE *file = fopen(filepath.GetAbsolute().ToCString(), "rb");
     if (file)

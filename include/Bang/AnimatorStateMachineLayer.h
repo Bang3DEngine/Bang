@@ -7,6 +7,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Resource.h"
@@ -20,8 +21,6 @@ class AnimatorLayerMask;
 class AnimatorStateMachine;
 class AnimatorStateMachineNode;
 class AnimatorStateMachineVariable;
-class IEventsAnimatorStateMachineLayer;
-class IEventsDestroy;
 class Path;
 
 using AnimatorBoneMask = Set<String>;
@@ -66,7 +65,7 @@ private:
     bool m_enabled = true;
     String m_layerName = "";
     RH<AnimatorStateMachine> p_stateMachine;
-    uint m_entryNodeIdx = -1u;
+    uint m_entryNodeIdx = SCAST<uint>(-1);
     RH<AnimatorLayerMask> m_layerMask;
     Array<AnimatorStateMachineNode *> m_nodes;
 
@@ -74,6 +73,6 @@ private:
 
     friend class AnimatorStateMachine;
 };
-}
+}  // namespace Bang
 
 #endif  // ANIMATORSTATEMACHINELAYER_H

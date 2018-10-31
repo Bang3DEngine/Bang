@@ -728,14 +728,15 @@ void ParticleSystem::UpdateDataVBO()
             m_particlesVBOData[i].position = pData.position;
             m_particlesVBOData[i].size = pData.size;
             m_particlesVBOData[i].color = pData.currentColor;
-            m_particlesVBOData[i].animationFrame = pData.currentFrame;
+            m_particlesVBOData[i].animationFrame =
+                SCAST<float>(pData.currentFrame);
         }
         else
         {
             m_particlesVBOData[i].position = Vector3::Infinity;
             m_particlesVBOData[i].size = 0.0f;
             m_particlesVBOData[i].color = Color::Zero;
-            m_particlesVBOData[i].animationFrame = 0;
+            m_particlesVBOData[i].animationFrame = 0.0f;
         }
     }
 

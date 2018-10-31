@@ -19,20 +19,16 @@
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/Transform.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
 class Texture2D;
 class TextureCubeMap;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
-Light::Light()
-{
-    CONSTRUCT_CLASS_ID(Light)
-}
+Light::Light(){CONSTRUCT_CLASS_ID(Light)}
 
 Light::~Light()
 {

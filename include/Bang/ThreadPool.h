@@ -28,8 +28,8 @@ private:
     String m_threadsName = "BangPooledThread";
     List<Thread *> m_threadList;
 
-    int m_maxThreadCount = 32;
+    uint m_maxThreadCount = 32;
 };
-}
+}  // namespace Bang
 
 #endif  // THREADPOOL_H

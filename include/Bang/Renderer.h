@@ -14,6 +14,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
+#include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsResource.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"
@@ -24,8 +25,6 @@ namespace Bang
 {
 class Camera;
 class ICloneable;
-class IEventsRendererChanged;
-class IEventsResource;
 class Material;
 class Resource;
 class ShaderProgram;
@@ -98,6 +97,6 @@ private:
 
     friend class GEngine;
 };
-}
+}  // namespace Bang
 
 #endif  // RENDERER_H

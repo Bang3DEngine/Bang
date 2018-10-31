@@ -73,10 +73,10 @@ template <class T>
 template <class OtherT>
 Matrix4G<T>::Matrix4G(const OtherT &a)
 {
-    c0 = Vector4G<T>(Cast<T>(a), Cast<T>(0), Cast<T>(0), Cast<T>(0));
-    c1 = Vector4G<T>(Cast<T>(0), Cast<T>(a), Cast<T>(0), Cast<T>(0));
-    c2 = Vector4G<T>(Cast<T>(0), Cast<T>(0), Cast<T>(a), Cast<T>(0));
-    c3 = Vector4G<T>(Cast<T>(0), Cast<T>(0), Cast<T>(0), Cast<T>(a));
+    c0 = Vector4G<T>(SCAST<T>(a), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
+    c1 = Vector4G<T>(SCAST<T>(0), SCAST<T>(a), SCAST<T>(0), SCAST<T>(0));
+    c2 = Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(a), SCAST<T>(0));
+    c3 = Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(0), SCAST<T>(a));
 }
 
 template <class T>
@@ -354,9 +354,9 @@ Matrix4G<T> Matrix4G<T>::Ortho(Real left,
     res[0][0] = SCAST<T>(2) / (right - left);
     res[1][1] = SCAST<T>(2) / (top - bottom);
     res[2][2] = -SCAST<T>(2) / (zFar - zNear);
-    res[3][0] = -(right + left) / (right - left);
-    res[3][1] = -(top + bottom) / (top - bottom);
-    res[3][2] = -(zFar + zNear) / (zFar - zNear);
+    res[3][0] = -SCAST<T>(right + left) / SCAST<T>(right - left);
+    res[3][1] = -SCAST<T>(top + bottom) / SCAST<T>(top - bottom);
+    res[3][2] = -SCAST<T>(zFar + zNear) / SCAST<T>(zFar - zNear);
     return res;
 }
 
@@ -614,4 +614,4 @@ void operator-=(Matrix4G<T> &m, const Matrix4G<T> &rhs)
 {
     m = m - rhs;
 }
-}
+}  // namespace Bang

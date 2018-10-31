@@ -16,6 +16,7 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/IEventsValueChanged.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/String.h"
 #include "Bang/UIImageRenderer.h"
@@ -105,6 +106,6 @@ private:
 
     friend class GameObjectFactory;
 };
-}
+}  // namespace Bang
 
 #endif  // UIINPUTTEXT_H

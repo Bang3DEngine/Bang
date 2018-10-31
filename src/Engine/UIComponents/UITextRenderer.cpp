@@ -22,7 +22,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/TextFormatter.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
@@ -30,7 +29,7 @@ namespace Bang
 {
 class Camera;
 class Texture2D;
-}
+}  // namespace Bang
 
 using namespace Bang;
 

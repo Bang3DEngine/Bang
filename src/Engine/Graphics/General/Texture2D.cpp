@@ -4,7 +4,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
-#include "Bang/Image.tcc"
+#include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
@@ -34,7 +34,7 @@ void Texture2D::OnFormatChanged()
 
     if (GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
     {
-        Imageb img;
+        Image img;
         ImageIO::Import(GetResourceFilepath(), &img);
         Import(img);
     }
@@ -109,7 +109,7 @@ float Texture2D::GetAlphaCutoff() const
     return m_alphaCutoff;
 }
 
-const Imageb &Texture2D::GetImage() const
+const Image &Texture2D::GetImage() const
 {
     return m_image;
 }
@@ -157,7 +157,7 @@ void Texture2D::Import(const Path &imageFilepath)
     ImportMetaFromFile(importFilepath);
 }
 
-void Texture2D::Import(const Image<Byte> &image)
+void Texture2D::Import(const Image &image)
 {
     if (image.GetData())
     {
@@ -177,4 +177,9 @@ void Texture2D::Import(const Image<Byte> &image)
 GL::BindTarget Texture2D::GetGLBindTarget() const
 {
     return GL::BindTarget::TEXTURE_2D;
+}
+
+Image Texture2D::ToImage() const
+{
+    return Texture::ToImage(GL::TextureTarget::TEXTURE_2D);
 }

@@ -28,6 +28,8 @@ Bang.tgz
 
 # Visual Studio
 *.vcxproj.filters
+Debug/*
+obj/*
 *.vcxproj.user
 *.db
 *.opendb

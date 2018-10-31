@@ -18,7 +18,6 @@ enum class ImageResizeMode
     LINEAR
 };
 
-template <class T>
 class Image : public Resource
 {
     RESOURCE(Image)
@@ -31,12 +30,12 @@ public:
     void Create(int width, int height, const Color &backgroundColor);
     void SetPixel(int x, int y, const Color &color);
 
-    Image<T> GetSubImage(const AARecti &subImageCoordsPx) const;
-    void Copy(const Image<T> &image, const Vector2i &pos);
-    void Copy(const Image<T> &image,
+    Image GetSubImage(const AARecti &subImageCoordsPx) const;
+    void Copy(const Image &image, const Vector2i &pos);
+    void Copy(const Image &image,
               const AARecti &dstRect,
               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
-    void Copy(const Image<T> &image,
+    void Copy(const Image &image,
               const AARecti &srcCopyRect,
               const AARecti &dstCopyRect,
               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
@@ -69,42 +68,34 @@ public:
                 ImageResizeMode resizeMode = ImageResizeMode::LINEAR,
                 AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
-    Image<T> Rotated90DegreesRight() const;
-    Image<T> Rotated180DegreesRight() const;
-    Image<T> Rotated270DegreesRight() const;
+    Image Rotated90DegreesRight() const;
+    Image Rotated180DegreesRight() const;
+    Image Rotated270DegreesRight() const;
 
     void FillTransparentPixels(const Color &color);
 
-    T *GetData();
-    const T *GetData() const;
+    Byte *GetData();
+    const Byte *GetData() const;
     Color GetPixel(int x, int y) const;
     int GetWidth() const;
     int GetHeight() const;
     const Vector2i &GetSize() const;
 
-    Image<T> InvertedVertically();
-    Image<T> InvertedHorizontally();
+    Image InvertedVertically();
+    Image InvertedHorizontally();
 
-    template <class OtherT>
-    Image<OtherT> To() const;
     void Export(const Path &filepath) const;
-    static Image<T> LoadFromData(int width,
-                                 int height,
-                                 const Array<T> &rgbaByteData);
+    static Image LoadFromData(int width,
+                              int height,
+                              const Array<Byte> &rgbaByteData);
 
     // Resource
     void Import(const Path &imageFilepath) override;
 
 private:
     Vector2i m_size = Vector2i::Zero;
-    Array<T> m_pixels;
+    Array<Byte> m_pixels;
 };
-
-template class Image<Byte>;
-template class Image<float>;
-
-using Imageb = Image<Byte>;
-using Imagef = Image<float>;
-}
+}  // namespace Bang
 
 #endif  // IMAGE_H

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{7468067A-DB5F-438F-8C44-CB54E7BFB424}</ProjectGuid>
+    <RootNamespace>Bang</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Bang\AABox.h" />
+    <ClInclude Include="include\Bang\AARect.h" />
+    <ClInclude Include="include\Bang\ALAudioSource.h" />
+    <ClInclude Include="include\Bang\Alignment.h" />
+    <ClInclude Include="include\Bang\All.h" />
+    <ClInclude Include="include\Bang\Animation.h" />
+    <ClInclude Include="include\Bang\Animator.h" />
+    <ClInclude Include="include\Bang\AnimatorLayerMask.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachine.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachineLayer.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachineNode.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachinePlayer.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachineTransition.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachineTransitionCondition.h" />
+    <ClInclude Include="include\Bang\AnimatorStateMachineVariable.h" />
+    <ClInclude Include="include\Bang\Application.h" />
+    <ClInclude Include="include\Bang\Array.h" />
+    <ClInclude Include="include\Bang\Array.tcc" />
+    <ClInclude Include="include\Bang\AspectRatioMode.h" />
+    <ClInclude Include="include\Bang\Assert.h" />
+    <ClInclude Include="include\Bang\Asset.h" />
+    <ClInclude Include="include\Bang\AudioClip.h" />
+    <ClInclude Include="include\Bang\AudioListener.h" />
+    <ClInclude Include="include\Bang\AudioManager.h" />
+    <ClInclude Include="include\Bang\AudioParams.h" />
+    <ClInclude Include="include\Bang\AudioPlayerRunnable.h" />
+    <ClInclude Include="include\Bang\AudioSource.h" />
+    <ClInclude Include="include\Bang\Axis.h" />
+    <ClInclude Include="include\Bang\AxisFunctions.h" />
+    <ClInclude Include="include\Bang\Bang.h" />
+    <ClInclude Include="include\Bang\BangDefines.h" />
+    <ClInclude Include="include\Bang\BangPreprocessor.h" />
+    <ClInclude Include="include\Bang\Behaviour.h" />
+    <ClInclude Include="include\Bang\BehaviourContainer.h" />
+    <ClInclude Include="include\Bang\BehaviourManager.h" />
+    <ClInclude Include="include\Bang\BinType.h" />
+    <ClInclude Include="include\Bang\Box.h" />
+    <ClInclude Include="include\Bang\BoxCollider.h" />
+    <ClInclude Include="include\Bang\Camera.h" />
+    <ClInclude Include="include\Bang\CapsuleCollider.h" />
+    <ClInclude Include="include\Bang\Chrono.h" />
+    <ClInclude Include="include\Bang\ChronoGL.h" />
+    <ClInclude Include="include\Bang\Cloth.h" />
+    <ClInclude Include="include\Bang\CodePreprocessor.h" />
+    <ClInclude Include="include\Bang\Collider.h" />
+    <ClInclude Include="include\Bang\Collision.h" />
+    <ClInclude Include="include\Bang\CollisionContact.h" />
+    <ClInclude Include="include\Bang\Color.h" />
+    <ClInclude Include="include\Bang\Compiler.h" />
+    <ClInclude Include="include\Bang\ComplexRandom.h" />
+    <ClInclude Include="include\Bang\Component.h" />
+    <ClInclude Include="include\Bang\ComponentClassIds.h" />
+    <ClInclude Include="include\Bang\ComponentFactory.h" />
+    <ClInclude Include="include\Bang\ComponentMacros.h" />
+    <ClInclude Include="include\Bang\Containers.h" />
+    <ClInclude Include="include\Bang\CubeMapIBLGenerator.h" />
+    <ClInclude Include="include\Bang\Cursor.h" />
+    <ClInclude Include="include\Bang\Debug.h" />
+    <ClInclude Include="include\Bang\DebugMessageType.h" />
+    <ClInclude Include="include\Bang\DebugRenderer.h" />
+    <ClInclude Include="include\Bang\Dialog.h" />
+    <ClInclude Include="include\Bang\DialogWindow.h" />
+    <ClInclude Include="include\Bang\DirectionalLight.h" />
+    <ClInclude Include="include\Bang\DPtr.h" />
+    <ClInclude Include="include\Bang\DPtr.tcc" />
+    <ClInclude Include="include\Bang\EventEmitter.h" />
+    <ClInclude Include="include\Bang\EventEmitter.tcc" />
+    <ClInclude Include="include\Bang\EventListener.h" />
+    <ClInclude Include="include\Bang\EventListener.tcc" />
+    <ClInclude Include="include\Bang\Extensions.h" />
+    <ClInclude Include="include\Bang\FastDynamicCast.h" />
+    <ClInclude Include="include\Bang\File.h" />
+    <ClInclude Include="include\Bang\FileTracker.h" />
+    <ClInclude Include="include\Bang\Flags.h" />
+    <ClInclude Include="include\Bang\Font.h" />
+    <ClInclude Include="include\Bang\FontSheetCreator.h" />
+    <ClInclude Include="include\Bang\FontStyle.h" />
+    <ClInclude Include="include\Bang\FPSChrono.h" />
+    <ClInclude Include="include\Bang\Framebuffer.h" />
+    <ClInclude Include="include\Bang\GameObject.h" />
+    <ClInclude Include="include\Bang\GameObject.tcc" />
+    <ClInclude Include="include\Bang\GameObjectFactory.h" />
+    <ClInclude Include="include\Bang\GBuffer.h" />
+    <ClInclude Include="include\Bang\GEngine.h" />
+    <ClInclude Include="include\Bang\GEngineDebugger.h" />
+    <ClInclude Include="include\Bang\Geometry.h" />
+    <ClInclude Include="include\Bang\GL.h" />
+    <ClInclude Include="include\Bang\GLObject.h" />
+    <ClInclude Include="include\Bang\GLUniforms.h" />
+    <ClInclude Include="include\Bang\GLUniforms.tcc" />
+    <ClInclude Include="include\Bang\GUID.h" />
+    <ClInclude Include="include\Bang\GUIDManager.h" />
+    <ClInclude Include="include\Bang\HideFlags.h" />
+    <ClInclude Include="include\Bang\IBO.h" />
+    <ClInclude Include="include\Bang\ICloneable.h" />
+    <ClInclude Include="include\Bang\IEventListenerCommon.h" />
+    <ClInclude Include="include\Bang\IEvents.h" />
+    <ClInclude Include="include\Bang\IEventsAnimatorStateMachine.h" />
+    <ClInclude Include="include\Bang\IEventsAnimatorStateMachineLayer.h" />
+    <ClInclude Include="include\Bang\IEventsAnimatorStateMachineNode.h" />
+    <ClInclude Include="include\Bang\IEventsChildren.h" />
+    <ClInclude Include="include\Bang\IEventsComponent.h" />
+    <ClInclude Include="include\Bang\IEventsComponentChangeGameObject.h" />
+    <ClInclude Include="include\Bang\IEventsDebug.h" />
+    <ClInclude Include="include\Bang\IEventsDestroy.h" />
+    <ClInclude Include="include\Bang\IEventsDragDrop.h" />
+    <ClInclude Include="include\Bang\IEventsFileTracker.h" />
+    <ClInclude Include="include\Bang\IEventsFocus.h" />
+    <ClInclude Include="include\Bang\IEventsGameObjectPhysics.h" />
+    <ClInclude Include="include\Bang\IEventsGameObjectVisibilityChanged.h" />
+    <ClInclude Include="include\Bang\IEventsName.h" />
+    <ClInclude Include="include\Bang\IEventsObject.h" />
+    <ClInclude Include="include\Bang\IEventsObjectGatherer.h" />
+    <ClInclude Include="include\Bang\IEventsRendererChanged.h" />
+    <ClInclude Include="include\Bang\IEventsResource.h" />
+    <ClInclude Include="include\Bang\IEventsSceneManager.h" />
+    <ClInclude Include="include\Bang\IEventsTransform.h" />
+    <ClInclude Include="include\Bang\IEventsUIList.h" />
+    <ClInclude Include="include\Bang\IEventsUITree.h" />
+    <ClInclude Include="include\Bang\IEventsValueChanged.h" />
+    <ClInclude Include="include\Bang\IGUIDable.h" />
+    <ClInclude Include="include\Bang\IInvalidatable.h" />
+    <ClInclude Include="include\Bang\ILayoutController.h" />
+    <ClInclude Include="include\Bang\ILayoutElement.h" />
+    <ClInclude Include="include\Bang\ILayoutSelfController.h" />
+    <ClInclude Include="include\Bang\Image.h" />
+    <ClInclude Include="include\Bang\ImageEffects.h" />
+    <ClInclude Include="include\Bang\ImageIO.h" />
+    <ClInclude Include="include\Bang\ImageIODDS.h" />
+    <ClInclude Include="include\Bang\ImageIOTGA.h" />
+    <ClInclude Include="include\Bang\Input.h" />
+    <ClInclude Include="include\Bang\IReflectable.h" />
+    <ClInclude Include="include\Bang\IsContainer.h" />
+    <ClInclude Include="include\Bang\IToString.h" />
+    <ClInclude Include="include\Bang\ITreeItem.h" />
+    <ClInclude Include="include\Bang\IUniformBuffer.h" />
+    <ClInclude Include="include\Bang\Key.h" />
+    <ClInclude Include="include\Bang\LayoutSizeType.h" />
+    <ClInclude Include="include\Bang\Library.h" />
+    <ClInclude Include="include\Bang\Light.h" />
+    <ClInclude Include="include\Bang\LineRenderer.h" />
+    <ClInclude Include="include\Bang\List.h" />
+    <ClInclude Include="include\Bang\List.tcc" />
+    <ClInclude Include="include\Bang\Map.h" />
+    <ClInclude Include="include\Bang\Map.tcc" />
+    <ClInclude Include="include\Bang\Material.h" />
+    <ClInclude Include="include\Bang\MaterialFactory.h" />
+    <ClInclude Include="include\Bang\Math.h" />
+    <ClInclude Include="include\Bang\Matrix3.h" />
+    <ClInclude Include="include\Bang\Matrix3.tcc" />
+    <ClInclude Include="include\Bang\Matrix4.h" />
+    <ClInclude Include="include\Bang\Matrix4.tcc" />
+    <ClInclude Include="include\Bang\Mesh.h" />
+    <ClInclude Include="include\Bang\MeshCollider.h" />
+    <ClInclude Include="include\Bang\MeshFactory.h" />
+    <ClInclude Include="include\Bang\MeshRenderer.h" />
+    <ClInclude Include="include\Bang\MeshSimplifier.h" />
+    <ClInclude Include="include\Bang\MetaAttribute.h" />
+    <ClInclude Include="include\Bang\MetaFilesManager.h" />
+    <ClInclude Include="include\Bang\MetaNode.h" />
+    <ClInclude Include="include\Bang\MetaNode.tcc" />
+    <ClInclude Include="include\Bang\Model.h" />
+    <ClInclude Include="include\Bang\ModelIO.h" />
+    <ClInclude Include="include\Bang\MouseButton.h" />
+    <ClInclude Include="include\Bang\MultiObjectGatherer.h" />
+    <ClInclude Include="include\Bang\MultiObjectGatherer.tcc" />
+    <ClInclude Include="include\Bang\Mutex.h" />
+    <ClInclude Include="include\Bang\MutexLocker.h" />
+    <ClInclude Include="include\Bang\NeededUniformFlags.h" />
+    <ClInclude Include="include\Bang\nv_dds.h" />
+    <ClInclude Include="include\Bang\Object.h" />
+    <ClInclude Include="include\Bang\ObjectGatherer.h" />
+    <ClInclude Include="include\Bang\ObjectGatherer.tcc" />
+    <ClInclude Include="include\Bang\ObjectId.h" />
+    <ClInclude Include="include\Bang\Octree.h" />
+    <ClInclude Include="include\Bang\Octree.tcc" />
+    <ClInclude Include="include\Bang\Particle.h" />
+    <ClInclude Include="include\Bang\ParticleSystem.h" />
+    <ClInclude Include="include\Bang\Path.h" />
+    <ClInclude Include="include\Bang\Paths.h" />
+    <ClInclude Include="include\Bang\Physics.h" />
+    <ClInclude Include="include\Bang\PhysicsMaterial.h" />
+    <ClInclude Include="include\Bang\PhysicsObject.h" />
+    <ClInclude Include="include\Bang\Plane.h" />
+    <ClInclude Include="include\Bang\PointLight.h" />
+    <ClInclude Include="include\Bang\Polygon.h" />
+    <ClInclude Include="include\Bang\Polygon2D.h" />
+    <ClInclude Include="include\Bang\PostProcessEffect.h" />
+    <ClInclude Include="include\Bang\PostProcessEffectSSAO.h" />
+    <ClInclude Include="include\Bang\Prefab.h" />
+    <ClInclude Include="include\Bang\process.hpp" />
+    <ClInclude Include="include\Bang\PxSceneContainer.h" />
+    <ClInclude Include="include\Bang\Quad.h" />
+    <ClInclude Include="include\Bang\Quaternion.h" />
+    <ClInclude Include="include\Bang\Random.h" />
+    <ClInclude Include="include\Bang\Ray.h" />
+    <ClInclude Include="include\Bang\Ray2D.h" />
+    <ClInclude Include="include\Bang\RayCastHitInfo.h" />
+    <ClInclude Include="include\Bang\RayCastInfo.h" />
+    <ClInclude Include="include\Bang\Rect.h" />
+    <ClInclude Include="include\Bang\RectTransform.h" />
+    <ClInclude Include="include\Bang\ReflectionProbe.h" />
+    <ClInclude Include="include\Bang\ReflectMacros.h" />
+    <ClInclude Include="include\Bang\ReflectStruct.h" />
+    <ClInclude Include="include\Bang\ReflectVariable.h" />
+    <ClInclude Include="include\Bang\ReflectVariableHints.h" />
+    <ClInclude Include="include\Bang\Renderer.h" />
+    <ClInclude Include="include\Bang\RenderFactory.h" />
+    <ClInclude Include="include\Bang\RenderFlags.h" />
+    <ClInclude Include="include\Bang\RenderPass.h" />
+    <ClInclude Include="include\Bang\Resource.h" />
+    <ClInclude Include="include\Bang\ResourceHandle.h" />
+    <ClInclude Include="include\Bang\Resources.h" />
+    <ClInclude Include="include\Bang\Resources.tcc" />
+    <ClInclude Include="include\Bang\RigidBody.h" />
+    <ClInclude Include="include\Bang\Rope.h" />
+    <ClInclude Include="include\Bang\Scene.h" />
+    <ClInclude Include="include\Bang\SceneManager.h" />
+    <ClInclude Include="include\Bang\Segment.h" />
+    <ClInclude Include="include\Bang\Segment2D.h" />
+    <ClInclude Include="include\Bang\Serializable.h" />
+    <ClInclude Include="include\Bang\Set.h" />
+    <ClInclude Include="include\Bang\Set.tcc" />
+    <ClInclude Include="include\Bang\Settings.h" />
+    <ClInclude Include="include\Bang\Shader.h" />
+    <ClInclude Include="include\Bang\ShaderPreprocessor.h" />
+    <ClInclude Include="include\Bang\ShaderProgram.h" />
+    <ClInclude Include="include\Bang\ShaderProgramFactory.h" />
+    <ClInclude Include="include\Bang\SkinnedMeshRenderer.h" />
+    <ClInclude Include="include\Bang\Sphere.h" />
+    <ClInclude Include="include\Bang\SphereCollider.h" />
+    <ClInclude Include="include\Bang\StackAndValue.h" />
+    <ClInclude Include="include\Bang\StreamOperators.h" />
+    <ClInclude Include="include\Bang\Stretch.h" />
+    <ClInclude Include="include\Bang\String.h" />
+    <ClInclude Include="include\Bang\SystemClipboard.h" />
+    <ClInclude Include="include\Bang\SystemProcess.h" />
+    <ClInclude Include="include\Bang\SystemUtils.h" />
+    <ClInclude Include="include\Bang\TextFormatter.h" />
+    <ClInclude Include="include\Bang\Texture.h" />
+    <ClInclude Include="include\Bang\Texture2D.h" />
+    <ClInclude Include="include\Bang\TextureCubeMap.h" />
+    <ClInclude Include="include\Bang\TextureFactory.h" />
+    <ClInclude Include="include\Bang\TextureUnitManager.h" />
+    <ClInclude Include="include\Bang\Thread.h" />
+    <ClInclude Include="include\Bang\ThreadPool.h" />
+    <ClInclude Include="include\Bang\Time.h" />
+    <ClInclude Include="include\Bang\Timer.h" />
+    <ClInclude Include="include\Bang\TimeSingleton.h" />
+    <ClInclude Include="include\Bang\Transform.h" />
+    <ClInclude Include="include\Bang\Tree.h" />
+    <ClInclude Include="include\Bang\Tree.tcc" />
+    <ClInclude Include="include\Bang\Triangle.h" />
+    <ClInclude Include="include\Bang\TypeMap.h" />
+    <ClInclude Include="include\Bang\UIAspectRatioFitter.h" />
+    <ClInclude Include="include\Bang\UIAutoFocuser.h" />
+    <ClInclude Include="include\Bang\UIButton.h" />
+    <ClInclude Include="include\Bang\UIButtonBase.h" />
+    <ClInclude Include="include\Bang\UICanvas.h" />
+    <ClInclude Include="include\Bang\UICheckBox.h" />
+    <ClInclude Include="include\Bang\UIComboBox.h" />
+    <ClInclude Include="include\Bang\UIContentSizeFitter.h" />
+    <ClInclude Include="include\Bang\UIDirLayout.h" />
+    <ClInclude Include="include\Bang\UIDirLayoutMovableSeparator.h" />
+    <ClInclude Include="include\Bang\UIDragDroppable.h" />
+    <ClInclude Include="include\Bang\UIFileList.h" />
+    <ClInclude Include="include\Bang\UIFocusable.h" />
+    <ClInclude Include="include\Bang\UIGridLayout.h" />
+    <ClInclude Include="include\Bang\UIGroupLayout.h" />
+    <ClInclude Include="include\Bang\UIHorizontalLayout.h" />
+    <ClInclude Include="include\Bang\UIImageRenderer.h" />
+    <ClInclude Include="include\Bang\UIInputNumber.h" />
+    <ClInclude Include="include\Bang\UIInputText.h" />
+    <ClInclude Include="include\Bang\UILabel.h" />
+    <ClInclude Include="include\Bang\UILayoutElement.h" />
+    <ClInclude Include="include\Bang\UILayoutIgnorer.h" />
+    <ClInclude Include="include\Bang\UILayoutManager.h" />
+    <ClInclude Include="include\Bang\UIList.h" />
+    <ClInclude Include="include\Bang\UIMask.h" />
+    <ClInclude Include="include\Bang\UIRectMask.h" />
+    <ClInclude Include="include\Bang\UIRenderer.h" />
+    <ClInclude Include="include\Bang\UIRendererCacher.h" />
+    <ClInclude Include="include\Bang\UIScrollArea.h" />
+    <ClInclude Include="include\Bang\UIScrollBar.h" />
+    <ClInclude Include="include\Bang\UIScrollPanel.h" />
+    <ClInclude Include="include\Bang\UISlider.h" />
+    <ClInclude Include="include\Bang\UITextCursor.h" />
+    <ClInclude Include="include\Bang\UITextRenderer.h" />
+    <ClInclude Include="include\Bang\UITheme.h" />
+    <ClInclude Include="include\Bang\UIToolButton.h" />
+    <ClInclude Include="include\Bang\UITree.h" />
+    <ClInclude Include="include\Bang\UITreeItemContainer.h" />
+    <ClInclude Include="include\Bang\UIVerticalLayout.h" />
+    <ClInclude Include="include\Bang\UMap.h" />
+    <ClInclude Include="include\Bang\UMap.tcc" />
+    <ClInclude Include="include\Bang\UniformBuffer.h" />
+    <ClInclude Include="include\Bang\UniformBuffer.tcc" />
+    <ClInclude Include="include\Bang\USet.h" />
+    <ClInclude Include="include\Bang\USet.tcc" />
+    <ClInclude Include="include\Bang\VAO.h" />
+    <ClInclude Include="include\Bang\Variant.h" />
+    <ClInclude Include="include\Bang\VBO.h" />
+    <ClInclude Include="include\Bang\Vector.h" />
+    <ClInclude Include="include\Bang\Vector.tcc" />
+    <ClInclude Include="include\Bang\Vector2.h" />
+    <ClInclude Include="include\Bang\Vector3.h" />
+    <ClInclude Include="include\Bang\Vector4.h" />
+    <ClInclude Include="include\Bang\WaterRenderer.h" />
+    <ClInclude Include="include\Bang\Window.h" />
+    <ClInclude Include="include\Bang\WindowManager.h" />
+    <ClInclude Include="include\Bang\WindowManager.tcc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\*.cpp" />
+    <ClCompile Include="src\*\*.cpp" />
+    <ClCompile Include="src\*\*\*.cpp" />
+    <ClCompile Include="src\*\*\*\*.cpp" />
+    <ClCompile Include="src\*\*\*\*\*.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

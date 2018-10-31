@@ -1,7 +1,11 @@
 #include "Bang/File.h"
 
-#include <errno.h>
+#ifdef __linux__
 #include <sys/stat.h>
+#endif
+
+#include <errno.h>
+
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -137,7 +141,9 @@ bool File::DuplicateDir(const Path &srcDirpath,
 
 void File::AddExecutablePermission(const Path &path)
 {
+#ifdef __linux__
     chmod(path.GetAbsolute().ToCString(), S_IRUSR | S_IXUSR);
+#endif
 }
 
 bool File::Remove(const Path &path)
@@ -174,7 +180,11 @@ bool File::CreateDirectory(const Path &dirPath)
     {
         return true;
     }
+#ifdef __linux__
     return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
+#else
+    return false;
+#endif
 }
 
 bool File::Rename(const Path &oldPath, const Path &newPath)

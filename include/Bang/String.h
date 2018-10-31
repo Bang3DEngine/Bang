@@ -221,7 +221,7 @@ private:
 };
 
 template <template <class String> class Container>
-String String::Trim(Container<char> trimChars) const
+String String::TrimLeft(Container<char> trimChars) const
 {
     if (IsEmpty())
     {
@@ -255,7 +255,7 @@ String String::TrimRight(Container<char> trimChars) const
 }
 
 template <template <class String> class Container>
-String String::TrimLeft(Container<char> trimChars) const
+String String::Trim(Container<char> trimChars) const
 {
     return (*this).TrimLeft(trimChars).TrimRight(trimChars);
 }
@@ -263,7 +263,7 @@ String String::TrimLeft(Container<char> trimChars) const
 template <template <class String> class Container>
 String String::Join(const Container<String> &parts, String joiner)
 {
-    int i = 0;
+    uint i = 0;
     String all = "";
     for (auto it = parts.Begin(); it != parts.End(); ++it)
     {
@@ -336,7 +336,7 @@ inline String operator+(const String &v, const char *str)
 {
     return String(std::string(v) + std::string(str));
 }
-}
+}  // namespace Bang
 
 // Hash specialization
 namespace std
@@ -349,6 +349,6 @@ struct hash<Bang::String>
         return std::hash<std::string>()(str);
     }
 };
-}
+}  // namespace std
 
 #endif  // STRING_H

@@ -10,6 +10,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsSceneManager.h"
 #include "Bang/List.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
@@ -18,8 +19,6 @@ namespace Bang
 {
 class BehaviourManager;
 class GameObject;
-class IEventsDestroy;
-class IEventsSceneManager;
 class Scene;
 
 class SceneManager : public EventEmitter<IEventsSceneManager>,
@@ -86,6 +85,6 @@ private:
     friend class Window;
     friend class Application;
 };
-}
+}  // namespace Bang
 
 #endif  // SCENEMANAGER_H

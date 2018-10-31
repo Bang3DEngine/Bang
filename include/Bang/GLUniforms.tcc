@@ -118,7 +118,7 @@ inline Array<bool> GLUniforms::GetUniformArray(GLId program,
     Array<int> aux =
         GLUniforms::GetUniformArray<int>(program, uniformLocation, numElements);
     Array<bool> res;
-    for (int i = 0; i < aux.Size(); ++i)
+    for (uint i = 0; i < aux.Size(); ++i)
     {
         res.PushBack(aux[i] != 0);
     }
@@ -252,4 +252,4 @@ inline Matrix4 GLUniforms::GetUniform(GLId program, int uniformLocation)
 {
     return GLUniforms::GetUniformArray<Matrix4>(program, uniformLocation, 1)[0];
 }
-}
+}  // namespace Bang

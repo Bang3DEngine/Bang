@@ -142,7 +142,7 @@ private:
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One;
-    float m_generationShapeConeFOVRads = Math::Pi / 4;
+    float m_generationShapeConeFOVRads = SCAST<float>(Math::Pi / 4);
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
@@ -167,6 +167,6 @@ private:
     Vector3 GetParticleInitialPosition() const;
     Vector3 GetParticleInitialVelocity() const;
 };
-}
+}  // namespace Bang
 
 #endif  // PARTICLESYSTEM_H

@@ -17,15 +17,15 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/GameObject.h"
 #include "Bang/IEvents.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/IEventsUIList.h"
 #include "Bang/String.h"
 #include "Bang/UITheme.h"
 #include "Bang/UMap.h"
 
 namespace Bang
 {
-class IEventsDestroy;
-class IEventsUIList;
 class UIDirLayout;
 class UIFocusable;
 class UIImageRenderer;
@@ -140,6 +140,6 @@ private:
 
     friend class GameObjectFactory;
 };
-}
+}  // namespace Bang
 
 #endif  // UILIST_H

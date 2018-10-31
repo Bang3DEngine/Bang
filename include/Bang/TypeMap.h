@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <typeinfo>
 
+#include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
@@ -80,10 +81,9 @@ public:
         List<Value> values;
         for (const auto &it : *this)
         {
-            Class *v = Cast<Class *>(it.second);
-            if (v)
+            if (Class *v = DCAST<Class *>(it.second))
             {
-                values.PushBack(Cast<Class *>(v));
+                values.PushBack(v);
             }
         }
         return values;
@@ -99,6 +99,6 @@ public:
         return UMap<TypeId, Value>::ContainsKey(typeId);
     }
 };
-}
+}  // namespace Bang
 
 #endif  // TYPEMAP_H

@@ -1,7 +1,5 @@
 #include "Bang/Polygon2D.h"
 
-#include <ext/alloc_traits.h>
-
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Geometry.h"
@@ -45,7 +43,7 @@ bool Polygon2D::Contains(const Vector2 &p)
 
     int intersectionCount = 0;
     Ray2D testRay(p, p + Vector2(VeryFar));
-    for (int i = 0; i < GetPoints().Size(); ++i)
+    for (uint i = 0; i < GetPoints().Size(); ++i)
     {
         const Segment2D segment(GetPoint(i),
                                 GetPoint((i + 1) % GetPoints().Size()));

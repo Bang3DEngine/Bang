@@ -1,6 +1,5 @@
 #include "Bang/Rope.h"
 
-#include <ext/alloc_traits.h>
 #include <sys/types.h>
 #include <memory>
 
@@ -30,7 +29,7 @@ namespace Bang
 {
 class ICloneable;
 class ShaderProgram;
-}
+}  // namespace Bang
 
 using namespace Bang;
 

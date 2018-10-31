@@ -308,7 +308,8 @@ bool Array<T>::operator==(const Array<T> &rhs) const
     {
         return false;
     }
-    for (int i = 0; i < Size(); ++i)
+
+    for (uint i = 0; i < Size(); ++i)
     {
         if (At(i) != rhs.At(i))
         {
@@ -426,4 +427,4 @@ const Array<T> &Array<T>::Empty()
     static Array<T> empty;
     return empty;
 }
-}
+}  // namespace Bang

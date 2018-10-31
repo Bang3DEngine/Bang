@@ -1,6 +1,5 @@
 #include "Bang/SkinnedMeshRenderer.h"
 
-#include <ext/alloc_traits.h>
 #include <map>
 #include <unordered_map>
 #include <utility>
@@ -31,7 +30,7 @@ namespace Bang
 {
 class ICloneable;
 class Resource;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
@@ -399,9 +398,8 @@ void SkinnedMeshRenderer::Reflect()
 
 Matrix4 SkinnedMeshRenderer::GetModelMatrixUniform() const
 {
-    return GetRootBoneGameObject()
-               ? GetRootBoneGameObject()
-                     ->GetTransform()
-                     ->GetLocalToWorldMatrix()
-               : MeshRenderer::GetModelMatrixUniform();
+    return GetRootBoneGameObject() ? GetRootBoneGameObject()
+                                         ->GetTransform()
+                                         ->GetLocalToWorldMatrix()
+                                   : MeshRenderer::GetModelMatrixUniform();
 }

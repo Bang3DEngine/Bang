@@ -29,7 +29,7 @@ class GameObject;
 class ICloneable;
 class IEventsDestroy;
 class IEventsDragDrop;
-class InputEvent;
+struct InputEvent;
 class Object;
 class UIFocusable;
 class UIDragDroppable;
@@ -113,6 +113,6 @@ private:
 
     friend class UIFocusable;
 };
-}
+}  // namespace Bang
 
 #endif  // CANVAS_H

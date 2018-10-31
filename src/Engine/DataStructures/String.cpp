@@ -342,7 +342,7 @@ bool String::Contains(const String &str, bool caseSensitive) const
     if (!caseSensitive)
     {
         auto it = std::search(
-            Begin(), End(), str.Begin(), str.End(), [](char ch1, char ch2) {
+            Begin(), End(), str.Begin(), str.End(), [this](char ch1, char ch2) {
                 return String::ToUpper(ch1) == String::ToUpper(ch2);
             });
         return (it != End());
@@ -492,4 +492,4 @@ String &String::operator=(const char *cstr)
     m_str = cstr;
     return *this;
 }
-}
+}  // namespace Bang

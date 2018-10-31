@@ -1,10 +1,13 @@
 #ifdef _WIN32
 
-#include "Bang/process.hpp"
-#include <TlHelp32.h>
+// clang-format off
 #include <windows.h>
+#include <TlHelp32.h>
+// clang-format on
+
 #include <cstring>
 #include <stdexcept>
+#include "Bang/process.hpp"
 
 namespace TinyProcessLib
 {
@@ -375,6 +378,6 @@ void Process::kill(id_type id, bool /*force*/) noexcept
         TerminateProcess(process_handle, 2);
 }
 
-}  // TinyProsessLib
+}  // namespace TinyProcessLib
 
 #endif

@@ -76,6 +76,6 @@ public:
 AABox operator*(const Matrix4 &m, const AABox &b);
 bool operator==(const AABox &b1, const AABox &b2);
 bool operator!=(const AABox &b1, const AABox &b2);
-}
+}  // namespace Bang
 
 #endif  // AABOX_H

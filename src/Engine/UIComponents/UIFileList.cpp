@@ -8,7 +8,6 @@
 #include "Bang/GameObjectFactory.h"
 #include "Bang/List.tcc"
 #include "Bang/Paths.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIList.h"
 #include "Bang/UITextRenderer.h"
@@ -16,10 +15,7 @@
 
 using namespace Bang;
 
-UIFileList::UIFileList()
-{
-    CONSTRUCT_CLASS_ID(UIFileList)
-}
+UIFileList::UIFileList(){CONSTRUCT_CLASS_ID(UIFileList)}
 
 UIFileList::~UIFileList()
 {
@@ -128,7 +124,7 @@ void UIFileList::UpdateEntries()
 
     uiList->SetSelectionCallback(
         [this, uiList](GameObject *go, UIList::Action action) {
-            UIFileListItem *item = Cast<UIFileListItem *>(go);
+            UIFileListItem *item = DCAST<UIFileListItem *>(go);
             if (action == UIList::Action::SELECTION_IN)
             {
                 p_selectedItem = item;

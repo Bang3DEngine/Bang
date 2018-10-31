@@ -11,7 +11,6 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/String.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 
@@ -206,7 +205,7 @@ bool Component::CalculateEnabledRecursively() const
 void Component::CloneInto(ICloneable *clone) const
 {
     Object::CloneInto(clone);
-    Component *c = Cast<Component *>(clone);
+    Component *c = SCAST<Component *>(clone);
     c->SetEnabled(IsEnabled());
 }
 

@@ -8,7 +8,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/GL.h"
-#include "Bang/Image.tcc"
+#include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/Math.h"
 #include "Bang/ResourceHandle.h"
@@ -295,7 +295,7 @@ void Framebuffer::Export(GL::Attachment attachment,
     GL::Flush();
     GL::Finish();
 
-    Imageb img = GetAttachmentTex2D(attachment)->ToImage();
+    Image img = GetAttachmentTex2D(attachment)->ToImage();
     if (invertY)
     {
         img = img.InvertedVertically();
@@ -333,7 +333,7 @@ void ExportDepthOrStencil(const Framebuffer *fb,
         bytes[i * 4 + 3] = Byte(255);
     }
 
-    Imageb img = Imageb::LoadFromData(fb->GetWidth(), fb->GetHeight(), bytes);
+    Image img = Image::LoadFromData(fb->GetWidth(), fb->GetHeight(), bytes);
     img = img.InvertedVertically();
     img.Export(filepath);
 

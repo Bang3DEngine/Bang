@@ -10,14 +10,10 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/StreamOperators.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 
-BehaviourContainer::BehaviourContainer()
-{
-    CONSTRUCT_CLASS_ID(BehaviourContainer)
-}
+BehaviourContainer::BehaviourContainer(){CONSTRUCT_CLASS_ID(BehaviourContainer)}
 
 BehaviourContainer::~BehaviourContainer()
 {

@@ -1,7 +1,7 @@
 #ifndef BANGDEFINES_H
 #define BANGDEFINES_H
 
-#include <stddef.h>
+#include <cstddef>
 #include <cstdint>
 
 #ifndef BANG_BUILD_TYPE
@@ -148,6 +148,6 @@ struct EnumClassHash
     }
 };
 // ======================================================
-}
+}  // namespace Bang
 
 #endif  // BANGDEFINES_H

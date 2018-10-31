@@ -37,7 +37,7 @@ void Chrono::Log()
     std::cerr << "Chrono " << m_chronoName << " -------------------"
               << std::endl;
     Time totalTime;
-    for (int i = 0; i < m_events.Size() - 1; ++i)
+    for (uint i = 0; i < m_events.Size() - 1; ++i)
     {
         ChronoEvent &ce = m_events[i];
         double intervalSecs = ce.timeSinceLastEvent.GetSeconds();

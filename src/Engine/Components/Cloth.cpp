@@ -462,9 +462,9 @@ void Cloth::InitParticle(uint i, const Particle::Parameters &params)
 void Cloth::AddSpringForces()
 {
     const float clothSubdivLength = Math::Max(GetSubdivisionLength(), 0.0001f);
-    for (int i = 0; i < GetSubdivisions(); ++i)
+    for (uint i = 0; i < GetSubdivisions(); ++i)
     {
-        for (int j = 0; j < GetSubdivisions(); ++j)
+        for (uint j = 0; j < GetSubdivisions(); ++j)
         {
             Vector3 springsForce = Vector3::Zero;
 
@@ -476,15 +476,14 @@ void Cloth::AddSpringForces()
                 const Vector2i &offset = m_offsets[o];
                 const float offsetLength = m_offsetsLengths[o];
 
-                const int ii = (i + offset.y);
-                const int jj = (j + offset.x);
-                if (ii < 0 || ii >= GetSubdivisions() || jj < 0 ||
-                    jj >= GetSubdivisions())
+                const uint ii = SCAST<uint>(i + offset.y);
+                const uint jj = SCAST<uint>(j + offset.x);
+                if (ii >= GetSubdivisions() || jj >= GetSubdivisions())
                 {
                     continue;
                 }
 
-                const int neighborParticleIndex = ii * GetSubdivisions() + jj;
+                const uint neighborParticleIndex = ii * GetSubdivisions() + jj;
                 const uint npi = neighborParticleIndex;
                 float expectedLength = clothSubdivLength * offsetLength;
 
@@ -535,7 +534,7 @@ void Cloth::ConstrainJoints()
             {
                 const uint pi = (i * GetSubdivisions()) + j;
                 const Vector3 pPos = m_particlesData[pi].position;
-                for (int o = 0; o < m_offsets.Size(); ++o)
+                for (uint o = 0; o < m_offsets.Size(); ++o)
                 {
                     const Vector2i &off = m_offsets[o];
                     const float offLength = m_offsetsLengths[o];
@@ -566,7 +565,7 @@ void Cloth::ConstrainJoints()
         }
     }
 
-    float dtSecs = Time::GetDeltaTime().GetSeconds();
+    float dtSecs = SCAST<float>(Time::GetDeltaTime().GetSeconds());
     for (uint i = 0; i < m_particlesData.Size(); ++i)
     {
         Particle::CorrectParticleCollisions(

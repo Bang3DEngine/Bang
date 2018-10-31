@@ -50,7 +50,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
 
     Array<OctreeData> octreeData;  // Retrieve all the octree data
     {
-        for (int i = 0; i < mesh->GetNumVerticesIds(); ++i)
+        for (uint i = 0; i < mesh->GetNumVerticesIds(); ++i)
         {
             const int vIndex = (mesh->GetTriangleVertexIdsIBO()
                                     ? mesh->GetTrianglesVertexIds()[i]
@@ -396,8 +396,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         simplifiedMesh.Get()->UpdateVAOsAndTables();
 
         Debug_Log("Level " << level << ": "
-                           << vertexClusterTriVertsIndices.Size()
-                           << "/"
+                           << vertexClusterTriVertsIndices.Size() << "/"
                            << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
@@ -441,7 +440,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
                 vertexRepresentativeData.tangent += vData.tangent;
             }
 
-            const float vertexClusterSize = vertexCluster.Size();
+            const float vertexClusterSize = SCAST<float>(vertexCluster.Size());
             vertexRepresentativeData.pos /= vertexClusterSize;
             vertexRepresentativeData.normal /= vertexClusterSize;
             vertexRepresentativeData.uv /= vertexClusterSize;
@@ -527,7 +526,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
             // Regularization
             /*
-            */
+             */
             // verticesTotalQuadricMatrix[0][0] += 1.0f;
             // verticesTotalQuadricMatrix[1][1] += 1.0f;
             // verticesTotalQuadricMatrix[2][2] += 1.0f;

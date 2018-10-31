@@ -1,7 +1,5 @@
 #include "Bang/Polygon.h"
 
-#include <ext/alloc_traits.h>
-
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Plane.h"

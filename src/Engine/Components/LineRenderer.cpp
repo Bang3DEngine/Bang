@@ -1,7 +1,5 @@
 #include "Bang/LineRenderer.h"
 
-#include <ext/alloc_traits.h>
-
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
@@ -15,7 +13,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 
 using namespace Bang;
@@ -115,7 +112,7 @@ void LineRenderer::Bind()
 void LineRenderer::CloneInto(ICloneable *clone) const
 {
     Renderer::CloneInto(clone);
-    LineRenderer *lr = Cast<LineRenderer *>(clone);
+    LineRenderer *lr = SCAST<LineRenderer *>(clone);
     lr->SetPoints(GetPoints());
 }
 

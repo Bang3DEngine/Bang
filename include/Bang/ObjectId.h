@@ -5,7 +5,6 @@
 #include <ostream>
 
 #include "Bang/BangDefines.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -23,7 +22,7 @@ public:
 
 private:
     static ObjectIdType NextObjectId;
-    ObjectIdType m_id = Cast<ObjectIdType>(-1);
+    ObjectIdType m_id = SCAST<ObjectIdType>(-1);
 
     ObjectId();
 
@@ -64,6 +63,6 @@ inline std::ostream &operator<<(std::ostream &os, const ObjectId &objectId)
     os << objectId.m_id;
     return os;
 }
-}
+}  // namespace Bang
 
 #endif  // OBJECTID_H

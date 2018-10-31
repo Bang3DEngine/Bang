@@ -65,8 +65,8 @@ void Particle::MoveParticle(Particle::Data *pData,
                             const Particle::Parameters &params)
 {
     double dtSecs = dt.GetSeconds();
-    Particle::StepPositionAndVelocity(pData, dtSecs, params);
-    Particle::CorrectParticleCollisions(pData, dtSecs, params);
+    Particle::StepPositionAndVelocity(pData, SCAST<float>(dtSecs), params);
+    Particle::CorrectParticleCollisions(pData, SCAST<float>(dtSecs), params);
 }
 
 void Particle::CorrectParticleCollisions(Particle::Data *pData,
@@ -170,7 +170,6 @@ void Particle::FixedStepAll(
 {
     Particle::ExecuteFixedStepped(
         totalDeltaTime, fixedStepDeltaTime, [&](Time dt) {
-
             extraFuncToExecuteBeforeEveryStep(dt);
             for (uint i = 0; i < particlesDatas->Size(); ++i)
             {
@@ -286,7 +285,8 @@ bool Particle::CollideParticle(Collider *collider,
             MeshCollider *meshCol = SCAST<MeshCollider *>(collider);
             if (Mesh *mesh = meshCol->GetMesh())
             {
-                for (int triIdx = 0; triIdx < mesh->GetNumTriangles(); ++triIdx)
+                for (uint triIdx = 0; triIdx < mesh->GetNumTriangles();
+                     ++triIdx)
                 {
                     Triangle tri = mesh->GetTriangle(triIdx);
                     Transform *tr = collider->GetGameObject()->GetTransform();
@@ -321,10 +321,9 @@ bool Particle::CollideParticle(Collider *collider,
                          (cnorm * 0.05f);
         *newPositionAfterInt = newPos;
 
-        Vector3 newVel =
-            newVelocityNoInt -
-            bouncinessEpsilon * cnorm *
-                collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
+        Vector3 newVel = newVelocityNoInt - bouncinessEpsilon * cnorm *
+                                                collisionPlane.GetDistanceTo(
+                                                    cpos + newVelocityNoInt);
         *newVelocityAfterInt = newVel;
 
         float normalForceLength = Math::Abs(

@@ -2,7 +2,6 @@
 
 #include "Bang/Assert.h"
 #include "Bang/List.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -382,8 +381,8 @@ Container<OtherT> List<T>::To() const
     Container<OtherT> cont;
     for (const T &x : *this)
     {
-        cont.PushBack(Cast<OtherT>(x));
+        cont.PushBack(SCAST<OtherT>(x));
     }
     return cont;
 }
-}
+}  // namespace Bang

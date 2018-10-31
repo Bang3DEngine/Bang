@@ -2,7 +2,6 @@
 
 #include "Bang/Axis.h"
 #include "Bang/Math.h"
-#include "Bang/TypeTraits.h"
 
 #define CLASS_VECTOR_T_IMPL(VECTOR_G, N)                                       \
                                                                                \

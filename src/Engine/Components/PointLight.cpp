@@ -1,7 +1,6 @@
 #include "Bang/PointLight.h"
 
 #include <GL/glew.h>
-#include <ext/alloc_traits.h>
 
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
@@ -26,7 +25,6 @@
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Sphere.h"
 #include "Bang/Transform.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 
 using namespace Bang;

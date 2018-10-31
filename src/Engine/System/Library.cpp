@@ -1,6 +1,8 @@
 #include "Bang/Library.h"
 
+#ifdef __linux__
 #include <dlfcn.h>
+#endif
 
 using namespace Bang;
 
@@ -21,9 +23,12 @@ Library::~Library()
 bool Library::Load()
 {
     ClearError();
+#ifdef __linux__
     m_libHandle = dlopen(GetLibraryPath().GetAbsolute().ToCString(),
-                         //  sRTLD_NOW | RTLD_GLOBAL);
+                         // RTLD_NOW | RTLD_GLOBAL);
                          RTLD_NOW | RTLD_LOCAL);
+#endif
+
     FetchError();
     return !TheresError();
 }
@@ -33,7 +38,9 @@ bool Library::UnLoad()
     ClearError();
     if (IsLoaded())
     {
+#ifdef __linux
         dlclose(m_libHandle);
+#endif
     }
     FetchError();
     return !TheresError();
@@ -52,7 +59,12 @@ bool Library::IsLoaded() const
 void *Library::GetSymbol(const String &symbolName)
 {
     ClearError();
-    void *symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
+    void *symbolAddress = nullptr;
+
+#ifdef __linux__
+    symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
+#endif
+
     FetchError();
     return symbolAddress;
 }
@@ -69,13 +81,20 @@ const String &Library::GetErrorString() const
 
 void Library::ClearError()
 {
+#ifdef __linux
     dlerror();
+#endif
     m_errorString = "";
 }
 
 void Library::FetchError()
 {
-    const char *error = dlerror();
+    const char *error = nullptr;
+
+#ifdef __linux
+    dlerror();
+#endif
+
     if (error)
     {
         m_errorString = String(error);

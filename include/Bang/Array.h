@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "Bang/Containers.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -105,7 +104,7 @@ public:
 private:
     std::vector<T> m_vector;
 };
-}
+}  // namespace Bang
 
 #include "Array.tcc"
 

@@ -293,7 +293,7 @@ void RenderFactory::RenderWireframeCircle(
 {
     if (RenderFactory *rf = RenderFactory::GetInstance())
     {
-        float wholeAngle = Math::Pi * (hemicircle ? 1 : 2);
+        float wholeAngle = SCAST<float>(Math::Pi * (hemicircle ? 1 : 2));
         Array<Vector3> circlePoints;
         for (int i = 0; i < numSegments; ++i)
         {
@@ -387,7 +387,8 @@ void RenderFactory::RenderWireframeCapsule(
     RenderFactory::RenderWireframeSphere(
         radius, false, paramsCpy, 1, 1, 16, true);
     paramsCpy.rotation =
-        params.rotation * Quaternion::AngleAxis(Math::Pi, Vector3::Forward);
+        params.rotation *
+        Quaternion::AngleAxis(SCAST<float>(Math::Pi), Vector3::Forward);
 
     paramsCpy.position =
         capsuleCenter + paramsCpy.rotation * Vector3(0, hHeight, 0);
@@ -411,8 +412,8 @@ void RenderFactory::RenderWireframeSphere(
 
         if (numLoopsVertical > 0)
         {
-            const float angleAdv =
-                (Math::Pi / numLoopsVertical) / (hemisphere ? 2 : 1);
+            const float angleAdv = SCAST<float>((Math::Pi / numLoopsVertical) /
+                                                (hemisphere ? 2 : 1));
             for (int i = 0; i < numLoopsVertical; ++i)
             {
                 paramsCpy.rotation =
@@ -425,12 +426,13 @@ void RenderFactory::RenderWireframeSphere(
 
         if (numLoopsHorizontal > 0)
         {
-            const float angleAdv = (Math::Pi / numLoopsHorizontal);
+            const float angleAdv = SCAST<float>(Math::Pi / numLoopsHorizontal);
             for (int i = 0; i < numLoopsHorizontal; ++i)
             {
                 paramsCpy.rotation =
                     params.rotation *
-                    Quaternion::AngleAxis(Math::Pi / 2, Vector3::Up) *
+                    Quaternion::AngleAxis(SCAST<float>(Math::Pi / 2),
+                                          Vector3::Up) *
                     Quaternion::AngleAxis(angleAdv * i, Vector3::Forward);
                 RenderFactory::RenderWireframeCircle(
                     radius, paramsCpy, numCircleSegments, hemisphere);
@@ -442,7 +444,8 @@ void RenderFactory::RenderWireframeSphere(
             // Render base
             paramsCpy.rotation =
                 params.rotation *
-                Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Right);
+                Quaternion::AngleAxis(SCAST<float>(Math::Pi * 0.5f),
+                                      Vector3::Right);
             RenderFactory::RenderWireframeCircle(
                 radius, paramsCpy, numCircleSegments, false);
         }
@@ -506,7 +509,7 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             ShaderProgram *sp = rf->m_outlineShaderProgram.Get();
             sp->Bind();
             sp->SetColor("B_OutlineColor", params.color);
-            sp->SetInt("B_OutlineThickness", params.thickness);
+            sp->SetInt("B_OutlineThickness", SCAST<int>(params.thickness));
             sp->SetFloat("B_AlphaFadeOnDepth", alphaDepthOnFade);
             sp->SetTexture2D("B_OutlineDepthTexture",
                              gbuffer->GetDepthStencilTexture(),

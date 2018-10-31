@@ -10,7 +10,6 @@
 #include <utility>
 
 #include "Bang/BangDefines.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -161,7 +160,9 @@ std::ostream &operator<<(std::ostream &log, const Matrix4G<T> &m)
     return log;
 }
 
-template <class EnumClass, class = TT_ENUM(EnumClass)>
+template <class EnumClass,
+          class = typename std::enable_if<std::is_enum<EnumClass>::value,
+                                          EnumClass>::type>
 std::ostream &operator<<(std::ostream &log, const EnumClass &e)
 {
     log << SCAST<int>(e);
@@ -237,10 +238,12 @@ template <class T>
 std::ostream &operator<<(std::ostream &log, const Array<T> &v)
 {
     log << "[";
-    for (int i = 0; i < v.Size(); ++i)
+    for (uint i = 0; i < v.Size(); ++i)
     {
         if (i != 0)
+        {
             log << ", ";
+        }
         log << v[i];
     }
     log << "]";
@@ -405,7 +408,9 @@ std::istream &operator>>(std::istream &is, AARectG<T> &r)
     return is;
 }
 
-template <class EnumClass, class = TT_ENUM(EnumClass)>
+template <class EnumClass,
+          class = typename std::enable_if<std::is_enum<EnumClass>::value,
+                                          EnumClass>::type>
 std::istream &operator>>(std::istream &is, EnumClass &e)
 {
     int x;
@@ -413,6 +418,6 @@ std::istream &operator>>(std::istream &is, EnumClass &e)
     e = SCAST<EnumClass>(x);
     return is;
 }
-}
+}  // namespace Bang
 
 #endif  // STREAMOPERATORS_H

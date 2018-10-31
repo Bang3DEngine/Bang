@@ -1,6 +1,5 @@
 #include "Bang/Thread.h"
 
-#include <pthread.h>
 #include <chrono>
 #include <ostream>
 #include <ratio>
@@ -62,7 +61,6 @@ void Thread::SetName(const String &threadName)
     if (threadName != GetName())
     {
         m_threadName = threadName;
-        pthread_setname_np(m_thread.native_handle(), GetName().ToCString());
     }
 }
 void Thread::SetRunnable(ThreadRunnable *runnable)
@@ -146,4 +144,4 @@ void ThreadRunnableLambda::Run()
 {
     m_runFunction();
 }
-}
+}  // namespace Bang

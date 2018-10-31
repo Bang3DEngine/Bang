@@ -9,11 +9,12 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
+#include "Bang/Matrix4.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 
-class SDL_Window;
+struct SDL_Window;
 
 namespace Bang
 {
@@ -908,6 +909,6 @@ private:
 
     friend class GEngine;
 };
-}
+}  // namespace Bang
 
 #endif  // GL_H

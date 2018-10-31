@@ -16,7 +16,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
-#include "Bang/TypeTraits.h"
 
 using namespace Bang;
 

@@ -28,7 +28,6 @@
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/TextureUnitManager.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/UMap.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
@@ -160,12 +159,10 @@ bool ShaderProgram::Link()
         Path fsPath =
             (GetFragmentShader() ? GetFragmentShader()->GetResourceFilepath()
                                  : Path::Empty);
-        Debug_Error("The shader program " << this << "( " << vsPath << ", "
-                                          << gsPath
-                                          << ", "
-                                          << fsPath
-                                          << ") did not link: "
-                                          << GL::GetProgramErrorMsg(m_idGL));
+        Debug_Error("The shader program "
+                    << this << "( " << vsPath << ", " << gsPath << ", "
+                    << fsPath
+                    << ") did not link: " << GL::GetProgramErrorMsg(m_idGL));
         GL::DeleteProgram(m_idGL);
         m_idGL = 0;
         return false;
@@ -226,7 +223,8 @@ bool SetShaderUniformArray(ShaderProgram *sp,
     return true;
 }
 
-template <class T, class = TT_NOT_POINTER(T)>
+template <class T,
+          class = typename std::enable_if<!std::is_pointer<T>::value, T>::type>
 bool SetShaderUniform(ShaderProgram *sp,
                       UMap<String, T> *cache,
                       const String &name,
@@ -485,10 +483,10 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
                  ? "Vertex"
                  : (type == GL::ShaderType::GEOMETRY ? "Geometry"
                                                      : "Fragment"));
-        Debug_Error("You are trying to set as " << typeName << " shader a "
-                                                               "non-"
-                                                << typeName
-                                                << " shader.");
+        Debug_Error("You are trying to set as " << typeName
+                                                << " shader a "
+                                                   "non-"
+                                                << typeName << " shader.");
         return false;
     }
 

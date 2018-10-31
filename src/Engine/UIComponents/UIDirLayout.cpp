@@ -1,7 +1,5 @@
 #include "Bang/UIDirLayout.h"
 
-#include <ext/alloc_traits.h>
-
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
@@ -17,17 +15,13 @@
 
 using namespace Bang;
 
-UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
-{
-    CONSTRUCT_CLASS_ID(UIDirLayout)
-}
+UIDirLayout::UIDirLayout()
+    : UIDirLayout(Axis::VERTICAL){CONSTRUCT_CLASS_ID(UIDirLayout)}
 
-UIDirLayout::UIDirLayout(Axis axis) : m_axis(axis)
-{
-    CONSTRUCT_CLASS_ID(UIDirLayout)
-}
+      UIDirLayout::UIDirLayout(Axis axis)
+    : m_axis(axis){CONSTRUCT_CLASS_ID(UIDirLayout)}
 
-UIDirLayout::~UIDirLayout()
+      UIDirLayout::~UIDirLayout()
 {
 }
 

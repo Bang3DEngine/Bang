@@ -6,7 +6,6 @@
 #include "Bang/GUID.h"
 #include "Bang/IEventsResource.h"
 #include "Bang/Image.h"
-#include "Bang/Image.tcc"
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
@@ -119,7 +118,7 @@ void TextureCubeMap::SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
     }
 }
 
-void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img)
+void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, const Image *img)
 {
     Fill(dir,
          (img ? img->GetData() : nullptr),
@@ -128,9 +127,9 @@ void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img)
          GL::DataType::UNSIGNED_BYTE);
 }
 
-Imageb TextureCubeMap::ToImage(GL::CubeMapDir cubeMapDir) const
+Image TextureCubeMap::ToImage(GL::CubeMapDir cubeMapDir) const
 {
-    return Texture::ToImage<Byte>(SCAST<GL::TextureTarget>(cubeMapDir));
+    return Texture::ToImage(SCAST<GL::TextureTarget>(cubeMapDir));
 }
 
 RH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
@@ -138,20 +137,20 @@ RH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
     return m_sideTextures[TextureCubeMap::GetDirIndex(cubeMapDir)];
 }
 
-void TextureCubeMap::Import(const Image<Byte> &topImage,
-                            const Image<Byte> &botImage,
-                            const Image<Byte> &leftImage,
-                            const Image<Byte> &rightImage,
-                            const Image<Byte> &frontImage,
-                            const Image<Byte> &backImage)
+void TextureCubeMap::Import(const Image &topImage,
+                            const Image &botImage,
+                            const Image &leftImage,
+                            const Image &rightImage,
+                            const Image &frontImage,
+                            const Image &backImage)
 {
     SetFormat(GL::ColorFormat::RGBA8);
 
-    std::array<Image<Byte>, 6> imgs = {
+    std::array<Image, 6> imgs = {
         {topImage, botImage, leftImage, rightImage, frontImage, backImage}};
     for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
-        const Image<Byte> &img = imgs[i];
+        const Image &img = imgs[i];
         if (img.GetData())
         {
             GL::CubeMapDir cubeMapDir = GL::GetAllCubeMapDirs()[i];

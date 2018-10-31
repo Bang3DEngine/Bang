@@ -18,7 +18,6 @@
 
 namespace Bang
 {
-template <class>
 class Image;
 class IEventsResource;
 class MetaNode;
@@ -35,8 +34,8 @@ public:
     virtual ~TextureCubeMap() override;
 
     // Texture
-    using Texture::Resize;
     using Texture::CreateEmpty;
+    using Texture::Resize;
     void CreateEmpty(int size);
     bool Resize(int size);
     void Fill(GL::CubeMapDir cubeMapDir,
@@ -46,7 +45,7 @@ public:
               GL::DataType inputDataType);
 
     void SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex);
-    Imageb ToImage(GL::CubeMapDir cubeMapDir) const;
+    Image ToImage(GL::CubeMapDir cubeMapDir) const;
     RH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
@@ -55,12 +54,12 @@ public:
 
     // Resource
     virtual void Import(const Path &textureCubeMapFilepath) override;
-    void Import(const Image<Byte> &topImage,
-                const Image<Byte> &botImage,
-                const Image<Byte> &leftImage,
-                const Image<Byte> &rightImage,
-                const Image<Byte> &frontImage,
-                const Image<Byte> &backImage);
+    void Import(const Image &topImage,
+                const Image &botImage,
+                const Image &leftImage,
+                const Image &rightImage,
+                const Image &frontImage,
+                const Image &backImage);
 
     // GLObject
     GL::BindTarget GetGLBindTarget() const override;
@@ -74,9 +73,9 @@ private:
     void CreateEmpty(const Vector2i &size) override;
     bool Resize(const Vector2i &size) override;
 
-    void FillCubeMapDir(GL::CubeMapDir dir, const Imageb *img);
+    void FillCubeMapDir(GL::CubeMapDir dir, const Image *img);
     static unsigned int GetDirIndex(GL::CubeMapDir dir);
 };
-}
+}  // namespace Bang
 
 #endif  // TEXTURECUBEMAP_H

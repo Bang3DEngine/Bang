@@ -269,12 +269,8 @@ bool GL::CheckError(int line, const String &func, const String &file)
         const char *err =
             reinterpret_cast<const char *>(gluErrorString(glError));
         Debug_Error("OpenGL error \"" << String(err).ToUpper()
-                                      << "\" at function \""
-                                      << func
-                                      << "\" in "
-                                      << file
-                                      << ":"
-                                      << line);
+                                      << "\" at function \"" << func << "\" in "
+                                      << file << ":" << line);
         // GL::PrintGLContext();
         ok = false;
     }
@@ -608,7 +604,7 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
             {
                 auto &enabledisStackAndValue =
                     gl->m_enabledVars.Get(glEnablable);
-                for (int i = 0; i < enabledisStackAndValue.currentValue.size();
+                for (uint i = 0; i < enabledisStackAndValue.currentValue.size();
                      ++i)
                 {
                     enabledisStackAndValue.currentValue[i] = false;
@@ -1094,7 +1090,7 @@ void GL::Uniform(int location, double value)
 {
     if (location >= 0)
     {
-        GL_CALL(glUniform1f(location, value));
+        GL_CALL(glUniform1d(location, value));
     }
 }
 void GL::Uniform(int location, bool value)

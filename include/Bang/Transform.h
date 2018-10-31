@@ -22,8 +22,6 @@ namespace Bang
 {
 class GameObject;
 class ICloneable;
-class IEventsChildren;
-class IEventsTransform;
 
 class IInvalidatableTransformWorld
     : public IInvalidatable<IInvalidatableTransformWorld>
@@ -164,6 +162,6 @@ private:
     void PropagateParentTransformChangedEventToChildren() const;
     void PropagateChildrenTransformChangedEventToParent() const;
 };
-}
+}  // namespace Bang
 
 #endif  // TRANSFORM_H

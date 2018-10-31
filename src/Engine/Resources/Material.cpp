@@ -15,14 +15,13 @@
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureFactory.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/Vector.tcc"
 
 namespace Bang
 {
 class Path;
 class Resource;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
@@ -421,7 +420,7 @@ void Material::CloneInto(ICloneable *clone) const
 {
     Serializable::CloneInto(clone);
 
-    Material *matClone = Cast<Material *>(clone);
+    Material *matClone = SCAST<Material *>(clone);
 
     matClone->GetNeededUniforms().SetOn(GetNeededUniforms().GetValue());
     matClone->SetShaderProgram(GetShaderProgram());

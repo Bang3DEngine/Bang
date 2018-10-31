@@ -29,7 +29,6 @@
 #include "Bang/Texture2D.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/Tree.tcc"
-#include "Bang/TypeTraits.h"
 #include "Bang/UIButton.h"
 #include "Bang/UIDragDroppable.h"
 #include "Bang/UIFocusable.h"

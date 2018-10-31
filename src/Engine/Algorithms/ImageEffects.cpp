@@ -1,14 +1,14 @@
 #include "Bang/ImageEffects.h"
 
 #include "Bang/Color.h"
-#include "Bang/Image.tcc"
+#include "Bang/Image.h"
 #include "Bang/Math.h"
 #include "Bang/Vector.tcc"
 
 using namespace Bang;
 
-void ImageEffects::SignedDistanceField(const Imageb &inputImageBW,
-                                       Imageb *outImg,
+void ImageEffects::SignedDistanceField(const Image &inputImageBW,
+                                       Image *outImg,
                                        int radius)
 {
     outImg->Create(
@@ -16,7 +16,7 @@ void ImageEffects::SignedDistanceField(const Imageb &inputImageBW,
 
     constexpr float negativeOffset = 0.25f;
 
-    Imageb outline;
+    Image outline;
     ImageEffects::Outline(inputImageBW, &outline);
     // outline.Export( Path("outline.png") );
 
@@ -59,7 +59,7 @@ void ImageEffects::SignedDistanceField(const Imageb &inputImageBW,
     }
 }
 
-void ImageEffects::Outline(const Imageb &imgBW, Imageb *outlineOutputImageBW)
+void ImageEffects::Outline(const Image &imgBW, Image *outlineOutputImageBW)
 {
     outlineOutputImageBW->Create(imgBW.GetWidth(), imgBW.GetHeight());
     for (int y = 0; y < imgBW.GetHeight(); ++y)
@@ -92,9 +92,9 @@ void ImageEffects::Outline(const Imageb &imgBW, Imageb *outlineOutputImageBW)
     }
 }
 
-bool ImageEffects::Albedo(const Imageb &inputImage1,
-                          const Imageb &inputImage2,
-                          Imageb *diffOutputImage,
+bool ImageEffects::Albedo(const Image &inputImage1,
+                          const Image &inputImage2,
+                          Image *diffOutputImage,
                           bool diffAlpha)
 {
     diffOutputImage->Create(

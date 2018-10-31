@@ -1,9 +1,12 @@
 #include "Bang/Path.h"
 
-#include <dirent.h>
-#include <sys/stat.h>
 #include <ctime>
 #include <vector>
+
+#ifdef __linux__
+#include <dirent.h>
+#include <sys/stat.h>
+#endif
 
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
@@ -125,6 +128,7 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
 {
     Array<Path> subPathsArray;
 
+#ifdef __linux__
     struct dirent *dir;
     if (DIR *d = opendir(GetAbsolute().ToCString()))
     {
@@ -142,6 +146,8 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
         }
         closedir(d);
     }
+#else
+#endif
 
     return subPathsArray;
 }

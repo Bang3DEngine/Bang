@@ -171,7 +171,7 @@ public:
         else
         {
             T angle = Math::ACos(cosTheta);
-            return (Math::Sin((Cast<T>(1) - t) * angle) * from +
+            return (Math::Sin((SCAST<T>(1) - t) * angle) * from +
                     Math::Sin(t * angle) * to) /
                    Math::Sin(angle);
         }
@@ -271,7 +271,7 @@ QuaternionG<T> &operator+=(QuaternionG<T> &lhs, const QuaternionG<T> &rhs)
 template <class T, class OtherT>
 QuaternionG<T> operator*(const QuaternionG<T> &q, OtherT a)
 {
-    return q * Cast<T>(a);
+    return q * SCAST<T>(a);
 }
 
 template <class T, class OtherT>
@@ -348,6 +348,6 @@ Vector3G<T> operator*(const Vector3G<T> &lhs, const QuaternionG<T> &q)
 {
     return q.Inversed() * lhs;
 }
-}
+}  // namespace Bang
 
 #endif  // QUATERNIONG_H

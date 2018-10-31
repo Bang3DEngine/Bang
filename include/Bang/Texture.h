@@ -52,8 +52,7 @@ protected:
     static Color GetColorFromFloatArray(const float *pixels, int i);
     static Color GetColorFromByteArray(const Byte *pixels, int i);
 
-    template <class T>
-    Image<T> ToImage(GL::TextureTarget texTarget) const;
+    Image ToImage(GL::TextureTarget texTarget) const;
 
     virtual void OnFormatChanged();
 
@@ -66,36 +65,6 @@ private:
     GL::ColorFormat m_glFormat = Undef<GL::ColorFormat>();
     GL::TextureTarget m_target = Undef<GL::TextureTarget>();
 };
-
-template <class T>
-Image<T> Texture::ToImage(GL::TextureTarget texTarget) const
-{
-    const int width = GetWidth();
-    const int height = GetHeight();
-    const int numComps = GL::GetNumComponents(GL::ColorComp::RGBA);
-    Byte *pixels = new Byte[width * height * numComps];
-
-    GL::Push(GL::BindTarget::TEXTURE_2D);
-    Bind();
-    GL::GetTexImage(
-        texTarget, GL::ColorComp::RGBA, GL::DataType::UNSIGNED_BYTE, pixels);
-    GL::Pop(GL::BindTarget::TEXTURE_2D);
-
-    Image<T> img(width, height);
-    for (int y = 0; y < height; ++y)
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            const int coords = (y * width + x) * numComps;
-            Color pixelColor = GetColorFromByteArray(pixels, coords);
-            img.SetPixel(x, y, pixelColor);
-        }
-    }
-
-    delete[] pixels;
-
-    return img;
-}
-}
+}  // namespace Bang
 
 #endif  // TEXTURE_H

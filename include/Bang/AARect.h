@@ -122,7 +122,7 @@ public:
 
     Vector2G<T> GetCenter() const
     {
-        return (GetMin() + GetMax()) / Cast<T>(2);
+        return (GetMin() + GetMax()) / SCAST<T>(2);
     }
 
     bool Contains(const Vector2G<T> &p) const
@@ -428,6 +428,6 @@ void operator+=(AARectG<T> &r, const Vector2G<T> &v)
     r.m_min += v;
     r.m_max += v;
 }
-}
+}  // namespace Bang
 
 #endif  // AARECT_H

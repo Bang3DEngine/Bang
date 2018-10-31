@@ -12,8 +12,10 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsDragDrop.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/IEventsUITree.h"
 #include "Bang/List.h"
 #include "Bang/String.h"
 #include "Bang/Tree.h"
@@ -23,9 +25,6 @@
 namespace Bang
 {
 class GameObject;
-class IEventsDestroy;
-class IEventsDragDrop;
-class IEventsUITree;
 class UIDragDroppable;
 class UIFocusable;
 class UIImageRenderer;
@@ -131,6 +130,6 @@ private:
 
     friend class GameObjectFactory;
 };
-}
+}  // namespace Bang
 
 #endif  // UITREE_H

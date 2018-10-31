@@ -34,7 +34,7 @@ namespace Bang
 class ICloneable;
 template <class>
 class Array;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
@@ -47,7 +47,7 @@ ReflectionProbe::ReflectionProbe()
     p_textureCubeMapDiffuse.Set(new TextureCubeMap());
     p_textureCubeMapSpecular.Set(new TextureCubeMap());
 
-    for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
+    for (uint i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         GL::CubeMapDir cmDir = GL::GetAllCubeMapDirs()[i];
 
@@ -97,7 +97,7 @@ ReflectionProbe::ReflectionProbe()
 
 ReflectionProbe::~ReflectionProbe()
 {
-    for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
+    for (uint i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         GameObject::Destroy(GetCameras()[i]->GetGameObject());
     }
@@ -110,7 +110,7 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
     if (hasRested || force)
     {
         // Render from each of the 6 cameras...
-        for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
+        for (uint i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
         {
             GameObject *camGo = GetCameras()[i]->GetGameObject();
             camGo->GetTransform()->SetPosition(

@@ -13,6 +13,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
+#include "Bang/IEventsDragDrop.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
@@ -73,6 +74,6 @@ private:
 
     friend class UICanvas;
 };
-}
+}  // namespace Bang
 
 #endif  // UIDRAGDROPPABLE_H

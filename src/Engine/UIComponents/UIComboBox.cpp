@@ -32,10 +32,7 @@
 
 using namespace Bang;
 
-UIComboBox::UIComboBox()
-{
-    CONSTRUCT_CLASS_ID(UIComboBox)
-}
+UIComboBox::UIComboBox(){CONSTRUCT_CLASS_ID(UIComboBox)}
 
 UIComboBox::~UIComboBox()
 {
@@ -182,7 +179,7 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
 void UIComboBox::SetSelectionByValue(int value, bool selected)
 {
     uint indexOfValue = m_indexToValue.IndexOf(value);
-    if (indexOfValue != -1u)
+    if (indexOfValue != SCAST<uint>(-1))
     {
         SetSelectionByIndex(indexOfValue, selected);
     }
@@ -191,7 +188,7 @@ void UIComboBox::SetSelectionByValue(int value, bool selected)
 void UIComboBox::SetSelectionByLabel(const String &label, bool selected)
 {
     uint indexOfLabel = m_indexToLabel.IndexOf(label);
-    if (indexOfLabel != -1u)
+    if (indexOfLabel != SCAST<uint>(-1))
     {
         SetSelectionByIndex(indexOfLabel, selected);
     }
@@ -278,7 +275,7 @@ void UIComboBox::ClearItems()
 void UIComboBox::RemoveItem(const String &label)
 {
     uint indexOfLabel = m_indexToLabel.IndexOf(label);
-    if (indexOfLabel != -1u)
+    if (indexOfLabel != SCAST<uint>(-1))
     {
         m_checkImgs.RemoveByIndex(indexOfLabel);
         m_indexToValue.RemoveByIndex(indexOfLabel);

@@ -419,7 +419,7 @@ void Mesh::UpdateCornerTablesIfNeeded()
     m_cornerIdToOppositeCornerId.Resize(GetNumCorners());
     for (uint i = 0; i < m_cornerIdToOppositeCornerId.Size(); ++i)
     {
-        m_cornerIdToOppositeCornerId[i] = -1u;
+        m_cornerIdToOppositeCornerId[i] = SCAST<uint>(-1);
     }
 
     struct TriMapInfo
@@ -492,7 +492,7 @@ void Mesh::UpdateCornerTablesIfNeeded()
         const Vector3 &vertexPos = GetPositionsPool()[vIdOfcId];
         const Array<VertexId> &vertexIdsInThisPosition =
             vertexPositionToVertexIdsInThatPosition[vertexPos];
-        VertexId minVId = -1u;
+        VertexId minVId = SCAST<uint>(-1);
         for (VertexId vId : vertexIdsInThisPosition)
         {
             m_vertexIdToCornerIds[vId].PushBack(cId);
@@ -697,7 +697,7 @@ Mesh::VertexId Mesh::GetRemainingVertexId(Mesh::TriangleId triangleId,
             return vId;
         }
     }
-    return -1u;
+    return SCAST<uint>(-1);
 }
 
 Mesh::VertexId Mesh::GetRemainingVertexIdUnique(
@@ -721,7 +721,7 @@ Mesh::VertexId Mesh::GetRemainingVertexIdUnique(
             return uniqueVId;
         }
     }
-    return -1u;
+    return SCAST<uint>(-1);
 }
 
 Mesh::CornerId Mesh::GetCornerIdFromTriangle(Mesh::TriangleId triangleId,
@@ -834,7 +834,7 @@ Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIds(
     for (CornerId cornerId : triCorners)
     {
         CornerId oppositeCornerId = GetOppositeCornerId(cornerId);
-        if (oppositeCornerId != -1u)
+        if (oppositeCornerId != SCAST<uint>(-1))
         {
             neighborTriangleIds.PushBack(
                 GetTriangleIdFromCornerId(oppositeCornerId));
@@ -894,7 +894,7 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId)
         if (!processedVertexIds.Contains(centralCId))
         {
             CornerId oppositeCId = GetOppositeCornerId(firstCId);
-            if (oppositeCId != -1u)
+            if (oppositeCId != SCAST<uint>(-1))
             {
                 ++processedTris;
 

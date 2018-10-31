@@ -6,7 +6,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/String.h"
-#include "Bang/TypeTraits.h"
 
 namespace Bang
 {
@@ -44,9 +43,9 @@ T Random::GetValue()
 template <class T>
 T Random::GetRange(T minIncluded, T maxExcluded)
 {
-    return Cast<T>(Random::GetValue() * (maxExcluded - minIncluded)) +
+    return SCAST<T>(Random::GetValue() * (maxExcluded - minIncluded)) +
            minIncluded;
 }
-}
+}  // namespace Bang
 
 #endif  // RANDOM_H

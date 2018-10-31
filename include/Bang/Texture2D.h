@@ -23,8 +23,8 @@ public:
     Texture2D(const Texture2D &tex) = delete;
 
     // Texture
-    using Texture::Resize;
     using Texture::CreateEmpty;
+    using Texture::Resize;
     void CreateEmpty(const Vector2i &size) override;
     bool Resize(const Vector2i &size) override;
     void Fill(const Color &fillColor, int width, int height);
@@ -34,15 +34,14 @@ public:
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
 
-    template <class T = Byte>
-    Image<T> ToImage();
+    Image ToImage() const;
 
     void SetAlphaCutoff(float alphaCutoff);
 
     float GetAlphaCutoff() const;
-    const Imageb &GetImage() const;
+    const Image &GetImage() const;
 
-    void Import(const Image<Byte> &image);
+    void Import(const Image &image);
 
     // GLObject
     GL::BindTarget GetGLBindTarget() const override;
@@ -55,7 +54,7 @@ public:
     virtual void Import(const Path &imageFilepath) override;
 
 protected:
-    Imageb m_image;
+    Image m_image;
     float m_alphaCutoff = 0.0f;
 
     Texture2D();
@@ -63,12 +62,6 @@ protected:
 
     void OnFormatChanged() override;
 };
-
-template <class T>
-Image<T> Texture2D::ToImage()
-{
-    return Texture::ToImage<T>(GL::TextureTarget::TEXTURE_2D);
-}
-}
+}  // namespace Bang
 
 #endif  // TEXTURE2D_H

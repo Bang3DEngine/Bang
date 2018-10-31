@@ -11,6 +11,8 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.tcc"
 #include "Bang/IEvents.h"
+#include "Bang/IEventsAnimatorStateMachineNode.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Serializable.h"
@@ -22,8 +24,6 @@ class Animation;
 class AnimatorStateMachine;
 class AnimatorStateMachineLayer;
 class AnimatorStateMachineTransition;
-class IEventsAnimatorStateMachineNode;
-class IEventsDestroy;
 
 class AnimatorStateMachineNode
     : public Serializable,
@@ -75,6 +75,6 @@ private:
 
     friend class AnimatorStateMachineLayer;
 };
-}
+}  // namespace Bang
 
 #endif  // ANIMATORSTATEMACHINENODE_H

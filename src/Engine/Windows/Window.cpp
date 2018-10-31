@@ -221,7 +221,7 @@ void Window::SetIcon(const Path &iconPath)
 {
     constexpr Uint32 RM = 0xff, GM = 0xff00, BM = 0xff0000, AM = 0xff000000;
     RH<Texture2D> tex = Resources::Load<Texture2D>(iconPath);
-    Imageb img = tex.Get()->ToImage<Byte>();
+    Image img = tex.Get()->ToImage();
     SDL_Surface *icon = SDL_CreateRGBSurface(
         SDL_SWSURFACE, img.GetWidth(), img.GetHeight(), 32, RM, GM, BM, AM);
     for (int y = 0; y < img.GetHeight(); ++y)
@@ -243,7 +243,7 @@ void Window::SetIcon(const Path &iconPath)
 
 void Window::SetBordered(bool bordered)
 {
-    SDL_SetWindowBordered(GetSDLWindow(), Cast<SDL_bool>(bordered));
+    SDL_SetWindowBordered(GetSDLWindow(), SCAST<SDL_bool>(bordered));
 }
 
 void Window::SetMinSize(int minSizeX, int minSizeY)

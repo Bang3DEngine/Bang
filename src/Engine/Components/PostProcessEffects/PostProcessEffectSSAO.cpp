@@ -55,16 +55,16 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
 
     p_ssaoShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/SSAO.frag")));
+        EPATH("Shaders").Append("SSAO.frag")));
     p_blurXShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/SSAOSeparableBlurX.frag")));
+        EPATH("Shaders").Append("SSAOSeparableBlurX.frag")));
     p_blurYShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/SSAOSeparableBlurY.frag")));
+        EPATH("Shaders").Append("SSAOSeparableBlurY.frag")));
     p_applySSAOShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/SSAOApply.frag")));
+        EPATH("Shaders").Append("SSAOApply.frag")));
 }
 
 PostProcessEffectSSAO::~PostProcessEffectSSAO()

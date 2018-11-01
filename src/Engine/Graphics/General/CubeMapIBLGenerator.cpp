@@ -18,10 +18,10 @@ CubeMapIBLGenerator::CubeMapIBLGenerator()
     // Create framebuffer and shader program
     m_iblFramebuffer = new Framebuffer();
 
-    m_iblShaderProgram =
-        ShaderProgramFactory::Get(EPATH("Shaders/CubeMapIBLGenerator.vert"),
-                                  EPATH("Shaders/CubeMapIBLGenerator.geom"),
-                                  EPATH("Shaders/CubeMapIBLGenerator.frag"));
+    m_iblShaderProgram = ShaderProgramFactory::Get(
+        EPATH("Shaders").Append("CubeMapIBLGenerator.vert"),
+        EPATH("Shaders").Append("CubeMapIBLGenerator.geom"),
+        EPATH("Shaders").Append("CubeMapIBLGenerator.frag"));
 }
 
 CubeMapIBLGenerator::~CubeMapIBLGenerator()

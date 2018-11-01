@@ -42,7 +42,7 @@ RenderFactory::RenderFactory()
     m_sphereMesh = MeshFactory::GetSphere();
     m_outlineShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/GizmosOutline.frag")));
+        EPATH("Shaders").Append("GizmosOutline.frag")));
 
     m_lineRenderer = m_renderGo->AddComponent<LineRenderer>();
     m_meshRenderer = m_renderGo->AddComponent<MeshRenderer>();

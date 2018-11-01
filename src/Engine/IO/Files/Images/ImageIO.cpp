@@ -73,7 +73,7 @@ void ImageIO::Import(const Path &filepath, Image *img, bool *_ok)
     {
         // These textures are thought for GPU only, skip
     }
-    else
+    else if (!filepath.IsEmpty())
     {
         Debug_Error("Unrecognized image format for '" << filepath.GetAbsolute()
                                                       << "'");

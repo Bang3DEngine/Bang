@@ -21,54 +21,55 @@ using namespace Bang;
 
 RH<Mesh> MeshFactory::GetPlane()
 {
-    return MeshFactory::GetMesh("Meshes/Plane.obj");
+    return MeshFactory::GetMesh("Plane.obj");
 }
 RH<Mesh> MeshFactory::GetUIPlane()
 {
-    return MeshFactory::GetMesh("Meshes/UIPlane.obj");
+    return MeshFactory::GetMesh("UIPlane.obj");
 }
 RH<Mesh> MeshFactory::GetUIPlaneInvUVY()
 {
-    return MeshFactory::GetMesh("Meshes/UIPlaneInvUVY.obj");
+    return MeshFactory::GetMesh("UIPlaneInvUVY.obj");
 }
 RH<Mesh> MeshFactory::GetUIPlane3x3()
 {
-    return MeshFactory::GetMesh("Meshes/UIPlane3x3.obj");
+    return MeshFactory::GetMesh("UIPlane3x3.obj");
 }
 RH<Bang::Mesh> Bang::MeshFactory::GetUIPlane3x3InvUVY()
 {
-    return MeshFactory::GetMesh("Meshes/UIPlane3x3InvUVY.obj");
+    return MeshFactory::GetMesh("UIPlane3x3InvUVY.obj");
 }
 RH<Mesh> MeshFactory::GetCube()
 {
-    return MeshFactory::GetMesh("Meshes/Cube.obj");
+    return MeshFactory::GetMesh("Cube.obj");
 }
 
 RH<Mesh> MeshFactory::GetCylinder()
 {
-    return MeshFactory::GetMesh("Meshes/Cylinder.obj");
+    return MeshFactory::GetMesh("Cylinder.obj");
 }
 
 RH<Mesh> MeshFactory::GetCapsule()
 {
-    return MeshFactory::GetMesh("Meshes/Capsule.obj");
+    return MeshFactory::GetMesh("Capsule.obj");
 }
 RH<Mesh> MeshFactory::GetSphere()
 {
-    return MeshFactory::GetMesh("Meshes/Sphere.obj");
+    return MeshFactory::GetMesh("Sphere.obj");
 }
 RH<Mesh> MeshFactory::GetCone()
 {
-    return MeshFactory::GetMesh("Meshes/Cone.obj");
+    return MeshFactory::GetMesh("Cone.obj");
 }
 RH<Mesh> MeshFactory::GetCamera()
 {
-    return MeshFactory::GetMesh("Meshes/Camera.obj");
+    return MeshFactory::GetMesh("Camera.obj");
 }
 
-RH<Mesh> MeshFactory::GetMesh(const String &enginePath)
+RH<Mesh> MeshFactory::GetMesh(const String &enginePathStr)
 {
-    return MeshFactory::GetMesh(EPATH(enginePath));
+    return MeshFactory::GetMesh(
+        Paths::GetEngineAssetsDir().Append("Meshes").Append(enginePathStr));
 }
 
 RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)

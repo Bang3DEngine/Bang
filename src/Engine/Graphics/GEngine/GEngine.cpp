@@ -90,7 +90,7 @@ void GEngine::Init()
         ShaderProgramFactory::GetRenderTextureToViewportGamma());
     m_renderSkySP.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders/RenderSky.frag")));
+        EPATH("Shaders").Append("RenderSky.frag")));
 
     Path shadersDir = ShaderProgramFactory::GetEngineShadersDir();
     m_fillCubeMapFromTexturesFB = new Framebuffer();

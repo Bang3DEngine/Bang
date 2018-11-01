@@ -5,7 +5,6 @@
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
-#include "Bang/UMap.tcc"
 
 using namespace Bang;
 
@@ -14,11 +13,10 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     switch (renderPass)
     {
         case RenderPass::SCENE:
-            return MaterialFactory::LoadMaterial("Materials/Default.bmat");
+            return MaterialFactory::LoadMaterial("Default.bmat");
 
         case RenderPass::SCENE_TRANSPARENT:
-            return MaterialFactory::LoadMaterial(
-                "Materials/DefaultTransparent.bmat");
+            return MaterialFactory::LoadMaterial("DefaultTransparent.bmat");
 
         default: break;
     }
@@ -27,67 +25,69 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 
 RH<Material> MaterialFactory::GetDefaultUnLighted()
 {
-    return MaterialFactory::LoadMaterial("Materials/DefaultUnLighted.bmat");
+    return MaterialFactory::LoadMaterial("DefaultUnLighted.bmat");
 }
 RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
-    return MaterialFactory::LoadMaterial(
-        "Materials/GizmosUnLightedOverlay.bmat");
+    return MaterialFactory::LoadMaterial("GizmosUnLightedOverlay.bmat");
 }
 
 RH<Material> MaterialFactory::GetParticlesAdditive()
 {
-    return MaterialFactory::LoadMaterial("Materials/ParticlesAdditive.bmat");
+    return MaterialFactory::LoadMaterial("ParticlesAdditive.bmat");
 }
 RH<Material> MaterialFactory::GetParticlesMesh()
 {
-    return MaterialFactory::LoadMaterial("Materials/ParticlesMesh.bmat");
+    return MaterialFactory::LoadMaterial("ParticlesMesh.bmat");
 }
 RH<Bang::Material> Bang::MaterialFactory::GetWater()
 {
-    return MaterialFactory::LoadMaterial("Materials/Water.bmat");
+    return MaterialFactory::LoadMaterial("Water.bmat");
 }
 
 RH<PhysicsMaterial> MaterialFactory::GetDefaultPhysicsMaterial()
 {
-    return MaterialFactory::LoadPhysicsMaterial("Materials/Default.bphmat");
+    return MaterialFactory::LoadPhysicsMaterial("Default.bphmat");
 }
 RH<Material> MaterialFactory::GetMissing()
 {
-    return MaterialFactory::LoadMaterial("Materials/Missing.bmat");
+    return MaterialFactory::LoadMaterial("Missing.bmat");
 }
 
 RH<Material> MaterialFactory::GetUIText()
 {
-    return MaterialFactory::LoadMaterial("Materials/UITextRenderer.bmat");
+    return MaterialFactory::LoadMaterial("UITextRenderer.bmat");
 }
 RH<Material> MaterialFactory::GetUIImage()
 {
-    return MaterialFactory::LoadMaterial("Materials/UIImageRenderer.bmat");
+    return MaterialFactory::LoadMaterial("UIImageRenderer.bmat");
 }
 
-RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePath)
+RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePathStr)
 {
+    Path matEnginePath = Paths::GetEngineAssetsDir()
+                             .Append("Materials")
+                             .Append(matEnginePathStr);
     MaterialFactory *mf = MaterialFactory::GetActive();
     if (!mf->m_cacheMaterials.ContainsKey(matEnginePath))
     {
-        mf->m_cacheMaterials.Add(
-            matEnginePath, Resources::Load<Material>(EPATH(matEnginePath)));
+        mf->m_cacheMaterials.Add(matEnginePath,
+                                 Resources::Load<Material>(matEnginePath));
     }
     return mf->m_cacheMaterials.Get(matEnginePath);
 }
 
 RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
-    const String &phMatEnginePath)
+    const String &phMatEnginePathStr)
 {
-    Path matEnginePath =
-        Paths::GetEngineAssetsDir().Append("Materials").Append(phMatEnginePath);
+    Path phMatEnginePath = Paths::GetEngineAssetsDir()
+                               .Append("PhysicsMaterials")
+                               .Append(phMatEnginePathStr);
     MaterialFactory *mf = MaterialFactory::GetActive();
     if (!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))
     {
         mf->m_cachePhysicsMaterials.Add(
-            phMatEnginePath,
-            Resources::Load<PhysicsMaterial>(EPATH(phMatEnginePath)));
+            phMatEnginePath, Resources::Load<PhysicsMaterial>(phMatEnginePath));
     }
     return mf->m_cachePhysicsMaterials.Get(phMatEnginePath);
 }

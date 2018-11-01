@@ -155,7 +155,8 @@ void UICanvas::OnUpdate()
     Vector2i currentMousePosVP = Input::GetMousePosition();
     Vector2 currentMousePosVPNDC = Input::GetMousePositionNDC();
     Vector2i currentMouseWindow = Input::GetMousePositionWindow();
-    const Array<InputEvent> &events = Input::GetEnqueuedEvents();
+    const Array<InputEvent> events =
+        Input::GetEnqueuedEvents();  // Copy to avoid concurrent change
     for (const InputEvent &inputEvent : events)
     {
         currentMouseWindow = inputEvent.GetMousePosWindow();

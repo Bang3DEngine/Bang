@@ -17,9 +17,12 @@ public:
     bool TryLock();
     void UnLock();
 
+    bool IsLocked() const;
+
 private:
+    bool m_isLocked = false;
     std::mutex m_mutex;
 };
-}
+}  // namespace Bang
 
 #endif  // MUTEX_H

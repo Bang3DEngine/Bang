@@ -1,11 +1,13 @@
 #ifndef MATERIALFACTORY_H
 #define MATERIALFACTORY_H
 
+#include "Bang/UMap.h"
+
 #include "Bang/BangDefines.h"
+#include "Bang/Path.h"
 #include "Bang/RenderPass.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
-#include "Bang/UMap.h"
 
 namespace Bang
 {
@@ -30,8 +32,8 @@ public:
     static RH<Material> GetUIImage();
 
 private:
-    UMap<String, RH<Material>> m_cacheMaterials;
-    UMap<String, RH<PhysicsMaterial>> m_cachePhysicsMaterials;
+    UMap<Path, RH<Material>> m_cacheMaterials;
+    UMap<Path, RH<PhysicsMaterial>> m_cachePhysicsMaterials;
 
     MaterialFactory() = default;
     static RH<Material> LoadMaterial(const String &matEnginePath);

@@ -74,7 +74,7 @@ void UMap<Key, Value, Hash, Pred, Alloc>::Clear()
 template <class Key, class Value, class Hash, class Pred, class Alloc>
 int UMap<Key, Value, Hash, Pred, Alloc>::Size() const
 {
-    return m_umap.size();
+    return SCAST<int>(m_umap.size());
 }
 
 template <class Key, class Value, class Hash, class Pred, class Alloc>
@@ -249,4 +249,4 @@ Value &UMap<Key, Value, Hash, Pred, Alloc>::operator[](const Key &k)
 {
     return m_umap[k];
 }
-}
+}  // namespace Bang

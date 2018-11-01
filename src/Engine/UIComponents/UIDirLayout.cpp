@@ -10,7 +10,6 @@
 #include "Bang/RectTransform.h"
 #include "Bang/Stretch.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;

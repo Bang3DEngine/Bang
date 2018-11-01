@@ -32,6 +32,6 @@ private:
 
     UITheme() = delete;
 };
-}
+}  // namespace Bang
 
 #endif  // UITHEME_H

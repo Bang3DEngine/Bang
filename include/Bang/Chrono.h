@@ -28,6 +28,6 @@ private:
     String m_chronoName = "";
     Array<ChronoEvent> m_events = {};
 };
-}
+}  // namespace Bang
 
 #endif  // CHRONO_H

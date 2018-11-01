@@ -134,6 +134,6 @@ private:
         return SCAST<FlagType>(~SCAST<FlagsPrimitiveType>(f));  \
     }                                                           \
     using FlagsName = Flags<FlagType>
-}
+}  // namespace Bang
 
 #endif  // FLAGS_H

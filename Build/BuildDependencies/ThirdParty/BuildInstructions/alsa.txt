@@ -1,4 +1,0 @@
-# Get source:
-wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.4.tar.bz2
-tar xvf alsa-lib-1.1.4.tar.bz2
-rm alsa-lib-1.1.4.tar.bz2

@@ -8,7 +8,6 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/String.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang
@@ -55,6 +54,6 @@ private:
 
     void OnChanged();
 };
-}
+}  // namespace Bang
 
 #endif  // UILAYOUTELEMENT_H

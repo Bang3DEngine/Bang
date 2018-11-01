@@ -93,29 +93,30 @@ void String::Remove(int beginIndex, int endIndexExclusive)
 
 long String::IndexOf(char c, long startingPos) const
 {
-    int index = m_str.find(c, startingPos);
+    int index = SCAST<int>(m_str.find(c, startingPos));
     return index == String::npos ? -1 : index;
 }
 
 long String::IndexOf(const String &str, long startingPos) const
 {
-    int index = m_str.find(str, startingPos);
+    int index = SCAST<int>(m_str.find(str, startingPos));
     return index == String::npos ? -1 : index;
 }
 
 long String::IndexOfOneOf(const String &charSet, long startingPos) const
 {
-    int index = m_str.find_first_of(charSet, startingPos);
+    int index = SCAST<int>(m_str.find_first_of(charSet, startingPos));
     return index == String::npos ? -1 : index;
 }
 
 long String::IndexOfOneNotOf(const String &charSet, long startingPos) const
 {
-    int index = m_str.find_first_not_of(charSet, startingPos);
+    int index = SCAST<int>(m_str.find_first_not_of(charSet, startingPos));
     return index == String::npos ? -1 : index;
 }
 
-String String::SubString(long startIndexInclusive, long endIndexInclusive) const
+String String::SubString(std::size_t startIndexInclusive,
+                         std::size_t endIndexInclusive) const
 {
     if ((startIndexInclusive < 0) || (startIndexInclusive >= Size()))
     {
@@ -184,9 +185,9 @@ int String::ReplaceInSitu(const String &from,
         lastIndex = IndexOf(from, lastIndex);
         if (lastIndex >= 0)
         {
-            Remove(lastIndex, lastIndex + from.Size());
+            Remove(lastIndex, lastIndex + SCAST<int>(from.Size()));
             Insert(lastIndex, to);
-            lastIndex += to.Size();
+            lastIndex += SCAST<int>(to.Size());
             ++numReplacements;
             if (maxNumberOfReplacements != -1 &&
                 numReplacements >= maxNumberOfReplacements)
@@ -209,9 +210,9 @@ String String::Replace(const String &from,
 
 String String::Elide(int length, bool elideRight) const
 {
-    int maxLength = std::min(int(Size()), length);
+    std::size_t maxLength = std::min(int(Size()), length);
     String result = (*this);
-    if (result.Size() > length)
+    if (SCAST<int>(result.Size()) > length)
     {
         result = result.SubString(result.Size() - maxLength, result.Size() - 1);
         if (elideRight)
@@ -259,7 +260,7 @@ String String::AddInFrontOfWords(String particle) const
         result.Insert(0, particle);
     }
 
-    for (int i = 0; i < result.Size() - 1; ++i)
+    for (int i = 0; i < SCAST<int>(result.Size()) - 1; ++i)
     {
         if (result.At(i) == ' ' && result.At(i + 1) != ' ')
         {
@@ -322,7 +323,7 @@ float String::ToFloat(const String &str, bool *ok)
     return v;
 }
 
-long String::Size() const
+std::size_t String::Size() const
 {
     return m_str.length();
 }
@@ -376,7 +377,7 @@ bool String::EndsWith(const String &str) const
 String String::ToUpper() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for (std::size_t i = 0; i < Size(); ++i)
     {
         result[i] = String::ToUpper(result[i]);
     }
@@ -386,7 +387,7 @@ String String::ToUpper() const
 String String::ToLower() const
 {
     String result = *this;
-    for (int i = 0; i < Size(); ++i)
+    for (std::size_t i = 0; i < Size(); ++i)
     {
         result[i] = String::ToLower(result[i]);
     }

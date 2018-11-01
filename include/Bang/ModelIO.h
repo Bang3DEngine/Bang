@@ -13,10 +13,10 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
-class aiMaterial;
-class aiMesh;
-class aiNode;
-class aiScene;
+struct aiMaterial;
+struct aiMesh;
+struct aiNode;
+struct aiScene;
 
 namespace Assimp
 {
@@ -102,6 +102,6 @@ private:
                                        RH<Material> *outMaterial,
                                        String *outMaterialName);
 };
-}
+}  // namespace Bang
 
 #endif  // MODELIO_H

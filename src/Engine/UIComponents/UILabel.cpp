@@ -24,7 +24,6 @@
 #include "Bang/UIRectMask.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
@@ -118,7 +117,7 @@ void UILabel::ResetSelection()
 }
 void UILabel::SelectAll()
 {
-    SetSelection(GetText()->GetContent().Size(), 0);
+    SetSelection(SCAST<int>(GetText()->GetContent().Size()), 0);
 }
 void UILabel::SetSelectAllOnFocus(bool selectAllOnFocus)
 {

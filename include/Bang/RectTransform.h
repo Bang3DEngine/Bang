@@ -10,7 +10,6 @@
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang
@@ -158,6 +157,6 @@ private:
 
     friend class UILayoutManager;
 };
-}
+}  // namespace Bang
 
 #endif  // RECTTRANSFORM_H

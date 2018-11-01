@@ -20,7 +20,7 @@ void GEngineDebugger::Reset()
     if (Input::GetKeyDown(Key::Q))
     {
         File::Remove(GEngineDebugger::c_debugDir);
-        File::CreateDirectory(GEngineDebugger::c_debugDir);
+        File::CreateDir(GEngineDebugger::c_debugDir);
     }
 }
 

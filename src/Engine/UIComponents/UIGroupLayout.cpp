@@ -5,7 +5,6 @@
 #include "Bang/FastDynamicCast.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

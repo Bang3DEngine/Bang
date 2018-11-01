@@ -22,7 +22,6 @@
 #include "Bang/Resources.tcc"
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 namespace Bang

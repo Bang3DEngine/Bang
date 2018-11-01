@@ -33,7 +33,6 @@
 #include "Bang/TextureFactory.h"
 #include "Bang/Transform.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
@@ -43,7 +42,7 @@ namespace Bang
 class ICloneable;
 template <class>
 class EventEmitter;
-}
+}  // namespace Bang
 
 using namespace Bang;
 
@@ -478,7 +477,6 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
 void Camera::CloneInto(ICloneable *clone) const
 {
     Component::CloneInto(clone);
-
     Camera *cam = SCAST<Camera *>(clone);
     cam->SetZFar(GetZFar());
     cam->SetZNear(GetZNear());

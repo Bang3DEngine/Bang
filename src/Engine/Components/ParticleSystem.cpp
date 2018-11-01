@@ -34,7 +34,6 @@
 #include "Bang/Transform.h"
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {

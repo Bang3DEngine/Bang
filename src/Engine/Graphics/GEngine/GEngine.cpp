@@ -33,7 +33,6 @@
 #include "Bang/TextureUnitManager.h"
 #include "Bang/Transform.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {
@@ -81,7 +80,6 @@ void GEngine::Init()
     m_gl->Init();
 
     m_texUnitManager = new TextureUnitManager();
-
     m_renderFactory = new RenderFactory();
     m_debugRenderer = new DebugRenderer();
 

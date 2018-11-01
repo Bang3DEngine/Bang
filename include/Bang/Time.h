@@ -166,6 +166,6 @@ inline Time &operator/=(Time &lhs, const T &rhs)
     lhs.SetNanos(lhs.GetNanos() / rhs);
     return lhs;
 }
-}
+}  // namespace Bang
 
 #endif  // TIME_H

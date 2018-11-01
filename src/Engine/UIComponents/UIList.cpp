@@ -24,15 +24,11 @@
 #include "Bang/UIScrollPanel.h"
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
-UIList::UIList()
-{
-    CONSTRUCT_CLASS_ID(UIList)
-}
+UIList::UIList(){CONSTRUCT_CLASS_ID(UIList)}
 
 UIList::~UIList()
 {
@@ -285,7 +281,7 @@ const Array<GOItem *> &UIList::GetItems() const
 
 GOItem *UIList::GetItem(int i) const
 {
-    if (i >= 0 && i < p_items.Size())
+    if (i >= 0 && i < SCAST<int>(p_items.Size()))
     {
         return GetItems()[i];
     }
@@ -403,7 +399,9 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
         case UIEvent::Type::MOUSE_EXIT: SetItemUnderMouse(nullptr, true); break;
 
         case UIEvent::Type::MOUSE_ENTER:
-        case UIEvent::Type::MOUSE_MOVE: { return OnMouseMove();
+        case UIEvent::Type::MOUSE_MOVE:
+        {
+            return OnMouseMove();
         }
         break;
 

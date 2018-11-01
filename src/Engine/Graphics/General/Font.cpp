@@ -23,7 +23,6 @@
 #include "Bang/Resources.tcc"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
@@ -129,7 +128,7 @@ bool Font::CatchTTFError()
 
 float Font::ScaleMagnitude(int fontSize, float magnitude)
 {
-    return Math::Round(magnitude * GetScaleProportion(fontSize));
+    return SCAST<float>(Math::Round(magnitude * GetScaleProportion(fontSize)));
 }
 
 Vector2 Font::ScaleMagnitude(int fontSize, const Vector2 &magnitude)

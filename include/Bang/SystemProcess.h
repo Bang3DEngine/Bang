@@ -48,6 +48,6 @@ private:
     void ReadOut(const char *str, int size);
     void ReadErr(const char *str, int size);
 };
-}
+}  // namespace Bang
 
 #endif  // SYSTEMPROCESS_H

@@ -25,7 +25,6 @@
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Sphere.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

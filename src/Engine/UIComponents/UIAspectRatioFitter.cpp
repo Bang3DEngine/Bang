@@ -8,7 +8,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
 #include "Bang/StreamOperators.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang

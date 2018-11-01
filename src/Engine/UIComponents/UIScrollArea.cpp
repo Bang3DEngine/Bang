@@ -8,15 +8,11 @@
 #include "Bang/RectTransform.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIRectMask.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
-UIScrollArea::UIScrollArea()
-{
-    CONSTRUCT_CLASS_ID(UIScrollArea)
-}
+UIScrollArea::UIScrollArea(){CONSTRUCT_CLASS_ID(UIScrollArea)}
 
 UIScrollArea::~UIScrollArea()
 {

@@ -17,9 +17,6 @@
 
 namespace Bang
 {
-class IEventsDestroy;
-class IEventsObject;
-
 class Object : public Serializable,
                public EventListener<IEventsObject>,
                public EventEmitterIEventsDestroyWithCheck,
@@ -74,6 +71,6 @@ private:
     virtual bool CalculateEnabledRecursively() const = 0;
     virtual void OnEnabledRecursivelyInvalidated();
 };
-}
+}  // namespace Bang
 
 #endif  // OBJECT_H

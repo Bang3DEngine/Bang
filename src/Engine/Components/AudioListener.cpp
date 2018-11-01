@@ -6,15 +6,11 @@
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 using namespace Bang;
 
-AudioListener::AudioListener()
-{
-    CONSTRUCT_CLASS_ID(AudioListener)
-}
+AudioListener::AudioListener(){CONSTRUCT_CLASS_ID(AudioListener)}
 
 AudioListener::~AudioListener()
 {

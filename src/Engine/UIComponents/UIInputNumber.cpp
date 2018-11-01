@@ -18,14 +18,10 @@
 #include "Bang/UIInputText.h"
 #include "Bang/UILabel.h"
 #include "Bang/UITextRenderer.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 
-UIInputNumber::UIInputNumber()
-{
-    CONSTRUCT_CLASS_ID(UIInputNumber)
-}
+UIInputNumber::UIInputNumber(){CONSTRUCT_CLASS_ID(UIInputNumber)}
 
 UIInputNumber::~UIInputNumber()
 {

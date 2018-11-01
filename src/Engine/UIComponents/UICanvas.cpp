@@ -34,7 +34,7 @@ namespace Bang
 class ICloneable;
 class IEventsObject;
 class Object;
-}
+}  // namespace Bang
 
 using namespace Bang;
 

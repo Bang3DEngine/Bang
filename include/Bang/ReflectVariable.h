@@ -79,6 +79,6 @@ private:
     SetterFunc m_setter = nullptr;
     GetterFunc m_getter = nullptr;
 };
-}
+}  // namespace Bang
 
 #endif  // REFLECTVARIABLE_H

@@ -5,7 +5,6 @@
 #include "Bang/Matrix4.tcc"
 #include "Bang/Plane.h"
 #include "Bang/Polygon.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 using namespace Bang;
@@ -84,4 +83,4 @@ Triangle operator*(const Matrix4 &m, const Triangle &t)
                     m.TransformedPoint(t[1]),
                     m.TransformedPoint(t[2]));
 }
-}
+}  // namespace Bang

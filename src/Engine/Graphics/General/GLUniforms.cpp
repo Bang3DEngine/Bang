@@ -6,7 +6,6 @@
 #include "Bang/Matrix4.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Time.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {

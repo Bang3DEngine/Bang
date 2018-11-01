@@ -2,6 +2,7 @@
 
 #ifdef __linux__
 #include <dlfcn.h>
+#elif _WIN32
 #endif
 
 using namespace Bang;
@@ -27,6 +28,8 @@ bool Library::Load()
     m_libHandle = dlopen(GetLibraryPath().GetAbsolute().ToCString(),
                          // RTLD_NOW | RTLD_GLOBAL);
                          RTLD_NOW | RTLD_LOCAL);
+#elif _WIN32
+
 #endif
 
     FetchError();
@@ -61,8 +64,10 @@ void *Library::GetSymbol(const String &symbolName)
     ClearError();
     void *symbolAddress = nullptr;
 
-#ifdef __linux__
-    symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
+#ifdef __linux__ symbolAddress =
+    dlsym(m_libHandle, symbolName.ToCString());
+
+#elif _WIN32
 #endif
 
     FetchError();
@@ -81,9 +86,7 @@ const String &Library::GetErrorString() const
 
 void Library::ClearError()
 {
-#ifdef __linux
-    dlerror();
-#endif
+    FetchError();
     m_errorString = "";
 }
 
@@ -93,7 +96,6 @@ void Library::FetchError()
 
 #ifdef __linux
     dlerror();
-#endif
 
     if (error)
     {
@@ -103,6 +105,8 @@ void Library::FetchError()
     {
         m_errorString = "";
     }
+#elif _WIN32
+#endif
 }
 
 bool Library::TheresError() const

@@ -22,7 +22,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/TextFormatter.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang
@@ -40,10 +39,11 @@ UITextRenderer::UITextRenderer() : UIRenderer()
     p_mesh = Resources::Create<Mesh>();
     SetMaterial(MaterialFactory::GetUIText().Get());
 
-    RH<Font> font = Resources::Load<Font>(EPATH("Fonts/Ubuntu.ttf"));
+    RH<Font> font = Resources::Load<Font>(
+        Paths::GetEngineAssetsDir().Append("Fonts").Append("Ubuntu.ttf"));
     SetFont(font.Get());
     SetContent("");
-    SetTextSize(20.0f);
+    SetTextSize(20);
     SetTextColor(Color::Black);
 
     SetRenderPrimitive(GL::Primitive::TRIANGLES);
@@ -94,7 +94,8 @@ void UITextRenderer::CalculateLayout(Axis axis)
         prefSize = Vector2i(rect.GetSize());
         prefSize.y = Math::Max<int>(
             prefSize.y,
-            m_numberOfLines * GetFont()->GetFontHeight(GetTextSize()));
+            m_numberOfLines *
+                SCAST<int>(GetFont()->GetFontHeight(GetTextSize())));
     }
 
     SetCalculatedLayout(axis, minSize.GetAxis(axis), prefSize.GetAxis(axis));
@@ -383,7 +384,7 @@ void UITextRenderer::CloneInto(ICloneable *clone) const
 {
     UIRenderer::CloneInto(clone);
 
-    UITextRenderer *text = Cast<UITextRenderer *>(clone);
+    UITextRenderer *text = SCAST<UITextRenderer *>(clone);
     text->SetFont(GetFont());
     text->SetContent(GetContent());
     text->SetTextSize(GetTextSize());

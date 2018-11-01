@@ -14,19 +14,14 @@
 #include "Bang/MouseButton.h"
 #include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
-#include "Bang/TypeTraits.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIScrollArea.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
-UIScrollBar::UIScrollBar()
-{
-    CONSTRUCT_CLASS_ID(UIScrollBar)
-}
+UIScrollBar::UIScrollBar(){CONSTRUCT_CLASS_ID(UIScrollBar)}
 
 UIScrollBar::~UIScrollBar()
 {
@@ -141,7 +136,7 @@ int UIScrollBar::GetScrolling() const
 float UIScrollBar::GetScrollingPercent() const
 {
     int scrollSpacePx = GetScrollingSpacePx();
-    return scrollSpacePx > 0 ? Cast<float>(GetScrolling()) / scrollSpacePx : 0;
+    return scrollSpacePx > 0 ? SCAST<float>(GetScrolling()) / scrollSpacePx : 0;
 }
 
 int UIScrollBar::GetLength() const

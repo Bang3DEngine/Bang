@@ -1,6 +1,5 @@
 #include "Bang/Plane.h"
 
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 using namespace Bang;

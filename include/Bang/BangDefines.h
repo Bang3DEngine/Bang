@@ -128,6 +128,8 @@ using Recti = RectG<int>;
 using Rect = Rectf;
 using RectPoints = std::array<Vector2, 4>;
 
+}  // namespace Bang
+
 using SDL_GLContext = void *;
 
 // ======================================================
@@ -148,6 +150,5 @@ struct EnumClassHash
     }
 };
 // ======================================================
-}  // namespace Bang
 
 #endif  // BANGDEFINES_H

@@ -1,0 +1,351 @@
+﻿  -- Selecting Windows SDK version 10.0.17134.0 to target Windows 10.0.16299.
+  -- The C compiler identification is MSVC 19.14.26428.1
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe
+  -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.14.26428/bin/Hostx86/x64/cl.exe -- works
+  -- Detecting C compiler ABI info
+  -- Detecting C compiler ABI info - done
+  -- Looking for sys/types.h
+  -- Looking for sys/types.h - found
+  -- Looking for stdint.h
+  -- Looking for stdint.h - found
+  -- Looking for stddef.h
+  -- Looking for stddef.h - found
+  -- Check size of off64_t
+  -- Check size of off64_t - failed
+  -- Looking for fseeko
+  -- Looking for fseeko - not found
+  -- Looking for unistd.h
+  -- Looking for unistd.h - not found
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 20/05/2018 10:15:58.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Release\ZERO_CHECK\".
+    Creando directorio "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Checking Build System
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "zlib.dir\Release\".
+    Creando directorio "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\".
+    Creando directorio "zlib.dir\Release\zlib.tlog\".
+  InitializeBuildStatus:
+    Se creará "zlib.dir\Release\zlib.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release" /nologo /W3 /WX- /diagnostics:classic /O2 /Ob2 /D WIN32 /D _WINDOWS /D NDEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\"Release\"" /D ZLIB_DLL /D _WINDLL /D _MBCS /Gm- /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"zlib.dir\Release\\" /Fd"zlib.dir\Release\vc141.pdb" /Gd /TC /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\adler32.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\compress.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\crc32.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\deflate.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzclose.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzlib.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzread.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzwrite.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inflate.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\infback.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inftrees.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inffast.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\trees.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\uncompr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\zutil.c"
+    adler32.c
+    compress.c
+    crc32.c
+    deflate.c
+    gzclose.c
+    gzlib.c
+    gzread.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(319): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(400): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(472): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+    gzwrite.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(212): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(232): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(371): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+    inflate.c
+    infback.c
+    inftrees.c
+    inffast.c
+    trees.c
+    uncompr.c
+    zutil.c
+    Generating Code...
+  ResourceCompile:
+    C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x86\rc.exe /D WIN32 /D _WINDOWS /D NDEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\\\"Release\\\"" /D ZLIB_DLL /l"0x0409" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release" /nologo /fo"zlib.dir\Release\zlib1.res" C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\win32\zlib1.rc 
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlib.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/zlib.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/zlib.lib" /MACHINE:X64  /machine:x64 /DLL zlib.dir\Release\zlib1.res
+    zlib.dir\Release\adler32.obj
+    zlib.dir\Release\compress.obj
+    zlib.dir\Release\crc32.obj
+    zlib.dir\Release\deflate.obj
+    zlib.dir\Release\gzclose.obj
+    zlib.dir\Release\gzlib.obj
+    zlib.dir\Release\gzread.obj
+    zlib.dir\Release\gzwrite.obj
+    zlib.dir\Release\inflate.obj
+    zlib.dir\Release\infback.obj
+    zlib.dir\Release\inftrees.obj
+    zlib.dir\Release\inffast.obj
+    zlib.dir\Release\trees.obj
+    zlib.dir\Release\uncompr.obj
+    zlib.dir\Release\zutil.obj
+       Creating library C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/zlib.lib and object C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/zlib.exp
+    zlib.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlib.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "zlib.dir\Release\zlib.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "zlib.dir\Release\zlib.tlog\zlib.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "example.dir\Release\".
+    Creando directorio "example.dir\Release\example.tlog\".
+  InitializeBuildStatus:
+    Se creará "example.dir\Release\example.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release" /nologo /W3 /WX- /diagnostics:classic /O2 /Ob2 /D WIN32 /D _WINDOWS /D NDEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\"Release\"" /D _MBCS /Gm- /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"example.dir\Release\\" /Fd"example.dir\Release\vc141.pdb" /Gd /TC /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\test\example.c"
+    example.c
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\example.exe" /INCREMENTAL:NO /NOLOGO Release\zlib.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/example.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/example.lib" /MACHINE:X64  /machine:x64 example.dir\Release\example.obj
+    example.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\example.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "example.dir\Release\example.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "example.dir\Release\example.tlog\example.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "minigzip.dir\Release\".
+    Creando directorio "minigzip.dir\Release\minigzip.tlog\".
+  InitializeBuildStatus:
+    Se creará "minigzip.dir\Release\minigzip.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release" /nologo /W3 /WX- /diagnostics:classic /O2 /Ob2 /D WIN32 /D _WINDOWS /D NDEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\"Release\"" /D _MBCS /Gm- /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"minigzip.dir\Release\\" /Fd"minigzip.dir\Release\vc141.pdb" /Gd /TC /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\test\minigzip.c"
+    minigzip.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\test\minigzip.c(503): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj]
+  Link:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\minigzip.exe" /INCREMENTAL:NO /NOLOGO Release\zlib.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/minigzip.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/Release/minigzip.lib" /MACHINE:X64  /machine:x64 minigzip.dir\Release\minigzip.obj
+    minigzip.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\minigzip.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "minigzip.dir\Release\minigzip.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "minigzip.dir\Release\minigzip.tlog\minigzip.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "zlibstatic.dir\Release\".
+    Creando directorio "zlibstatic.dir\Release\zlibstatic.tlog\".
+  InitializeBuildStatus:
+    Se creará "zlibstatic.dir\Release\zlibstatic.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  ClCompile:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\CL.exe /c /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11" /I"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release" /nologo /W3 /WX- /diagnostics:classic /O2 /Ob2 /D WIN32 /D _WINDOWS /D NDEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\"Release\"" /D _MBCS /Gm- /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"zlibstatic.dir\Release\\" /Fd"zlibstatic.dir\Release\zlibstatic.pdb" /Gd /TC /FC /errorReport:queue "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\adler32.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\compress.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\crc32.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\deflate.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzclose.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzlib.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzread.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\gzwrite.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inflate.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\infback.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inftrees.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\inffast.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\trees.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\uncompr.c" "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\zutil.c"
+    adler32.c
+    compress.c
+    crc32.c
+    deflate.c
+    gzclose.c
+    gzlib.c
+    gzread.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(319): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(400): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(472): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+    gzwrite.c
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(212): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(232): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(371): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+    inflate.c
+    infback.c
+    inftrees.c
+    inffast.c
+    trees.c
+    uncompr.c
+    zutil.c
+    Generating Code...
+  Lib:
+    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\HostX86\x64\Lib.exe /OUT:"C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlibstatic.lib" /NOLOGO /MACHINE:X64  /machine:x64 zlibstatic.dir\Release\adler32.obj
+    zlibstatic.dir\Release\compress.obj
+    zlibstatic.dir\Release\crc32.obj
+    zlibstatic.dir\Release\deflate.obj
+    zlibstatic.dir\Release\gzclose.obj
+    zlibstatic.dir\Release\gzlib.obj
+    zlibstatic.dir\Release\gzread.obj
+    zlibstatic.dir\Release\gzwrite.obj
+    zlibstatic.dir\Release\inflate.obj
+    zlibstatic.dir\Release\infback.obj
+    zlibstatic.dir\Release\inftrees.obj
+    zlibstatic.dir\Release\inffast.obj
+    zlibstatic.dir\Release\trees.obj
+    zlibstatic.dir\Release\uncompr.obj
+    zlibstatic.dir\Release\zutil.obj
+    zlibstatic.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlibstatic.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "zlibstatic.dir\Release\zlibstatic.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "zlibstatic.dir\Release\zlibstatic.tlog\zlibstatic.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Release\ALL_BUILD\".
+    Creando directorio "x64\Release\ALL_BUILD\ALL_BUILD.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Release\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Building Custom Rule C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/CMakeLists.txt
+    CMake does not need to re-run because C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/CMakeFiles/generate.stamp is up-to-date.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Release\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Release\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+  
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (destino predeterminado) (1) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (destino predeterminado) (3) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj" (destino predeterminado) (4) ->
+  (ClCompile destino) -> 
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(319): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(400): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(472): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(212): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(232): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(371): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj]
+  
+  
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (destino predeterminado) (1) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj" (destino predeterminado) (5) ->
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\test\minigzip.c(503): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj]
+  
+  
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (destino predeterminado) (1) ->
+  "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj" (destino predeterminado) (6) ->
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(319): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(400): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzread.c(472): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(212): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(232): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+c:\users\sephirot47\projects\bangeditor\bang\compile\compiledependencies\thirdparty\zlib-1.2.11\gzwrite.c(371): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data [C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj]
+  
+      13 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:08.76
+  Microsoft (R) Build Engine versión 15.7.177.53362 para .NET Framework
+  Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+  
+  Compilación iniciada a las 20/05/2018 10:16:07.
+  Proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\install.vcxproj" en nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ZERO_CHECK.vcxproj" (2) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\ZERO_CHECK.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ZERO_CHECK.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\install.vcxproj" (1) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (3) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (4) en el nodo 1 (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (4) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj" (5) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "zlib.dir\Release\zlib.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  ResourceCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    zlib.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlib.dll
+  FinalizeBuildStatus:
+    Se eliminará el archivo "zlib.dir\Release\zlib.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "zlib.dir\Release\zlib.tlog\zlib.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlib.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "example.dir\Release\example.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    example.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\example.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "example.dir\Release\example.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "example.dir\Release\example.tlog\example.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\example.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj" (6) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "minigzip.dir\Release\minigzip.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Link:
+    Todas las salidas están actualizadas.
+    minigzip.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\minigzip.exe
+  FinalizeBuildStatus:
+    Se eliminará el archivo "minigzip.dir\Release\minigzip.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "minigzip.dir\Release\minigzip.tlog\minigzip.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\minigzip.vcxproj" (destinos predeterminados).
+  El proyecto "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (3) está compilando "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj" (7) en el nodo 1 (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "zlibstatic.dir\Release\zlibstatic.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  ClCompile:
+    Todas las salidas están actualizadas.
+  Lib:
+    Todas las salidas están actualizadas.
+    zlibstatic.vcxproj -> C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\Release\zlibstatic.lib
+  FinalizeBuildStatus:
+    Se eliminará el archivo "zlibstatic.dir\Release\zlibstatic.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "zlibstatic.dir\Release\zlibstatic.tlog\zlibstatic.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\zlibstatic.vcxproj" (destinos predeterminados).
+  InitializeBuildStatus:
+    Se creará "x64\Release\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  CustomBuild:
+    Todas las salidas están actualizadas.
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Release\ALL_BUILD\ALL_BUILD.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Release\ALL_BUILD\ALL_BUILD.tlog\ALL_BUILD.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\ALL_BUILD.vcxproj" (destinos predeterminados).
+  PrepareForBuild:
+    Creando directorio "x64\Release\INSTALL\".
+    Creando directorio "x64\Release\INSTALL\INSTALL.tlog\".
+  InitializeBuildStatus:
+    Se creará "x64\Release\INSTALL\INSTALL.tlog\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+  PostBuildEvent:
+    setlocal
+    "C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Release -P cmake_install.cmake
+    if %errorlevel% neq 0 goto :cmEnd
+    :cmEnd
+    endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+    :cmErrorLevel
+    exit /b %1
+    :cmDone
+    if %errorlevel% neq 0 goto :VCEnd
+    :VCEnd
+    -- Install configuration: "Release"
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/lib/zlib.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/bin/zlib.dll
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/lib/zlibstatic.lib
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/include/zconf.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/include/zlib.h
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/share/man/man3/zlib.3
+    -- Installing: C:/Users/sephirot47/Projects/BangEditor/Bang/Compile/CompileDependencies/ThirdParty/zlib-1.2.11/build/Release/share/pkgconfig/zlib.pc
+  FinalizeBuildStatus:
+    Se eliminará el archivo "x64\Release\INSTALL\INSTALL.tlog\unsuccessfulbuild".
+    Aplicando tarea Touch a "x64\Release\INSTALL\INSTALL.tlog\INSTALL.lastbuildstate".
+  Compilación del proyecto terminada "C:\Users\sephirot47\Projects\BangEditor\Bang\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\Release\install.vcxproj" (destinos predeterminados).
+  
+  Compilación correcta.
+      0 Advertencia(s)
+      0 Errores
+  
+  Tiempo transcurrido 00:00:01.22

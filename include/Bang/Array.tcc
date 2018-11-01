@@ -35,7 +35,7 @@ Array<T>::Array(std::initializer_list<T> l) : m_vector(l)
 template <class T>
 void Array<T>::Insert(const T &x, int index)
 {
-    ASSERT(index >= 0 && index <= Size());
+    ASSERT(index >= 0 && index <= SCAST<int>(Size()));
     Resize(Size() + 1);
 
     for (int i = Size() - 1; i > index; --i)
@@ -243,7 +243,7 @@ void Array<T>::Resize(std::size_t n, const T &value)
 template <class T>
 uint Array<T>::Size() const
 {
-    return m_vector.size();
+    return SCAST<uint>(m_vector.size());
 }
 
 template <class T>

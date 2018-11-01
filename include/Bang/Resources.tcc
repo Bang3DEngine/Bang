@@ -166,4 +166,4 @@ RH<ResourceClass> Resources::Clone(const ResourceClass *src)
     }
     return rh;
 }
-}
+}  // namespace Bang

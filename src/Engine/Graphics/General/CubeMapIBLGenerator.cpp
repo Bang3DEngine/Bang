@@ -83,7 +83,6 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
 
     CubeMapIBLGenerator *cmg = CubeMapIBLGenerator::GetInstance();
     cmg->m_iblFramebuffer->Bind();
-
     cmg->m_iblShaderProgram->Bind();
     cmg->m_iblShaderProgram->SetInt("B_SampleCount", sampleCount);
     cmg->m_iblShaderProgram->SetInt("B_IBLType", SCAST<int>(iblType));

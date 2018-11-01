@@ -24,7 +24,6 @@
 #include "Bang/Set.tcc"
 #include "Bang/Triangle.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector4.h"
 
 using namespace Bang;

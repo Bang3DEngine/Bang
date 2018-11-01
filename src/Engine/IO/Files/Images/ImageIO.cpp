@@ -197,8 +197,8 @@ void ImageIO::ImportBMP(const Path &filepath, Image *img, bool *ok)
     }
 
     // Set width and height to the values loaded from the file
-    GLuint w = bmpInfo->biWidth;
-    GLuint h = bmpInfo->biHeight;
+    int w = SCAST<int>(bmpInfo->biWidth);
+    int h = SCAST<int>(bmpInfo->biHeight);
 
     int i = 0;
     Debug_Peek(w);
@@ -277,10 +277,10 @@ void ImageIO::ExportPNG(const Path &filepath, const Image &img)
             new png_byte[png_get_rowbytes(png, info) / sizeof(png_byte)];
         for (int x = 0; x < img.GetWidth(); ++x)
         {
-            rowPointers[y][x * 4 + 0] = Cast<Byte>(img.GetPixel(x, y).r * 255);
-            rowPointers[y][x * 4 + 1] = Cast<Byte>(img.GetPixel(x, y).g * 255);
-            rowPointers[y][x * 4 + 2] = Cast<Byte>(img.GetPixel(x, y).b * 255);
-            rowPointers[y][x * 4 + 3] = Cast<Byte>(img.GetPixel(x, y).a * 255);
+            rowPointers[y][x * 4 + 0] = SCAST<Byte>(img.GetPixel(x, y).r * 255);
+            rowPointers[y][x * 4 + 1] = SCAST<Byte>(img.GetPixel(x, y).g * 255);
+            rowPointers[y][x * 4 + 2] = SCAST<Byte>(img.GetPixel(x, y).b * 255);
+            rowPointers[y][x * 4 + 3] = SCAST<Byte>(img.GetPixel(x, y).a * 255);
         }
     }
     png_write_image(png, rowPointers);
@@ -425,7 +425,7 @@ void ImageIO::ExportJPG(const Path &filepath, const Image &img, int quality)
     jpeg_start_compress(&cinfo, TRUE);
 
     const int rowStride = img.GetWidth() * 4;
-    while (cinfo.next_scanline < img.GetHeight())
+    while (SCAST<int>(cinfo.next_scanline) < img.GetHeight())
     {
         const Byte *rowPointer =
             &(img.GetData()[cinfo.next_scanline * rowStride]);
@@ -471,7 +471,7 @@ void ImageIO::ImportJPG(const Path &filepath, Image *img, bool *ok)
         (j_common_ptr)&cinfo, JPOOL_IMAGE, rowStride, 1);
 
     img->Create(cinfo.output_width, cinfo.output_height);
-    while (cinfo.output_scanline < img->GetHeight())
+    while (SCAST<int>(cinfo.output_scanline) < img->GetHeight())
     {
         const int y = cinfo.output_scanline;
         jpeg_read_scanlines(&cinfo, buffer, 1);
@@ -524,9 +524,9 @@ void ImageIO::ExportTGA(const Path &filepath, const Image &img)
     {
         for (int x = 0; x < img.GetWidth(); x++)
         {
-            unsigned char r = img.GetPixel(x, y).r;
-            unsigned char g = img.GetPixel(x, y).g;
-            unsigned char b = img.GetPixel(x, y).b;
+            unsigned char r = SCAST<unsigned char>(img.GetPixel(x, y).r);
+            unsigned char g = SCAST<unsigned char>(img.GetPixel(x, y).g);
+            unsigned char b = SCAST<unsigned char>(img.GetPixel(x, y).b);
             tgafile.put(b);
             tgafile.put(g);
             tgafile.put(r);
@@ -567,10 +567,11 @@ void ImageIO::ImportTGA(const Path &filepath, Image *img, bool *ok)
             for (int x = 0; x < width; ++x)
             {
                 const unsigned int coord = (y * width + x);
-                Color c = Color(pixels[coord] >> TGA_READER_ARGB.redShift,
-                                pixels[coord] >> TGA_READER_ARGB.greenShift,
-                                pixels[coord] >> TGA_READER_ARGB.blueShift,
-                                pixels[coord] >> TGA_READER_ARGB.alphaShift);
+                Color c = Color(
+                    SCAST<float>(pixels[coord] >> TGA_READER_ARGB.redShift),
+                    SCAST<float>(pixels[coord] >> TGA_READER_ARGB.greenShift),
+                    SCAST<float>(pixels[coord] >> TGA_READER_ARGB.blueShift),
+                    SCAST<float>(pixels[coord] >> TGA_READER_ARGB.alphaShift));
                 c /= 255.0f;
 
                 img->SetPixel(x, y, c);

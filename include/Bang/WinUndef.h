@@ -1,0 +1,2 @@
+#undef GetClassName
+#undef ERROR

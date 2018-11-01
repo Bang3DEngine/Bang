@@ -43,6 +43,6 @@ private:
     void Tick();
     void ResetTimestamp();
 };
-}
+}  // namespace Bang
 
 #endif  // TIMER_H

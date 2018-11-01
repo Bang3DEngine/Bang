@@ -160,6 +160,7 @@
 
 #include "Bang/nv_dds.h"
 
+#include <GL/gl.h>
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
@@ -411,7 +412,7 @@ void flip_blocks_dxtc5(DXTColBlock *line, unsigned int numBlocks)
         curblock++;
     }
 }
-}
+}  // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 // CDDSImage public functions

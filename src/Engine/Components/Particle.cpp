@@ -17,7 +17,6 @@
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
 #include "Bang/Triangle.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 using namespace Bang;

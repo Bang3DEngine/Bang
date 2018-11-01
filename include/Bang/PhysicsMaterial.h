@@ -68,6 +68,6 @@ private:
     friend class Collider;
     friend class PxSceneContainer;
 };
-}
+}  // namespace Bang
 
 #endif  // PHYSICSMATERIAL_H

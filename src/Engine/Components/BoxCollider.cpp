@@ -12,7 +12,6 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
@@ -77,11 +76,10 @@ void BoxCollider::Reflect()
 
 physx::PxShape *BoxCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic()
-               ? GetPxRigidDynamic()->createShape(
-                     physx::PxBoxGeometry(1, 1, 1),
-                     *Physics::GetDefaultPxMaterial())
-               : nullptr;
+    return GetPxRigidDynamic() ? GetPxRigidDynamic()->createShape(
+                                     physx::PxBoxGeometry(1, 1, 1),
+                                     *Physics::GetDefaultPxMaterial())
+                               : nullptr;
 }
 
 void BoxCollider::UpdatePxShape()

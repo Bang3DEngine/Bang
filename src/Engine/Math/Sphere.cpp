@@ -4,7 +4,6 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Math.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 
 using namespace Bang;

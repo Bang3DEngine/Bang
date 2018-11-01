@@ -13,7 +13,6 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/Sphere.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
@@ -82,11 +81,10 @@ float SphereCollider::GetRadius() const
 
 physx::PxShape *SphereCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic()
-               ? GetPxRigidDynamic()->createShape(
-                     physx::PxSphereGeometry(1),
-                     *Physics::GetDefaultPxMaterial())
-               : nullptr;
+    return GetPxRigidDynamic() ? GetPxRigidDynamic()->createShape(
+                                     physx::PxSphereGeometry(1),
+                                     *Physics::GetDefaultPxMaterial())
+                               : nullptr;
 }
 
 void SphereCollider::UpdatePxShape()

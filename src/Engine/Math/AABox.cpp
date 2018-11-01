@@ -5,7 +5,6 @@
 #include "Bang/Math.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Sphere.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector4.h"
 
 namespace Bang
@@ -345,4 +344,4 @@ bool operator!=(const AABox &b1, const AABox &b2)
 {
     return !(b1 == b2);
 }
-}
+}  // namespace Bang

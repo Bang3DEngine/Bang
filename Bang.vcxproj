@@ -432,6 +432,8 @@
     <ClInclude Include="include\Bang\WindowManager.tcc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\*\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\yaml-cpp\src\*.cpp" />
     <ClCompile Include="src\*.cpp" />
     <ClCompile Include="src\*\*.cpp" />
     <ClCompile Include="src\*\*\*.cpp" />

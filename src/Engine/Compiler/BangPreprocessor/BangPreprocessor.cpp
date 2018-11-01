@@ -169,7 +169,7 @@ void BangPreprocessor::RemoveComments(String *source)
     if (output.Size() >= 1)
     {
         output.Remove(output.Begin(),
-                      output.Find('\n') + 2);  // Remove first line
+                      SCAST<int>(output.Find('\n')) + 2);  // Remove first line
     }
     *source = output;
 }

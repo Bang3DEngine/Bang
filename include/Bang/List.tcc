@@ -168,7 +168,7 @@ void List<T>::Clear()
 template <class T>
 uint List<T>::Size() const
 {
-    return m_list.size();
+    return SCAST<uint>(m_list.size());
 }
 
 template <class T>

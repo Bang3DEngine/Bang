@@ -15,7 +15,6 @@
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutIgnorer.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang

@@ -113,11 +113,11 @@ void Image::AddMarginsToMatchAspectRatio(float aspectRatio,
     Vector2i newSize = GetSize();
     if (aspectRatio > 1.0f)
     {
-        newSize.x = SCAST<int>(GetHeight() * aspectRatio);
+        newSize.x = (GetHeight() * aspectRatio);
     }
     else
     {
-        newSize.y = SCAST<int>(GetWidth() / aspectRatio);
+        newSize.y = GetWidth() / aspectRatio;
     }
     Vector2i margins = (newSize - GetSize());
     AddMargins(margins / 2, marginColor, AspectRatioMode::IGNORE);
@@ -366,15 +366,14 @@ Image Image::LoadFromData(int width,
     return img;
 }
 
-void Image::Export(const Path &filepath) const
-{
-    ImageIO::Export(filepath, *this);
-}
-
 void Image::Import(const Path &imageFilepath)
 {
     bool ok;
     ImageIO::Import(imageFilepath, this, &ok);
 }
 
+void Image::Export(const Path &filepath) const
+{
+    ImageIO::Export(filepath, *this);
+}
 }  // namespace Bang

@@ -24,7 +24,6 @@
 #include "Bang/USet.tcc"
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 
@@ -364,40 +363,31 @@ void Mesh::UpdateVertexNormals()
     SetNormalsPool(normalsPool);
 }
 
+struct LexicographicCompare
+{
+    bool operator()(const Vector3 &lhs, const Vector3 &rhs) const
+    {
+        for (uint i = 0; i < 3; ++i)
+        {
+            if (lhs[i] < rhs[i])
+            {
+                return true;
+            }
+            else if (lhs[i] > rhs[i])
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+};
+
 struct PairVector3Comparator
 {
     bool operator()(const std::pair<Vector3, Vector3> &lhs,
                     const std::pair<Vector3, Vector3> &rhs) const
     {
-        /*
-        constexpr float Eps = 1e-6;
-        if ( Math::Abs(lhs.first.x - rhs.first.x) >= Eps)
-        {
-            return lhs.first.x < rhs.first.x;
-        }
-        else if ( Math::Abs(lhs.first.y - rhs.first.y) >= Eps)
-        {
-            return lhs.first.y < rhs.first.y;
-        }
-        else if ( Math::Abs(lhs.first.z - rhs.first.z) >= Eps)
-        {
-            return lhs.first.z < rhs.first.z;
-        }
-        else if ( Math::Abs(lhs.second.x - rhs.second.x) >= Eps)
-        {
-            return lhs.second.x < rhs.second.x;
-        }
-        else if ( Math::Abs(lhs.second.y - rhs.second.y) >= Eps)
-        {
-            return lhs.second.y < rhs.second.y;
-        }
-        else if ( Math::Abs(lhs.second.z - rhs.second.z) >= Eps)
-        {
-            return lhs.second.z < rhs.second.z;
-        }
-        return false;
-        */
-        Vector3::LexicographicCompare LexicoCompare;
+        LexicographicCompare LexicoCompare;
         if (lhs.first != rhs.first)
         {
             return LexicoCompare(lhs.first, rhs.first);
@@ -429,7 +419,7 @@ void Mesh::UpdateCornerTablesIfNeeded()
         VertexId secondVertexId;
     };
 
-    Vector3::LexicographicCompare LexicoCompare;
+    LexicographicCompare LexicoCompare;
     Map<std::pair<Vector3, Vector3>, TriMapInfo, PairVector3Comparator>
         connectedVertexIdPairs;
     for (TriangleId triId = 0; triId < numTriangles; ++triId)
@@ -475,7 +465,7 @@ void Mesh::UpdateCornerTablesIfNeeded()
         }
     }
 
-    Map<Vector3, Array<VertexId>, Vector3::LexicographicCompare>
+    Map<Vector3, Array<VertexId>, LexicographicCompare>
         vertexPositionToVertexIdsInThatPosition;
     for (uint i = 0; i < GetNumVertices(); ++i)
     {
@@ -992,7 +982,7 @@ UMap<Mesh::VertexId, Array<Mesh::TriangleId>> Mesh::GetVertexIdsToTriangleIds()
     const
 {
     UMap<VertexId, Array<Mesh::TriangleId>> vertexIdsToTriIds;
-    for (int ti = 0; ti < GetNumTriangles(); ++ti)
+    for (uint ti = 0; ti < GetNumTriangles(); ++ti)
     {
         std::array<Mesh::VertexId, 3> tiVerticesIds =
             GetVertexIdsFromTriangle(ti);

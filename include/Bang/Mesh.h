@@ -176,6 +176,6 @@ private:
     Mesh();
     virtual ~Mesh() override;
 };
-}
+}  // namespace Bang
 
 #endif  // MESH_H

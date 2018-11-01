@@ -18,10 +18,7 @@
 
 using namespace Bang;
 
-UICheckBox::UICheckBox()
-{
-    CONSTRUCT_CLASS_ID(UICheckBox)
-}
+UICheckBox::UICheckBox(){CONSTRUCT_CLASS_ID(UICheckBox)}
 
 UICheckBox::~UICheckBox()
 {

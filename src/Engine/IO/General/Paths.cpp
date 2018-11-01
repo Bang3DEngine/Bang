@@ -1,11 +1,20 @@
 #include "Bang/Paths.h"
 
 #include <limits.h>
+
+#ifdef __linux__
 #include <pwd.h>
+#include <sys/types.h>
 #include <unistd.h>
-#include <ostream>
-#include <string>
-#include <vector>
+constexpr char Separator[] = "/";
+constexpr char SeparatorC = '/';
+#elif _WIN32
+#include <Windows.h>
+#include <stdlib.h>
+#include "Bang/WinUndef.h"
+constexpr char Separator[] = "\\";
+constexpr char SeparatorC = '\\';
+#endif
 
 #include "Bang/Application.h"
 #include "Bang/Array.tcc"
@@ -48,8 +57,16 @@ void Paths::InitPaths(const Path &engineRootPath)
 Path Paths::GetHome()
 {
     Path homePath;
+
+#ifdef __linux__
+
     struct passwd *pw = getpwuid(getuid());
     homePath = Path(pw->pw_dir);
+
+#elif _WIN32
+
+#endif
+
     return homePath;
 }
 
@@ -65,10 +82,25 @@ Path Paths::GetExecutableDir()
 
 Path Paths::GetExecutablePath()
 {
+#ifdef __linux__
+
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
     String exePath(std::string(result, (count > 0) ? count : 0));
     return Path(exePath);
+
+#elif _WIN32
+
+    HMODULE hModule = GetModuleHandleW(NULL);
+    WCHAR path[_MAX_PATH];
+    GetModuleFileNameW(hModule, path, _MAX_PATH);
+
+    std::wstring wsPath(path);
+    std::string sPath(wsPath.begin(), wsPath.end());
+
+    return Path(String(sPath));
+
+#endif
 }
 
 Path Paths::GetEngineIncludeDir()
@@ -166,7 +198,7 @@ Array<Path> Paths::GetEngineIncludeDirs()
 
 bool Paths::IsEnginePath(const Path &path)
 {
-    return path.IsSubPathOf(Paths::GetEngineDir());
+    return path.BeginsWith(String(Paths::GetEngineDir()) + String(Separator));
 }
 
 void Paths::SetEngineRoot(const Path &engineRootDir)
@@ -182,7 +214,7 @@ Path Paths::GetResolvedPath(const Path &path_)
         path = Paths::GetExecutableDir().Append(path);
     }
 
-    Array<String> pathParts = path.GetAbsolute().Split<Array>('/');
+    Array<String> pathParts = path.GetAbsolute().Split<Array>(SeparatorC);
     pathParts.RemoveAll(".");
 
     int skipNext = 0;
@@ -206,7 +238,7 @@ Path Paths::GetResolvedPath(const Path &path_)
             }
         }
     }
-    Path resolvedPath = Path(String::Join(resolvedPathParts, "/"));
+    Path resolvedPath = Path(String::Join(resolvedPathParts, Separator));
     return resolvedPath;
 }
 

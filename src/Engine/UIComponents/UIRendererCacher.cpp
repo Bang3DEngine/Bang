@@ -24,14 +24,13 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
 #include "Bang/UIImageRenderer.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang
 {
 class IEventsObject;
 class Object;
-}
+}  // namespace Bang
 
 using namespace Bang;
 

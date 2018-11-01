@@ -1,0 +1,37 @@
+autom4te.cache/
+# Compiled Object files
+*.tlog
+*.pdb
+*.idb
+*.slo
+*.log
+*.lastbuildstate
+*.lo
+*.o
+*.obj
+# Precompiled Headers
+*.gch
+*.pch
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+# Fortran module files
+*.mod
+*.smod
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+# Executables
+*.exe
+*.out
+*.app
+config.status
+config.log
+change.log
+jpeg-6b/jconfig.h
+*.user
+/Libraries/*
+/build*/

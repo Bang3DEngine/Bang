@@ -77,7 +77,7 @@ void Map<Key, Value, Compare>::Clear()
 template <class Key, class Value, class Compare>
 int Map<Key, Value, Compare>::Size() const
 {
-    return m_map.size();
+    return SCAST<int>(m_map.size());
 }
 
 template <class Key, class Value, class Compare>

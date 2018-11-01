@@ -42,6 +42,6 @@ private:
 
     friend class Resources;
 };
-}
+}  // namespace Bang
 
 #endif  // MATERIALFACTORY_H

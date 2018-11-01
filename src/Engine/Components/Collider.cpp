@@ -14,7 +14,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
 #include "extensions/PxRigidBodyExt.h"
@@ -26,20 +25,17 @@ namespace Bang
 {
 class ICloneable;
 class Object;
-}
+}  // namespace Bang
 
 namespace physx
 {
 class PxActor;
 class PxMaterial;
-}
+}  // namespace physx
 
 using namespace Bang;
 
-Collider::Collider()
-{
-    CONSTRUCT_CLASS_ID(Collider)
-}
+Collider::Collider(){CONSTRUCT_CLASS_ID(Collider)}
 
 Collider::~Collider()
 {

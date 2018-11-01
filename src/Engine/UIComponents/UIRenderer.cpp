@@ -8,13 +8,12 @@
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/RectTransform.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {
 class Camera;
 class Object;
-}
+}  // namespace Bang
 
 using namespace Bang;
 

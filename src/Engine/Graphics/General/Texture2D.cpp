@@ -11,7 +11,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
 #include "Bang/StreamOperators.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

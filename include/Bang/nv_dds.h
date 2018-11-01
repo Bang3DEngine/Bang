@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 
+#include <GL/glew.h>
 #ifndef NV_DDS_NO_GL_SUPPORT
 #ifdef __APPLE__
 #include <OpenGL/gl.h>

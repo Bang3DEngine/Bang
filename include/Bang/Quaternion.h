@@ -232,7 +232,7 @@ public:
             .Normalized();
     }
 
-    static QuaternionG Identity;
+    static QuaternionG<T> Identity;
 };
 
 template <class T>

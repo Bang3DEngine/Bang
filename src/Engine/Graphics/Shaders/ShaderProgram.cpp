@@ -31,7 +31,6 @@
 #include "Bang/UMap.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

@@ -5,6 +5,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/Font.h"
+#include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/String.h"
 
@@ -21,13 +22,13 @@ public:
                                  Array<AARecti> *imagesOutputRects = nullptr,
                                  int extraMargin = 0);
 
-    static Imageb PackImages(const Array<Imageb> &images,
-                             int margin,
-                             Array<AARecti> *imagesOutputRects = nullptr,
-                             const Color &bgColor = Color::Zero);
+    static Image PackImages(const Array<Image> &images,
+                            int margin,
+                            Array<AARecti> *imagesOutputRects = nullptr,
+                            const Color &bgColor = Color::Zero);
 
     FontSheetCreator() = delete;
 };
-}
+}  // namespace Bang
 
 #endif  // FONTSHEETCREATOR_H

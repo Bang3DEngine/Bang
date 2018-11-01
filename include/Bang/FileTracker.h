@@ -43,6 +43,6 @@ private:
     USet<Path> m_pathsJustRecentlyTracked;
     UMap<Path, Time> m_pathsToTrackToModificationTime;
 };
-}
+}  // namespace Bang
 
 #endif  // FILETRACKER_H

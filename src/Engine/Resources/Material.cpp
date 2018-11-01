@@ -15,7 +15,6 @@
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureFactory.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {

@@ -30,8 +30,8 @@ set(BANG_ENGINE_INCLUDE_DIR   ${BANG_ENGINE_ROOT}/include)
 set(BANG_ENGINE_LIBRARIES_DIR "${BANG_ENGINE_ROOT}/Libraries/${CMAKE_BUILD_TYPE}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
-include(${BANG_ENGINE_ROOT}/Build/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
 
 # Output params
 message("Bang ======================================")
@@ -85,7 +85,7 @@ add_misc_files("${ENGINE_SRC_FILES}")
 #=================================================================
 # Dependencies ===================================================
 #=================================================================
-include("${CMAKE_CURRENT_LIST_DIR}/Build/BuildDependencies/CMakeLists.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/Compile/CompileDependencies/CMakeLists.txt")
 
 if (${BUILD_SHARED_LIBS})
     # If shared building, split compilation into some different shared libs

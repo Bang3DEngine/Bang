@@ -18,7 +18,6 @@
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang

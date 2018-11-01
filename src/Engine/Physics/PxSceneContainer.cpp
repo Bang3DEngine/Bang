@@ -23,7 +23,6 @@
 #include "Bang/RayCastHitInfo.h"
 #include "Bang/RayCastInfo.h"
 #include "Bang/Scene.h"
-#include "Bang/Vector.tcc"
 #include "PxActor.h"
 #include "PxFiltering.h"
 #include "PxPhysics.h"
@@ -48,7 +47,7 @@ namespace physx
 class PxRigidBody;
 class PxShape;
 class PxTransform;
-}
+}  // namespace physx
 
 using namespace Bang;
 using namespace physx;

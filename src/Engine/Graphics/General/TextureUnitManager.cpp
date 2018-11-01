@@ -22,7 +22,7 @@ TextureUnitManager::TextureUnitManager()
     m_numUsableTextureUnits = m_numMaxTextureUnits - 1;
     m_voidTexUnit = m_numMaxTextureUnits - 1;
 
-    for (int i = 0; i < m_numUsableTextureUnits; ++i)
+    for (uint i = 0; i < m_numUsableTextureUnits; ++i)
     {
         // All units are totally free at the beginning
         m_freeUnits.push(i);
@@ -85,7 +85,7 @@ TextureUnitManager::TexUnit TextureUnitManager::BindTextureToUnit(
     return texUnit;
 }
 
-int TextureUnitManager::GetMaxTextureUnits()
+uint TextureUnitManager::GetMaxTextureUnits()
 {
     return TextureUnitManager::GetActive()->m_numMaxTextureUnits;
 }
@@ -93,7 +93,7 @@ int TextureUnitManager::GetMaxTextureUnits()
 TextureUnitManager::TexUnit TextureUnitManager::MakeRoomAndGetAFreeTextureUnit()
 {
     TexUnit freeUnit = -1;
-    uint numFreeTextures = m_freeUnits.size();
+    uint numFreeTextures = SCAST<uint>(m_freeUnits.size());
     if (numFreeTextures > 0)
     {
         // If there is a directly free unit
@@ -144,7 +144,7 @@ void TextureUnitManager::UpdateStructuresForUsedTexture(Texture *texture,
     // CheckBindingsValidity();
 }
 
-int TextureUnitManager::GetNumUsableTextureUnits()
+uint TextureUnitManager::GetNumUsableTextureUnits()
 {
     TextureUnitManager *tm = TextureUnitManager::GetActive();
     return (tm ? tm->m_numUsableTextureUnits : 99);
@@ -152,7 +152,7 @@ int TextureUnitManager::GetNumUsableTextureUnits()
 
 void TextureUnitManager::UnBindAllTexturesFromAllUnits()
 {
-    const int MaxTexUnits = TextureUnitManager::GetNumUsableTextureUnits();
+    const uint MaxTexUnits = TextureUnitManager::GetNumUsableTextureUnits();
     for (int unit = 0; unit < MaxTexUnits; ++unit)
     {
         GL::ActiveTexture(GL_TEXTURE0 + unit);
@@ -163,7 +163,7 @@ void TextureUnitManager::UnBindAllTexturesFromAllUnits()
     }
 }
 
-int TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
+uint TextureUnitManager::GetUnitTextureIsBoundTo(Texture *texture)
 {
     if (!texture)
     {

@@ -23,7 +23,6 @@
 #include "Bang/UILayoutIgnorer.h"
 #include "Bang/UMap.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

@@ -5,7 +5,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/LayoutSizeType.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 namespace Bang
@@ -46,6 +45,6 @@ private:
 
     friend class UILayoutManager;
 };
-}
+}  // namespace Bang
 
 #endif  // ILAYOUTELEMENT_H

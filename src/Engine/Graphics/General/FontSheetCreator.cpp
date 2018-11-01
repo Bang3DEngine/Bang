@@ -13,7 +13,6 @@
 #include "Bang/Image.h"
 #include "Bang/Math.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;

@@ -16,17 +16,13 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/UIScrollBar.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
 const float UIScrollPanel::WheelScrollSpeedPx = 20.0f;
 
-UIScrollPanel::UIScrollPanel()
-{
-    CONSTRUCT_CLASS_ID(UIScrollPanel)
-}
+UIScrollPanel::UIScrollPanel(){CONSTRUCT_CLASS_ID(UIScrollPanel)}
 
 UIScrollPanel::~UIScrollPanel()
 {

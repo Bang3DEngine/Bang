@@ -29,7 +29,6 @@
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector.tcc"
 #include "PxPhysics.h"
 #include "PxPhysicsVersion.h"
 #include "PxRigidBody.h"
@@ -57,7 +56,7 @@ class PxActor;
 class PxMaterial;
 class PxShape;
 class PxTriangleMesh;
-}
+}  // namespace physx
 
 using namespace physx;
 using namespace Bang;

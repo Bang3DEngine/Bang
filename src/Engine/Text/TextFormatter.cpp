@@ -9,7 +9,6 @@
 #include "Bang/Font.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
@@ -32,7 +31,7 @@ Array<TextFormatter::CharRect> TextFormatter::GetFormattedTextPositions(
 
     // First create a list with all the character rects in the origin
     Array<CharRect> charRects;
-    for (int i = 0; i < content.Size(); ++i)
+    for (uint i = 0; i < content.Size(); ++i)
     {
         const char c = content[i];
         Vector2 size = Vector2(font->GetAtlasCharRectSize(fontSize, c));
@@ -86,7 +85,7 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
 
     Vector2 penPosition(limitsRect.GetMinXMaxY());  // penPosition.y is baseline
     const float lineSkip = font->GetLineSkip(fontSize);
-    for (int i = 0; i < content.Size(); ++i)
+    for (uint i = 0; i < content.Size(); ++i)
     {
         const float charAdvX = GetCharAdvanceX(content, font, fontSize, i);
         bool lineBreak = (content[i] == '\n');
@@ -109,7 +108,7 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
                 // Does the following word (after this space) still fits in
                 // the current line?
                 float tmpAdvX = penPosition.x + charAdvX;
-                for (int j = i + 1; j < content.Size(); ++j)
+                for (uint j = i + 1; j < content.Size(); ++j)
                 {
                     if (content[j] == ' ')
                     {
@@ -132,7 +131,7 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
         if (lineBreak)
         {
             // Advance to next line! Add the current line to the result.
-            penPosition.x = limitsRect.GetMin().x;
+            penPosition.x = SCAST<float>(limitsRect.GetMin().x);
             penPosition.y -= lineSkip * spacingMult.y;
             linedCharRects.PushBack(Array<CharRect>());
 
@@ -170,7 +169,7 @@ Vector2i TextFormatter::GetMinimumHeightTextSize(
 
     Vector2 textSize = Vector2::Zero;
     float currentLineWidth = 0.0f;
-    for (int i = 0; i < content.Size(); ++i)
+    for (uint i = 0; i < content.Size(); ++i)
     {
         char c = content[i];
         if (c == '\n')
@@ -180,7 +179,8 @@ Vector2i TextFormatter::GetMinimumHeightTextSize(
         }
         else
         {
-            int charAdvX = GetCharAdvanceX(content, font, fontSize, i);
+            int charAdvX =
+                SCAST<int>(GetCharAdvanceX(content, font, fontSize, i));
             currentLineWidth += charAdvX * spacingMultiplier.x;
             textSize.x = Math::Max(textSize.x, currentLineWidth);
         }
@@ -282,7 +282,7 @@ float TextFormatter::GetCharAdvanceX(const String &content,
                                      int currentCharIndex)
 {
     float advance = 0;
-    if (currentCharIndex < content.Size() - 1)
+    if (currentCharIndex < SCAST<int>(content.Size()) - 1)
     {
         advance = font->GetKerning(
             fontSize, content[currentCharIndex], content[currentCharIndex + 1]);

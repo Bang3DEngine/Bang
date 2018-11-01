@@ -21,15 +21,12 @@
 #include "Bang/UILayoutManager.h"
 #include "Bang/UMap.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
-UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator()
-{
-    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)
-}
+UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator(){
+    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)}
 
 UIDirLayoutMovableSeparator::~UIDirLayoutMovableSeparator()
 {

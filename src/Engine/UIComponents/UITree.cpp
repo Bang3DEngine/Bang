@@ -35,7 +35,6 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UITreeItemContainer.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
@@ -75,7 +74,7 @@ void UITree::OnUpdate()
             if (selItemCont)
             {
                 UITreeItemContainer *selectedItemCont =
-                    DCAST<UITreeItemContainer *>(selItemCont);
+                    SCAST<UITreeItemContainer *>(selItemCont);
                 GOItem *selectedItem = selectedItemCont->GetContainedItem();
 
                 bool isCollapsed = selectedItemCont->IsCollapsed();
@@ -541,7 +540,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 
         // Remove needed stuff from list, remove from map, and delete the item
         // tree (which recursively deletes its children)
-        for (int i = 0; i < itemsToRemove.Size(); ++i)
+        for (uint i = 0; i < itemsToRemove.Size(); ++i)
         {
             GOItem *itemToRemove = itemsToRemove[i];
             UITreeItemContainer *itemContToRemove = itemsContToRemove[i];
@@ -570,7 +569,7 @@ GOItem *UITree::GetSelectedItem() const
     if (selectedItem)
     {
         UITreeItemContainer *selectedItemCont =
-            Cast<UITreeItemContainer *>(selectedItem);
+            SCAST<UITreeItemContainer *>(selectedItem);
         return selectedItemCont->GetContainedItem();
     }
     return nullptr;
@@ -788,7 +787,7 @@ UITree *UITree::CreateInto(GameObject *go)
         // Forward selectionCallback from itemContainer to actual item
         if (uiTree->m_selectionCallback)
         {
-            UITreeItemContainer *itemCont = Cast<UITreeItemContainer *>(item);
+            UITreeItemContainer *itemCont = SCAST<UITreeItemContainer *>(item);
             uiTree->m_selectionCallback(itemCont->GetContainedItem(), action);
         }
     });

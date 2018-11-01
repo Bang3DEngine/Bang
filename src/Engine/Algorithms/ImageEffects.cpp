@@ -3,7 +3,6 @@
 #include "Bang/Color.h"
 #include "Bang/Image.h"
 #include "Bang/Math.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

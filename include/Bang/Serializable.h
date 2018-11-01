@@ -57,6 +57,6 @@ private:
 
     friend class Resources;
 };
-}
+}  // namespace Bang
 
 #endif  // SERIALIZABLE_H

@@ -239,6 +239,6 @@ inline Quaternion Variant::Get() const
 {
     return GetQuaternion();
 }
-}
+}  // namespace Bang
 
 #endif  // VARIANT_H

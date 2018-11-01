@@ -25,7 +25,6 @@
 #include "Bang/UITextCursor.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
@@ -34,10 +33,7 @@ const Vector2i UIInputText::LookAheadOffsetPx = Vector2i(5);
 const int UIInputText::MarginX = 5;
 const int UIInputText::MarginY = 2;
 
-UIInputText::UIInputText()
-{
-    CONSTRUCT_CLASS_ID(UIInputText)
-}
+UIInputText::UIInputText(){CONSTRUCT_CLASS_ID(UIInputText)}
 
 UIInputText::~UIInputText()
 {
@@ -245,8 +241,8 @@ void UIInputText::ReplaceSelectedText(const String &replaceStr)
     int minIndex = GetLabel()->GetSelectionBeginIndex();
     int maxIndex = GetLabel()->GetSelectionEndIndex();
 
-    if (minIndex >= 0 && minIndex <= content.Size() && maxIndex >= 0 &&
-        maxIndex <= content.Size())
+    if (minIndex >= 0 && minIndex <= SCAST<int>(content.Size()) &&
+        maxIndex >= 0 && maxIndex <= SCAST<int>(content.Size()))
     {
         content.Remove(minIndex, maxIndex);
         content.Insert(minIndex, replaceStr);

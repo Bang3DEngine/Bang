@@ -356,14 +356,14 @@ void RectTransform::SetAnchors(const Vector2 &anchorMin,
 
 void RectTransform::SetWidthFromPivot(int width)
 {
-    SetMarginLeft(-(GetPivotPosition().x - (-1)) * width / 2);
-    SetMarginRight((GetPivotPosition().x - (1)) * width / 2);
+    SetMarginLeft(SCAST<int>(-(GetPivotPosition().x - (-1)) * width / 2));
+    SetMarginRight(SCAST<int>((GetPivotPosition().x - (1)) * width / 2));
 }
 
 void RectTransform::SetHeightFromPivot(int height)
 {
-    SetMarginBot(-(GetPivotPosition().y - (-1)) * height / 2);
-    SetMarginTop((GetPivotPosition().y - (1)) * height / 2);
+    SetMarginBot(SCAST<int>(-(GetPivotPosition().y - (-1)) * height / 2));
+    SetMarginTop(SCAST<int>((GetPivotPosition().y - (1)) * height / 2));
 }
 
 void RectTransform::SetSizeFromPivot(const Vector2i &size)
@@ -390,11 +390,11 @@ int RectTransform::GetMarginBot() const
 }
 int RectTransform::GetMarginMin(Axis axis) const
 {
-    return GetMargins(axis)[0];
+    return SCAST<int>(GetMargins(axis)[0]);
 }
 int RectTransform::GetMarginMax(Axis axis) const
 {
-    return GetMargins(axis)[1];
+    return SCAST<int>(GetMargins(axis)[1]);
 }
 Vector2 RectTransform::GetMargins(Axis axis) const
 {

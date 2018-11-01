@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{EAE2DB66-46F2-4DCC-B188-126C7F0156A6}</ProjectGuid>
+    <RootNamespace>CompileAssimp</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+cd $(ProjectDir)\..
+mkdir build\$(Configuration)
+cd build\$(Configuration)
+cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DBUILD_SHARED_LIBS=OFF -DSYSTEM_IRRXML=OFF -DASSIMP_BUILD_ZLIB=OFF -DASSIMP_BUILD_TESTS=OFF -DASSIMP_BUILD_SAMPLES=OFF -DASSIMP_ASAN=OFF -DASSIMP_UBSAN=OFF -DASSIMP_NO_EXPORT=OFF -DASSIMP_BUILD_OFF_IMPORTER=OFF -DASSIMP_BUILD_OGRE_IMPORTER=OFF -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF -DASSIMP_BUILD_Q3D_IMPORTER=OFF -DASSIMP_BUILD_RAW_IMPORTER=OFF -DASSIMP_BUILD_SMD_IMPORTER=OFF -DASSIMP_BUILD_SIB_IMPORTER=OFF -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF -DASSIMP_BUILD_AC_IMPORTER=OFF -DASSIMP_BUILD_AMF_IMPORTER=OFF -DASSIMP_BUILD_ASE_IMPORTER=OFF -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF -DASSIMP_BUILD_ASSXML_IMPORTER=OFF -DASSIMP_BUILD_B3D_IMPORTER=OFF -DASSIMP_BUILD_COB_IMPORTER=OFF -DASSIMP_BUILD_CSM_IMPORTER=OFF -DASSIMP_BUILD_DFX_IMPORTER=OFF -DASSIMP_BUILD_GLTF_IMPORTER=OFF -DASSIMP_BUILD_HMP_IMPORTER=OFF -DASSIMP_BUILD_IFC_IMPORTER=OFF -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF -DASSIMP_BUILD_IRR_IMPORTER=OFF -DASSIMP_BUILD_LWO_IMPORTER=OFF -DASSIMP_BUILD_LWS_IMPORTER=OFF -DASSIMP_BUILD_MD2_IMPORTER=OFF -DASSIMP_BUILD_MD3_IMPORTER=OFF -DASSIMP_BUILD_MD5_IMPORTER=OFF -DASSIMP_BUILD_MDL_IMPORTER=OFF -DASSIMP_BUILD_MMD_IMPORTER=OFF -DASSIMP_BUILD_MS3D_IMPORTER=OFF -DASSIMP_BUILD_NDO_IMPORTER=OFF -DASSIMP_BUILD_NDF_IMPORTER=OFF -DASSIMP_BUILD_X3D_IMPORTER=OFF -DASSIMP_BUILD_XGL_IMPORTER=OFF -DASSIMP_BUILD_X_IMPORTER=OFF -DBUILD_FRAMEWORK=OFF -DASSIMP_BUILD_ASSIMP_TOOLS=OFF ..\..
+)</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd $(ProjectDir)\..\build
+cmake --build "$(Configuration)" --config "$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST "$(ProjectDir)\..\build\$(Configuration)\*.sln"  (
+cd $(ProjectDir)\..
+mkdir $(ProjectDir)\..\build\$(Configuration)
+cd $(ProjectDir)\..\build\$(Configuration)
+cmake  -A x64 -T host=x64 -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DBUILD_SHARED_LIBS=OFF -DSYSTEM_IRRXML=OFF -DASSIMP_BUILD_ZLIB=OFF -DASSIMP_BUILD_TESTS=OFF -DASSIMP_BUILD_SAMPLES=OFF -DASSIMP_ASAN=OFF -DASSIMP_UBSAN=OFF -DASSIMP_NO_EXPORT=OFF -DASSIMP_BUILD_OFF_IMPORTER=OFF -DASSIMP_BUILD_OGRE_IMPORTER=OFF -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF -DASSIMP_BUILD_Q3D_IMPORTER=OFF -DASSIMP_BUILD_RAW_IMPORTER=OFF -DASSIMP_BUILD_SMD_IMPORTER=OFF -DASSIMP_BUILD_SIB_IMPORTER=OFF -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF -DASSIMP_BUILD_AC_IMPORTER=OFF -DASSIMP_BUILD_AMF_IMPORTER=OFF -DASSIMP_BUILD_ASE_IMPORTER=OFF -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF -DASSIMP_BUILD_ASSXML_IMPORTER=OFF -DASSIMP_BUILD_B3D_IMPORTER=OFF -DASSIMP_BUILD_COB_IMPORTER=OFF -DASSIMP_BUILD_CSM_IMPORTER=OFF -DASSIMP_BUILD_DFX_IMPORTER=OFF -DASSIMP_BUILD_GLTF_IMPORTER=OFF -DASSIMP_BUILD_HMP_IMPORTER=OFF -DASSIMP_BUILD_IFC_IMPORTER=OFF -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF -DASSIMP_BUILD_IRR_IMPORTER=OFF -DASSIMP_BUILD_LWO_IMPORTER=OFF -DASSIMP_BUILD_LWS_IMPORTER=OFF -DASSIMP_BUILD_MD2_IMPORTER=OFF -DASSIMP_BUILD_MD3_IMPORTER=OFF -DASSIMP_BUILD_MD5_IMPORTER=OFF -DASSIMP_BUILD_MDL_IMPORTER=OFF -DASSIMP_BUILD_MMD_IMPORTER=OFF -DASSIMP_BUILD_MS3D_IMPORTER=OFF -DASSIMP_BUILD_NDO_IMPORTER=OFF -DASSIMP_BUILD_NDF_IMPORTER=OFF -DASSIMP_BUILD_X3D_IMPORTER=OFF -DASSIMP_BUILD_XGL_IMPORTER=OFF -DASSIMP_BUILD_X_IMPORTER=OFF -DBUILD_FRAMEWORK=OFF -DASSIMP_BUILD_ASSIMP_TOOLS=OFF ..\..
+)</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)
+cmake --build . --config "$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST "build\$(Configuration)\*.sln"  (
+cd $(ProjectDir)\..
+mkdir build\$(Configuration)
+cd build\$(Configuration)
+cmake -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DBUILD_SHARED_LIBS=OFF -DSYSTEM_IRRXML=OFF -DASSIMP_BUILD_ZLIB=OFF -DASSIMP_BUILD_TESTS=OFF -DASSIMP_BUILD_SAMPLES=OFF -DASSIMP_ASAN=OFF -DASSIMP_UBSAN=OFF -DASSIMP_NO_EXPORT=OFF -DASSIMP_BUILD_OFF_IMPORTER=OFF -DASSIMP_BUILD_OGRE_IMPORTER=OFF -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF -DASSIMP_BUILD_Q3D_IMPORTER=OFF -DASSIMP_BUILD_RAW_IMPORTER=OFF -DASSIMP_BUILD_SMD_IMPORTER=OFF -DASSIMP_BUILD_SIB_IMPORTER=OFF -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF -DASSIMP_BUILD_AC_IMPORTER=OFF -DASSIMP_BUILD_AMF_IMPORTER=OFF -DASSIMP_BUILD_ASE_IMPORTER=OFF -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF -DASSIMP_BUILD_ASSXML_IMPORTER=OFF -DASSIMP_BUILD_B3D_IMPORTER=OFF -DASSIMP_BUILD_COB_IMPORTER=OFF -DASSIMP_BUILD_CSM_IMPORTER=OFF -DASSIMP_BUILD_DFX_IMPORTER=OFF -DASSIMP_BUILD_GLTF_IMPORTER=OFF -DASSIMP_BUILD_HMP_IMPORTER=OFF -DASSIMP_BUILD_IFC_IMPORTER=OFF -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF -DASSIMP_BUILD_IRR_IMPORTER=OFF -DASSIMP_BUILD_LWO_IMPORTER=OFF -DASSIMP_BUILD_LWS_IMPORTER=OFF -DASSIMP_BUILD_MD2_IMPORTER=OFF -DASSIMP_BUILD_MD3_IMPORTER=OFF -DASSIMP_BUILD_MD5_IMPORTER=OFF -DASSIMP_BUILD_MDL_IMPORTER=OFF -DASSIMP_BUILD_MMD_IMPORTER=OFF -DASSIMP_BUILD_MS3D_IMPORTER=OFF -DASSIMP_BUILD_NDO_IMPORTER=OFF -DASSIMP_BUILD_NDF_IMPORTER=OFF -DASSIMP_BUILD_X3D_IMPORTER=OFF -DASSIMP_BUILD_XGL_IMPORTER=OFF -DASSIMP_BUILD_X_IMPORTER=OFF -DBUILD_FRAMEWORK=OFF -DASSIMP_BUILD_ASSIMP_TOOLS=OFF ..\..
+)</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd $(ProjectDir)\..\build
+cmake --build "$(Configuration)" --config "$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST "$(ProjectDir)\..\build\$(Configuration)\*.sln"  (
+cd $(ProjectDir)\..
+mkdir $(ProjectDir)\..\build\$(Configuration)
+cd $(ProjectDir)\..\build\$(Configuration)
+cmake  -A x64 -T host=x64 -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration) -DBUILD_SHARED_LIBS=OFF -DSYSTEM_IRRXML=OFF -DASSIMP_BUILD_ZLIB=OFF -DASSIMP_BUILD_TESTS=OFF -DASSIMP_BUILD_SAMPLES=OFF -DASSIMP_ASAN=OFF -DASSIMP_UBSAN=OFF -DASSIMP_NO_EXPORT=OFF -DASSIMP_BUILD_OFF_IMPORTER=OFF -DASSIMP_BUILD_OGRE_IMPORTER=OFF -DASSIMP_BUILD_OPENGEX_IMPORTER=OFF -DASSIMP_BUILD_Q3BSP_IMPORTER=OFF -DASSIMP_BUILD_Q3D_IMPORTER=OFF -DASSIMP_BUILD_RAW_IMPORTER=OFF -DASSIMP_BUILD_SMD_IMPORTER=OFF -DASSIMP_BUILD_SIB_IMPORTER=OFF -DASSIMP_BUILD_TERRAGEN_IMPORTER=OFF -DASSIMP_BUILD_AC_IMPORTER=OFF -DASSIMP_BUILD_AMF_IMPORTER=OFF -DASSIMP_BUILD_ASE_IMPORTER=OFF -DASSIMP_BUILD_ASSBIN_IMPORTER=OFF -DASSIMP_BUILD_ASSXML_IMPORTER=OFF -DASSIMP_BUILD_B3D_IMPORTER=OFF -DASSIMP_BUILD_COB_IMPORTER=OFF -DASSIMP_BUILD_CSM_IMPORTER=OFF -DASSIMP_BUILD_DFX_IMPORTER=OFF -DASSIMP_BUILD_GLTF_IMPORTER=OFF -DASSIMP_BUILD_HMP_IMPORTER=OFF -DASSIMP_BUILD_IFC_IMPORTER=OFF -DASSIMP_BUILD_IRRMESH_IMPORTER=OFF -DASSIMP_BUILD_IRR_IMPORTER=OFF -DASSIMP_BUILD_LWO_IMPORTER=OFF -DASSIMP_BUILD_LWS_IMPORTER=OFF -DASSIMP_BUILD_MD2_IMPORTER=OFF -DASSIMP_BUILD_MD3_IMPORTER=OFF -DASSIMP_BUILD_MD5_IMPORTER=OFF -DASSIMP_BUILD_MDL_IMPORTER=OFF -DASSIMP_BUILD_MMD_IMPORTER=OFF -DASSIMP_BUILD_MS3D_IMPORTER=OFF -DASSIMP_BUILD_NDO_IMPORTER=OFF -DASSIMP_BUILD_NDF_IMPORTER=OFF -DASSIMP_BUILD_X3D_IMPORTER=OFF -DASSIMP_BUILD_XGL_IMPORTER=OFF -DASSIMP_BUILD_X_IMPORTER=OFF -DBUILD_FRAMEWORK=OFF -DASSIMP_BUILD_ASSIMP_TOOLS=OFF ..\..
+)</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd $(ProjectDir)\..\build\$(Configuration)
+cmake --build . --config "$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -16,7 +16,6 @@
 #include "Bang/Set.h"
 #include "Bang/Set.tcc"
 #include "Bang/Time.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {

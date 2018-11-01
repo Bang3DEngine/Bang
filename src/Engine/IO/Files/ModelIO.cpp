@@ -49,7 +49,6 @@
 #include "Bang/UMap.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
@@ -142,7 +141,7 @@ Tree<ModelIONode> *ReadModelNode(const aiScene *scene, aiNode *node)
     modelNode.localToParent = AiMatrix4ToMatrix4(node->mTransformation);
 
     // Set mesh indices
-    for (int i = 0; i < node->mNumMeshes; ++i)
+    for (uint i = 0; i < node->mNumMeshes; ++i)
     {
         uint meshIndex = node->mMeshes[i];
         modelNode.meshIndices.PushBack(meshIndex);
@@ -150,7 +149,7 @@ Tree<ModelIONode> *ReadModelNode(const aiScene *scene, aiNode *node)
             scene->mMeshes[meshIndex]->mMaterialIndex);
     }
 
-    for (int i = 0; i < node->mNumChildren; ++i)
+    for (uint i = 0; i < node->mNumChildren; ++i)
     {
         aiNode *child = node->mChildren[i];
         Tree<ModelIONode> *childModelTree = ReadModelNode(scene, child);
@@ -275,9 +274,9 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
                             Map<String, Mesh::Bone> *bones,
                             Map<String, uint> *bonesIndices)
 {
-    for (int i = 0; i < SCAST<int>(aMesh->mNumFaces); ++i)
+    for (uint i = 0; i < aMesh->mNumFaces; ++i)
     {
-        for (int j = 0; j < aMesh->mFaces[i].mNumIndices; ++j)
+        for (uint j = 0; j < aMesh->mFaces[i].mNumIndices; ++j)
         {
             Mesh::VertexId vIndex = aMesh->mFaces[i].mIndices[j];
             vertexIndices->PushBack(vIndex);
@@ -285,14 +284,14 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     }
 
     // Positions
-    for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+    for (uint i = 0; i < aMesh->mNumVertices; ++i)
     {
         Vector3 pos = AiVec3ToVec3(aMesh->mVertices[i]);
         vertexPositionsPool->PushBack(pos);
     }
 
     // Normals
-    for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+    for (uint i = 0; i < aMesh->mNumVertices; ++i)
     {
         Vector3 normal = AiVec3ToVec3(aMesh->mNormals[i]);
         vertexNormalsPool->PushBack(normal);
@@ -301,7 +300,7 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     // Uvs
     if (aMesh->GetNumUVChannels() > 0)
     {
-        for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+        for (uint i = 0; i < aMesh->mNumVertices; ++i)
         {
             Vector3 uvs = AiVec3ToVec3(aMesh->mTextureCoords[0][i]);
             vertexUvsPool->PushBack(uvs.xy());
@@ -311,7 +310,7 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
     // Tangents
     if (aMesh->HasTangentsAndBitangents())
     {
-        for (int i = 0; i < SCAST<int>(aMesh->mNumVertices); ++i)
+        for (uint i = 0; i < aMesh->mNumVertices; ++i)
         {
             Vector3 tangent = AiVec3ToVec3(aMesh->mTangents[i]);
             vertexTangentsPool->PushBack(tangent);
@@ -403,11 +402,10 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     if (scene.mNumMaterials > 0)
     {
         scene.mMaterials = new aiMaterial *[scene.mNumMaterials];
-        for (int i = 0; i < scene.mNumMaterials; ++i)
+        for (uint i = 0; i < scene.mNumMaterials; ++i)
         {
             Material *material = sceneMaterialsArray[i];
             aiMaterial *aMaterial = MaterialToAiMaterial(material);
-            ;
             scene.mMaterials[i] = aMaterial;
         }
     }
@@ -417,7 +415,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     if (scene.mNumMeshes > 0)
     {
         scene.mMeshes = new aiMesh *[scene.mNumMeshes];
-        for (int i = 0; i < scene.mNumMeshes; ++i)
+        for (uint i = 0; i < scene.mNumMeshes; ++i)
         {
             Mesh *mesh = sceneMeshesArray[i];
             aiMesh *aMesh = MeshToAiMesh(mesh);
@@ -454,7 +452,7 @@ String ModelIO::GetExtensionIdFromExtension(const String &extension)
 {
 #ifndef FROM_TRAVIS
     Assimp::Exporter exporter;
-    for (int i = 0; i < exporter.GetExportFormatCount(); ++i)
+    for (uint i = 0; i < exporter.GetExportFormatCount(); ++i)
     {
         const aiExportFormatDesc *fmtDesc =
             exporter.GetExportFormatDescription(i);
@@ -503,7 +501,7 @@ aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
     if (goNode->mNumChildren > 0)
     {
         goNode->mChildren = new aiNode *[goNode->mNumChildren];
-        for (int i = 0; i < goNode->mNumChildren; ++i)
+        for (uint i = 0; i < goNode->mNumChildren; ++i)
         {
             GameObject *child = gameObject->GetChild(i);
             aiNode *childNode = GameObjectToAiNode(child, sceneMeshes);
@@ -534,7 +532,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
         aMesh->mTextureCoords[0] = new aiVector3D[aMesh->mNumVertices];
 
         // Populate vertices
-        for (int i = 0; i < aMesh->mNumVertices; ++i)
+        for (uint i = 0; i < aMesh->mNumVertices; ++i)
         {
             Vector3 posi = (mesh->GetPositionsPool().Size() > i
                                 ? mesh->GetPositionsPool()[i]
@@ -554,7 +552,7 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
 
         aMesh->mNumFaces = mesh->GetNumTriangles();
         aMesh->mFaces = new aiFace[aMesh->mNumFaces];
-        for (int tri = 0; tri < aMesh->mNumFaces; ++tri)
+        for (uint tri = 0; tri < aMesh->mNumFaces; ++tri)
         {
             aiFace *aFace = &(aMesh->mFaces[tri]);
             aFace->mNumIndices = 3;

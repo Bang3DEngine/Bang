@@ -1,7 +1,7 @@
 #include "Bang/SystemProcess.h"
 
-#include <string.h>
 #include <cstddef>
+#include <cstring>
 #include <functional>
 
 #include "Bang/Path.h"
@@ -56,7 +56,6 @@ bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
                     [this](const char *str, int size) { ReadErr(str, size); },
                     true,
                     SystemProcess::MaxBuffSize);
-
     return true;
 }
 

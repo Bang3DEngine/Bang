@@ -43,7 +43,6 @@
 #include "Bang/UITheme.h"
 #include "Bang/UIToolButton.h"
 #include "Bang/UITree.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 
@@ -625,7 +624,7 @@ UIImageRenderer *GameObjectFactory::AddOuterBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddOuterBorder(
         uiGo,
-        Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        Vector2i(SCAST<int>(UITheme::GetNotFocusedBorderStroke())),
         UITheme::GetNotFocusedBorderColor());
 }
 
@@ -651,7 +650,7 @@ UIImageRenderer *GameObjectFactory::AddInnerBorder(GameObject *uiGo)
 {
     return GameObjectFactory::AddInnerBorder(
         uiGo,
-        Vector2i(UITheme::GetNotFocusedBorderStroke()),
+        Vector2i(SCAST<int>(UITheme::GetNotFocusedBorderStroke())),
         UITheme::GetNotFocusedBorderColor());
 }
 
@@ -673,7 +672,7 @@ void GameObjectFactory::MakeBorderFocused(UIImageRenderer *border)
     {
         border->SetTint(UITheme::GetFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
-            Vector2i(UITheme::GetFocusedBorderStroke()));
+            Vector2i(SCAST<int>(UITheme::GetFocusedBorderStroke())));
     }
 }
 
@@ -683,7 +682,7 @@ void GameObjectFactory::MakeBorderNotFocused(UIImageRenderer *border)
     {
         border->SetTint(UITheme::GetNotFocusedBorderColor());
         border->SetSlice9BorderStrokePx(
-            Vector2i(UITheme::GetNotFocusedBorderStroke()));
+            Vector2i(SCAST<int>(UITheme::GetNotFocusedBorderStroke())));
     }
 }
 
@@ -693,7 +692,7 @@ String GameObjectFactory::GetGameObjectDuplicateName(const GameObject *go)
 
     String duplicateNameNumber = "";
     bool isDuplicatedName = false;
-    for (int i = originalName.Size() - 1; i >= 0; --i)
+    for (uint i = originalName.Size() - 1; i >= 0; --i)
     {
         char c = originalName[i];
         if (String::IsNumber(c))

@@ -71,6 +71,6 @@ private:
 
     friend class Resources;
 };
-}
+}  // namespace Bang
 
 #endif  // TEXTUREFACTORY_H

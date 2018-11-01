@@ -120,6 +120,6 @@ void IReflectable::ReflectVarMemberEnum(const String &varName,
     ReflectVarMember<TClass, T, int>(
         varName, setter, getter, instance, hintsString);
 }
-}
+}  // namespace Bang
 
 #endif  // IREFLECTABLE_H

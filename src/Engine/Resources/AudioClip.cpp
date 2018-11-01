@@ -1,6 +1,10 @@
 #include "Bang/AudioClip.h"
 
+#ifdef __linux__
 #include <sndfile.h>
+#elif _WIN32
+#endif
+
 #include <stddef.h>
 #include <ostream>
 #include <vector>
@@ -39,6 +43,7 @@ void AudioClip::Import(const Path &soundFilepath)
     alGenBuffers(1, &m_alBufferId);
     AudioManager::CheckALError();
 
+#ifdef __linux__
     SF_INFO soundInfo;
     SNDFILE *soundFile =
         sf_open(soundFilepath.GetAbsolute().ToCString(), SFM_READ, &soundInfo);
@@ -78,6 +83,8 @@ void AudioClip::Import(const Path &soundFilepath)
     {
         m_soundFilepath = Path::Empty;
     }
+#elif _WIN32
+#endif
 }
 
 int AudioClip::GetChannels() const

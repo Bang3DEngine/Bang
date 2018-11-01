@@ -9,15 +9,11 @@
 #include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector2.h"
 
 using namespace Bang;
 
-UIGridLayout::UIGridLayout()
-{
-    CONSTRUCT_CLASS_ID(UIGridLayout)
-}
+UIGridLayout::UIGridLayout(){CONSTRUCT_CLASS_ID(UIGridLayout)}
 
 UIGridLayout::~UIGridLayout()
 {

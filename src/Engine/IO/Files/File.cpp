@@ -12,6 +12,14 @@
 #include <iostream>
 #include <string>
 
+#ifdef __linux__
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#elif _WIN32
+#include <Windows.h>
+#endif
+
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/List.h"
@@ -91,7 +99,7 @@ bool File::DuplicateDir(const Path &srcDirpath,
     {
         return true;
     }
-    if (!File::CreateDirectory(dstDirPath))
+    if (!File::CreateDir(dstDirPath))
     {
         return false;
     }
@@ -143,6 +151,7 @@ void File::AddExecutablePermission(const Path &path)
 {
 #ifdef __linux__
     chmod(path.GetAbsolute().ToCString(), S_IRUSR | S_IXUSR);
+#elif _WIN32
 #endif
 }
 
@@ -174,16 +183,17 @@ bool File::Remove(const Path &path)
     }
 }
 
-bool File::CreateDirectory(const Path &dirPath)
+bool File::CreateDir(const Path &dirPath)
 {
     if (dirPath.Exists())
     {
         return true;
     }
+
 #ifdef __linux__
     return mkdir(dirPath.GetAbsolute().ToCString(), 0700) == 0;
-#else
-    return false;
+#elif _WIN32
+    return CreateDirectory(dirPath.GetAbsolute().ToCString(), NULL);
 #endif
 }
 

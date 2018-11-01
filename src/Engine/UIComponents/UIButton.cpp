@@ -7,10 +7,7 @@
 
 using namespace Bang;
 
-UIButton::UIButton()
-{
-    CONSTRUCT_CLASS_ID(UIButton)
-}
+UIButton::UIButton(){CONSTRUCT_CLASS_ID(UIButton)}
 
 UIButton::~UIButton()
 {

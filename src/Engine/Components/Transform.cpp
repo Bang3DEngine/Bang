@@ -14,7 +14,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Quaternion.h"
 #include "Bang/StreamOperators.h"
-#include "Bang/Vector.tcc"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"
 

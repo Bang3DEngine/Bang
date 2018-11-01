@@ -47,4 +47,4 @@ script:
 - sudo apt-get -y install libglew-dev libfreetype6-dev libopenal-dev libsdl2-dev libsdl2-ttf-dev libassimp-dev libsndio-dev
 - rm -rf build && mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=ON -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Debug   .. && make VERBOSE=0 --no-print-directory -j6 > buildSharedDeb.txt && cd ..
 - rm -rf build && mkdir -p build && cd build && cmake -DBUILD_SHARED_LIBS=ON -DFROM_TRAVIS=ON -DCMAKE_BUILD_TYPE=Release .. && make VERBOSE=0 --no-print-directory -j6 > buildSharedRel.txt && cd ..
-- cd Build/BuildPackage && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug -DFORCE_NO_PIE=OFF .. && make VERBOSE=0 --no-print-directory -j6 && cd ../..
+- cd Compile/CompilePackage && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug -DFORCE_NO_PIE=OFF .. && make VERBOSE=0 --no-print-directory -j6 && cd ../..

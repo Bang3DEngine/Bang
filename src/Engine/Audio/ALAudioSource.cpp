@@ -3,7 +3,6 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Math.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 

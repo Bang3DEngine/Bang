@@ -12,7 +12,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector.tcc"
 
 namespace Bang
 {
@@ -148,7 +147,7 @@ void TextureCubeMap::Import(const Image &topImage,
 
     std::array<Image, 6> imgs = {
         {topImage, botImage, leftImage, rightImage, frontImage, backImage}};
-    for (int i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
+    for (uint i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         const Image &img = imgs[i];
         if (img.GetData())

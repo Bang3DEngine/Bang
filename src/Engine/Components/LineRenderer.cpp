@@ -13,7 +13,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 
@@ -48,7 +47,7 @@ void LineRenderer::OnRender()
 void LineRenderer::SetPoint(int i, const Vector3 &point)
 {
     Array<Vector3> newPoints = m_points;
-    ASSERT(i >= 0 && i <= newPoints.Size());
+    ASSERT(i >= 0 && i <= SCAST<int>(newPoints.Size()));
 
     if (i == newPoints.Size())
     {

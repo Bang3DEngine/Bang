@@ -5,6 +5,7 @@
 
 #include "Bang/Debug.h"
 #include "Bang/Octree.h"
+#include "Bang/Vector3.h"
 
 using namespace Bang;
 

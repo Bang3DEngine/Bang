@@ -8,14 +8,10 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
-#include "Bang/Vector.tcc"
 
 using namespace Bang;
 
-UIRectMask::UIRectMask()
-{
-    CONSTRUCT_CLASS_ID(UIRectMask)
-}
+UIRectMask::UIRectMask(){CONSTRUCT_CLASS_ID(UIRectMask)}
 
 UIRectMask::~UIRectMask()
 {

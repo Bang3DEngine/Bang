@@ -24,7 +24,7 @@ public:
     const Path &GetPath() const;
 
     static bool Remove(const Path &path);
-    static bool CreateDirectory(const Path &dirPath);
+    static bool CreateDir(const Path &dirPath);
     static bool Rename(const Path &srcPath, const Path &dstPath);
 
     static bool Duplicate(const Path &srcPath, const Path &dstPath);
@@ -52,6 +52,6 @@ protected:
                              USet<Path> &pathsToIgnore,
                              bool overwrite = true);
 };
-}
+}  // namespace Bang
 
 #endif  // FILE_H

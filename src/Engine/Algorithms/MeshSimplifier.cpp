@@ -39,8 +39,58 @@ struct ClassifyPoints
     }
 };
 
+void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
+                                          SmoothMethod smoothMethod,
+                                          float smoothFactor,
+                                          uint steps)
+{
+    mesh->UpdateCornerTablesIfNeeded();
+
+    float nextSmoothFactor = smoothFactor;
+    for (uint i = 0; i < steps; ++i)
+    {
+        const Array<Vector3> prevPositions = mesh->GetPositionsPool();
+        Array<Vector3> newPositions = Array<Vector3>(prevPositions.Size());
+        for (Mesh::VertexId vId = 0; vId < mesh->GetPositionsPool().Size(); ++vId)
+        {
+            Vector3 vertexPos = prevPositions[vId];
+            Vector3 vDisplacement = Vector3::Zero;
+
+            const Array<Mesh::VertexId> neighborVIds = mesh->GetNeighborVertexIds(vId);
+            const uint numNeighbors = neighborVIds.Size();
+
+            for (Mesh::VertexId nVId : neighborVIds)
+            {
+                Vector3 neighborVertexPos = prevPositions[nVId];
+                vDisplacement += (neighborVertexPos - vertexPos);
+            }
+            vDisplacement /= SCAST<float>(numNeighbors);
+
+            vertexPos += vDisplacement * nextSmoothFactor;
+            newPositions[vId] = vertexPos;
+        }
+
+        mesh->SetPositionsPool(newPositions);
+
+        if (smoothMethod == SmoothMethod::TAUBIN)
+        {
+            nextSmoothFactor *= -1.0f;
+        }
+
+        if (smoothMethod == SmoothMethod::BILAPLACE)
+        {
+            nextSmoothFactor *= -1.0f;
+            float sign = Math::Sign(nextSmoothFactor);
+            nextSmoothFactor = smoothFactor * sign * (sign > 0 ? 1.5f : 1.0f);
+        }
+
+    }
+
+    mesh->UpdateVAOs();
+}
+
 Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
-                                               Method simplificationMethod)
+                                               SimplificationMethod simplificationMethod)
 {
     if (!mesh)
     {
@@ -103,7 +153,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
     }
 
     UMap<Mesh::VertexId, Array<Mesh::TriangleId>> vertexIdxsToTriIdxs;
-    if (simplificationMethod == Method::QUADRIC_ERROR_METRICS)
+    if (simplificationMethod == SimplificationMethod::QUADRIC_ERROR_METRICS)
     {
         vertexIdxsToTriIdxs = mesh->GetVertexIdsToTriangleIds();
     }
@@ -413,7 +463,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     const Mesh &mesh,
     const VertexCluster &vertexCluster,
     const UMap<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
-    Method simplificationMethod)
+    SimplificationMethod simplificationMethod)
 {
     VertexData vertexRepresentativeData;
     vertexRepresentativeData.pos = Vector3::Zero;
@@ -428,7 +478,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
     switch (simplificationMethod)
     {
-        case Method::CLUSTERING:
+        case SimplificationMethod::CLUSTERING:
         {
             for (const auto &pair : vertexCluster)
             {
@@ -447,7 +497,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
         }
         break;
 
-        case Method::QUADRIC_ERROR_METRICS:
+        case SimplificationMethod::QUADRIC_ERROR_METRICS:
         {
             // To get the position use quadric error metrics
             int numTrisComputed = 0;
@@ -525,7 +575,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
             // Regularization
             /*
-             */
+            */
             // verticesTotalQuadricMatrix[0][0] += 1.0f;
             // verticesTotalQuadricMatrix[1][1] += 1.0f;
             // verticesTotalQuadricMatrix[2][2] += 1.0f;
@@ -540,15 +590,15 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
             bool isInvertible;
             Vector3 minimumQuadricErrorPosition =
-                (verticesTotalQuadricMatrix.Inversed(0.1f, &isInvertible) *
-                 Vector4(0, 0, 0, 1))
-                    .xyz();
+                    (verticesTotalQuadricMatrix.Inversed(0.1f, &isInvertible) *
+                     Vector4(0,0,0,1)).xyz();
 
             // To get normal, uvs, etc. use the clustering method.
-            vertexRepresentativeData = GetVertexRepresentativeForCluster(
-                mesh, vertexCluster, vertexIdxsToTriIdxs, Method::CLUSTERING);
-            if (isInvertible &&
-                clusterAABox.Contains(minimumQuadricErrorPosition))
+            vertexRepresentativeData =
+                    GetVertexRepresentativeForCluster(mesh, vertexCluster,
+                                                      vertexIdxsToTriIdxs,
+                                                      SimplificationMethod::CLUSTERING);
+            if (isInvertible && clusterAABox.Contains(minimumQuadricErrorPosition))
             {
                 vertexRepresentativeData.pos = minimumQuadricErrorPosition;
             }

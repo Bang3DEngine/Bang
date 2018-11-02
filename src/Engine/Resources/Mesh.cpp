@@ -498,10 +498,9 @@ void Mesh::CalculateLODs()
 {
     if (!m_areLodsValid)
     {
-        m_lodMeshes = MeshSimplifier::GetAllMeshLODs(
-            this,
-            // MeshSimplifier::Method::CLUSTERING);
-            MeshSimplifier::Method::QUADRIC_ERROR_METRICS);
+        m_lodMeshes = MeshSimplifier::GetAllMeshLODs(this,
+                                 // MeshSimplifier::Method::CLUSTERING);
+                                 MeshSimplifier::SimplificationMethod::QUADRIC_ERROR_METRICS);
         m_areLodsValid = true;
     }
 }
@@ -924,7 +923,7 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId)
     return meanCurvature;
 }
 
-bool Mesh::HasCornerTablesComputed() const
+bool Mesh::HasCornerTablesUpdated() const
 {
     return m_cornerIdToOppositeCornerId.Size() >= 1;
 }

@@ -118,7 +118,7 @@ public:
     Array<TriangleId> GetNeighborTriangleIdsFromVertexId(VertexId vId) const;
     float GetVertexGaussianCurvature(VertexId centralVId);
     float GetVertexMeanCurvature(VertexId centralVId);
-    bool HasCornerTablesComputed() const;
+    bool HasCornerTablesUpdated() const;
 
     const AABox &GetAABBox() const;
     const Sphere &GetBoundingSphere() const;

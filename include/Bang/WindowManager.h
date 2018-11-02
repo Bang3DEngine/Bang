@@ -43,6 +43,9 @@ private:
 
     const Array<Window *> GetCurrentWindows() const;
 };
+
 }
+
+#include "Bang/WindowManager.tcc"
 
 #endif  // WINDOWMANAGER_H

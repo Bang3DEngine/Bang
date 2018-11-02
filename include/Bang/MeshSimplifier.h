@@ -16,14 +16,27 @@ class ResourceHandle;
 class MeshSimplifier
 {
 public:
-    enum class Method
+    enum class SmoothMethod
+    {
+        LAPLACE,
+        TAUBIN,
+        BILAPLACE
+    };
+
+    enum class SimplificationMethod
     {
         CLUSTERING,
         QUADRIC_ERROR_METRICS
     };
 
-    static Array<RH<Mesh>> GetAllMeshLODs(const Mesh *mesh,
-                                          Method simplificationMethod);
+    static void ApplySmoothIteration(Mesh *mesh,
+                                     SmoothMethod smoothMethod,
+                                     float smoothFactor,
+                                     uint steps = 2);
+
+    static Array<RH<Mesh>> GetAllMeshLODs(
+                                    const Mesh *mesh,
+                                    SimplificationMethod simplificationMethod);
 
     MeshSimplifier() = delete;
 
@@ -40,9 +53,8 @@ private:
     static VertexData GetVertexRepresentativeForCluster(
         const Mesh &mesh,
         const VertexCluster &vertexCluster,
-        const UMap<Mesh::VertexId, Array<Mesh::TriangleId>>
-            &vertexIdxsToTriIdxs,
-        Method simplificationMethod);
+        const UMap<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
+        SimplificationMethod simplificationMethod);
 };
 }
 

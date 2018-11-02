@@ -343,17 +343,17 @@ Vector4G<T> Vector4G<T>::Clamp2(const Vector4G<T> &v,
 template <class T>
 Axis Vector4G<T>::GetAxis() const
 {
-    return x == 1 ? Axis::Horizontal : Axis::Vertical;
+    return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL;
 }
 template <class T>
 const T &Vector4G<T>::GetAxis(Axis axis) const
 {
-    return (axis == Axis::Horizontal) ? x : y;
+    return (axis == Axis::HORIZONTAL) ? x : y;
 }
 template <class T>
 Vector4G<T> Vector4G<T>::FromAxis(Axis axis)
 {
-    return (axis == Axis::Horizontal) ? Vector4G<T>::Right : Vector4G<T>::Up;
+    return (axis == Axis::HORIZONTAL) ? Vector4G<T>::Right : Vector4G<T>::Up;
 }
 
 template <class T>

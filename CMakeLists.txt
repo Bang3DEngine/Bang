@@ -62,9 +62,9 @@ if (ADD_MISC_FILES)
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.txt"
-                                  "${BANG_ENGINE_ROOT}/Build/BuildPackage/CMakeLists.txt"
-                                  "${BANG_ENGINE_ROOT}/Build/BuildDependencies/CMakeLists.txt"
-                                  "${BANG_ENGINE_ROOT}/Build/BuildDependencies/ThirdParty/CMakeLists.txt"
+                                  "${BANG_ENGINE_ROOT}/Compile/CompilePackage/CMakeLists.txt"
+                                  "${BANG_ENGINE_ROOT}/Compile/CompileDependencies/CMakeLists.txt"
+                                  "${BANG_ENGINE_ROOT}/Compile/CompileDependencies/ThirdParty/CMakeLists.txt"
                                   "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.h"
                                   "${BANG_ENGINE_INCLUDE_DIR}/Bang/*.tcc")
     add_misc_files("${OTHER_FILES}")

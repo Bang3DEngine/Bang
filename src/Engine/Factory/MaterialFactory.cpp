@@ -81,7 +81,7 @@ RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
     const String &phMatEnginePathStr)
 {
     Path phMatEnginePath = Paths::GetEngineAssetsDir()
-                               .Append("PhysicsMaterials")
+                               .Append("Materials")
                                .Append(phMatEnginePathStr);
     MaterialFactory *mf = MaterialFactory::GetActive();
     if (!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))

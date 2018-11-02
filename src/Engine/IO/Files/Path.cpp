@@ -5,6 +5,7 @@
 #include <vector>
 
 #ifdef __linux__
+#include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>

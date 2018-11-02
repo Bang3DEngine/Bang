@@ -315,7 +315,7 @@ Vector2G<T> Vector2G<T>::Clamp2(const Vector2G<T> &v,
 template <class T>
 Axis Vector2G<T>::GetAxis() const
 {
-    return x == 1 ? Axis::HORIZONTAL : Axis::Vertical;
+    return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL;
 }
 template <class T>
 const T &Vector2G<T>::GetAxis(Axis axis) const

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Bang/Image.h"
 
 #include "Bang/AARect.h"

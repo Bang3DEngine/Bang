@@ -187,7 +187,7 @@ Array<Path> Paths::GetEngineIncludeDirs()
     incPaths.PushBack(Path("/usr/include/SDL2"));
 
     Path physxRootDir = Paths::GetEngineDir().Append(
-        "Build/BuildDependencies/ThirdParty/PhysX/");
+        "Compile/CompileDependencies/ThirdParty/PhysX/");
     Array<Path> physxDirs = physxRootDir.GetSubDirectories(FindFlag::RECURSIVE);
     for (const Path &physxDir : physxDirs)
     {

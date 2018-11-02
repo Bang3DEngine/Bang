@@ -135,7 +135,6 @@ private:
     static DebugRenderer *GetActive();
 
     friend class Scene;
-    friend class GameObject;
 };
 }
 

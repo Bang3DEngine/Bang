@@ -1,5 +1,7 @@
 #include "Bang/ImageIO.h"
 
+#include <stdio.h>
+
 #include <GL/glew.h>
 // #include <jmorecfg.h>
 #include <jpeglib.h>
@@ -7,7 +9,6 @@
 #include <pngconf.h>
 #include <setjmp.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <fstream>
 
 #include "Bang/Array.h"

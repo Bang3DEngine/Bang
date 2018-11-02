@@ -214,7 +214,6 @@
 #include "Bang/UniformBuffer.tcc"
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
-#include "Bang/Vector.h"
 #include "Bang/Vector2.h"
 #include "Bang/Vector3.h"
 #include "Bang/Vector4.h"

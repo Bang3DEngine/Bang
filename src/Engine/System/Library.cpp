@@ -64,9 +64,8 @@ void *Library::GetSymbol(const String &symbolName)
     ClearError();
     void *symbolAddress = nullptr;
 
-#ifdef __linux__ symbolAddress =
-    dlsym(m_libHandle, symbolName.ToCString());
-
+#ifdef __linux__
+    symbolAddress = dlsym(m_libHandle, symbolName.ToCString());
 #elif _WIN32
 #endif
 

@@ -57,8 +57,6 @@ private:
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
-
-    friend class ComponentFactory;
 };
 }
 

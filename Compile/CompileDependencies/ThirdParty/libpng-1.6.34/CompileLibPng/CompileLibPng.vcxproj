@@ -180,7 +180,7 @@ cmake --build . --target "install" --config "$(Configuration)"</Command>
 cd $(ProjectDir)\..
 mkdir build\$(Configuration)\$(Platform)
 cd build\$(Configuration)\$(Platform)
-cmake -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlibd.lib ..\..\..
+cmake -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_INSTALL_PREFIX=$(ProjectDir)\..\build\$(Configuration)\$(Platform) -DZLIB_INCLUDE_DIR=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\include -DZLIB_LIBRARY=$(ProjectDir)\..\..\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlib.lib ..\..\..
 )</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

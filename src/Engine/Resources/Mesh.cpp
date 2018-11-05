@@ -426,14 +426,14 @@ void Mesh::UpdateCornerTablesIfNeeded()
     {
         for (uint i = 0; i < 3; ++i)
         {
-            VertexId triFirstVId =
+            const VertexId triFirstVId =
                 GetTrianglesVertexIds()[(triId * 3) + ((i + 0) % 3)];
-            VertexId triSecondVId =
+            const VertexId triSecondVId =
                 GetTrianglesVertexIds()[(triId * 3) + ((i + 1) % 3)];
             ASSERT(triFirstVId < GetNumVertices());
             ASSERT(triSecondVId < GetNumVertices());
-            Vector3 triFirstVertexPos = GetPositionsPool()[triFirstVId];
-            Vector3 triSecondVertexPos = GetPositionsPool()[triSecondVId];
+            const Vector3 &triFirstVertexPos = GetPositionsPool()[triFirstVId];
+            const Vector3 &triSecondVertexPos = GetPositionsPool()[triSecondVId];
             const auto orderedVertexPositions =
                 (LexicoCompare(triFirstVertexPos, triSecondVertexPos))
                     ? std::make_pair(triFirstVertexPos, triSecondVertexPos)
@@ -867,32 +867,39 @@ float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId)
 
 float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId)
 {
-    USet<VertexId> processedVertexIds;
+    USet<CornerId> processedCornerIds;
 
-    int processedTris = 0;
+    VertexId centralVUniqueId = GetVertexIdUnique(centralVId);
+
+    uint numProcessedTris = 0;
     float cornerAreasSum = 0.0f;
     Vector3 edgesFactorSum = Vector3::Zero;
-    Vector3 centralVertexPos = GetPositionsPool()[centralVId];
-    Array<CornerId> vertexCornerIds = GetCornerIdsFromVertexId(centralVId);
+    Vector3 centralVertexPos = GetPositionsPool()[centralVUniqueId];
+    Array<CornerId> vertexCornerIds = GetCornerIdsFromVertexId(centralVUniqueId);
     for (CornerId centralCId : vertexCornerIds)
     {
-        ASSERT(GetVertexIdUnique(centralVId) ==
-               GetVertexIdUniqueFromCornerId(centralCId));
+        ASSERT(centralVUniqueId == GetVertexIdUniqueFromCornerId(centralCId));
 
         CornerId firstCId = GetPreviousCornerId(centralCId);
-        if (!processedVertexIds.Contains(centralCId))
+        ASSERT(GetTriangleIdFromCornerId(centralCId) ==
+               GetTriangleIdFromCornerId(firstCId));
+
+        if (!processedCornerIds.Contains(centralCId))
         {
             CornerId oppositeCId = GetOppositeCornerId(firstCId);
             if (oppositeCId != SCAST<uint>(-1))
             {
-                ++processedTris;
+                ASSERT(GetTriangleIdFromCornerId(centralCId) !=
+                       GetTriangleIdFromCornerId(oppositeCId));
 
-                float cAngle = GetCornerAngleRads(centralCId);
+                ++numProcessedTris;
+
+                float firstCAngle = GetCornerAngleRads(firstCId);
                 float oppCAngle = GetCornerAngleRads(oppositeCId);
 
                 TriangleId triId = GetTriangleIdFromCornerId(firstCId);
                 VertexId otherVIdOnEdge = GetRemainingVertexIdUnique(
-                    triId, centralVId, GetVertexIdFromCornerId(firstCId));
+                   triId, centralVId, GetVertexIdFromCornerId(firstCId));
                 ASSERT(otherVIdOnEdge !=
                        GetVertexIdUniqueFromCornerId(oppositeCId));
                 ASSERT(otherVIdOnEdge !=
@@ -903,19 +910,19 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId)
                 Vector3 otherVertexOnEdgePos =
                     GetPositionsPool()[otherVIdOnEdge];
                 Vector3 edgeFactor =
-                    (1.0f / Math::Tan(cAngle) + 1.0f / Math::Tan(oppCAngle)) *
+                    (1.0f / Math::Tan(firstCAngle) + 1.0f / Math::Tan(oppCAngle)) *
                     (centralVertexPos - otherVertexOnEdgePos);
 
                 edgesFactorSum += edgeFactor;
                 cornerAreasSum += GetTriangle(triId).GetArea();
 
-                processedVertexIds.Add(centralCId);
-                processedVertexIds.Add(oppositeCId);
+                processedCornerIds.Add(centralCId);
+                processedCornerIds.Add(oppositeCId);
             }
         }
     }
-    ASSERT(processedTris ==
-           GetNeighborTriangleIdsFromVertexId(centralVId).Size());
+    ASSERT(numProcessedTris ==
+           GetNeighborTriangleIdsFromVertexId(centralVUniqueId).Size());
 
     cornerAreasSum /= 3.0f;
     Vector3 laplaceBeltrami = (1.0f / (2.0f * cornerAreasSum)) * edgesFactorSum;

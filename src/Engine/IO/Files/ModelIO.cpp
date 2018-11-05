@@ -708,7 +708,9 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
         importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
                            aiProcess_Triangulate |
                            aiProcess_GenSmoothNormals |
-                           aiProcess_CalcTangentSpace);
+                           aiProcess_CalcTangentSpace |
+                           aiProcess_JoinIdenticalVertices
+                           );
 
     String errorStr = importer->GetErrorString();
     if (!errorStr.IsEmpty())

@@ -833,11 +833,14 @@ Array<Mesh::CornerId> Mesh::GetNeighborCornerIds(Mesh::CornerId cId) const
 Array<Mesh::VertexId> Mesh::GetNeighborVertexIds(Mesh::VertexId vId) const
 {
     USet<VertexId> neighborVertexIds;
-    Array<CornerId> neighborCornerIds =
-        GetNeighborCornerIds(GetVertexIdFromCornerId(vId));
-    for (CornerId neighborCornerId : neighborCornerIds)
+    Array<CornerId> vertexCornerIds = GetCornerIdsFromVertexId(vId);
+    for (CornerId vertexCId : vertexCornerIds)
     {
-        neighborVertexIds.Add(GetVertexIdFromCornerId(neighborCornerId));
+        Array<CornerId> neighborCornerIds = GetNeighborCornerIds(vertexCId);
+        for (CornerId neighborCornerId : neighborCornerIds)
+        {
+            neighborVertexIds.Add(GetVertexIdFromCornerId(neighborCornerId));
+        }
     }
     return neighborVertexIds.GetKeys();
 }

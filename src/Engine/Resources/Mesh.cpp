@@ -415,52 +415,56 @@ void Mesh::UpdateCornerTablesIfNeeded()
     struct TriMapInfo
     {
         TriangleId triangleId;
-        VertexId firstVertexId;
-        VertexId secondVertexId;
+        VertexId firstCornerId;
+        VertexId secondCornerId;
     };
 
     LexicographicCompare LexicoCompare;
     Map<std::pair<Vector3, Vector3>, TriMapInfo, PairVector3Comparator>
-        connectedVertexIdPairs;
+        connectedCornerIdPairs;
     for (TriangleId triId = 0; triId < numTriangles; ++triId)
     {
         for (uint i = 0; i < 3; ++i)
         {
-            const VertexId triFirstVId =
-                GetTrianglesVertexIds()[(triId * 3) + ((i + 0) % 3)];
-            const VertexId triSecondVId =
-                GetTrianglesVertexIds()[(triId * 3) + ((i + 1) % 3)];
+            CornerId triFirstCId  = (triId * 3) + ((i + 0) % 3);
+            CornerId triSecondCId = (triId * 3) + ((i + 1) % 3);
+            const VertexId triFirstVId = GetVertexIdFromCornerId(triFirstCId);
+            const VertexId triSecondVId = GetVertexIdFromCornerId(triSecondCId);
             ASSERT(triFirstVId < GetNumVertices());
             ASSERT(triSecondVId < GetNumVertices());
             const Vector3 &triFirstVertexPos = GetPositionsPool()[triFirstVId];
             const Vector3 &triSecondVertexPos = GetPositionsPool()[triSecondVId];
-            const auto orderedVertexPositions =
+            const auto orderedCornerPositions =
                 (LexicoCompare(triFirstVertexPos, triSecondVertexPos))
                     ? std::make_pair(triFirstVertexPos, triSecondVertexPos)
                     : std::make_pair(triSecondVertexPos, triFirstVertexPos);
-            if (connectedVertexIdPairs.ContainsKey(orderedVertexPositions))
+            if (connectedCornerIdPairs.ContainsKey(orderedCornerPositions))
             {
                 // There was already another tri with this edge:
                 // Consequently, this and the other are adjacent
                 const TriMapInfo &otherTriInfo =
-                    connectedVertexIdPairs[orderedVertexPositions];
+                    connectedCornerIdPairs[orderedCornerPositions];
 
-                VertexId triOppVId =
-                    GetRemainingVertexId(triId, triFirstVId, triSecondVId);
-                VertexId otherTriOppVId =
-                    GetRemainingVertexId(otherTriInfo.triangleId,
-                                         otherTriInfo.firstVertexId,
-                                         otherTriInfo.secondVertexId);
-                m_cornerIdToOppositeCornerId[triOppVId] = otherTriOppVId;
-                m_cornerIdToOppositeCornerId[otherTriOppVId] = triOppVId;
+                CornerId triOppCId = GetRemainingCornerId(triId,
+                                                          triFirstCId,
+                                                          triSecondCId);
+                VertexId otherTriOppCId =
+                        GetRemainingCornerId(otherTriInfo.triangleId,
+                                             otherTriInfo.firstCornerId,
+                                             otherTriInfo.secondCornerId);
+
+                ASSERT(m_cornerIdToOppositeCornerId[triOppCId] == SCAST<uint>(-1));
+                ASSERT(m_cornerIdToOppositeCornerId[otherTriOppCId] == SCAST<uint>(-1));
+                m_cornerIdToOppositeCornerId[triOppCId] = otherTriOppCId;
+                m_cornerIdToOppositeCornerId[otherTriOppCId] = triOppCId;
             }
             else
             {
                 TriMapInfo triInfo;
                 triInfo.triangleId = triId;
-                triInfo.firstVertexId = triFirstVId;
-                triInfo.secondVertexId = triSecondVId;
-                connectedVertexIdPairs[orderedVertexPositions] = triInfo;
+                triInfo.firstCornerId = triFirstCId;
+                triInfo.secondCornerId = triSecondCId;
+                connectedCornerIdPairs[orderedCornerPositions] = triInfo;
             }
         }
     }
@@ -713,6 +717,30 @@ Mesh::VertexId Mesh::GetRemainingVertexIdUnique(
     return SCAST<uint>(-1);
 }
 
+Mesh::CornerId Mesh::GetRemainingCornerId(Mesh::TriangleId triangleId,
+                                          Mesh::CornerId oneCorner,
+                                          Mesh::CornerId anotherCorner) const
+{
+    Mesh::CornerId oneCornerLocalTriId = (oneCorner - triangleId*3);
+    Mesh::CornerId anotherCornerLocalTriId = (anotherCorner - triangleId*3);
+    ASSERT(oneCornerLocalTriId >= 0 && oneCornerLocalTriId < 3);
+    ASSERT(anotherCornerLocalTriId >= 0 && anotherCornerLocalTriId < 3);
+
+    uint remainingCornerLocalTriId = SCAST<uint>(-1);
+    for (uint i = 0; i < 3; ++i)
+    {
+        if (i != oneCornerLocalTriId && i != anotherCornerLocalTriId)
+        {
+            remainingCornerLocalTriId = i;
+            break;
+        }
+    }
+
+    Mesh::CornerId remainingCornerId =
+            (triangleId * 3) + remainingCornerLocalTriId;
+    return remainingCornerId;
+}
+
 Mesh::CornerId Mesh::GetCornerIdFromTriangle(Mesh::TriangleId triangleId,
                                              uint i) const
 {
@@ -804,14 +832,25 @@ Array<Mesh::CornerId> Mesh::GetNeighborCornerIds(Mesh::CornerId cId) const
 
 Array<Mesh::VertexId> Mesh::GetNeighborVertexIds(Mesh::VertexId vId) const
 {
-    Array<VertexId> neighborVertexIds;
+    USet<VertexId> neighborVertexIds;
     Array<CornerId> neighborCornerIds =
         GetNeighborCornerIds(GetVertexIdFromCornerId(vId));
     for (CornerId neighborCornerId : neighborCornerIds)
     {
-        neighborVertexIds.PushBack(GetVertexIdFromCornerId(neighborCornerId));
+        neighborVertexIds.Add(GetVertexIdFromCornerId(neighborCornerId));
     }
-    return neighborVertexIds;
+    return neighborVertexIds.GetKeys();
+}
+
+Array<Mesh::VertexId> Mesh::GetNeighborUniqueVertexIds(Mesh::VertexId vId) const
+{
+    USet<VertexId> neighborUniqueVertexIds;
+    Array<VertexId> neighborVertexIds = GetNeighborVertexIds(vId);
+    for (VertexId nvid : neighborVertexIds)
+    {
+        neighborUniqueVertexIds.Add( GetVertexIdUnique(nvid) );
+    }
+    return neighborUniqueVertexIds.GetKeys();
 }
 
 Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIds(

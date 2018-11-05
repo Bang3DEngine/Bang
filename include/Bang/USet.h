@@ -36,7 +36,7 @@ public:
     bool IsEmpty() const;
     bool Contains(const Key &key) const;
 
-    List<Key> GetKeys() const;
+    Array<Key> GetKeys() const;
 
     Iterator Begin();
     Iterator End();

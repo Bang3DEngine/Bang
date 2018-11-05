@@ -63,9 +63,9 @@ bool USet<Key, Hash, Pred, Alloc>::Contains(const Key &key) const
 }
 
 template <class Key, class Hash, class Pred, class Alloc>
-List<Key> USet<Key, Hash, Pred, Alloc>::GetKeys() const
+Array<Key> USet<Key, Hash, Pred, Alloc>::GetKeys() const
 {
-    List<Key> result;
+    Array<Key> result;
     for (Const_Iterator cit = this->Begin(); cit != this->End(); ++cit)
     {
         result.PushBack(*cit);

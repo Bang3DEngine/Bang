@@ -100,6 +100,9 @@ public:
     VertexId GetRemainingVertexIdUnique(TriangleId triangleId,
                                         VertexId oneVertex,
                                         VertexId anotherVertex) const;
+    Mesh::CornerId GetRemainingCornerId(TriangleId triangleId,
+                                        CornerId oneCorner,
+                                        CornerId anotherCorner) const;
     CornerId GetCornerIdFromTriangle(TriangleId triangleId, uint i) const;
     std::array<CornerId, 3> GetCornerIdsFromTriangle(
         TriangleId triangleId) const;
@@ -114,6 +117,7 @@ public:
     const Array<CornerId> &GetCornerIdsFromVertexId(VertexId vId) const;
     Array<CornerId> GetNeighborCornerIds(CornerId cId) const;
     Array<VertexId> GetNeighborVertexIds(VertexId vId) const;
+    Array<VertexId> GetNeighborUniqueVertexIds(VertexId vId) const;
     Array<TriangleId> GetAdjacentTriangleIds(TriangleId triId) const;
     Array<TriangleId> GetNeighborTriangleIdsFromVertexId(VertexId vId) const;
     float GetVertexGaussianCurvature(VertexId centralVId);

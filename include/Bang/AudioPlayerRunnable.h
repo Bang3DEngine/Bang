@@ -17,6 +17,7 @@ class AudioClip;
 class IEventsDestroy;
 
 class AudioPlayerRunnable : public ThreadRunnable,
+                            public EventListener<IEventsDestroy>,
                             public EventEmitterIEventsDestroyWithCheck
 {
 public:
@@ -37,8 +38,11 @@ public:
 private:
     bool m_forceExit = false;
     AudioClip *p_audioClip = nullptr;
-    ALAudioSource *p_alAudioSource = 0;
+    ALAudioSource *p_alAudioSource = nullptr;
     float m_delayInSeconds = 0.0f;
+
+    // IEventsDestroy
+    void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
 }
 

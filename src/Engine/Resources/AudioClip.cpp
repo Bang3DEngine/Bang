@@ -67,12 +67,11 @@ void AudioClip::Import(const Path &soundFilepath)
     }
 
     AudioManager::ClearALErrors();
-    alBufferData(
-        m_alBufferId,
-        soundInfo.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
-        &readData.Front(),
-        readData.Size() * sizeof(short),
-        soundInfo.samplerate);
+    alBufferData(m_alBufferId,
+                 AL_FORMAT_MONO16,  // Always mono, so that attenuation works
+                 &readData.Front(),
+                 readData.Size() * sizeof(short),
+                 soundInfo.samplerate);
     bool hasError = AudioManager::CheckALError();
 
     if (!hasError)

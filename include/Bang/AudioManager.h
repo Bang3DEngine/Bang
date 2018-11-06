@@ -7,6 +7,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
+#include "Bang/Debug.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsDestroy.h"
@@ -51,6 +52,9 @@ public:
     static void ClearALErrors();
     static bool CheckALError();
 
+    static String GetALErrorEnumString(ALenum errorEnum);
+    static String GetALCErrorEnumString(ALCenum errorEnum);
+
     static AudioManager *GetInstance();
 
 private:
@@ -67,8 +71,6 @@ private:
 
     bool InitAL();
     static List<String> GetAudioDevicesList();
-    static String GetALErrorEnumString(ALenum errorEnum);
-    static String GetALCErrorEnumString(ALCenum errorEnum);
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
@@ -84,6 +86,20 @@ private:
     friend class Application;
     friend class AudioPlayerRunnable;
 };
+
+#define BANG_AL_CALL(Call)                                                 \
+    {                                                                      \
+        alGetError();                                                      \
+        Call;                                                              \
+        ALenum errorEnum = alGetError();                                   \
+        if (errorEnum != AL_NO_ERROR)                                      \
+        {                                                                  \
+            Debug_Error(String("OpenAL error on call '") + String(#Call) + \
+                        String("' : ") +                                   \
+                        AudioManager::GetALErrorEnumString(errorEnum) +    \
+                        String(" (") + String(")"));                       \
+        }                                                                  \
+    }
 }
 
 #endif  // AUDIOMANAGER_H

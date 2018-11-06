@@ -2,6 +2,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/AudioListener.h"
 #include "Bang/Axis.h"
 #include "Bang/BoxCollider.h"
 #include "Bang/Camera.h"
@@ -207,6 +208,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
 Camera *GameObjectFactory::CreateDefaultCameraInto(GameObject *go)
 {
     Camera *cam = go->AddComponent<Camera>();
+    go->AddComponent<AudioListener>();
     return CreateDefaultCameraInto(cam);
 }
 

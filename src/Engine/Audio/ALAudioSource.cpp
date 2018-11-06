@@ -1,5 +1,6 @@
 #include "Bang/ALAudioSource.h"
 
+#include "Bang/AudioManager.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Math.h"
@@ -8,8 +9,8 @@ using namespace Bang;
 
 ALAudioSource::ALAudioSource()
 {
-    alGenSources(1, &m_alSourceId);
-    SetParams(m_audioParams);  // Initialize AL source
+    BANG_AL_CALL(alGenSources(1, &m_alSourceId));
+    UpdateALProperties();  // Initialize AL source
 }
 
 ALAudioSource::~ALAudioSource()
@@ -17,22 +18,23 @@ ALAudioSource::~ALAudioSource()
     Stop();
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
-    alDeleteSources(1, &m_alSourceId);
+    BANG_AL_CALL(alDeleteSources(1, &m_alSourceId));
 }
 
 void ALAudioSource::Play()
 {
-    alSourcePlay(m_alSourceId);
+    UpdateALProperties();
+    BANG_AL_CALL(alSourcePlay(GetALSourceId()));
 }
 
 void ALAudioSource::Pause()
 {
-    alSourcePause(m_alSourceId);
+    BANG_AL_CALL(alSourcePause(GetALSourceId()));
 }
 
 void ALAudioSource::Stop()
 {
-    alSourceStop(m_alSourceId);
+    BANG_AL_CALL(alSourceStop(GetALSourceId()));
 }
 
 void ALAudioSource::SetVolume(float volume)
@@ -40,7 +42,7 @@ void ALAudioSource::SetVolume(float volume)
     if (volume != GetVolume())
     {
         m_audioParams.volume = volume;
-        alSourcef(GetALSourceId(), AL_GAIN, GetVolume());
+        UpdateALProperties();
     }
 }
 void ALAudioSource::SetPitch(float pitch)
@@ -49,7 +51,7 @@ void ALAudioSource::SetPitch(float pitch)
     if (clampedPitch != GetPitch())
     {
         m_audioParams.pitch = clampedPitch;
-        alSourcef(GetALSourceId(), AL_PITCH, GetPitch());
+        UpdateALProperties();
     }
 }
 void ALAudioSource::SetRange(float range)
@@ -57,8 +59,7 @@ void ALAudioSource::SetRange(float range)
     if (range != GetRange())
     {
         m_audioParams.range = range;
-        alSourcef(m_alSourceId, AL_MAX_DISTANCE, GetRange());
-        alSourcef(m_alSourceId, AL_REFERENCE_DISTANCE, GetRange() * 0.5f);
+        UpdateALProperties();
     }
 }
 void ALAudioSource::SetLooping(bool looping)
@@ -66,7 +67,7 @@ void ALAudioSource::SetLooping(bool looping)
     if (looping != GetLooping())
     {
         m_audioParams.looping = looping;
-        alSourcef(GetALSourceId(), AL_LOOPING, GetLooping());
+        UpdateALProperties();
     }
 }
 
@@ -75,7 +76,7 @@ void ALAudioSource::SetPosition(const Vector3 &position)
     if (position != GetPosition())
     {
         m_audioParams.position = position;
-        alSourcefv(GetALSourceId(), AL_POSITION, GetPosition().Data());
+        UpdateALProperties();
 
         // Vector3 at = -transform->GetForward(), up = transform->GetUp();
         // ALfloat listenerOri[] = { at.x, at.y, at.z, up.x, up.y, up.z };
@@ -94,7 +95,26 @@ void ALAudioSource::SetParams(const AudioParams &audioParams)
 
 void ALAudioSource::SetALBufferId(ALuint bufferId)
 {
-    alSourcei(m_alSourceId, AL_BUFFER, bufferId);
+    if (bufferId != m_bufferId)
+    {
+        m_bufferId = bufferId;
+        BANG_AL_CALL(alSourcei(GetALSourceId(), AL_BUFFER, bufferId));
+    }
+}
+
+void ALAudioSource::UpdateALProperties() const
+{
+    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_GAIN, GetVolume()));
+    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_PITCH, GetPitch()));
+    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_ROLLOFF_FACTOR, 1.0f));
+    BANG_AL_CALL(alSourcef(
+        GetALSourceId(), AL_MAX_DISTANCE, Math::Max(GetRange(), 0.01f)));
+    BANG_AL_CALL(alSourcef(GetALSourceId(),
+                           AL_REFERENCE_DISTANCE,
+                           Math::Max(GetRange() * 0.5f, 0.01f)));
+    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_LOOPING, GetLooping()));
+    BANG_AL_CALL(
+        alSourcefv(GetALSourceId(), AL_POSITION, GetPosition().Data()));
 }
 
 bool ALAudioSource::IsPlaying() const
@@ -140,6 +160,6 @@ bool ALAudioSource::GetLooping() const
 ALAudioSource::State ALAudioSource::GetState() const
 {
     ALint state;
-    alGetSourcei(m_alSourceId, AL_SOURCE_STATE, &state);
+    alGetSourcei(GetALSourceId(), AL_SOURCE_STATE, &state);
     return static_cast<State>(state);
 }

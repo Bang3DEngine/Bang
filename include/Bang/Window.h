@@ -123,10 +123,10 @@ private:
     SceneManager *m_sceneManager = nullptr;
 
     Time m_sleepTimeInBackground;
-    Vector2i m_minSize = Vector2i::Zero;
+    Vector2i m_minSize = Vector2i::Zero();
     Vector2i m_maxSize = Vector2i(4096);
-    Vector2i m_prevSize = Vector2i::Zero;
-    Vector2i m_newSize = Vector2i::Zero;
+    Vector2i m_prevSize = Vector2i::Zero();
+    Vector2i m_newSize = Vector2i::Zero();
     bool m_isResizable = true, m_resizableChanged = false;
 
     static Window *s_activeWindow;

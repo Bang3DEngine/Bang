@@ -435,7 +435,7 @@ public:
     static void Clear(GLbitfield bufferBit);
     static void Clear(GL::BufferBit bufferBit);
     static void SetClearColorBufferValue(const Color &clearColor);
-    static void ClearColorBuffer(const Color &clearColor = Color::Zero,
+    static void ClearColorBuffer(const Color &clearColor = Color::Zero(),
                                  bool clearR = true,
                                  bool clearG = true,
                                  bool clearB = true,
@@ -449,7 +449,7 @@ public:
     static void ClearStencilDepthBuffers(int clearStencilValue = 0,
                                          float clearDepthValue = 1.0f);
     static void ClearColorStencilDepthBuffers(
-        const Color &clearColorValue = Color::Zero,
+        const Color &clearColorValue = Color::Zero(),
         int clearStencilValue = 0,
         float clearDepthValue = 1.0f);
 

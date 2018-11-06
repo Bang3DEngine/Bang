@@ -395,7 +395,8 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         simplifiedMesh.Get()->UpdateVAOsAndTables();
 
         Debug_Log("Level " << level << ": "
-                           << vertexClusterTriVertsIndices.Size() << "/"
+                           << vertexClusterTriVertsIndices.Size()
+                           << "/"
                            << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
@@ -416,10 +417,10 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     Method simplificationMethod)
 {
     VertexData vertexRepresentativeData;
-    vertexRepresentativeData.pos = Vector3::Zero;
-    vertexRepresentativeData.normal = Vector3::Zero;
-    vertexRepresentativeData.uv = Vector2::Zero;
-    vertexRepresentativeData.tangent = Vector3::Zero;
+    vertexRepresentativeData.pos = Vector3::Zero();
+    vertexRepresentativeData.normal = Vector3::Zero();
+    vertexRepresentativeData.uv = Vector2::Zero();
+    vertexRepresentativeData.tangent = Vector3::Zero();
 
     if (vertexCluster.IsEmpty())
     {
@@ -451,7 +452,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
         {
             // To get the position use quadric error metrics
             int numTrisComputed = 0;
-            Vector3 vertexPosMean = Vector3::Zero;
+            Vector3 vertexPosMean = Vector3::Zero();
             Matrix4 verticesTotalQuadricMatrix = Matrix4(0.0f);
             Set<Mesh::TriangleId> visitedTriangles;
             AABox clusterAABox;

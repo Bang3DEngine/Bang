@@ -25,8 +25,8 @@ public:
     Vector3 GetProjectedVector(const Vector3 &vector) const;
 
 private:
-    Vector3 m_point = Vector3::Zero;
-    Vector3 m_normal = Vector3::Up;
+    Vector3 m_point = Vector3::Zero();
+    Vector3 m_normal = Vector3::Up();
 };
 }
 

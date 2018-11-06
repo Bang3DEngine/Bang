@@ -61,7 +61,7 @@ protected:
 
 private:
     float m_intensity = 1.0f;
-    Color m_color = Color::White;
+    Color m_color = Color::White();
 
     float m_shadowBias = 0.003f;
     Vector2i m_shadowMapSize = Vector2i(256);

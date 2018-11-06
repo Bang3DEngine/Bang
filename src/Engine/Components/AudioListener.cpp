@@ -10,7 +10,10 @@
 
 using namespace Bang;
 
-AudioListener::AudioListener(){CONSTRUCT_CLASS_ID(AudioListener)}
+AudioListener::AudioListener()
+{
+    CONSTRUCT_CLASS_ID(AudioListener)
+}
 
 AudioListener::~AudioListener()
 {
@@ -34,5 +37,5 @@ void AudioListener::UpdateALProperties() const
     alListenerfv(AL_ORIENTATION, listenerOri);
     // alListenerfv(AL_DIRECTION, tr->GetEuler().Data());
     alListenerfv(AL_POSITION, tr->GetPosition().Data());
-    alListenerfv(AL_VELOCITY, Vector3::Zero.Data());
+    alListenerfv(AL_VELOCITY, Vector3::Zero().Data());
 }

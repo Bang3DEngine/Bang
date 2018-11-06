@@ -125,7 +125,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
     GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");
     Camera *cam = GameObjectFactory::CreateDefaultCameraInto(cameraGo);
     cameraGo->GetTransform()->SetPosition(Vector3(5, 4, 3));
-    cameraGo->GetTransform()->LookAt(Vector3::Zero);
+    cameraGo->GetTransform()->LookAt(Vector3::Zero());
     scene->SetCamera(cam);
 
     /*
@@ -594,7 +594,7 @@ UIImageRenderer *GameObjectFactory::AddInnerShadow(GameObject *uiGo,
     innerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     innerShadowImg->SetImageTexture(TextureFactory::GetInnerShadow());
     innerShadowImg->SetSlice9BorderStrokePx(size);
-    innerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
+    innerShadowImg->SetTint(Color::Black().WithAlpha(alpha));
     innerShadowImg->SetDepthMask(false);
     // innerShadowGo->GetTransform()->TranslateLocal( Vector3(0, 0, 0.00001f) );
     innerShadowGo->SetParent(uiGo);
@@ -611,7 +611,7 @@ UIImageRenderer *GameObjectFactory::AddOuterShadow(GameObject *uiGo,
     outerShadowImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     outerShadowImg->SetImageTexture(TextureFactory::GetOuterShadow());
     outerShadowImg->SetSlice9BorderStrokePx(size);
-    outerShadowImg->SetTint(Color::Black.WithAlpha(alpha));
+    outerShadowImg->SetTint(Color::Black().WithAlpha(alpha));
     outerShadowImg->SetDepthMask(false);
     outerShadowGo->GetRectTransform()->TranslateLocal(Vector3(0, 0, 0.001f));
     outerShadowGo->GetRectTransform()->SetMargins(
@@ -733,7 +733,7 @@ Camera *GameObjectFactory::CreateUICameraInto(GameObject *go)
 {
     Camera *cam = go->AddComponent<Camera>();
     cam->SetGammaCorrection(1.0f);
-    cam->SetClearColor(Color::LightGray);
+    cam->SetClearColor(Color::LightGray());
     return cam;
 }
 
@@ -745,11 +745,11 @@ GameObject *GameObjectFactory::CreateUISeparator(LayoutSizeType sizeType,
         GameObjectFactory::CreateUISpacer(sizeType, Vector2(space));
     LineRenderer *lr = sepGo->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
-    lr->GetMaterial()->SetAlbedoColor(Color::Black);
+    lr->GetMaterial()->SetAlbedoColor(Color::Black());
     lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     UILayoutElement *le = sepGo->GetComponent<UILayoutElement>();
-    le->SetPreferredSize(Vector2i::Max(space, Vector2i::One));
+    le->SetPreferredSize(Vector2i::Max(space, Vector2i::One()));
     bool horizontal = (space.x == 0);
     if (horizontal)
     {
@@ -826,7 +826,7 @@ GameObject *GameObjectFactory::CreateCylinderGameObject()
     RH<Mesh> mesh = MeshFactory::GetCylinder();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cylinder");
     BoxCollider *col = go->AddComponent<BoxCollider>();
-    col->SetExtents(Vector3::One);
+    col->SetExtents(Vector3::One());
     return go;
 }
 

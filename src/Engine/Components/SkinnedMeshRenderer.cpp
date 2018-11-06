@@ -63,7 +63,7 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
 
     if (!boneGameObject || boneGameObject == GetRootBoneGameObject())
     {
-        return Matrix4::Identity;
+        return Matrix4::Identity();
     }
 
     const String &boneName = boneGameObject->GetName();
@@ -73,20 +73,20 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
         {
             return tr->GetLocalToParentMatrix();
         }
-        return Matrix4::Identity;
+        return Matrix4::Identity();
     }
 
     GameObject *parentBoneGo = boneGameObject->GetParent();
     String parentBoneGoName = parentBoneGo ? parentBoneGo->GetName() : nullptr;
 
-    Matrix4 boneSpaceToRootSpace = Matrix4::Identity;
+    Matrix4 boneSpaceToRootSpace = Matrix4::Identity();
     if (GetBoneGameObject(boneName))
     {
         boneSpaceToRootSpace = GetBoneSpaceToRootSpaceMatrix(boneName);
     }
     Matrix4 rootSpaceToBoneSpace = boneSpaceToRootSpace.Inversed();
 
-    Matrix4 parentBoneSpaceToRootSpace = Matrix4::Identity;
+    Matrix4 parentBoneSpaceToRootSpace = Matrix4::Identity();
     if (GetBoneGameObject(parentBoneGoName))
     {
         parentBoneSpaceToRootSpace =
@@ -115,7 +115,7 @@ const Matrix4 &SkinnedMeshRenderer::GetInitialTransformMatrixFor(
     {
         return m_initialTransforms.Get(boneName);
     }
-    return Matrix4::Identity;
+    return Matrix4::Identity();
 }
 
 const Map<String, Matrix4> &SkinnedMeshRenderer::GetInitialTransforms() const
@@ -250,7 +250,7 @@ Matrix4 SkinnedMeshRenderer::GetBoneSpaceToRootSpaceMatrix(
 {
     return m_boneSpaceToRootSpaceMatrices.ContainsKey(boneName)
                ? m_boneSpaceToRootSpaceMatrices.Get(boneName)
-               : Matrix4::Identity;
+               : Matrix4::Identity();
 }
 
 void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
@@ -259,7 +259,7 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
     if (Mesh *mesh = GetActiveMesh())
     {
         Array<Matrix4> boneMatricesArray(Animator::MaxNumBones,
-                                         Matrix4::Identity);
+                                         Matrix4::Identity());
         for (const auto &pair : boneMatrices)
         {
             const String &boneName = pair.first;
@@ -398,8 +398,9 @@ void SkinnedMeshRenderer::Reflect()
 
 Matrix4 SkinnedMeshRenderer::GetModelMatrixUniform() const
 {
-    return GetRootBoneGameObject() ? GetRootBoneGameObject()
-                                         ->GetTransform()
-                                         ->GetLocalToWorldMatrix()
-                                   : MeshRenderer::GetModelMatrixUniform();
+    return GetRootBoneGameObject()
+               ? GetRootBoneGameObject()
+                     ->GetTransform()
+                     ->GetLocalToWorldMatrix()
+               : MeshRenderer::GetModelMatrixUniform();
 }

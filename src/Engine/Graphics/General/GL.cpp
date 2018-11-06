@@ -184,14 +184,14 @@ void GL::Init()
     SetGLContextValue(&GL::m_lineWidths, 0.0f);
     SetGLContextValue(&GL::m_stencilValues, SCAST<Byte>(0));
     SetGLContextValue(&GL::m_stencilMasks, 0xFFu);
-    SetGLContextValue(&GL::m_viewportRects, AARecti::Zero);
+    SetGLContextValue(&GL::m_viewportRects, AARecti::Zero());
 
     SetGLContextValue(&GL::m_drawBuffers, {GL::Attachment::COLOR0});
     SetGLContextValue(&GL::m_readBuffers, GL::Attachment::COLOR0);
 
     SetGLContextValue(&GL::m_depthMasks, true);
     SetGLContextValue(&GL::m_depthFuncs, GL::Function::LESS);
-    SetGLContextValue(&GL::m_clearColors, Color::Zero);
+    SetGLContextValue(&GL::m_clearColors, Color::Zero());
     SetGLContextValue(&GL::m_cullFaces, GL::Face::BACK);
 
     SetGLContextValue(&GL::m_scissorRectsPx, AARecti(-1, -1, -1, -1));
@@ -269,8 +269,12 @@ bool GL::CheckError(int line, const String &func, const String &file)
         const char *err =
             reinterpret_cast<const char *>(gluErrorString(glError));
         Debug_Error("OpenGL error \"" << String(err).ToUpper()
-                                      << "\" at function \"" << func << "\" in "
-                                      << file << ":" << line);
+                                      << "\" at function \""
+                                      << func
+                                      << "\" in "
+                                      << file
+                                      << ":"
+                                      << line);
         // GL::PrintGLContext();
         ok = false;
     }
@@ -717,7 +721,7 @@ void GL::Scissor(const AARecti &scissorRectPx)
         }
         else
         {
-            SetGLContextValue(&GL::m_scissorRectsPx, AARecti::Zero);
+            SetGLContextValue(&GL::m_scissorRectsPx, AARecti::Zero());
             GL_CALL(glScissor(0, 0, 0, 0));
         }
     }
@@ -2010,7 +2014,7 @@ Vector2 GL::FromWindowAmountNDCToWindowAmount(const Vector2 &winAmountNDC)
 
 Vector2 GL::FromViewportAmountToViewportAmountNDC(const Vector2 &vpAmount)
 {
-    Vector2 vpSize(Vector2i::Max(GL::GetViewportSize(), Vector2i::One));
+    Vector2 vpSize(Vector2i::Max(GL::GetViewportSize(), Vector2i::One()));
     return (vpAmount / vpSize) * 2.0f;
 }
 
@@ -2037,7 +2041,7 @@ Vector2 GL::FromWindowPointToWindowPointNDC(const Vector2i &winPoint)
 
 Vector2 GL::FromViewportPointToViewportPointNDC(const Vector2 &vpPoint)
 {
-    Vector2i vpSize = Vector2i::Max(Vector2i::One, GL::GetViewportSize());
+    Vector2i vpSize = Vector2i::Max(Vector2i::One(), GL::GetViewportSize());
     Vector2 res = GL::FromPointToPointNDC(vpPoint, Vector2(vpSize));
     return res;
 }

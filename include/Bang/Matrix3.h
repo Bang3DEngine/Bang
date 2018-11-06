@@ -11,7 +11,7 @@ template <class T>  // Part of it copied from glm
 class Matrix3G
 {
 public:
-    const static Matrix3G<T> Identity;
+    static const Matrix3G<T> &Identity();
 
     Vector3G<T> c0, c1, c2;  // Matrix columns from left to right
 

@@ -148,7 +148,7 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
     Array<ILayoutElement *> les = go->GetComponents<ILayoutElement>();
     if (les.IsEmpty())
     {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
 
     for (ILayoutElement *le : les)
@@ -163,7 +163,7 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
 
     if (priorLayoutElms.IsEmpty())
     {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
 
     // Get the max size between the elements ordered by priority.
@@ -203,7 +203,7 @@ Vector2 UILayoutManager::GetSize(GameObject *go, LayoutSizeType sizeType)
         }
     }
 
-    return Vector2::Max(size, Vector2::Zero);
+    return Vector2::Max(size, Vector2::Zero());
 }
 
 Array<GameObject *> UILayoutManager::GetLayoutableChildrenList(GameObject *go)

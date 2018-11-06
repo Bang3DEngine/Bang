@@ -31,7 +31,7 @@ bool Input::IsInsideContextFocus() const
 
 bool Input::IsInsideContext() const
 {
-    return m_context.rect == AARecti::Zero ||
+    return m_context.rect == AARecti::Zero() ||
            m_context.rect.Contains(Input::GetMousePositionWindow());
 }
 
@@ -82,7 +82,7 @@ void Input::OnFrameFinished()
     }
     //
 
-    m_lastMouseWheelDelta = Vector2::Zero;
+    m_lastMouseWheelDelta = Vector2::Zero();
     m_eventInfoQueue.Clear();
 }
 
@@ -409,7 +409,8 @@ const Array<InputEvent> &Input::GetEnqueuedEvents()
 Vector2 Input::GetMouseWheel()
 {
     Input *inp = Input::GetActive();
-    return inp->IsInsideContext() ? inp->m_lastMouseWheelDelta : Vector2::Zero;
+    return inp->IsInsideContext() ? inp->m_lastMouseWheelDelta
+                                  : Vector2::Zero();
 }
 
 Array<MouseButton> Input::GetMouseButtons()
@@ -464,9 +465,10 @@ Array<MouseButton> Input::GetMouseButtonsDown()
 bool Input::GetMouseButton(MouseButton mb)
 {
     Input *inp = Input::GetActive();
-    return inp->IsInsideContextFocus() ? inp->m_mouseInfo.ContainsKey(mb) &&
-                                             inp->m_mouseInfo[mb].pressed
-                                       : false;
+    return inp->IsInsideContextFocus()
+               ? inp->m_mouseInfo.ContainsKey(mb) &&
+                     inp->m_mouseInfo[mb].pressed
+               : false;
 }
 
 bool Input::GetMouseButtonUp(MouseButton mb)
@@ -553,7 +555,7 @@ Vector2i Input::GetMouseDelta()
     Input *inp = Input::GetActive();
     return inp->IsInsideContextFocus()
                ? Vector2i(Input::GetMouseDeltaX(), Input::GetMouseDeltaY())
-               : Vector2i::Zero;
+               : Vector2i::Zero();
 }
 
 void Input::SetMouseWrapping(bool isMouseWrapping)
@@ -581,9 +583,9 @@ const Input::Context &Input::GetContext()
 AARecti Input::GetContextRect()
 {
     Input::Context context = Input::GetContext();
-    if (context.rect == AARecti::Zero)
+    if (context.rect == AARecti::Zero())
     {
-        return AARecti(Vector2i::Zero, Window::GetActive()->GetSize());
+        return AARecti(Vector2i::Zero(), Window::GetActive()->GetSize());
     }
     return context.rect;
 }
@@ -691,7 +693,7 @@ void Input::StopTextInput()
 void Input::Reset()
 {
     m_isADoubleClick = m_lockMouseMovement = m_isMouseInside = false;
-    m_lastMouseWheelDelta = Vector2::Zero;
+    m_lastMouseWheelDelta = Vector2::Zero();
     m_lastMousePosWindow = Vector2i(-1);
     m_lastMouseDownTimestamp.SetNanos(0);
     m_inputText = "";

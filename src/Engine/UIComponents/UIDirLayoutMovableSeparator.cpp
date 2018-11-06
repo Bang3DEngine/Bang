@@ -25,8 +25,10 @@
 
 using namespace Bang;
 
-UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator(){
-    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)}
+UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator()
+{
+    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)
+}
 
 UIDirLayoutMovableSeparator::~UIDirLayoutMovableSeparator()
 {
@@ -117,9 +119,9 @@ void UIDirLayoutMovableSeparator::OnUpdate()
 
         Array<Vector2i> prevNextIdealNeededRoomForNewSize = {
             Vector2i::Max(prevIdealNewPrefSize - prevCurrentSize,
-                          Vector2i::Zero),
+                          Vector2i::Zero()),
             Vector2i::Max(nextIdealNewPrefSize - nextCurrentSize,
-                          Vector2i::Zero)};
+                          Vector2i::Zero())};
 
         Array<GameObject *> prevNextSiblings = {prevSibling, nextSibling};
         for (int prevOrNext : {0, 1})
@@ -142,7 +144,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                 }
             }
             neededRoomForNewSize -=
-                Vector2i::Max(parentFreeSize, Vector2i::Zero);
+                Vector2i::Max(parentFreeSize, Vector2i::Zero());
 
             int j = (isPrev ? nextSiblingIndex : prevSiblingIndex);
             while (j >= 0 && j <= siblings.Size() - 1)
@@ -160,12 +162,12 @@ void UIDirLayoutMovableSeparator::OnUpdate()
                     Vector2i sbMinSize = UILayoutManager::GetMinSize(sibling);
                     Vector2i availableRoom = (sbSize - sbMinSize);
                     Vector2i roomToBeStolen = Vector2i::Clamp(
-                        availableRoom, Vector2i::Zero, neededRoomForNewSize);
+                        availableRoom, Vector2i::Zero(), neededRoomForNewSize);
 
                     if (UILayoutElement *auxLE = childToAuxLE.Get(sibling))
                     {
                         Vector2i newPrefSizeAfterBeingStolen = Vector2i::Max(
-                            sbSize - roomToBeStolen, Vector2i::One);
+                            sbSize - roomToBeStolen, Vector2i::One());
 
                         // Change preferred size to steal :)
                         auxLE->SetPreferredSizeInAxis(
@@ -186,7 +188,7 @@ void UIDirLayoutMovableSeparator::OnUpdate()
 
                 // How much room that we needed we have not been able to get?
                 Vector2i neededRoomLeft =
-                    Vector2i::Max(neededRoomForNewSize, Vector2i::Zero);
+                    Vector2i::Max(neededRoomForNewSize, Vector2i::Zero());
 
                 // Assign new preferred size to prev next
                 Vector2i stolenRoom =
@@ -325,7 +327,7 @@ UIDirLayoutMovableSeparator *UIDirLayoutMovableSeparator::CreateInto(
 
     LineRenderer *lr = go->AddComponent<LineRenderer>();
     lr->SetMaterial(MaterialFactory::GetUIImage().Get());
-    lr->GetMaterial()->SetAlbedoColor(Color::DarkGray);
+    lr->GetMaterial()->SetAlbedoColor(Color::DarkGray());
     lr->SetViewProjMode(GL::ViewProjMode::CANVAS);
 
     dirLayoutSep->p_lineRenderer = lr;

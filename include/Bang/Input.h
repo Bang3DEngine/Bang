@@ -41,8 +41,8 @@ struct InputEvent
     MouseButton mouseButton = MouseButton::NONE;
     bool autoRepeat = false;
     Time timestamp = Time::Infinity();
-    Vector2i mousePosWindow = Vector2i::Zero;
-    Vector2 wheelDelta = Vector2::Zero;
+    Vector2i mousePosWindow = Vector2i::Zero();
+    Vector2 wheelDelta = Vector2::Zero();
 
     bool IsMouseType() const;
     Vector2i GetMousePosWindow() const;
@@ -144,12 +144,12 @@ private:
     bool m_isADoubleClick = false;
     bool m_lockMouseMovement = false;
     bool m_isMouseInside = false;
-    Vector2 m_lastMouseWheelDelta = Vector2::Zero;
+    Vector2 m_lastMouseWheelDelta = Vector2::Zero();
 
     String m_inputText = "";
 
-    Vector2i m_lastMousePosWindow = Vector2i::Zero;
-    Vector2i m_lastClickMousePos = Vector2i::Zero;
+    Vector2i m_lastMousePosWindow = Vector2i::Zero();
+    Vector2i m_lastClickMousePos = Vector2i::Zero();
 
     Array<Key> m_keysUp;
     Array<Key> m_keysDown;

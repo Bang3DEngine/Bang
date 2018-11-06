@@ -44,7 +44,7 @@ UITextRenderer::UITextRenderer() : UIRenderer()
     SetFont(font.Get());
     SetContent("");
     SetTextSize(20);
-    SetTextColor(Color::Black);
+    SetTextColor(Color::Black());
 
     SetRenderPrimitive(GL::Primitive::TRIANGLES);
     OnChanged();
@@ -62,8 +62,8 @@ void UITextRenderer::CalculateLayout(Axis axis)
         return;
     }
 
-    Vector2i minSize = Vector2i::Zero;
-    Vector2i prefSize = Vector2i::Zero;
+    Vector2i minSize = Vector2i::Zero();
+    Vector2i prefSize = Vector2i::Zero();
     if (axis == Axis::HORIZONTAL)
     {
         prefSize = TextFormatter::GetMinimumHeightTextSize(
@@ -85,7 +85,7 @@ void UITextRenderer::CalculateLayout(Axis axis)
                 IsWrapping(),
                 &numLines);
         AARect rect =
-            charRects.Size() > 0 ? charRects.Front().rectPx : AARect::Zero;
+            charRects.Size() > 0 ? charRects.Front().rectPx : AARect::Zero();
         for (const TextFormatter::CharRect &cr : charRects)
         {
             rect = AARect::Union(rect, cr.rectPx);

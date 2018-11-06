@@ -50,24 +50,24 @@ ReflectionProbe::ReflectionProbe()
     {
         GL::CubeMapDir cmDir = GL::GetAllCubeMapDirs()[i];
 
-        Vector3 lookDir = Vector3::Forward;
-        Vector3 upDir = Vector3::Up;
+        Vector3 lookDir = Vector3::Forward();
+        Vector3 upDir = Vector3::Up();
         switch (cmDir)
         {
             case GL::CubeMapDir::TOP:
-                lookDir = Vector3::Up;
-                upDir = Vector3::Right;
+                lookDir = Vector3::Up();
+                upDir = Vector3::Right();
                 break;
 
             case GL::CubeMapDir::BOT:
-                lookDir = Vector3::Down;
-                upDir = Vector3::Right;
+                lookDir = Vector3::Down();
+                upDir = Vector3::Right();
                 break;
 
-            case GL::CubeMapDir::LEFT: lookDir = Vector3::Left; break;
-            case GL::CubeMapDir::RIGHT: lookDir = Vector3::Right; break;
-            case GL::CubeMapDir::BACK: lookDir = Vector3::Back; break;
-            case GL::CubeMapDir::FRONT: lookDir = Vector3::Forward; break;
+            case GL::CubeMapDir::LEFT: lookDir = Vector3::Left(); break;
+            case GL::CubeMapDir::RIGHT: lookDir = Vector3::Right(); break;
+            case GL::CubeMapDir::BACK: lookDir = Vector3::Back(); break;
+            case GL::CubeMapDir::FRONT: lookDir = Vector3::Forward(); break;
         }
 
         GameObject *camGo = GameObjectFactory::CreateGameObject();
@@ -89,7 +89,7 @@ ReflectionProbe::ReflectionProbe()
     SetRenderSize(256);
     SetCamerasZNear(0.01f);
     SetCamerasZFar(100.0f);
-    SetCamerasClearColor(Color::Gray);
+    SetCamerasClearColor(Color::Gray());
     SetCamerasClearMode(CameraClearMode::COLOR);
     SetCamerasSkyBoxTexture(TextureFactory::GetDefaultSkybox());
 }
@@ -343,7 +343,7 @@ void ReflectionProbe::SetRendererUniforms(Renderer *renderer, ShaderProgram *sp)
             }
             else
             {
-                sp->SetVector3("B_ReflectionProbeSize", -Vector3::One, false);
+                sp->SetVector3("B_ReflectionProbeSize", -Vector3::One(), false);
             }
 
             sp->SetBool("B_UseReflectionProbe", true, false);

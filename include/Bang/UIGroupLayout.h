@@ -64,8 +64,8 @@ private:
     Stretch m_childrenHorizontalStretch = Undef<Stretch>();
     Stretch m_childrenVerticalStretch = Undef<Stretch>();
 
-    Vector2i m_paddingLeftBot = Vector2i::Zero;
-    Vector2i m_paddingRightTop = Vector2i::Zero;
+    Vector2i m_paddingLeftBot = Vector2i::Zero();
+    Vector2i m_paddingRightTop = Vector2i::Zero();
 };
 }
 

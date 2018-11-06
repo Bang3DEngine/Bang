@@ -16,11 +16,11 @@ class Sphere;
 class AABox
 {
 private:
-    Vector3 m_minv = Vector3::Infinity;
-    Vector3 m_maxv = Vector3::NInfinity;
+    Vector3 m_minv = Vector3::Infinity();
+    Vector3 m_maxv = Vector3::NInfinity();
 
 public:
-    static AABox Empty;
+    static const AABox &Empty();
 
     AABox();
     AABox(float minx,

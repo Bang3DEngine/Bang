@@ -149,7 +149,8 @@ void UIDragDroppable::OnDragStarted()
 
                 p_dragDropImageRenderer =
                     m_dragDropGameObject->AddComponent<UIImageRenderer>();
-                p_dragDropImageRenderer->SetTint(Color::White.WithAlpha(0.5f));
+                p_dragDropImageRenderer->SetTint(
+                    Color::White().WithAlpha(0.5f));
                 p_dragDropImageRenderer->SetMode(
                     UIImageRenderer::Mode::TEXTURE);
 
@@ -214,13 +215,13 @@ void UIDragDroppable::MoveDragDropGameObjectTo(const Vector2i &pos)
 
         Vector2i offsetedPos = pos - m_dragGrabOffset;
         RectTransform *ddGoRT = m_dragDropGameObject->GetRectTransform();
-        ddGoRT->SetPivotPosition(Vector2::Zero);
+        ddGoRT->SetPivotPosition(Vector2::Zero());
         ddGoRT->SetMarginLeftBot(offsetedPos);
         ddGoRT->SetMarginRightTop(-ddGoRT->GetMarginLeftBot() +
                                   -thisRect.GetSize());
-        ddGoRT->SetAnchorMin(-Vector2::One);
-        ddGoRT->SetAnchorMax(-Vector2::One);
-        ddGoRT->SetPosition(Vector3::Zero);  // thisRT->GetPosition() );
+        ddGoRT->SetAnchorMin(-Vector2::One());
+        ddGoRT->SetAnchorMax(-Vector2::One());
+        ddGoRT->SetPosition(Vector3::Zero());  // thisRT->GetPosition() );
         ddGoRT->SetRotation(thisRT->GetRotation());
         ddGoRT->SetScale(thisRT->GetScale());
         ddGoRT->TranslateLocal(Vector3(0, 0, -0.3f));

@@ -30,10 +30,10 @@ public:
 private:
     struct VertexData  // Simple struct to hold vertex data
     {
-        Vector3 pos = Vector3::Zero;
-        Vector3 normal = Vector3::Zero;
-        Vector2 uv = Vector2::Zero;
-        Vector3 tangent = Vector3::Zero;
+        Vector3 pos = Vector3::Zero();
+        Vector3 normal = Vector3::Zero();
+        Vector2 uv = Vector2::Zero();
+        Vector3 tangent = Vector3::Zero();
     };
     using VertexCluster = UMap<Mesh::VertexId, VertexData>;
 

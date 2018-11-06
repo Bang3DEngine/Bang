@@ -9,6 +9,25 @@ namespace Bang
 class Color
 {
 public:
+    static const Color &Red();
+    static const Color &Orange();
+    static const Color &Yellow();
+    static const Color &Green();
+    static const Color &Turquoise();
+    static const Color &VeryLightBlue();
+    static const Color &LightBlue();
+    static const Color &Blue();
+    static const Color &DarkBlue();
+    static const Color &Purple();
+    static const Color &Pink();
+    static const Color &Black();
+    static const Color &Gray();
+    static const Color &LightGray();
+    static const Color &DarkGray();
+    static const Color &White();
+    static const Color &Zero();
+    static const Color &One();
+
     float r, g, b, a;
 
     Color();
@@ -49,25 +68,6 @@ public:
 
     static Color FromVector3(const Vector3 &v);
     static Color FromVector4(const Vector4 &v);
-
-    const static Color Red;
-    const static Color Orange;
-    const static Color Yellow;
-    const static Color Green;
-    const static Color Turquoise;
-    const static Color VeryLightBlue;
-    const static Color LightBlue;
-    const static Color Blue;
-    const static Color DarkBlue;
-    const static Color Purple;
-    const static Color Pink;
-    const static Color Black;
-    const static Color Gray;
-    const static Color LightGray;
-    const static Color DarkGray;
-    const static Color White;
-    const static Color Zero;
-    const static Color One;
 };
 
 Color operator+(float m, const Color &v);

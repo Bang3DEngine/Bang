@@ -53,7 +53,7 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
                     Uint32 color32 = charPixels[y * charBitmap->w + x];
                     Uint32 alpha = ((color32 & fmt->Amask) >> fmt->Ashift)
                                    << fmt->Aloss;
-                    Color pxColor = Color::Zero;
+                    Color pxColor = Color::Zero();
                     pxColor.a = (alpha / 255.0f);
                     charImage.SetPixel(x, y, pxColor);
                 }
@@ -67,7 +67,7 @@ bool FontSheetCreator::LoadAtlasTexture(TTF_Font *ttfFont,
         else
         {
             Image empty;
-            empty.Create(1, 1, Color::Zero);
+            empty.Create(1, 1, Color::Zero());
             charImages.PushBack(empty);
         }
     }
@@ -111,7 +111,7 @@ Image FontSheetCreator::PackImages(const Array<Image> &images,
     int totalHeight = (imagesPerSide) * (maxImgHeight + (margin * 2));
 
     Image result;
-    result.Create(totalWidth, totalHeight, Color::Zero);
+    result.Create(totalWidth, totalHeight, Color::Zero());
 
     maxImgHeight = 0;
     int currentRowImages = 0;
@@ -141,7 +141,7 @@ Image FontSheetCreator::PackImages(const Array<Image> &images,
     }
 
     Vector2i minPixel = result.GetSize();
-    Vector2i maxPixel = Vector2i::Zero;
+    Vector2i maxPixel = Vector2i::Zero();
     for (int y = 0; y < result.GetHeight(); ++y)
     {
         for (int x = 0; x < result.GetWidth(); ++x)
@@ -155,7 +155,7 @@ Image FontSheetCreator::PackImages(const Array<Image> &images,
         }
     }
 
-    maxPixel += Vector2i::One;
+    maxPixel += Vector2i::One();
     Vector2i fittedSize = (maxPixel - minPixel);
     Image fittedResult(fittedSize.x, fittedSize.y);
     fittedResult = result.GetSubImage(AARecti(minPixel, maxPixel));

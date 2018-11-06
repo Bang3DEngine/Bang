@@ -104,11 +104,11 @@ protected:
     float m_lineWidth = 1.0f;
     float m_normalMapMultiplyFactor = 1.0f;
     RenderPass m_renderPass = RenderPass::SCENE;
-    Color m_albedoColor = Color::White;
-    Vector2 m_albedoUvOffset = Vector2::Zero;
-    Vector2 m_albedoUvMultiply = Vector2::One;
-    Vector2 m_normalMapUvOffset = Vector2::Zero;
-    Vector2 m_normalMapUvMultiply = Vector2::One;
+    Color m_albedoColor = Color::White();
+    Vector2 m_albedoUvOffset = Vector2::Zero();
+    Vector2 m_albedoUvMultiply = Vector2::One();
+    Vector2 m_normalMapUvOffset = Vector2::Zero();
+    Vector2 m_normalMapUvMultiply = Vector2::One();
     GL::CullFaceExt m_cullFace = GL::CullFaceExt::BACK;
     float m_roughness = 1.0f;
     float m_metalness = 0.5f;

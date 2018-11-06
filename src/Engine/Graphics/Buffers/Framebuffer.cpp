@@ -238,7 +238,7 @@ Color Framebuffer::ReadColor(int x, int y, GL::Attachment attachment) const
 
 bool Framebuffer::Resize(const Vector2i &size)
 {
-    m_size = Vector2i::Max(size, Vector2i::One);
+    m_size = Vector2i::Max(size, Vector2i::One());
 
     bool resized = false;
     for (const auto &it : m_attachments_To_Texture)

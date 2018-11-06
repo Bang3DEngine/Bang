@@ -21,9 +21,9 @@ public:
     Collider *GetOtherCollider() const;
 
 private:
-    Vector3 m_point = Vector3::Zero;
-    Vector3 m_normal = Vector3::Zero;
-    Vector3 m_impulse = Vector3::Zero;
+    Vector3 m_point = Vector3::Zero();
+    Vector3 m_normal = Vector3::Zero();
+    Vector3 m_impulse = Vector3::Zero();
     float m_separation = 0.0f;
     Collider *p_otherCollider = nullptr;
 

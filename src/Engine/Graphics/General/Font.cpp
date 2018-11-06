@@ -192,7 +192,7 @@ Vector2 Font::GetCharMaxUv(int fontSize, char c) const
     }
     else
     {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
 }
 Vector2 Font::GetCharMinUv(int fontSize, char c) const
@@ -205,7 +205,7 @@ Vector2 Font::GetCharMinUv(int fontSize, char c) const
     }
     else
     {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
 }
 
@@ -260,11 +260,11 @@ Vector2i Font::GetAtlasCharRectSize(int fontSize, char c) const
 {
     if (!GetReferenceFont())
     {
-        return Vector2i::Zero;
+        return Vector2i::Zero();
     }
     GetFontAtlas(fontSize);  // Load if not loaded yet
     const AARecti &charRect = m_cachedAtlasCharRects[fontSize][c];
-    return charRect.IsValid() ? charRect.GetSize() : Vector2i::Zero;
+    return charRect.IsValid() ? charRect.GetSize() : Vector2i::Zero();
 }
 
 bool Font::HasFontSizeLoaded(int fontSize) const

@@ -23,7 +23,7 @@ public:
     const Vector2 &GetDirection() const;
 
 private:
-    Vector2 m_origin = Vector2::Zero;
+    Vector2 m_origin = Vector2::Zero();
     Vector2 m_direction = Vector2(1, 0);
 };
 }

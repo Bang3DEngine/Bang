@@ -17,7 +17,7 @@ UITextCursor::UITextCursor()
     CONSTRUCT_CLASS_ID(UITextCursor)
 
     SetMaterial(MaterialFactory::GetUIImage().Get());
-    GetMaterial()->SetAlbedoColor(Color::Black);
+    GetMaterial()->SetAlbedoColor(Color::Black());
     SetViewProjMode(GL::ViewProjMode::CANVAS);
     SetStroke(1.0f);
 

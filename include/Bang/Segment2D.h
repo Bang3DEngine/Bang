@@ -22,8 +22,8 @@ public:
     const Vector2 &GetDestiny() const;
 
 private:
-    Vector2 m_origin = Vector2::Zero;
-    Vector2 m_destiny = Vector2::Zero;
+    Vector2 m_origin = Vector2::Zero();
+    Vector2 m_destiny = Vector2::Zero();
 };
 }
 

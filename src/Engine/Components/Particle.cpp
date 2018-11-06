@@ -72,7 +72,7 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
                                          float dtSecs,
                                          const Particle::Parameters &params)
 {
-    pData->frictionForce = Vector3::Zero;
+    pData->frictionForce = Vector3::Zero();
     if (params.computeCollisions && params.colliders.Size() >= 1)
     {
         Vector3 pPrevPos = pData->prevPosition;

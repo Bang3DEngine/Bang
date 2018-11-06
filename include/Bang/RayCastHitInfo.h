@@ -25,9 +25,9 @@ public:
 private:
     float m_distance = 0.0f;
     uint32_t m_faceIndex = 0;
-    Vector2 m_uv = Vector2::Zero;
-    Vector3 m_normal = Vector3::Zero;
-    Vector3 m_position = Vector3::Zero;
+    Vector2 m_uv = Vector2::Zero();
+    Vector3 m_normal = Vector3::Zero();
+    Vector3 m_position = Vector3::Zero();
 
     Collider *p_collider = nullptr;
 

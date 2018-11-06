@@ -133,7 +133,7 @@ void Transform::SetScale(float s)
 void Transform::SetScale(const Vector3 &v)
 {
     GameObject *p = GetGameObject()->GetParent();
-    Vector3 parentScale = p ? p->GetTransform()->GetScale() : Vector3::One;
+    Vector3 parentScale = p ? p->GetTransform()->GetScale() : Vector3::One();
     parentScale = Vector3::Max(Vector3(0.0001f), parentScale);
     SetLocalScale(1.0f / parentScale * v);
 }
@@ -362,13 +362,13 @@ Vector3 Transform::GetScale() const
 {
     GameObject *parent = GetGameObject()->GetParent();
     Transform *parentTr = (parent ? parent->GetTransform() : nullptr);
-    Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One;
+    Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One();
     return parentScale * GetLocalScale();
 }
 
 Vector3 Transform::GetForward() const
 {
-    return FromLocalToWorldDirection(Vector3::Forward).Normalized();
+    return FromLocalToWorldDirection(Vector3::Forward()).Normalized();
 }
 
 Vector3 Transform::GetBack() const
@@ -378,7 +378,7 @@ Vector3 Transform::GetBack() const
 
 Vector3 Transform::GetRight() const
 {
-    return FromLocalToWorldDirection(Vector3::Right).Normalized();
+    return FromLocalToWorldDirection(Vector3::Right()).Normalized();
 }
 
 Vector3 Transform::GetLeft() const
@@ -388,7 +388,7 @@ Vector3 Transform::GetLeft() const
 
 Vector3 Transform::GetUp() const
 {
-    return FromLocalToWorldDirection(Vector3::Up).Normalized();
+    return FromLocalToWorldDirection(Vector3::Up()).Normalized();
 }
 
 Vector3 Transform::GetDown() const

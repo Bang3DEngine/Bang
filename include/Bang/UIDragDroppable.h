@@ -53,7 +53,7 @@ private:
     Time m_pressTime;
     bool m_beingDragged = false;
     bool m_showDragDropGameObject = true;
-    Vector2i m_dragGrabOffset = Vector2i::Zero;
+    Vector2i m_dragGrabOffset = Vector2i::Zero();
 
     Time m_dragStartTime;
     GameObject *m_dragDropGameObject = nullptr;

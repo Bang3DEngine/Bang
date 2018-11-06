@@ -134,18 +134,19 @@ public:
 private:
     mutable Matrix4 m_rectLocalToWorldMatrix;
     mutable Matrix4 m_rectLocalToWorldMatrixInv;
-    mutable AARecti m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero;
+    mutable AARecti m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero();
 
     mutable Matrix4 m_rectTransformLocalToWorldMatrix;
     mutable Matrix4 m_rectTransformLocalToWorldMatrixInv;
-    mutable AARecti m_vpInWhichRectTransformLocalToWorldWasCalc = AARecti::Zero;
+    mutable AARecti m_vpInWhichRectTransformLocalToWorldWasCalc =
+        AARecti::Zero();
 
-    Vector2i m_marginRightTop = Vector2i::Zero;
-    Vector2i m_marginLeftBot = Vector2i::Zero;
+    Vector2i m_marginRightTop = Vector2i::Zero();
+    Vector2i m_marginLeftBot = Vector2i::Zero();
 
-    Vector2 m_pivotPosition = Vector2::Zero;
-    Vector2 m_anchorMin = -Vector2::One;
-    Vector2 m_anchorMax = Vector2::One;
+    Vector2 m_pivotPosition = Vector2::Zero();
+    Vector2 m_anchorMin = -Vector2::One();
+    Vector2 m_anchorMax = Vector2::One();
 
     void WarnWrongAnchorsIfNeeded();
 

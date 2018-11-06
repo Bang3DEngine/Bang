@@ -292,7 +292,7 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
         const String &boneName = it.first;
         const auto &posKeyFrames = it.second;
 
-        Vector3 bonePosition = Vector3::Zero;
+        Vector3 bonePosition = Vector3::Zero();
 
         Array<KeyFrame<Vector3>> positionInterpKeyFrames =
             GetConsecutiveKeyFrames(posKeyFrames, timeInFrames);
@@ -320,7 +320,7 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
         const String &boneName = it.first;
         const auto &rotKeyFrames = it.second;
 
-        Quaternion boneRotation = Quaternion::Identity;
+        Quaternion boneRotation = Quaternion::Identity();
 
         Array<KeyFrame<Quaternion>> rotationInterpKeyFrames =
             GetConsecutiveKeyFrames(rotKeyFrames, timeInFrames);
@@ -348,7 +348,7 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
         const String &boneName = it.first;
         const auto &scaleKeyFrames = it.second;
 
-        Vector3 boneScale = Vector3::One;
+        Vector3 boneScale = Vector3::One();
         Array<KeyFrame<Vector3>> scaleInterpKeyFrames =
             GetConsecutiveKeyFrames(scaleKeyFrames, timeInFrames);
 

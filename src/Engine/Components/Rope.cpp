@@ -107,7 +107,7 @@ void Rope::SetUniformsOnBind(ShaderProgram *sp)
 {
     LineRenderer::SetUniformsOnBind(sp);
 
-    GLUniforms::SetModelMatrix(Matrix4::Identity);
+    GLUniforms::SetModelMatrix(Matrix4::Identity());
     GLUniforms::SetAllUniformsToShaderProgram(sp);
 }
 
@@ -121,7 +121,7 @@ void Rope::OnRender()
 
     if (GetActiveMaterial())
     {
-        GetActiveMaterial()->SetAlbedoColor(Color::White);
+        GetActiveMaterial()->SetAlbedoColor(Color::White());
         GetActiveMaterial()->Bind();
     }
     LineRenderer::OnRender();
@@ -130,7 +130,7 @@ void Rope::OnRender()
     {
         if (GetActiveMaterial())
         {
-            GetActiveMaterial()->SetAlbedoColor(Color::Red);
+            GetActiveMaterial()->SetAlbedoColor(Color::Red());
             GetActiveMaterial()->SetReceivesLighting(false);
             GetActiveMaterial()->Bind();
         }
@@ -198,7 +198,7 @@ void Rope::SetNumPoints(uint numPoints_)
     uint numPoints = Math::Max(numPoints_, 2u);
     if (numPoints != GetNumPoints())
     {
-        m_points.Resize(numPoints, Vector3::Zero);
+        m_points.Resize(numPoints, Vector3::Zero());
         m_fixedPoints.Resize(numPoints, false);
         m_particlesData.Resize(numPoints);
         m_validLineRendererPoints = false;
@@ -287,7 +287,7 @@ void Rope::InitParticle(uint i, const Particle::Parameters &params)
         else
         {
             pData->position = m_particlesData[i - 1].position +
-                              Vector3::Down * GetPartLength();
+                              Vector3::Down() * GetPartLength();
         }
 
         pData->prevPosition = pData->position;

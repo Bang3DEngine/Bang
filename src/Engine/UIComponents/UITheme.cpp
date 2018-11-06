@@ -19,7 +19,7 @@ Color UITheme::GetFocusedBorderColor()
 
 Color UITheme::GetNotFocusedBorderColor()
 {
-    return Color::Black;
+    return Color::Black();
 }
 
 float UITheme::GetFocusedBorderStroke()
@@ -34,17 +34,17 @@ float UITheme::GetNotFocusedBorderStroke()
 
 Color UITheme::GetArrowsColor()
 {
-    return Color::Black;
+    return Color::Black();
 }
 
 Color UITheme::GetInputsBackgroundColor()
 {
-    return Color::White;
+    return Color::White();
 }
 
 Color UITheme::GetTickColor()
 {
-    return Color::Black;  // UITheme::GetBaseColor();
+    return Color::Black();  // UITheme::GetBaseColor();
 }
 
 Color UITheme::GetCheckBoxBackgroundColor()
@@ -59,7 +59,7 @@ Color UITheme::GetInputTextBackgroundColor()
 
 Color UITheme::GetInputTextBlockedBackgroundColor()
 {
-    return Color::Zero;
+    return Color::Zero();
 }
 
 Color UITheme::GetSelectionTextColor()
@@ -69,5 +69,5 @@ Color UITheme::GetSelectionTextColor()
 
 Color UITheme::GetBaseColor()
 {
-    return Color::Orange;
+    return Color::Orange();
 }

@@ -33,7 +33,7 @@ public:
 
 private:
     bool m_wasScissorEnabled = false;
-    AARecti m_prevScissor = AARecti::Zero;
+    AARecti m_prevScissor = AARecti::Zero();
 
     bool m_masking = true;
 };

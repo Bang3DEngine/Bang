@@ -189,7 +189,7 @@ void DebugRenderer::RenderQuad(const Quad &quad,
                                culling,
                                depthTest);
 
-    if (bordersColor != Color::Zero)
+    if (bordersColor != Color::Zero())
     {
         RenderLine(quad[0], quad[1], bordersColor, time, 1.0f, depthTest);
         RenderLine(quad[1], quad[2], bordersColor, time, 1.0f, depthTest);
@@ -259,10 +259,10 @@ DebugRenderer::DebugRenderPrimitive *DebugRenderer::CreateDebugRenderPrimitive(
 
     DebugRenderPrimitive drp;
     drp.primitive = primitive;
-    drp.p0 = (points.Size() >= 1 ? points[0] : Vector3::Zero);
-    drp.p1 = (points.Size() >= 2 ? points[1] : Vector3::Zero);
-    drp.p2 = (points.Size() >= 3 ? points[2] : Vector3::Zero);
-    drp.p3 = (points.Size() >= 4 ? points[3] : Vector3::Zero);
+    drp.p0 = (points.Size() >= 1 ? points[0] : Vector3::Zero());
+    drp.p1 = (points.Size() >= 2 ? points[1] : Vector3::Zero());
+    drp.p2 = (points.Size() >= 3 ? points[2] : Vector3::Zero());
+    drp.p3 = (points.Size() >= 4 ? points[3] : Vector3::Zero());
     drp.color = color;
     drp.destroyTime = Time::GetNow() + Time::Seconds(time);
     drp.thickness = thickness;

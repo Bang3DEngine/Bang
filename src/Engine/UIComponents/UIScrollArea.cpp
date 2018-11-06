@@ -12,7 +12,10 @@
 
 using namespace Bang;
 
-UIScrollArea::UIScrollArea(){CONSTRUCT_CLASS_ID(UIScrollArea)}
+UIScrollArea::UIScrollArea()
+{
+    CONSTRUCT_CLASS_ID(UIScrollArea)
+}
 
 UIScrollArea::~UIScrollArea()
 {
@@ -96,7 +99,7 @@ UIScrollArea *UIScrollArea::CreateInto(GameObject *go)
     UIScrollArea *scrollArea = go->AddComponent<UIScrollArea>();
 
     UIImageRenderer *bg = go->AddComponent<UIImageRenderer>();
-    bg->SetTint(Color::White);
+    bg->SetTint(Color::White());
 
     UIRectMask *mask = go->AddComponent<UIRectMask>();
 

@@ -213,7 +213,7 @@ void PostProcessEffectSSAO::SetNumRandomSamples(int numRandomSamples)
         m_randomHemisphereOffsets.Clear();
         for (int i = 0; i < GetNumRandomSamples(); ++i)
         {
-            Vector3 randV = Vector3::Zero;
+            Vector3 randV = Vector3::Zero();
             if (GetSeparable())
             {
                 int j = (i > GetNumRandomSamples() / 2) ? 1 : 0;

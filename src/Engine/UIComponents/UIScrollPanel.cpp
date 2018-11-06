@@ -22,7 +22,10 @@ using namespace Bang;
 
 const float UIScrollPanel::WheelScrollSpeedPx = 20.0f;
 
-UIScrollPanel::UIScrollPanel(){CONSTRUCT_CLASS_ID(UIScrollPanel)}
+UIScrollPanel::UIScrollPanel()
+{
+    CONSTRUCT_CLASS_ID(UIScrollPanel)
+}
 
 UIScrollPanel::~UIScrollPanel()
 {
@@ -30,7 +33,7 @@ UIScrollPanel::~UIScrollPanel()
 
 void UIScrollPanel::UpdateScrollUI()
 {
-    Vector2 contentSize = Vector2::Max(GetContentSize(), Vector2::One);
+    Vector2 contentSize = Vector2::Max(GetContentSize(), Vector2::One());
     Vector2 containerSize = GetContainerSize();
 
     // Handle vertical/horizontal show mode
@@ -44,7 +47,7 @@ void UIScrollPanel::UpdateScrollUI()
 
     // Set bar length
     Vector2 sizeProp = Vector2(containerSize) / Vector2(contentSize);
-    sizeProp = Vector2::Clamp(sizeProp, Vector2(0.1f), Vector2::One);
+    sizeProp = Vector2::Clamp(sizeProp, Vector2(0.1f), Vector2::One());
     GetHorizontalScrollBar()->SetLengthPercent(sizeProp.x);
     GetVerticalScrollBar()->SetLengthPercent(sizeProp.y);
 
@@ -208,7 +211,7 @@ void UIScrollPanel::SetScrolling(const Vector2i &scrolling)
 void UIScrollPanel::SetScrollingPercent(const Vector2 &scrollPerc)
 {
     Vector2 scrollPercClamped =
-        Vector2::Clamp(scrollPerc, Vector2::Zero, Vector2::One);
+        Vector2::Clamp(scrollPerc, Vector2::Zero(), Vector2::One());
     GetScrollArea()->SetScrolling(Vector2i(Vector2::Round(
         scrollPercClamped * Vector2(-1, 1) * GetMaxScrollLength())));
     GetHorizontalScrollBar()->SetScrollingPercent(scrollPercClamped.x);
@@ -226,7 +229,7 @@ Vector2 UIScrollPanel::GetScrollingPercent() const
         Vector2(GetHorizontalScrollBar()->GetScrollingPercent(),
                 GetVerticalScrollBar()->GetScrollingPercent());
     scrollingPercent =
-        Vector2::Clamp(scrollingPercent, Vector2::Zero, Vector2::One);
+        Vector2::Clamp(scrollingPercent, Vector2::Zero(), Vector2::One());
     return scrollingPercent;
 }
 
@@ -275,7 +278,7 @@ Vector2 UIScrollPanel::GetContentSize() const
     GameObject *containedGo = GetScrollArea()->GetContainedGameObject();
     return containedGo
                ? containedGo->GetRectTransform()->GetViewportRect().GetSize()
-               : Vector2::Zero;
+               : Vector2::Zero();
 }
 
 Vector2 UIScrollPanel::GetContainerSize() const
@@ -285,7 +288,7 @@ Vector2 UIScrollPanel::GetContainerSize() const
 
 Vector2 UIScrollPanel::GetMaxScrollLength() const
 {
-    return Vector2::Max(GetContentSize() - GetContainerSize(), Vector2::Zero);
+    return Vector2::Max(GetContentSize() - GetContainerSize(), Vector2::Zero());
 }
 
 UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
@@ -296,12 +299,12 @@ UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
     switch (event.type)
     {
         case UIEvent::Type::FOCUS_TAKEN:
-            p_border->SetTint(Color::Orange);
+            p_border->SetTint(Color::Orange());
             return UIEventResult::INTERCEPT;
             break;
 
         case UIEvent::Type::FOCUS_LOST:
-            p_border->SetTint(Color::Black);
+            p_border->SetTint(Color::Black());
             return UIEventResult::INTERCEPT;
             break;
 
@@ -329,12 +332,12 @@ UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
                 break;
 
                 case Key::HOME:
-                    SetScrollingPercent(Vector2::Zero);
+                    SetScrollingPercent(Vector2::Zero());
                     return UIEventResult::INTERCEPT;
                     break;
 
                 case Key::END:
-                    SetScrollingPercent(Vector2::One);
+                    SetScrollingPercent(Vector2::One());
                     return UIEventResult::INTERCEPT;
                     break;
 
@@ -345,7 +348,8 @@ UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
 
         case UIEvent::Type::WHEEL:
         {
-            Vector2 contentSize = Vector2::Max(GetContentSize(), Vector2::One);
+            Vector2 contentSize =
+                Vector2::Max(GetContentSize(), Vector2::One());
             Vector2 containerSize = GetContainerSize();
 
             Vector2 scrollMaxAmount = GetMaxScrollLength();
@@ -353,8 +357,8 @@ UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
             Vector2 scrollingPercent =
                 Vector2(GetHorizontalScrollBar()->GetScrollingPercent(),
                         GetVerticalScrollBar()->GetScrollingPercent());
-            scrollingPercent =
-                Vector2::Clamp(scrollingPercent, Vector2::Zero, Vector2::One);
+            scrollingPercent = Vector2::Clamp(
+                scrollingPercent, Vector2::Zero(), Vector2::One());
             Vector2i scrolling(scrollingPercent * scrollMaxAmount);
             if (contentSize.x > containerSize.x ||
                 contentSize.y > containerSize.y)
@@ -368,7 +372,7 @@ UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,
                         Vector2(mouseWheelPx) / contentSize;
                     scrollingPercent -= mouseWheelPercent;
                     scrollingPercent = Vector2::Clamp(
-                        scrollingPercent, Vector2::Zero, Vector2::One);
+                        scrollingPercent, Vector2::Zero(), Vector2::One());
                 }
 
                 // Apply scrollings

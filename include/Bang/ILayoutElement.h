@@ -36,9 +36,9 @@ protected:
 
 private:
     int m_layoutPriority = 0;
-    mutable Vector2i m_calculatedMinSize = -Vector2i::One;
-    mutable Vector2i m_calculatedPreferredSize = -Vector2i::One;
-    mutable Vector2 m_calculatedFlexibleSize = -Vector2::One;
+    mutable Vector2i m_calculatedMinSize = -Vector2i::One();
+    mutable Vector2i m_calculatedPreferredSize = -Vector2i::One();
+    mutable Vector2 m_calculatedFlexibleSize = -Vector2::One();
 
     virtual void CalculateLayout(Axis axis) = 0;
     void _CalculateLayout(Axis axis);

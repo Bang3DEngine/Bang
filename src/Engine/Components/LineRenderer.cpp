@@ -77,7 +77,7 @@ AABox LineRenderer::GetAABBox() const
 {
     if (m_points.IsEmpty())
     {
-        return AABox::Empty;
+        return AABox::Empty();
     }
 
     Vector3 minp = m_points.Front();

@@ -67,7 +67,7 @@ Vector2 RectTransform::FromViewportAmountToLocalAmountNDC(
 {
     Rect parentWinRect = GetParentViewportRect();
     Vector2 parentSizePxVp =
-        Vector2::Max(Vector2::One, parentWinRect.GetSize());
+        Vector2::Max(Vector2::One(), parentWinRect.GetSize());
     return GL::FromAmountToAmountNDC(Vector2(vpAmount), parentSizePxVp);
 }
 Vector2 RectTransform::FromViewportAmountToLocalAmountNDC(
@@ -81,7 +81,7 @@ Vector2 RectTransform::FromWindowAmountToLocalAmountNDC(
 {
     Vector2 winViewportProportion =
         (Vector2(Window::GetActive()->GetSize()) /
-         Vector2::Max(Vector2::One, Vector2(GL::GetViewportSize())));
+         Vector2::Max(Vector2::One(), Vector2(GL::GetViewportSize())));
     Vector2 vpAmount = winAmount * winViewportProportion;
     return FromViewportAmountToLocalAmountNDC(vpAmount);
 }
@@ -95,7 +95,8 @@ Vector2 RectTransform::FromLocalAmountNDCToViewportAmount(
     const Vector2 &localAmountNDC) const
 {
     Rect parentWinRect = GetParentViewportRect();
-    Vector2 parentSizePx = Vector2::Max(Vector2::One, parentWinRect.GetSize());
+    Vector2 parentSizePx =
+        Vector2::Max(Vector2::One(), parentWinRect.GetSize());
     return GL::FromAmountNDCToAmount(localAmountNDC, parentSizePx);
 }
 
@@ -450,7 +451,7 @@ RectPoints RectTransform::GetParentViewportRectPointsNDC() const
 
 AARect RectTransform::GetViewportAARect() const
 {
-    return GetLocalToWorldMatrix() * AARect::NDCRect;
+    return GetLocalToWorldMatrix() * AARect::NDCRect();
 }
 
 AARect RectTransform::GetViewportAARectNDC() const
@@ -460,7 +461,7 @@ AARect RectTransform::GetViewportAARectNDC() const
 
 AARect RectTransform::GetViewportAARectWithoutTransform() const
 {
-    return GetRectLocalToWorldMatrix() * AARect::NDCRect;
+    return GetRectLocalToWorldMatrix() * AARect::NDCRect();
 }
 
 AARect RectTransform::GetViewportAARectWithoutTransformNDC() const
@@ -473,7 +474,7 @@ AARect RectTransform::GetParentViewportAARect() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return AARect(Vector2::Zero, Vector2(GL::GetViewportSize()));
+        return AARect(Vector2::Zero(), Vector2(GL::GetViewportSize()));
     }
     return parent->GetRectTransform()->GetViewportAARect();
 }
@@ -483,7 +484,7 @@ AARect RectTransform::GetParentViewportAARectNDC() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return AARect::NDCRect;
+        return AARect::NDCRect();
     }
     return parent->GetRectTransform()->GetViewportAARectNDC();
 }
@@ -493,7 +494,7 @@ AARect RectTransform::GetParentViewportAARectWithoutTransform() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return AARect(Vector2::Zero, Vector2(GL::GetViewportSize()));
+        return AARect(Vector2::Zero(), Vector2(GL::GetViewportSize()));
     }
     return parent->GetRectTransform()->GetViewportAARectWithoutTransform();
 }
@@ -503,7 +504,7 @@ AARect RectTransform::GetParentViewportAARectWithoutTransformNDC() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return AARect::NDCRect;
+        return AARect::NDCRect();
     }
     return parent->GetRectTransform()->GetViewportAARectWithoutTransformNDC();
 }
@@ -521,7 +522,7 @@ Rect RectTransform::GetParentViewportRect() const
 void RectTransform::CalculateLocalToParentMatrix() const
 {
     AARect thisVPAARect = GetViewportAARectWithoutTransform();
-    Vector2 thisSize = Vector2::Max(thisVPAARect.GetSize(), Vector2::One);
+    Vector2 thisSize = Vector2::Max(thisVPAARect.GetSize(), Vector2::One());
     Vector2 pivotVp =
         -thisVPAARect.GetCenter() - GetPivotPosition() * thisSize * 0.5f;
     Matrix4 translateToPivot = Matrix4::TranslateMatrix(Vector3(pivotVp, 0));
@@ -536,15 +537,15 @@ void RectTransform::CalculateLocalToParentMatrix() const
 void RectTransform::OnTransformInvalidated()
 {
     Transform::OnTransformInvalidated();
-    m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero;
-    m_vpInWhichRectTransformLocalToWorldWasCalc = AARecti::Zero;
+    m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero();
+    m_vpInWhichRectTransformLocalToWorldWasCalc = AARecti::Zero();
 }
 
 void RectTransform::InvalidateTransform()
 {
     Transform::InvalidateTransform();
-    m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero;
-    m_vpInWhichRectTransformLocalToWorldWasCalc = AARecti::Zero;
+    m_vpInWhichRectLocalToWorldWasCalc = AARecti::Zero();
+    m_vpInWhichRectTransformLocalToWorldWasCalc = AARecti::Zero();
 }
 
 void RectTransform::CalculateRectLocalToWorldMatrix() const

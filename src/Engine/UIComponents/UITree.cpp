@@ -235,7 +235,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 
     bool isValidDrag =
         IsValidDrag(dragDroppable, p_itemBeingDragged, childItemOver);
-    p_dragMarkerImg->SetTint(isValidDrag ? Color::Blue : Color::Red);
+    p_dragMarkerImg->SetTint(isValidDrag ? Color::Blue() : Color::Red());
 }
 
 void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
@@ -777,7 +777,7 @@ UITree *UITree::CreateInto(GameObject *go)
     UIImageRenderer *dragMarkerImg =
         dragMarker->AddComponent<UIImageRenderer>();
     dragMarker->GetRectTransform()->TranslateLocal(Vector3(0.0f, 0.0f, -0.4f));
-    dragMarker->GetRectTransform()->SetAnchors(-Vector2::One);
+    dragMarker->GetRectTransform()->SetAnchors(-Vector2::One());
 
     uiTree->p_dragMarker = dragMarker;
     uiTree->p_dragMarkerImg = dragMarkerImg;

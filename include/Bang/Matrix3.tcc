@@ -7,9 +7,6 @@
 using namespace Bang;
 
 template <class T>
-const Matrix3G<T> Matrix3G<T>::Identity = Matrix3G<T>(1);
-
-template <class T>
 Matrix3G<T>::Matrix3G() : Matrix3G<T>(1)
 {
 }
@@ -127,6 +124,13 @@ template <class T>
 const Vector3G<T> &Matrix3G<T>::operator[](std::size_t i) const
 {
     return const_cast<Matrix3G<T> *>(this)->operator[](i);
+}
+
+template <class T>
+const Matrix3G<T> &Matrix3G<T>::Identity()
+{
+    static const Matrix3G<T> m = Matrix3G<T>(1);
+    return m;
 }
 
 // Operators

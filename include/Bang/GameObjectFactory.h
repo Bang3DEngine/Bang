@@ -58,7 +58,7 @@ public:
 
     static UICanvas *CreateUICanvas();
     static UICanvas *CreateUICanvasInto(GameObject *go);
-    static UIImageRenderer *CreateUIImage(const Color &color = Color::White);
+    static UIImageRenderer *CreateUIImage(const Color &color = Color::White());
     static UIImageRenderer *CreateUIImage(const Color &color,
                                           const Vector2i &size);
     static UIList *CreateUIListInto(GameObject *go,
@@ -114,7 +114,7 @@ public:
 
     static GameObject *CreateUISpacer(
         LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
-        const Vector2 &space = Vector2::One);
+        const Vector2 &space = Vector2::One());
     static GameObject *CreateUIHSpacer(
         LayoutSizeType sizeType = LayoutSizeType::FLEXIBLE,
         float spaceX = 1);

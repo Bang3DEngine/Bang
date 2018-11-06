@@ -536,17 +536,17 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
         {
             Vector3 posi = (mesh->GetPositionsPool().Size() > i
                                 ? mesh->GetPositionsPool()[i]
-                                : Vector3::Zero);
+                                : Vector3::Zero());
             aMesh->mVertices[i] = VectorToAiVec3(posi);
 
             Vector3 normali =
                 (mesh->GetNormalsPool().Size() > i ? mesh->GetNormalsPool()[i]
-                                                   : Vector3::Zero);
+                                                   : Vector3::Zero());
             aMesh->mNormals[i] = VectorToAiVec3(normali);
 
             Vector3 texCoordi = (mesh->GetUvsPool().Size() > i
                                      ? Vector3(mesh->GetUvsPool()[i], 0)
-                                     : Vector3::Zero);
+                                     : Vector3::Zero());
             aMesh->mTextureCoords[0][i] = VectorToAiVec3(texCoordi);
         }
 
@@ -575,7 +575,7 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
     // aMaterial->mProperties = new
     // aiMaterialProperty*[aMaterial->mNumProperties];
 
-    aiColor3D diffColor = ColorToAiColor3(Color::Red);
+    aiColor3D diffColor = ColorToAiColor3(Color::Red());
     aMaterial->AddProperty(&diffColor, 1, AI_MATKEY_COLOR_DIFFUSE); /*
      aMaterial->mProperties[0] = new aiMaterialProperty();
      aMaterial->mProperties[0]->mKey = AI_MATKEY_COLOR_DIFFUSE;
@@ -646,7 +646,7 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     outMaterial->Get()->SetMetalness(0.1f);
     outMaterial->Get()->SetAlbedoTexture(matAlbedoTexture.Get());
     outMaterial->Get()->SetNormalMapTexture(matNormalTexture.Get());
-    outMaterial->Get()->SetAlbedoColor(matAlbedoTexture ? Color::White
+    outMaterial->Get()->SetAlbedoColor(matAlbedoTexture ? Color::White()
                                                         : albedoColor);
 }
 

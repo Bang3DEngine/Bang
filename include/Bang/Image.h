@@ -41,13 +41,13 @@ public:
               ImageResizeMode resizeMode = ImageResizeMode::LINEAR);
 
     void AddMargins(const Vector2i &margins,
-                    const Color &marginColor = Color::Zero,
+                    const Color &marginColor = Color::Zero(),
                     AspectRatioMode arMode = AspectRatioMode::IGNORE);
 
     void AddMarginsToMatchAspectRatio(const Vector2i &aspectRatioSizes,
-                                      const Color &marginColor = Color::Zero);
+                                      const Color &marginColor = Color::Zero());
     void AddMarginsToMatchAspectRatio(float aspectRatio,
-                                      const Color &marginColor = Color::Zero);
+                                      const Color &marginColor = Color::Zero());
 
     void ResizeToMatchAspectRatio(
         const Vector2i &aspectRatioSizes,
@@ -93,7 +93,7 @@ public:
     void Import(const Path &imageFilepath) override;
 
 private:
-    Vector2i m_size = Vector2i::Zero;
+    Vector2i m_size = Vector2i::Zero();
     Array<Byte> m_pixels;
 };
 }  // namespace Bang

@@ -122,8 +122,8 @@ void UIButtonBase::ChangeAspectToIdle()
 {
     if (GetBackground() && GetText())
     {
-        GetBackground()->SetTint(Color::White.WithValue(1.2f));
-        GetText()->SetTextColor(Color::Black);
+        GetBackground()->SetTint(Color::White().WithValue(1.2f));
+        GetText()->SetTextColor(Color::Black());
         GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
@@ -133,7 +133,7 @@ void UIButtonBase::ChangeAspectToOver()
     if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetOverColor());
-        GetText()->SetTextColor(Color::Black);
+        GetText()->SetTextColor(Color::Black());
         GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
@@ -143,7 +143,7 @@ void UIButtonBase::ChangeAspectToPressed()
     if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetSelectedColor());
-        GetText()->SetTextColor(Color::Black);
+        GetText()->SetTextColor(Color::Black());
         GetFocusable()->SetCursorType(Cursor::Type::HAND);
     }
 }
@@ -153,7 +153,7 @@ void UIButtonBase::ChangeAspectToBlocked()
     if (GetBackground() && GetText())
     {
         GetBackground()->SetTint(UITheme::GetInputTextBlockedBackgroundColor());
-        GetText()->SetTextColor(Color::DarkGray);
+        GetText()->SetTextColor(Color::DarkGray());
         GetFocusable()->SetCursorType(Cursor::Type::NO);
     }
 }
@@ -240,7 +240,7 @@ UIButtonBase *UIButtonBase::CreateInto(
     hl->SetSpacing(0);
 
     UILayoutElement *le = go->AddComponent<UILayoutElement>();
-    le->SetFlexibleSize(Vector2::Zero);
+    le->SetFlexibleSize(Vector2::Zero());
     le->SetLayoutPriority(1);
 
     UIImageRenderer *bgImg = go->AddComponent<UIImageRenderer>();
@@ -252,14 +252,14 @@ UIButtonBase *UIButtonBase::CreateInto(
     focusable->EventEmitter<IEventsFocus>::RegisterListener(button);
 
     UILabel *label = GameObjectFactory::CreateUILabel();
-    label->GetText()->SetTextColor(Color::Black);
+    label->GetText()->SetTextColor(Color::Black());
     label->GetFocusable()->SetEnabled(false);
     label->GetMask()->SetMasking(false);
 
     UIImageRenderer *icon = GameObjectFactory::CreateUIImage();
     GameObject *iconGo = icon->GetGameObject();
     UILayoutElement *iconLE = iconGo->AddComponent<UILayoutElement>();
-    iconLE->SetFlexibleSize(Vector2::Zero);
+    iconLE->SetFlexibleSize(Vector2::Zero());
 
     button->p_icon = icon;
     button->p_background = bgImg;
@@ -271,7 +271,7 @@ UIButtonBase *UIButtonBase::CreateInto(
     label->GetGameObject()->SetParent(go);
 
     button->GetText()->SetContent("");
-    button->SetIcon(nullptr, Vector2i::Zero, 0);
+    button->SetIcon(nullptr, Vector2i::Zero(), 0);
 
     button->UpdateAspect();
     return button;

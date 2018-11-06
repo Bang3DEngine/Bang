@@ -35,7 +35,10 @@ class PxMaterial;
 
 using namespace Bang;
 
-Collider::Collider(){CONSTRUCT_CLASS_ID(Collider)}
+Collider::Collider()
+{
+    CONSTRUCT_CLASS_ID(Collider)
+}
 
 Collider::~Collider()
 {
@@ -174,7 +177,7 @@ physx::PxShape *Collider::GetPxShape() const
 
 Quaternion Collider::GetInternalRotation() const
 {
-    return Quaternion::Identity;
+    return Quaternion::Identity();
 }
 
 Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const

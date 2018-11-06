@@ -48,9 +48,9 @@ protected:
     virtual void CalculateLayout(Axis axis) override;
 
 private:
-    Vector2i m_minSize = -Vector2i::One;
-    Vector2i m_preferredSize = -Vector2i::One;
-    Vector2 m_flexibleSize = -Vector2::One;
+    Vector2i m_minSize = -Vector2i::One();
+    Vector2i m_preferredSize = -Vector2i::One();
+    Vector2 m_flexibleSize = -Vector2::One();
 
     void OnChanged();
 };

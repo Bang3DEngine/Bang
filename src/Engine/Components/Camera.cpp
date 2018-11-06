@@ -173,7 +173,7 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
     Vector3 camPosition = tr->GetPosition();
     if (aaBBoxWorld.Contains(camPosition))
     {
-        return AARect::NDCRect;
+        return AARect::NDCRect();
     }
 
     Array<Vector3> intPoints;
@@ -448,7 +448,7 @@ Matrix4 Camera::GetProjectionMatrix() const
         if (GetAspectRatio() == 0.0 || GetFovDegrees() == 0.0 ||
             GetZNear() == GetZFar())
         {
-            return Matrix4::Identity;
+            return Matrix4::Identity();
         }
 
         return Matrix4::Perspective(Math::DegToRad(GetFovDegrees()),

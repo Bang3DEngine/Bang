@@ -324,7 +324,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         if (currentDrawAttachments.Size() > 0)
         {
             gbuffer->SetDrawBuffers(currentDrawAttachments);
-            GL::ClearColorBuffer(Color::Zero);  // Clear all except color
+            GL::ClearColorBuffer(Color::Zero());  // Clear all except color
         }
 
         if (camera->GetClearMode() == CameraClearMode::SKY_BOX)
@@ -507,9 +507,9 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
     sp->Bind();
     BANG_UNUSED(destRectMask);
     sp->SetVector2(
-        GLUniforms::UniformName_AlbedoUvOffset, Vector2::Zero, false);
+        GLUniforms::UniformName_AlbedoUvOffset, Vector2::Zero(), false);
     sp->SetVector2(
-        GLUniforms::UniformName_AlbedoUvMultiply, Vector2::One, false);
+        GLUniforms::UniformName_AlbedoUvMultiply, Vector2::One(), false);
     RenderViewportPlane();
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
@@ -547,7 +547,7 @@ void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)
         sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
     }
     sp->SetTexture2D("B_RenderTexture_Texture", texture, false);
-    GEngine::RenderViewportRect(sp, AARect::NDCRect);
+    GEngine::RenderViewportRect(sp, AARect::NDCRect());
 
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }

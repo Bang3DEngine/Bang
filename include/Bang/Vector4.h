@@ -16,16 +16,16 @@ template <class T>
 class Vector4G
 {
 public:
-    const static Vector4G Up;
-    const static Vector4G Down;
-    const static Vector4G Right;
-    const static Vector4G Left;
-    const static Vector4G Zero;
-    const static Vector4G One;
-    const static Vector4G Forward;
-    const static Vector4G Back;
-    const static Vector4G Infinity;
-    const static Vector4G NInfinity;
+    static const Vector4G<T> &Up();
+    static const Vector4G<T> &Down();
+    static const Vector4G<T> &Right();
+    static const Vector4G<T> &Left();
+    static const Vector4G<T> &Zero();
+    static const Vector4G<T> &One();
+    static const Vector4G<T> &Forward();
+    static const Vector4G<T> &Back();
+    static const Vector4G<T> &Infinity();
+    static const Vector4G<T> &NInfinity();
 
     T x, y, z, w;
 

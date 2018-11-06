@@ -141,7 +141,7 @@ private:
     ParticleSimulationSpace m_simulationSpace = ParticleSimulationSpace::WORLD;
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
-    Vector3 m_generationShapeBoxSize = Vector3::One;
+    Vector3 m_generationShapeBoxSize = Vector3::One();
     float m_generationShapeConeFOVRads = SCAST<float>(Math::Pi / 4);
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
@@ -149,8 +149,8 @@ private:
     RH<Texture2D> p_texture;
     bool m_billboard = true;
 
-    Color m_startColor = Color::White;
-    Color m_endColor = Color::White;
+    Color m_startColor = Color::White();
+    Color m_endColor = Color::White();
     ComplexRandom m_lifeTime = ComplexRandom(0.1f, 3.0f);
     ComplexRandom m_startTime = ComplexRandom(0.1f, 5.0f);
     ComplexRandom m_startSize = ComplexRandom(0.3f, 1.0f);

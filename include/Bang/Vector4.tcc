@@ -8,34 +8,6 @@
 namespace Bang
 {
 template <class T>
-const Vector4G<T> Vector4G<T>::Up =
-    Vector4G<T>(SCAST<T>(0), SCAST<T>(1), SCAST<T>(0), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Down =
-    Vector4G<T>(SCAST<T>(0), SCAST<T>(-1), SCAST<T>(0), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Right =
-    Vector4G<T>(SCAST<T>(1), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Left =
-    Vector4G<T>(SCAST<T>(-1), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Zero = Vector4G<T>(SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::One = Vector4G<T>(SCAST<T>(1));
-template <class T>
-const Vector4G<T> Vector4G<T>::Forward =
-    Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(-1), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Back =
-    Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(1), SCAST<T>(0));
-template <class T>
-const Vector4G<T> Vector4G<T>::Infinity = Vector4G<T>(Math::Infinity<T>());
-template <class T>
-const Vector4G<T> Vector4G<T>::NInfinity =
-    Vector4G<T>(Math::NegativeInfinity<T>());
-
-template <class T>
 Vector4G<T>::Vector4G()
 {
     for (int i = 0; i < 4; ++i)
@@ -643,6 +615,73 @@ template <class T>
 Vector4G<T> operator-(const Vector4G<T> &v)
 {
     return v * SCAST<T>(-1);
+}
+
+template <class T>
+const Vector4G<T> &Vector4G<T>::Up()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(0), SCAST<T>(1), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Down()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(0), SCAST<T>(-1), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Right()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(1), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Left()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(-1), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Zero()
+{
+    static const Vector4G<T> v = Vector4G<T>(SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::One()
+{
+    static const Vector4G<T> v = Vector4G<T>(SCAST<T>(1));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Forward()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(-1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Back()
+{
+    static const Vector4G<T> v =
+        Vector4G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::Infinity()
+{
+    static const Vector4G<T> v = Vector4G<T>(Math::Infinity<T>());
+    return v;
+}
+template <class T>
+const Vector4G<T> &Vector4G<T>::NInfinity()
+{
+    static const Vector4G<T> v = Vector4G<T>(Math::NegativeInfinity<T>());
+    return v;
 }
 
 }  // namespace Bang

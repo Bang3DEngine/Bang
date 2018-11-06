@@ -455,7 +455,7 @@ Scene *Dialog::CreateGetStringScene(const String &msg, const String &hint)
     UITextRenderer *msgText = msgLabel->GetText();
     msgText->SetWrapping(true);
     msgText->SetContent(msg);
-    msgText->SetTextColor(Color::Black);
+    msgText->SetTextColor(Color::Black());
     msgText->SetTextSize(12);
     msgText->SetHorizontalAlign(HorizontalAlignment::LEFT);
     msgText->SetVerticalAlign(VerticalAlignment::CENTER);
@@ -552,7 +552,7 @@ Scene *Dialog::CreateYesNoCancelScene(const String &msg)
     UITextRenderer *text = msgGo->AddComponent<UITextRenderer>();
     text->SetWrapping(true);
     text->SetContent(msg);
-    text->SetTextColor(Color::Black);
+    text->SetTextColor(Color::Black());
     text->SetTextSize(12);
     text->SetHorizontalAlign(HorizontalAlignment::LEFT);
     text->SetVerticalAlign(VerticalAlignment::TOP);
@@ -621,13 +621,13 @@ Scene *Dialog::CreateMsgScene(const String &msg)
     hLayout->SetChildrenHorizontalAlignment(HorizontalAlignment::CENTER);
     hLayout->SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
     UILayoutElement *hLayoutLE = hLayoutGo->AddComponent<UILayoutElement>();
-    hLayoutLE->SetPreferredSize(Vector2i::One);
+    hLayoutLE->SetPreferredSize(Vector2i::One());
 
     GameObject *msgGo = GameObjectFactory::CreateUIGameObjectNamed("MSGGo");
     UITextRenderer *text = msgGo->AddComponent<UITextRenderer>();
     text->SetWrapping(true);
     text->SetContent(msg);
-    text->SetTextColor(Color::Black);
+    text->SetTextColor(Color::Black());
     text->SetTextSize(12);
     text->SetHorizontalAlign(HorizontalAlignment::CENTER);
     text->SetVerticalAlign(VerticalAlignment::CENTER);

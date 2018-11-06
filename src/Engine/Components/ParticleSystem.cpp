@@ -453,7 +453,7 @@ void ParticleSystem::Bind()
 
 AABox ParticleSystem::GetAABBox() const
 {
-    return m_isEmitting ? m_aabox : AABox::Empty;
+    return m_isEmitting ? m_aabox : AABox::Empty();
 }
 
 void ParticleSystem::OnRender()
@@ -498,12 +498,12 @@ void ParticleSystem::SetUniformsOnBind(ShaderProgram *sp)
     Renderer::SetUniformsOnBind(sp);
 
     Transform *tr = GetGameObject()->GetTransform();
-    Matrix4 modelMat = Matrix4::Identity;
+    Matrix4 modelMat = Matrix4::Identity();
     if (GetBillboard())
     {
-        Vector3 trPos = Vector3::Zero;
-        Vector3 trScale = Vector3::One;
-        Quaternion rot = Quaternion::Identity;
+        Vector3 trPos = Vector3::Zero();
+        Vector3 trScale = Vector3::One();
+        Quaternion rot = Quaternion::Identity();
         if (GetSimulationSpace() == ParticleSimulationSpace::LOCAL)
         {
             trPos = tr->GetPosition();
@@ -667,7 +667,7 @@ void ParticleSystem::RecreateVAOForMesh()
 
 Vector3 ParticleSystem::GetParticleInitialPosition() const
 {
-    Vector3 particleInitialPosition = Vector3::Zero;
+    Vector3 particleInitialPosition = Vector3::Zero();
     switch (GetGenerationShape())
     {
         case ParticleGenerationShape::BOX:
@@ -676,12 +676,12 @@ Vector3 ParticleSystem::GetParticleInitialPosition() const
             break;
 
         case ParticleGenerationShape::CONE:
-            particleInitialPosition = Vector3::Zero;
+            particleInitialPosition = Vector3::Zero();
             break;
     }
 
     Transform *tr = GetGameObject() ? GetGameObject()->GetTransform() : nullptr;
-    Vector3 goPos = tr ? tr->GetPosition() : Vector3::Zero;
+    Vector3 goPos = tr ? tr->GetPosition() : Vector3::Zero();
     particleInitialPosition += goPos;
 
     return particleInitialPosition;
@@ -689,11 +689,11 @@ Vector3 ParticleSystem::GetParticleInitialPosition() const
 
 Vector3 ParticleSystem::GetParticleInitialVelocity() const
 {
-    Vector3 particleInitialVelocity = Vector3::Zero;
+    Vector3 particleInitialVelocity = Vector3::Zero();
     switch (GetGenerationShape())
     {
         case ParticleGenerationShape::BOX:
-            particleInitialVelocity = Vector3::Forward;
+            particleInitialVelocity = Vector3::Forward();
             break;
 
         case ParticleGenerationShape::CONE:
@@ -709,7 +709,7 @@ Vector3 ParticleSystem::GetParticleInitialVelocity() const
     }
 
     Transform *tr = GetGameObject() ? GetGameObject()->GetTransform() : nullptr;
-    Quaternion goRot = tr ? tr->GetRotation() : Quaternion::Identity;
+    Quaternion goRot = tr ? tr->GetRotation() : Quaternion::Identity();
 
     particleInitialVelocity *= GetInitialVelocityMultiplier();
     particleInitialVelocity = goRot * particleInitialVelocity;
@@ -732,9 +732,9 @@ void ParticleSystem::UpdateDataVBO()
         }
         else
         {
-            m_particlesVBOData[i].position = Vector3::Infinity;
+            m_particlesVBOData[i].position = Vector3::Infinity();
             m_particlesVBOData[i].size = 0.0f;
-            m_particlesVBOData[i].color = Color::Zero;
+            m_particlesVBOData[i].color = Color::Zero();
             m_particlesVBOData[i].animationFrame = 0.0f;
         }
     }

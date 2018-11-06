@@ -50,8 +50,8 @@ public:
 
 private:
     float m_aspectRatio = -1.0f;
-    Vector2i m_paddingLeftBot = Vector2i::Zero;
-    Vector2i m_paddingRightTop = Vector2i::Zero;
+    Vector2i m_paddingLeftBot = Vector2i::Zero();
+    Vector2i m_paddingRightTop = Vector2i::Zero();
     AspectRatioMode m_aspectRatioMode = Undef<AspectRatioMode>();
 
     UIAspectRatioFitter();

@@ -32,7 +32,6 @@ MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: None
 PointerAlignment: Right
 SortIncludes: 'true'
-# SpaceAfterTemplateKeyword: 'true'
 SpaceBeforeAssignmentOperators: 'true'
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: 'false'

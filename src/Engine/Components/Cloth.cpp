@@ -576,7 +576,7 @@ void Cloth::ConstrainJoints()
 void Cloth::RecreateMesh()
 {
     m_points.Clear();
-    m_fixedPoints.Clear();
+    Array<bool> newFixedPoints;
 
     GameObject *go = GetGameObject();
     Transform *tr = (go ? go->GetTransform() : nullptr);
@@ -591,9 +591,10 @@ void Cloth::RecreateMesh()
             pos -= rot * Vector3(1, 0, 1) * (GetClothSize() * 0.5f);
             pos += center;
             m_points.PushBack(pos);
-            m_fixedPoints.PushBack(false);
+            newFixedPoints.PushBack(IsPointFixed(i * GetSubdivisions() + j));
         }
     }
+    m_fixedPoints = newFixedPoints;
 
     m_particlesData.Resize(GetTotalNumPoints());
     for (uint i = 0; i < GetSubdivisions(); ++i)

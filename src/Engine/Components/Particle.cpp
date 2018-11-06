@@ -317,12 +317,13 @@ bool Particle::CollideParticle(Collider *collider,
                                Math::Max(Math::Abs(planePointNoIntDist), 0.1f);
         Vector3 newPos = newPositionNoInt -
                          bouncinessEpsilon * correctionDist * cnorm +
-                         (cnorm * 0.05f);
+                         (cnorm * 0.02f);
         *newPositionAfterInt = newPos;
 
-        Vector3 newVel = newVelocityNoInt - bouncinessEpsilon * cnorm *
-                                                collisionPlane.GetDistanceTo(
-                                                    cpos + newVelocityNoInt);
+        Vector3 newVel =
+            newVelocityNoInt -
+            bouncinessEpsilon * cnorm *
+                collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
         *newVelocityAfterInt = newVel;
 
         float normalForceLength = Math::Abs(

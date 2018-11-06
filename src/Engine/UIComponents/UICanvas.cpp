@@ -139,6 +139,14 @@ void UICanvas::OnUpdate()
 {
     Component::OnUpdate();
 
+    // Wait for UI to settle down a bit. Otherwise, we get events when opening
+    // the window that make no sense
+    if (m_framesSinceCreated < 5)
+    {
+        ++m_framesSinceCreated;
+        return;
+    }
+
     Array<std::pair<UIFocusable *, AARecti>> focusablesAndRectsVP;
     GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
                                              &focusablesAndRectsVP);

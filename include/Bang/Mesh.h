@@ -92,41 +92,52 @@ public:
     uint GetNumVertices() const;
     uint GetNumTriangles() const;
     uint GetNumVerticesIds() const;
-    Triangle GetTriangle(TriangleId triId) const;
-    std::array<VertexId, 3> GetVertexIdsFromTriangle(TriangleId triId) const;
-    VertexId GetRemainingVertexId(TriangleId triangleId,
-                                  VertexId oneVertex,
-                                  VertexId anotherVertex) const;
-    VertexId GetRemainingVertexIdUnique(TriangleId triangleId,
-                                        VertexId oneVertex,
-                                        VertexId anotherVertex) const;
-    Mesh::CornerId GetRemainingCornerId(TriangleId triangleId,
-                                        CornerId oneCorner,
-                                        CornerId anotherCorner) const;
-    CornerId GetCornerIdFromTriangle(TriangleId triangleId, uint i) const;
+    Triangle GetTriangle(Mesh::TriangleId triId) const;
+    std::array<Mesh::VertexId, 3> GetVertexIdsFromTriangle(
+        Mesh::TriangleId triId) const;
+    VertexId GetRemainingVertexId(Mesh::TriangleId triangleId,
+                                  Mesh::VertexId oneVertex,
+                                  Mesh::VertexId anotherVertex) const;
+    Mesh::VertexId GetRemainingVertexIdUnique(
+        Mesh::TriangleId triangleId,
+        Mesh::VertexId oneVertex,
+        Mesh::VertexId anotherVertex) const;
+    Mesh::CornerId GetRemainingCornerId(Mesh::TriangleId triangleId,
+                                        Mesh::CornerId oneCorner,
+                                        Mesh::CornerId anotherCorner) const;
+    Mesh::CornerId GetCornerIdFromTriangle(Mesh::TriangleId triangleId,
+                                           uint i) const;
     std::array<CornerId, 3> GetCornerIdsFromTriangle(
         TriangleId triangleId) const;
-    CornerId GetTriangleIdFromCornerId(CornerId cornerId) const;
-    VertexId GetVertexIdFromCornerId(CornerId cId) const;
-    VertexId GetVertexIdUniqueFromCornerId(CornerId cId) const;
-    VertexId GetVertexIdUnique(VertexId vId) const;
-    CornerId GetNextCornerId(CornerId cId) const;
-    CornerId GetPreviousCornerId(CornerId cId) const;
-    CornerId GetOppositeCornerId(CornerId cId) const;
-    float GetCornerAngleRads(CornerId cId) const;
-    const Array<CornerId> &GetCornerIdsFromVertexId(VertexId vId) const;
-    Array<CornerId> GetNeighborCornerIds(CornerId cId) const;
-    Array<VertexId> GetNeighborVertexIds(VertexId vId) const;
-    Array<VertexId> GetNeighborUniqueVertexIds(VertexId vId) const;
-    Array<TriangleId> GetAdjacentTriangleIds(TriangleId triId) const;
-    Array<TriangleId> GetNeighborTriangleIdsFromVertexId(VertexId vId) const;
-    float GetVertexGaussianCurvature(VertexId centralVId);
-    float GetVertexMeanCurvature(VertexId centralVId);
+    Mesh::CornerId GetTriangleIdFromCornerId(Mesh::CornerId cornerId) const;
+    Mesh::VertexId GetVertexIdFromCornerId(Mesh::CornerId cId) const;
+    Mesh::VertexId GetVertexIdUniqueFromCornerId(Mesh::CornerId cId) const;
+    Mesh::VertexId GetVertexIdUnique(Mesh::VertexId vId) const;
+    Mesh::CornerId GetNextCornerId(Mesh::CornerId cId) const;
+    Mesh::CornerId GetPreviousCornerId(Mesh::CornerId cId) const;
+    Mesh::CornerId GetOppositeCornerId(Mesh::CornerId cId) const;
+    float GetCornerAngleRads(Mesh::CornerId cId) const;
+    const Array<Mesh::CornerId> &GetCornerIdsFromVertexId(
+        Mesh::VertexId vId) const;
+    Array<Mesh::CornerId> GetNeighborCornerIds(Mesh::CornerId cId) const;
+    Array<Mesh::VertexId> GetNeighborVertexIds(Mesh::VertexId vId) const;
+    Array<Mesh::VertexId> GetNeighborUniqueVertexIds(Mesh::VertexId vId) const;
+    Array<Mesh::TriangleId> GetAdjacentTriangleIds(
+        Mesh::TriangleId triId) const;
+    Array<Mesh::TriangleId> GetNeighborTriangleIdsFromVertexId(
+        Mesh::VertexId vId) const;
+    float GetVertexGaussianCurvature(Mesh::VertexId centralVId) const;
+    float GetVertexMeanCurvature(Mesh::VertexId centralVId) const;
+    void GetNeighborCotangentWeights(
+        Mesh::VertexId centralVId,
+        Map<Mesh::VertexId, float> *edgesCotangentsScalar,
+        Map<Mesh::VertexId, Vector3> *edgesCotangentsVector,
+        Map<Mesh::VertexId, float> *triAreas) const;
     bool HasCornerTablesUpdated() const;
 
     const AABox &GetAABBox() const;
     const Sphere &GetBoundingSphere() const;
-    const Array<VertexId> &GetTrianglesVertexIds() const;
+    const Array<Mesh::VertexId> &GetTrianglesVertexIds() const;
     const Array<Vector3> &GetPositionsPool() const;
     const Array<Vector3> &GetNormalsPool() const;
     const Array<Vector2> &GetUvsPool() const;
@@ -135,7 +146,8 @@ public:
     const Map<String, Mesh::Bone> &GetBonesPool() const;
     const Path &GetModelFilepath() const;
 
-    UMap<VertexId, Array<TriangleId>> GetVertexIdsToTriangleIds() const;
+    UMap<Mesh::VertexId, Array<Mesh::TriangleId>> GetVertexIdsToTriangleIds()
+        const;
 
     // ICloneable
     virtual void CloneInto(ICloneable *clone) const override;

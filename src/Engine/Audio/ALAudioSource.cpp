@@ -24,17 +24,26 @@ ALAudioSource::~ALAudioSource()
 void ALAudioSource::Play()
 {
     UpdateALProperties();
-    BANG_AL_CALL(alSourcePlay(GetALSourceId()));
+    if (GetALSourceId() > 0)
+    {
+        BANG_AL_CALL(alSourcePlay(GetALSourceId()));
+    }
 }
 
 void ALAudioSource::Pause()
 {
-    BANG_AL_CALL(alSourcePause(GetALSourceId()));
+    if (GetALSourceId() > 0)
+    {
+        BANG_AL_CALL(alSourcePause(GetALSourceId()));
+    }
 }
 
 void ALAudioSource::Stop()
 {
-    BANG_AL_CALL(alSourceStop(GetALSourceId()));
+    if (GetALSourceId() > 0)
+    {
+        BANG_AL_CALL(alSourceStop(GetALSourceId()));
+    }
 }
 
 void ALAudioSource::SetVolume(float volume)
@@ -95,7 +104,7 @@ void ALAudioSource::SetParams(const AudioParams &audioParams)
 
 void ALAudioSource::SetALBufferId(ALuint bufferId)
 {
-    if (bufferId != m_bufferId)
+    if (bufferId != m_bufferId && (GetALSourceId() > 0))
     {
         m_bufferId = bufferId;
         BANG_AL_CALL(alSourcei(GetALSourceId(), AL_BUFFER, bufferId));
@@ -104,17 +113,20 @@ void ALAudioSource::SetALBufferId(ALuint bufferId)
 
 void ALAudioSource::UpdateALProperties() const
 {
-    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_GAIN, GetVolume()));
-    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_PITCH, GetPitch()));
-    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_ROLLOFF_FACTOR, 1.0f));
-    BANG_AL_CALL(alSourcef(
-        GetALSourceId(), AL_MAX_DISTANCE, Math::Max(GetRange(), 0.01f)));
-    BANG_AL_CALL(alSourcef(GetALSourceId(),
-                           AL_REFERENCE_DISTANCE,
-                           Math::Max(GetRange() * 0.5f, 0.01f)));
-    BANG_AL_CALL(alSourcef(GetALSourceId(), AL_LOOPING, GetLooping()));
-    BANG_AL_CALL(
-        alSourcefv(GetALSourceId(), AL_POSITION, GetPosition().Data()));
+    if (GetALSourceId() > 0)
+    {
+        BANG_AL_CALL(alSourcef(GetALSourceId(), AL_GAIN, GetVolume()));
+        BANG_AL_CALL(alSourcef(GetALSourceId(), AL_PITCH, GetPitch()));
+        BANG_AL_CALL(alSourcef(GetALSourceId(), AL_ROLLOFF_FACTOR, 1.0f));
+        BANG_AL_CALL(alSourcef(
+            GetALSourceId(), AL_MAX_DISTANCE, Math::Max(GetRange(), 0.01f)));
+        BANG_AL_CALL(alSourcef(GetALSourceId(),
+                               AL_REFERENCE_DISTANCE,
+                               Math::Max(GetRange() * 0.5f, 0.01f)));
+        BANG_AL_CALL(alSourcei(GetALSourceId(), AL_LOOPING, GetLooping()));
+        BANG_AL_CALL(
+            alSourcefv(GetALSourceId(), AL_POSITION, GetPosition().Data()));
+    }
 }
 
 bool ALAudioSource::IsPlaying() const
@@ -160,6 +172,9 @@ bool ALAudioSource::GetLooping() const
 ALAudioSource::State ALAudioSource::GetState() const
 {
     ALint state;
-    alGetSourcei(GetALSourceId(), AL_SOURCE_STATE, &state);
+    if (GetALSourceId() > 0)
+    {
+        alGetSourcei(GetALSourceId(), AL_SOURCE_STATE, &state);
+    }
     return static_cast<State>(state);
 }

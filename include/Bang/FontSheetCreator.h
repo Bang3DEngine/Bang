@@ -25,7 +25,7 @@ public:
     static Image PackImages(const Array<Image> &images,
                             int margin,
                             Array<AARecti> *imagesOutputRects = nullptr,
-                            const Color &bgColor = Color::Zero);
+                            const Color &bgColor = Color::Zero());
 
     FontSheetCreator() = delete;
 };

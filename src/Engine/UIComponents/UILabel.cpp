@@ -417,7 +417,7 @@ UILabel *UILabel::CreateInto(GameObject *go)
     hl->SetChildrenHorizontalStretch(Stretch::FULL);
 
     label->p_layoutElement = go->AddComponent<UILayoutElement>();
-    label->p_layoutElement->SetFlexibleSize(Vector2::One);
+    label->p_layoutElement->SetFlexibleSize(Vector2::One());
 
     UIRectMask *mask = go->AddComponent<UIRectMask>();
     label->p_mask = mask;

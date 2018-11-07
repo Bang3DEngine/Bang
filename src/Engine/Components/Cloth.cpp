@@ -29,7 +29,7 @@ Cloth::Cloth()
     m_debugPointsMesh = Resources::Create<Mesh>();
     m_debugPointsMaterial = Resources::Create<Material>();
 
-    m_debugPointsMaterial.Get()->SetAlbedoColor(Color::Red);
+    m_debugPointsMaterial.Get()->SetAlbedoColor(Color::Red());
     m_debugPointsMaterial.Get()->SetReceivesLighting(false);
 
     m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
@@ -305,7 +305,7 @@ void Cloth::OnRender()
         {
             prevMatAlbedoColor = GetMaterial()->GetAlbedoColor();
             prevReceivesLighting = GetMaterial()->GetReceivesLighting();
-            GetMaterial()->SetAlbedoColor(Color::Red);
+            GetMaterial()->SetAlbedoColor(Color::Red());
             GetMaterial()->SetReceivesLighting(false);
             GetMaterial()->Bind();
         }
@@ -335,7 +335,7 @@ void Cloth::SetUniformsOnBind(ShaderProgram *sp)
 {
     Renderer::SetUniformsOnBind(sp);
 
-    GLUniforms::SetModelMatrix(Matrix4::Identity);
+    GLUniforms::SetModelMatrix(Matrix4::Identity());
     GLUniforms::SetAllUniformsToShaderProgram(sp);
 }
 
@@ -466,7 +466,7 @@ void Cloth::AddSpringForces()
     {
         for (uint j = 0; j < GetSubdivisions(); ++j)
         {
-            Vector3 springsForce = Vector3::Zero;
+            Vector3 springsForce = Vector3::Zero();
 
             const uint particleIndex = (i * GetSubdivisions() + j);
             const uint pi = particleIndex;
@@ -576,12 +576,12 @@ void Cloth::ConstrainJoints()
 void Cloth::RecreateMesh()
 {
     m_points.Clear();
-    m_fixedPoints.Clear();
+    Array<bool> newFixedPoints;
 
     GameObject *go = GetGameObject();
     Transform *tr = (go ? go->GetTransform() : nullptr);
-    Vector3 center = (tr ? tr->GetPosition() : Vector3::Zero);
-    Quaternion rot = (tr ? tr->GetRotation() : Quaternion::Identity);
+    Vector3 center = (tr ? tr->GetPosition() : Vector3::Zero());
+    Quaternion rot = (tr ? tr->GetRotation() : Quaternion::Identity());
     const Vector2 stepSize = Vector2(GetClothSize() / (GetSubdivisions() - 1));
     for (uint i = 0; i < GetSubdivisions(); ++i)
     {
@@ -591,9 +591,10 @@ void Cloth::RecreateMesh()
             pos -= rot * Vector3(1, 0, 1) * (GetClothSize() * 0.5f);
             pos += center;
             m_points.PushBack(pos);
-            m_fixedPoints.PushBack(false);
+            newFixedPoints.PushBack(IsPointFixed(i * GetSubdivisions() + j));
         }
     }
+    m_fixedPoints = newFixedPoints;
 
     m_particlesData.Resize(GetTotalNumPoints());
     for (uint i = 0; i < GetSubdivisions(); ++i)

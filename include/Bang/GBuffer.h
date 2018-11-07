@@ -36,10 +36,10 @@ public:
     void ApplyPassBlend(ShaderProgram *sp,
                         GL::BlendFactor srcBlendFactor,
                         GL::BlendFactor dstBlendFactor,
-                        const AARect &mask = AARect::NDCRect);
+                        const AARect &mask = AARect::NDCRect());
     void ApplyPass(ShaderProgram *sp,
                    bool willReadFromColor = false,
-                   const AARect &mask = AARect::NDCRect);
+                   const AARect &mask = AARect::NDCRect());
 
     void SetAllDrawBuffers() const override;
     void SetAllDrawBuffersExceptColor();

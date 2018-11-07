@@ -75,7 +75,7 @@ AABox DirectionalLight::GetShadowCastersAABox(
                                    ->GetTransform()
                                    ->GetLocalToWorldMatrix();
         AABox rendAABox = shadowCasterRend->GetAABBox();
-        if (rendAABox != AABox::Empty)
+        if (rendAABox != AABox::Empty())
         {
             AABox rendAABoxWorld = localToWorld * rendAABox;
             casterPoints.PushBack(rendAABoxWorld.GetPoints());
@@ -111,7 +111,7 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     Matrix4 shadowMapViewMatrix, shadowMapProjMatrix;
     GetWorldToShadowMapMatrices(
         &shadowMapViewMatrix, &shadowMapProjMatrix, shadowCastersRenderers);
-    GLUniforms::SetModelMatrix(Matrix4::Identity);
+    GLUniforms::SetModelMatrix(Matrix4::Identity());
     GLUniforms::SetViewMatrix(shadowMapViewMatrix);
     GLUniforms::SetProjectionMatrix(shadowMapProjMatrix);
     m_lastUsedShadowMapViewProj = shadowMapProjMatrix * shadowMapViewMatrix;
@@ -182,8 +182,8 @@ void DirectionalLight::GetWorldToShadowMapMatrices(
     AABox orthoBoxInLightSpace = GetShadowMapOrthoBox(shadowCastersRenderers);
     Vector3 orthoBoxExtents = orthoBoxInLightSpace.GetExtents();
     Matrix4 lightToWorld = GetLightToWorldMatrix();
-    Vector3 fwd = lightToWorld.TransformedVector(Vector3::Forward);
-    Vector3 up = lightToWorld.TransformedVector(Vector3::Up);
+    Vector3 fwd = lightToWorld.TransformedVector(Vector3::Forward());
+    Vector3 up = lightToWorld.TransformedVector(Vector3::Up());
 
     Vector3 orthoBoxCenterWorld =
         lightToWorld.TransformedPoint(orthoBoxInLightSpace.GetCenter());

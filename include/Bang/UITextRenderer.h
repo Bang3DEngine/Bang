@@ -78,9 +78,9 @@ private:
     RH<Font> p_font;
     String m_content = "";
     int m_textSize = 64;
-    Vector2 m_spacingMultiplier = Vector2::One;
+    Vector2 m_spacingMultiplier = Vector2::One();
     bool m_kerning = false;
-    mutable AARect m_textRectNDC = AARect::Zero;
+    mutable AARect m_textRectNDC = AARect::Zero();
 
     bool m_wrapping = false;
     HorizontalAlignment m_horizontalAlignment = HorizontalAlignment::CENTER;

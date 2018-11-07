@@ -6,9 +6,6 @@
 using namespace Bang;
 
 template <class T>
-const Matrix4G<T> Matrix4G<T>::Identity = Matrix4G<T>(1);
-
-template <class T>
 Matrix4G<T>::Matrix4G() : Matrix4G<T>(1)
 {
 }
@@ -458,32 +455,6 @@ QuaternionG<T> Matrix4G<T>::ToQuaternion(const Matrix4G<T> &m)
             res.z = biggestVal;
             res.w = (m.c0[1] - m.c1[0]) * mult;
             break;
-        /*
-            case 0:
-                res.x = (m.c2[1] - m.c1[2]) * mult;
-                res.y = (m.c0[2] - m.c2[0]) * mult;
-                res.z = (m.c1[0] - m.c0[1]) * mult;
-                res.w = biggestVal;
-                break;
-            case 1:
-                res.x = biggestVal;
-                res.y = (m.c1[0] + m.c0[1]) * mult;
-                res.z = (m.c0[2] + m.c2[0]) * mult;
-                res.w = (m.c2[1] - m.c1[2]) * mult;
-                break;
-            case 2:
-                res.x = (m.c1[0] + m.c0[1]) * mult;
-                res.y = biggestVal;
-                res.z = (m.c2[1] + m.c1[2]) * mult;
-                res.w = (m.c0[2] - m.c2[0]) * mult;
-                break;
-            case 3:
-                res.x = (m.c0[2] + m.c2[0]) * mult;
-                res.y = (m.c2[1] + m.c1[2]) * mult;
-                res.z = biggestVal;
-                res.w = (m.c1[0] - m.c0[1]) * mult;
-                break;
-    */
         default: break;
     }
     return res;
@@ -505,6 +476,13 @@ template <class T>
 const Vector4G<T> &Matrix4G<T>::operator[](std::size_t i) const
 {
     return const_cast<Matrix4G<T> *>(this)->operator[](i);
+}
+
+template <class T>
+const Matrix4G<T> &Matrix4G<T>::Identity()
+{
+    static const Matrix4G<T> m = Matrix4G<T>(1);
+    return m;
 }
 
 // Operators

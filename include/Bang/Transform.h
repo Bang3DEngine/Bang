@@ -54,10 +54,10 @@ class Transform : public Component,
     COMPONENT_WITH_FAST_DYNAMIC_CAST(Transform)
 
 public:
-    void LookAt(const Vector3 &target, const Vector3 &up = Vector3::Up);
-    void LookAt(Transform *targetTransform, const Vector3 &up = Vector3::Up);
-    void LookAt(GameObject *target, const Vector3 &up = Vector3::Up);
-    void LookInDirection(const Vector3 &dir, const Vector3 &up = Vector3::Up);
+    void LookAt(const Vector3 &target, const Vector3 &up = Vector3::Up());
+    void LookAt(Transform *targetTransform, const Vector3 &up = Vector3::Up());
+    void LookAt(GameObject *target, const Vector3 &up = Vector3::Up());
+    void LookInDirection(const Vector3 &dir, const Vector3 &up = Vector3::Up());
 
     void FillFromMatrix(const Matrix4 &transformMatrix);
 
@@ -154,10 +154,10 @@ protected:
     virtual bool CanBeRepeatedInGameObject() const override;
 
 private:
-    Vector3 m_localPosition = Vector3::Zero;
-    Quaternion m_localRotation = Quaternion::Identity;
-    Vector3 m_localEulerAnglesDegreesHint = Vector3::Zero;
-    Vector3 m_localScale = Vector3::One;
+    Vector3 m_localPosition = Vector3::Zero();
+    Quaternion m_localRotation = Quaternion::Identity();
+    Vector3 m_localEulerAnglesDegreesHint = Vector3::Zero();
+    Vector3 m_localScale = Vector3::One();
 
     void PropagateParentTransformChangedEventToChildren() const;
     void PropagateChildrenTransformChangedEventToParent() const;

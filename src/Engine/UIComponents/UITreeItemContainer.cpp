@@ -41,15 +41,15 @@ UITreeItemContainer::UITreeItemContainer()
     containerLE->SetFlexibleSize(Vector2(99999.0f));
 
     p_indentSpacer =
-        GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN, Vector2::Zero);
+        GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN, Vector2::Zero());
     p_indentSpacer->SetName("IndentSpacer");
 
     Texture2D *iconTex = TextureFactory::GetDownArrowIcon();
     p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex);
-    p_collapseButton->GetLayoutElement()->SetFlexibleSize(Vector2::Zero);
+    p_collapseButton->GetLayoutElement()->SetFlexibleSize(Vector2::Zero());
     p_collapseButton->GetGameObject()->SetName("CollapseButton");
     p_collapseButton->SetIcon(iconTex, Vector2i(8), 0);
-    p_collapseButton->GetIcon()->SetTint(Color::Black);
+    p_collapseButton->GetIcon()->SetTint(Color::Black());
     p_collapseButton->GetBorder()->SetVisible(false);
     p_collapseButton->GetBackground()->SetVisible(false);
 

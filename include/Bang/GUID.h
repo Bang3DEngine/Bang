@@ -14,11 +14,11 @@ class GUID
 {
 public:
     using GUIDType = uint64_t;
-    static const GUIDType EmptyGUID;
+    static GUIDType EmptyGUID();
+    static const GUID &Empty();
 
     GUID() = default;
 
-    static const GUID &Empty();
     bool IsEmpty() const;
 
     static GUID GetRandomGUID();
@@ -36,9 +36,9 @@ public:
     bool operator<(const GUID &rhs) const;
 
 private:
-    GUIDType m_timeGUID = GUID::EmptyGUID;
-    GUIDType m_randGUID = GUID::EmptyGUID;
-    GUIDType m_embeddedResourceGUID = GUID::EmptyGUID;
+    GUIDType m_timeGUID = GUID::EmptyGUID();
+    GUIDType m_randGUID = GUID::EmptyGUID();
+    GUIDType m_embeddedResourceGUID = GUID::EmptyGUID();
 
     void SetEmbeddedResourceGUID(const GUIDType &guid);
 

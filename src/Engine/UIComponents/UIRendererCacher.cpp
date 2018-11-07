@@ -61,7 +61,7 @@ void UIRendererCacher::OnStart()
     {
         tex->SetWrapMode(GL::WrapMode::REPEAT);
         p_cachedImageRenderer->SetImageTexture(tex);
-        p_cachedImageRenderer->SetTint(Color::White);
+        p_cachedImageRenderer->SetTint(Color::White());
         p_cachedImageRenderer->GetImageTexture()->SetAlphaCutoff(1.0f);
         p_cachedImageRenderer->SetMode(UIImageRenderer::Mode::TEXTURE);
         p_cachedImageRenderer->GetImageTexture()->SetFilterMode(

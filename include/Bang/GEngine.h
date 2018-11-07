@@ -61,7 +61,7 @@ public:
                         RenderPass renderPass,
                         bool renderChildren = true);
     void RenderViewportRect(ShaderProgram *sp,
-                            const AARect &destRectMask = AARect::NDCRect);
+                            const AARect &destRectMask = AARect::NDCRect());
     void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderViewportPlane();
 
@@ -143,7 +143,7 @@ private:
     void ApplyStenciledDeferredLightsToGBuffer(
         GameObject *lightsContainer,
         Camera *camera,
-        const AARect &maskRectNDC = AARect::NDCRect);
+        const AARect &maskRectNDC = AARect::NDCRect());
 
     void RetrieveForwardRenderingInformation(GameObject *goToRender);
     void PrepareForForwardRendering(Renderer *rend);

@@ -174,10 +174,10 @@ UISlider *UISlider::CreateInto(GameObject *go)
 
     UILayoutElement *sliderLE =
         sliderContainer->AddComponent<UILayoutElement>();
-    sliderLE->SetFlexibleSize(Vector2::One);
+    sliderLE->SetFlexibleSize(Vector2::One());
 
     UIImageRenderer *guideRenderer =
-        GameObjectFactory::CreateUIImage(Color::Black);
+        GameObjectFactory::CreateUIImage(Color::Black());
     RectTransform *guideRT = guideRenderer->GetGameObject()->GetRectTransform();
     guideRT->SetAnchorMin(Vector2(-1.0f, 0.0f));
     guideRT->SetAnchorMax(Vector2(1.0f, 0.0f));
@@ -188,7 +188,7 @@ UISlider *UISlider::CreateInto(GameObject *go)
     handleRenderer->SetImageTexture(TextureFactory::GetCircleIcon());
     RectTransform *handleRT =
         handleRenderer->GetGameObject()->GetRectTransform();
-    handleRT->SetAnchors(Vector2::Zero);
+    handleRT->SetAnchors(Vector2::Zero());
     handleRT->SetMargins(-6);
 
     guideRenderer->GetGameObject()->SetParent(sliderContainer);

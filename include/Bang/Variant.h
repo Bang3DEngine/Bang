@@ -113,7 +113,7 @@ private:
     double m_double = 0.0;
     String m_string = "";
     GUID m_guid = GUID::Empty();
-    Vector4 m_vector4 = Vector4::Zero;
+    Vector4 m_vector4 = Vector4::Zero();
 };
 
 // Set specializations

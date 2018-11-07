@@ -51,12 +51,14 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
     {
         const Array<Vector3> prevPositions = mesh->GetPositionsPool();
         Array<Vector3> newPositions = Array<Vector3>(prevPositions.Size());
-        for (Mesh::VertexId vId = 0; vId < mesh->GetPositionsPool().Size(); ++vId)
+        for (Mesh::VertexId vId = 0; vId < mesh->GetPositionsPool().Size();
+             ++vId)
         {
             Vector3 vertexPos = prevPositions[vId];
-            Vector3 vDisplacement = Vector3::Zero;
+            Vector3 vDisplacement = Vector3::Zero();
 
-            const Array<Mesh::VertexId> neighborVIds = mesh->GetNeighborVertexIds(vId);
+            const Array<Mesh::VertexId> neighborVIds =
+                mesh->GetNeighborVertexIds(vId);
             const uint numNeighbors = neighborVIds.Size();
 
             for (Mesh::VertexId nVId : neighborVIds)
@@ -83,14 +85,14 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
             float sign = Math::Sign(nextSmoothFactor);
             nextSmoothFactor = smoothFactor * sign * (sign > 0 ? 1.5f : 1.0f);
         }
-
     }
 
     mesh->UpdateVAOs();
 }
 
-Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
-                                               SimplificationMethod simplificationMethod)
+Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(
+    const Mesh *mesh,
+    SimplificationMethod simplificationMethod)
 {
     if (!mesh)
     {
@@ -445,7 +447,8 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(const Mesh *mesh,
         simplifiedMesh.Get()->UpdateVAOsAndTables();
 
         Debug_Log("Level " << level << ": "
-                           << vertexClusterTriVertsIndices.Size() << "/"
+                           << vertexClusterTriVertsIndices.Size()
+                           << "/"
                            << mesh->GetNumVerticesIds());
 
         simplifiedMeshesArray.PushBack(simplifiedMesh);
@@ -466,10 +469,10 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
     SimplificationMethod simplificationMethod)
 {
     VertexData vertexRepresentativeData;
-    vertexRepresentativeData.pos = Vector3::Zero;
-    vertexRepresentativeData.normal = Vector3::Zero;
-    vertexRepresentativeData.uv = Vector2::Zero;
-    vertexRepresentativeData.tangent = Vector3::Zero;
+    vertexRepresentativeData.pos = Vector3::Zero();
+    vertexRepresentativeData.normal = Vector3::Zero();
+    vertexRepresentativeData.uv = Vector2::Zero();
+    vertexRepresentativeData.tangent = Vector3::Zero();
 
     if (vertexCluster.IsEmpty())
     {
@@ -501,7 +504,7 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
         {
             // To get the position use quadric error metrics
             int numTrisComputed = 0;
-            Vector3 vertexPosMean = Vector3::Zero;
+            Vector3 vertexPosMean = Vector3::Zero();
             Matrix4 verticesTotalQuadricMatrix = Matrix4(0.0f);
             Set<Mesh::TriangleId> visitedTriangles;
             AABox clusterAABox;
@@ -590,15 +593,18 @@ MeshSimplifier::VertexData MeshSimplifier::GetVertexRepresentativeForCluster(
 
             bool isInvertible;
             Vector3 minimumQuadricErrorPosition =
-                    (verticesTotalQuadricMatrix.Inversed(0.1f, &isInvertible) *
-                     Vector4(0,0,0,1)).xyz();
+                (verticesTotalQuadricMatrix.Inversed(0.1f, &isInvertible) *
+                 Vector4(0, 0, 0, 1))
+                    .xyz();
 
             // To get normal, uvs, etc. use the clustering method.
-            vertexRepresentativeData =
-                    GetVertexRepresentativeForCluster(mesh, vertexCluster,
-                                                      vertexIdxsToTriIdxs,
-                                                      SimplificationMethod::CLUSTERING);
-            if (isInvertible && clusterAABox.Contains(minimumQuadricErrorPosition))
+            vertexRepresentativeData = GetVertexRepresentativeForCluster(
+                mesh,
+                vertexCluster,
+                vertexIdxsToTriIdxs,
+                SimplificationMethod::CLUSTERING);
+            if (isInvertible &&
+                clusterAABox.Contains(minimumQuadricErrorPosition))
             {
                 vertexRepresentativeData.pos = minimumQuadricErrorPosition;
             }

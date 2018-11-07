@@ -18,7 +18,10 @@
 
 using namespace Bang;
 
-UICheckBox::UICheckBox(){CONSTRUCT_CLASS_ID(UICheckBox)}
+UICheckBox::UICheckBox()
+{
+    CONSTRUCT_CLASS_ID(UICheckBox)
+}
 
 UICheckBox::~UICheckBox()
 {
@@ -142,7 +145,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     go->AddComponent<UIHorizontalLayout>();
 
     UILayoutElement *goLE = go->AddComponent<UILayoutElement>();
-    goLE->SetFlexibleSize(Vector2::Zero);
+    goLE->SetFlexibleSize(Vector2::Zero());
 
     GameObject *checkBgImgGo = GameObjectFactory::CreateUIGameObject();
     UIImageRenderer *checkBgImg = checkBgImgGo->AddComponent<UIImageRenderer>();
@@ -150,7 +153,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     // TextureFactory::Get9SliceRoundRectTexture().Get() );
     // checkBgImg->SetMode(UIImageRenderer::Mode::SLICE_9);
     checkBgImg->SetTint(UITheme::GetCheckBoxBackgroundColor());
-    checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
+    checkBgImgGo->GetRectTransform()->SetAnchors(Vector2::Zero());
 
     UIFocusable *focusable = go->AddComponent<UIFocusable>();
     focusable->EventEmitter<IEventsFocus>::RegisterListener(checkBox);
@@ -161,7 +164,7 @@ UICheckBox *UICheckBox::CreateInto(GameObject *go)
     UIImageRenderer *tickImg = tickImgGo->AddComponent<UIImageRenderer>();
     tickImg->SetImageTexture(TextureFactory::GetCheckIcon());
     tickImg->SetTint(UITheme::GetTickColor());
-    tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero);
+    tickImgGo->GetRectTransform()->SetAnchors(Vector2::Zero());
 
     checkBox->p_border = GameObjectFactory::AddInnerBorder(checkBgImgGo);
     // GameObjectFactory::AddInnerShadow(checkBgImgGo, Vector2i(3));

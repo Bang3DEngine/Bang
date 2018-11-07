@@ -98,5 +98,5 @@ Vector2 ILayoutElement::GetSize(LayoutSizeType sizeType) const
         return GetFlexibleSize();
     }
 
-    return Vector2::Zero;
+    return Vector2::Zero();
 }

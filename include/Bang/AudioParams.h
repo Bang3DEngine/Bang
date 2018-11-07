@@ -7,14 +7,14 @@ namespace Bang
 {
 struct AudioParams
 {
-    Vector3 position = Vector3::Zero;
+    Vector3 position = Vector3::Zero();
     float volume = 1.0f;
     float delay = 0.0f;
     float pitch = 1.0f;
     float range = 1000.0f;
     bool looping = false;
 
-    AudioParams(const Vector3 &_position = Vector3::Zero,
+    AudioParams(const Vector3 &_position = Vector3::Zero(),
                 float _volume = 1.0f,
                 float _delay = 0.0f,
                 float _pitch = 1.0f,

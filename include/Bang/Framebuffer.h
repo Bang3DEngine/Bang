@@ -45,7 +45,7 @@ public:
 
     void Blit(GL::Attachment srcAttachment,
               GL::Attachment dstAttachment,
-              const AARect &ndcRect = AARect::NDCRect,
+              const AARect &ndcRect = AARect::NDCRect(),
               GL::BufferBit bufferBit = GL::BufferBit::COLOR);
     Color ReadColor(int x, int y, GL::Attachment attachment) const;
     bool Resize(const Vector2i &size);
@@ -74,7 +74,7 @@ public:
                        int stencilValueMultiplier = 1) const;
 
 protected:
-    Vector2i m_size = Vector2i::Zero;
+    Vector2i m_size = Vector2i::Zero();
     Array<GL::Attachment> m_attachments;
     UMap<GL::Attachment, RH<Texture>, EnumClassHash> m_attachments_To_Texture;
 

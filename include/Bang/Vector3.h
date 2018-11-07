@@ -13,16 +13,16 @@ template <class T>
 class Vector3G
 {
 public:
-    const static Vector3G Up;
-    const static Vector3G Down;
-    const static Vector3G Right;
-    const static Vector3G Left;
-    const static Vector3G Zero;
-    const static Vector3G One;
-    const static Vector3G Forward;
-    const static Vector3G Back;
-    const static Vector3G Infinity;
-    const static Vector3G NInfinity;
+    static const Vector3G &Up();
+    static const Vector3G &Down();
+    static const Vector3G &Right();
+    static const Vector3G &Left();
+    static const Vector3G &Zero();
+    static const Vector3G &One();
+    static const Vector3G &Forward();
+    static const Vector3G &Back();
+    static const Vector3G &Infinity();
+    static const Vector3G &NInfinity();
 
     T x, y, z;
 

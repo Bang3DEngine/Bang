@@ -9,8 +9,8 @@ namespace Bang
 {
 struct RayCastInfo
 {
-    Vector3 origin = Vector3::Zero;
-    Vector3 direction = Vector3::Forward;
+    Vector3 origin = Vector3::Zero();
+    Vector3 direction = Vector3::Forward();
     float maxDistance = Math::Infinity<float>();
 };
 }

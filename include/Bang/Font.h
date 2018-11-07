@@ -31,8 +31,8 @@ public:
      */
     struct GlyphMetrics
     {
-        Vector2f size = Vector2f::Zero;
-        Vector2f bearing = Vector2f::Zero;
+        Vector2f size = Vector2f::Zero();
+        Vector2f bearing = Vector2f::Zero();
         float advance = 0;
     };
 

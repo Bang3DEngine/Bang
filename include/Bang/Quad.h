@@ -42,7 +42,7 @@ public:
 
 private:
     std::array<Vector3, 4> m_points = {
-        {Vector3::Zero, Vector3::Zero, Vector3::Zero, Vector3::Zero}};
+        {Vector3::Zero(), Vector3::Zero(), Vector3::Zero(), Vector3::Zero()}};
 };
 
 Quad operator*(const Matrix4 &m, const Quad &q);

@@ -122,7 +122,7 @@ private:
     GameObject *p_container = nullptr;
     UIScrollPanel *p_scrollPanel = nullptr;
 
-    Color m_idleColor = Color::Zero;
+    Color m_idleColor = Color::Zero();
     Color m_overColor = UITheme::GetOverColor();
     Color m_selectedColor = UITheme::GetSelectedColor();
 

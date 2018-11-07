@@ -34,7 +34,7 @@ class Path;
 
 using namespace Bang;
 
-Mesh::Mesh() : m_bBox(Vector3::Zero)
+Mesh::Mesh() : m_bBox(Vector3::Zero())
 {
     m_vao = new VAO();
 }
@@ -349,7 +349,7 @@ void Mesh::UpdateVertexNormals()
     Array<Vector3> normalsPool;
     for (VertexId vi = 0; vi < GetNumVertices(); ++vi)
     {
-        Vector3 normal = Vector3::Zero;
+        Vector3 normal = Vector3::Zero();
         const Array<CornerId> &cornerIds = GetCornerIdsFromVertexId(vi);
         for (CornerId cornerId : cornerIds)
         {
@@ -980,7 +980,7 @@ void Mesh::GetNeighborCotangentWeights(
 float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
 {
     float trisAreasSum = 0.0f;
-    Vector3 edgesCotangentsVectorSum = Vector3::Zero;
+    Vector3 edgesCotangentsVectorSum = Vector3::Zero();
 
     Map<VertexId, Vector3> edgesCotangentsVector;
     Map<VertexId, float> edgesCotangentsScalar;

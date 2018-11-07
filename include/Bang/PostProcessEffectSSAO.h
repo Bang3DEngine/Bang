@@ -60,7 +60,7 @@ private:
     bool m_separable = false;
     int m_numRandomOffsetsHemisphere = -1;
     bool m_bilateralBlurEnabled = true;
-    Vector2 m_fbSize = Vector2::One;
+    Vector2 m_fbSize = Vector2::One();
 
     Array<float> m_blurKernel;
     Array<Vector3> m_randomHemisphereOffsets;

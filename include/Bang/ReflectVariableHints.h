@@ -34,8 +34,8 @@ public:
 
 private:
     bool m_zoomablePreview = false;
-    Vector4 m_minValue = Vector4::NInfinity;
-    Vector4 m_maxValue = Vector4::Infinity;
+    Vector4 m_minValue = Vector4::NInfinity();
+    Vector4 m_maxValue = Vector4::Infinity();
     Array<String> m_extensions;
     bool m_isSlider = false;
     bool m_isHidden = false;

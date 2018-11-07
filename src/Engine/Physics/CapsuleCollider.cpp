@@ -126,17 +126,17 @@ Quaternion CapsuleCollider::GetInternalRotation() const
 {
     switch (GetAxis())
     {
-        case Axis3D::X: return Quaternion::Identity; break;
+        case Axis3D::X: return Quaternion::Identity(); break;
 
         case Axis3D::Y:
-            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Forward);
+            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Forward());
             break;
 
         case Axis3D::Z:
-            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Up);
+            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Up());
             break;
     }
-    return Quaternion::Identity;
+    return Quaternion::Identity();
 }
 
 void CapsuleCollider::UpdatePxShape()

@@ -136,11 +136,11 @@ std::istream &operator>>(std::istream &is, Color &c)
         String colorName;
         is >> colorName;
 
-#define READ_COLOR_NAME(ColorName)  \
-    if (colorName == "" #ColorName) \
-    {                               \
-        c = Color::ColorName;       \
-        return is;                  \
+#define READ_COLOR_NAME(ColorName)       \
+    if (colorName == "" #ColorName "()") \
+    {                                    \
+        c = Color::ColorName();          \
+        return is;                       \
     }
 
         READ_COLOR_NAME(Red);

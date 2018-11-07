@@ -7,40 +7,6 @@
 namespace Bang
 {
 template <class T>
-const Vector3G<T> Vector3G<T>::Up = Vector3G<T>(SCAST<T>(0),
-                                                SCAST<T>(1),
-                                                SCAST<T>(0));
-template <class T>
-const Vector3G<T> Vector3G<T>::Down = Vector3G<T>(SCAST<T>(0),
-                                                  SCAST<T>(-1),
-                                                  SCAST<T>(0));
-template <class T>
-const Vector3G<T> Vector3G<T>::Right = Vector3G<T>(SCAST<T>(1),
-                                                   SCAST<T>(0),
-                                                   SCAST<T>(0));
-template <class T>
-const Vector3G<T> Vector3G<T>::Left = Vector3G<T>(SCAST<T>(-1),
-                                                  SCAST<T>(0),
-                                                  SCAST<T>(0));
-template <class T>
-const Vector3G<T> Vector3G<T>::Zero = Vector3G<T>(SCAST<T>(0));
-template <class T>
-const Vector3G<T> Vector3G<T>::One = Vector3G<T>(SCAST<T>(1));
-template <class T>
-const Vector3G<T> Vector3G<T>::Forward = Vector3G<T>(SCAST<T>(0),
-                                                     SCAST<T>(0),
-                                                     SCAST<T>(-1));
-template <class T>
-const Vector3G<T> Vector3G<T>::Back = Vector3G<T>(SCAST<T>(0),
-                                                  SCAST<T>(0),
-                                                  SCAST<T>(1));
-template <class T>
-const Vector3G<T> Vector3G<T>::Infinity = Vector3G<T>(Math::Infinity<T>());
-template <class T>
-const Vector3G<T> Vector3G<T>::NInfinity =
-    Vector3G<T>(Math::NegativeInfinity<T>());
-
-template <class T>
 Vector3G<T>::Vector3G()
 {
     for (int i = 0; i < 3; ++i)
@@ -115,9 +81,9 @@ void Vector3G<T>::Normalize()
 template <class T>
 Vector3G<T> Vector3G<T>::NormalizedSafe() const
 {
-    if (*this == Vector3G<T>::Zero)
+    if (*this == Vector3G<T>::Zero())
     {
-        return Vector3G<T>::Zero;
+        return Vector3G<T>::Zero();
     }
     return (*this).Normalized();
 }
@@ -368,7 +334,7 @@ Vector2G<T> Vector3G<T>::ProjectedOnAxis(Axis3D axis) const
         case Axis3D::Y: return Vector2G<T>(x, z);
         case Axis3D::Z: return Vector2G<T>(x, y);
     }
-    return Vector2G<T>::Zero;
+    return Vector2G<T>::Zero();
 }
 
 template <class T>
@@ -671,6 +637,73 @@ template <class T>
 Vector3G<T> operator-(const Vector3G<T> &v)
 {
     return v * SCAST<T>(-1);
+}
+
+template <class T>
+const Vector3G<T> &Vector3G<T>::Up()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(0), SCAST<T>(1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Down()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(0), SCAST<T>(-1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Right()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(1), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Left()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(-1), SCAST<T>(0), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Zero()
+{
+    static const Vector3G<T> v = Vector3G<T>(SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::One()
+{
+    static const Vector3G<T> v = Vector3G<T>(SCAST<T>(1));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Forward()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(-1));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Back()
+{
+    static const Vector3G<T> v =
+        Vector3G<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(1));
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::Infinity()
+{
+    static const Vector3G<T> v = Vector3G<T>(Math::Infinity<T>());
+    return v;
+}
+template <class T>
+const Vector3G<T> &Vector3G<T>::NInfinity()
+{
+    static const Vector3G<T> v = Vector3G<T>(Math::NegativeInfinity<T>());
+    return v;
 }
 
 }  // namespace Bang

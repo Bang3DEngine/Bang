@@ -10,7 +10,7 @@ template <class T>  // Part of it copied from glm
 class Matrix4G
 {
 public:
-    static const Matrix4G Identity;
+    static const Matrix4G<T> &Identity();
 
     Vector4G<T> c0, c1, c2, c3;  // Matrix columns from left to right
 

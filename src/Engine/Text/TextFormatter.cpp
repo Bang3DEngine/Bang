@@ -164,10 +164,10 @@ Vector2i TextFormatter::GetMinimumHeightTextSize(
     // Get the text size with as less height as possible
     if (!font || content.IsEmpty() || fontSize <= 0)
     {
-        return Vector2i::Zero;
+        return Vector2i::Zero();
     }
 
-    Vector2 textSize = Vector2::Zero;
+    Vector2 textSize = Vector2::Zero();
     float currentLineWidth = 0.0f;
     for (uint i = 0; i < content.Size(); ++i)
     {
@@ -265,7 +265,7 @@ AARectf TextFormatter::GetCharRect(char c, const Font *font, int fontSize)
 {
     if (!font)
     {
-        return AARectf::Zero;
+        return AARectf::Zero();
     }
 
     Font::GlyphMetrics charMetrics = font->GetCharMetrics(fontSize, c);

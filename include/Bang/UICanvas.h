@@ -86,6 +86,7 @@ public:
 private:
     Set<UIFocusable *> p_focusablesBeingPressed;
     UILayoutManager *m_uiLayoutManager = nullptr;
+    uint m_framesSinceCreated = 0;
 
     UIFocusable *p_focus = nullptr;
     UIDragDroppable *p_ddBeingDragged = nullptr;

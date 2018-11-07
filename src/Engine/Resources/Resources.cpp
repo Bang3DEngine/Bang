@@ -209,7 +209,7 @@ void Resources::Add(Resource *res)
 
 bool Resources::IsEmbeddedResource(const GUID &guid)
 {
-    return (guid.GetEmbeddedResourceGUID() != GUID::EmptyGUID);
+    return (guid.GetEmbeddedResourceGUID() != GUID::EmptyGUID());
 }
 
 bool Resources::IsEmbeddedResource(const Path &resourcePath)

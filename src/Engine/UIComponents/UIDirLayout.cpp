@@ -14,13 +14,17 @@
 
 using namespace Bang;
 
-UIDirLayout::UIDirLayout()
-    : UIDirLayout(Axis::VERTICAL){CONSTRUCT_CLASS_ID(UIDirLayout)}
+UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
+{
+    CONSTRUCT_CLASS_ID(UIDirLayout)
+}
 
-      UIDirLayout::UIDirLayout(Axis axis)
-    : m_axis(axis){CONSTRUCT_CLASS_ID(UIDirLayout)}
+UIDirLayout::UIDirLayout(Axis axis) : m_axis(axis)
+{
+    CONSTRUCT_CLASS_ID(UIDirLayout)
+}
 
-      UIDirLayout::~UIDirLayout()
+UIDirLayout::~UIDirLayout()
 {
 }
 
@@ -43,7 +47,7 @@ void UIDirLayout::ApplyLayout(Axis axis)
     Vector2i layoutRectSize(Vector2::Round(rt->GetViewportAARect().GetSize()));
     Vector2i paddedLayoutRectSize = layoutRectSize - GetPaddingSize();
 
-    Array<Vector2i> childrenRTSizes(children.Size(), Vector2i::Zero);
+    Array<Vector2i> childrenRTSizes(children.Size(), Vector2i::Zero());
     {
         Vector2i availableSpace =
             paddedLayoutRectSize - GetTotalSpacing(children);
@@ -63,7 +67,8 @@ void UIDirLayout::ApplyLayout(Axis axis)
     Vector2i currentTopLeft(GetPaddingLeft(), GetPaddingTop());
     for (GameObject *child : children)
     {
-        Vector2i spacing = (i > 0) ? (GetDir() * GetSpacing()) : Vector2i::Zero;
+        Vector2i spacing =
+            (i > 0) ? (GetDir() * GetSpacing()) : Vector2i::Zero();
         currentTopLeft += spacing;
 
         Vector2i childRTSize = childrenRTSizes[i];
@@ -171,18 +176,18 @@ void UIDirLayout::FillChildrenPreferredSizes(
     Vector2i *availableSpace)
 {
     Array<Vector2i> prefSizes;
-    Vector2i totalPrefPxToAdd = Vector2i::Zero;
+    Vector2i totalPrefPxToAdd = Vector2i::Zero();
     for (uint i = 0; i < children.Size(); ++i)
     {
         GameObject *child = children[i];
         Vector2i minChildSize = (*childrenRTSizes)[i];
         Vector2i prefSize(UILayoutManager::GetPreferredSize(child));
         Vector2i pxToAdd = prefSize - minChildSize;
-        pxToAdd = Vector2i::Max(pxToAdd, Vector2i::Zero);
+        pxToAdd = Vector2i::Max(pxToAdd, Vector2i::Zero());
         totalPrefPxToAdd += pxToAdd;
         prefSizes.PushBack(prefSize);
     }
-    totalPrefPxToAdd = Vector2i::Max(totalPrefPxToAdd, Vector2i::One);
+    totalPrefPxToAdd = Vector2i::Max(totalPrefPxToAdd, Vector2i::One());
 
     // Populate with new children sizes
     Array<Vector2i> newChildRTSizes;
@@ -192,7 +197,7 @@ void UIDirLayout::FillChildrenPreferredSizes(
         Vector2i minChildSize = (*childrenRTSizes)[i];
         Vector2i childPrefSize = prefSizes[i];
         Vector2i childPrefPxToAdd = (childPrefSize - minChildSize);
-        childPrefPxToAdd = Vector2i::Max(childPrefPxToAdd, Vector2i::Zero);
+        childPrefPxToAdd = Vector2i::Max(childPrefPxToAdd, Vector2i::Zero());
         Vector2d sizeProportion(Vector2d(childPrefPxToAdd) /
                                 Vector2d(totalPrefPxToAdd));
         Vector2i prefAvailPxToAdd(sizeProportion * Vector2d(*availableSpace));
@@ -232,7 +237,7 @@ void UIDirLayout::FillChildrenFlexibleSizes(const Vector2i &layoutRectSize,
                                             Array<Vector2i> *childrenRTSizes,
                                             Vector2i *availableSpace)
 {
-    Vector2d totalChildrenFlexSize = Vector2d::Zero;
+    Vector2d totalChildrenFlexSize = Vector2d::Zero();
     Array<Vector2d> flexSizes;
     for (uint i = 0; i < children.Size(); ++i)
     {
@@ -313,8 +318,8 @@ void UIDirLayout::ApplyStretches(const Vector2i &layoutRectSize,
 
 void UIDirLayout::CalculateLayout(Axis axis)
 {
-    Vector2i minSize = Vector2i::Zero;
-    Vector2i prefSize = Vector2i::Zero;
+    Vector2i minSize = Vector2i::Zero();
+    Vector2i prefSize = Vector2i::Zero();
     Array<GameObject *> children =
         UILayoutManager::GetLayoutableChildrenList(GetGameObject());
     for (GameObject *child : children)

@@ -205,7 +205,7 @@ void Renderer::OnResourceChanged(Resource *)
 
 AABox Renderer::GetAABBox() const
 {
-    return AABox::Empty;
+    return AABox::Empty();
 }
 
 bool Renderer::GetCastsShadows() const
@@ -248,9 +248,9 @@ Material *Renderer::GetMaterial() const
 
 AARect Renderer::GetBoundingRect(Camera *camera) const
 {
-    return AARect::NDCRect;
+    return AARect::NDCRect();
     return camera ? camera->GetViewportBoundingAARectNDC(GetAABBox())
-                  : AARect::Zero;
+                  : AARect::Zero();
 }
 
 void Renderer::PropagateRendererChanged()
@@ -263,7 +263,7 @@ Matrix4 Renderer::GetModelMatrixUniform() const
 {
     return GetGameObject()->GetTransform()
                ? GetGameObject()->GetTransform()->GetLocalToWorldMatrix()
-               : Matrix4::Identity;
+               : Matrix4::Identity();
 }
 
 void Renderer::Reflect()

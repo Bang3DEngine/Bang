@@ -29,60 +29,60 @@ public:
 
     static void RenderLine(const Vector3 &origin,
                            const Vector3 &end,
-                           const Color &color = Color::Green,
+                           const Color &color = Color::Green(),
                            float time = 1.0f,
                            float thickness = 1.0f,
                            bool depthTest = false);
 
     static void RenderPoint(const Vector3 &point,
-                            const Color &color = Color::Green,
+                            const Color &color = Color::Green(),
                             float time = 1.0f,
                             float thickness = 1.0f,
                             bool depthTest = false);
 
     static void RenderPointNDC(const Vector2 &point,
-                               const Color &color = Color::Green,
+                               const Color &color = Color::Green(),
                                float time = 1.0f,
                                float thickness = 1.0f);
 
     static void RenderLineNDC(const Vector2 &originNDC,
                               const Vector2 &endNDC,
-                              const Color &color = Color::Green,
+                              const Color &color = Color::Green(),
                               float time = 1.0f,
                               float thickness = 1.0f,
                               bool depthTest = false);
 
     static void RenderAABox(const AABox &aaBox,
-                            const Color &color = Color::Green,
+                            const Color &color = Color::Green(),
                             float time = 1.0f,
                             float thickness = 1.0f,
                             bool wireframe = false,
                             bool culling = false,
                             bool depthTest = false,
-                            const Color &bordersColor = Color::Zero);
+                            const Color &bordersColor = Color::Zero());
 
     static void RenderTriangle(const Triangle &triangle,
-                               const Color &color = Color::Green,
+                               const Color &color = Color::Green(),
                                float time = 1.0f,
                                bool wireframe = false,
                                bool culling = false,
                                bool depthTest = false);
     static void RenderQuad(const Quad &quad,
-                           const Color &color = Color::Green,
+                           const Color &color = Color::Green(),
                            float time = 1.0f,
                            bool wireframe = false,
                            bool culling = false,
                            bool depthTest = false,
-                           const Color &bordersColor = Color::Zero);
+                           const Color &bordersColor = Color::Zero());
 
     static void RenderAARectNDC(const AARect &aaRectNDC,
-                                const Color &color = Color::Green,
+                                const Color &color = Color::Green(),
                                 float time = 1.0f,
                                 float thickness = 1.0f,
                                 bool depthTest = false);
 
     static void RenderRectNDC(const Rect &rectNDC,
-                              const Color &color = Color::Green,
+                              const Color &color = Color::Green(),
                               float time = 1.0f,
                               float thickness = 1.0f,
                               bool depthTest = false);

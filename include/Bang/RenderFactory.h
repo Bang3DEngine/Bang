@@ -27,11 +27,11 @@ public:
         RH<Texture2D> texture;
         bool wireframe = false;
         float thickness = 1.0f;
-        Color color = Color::White;
+        Color color = Color::White();
         bool receivesLighting = false;
-        Vector3 scale = Vector3::One;
-        Vector3 position = Vector3::Zero;
-        Quaternion rotation = Quaternion::Identity;
+        Vector3 scale = Vector3::One();
+        Vector3 position = Vector3::Zero();
+        Quaternion rotation = Quaternion::Identity();
         GL::CullFaceExt cullFace = GL::CullFaceExt::BACK;
         GL::ViewProjMode viewProjMode = GL::ViewProjMode::WORLD;
     };

@@ -10,6 +10,8 @@ template <class T>  // Most of it almost copied from glm
 class QuaternionG
 {
 public:
+    static const QuaternionG<T> &Identity();
+
     T x, y, z, w;
 
     QuaternionG()
@@ -40,7 +42,7 @@ public:
         T length = Length();
         if (length == 0.0f)
         {
-            return QuaternionG<T>::Identity;
+            return QuaternionG<T>::Identity();
         }
         return QuaternionG<T>(x / length, y / length, z / length, w / length);
     }
@@ -100,7 +102,7 @@ public:
         }
         else
         {
-            axis = Vector3::Zero;
+            axis = Vector3::Zero();
         }
 
         return axis.NormalizedSafe() * angle;
@@ -108,11 +110,11 @@ public:
     static QuaternionG<T> FromEulerAnglesRads(const Vector3 &eulerAnglesRads)
     {
         QuaternionG<T> qx =
-            Quaternion::AngleAxis(eulerAnglesRads.x, Vector3::Right);
+            Quaternion::AngleAxis(eulerAnglesRads.x, Vector3::Right());
         QuaternionG<T> qy =
-            Quaternion::AngleAxis(eulerAnglesRads.y, Vector3::Up);
+            Quaternion::AngleAxis(eulerAnglesRads.y, Vector3::Up());
         QuaternionG<T> qz =
-            Quaternion::AngleAxis(eulerAnglesRads.z, Vector3::Forward);
+            Quaternion::AngleAxis(eulerAnglesRads.z, Vector3::Forward());
         return (qz * qy * qx).Normalized();
     }
     static Vector3G<T> GetEulerAnglesDegrees(const QuaternionG<T> &q)
@@ -184,7 +186,7 @@ public:
         const T d = Vector3G<T>::Dot(v0, v1);
         if (d >= 1.0f)
         {
-            return QuaternionG<T>::Identity;
+            return QuaternionG<T>::Identity();
         }
         else if (d <= -1.0f)
         {
@@ -207,7 +209,7 @@ public:
 
     static QuaternionG<T> LookDirection(
         const Vector3G<T> &_forward,
-        const Vector3G<T> &_up = Vector3G<T>::Up)
+        const Vector3G<T> &_up = Vector3G<T>::Up())
     {
         Vector3G<T> forward = _forward.NormalizedSafe();
         Vector3G<T> up = _up.NormalizedSafe();
@@ -215,10 +217,10 @@ public:
         if (Vector3G<T>::Dot(forward, up) >= SCAST<T>(0.99) ||
             Vector3G<T>::Dot(forward, -up) >= SCAST<T>(0.99))
         {
-            return QuaternionG<T>::Identity;
+            return QuaternionG<T>::Identity();
         }
         return Matrix4G<T>::ToQuaternion(
-            Matrix4G<T>::LookAt(Vector3::Zero, forward, up).Inversed());
+            Matrix4G<T>::LookAt(Vector3::Zero(), forward, up).Inversed());
     }
 
     template <class OtherT>
@@ -231,12 +233,14 @@ public:
                               Math::Cos(angleRads * SCAST<T>(0.5)))
             .Normalized();
     }
-
-    static QuaternionG<T> Identity;
 };
 
 template <class T>
-QuaternionG<T> QuaternionG<T>::Identity = QuaternionG<T>();
+const QuaternionG<T> &QuaternionG<T>::Identity()
+{
+    static const QuaternionG<T> q = QuaternionG<T>();
+    return q;
+}
 
 template <class T>
 bool operator==(const QuaternionG<T> &q1, const QuaternionG<T> &q2)

@@ -12,25 +12,6 @@
 
 namespace Bang
 {
-const Color Color::Red = Color(1, 0, 0, 1);
-const Color Color::Orange = Color(1, 0.5f, 0, 1);
-const Color Color::Yellow = Color(1, 1, 0, 1);
-const Color Color::Green = Color(0, 1, 0, 1);
-const Color Color::Turquoise = Color(1, 1, 0, 1);
-const Color Color::VeryLightBlue = Color(0.8f, 0.95f, 1, 1);
-const Color Color::LightBlue = Color(0.7f, 0.9f, 1, 1);
-const Color Color::Blue = Color(0, 0, 1, 1);
-const Color Color::DarkBlue = Color(0, 0, 0.6f, 1);
-const Color Color::Purple = Color(0.5f, 0, 1, 1);
-const Color Color::Pink = Color(1, 0, 1, 1);
-const Color Color::Black = Color(0, 0, 0, 1);
-const Color Color::LightGray = Color(0.8f, 0.8f, 0.8f, 1);
-const Color Color::DarkGray = Color(0.3f, 0.3f, 0.3f, 1);
-const Color Color::Gray = Color(0.5f, 0.5f, 0.5f, 1);
-const Color Color::White = Color(1, 1, 1, 1);
-const Color Color::Zero = Color(0, 0, 0, 0);
-const Color Color::One = Color(1, 1, 1, 1);
-
 Color::Color() : Color(0)
 {
 }
@@ -401,5 +382,96 @@ bool operator==(const Color &lhs, const Color &rhs)
 bool operator!=(const Color &lhs, const Color &rhs)
 {
     return !(lhs == rhs);
+}
+
+const Color &Color::Red()
+{
+    static const Color c = Color(1, 0, 0, 1);
+    return c;
+}
+const Color &Color::Orange()
+{
+    static const Color c = Color(1, 0.5f, 0, 1);
+    return c;
+}
+const Color &Color::Yellow()
+{
+    static const Color c = Color(1, 1, 0, 1);
+    return c;
+}
+const Color &Color::Green()
+{
+    static const Color c = Color(0, 1, 0, 1);
+    return c;
+}
+const Color &Color::Turquoise()
+{
+    static const Color c = Color(1, 1, 0, 1);
+    return c;
+}
+const Color &Color::VeryLightBlue()
+{
+    static const Color c = Color(0.8f, 0.95f, 1, 1);
+    return c;
+}
+const Color &Color::LightBlue()
+{
+    static const Color c = Color(0.7f, 0.9f, 1, 1);
+    return c;
+}
+const Color &Color::Blue()
+{
+    static const Color c = Color(0, 0, 1, 1);
+    return c;
+}
+const Color &Color::DarkBlue()
+{
+    static const Color c = Color(0, 0, 0.6f, 1);
+    return c;
+}
+const Color &Color::Purple()
+{
+    static const Color c = Color(0.5f, 0, 1, 1);
+    return c;
+}
+const Color &Color::Pink()
+{
+    static const Color c = Color(1, 0, 1, 1);
+    return c;
+}
+const Color &Color::Black()
+{
+    static const Color c = Color(0, 0, 0, 1);
+    return c;
+}
+const Color &Color::LightGray()
+{
+    static const Color c = Color(0.8f, 0.8f, 0.8f, 1);
+    return c;
+}
+const Color &Color::DarkGray()
+{
+    static const Color c = Color(0.3f, 0.3f, 0.3f, 1);
+    return c;
+}
+const Color &Color::Gray()
+{
+    static const Color c = Color(0.5f, 0.5f, 0.5f, 1);
+    return c;
+}
+const Color &Color::White()
+{
+    static const Color c = Color(1, 1, 1, 1);
+    return c;
+}
+const Color &Color::Zero()
+{
+    static const Color c = Color(0, 0, 0, 0);
+    return c;
+}
+const Color &Color::One()
+{
+    static const Color c = Color(1, 1, 1, 1);
+    return c;
 }
 }  // namespace Bang

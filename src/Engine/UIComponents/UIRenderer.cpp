@@ -42,9 +42,9 @@ void UIRenderer::OnRender(RenderPass renderPass)
         if (GetCullByRectTransform())
         {
             const AARect rectNDC = rt->GetViewportAARectNDC();
-            render = (rectNDC != AARect::Zero &&
-                      AARect::Intersection(AARect::NDCRect, rectNDC) !=
-                          AARect::Zero);
+            render = (rectNDC != AARect::Zero() &&
+                      AARect::Intersection(AARect::NDCRect(), rectNDC) !=
+                          AARect::Zero());
         }
 
         if (render)
@@ -100,5 +100,5 @@ AARect UIRenderer::GetBoundingRect(Camera *camera) const
 {
     GameObject *go = GetGameObject();
     RectTransform *rt = go ? go->GetRectTransform() : nullptr;
-    return rt ? (rt->GetViewportAARect()) : AARect::Zero;
+    return rt ? (rt->GetViewportAARect()) : AARect::Zero();
 }

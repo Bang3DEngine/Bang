@@ -70,7 +70,8 @@ GLUniforms::ModelMatrixUniforms *GLUniforms::GetModelMatricesUniforms()
 
 Matrix4 GLUniforms::GetCanvasProjectionMatrix()
 {
-    const Vector2i vpSize = Vector2i::Max(GL::GetViewportSize(), Vector2i::One);
+    const Vector2i vpSize =
+        Vector2i::Max(GL::GetViewportSize(), Vector2i::One());
     const Matrix4 ortho = Matrix4::Ortho(0, vpSize.x, 0, vpSize.y, 1, -1);
     return ortho;
 }

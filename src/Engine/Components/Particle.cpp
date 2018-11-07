@@ -72,7 +72,7 @@ void Particle::CorrectParticleCollisions(Particle::Data *pData,
                                          float dtSecs,
                                          const Particle::Parameters &params)
 {
-    pData->frictionForce = Vector3::Zero;
+    pData->frictionForce = Vector3::Zero();
     if (params.computeCollisions && params.colliders.Size() >= 1)
     {
         Vector3 pPrevPos = pData->prevPosition;
@@ -317,12 +317,13 @@ bool Particle::CollideParticle(Collider *collider,
                                Math::Max(Math::Abs(planePointNoIntDist), 0.1f);
         Vector3 newPos = newPositionNoInt -
                          bouncinessEpsilon * correctionDist * cnorm +
-                         (cnorm * 0.05f);
+                         (cnorm * 0.02f);
         *newPositionAfterInt = newPos;
 
-        Vector3 newVel = newVelocityNoInt - bouncinessEpsilon * cnorm *
-                                                collisionPlane.GetDistanceTo(
-                                                    cpos + newVelocityNoInt);
+        Vector3 newVel =
+            newVelocityNoInt -
+            bouncinessEpsilon * cnorm *
+                collisionPlane.GetDistanceTo(cpos + newVelocityNoInt);
         *newVelocityAfterInt = newVel;
 
         float normalForceLength = Math::Abs(

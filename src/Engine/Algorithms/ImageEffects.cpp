@@ -11,7 +11,7 @@ void ImageEffects::SignedDistanceField(const Image &inputImageBW,
                                        int radius)
 {
     outImg->Create(
-        inputImageBW.GetWidth(), inputImageBW.GetHeight(), Color::White);
+        inputImageBW.GetWidth(), inputImageBW.GetHeight(), Color::White());
 
     constexpr float negativeOffset = 0.25f;
 
@@ -72,13 +72,13 @@ void ImageEffects::Outline(const Image &imgBW, Image *outlineOutputImageBW)
 
             bool isFrontier = false;
             const Color currentColor = imgBW.GetPixel(x, y);
-            if (currentColor == Color::Zero)
+            if (currentColor == Color::Zero())
             {
                 for (int ry = minY; ry <= maxY; ++ry)
                 {
                     for (int rx = minX; rx <= maxX; ++rx)
                     {
-                        if (imgBW.GetPixel(rx, ry) != Color::Zero)
+                        if (imgBW.GetPixel(rx, ry) != Color::Zero())
                         {
                             isFrontier = true;
                         }
@@ -86,7 +86,7 @@ void ImageEffects::Outline(const Image &imgBW, Image *outlineOutputImageBW)
                 }
             }
             outlineOutputImageBW->SetPixel(
-                x, y, isFrontier ? Color::White : Color::Zero);
+                x, y, isFrontier ? Color::White() : Color::Zero());
         }
     }
 }
@@ -97,7 +97,7 @@ bool ImageEffects::Albedo(const Image &inputImage1,
                           bool diffAlpha)
 {
     diffOutputImage->Create(
-        inputImage1.GetWidth(), inputImage1.GetHeight(), Color::White);
+        inputImage1.GetWidth(), inputImage1.GetHeight(), Color::White());
 
     bool diff = false;
     for (int y = 0; y < inputImage1.GetHeight(); ++y)
@@ -117,7 +117,7 @@ bool ImageEffects::Albedo(const Image &inputImage1,
 
             diffOutputImage->SetPixel(x, y, diffColor);
 
-            if (diffColor != Color::Zero)
+            if (diffColor != Color::Zero())
             {
                 diff = true;
             }

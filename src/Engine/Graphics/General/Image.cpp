@@ -94,7 +94,7 @@ void Image::AddMargins(const Vector2i &margins,
         GetSize(), (margins * 2) + GetSize(), arMode);
     Create(newSize.x, newSize.y, marginColor);
     Copy(original,
-         AARecti(Vector2i::Zero, original.GetSize()),
+         AARecti(Vector2i::Zero(), original.GetSize()),
          AARecti(newSize / 2 - original.GetSize() / 2,
                  newSize / 2 + (original.GetSize() + 1) / 2));
 }
@@ -198,12 +198,12 @@ void Image::Resize(int _newWidth,
                 Vector2 oriBotRightF = Vector2(x + 1, y + 1) * sizeProp;
                 Vector2i oriTopLeft(Math::Floor(oriTopLeftF.x),
                                     Math::Floor(oriTopLeftF.y));
-                oriTopLeft = Vector2i::Max(oriTopLeft, Vector2i::Zero);
+                oriTopLeft = Vector2i::Max(oriTopLeft, Vector2i::Zero());
                 Vector2i oriBotRight(Math::Ceil(oriBotRightF.x),
                                      Math::Ceil(oriBotRightF.y));
                 oriBotRight = Vector2i::Min(oriBotRight, original.GetSize());
 
-                newColor = Color::Zero;
+                newColor = Color::Zero();
                 for (int oriY = oriTopLeft.y; oriY < oriBotRight.y; ++oriY)
                 {
                     for (int oriX = oriTopLeft.x; oriX < oriBotRight.x; ++oriX)

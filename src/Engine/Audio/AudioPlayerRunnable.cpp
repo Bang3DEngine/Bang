@@ -15,6 +15,8 @@ AudioPlayerRunnable::AudioPlayerRunnable(AudioClip *clip,
     p_audioClip = clip;
     p_alAudioSource = alAudioSource;
     m_delayInSeconds = delayInSeconds;
+
+    GetALAudioSource()->EventEmitter<IEventsDestroy>::RegisterListener(this);
     SetAutoDelete(true);
 }
 
@@ -24,7 +26,7 @@ AudioPlayerRunnable::~AudioPlayerRunnable()
     EventEmitter<IEventsDestroy>::PropagateToListeners(
         &IEventsDestroy::OnDestroyed, this);
 
-    if (p_alAudioSource->m_autoDelete)
+    if (GetALAudioSource() && GetALAudioSource()->m_autoDelete)
     {
         delete p_alAudioSource;
     }
@@ -32,18 +34,27 @@ AudioPlayerRunnable::~AudioPlayerRunnable()
 
 void AudioPlayerRunnable::Resume()
 {
-    p_alAudioSource->Play();
+    if (GetALAudioSource())
+    {
+        GetALAudioSource()->Play();
+    }
 }
 
 void AudioPlayerRunnable::Pause()
 {
-    p_alAudioSource->Pause();
+    if (GetALAudioSource())
+    {
+        GetALAudioSource()->Pause();
+    }
 }
 
 void AudioPlayerRunnable::Stop()
 {
     m_forceExit = true;
-    p_alAudioSource->Stop();
+    if (GetALAudioSource())
+    {
+        GetALAudioSource()->Stop();
+    }
 }
 
 AudioClip *AudioPlayerRunnable::GetAudioClip() const
@@ -68,9 +79,19 @@ void AudioPlayerRunnable::Run()
         Thread::SleepCurrentThread(m_delayInSeconds);
     }
 
-    p_alAudioSource->Play();  // Play and wait until source is stopped
-    do
+    if (GetALAudioSource())
     {
-        Thread::SleepCurrentThread(0.3f);
-    } while (!m_forceExit && !p_alAudioSource->IsStopped());
+        GetALAudioSource()->Play();  // Play and wait until source is stopped
+        do
+        {
+            Thread::SleepCurrentThread(0.3f);
+        } while (!m_forceExit && !GetALAudioSource()->IsStopped());
+    }
+}
+
+void AudioPlayerRunnable::OnDestroyed(EventEmitter<IEventsDestroy> *object)
+{
+    ASSERT(object == GetALAudioSource());
+    p_alAudioSource = nullptr;
+    m_forceExit = true;
 }

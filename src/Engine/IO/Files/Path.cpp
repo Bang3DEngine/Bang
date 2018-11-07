@@ -5,10 +5,10 @@
 #include <vector>
 
 #ifdef __linux__
-#include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 constexpr char Separator[] = "/";
 constexpr char SeparatorC = '/';
 #elif _WIN32

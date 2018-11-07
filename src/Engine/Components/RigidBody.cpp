@@ -243,14 +243,14 @@ Vector3 RigidBody::GetLinearVelocity() const
 {
     return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
                                      GetPxRigidDynamic()->getLinearVelocity())
-                               : Vector3::Zero;
+                               : Vector3::Zero();
 }
 
 Vector3 RigidBody::GetAngularVelocity() const
 {
     return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
                                      GetPxRigidDynamic()->getAngularVelocity())
-                               : Vector3::Zero;
+                               : Vector3::Zero();
 }
 
 float RigidBody::GetMaxAngularVelocity() const

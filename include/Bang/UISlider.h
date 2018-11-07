@@ -50,7 +50,7 @@ public:
     const Color &GetPressedColor() const;
 
 private:
-    Color m_idleColor = Color::White;
+    Color m_idleColor = Color::White();
     Color m_overColor = UITheme::GetOverColor();
     Color m_pressedColor = UITheme::GetSelectedColor();
 

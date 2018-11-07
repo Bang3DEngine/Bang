@@ -182,9 +182,9 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
     const Vector3 pos = tr->GetPosition();
     const Matrix4 pers = Matrix4::Perspective(
         Math::DegToRad(90.0f), 1.0f, 0.05f, GetLightZFar());
-    const Vector3 up = Vector3::Up, down = Vector3::Down, left = Vector3::Left,
-                  right = Vector3::Right, fwd = Vector3::Forward,
-                  back = Vector3::Back;
+    const Vector3 up = Vector3::Up(), down = Vector3::Down(),
+                  left = Vector3::Left(), right = Vector3::Right(),
+                  fwd = Vector3::Forward(), back = Vector3::Back();
     cubeMapPVMMatrices.Resize(6);
     cubeMapPVMMatrices[0] = pers * Matrix4::LookAt(pos, (pos + right), down);
     cubeMapPVMMatrices[1] = pers * Matrix4::LookAt(pos, (pos + left), down);

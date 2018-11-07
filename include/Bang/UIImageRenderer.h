@@ -63,7 +63,7 @@ public:
 
 private:
     RH<Mesh> p_quadMesh;
-    Color m_tint = Color::White;
+    Color m_tint = Color::White();
     RH<Texture2D> p_imageTexture;
     Mode m_mode = Undef<Mode>();
     Vector2i m_slice9BorderStrokePx = Vector2i(8);

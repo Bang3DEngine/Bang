@@ -10,14 +10,14 @@ template <class T>
 class Vector2G
 {
 public:
-    const static Vector2G Up;
-    const static Vector2G Down;
-    const static Vector2G Right;
-    const static Vector2G Left;
-    const static Vector2G Zero;
-    const static Vector2G One;
-    const static Vector2G Infinity;
-    const static Vector2G NInfinity;
+    static const Vector2G &Up();
+    static const Vector2G &Down();
+    static const Vector2G &Right();
+    static const Vector2G &Left();
+    static const Vector2G &Zero();
+    static const Vector2G &One();
+    static const Vector2G &Infinity();
+    static const Vector2G &NInfinity();
 
     T x, y;
 

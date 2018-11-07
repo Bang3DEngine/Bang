@@ -213,7 +213,7 @@ void ImageIO::ImportBMP(const Path &filepath, Image *img, bool *ok)
                                 pixels[i * 3 + 1] / 255.0f,
                                 pixels[i * 3 + 2] / 255.0f,
                                 1.0f);
-            color = Color::Red;
+            color = Color::Red();
             img->SetPixel(x, y, color);
             ++i;
         }

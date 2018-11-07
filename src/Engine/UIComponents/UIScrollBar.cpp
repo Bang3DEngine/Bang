@@ -21,7 +21,10 @@
 
 using namespace Bang;
 
-UIScrollBar::UIScrollBar(){CONSTRUCT_CLASS_ID(UIScrollBar)}
+UIScrollBar::UIScrollBar()
+{
+    CONSTRUCT_CLASS_ID(UIScrollBar)
+}
 
 UIScrollBar::~UIScrollBar()
 {
@@ -33,7 +36,7 @@ void UIScrollBar::OnUpdate()
 
     if (IsBeingGrabbed())
     {
-        p_barImg->SetTint(Color::White.WithValue(0.8f));
+        p_barImg->SetTint(Color::White().WithValue(0.8f));
 
         Vector2 mouseCoordsPx(Input::GetMousePosition());
         AARect scrollRectPx = GetScrollingRect();
@@ -45,13 +48,13 @@ void UIScrollBar::OnUpdate()
 
         Vector2 offsettedMouseCoordsPxRel = mouseCoordsPx - m_grabOffsetPx;
         Vector2 emptySpacePx = scrollRectPx.GetSize() - barRectPx.GetSize();
-        emptySpacePx = Vector2::Max(emptySpacePx, Vector2::One);
+        emptySpacePx = Vector2::Max(emptySpacePx, Vector2::One());
 
         Vector2 mousePercent =
-            ((emptySpacePx != Vector2::Zero)
+            ((emptySpacePx != Vector2::Zero())
                  ? Vector2(offsettedMouseCoordsPxRel - scrollRectPx.GetMin()) /
                        emptySpacePx
-                 : Vector2::Zero);
+                 : Vector2::Zero());
         mousePercent.y = 1.0f - mousePercent.y;
         float scrollPercent = mousePercent.GetAxis(GetScrollAxis());
         scrollPercent = Math::Clamp(scrollPercent, 0.0f, 1.0f);
@@ -206,7 +209,7 @@ UIScrollBar *UIScrollBar::CreateInto(GameObject *go)
     UIScrollBar *scrollBar = go->AddComponent<UIScrollBar>();
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
-    scrollArea->GetBackground()->SetTint(Color::White.WithValue(0.4f));
+    scrollArea->GetBackground()->SetTint(Color::White().WithValue(0.4f));
 
     GameObject *bar = GameObjectFactory::CreateUIGameObjectNamed("Bar");
     UIImageRenderer *barImg = bar->AddComponent<UIImageRenderer>();
@@ -246,7 +249,7 @@ void UIScrollBar::OnMouseEnter()
 {
     if (!IsBeingGrabbed())
     {
-        p_barImg->SetTint(Color::White.WithValue(1.0f));
+        p_barImg->SetTint(Color::White().WithValue(1.0f));
     }
 }
 
@@ -254,7 +257,7 @@ void UIScrollBar::OnMouseExit()
 {
     if (!IsBeingGrabbed())
     {
-        p_barImg->SetTint(Color::White.WithValue(0.9f));
+        p_barImg->SetTint(Color::White().WithValue(0.9f));
     }
 }
 

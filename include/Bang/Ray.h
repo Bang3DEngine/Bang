@@ -23,8 +23,8 @@ public:
     const Vector3 &GetDirection() const;
 
 private:
-    Vector3 m_origin = Vector3::Zero;
-    Vector3 m_direction = Vector3::Forward;
+    Vector3 m_origin = Vector3::Zero();
+    Vector3 m_direction = Vector3::Forward();
 };
 }
 

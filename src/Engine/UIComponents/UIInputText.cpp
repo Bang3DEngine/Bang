@@ -33,7 +33,10 @@ const Vector2i UIInputText::LookAheadOffsetPx = Vector2i(5);
 const int UIInputText::MarginX = 5;
 const int UIInputText::MarginY = 2;
 
-UIInputText::UIInputText(){CONSTRUCT_CLASS_ID(UIInputText)}
+UIInputText::UIInputText()
+{
+    CONSTRUCT_CLASS_ID(UIInputText)
+}
 
 UIInputText::~UIInputText()
 {
@@ -98,10 +101,10 @@ void UIInputText::UpdateTextScrolling()
     if (p_scrollArea && GetText())
     {
         Vector2i prevScrollPx = p_scrollArea->GetScrolling();
-        p_scrollArea->SetScrolling(Vector2i::Zero);
+        p_scrollArea->SetScrolling(Vector2i::Zero());
         GetText()->RegenerateCharQuadsVAO();
 
-        Vector2 scrollNDC = Vector2::Zero;
+        Vector2 scrollNDC = Vector2::Zero();
         AARect labelLimits(GetLabelRT()->GetViewportAARectNDC());
         AARect contentRectNDC = GetText()->GetContentViewportNDCRect();
         if (contentRectNDC.GetWidth() > labelLimits.GetWidth() &&
@@ -318,9 +321,10 @@ UIInputText *UIInputText::CreateInto(GameObject *go)
     inputText->p_background = bg;
 
     UIScrollArea *scrollArea = GameObjectFactory::CreateUIScrollAreaInto(go);
-    scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(Vector2::Zero);
+    scrollArea->GetGameObject()->GetRectTransform()->SetAnchors(
+        Vector2::Zero());
     scrollArea->GetMask()->SetMasking(true);
-    scrollArea->GetBackground()->SetTint(Color::Zero);
+    scrollArea->GetBackground()->SetTint(Color::Zero());
     inputText->p_scrollArea = scrollArea;
 
     inputText->p_border = GameObjectFactory::AddInnerBorder(go);

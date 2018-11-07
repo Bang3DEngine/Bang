@@ -28,7 +28,10 @@
 
 using namespace Bang;
 
-UIList::UIList(){CONSTRUCT_CLASS_ID(UIList)}
+UIList::UIList()
+{
+    CONSTRUCT_CLASS_ID(UIList)
+}
 
 UIList::~UIList()
 {
@@ -330,7 +333,7 @@ void UIList::ScrollTo(GOItem *item)
     relativeItemRect.SetMax(
         Vector2::Max(relativeItemRectMin, relativeItemRectMax));
 
-    Vector2i scrolling = -Vector2i::One;
+    Vector2i scrolling = -Vector2i::One();
     if (itemRect.GetMax().y > panelRect.GetMax().y)
     {
         scrolling = Vector2i(relativeItemRect.GetMax() - panelRect.GetHeight());
@@ -340,7 +343,7 @@ void UIList::ScrollTo(GOItem *item)
         scrolling = Vector2i(relativeItemRect.GetMin() - panelRect.GetHeight());
     }
 
-    if (scrolling != -Vector2i::One)
+    if (scrolling != -Vector2i::One())
     {
         GetScrollPanel()->SetScrolling(scrolling);
     }
@@ -399,9 +402,7 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
         case UIEvent::Type::MOUSE_EXIT: SetItemUnderMouse(nullptr, true); break;
 
         case UIEvent::Type::MOUSE_ENTER:
-        case UIEvent::Type::MOUSE_MOVE:
-        {
-            return OnMouseMove();
+        case UIEvent::Type::MOUSE_MOVE: { return OnMouseMove();
         }
         break;
 

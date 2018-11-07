@@ -37,19 +37,19 @@ public:
         Particle::PhysicsStepMode physicsStepMode = PhysicsStepMode::EULER;
 
         float animationSpeed = 0.0f;
-        Vector2i animationSheetSize = Vector2i::One;
+        Vector2i animationSheetSize = Vector2i::One();
     };
 
     struct Data
     {
-        Vector3 prevPosition = Vector3::Zero;
-        Vector3 position = Vector3::Zero;
-        Vector3 velocity = Vector3::Zero;
-        Vector3 extraForce = Vector3::Zero;
-        Vector3 frictionForce = Vector3::Zero;
-        Color startColor = Color::White;
-        Color endColor = Color::White;
-        Color currentColor = Color::White;
+        Vector3 prevPosition = Vector3::Zero();
+        Vector3 position = Vector3::Zero();
+        Vector3 velocity = Vector3::Zero();
+        Vector3 extraForce = Vector3::Zero();
+        Vector3 frictionForce = Vector3::Zero();
+        Color startColor = Color::White();
+        Color endColor = Color::White();
+        Color currentColor = Color::White();
         float totalLifeTime = Math::Infinity<float>();
         float remainingLifeTime = Math::Infinity<float>();
         float remainingStartTime = 0.0f;

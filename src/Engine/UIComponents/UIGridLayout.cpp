@@ -13,7 +13,10 @@
 
 using namespace Bang;
 
-UIGridLayout::UIGridLayout(){CONSTRUCT_CLASS_ID(UIGridLayout)}
+UIGridLayout::UIGridLayout()
+{
+    CONSTRUCT_CLASS_ID(UIGridLayout)
+}
 
 UIGridLayout::~UIGridLayout()
 {
@@ -50,7 +53,7 @@ void UIGridLayout::ApplyLayout(Axis axis)
 
 void UIGridLayout::CalculateLayout(Axis axis)
 {
-    Vector2i minSize = Vector2i::Zero;
+    Vector2i minSize = Vector2i::Zero();
     Vector2i prefSize = GetCellSize() * Vector2i(GetNumColumns(), GetNumRows());
     prefSize += GetTotalSpacing();
     prefSize += GetPaddingSize();

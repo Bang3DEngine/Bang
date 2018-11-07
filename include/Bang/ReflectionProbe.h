@@ -73,13 +73,13 @@ public:
 private:
     bool m_isBoxed = false;
     bool m_filterForIBL = true;
-    Vector3 m_size = Vector3::One;
+    Vector3 m_size = Vector3::One();
     Time m_restTime;
 
     int m_renderSize = -1;
     float m_camerasZNear = -1.0f;
     float m_camerasZFar = -1.0f;
-    Color m_camerasClearColor = -Color::One;
+    Color m_camerasClearColor = -Color::One();
     CameraClearMode m_camerasClearMode = Undef<CameraClearMode>();
     RH<TextureCubeMap> m_camerasSkyBoxTexture;
 

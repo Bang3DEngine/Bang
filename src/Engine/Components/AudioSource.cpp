@@ -20,7 +20,10 @@
 
 using namespace Bang;
 
-AudioSource::AudioSource(){CONSTRUCT_CLASS_ID(AudioSource)}
+AudioSource::AudioSource()
+{
+    CONSTRUCT_CLASS_ID(AudioSource)
+}
 
 AudioSource::~AudioSource()
 {
@@ -48,8 +51,7 @@ void AudioSource::OnUpdate()
         }
     }
 
-    Transform *tr = GetGameObject()->GetTransform();
-    if (tr)
+    if (Transform *tr = GetGameObject()->GetTransform())
     {
         ALAudioSource::SetPosition(tr->GetPosition());
     }
@@ -110,23 +112,21 @@ void AudioSource::Reflect()
     ReflectVar<float>("Volume",
                       [this](float v) { SetVolume(v); },
                       [this]() -> float { return GetVolume(); },
-                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                      BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
     ReflectVar<float>("Pitch",
                       [this](float p) { SetPitch(p); },
                       [this]() -> float { return GetPitch(); },
-                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                      BANG_REFLECT_HINT_MIN_VALUE(0.01f));
     ReflectVar<float>("Range",
                       [this](float r) { SetRange(r); },
                       [this]() -> float { return GetRange(); },
-                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                      BANG_REFLECT_HINT_MIN_VALUE(0.01f));
     ReflectVar<bool>("Looping",
                      [this](bool looping) { SetLooping(looping); },
-                     [this]() -> bool { return GetLooping(); },
-                     BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                     [this]() -> bool { return GetLooping(); });
     ReflectVar<bool>("PlayOnStart",
                      [this](bool playOnStart) { SetPlayOnStart(playOnStart); },
-                     [this]() -> bool { return GetPlayOnStart(); },
-                     BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                     [this]() -> bool { return GetPlayOnStart(); });
 
     BANG_REFLECT_VAR_MEMBER_RESOURCE(
         AudioSource,

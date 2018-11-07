@@ -184,7 +184,7 @@ void GameObject::AddChild_(GameObject *child,
     ASSERT(index >= 0 && index <= GetChildren().Size());
     if (child->GetParent() != this)  // Parent change
     {
-        Matrix4 prevWorldTransform = Matrix4::Identity;
+        Matrix4 prevWorldTransform = Matrix4::Identity();
         if (keepWorldTransform && child->GetTransform())
         {
             prevWorldTransform = child->GetTransform()->GetLocalToWorldMatrix();
@@ -824,7 +824,7 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam,
 
 AABox GameObject::GetLocalAABBox(bool includeChildren) const
 {
-    AABox aabBox = AABox::Empty;
+    AABox aabBox = AABox::Empty();
     if (IsEnabledRecursively() && IsVisibleRecursively())
     {
         Array<Renderer *> rends = GetComponents<Renderer>();
@@ -848,7 +848,7 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
             for (GameObject *child : GetChildren())
             {
                 AABox aabBoxChild = child->GetLocalAABBox(true);
-                if (aabBoxChild != AABox::Empty)
+                if (aabBoxChild != AABox::Empty())
                 {
                     Matrix4 mat;
                     const Transform *childT = child->GetTransform();
@@ -868,9 +868,9 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
 AABox GameObject::GetAABBoxWorld(bool includeChildren) const
 {
     AABox b = GetLocalAABBox(includeChildren);
-    if (b != AABox::Empty)
+    if (b != AABox::Empty())
     {
-        Matrix4 mat = Matrix4::Identity;
+        Matrix4 mat = Matrix4::Identity();
         if (GetTransform())
         {
             mat = GetTransform()->GetLocalToWorldMatrix();

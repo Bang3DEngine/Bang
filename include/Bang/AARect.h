@@ -11,12 +11,12 @@ template <class T>
 class AARectG
 {
 private:
-    Vector2G<T> m_min = Vector2G<T>::Infinity;
-    Vector2G<T> m_max = Vector2G<T>::NInfinity;
+    Vector2G<T> m_min = Vector2G<T>::Infinity();
+    Vector2G<T> m_max = Vector2G<T>::NInfinity();
 
 public:
-    const static AARectG<T> NDCRect;
-    const static AARectG<T> Zero;
+    const static AARectG<T> &NDCRect();
+    const static AARectG<T> &Zero();
 
     AARectG()
     {
@@ -144,7 +144,7 @@ public:
     {
         if (begin == end)
         {
-            return AARectG<T>::Zero;
+            return AARectG<T>::Zero();
         }
         AARectG<T> unionRect = *begin;
         for (auto it = begin; it != end; ++it)
@@ -163,7 +163,7 @@ public:
 
         if (minx > maxx || miny > maxy)
         {
-            return AARectG<T>::Zero;
+            return AARectG<T>::Zero();
         }
 
         return AARectG<T>(minx, miny, maxx, maxy);
@@ -174,7 +174,7 @@ public:
     {
         if (begin == end)
         {
-            return AARectG<T>::Zero;
+            return AARectG<T>::Zero();
         }
         AARectG<T> intersectionRect = *begin;
         for (auto it = begin; it != end; ++it)
@@ -189,7 +189,7 @@ public:
     {
         if (begin == end)
         {
-            return AARectG<T>::Zero;
+            return AARectG<T>::Zero();
         }
 
         Vector2G<T> minv = *begin, maxv = *begin;
@@ -206,7 +206,7 @@ public:
     RectG<OtherT> ToRect() const
     {
         return RectG<OtherT>(Vector2G<OtherT>(GetCenter()),
-                             Vector2G<OtherT>::Right,
+                             Vector2G<OtherT>::Right(),
                              SCAST<OtherT>(GetWidth() * 0.5),
                              SCAST<OtherT>(GetHeight() * 0.5));
     }
@@ -264,11 +264,20 @@ public:
 };
 
 template <class T>
-const AARectG<T> AARectG<T>::NDCRect = AARectG<T>(Vector2G<T>(-1),
-                                                  Vector2G<T>(1));
+const AARectG<T> &AARectG<T>::NDCRect()
+{
+    static const AARectG<T> r =
+        AARectG<T>(Vector2G<T>(SCAST<T>(-1)), Vector2G<T>(SCAST<T>(1)));
+    return r;
+}
 
 template <class T>
-const AARectG<T> AARectG<T>::Zero = AARectG<T>(0, 0, 0, 0);
+const AARectG<T> &AARectG<T>::Zero()
+{
+    static const AARectG<T> r =
+        AARectG<T>(SCAST<T>(0), SCAST<T>(0), SCAST<T>(0), SCAST<T>(0));
+    return r;
+}
 
 template <class T>
 bool operator==(const AARectG<T> &r1, const AARectG<T> &r2)

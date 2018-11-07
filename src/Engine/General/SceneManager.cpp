@@ -95,7 +95,7 @@ void SceneManager::Render()
         }
         else
         {
-            GL::ClearColorBuffer(Color::Black);
+            GL::ClearColorBuffer(Color::Black());
         }
     }
 }

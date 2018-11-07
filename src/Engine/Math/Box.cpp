@@ -46,17 +46,17 @@ bool Box::Contains(const Vector3 &point) const
 
 Vector3 Box::GetExtentX() const
 {
-    return GetOrientation() * (GetLocalExtents().x * Vector3::Right);
+    return GetOrientation() * (GetLocalExtents().x * Vector3::Right());
 }
 
 Vector3 Box::GetExtentY() const
 {
-    return GetOrientation() * (GetLocalExtents().y * Vector3::Up);
+    return GetOrientation() * (GetLocalExtents().y * Vector3::Up());
 }
 
 Vector3 Box::GetExtentZ() const
 {
-    return GetOrientation() * (GetLocalExtents().z * Vector3::Forward);
+    return GetOrientation() * (GetLocalExtents().z * Vector3::Forward());
 }
 
 const Vector3 &Box::GetCenter() const

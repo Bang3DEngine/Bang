@@ -67,7 +67,7 @@ protected:
 
 private:
     bool m_isTrigger = false;
-    Vector3 m_center = Vector3::Zero;
+    Vector3 m_center = Vector3::Zero();
 
     mutable RH<PhysicsMaterial> p_physicsMaterial;
     RH<PhysicsMaterial> p_sharedPhysicsMaterial;

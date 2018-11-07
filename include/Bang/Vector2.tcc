@@ -7,24 +7,6 @@
 namespace Bang
 {
 template <class T>
-const Vector2G<T> Vector2G<T>::Up = Vector2G<T>(SCAST<T>(0), SCAST<T>(1));
-template <class T>
-const Vector2G<T> Vector2G<T>::Down = Vector2G<T>(SCAST<T>(0), SCAST<T>(-1));
-template <class T>
-const Vector2G<T> Vector2G<T>::Right = Vector2G<T>(SCAST<T>(1), SCAST<T>(0));
-template <class T>
-const Vector2G<T> Vector2G<T>::Left = Vector2G<T>(SCAST<T>(-1), SCAST<T>(0));
-template <class T>
-const Vector2G<T> Vector2G<T>::Zero = Vector2G<T>(SCAST<T>(0));
-template <class T>
-const Vector2G<T> Vector2G<T>::One = Vector2G<T>(SCAST<T>(1));
-template <class T>
-const Vector2G<T> Vector2G<T>::Infinity = Vector2G<T>(Math::Infinity<T>());
-template <class T>
-const Vector2G<T> Vector2G<T>::NInfinity =
-    Vector2G<T>(Math::NegativeInfinity<T>());
-
-template <class T>
 T Vector2G<T>::Cross(const Vector2G<T> &v1, const Vector2G<T> &v2)
 {
     return (v1.x * v2.y) - (v1.y * v2.x);
@@ -91,9 +73,9 @@ void Vector2G<T>::Normalize()
 template <class T>
 Vector2G<T> Vector2G<T>::NormalizedSafe() const
 {
-    if (*this == Vector2G<T>::Zero)
+    if (*this == Vector2G<T>::Zero())
     {
-        return Vector2G<T>::Zero;
+        return Vector2G<T>::Zero();
     }
     return (*this).Normalized();
 }
@@ -325,7 +307,8 @@ const T &Vector2G<T>::GetAxis(Axis axis) const
 template <class T>
 Vector2G<T> Vector2G<T>::FromAxis(Axis axis)
 {
-    return (axis == Axis::HORIZONTAL) ? Vector2G<T>::Right : Vector2G<T>::Up;
+    return (axis == Axis::HORIZONTAL) ? Vector2G<T>::Right()
+                                      : Vector2G<T>::Up();
 }
 
 template <class T>
@@ -615,6 +598,55 @@ template <class T>
 Vector2G<T> operator-(const Vector2G<T> &v)
 {
     return v * SCAST<T>(-1);
+}
+
+template <class T>
+const Vector2G<T> &Vector2G<T>::Up()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(0), SCAST<T>(1));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::Down()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(0), SCAST<T>(-1));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::Right()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::Left()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(-1), SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::Zero()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(0));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::One()
+{
+    static const Vector2G<T> v = Vector2G<T>(SCAST<T>(1));
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::Infinity()
+{
+    static const Vector2G<T> v = Vector2G<T>(Math::Infinity<T>());
+    return v;
+}
+template <class T>
+const Vector2G<T> &Vector2G<T>::NInfinity()
+{
+    static const Vector2G<T> v = Vector2G<T>(Math::NegativeInfinity<T>());
+    return v;
 }
 
 }  // namespace Bang

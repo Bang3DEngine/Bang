@@ -44,12 +44,12 @@ inline Color GetAxisColor(Axis3D axis)
 {
     switch (axis)
     {
-        case Axis3D::X: return Color::Red;
-        case Axis3D::Y: return Color::Green;
-        case Axis3D::Z: return Color::Blue;
+        case Axis3D::X: return Color::Red();
+        case Axis3D::Y: return Color::Green();
+        case Axis3D::Z: return Color::Blue();
     }
     ASSERT(false);
-    return Color::White;
+    return Color::White();
 }
 inline Color GetAxisColor(Axis3DExt axis)
 {
@@ -64,19 +64,19 @@ inline Color GetAxisColor(Axis3DExt axis)
         case Axis3DExt::XYZ: return Color(1, 1, 1, 1);
     }
     ASSERT(false);
-    return Color::White;
+    return Color::White();
 }
 
 inline Vector3 GetAxisVector(Axis3D axis)
 {
     switch (axis)
     {
-        case Axis3D::X: return Vector3::Right;
-        case Axis3D::Y: return Vector3::Up;
-        case Axis3D::Z: return Vector3::Forward;
+        case Axis3D::X: return Vector3::Right();
+        case Axis3D::Y: return Vector3::Up();
+        case Axis3D::Z: return Vector3::Forward();
     }
     ASSERT(false);
-    return Vector3::Zero;
+    return Vector3::Zero();
 }
 inline Vector3 GetAxisVector(Axis3DExt axis)
 {
@@ -91,7 +91,7 @@ inline Vector3 GetAxisVector(Axis3DExt axis)
         case Axis3DExt::XYZ: return Vector3(1, 1, 1);
     }
     ASSERT(false);
-    return Vector3::Zero;
+    return Vector3::Zero();
 }
 }
 

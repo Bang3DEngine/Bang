@@ -9,7 +9,10 @@
 
 using namespace Bang;
 
-const GUID::GUIDType GUID::EmptyGUID = 0;
+GUID::GUIDType GUID::EmptyGUID()
+{
+    return 0;
+}
 
 const GUID &GUID::Empty()
 {
@@ -32,7 +35,7 @@ GUID GUID::GetRandomGUID()
     GUID guid;
     guid.m_timeGUID = Time::GetNow().GetNanos();
     guid.m_randGUID = Random::GetRange<GUIDType>(1, Math::Max<GUIDType>());
-    guid.m_embeddedResourceGUID = GUID::EmptyGUID;
+    guid.m_embeddedResourceGUID = GUID::EmptyGUID();
     return guid;
 }
 
@@ -59,7 +62,7 @@ GUID GUID::WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const
 GUID GUID::WithoutEmbeddedResourceGUID() const
 {
     GUID guid = *this;
-    guid.SetEmbeddedResourceGUID(GUID::EmptyGUID);
+    guid.SetEmbeddedResourceGUID(GUID::EmptyGUID());
     return guid;
 }
 

@@ -38,6 +38,7 @@ public:
     void SetPosition(const Vector3 &position);
     void SetParams(const AudioParams &audioParams);
     void SetALBufferId(ALuint bufferId);
+    void UpdateALProperties() const;
 
     bool IsPlaying() const;
     bool IsPaused() const;
@@ -52,6 +53,7 @@ public:
     bool GetLooping() const;
 
 private:
+    uint m_bufferId = 0;
     ALuint m_alSourceId = 0;
     AudioParams m_audioParams;
     bool m_autoDelete = false;

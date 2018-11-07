@@ -32,7 +32,10 @@
 
 using namespace Bang;
 
-UIComboBox::UIComboBox(){CONSTRUCT_CLASS_ID(UIComboBox)}
+UIComboBox::UIComboBox()
+{
+    CONSTRUCT_CLASS_ID(UIComboBox)
+}
 
 UIComboBox::~UIComboBox()
 {
@@ -96,7 +99,7 @@ void UIComboBox::AddItem(const String &label, int value)
 
     UIImageRenderer *checkIcon = checkGo->AddComponent<UIImageRenderer>();
     checkIcon->SetImageTexture(TextureFactory::GetCheckIcon());
-    checkIcon->SetTint(Color::White);
+    checkIcon->SetTint(Color::White());
     UILayoutElement *checkIconLE = checkGo->AddComponent<UILayoutElement>();
     checkIconLE->SetMinWidth(16);
     checkIconLE->SetMinHeight(16);
@@ -157,7 +160,7 @@ void UIComboBox::SetSelectionByIndex(int index, bool selected)
             m_selectedIndices.Remove(index);
             if (GetMultiCheck())
             {
-                m_checkImgs[index]->SetTint(Color::White);
+                m_checkImgs[index]->SetTint(Color::White());
                 if (m_selectedIndices.IsEmpty())
                 {
                     GetList()->ClearSelection();
@@ -530,7 +533,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     UILayoutElement *downArrowLE =
         downArrowIconGo->AddComponent<UILayoutElement>();
     downArrowLE->SetMinSize(Vector2i(8));
-    downArrowLE->SetFlexibleSize(Vector2::Zero);
+    downArrowLE->SetFlexibleSize(Vector2::Zero());
 
     UIList *list = GameObjectFactory::CreateUIList(false);
     GameObject *listGo = list->GetGameObject();

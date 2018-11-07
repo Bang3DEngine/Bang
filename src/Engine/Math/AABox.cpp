@@ -9,7 +9,11 @@
 
 namespace Bang
 {
-AABox AABox::Empty = AABox();
+const AABox &AABox::Empty()
+{
+    static AABox b = AABox();
+    return b;
+}
 
 AABox::AABox()
 {
@@ -173,12 +177,12 @@ void AABox::AddPoint(const Vector3 &point)
 
 AABox AABox::Union(const AABox &b1, const AABox &b2)
 {
-    if (b1 == AABox::Empty)
+    if (b1 == AABox::Empty())
     {
         return b2;
     }
 
-    if (b2 == AABox::Empty)
+    if (b2 == AABox::Empty())
     {
         return b1;
     }
@@ -190,7 +194,7 @@ AABox AABox::Union(const AABox &b1, const AABox &b2)
 
 void AABox::CreateFromPositions(const Array<Vector3> &positions)
 {
-    *this = AABox::Empty;
+    *this = AABox::Empty();
     for (const Vector3 &v : positions)
     {
         AddPoint(v);

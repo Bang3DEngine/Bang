@@ -57,7 +57,7 @@ protected:
     virtual void OnFormatChanged();
 
 private:
-    Vector2i m_size = Vector2i::Zero;
+    Vector2i m_size = Vector2i::Zero();
 
     GL::FilterMode m_filterMode = Undef<GL::FilterMode>();
     GL::WrapMode m_wrapMode = Undef<GL::WrapMode>();

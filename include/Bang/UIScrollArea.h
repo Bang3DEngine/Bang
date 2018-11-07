@@ -42,7 +42,7 @@ private:
     GameObject *p_container = nullptr;
     GameObject *p_containedGo = nullptr;
 
-    Vector2i m_scrollingPx = Vector2i::Zero;
+    Vector2i m_scrollingPx = Vector2i::Zero();
 
     void UpdatePaddings();
 

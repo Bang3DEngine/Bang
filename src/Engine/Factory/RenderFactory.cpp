@@ -276,7 +276,7 @@ void RenderFactory::RenderBillboardCircle(
 
     Camera *cam = Camera::GetActive();
     Vector3 camPos = cam ? cam->GetGameObject()->GetTransform()->GetPosition()
-                         : Vector3::Zero;
+                         : Vector3::Zero();
 
     RenderFactory::Parameters paramsCpy = params;
     paramsCpy.rotation = Quaternion::LookDirection(
@@ -387,7 +387,7 @@ void RenderFactory::RenderWireframeCapsule(
         radius, false, paramsCpy, 1, 1, 16, true);
     paramsCpy.rotation =
         params.rotation *
-        Quaternion::AngleAxis(SCAST<float>(Math::Pi), Vector3::Forward);
+        Quaternion::AngleAxis(SCAST<float>(Math::Pi), Vector3::Forward());
 
     paramsCpy.position =
         capsuleCenter + paramsCpy.rotation * Vector3(0, hHeight, 0);
@@ -417,7 +417,7 @@ void RenderFactory::RenderWireframeSphere(
             {
                 paramsCpy.rotation =
                     params.rotation *
-                    Quaternion::AngleAxis(angleAdv * i, Vector3::Right);
+                    Quaternion::AngleAxis(angleAdv * i, Vector3::Right());
                 RenderFactory::RenderWireframeCircle(
                     radius, paramsCpy, numCircleSegments, hemisphere);
             }
@@ -431,8 +431,8 @@ void RenderFactory::RenderWireframeSphere(
                 paramsCpy.rotation =
                     params.rotation *
                     Quaternion::AngleAxis(SCAST<float>(Math::Pi / 2),
-                                          Vector3::Up) *
-                    Quaternion::AngleAxis(angleAdv * i, Vector3::Forward);
+                                          Vector3::Up()) *
+                    Quaternion::AngleAxis(angleAdv * i, Vector3::Forward());
                 RenderFactory::RenderWireframeCircle(
                     radius, paramsCpy, numCircleSegments, hemisphere);
             }
@@ -444,7 +444,7 @@ void RenderFactory::RenderWireframeSphere(
             paramsCpy.rotation =
                 params.rotation *
                 Quaternion::AngleAxis(SCAST<float>(Math::Pi * 0.5f),
-                                      Vector3::Right);
+                                      Vector3::Right());
             RenderFactory::RenderWireframeCircle(
                 radius, paramsCpy, numCircleSegments, false);
         }

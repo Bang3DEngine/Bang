@@ -23,8 +23,8 @@ public:
     const Vector3 &GetDestiny() const;
 
 private:
-    Vector3 m_origin = Vector3::Zero;
-    Vector3 m_destiny = Vector3::Zero;
+    Vector3 m_origin = Vector3::Zero();
+    Vector3 m_destiny = Vector3::Zero();
 };
 }
 

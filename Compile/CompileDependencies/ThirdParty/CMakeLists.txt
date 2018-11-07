@@ -189,7 +189,7 @@ add_custom_command(
       cd build &&
       cmake -DBUILD_SHARED_LIBS=OFF
             -DUSE_AES=OFF
-            -DCMAKE_C_FLAGS="-fPIC"
+            -DCMAKE_C_FLAGS=-fPIC\ -DNOCRYPT
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             .. &&
       make -j${NUM_COMPILE_THREADS} &&

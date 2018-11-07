@@ -99,7 +99,7 @@ Mesh *MeshRenderer::GetCurrentLODActiveMesh() const
 
 AABox MeshRenderer::GetAABBox() const
 {
-    return GetActiveMesh() ? GetActiveMesh()->GetAABBox() : AABox::Empty;
+    return GetActiveMesh() ? GetActiveMesh()->GetAABBox() : AABox::Empty();
 }
 
 void MeshRenderer::OnRender()

@@ -28,7 +28,10 @@ class TextureCubeMap;
 
 using namespace Bang;
 
-Light::Light(){CONSTRUCT_CLASS_ID(Light)}
+Light::Light()
+{
+    CONSTRUCT_CLASS_ID(Light)
+}
 
 Light::~Light()
 {
@@ -172,7 +175,7 @@ void Light::SetLightScreenPassShaderProgram(ShaderProgram *sp)
 AARect Light::GetRenderRect(Camera *camera) const
 {
     BANG_UNUSED(camera);
-    return AARect::NDCRect;
+    return AARect::NDCRect();
 }
 
 void Light::Reflect()

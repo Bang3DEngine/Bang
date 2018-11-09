@@ -106,7 +106,7 @@ ShaderProgram *ShaderProgramFactory::GetDirectionalLightDeferredScreenPass()
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
                                          const Path &fShaderPath)
 {
-    return Get(vShaderPath, Path::Empty, fShaderPath, false);
+    return Get(vShaderPath, Path::Empty(), fShaderPath, false);
 }
 
 ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,

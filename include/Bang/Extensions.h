@@ -10,6 +10,8 @@ namespace Bang
 class Extensions
 {
 public:
+    static String GetStaticLibExtension();
+    static String GetDynamicLibExtension();
     static String GetMeshExtension();
     static String GetSceneExtension();
     static String GetPrefabExtension();
@@ -43,6 +45,6 @@ public:
 
     Extensions() = delete;
 };
-}
+}  // namespace Bang
 
 #endif  // EXTENSIONS_H

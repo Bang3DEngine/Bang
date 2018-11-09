@@ -160,7 +160,7 @@ void SceneManager::SetLoadedScene(Scene *loadedScene)
 void SceneManager::LoadScene(Scene *scene, bool destroyActive)
 {
     SceneManager *sm = SceneManager::GetActive();
-    sm->PrepareNextLoad(scene, Path::Empty, destroyActive);
+    sm->PrepareNextLoad(scene, Path::Empty(), destroyActive);
 }
 void SceneManager::LoadScene(const Path &sceneFilepath, bool destroyActive)
 {
@@ -306,7 +306,7 @@ void SceneManager::ClearNextLoad()
 {
     m_nextLoadNeeded = false;
     p_nextLoadScene = nullptr;
-    m_nextLoadScenePath = Path::Empty;
+    m_nextLoadScenePath = Path::Empty();
     m_nextLoadDestroyPrevious = false;
 }
 

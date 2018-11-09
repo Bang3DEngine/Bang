@@ -228,7 +228,7 @@ Path MetaFilesManager::GetFilepath(const GUID &guid)
             }
         }
     }
-    return Path::Empty;
+    return Path::Empty();
 }
 
 Path MetaFilesManager::GetFilepath(const Path &metaFilepath)

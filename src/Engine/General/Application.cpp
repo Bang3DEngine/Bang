@@ -30,6 +30,12 @@ Application::Application()
 
 void Application::Init(const Path &engineRootPath)
 {
+    Init_(engineRootPath);
+    InitAfterPathsInit_();
+}
+
+void Application::Init_(const Path &engineRootPath)
+{
     srand(1234);
 
     Application::s_appSingleton = this;
@@ -42,8 +48,12 @@ void Application::Init(const Path &engineRootPath)
 
     m_paths = CreatePaths();
     m_paths->InitPaths(engineRootPath);
+}
 
+void Application::InitAfterPathsInit_()
+{
     m_settings = CreateSettings();
+    m_settings->Init();
 
     m_physics = new Physics();
     m_physics->Init();

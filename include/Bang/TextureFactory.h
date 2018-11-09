@@ -65,9 +65,9 @@ private:
     Map<Path, RH<TextureCubeMap>> m_textureCubeMapsCache;
 
     // Cache most used paths
-    Path m_whiteTexturePath = Path::Empty;
-    Path m_whiteTextureCMPath = Path::Empty;
-    Path m_brdfLutTexturePath = Path::Empty;
+    Path m_whiteTexturePath = Path::Empty();
+    Path m_whiteTextureCMPath = Path::Empty();
+    Path m_brdfLutTexturePath = Path::Empty();
 
     friend class Resources;
 };

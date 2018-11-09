@@ -20,9 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{7468067A-DB5F-438F-8C44-CB54E7BFB424}</ProjectGuid>
+    <ProjectGuid>{0D68C52E-AD5B-4AD8-B536-A360E1BA97B1}</ProjectGuid>
     <RootNamespace>Bang</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectName>Bang</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,7 +40,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -69,15 +70,44 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)\Libraries\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
+    <TargetName>lib$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\Binaries\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\buildIntermediate\$(Configuration)\$(Platform)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\characterkinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\geometry;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\solver;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\vehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\headers;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\ccd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\contact;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\distance;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\gjk;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\hf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\intersection;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\pcm;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\sweep;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\utils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\avx;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\scalar;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\buffering;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\linux;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Binary;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\File;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Xml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x86;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\doc;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\android;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessorDefinitions>BUILD_STATIC;_CRT_SECURE_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glu32.lib;opengl32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\lib\jpeg-static.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\lib\libpng16_staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\code\$(Configuration)\assimp-vc140-mt.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\lib\Release\$(Platform)\glew32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\lib\Release\$(Platform)\glew32s.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\build\$(Configuration)\lib\OpenAL32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14\build\$(Configuration)\libsdl2_ttf.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2d.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2maind.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2-staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2d.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2maind.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2-staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\build\$(Configuration)\libfreetype2.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\lib\zlibstaticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\contrib\irrXML\$(Configuration)\IrrXML.lib</AdditionalDependencies>
+    </Link>
+    <PreLinkEvent>
+      <Command>xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Platform)\bin\SDL2d.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\bin\Release\$(Platform)\glew32.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\libs\OpenAL32.dll $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -85,8 +115,22 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libsndfile\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\characterkinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\geometry;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\solver;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\vehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\headers;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\ccd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\contact;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\distance;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\gjk;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\hf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\intersection;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\pcm;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\sweep;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\utils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\avx;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\scalar;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\buffering;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\linux;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Binary;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\File;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Xml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\android;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!--AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories-->
+      <PreprocessorDefinitions>BUILD_STATIC;_CRT_SECURE_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glu32.lib;opengl32.lib;shlwapi.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\lib\jpeg-static.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\lib\libpng16_staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\code\$(Configuration)\assimp-vc140-mt.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\lib\Release\$(Platform)\glew32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\libs\Win64\OpenAL32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14\CompileSDL2_TTF\$(Configuration)\$(Platform)\libsdl2_ttf.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2d.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2maind.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\CompileFreetype\$(Configuration)\$(Platform)\libfreetype2.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlibstaticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\contrib\irrXML\$(Configuration)\IrrXML.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libsndfile\lib\libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <SubSystem>Console</SubSystem>
+      <AllowIsolation>false</AllowIsolation>
+      <IgnoreEmbeddedIDL>true</IgnoreEmbeddedIDL>
+    </Link>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -96,345 +140,196 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\characterkinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\geometry;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\solver;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\vehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\headers;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\ccd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\contact;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\distance;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\gjk;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\hf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\intersection;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\pcm;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\sweep;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\utils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\avx;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\scalar;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\buffering;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\linux;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Binary;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\File;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Xml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x86;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win32;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win64;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\doc;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\android;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILD_STATIC;_CRT_SECURE_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glu32.lib;opengl32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\lib\jpeg-static.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\lib\libpng16_staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\code\$(Configuration)\assimp-vc140-mt.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\glew32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\glew32s.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\build\$(Configuration)\lib\OpenAL32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14\build\$(Configuration)\libsdl2_ttf.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2d.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2maind.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2-staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2d.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2maind.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Configuration)\SDL2-staticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\build\$(Configuration)\libfreetype2.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\lib\zlibd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\lib\zlibstaticd.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\contrib\irrXML\$(Configuration)\IrrXML.lib</AdditionalDependencies>
     </Link>
+    <PreLinkEvent>
+      <Command>xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\$(Platform)\bin\SDL2d.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\bin\Release\$(Platform)\glew32.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\libs\OpenAL32.dll $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Custom</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Build\BuildDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Build\BuildDependencies\ThirdParty\libpng-1.6.34;$(ProjectDir)\Build\BuildDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\assimp\include;$(ProjectDir)\Build\BuildDependencies\ThirdParty\openal-soft\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\yaml-cpp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform);$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform);$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libsndfile\include\;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\characterkinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\common\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\cooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\geometry;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\solver;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Include\vehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\headers;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\ccd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\contact;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\distance;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\gjk;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\hf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\intersection;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\pcm;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\sweep;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\utils;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\collision;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\pipeline;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\avx;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\scalar;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\buffering;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\linux;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\gpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\convex;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\mesh;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Binary;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\File;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Xml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\cloth;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\particles;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\android;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\neon;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\unix\sse2;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\unix;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\include;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\windows;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILD_STATIC;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glu32.lib;opengl32.lib;shlwapi.lib;Shell32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libjpeg-turbo\build\$(Configuration)\$(Platform)\lib\jpeg-static.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libpng-1.6.34\build\$(Configuration)\$(Platform)\lib\libpng16_static.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\code\$(Configuration)\assimp-vc140-mt.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\lib\Release\$(Platform)\glew32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\libs\Win64\OpenAL32.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2_ttf-2.0.14\CompileSDL2_TTF\$(Configuration)\$(Platform)\libsdl2_ttf.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\lib\SDL2main.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\freetype-2.4.0\CompileFreetype\$(Configuration)\$(Platform)\libfreetype2.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\zlib-1.2.11\build\$(Configuration)\$(Platform)\lib\zlibstatic.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\assimp\build\$(Configuration)\contrib\irrXML\$(Configuration)\IrrXML.lib;$(ProjectDir)\Compile\CompileDependencies\ThirdParty\libsndfile\lib\libsndfile-1.lib</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <SubSystem>Console</SubSystem>
+      <AllowIsolation>false</AllowIsolation>
+      <IgnoreEmbeddedIDL>true</IgnoreEmbeddedIDL>
     </Link>
+    <PreLinkEvent>
+      <Command>xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\SDL2-2.0.8\build\$(Configuration)\bin\SDL2.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\glew-2.1.0\Windows\bin\Release\$(Platform)\glew32.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\openal-soft\Windows\bin\OpenAL32.dll $(OutDir)
+xcopy /Y $(SolutionDir)\Compile\CompileDependencies\ThirdParty\libsndfile\bin\libsndfile-1.dll $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Bang\AABox.h" />
-    <ClInclude Include="include\Bang\AARect.h" />
-    <ClInclude Include="include\Bang\ALAudioSource.h" />
-    <ClInclude Include="include\Bang\Alignment.h" />
-    <ClInclude Include="include\Bang\All.h" />
-    <ClInclude Include="include\Bang\Animation.h" />
-    <ClInclude Include="include\Bang\Animator.h" />
-    <ClInclude Include="include\Bang\AnimatorLayerMask.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachine.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachineLayer.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachineNode.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachinePlayer.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachineTransition.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachineTransitionCondition.h" />
-    <ClInclude Include="include\Bang\AnimatorStateMachineVariable.h" />
-    <ClInclude Include="include\Bang\Application.h" />
-    <ClInclude Include="include\Bang\Array.h" />
-    <ClInclude Include="include\Bang\Array.tcc" />
-    <ClInclude Include="include\Bang\AspectRatioMode.h" />
-    <ClInclude Include="include\Bang\Assert.h" />
-    <ClInclude Include="include\Bang\Asset.h" />
-    <ClInclude Include="include\Bang\AudioClip.h" />
-    <ClInclude Include="include\Bang\AudioListener.h" />
-    <ClInclude Include="include\Bang\AudioManager.h" />
-    <ClInclude Include="include\Bang\AudioParams.h" />
-    <ClInclude Include="include\Bang\AudioPlayerRunnable.h" />
-    <ClInclude Include="include\Bang\AudioSource.h" />
-    <ClInclude Include="include\Bang\Axis.h" />
-    <ClInclude Include="include\Bang\AxisFunctions.h" />
-    <ClInclude Include="include\Bang\Bang.h" />
-    <ClInclude Include="include\Bang\BangDefines.h" />
-    <ClInclude Include="include\Bang\BangPreprocessor.h" />
-    <ClInclude Include="include\Bang\Behaviour.h" />
-    <ClInclude Include="include\Bang\BehaviourContainer.h" />
-    <ClInclude Include="include\Bang\BehaviourManager.h" />
-    <ClInclude Include="include\Bang\BinType.h" />
-    <ClInclude Include="include\Bang\Box.h" />
-    <ClInclude Include="include\Bang\BoxCollider.h" />
-    <ClInclude Include="include\Bang\Camera.h" />
-    <ClInclude Include="include\Bang\CapsuleCollider.h" />
-    <ClInclude Include="include\Bang\Chrono.h" />
-    <ClInclude Include="include\Bang\ChronoGL.h" />
-    <ClInclude Include="include\Bang\Cloth.h" />
-    <ClInclude Include="include\Bang\CodePreprocessor.h" />
-    <ClInclude Include="include\Bang\Collider.h" />
-    <ClInclude Include="include\Bang\Collision.h" />
-    <ClInclude Include="include\Bang\CollisionContact.h" />
-    <ClInclude Include="include\Bang\Color.h" />
-    <ClInclude Include="include\Bang\Compiler.h" />
-    <ClInclude Include="include\Bang\ComplexRandom.h" />
-    <ClInclude Include="include\Bang\Component.h" />
-    <ClInclude Include="include\Bang\ComponentClassIds.h" />
-    <ClInclude Include="include\Bang\ComponentFactory.h" />
-    <ClInclude Include="include\Bang\ComponentMacros.h" />
-    <ClInclude Include="include\Bang\Containers.h" />
-    <ClInclude Include="include\Bang\CubeMapIBLGenerator.h" />
-    <ClInclude Include="include\Bang\Cursor.h" />
-    <ClInclude Include="include\Bang\Debug.h" />
-    <ClInclude Include="include\Bang\DebugMessageType.h" />
-    <ClInclude Include="include\Bang\DebugRenderer.h" />
-    <ClInclude Include="include\Bang\Dialog.h" />
-    <ClInclude Include="include\Bang\DialogWindow.h" />
-    <ClInclude Include="include\Bang\DirectionalLight.h" />
-    <ClInclude Include="include\Bang\DPtr.h" />
-    <ClInclude Include="include\Bang\DPtr.tcc" />
-    <ClInclude Include="include\Bang\EventEmitter.h" />
-    <ClInclude Include="include\Bang\EventEmitter.tcc" />
-    <ClInclude Include="include\Bang\EventListener.h" />
-    <ClInclude Include="include\Bang\EventListener.tcc" />
-    <ClInclude Include="include\Bang\Extensions.h" />
-    <ClInclude Include="include\Bang\FastDynamicCast.h" />
-    <ClInclude Include="include\Bang\File.h" />
-    <ClInclude Include="include\Bang\FileTracker.h" />
-    <ClInclude Include="include\Bang\Flags.h" />
-    <ClInclude Include="include\Bang\Font.h" />
-    <ClInclude Include="include\Bang\FontSheetCreator.h" />
-    <ClInclude Include="include\Bang\FontStyle.h" />
-    <ClInclude Include="include\Bang\FPSChrono.h" />
-    <ClInclude Include="include\Bang\Framebuffer.h" />
-    <ClInclude Include="include\Bang\GameObject.h" />
-    <ClInclude Include="include\Bang\GameObject.tcc" />
-    <ClInclude Include="include\Bang\GameObjectFactory.h" />
-    <ClInclude Include="include\Bang\GBuffer.h" />
-    <ClInclude Include="include\Bang\GEngine.h" />
-    <ClInclude Include="include\Bang\GEngineDebugger.h" />
-    <ClInclude Include="include\Bang\Geometry.h" />
-    <ClInclude Include="include\Bang\GL.h" />
-    <ClInclude Include="include\Bang\GLObject.h" />
-    <ClInclude Include="include\Bang\GLUniforms.h" />
-    <ClInclude Include="include\Bang\GLUniforms.tcc" />
-    <ClInclude Include="include\Bang\GUID.h" />
-    <ClInclude Include="include\Bang\GUIDManager.h" />
-    <ClInclude Include="include\Bang\HideFlags.h" />
-    <ClInclude Include="include\Bang\IBO.h" />
-    <ClInclude Include="include\Bang\ICloneable.h" />
-    <ClInclude Include="include\Bang\IEventListenerCommon.h" />
-    <ClInclude Include="include\Bang\IEvents.h" />
-    <ClInclude Include="include\Bang\IEventsAnimatorStateMachine.h" />
-    <ClInclude Include="include\Bang\IEventsAnimatorStateMachineLayer.h" />
-    <ClInclude Include="include\Bang\IEventsAnimatorStateMachineNode.h" />
-    <ClInclude Include="include\Bang\IEventsChildren.h" />
-    <ClInclude Include="include\Bang\IEventsComponent.h" />
-    <ClInclude Include="include\Bang\IEventsComponentChangeGameObject.h" />
-    <ClInclude Include="include\Bang\IEventsDebug.h" />
-    <ClInclude Include="include\Bang\IEventsDestroy.h" />
-    <ClInclude Include="include\Bang\IEventsDragDrop.h" />
-    <ClInclude Include="include\Bang\IEventsFileTracker.h" />
-    <ClInclude Include="include\Bang\IEventsFocus.h" />
-    <ClInclude Include="include\Bang\IEventsGameObjectPhysics.h" />
-    <ClInclude Include="include\Bang\IEventsGameObjectVisibilityChanged.h" />
-    <ClInclude Include="include\Bang\IEventsName.h" />
-    <ClInclude Include="include\Bang\IEventsObject.h" />
-    <ClInclude Include="include\Bang\IEventsObjectGatherer.h" />
-    <ClInclude Include="include\Bang\IEventsRendererChanged.h" />
-    <ClInclude Include="include\Bang\IEventsResource.h" />
-    <ClInclude Include="include\Bang\IEventsSceneManager.h" />
-    <ClInclude Include="include\Bang\IEventsTransform.h" />
-    <ClInclude Include="include\Bang\IEventsUIList.h" />
-    <ClInclude Include="include\Bang\IEventsUITree.h" />
-    <ClInclude Include="include\Bang\IEventsValueChanged.h" />
-    <ClInclude Include="include\Bang\IGUIDable.h" />
-    <ClInclude Include="include\Bang\IInvalidatable.h" />
-    <ClInclude Include="include\Bang\ILayoutController.h" />
-    <ClInclude Include="include\Bang\ILayoutElement.h" />
-    <ClInclude Include="include\Bang\ILayoutSelfController.h" />
-    <ClInclude Include="include\Bang\Image.h" />
-    <ClInclude Include="include\Bang\ImageEffects.h" />
-    <ClInclude Include="include\Bang\ImageIO.h" />
-    <ClInclude Include="include\Bang\ImageIODDS.h" />
-    <ClInclude Include="include\Bang\ImageIOTGA.h" />
-    <ClInclude Include="include\Bang\Input.h" />
-    <ClInclude Include="include\Bang\IReflectable.h" />
-    <ClInclude Include="include\Bang\IsContainer.h" />
-    <ClInclude Include="include\Bang\IToString.h" />
-    <ClInclude Include="include\Bang\ITreeItem.h" />
-    <ClInclude Include="include\Bang\IUniformBuffer.h" />
-    <ClInclude Include="include\Bang\Key.h" />
-    <ClInclude Include="include\Bang\LayoutSizeType.h" />
-    <ClInclude Include="include\Bang\Library.h" />
-    <ClInclude Include="include\Bang\Light.h" />
-    <ClInclude Include="include\Bang\LineRenderer.h" />
-    <ClInclude Include="include\Bang\List.h" />
-    <ClInclude Include="include\Bang\List.tcc" />
-    <ClInclude Include="include\Bang\Map.h" />
-    <ClInclude Include="include\Bang\Map.tcc" />
-    <ClInclude Include="include\Bang\Material.h" />
-    <ClInclude Include="include\Bang\MaterialFactory.h" />
-    <ClInclude Include="include\Bang\Math.h" />
-    <ClInclude Include="include\Bang\Matrix3.h" />
-    <ClInclude Include="include\Bang\Matrix3.tcc" />
-    <ClInclude Include="include\Bang\Matrix4.h" />
-    <ClInclude Include="include\Bang\Matrix4.tcc" />
-    <ClInclude Include="include\Bang\Mesh.h" />
-    <ClInclude Include="include\Bang\MeshCollider.h" />
-    <ClInclude Include="include\Bang\MeshFactory.h" />
-    <ClInclude Include="include\Bang\MeshRenderer.h" />
-    <ClInclude Include="include\Bang\MeshSimplifier.h" />
-    <ClInclude Include="include\Bang\MetaAttribute.h" />
-    <ClInclude Include="include\Bang\MetaFilesManager.h" />
-    <ClInclude Include="include\Bang\MetaNode.h" />
-    <ClInclude Include="include\Bang\MetaNode.tcc" />
-    <ClInclude Include="include\Bang\Model.h" />
-    <ClInclude Include="include\Bang\ModelIO.h" />
-    <ClInclude Include="include\Bang\MouseButton.h" />
-    <ClInclude Include="include\Bang\MultiObjectGatherer.h" />
-    <ClInclude Include="include\Bang\MultiObjectGatherer.tcc" />
-    <ClInclude Include="include\Bang\Mutex.h" />
-    <ClInclude Include="include\Bang\MutexLocker.h" />
-    <ClInclude Include="include\Bang\NeededUniformFlags.h" />
-    <ClInclude Include="include\Bang\nv_dds.h" />
-    <ClInclude Include="include\Bang\Object.h" />
-    <ClInclude Include="include\Bang\ObjectGatherer.h" />
-    <ClInclude Include="include\Bang\ObjectGatherer.tcc" />
-    <ClInclude Include="include\Bang\ObjectId.h" />
-    <ClInclude Include="include\Bang\Octree.h" />
-    <ClInclude Include="include\Bang\Octree.tcc" />
-    <ClInclude Include="include\Bang\Particle.h" />
-    <ClInclude Include="include\Bang\ParticleSystem.h" />
-    <ClInclude Include="include\Bang\Path.h" />
-    <ClInclude Include="include\Bang\Paths.h" />
-    <ClInclude Include="include\Bang\Physics.h" />
-    <ClInclude Include="include\Bang\PhysicsMaterial.h" />
-    <ClInclude Include="include\Bang\PhysicsObject.h" />
-    <ClInclude Include="include\Bang\Plane.h" />
-    <ClInclude Include="include\Bang\PointLight.h" />
-    <ClInclude Include="include\Bang\Polygon.h" />
-    <ClInclude Include="include\Bang\Polygon2D.h" />
-    <ClInclude Include="include\Bang\PostProcessEffect.h" />
-    <ClInclude Include="include\Bang\PostProcessEffectSSAO.h" />
-    <ClInclude Include="include\Bang\Prefab.h" />
-    <ClInclude Include="include\Bang\process.hpp" />
-    <ClInclude Include="include\Bang\PxSceneContainer.h" />
-    <ClInclude Include="include\Bang\Quad.h" />
-    <ClInclude Include="include\Bang\Quaternion.h" />
-    <ClInclude Include="include\Bang\Random.h" />
-    <ClInclude Include="include\Bang\Ray.h" />
-    <ClInclude Include="include\Bang\Ray2D.h" />
-    <ClInclude Include="include\Bang\RayCastHitInfo.h" />
-    <ClInclude Include="include\Bang\RayCastInfo.h" />
-    <ClInclude Include="include\Bang\Rect.h" />
-    <ClInclude Include="include\Bang\RectTransform.h" />
-    <ClInclude Include="include\Bang\ReflectionProbe.h" />
-    <ClInclude Include="include\Bang\ReflectMacros.h" />
-    <ClInclude Include="include\Bang\ReflectStruct.h" />
-    <ClInclude Include="include\Bang\ReflectVariable.h" />
-    <ClInclude Include="include\Bang\ReflectVariableHints.h" />
-    <ClInclude Include="include\Bang\Renderer.h" />
-    <ClInclude Include="include\Bang\RenderFactory.h" />
-    <ClInclude Include="include\Bang\RenderFlags.h" />
-    <ClInclude Include="include\Bang\RenderPass.h" />
-    <ClInclude Include="include\Bang\Resource.h" />
-    <ClInclude Include="include\Bang\ResourceHandle.h" />
-    <ClInclude Include="include\Bang\Resources.h" />
-    <ClInclude Include="include\Bang\Resources.tcc" />
-    <ClInclude Include="include\Bang\RigidBody.h" />
-    <ClInclude Include="include\Bang\Rope.h" />
-    <ClInclude Include="include\Bang\Scene.h" />
-    <ClInclude Include="include\Bang\SceneManager.h" />
-    <ClInclude Include="include\Bang\Segment.h" />
-    <ClInclude Include="include\Bang\Segment2D.h" />
-    <ClInclude Include="include\Bang\Serializable.h" />
-    <ClInclude Include="include\Bang\Set.h" />
-    <ClInclude Include="include\Bang\Set.tcc" />
-    <ClInclude Include="include\Bang\Settings.h" />
-    <ClInclude Include="include\Bang\Shader.h" />
-    <ClInclude Include="include\Bang\ShaderPreprocessor.h" />
-    <ClInclude Include="include\Bang\ShaderProgram.h" />
-    <ClInclude Include="include\Bang\ShaderProgramFactory.h" />
-    <ClInclude Include="include\Bang\SkinnedMeshRenderer.h" />
-    <ClInclude Include="include\Bang\Sphere.h" />
-    <ClInclude Include="include\Bang\SphereCollider.h" />
-    <ClInclude Include="include\Bang\StackAndValue.h" />
-    <ClInclude Include="include\Bang\StreamOperators.h" />
-    <ClInclude Include="include\Bang\Stretch.h" />
-    <ClInclude Include="include\Bang\String.h" />
-    <ClInclude Include="include\Bang\SystemClipboard.h" />
-    <ClInclude Include="include\Bang\SystemProcess.h" />
-    <ClInclude Include="include\Bang\SystemUtils.h" />
-    <ClInclude Include="include\Bang\TextFormatter.h" />
-    <ClInclude Include="include\Bang\Texture.h" />
-    <ClInclude Include="include\Bang\Texture2D.h" />
-    <ClInclude Include="include\Bang\TextureCubeMap.h" />
-    <ClInclude Include="include\Bang\TextureFactory.h" />
-    <ClInclude Include="include\Bang\TextureUnitManager.h" />
-    <ClInclude Include="include\Bang\Thread.h" />
-    <ClInclude Include="include\Bang\ThreadPool.h" />
-    <ClInclude Include="include\Bang\Time.h" />
-    <ClInclude Include="include\Bang\Timer.h" />
-    <ClInclude Include="include\Bang\TimeSingleton.h" />
-    <ClInclude Include="include\Bang\Transform.h" />
-    <ClInclude Include="include\Bang\Tree.h" />
-    <ClInclude Include="include\Bang\Tree.tcc" />
-    <ClInclude Include="include\Bang\Triangle.h" />
-    <ClInclude Include="include\Bang\TypeMap.h" />
-    <ClInclude Include="include\Bang\UIAspectRatioFitter.h" />
-    <ClInclude Include="include\Bang\UIAutoFocuser.h" />
-    <ClInclude Include="include\Bang\UIButton.h" />
-    <ClInclude Include="include\Bang\UIButtonBase.h" />
-    <ClInclude Include="include\Bang\UICanvas.h" />
-    <ClInclude Include="include\Bang\UICheckBox.h" />
-    <ClInclude Include="include\Bang\UIComboBox.h" />
-    <ClInclude Include="include\Bang\UIContentSizeFitter.h" />
-    <ClInclude Include="include\Bang\UIDirLayout.h" />
-    <ClInclude Include="include\Bang\UIDirLayoutMovableSeparator.h" />
-    <ClInclude Include="include\Bang\UIDragDroppable.h" />
-    <ClInclude Include="include\Bang\UIFileList.h" />
-    <ClInclude Include="include\Bang\UIFocusable.h" />
-    <ClInclude Include="include\Bang\UIGridLayout.h" />
-    <ClInclude Include="include\Bang\UIGroupLayout.h" />
-    <ClInclude Include="include\Bang\UIHorizontalLayout.h" />
-    <ClInclude Include="include\Bang\UIImageRenderer.h" />
-    <ClInclude Include="include\Bang\UIInputNumber.h" />
-    <ClInclude Include="include\Bang\UIInputText.h" />
-    <ClInclude Include="include\Bang\UILabel.h" />
-    <ClInclude Include="include\Bang\UILayoutElement.h" />
-    <ClInclude Include="include\Bang\UILayoutIgnorer.h" />
-    <ClInclude Include="include\Bang\UILayoutManager.h" />
-    <ClInclude Include="include\Bang\UIList.h" />
-    <ClInclude Include="include\Bang\UIMask.h" />
-    <ClInclude Include="include\Bang\UIRectMask.h" />
-    <ClInclude Include="include\Bang\UIRenderer.h" />
-    <ClInclude Include="include\Bang\UIRendererCacher.h" />
-    <ClInclude Include="include\Bang\UIScrollArea.h" />
-    <ClInclude Include="include\Bang\UIScrollBar.h" />
-    <ClInclude Include="include\Bang\UIScrollPanel.h" />
-    <ClInclude Include="include\Bang\UISlider.h" />
-    <ClInclude Include="include\Bang\UITextCursor.h" />
-    <ClInclude Include="include\Bang\UITextRenderer.h" />
-    <ClInclude Include="include\Bang\UITheme.h" />
-    <ClInclude Include="include\Bang\UIToolButton.h" />
-    <ClInclude Include="include\Bang\UITree.h" />
-    <ClInclude Include="include\Bang\UITreeItemContainer.h" />
-    <ClInclude Include="include\Bang\UIVerticalLayout.h" />
-    <ClInclude Include="include\Bang\UMap.h" />
-    <ClInclude Include="include\Bang\UMap.tcc" />
-    <ClInclude Include="include\Bang\UniformBuffer.h" />
-    <ClInclude Include="include\Bang\UniformBuffer.tcc" />
-    <ClInclude Include="include\Bang\USet.h" />
-    <ClInclude Include="include\Bang\USet.tcc" />
-    <ClInclude Include="include\Bang\VAO.h" />
-    <ClInclude Include="include\Bang\Variant.h" />
-    <ClInclude Include="include\Bang\VBO.h" />
-    <ClInclude Include="include\Bang\Vector.h" />
-    <ClInclude Include="include\Bang\Vector.tcc" />
-    <ClInclude Include="include\Bang\Vector2.h" />
-    <ClInclude Include="include\Bang\Vector3.h" />
-    <ClInclude Include="include\Bang\Vector4.h" />
-    <ClInclude Include="include\Bang\WaterRenderer.h" />
-    <ClInclude Include="include\Bang\Window.h" />
-    <ClInclude Include="include\Bang\WindowManager.h" />
-    <ClInclude Include="include\Bang\WindowManager.tcc" />
+    <ClInclude Include="include\Bang\*.h" />
+    <ClInclude Include="include\Bang\*.tcc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\*\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\include\windows\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\Common\src\windows\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\headers\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\ccd\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\common\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\contact\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\convex\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\distance\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\gjk\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\hf\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\intersection\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\mesh\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\pcm\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\GeomUtils\src\sweep\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\ImmediateMode\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\API\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\collision\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\pipeline\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\include\utils\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\collision\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\common\src\pipeline\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevel\software\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelAABB\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\avx\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\scalar\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelCloth\src\sse2\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelDynamics\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\LowLevelParticles\src\gpu\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\buffering\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\cloth\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\device\windows\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\gpu\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\particles\*.cpp" />
+    <!--ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysX\src\windows\*.cpp"/-->
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCharacterKinematic\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\convex\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\mesh\*.cpp" />
+    <!--ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXCooking\src\windows\*.cpp"/-->
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Binary\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\File\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXExtensions\src\serialization\Xml\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXGpu\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\core\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXMetaData\extensions\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\PhysXVehicle\src\PhysXMetaData\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SceneQuery\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\cloth\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PhysX_3.4\Source\SimulationController\src\particles\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\cudamanager\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\filebuf\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\foundation\windows\*.cpp" />
+    <!--ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\*.cpp"/-->
+    <!--ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\pvd\windows\*.cpp"/-->
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\include\task\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x64\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\resource_x86\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win32\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc12win64\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win32\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc14win64\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win32\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\compiler\vc15win64\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\cudamanager\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\fastxml\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\filebuf\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\doc\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\externals\src\android\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\include\windows\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\foundation\src\windows\*.cpp" />
+    <!--ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\*.cpp"/>
+	<ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\include\*.cpp"/>
+	<ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\*.cpp"/>
+	<ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\pvd\src\windows\*.cpp"/-->
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\*.cpp" />
+    <ClCompile Include="Compile\CompileDependencies\ThirdParty\PhysX\PxShared\src\task\src\*.cpp" />
     <ClCompile Include="Compile\CompileDependencies\ThirdParty\yaml-cpp\src\*.cpp" />
-    <ClCompile Include="src\*.cpp" />
     <ClCompile Include="src\*\*.cpp" />
     <ClCompile Include="src\*\*\*.cpp" />
     <ClCompile Include="src\*\*\*\*.cpp" />

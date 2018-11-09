@@ -57,7 +57,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    Path m_ttfFilepath = Path::Empty;
+    Path m_ttfFilepath = Path::Empty();
     TTF_Font *m_referenceFont = nullptr;
 
     struct FontDataCache
@@ -88,6 +88,6 @@ private:
 
     void Free();
 };
-}
+}  // namespace Bang
 
 #endif  // FONT_H

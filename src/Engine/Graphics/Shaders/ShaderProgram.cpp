@@ -151,13 +151,13 @@ bool ShaderProgram::Link()
     {
         Path vsPath =
             (GetVertexShader() ? GetVertexShader()->GetResourceFilepath()
-                               : Path::Empty);
+                               : Path::Empty());
         Path gsPath =
             (GetGeometryShader() ? GetGeometryShader()->GetResourceFilepath()
-                                 : Path::Empty);
+                                 : Path::Empty());
         Path fsPath =
             (GetFragmentShader() ? GetFragmentShader()->GetResourceFilepath()
-                                 : Path::Empty);
+                                 : Path::Empty());
         Debug_Error("The shader program "
                     << this << "( " << vsPath << ", " << gsPath << ", "
                     << fsPath

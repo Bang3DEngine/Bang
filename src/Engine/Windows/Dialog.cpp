@@ -47,7 +47,7 @@ using namespace Bang;
 
 bool Dialog::s_okPressed = false;
 String Dialog::s_resultString = "";
-Path Dialog::s_resultPath = Path::EmptyPath();
+Path Dialog::s_resultPath = Path::Empty();
 std::stack<DialogWindow *> Dialog::s_dialogCreation_dialogWindows;
 std::stack<Window *> Dialog::s_dialogCreation_prevActiveWindows;
 std::stack<bool> Dialog::s_dialogCreation_modalBooleans;
@@ -91,7 +91,7 @@ Path Dialog::OpenFilePath(const String &title,
     Scene *scene = GameObjectFactory::CreateScene(false);
     CreateOpenFilePathSceneInto(scene, false, extensions, initialDirPath);
     Dialog::EndDialogCreation(scene);
-    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
+    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty();
 }
 
 Path Dialog::OpenDirectory(const String &title, const Path &initialDirPath)
@@ -100,7 +100,7 @@ Path Dialog::OpenDirectory(const String &title, const Path &initialDirPath)
     Scene *scene = GameObjectFactory::CreateScene(false);
     CreateOpenFilePathSceneInto(scene, true, {}, initialDirPath);
     Dialog::EndDialogCreation(scene);
-    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
+    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty();
 }
 
 Path Dialog::SaveFilePath(const String &title,
@@ -112,7 +112,7 @@ Path Dialog::SaveFilePath(const String &title,
     Scene *scene = GameObjectFactory::CreateScene(false);
     CreateSaveFilePathSceneInto(scene, extension, initDirPath, initFileName);
     Dialog::EndDialogCreation(scene);
-    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty;
+    return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty();
 }
 
 DialogWindow *Dialog::BeginDialogCreation(const String &title,
@@ -137,7 +137,7 @@ DialogWindow *Dialog::BeginDialogCreation(const String &title,
 
         Dialog::s_okPressed = false;
         Dialog::s_resultString = "";
-        Dialog::s_resultPath = Path::Empty;
+        Dialog::s_resultPath = Path::Empty();
         Dialog::s_currentDialog = dialogWindow;
     }
     Dialog::s_dialogCreation_dialogWindows.push(dialogWindow);

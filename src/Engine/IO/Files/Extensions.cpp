@@ -6,6 +6,24 @@
 
 namespace Bang
 {
+String Extensions::GetStaticLibExtension()
+{
+#ifdef __linux__
+    return "a";
+#else
+    return "lib";
+#endif
+}
+
+String Extensions::GetDynamicLibExtension()
+{
+#ifdef __linux__
+    return "so";
+#else
+    return "dll";
+#endif
+}
+
 String Extensions::GetMeshExtension()
 {
     return "bmesh";
@@ -142,4 +160,4 @@ bool Extensions::Equals(const String &extensionSrc, const String &extensionDst)
     Array<String> extensionsDst = {{extensionDst}};
     return Extensions::Equals(extensionSrc, extensionsDst);
 }
-}
+}  // namespace Bang

@@ -30,7 +30,7 @@ CREATE_FLAGS(FindFlags, FindFlag);
 class Path
 {
 public:
-    static const Path Empty;
+    static const Path &Empty();
 
     Path();
     Path(const Path &path);
@@ -92,12 +92,10 @@ public:
     bool operator==(const Path &rhs) const;
     bool operator<(const Path &rhs) const;
 
-    static Path EmptyPath();
-
 private:
     String m_absolutePath = "";
 };
-}
+}  // namespace Bang
 
 // Hash for Path
 namespace std
@@ -110,6 +108,6 @@ struct hash<Bang::Path>
         return std::hash<std::string>()(path.GetAbsolute());
     }
 };
-}
+}  // namespace std
 
 #endif  // PATH_H

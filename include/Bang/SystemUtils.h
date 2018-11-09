@@ -13,7 +13,7 @@ class SystemUtils
 {
 public:
     static void System(const String &command,
-                       const List<String> &argsList = {},
+                       const Array<String> &argsArray = {},
                        String *output = nullptr,
                        bool *success = nullptr);
 
@@ -28,6 +28,6 @@ private:
 
     friend class Application;
 };
-}
+}  // namespace Bang
 
 #endif  // SYSTEMUTILS_H

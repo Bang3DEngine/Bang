@@ -20,9 +20,9 @@ public:
     SystemProcess();
     ~SystemProcess();
 
-    bool Start(const String &command, const List<String> &extraArgs = {});
+    bool Start(const String &command, const Array<String> &extraArgs = {});
     bool StartDettached(const String &command,
-                        const List<String> &extraArgs = {});
+                        const Array<String> &extraArgs = {});
     void WaitUntilFinished(float seconds = Math::Infinity<float>(),
                            bool *finished = nullptr,
                            int *status = nullptr);

@@ -26,7 +26,7 @@ public:
     Application();
     virtual ~Application();
 
-    virtual void Init(const Path &engineRootPath = Path::Empty);
+    virtual void Init(const Path &engineRootPath = Path::Empty());
 
     int MainLoop();
     bool MainLoopIteration();
@@ -66,6 +66,9 @@ protected:
 
     String m_mainThreadId = "";
 
+    virtual void Init_(const Path &engineRootPath = Path::Empty());
+    virtual void InitAfterPathsInit_();
+
 private:
     static Application *s_appSingleton;
 
@@ -80,6 +83,6 @@ private:
 
     friend class Window;
 };
-}
+}  // namespace Bang
 
 #endif  // APPLICATION_H

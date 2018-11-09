@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 
-#ifndef BANG_BUILD_TYPE
-#define BANG_BUILD_TYPE "NoBuildType"
+#ifndef NDEBUG
+#define DEBUG
 #endif
 
 #define BANG_UNUSED(v1) ((void)v1)

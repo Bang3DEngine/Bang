@@ -4,6 +4,7 @@
 #include <cstring>
 #include <functional>
 
+#include "Bang/Debug.h"
 #include "Bang/Path.h"
 #include "Bang/Paths.h"
 #include "Bang/Thread.h"
@@ -44,10 +45,15 @@ void SystemProcess::ReadErr(const char *str, int size)
     ReadOutErr(&m_err, str, size);
 }
 
-bool SystemProcess::Start(const String &command, const List<String> &extraArgs)
+bool SystemProcess::Start(const String &command, const Array<String> &extraArgs)
 {
-    String fullCommand =
-        "LD_PRELOAD=\"\" ; " + command + " " + String::Join(extraArgs, " ");
+    String fullCommand = "";
+#ifdef __linux__
+    fullCommand += "LD_PRELOAD=\"\" ; ";
+#endif
+    fullCommand += command + " " + String::Join(extraArgs, " ");
+
+    // Debug_DLog("Starting process: " << fullCommand);
 
     m_process =
         new Process(fullCommand,

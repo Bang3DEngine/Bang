@@ -3,6 +3,7 @@
 *.trace
 /build*/
 build*/
+Libraries/
 *.user*
 *.refl.h
 res/EngineAssets/tmp

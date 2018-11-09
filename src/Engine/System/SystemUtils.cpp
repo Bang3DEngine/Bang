@@ -10,12 +10,12 @@ SystemUtils::SystemUtils()
 }
 
 void SystemUtils::System(const String &command,
-                         const List<String> &argsList,
+                         const Array<String> &argsArray,
                          String *output,
                          bool *success)
 {
     SystemProcess process;
-    process.Start(command, argsList);
+    process.Start(command, argsArray);
     process.WaitUntilFinished();
 
     String out = process.ReadStandardOutput() + process.ReadStandardError();

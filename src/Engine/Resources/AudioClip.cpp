@@ -76,7 +76,7 @@ void AudioClip::Import(const Path &soundFilepath)
     }
     else
     {
-        m_soundFilepath = Path::Empty;
+        m_soundFilepath = Path::Empty();
     }
 }
 

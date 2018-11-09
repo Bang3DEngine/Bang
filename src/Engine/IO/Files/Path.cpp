@@ -25,7 +25,11 @@ constexpr char SeparatorC = '\\';
 
 using namespace Bang;
 
-const Path Path::Empty;
+const Path &Path::Empty()
+{
+    static const Path p;
+    return p;
+}
 
 Path::Path()
 {
@@ -74,10 +78,11 @@ bool Path::IsFile() const
 {
 #ifdef __linux__
     struct stat path_stat;
-    stat(GetAbsolute().ToCString(), &path_stat);
+    stat(abs.ToCString(), &path_stat);
     return S_ISREG(path_stat.st_mode);
 #elif _WIN32
-    return !PathIsDirectory(GetAbsolute().ToCString());
+    return PathFileExists(GetAbsolute().ToCString()) &&
+           !PathIsDirectory(GetAbsolute().ToCString());
 #endif
 }
 
@@ -134,10 +139,6 @@ Array<Path> Path::GetSubDirectories(FindFlags findFlags) const
             if (subPath.IsDir())
             {
                 subDirsArray.PushBack(subPath);
-                if (findFlags.IsOn(FindFlag::RECURSIVE))
-                {
-                    subDirsArray.PushBack(subPath.GetSubDirectories(findFlags));
-                }
             }
         }
     }
@@ -149,6 +150,7 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
     Array<Path> subPathsArray;
 
 #ifdef __linux__
+
     struct dirent *dir;
     if (DIR *d = opendir(GetAbsolute().ToCString()))
     {
@@ -161,6 +163,11 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
                 {
                     Path subPath = this->Append(subName);
                     subPathsArray.PushBack(subPath);
+
+                    if (findFlags.IsOn(FindFlag::RECURSIVE) && subPath.IsDir())
+                    {
+                        subPathsArray.PushBack(subPath.GetSubPaths(findFlags));
+                    }
                 }
             }
         }
@@ -169,22 +176,37 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
 
 #elif _WIN32
 
-    char fullpath[MAX_PATH];
-    GetFullPathName(GetAbsolute().ToCString(), MAX_PATH, fullpath, 0);
-    std::string fp(fullpath);
-
     WIN32_FIND_DATA findFileData;
-    HANDLE hFind = FindFirstFile(
-        (LPCSTR)(GetAbsolute() + String(Separator + String("*"))).ToCString(),
-        &findFileData);
+    // HANDLE hFind = FindFirstFile(
+    //     (LPCSTR)(GetAbsolute() + String("\\*")).ToCString(), &findFileData);
+    const static String wc = "\\*";
+    HANDLE hFind = FindFirstFileEx((LPCSTR)(GetAbsolute() + wc).ToCString(),
+                                   FindExInfoBasic,
+                                   &findFileData,
+                                   FindExSearchNameMatch,
+                                   NULL,
+                                   0);
     if (hFind != INVALID_HANDLE_VALUE)
     {
         do
         {
-            String fileName(findFileData.cFileName);
-            if (fileName != "." && fileName != "..")
+            if (strcmp(findFileData.cFileName, ".") != 0 &&
+                strcmp(findFileData.cFileName, "..") != 0)
             {
-                subPathsArray.PushBack(Append(fileName));
+                Path subPath = Append(findFileData.cFileName);
+                subPathsArray.PushBack(subPath);
+
+                if (findFlags.IsOn(FindFlag::RECURSIVE))
+                {
+                    const bool isDir = (findFileData.dwFileAttributes &
+                                        FILE_ATTRIBUTE_DIRECTORY);
+                    if (isDir)
+                    {
+                        Array<Path> subPathsOfSubPath =
+                            subPath.GetSubPaths(findFlags);
+                        subPathsArray.PushBack(subPathsOfSubPath);
+                    }
+                }
             }
         } while (FindNextFile(hFind, &findFileData) != 0);
     }
@@ -353,7 +375,7 @@ Path Path::GetDirectory() const
 {
     if (IsEmpty())
     {
-        return Path::Empty;
+        return Path::Empty();
     }
 
     const size_t lastSlash = GetAbsolute().RFind(SeparatorC);
@@ -378,7 +400,7 @@ Path Path::GetDuplicatePath(const Path &path)
 {
     if (path.IsEmpty())
     {
-        return Path::Empty;
+        return Path::Empty();
     }
 
     Path resultPath = path;
@@ -503,7 +525,7 @@ Path Path::GetNextDuplicatePath(const Path &filepath)
 {
     if (filepath.IsEmpty())
     {
-        return Path::Empty;
+        return Path::Empty();
     }
 
     Path fileDir = filepath.GetDirectory();
@@ -580,9 +602,4 @@ String Path::GetNextDuplicateString(const String &string)
         (duplicateString + "_" + String::ToString(duplicationNumber));
     ASSERT(duplicateString != string);
     return duplicateString;
-}
-
-Path Path::EmptyPath()
-{
-    return Path();
 }

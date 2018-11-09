@@ -21,6 +21,7 @@ public:
     static Path GetExecutableDir();
     static Path GetExecutablePath();
     static Path GetEngineIncludeDir();
+    static Path GetCompilerPath();
     static const Path &GetEngineDir();
     static const Path &GetEngineAssetsDir();
     static Path GetEngineBuildDir();
@@ -51,6 +52,7 @@ public:
     static void RemoveDirectoriesFromArray(Array<Path> *paths);
 
     static void SetProjectRoot(const Path &projectRootDir);
+    static void SetCompilerPath(const Path &compilerPath);
 
 protected:
     Paths();
@@ -59,14 +61,18 @@ protected:
     static Paths *GetInstance();
 
 private:
-    Path m_engineRoot = Path::Empty;
-    Path m_projectRoot = Path::Empty;
+    Path m_engineRootPath = Path::Empty();
+    Path m_projectRootPath = Path::Empty();
+    Path m_engineAssetsDir = Path::Empty();
 
-    // Cached paths (the ones more used), to avoid Path creation every time
-    Path m_engineAssetsDir = Path::Empty;
+    Array<Path> m_compilerIncludePaths;
+    Path m_compilerPath = Path::Empty();
+
+    void FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths);
 
     friend class Application;
+    friend class Settings;
 };
-}
+}  // namespace Bang
 
 #endif  // PATHS_H

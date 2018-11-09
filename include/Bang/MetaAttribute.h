@@ -81,10 +81,10 @@ inline Path MetaAttribute::Get() const
 {
     if (GetStringValue().IsEmpty())
     {
-        return Path::Empty;
+        return Path::Empty();
     }
     return Path(GetStringValue());
 }
-}
+}  // namespace Bang
 
 #endif  // METAATTRIBUTE_H

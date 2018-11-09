@@ -67,9 +67,9 @@ protected:
     virtual ~UIFileListItem() override;
 
 private:
-    Path m_path = Path::Empty;
+    Path m_path = Path::Empty();
     UITextRenderer *m_text = nullptr;
 };
-}
+}  // namespace Bang
 
 #endif  // UIFILELIST_H

@@ -35,12 +35,12 @@ public:
     static YesNoCancel GetYesNoCancel(const String &title, const String &msg);
     static Path OpenFilePath(const String &title,
                              const Array<String> &extensions = {},
-                             const Path &initialDirPath = Path::Empty);
+                             const Path &initialDirPath = Path::Empty());
     static Path OpenDirectory(const String &title,
-                              const Path &initialDirPath = Path::Empty);
+                              const Path &initialDirPath = Path::Empty());
     static Path SaveFilePath(const String &title,
                              const String &extension,
-                             const Path &initialDirPath = Path::Empty,
+                             const Path &initialDirPath = Path::Empty(),
                              const String &initialFileName = "Unnamed");
 
     static DialogWindow *BeginDialogCreation(const String &title,
@@ -93,6 +93,6 @@ private:
     static void AcceptDialogPath(const Path &path);
     static void OnDialogPathChanged(const Path &path);
 };
-}
+}  // namespace Bang
 
 #endif  // DIALOG_H

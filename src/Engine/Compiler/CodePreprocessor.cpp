@@ -48,10 +48,10 @@ Path CodePreprocessor::GetIncludePath(const String &includeDirective,
         }
     }
 
-    Debug_Error("Could not find include: '" << includeDirective << "'. "
-                                            << "Using directories: "
-                                            << includeDirs);
-    return Path::Empty;
+    Debug_Error("Could not find include: '"
+                << includeDirective << "'. "
+                << "Using directories: " << includeDirs);
+    return Path::Empty();
 }
 
 Array<Path> CodePreprocessor::GetIncludePathCombinations(

@@ -3,8 +3,6 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/List.h"
-#include "Bang/List.tcc"
 #include "Bang/Path.h"
 #include "Bang/String.h"
 
@@ -22,21 +20,22 @@ public:
 
     struct Job
     {
-        List<Path> includePaths;
-        List<Path> libDirs;
-        List<String> libraries;
-        List<String> flags;
+        Array<Path> includePaths;
+        Array<Path> libDirs;
+        Array<String> libraries;
+        Array<String> flags;
         Path outputFile;
+        Path compilerPath;
         OutputType outputMode = OutputType::EXECUTABLE;
 
         void AddInputFile(const Path &path);
         void AddInputFiles(const Array<Path> &paths);
         void AddInputFile(const String &path);
         void AddInputFiles(const Array<String> &paths);
-        const List<String> &GetInputFiles() const;
+        const Array<String> &GetInputFiles() const;
 
     private:
-        List<String> inputFiles;  // cpp or objects
+        Array<String> inputFiles;  // cpp or objects
     };
 
     struct Result
@@ -51,6 +50,6 @@ public:
 private:
     Compiler();
 };
-}
+}  // namespace Bang
 
 #endif  // COMPILER_H

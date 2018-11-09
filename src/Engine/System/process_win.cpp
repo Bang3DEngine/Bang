@@ -236,9 +236,8 @@ bool Process::try_get_exit_status(int &exit_status) noexcept
     if (wait_status == WAIT_TIMEOUT)
         return false;
 
-    DWORD exit_status_win;
+    DWORD exit_status_win = -1;
     if (!GetExitCodeProcess(data.handle, &exit_status_win))
-        exit_status_win = -1;
     {
         std::lock_guard<std::mutex> lock(close_mutex);
         CloseHandle(data.handle);

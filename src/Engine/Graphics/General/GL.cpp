@@ -269,12 +269,8 @@ bool GL::CheckError(int line, const String &func, const String &file)
         const char *err =
             reinterpret_cast<const char *>(gluErrorString(glError));
         Debug_Error("OpenGL error \"" << String(err).ToUpper()
-                                      << "\" at function \""
-                                      << func
-                                      << "\" in "
-                                      << file
-                                      << ":"
-                                      << line);
+                                      << "\" at function \"" << func << "\" in "
+                                      << file << ":" << line);
         // GL::PrintGLContext();
         ok = false;
     }
@@ -807,8 +803,9 @@ bool GL::ValidateProgram(GLId programId)
                 GL::GetProgramInteger(programId, GL::VALIDATE_STATUS));
     if (!isValid)
     {
-        Debug_Error("Invalid shader program in the current state: "
-                    << GL::GetProgramErrorMsg(programId));
+        const String errMsg = GL::GetProgramErrorMsg(programId);
+        Debug_Error("Invalid shader program in the current state: " << errMsg);
+        PrintGLContext();
     }
     return isValid;
 }

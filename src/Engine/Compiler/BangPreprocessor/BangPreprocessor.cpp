@@ -6,9 +6,11 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Debug.h"
 #include "Bang/File.h"
 #include "Bang/List.tcc"
 #include "Bang/Path.h"
+#include "Bang/Paths.h"
 #include "Bang/ReflectStruct.h"
 #include "Bang/SystemProcess.h"
 
@@ -152,13 +154,92 @@ Array<ReflectStruct> BangPreprocessor::GetReflectStructs(const String &source)
     return reflectStructsArray;
 }
 
+// https://stackoverflow.com/questions/2394017/remove-comments-from-c-c-code
+String RemoveComments_(const String &str)
+{
+    String finalStr = "";
+
+#define RETURN_IF_I_OUT_OF_BOUNDS() \
+    if (i >= str.Size())            \
+    {                               \
+        return finalStr;            \
+    }
+
+    uint i = 0;
+    while (true)
+    {
+        RETURN_IF_I_OUT_OF_BOUNDS();
+        char c = str[i++];
+        if (c == '\'' || c == '"') /* literal */
+        {
+            char q = c;
+            do
+            {
+                finalStr += c;
+                if (c == '\\')
+                {
+                    RETURN_IF_I_OUT_OF_BOUNDS();
+                    finalStr += str[i++];
+                }
+
+                RETURN_IF_I_OUT_OF_BOUNDS();
+                c = str[i++];
+            } while (c != q);
+
+            finalStr += c;
+        }
+        else if (c == '/') /* opening comment ? */
+        {
+            RETURN_IF_I_OUT_OF_BOUNDS();
+            c = str[i++];
+
+            if (c != '*' && c != '/') /* no, recover */
+            {
+                finalStr += "/";
+                --i;
+            }
+            else
+            {
+                const bool isMultiLineComment = (c == '*');
+                const bool isSingleLineComment = !isMultiLineComment;
+
+                char prev;
+                bool keepSkipping;
+                finalStr += " "; /* replace comment with space */
+                do
+                {
+                    prev = c;
+                    RETURN_IF_I_OUT_OF_BOUNDS();
+                    c = str[i++];
+
+                    keepSkipping =
+                        (isMultiLineComment && !(prev == '*' && c == '/')) ||
+                        (isSingleLineComment && c == '\n');
+                } while (keepSkipping);
+            }
+        }
+        else
+        {
+            finalStr += c;
+        }
+        RETURN_IF_I_OUT_OF_BOUNDS()
+    }
+
+#undef RETURN_IF_I_OUT_OF_BOUNDS
+
+    return finalStr;
+}
+
 void BangPreprocessor::RemoveComments(String *source)
 {
     String &src = *source;
 
     SystemProcess gCompilerProcess;
-    gCompilerProcess.Start("g++", {"-fpreprocessed", "-E", "-"});
+    Path compilerPath = Paths::GetCompilerPath();
+#ifdef __linux__
 
+    gCompilerProcess.Start(compilerPath.GetAbsolute(),
+                           {"-fpreprocessed", "-E", "-"});
     gCompilerProcess.Write(src);
     gCompilerProcess.CloseWriteChannel();
     gCompilerProcess.WaitUntilFinished();
@@ -172,6 +253,12 @@ void BangPreprocessor::RemoveComments(String *source)
                       SCAST<int>(output.Find('\n')) + 2);  // Remove first line
     }
     *source = output;
+
+#elif _WIN32
+
+    *source = RemoveComments_(*source);
+
+#endif
 }
 
 String::Iterator BangPreprocessor::Find(String::Iterator begin,

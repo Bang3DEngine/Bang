@@ -18,6 +18,7 @@
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/Transform.h"
 
 namespace Bang
@@ -28,10 +29,7 @@ class TextureCubeMap;
 
 using namespace Bang;
 
-Light::Light()
-{
-    CONSTRUCT_CLASS_ID(Light)
-}
+Light::Light(){CONSTRUCT_CLASS_ID(Light)}
 
 Light::~Light()
 {
@@ -117,25 +115,33 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
     ASSERT(GL::IsBound(sp))
 
     Transform *tr = GetGameObject()->GetTransform();
-    sp->SetInt("B_LightShadowType", int(GetShadowType()));
-    sp->SetFloat("B_LightShadowBias", GetShadowBias());
     sp->SetFloat("B_LightIntensity", GetIntensity());
     sp->SetColor("B_LightColor", GetColor());
     sp->SetVector3("B_LightForwardWorld", tr->GetForward());
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
+
+    sp->SetInt("B_LightShadowType", int(GetShadowType()));
+    sp->SetFloat("B_LightShadowBias", GetShadowBias());
+    const String usedShadowMapUniformName =
+        (GetShadowType() == ShadowType::HARD ? "B_LightShadowMap"
+                                             : "B_LightShadowMapSoft");
+    const String notUsedShadowMapUniformName =
+        (GetShadowType() == ShadowType::HARD ? "B_LightShadowMapSoft"
+                                             : "B_LightShadowMap");
     if (DCAST<Texture2D *>(GetShadowMapTexture()))
     {
-        sp->SetTexture2D("B_LightShadowMap",
+        sp->SetTexture2D(usedShadowMapUniformName,
                          SCAST<Texture2D *>(GetShadowMapTexture()));
-        sp->SetTexture2D("B_LightShadowMapSoft",
-                         SCAST<Texture2D *>(GetShadowMapTexture()));
+        sp->SetTexture2D(notUsedShadowMapUniformName,
+                         TextureFactory::GetWhiteTexture());
     }
     else
     {
-        sp->SetTextureCubeMap("B_LightShadowMap",
+        sp->SetTextureCubeMap(usedShadowMapUniformName,
                               SCAST<TextureCubeMap *>(GetShadowMapTexture()));
-        sp->SetTextureCubeMap("B_LightShadowMapSoft",
-                              SCAST<TextureCubeMap *>(GetShadowMapTexture()));
+        sp->SetTextureCubeMap(
+            notUsedShadowMapUniformName,
+            SCAST<TextureCubeMap *>(TextureFactory::GetWhiteTextureCubeMap()));
     }
 }
 

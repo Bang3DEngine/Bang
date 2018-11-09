@@ -10,6 +10,8 @@ constexpr char Separator[] = "/";
 constexpr char SeparatorC = '/';
 #elif _WIN32
 #include <Windows.h>
+
+#include <ShlObj.h>
 #include <stdlib.h>
 #include "Bang/WinUndef.h"
 constexpr char Separator[] = "\\";
@@ -35,7 +37,7 @@ Paths::~Paths()
 
 void Paths::InitPaths(const Path &engineRootPath)
 {
-    m_engineRoot = Path::Empty;
+    m_engineRootPath = Path::Empty();
     if (!engineRootPath.IsEmpty())
     {
         Paths::SetEngineRoot(engineRootPath);
@@ -52,6 +54,8 @@ void Paths::InitPaths(const Path &engineRootPath)
                     << GetEngineDir());
         Application::Exit(1, true);
     }
+
+    FindCompilerPaths(&m_compilerPath, &m_compilerIncludePaths);
 }
 
 Path Paths::GetHome()
@@ -108,9 +112,14 @@ Path Paths::GetEngineIncludeDir()
     return Paths::GetEngineDir().Append("include");
 }
 
+Path Paths::GetCompilerPath()
+{
+    return Paths::GetInstance()->m_compilerPath;
+}
+
 const Path &Paths::GetEngineDir()
 {
-    return Paths::GetInstance()->m_engineRoot;
+    return Paths::GetInstance()->m_engineRootPath;
 }
 const Path &Paths::GetEngineAssetsDir()
 {
@@ -119,7 +128,7 @@ const Path &Paths::GetEngineAssetsDir()
 
 Path Paths::GetEngineBuildDir()
 {
-    return Paths::GetEngineDir().Append("Build");
+    return Paths::GetEngineDir().Append("Compile");
 }
 
 Path Paths::GetEngineLibrariesDir()
@@ -129,7 +138,11 @@ Path Paths::GetEngineLibrariesDir()
 
 const String &Paths::GetBuildType()
 {
-    static const String BuildType = BANG_BUILD_TYPE;
+#ifdef DEBUG
+    static const String BuildType = "Debug";
+#else
+    static const String BuildType = "Release";
+#endif
     return BuildType;
 }
 
@@ -156,7 +169,7 @@ Array<Path> Paths::GetProjectIncludeDirs()
 
 const Path &Paths::GetProjectDir()
 {
-    return Paths::GetInstance()->m_projectRoot;
+    return Paths::GetInstance()->m_projectRootPath;
 }
 
 Path Paths::GetProjectAssetsDir()
@@ -169,6 +182,160 @@ Path Paths::GetProjectLibrariesDir()
     return GetProjectDir().Append("Libraries");
 }
 
+void Paths::FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths)
+{
+    // Include paths
+    includePaths->Clear();
+    includePaths->PushBack(Paths::GetEngineIncludeDir());
+
+    Path tpd = Paths::GetEngineDir()
+                   .Append("Compile")
+                   .Append("CompileDependencies")
+                   .Append("ThirdParty");
+    {
+        includePaths->PushBack(tpd.Append("yaml-cpp").Append("include"));
+        includePaths->PushBack(tpd.Append("assimp").Append("include"));
+        includePaths->PushBack(tpd.Append("assimp")
+                                   .Append("build")
+                                   .Append(GetBuildType())
+                                   .Append("include"));
+        includePaths->PushBack(tpd.Append("openal-soft").Append("include"));
+        includePaths->PushBack(tpd.Append("glew-2.1.0").Append("include"));
+        includePaths->PushBack(tpd.Append("SDL2-2.0.8").Append("include"));
+        includePaths->PushBack(tpd.Append("SDL2_ttf-2.0.14"));
+        includePaths->PushBack(tpd.Append("libpng-1.6.34"));
+        includePaths->PushBack(tpd.Append("libpng-1.6.34")
+                                   .Append("build")
+                                   .Append(GetBuildType())
+                                   .Append("x64")
+                                   .Append("include"));
+        includePaths->PushBack(tpd.Append("libjpeg-turbo"));
+        includePaths->PushBack(tpd.Append("libjpeg-turbo")
+                                   .Append("build")
+                                   .Append(GetBuildType())
+                                   .Append("x64")
+                                   .Append("include"));
+        includePaths->PushBack(tpd.Append("libsndfile").Append("include"));
+
+        /*
+        {
+            Array<Path> thirdPartySubDirs =
+                tpd.GetSubDirectories(FindFlag::RECURSIVE);
+            for (const Path &thirdPartySubDir : thirdPartySubDirs)
+            {
+                if (thirdPartySubDir.GetAbsolute().EndsWith("include"))
+                {
+                    includePaths->PushBack(thirdPartySubDir);
+                }
+            }
+        }
+        */
+
+        {
+            Path physxRootDir = tpd.Append("PhysX");
+            Array<Path> physxDirs =
+                physxRootDir.GetSubDirectories(FindFlag::RECURSIVE);
+            for (const Path &physxDir : physxDirs)
+            {
+                includePaths->PushBack(physxDir);
+            }
+        }
+    }
+
+#ifdef __linux__
+
+    // Compiler path
+    Array<Path> pathsToTry;
+    pathsToTry.PushBack(Path("/usr/bin/g++"));
+    pathsToTry.PushBack(Path("/usr/bin/c++"));
+    pathsToTry.PushBack(Path("/usr/bin/gcc"));
+    for (const Path &path : pathsToTry)
+    {
+        if (path.IsFile())
+        {
+            *compilerPath = path;
+            break;
+        }
+    }
+
+    // Include paths
+    includePaths->PushBack(Path("/usr/include"));
+    includePaths->PushBack(Path("/usr/include/SDL2"));
+
+#elif _WIN32
+
+    Array<Path> programFilesDirs;
+    {
+        TCHAR pf[MAX_PATH];
+        SHGetSpecialFolderPath(0, pf, CSIDL_PROGRAM_FILES, FALSE);
+        programFilesDirs.PushBack(Path(String(pf)));
+        SHGetSpecialFolderPath(0, pf, CSIDL_PROGRAM_FILESX86, FALSE);
+        programFilesDirs.PushBack(Path(String(pf)));
+    }
+
+    includePaths->PushBack(Paths::GetEngineBuildDir());
+
+    for (const Path &programFilesDir : programFilesDirs)
+    {
+        const Array<Path> programFilesSubDirs =
+            programFilesDir.GetSubDirectories(FindFlag::SIMPLE);
+        for (const Path &programFilesSubDir : programFilesSubDirs)
+        {
+            if (programFilesSubDir.GetAbsolute().Contains(
+                    "Microsoft Visual Studio"))
+            {
+                Array<Path> allSubPaths =
+                    programFilesSubDir.GetSubPaths(FindFlag::RECURSIVE);
+                for (const Path &subPath : allSubPaths)
+                {
+                    if (compilerPath->IsEmpty())
+                    {
+                        if (subPath.IsFile())
+                        {
+                            if (subPath.GetNameExt() == "cl.exe")
+                            {
+                                *compilerPath = subPath;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                for (const Path &subPath : allSubPaths)
+                {
+                    if (subPath.IsDir())
+                    {
+                        if ((subPath.GetAbsolute().Contains("MSVC") &&
+                             subPath.GetAbsolute().EndsWith("include")) ||
+                            subPath.GetAbsolute().EndsWith(
+                                "VC\\Auxiliary\\VS\\include"))
+                        {
+                            includePaths->PushBack(subPath);
+                        }
+                    }
+                }
+            }
+
+            if (programFilesSubDir.GetAbsolute().Contains("Windows Kits"))
+            {
+                const Array<Path> allSubDirs =
+                    programFilesSubDir.GetSubDirectories(FindFlag::RECURSIVE);
+                for (const Path &subDir : allSubDirs)
+                {
+                    if (subDir.GetAbsolute().EndsWith("ucrt") ||
+                        subDir.GetAbsolute().EndsWith("um") ||
+                        subDir.GetAbsolute().EndsWith("shared") ||
+                        subDir.GetAbsolute().EndsWith("winrt"))
+                    {
+                        includePaths->PushBack(subDir);
+                    }
+                }
+            }
+        }
+    }
+#endif
+}
+
 Path Paths::CreateProjectPath(const String &path)
 {
     return Paths::GetProjectAssetsDir().Append(path);
@@ -176,24 +343,17 @@ Path Paths::CreateProjectPath(const String &path)
 
 void Paths::SetProjectRoot(const Path &projectRootDir)
 {
-    Paths::GetInstance()->m_projectRoot = projectRootDir;
+    Paths::GetInstance()->m_projectRootPath = projectRootDir;
+}
+
+void Paths::SetCompilerPath(const Path &compilerPath)
+{
+    Paths::GetInstance()->m_compilerPath = compilerPath;
 }
 
 Array<Path> Paths::GetEngineIncludeDirs()
 {
-    Array<Path> incPaths;
-    incPaths.PushBack(Paths::GetEngineIncludeDir());
-    incPaths.PushBack(Path("/usr/include"));
-    incPaths.PushBack(Path("/usr/include/SDL2"));
-
-    Path physxRootDir = Paths::GetEngineDir().Append(
-        "Compile/CompileDependencies/ThirdParty/PhysX/");
-    Array<Path> physxDirs = physxRootDir.GetSubDirectories(FindFlag::RECURSIVE);
-    for (const Path &physxDir : physxDirs)
-    {
-        incPaths.PushBack(physxDir);
-    }
-    return incPaths;
+    return Paths::GetInstance()->m_compilerIncludePaths;
 }
 
 bool Paths::IsEnginePath(const Path &path)
@@ -203,7 +363,7 @@ bool Paths::IsEnginePath(const Path &path)
 
 void Paths::SetEngineRoot(const Path &engineRootDir)
 {
-    Paths::GetInstance()->m_engineRoot = engineRootDir;
+    Paths::GetInstance()->m_engineRootPath = engineRootDir;
 }
 
 Path Paths::GetResolvedPath(const Path &path_)

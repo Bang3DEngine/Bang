@@ -2,20 +2,23 @@
 #define SETTINGS_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/Path.h"
 
 namespace Bang
 {
 class Settings
 {
-public:
-    static Settings *GetInstance();
-
-private:
+protected:
     Settings();
     virtual ~Settings();
 
+    virtual void Init();
+
+    static Settings *GetInstance();
+
+protected:
     friend class Application;
 };
-}
+}  // namespace Bang
 
 #endif  // SETTINGS_H

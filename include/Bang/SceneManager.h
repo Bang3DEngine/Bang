@@ -68,7 +68,7 @@ private:
     bool m_nextLoadNeeded = false;
     Scene *p_nextLoadScene = nullptr;
     bool m_nextLoadDestroyPrevious = false;
-    Path m_nextLoadScenePath = Path::Empty;
+    Path m_nextLoadScenePath = Path::Empty();
 
     void Init();
     void SetSceneVariable(Scene **sceneVariable, Scene *sceneValue);

@@ -55,7 +55,10 @@ void Paths::InitPaths(const Path &engineRootPath)
         Application::Exit(1, true);
     }
 
-    FindCompilerPaths(&m_compilerPath, &m_compilerIncludePaths);
+    FindCompilerPaths(&m_compilerPath,
+                      &m_linkerPath,
+                      &m_msvcConfigureArchitecturePath,
+                      &m_compilerIncludePaths);
 }
 
 Path Paths::GetHome()
@@ -115,6 +118,16 @@ Path Paths::GetEngineIncludeDir()
 Path Paths::GetCompilerPath()
 {
     return Paths::GetInstance()->m_compilerPath;
+}
+
+Path Paths::GetLinkerPath()
+{
+    return Paths::GetInstance()->m_linkerPath;
+}
+
+Path Paths::GetMSVCConfigureArchitectureBatPath()
+{
+    return Paths::GetInstance()->m_msvcConfigureArchitecturePath;
 }
 
 const Path &Paths::GetEngineDir()
@@ -182,7 +195,10 @@ Path Paths::GetProjectLibrariesDir()
     return GetProjectDir().Append("Libraries");
 }
 
-void Paths::FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths)
+void Paths::FindCompilerPaths(Path *compilerPath,
+                              Path *linkerPath,
+                              Path *msvcConfigureArchitectureBatPath,
+                              Array<Path> *includePaths)
 {
     // Include paths
     includePaths->Clear();
@@ -257,6 +273,7 @@ void Paths::FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths)
             break;
         }
     }
+    *linkerPath = *compilerPath;
 
     // Include paths
     includePaths->PushBack(Path("/usr/include"));
@@ -288,15 +305,19 @@ void Paths::FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths)
                     programFilesSubDir.GetSubPaths(FindFlag::RECURSIVE);
                 for (const Path &subPath : allSubPaths)
                 {
-                    if (compilerPath->IsEmpty())
+                    if (subPath.IsFile())
                     {
-                        if (subPath.IsFile())
+                        if (subPath.GetNameExt() == "cl.exe")
                         {
-                            if (subPath.GetNameExt() == "cl.exe")
-                            {
-                                *compilerPath = subPath;
-                                break;
-                            }
+                            *compilerPath = subPath;
+                        }
+                        else if (subPath.GetNameExt() == "link.exe")
+                        {
+                            *linkerPath = subPath;
+                        }
+                        else if (subPath.GetNameExt() == "vcvarsall.bat")
+                        {
+                            *msvcConfigureArchitectureBatPath = subPath;
                         }
                     }
                 }

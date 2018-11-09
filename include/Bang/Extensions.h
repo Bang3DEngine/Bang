@@ -10,8 +10,10 @@ namespace Bang
 class Extensions
 {
 public:
+    static String GetObjExtension();
     static String GetStaticLibExtension();
     static String GetDynamicLibExtension();
+
     static String GetMeshExtension();
     static String GetSceneExtension();
     static String GetPrefabExtension();

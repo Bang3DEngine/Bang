@@ -6,6 +6,15 @@
 
 namespace Bang
 {
+String Extensions::GetObjExtension()
+{
+#ifdef __linux__
+    return "o";
+#else
+    return "obj";
+#endif
+}
+
 String Extensions::GetStaticLibExtension()
 {
 #ifdef __linux__

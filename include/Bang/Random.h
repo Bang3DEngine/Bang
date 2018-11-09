@@ -16,6 +16,9 @@ public:
     static void SetSeed(const String &seed);
 
     template <class T = float>
+    static T GetValue01();
+
+    template <class T = uint64_t>
     static T GetValue();
 
     template <class T>
@@ -35,15 +38,21 @@ private:
 };
 
 template <class T>
+T Random::GetValue01()
+{
+    return SCAST<float>(rand()) / RAND_MAX;
+}
+
+template <class T>
 T Random::GetValue()
 {
-    return float(rand()) / RAND_MAX;
+    return SCAST<T>(rand());
 }
 
 template <class T>
 T Random::GetRange(T minIncluded, T maxExcluded)
 {
-    return SCAST<T>(Random::GetValue() * (maxExcluded - minIncluded)) +
+    return SCAST<T>(Random::GetValue01() * (maxExcluded - minIncluded)) +
            minIncluded;
 }
 }  // namespace Bang

@@ -21,7 +21,6 @@ public:
     static Path GetExecutableDir();
     static Path GetExecutablePath();
     static Path GetEngineIncludeDir();
-    static Path GetCompilerPath();
     static const Path &GetEngineDir();
     static const Path &GetEngineAssetsDir();
     static Path GetEngineBuildDir();
@@ -33,6 +32,9 @@ public:
     static Path CreateEnginePath(const String &path);
     static Path CreateProjectPath(const String &path);
 
+    static Path GetCompilerPath();
+    static Path GetLinkerPath();
+    static Path GetMSVCConfigureArchitectureBatPath();
     static Array<Path> GetEngineIncludeDirs();
     static Array<Path> GetAllProjectSubDirs();
     static Array<Path> GetProjectIncludeDirs();
@@ -67,8 +69,13 @@ private:
 
     Array<Path> m_compilerIncludePaths;
     Path m_compilerPath = Path::Empty();
+    Path m_linkerPath = Path::Empty();
+    Path m_msvcConfigureArchitecturePath = Path::Empty();
 
-    void FindCompilerPaths(Path *compilerPath, Array<Path> *includePaths);
+    void FindCompilerPaths(Path *compilerPath,
+                           Path *linkerPath,
+                           Path *msvcConfigureArchitectureBatPath,
+                           Array<Path> *includePaths);
 
     friend class Application;
     friend class Settings;

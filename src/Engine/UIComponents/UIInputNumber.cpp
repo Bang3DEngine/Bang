@@ -21,10 +21,7 @@
 
 using namespace Bang;
 
-UIInputNumber::UIInputNumber()
-{
-    CONSTRUCT_CLASS_ID(UIInputNumber)
-}
+UIInputNumber::UIInputNumber(){CONSTRUCT_CLASS_ID(UIInputNumber)}
 
 UIInputNumber::~UIInputNumber()
 {
@@ -116,7 +113,7 @@ void UIInputNumber::UpdateTextFromValue()
 void UIInputNumber::ChangeTextColorBasedOnMinMax()
 {
     // Colorize text based on the textValue
-    // (which can be different from GetValue())
+    // (which can be different from GetValue01())
     float textValue = String::ToFloat(GetInputText()->GetText()->GetContent());
     bool isOutOfRange =
         (textValue < GetMinValue() || textValue > GetMaxValue());

@@ -25,7 +25,6 @@ public:
         Array<String> libraries;
         Array<String> flags;
         Path outputFile;
-        Path compilerPath;
         OutputType outputMode = OutputType::EXECUTABLE;
 
         void AddInputFile(const Path &path);

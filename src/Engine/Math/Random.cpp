@@ -62,16 +62,16 @@ Quaternion Random::GetRotation()
 
 Color Random::GetColor()
 {
-    return Color(Random::GetValue(),
-                 Random::GetValue(),
-                 Random::GetValue(),
-                 Random::GetValue());
+    return Color(Random::GetValue01(),
+                 Random::GetValue01(),
+                 Random::GetValue01(),
+                 Random::GetValue01());
 }
 
 Color Random::GetColorOpaque()
 {
     return Color(
-        Random::GetValue(), Random::GetValue(), Random::GetValue(), 1.0f);
+        Random::GetValue01(), Random::GetValue01(), Random::GetValue01(), 1.0f);
 }
 
 Random::Random()

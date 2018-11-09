@@ -3,6 +3,10 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Debug.h"
+#include "Bang/File.h"
+#include "Bang/Paths.h"
+#include "Bang/Random.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/SystemUtils.h"
 
@@ -17,44 +21,51 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         false
 #endif
         ;
+    constexpr bool msvc = !gcc;
 
     Array<String> args;
 
     // Output
-    switch (job.outputMode)
+    String debugAppend = "";
+#ifdef _WIN32
+#ifdef DEBUG
+    debugAppend = "d";
+#endif
+#endif
+    if (gcc)
     {
-        case OutputType::OBJECT:
-            if (gcc)
-            {
-                args.PushBack("-c");
-            }
-            else
-            {
-                args.PushBack("/Fo" + job.outputFile.GetAbsolute());
-            }
-            break;
+        switch (job.outputMode)
+        {
+            case OutputType::OBJECT: args.PushBack("-c"); break;
 
-        case OutputType::EXECUTABLE:
-            if (gcc)
-            {
-                args.PushBack("-c");
-            }
-            else
-            {
-                args.PushBack("/MT" + job.outputFile.GetAbsolute());
-            }
-            break;
+            case OutputType::EXECUTABLE: args.PushBack("-c"); break;
 
-        case OutputType::SHARED_LIB:
-            if (gcc)
-            {
-                args.PushBack("-shared");
-            }
-            else
-            {
-                args.PushBack("/LD" + job.outputFile.GetAbsolute());
-            }
-            break;
+            case OutputType::SHARED_LIB: args.PushBack("-shared"); break;
+        }
+    }
+    else if (msvc)
+    {
+        args.PushBack("/EHsc");
+        if (job.outputMode == OutputType::OBJECT)
+        {
+            args.PushBack("/Fo" + job.outputFile.GetAbsolute());
+        }
+
+        if (job.outputMode != OutputType::SHARED_LIB)
+        {
+            args.PushBack("/link");
+            args.PushBack("/MD" + debugAppend + " " +
+                          job.outputFile.GetAbsolute());
+        }
+        else
+        {
+            args.PushBack("/MACHINE:x64");
+            args.PushBack("/MANIFEST:NO");
+            args.PushBack("/NXCOMPAT");
+            args.PushBack("/IGNOREDL");
+            args.PushBack("/DLL");
+            args.PushBack("/OUT:" + job.outputFile.GetAbsolute());
+        }
     }
 
     // Flags
@@ -79,14 +90,9 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         args.PushBack(Array<String>({"-o", job.outputFile.GetAbsolute()}));
     }
 
-    // Linking
+    // Libraries stuff
     if (job.libraries.Size() >= 1)
     {
-        if (!gcc)
-        {
-            args.PushBack("/link");
-        }
-
         // Library directories
         const String libDirPrefix = (gcc ? "-L" : "/LIBPATH:");
         Array<String> libDirs = job.libDirs.To<Array, String>();
@@ -98,19 +104,53 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         args.PushBack(libDirs);
 
         // Libraries
-        const String libPrefix = (gcc ? "-l" : "");
         Array<String> libs = job.libraries.To<Array, String>();
+        const String libPrefix = (gcc ? "-l" : "");
         for (String &lib : libs)
         {
             lib.Prepend(libPrefix);
         }
+
         args.PushBack(libs);
     }
 
     Result result;
     result.compileJob = job;
-    SystemUtils::System(
-        job.compilerPath.GetAbsolute(), args, &result.output, &result.success);
+    Path compilerPath =
+        (job.outputMode == OutputType::SHARED_LIB ? Paths::GetLinkerPath()
+                                                  : Paths::GetCompilerPath());
+    String compileCommand = compilerPath.GetAbsolute();
+    if (msvc)
+    {
+        // We need to prepare the environment. To execute several commands,
+        // we create a tmp file having all these commands
+
+        Path tmpCommandPath;
+        do
+        {
+            tmpCommandPath = Paths::GetProjectLibrariesDir()
+                                 .Append(String::ToString(Time::GetNow()) +
+                                         String::ToString(Random::GetValue()))
+                                 .WithExtension("bat");
+        } while (tmpCommandPath.Exists());
+
+        String prepareEnvCommand =
+            Paths::GetMSVCConfigureArchitectureBatPath().GetAbsolute() + " x64";
+        compileCommand = compileCommand + " " + String::Join(args, " ");
+
+        File::Write(tmpCommandPath,
+                    prepareEnvCommand + " \n " + compileCommand);
+
+        SystemUtils::System(
+            tmpCommandPath.GetAbsolute(), {}, &result.output, &result.success);
+
+        // File::Remove(tmpCommandPath);
+    }
+    else
+    {
+        SystemUtils::System(
+            compileCommand, args, &result.output, &result.success);
+    }
 
     return result;
 }

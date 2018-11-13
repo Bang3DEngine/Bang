@@ -15,6 +15,7 @@ class Paths
 {
 public:
     void InitPaths(const Path &engineRootPath);
+    void InitPathsAfterInitingSettings();
 
     static Path GetHome();
     static Path GetEngineSrcDir();
@@ -38,6 +39,7 @@ public:
     static Array<Path> GetEngineIncludeDirs();
     static Array<Path> GetAllProjectSubDirs();
     static Array<Path> GetProjectIncludeDirs();
+    static const Array<Path> &GetCompilerIncludePaths();
 
     static const Path &GetProjectDir();
     static Path GetProjectAssetsDir();
@@ -55,6 +57,9 @@ public:
 
     static void SetProjectRoot(const Path &projectRootDir);
     static void SetCompilerPath(const Path &compilerPath);
+    static void SetLinkerPath(const Path &linkerPath);
+    static void SetMSVCConfigureArchitecturePath(const Path &msvcConfArchPath);
+    static void AddCompilerIncludePath(const Path &compilerIncludePath);
 
 protected:
     Paths();

@@ -54,11 +54,31 @@ void Paths::InitPaths(const Path &engineRootPath)
                     << GetEngineDir());
         Application::Exit(1, true);
     }
+}
 
-    FindCompilerPaths(&m_compilerPath,
-                      &m_linkerPath,
-                      &m_msvcConfigureArchitecturePath,
-                      &m_compilerIncludePaths);
+void Paths::InitPathsAfterInitingSettings()
+{
+    bool mustFindCompilerPaths = false;
+    mustFindCompilerPaths |= !m_compilerPath.IsFile();
+    mustFindCompilerPaths |= !m_linkerPath.IsFile();
+
+#ifdef _WIN32
+    mustFindCompilerPaths |= !m_msvcConfigureArchitecturePath.IsFile();
+#endif
+
+    mustFindCompilerPaths |= m_compilerIncludePaths.IsEmpty();
+    for (const Path &includePath : m_compilerIncludePaths)
+    {
+        mustFindCompilerPaths |= !includePath.Exists();
+    }
+
+    if (mustFindCompilerPaths)
+    {
+        FindCompilerPaths(&m_compilerPath,
+                          &m_linkerPath,
+                          &m_msvcConfigureArchitecturePath,
+                          &m_compilerIncludePaths);
+    }
 }
 
 Path Paths::GetHome()
@@ -178,6 +198,11 @@ Array<Path> Paths::GetProjectIncludeDirs()
         Paths::GetProjectAssetsDir().GetSubDirectories(FindFlag::RECURSIVE);
     incDirs.PushBack(Paths::GetProjectAssetsDir());
     return incDirs;
+}
+
+const Array<Path> &Paths::GetCompilerIncludePaths()
+{
+    return Paths::GetInstance()->m_compilerIncludePaths;
 }
 
 const Path &Paths::GetProjectDir()
@@ -359,6 +384,21 @@ void Paths::SetProjectRoot(const Path &projectRootDir)
 void Paths::SetCompilerPath(const Path &compilerPath)
 {
     Paths::GetInstance()->m_compilerPath = compilerPath;
+}
+
+void Paths::SetLinkerPath(const Path &linkerPath)
+{
+    Paths::GetInstance()->m_linkerPath = linkerPath;
+}
+
+void Paths::SetMSVCConfigureArchitecturePath(const Path &msvcConfArchPath)
+{
+    Paths::GetInstance()->m_msvcConfigureArchitecturePath = msvcConfArchPath;
+}
+
+void Paths::AddCompilerIncludePath(const Path &compilerIncludePath)
+{
+    Paths::GetInstance()->m_compilerIncludePaths.PushBack(compilerIncludePath);
 }
 
 Array<Path> Paths::GetEngineIncludeDirs()

@@ -55,6 +55,8 @@ void Application::InitAfterPathsInit_()
     m_settings = CreateSettings();
     m_settings->Init();
 
+    m_paths->InitPathsAfterInitingSettings();
+
     m_physics = new Physics();
     m_physics->Init();
 

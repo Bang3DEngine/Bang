@@ -11,6 +11,8 @@
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix3.tcc"
 #include "Bang/Matrix4.h"
+#include "Bang/Mutex.h"
+#include "Bang/MutexLocker.h"
 #include "Bang/Shader.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -47,7 +49,13 @@ void Debug::Message(DebugMessageType msgType,
 
     std::ostream &os =
         (msgType == DebugMessageType::ERROR ? std::cerr : std::cout);
-    os << prefix << str << " | " << fileName << "(" << line << ")" << std::endl;
+
+    static Mutex outputMutex;
+    {
+        MutexLocker ml(&outputMutex);
+        os << prefix << str << " | " << fileName << "(" << line << ")"
+           << std::endl;
+    }
     os.flush();
 
     if (Debug *dbg = Debug::GetInstance())

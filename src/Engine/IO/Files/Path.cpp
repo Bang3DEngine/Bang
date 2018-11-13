@@ -157,11 +157,11 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
         while ((dir = readdir(d)) != nullptr)
         {
             String subName = dir->d_name;
-            if (findFlags.IsOn(FindFlag::HIDDEN) || !subName.BeginsWith("."))
+            Path subPath = this->Append(subName);
+            if (findFlags.IsOn(FindFlag::HIDDEN) || !subPath.IsHiddenFile())
             {
                 if (subName != "." && subName != "..")
                 {
-                    Path subPath = this->Append(subName);
                     subPathsArray.PushBack(subPath);
 
                     if (findFlags.IsOn(FindFlag::RECURSIVE) && subPath.IsDir())
@@ -190,21 +190,24 @@ Array<Path> Path::GetSubPaths(FindFlags findFlags) const
     {
         do
         {
-            if (strcmp(findFileData.cFileName, ".") != 0 &&
-                strcmp(findFileData.cFileName, "..") != 0)
+            String subName = findFileData.cFileName;
+            Path subPath = Append(findFileData.cFileName);
+            if (findFlags.IsOn(FindFlag::HIDDEN) || !subPath.IsHiddenFile())
             {
-                Path subPath = Append(findFileData.cFileName);
-                subPathsArray.PushBack(subPath);
-
-                if (findFlags.IsOn(FindFlag::RECURSIVE))
+                if (subName != "." && subName != "..")
                 {
-                    const bool isDir = (findFileData.dwFileAttributes &
-                                        FILE_ATTRIBUTE_DIRECTORY);
-                    if (isDir)
+                    subPathsArray.PushBack(subPath);
+
+                    if (findFlags.IsOn(FindFlag::RECURSIVE))
                     {
-                        Array<Path> subPathsOfSubPath =
-                            subPath.GetSubPaths(findFlags);
-                        subPathsArray.PushBack(subPathsOfSubPath);
+                        const bool isDir = (findFileData.dwFileAttributes &
+                                            FILE_ATTRIBUTE_DIRECTORY);
+                        if (isDir)
+                        {
+                            Array<Path> subPathsOfSubPath =
+                                subPath.GetSubPaths(findFlags);
+                            subPathsArray.PushBack(subPathsOfSubPath);
+                        }
                     }
                 }
             }

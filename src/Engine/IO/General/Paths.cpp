@@ -202,7 +202,6 @@ void Paths::FindCompilerPaths(Path *compilerPath,
 {
     // Include paths
     includePaths->Clear();
-    includePaths->PushBack(Paths::GetEngineIncludeDir());
 
     Path tpd = Paths::GetEngineDir()
                    .Append("Compile")
@@ -233,20 +232,6 @@ void Paths::FindCompilerPaths(Path *compilerPath,
                                    .Append("include"));
         includePaths->PushBack(tpd.Append("libsndfile").Append("include"));
 
-        /*
-        {
-            Array<Path> thirdPartySubDirs =
-                tpd.GetSubDirectories(FindFlag::RECURSIVE);
-            for (const Path &thirdPartySubDir : thirdPartySubDirs)
-            {
-                if (thirdPartySubDir.GetAbsolute().EndsWith("include"))
-                {
-                    includePaths->PushBack(thirdPartySubDir);
-                }
-            }
-        }
-        */
-
         {
             Path physxRootDir = tpd.Append("PhysX");
             Array<Path> physxDirs =
@@ -257,6 +242,8 @@ void Paths::FindCompilerPaths(Path *compilerPath,
             }
         }
     }
+    includePaths->PushBack(Paths::GetEngineDir().Append("include"));
+    includePaths->PushBack(Paths::GetEngineBuildDir());
 
 #ifdef __linux__
 
@@ -290,8 +277,6 @@ void Paths::FindCompilerPaths(Path *compilerPath,
         programFilesDirs.PushBack(Path(String(pf)));
     }
 
-    includePaths->PushBack(Paths::GetEngineBuildDir());
-
     for (const Path &programFilesDir : programFilesDirs)
     {
         const Array<Path> programFilesSubDirs =
@@ -307,15 +292,19 @@ void Paths::FindCompilerPaths(Path *compilerPath,
                 {
                     if (subPath.IsFile())
                     {
-                        if (subPath.GetNameExt() == "cl.exe")
+                        if (subPath.GetDirectory().GetName() == "x64")
                         {
-                            *compilerPath = subPath;
+                            if (subPath.GetNameExt() == "cl.exe")
+                            {
+                                *compilerPath = subPath;
+                            }
+                            else if (subPath.GetNameExt() == "link.exe")
+                            {
+                                *linkerPath = subPath;
+                            }
                         }
-                        else if (subPath.GetNameExt() == "link.exe")
-                        {
-                            *linkerPath = subPath;
-                        }
-                        else if (subPath.GetNameExt() == "vcvarsall.bat")
+
+                        if (subPath.GetNameExt() == "vcvarsall.bat")
                         {
                             *msvcConfigureArchitectureBatPath = subPath;
                         }

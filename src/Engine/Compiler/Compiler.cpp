@@ -37,44 +37,16 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         switch (job.outputMode)
         {
             case OutputType::OBJECT: args.PushBack("-c"); break;
-
             case OutputType::EXECUTABLE: args.PushBack("-c"); break;
-
             case OutputType::SHARED_LIB: args.PushBack("-shared"); break;
         }
     }
     else if (msvc)
     {
         args.PushBack("/EHsc");
-        if (job.outputMode == OutputType::OBJECT)
-        {
-            args.PushBack("/Fo" + job.outputFile.GetAbsolute());
-        }
-
-        if (job.outputMode != OutputType::SHARED_LIB)
-        {
-            args.PushBack("/link");
-            args.PushBack("/MD" + debugAppend + " " +
-                          job.outputFile.GetAbsolute());
-        }
-        else
-        {
-            args.PushBack("/MACHINE:x64");
-            args.PushBack("/MANIFEST:NO");
-            args.PushBack("/NXCOMPAT");
-            args.PushBack("/IGNOREDL");
-            args.PushBack("/DLL");
-            args.PushBack("/OUT:" + job.outputFile.GetAbsolute());
-        }
     }
 
-    // Flags
-    args.PushBack(job.flags);
-
-    // Input Files
-    args.PushBack(job.GetInputFiles());
-
-    // Include paths
+    // Include paths (must be before input files for msvc)
     const String incPrefix = (gcc ? "-I" : "/I");
     Array<String> incPaths = job.includePaths.To<Array, String>();
     for (String &incPath : incPaths)
@@ -83,6 +55,39 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         incPath.Append("\"");
     }
     args.PushBack(incPaths);
+
+    // Flags (must be before input files for msvc)
+    args.PushBack(job.flags);
+
+    // Input Files (must be before msvc /link option)
+    Array<String> inputPaths = job.GetInputFiles().To<Array, String>();
+    args.PushBack(inputPaths);
+
+    if (msvc)
+    {
+        if (job.outputMode == OutputType::EXECUTABLE)
+        {
+            args.PushBack("/link");
+        }
+
+        if (job.outputMode == OutputType::OBJECT)
+        {
+            args.PushBack("/c");
+            args.PushBack("/Fo\"" + job.outputFile.GetAbsolute() + "\"");
+        }
+        else
+        {
+            args.PushBack("/link");
+            args.PushBack("/MACHINE:x64");
+            args.PushBack("/MANIFEST:NO");
+            args.PushBack("/NXCOMPAT");
+            args.PushBack("/IGNOREDL");
+            args.PushBack("/DLL");
+            args.PushBack("/OUT:\"" + job.outputFile.GetAbsolute() + "\"");
+        }
+
+        args.PushBack("/MD" + debugAppend);
+    }
 
     // Output file for gcc
     if (gcc)
@@ -119,7 +124,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
     Path compilerPath =
         (job.outputMode == OutputType::SHARED_LIB ? Paths::GetLinkerPath()
                                                   : Paths::GetCompilerPath());
-    String compileCommand = compilerPath.GetAbsolute();
+    String compileCommand = "\"" + compilerPath.GetAbsolute() + "\"";
     if (msvc)
     {
         // We need to prepare the environment. To execute several commands,
@@ -135,11 +140,13 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         } while (tmpCommandPath.Exists());
 
         String prepareEnvCommand =
-            Paths::GetMSVCConfigureArchitectureBatPath().GetAbsolute() + " x64";
+            "\"" + Paths::GetMSVCConfigureArchitectureBatPath().GetAbsolute() +
+            "\" x64";
         compileCommand = compileCommand + " " + String::Join(args, " ");
 
         File::Write(tmpCommandPath,
-                    prepareEnvCommand + " \n " + compileCommand);
+                    String("CALL ") + prepareEnvCommand + " \n " +
+                        String("CALL ") + compileCommand);
 
         SystemUtils::System(
             tmpCommandPath.GetAbsolute(), {}, &result.output, &result.success);

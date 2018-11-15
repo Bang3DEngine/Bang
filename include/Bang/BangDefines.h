@@ -5,7 +5,9 @@
 #include <cstdint>
 
 #ifndef NDEBUG
+#ifndef DEBUG
 #define DEBUG
+#endif
 #endif
 
 #define BANG_UNUSED(v1) ((void)v1)

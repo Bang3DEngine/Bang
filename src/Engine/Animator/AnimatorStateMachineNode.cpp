@@ -79,6 +79,20 @@ void AnimatorStateMachineNode::RemoveTransition(
     }
 }
 
+Map<String, Animation::BoneTransformation>
+AnimatorStateMachineNode::GetBoneTransformations(Time animationTime) const
+{
+    Map<String, Animation::BoneTransformation> bonesTransformations =
+        Animation::GetBoneAnimationTransformations(GetAnimation(),
+                                                   animationTime);
+    return bonesTransformations;
+}
+
+void AnimatorStateMachineNode::SetSpeed(float speed)
+{
+    m_speed = speed;
+}
+
 void AnimatorStateMachineNode::SetLayer(
     AnimatorStateMachineLayer *stateMachineLayer)
 {
@@ -137,6 +151,11 @@ const Array<AnimatorStateMachineTransition *>
     return m_transitions;
 }
 
+float AnimatorStateMachineNode::GetSpeed() const
+{
+    return m_speed;
+}
+
 AnimatorStateMachine *AnimatorStateMachineNode::GetStateMachine() const
 {
     return GetLayer() ? GetLayer()->GetStateMachine() : nullptr;
@@ -154,6 +173,7 @@ void AnimatorStateMachineNode::CloneInto(ICloneable *clone) const
     AnimatorStateMachineNode *nodeClone =
         SCAST<AnimatorStateMachineNode *>(clone);
     nodeClone->SetName(GetName());
+    nodeClone->SetSpeed(GetSpeed());
     nodeClone->SetAnimation(GetAnimation());
 }
 
@@ -172,6 +192,11 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
             Resources::Load<Animation>(metaNode.Get<GUID>("Animation")).Get());
     }
 
+    if (metaNode.Contains("Speed"))
+    {
+        SetSpeed(metaNode.Get<float>("Speed"));
+    }
+
     for (const MetaNode &childMetaNode : metaNode.GetChildren("Transitions"))
     {
         auto newTransition = new AnimatorStateMachineTransition();
@@ -188,6 +213,7 @@ void AnimatorStateMachineNode::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("NodeName", GetName());
     metaNode->Set("Animation",
                   GetAnimation() ? GetAnimation()->GetGUID() : GUID::Empty());
+    metaNode->Set("Speed", GetSpeed());
 
     metaNode->CreateChildrenContainer("Transitions");
     for (const AnimatorStateMachineTransition *smTransition : GetTransitions())

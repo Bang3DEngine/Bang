@@ -21,11 +21,6 @@
 
 using namespace Bang;
 
-const String Debug::c_logPrefix = "[   LOG   ]: ";
-const String Debug::c_dlogPrefix = "[  DLOG   ]: ";
-const String Debug::c_warnPrefix = "[ WARNING ]: ";
-const String Debug::c_errorPrefix = "[  ERROR  ]: ";
-
 Debug::Debug()
 {
 }
@@ -41,10 +36,10 @@ void Debug::Message(DebugMessageType msgType,
     String prefix = "";
     switch (msgType)
     {
-        case DebugMessageType::LOG: prefix = c_logPrefix; break;
-        case DebugMessageType::DLOG: prefix = c_dlogPrefix; break;
-        case DebugMessageType::WARN: prefix = c_warnPrefix; break;
-        case DebugMessageType::ERROR: prefix = c_errorPrefix; break;
+        case DebugMessageType::LOG: prefix = "[   LOG   ]: "; break;
+        case DebugMessageType::DLOG: prefix = "[  DLOG   ]: "; break;
+        case DebugMessageType::WARN: prefix = "[ WARNING ]: "; break;
+        case DebugMessageType::ERROR: prefix = "[  ERROR  ]: "; break;
     }
 
     std::ostream &os =

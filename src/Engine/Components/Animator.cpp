@@ -66,7 +66,8 @@ void Animator::OnUpdate()
     AnimatorStateMachine *sm = GetStateMachine();
     if (sm && IsPlaying())
     {
-        Map<String, Animation::BoneTransformation> totalBoneNameToBoneTransform;
+        Map<String, Animation::BoneTransformation>
+            combinedLayersBonesTransformations;
         for (AnimatorStateMachinePlayer *player : GetPlayers())
         {
             player->Step(passedTime);
@@ -74,9 +75,6 @@ void Animator::OnUpdate()
             if (Animation *currentAnim = player->GetCurrentAnimation())
             {
                 const Time currentAnimTime = player->GetCurrentNodeTime();
-
-                Map<String, Animation::BoneTransformation>
-                    layerBoneNameToBoneTransform;
 
                 AnimatorStateMachineLayer *layer =
                     player->GetStateMachineLayer();
@@ -90,24 +88,44 @@ void Animator::OnUpdate()
                             ? layer->GetLayerMask()->GetBoneMaskNamesSet(this)
                             : Set<String>();
 
-                    if (Animation *nextAnim = player->GetNextAnimation())
+                    Map<String, Animation::BoneTransformation>
+                        layerBoneNameToBoneTransform;
+                    if (AnimatorStateMachineNode *nextNode =
+                            player->GetNextNode())
                     {
                         // Cross fading
+                        Map<String, Animation::BoneTransformation>
+                            prevBoneTransformations =
+                                player->GetCurrentNode()
+                                    ->GetBoneTransformations(
+                                        player->GetCurrentNodeTime());
+
+                        Map<String, Animation::BoneTransformation>
+                            nextBoneTransformations =
+                                nextNode->GetBoneTransformations(
+                                    player->GetCurrentTransitionTime());
+
+                        double totalCrossFadeSeconds = Math::Max(
+                            player->GetCurrentTransitionDuration().GetSeconds(),
+                            0.01);
+                        float nextWeight =
+                            (player->GetCurrentTransitionTime().GetSeconds() /
+                             totalCrossFadeSeconds);
+
                         ASSERT(player->GetCurrentTransition());
+
                         layerBoneNameToBoneTransform =
-                            Animation::GetBoneCrossFadeAnimationTransformations(
-                                currentAnim,
-                                currentAnimTime,
-                                nextAnim,
-                                player->GetCurrentTransitionTime(),
-                                player->GetCurrentTransitionDuration());
+                            Animation::GetInterpolatedBoneTransformations(
+                                prevBoneTransformations,
+                                nextBoneTransformations,
+                                nextWeight);
                     }
                     else
                     {
                         // Simple animation
                         layerBoneNameToBoneTransform =
-                            Animation::GetBoneAnimationTransformations(
-                                currentAnim, currentAnimTime);
+                            player->GetCurrentNode()->GetBoneTransformations(
+                                currentAnimTime);
                     }
 
                     for (const auto &pair : layerBoneNameToBoneTransform)
@@ -121,22 +139,23 @@ void Animator::OnUpdate()
                              layerMask.Contains(layerBoneName));
                         if (considerThisBone)
                         {
-                            auto it = totalBoneNameToBoneTransform.Find(
+                            auto it = combinedLayersBonesTransformations.Find(
                                 layerBoneName);
-                            if (it != totalBoneNameToBoneTransform.End())
+                            if (it != combinedLayersBonesTransformations.End())
                             {
                                 Animation::BoneTransformation
-                                    &totalBoneTransform = it->second;
-                                totalBoneTransform.position +=
+                                    &combinedLayerBoneTransformation =
+                                        it->second;
+                                combinedLayerBoneTransformation.position +=
                                     layerBoneTransform.position;
-                                totalBoneTransform.rotation *=
+                                combinedLayerBoneTransformation.rotation *=
                                     layerBoneTransform.rotation;
-                                totalBoneTransform.scale *=
+                                combinedLayerBoneTransformation.scale *=
                                     layerBoneTransform.scale;
                             }
                             else
                             {
-                                totalBoneNameToBoneTransform.Add(
+                                combinedLayersBonesTransformations.Add(
                                     layerBoneName, layerBoneTransform);
                             }
                         }
@@ -146,7 +165,7 @@ void Animator::OnUpdate()
         }
 
         Map<String, Matrix4> totalBoneNameToBoneMatrices =
-            Animation::GetBoneMatrices(totalBoneNameToBoneTransform);
+            Animation::GetBoneMatrices(combinedLayersBonesTransformations);
         SetSkinnedMeshRendererCurrentBoneMatrices(totalBoneNameToBoneMatrices);
     }
 }

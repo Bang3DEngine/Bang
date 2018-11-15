@@ -77,7 +77,14 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
             }
         }
 
-        m_currentNodeTime += deltaTime;
+        {
+            Time speededDeltaTime = deltaTime;
+            speededDeltaTime *= GetCurrentNode()->GetSpeed();
+            speededDeltaTime *= GetCurrentAnimation()
+                                    ? GetCurrentAnimation()->GetSpeed()
+                                    : 1.0f;
+            m_currentNodeTime += speededDeltaTime;
+        }
 
         // If we are NOT doing a transition, check if we can pick one of them
         if (!GetCurrentTransition())

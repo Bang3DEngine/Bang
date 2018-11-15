@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Bang/Animation.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
@@ -44,6 +45,10 @@ public:
     AnimatorStateMachineTransition *GetTransition(uint transitionIdx);
     void RemoveTransition(AnimatorStateMachineTransition *transition);
 
+    virtual Map<String, Animation::BoneTransformation> GetBoneTransformations(
+        Time animationTime) const;
+
+    void SetSpeed(float speed);
     void SetAnimation(Animation *animation);
 
     const String &GetName() const;
@@ -52,11 +57,12 @@ public:
         AnimatorStateMachineNode *nodeTo) const;
     const Array<AnimatorStateMachineTransition *> &GetTransitions() const;
 
+    float GetSpeed() const;
     AnimatorStateMachine *GetStateMachine() const;
     AnimatorStateMachineLayer *GetLayer() const;
 
     // ICloneable
-    void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
@@ -64,6 +70,7 @@ public:
 
 private:
     String m_name = "Node";
+    float m_speed = 1.0f;
     RH<Animation> p_animation;
     AnimatorStateMachineLayer *p_layer = nullptr;
     Array<AnimatorStateMachineTransition *> m_transitions;

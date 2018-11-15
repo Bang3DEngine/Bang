@@ -97,11 +97,10 @@ public:
                                     Time animationTime);
 
     static Map<String, Animation::BoneTransformation>
-    GetBoneCrossFadeAnimationTransformations(const Animation *prevAnimation,
-                                             Time prevAnimationTime,
-                                             const Animation *nextAnimation,
-                                             Time currentCrossFadeTime,
-                                             Time totalCrossFadeTime);
+    GetInterpolatedBoneTransformations(
+        const Map<String, Animation::BoneTransformation> &prevTransformations,
+        const Map<String, Animation::BoneTransformation> &nextTransformations,
+        float weight);
 
 private:
     Animation();

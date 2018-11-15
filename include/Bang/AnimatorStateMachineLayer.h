@@ -36,7 +36,7 @@ public:
     AnimatorStateMachineLayer();
     virtual ~AnimatorStateMachineLayer() override;
 
-    AnimatorStateMachineNode *CreateAndAddNode();
+    void AddNode(AnimatorStateMachineNode *newSMNode);
     void RemoveNode(AnimatorStateMachineNode *nodeToRemove);
     void SetEntryNode(AnimatorStateMachineNode *entryNode);
     void SetEntryNodeIdx(uint entryNodeIdx);

@@ -3,8 +3,12 @@
 
 #include <vector>
 
+#include "Bang/AnimatorStateMachineLayer.h"
+#include "Bang/AnimatorStateMachineNode.h"
+#include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
+#include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
@@ -54,13 +58,13 @@ public:
     AnimatorStateMachineLayer *GetStateMachineLayer() const;
 
 private:
-    AnimatorStateMachineLayer *p_stateMachineLayer = nullptr;
+    DPtr<AnimatorStateMachineLayer> p_stateMachineLayer = nullptr;
 
     Time m_currentNodeTime;
-    AnimatorStateMachineNode *p_currentNode = nullptr;
+    DPtr<AnimatorStateMachineNode> p_currentNode = nullptr;
 
     Time m_currentTransitionTime;
-    AnimatorStateMachineTransition *p_currentTransition = nullptr;
+    DPtr<AnimatorStateMachineTransition> p_currentTransition = nullptr;
 
     // IEventsAnimatorStateMachineLayer
     virtual void OnNodeCreated(uint newNodeIdx,

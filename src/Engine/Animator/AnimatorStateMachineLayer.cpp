@@ -5,6 +5,7 @@
 #include "Bang/Animator.h"
 #include "Bang/AnimatorLayerMask.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachineBlendTreeNode.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/AnimatorStateMachineTransitionCondition.h"
@@ -23,7 +24,8 @@ using namespace Bang;
 
 AnimatorStateMachineLayer::AnimatorStateMachineLayer()
 {
-    AnimatorStateMachineNode *entryNode = CreateAndAddNode();
+    AnimatorStateMachineNode *entryNode = new AnimatorStateMachineNode();
+    AddNode(entryNode);
     entryNode->SetName("Entry");
 }
 
@@ -34,9 +36,8 @@ AnimatorStateMachineLayer::~AnimatorStateMachineLayer()
     Clear();
 }
 
-AnimatorStateMachineNode *AnimatorStateMachineLayer::CreateAndAddNode()
+void AnimatorStateMachineLayer::AddNode(AnimatorStateMachineNode *newSMNode)
 {
-    AnimatorStateMachineNode *newSMNode = new AnimatorStateMachineNode();
     newSMNode->SetLayer(this);
     m_nodes.PushBack(newSMNode);
 
@@ -49,8 +50,6 @@ AnimatorStateMachineNode *AnimatorStateMachineLayer::CreateAndAddNode()
         &IEventsAnimatorStateMachineLayer::OnNodeCreated,
         m_nodes.Size() - 1,
         newSMNode);
-
-    return newSMNode;
 }
 
 const AnimatorStateMachineNode *AnimatorStateMachineLayer::GetNode(
@@ -239,7 +238,14 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
         // First just create the nodes (so that indices work nice)...
         for (uint i = 0; i < childrenMetaNodes.Size(); ++i)
         {
-            CreateAndAddNode();
+            const MetaNode &childMetaNode = childrenMetaNodes[i];
+            bool isBlendTreeNode =
+                (childMetaNode.GetName() ==
+                 AnimatorStateMachineBlendTreeNode::GetClassNameStatic());
+            AnimatorStateMachineNode *newNode =
+                isBlendTreeNode ? new AnimatorStateMachineBlendTreeNode()
+                                : new AnimatorStateMachineNode();
+            AddNode(newNode);
         }
 
         // Now import nodes meta

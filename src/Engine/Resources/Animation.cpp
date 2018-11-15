@@ -275,6 +275,10 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
                                            Time animationTime)
 {
     Map<String, Animation::BoneTransformation> boneTransformations;
+    if (!anim)
+    {
+        return boneTransformations;
+    }
 
     if (anim->GetDurationInFrames() <= 0.0f)
     {
@@ -375,77 +379,56 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
 }
 
 Map<String, Animation::BoneTransformation>
-Animation::GetBoneCrossFadeAnimationTransformations(
-    const Animation *prevAnimation,
-    Time prevAnimationTime,
-    const Animation *nextAnimation,
-    Time currentCrossFadeTime,
-    Time totalCrossFadeTime)
+Animation::GetInterpolatedBoneTransformations(
+    const Map<String, Animation::BoneTransformation> &prevTransformations,
+    const Map<String, Animation::BoneTransformation> &nextTransformations,
+    float weight)
 {
-    Map<String, Animation::BoneTransformation> boneCrossFadeAnimTransformations;
-
-    double totalCrossFadeSeconds =
-        Math::Max(totalCrossFadeTime.GetSeconds(), 0.01);
-    float nextPonderation =
-        (currentCrossFadeTime.GetSeconds() / totalCrossFadeSeconds);
-
-    // Gather the prev animation bone transformations
-    Map<String, BoneTransformation> prevBoneTransformations =
-        Animation::GetBoneAnimationTransformations(prevAnimation,
-                                                   prevAnimationTime);
-
-    // Gather the next animation bone transformations
-    Map<String, BoneTransformation> nextBoneTransformations =
-        Animation::GetBoneAnimationTransformations(nextAnimation,
-                                                   currentCrossFadeTime);
-
     // Gather bone names
     Set<String> allBoneNames;
-    for (const auto &pair : prevBoneTransformations)
+    for (const auto &pair : prevTransformations)
     {
         allBoneNames.Add(pair.first);
     }
-    for (const auto &pair : nextBoneTransformations)
+    for (const auto &pair : nextTransformations)
     {
         allBoneNames.Add(pair.first);
     }
 
     // Interpolate transformations
+    Map<String, Animation::BoneTransformation> interpolatedBoneTransformations;
     for (const String &boneName : allBoneNames)
     {
         BoneTransformation prevBoneTransformation;
-        auto prevTransformationIt = prevBoneTransformations.Find(boneName);
-        if (prevTransformationIt != prevBoneTransformations.End())
+        auto prevTransformationIt = prevTransformations.Find(boneName);
+        if (prevTransformationIt != prevTransformations.End())
         {
             prevBoneTransformation = prevTransformationIt->second;
         }
 
         BoneTransformation nextBoneTransformation;
-        auto nextTransformationIt = nextBoneTransformations.Find(boneName);
-        if (nextTransformationIt != nextBoneTransformations.End())
+        auto nextTransformationIt = nextTransformations.Find(boneName);
+        if (nextTransformationIt != nextTransformations.End())
         {
             nextBoneTransformation = nextTransformationIt->second;
         }
 
         Vector3 interpPos = Vector3::Lerp(prevBoneTransformation.position,
                                           nextBoneTransformation.position,
-                                          nextPonderation);
+                                          weight);
         Quaternion interpRot =
             Quaternion::SLerp(prevBoneTransformation.rotation,
                               nextBoneTransformation.rotation,
-                              nextPonderation);
-        Vector3 interpScale = Vector3::Lerp(prevBoneTransformation.scale,
-                                            nextBoneTransformation.scale,
-                                            nextPonderation);
+                              weight);
+        Vector3 interpScale = Vector3::Lerp(
+            prevBoneTransformation.scale, nextBoneTransformation.scale, weight);
 
         BoneTransformation crossFadedTransformation;
         crossFadedTransformation.position = interpPos;
         crossFadedTransformation.rotation = interpRot;
         crossFadedTransformation.scale = interpScale;
 
-        boneCrossFadeAnimTransformations.Add(boneName,
-                                             crossFadedTransformation);
+        interpolatedBoneTransformations.Add(boneName, crossFadedTransformation);
     }
-
-    return boneCrossFadeAnimTransformations;
+    return interpolatedBoneTransformations;
 }

@@ -119,9 +119,7 @@ Scene *GameObjectFactory::CreateDefaultSceneInto(Scene *scene)
 {
     ASSERT(scene->GetTransform());
 
-    GameObject *cube = GameObjectFactory::CreateGameObjectNamed("Cube");
-    MeshRenderer *mr = cube->AddComponent<MeshRenderer>();
-    mr->SetMesh(MeshFactory::GetCube().Get());
+    GameObject *cube = GameObjectFactory::CreateCubeGameObject();
 
     GameObject *cameraGo = GameObjectFactory::CreateGameObjectNamed("Camera");
     Camera *cam = GameObjectFactory::CreateDefaultCameraInto(cameraGo);

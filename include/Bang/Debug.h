@@ -44,12 +44,6 @@ protected:
 
     static void OnMessage();
 
-private:
-    static const String c_logPrefix;
-    static const String c_dlogPrefix;
-    static const String c_warnPrefix;
-    static const String c_errorPrefix;
-
     friend class Application;
 };
 

@@ -143,7 +143,7 @@ float AnimatorStateMachine::GetVariableFloat(const String &varName) const
 {
     if (AnimatorStateMachineVariable *var = GetVariable(varName))
     {
-        return var->GetValueBool();
+        return var->GetValueFloat();
     }
     return 0.0f;
 }

@@ -10,6 +10,14 @@ set(BANG_CMAKE_MACROS_BUILT ON)
 #=================================================================
 #=================================================================
 
+# Some global vars
+set(LIBRARIES_SUBDIR_NAME "${CMAKE_BUILD_TYPE}")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if (${USE_SANITIZER})
+        set(LIBRARIES_SUBDIR_NAME "DebugWithSanitizer")
+    endif()
+endif()
+
 #=================================================================
 # Macros =========================================================
 #=================================================================

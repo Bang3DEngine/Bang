@@ -4,10 +4,16 @@
 #include <cstddef>
 #include <cstdint>
 
-#ifndef NDEBUG
 #ifndef DEBUG
+
+#ifndef NDEBUG
 #define DEBUG
 #endif
+
+#ifdef _DEBUG
+#define DEBUG
+#endif
+
 #endif
 
 #define BANG_UNUSED(v1) ((void)v1)

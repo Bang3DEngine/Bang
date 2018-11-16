@@ -23,15 +23,15 @@ set(BANG_BUILT ON)
 #=================================================================
 # General variables ==============================================
 #=================================================================
-set(BANG_ENGINE_ROOT          ${CMAKE_CURRENT_LIST_DIR})
+set(BANG_ENGINE_ROOT ${CMAKE_CURRENT_LIST_DIR})
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
+include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
+
 set(BANG_SRC_DIR              ${BANG_ENGINE_ROOT}/src)
 set(BANG_ENGINE_SRC_DIR       ${BANG_SRC_DIR}/Engine)
 set(BANG_ENGINE_INCLUDE_DIR   ${BANG_ENGINE_ROOT}/include)
-set(BANG_ENGINE_LIBRARIES_DIR "${BANG_ENGINE_ROOT}/Libraries/${CMAKE_BUILD_TYPE}")
+set(BANG_ENGINE_LIBRARIES_DIR "${BANG_ENGINE_ROOT}/Libraries/${LIBRARIES_SUBDIR_NAME}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeCheckInputParams.cmake REQUIRED)
-include(${BANG_ENGINE_ROOT}/Compile/CMakeIncludes/CMakeMacros.cmake           REQUIRED)
 
 # Output params
 message("Bang ======================================")

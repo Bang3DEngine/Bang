@@ -94,8 +94,7 @@ void Library::FetchError()
     const char *error = nullptr;
 
 #ifdef __linux
-    dlerror();
-
+    error = dlerror();
     if (error)
     {
         m_errorString = String(error);

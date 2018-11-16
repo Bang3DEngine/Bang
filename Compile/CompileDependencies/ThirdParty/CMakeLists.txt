@@ -320,7 +320,10 @@ add_custom_command(
       cd ${SNDIO_DIR} &&
       mkdir -p build &&
       cd build &&
-      cmake .. &&
+      cmake -DCMAKE_CXX_FLAGS=-fPIC
+            -DCMAKE_C_FLAGS=-fPIC
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            .. &&
       make -j${NUM_COMPILE_THREADS} &&
       /bin/bash -c "cp ${SNDIO_LIB_OUTPUT} ${SNDIO_LIB_FINAL_OUTPUT}"
   COMMENT "Building SNDIO"

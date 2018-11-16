@@ -227,11 +227,6 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
         SetEnabled(metaNode.Get<bool>("Enabled"));
     }
 
-    if (metaNode.Contains("EntryNodeIdx"))
-    {
-        SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
-    }
-
     {
         const auto &childrenMetaNodes = metaNode.GetChildren("Nodes");
 
@@ -255,6 +250,11 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
             AnimatorStateMachineNode *node = GetNode(i);
             node->ImportMeta(childMetaNode);
         }
+    }
+
+    if (metaNode.Contains("EntryNodeIdx"))
+    {
+        SetEntryNodeIdx(metaNode.Get<uint>("EntryNodeIdx"));
     }
 }
 

@@ -99,19 +99,17 @@ void AnimatorStateMachine::OnVariableNameChanged(
     }
 }
 
-void AnimatorStateMachine::SetVariableFloat(const String &varName,
-                                            const float value)
+void AnimatorStateMachine::SetVariableFloatDefaultValue(const String &varName,
+                                                        const float value)
 {
     AnimatorStateMachineVariable *var = CreateOrGetVariable(varName);
-    var->SetType(AnimatorStateMachineVariable::Type::FLOAT);
     var->SetValueFloat(value);
 }
 
-void AnimatorStateMachine::SetVariableBool(const String &varName,
-                                           const bool value)
+void AnimatorStateMachine::SetVariableBoolDefaultValue(const String &varName,
+                                                       const bool value)
 {
     AnimatorStateMachineVariable *var = CreateOrGetVariable(varName);
-    var->SetType(AnimatorStateMachineVariable::Type::BOOL);
     var->SetValueBool(value);
 }
 
@@ -139,7 +137,8 @@ void AnimatorStateMachine::RemoveVariable(uint varIdx)
     }
 }
 
-float AnimatorStateMachine::GetVariableFloat(const String &varName) const
+float AnimatorStateMachine::GetVariableFloatDefaultValue(
+    const String &varName) const
 {
     if (AnimatorStateMachineVariable *var = GetVariable(varName))
     {
@@ -148,7 +147,8 @@ float AnimatorStateMachine::GetVariableFloat(const String &varName) const
     return 0.0f;
 }
 
-bool AnimatorStateMachine::GetVariableBool(const String &varName) const
+bool AnimatorStateMachine::GetVariableBoolDefaultValue(
+    const String &varName) const
 {
     if (AnimatorStateMachineVariable *var = GetVariable(varName))
     {

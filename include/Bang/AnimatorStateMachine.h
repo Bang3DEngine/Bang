@@ -31,15 +31,15 @@ public:
     void RemoveLayer(AnimatorStateMachineLayer *layer);
 
     AnimatorStateMachineVariable *CreateNewVariable();
-    void SetVariableFloat(const String &varName, const float value);
-    void SetVariableBool(const String &varName, const bool value);
+    void SetVariableFloatDefaultValue(const String &varName, const float value);
+    void SetVariableBoolDefaultValue(const String &varName, const bool value);
     void MoveVariable(uint oldIndex, uint newIndex);
     void RemoveVariable(AnimatorStateMachineVariable *var);
     void RemoveVariable(uint varIdx);
 
     AnimatorStateMachineVariable *GetVariable(const String &varName) const;
-    float GetVariableFloat(const String &varName) const;
-    bool GetVariableBool(const String &varName) const;
+    float GetVariableFloatDefaultValue(const String &varName) const;
+    bool GetVariableBoolDefaultValue(const String &varName) const;
     Array<String> GetVariablesNames() const;
     const Array<AnimatorStateMachineVariable *> &GetVariables() const;
     const Array<AnimatorStateMachineLayer *> &GetLayers() const;

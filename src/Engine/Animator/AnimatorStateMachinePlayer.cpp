@@ -86,7 +86,7 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
             m_currentNodeTime += speededDeltaTime;
         }
 
-        // If we are NOT doing a transition, check if we can pick one of them
+        // If we are NOT doing a transition, check if we can pick one new node
         if (!GetCurrentTransition())
         {
             if (GetCurrentNode()->GetAnimation())

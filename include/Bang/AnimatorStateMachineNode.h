@@ -21,6 +21,7 @@
 
 namespace Bang
 {
+class Animator;
 class Animation;
 class AnimatorStateMachine;
 class AnimatorStateMachineLayer;
@@ -46,7 +47,8 @@ public:
     void RemoveTransition(AnimatorStateMachineTransition *transition);
 
     virtual Map<String, Animation::BoneTransformation> GetBoneTransformations(
-        Time animationTime) const;
+        Time animationTime,
+        Animator *animator) const;
 
     void SetSpeed(float speed);
     void SetAnimation(Animation *animation);

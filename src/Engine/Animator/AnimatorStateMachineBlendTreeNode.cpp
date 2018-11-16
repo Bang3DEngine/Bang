@@ -1,5 +1,6 @@
 #include "Bang/AnimatorStateMachineBlendTreeNode.h"
 
+#include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/Resources.h"
 
@@ -43,10 +44,10 @@ float AnimatorStateMachineBlendTreeNode::GetSecondAnimationSpeed() const
 
 Map<String, Animation::BoneTransformation>
 AnimatorStateMachineBlendTreeNode::GetBoneTransformations(
-    Time animationTime) const
+    Time animationTime,
+    Animator *animator) const
 {
-    float secondWeight =
-        GetStateMachine()->GetVariableFloat(GetBlendVariableName());
+    float secondWeight = animator->GetVariableFloat(GetBlendVariableName());
     secondWeight = Math::Clamp(secondWeight, 0.0f, 1.0f);
 
     Map<String, Animation::BoneTransformation> firstBoneTransformations =

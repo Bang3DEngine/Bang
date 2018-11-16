@@ -8,6 +8,7 @@
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachinePlayer.h"
+#include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
@@ -98,12 +99,12 @@ void Animator::OnUpdate()
                             prevBoneTransformations =
                                 player->GetCurrentNode()
                                     ->GetBoneTransformations(
-                                        player->GetCurrentNodeTime());
+                                        player->GetCurrentNodeTime(), this);
 
                         Map<String, Animation::BoneTransformation>
                             nextBoneTransformations =
                                 nextNode->GetBoneTransformations(
-                                    player->GetCurrentTransitionTime());
+                                    player->GetCurrentTransitionTime(), this);
 
                         double totalCrossFadeSeconds = Math::Max(
                             player->GetCurrentTransitionDuration().GetSeconds(),
@@ -125,7 +126,7 @@ void Animator::OnUpdate()
                         // Simple animation
                         layerBoneNameToBoneTransform =
                             player->GetCurrentNode()->GetBoneTransformations(
-                                currentAnimTime);
+                                currentAnimTime, this);
                     }
 
                     for (const auto &pair : layerBoneNameToBoneTransform)
@@ -195,6 +196,22 @@ void Animator::SetPlayOnStart(bool playOnStart)
     }
 }
 
+void Animator::SetVariableVariant(const String &varName,
+                                  const Variant &variableVariant)
+{
+    m_variableNameToValue[varName] = variableVariant;
+}
+
+void Animator::SetVariableFloat(const String &varName, float value)
+{
+    m_variableNameToValue[varName].SetFloat(value);
+}
+
+void Animator::SetVariableBool(const String &varName, bool value)
+{
+    m_variableNameToValue[varName].SetBool(value);
+}
+
 void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
     const Map<String, Matrix4> &boneAnimMatrices)
 {
@@ -229,6 +246,13 @@ void Animator::OnLayerAdded(AnimatorStateMachine *stateMachine,
     AnimatorStateMachinePlayer *player = new AnimatorStateMachinePlayer();
     player->SetStateMachineLayer(stateMachineLayer);
     m_animatorStateMachinePlayers.PushBack(player);
+
+    const Array<AnimatorStateMachineVariable *> &vars =
+        stateMachine->GetVariables();
+    for (AnimatorStateMachineVariable *var : vars)
+    {
+        SetVariableVariant(var->GetName(), var->GetVariant());
+    }
 }
 
 void Animator::OnLayerRemoved(AnimatorStateMachine *stateMachine,
@@ -270,6 +294,25 @@ bool Animator::IsPlaying() const
 bool Animator::GetPlayOnStart() const
 {
     return m_playOnStart;
+}
+
+Variant Animator::GetVariableVariant(const String &varName) const
+{
+    if (m_variableNameToValue.ContainsKey(varName))
+    {
+        return m_variableNameToValue.Get(varName);
+    }
+    return Variant();
+}
+
+float Animator::GetVariableFloat(const String &varName) const
+{
+    return GetVariableVariant(varName).GetFloat();
+}
+
+bool Animator::GetVariableBool(const String &varName) const
+{
+    return GetVariableVariant(varName).GetBool();
 }
 
 AnimatorStateMachine *Animator::GetStateMachine() const

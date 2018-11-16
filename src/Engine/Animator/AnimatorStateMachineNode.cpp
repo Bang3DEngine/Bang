@@ -1,6 +1,7 @@
 #include "Bang/AnimatorStateMachineNode.h"
 
 #include "Bang/Animation.h"
+#include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineTransition.h"
@@ -80,7 +81,8 @@ void AnimatorStateMachineNode::RemoveTransition(
 }
 
 Map<String, Animation::BoneTransformation>
-AnimatorStateMachineNode::GetBoneTransformations(Time animationTime) const
+AnimatorStateMachineNode::GetBoneTransformations(Time animationTime,
+                                                 Animator *animator) const
 {
     Map<String, Animation::BoneTransformation> bonesTransformations =
         Animation::GetBoneAnimationTransformations(GetAnimation(),

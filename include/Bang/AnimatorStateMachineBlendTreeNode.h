@@ -5,6 +5,7 @@
 
 namespace Bang
 {
+class Animator;
 class AnimatorStateMachineBlendTreeNode : public AnimatorStateMachineNode
 {
     SERIALIZABLE(AnimatorStateMachineBlendTreeNode);
@@ -18,7 +19,8 @@ public:
     void SetBlendVariableName(const String &blendVariableName);
 
     virtual Map<String, Animation::BoneTransformation> GetBoneTransformations(
-        Time animationTime) const override;
+        Time animationTime,
+        Animator *animator) const override;
     Animation *GetSecondAnimation() const;
     const String &GetBlendVariableName() const;
     float GetSecondAnimationSpeed() const;

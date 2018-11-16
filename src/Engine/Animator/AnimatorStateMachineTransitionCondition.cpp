@@ -33,7 +33,7 @@ void AnimatorStateMachineTransitionCondition::SetVariableName(
 }
 
 void AnimatorStateMachineTransitionCondition::SetVariableType(
-    AnimatorStateMachineVariable::Type type)
+    Variant::Type type)
 {
     m_varType = type;
 }
@@ -55,8 +55,7 @@ const String &AnimatorStateMachineTransitionCondition::GetVariableName() const
     return m_varName;
 }
 
-AnimatorStateMachineVariable::Type
-AnimatorStateMachineTransitionCondition::GetVariableType() const
+Variant::Type AnimatorStateMachineTransitionCondition::GetVariableType() const
 {
     return m_varType;
 }
@@ -99,7 +98,7 @@ bool AnimatorStateMachineTransitionCondition::IsFulfilled() const
         {
             switch (var->GetType())
             {
-                case AnimatorStateMachineVariable::Type::FLOAT:
+                case Variant::Type::FLOAT:
                     switch (GetComparator())
                     {
                         case Comparator::GREATER:
@@ -114,7 +113,7 @@ bool AnimatorStateMachineTransitionCondition::IsFulfilled() const
                     }
                     break;
 
-                case AnimatorStateMachineVariable::Type::BOOL:
+                case Variant::Type::BOOL:
                     switch (GetComparator())
                     {
                         case Comparator::IS_TRUE: return (var->GetValueBool());
@@ -123,6 +122,7 @@ bool AnimatorStateMachineTransitionCondition::IsFulfilled() const
                         default: ASSERT(false); break;
                     }
                     break;
+                default: return false;
             }
         }
     }

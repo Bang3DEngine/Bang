@@ -35,8 +35,11 @@ public:
     void OnUpdate() override;
 
     void SetStateMachine(AnimatorStateMachine *stateMachine);
-
     void SetPlayOnStart(bool playOnStart);
+    void SetVariableVariant(const String &varName,
+                            const Variant &variableVariant);
+    void SetVariableFloat(const String &varName, float value);
+    void SetVariableBool(const String &varName, bool value);
 
     void Play();
     void Stop();
@@ -44,6 +47,9 @@ public:
 
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
+    Variant GetVariableVariant(const String &varName) const;
+    float GetVariableFloat(const String &varName) const;
+    bool GetVariableBool(const String &varName) const;
     AnimatorStateMachine *GetStateMachine() const;
     const Array<AnimatorStateMachinePlayer *> &GetPlayers() const;
 
@@ -59,6 +65,7 @@ private:
     Time m_prevFrameTime;
 
     RH<AnimatorStateMachine> m_stateMachine;
+    Map<String, Variant> m_variableNameToValue;
     Array<AnimatorStateMachinePlayer *> m_animatorStateMachinePlayers;
 
     bool m_playOnStart = true;

@@ -15,32 +15,26 @@ class AnimatorStateMachineVariable : public Serializable
     SERIALIZABLE(AnimatorStateMachineVariable)
 
 public:
-    enum class Type
-    {
-        FLOAT,
-        BOOL
-    };
-
     AnimatorStateMachineVariable();
     virtual ~AnimatorStateMachineVariable() override;
 
     void SetName(const String &varName);
-    void SetType(AnimatorStateMachineVariable::Type type);
+    void SetType(Variant::Type type);
     void SetValueFloat(float value);
     void SetValueBool(bool value);
+    void SetVariant(const Variant &variant);
 
     const String &GetName() const;
-    Type GetType() const;
+    Variant::Type GetType() const;
     bool GetValueBool() const;
     float GetValueFloat() const;
+    const Variant &GetVariant() const;
     AnimatorStateMachine *GetStateMachine() const;
 
 private:
     AnimatorStateMachine *p_stateMachine = nullptr;
     String m_name = "EmptyName";
-    Type m_type = Type::FLOAT;
-    float m_valueFloat = 0.0f;
-    bool m_valueBool = false;
+    Variant m_variant;
 
     void SetStateMachine(AnimatorStateMachine *stateMachine);
 

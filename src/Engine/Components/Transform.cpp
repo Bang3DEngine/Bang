@@ -33,7 +33,7 @@ void Transform::SetLocalPosition(const Vector3 &p)
     if (GetLocalPosition() != p)
     {
         m_localPosition = p;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 void Transform::SetPosition(const Vector3 &p)
@@ -64,7 +64,7 @@ void Transform::SetLocalRotation(const Quaternion &q)
         m_localRotation = q.Normalized();
         m_localEulerAnglesDegreesHint =
             GetLocalRotation().GetEulerAnglesDegrees();
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 void Transform::SetLocalEuler(const Vector3 &degreesEuler)
@@ -148,7 +148,7 @@ void Transform::SetLocalScale(const Vector3 &s)
     if (GetLocalScale() != s)
     {
         m_localScale = s;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -276,12 +276,11 @@ const Matrix4 &Transform::GetLocalToWorldMatrixInv() const
 
 void Transform::LookAt(const Vector3 &target, const Vector3 &_up)
 {
-    if (target == GetLocalPosition())
+    if (target != GetLocalPosition())
     {
-        return;
+        Vector3 up = _up.Normalized();
+        SetRotation(Quaternion::LookDirection(target - GetPosition(), up));
     }
-    Vector3 up = _up.Normalized();
-    SetRotation(Quaternion::LookDirection(target - GetPosition(), up));
 }
 
 void Transform::LookAt(Transform *targetTransform, const Vector3 &up)
@@ -415,46 +414,38 @@ void Transform::OnParentChanged(GameObject *, GameObject *)
 void Transform::OnTransformChanged()
 {
     InvalidateTransform();
+    m_alreadyNotifiedChildrenThatTransformHasChanged = false;
 
-    GameObject *go = GetGameObject();
-    if (!go)
+    if (GameObject *go = GetGameObject())
     {
-        return;
+        EventListener<IEventsTransform>::SetReceiveEvents(false);
+
+        EventEmitter<IEventsTransform>::PropagateToListeners(
+            &EventListener<IEventsTransform>::OnTransformChanged);
+
+        EventEmitter<IEventsTransform>::PropagateToArray(
+            go->GetComponents<EventListener<IEventsTransform>>(),
+            &EventListener<IEventsTransform>::OnTransformChanged);
+
+        EventListener<IEventsTransform>::SetReceiveEvents(true);
+
+        PropagateParentTransformChangedEventToChildren();
     }
-
-    EventEmitter<IEventsTransform>::PropagateToListeners(
-        &EventListener<IEventsTransform>::OnTransformChanged);
-
-    EventListener<IEventsTransform>::SetReceiveEvents(false);
-
-    EventEmitter<IEventsTransform>::PropagateToArray(
-        go->GetComponents<EventListener<IEventsTransform>>(),
-        &EventListener<IEventsTransform>::OnTransformChanged);
-
-    EventListener<IEventsTransform>::SetReceiveEvents(true);
-
-    PropagateParentTransformChangedEventToChildren();
-    PropagateChildrenTransformChangedEventToParent();
 }
 
 void Transform::PropagateParentTransformChangedEventToChildren() const
 {
-    GameObject *go = GetGameObject();
-    EventEmitter<IEventsTransform>::PropagateToListeners(
-        &EventListener<IEventsTransform>::OnParentTransformChanged);
-    EventEmitter<IEventsTransform>::PropagateToArray(
-        go->GetComponentsInChildren<EventListener<IEventsTransform>>(),
-        &EventListener<IEventsTransform>::OnParentTransformChanged);
-}
+    if (!m_alreadyNotifiedChildrenThatTransformHasChanged)
+    {
+        m_alreadyNotifiedChildrenThatTransformHasChanged = true;
 
-void Transform::PropagateChildrenTransformChangedEventToParent() const
-{
-    GameObject *go = GetGameObject();
-    EventEmitter<IEventsTransform>::PropagateToListeners(
-        &EventListener<IEventsTransform>::OnChildrenTransformChanged);
-    EventEmitter<IEventsTransform>::PropagateToArray(
-        go->GetComponentsInParent<EventListener<IEventsTransform>>(),
-        &EventListener<IEventsTransform>::OnChildrenTransformChanged);
+        GameObject *go = GetGameObject();
+        EventEmitter<IEventsTransform>::PropagateToListeners(
+            &EventListener<IEventsTransform>::OnParentTransformChanged);
+        EventEmitter<IEventsTransform>::PropagateToArray(
+            go->GetComponentsInChildren<EventListener<IEventsTransform>>(),
+            &EventListener<IEventsTransform>::OnParentTransformChanged);
+    }
 }
 
 void Transform::OnParentTransformChanged()
@@ -462,6 +453,7 @@ void Transform::OnParentTransformChanged()
     InvalidateTransform();
     PropagateParentTransformChangedEventToChildren();
 }
+
 void Transform::OnChildrenTransformChanged()
 {
 }

@@ -159,8 +159,9 @@ private:
     Vector3 m_localEulerAnglesDegreesHint = Vector3::Zero();
     Vector3 m_localScale = Vector3::One();
 
+    mutable bool m_alreadyNotifiedChildrenThatTransformHasChanged = false;
+
     void PropagateParentTransformChangedEventToChildren() const;
-    void PropagateChildrenTransformChangedEventToParent() const;
 };
 }  // namespace Bang
 

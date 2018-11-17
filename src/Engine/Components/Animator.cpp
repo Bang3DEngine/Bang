@@ -65,7 +65,7 @@ void Animator::OnUpdate()
     m_prevFrameTime = now;
 
     AnimatorStateMachine *sm = GetStateMachine();
-    if (sm && IsPlaying())
+    if (sm && IsPlaying() && IsEnabledRecursively())
     {
         Map<String, Animation::BoneTransformation>
             combinedLayersBonesTransformations;

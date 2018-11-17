@@ -163,7 +163,7 @@ void RectTransform::SetMarginLeft(int marginLeft)
     if (GetMarginLeft() != marginLeft)
     {
         m_marginLeftBot.x = marginLeft;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -172,7 +172,7 @@ void RectTransform::SetMarginTop(int marginTop)
     if (GetMarginTop() != marginTop)
     {
         m_marginRightTop.y = marginTop;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -181,7 +181,7 @@ void RectTransform::SetMarginRight(int marginRight)
     if (GetMarginRight() != marginRight)
     {
         m_marginRightTop.x = marginRight;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -190,7 +190,7 @@ void RectTransform::SetMarginBot(int marginBot)
     if (GetMarginBot() != marginBot)
     {
         m_marginLeftBot.y = marginBot;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -280,7 +280,7 @@ void RectTransform::SetPivotPosition(const Vector2 &pivotPosition)
     if (m_pivotPosition != pivotPosition)
     {
         m_pivotPosition = pivotPosition;
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -351,7 +351,7 @@ void RectTransform::SetAnchors(const Vector2 &anchorMin,
     if (changed)
     {
         WarnWrongAnchorsIfNeeded();
-        InvalidateTransform();
+        OnTransformChanged();
     }
 }
 
@@ -706,13 +706,13 @@ void RectTransform::WarnWrongAnchorsIfNeeded()
 void RectTransform::OnEnabled(Object *object)
 {
     Transform::OnEnabled(object);
-    InvalidateTransform();
+    OnTransformChanged();
 }
 
 void RectTransform::OnDisabled(Object *object)
 {
     Transform::OnDisabled(object);
-    InvalidateTransform();
+    OnTransformChanged();
 }
 
 void RectTransform::Reflect()

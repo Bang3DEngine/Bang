@@ -123,11 +123,6 @@ const Map<String, Matrix4> &SkinnedMeshRenderer::GetInitialTransforms() const
     return m_initialTransforms;
 }
 
-const Set<String> &SkinnedMeshRenderer::GetBonesNames() const
-{
-    return m_bonesNames;
-}
-
 void SkinnedMeshRenderer::SetBoneUniforms(ShaderProgram *sp)
 {
     sp->SetBool("B_HasBoneAnimations", true);
@@ -138,32 +133,37 @@ void SkinnedMeshRenderer::SetBoneUniforms(ShaderProgram *sp)
 
 void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
 {
-    Map<String, Matrix4> bonesMatrices;
-    UMap<GameObject *, Matrix4> bonesTransformsCache;
-    for (const String &boneName : GetBonesNames())
+    if (GameObject *rootBoneGo = GetRootBoneGameObject())
     {
-        if (GetActiveMesh())
+        Map<String, Matrix4> bonesMatrices;
+        UMap<GameObject *, Matrix4> bonesTransformsCache;
+        Array<GameObject *> childrenRecursive =
+            rootBoneGo->GetChildrenRecursively();
+        for (GameObject *child : childrenRecursive)
         {
-            if (GameObject *boneGameObject = GetBoneGameObject(boneName))
-            {
-                Matrix4 localToParent =
-                    boneGameObject->GetTransform()->GetLocalToParentMatrix();
-                Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
-                    boneGameObject, localToParent, &bonesTransformsCache);
-                bonesMatrices.Add(boneName, boneTransformMatrix);
-            }
+            const String &boneName = child->GetName();
+            GameObject *boneGameObject = child;
+            Matrix4 localToParent =
+                boneGameObject->GetTransform()->GetLocalToParentMatrix();
+            Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
+                boneGameObject, localToParent, &bonesTransformsCache);
+            bonesMatrices.Add(boneName, boneTransformMatrix);
         }
+        SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
     }
-    SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
 }
 
 void SkinnedMeshRenderer::UpdateTransformMatricesFromInitialBonePosition()
 {
-    for (const String &boneName : GetBonesNames())
+    if (GameObject *rootBoneGo = GetRootBoneGameObject())
     {
-        if (GameObject *go = GetBoneGameObject(boneName))
+        Array<GameObject *> childrenRecursive =
+            rootBoneGo->GetChildrenRecursively();
+        for (GameObject *child : childrenRecursive)
         {
-            go->GetTransform()->FillFromMatrix(
+            const String &boneName = child->GetName();
+            GameObject *boneGameObject = child;
+            boneGameObject->GetTransform()->FillFromMatrix(
                 GetInitialTransformMatrixFor(boneName));
         }
     }
@@ -294,17 +294,12 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
         SetRootBoneGameObjectName(model->GetRootGameObjectName());
         if (GetRootBoneGameObject())
         {
-            GetRootBoneGameObject()
-                ->EventEmitter<IEventsName>::RegisterListener(this);
-
-            m_bonesNames.Clear();
             m_initialTransforms.Clear();
 
             // Fill boneName to gameObject
             for (const auto &it : allBones)
             {
                 const String &boneName = it.first;
-                m_bonesNames.Add(boneName);
                 if (GameObject *boneGo =
                         GetRootBoneGameObject()->FindInChildrenAndThis(boneName,
                                                                        true))
@@ -312,7 +307,6 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
                     m_initialTransforms.Add(
                         boneName,
                         boneGo->GetTransform()->GetLocalToParentMatrix());
-                    boneGo->EventEmitter<IEventsName>::RegisterListener(this);
                 }
             }
 
@@ -346,41 +340,11 @@ void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 
-void SkinnedMeshRenderer::OnNameChanged(GameObject *,
-                                        const String &oldName,
-                                        const String &newName)
-{
-    if (oldName == m_rootBoneGameObjectName)
-    {
-        m_rootBoneGameObjectName = newName;
-    }
-
-    if (m_bonesNames.Contains(oldName))
-    {
-        m_bonesNames.Remove(oldName);
-        m_bonesNames.Add(newName);
-    }
-
-    if (m_boneSpaceToRootSpaceMatrices.ContainsKey(oldName))
-    {
-        m_boneSpaceToRootSpaceMatrices.Add(
-            newName, m_boneSpaceToRootSpaceMatrices.Get(oldName));
-        m_boneSpaceToRootSpaceMatrices.Remove(oldName);
-    }
-
-    if (m_initialTransforms.ContainsKey(oldName))
-    {
-        m_initialTransforms.Add(newName, m_initialTransforms.Get(oldName));
-        m_initialTransforms.Remove(oldName);
-    }
-}
-
 void SkinnedMeshRenderer::CloneInto(ICloneable *cloneable) const
 {
     MeshRenderer::CloneInto(cloneable);
 
     SkinnedMeshRenderer *smrClone = SCAST<SkinnedMeshRenderer *>(cloneable);
-    smrClone->m_bonesNames = m_bonesNames;
     smrClone->m_boneSpaceToRootSpaceMatrices = m_boneSpaceToRootSpaceMatrices;
     smrClone->m_initialTransforms = m_initialTransforms;
 }

@@ -9,9 +9,9 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
-#include "Bang/IEventsName.h"
 #include "Bang/IEventsObjectGatherer.h"
 #include "Bang/Map.h"
 #include "Bang/MeshRenderer.h"
@@ -27,7 +27,6 @@ template <class>
 class IEventsObjectGatherer;
 class GameObject;
 class ICloneable;
-class IEventsName;
 class Model;
 class ShaderProgram;
 template <class ObjectType, bool RECURSIVE>
@@ -35,7 +34,6 @@ class ObjectGatherer;
 
 class SkinnedMeshRenderer
     : public MeshRenderer,
-      public EventListener<IEventsName>,
       public EventListener<IEventsObjectGatherer<GameObject>>
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(SkinnedMeshRenderer)
@@ -63,7 +61,6 @@ public:
         UMap<GameObject *, Matrix4> *boneTransformInRootSpaceCache) const;
     const Matrix4 &GetInitialTransformMatrixFor(const String &boneName) const;
     const Map<String, Matrix4> &GetInitialTransforms() const;
-    const Set<String> &GetBonesNames() const;
 
     void SetBoneUniforms(ShaderProgram *sp);
     void UpdateBonesMatricesFromTransformMatrices();
@@ -80,11 +77,6 @@ public:
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
                                     GameObject *go) override;
 
-    // IEventsName
-    virtual void OnNameChanged(GameObject *go,
-                               const String &oldName,
-                               const String &newName) override;
-
     // ICloneable
     void CloneInto(ICloneable *cloneable) const override;
 
@@ -92,7 +84,6 @@ public:
     void Reflect() override;
 
 private:
-    Set<String> m_bonesNames;
     Map<String, Matrix4> m_initialTransforms;
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
@@ -100,7 +91,7 @@ private:
     ObjectGatherer<GameObject, true> *m_gameObjectGatherer = nullptr;
 
     String m_rootBoneGameObjectName = "";
-    mutable GameObject *p_rootBoneGameObject = nullptr;
+    mutable DPtr<GameObject> p_rootBoneGameObject = nullptr;
     mutable Map<String, GameObject *> m_boneNameToBoneGameObject;
 };
 }

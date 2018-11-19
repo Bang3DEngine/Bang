@@ -243,9 +243,13 @@ bool Framebuffer::Resize(const Vector2i &size)
     bool resized = false;
     for (const auto &it : m_attachments_To_Texture)
     {
-        if (Texture *tex = it.second.Get())
+        if (Texture2D *tex = DCAST<Texture2D *>(it.second.Get()))
         {
             resized |= tex->Resize(GetSize());
+        }
+        else if (TextureCubeMap *tex = DCAST<TextureCubeMap *>(it.second.Get()))
+        {
+            resized |= tex->Resize(GetSize().x);
         }
     }
     return resized;

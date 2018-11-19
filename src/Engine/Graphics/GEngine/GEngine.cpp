@@ -734,7 +734,7 @@ void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
     m_fillCubeMapFromTexturesFB->Bind();
     m_fillCubeMapFromTexturesSP.Get()->Bind();
 
-    GL::SetViewport(0, 0, texCMToFill->GetWidth(), texCMToFill->GetHeight());
+    GL::SetViewport(0, 0, texCMToFill->GetSize(), texCMToFill->GetSize());
     m_fillCubeMapFromTexturesFB->SetAttachmentTexture(
         texCMToFill, GL::Attachment::COLOR0, mipMapLevel);
     m_fillCubeMapFromTexturesFB->SetAllDrawBuffers();

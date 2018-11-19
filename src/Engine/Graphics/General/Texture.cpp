@@ -28,16 +28,6 @@ void Texture::GenerateMipMaps() const
     GL::GenerateMipMap(GetTextureTarget());
 }
 
-void Texture::CreateEmpty(int width, int height)
-{
-    CreateEmpty(Vector2i(width, height));
-}
-
-bool Texture::Resize(int width, int height)
-{
-    return Resize(Vector2i(width, height));
-}
-
 void Texture::SetFormat(GL::ColorFormat glFormat)
 {
     if (glFormat != GetFormat())
@@ -55,6 +45,13 @@ void Texture::SetTarget(GL::TextureTarget target)
         m_target = target;
         PropagateResourceChanged();
     }
+}
+
+void Texture::SetWrapMode(GL::WrapMode wrapMode)
+{
+    SetWrapMode(wrapMode, GL::WrapCoord::WRAP_R);
+    SetWrapMode(wrapMode, GL::WrapCoord::WRAP_S);
+    SetWrapMode(wrapMode, GL::WrapCoord::WRAP_T);
 }
 
 void Texture::SetFilterMode(GL::FilterMode filterMode)
@@ -82,43 +79,6 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
     }
 }
 
-void Texture::SetWrapMode(GL::WrapMode wrapMode)
-{
-    if (wrapMode != GetWrapMode())
-    {
-        m_wrapMode = wrapMode;
-
-        GL::Push(GetGLBindTarget());
-
-        Bind();
-        GL::TexParameterWrap(
-            GetTextureTarget(), GL::WrapCoord::WRAP_S, GetWrapMode());
-        GL::TexParameterWrap(
-            GetTextureTarget(), GL::WrapCoord::WRAP_T, GetWrapMode());
-        GL::TexParameterWrap(
-            GetTextureTarget(), GL::WrapCoord::WRAP_R, GetWrapMode());
-
-        GL::Pop(GetGLBindTarget());
-
-        PropagateResourceChanged();
-    }
-}
-
-int Texture::GetWidth() const
-{
-    return m_size.x;
-}
-
-int Texture::GetHeight() const
-{
-    return m_size.y;
-}
-
-const Vector2i &Texture::GetSize() const
-{
-    return m_size;
-}
-
 GL::DataType Texture::GetDataType() const
 {
     return GL::GetDataTypeFrom(GetFormat());
@@ -134,9 +94,9 @@ GL::ColorFormat Texture::GetFormat() const
     return m_glFormat;
 }
 
-uint Texture::GetBytesSize() const
+GL::FilterMode Texture::GetFilterMode() const
 {
-    return GetWidth() * GetHeight() * GL::GetPixelBytesSize(m_glFormat);
+    return m_filterMode;
 }
 
 GL::TextureTarget Texture::GetTextureTarget() const
@@ -144,14 +104,34 @@ GL::TextureTarget Texture::GetTextureTarget() const
     return m_target;
 }
 
-GL::FilterMode Texture::GetFilterMode() const
+void Texture::SetWrapMode(GL::WrapMode wrapMode, GL::WrapCoord wrapCoord)
 {
-    return m_filterMode;
+    if (wrapMode != GetWrapMode())
+    {
+        uint idx;
+        switch (wrapCoord)
+        {
+            case GL::WrapCoord::WRAP_R: idx = 0; break;
+            case GL::WrapCoord::WRAP_S: idx = 1; break;
+            case GL::WrapCoord::WRAP_T: idx = 2; break;
+            default: ASSERT(false); break;
+        }
+        m_wrapMode[idx] = wrapMode;
+
+        GL::Push(GetGLBindTarget());
+
+        Bind();
+        GL::TexParameterWrap(GetTextureTarget(), wrapCoord, GetWrapMode());
+
+        GL::Pop(GetGLBindTarget());
+
+        PropagateResourceChanged();
+    }
 }
 
-GL::WrapMode Texture::GetWrapMode() const
+GL::WrapMode Texture::GetWrapMode(Axis3D dim) const
 {
-    return m_wrapMode;
+    return m_wrapMode[SCAST<uint>(dim)];
 }
 
 Color Texture::GetColorFromFloatArray(const float *pixels, int i)
@@ -176,48 +156,7 @@ int Texture::GetNumComponents() const
     return GL::GetNumComponents(GetFormat());
 }
 
-void Texture::SetWidth(int width)
+GL::WrapMode Texture::GetWrapMode() const
 {
-    if (width != GetWidth())
-    {
-        m_size.x = width;
-        PropagateResourceChanged();
-    }
-}
-void Texture::SetHeight(int height)
-{
-    if (height != GetHeight())
-    {
-        m_size.y = height;
-        PropagateResourceChanged();
-    }
-}
-
-Image Texture::ToImage(GL::TextureTarget texTarget) const
-{
-    const int width = GetWidth();
-    const int height = GetHeight();
-    const int numComps = GL::GetNumComponents(GL::ColorComp::RGBA);
-    Byte *pixels = new Byte[width * height * numComps];
-
-    GL::Push(GL::BindTarget::TEXTURE_2D);
-    Bind();
-    GL::GetTexImage(
-        texTarget, GL::ColorComp::RGBA, GL::DataType::UNSIGNED_BYTE, pixels);
-    GL::Pop(GL::BindTarget::TEXTURE_2D);
-
-    Image img(width, height);
-    for (int y = 0; y < height; ++y)
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            const int coords = (y * width + x) * numComps;
-            Color pixelColor = GetColorFromByteArray(pixels, coords);
-            img.SetPixel(x, y, pixelColor);
-        }
-    }
-
-    delete[] pixels;
-
-    return img;
+    return m_wrapMode[0];
 }

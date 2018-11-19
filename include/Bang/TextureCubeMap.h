@@ -33,19 +33,16 @@ public:
     TextureCubeMap();
     virtual ~TextureCubeMap() override;
 
-    // Texture
-    using Texture::CreateEmpty;
-    using Texture::Resize;
-    void CreateEmpty(int size);
-    bool Resize(int size);
+    void CreateEmpty(uint size);
+    bool Resize(uint size);
     void Fill(GL::CubeMapDir cubeMapDir,
               const Byte *newData,
-              int size,
+              uint size,
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType);
-
     void SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex);
-    Image ToImage(GL::CubeMapDir cubeMapDir) const;
+
+    uint GetSize() const;
     RH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
@@ -69,12 +66,10 @@ public:
 
 private:
     std::array<RH<Texture2D>, 6> m_sideTextures;
-
-    void CreateEmpty(const Vector2i &size) override;
-    bool Resize(const Vector2i &size) override;
+    uint m_size = 0;
 
     void FillCubeMapDir(GL::CubeMapDir dir, const Image *img);
-    static unsigned int GetDirIndex(GL::CubeMapDir dir);
+    static uint GetDirIndex(GL::CubeMapDir dir);
 };
 }  // namespace Bang
 

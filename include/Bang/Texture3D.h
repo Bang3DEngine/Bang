@@ -5,15 +5,12 @@
 
 namespace Bang
 {
-
 class Texture3D
 {
 public:
-	Texture3D();
-	virtual ~Texture3D();
+    Texture3D();
+    virtual ~Texture3D();
 };
-
 }
 
-#endif // TEXTURE3D_H
-
+#endif  // TEXTURE3D_H

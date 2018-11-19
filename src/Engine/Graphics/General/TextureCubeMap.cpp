@@ -23,7 +23,7 @@ using namespace Bang;
 TextureCubeMap::TextureCubeMap() : Texture(GL::TextureTarget::TEXTURE_CUBE_MAP)
 {
     SetFormat(GL::ColorFormat::RGBA8);
-    CreateEmpty(1, 1);
+    CreateEmpty(1);
 
     SetFilterMode(GL::FilterMode::BILINEAR);
     SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
@@ -33,55 +33,38 @@ TextureCubeMap::~TextureCubeMap()
 {
 }
 
-void TextureCubeMap::CreateEmpty(int size)
+void TextureCubeMap::CreateEmpty(uint size)
 {
-    CreateEmpty(size, size);
-}
-void TextureCubeMap::CreateEmpty(const Vector2i &size)
-{
-    ASSERT_MSG(size.x == size.y,
-               "CubeMaps must have the same width and height.");
-    SetWidth(size.x);
-    SetHeight(size.y);
-
     for (GL::CubeMapDir cubeMapDir : GL::GetAllCubeMapDirs())
     {
-        Fill(cubeMapDir, nullptr, size.x, GetColorComp(), GetDataType());
+        Fill(cubeMapDir, nullptr, size, GetColorComp(), GetDataType());
     }
 }
 
-bool TextureCubeMap::Resize(const Vector2i &size)
+bool TextureCubeMap::Resize(uint size)
 {
-    ASSERT_MSG(size.x == size.y,
-               "CubeMaps must have the same width and height.");
     if (size != GetSize())
     {
-        CreateEmpty(size.x, size.y);
+        CreateEmpty(size);
         return true;
     }
     return false;
 }
 
-bool TextureCubeMap::Resize(int size)
-{
-    return Resize(size, size);
-}
-
 void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
                           const Byte *newData,
-                          int size,
+                          uint size,
                           GL::ColorComp inputDataColorComp,
                           GL::DataType inputDataType)
 {
-    SetWidth(size);
-    SetHeight(size);
+    m_size = size;
 
     GL::Push(GetGLBindTarget());
 
     Bind();
     GL::TexImage2D(SCAST<GL::TextureTarget>(cubeMapDir),
-                   GetWidth(),
-                   GetHeight(),
+                   GetSize(),
+                   GetSize(),
                    GetFormat(),
                    inputDataColorComp,
                    inputDataType,
@@ -90,6 +73,11 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
     GL::Pop(GetGLBindTarget());
 
     PropagateResourceChanged();
+}
+
+uint TextureCubeMap::GetSize() const
+{
+    return m_size;
 }
 
 void TextureCubeMap::SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
@@ -126,11 +114,6 @@ void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, const Image *img)
          GL::DataType::UNSIGNED_BYTE);
 }
 
-Image TextureCubeMap::ToImage(GL::CubeMapDir cubeMapDir) const
-{
-    return Texture::ToImage(SCAST<GL::TextureTarget>(cubeMapDir));
-}
-
 RH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
 {
     return m_sideTextures[TextureCubeMap::GetDirIndex(cubeMapDir)];
@@ -154,12 +137,9 @@ void TextureCubeMap::Import(const Image &topImage,
         {
             GL::CubeMapDir cubeMapDir = GL::GetAllCubeMapDirs()[i];
 
-            SetWidth(img.GetWidth());
-            SetHeight(img.GetHeight());
-
             Fill(cubeMapDir,
                  img.GetData(),
-                 Math::Min(GetWidth(), GetHeight()),
+                 Math::Min(img.GetWidth(), img.GetHeight()),
                  GL::ColorComp::RGBA,
                  GL::DataType::UNSIGNED_BYTE);
         }

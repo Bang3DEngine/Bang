@@ -12,6 +12,12 @@ enum class Axis
     HORIZONTAL
 };
 
+enum class Axis2D
+{
+    X,
+    Y
+};
+
 enum class Axis3D
 {
     X,

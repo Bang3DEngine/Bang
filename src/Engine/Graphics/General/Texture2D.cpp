@@ -113,6 +113,85 @@ const Image &Texture2D::GetImage() const
     return m_image;
 }
 
+void Texture2D::CreateEmpty(int width, int height)
+{
+    CreateEmpty(Vector2i(width, height));
+}
+
+bool Texture2D::Resize(int width, int height)
+{
+    return Resize(Vector2i(width, height));
+}
+
+int Texture2D::GetWidth() const
+{
+    return m_size.x;
+}
+
+int Texture2D::GetHeight() const
+{
+    return m_size.y;
+}
+
+const Vector2i &Texture2D::GetSize() const
+{
+    return m_size;
+}
+
+void Texture2D::SetWidth(int width)
+{
+    if (width != GetWidth())
+    {
+        m_size.x = width;
+        PropagateResourceChanged();
+    }
+}
+
+void Texture2D::SetHeight(int height)
+{
+    if (height != GetHeight())
+    {
+        m_size.y = height;
+        PropagateResourceChanged();
+    }
+}
+
+uint Texture2D::GetBytesSize() const
+{
+    return GetWidth() * GetHeight() * GL::GetPixelBytesSize(GetFormat());
+}
+
+Image Texture2D::ToImage() const
+{
+    const int width = GetWidth();
+    const int height = GetHeight();
+    const int numComps = GL::GetNumComponents(GL::ColorComp::RGBA);
+    Byte *pixels = new Byte[width * height * numComps];
+
+    GL::Push(GL::BindTarget::TEXTURE_2D);
+    Bind();
+    GL::GetTexImage(GetTextureTarget(),
+                    GL::ColorComp::RGBA,
+                    GL::DataType::UNSIGNED_BYTE,
+                    pixels);
+    GL::Pop(GL::BindTarget::TEXTURE_2D);
+
+    Image img(width, height);
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            const int coords = (y * width + x) * numComps;
+            Color pixelColor = GetColorFromByteArray(pixels, coords);
+            img.SetPixel(x, y, pixelColor);
+        }
+    }
+
+    delete[] pixels;
+
+    return img;
+}
+
 void Texture2D::ImportMeta(const MetaNode &metaNode)
 {
     Asset::ImportMeta(metaNode);
@@ -176,9 +255,4 @@ void Texture2D::Import(const Image &image)
 GL::BindTarget Texture2D::GetGLBindTarget() const
 {
     return GL::BindTarget::TEXTURE_2D;
-}
-
-Image Texture2D::ToImage() const
-{
-    return Texture::ToImage(GL::TextureTarget::TEXTURE_2D);
 }

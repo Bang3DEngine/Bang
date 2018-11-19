@@ -9,6 +9,7 @@
 #include "Bang/Resources.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture3D.h"
 #include "Bang/VAO.h"
 
 using namespace Bang;
@@ -29,14 +30,28 @@ VolumeRenderer::~VolumeRenderer()
 {
 }
 
+void VolumeRenderer::SetVolumeTexture(Texture3D *volTexture)
+{
+    p_volumeTexture.Set(volTexture);
+}
+
 void VolumeRenderer::SetModelPath(const Path &modelPath)
 {
-    m_modelPath = modelPath;
+    if (modelPath != GetModelPath())
+    {
+        m_modelPath = modelPath;
+        p_volumeTexture = Resources::Load<Texture3D>(modelPath);
+    }
 }
 
 const Path &VolumeRenderer::GetModelPath() const
 {
     return m_modelPath;
+}
+
+Texture3D *VolumeRenderer::GetVolumeTexture() const
+{
+    return p_volumeTexture.Get();
 }
 
 void VolumeRenderer::OnRender()
@@ -46,6 +61,13 @@ void VolumeRenderer::OnRender()
     GL::Render(GetCubeMesh()->GetVAO(),
                GL::Primitive::TRIANGLES,
                GetCubeMesh()->GetNumVerticesIds());
+}
+
+void VolumeRenderer::SetUniformsOnBind(ShaderProgram *sp)
+{
+    Renderer::SetUniformsOnBind(sp);
+
+    sp->SetTexture3D("B_Texture3D", GetVolumeTexture(), false);
 }
 
 void VolumeRenderer::Reflect()

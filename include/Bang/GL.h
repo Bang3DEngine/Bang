@@ -222,6 +222,7 @@ public:
         RGBA16F = GL_RGBA16F,
         RGB10_A2 = GL_RGB10_A2,
         RGBA32F = GL_RGBA32F,
+        R8 = GL_R8,
         DEPTH = GL_DEPTH_COMPONENT,
         DEPTH16 = GL_DEPTH_COMPONENT16,
         DEPTH24 = GL_DEPTH_COMPONENT24,
@@ -605,8 +606,16 @@ public:
 
     static void GenerateMipMap(GL::TextureTarget textureTarget);
     static void TexImage2D(GL::TextureTarget textureTarget,
-                           int textureWidth,
-                           int textureHeight,
+                           uint textureWidth,
+                           uint textureHeight,
+                           GL::ColorFormat textureColorFormat,
+                           GL::ColorComp inputDataColorComp,
+                           GL::DataType inputDataType,
+                           const void *data);
+    static void TexImage3D(GL::TextureTarget textureTarget,
+                           uint textureWidth,
+                           uint textureHeight,
+                           uint textureDepth,
                            GL::ColorFormat textureColorFormat,
                            GL::ColorComp inputDataColorComp,
                            GL::DataType inputDataType,
@@ -864,7 +873,9 @@ private:
     StackAndValue<GLId> m_boundVAOIds;
     StackAndValue<GLId> m_boundVBOArrayBufferIds;
     StackAndValue<GLId> m_boundVBOElementsBufferIds;
+    StackAndValue<GLId> m_boundTexture1DIds;
     StackAndValue<GLId> m_boundTexture2DIds;
+    StackAndValue<GLId> m_boundTexture3DIds;
     StackAndValue<GLId> m_boundTextureCubeMapIds;
     StackAndValue<GLId> m_boundDrawFramebufferIds;
     StackAndValue<GLId> m_boundReadFramebufferIds;

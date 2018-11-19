@@ -269,8 +269,12 @@ bool GL::CheckError(int line, const String &func, const String &file)
         const char *err =
             reinterpret_cast<const char *>(gluErrorString(glError));
         Debug_Error("OpenGL error \"" << String(err).ToUpper()
-                                      << "\" at function \"" << func << "\" in "
-                                      << file << ":" << line);
+                                      << "\" at function \""
+                                      << func
+                                      << "\" in "
+                                      << file
+                                      << ":"
+                                      << line);
         // GL::PrintGLContext();
         ok = false;
     }
@@ -1241,8 +1245,8 @@ void GL::GenerateMipMap(GL::TextureTarget textureTarget)
 }
 
 void GL::TexImage2D(GL::TextureTarget textureTarget,
-                    int textureWidth,
-                    int textureHeight,
+                    uint textureWidth,
+                    uint textureHeight,
                     GL::ColorFormat textureColorFormat,
                     GL::ColorComp inputDataColorComp,
                     GL::DataType inputDataType,
@@ -1253,6 +1257,27 @@ void GL::TexImage2D(GL::TextureTarget textureTarget,
                          GLCAST(textureColorFormat),
                          textureWidth,
                          textureHeight,
+                         0,
+                         GLCAST(inputDataColorComp),
+                         GLCAST(inputDataType),
+                         data));
+}
+
+void GL::TexImage3D(GL::TextureTarget textureTarget,
+                    uint textureWidth,
+                    uint textureHeight,
+                    uint textureDepth,
+                    GL::ColorFormat textureColorFormat,
+                    GL::ColorComp inputDataColorComp,
+                    GL::DataType inputDataType,
+                    const void *data)
+{
+    GL_CALL(glTexImage3D(GLCAST(textureTarget),
+                         0,
+                         GLCAST(textureColorFormat),
+                         textureWidth,
+                         textureHeight,
+                         textureDepth,
                          0,
                          GLCAST(inputDataColorComp),
                          GLCAST(inputDataType),
@@ -1427,9 +1452,9 @@ void GL::DeleteRenderBuffers(int n, const GLId *glIds)
 
 void GL::DeleteTextures(int n, const GLId *glIds)
 {
-    // GL::OnDeletedGLObjects(GL::BindTarget::Texture1D,      n, glIds);
+    GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_1D, n, glIds);
     GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_2D, n, glIds);
-    // GL::OnDeletedGLObjects(GL::BindTarget::Texture3D,      n, glIds);
+    GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_3D, n, glIds);
     GL::OnDeletedGLObjects(GL::BindTarget::TEXTURE_CUBE_MAP, n, glIds);
     GL_CALL(glDeleteTextures(n, glIds));
 }
@@ -1715,7 +1740,7 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
     switch (bindTarget)
     {
         case GL::BindTarget::TEXTURE_1D:
-            // SetGLContextValue(&GL::m_boundTexture1DIds, glId);
+            SetGLContextValue(&GL::m_boundTexture1DIds, glId);
             GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
             break;
         case GL::BindTarget::TEXTURE_2D:
@@ -1723,7 +1748,7 @@ void GL::Bind(GL::BindTarget bindTarget, GLId glId)
             GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
             break;
         case GL::BindTarget::TEXTURE_3D:
-            // SetGLContextValue(&GL::m_boundTexture3DIds, glId);
+            SetGLContextValue(&GL::m_boundTexture3DIds, glId);
             GL_CALL(glBindTexture(GLCAST(bindTarget), glId));
             break;
         case GL::BindTarget::TEXTURE_CUBE_MAP:
@@ -2111,8 +2136,12 @@ GLId GL::GetBoundId(GL::BindTarget bindTarget)
 {
     switch (bindTarget)
     {
+        case GL::BindTarget::TEXTURE_1D:
+            return GetGLContextValue(&GL::m_boundTexture1DIds);
         case GL::BindTarget::TEXTURE_2D:
             return GetGLContextValue(&GL::m_boundTexture2DIds);
+        case GL::BindTarget::TEXTURE_3D:
+            return GetGLContextValue(&GL::m_boundTexture3DIds);
         case GL::BindTarget::TEXTURE_CUBE_MAP:
             return GetGLContextValue(&GL::m_boundTextureCubeMapIds);
         case GL::BindTarget::FRAMEBUFFER:
@@ -2146,6 +2175,7 @@ uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
 {
     switch (texFormat)
     {
+        case GL::ColorFormat::R8: return 1;
         case GL::ColorFormat::SRGB: return 3;
         case GL::ColorFormat::SRGBA: return 4;
         case GL::ColorFormat::RGBA8: return 4;
@@ -2588,7 +2618,12 @@ void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
     {
         case GL::BindTarget::NONE:
         case GL::BindTarget::TEXTURE_1D:
-        case GL::BindTarget::TEXTURE_3D: ASSERT(false); break;
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundTexture1DIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundTexture1DIds, push);
+            break;
 
         case GL::BindTarget::TEXTURE_2D:
             if (!push)
@@ -2597,6 +2632,15 @@ void GL::PushOrPop(GL::BindTarget bindTarget, bool push)
             }
             PushOrPop_(&gl->m_boundTexture2DIds, push);
             break;
+
+        case GL::BindTarget::TEXTURE_3D:
+            if (!push)
+            {
+                GL::Bind(bindTarget, gl->m_boundTexture3DIds.stack.top());
+            }
+            PushOrPop_(&gl->m_boundTexture3DIds, push);
+            break;
+
         case GL::BindTarget::TEXTURE_CUBE_MAP:
             if (!push)
             {
@@ -2722,7 +2766,9 @@ void GL::PrintGLContext()
     Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::DRAW_FRAMEBUFFER)));
     Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::READ_FRAMEBUFFER)));
     Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_1D)));
     Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_2D)));
+    Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_3D)));
     Debug_DPeek(SCAST<int>(GL::GetBoundId(GL::BindTarget::TEXTURE_CUBE_MAP)));
     // Debug_DPeek( SCAST<int>(GL::GetBoundId(GL::BindTarget::UniformBuffer)) );
     Debug_DPeek(GL::GetColorMask());

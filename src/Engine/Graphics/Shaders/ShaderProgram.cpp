@@ -450,10 +450,31 @@ bool ShaderProgram::SetTexture2D(const String &name,
         return SetDefaultTexture2D(name, warn);
     }
 }
+
+bool ShaderProgram::SetTexture3D(const String &name,
+                                 Texture3D *texture3D,
+                                 bool warn)
+{
+    if (texture3D)
+    {
+        return SetTexture(name, SCAST<Texture *>(texture3D), warn);
+    }
+    else
+    {
+        return SetDefaultTexture3D(name, warn);
+    }
+}
+
 bool ShaderProgram::SetDefaultTexture2D(const String &name, bool warn)
 {
     return SetTexture(
         name, SCAST<Texture *>(TextureFactory::GetWhiteTexture()), warn);
+}
+
+bool ShaderProgram::SetDefaultTexture3D(const String &name, bool warn)
+{
+    return SetTexture(
+        name, SCAST<Texture3D *>(TextureFactory::GetWhiteTexture3D()), warn);
 }
 
 bool ShaderProgram::SetTextureCubeMap(const String &name,
@@ -729,9 +750,13 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         {
             SetDefaultTextureCubeMap(name, false);
         }
-        else
+        else if (DCAST<Texture2D *>(destroyedTex))
         {
             SetDefaultTexture2D(name, false);
+        }
+        else
+        {
+            SetDefaultTexture3D(name, false);
         }
     }
 }

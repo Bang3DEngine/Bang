@@ -12,6 +12,7 @@
 namespace Bang
 {
 class Texture2D;
+class Texture3D;
 class TextureCubeMap;
 
 class TextureFactory
@@ -38,6 +39,7 @@ public:
     static Texture2D *GetErrorIcon();
     static Texture2D *GetCheckerboard();
     static Texture2D *GetWhiteTexture();
+    static Texture3D *GetWhiteTexture3D();
     static Texture2D *GetBRDFLUTTexture();
     static Texture2D *Get9SliceBorder();
     static Texture2D *Get9SliceRoundRectTexture();
@@ -61,6 +63,7 @@ protected:
     static TextureFactory *GetInstance();
 
 private:
+    RH<Texture3D> m_whiteTexture3D;
     Map<Path, RH<Texture2D>> m_texture2DCache;
     Map<Path, RH<TextureCubeMap>> m_textureCubeMapsCache;
 

@@ -185,6 +185,11 @@ void Resource::ExportMeta(MetaNode *metaNode) const
     }
 }
 
+void Resource::Import(const Path &resourceFilepath)
+{
+    BANG_UNUSED(resourceFilepath);
+}
+
 void Resource::Import_(const Path &resourceFilepath)
 {
     Import(resourceFilepath);

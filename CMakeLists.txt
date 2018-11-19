@@ -52,6 +52,7 @@ message("===========================================")
 #=================================================================
 # Add misc files =================================================
 #=================================================================
+option(ADD_MISC_FILES "Add misc files for IDE" ON)
 if (ADD_MISC_FILES)
     set(BANG_ENGINE_ASSETS_DIR "${BANG_ENGINE_ROOT}/Assets")
     file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"

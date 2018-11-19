@@ -1,15 +1,43 @@
 #ifndef TEXTURE3D_H
 #define TEXTURE3D_H
 
-#include "Bang/Bang.h"
+#include "Bang/Texture.h"
 
 namespace Bang
 {
-class Texture3D
+class Texture3D : public Texture
 {
+    ASSET(Texture3D)
+
 public:
     Texture3D();
     virtual ~Texture3D();
+
+    void CreateEmpty(const Vector3i &size);
+    void CreateEmpty(uint width, uint height, uint depth);
+    bool Resize(const Vector3i &size);
+    void Fill(const Byte *newData,
+              const Vector3i &size,
+              GL::ColorComp inputDataColorComp,
+              GL::DataType inputDataType);
+
+    uint GetWidth() const;
+    uint GetHeight() const;
+    uint GetDepth() const;
+    const Vector3i &GetSize() const;
+    uint GetBytesSize() const;
+
+    // GLObject
+    GL::BindTarget GetGLBindTarget() const override;
+
+    // IReflectable
+    void Reflect() override;
+
+    // Resource
+    virtual void Import(const Path &volumeTextureFilepath) override;
+
+private:
+    Vector3i m_size = Vector3i::Zero();
 };
 }
 

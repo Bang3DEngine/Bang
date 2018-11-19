@@ -6,6 +6,7 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/Texture2D.h"
+#include "Bang/Texture3D.h"
 #include "Bang/TextureCubeMap.h"
 
 using namespace Bang;
@@ -121,6 +122,17 @@ Texture2D *TextureFactory::GetCheckerboard()
 Texture2D *TextureFactory::GetWhiteTexture()
 {
     return GetTexture2D(TextureFactory::GetInstance()->m_whiteTexturePath);
+}
+
+Texture3D *TextureFactory::GetWhiteTexture3D()
+{
+    TextureFactory *tf = TextureFactory::GetInstance();
+    if (tf->m_whiteTexture3D)
+    {
+        tf->m_whiteTexture3D = Resources::Create<Texture3D>();
+        tf->m_whiteTexture3D.Get()->CreateEmpty(Vector3i(1));
+    }
+    return tf->m_whiteTexture3D.Get();
 }
 
 Texture2D *TextureFactory::GetBRDFLUTTexture()

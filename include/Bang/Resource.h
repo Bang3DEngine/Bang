@@ -48,7 +48,7 @@ protected:
     virtual void ExportMeta(MetaNode *metaNode) const;
 
     // Resource
-    virtual void Import(const Path &resourceFilepath) = 0;
+    virtual void Import(const Path &resourceFilepath);
     void Import_(const Path &resourceFilepath);
 
 private:

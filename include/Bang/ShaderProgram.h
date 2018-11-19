@@ -17,6 +17,7 @@
 #include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
+#include "Bang/Texture3D.h"
 #include "Bang/UMap.h"
 
 namespace Bang
@@ -24,6 +25,7 @@ namespace Bang
 template <class>
 class EventEmitter;
 class Color;
+class Texture3D;
 class IEventsDestroy;
 class IEventsResource;
 class Path;
@@ -66,6 +68,9 @@ public:
     bool SetMatrix4(const String &name, const Matrix4 &v, bool warn = false);
     bool SetTexture2D(const String &name,
                       Texture2D *texture,
+                      bool warn = false);
+    bool SetTexture3D(const String &name,
+                      Texture3D *texture3D,
                       bool warn = false);
     bool SetTextureCubeMap(const String &name,
                            TextureCubeMap *textureCubeMap,
@@ -152,6 +157,7 @@ private:
     void UnBind() const override;
 
     bool SetDefaultTexture2D(const String &name, bool warn = true);
+    bool SetDefaultTexture3D(const String &name, bool warn = true);
     bool SetDefaultTextureCubeMap(const String &name, bool warn = true);
     bool SetTexture(const String &name, Texture *texture, bool warn = true);
 

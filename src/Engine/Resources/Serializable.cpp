@@ -88,6 +88,10 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                         reflVarSetter(
                             Variant::FromBool(metaNode.Get<bool>(varName)));
                         break;
+                    case Variant::Type::PATH:
+                        reflVarSetter(
+                            Variant::FromPath(metaNode.Get<Path>(varName)));
+                        break;
                     case Variant::Type::STRING:
                         reflVarSetter(
                             Variant::FromString(metaNode.Get<String>(varName)));

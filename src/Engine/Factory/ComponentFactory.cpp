@@ -38,6 +38,7 @@
 #include "Bang/UIScrollArea.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UIVerticalLayout.h"
+#include "Bang/VolumeRenderer.h"
 #include "Bang/WaterRenderer.h"
 
 using namespace Bang;
@@ -67,6 +68,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, MeshCollider);
     CREATE_COMPONENT(componentClassName, LineRenderer);
     CREATE_COMPONENT(componentClassName, MeshRenderer);
+    CREATE_COMPONENT(componentClassName, VolumeRenderer);
     CREATE_COMPONENT(componentClassName, WaterRenderer);
     CREATE_COMPONENT(componentClassName, ParticleSystem);
     CREATE_COMPONENT(componentClassName, UIScrollArea);

@@ -4,6 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/Color.h"
 #include "Bang/GUID.h"
+#include "Bang/Path.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -20,6 +21,7 @@ public:
         NONE,
         FLOAT,
         DOUBLE,
+        PATH,
         INT,
         UINT,
         BOOL,
@@ -42,6 +44,7 @@ public:
     void SetFloat(float v);
     void SetDouble(double v);
     void SetBool(bool v);
+    void SetPath(const Path &path);
     void SetGUID(const GUID &guid);
     void SetString(const String &v);
     void SetColor(const Color &v);
@@ -61,6 +64,7 @@ public:
     int GetInt() const;
     uint GetUint() const;
     float GetFloat() const;
+    Path GetPath() const;
     double GetDouble() const;
     bool GetBool() const;
     const GUID &GetGUID() const;
@@ -82,14 +86,15 @@ public:
     static Variant FromDouble(double v);
     static Variant FromInt(int v);
     static Variant FromUint(uint v);
-    static Variant FromBool(bool v);
+    static Variant FromBool(bool b);
+    static Variant FromPath(const Path &path);
     static Variant FromGUID(const GUID &guid);
-    static Variant FromString(const String &v);
-    static Variant FromColor(const Color &v);
+    static Variant FromString(const String &str);
+    static Variant FromColor(const Color &color);
     static Variant FromVector2(const Vector2 &v);
     static Variant FromVector3(const Vector3 &v);
     static Variant FromVector4(const Vector4 &v);
-    static Variant FromQuaternion(const Quaternion &v);
+    static Variant FromQuaternion(const Quaternion &q);
 
     template <class T>
     static Variant From(const T &v)
@@ -148,6 +153,11 @@ inline void Variant::Set<GUID>(const GUID &v)
     SetGUID(v);
 }
 template <>
+inline void Variant::Set<Path>(const Path &v)
+{
+    SetPath(v);
+}
+template <>
 inline void Variant::Set<String>(const String &v)
 {
     SetString(v);
@@ -188,6 +198,11 @@ template <>
 inline double Variant::Get() const
 {
     return GetDouble();
+}
+template <>
+inline Path Variant::Get() const
+{
+    return GetPath();
 }
 template <>
 inline bool Variant::Get() const

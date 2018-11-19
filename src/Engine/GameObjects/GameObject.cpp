@@ -210,7 +210,7 @@ void GameObject::AddChild_(GameObject *child,
         EventEmitter<IEventsChildren>::PropagateToListeners(
             &IEventsChildren::OnParentChanged, oldParent, this);
         PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
-                         GetComponents<EventListener<IEventsChildren>>(),
+                         child->GetComponents<EventListener<IEventsChildren>>(),
                          oldParent,
                          this);
     }

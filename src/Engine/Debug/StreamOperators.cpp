@@ -96,6 +96,7 @@ std::ostream &operator<<(std::ostream &log, const Variant &variant)
     {
         case Variant::Type::FLOAT: log << variant.GetFloat(); break;
         case Variant::Type::DOUBLE: log << variant.GetDouble(); break;
+        case Variant::Type::PATH: log << variant.GetPath(); break;
         case Variant::Type::BOOL: log << variant.GetBool(); break;
         case Variant::Type::INT: log << variant.GetInt(); break;
         case Variant::Type::UINT: log << variant.GetUint(); break;
@@ -238,6 +239,13 @@ std::istream &operator>>(std::istream &is, Variant &variant)
             bool v;
             is >> v;
             variant.SetBool(v);
+        }
+        break;
+        case Variant::Type::PATH:
+        {
+            String v;
+            is >> v;
+            variant.SetPath(Path(v));
         }
         break;
         case Variant::Type::STRING:

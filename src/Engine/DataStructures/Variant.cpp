@@ -2,6 +2,7 @@
 
 #include "Bang/Color.h"
 #include "Bang/GUID.h"
+#include "Bang/Path.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
@@ -18,73 +19,79 @@ void Variant::SetType(Variant::Type type)
 void Variant::SetInt(int v)
 {
     m_int = v;
-    m_type = Type::INT;
+    SetType(Type::INT);
 }
 
 void Variant::SetUint(uint v)
 {
     SetInt(SCAST<int>(v));
-    m_type = Type::UINT;
+    SetType(Type::UINT);
 }
 
 void Variant::SetFloat(float v)
 {
     SetDouble(SCAST<double>(v));
-    m_type = Type::FLOAT;
+    SetType(Type::FLOAT);
 }
 
 void Variant::SetDouble(double v)
 {
     m_double = v;
-    m_type = Type::DOUBLE;
+    SetType(Type::DOUBLE);
 }
 
 void Variant::SetBool(bool v)
 {
     SetInt(SCAST<int>(v));
-    m_type = Type::BOOL;
+    SetType(Type::BOOL);
+}
+
+void Variant::SetPath(const Path &path)
+{
+    SetString(path.GetAbsolute());
+    SetType(Type::PATH);
 }
 
 void Variant::SetGUID(const GUID &guid)
 {
     m_guid = guid;
-    m_type = Type::GUID;
+    SetType(Type::GUID);
 }
 
 void Variant::SetString(const String &v)
 {
     m_string = v;
-    m_type = Type::STRING;
+    SetType(Type::STRING);
 }
 
 void Variant::SetColor(const Color &v)
 {
     SetVector4(Vector4(v.r, v.g, v.b, v.a));
-    m_type = Type::COLOR;
+    SetType(Type::COLOR);
 }
 
 void Variant::SetVector2(const Vector2 &v)
 {
     SetVector4(Vector4(v.x, v.y, 0, 0));
-    m_type = Type::VECTOR2;
+    SetType(Type::VECTOR2);
 }
 
 void Variant::SetVector3(const Vector3 &v)
 {
     SetVector4(Vector4(v.x, v.y, v.z, 0));
-    m_type = Type::VECTOR3;
+    SetType(Type::VECTOR3);
 }
 
 void Variant::SetVector4(const Vector4 &v)
 {
     m_vector4 = v;
-    m_type = Type::VECTOR4;
+    SetType(Type::VECTOR4);
 }
 
 void Variant::SetQuaternion(const Quaternion &v)
 {
     SetVector4(Vector4(v.x, v.y, v.z, v.w));
-    m_type = Type::QUATERNION;
+    SetType(Type::QUATERNION);
 }
 
 Variant::Type Variant::GetType() const
@@ -105,6 +112,11 @@ uint Variant::GetUint() const
 float Variant::GetFloat() const
 {
     return SCAST<float>(GetDouble());
+}
+
+Path Variant::GetPath() const
+{
+    return Path(GetString());
 }
 
 double Variant::GetDouble() const
@@ -188,6 +200,13 @@ Variant Variant::FromBool(bool v)
     return variant;
 }
 
+Variant Variant::FromPath(const Path &v)
+{
+    Variant variant;
+    variant.SetPath(v);
+    return variant;
+}
+
 Variant Variant::FromGUID(const GUID &v)
 {
     Variant variant;
@@ -251,6 +270,7 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::INT: return (GetInt() == rhs.GetInt());
         case Variant::Type::UINT: return (GetUint() == rhs.GetUint());
         case Variant::Type::BOOL: return (GetBool() == rhs.GetBool());
+        case Variant::Type::PATH: return (GetPath() == rhs.GetPath());
         case Variant::Type::STRING: return (GetString() == rhs.GetString());
         case Variant::Type::GUID: return (GetGUID() == rhs.GetGUID());
         case Variant::Type::COLOR: return (GetColor() == rhs.GetColor());
@@ -284,6 +304,7 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::BOOL: return "bool";
         case Variant::Type::COLOR: return "Color";
         case Variant::Type::STRING: return "String";
+        case Variant::Type::PATH: return "Path";
         case Variant::Type::GUID: return "GUID";
         case Variant::Type::VECTOR2: return "Vector2";
         case Variant::Type::VECTOR3: return "Vector3";
@@ -327,6 +348,10 @@ Variant::Type Variant::GetTypeFromString(const String &typeStr)
     else if (typeStr == "GUID")
     {
         return Variant::Type::GUID;
+    }
+    else if (typeStr == "Path")
+    {
+        return Variant::Type::PATH;
     }
     else if (typeStr == "String")
     {

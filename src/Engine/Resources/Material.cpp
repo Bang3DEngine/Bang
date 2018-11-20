@@ -312,27 +312,30 @@ GL::CullFaceExt Material::GetCullFace() const
 void Material::Bind() const
 {
     ShaderProgram *sp = GetShaderProgram();
-    if (!sp || !sp->IsLinked())
+    if (sp && sp->IsLinked())
     {
-        return;
+        sp->Bind();
+
+        GL::SetWireframe(GetRenderWireframe());
+        GL::LineWidth(GetLineWidth());
+        GL::PointSize(GetLineWidth());
+
+        if (GetCullFace() != GL::CullFaceExt::NONE)
+        {
+            GL::Enable(GL::Enablable::CULL_FACE);  // Culling states
+            GL::SetCullFace(SCAST<GL::Face>(GetCullFace()));
+        }
+        else
+        {
+            GL::Disable(GL::Enablable::CULL_FACE);
+        }
+
+        BindMaterialUniforms(sp);
     }
+}
 
-    sp->Bind();
-
-    GL::SetWireframe(GetRenderWireframe());
-    GL::LineWidth(GetLineWidth());
-    GL::PointSize(GetLineWidth());
-
-    if (GetCullFace() != GL::CullFaceExt::NONE)
-    {
-        GL::Enable(GL::Enablable::CULL_FACE);  // Culling states
-        GL::SetCullFace(SCAST<GL::Face>(GetCullFace()));
-    }
-    else
-    {
-        GL::Disable(GL::Enablable::CULL_FACE);
-    }
-
+void Material::BindMaterialUniforms(ShaderProgram *sp) const
+{
     if (GetNeededUniforms().IsOn(NeededUniformFlag::MATERIAL_ALBEDO))
     {
         sp->SetColor(GLUniforms::UniformName_MaterialAlbedoColor,
@@ -362,8 +365,6 @@ void Material::Bind() const
                     GetReceivesLighting());
         sp->SetFloat(GLUniforms::UniformName_MaterialRoughness, GetRoughness());
         sp->SetFloat(GLUniforms::UniformName_MaterialMetalness, GetMetalness());
-        sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
-                         TextureFactory::GetBRDFLUTTexture());
 
         if (Texture2D *roughnessTex = GetRoughnessTexture())
         {

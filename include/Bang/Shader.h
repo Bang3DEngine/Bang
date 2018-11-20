@@ -23,6 +23,7 @@ public:
     bool Compile();
 
     const String &GetSourceCode() const;
+    const String &GetProcessedSourceCode() const;
     GL::ShaderType GetType() const;
     GL::BindTarget GetGLBindTarget() const override;
 
@@ -32,6 +33,7 @@ public:
 private:
     GL::ShaderType m_type;
     String m_sourceCode = "";
+    String m_processedSourceCode = "";
 
     void RetrieveType(const Path &shaderPath);
 };

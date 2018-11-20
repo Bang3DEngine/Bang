@@ -722,7 +722,8 @@ public:
     static void Render(const VAO *vao,
                        GL::Primitive primitivesMode,
                        int elementsCount,
-                       int startElementIndex = 0);
+                       int startElementIndex = 0,
+                       bool validateShader = true);
     static void DrawArrays(const VAO *vao,
                            GL::Primitive primitivesMode,
                            int verticesCount,

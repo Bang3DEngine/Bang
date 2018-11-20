@@ -69,10 +69,10 @@ bool Shader::Compile()
 
     m_idGL = GL::CreateShader(m_type);
 
-    String preprocessedSourceCode = m_sourceCode;
-    ShaderPreprocessor::PreprocessCode(&preprocessedSourceCode);
+    m_processedSourceCode = m_sourceCode;
+    ShaderPreprocessor::PreprocessCode(&m_processedSourceCode);
 
-    GL::ShaderSource(m_idGL, preprocessedSourceCode);
+    GL::ShaderSource(m_idGL, m_processedSourceCode);
     if (!GL::CompileShader(m_idGL))
     {
         Debug_Error(
@@ -88,6 +88,11 @@ bool Shader::Compile()
 const String &Shader::GetSourceCode() const
 {
     return m_sourceCode;
+}
+
+const String &Shader::GetProcessedSourceCode() const
+{
+    return m_processedSourceCode;
 }
 
 GL::ShaderType Shader::GetType() const

@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "Bang/Debug.h"
+#include "Bang/ImageIODDS.h"
 
 using namespace Bang;
 
@@ -108,7 +109,13 @@ void Texture3D::Reflect()
 
 void Texture3D::Import(const Path &volumeTextureFilepath)
 {
-    if (volumeTextureFilepath.GetExtension().ToLower() == "pvm")
+    if (!volumeTextureFilepath.IsFile())
+    {
+        Debug_Error(volumeTextureFilepath << " not found!");
+        return;
+    }
+
+    if (volumeTextureFilepath.HasExtension("txt"))
     {
         SetFormat(GL::ColorFormat::R8);
 
@@ -135,10 +142,10 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
                  GL::ColorComp::RED,
                  GL::DataType::UNSIGNED_BYTE);
         }
-        else
-        {
-            Debug_Error(volumeTextureFilepath << " not found!");
-        }
+    }
+    else if (volumeTextureFilepath.HasExtension("pvm"))
+    {
+        ImageIODDS::ImportDDS3D(volumeTextureFilepath, this, nullptr);
     }
     else
     {

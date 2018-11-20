@@ -1616,15 +1616,21 @@ void GL::SetColorMask(const std::array<bool, 4> &colorMask)
 void GL::Render(const VAO *vao,
                 GL::Primitive renderMode,
                 int elementsCount,
-                int startElementIndex)
+                int startElementIndex,
+                bool validateShader)
 {
 #ifdef DEBUG
-    GLId boundShaderProgram = GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
-    if (boundShaderProgram > 0)
+    if (validateShader)
     {
-        ASSERT(GL::ValidateProgram(boundShaderProgram));
+        GLId boundShaderProgram =
+            GL::GetBoundId(GL::BindTarget::SHADER_PROGRAM);
+        if (boundShaderProgram > 0)
+        {
+            ASSERT(GL::ValidateProgram(boundShaderProgram));
+        }
     }
 #endif
+
     if (vao->IsIndexed())
     {
         GL::DrawElements(vao, renderMode, elementsCount, startElementIndex);

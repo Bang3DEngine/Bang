@@ -127,7 +127,7 @@ Texture2D *TextureFactory::GetWhiteTexture()
 Texture3D *TextureFactory::GetWhiteTexture3D()
 {
     TextureFactory *tf = TextureFactory::GetInstance();
-    if (tf->m_whiteTexture3D)
+    if (!tf->m_whiteTexture3D)
     {
         tf->m_whiteTexture3D = Resources::Create<Texture3D>();
         tf->m_whiteTexture3D.Get()->CreateEmpty(Vector3i(1));

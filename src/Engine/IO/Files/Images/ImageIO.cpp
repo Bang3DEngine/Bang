@@ -94,7 +94,7 @@ void ImageIO::Import(const Path &filepath,
     bool ok = false;
     if (filepath.HasExtension("dds"))
     {
-        ImageIODDS::ImportDDS(filepath, tex, _ok);
+        ImageIODDS::ImportDDS2D(filepath, tex, _ok);
     }
     else
     {
@@ -498,7 +498,7 @@ void ImageIO::ImportJPG(const Path &filepath, Image *img, bool *ok)
 
 void ImageIO::ImportDDS(const Path &filepath, Texture2D *tex, bool *ok)
 {
-    ImageIODDS::ImportDDS(filepath, tex, ok);
+    ImageIODDS::ImportDDS2D(filepath, tex, ok);
 }
 
 void ImageIO::ExportTGA(const Path &filepath, const Image &img)

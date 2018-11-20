@@ -56,6 +56,7 @@ public:
     void SetCullFace(GL::CullFaceExt cullFace);
     void SetRenderWireframe(bool renderWireframe);
     void SetLineWidth(float w);
+    void BindMaterialUniforms(ShaderProgram *sp) const;
 
     NeededUniformFlags &GetNeededUniforms();
     const NeededUniformFlags &GetNeededUniforms() const;

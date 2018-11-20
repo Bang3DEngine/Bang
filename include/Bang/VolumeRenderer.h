@@ -6,6 +6,8 @@
 
 namespace Bang
 {
+class GBuffer;
+class Framebuffer;
 class Mesh;
 class Material;
 class Texture3D;
@@ -20,13 +22,14 @@ protected:
 
     void SetVolumeTexture(Texture3D *volTexture);
     void SetModelPath(const Path &pvmModelPath);
+    void SetDensityThreshold(float densityThreshold);
 
     const Path &GetModelPath() const;
+    float GetDensityThreshold() const;
     Texture3D *GetVolumeTexture() const;
 
     // Renderer
     virtual void OnRender() override;
-    virtual void SetUniformsOnBind(ShaderProgram *sp) override;
 
     // Serializable
     virtual void Reflect() override;
@@ -36,8 +39,13 @@ private:
     RH<Mesh> p_cubeMesh;
     RH<Texture3D> p_volumeTexture;
     RH<ShaderProgram> p_cubeShaderProgram;
+    RH<Material> m_volumeRenderingMaterial;
+    float m_densityThreshold = 0.5f;
+
+    GBuffer *m_cubeBackFacesGBuffer = nullptr;
 
     Mesh *GetCubeMesh() const;
+    Material *GetVolumeRenderMaterial() const;
 };
 }
 

@@ -7,11 +7,13 @@ namespace Bang
 {
 class Path;
 class Texture2D;
+class Texture3D;
 
 class ImageIODDS
 {
 public:
-    static void ImportDDS(const Path &filepath, Texture2D *tex, bool *_ok);
+    static void ImportDDS2D(const Path &filepath, Texture2D *tex, bool *_ok);
+    static void ImportDDS3D(const Path &filepath, Texture3D *tex, bool *_ok);
 
     ImageIODDS() = delete;
 };

@@ -171,6 +171,11 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
     }
     else
     {
+        if (!filepath.IsFile())
+        {
+            return GUID::Empty();
+        }
+
         if (!Resources::IsEmbeddedResource(filepath))
         {
             Path metaFilepath = GetMetaFilepath(filepath);
@@ -186,6 +191,11 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
         else
         {
             Path parentResPath = filepath.GetDirectory();
+            if (!parentResPath.IsFile())
+            {
+                return GUID::Empty();
+            }
+
             Resource *parentRes = Resources::GetCached(parentResPath);
             if (parentRes)
             {

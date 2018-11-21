@@ -89,12 +89,7 @@ void Resources::CreateResourceMetaAndImportFile(const Resource *resource,
 RH<Resource> Resources::Load_(std::function<Resource *()> creator,
                               const Path &filepath)
 {
-    if (m_beingDestroyed)
-    {
-        return RH<Resource>(nullptr);
-    }
-
-    if (filepath.IsEmpty())
+    if (m_beingDestroyed || filepath.IsEmpty())
     {
         return RH<Resource>(nullptr);
     }
@@ -106,19 +101,31 @@ RH<Resource> Resources::Load_(std::function<Resource *()> creator,
     }
 
     RH<Resource> resRH;
-    Resource *res = GetCached_(filepath);
-    resRH.Set(res);  // Register as soon as possible
-    if (!res)
+    if (!Resources::IsEmbeddedResource(filepath))
     {
-        res = creator();
-
-        Path importFilepath = MetaFilesManager::GetMetaFilepath(filepath);
-        res->ImportMetaFromFile(importFilepath);  // Get resource GUID
+        Resource *res = GetCached_(filepath);
         resRH.Set(res);  // Register as soon as possible
+        if (!res)
+        {
+            res = creator();
 
-        Resources::Import(res);  // Actually import all
+            Path importFilepath = MetaFilesManager::GetMetaFilepath(filepath);
+            res->ImportMetaFromFile(importFilepath);  // Get resource GUID
+            resRH.Set(res);  // Register as soon as possible
+
+            Resources::Import(res);  // Actually import all
+        }
     }
-
+    else
+    {
+        RH<Resource> parentResRH =
+            Resources::LoadFromExtension(filepath.GetDirectory());
+        if (parentResRH)
+        {
+            String embeddedResName = filepath.GetNameExt();
+            resRH.Set(parentResRH.Get()->GetEmbeddedResource(embeddedResName));
+        }
+    }
     return resRH;
 }
 

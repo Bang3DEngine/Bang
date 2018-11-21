@@ -28,7 +28,7 @@ public:
     static const GL::Attachment AttMisc;
     static const GL::Attachment AttDepthStencil;
 
-    GBuffer(int width, int height);
+    GBuffer(int width = 1, int height = 1);
     virtual ~GBuffer() override;
 
     void BindAttachmentsForReading(ShaderProgram *sp);

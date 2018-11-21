@@ -20,7 +20,7 @@ public:
               const Vector3i &size,
               GL::ColorComp inputDataColorComp,
               GL::DataType inputDataType,
-              Byte paddingFilling = 0);
+              uint paddingFilling = 0);
 
     uint GetWidth() const;
     uint GetHeight() const;

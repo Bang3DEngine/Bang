@@ -44,13 +44,6 @@ void main()
 
         rayIn  *= actualSizeRatio;
         rayOut *= actualSizeRatio;
-
-        vec3 rayInOutDiff = (rayOut - rayIn);
-        float sqDistToTravel = dot(rayInOutDiff, rayInOutDiff);
-        // if (sqDistToTravel <= 0.0f)
-        // {
-        //    discard;
-        // }
     }
     vec3 rayDir = normalize(rayOut - rayIn);
 

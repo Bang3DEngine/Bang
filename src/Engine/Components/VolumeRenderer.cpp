@@ -49,7 +49,7 @@ void VolumeRenderer::SetVolumeTexture(Texture3D *volTexture)
         GL::Push(GL::BindTarget::TEXTURE_3D);
 
         GetVolumeTexture()->Bind();
-        // GetVolumeTexture()->GenerateMipMaps();
+        GetVolumeTexture()->GenerateMipMaps();
         GetVolumeTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
         GetVolumeTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 

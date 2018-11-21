@@ -44,13 +44,36 @@ void Texture3D::Fill(const Byte *newData,
                      const Vector3i &size,
                      GL::ColorComp inputDataColorComp,
                      GL::DataType inputDataType,
-                     Byte paddingFilling)
+                     uint paddingFilling)
 {
     m_size = size;
 
     GL::Push(GetGLBindTarget());
 
     Bind();
+
+    const Vector3i &sizePOT = GetSizePOT();
+    const uint totalDataBytes = GetBytesSize();
+    Array<uint8_t> paddedPOTData(totalDataBytes, paddingFilling);
+    if (newData)
+    {
+        for (uint z = 0; z < sizePOT.z; ++z)
+        {
+            for (uint y = 0; y < sizePOT.y; ++y)
+            {
+                for (uint x = 0; x < sizePOT.x; ++x)
+                {
+                    if (z < size.z && y < size.y && x < size.x)
+                    {
+                        const uint idx = (z * size.x * size.y + y * size.x + x);
+                        const uint idxPOT =
+                            (z * sizePOT.x * sizePOT.y + y * sizePOT.x + x);
+                        paddedPOTData[idxPOT] = newData[idx];
+                    }
+                }
+            }
+        }
+    }
 
     GL::TexImage3D(GetTextureTarget(),
                    GetSizePOT().x,
@@ -59,11 +82,11 @@ void Texture3D::Fill(const Byte *newData,
                    GetFormat(),
                    inputDataColorComp,
                    inputDataType,
-                   newData);
+                   paddedPOTData.Data());
 
     if (newData && GetWidth() > 0 && GetHeight() > 0)
     {
-        // GenerateMipMaps();
+        GenerateMipMaps();
     }
 
     GL::Pop(GetGLBindTarget());
@@ -131,27 +154,19 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
             uint width, height, depth;
             ifs >> width >> height >> depth;
 
-            const uint widthPOT = GetPOT(width);
-            const uint heightPOT = GetPOT(height);
-            const uint depthPOT = GetPOT(depth);
-
-            const uint sizePOT = (widthPOT * heightPOT * depthPOT);
-            Array<uint8_t> data(sizePOT, 255);
-            for (uint z = 0; z < depthPOT; ++z)
+            const uint size = (width * height * depth);
+            Array<uint8_t> data(size);
+            for (uint z = 0; z < depth; ++z)
             {
-                for (uint y = 0; y < heightPOT; ++y)
+                for (uint y = 0; y < height; ++y)
                 {
-                    for (uint x = 0; x < widthPOT; ++x)
+                    for (uint x = 0; x < width; ++x)
                     {
-                        if (z < depth && y < height && x < width)
-                        {
-                            uint datai;
-                            ifs >> datai;
+                        uint datai;
+                        ifs >> datai;
 
-                            const uint idx =
-                                (z * widthPOT * heightPOT + y * widthPOT + x);
-                            data[idx] = datai;
-                        }
+                        const uint idx = (z * width * height + y * width + x);
+                        data[idx] = datai;
                     }
                 }
             }
@@ -159,7 +174,8 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
             Fill(data.Data(),
                  Vector3i(width, height, depth),
                  GL::ColorComp::RED,
-                 GL::DataType::UNSIGNED_BYTE);
+                 GL::DataType::UNSIGNED_BYTE,
+                 255);
         }
     }
     else if (volumeTextureFilepath.HasExtension("pvm"))

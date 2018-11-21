@@ -9,7 +9,7 @@ using namespace Bang;
 
 Texture3D::Texture3D() : Texture(GL::TextureTarget::TEXTURE_3D)
 {
-    SetFormat(GL::ColorFormat::RGBA8);
+    SetFormat(GL::ColorFormat::R8);
     CreateEmpty(1, 1, 1);
 
     SetFilterMode(GL::FilterMode::BILINEAR);
@@ -43,17 +43,19 @@ bool Texture3D::Resize(const Vector3i &size)
 void Texture3D::Fill(const Byte *newData,
                      const Vector3i &size,
                      GL::ColorComp inputDataColorComp,
-                     GL::DataType inputDataType)
+                     GL::DataType inputDataType,
+                     Byte paddingFilling)
 {
     m_size = size;
 
     GL::Push(GetGLBindTarget());
 
     Bind();
+
     GL::TexImage3D(GetTextureTarget(),
-                   GetWidth(),
-                   GetHeight(),
-                   GetDepth(),
+                   GetSizePOT().x,
+                   GetSizePOT().y,
+                   GetSizePOT().z,
                    GetFormat(),
                    inputDataColorComp,
                    inputDataType,
@@ -61,7 +63,7 @@ void Texture3D::Fill(const Byte *newData,
 
     if (newData && GetWidth() > 0 && GetHeight() > 0)
     {
-        GenerateMipMaps();
+        // GenerateMipMaps();
     }
 
     GL::Pop(GetGLBindTarget());
@@ -89,9 +91,15 @@ const Vector3i &Texture3D::GetSize() const
     return m_size;
 }
 
+Vector3i Texture3D::GetSizePOT() const
+{
+    return Vector3i(
+        GetPOT(GetWidth()), GetPOT(GetHeight()), GetPOT(GetDepth()));
+}
+
 uint Texture3D::GetBytesSize() const
 {
-    return GetWidth() * GetHeight() * GetDepth() *
+    return GetSizePOT().x * GetSizePOT().y * GetSizePOT().z *
            GL::GetPixelBytesSize(GetFormat());
 }
 
@@ -102,9 +110,7 @@ GL::BindTarget Texture3D::GetGLBindTarget() const
 
 void Texture3D::Reflect()
 {
-    ReflectVar<Vector3>("Size",
-                        [this](const Vector3 &size) { Resize(Vector3i(size)); },
-                        [this]() { return Vector3(GetSize()); });
+    Texture::Reflect();
 }
 
 void Texture3D::Import(const Path &volumeTextureFilepath)
@@ -125,16 +131,29 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
             uint width, height, depth;
             ifs >> width >> height >> depth;
 
-            uint size = (width * height * depth);
-            Array<uint8_t> data(size, 0);
-            for (uint i = 0; i < size; ++i)
+            const uint widthPOT = GetPOT(width);
+            const uint heightPOT = GetPOT(height);
+            const uint depthPOT = GetPOT(depth);
+
+            const uint sizePOT = (widthPOT * heightPOT * depthPOT);
+            Array<uint8_t> data(sizePOT, 255);
+            for (uint z = 0; z < depthPOT; ++z)
             {
-                uint datai;
-                if (!(ifs >> datai))
+                for (uint y = 0; y < heightPOT; ++y)
                 {
-                    break;
+                    for (uint x = 0; x < widthPOT; ++x)
+                    {
+                        if (z < depth && y < height && x < width)
+                        {
+                            uint datai;
+                            ifs >> datai;
+
+                            const uint idx =
+                                (z * widthPOT * heightPOT + y * widthPOT + x);
+                            data[idx] = datai;
+                        }
+                    }
                 }
-                data[i] = datai;
             }
 
             Fill(data.Data(),
@@ -151,4 +170,10 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
     {
         Debug_Error(volumeTextureFilepath << " extension not supported!");
     }
+}
+
+uint Texture3D::GetPOT(float x)
+{
+    return SCAST<uint>(
+        Math::Pow(2.0f, Math::Ceil(Math::Log(x) / Math::Log(2.0f))));
 }

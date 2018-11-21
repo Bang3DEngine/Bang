@@ -46,12 +46,14 @@ void VolumeRenderer::SetVolumeTexture(Texture3D *volTexture)
     p_volumeTexture.Set(volTexture);
     if (GetVolumeTexture())
     {
-        GL::Push(GL::BindTarget::TEXTURE_2D);
+        GL::Push(GL::BindTarget::TEXTURE_3D);
 
         GetVolumeTexture()->Bind();
+        // GetVolumeTexture()->GenerateMipMaps();
+        GetVolumeTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
         GetVolumeTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-        GL::Pop(GL::BindTarget::TEXTURE_2D);
+        GL::Pop(GL::BindTarget::TEXTURE_3D);
     }
 }
 
@@ -60,13 +62,19 @@ void VolumeRenderer::SetModelPath(const Path &modelPath)
     if (modelPath != GetModelPath())
     {
         m_modelPath = modelPath;
-        SetVolumeTexture(Resources::Load<Texture3D>(modelPath).Get());
+        RH<Texture3D> tex3D = Resources::Load<Texture3D>(modelPath);
+        SetVolumeTexture(tex3D.Get());
     }
 }
 
 void VolumeRenderer::SetDensityThreshold(float densityThreshold)
 {
     m_densityThreshold = densityThreshold;
+}
+
+void VolumeRenderer::SetNumSamples(uint numSamples)
+{
+    m_numSamples = numSamples;
 }
 
 const Path &VolumeRenderer::GetModelPath() const
@@ -77,6 +85,11 @@ const Path &VolumeRenderer::GetModelPath() const
 float VolumeRenderer::GetDensityThreshold() const
 {
     return m_densityThreshold;
+}
+
+uint VolumeRenderer::GetNumSamples() const
+{
+    return m_numSamples;
 }
 
 Texture3D *VolumeRenderer::GetVolumeTexture() const
@@ -120,10 +133,19 @@ void VolumeRenderer::OnRender()
 
         GL::Push(GL::Pushable::DEPTH_STATES);
         sp->SetFloat("B_DensityThreshold", GetDensityThreshold());
+        sp->SetVector3(
+            "B_Texture3DSize",
+            Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSize()
+                                       : Vector3i::One()));
+        sp->SetVector3(
+            "B_Texture3DPOTSize",
+            Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSizePOT()
+                                       : Vector3i::One()));
         sp->SetTexture2D(
             "B_CubeBackFacesColor",
             m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
         sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
+        sp->SetInt("B_NumSamples", GetNumSamples());
         sp->SetBool("B_RenderingCubeBackFaces", false);
         GL::SetCullFace(GL::Face::BACK);
         GL::Render(GetCubeMesh()->GetVAO(),
@@ -145,8 +167,14 @@ void VolumeRenderer::Reflect()
         this,
         BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f));
 
+    ReflectVarMember<VolumeRenderer, uint>("Num Samples",
+                                           &VolumeRenderer::SetNumSamples,
+                                           &VolumeRenderer::GetNumSamples,
+                                           this,
+                                           BANG_REFLECT_HINT_MIN_VALUE(1.0f));
+
     ReflectVarMember<VolumeRenderer, Path>(
-        "PVM Path",
+        "Volume Path",
         &VolumeRenderer::SetModelPath,
         &VolumeRenderer::GetModelPath,
         this,

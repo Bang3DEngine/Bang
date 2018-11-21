@@ -23,9 +23,11 @@ protected:
     void SetVolumeTexture(Texture3D *volTexture);
     void SetModelPath(const Path &pvmModelPath);
     void SetDensityThreshold(float densityThreshold);
+    void SetNumSamples(uint numSamples);
 
     const Path &GetModelPath() const;
     float GetDensityThreshold() const;
+    uint GetNumSamples() const;
     Texture3D *GetVolumeTexture() const;
 
     // Renderer
@@ -35,11 +37,13 @@ protected:
     virtual void Reflect() override;
 
 private:
-    Path m_modelPath;
     RH<Mesh> p_cubeMesh;
     RH<Texture3D> p_volumeTexture;
     RH<ShaderProgram> p_cubeShaderProgram;
     RH<Material> m_volumeRenderingMaterial;
+
+    Path m_modelPath = Path::Empty();
+    uint m_numSamples = 50;
     float m_densityThreshold = 0.5f;
 
     GBuffer *m_cubeBackFacesGBuffer = nullptr;

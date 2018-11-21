@@ -19,12 +19,14 @@ public:
     void Fill(const Byte *newData,
               const Vector3i &size,
               GL::ColorComp inputDataColorComp,
-              GL::DataType inputDataType);
+              GL::DataType inputDataType,
+              Byte paddingFilling = 0);
 
     uint GetWidth() const;
     uint GetHeight() const;
     uint GetDepth() const;
     const Vector3i &GetSize() const;
+    Vector3i GetSizePOT() const;
     uint GetBytesSize() const;
 
     // GLObject
@@ -38,6 +40,8 @@ public:
 
 private:
     Vector3i m_size = Vector3i::Zero();
+
+    static uint GetPOT(float x);
 };
 }
 

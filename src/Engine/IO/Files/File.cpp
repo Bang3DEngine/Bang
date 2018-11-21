@@ -22,6 +22,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Debug.h"
 #include "Bang/List.h"
 #include "Bang/List.tcc"
 #include "Bang/StreamOperators.h"
@@ -275,8 +276,8 @@ String File::GetContents(const Path &filepath)
     }
     else
     {
-        std::cerr << "Can't open file '" << filepath
-                  << "': " << std::strerror(errno) << std::endl;
+        Debug_Error(
+            "Can't open file '" << filepath << "': " << std::strerror(errno));
     }
     return contents;
 }

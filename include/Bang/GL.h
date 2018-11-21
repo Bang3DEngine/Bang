@@ -620,6 +620,17 @@ public:
                            GL::ColorComp inputDataColorComp,
                            GL::DataType inputDataType,
                            const void *data);
+    static void TexSubImage3D(GL::TextureTarget textureTarget,
+                              uint offsetX,
+                              uint offsetY,
+                              uint offsetZ,
+                              uint textureWidth,
+                              uint textureHeight,
+                              uint textureDepth,
+                              GL::ColorComp inputDataColorComp,
+                              GL::DataType inputDataType,
+                              const void *data);
+
     static void TexParameteri(GL::TextureTarget textureTarget,
                               GL::TexParameter textureParameter,
                               GLint value);

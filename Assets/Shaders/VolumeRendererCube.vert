@@ -8,8 +8,7 @@ layout(location = 1) in vec3 B_VIn_Normal;
 layout(location = 2) in vec2 B_VIn_Uv;
 layout(location = 3) in vec3 B_VIn_Tangent;
 
-out vec3 B_FIn_Color;
-out vec3 B_FIn_Position;
+out vec3 B_FIn_ModelPosition;
 
 void main()
 {
@@ -18,8 +17,7 @@ void main()
     vec4 modelPosition = vec4(B_VIn_Position, 1);
     vec4 modelNormal   = vec4(B_VIn_Normal,   0);
 
-    B_FIn_Color = modelPosition.xyz + 0.5f;
-    B_FIn_Position = (B_Model * modelPosition).xyz;
+    B_FIn_ModelPosition = modelPosition.xyz;
 
     gl_Position = B_PVM * modelPosition;
 }

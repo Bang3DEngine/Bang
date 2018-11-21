@@ -174,7 +174,9 @@ void GL::Init()
     SetGLContextValue(&GL::m_boundVAOIds, 0u);
     SetGLContextValue(&GL::m_boundVBOArrayBufferIds, 0u);
     SetGLContextValue(&GL::m_boundVBOElementsBufferIds, 0u);
+    SetGLContextValue(&GL::m_boundTexture1DIds, 0u);
     SetGLContextValue(&GL::m_boundTexture2DIds, 0u);
+    SetGLContextValue(&GL::m_boundTexture3DIds, 0u);
     SetGLContextValue(&GL::m_boundTextureCubeMapIds, 0u);
     SetGLContextValue(&GL::m_boundDrawFramebufferIds, 0u);
     SetGLContextValue(&GL::m_boundReadFramebufferIds, 0u);
@@ -1272,6 +1274,16 @@ void GL::TexImage3D(GL::TextureTarget textureTarget,
                     GL::DataType inputDataType,
                     const void *data)
 {
+    // typedef void(GLAPIENTRY * PFNGLTEXIMAGE3DPROC)(GLenum target,
+    //                                                GLint level,
+    //                                                GLint internalFormat,
+    //                                                GLsizei width,
+    //                                                GLsizei height,
+    //                                                GLsizei depth,
+    //                                                GLint border,
+    //                                                GLenum format,
+    //                                                GLenum type,
+    //                                                const void *pixels);
     GL_CALL(glTexImage3D(GLCAST(textureTarget),
                          0,
                          GLCAST(textureColorFormat),
@@ -1282,6 +1294,30 @@ void GL::TexImage3D(GL::TextureTarget textureTarget,
                          GLCAST(inputDataColorComp),
                          GLCAST(inputDataType),
                          data));
+}
+
+void GL::TexSubImage3D(GL::TextureTarget textureTarget,
+                       uint offsetX,
+                       uint offsetY,
+                       uint offsetZ,
+                       uint textureWidth,
+                       uint textureHeight,
+                       uint textureDepth,
+                       GL::ColorComp inputDataColorComp,
+                       GL::DataType inputDataType,
+                       const void *data)
+{
+    GL_CALL(glTexSubImage3D(GLCAST(textureTarget),
+                            0,
+                            offsetX,
+                            offsetY,
+                            offsetZ,
+                            textureWidth,
+                            textureHeight,
+                            textureDepth,
+                            GLCAST(inputDataColorComp),
+                            GLCAST(inputDataType),
+                            data));
 }
 
 void GL::TexParameteri(GL::TextureTarget textureTarget,
@@ -2252,6 +2288,7 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
 {
     switch (format)
     {
+        case GL::ColorFormat::R8:
         case GL::ColorFormat::SRGB:
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
@@ -2276,6 +2313,8 @@ GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
 {
     switch (format)
     {
+        case GL::ColorFormat::R8: return GL::ColorComp::RED;
+
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
         case GL::ColorFormat::RGBA16F:

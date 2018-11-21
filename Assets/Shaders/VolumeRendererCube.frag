@@ -89,7 +89,7 @@ void main()
 
             worldPosition = (B_Model * vec4(B_FIn_ModelPosition +
                                             (rayDir * currentSampleDist), 1)).xyz;
-            normal = normalize((B_Model * vec4(normalize(gradient), 0))).xyz;
+            normal = normalize((B_Normal * vec4(normalize(gradient), 0))).xyz;
 
             albedoColor = B_MaterialAlbedoColor;
             break;

@@ -282,7 +282,16 @@ Matrix4 GLUniforms::GetProjectionMatrix(GL::ViewProjMode viewProjMode)
 
 Matrix4 GLUniforms::CalculateNormalMatrix(const Matrix4 &modelMatrix)
 {
-    return modelMatrix.Inversed().Transposed();
+    Matrix4 modelMatrixWithoutTranslation = modelMatrix;
+    modelMatrixWithoutTranslation.SetTranslation(Vector3::Zero());
+
+    Vector3 scale = modelMatrix.GetScale();
+    if (scale.x == scale.y && scale.y == scale.z)
+    {
+        return modelMatrixWithoutTranslation;
+    }
+
+    return modelMatrixWithoutTranslation.Inversed().Transposed();
 }
 
 GL::ViewProjMode GLUniforms::GetViewProjMode() const

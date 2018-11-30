@@ -99,14 +99,6 @@ if (${BUILD_SHARED_LIBS})
     add_bang_compilation_flags(BangMathLib)
     remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_MATH_LIB_SOURCES}")
 
-    # System lib
-    set(BANG_SYSTEM_LIB_SOURCES "")
-    file(GLOB_RECURSE BANG_SYSTEM_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/System/*.cpp")
-    add_library(BangSystemLib ${BANG_SYSTEM_LIB_SOURCES})
-    target_include_directories(BangSystemLib PUBLIC ${DEPENDENCIES_INCLUDE_DIRS} ${BANG_ENGINE_INCLUDE_DIR})
-    add_bang_compilation_flags(BangSystemLib)
-    remove_from_list_another_list(ENGINE_SRC_FILES "${BANG_SYSTEM_LIB_SOURCES}")
-
     # Components lib
     set(BANG_COMPONENTS_LIB_SOURCES "")
     file(GLOB_RECURSE BANG_COMPONENTS_LIB_SOURCES "${BANG_ENGINE_SRC_DIR}/Components/*.cpp"
@@ -140,7 +132,6 @@ target_link_libraries(BangLib PUBLIC ${DEPENDENCIES_LIBS})
 if (${BUILD_SHARED_LIBS})
     target_link_libraries(BangLib PUBLIC BangComponentsLib)
     target_link_libraries(BangLib PUBLIC BangGraphicsLib)
-    target_link_libraries(BangLib PUBLIC BangSystemLib)
     target_link_libraries(BangLib PUBLIC BangMathLib)
 endif()
 

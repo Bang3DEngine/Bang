@@ -1,7 +1,9 @@
 #include "Bang/VolumeRenderer.h"
 
+#include "Bang/Extensions.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/Material.h"
@@ -13,6 +15,7 @@
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture2D.h"
 #include "Bang/Texture3D.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/VAO.h"
@@ -30,7 +33,7 @@ VolumeRenderer::VolumeRenderer()
 
     m_volumeRenderingMaterial = Resources::Create<Material>();
     m_volumeRenderingMaterial.Get()->GetNeededUniforms().SetOn(
-        NeededUniformFlag::ALL);
+                                    NeededUniformFlag::ALL);
     GetVolumeRenderMaterial()->SetShaderProgram(p_cubeShaderProgram.Get());
 
     m_cubeBackFacesGBuffer = new GBuffer(1, 1);
@@ -105,53 +108,62 @@ void VolumeRenderer::OnRender()
     if (ShaderProgram *sp = GetVolumeRenderMaterial()->GetShaderProgram())
     {
         GetActiveMaterial()->BindMaterialUniforms(sp);
+
+        // First pass for cube back faces
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+        {
+            m_cubeBackFacesGBuffer->Bind();
+            m_cubeBackFacesGBuffer->Resize(GL::GetViewportSize());
+            m_cubeBackFacesGBuffer->SetAllDrawBuffers();
+            GL::ClearDepthBuffer();
+            sp->SetBool("B_RenderingCubeBackFaces", true);
+            sp->SetTexture2D("B_CubeBackFacesColor",
+                             TextureFactory::GetWhiteTexture());
+            sp->SetTexture3D("B_Texture3D",
+                             TextureFactory::GetWhiteTexture3D());
 
-        m_cubeBackFacesGBuffer->Bind();
-        m_cubeBackFacesGBuffer->Resize(GL::GetViewportSize());
-        m_cubeBackFacesGBuffer->SetAllDrawBuffers();
-        GL::ClearDepthBuffer();
-        sp->SetBool("B_RenderingCubeBackFaces", true);
-        sp->SetTexture2D("B_CubeBackFacesColor",
-                         TextureFactory::GetWhiteTexture());
-        sp->SetTexture3D("B_Texture3D", TextureFactory::GetWhiteTexture3D());
+            sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
+                             TextureFactory::GetBRDFLUTTexture());
+            sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
+                                  TextureFactory::GetWhiteTextureCubeMap());
+            sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
+                                  TextureFactory::GetWhiteTextureCubeMap());
 
-        sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
-                         TextureFactory::GetBRDFLUTTexture());
-        sp->SetTextureCubeMap("B_ReflectionProbeDiffuse",
-                              TextureFactory::GetWhiteTextureCubeMap());
-        sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
-                              TextureFactory::GetWhiteTextureCubeMap());
 
-        GL::SetCullFace(GL::Face::FRONT);
-        GL::Render(GetCubeMesh()->GetVAO(),
-                   GL::Primitive::TRIANGLES,
-                   GetCubeMesh()->GetNumVerticesIds(),
-                   0);
-
+            GL::SetCullFace(GL::Face::FRONT);
+            GL::Render(GetCubeMesh()->GetVAO(),
+                       GL::Primitive::TRIANGLES,
+                       GetCubeMesh()->GetNumVerticesIds(),
+                       0);
+        }
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
+        // Second pass
         GL::Push(GL::Pushable::DEPTH_STATES);
-        sp->SetFloat("B_DensityThreshold", GetDensityThreshold());
-        sp->SetVector3(
-            "B_Texture3DSize",
-            Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSize()
-                                       : Vector3i::One()));
-        sp->SetVector3(
-            "B_Texture3DPOTSize",
-            Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSizePOT()
-                                       : Vector3i::One()));
-        sp->SetTexture2D(
-            "B_CubeBackFacesColor",
-            m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
-        sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
-        sp->SetInt("B_NumSamples", GetNumSamples());
-        sp->SetBool("B_RenderingCubeBackFaces", false);
-        GL::SetCullFace(GL::Face::BACK);
-        GL::Render(GetCubeMesh()->GetVAO(),
-                   GL::Primitive::TRIANGLES,
-                   GetCubeMesh()->GetNumVerticesIds(),
-                   0);
+        {
+            sp->SetFloat("B_DensityThreshold", GetDensityThreshold());
+            sp->SetVector3(
+                "B_Texture3DSize",
+                Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSize()
+                                           : Vector3i::One()));
+            sp->SetVector3(
+                "B_Texture3DPOTSize",
+                Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSizePOT()
+                                           : Vector3i::One()));
+
+            sp->SetTexture2D(
+                "B_CubeBackFacesColor",
+                m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
+
+            sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
+            sp->SetInt("B_NumSamples", GetNumSamples());
+            sp->SetBool("B_RenderingCubeBackFaces", false);
+            GL::SetCullFace(GL::Face::BACK);
+            GL::Render(GetCubeMesh()->GetVAO(),
+                       GL::Primitive::TRIANGLES,
+                       GetCubeMesh()->GetNumVerticesIds(),
+                       0);
+        }
         GL::Pop(GL::Pushable::DEPTH_STATES);
     }
 }

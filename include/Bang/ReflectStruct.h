@@ -12,10 +12,10 @@ namespace Bang
 class ReflectStruct
 {
 public:
-    ReflectStruct() = default;
-    ~ReflectStruct() = default;
+    ReflectStruct();
+    virtual ~ReflectStruct();
 
-    void AddVariable(const ReflectVariable &prop);
+    void AddVariable(const ReflectVariable &reflVar);
     void AddEnumField(const String &enumName, const String &enumFieldName);
     void AddEnumFieldValue(const String &enumName,
                            const String &enumFieldName,
@@ -24,6 +24,7 @@ public:
     void AddEnumFieldValue(const String &enumName,
                            const String &enumFieldName,
                            T enumFieldValue);
+    void Clear();
 
     MetaNode GetMeta() const;
     const String &GetStructName() const;
@@ -32,6 +33,8 @@ public:
     ReflectVariable *GetReflectVariablePtr(const String &varName);
     const ReflectVariable *GetReflectVariablePtr(const String &varName) const;
     const Map<String, uint> &GetEnumFields(const String &enumName) const;
+
+    bool EqualsWithoutValue(const ReflectStruct &rhs) const;
     bool operator==(const ReflectStruct &rhs) const;
     bool operator!=(const ReflectStruct &rhs) const;
 

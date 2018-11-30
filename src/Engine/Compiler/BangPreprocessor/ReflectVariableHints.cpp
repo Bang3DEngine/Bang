@@ -10,7 +10,7 @@ const String ReflectVariableHints::KeyStepValue = "StepValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
-const String ReflectVariableHints::KeyIsHidden = "IsHidden";
+const String ReflectVariableHints::KeyIsShown = "IsShown";
 const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
@@ -90,9 +90,9 @@ void ReflectVariableHints::Update(const String &hintsString)
             {
                 m_zoomablePreview = IsTrue(valueStr);
             }
-            else if (keyStr == ReflectVariableHints::KeyIsHidden)
+            else if (keyStr == ReflectVariableHints::KeyIsShown)
             {
-                m_isHidden = IsTrue(valueStr);
+                m_isShown = IsTrue(valueStr);
             }
         }
     }
@@ -128,12 +128,28 @@ bool ReflectVariableHints::GetIsSlider() const
     return m_isSlider;
 }
 
-bool ReflectVariableHints::GetIsHidden() const
+bool ReflectVariableHints::GetIsShown() const
 {
-    return m_isHidden;
+    return m_isShown;
 }
 
 bool ReflectVariableHints::GetIsEnum() const
 {
     return m_isEnum;
+}
+
+bool ReflectVariableHints::operator==(const ReflectVariableHints &rhs) const
+{
+    return GetZoomablePreview() == rhs.GetZoomablePreview() &&
+           GetStepValue() == rhs.GetStepValue() &&
+           GetMinValue() == rhs.GetMinValue() &&
+           GetMaxValue() == rhs.GetMaxValue() &&
+           GetExtensions() == rhs.GetExtensions() &&
+           GetIsSlider() == rhs.GetIsSlider() &&
+           GetIsShown() == rhs.GetIsShown() && GetIsEnum() == rhs.GetIsEnum();
+}
+
+bool ReflectVariableHints::operator!=(const ReflectVariableHints &rhs) const
+{
+    return !(*this == rhs);
 }

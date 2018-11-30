@@ -363,7 +363,7 @@ void Cloth::Reflect()
     // GetReflectStructPtr()
     //     ->GetReflectVariablePtr("Material")
     //     ->GetHintsPtr()
-    //     ->Update(BANG_REFLECT_HINT_HIDDEN(true));
+    //     ->Update(BANG_REFLECT_HINT_SHOWN(false));
 
     ReflectVar<bool>(
         "Wireframe",

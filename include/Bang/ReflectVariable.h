@@ -66,6 +66,7 @@ public:
     const String &GetInitValueString() const;
     const ReflectVariableHints &GetHints() const;
 
+    bool EqualsWithoutValue(const ReflectVariable &rhs) const;
     bool operator==(const ReflectVariable &rhs) const;
     bool operator!=(const ReflectVariable &rhs) const;
 

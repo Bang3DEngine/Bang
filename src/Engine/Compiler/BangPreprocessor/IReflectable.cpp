@@ -7,8 +7,9 @@ using namespace Bang;
 
 const ReflectStruct &IReflectable::GetReflectStruct() const
 {
-    if (!m_alreadyReflected)
+    // if (!m_alreadyReflected)
     {
+        m_reflectStruct.Clear();
         const_cast<IReflectable *>(this)->Reflect();
         m_alreadyReflected = true;
     }

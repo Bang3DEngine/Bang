@@ -17,7 +17,7 @@ public:
     static const String KeyExtension;
     static const String KeyZoomablePreview;
     static const String KeyIsSlider;
-    static const String KeyIsHidden;
+    static const String KeyIsShown;
     static const String KeyIsEnum;
 
     ReflectVariableHints(const String &hintsString = "");
@@ -31,8 +31,11 @@ public:
     const Vector4 &GetMaxValue() const;
     float GetStepValue() const;
     bool GetIsSlider() const;
-    bool GetIsHidden() const;
+    bool GetIsShown() const;
     bool GetIsEnum() const;
+
+    bool operator==(const ReflectVariableHints &rhs) const;
+    bool operator!=(const ReflectVariableHints &rhs) const;
 
 private:
     bool m_zoomablePreview = false;
@@ -41,7 +44,7 @@ private:
     Vector4 m_maxValue = Vector4::Infinity();
     Array<String> m_extensions;
     bool m_isSlider = false;
-    bool m_isHidden = false;
+    bool m_isShown = true;
     bool m_isEnum = false;
 };
 }

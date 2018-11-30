@@ -25,11 +25,13 @@ using namespace Bang;
 VolumeRenderer::VolumeRenderer()
 {
     p_cubeMesh = MeshFactory::GetCube();
+
     p_forwardShaderProgram.Set(ShaderProgramFactory::Get(
         Paths::GetEngineAssetsDir().Append("Shaders").Append(
             "VolumeRendererForward.vert"),
         Paths::GetEngineAssetsDir().Append("Shaders").Append(
             "VolumeRendererForward.frag")));
+
     p_deferredShaderProgram.Set(ShaderProgramFactory::Get(
         Paths::GetEngineAssetsDir().Append("Shaders").Append(
             "VolumeRendererDeferred.vert"),
@@ -40,6 +42,8 @@ VolumeRenderer::VolumeRenderer()
     m_volumeRenderingMaterial.Get()->GetNeededUniforms().SetOn(
         NeededUniformFlag::ALL);
     GetVolumeRenderMaterial()->SetShaderProgram(p_deferredShaderProgram.Get());
+
+    m_volumePropertiesMaterial = MaterialFactory::GetDefault();
 
     m_cubeBackFacesGBuffer = new GBuffer(1, 1);
 }
@@ -97,18 +101,9 @@ void VolumeRenderer::SetRenderCubeMax(const Vector3 &renderCubeMax)
 
 void VolumeRenderer::SetUseTransferFunction(bool useTransferFunction)
 {
-    m_useTransferFunction = useTransferFunction;
-    if (GetUseTransferFunction())
+    if (useTransferFunction != GetUseTransferFunction())
     {
-        GetMaterial()->SetRenderPass(RenderPass::SCENE_TRANSPARENT);
-        m_volumeRenderingMaterial.Get()->SetShaderProgram(
-            p_forwardShaderProgram.Get());
-    }
-    else
-    {
-        GetMaterial()->SetRenderPass(RenderPass::SCENE);
-        m_volumeRenderingMaterial.Get()->SetShaderProgram(
-            p_deferredShaderProgram.Get());
+        m_useTransferFunction = useTransferFunction;
     }
 }
 
@@ -131,6 +126,12 @@ void VolumeRenderer::SetTransferFunctionTexture(
     Texture2D *transferFunctionTexture)
 {
     p_transferFunctionTexture.Set(transferFunctionTexture);
+}
+
+void VolumeRenderer::SetVolumePropertiesMaterial(
+    Material *volumePropertiesMaterial)
+{
+    m_volumePropertiesMaterial.Set(volumePropertiesMaterial);
 }
 
 const Path &VolumeRenderer::GetModelPath() const
@@ -187,6 +188,29 @@ bool VolumeRenderer::GetInvertNormals() const
     return m_invertNormals;
 }
 
+Material *VolumeRenderer::GetVolumePropertiesMaterial() const
+{
+    return m_volumePropertiesMaterial.Get();
+}
+
+void VolumeRenderer::OnBeforeRender()
+{
+    Renderer::OnBeforeRender();
+
+    if (GetUseTransferFunction())
+    {
+        GetMaterial()->SetRenderPass(RenderPass::SCENE_TRANSPARENT);
+        m_volumeRenderingMaterial.Get()->SetShaderProgram(
+            p_forwardShaderProgram.Get());
+    }
+    else
+    {
+        GetMaterial()->SetRenderPass(RenderPass::SCENE);
+        m_volumeRenderingMaterial.Get()->SetShaderProgram(
+            p_deferredShaderProgram.Get());
+    }
+}
+
 void VolumeRenderer::OnRender()
 {
     Renderer::OnRender();
@@ -194,7 +218,21 @@ void VolumeRenderer::OnRender()
     GetVolumeRenderMaterial()->Bind();
     if (ShaderProgram *sp = GetVolumeRenderMaterial()->GetShaderProgram())
     {
-        GetActiveMaterial()->BindMaterialUniforms(sp);
+        if (GetVolumePropertiesMaterial())
+        {
+            GetVolumePropertiesMaterial()->BindMaterialUniforms(sp);
+        }
+
+        sp->SetTexture2D("B_TransferFunctionTexture",
+                         GetTransferFunctionTexture()
+                             ? GetTransferFunctionTexture()
+                             : TextureFactory::GetWhiteTexture());
+
+        sp->SetTexture2D(
+            "B_CubeBackFacesColor",
+            m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
+
+        sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
 
         // First pass for cube back faces
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -204,10 +242,6 @@ void VolumeRenderer::OnRender()
             m_cubeBackFacesGBuffer->SetAllDrawBuffers();
             GL::ClearDepthBuffer();
             sp->SetBool("B_RenderingCubeBackFaces", true);
-            sp->SetTexture2D("B_CubeBackFacesColor",
-                             TextureFactory::GetWhiteTexture());
-            sp->SetTexture3D("B_Texture3D",
-                             TextureFactory::GetWhiteTexture3D());
 
             sp->SetTexture2D(GLUniforms::UniformName_BRDF_LUT,
                              TextureFactory::GetBRDFLUTTexture());
@@ -238,28 +272,13 @@ void VolumeRenderer::OnRender()
                 Vector3(GetVolumeTexture() ? GetVolumeTexture()->GetSizePOT()
                                            : Vector3i::One()));
 
-            sp->SetTexture2D("B_TransferFunctionTexture",
-                             GetTransferFunctionTexture()
-                                 ? GetTransferFunctionTexture()
-                                 : TextureFactory::GetWhiteTexture());
-
             sp->SetBool("B_InvertNormals", GetInvertNormals());
-
-            sp->SetTexture2D(
-                "B_CubeBackFacesColor",
-                m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
 
             sp->SetFloat("B_AlphaMultiply", GetAlphaMultiply());
             sp->SetVector3("B_RenderCubeMin", GetRenderCubeMin());
             sp->SetVector3("B_RenderCubeMax", GetRenderCubeMax());
-            sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
             sp->SetInt("B_NumSamples", GetNumSamples());
             sp->SetBool("B_RenderingCubeBackFaces", false);
-
-            if (GetUseTransferFunction())
-            {
-                GEngine::GetInstance()->PrepareForForwardRendering(this);
-            }
 
             GL::SetCullFace(GL::Face::BACK);
             GL::Render(GetCubeMesh()->GetVAO(),
@@ -274,6 +293,19 @@ void VolumeRenderer::OnRender()
 void VolumeRenderer::Reflect()
 {
     Renderer::Reflect();
+
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("Material")
+        ->GetHintsPtr()
+        ->Update(BANG_REFLECT_HINT_SHOWN(false));
+
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        VolumeRenderer,
+        "Volume Material",
+        SetVolumePropertiesMaterial,
+        GetVolumePropertiesMaterial,
+        Material,
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetMaterialExtension()));
 
     ReflectVarMember<VolumeRenderer, float>(
         "Density threshold",
@@ -307,6 +339,7 @@ void VolumeRenderer::Reflect()
         this,
         BANG_REFLECT_HINT_MINMAX_VALUE(0.01f, 0.99f) +
             BANG_REFLECT_HINT_STEP_VALUE(0.01f));
+
     ReflectVarMember<VolumeRenderer, Vector3>(
         "Render Cube Max",
         &VolumeRenderer::SetRenderCubeMax,
@@ -321,14 +354,16 @@ void VolumeRenderer::Reflect()
         SetTransferFunctionTexture,
         GetTransferFunctionTexture,
         Texture2D,
-        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetImageExtensions()));
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetImageExtensions()) +
+            BANG_REFLECT_HINT_SHOWN(GetUseTransferFunction()));
 
     ReflectVarMember<VolumeRenderer, float>(
         "Alpha Multiply",
         &VolumeRenderer::SetAlphaMultiply,
         &VolumeRenderer::GetAlphaMultiply,
         this,
-        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.1f));
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.1f) +
+            BANG_REFLECT_HINT_SHOWN(GetUseTransferFunction()));
 
     ReflectVarMember<VolumeRenderer, uint>("Num Samples",
                                            &VolumeRenderer::SetNumSamples,

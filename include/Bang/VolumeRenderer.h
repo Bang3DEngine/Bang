@@ -32,6 +32,7 @@ protected:
     void SetInvertNormals(bool invertNormals);
     void SetAlphaMultiply(float alphaMultiply);
     void SetTransferFunctionTexture(Texture2D *transferFunctionTexture);
+    void SetVolumePropertiesMaterial(Material *volumePropertiesMaterial);
 
     const Path &GetModelPath() const;
     float GetDensityThreshold() const;
@@ -44,6 +45,10 @@ protected:
     bool GetUseTransferFunction() const;
     float GetSurfaceThickness() const;
     bool GetInvertNormals() const;
+    Material *GetVolumePropertiesMaterial() const;
+
+    // Component
+    void OnBeforeRender() override;
 
     // Renderer
     virtual void OnRender() override;
@@ -58,6 +63,7 @@ private:
     RH<ShaderProgram> p_forwardShaderProgram;
     RH<ShaderProgram> p_deferredShaderProgram;
     RH<Material> m_volumeRenderingMaterial;
+    RH<Material> m_volumePropertiesMaterial;
 
     float m_alphaMultiply = 1.0f;
     bool m_useTransferFunction = false;

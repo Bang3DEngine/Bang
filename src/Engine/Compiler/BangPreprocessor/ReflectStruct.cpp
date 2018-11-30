@@ -14,16 +14,12 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-bool ReflectStruct::operator==(const ReflectStruct &rhs) const
+ReflectStruct::ReflectStruct()
 {
-    return GetStructName() == rhs.GetStructName() &&
-           GetStructVariableName() == rhs.GetStructVariableName() &&
-           GetVariables() == rhs.GetVariables();
 }
 
-bool ReflectStruct::operator!=(const ReflectStruct &rhs) const
+ReflectStruct::~ReflectStruct()
 {
-    return !(*this == rhs);
 }
 
 void ReflectStruct::FromString(String::Iterator structBegin,
@@ -115,9 +111,9 @@ void ReflectStruct::SetStructVariableName(const String &structVarName)
     m_structVariableName = structVarName;
 }
 
-void ReflectStruct::AddVariable(const ReflectVariable &prop)
+void ReflectStruct::AddVariable(const ReflectVariable &reflVar)
 {
-    m_variables.PushBack(prop);
+    m_variables.PushBack(reflVar);
 }
 
 void ReflectStruct::AddEnumField(const String &enumName,
@@ -137,6 +133,15 @@ void ReflectStruct::AddEnumFieldValue(const String &enumName,
 {
     m_enumFieldValues[enumName][enumFieldName] = enumFieldValue;
     m_lastAddedEnumFieldValues[enumName] = enumFieldValue;
+}
+
+void ReflectStruct::Clear()
+{
+    m_structName = "";
+    m_structVariableName = "";
+    m_variables.Clear();
+    m_enumFieldValues.Clear();
+    m_lastAddedEnumFieldValues.Clear();
 }
 
 MetaNode ReflectStruct::GetMeta() const
@@ -230,4 +235,35 @@ const Map<String, uint> &ReflectStruct::GetEnumFields(
     const String &enumName) const
 {
     return m_enumFieldValues[enumName];
+}
+
+bool ReflectStruct::EqualsWithoutValue(const ReflectStruct &rhs) const
+{
+    if (GetVariables().Size() != rhs.GetVariables().Size())
+    {
+        return false;
+    }
+
+    for (uint i = 0; i < rhs.GetVariables().Size(); ++i)
+    {
+        if (!GetVariables()[i].EqualsWithoutValue(rhs.GetVariables()[i]))
+        {
+            return false;
+        }
+    }
+
+    return GetStructName() == rhs.GetStructName() &&
+           GetStructVariableName() == rhs.GetStructVariableName();
+}
+
+bool ReflectStruct::operator==(const ReflectStruct &rhs) const
+{
+    return GetStructName() == rhs.GetStructName() &&
+           GetStructVariableName() == rhs.GetStructVariableName() &&
+           GetVariables() == rhs.GetVariables();
+}
+
+bool ReflectStruct::operator!=(const ReflectStruct &rhs) const
+{
+    return !(*this == rhs);
 }

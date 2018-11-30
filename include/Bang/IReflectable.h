@@ -24,30 +24,30 @@ protected:
     virtual ~IReflectable() = default;
 
     template <class T>
-    void ReflectVar(const String &varName,
-                    std::function<void(T)> setter,
-                    std::function<T()> getter,
-                    const String &hintsString = "");
+    ReflectVariable *ReflectVar(const String &varName,
+                                std::function<void(T)> setter,
+                                std::function<T()> getter,
+                                const String &hintsString = "");
 
     template <class TClass, class T, class TToCastTo = T>
-    void ReflectVarMember(const String &varName,
-                          void (TClass::*setter)(T),
-                          T (TClass::*getter)() const,
-                          TClass *instance,
-                          const String &hintsString = "");
+    ReflectVariable *ReflectVarMember(const String &varName,
+                                      void (TClass::*setter)(T),
+                                      T (TClass::*getter)() const,
+                                      TClass *instance,
+                                      const String &hintsString = "");
     template <class TClass, class T, class TToCastTo = T>
-    void ReflectVarMember(const String &varName,
-                          void (TClass::*setter)(const T &),
-                          const T &(TClass::*getter)() const,
-                          TClass *instance,
-                          const String &hintsString = "");
+    ReflectVariable *ReflectVarMember(const String &varName,
+                                      void (TClass::*setter)(const T &),
+                                      const T &(TClass::*getter)() const,
+                                      TClass *instance,
+                                      const String &hintsString = "");
 
     template <class TClass, class T>
-    void ReflectVarMemberEnum(const String &varName,
-                              void (TClass::*setter)(T),
-                              T (TClass::*getter)() const,
-                              TClass *instance,
-                              const String &hintsString = "");
+    ReflectVariable *ReflectVarMemberEnum(const String &varName,
+                                          void (TClass::*setter)(T),
+                                          T (TClass::*getter)() const,
+                                          TClass *instance,
+                                          const String &hintsString = "");
 
     virtual void Reflect();
     ReflectStruct *GetReflectStructPtr() const;
@@ -60,10 +60,10 @@ private:
 };
 
 template <class T>
-void IReflectable::ReflectVar(const String &varName,
-                              std::function<void(T)> setter,
-                              std::function<T()> getter,
-                              const String &hintsString)
+ReflectVariable *IReflectable::ReflectVar(const String &varName,
+                                          std::function<void(T)> setter,
+                                          std::function<T()> getter,
+                                          const String &hintsString)
 {
     ASSERT(setter);
     ASSERT(getter);
@@ -78,16 +78,19 @@ void IReflectable::ReflectVar(const String &varName,
     reflVar.SetHints(hints);
 
     GetReflectStructPtr()->AddVariable(reflVar);
+
+    return GetReflectStructPtr()->GetReflectVariablePtr(varName);
 }
 
 template <class TClass, class T, class TToCastTo>
-void IReflectable::ReflectVarMember(const String &varName,
-                                    void (TClass::*setter)(const T &),
-                                    const T &(TClass::*getter)() const,
-                                    TClass *instance,
-                                    const String &hintsString)
+ReflectVariable *IReflectable::ReflectVarMember(
+    const String &varName,
+    void (TClass::*setter)(const T &),
+    const T &(TClass::*getter)() const,
+    TClass *instance,
+    const String &hintsString)
 {
-    ReflectVar<TToCastTo>(
+    return ReflectVar<TToCastTo>(
         varName,
         [instance, setter](TToCastTo v) { (instance->*setter)(SCAST<T>(v)); },
         [instance, getter]() -> TToCastTo {
@@ -96,13 +99,13 @@ void IReflectable::ReflectVarMember(const String &varName,
         hintsString);
 }
 template <class TClass, class T, class TToCastTo>
-void IReflectable::ReflectVarMember(const String &varName,
-                                    void (TClass::*setter)(T),
-                                    T (TClass::*getter)() const,
-                                    TClass *instance,
-                                    const String &hintsString)
+ReflectVariable *IReflectable::ReflectVarMember(const String &varName,
+                                                void (TClass::*setter)(T),
+                                                T (TClass::*getter)() const,
+                                                TClass *instance,
+                                                const String &hintsString)
 {
-    ReflectVar<TToCastTo>(
+    return ReflectVar<TToCastTo>(
         varName,
         [instance, setter](TToCastTo v) { (instance->*setter)(SCAST<T>(v)); },
         [instance, getter]() -> TToCastTo {
@@ -111,13 +114,13 @@ void IReflectable::ReflectVarMember(const String &varName,
         hintsString);
 }
 template <class TClass, class T>
-void IReflectable::ReflectVarMemberEnum(const String &varName,
-                                        void (TClass::*setter)(T),
-                                        T (TClass::*getter)() const,
-                                        TClass *instance,
-                                        const String &hintsString)
+ReflectVariable *IReflectable::ReflectVarMemberEnum(const String &varName,
+                                                    void (TClass::*setter)(T),
+                                                    T (TClass::*getter)() const,
+                                                    TClass *instance,
+                                                    const String &hintsString)
 {
-    ReflectVarMember<TClass, T, int>(
+    return ReflectVarMember<TClass, T, int>(
         varName, setter, getter, instance, hintsString);
 }
 }  // namespace Bang

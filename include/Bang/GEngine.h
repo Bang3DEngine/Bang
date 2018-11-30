@@ -64,6 +64,7 @@ public:
                             const AARect &destRectMask = AARect::NDCRect());
     void RenderToGBuffer(GameObject *go, Camera *camera);
     void RenderViewportPlane();
+    void PrepareForForwardRendering(Renderer *rend);
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
 
@@ -146,7 +147,6 @@ private:
         const AARect &maskRectNDC = AARect::NDCRect());
 
     void RetrieveForwardRenderingInformation(GameObject *goToRender);
-    void PrepareForForwardRendering(Renderer *rend);
 
     friend class Gizmos;
     friend class Window;

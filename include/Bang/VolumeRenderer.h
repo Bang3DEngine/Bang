@@ -10,6 +10,7 @@ class GBuffer;
 class Framebuffer;
 class Mesh;
 class Material;
+class Texture2D;
 class Texture3D;
 class ShaderProgram;
 class VolumeRenderer : public Renderer
@@ -26,13 +27,23 @@ protected:
     void SetNumSamples(uint numSamples);
     void SetRenderCubeMin(const Vector3 &renderCubeMin);
     void SetRenderCubeMax(const Vector3 &renderCubeMax);
+    void SetUseTransferFunction(bool useTransferFunction);
+    void SetSurfaceThickness(float surfaceThickness);
+    void SetInvertNormals(bool invertNormals);
+    void SetAlphaMultiply(float alphaMultiply);
+    void SetTransferFunctionTexture(Texture2D *transferFunctionTexture);
 
     const Path &GetModelPath() const;
     float GetDensityThreshold() const;
     uint GetNumSamples() const;
+    float GetAlphaMultiply() const;
+    Texture2D *GetTransferFunctionTexture() const;
     Texture3D *GetVolumeTexture() const;
     const Vector3 &GetRenderCubeMin() const;
     const Vector3 &GetRenderCubeMax() const;
+    bool GetUseTransferFunction() const;
+    float GetSurfaceThickness() const;
+    bool GetInvertNormals() const;
 
     // Renderer
     virtual void OnRender() override;
@@ -42,15 +53,21 @@ protected:
 
 private:
     RH<Mesh> p_cubeMesh;
+    RH<Texture2D> p_transferFunctionTexture;
     RH<Texture3D> p_volumeTexture;
-    RH<ShaderProgram> p_cubeShaderProgram;
+    RH<ShaderProgram> p_forwardShaderProgram;
+    RH<ShaderProgram> p_deferredShaderProgram;
     RH<Material> m_volumeRenderingMaterial;
 
+    float m_alphaMultiply = 1.0f;
+    bool m_useTransferFunction = false;
     Vector3 m_renderCubeMin = Vector3::Zero();
     Vector3 m_renderCubeMax = Vector3::One();
     Path m_modelPath = Path::Empty();
     uint m_numSamples = 50;
     float m_densityThreshold = 0.5f;
+    float m_surfaceThickness = 0.01f;
+    bool m_invertNormals = false;
 
     GBuffer *m_cubeBackFacesGBuffer = nullptr;
 

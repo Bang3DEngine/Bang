@@ -194,15 +194,23 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
 
         fclose(fp);
 
-        Array<uint8_t> data(totalSize);
-        for (uint z = 0; z < depth; ++z)
+        int downsample = 4;
+        const uint widthDS = width / downsample;
+        const uint heightDS = height / downsample;
+        const uint depthDS = depth / downsample;
+        uint totalSizeDownsampled = (widthDS * heightDS * depthDS);
+        Array<uint8_t> dataDS(totalSizeDownsampled);
+        for (uint z = 0; z < depthDS; ++z)
         {
-            for (uint y = 0; y < height; ++y)
+            for (uint y = 0; y < heightDS; ++y)
             {
-                for (uint x = 0; x < width; ++x)
+                for (uint x = 0; x < widthDS; ++x)
                 {
-                    const uint idx = (z * width * height + y * width + x);
-                    data[idx] =
+                    const uint idx = (z * downsample * width * height +
+                                      y * downsample * width + x * downsample);
+                    const uint idxDS =
+                        (z * widthDS * heightDS + y * widthDS + x);
+                    dataDS[idxDS] =
                         SCAST<uint8_t>(255 * (float(dataPtr[idx]) / 4095.0f));
                 }
             }
@@ -210,8 +218,8 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
 
         delete[] dataPtr;
 
-        Fill(data.Data(),
-             Vector3i(width, height, depth),
+        Fill(dataDS.Data(),
+             Vector3i(widthDS, heightDS, depthDS),
              GL::ColorComp::RED,
              GL::DataType::UNSIGNED_BYTE,
              255);

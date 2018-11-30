@@ -33,7 +33,7 @@ VolumeRenderer::VolumeRenderer()
 
     m_volumeRenderingMaterial = Resources::Create<Material>();
     m_volumeRenderingMaterial.Get()->GetNeededUniforms().SetOn(
-                                    NeededUniformFlag::ALL);
+        NeededUniformFlag::ALL);
     GetVolumeRenderMaterial()->SetShaderProgram(p_cubeShaderProgram.Get());
 
     m_cubeBackFacesGBuffer = new GBuffer(1, 1);
@@ -80,6 +80,16 @@ void VolumeRenderer::SetNumSamples(uint numSamples)
     m_numSamples = numSamples;
 }
 
+void VolumeRenderer::SetRenderCubeMin(const Vector3 &renderCubeMin)
+{
+    m_renderCubeMin = renderCubeMin;
+}
+
+void VolumeRenderer::SetRenderCubeMax(const Vector3 &renderCubeMax)
+{
+    m_renderCubeMax = renderCubeMax;
+}
+
 const Path &VolumeRenderer::GetModelPath() const
 {
     return m_modelPath;
@@ -98,6 +108,15 @@ uint VolumeRenderer::GetNumSamples() const
 Texture3D *VolumeRenderer::GetVolumeTexture() const
 {
     return p_volumeTexture.Get();
+}
+
+const Vector3 &VolumeRenderer::GetRenderCubeMin() const
+{
+    return m_renderCubeMin;
+}
+const Vector3 &VolumeRenderer::GetRenderCubeMax() const
+{
+    return m_renderCubeMax;
 }
 
 void VolumeRenderer::OnRender()
@@ -129,7 +148,6 @@ void VolumeRenderer::OnRender()
             sp->SetTextureCubeMap("B_ReflectionProbeSpecular",
                                   TextureFactory::GetWhiteTextureCubeMap());
 
-
             GL::SetCullFace(GL::Face::FRONT);
             GL::Render(GetCubeMesh()->GetVAO(),
                        GL::Primitive::TRIANGLES,
@@ -155,6 +173,8 @@ void VolumeRenderer::OnRender()
                 "B_CubeBackFacesColor",
                 m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
 
+            sp->SetVector3("B_RenderCubeMin", GetRenderCubeMin());
+            sp->SetVector3("B_RenderCubeMax", GetRenderCubeMax());
             sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
             sp->SetInt("B_NumSamples", GetNumSamples());
             sp->SetBool("B_RenderingCubeBackFaces", false);
@@ -179,6 +199,21 @@ void VolumeRenderer::Reflect()
         this,
         BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f));
 
+    ReflectVarMember<VolumeRenderer, Vector3>(
+        "Render Cube Min",
+        &VolumeRenderer::SetRenderCubeMin,
+        &VolumeRenderer::GetRenderCubeMin,
+        this,
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.01f, 0.99f) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.01f));
+    ReflectVarMember<VolumeRenderer, Vector3>(
+        "Render Cube Max",
+        &VolumeRenderer::SetRenderCubeMax,
+        &VolumeRenderer::GetRenderCubeMax,
+        this,
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.01f, 0.99f) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.01f));
+
     ReflectVarMember<VolumeRenderer, uint>("Num Samples",
                                            &VolumeRenderer::SetNumSamples,
                                            &VolumeRenderer::GetNumSamples,
@@ -190,7 +225,7 @@ void VolumeRenderer::Reflect()
         &VolumeRenderer::SetModelPath,
         &VolumeRenderer::GetModelPath,
         this,
-        BANG_REFLECT_HINT_EXTENSIONS(Array<String>({"txt"})));
+        BANG_REFLECT_HINT_EXTENSIONS(Array<String>({"txt", "dat"})));
 }
 
 Mesh *VolumeRenderer::GetCubeMesh() const

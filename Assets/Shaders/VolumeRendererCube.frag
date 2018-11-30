@@ -12,6 +12,8 @@ uniform sampler3D B_Texture3D;
 uniform vec3 B_Texture3DSize;
 uniform vec3 B_Texture3DPOTSize;
 uniform int B_NumSamples;
+uniform vec3 B_RenderCubeMin;
+uniform vec3 B_RenderCubeMax;
 
 in vec3 B_FIn_ModelPosition;
 
@@ -54,19 +56,20 @@ void main()
     vec4 albedoColor = vec4(0,0,0,1);
     float numSteps = B_NumSamples;
     float sampleStep = 1.0f / numSteps;
-    float currentSampleDist = 0.001f;
+    float currentSampleDist = 0.0f;
     vec3 voxelSize = (vec3(1.0f) / B_Texture3DPOTSize);
-    vec3 margins = voxelSize * 0.0f;
-    vec3 invMargins = 1.0f - margins;
+    vec3 cubeMin = B_RenderCubeMin * actualSizeRatio;
+    vec3 cubeMax = B_RenderCubeMax * actualSizeRatio;
     for (int i = 0; i < B_NumSamples; ++i)
     {
         vec3 currentSamplePoint = (rayIn + rayDir * currentSampleDist);
+        currentSampleDist += sampleStep;
         {
-            if (currentSamplePoint.x < margins.x || currentSamplePoint.x > invMargins.x ||
-                currentSamplePoint.y < margins.y || currentSamplePoint.y > invMargins.y ||
-                currentSamplePoint.z < margins.z || currentSamplePoint.z > invMargins.z)
+            if (currentSamplePoint.x < cubeMin.x || currentSamplePoint.x > cubeMax.x ||
+                currentSamplePoint.y < cubeMin.y || currentSamplePoint.y > cubeMax.y ||
+                currentSamplePoint.z < cubeMin.z || currentSamplePoint.z > cubeMax.z)
             {
-                discard;
+                continue;
             }
         }
 
@@ -94,7 +97,6 @@ void main()
             albedoColor = B_MaterialAlbedoColor;
             break;
         }
-        currentSampleDist += sampleStep;
     }
 
     if (draw)

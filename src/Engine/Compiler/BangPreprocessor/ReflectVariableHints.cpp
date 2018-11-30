@@ -6,6 +6,7 @@ using namespace Bang;
 
 const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
+const String ReflectVariableHints::KeyStepValue = "StepValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
@@ -62,6 +63,10 @@ void ReflectVariableHints::Update(const String &hintsString)
                     m_maxValue = valueVec;
                 }
             }
+            else if (keyStr == ReflectVariableHints::KeyStepValue)
+            {
+                iss >> m_stepValue;
+            }
             else if (keyStr == ReflectVariableHints::KeyIsSlider)
             {
                 m_isSlider = IsTrue(valueStr);
@@ -111,6 +116,11 @@ const Vector4 &ReflectVariableHints::GetMinValue() const
 const Vector4 &ReflectVariableHints::GetMaxValue() const
 {
     return m_maxValue;
+}
+
+float ReflectVariableHints::GetStepValue() const
+{
+    return m_stepValue;
 }
 
 bool ReflectVariableHints::GetIsSlider() const

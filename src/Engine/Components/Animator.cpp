@@ -73,7 +73,7 @@ void Animator::OnUpdate()
         {
             player->Step(passedTime);
 
-            if (Animation *currentAnim = player->GetCurrentAnimation())
+            if (player->GetCurrentAnimation())
             {
                 const Time currentAnimTime = player->GetCurrentNodeTime();
 

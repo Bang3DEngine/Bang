@@ -40,12 +40,14 @@ public:
     void SetMaxValue(float max);
     void SetMinMaxValues(float min, float max);
     void SetDecimalPlaces(uint decimalPlaces);
+    void SetStep(float step);
 
     float GetValue() const;
     uint GetDecimalPlaces() const;
     UIInputText *GetInputText() const;
     float GetMinValue() const;
     float GetMaxValue() const;
+    float GetStep() const;
     const Vector2 &GetMinMaxValues() const;
 
     bool HasFocus() const;
@@ -56,6 +58,7 @@ public:
 
 private:
     float m_value = 0.0f;
+    float m_step = 1.0f;
     uint m_decimalPlaces = 3;
     UIInputText *p_inputText = nullptr;
     Vector2 m_minMaxValues =

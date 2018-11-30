@@ -201,6 +201,7 @@ void GL::Init()
     SetGLContextValue(&GL::m_backPolygonModes, GL::FILL);
     SetGLContextValue(&GL::m_frontBackPolygonModes, GL::FILL);
     SetGLContextValue(&GL::m_stencilFuncs, GL::Function::ALWAYS);
+    SetGLContextValue(&GL::m_blendColors, Color::Zero());
     SetGLContextValue(&GL::m_blendSrcFactorColors, GL::BlendFactor::ONE);
     SetGLContextValue(&GL::m_blendDstFactorColors, GL::BlendFactor::ZERO);
     SetGLContextValue(&GL::m_blendSrcFactorAlphas, GL::BlendFactor::ONE);
@@ -484,6 +485,16 @@ GLvoid *GL::MapBuffer(GL::BindTarget target, GL::Enum access)
 void GL::UnMapBuffer(GL::BindTarget target)
 {
     GL_CALL(glUnmapBuffer(GLCAST(target)));
+}
+
+void GL::BlendColor(const Color &blendColor)
+{
+    if (blendColor != GL::GetBlendColor())
+    {
+        SetGLContextValue(&GL::m_blendColors, blendColor);
+        GL_CALL(glBlendColor(
+            blendColor.r, blendColor.g, blendColor.b, blendColor.a));
+    }
 }
 
 int GL::GetUniformsListSize(GLId shaderProgramId)
@@ -1581,6 +1592,11 @@ const GL::Attachment &GL::GetReadBuffer()
     return GetGLContextValue(&GL::m_readBuffers);
 }
 
+const Color &GL::GetBlendColor()
+{
+    return GetGLContextValue(&GL::m_blendColors);
+}
+
 GL::BlendFactor GL::GetBlendSrcFactorColor()
 {
     return GetGLContextValue(&GL::m_blendSrcFactorColors);
@@ -2444,12 +2460,14 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
         case GL::Pushable::BLEND_STATES:
             if (!push)
             {
+                ASSERT(gl->m_blendColors.stack.size() >= 1);
                 ASSERT(gl->m_blendSrcFactorColors.stack.size() >= 1);
                 ASSERT(gl->m_blendDstFactorColors.stack.size() >= 1);
                 ASSERT(gl->m_blendSrcFactorAlphas.stack.size() >= 1);
                 ASSERT(gl->m_blendDstFactorAlphas.stack.size() >= 1);
                 ASSERT(gl->m_blendEquationColors.stack.size() >= 1);
                 ASSERT(gl->m_blendEquationAlphas.stack.size() >= 1);
+                GL::BlendColor(gl->m_blendColors.stack.top());
                 GL::BlendFuncSeparate(gl->m_blendSrcFactorColors.stack.top(),
                                       gl->m_blendDstFactorColors.stack.top(),
                                       gl->m_blendSrcFactorAlphas.stack.top(),
@@ -2460,6 +2478,7 @@ void GL::PushOrPop(GL::Pushable pushable, bool push)
             }
 
             PushOrPop(GL::Enablable::BLEND, push);
+            PushOrPop_(&gl->m_blendColors, push);
             PushOrPop_(&gl->m_blendEquationAlphas, push);
             PushOrPop_(&gl->m_blendEquationColors, push);
             PushOrPop_(&gl->m_blendDstFactorAlphas, push);
@@ -2838,6 +2857,7 @@ void GL::PrintGLContext()
     Debug_DPeek(GL::GetStencilFunc());
     Debug_DPeek(SCAST<int>(GL::GetStencilValue()));
     Debug_DPeek(SCAST<int>(GL::GetStencilMask()));
+    Debug_DPeek(GL::GetBlendColor());
     Debug_DPeek(GL::GetBlendDstFactorAlpha());
     Debug_DPeek(GL::GetBlendDstFactorColor());
     Debug_DPeek(GL::GetBlendEquationAlpha());

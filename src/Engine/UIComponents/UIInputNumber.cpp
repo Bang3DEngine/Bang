@@ -21,7 +21,10 @@
 
 using namespace Bang;
 
-UIInputNumber::UIInputNumber(){CONSTRUCT_CLASS_ID(UIInputNumber)}
+UIInputNumber::UIInputNumber()
+{
+    CONSTRUCT_CLASS_ID(UIInputNumber)
+}
 
 UIInputNumber::~UIInputNumber()
 {
@@ -78,6 +81,11 @@ void UIInputNumber::SetDecimalPlaces(uint decimalPlaces)
     GetInputText()->SetAllowedCharacters(allowedChars);
 
     SetValue(GetValue());
+}
+
+void UIInputNumber::SetStep(float step)
+{
+    m_step = step;
 }
 
 float UIInputNumber::GetValue() const
@@ -139,6 +147,11 @@ float UIInputNumber::GetMaxValue() const
     return GetMinMaxValues()[1];
 }
 
+float UIInputNumber::GetStep() const
+{
+    return m_step;
+}
+
 const Vector2 &UIInputNumber::GetMinMaxValues() const
 {
     return m_minMaxValues;
@@ -173,8 +186,8 @@ UIEventResult UIInputNumber::OnUIEvent(UIFocusable *, const UIEvent &event)
                 case Key::UP:
                 case Key::DOWN:
                 {
-                    float increment = (event.key.key == Key::DOWN ? -1 : 1);
-                    SetValue(GetValue() + increment);
+                    float sign = (event.key.key == Key::DOWN ? -1 : 1);
+                    SetValue(GetValue() + sign * GetStep());
                     UpdateTextFromValue();
                     GetInputText()->GetLabel()->SelectAll();
                     return UIEventResult::INTERCEPT;

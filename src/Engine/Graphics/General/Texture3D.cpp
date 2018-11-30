@@ -178,6 +178,44 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
                  255);
         }
     }
+    else if (volumeTextureFilepath.HasExtension("dat"))
+    {
+        FILE *fp = fopen(volumeTextureFilepath.GetAbsolute().ToCString(), "rb");
+
+        unsigned short size[3];
+        fread((void *)size, 3, sizeof(unsigned short), fp);
+        const uint width = size[0];
+        const uint height = size[1];
+        const uint depth = size[2];
+
+        uint totalSize = width * height * depth;
+        unsigned short *dataPtr = new unsigned short[totalSize];
+        fread((void *)dataPtr, totalSize, sizeof(unsigned short), fp);
+
+        fclose(fp);
+
+        Array<uint8_t> data(totalSize);
+        for (uint z = 0; z < depth; ++z)
+        {
+            for (uint y = 0; y < height; ++y)
+            {
+                for (uint x = 0; x < width; ++x)
+                {
+                    const uint idx = (z * width * height + y * width + x);
+                    data[idx] =
+                        SCAST<uint8_t>(255 * (float(dataPtr[idx]) / 4095.0f));
+                }
+            }
+        }
+
+        delete[] dataPtr;
+
+        Fill(data.Data(),
+             Vector3i(width, height, depth),
+             GL::ColorComp::RED,
+             GL::DataType::UNSIGNED_BYTE,
+             255);
+    }
     else if (volumeTextureFilepath.HasExtension("pvm"))
     {
         ImageIODDS::ImportDDS3D(volumeTextureFilepath, this, nullptr);

@@ -13,6 +13,7 @@ class ReflectVariableHints
 public:
     static const String KeyMinValue;
     static const String KeyMaxValue;
+    static const String KeyStepValue;
     static const String KeyExtension;
     static const String KeyZoomablePreview;
     static const String KeyIsSlider;
@@ -28,12 +29,14 @@ public:
     const Array<String> &GetExtensions() const;
     const Vector4 &GetMinValue() const;
     const Vector4 &GetMaxValue() const;
+    float GetStepValue() const;
     bool GetIsSlider() const;
     bool GetIsHidden() const;
     bool GetIsEnum() const;
 
 private:
     bool m_zoomablePreview = false;
+    float m_stepValue = 1.0f;
     Vector4 m_minValue = Vector4::NInfinity();
     Vector4 m_maxValue = Vector4::Infinity();
     Array<String> m_extensions;

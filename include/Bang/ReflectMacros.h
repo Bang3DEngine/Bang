@@ -52,6 +52,9 @@
     BANG_REFLECT_HINT_MIN_VALUE(minValue) +                \
         BANG_REFLECT_HINT_MAX_VALUE(maxValue)
 
+#define BANG_REFLECT_HINT_STEP_VALUE(stepValue) \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyStepValue, stepValue)
+
 #define BANG_REFLECT_HINT_EXTENSIONS(extensions) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyExtension, extensions)
 

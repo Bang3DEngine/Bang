@@ -368,7 +368,16 @@ public:
         SRC_ALPHA = GL_SRC_ALPHA,
         ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
         DST_ALPHA = GL_DST_ALPHA,
-        ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA
+        ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA,
+        CONSTANT_COLOR = GL_CONSTANT_COLOR,
+        ONE_MINUS_CONSTANT_COLOR = GL_ONE_MINUS_CONSTANT_COLOR,
+        CONSTANT_ALPHA = GL_CONSTANT_ALPHA,
+        ONE_MINUS_CONSTANT_ALPHA = GL_ONE_MINUS_CONSTANT_ALPHA,
+        SRC_ALPHA_SATURATE = GL_SRC_ALPHA_SATURATE,
+        SRC1_COLOR = GL_SRC1_COLOR,
+        ONE_MINUS_SRC1_COLOR = GL_ONE_MINUS_SRC1_COLOR,
+        SRC1_ALPHA = GL_SRC1_ALPHA,
+        ONE_MINUS_SRC1_ALPHA = GL_ONE_MINUS_SRC1_ALPHA
     };
 
     enum class BlendEquationE
@@ -479,6 +488,7 @@ public:
     static GLvoid *MapBuffer(GL::BindTarget target, GL::Enum access);
     static void UnMapBuffer(GL::BindTarget target);
 
+    static void BlendColor(const Color &blendColor);
     static void BlendFunc(GL::BlendFactor srcFactor, GL::BlendFactor dstFactor);
     static void BlendFuncSeparate(GL::BlendFactor srcFactorColor,
                                   GL::BlendFactor dstFactorColor,
@@ -796,6 +806,7 @@ public:
     static const Array<GL::Attachment> &GetDrawBuffers();
     static const GL::Attachment &GetReadBuffer();
 
+    static const Color &GetBlendColor();
     static GL::BlendFactor GetBlendSrcFactorColor();
     static GL::BlendFactor GetBlendDstFactorColor();
     static GL::BlendFactor GetBlendSrcFactorAlpha();
@@ -924,6 +935,7 @@ private:
     StackAndValue<GL::BlendFactor> m_blendDstFactorColors;
     StackAndValue<GL::BlendFactor> m_blendSrcFactorAlphas;
     StackAndValue<GL::BlendFactor> m_blendDstFactorAlphas;
+    StackAndValue<Color> m_blendColors;
     StackAndValue<GL::BlendEquationE> m_blendEquationColors;
     StackAndValue<GL::BlendEquationE> m_blendEquationAlphas;
     StackAndValue<GL::StencilOperation> m_stencilOps;

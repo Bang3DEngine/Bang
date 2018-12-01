@@ -197,18 +197,16 @@ void VolumeRenderer::OnBeforeRender()
 {
     Renderer::OnBeforeRender();
 
-    if (GetUseTransferFunction())
+    if (GetActiveMaterial())
     {
-        GetMaterial()->SetRenderPass(RenderPass::SCENE_TRANSPARENT);
-        m_volumeRenderingMaterial.Get()->SetShaderProgram(
-            p_forwardShaderProgram.Get());
+        GetMaterial()->SetRenderPass(GetUseTransferFunction()
+                                         ? RenderPass::SCENE_TRANSPARENT
+                                         : RenderPass::SCENE);
     }
-    else
-    {
-        GetMaterial()->SetRenderPass(RenderPass::SCENE);
-        m_volumeRenderingMaterial.Get()->SetShaderProgram(
-            p_deferredShaderProgram.Get());
-    }
+
+    GetVolumeRenderMaterial()->SetShaderProgram(
+        GetUseTransferFunction() ? p_forwardShaderProgram.Get()
+                                 : p_deferredShaderProgram.Get());
 }
 
 void VolumeRenderer::OnRender()
@@ -298,6 +296,18 @@ void VolumeRenderer::Reflect()
         ->GetReflectVariablePtr("Material")
         ->GetHintsPtr()
         ->Update(BANG_REFLECT_HINT_SHOWN(false));
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("Casts Shadows")
+        ->GetHintsPtr()
+        ->Update(BANG_REFLECT_HINT_SHOWN(false));
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("Receives Shadows")
+        ->GetHintsPtr()
+        ->Update(BANG_REFLECT_HINT_SHOWN(false));
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("Depth Mask")
+        ->GetHintsPtr()
+        ->Update(BANG_REFLECT_HINT_SHOWN(false));
 
     BANG_REFLECT_VAR_MEMBER_RESOURCE(
         VolumeRenderer,
@@ -312,14 +322,16 @@ void VolumeRenderer::Reflect()
         &VolumeRenderer::SetDensityThreshold,
         &VolumeRenderer::GetDensityThreshold,
         this,
-        BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f));
+        BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.01f));
 
     ReflectVarMember<VolumeRenderer, float>(
         "Surface Thickness",
         &VolumeRenderer::SetSurfaceThickness,
         &VolumeRenderer::GetSurfaceThickness,
         this,
-        BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f));
+        BANG_REFLECT_HINT_SLIDER(0.01f, 0.99f) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.01f));
 
     ReflectVarMember<VolumeRenderer, bool>("Invert Normals",
                                            &VolumeRenderer::SetInvertNormals,

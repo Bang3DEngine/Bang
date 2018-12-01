@@ -45,7 +45,8 @@ public:
     virtual void OnRender(RenderPass renderPass) override;
 
     void SetVisible(bool visible);
-    void SetMaterial(Material *mat);
+    void SetMaterial(Material *sharedMaterial,
+                     Material *materialCopy = nullptr);
     void SetDepthMask(bool depthMask);
     void SetCastsShadows(bool castsShadows);
     void SetReceivesShadows(bool receivesShadows);
@@ -57,6 +58,7 @@ public:
     bool GetDepthMask() const;
     Material *GetSharedMaterial() const;
     Material *GetActiveMaterial() const;
+    Material *GetCopiedMaterial() const;
     Material *GetMaterial() const;
     bool GetCastsShadows() const;
     bool GetReceivesShadows() const;

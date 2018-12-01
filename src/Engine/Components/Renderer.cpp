@@ -41,11 +41,16 @@ Renderer::~Renderer()
 
 Material *Renderer::GetActiveMaterial() const
 {
-    if (p_material)
+    if (GetCopiedMaterial())
     {
-        return GetMaterial();
+        return GetCopiedMaterial();
     }
     return GetSharedMaterial();
+}
+
+Material *Renderer::GetCopiedMaterial() const
+{
+    return p_material.Get();
 }
 
 void Renderer::OnRender(RenderPass renderPass)
@@ -104,29 +109,33 @@ void Renderer::SetVisible(bool visible)
     }
 }
 
-void Renderer::SetMaterial(Material *mat)
+void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
 {
-    if (GetSharedMaterial() != mat)
+    if (GetSharedMaterial() != sharedMaterial)
     {
         if (GetSharedMaterial())
         {
             GetSharedMaterial()
                 ->EventEmitter<IEventsResource>::UnRegisterListener(this);
         }
-
         if (p_material.Get())
         {
             p_material.Get()->EventEmitter<IEventsResource>::UnRegisterListener(
                 this);
-            p_material.Set(nullptr);
         }
 
-        p_sharedMaterial.Set(mat);
+        p_sharedMaterial.Set(sharedMaterial);
+        p_material.Set(materialCopy);
 
         if (GetSharedMaterial())
         {
             GetSharedMaterial()
                 ->EventEmitter<IEventsResource>::RegisterListener(this);
+        }
+        if (p_material.Get())
+        {
+            p_material.Get()->EventEmitter<IEventsResource>::RegisterListener(
+                this);
         }
 
         PropagateRendererChanged();
@@ -234,13 +243,14 @@ bool Renderer::GetUseReflectionProbes() const
 }
 Material *Renderer::GetMaterial() const
 {
-    if (!p_material)
+    if (!GetCopiedMaterial())
     {
         if (GetSharedMaterial())
         {
             p_material = Resources::Clone<Material>(GetSharedMaterial());
-            p_material.Get()->EventEmitter<IEventsResource>::RegisterListener(
-                const_cast<Renderer *>(this));
+            GetCopiedMaterial()
+                ->EventEmitter<IEventsResource>::RegisterListener(
+                    const_cast<Renderer *>(this));
         }
     }
     return p_material.Get();

@@ -767,12 +767,13 @@ void GEngine::Render(Renderer *rend)
     if (!m_renderRoutine)
     {
         // If we have a replacement shader currently, change the renderer sp
-        RH<Material> previousRendMat;
-        previousRendMat.Set(rend->GetActiveMaterial());
+        RH<Material> previousRendSharedMat, previousRendCopiedMat;
+        previousRendSharedMat.Set(rend->GetSharedMaterial());
+        previousRendCopiedMat.Set(rend->GetCopiedMaterial());
         if (GetReplacementMaterial())
         {
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-            rend->SetMaterial(GetReplacementMaterial());
+            rend->SetMaterial(GetReplacementMaterial(), nullptr);
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
         }
 
@@ -792,7 +793,8 @@ void GEngine::Render(Renderer *rend)
         if (GetReplacementMaterial())
         {
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-            rend->SetMaterial(previousRendMat.Get());
+            rend->SetMaterial(previousRendSharedMat.Get(),
+                              previousRendCopiedMat.Get());
             rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
         }
     }

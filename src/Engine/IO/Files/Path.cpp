@@ -111,15 +111,7 @@ Array<Path> Path::GetFiles(FindFlags findFlags,
         {
             bool extMatches =
                 extensions.IsEmpty() || subPath.HasExtension(extensions);
-            if (subPath.IsDir())
-            {
-                if (findFlags.IsOn(FindFlag::RECURSIVE))
-                {
-                    subFilesArray.PushBack(
-                        subPath.GetFiles(findFlags, extensions));
-                }
-            }
-            else if (/*subPath.IsFile() &&*/ extMatches)
+            if (subPath.IsFile() && extMatches)
             {
                 subFilesArray.PushBack(subPath);
             }

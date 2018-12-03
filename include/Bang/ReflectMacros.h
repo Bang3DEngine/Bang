@@ -28,6 +28,13 @@
         },                                                                   \
         Hints);
 
+#define BANG_REFLECT_BUTTON(Class, Name, ActionFunction) \
+    ReflectVar<bool>(                                    \
+        Name,                                            \
+        [=](bool v) { ActionFunction(); },               \
+        []() { return true; },                           \
+        BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyButton, true));
+
 #define BANG_REFLECT_HINT_ENUM_FIELD(enumName, enumFieldName) \
     GetReflectStructPtr()->AddEnumField(enumName, enumFieldName)
 

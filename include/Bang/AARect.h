@@ -203,6 +203,15 @@ public:
     }
 
     template <class OtherT = T>
+    Vector2 GetClosestPointInAARect(const Vector2 &point) const
+    {
+        Vector2 closestPoint;
+        closestPoint.x = Math::Clamp(point.x, GetMin().x, GetMax().x);
+        closestPoint.y = Math::Clamp(point.y, GetMin().y, GetMax().y);
+        return closestPoint;
+    }
+
+    template <class OtherT = T>
     RectG<OtherT> ToRect() const
     {
         return RectG<OtherT>(Vector2G<OtherT>(GetCenter()),

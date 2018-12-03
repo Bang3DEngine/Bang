@@ -15,6 +15,7 @@ public:
     static const String KeyMaxValue;
     static const String KeyStepValue;
     static const String KeyExtension;
+    static const String KeyButton;
     static const String KeyZoomablePreview;
     static const String KeyIsSlider;
     static const String KeyIsShown;
@@ -30,6 +31,7 @@ public:
     const Vector4 &GetMinValue() const;
     const Vector4 &GetMaxValue() const;
     float GetStepValue() const;
+    bool GetIsButton() const;
     bool GetIsSlider() const;
     bool GetIsShown() const;
     bool GetIsEnum() const;
@@ -38,6 +40,7 @@ public:
     bool operator!=(const ReflectVariableHints &rhs) const;
 
 private:
+    bool m_isButton = false;
     bool m_zoomablePreview = false;
     float m_stepValue = 1.0f;
     Vector4 m_minValue = Vector4::NInfinity();

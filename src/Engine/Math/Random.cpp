@@ -25,6 +25,11 @@ void Random::SetSeed(const String &seedStr)
     Random::SetSeed(seed);
 }
 
+bool Random::GetBool()
+{
+    return (GetValue01() > 0.5f);
+}
+
 Vector2 Random::GetInsideUnitCircle()
 {
     return Random::GetRandomVector2().NormalizedSafe();

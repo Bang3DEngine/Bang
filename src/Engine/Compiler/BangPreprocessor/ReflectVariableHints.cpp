@@ -8,6 +8,7 @@ const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyStepValue = "StepValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
+const String ReflectVariableHints::KeyButton = "Button";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
 const String ReflectVariableHints::KeyIsShown = "IsShown";
@@ -62,6 +63,10 @@ void ReflectVariableHints::Update(const String &hintsString)
                 {
                     m_maxValue = valueVec;
                 }
+            }
+            else if (keyStr == ReflectVariableHints::KeyButton)
+            {
+                m_isButton = true;
             }
             else if (keyStr == ReflectVariableHints::KeyStepValue)
             {
@@ -121,6 +126,11 @@ const Vector4 &ReflectVariableHints::GetMaxValue() const
 float ReflectVariableHints::GetStepValue() const
 {
     return m_stepValue;
+}
+
+bool ReflectVariableHints::GetIsButton() const
+{
+    return m_isButton;
 }
 
 bool ReflectVariableHints::GetIsSlider() const

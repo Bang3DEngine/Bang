@@ -37,6 +37,8 @@ list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PxShared/src/foundation
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PxShared/src/foundation/include/unix")
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PxShared/src/cudamanager/include")
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PxShared/src/pvd/include")
+list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PhysX_3.4/Include/geometry/")
+list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PhysX_3.4/Include/extensions/")
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PhysX_3.4/Source/PhysXGpu/include")
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PhysX_3.4/Source/LowLevel/common")
 list(APPEND PHYSX_INCLUDE_DIRECTORIES "${PHYSX_ROOT_DIR}/PhysX_3.4/Source/LowLevel/common/include")

@@ -47,6 +47,8 @@ public:
 
     Vector3G<T> xy0() const;
     Vector3G<T> xy1() const;
+    Vector3G<T> x0y() const;
+    Vector3G<T> x1y() const;
 
     T &At(std::size_t i);
     const T &At(std::size_t i) const;

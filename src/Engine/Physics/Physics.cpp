@@ -6,6 +6,7 @@
 #include "Bang/Application.h"
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
+#include "Bang/Collider.h"
 #include "Bang/Component.h"
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.h"
@@ -29,6 +30,7 @@
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Transform.h"
+#include "PxGeometryQuery.h"
 #include "PxPhysics.h"
 #include "PxPhysicsVersion.h"
 #include "PxRigidBody.h"
@@ -385,6 +387,40 @@ void Physics::RayCast(const Vector3 &origin,
     rcInfo.direction = direction;
     rcInfo.maxDistance = maxDistance;
     Physics::RayCast(rcInfo, hitInfo);
+}
+
+bool Physics::Overlap(const PxGeometry &pxGeometry0,
+                      const PxTransform &pxTransform0,
+                      const PxGeometry &pxGeometry1,
+                      const PxTransform &pxTransform1)
+{
+    return PxGeometryQuery::overlap(
+        pxGeometry0, pxTransform0, pxGeometry1, pxTransform1);
+}
+
+bool Physics::Overlap(const Collider *collider0,
+                      const PxGeometry &pxGeometry1,
+                      const PxTransform &pxTransform1)
+{
+    if (!collider0 || !collider0->GetPxRigidDynamic())
+    {
+        return false;
+    }
+    return Physics::Overlap(collider0->GetPxShape()->getGeometry().any(),
+                            collider0->GetPxShape()->getLocalPose(),
+                            pxGeometry1,
+                            pxTransform1);
+}
+
+bool Physics::Overlap(const Collider *collider0, const Collider *collider1)
+{
+    if (!collider1 || !collider1->GetPxRigidDynamic())
+    {
+        return false;
+    }
+    return Physics::Overlap(collider0,
+                            collider1->GetPxShape()->getGeometry().any(),
+                            collider1->GetPxShape()->getLocalPose());
 }
 
 Physics *Physics::GetInstance()

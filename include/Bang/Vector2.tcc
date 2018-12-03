@@ -172,6 +172,18 @@ Vector3G<T> Vector2G<T>::xy1() const
 }
 
 template <class T>
+Vector3G<T> Vector2G<T>::x0y() const
+{
+    return Vector3G<T>(x, 0, y);
+}
+
+template <class T>
+Vector3G<T> Vector2G<T>::x1y() const
+{
+    return Vector3G<T>(x, 1, y);
+}
+
+template <class T>
 T *Vector2G<T>::Data()
 {
     return &At(0);

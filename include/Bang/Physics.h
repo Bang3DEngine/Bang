@@ -25,6 +25,7 @@ namespace physx
 class PxCooking;
 class PxFoundation;
 class PxMaterial;
+class PxGeometry;
 class PxPhysics;
 class PxRigidDynamic;
 class PxTriangleMesh;
@@ -35,6 +36,7 @@ namespace Bang
 template <class>
 class EventEmitter;
 class GameObject;
+class Collider;
 class IEventsDestroy;
 class Mesh;
 class PhysicsMaterial;
@@ -79,6 +81,14 @@ public:
                         const Vector3 &direction,
                         float maxDistance,
                         RayCastHitInfo *hitInfo);
+    static bool Overlap(const physx::PxGeometry &pxGeometry0,
+                        const physx::PxTransform &pxTransform0,
+                        const physx::PxGeometry &pxGeometry1,
+                        const physx::PxTransform &pxTransform1);
+    static bool Overlap(const Collider *collider0,
+                        const physx::PxGeometry &pxGeometry1,
+                        const physx::PxTransform &pxTransform1);
+    static bool Overlap(const Collider *collider0, const Collider *collider1);
 
     physx::PxTriangleMesh *CreatePxTriangleMesh(Mesh *mesh) const;
     static physx::PxMaterial *GetDefaultPxMaterial();

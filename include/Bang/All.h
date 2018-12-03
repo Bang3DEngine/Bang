@@ -120,6 +120,7 @@
 #include "Bang/ModelIO.h"
 #include "Bang/Mutex.h"
 #include "Bang/MutexLocker.h"
+#include "Bang/NavigationMesh.h"
 #include "Bang/Object.h"
 #include "Bang/ObjectId.h"
 #include "Bang/Path.h"

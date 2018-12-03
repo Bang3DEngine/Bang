@@ -152,6 +152,16 @@ const String &ReflectVariable::GetCodeName() const
     return m_codeName;
 }
 
+ReflectVariable::SetterFunc ReflectVariable::GetSetter() const
+{
+    return m_setter;
+}
+
+ReflectVariable::GetterFunc ReflectVariable::GetGetter() const
+{
+    return m_getter;
+}
+
 const String &ReflectVariable::GetInitValueString() const
 {
     return m_initValueString;
@@ -167,16 +177,6 @@ bool ReflectVariable::EqualsWithoutValue(const ReflectVariable &rhs) const
     return GetName() == rhs.GetName() && GetCodeName() == rhs.GetCodeName() &&
            GetHints() == rhs.GetHints() &&
            GetInitValueString() == rhs.GetInitValueString();
-}
-
-const ReflectVariable::SetterFunc &ReflectVariable::GetSetter() const
-{
-    return m_setter;
-}
-
-const ReflectVariable::GetterFunc &ReflectVariable::GetGetter() const
-{
-    return m_getter;
 }
 
 const Variant &ReflectVariable::GetInitValue() const

@@ -107,6 +107,7 @@ public:
                                const Vector3G<OtherT2> &normal);
 
     Vector2G<T> xy() const;
+    Vector2G<T> xz() const;
 };
 
 template <class T>

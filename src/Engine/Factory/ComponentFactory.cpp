@@ -16,6 +16,7 @@
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshCollider.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/NavigationMesh.h"
 #include "Bang/ParticleSystem.h"
 #include "Bang/PointLight.h"
 #include "Bang/PostProcessEffect.h"
@@ -76,6 +77,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, RectTransform);
     CREATE_COMPONENT(componentClassName, SphereCollider);
     CREATE_COMPONENT(componentClassName, UITextRenderer);
+    CREATE_COMPONENT(componentClassName, NavigationMesh);
     CREATE_COMPONENT(componentClassName, CapsuleCollider);
     CREATE_COMPONENT(componentClassName, ReflectionProbe);
     CREATE_COMPONENT(componentClassName, UIImageRenderer);

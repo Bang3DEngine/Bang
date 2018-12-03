@@ -362,6 +362,12 @@ Vector2G<T> Vector3G<T>::xy() const
     return Vector2G<T>(x, y);
 }
 
+template <class T>
+Vector2G<T> Vector3G<T>::xz() const
+{
+    return Vector2G<T>(x, z);
+}
+
 /* Operators */
 
 template <class T>

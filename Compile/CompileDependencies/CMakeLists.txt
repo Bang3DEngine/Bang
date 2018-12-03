@@ -88,6 +88,7 @@ find_library(PTHREAD_LIBRARY REQUIRED "pthread" PATHS ${SEARCH_LIB_PATHS})
 
 # PhysX
 include("${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PhysX/CMakeLists.txt")
+list(APPEND DEPENDENCIES_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PhysX/PhysX_3.4/Include/geometry")
 add_dependencies(BuildDependencies PhysXLib)
 
 # YAML

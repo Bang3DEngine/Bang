@@ -60,8 +60,8 @@ public:
     const String &GetName() const;
     const Variant &GetVariant() const;
     const String &GetCodeName() const;
-    const SetterFunc &GetSetter() const;
-    const GetterFunc &GetGetter() const;
+    SetterFunc GetSetter() const;
+    GetterFunc GetGetter() const;
     const Variant &GetInitValue() const;
     const String &GetInitValueString() const;
     const ReflectVariableHints &GetHints() const;

@@ -24,6 +24,7 @@ public:
     template <class T>
     static T GetRange(T minIncluded, T maxExcluded);
 
+    static bool GetBool();
     static Vector2 GetInsideUnitCircle();
     static Vector3 GetInsideUnitSphere();
     static Vector2 GetRandomVector2();

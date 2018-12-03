@@ -407,7 +407,7 @@ bool Physics::Overlap(const Collider *collider0,
         return false;
     }
     return Physics::Overlap(collider0->GetPxShape()->getGeometry().any(),
-                            collider0->GetPxShape()->getLocalPose(),
+                            collider0->GetWorldPxTransform(),
                             pxGeometry1,
                             pxTransform1);
 }
@@ -420,7 +420,7 @@ bool Physics::Overlap(const Collider *collider0, const Collider *collider1)
     }
     return Physics::Overlap(collider0,
                             collider1->GetPxShape()->getGeometry().any(),
-                            collider1->GetPxShape()->getLocalPose());
+                            collider1->GetWorldPxTransform());
 }
 
 Physics *Physics::GetInstance()
@@ -525,6 +525,18 @@ PxQuat Physics::GetPxQuatFromQuaternion(const Quaternion &q)
     return PxQuat(q.x, q.y, q.z, q.w);
 }
 
+PxTransform Physics::GetPxTransformFromMatrix(const Matrix4 &m)
+{
+    PxTransform pxTransform(PxIdentity);
+    pxTransform.p = Physics::GetPxVec3FromVector3(m.GetTranslation());
+    pxTransform.q = Physics::GetPxQuatFromQuaternion(m.GetRotation());
+    if (!pxTransform.isValid())
+    {
+        pxTransform = PxTransform(PxIdentity);
+    }
+    return pxTransform;
+}
+
 void Physics::FillTransformFromPxTransform(Transform *transform,
                                            const PxTransform &pxTransform)
 {
@@ -537,17 +549,8 @@ void Physics::FillTransformFromPxTransform(Transform *transform,
 
 PxTransform Physics::GetPxTransformFromTransform(Transform *tr)
 {
-    PxTransform pxTransform(PxIdentity);
-    if (tr)
-    {
-        pxTransform.p = Physics::GetPxVec3FromVector3(tr->GetPosition());
-        pxTransform.q = Physics::GetPxQuatFromQuaternion(tr->GetRotation());
-        if (!pxTransform.isValid())
-        {
-            pxTransform = PxTransform(PxIdentity);
-        }
-    }
-    return pxTransform;
+    return GetPxTransformFromMatrix(tr ? tr->GetLocalToWorldMatrix()
+                                       : Matrix4::Identity());
 }
 
 PxSceneContainer *Physics::GetPxSceneContainerFromScene(Scene *scene)

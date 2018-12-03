@@ -14,6 +14,7 @@
 namespace physx
 {
 class PxRigidDynamic;
+class PxTransform;
 class PxShape;
 }
 
@@ -39,6 +40,7 @@ public:
     // Component
     void OnUpdate() override;
 
+    virtual void UpdatePxShape();
     void SetIsTrigger(bool isTrigger);
     void SetCenter(const Vector3 &center);
     void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
@@ -55,9 +57,12 @@ public:
 protected:
     virtual physx::PxShape *CreatePxShape() const = 0;
 
-    Matrix4 GetShapeTransformWithRespectToPxActor() const;
+    physx::PxTransform GetWorldPxTransform() const;
+    physx::PxTransform GetWorldPxTransformWithRespectToPxActor() const;
+    Matrix4 GetWorldShapeTransform() const;
+    Matrix4 GetWorldShapeTransformWithRespectToPxActor() const;
+    Matrix4 GetLocalShapeTransform() const;
     virtual Quaternion GetInternalRotation() const;
-    virtual void UpdatePxShape();
 
     physx::PxShape *GetPxShape() const;
 

@@ -259,6 +259,15 @@ bool Array<T>::IsEmpty() const
 }
 
 template <class T>
+void Array<T>::Reverse()
+{
+    if (Size() >= 1)
+    {
+        std::reverse(Begin(), End());
+    }
+}
+
+template <class T>
 void Array<T>::Sort()
 {
     if (!IsEmpty())

@@ -171,13 +171,13 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
     }
     else
     {
-        if (!filepath.IsFile())
-        {
-            return GUID::Empty();
-        }
-
         if (!Resources::IsEmbeddedResource(filepath))
         {
+            if (!filepath.IsFile())
+            {
+                return GUID::Empty();
+            }
+
             Path metaFilepath = GetMetaFilepath(filepath);
             if (metaFilepath.IsFile())
             {

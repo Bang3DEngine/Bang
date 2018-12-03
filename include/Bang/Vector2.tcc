@@ -1,8 +1,8 @@
-#ifndef VECTOR2_TCC
-#define VECTOR2_TCC
+#pragma once
 
 #include "Bang/Axis.h"
 #include "Bang/Math.h"
+#include "Bang/Vector2.h"
 
 namespace Bang
 {
@@ -662,5 +662,3 @@ const Vector2G<T> &Vector2G<T>::NInfinity()
 }
 
 }  // namespace Bang
-
-#endif  // VECTOR2_H

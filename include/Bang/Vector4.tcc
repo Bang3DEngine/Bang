@@ -1,9 +1,9 @@
-#ifndef VECTOR4_TCC
-#define VECTOR4_TCC
+#pragma once
 
 #include "Bang/Axis.h"
 #include "Bang/Bang.h"
 #include "Bang/Math.h"
+#include "Bang/Vector4.h"
 
 namespace Bang
 {
@@ -685,5 +685,3 @@ const Vector4G<T> &Vector4G<T>::NInfinity()
 }
 
 }  // namespace Bang
-
-#endif  // VECTOR4_H

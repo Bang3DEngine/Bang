@@ -31,7 +31,7 @@
 #define BANG_REFLECT_BUTTON(Class, Name, ActionFunction) \
     ReflectVar<bool>(                                    \
         Name,                                            \
-        [=](bool v) { ActionFunction(); },               \
+        [=](bool) { ActionFunction(); },                 \
         []() { return true; },                           \
         BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyButton, true));
 

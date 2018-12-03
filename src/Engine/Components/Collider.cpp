@@ -180,28 +180,6 @@ Quaternion Collider::GetInternalRotation() const
     return Quaternion::Identity();
 }
 
-Matrix4 Collider::GetShapeTransformWithRespectToPxActor() const
-{
-    Matrix4 shapeTransformWithRespectToPxActor =
-        GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-    if (physx::PxActor *pxActor = GetPxRigidDynamic())
-    {
-        Physics *ph = Physics::GetInstance();
-        if (PxSceneContainer *pxSceneCont =
-                ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene()))
-        {
-            if (GameObject *pxActorGo =
-                    pxSceneCont->GetGameObjectFromPxActor(pxActor))
-            {
-                shapeTransformWithRespectToPxActor =
-                    pxActorGo->GetTransform()->GetLocalToWorldMatrixInv() *
-                    shapeTransformWithRespectToPxActor;
-            }
-        }
-    }
-    return shapeTransformWithRespectToPxActor;
-}
-
 void Collider::UpdatePxShape()
 {
     if (!GetPxShape())
@@ -214,22 +192,8 @@ void Collider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        Vector3 shapeLocalPosFromPxActor = GetCenter();
-        Quaternion shapeLocalRotFromPxActor = GetInternalRotation();
-
-        Matrix4 shapeTransformWithRespectToPxActor =
-            GetShapeTransformWithRespectToPxActor();
-        shapeLocalPosFromPxActor +=
-            shapeTransformWithRespectToPxActor.GetTranslation();
-        shapeLocalRotFromPxActor =
-            shapeTransformWithRespectToPxActor.GetRotation() *
-            shapeLocalRotFromPxActor;
-
-        physx::PxTransform pxLocalTransform = GetPxShape()->getLocalPose();
-        pxLocalTransform.p =
-            Physics::GetPxVec3FromVector3(shapeLocalPosFromPxActor);
-        pxLocalTransform.q =
-            Physics::GetPxQuatFromQuaternion(shapeLocalRotFromPxActor);
+        physx::PxTransform pxLocalTransform =
+            GetWorldPxTransformWithRespectToPxActor();
         GetPxShape()->setLocalPose(pxLocalTransform);
 
         GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
@@ -263,4 +227,54 @@ void Collider::Reflect()
         PhysicsMaterial,
         BANG_REFLECT_HINT_EXTENSIONS(
             Extensions::GetPhysicsMaterialExtension()));
+}
+
+physx::PxTransform Collider::GetWorldPxTransform() const
+{
+    Matrix4 worldTransform = GetWorldShapeTransform();
+    return Physics::GetPxTransformFromMatrix(worldTransform);
+}
+
+physx::PxTransform Collider::GetWorldPxTransformWithRespectToPxActor() const
+{
+    Matrix4 worldTransformWithRespectToActor =
+        GetWorldShapeTransformWithRespectToPxActor();
+    return Physics::GetPxTransformFromMatrix(worldTransformWithRespectToActor);
+}
+
+Matrix4 Collider::GetWorldShapeTransform() const
+{
+    Matrix4 worldShapeTransform =
+        GetGameObject()->GetTransform()->GetLocalToWorldMatrix() *
+        GetLocalShapeTransform();
+    return worldShapeTransform;
+}
+
+Matrix4 Collider::GetWorldShapeTransformWithRespectToPxActor() const
+{
+    Matrix4 shapeTransformWithRespectToPxActor = GetWorldShapeTransform();
+    if (physx::PxActor *pxActor = GetPxRigidDynamic())
+    {
+        Physics *ph = Physics::GetInstance();
+        if (PxSceneContainer *pxSceneCont =
+                ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene()))
+        {
+            if (GameObject *pxActorGo =
+                    pxSceneCont->GetGameObjectFromPxActor(pxActor))
+            {
+                Matrix4 actorToWorldInv =
+                    pxActorGo->GetTransform()->GetLocalToWorldMatrixInv();
+                shapeTransformWithRespectToPxActor =
+                    actorToWorldInv * shapeTransformWithRespectToPxActor;
+            }
+        }
+    }
+    return shapeTransformWithRespectToPxActor;
+}
+
+Matrix4 Collider::GetLocalShapeTransform() const
+{
+    Matrix4 localShapeTransform = Matrix4::TranslateMatrix(GetCenter()) *
+                                  Matrix4::RotateMatrix(GetInternalRotation());
+    return localShapeTransform;
 }

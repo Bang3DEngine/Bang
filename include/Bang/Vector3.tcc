@@ -1,8 +1,8 @@
-#ifndef VECTOR3_TCC
-#define VECTOR3_TCC
+#pragma once
 
 #include "Bang/Axis.h"
 #include "Bang/Math.h"
+#include "Bang/Vector3.h"
 
 namespace Bang
 {
@@ -363,6 +363,30 @@ Vector2G<T> Vector3G<T>::xy() const
 }
 
 template <class T>
+Vector3G<T> Vector3G<T>::xy0() const
+{
+    return Vector3G<T>(x, y, 0);
+}
+
+template <class T>
+Vector3G<T> Vector3G<T>::xy1() const
+{
+    return Vector3G<T>(x, y, 1);
+}
+
+template <class T>
+Vector3G<T> Vector3G<T>::x0z() const
+{
+    return Vector3G<T>(x, 0, z);
+}
+
+template <class T>
+Vector3G<T> Vector3G<T>::x1z() const
+{
+    return Vector3G<T>(x, 1, z);
+}
+
+template <class T>
 Vector2G<T> Vector3G<T>::xz() const
 {
     return Vector2G<T>(x, z);
@@ -713,5 +737,3 @@ const Vector3G<T> &Vector3G<T>::NInfinity()
 }
 
 }  // namespace Bang
-
-#endif  // VECTOR3_H

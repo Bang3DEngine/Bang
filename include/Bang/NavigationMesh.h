@@ -21,7 +21,7 @@ public:
     Array<Vector3> GetPath(const Vector3 &origin, const Vector3 &destiny) const;
 
     void RecomputeCollisions();
-    void SetDivisions(uint divisions);
+    void SetNumCells(uint numCells);
 
     const Array<Array<bool>> &GetCollisions() const;
     bool IsCellColliding(uint xi, uint yi) const;
@@ -30,14 +30,14 @@ public:
     Vector3 GetGridCenter() const;
     Vector2 GetCellSize() const;
     Vector2 GetGridSize() const;
-    uint GetDivisions() const;
+    uint GetNumCells() const;
 
     // IReflectable
     virtual void Reflect() override;
 
 private:
     Array<Array<bool>> m_collisions;
-    uint m_divisions = 10;
+    uint m_numCells = 10;
 
     Vector2i GetClosestCellTo(const Vector3 &position) const;
 };

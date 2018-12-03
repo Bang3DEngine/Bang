@@ -101,6 +101,8 @@ public:
     static physx::PxVec3 GetPxVec3FromVector3(const Vector3 &v);
     static physx::PxVec4 GetPxVec4FromVector4(const Vector4 &v);
     static physx::PxQuat GetPxQuatFromQuaternion(const Quaternion &q);
+    static physx::PxTransform GetPxTransformFromMatrix(const Matrix4 &m);
+    static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
     static Physics *GetInstance();
 
     // IEventsDestroy
@@ -133,7 +135,6 @@ private:
     static void FillTransformFromPxTransform(
         Transform *transform,
         const physx::PxTransform &pxTransform);
-    static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
 
     friend class RigidBody;
     friend class PxSceneContainer;

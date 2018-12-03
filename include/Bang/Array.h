@@ -72,6 +72,7 @@ public:
     void Clear();
     bool IsEmpty() const;
 
+    void Reverse();
     void Sort();
     template <class StrictWeakOrdering>
     void Sort(const StrictWeakOrdering &sortClass);

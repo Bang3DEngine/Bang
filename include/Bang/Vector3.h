@@ -107,6 +107,10 @@ public:
                                const Vector3G<OtherT2> &normal);
 
     Vector2G<T> xy() const;
+    Vector3G<T> xy0() const;
+    Vector3G<T> xy1() const;
+    Vector3G<T> x0z() const;
+    Vector3G<T> x1z() const;
     Vector2G<T> xz() const;
 };
 

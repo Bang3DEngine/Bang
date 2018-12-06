@@ -127,13 +127,14 @@ add_bang_compilation_flags(BangEngineObjects)
 target_include_directories(BangEngineObjects PUBLIC ${BANG_ENGINE_INCLUDE_DIR})
 target_include_directories(BangEngineObjects PUBLIC ${DEPENDENCIES_INCLUDE_DIRS})
 set_target_properties(BangLib PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(BangLib PUBLIC ${DEPENDENCIES_LIBS})
 
 if (${BUILD_SHARED_LIBS})
     target_link_libraries(BangLib PUBLIC BangComponentsLib)
     target_link_libraries(BangLib PUBLIC BangGraphicsLib)
     target_link_libraries(BangLib PUBLIC BangMathLib)
 endif()
+
+target_link_libraries(BangLib PUBLIC ${DEPENDENCIES_LIBS})
 
 add_dependencies(BangEngineObjects BuildDependencies)
 add_dependencies(BangLib BuildDependencies)

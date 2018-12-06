@@ -55,6 +55,7 @@ public:
     void SetBonesPool(const Map<String, Mesh::Bone> &bones);
     void SetTrianglesVertexIds(const Array<VertexId> &triangleVertexIds);
     void SetBonesIds(const Map<String, uint> &bonesIds);
+    void SetPosition(Mesh::VertexId vId, const Vector3 &pos);
 
     void UpdateVAOs();
     void UpdateCornerTablesIfNeeded();
@@ -107,6 +108,9 @@ public:
                                         Mesh::CornerId anotherCorner) const;
     Mesh::CornerId GetCornerIdFromTriangle(Mesh::TriangleId triangleId,
                                            uint i) const;
+    Mesh::CornerId GetCornerIdFromTriangleIdAndVertexId(
+        Mesh::TriangleId triangleId,
+        Mesh::VertexId vertexId) const;
     std::array<CornerId, 3> GetCornerIdsFromTriangle(
         TriangleId triangleId) const;
     Mesh::CornerId GetTriangleIdFromCornerId(Mesh::CornerId cornerId) const;
@@ -133,6 +137,10 @@ public:
         Map<Mesh::VertexId, float> *edgesCotangentsScalar,
         Map<Mesh::VertexId, Vector3> *edgesCotangentsVector,
         Map<Mesh::VertexId, float> *triAreas) const;
+    bool IsBoundaryVertex(Mesh::VertexId vId) const;
+    bool IsBoundaryEdge(Mesh::VertexId vId0, Mesh::VertexId vId1) const;
+    Mesh::TriangleId GetCommonTriangle(Mesh::VertexId vId0,
+                                       Mesh::VertexId vId1) const;
     bool HasCornerTablesUpdated() const;
 
     const AABox &GetAABBox() const;

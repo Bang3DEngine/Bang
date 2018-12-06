@@ -44,8 +44,10 @@ public:
     void SetIsTrigger(bool isTrigger);
     void SetCenter(const Vector3 &center);
     void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
+    void SetUseInNavMesh(bool useInNavMesh);
 
     bool GetIsTrigger() const;
+    bool GetUseInNavMesh() const;
     const Vector3 &GetCenter() const;
     PhysicsMaterial *GetSharedPhysicsMaterial() const;
     PhysicsMaterial *GetActivePhysicsMaterial() const;
@@ -72,6 +74,7 @@ protected:
 
 private:
     bool m_isTrigger = false;
+    bool m_useInNavMesh = true;
     Vector3 m_center = Vector3::Zero();
 
     mutable RH<PhysicsMaterial> p_physicsMaterial;

@@ -24,6 +24,7 @@ public:
     void SetNumCells(uint numCells);
 
     const Array<Array<bool>> &GetCollisions() const;
+    bool IsPointColliding(const Vector3 &point) const;
     bool IsCellColliding(uint xi, uint yi) const;
     bool IsCellInsideGrid(uint xi, uint yi) const;
     Vector3 GetCellCenter(uint xi, uint yi) const;

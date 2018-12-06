@@ -82,9 +82,19 @@ void Collider::SetPhysicsMaterial(PhysicsMaterial *physicsMaterial)
     }
 }
 
+void Collider::SetUseInNavMesh(bool useInNavMesh)
+{
+    m_useInNavMesh = useInNavMesh;
+}
+
 bool Collider::GetIsTrigger() const
 {
     return m_isTrigger;
+}
+
+bool Collider::GetUseInNavMesh() const
+{
+    return m_useInNavMesh;
 }
 
 const Vector3 &Collider::GetCenter() const
@@ -217,6 +227,8 @@ void Collider::Reflect()
     Component::Reflect();
 
     BANG_REFLECT_VAR_MEMBER(Collider, "Is Trigger", SetIsTrigger, GetIsTrigger);
+    BANG_REFLECT_VAR_MEMBER(
+        Collider, "Use in NavMesh", SetUseInNavMesh, GetUseInNavMesh);
     BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);
 
     BANG_REFLECT_VAR_MEMBER_RESOURCE(

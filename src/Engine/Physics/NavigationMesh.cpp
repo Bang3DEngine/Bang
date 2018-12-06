@@ -131,6 +131,7 @@ Array<Vector3> NavigationMesh::GetPath(const Vector3 &origin,
                                         [SCAST<uint>(currentCell.x)];
         }
         pathPositions.Reverse();
+        pathPositions.PushBack(destiny);
     }
 
     return pathPositions;
@@ -165,7 +166,8 @@ void NavigationMesh::RecomputeCollisions()
                     for (Collider *collider : colliders)
                     {
                         if (!collider->IsEnabledRecursively() ||
-                            collider->GetIsTrigger())
+                            collider->GetIsTrigger() ||
+                            !collider->GetUseInNavMesh())
                         {
                             continue;
                         }
@@ -207,6 +209,12 @@ void NavigationMesh::SetNumCells(uint divisions)
 const Array<Array<bool>> &NavigationMesh::GetCollisions() const
 {
     return m_collisions;
+}
+
+bool NavigationMesh::IsPointColliding(const Vector3 &point) const
+{
+    Vector2i closestCell = GetClosestCellTo(point);
+    return IsCellColliding(closestCell.x, closestCell.y);
 }
 
 bool NavigationMesh::IsCellColliding(uint xi, uint yi) const

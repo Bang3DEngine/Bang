@@ -26,6 +26,8 @@ private:
     Vector3 m_origin = Vector3::Zero();
     Vector3 m_direction = Vector3::Forward();
 };
+
+Ray operator*(const Matrix4 &m, const Ray &ray);
 }
 
 #endif  // RAY_H

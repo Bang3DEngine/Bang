@@ -1,5 +1,8 @@
 #include "Bang/Ray.h"
 
+#include "Bang/Matrix4.h"
+#include "Bang/Vector4.h"
+
 using namespace Bang;
 
 Ray::Ray()
@@ -38,4 +41,14 @@ const Vector3 &Ray::GetOrigin() const
 const Vector3 &Ray::GetDirection() const
 {
     return m_direction;
+}
+
+namespace Bang
+{
+Ray operator*(const Matrix4 &m, const Ray &ray)
+{
+    Vector3 newDir = m.TransformedVector(ray.GetDirection());
+    Vector3 newOrigin = m.TransformedPoint(ray.GetOrigin());
+    return Ray(newOrigin, newDir);
+}
 }

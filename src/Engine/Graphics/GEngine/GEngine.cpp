@@ -242,11 +242,6 @@ void GEngine::SetReplacementMaterial(Material *material)
     m_replacementMaterial.Set(material);
 }
 
-void GEngine::SetRenderRoutine(GEngine::RenderRoutine renderRoutine)
-{
-    m_renderRoutine = renderRoutine;
-}
-
 Material *GEngine::GetReplacementMaterial() const
 {
     return m_replacementMaterial.Get();
@@ -764,43 +759,36 @@ void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
 
 void GEngine::Render(Renderer *rend)
 {
-    if (!m_renderRoutine)
+    // If we have a replacement shader currently, change the renderer sp
+    RH<Material> previousRendSharedMat, previousRendCopiedMat;
+    previousRendSharedMat.Set(rend->GetSharedMaterial());
+    previousRendCopiedMat.Set(rend->GetCopiedMaterial());
+    if (GetReplacementMaterial())
     {
-        // If we have a replacement shader currently, change the renderer sp
-        RH<Material> previousRendSharedMat, previousRendCopiedMat;
-        previousRendSharedMat.Set(rend->GetSharedMaterial());
-        previousRendCopiedMat.Set(rend->GetCopiedMaterial());
-        if (GetReplacementMaterial())
-        {
-            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-            rend->SetMaterial(GetReplacementMaterial(), nullptr);
-            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
-        }
-
-        // Render with the renderer!
-        rend->Bind();
-
-        if (m_currentlyForwardRendering)
-        {
-            PrepareForForwardRendering(rend);
-        }
-
-        rend->OnRender();
-
-        rend->UnBind();
-
-        // Restore previous sp, in case it was replaced with replacement shader
-        if (GetReplacementMaterial())
-        {
-            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
-            rend->SetMaterial(previousRendSharedMat.Get(),
-                              previousRendCopiedMat.Get());
-            rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
-        }
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
+        rend->SetMaterial(GetReplacementMaterial(), nullptr);
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
     }
-    else
+
+    // Render with the renderer!
+    rend->Bind();
+
+    if (m_currentlyForwardRendering)
     {
-        m_renderRoutine(rend);
+        PrepareForForwardRendering(rend);
+    }
+
+    rend->OnRender();
+
+    rend->UnBind();
+
+    // Restore previous sp, in case it was replaced with replacement shader
+    if (GetReplacementMaterial())
+    {
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(false);
+        rend->SetMaterial(previousRendSharedMat.Get(),
+                          previousRendCopiedMat.Get());
+        rend->EventEmitter<IEventsRendererChanged>::SetEmitEvents(true);
     }
 }
 

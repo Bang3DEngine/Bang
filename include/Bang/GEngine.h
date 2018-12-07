@@ -46,8 +46,6 @@ class TextureUnitManager;
 class GEngine : public EventListener<IEventsDestroy>
 {
 public:
-    using RenderRoutine = std::function<void(Renderer *)>;
-
     GEngine();
     virtual ~GEngine() override;
 
@@ -69,7 +67,6 @@ public:
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
 
     void SetReplacementMaterial(Material *material);
-    void SetRenderRoutine(RenderRoutine renderRoutine);
 
     void PushActiveRenderingCamera();
     void SetActiveRenderingCamera(Camera *camera);
@@ -109,7 +106,6 @@ private:
     MultiObjectGatherer<ReflectionProbe, true> m_reflProbesCache;
     MultiObjectGatherer<Light, true> m_lightsCache;
 
-    RenderRoutine m_renderRoutine;
     StackAndValue<Camera *> p_renderingCameras;
     USet<Camera *> m_stackedCamerasThatHaveBeenDestroyed;
 

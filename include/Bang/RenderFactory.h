@@ -102,6 +102,10 @@ public:
     static void RenderPointNDC(const Vector2 &pointNDC,
                                const RenderFactory::Parameters &params);
 
+    static void GetBillboardTransform(const Vector3 &center,
+                                      Quaternion *rotation,
+                                      Vector3 *scale);
+
     GameObject *GetGameObject() const;
     static RenderFactory *GetInstance();
 

@@ -204,20 +204,12 @@ void RenderFactory::RenderIcon(Texture2D *texture,
         paramsCpy.receivesLighting = false;
         if (billboard)
         {
-            Camera *cam = Camera::GetActive();
-
-            Vector3 camPos =
-                cam->GetGameObject()->GetTransform()->GetPosition();
-            float distScale = 1.0f;
-            if (cam->GetProjectionMode() == CameraProjectionMode::PERSPECTIVE)
-            {
-                distScale = Vector3::Distance(camPos, paramsCpy.position);
-            }
-
-            paramsCpy.scale *= distScale * 0.5f;
-            paramsCpy.rotation = Quaternion::LookDirection(
-                cam->GetGameObject()->GetTransform()->GetForward(),
-                cam->GetGameObject()->GetTransform()->GetUp());
+            Quaternion bbRotation;
+            Vector3 bbScale;
+            RenderFactory::GetBillboardTransform(
+                paramsCpy.position, &bbRotation, &bbScale);
+            paramsCpy.rotation = bbRotation;
+            paramsCpy.scale *= bbScale;
         }
         paramsCpy.texture.Set(texture);
         rf->Render(rf->m_meshRenderer, paramsCpy);
@@ -640,6 +632,24 @@ void RenderFactory::RenderPointNDC(const Vector2 &pointNDC,
 
         GL::Pop(GL::Pushable::VIEWPROJ_MODE);
     }
+}
+
+void RenderFactory::GetBillboardTransform(const Vector3 &center,
+                                          Quaternion *rotation,
+                                          Vector3 *scale)
+{
+    Camera *cam = Camera::GetActive();
+
+    Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
+    float distScale = 1.0f;
+    if (cam->GetProjectionMode() == CameraProjectionMode::PERSPECTIVE)
+    {
+        distScale = Vector3::Distance(camPos, center);
+    }
+
+    *scale = Vector3(distScale * 0.5f);
+    Transform *camTR = cam->GetGameObject()->GetTransform();
+    *rotation = Quaternion::LookDirection(camTR->GetForward(), camTR->GetUp());
 }
 
 GameObject *RenderFactory::GetGameObject() const

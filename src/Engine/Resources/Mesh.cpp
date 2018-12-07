@@ -86,6 +86,11 @@ void Mesh::SetBonesIds(const Map<String, uint> &bonesIds)
     }
 }
 
+void Mesh::SetPosition(Mesh::VertexId vId, const Vector3 &pos)
+{
+    m_positionsPool[vId] = pos;
+}
+
 void Mesh::UpdateVAOs()
 {
     if (m_vertexAttributesVBO)
@@ -761,6 +766,21 @@ Mesh::CornerId Mesh::GetCornerIdFromTriangle(Mesh::TriangleId triangleId,
     return (triangleId * 3) + i;
 }
 
+Mesh::CornerId Mesh::GetCornerIdFromTriangleIdAndVertexId(
+    Mesh::TriangleId triangleId,
+    Mesh::VertexId vertexId) const
+{
+    Array<Mesh::CornerId> cIds = GetCornerIdsFromVertexId(vertexId);
+    for (Mesh::CornerId cId : cIds)
+    {
+        if (GetTriangleIdFromCornerId(cId) == triangleId)
+        {
+            return cId;
+        }
+    }
+    return -1u;
+}
+
 Mesh::CornerId Mesh::GetTriangleIdFromCornerId(Mesh::CornerId cornerId) const
 {
     return (cornerId / 3);
@@ -983,8 +1003,6 @@ void Mesh::GetNeighborCotangentWeights(
             }
         }
     }
-    ASSERT(numProcessedTris ==
-           GetNeighborTriangleIdsFromVertexId(centralVUniqueId).Size());
 }
 
 float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
@@ -1012,6 +1030,54 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
         (1.0f / (trisAreasSum)) * edgesCotangentsVectorSum;
     float meanCurvature = 0.5f * laplaceBeltrami.Length();
     return meanCurvature;
+}
+
+bool Mesh::IsBoundaryVertex(Mesh::VertexId vId) const
+{
+    Array<Mesh::CornerId> cIds = GetCornerIdsFromVertexId(vId);
+    for (Mesh::CornerId cId : cIds)
+    {
+        if (GetOppositeCornerId(GetNextCornerId(cId)) == -1u ||
+            GetOppositeCornerId(GetPreviousCornerId(cId)) == -1u)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Mesh::IsBoundaryEdge(Mesh::VertexId vId0, Mesh::VertexId vId1) const
+{
+    Mesh::TriangleId triId = GetCommonTriangle(vId0, vId1);
+    if (triId != -1u)
+    {
+        Mesh::CornerId cId0 = GetCornerIdFromTriangleIdAndVertexId(triId, vId0);
+        Mesh::CornerId cId1 = GetCornerIdFromTriangleIdAndVertexId(triId, vId1);
+        if (cId0 != -1u && cId1 != -1u)
+        {
+            Mesh::CornerId cIdOther = GetRemainingCornerId(triId, cId0, cId1);
+            return (GetOppositeCornerId(cIdOther) == -1u);
+        }
+    }
+    return false;
+}
+
+Mesh::TriangleId Mesh::GetCommonTriangle(Mesh::VertexId vId0,
+                                         Mesh::VertexId vId1) const
+{
+    Array<Mesh::TriangleId> triIds0 = GetNeighborTriangleIdsFromVertexId(vId0);
+    Array<Mesh::TriangleId> triIds1 = GetNeighborTriangleIdsFromVertexId(vId1);
+    for (Mesh::TriangleId triId0 : triIds0)
+    {
+        for (Mesh::TriangleId triId1 : triIds1)
+        {
+            if (triId0 == triId1)
+            {
+                return triId0;
+            }
+        }
+    }
+    return SCAST<Mesh::TriangleId>(-1);
 }
 
 bool Mesh::HasCornerTablesUpdated() const

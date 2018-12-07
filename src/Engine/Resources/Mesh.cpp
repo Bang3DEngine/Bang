@@ -100,6 +100,16 @@ void Mesh::UpdateVAOs()
     bool hasTangents = !GetTangentsPool().IsEmpty();
     bool hasBones = !GetBonesPool().IsEmpty();
 
+    if (hasPos && GetTrianglesVertexIds().IsEmpty())
+    {
+        Array<Mesh::VertexId> triVertexIds;
+        for (uint i = 0; i < GetPositionsPool().Size(); ++i)
+        {
+            triVertexIds.PushBack(i);
+        }
+        SetTrianglesVertexIds(triVertexIds);
+    }
+
     if (hasBones)
     {
         // Pick 4 most relevant bones per vertex

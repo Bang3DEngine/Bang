@@ -143,6 +143,73 @@ void Geometry::IntersectSegmentPlane(const Segment &segment,
 }
 
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/
+// minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+void Geometry::IntersectRayAABox(const Ray &ray,
+                                 const AABox &aaBox,
+                                 bool *intersected,
+                                 float *intersectionDistance)
+{
+    float tmin = (aaBox.GetMin().x - ray.GetOrigin().x) / ray.GetDirection().x;
+    float tmax = (aaBox.GetMax().x - ray.GetOrigin().x) / ray.GetDirection().x;
+
+    if (tmin > tmax)
+    {
+        std::swap(tmin, tmax);
+    }
+
+    float tymin = (aaBox.GetMin().y - ray.GetOrigin().y) / ray.GetDirection().y;
+    float tymax = (aaBox.GetMax().y - ray.GetOrigin().y) / ray.GetDirection().y;
+
+    if (tymin > tymax)
+    {
+        std::swap(tymin, tymax);
+    }
+
+    if ((tmin > tymax) || (tymin > tmax))
+    {
+        *intersected = false;
+        return;
+    }
+
+    if (tymin > tmin)
+    {
+        tmin = tymin;
+    }
+
+    if (tymax < tmax)
+    {
+        tmax = tymax;
+    }
+
+    float tzmin = (aaBox.GetMin().z - ray.GetOrigin().z) / ray.GetDirection().z;
+    float tzmax = (aaBox.GetMax().z - ray.GetOrigin().z) / ray.GetDirection().z;
+
+    if (tzmin > tzmax)
+    {
+        std::swap(tzmin, tzmax);
+    }
+
+    if ((tmin > tzmax) || (tzmin > tmax))
+    {
+        *intersected = false;
+        return;
+    }
+
+    if (tzmin > tmin)
+    {
+        tmin = tzmin;
+    }
+
+    if (tzmax < tmax)
+    {
+        tmax = tzmax;
+    }
+
+    *intersected = true;
+    *intersectionDistance = tmin;
+}
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/
 // minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
 void Geometry::IntersectRaySphere(const Ray &ray,
                                   const Sphere &sphere,
@@ -400,27 +467,27 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
 {
     float &t = *distanceFromRayOriginToIntersection;
     const Vector3 &rayOrig = ray.GetOrigin();
-    const Vector3 &rayDir = ray.GetDirection();
+    const Vector3d rayDir(ray.GetDirection());
     const Vector3 &v0 = triangle.GetPoint(0);
     const Vector3 &v1 = triangle.GetPoint(1);
     const Vector3 &v2 = triangle.GetPoint(2);
 
-    Vector3 v1v0(v1 - v0);
-    Vector3 v2v0(v2 - v0);
+    Vector3d v1v0(v1 - v0);
+    Vector3d v2v0(v2 - v0);
 
-    Vector3 h = Vector3::Cross(rayDir, v2v0);
-    float a = Vector3::Dot(v1v0, h);
+    Vector3d h(Vector3::Cross(rayDir, v2v0));
+    double a = Vector3d::Dot(v1v0, h);
 
-    constexpr float Epsilon = 1e-7;
+    constexpr double Epsilon = 1e-8;
     if (a > -Epsilon && a < Epsilon)
     {
         *intersected = false;
         return;
     }
 
-    float f = 1.0 / a;
-    Vector3 s(rayOrig - v0);
-    float u = f * Vector3::Dot(s, h);
+    double f = 1.0 / a;
+    Vector3d s(rayOrig - v0);
+    double u = f * Vector3d::Dot(s, h);
 
     if (u < 0.0 || u > 1.0)
     {
@@ -428,8 +495,8 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
         return;
     }
 
-    Vector3 q = Vector3::Cross(s, v1v0);
-    float v = f * Vector3::Dot(rayDir, q);
+    Vector3d q = Vector3d::Cross(s, v1v0);
+    double v = f * Vector3d::Dot(rayDir, q);
 
     if (v < 0.0 || u + v > 1.0)
     {
@@ -439,8 +506,8 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
 
     // At this stage we can compute t to find out where
     // the intersection point is on the line
-    t = (f * Vector3::Dot(v2v0, q));
-    if (t < 0.00001)
+    t = (f * Vector3d::Dot(v2v0, q));
+    if (t < Epsilon)
     {
         *intersected = false;
         return;

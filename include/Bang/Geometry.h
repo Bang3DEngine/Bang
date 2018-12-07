@@ -55,6 +55,11 @@ public:
                                       bool *intersected,
                                       Vector3 *intersectionPoint);
 
+    static void IntersectRayAABox(const Ray &ray,
+                                  const AABox &aaBox,
+                                  bool *intersected,
+                                  float *intersectionDistance);
+
     // Computes the intersection between a ray and a sphere
     static void IntersectRaySphere(const Ray &ray,
                                    const Sphere &sphere,

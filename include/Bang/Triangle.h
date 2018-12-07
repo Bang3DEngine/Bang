@@ -26,6 +26,7 @@ public:
     float GetArea() const;
     Plane GetPlane() const;
     Vector3 GetNormal() const;
+    Vector3 GetBarycentricCoordinates(const Vector3 &point) const;
     const std::array<Vector3, 3> &GetPoints() const;
     const Vector3 &GetPoint(int i) const;
     Polygon ToPolygon() const;

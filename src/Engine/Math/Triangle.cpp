@@ -44,6 +44,17 @@ Vector3 Triangle::GetNormal() const
         .NormalizedSafe();
 }
 
+Vector3 Triangle::GetBarycentricCoordinates(const Vector3 &point) const
+{
+    Vector3 projPoint = GetPlane().GetProjectedPoint(point);
+    Triangle tri0(projPoint, GetPoint(1), GetPoint(2));
+    Triangle tri1(projPoint, GetPoint(0), GetPoint(2));
+    Triangle tri2(projPoint, GetPoint(0), GetPoint(1));
+    float area = GetArea();
+    return Vector3(
+        tri0.GetArea() / area, tri1.GetArea() / area, tri2.GetArea() / area);
+}
+
 const Vector3 &Triangle::GetPoint(int i) const
 {
     return (*this)[i];

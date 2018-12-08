@@ -338,12 +338,6 @@ void RigidBody::UpdatePxRigidDynamicValues()
             SCAST<physx::PxRigidDynamicLockFlags>(GetConstraints().GetValue()));
         GetPxRigidDynamic()->setLinearDamping(GetDrag());
         GetPxRigidDynamic()->setAngularDamping(GetAngularDrag());
-
-        if (GetGameObject() && GetGameObject()->GetName() == "AAA")
-        {
-            Debug_DLog(Physics::GetVector3FromPxVec3(
-                GetPxRigidDynamic()->getLinearVelocity()));
-        }
     }
 }
 

@@ -83,8 +83,9 @@ private:
     physx::PxShape *p_pxShape = nullptr;
 
     // PhysicsObject
-    virtual bool CanBeSimulationShape();
-    virtual bool CanBeTriggerShape();
+    virtual bool CanComputeInertia() const;
+    virtual bool CanBeSimulationShape() const;
+    virtual bool CanBeTriggerShape() const;
     virtual void OnPxRigidDynamicChanged(
         physx::PxRigidDynamic *prevPxRD,
         physx::PxRigidDynamic *newPxRD) override;

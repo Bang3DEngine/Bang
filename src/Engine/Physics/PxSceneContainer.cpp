@@ -449,7 +449,7 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     // For each physics object in descendants, update its pxActor
     for (PhysicsObject *phObj : phObjsInDescendants)
     {
-        phObj->SetPxRigidDynamic(pxRD);
+        bool forceKinematic = false;
         if (phObj->GetPhysicsObjectType() != PhysicsObject::Type::RIGIDBODY)
         {
             // Collider
@@ -458,7 +458,16 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
             {
                 m_pxShapeToCollider.Add(collider->GetPxShape(), collider);
             }
+
+            forceKinematic = (phObj->GetPhysicsObjectType() ==
+                              PhysicsObject::Type::MESH_COLLIDER);
         }
+
+        if (forceKinematic)
+        {
+            pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+        }
+        phObj->SetPxRigidDynamic(pxRD);
 
         Component *comp = DCAST<Component *>(phObj);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);

@@ -152,12 +152,17 @@ void Collider::OnDisabled(Object *)
     }
 }
 
-bool Collider::CanBeSimulationShape()
+bool Collider::CanComputeInertia() const
 {
     return true;
 }
 
-bool Collider::CanBeTriggerShape()
+bool Collider::CanBeSimulationShape() const
+{
+    return true;
+}
+
+bool Collider::CanBeTriggerShape() const
 {
     return true;
 }
@@ -218,7 +223,11 @@ void Collider::UpdatePxShape()
             GetPxShape()->setMaterials(&material, 1);
         }
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
+        if (CanComputeInertia())
+        {
+            physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(),
+                                                        1.0f);
+        }
     }
 }
 

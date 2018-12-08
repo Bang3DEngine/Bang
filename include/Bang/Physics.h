@@ -58,7 +58,7 @@ public:
     void Step(Scene *scene, Time simulationTime);
     void StepIfNeeded(Scene *scene);
     void ResetStepTimeReference(Scene *scene);
-    void UpdateFromTransforms(Scene *scene);
+    void UpdatePxSceneFromTransforms(Scene *scene);
     void SetIgnoreNextFrames(Scene *scene, int numNextFramesToIgnore);
 
     void RegisterScene(Scene *scene);

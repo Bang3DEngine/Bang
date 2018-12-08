@@ -62,7 +62,7 @@ void SceneManager::OnNewFrame(Scene *scene)
         scene->Start();
 
         scene->Update();
-        Physics::GetInstance()->UpdateFromTransforms(scene);
+        Physics::GetInstance()->UpdatePxSceneFromTransforms(scene);
         Physics::GetInstance()->StepIfNeeded(scene);
         scene->PostUpdate();
 

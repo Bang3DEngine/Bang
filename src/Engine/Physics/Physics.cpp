@@ -119,7 +119,7 @@ void Physics::ResetStepTimeReference(Scene *scene)
     }
 }
 
-void Physics::UpdateFromTransforms(Scene *scene)
+void Physics::UpdatePxSceneFromTransforms(Scene *scene)
 {
     if (PxSceneContainer *pxSceneContainer =
             GetPxSceneContainerFromScene(scene))
@@ -322,10 +322,12 @@ PxTriangleMesh *Physics::CreatePxTriangleMesh(Mesh *mesh) const
     {
         PxTolerancesScale scale;
         PxCookingParams params(scale);
-        params.meshPreprocessParams |=
-            PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-        params.meshPreprocessParams |=
-            PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+        params.meshPreprocessParams.clear(
+            PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH);
+        params.meshPreprocessParams.clear(
+            PxMeshPreprocessingFlag::eWELD_VERTICES);
+        params.meshPreprocessParams.set(
+            PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE);
         params.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
 
         m_pxCooking->setParams(params);
@@ -340,6 +342,11 @@ PxTriangleMesh *Physics::CreatePxTriangleMesh(Mesh *mesh) const
         meshDesc.triangles.data = mesh->GetTrianglesVertexIds().Data();
 
 #ifdef DEBUG
+        if (!meshDesc.isValid())
+        {
+            Debug_Warn("Mesh description is not valid.");
+        }
+
         if (!m_pxCooking->validateTriangleMesh(meshDesc))
         {
             Debug_Warn("Triangle mesh " << mesh

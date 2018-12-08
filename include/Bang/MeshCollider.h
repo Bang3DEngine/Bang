@@ -37,8 +37,9 @@ private:
     RH<Mesh> p_mesh;
 
     // Collider
-    virtual bool CanBeTriggerShape() override;
-    virtual bool CanBeSimulationShape() override;
+    virtual bool CanComputeInertia() const override;
+    virtual bool CanBeTriggerShape() const override;
+    virtual bool CanBeSimulationShape() const override;
     physx::PxShape *CreatePxShape() const override;
     void UpdatePxShape() override;
 };

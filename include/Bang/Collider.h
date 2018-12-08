@@ -86,9 +86,8 @@ private:
     virtual bool CanComputeInertia() const;
     virtual bool CanBeSimulationShape() const;
     virtual bool CanBeTriggerShape() const;
-    virtual void OnPxRigidDynamicChanged(
-        physx::PxRigidDynamic *prevPxRD,
-        physx::PxRigidDynamic *newPxRD) override;
+    virtual void OnPxActorChanged(physx::PxActor *prevPxActor,
+                                  physx::PxActor *newPxActor) override;
 
     friend class Physics;
     friend class PxSceneContainer;

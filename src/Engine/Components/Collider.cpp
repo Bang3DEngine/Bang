@@ -167,19 +167,21 @@ bool Collider::CanBeTriggerShape() const
     return true;
 }
 
-void Collider::OnPxRigidDynamicChanged(physx::PxRigidDynamic *prevPxRD,
-                                       physx::PxRigidDynamic *newPxRD)
+void Collider::OnPxActorChanged(physx::PxActor *prevPxActor,
+                                physx::PxActor *newPxActor)
 {
-    if (prevPxRD)
+    if (prevPxActor)
     {
         if (GetPxShape())
         {
-            prevPxRD->detachShape(*GetPxShape());
+            physx::PxRigidActor *pxRigidActor =
+                SCAST<physx::PxRigidActor *>(prevPxActor);
+            pxRigidActor->detachShape(*GetPxShape());
             p_pxShape = nullptr;
         }
     }
 
-    if (newPxRD)
+    if (newPxActor)
     {
         UpdatePxShape();
     }

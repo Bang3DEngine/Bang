@@ -70,6 +70,7 @@ public:
 
     void SetMass(float mass);
     void SetDrag(float drag);
+    void SetStatic(bool dynamic);
     void SetAngularDrag(float angularDrag);
     void SetUseGravity(bool useGravity);
     void SetIsKinematic(bool isKinematic);
@@ -83,6 +84,7 @@ public:
     float GetAngularDrag() const;
     bool GetUseGravity() const;
     bool GetIsKinematic() const;
+    bool GetStatic() const;
     Vector3 GetLinearVelocity() const;
     Vector3 GetAngularVelocity() const;
     float GetMaxAngularVelocity() const;
@@ -99,6 +101,7 @@ private:
     // Saved properties
     float m_mass = 1.0f;
     float m_drag = 0.0f;
+    bool m_static = false;
     float m_angularDrag = 0.05f;
     bool m_useGravity = true;
     bool m_isKinematic = true;
@@ -107,9 +110,8 @@ private:
     void UpdatePxRigidDynamicValues();
 
     // PhysicsObject
-    void OnPxRigidDynamicChanged(
-        physx::PxRigidDynamic *prevPxRigidDynamic,
-        physx::PxRigidDynamic *newPxRigidDynamic) override;
+    void OnPxActorChanged(physx::PxActor *prevPxActor,
+                          physx::PxActor *newPxActor) override;
 
     friend class Physics;
     friend class PxSceneContainer;

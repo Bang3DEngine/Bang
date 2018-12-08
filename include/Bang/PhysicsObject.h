@@ -5,6 +5,8 @@
 
 namespace physx
 {
+class PxActor;
+class PxRigidStatic;
 class PxRigidDynamic;
 }
 
@@ -26,19 +28,20 @@ public:
     PhysicsObject();
     virtual ~PhysicsObject();
 
+    physx::PxActor *GetPxActor() const;
+    physx::PxRigidStatic *GetPxRigidStatic() const;
     physx::PxRigidDynamic *GetPxRigidDynamic() const;
     PhysicsObject::Type GetPhysicsObjectType() const;
 
 protected:
-    physx::PxRigidDynamic *p_pxRigidDynamic = nullptr;
+    physx::PxActor *p_pxActor = nullptr;
     PhysicsObject::Type m_physicsObjectType = PhysicsObject::Type::NONE;
 
-    void SetPxRigidDynamic(physx::PxRigidDynamic *pxRigidDynamic);
+    void SetPxActor(physx::PxActor *pxActor);
     void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
 
-    virtual void OnPxRigidDynamicChanged(
-        physx::PxRigidDynamic *prevPxRigidDynamic,
-        physx::PxRigidDynamic *newPxRigidDynamic);
+    virtual void OnPxActorChanged(physx::PxActor *prevPxActor,
+                                  physx::PxActor *newPxActor);
 
     friend class PxSceneContainer;
 };

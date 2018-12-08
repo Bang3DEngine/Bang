@@ -415,13 +415,13 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     // but neither do you or your ancestors
     ASSERT(phObjGo->HasComponent<PhysicsObject>());
 
-    PxRigidDynamic *pxRD =
-        SCAST<PxRigidDynamic *>(GetAncestorOrThisPxActor(phObjGo));
-    if (!pxRD)
+    PxRigidActor *pxRA =
+        SCAST<PxRigidActor *>(GetAncestorOrThisPxActor(phObjGo));
+    if (!pxRA)
     {
         ASSERT(!GetPxActorFromGameObject(phObjGo));
-        pxRD = ph->CreateNewPxRigidDynamic(phObjGo->GetTransform());
-        phObj->SetPxRigidDynamic(pxRD);
+        pxRA = ph->CreateNewPxRigidActor(false, phObjGo->GetTransform());
+        phObj->SetPxActor(pxRA);
         // Debug_Log("I need to create pxActor " << pxRD << " for go " <<
         //           phObjGo->GetName() << " for comp " << phObj);
     }
@@ -431,20 +431,20 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
         // phObjGo->GetName() <<
         //           " for comp " << phObj);
     }
-    ASSERT(pxRD);
+    ASSERT(pxRA);
 
     if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
     {
-        m_gameObjectToPxActor.Add(phObjGo, pxRD);
+        m_gameObjectToPxActor.Add(phObjGo, pxRA);
     }
 
-    if (!m_pxActorToGameObject.ContainsKey(pxRD))
+    if (!m_pxActorToGameObject.ContainsKey(pxRA))
     {
-        m_pxActorToGameObject.Add(pxRD, phObjGo);
-        GetPxScene()->addActor(*pxRD);
+        m_pxActorToGameObject.Add(pxRA, phObjGo);
+        GetPxScene()->addActor(*pxRA);
     }
     ASSERT(GetPxActorFromGameObject(phObjGo));
-    ASSERT(m_pxActorToGameObject.ContainsKey(pxRD));
+    ASSERT(m_pxActorToGameObject.ContainsKey(pxRA));
 
     // For each physics object in descendants, update its pxActor
     for (PhysicsObject *phObj : phObjsInDescendants)
@@ -465,9 +465,12 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
 
         if (forceKinematic)
         {
-            pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+            if (PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
+            {
+                pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+            }
         }
-        phObj->SetPxRigidDynamic(pxRD);
+        phObj->SetPxActor(pxRA);
 
         Component *comp = DCAST<Component *>(phObj);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -491,7 +494,7 @@ void PxSceneContainer::OnObjectUnGathered(GameObject *prevGo,
                                           PhysicsObject *phObj)
 {
     BANG_UNUSED(prevGo);
-    phObj->SetPxRigidDynamic(nullptr);
+    phObj->SetPxActor(nullptr);
 }
 
 void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)

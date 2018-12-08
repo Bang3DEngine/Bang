@@ -29,9 +29,7 @@ RigidBody::RigidBody()
     // Create pxActor
     if (Physics *ph = Physics::GetInstance())
     {
-        SetPxRigidDynamic(ph->CreateNewPxRigidDynamic());
-        // Debug_Log ("Creating new pxRD for " << this << " go " <<
-        //            " (pxRD:" << GetPxRigidDynamic() << ")");
+        SetPxActor(ph->CreateNewPxRigidActor(false));
         SetIsKinematic(false);
     }
 }
@@ -55,6 +53,16 @@ void RigidBody::SetDrag(float drag)
     {
         m_drag = drag;
         UpdatePxRigidDynamicValues();
+    }
+}
+
+void RigidBody::SetStatic(bool isStatic)
+{
+    if (isStatic != GetStatic())
+    {
+        m_static = isStatic;
+
+        // Change pxActor for a new dynamic/static one
     }
 }
 
@@ -239,6 +247,11 @@ bool RigidBody::GetIsKinematic() const
     return m_isKinematic;
 }
 
+bool RigidBody::GetStatic() const
+{
+    return m_static;
+}
+
 Vector3 RigidBody::GetLinearVelocity() const
 {
     return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
@@ -341,9 +354,8 @@ void RigidBody::UpdatePxRigidDynamicValues()
     }
 }
 
-void RigidBody::OnPxRigidDynamicChanged(PxRigidDynamic *prevPxRigidDynamic,
-                                        PxRigidDynamic *newPxRigidDynamic)
+void RigidBody::OnPxActorChanged(PxActor *prevPxActor, PxActor *newPxActor)
 {
-    BANG_UNUSED_2(prevPxRigidDynamic, newPxRigidDynamic);
+    BANG_UNUSED_2(prevPxActor, newPxActor);
     UpdatePxRigidDynamicValues();
 }

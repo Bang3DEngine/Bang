@@ -33,8 +33,10 @@
 #include "PxGeometryQuery.h"
 #include "PxPhysics.h"
 #include "PxPhysicsVersion.h"
+#include "PxRigidActor.h"
 #include "PxRigidBody.h"
 #include "PxRigidDynamic.h"
+#include "PxRigidStatic.h"
 #include "PxScene.h"
 #include "common/PxCoreUtilityTypes.h"
 #include "common/PxTolerancesScale.h"
@@ -471,25 +473,39 @@ PxMaterial *Physics::CreateNewMaterial()
     return GetPxPhysics()->createMaterial(0.5f, 0.5f, 0.02f);
 }
 
-PxRigidDynamic *Physics::CreateNewPxRigidDynamic(Transform *transform)
+PxRigidActor *Physics::CreateNewPxRigidActor(bool isStatic,
+                                             Transform *transform)
 {
     PxMaterial *pxDefaultMat =
         MaterialFactory::GetDefaultPhysicsMaterial().Get()->GetPxMaterial();
 
     PxTransform pxTransform = GetPxTransformFromTransform(transform);
-    PxRigidDynamic *pxRD = PxCreateDynamic(*GetPxPhysics(),
-                                           pxTransform,
-                                           PxSphereGeometry(0.01f),
-                                           *pxDefaultMat,
-                                           10.0f);
-    pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+    PxRigidActor *pxRA = nullptr;
+    if (isStatic)
+    {
+        PxRigidStatic *pxRS = PxCreateStatic(*GetPxPhysics(),
+                                             pxTransform,
+                                             PxSphereGeometry(0.01f),
+                                             *pxDefaultMat);
+        pxRA = pxRS;
+    }
+    else
+    {
+        PxRigidDynamic *pxRD = PxCreateDynamic(*GetPxPhysics(),
+                                               pxTransform,
+                                               PxSphereGeometry(0.01f),
+                                               *pxDefaultMat,
+                                               10.0f);
+        pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+        pxRA = pxRD;
+    }
 
     // Remove default initial shape
     PxShape *shape;
-    pxRD->getShapes(&shape, 1);
-    pxRD->detachShape(*shape);
+    pxRA->getShapes(&shape, 1);
+    pxRA->detachShape(*shape);
 
-    return pxRD;
+    return pxRA;
 }
 
 Vector2 Physics::GetVector2FromPxVec2(const PxVec2 &v)

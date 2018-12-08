@@ -27,6 +27,8 @@ class PxFoundation;
 class PxMaterial;
 class PxGeometry;
 class PxPhysics;
+class PxRigidBody;
+class PxRigidStatic;
 class PxRigidDynamic;
 class PxTriangleMesh;
 }
@@ -127,8 +129,8 @@ private:
     physx::PxPhysics *GetPxPhysics() const;
 
     physx::PxMaterial *CreateNewMaterial();
-    physx::PxRigidDynamic *CreateNewPxRigidDynamic(
-        Transform *transform = nullptr);
+    physx::PxRigidActor *CreateNewPxRigidActor(bool isStatic = false,
+                                               Transform *transform = nullptr);
 
     static GameObject *GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 

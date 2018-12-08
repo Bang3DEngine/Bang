@@ -13,9 +13,11 @@
 #include "Bang/Map.tcc"
 #include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
+#include "Bang/Ray.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Sphere.h"
 #include "Bang/String.h"
+#include "Bang/Texture2D.h"
 #include "Bang/Triangle.h"
 #include "Bang/UMap.h"
 
@@ -99,6 +101,8 @@ public:
     VertexId GetRemainingVertexId(Mesh::TriangleId triangleId,
                                   Mesh::VertexId oneVertex,
                                   Mesh::VertexId anotherVertex) const;
+    Vector2 GetTriangleUvsAtPoint(Mesh::TriangleId triangleId,
+                                  const Vector3 &point) const;
     Mesh::VertexId GetRemainingVertexIdUnique(
         Mesh::TriangleId triangleId,
         Mesh::VertexId oneVertex,

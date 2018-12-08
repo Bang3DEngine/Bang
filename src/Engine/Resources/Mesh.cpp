@@ -11,11 +11,13 @@
 #include "Bang/Assert.h"
 #include "Bang/Containers.h"
 #include "Bang/GL.h"
+#include "Bang/Geometry.h"
 #include "Bang/IBO.h"
 #include "Bang/IToString.h"
 #include "Bang/Math.h"
 #include "Bang/MeshSimplifier.h"
 #include "Bang/MetaNode.h"
+#include "Bang/Ray.h"
 #include "Bang/Set.h"
 #include "Bang/Set.tcc"
 #include "Bang/Triangle.h"
@@ -709,6 +711,26 @@ Mesh::VertexId Mesh::GetRemainingVertexId(Mesh::TriangleId triangleId,
         }
     }
     return SCAST<uint>(-1);
+}
+
+Vector2 Mesh::GetTriangleUvsAtPoint(Mesh::TriangleId triangleId,
+                                    const Vector3 &point) const
+{
+    Triangle tri = GetTriangle(triangleId);
+
+    uint triV0Id = GetTrianglesVertexIds()[triangleId * 3 + 0];
+    uint triV1Id = GetTrianglesVertexIds()[triangleId * 3 + 1];
+    uint triV2Id = GetTrianglesVertexIds()[triangleId * 3 + 2];
+    const Array<Vector2> &uvs = GetUvsPool();
+    Vector2 uvs0 = triV0Id < uvs.Size() ? uvs[triV0Id] : Vector2::Zero();
+    Vector2 uvs1 = triV1Id < uvs.Size() ? uvs[triV1Id] : Vector2::Zero();
+    Vector2 uvs2 = triV2Id < uvs.Size() ? uvs[triV2Id] : Vector2::Zero();
+
+    Vector3 barycentricCoords = tri.GetBarycentricCoordinates(point);
+    Vector2 pointUvs = (uvs0 * barycentricCoords[0]) +
+                       (uvs1 * barycentricCoords[1]) +
+                       (uvs2 * barycentricCoords[2]);
+    return pointUvs;
 }
 
 Mesh::VertexId Mesh::GetRemainingVertexIdUnique(

@@ -14,7 +14,9 @@ namespace Bang
 {
 class ICloneable;
 class Mesh;
+class Ray;
 class ShaderProgram;
+class Texture2D;
 
 class MeshRenderer : public Renderer
 {
@@ -33,6 +35,15 @@ public:
     int GetCurrentLOD() const;
     Mesh *GetCurrentLODActiveMesh() const;
 
+    void IntersectRay(const Ray &ray,
+                      bool *outIntersected = nullptr,
+                      Vector3 *outIntersectionPoint = nullptr,
+                      uint *outTriId = nullptr) const;
+    void IntersectRay(const Ray &ray,
+                      Texture2D *textureToFilterBy,
+                      bool *outIntersected = nullptr,
+                      Vector3 *outIntersectionPoint = nullptr,
+                      uint *outTriId = nullptr) const;
     // Renderer
     virtual void Bind() override;
     virtual void SetUniformsOnBind(ShaderProgram *sp) override;
@@ -47,6 +58,12 @@ protected:
 
     bool m_autoLOD = false;
     int m_currentLOD = 0;
+
+    void IntersectRay_(const Ray &ray,
+                       Texture2D *textureToFilterBy = nullptr,
+                       bool *outIntersected = nullptr,
+                       Vector3 *outIntersectionPoint = nullptr,
+                       uint *outTriId = nullptr) const;
 
     MeshRenderer();
     virtual ~MeshRenderer() override;

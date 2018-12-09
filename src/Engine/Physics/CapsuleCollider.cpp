@@ -145,8 +145,6 @@ void CapsuleCollider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidDynamic());
-
         float scaledRadius = GetScaledRadius();
         float scaledHeight = GetScaledHeight();
         physx::PxCapsuleGeometry capsuleGeometry;
@@ -154,6 +152,10 @@ void CapsuleCollider::UpdatePxShape()
         capsuleGeometry.halfHeight = scaledHeight * 0.5f;
         GetPxShape()->setGeometry(capsuleGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
+        if (GetPxRigidDynamic())
+        {
+            physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(),
+                                                        1.0f);
+        }
     }
 }

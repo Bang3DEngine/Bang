@@ -29,7 +29,7 @@ RigidBody::RigidBody()
     // Create pxActor
     if (Physics *ph = Physics::GetInstance())
     {
-        SetPxActor(ph->CreateNewPxRigidActor(false));
+        SetPxRigidActor(ph->CreateNewPxRigidActor(false));
         SetIsKinematic(false);
     }
 }
@@ -43,7 +43,7 @@ void RigidBody::SetMass(float mass)
     if (mass != GetMass())
     {
         m_mass = mass;
-        UpdatePxRigidDynamicValues();
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -52,17 +52,7 @@ void RigidBody::SetDrag(float drag)
     if (drag != GetDrag())
     {
         m_drag = drag;
-        UpdatePxRigidDynamicValues();
-    }
-}
-
-void RigidBody::SetStatic(bool isStatic)
-{
-    if (isStatic != GetStatic())
-    {
-        m_static = isStatic;
-
-        // Change pxActor for a new dynamic/static one
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -71,7 +61,7 @@ void RigidBody::SetAngularDrag(float angularDrag)
     if (angularDrag != GetAngularDrag())
     {
         m_angularDrag = angularDrag;
-        UpdatePxRigidDynamicValues();
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -80,7 +70,7 @@ void RigidBody::SetUseGravity(bool useGravity)
     if (useGravity != GetUseGravity())
     {
         m_useGravity = useGravity;
-        UpdatePxRigidDynamicValues();
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -89,7 +79,7 @@ void RigidBody::SetIsKinematic(bool isKinematic)
     if (isKinematic != GetIsKinematic())
     {
         m_isKinematic = isKinematic;
-        UpdatePxRigidDynamicValues();
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -124,7 +114,7 @@ void RigidBody::SetConstraints(const RigidBodyConstraints &constraints)
     if (constraints != GetConstraints())
     {
         m_constraints = constraints;
-        UpdatePxRigidDynamicValues();
+        UpdatePxRigidActorValues();
     }
 }
 
@@ -247,11 +237,6 @@ bool RigidBody::GetIsKinematic() const
     return m_isKinematic;
 }
 
-bool RigidBody::GetStatic() const
-{
-    return m_static;
-}
-
 Vector3 RigidBody::GetLinearVelocity() const
 {
     return GetPxRigidDynamic() ? Physics::GetVector3FromPxVec3(
@@ -338,12 +323,16 @@ void RigidBody::ExportMeta(MetaNode *metaNode) const
     metaNode->Set("Constraints", GetConstraints().GetValue());
 }
 
-void RigidBody::UpdatePxRigidDynamicValues()
+void RigidBody::UpdatePxRigidActorValues()
 {
+    if (GetPxRigidActor())
+    {
+        GetPxRigidActor()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY,
+                                        !GetUseGravity());
+    }
+
     if (GetPxRigidDynamic())
     {
-        GetPxRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY,
-                                          !GetUseGravity());
         GetPxRigidDynamic()->setRigidBodyFlag(
             physx::PxRigidBodyFlag::eKINEMATIC, GetIsKinematic());
         GetPxRigidDynamic()->setMass(GetMass());
@@ -354,8 +343,9 @@ void RigidBody::UpdatePxRigidDynamicValues()
     }
 }
 
-void RigidBody::OnPxActorChanged(PxActor *prevPxActor, PxActor *newPxActor)
+void RigidBody::OnPxRigidActorChanged(PxRigidActor *prevPxRigidActor,
+                                      PxRigidActor *newPxRigidActor)
 {
-    BANG_UNUSED_2(prevPxActor, newPxActor);
-    UpdatePxRigidDynamicValues();
+    BANG_UNUSED_2(prevPxRigidActor, newPxRigidActor);
+    UpdatePxRigidActorValues();
 }

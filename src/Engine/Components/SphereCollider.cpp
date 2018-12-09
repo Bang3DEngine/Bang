@@ -81,10 +81,11 @@ float SphereCollider::GetRadius() const
 
 physx::PxShape *SphereCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic() ? GetPxRigidDynamic()->createShape(
-                                     physx::PxSphereGeometry(1),
-                                     *Physics::GetDefaultPxMaterial())
-                               : nullptr;
+    return GetPxRigidDynamic()
+               ? GetPxRigidDynamic()->createShape(
+                     physx::PxSphereGeometry(1),
+                     *Physics::GetDefaultPxMaterial())
+               : nullptr;
 }
 
 void SphereCollider::UpdatePxShape()
@@ -93,13 +94,15 @@ void SphereCollider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidDynamic());
-
         float scaledRadius = GetScaledRadius();
         physx::PxSphereGeometry sphereGeometry;
         sphereGeometry.radius = scaledRadius;
         GetPxShape()->setGeometry(sphereGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
+        if (GetPxRigidDynamic())
+        {
+            physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(),
+                                                        1.0f);
+        }
     }
 }

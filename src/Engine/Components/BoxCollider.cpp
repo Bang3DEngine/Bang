@@ -76,10 +76,11 @@ void BoxCollider::Reflect()
 
 physx::PxShape *BoxCollider::CreatePxShape() const
 {
-    return GetPxRigidDynamic() ? GetPxRigidDynamic()->createShape(
-                                     physx::PxBoxGeometry(1, 1, 1),
-                                     *Physics::GetDefaultPxMaterial())
-                               : nullptr;
+    return GetPxRigidDynamic()
+               ? GetPxRigidDynamic()->createShape(
+                     physx::PxBoxGeometry(1, 1, 1),
+                     *Physics::GetDefaultPxMaterial())
+               : nullptr;
 }
 
 void BoxCollider::UpdatePxShape()
@@ -88,14 +89,16 @@ void BoxCollider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidDynamic());
-
         Transform *tr = GetGameObject()->GetTransform();
         Vector3 extents = GetExtents() * tr->GetScale();
         physx::PxBoxGeometry boxGeometry;
         boxGeometry.halfExtents = Physics::GetPxVec3FromVector3(extents);
         GetPxShape()->setGeometry(boxGeometry);
 
-        physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(), 1.0f);
+        if (GetPxRigidDynamic())
+        {
+            physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(),
+                                                        1.0f);
+        }
     }
 }

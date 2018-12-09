@@ -15,7 +15,6 @@
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
 #include "Bang/Transform.h"
-#include "PxRigidDynamic.h"
 #include "PxRigidStatic.h"
 #include "PxShape.h"
 #include "extensions/PxRigidActorExt.h"
@@ -93,7 +92,7 @@ bool MeshCollider::CanBeSimulationShape() const
 physx::PxShape *MeshCollider::CreatePxShape() const
 {
     PxShape *shape = nullptr;
-    if (PxRigidDynamic *pxRD = GetPxRigidDynamic())
+    if (PxRigidActor *pxRA = GetPxRigidActor())
     {
         PxMeshScale scale(PxVec3(1, 1, 1), PxQuat(PxIdentity));
         PxTriangleMesh *pxTriMesh =
@@ -102,7 +101,7 @@ physx::PxShape *MeshCollider::CreatePxShape() const
         if (triMeshGeom.isValid())
         {
             shape = PxRigidActorExt::createExclusiveShape(
-                *pxRD,
+                *pxRA,
                 triMeshGeom,
                 *Physics::GetDefaultPxMaterial(),
                 physx::PxShapeFlag::eSIMULATION_SHAPE);
@@ -117,9 +116,6 @@ void MeshCollider::UpdatePxShape()
 
     if (GetPxShape())
     {
-        ASSERT(GetPxRigidDynamic()->getRigidBodyFlags().isSet(
-            PxRigidBodyFlag::eKINEMATIC));
-
         Transform *tr = GetGameObject()->GetTransform();
         PxTriangleMeshGeometry &triMeshGeom =
             GetPxShape()->getGeometry().triangleMesh();
@@ -128,7 +124,11 @@ void MeshCollider::UpdatePxShape()
         if (triMeshGeom.scale.scale != scale)
         {
             triMeshGeom.scale.scale = scale;
-            GetPxShape()->setGeometry(triMeshGeom);
+            if (GetPxShape()->getGeometry().getType() ==
+                PxGeometryType::eTRIANGLEMESH)
+            {
+                GetPxShape()->setGeometry(triMeshGeom);
+            }
         }
     }
 }

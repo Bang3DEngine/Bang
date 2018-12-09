@@ -136,6 +136,53 @@ void PxSceneContainer::ResetStepTimeReference()
     m_lastStepTime = Time::GetNow();
 }
 
+void PxSceneContainer::ChangePxRigidActor(PxSceneContainer *psc,
+                                          PhysicsObject *phObj,
+                                          PxRigidActor *newPxRigidActor)
+{
+    physx::PxActor *oldPxActor = phObj->GetPxRigidActor();
+
+    Component *phComp = DCAST<Component *>(phObj);
+    GameObject *phGo = phComp->GetGameObject();
+    const Array<PhysicsObject *> descPhObjs =
+        phGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
+
+    for (PhysicsObject *descPhObj : descPhObjs)
+    {
+        Component *descPhComp = DCAST<Component *>(descPhObj);
+        GameObject *descPhGo = descPhComp->GetGameObject();
+        if (psc)
+        {
+            psc->m_gameObjectToPxActor.Add(descPhGo, newPxRigidActor);
+            psc->m_pxActorToGameObject.Add(newPxRigidActor, descPhGo);
+        }
+
+        if (Collider *descColl = DCAST<Collider *>(descPhObj))
+        {
+            if (PxShape *descPxShape = descColl->GetPxShape())
+            {
+                newPxRigidActor->attachShape(*descPxShape);
+            }
+        }
+        descPhObj->SetPxRigidActor(newPxRigidActor);
+    }
+
+    if (oldPxActor)
+    {
+        if (psc)
+        {
+            psc->GetPxScene()->removeActor(*oldPxActor);
+            psc->m_pxActorToGameObject.Remove(oldPxActor);
+        }
+        oldPxActor->release();
+    }
+
+    if (psc)
+    {
+        psc->GetPxScene()->addActor(*newPxRigidActor);
+    }
+}
+
 Scene *PxSceneContainer::GetScene() const
 {
     return p_scene;
@@ -247,10 +294,10 @@ PxActor *PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
         Array<PhysicsObject *> phObjs = go->GetComponents<PhysicsObject>();
         for (PhysicsObject *phObj : phObjs)
         {
-            if (PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
+            if (PxRigidActor *pxRA = phObj->GetPxRigidActor())
             {
-                m_gameObjectToPxActor.Add(go, SCAST<PxActor *>(pxRD));
-                return pxRD;
+                m_gameObjectToPxActor.Add(go, pxRA);
+                return pxRA;
             }
         }
     }
@@ -403,13 +450,6 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     Array<PhysicsObject *> phObjsInDescendants =
         phObjGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
 
-    // Debug_Log("Gathered: " << phObjGo->GetName());
-
-    // Remove all orphan PxShapes that do not have a parent pxActor
-    // for (PhysicsObject *phObj : phObjsInDescendants)
-    // {
-    // }
-
     // Does this gameObject need a pxActor for him to be created?
     // You need to create a pxActor when you hold a PhysicsObject component,
     // but neither do you or your ancestors
@@ -420,16 +460,9 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
     if (!pxRA)
     {
         ASSERT(!GetPxActorFromGameObject(phObjGo));
-        pxRA = ph->CreateNewPxRigidActor(false, phObjGo->GetTransform());
-        phObj->SetPxActor(pxRA);
-        // Debug_Log("I need to create pxActor " << pxRD << " for go " <<
-        //           phObjGo->GetName() << " for comp " << phObj);
-    }
-    else
-    {
-        // Debug_Log("Reusing pxActor " << pxRD << " for go " <<
-        // phObjGo->GetName() <<
-        //           " for comp " << phObj);
+        pxRA = ph->CreateNewPxRigidActor(phObj->GetStatic(),
+                                         phObjGo->GetTransform());
+        phObj->SetPxRigidActor(pxRA);
     }
     ASSERT(pxRA);
 
@@ -470,7 +503,7 @@ void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
                 pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
             }
         }
-        phObj->SetPxActor(pxRA);
+        phObj->SetPxRigidActor(pxRA);
 
         Component *comp = DCAST<Component *>(phObj);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
@@ -494,7 +527,7 @@ void PxSceneContainer::OnObjectUnGathered(GameObject *prevGo,
                                           PhysicsObject *phObj)
 {
     BANG_UNUSED(prevGo);
-    phObj->SetPxActor(nullptr);
+    phObj->SetPxRigidActor(nullptr);
 }
 
 void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)

@@ -92,6 +92,8 @@ public:
                         const physx::PxTransform &pxTransform1);
     static bool Overlap(const Collider *collider0, const Collider *collider1);
 
+    physx::PxRigidActor *CreateNewPxRigidActor(bool isStatic = false,
+                                               Transform *transform = nullptr);
     physx::PxTriangleMesh *CreatePxTriangleMesh(Mesh *mesh) const;
     static physx::PxMaterial *GetDefaultPxMaterial();
 
@@ -129,8 +131,6 @@ private:
     physx::PxPhysics *GetPxPhysics() const;
 
     physx::PxMaterial *CreateNewMaterial();
-    physx::PxRigidActor *CreateNewPxRigidActor(bool isStatic = false,
-                                               Transform *transform = nullptr);
 
     static GameObject *GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 

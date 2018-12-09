@@ -139,8 +139,8 @@ void Physics::UpdatePxSceneFromTransforms(Scene *scene)
                     {
                         if (Transform *tr = phObjGo->GetTransform())
                         {
-                            PxRigidBody *pxRB = SCAST<PxRigidBody *>(pxActor);
-                            pxRB->setGlobalPose(
+                            PxRigidActor *pxRA = SCAST<PxRigidActor *>(pxActor);
+                            pxRA->setGlobalPose(
                                 GetPxTransformFromTransform(tr));
                         }
                     }
@@ -207,11 +207,11 @@ void Physics::Step(Scene *scene, Time simulationTime)
                     RigidBody *rb = SCAST<RigidBody *>(phObj);
                     if (rb->IsActiveRecursively())
                     {
-                        PxRigidBody *pxRB = SCAST<PxRigidBody *>(pxActor);
+                        PxRigidActor *pxRA = SCAST<PxRigidActor *>(pxActor);
                         if (Transform *tr = go->GetTransform())
                         {
                             FillTransformFromPxTransform(tr,
-                                                         pxRB->getGlobalPose());
+                                                         pxRA->getGlobalPose());
                         }
                     }
                 }
@@ -411,7 +411,7 @@ bool Physics::Overlap(const Collider *collider0,
                       const PxGeometry &pxGeometry1,
                       const PxTransform &pxTransform1)
 {
-    if (!collider0 || !collider0->GetPxRigidDynamic())
+    if (!collider0 || !collider0->GetPxRigidActor())
     {
         return false;
     }
@@ -423,7 +423,7 @@ bool Physics::Overlap(const Collider *collider0,
 
 bool Physics::Overlap(const Collider *collider0, const Collider *collider1)
 {
-    if (!collider1 || !collider1->GetPxRigidDynamic())
+    if (!collider1 || !collider1->GetPxRigidActor())
     {
         return false;
     }

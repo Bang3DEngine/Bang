@@ -1,5 +1,10 @@
 #include "Bang/PhysicsObject.h"
 
+#include "Bang/Component.h"
+#include "Bang/GameObject.h"
+#include "Bang/Physics.h"
+#include "Bang/PxSceneContainer.h"
+#include "Bang/Scene.h"
 #include "PxRigidDynamic.h"
 #include "PxRigidStatic.h"
 
@@ -18,32 +23,56 @@ void PhysicsObject::SetPhysicsObjectType(PhysicsObject::Type physicsObjectType)
     m_physicsObjectType = physicsObjectType;
 }
 
-void PhysicsObject::SetPxActor(physx::PxActor *pxActor)
+void PhysicsObject::SetPxRigidActor(physx::PxRigidActor *pxRigidActor)
 {
-    if (pxActor != GetPxActor())
+    if (pxRigidActor != GetPxRigidActor())
     {
-        physx::PxActor *prevPxRD = GetPxActor();
+        physx::PxRigidActor *prevPxRA = GetPxRigidActor();
 
-        p_pxActor = pxActor;
+        p_pxRigidActor = pxRigidActor;
 
-        OnPxActorChanged(prevPxRD, GetPxActor());
+        OnPxRigidActorChanged(prevPxRA, GetPxRigidActor());
     }
 }
 
-physx::PxActor *PhysicsObject::GetPxActor() const
+void PhysicsObject::SetStatic(bool isStatic)
 {
-    return p_pxActor;
+    if (isStatic != GetStatic())
+    {
+        m_static = isStatic;
+
+        Physics *ph = Physics::GetInstance();
+        physx::PxRigidActor *newPxRigidActor =
+            ph->CreateNewPxRigidActor(GetStatic());
+
+        Component *comp = DCAST<Component *>(this);
+        PxSceneContainer *pxSceneContainer =
+            ph->GetPxSceneContainerFromScene(comp->GetGameObject()->GetScene());
+        PxSceneContainer::ChangePxRigidActor(
+            pxSceneContainer, this, newPxRigidActor);
+    }
+}
+
+bool PhysicsObject::GetStatic() const
+{
+    return m_static;
+}
+
+physx::PxRigidActor *PhysicsObject::GetPxRigidActor() const
+{
+    return p_pxRigidActor;
 }
 
 physx::PxRigidStatic *PhysicsObject::GetPxRigidStatic() const
 {
-    return GetPxActor() ? DCAST<physx::PxRigidStatic *>(GetPxActor()) : nullptr;
+    return GetPxRigidActor() ? DCAST<physx::PxRigidStatic *>(GetPxRigidActor())
+                             : nullptr;
 }
 
 physx::PxRigidDynamic *PhysicsObject::GetPxRigidDynamic() const
 {
-    return GetPxActor() ? DCAST<physx::PxRigidDynamic *>(GetPxActor())
-                        : nullptr;
+    return GetPxRigidActor() ? DCAST<physx::PxRigidDynamic *>(GetPxRigidActor())
+                             : nullptr;
 }
 
 PhysicsObject::Type PhysicsObject::GetPhysicsObjectType() const
@@ -51,8 +80,8 @@ PhysicsObject::Type PhysicsObject::GetPhysicsObjectType() const
     return m_physicsObjectType;
 }
 
-void PhysicsObject::OnPxActorChanged(physx::PxActor *prevPxDynamic,
-                                     physx::PxActor *newPxDynamic)
+void PhysicsObject::OnPxRigidActorChanged(physx::PxRigidActor *prevPxDynamic,
+                                          physx::PxRigidActor *newPxDynamic)
 {
     BANG_UNUSED_2(prevPxDynamic, newPxDynamic);
 }

@@ -167,21 +167,19 @@ bool Collider::CanBeTriggerShape() const
     return true;
 }
 
-void Collider::OnPxActorChanged(physx::PxActor *prevPxActor,
-                                physx::PxActor *newPxActor)
+void Collider::OnPxRigidActorChanged(physx::PxRigidActor *prevPxRigidActor,
+                                     physx::PxRigidActor *newPxRigidActor)
 {
-    if (prevPxActor)
+    if (prevPxRigidActor)
     {
         if (GetPxShape())
         {
-            physx::PxRigidActor *pxRigidActor =
-                SCAST<physx::PxRigidActor *>(prevPxActor);
-            pxRigidActor->detachShape(*GetPxShape());
+            prevPxRigidActor->detachShape(*GetPxShape());
             p_pxShape = nullptr;
         }
     }
 
-    if (newPxActor)
+    if (newPxRigidActor)
     {
         UpdatePxShape();
     }
@@ -201,7 +199,7 @@ void Collider::UpdatePxShape()
 {
     if (!GetPxShape())
     {
-        if (GetPxRigidDynamic())
+        if (GetPxRigidActor())
         {
             p_pxShape = CreatePxShape();
         }
@@ -225,7 +223,7 @@ void Collider::UpdatePxShape()
             GetPxShape()->setMaterials(&material, 1);
         }
 
-        if (CanComputeInertia())
+        if (CanComputeInertia() && GetPxRigidDynamic())
         {
             physx::PxRigidBodyExt::updateMassAndInertia(*GetPxRigidDynamic(),
                                                         1.0f);
@@ -276,14 +274,14 @@ Matrix4 Collider::GetWorldShapeTransform() const
 Matrix4 Collider::GetWorldShapeTransformWithRespectToPxActor() const
 {
     Matrix4 shapeTransformWithRespectToPxActor = GetWorldShapeTransform();
-    if (physx::PxActor *pxActor = GetPxRigidDynamic())
+    if (physx::PxRigidActor *pxRA = GetPxRigidActor())
     {
         Physics *ph = Physics::GetInstance();
         if (PxSceneContainer *pxSceneCont =
                 ph->GetPxSceneContainerFromScene(GetGameObject()->GetScene()))
         {
             if (GameObject *pxActorGo =
-                    pxSceneCont->GetGameObjectFromPxActor(pxActor))
+                    pxSceneCont->GetGameObjectFromPxActor(pxRA))
             {
                 Matrix4 actorToWorldInv =
                     pxActorGo->GetTransform()->GetLocalToWorldMatrixInv();

@@ -52,6 +52,10 @@ public:
 
     void ResetStepTimeReference();
 
+    static void ChangePxRigidActor(PxSceneContainer *pxSceneContainer,
+                                   PhysicsObject *phObj,
+                                   physx::PxRigidActor *newPxRigidActor);
+
     Scene *GetScene() const;
     physx::PxScene *GetPxScene() const;
     Array<Collider *> GetColliders() const;

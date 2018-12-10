@@ -37,7 +37,10 @@ public:
     };
 
     Variant() = default;
-    ~Variant() = default;
+    ~Variant();
+
+    Variant(const Variant &rhs);
+    Variant &operator=(const Variant &rhs);
 
     void SetType(Type type);
 

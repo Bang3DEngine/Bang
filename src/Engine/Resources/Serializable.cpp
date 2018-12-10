@@ -6,6 +6,7 @@
 #include "Bang/GUIDManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
@@ -119,6 +120,10 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                     case Variant::Type::QUATERNION:
                         reflVarSetter(Variant::FromQuaternion(
                             metaNode.Get<Quaternion>(varName)));
+                        break;
+                    case Variant::Type::OBJECT_PTR:
+                        reflVarSetter(Variant::FromObjectPtr(
+                            metaNode.Get<ObjectPtr>(varName)));
                         break;
                     case Variant::Type::NONE: break;
 

@@ -544,6 +544,41 @@ GameObject *GameObject::Find(const String &name)
     return scene ? scene->FindInChildren(name) : nullptr;
 }
 
+Object *GameObject::FindObjectInDescendants(const GUID &guid)
+{
+    if (guid == GUID::Empty())
+    {
+        return nullptr;
+    }
+
+    if (GetGUID() == guid)
+    {
+        return this;
+    }
+
+    const Array<Component *> &comps = GetComponents();
+    for (Component *comp : comps)
+    {
+        if (comp && comp->GetGUID() == guid)
+        {
+            return comp;
+        }
+    }
+
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (child)
+        {
+            if (Object *obj = child->FindObjectInDescendants(guid))
+            {
+                return obj;
+            }
+        }
+    }
+    return nullptr;
+}
+
 GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
 {
     for (GameObject *child : GetChildren())

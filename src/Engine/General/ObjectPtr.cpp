@@ -1,72 +1,66 @@
 #include "Bang/ObjectPtr.h"
 
 #include "Bang/GUID.h"
-#include "Bang/Scene.h"
+#include "Bang/GameObject.h"
 #include "Bang/SceneManager.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/String.h"
 
 using namespace Bang;
 
-ObjectPtr::ObjectPtr(Object *object) : DPtr<Object>(object)
+ObjectPtr::ObjectPtr(Object *object)
 {
+    SetObject(object);
 }
 
 ObjectPtr &ObjectPtr::operator=(const ObjectPtr &rhs)
 {
-    return SCAST<ObjectPtr &>(this->DPtr<Object>::operator=(rhs));
+    SetObjectGUID(rhs.GetObjectGUID());
+    return *this;
 }
 
-void ObjectPtr::SetPtrGUID(const GUID &guid)
+ObjectPtr &ObjectPtr::operator=(Object *rhs)
 {
-    if (Scene *scene = SceneManager::GetActiveScene())
-    {
-        Array<GameObject *> children = scene->GetChildrenRecursively();
-        Array<Component *> comps =
-            scene->GetComponentsInDescendantsAndThis<Component>();
-        for (GameObject *child : children)
-        {
-            if (child->GetGUID() == guid)
-            {
-                Set(child);
-                break;
-            }
-        }
+    SetObject(rhs);
+    return *this;
+}
 
-        if (!Get())
-        {
-            for (Component *comp : comps)
-            {
-                if (comp->GetGUID() == guid)
-                {
-                    Set(comp);
-                    break;
-                }
-            }
-        }
+void ObjectPtr::SetObjectGUID(const GUID &guid)
+{
+    if (guid != GetObjectGUID())
+    {
+        m_objectGUID = guid;
     }
 }
 
-GUID ObjectPtr::GetPtrGUID() const
+void ObjectPtr::SetObject(Object *object)
 {
-    return Get() ? Get()->GetGUID() : GUID::Empty();
+    SetObjectGUID((object ? object->GetGUID() : GUID::Empty()));
+}
+
+Object *ObjectPtr::GetObjectIn(GameObject *go) const
+{
+    return (go ? go->FindObjectInDescendants(GetObjectGUID()) : nullptr);
+}
+
+GUID ObjectPtr::GetObjectGUID() const
+{
+    return m_objectGUID;
+}
+
+bool ObjectPtr::operator==(const ObjectPtr &rhs) const
+{
+    return GetObjectGUID() == rhs.GetObjectGUID();
+}
+
+bool ObjectPtr::operator!=(const ObjectPtr &rhs) const
+{
+    return !(*this == rhs);
 }
 
 std::ostream &operator<<(std::ostream &os, const ObjectPtr &rhs)
 {
     os << "OP ";
-    os << rhs.GetPtrGUID();
+    os << rhs.GetObjectGUID();
     return os;
-}
-
-std::istream &operator>>(std::istream &is, ObjectPtr &rhs)
-{
-    String opStr;
-    is >> opStr;
-
-    GUID guid;
-    is >> guid;
-
-    rhs.SetPtrGUID(guid);
-    return is;
 }

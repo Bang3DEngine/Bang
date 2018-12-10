@@ -9,22 +9,32 @@
 namespace Bang
 {
 class Object;
-class ObjectPtr : public DPtr<Object>
+class ObjectPtr
 {
 public:
     ObjectPtr() = default;
-    ObjectPtr(Object *object);
+    explicit ObjectPtr(Object *object);
 
     ObjectPtr &operator=(const ObjectPtr &rhs);
+    ObjectPtr &operator=(Object *rhs);
 
-    void SetPtrGUID(const GUID &guid);
-    GUID GetPtrGUID() const;
+    void SetObjectGUID(const GUID &guid);
+    void SetObject(Object *object);
+
+    Object *GetObjectIn(GameObject *go) const;
+    GUID GetObjectGUID() const;
+
+    bool operator==(const ObjectPtr &rhs) const;
+    bool operator!=(const ObjectPtr &rhs) const;
+
+private:
+    GUID m_objectGUID;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ObjectPtr &rhs)
 {
     os << "OP ";
-    os << rhs.GetPtrGUID();
+    os << rhs.GetObjectGUID();
     return os;
 }
 
@@ -36,7 +46,7 @@ inline std::istream &operator>>(std::istream &is, ObjectPtr &rhs)
     GUID guid;
     is >> guid;
 
-    rhs.SetPtrGUID(guid);
+    rhs.SetObjectGUID(guid);
     return is;
 }
 }

@@ -2,6 +2,8 @@
 
 #include "Bang/Color.h"
 #include "Bang/GUID.h"
+#include "Bang/Object.h"
+#include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
@@ -56,6 +58,16 @@ void Variant::SetGUID(const GUID &guid)
 {
     m_guid = guid;
     SetType(Type::GUID);
+}
+
+void Variant::SetObjectPtr(const ObjectPtr &objectPtr)
+{
+    if (!m_objectPtr)
+    {
+        m_objectPtr = new ObjectPtr();
+    }
+    *m_objectPtr = objectPtr;
+    SetType(Type::OBJECT_PTR);
 }
 
 void Variant::SetString(const String &v)
@@ -132,6 +144,15 @@ bool Variant::GetBool() const
 const GUID &Variant::GetGUID() const
 {
     return m_guid;
+}
+
+ObjectPtr Variant::GetObjectPtr() const
+{
+    if (!m_objectPtr)
+    {
+        m_objectPtr = new ObjectPtr();
+    }
+    return *m_objectPtr;
 }
 
 String Variant::GetString() const
@@ -214,6 +235,13 @@ Variant Variant::FromGUID(const GUID &v)
     return variant;
 }
 
+Variant Variant::FromObjectPtr(const ObjectPtr &ptr)
+{
+    Variant variant;
+    variant.SetObjectPtr(ptr);
+    return variant;
+}
+
 Variant Variant::FromString(const String &v)
 {
     Variant variant;
@@ -279,6 +307,8 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::VECTOR4: return (GetVector4() == rhs.GetVector4());
         case Variant::Type::QUATERNION:
             return (GetQuaternion() == rhs.GetQuaternion());
+        case Variant::Type::OBJECT_PTR:
+            return (GetObjectPtr() == rhs.GetObjectPtr());
         case Variant::Type::NONE: return true;
 
         default: break;
@@ -310,6 +340,7 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::VECTOR3: return "Vector3";
         case Variant::Type::VECTOR4: return "Vector4";
         case Variant::Type::QUATERNION: return "Quaternion";
+        case Variant::Type::OBJECT_PTR: return "ObjectPtr";
         case Variant::Type::NONE: return "None";
 
         default: break;
@@ -372,6 +403,10 @@ Variant::Type Variant::GetTypeFromString(const String &typeStr)
     else if (typeStr == "Quaternion")
     {
         return Variant::Type::QUATERNION;
+    }
+    else if (typeStr.BeginsWith("ObjectPtr") || typeStr.EndsWith("*"))
+    {
+        return Variant::Type::OBJECT_PTR;
     }
     return Variant::Type::NONE;
 }

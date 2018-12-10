@@ -12,15 +12,15 @@ using namespace Bang;
 
 using BP = BangPreprocessor;
 
-void ReflectVariable::FromString(String::Iterator propBegin,
-                                 String::Iterator propEnd,
+void ReflectVariable::FromString(String::Iterator varBegin,
+                                 String::Iterator varEnd,
                                  ReflectVariable *outReflectedVar,
                                  bool *success)
 {
     *success = false;
 
     String::Iterator varListBegin, varListEnd;
-    BP::GetNextScope(propBegin, propEnd, &varListBegin, &varListEnd, '(', ')');
+    BP::GetNextScope(varBegin, varEnd, &varListBegin, &varListEnd, '(', ')');
 
     // Process property list
     String varListStr(varListBegin + 1, varListEnd - 1);
@@ -40,35 +40,44 @@ void ReflectVariable::FromString(String::Iterator propBegin,
     do
     {
         String::Iterator wordBegin;
-        BP::FindNextWord(wordEnd, propEnd, &wordBegin, &wordEnd);
+        BP::FindNextWord(wordEnd, varEnd, &wordBegin, &wordEnd);
         nextWord = String(wordBegin, wordEnd);
     } while (BP::Modifiers.Contains(nextWord));
 
     String variableTypeStr = nextWord;
+
+    String::Iterator nameBegin, nameEnd;
+    BP::FindNextWord(wordEnd, varEnd, &nameBegin, &nameEnd);
+    if (nameBegin == varEnd || nameEnd == varEnd)
+    {
+        std::cerr << "BP Error: Expected a variable name" << std::endl;
+        return;
+    }
+
+    String varCodeName = String(nameBegin, nameEnd);
+    if (varCodeName.BeginsWith("*"))
+    {
+        variableTypeStr += "*";
+        varCodeName = varCodeName.SubString(1);
+    }
+
     if (!Variant::ExistsType(variableTypeStr))
     {
-        std::cerr << "BP Error: Expected a variable type,"
+        std::cerr << "BP Error: Expected a variable type, "
                      "but got '"
                   << variableTypeStr << "'" << std::endl;
         return;
     }
 
+    outReflectedVar->SetTypeString(variableTypeStr);
     outReflectedVar->GetVariant().SetType(
         Variant::GetTypeFromString(variableTypeStr));
+    outReflectedVar->m_codeName = varCodeName;
 
-    String::Iterator nameBegin, nameEnd;
-    BP::FindNextWord(wordEnd, propEnd, &nameBegin, &nameEnd);
-    if (nameBegin == propEnd || nameEnd == propEnd)
+    String::Iterator assignBegin = std::find(nameEnd, varEnd, '=');
+    if (assignBegin != varEnd)
     {
-        std::cerr << "BP Error: Expected a variable name" << std::endl;
-        return;
-    }
-    outReflectedVar->m_codeName = String(nameBegin, nameEnd);
-
-    String::Iterator assignBegin = std::find(nameEnd, propEnd, '=');
-    if (assignBegin != propEnd)
-    {
-        String initValueStr(assignBegin + 1, propEnd - 1);
+        String initValueStr(assignBegin + 1, varEnd - 1);
         initValueStr = initValueStr.Trim({' ', '"'});
         outReflectedVar->SetInitValueString(initValueStr);
     }
@@ -84,6 +93,11 @@ void ReflectVariable::SetName(const String &name)
 void ReflectVariable::SetCodeName(const String &varCodeName)
 {
     m_codeName = varCodeName;
+}
+
+void ReflectVariable::SetTypeString(const String &typeString)
+{
+    m_typeString = typeString;
 }
 
 void ReflectVariable::SetInitValue(const Variant &initValueVariant)
@@ -160,6 +174,11 @@ ReflectVariable::SetterFunc ReflectVariable::GetSetter() const
 ReflectVariable::GetterFunc ReflectVariable::GetGetter() const
 {
     return m_getter;
+}
+
+const String &ReflectVariable::GetTypeString() const
+{
+    return m_typeString;
 }
 
 const String &ReflectVariable::GetInitValueString() const

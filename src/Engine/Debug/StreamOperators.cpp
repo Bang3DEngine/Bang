@@ -5,6 +5,8 @@
 #include "Bang/ComplexRandom.h"
 #include "Bang/GUID.h"
 #include "Bang/IToString.h"
+#include "Bang/Object.h"
+#include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
 #include "Bang/Quad.h"
 #include "Bang/Quaternion.h"
@@ -107,6 +109,7 @@ std::ostream &operator<<(std::ostream &log, const Variant &variant)
         case Variant::Type::VECTOR3: log << variant.GetVector3(); break;
         case Variant::Type::VECTOR4: log << variant.GetVector4(); break;
         case Variant::Type::QUATERNION: log << variant.GetQuaternion(); break;
+        case Variant::Type::OBJECT_PTR: log << variant.GetObjectPtr(); break;
         case Variant::Type::NONE: break;
 
         default: ASSERT(false); break;
@@ -296,6 +299,14 @@ std::istream &operator>>(std::istream &is, Variant &variant)
             Quaternion v;
             is >> v;
             variant.SetQuaternion(v);
+        }
+        break;
+
+        case Variant::Type::OBJECT_PTR:
+        {
+            ObjectPtr v;
+            is >> v;
+            variant.SetObjectPtr(v);
         }
         break;
 

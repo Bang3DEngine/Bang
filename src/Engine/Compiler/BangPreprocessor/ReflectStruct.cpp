@@ -154,22 +154,38 @@ MetaNode ReflectStruct::GetMeta() const
     return meta;
 }
 
-String ReflectStruct::GetInitializationCode() const
+String ReflectStruct::GetReflectVarCode() const
 {
     String src = "";
     for (const ReflectVariable &var : GetVariables())
     {
-        String varReflectionCode = R"VERBATIM(
-               ReflectVar<VAR_TYPE>(
-                           "VAR_REFL_NAME",
-                           [this](VAR_TYPE x) { VAR_NAME = x; },
-                           [this]() { return VAR_NAME; });
-            )VERBATIM";
-
         Variant::Type varType = var.GetVariant().GetType();
         if (varType == Variant::Type::NONE)
         {
             continue;
+        }
+
+        String varReflectionCode = R"VERBATIM(
+               ReflectVar<VAR_TYPE>(
+                           "VAR_REFL_NAME",
+                           [this](VAR_TYPE x) { VAR_NAME = MAYBE_CAST(xMAYBE_GET); },
+                           [this]() { return MAYBE_CONSTRUCTOR(VAR_NAME); });
+            )VERBATIM";
+
+        if (varType == Variant::Type::OBJECT_PTR)
+        {
+            varReflectionCode.ReplaceInSitu("MAYBE_GET", ".Get()");
+            varReflectionCode.ReplaceInSitu(
+                "MAYBE_CONSTRUCTOR",
+                Variant::GetTypeToString(var.GetVariant().GetType()));
+            varReflectionCode.ReplaceInSitu(
+                "MAYBE_CAST", "SCAST<" + var.GetTypeString() + ">");
+        }
+        else
+        {
+            varReflectionCode.ReplaceInSitu("MAYBE_GET", "");
+            varReflectionCode.ReplaceInSitu("MAYBE_CONSTRUCTOR", "");
+            varReflectionCode.ReplaceInSitu("MAYBE_CAST", "");
         }
 
         varReflectionCode.ReplaceInSitu(
@@ -184,7 +200,7 @@ String ReflectStruct::GetInitializationCode() const
     return src;
 }
 
-String ReflectStruct::GetGetReflectionInfoCode() const
+String ReflectStruct::GetReflectCode() const
 {
     String src = R"VERBATIM(
      void Reflect() override
@@ -194,7 +210,7 @@ String ReflectStruct::GetGetReflectionInfoCode() const
     )VERBATIM";
 
     src.ReplaceInSitu("REFLECT_VAR_NAME", BP::GetReflectionInfoPtrFuncName);
-    src.ReplaceInSitu("INIT_CODE", GetInitializationCode());
+    src.ReplaceInSitu("INIT_CODE", GetReflectVarCode());
     return src;
 }
 

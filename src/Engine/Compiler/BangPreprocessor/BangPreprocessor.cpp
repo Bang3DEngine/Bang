@@ -89,7 +89,7 @@ void BangPreprocessor::Preprocess(const String &source,
                     GET_REFLECTION_INFO_CODE
                 private:   )VERBATIM";
         reflectDefineCode.ReplaceInSitu("GET_REFLECTION_INFO_CODE",
-                                        reflStruct.GetGetReflectionInfoCode());
+                                        reflStruct.GetReflectCode());
         reflectDefineCode.ReplaceInSitu("\n", "\\\n");
 
         reflectDefineCode +=

@@ -15,13 +15,14 @@ public:
     ReflectVariable() = default;
     ~ReflectVariable() = default;
 
-    static void FromString(String::Iterator propBegin,
-                           String::Iterator propEnd,
+    static void FromString(String::Iterator varBegin,
+                           String::Iterator varEnd,
                            ReflectVariable *outReflectedVar,
                            bool *success);
 
     void SetName(const String &name);
     void SetCodeName(const String &varCodeName);
+    void SetTypeString(const String &typeString);
     void SetInitValue(const Variant &initValueVariant);
     void SetInitValueString(const String &initValueStr);
     void SetHints(const ReflectVariableHints &hints);
@@ -62,6 +63,7 @@ public:
     const String &GetCodeName() const;
     SetterFunc GetSetter() const;
     GetterFunc GetGetter() const;
+    const String &GetTypeString() const;
     const Variant &GetInitValue() const;
     const String &GetInitValueString() const;
     const ReflectVariableHints &GetHints() const;
@@ -73,6 +75,7 @@ public:
 private:
     Variant m_variant;
     String m_name = "";
+    String m_typeString = "";
     String m_codeName = "";
     String m_initValueString = "";
     ReflectVariableHints m_hints;

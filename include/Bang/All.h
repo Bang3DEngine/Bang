@@ -123,6 +123,7 @@
 #include "Bang/NavigationMesh.h"
 #include "Bang/Object.h"
 #include "Bang/ObjectId.h"
+#include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
 #include "Bang/Paths.h"
 #include "Bang/Physics.h"

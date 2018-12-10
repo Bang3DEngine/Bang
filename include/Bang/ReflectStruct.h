@@ -53,8 +53,8 @@ private:
     void SetStructName(const String &structName);
     void SetStructVariableName(const String &structVarName);
 
-    String GetInitializationCode() const;
-    String GetGetReflectionInfoCode() const;
+    String GetReflectVarCode() const;
+    String GetReflectCode() const;
 
     friend class BangPreprocessor;
 };

@@ -13,6 +13,7 @@
 
 namespace Bang
 {
+class ObjectPtr;
 class Variant
 {
 public:
@@ -27,6 +28,7 @@ public:
         BOOL,
         STRING,
         GUID,
+        OBJECT_PTR,
         COLOR,
         VECTOR2,
         VECTOR3,
@@ -46,6 +48,7 @@ public:
     void SetBool(bool v);
     void SetPath(const Path &path);
     void SetGUID(const GUID &guid);
+    void SetObjectPtr(const ObjectPtr &objectPtr);
     void SetString(const String &v);
     void SetColor(const Color &v);
     void SetVector2(const Vector2 &v);
@@ -68,6 +71,7 @@ public:
     double GetDouble() const;
     bool GetBool() const;
     const GUID &GetGUID() const;
+    ObjectPtr GetObjectPtr() const;
     String GetString() const;
     Color GetColor() const;
     Vector2 GetVector2() const;
@@ -89,6 +93,7 @@ public:
     static Variant FromBool(bool b);
     static Variant FromPath(const Path &path);
     static Variant FromGUID(const GUID &guid);
+    static Variant FromObjectPtr(const ObjectPtr &ptr);
     static Variant FromString(const String &str);
     static Variant FromColor(const Color &color);
     static Variant FromVector2(const Vector2 &v);
@@ -119,6 +124,7 @@ private:
     String m_string = "";
     GUID m_guid = GUID::Empty();
     Vector4 m_vector4 = Vector4::Zero();
+    mutable ObjectPtr *m_objectPtr = nullptr;
 };
 
 // Set specializations
@@ -186,6 +192,11 @@ template <>
 inline void Variant::Set<Quaternion>(const Quaternion &v)
 {
     SetQuaternion(v);
+}
+template <>
+inline void Variant::Set<ObjectPtr>(const ObjectPtr &v)
+{
+    SetObjectPtr(v);
 }
 
 // Get specializations

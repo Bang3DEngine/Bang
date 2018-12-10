@@ -28,7 +28,9 @@ void DPtr<T>::Set(T *ptr)
     {
         if (p_ptr)
         {
-            p_ptr->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+            EventEmitter<IEventsDestroy> *eed =
+                SCAST<EventEmitter<IEventsDestroy> *>(p_ptr);
+            eed->UnRegisterListener(this);
         }
 
         T *oldPtr = p_ptr;
@@ -37,7 +39,9 @@ void DPtr<T>::Set(T *ptr)
         p_ptr = ptr;
         if (p_ptr)
         {
-            p_ptr->EventEmitter<IEventsDestroy>::RegisterListener(this);
+            EventEmitter<IEventsDestroy> *eed =
+                SCAST<EventEmitter<IEventsDestroy> *>(p_ptr);
+            eed->RegisterListener(this);
         }
 
         if (m_changedCallback)

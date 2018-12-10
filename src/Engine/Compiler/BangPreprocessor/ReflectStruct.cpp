@@ -183,8 +183,8 @@ String ReflectStruct::GetReflectVarCode() const
             varReflectionCode.ReplaceInSitu(
                 "MAYBE_CAST", "SCAST<" + var.GetTypeString() + ">");
             const String typeStr = var.GetTypeString().Replace("*", "");
-            varReflectionCode.ReplaceInSitu("HINTS",
-                                            var.GetHints().GetHintsString());
+            varReflectionCode.ReplaceInSitu(
+                "HINTS", "\"" + var.GetHints().GetHintsString() + "\"");
         }
         else
         {

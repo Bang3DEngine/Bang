@@ -40,8 +40,7 @@ constexpr inline bool IsSubClass(ClassIdType baseClassIdBegin,
                                  ClassIdType baseClassIdEnd,
                                  TSubClass *obj)
 {
-    return IsSubClassByIds(
-        baseClassIdBegin, baseClassIdEnd, obj->GetClassIdBegin());
+    return IsSubClassByIds(baseClassIdBegin, baseClassIdEnd, obj->GetClassId());
 }
 
 template <class TBaseClass, class TSubClass>

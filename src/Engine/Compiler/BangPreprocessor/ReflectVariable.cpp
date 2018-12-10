@@ -6,6 +6,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
+#include "Bang/Object.h"
 #include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 
@@ -58,11 +59,15 @@ void ReflectVariable::FromString(String::Iterator varBegin,
     String varCodeName = String(nameBegin, nameEnd);
     if (varCodeName.BeginsWith("*"))
     {
+        const String ptrClassName = variableTypeStr;
+
         variableTypeStr += "*";
         varCodeName = varCodeName.SubString(1);
 
+        const ClassIdType beginClassId = GetClassIdBegin(ptrClassName);
+        const ClassIdType endClassId = GetClassIdEnd(ptrClassName);
         outReflectedVar->GetHintsPtr()->Update(
-            BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(-1u, -1u));
+            BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(beginClassId, endClassId));
     }
 
     if (!Variant::ExistsType(variableTypeStr))

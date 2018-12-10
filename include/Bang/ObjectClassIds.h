@@ -2,6 +2,8 @@
 #define OBJECT_CLASS_IDS_H
 
 #include "Bang/FastDynamicCast.h"
+#include "Bang/Map.h"
+#include "Bang/String.h"
 
 namespace Bang
 {
@@ -11,7 +13,15 @@ namespace Bang
     constexpr ClassIdType CLASS##CIDEnd = ID_END
 #define SET_COMPONENT_ID(CLASS, ID) SET_COMPONENT_IDS(CLASS, ID, ID)
 
-SET_COMPONENT_IDS(Component, 0, 10000000);
+extern Map<String, ClassIdType> ClassNameToClassIdBegin;
+extern Map<String, ClassIdType> ClassNameToClassIdEnd;
+
+void RegisterObjectClasses();
+ClassIdType GetClassIdBegin(const String &className);
+ClassIdType GetClassIdEnd(const String &className);
+
+SET_COMPONENT_IDS(Object, 0, 1000000000);
+SET_COMPONENT_IDS(Component, 0, 100000);
 SET_COMPONENT_IDS(Renderer, 1, 100);
 SET_COMPONENT_IDS(MeshRenderer, 10, 20);
 SET_COMPONENT_IDS(SkinnedMeshRenderer, 11, 15);
@@ -74,6 +84,8 @@ SET_COMPONENT_IDS(UISlider, 4001, 4100);
 SET_COMPONENT_IDS(UITextCursor, 4101, 4200);
 SET_COMPONENT_IDS(UITree, 4301, 4400);
 SET_COMPONENT_IDS(Camera, 4501, 4600);
+
+SET_COMPONENT_IDS(GameObject, 100000, 200000);
 }
 
 #endif  // OBJECT_CLASS_IDS_H

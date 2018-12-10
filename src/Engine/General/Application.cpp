@@ -41,6 +41,8 @@ void Application::Init_(const Path &engineRootPath)
     Application::s_appSingleton = this;
     m_mainThreadId = Thread::GetCurrentThreadId();
 
+    RegisterObjectClasses();
+
     m_time = new TimeSingleton();
 
     m_systemUtils = new SystemUtils();

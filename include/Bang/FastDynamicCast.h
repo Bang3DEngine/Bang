@@ -28,15 +28,37 @@ constexpr inline bool CanFastDynamicCast(T *obj)
 {
     return CanFastDynamicCast(obj->GetClassId()) && T::CanFastDynamicCast();
 }
+constexpr inline bool IsSubClassByIds(ClassIdType baseClassIdBegin,
+                                      ClassIdType baseClassIdEnd,
+                                      ClassIdType subClassId)
+{
+    return (subClassId >= baseClassIdBegin && subClassId < baseClassIdEnd);
+}
+
+template <class TSubClass>
+constexpr inline bool IsSubClass(ClassIdType baseClassIdBegin,
+                                 ClassIdType baseClassIdEnd,
+                                 TSubClass *obj)
+{
+    return IsSubClassByIds(
+        baseClassIdBegin, baseClassIdEnd, obj->GetClassIdBegin());
+}
+
+template <class TBaseClass, class TSubClass>
+constexpr inline bool IsSubClass(TSubClass *obj)
+{
+    return IsSubClass(
+        TBaseClass::GetClassIdBegin(), TBaseClass::GetClassIdEnd(), obj);
+}
 
 // SFINAE helper to know whether T is FastDynamicCastable
-template <class T, class = void>
+template <class T, class = CID>
 struct IsFastDynamicCastable
 {
     static constexpr bool value = false;
 };
 template <class T>
-struct IsFastDynamicCastable<T, decltype(T::GetClassIdBegin(), void())>
+struct IsFastDynamicCastable<T, decltype(T::GetClassIdBegin(), CID())>
 {
     static constexpr bool value = true;
 };

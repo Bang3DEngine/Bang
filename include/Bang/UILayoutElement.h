@@ -4,7 +4,6 @@
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/String.h"

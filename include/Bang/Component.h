@@ -26,9 +26,9 @@ class Component : public Object,
                   public IToString,
                   public EventEmitter<IEventsComponentChangeGameObject>
 {
+    OBJECT_WITH_FAST_DYNAMIC_CAST(Component)
     SERIALIZABLE(Component)
     CLONEABLE_COMPONENT(Component)
-    SET_CLASS_ID_AS_ROOT()
 
 public:
     static void Destroy(Component *component);

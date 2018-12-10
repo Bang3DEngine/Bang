@@ -2,7 +2,6 @@
 #define WATERRENDERER_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
 #include "Bang/ResourceHandle.h"

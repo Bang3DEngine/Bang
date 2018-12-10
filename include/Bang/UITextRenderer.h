@@ -5,7 +5,6 @@
 #include "Bang/Array.h"
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/ILayoutElement.h"

@@ -2,6 +2,7 @@
 #define REFLECTVARIABLEHINTS_H
 
 #include "Bang/Bang.h"
+#include "Bang/FastDynamicCast.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
 #include "Bang/Vector4.h"
@@ -11,11 +12,13 @@ namespace Bang
 class ReflectVariableHints
 {
 public:
+    static const String KeyObjectPtrClassIdBegin;
+    static const String KeyObjectPtrClassIdEnd;
     static const String KeyMinValue;
     static const String KeyMaxValue;
     static const String KeyStepValue;
     static const String KeyExtension;
-    static const String KeyButton;
+    static const String KeyIsButton;
     static const String KeyZoomablePreview;
     static const String KeyIsSlider;
     static const String KeyIsShown;
@@ -26,6 +29,8 @@ public:
 
     void Update(const String &hintsString);
 
+    ClassIdType GetObjectPtrClassIdBegin() const;
+    ClassIdType GetObjectPtrClassIdEnd() const;
     bool GetZoomablePreview() const;
     const Array<String> &GetExtensions() const;
     const Vector4 &GetMinValue() const;
@@ -36,10 +41,14 @@ public:
     bool GetIsShown() const;
     bool GetIsEnum() const;
 
+    String GetHintsString() const;
+
     bool operator==(const ReflectVariableHints &rhs) const;
     bool operator!=(const ReflectVariableHints &rhs) const;
 
 private:
+    ClassIdType m_objectPtrClassIdBegin = -1u;
+    ClassIdType m_objectPtrClassIdEnd = -1u;
     bool m_isButton = false;
     bool m_zoomablePreview = false;
     float m_stepValue = 1.0f;

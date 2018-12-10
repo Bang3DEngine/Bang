@@ -6,6 +6,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
+#include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 
 using namespace Bang;
@@ -59,6 +60,9 @@ void ReflectVariable::FromString(String::Iterator varBegin,
     {
         variableTypeStr += "*";
         varCodeName = varCodeName.SubString(1);
+
+        outReflectedVar->GetHintsPtr()->Update(
+            BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(-1u, -1u));
     }
 
     if (!Variant::ExistsType(variableTypeStr))

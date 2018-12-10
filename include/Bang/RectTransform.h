@@ -4,7 +4,6 @@
 #include "Bang/AARect.h"
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"

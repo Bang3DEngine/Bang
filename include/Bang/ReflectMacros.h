@@ -33,7 +33,7 @@
         Name,                                            \
         [=](bool) { ActionFunction(); },                 \
         []() { return true; },                           \
-        BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyButton, true));
+        BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsButton, true));
 
 #define BANG_REFLECT_HINT_ENUM_FIELD(enumName, enumFieldName) \
     GetReflectStructPtr()->AddEnumField(enumName, enumFieldName)
@@ -45,6 +45,14 @@
 
 #define BANG_REFLECT_HINT_KEY_VALUE(key, value) \
     key + ":" + String::ToString(value) + ";"
+
+#define BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(objectPtrClassIdBegin, \
+                                              objectPtrClassIdEnd)   \
+    BANG_REFLECT_HINT_KEY_VALUE(                                     \
+        ReflectVariableHints::KeyObjectPtrClassIdBegin,              \
+        objectPtrClassIdBegin) +                                     \
+        BANG_REFLECT_HINT_KEY_VALUE(                                 \
+            ReflectVariableHints::KeyObjectPtrClassIdEnd, objectPtrClassIdEnd)
 
 #define BANG_REFLECT_HINT_MIN_VALUE(minValue) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyMinValue, minValue)

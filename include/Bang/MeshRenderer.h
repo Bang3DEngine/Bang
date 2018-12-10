@@ -3,7 +3,6 @@
 
 #include "Bang/AABox.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Renderer.h"

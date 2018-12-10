@@ -4,7 +4,6 @@
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
 #include "Bang/ResourceHandle.h"

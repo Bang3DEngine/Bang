@@ -3,7 +3,6 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/Map.h"

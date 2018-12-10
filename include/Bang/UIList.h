@@ -9,7 +9,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"

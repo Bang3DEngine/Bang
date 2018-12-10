@@ -7,7 +7,6 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"

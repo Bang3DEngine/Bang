@@ -6,6 +6,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/BangPreprocessor.h"
 #include "Bang/MetaNode.h"
+#include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Variant.h"
@@ -169,7 +170,8 @@ String ReflectStruct::GetReflectVarCode() const
                ReflectVar<VAR_TYPE>(
                            "VAR_REFL_NAME",
                            [this](VAR_TYPE x) { VAR_NAME = MAYBE_CAST(xMAYBE_GET); },
-                           [this]() { return MAYBE_CONSTRUCTOR(VAR_NAME); });
+                           [this]() { return MAYBE_CONSTRUCTOR(VAR_NAME); },
+                                   HINTS);
             )VERBATIM";
 
         if (varType == Variant::Type::OBJECT_PTR)
@@ -180,12 +182,16 @@ String ReflectStruct::GetReflectVarCode() const
                 Variant::GetTypeToString(var.GetVariant().GetType()));
             varReflectionCode.ReplaceInSitu(
                 "MAYBE_CAST", "SCAST<" + var.GetTypeString() + ">");
+            const String typeStr = var.GetTypeString().Replace("*", "");
+            varReflectionCode.ReplaceInSitu("HINTS",
+                                            var.GetHints().GetHintsString());
         }
         else
         {
             varReflectionCode.ReplaceInSitu("MAYBE_GET", "");
             varReflectionCode.ReplaceInSitu("MAYBE_CONSTRUCTOR", "");
             varReflectionCode.ReplaceInSitu("MAYBE_CAST", "");
+            varReflectionCode.ReplaceInSitu("HINTS", "\"\"");
         }
 
         varReflectionCode.ReplaceInSitu(

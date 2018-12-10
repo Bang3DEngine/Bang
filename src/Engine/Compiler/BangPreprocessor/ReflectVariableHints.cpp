@@ -1,14 +1,19 @@
 #include "Bang/ReflectVariableHints.h"
 
+#include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 
 using namespace Bang;
 
+const String ReflectVariableHints::KeyObjectPtrClassIdBegin =
+    "ObjectPtrClassIdBegin";
+const String ReflectVariableHints::KeyObjectPtrClassIdEnd =
+    "ObjectPtrClassIdEnd";
 const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyStepValue = "StepValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
-const String ReflectVariableHints::KeyButton = "Button";
+const String ReflectVariableHints::KeyIsButton = "IsButton";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
 const String ReflectVariableHints::KeyIsShown = "IsShown";
@@ -64,9 +69,17 @@ void ReflectVariableHints::Update(const String &hintsString)
                     m_maxValue = valueVec;
                 }
             }
-            else if (keyStr == ReflectVariableHints::KeyButton)
+            else if (keyStr == ReflectVariableHints::KeyIsButton)
             {
                 m_isButton = true;
+            }
+            else if (keyStr == ReflectVariableHints::KeyObjectPtrClassIdBegin)
+            {
+                iss >> m_objectPtrClassIdBegin;
+            }
+            else if (keyStr == ReflectVariableHints::KeyObjectPtrClassIdEnd)
+            {
+                iss >> m_objectPtrClassIdEnd;
             }
             else if (keyStr == ReflectVariableHints::KeyStepValue)
             {
@@ -101,6 +114,16 @@ void ReflectVariableHints::Update(const String &hintsString)
             }
         }
     }
+}
+
+ClassIdType ReflectVariableHints::GetObjectPtrClassIdBegin() const
+{
+    return m_objectPtrClassIdBegin;
+}
+
+ClassIdType ReflectVariableHints::GetObjectPtrClassIdEnd() const
+{
+    return m_objectPtrClassIdEnd;
 }
 
 bool ReflectVariableHints::GetZoomablePreview() const
@@ -148,15 +171,38 @@ bool ReflectVariableHints::GetIsEnum() const
     return m_isEnum;
 }
 
+String ReflectVariableHints::GetHintsString() const
+{
+    String hintsString = "";
+
+#define ADD_TO_HINTS_STRING(KEY_NAME)           \
+    hintsString += BANG_REFLECT_HINT_KEY_VALUE( \
+        ReflectVariableHints::Key##KEY_NAME, Get##KEY_NAME());
+
+    ADD_TO_HINTS_STRING(ObjectPtrClassIdBegin);
+    ADD_TO_HINTS_STRING(ObjectPtrClassIdEnd);
+    ADD_TO_HINTS_STRING(MinValue);
+    ADD_TO_HINTS_STRING(MaxValue);
+    ADD_TO_HINTS_STRING(StepValue);
+    ADD_TO_HINTS_STRING(IsSlider);
+    ADD_TO_HINTS_STRING(IsButton);
+    for (const String &extension : GetExtensions())
+    {
+        hintsString += BANG_REFLECT_HINT_KEY_VALUE(
+            ReflectVariableHints::KeyExtension, extension);
+    }
+    ADD_TO_HINTS_STRING(ZoomablePreview);
+    ADD_TO_HINTS_STRING(IsShown);
+    ADD_TO_HINTS_STRING(IsEnum);
+
+#undef ADD_TO_HINTS_STRING
+
+    return hintsString;
+}
+
 bool ReflectVariableHints::operator==(const ReflectVariableHints &rhs) const
 {
-    return GetZoomablePreview() == rhs.GetZoomablePreview() &&
-           GetStepValue() == rhs.GetStepValue() &&
-           GetMinValue() == rhs.GetMinValue() &&
-           GetMaxValue() == rhs.GetMaxValue() &&
-           GetExtensions() == rhs.GetExtensions() &&
-           GetIsSlider() == rhs.GetIsSlider() &&
-           GetIsShown() == rhs.GetIsShown() && GetIsEnum() == rhs.GetIsEnum();
+    return GetHintsString() == rhs.GetHintsString();
 }
 
 bool ReflectVariableHints::operator!=(const ReflectVariableHints &rhs) const

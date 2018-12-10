@@ -13,6 +13,7 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObject.h"
 #include "Bang/ObjectId.h"
+#include "Bang/ObjectMacros.h"
 #include "Bang/Serializable.h"
 
 namespace Bang
@@ -22,6 +23,8 @@ class Object : public Serializable,
                public EventEmitterIEventsDestroyWithCheck,
                public EventEmitter<IEventsObject>
 {
+    SET_CLASS_ID_AS_ROOT()
+
 public:
     const ObjectId &GetObjectId() const;
     void SetEnabled(bool enabled);

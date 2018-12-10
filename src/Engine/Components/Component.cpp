@@ -16,7 +16,6 @@ using namespace Bang;
 
 Component::Component()
 {
-    m_classId = GetInvalidClassId();
 }
 
 Component::~Component()

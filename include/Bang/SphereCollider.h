@@ -3,7 +3,6 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Sphere.h"
 #include "Bang/String.h"

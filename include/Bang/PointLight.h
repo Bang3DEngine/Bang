@@ -3,7 +3,6 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
 #include "Bang/MetaNode.h"

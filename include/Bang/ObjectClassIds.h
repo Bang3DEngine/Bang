@@ -1,11 +1,11 @@
-#ifndef COMPONENT_CLASS_IDS_H
-#define COMPONENT_CLASS_IDS_H
+#ifndef OBJECT_CLASS_IDS_H
+#define OBJECT_CLASS_IDS_H
 
 #include "Bang/FastDynamicCast.h"
 
 namespace Bang
 {
-// Component class ids for FastDynamicCast
+// Class ids for FastDynamicCast
 #define SET_COMPONENT_IDS(CLASS, ID_BEGIN, ID_END)    \
     constexpr ClassIdType CLASS##CIDBegin = ID_BEGIN; \
     constexpr ClassIdType CLASS##CIDEnd = ID_END
@@ -76,4 +76,4 @@ SET_COMPONENT_IDS(UITree, 4301, 4400);
 SET_COMPONENT_IDS(Camera, 4501, 4600);
 }
 
-#endif  // COMPONENT_CLASS_IDS_H
+#endif  // OBJECT_CLASS_IDS_H

@@ -1,7 +1,6 @@
 #ifndef COMPONENTMACROS_H
 #define COMPONENTMACROS_H
 
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentFactory.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/FastDynamicCast.h"
@@ -9,6 +8,7 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
 #include "Bang/Object.h"
+#include "Bang/ObjectClassIds.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
 
@@ -35,25 +35,15 @@ public:                                   \
 #define COMPONENT(CLASS)       \
     CLONEABLE_COMPONENT(CLASS) \
     COMPONENT_ABSTRACT(CLASS)  \
-    SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLAS)
-
-#define COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT_ABSTRACT( \
-    CLASS, CIDBegin, CIDEnd)                                \
-    COMPONENT_ABSTRACT(CLASS)                               \
-    SET_CLASS_ID(CLASS, CIDBegin, CIDEnd)
-
-#define COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT(CLASS, CIDBegin, CIDEnd) \
-    CLONEABLE_COMPONENT(CLASS)                                             \
-    COMPONENT_ABSTRACT(CLASS)                                              \
-    SET_CLASS_ID(CLASS, CIDBegin, CIDEnd)
+    SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLASS)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS) \
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT_ABSTRACT(  \
-        CLASS, CLASS##CIDBegin, CLASS##CIDEnd)
+    COMPONENT_ABSTRACT(CLASS)                            \
+    OBJECT_WITH_FAST_DYNAMIC_CAST(CLASS)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST(CLASS) \
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_EXPLICIT(  \
-        CLASS, CLASS##CIDBegin, CLASS##CIDEnd)
+    CLONEABLE_COMPONENT(CLASS)                  \
+    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS)
 }
 
 #endif  // COMPONENTMACROS_H

@@ -8,6 +8,8 @@ using namespace Bang;
 
 Object::~Object()
 {
+    m_classId = GetInvalidClassId();
+
     ASSERT(IsBeingDestroyed());
     ASSERT(IsWaitingToBeDestroyed());
     PropagateObjectDestruction(this);

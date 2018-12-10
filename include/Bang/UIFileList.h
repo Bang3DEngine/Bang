@@ -6,7 +6,6 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"

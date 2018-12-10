@@ -6,7 +6,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/ComplexRandom.h"
-#include "Bang/ComponentClassIds.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"

@@ -1,7 +1,6 @@
 #ifndef OBJECTPTR_H
 #define OBJECTPTR_H
 
-#include "Bang/DPtr.h"
 #include "Bang/GUID.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/String.h"
@@ -41,7 +40,8 @@ inline std::ostream &operator<<(std::ostream &os, const ObjectPtr &rhs)
 inline std::istream &operator>>(std::istream &is, ObjectPtr &rhs)
 {
     String opStr;
-    is >> opStr;
+    is >> opStr;    // "OP"
+    is >> std::ws;  // whitespace
 
     GUID guid;
     is >> guid;

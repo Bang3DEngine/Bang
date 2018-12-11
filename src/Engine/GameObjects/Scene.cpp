@@ -113,7 +113,7 @@ void Scene::CloneInto(ICloneable *clone) const
 
     Scene *cloneScene = SCAST<Scene *>(clone);
 
-    // Find cloned camera by GUID.
+    // Find cloned camera
     if (GetCamera())
     {
         Array<Camera *> cams = GetComponentsInDescendantsAndThis<Camera>();

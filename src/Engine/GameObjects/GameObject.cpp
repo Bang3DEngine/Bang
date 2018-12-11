@@ -44,6 +44,7 @@ using namespace Bang;
 
 GameObject::GameObject(const String &name)
 {
+    CONSTRUCT_CLASS_ID(GameObject);
     SetName(name);
 }
 

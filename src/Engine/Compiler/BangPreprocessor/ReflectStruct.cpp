@@ -169,14 +169,15 @@ String ReflectStruct::GetReflectVarCode() const
         String varReflectionCode = R"VERBATIM(
                ReflectVar<VAR_TYPE>(
                            "VAR_REFL_NAME",
-                           [this](VAR_TYPE x) { VAR_NAME = MAYBE_CAST(xMAYBE_GET); },
+                           [this](VAR_TYPE x) { VAR_NAME = MAYBE_CAST(VAR_X); },
                            [this]() { return MAYBE_CONSTRUCTOR(VAR_NAME); },
                                    HINTS);
             )VERBATIM";
 
         if (varType == Variant::Type::OBJECT_PTR)
         {
-            varReflectionCode.ReplaceInSitu("MAYBE_GET", ".Get()");
+            varReflectionCode.ReplaceInSitu("VAR_X",
+                          "x.GetObjectIn(SceneManager::GetActiveScene())");
             varReflectionCode.ReplaceInSitu(
                 "MAYBE_CONSTRUCTOR",
                 Variant::GetTypeToString(var.GetVariant().GetType()));
@@ -188,7 +189,7 @@ String ReflectStruct::GetReflectVarCode() const
         }
         else
         {
-            varReflectionCode.ReplaceInSitu("MAYBE_GET", "");
+            varReflectionCode.ReplaceInSitu("VAR_X", "x");
             varReflectionCode.ReplaceInSitu("MAYBE_CONSTRUCTOR", "");
             varReflectionCode.ReplaceInSitu("MAYBE_CAST", "");
             varReflectionCode.ReplaceInSitu("HINTS", "\"\"");

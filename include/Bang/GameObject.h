@@ -55,6 +55,7 @@ class GameObject : public Object,
                    public EventEmitter<IEventsComponent>,
                    public EventEmitter<IEventsGameObjectVisibilityChanged>
 {
+    OBJECT_WITH_FAST_DYNAMIC_CAST(GameObject)
     GAMEOBJECT_NO_FRIEND(GameObject)
 
 public:

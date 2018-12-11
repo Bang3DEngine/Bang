@@ -3,6 +3,7 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Color.h"
+#include "Bang/ObjectPtr.h"
 #include "Bang/GUID.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
@@ -13,7 +14,6 @@
 
 namespace Bang
 {
-class ObjectPtr;
 class Variant
 {
 public:
@@ -37,10 +37,7 @@ public:
     };
 
     Variant() = default;
-    ~Variant();
-
-    Variant(const Variant &rhs);
-    Variant &operator=(const Variant &rhs);
+    ~Variant() = default;
 
     void SetType(Type type);
 
@@ -127,7 +124,7 @@ private:
     String m_string = "";
     GUID m_guid = GUID::Empty();
     Vector4 m_vector4 = Vector4::Zero();
-    mutable ObjectPtr *m_objectPtr = nullptr;
+    ObjectPtr m_objectPtr;
 };
 
 // Set specializations
@@ -267,6 +264,11 @@ template <>
 inline Quaternion Variant::Get() const
 {
     return GetQuaternion();
+}
+template <>
+inline ObjectPtr Variant::Get() const
+{
+    return GetObjectPtr();
 }
 }  // namespace Bang
 

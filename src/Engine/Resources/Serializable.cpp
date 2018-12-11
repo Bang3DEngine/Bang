@@ -192,4 +192,6 @@ void Serializable::CloneInto(ICloneable *cloneable) const
             }
         }
     }
+
+    clone->SetGUID(GetGUID());
 }

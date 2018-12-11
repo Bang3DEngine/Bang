@@ -13,34 +13,6 @@
 
 using namespace Bang;
 
-Variant::~Variant()
-{
-    if (m_objectPtr)
-    {
-        delete m_objectPtr;
-    }
-}
-
-Variant::Variant(const Variant &rhs)
-{
-    *this = rhs;
-}
-
-Variant &Variant::operator=(const Variant &rhs)
-{
-    if (this != &rhs)
-    {
-        SetInt(rhs.GetInt());
-        SetDouble(rhs.GetDouble());
-        SetString(rhs.GetString());
-        SetGUID(rhs.GetGUID());
-        SetVector4(rhs.GetVector4());
-        SetObjectPtr(rhs.GetObjectPtr());
-        SetType(rhs.GetType());
-    }
-    return *this;
-}
-
 void Variant::SetType(Variant::Type type)
 {
     m_type = type;
@@ -90,14 +62,7 @@ void Variant::SetGUID(const GUID &guid)
 
 void Variant::SetObjectPtr(const ObjectPtr &objectPtr)
 {
-    if (objectPtr != GetObjectPtr())
-    {
-        if (!m_objectPtr)
-        {
-            m_objectPtr = new ObjectPtr();
-        }
-        *m_objectPtr = objectPtr;
-    }
+    m_objectPtr = objectPtr;
     SetType(Type::OBJECT_PTR);
 }
 
@@ -179,11 +144,7 @@ const GUID &Variant::GetGUID() const
 
 ObjectPtr Variant::GetObjectPtr() const
 {
-    if (!m_objectPtr)
-    {
-        m_objectPtr = new ObjectPtr();
-    }
-    return *m_objectPtr;
+    return m_objectPtr;
 }
 
 String Variant::GetString() const

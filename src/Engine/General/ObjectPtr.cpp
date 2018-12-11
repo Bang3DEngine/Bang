@@ -40,7 +40,15 @@ void ObjectPtr::SetObject(Object *object)
 
 Object *ObjectPtr::GetObjectIn(GameObject *go) const
 {
-    return (go ? go->FindObjectInDescendants(GetObjectGUID()) : nullptr);
+    if (go)
+    {
+        GUID objectGUID = GetObjectGUID();
+        GameObject *rootNode = go->FindInChildren("RootNode");
+        GUID rootNodeGUID = rootNode->GetGUID();
+        Object *foundObject = go->FindObjectInDescendants(objectGUID);
+        return foundObject;
+    }
+    return nullptr;
 }
 
 GUID ObjectPtr::GetObjectGUID() const

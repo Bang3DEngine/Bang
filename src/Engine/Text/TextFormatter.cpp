@@ -89,17 +89,18 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
     {
         const float charAdvX = GetCharAdvanceX(content, font, fontSize, i);
         bool lineBreak = (content[i] == '\n');
+        bool addCharacterToLines = (!lineBreak);
         if (wrapping && !lineBreak)
         {
             // Do we have to break line here because of wrapping?
-            bool wrappingLineBreak = false;
+            bool breakLineBecauseOfWrapping = false;
 
             // Split the input char positions into the needed lines.
             // Each line will contain as many words as possible (split by
             // spaces).
             if (content[i] != ' ')
             {
-                wrappingLineBreak =
+                breakLineBecauseOfWrapping =
                     (penPosition.x + charAdvX > limitsRect.GetMax().x);
             }
             else
@@ -118,14 +119,14 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
                         GetCharAdvanceX(content, font, fontSize, j);
                     if (tmpAdvX + jCharAdvX > limitsRect.GetMax().x)
                     {
-                        wrappingLineBreak = true;
+                        breakLineBecauseOfWrapping = true;
                         break;
                     }
                     tmpAdvX += jCharAdvX * spacingMult.x;
                 }
             }
 
-            lineBreak = lineBreak || wrappingLineBreak;
+            lineBreak = lineBreak || breakLineBecauseOfWrapping;
         }
 
         if (lineBreak)
@@ -138,14 +139,15 @@ Array<Array<TextFormatter::CharRect>> TextFormatter::SplitCharRectsInLines(
             // Skip all next ' '
             if (content[i] == ' ')
             {
-                while (content[i] == ' ')
+                while (i < content.Size() && content[i] == ' ')
                 {
                     ++i;
                 }
                 --i;
             }
         }
-        else
+
+        if (addCharacterToLines)
         {
             CharRect cr(content[i], penPosition + charRects[i].rectPx);
             linedCharRects.Back().PushBack(cr);

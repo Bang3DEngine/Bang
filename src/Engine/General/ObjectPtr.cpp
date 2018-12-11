@@ -43,8 +43,6 @@ Object *ObjectPtr::GetObjectIn(GameObject *go) const
     if (go)
     {
         GUID objectGUID = GetObjectGUID();
-        GameObject *rootNode = go->FindInChildren("RootNode");
-        GUID rootNodeGUID = rootNode->GetGUID();
         Object *foundObject = go->FindObjectInDescendants(objectGUID);
         return foundObject;
     }

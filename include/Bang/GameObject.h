@@ -77,14 +77,20 @@ public:
     Component *AddComponent(Component *c, int index = -1);
 
     static GameObject *Find(const String &name);
-    Object *FindObjectInDescendants(const GUID &guid);
-    GameObject *FindInChildren(const GUID &guid, bool recursive = true);
-    GameObject *FindInChildren(const String &name, bool recursive = true);
-    GameObject *FindInChildrenAndThis(const GUID &guid, bool recursive = true);
+    Object *FindObjectInDescendants(const GUID &guid) const;
+    GameObject *FindInChildren(const GUID &guid, bool recursive = true) const;
+    GameObject *FindInChildren(const String &name, bool recursive = true) const;
+    GameObject *FindInChildrenAndThis(const GUID &guid,
+                                      bool recursive = true) const;
     GameObject *FindInChildrenAndThis(const String &name,
-                                      bool recursive = true);
-    GameObject *FindInAncestors(const String &name, bool broadSearch);
-    GameObject *FindInAncestorsAndThis(const String &name, bool broadSearch);
+                                      bool recursive = true) const;
+    GameObject *FindInAncestors(const String &name, bool broadSearch) const;
+    GameObject *FindInAncestorsAndThis(const String &name,
+                                       bool broadSearch) const;
+    template <class T>
+    T *FindObjectInDescendants() const;
+    Object *FindObjectInDescendants(ClassIdType classIdBegin,
+                                    ClassIdType classIdEnd) const;
 
     void SetVisible(bool visible);
     void SetParent(GameObject *newParent,

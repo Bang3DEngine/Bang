@@ -545,7 +545,7 @@ GameObject *GameObject::Find(const String &name)
     return scene ? scene->FindInChildren(name) : nullptr;
 }
 
-Object *GameObject::FindObjectInDescendants(const GUID &guid)
+Object *GameObject::FindObjectInDescendants(const GUID &guid) const
 {
     if (guid == GUID::Empty())
     {
@@ -554,7 +554,7 @@ Object *GameObject::FindObjectInDescendants(const GUID &guid)
 
     if (GetGUID() == guid)
     {
-        return this;
+        return const_cast<GameObject *>(this);
     }
 
     const Array<Component *> &comps = GetComponents();
@@ -580,7 +580,7 @@ Object *GameObject::FindObjectInDescendants(const GUID &guid)
     return nullptr;
 }
 
-GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
+GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive) const
 {
     for (GameObject *child : GetChildren())
     {
@@ -596,7 +596,7 @@ GameObject *GameObject::FindInChildren(const GUID &guid, bool recursive)
     return nullptr;
 }
 
-GameObject *GameObject::FindInChildren(const String &name, bool recursive)
+GameObject *GameObject::FindInChildren(const String &name, bool recursive) const
 {
     for (GameObject *child : GetChildren())
     {
@@ -612,11 +612,12 @@ GameObject *GameObject::FindInChildren(const String &name, bool recursive)
     return nullptr;
 }
 
-GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
+GameObject *GameObject::FindInChildrenAndThis(const GUID &guid,
+                                              bool recursive) const
 {
     if (GetGUID() == guid)
     {
-        return this;
+        return const_cast<GameObject *>(this);
     }
 
     for (GameObject *child : GetChildren())
@@ -637,11 +638,11 @@ GameObject *GameObject::FindInChildrenAndThis(const GUID &guid, bool recursive)
 }
 
 GameObject *GameObject::FindInChildrenAndThis(const String &name,
-                                              bool recursive)
+                                              bool recursive) const
 {
     if (GetName() == name)
     {
-        return this;
+        return const_cast<GameObject *>(this);
     }
 
     for (GameObject *child : GetChildren())
@@ -661,18 +662,19 @@ GameObject *GameObject::FindInChildrenAndThis(const String &name,
     return nullptr;
 }
 
-GameObject *GameObject::FindInAncestors(const String &name, bool broadSearch)
+GameObject *GameObject::FindInAncestors(const String &name,
+                                        bool broadSearch) const
 {
     return GetParent() ? GetParent()->FindInAncestorsAndThis(name, broadSearch)
                        : nullptr;
 }
 
 GameObject *GameObject::FindInAncestorsAndThis(const String &name,
-                                               bool broadSearch)
+                                               bool broadSearch) const
 {
     if (GetName() == name)
     {
-        return this;
+        return const_cast<GameObject *>(this);
     }
 
     if (broadSearch)
@@ -683,7 +685,7 @@ GameObject *GameObject::FindInAncestorsAndThis(const String &name,
             {
                 if (siblingOrThis->GetName() == name)
                 {
-                    return this;
+                    return const_cast<GameObject *>(this);
                 }
 
                 if (GameObject *found =
@@ -697,6 +699,39 @@ GameObject *GameObject::FindInAncestorsAndThis(const String &name,
 
     return GetParent() ? GetParent()->FindInAncestorsAndThis(name, false)
                        : nullptr;
+}
+
+Object *GameObject::FindObjectInDescendants(ClassIdType classIdBegin,
+                                            ClassIdType classIdEnd) const
+{
+    if (IsSubClass(classIdBegin, classIdEnd, this))
+    {
+        return const_cast<GameObject *>(this);
+    }
+
+    const Array<Component *> &components = GetComponents();
+    for (Component *comp : components)
+    {
+        if (comp && IsSubClass(classIdBegin, classIdEnd, comp))
+        {
+            return comp;
+        }
+    }
+
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (child)
+        {
+            if (Object *obj =
+                    child->FindObjectInDescendants(classIdBegin, classIdEnd))
+            {
+                return obj;
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 void GameObject::SetVisible(bool visible)

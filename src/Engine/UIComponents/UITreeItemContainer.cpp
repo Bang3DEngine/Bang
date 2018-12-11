@@ -15,6 +15,7 @@
 #include "Bang/UIHorizontalLayout.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
+#include "Bang/UITheme.h"
 
 namespace Bang
 {
@@ -44,6 +45,8 @@ UITreeItemContainer::UITreeItemContainer()
         GameObjectFactory::CreateUISpacer(LayoutSizeType::MIN, Vector2::Zero());
     p_indentSpacer->SetName("IndentSpacer");
 
+    p_dragBg = AddComponent<UIImageRenderer>();
+
     Texture2D *iconTex = TextureFactory::GetDownArrowIcon();
     p_collapseButton = GameObjectFactory::CreateUIButton("", iconTex);
     p_collapseButton->GetLayoutElement()->SetFlexibleSize(Vector2::Zero());
@@ -62,6 +65,7 @@ UITreeItemContainer::UITreeItemContainer()
     p_indentSpacer->SetParent(this);
     p_collapseButton->GetGameObject()->SetParent(this);
     p_userItemContainer->SetParent(this);
+    SetBeingDragged(false);
 }
 
 UITreeItemContainer::~UITreeItemContainer()
@@ -103,6 +107,11 @@ void UITreeItemContainer::SetIndentation(int indentationPx)
 {
     m_indentationPx = indentationPx;
     p_indentSpacer->GetComponent<UILayoutElement>()->SetMinWidth(indentationPx);
+}
+
+void UITreeItemContainer::SetBeingDragged(bool beingDragged)
+{
+    p_dragBg->SetTint(beingDragged ? UITheme::GetOverColor() : Color::Zero());
 }
 
 bool UITreeItemContainer::IsCollapsed() const

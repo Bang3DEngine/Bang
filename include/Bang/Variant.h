@@ -3,8 +3,8 @@
 
 #include "Bang/Bang.h"
 #include "Bang/Color.h"
-#include "Bang/ObjectPtr.h"
 #include "Bang/GUID.h"
+#include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"

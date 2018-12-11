@@ -136,10 +136,11 @@ void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
     IEventsDragDrop::OnDragStarted(dd_);
 
     UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
-    if (UITreeItemContainer *treeItemCont =
+    if (UITreeItemContainer *draggedTreeItemCont =
             DCAST<UITreeItemContainer *>(dd->GetGameObject()))
     {
-        p_itemBeingDragged = treeItemCont->GetContainedItem();
+        p_itemBeingDragged = draggedTreeItemCont->GetContainedItem();
+        draggedTreeItemCont->SetBeingDragged(true);
     }
     else
     {
@@ -244,6 +245,8 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
 
+    UITreeItemContainer *draggedItemCont =
+        DCAST<UITreeItemContainer *>(dragDroppable->GetGameObject());
     if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
     {
         GOItem *itemOver = nullptr;
@@ -277,8 +280,7 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
                 break;
         }
 
-        if (UITreeItemContainer *draggedItemCont =
-                DCAST<UITreeItemContainer *>(dragDroppable->GetGameObject()))
+        if (draggedItemCont)
         {
             if (Contains(draggedItemCont))
             {
@@ -303,6 +305,11 @@ void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
     {
         EventEmitter<IEventsUITree>::PropagateToListeners(
             &IEventsUITree::OnDropOutside, dragDroppable);
+    }
+
+    if (draggedItemCont)
+    {
+        draggedItemCont->SetBeingDragged(false);
     }
 
     p_itemBeingDragged = nullptr;

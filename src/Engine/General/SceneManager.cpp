@@ -54,6 +54,12 @@ SceneManager *SceneManager::GetActive()
     return win ? win->GetSceneManager() : nullptr;
 }
 
+Scene *SceneManager::GetObjectPtrLookupScene()
+{
+    SceneManager *sm = SceneManager::GetActive();
+    return sm ? sm->GetObjectPtrLookupScene_() : nullptr;
+}
+
 void SceneManager::OnNewFrame(Scene *scene)
 {
     if (scene)
@@ -295,6 +301,11 @@ const Path &SceneManager::GetNextLoadScenePath() const
 bool SceneManager::GetNextLoadDestroyPrevious() const
 {
     return m_nextLoadDestroyPrevious;
+}
+
+Scene *SceneManager::GetObjectPtrLookupScene_() const
+{
+    return GetActiveScene_();
 }
 
 BehaviourManager *SceneManager::GetBehaviourManager() const

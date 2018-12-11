@@ -15,6 +15,7 @@
 namespace Bang
 {
 class UIButton;
+class UIImageRenderer;
 class UIDragDroppable;
 
 class UITreeItemContainer : public GameObject
@@ -29,6 +30,7 @@ public:
     void SetCollapsed(bool collapsed);
     void SetContainedItem(GOItem *item);
     void SetIndentation(int indentationPx);
+    void SetBeingDragged(bool beingDragged);
 
     bool IsCollapsed() const;
     int GetIndentationPx() const;
@@ -42,6 +44,7 @@ private:
     bool m_collapsed = false;
     GOItem *p_containedGameObject = nullptr;
 
+    UIImageRenderer *p_dragBg = nullptr;
     DPtr<UIFocusable> p_defaultFocusable;
     GameObject *p_userItemContainer = nullptr;
     UIButton *p_collapseButton = nullptr;

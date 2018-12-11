@@ -38,13 +38,13 @@ constexpr inline bool IsSubClassByIds(ClassIdType baseClassIdBegin,
 template <class TSubClass>
 constexpr inline bool IsSubClass(ClassIdType baseClassIdBegin,
                                  ClassIdType baseClassIdEnd,
-                                 TSubClass *obj)
+                                 const TSubClass *obj)
 {
     return IsSubClassByIds(baseClassIdBegin, baseClassIdEnd, obj->GetClassId());
 }
 
 template <class TBaseClass, class TSubClass>
-constexpr inline bool IsSubClass(TSubClass *obj)
+constexpr inline bool IsSubClass(const TSubClass *obj)
 {
     return IsSubClass(
         TBaseClass::GetClassIdBegin(), TBaseClass::GetClassIdEnd(), obj);
@@ -141,7 +141,7 @@ protected:                                        \
     ClassIdType m_classId = GetInvalidClassId();  \
                                                   \
 public:                                           \
-    ClassIdType GetClassId()                      \
+    ClassIdType GetClassId() const                \
     {                                             \
         return m_classId;                         \
     }                                             \

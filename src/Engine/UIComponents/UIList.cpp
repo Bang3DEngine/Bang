@@ -411,7 +411,6 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
             {
                 if (event.mouse.button == MouseButton::LEFT)
                 {
-                    SetSelection(p_itemUnderMouse);
                     CallSelectionCallback(p_itemUnderMouse,
                                           Action::MOUSE_LEFT_DOWN);
                     return UIEventResult::INTERCEPT;
@@ -443,6 +442,17 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
                 CallSelectionCallback(p_itemUnderMouse,
                                       Action::DOUBLE_CLICKED_LEFT);
                 return UIEventResult::INTERCEPT;
+            }
+            break;
+
+        case UIEvent::Type::MOUSE_CLICK_FULL:
+            if (p_itemUnderMouse)
+            {
+                if (event.mouse.button == MouseButton::LEFT)
+                {
+                    SetSelection(p_itemUnderMouse);
+                    return UIEventResult::INTERCEPT;
+                }
             }
             break;
 

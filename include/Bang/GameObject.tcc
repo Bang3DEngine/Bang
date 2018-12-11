@@ -278,6 +278,34 @@ bool GameObject::HasComponent() const
 }
 
 template <class T>
+T *GameObject::FindObjectInDescendants() const
+{
+    if (T *obj = DCAST<T *>(const_cast<GameObject *>(this)))
+    {
+        return obj;
+    }
+
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (child)
+        {
+            if (T *obj = child->FindObjectInDescendants<T>())
+            {
+                return obj;
+            }
+        }
+    }
+
+    if (T *obj = GetComponent<T>())
+    {
+        return obj;
+    }
+
+    return nullptr;
+}
+
+template <class T>
 bool CanEventBePropagated(const T &x)
 {
     if (!x)

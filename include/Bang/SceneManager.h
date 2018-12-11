@@ -41,6 +41,7 @@ public:
 
     static Scene *GetActiveScene();
     static SceneManager *GetActive();
+    static Scene *GetObjectPtrLookupScene();
     BehaviourManager *GetBehaviourManager() const;
 
 protected:
@@ -58,6 +59,7 @@ protected:
     Scene *GetNextLoadScene() const;
     const Path &GetNextLoadScenePath() const;
     bool GetNextLoadDestroyPrevious() const;
+    virtual Scene *GetObjectPtrLookupScene_() const;
     void ClearNextLoad();
 
 private:

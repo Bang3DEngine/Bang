@@ -176,8 +176,9 @@ String ReflectStruct::GetReflectVarCode() const
 
         if (varType == Variant::Type::OBJECT_PTR)
         {
-            varReflectionCode.ReplaceInSitu("VAR_X",
-                          "x.GetObjectIn(SceneManager::GetActiveScene())");
+            varReflectionCode.ReplaceInSitu(
+                "VAR_X",
+                "x.GetObjectIn(SceneManager::GetObjectPtrLookupScene())");
             varReflectionCode.ReplaceInSitu(
                 "MAYBE_CONSTRUCTOR",
                 Variant::GetTypeToString(var.GetVariant().GetType()));

@@ -12,8 +12,7 @@ namespace Bang
 class ReflectVariableHints
 {
 public:
-    static const String KeyObjectPtrClassIdBegin;
-    static const String KeyObjectPtrClassIdEnd;
+    static const String KeyObjectPtrClass;
     static const String KeyMinValue;
     static const String KeyMaxValue;
     static const String KeyStepValue;
@@ -29,6 +28,7 @@ public:
 
     void Update(const String &hintsString);
 
+    String GetObjectPtrClass() const;
     ClassIdType GetObjectPtrClassIdBegin() const;
     ClassIdType GetObjectPtrClassIdEnd() const;
     bool GetZoomablePreview() const;
@@ -47,8 +47,7 @@ public:
     bool operator!=(const ReflectVariableHints &rhs) const;
 
 private:
-    ClassIdType m_objectPtrClassIdBegin = -1u;
-    ClassIdType m_objectPtrClassIdEnd = -1u;
+    String m_objectPtrClass = "";
     bool m_isButton = false;
     bool m_zoomablePreview = false;
     float m_stepValue = 1.0f;

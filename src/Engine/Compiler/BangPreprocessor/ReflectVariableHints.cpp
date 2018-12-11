@@ -1,14 +1,12 @@
 #include "Bang/ReflectVariableHints.h"
 
+#include "Bang/ObjectClassIds.h"
 #include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 
 using namespace Bang;
 
-const String ReflectVariableHints::KeyObjectPtrClassIdBegin =
-    "ObjectPtrClassIdBegin";
-const String ReflectVariableHints::KeyObjectPtrClassIdEnd =
-    "ObjectPtrClassIdEnd";
+const String ReflectVariableHints::KeyObjectPtrClass = "ObjectPtrClass";
 const String ReflectVariableHints::KeyMinValue = "MinValue";
 const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyStepValue = "StepValue";
@@ -73,13 +71,9 @@ void ReflectVariableHints::Update(const String &hintsString)
             {
                 m_isButton = true;
             }
-            else if (keyStr == ReflectVariableHints::KeyObjectPtrClassIdBegin)
+            else if (keyStr == ReflectVariableHints::KeyObjectPtrClass)
             {
-                iss >> m_objectPtrClassIdBegin;
-            }
-            else if (keyStr == ReflectVariableHints::KeyObjectPtrClassIdEnd)
-            {
-                iss >> m_objectPtrClassIdEnd;
+                iss >> m_objectPtrClass;
             }
             else if (keyStr == ReflectVariableHints::KeyStepValue)
             {
@@ -116,14 +110,19 @@ void ReflectVariableHints::Update(const String &hintsString)
     }
 }
 
+String ReflectVariableHints::GetObjectPtrClass() const
+{
+    return m_objectPtrClass;
+}
+
 ClassIdType ReflectVariableHints::GetObjectPtrClassIdBegin() const
 {
-    return m_objectPtrClassIdBegin;
+    return GetClassIdBegin(GetObjectPtrClass());
 }
 
 ClassIdType ReflectVariableHints::GetObjectPtrClassIdEnd() const
 {
-    return m_objectPtrClassIdEnd;
+    return GetClassIdEnd(GetObjectPtrClass());
 }
 
 bool ReflectVariableHints::GetZoomablePreview() const
@@ -179,8 +178,7 @@ String ReflectVariableHints::GetHintsString() const
     hintsString += BANG_REFLECT_HINT_KEY_VALUE( \
         ReflectVariableHints::Key##KEY_NAME, Get##KEY_NAME());
 
-    ADD_TO_HINTS_STRING(ObjectPtrClassIdBegin);
-    ADD_TO_HINTS_STRING(ObjectPtrClassIdEnd);
+    ADD_TO_HINTS_STRING(ObjectPtrClass);
     ADD_TO_HINTS_STRING(MinValue);
     ADD_TO_HINTS_STRING(MaxValue);
     ADD_TO_HINTS_STRING(StepValue);

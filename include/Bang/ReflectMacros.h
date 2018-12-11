@@ -46,13 +46,9 @@
 #define BANG_REFLECT_HINT_KEY_VALUE(key, value) \
     key + ":" + String::ToString(value) + ";"
 
-#define BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(objectPtrClassIdBegin, \
-                                              objectPtrClassIdEnd)   \
-    BANG_REFLECT_HINT_KEY_VALUE(                                     \
-        ReflectVariableHints::KeyObjectPtrClassIdBegin,              \
-        objectPtrClassIdBegin) +                                     \
-        BANG_REFLECT_HINT_KEY_VALUE(                                 \
-            ReflectVariableHints::KeyObjectPtrClassIdEnd, objectPtrClassIdEnd)
+#define BANG_REFLECT_HINT_OBJECT_PTR_CLASS(objectPtrClass)               \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyObjectPtrClass, \
+                                objectPtrClass)
 
 #define BANG_REFLECT_HINT_MIN_VALUE(minValue) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyMinValue, minValue)

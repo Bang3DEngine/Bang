@@ -64,10 +64,8 @@ void ReflectVariable::FromString(String::Iterator varBegin,
         variableTypeStr += "*";
         varCodeName = varCodeName.SubString(1);
 
-        const ClassIdType beginClassId = GetClassIdBegin(ptrClassName);
-        const ClassIdType endClassId = GetClassIdEnd(ptrClassName);
         outReflectedVar->GetHintsPtr()->Update(
-            BANG_REFLECT_HINT_OBJECT_PTR_CLASS_ID(beginClassId, endClassId));
+            BANG_REFLECT_HINT_OBJECT_PTR_CLASS(ptrClassName));
     }
 
     if (!Variant::ExistsType(variableTypeStr))

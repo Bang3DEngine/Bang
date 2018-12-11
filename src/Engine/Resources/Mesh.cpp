@@ -93,7 +93,7 @@ void Mesh::SetPosition(Mesh::VertexId vId, const Vector3 &pos)
     m_positionsPool[vId] = pos;
 }
 
-void Mesh::UpdateVAOs()
+void Mesh::UpdateVAOs(bool createIndicesIfNeeded)
 {
     if (m_vertexAttributesVBO)
     {
@@ -107,7 +107,7 @@ void Mesh::UpdateVAOs()
     bool hasTangents = !GetTangentsPool().IsEmpty();
     bool hasBones = !GetBonesPool().IsEmpty();
 
-    if (hasPos && GetTrianglesVertexIds().IsEmpty())
+    if (createIndicesIfNeeded && hasPos && GetTrianglesVertexIds().IsEmpty())
     {
         Array<Mesh::VertexId> triVertexIds;
         for (uint i = 0; i < GetPositionsPool().Size(); ++i)

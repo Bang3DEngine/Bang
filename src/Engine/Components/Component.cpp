@@ -89,8 +89,8 @@ void Component::SetGameObjectForced(GameObject *newGameObject)
                 if (comp != this && comp->GetClassName() == GetClassName())
                 {
                     Debug_Error(comp->GetClassName()
-                                << " should not be repeated "
-                                   "the same a GameObject.");
+                                << " should not be repeated in"
+                                   "the same GameObject.");
                 }
             }
         }

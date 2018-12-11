@@ -59,7 +59,7 @@ public:
     void SetBonesIds(const Map<String, uint> &bonesIds);
     void SetPosition(Mesh::VertexId vId, const Vector3 &pos);
 
-    void UpdateVAOs();
+    void UpdateVAOs(bool createIndicesIfNeeded = true);
     void UpdateCornerTablesIfNeeded();
     void UpdateVertexNormals();
     void UpdateVAOsAndTables();

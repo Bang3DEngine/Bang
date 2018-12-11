@@ -113,7 +113,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
     {
         p_mesh.Get()->SetPositionsPool({});
         p_mesh.Get()->SetUvsPool({});
-        p_mesh.Get()->UpdateVAOs();
+        p_mesh.Get()->UpdateVAOs(false);
         return;
     }
 
@@ -199,7 +199,7 @@ void UITextRenderer::RegenerateCharQuadsVAO() const
                                                          textQuadPos2D.End());
     p_mesh.Get()->SetPositionsPool(textQuadPos3D);
     p_mesh.Get()->SetUvsPool(textQuadUvs);
-    p_mesh.Get()->UpdateVAOs();
+    p_mesh.Get()->UpdateVAOs(false);
 }
 
 void UITextRenderer::Bind()

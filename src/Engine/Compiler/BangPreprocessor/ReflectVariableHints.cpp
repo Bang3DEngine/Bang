@@ -47,7 +47,7 @@ void ReflectVariableHints::Update(const String &hintsString)
             if (isMinValueKey || isMaxValueKey)
             {
                 Vector4 valueVec;
-                if (valueStr.BeginsWith("Vector"))
+                if (valueStr.BeginsWith("Vector") || valueStr.BeginsWith("("))
                 {
                     iss >> valueVec;
                 }

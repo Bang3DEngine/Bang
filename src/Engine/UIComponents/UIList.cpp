@@ -291,6 +291,11 @@ GOItem *UIList::GetItem(int i) const
     return nullptr;
 }
 
+void UIList::SetNotifySelectionOnFullClick(bool notifySelectionOnFullClick)
+{
+    m_notifySelectionOnFullClick = notifySelectionOnFullClick;
+}
+
 void UIList::ScrollToBegin()
 {
     GetScrollPanel()->SetScrollingPercent(Vector2(0.0f));
@@ -411,6 +416,10 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
             {
                 if (event.mouse.button == MouseButton::LEFT)
                 {
+                    if (!m_notifySelectionOnFullClick)
+                    {
+                        SetSelection(p_itemUnderMouse);
+                    }
                     CallSelectionCallback(p_itemUnderMouse,
                                           Action::MOUSE_LEFT_DOWN);
                     return UIEventResult::INTERCEPT;
@@ -446,7 +455,7 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
             break;
 
         case UIEvent::Type::MOUSE_CLICK_FULL:
-            if (p_itemUnderMouse)
+            if (p_itemUnderMouse && m_notifySelectionOnFullClick)
             {
                 if (event.mouse.button == MouseButton::LEFT)
                 {

@@ -728,17 +728,20 @@ void RectTransform::Reflect()
         "Pivot",
         SetPivotPosition,
         GetPivotPosition,
-        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2(-1), Vector2(1)) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.1f));
     BANG_REFLECT_VAR_MEMBER_HINTED(
         RectTransform,
         "Anchor Min",
         SetAnchorMin,
         GetAnchorMin,
-        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2(-1), Vector2(1)) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.1f));
     BANG_REFLECT_VAR_MEMBER_HINTED(
         RectTransform,
         "Anchor Max",
         SetAnchorMax,
         GetAnchorMax,
-        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2i(-1), Vector2i(1)));
+        BANG_REFLECT_HINT_MINMAX_VALUE(Vector2(-1), Vector2(1)) +
+            BANG_REFLECT_HINT_STEP_VALUE(0.1f));
 }

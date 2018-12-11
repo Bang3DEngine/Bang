@@ -33,6 +33,9 @@ public:
         VECTOR2,
         VECTOR3,
         VECTOR4,
+        VECTOR2i,
+        VECTOR3i,
+        VECTOR4i,
         QUATERNION
     };
 
@@ -54,6 +57,9 @@ public:
     void SetVector2(const Vector2 &v);
     void SetVector3(const Vector3 &v);
     void SetVector4(const Vector4 &v);
+    void SetVector2i(const Vector2i &v);
+    void SetVector3i(const Vector3i &v);
+    void SetVector4i(const Vector4i &v);
     void SetQuaternion(const Quaternion &v);
 
     template <class T>
@@ -77,6 +83,9 @@ public:
     Vector2 GetVector2() const;
     Vector3 GetVector3() const;
     Vector4 GetVector4() const;
+    Vector2i GetVector2i() const;
+    Vector3i GetVector3i() const;
+    Vector4i GetVector4i() const;
     Quaternion GetQuaternion() const;
 
     template <class T>
@@ -99,6 +108,9 @@ public:
     static Variant FromVector2(const Vector2 &v);
     static Variant FromVector3(const Vector3 &v);
     static Variant FromVector4(const Vector4 &v);
+    static Variant FromVector2i(const Vector2i &v);
+    static Variant FromVector3i(const Vector3i &v);
+    static Variant FromVector4i(const Vector4i &v);
     static Variant FromQuaternion(const Quaternion &q);
 
     template <class T>
@@ -124,6 +136,7 @@ private:
     String m_string = "";
     GUID m_guid = GUID::Empty();
     Vector4 m_vector4 = Vector4::Zero();
+    Vector4i m_vector4i = Vector4i::Zero();
     ObjectPtr m_objectPtr;
 };
 
@@ -187,6 +200,21 @@ template <>
 inline void Variant::Set<Vector4>(const Vector4 &v)
 {
     SetVector4(v);
+}
+template <>
+inline void Variant::Set<Vector2i>(const Vector2i &v)
+{
+    SetVector2i(v);
+}
+template <>
+inline void Variant::Set<Vector3i>(const Vector3i &v)
+{
+    SetVector3i(v);
+}
+template <>
+inline void Variant::Set<Vector4i>(const Vector4i &v)
+{
+    SetVector4i(v);
 }
 template <>
 inline void Variant::Set<Quaternion>(const Quaternion &v)
@@ -259,6 +287,21 @@ template <>
 inline Vector4 Variant::Get() const
 {
     return GetVector4();
+}
+template <>
+inline Vector2i Variant::Get() const
+{
+    return GetVector2i();
+}
+template <>
+inline Vector3i Variant::Get() const
+{
+    return GetVector3i();
+}
+template <>
+inline Vector4i Variant::Get() const
+{
+    return GetVector4i();
 }
 template <>
 inline Quaternion Variant::Get() const

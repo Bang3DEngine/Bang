@@ -117,6 +117,18 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                         reflVarSetter(Variant::FromVector4(
                             metaNode.Get<Vector4>(varName)));
                         break;
+                    case Variant::Type::VECTOR2i:
+                        reflVarSetter(Variant::FromVector2i(
+                            metaNode.Get<Vector2i>(varName)));
+                        break;
+                    case Variant::Type::VECTOR3i:
+                        reflVarSetter(Variant::FromVector3i(
+                            metaNode.Get<Vector3i>(varName)));
+                        break;
+                    case Variant::Type::VECTOR4i:
+                        reflVarSetter(Variant::FromVector4i(
+                            metaNode.Get<Vector4i>(varName)));
+                        break;
                     case Variant::Type::QUATERNION:
                         reflVarSetter(Variant::FromQuaternion(
                             metaNode.Get<Quaternion>(varName)));

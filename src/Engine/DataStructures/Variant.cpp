@@ -96,6 +96,24 @@ void Variant::SetVector4(const Vector4 &v)
     SetType(Type::VECTOR4);
 }
 
+void Variant::SetVector2i(const Vector2i &v)
+{
+    SetVector4i(Vector4i(v.x, v.y, 0, 0));
+    SetType(Type::VECTOR2i);
+}
+
+void Variant::SetVector3i(const Vector3i &v)
+{
+    SetVector4i(Vector4i(v.x, v.y, v.z, 0));
+    SetType(Type::VECTOR3i);
+}
+
+void Variant::SetVector4i(const Vector4i &v)
+{
+    m_vector4i = v;
+    SetType(Type::VECTOR4i);
+}
+
 void Variant::SetQuaternion(const Quaternion &v)
 {
     SetVector4(Vector4(v.x, v.y, v.z, v.w));
@@ -170,6 +188,21 @@ Vector3 Variant::GetVector3() const
 Vector4 Variant::GetVector4() const
 {
     return m_vector4;
+}
+
+Vector2i Variant::GetVector2i() const
+{
+    return GetVector4i().xy();
+}
+
+Vector3i Variant::GetVector3i() const
+{
+    return GetVector4i().xyz();
+}
+
+Vector4i Variant::GetVector4i() const
+{
+    return m_vector4i;
 }
 
 Quaternion Variant::GetQuaternion() const
@@ -269,6 +302,27 @@ Variant Variant::FromVector4(const Vector4 &v)
     return variant;
 }
 
+Variant Variant::FromVector2i(const Vector2i &v)
+{
+    Variant variant;
+    variant.SetVector2i(v);
+    return variant;
+}
+
+Variant Variant::FromVector3i(const Vector3i &v)
+{
+    Variant variant;
+    variant.SetVector3i(v);
+    return variant;
+}
+
+Variant Variant::FromVector4i(const Vector4i &v)
+{
+    Variant variant;
+    variant.SetVector4i(v);
+    return variant;
+}
+
 Variant Variant::FromQuaternion(const Quaternion &v)
 {
     Variant variant;
@@ -297,6 +351,12 @@ bool Variant::operator==(const Variant &rhs) const
         case Variant::Type::VECTOR2: return (GetVector2() == rhs.GetVector2());
         case Variant::Type::VECTOR3: return (GetVector3() == rhs.GetVector3());
         case Variant::Type::VECTOR4: return (GetVector4() == rhs.GetVector4());
+        case Variant::Type::VECTOR2i:
+            return (GetVector2i() == rhs.GetVector2i());
+        case Variant::Type::VECTOR3i:
+            return (GetVector3i() == rhs.GetVector3i());
+        case Variant::Type::VECTOR4i:
+            return (GetVector4i() == rhs.GetVector4i());
         case Variant::Type::QUATERNION:
             return (GetQuaternion() == rhs.GetQuaternion());
         case Variant::Type::OBJECT_PTR:
@@ -331,6 +391,9 @@ String Variant::GetTypeToString(Variant::Type type)
         case Variant::Type::VECTOR2: return "Vector2";
         case Variant::Type::VECTOR3: return "Vector3";
         case Variant::Type::VECTOR4: return "Vector4";
+        case Variant::Type::VECTOR2i: return "Vector2i";
+        case Variant::Type::VECTOR3i: return "Vector3i";
+        case Variant::Type::VECTOR4i: return "Vector4i";
         case Variant::Type::QUATERNION: return "Quaternion";
         case Variant::Type::OBJECT_PTR: return "ObjectPtr";
         case Variant::Type::NONE: return "None";
@@ -391,6 +454,18 @@ Variant::Type Variant::GetTypeFromString(const String &typeStr)
     else if (typeStr == "Vector4")
     {
         return Variant::Type::VECTOR4;
+    }
+    else if (typeStr == "Vector2i")
+    {
+        return Variant::Type::VECTOR2i;
+    }
+    else if (typeStr == "Vector3i")
+    {
+        return Variant::Type::VECTOR3i;
+    }
+    else if (typeStr == "Vector4i")
+    {
+        return Variant::Type::VECTOR4i;
     }
     else if (typeStr == "Quaternion")
     {

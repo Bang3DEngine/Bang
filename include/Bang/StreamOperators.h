@@ -346,28 +346,18 @@ std::istream &operator>>(std::istream &is, const T &enumT)
 template <class T>
 std::istream &operator>>(std::istream &is, Vector2G<T> &v)
 {
-    char _;
-    ConsumeLetters_(is);
-    if (is.peek() != '(')
-    {
-        is >> _;
-    }
-
-    is >> _ >> v.x >> _ >> v.y >> _;
+    Vector4G<T> v4;
+    is >> v4;
+    v = v4.xy();
     return is;
 }
 
 template <class T>
 std::istream &operator>>(std::istream &is, Vector3G<T> &v)
 {
-    char _;
-    ConsumeLetters_(is);
-    while (is.peek() != '(')
-    {
-        is >> _;
-    }
-
-    is >> _ >> v.x >> _ >> v.y >> _ >> v.z >> _;
+    Vector4G<T> v4;
+    is >> v4;
+    v = v4.xyz();
     return is;
 }
 
@@ -381,17 +371,29 @@ std::istream &operator>>(std::istream &is, Vector4G<T> &v)
         is >> _;
     }
 
-    is >> _ >> v.x >> _ >> v.y >> _ >> v.z >> _ >> v.w >> _;
+    for (int i = 0; i < 4; ++i)
+    {
+        is >> _ >> v[i];
+        if (is.peek() != ',')
+        {
+            break;
+        }
+    }
+
+    if (is.peek() == ')')
+    {
+        is >> _;
+    }
+
     return is;
 }
 
 template <class T>
 std::istream &operator>>(std::istream &is, QuaternionG<T> &q)
 {
-    ConsumeLetters_(is);
-
-    char _;
-    is >> _ >> q.x >> _ >> q.y >> _ >> q.z >> _ >> q.w >> _;
+    Vector4G<T> v4;
+    is >> v4;
+    q = Quaternion(v4.x, v4.y, v4.z, v4.w);
     return is;
 }
 

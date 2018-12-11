@@ -108,6 +108,9 @@ std::ostream &operator<<(std::ostream &log, const Variant &variant)
         case Variant::Type::VECTOR2: log << variant.GetVector2(); break;
         case Variant::Type::VECTOR3: log << variant.GetVector3(); break;
         case Variant::Type::VECTOR4: log << variant.GetVector4(); break;
+        case Variant::Type::VECTOR2i: log << variant.GetVector2i(); break;
+        case Variant::Type::VECTOR3i: log << variant.GetVector3i(); break;
+        case Variant::Type::VECTOR4i: log << variant.GetVector4i(); break;
         case Variant::Type::QUATERNION: log << variant.GetQuaternion(); break;
         case Variant::Type::OBJECT_PTR: log << variant.GetObjectPtr(); break;
         case Variant::Type::NONE: break;
@@ -272,6 +275,7 @@ std::istream &operator>>(std::istream &is, Variant &variant)
             variant.SetColor(v);
         }
         break;
+
         case Variant::Type::VECTOR2:
         {
             Vector2 v;
@@ -291,6 +295,28 @@ std::istream &operator>>(std::istream &is, Variant &variant)
             Vector4 v;
             is >> v;
             variant.SetVector4(v);
+        }
+        break;
+
+        case Variant::Type::VECTOR2i:
+        {
+            Vector2i v;
+            is >> v;
+            variant.SetVector2i(v);
+        }
+        break;
+        case Variant::Type::VECTOR3i:
+        {
+            Vector3i v;
+            is >> v;
+            variant.SetVector3i(v);
+        }
+        break;
+        case Variant::Type::VECTOR4i:
+        {
+            Vector4i v;
+            is >> v;
+            variant.SetVector4i(v);
         }
         break;
 

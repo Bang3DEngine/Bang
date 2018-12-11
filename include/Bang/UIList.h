@@ -67,6 +67,7 @@ public:
     const Array<GOItem *> &GetItems() const;
     GOItem *GetItem(int i) const;
 
+    void SetNotifySelectionOnFullClick(bool notifySelectionOnFullClick);
     void ScrollToBegin();
     void ScrollTo(int i);
     void ScrollTo(GOItem *item);
@@ -126,6 +127,7 @@ private:
     Color m_selectedColor = UITheme::GetSelectedColor();
 
     bool m_wideSelectionMode = true;
+    bool m_notifySelectionOnFullClick = false;
 
     void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);
 

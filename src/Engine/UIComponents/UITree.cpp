@@ -780,7 +780,6 @@ UITree *UITree::CreateInto(GameObject *go)
     uiTree->p_uiList = list;
 
     GameObject *dragMarker = GameObjectFactory::CreateUIGameObject();
-    ;
     UIImageRenderer *dragMarkerImg =
         dragMarker->AddComponent<UIImageRenderer>();
     dragMarker->GetRectTransform()->TranslateLocal(Vector3(0.0f, 0.0f, -0.4f));
@@ -789,6 +788,7 @@ UITree *UITree::CreateInto(GameObject *go)
     uiTree->p_dragMarker = dragMarker;
     uiTree->p_dragMarkerImg = dragMarkerImg;
 
+    uiTree->GetUIList()->SetNotifySelectionOnFullClick(true);
     uiTree->GetUIList()->SetSelectionCallback([uiTree](GOItem *item,
                                                        UIList::Action action) {
         // Forward selectionCallback from itemContainer to actual item

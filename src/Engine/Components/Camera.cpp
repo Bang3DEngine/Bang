@@ -55,6 +55,8 @@ Camera::Camera()
     AddRenderPass(RenderPass::SCENE_POSTPROCESS);
     AddRenderPass(RenderPass::CANVAS);
     AddRenderPass(RenderPass::CANVAS_POSTPROCESS);
+    AddRenderPass(RenderPass::OVERLAY);
+    AddRenderPass(RenderPass::OVERLAY_POSTPROCESS);
 
     m_gbuffer = new GBuffer(1, 1);
 

@@ -27,6 +27,8 @@ public:
     bool IsPointColliding(const Vector3 &point) const;
     bool IsCellColliding(uint xi, uint yi) const;
     bool IsCellInsideGrid(uint xi, uint yi) const;
+    AARect GetGridAARect() const;
+    Vector3 GetClosestPointInsideGrid(const Vector3 &point) const;
     Vector3 GetCellCenter(uint xi, uint yi) const;
     Vector3 GetGridCenter() const;
     Vector2 GetCellSize() const;

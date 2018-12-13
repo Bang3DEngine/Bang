@@ -228,6 +228,31 @@ bool NavigationMesh::IsCellInsideGrid(uint xi, uint yi) const
     return (xi < GetNumCells()) && (yi < GetNumCells());
 }
 
+AARect NavigationMesh::GetGridAARect() const
+{
+    Vector2 gridSizeHalf = GetGridSize() * 0.5f;
+    AARect gridRect(
+        -gridSizeHalf.x, -gridSizeHalf.y, gridSizeHalf.x, gridSizeHalf.y);
+    gridRect += GetGridCenter().xz();
+    return gridRect;
+}
+
+Vector3 NavigationMesh::GetClosestPointInsideGrid(const Vector3 &point) const
+{
+    AARect gridRect = GetGridAARect();
+
+    Vector2 pos2 = point.xz();
+    if (!gridRect.Contains(pos2))
+    {
+        Vector2 closestPoint = gridRect.GetClosestPointInAARect(pos2);
+        pos2 = closestPoint +
+               (gridRect.GetCenter() - closestPoint).NormalizedSafe() * 0.01f;
+    }
+    ASSERT(gridRect.Contains(pos2));
+
+    return Vector3(pos2.x, 0, pos2.y);
+}
+
 Vector3 NavigationMesh::GetCellCenter(uint xi, uint yi) const
 {
     Vector2 cellSize = GetCellSize();
@@ -274,20 +299,10 @@ void NavigationMesh::Reflect()
 
 Vector2i NavigationMesh::GetClosestCellTo(const Vector3 &position) const
 {
-    Vector2 gridSizeHalf = GetGridSize() * 0.5f;
-    AARect gridRect(
-        -gridSizeHalf.x, -gridSizeHalf.y, gridSizeHalf.x, gridSizeHalf.y);
-    gridRect += GetGridCenter().xy();
-
-    Vector2 pos2 = position.xz();
-    if (!gridRect.Contains(pos2))
-    {
-        Vector2 closestPoint = gridRect.GetClosestPointInAARect(pos2);
-        pos2 = closestPoint + (closestPoint - pos2).Normalized() * 0.001f;
-    }
-    ASSERT(gridRect.Contains(pos2));
-
-    Vector2i cellIdx = Vector2i((pos2 - gridRect.GetMin()) / GetCellSize());
+    AARect gridRect = GetGridAARect();
+    Vector3 closestPoint = GetClosestPointInsideGrid(position);
+    Vector2i cellIdx =
+        Vector2i((closestPoint.xz() - gridRect.GetMin()) / GetCellSize());
     ASSERT(IsCellInsideGrid(SCAST<uint>(cellIdx.x), SCAST<uint>(cellIdx.y)));
 
     return cellIdx;

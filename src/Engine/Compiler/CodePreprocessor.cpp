@@ -48,9 +48,9 @@ Path CodePreprocessor::GetIncludePath(const String &includeDirective,
         }
     }
 
-    Debug_Error("Could not find include: '"
-                << includeDirective << "'. "
-                << "Using directories: " << includeDirs);
+    Debug_Error("Could not find include: '" << includeDirective << "'. "
+                                            << "Using directories: "
+                                            << includeDirs);
     return Path::Empty();
 }
 
@@ -150,6 +150,10 @@ Array<Path> CodePreprocessor::GetSourceIncludePaths(
     const Array<Path> &includeDirs,
     bool onlyExisting)
 {
+    if (!srcPath.IsFile())
+    {
+        return Array<Path>();
+    }
     return CodePreprocessor::GetSourceIncludePaths(
         File::GetContents(srcPath), includeDirs, onlyExisting);
 }

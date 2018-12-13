@@ -13,7 +13,10 @@
 
 using namespace Bang;
 
-BehaviourContainer::BehaviourContainer(){CONSTRUCT_CLASS_ID(BehaviourContainer)}
+BehaviourContainer::BehaviourContainer()
+{
+    CONSTRUCT_CLASS_ID(BehaviourContainer)
+}
 
 BehaviourContainer::~BehaviourContainer()
 {

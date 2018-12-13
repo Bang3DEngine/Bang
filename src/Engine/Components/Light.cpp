@@ -29,7 +29,10 @@ class TextureCubeMap;
 
 using namespace Bang;
 
-Light::Light(){CONSTRUCT_CLASS_ID(Light)}
+Light::Light()
+{
+    CONSTRUCT_CLASS_ID(Light)
+}
 
 Light::~Light()
 {

@@ -119,7 +119,8 @@ const Array<AnimatorStateMachineTransitionCondition *>
     return m_transitionConditions;
 }
 
-void AnimatorStateMachineTransition::CloneInto(ICloneable *clone, bool cloneGUID) const
+void AnimatorStateMachineTransition::CloneInto(ICloneable *clone,
+                                               bool cloneGUID) const
 {
     Serializable::CloneInto(clone, cloneGUID);
 

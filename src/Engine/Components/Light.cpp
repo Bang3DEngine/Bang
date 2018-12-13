@@ -5,6 +5,7 @@
 #include "Bang/Camera.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GBuffer.h"
+#include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -14,6 +15,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
+#include "Bang/Resources.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
@@ -32,10 +34,17 @@ using namespace Bang;
 Light::Light()
 {
     CONSTRUCT_CLASS_ID(Light)
+
+    p_shadowMapMaterial = Resources::Create<Material>();
 }
 
 Light::~Light()
 {
+}
+
+void Light::SetShadowShaderProgram(ShaderProgram *sp)
+{
+    p_shadowMapMaterial.Get()->SetShaderProgram(sp);
 }
 
 void Light::SetColor(const Color &color)
@@ -75,6 +84,21 @@ Light::ShadowType Light::GetShadowType() const
 {
     return m_shadowType;
 }
+
+ShaderProgram *Light::GetShadowMapShaderProgram() const
+{
+    return p_shadowMapMaterial.Get()->GetShaderProgram();
+}
+
+float Light::GetShadowMapNearDistance() const
+{
+    return 0.05f;
+}
+
+float Light::GetShadowMapFarDistance() const
+{
+    return 1.0f;
+}
 const Vector2i &Light::GetShadowMapSize() const
 {
     return m_shadowMapSize;
@@ -88,7 +112,19 @@ void Light::RenderShadowMaps(GameObject *go)
 {
     if (GetShadowType() != ShadowType::NONE)
     {
-        RenderShadowMaps_(go);
+        if (GetShadowMapShaderProgram())
+        {
+            GEngine::GetInstance()->SetReplacementMaterial(
+                p_shadowMapMaterial.Get());
+
+            ShaderProgram *sp = GetShadowMapShaderProgram();
+            sp->Bind();
+            sp->SetFloat("B_LightZNear", GetShadowMapNearDistance());
+            sp->SetFloat("B_LightZFar", GetShadowMapFarDistance());
+
+            RenderShadowMaps_(go);
+            GEngine::GetInstance()->SetReplacementMaterial(nullptr);
+        }
     }
 }
 
@@ -120,6 +156,8 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
     Transform *tr = GetGameObject()->GetTransform();
     sp->SetFloat("B_LightIntensity", GetIntensity());
     sp->SetColor("B_LightColor", GetColor());
+    sp->SetFloat("B_LightZNear", GetShadowMapNearDistance());
+    sp->SetFloat("B_LightZFar", GetShadowMapFarDistance());
     sp->SetVector3("B_LightForwardWorld", tr->GetForward());
     sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
 

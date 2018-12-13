@@ -42,6 +42,9 @@ public:
     float GetIntensity() const;
     float GetShadowBias() const;
     ShadowType GetShadowType() const;
+    ShaderProgram *GetShadowMapShaderProgram() const;
+    virtual float GetShadowMapNearDistance() const;
+    virtual float GetShadowMapFarDistance() const;
     const Vector2i &GetShadowMapSize() const;
     virtual Texture *GetShadowMapTexture() const;
 
@@ -54,6 +57,7 @@ protected:
     Light();
     virtual ~Light() override;
 
+    void SetShadowShaderProgram(ShaderProgram *sp);
     void SetLightScreenPassShaderProgram(ShaderProgram *sp);
     Array<Renderer *> GetShadowCastersIn(GameObject *go) const;
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const;
@@ -66,6 +70,7 @@ private:
     Vector2i m_shadowMapSize = Vector2i(256);
     ShadowType m_shadowType = ShadowType::HARD;
 
+    RH<Material> p_shadowMapMaterial;
     RH<ShaderProgram> p_lightScreenPassShaderProgram;
 
     void ApplyLight(Camera *camera, const AARect &renderRect) const;

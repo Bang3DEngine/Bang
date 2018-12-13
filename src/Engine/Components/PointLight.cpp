@@ -64,7 +64,7 @@ void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
 
     ASSERT(GL::IsBound(sp));
     sp->SetFloat("B_LightRange", GetRange());
-    sp->SetFloat("B_PointLightZFar", GetLightZFar());
+    sp->SetFloat("B_LightZFar", GetLightZFar());
 }
 
 AARect PointLight::GetRenderRect(Camera *cam) const
@@ -83,6 +83,16 @@ void PointLight::SetRange(float range)
 float PointLight::GetRange() const
 {
     return m_range;
+}
+
+float PointLight::GetShadowMapNearDistance() const
+{
+    return 0.05f;
+}
+
+float PointLight::GetShadowMapFarDistance() const
+{
+    return GetRange();
 }
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
@@ -181,8 +191,10 @@ Array<Matrix4> PointLight::GetWorldToShadowMapMatrices() const
 
     const Transform *tr = GetGameObject()->GetTransform();
     const Vector3 pos = tr->GetPosition();
-    const Matrix4 pers = Matrix4::Perspective(
-        Math::DegToRad(90.0f), 1.0f, 0.05f, GetLightZFar());
+    const Matrix4 pers = Matrix4::Perspective(Math::DegToRad(90.0f),
+                                              1.0f,
+                                              GetShadowMapNearDistance(),
+                                              GetShadowMapFarDistance());
     const Vector3 up = Vector3::Up(), down = Vector3::Down(),
                   left = Vector3::Left(), right = Vector3::Right(),
                   fwd = Vector3::Forward(), back = Vector3::Back();

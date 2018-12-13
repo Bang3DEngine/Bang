@@ -96,6 +96,14 @@ ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewportGamma()
                    "RenderTextureGamma.frag"));
 }
 
+ShaderProgram *ShaderProgramFactory::GetDirectionalLightShadowMap()
+{
+    return Get(ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "DirectionalLightShadowMap.vert"),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "DirectionalLightShadowMap.frag"));
+}
+
 ShaderProgram *ShaderProgramFactory::GetDirectionalLightDeferredScreenPass()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),

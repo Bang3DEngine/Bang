@@ -37,13 +37,19 @@ class ICloneable;
 
 using namespace Bang;
 
+#include "Bang/Input.h"
 DirectionalLight::DirectionalLight()
 {
     CONSTRUCT_CLASS_ID(DirectionalLight)
 
     m_shadowMapFramebuffer = new Framebuffer(1, 1);
-    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
-                                                  GL::ColorFormat::DEPTH16);
+    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
+                                                  GL::ColorFormat::RGBA32F);
+    m_shadowMapFramebuffer->CreateAttachmentTex2D(
+        GL::Attachment::DEPTH_STENCIL, GL::ColorFormat::DEPTH24_STENCIL8);
+
+    SetShadowShaderProgram(
+        ShaderProgramFactory::GetDirectionalLightShadowMap());
 
     GL::Push(GL::BindTarget::TEXTURE_2D);
 
@@ -102,6 +108,7 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     const Vector2i &shadowMapSize = GetShadowMapSize();
     m_shadowMapFramebuffer->Bind();
     m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);
+    m_shadowMapFramebuffer->SetAllDrawBuffers();
 
     // Set up viewport
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
@@ -118,13 +125,19 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
 
     // Render shadow map into framebuffer
     GL::ClearDepthBuffer(1.0f);
-    GL::SetColorMask(false, false, false, false);
+    GL::ClearColorBuffer(Color::One());
     GL::SetDepthFunc(GL::Function::LEQUAL);
     GL::SetDepthMask(true);
 
     for (Renderer *rend : shadowCastersRenderers)
     {
         rend->OnRender(RenderPass::SCENE);
+    }
+
+    if (Input::GetKeyDown(Key::Z))
+    {
+        m_shadowMapFramebuffer->Export(GL::Attachment::COLOR0,
+                                       Path("test.png"));
     }
 
     ge->PopActiveRenderingCamera();
@@ -162,6 +175,16 @@ void DirectionalLight::SetShadowDistance(float shadowDistance)
     m_shadowDistance = shadowDistance;
 }
 
+float DirectionalLight::GetShadowMapNearDistance() const
+{
+    return 0.05f;
+}
+
+float DirectionalLight::GetShadowMapFarDistance() const
+{
+    return GetShadowDistance();
+}
+
 float DirectionalLight::GetShadowDistance() const
 {
     return m_shadowDistance;
@@ -169,7 +192,7 @@ float DirectionalLight::GetShadowDistance() const
 
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::DEPTH);
+    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
 void DirectionalLight::GetWorldToShadowMapMatrices(
@@ -279,50 +302,6 @@ AABox DirectionalLight::GetShadowMapOrthoBox(
     // Make an array of all the points we want to have inside our shadow map
     // First of all, we want to have the whole camera frustum inside of it
     // And then, we want to have all the shadow casters that affect us too
-
-    /*
-    float time = 20.0f;
-    if (Input::GetKeyDown(Key::Q))
-    {
-        DebugRenderer::RenderQuad(extCamAABoxTopQuadWS,   Color::Blue, time,
-    false, false, true, Color::Black);
-        DebugRenderer::RenderQuad(extCamAABoxBotQuadWS,   Color::Blue, time,
-    false, false, true, Color::Black);
-        DebugRenderer::RenderQuad(extCamAABoxLeftQuadWS,  Color::Blue, time,
-    false, false, true, Color::Black);
-        DebugRenderer::RenderQuad(extCamAABoxRightQuadWS, Color::Blue, time,
-    false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camTopQuad,   Color::LightBlue, time,
-    false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camBotQuad,   Color::LightBlue, time,
-    false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camLeftQuad,  Color::LightBlue, time,
-    false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camRightQuad, Color::LightBlue, time,
-    false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camAABoxLS.GetTopQuad(),   Color::Green,
-    time, false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camAABoxLS.GetBotQuad(),   Color::Green,
-    time, false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camAABoxLS.GetRightQuad(), Color::Green,
-    time, false, false, true, Color::Black);
-        // DebugRenderer::RenderQuad(camAABoxLS.GetLeftQuad(),  Color::Green,
-    time, false, false, true, Color::Black);
-        DebugRenderer::RenderAABox(sceneAABox, Color::Purple, time, 1.0f, true,
-    false, true, Color::Black);
-
-        for (const Vector3 &intPoint : extCamAABoxSceneBoxIntersectionsWS)
-        for (const Vector3 &intPoint : ints)
-        {
-            DebugRenderer::RenderPoint(intPoint, Color::Red, time, 20.0f, true);
-        }
-        // DebugRenderer::RenderQuad(orthoBoxLeftQuadWorldSpace, Color::Blue,
-    time, false, false, true);
-        // DebugRenderer::RenderQuad(orthoBoxRightQuadWorldSpace, Color::Blue,
-    time, false, false, true);
-    }
-    */
-
     Array<Vector3> pointsToBeShadowMappedWS;
     pointsToBeShadowMappedWS.PushBack(extCamAABoxSceneBoxIntersectionsWS);
 

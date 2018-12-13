@@ -25,6 +25,9 @@ class DirectionalLight : public Light
 
 public:
     void SetShadowDistance(float shadowDistance);
+
+    float GetShadowMapNearDistance() const override;
+    float GetShadowMapFarDistance() const override;
     float GetShadowDistance() const;
 
     // Light

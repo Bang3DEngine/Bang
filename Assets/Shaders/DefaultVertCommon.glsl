@@ -23,12 +23,29 @@ layout(location = 5) in vec4 B_VIn_VertexBonesWeights;
     #endif
 #endif
 
-void main()
+vec4 GetWorldVertexNormal()
 {
-    vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
+    vec4 modelNormal = vec4(B_VIn_Normal, 0);
 
+    ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
+    vec4 boneWeights = B_VIn_VertexBonesWeights;
+
+    if (B_HasBoneAnimations)
+    {
+        vec4 bonedNormal = vec4(0);
+        bonedNormal += (B_BoneAnimationMatrices[boneIds[0]] * modelNormal) * boneWeights[0];
+        bonedNormal += (B_BoneAnimationMatrices[boneIds[1]] * modelNormal) * boneWeights[1];
+        bonedNormal += (B_BoneAnimationMatrices[boneIds[2]] * modelNormal) * boneWeights[2];
+        bonedNormal += (B_BoneAnimationMatrices[boneIds[3]] * modelNormal) * boneWeights[3];
+        modelNormal = vec4(bonedNormal.xyz, 0);
+    }
+
+    return B_Normal * modelNormal;
+}
+
+vec4 GetModelVertexPosition()
+{
     vec4 modelPosition = vec4(B_VIn_Position, 1);
-    vec4 modelNormal   = vec4(B_VIn_Normal,   0);
 
     ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
     vec4 boneWeights = B_VIn_VertexBonesWeights;
@@ -41,21 +58,34 @@ void main()
         bonedPosition += (B_BoneAnimationMatrices[boneIds[2]] * modelPosition) * boneWeights[2];
         bonedPosition += (B_BoneAnimationMatrices[boneIds[3]] * modelPosition) * boneWeights[3];
         modelPosition = vec4(bonedPosition.xyz, 1);
-
-        vec4 bonedNormal = vec4(0);
-        bonedNormal += (B_BoneAnimationMatrices[boneIds[0]] * modelNormal) * boneWeights[0];
-        bonedNormal += (B_BoneAnimationMatrices[boneIds[1]] * modelNormal) * boneWeights[1];
-        bonedNormal += (B_BoneAnimationMatrices[boneIds[2]] * modelNormal) * boneWeights[2];
-        bonedNormal += (B_BoneAnimationMatrices[boneIds[3]] * modelNormal) * boneWeights[3];
-        modelNormal = vec4(bonedNormal.xyz, 0);
     }
 
+    return modelPosition;
+}
+vec4 GetWorldVertexPosition(vec4 vertexModelPosition)
+{
+    return B_Model * vertexModelPosition;
+}
+vec4 GetProjectedVertexPosition(vec4 vertexModelPosition)
+{
+    return B_PVM * vertexModelPosition;
+}
+
+#ifndef BANG_NO_MAIN
+void main()
+{
+    vec2 uv = vec2(B_VIn_Uv.x, 1.0 - B_VIn_Uv.y);
+
+    vec4 modelPosition = GetModelVertexPosition();
+    vec4 worldPosition = GetWorldVertexPosition(modelPosition);
+    vec4 worldNormal = GetWorldVertexNormal();
+
     #ifndef ONLY_OUT_MODEL_POS_VEC4
-        B_FIn_Position    = (B_Model  * modelPosition).xyz;
-        B_FIn_Normal      = (B_Normal * modelNormal).xyz;
+        B_FIn_Position    = worldPosition.xyz;
+        B_FIn_Normal      = worldNormal.xyz;
         B_FIn_AlbedoUv    = uv * B_AlbedoUvMultiply    + B_AlbedoUvOffset;
         B_FIn_NormalMapUv = uv * B_NormalMapUvMultiply + B_NormalMapUvOffset;
-        gl_Position       = B_PVM * modelPosition;
+        gl_Position       = GetProjectedVertexPosition(modelPosition);
 
         // Calculate TBN for normal mapping
         if (B_HasNormalMapTexture)
@@ -71,6 +101,7 @@ void main()
             B_TBN = mat3(T, B, N);
         }
     #else
-        gl_Position = B_Model * modelPosition;
+        gl_Position = worldPosition;
     #endif
 }
+#endif

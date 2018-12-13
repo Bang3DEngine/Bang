@@ -27,6 +27,8 @@ public:
     void SetRange(float range);
 
     float GetRange() const;
+    float GetShadowMapNearDistance() const override;
+    float GetShadowMapFarDistance() const override;
 
     // Light
     TextureCubeMap *GetShadowMapTexture() const override;

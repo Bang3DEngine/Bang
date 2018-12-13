@@ -29,6 +29,7 @@ public:
     static ShaderProgram *GetPointLightDeferredScreenPass();
     static ShaderProgram *GetRenderTextureToViewport();
     static ShaderProgram *GetRenderTextureToViewportGamma();
+    static ShaderProgram *GetDirectionalLightShadowMap();
     static ShaderProgram *GetDirectionalLightDeferredScreenPass();
     static ShaderProgram *Get(const Path &vShaderPath, const Path &fShaderPath);
     static ShaderProgram *Get(const Path &vShaderPath,

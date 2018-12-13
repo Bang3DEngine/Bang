@@ -2,6 +2,7 @@
 #define COMMON_GLSL
 
 const float PI = 3.14159265359;
+const float LIGHT_EXP = 40.0f;
 
 // Matrices related ///////////////////////////
 uniform mat4 B_Model;
@@ -234,6 +235,11 @@ float B_SampleStencilOffset(vec2 pixOffset)
 float B_SampleFlagsOffset(vec2 pixOffset)
 {
     return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
+}
+
+float Map01(float x, float minX, float maxX)
+{
+    return (x-minX) / (maxX-minX);
 }
 
 vec3 B_ComputeWorldPosition()

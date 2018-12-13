@@ -13,6 +13,9 @@ const int LIGHT_TYPE_POINT       = 1;
 
 #if defined(BANG_DEFERRED_RENDERING)
 
+    uniform float B_LightZNear;
+    uniform float B_LightZFar;
+
     uniform float B_LightRange;
     uniform vec4  B_LightColor;
     uniform float B_LightIntensity;

@@ -4,12 +4,10 @@
 #include "LightCommon.glsl"
 
 #if defined(BANG_DEFERRED_RENDERING)
-
     uniform float B_ShadowDistance;
     uniform mat4 B_WorldToShadowMapMatrix;
     uniform sampler2D B_LightShadowMap;
     uniform sampler2DShadow B_LightShadowMapSoft;
-
 #endif
 
 float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
@@ -24,7 +22,7 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
         float ShadowDist = B_ShadowDistance * 2;
 
         // If facing away, complete shadow directly
-        if (dot(pixelNormalWorld, -lightForwardWorld) < 0)
+        if (dot(pixelNormalWorld, lightForwardWorld) >= 0)
         {
             return 0.0f;
         }
@@ -38,38 +36,19 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
         }
 
         // Get uvs in shadow map, and sample the shadow map depth
-        vec2 shadowMapUv = (B_WorldToShadowMapMatrix * vec4(pixelPosWorld,1)).xy;
-        shadowMapUv = shadowMapUv * 0.5f + 0.5f;
+        vec4 worldPosInLightSpace = (B_WorldToShadowMapMatrix * vec4(pixelPosWorld, 1));
+        vec2 shadowMapUv = (worldPosInLightSpace.xy * 0.5f + 0.5f);
 
         // Get actual world pixel depth
-        vec3 worldPosInLightSpace = (B_WorldToShadowMapMatrix *
-                                     vec4(pixelPosWorld,1)).xyz;
-        float worldPosDepthFromLightSpace = worldPosInLightSpace.z * 0.5f + 0.5f;
+        float worldPosDepthFromLightSpace = (worldPosInLightSpace.z);
+        float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
 
         // Bias it, taking into account slope
-        float MinBias = B_LightShadowBias;
-        float MaxBias = B_LightShadowBias * 2;
-        float bias = tan(acos(dot(pixelNormalWorld, lightForwardWorld)));
-        bias = MinBias; // + clamp(bias, 0, MaxBias);
-        float biasedWorldDepth = (worldPosDepthFromLightSpace - B_LightShadowBias);
+        float bias = B_LightShadowBias;
+        float biasedWorldDepth = (worldPosDepthFromLightSpace - bias);
 
-        float lightness;
-        if (B_LightShadowType == SHADOW_HARD)
-        {
-            float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
-            if (shadowMapDepth == 1.0f)
-            {
-                return 1.0f;
-            }
-            float depthAlbedo = (shadowMapDepth - biasedWorldDepth);
-            lightness = (depthAlbedo > 0.0) ? 1.0 : 0.0;
-        }
-        else // SHADOW_SOFT
-        {
-            // Get the PCF value from 0 to 1
-            lightness = texture(B_LightShadowMapSoft, vec3(shadowMapUv,
-                                                           biasedWorldDepth));
-        }
+        float lightness = (shadowMapDepth * exp(-LIGHT_EXP * biasedWorldDepth));
+        lightness = clamp(lightness, 0.0f, 1.0f);
 
         // Attenuate lightness if arriving to shadow distance boundary
         const float StartFadeCloseness = 0.95f;
@@ -86,6 +65,24 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
         }
 
         return lightness;
+
+        if (B_LightShadowType == SHADOW_HARD)
+        {
+            float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
+            if (shadowMapDepth == 1.0f)
+            {
+                return 1.0f;
+            }
+            float depthDiff = (shadowMapDepth - biasedWorldDepth);
+            lightness = (depthDiff > 0.0) ? 1.0 : 0.0;
+        }
+        else // SHADOW_SOFT
+        {
+            // Get the PCF value from 0 to 1
+            lightness = texture(B_LightShadowMapSoft, vec3(shadowMapUv,
+                                                           biasedWorldDepth));
+        }
+
     }
     #endif
     return 1.0f;

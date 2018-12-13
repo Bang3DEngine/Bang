@@ -474,9 +474,9 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
            projPoint.y < 1.0f && projPoint.z > -1.0f && projPoint.z < 1.0f;
 }
 
-void Camera::CloneInto(ICloneable *clone) const
+void Camera::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
     Camera *cam = SCAST<Camera *>(clone);
     cam->SetZFar(GetZFar());
     cam->SetZNear(GetZNear());

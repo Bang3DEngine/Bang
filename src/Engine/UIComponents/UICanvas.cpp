@@ -549,9 +549,9 @@ void UICanvas::OnBeforeChildrenRender(RenderPass rp)
     }
 }
 
-void UICanvas::CloneInto(ICloneable *clone) const
+void UICanvas::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
 }
 
 void UICanvas::ImportMeta(const MetaNode &metaNode)

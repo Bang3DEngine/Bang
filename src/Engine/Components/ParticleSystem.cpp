@@ -745,9 +745,9 @@ void ParticleSystem::UpdateDataVBO()
         0);
 }
 
-void ParticleSystem::CloneInto(ICloneable *clone) const
+void ParticleSystem::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Renderer::CloneInto(clone);
+    Renderer::CloneInto(clone, cloneGUID);
 
     ParticleSystem *psClone = SCAST<ParticleSystem *>(clone);
     psClone->SetMesh(GetMesh());

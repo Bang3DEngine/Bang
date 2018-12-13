@@ -6,20 +6,21 @@
 
 namespace Bang
 {
-#define ICLONEABLE(CLASS)                 \
-public:                                   \
-    virtual CLASS *Clone() const override \
-    {                                     \
-        CLASS *c = new CLASS();           \
-        CloneInto(c);                     \
-        return c;                         \
+#define ICLONEABLE(CLASS)                               \
+public:                                                 \
+    virtual CLASS *Clone(bool cloneGUID) const override \
+    {                                                   \
+        CLASS *c = new CLASS();                         \
+        CloneInto(c, cloneGUID);                        \
+        return c;                                       \
     }
 
 class ICloneable
 {
 public:
-    virtual ICloneable *Clone() const
+    virtual ICloneable *Clone(bool cloneGUID) const
     {
+        BANG_UNUSED(cloneGUID);
         ASSERT_MSG(false, "Method not implemented");
         return nullptr;
     }
@@ -31,7 +32,7 @@ protected:
     virtual ~ICloneable()
     {
     }
-    virtual void CloneInto(ICloneable *clone) const = 0;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const = 0;
 };
 }
 

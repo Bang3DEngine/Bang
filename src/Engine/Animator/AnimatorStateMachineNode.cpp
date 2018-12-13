@@ -168,9 +168,10 @@ AnimatorStateMachineLayer *AnimatorStateMachineNode::GetLayer() const
     return p_layer;
 }
 
-void AnimatorStateMachineNode::CloneInto(ICloneable *clone) const
+void AnimatorStateMachineNode::CloneInto(ICloneable *clone,
+                                         bool cloneGUID) const
 {
-    Serializable::CloneInto(clone);
+    Serializable::CloneInto(clone, cloneGUID);
 
     AnimatorStateMachineNode *nodeClone =
         SCAST<AnimatorStateMachineNode *>(clone);

@@ -1057,9 +1057,9 @@ bool CanEventBePropagatedToComponent(const Component *comp)
     return comp->IsEnabledRecursively() && comp->T::IsReceivingEvents();
 }
 
-void GameObject::CloneInto(ICloneable *clone) const
+void GameObject::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Object::CloneInto(clone);
+    Object::CloneInto(clone, cloneGUID);
 
     GameObject *go = SCAST<GameObject *>(clone);
     go->SetName(m_name);
@@ -1069,7 +1069,7 @@ void GameObject::CloneInto(ICloneable *clone) const
     {
         if (child && !child->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
-            GameObject *childClone = child->Clone();
+            GameObject *childClone = child->Clone(cloneGUID);
             childClone->SetParent(go);
         }
     }
@@ -1078,7 +1078,7 @@ void GameObject::CloneInto(ICloneable *clone) const
     {
         if (comp && !comp->GetHideFlags().IsOn(HideFlag::DONT_CLONE))
         {
-            go->AddComponent(comp->Clone());
+            go->AddComponent(comp->Clone(cloneGUID));
         }
     }
 }

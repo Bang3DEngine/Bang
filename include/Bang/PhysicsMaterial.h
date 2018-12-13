@@ -41,7 +41,7 @@ public:
     CombineMode GetRestitutionCombineMode() const;
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // Resource
     void Import(const Path &physicsMaterialFilepath) override;

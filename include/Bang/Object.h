@@ -38,7 +38,7 @@ public:
     bool IsWaitingToBeDestroyed() const;
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
 protected:
     Object() = default;

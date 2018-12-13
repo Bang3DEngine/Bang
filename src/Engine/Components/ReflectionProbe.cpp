@@ -386,9 +386,9 @@ TextureCubeMap *ReflectionProbe::GetTextureCubeMapWithoutFiltering() const
     return p_textureCubeMapWithoutFiltering.Get();
 }
 
-void ReflectionProbe::CloneInto(ICloneable *clone) const
+void ReflectionProbe::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
 
     ReflectionProbe *rpClone = SCAST<ReflectionProbe *>(clone);
     rpClone->SetSize(GetSize());

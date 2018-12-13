@@ -380,9 +380,9 @@ const Color &UITextRenderer::GetTextColor() const
     return GetMaterial()->GetAlbedoColor();
 }
 
-void UITextRenderer::CloneInto(ICloneable *clone) const
+void UITextRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    UIRenderer::CloneInto(clone);
+    UIRenderer::CloneInto(clone, cloneGUID);
 
     UITextRenderer *text = SCAST<UITextRenderer *>(clone);
     text->SetFont(GetFont());

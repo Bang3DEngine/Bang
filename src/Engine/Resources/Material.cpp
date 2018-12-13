@@ -416,9 +416,9 @@ void Material::UnBind() const
     }
 }
 
-void Material::CloneInto(ICloneable *clone) const
+void Material::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Serializable::CloneInto(clone);
+    Serializable::CloneInto(clone, cloneGUID);
 
     Material *matClone = SCAST<Material *>(clone);
 

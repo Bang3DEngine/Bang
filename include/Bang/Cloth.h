@@ -57,7 +57,7 @@ public:
     AABox GetAABBox() const override;
 
     // ICloneable
-    void CloneInto(ICloneable *clone) const override;
+    void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // Serializable
     void Reflect() override;

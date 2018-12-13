@@ -47,7 +47,8 @@ public:
     const HideFlags &GetHideFlags() const;
 
     // ICloneable
-    virtual void CloneInto(ICloneable *cloneable) const override;
+    virtual void CloneInto(ICloneable *cloneable,
+                           bool cloneGUID) const override;
 
 protected:
     Serializable();

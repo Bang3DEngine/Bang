@@ -108,9 +108,9 @@ void LineRenderer::Bind()
     }
 }
 
-void LineRenderer::CloneInto(ICloneable *clone) const
+void LineRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Renderer::CloneInto(clone);
+    Renderer::CloneInto(clone, cloneGUID);
     LineRenderer *lr = SCAST<LineRenderer *>(clone);
     lr->SetPoints(GetPoints());
 }

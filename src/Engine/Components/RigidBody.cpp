@@ -262,9 +262,9 @@ const RigidBodyConstraints &RigidBody::GetConstraints() const
     return m_constraints;
 }
 
-void RigidBody::CloneInto(ICloneable *clone) const
+void RigidBody::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
 
     RigidBody *rbClone = SCAST<RigidBody *>(clone);
     rbClone->SetMass(GetMass());

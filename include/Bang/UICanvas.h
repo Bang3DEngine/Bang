@@ -68,7 +68,7 @@ public:
     Array<EventListener<IEventsDragDrop> *> GetDragDropListeners() const;
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // ISerializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

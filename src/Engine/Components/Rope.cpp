@@ -371,14 +371,14 @@ void Rope::UpdateLineRendererPoints()
     LineRenderer::SetPoints(pointsToRender);
 }
 
-void Rope::CloneInto(ICloneable *clone) const
+void Rope::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
     Rope *ropeClone = SCAST<Rope *>(clone);
 
     ropeClone->SetFixedPoints(m_fixedPoints);
     ropeClone->SetPoints(GetPoints());
 
-    LineRenderer::CloneInto(clone);
+    LineRenderer::CloneInto(clone, cloneGUID);
 }
 
 void Rope::Reflect()

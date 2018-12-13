@@ -91,9 +91,9 @@ PhysicsMaterial::CombineMode PhysicsMaterial::GetRestitutionCombineMode() const
     return m_restitutionCombineMode;
 }
 
-void PhysicsMaterial::CloneInto(ICloneable *clone) const
+void PhysicsMaterial::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Serializable::CloneInto(clone);
+    Serializable::CloneInto(clone, cloneGUID);
 
     PhysicsMaterial *pMat = SCAST<PhysicsMaterial *>(clone);
     pMat->SetStaticFriction(GetStaticFriction());

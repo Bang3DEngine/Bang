@@ -317,9 +317,9 @@ Texture2D *PostProcessEffectSSAO::GetSSAOTexture() const
     return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
-void PostProcessEffectSSAO::CloneInto(ICloneable *clone) const
+void PostProcessEffectSSAO::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    PostProcessEffect::CloneInto(clone);
+    PostProcessEffect::CloneInto(clone, cloneGUID);
 
     PostProcessEffectSSAO *ppe = SCAST<PostProcessEffectSSAO *>(clone);
     ppe->SetBilateralBlurEnabled(GetBilateralBlurEnabled());

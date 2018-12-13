@@ -162,7 +162,7 @@ RH<ResourceClass> Resources::Clone(const ResourceClass *src)
     if (src)
     {
         rh = Resources::Create<ResourceClass>();
-        src->CloneInto(rh.Get());
+        src->CloneInto(rh.Get(), false);
     }
     return rh;
 }

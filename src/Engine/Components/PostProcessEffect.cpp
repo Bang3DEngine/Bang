@@ -113,9 +113,9 @@ Path PostProcessEffect::GetPostProcessShaderFilepath() const
                : Path();
 }
 
-void PostProcessEffect::CloneInto(ICloneable *clone) const
+void PostProcessEffect::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
     PostProcessEffect *ppe = SCAST<PostProcessEffect *>(clone);
     ppe->SetPostProcessShader(GetPostProcessShader());
     ppe->SetType(GetType());

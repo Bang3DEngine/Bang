@@ -17,24 +17,15 @@ namespace Bang
 #define REQUIRE_COMPONENT(gameObject, CLASS) \
     ASSERT(gameObject->HasComponent<CLASS>())
 
-#define CLONEABLE_COMPONENT(CLASS)        \
-public:                                   \
-    virtual CLASS *Clone() const override \
-    {                                     \
-        CLASS *clone = new CLASS();       \
-        CloneInto(clone);                 \
-        return clone;                     \
-    }
-
 #define COMPONENT_ABSTRACT(CLASS)        \
     SERIALIZABLE(CLASS)                  \
     friend class Bang::Component;        \
     friend class Bang::ComponentFactory; \
     friend class Bang::GameObject;
 
-#define COMPONENT(CLASS)       \
-    CLONEABLE_COMPONENT(CLASS) \
-    COMPONENT_ABSTRACT(CLASS)  \
+#define COMPONENT(CLASS)      \
+    ICLONEABLE(CLASS)         \
+    COMPONENT_ABSTRACT(CLASS) \
     SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLASS)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS) \
@@ -42,7 +33,7 @@ public:                                   \
     OBJECT_WITH_FAST_DYNAMIC_CAST(CLASS)
 
 #define COMPONENT_WITH_FAST_DYNAMIC_CAST(CLASS) \
-    CLONEABLE_COMPONENT(CLASS)                  \
+    ICLONEABLE(CLASS)                           \
     COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS)
 }
 

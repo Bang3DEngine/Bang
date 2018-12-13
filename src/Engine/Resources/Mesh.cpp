@@ -1176,9 +1176,9 @@ UMap<Mesh::VertexId, Array<Mesh::TriangleId>> Mesh::GetVertexIdsToTriangleIds()
     return vertexIdsToTriIds;
 }
 
-void Mesh::CloneInto(ICloneable *clone) const
+void Mesh::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Serializable::CloneInto(clone);
+    Serializable::CloneInto(clone, cloneGUID);
 
     Mesh *mClone = SCAST<Mesh *>(clone);
 

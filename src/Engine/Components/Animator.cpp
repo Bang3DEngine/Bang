@@ -325,9 +325,9 @@ const Array<AnimatorStateMachinePlayer *> &Animator::GetPlayers() const
     return m_animatorStateMachinePlayers;
 }
 
-void Animator::CloneInto(ICloneable *clone) const
+void Animator::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
 
     Animator *animatorClone = SCAST<Animator *>(clone);
     animatorClone->SetPlayOnStart(GetPlayOnStart());

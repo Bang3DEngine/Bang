@@ -77,7 +77,7 @@ public:
                                     GameObject *go) override;
 
     // ICloneable
-    void CloneInto(ICloneable *cloneable) const override;
+    void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // Serializable
     void Reflect() override;

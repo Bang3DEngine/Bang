@@ -151,9 +151,9 @@ AARect UIImageRenderer::GetBoundingRect(Camera *camera) const
     return AARect(boundingRect.GetCenter(), boundingRect.GetCenter());
 }
 
-void UIImageRenderer::CloneInto(ICloneable *clone) const
+void UIImageRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    UIRenderer::CloneInto(clone);
+    UIRenderer::CloneInto(clone, cloneGUID);
     UIImageRenderer *img = SCAST<UIImageRenderer *>(clone);
     img->SetImageTexture(GetImageTexture());
     img->SetTint(GetTint());

@@ -81,9 +81,9 @@ Animation *AnimatorStateMachineBlendTreeNode::GetSecondAnimation() const
     return p_secondAnimation.Get();
 }
 
-void AnimatorStateMachineBlendTreeNode::CloneInto(ICloneable *clone) const
+void AnimatorStateMachineBlendTreeNode::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    AnimatorStateMachineNode::CloneInto(clone);
+    AnimatorStateMachineNode::CloneInto(clone, cloneGUID);
 
     AnimatorStateMachineBlendTreeNode *btNode =
         SCAST<AnimatorStateMachineBlendTreeNode *>(clone);

@@ -107,9 +107,9 @@ void Scene::InvalidateCanvas()
     }
 }
 
-void Scene::CloneInto(ICloneable *clone) const
+void Scene::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    GameObject::CloneInto(clone);
+    GameObject::CloneInto(clone, cloneGUID);
 
     Scene *cloneScene = SCAST<Scene *>(clone);
 

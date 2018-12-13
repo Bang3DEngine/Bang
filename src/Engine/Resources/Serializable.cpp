@@ -185,7 +185,7 @@ const HideFlags &Serializable::GetHideFlags() const
     return m_hideFlags;
 }
 
-void Serializable::CloneInto(ICloneable *cloneable) const
+void Serializable::CloneInto(ICloneable *cloneable, bool cloneGUID) const
 {
     Serializable *clone = SCAST<Serializable *>(cloneable);
 
@@ -205,5 +205,8 @@ void Serializable::CloneInto(ICloneable *cloneable) const
         }
     }
 
-    clone->SetGUID(GetGUID());
+    if (cloneGUID)
+    {
+        clone->SetGUID(GetGUID());
+    }
 }

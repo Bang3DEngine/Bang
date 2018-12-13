@@ -28,7 +28,7 @@ class Component : public Object,
 {
     OBJECT_WITH_FAST_DYNAMIC_CAST(Component)
     SERIALIZABLE(Component)
-    CLONEABLE_COMPONENT(Component)
+    ICLONEABLE(Component)
 
 public:
     static void Destroy(Component *component);
@@ -39,7 +39,7 @@ public:
     GameObject *GetGameObject() const;
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // IToString
     virtual String ToString() const override;

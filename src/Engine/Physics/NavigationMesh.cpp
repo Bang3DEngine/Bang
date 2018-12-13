@@ -13,6 +13,7 @@ using namespace Bang;
 
 NavigationMesh::NavigationMesh()
 {
+    CONSTRUCT_CLASS_ID(NavigationMesh);
 }
 
 NavigationMesh::~NavigationMesh()

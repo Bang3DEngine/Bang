@@ -153,9 +153,9 @@ void BehaviourContainer::ResetInitializationModificationsMetaNode()
     SetInitializationModificationsMeta(MetaNode());
 }
 
-void BehaviourContainer::CloneInto(ICloneable *clone) const
+void BehaviourContainer::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Component::CloneInto(clone);
+    Component::CloneInto(clone, cloneGUID);
     BehaviourContainer *bc = SCAST<BehaviourContainer *>(clone);
     bc->SetSourceFilepathGUID(GetSourceFilepathGUID());
     bc->SetInitializationModificationsMeta(

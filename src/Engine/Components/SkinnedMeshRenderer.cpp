@@ -340,11 +340,11 @@ void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
     RetrieveBonesBindPoseFromCurrentHierarchy();
 }
 
-void SkinnedMeshRenderer::CloneInto(ICloneable *cloneable) const
+void SkinnedMeshRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    MeshRenderer::CloneInto(cloneable);
+    MeshRenderer::CloneInto(clone, cloneGUID);
 
-    SkinnedMeshRenderer *smrClone = SCAST<SkinnedMeshRenderer *>(cloneable);
+    SkinnedMeshRenderer *smrClone = SCAST<SkinnedMeshRenderer *>(clone);
     smrClone->m_boneSpaceToRootSpaceMatrices = m_boneSpaceToRootSpaceMatrices;
     smrClone->m_initialTransforms = m_initialTransforms;
 }

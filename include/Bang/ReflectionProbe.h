@@ -63,7 +63,7 @@ public:
     static void SetRendererUniforms(Renderer *renderer, ShaderProgram *sp);
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

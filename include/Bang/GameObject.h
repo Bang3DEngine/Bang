@@ -232,7 +232,7 @@ public:
     static GameObject *Instantiate();
 
     // ICloneable
-    virtual void CloneInto(ICloneable *clone) const override;
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
     // IToString
     void Print(const String &indent = "") const;

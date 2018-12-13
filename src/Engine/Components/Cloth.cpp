@@ -346,9 +346,9 @@ AABox Cloth::GetAABBox() const
     return aaBox;
 }
 
-void Cloth::CloneInto(ICloneable *clone) const
+void Cloth::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Renderer::CloneInto(clone);
+    Renderer::CloneInto(clone, cloneGUID);
 
     Cloth *cloth = SCAST<Cloth *>(clone);
     cloth->m_points = m_points;

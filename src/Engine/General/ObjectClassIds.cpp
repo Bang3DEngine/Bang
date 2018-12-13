@@ -16,6 +16,7 @@
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshCollider.h"
 #include "Bang/MeshRenderer.h"
+#include "Bang/NavigationMesh.h"
 #include "Bang/Object.h"
 #include "Bang/ParticleSystem.h"
 #include "Bang/PointLight.h"
@@ -161,6 +162,7 @@ void RegisterObjectClasses()
     REGISTER_OBJECT_CLASS(UITextCursor);
     REGISTER_OBJECT_CLASS(UITree);
     REGISTER_OBJECT_CLASS(Camera);
+    REGISTER_OBJECT_CLASS(NavigationMesh);
     REGISTER_OBJECT_CLASS(GameObject);
 
 #undef REGISTER_OBJECT_CLASS

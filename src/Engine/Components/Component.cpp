@@ -201,9 +201,9 @@ bool Component::CalculateEnabledRecursively() const
            (GetGameObject() ? GetGameObject()->IsEnabledRecursively() : true);
 }
 
-void Component::CloneInto(ICloneable *clone) const
+void Component::CloneInto(ICloneable *clone, bool cloneGUID) const
 {
-    Object::CloneInto(clone);
+    Object::CloneInto(clone, cloneGUID);
     Component *c = SCAST<Component *>(clone);
     c->SetEnabled(IsEnabled());
 }

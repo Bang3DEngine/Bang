@@ -65,8 +65,9 @@ public:
     void PrepareForForwardRendering(Renderer *rend);
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
-    void BlurTexture(Framebuffer *auxiliarFramebuffer,
-                     Texture2D *inputTexture,
+    void BlurTexture(Texture2D *inputTexture,
+                     Texture2D *auxiliarTexture,
+                     Texture2D *blurredOutputTexture,
                      int blurRadius) const;
 
     void SetReplacementMaterial(Material *material);
@@ -126,8 +127,10 @@ private:
     Array<float> m_currentForwardRenderingLightIntensities;
     Array<float> m_currentForwardRenderingLightRanges;
 
-    RH<Mesh> p_windowPlaneMesh;
+    Framebuffer *m_blurFramebuffer = nullptr;
     RH<ShaderProgram> p_separableBlurSP;
+
+    RH<Mesh> p_windowPlaneMesh;
     RH<ShaderProgram> p_renderTextureToViewportSP;
     RH<ShaderProgram> p_renderTextureToViewportGammaSP;
 

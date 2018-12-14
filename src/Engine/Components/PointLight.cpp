@@ -24,6 +24,7 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Sphere.h"
+#include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
 
 using namespace Bang;
@@ -37,6 +38,18 @@ PointLight::PointLight() : Light()
         GL::Attachment::COLOR0, GL::ColorFormat::RGBA32F);
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
         GL::Attachment::DEPTH, GL::ColorFormat::DEPTH16);
+
+    m_blurredShadowMapTexCM = Resources::Create<TextureCubeMap>();
+    m_blurredShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurredShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurredShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurredShadowMapTexCM.Get()->CreateEmpty(1);
+
+    m_blurAuxiliarShadowMapTexCM = Resources::Create<TextureCubeMap>();
+    m_blurAuxiliarShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurAuxiliarShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurAuxiliarShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurAuxiliarShadowMapTexCM.Get()->CreateEmpty(1);
 
     GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
     GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
@@ -59,7 +72,6 @@ void PointLight::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
 
     ASSERT(GL::IsBound(sp));
     sp->SetFloat("B_LightRange", GetRange());
-    sp->SetFloat("B_LightZFar", GetLightZFar());
 }
 
 AARect PointLight::GetRenderRect(Camera *cam) const
@@ -94,6 +106,7 @@ TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
     return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
         GL::Attachment::COLOR0);
+    // return m_blurredShadowMapTexCM.Get();
 }
 
 void PointLight::Reflect()
@@ -134,10 +147,10 @@ void PointLight::RenderShadowMaps_(GameObject *go)
                                                  cubeMapPVMMatrices);
 
     // Render shadow map into framebuffer
-    GL::ClearColorBuffer(Color::One());
-    // GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
+    GL::ClearColorBuffer(Color::One());
     GL::SetDepthFunc(GL::Function::LEQUAL);
+    GL::SetDepthMask(true);
 
     float rangeLimit = Math::Pow(GetRange(), 1.0f);
     const Vector3 pointLightPos =
@@ -153,13 +166,24 @@ void PointLight::RenderShadowMaps_(GameObject *go)
             shadowCasterAABoxWorld.GetClosestPointInAABB(pointLightPos);
         bool isCompletelyOutside =
             Vector3::Distance(closestPointInAABox, pointLightPos) > rangeLimit;
-        // if (!isCompletelyOutside)
+        if (!isCompletelyOutside)
         {
             shadowCasterRend->OnRender(RenderPass::SCENE);
         }
     }
-    /*
-    */
+
+    // Blur shadow map
+    if (GetShadowSoftness() > 0)
+    {
+        TextureCubeMap *shadowMapTexCM =
+            m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
+                GL::Attachment::COLOR0);
+        GEngine::GetInstance()->BlurTextureCM(
+            shadowMapTexCM,
+            m_blurAuxiliarShadowMapTexCM.Get(),
+            m_blurredShadowMapTexCM.Get(),
+            GetShadowSoftness());
+    }
 
     ge->PopActiveRenderingCamera();
 

@@ -69,6 +69,10 @@ public:
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
                      int blurRadius) const;
+    void BlurTextureCM(TextureCubeMap *inputTextureCM,
+                       TextureCubeMap *auxiliarTextureCM,
+                       TextureCubeMap *blurredOutputTextureCM,
+                       int blurRadius) const;
 
     void SetReplacementMaterial(Material *material);
 
@@ -129,6 +133,7 @@ private:
 
     Framebuffer *m_blurFramebuffer = nullptr;
     RH<ShaderProgram> p_separableBlurSP;
+    RH<ShaderProgram> p_separableBlurCubeMapSP;
 
     RH<Mesh> p_windowPlaneMesh;
     RH<ShaderProgram> p_renderTextureToViewportSP;

@@ -28,6 +28,7 @@ public:
     static ShaderProgram *GetPointLightShadowMap();
     static ShaderProgram *GetPointLightDeferredScreenPass();
     static ShaderProgram *GetSeparableBlur();
+    static ShaderProgram *GetSeparableBlurCubeMap();
     static ShaderProgram *GetRenderTextureToViewport();
     static ShaderProgram *GetRenderTextureToViewportGamma();
     static ShaderProgram *GetDirectionalLightShadowMap();

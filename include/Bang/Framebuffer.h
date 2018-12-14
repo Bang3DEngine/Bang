@@ -38,6 +38,9 @@ public:
     void SetAttachmentTexture(Texture *tex,
                               GL::Attachment attachment,
                               uint mipMapLevel = 0);
+    void SetAttachmentTexture(GLId texId,
+                              GL::Attachment attachment,
+                              uint mipMapLevel = 0);
     void SetAttachmentTexture2D(Texture *tex,
                                 GL::Attachment attachment,
                                 GL::TextureTarget texTarget,
@@ -83,7 +86,7 @@ private:
     mutable Array<GL::Attachment> m_latestDrawAttachments;
     mutable GL::Attachment m_currentReadAttachment;
 
-    void BeforeSetAttTex(Texture *tex, GL::Attachment attachment);
+    void BeforeSetAttTex(GL::Attachment attachment);
     void AfterSetAttTex(Texture *tex, GL::Attachment attachment);
 };
 }

@@ -46,12 +46,12 @@ DirectionalLight::DirectionalLight()
     m_blurAuxiliarTexture = Resources::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurredShadowMapTexture = Resources::Create<Texture2D>();
     m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurredShadowMapTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
@@ -143,11 +143,14 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     ge->PopActiveRenderingCamera();
 
     // Blur shadow map
-    GEngine::GetInstance()->BlurTexture(
-        m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
-        m_blurAuxiliarTexture.Get(),
-        m_blurredShadowMapTexture.Get(),
-        GetShadowSoftness());
+    if (GetShadowSoftness() > 0)
+    {
+        GEngine::GetInstance()->BlurTexture(
+            m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
+            m_blurAuxiliarTexture.Get(),
+            m_blurredShadowMapTexture.Get(),
+            GetShadowSoftness());
+    }
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::ALL_MATRICES);

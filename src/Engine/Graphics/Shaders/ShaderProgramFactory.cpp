@@ -89,6 +89,13 @@ ShaderProgram *ShaderProgramFactory::GetSeparableBlur()
                    "SeparableBlur.frag"));
 }
 
+ShaderProgram *ShaderProgramFactory::GetSeparableBlurCubeMap()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "SeparableBlurCM.frag"));
+}
+
 ShaderProgram *ShaderProgramFactory::GetRenderTextureToViewport()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),

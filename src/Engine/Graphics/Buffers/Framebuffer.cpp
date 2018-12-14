@@ -135,7 +135,7 @@ void Framebuffer::SetReadBuffer(GL::Attachment attachment) const
     m_currentReadAttachment = attachment;
 }
 
-void Framebuffer::BeforeSetAttTex(Texture *tex, GL::Attachment attachment)
+void Framebuffer::BeforeSetAttTex(GL::Attachment attachment)
 {
     Bind();
     m_attachments.Remove(attachment);
@@ -156,7 +156,7 @@ void Framebuffer::SetAttachmentTexture(Texture *tex,
 {
     GL::Push(GL::BindTarget::FRAMEBUFFER);
 
-    BeforeSetAttTex(tex, attachment);
+    BeforeSetAttTex(attachment);
     GL::FramebufferTexture(GL::FramebufferTarget::READ_DRAW,
                            attachment,
                            tex->GetGLId(),
@@ -165,6 +165,22 @@ void Framebuffer::SetAttachmentTexture(Texture *tex,
 
     GL::Pop(GL::BindTarget::FRAMEBUFFER);
 }
+
+void Framebuffer::SetAttachmentTexture(GLId texId,
+                                       GL::Attachment attachment,
+                                       uint mipMapLevel)
+{
+    GL::Push(GL::BindTarget::FRAMEBUFFER);
+
+    BeforeSetAttTex(attachment);
+    GL::FramebufferTexture(
+        GL::FramebufferTarget::READ_DRAW, attachment, texId, mipMapLevel);
+
+    ASSERT(GL::CheckFramebufferError());
+
+    GL::Pop(GL::BindTarget::FRAMEBUFFER);
+}
+
 void Framebuffer::SetAttachmentTexture2D(Texture *tex,
                                          GL::Attachment attachment,
                                          GL::TextureTarget texTarget,
@@ -172,7 +188,7 @@ void Framebuffer::SetAttachmentTexture2D(Texture *tex,
 {
     GL::Push(GL::BindTarget::FRAMEBUFFER);
 
-    BeforeSetAttTex(tex, attachment);
+    BeforeSetAttTex(attachment);
     GL::FramebufferTexture2D(GL::FramebufferTarget::READ_DRAW,
                              attachment,
                              texTarget,

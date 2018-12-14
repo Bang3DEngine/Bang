@@ -269,6 +269,7 @@ public:
 
     static const std::array<GL::CubeMapDir, 6> &GetAllCubeMapDirs();
     static int GetCubeMapDirIndex(GL::CubeMapDir cmDir);
+    static Vector3 GetCubeMapDirVector(GL::CubeMapDir cmDir);
 
     enum class FramebufferTarget
     {

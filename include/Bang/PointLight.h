@@ -39,6 +39,8 @@ public:
 protected:
     float m_range = 1.0f;
     Framebuffer *m_shadowMapFramebuffer = nullptr;
+    RH<TextureCubeMap> m_blurAuxiliarShadowMapTexCM;
+    RH<TextureCubeMap> m_blurredShadowMapTexCM;
 
     PointLight();
     virtual ~PointLight() override;

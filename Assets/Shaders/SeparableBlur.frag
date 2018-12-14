@@ -3,7 +3,13 @@ uniform bool B_BlurInX;
 uniform float B_BlurKernel[256];
 
 uniform vec2 B_InputTextureSize;
+
+#ifdef BANG_BLUR_TEXTURE_CUBEMAP
+uniform vec3 B_SampleDirection;
+uniform samplerCube B_InputTexture;
+#else
 uniform sampler2D B_InputTexture;
+#endif
 
 in vec2 B_FIn_AlbedoUv;
 
@@ -18,16 +24,53 @@ void main()
 
     int j = 0;
     vec4 meanColor = vec4(0);
-    int blurRadius = B_BlurRadius;
+    int blurRadius = 0; // B_BlurRadius;
     for (int i = -blurRadius; i <= blurRadius; ++i)
     {
         vec2 sampleUvOffset = (offMult * i);
         vec2 sampleUvs = (uv + sampleUvOffset);
+
+        #ifdef BANG_BLUR_TEXTURE_CUBEMAP
+        // sampleUvs = uv;
+        vec3 sampleCoords = B_SampleDirection;
+        if (B_SampleDirection.x == 1)
+        {
+            sampleCoords.yz += vec2(1-sampleUvs.y, 1-sampleUvs.x) * 2.0f - 1.0f;
+        }
+        else if (B_SampleDirection.x == -1)
+        {
+            sampleCoords.yz += vec2(1-sampleUvs.y, sampleUvs.x) * 2.0f - 1.0f;
+        }
+        else if (B_SampleDirection.y == 1)
+        {
+            sampleCoords.xz += vec2(sampleUvs.x, sampleUvs.y) * 2.0f - 1.0f;
+        }
+        else if (B_SampleDirection.y == -1)
+        {
+            sampleCoords.xz += vec2(sampleUvs.x, 1-sampleUvs.y) * 2.0f - 1.0f;
+        }
+        else if (B_SampleDirection.z == 1)
+        {
+            sampleCoords.xy += vec2(sampleUvs.x, 1-sampleUvs.y) * 2.0f - 1.0f;
+        }
+        else if (B_SampleDirection.z == -1)
+        {
+            sampleCoords.xy += vec2(1-sampleUvs.x, 1-sampleUvs.y) * 2.0f - 1.0f;
+        }
+
+        vec4 sampleColor = texture(B_InputTexture, sampleCoords);
+        #else
         vec4 sampleColor = texture(B_InputTexture, sampleUvs);
-        float sampleWeight = B_BlurKernel[j];
+        #endif
+
+        float sampleWeight = 1.0f / (blurRadius * 2 + 1); // B_BlurKernel[j];
         meanColor += sampleWeight * sampleColor;
         j += 1;
     }
 
-    B_OutColor = vec4( vec3(meanColor.r), 1);
+    #ifdef BANG_BLUR_TEXTURE_CUBEMAP
+    B_OutColor = vec4( vec3(meanColor), 1); // texture(B_InputTexture, B_SampleDirection + vec3(0, uv)).rgb, 1); // vec4( vec3(meanColor), 1);
+    #else
+    B_OutColor = vec4( vec3(meanColor), 1);
+    #endif
 }

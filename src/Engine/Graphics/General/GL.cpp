@@ -253,6 +253,20 @@ int GL::GetCubeMapDirIndex(GL::CubeMapDir cmDir)
     return -1;
 }
 
+Vector3 GL::GetCubeMapDirVector(GL::CubeMapDir cmDir)
+{
+    switch (cmDir)
+    {
+        case GL::CubeMapDir::TOP: return Vector3::Up(); break;
+        case GL::CubeMapDir::BOT: return Vector3::Down(); break;
+        case GL::CubeMapDir::LEFT: return Vector3::Left(); break;
+        case GL::CubeMapDir::RIGHT: return Vector3::Right(); break;
+        case GL::CubeMapDir::FRONT: return Vector3::Forward(); break;
+        case GL::CubeMapDir::BACK: return Vector3::Back(); break;
+    }
+    return Vector3::Zero();
+}
+
 void GL::ClearError()
 {
     glGetError();

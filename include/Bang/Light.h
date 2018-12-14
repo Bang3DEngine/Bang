@@ -54,7 +54,7 @@ protected:
     Light();
     virtual ~Light() override;
 
-    void SetShadowShaderProgram(ShaderProgram *sp);
+    void SetShadowMapShaderProgram(ShaderProgram *sp);
     void SetLightScreenPassShaderProgram(ShaderProgram *sp);
     Array<Renderer *> GetShadowCastersIn(GameObject *go) const;
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const;

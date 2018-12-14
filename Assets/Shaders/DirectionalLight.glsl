@@ -1,6 +1,7 @@
 #ifndef DIRECTIONAL_LIGHT_GLSL
 #define DIRECTIONAL_LIGHT_GLSL
 
+#define BANG_DIRECTIONAL_LIGHT
 #include "LightCommon.glsl"
 
 float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
@@ -40,7 +41,7 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
     lightness = clamp(lightness, 0.0f, 1.0f);
 
     // Attenuate lightness if arriving to shadow distance boundary
-    /*const float StartFadeCloseness = 0.95f;
+    const float StartFadeCloseness = 0.95f;
     const float FadeWidth = (1.0f - StartFadeCloseness);
     float closenessToShadowDistanceBoundary = (distPixelToCamPosWorld /
                                                ShadowDist);
@@ -51,7 +52,7 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
 
         lightness += 1.0f - (relDistance / FadeWidth);
         lightness = min(lightness, 1);
-    }*/
+    }
     return lightness;
     #endif
 

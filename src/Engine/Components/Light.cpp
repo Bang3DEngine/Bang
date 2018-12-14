@@ -42,7 +42,7 @@ Light::~Light()
 {
 }
 
-void Light::SetShadowShaderProgram(ShaderProgram *sp)
+void Light::SetShadowMapShaderProgram(ShaderProgram *sp)
 {
     p_shadowMapMaterial.Get()->SetShaderProgram(sp);
 }
@@ -139,10 +139,11 @@ void Light::RenderShadowMaps(GameObject *go)
                 p_shadowMapMaterial.Get());
 
             ShaderProgram *sp = GetShadowMapShaderProgram();
+
             sp->Bind();
             SetShadowLightCommonUniforms(sp);
-
             RenderShadowMaps_(go);
+
             GEngine::GetInstance()->SetReplacementMaterial(nullptr);
         }
     }

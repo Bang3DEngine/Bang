@@ -1,16 +1,8 @@
 #ifndef POINT_LIGHT_GLSL
 #define POINT_LIGHT_GLSL
 
+#define BANG_POINT_LIGHT
 #include "LightCommon.glsl"
-
-#if defined(BANG_DEFERRED_RENDERING)
-
-    uniform float B_PointLightZFar;
-    uniform mat4 B_WorldToShadowMapMatrices[6];
-    uniform samplerCube B_LightShadowMap;
-    uniform samplerCubeShadow B_LightShadowMapSoft;
-
-#endif
 
 float GetPointLightFragmentLightness(const float pixelDistSq,
                                      const in vec3 pixelPosWorld,
@@ -24,22 +16,26 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
         return 0.0f;
     }
 
-    if (pixelDistSq > B_LightRange*B_LightRange)
+    if (pixelDistSq > (B_LightRange * B_LightRange))
     {
         return 0.0f;
     }
 
     float pixelDistance = sqrt(pixelDistSq);
-    float pixelDistanceNorm = pixelDistance / B_PointLightZFar;
+    float pixelDistanceNorm = Map01(pixelDistance, B_LightZNear, B_LightZFar) * 2.0f - 1.0f;
 
-    float biasedPixelDistance = (pixelDistanceNorm - B_LightShadowBias);
+    float biasedPixelDistanceNorm = (pixelDistanceNorm - B_LightShadowBias);
     float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
     if (shadowMapDistance == 1.0f)
     {
         return 1.0f;
     }
-    float depthDiff = (biasedPixelDistance - shadowMapDistance);
-    return (depthDiff > 0.0) ? 0.0 : 1.0;
+
+    float lightness = shadowMapDistance *
+                      exp(-B_LightShadowExponentConstant * biasedPixelDistanceNorm);
+    lightness = clamp(lightness, 0, 1);
+
+    return lightness;
     #endif
     return 1.0f;
 }

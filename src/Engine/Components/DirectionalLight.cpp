@@ -60,23 +60,14 @@ DirectionalLight::DirectionalLight()
         ->SetWrapMode(GL::WrapMode::REPEAT);
     m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_shadowMapFramebuffer->CreateAttachmentTex2D(
-        GL::Attachment::DEPTH_STENCIL, GL::ColorFormat::DEPTH24_STENCIL8);
+    m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
+                                                  GL::ColorFormat::DEPTH16);
 
-    SetShadowShaderProgram(
-        ShaderProgramFactory::GetDirectionalLightShadowMap());
-
-    GL::Push(GL::BindTarget::TEXTURE_2D);
-
-    GetShadowMapTexture()->Bind();
     GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
     GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-    GL::TexParameteri(GetShadowMapTexture()->GetTextureTarget(),
-                      GL::TexParameter::TEXTURE_COMPARE_MODE,
-                      GL_COMPARE_REF_TO_TEXTURE);
 
-    GL::Pop(GL::BindTarget::TEXTURE_2D);
-
+    SetShadowMapShaderProgram(
+        ShaderProgramFactory::GetDirectionalLightShadowMap());
     SetLightScreenPassShaderProgram(
         ShaderProgramFactory::GetDirectionalLightDeferredScreenPass());
 }

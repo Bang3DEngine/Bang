@@ -34,23 +34,18 @@ PointLight::PointLight() : Light()
 
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
+        GL::Attachment::COLOR0, GL::ColorFormat::RGBA32F);
+    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
         GL::Attachment::DEPTH, GL::ColorFormat::DEPTH16);
 
-    GL::Push(GL::BindTarget::TEXTURE_2D);
-    GetShadowMapTexture()->Bind();
-    TextureCubeMap *texCM = SCAST<TextureCubeMap *>(GetShadowMapTexture());
-    texCM->SetFilterMode(GL::FilterMode::BILINEAR);
-    texCM->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-    GL::TexParameteri(GetShadowMapTexture()->GetTextureTarget(),
-                      GL::TexParameter::TEXTURE_COMPARE_MODE,
-                      GL_COMPARE_REF_TO_TEXTURE);
-    GL::Pop(GL::BindTarget::TEXTURE_2D);
+    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
+    GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_shadowMapMaterial = Resources::Create<Material>();
-    m_shadowMapMaterial.Get()->SetShaderProgram(
-        ShaderProgramFactory::GetPointLightShadowMap());
+    SetShadowMapShaderProgram(ShaderProgramFactory::GetPointLightShadowMap());
     SetLightScreenPassShaderProgram(
         ShaderProgramFactory::GetPointLightDeferredScreenPass());
+
+    SetShadowExponentConstant(8.0f);
 }
 
 PointLight::~PointLight()
@@ -98,7 +93,7 @@ float PointLight::GetShadowMapFarDistance() const
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
     return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
-        GL::Attachment::DEPTH);
+        GL::Attachment::COLOR0);
 }
 
 void PointLight::Reflect()
@@ -134,17 +129,13 @@ void PointLight::RenderShadowMaps_(GameObject *go)
     // Set up viewport
     GL::SetViewport(0, 0, shadowMapSize.x, shadowMapSize.y);
 
-    m_shadowMapMaterial.Get()->Bind();
-    SetUniformsBeforeApplyingLight(
-        m_shadowMapMaterial.Get()->GetShaderProgram());
-
     Array<Matrix4> cubeMapPVMMatrices = GetWorldToShadowMapMatrices();
-    m_shadowMapMaterial.Get()->GetShaderProgram()->SetMatrix4Array(
-        "B_WorldToShadowMapMatrices", cubeMapPVMMatrices);
+    GetShadowMapShaderProgram()->SetMatrix4Array("B_WorldToShadowMapMatrices",
+                                                 cubeMapPVMMatrices);
 
     // Render shadow map into framebuffer
-    GEngine::GetInstance()->SetReplacementMaterial(m_shadowMapMaterial.Get());
-    GL::SetColorMask(false, false, false, false);
+    GL::ClearColorBuffer(Color::One());
+    // GL::SetColorMask(false, false, false, false);
     GL::ClearDepthBuffer(1.0f);
     GL::SetDepthFunc(GL::Function::LEQUAL);
 
@@ -162,14 +153,15 @@ void PointLight::RenderShadowMaps_(GameObject *go)
             shadowCasterAABoxWorld.GetClosestPointInAABB(pointLightPos);
         bool isCompletelyOutside =
             Vector3::Distance(closestPointInAABox, pointLightPos) > rangeLimit;
-        if (!isCompletelyOutside)
+        // if (!isCompletelyOutside)
         {
             shadowCasterRend->OnRender(RenderPass::SCENE);
         }
     }
-    ge->PopActiveRenderingCamera();
+    /*
+    */
 
-    GEngine::GetInstance()->SetReplacementMaterial(nullptr);
+    ge->PopActiveRenderingCamera();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);

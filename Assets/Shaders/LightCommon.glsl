@@ -24,7 +24,12 @@ uniform bool B_LightCastsShadows;
     uniform float B_LightShadowDistance;
     uniform float B_LightShadowExponentConstant;
     uniform mat4 B_LightWorldToShadowMapMatrix;
+
+    #if defined(BANG_POINT_LIGHT)
+    uniform samplerCube B_LightShadowMap;
+    #elif defined(BANG_DIRECTIONAL_LIGHT)
     uniform sampler2D B_LightShadowMap;
+    #endif
 
 
 #elif defined(BANG_FORWARD_RENDERING) // Forward lighting uniforms

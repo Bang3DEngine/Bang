@@ -84,6 +84,7 @@ void GEngine::Init()
     m_debugRenderer = new DebugRenderer();
 
     p_windowPlaneMesh = MeshFactory::GetUIPlane();
+    p_separableBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
     p_renderTextureToViewportSP.Set(
         ShaderProgramFactory::GetRenderTextureToViewport());
     p_renderTextureToViewportGammaSP.Set(
@@ -482,6 +483,69 @@ void GEngine::RenderWithPassAndMarkStencilForLights(GameObject *go,
     RenderWithPass(go, renderPass);
 
     GL::Pop(GL::Pushable::STENCIL_STATES);
+}
+
+void GEngine::BlurTexture(Framebuffer *auxiliarFramebuffer,
+                          Texture2D *inputTexture,
+                          int blurRadius) const
+{
+    GL::Push(GL::Pushable::VIEWPORT);
+    GL::Push(GL::Pushable::COLOR_MASK);
+    GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::ALL_MATRICES);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    auxiliarFramebuffer->Bind();
+    auxiliarFramebuffer->Resize(inputTexture->GetSize());
+    GL::SetViewport(0, 0, inputTexture->GetSize().x, inputTexture->GetSize().y);
+
+    ASSERT(auxiliarFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0));
+    ASSERT(auxiliarFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1));
+    ASSERT(inputTexture !=
+           auxiliarFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0));
+
+    // Calculate blur kernel
+    Array<float> blurKernel;
+    {
+        float sum = 0.0f;
+        for (int i = -blurRadius; i <= blurRadius; ++i)
+        {
+            float k = Math::Exp(-0.5 * Math::Pow(float(i), 2.0f) / 3.0f);
+            blurKernel.PushBack(k);
+            sum += blurKernel.Back();
+        }
+
+        for (uint i = 0; i < blurKernel.Size(); ++i)
+        {
+            blurKernel[i] /= sum;  // Normalize
+        }
+    }
+
+    p_separableBlurSP.Get()->Bind();
+    p_separableBlurSP.Get()->SetVector2("B_InputTextureSize",
+                                        Vector2(inputTexture->GetSize()));
+    p_separableBlurSP.Get()->SetInt("B_BlurRadius", blurRadius);
+    p_separableBlurSP.Get()->SetFloatArray("B_BlurKernel", blurKernel);
+    p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", inputTexture);
+
+    // Render blur X
+    p_separableBlurSP.Get()->SetBool("B_BlurInX", true);
+    auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+    GEngine::GetInstance()->RenderViewportPlane();
+
+    // Render blur Y
+    p_separableBlurSP.Get()->SetBool("B_BlurInX", false);
+    p_separableBlurSP.Get()->SetTexture2D(
+        "B_InputTexture",
+        auxiliarFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1));
+    auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+    GEngine::GetInstance()->RenderViewportPlane();
+
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::ALL_MATRICES);
+    GL::Pop(GL::Pushable::DEPTH_STATES);
+    GL::Pop(GL::Pushable::COLOR_MASK);
+    GL::Pop(GL::Pushable::VIEWPORT);
 }
 
 bool GEngine::CanRenderNow(Renderer *rend, RenderPass renderPass) const

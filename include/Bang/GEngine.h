@@ -65,6 +65,9 @@ public:
     void PrepareForForwardRendering(Renderer *rend);
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
+    void BlurTexture(Framebuffer *auxiliarFramebuffer,
+                     Texture2D *inputTexture,
+                     int blurRadius) const;
 
     void SetReplacementMaterial(Material *material);
 
@@ -124,6 +127,7 @@ private:
     Array<float> m_currentForwardRenderingLightRanges;
 
     RH<Mesh> p_windowPlaneMesh;
+    RH<ShaderProgram> p_separableBlurSP;
     RH<ShaderProgram> p_renderTextureToViewportSP;
     RH<ShaderProgram> p_renderTextureToViewportGammaSP;
 

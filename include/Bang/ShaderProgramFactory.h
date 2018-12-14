@@ -27,6 +27,7 @@ public:
     static ShaderProgram *GetDefaultPostProcess();
     static ShaderProgram *GetPointLightShadowMap();
     static ShaderProgram *GetPointLightDeferredScreenPass();
+    static ShaderProgram *GetSeparableBlur();
     static ShaderProgram *GetRenderTextureToViewport();
     static ShaderProgram *GetRenderTextureToViewportGamma();
     static ShaderProgram *GetDirectionalLightShadowMap();

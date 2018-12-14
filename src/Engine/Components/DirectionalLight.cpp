@@ -42,9 +42,27 @@ DirectionalLight::DirectionalLight()
 {
     CONSTRUCT_CLASS_ID(DirectionalLight)
 
-    m_shadowMapFramebuffer = new Framebuffer(1, 1);
+    m_blurredShadowMapFramebuffer = new Framebuffer();
+    m_blurredShadowMapFramebuffer->CreateAttachmentTex2D(
+        GL::Attachment::COLOR0, GL::ColorFormat::RGBA32F);
+    m_blurredShadowMapFramebuffer->CreateAttachmentTex2D(
+        GL::Attachment::COLOR1, GL::ColorFormat::RGBA32F);
+    m_blurredShadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurredShadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1)
+        ->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurredShadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetFilterMode(GL::FilterMode::NEAREST);
+    m_blurredShadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1)
+        ->SetFilterMode(GL::FilterMode::NEAREST);
+
+    m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
                                                   GL::ColorFormat::RGBA32F);
+    m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetWrapMode(GL::WrapMode::REPEAT);
+    m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetFilterMode(GL::FilterMode::NEAREST);
     m_shadowMapFramebuffer->CreateAttachmentTex2D(
         GL::Attachment::DEPTH_STENCIL, GL::ColorFormat::DEPTH24_STENCIL8);
 
@@ -69,6 +87,7 @@ DirectionalLight::DirectionalLight()
 DirectionalLight::~DirectionalLight()
 {
     delete m_shadowMapFramebuffer;
+    delete m_blurredShadowMapFramebuffer;
 }
 
 AABox DirectionalLight::GetShadowCastersAABox(
@@ -107,7 +126,7 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     // Bind and resize shadow map framebuffer
     const Vector2i &shadowMapSize = GetShadowMapSize();
     m_shadowMapFramebuffer->Bind();
-    m_shadowMapFramebuffer->Resize(shadowMapSize.x, shadowMapSize.y);
+    m_shadowMapFramebuffer->Resize(shadowMapSize);
     m_shadowMapFramebuffer->SetAllDrawBuffers();
 
     // Set up viewport
@@ -134,13 +153,24 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
         rend->OnRender(RenderPass::SCENE);
     }
 
+    ge->PopActiveRenderingCamera();
+
+    // Blur shadow map
+    GL::ClearColorBuffer(Color::Zero());  // Needed?
+    GEngine::GetInstance()->BlurTexture(
+        m_blurredShadowMapFramebuffer,
+        m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
+        24);
+
     if (Input::GetKeyDown(Key::Z))
     {
+        m_shadowMapFramebuffer->Bind();
         m_shadowMapFramebuffer->Export(GL::Attachment::COLOR0,
-                                       Path("test.png"));
+                                       Path("original.png"));
+        m_blurredShadowMapFramebuffer->Bind();
+        m_blurredShadowMapFramebuffer->Export(GL::Attachment::COLOR0,
+                                              Path("blurred.png"));
     }
-
-    ge->PopActiveRenderingCamera();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::ALL_MATRICES);
@@ -192,7 +222,9 @@ float DirectionalLight::GetShadowDistance() const
 
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
+    return m_blurredShadowMapFramebuffer->GetAttachmentTex2D(
+        GL::Attachment::COLOR0);
+    // m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
 void DirectionalLight::GetWorldToShadowMapMatrices(

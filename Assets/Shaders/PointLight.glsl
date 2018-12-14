@@ -17,44 +17,29 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
                                      const in vec3 pixelNormalWorld)
 {
     #if defined(BANG_DEFERRED_RENDERING)
-    if (B_LightShadowType != SHADOW_NONE)
+    // If facing away, complete shadow directly
+    vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
+    if (dot(pixelNormalWorld, pixelDirWorld) >= 0)
     {
-        // SHADOW_HARD or SHADOW_SOFT
-
-        // If facing away, complete shadow directly
-        vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
-        if (dot(pixelNormalWorld, pixelDirWorld) >= 0)
-        {
-            return 0.0f;
-        }
-
-        if (pixelDistSq > B_LightRange*B_LightRange)
-        {
-            return 0.0f;
-        }
-
-        float pixelDistance = sqrt(pixelDistSq);
-        float pixelDistanceNorm = pixelDistance / B_PointLightZFar;
-
-        float biasedPixelDistance = (pixelDistanceNorm - B_LightShadowBias);
-        if (B_LightShadowType == SHADOW_HARD)
-        {
-            float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
-            if (shadowMapDistance == 1.0f)
-            {
-                return 1.0f;
-            }
-            float depthDiff = (biasedPixelDistance - shadowMapDistance);
-            return (depthDiff > 0.0) ? 0.0 : 1.0;
-        }
-        else // SHADOW_SOFT
-        {
-            // Get the PCF value from 0 to 1
-            float lightness = texture(B_LightShadowMapSoft,
-                                      vec4(pixelDirWorld, biasedPixelDistance));
-            return lightness;
-        }
+        return 0.0f;
     }
+
+    if (pixelDistSq > B_LightRange*B_LightRange)
+    {
+        return 0.0f;
+    }
+
+    float pixelDistance = sqrt(pixelDistSq);
+    float pixelDistanceNorm = pixelDistance / B_PointLightZFar;
+
+    float biasedPixelDistance = (pixelDistanceNorm - B_LightShadowBias);
+    float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
+    if (shadowMapDistance == 1.0f)
+    {
+        return 1.0f;
+    }
+    float depthDiff = (biasedPixelDistance - shadowMapDistance);
+    return (depthDiff > 0.0) ? 0.0 : 1.0;
     #endif
     return 1.0f;
 }
@@ -80,7 +65,7 @@ vec3 GetPointLightColorApportation(const vec3 lightPosWorld,
     if (intensityAtt <= 0.0) { return vec3(0); }
 
     float lightness = 1.0f;
-    if (pixelReceivesShadows)
+    if (B_LightCastsShadows && pixelReceivesShadows)
     {
         lightness = GetPointLightFragmentLightness(pixelDistSq,
                                                    pixelPosWorld,

@@ -7,10 +7,7 @@ layout(location = 0) out vec4 B_OutDepth;
 
 void main()
 {
-    // Get distance between fragment and point light source
-    float lightDistance = gl_FragCoord.z * 2.0f - 1.0f; // distance(B_FIn_Position.xyz, B_Light);
-    // lightDistance = Map01(lightDistance, B_LightZNear, B_LightZFar); // Map to [0:1]
-
-    float expDepth = exp(LIGHT_EXP * lightDistance);
-    B_OutDepth = vec4(expDepth, expDepth, expDepth, 1); // Write this as depth
+    float depth = gl_FragCoord.z * 2.0f - 1.0f;
+    float expDepth = exp(B_LightShadowExponentConstant * depth);
+    B_OutDepth = vec4(expDepth, 0, 0, 1); // Write this as depth
 }

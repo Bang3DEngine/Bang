@@ -2,7 +2,6 @@
 #define COMMON_GLSL
 
 const float PI = 3.14159265359;
-const float LIGHT_EXP = 80.0f;
 
 // Matrices related ///////////////////////////
 uniform mat4 B_Model;

@@ -508,6 +508,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
+    GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     m_blurFramebuffer->Bind();
@@ -545,6 +546,8 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     p_separableBlurSP.Get()->SetInt("B_BlurRadius", blurRadius);
     p_separableBlurSP.Get()->SetFloatArray("B_BlurKernel", blurKernel);
 
+    GL::Disable(GL::Enablable::BLEND);
+
     // Render blur X
     p_separableBlurSP.Get()->SetBool("B_BlurInX", true);
     p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", inputTexture);
@@ -558,6 +561,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     GEngine::GetInstance()->RenderViewportPlane();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::Pushable::COLOR_MASK);
     GL::Pop(GL::Pushable::VIEWPORT);
 }

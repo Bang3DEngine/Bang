@@ -4,12 +4,10 @@
 #include "Common.glsl"
 #include "MaterialPBRUniforms.glsl"
 
-const int SHADOW_NONE = 0;
-const int SHADOW_HARD = 1;
-const int SHADOW_SOFT = 2;
-
 const int LIGHT_TYPE_DIRECTIONAL = 0;
 const int LIGHT_TYPE_POINT       = 1;
+
+uniform bool B_LightCastsShadows;
 
 #if defined(BANG_DEFERRED_RENDERING)
 
@@ -22,8 +20,12 @@ const int LIGHT_TYPE_POINT       = 1;
     uniform vec3  B_LightForwardWorld;
     uniform vec3  B_LightPositionWorld;
 
-    uniform int   B_LightShadowType;
     uniform float B_LightShadowBias;
+    uniform float B_LightShadowDistance;
+    uniform float B_LightShadowExponentConstant;
+    uniform mat4 B_LightWorldToShadowMapMatrix;
+    uniform sampler2D B_LightShadowMap;
+
 
 #elif defined(BANG_FORWARD_RENDERING) // Forward lighting uniforms
 

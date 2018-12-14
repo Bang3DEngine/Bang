@@ -156,7 +156,7 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
         m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
         m_blurAuxiliarTexture.Get(),
         m_blurredShadowMapTexture.Get(),
-        12);
+        GetShadowSoftness());
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::ALL_MATRICES);
@@ -170,9 +170,9 @@ void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
     Light::SetUniformsBeforeApplyingLight(sp);
 
     ASSERT(GL::IsBound(sp))
-    sp->SetFloat("B_ShadowDistance", GetShadowDistance(), false);
+    sp->SetFloat("B_LightShadowDistance", GetShadowDistance(), false);
     sp->SetMatrix4(
-        "B_WorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, false);
+        "B_LightWorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, false);
 }
 
 void DirectionalLight::Reflect()

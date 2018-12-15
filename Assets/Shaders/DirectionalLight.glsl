@@ -10,7 +10,7 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
                                            const in vec3 camPosWorld)
 {
     #if defined(BANG_DEFERRED_RENDERING)
-    float ShadowDist = B_LightShadowDistance * 2;
+    float ShadowDist = B_LightZFar * 2;
 
     // If facing away, complete shadow directly
     if (dot(pixelNormalWorld, lightForwardWorld) >= 0)

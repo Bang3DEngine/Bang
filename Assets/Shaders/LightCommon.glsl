@@ -21,7 +21,6 @@ uniform bool B_LightCastsShadows;
     uniform vec3  B_LightPositionWorld;
 
     uniform float B_LightShadowBias;
-    uniform float B_LightShadowDistance;
     uniform float B_LightShadowStrength;
     uniform float B_LightShadowExponentConstant;
     uniform mat4 B_LightWorldToShadowMapMatrix;

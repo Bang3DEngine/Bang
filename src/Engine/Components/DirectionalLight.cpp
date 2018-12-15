@@ -63,9 +63,6 @@ DirectionalLight::DirectionalLight()
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
                                                   GL::ColorFormat::DEPTH16);
 
-    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
-    GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-
     SetShadowMapShaderProgram(
         ShaderProgramFactory::GetDirectionalLightShadowMap());
     SetLightScreenPassShaderProgram(
@@ -165,7 +162,6 @@ void DirectionalLight::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
     Light::SetUniformsBeforeApplyingLight(sp);
 
     ASSERT(GL::IsBound(sp))
-    sp->SetFloat("B_LightShadowDistance", GetShadowDistance(), false);
     sp->SetMatrix4(
         "B_LightWorldToShadowMapMatrix", m_lastUsedShadowMapViewProj, false);
 }

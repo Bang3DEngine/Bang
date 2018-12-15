@@ -132,8 +132,9 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     // Render shadow map into framebuffer
     GL::SetDepthMask(true);
     GL::ClearDepthBuffer(1.0f);
-    GL::ClearColorBuffer(Color::One());
     GL::SetDepthFunc(GL::Function::LEQUAL);
+    float limit = Math::Exp(GetShadowExponentConstant());
+    GL::ClearColorBuffer(Color(limit));
 
     for (Renderer *rend : shadowCastersRenderers)
     {

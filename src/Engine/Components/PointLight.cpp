@@ -41,21 +41,20 @@ PointLight::PointLight() : Light()
 
     m_blurredShadowMapTexCM = Resources::Create<TextureCubeMap>();
     m_blurredShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
-    m_blurredShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurredShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
     m_blurredShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredShadowMapTexCM.Get()->CreateEmpty(1);
 
     m_blurAuxiliarShadowMapTexCM = Resources::Create<TextureCubeMap>();
     m_blurAuxiliarShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
-    m_blurAuxiliarShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+    m_blurAuxiliarShadowMapTexCM.Get()->SetWrapMode(
+        GL::WrapMode::CLAMP_TO_EDGE);
     m_blurAuxiliarShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarShadowMapTexCM.Get()->CreateEmpty(1);
 
     SetShadowMapShaderProgram(ShaderProgramFactory::GetPointLightShadowMap());
     SetLightScreenPassShaderProgram(
         ShaderProgramFactory::GetPointLightDeferredScreenPass());
-
-    SetShadowExponentConstant(8.0f);
 }
 
 PointLight::~PointLight()
@@ -159,9 +158,10 @@ void PointLight::RenderShadowMaps_(GameObject *go)
 
     // Render shadow map into framebuffer
     GL::SetDepthMask(true);
-    GL::SetDepthFunc(GL::Function::LEQUAL);
-    GL::ClearColorBuffer(Color::One());
     GL::ClearDepthBuffer(1.0f);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
+    float limit = Math::Exp(GetShadowExponentConstant());
+    GL::ClearColorBuffer(Color(limit));
 
     float rangeLimit = Math::Pow(GetRange(), 1.0f);
     const Vector3 pointLightPos =

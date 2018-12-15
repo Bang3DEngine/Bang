@@ -35,7 +35,7 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
     }
 
     // Get actual world pixel depth
-    float worldPosDepthFromLightSpace = worldPosInLightSpace.z;
+    float worldPosDepthFromLightSpace = worldPosInLightSpace.z * 0.5f + 0.5f;
     float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
     float biasedWorldDepth = (worldPosDepthFromLightSpace - B_LightShadowBias);
 

@@ -49,6 +49,7 @@ GEngine::GEngine()
 GEngine::~GEngine()
 {
     delete m_blurFramebuffer;
+    delete m_blurCMFramebuffer;
 
     if (m_debugRenderer)
     {
@@ -95,18 +96,7 @@ void GEngine::Init()
         EPATH("Shaders").Append("RenderSky.frag")));
 
     m_blurFramebuffer = new Framebuffer();
-    m_blurFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
-                                             GL::ColorFormat::RGBA32F);
-    m_blurFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR1,
-                                             GL::ColorFormat::RGBA32F);
-    m_blurFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
-        ->SetWrapMode(GL::WrapMode::REPEAT);
-    m_blurFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1)
-        ->SetWrapMode(GL::WrapMode::REPEAT);
-    m_blurFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
-        ->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_blurFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR1)
-        ->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurCMFramebuffer = new Framebuffer();
 
     p_separableBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
     p_separableBlurCubeMapSP.Set(
@@ -565,6 +555,8 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
     GEngine::GetInstance()->RenderViewportPlane();
 
+    m_blurFramebuffer->UnBind();
+
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
     GL::Pop(GL::Pushable::BLEND_STATES);
@@ -584,9 +576,9 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     uint cmSize = inputTextureCM->GetSize();
-    m_blurFramebuffer->Bind();
+    m_blurCMFramebuffer->Bind();
     GL::SetViewport(0, 0, cmSize, cmSize);
-    m_blurFramebuffer->Resize(cmSize, cmSize);
+    m_blurCMFramebuffer->Resize(cmSize, cmSize);
 
     p_separableBlurCubeMapSP.Get()->Bind();
     p_separableBlurCubeMapSP.Get()->SetVector2("B_InputTextureSize",
@@ -598,11 +590,11 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 
     for (GL::CubeMapDir cmDir : GL::GetAllCubeMapDirs())
     {
-        m_blurFramebuffer->SetAttachmentTexture2D(
+        m_blurCMFramebuffer->SetAttachmentTexture2D(
             blurredOutputTextureCM,
             GL::Attachment::COLOR0,
             SCAST<GL::TextureTarget>(cmDir));
-        m_blurFramebuffer->SetAttachmentTexture2D(
+        m_blurCMFramebuffer->SetAttachmentTexture2D(
             auxiliarTextureCM,
             GL::Attachment::COLOR1,
             SCAST<GL::TextureTarget>(cmDir));
@@ -616,18 +608,18 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
         p_separableBlurCubeMapSP.Get()->SetBool("B_BlurInX", true);
         p_separableBlurCubeMapSP.Get()->SetTextureCubeMap("B_InputTexture",
                                                           inputTextureCM);
-        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
         p_separableBlurCubeMapSP.Get()->SetBool("B_BlurInX", false);
         p_separableBlurCubeMapSP.Get()->SetTextureCubeMap("B_InputTexture",
                                                           auxiliarTextureCM);
-        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }
 
-    m_blurFramebuffer->UnBind();
+    m_blurCMFramebuffer->UnBind();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
@@ -771,10 +763,12 @@ void GEngine::RenderViewportPlane()
     // Save state
     bool prevWireframe = GL::IsWireframe();
     GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::CULL_FACE);
 
     // Set state
     GL::SetWireframe(false);
     GL::SetDepthMask(false);
+    GL::Disable(GL::Enablable::CULL_FACE);
     GL::SetDepthFunc(GL::Function::ALWAYS);
 
     GL::Render(p_windowPlaneMesh.Get()->GetVAO(),
@@ -783,6 +777,7 @@ void GEngine::RenderViewportPlane()
 
     // Restore state
     GL::SetWireframe(prevWireframe);
+    GL::Pop(GL::Pushable::CULL_FACE);
     GL::Pop(GL::Pushable::DEPTH_STATES);
 }
 

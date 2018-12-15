@@ -132,6 +132,7 @@ private:
     Array<float> m_currentForwardRenderingLightRanges;
 
     Framebuffer *m_blurFramebuffer = nullptr;
+    Framebuffer *m_blurCMFramebuffer = nullptr;
     RH<ShaderProgram> p_separableBlurSP;
     RH<ShaderProgram> p_separableBlurCubeMapSP;
 

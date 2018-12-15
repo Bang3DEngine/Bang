@@ -77,7 +77,7 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
     GL::Push(GL::Pushable::CULL_FACE);
     GL::Push(GL::Pushable::STENCIL_STATES);
-    PushDrawAttachments();
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     GL::SetStencilOp(GL::StencilOperation::KEEP);  // Dont modify stencil
 
@@ -87,6 +87,7 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
     GEngine::GetInstance()->RenderViewportRect(sp, mask);  // Render rect!
 
     PopDrawAttachments();
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::STENCIL_STATES);
     GL::Pop(GL::Pushable::CULL_FACE);
 }

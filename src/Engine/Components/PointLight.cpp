@@ -106,9 +106,6 @@ float PointLight::GetShadowMapFarDistance() const
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
-    // return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
-    //     GL::Attachment::COLOR0);
-
     return GetShadowSoftness() > 0
                ? m_blurredShadowMapTexCM.Get()
                : m_shadowMapFramebuffer->GetAttachmentTexCubeMap(

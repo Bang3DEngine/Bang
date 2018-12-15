@@ -130,10 +130,10 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
     m_lastUsedShadowMapViewProj = shadowMapProjMatrix * shadowMapViewMatrix;
 
     // Render shadow map into framebuffer
+    GL::SetDepthMask(true);
     GL::ClearDepthBuffer(1.0f);
     GL::ClearColorBuffer(Color::One());
     GL::SetDepthFunc(GL::Function::LEQUAL);
-    GL::SetDepthMask(true);
 
     for (Renderer *rend : shadowCastersRenderers)
     {
@@ -202,7 +202,9 @@ float DirectionalLight::GetShadowDistance() const
 
 Texture2D *DirectionalLight::GetShadowMapTexture() const
 {
-    return m_blurredShadowMapTexture.Get();
+    return GetShadowSoftness() > 0 ? m_blurredShadowMapTexture.Get()
+                                   : m_shadowMapFramebuffer->GetAttachmentTex2D(
+                                         GL::Attachment::COLOR0);
 }
 
 void DirectionalLight::GetWorldToShadowMapMatrices(

@@ -74,6 +74,11 @@ void Light::SetShadowBias(float shadowBias)
 {
     m_shadowBias = shadowBias;
 }
+
+void Light::SetShadowStrength(float shadowStrength)
+{
+    m_shadowStrength = shadowStrength;
+}
 void Light::SetShadowMapSize(const Vector2i &shadowMapSize)
 {
     m_shadowMapSize = shadowMapSize;
@@ -100,6 +105,11 @@ bool Light::GetCastShadows() const
 uint Light::GetShadowSoftness() const
 {
     return m_shadowSoftness;
+}
+
+float Light::GetShadowStrength() const
+{
+    return m_shadowStrength;
 }
 
 float Light::GetShadowExponentConstant() const
@@ -174,14 +184,21 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
 {
     ASSERT(GL::IsBound(sp))
+    SetShadowLightCommonUniforms(sp);
+}
 
+void Light::SetShadowLightCommonUniforms(ShaderProgram *sp) const
+{
     Transform *tr = GetGameObject()->GetTransform();
+    sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
+    sp->SetFloat("B_LightShadowExponentConstant", GetShadowExponentConstant());
+    sp->SetFloat("B_LightShadowStrength", GetShadowStrength());
+    sp->SetFloat("B_LightZNear", GetShadowMapNearDistance());
+    sp->SetFloat("B_LightZFar", GetShadowMapFarDistance());
     sp->SetBool("B_LightCastsShadows", GetCastShadows());
     sp->SetFloat("B_LightIntensity", GetIntensity());
     sp->SetColor("B_LightColor", GetColor());
     sp->SetVector3("B_LightForwardWorld", tr->GetForward());
-    sp->SetVector3("B_LightPositionWorld", tr->GetPosition());
-    SetShadowLightCommonUniforms(sp);
 
     sp->SetFloat("B_LightShadowBias", GetShadowBias());
     if (DCAST<Texture2D *>(GetShadowMapTexture()))
@@ -194,13 +211,6 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
         sp->SetTextureCubeMap("B_LightShadowMap",
                               SCAST<TextureCubeMap *>(GetShadowMapTexture()));
     }
-}
-
-void Light::SetShadowLightCommonUniforms(ShaderProgram *sp) const
-{
-    sp->SetFloat("B_LightShadowExponentConstant", GetShadowExponentConstant());
-    sp->SetFloat("B_LightZNear", GetShadowMapNearDistance());
-    sp->SetFloat("B_LightZFar", GetShadowMapFarDistance());
 }
 
 Array<Renderer *> Light::GetShadowCastersIn(GameObject *go) const
@@ -264,6 +274,12 @@ void Light::Reflect()
                                    GetShadowSoftness,
                                    BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 64.0f));
 
+    BANG_REFLECT_VAR_MEMBER_HINTED(Light,
+                                   "Shadow strength",
+                                   SetShadowStrength,
+                                   GetShadowStrength,
+                                   BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
     BANG_REFLECT_VAR_MEMBER_HINTED(Light,
                                    "Shadow Bias",
                                    SetShadowBias,

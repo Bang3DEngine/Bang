@@ -51,9 +51,6 @@ PointLight::PointLight() : Light()
     m_blurAuxiliarShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarShadowMapTexCM.Get()->CreateEmpty(1);
 
-    GetShadowMapTexture()->SetFilterMode(GL::FilterMode::BILINEAR);
-    GetShadowMapTexture()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-
     SetShadowMapShaderProgram(ShaderProgramFactory::GetPointLightShadowMap());
     SetLightScreenPassShaderProgram(
         ShaderProgramFactory::GetPointLightDeferredScreenPass());
@@ -87,6 +84,11 @@ void PointLight::SetRange(float range)
     m_range = range;
 }
 
+void PointLight::SetShadowNearPlane(float nearPlane)
+{
+    m_shadowNearPlane = nearPlane;
+}
+
 float PointLight::GetRange() const
 {
     return m_range;
@@ -94,7 +96,7 @@ float PointLight::GetRange() const
 
 float PointLight::GetShadowMapNearDistance() const
 {
-    return 0.05f;
+    return m_shadowNearPlane;
 }
 
 float PointLight::GetShadowMapFarDistance() const
@@ -104,9 +106,13 @@ float PointLight::GetShadowMapFarDistance() const
 
 TextureCubeMap *PointLight::GetShadowMapTexture() const
 {
-    return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
-        GL::Attachment::COLOR0);
-    // return m_blurredShadowMapTexCM.Get();
+    // return m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
+    //     GL::Attachment::COLOR0);
+
+    return GetShadowSoftness() > 0
+               ? m_blurredShadowMapTexCM.Get()
+               : m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
+                     GL::Attachment::COLOR0);
 }
 
 void PointLight::Reflect()
@@ -118,15 +124,23 @@ void PointLight::Reflect()
                                    SetRange,
                                    GetRange,
                                    BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(PointLight,
+                                   "Shadow near plane",
+                                   SetShadowNearPlane,
+                                   GetShadowMapNearDistance,
+                                   BANG_REFLECT_HINT_SLIDER(0.05f, 5.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 }
 
+#include "Bang/Input.h"
 void PointLight::RenderShadowMaps_(GameObject *go)
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
     GL::Push(GL::Pushable::ALL_MATRICES);
-    GL::Push(GL::Pushable::VIEWPROJ_MODE);
     GL::Push(GL::Pushable::DEPTH_STATES);
+    GL::Push(GL::Pushable::VIEWPROJ_MODE);
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
@@ -147,10 +161,10 @@ void PointLight::RenderShadowMaps_(GameObject *go)
                                                  cubeMapPVMMatrices);
 
     // Render shadow map into framebuffer
-    GL::ClearDepthBuffer(1.0f);
-    GL::ClearColorBuffer(Color::One());
-    GL::SetDepthFunc(GL::Function::LEQUAL);
     GL::SetDepthMask(true);
+    GL::SetDepthFunc(GL::Function::LEQUAL);
+    GL::ClearColorBuffer(Color::One());
+    GL::ClearDepthBuffer(1.0f);
 
     float rangeLimit = Math::Pow(GetRange(), 1.0f);
     const Vector3 pointLightPos =

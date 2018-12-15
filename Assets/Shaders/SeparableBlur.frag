@@ -24,14 +24,13 @@ void main()
 
     int j = 0;
     vec4 meanColor = vec4(0);
-    int blurRadius = 0; // B_BlurRadius;
+    int blurRadius = B_BlurRadius;
     for (int i = -blurRadius; i <= blurRadius; ++i)
     {
         vec2 sampleUvOffset = (offMult * i);
         vec2 sampleUvs = (uv + sampleUvOffset);
 
         #ifdef BANG_BLUR_TEXTURE_CUBEMAP
-        // sampleUvs = uv;
         vec3 sampleCoords = B_SampleDirection;
         if (B_SampleDirection.x == 1)
         {
@@ -63,14 +62,10 @@ void main()
         vec4 sampleColor = texture(B_InputTexture, sampleUvs);
         #endif
 
-        float sampleWeight = 1.0f / (blurRadius * 2 + 1); // B_BlurKernel[j];
+        float sampleWeight = B_BlurKernel[j];
         meanColor += sampleWeight * sampleColor;
-        j += 1;
+        ++j;
     }
 
-    #ifdef BANG_BLUR_TEXTURE_CUBEMAP
-    B_OutColor = vec4( vec3(meanColor), 1); // texture(B_InputTexture, B_SampleDirection + vec3(0, uv)).rgb, 1); // vec4( vec3(meanColor), 1);
-    #else
-    B_OutColor = vec4( vec3(meanColor), 1);
-    #endif
+    B_OutColor = vec4( vec3(meanColor.r), 1);
 }

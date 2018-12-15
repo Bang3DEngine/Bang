@@ -31,6 +31,7 @@ public:
     void SetColor(const Color &color);
     void SetIntensity(float intensity);
     void SetShadowBias(float shadowBias);
+    void SetShadowStrength(float shadowStrength);
     void SetShadowMapSize(const Vector2i &shadowMapSize);
 
     const Color &GetColor() const;
@@ -38,6 +39,7 @@ public:
     float GetShadowBias() const;
     bool GetCastShadows() const;
     uint GetShadowSoftness() const;
+    float GetShadowStrength() const;
     float GetShadowExponentConstant() const;
     ShaderProgram *GetShadowMapShaderProgram() const;
     virtual float GetShadowMapNearDistance() const;
@@ -66,6 +68,7 @@ private:
     uint m_shadowSoftness = 0;
     bool m_castShadows = false;
     float m_shadowBias = 0.003f;
+    float m_shadowStrength = 1.0f;
     float m_shadowExponentConstant = 80.0f;
     Vector2i m_shadowMapSize = Vector2i(256);
 

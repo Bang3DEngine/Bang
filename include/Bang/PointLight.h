@@ -25,6 +25,7 @@ class PointLight : public Light
 
 public:
     void SetRange(float range);
+    void SetShadowNearPlane(float nearPlane);
 
     float GetRange() const;
     float GetShadowMapNearDistance() const override;
@@ -38,6 +39,7 @@ public:
 
 protected:
     float m_range = 1.0f;
+    float m_shadowNearPlane = 0.1f;
     Framebuffer *m_shadowMapFramebuffer = nullptr;
     RH<TextureCubeMap> m_blurAuxiliarShadowMapTexCM;
     RH<TextureCubeMap> m_blurredShadowMapTexCM;

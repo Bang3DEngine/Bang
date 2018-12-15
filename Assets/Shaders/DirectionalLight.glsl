@@ -35,16 +35,9 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
     }
 
     // Get actual world pixel depth
-    float worldPosDepthFromLightSpace = (worldPosInLightSpace.z);
+    float worldPosDepthFromLightSpace = worldPosInLightSpace.z;
     float shadowMapDepth = texture(B_LightShadowMap, shadowMapUv).r;
-    if (shadowMapDepth == 1.0f)
-    {
-        return 1.0f;
-    }
-
-    // Bias it, taking into account slope
-    float bias = B_LightShadowBias;
-    float biasedWorldDepth = (worldPosDepthFromLightSpace - bias);
+    float biasedWorldDepth = (worldPosDepthFromLightSpace - B_LightShadowBias);
 
     float lightness = (shadowMapDepth * exp(-B_LightShadowExponentConstant * biasedWorldDepth));
     lightness = clamp(lightness, 0.0f, 1.0f);
@@ -107,6 +100,7 @@ vec3 GetDirectionalLightColorApportation(const vec3 lightForwardWorld,
                                                          pixelNormalWorld,
                                                          lightForwardWorld,
                                                          camPosWorld);
+        lightness = min(1, lightness + (1-B_LightShadowStrength));
     }
 
     vec3 lightApport = (diffuse + specular) * radiance * surfaceDotWithLight;

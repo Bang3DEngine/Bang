@@ -22,14 +22,11 @@ float GetPointLightFragmentLightness(const float pixelDistSq,
     }
 
     float pixelDistance = sqrt(pixelDistSq);
-    float pixelDistanceNorm = pixelDistance; // Map01(pixelDistance, B_LightZNear, B_LightZFar) * 2.0f - 1.0f;
+    float pixelDistanceNorm = Map01(pixelDistance, B_LightZNear, B_LightZFar) * 2.0f - 1.0f;
 
     float biasedPixelDistanceNorm = (pixelDistanceNorm - B_LightShadowBias);
     float shadowMapDistance = texture(B_LightShadowMap, pixelDirWorld).r;
-    if (shadowMapDistance == 1.0f)
-    {
-        return 1.0f;
-    }
+
 
     float lightness = (shadowMapDistance * exp(-B_LightShadowExponentConstant * biasedPixelDistanceNorm));
     lightness = clamp(lightness, 0.0f, 1.0f);
@@ -62,19 +59,13 @@ vec3 GetPointLightColorApportation(const vec3 lightPosWorld,
         return vec3(0);
     }
 
-    if (false)
-    {
-        vec3 pixelDirWorld = (pixelPosWorld - B_LightPositionWorld);
-        return texture(B_LightShadowMap, pixelDirWorld).rgb;
-        // return vec3(texture(B_LightShadowMap, pixelDirWorld).r, 0, 0);
-    }
-
     float lightness = 1.0f;
     if (B_LightCastsShadows && pixelReceivesShadows)
     {
         lightness = GetPointLightFragmentLightness(pixelDistSq,
                                                    pixelPosWorld,
                                                    pixelNormalWorld);
+        lightness = min(1, lightness + (1-B_LightShadowStrength));
     }
 
     vec3 N = pixelNormalWorld;

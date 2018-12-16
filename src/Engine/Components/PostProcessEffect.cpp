@@ -15,6 +15,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Resources.h"
 #include "Bang/Resources.tcc"
+#include "Bang/Scene.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
@@ -45,8 +46,8 @@ void PostProcessEffect::OnRender(RenderPass renderPass)
 bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
 {
     // Only render if its gameObject contains the active camera
-    Camera *activeCamera = Camera::GetActive();
-    if (GetGameObject()->GetComponents().Contains(activeCamera))
+    // Camera *activeSceneCamera = GetGameObject()->GetScene()->GetCamera();
+    // if (GetGameObject()->GetComponents().Contains(activeSceneCamera))
     {
         switch (GetType())
         {
@@ -54,8 +55,7 @@ bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
                 return (renderPass == RenderPass::SCENE_POSTPROCESS);
 
             case Type::AFTER_CANVAS:
-                return (renderPass == RenderPass::SCENE_POSTPROCESS ||
-                        renderPass == RenderPass::CANVAS_POSTPROCESS);
+                return (renderPass == RenderPass::CANVAS_POSTPROCESS);
         }
     }
     return false;

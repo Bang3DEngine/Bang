@@ -51,8 +51,8 @@ public:
 
     void Init();
 
-    void Render(Scene *scene);
-    void Render(Scene *scene, Camera *camera);
+    void Render(GameObject *go);
+    void Render(GameObject *go, Camera *camera);
     void RenderTexture(Texture2D *texture);
     void RenderTexture(Texture2D *texture, float gammaCorrection);
     void RenderWithPass(GameObject *go,
@@ -73,6 +73,8 @@ public:
                        TextureCubeMap *auxiliarTextureCM,
                        TextureCubeMap *blurredOutputTextureCM,
                        int blurRadius) const;
+    void FillTexture(Texture2D *texture, const Color &color);
+    void CopyTexture(Texture2D *source, Texture2D *destiny);
 
     void SetReplacementMaterial(Material *material);
 
@@ -131,6 +133,7 @@ private:
     Array<float> m_currentForwardRenderingLightIntensities;
     Array<float> m_currentForwardRenderingLightRanges;
 
+    Framebuffer *m_copyTextureFramebuffer = nullptr;
     Framebuffer *m_blurFramebuffer = nullptr;
     Framebuffer *m_blurCMFramebuffer = nullptr;
     RH<ShaderProgram> p_separableBlurSP;

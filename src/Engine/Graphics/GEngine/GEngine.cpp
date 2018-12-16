@@ -50,6 +50,7 @@ GEngine::~GEngine()
 {
     delete m_blurFramebuffer;
     delete m_blurCMFramebuffer;
+    delete m_copyTextureFramebuffer;
 
     if (m_debugRenderer)
     {
@@ -95,6 +96,7 @@ void GEngine::Init()
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         EPATH("Shaders").Append("RenderSky.frag")));
 
+    m_copyTextureFramebuffer = new Framebuffer();
     m_blurFramebuffer = new Framebuffer();
     m_blurCMFramebuffer = new Framebuffer();
 
@@ -110,39 +112,39 @@ void GEngine::Init()
         shadersDir.Append("FillCubeMapFromTextures.frag")));
 }
 
-void GEngine::Render(Scene *scene)
+void GEngine::Render(GameObject *go)
 {
-    if (scene)
+    if (go)
     {
         if (Camera *camera = GetActiveRenderingCamera())
         {
             RenderFlags renderFlags = camera->GetRenderFlags();
 
-            scene->BeforeRender();
+            go->BeforeRender();
 
             if (renderFlags.IsOn(RenderFlag::RENDER_SHADOW_MAPS))
             {
-                RenderShadowMaps(scene);
+                RenderShadowMaps(go);
             }
 
-            RenderToGBuffer(scene, camera);
+            RenderToGBuffer(go, camera);
 
             if (renderFlags.IsOn(RenderFlag::RENDER_REFLECTION_PROBES))
             {
-                RenderReflectionProbes(scene);
+                RenderReflectionProbes(go);
             }
         }
     }
 }
 
-void GEngine::Render(Scene *scene, Camera *camera)
+void GEngine::Render(GameObject *go, Camera *camera)
 {
-    if (scene && camera)
+    if (go && camera)
     {
         PushActiveRenderingCamera();
 
         SetActiveRenderingCamera(camera);
-        Render(scene);
+        Render(go);
 
         PopActiveRenderingCamera();
     }
@@ -636,6 +638,40 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
     GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::Pushable::COLOR_MASK);
     GL::Pop(GL::Pushable::VIEWPORT);
+}
+
+void GEngine::FillTexture(Texture2D *texture, const Color &color)
+{
+    GL::Push(GL::Pushable::BLEND_STATES);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    GL::Disable(GL::Enablable::BLEND);
+
+    m_copyTextureFramebuffer->Bind();
+    m_copyTextureFramebuffer->SetAttachmentTexture(texture,
+                                                   GL::Attachment::COLOR0);
+    GL::ClearColorBuffer(color);
+
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::BLEND_STATES);
+}
+
+void GEngine::CopyTexture(Texture2D *source, Texture2D *destiny)
+{
+    GL::Push(GL::Pushable::BLEND_STATES);
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+
+    destiny->Resize(source->GetSize());
+
+    GL::Disable(GL::Enablable::BLEND);
+
+    m_copyTextureFramebuffer->Bind();
+    m_copyTextureFramebuffer->SetAttachmentTexture(destiny,
+                                                   GL::Attachment::COLOR0);
+    GEngine::RenderTexture(source);
+
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 bool GEngine::CanRenderNow(Renderer *rend, RenderPass renderPass) const

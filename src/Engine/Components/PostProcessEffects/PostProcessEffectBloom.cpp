@@ -14,9 +14,9 @@ PostProcessEffectBloom::PostProcessEffectBloom()
 {
     CONSTRUCT_CLASS_ID(PostProcessEffectBloom);
 
-    m_bloomFramebuffer = new Framebuffer();
-    m_bloomFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
-                                              GL::ColorFormat::RGBA32F);
+    m_brightnessTexture = Resources::Create<Texture2D>();
+    m_brightnessTexture.Get()->CreateEmpty(1, 1);
+    m_brightnessTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
 
     m_blurAuxiliarTexture = Resources::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->CreateEmpty(1, 1);
@@ -25,6 +25,10 @@ PostProcessEffectBloom::PostProcessEffectBloom()
     m_blurredBloomTexture = Resources::Create<Texture2D>();
     m_blurredBloomTexture.Get()->CreateEmpty(1, 1);
     m_blurredBloomTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+
+    m_bloomFramebuffer = new Framebuffer();
+    m_bloomFramebuffer->SetAttachmentTexture(m_brightnessTexture.Get(),
+                                             GL::Attachment::COLOR0);
 
     p_bloomSP.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
@@ -38,7 +42,7 @@ PostProcessEffectBloom::~PostProcessEffectBloom()
 #include "Bang/Input.h"
 void PostProcessEffectBloom::OnRender(RenderPass renderPass)
 {
-    PostProcessEffect::OnRender(renderPass);
+    Component::OnRender(renderPass);
 
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::BLEND_STATES);
@@ -55,25 +59,33 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
 
         GL::Disable(GL::Enablable::BLEND);
 
-        m_bloomFramebuffer->Resize(bloomTexSize);
+        m_brightnessTexture.Get()->Resize(bloomTexSize);
+        m_blurAuxiliarTexture.Get()->Resize(bloomTexSize);
+        m_blurredBloomTexture.Get()->Resize(bloomTexSize);
+
+        GEngine *ge = GEngine::GetInstance();
+        ge->FillTexture(m_brightnessTexture.Get(), Color::Zero());
+        ge->FillTexture(m_blurAuxiliarTexture.Get(), Color::Zero());
+        ge->FillTexture(m_blurredBloomTexture.Get(), Color::Zero());
 
         m_bloomFramebuffer->Bind();
         m_bloomFramebuffer->SetAllDrawBuffers();
         GL::ClearColorBuffer(Color::Zero());
 
         // Extract bright pixels
-        GEngine *ge = GEngine::GetInstance();
         sp->SetBool("B_ExtractingBrightPixels", true);
         sp->SetFloat("B_Intensity", GetIntensity());
         sp->SetFloat("B_BrightnessThreshold", GetBrightnessThreshold());
         ge->GetActiveGBuffer()->BindAttachmentsForReading(sp);
         ge->RenderViewportPlane();
 
-        ge->BlurTexture(
-            m_bloomFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
-            m_blurAuxiliarTexture.Get(),
-            m_blurredBloomTexture.Get(),
-            GetBlurRadius());
+        // ge->CopyTexture(m_brightnessTexture.Get(),
+        // m_blurredBloomTexture.Get());
+
+        ge->BlurTexture(m_brightnessTexture.Get(),
+                        m_blurAuxiliarTexture.Get(),
+                        m_blurredBloomTexture.Get(),
+                        GetBlurRadius());
 
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 

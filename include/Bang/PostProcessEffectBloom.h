@@ -37,7 +37,9 @@ private:
     uint m_blurRadius = 5;
 
     RH<ShaderProgram> p_bloomSP;
-    RH<Texture2D> m_blurredBloomTexture, m_blurAuxiliarTexture;
+    RH<Texture2D> m_brightnessTexture;
+    RH<Texture2D> m_blurredBloomTexture;
+    RH<Texture2D> m_blurAuxiliarTexture;
 };
 }
 

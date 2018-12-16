@@ -654,13 +654,10 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
 void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 {
-    GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     gbuffer->Bind();
-
-    GL::Disable(GL::Enablable::BLEND);
 
     ShaderProgram *sp = p_renderTextureToViewportGammaSP.Get();
     sp->Bind();
@@ -670,7 +667,6 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-    GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)

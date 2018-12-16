@@ -15,8 +15,9 @@ using namespace Bang;
 
 const GL::Attachment GBuffer::AttColor = GL::Attachment::COLOR0;
 const GL::Attachment GBuffer::AttAlbedo = GL::Attachment::COLOR1;
-const GL::Attachment GBuffer::AttNormal = GL::Attachment::COLOR2;
-const GL::Attachment GBuffer::AttMisc = GL::Attachment::COLOR3;
+const GL::Attachment GBuffer::AttLight = GL::Attachment::COLOR2;
+const GL::Attachment GBuffer::AttNormal = GL::Attachment::COLOR3;
+const GL::Attachment GBuffer::AttMisc = GL::Attachment::COLOR4;
 const GL::Attachment GBuffer::AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
 
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
@@ -45,6 +46,7 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     Bind();
     SetAttachmentTexture(GetColorTexture0(), GBuffer::AttColor);
     CreateAttachmentTex2D(GBuffer::AttAlbedo, GL::ColorFormat::RGBA8);
+    CreateAttachmentTex2D(GBuffer::AttLight, GL::ColorFormat::RGBA8);
     CreateAttachmentTex2D(GBuffer::AttNormal, GL::ColorFormat::RGB10_A2);
     CreateAttachmentTex2D(GBuffer::AttMisc, GL::ColorFormat::RGB10_A2);
     SetSceneDepthStencil();
@@ -67,6 +69,9 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
     sp->SetTexture2D(GBuffer::GetAlbedoTexName(),
                      GetAttachmentTex2D(GBuffer::AttAlbedo),
                      false);
+    sp->SetTexture2D(GBuffer::GetLightTexName(),
+                     GetAttachmentTex2D(GBuffer::AttLight),
+                     false);
     sp->SetTexture2D(
         GBuffer::GetMiscTexName(), GetAttachmentTex2D(GBuffer::AttMisc), false);
     sp->SetTexture2D(GBuffer::GetColorsTexName(), GetReadColorTexture(), false);
@@ -75,7 +80,6 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
                      false);
 }
 
-#include "Bang/TextureFactory.h"
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
     GL::Push(GL::Pushable::CULL_FACE);
@@ -143,19 +147,27 @@ void GBuffer::SetAllDrawBuffers() const
 {
     SetDrawBuffers({{GBuffer::AttColor,
                      GBuffer::AttAlbedo,
+                     GBuffer::AttLight,
                      GBuffer::AttNormal,
                      GBuffer::AttMisc}});
 }
 
 void GBuffer::SetAllDrawBuffersExceptColor()
 {
-    SetDrawBuffers(
-        {{GBuffer::AttAlbedo, GBuffer::AttNormal, GBuffer::AttMisc}});
+    SetDrawBuffers({{GBuffer::AttAlbedo,
+                     GBuffer::AttLight,
+                     GBuffer::AttNormal,
+                     GBuffer::AttMisc}});
 }
 
 void GBuffer::SetColorDrawBuffer()
 {
     SetDrawBuffers({GBuffer::AttColor});
+}
+
+void GBuffer::SetLightDrawBuffer()
+{
+    SetDrawBuffers({GBuffer::AttLight});
 }
 
 void GBuffer::SetHDR(bool hdr)
@@ -250,6 +262,11 @@ Texture2D *GBuffer::GetReadColorTexture() const
 String GBuffer::GetMiscTexName()
 {
     return "B_GTex_Misc";
+}
+
+String GBuffer::GetLightTexName()
+{
+    return "B_GTex_Light";
 }
 String GBuffer::GetColorsTexName()
 {

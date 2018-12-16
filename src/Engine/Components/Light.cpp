@@ -162,6 +162,7 @@ void Light::RenderShadowMaps(GameObject *go)
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
+    GL::Push(GL::Pushable::BLEND_STATES);
 
     ShaderProgram *lightSP = p_lightScreenPassShaderProgram.Get();
     lightSP->Bind();
@@ -173,11 +174,14 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
         AARect::Intersection(GetRenderRect(camera), renderRect);
 
     // Additive blend
-    gbuffer->ApplyPassBlend(lightSP,
-                            GL::BlendFactor::ONE,
-                            GL::BlendFactor::ONE,
-                            improvedRenderRect);
+    GL::Enable(GL::Enablable::BLEND);
+    GL::BlendFunc(GL::BlendFactor::ONE, GL::BlendFactor::ONE);
 
+    gbuffer->SetLightDrawBuffer();
+    gbuffer->BindAttachmentsForReading(lightSP);
+    GEngine::GetInstance()->RenderViewportRect(lightSP, improvedRenderRect);
+
+    GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
 }
 

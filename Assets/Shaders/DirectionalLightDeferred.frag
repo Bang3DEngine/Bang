@@ -1,7 +1,12 @@
 #define BANG_FRAGMENT
 #define BANG_DEFERRED_RENDERING
-#include "ScreenPass.frag"
+
 #include "DirectionalLight.glsl"
+
+in vec3 B_FIn_Position;
+in vec2 B_FIn_AlbedoUv;
+
+layout(location = 0) out vec4 B_GIn_Light;
 
 vec3 GetLightColorApportation()
 {
@@ -28,11 +33,11 @@ void main()
     if (B_SampleReceivesLight())
     {
         vec3 lightApport = GetLightColorApportation();
-        B_GIn_Color = vec4(lightApport, 0);
+        B_GIn_Light = vec4(lightApport, 1);
     }
     else
     {
-        B_GIn_Color = vec4(0);
+        B_GIn_Light = vec4(0);
     }
 }
 

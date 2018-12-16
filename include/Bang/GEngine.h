@@ -68,9 +68,7 @@ public:
     void BlurTexture(Texture2D *inputTexture,
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
-                     int blurRadius,
-                     bool clearAuxiliarTexture = false,
-                     bool clearBlurredTexture = false) const;
+                     int blurRadius) const;
     void BlurTextureCM(TextureCubeMap *inputTextureCM,
                        TextureCubeMap *auxiliarTextureCM,
                        TextureCubeMap *blurredOutputTextureCM,

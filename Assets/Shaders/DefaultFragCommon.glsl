@@ -21,8 +21,9 @@ in vec2 B_FIn_AlbedoUv;
 #elif defined(BANG_DEFERRED_RENDERING)
     layout(location = 0) out vec4 B_GIn_Color;
     layout(location = 1) out vec4 B_GIn_Albedo;
-    layout(location = 2) out vec4 B_GIn_Normal;
-    layout(location = 3) out vec4 B_GIn_Misc;
+    layout(location = 2) out vec4 B_GIn_Light;
+    layout(location = 3) out vec4 B_GIn_Normal;
+    layout(location = 4) out vec4 B_GIn_Misc;
 #endif
 
 void DefaultFragCommonMain(vec4 albedoColor)
@@ -77,6 +78,7 @@ void DefaultFragCommonMain(vec4 albedoColor)
                             0);
     #endif
 
+    B_GIn_Light = vec4(0,0,0,0);
     B_GIn_Color = finalColor;
 }
 

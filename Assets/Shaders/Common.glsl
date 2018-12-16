@@ -59,12 +59,12 @@ uniform bool      B_HasAlbedoTexture;
 uniform bool B_ReceivesShadows;
 //////////////////////////////////////////
 
-
 // GBuffer textures //////////////////////
-uniform sampler2D B_GTex_Normal;
-uniform sampler2D B_GTex_AlbedoColor;
-uniform sampler2D B_GTex_Misc;
 uniform sampler2D B_GTex_Color;
+uniform sampler2D B_GTex_AlbedoColor;
+uniform sampler2D B_GTex_Light;
+uniform sampler2D B_GTex_Normal;
+uniform sampler2D B_GTex_Misc;
 uniform sampler2D B_GTex_DepthStencil;
 // ///////////////////////////////////////
 
@@ -124,6 +124,10 @@ vec3  B_SampleNormal(vec2 uv)
 vec4  B_SampleAlbedoColor(vec2 uv)
 {
     return texture(B_GTex_AlbedoColor, uv);
+}
+vec4  B_SampleLight(vec2 uv)
+{
+    return texture(B_GTex_Light, uv);
 }
 bool  B_SampleReceivesLight (vec2 uv)
 {

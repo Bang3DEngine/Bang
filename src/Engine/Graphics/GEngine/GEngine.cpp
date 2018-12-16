@@ -296,6 +296,11 @@ void SetDrawBuffersToClearFromFlags(GBuffer *gbuffer, RenderFlags renderFlags)
         clearAttachments.PushBack(GBuffer::AttAlbedo);
     }
 
+    if (renderFlags.IsOn(RenderFlag::CLEAR_LIGHT))
+    {
+        clearAttachments.PushBack(GBuffer::AttLight);
+    }
+
     if (renderFlags.IsOn(RenderFlag::CLEAR_COLOR))
     {
         clearAttachments.PushBack(GBuffer::AttColor);
@@ -414,6 +419,11 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             gbuffer->SetColorDrawBuffer();
             RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
         }
+
+        gbuffer->SetColorDrawBuffer();
+        GL::Enable(GL::Enablable::BLEND);
+        GL::BlendFunc(GL::BlendFactor::ONE, GL::BlendFactor::ONE);
+        RenderTexture(gbuffer->GetAttachmentTex2D(GBuffer::AttLight));
     }
 
     // Enable blend for transparent stuff from now on
@@ -500,7 +510,8 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
         float sum = 0.0f;
         for (int i = -blurRadius; i <= blurRadius; ++i)
         {
-            float k = Math::Exp(-0.5 * Math::Pow(float(i), 2.0f) / 3.0f);
+            float k =
+                Math::Exp(-0.5 * Math::Pow(Math::Abs(float(i)), 2.0f) / 3.0f);
             blurKernel.PushBack(k);
             sum += blurKernel.Back();
         }
@@ -516,9 +527,7 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
 void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
-                          int blurRadius,
-                          bool clearAuxiliarTexture,
-                          bool clearBlurredTexture) const
+                          int blurRadius) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -548,20 +557,12 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     p_separableBlurSP.Get()->SetBool("B_BlurInX", true);
     p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", inputTexture);
     m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
-    if (clearAuxiliarTexture)
-    {
-        GL::ClearColorBuffer(Color::Zero());
-    }
     GEngine::GetInstance()->RenderViewportPlane();
 
     // Render blur Y
     p_separableBlurSP.Get()->SetBool("B_BlurInX", false);
     p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", auxiliarTexture);
     m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
-    if (clearBlurredTexture)
-    {
-        GL::ClearColorBuffer(Color::Zero());
-    }
     GEngine::GetInstance()->RenderViewportPlane();
 
     m_blurFramebuffer->UnBind();

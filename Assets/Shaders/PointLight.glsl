@@ -73,7 +73,6 @@ vec3 GetPointLightColorApportation(const vec3 lightPosWorld,
     vec3 L = normalize(lightPosWorld - pixelPosWorld);
     vec3 H = normalize(V + L);
 
-
     vec3 radiance = lightColor * intensityAtt;
 
     // Cook-Torrance BRDF

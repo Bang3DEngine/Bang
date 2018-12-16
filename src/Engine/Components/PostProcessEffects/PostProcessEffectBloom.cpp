@@ -73,15 +73,16 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
             m_bloomFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
             m_blurAuxiliarTexture.Get(),
             m_blurredBloomTexture.Get(),
-            GetBlurRadius(),
-            true,
-            true);
+            GetBlurRadius());
 
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
         sp->SetBool("B_ExtractingBrightPixels", false);
-        sp->SetTexture2D("B_SceneTexture",
+        sp->SetTexture2D("B_SceneColorTexture",
                          ge->GetActiveGBuffer()->GetDrawColorTexture());
+        sp->SetTexture2D(
+            "B_SceneLightTexture",
+            ge->GetActiveGBuffer()->GetAttachmentTex2D(GBuffer::AttLight));
         sp->SetTexture2D("B_BlurredBloomTexture", m_blurredBloomTexture.Get());
         ge->GetActiveGBuffer()->ApplyPass(sp, true);
 
@@ -143,7 +144,8 @@ void PostProcessEffectBloom::Reflect()
                                    "Brightness threshold",
                                    SetBrightnessThreshold,
                                    GetBrightnessThreshold,
-                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectBloom,
                                    "Blur radius",
@@ -151,9 +153,10 @@ void PostProcessEffectBloom::Reflect()
                                    GetBlurRadius,
                                    BANG_REFLECT_HINT_MIN_VALUE(0.0f));
 
-    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectBloom,
-                                   "Intensity",
-                                   SetIntensity,
-                                   GetIntensity,
-                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        PostProcessEffectBloom,
+        "Intensity",
+        SetIntensity,
+        GetIntensity,
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
 }

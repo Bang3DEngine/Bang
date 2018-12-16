@@ -17,11 +17,8 @@ class Texture2D;
 class GBuffer : public Framebuffer
 {
 public:
-    // NORMAL: (normal.x, normal.y, normal.z, 0)
-    // MISC:   (receivesLighting, roughness, metalness, ---)
-    //          If receivesLighting >  0 ---> receivesShadows
-    //          If receivesLighting <= 0 ---> not receivesShadows
     static const GL::Attachment AttColor;
+    static const GL::Attachment AttLight;
     static const GL::Attachment AttAlbedo;
     static const GL::Attachment AttNormal;
     static const GL::Attachment AttMisc;
@@ -45,6 +42,7 @@ public:
     void SetAllDrawBuffers() const override;
     void SetAllDrawBuffersExceptColor();
     void SetColorDrawBuffer();
+    void SetLightDrawBuffer();
     void SetHDR(bool hdr);
 
     bool GetHDR() const;
@@ -64,6 +62,7 @@ public:
     Texture2D *GetReadColorTexture() const;
 
     static String GetMiscTexName();
+    static String GetLightTexName();
     static String GetColorsTexName();
     static String GetAlbedoTexName();
     static String GetNormalsTexName();

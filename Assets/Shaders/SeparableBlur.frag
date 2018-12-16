@@ -67,5 +67,5 @@ void main()
         ++j;
     }
 
-    B_OutColor = vec4( vec3(meanColor.r, 0, 0), 1);
+    B_OutColor = meanColor.rgba;
 }

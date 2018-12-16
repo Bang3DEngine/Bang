@@ -336,6 +336,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
             gbuffer->SetColorDrawBuffer();
+            GL::ClearColorBuffer();
             m_renderSkySP.Get()->Bind();
             gbuffer->ApplyPass(m_renderSkySP.Get(), false);
 
@@ -515,7 +516,9 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
 void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
-                          int blurRadius) const
+                          int blurRadius,
+                          bool clearAuxiliarTexture,
+                          bool clearBlurredTexture) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -545,12 +548,20 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     p_separableBlurSP.Get()->SetBool("B_BlurInX", true);
     p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", inputTexture);
     m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+    if (clearAuxiliarTexture)
+    {
+        GL::ClearColorBuffer(Color::Zero());
+    }
     GEngine::GetInstance()->RenderViewportPlane();
 
     // Render blur Y
     p_separableBlurSP.Get()->SetBool("B_BlurInX", false);
     p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", auxiliarTexture);
     m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+    if (clearBlurredTexture)
+    {
+        GL::ClearColorBuffer(Color::Zero());
+    }
     GEngine::GetInstance()->RenderViewportPlane();
 
     m_blurFramebuffer->UnBind();

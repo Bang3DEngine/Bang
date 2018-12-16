@@ -79,12 +79,10 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
     GL::Push(GL::Pushable::CULL_FACE);
-    GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::STENCIL_STATES);
     PushDrawAttachments();
 
     GL::SetStencilOp(GL::StencilOperation::KEEP);  // Dont modify stencil
-    GL::Disable(GL::Enablable::BLEND);
     GL::Disable(GL::Enablable::CULL_FACE);
 
     BindAttachmentsForReading(sp);
@@ -94,7 +92,6 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 
     PopDrawAttachments();
     GL::Pop(GL::Pushable::STENCIL_STATES);
-    GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::Pushable::CULL_FACE);
 }
 
@@ -125,7 +122,12 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
         PingPongColorBuffers();
     }
 
+    GL::Push(GL::Pushable::BLEND_STATES);
+
+    GL::Disable(GL::Enablable::BLEND);
     ApplyPass_(sp, mask);
+
+    GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 bool GBuffer::Resize(const Vector2i &size)

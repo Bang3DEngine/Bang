@@ -207,6 +207,7 @@ Camera *GameObjectFactory::CreateDefaultCameraInto(GameObject *go)
 {
     Camera *cam = go->AddComponent<Camera>();
     go->AddComponent<AudioListener>();
+    cam->SetHDR(true);
     return CreateDefaultCameraInto(cam);
 }
 

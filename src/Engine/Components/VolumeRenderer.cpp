@@ -228,7 +228,7 @@ void VolumeRenderer::OnRender()
 
         sp->SetTexture2D(
             "B_CubeBackFacesColor",
-            m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor0));
+            m_cubeBackFacesGBuffer->GetAttachmentTex2D(GBuffer::AttColor));
 
         sp->SetTexture3D("B_Texture3D", GetVolumeTexture());
 

@@ -89,7 +89,7 @@ void UIRendererCacher::OnRender(RenderPass renderPass)
             p_cacheFramebuffer->Resize(gbuffer->GetWidth(),
                                        gbuffer->GetHeight());
 
-            GL::ReadBuffer(gbuffer->GetLastDrawnColorAttachment());
+            GL::ReadBuffer(GBuffer::AttColor);
             GL::DrawBuffers({GL::Attachment::COLOR0});
             GL::ClearColorStencilDepthBuffers();
 

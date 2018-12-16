@@ -120,19 +120,19 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
                                                     cam);
         }
 
-#define __GET_TEX(CubeMapDir)                        \
+#define BANG_GET_TEX(CubeMapDir)                     \
     GetCameras()[GL::GetCubeMapDirIndex(CubeMapDir)] \
         ->GetGBuffer()                               \
-        ->GetLastDrawnColorTexture()
+        ->GetDrawColorTexture()
 
         GEngine::GetInstance()->FillCubeMapFromTextures(
             GetTextureCubeMapWithoutFiltering(),
-            __GET_TEX(GL::CubeMapDir::TOP),
-            __GET_TEX(GL::CubeMapDir::BOT),
-            __GET_TEX(GL::CubeMapDir::LEFT),
-            __GET_TEX(GL::CubeMapDir::RIGHT),
-            __GET_TEX(GL::CubeMapDir::FRONT),
-            __GET_TEX(GL::CubeMapDir::BACK));
+            BANG_GET_TEX(GL::CubeMapDir::TOP),
+            BANG_GET_TEX(GL::CubeMapDir::BOT),
+            BANG_GET_TEX(GL::CubeMapDir::LEFT),
+            BANG_GET_TEX(GL::CubeMapDir::RIGHT),
+            BANG_GET_TEX(GL::CubeMapDir::FRONT),
+            BANG_GET_TEX(GL::CubeMapDir::BACK));
 
         if (GetFilterForIBL())
         {
@@ -147,7 +147,7 @@ void ReflectionProbe::RenderReflectionProbe(bool force)
         m_lastRenderTime = Time::GetNow();
     }
 
-#undef __GET_TEX
+#undef BANG_GET_TEX
 }
 
 void ReflectionProbe::SetRenderSize(int size)

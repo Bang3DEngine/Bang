@@ -61,6 +61,7 @@ Camera::Camera()
     m_gbuffer = new GBuffer(1, 1);
 
     SetSkyBoxTexture(TextureFactory::GetDefaultSkybox());
+    SetHDR(true);
 }
 
 Camera::~Camera()
@@ -283,6 +284,16 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
 void Camera::SetClearMode(CameraClearMode clearMode)
 {
     m_clearMode = clearMode;
+}
+
+void Camera::SetHDR(bool hdr)
+{
+    GetGBuffer()->SetHDR(hdr);
+}
+
+bool Camera::GetHDR() const
+{
+    return GetGBuffer()->GetHDR();
 }
 
 const Color &Camera::GetClearColor() const

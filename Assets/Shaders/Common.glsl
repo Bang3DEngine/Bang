@@ -241,6 +241,11 @@ float Map01(float x, float minX, float maxX)
     return (x-minX) / (maxX-minX);
 }
 
+float Brightness(vec3 color)
+{
+    return dot(color, vec3(0.2126, 0.7152, 0.0722));
+}
+
 vec3 B_ComputeWorldPosition()
 {
     return B_ComputeWorldPosition( B_SampleDepth() );

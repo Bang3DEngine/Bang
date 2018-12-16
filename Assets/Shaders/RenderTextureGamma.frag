@@ -1,5 +1,4 @@
 #define BANG_FRAGMENT
-#include "Common.glsl"
 
 uniform float B_GammaCorrection;
 uniform sampler2D B_RenderTexture_Texture;
@@ -15,5 +14,5 @@ void main()
 
     float gammaCorrection = B_GammaCorrection;
     vec3 gammaCorrectedColor = pow(color.rgb, vec3(gammaCorrection));
-    gl_FragColor = vec4(gammaCorrectedColor, 1);
+    B_GIn_Color = vec4(gammaCorrectedColor, 1);
 }

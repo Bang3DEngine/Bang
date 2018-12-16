@@ -20,6 +20,7 @@
 #include "Bang/ParticleSystem.h"
 #include "Bang/PointLight.h"
 #include "Bang/PostProcessEffect.h"
+#include "Bang/PostProcessEffectBloom.h"
 #include "Bang/PostProcessEffectSSAO.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
@@ -88,6 +89,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, UIHorizontalLayout);
     CREATE_COMPONENT(componentClassName, SkinnedMeshRenderer);
     CREATE_COMPONENT(componentClassName, PostProcessEffectSSAO);
+    CREATE_COMPONENT(componentClassName, PostProcessEffectBloom);
 
     Debug_Warn("Please register class '" << componentClassName
                                          << "' in "

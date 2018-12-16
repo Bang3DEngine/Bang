@@ -21,6 +21,7 @@
 #include "Bang/ParticleSystem.h"
 #include "Bang/PointLight.h"
 #include "Bang/PostProcessEffect.h"
+#include "Bang/PostProcessEffectBloom.h"
 #include "Bang/PostProcessEffectSSAO.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
@@ -124,6 +125,7 @@ void RegisterObjectClasses()
     REGISTER_OBJECT_CLASS(PointLight);
     REGISTER_OBJECT_CLASS(PostProcessEffect);
     REGISTER_OBJECT_CLASS(PostProcessEffectSSAO);
+    REGISTER_OBJECT_CLASS(PostProcessEffectBloom);
     REGISTER_OBJECT_CLASS(Transform);
     REGISTER_OBJECT_CLASS(RectTransform);
     REGISTER_OBJECT_CLASS(RigidBody);

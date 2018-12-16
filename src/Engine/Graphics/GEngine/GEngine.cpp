@@ -298,8 +298,7 @@ void SetDrawBuffersToClearFromFlags(GBuffer *gbuffer, RenderFlags renderFlags)
 
     if (renderFlags.IsOn(RenderFlag::CLEAR_COLOR))
     {
-        clearAttachments.PushBack(GBuffer::AttColor0);
-        clearAttachments.PushBack(GBuffer::AttColor1);
+        clearAttachments.PushBack(GBuffer::AttColor);
     }
 
     if (renderFlags.IsOn(RenderFlag::CLEAR_MISC))
@@ -323,8 +322,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         SetDrawBuffersToClearFromFlags(gbuffer, renderFlags);
         Array<GL::Attachment> currentDrawAttachments =
             gbuffer->GetCurrentDrawAttachments();
-        currentDrawAttachments.Remove(GBuffer::AttColor0);
-        currentDrawAttachments.Remove(GBuffer::AttColor1);
+        currentDrawAttachments.Remove(GBuffer::AttColor);
 
         if (currentDrawAttachments.Size() > 0)
         {
@@ -656,20 +654,23 @@ void GEngine::RenderViewportRect(ShaderProgram *sp, const AARect &destRectMask)
 
 void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 {
+    GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     gbuffer->Bind();
 
+    GL::Disable(GL::Enablable::BLEND);
+
     ShaderProgram *sp = p_renderTextureToViewportGammaSP.Get();
     sp->Bind();
     sp->SetFloat("B_GammaCorrection", gammaCorrection, false);
-    sp->SetTexture2D(
-        "B_RenderTexture_Texture", gbuffer->GetLastDrawnColorTexture(), false);
+    sp->SetTexture2D("B_RenderTexture_Texture", gbuffer->GetDrawColorTexture());
     gbuffer->ApplyPass(p_renderTextureToViewportGammaSP.Get(), true);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+    GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)
@@ -697,17 +698,6 @@ void GEngine::RenderTexture(Texture2D *texture)
 void GEngine::RenderTexture(Texture2D *texture, float gammaCorrection)
 {
     RenderTexture_(texture, gammaCorrection);
-}
-
-void GEngine::RenderWithAllPasses(GameObject *go)
-{
-    RenderWithPass(go, RenderPass::SCENE);
-    RenderTransparentPass(go);
-    RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
-    RenderWithPass(go, RenderPass::CANVAS);
-    RenderWithPass(go, RenderPass::CANVAS_POSTPROCESS);
-    RenderWithPass(go, RenderPass::OVERLAY);
-    RenderWithPass(go, RenderPass::OVERLAY_POSTPROCESS);
 }
 
 void GEngine::RenderTransparentPass(GameObject *go)

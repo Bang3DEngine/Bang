@@ -31,11 +31,14 @@ void Texture2D::OnFormatChanged()
 {
     Texture::OnFormatChanged();
 
-    if (GetWidth() >= 1 && GetHeight() >= 1 && GetResourceFilepath().IsFile())
+    if (GetWidth() >= 1 && GetHeight() >= 1)
     {
-        Image img;
-        ImageIO::Import(GetResourceFilepath(), &img);
-        Import(img);
+        if (GetResourceFilepath().IsFile())
+        {
+            Image img;
+            ImageIO::Import(GetResourceFilepath(), &img);
+            Import(img);
+        }
     }
 }
 

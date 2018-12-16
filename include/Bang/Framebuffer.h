@@ -51,7 +51,7 @@ public:
               const AARect &ndcRect = AARect::NDCRect(),
               GL::BufferBit bufferBit = GL::BufferBit::COLOR);
     Color ReadColor(int x, int y, GL::Attachment attachment) const;
-    bool Resize(const Vector2i &size);
+    virtual bool Resize(const Vector2i &size);
     bool Resize(int width, int height);
 
     int GetWidth() const;

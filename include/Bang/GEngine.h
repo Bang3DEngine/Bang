@@ -144,7 +144,6 @@ private:
     void RenderShadowMaps(GameObject *go);
     void RenderTexture_(Texture2D *texture, float gammaCorrection);
     void RenderReflectionProbes(GameObject *go);
-    void RenderWithAllPasses(GameObject *go);
     void RenderTransparentPass(GameObject *go);
     void RenderWithPassAndMarkStencilForLights(GameObject *go,
                                                RenderPass renderPass);

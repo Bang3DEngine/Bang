@@ -73,7 +73,9 @@ public:
     void SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
                           bool createFilteredCubeMapsForIBL = true);
     void SetClearMode(CameraClearMode clearMode);
+    void SetHDR(bool hdr);
 
+    bool GetHDR() const;
     const Color &GetClearColor() const;
     float GetAspectRatio() const;
     float GetOrthoWidth() const;

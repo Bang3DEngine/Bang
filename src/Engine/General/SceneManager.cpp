@@ -97,7 +97,7 @@ void SceneManager::Render()
         {
             camera->SetRenderSize(Window::GetActive()->GetSize());
             ge->Render(activeScene, camera);
-            ge->RenderTexture(camera->GetGBuffer()->GetLastDrawnColorTexture());
+            ge->RenderTexture(camera->GetGBuffer()->GetDrawColorTexture());
         }
         else
         {

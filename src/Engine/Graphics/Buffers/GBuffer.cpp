@@ -13,11 +13,10 @@
 
 using namespace Bang;
 
-const GL::Attachment GBuffer::AttColor0 = GL::Attachment::COLOR0;
-const GL::Attachment GBuffer::AttColor1 = GL::Attachment::COLOR1;
-const GL::Attachment GBuffer::AttAlbedo = GL::Attachment::COLOR2;
-const GL::Attachment GBuffer::AttNormal = GL::Attachment::COLOR3;
-const GL::Attachment GBuffer::AttMisc = GL::Attachment::COLOR4;
+const GL::Attachment GBuffer::AttColor = GL::Attachment::COLOR0;
+const GL::Attachment GBuffer::AttAlbedo = GL::Attachment::COLOR1;
+const GL::Attachment GBuffer::AttNormal = GL::Attachment::COLOR2;
+const GL::Attachment GBuffer::AttMisc = GL::Attachment::COLOR3;
 const GL::Attachment GBuffer::AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
 
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
@@ -36,17 +35,22 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
         depthStencilTex->CreateEmpty(width, height);
     }
 
+    // Create color textures
+    m_colorTexture0 = Resources::Create<Texture2D>();
+    m_colorTexture1 = Resources::Create<Texture2D>();
+    p_drawColorTexture = GetColorTexture0();
+    p_readColorTexture = GetColorTexture1();
+
     // Create attachments
     Bind();
-    CreateAttachmentTex2D(GBuffer::AttColor0, GL::ColorFormat::RGBA8);
-    CreateAttachmentTex2D(GBuffer::AttColor1, GL::ColorFormat::RGBA8);
+    SetAttachmentTexture(GetColorTexture0(), GBuffer::AttColor);
     CreateAttachmentTex2D(GBuffer::AttAlbedo, GL::ColorFormat::RGBA8);
     CreateAttachmentTex2D(GBuffer::AttNormal, GL::ColorFormat::RGB10_A2);
     CreateAttachmentTex2D(GBuffer::AttMisc, GL::ColorFormat::RGB10_A2);
     SetSceneDepthStencil();
     UnBind();
 
-    m_drawColorAttachment = m_readColorAttachment = GBuffer::AttColor0;
+    SetHDR(true);
 }
 
 GBuffer::~GBuffer()
@@ -65,14 +69,13 @@ void GBuffer::BindAttachmentsForReading(ShaderProgram *sp)
                      false);
     sp->SetTexture2D(
         GBuffer::GetMiscTexName(), GetAttachmentTex2D(GBuffer::AttMisc), false);
-    sp->SetTexture2D(GBuffer::GetColorsTexName(),
-                     GetAttachmentTex2D(m_readColorAttachment),
-                     false);
+    sp->SetTexture2D(GBuffer::GetColorsTexName(), GetReadColorTexture(), false);
     sp->SetTexture2D(GBuffer::GetDepthStencilTexName(),
                      GetAttachmentTex2D(GBuffer::AttDepthStencil),
                      false);
 }
 
+#include "Bang/TextureFactory.h"
 void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
 {
     GL::Push(GL::Pushable::CULL_FACE);
@@ -82,11 +85,11 @@ void GBuffer::ApplyPass_(ShaderProgram *sp, const AARect &mask)
     GL::SetStencilOp(GL::StencilOperation::KEEP);  // Dont modify stencil
 
     BindAttachmentsForReading(sp);
+
     SetColorDrawBuffer();
     GL::Disable(GL::Enablable::CULL_FACE);
     GEngine::GetInstance()->RenderViewportRect(sp, mask);  // Render rect!
 
-    PopDrawAttachments();
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::Pushable::STENCIL_STATES);
     GL::Pop(GL::Pushable::CULL_FACE);
@@ -120,14 +123,20 @@ void GBuffer::ApplyPass(ShaderProgram *sp,
     }
 
     ApplyPass_(sp, mask);
+}
 
-    // We want to read from the updated drawn buffer from now on ;)
-    m_readColorAttachment = m_drawColorAttachment;
+bool GBuffer::Resize(const Vector2i &size)
+{
+    bool resized = false;
+    resized |= Framebuffer::Resize(size);
+    resized |= GetColorTexture0()->Resize(size);
+    resized |= GetColorTexture1()->Resize(size);
+    return resized;
 }
 
 void GBuffer::SetAllDrawBuffers() const
 {
-    SetDrawBuffers({{m_drawColorAttachment,
+    SetDrawBuffers({{GBuffer::AttColor,
                      GBuffer::AttAlbedo,
                      GBuffer::AttNormal,
                      GBuffer::AttMisc}});
@@ -141,7 +150,22 @@ void GBuffer::SetAllDrawBuffersExceptColor()
 
 void GBuffer::SetColorDrawBuffer()
 {
-    SetDrawBuffers({m_drawColorAttachment});
+    SetDrawBuffers({GBuffer::AttColor});
+}
+
+void GBuffer::SetHDR(bool hdr)
+{
+    m_hdr = hdr;
+
+    GL::ColorFormat colorFormat =
+        (GetHDR() ? GL::ColorFormat::RGBA16F : GL::ColorFormat::RGBA8);
+    m_colorTexture0.Get()->SetFormat(colorFormat);
+    m_colorTexture1.Get()->SetFormat(colorFormat);
+}
+
+bool GBuffer::GetHDR() const
+{
+    return m_hdr;
 }
 
 void GBuffer::SetDepthStencilTexture(Texture2D *depthStencilTexture)
@@ -151,20 +175,10 @@ void GBuffer::SetDepthStencilTexture(Texture2D *depthStencilTexture)
         SetAttachmentTexture(depthStencilTexture, GBuffer::AttDepthStencil);
         if (GetWidth() > 0 && GetHeight() > 0)
         {
-            Resize(GetWidth(), GetHeight());
+            Resize(Vector2i(GetWidth(), GetHeight()));
         }
         p_currentDepthStencilTexture.Set(depthStencilTexture);
     }
-}
-
-GL::Attachment GBuffer::GetLastDrawnColorAttachment() const
-{
-    return m_drawColorAttachment;
-}
-
-Texture2D *GBuffer::GetLastDrawnColorTexture() const
-{
-    return GetAttachmentTex2D(GetLastDrawnColorAttachment());
 }
 
 Texture2D *GBuffer::GetSceneDepthStencilTexture() const
@@ -208,6 +222,26 @@ Texture2D *GBuffer::GetDepthStencilTexture() const
     return p_currentDepthStencilTexture.Get();
 }
 
+Texture2D *GBuffer::GetColorTexture0() const
+{
+    return m_colorTexture0.Get();
+}
+
+Texture2D *GBuffer::GetColorTexture1() const
+{
+    return m_colorTexture1.Get();
+}
+
+Texture2D *GBuffer::GetDrawColorTexture() const
+{
+    return p_drawColorTexture;
+}
+
+Texture2D *GBuffer::GetReadColorTexture() const
+{
+    return p_readColorTexture;
+}
+
 String GBuffer::GetMiscTexName()
 {
     return "B_GTex_Misc";
@@ -231,9 +265,8 @@ String GBuffer::GetDepthStencilTexName()
 
 void GBuffer::PingPongColorBuffers()
 {
-    m_readColorAttachment = m_drawColorAttachment;
-    m_drawColorAttachment =
-        (m_readColorAttachment == GBuffer::AttColor0 ? GBuffer::AttColor1
-                                                     : GBuffer::AttColor0);
-    ASSERT(m_drawColorAttachment != m_readColorAttachment);
+    std::swap(p_readColorTexture, p_drawColorTexture);
+
+    SetAttachmentTexture(GetDrawColorTexture(), GBuffer::AttColor);
+    ASSERT(GetDrawColorTexture() != GetReadColorTexture());
 }

@@ -25,6 +25,7 @@ public:
     float GetIntensity() const;
     uint GetBlurRadius() const;
     float GetBrightnessThreshold() const;
+    Texture2D *GetFinalBloomTexture() const;
     ShaderProgram *GetBloomShaderProgram() const;
 
     // IReflectable

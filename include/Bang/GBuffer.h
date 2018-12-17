@@ -18,8 +18,8 @@ class GBuffer : public Framebuffer
 {
 public:
     static const GL::Attachment AttColor;
-    static const GL::Attachment AttLight;
     static const GL::Attachment AttAlbedo;
+    static const GL::Attachment AttLight;
     static const GL::Attachment AttNormal;
     static const GL::Attachment AttMisc;
     static const GL::Attachment AttDepthStencil;

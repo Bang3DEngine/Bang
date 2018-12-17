@@ -46,7 +46,7 @@ void PostProcessEffect::OnRender(RenderPass renderPass)
 bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
 {
     // Only render if its gameObject contains the active camera
-    // Camera *activeSceneCamera = GetGameObject()->GetScene()->GetCamera();
+    // Camera *activeSceneCamera = Camera::GetActive();
     // if (GetGameObject()->GetComponents().Contains(activeSceneCamera))
     {
         switch (GetType())

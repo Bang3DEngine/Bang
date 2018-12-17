@@ -426,6 +426,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         GL::Enable(GL::Enablable::BLEND);
         GL::BlendFunc(GL::BlendFactor::ONE, GL::BlendFactor::ONE);
         RenderTexture(gbuffer->GetAttachmentTex2D(GBuffer::AttLight));
+        GL::Disable(GL::Enablable::BLEND);
     }
 
     // Enable blend for transparent stuff from now on
@@ -509,13 +510,17 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
 {
     Array<float> blurKernel;
     {
-        float sum = 0.0f;
-        for (int i = -blurRadius; i <= blurRadius; ++i)
+        // intialising standard deviation to 1.0
+        const float sigma = blurRadius;
+        const float s = 2.0 * sigma * sigma;
+
+        float sum = 0.0;
+        for (int i = -blurRadius; i <= blurRadius; i++)
         {
-            float k =
-                Math::Exp(-0.5 * Math::Pow(Math::Abs(float(i)), 2.0f) / 3.0f);
-            blurKernel.PushBack(k);
-            sum += blurKernel.Back();
+            const float r = sqrt(i * i + i * i);
+            const float value = Math::Exp(-(r * r) / s) / (Math::Pi * s);
+            blurKernel.PushBack(value);
+            sum += value;
         }
 
         for (uint i = 0; i < blurKernel.Size(); ++i)

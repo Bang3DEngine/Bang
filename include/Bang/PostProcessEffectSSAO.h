@@ -56,7 +56,7 @@ private:
     float m_ssaoRadius = -1;
     int m_blurRadius = -1;
     int m_numAxes = -1;
-    bool m_separable = false;
+    bool m_separable = true;
     int m_numRandomOffsetsHemisphere = -1;
     bool m_bilateralBlurEnabled = true;
     Vector2 m_fbSize = Vector2::One();

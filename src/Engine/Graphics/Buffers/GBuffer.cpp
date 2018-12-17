@@ -41,12 +41,14 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     m_colorTexture1 = Resources::Create<Texture2D>();
     p_drawColorTexture = GetColorTexture0();
     p_readColorTexture = GetColorTexture1();
+    GetColorTexture0()->SetFormat(GL::ColorFormat::RGBA8);
+    GetColorTexture1()->SetFormat(GL::ColorFormat::RGBA8);
 
     // Create attachments
     Bind();
     SetAttachmentTexture(GetColorTexture0(), GBuffer::AttColor);
     CreateAttachmentTex2D(GBuffer::AttAlbedo, GL::ColorFormat::RGBA8);
-    CreateAttachmentTex2D(GBuffer::AttLight, GL::ColorFormat::RGBA8);
+    CreateAttachmentTex2D(GBuffer::AttLight, GL::ColorFormat::RGBA16F);
     CreateAttachmentTex2D(GBuffer::AttNormal, GL::ColorFormat::RGB10_A2);
     CreateAttachmentTex2D(GBuffer::AttMisc, GL::ColorFormat::RGB10_A2);
     SetSceneDepthStencil();
@@ -174,10 +176,9 @@ void GBuffer::SetHDR(bool hdr)
 {
     m_hdr = hdr;
 
-    GL::ColorFormat colorFormat =
+    GL::ColorFormat lightFormat =
         (GetHDR() ? GL::ColorFormat::RGBA16F : GL::ColorFormat::RGBA8);
-    m_colorTexture0.Get()->SetFormat(colorFormat);
-    m_colorTexture1.Get()->SetFormat(colorFormat);
+    GetAttachmentTex2D(GBuffer::AttLight)->SetFormat(lightFormat);
 }
 
 bool GBuffer::GetHDR() const

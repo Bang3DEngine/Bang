@@ -161,6 +161,7 @@ void Light::RenderShadowMaps(GameObject *go)
 
 void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 {
+    GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::BLEND_STATES);
 
@@ -183,6 +184,7 @@ void Light::ApplyLight(Camera *camera, const AARect &renderRect) const
 
     GL::Pop(GL::Pushable::BLEND_STATES);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+    GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 }
 
 void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const

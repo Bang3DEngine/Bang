@@ -129,7 +129,6 @@ void PointLight::Reflect()
                                        BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 }
 
-#include "Bang/Input.h"
 void PointLight::RenderShadowMaps_(GameObject *go)
 {
     GL::Push(GL::Pushable::VIEWPORT);

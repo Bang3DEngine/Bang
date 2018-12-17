@@ -62,6 +62,9 @@ public:
 
     static void SetRendererUniforms(Renderer *renderer, ShaderProgram *sp);
 
+    // IReflectable
+    virtual void Reflect() override;
+
     // ICloneable
     virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 

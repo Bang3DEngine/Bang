@@ -44,12 +44,8 @@ public:
     const Vector2 &GetFBSize() const;
     Texture2D *GetSSAOTexture() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
-
-    // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
+    // IReflectable
+    virtual void Reflect() override;
 
 private:
     float m_ssaoIntensity = 1.0f;

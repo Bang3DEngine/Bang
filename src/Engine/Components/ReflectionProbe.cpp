@@ -5,6 +5,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
 #include "Bang/CubeMapIBLGenerator.h"
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
@@ -367,6 +368,54 @@ void ReflectionProbe::SetRendererUniforms(Renderer *renderer, ShaderProgram *sp)
                               TextureFactory::GetWhiteTextureCubeMap(),
                               false);
     }
+}
+
+void ReflectionProbe::Reflect()
+{
+    Component::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(ReflectionProbe,
+                                   "Size",
+                                   SetSize,
+                                   GetSize,
+                                   BANG_REFLECT_HINT_MIN_VALUE(Vector2i(0)));
+    BANG_REFLECT_VAR_MEMBER_HINTED(ReflectionProbe,
+                                   "Render Size",
+                                   SetRenderSize,
+                                   GetRenderSize,
+                                   BANG_REFLECT_HINT_MIN_VALUE(Vector2i(0)));
+    BANG_REFLECT_VAR_MEMBER(
+        ReflectionProbe, "Filter for IBL", SetFilterForIBL, GetFilterForIBL);
+    ReflectVar<float>("Rest time",
+                      [this](float seconds) { SetRestTimeSeconds(seconds); },
+                      [this]() { return GetRestTime().GetSeconds(); },
+                      BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+
+    BANG_REFLECT_VAR_MEMBER(
+        ReflectionProbe, "Is Boxed", SetIsBoxed, GetIsBoxed);
+    BANG_REFLECT_VAR_MEMBER(
+        ReflectionProbe, "ZNear", SetCamerasZNear, GetCamerasZNear);
+    BANG_REFLECT_VAR_MEMBER(
+        ReflectionProbe, "ZFar", SetCamerasZFar, GetCamerasZFar);
+    BANG_REFLECT_VAR_MEMBER(ReflectionProbe,
+                            "Clear mode",
+                            SetCamerasClearMode,
+                            GetCamerasClearMode);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Clear mode", "Color", CameraClearMode::COLOR);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Clear mode", "SkyBox", CameraClearMode::SKY_BOX);
+    BANG_REFLECT_VAR_MEMBER(ReflectionProbe,
+                            "Clear color",
+                            SetCamerasClearColor,
+                            GetCamerasClearColor);
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        ReflectionProbe,
+        "Skybox texture",
+        SetCamerasSkyBoxTexture,
+        GetCamerasSkyBoxTexture,
+        TextureCubeMap,
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetTextureCubeMapExtension()));
 }
 
 TextureCubeMap *ReflectionProbe::GetTextureCubeMapDiffuse() const

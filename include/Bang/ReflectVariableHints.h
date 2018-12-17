@@ -22,6 +22,7 @@ public:
     static const String KeyIsSlider;
     static const String KeyIsShown;
     static const String KeyIsEnum;
+    static const String KeyIsEnumFlags;
 
     ReflectVariableHints(const String &hintsString = "");
     ~ReflectVariableHints();
@@ -40,6 +41,7 @@ public:
     bool GetIsSlider() const;
     bool GetIsShown() const;
     bool GetIsEnum() const;
+    bool GetIsEnumFlags() const;
 
     String GetHintsString() const;
 
@@ -57,6 +59,7 @@ private:
     bool m_isSlider = false;
     bool m_isShown = true;
     bool m_isEnum = false;
+    bool m_isEnumFlags = false;
 };
 }
 

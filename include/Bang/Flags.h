@@ -76,22 +76,27 @@ public:
         return !IsOn(f);
     }
 
-    inline Flags operator|(Flag f)
+    explicit inline operator FlagsPrimitiveType() const
+    {
+        return SCAST<FlagsPrimitiveType>(GetValue());
+    }
+
+    inline Flags operator|(Flag f) const
     {
         return Flags(GetValue() | f);
     }
 
-    inline Flags operator~()
+    inline Flags operator~() const
     {
         return Flags(~GetValue());
     }
 
-    inline Flags operator&(Flag f)
+    inline Flags operator&(Flag f) const
     {
         return Flags(GetValue() & f);
     }
 
-    inline Flags operator^(Flag f)
+    inline Flags operator^(Flag f) const
     {
         return Flags(GetValue() ^ f);
     }

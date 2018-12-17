@@ -16,6 +16,7 @@ const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
 const String ReflectVariableHints::KeyIsShown = "IsShown";
 const String ReflectVariableHints::KeyIsEnum = "IsEnum";
+const String ReflectVariableHints::KeyIsEnumFlags = "IsEnumFlags";
 
 ReflectVariableHints::ReflectVariableHints(const String &hintsString)
 {
@@ -86,6 +87,10 @@ void ReflectVariableHints::Update(const String &hintsString)
             else if (keyStr == ReflectVariableHints::KeyIsEnum)
             {
                 m_isEnum = IsTrue(valueStr);
+            }
+            else if (keyStr == ReflectVariableHints::KeyIsEnumFlags)
+            {
+                m_isEnumFlags = IsTrue(valueStr);
             }
             else if (keyStr == ReflectVariableHints::KeyExtension)
             {
@@ -170,6 +175,11 @@ bool ReflectVariableHints::GetIsEnum() const
     return m_isEnum;
 }
 
+bool ReflectVariableHints::GetIsEnumFlags() const
+{
+    return m_isEnumFlags;
+}
+
 String ReflectVariableHints::GetHintsString() const
 {
     String hintsString = "";
@@ -192,6 +202,7 @@ String ReflectVariableHints::GetHintsString() const
     ADD_TO_HINTS_STRING(ZoomablePreview);
     ADD_TO_HINTS_STRING(IsShown);
     ADD_TO_HINTS_STRING(IsEnum);
+    ADD_TO_HINTS_STRING(IsEnumFlags);
 
 #undef ADD_TO_HINTS_STRING
 

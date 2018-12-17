@@ -12,11 +12,20 @@
     BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Setter, Getter, "")
 
 #define BANG_REFLECT_VAR_MEMBER_ENUM(Class, Name, Setter, Getter) \
-    ReflectVarMemberEnum(Name,                                    \
-                         &Class::Setter,                          \
-                         &Class::Getter,                          \
-                         this,                                    \
-                         BANG_REFLECT_HINT_ENUM(true));
+    ReflectVarMember(Name,                                        \
+                     &Class::Setter,                              \
+                     &Class::Getter,                              \
+                     this,                                        \
+                     BANG_REFLECT_HINT_ENUM(true));
+#define BANG_REFLECT_VAR_MEMBER_ENUM_FLAGS(Class, Name, Setter, Getter) \
+    ReflectVar<FlagsPrimitiveType>(                                     \
+        Name,                                                           \
+        [this](FlagsPrimitiveType x) {                                  \
+            Setter(SCAST<FlagsPrimitiveType>(x));                       \
+        },                                                              \
+        [this]() { return SCAST<FlagsPrimitiveType>(Getter()); },       \
+        this,                                                           \
+        BANG_REFLECT_HINT_ENUM_FLAGS(true));
 
 #define BANG_REFLECT_VAR_MEMBER_RESOURCE(                                    \
     Class, Name, Setter, Getter, ResourceClass, Hints)                       \
@@ -34,9 +43,6 @@
         [=](bool) { ActionFunction(); },                 \
         []() { return true; },                           \
         BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsButton, true));
-
-#define BANG_REFLECT_HINT_ENUM_FIELD(enumName, enumFieldName) \
-    GetReflectStructPtr()->AddEnumField(enumName, enumFieldName)
 
 #define BANG_REFLECT_HINT_ENUM_FIELD_VALUE(   \
     enumName, enumFieldName, enumFieldValue)  \
@@ -79,5 +85,8 @@
 
 #define BANG_REFLECT_HINT_ENUM(trueOrFalse) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsEnum, trueOrFalse)
+#define BANG_REFLECT_HINT_ENUM_FLAGS(trueOrFalse)                     \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsEnumFlags, \
+                                trueOrFalse)
 
 #endif  // REFLECTMACROS_H

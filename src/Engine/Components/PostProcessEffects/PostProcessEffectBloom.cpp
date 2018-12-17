@@ -142,7 +142,11 @@ ShaderProgram *PostProcessEffectBloom::GetBloomShaderProgram() const
 
 void PostProcessEffectBloom::Reflect()
 {
-    Component::Reflect();
+    PostProcessEffect::Reflect();
+
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("PostProcess Shader")
+        ->SetHints(BANG_REFLECT_HINT_SHOWN(false));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectBloom,
                                    "Brightness threshold",

@@ -262,65 +262,45 @@ const RigidBodyConstraints &RigidBody::GetConstraints() const
     return m_constraints;
 }
 
-void RigidBody::CloneInto(ICloneable *clone, bool cloneGUID) const
+void RigidBody::Reflect()
 {
-    Component::CloneInto(clone, cloneGUID);
+    Component::Reflect();
 
-    RigidBody *rbClone = SCAST<RigidBody *>(clone);
-    rbClone->SetMass(GetMass());
-    rbClone->SetDrag(GetDrag());
-    rbClone->SetAngularDrag(GetAngularDrag());
-    rbClone->SetUseGravity(GetUseGravity());
-    rbClone->SetIsKinematic(GetIsKinematic());
-    rbClone->SetConstraints(GetConstraints());
-}
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        RigidBody, "Mass", SetMass, GetMass, BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        RigidBody, "Drag", SetDrag, GetDrag, BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(RigidBody,
+                                   "Angular Drag",
+                                   SetAngularDrag,
+                                   GetAngularDrag,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+    BANG_REFLECT_VAR_MEMBER(
+        RigidBody, "Use gravity", SetUseGravity, GetUseGravity);
+    BANG_REFLECT_VAR_MEMBER(
+        RigidBody, "Is kinematic", SetIsKinematic, GetIsKinematic);
 
-void RigidBody::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
+    // BANG_REFLECT_VAR_MEMBER_ENUM_FLAGS(
+    //     RigidBody, "Constraints", SetConstraints, GetConstraints);
 
-    if (metaNode.Contains("Mass"))
-    {
-        SetMass(metaNode.Get<float>("Mass"));
-    }
+    ReflectVarEnum<FlagsPrimitiveType>(
+        "Constraints",
+        [this](const FlagsPrimitiveType &x) { SetConstraints(x); },
+        [this]() { return SCAST<FlagsPrimitiveType>(GetConstraints()); },
+        BANG_REFLECT_HINT_ENUM_FLAGS(true));
 
-    if (metaNode.Contains("Drag"))
-    {
-        SetDrag(metaNode.Get<float>("Drag"));
-    }
-
-    if (metaNode.Contains("AngularDrag"))
-    {
-        SetAngularDrag(metaNode.Get<float>("AngularDrag"));
-    }
-
-    if (metaNode.Contains("UseGravity"))
-    {
-        SetUseGravity(metaNode.Get<bool>("UseGravity"));
-    }
-
-    if (metaNode.Contains("IsKinematic"))
-    {
-        SetIsKinematic(metaNode.Get<bool>("IsKinematic"));
-    }
-
-    if (metaNode.Contains("Constraints"))
-    {
-        SetConstraints(
-            SCAST<RigidBodyConstraints>(metaNode.Get<int>("Constraints")));
-    }
-}
-
-void RigidBody::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    metaNode->Set("Mass", GetMass());
-    metaNode->Set("Drag", GetDrag());
-    metaNode->Set("AngularDrag", GetAngularDrag());
-    metaNode->Set("UseGravity", GetUseGravity());
-    metaNode->Set("IsKinematic", GetIsKinematic());
-    metaNode->Set("Constraints", GetConstraints().GetValue());
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Position Lock X", RigidBodyConstraint::LOCK_POSITION_X);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Position Lock Y", RigidBodyConstraint::LOCK_POSITION_Y);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Position Lock Z", RigidBodyConstraint::LOCK_POSITION_Z);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Rotation Lock X", RigidBodyConstraint::LOCK_ROTATION_X);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Rotation Lock Y", RigidBodyConstraint::LOCK_ROTATION_Y);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Constraints", "Rotation Lock Z", RigidBodyConstraint::LOCK_ROTATION_Z);
 }
 
 void RigidBody::UpdatePxRigidActorValues()

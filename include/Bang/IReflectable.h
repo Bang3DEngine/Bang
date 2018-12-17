@@ -42,6 +42,11 @@ protected:
                                       TClass *instance,
                                       const String &hintsString = "");
 
+    template <class T>
+    ReflectVariable *ReflectVarEnum(const String &varName,
+                                    std::function<void(T)> setter,
+                                    std::function<T()> getter,
+                                    const String &hintsString = "");
     template <class TClass, class T>
     ReflectVariable *ReflectVarMemberEnum(const String &varName,
                                           void (TClass::*setter)(T),
@@ -112,6 +117,14 @@ ReflectVariable *IReflectable::ReflectVarMember(const String &varName,
             return SCAST<TToCastTo>((instance->*getter)());
         },
         hintsString);
+}
+template <class T>
+ReflectVariable *IReflectable::ReflectVarEnum(const String &varName,
+                                              std::function<void(T)> setter,
+                                              std::function<T()> getter,
+                                              const String &hintsString)
+{
+    return ReflectVar<T>(varName, setter, getter, hintsString);
 }
 template <class TClass, class T>
 ReflectVariable *IReflectable::ReflectVarMemberEnum(const String &varName,

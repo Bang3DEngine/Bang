@@ -5,6 +5,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Camera.h"
+#include "Bang/Extensions.h"
 #include "Bang/FastDynamicCast.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -113,47 +114,26 @@ Path PostProcessEffect::GetPostProcessShaderFilepath() const
                : Path();
 }
 
-void PostProcessEffect::CloneInto(ICloneable *clone, bool cloneGUID) const
+void PostProcessEffect::Reflect()
 {
-    Component::CloneInto(clone, cloneGUID);
-    PostProcessEffect *ppe = SCAST<PostProcessEffect *>(clone);
-    ppe->SetPostProcessShader(GetPostProcessShader());
-    ppe->SetType(GetType());
-    ppe->SetPriority(GetPriority());
-}
+    Component::Reflect();
 
-void PostProcessEffect::ImportMeta(const MetaNode &metaNode)
-{
-    Component::ImportMeta(metaNode);
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        PostProcessEffect,
+        "PostProcess Shader",
+        SetPostProcessShader,
+        GetPostProcessShader,
+        Shader,
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetShaderExtensions()));
 
-    if (metaNode.Contains("Priority"))
-    {
-        SetPriority(metaNode.Get<int>("Priority"));
-    }
+    BANG_REFLECT_VAR_MEMBER(
+        PostProcessEffect, "Priority", SetPriority, GetPriority);
 
-    if (metaNode.Contains("Type"))
-    {
-        SetType(metaNode.Get<Type>("Type"));
-    }
-
-    if (metaNode.Contains("PostProcessShader"))
-    {
-        GUID shaderGUID = metaNode.Get<GUID>("PostProcessShader");
-        RH<Shader> ppShader = Resources::Load<Shader>(shaderGUID);
-        SetPostProcessShader(ppShader.Get());
-    }
-}
-
-void PostProcessEffect::ExportMeta(MetaNode *metaNode) const
-{
-    Component::ExportMeta(metaNode);
-
-    if (GetPostProcessShader())
-    {
-        metaNode->Set("PostProcessShader", GetPostProcessShader()->GetGUID());
-    }
-    metaNode->Set("Priority", GetPriority());
-    metaNode->Set("Type", GetType());
+    BANG_REFLECT_VAR_MEMBER_ENUM(PostProcessEffect, "Type", SetType, GetType);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Type", "After Scene", PostProcessEffect::Type::AFTER_SCENE);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Type", "After Canvas", PostProcessEffect::Type::AFTER_CANVAS);
 }
 
 bool operator<(const PostProcessEffect &lhs, const PostProcessEffect &rhs)

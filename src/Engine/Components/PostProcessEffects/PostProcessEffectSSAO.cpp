@@ -317,78 +317,42 @@ Texture2D *PostProcessEffectSSAO::GetSSAOTexture() const
     return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0);
 }
 
-void PostProcessEffectSSAO::CloneInto(ICloneable *clone, bool cloneGUID) const
+void PostProcessEffectSSAO::Reflect()
 {
-    PostProcessEffect::CloneInto(clone, cloneGUID);
+    PostProcessEffect::Reflect();
 
-    PostProcessEffectSSAO *ppe = SCAST<PostProcessEffectSSAO *>(clone);
-    ppe->SetBilateralBlurEnabled(GetBilateralBlurEnabled());
-    ppe->SetBlurRadius(GetBlurRadius());
-    ppe->SetFBSize(GetFBSize());
-    ppe->SetNumRandomAxes(GetNumRandomAxes());
-    ppe->SetNumRandomSamples(GetNumRandomSamples());
-    ppe->SetSSAOIntensity(GetSSAOIntensity());
-    ppe->SetSSAORadius(GetSSAORadius());
-    ppe->SetSeparable(GetSeparable());
-}
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("PostProcess Shader")
+        ->SetHints(BANG_REFLECT_HINT_SHOWN(false));
 
-void PostProcessEffectSSAO::ImportMeta(const MetaNode &metaNode)
-{
-    PostProcessEffect::ImportMeta(metaNode);
+    BANG_REFLECT_VAR_MEMBER(PostProcessEffectSSAO,
+                            "Bilateral blur",
+                            SetBilateralBlurEnabled,
+                            GetBilateralBlurEnabled);
 
-    if (metaNode.Contains("BilateralBlur"))
-    {
-        SetBilateralBlurEnabled(metaNode.Get<bool>("BilateralBlur"));
-    }
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
+                                   "Intensity",
+                                   SetSSAOIntensity,
+                                   GetSSAOIntensity,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
 
-    if (metaNode.Contains("BlurRadius"))
-    {
-        SetBlurRadius(metaNode.Get<int>("BlurRadius"));
-    }
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
+                                   "Radius",
+                                   SetSSAORadius,
+                                   GetSSAORadius,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
 
-    if (metaNode.Contains("FBSize"))
-    {
-        SetFBSize(metaNode.Get<Vector2>("FBSize"));
-    }
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
+                                   "Blur radius",
+                                   SetBlurRadius,
+                                   GetBlurRadius,
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
 
-    if (metaNode.Contains("NumRandomAxes"))
-    {
-        SetNumRandomAxes(metaNode.Get<int>("NumRandomAxes"));
-    }
-
-    if (metaNode.Contains("NumRandomSamples"))
-    {
-        SetNumRandomSamples(metaNode.Get<int>("NumRandomSamples"));
-    }
-
-    if (metaNode.Contains("Intensity"))
-    {
-        SetSSAOIntensity(metaNode.Get<float>("Intensity"));
-    }
-
-    if (metaNode.Contains("Radius"))
-    {
-        SetSSAORadius(metaNode.Get<float>("Radius"));
-    }
-
-    if (metaNode.Contains("Separable"))
-    {
-        SetSeparable(metaNode.Get<bool>("Separable"));
-    }
-}
-
-void PostProcessEffectSSAO::ExportMeta(MetaNode *metaNode) const
-{
-    PostProcessEffect::ExportMeta(metaNode);
-
-    metaNode->Set("BilateralBlur", GetBilateralBlurEnabled());
-    metaNode->Set("BlurRadius", GetBlurRadius());
-    metaNode->Set("FBSize", GetFBSize());
-    metaNode->Set("NumRandomAxes", GetNumRandomAxes());
-    metaNode->Set("NumRandomSamples", GetNumRandomSamples());
-    metaNode->Set("Intensity", GetSSAOIntensity());
-    metaNode->Set("Radius", GetSSAORadius());
-    metaNode->Set("Separable", GetSeparable());
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
+                                   "Num samples",
+                                   SetNumRandomSamples,
+                                   GetNumRandomSamples,
+                                   BANG_REFLECT_HINT_MIN_VALUE(1.0f));
 }
 
 void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)

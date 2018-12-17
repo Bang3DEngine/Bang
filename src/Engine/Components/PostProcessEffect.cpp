@@ -129,7 +129,7 @@ void PostProcessEffect::Reflect()
     BANG_REFLECT_VAR_MEMBER(
         PostProcessEffect, "Priority", SetPriority, GetPriority);
 
-    BANG_REFLECT_VAR_MEMBER_ENUM(PostProcessEffect, "Type", SetType, GetType);
+    BANG_REFLECT_VAR_ENUM("Type", SetType, GetType, PostProcessEffect::Type);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Type", "After Scene", PostProcessEffect::Type::AFTER_SCENE);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(

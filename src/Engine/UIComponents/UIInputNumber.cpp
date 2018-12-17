@@ -63,6 +63,11 @@ void UIInputNumber::SetMaxValue(float max)
     SetValue(GetValue());
 }
 
+void UIInputNumber::SetBlocked(bool blocked)
+{
+    GetInputText()->SetBlocked(blocked);
+}
+
 void UIInputNumber::SetMinMaxValues(float min, float max)
 {
     SetMinValue(min);

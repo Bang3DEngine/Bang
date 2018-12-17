@@ -14,6 +14,8 @@ using namespace Bang;
 NavigationMesh::NavigationMesh()
 {
     CONSTRUCT_CLASS_ID(NavigationMesh);
+
+    SetNumCells(10);
 }
 
 NavigationMesh::~NavigationMesh()

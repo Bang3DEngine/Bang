@@ -40,7 +40,7 @@ public:
 
 private:
     Array<Array<bool>> m_collisions;
-    uint m_numCells = 10;
+    uint m_numCells = 0;
 
     Vector2i GetClosestCellTo(const Vector3 &position) const;
 };

@@ -128,6 +128,21 @@ void AudioSource::Reflect()
                      [this](bool playOnStart) { SetPlayOnStart(playOnStart); },
                      [this]() -> bool { return GetPlayOnStart(); });
 
+    BANG_REFLECT_BUTTON_HINTED(
+        AudioSource,
+        (IsPlaying() ? "Stop" : "Play"),
+        [this]() {
+            if (!IsPlaying())
+            {
+                Play();
+            }
+            else
+            {
+                Stop();
+            }
+        },
+        BANG_REFLECT_HINT_BLOCKED((GetAudioClip() == nullptr)));
+
     BANG_REFLECT_VAR_MEMBER_RESOURCE(
         AudioSource,
         "AudioClip",

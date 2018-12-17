@@ -11,20 +11,20 @@
 #define BANG_REFLECT_VAR_MEMBER(Class, Name, Setter, Getter) \
     BANG_REFLECT_VAR_MEMBER_HINTED(Class, Name, Setter, Getter, "")
 
-#define BANG_REFLECT_VAR_MEMBER_ENUM(Class, Name, Setter, Getter) \
-    ReflectVarMember(Name,                                        \
-                     &Class::Setter,                              \
-                     &Class::Getter,                              \
-                     this,                                        \
-                     BANG_REFLECT_HINT_ENUM(true));
-#define BANG_REFLECT_VAR_MEMBER_ENUM_FLAGS(Class, Name, Setter, Getter) \
-    ReflectVar<FlagsPrimitiveType>(                                     \
-        Name,                                                           \
-        [this](FlagsPrimitiveType x) {                                  \
-            Setter(SCAST<FlagsPrimitiveType>(x));                       \
-        },                                                              \
-        [this]() { return SCAST<FlagsPrimitiveType>(Getter()); },       \
-        this,                                                           \
+#define BANG_REFLECT_VAR_ENUM(Name, Setter, Getter, EnumType)       \
+    ReflectVar<uint32_t>(                                           \
+        Name,                                                       \
+        [this](uint32_t x) { Setter(SCAST<EnumType>(x)); },         \
+        [this]() -> uint32_t { return SCAST<uint32_t>(Getter()); }, \
+        BANG_REFLECT_HINT_ENUM(true));
+
+#define BANG_REFLECT_VAR_ENUM_FLAGS(Name, Setter, Getter)         \
+    ReflectVar<FlagsPrimitiveType>(                               \
+        Name,                                                     \
+        [this](FlagsPrimitiveType x) {                            \
+            Setter(SCAST<FlagsPrimitiveType>(x));                 \
+        },                                                        \
+        [this]() { return SCAST<FlagsPrimitiveType>(Getter()); }, \
         BANG_REFLECT_HINT_ENUM_FLAGS(true));
 
 #define BANG_REFLECT_VAR_MEMBER_RESOURCE(                                    \
@@ -37,12 +37,15 @@
         },                                                                   \
         Hints);
 
+#define BANG_REFLECT_BUTTON_HINTED(Class, Name, ActionFunction, Hints)         \
+    ReflectVar<bool>(                                                          \
+        Name,                                                                  \
+        [=](bool) { ActionFunction(); },                                       \
+        []() { return true; },                                                 \
+        BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsButton, true) + \
+            Hints);
 #define BANG_REFLECT_BUTTON(Class, Name, ActionFunction) \
-    ReflectVar<bool>(                                    \
-        Name,                                            \
-        [=](bool) { ActionFunction(); },                 \
-        []() { return true; },                           \
-        BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsButton, true));
+    BANG_REFLECT_BUTTON_HINTED(Class, Name, ActionFunction, "")
 
 #define BANG_REFLECT_HINT_ENUM_FIELD_VALUE(   \
     enumName, enumFieldName, enumFieldValue)  \
@@ -74,6 +77,9 @@
 
 #define BANG_REFLECT_HINT_EXTENSIONS(extensions) \
     BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyExtension, extensions)
+
+#define BANG_REFLECT_HINT_BLOCKED(blocked) \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsBlocked, blocked)
 
 #define BANG_REFLECT_HINT_SLIDER(minValue, maxValue)     \
     BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) + \

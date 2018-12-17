@@ -12,6 +12,7 @@ const String ReflectVariableHints::KeyMaxValue = "MaxValue";
 const String ReflectVariableHints::KeyStepValue = "StepValue";
 const String ReflectVariableHints::KeyIsSlider = "IsSlider";
 const String ReflectVariableHints::KeyIsButton = "IsButton";
+const String ReflectVariableHints::KeyIsBlocked = "IsBlocked";
 const String ReflectVariableHints::KeyExtension = "Extension";
 const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
 const String ReflectVariableHints::KeyIsShown = "IsShown";
@@ -111,6 +112,10 @@ void ReflectVariableHints::Update(const String &hintsString)
             {
                 m_isShown = IsTrue(valueStr);
             }
+            else if (keyStr == ReflectVariableHints::KeyIsBlocked)
+            {
+                m_blocked = IsTrue(valueStr);
+            }
         }
     }
 }
@@ -175,6 +180,11 @@ bool ReflectVariableHints::GetIsEnum() const
     return m_isEnum;
 }
 
+bool ReflectVariableHints::GetIsBlocked() const
+{
+    return m_blocked;
+}
+
 bool ReflectVariableHints::GetIsEnumFlags() const
 {
     return m_isEnumFlags;
@@ -194,6 +204,7 @@ String ReflectVariableHints::GetHintsString() const
     ADD_TO_HINTS_STRING(StepValue);
     ADD_TO_HINTS_STRING(IsSlider);
     ADD_TO_HINTS_STRING(IsButton);
+    ADD_TO_HINTS_STRING(IsBlocked);
     for (const String &extension : GetExtensions())
     {
         hintsString += BANG_REFLECT_HINT_KEY_VALUE(

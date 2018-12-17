@@ -18,6 +18,7 @@ public:
     static const String KeyStepValue;
     static const String KeyExtension;
     static const String KeyIsButton;
+    static const String KeyIsBlocked;
     static const String KeyZoomablePreview;
     static const String KeyIsSlider;
     static const String KeyIsShown;
@@ -41,6 +42,7 @@ public:
     bool GetIsSlider() const;
     bool GetIsShown() const;
     bool GetIsEnum() const;
+    bool GetIsBlocked() const;
     bool GetIsEnumFlags() const;
 
     String GetHintsString() const;
@@ -52,6 +54,7 @@ private:
     String m_objectPtrClass = "";
     bool m_isButton = false;
     bool m_zoomablePreview = false;
+    bool m_blocked = false;
     float m_stepValue = 1.0f;
     Vector4 m_minValue = Vector4::NInfinity();
     Vector4 m_maxValue = Vector4::Infinity();

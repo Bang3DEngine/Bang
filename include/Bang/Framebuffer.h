@@ -41,10 +41,10 @@ public:
     void SetAttachmentTexture(GLId texId,
                               GL::Attachment attachment,
                               uint mipMapLevel = 0);
-    void SetAttachmentTexture2D(Texture *tex,
-                                GL::Attachment attachment,
-                                GL::TextureTarget texTarget,
-                                uint mipMapLevel = 0);
+    void SetAttachmentTexture(Texture *tex,
+                              GL::Attachment attachment,
+                              GL::TextureTarget texTarget,
+                              uint mipMapLevel = 0);
 
     void Blit(GL::Attachment srcAttachment,
               GL::Attachment dstAttachment,

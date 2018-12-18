@@ -71,15 +71,11 @@ public:
     void PrepareForForwardRendering(Renderer *rend);
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
-    void DownscaleTexture(Texture2D *inputTexture,
-                          Texture2D *auxiliarTexture,
-                          Texture2D *outputTexture,
-                          uint downscalingPow2) const;
     void BlurTexture(Texture2D *inputTexture,
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
                      uint blurRadius,
-                     uint downscalingPow2 = 0,
+                     uint mipMapLevel = 0,
                      BlurType blurType = BlurType::GAUSSIAN) const;
     void BlurTextureCM(TextureCubeMap *inputTextureCM,
                        TextureCubeMap *auxiliarTextureCM,

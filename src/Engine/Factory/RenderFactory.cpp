@@ -468,7 +468,6 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
 {
     if (RenderFactory *rf = RenderFactory::GetInstance())
     {
-        // Save state
         GL::Push(GL::Pushable::COLOR_MASK);
         GL::Push(GL::Pushable::DEPTH_STATES);
         GL::Push(GL::Pushable::STENCIL_STATES);
@@ -514,7 +513,9 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
             GL::SetColorMask(true, true, true, true);
             gbuffer->SetColorDrawBuffer();
             gbuffer->SetSceneDepthStencil();
-            gbuffer->ApplyPass(sp, false);  // Apply pass to render the outline
+            gbuffer->ApplyPassBlend(sp,
+                                    GL::BlendFactor::SRC_ALPHA,
+                                    GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
 
             // Clear depth buffer to leave it as it was (maybe xD)
             GL::SetDepthMask(true);

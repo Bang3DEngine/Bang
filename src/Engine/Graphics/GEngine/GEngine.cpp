@@ -532,7 +532,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
                           uint blurRadius,
-                          uint downscalingPow2,
+                          uint mipMapLevel,
                           BlurType blurType) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
@@ -552,13 +552,6 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
                                         : p_kawaseBlurSP.Get());
     blurSP->Bind();
     blurSP->SetVector2("B_InputTextureSize", Vector2(inputTexture->GetSize()));
-
-    if (downscalingPow2 >= 2)
-    {
-        for (int i = 0; i <= 2; ++i)
-        {
-        }
-    }
 
     GL::SetViewport(0, 0, inputTexture->GetSize().x, inputTexture->GetSize().y);
 
@@ -651,11 +644,11 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 
     for (GL::CubeMapDir cmDir : GL::GetAllCubeMapDirs())
     {
-        m_auxiliarFramebuffer->SetAttachmentTexture2D(
+        m_auxiliarFramebuffer->SetAttachmentTexture(
             blurredOutputTextureCM,
             GL::Attachment::COLOR0,
             SCAST<GL::TextureTarget>(cmDir));
-        m_auxiliarFramebuffer->SetAttachmentTexture2D(
+        m_auxiliarFramebuffer->SetAttachmentTexture(
             auxiliarTextureCM,
             GL::Attachment::COLOR1,
             SCAST<GL::TextureTarget>(cmDir));
@@ -764,13 +757,6 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-}
-
-void GEngine::DownscaleTexture(Texture2D *inputTexture,
-                               Texture2D *auxiliarTexture,
-                               Texture2D *outputTexture,
-                               uint downscalingPow2) const
-{
 }
 
 void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)

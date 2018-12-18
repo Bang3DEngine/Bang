@@ -82,6 +82,13 @@ ShaderProgram *ShaderProgramFactory::GetPointLightDeferredScreenPass()
                    "PointLightDeferred.frag"));
 }
 
+ShaderProgram *ShaderProgramFactory::GetKawaseBlur()
+{
+    return Get(
+        ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+        ShaderProgramFactory::GetEngineShadersDir().Append("KawaseBlur.frag"));
+}
+
 ShaderProgram *ShaderProgramFactory::GetSeparableBlur()
 {
     return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),

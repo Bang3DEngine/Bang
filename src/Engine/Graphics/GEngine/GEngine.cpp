@@ -100,8 +100,9 @@ void GEngine::Init()
     m_blurFramebuffer = new Framebuffer();
     m_blurCMFramebuffer = new Framebuffer();
 
-    p_separableBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
-    p_separableBlurCubeMapSP.Set(
+    p_kawaseBlurSP.Set(ShaderProgramFactory::GetKawaseBlur());
+    p_separableGaussianBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
+    p_separableGaussianBlurCubeMapSP.Set(
         ShaderProgramFactory::GetSeparableBlurCubeMap());
 
     Path shadersDir = ShaderProgramFactory::GetEngineShadersDir();
@@ -534,7 +535,8 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
 void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
-                          int blurRadius) const
+                          int blurRadius,
+                          BlurType blurType) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -542,35 +544,72 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     GL::Push(GL::BindTarget::SHADER_PROGRAM);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
-    m_blurFramebuffer->Bind();
-    m_blurFramebuffer->SetAttachmentTexture(blurredOutputTexture,
-                                            GL::Attachment::COLOR0);
-    m_blurFramebuffer->SetAttachmentTexture(auxiliarTexture,
-                                            GL::Attachment::COLOR1);
-    m_blurFramebuffer->Resize(inputTexture->GetSize());
-    GL::SetViewport(0, 0, inputTexture->GetSize().x, inputTexture->GetSize().y);
-
-    const Array<float> blurKernel = GetGaussianBlurKernel(blurRadius);
-
-    p_separableBlurSP.Get()->Bind();
-    p_separableBlurSP.Get()->SetVector2("B_InputTextureSize",
-                                        Vector2(inputTexture->GetSize()));
-    p_separableBlurSP.Get()->SetInt("B_BlurRadius", blurRadius);
-    p_separableBlurSP.Get()->SetFloatArray("B_BlurKernel", blurKernel);
-
     GL::Disable(GL::Enablable::BLEND);
 
-    // Render blur X
-    p_separableBlurSP.Get()->SetBool("B_BlurInX", true);
-    p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", inputTexture);
-    m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
-    GEngine::GetInstance()->RenderViewportPlane();
+    m_blurFramebuffer->Bind();
+    auxiliarTexture->Resize(inputTexture->GetSize());
+    blurredOutputTexture->Resize(inputTexture->GetSize());
 
-    // Render blur Y
-    p_separableBlurSP.Get()->SetBool("B_BlurInX", false);
-    p_separableBlurSP.Get()->SetTexture2D("B_InputTexture", auxiliarTexture);
-    m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
-    GEngine::GetInstance()->RenderViewportPlane();
+    ShaderProgram *blurSP =
+        (blurType == BlurType::GAUSSIAN ? p_separableGaussianBlurSP.Get()
+                                        : p_kawaseBlurSP.Get());
+    blurSP->Bind();
+    blurSP->SetVector2("B_InputTextureSize", Vector2(inputTexture->GetSize()));
+
+    GL::SetViewport(0, 0, inputTexture->GetSize().x, inputTexture->GetSize().y);
+
+    if (blurType == BlurType::GAUSSIAN)
+    {
+        m_blurFramebuffer->SetAttachmentTexture(blurredOutputTexture,
+                                                GL::Attachment::COLOR0);
+        m_blurFramebuffer->SetAttachmentTexture(auxiliarTexture,
+                                                GL::Attachment::COLOR1);
+
+        const Array<float> blurKernel = GetGaussianBlurKernel(blurRadius);
+        blurSP->SetInt("B_BlurRadius", blurRadius);
+        blurSP->SetFloatArray("B_BlurKernel", blurKernel);
+
+        // Render blur X
+        blurSP->SetBool("B_BlurInX", true);
+        blurSP->SetTexture2D("B_InputTexture", inputTexture);
+        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        GEngine::GetInstance()->RenderViewportPlane();
+
+        // Render blur Y
+        blurSP->SetBool("B_BlurInX", false);
+        blurSP->SetTexture2D("B_InputTexture", auxiliarTexture);
+        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        GEngine::GetInstance()->RenderViewportPlane();
+    }
+    else
+    {
+        Texture2D *inTexture = inputTexture;
+        Texture2D *outTexture =
+            (blurRadius % 2 == 1) ? blurredOutputTexture : auxiliarTexture;
+        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        for (int i = 0; i < blurRadius; ++i)
+        {
+            m_blurFramebuffer->SetAttachmentTexture(outTexture,
+                                                    GL::Attachment::COLOR0);
+            blurSP->SetTexture2D("B_InputTexture", inTexture);
+            blurSP->SetInt("B_Iteration", i);
+            GEngine::GetInstance()->RenderViewportPlane();
+
+            // Swap textures
+            if (blurRadius % 2 == 1)
+            {
+                outTexture =
+                    ((i % 2 == 0) ? auxiliarTexture : blurredOutputTexture);
+            }
+            else
+            {
+                outTexture =
+                    ((i % 2 == 0) ? blurredOutputTexture : auxiliarTexture);
+            }
+            inTexture = (outTexture == auxiliarTexture ? blurredOutputTexture
+                                                       : auxiliarTexture);
+        }
+    }
 
     m_blurFramebuffer->UnBind();
 
@@ -597,13 +636,14 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
     GL::SetViewport(0, 0, cmSize, cmSize);
     m_blurCMFramebuffer->Resize(cmSize, cmSize);
 
-    p_separableBlurCubeMapSP.Get()->Bind();
-    p_separableBlurCubeMapSP.Get()->SetVector2("B_InputTextureSize",
-                                               Vector2(cmSize));
-    p_separableBlurCubeMapSP.Get()->SetInt("B_BlurRadius", blurRadius);
+    p_separableGaussianBlurCubeMapSP.Get()->Bind();
+    p_separableGaussianBlurCubeMapSP.Get()->SetVector2("B_InputTextureSize",
+                                                       Vector2(cmSize));
+    p_separableGaussianBlurCubeMapSP.Get()->SetInt("B_BlurRadius", blurRadius);
 
     const Array<float> blurKernel = GetGaussianBlurKernel(blurRadius);
-    p_separableBlurCubeMapSP.Get()->SetFloatArray("B_BlurKernel", blurKernel);
+    p_separableGaussianBlurCubeMapSP.Get()->SetFloatArray("B_BlurKernel",
+                                                          blurKernel);
 
     for (GL::CubeMapDir cmDir : GL::GetAllCubeMapDirs())
     {
@@ -618,20 +658,20 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 
         GL::Disable(GL::Enablable::BLEND);
 
-        p_separableBlurCubeMapSP.Get()->SetVector3(
+        p_separableGaussianBlurCubeMapSP.Get()->SetVector3(
             "B_SampleDirection", GL::GetCubeMapDirVector(cmDir));
 
         // Render blur X
-        p_separableBlurCubeMapSP.Get()->SetBool("B_BlurInX", true);
-        p_separableBlurCubeMapSP.Get()->SetTextureCubeMap("B_InputTexture",
-                                                          inputTextureCM);
+        p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", true);
+        p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
+            "B_InputTexture", inputTextureCM);
         m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
-        p_separableBlurCubeMapSP.Get()->SetBool("B_BlurInX", false);
-        p_separableBlurCubeMapSP.Get()->SetTextureCubeMap("B_InputTexture",
-                                                          auxiliarTextureCM);
+        p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", false);
+        p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
+            "B_InputTexture", auxiliarTextureCM);
         m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }

@@ -81,10 +81,12 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
 
         if (GetBlurRadius() > 0)
         {
-            ge->BlurTexture(m_brightnessTexture.Get(),
-                            m_blurAuxiliarTexture.Get(),
-                            m_blurredBloomTexture.Get(),
-                            GetBlurRadius());
+            ge->BlurTexture(
+                m_brightnessTexture.Get(),
+                m_blurAuxiliarTexture.Get(),
+                m_blurredBloomTexture.Get(),
+                GetBlurRadius(),
+                (GetUseKawaseBlur() ? BlurType::KAWASE : BlurType::GAUSSIAN));
         }
 
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -109,6 +111,11 @@ void PostProcessEffectBloom::SetBlurRadius(uint blurRadius)
     m_blurRadius = blurRadius;
 }
 
+void PostProcessEffectBloom::SetUseKawaseBlur(bool useKawaseBlur)
+{
+    m_useKawaseBlur = useKawaseBlur;
+}
+
 void PostProcessEffectBloom::SetBrightnessThreshold(float brightnessThreshold)
 {
     m_brightnessThreshold = brightnessThreshold;
@@ -122,6 +129,11 @@ float PostProcessEffectBloom::GetIntensity() const
 uint PostProcessEffectBloom::GetBlurRadius() const
 {
     return m_blurRadius;
+}
+
+bool PostProcessEffectBloom::GetUseKawaseBlur() const
+{
+    return m_useKawaseBlur;
 }
 
 float PostProcessEffectBloom::GetBrightnessThreshold() const

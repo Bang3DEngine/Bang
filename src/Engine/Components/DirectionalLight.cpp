@@ -147,7 +147,8 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
             m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0),
             m_blurAuxiliarTexture.Get(),
             m_blurredShadowMapTexture.Get(),
-            GetShadowSoftness());
+            GetShadowSoftness(),
+            BlurType::KAWASE);
     }
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);

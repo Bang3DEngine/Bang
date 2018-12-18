@@ -43,6 +43,12 @@ class Texture2D;
 class TextureCubeMap;
 class TextureUnitManager;
 
+enum class BlurType
+{
+    GAUSSIAN,
+    KAWASE
+};
+
 class GEngine : public EventListener<IEventsDestroy>
 {
 public:
@@ -68,7 +74,8 @@ public:
     void BlurTexture(Texture2D *inputTexture,
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
-                     int blurRadius) const;
+                     int blurRadius,
+                     BlurType blurType = BlurType::GAUSSIAN) const;
     void BlurTextureCM(TextureCubeMap *inputTextureCM,
                        TextureCubeMap *auxiliarTextureCM,
                        TextureCubeMap *blurredOutputTextureCM,
@@ -136,8 +143,9 @@ private:
     Framebuffer *m_copyTextureFramebuffer = nullptr;
     Framebuffer *m_blurFramebuffer = nullptr;
     Framebuffer *m_blurCMFramebuffer = nullptr;
-    RH<ShaderProgram> p_separableBlurSP;
-    RH<ShaderProgram> p_separableBlurCubeMapSP;
+    RH<ShaderProgram> p_kawaseBlurSP;
+    RH<ShaderProgram> p_separableGaussianBlurSP;
+    RH<ShaderProgram> p_separableGaussianBlurCubeMapSP;
 
     RH<Mesh> p_windowPlaneMesh;
     RH<ShaderProgram> p_renderTextureToViewportSP;

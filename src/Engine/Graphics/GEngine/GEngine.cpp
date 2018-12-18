@@ -532,7 +532,6 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
                           uint blurRadius,
-                          uint mipMapLevel,
                           BlurType blurType) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
@@ -943,7 +942,7 @@ void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
                                       Texture2D *rightTexture,
                                       Texture2D *frontTexture,
                                       Texture2D *backTexture,
-                                      int mipMapLevel)
+                                      uint mipMapLevel)
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::SHADER_PROGRAM);

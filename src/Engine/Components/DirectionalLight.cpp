@@ -148,7 +148,6 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
             m_blurAuxiliarTexture.Get(),
             m_blurredShadowMapTexture.Get(),
             GetShadowSoftness(),
-            2,
             BlurType::KAWASE);
     }
 

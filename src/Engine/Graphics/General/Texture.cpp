@@ -24,8 +24,12 @@ Texture::~Texture()
 
 void Texture::GenerateMipMaps() const
 {
-    ASSERT(GL::IsBound(this));
+    GL::Push(GetGLBindTarget());
+
+    Bind();
     GL::GenerateMipMap(GetTextureTarget());
+
+    GL::Pop(GetGLBindTarget());
 }
 
 void Texture::SetFormat(GL::ColorFormat glFormat)

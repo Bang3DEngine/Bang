@@ -75,7 +75,6 @@ public:
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
                      uint blurRadius,
-                     uint mipMapLevel = 0,
                      BlurType blurType = BlurType::GAUSSIAN) const;
     void BlurTextureCM(TextureCubeMap *inputTextureCM,
                        TextureCubeMap *auxiliarTextureCM,
@@ -97,7 +96,7 @@ public:
                                  Texture2D *rightTexture,
                                  Texture2D *frontTexture,
                                  Texture2D *backTexture,
-                                 int mipMapLevel = 0);
+                                 uint mipMapLevel = 0);
 
     static GBuffer *GetActiveGBuffer();
 

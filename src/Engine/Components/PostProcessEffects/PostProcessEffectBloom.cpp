@@ -16,14 +16,17 @@ PostProcessEffectBloom::PostProcessEffectBloom()
 
     m_brightnessTexture = Resources::Create<Texture2D>();
     m_brightnessTexture.Get()->CreateEmpty(1, 1);
+    m_brightnessTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_brightnessTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurAuxiliarTexture = Resources::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->CreateEmpty(1, 1);
+    m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurredBloomTexture = Resources::Create<Texture2D>();
     m_blurredBloomTexture.Get()->CreateEmpty(1, 1);
+    m_blurredBloomTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredBloomTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_bloomFramebuffer = new Framebuffer();
@@ -47,16 +50,18 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
 {
     Component::OnRender(renderPass);
 
-    GL::Push(GL::Pushable::VIEWPORT);
-    GL::Push(GL::Pushable::BLEND_STATES);
-    GL::Push(GL::BindTarget::SHADER_PROGRAM);
-
     if (MustBeRendered(renderPass))
     {
+        GL::Push(GL::Pushable::VIEWPORT);
+        GL::Push(GL::Pushable::BLEND_STATES);
+        GL::Push(GL::BindTarget::SHADER_PROGRAM);
+
         ShaderProgram *sp = GetBloomShaderProgram();
         sp->Bind();
 
-        Vector2i bloomTexSize = GL::GetViewportSize();
+        Vector2i bloomTexSize =
+            GL::GetViewportSize() / SCAST<int>(GetDownscale());
+        GL::SetViewport(0, 0, bloomTexSize.x, bloomTexSize.y);
 
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
@@ -90,20 +95,24 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
                 m_blurAuxiliarTexture.Get(),
                 m_blurredBloomTexture.Get(),
                 GetBlurRadius(),
-                2,
                 (GetUseKawaseBlur() ? BlurType::KAWASE : BlurType::GAUSSIAN));
         }
 
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+        GL::Pop(GL::Pushable::VIEWPORT);
 
         sp->SetBool("B_ExtractingBrightPixels", false);
         sp->SetTexture2D("B_BlurredBloomTexture", GetFinalBloomTexture());
         ge->GetActiveGBuffer()->ApplyPass(sp, true);
-    }
 
-    GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-    GL::Pop(GL::Pushable::BLEND_STATES);
-    GL::Pop(GL::Pushable::VIEWPORT);
+        GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+        GL::Pop(GL::Pushable::BLEND_STATES);
+    }
+}
+
+void PostProcessEffectBloom::SetDownscale(uint downscale)
+{
+    m_downscale = downscale;
 }
 
 void PostProcessEffectBloom::SetIntensity(float intensity)
@@ -141,6 +150,11 @@ void PostProcessEffectBloom::SetUseHighBitDepthTextures(
         m_blurAuxiliarTexture.Get()->SetFormat(colorFormat);
         m_blurredBloomTexture.Get()->SetFormat(colorFormat);
     }
+}
+
+uint PostProcessEffectBloom::GetDownscale() const
+{
+    return m_downscale;
 }
 
 float PostProcessEffectBloom::GetIntensity() const
@@ -211,4 +225,10 @@ void PostProcessEffectBloom::Reflect()
                             "High bit depth",
                             SetUseHighBitDepthTextures,
                             GetUseHighBitDepthTextures);
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectBloom,
+                                   "Downscale",
+                                   SetDownscale,
+                                   GetDownscale,
+                                   BANG_REFLECT_HINT_MIN_VALUE(1.0f));
 }

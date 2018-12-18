@@ -55,6 +55,9 @@ bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
             case Type::AFTER_SCENE:
                 return (renderPass == RenderPass::SCENE_POSTPROCESS);
 
+            case Type::AFTER_SCENE_AND_LIGHT:
+                return (renderPass == RenderPass::SCENE_POSTPROCESS_2);
+
             case Type::AFTER_CANVAS:
                 return (renderPass == RenderPass::CANVAS_POSTPROCESS);
         }
@@ -132,6 +135,10 @@ void PostProcessEffect::Reflect()
     BANG_REFLECT_VAR_ENUM("Type", SetType, GetType, PostProcessEffect::Type);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Type", "After Scene", PostProcessEffect::Type::AFTER_SCENE);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Type",
+        "After Scene and Light",
+        PostProcessEffect::Type::AFTER_SCENE_AND_LIGHT);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Type", "After Canvas", PostProcessEffect::Type::AFTER_CANVAS);
 }

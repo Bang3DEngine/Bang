@@ -53,6 +53,7 @@ Camera::Camera()
     AddRenderPass(RenderPass::SCENE);
     AddRenderPass(RenderPass::SCENE_TRANSPARENT);
     AddRenderPass(RenderPass::SCENE_POSTPROCESS);
+    AddRenderPass(RenderPass::SCENE_POSTPROCESS_2);
     AddRenderPass(RenderPass::CANVAS);
     AddRenderPass(RenderPass::CANVAS_POSTPROCESS);
     AddRenderPass(RenderPass::OVERLAY);

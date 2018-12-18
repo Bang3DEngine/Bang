@@ -424,6 +424,12 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         GL::BlendFunc(GL::BlendFactor::ONE, GL::BlendFactor::ONE);
         RenderTexture(gbuffer->GetAttachmentTex2D(GBuffer::AttLight));
         GL::Disable(GL::Enablable::BLEND);
+
+        if (camera->MustRenderPass(RenderPass::SCENE_POSTPROCESS_2))
+        {
+            gbuffer->SetColorDrawBuffer();
+            RenderWithPass(go, RenderPass::SCENE_POSTPROCESS_2);
+        }
     }
 
     // Enable blend for transparent stuff from now on

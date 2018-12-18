@@ -42,6 +42,10 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
                                     GL::ColorFormat::RGB10_A2);
     m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR1,
                                     GL::ColorFormat::RGB10_A2);
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1)
+        ->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     SetBlurRadius(1);
     SetSSAORadius(1);

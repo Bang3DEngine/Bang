@@ -10,6 +10,7 @@ enum class RenderPass
     SCENE = 0,
     SCENE_TRANSPARENT = 6,
     SCENE_POSTPROCESS = 1,
+    SCENE_POSTPROCESS_2 = 7,
 
     CANVAS = 2,
     CANVAS_POSTPROCESS = 3,

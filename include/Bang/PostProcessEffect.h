@@ -24,6 +24,7 @@ public:
     enum class Type
     {
         AFTER_SCENE = 0,
+        AFTER_SCENE_AND_LIGHT,
         AFTER_CANVAS
     };
 

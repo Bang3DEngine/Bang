@@ -50,21 +50,19 @@ public:
 private:
     float m_ssaoIntensity = 1.0f;
     float m_ssaoRadius = -1;
-    int m_blurRadius = -1;
+    uint m_blurRadius = 4;
     int m_numAxes = -1;
     bool m_separable = true;
     int m_numRandomOffsetsHemisphere = -1;
-    bool m_bilateralBlurEnabled = true;
     Vector2 m_fbSize = Vector2::One();
 
-    Array<float> m_blurKernel;
     Array<Vector3> m_randomHemisphereOffsets;
     RH<Texture2D> m_randomAxesTexture;
 
     Framebuffer *m_ssaoFB = nullptr;
+    RH<Texture2D> m_blurAuxiliarTexture;
+    RH<Texture2D> m_blurredSSAOTexture;
     RH<ShaderProgram> p_ssaoShaderProgram;
-    RH<ShaderProgram> p_blurXShaderProgram;
-    RH<ShaderProgram> p_blurYShaderProgram;
     RH<ShaderProgram> p_applySSAOShaderProgram;
 
     void GenerateRandomAxesTexture(int numAxes);

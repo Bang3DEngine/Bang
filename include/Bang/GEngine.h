@@ -141,6 +141,7 @@ private:
     Array<float> m_currentForwardRenderingLightRanges;
 
     Framebuffer *m_auxiliarFramebuffer = nullptr;
+    Framebuffer *m_auxiliarFramebufferCM = nullptr;
     RH<ShaderProgram> p_kawaseBlurSP;
     RH<ShaderProgram> p_separableGaussianBlurSP;
     RH<ShaderProgram> p_separableGaussianBlurCubeMapSP;

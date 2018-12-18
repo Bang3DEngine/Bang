@@ -40,12 +40,16 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
     m_ssaoFB = new Framebuffer();
     m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR0,
                                     GL::ColorFormat::RGB10_A2);
-    m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR1,
-                                    GL::ColorFormat::RGB10_A2);
     m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1)
-        ->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+
+    m_blurAuxiliarTexture = Resources::Create<Texture2D>();
+    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGB10_A2);
+    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+
+    m_blurredSSAOTexture = Resources::Create<Texture2D>();
+    m_blurredSSAOTexture.Get()->SetFormat(GL::ColorFormat::RGB10_A2);
+    m_blurredSSAOTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     SetBlurRadius(1);
     SetSSAORadius(1);
@@ -54,21 +58,15 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
 
     m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetWrapMode(GL::WrapMode::REPEAT);
-    m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1)
-        ->SetWrapMode(GL::WrapMode::REPEAT);
 
     p_ssaoShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         EPATH("Shaders").Append("SSAO.frag")));
-    p_blurXShaderProgram.Set(ShaderProgramFactory::Get(
-        ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders").Append("SSAOSeparableBlurX.frag")));
-    p_blurYShaderProgram.Set(ShaderProgramFactory::Get(
-        ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        EPATH("Shaders").Append("SSAOSeparableBlurY.frag")));
     p_applySSAOShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         EPATH("Shaders").Append("SSAOApply.frag")));
+
+    SetType(PostProcessEffect::Type::AFTER_SCENE_AND_LIGHT);
 }
 
 PostProcessEffectSSAO::~PostProcessEffectSSAO()
@@ -102,8 +100,6 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             Vector2 randomAxesUvMult(
                 (Vector2(GL::GetViewportSize()) /
                  Vector2(m_randomAxesTexture.Get()->GetSize())));
-            p_ssaoShaderProgram.Get()->SetFloat("B_SSAOIntensity",
-                                                GetSSAOIntensity());
             p_ssaoShaderProgram.Get()->SetFloat("B_SSAORadius",
                                                 GetSSAORadius());
             p_ssaoShaderProgram.Get()->SetVector2("B_RandomAxesUvMultiply",
@@ -115,45 +111,29 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
             p_ssaoShaderProgram.Get()->SetVector3Array(
                 "B_RandomHemisphereOffsetsArray", m_randomHemisphereOffsets);
 
+            GL::WrapMode prevDepthWrapMode =
+                gbuffer->GetSceneDepthStencilTexture()->GetWrapMode();
+            gbuffer->GetSceneDepthStencilTexture()->SetWrapMode(
+                GL::WrapMode::CLAMP_TO_EDGE);
+
             m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
             gbuffer->BindAttachmentsForReading(p_ssaoShaderProgram.Get());
             GEngine::GetInstance()->RenderViewportPlane();  // Render Pass!
+
+            gbuffer->GetSceneDepthStencilTexture()->SetWrapMode(
+                prevDepthWrapMode);
         }
 
-        // Then blur separatedly, first X, then Y
+        // Then blur
         if (GetBlurRadius() > 0)
         {
-            // Blur in X
-            p_blurXShaderProgram.Get()->Bind();
-            gbuffer->BindAttachmentsForReading(p_blurXShaderProgram.Get());
-            p_blurXShaderProgram.Get()->SetBool("B_BilateralEnabled",
-                                                GetBilateralBlurEnabled());
-            p_blurXShaderProgram.Get()->SetFloatArray("B_BlurKernel",
-                                                      m_blurKernel);
-            p_blurXShaderProgram.Get()->SetInt("B_BlurRadius", GetBlurRadius());
-
-            m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR1});
-            p_blurXShaderProgram.Get()->SetTexture2D(
-                GBuffer::GetColorsTexName(),
-                m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0));
-            GEngine::GetInstance()->RenderViewportPlane();  // Render blur X!
-
-            // Blur in Y
-            p_blurYShaderProgram.Get()->Bind();
-            gbuffer->BindAttachmentsForReading(p_blurYShaderProgram.Get());
-            p_blurYShaderProgram.Get()->SetBool("B_BilateralEnabled",
-                                                GetBilateralBlurEnabled());
-            p_blurYShaderProgram.Get()->SetFloatArray("B_BlurKernel",
-                                                      m_blurKernel);
-            p_blurYShaderProgram.Get()->SetInt("B_BlurRadius", GetBlurRadius());
-            p_blurYShaderProgram.Get()->SetTexture2D(
-                GBuffer::GetColorsTexName(), GetSSAOTexture());
-
-            m_ssaoFB->SetDrawBuffers({GL::Attachment::COLOR0});
-            p_blurYShaderProgram.Get()->SetTexture2D(
-                GBuffer::GetColorsTexName(),
-                m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR1));
-            GEngine::GetInstance()->RenderViewportPlane();  // Render blur Y!
+            GEngine *ge = GEngine::GetInstance();
+            ge->BlurTexture(
+                m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0),
+                m_blurAuxiliarTexture.Get(),
+                m_blurredSSAOTexture.Get(),
+                GetBlurRadius(),
+                BlurType::KAWASE);
         }
 
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -161,6 +141,8 @@ void PostProcessEffectSSAO::OnRender(RenderPass renderPass)
         // Then apply actual SSAO blending with occlusion calculated above!
         {
             p_applySSAOShaderProgram.Get()->Bind();
+            p_applySSAOShaderProgram.Get()->SetFloat("B_SSAOIntensity",
+                                                     GetSSAOIntensity());
             p_applySSAOShaderProgram.Get()->SetTexture2D("B_SSAOMap",
                                                          GetSSAOTexture());
             gbuffer->ApplyPass(p_applySSAOShaderProgram.Get(), true);
@@ -186,21 +168,6 @@ void PostProcessEffectSSAO::SetBlurRadius(int blurRadius)
     if (blurRadius != GetBlurRadius())
     {
         m_blurRadius = blurRadius;
-
-        // Recompute blur kernel
-        float sum = 0.0f;
-        m_blurKernel.Clear();
-        for (int i = -GetBlurRadius(); i <= GetBlurRadius(); ++i)
-        {
-            float k = std::exp(-0.5 * Math::Pow(float(i), 2.0f) / 3.0f);
-            m_blurKernel.PushBack(k);
-            sum += m_blurKernel.Back();
-        }
-
-        for (uint i = 0; i < m_blurKernel.Size(); ++i)
-        {
-            m_blurKernel[i] /= sum;  // Normalize
-        }
     }
 }
 
@@ -265,11 +232,6 @@ void PostProcessEffectSSAO::SetSeparable(bool separable)
     }
 }
 
-void PostProcessEffectSSAO::SetBilateralBlurEnabled(bool bilateralBlurEnabled)
-{
-    m_bilateralBlurEnabled = bilateralBlurEnabled;
-}
-
 void PostProcessEffectSSAO::SetFBSize(const Vector2 &fbSize)
 {
     m_fbSize = fbSize;
@@ -301,11 +263,6 @@ int PostProcessEffectSSAO::GetNumRandomAxes() const
     return m_numAxes;
 }
 
-bool PostProcessEffectSSAO::GetBilateralBlurEnabled() const
-{
-    return m_bilateralBlurEnabled;
-}
-
 int PostProcessEffectSSAO::GetNumRandomSamples() const
 {
     return m_numRandomOffsetsHemisphere;
@@ -318,7 +275,9 @@ const Vector2 &PostProcessEffectSSAO::GetFBSize() const
 
 Texture2D *PostProcessEffectSSAO::GetSSAOTexture() const
 {
-    return m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0);
+    return (GetBlurRadius() > 0
+                ? m_blurredSSAOTexture.Get()
+                : m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0));
 }
 
 void PostProcessEffectSSAO::Reflect()
@@ -329,22 +288,19 @@ void PostProcessEffectSSAO::Reflect()
         ->GetReflectVariablePtr("PostProcess Shader")
         ->SetHints(BANG_REFLECT_HINT_SHOWN(false));
 
-    BANG_REFLECT_VAR_MEMBER(PostProcessEffectSSAO,
-                            "Bilateral blur",
-                            SetBilateralBlurEnabled,
-                            GetBilateralBlurEnabled);
-
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
                                    "Intensity",
                                    SetSSAOIntensity,
                                    GetSSAOIntensity,
-                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
                                    "Radius",
                                    SetSSAORadius,
                                    GetSSAORadius,
-                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f));
+                                   BANG_REFLECT_HINT_MIN_VALUE(0.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.01f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectSSAO,
                                    "Blur radius",

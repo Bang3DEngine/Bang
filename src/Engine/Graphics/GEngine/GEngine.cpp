@@ -49,6 +49,7 @@ GEngine::GEngine()
 GEngine::~GEngine()
 {
     delete m_auxiliarFramebuffer;
+    delete m_auxiliarFramebufferCM;
 
     if (m_debugRenderer)
     {
@@ -95,6 +96,7 @@ void GEngine::Init()
         EPATH("Shaders").Append("RenderSky.frag")));
 
     m_auxiliarFramebuffer = new Framebuffer();
+    m_auxiliarFramebufferCM = new Framebuffer();
 
     p_kawaseBlurSP.Set(ShaderProgramFactory::GetKawaseBlur());
     p_separableGaussianBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
@@ -634,9 +636,9 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     uint cmSize = inputTextureCM->GetSize();
-    m_auxiliarFramebuffer->Bind();
+    m_auxiliarFramebufferCM->Bind();
     GL::SetViewport(0, 0, cmSize, cmSize);
-    m_auxiliarFramebuffer->Resize(cmSize, cmSize);
+    m_auxiliarFramebufferCM->Resize(cmSize, cmSize);
 
     p_separableGaussianBlurCubeMapSP.Get()->Bind();
     p_separableGaussianBlurCubeMapSP.Get()->SetVector2("B_InputTextureSize",
@@ -649,11 +651,11 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 
     for (GL::CubeMapDir cmDir : GL::GetAllCubeMapDirs())
     {
-        m_auxiliarFramebuffer->SetAttachmentTexture(
+        m_auxiliarFramebufferCM->SetAttachmentTexture(
             blurredOutputTextureCM,
             GL::Attachment::COLOR0,
             SCAST<GL::TextureTarget>(cmDir));
-        m_auxiliarFramebuffer->SetAttachmentTexture(
+        m_auxiliarFramebufferCM->SetAttachmentTexture(
             auxiliarTextureCM,
             GL::Attachment::COLOR1,
             SCAST<GL::TextureTarget>(cmDir));
@@ -667,18 +669,18 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
         p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", true);
         p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
             "B_InputTexture", inputTextureCM);
-        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        m_auxiliarFramebufferCM->SetDrawBuffers({GL::Attachment::COLOR1});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
         p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", false);
         p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
             "B_InputTexture", auxiliarTextureCM);
-        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        m_auxiliarFramebufferCM->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }
 
-    m_auxiliarFramebuffer->UnBind();
+    m_auxiliarFramebufferCM->UnBind();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);

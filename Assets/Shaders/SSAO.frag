@@ -3,7 +3,6 @@
 #define MAX_RANDOM_OFFSETS 128
 
 uniform float B_SSAORadius    = 1.0f;
-uniform float B_SSAOIntensity = 1.0f;
 uniform vec2 B_RandomAxesUvMultiply;
 uniform sampler2D B_RandomAxes;
 uniform int B_NumRandomOffsets;
@@ -76,9 +75,8 @@ void main()
     float occlusion = 0.0f;
     if (totalOcclusionSum > 0.00001)
     {
-        occlusion = (occlusionSum / totalOcclusionSum);
-        // occlusion = (occlusionSum / B_NumRandomOffsets);
-        occlusion *= B_SSAOIntensity; // pow(occlusion, 1.0/B_SSAOIntensity);
+        occlusion = occlusionSum;
+        // occlusion = (occlusionSum / totalOcclusionSum);
     }
 
     B_GIn_Color = vec4( vec3(occlusion), 1 );

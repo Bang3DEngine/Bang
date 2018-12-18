@@ -34,7 +34,7 @@ private:
     RH<Texture2D> m_auxiliarTexture;
 
     float m_fadeRange = 0.125f;
-    float m_foregroundThreshold = 0.5f;
+    float m_foregroundThreshold = 0.75f;
     uint m_blurRadius = 6;
 };
 }

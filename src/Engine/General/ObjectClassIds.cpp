@@ -23,6 +23,7 @@
 #include "Bang/PostProcessEffect.h"
 #include "Bang/PostProcessEffectBloom.h"
 #include "Bang/PostProcessEffectDOF.h"
+#include "Bang/PostProcessEffectFXAA.h"
 #include "Bang/PostProcessEffectSSAO.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
@@ -127,6 +128,7 @@ void RegisterObjectClasses()
     REGISTER_OBJECT_CLASS(PostProcessEffect);
     REGISTER_OBJECT_CLASS(PostProcessEffectSSAO);
     REGISTER_OBJECT_CLASS(PostProcessEffectBloom);
+    REGISTER_OBJECT_CLASS(PostProcessEffectFXAA);
     REGISTER_OBJECT_CLASS(PostProcessEffectDOF);
     REGISTER_OBJECT_CLASS(Transform);
     REGISTER_OBJECT_CLASS(RectTransform);

@@ -22,6 +22,7 @@
 #include "Bang/PostProcessEffect.h"
 #include "Bang/PostProcessEffectBloom.h"
 #include "Bang/PostProcessEffectDOF.h"
+#include "Bang/PostProcessEffectFXAA.h"
 #include "Bang/PostProcessEffectSSAO.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
@@ -91,6 +92,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, SkinnedMeshRenderer);
     CREATE_COMPONENT(componentClassName, PostProcessEffectDOF);
     CREATE_COMPONENT(componentClassName, PostProcessEffectSSAO);
+    CREATE_COMPONENT(componentClassName, PostProcessEffectFXAA);
     CREATE_COMPONENT(componentClassName, PostProcessEffectBloom);
 
     Debug_Warn("Please register class '" << componentClassName

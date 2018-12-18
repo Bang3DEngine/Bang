@@ -7,20 +7,20 @@
 
 void main()
 {
-    vec2 uv = B_GetViewportUv();
+    vec2 uv = B_FIn_AlbedoUv;
+    vec2 vpStep = B_GetViewportStep();
 
-    vec3 rgbNW = B_SampleColor(uv + vec2(-1, -1) * B_GetViewportStep()).rgb;
-    vec3 rgbNE = B_SampleColor(uv + vec2( 1, -1) * B_GetViewportStep()).rgb;
-    vec3 rgbSW = B_SampleColor(uv + vec2(-1,  1) * B_GetViewportStep()).rgb;
-    vec3 rgbSE = B_SampleColor(uv + vec2( 1,  1) * B_GetViewportStep()).rgb;
+    vec3 rgbNW = B_SampleColor(uv + vec2(-1, -1) * vpStep).rgb;
+    vec3 rgbNE = B_SampleColor(uv + vec2( 1, -1) * vpStep).rgb;
+    vec3 rgbSW = B_SampleColor(uv + vec2(-1,  1) * vpStep).rgb;
+    vec3 rgbSE = B_SampleColor(uv + vec2( 1,  1) * vpStep).rgb;
     vec3 rgbM  = B_SampleColor(uv).rgb;
-    vec3 luma = vec3(0.299, 0.587, 0.114);
 
-    float lumaNW = dot(rgbNW, luma);
-    float lumaNE = dot(rgbNE, luma);
-    float lumaSW = dot(rgbSW, luma);
-    float lumaSE = dot(rgbSE, luma);
-    float lumaM = dot(rgbM, luma);
+    float lumaNW = Luma(rgbNW);
+    float lumaNE = Luma(rgbNE);
+    float lumaSW = Luma(rgbSW);
+    float lumaSE = Luma(rgbSE);
+    float lumaM  = Luma(rgbM);
     float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
     float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
 
@@ -36,7 +36,7 @@ void main()
     dir = min(
        vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
        max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),  dir * rcpDirMin)
-     ) * B_GetViewportStep();
+     ) * vpStep;
 
     vec3 rgbA = 0.5 * (
             B_SampleColor(uv + dir * (1.0 / 3.0 - 0.5)).rgb +
@@ -45,7 +45,7 @@ void main()
             B_SampleColor(uv + dir * -0.5).rgb +
             B_SampleColor(uv + dir *  0.5).rgb);
 
-    float lumaB = dot(rgbB, luma);
+    float lumaB = Luma(rgbB);
     vec3 col = ((lumaB < lumaMin) || (lumaB > lumaMax)) ? rgbA : rgbB;
     B_GIn_Color = vec4(col, 1);
 }

@@ -26,8 +26,6 @@ void PostProcessEffectFXAA::OnRender(RenderPass renderPass)
 
     if (MustBeRendered(renderPass))
     {
-        GL::Push(GL::Pushable::VIEWPORT);
-        GL::Push(GL::Pushable::BLEND_STATES);
         GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
         GEngine *ge = GEngine::GetInstance();
@@ -37,8 +35,6 @@ void PostProcessEffectFXAA::OnRender(RenderPass renderPass)
         ge->GetActiveGBuffer()->ApplyPass(sp, true);
 
         GL::Pop(GL::BindTarget::SHADER_PROGRAM);
-        GL::Pop(GL::Pushable::BLEND_STATES);
-        GL::Pop(GL::Pushable::VIEWPORT);
     }
 }
 

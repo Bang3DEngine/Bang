@@ -24,6 +24,7 @@
 #include "Bang/PostProcessEffectDOF.h"
 #include "Bang/PostProcessEffectFXAA.h"
 #include "Bang/PostProcessEffectSSAO.h"
+#include "Bang/PostProcessEffectToneMapping.h"
 #include "Bang/RectTransform.h"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/Renderer.h"
@@ -94,6 +95,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, PostProcessEffectSSAO);
     CREATE_COMPONENT(componentClassName, PostProcessEffectFXAA);
     CREATE_COMPONENT(componentClassName, PostProcessEffectBloom);
+    CREATE_COMPONENT(componentClassName, PostProcessEffectToneMapping);
 
     Debug_Warn("Please register class '" << componentClassName
                                          << "' in "

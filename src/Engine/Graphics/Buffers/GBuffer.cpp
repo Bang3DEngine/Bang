@@ -41,8 +41,6 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     m_colorTexture1 = Resources::Create<Texture2D>();
     p_drawColorTexture = GetColorTexture0();
     p_readColorTexture = GetColorTexture1();
-    GetColorTexture0()->SetFormat(GL::ColorFormat::RGBA8);
-    GetColorTexture1()->SetFormat(GL::ColorFormat::RGBA8);
 
     // Create attachments
     Bind();
@@ -176,9 +174,11 @@ void GBuffer::SetHDR(bool hdr)
 {
     m_hdr = hdr;
 
-    GL::ColorFormat lightFormat =
+    GL::ColorFormat colorFormat =
         (GetHDR() ? GL::ColorFormat::RGBA16F : GL::ColorFormat::RGBA8);
-    GetAttachmentTex2D(GBuffer::AttLight)->SetFormat(lightFormat);
+    GetColorTexture0()->SetFormat(colorFormat);
+    GetColorTexture1()->SetFormat(colorFormat);
+    GetAttachmentTex2D(GBuffer::AttLight)->SetFormat(colorFormat);
 }
 
 bool GBuffer::GetHDR() const

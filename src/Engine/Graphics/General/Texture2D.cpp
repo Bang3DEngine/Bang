@@ -209,9 +209,20 @@ void Texture2D::ImportMeta(const MetaNode &metaNode)
         SetFilterMode(metaNode.Get<GL::FilterMode>("FilterMode"));
     }
 
-    if (metaNode.Contains("WrapMode"))
+    if (metaNode.Contains("WrapModeS"))
     {
-        SetWrapMode(metaNode.Get<GL::WrapMode>("WrapMode"));
+        SetWrapMode(metaNode.Get<GL::WrapMode>("WrapModeS"),
+                    GL::WrapCoord::WRAP_S);
+    }
+    if (metaNode.Contains("WrapModeT"))
+    {
+        SetWrapMode(metaNode.Get<GL::WrapMode>("WrapModeT"),
+                    GL::WrapCoord::WRAP_T);
+    }
+    if (metaNode.Contains("WrapModeR"))
+    {
+        SetWrapMode(metaNode.Get<GL::WrapMode>("WrapModeR"),
+                    GL::WrapCoord::WRAP_R);
     }
 
     if (metaNode.Contains("AlphaCutoff"))
@@ -226,7 +237,9 @@ void Texture2D::ExportMeta(MetaNode *metaNode) const
 
     metaNode->Set("Format", GetFormat());
     metaNode->Set("FilterMode", GetFilterMode());
-    metaNode->Set("WrapMode", GetWrapMode());
+    metaNode->Set("WrapModeS", GetWrapMode(GL::WrapCoord::WRAP_S));
+    metaNode->Set("WrapModeT", GetWrapMode(GL::WrapCoord::WRAP_T));
+    metaNode->Set("WrapModeR", GetWrapMode(GL::WrapCoord::WRAP_R));
     metaNode->Set("AlphaCutoff", GetAlphaCutoff());
 }
 

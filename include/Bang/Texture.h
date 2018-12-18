@@ -33,7 +33,8 @@ public:
     GL::FilterMode GetFilterMode() const;
     int GetNumComponents() const;
     uint GetBytesSize() const;
-    GL::WrapMode GetWrapMode() const;
+    GL::WrapMode GetWrapMode(
+        GL::WrapCoord wrapCoord = GL::WrapCoord::WRAP_R) const;
 
     GL::TextureTarget GetTextureTarget() const;
 

@@ -16,15 +16,15 @@ PostProcessEffectBloom::PostProcessEffectBloom()
 
     m_brightnessTexture = Resources::Create<Texture2D>();
     m_brightnessTexture.Get()->CreateEmpty(1, 1);
-    m_brightnessTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_brightnessTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurAuxiliarTexture = Resources::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->CreateEmpty(1, 1);
-    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurredBloomTexture = Resources::Create<Texture2D>();
     m_blurredBloomTexture.Get()->CreateEmpty(1, 1);
-    m_blurredBloomTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurredBloomTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_bloomFramebuffer = new Framebuffer();
     m_bloomFramebuffer->SetAttachmentTexture(m_brightnessTexture.Get(),
@@ -33,6 +33,10 @@ PostProcessEffectBloom::PostProcessEffectBloom()
     p_bloomSP.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         ShaderProgramFactory::GetEngineShadersDir().Append("Bloom.frag")));
+
+    // Trigger high bit depth format change
+    m_useHighBitDepthTextures = false;
+    SetUseHighBitDepthTextures(true);
 }
 
 PostProcessEffectBloom::~PostProcessEffectBloom()
@@ -86,6 +90,7 @@ void PostProcessEffectBloom::OnRender(RenderPass renderPass)
                 m_blurAuxiliarTexture.Get(),
                 m_blurredBloomTexture.Get(),
                 GetBlurRadius(),
+                2,
                 (GetUseKawaseBlur() ? BlurType::KAWASE : BlurType::GAUSSIAN));
         }
 
@@ -121,6 +126,23 @@ void PostProcessEffectBloom::SetBrightnessThreshold(float brightnessThreshold)
     m_brightnessThreshold = brightnessThreshold;
 }
 
+void PostProcessEffectBloom::SetUseHighBitDepthTextures(
+    bool useHighBitDepthTextures)
+{
+    if (useHighBitDepthTextures != GetUseHighBitDepthTextures())
+    {
+        m_useHighBitDepthTextures = useHighBitDepthTextures;
+
+        GL::ColorFormat colorFormat =
+            (GetUseHighBitDepthTextures() ? GL::ColorFormat::RGBA16F
+                                          : GL::ColorFormat::RGB10_A2);
+
+        m_brightnessTexture.Get()->SetFormat(colorFormat);
+        m_blurAuxiliarTexture.Get()->SetFormat(colorFormat);
+        m_blurredBloomTexture.Get()->SetFormat(colorFormat);
+    }
+}
+
 float PostProcessEffectBloom::GetIntensity() const
 {
     return m_intensity;
@@ -145,6 +167,11 @@ Texture2D *PostProcessEffectBloom::GetFinalBloomTexture() const
 {
     return GetBlurRadius() > 0 ? m_blurredBloomTexture.Get()
                                : m_brightnessTexture.Get();
+}
+
+bool PostProcessEffectBloom::GetUseHighBitDepthTextures() const
+{
+    return m_useHighBitDepthTextures;
 }
 
 ShaderProgram *PostProcessEffectBloom::GetBloomShaderProgram() const
@@ -179,4 +206,9 @@ void PostProcessEffectBloom::Reflect()
         SetIntensity,
         GetIntensity,
         BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
+
+    BANG_REFLECT_VAR_MEMBER(PostProcessEffectBloom,
+                            "High bit depth",
+                            SetUseHighBitDepthTextures,
+                            GetUseHighBitDepthTextures);
 }

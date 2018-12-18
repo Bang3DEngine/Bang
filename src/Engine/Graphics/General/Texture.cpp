@@ -104,24 +104,29 @@ GL::TextureTarget Texture::GetTextureTarget() const
     return m_target;
 }
 
+uint GetWrapCoordIndex(GL::WrapCoord wrapCoord)
+{
+    switch (wrapCoord)
+    {
+        case GL::WrapCoord::WRAP_S: return 0;
+        case GL::WrapCoord::WRAP_T: return 1;
+        case GL::WrapCoord::WRAP_R: return 2;
+    }
+    ASSERT(false);
+    return SCAST<uint>(-1);
+}
+
 void Texture::SetWrapMode(GL::WrapMode wrapMode, GL::WrapCoord wrapCoord)
 {
-    if (wrapMode != GetWrapMode())
+    if (wrapMode != GetWrapMode(wrapCoord))
     {
-        uint idx;
-        switch (wrapCoord)
-        {
-            case GL::WrapCoord::WRAP_R: idx = 0; break;
-            case GL::WrapCoord::WRAP_S: idx = 1; break;
-            case GL::WrapCoord::WRAP_T: idx = 2; break;
-            default: ASSERT(false); break;
-        }
+        uint idx = GetWrapCoordIndex(wrapCoord);
         m_wrapMode[idx] = wrapMode;
 
         GL::Push(GetGLBindTarget());
 
         Bind();
-        GL::TexParameterWrap(GetTextureTarget(), wrapCoord, GetWrapMode());
+        GL::TexParameterWrap(GetTextureTarget(), wrapCoord, wrapMode);
 
         GL::Pop(GetGLBindTarget());
 
@@ -156,7 +161,8 @@ int Texture::GetNumComponents() const
     return GL::GetNumComponents(GetFormat());
 }
 
-GL::WrapMode Texture::GetWrapMode() const
+GL::WrapMode Texture::GetWrapMode(GL::WrapCoord wrapCoord) const
 {
-    return m_wrapMode[0];
+    uint idx = GetWrapCoordIndex(wrapCoord);
+    return m_wrapMode[idx];
 }

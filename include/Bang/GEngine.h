@@ -71,15 +71,20 @@ public:
     void PrepareForForwardRendering(Renderer *rend);
 
     void ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection);
+    void DownscaleTexture(Texture2D *inputTexture,
+                          Texture2D *auxiliarTexture,
+                          Texture2D *outputTexture,
+                          uint downscalingPow2) const;
     void BlurTexture(Texture2D *inputTexture,
                      Texture2D *auxiliarTexture,
                      Texture2D *blurredOutputTexture,
-                     int blurRadius,
+                     uint blurRadius,
+                     uint downscalingPow2 = 0,
                      BlurType blurType = BlurType::GAUSSIAN) const;
     void BlurTextureCM(TextureCubeMap *inputTextureCM,
                        TextureCubeMap *auxiliarTextureCM,
                        TextureCubeMap *blurredOutputTextureCM,
-                       int blurRadius) const;
+                       uint blurRadius) const;
     void FillTexture(Texture2D *texture, const Color &color);
     void CopyTexture(Texture2D *source, Texture2D *destiny);
 
@@ -140,9 +145,7 @@ private:
     Array<float> m_currentForwardRenderingLightIntensities;
     Array<float> m_currentForwardRenderingLightRanges;
 
-    Framebuffer *m_copyTextureFramebuffer = nullptr;
-    Framebuffer *m_blurFramebuffer = nullptr;
-    Framebuffer *m_blurCMFramebuffer = nullptr;
+    Framebuffer *m_auxiliarFramebuffer = nullptr;
     RH<ShaderProgram> p_kawaseBlurSP;
     RH<ShaderProgram> p_separableGaussianBlurSP;
     RH<ShaderProgram> p_separableGaussianBlurCubeMapSP;

@@ -48,9 +48,7 @@ GEngine::GEngine()
 
 GEngine::~GEngine()
 {
-    delete m_blurFramebuffer;
-    delete m_blurCMFramebuffer;
-    delete m_copyTextureFramebuffer;
+    delete m_auxiliarFramebuffer;
 
     if (m_debugRenderer)
     {
@@ -96,9 +94,7 @@ void GEngine::Init()
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         EPATH("Shaders").Append("RenderSky.frag")));
 
-    m_copyTextureFramebuffer = new Framebuffer();
-    m_blurFramebuffer = new Framebuffer();
-    m_blurCMFramebuffer = new Framebuffer();
+    m_auxiliarFramebuffer = new Framebuffer();
 
     p_kawaseBlurSP.Set(ShaderProgramFactory::GetKawaseBlur());
     p_separableGaussianBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
@@ -535,7 +531,8 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
 void GEngine::BlurTexture(Texture2D *inputTexture,
                           Texture2D *auxiliarTexture,
                           Texture2D *blurredOutputTexture,
-                          int blurRadius,
+                          uint blurRadius,
+                          uint downscalingPow2,
                           BlurType blurType) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
@@ -546,7 +543,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
 
     GL::Disable(GL::Enablable::BLEND);
 
-    m_blurFramebuffer->Bind();
+    m_auxiliarFramebuffer->Bind();
     auxiliarTexture->Resize(inputTexture->GetSize());
     blurredOutputTexture->Resize(inputTexture->GetSize());
 
@@ -556,14 +553,21 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     blurSP->Bind();
     blurSP->SetVector2("B_InputTextureSize", Vector2(inputTexture->GetSize()));
 
+    if (downscalingPow2 >= 2)
+    {
+        for (int i = 0; i <= 2; ++i)
+        {
+        }
+    }
+
     GL::SetViewport(0, 0, inputTexture->GetSize().x, inputTexture->GetSize().y);
 
     if (blurType == BlurType::GAUSSIAN)
     {
-        m_blurFramebuffer->SetAttachmentTexture(blurredOutputTexture,
-                                                GL::Attachment::COLOR0);
-        m_blurFramebuffer->SetAttachmentTexture(auxiliarTexture,
-                                                GL::Attachment::COLOR1);
+        m_auxiliarFramebuffer->SetAttachmentTexture(blurredOutputTexture,
+                                                    GL::Attachment::COLOR0);
+        m_auxiliarFramebuffer->SetAttachmentTexture(auxiliarTexture,
+                                                    GL::Attachment::COLOR1);
 
         const Array<float> blurKernel = GetGaussianBlurKernel(blurRadius);
         blurSP->SetInt("B_BlurRadius", blurRadius);
@@ -572,13 +576,13 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
         // Render blur X
         blurSP->SetBool("B_BlurInX", true);
         blurSP->SetTexture2D("B_InputTexture", inputTexture);
-        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
         blurSP->SetBool("B_BlurInX", false);
         blurSP->SetTexture2D("B_InputTexture", auxiliarTexture);
-        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }
     else
@@ -586,11 +590,11 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
         Texture2D *inTexture = inputTexture;
         Texture2D *outTexture =
             (blurRadius % 2 == 1) ? blurredOutputTexture : auxiliarTexture;
-        m_blurFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         for (int i = 0; i < blurRadius; ++i)
         {
-            m_blurFramebuffer->SetAttachmentTexture(outTexture,
-                                                    GL::Attachment::COLOR0);
+            m_auxiliarFramebuffer->SetAttachmentTexture(outTexture,
+                                                        GL::Attachment::COLOR0);
             blurSP->SetTexture2D("B_InputTexture", inTexture);
             blurSP->SetInt("B_Iteration", i);
             GEngine::GetInstance()->RenderViewportPlane();
@@ -611,7 +615,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
         }
     }
 
-    m_blurFramebuffer->UnBind();
+    m_auxiliarFramebuffer->UnBind();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
@@ -623,7 +627,7 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
 void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
                             TextureCubeMap *auxiliarTextureCM,
                             TextureCubeMap *blurredOutputTextureCM,
-                            int blurRadius) const
+                            uint blurRadius) const
 {
     GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::COLOR_MASK);
@@ -632,9 +636,9 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     uint cmSize = inputTextureCM->GetSize();
-    m_blurCMFramebuffer->Bind();
+    m_auxiliarFramebuffer->Bind();
     GL::SetViewport(0, 0, cmSize, cmSize);
-    m_blurCMFramebuffer->Resize(cmSize, cmSize);
+    m_auxiliarFramebuffer->Resize(cmSize, cmSize);
 
     p_separableGaussianBlurCubeMapSP.Get()->Bind();
     p_separableGaussianBlurCubeMapSP.Get()->SetVector2("B_InputTextureSize",
@@ -647,11 +651,11 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 
     for (GL::CubeMapDir cmDir : GL::GetAllCubeMapDirs())
     {
-        m_blurCMFramebuffer->SetAttachmentTexture2D(
+        m_auxiliarFramebuffer->SetAttachmentTexture2D(
             blurredOutputTextureCM,
             GL::Attachment::COLOR0,
             SCAST<GL::TextureTarget>(cmDir));
-        m_blurCMFramebuffer->SetAttachmentTexture2D(
+        m_auxiliarFramebuffer->SetAttachmentTexture2D(
             auxiliarTextureCM,
             GL::Attachment::COLOR1,
             SCAST<GL::TextureTarget>(cmDir));
@@ -665,18 +669,18 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
         p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", true);
         p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
             "B_InputTexture", inputTextureCM);
-        m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
         p_separableGaussianBlurCubeMapSP.Get()->SetBool("B_BlurInX", false);
         p_separableGaussianBlurCubeMapSP.Get()->SetTextureCubeMap(
             "B_InputTexture", auxiliarTextureCM);
-        m_blurCMFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }
 
-    m_blurCMFramebuffer->UnBind();
+    m_auxiliarFramebuffer->UnBind();
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
@@ -692,9 +696,9 @@ void GEngine::FillTexture(Texture2D *texture, const Color &color)
 
     GL::Disable(GL::Enablable::BLEND);
 
-    m_copyTextureFramebuffer->Bind();
-    m_copyTextureFramebuffer->SetAttachmentTexture(texture,
-                                                   GL::Attachment::COLOR0);
+    m_auxiliarFramebuffer->Bind();
+    m_auxiliarFramebuffer->SetAttachmentTexture(texture,
+                                                GL::Attachment::COLOR0);
     GL::ClearColorBuffer(color);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -710,9 +714,9 @@ void GEngine::CopyTexture(Texture2D *source, Texture2D *destiny)
 
     GL::Disable(GL::Enablable::BLEND);
 
-    m_copyTextureFramebuffer->Bind();
-    m_copyTextureFramebuffer->SetAttachmentTexture(destiny,
-                                                   GL::Attachment::COLOR0);
+    m_auxiliarFramebuffer->Bind();
+    m_auxiliarFramebuffer->SetAttachmentTexture(destiny,
+                                                GL::Attachment::COLOR0);
     GEngine::RenderTexture(source);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -760,6 +764,13 @@ void GEngine::ApplyGammaCorrection(GBuffer *gbuffer, float gammaCorrection)
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     GL::Pop(GL::BindTarget::SHADER_PROGRAM);
+}
+
+void GEngine::DownscaleTexture(Texture2D *inputTexture,
+                               Texture2D *auxiliarTexture,
+                               Texture2D *outputTexture,
+                               uint downscalingPow2) const
+{
 }
 
 void GEngine::RenderTexture_(Texture2D *texture, float gammaCorrection)

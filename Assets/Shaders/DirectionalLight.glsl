@@ -28,11 +28,6 @@ float GetDirectionalLightFragmentLightness(const in vec3 pixelPosWorld,
     // Get uvs in shadow map, and sample the shadow map depth
     vec4 worldPosInLightSpace = (B_LightWorldToShadowMapMatrix * vec4(pixelPosWorld, 1));
     vec2 shadowMapUv = (worldPosInLightSpace.xy * 0.5f + 0.5f);
-    if (shadowMapUv.x < 0 || shadowMapUv.y < 0 ||
-        shadowMapUv.x >= 1 || shadowMapUv.y >= 1)
-    {
-        return 1.0f;
-    }
 
     // Get actual world pixel depth
     float worldPosDepthFromLightSpace = worldPosInLightSpace.z * 0.5f + 0.5f;

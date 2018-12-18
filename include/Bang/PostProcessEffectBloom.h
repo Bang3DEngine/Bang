@@ -22,12 +22,14 @@ public:
     void SetBlurRadius(uint blurRadius);
     void SetUseKawaseBlur(bool useKawaseBlur);
     void SetBrightnessThreshold(float brightnessThreshold);
+    void SetUseHighBitDepthTextures(bool useHighBitDepthTextures);
 
     float GetIntensity() const;
     uint GetBlurRadius() const;
     bool GetUseKawaseBlur() const;
     float GetBrightnessThreshold() const;
     Texture2D *GetFinalBloomTexture() const;
+    bool GetUseHighBitDepthTextures() const;
     ShaderProgram *GetBloomShaderProgram() const;
 
     // IReflectable
@@ -35,6 +37,7 @@ public:
 
 private:
     Framebuffer *m_bloomFramebuffer = nullptr;
+    bool m_useHighBitDepthTextures = true;
     float m_brightnessThreshold = 1.0f;
     bool m_useKawaseBlur = true;
     float m_intensity = 1.0f;

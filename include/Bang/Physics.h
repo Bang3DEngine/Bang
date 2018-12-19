@@ -119,7 +119,7 @@ private:
     physx::PxPhysics *m_pxPhysics = nullptr;
     physx::PxCooking *m_pxCooking = nullptr;
 
-    int m_maxSubSteps = 10;
+    int m_maxSubSteps = 3;
     Time m_stepSleepTime;
     Vector3 m_gravity = Vector3(0.0f, -30.0f, 0.0f);
 

@@ -26,6 +26,13 @@ void FPSChrono::SetMeanSamples(int meanSamples)
     m_meanSamples = Math::Max(meanSamples, 1);
 }
 
+double FPSChrono::GetLastTimeSeconds() const
+{
+    return m_latestDeltaTimes.Size() >= 1
+               ? m_latestDeltaTimes.Front().GetSeconds()
+               : 0.0;
+}
+
 double FPSChrono::GetMeanFPS() const
 {
     if (m_latestDeltaTimes.IsEmpty())

@@ -18,6 +18,7 @@ public:
 
     void SetMeanSamples(int meanSamples);
 
+    double GetLastTimeSeconds() const;
     double GetMeanFPS() const;
     double GetMeanSeconds() const;
     int GetMeanSamples() const;

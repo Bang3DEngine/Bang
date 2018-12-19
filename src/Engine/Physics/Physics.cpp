@@ -67,7 +67,7 @@ using namespace Bang;
 
 Physics::Physics()
 {
-    m_stepSleepTime.SetSeconds(1.0 / 60.0);
+    m_stepSleepTime.SetSeconds(1.0 / 30.0);
 }
 
 Physics::~Physics()

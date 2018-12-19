@@ -10,6 +10,7 @@
 #include "Bang/CapsuleCollider.h"
 #include "Bang/Collider.h"
 #include "Bang/Component.h"
+#include "Bang/DecalRenderer.h"
 #include "Bang/DirectionalLight.h"
 #include "Bang/GameObject.h"
 #include "Bang/Light.h"
@@ -126,6 +127,7 @@ void RegisterObjectClasses()
     REGISTER_OBJECT_CLASS(Light);
     REGISTER_OBJECT_CLASS(DirectionalLight);
     REGISTER_OBJECT_CLASS(PointLight);
+    REGISTER_OBJECT_CLASS(DecalRenderer);
     REGISTER_OBJECT_CLASS(PostProcessEffect);
     REGISTER_OBJECT_CLASS(PostProcessEffectSSAO);
     REGISTER_OBJECT_CLASS(PostProcessEffectBloom);

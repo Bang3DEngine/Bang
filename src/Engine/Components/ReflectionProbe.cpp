@@ -397,10 +397,12 @@ void ReflectionProbe::Reflect()
         ReflectionProbe, "ZNear", SetCamerasZNear, GetCamerasZNear);
     BANG_REFLECT_VAR_MEMBER(
         ReflectionProbe, "ZFar", SetCamerasZFar, GetCamerasZFar);
-    BANG_REFLECT_VAR_MEMBER(ReflectionProbe,
-                            "Clear mode",
-                            SetCamerasClearMode,
-                            GetCamerasClearMode);
+
+    ReflectVar<uint>(
+        "Clear mode",
+        [this](uint x) { SetCamerasClearMode(SCAST<CameraClearMode>(x)); },
+        [this]() { return SCAST<uint>(GetCamerasClearMode()); });
+
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Clear mode", "Color", CameraClearMode::COLOR);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(

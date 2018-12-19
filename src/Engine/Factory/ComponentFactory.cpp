@@ -12,6 +12,7 @@
 #include "Bang/Cloth.h"
 #include "Bang/Component.h"
 #include "Bang/Debug.h"
+#include "Bang/DecalRenderer.h"
 #include "Bang/DirectionalLight.h"
 #include "Bang/LineRenderer.h"
 #include "Bang/MeshCollider.h"
@@ -79,6 +80,7 @@ Component *ComponentFactory::Create(const String &componentClassName)
     CREATE_COMPONENT(componentClassName, UIScrollArea);
     CREATE_COMPONENT(componentClassName, AudioListener);
     CREATE_COMPONENT(componentClassName, RectTransform);
+    CREATE_COMPONENT(componentClassName, DecalRenderer);
     CREATE_COMPONENT(componentClassName, SphereCollider);
     CREATE_COMPONENT(componentClassName, UITextRenderer);
     CREATE_COMPONENT(componentClassName, NavigationMesh);

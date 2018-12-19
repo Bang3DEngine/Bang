@@ -14,6 +14,8 @@ PostProcessEffectFXAA::PostProcessEffectFXAA()
     m_fxaaShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
         ShaderProgramFactory::GetEngineShadersDir().Append("FXAA.frag")));
+
+    SetType(Type::AFTER_SCENE_AND_LIGHT);
 }
 
 PostProcessEffectFXAA::~PostProcessEffectFXAA()

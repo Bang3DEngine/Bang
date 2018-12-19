@@ -64,6 +64,7 @@ void LineRenderer::SetPoint(int i, const Vector3 &point)
 void LineRenderer::SetPoints(const Array<Vector3> &points)
 {
     m_points = points;
+    p_mesh.Get()->SetTrianglesVertexIds({});
     p_mesh.Get()->SetPositionsPool(GetPoints());
     p_mesh.Get()->UpdateVAOs();
 }

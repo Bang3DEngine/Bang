@@ -52,9 +52,9 @@ private:
     GL::TextureTarget m_target = Undef<GL::TextureTarget>();
 
     GL::FilterMode m_filterMode = Undef<GL::FilterMode>();
-    std::array<GL::WrapMode, 3> m_wrapMode = {Undef<GL::WrapMode>(),
-                                              Undef<GL::WrapMode>(),
-                                              Undef<GL::WrapMode>()};
+    std::array<GL::WrapMode, 3> m_wrapMode = {{Undef<GL::WrapMode>(),
+                                               Undef<GL::WrapMode>(),
+                                               Undef<GL::WrapMode>()}};
 };
 }  // namespace Bang
 

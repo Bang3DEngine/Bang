@@ -20,7 +20,7 @@ public:
     virtual Matrix4 GetModelMatrixUniform() const override;
 
     void SetIsProjective(bool isProjective);
-    void SetFieldOfView(float fieldOfView);
+    void SetFieldOfViewDegrees(float fieldOfViewDegrees);
     void SetAspectRatio(float aspectRatio);
     void SetZNear(float zNear);
     void SetZFar(float zFar);
@@ -28,7 +28,7 @@ public:
 
     float GetZNear() const;
     float GetZFar() const;
-    float GetFieldOfView() const;
+    float GetFieldOfViewDegrees() const;
     Vector3 GetBoxSize() const;
     float GetAspectRatio() const;
     bool GetIsProjective() const;
@@ -45,7 +45,7 @@ private:
 
     float m_zNear = 0.05f;
     float m_zFar = 100.0f;
-    float m_fieldOfView = 60.0f;
+    float m_fieldOfViewDegrees = 60.0f;
     float m_aspectRatio = 1.0f;
 };
 }

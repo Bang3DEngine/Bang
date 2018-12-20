@@ -62,10 +62,10 @@ Matrix4 DecalRenderer::GetModelMatrixUniform() const
     {
         // Set new scale to cover all the frustum
         Vector3 newScale;
-        float fovRad = Math::DegToRad(GetFieldOfView());
-        newScale.x = Math::Sin(fovRad) * GetZFar();
-        newScale.y = Math::Cos(fovRad) * GetZFar() * GetAspectRatio();
-        newScale.z = GetZFar();
+        float fovRad = Math::DegToRad(GetFieldOfViewDegrees());
+        newScale.y = Math::Tan(fovRad) * GetZFar() * 2 * 1.5f;
+        newScale.x = newScale.y * GetAspectRatio();
+        newScale.z = GetZFar() * 1.5f;
         transformMatrix.SetScale(newScale);
     }
     return transformMatrix;
@@ -76,9 +76,9 @@ void DecalRenderer::SetIsProjective(bool isProjective)
     m_projective = isProjective;
 }
 
-void DecalRenderer::SetFieldOfView(float fieldOfView)
+void DecalRenderer::SetFieldOfViewDegrees(float fieldOfViewDegrees)
 {
-    m_fieldOfView = fieldOfView;
+    m_fieldOfViewDegrees = fieldOfViewDegrees;
 }
 
 void DecalRenderer::SetAspectRatio(float aspectRatio)
@@ -111,9 +111,9 @@ float DecalRenderer::GetZFar() const
     return m_zFar;
 }
 
-float DecalRenderer::GetFieldOfView() const
+float DecalRenderer::GetFieldOfViewDegrees() const
 {
-    return m_fieldOfView;
+    return m_fieldOfViewDegrees;
 }
 
 Vector3 DecalRenderer::GetBoxSize() const
@@ -158,10 +158,11 @@ Matrix4 DecalRenderer::GetProjectionMatrix() const
     Matrix4 projMatrix;
     if (GetIsProjective())
     {
-        projMatrix = Matrix4::Perspective(Math::DegToRad(GetFieldOfView()),
-                                          GetAspectRatio(),
-                                          GetZNear(),
-                                          GetZFar());
+        projMatrix =
+            Matrix4::Perspective(Math::DegToRad(GetFieldOfViewDegrees()),
+                                 GetAspectRatio(),
+                                 GetZNear(),
+                                 GetZFar());
     }
     else
     {
@@ -194,10 +195,24 @@ void DecalRenderer::Reflect()
     BANG_REFLECT_VAR_MEMBER(
         DecalRenderer, "Projective", SetIsProjective, GetIsProjective);
 
-    BANG_REFLECT_VAR_MEMBER(
-        DecalRenderer, "Field of View", SetFieldOfView, GetFieldOfView);
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        DecalRenderer,
+        "Field of View",
+        SetFieldOfViewDegrees,
+        GetFieldOfViewDegrees,
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 179.0f));
     BANG_REFLECT_VAR_MEMBER(
         DecalRenderer, "Aspect Ratio", SetAspectRatio, GetAspectRatio);
-    BANG_REFLECT_VAR_MEMBER(DecalRenderer, "Near plane", SetZNear, GetZNear);
-    BANG_REFLECT_VAR_MEMBER(DecalRenderer, "Far plane", SetZFar, GetZFar);
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        DecalRenderer,
+        "Near plane",
+        SetZNear,
+        GetZNear,
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.05f, GetZFar()));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        DecalRenderer,
+        "Far plane",
+        SetZFar,
+        GetZFar,
+        BANG_REFLECT_HINT_MIN_VALUE(GetZNear() + 0.001f));
 }

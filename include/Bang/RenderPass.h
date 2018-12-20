@@ -8,9 +8,10 @@ namespace Bang
 enum class RenderPass
 {
     SCENE = 0,
+    SCENE_DECALS = 8,
     SCENE_TRANSPARENT = 6,
-    SCENE_POSTPROCESS = 1,
-    SCENE_POSTPROCESS_2 = 7,
+    SCENE_BEFORE_ADDING_LIGHTS = 1,
+    SCENE_AFTER_ADDING_LIGHTS = 7,
 
     CANVAS = 2,
     CANVAS_POSTPROCESS = 3,

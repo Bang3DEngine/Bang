@@ -403,6 +403,28 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         {
             gbuffer->SetAllDrawBuffers();
             RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
+        }
+
+        if (camera->MustRenderPass(RenderPass::SCENE_DECALS))
+        {
+            GL::Push(GL::Pushable::STENCIL_STATES);
+            GL::Push(GL::Pushable::BLEND_STATES);
+
+            gbuffer->SetDrawBuffers({GBuffer::AttAlbedo});
+
+            GL::Enable(GL::Enablable::BLEND);
+            GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
+                          GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+            GL::Disable(GL::Enablable::STENCIL_TEST);
+            RenderWithPass(go, RenderPass::SCENE_DECALS);
+
+            GL::Pop(GL::Pushable::STENCIL_STATES);
+            GL::Pop(GL::Pushable::BLEND_STATES);
+        }
+
+        if (camera->MustRenderPass(RenderPass::SCENE))
+        {
+            gbuffer->SetAllDrawBuffers();
             ApplyStenciledDeferredLightsToGBuffer(go, camera);
         }
 
@@ -415,10 +437,10 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         }
 
         // Render scene postprocess
-        if (camera->MustRenderPass(RenderPass::SCENE_POSTPROCESS))
+        if (camera->MustRenderPass(RenderPass::SCENE_BEFORE_ADDING_LIGHTS))
         {
             gbuffer->SetColorDrawBuffer();
-            RenderWithPass(go, RenderPass::SCENE_POSTPROCESS);
+            RenderWithPass(go, RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
         }
 
         gbuffer->SetColorDrawBuffer();
@@ -427,10 +449,10 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         RenderTexture(gbuffer->GetAttachmentTex2D(GBuffer::AttLight));
         GL::Disable(GL::Enablable::BLEND);
 
-        if (camera->MustRenderPass(RenderPass::SCENE_POSTPROCESS_2))
+        if (camera->MustRenderPass(RenderPass::SCENE_AFTER_ADDING_LIGHTS))
         {
             gbuffer->SetColorDrawBuffer();
-            RenderWithPass(go, RenderPass::SCENE_POSTPROCESS_2);
+            RenderWithPass(go, RenderPass::SCENE_AFTER_ADDING_LIGHTS);
         }
     }
 

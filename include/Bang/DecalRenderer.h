@@ -6,6 +6,7 @@
 
 namespace Bang
 {
+class Texture2D;
 class DecalRenderer : public Renderer
 {
     COMPONENT_WITH_FAST_DYNAMIC_CAST(DecalRenderer);
@@ -17,9 +18,14 @@ public:
     // Renderer
     void OnRender() override;
 
+    void SetDecalTexture(Texture2D *decalTexture);
+
     Vector3 GetBoxSize() const;
+    Texture2D *GetDecalTexture() const;
+    Matrix4 GetProjectionMatrix() const;
 
 private:
+    RH<Mesh> m_cubeMesh;
 };
 }
 

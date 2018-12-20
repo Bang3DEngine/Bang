@@ -53,10 +53,10 @@ bool PostProcessEffect::MustBeRendered(RenderPass renderPass) const
         switch (GetType())
         {
             case Type::AFTER_SCENE:
-                return (renderPass == RenderPass::SCENE_POSTPROCESS);
+                return (renderPass == RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
 
             case Type::AFTER_SCENE_AND_LIGHT:
-                return (renderPass == RenderPass::SCENE_POSTPROCESS_2);
+                return (renderPass == RenderPass::SCENE_AFTER_ADDING_LIGHTS);
 
             case Type::AFTER_CANVAS:
                 return (renderPass == RenderPass::CANVAS_POSTPROCESS);

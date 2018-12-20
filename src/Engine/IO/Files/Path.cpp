@@ -62,6 +62,11 @@ void Path::SetPath(const String &path)
 
 bool Path::IsDir() const
 {
+    if (IsEmpty())
+    {
+        return false;
+    }
+
 #ifdef __linux__
     struct stat path_stat;
     if (stat(GetAbsolute().ToCString(), &path_stat) == 0)
@@ -76,6 +81,11 @@ bool Path::IsDir() const
 
 bool Path::IsFile() const
 {
+    if (IsEmpty())
+    {
+        return false;
+    }
+
 #ifdef __linux__
     struct stat path_stat;
     stat(GetAbsolute().ToCString(), &path_stat);
@@ -88,6 +98,11 @@ bool Path::IsFile() const
 
 bool Path::Exists() const
 {
+    if (IsEmpty())
+    {
+        return false;
+    }
+
 #ifdef __linux__
     return access(GetAbsolute().ToCString(), F_OK) != -1;
 #elif _WIN32

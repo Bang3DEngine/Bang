@@ -24,12 +24,13 @@ public:
     void SetAspectRatio(float aspectRatio);
     void SetZNear(float zNear);
     void SetZFar(float zFar);
+    void SetBoxSize(const Vector3 &boxSize);
     void SetDecalTexture(Texture2D *decalTexture);
 
     float GetZNear() const;
     float GetZFar() const;
     float GetFieldOfViewDegrees() const;
-    Vector3 GetBoxSize() const;
+    const Vector3 &GetBoxSize() const;
     float GetAspectRatio() const;
     bool GetIsProjective() const;
     Texture2D *GetDecalTexture() const;
@@ -47,6 +48,7 @@ private:
     float m_zFar = 100.0f;
     float m_fieldOfViewDegrees = 60.0f;
     float m_aspectRatio = 1.0f;
+    Vector3 m_boxSize = Vector3::One();
 };
 }
 

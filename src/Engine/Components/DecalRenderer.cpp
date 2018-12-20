@@ -1,13 +1,16 @@
 #include "Bang/DecalRenderer.h"
 
+#include "Bang/Extensions.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
+#include "Bang/Resources.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/Texture2D.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/Transform.h"
@@ -68,6 +71,10 @@ Matrix4 DecalRenderer::GetModelMatrixUniform() const
         newScale.z = GetZFar() * 1.5f;
         transformMatrix.SetScale(newScale);
     }
+    else
+    {
+        transformMatrix.SetScale(GetBoxSize());
+    }
     return transformMatrix;
 }
 
@@ -96,6 +103,11 @@ void DecalRenderer::SetZFar(float zFar)
     m_zFar = zFar;
 }
 
+void DecalRenderer::SetBoxSize(const Vector3 &boxSize)
+{
+    m_boxSize = boxSize;
+}
+
 void DecalRenderer::SetDecalTexture(Texture2D *decalTexture)
 {
     GetMaterial()->SetAlbedoTexture(decalTexture);
@@ -116,9 +128,9 @@ float DecalRenderer::GetFieldOfViewDegrees() const
     return m_fieldOfViewDegrees;
 }
 
-Vector3 DecalRenderer::GetBoxSize() const
+const Vector3 &DecalRenderer::GetBoxSize() const
 {
-    return GetGameObject()->GetTransform()->GetScale();
+    return m_boxSize;
 }
 
 float DecalRenderer::GetAspectRatio() const
@@ -148,7 +160,11 @@ Matrix4 DecalRenderer::GetViewMatrix() const
     }
     else
     {
-        viewMatrix = GetModelMatrixUniform().Inversed();
+        Transform *tr = GetGameObject()->GetTransform();
+        viewMatrix = Matrix4::TranslateMatrix(tr->GetPosition()) *
+                     Matrix4::RotateMatrix(tr->GetRotation()) *
+                     Matrix4::ScaleMatrix(GetBoxSize());
+        viewMatrix = viewMatrix.Inversed();
     }
     return viewMatrix;
 }
@@ -192,27 +208,52 @@ void DecalRenderer::Reflect()
         ->GetHintsPtr()
         ->SetIsShown(false);
 
+    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+        DecalRenderer,
+        "Texture",
+        SetDecalTexture,
+        GetDecalTexture,
+        Texture2D,
+        BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetImageExtensions()));
+
     BANG_REFLECT_VAR_MEMBER(
         DecalRenderer, "Projective", SetIsProjective, GetIsProjective);
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        DecalRenderer,
+        "Box Size",
+        SetBoxSize,
+        GetBoxSize,
+        BANG_REFLECT_HINT_MIN_VALUE(Vector3(0)) +
+            BANG_REFLECT_HINT_SHOWN(!GetIsProjective()));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
         "Field of View",
         SetFieldOfViewDegrees,
         GetFieldOfViewDegrees,
-        BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 179.0f));
-    BANG_REFLECT_VAR_MEMBER(
-        DecalRenderer, "Aspect Ratio", SetAspectRatio, GetAspectRatio);
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 179.0f) +
+            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(DecalRenderer,
+                                   "Aspect Ratio",
+                                   SetAspectRatio,
+                                   GetAspectRatio,
+                                   BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
         "Near plane",
         SetZNear,
         GetZNear,
-        BANG_REFLECT_HINT_MINMAX_VALUE(0.05f, GetZFar()));
+        BANG_REFLECT_HINT_MINMAX_VALUE(0.05f, GetZFar()) +
+            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
         "Far plane",
         SetZFar,
         GetZFar,
-        BANG_REFLECT_HINT_MIN_VALUE(GetZNear() + 0.001f));
+        BANG_REFLECT_HINT_MIN_VALUE(GetZNear()) +
+            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
 }

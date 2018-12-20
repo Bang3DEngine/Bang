@@ -482,6 +482,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     if (camera->MustRenderPass(RenderPass::OVERLAY))
     {
         // GBuffer Overlay rendering
+        GL::Enable(GL::Enablable::BLEND);
         gbuffer->SetAllDrawBuffers();
         gbuffer->SetOverlayDepthStencil();
         ClearDepthStencilIfNeeded(renderFlags);

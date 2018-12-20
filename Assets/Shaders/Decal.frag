@@ -38,7 +38,6 @@ void main()
     vec4 finalColor = GetIBLAmbientColor(true,
                                          pixelWorldPos, pixelNormal, pixelAlbedo,
                                          pixelRoughness, pixelMetalness);
-
     B_GIn_Albedo = pixelAlbedo;
     B_GIn_Color = finalColor;
 }

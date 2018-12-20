@@ -48,7 +48,7 @@ void main()
     vec3 viewVector = normalize(position - B_Camera_WorldPos.xyz);
     vec3 reflectedViewVector = reflect(viewVector, normal);
 
-    vec4 finalColor = GetIBLAmbientColor(position, normal, WaterColor,
+    vec4 finalColor = GetIBLAmbientColor(true, position, normal, WaterColor,
                                          WaterRoughness, WaterMetalness);
     finalColor += vec4(GetForwardLightApport(position,
                                              normal,

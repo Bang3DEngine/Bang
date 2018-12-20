@@ -14,7 +14,7 @@ const String ReflectVariableHints::KeyIsSlider = "IsSlider";
 const String ReflectVariableHints::KeyIsButton = "IsButton";
 const String ReflectVariableHints::KeyIsBlocked = "IsBlocked";
 const String ReflectVariableHints::KeyExtension = "Extension";
-const String ReflectVariableHints::KeyZoomablePreview = "ZoomablePreview";
+const String ReflectVariableHints::KeyIsZoomablePreview = "IsZoomablePreview";
 const String ReflectVariableHints::KeyIsShown = "IsShown";
 const String ReflectVariableHints::KeyIsEnum = "IsEnum";
 const String ReflectVariableHints::KeyIsEnumFlags = "IsEnumFlags";
@@ -62,36 +62,40 @@ void ReflectVariableHints::Update(const String &hintsString)
 
                 if (isMinValueKey)
                 {
-                    m_minValue = valueVec;
+                    SetMinValue(valueVec);
                 }
                 else
                 {
-                    m_maxValue = valueVec;
+                    SetMaxValue(valueVec);
                 }
             }
             else if (keyStr == ReflectVariableHints::KeyIsButton)
             {
-                m_isButton = true;
+                SetIsButton(true);
             }
             else if (keyStr == ReflectVariableHints::KeyObjectPtrClass)
             {
-                iss >> m_objectPtrClass;
+                String objectPtrClass;
+                iss >> objectPtrClass;
+                SetObjectPtrClass(objectPtrClass);
             }
             else if (keyStr == ReflectVariableHints::KeyStepValue)
             {
-                iss >> m_stepValue;
+                float stepValue;
+                iss >> stepValue;
+                SetStepValue(stepValue);
             }
             else if (keyStr == ReflectVariableHints::KeyIsSlider)
             {
-                m_isSlider = IsTrue(valueStr);
+                SetIsSlider(IsTrue(valueStr));
             }
             else if (keyStr == ReflectVariableHints::KeyIsEnum)
             {
-                m_isEnum = IsTrue(valueStr);
+                SetIsEnum(IsTrue(valueStr));
             }
             else if (keyStr == ReflectVariableHints::KeyIsEnumFlags)
             {
-                m_isEnumFlags = IsTrue(valueStr);
+                SetIsEnumFlags(IsTrue(valueStr));
             }
             else if (keyStr == ReflectVariableHints::KeyExtension)
             {
@@ -102,22 +106,87 @@ void ReflectVariableHints::Update(const String &hintsString)
                 }
 
                 Array<String> extensions = valueStrMod.Split<Array>(',', true);
-                m_extensions.PushBack(extensions);
+                AddExtensions(extensions);
             }
-            else if (keyStr == ReflectVariableHints::KeyZoomablePreview)
+            else if (keyStr == ReflectVariableHints::KeyIsZoomablePreview)
             {
-                m_zoomablePreview = IsTrue(valueStr);
+                SetIsZoomablePreview(IsTrue(valueStr));
             }
             else if (keyStr == ReflectVariableHints::KeyIsShown)
             {
-                m_isShown = IsTrue(valueStr);
+                SetIsShown(IsTrue(valueStr));
             }
             else if (keyStr == ReflectVariableHints::KeyIsBlocked)
             {
-                m_blocked = IsTrue(valueStr);
+                SetIsBlocked(IsTrue(valueStr));
             }
         }
     }
+}
+
+void ReflectVariableHints::SetObjectPtrClass(const String &objectPtrClass)
+{
+    m_objectPtrClass = objectPtrClass;
+}
+
+void ReflectVariableHints::SetIsZoomablePreview(bool zoomablePreview)
+{
+    m_isZoomablePreview = zoomablePreview;
+}
+
+void ReflectVariableHints::AddExtensions(const Array<String> &extensions)
+{
+    m_extensions.PushBack(extensions);
+}
+
+void ReflectVariableHints::SetExtensions(const Array<String> &extensions)
+{
+    m_extensions = extensions;
+}
+
+void ReflectVariableHints::SetMinValue(const Vector4 &minValue)
+{
+    m_minValue = minValue;
+}
+
+void ReflectVariableHints::SetMaxValue(const Vector4 &maxValue)
+{
+    m_maxValue = maxValue;
+}
+
+void ReflectVariableHints::SetStepValue(float stepValue)
+{
+    m_stepValue = stepValue;
+}
+
+void ReflectVariableHints::SetIsButton(bool isButton)
+{
+    m_isButton = isButton;
+}
+
+void ReflectVariableHints::SetIsSlider(bool isSlider)
+{
+    m_isSlider = isSlider;
+}
+
+void ReflectVariableHints::SetIsShown(bool isShown)
+{
+    m_isShown = isShown;
+}
+
+void ReflectVariableHints::SetIsEnum(bool isEnum)
+{
+    m_isEnum = isEnum;
+}
+
+void ReflectVariableHints::SetIsBlocked(bool isBlocked)
+{
+    m_isBlocked = isBlocked;
+}
+
+void ReflectVariableHints::SetIsEnumFlags(bool isEnumFlags)
+{
+    m_isEnumFlags = isEnumFlags;
 }
 
 String ReflectVariableHints::GetObjectPtrClass() const
@@ -135,9 +204,9 @@ ClassIdType ReflectVariableHints::GetObjectPtrClassIdEnd() const
     return GetClassIdEnd(GetObjectPtrClass());
 }
 
-bool ReflectVariableHints::GetZoomablePreview() const
+bool ReflectVariableHints::GetIsZoomablePreview() const
 {
-    return m_zoomablePreview;
+    return m_isZoomablePreview;
 }
 
 const Array<String> &ReflectVariableHints::GetExtensions() const
@@ -182,7 +251,7 @@ bool ReflectVariableHints::GetIsEnum() const
 
 bool ReflectVariableHints::GetIsBlocked() const
 {
-    return m_blocked;
+    return m_isBlocked;
 }
 
 bool ReflectVariableHints::GetIsEnumFlags() const
@@ -210,7 +279,7 @@ String ReflectVariableHints::GetHintsString() const
         hintsString += BANG_REFLECT_HINT_KEY_VALUE(
             ReflectVariableHints::KeyExtension, extension);
     }
-    ADD_TO_HINTS_STRING(ZoomablePreview);
+    ADD_TO_HINTS_STRING(IsZoomablePreview);
     ADD_TO_HINTS_STRING(IsShown);
     ADD_TO_HINTS_STRING(IsEnum);
     ADD_TO_HINTS_STRING(IsEnumFlags);

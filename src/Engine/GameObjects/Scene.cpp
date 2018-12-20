@@ -58,7 +58,7 @@ void Scene::Render(RenderPass rp, bool renderChildren)
 {
     GameObject::Render(rp, renderChildren);
 
-    if (rp == RenderPass::SCENE)
+    if (rp == RenderPass::SCENE_OPAQUE)
     {
         GetDebugRenderer()->RenderPrimitives(true);
     }

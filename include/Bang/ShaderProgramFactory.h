@@ -18,12 +18,13 @@ class ShaderProgramFactory
 {
 public:
     static Path GetDefaultVertexShaderPath(
-        RenderPass renderPass = RenderPass::SCENE);
+        RenderPass renderPass = RenderPass::SCENE_OPAQUE);
     static Path GetDefaultFragmentShaderPath(
-        RenderPass renderPass = RenderPass::SCENE);
+        RenderPass renderPass = RenderPass::SCENE_OPAQUE);
     static Path GetScreenPassVertexShaderPath();
 
-    static ShaderProgram *GetDefault(RenderPass renderPass = RenderPass::SCENE);
+    static ShaderProgram *GetDefault(
+        RenderPass renderPass = RenderPass::SCENE_OPAQUE);
     static ShaderProgram *GetDefaultPostProcess();
     static ShaderProgram *GetPointLightShadowMap();
     static ShaderProgram *GetPointLightDeferredScreenPass();

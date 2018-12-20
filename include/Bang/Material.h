@@ -104,7 +104,7 @@ protected:
 
     float m_lineWidth = 1.0f;
     float m_normalMapMultiplyFactor = 1.0f;
-    RenderPass m_renderPass = RenderPass::SCENE;
+    RenderPass m_renderPass = RenderPass::SCENE_OPAQUE;
     Color m_albedoColor = Color::White();
     Vector2 m_albedoUvOffset = Vector2::Zero();
     Vector2 m_albedoUvMultiply = Vector2::One();

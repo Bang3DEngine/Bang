@@ -27,6 +27,7 @@ public:
         RH<Texture2D> texture;
         bool wireframe = false;
         float thickness = 1.0f;
+        bool depthMask = true;
         Color color = Color::White();
         bool receivesLighting = false;
         Vector3 scale = Vector3::One();

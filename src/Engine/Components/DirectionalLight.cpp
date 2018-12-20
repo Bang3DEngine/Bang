@@ -135,7 +135,7 @@ void DirectionalLight::RenderShadowMaps_(GameObject *go)
 
     for (Renderer *rend : shadowCastersRenderers)
     {
-        rend->OnRender(RenderPass::SCENE);
+        rend->OnRender(RenderPass::SCENE_OPAQUE);
     }
 
     ge->PopActiveRenderingCamera();

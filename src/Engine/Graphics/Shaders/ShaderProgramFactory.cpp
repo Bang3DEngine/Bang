@@ -12,7 +12,7 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 {
     switch (renderPass)
     {
-        case RenderPass::SCENE:
+        case RenderPass::SCENE_OPAQUE:
             return ShaderProgramFactory::GetEngineShadersDir().Append(
                 "Default.vert");
             break;
@@ -24,14 +24,15 @@ Path ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass renderPass)
 
         default: break;
     }
-    return ShaderProgramFactory::GetDefaultVertexShaderPath(RenderPass::SCENE);
+    return ShaderProgramFactory::GetDefaultVertexShaderPath(
+        RenderPass::SCENE_OPAQUE);
 }
 
 Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
 {
     switch (renderPass)
     {
-        case RenderPass::SCENE:
+        case RenderPass::SCENE_OPAQUE:
             return ShaderProgramFactory::GetEngineShadersDir().Append(
                 "Default.frag");
             break;
@@ -44,7 +45,7 @@ Path ShaderProgramFactory::GetDefaultFragmentShaderPath(RenderPass renderPass)
         default: break;
     }
     return ShaderProgramFactory::GetDefaultFragmentShaderPath(
-        RenderPass::SCENE);
+        RenderPass::SCENE_OPAQUE);
 }
 
 Path ShaderProgramFactory::GetScreenPassVertexShaderPath()

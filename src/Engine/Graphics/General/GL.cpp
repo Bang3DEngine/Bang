@@ -69,7 +69,7 @@ static void PushGLContextValue(StackAndValue<T> GL::*svMPtr)
     GL *gl = GL::GetInstance();
     ASSERT(gl);
     StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
-    stackAndValue->stack.push(stackAndValue.currentValue);
+    stackAndValue->stack.push(stackAndValue->currentValue);
 }
 template <class T>
 static const T &PopAndGetGLContextValue(StackAndValue<T> GL::*svMPtr)
@@ -78,11 +78,11 @@ static const T &PopAndGetGLContextValue(StackAndValue<T> GL::*svMPtr)
     ASSERT(gl);
     StackAndValue<T> *stackAndValue = &(gl->*svMPtr);
 
-    ASSERT(stackAndValue.stack.size() >= 1);
+    ASSERT(stackAndValue->stack.size() >= 1);
     stackAndValue->currentValue = stackAndValue->stack.top();
     stackAndValue->stack.pop();
 
-    return stackAndValue.currentValue;
+    return stackAndValue->currentValue;
 }
 
 GL::GL()
@@ -594,7 +594,8 @@ void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
     GL *gl = GL::GetInstance();
     ASSERT(gl);
 
-    if (enabled != GL::IsEnabled(glEnablable))
+    bool canBeIndexed = (GL::CanEnablableBeIndexed(glEnablable));
+    if (enabled != GL::IsEnabled(glEnablable) || canBeIndexed)
     {
         if (enabled)
         {
@@ -606,9 +607,16 @@ void GL::SetEnabled(GL::Enablable glEnablable, bool enabled)
         }
 
         auto &enabledisStackAndValue = gl->m_enabledVars[glEnablable];
-        for (int i = 0; i < GL::GetEnablableIndexMax(glEnablable); ++i)
+        if (canBeIndexed)
         {
-            enabledisStackAndValue.currentValue[i] = enabled;
+            for (int i = 0; i < GL::GetEnablableIndexMax(glEnablable); ++i)
+            {
+                enabledisStackAndValue.currentValue[i] = enabled;
+            }
+        }
+        else
+        {
+            enabledisStackAndValue.currentValue[0] = enabled;
         }
     }
 }
@@ -629,19 +637,15 @@ void GL::SetEnabledi(GL::Enablable glEnablable, int i, bool enabled)
         }
 
         GL *gl = GL::GetInstance();
-        if (gl)
+        ASSERT(gl);
+
+        if (GL::CanEnablableBeIndexed(glEnablable))
         {
-            if (!gl->m_enabledVars.ContainsKey(glEnablable))
-            {
-                auto &enabledisStackAndValue =
-                    gl->m_enabledVars.Get(glEnablable);
-                for (uint i = 0; i < enabledisStackAndValue.currentValue.size();
-                     ++i)
-                {
-                    enabledisStackAndValue.currentValue[i] = false;
-                }
-            }
             gl->m_enabledVars[glEnablable].currentValue[i] = enabled;
+        }
+        else
+        {
+            gl->m_enabledVars[glEnablable].currentValue[0] = enabled;
         }
     }
 }
@@ -2676,16 +2680,20 @@ void GL::PushOrPop(GL::Enablable enablable, bool push)
         GL::SetEnabled(enablable,
                        gl->m_enabledVars.Get(enablable).stack.top()[0]);
 
-        ASSERT(gl->m_enabledVars.ContainsKey(enablable));
-        ASSERT(gl->m_enabledVars.Get(enablable).stack.size() >= 1);
         auto &enabledIStackAndValue = gl->m_enabledVars.Get(enablable);
-        for (int i = 0; i < GL::GetEnablableIndexMax(enablable); ++i)
+        if (GL::CanEnablableBeIndexed(enablable))
         {
-            GL::SetEnabledi(enablable, i, enabledIStackAndValue.stack.top()[i]);
+            for (int i = 0; i < GL::GetEnablableIndexMax(enablable); ++i)
+            {
+                GL::SetEnabledi(
+                    enablable, i, enabledIStackAndValue.stack.top()[i]);
+            }
+        }
+        else
+        {
+            GL::SetEnabled(enablable, enabledIStackAndValue.stack.top()[0]);
         }
     }
-
-    PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
     PushOrPop_(&gl->m_enabledVars.Get(enablable), push);
 }
 

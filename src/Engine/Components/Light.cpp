@@ -233,7 +233,7 @@ Array<Renderer *> Light::GetShadowCastersIn(GameObject *go) const
             if (const Material *mat = rend->GetActiveMaterial())
             {
                 isValidShadowCaster =
-                    (mat->GetRenderPass() == RenderPass::SCENE &&
+                    (mat->GetRenderPass() == RenderPass::SCENE_OPAQUE &&
                      rend->GetCastsShadows());
             }
 

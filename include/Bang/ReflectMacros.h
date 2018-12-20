@@ -85,8 +85,8 @@
     BANG_REFLECT_HINT_MINMAX_VALUE(minValue, maxValue) + \
         BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsSlider, true)
 
-#define BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(trueOrFalse)                   \
-    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyZoomablePreview, \
+#define BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(trueOrFalse)                     \
+    BANG_REFLECT_HINT_KEY_VALUE(ReflectVariableHints::KeyIsZoomablePreview, \
                                 trueOrFalse)
 
 #define BANG_REFLECT_HINT_ENUM(trueOrFalse) \

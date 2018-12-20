@@ -216,7 +216,8 @@ void main()
         float pixelRoughness = B_MaterialRoughness;
         float pixelMetalness = B_MaterialMetalness;
 
-        vec4 color = GetIBLAmbientColor(worldPosition, normal, albedoColor,
+        vec4 color = GetIBLAmbientColor(true,
+                                        worldPosition, normal, albedoColor,
                                         pixelRoughness, pixelMetalness);
 
         B_GIn_Color = color;

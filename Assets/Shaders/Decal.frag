@@ -1,5 +1,9 @@
 #define BANG_FRAGMENT
+
+#define BANG_NO_REFLECTION_PROBES
+
 #include "Common.glsl"
+#include "LightCommon.glsl"
 
 uniform sampler2D B_DecalTexture;
 uniform mat4 B_DecalProjectionMatrix;
@@ -7,6 +11,7 @@ uniform mat4 B_DecalProjectionMatrix;
 in vec3 B_FIn_Position;
 
 layout(location = 0) out vec4 B_GIn_Albedo;
+layout(location = 1) out vec4 B_GIn_Color;
 
 void main()
 {
@@ -24,11 +29,16 @@ void main()
     pixelProj.xyz /= pixelProj.w;
 
     vec2 uv = pixelProj.xy * 0.5 + 0.5;
+    uv = vec2(uv.x, 1.0f - uv.y);
 
-    vec4 decalColor = texture(B_DecalTexture, uv);
-    B_GIn_Albedo = vec4(1,1,0,1); // decalColor;
-    //  B_GIn_Albedo = vec4(uv, 0, 1);
-    // B_GIn_Albedo = vec4(uv.y > 0.9 ? vec3(1,0,0) : vec3(0,1,0), 1);
-    // B_GIn_Albedo = vec4(pixelCubePos.xyz, 1);
-    // B_GIn_Albedo = vec4(1,0,0, 1);
+    vec4 pixelAlbedo = texture(B_DecalTexture, uv);
+    vec3 pixelNormal = B_SampleNormal();
+    float pixelRoughness = B_SampleRoughness();
+    float pixelMetalness = B_SampleMetalness();
+    vec4 finalColor = GetIBLAmbientColor(true,
+                                         pixelWorldPos, pixelNormal, pixelAlbedo,
+                                         pixelRoughness, pixelMetalness);
+
+    B_GIn_Albedo = pixelAlbedo;
+    B_GIn_Color = finalColor;
 }

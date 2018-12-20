@@ -54,7 +54,8 @@ void DefaultFragCommonMain(vec4 albedoColor)
     float pixelRoughness = texture(B_RoughnessTexture, B_FIn_AlbedoUv).r * B_MaterialRoughness;
     float pixelMetalness = texture(B_MetalnessTexture, B_FIn_AlbedoUv).r * B_MaterialMetalness;
     vec3 finalPosition = B_FIn_Position.xyz;
-    vec4 finalColor = GetIBLAmbientColor(finalPosition,  finalNormal, finalAlbedo,
+    vec4 finalColor = GetIBLAmbientColor(B_MaterialReceivesLighting,
+                                         finalPosition,  finalNormal, finalAlbedo,
                                          pixelRoughness, pixelMetalness);
 
     #if defined(BANG_FORWARD_RENDERING)

@@ -37,11 +37,13 @@ uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
 
+#ifndef BANG_NO_REFLECTION_PROBES
 uniform bool        B_UseReflectionProbe;
 uniform samplerCube B_ReflectionProbeDiffuse;
 uniform samplerCube B_ReflectionProbeSpecular;
 uniform vec3        B_ReflectionProbeCenter; // If boxed.
 uniform vec3        B_ReflectionProbeSize;   // If boxed.
+#endif
 /////////////////////////////////////////////
 
 uniform float B_TimeSeconds;

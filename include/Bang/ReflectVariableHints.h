@@ -19,7 +19,7 @@ public:
     static const String KeyExtension;
     static const String KeyIsButton;
     static const String KeyIsBlocked;
-    static const String KeyZoomablePreview;
+    static const String KeyIsZoomablePreview;
     static const String KeyIsSlider;
     static const String KeyIsShown;
     static const String KeyIsEnum;
@@ -30,14 +30,28 @@ public:
 
     void Update(const String &hintsString);
 
+    void SetObjectPtrClass(const String &objectPtrClass);
+    void AddExtensions(const Array<String> &extensions);
+    void SetExtensions(const Array<String> &extensions);
+    void SetMinValue(const Vector4 &minValue);
+    void SetMaxValue(const Vector4 &maxValue);
+    void SetIsZoomablePreview(bool zoomablePreview);
+    void SetStepValue(float stepValue);
+    void SetIsButton(bool isButton);
+    void SetIsSlider(bool isSlider);
+    void SetIsShown(bool isShown);
+    void SetIsEnum(bool isEnum);
+    void SetIsBlocked(bool isBlocked);
+    void SetIsEnumFlags(bool isEnumFlags);
+
     String GetObjectPtrClass() const;
     ClassIdType GetObjectPtrClassIdBegin() const;
     ClassIdType GetObjectPtrClassIdEnd() const;
-    bool GetZoomablePreview() const;
     const Array<String> &GetExtensions() const;
     const Vector4 &GetMinValue() const;
     const Vector4 &GetMaxValue() const;
     float GetStepValue() const;
+    bool GetIsZoomablePreview() const;
     bool GetIsButton() const;
     bool GetIsSlider() const;
     bool GetIsShown() const;
@@ -53,8 +67,8 @@ public:
 private:
     String m_objectPtrClass = "";
     bool m_isButton = false;
-    bool m_zoomablePreview = false;
-    bool m_blocked = false;
+    bool m_isZoomablePreview = false;
+    bool m_isBlocked = false;
     float m_stepValue = 1.0f;
     Vector4 m_minValue = Vector4::NInfinity();
     Vector4 m_maxValue = Vector4::Infinity();

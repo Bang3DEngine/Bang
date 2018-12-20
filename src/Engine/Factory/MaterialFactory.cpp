@@ -12,7 +12,7 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 {
     switch (renderPass)
     {
-        case RenderPass::SCENE:
+        case RenderPass::SCENE_OPAQUE:
             return MaterialFactory::LoadMaterial("Default.bmat");
 
         case RenderPass::SCENE_TRANSPARENT:
@@ -20,7 +20,7 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 
         default: break;
     }
-    return MaterialFactory::GetDefault(RenderPass::SCENE);
+    return MaterialFactory::GetDefault(RenderPass::SCENE_OPAQUE);
 }
 
 RH<Material> MaterialFactory::GetDefaultUnLighted()

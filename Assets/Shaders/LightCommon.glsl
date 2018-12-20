@@ -2,7 +2,6 @@
 #define LIGHT_COMMON_GLSL
 
 #include "Common.glsl"
-#include "MaterialPBRUniforms.glsl"
 
 const int LIGHT_TYPE_DIRECTIONAL = 0;
 const int LIGHT_TYPE_POINT       = 1;
@@ -114,20 +113,22 @@ vec3 GetCameraSkyBoxSample(const samplerCube cubeMap, const vec3 direction)
     return GetCameraSkyBoxSampleLod(cubeMap, direction, 1.0);
 }
 
-vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
+vec4 GetIBLAmbientColor(const bool receivesLighting,
+                        const vec3 pixelPosWorld,
                         const vec3 pixelNormalWorld,
                         const vec4 pixelAlbedo,
                         const float pixelRoughness,
                         const float pixelMetalness)
 {
     vec4 finalColor = vec4(0);
-    if (B_MaterialReceivesLighting)
+    if (receivesLighting)
     {
         vec3 N = pixelNormalWorld.xyz;
         vec3 V = normalize(B_Camera_WorldPos.xyz - pixelPosWorld);
         vec3 R = reflect(-V, N);
 
         bool useReflectionProbeAsCubeMap = false;
+        #ifndef BANG_NO_REFLECTION_PROBES
         bool isBoxed = (B_ReflectionProbeSize.x > 0);
         if (B_UseReflectionProbe)
         {
@@ -179,6 +180,7 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
                 useReflectionProbeAsCubeMap = true;
             }
         }
+        #endif
 
         // Calculate ambient color
         float dotNV = max(dot(N, V), 0.0);
@@ -194,12 +196,14 @@ vec4 GetIBLAmbientColor(const vec3 pixelPosWorld,
 
         vec3 diffuseCubeMapSample;
         vec3 specularCubeMapSample;
+        #ifndef BANG_NO_REFLECTION_PROBES
         if (useReflectionProbeAsCubeMap)
         {
             diffuseCubeMapSample = GetCameraSkyBoxSample(B_ReflectionProbeDiffuse, N).rgb;
             specularCubeMapSample = GetCameraSkyBoxSampleLod(B_ReflectionProbeSpecular, R, lod).rgb;
         }
         else // SkyBox sampled directly
+        #endif
         {
             diffuseCubeMapSample = GetCameraSkyBoxSample(B_SkyBoxDiffuse, N).rgb;
             specularCubeMapSample = GetCameraSkyBoxSampleLod(B_SkyBoxSpecular, R, lod).rgb;

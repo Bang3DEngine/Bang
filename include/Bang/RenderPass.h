@@ -7,7 +7,7 @@ namespace Bang
 {
 enum class RenderPass
 {
-    SCENE = 0,
+    SCENE_OPAQUE = 0,
     SCENE_DECALS = 8,
     SCENE_TRANSPARENT = 6,
     SCENE_BEFORE_ADDING_LIGHTS = 1,

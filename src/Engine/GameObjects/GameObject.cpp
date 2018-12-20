@@ -905,7 +905,7 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
                 rend->GetActiveMaterial())
             {
                 RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
-                if (rp == RenderPass::SCENE ||
+                if (rp == RenderPass::SCENE_OPAQUE ||
                     rp == RenderPass::SCENE_TRANSPARENT)
                 {
                     const AABox rendAABox = rend->GetAABBox();

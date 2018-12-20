@@ -389,7 +389,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
     ClearNeededBuffersForTheFirstTime(gbuffer, camera);
 
     // GBuffer Scene rendering
-    if (camera->MustRenderPass(RenderPass::SCENE) ||
+    if (camera->MustRenderPass(RenderPass::SCENE_OPAQUE) ||
         camera->MustRenderPass(RenderPass::SCENE_TRANSPARENT))
     {
         gbuffer->SetSceneDepthStencil();
@@ -399,10 +399,10 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         GL::SetDepthFunc(GL::Function::LEQUAL);
 
         // Render scene pass
-        if (camera->MustRenderPass(RenderPass::SCENE))
+        if (camera->MustRenderPass(RenderPass::SCENE_OPAQUE))
         {
             gbuffer->SetAllDrawBuffers();
-            RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE);
+            RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE_OPAQUE);
         }
 
         if (camera->MustRenderPass(RenderPass::SCENE_DECALS))
@@ -410,19 +410,20 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             GL::Push(GL::Pushable::STENCIL_STATES);
             GL::Push(GL::Pushable::BLEND_STATES);
 
-            gbuffer->SetDrawBuffers({GBuffer::AttAlbedo});
+            gbuffer->SetDrawBuffers({GBuffer::AttAlbedo, GBuffer::AttColor});
 
             GL::Enable(GL::Enablable::BLEND);
             GL::BlendFunc(GL::BlendFactor::SRC_ALPHA,
                           GL::BlendFactor::ONE_MINUS_SRC_ALPHA);
+
             GL::Disable(GL::Enablable::STENCIL_TEST);
             RenderWithPass(go, RenderPass::SCENE_DECALS);
 
-            GL::Pop(GL::Pushable::STENCIL_STATES);
             GL::Pop(GL::Pushable::BLEND_STATES);
+            GL::Pop(GL::Pushable::STENCIL_STATES);
         }
 
-        if (camera->MustRenderPass(RenderPass::SCENE))
+        if (camera->MustRenderPass(RenderPass::SCENE_OPAQUE))
         {
             gbuffer->SetAllDrawBuffers();
             ApplyStenciledDeferredLightsToGBuffer(go, camera);

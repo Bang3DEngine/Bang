@@ -178,7 +178,7 @@ void PointLight::RenderShadowMaps_(GameObject *go)
             Vector3::Distance(closestPointInAABox, pointLightPos) > rangeLimit;
         if (!isCompletelyOutside)
         {
-            shadowCasterRend->OnRender(RenderPass::SCENE);
+            shadowCasterRend->OnRender(RenderPass::SCENE_OPAQUE);
         }
     }
 

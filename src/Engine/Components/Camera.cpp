@@ -50,7 +50,7 @@ Camera::Camera()
 {
     CONSTRUCT_CLASS_ID(Camera)
 
-    AddRenderPass(RenderPass::SCENE);
+    AddRenderPass(RenderPass::SCENE_OPAQUE);
     AddRenderPass(RenderPass::SCENE_TRANSPARENT);
     AddRenderPass(RenderPass::SCENE_DECALS);
     AddRenderPass(RenderPass::SCENE_BEFORE_ADDING_LIGHTS);

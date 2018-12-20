@@ -79,49 +79,53 @@ void RenderFactory::RenderWireframeBox(const AABox &b,
                                        const RenderFactory::Parameters &params)
 {
     const Quaternion &r = params.rotation;
-    const Vector3 &bMin = b.GetMin();
-    const Vector3 &bMax = b.GetMax();
+    const Vector3 bMin = b.GetMin() * params.scale;
+    const Vector3 bMax = b.GetMax() * params.scale;
+
+    RenderFactory::Parameters paramsCpy = params;
+    paramsCpy.rotation = Quaternion::Identity();
+    paramsCpy.scale = Vector3(1.0f);
 
     RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
                r * Vector3(bMax.x, bMin.y, bMin.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
                r * Vector3(bMin.x, bMax.y, bMin.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
                r * Vector3(bMin.x, bMin.y, bMax.z),
-               params);
+               paramsCpy);
 
     RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z),
                r * Vector3(bMax.x, bMax.y, bMin.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMax.x, bMin.y, bMin.z),
                r * Vector3(bMax.x, bMin.y, bMax.z),
-               params);
+               paramsCpy);
 
     RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z),
                r * Vector3(bMax.x, bMax.y, bMin.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMin.x, bMax.y, bMin.z),
                r * Vector3(bMin.x, bMax.y, bMax.z),
-               params);
+               paramsCpy);
 
     RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z),
                r * Vector3(bMax.x, bMin.y, bMax.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMin.x, bMin.y, bMax.z),
                r * Vector3(bMin.x, bMax.y, bMax.z),
-               params);
+               paramsCpy);
 
     RenderLine(r * Vector3(bMin.x, bMax.y, bMax.z),
                r * Vector3(bMax.x, bMax.y, bMax.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMax.x, bMin.y, bMax.z),
                r * Vector3(bMax.x, bMax.y, bMax.z),
-               params);
+               paramsCpy);
     RenderLine(r * Vector3(bMax.x, bMax.y, bMin.z),
                r * Vector3(bMax.x, bMax.y, bMax.z),
-               params);
+               paramsCpy);
 }
 
 void RenderFactory::RenderBox(const AABox &b,
@@ -242,17 +246,14 @@ void RenderFactory::RenderLine(const Vector3 &origin,
                                const Vector3 &destiny,
                                const RenderFactory::Parameters &params)
 {
-    RenderFactory *rf = RenderFactory::GetInstance();
-    if (!rf)
+    if (RenderFactory *rf = RenderFactory::GetInstance())
     {
-        return;
+        RenderFactory::Parameters paramsCpy = params;
+        paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
+
+        rf->m_lineRenderer->SetPoints({origin, destiny});
+        rf->Render(rf->m_lineRenderer, paramsCpy);
     }
-
-    RenderFactory::Parameters paramsCpy = params;
-    paramsCpy.viewProjMode = GL::ViewProjMode::WORLD;
-
-    rf->m_lineRenderer->SetPoints({origin, destiny});
-    rf->Render(rf->m_lineRenderer, paramsCpy);
 }
 
 void RenderFactory::RenderBillboardCircle(
@@ -493,7 +494,7 @@ void RenderFactory::RenderOutline(GameObject *gameObject,
 
             // Mark the depth buffer drawing the object
             GEngine::GetInstance()->RenderWithPass(gameObject,
-                                                   RenderPass::SCENE);
+                                                   RenderPass::SCENE_OPAQUE);
 
             // Prepare masks and uniforms to actually draw the outline
             ShaderProgram *sp = rf->m_outlineShaderProgram.Get();
@@ -688,6 +689,7 @@ void RenderFactory::ApplyRenderParameters(
         mat->SetLineWidth(params.thickness);
         mat->SetAlbedoTexture(params.texture.Get());
 
+        rend->SetDepthMask(params.depthMask);
         rend->SetViewProjMode(params.viewProjMode);
     }
 

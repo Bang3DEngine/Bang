@@ -41,6 +41,7 @@ void DecalRenderer::OnRender()
     gbuffer->BindAttachmentsForReading(sp);
 
     Matrix4 projMatrix = GetProjectionMatrix();
+    sp->SetMatrix4("B_DecalViewMatrix", GetViewMatrix());
     sp->SetMatrix4("B_DecalProjectionMatrix", projMatrix);
     sp->SetTexture2D("B_DecalTexture", GetDecalTexture());
 
@@ -54,6 +55,22 @@ void DecalRenderer::OnRender()
     GL::Pop(GL::Enablable::DEPTH_TEST);
 }
 
+Matrix4 DecalRenderer::GetModelMatrixUniform() const
+{
+    Matrix4 transformMatrix = Renderer::GetModelMatrixUniform();
+    if (GetIsProjective())
+    {
+        // Set new scale to cover all the frustum
+        Vector3 newScale;
+        float fovRad = Math::DegToRad(GetFieldOfView());
+        newScale.x = Math::Sin(fovRad) * GetZFar();
+        newScale.y = Math::Cos(fovRad) * GetZFar() * GetAspectRatio();
+        newScale.z = GetZFar();
+        transformMatrix.SetScale(newScale);
+    }
+    return transformMatrix;
+}
+
 void DecalRenderer::SetIsProjective(bool isProjective)
 {
     m_projective = isProjective;
@@ -62,6 +79,11 @@ void DecalRenderer::SetIsProjective(bool isProjective)
 void DecalRenderer::SetFieldOfView(float fieldOfView)
 {
     m_fieldOfView = fieldOfView;
+}
+
+void DecalRenderer::SetAspectRatio(float aspectRatio)
+{
+    m_aspectRatio = aspectRatio;
 }
 
 void DecalRenderer::SetZNear(float zNear)
@@ -101,9 +123,7 @@ Vector3 DecalRenderer::GetBoxSize() const
 
 float DecalRenderer::GetAspectRatio() const
 {
-    Vector3 boxSize = GetBoxSize();
-    float aspectRatio = Math::Abs(boxSize.x / Math::Max(boxSize.y, 0.0001f));
-    return aspectRatio;
+    return m_aspectRatio;
 }
 
 bool DecalRenderer::GetIsProjective() const
@@ -116,13 +136,32 @@ Texture2D *DecalRenderer::GetDecalTexture() const
     return GetMaterial()->GetAlbedoTexture();
 }
 
+Matrix4 DecalRenderer::GetViewMatrix() const
+{
+    Matrix4 viewMatrix;
+    if (GetIsProjective())
+    {
+        Transform *tr = GetGameObject()->GetTransform();
+        viewMatrix = Matrix4::TranslateMatrix(tr->GetPosition()) *
+                     Matrix4::RotateMatrix(tr->GetRotation());
+        viewMatrix = viewMatrix.Inversed();
+    }
+    else
+    {
+        viewMatrix = GetModelMatrixUniform().Inversed();
+    }
+    return viewMatrix;
+}
+
 Matrix4 DecalRenderer::GetProjectionMatrix() const
 {
     Matrix4 projMatrix;
     if (GetIsProjective())
     {
-        projMatrix = Matrix4::Perspective(
-            GetFieldOfView(), GetAspectRatio(), GetZNear(), GetZFar());
+        projMatrix = Matrix4::Perspective(Math::DegToRad(GetFieldOfView()),
+                                          GetAspectRatio(),
+                                          GetZNear(),
+                                          GetZFar());
     }
     else
     {
@@ -147,12 +186,18 @@ void DecalRenderer::Reflect()
         ->GetReflectVariablePtr("Receives Shadows")
         ->GetHintsPtr()
         ->SetIsShown(false);
+    GetReflectStructPtr()
+        ->GetReflectVariablePtr("Material")
+        ->GetHintsPtr()
+        ->SetIsShown(false);
 
     BANG_REFLECT_VAR_MEMBER(
         DecalRenderer, "Projective", SetIsProjective, GetIsProjective);
 
     BANG_REFLECT_VAR_MEMBER(
         DecalRenderer, "Field of View", SetFieldOfView, GetFieldOfView);
+    BANG_REFLECT_VAR_MEMBER(
+        DecalRenderer, "Aspect Ratio", SetAspectRatio, GetAspectRatio);
     BANG_REFLECT_VAR_MEMBER(DecalRenderer, "Near plane", SetZNear, GetZNear);
     BANG_REFLECT_VAR_MEMBER(DecalRenderer, "Far plane", SetZFar, GetZFar);
 }

@@ -16,10 +16,12 @@ public:
     virtual ~DecalRenderer() override;
 
     // Renderer
-    void OnRender() override;
+    virtual void OnRender() override;
+    virtual Matrix4 GetModelMatrixUniform() const override;
 
     void SetIsProjective(bool isProjective);
     void SetFieldOfView(float fieldOfView);
+    void SetAspectRatio(float aspectRatio);
     void SetZNear(float zNear);
     void SetZFar(float zFar);
     void SetDecalTexture(Texture2D *decalTexture);
@@ -31,6 +33,7 @@ public:
     float GetAspectRatio() const;
     bool GetIsProjective() const;
     Texture2D *GetDecalTexture() const;
+    Matrix4 GetViewMatrix() const;
     Matrix4 GetProjectionMatrix() const;
 
     // IReflectable
@@ -43,6 +46,7 @@ private:
     float m_zNear = 0.05f;
     float m_zFar = 100.0f;
     float m_fieldOfView = 60.0f;
+    float m_aspectRatio = 1.0f;
 };
 }
 

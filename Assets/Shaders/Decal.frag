@@ -6,6 +6,7 @@
 #include "LightCommon.glsl"
 
 uniform sampler2D B_DecalTexture;
+uniform mat4 B_DecalViewMatrix;
 uniform mat4 B_DecalProjectionMatrix;
 
 in vec3 B_FIn_Position;
@@ -17,16 +18,15 @@ void main()
 {
     vec3 pixelWorldPos = B_ComputeWorldPosition();
 
-    vec4 pixelCubePos = B_ModelInv * vec4(pixelWorldPos, 1);
-    if (pixelCubePos.x < -0.5 || pixelCubePos.x > 0.5 ||
-        pixelCubePos.y < -0.5 || pixelCubePos.y > 0.5 ||
-        pixelCubePos.z < -0.5 || pixelCubePos.z > 0.5)
+    vec4 pixelLocalPos = B_DecalViewMatrix * vec4(pixelWorldPos, 1);
+    vec4 pixelProj = B_DecalProjectionMatrix * pixelLocalPos;
+    pixelProj.xyz /= pixelProj.w;
+    if (pixelProj.x < -1.0 || pixelProj.x > 1.0 ||
+        pixelProj.y < -1.0 || pixelProj.y > 1.0 ||
+        pixelProj.z < -1.0 || pixelProj.z > 1.0)
     {
         discard;
     }
-
-    vec4 pixelProj = B_DecalProjectionMatrix * (pixelCubePos);
-    pixelProj.xyz /= pixelProj.w;
 
     vec2 uv = pixelProj.xy * 0.5 + 0.5;
     uv = vec2(uv.x, 1.0f - uv.y);

@@ -1,4 +1,6 @@
-#include "Bang/ObjectClassIds.h"
+#include "Bang/ClassDB.h"
+
+#include "Bang/Application.h"
 
 #include "Bang/Animator.h"
 #include "Bang/AudioListener.h"
@@ -72,36 +74,43 @@
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/WaterRenderer.h"
 
-namespace Bang
-{
-Map<String, ClassIdType> ClassNameToClassIdBegin;
-Map<String, ClassIdType> ClassNameToClassIdEnd;
+using namespace Bang;
 
-ClassIdType GetClassIdBegin(const String &className)
+ClassDB::ClassDB()
 {
-    auto it = ClassNameToClassIdBegin.Find(className);
-    if (it != ClassNameToClassIdBegin.End())
+}
+
+ClassDB::~ClassDB()
+{
+}
+
+ClassIdType ClassDB::GetClassIdBegin(const String &className)
+{
+    ClassDB *cdb = ClassDB::GetInstance();
+    auto it = cdb->m_classNameToClassIdBegin.Find(className);
+    if (it != cdb->m_classNameToClassIdBegin.End())
     {
         return it->second;
     }
     return -1u;
 }
 
-ClassIdType GetClassIdEnd(const String &className)
+ClassIdType ClassDB::GetClassIdEnd(const String &className)
 {
-    auto it = ClassNameToClassIdEnd.Find(className);
-    if (it != ClassNameToClassIdEnd.End())
+    ClassDB *cdb = ClassDB::GetInstance();
+    auto it = cdb->m_classNameToClassIdEnd.Find(className);
+    if (it != cdb->m_classNameToClassIdEnd.End())
     {
         return it->second;
     }
     return -1u;
 }
 
-void RegisterObjectClasses()
+void ClassDB::RegisterClasses()
 {
-#define REGISTER_OBJECT_CLASS(CLASSNAME)                                   \
-    ClassNameToClassIdBegin.Add(#CLASSNAME, CLASSNAME::GetClassIdBegin()); \
-    ClassNameToClassIdEnd.Add(#CLASSNAME, CLASSNAME::GetClassIdEnd());
+#define REGISTER_OBJECT_CLASS(CLASSNAME)                                     \
+    m_classNameToClassIdBegin.Add(#CLASSNAME, CLASSNAME::GetClassIdBegin()); \
+    m_classNameToClassIdEnd.Add(#CLASSNAME, CLASSNAME::GetClassIdEnd());
 
     REGISTER_OBJECT_CLASS(Object);
     REGISTER_OBJECT_CLASS(Component);
@@ -177,4 +186,8 @@ void RegisterObjectClasses()
 
 #undef REGISTER_OBJECT_CLASS
 }
+
+ClassDB *ClassDB::GetInstance()
+{
+    return Application::GetInstance()->GetClassDB();
 }

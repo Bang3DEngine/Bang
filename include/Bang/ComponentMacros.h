@@ -1,6 +1,7 @@
 #ifndef COMPONENTMACROS_H
 #define COMPONENTMACROS_H
 
+#include "Bang/ClassDB.h"
 #include "Bang/ComponentFactory.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/FastDynamicCast.h"
@@ -8,7 +9,6 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
 #include "Bang/Object.h"
-#include "Bang/ObjectClassIds.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
 

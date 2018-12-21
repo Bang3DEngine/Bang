@@ -1,6 +1,6 @@
 #include "Bang/ReflectVariableHints.h"
 
-#include "Bang/ObjectClassIds.h"
+#include "Bang/ClassDB.h"
 #include "Bang/ReflectMacros.h"
 #include "Bang/StreamOperators.h"
 
@@ -196,12 +196,12 @@ String ReflectVariableHints::GetObjectPtrClass() const
 
 ClassIdType ReflectVariableHints::GetObjectPtrClassIdBegin() const
 {
-    return GetClassIdBegin(GetObjectPtrClass());
+    return ClassDB::GetClassIdBegin(GetObjectPtrClass());
 }
 
 ClassIdType ReflectVariableHints::GetObjectPtrClassIdEnd() const
 {
-    return GetClassIdEnd(GetObjectPtrClass());
+    return ClassDB::GetClassIdEnd(GetObjectPtrClass());
 }
 
 bool ReflectVariableHints::GetIsZoomablePreview() const

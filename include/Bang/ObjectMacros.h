@@ -1,7 +1,7 @@
 #ifndef OBJECTMACROS_H
 #define OBJECTMACROS_H
 
-#include "Bang/ObjectClassIds.h"
+#include "Bang/ClassDB.h"
 
 namespace Bang
 {
@@ -10,7 +10,7 @@ namespace Bang
 
 #define OBJECT_WITH_FAST_DYNAMIC_CAST(CLASS) \
     OBJECT_WITH_FAST_DYNAMIC_CAST_EXPLICIT(  \
-        CLASS, CLASS##CIDBegin, CLASS##CIDEnd)
+        CLASS, ClassDB::CLASS##CIDBegin, ClassDB::CLASS##CIDEnd)
 }
 
 #endif  // OBJECTMACROS_H

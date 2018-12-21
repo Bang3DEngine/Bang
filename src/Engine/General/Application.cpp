@@ -2,7 +2,10 @@
 
 #include <cstdlib>
 
+#include "SDL_timer.h"
+
 #include "Bang/AudioManager.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Debug.h"
 #include "Bang/GEngine.h"
 #include "Bang/MetaFilesManager.h"
@@ -18,7 +21,6 @@
 #include "Bang/TimeSingleton.h"
 #include "Bang/Window.h"
 #include "Bang/WindowManager.h"
-#include "SDL_timer.h"
 
 using namespace Bang;
 
@@ -41,7 +43,8 @@ void Application::Init_(const Path &engineRootPath)
     Application::s_appSingleton = this;
     m_mainThreadId = Thread::GetCurrentThreadId();
 
-    RegisterObjectClasses();
+    m_classDB = new ClassDB();
+    GetClassDB()->RegisterClasses();
 
     m_time = new TimeSingleton();
 
@@ -85,6 +88,7 @@ void Application::InitAfterPathsInit_()
 
 Application::~Application()
 {
+    delete m_classDB;
     delete m_time;
     delete m_debug;
     delete m_paths;
@@ -165,6 +169,11 @@ void Application::BlockingWait(Window *win)
 TimeSingleton *Application::GetTime() const
 {
     return m_time;
+}
+
+ClassDB *Application::GetClassDB() const
+{
+    return m_classDB;
 }
 
 Paths *Application::GetPaths() const

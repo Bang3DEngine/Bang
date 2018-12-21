@@ -8,6 +8,7 @@
 namespace Bang
 {
 class AudioManager;
+class ClassDB;
 class Debug;
 class GEngine;
 class MetaFilesManager;
@@ -33,6 +34,7 @@ public:
     void BlockingWait(Window *win);
 
     TimeSingleton *GetTime() const;
+    ClassDB *GetClassDB() const;
     Paths *GetPaths() const;
     Debug *GetDebug() const;
     GEngine *GetGEngine() const;
@@ -53,6 +55,7 @@ public:
 
 protected:
     TimeSingleton *m_time = nullptr;
+    ClassDB *m_classDB = nullptr;
     Debug *m_debug = nullptr;
     Paths *m_paths = nullptr;
     Physics *m_physics = nullptr;

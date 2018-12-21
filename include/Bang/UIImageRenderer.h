@@ -19,7 +19,7 @@ class Texture2D;
 
 class UIImageRenderer : public UIRenderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIImageRenderer)
+    COMPONENT(UIImageRenderer)
 
 public:
     enum class Mode

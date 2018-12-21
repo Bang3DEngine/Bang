@@ -1,12 +1,12 @@
 #include "Bang/UILayoutIgnorer.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 
 using namespace Bang;
 
 UILayoutIgnorer::UILayoutIgnorer()
 {
-    CONSTRUCT_CLASS_ID(UILayoutIgnorer)
+    SET_INSTANCE_CLASS_ID(UILayoutIgnorer)
 }
 
 UILayoutIgnorer::~UILayoutIgnorer()

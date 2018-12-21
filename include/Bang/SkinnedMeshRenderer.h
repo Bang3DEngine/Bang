@@ -35,7 +35,7 @@ class SkinnedMeshRenderer
     : public MeshRenderer,
       public EventListener<IEventsObjectGatherer<GameObject>>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(SkinnedMeshRenderer)
+    COMPONENT(SkinnedMeshRenderer)
 
 public:
     SkinnedMeshRenderer();

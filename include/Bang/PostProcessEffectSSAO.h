@@ -19,7 +19,7 @@ class Texture2D;
 
 class PostProcessEffectSSAO : public PostProcessEffect
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectSSAO);
+    COMPONENT(PostProcessEffectSSAO);
 
 public:
     // Component

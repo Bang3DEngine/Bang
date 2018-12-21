@@ -14,8 +14,21 @@ public:
     ClassDB();
     virtual ~ClassDB();
 
+    static constexpr inline ClassIdType GetInvalidClassId();
     static ClassIdType GetClassIdBegin(const String &className);
     static ClassIdType GetClassIdEnd(const String &className);
+
+    static constexpr inline bool IsSubClassByIds(ClassIdType baseClassIdBegin,
+                                                 ClassIdType baseClassIdEnd,
+                                                 ClassIdType subClassId);
+
+    template <class TSubClass>
+    static constexpr inline bool IsSubClass(ClassIdType baseClassIdBegin,
+                                            ClassIdType baseClassIdEnd,
+                                            const TSubClass *obj);
+
+    template <class TBaseClass, class TSubClass>
+    static constexpr inline bool IsSubClass(const TSubClass *obj);
 
     void RegisterClasses();
 
@@ -28,5 +41,7 @@ private:
     Map<String, ClassIdType> m_classNameToClassIdEnd;
 };
 }
+
+#include "Bang/ClassDB.tcc"
 
 #endif  // CLASSDB_H

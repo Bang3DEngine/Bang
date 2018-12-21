@@ -7,7 +7,7 @@ namespace Bang
 {
 class PostProcessEffectToneMapping : public PostProcessEffect
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectToneMapping)
+    COMPONENT(PostProcessEffectToneMapping)
 
 public:
     PostProcessEffectToneMapping();

@@ -4,12 +4,12 @@
 #include <queue>
 
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Component.h"
 #include "Bang/Containers.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -40,7 +40,7 @@ using namespace Bang;
 
 UICanvas::UICanvas()
 {
-    CONSTRUCT_CLASS_ID(UICanvas)
+    SET_INSTANCE_CLASS_ID(UICanvas)
     m_uiLayoutManager = new UILayoutManager();
 }
 

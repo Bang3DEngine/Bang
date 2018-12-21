@@ -12,7 +12,7 @@ using namespace Bang;
 
 PostProcessEffectBloom::PostProcessEffectBloom()
 {
-    CONSTRUCT_CLASS_ID(PostProcessEffectBloom);
+    SET_INSTANCE_CLASS_ID(PostProcessEffectBloom);
 
     m_brightnessTexture = Resources::Create<Texture2D>();
     m_brightnessTexture.Get()->CreateEmpty(1, 1);

@@ -10,7 +10,7 @@ namespace Bang
 {
 class UIVerticalLayout : public UIDirLayout
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIVerticalLayout)
+    COMPONENT(UIVerticalLayout)
 
 public:
     UIVerticalLayout();

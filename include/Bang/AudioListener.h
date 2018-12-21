@@ -11,7 +11,7 @@ namespace Bang
 {
 class AudioListener : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioListener)
+    COMPONENT(AudioListener)
 
 public:
     AudioListener();

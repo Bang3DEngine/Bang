@@ -1,8 +1,8 @@
 #include "Bang/Transform.h"
 
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/ICloneable.h"
@@ -21,7 +21,7 @@ using namespace Bang;
 
 Transform::Transform()
 {
-    CONSTRUCT_CLASS_ID(Transform);
+    SET_INSTANCE_CLASS_ID(Transform);
 }
 
 Transform::~Transform()

@@ -13,7 +13,7 @@ namespace Bang
 {
 class UILayoutElement : public Component, public ILayoutElement
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutElement)
+    COMPONENT(UILayoutElement)
 
 public:
     UILayoutElement();

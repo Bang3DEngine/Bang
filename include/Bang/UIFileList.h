@@ -19,7 +19,7 @@ class UITextRenderer;
 
 class UIFileList : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIFileList)
+    COMPONENT(UIFileList)
 
 public:
     UIFileList();

@@ -6,9 +6,9 @@
 
 #include "Bang/Animator.h"
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsName.h"
 #include "Bang/IEventsObjectGatherer.h"
@@ -36,7 +36,7 @@ using namespace Bang;
 
 SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
-    CONSTRUCT_CLASS_ID(SkinnedMeshRenderer);
+    SET_INSTANCE_CLASS_ID(SkinnedMeshRenderer);
 
     m_gameObjectGatherer = new ObjectGatherer<GameObject, true>();
     m_gameObjectGatherer->RegisterListener(this);

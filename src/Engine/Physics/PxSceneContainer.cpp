@@ -3,13 +3,13 @@
 #include <stdint.h>
 
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Collider.h"
 #include "Bang/Collision.h"
 #include "Bang/CollisionContact.h"
 #include "Bang/Component.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/IEventsDestroy.h"
@@ -200,7 +200,7 @@ Array<Collider *> PxSceneContainer::GetColliders() const
         m_physicsObjectGatherer->GetGatheredObjects();
     for (PhysicsObject *phObj : phObjs)
     {
-        if (Collider *coll = FastDynamicCast<Collider *>(phObj))
+        if (Collider *coll = DCAST<Collider *>(phObj))
         {
             colliders.PushBack(coll);
         }

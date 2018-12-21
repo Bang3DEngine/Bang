@@ -1,6 +1,6 @@
 #include "Bang/WaterRenderer.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
@@ -17,7 +17,7 @@ using namespace Bang;
 
 WaterRenderer::WaterRenderer()
 {
-    CONSTRUCT_CLASS_ID(WaterRenderer);
+    SET_INSTANCE_CLASS_ID(WaterRenderer);
 
     p_planeMesh = MeshFactory::GetPlane();
     SetMaterial(MaterialFactory::GetWater().Get());

@@ -29,7 +29,7 @@ class UIDirLayout;
 
 class UIButtonBase : public Component, public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(UIButtonBase)
+    COMPONENT_ABSTRACT(UIButtonBase)
 
 public:
     virtual void Click() = 0;

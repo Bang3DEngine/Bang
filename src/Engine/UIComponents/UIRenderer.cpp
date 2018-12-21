@@ -2,7 +2,7 @@
 
 #include "Bang/AARect.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsChildren.h"
@@ -19,7 +19,7 @@ using namespace Bang;
 
 UIRenderer::UIRenderer()
 {
-    CONSTRUCT_CLASS_ID(UIRenderer)
+    SET_INSTANCE_CLASS_ID(UIRenderer)
     SetViewProjMode(GL::ViewProjMode::CANVAS);
     SetCullByRectTransform(false);
     SetCastsShadows(false);

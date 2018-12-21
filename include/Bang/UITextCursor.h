@@ -11,7 +11,7 @@ namespace Bang
 {
 class UITextCursor : public LineRenderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UITextCursor)
+    COMPONENT(UITextCursor)
 
 public:
     UITextCursor();

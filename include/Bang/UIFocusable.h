@@ -19,7 +19,7 @@ namespace Bang
 {
 class UIFocusable : public Component, public EventEmitter<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIFocusable)
+    COMPONENT(UIFocusable)
 
 public:
     using EventCallback =

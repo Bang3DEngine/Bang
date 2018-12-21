@@ -3,7 +3,7 @@
 #include <istream>
 
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"
@@ -28,7 +28,7 @@ using namespace Bang;
 
 CapsuleCollider::CapsuleCollider()
 {
-    CONSTRUCT_CLASS_ID(CapsuleCollider)
+    SET_INSTANCE_CLASS_ID(CapsuleCollider)
     SetPhysicsObjectType(PhysicsObject::Type::CAPSULE_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }

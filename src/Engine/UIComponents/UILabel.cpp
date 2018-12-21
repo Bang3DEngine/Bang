@@ -6,7 +6,7 @@
 #include "Bang/Cursor.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/EventEmitter.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -30,7 +30,7 @@ using namespace Bang;
 
 UILabel::UILabel()
 {
-    CONSTRUCT_CLASS_ID(UILabel)
+    SET_INSTANCE_CLASS_ID(UILabel)
 
     ResetSelection();
     SetSelectable(false);

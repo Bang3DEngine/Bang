@@ -12,7 +12,7 @@ class GameObject;
 
 class UIToolButton : public UIButtonBase
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIToolButton)
+    COMPONENT(UIToolButton)
 
 public:
     void SetOn(bool on);

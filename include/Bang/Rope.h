@@ -19,7 +19,7 @@ class ShaderProgram;
 
 class Rope : public LineRenderer
 {
-    COMPONENT(Rope)
+    COMPONENT_WITHOUT_CLASS_ID(Rope)
 
 public:
     Rope();

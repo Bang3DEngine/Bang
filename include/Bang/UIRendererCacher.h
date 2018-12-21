@@ -38,7 +38,7 @@ class UIRendererCacher
       public EventListener<IEventsRendererChanged>,
       public EventListener<IEventsGameObjectVisibilityChanged>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIRendererCacher)
+    COMPONENT(UIRendererCacher)
 
 public:
     UIRendererCacher();

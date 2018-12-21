@@ -12,7 +12,6 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -35,7 +34,7 @@ using namespace Bang;
 
 Animator::Animator()
 {
-    CONSTRUCT_CLASS_ID(Animator);
+    SET_INSTANCE_CLASS_ID(Animator);
 }
 
 Animator::~Animator()

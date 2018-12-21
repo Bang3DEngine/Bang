@@ -28,7 +28,7 @@ class UIInputNumber : public Component,
                       public EventListener<IEventsValueChanged>,
                       public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIInputNumber)
+    COMPONENT(UIInputNumber)
 
 public:
     UIInputNumber();

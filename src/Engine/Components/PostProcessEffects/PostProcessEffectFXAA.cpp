@@ -9,7 +9,7 @@ using namespace Bang;
 
 PostProcessEffectFXAA::PostProcessEffectFXAA()
 {
-    CONSTRUCT_CLASS_ID(PostProcessEffectFXAA);
+    SET_INSTANCE_CLASS_ID(PostProcessEffectFXAA);
 
     m_fxaaShaderProgram.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),

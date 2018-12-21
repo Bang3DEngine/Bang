@@ -1,6 +1,6 @@
 #include "Bang/UIToolButton.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/UIFocusable.h"
@@ -9,7 +9,7 @@ using namespace Bang;
 
 UIToolButton::UIToolButton()
 {
-    CONSTRUCT_CLASS_ID(UIToolButton)
+    SET_INSTANCE_CLASS_ID(UIToolButton)
 }
 
 UIToolButton::~UIToolButton()

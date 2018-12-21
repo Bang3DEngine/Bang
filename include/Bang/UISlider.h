@@ -28,7 +28,7 @@ class UISlider : public Component,
                  public EventListener<IEventsValueChanged>,
                  public EventEmitter<IEventsValueChanged>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UISlider)
+    COMPONENT(UISlider)
 
 public:
     void SetValue(float value);

@@ -8,7 +8,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
@@ -41,7 +41,7 @@ using namespace Bang;
 #include "Bang/Input.h"
 DirectionalLight::DirectionalLight()
 {
-    CONSTRUCT_CLASS_ID(DirectionalLight)
+    SET_INSTANCE_CLASS_ID(DirectionalLight)
 
     m_blurAuxiliarTexture = Resources::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);

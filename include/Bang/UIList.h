@@ -37,7 +37,7 @@ class UIList : public Component,
                public EventListener<IEventsDestroy>,
                public EventEmitter<IEventsUIList>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIList)
+    COMPONENT(UIList)
 
 public:
     enum class Action

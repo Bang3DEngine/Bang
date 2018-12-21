@@ -21,7 +21,7 @@ class ICloneable;
 class Animator : public Component,
                  public EventListener<IEventsAnimatorStateMachine>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Animator)
+    COMPONENT(Animator)
 
 public:
     static constexpr int MaxNumBones = 128;

@@ -31,7 +31,7 @@ enum class ShowScrollMode
 
 class UIScrollPanel : public Component, public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollPanel)
+    COMPONENT(UIScrollPanel)
 
 public:
     virtual ~UIScrollPanel() override;

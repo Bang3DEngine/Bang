@@ -11,7 +11,7 @@ namespace Bang
 class Mesh;
 class Cloth : public Renderer
 {
-    COMPONENT(Cloth)
+    COMPONENT_WITHOUT_CLASS_ID(Cloth)
 
 public:
     Cloth();

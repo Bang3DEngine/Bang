@@ -7,7 +7,7 @@ namespace Bang
 {
 class PostProcessEffectFXAA : public PostProcessEffect
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectFXAA)
+    COMPONENT(PostProcessEffectFXAA)
 
 public:
     PostProcessEffectFXAA();

@@ -4,7 +4,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
@@ -31,7 +31,7 @@ using namespace Bang;
 
 Renderer::Renderer()
 {
-    CONSTRUCT_CLASS_ID(Renderer);
+    SET_INSTANCE_CLASS_ID(Renderer);
     SetMaterial(MaterialFactory::GetDefault().Get());
 }
 

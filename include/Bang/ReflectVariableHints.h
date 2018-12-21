@@ -2,7 +2,7 @@
 #define REFLECTVARIABLEHINTS_H
 
 #include "Bang/Bang.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Math.h"
 #include "Bang/String.h"
 #include "Bang/Vector4.h"

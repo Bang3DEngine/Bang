@@ -6,7 +6,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Camera.h"
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GUID.h"
@@ -25,7 +25,7 @@ using namespace Bang;
 
 PostProcessEffect::PostProcessEffect()
 {
-    CONSTRUCT_CLASS_ID(PostProcessEffect)
+    SET_INSTANCE_CLASS_ID(PostProcessEffect)
     p_shaderProgram.Set(ShaderProgramFactory::GetDefaultPostProcess());
 }
 

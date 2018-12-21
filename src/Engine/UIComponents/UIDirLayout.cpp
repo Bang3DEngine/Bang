@@ -3,7 +3,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/Math.h"
@@ -16,12 +16,12 @@ using namespace Bang;
 
 UIDirLayout::UIDirLayout() : UIDirLayout(Axis::VERTICAL)
 {
-    CONSTRUCT_CLASS_ID(UIDirLayout)
+    SET_INSTANCE_CLASS_ID(UIDirLayout)
 }
 
 UIDirLayout::UIDirLayout(Axis axis) : m_axis(axis)
 {
-    CONSTRUCT_CLASS_ID(UIDirLayout)
+    SET_INSTANCE_CLASS_ID(UIDirLayout)
 }
 
 UIDirLayout::~UIDirLayout()

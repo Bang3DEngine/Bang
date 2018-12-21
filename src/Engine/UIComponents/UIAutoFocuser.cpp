@@ -1,13 +1,13 @@
 #include "Bang/UIAutoFocuser.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/UICanvas.h"
 
 using namespace Bang;
 
 UIAutoFocuser::UIAutoFocuser()
 {
-    CONSTRUCT_CLASS_ID(UIAutoFocuser);
+    SET_INSTANCE_CLASS_ID(UIAutoFocuser);
 }
 
 void UIAutoFocuser::OnStart()

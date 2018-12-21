@@ -32,7 +32,7 @@ class Renderer : public Component,
                  public EventListener<IEventsResource>,
                  public EventEmitter<IEventsRendererChanged>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Renderer)
+    COMPONENT(Renderer)
 
 public:
     virtual void Bind();

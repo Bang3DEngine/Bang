@@ -3,7 +3,7 @@
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/ICloneable.h"
 #include "Bang/Material.h"
@@ -18,7 +18,7 @@ using namespace Bang;
 
 LineRenderer::LineRenderer()
 {
-    CONSTRUCT_CLASS_ID(LineRenderer);
+    SET_INSTANCE_CLASS_ID(LineRenderer);
 
     p_mesh = Resources::Create<Mesh>();
 

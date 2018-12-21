@@ -24,7 +24,7 @@ class UIScrollArea;
 
 class UIScrollBar : public Component, public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollBar)
+    COMPONENT(UIScrollBar)
 
 public:
     UIScrollBar();

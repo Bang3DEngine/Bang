@@ -5,11 +5,11 @@
 #include "Bang/AABox.h"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentFactory.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Debug.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -44,7 +44,7 @@ using namespace Bang;
 
 GameObject::GameObject(const String &name)
 {
-    CONSTRUCT_CLASS_ID(GameObject);
+    SET_INSTANCE_CLASS_ID(GameObject);
     SetName(name);
 }
 
@@ -257,7 +257,7 @@ Component *GameObject::AddComponent_(Component *component, int index_)
     ASSERT(m_componentsIterationDepth == 0);
     if (component && !GetComponents().Contains(component))
     {
-        Transform *transformComp = FastDynamicCast<Transform *>(component);
+        Transform *transformComp = DCAST<Transform *>(component);
         if (transformComp)
         {
             ASSERT_SOFT_MSG(
@@ -271,7 +271,7 @@ Component *GameObject::AddComponent_(Component *component, int index_)
         if (transformComp)
         {
             p_transform = transformComp;
-            if (RectTransform *rt = FastDynamicCast<RectTransform *>(component))
+            if (RectTransform *rt = DCAST<RectTransform *>(component))
             {
                 p_rectTransform = rt;
             }
@@ -703,7 +703,7 @@ GameObject *GameObject::FindInAncestorsAndThis(const String &name,
 Object *GameObject::FindObjectInDescendants(ClassIdType classIdBegin,
                                             ClassIdType classIdEnd) const
 {
-    if (IsSubClass(classIdBegin, classIdEnd, this))
+    if (ClassDB::IsSubClass(classIdBegin, classIdEnd, this))
     {
         return const_cast<GameObject *>(this);
     }
@@ -711,7 +711,7 @@ Object *GameObject::FindObjectInDescendants(ClassIdType classIdBegin,
     const Array<Component *> &components = GetComponents();
     for (Component *comp : components)
     {
-        if (comp && IsSubClass(classIdBegin, classIdEnd, comp))
+        if (comp && ClassDB::IsSubClass(classIdBegin, classIdEnd, comp))
         {
             return comp;
         }

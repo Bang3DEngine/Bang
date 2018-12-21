@@ -16,7 +16,7 @@ class ICloneable;
 
 class AudioSource : public Component, public ALAudioSource
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(AudioSource)
+    COMPONENT(AudioSource)
 
 public:
     virtual ~AudioSource() override;

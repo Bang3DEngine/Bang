@@ -1,7 +1,7 @@
 #include "Bang/MeshRenderer.h"
 
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
@@ -26,7 +26,7 @@ using namespace Bang;
 
 MeshRenderer::MeshRenderer()
 {
-    CONSTRUCT_CLASS_ID(MeshRenderer);
+    SET_INSTANCE_CLASS_ID(MeshRenderer);
     SetRenderPrimitive(GL::Primitive::TRIANGLES);
     SetMaterial(MaterialFactory::GetDefault().Get());
     SetMesh(MeshFactory::GetCube().Get());

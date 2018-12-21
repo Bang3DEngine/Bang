@@ -5,7 +5,7 @@
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -23,7 +23,7 @@ using namespace Bang;
 
 UIScrollBar::UIScrollBar()
 {
-    CONSTRUCT_CLASS_ID(UIScrollBar)
+    SET_INSTANCE_CLASS_ID(UIScrollBar)
 }
 
 UIScrollBar::~UIScrollBar()

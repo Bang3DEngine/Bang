@@ -18,7 +18,7 @@ class ICloneable;
 
 class PostProcessEffect : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffect)
+    COMPONENT(PostProcessEffect)
 
 public:
     enum class Type

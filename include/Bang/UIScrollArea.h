@@ -14,7 +14,7 @@ class UIRectMask;
 
 class UIScrollArea : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIScrollArea)
+    COMPONENT(UIScrollArea)
 
 public:
     virtual ~UIScrollArea() override;

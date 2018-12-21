@@ -18,7 +18,7 @@ class Object;
 
 class RectTransform : public Transform
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(RectTransform)
+    COMPONENT(RectTransform)
 
 public:
     RectTransform();

@@ -6,7 +6,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
@@ -31,7 +31,7 @@ using namespace Bang;
 
 PointLight::PointLight() : Light()
 {
-    CONSTRUCT_CLASS_ID(PointLight)
+    SET_INSTANCE_CLASS_ID(PointLight)
 
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(

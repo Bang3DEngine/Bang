@@ -9,7 +9,7 @@ namespace Bang
 class Texture2D;
 class DecalRenderer : public Renderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(DecalRenderer);
+    COMPONENT(DecalRenderer);
 
 public:
     DecalRenderer();

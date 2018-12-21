@@ -30,7 +30,7 @@ class UIComboBox : public Component,
                    public EventEmitter<IEventsFocus>,
                    public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIComboBox)
+    COMPONENT(UIComboBox)
 
 public:
     void AddItem(const String &label, int value);

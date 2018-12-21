@@ -11,7 +11,7 @@ namespace Bang
 {
 class UIGridLayout : public UIGroupLayout
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIGridLayout)
+    COMPONENT(UIGridLayout)
 
 public:
     void SetCellSize(const Vector2i &cellSize);

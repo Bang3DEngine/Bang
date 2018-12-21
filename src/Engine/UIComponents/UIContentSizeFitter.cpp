@@ -1,7 +1,7 @@
 #include "Bang/UIContentSizeFitter.h"
 
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/MetaNode.h"
@@ -19,7 +19,7 @@ using namespace Bang;
 
 UIContentSizeFitter::UIContentSizeFitter()
 {
-    CONSTRUCT_CLASS_ID(UIContentSizeFitter)
+    SET_INSTANCE_CLASS_ID(UIContentSizeFitter)
 }
 
 UIContentSizeFitter::~UIContentSizeFitter()

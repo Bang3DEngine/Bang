@@ -1,7 +1,7 @@
 #include "Bang/SphereCollider.h"
 
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"
@@ -28,7 +28,7 @@ using namespace Bang;
 
 SphereCollider::SphereCollider()
 {
-    CONSTRUCT_CLASS_ID(SphereCollider)
+    SET_INSTANCE_CLASS_ID(SphereCollider)
     SetPhysicsObjectType(PhysicsObject::Type::SPHERE_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }

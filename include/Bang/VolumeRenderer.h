@@ -15,7 +15,7 @@ class Texture3D;
 class ShaderProgram;
 class VolumeRenderer : public Renderer
 {
-    COMPONENT(VolumeRenderer)
+    COMPONENT_WITHOUT_CLASS_ID(VolumeRenderer)
 
 protected:
     VolumeRenderer();

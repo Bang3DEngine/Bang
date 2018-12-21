@@ -4,7 +4,7 @@
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -24,7 +24,7 @@ const float UIScrollPanel::WheelScrollSpeedPx = 20.0f;
 
 UIScrollPanel::UIScrollPanel()
 {
-    CONSTRUCT_CLASS_ID(UIScrollPanel)
+    SET_INSTANCE_CLASS_ID(UIScrollPanel)
 }
 
 UIScrollPanel::~UIScrollPanel()

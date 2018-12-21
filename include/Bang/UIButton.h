@@ -12,7 +12,7 @@ class GameObject;
 
 class UIButton : public UIButtonBase
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIButton)
+    COMPONENT(UIButton)
 
 public:
     virtual void Click() override;

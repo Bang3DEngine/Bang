@@ -4,7 +4,7 @@
 #include "Bang/Array.h"
 #include "Bang/Color.h"
 #include "Bang/DPtr.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Font.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
@@ -35,7 +35,7 @@ const int UIInputText::MarginY = 2;
 
 UIInputText::UIInputText()
 {
-    CONSTRUCT_CLASS_ID(UIInputText)
+    SET_INSTANCE_CLASS_ID(UIInputText)
 }
 
 UIInputText::~UIInputText()

@@ -6,10 +6,13 @@
 
 using namespace Bang;
 
+Object::Object()
+{
+    SET_INSTANCE_CLASS_ID(Object);
+}
+
 Object::~Object()
 {
-    m_classId = GetInvalidClassId();
-
     ASSERT(IsBeingDestroyed());
     ASSERT(IsWaitingToBeDestroyed());
     PropagateObjectDestruction(this);

@@ -3,7 +3,7 @@
 #include <istream>
 
 #include "Bang/Debug.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
@@ -23,7 +23,7 @@ using namespace physx;
 
 RigidBody::RigidBody()
 {
-    CONSTRUCT_CLASS_ID(RigidBody)
+    SET_INSTANCE_CLASS_ID(RigidBody)
     SetPhysicsObjectType(PhysicsObject::Type::RIGIDBODY);
 
     // Create pxActor

@@ -11,7 +11,7 @@ using namespace Bang;
 
 PostProcessEffectDOF::PostProcessEffectDOF()
 {
-    CONSTRUCT_CLASS_ID(PostProcessEffectDOF);
+    SET_INSTANCE_CLASS_ID(PostProcessEffectDOF);
 
     m_foregroundTexture = Resources::Create<Texture2D>();
     m_foregroundTexture.Get()->CreateEmpty(1, 1);

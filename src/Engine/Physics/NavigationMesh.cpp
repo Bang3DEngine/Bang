@@ -13,7 +13,7 @@ using namespace Bang;
 
 NavigationMesh::NavigationMesh()
 {
-    CONSTRUCT_CLASS_ID(NavigationMesh);
+    SET_INSTANCE_CLASS_ID(NavigationMesh);
 
     SetNumCells(10);
 }

@@ -36,7 +36,7 @@ class UILayoutManager;
 
 class UICanvas : public Component, public EventListener<IEventsDestroy>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UICanvas)
+    COMPONENT(UICanvas)
 
 public:
     UICanvas();

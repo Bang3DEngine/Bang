@@ -23,7 +23,7 @@ class Object : public Serializable,
                public EventEmitterIEventsDestroyWithCheck,
                public EventEmitter<IEventsObject>
 {
-    SET_CLASS_ID_AS_ROOT()
+    SET_CLASS_ID_AS_ROOT(Object)
 
 public:
     const ObjectId &GetObjectId() const;
@@ -41,7 +41,7 @@ public:
     virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
 protected:
-    Object() = default;
+    Object();
     virtual ~Object() override;
 
     virtual void PreStart();

@@ -2,9 +2,9 @@
 #define COMPONENTMACROS_H
 
 #include "Bang/ClassDB.h"
+#include "Bang/ClassDB.h"
 #include "Bang/ComponentFactory.h"
 #include "Bang/EventEmitter.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/IEventsComponentChangeGameObject.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IToString.h"
@@ -23,18 +23,15 @@ namespace Bang
     friend class Bang::ComponentFactory; \
     friend class Bang::GameObject;
 
-#define COMPONENT(CLASS)      \
-    ICLONEABLE(CLASS)         \
-    COMPONENT_ABSTRACT(CLASS) \
-    SET_CLASS_NOT_FAST_DYNAMIC_CASTABLE(CLASS)
+#define COMPONENT(CLASS) \
+    ICLONEABLE(CLASS)    \
+    SET_CLASS_ID(CLASS)  \
+    COMPONENT_ABSTRACT(CLASS)
 
-#define COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS) \
-    COMPONENT_ABSTRACT(CLASS)                            \
-    OBJECT_WITH_FAST_DYNAMIC_CAST(CLASS)
-
-#define COMPONENT_WITH_FAST_DYNAMIC_CAST(CLASS) \
-    ICLONEABLE(CLASS)                           \
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(CLASS)
+#define COMPONENT_WITHOUT_CLASS_ID(CLASS) \
+    ICLONEABLE(CLASS)                     \
+    COMPONENT_ABSTRACT(CLASS)             \
+    OBJECT_WITHOUT_CLASS_ID(CLASS)
 }
 
 #endif  // COMPONENTMACROS_H

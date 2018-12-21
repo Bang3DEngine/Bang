@@ -9,7 +9,7 @@ class Framebuffer;
 
 class PostProcessEffectBloom : public PostProcessEffect
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectBloom)
+    COMPONENT(PostProcessEffectBloom)
 
 public:
     PostProcessEffectBloom();

@@ -6,9 +6,9 @@
 #include "Bang/Array.tcc"
 #include "Bang/AudioClip.h"
 #include "Bang/AudioManager.h"
+#include "Bang/ClassDB.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
@@ -22,7 +22,7 @@ using namespace Bang;
 
 AudioSource::AudioSource()
 {
-    CONSTRUCT_CLASS_ID(AudioSource)
+    SET_INSTANCE_CLASS_ID(AudioSource)
 }
 
 AudioSource::~AudioSource()

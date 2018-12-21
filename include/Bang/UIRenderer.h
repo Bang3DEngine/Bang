@@ -26,7 +26,7 @@ class UIRenderer : public Renderer,
                    public EventListener<IEventsChildren>,
                    public EventListener<IEventsTransform>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIRenderer)
+    COMPONENT(UIRenderer)
 
 public:
     virtual AARect GetBoundingRect(Camera *camera) const override;

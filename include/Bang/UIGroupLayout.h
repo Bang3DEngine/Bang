@@ -17,7 +17,7 @@ class UIGroupLayout : public Component,
                       public ILayoutElement,
                       public ILayoutController
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(UIGroupLayout)
+    COMPONENT_ABSTRACT(UIGroupLayout)
 
 public:
     UIGroupLayout();

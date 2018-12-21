@@ -19,7 +19,7 @@ using namespace Bang;
 
 DecalRenderer::DecalRenderer()
 {
-    CONSTRUCT_CLASS_ID(DecalRenderer);
+    SET_INSTANCE_CLASS_ID(DecalRenderer);
 
     m_cubeMesh = MeshFactory::GetCube();
     GetMaterial()->SetCullFace(GL::CullFaceExt::NONE);

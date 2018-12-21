@@ -6,7 +6,6 @@
 namespace Bang
 {
 using ClassIdType = uint;
-using CID = ClassIdType;
 
 #define CREATE_STATIC_CLASS_ID(CLASS, ID_BEGIN, ID_END)      \
     constexpr static ClassIdType CLASS##CIDBegin = ID_BEGIN; \
@@ -84,6 +83,31 @@ using CID = ClassIdType;
     CREATE_STATIC_CLASS_ID(Camera, 4501, 4600);                      \
     CREATE_STATIC_CLASS_ID(NavigationMesh, 4601, 4700);              \
     CREATE_STATIC_CLASS_ID(GameObject, 100000, 200000);
+
+#define SET_CLASS_ID(CLASS)                               \
+public:                                                   \
+    constexpr static inline ClassIdType GetClassIdBegin() \
+    {                                                     \
+        return ClassDB::CLASS##CIDBegin;                  \
+    }                                                     \
+    constexpr static inline ClassIdType GetClassIdEnd()   \
+    {                                                     \
+        return ClassDB::CLASS##CIDEnd;                    \
+    }
+
+#define SET_CLASS_ID_AS_ROOT(CLASS)                               \
+protected:                                                        \
+    ClassIdType m_instanceClassId = ClassDB::GetInvalidClassId(); \
+                                                                  \
+public:                                                           \
+    ClassIdType GetInstanceClassId() const                        \
+    {                                                             \
+        return m_instanceClassId;                                 \
+    }                                                             \
+    SET_CLASS_ID(CLASS)
+
+#define SET_INSTANCE_CLASS_ID(CLASS) \
+    m_instanceClassId = CLASS::GetClassIdBegin();
 }
 
 #endif  // CLASSDBMACROS_H

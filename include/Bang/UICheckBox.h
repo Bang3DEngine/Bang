@@ -29,7 +29,7 @@ class UICheckBox : public Component,
                    public EventEmitter<IEventsFocus>,
                    public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UICheckBox)
+    COMPONENT(UICheckBox)
 
 public:
     void OnUpdate() override;

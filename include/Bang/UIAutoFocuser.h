@@ -12,7 +12,7 @@ class UIFocusable;
 
 class UIAutoFocuser : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIAutoFocuser)
+    COMPONENT(UIAutoFocuser)
 
 public:
     // Component

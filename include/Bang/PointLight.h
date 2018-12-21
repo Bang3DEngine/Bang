@@ -21,7 +21,7 @@ class ShaderProgram;
 
 class PointLight : public Light
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PointLight)
+    COMPONENT(PointLight)
 
 public:
     void SetRange(float range);

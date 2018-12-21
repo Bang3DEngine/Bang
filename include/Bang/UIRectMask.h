@@ -13,7 +13,7 @@ namespace Bang
 {
 class UIRectMask : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIRectMask)
+    COMPONENT(UIRectMask)
 
 public:
     UIRectMask();

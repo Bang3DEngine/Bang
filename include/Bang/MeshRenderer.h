@@ -19,7 +19,7 @@ class Texture2D;
 
 class MeshRenderer : public Renderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(MeshRenderer)
+    COMPONENT(MeshRenderer)
 
 public:
     void SetMesh(Mesh *m);

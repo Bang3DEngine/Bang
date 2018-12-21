@@ -5,10 +5,10 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
+#include "Bang/ClassDB.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/IToString.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Object.h"
@@ -26,7 +26,7 @@ class Component : public Object,
                   public IToString,
                   public EventEmitter<IEventsComponentChangeGameObject>
 {
-    OBJECT_WITH_FAST_DYNAMIC_CAST(Component)
+    OBJECT(Component)
     SERIALIZABLE(Component)
     ICLONEABLE(Component)
 

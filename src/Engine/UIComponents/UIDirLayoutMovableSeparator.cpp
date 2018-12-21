@@ -5,7 +5,7 @@
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -27,7 +27,7 @@ using namespace Bang;
 
 UIDirLayoutMovableSeparator::UIDirLayoutMovableSeparator()
 {
-    CONSTRUCT_CLASS_ID(UIDirLayoutMovableSeparator)
+    SET_INSTANCE_CLASS_ID(UIDirLayoutMovableSeparator)
 }
 
 UIDirLayoutMovableSeparator::~UIDirLayoutMovableSeparator()

@@ -9,7 +9,7 @@ namespace Bang
 {
 class NavigationMesh : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(NavigationMesh)
+    COMPONENT(NavigationMesh)
 
 public:
     NavigationMesh();

@@ -5,9 +5,9 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
+#include "Bang/ClassDB.h"
 #include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -48,7 +48,7 @@ using namespace Bang;
 
 Camera::Camera()
 {
-    CONSTRUCT_CLASS_ID(Camera)
+    SET_INSTANCE_CLASS_ID(Camera)
 
     AddRenderPass(RenderPass::SCENE_OPAQUE);
     AddRenderPass(RenderPass::SCENE_TRANSPARENT);

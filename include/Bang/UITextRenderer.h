@@ -25,7 +25,7 @@ class UITextRenderer : public UIRenderer,
                        public ILayoutElement,
                        public IInvalidatable<UITextRenderer>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UITextRenderer)
+    COMPONENT(UITextRenderer)
 
 public:
     void RegenerateCharQuadsVAO() const;

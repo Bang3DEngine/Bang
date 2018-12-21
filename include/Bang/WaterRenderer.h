@@ -15,7 +15,7 @@ class MetaNode;
 
 class WaterRenderer : public Renderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(WaterRenderer)
+    COMPONENT(WaterRenderer)
 
 public:
     WaterRenderer();

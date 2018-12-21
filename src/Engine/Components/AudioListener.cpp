@@ -3,7 +3,7 @@
 #include <AL/al.h>
 
 #include "Bang/AudioManager.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
@@ -13,7 +13,7 @@ using namespace Bang;
 
 AudioListener::AudioListener()
 {
-    CONSTRUCT_CLASS_ID(AudioListener)
+    SET_INSTANCE_CLASS_ID(AudioListener)
 }
 
 AudioListener::~AudioListener()

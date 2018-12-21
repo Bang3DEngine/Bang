@@ -44,7 +44,7 @@ enum class ParticleSimulationSpace
 
 class ParticleSystem : public Renderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(ParticleSystem)
+    COMPONENT(ParticleSystem)
 
 private:
     struct ParticleVBOData

@@ -17,7 +17,7 @@ class Library;
 
 class BehaviourContainer : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(BehaviourContainer)
+    COMPONENT(BehaviourContainer)
 
 public:
     void SetSourceFilepath(const Path &sourceFilepath);

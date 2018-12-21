@@ -2,7 +2,7 @@
 
 #include <istream>
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
 #include "Bang/ICloneable.h"
@@ -27,7 +27,7 @@ using namespace Bang;
 
 UIImageRenderer::UIImageRenderer()
 {
-    CONSTRUCT_CLASS_ID(UIImageRenderer)
+    SET_INSTANCE_CLASS_ID(UIImageRenderer)
 
     SetMaterial(MaterialFactory::GetUIImage().Get());
     SetMode(Mode::TEXTURE_INV_UVY);

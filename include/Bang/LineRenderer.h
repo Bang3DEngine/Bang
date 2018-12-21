@@ -17,7 +17,7 @@ class MetaNode;
 
 class LineRenderer : public Renderer
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(LineRenderer)
+    COMPONENT(LineRenderer)
 
 public:
     void SetPoint(int i, const Vector3 &point);

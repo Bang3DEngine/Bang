@@ -1,7 +1,7 @@
 #include "Bang/UIRectMask.h"
 
 #include "Bang/AARect.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
@@ -11,7 +11,7 @@
 
 using namespace Bang;
 
-UIRectMask::UIRectMask(){CONSTRUCT_CLASS_ID(UIRectMask)}
+UIRectMask::UIRectMask(){SET_INSTANCE_CLASS_ID(UIRectMask)}
 
 UIRectMask::~UIRectMask()
 {

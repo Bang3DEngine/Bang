@@ -23,7 +23,7 @@ class UIFocusable;
 class UIDirLayoutMovableSeparator : public Component,
                                     public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDirLayoutMovableSeparator)
+    COMPONENT(UIDirLayoutMovableSeparator)
 
 public:
     UIDirLayoutMovableSeparator();

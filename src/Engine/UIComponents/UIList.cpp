@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -30,7 +30,7 @@ using namespace Bang;
 
 UIList::UIList()
 {
-    CONSTRUCT_CLASS_ID(UIList)
+    SET_INSTANCE_CLASS_ID(UIList)
 }
 
 UIList::~UIList()

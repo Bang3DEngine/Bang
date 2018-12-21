@@ -3,7 +3,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -22,7 +22,7 @@ using namespace Bang;
 
 UISlider::UISlider()
 {
-    CONSTRUCT_CLASS_ID(UISlider)
+    SET_INSTANCE_CLASS_ID(UISlider)
 }
 
 UISlider::~UISlider()

@@ -1,7 +1,7 @@
 #include "Bang/MeshCollider.h"
 
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
@@ -39,7 +39,7 @@ using namespace physx;
 
 MeshCollider::MeshCollider()
 {
-    CONSTRUCT_CLASS_ID(MeshCollider)
+    SET_INSTANCE_CLASS_ID(MeshCollider)
     SetPhysicsObjectType(PhysicsObject::Type::MESH_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }

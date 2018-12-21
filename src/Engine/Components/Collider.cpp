@@ -1,7 +1,6 @@
 #include "Bang/Collider.h"
 
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/Matrix4.tcc"
@@ -37,7 +36,7 @@ using namespace Bang;
 
 Collider::Collider()
 {
-    CONSTRUCT_CLASS_ID(Collider)
+    SET_INSTANCE_CLASS_ID(Collider)
 }
 
 Collider::~Collider()

@@ -6,7 +6,7 @@
 #include "Bang/Camera.h"
 #include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/Extensions.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -40,7 +40,7 @@ using namespace Bang;
 
 ReflectionProbe::ReflectionProbe()
 {
-    CONSTRUCT_CLASS_ID(ReflectionProbe);
+    SET_INSTANCE_CLASS_ID(ReflectionProbe);
 
     m_restTime.SetSeconds(0.5);
     p_textureCubeMapWithoutFiltering.Set(new TextureCubeMap());

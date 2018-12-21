@@ -10,7 +10,7 @@ namespace Bang
 {
 class UILayoutIgnorer : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UILayoutIgnorer)
+    COMPONENT(UILayoutIgnorer)
 
 public:
     UILayoutIgnorer();

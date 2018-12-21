@@ -14,7 +14,7 @@ namespace Bang
 {
 class UIContentSizeFitter : public Component, public ILayoutSelfController
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIContentSizeFitter)
+    COMPONENT(UIContentSizeFitter)
 
 public:
     void SetHorizontalSizeType(LayoutSizeType sizeType);

@@ -2,7 +2,6 @@
 
 #include "Bang/Component.h"
 #include "Bang/ComponentFactory.h"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 
 namespace Bang
@@ -22,7 +21,7 @@ T *GameObject::GetComponent() const
     {
         if (comp)
         {
-            if (T *tcomp = FastDynamicCast<T *>(comp))
+            if (T *tcomp = DCAST<T *>(comp))
             {
                 return tcomp;
             }
@@ -138,7 +137,7 @@ void GameObject::GetComponents(Array<T *> *components) const
     {
         if (comp)
         {
-            if (T *tcomp = FastDynamicCast<T *>(comp))
+            if (T *tcomp = DCAST<T *>(comp))
             {
                 components->PushBack(tcomp);
             }

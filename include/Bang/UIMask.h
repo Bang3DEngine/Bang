@@ -15,7 +15,7 @@ namespace Bang
 {
 class UIMask : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIMask)
+    COMPONENT(UIMask)
 
 public:
     UIMask();

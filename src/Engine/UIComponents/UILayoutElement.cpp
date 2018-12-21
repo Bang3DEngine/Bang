@@ -1,12 +1,12 @@
 #include "Bang/UILayoutElement.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 
 using namespace Bang;
 
 UILayoutElement::UILayoutElement()
 {
-    CONSTRUCT_CLASS_ID(UILayoutElement)
+    SET_INSTANCE_CLASS_ID(UILayoutElement)
     SetLayoutPriority(1);
 }
 

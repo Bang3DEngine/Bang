@@ -2,7 +2,7 @@
 
 #include <istream>
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 
@@ -10,7 +10,7 @@ using namespace Bang;
 
 UIGroupLayout::UIGroupLayout()
 {
-    CONSTRUCT_CLASS_ID(UIGroupLayout)
+    SET_INSTANCE_CLASS_ID(UIGroupLayout)
     SetChildrenHorizontalAlignment(HorizontalAlignment::CENTER);
     SetChildrenVerticalAlignment(VerticalAlignment::CENTER);
     SetChildrenHorizontalStretch(Stretch::FULL);

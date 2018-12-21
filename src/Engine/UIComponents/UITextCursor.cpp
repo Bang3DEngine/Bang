@@ -3,7 +3,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
@@ -14,7 +14,7 @@ using namespace Bang;
 
 UITextCursor::UITextCursor()
 {
-    CONSTRUCT_CLASS_ID(UITextCursor)
+    SET_INSTANCE_CLASS_ID(UITextCursor)
 
     SetMaterial(MaterialFactory::GetUIImage().Get());
     GetMaterial()->SetAlbedoColor(Color::Black());

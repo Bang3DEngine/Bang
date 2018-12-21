@@ -1,7 +1,7 @@
 #include "Bang/BoxCollider.h"
 
 #include "Bang/Assert.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/MetaNode.h"
@@ -28,7 +28,7 @@ using namespace Bang;
 
 BoxCollider::BoxCollider()
 {
-    CONSTRUCT_CLASS_ID(BoxCollider)
+    SET_INSTANCE_CLASS_ID(BoxCollider)
     SetPhysicsObjectType(PhysicsObject::Type::BOX_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }

@@ -2,7 +2,7 @@
 
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -29,7 +29,7 @@ const Time UIDragDroppable::DragInitTime = Time::Seconds(0.25);
 
 UIDragDroppable::UIDragDroppable()
 {
-    CONSTRUCT_CLASS_ID(UIDragDroppable);
+    SET_INSTANCE_CLASS_ID(UIDragDroppable);
     m_pressTime.SetInfinity();
 }
 

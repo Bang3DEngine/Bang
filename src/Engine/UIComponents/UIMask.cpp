@@ -1,6 +1,6 @@
 #include "Bang/UIMask.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
@@ -10,7 +10,7 @@ using namespace Bang;
 
 UIMask::UIMask()
 {
-    CONSTRUCT_CLASS_ID(UIMask)
+    SET_INSTANCE_CLASS_ID(UIMask)
 }
 
 UIMask::~UIMask()

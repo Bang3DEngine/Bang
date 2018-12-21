@@ -7,7 +7,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
 #include "Bang/Component.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Flags.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
@@ -44,7 +44,7 @@ using namespace Bang;
 
 ParticleSystem::ParticleSystem()
 {
-    CONSTRUCT_CLASS_ID(ParticleSystem);
+    SET_INSTANCE_CLASS_ID(ParticleSystem);
     SetRenderPrimitive(GL::Primitive::TRIANGLES);
 
     p_particleDataVBO = new VBO();

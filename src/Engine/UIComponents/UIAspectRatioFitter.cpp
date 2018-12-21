@@ -1,6 +1,6 @@
 #include "Bang/UIAspectRatioFitter.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/Math.h"
@@ -19,7 +19,7 @@ using namespace Bang;
 
 UIAspectRatioFitter::UIAspectRatioFitter()
 {
-    CONSTRUCT_CLASS_ID(UIAspectRatioFitter);
+    SET_INSTANCE_CLASS_ID(UIAspectRatioFitter);
     SetAspectRatioMode(AspectRatioMode::KEEP);
 }
 

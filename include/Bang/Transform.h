@@ -51,7 +51,7 @@ class Transform : public Component,
                   public EventListener<IEventsChildren>,
                   public EventEmitter<IEventsTransform>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Transform)
+    COMPONENT(Transform)
 
 public:
     void LookAt(const Vector3 &target, const Vector3 &up = Vector3::Up());

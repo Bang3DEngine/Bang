@@ -14,7 +14,7 @@ namespace Bang
 {
 class Timer : public Component
 {
-    COMPONENT(Timer)
+    COMPONENT_WITHOUT_CLASS_ID(Timer)
 
 public:
     void Run();

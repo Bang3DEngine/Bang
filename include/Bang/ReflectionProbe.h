@@ -24,7 +24,7 @@ class TextureCubeMap;
 
 class ReflectionProbe : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(ReflectionProbe)
+    COMPONENT(ReflectionProbe)
 
 public:
     ReflectionProbe();

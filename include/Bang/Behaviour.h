@@ -21,7 +21,7 @@ class IEventsGameObjectPhysics;
 class Behaviour : public Component,
                   public EventListener<IEventsGameObjectPhysics>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(Behaviour)
+    COMPONENT(Behaviour)
 
 public:
     Behaviour();

@@ -4,7 +4,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Color.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Font.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
@@ -34,7 +34,7 @@ using namespace Bang;
 
 UITextRenderer::UITextRenderer() : UIRenderer()
 {
-    CONSTRUCT_CLASS_ID(UITextRenderer)
+    SET_INSTANCE_CLASS_ID(UITextRenderer)
 
     p_mesh = Resources::Create<Mesh>();
     SetMaterial(MaterialFactory::GetUIText().Get());

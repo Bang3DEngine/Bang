@@ -5,7 +5,7 @@
 #include "Bang/Color.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -34,7 +34,7 @@ using namespace Bang;
 
 UIComboBox::UIComboBox()
 {
-    CONSTRUCT_CLASS_ID(UIComboBox)
+    SET_INSTANCE_CLASS_ID(UIComboBox)
 }
 
 UIComboBox::~UIComboBox()

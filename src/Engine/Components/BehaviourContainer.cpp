@@ -3,7 +3,7 @@
 #include "Bang/BangPreprocessor.h"
 #include "Bang/Behaviour.h"
 #include "Bang/BehaviourManager.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MetaFilesManager.h"
@@ -15,7 +15,7 @@ using namespace Bang;
 
 BehaviourContainer::BehaviourContainer()
 {
-    CONSTRUCT_CLASS_ID(BehaviourContainer)
+    SET_INSTANCE_CLASS_ID(BehaviourContainer)
 }
 
 BehaviourContainer::~BehaviourContainer()

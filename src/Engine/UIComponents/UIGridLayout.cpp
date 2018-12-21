@@ -2,7 +2,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/ILayoutController.h"
 #include "Bang/Math.h"
@@ -15,7 +15,7 @@ using namespace Bang;
 
 UIGridLayout::UIGridLayout()
 {
-    CONSTRUCT_CLASS_ID(UIGridLayout)
+    SET_INSTANCE_CLASS_ID(UIGridLayout)
 }
 
 UIGridLayout::~UIGridLayout()

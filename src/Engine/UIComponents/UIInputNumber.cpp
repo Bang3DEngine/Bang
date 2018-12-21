@@ -6,7 +6,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -23,7 +23,7 @@ using namespace Bang;
 
 UIInputNumber::UIInputNumber()
 {
-    CONSTRUCT_CLASS_ID(UIInputNumber)
+    SET_INSTANCE_CLASS_ID(UIInputNumber)
 }
 
 UIInputNumber::~UIInputNumber()

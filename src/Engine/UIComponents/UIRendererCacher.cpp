@@ -5,7 +5,7 @@
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -36,7 +36,7 @@ using namespace Bang;
 
 UIRendererCacher::UIRendererCacher()
 {
-    CONSTRUCT_CLASS_ID(UIRendererCacher)
+    SET_INSTANCE_CLASS_ID(UIRendererCacher)
 
     p_cacheFramebuffer = new Framebuffer(1, 1);
     p_cacheFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,

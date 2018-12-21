@@ -1,13 +1,13 @@
 #include "Bang/UIButton.h"
 
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/UIFocusable.h"
 
 using namespace Bang;
 
-UIButton::UIButton(){CONSTRUCT_CLASS_ID(UIButton)}
+UIButton::UIButton(){SET_INSTANCE_CLASS_ID(UIButton)}
 
 UIButton::~UIButton()
 {

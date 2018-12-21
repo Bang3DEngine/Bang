@@ -42,7 +42,7 @@ class ICloneable;
 
 class RigidBody : public Component, public PhysicsObject
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(RigidBody)
+    COMPONENT(RigidBody)
 
 public:
     RigidBody();

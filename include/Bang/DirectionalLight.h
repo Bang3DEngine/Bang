@@ -21,7 +21,7 @@ class ShaderProgram;
 
 class DirectionalLight : public Light
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(DirectionalLight)
+    COMPONENT(DirectionalLight)
 
 public:
     void SetShadowDistance(float shadowDistance);

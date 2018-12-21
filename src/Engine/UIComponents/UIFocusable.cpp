@@ -2,14 +2,14 @@
 
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/UICanvas.h"
 
 using namespace Bang;
 
 UIFocusable::UIFocusable()
 {
-    CONSTRUCT_CLASS_ID(UIFocusable);
+    SET_INSTANCE_CLASS_ID(UIFocusable);
 }
 
 UIFocusable::~UIFocusable()

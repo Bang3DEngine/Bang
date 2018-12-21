@@ -14,7 +14,7 @@ namespace Bang
 {
 class UIAspectRatioFitter : public Component, public ILayoutSelfController
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIAspectRatioFitter)
+    COMPONENT(UIAspectRatioFitter)
 
 public:
     void SetAspectRatio(float aspectRatio);

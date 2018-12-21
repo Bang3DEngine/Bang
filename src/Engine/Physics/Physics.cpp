@@ -6,12 +6,12 @@
 #include "Bang/Application.h"
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Collider.h"
 #include "Bang/Component.h"
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/FastDynamicCast.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/IEventsDestroy.h"
@@ -130,7 +130,7 @@ void Physics::UpdatePxSceneFromTransforms(Scene *scene)
             pxSceneContainer->m_physicsObjectGatherer->GetGatheredObjects();
         for (PhysicsObject *phObj : allPhObjs)
         {
-            if (Component *comp = FastDynamicCast<Component *>(phObj))
+            if (Component *comp = DCAST<Component *>(phObj))
             {
                 if (GameObject *phObjGo = comp->GetGameObject())
                 {

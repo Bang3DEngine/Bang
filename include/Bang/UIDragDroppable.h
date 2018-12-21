@@ -28,7 +28,7 @@ class UIDragDroppable : public Component,
                         public EventEmitter<IEventsDragDrop>,
                         public EventListener<IEventsFocus>
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(UIDragDroppable)
+    COMPONENT(UIDragDroppable)
 
 public:
     UIDragDroppable();

@@ -6,7 +6,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Debug.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -31,7 +31,7 @@ using namespace Bang;
 
 RectTransform::RectTransform()
 {
-    CONSTRUCT_CLASS_ID(RectTransform);
+    SET_INSTANCE_CLASS_ID(RectTransform);
 }
 
 RectTransform::~RectTransform()

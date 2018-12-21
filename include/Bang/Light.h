@@ -22,7 +22,7 @@ class Texture;
 
 class Light : public Component
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST_ABSTRACT(Light)
+    COMPONENT_ABSTRACT(Light)
 
 public:
     void SetShadowExponentConstant(float exponentConstant);

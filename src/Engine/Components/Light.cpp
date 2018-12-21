@@ -3,7 +3,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
@@ -33,7 +33,7 @@ using namespace Bang;
 
 Light::Light()
 {
-    CONSTRUCT_CLASS_ID(Light)
+    SET_INSTANCE_CLASS_ID(Light)
 
     p_shadowMapMaterial = Resources::Create<Material>();
 }

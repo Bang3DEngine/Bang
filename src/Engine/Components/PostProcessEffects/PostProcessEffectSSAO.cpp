@@ -7,7 +7,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -35,7 +35,7 @@ using namespace Bang;
 
 PostProcessEffectSSAO::PostProcessEffectSSAO()
 {
-    CONSTRUCT_CLASS_ID(PostProcessEffectSSAO)
+    SET_INSTANCE_CLASS_ID(PostProcessEffectSSAO)
 
     m_ssaoFB = new Framebuffer();
     m_ssaoFB->CreateAttachmentTex2D(GL::Attachment::COLOR0,

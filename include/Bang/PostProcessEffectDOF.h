@@ -7,7 +7,7 @@ namespace Bang
 {
 class PostProcessEffectDOF : public PostProcessEffect
 {
-    COMPONENT_WITH_FAST_DYNAMIC_CAST(PostProcessEffectDOF)
+    COMPONENT(PostProcessEffectDOF)
 
 public:
     PostProcessEffectDOF();

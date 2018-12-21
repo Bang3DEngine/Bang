@@ -11,7 +11,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Color.h"
 #include "Bang/Debug.h"
-#include "Bang/FastDynamicCast.h"
+#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -43,7 +43,7 @@ const int UITree::IndentationPx = 10;
 
 UITree::UITree()
 {
-    CONSTRUCT_CLASS_ID(UITree)
+    SET_INSTANCE_CLASS_ID(UITree)
     m_rootTree.SetData(nullptr);
 }
 

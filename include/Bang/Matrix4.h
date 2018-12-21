@@ -68,6 +68,10 @@ public:
                               const Vector3G<T> &focusPoint,
                               const Vector3G<T> &up);
 
+    static Matrix4G<T> TransformMatrix(const Vector3G<T> &position,
+                                       const QuaternionG<T> &rotation,
+                                       const Vector3G<T> &scale);
+
     template <class Real>
     static Matrix4G<T> Perspective(Real fovYRads,
                                    Real aspect,

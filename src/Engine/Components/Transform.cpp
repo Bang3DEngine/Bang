@@ -32,7 +32,7 @@ void Transform::SetLocalPosition(const Vector3 &p)
 {
     if (GetLocalPosition() != p)
     {
-        m_localPosition = p;
+        GetLocalTransformation().SetPosition(p);
         OnTransformChanged();
     }
 }
@@ -61,7 +61,7 @@ void Transform::SetLocalRotation(const Quaternion &q)
 {
     if (GetLocalRotation() != q)
     {
-        m_localRotation = q.Normalized();
+        GetLocalTransformation().SetRotation(q.Normalized());
         m_localEulerAnglesDegreesHint =
             GetLocalRotation().GetEulerAnglesDegrees();
         OnTransformChanged();
@@ -143,65 +143,41 @@ void Transform::SetLocalScale(float s)
     SetLocalScale(Vector3(s));
 }
 
-void Transform::SetLocalScale(const Vector3 &s)
+void Transform::SetLocalScale(const Vector3 &localScale)
 {
-    if (GetLocalScale() != s)
+    if (GetLocalScale() != localScale)
     {
-        m_localScale = s;
+        GetLocalTransformation().SetScale(localScale);
         OnTransformChanged();
     }
 }
 
-Vector3 Transform::TransformPoint(const Vector3 &point) const
+Vector3 Transform::FromLocalToWorldPoint(const Vector3 &point) const
 {
     return (GetLocalToWorldMatrix() * Vector4(point, 1)).xyz();
 }
-Vector3 Transform::InverseTransformPoint(const Vector3 &point) const
-{
-    return (GetLocalToWorldMatrixInv() * Vector4(point, 1)).xyz();
-}
-Vector3 Transform::TransformDirection(const Vector3 &dir) const
-{
-    return GetRotation() * dir;
-}
-Vector3 Transform::InverseTransformDirection(const Vector3 &dir) const
-{
-    return GetRotation().Inversed() * dir;
-}
-Vector3 Transform::TransformVector(const Vector3 &dir) const
+Vector3 Transform::FromLocalToWorldVector(const Vector3 &dir) const
 {
     return (GetLocalToWorldMatrix() * Vector4(dir, 0)).xyz();
 }
-Vector3 Transform::InverseTransformVector(const Vector3 &dir) const
-{
-    return (GetLocalToWorldMatrixInv() * Vector4(dir, 0)).xyz();
-}
-
-Vector3 Transform::FromLocalToWorldPoint(const Vector3 &point) const
-{
-    return TransformPoint(point);
-}
-Vector3 Transform::FromLocalToWorldVector(const Vector3 &dir) const
-{
-    return TransformVector(dir);
-}
 Vector3 Transform::FromLocalToWorldDirection(const Vector3 &dir) const
 {
-    return TransformDirection(dir);
+    return GetRotation() * dir;
 }
 
 Vector3 Transform::FromWorldToLocalPoint(const Vector3 &point) const
 {
-    return InverseTransformPoint(point);
+    return (GetLocalToWorldMatrixInv() * Vector4(point, 1)).xyz();
 }
+
 Vector3 Transform::FromWorldToLocalVector(const Vector3 &dir) const
 {
-    return InverseTransformVector(dir);
+    return (GetLocalToWorldMatrixInv() * Vector4(dir, 0)).xyz();
 }
 
 Vector3 Transform::FromWorldToLocalDirection(const Vector3 &dir) const
 {
-    return InverseTransformDirection(dir);
+    return GetRotation().Inversed() * dir;
 }
 
 bool Transform::CanBeRepeatedInGameObject() const
@@ -229,12 +205,8 @@ void Transform::RecalculateWorldMatricesIfNeeded() const
 
 void Transform::CalculateLocalToParentMatrix() const
 {
-    Matrix4 T = Matrix4::TranslateMatrix(GetLocalPosition());
-    Matrix4 R = Matrix4::RotateMatrix(GetLocalRotation());
-    Matrix4 S = Matrix4::ScaleMatrix(GetLocalScale());
-
-    m_localToParentMatrix = (T * R * S);
-    m_localToParentMatrixInv = m_localToParentMatrix.Inversed();
+    m_localToParentMatrix = GetLocalTransformation().GetLocalToWorldMatrix();
+    m_localToParentMatrixInv = GetLocalTransformation().GetWorldToLocalMatrix();
 }
 
 void Transform::CalculateLocalToWorldMatrix() const
@@ -253,13 +225,13 @@ void Transform::CalculateLocalToWorldMatrix() const
 const Matrix4 &Transform::GetLocalToParentMatrix() const
 {
     RecalculateParentMatricesIfNeeded();
-    return m_localToParentMatrix;
+    return GetLocalTransformation().GetLocalToWorldMatrix();
 }
 
 const Matrix4 &Transform::GetLocalToParentMatrixInv() const
 {
     RecalculateParentMatricesIfNeeded();
-    return m_localToParentMatrixInv;
+    return GetLocalTransformation().GetLocalToWorldMatrix();
 }
 
 const Matrix4 &Transform::GetLocalToWorldMatrix() const
@@ -274,13 +246,9 @@ const Matrix4 &Transform::GetLocalToWorldMatrixInv() const
     return m_localToWorldMatrixInv;
 }
 
-void Transform::LookAt(const Vector3 &target, const Vector3 &_up)
+void Transform::LookAt(const Vector3 &target, const Vector3 &up)
 {
-    if (target != GetLocalPosition())
-    {
-        Vector3 up = _up.Normalized();
-        SetRotation(Quaternion::LookDirection(target - GetPosition(), up));
-    }
+    GetLocalTransformation().LookAt(target, up);
 }
 
 void Transform::LookAt(Transform *targetTransform, const Vector3 &up)
@@ -295,22 +263,17 @@ void Transform::LookAt(GameObject *target, const Vector3 &up)
 
 void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 {
-    LookAt(GetPosition() + dir * 99.0f, up);
+    GetLocalTransformation().LookAt(dir, up);
 }
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    Vector3 localPos = transformMatrix.GetTranslation();
-    Quaternion localRot = transformMatrix.GetRotation();
-    Vector3 localScale = transformMatrix.GetScale();
-    SetLocalPosition(localPos);
-    SetLocalRotation(localRot);
-    SetLocalScale(localScale);
+    GetLocalTransformation().FillFromMatrix(transformMatrix);
 }
 
 const Vector3 &Transform::GetLocalPosition() const
 {
-    return m_localPosition;
+    return GetLocalTransformation().GetPosition();
 }
 
 Vector3 Transform::GetPosition() const
@@ -327,7 +290,7 @@ Vector3 Transform::GetPosition() const
 
 const Quaternion &Transform::GetLocalRotation() const
 {
-    return m_localRotation;
+    return GetLocalTransformation().GetRotation();
 }
 
 Quaternion Transform::GetRotation() const
@@ -354,7 +317,7 @@ Vector3 Transform::GetEuler() const
 
 const Vector3 &Transform::GetLocalScale() const
 {
-    return m_localScale;
+    return GetLocalTransformation().GetScale();
 }
 
 Vector3 Transform::GetScale() const
@@ -363,6 +326,16 @@ Vector3 Transform::GetScale() const
     Transform *parentTr = (parent ? parent->GetTransform() : nullptr);
     Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One();
     return parentScale * GetLocalScale();
+}
+
+Transformation &Transform::GetLocalTransformation()
+{
+    return m_localTransformation;
+}
+
+const Transformation &Transform::GetLocalTransformation() const
+{
+    return m_localTransformation;
 }
 
 Vector3 Transform::GetForward() const

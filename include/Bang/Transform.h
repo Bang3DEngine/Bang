@@ -16,6 +16,7 @@
 #include "Bang/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
+#include "Bang/Transformation.h"
 
 namespace Bang
 {
@@ -83,13 +84,6 @@ public:
     void SetLocalScale(float s);
     void SetLocalScale(const Vector3 &s);
 
-    Vector3 TransformPoint(const Vector3 &point) const;
-    Vector3 InverseTransformPoint(const Vector3 &point) const;
-    Vector3 TransformDirection(const Vector3 &dir) const;
-    Vector3 InverseTransformDirection(const Vector3 &dir) const;
-    Vector3 TransformVector(const Vector3 &vector) const;
-    Vector3 InverseTransformVector(const Vector3 &vector) const;
-
     Vector3 FromLocalToWorldPoint(const Vector3 &point) const;
     Vector3 FromLocalToWorldVector(const Vector3 &vector) const;
     Vector3 FromLocalToWorldDirection(const Vector3 &dir) const;
@@ -132,13 +126,16 @@ public:
     virtual void InvalidateTransform();
 
 protected:
-    mutable Matrix4 m_localToWorldMatrix;
-    mutable Matrix4 m_localToWorldMatrixInv;
     mutable Matrix4 m_localToParentMatrix;
     mutable Matrix4 m_localToParentMatrixInv;
+    mutable Matrix4 m_localToWorldMatrix;
+    mutable Matrix4 m_localToWorldMatrixInv;
 
     Transform();
     virtual ~Transform() override;
+
+    Transformation &GetLocalTransformation();
+    const Transformation &GetLocalTransformation() const;
 
     // IInvalidatable
     void OnInvalidatedWorld() override;
@@ -153,10 +150,8 @@ protected:
     virtual bool CanBeRepeatedInGameObject() const override;
 
 private:
-    Vector3 m_localPosition = Vector3::Zero();
-    Quaternion m_localRotation = Quaternion::Identity();
+    Transformation m_localTransformation;
     Vector3 m_localEulerAnglesDegreesHint = Vector3::Zero();
-    Vector3 m_localScale = Vector3::One();
 
     mutable bool m_alreadyNotifiedChildrenThatTransformHasChanged = false;
 

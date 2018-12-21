@@ -320,6 +320,26 @@ Matrix4G<T> Matrix4G<T>::LookAt(const Vector3G<T> &eyePosition,
 }
 
 template <class T>
+Matrix4G<T> Matrix4G<T>::TransformMatrix(const Vector3G<T> &position,
+                                         const QuaternionG<T> &rotation,
+                                         const Vector3G<T> &scale)
+{
+    Matrix4 transformMatrix;
+    if (rotation == Quaternion::Identity())
+    {
+        transformMatrix.SetTranslation(position);
+        transformMatrix.SetScale(scale);
+    }
+    else
+    {
+        transformMatrix.SetScale(scale);
+        transformMatrix = Matrix4::RotateMatrix(rotation) * transformMatrix;
+        transformMatrix.SetTranslation(position);
+    }
+    return transformMatrix;
+}
+
+template <class T>
 template <class Real>
 Matrix4G<T> Matrix4G<T>::Perspective(Real fovYRads,
                                      Real aspect,

@@ -200,8 +200,7 @@ void GameObject::AddChild_(GameObject *child,
         if (keepWorldTransform && GetTransform() && child->GetTransform())
         {
             child->GetTransform()->FillFromMatrix(
-                GetTransform()->GetWorldToLocalMatrix() *
-                prevWorldTransform);
+                GetTransform()->GetWorldToLocalMatrix() * prevWorldTransform);
         }
 
         index = Math::Clamp(index, 0, m_children.Size());

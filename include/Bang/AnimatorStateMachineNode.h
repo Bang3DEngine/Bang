@@ -46,7 +46,7 @@ public:
     AnimatorStateMachineTransition *GetTransition(uint transitionIdx);
     void RemoveTransition(AnimatorStateMachineTransition *transition);
 
-    virtual Map<String, Animation::BoneTransformation> GetBoneTransformations(
+    virtual Map<String, Transformation> GetBoneTransformations(
         Time animationTime,
         Animator *animator) const;
 

@@ -10,6 +10,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Quaternion.h"
 #include "Bang/String.h"
+#include "Bang/Transformation.h"
 #include "Bang/Vector3.h"
 
 namespace Bang
@@ -34,13 +35,6 @@ public:
     {
         float timeInFrames;
         T value;
-    };
-
-    struct BoneTransformation
-    {
-        Vector3 position;
-        Quaternion rotation;
-        Vector3 scale;
     };
 
     void AddPositionKeyFrame(const String &boneName,
@@ -90,16 +84,15 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
     static Map<String, Matrix4> GetBoneMatrices(
-        const Map<String, Animation::BoneTransformation> &bonesTransformations);
+        const Map<String, Transformation> &bonesTransformations);
 
-    static Map<String, Animation::BoneTransformation>
-    GetBoneAnimationTransformations(const Animation *animation,
-                                    Time animationTime);
+    static Map<String, Transformation> GetBoneAnimationTransformations(
+        const Animation *animation,
+        Time animationTime);
 
-    static Map<String, Animation::BoneTransformation>
-    GetInterpolatedBoneTransformations(
-        const Map<String, Animation::BoneTransformation> &prevTransformations,
-        const Map<String, Animation::BoneTransformation> &nextTransformations,
+    static Map<String, Transformation> GetInterpolatedBoneTransformations(
+        const Map<String, Transformation> &prevTransformations,
+        const Map<String, Transformation> &nextTransformations,
         float weight);
 
 private:

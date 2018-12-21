@@ -26,6 +26,10 @@ public:
     void LookAt(GameObject *target, const Vector3 &up = Vector3::Up());
     void LookInDirection(const Vector3 &dir, const Vector3 &up = Vector3::Up());
 
+    void Translate(const Vector3 &translation);
+    void Rotate(const Quaternion &rotation);
+    void Scale(const Vector3 &scale);
+
     Vector3 FromLocalToWorldPoint(const Vector3 &point) const;
     Vector3 FromLocalToWorldVector(const Vector3 &vector) const;
     Vector3 FromLocalToWorldDirection(const Vector3 &dir) const;

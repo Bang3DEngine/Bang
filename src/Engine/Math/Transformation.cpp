@@ -77,6 +77,21 @@ void Transformation::LookInDirection(const Vector3 &dir, const Vector3 &up)
     LookAt(GetPosition() + dir * 99.0f, up);
 }
 
+void Transformation::Translate(const Vector3 &translation)
+{
+    SetPosition(GetPosition() + translation);
+}
+
+void Transformation::Rotate(const Quaternion &rotation)
+{
+    SetRotation(rotation * GetRotation());
+}
+
+void Transformation::Scale(const Vector3 &scale)
+{
+    SetScale(scale * GetScale());
+}
+
 Vector3 Transformation::FromLocalToWorldPoint(const Vector3 &point) const
 {
     return GetLocalToWorldMatrix().TransformedPoint(point);

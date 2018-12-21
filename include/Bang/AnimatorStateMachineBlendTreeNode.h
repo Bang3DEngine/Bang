@@ -18,7 +18,7 @@ public:
     void SetSecondAnimationSpeed(float secondAnimationSpeed);
     void SetBlendVariableName(const String &blendVariableName);
 
-    virtual Map<String, Animation::BoneTransformation> GetBoneTransformations(
+    virtual Map<String, Transformation> GetBoneTransformations(
         Time animationTime,
         Animator *animator) const override;
     Animation *GetSecondAnimation() const;

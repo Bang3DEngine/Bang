@@ -42,7 +42,7 @@ float AnimatorStateMachineBlendTreeNode::GetSecondAnimationSpeed() const
     return m_secondAnimationSpeed;
 }
 
-Map<String, Animation::BoneTransformation>
+Map<String, Transformation>
 AnimatorStateMachineBlendTreeNode::GetBoneTransformations(
     Time animationTime,
     Animator *animator) const
@@ -50,20 +50,20 @@ AnimatorStateMachineBlendTreeNode::GetBoneTransformations(
     float secondWeight = animator->GetVariableFloat(GetBlendVariableName());
     secondWeight = Math::Clamp(secondWeight, 0.0f, 1.0f);
 
-    Map<String, Animation::BoneTransformation> firstBoneTransformations =
+    Map<String, Transformation> firstBoneTransformations =
         Animation::GetBoneAnimationTransformations(GetAnimation(),
                                                    animationTime);
     float normalizedTime =
         animationTime.GetSeconds() /
         Math::Max(GetAnimation()->GetDurationInSeconds(), 0.01f);
 
-    Map<String, Animation::BoneTransformation> blended;
+    Map<String, Transformation> blended;
     if (GetSecondAnimation())
     {
         Time secondAnimationTime = Time::Seconds(
             normalizedTime * GetSecondAnimation()->GetDurationInSeconds());
         secondAnimationTime *= GetSecondAnimationSpeed();
-        Map<String, Animation::BoneTransformation> secondBoneTransformations =
+        Map<String, Transformation> secondBoneTransformations =
             Animation::GetBoneAnimationTransformations(GetSecondAnimation(),
                                                        secondAnimationTime);
         blended = Animation::GetInterpolatedBoneTransformations(

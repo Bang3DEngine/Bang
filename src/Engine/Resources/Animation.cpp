@@ -254,27 +254,25 @@ void Animation::ExportMeta(MetaNode *metaNode) const
 }
 
 Map<String, Matrix4> Animation::GetBoneMatrices(
-    const Map<String, Animation::BoneTransformation> &bonesTransformations)
+    const Map<String, Transformation> &bonesTransformations)
 {
     Map<String, Matrix4> bonesMatrices;
     for (auto &it : bonesTransformations)
     {
         const String &boneName = it.first;
-        const BoneTransformation &boneTransformation = it.second;
-        const BoneTransformation &bt = boneTransformation;
-        Matrix4 transformMatrix = Matrix4::TranslateMatrix(bt.position) *
-                                  Matrix4::RotateMatrix(bt.rotation) *
-                                  Matrix4::ScaleMatrix(bt.scale);
+        const Transformation &boneTransformation = it.second;
+        const Transformation &bt = boneTransformation;
+        const Matrix4 transformMatrix = bt.GetLocalToWorldMatrix();
         bonesMatrices.Add(boneName, transformMatrix);
     }
     return bonesMatrices;
 }
 
-Map<String, Animation::BoneTransformation>
-Animation::GetBoneAnimationTransformations(const Animation *anim,
-                                           Time animationTime)
+Map<String, Transformation> Animation::GetBoneAnimationTransformations(
+    const Animation *anim,
+    Time animationTime)
 {
-    Map<String, Animation::BoneTransformation> boneTransformations;
+    Map<String, Transformation> boneTransformations;
     if (!anim)
     {
         return boneTransformations;
@@ -316,7 +314,7 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
             bonePosition =
                 Vector3::Lerp(prevPosKF.value, nextPosKF.value, interpFactor);
         }
-        boneTransformations[boneName].position = bonePosition;
+        boneTransformations[boneName].SetPosition(bonePosition);
     }
 
     for (const auto &it : anim->GetBoneNameToRotationKeyFrames())
@@ -344,7 +342,7 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
             boneRotation = Quaternion::SLerp(
                 prevRotKF.value, nextRotKF.value, interpFactor);
         }
-        boneTransformations[boneName].rotation = boneRotation;
+        boneTransformations[boneName].SetRotation(boneRotation);
     }
 
     for (const auto &it : anim->GetBoneNameToScaleKeyFrames())
@@ -372,16 +370,15 @@ Animation::GetBoneAnimationTransformations(const Animation *anim,
             boneScale = Vector3::Lerp(
                 prevScaleKF.value, nextScaleKF.value, interpFactor);
         }
-        boneTransformations[boneName].scale = boneScale;
+        boneTransformations[boneName].SetScale(boneScale);
     }
 
     return boneTransformations;
 }
 
-Map<String, Animation::BoneTransformation>
-Animation::GetInterpolatedBoneTransformations(
-    const Map<String, Animation::BoneTransformation> &prevTransformations,
-    const Map<String, Animation::BoneTransformation> &nextTransformations,
+Map<String, Transformation> Animation::GetInterpolatedBoneTransformations(
+    const Map<String, Transformation> &prevTransformations,
+    const Map<String, Transformation> &nextTransformations,
     float weight)
 {
     // Gather bone names
@@ -396,37 +393,38 @@ Animation::GetInterpolatedBoneTransformations(
     }
 
     // Interpolate transformations
-    Map<String, Animation::BoneTransformation> interpolatedBoneTransformations;
+    Map<String, Transformation> interpolatedBoneTransformations;
     for (const String &boneName : allBoneNames)
     {
-        BoneTransformation prevBoneTransformation;
+        Transformation prevBoneTransformation;
         auto prevTransformationIt = prevTransformations.Find(boneName);
         if (prevTransformationIt != prevTransformations.End())
         {
             prevBoneTransformation = prevTransformationIt->second;
         }
 
-        BoneTransformation nextBoneTransformation;
+        Transformation nextBoneTransformation;
         auto nextTransformationIt = nextTransformations.Find(boneName);
         if (nextTransformationIt != nextTransformations.End())
         {
             nextBoneTransformation = nextTransformationIt->second;
         }
 
-        Vector3 interpPos = Vector3::Lerp(prevBoneTransformation.position,
-                                          nextBoneTransformation.position,
+        Vector3 interpPos = Vector3::Lerp(prevBoneTransformation.GetPosition(),
+                                          nextBoneTransformation.GetPosition(),
                                           weight);
         Quaternion interpRot =
-            Quaternion::SLerp(prevBoneTransformation.rotation,
-                              nextBoneTransformation.rotation,
+            Quaternion::SLerp(prevBoneTransformation.GetRotation(),
+                              nextBoneTransformation.GetRotation(),
                               weight);
-        Vector3 interpScale = Vector3::Lerp(
-            prevBoneTransformation.scale, nextBoneTransformation.scale, weight);
+        Vector3 interpScale = Vector3::Lerp(prevBoneTransformation.GetScale(),
+                                            nextBoneTransformation.GetScale(),
+                                            weight);
 
-        BoneTransformation crossFadedTransformation;
-        crossFadedTransformation.position = interpPos;
-        crossFadedTransformation.rotation = interpRot;
-        crossFadedTransformation.scale = interpScale;
+        Transformation crossFadedTransformation;
+        crossFadedTransformation.SetPosition(interpPos);
+        crossFadedTransformation.SetRotation(interpRot);
+        crossFadedTransformation.SetScale(interpScale);
 
         interpolatedBoneTransformations.Add(boneName, crossFadedTransformation);
     }

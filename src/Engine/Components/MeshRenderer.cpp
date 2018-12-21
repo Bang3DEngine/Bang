@@ -1,7 +1,7 @@
 #include "Bang/MeshRenderer.h"
 
-#include "Bang/Extensions.h"
 #include "Bang/ClassDB.h"
+#include "Bang/Extensions.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"

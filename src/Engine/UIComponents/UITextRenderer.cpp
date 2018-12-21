@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Color.h"
 #include "Bang/ClassDB.h"
+#include "Bang/Color.h"
 #include "Bang/Font.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"

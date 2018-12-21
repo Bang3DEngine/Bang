@@ -37,7 +37,6 @@
 #include "Bang/Color.h"
 #include "Bang/Compiler.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentFactory.h"
 #include "Bang/Containers.h"
 #include "Bang/Cursor.h"
 #include "Bang/Debug.h"

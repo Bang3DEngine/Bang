@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Bang/ClassDB.h"
+#include "Bang/Debug.h"
 
 namespace Bang
 {
@@ -30,5 +31,19 @@ constexpr inline bool ClassDB::IsSubClass(const TSubClass *obj)
 {
     return ClassDB::IsSubClass(
         TBaseClass::GetClassIdBegin(), TBaseClass::GetClassIdEnd(), obj);
+}
+
+template <class T>
+T *ClassDB::Create(const String &className)
+{
+    void *createdObj = ClassDB::Create(className);
+    if (!createdObj)
+    {
+        Debug_Error("Trying to create an object of class '"
+                    << className
+                    << "' "
+                       "which is not registered.");
+    }
+    return createdObj ? SCAST<T *>(createdObj) : nullptr;
 }
 }

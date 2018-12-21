@@ -14,7 +14,7 @@ using ClassIdType = uint;
 #define CREATE_STATIC_CLASS_IDS()                                    \
     CREATE_STATIC_CLASS_ID(Object, 0, 1000000000);                   \
     CREATE_STATIC_CLASS_ID(Component, 0, 100000);                    \
-    CREATE_STATIC_CLASS_ID(Renderer, 1, 100);                        \
+    CREATE_STATIC_CLASS_ID(Renderer, 1, 149);                        \
     CREATE_STATIC_CLASS_ID(MeshRenderer, 10, 20);                    \
     CREATE_STATIC_CLASS_ID(SkinnedMeshRenderer, 11, 15);             \
     CREATE_STATIC_CLASS_ID(LineRenderer, 21, 30);                    \
@@ -24,7 +24,8 @@ using ClassIdType = uint;
     CREATE_STATIC_CLASS_ID(WaterRenderer, 41, 50);                   \
     CREATE_STATIC_CLASS_ID(ParticleSystem, 51, 60);                  \
     CREATE_STATIC_CLASS_ID(DecalRenderer, 61, 65);                   \
-    CREATE_STATIC_CLASS_ID(Animator, 101, 200);                      \
+    CREATE_STATIC_CLASS_ID(VolumeRenderer, 65, 70);                  \
+    CREATE_STATIC_CLASS_ID(Animator, 150, 200);                      \
     CREATE_STATIC_CLASS_ID(AudioListener, 201, 300);                 \
     CREATE_STATIC_CLASS_ID(AudioSource, 301, 400);                   \
     CREATE_STATIC_CLASS_ID(BehaviourContainer, 401, 500);            \

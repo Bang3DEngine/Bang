@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Bang/Component.h"
-#include "Bang/ComponentFactory.h"
 #include "Bang/GameObject.h"
 
 namespace Bang

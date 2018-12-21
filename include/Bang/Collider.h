@@ -23,9 +23,9 @@ class ICloneable;
 class Object;
 class PhysicsMaterial;
 
-#define COLLIDER(className)                     \
-    COMPONENT(className) \
-    friend class Physics;                       \
+#define COLLIDER(className) \
+    COMPONENT(className)    \
+    friend class Physics;   \
     friend class PxSceneContainer;
 
 class Collider : public Component, public PhysicsObject

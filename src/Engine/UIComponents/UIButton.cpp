@@ -7,7 +7,10 @@
 
 using namespace Bang;
 
-UIButton::UIButton(){SET_INSTANCE_CLASS_ID(UIButton)}
+UIButton::UIButton()
+{
+    SET_INSTANCE_CLASS_ID(UIButton)
+}
 
 UIButton::~UIButton()
 {

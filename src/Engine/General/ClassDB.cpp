@@ -72,6 +72,7 @@
 #include "Bang/UIToolButton.h"
 #include "Bang/UITree.h"
 #include "Bang/UIVerticalLayout.h"
+#include "Bang/VolumeRenderer.h"
 #include "Bang/WaterRenderer.h"
 
 using namespace Bang;
@@ -106,85 +107,105 @@ ClassIdType ClassDB::GetClassIdEnd(const String &className)
     return -1u;
 }
 
+void *ClassDB::Create(const String &className)
+{
+    void *createdObj = nullptr;
+
+    ClassDB *cdb = ClassDB::GetInstance();
+    auto it = cdb->m_classNameToConstructor.Find(className);
+    if (it != cdb->m_classNameToConstructor.End())
+    {
+        const auto &constructor = it->second;
+        createdObj = constructor();
+    }
+    return createdObj;
+}
+
 void ClassDB::RegisterClasses()
 {
-#define REGISTER_OBJECT_CLASS(CLASSNAME)                                     \
+#define REGISTER_ABSTRACT_CLASS(CLASSNAME)                                   \
     m_classNameToClassIdBegin.Add(#CLASSNAME, CLASSNAME::GetClassIdBegin()); \
     m_classNameToClassIdEnd.Add(#CLASSNAME, CLASSNAME::GetClassIdEnd());
 
-    REGISTER_OBJECT_CLASS(Object);
-    REGISTER_OBJECT_CLASS(Component);
-    REGISTER_OBJECT_CLASS(Renderer);
-    REGISTER_OBJECT_CLASS(MeshRenderer);
-    REGISTER_OBJECT_CLASS(SkinnedMeshRenderer);
-    REGISTER_OBJECT_CLASS(LineRenderer);
-    REGISTER_OBJECT_CLASS(UIRenderer);
-    REGISTER_OBJECT_CLASS(UIImageRenderer);
-    REGISTER_OBJECT_CLASS(UITextRenderer);
-    REGISTER_OBJECT_CLASS(WaterRenderer);
-    REGISTER_OBJECT_CLASS(ParticleSystem);
-    REGISTER_OBJECT_CLASS(Animator);
-    REGISTER_OBJECT_CLASS(AudioListener);
-    REGISTER_OBJECT_CLASS(AudioSource);
-    REGISTER_OBJECT_CLASS(BehaviourContainer);
-    REGISTER_OBJECT_CLASS(Behaviour);
-    REGISTER_OBJECT_CLASS(Collider);
-    REGISTER_OBJECT_CLASS(BoxCollider);
-    REGISTER_OBJECT_CLASS(SphereCollider);
-    REGISTER_OBJECT_CLASS(CapsuleCollider);
-    REGISTER_OBJECT_CLASS(MeshCollider);
-    REGISTER_OBJECT_CLASS(Light);
-    REGISTER_OBJECT_CLASS(DirectionalLight);
-    REGISTER_OBJECT_CLASS(PointLight);
-    REGISTER_OBJECT_CLASS(DecalRenderer);
-    REGISTER_OBJECT_CLASS(PostProcessEffect);
-    REGISTER_OBJECT_CLASS(PostProcessEffectSSAO);
-    REGISTER_OBJECT_CLASS(PostProcessEffectBloom);
-    REGISTER_OBJECT_CLASS(PostProcessEffectFXAA);
-    REGISTER_OBJECT_CLASS(PostProcessEffectToneMapping);
-    REGISTER_OBJECT_CLASS(PostProcessEffectDOF);
-    REGISTER_OBJECT_CLASS(Transform);
-    REGISTER_OBJECT_CLASS(RectTransform);
-    REGISTER_OBJECT_CLASS(RigidBody);
-    REGISTER_OBJECT_CLASS(ReflectionProbe);
-    REGISTER_OBJECT_CLASS(UIAspectRatioFitter);
-    REGISTER_OBJECT_CLASS(UIAutoFocuser);
-    REGISTER_OBJECT_CLASS(UIButtonBase);
-    REGISTER_OBJECT_CLASS(UIButton);
-    REGISTER_OBJECT_CLASS(UIToolButton);
-    REGISTER_OBJECT_CLASS(UICanvas);
-    REGISTER_OBJECT_CLASS(UICheckBox);
-    REGISTER_OBJECT_CLASS(UIComboBox);
-    REGISTER_OBJECT_CLASS(UIContentSizeFitter);
-    REGISTER_OBJECT_CLASS(UIDirLayoutMovableSeparator);
-    REGISTER_OBJECT_CLASS(UIDragDroppable);
-    REGISTER_OBJECT_CLASS(UIFileList);
-    REGISTER_OBJECT_CLASS(UIFocusable);
-    REGISTER_OBJECT_CLASS(UIGroupLayout);
-    REGISTER_OBJECT_CLASS(UIDirLayout);
-    REGISTER_OBJECT_CLASS(UIHorizontalLayout);
-    REGISTER_OBJECT_CLASS(UIVerticalLayout);
-    REGISTER_OBJECT_CLASS(UIGridLayout);
-    REGISTER_OBJECT_CLASS(UIInputNumber);
-    REGISTER_OBJECT_CLASS(UIInputText);
-    REGISTER_OBJECT_CLASS(UILabel);
-    REGISTER_OBJECT_CLASS(UILayoutElement);
-    REGISTER_OBJECT_CLASS(UILayoutIgnorer);
-    REGISTER_OBJECT_CLASS(UIList);
-    REGISTER_OBJECT_CLASS(UIMask);
-    REGISTER_OBJECT_CLASS(UIRectMask);
-    REGISTER_OBJECT_CLASS(UIRendererCacher);
-    REGISTER_OBJECT_CLASS(UIScrollArea);
-    REGISTER_OBJECT_CLASS(UIScrollBar);
-    REGISTER_OBJECT_CLASS(UIScrollPanel);
-    REGISTER_OBJECT_CLASS(UISlider);
-    REGISTER_OBJECT_CLASS(UITextCursor);
-    REGISTER_OBJECT_CLASS(UITree);
-    REGISTER_OBJECT_CLASS(Camera);
-    REGISTER_OBJECT_CLASS(NavigationMesh);
-    REGISTER_OBJECT_CLASS(GameObject);
+#define REGISTER_CLASS(CLASSNAME)      \
+    REGISTER_ABSTRACT_CLASS(CLASSNAME) \
+    m_classNameToConstructor.Add(      \
+        #CLASSNAME, []() { return SCAST<void *>(new CLASSNAME()); });
 
-#undef REGISTER_OBJECT_CLASS
+    REGISTER_ABSTRACT_CLASS(Object);
+    REGISTER_CLASS(Component);
+    REGISTER_CLASS(Renderer);
+    REGISTER_CLASS(MeshRenderer);
+    REGISTER_CLASS(SkinnedMeshRenderer);
+    REGISTER_CLASS(LineRenderer);
+    REGISTER_CLASS(UIRenderer);
+    REGISTER_CLASS(UIImageRenderer);
+    REGISTER_CLASS(VolumeRenderer);
+    REGISTER_CLASS(UITextRenderer);
+    REGISTER_CLASS(WaterRenderer);
+    REGISTER_CLASS(ParticleSystem);
+    REGISTER_CLASS(Animator);
+    REGISTER_CLASS(AudioListener);
+    REGISTER_CLASS(AudioSource);
+    REGISTER_CLASS(BehaviourContainer);
+    REGISTER_CLASS(Behaviour);
+    REGISTER_ABSTRACT_CLASS(Collider);
+    REGISTER_CLASS(BoxCollider);
+    REGISTER_CLASS(SphereCollider);
+    REGISTER_CLASS(CapsuleCollider);
+    REGISTER_CLASS(MeshCollider);
+    REGISTER_ABSTRACT_CLASS(Light);
+    REGISTER_CLASS(DirectionalLight);
+    REGISTER_CLASS(PointLight);
+    REGISTER_CLASS(DecalRenderer);
+    REGISTER_CLASS(PostProcessEffect);
+    REGISTER_CLASS(PostProcessEffectSSAO);
+    REGISTER_CLASS(PostProcessEffectBloom);
+    REGISTER_CLASS(PostProcessEffectFXAA);
+    REGISTER_CLASS(PostProcessEffectToneMapping);
+    REGISTER_CLASS(PostProcessEffectDOF);
+    REGISTER_CLASS(Transform);
+    REGISTER_CLASS(RectTransform);
+    REGISTER_CLASS(RigidBody);
+    REGISTER_CLASS(ReflectionProbe);
+    REGISTER_CLASS(UIAspectRatioFitter);
+    REGISTER_CLASS(UIAutoFocuser);
+    REGISTER_ABSTRACT_CLASS(UIButtonBase);
+    REGISTER_CLASS(UIButton);
+    REGISTER_CLASS(UIToolButton);
+    REGISTER_CLASS(UICanvas);
+    REGISTER_CLASS(UICheckBox);
+    REGISTER_CLASS(UIComboBox);
+    REGISTER_CLASS(UIContentSizeFitter);
+    REGISTER_CLASS(UIDirLayoutMovableSeparator);
+    REGISTER_CLASS(UIDragDroppable);
+    REGISTER_CLASS(UIFileList);
+    REGISTER_CLASS(UIFocusable);
+    REGISTER_ABSTRACT_CLASS(UIGroupLayout);
+    REGISTER_CLASS(UIDirLayout);
+    REGISTER_CLASS(UIHorizontalLayout);
+    REGISTER_CLASS(UIVerticalLayout);
+    REGISTER_CLASS(UIGridLayout);
+    REGISTER_CLASS(UIInputNumber);
+    REGISTER_CLASS(UIInputText);
+    REGISTER_CLASS(UILabel);
+    REGISTER_CLASS(UILayoutElement);
+    REGISTER_CLASS(UILayoutIgnorer);
+    REGISTER_CLASS(UIList);
+    REGISTER_CLASS(UIMask);
+    REGISTER_CLASS(UIRectMask);
+    REGISTER_CLASS(UIRendererCacher);
+    REGISTER_CLASS(UIScrollArea);
+    REGISTER_CLASS(UIScrollBar);
+    REGISTER_CLASS(UIScrollPanel);
+    REGISTER_CLASS(UISlider);
+    REGISTER_CLASS(UITextCursor);
+    REGISTER_CLASS(UITree);
+    REGISTER_CLASS(Camera);
+    REGISTER_CLASS(NavigationMesh);
+    REGISTER_CLASS(GameObject);
+
+#undef REGISTER_CLASS
 }
 
 ClassDB *ClassDB::GetInstance()

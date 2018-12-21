@@ -1,8 +1,8 @@
 #include "Bang/UIRenderer.h"
 
 #include "Bang/AARect.h"
-#include "Bang/EventListener.tcc"
 #include "Bang/ClassDB.h"
+#include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsChildren.h"

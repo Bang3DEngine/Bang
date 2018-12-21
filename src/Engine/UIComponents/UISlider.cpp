@@ -1,9 +1,9 @@
 #include "Bang/UISlider.h"
 
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"

@@ -7,7 +7,6 @@
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Component.h"
-#include "Bang/ComponentFactory.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Debug.h"
 #include "Bang/GUID.h"
@@ -1175,7 +1174,7 @@ void GameObject::ImportMeta(const MetaNode &metaNode)
 
             if (!comp)
             {
-                comp = ComponentFactory::Create(tagName);
+                comp = ClassDB::Create<Component>(tagName);
                 AddComponent(comp);
             }
             else

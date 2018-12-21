@@ -15,7 +15,10 @@
 
 using namespace Bang;
 
-UIFileList::UIFileList(){SET_INSTANCE_CLASS_ID(UIFileList)}
+UIFileList::UIFileList()
+{
+    SET_INSTANCE_CLASS_ID(UIFileList)
+}
 
 UIFileList::~UIFileList()
 {

@@ -2,10 +2,10 @@
 
 #include "Bang/Array.h"
 #include "Bang/Camera.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"

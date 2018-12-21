@@ -5,8 +5,8 @@
 
 #include "Bang/Alignment.h"
 #include "Bang/Assert.h"
-#include "Bang/Color.h"
 #include "Bang/ClassDB.h"
+#include "Bang/Color.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"

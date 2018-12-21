@@ -4,9 +4,9 @@
 
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "Bang/ClassDB.h"
 #include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/Extensions.h"
-#include "Bang/ClassDB.h"
 #include "Bang/Flags.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"

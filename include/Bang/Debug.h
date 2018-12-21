@@ -2,7 +2,6 @@
 #define DEBUG_H
 
 #include <iostream>
-#include <vector>
 
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"

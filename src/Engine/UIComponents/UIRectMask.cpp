@@ -11,7 +11,10 @@
 
 using namespace Bang;
 
-UIRectMask::UIRectMask(){SET_INSTANCE_CLASS_ID(UIRectMask)}
+UIRectMask::UIRectMask()
+{
+    SET_INSTANCE_CLASS_ID(UIRectMask)
+}
 
 UIRectMask::~UIRectMask()
 {

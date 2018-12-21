@@ -2,9 +2,9 @@
 
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/DPtr.tcc"
-#include "Bang/ClassDB.h"
 #include "Bang/Font.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"

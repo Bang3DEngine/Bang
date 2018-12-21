@@ -1,9 +1,9 @@
 #include "Bang/UITextCursor.h"
 
 #include "Bang/Array.tcc"
+#include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"

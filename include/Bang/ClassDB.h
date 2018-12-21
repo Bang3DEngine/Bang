@@ -30,6 +30,11 @@ public:
     template <class TBaseClass, class TSubClass>
     static constexpr inline bool IsSubClass(const TSubClass *obj);
 
+    template <class T>
+    static T *Create(const String &className);
+
+    static void *Create(const String &className);
+
     void RegisterClasses();
 
     static ClassDB *GetInstance();
@@ -39,6 +44,7 @@ public:
 private:
     Map<String, ClassIdType> m_classNameToClassIdBegin;
     Map<String, ClassIdType> m_classNameToClassIdEnd;
+    Map<String, std::function<void *()>> m_classNameToConstructor;
 };
 }
 

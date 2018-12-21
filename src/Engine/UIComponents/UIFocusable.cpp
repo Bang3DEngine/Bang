@@ -1,8 +1,8 @@
 #include "Bang/UIFocusable.h"
 
+#include "Bang/ClassDB.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventEmitter.tcc"
-#include "Bang/ClassDB.h"
 #include "Bang/UICanvas.h"
 
 using namespace Bang;

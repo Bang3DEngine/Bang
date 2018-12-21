@@ -1,10 +1,10 @@
 #include "Bang/UIScrollPanel.h"
 
 #include "Bang/AARect.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"

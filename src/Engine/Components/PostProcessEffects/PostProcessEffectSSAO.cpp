@@ -5,9 +5,9 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
-#include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"

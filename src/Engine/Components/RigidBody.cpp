@@ -2,8 +2,8 @@
 
 #include <istream>
 
-#include "Bang/Debug.h"
 #include "Bang/ClassDB.h"
+#include "Bang/Debug.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

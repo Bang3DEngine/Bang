@@ -183,7 +183,7 @@ void MeshRenderer::IntersectRay_(const Ray &ray,
     if (intersected && dist < minIntersectionDist)
     {
         Transform *tr = GetGameObject()->GetTransform();
-        const Matrix4 &localToWorldInv = tr->GetLocalToWorldMatrixInv();
+        const Matrix4 &localToWorldInv = tr->GetWorldToLocalMatrix();
         const Ray localRay = localToWorldInv * ray;
 
         float minLocalMRDist = Math::Infinity<float>();

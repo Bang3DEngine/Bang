@@ -41,7 +41,7 @@ RectTransform::~RectTransform()
 Vector2 RectTransform::FromViewportPointToLocalPointNDC(
     const Vector2 &vpPoint) const
 {
-    return (GetLocalToWorldMatrixInv() * Vector4(vpPoint, 0, 1)).xy();
+    return (GetWorldToLocalMatrix() * Vector4(vpPoint, 0, 1)).xy();
 }
 Vector2 RectTransform::FromViewportPointToLocalPointNDC(
     const Vector2i &vpPoint) const
@@ -110,7 +110,7 @@ Vector2 RectTransform::FromLocalPointNDCToViewportPoint(
 Vector2 RectTransform::FromViewportPointNDCToLocalPointNDC(
     const Vector2 &vpPointNDC) const
 {
-    return (GetLocalToWorldMatrixInv() *
+    return (GetWorldToLocalMatrix() *
             Vector4(GL::FromViewportPointNDCToViewportPoint(vpPointNDC), 0, 1))
         .xy();
 }
@@ -130,7 +130,7 @@ AARect RectTransform::FromLocalAARectNDCToViewportAARectNDC(
 Rect RectTransform::FromViewportRectNDCToLocalRectNDC(
     const Rect &vpRectNDC) const
 {
-    return GetLocalToWorldMatrixInv() * vpRectNDC;
+    return GetWorldToLocalMatrix() * vpRectNDC;
 }
 Rect RectTransform::FromLocalRectNDCToViewportRectNDC(
     const Rect &localRectNDC) const
@@ -531,7 +531,7 @@ void RectTransform::CalculateLocalToParentMatrix() const
                             Matrix4::RotateMatrix(GetLocalRotation()) *
                             Matrix4::ScaleMatrix(GetLocalScale()) *
                             translateToPivot;
-    m_localToParentMatrixInv = m_localToParentMatrix.Inversed();
+    m_parentToLocalMatrix = m_localToParentMatrix.Inversed();
 }
 
 void RectTransform::OnTransformInvalidated()
@@ -629,7 +629,7 @@ const Matrix4 &RectTransform::GetLocalToWorldMatrix() const
     return m_rectTransformLocalToWorldMatrix;
 }
 
-const Matrix4 &RectTransform::GetLocalToWorldMatrixInv() const
+const Matrix4 &RectTransform::GetWorldToLocalMatrix() const
 {
     if (m_vpInWhichRectTransformLocalToWorldWasCalc != GL::GetViewportRect())
     {

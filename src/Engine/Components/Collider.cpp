@@ -284,7 +284,7 @@ Matrix4 Collider::GetWorldShapeTransformWithRespectToPxActor() const
                     pxSceneCont->GetGameObjectFromPxActor(pxRA))
             {
                 Matrix4 actorToWorldInv =
-                    pxActorGo->GetTransform()->GetLocalToWorldMatrixInv();
+                    pxActorGo->GetTransform()->GetWorldToLocalMatrix();
                 shapeTransformWithRespectToPxActor =
                     actorToWorldInv * shapeTransformWithRespectToPxActor;
             }

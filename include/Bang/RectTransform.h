@@ -116,7 +116,7 @@ public:
 
     // Transform
     const Matrix4 &GetLocalToWorldMatrix() const override;
-    const Matrix4 &GetLocalToWorldMatrixInv() const override;
+    const Matrix4 &GetWorldToLocalMatrix() const override;
     void InvalidateTransform() override;
     void OnTransformInvalidated() override;
 

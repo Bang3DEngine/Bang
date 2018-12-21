@@ -92,9 +92,9 @@ public:
     Vector3 FromWorldToLocalDirection(const Vector3 &dir) const;
 
     virtual const Matrix4 &GetLocalToParentMatrix() const;
-    virtual const Matrix4 &GetLocalToParentMatrixInv() const;
+    virtual const Matrix4 &GetParentToLocalMatrix() const;
     virtual const Matrix4 &GetLocalToWorldMatrix() const;
-    virtual const Matrix4 &GetLocalToWorldMatrixInv() const;
+    virtual const Matrix4 &GetWorldToLocalMatrix() const;
 
     Vector3 GetForward() const;
     Vector3 GetBack() const;
@@ -112,6 +112,8 @@ public:
     const Vector3 &GetLocalScale() const;
     Vector3 GetScale() const;
 
+    const Transformation &GetLocalTransformation() const;
+
     // IEventsChildren
     void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
 
@@ -127,15 +129,14 @@ public:
 
 protected:
     mutable Matrix4 m_localToParentMatrix;
-    mutable Matrix4 m_localToParentMatrixInv;
+    mutable Matrix4 m_parentToLocalMatrix;
     mutable Matrix4 m_localToWorldMatrix;
-    mutable Matrix4 m_localToWorldMatrixInv;
+    mutable Matrix4 m_worldToLocalMatrix;
 
     Transform();
     virtual ~Transform() override;
 
     Transformation &GetLocalTransformation();
-    const Transformation &GetLocalTransformation() const;
 
     // IInvalidatable
     void OnInvalidatedWorld() override;

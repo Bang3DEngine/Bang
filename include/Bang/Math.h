@@ -251,6 +251,12 @@ public:
     }
 
     template <class T>
+    static bool constexpr Equals(const T &lhs, const T &rhs, const T &diff)
+    {
+        return (Math::Abs(lhs - rhs) <= diff);
+    }
+
+    template <class T>
     static constexpr bool IsInt(const T &v, float tolerance = 0.0001f)
     {
         return (Math::Abs(v - Math::Round(v)) < tolerance);

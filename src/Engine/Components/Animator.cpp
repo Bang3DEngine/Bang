@@ -82,10 +82,12 @@ void Animator::OnUpdate()
                 if (layer->GetEnabled())
                 {
                     bool hasLayerMask = (layer->GetLayerMask() != nullptr);
-                    Set<String> layerMask =
-                        hasLayerMask
-                            ? layer->GetLayerMask()->GetBoneMaskNamesSet(this)
-                            : Set<String>();
+                    Set<String> layerMask;
+                    if (hasLayerMask)
+                    {
+                        layerMask =
+                            layer->GetLayerMask()->GetBoneMaskNamesSet(this);
+                    }
 
                     Map<String, Transformation> layerBoneNameToBoneTransform;
                     if (AnimatorStateMachineNode *nextNode =
@@ -216,9 +218,7 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
         {
             const String &boneName = pair.first;
             const Matrix4 &boneAnimMatrix = pair.second;
-            GameObject *boneGo = smr->GetBoneGameObject(boneName);
-            if (boneGo &&
-                smr->GetActiveMesh()->GetBonesPool().ContainsKey(boneName))
+            if (GameObject *boneGo = smr->GetBoneGameObject(boneName))
             {
                 boneGo->GetTransform()->FillFromMatrix(boneAnimMatrix);
             }

@@ -515,7 +515,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     currentItemLabel->SetSelectable(false);
     currentItemLabel->GetFocusable()->SetEnabled(false);
     UITextRenderer *currentItemText = currentItemLabel->GetText();
-    currentItemText->SetContent("Current");
+    currentItemText->SetContent("None");
     currentItemText->SetTextSize(12);
     currentItemText->SetHorizontalAlign(HorizontalAlignment::RIGHT);
 

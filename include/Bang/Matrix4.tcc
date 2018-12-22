@@ -324,8 +324,8 @@ Matrix4G<T> Matrix4G<T>::TransformMatrix(const Vector3G<T> &position,
                                          const QuaternionG<T> &rotation,
                                          const Vector3G<T> &scale)
 {
-    Matrix4 transformMatrix;
-    if (rotation == Quaternion::Identity())
+    Matrix4G<T> transformMatrix;
+    if (rotation == QuaternionG<T>::Identity())
     {
         transformMatrix.SetTranslation(position);
         transformMatrix.SetScale(scale);
@@ -333,9 +333,24 @@ Matrix4G<T> Matrix4G<T>::TransformMatrix(const Vector3G<T> &position,
     else
     {
         transformMatrix.SetScale(scale);
-        transformMatrix = Matrix4::RotateMatrix(rotation) * transformMatrix;
+        transformMatrix = Matrix4G<T>::RotateMatrix(rotation) * transformMatrix;
         transformMatrix.SetTranslation(position);
     }
+    return transformMatrix;
+}
+
+template <class T>
+Matrix4G<T> Matrix4G<T>::TransformMatrixInverse(const Vector3G<T> &position,
+                                                const QuaternionG<T> &rotation,
+                                                const Vector3G<T> &scale)
+{
+    const Vector3G<T> inversePosition = -position;
+    const QuaternionG<T> inverseRotation = rotation.Inversed();
+    const Vector3G<T> inverseScale = (1.0f / scale);
+
+    Matrix4G<T> transformMatrix = Matrix4G<T>::ScaleMatrix(inverseScale) *
+                                  Matrix4G<T>::RotateMatrix(inverseRotation) *
+                                  Matrix4G<T>::TranslateMatrix(inversePosition);
     return transformMatrix;
 }
 

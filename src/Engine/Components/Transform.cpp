@@ -225,13 +225,13 @@ void Transform::CalculateLocalToWorldMatrix() const
 const Matrix4 &Transform::GetLocalToParentMatrix() const
 {
     RecalculateParentMatricesIfNeeded();
-    return GetLocalTransformation().GetLocalToWorldMatrix();
+    return m_localToParentMatrix;
 }
 
 const Matrix4 &Transform::GetParentToLocalMatrix() const
 {
     RecalculateParentMatricesIfNeeded();
-    return GetLocalTransformation().GetLocalToWorldMatrix();
+    return m_parentToLocalMatrix;
 }
 
 const Matrix4 &Transform::GetLocalToWorldMatrix() const

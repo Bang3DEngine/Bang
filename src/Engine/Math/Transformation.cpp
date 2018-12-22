@@ -181,8 +181,8 @@ void Transformation::CalculateWorldToLocalMatrixIfNeeded() const
 {
     if (!m_validWorldToLocalMatrix)
     {
-        m_worldToLocalMatrix = Matrix4::TransformMatrix(
-            -GetPosition(), -GetRotation(), -GetScale());
+        m_worldToLocalMatrix = Matrix4::TransformMatrixInverse(
+            GetPosition(), GetRotation(), GetScale());
         m_validWorldToLocalMatrix = true;
     }
 }

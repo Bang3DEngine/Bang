@@ -55,7 +55,7 @@ AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
     var->SetStateMachine(this);
 
     String varName = "NewVariable";
-    var->SetType(Variant::Type::FLOAT);
+    var->SetType(AnimatorStateMachineVariable::Type::FLOAT);
     varName = Path::GetDuplicateString(varName, GetVariablesNames());
     var->SetName(varName);
 

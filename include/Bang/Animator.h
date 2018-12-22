@@ -1,6 +1,7 @@
 ﻿#ifndef ANIMATOR_H
 #define ANIMATOR_H
 
+#include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
@@ -40,6 +41,7 @@ public:
                             const Variant &variableVariant);
     void SetVariableFloat(const String &varName, float value);
     void SetVariableBool(const String &varName, bool value);
+    void SetVariableTrigger(const String &varName, bool value);
 
     void Play();
     void Stop();
@@ -48,8 +50,11 @@ public:
     bool IsPlaying() const;
     bool GetPlayOnStart() const;
     Variant GetVariableVariant(const String &varName) const;
+    AnimatorStateMachineVariable::Type GetVariableType(
+        const String &varName) const;
     float GetVariableFloat(const String &varName) const;
     bool GetVariableBool(const String &varName) const;
+    bool GetVariableTrigger(const String &varName) const;
     AnimatorStateMachine *GetStateMachine() const;
     const Array<AnimatorStateMachinePlayer *> &GetPlayers() const;
 

@@ -31,19 +31,19 @@ public:
     virtual ~AnimatorStateMachineTransitionCondition() override;
 
     void SetVariableName(const String &variableName);
-    void SetVariableType(Variant::Type type);
     void SetComparator(
         AnimatorStateMachineTransitionCondition::Comparator comparator);
     void SetCompareValueFloat(float compareValueFloat);
 
     bool IsFulfilled(Animator *animator) const;
     const String &GetVariableName() const;
-    Variant::Type GetVariableType() const;
+    AnimatorStateMachineVariable::Type GetVariableType() const;
     AnimatorStateMachineTransitionCondition::Comparator GetComparator() const;
     float GetCompareValueFloat() const;
 
     AnimatorStateMachine *GetStateMachine() const;
     AnimatorStateMachineLayer *GetLayer() const;
+    AnimatorStateMachineVariable *GetVariable() const;
     AnimatorStateMachineTransition *GetTransition() const;
 
     // Serializable
@@ -52,7 +52,6 @@ public:
 
 private:
     String m_varName = "";
-    Variant::Type m_varType = Variant::Type::FLOAT;
     Comparator m_comparator = Comparator::GREATER;
     float m_compareValueFloat = 0.0f;
     AnimatorStateMachineTransition *p_transition = nullptr;

@@ -21,19 +21,28 @@ AnimatorStateMachineVariable::~AnimatorStateMachineVariable()
 {
 }
 
-void AnimatorStateMachineVariable::SetType(Variant::Type type)
+void AnimatorStateMachineVariable::SetType(
+    AnimatorStateMachineVariable::Type type)
 {
-    m_variant.SetType(type);
+    m_type = type;
 }
 
 void AnimatorStateMachineVariable::SetValueFloat(float value)
 {
     m_variant.SetFloat(value);
+    SetType(AnimatorStateMachineVariable::Type::FLOAT);
 }
 
 void AnimatorStateMachineVariable::SetValueBool(bool value)
 {
     m_variant.SetBool(value);
+    SetType(AnimatorStateMachineVariable::Type::BOOL);
+}
+
+void AnimatorStateMachineVariable::SetValueTrigger()
+{
+    SetValueBool(true);
+    SetType(AnimatorStateMachineVariable::Type::TRIGGER);
 }
 
 void AnimatorStateMachineVariable::SetVariant(const Variant &variant)
@@ -46,9 +55,14 @@ const String &AnimatorStateMachineVariable::GetName() const
     return m_name;
 }
 
-Variant::Type AnimatorStateMachineVariable::GetType() const
+AnimatorStateMachineVariable::Type AnimatorStateMachineVariable::GetType() const
 {
-    return GetVariant().GetType();
+    return m_type;
+}
+
+bool AnimatorStateMachineVariable::GetValueTrigger() const
+{
+    return GetValueBool();
 }
 
 bool AnimatorStateMachineVariable::GetValueBool() const
@@ -102,7 +116,8 @@ void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("VariableType"))
     {
-        SetType(metaNode.Get<Variant::Type>("VariableType"));
+        SetType(
+            metaNode.Get<AnimatorStateMachineVariable::Type>("VariableType"));
     }
 
     Variant variant;
@@ -110,7 +125,6 @@ void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
     {
         variant = metaNode.Get<Variant>("Variant");
     }
-    variant.SetType(GetType());
     SetVariant(variant);
 }
 

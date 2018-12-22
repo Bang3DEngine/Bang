@@ -40,7 +40,7 @@ public:
     void StartTransition(AnimatorStateMachineTransition *connection,
                          Time prevNodeTime,
                          Time startTransitionTime = Time(0));
-    void FinishCurrentTransition();
+    void FinishCurrentTransition(Animator *animator);
 
     AnimatorStateMachineNode *GetCurrentNode() const;
     Animation *GetCurrentAnimation() const;

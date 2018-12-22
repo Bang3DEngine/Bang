@@ -206,6 +206,11 @@ void Animator::SetVariableBool(const String &varName, bool value)
     m_variableNameToValue[varName].SetBool(value);
 }
 
+void Animator::SetVariableTrigger(const String &varName, bool value)
+{
+    SetVariableBool(varName, value);
+}
+
 void Animator::SetSkinnedMeshRendererBoneTransformations(
     const Map<String, Transformation> &boneAnimMatrices)
 {
@@ -305,6 +310,20 @@ Variant Animator::GetVariableVariant(const String &varName) const
     return Variant();
 }
 
+AnimatorStateMachineVariable::Type Animator::GetVariableType(
+    const String &varName) const
+{
+    if (GetStateMachine())
+    {
+        if (AnimatorStateMachineVariable *var =
+                GetStateMachine()->GetVariableDefault(varName))
+        {
+            return var->GetType();
+        }
+    }
+    return AnimatorStateMachineVariable::Type::FLOAT;
+}
+
 float Animator::GetVariableFloat(const String &varName) const
 {
     return GetVariableVariant(varName).GetFloat();
@@ -313,6 +332,11 @@ float Animator::GetVariableFloat(const String &varName) const
 bool Animator::GetVariableBool(const String &varName) const
 {
     return GetVariableVariant(varName).GetBool();
+}
+
+bool Animator::GetVariableTrigger(const String &varName) const
+{
+    return GetVariableBool(varName);
 }
 
 AnimatorStateMachine *Animator::GetStateMachine() const

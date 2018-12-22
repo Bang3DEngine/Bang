@@ -33,12 +33,6 @@ void AnimatorStateMachineTransitionCondition::SetVariableName(
     m_varName = variableName;
 }
 
-void AnimatorStateMachineTransitionCondition::SetVariableType(
-    Variant::Type type)
-{
-    m_varType = type;
-}
-
 void AnimatorStateMachineTransitionCondition::SetComparator(
     AnimatorStateMachineTransitionCondition::Comparator comparator)
 {
@@ -56,9 +50,14 @@ const String &AnimatorStateMachineTransitionCondition::GetVariableName() const
     return m_varName;
 }
 
-Variant::Type AnimatorStateMachineTransitionCondition::GetVariableType() const
+AnimatorStateMachineVariable::Type
+AnimatorStateMachineTransitionCondition::GetVariableType() const
 {
-    return m_varType;
+    if (AnimatorStateMachineVariable *var = GetVariable())
+    {
+        return var->GetType();
+    }
+    return AnimatorStateMachineVariable::Type::FLOAT;
 }
 
 AnimatorStateMachineTransitionCondition::Comparator
@@ -84,6 +83,14 @@ AnimatorStateMachineLayer *AnimatorStateMachineTransitionCondition::GetLayer()
     return GetTransition() ? GetTransition()->GetLayer() : nullptr;
 }
 
+AnimatorStateMachineVariable *
+AnimatorStateMachineTransitionCondition::GetVariable() const
+{
+    return GetStateMachine()
+               ? GetStateMachine()->GetVariableDefault(GetVariableName())
+               : nullptr;
+}
+
 AnimatorStateMachineTransition *
 AnimatorStateMachineTransitionCondition::GetTransition() const
 {
@@ -96,9 +103,9 @@ bool AnimatorStateMachineTransitionCondition::IsFulfilled(
     if (GetStateMachine())
     {
         const Variant var = animator->GetVariableVariant(GetVariableName());
-        switch (var.GetType())
+        switch (animator->GetVariableType(GetVariableName()))
         {
-            case Variant::Type::FLOAT:
+            case AnimatorStateMachineVariable::Type::FLOAT:
                 switch (GetComparator())
                 {
                     case Comparator::GREATER:
@@ -107,19 +114,20 @@ bool AnimatorStateMachineTransitionCondition::IsFulfilled(
                     case Comparator::LESS:
                         return (var.GetFloat() < GetCompareValueFloat());
 
-                    default: ASSERT(false); break;
+                    default: break;
                 }
                 break;
 
-            case Variant::Type::BOOL:
+            case AnimatorStateMachineVariable::Type::BOOL:
+            case AnimatorStateMachineVariable::Type::TRIGGER:
                 switch (GetComparator())
                 {
                     case Comparator::IS_TRUE: return (var.GetBool());
                     case Comparator::IS_FALSE: return (!var.GetBool());
-                    default: ASSERT(false); break;
+                    default: break;
                 }
                 break;
-            default: return false;
+            default: ASSERT(false); return false;
         }
     }
     return false;
@@ -152,7 +160,6 @@ void AnimatorStateMachineTransitionCondition::ExportMeta(
     Serializable::ExportMeta(metaNode);
 
     metaNode->Set("VariableName", GetVariableName());
-    metaNode->Set("VariableType", m_varType);
     metaNode->Set("Comparator", GetComparator());
     metaNode->Set("CompareValueFloat", GetCompareValueFloat());
 }

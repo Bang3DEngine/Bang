@@ -1,10 +1,12 @@
 #include "Bang/AnimatorStateMachinePlayer.h"
 
 #include "Bang/Animation.h"
+#include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/AnimatorStateMachineTransition.h"
+#include "Bang/AnimatorStateMachineTransitionCondition.h"
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
 #include "Bang/EventEmitter.h"
@@ -73,7 +75,7 @@ void AnimatorStateMachinePlayer::Step(Animator *animator, Time deltaTime)
             m_currentTransitionTime += deltaTime;
             if (GetCurrentTransitionTime() >= GetCurrentTransitionDuration())
             {
-                FinishCurrentTransition();
+                FinishCurrentTransition(animator);
             }
         }
 
@@ -129,11 +131,22 @@ void AnimatorStateMachinePlayer::StartTransition(
     SetCurrentNode(prevNode, prevNodeTime);
 }
 
-void AnimatorStateMachinePlayer::FinishCurrentTransition()
+void AnimatorStateMachinePlayer::FinishCurrentTransition(Animator *animator)
 {
     // Next node becomes the current node now
     if (GetCurrentTransition())
     {
+        // Toggle off triggers
+        for (auto *transCond :
+             GetCurrentTransition()->GetTransitionConditions())
+        {
+            if (transCond->GetVariableType() ==
+                AnimatorStateMachineVariable::Type::TRIGGER)
+            {
+                animator->SetVariableTrigger(transCond->GetVariableName(),
+                                             false);
+            }
+        }
         SetCurrentNode(GetNextNode(), GetNextNodeTime());
 
         p_currentTransition = nullptr;

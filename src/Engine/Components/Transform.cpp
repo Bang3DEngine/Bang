@@ -205,8 +205,8 @@ void Transform::RecalculateWorldMatricesIfNeeded() const
 
 void Transform::CalculateLocalToParentMatrix() const
 {
-    m_localToParentMatrix = GetLocalTransformation().GetLocalToWorldMatrix();
-    m_parentToLocalMatrix = GetLocalTransformation().GetWorldToLocalMatrix();
+    m_localToParentMatrix = GetLocalTransformation().GetMatrix();
+    m_parentToLocalMatrix = GetLocalTransformation().GetMatrixInverse();
 }
 
 void Transform::CalculateLocalToWorldMatrix() const

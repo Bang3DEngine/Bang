@@ -8,17 +8,39 @@ Transformation::Transformation()
 {
 }
 
-Transformation::~Transformation()
+Transformation::Transformation(const Vector3 &position,
+                               const Quaternion &rotation,
+                               const Vector3 &scale)
 {
+    SetPosition(position);
+    SetRotation(rotation);
+    SetScale(scale);
 }
 
-const Matrix4 &Transformation::GetLocalToWorldMatrix() const
+Transformation::Transformation(const Matrix4 &transformationMatrix)
+{
+    FillFromMatrix(transformationMatrix);
+}
+
+const Transformation &Transformation::Identity()
+{
+    static const Transformation identity;
+    return identity;
+}
+
+Transformation Transformation::Inversed() const
+{
+    return Transformation(
+        -GetPosition(), GetRotation().Inversed(), 1.0f / GetScale());
+}
+
+const Matrix4 &Transformation::GetMatrix() const
 {
     CalculateLocalToWorldMatrixIfNeeded();
     return m_localToWorldMatrix;
 }
 
-const Matrix4 &Transformation::GetWorldToLocalMatrix() const
+const Matrix4 &Transformation::GetMatrixInverse() const
 {
     CalculateWorldToLocalMatrixIfNeeded();
     return m_worldToLocalMatrix;
@@ -92,14 +114,24 @@ void Transformation::Scale(const Vector3 &scale)
     SetScale(scale * GetScale());
 }
 
+Vector3 Transformation::TransformedPoint(const Vector3 &point)
+{
+    return ((*this) * Vector4(point, 1)).xyz();
+}
+
+Vector3 Transformation::TransformedVector(const Vector3 &vector)
+{
+    return ((*this) * Vector4(vector, 0)).xyz();
+}
+
 Vector3 Transformation::FromLocalToWorldPoint(const Vector3 &point) const
 {
-    return GetLocalToWorldMatrix().TransformedPoint(point);
+    return GetMatrix().TransformedPoint(point);
 }
 
 Vector3 Transformation::FromLocalToWorldVector(const Vector3 &vector) const
 {
-    return GetLocalToWorldMatrix().TransformedVector(vector);
+    return GetMatrix().TransformedVector(vector);
 }
 
 Vector3 Transformation::FromLocalToWorldDirection(const Vector3 &dir) const
@@ -109,12 +141,12 @@ Vector3 Transformation::FromLocalToWorldDirection(const Vector3 &dir) const
 
 Vector3 Transformation::FromWorldToLocalPoint(const Vector3 &point) const
 {
-    return GetWorldToLocalMatrix().TransformedPoint(point);
+    return GetMatrixInverse().TransformedPoint(point);
 }
 
 Vector3 Transformation::FromWorldToLocalVector(const Vector3 &vector) const
 {
-    return GetWorldToLocalMatrix().TransformedVector(vector);
+    return GetMatrixInverse().TransformedVector(vector);
 }
 
 Vector3 Transformation::FromWorldToLocalDirection(const Vector3 &dir) const

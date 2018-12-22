@@ -12,10 +12,16 @@ class Transformation
 {
 public:
     Transformation();
-    virtual ~Transformation();
+    Transformation(const Vector3 &position,
+                   const Quaternion &rotation,
+                   const Vector3 &scale);
+    explicit Transformation(const Matrix4 &transformationMatrix);
 
-    const Matrix4 &GetLocalToWorldMatrix() const;
-    const Matrix4 &GetWorldToLocalMatrix() const;
+    static const Transformation &Identity();
+
+    Transformation Inversed() const;
+    const Matrix4 &GetMatrix() const;
+    const Matrix4 &GetMatrixInverse() const;
     void FillFromMatrix(const Matrix4 &transformMatrix);
 
     void SetPosition(const Vector3 &position);
@@ -29,6 +35,9 @@ public:
     void Translate(const Vector3 &translation);
     void Rotate(const Quaternion &rotation);
     void Scale(const Vector3 &scale);
+
+    Vector3 TransformedPoint(const Vector3 &point);
+    Vector3 TransformedVector(const Vector3 &vector);
 
     Vector3 FromLocalToWorldPoint(const Vector3 &point) const;
     Vector3 FromLocalToWorldVector(const Vector3 &vector) const;
@@ -60,6 +69,23 @@ private:
     void CalculateLocalToWorldMatrixIfNeeded() const;
     void CalculateWorldToLocalMatrixIfNeeded() const;
 };
+
+inline Transformation operator*(const Transformation &lhs,
+                                const Transformation &rhs)
+{
+    return Transformation(lhs.GetMatrix() * rhs.GetMatrix());
+}
+
+template <class T>
+inline Vector4G<T> operator*(const Transformation &tr, const Vector4G<T> &v)
+{
+    return tr.GetMatrix() * v;
+}
+
+inline void operator*=(Transformation &lhs, const Transformation &rhs)
+{
+    lhs = (lhs * rhs);
+}
 }
 
 #endif  // TRANSFORMATION_H

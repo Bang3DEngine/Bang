@@ -82,7 +82,7 @@ void AnimatorStateMachineNode::RemoveTransition(
 
 Map<String, Transformation> AnimatorStateMachineNode::GetBoneTransformations(
     Time animationTime,
-    Animator *animator) const
+    Animator *) const
 {
     Map<String, Transformation> bonesTransformations =
         Animation::GetBoneAnimationTransformations(GetAnimation(),

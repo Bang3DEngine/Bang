@@ -73,7 +73,7 @@ private:
 
     void ClearPlayers();
 
-    void SetSkinnedMeshRendererCurrentBoneTransformations(
+    void SetSkinnedMeshRendererBoneTransformations(
         const Map<String, Transformation> &boneAnimTransformations);
 
     // IEventsAnimatorStateMachine

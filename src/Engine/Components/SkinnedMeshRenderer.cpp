@@ -274,10 +274,6 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
                 {
                     boneMatricesArray[boneIdx] = boneMatrix;
                 }
-                else
-                {
-                    boneMatricesArray[boneIdx] = Matrix4::Identity();
-                }
             }
         }
         SetSkinnedMeshRendererCurrentBoneMatrices(boneMatricesArray);

@@ -14,18 +14,33 @@ class AnimatorLayerMask : public Resource
     RESOURCE(AnimatorLayerMask)
 
 public:
+    struct BoneEntry
+    {
+        String boneName = "";
+        bool addAscendants = true;
+        bool addDescendants = true;
+        bool operator==(const BoneEntry &rhs) const
+        {
+            return boneName == rhs.boneName &&
+                   addAscendants == rhs.addAscendants &&
+                   addDescendants == rhs.addDescendants;
+        }
+        bool operator!=(const BoneEntry &rhs) const
+        {
+            return !((*this) == rhs);
+        }
+    };
+
     AnimatorLayerMask();
-    virtual ~AnimatorLayerMask();
+    virtual ~AnimatorLayerMask() override;
 
-    void AddBone(const String &boneName);
-    void RemoveBone(uint i);
-    void RemoveBone(const String &boneName);
-    void ClearBones();
+    void AddBoneEntry(const AnimatorLayerMask::BoneEntry &boneName);
+    void RemoveBoneEntry(uint i);
+    void RemoveBoneEntry(const String &boneName);
+    void ClearBoneEntries();
 
-    const Array<String> &GetBoneMaskNames() const;
+    const Array<AnimatorLayerMask::BoneEntry> &GetBoneEntries() const;
     Set<String> GetBoneMaskNamesSet(Animator *animator) const;
-
-    const Array<String> &GetBoneNames() const;
 
     // Resource
     virtual void Import(const Path &resourceFilepath) override;
@@ -35,7 +50,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    Array<String> m_boneNames;
+    Array<BoneEntry> m_boneEntries;
 };
 }
 

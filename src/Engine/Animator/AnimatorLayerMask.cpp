@@ -13,32 +13,41 @@ AnimatorLayerMask::~AnimatorLayerMask()
 {
 }
 
-void AnimatorLayerMask::AddBone(const String &boneName)
+void AnimatorLayerMask::AddBoneEntry(
+    const AnimatorLayerMask::BoneEntry &boneEntry)
 {
-    m_boneNames.PushBack(boneName);
+    m_boneEntries.PushBack(boneEntry);
 }
 
-void AnimatorLayerMask::RemoveBone(uint i)
+void AnimatorLayerMask::RemoveBoneEntry(uint i)
 {
-    if (i < m_boneNames.Size())
+    if (i < m_boneEntries.Size())
     {
-        m_boneNames.RemoveByIndex(i);
+        m_boneEntries.RemoveByIndex(i);
     }
 }
 
-void AnimatorLayerMask::RemoveBone(const String &boneName)
+void AnimatorLayerMask::RemoveBoneEntry(const String &boneName)
 {
-    RemoveBone(GetBoneNames().IndexOf(boneName));
+    for (uint i = 0; i < GetBoneEntries().Size(); ++i)
+    {
+        if (GetBoneEntries()[i].boneName == boneName)
+        {
+            RemoveBoneEntry(i);
+            break;
+        }
+    }
 }
 
-void AnimatorLayerMask::ClearBones()
+void AnimatorLayerMask::ClearBoneEntries()
 {
-    m_boneNames.Clear();
+    m_boneEntries.Clear();
 }
 
-const Array<String> &AnimatorLayerMask::GetBoneMaskNames() const
+const Array<AnimatorLayerMask::BoneEntry> &AnimatorLayerMask::GetBoneEntries()
+    const
 {
-    return m_boneNames;
+    return m_boneEntries;
 }
 
 Set<String> AnimatorLayerMask::GetBoneMaskNamesSet(Animator *animator) const
@@ -48,36 +57,45 @@ Set<String> AnimatorLayerMask::GetBoneMaskNamesSet(Animator *animator) const
     {
         if (GameObject *animatorGo = animator->GetGameObject())
         {
-            for (const String &maskBoneName : GetBoneMaskNames())
+            for (const BoneEntry &maskBoneEntry : GetBoneEntries())
             {
-                GameObject *maskRootBoneGo =
-                    animatorGo->GetParent()->FindInChildren(maskBoneName, true);
-                if (maskRootBoneGo)
+                const String &boneName = maskBoneEntry.boneName;
+                if (GameObject *boneGo =
+                        animatorGo->GetParent()->FindInChildren(boneName, true))
                 {
-                    Array<GameObject *> descendants =
-                        maskRootBoneGo->GetChildrenRecursively();
-                    boneMaskSet.Add(maskRootBoneGo->GetName());
-                    for (GameObject *descendant : descendants)
+                    boneMaskSet.Add(boneGo->GetName());
+
+                    if (maskBoneEntry.addDescendants)
                     {
-                        boneMaskSet.Add(descendant->GetName());
+                        Array<GameObject *> descendants =
+                            boneGo->GetChildrenRecursively();
+                        for (GameObject *descendant : descendants)
+                        {
+                            boneMaskSet.Add(descendant->GetName());
+                        }
                     }
 
-                    // Todo, this should stop in the root node!!!
-                    // GameObject *upGo = maskRootBoneGo;
-                    // while ((upGo = upGo->GetParent()))
-                    // {
-                    //     boneMaskSet.Add(upGo->GetName());
-                    // }
+                    if (maskBoneEntry.addAscendants)
+                    {
+                        GameObject *ascendantGo = boneGo->GetParent();
+                        while (ascendantGo)
+                        {
+                            boneMaskSet.Add(ascendantGo->GetName());
+
+                            bool stop = (ascendantGo->FindInChildren(
+                                animatorGo->GetName(), false));
+                            if (stop)
+                            {
+                                break;
+                            }
+                            ascendantGo = ascendantGo->GetParent();
+                        }
+                    }
                 }
             }
         }
     }
     return boneMaskSet;
-}
-
-const Array<String> &AnimatorLayerMask::GetBoneNames() const
-{
-    return m_boneNames;
 }
 
 void AnimatorLayerMask::Import(const Path &resourceFilepath)
@@ -89,12 +107,36 @@ void AnimatorLayerMask::ImportMeta(const MetaNode &metaNode)
 {
     Resource::ImportMeta(metaNode);
 
-    m_boneNames = metaNode.GetArray<String>("BoneNames");
+    m_boneEntries.Clear();
+    Array<String> boneNames = metaNode.GetArray<String>("BoneNames");
+    Array<bool> boneAddDescendants = metaNode.GetArray<bool>("AddDescendants");
+    Array<bool> boneAddAscendants = metaNode.GetArray<bool>("AddAscendants");
+    for (uint i = 0; i < boneNames.Size(); ++i)
+    {
+        AnimatorLayerMask::BoneEntry boneEntry;
+        boneEntry.boneName = (i < boneNames.Size() ? boneNames[i] : "");
+        boneEntry.addDescendants =
+            (i < boneAddDescendants.Size() ? boneAddDescendants[i] : true);
+        boneEntry.addAscendants =
+            (i < boneAddAscendants.Size() ? boneAddAscendants[i] : true);
+        m_boneEntries.PushBack(boneEntry);
+    }
 }
 
 void AnimatorLayerMask::ExportMeta(MetaNode *metaNode) const
 {
     Resource::ExportMeta(metaNode);
 
-    metaNode->SetArray<String>("BoneNames", m_boneNames);
+    Array<String> boneNames;
+    Array<bool> boneAddDescendants;
+    Array<bool> boneAddAscendants;
+    for (const AnimatorLayerMask::BoneEntry &boneEntry : GetBoneEntries())
+    {
+        boneNames.PushBack(boneEntry.boneName);
+        boneAddDescendants.PushBack(boneEntry.addDescendants);
+        boneAddAscendants.PushBack(boneEntry.addAscendants);
+    }
+    metaNode->SetArray<String>("BoneNames", boneNames);
+    metaNode->SetArray<bool>("AddDescendants", boneAddDescendants);
+    metaNode->SetArray<bool>("AddAscendants", boneAddAscendants);
 }

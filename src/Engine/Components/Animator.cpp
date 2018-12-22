@@ -160,7 +160,7 @@ void Animator::OnUpdate()
             }
         }
 
-        SetSkinnedMeshRendererCurrentBoneTransformations(
+        SetSkinnedMeshRendererBoneTransformations(
             combinedLayersBonesTransformations);
     }
 }
@@ -206,27 +206,34 @@ void Animator::SetVariableBool(const String &varName, bool value)
     m_variableNameToValue[varName].SetBool(value);
 }
 
-void Animator::SetSkinnedMeshRendererCurrentBoneTransformations(
+void Animator::SetSkinnedMeshRendererBoneTransformations(
     const Map<String, Transformation> &boneAnimMatrices)
 {
     Array<SkinnedMeshRenderer *> smrs =
         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
-        for (const auto &pair : boneAnimMatrices)
+        GameObject *rootBoneGo = smr->GetRootBoneGameObject();
+        Array<GameObject *> allBoneGos = rootBoneGo->GetChildrenRecursively();
+        for (GameObject *boneGo : allBoneGos)
         {
-            const String &boneName = pair.first;
-            const Transformation &boneAnimTransformation = pair.second;
-            if (GameObject *boneGo = smr->GetBoneGameObject(boneName))
+            const String &boneName = boneGo->GetName();
+            auto it = boneAnimMatrices.Find(boneGo->GetName());
+            if (it != boneAnimMatrices.End())
+            {
+                const Transformation &boneAnimTransformation = it->second;
+                if (GameObject *boneGo = smr->GetBoneGameObject(boneName))
+                {
+                    boneGo->GetTransform()->FillFromTransformation(
+                        boneAnimTransformation);
+                }
+            }
+            else
             {
                 boneGo->GetTransform()->FillFromTransformation(
-                    boneAnimTransformation);
+                    smr->GetInitialTransformationFor(boneName));
             }
         }
-    }
-
-    for (SkinnedMeshRenderer *smr : smrs)
-    {
         smr->UpdateBonesMatricesFromTransformMatrices();
     }
 }

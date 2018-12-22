@@ -262,7 +262,7 @@ Map<String, Matrix4> Animation::GetBoneMatrices(
         const String &boneName = it.first;
         const Transformation &boneTransformation = it.second;
         const Transformation &bt = boneTransformation;
-        const Matrix4 transformMatrix = bt.GetMatrix();
+        const Matrix4 &transformMatrix = bt.GetMatrix();
         bonesMatrices.Add(boneName, transformMatrix);
     }
     return bonesMatrices;

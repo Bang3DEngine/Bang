@@ -268,7 +268,16 @@ void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    m_localTransformation.FillFromMatrix(transformMatrix);
+    Transformation matrixTransformation;
+    matrixTransformation.FillFromMatrix(transformMatrix);
+    FillFromTransformation(matrixTransformation);
+}
+
+void Transform::FillFromTransformation(const Transformation &transformation)
+{
+    m_localTransformation.SetPosition(transformation.GetPosition());
+    m_localTransformation.SetRotation(transformation.GetRotation());
+    m_localTransformation.SetScale(transformation.GetScale());
     OnTransformChanged();
 }
 

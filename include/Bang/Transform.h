@@ -60,6 +60,7 @@ public:
     void LookInDirection(const Vector3 &dir, const Vector3 &up = Vector3::Up());
 
     void FillFromMatrix(const Matrix4 &transformMatrix);
+    void FillFromTransformation(const Transformation &transformation);
 
     void SetLocalPosition(const Vector3 &p);
     void SetPosition(const Vector3 &p);

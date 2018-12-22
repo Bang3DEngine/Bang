@@ -160,9 +160,8 @@ void Animator::OnUpdate()
             }
         }
 
-        Map<String, Matrix4> totalBoneNameToBoneMatrices =
-            Animation::GetBoneMatrices(combinedLayersBonesTransformations);
-        SetSkinnedMeshRendererCurrentBoneMatrices(totalBoneNameToBoneMatrices);
+        SetSkinnedMeshRendererCurrentBoneTransformations(
+            combinedLayersBonesTransformations);
     }
 }
 
@@ -207,8 +206,8 @@ void Animator::SetVariableBool(const String &varName, bool value)
     m_variableNameToValue[varName].SetBool(value);
 }
 
-void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
-    const Map<String, Matrix4> &boneAnimMatrices)
+void Animator::SetSkinnedMeshRendererCurrentBoneTransformations(
+    const Map<String, Transformation> &boneAnimMatrices)
 {
     Array<SkinnedMeshRenderer *> smrs =
         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
@@ -217,10 +216,11 @@ void Animator::SetSkinnedMeshRendererCurrentBoneMatrices(
         for (const auto &pair : boneAnimMatrices)
         {
             const String &boneName = pair.first;
-            const Matrix4 &boneAnimMatrix = pair.second;
+            const Transformation &boneAnimTransformation = pair.second;
             if (GameObject *boneGo = smr->GetBoneGameObject(boneName))
             {
-                boneGo->GetTransform()->FillFromMatrix(boneAnimMatrix);
+                boneGo->GetTransform()->FillFromTransformation(
+                    boneAnimTransformation);
             }
         }
     }

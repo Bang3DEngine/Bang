@@ -10,6 +10,7 @@
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
+#include "Bang/Transformation.h"
 
 namespace Bang
 {
@@ -72,8 +73,8 @@ private:
 
     void ClearPlayers();
 
-    void SetSkinnedMeshRendererCurrentBoneMatrices(
-        const Map<String, Matrix4> &boneAnimMatrices);
+    void SetSkinnedMeshRendererCurrentBoneTransformations(
+        const Map<String, Transformation> &boneAnimTransformations);
 
     // IEventsAnimatorStateMachine
     void OnLayerAdded(AnimatorStateMachine *stateMachine,

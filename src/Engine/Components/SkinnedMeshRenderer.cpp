@@ -165,8 +165,8 @@ void SkinnedMeshRenderer::UpdateTransformMatricesFromInitialBonePosition()
         {
             const String &boneName = child->GetName();
             GameObject *boneGameObject = child;
-            boneGameObject->GetTransform()->FillFromMatrix(
-                GetInitialTransformationFor(boneName).GetMatrix());
+            boneGameObject->GetTransform()->FillFromTransformation(
+                GetInitialTransformationFor(boneName));
         }
     }
 }

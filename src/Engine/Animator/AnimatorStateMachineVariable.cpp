@@ -106,11 +106,11 @@ void AnimatorStateMachineVariable::ImportMeta(const MetaNode &metaNode)
     }
 
     Variant variant;
-    variant.SetType(GetType());
     if (metaNode.Contains("Variant"))
     {
         variant = metaNode.Get<Variant>("Variant");
     }
+    variant.SetType(GetType());
     SetVariant(variant);
 }
 

@@ -67,7 +67,7 @@ AnimatorStateMachineVariable *AnimatorStateMachine::CreateNewVariable()
 AnimatorStateMachineVariable *AnimatorStateMachine::CreateOrGetVariable(
     const String &varName)
 {
-    AnimatorStateMachineVariable *var = GetVariable(varName);
+    AnimatorStateMachineVariable *var = GetVariableDefault(varName);
     if (!var)
     {
         var = CreateNewVariable();
@@ -118,7 +118,8 @@ void AnimatorStateMachine::MoveVariable(uint oldIndex, uint newIndex)
 {
     if (oldIndex < GetLayers().Size() && newIndex <= GetLayers().Size())
     {
-        AnimatorStateMachineVariable *movingVar = GetVariables()[oldIndex];
+        AnimatorStateMachineVariable *movingVar =
+            GetVariableDefaults()[oldIndex];
         m_variables.RemoveByIndex(oldIndex);
         m_variables.Insert(movingVar, newIndex);
     }
@@ -141,7 +142,7 @@ void AnimatorStateMachine::RemoveVariable(uint varIdx)
 float AnimatorStateMachine::GetVariableFloatDefaultValue(
     const String &varName) const
 {
-    if (AnimatorStateMachineVariable *var = GetVariable(varName))
+    if (AnimatorStateMachineVariable *var = GetVariableDefault(varName))
     {
         return var->GetValueFloat();
     }
@@ -151,14 +152,14 @@ float AnimatorStateMachine::GetVariableFloatDefaultValue(
 bool AnimatorStateMachine::GetVariableBoolDefaultValue(
     const String &varName) const
 {
-    if (AnimatorStateMachineVariable *var = GetVariable(varName))
+    if (AnimatorStateMachineVariable *var = GetVariableDefault(varName))
     {
         return var->GetValueBool();
     }
     return false;
 }
 
-AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
+AnimatorStateMachineVariable *AnimatorStateMachine::GetVariableDefault(
     const String &varName) const
 {
     for (AnimatorStateMachineVariable *var : m_variables)
@@ -172,7 +173,7 @@ AnimatorStateMachineVariable *AnimatorStateMachine::GetVariable(
 }
 
 const Array<AnimatorStateMachineVariable *>
-    &AnimatorStateMachine::GetVariables() const
+    &AnimatorStateMachine::GetVariableDefaults() const
 {
     return m_variables;
 }
@@ -243,7 +244,7 @@ void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
     }
 
     metaNode->CreateChildrenContainer("Variables");
-    for (const AnimatorStateMachineVariable *var : GetVariables())
+    for (const AnimatorStateMachineVariable *var : GetVariableDefaults())
     {
         MetaNode varMeta = var->GetMeta();
         metaNode->AddChild(varMeta, "Variables");

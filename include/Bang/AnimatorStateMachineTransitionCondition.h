@@ -9,6 +9,7 @@
 
 namespace Bang
 {
+class Animator;
 class AnimatorStateMachine;
 class AnimatorStateMachineLayer;
 class AnimatorStateMachineTransition;
@@ -35,7 +36,7 @@ public:
         AnimatorStateMachineTransitionCondition::Comparator comparator);
     void SetCompareValueFloat(float compareValueFloat);
 
-    bool IsFulfilled() const;
+    bool IsFulfilled(Animator *animator) const;
     const String &GetVariableName() const;
     Variant::Type GetVariableType() const;
     AnimatorStateMachineTransitionCondition::Comparator GetComparator() const;

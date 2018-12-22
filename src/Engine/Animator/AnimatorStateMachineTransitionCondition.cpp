@@ -1,5 +1,6 @@
 #include "Bang/AnimatorStateMachineTransitionCondition.h"
 
+#include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineTransition.h"
@@ -89,41 +90,36 @@ AnimatorStateMachineTransitionCondition::GetTransition() const
     return p_transition;
 }
 
-bool AnimatorStateMachineTransitionCondition::IsFulfilled() const
+bool AnimatorStateMachineTransitionCondition::IsFulfilled(
+    Animator *animator) const
 {
     if (GetStateMachine())
     {
-        if (AnimatorStateMachineVariable *var =
-                GetStateMachine()->GetVariable(GetVariableName()))
+        const Variant var = animator->GetVariableVariant(GetVariableName());
+        switch (var.GetType())
         {
-            switch (var->GetType())
-            {
-                case Variant::Type::FLOAT:
-                    switch (GetComparator())
-                    {
-                        case Comparator::GREATER:
-                            return (var->GetValueFloat() >
-                                    GetCompareValueFloat());
+            case Variant::Type::FLOAT:
+                switch (GetComparator())
+                {
+                    case Comparator::GREATER:
+                        return (var.GetFloat() > GetCompareValueFloat());
 
-                        case Comparator::LESS:
-                            return (var->GetValueFloat() <
-                                    GetCompareValueFloat());
+                    case Comparator::LESS:
+                        return (var.GetFloat() < GetCompareValueFloat());
 
-                        default: ASSERT(false); break;
-                    }
-                    break;
+                    default: ASSERT(false); break;
+                }
+                break;
 
-                case Variant::Type::BOOL:
-                    switch (GetComparator())
-                    {
-                        case Comparator::IS_TRUE: return (var->GetValueBool());
-                        case Comparator::IS_FALSE:
-                            return (!var->GetValueBool());
-                        default: ASSERT(false); break;
-                    }
-                    break;
-                default: return false;
-            }
+            case Variant::Type::BOOL:
+                switch (GetComparator())
+                {
+                    case Comparator::IS_TRUE: return (var.GetBool());
+                    case Comparator::IS_FALSE: return (!var.GetBool());
+                    default: ASSERT(false); break;
+                }
+                break;
+            default: return false;
         }
     }
     return false;

@@ -37,11 +37,12 @@ public:
     void RemoveVariable(AnimatorStateMachineVariable *var);
     void RemoveVariable(uint varIdx);
 
-    AnimatorStateMachineVariable *GetVariable(const String &varName) const;
+    AnimatorStateMachineVariable *GetVariableDefault(
+        const String &varName) const;
     float GetVariableFloatDefaultValue(const String &varName) const;
     bool GetVariableBoolDefaultValue(const String &varName) const;
     Array<String> GetVariablesNames() const;
-    const Array<AnimatorStateMachineVariable *> &GetVariables() const;
+    const Array<AnimatorStateMachineVariable *> &GetVariableDefaults() const;
     const Array<AnimatorStateMachineLayer *> &GetLayers() const;
 
     void Clear();

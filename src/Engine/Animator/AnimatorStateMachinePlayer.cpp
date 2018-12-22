@@ -49,7 +49,7 @@ void AnimatorStateMachinePlayer::SetStateMachineLayer(
     }
 }
 
-void AnimatorStateMachinePlayer::Step(Time deltaTime)
+void AnimatorStateMachinePlayer::Step(Animator *animator, Time deltaTime)
 {
     AnimatorStateMachineLayer *smLayer = GetStateMachineLayer();
     if (!smLayer)
@@ -86,7 +86,7 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
             m_currentNodeTime += speededDeltaTime;
         }
 
-        // If we are NOT doing a transition, check if we can pick one new node
+        // If we are NOT doing a transition, check if we can pick a new one
         if (!GetCurrentTransition())
         {
             if (GetCurrentNode()->GetAnimation())
@@ -99,7 +99,7 @@ void AnimatorStateMachinePlayer::Step(Time deltaTime)
                 {
                     if (hasFinishedAnimation || conn->GetImmediateTransition())
                     {
-                        if (conn->AreTransitionConditionsFulfilled())
+                        if (conn->AreTransitionConditionsFulfilled(animator))
                         {
                             StartTransition(
                                 conn, GetCurrentNodeTime(), Time(0));

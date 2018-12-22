@@ -36,7 +36,7 @@ public:
 
     void SetNodeTo(AnimatorStateMachineNode *node);
     void SetNodeFrom(AnimatorStateMachineNode *node);
-    bool AreTransitionConditionsFulfilled() const;
+    bool AreTransitionConditionsFulfilled(Animator *animator) const;
 
     void SetTransitionDuration(Time transitionDuration);
     void SetImmediateTransition(bool immediateTransition);

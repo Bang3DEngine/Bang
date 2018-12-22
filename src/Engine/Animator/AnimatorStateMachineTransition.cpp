@@ -32,11 +32,12 @@ void AnimatorStateMachineTransition::SetNodeFrom(
     p_nodeFrom = nodeFrom;
 }
 
-bool AnimatorStateMachineTransition::AreTransitionConditionsFulfilled() const
+bool AnimatorStateMachineTransition::AreTransitionConditionsFulfilled(
+    Animator *animator) const
 {
     for (auto transCond : GetTransitionConditions())
     {
-        if (!transCond->IsFulfilled())
+        if (!transCond->IsFulfilled(animator))
         {
             return false;
         }

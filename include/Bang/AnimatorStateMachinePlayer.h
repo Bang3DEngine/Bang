@@ -33,7 +33,7 @@ public:
 
     void SetStateMachineLayer(AnimatorStateMachineLayer *stateMachineLayer);
 
-    void Step(Time deltaTime);
+    void Step(Animator *animator, Time deltaTime);
     void SetCurrentNode(AnimatorStateMachineNode *node);
     void SetCurrentNode(AnimatorStateMachineNode *node, Time nodeTime);
 

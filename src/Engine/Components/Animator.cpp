@@ -69,7 +69,7 @@ void Animator::OnUpdate()
         Map<String, Transformation> combinedLayersBonesTransformations;
         for (AnimatorStateMachinePlayer *player : GetPlayers())
         {
-            player->Step(passedTime);
+            player->Step(this, passedTime);
 
             if (player->GetCurrentAnimation())
             {
@@ -248,7 +248,7 @@ void Animator::OnLayerAdded(AnimatorStateMachine *stateMachine,
     m_animatorStateMachinePlayers.PushBack(player);
 
     const Array<AnimatorStateMachineVariable *> &vars =
-        stateMachine->GetVariables();
+        stateMachine->GetVariableDefaults();
     for (AnimatorStateMachineVariable *var : vars)
     {
         SetVariableVariant(var->GetName(), var->GetVariant());

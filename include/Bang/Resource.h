@@ -10,6 +10,7 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GUID.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsResource.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
@@ -22,7 +23,9 @@ namespace Bang
 {
 class IEventsResource;
 
-class Resource : public Serializable, public EventEmitter<IEventsResource>
+class Resource : public Serializable,
+                 public EventEmitter<IEventsDestroy>,
+                 public EventEmitter<IEventsResource>
 {
 public:
     void RemoveEmbeddedResource(Resource *resource);
@@ -44,8 +47,8 @@ protected:
     void ClearEmbeddedResources();
 
     // Serializable
-    virtual void ImportMeta(const MetaNode &metaNode);
-    virtual void ExportMeta(MetaNode *metaNode) const;
+    virtual void ImportMeta(const MetaNode &metaNode) override;
+    virtual void ExportMeta(MetaNode *metaNode) const override;
 
     // Resource
     virtual void Import(const Path &resourceFilepath);
@@ -69,9 +72,13 @@ private:
     friend class Resources;
 };
 
-#define RESOURCE(CLASSNAME) \
-    SERIALIZABLE(CLASSNAME) \
+#define RESOURCE_ABSTRACT(CLASSNAME) \
+    SERIALIZABLE(CLASSNAME)          \
     friend class Resources;
+
+#define RESOURCE(CLASSNAME)      \
+    RESOURCE_ABSTRACT(CLASSNAME) \
+    ICLONEABLE(CLASSNAME)
 }
 
 #endif  // RESOURCE_H

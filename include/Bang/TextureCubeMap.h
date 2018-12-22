@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
 #include "Bang/IEventsResource.h"
 #include "Bang/ImageIO.h"
+#include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
@@ -27,7 +27,7 @@ class Texture2D;
 
 class TextureCubeMap : public Texture, public EventListener<IEventsResource>
 {
-    ASSET(TextureCubeMap)
+    RESOURCE(TextureCubeMap)
 
 public:
     TextureCubeMap();

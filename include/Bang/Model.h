@@ -1,11 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Mesh.h"
 #include "Bang/ModelIO.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -20,9 +20,9 @@ class Material;
 class MetaNode;
 class Path;
 
-class Model : public Asset
+class Model : public Resource
 {
-    ASSET(Model)
+    RESOURCE(Model)
 
 public:
     Model();

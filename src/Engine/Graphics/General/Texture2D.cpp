@@ -197,7 +197,7 @@ Image Texture2D::ToImage() const
 
 void Texture2D::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 
     if (metaNode.Contains("Format"))
     {
@@ -233,7 +233,7 @@ void Texture2D::ImportMeta(const MetaNode &metaNode)
 
 void Texture2D::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     metaNode->Set("Format", GetFormat());
     metaNode->Set("FilterMode", GetFilterMode());

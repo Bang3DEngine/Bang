@@ -110,7 +110,7 @@ void PhysicsMaterial::Import(const Path &physicsMaterialFilepath)
 
 void PhysicsMaterial::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 
     if (metaNode.Contains("StaticFriction"))
     {
@@ -142,7 +142,7 @@ void PhysicsMaterial::ImportMeta(const MetaNode &metaNode)
 
 void PhysicsMaterial::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     metaNode->Set("StaticFriction", GetStaticFriction());
     metaNode->Set("DynamicFriction", GetDynamicFriction());

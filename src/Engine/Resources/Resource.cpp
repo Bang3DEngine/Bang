@@ -11,13 +11,15 @@
 
 using namespace Bang;
 
-// IResource
 Resource::Resource()
 {
 }
 
 Resource::~Resource()
 {
+    EventEmitter<IEventsDestroy>::PropagateToListeners(
+        &IEventsDestroy::OnDestroyed, this);
+
     if (GetParentResource())
     {
         GetParentResource()->RemoveEmbeddedResource(this);

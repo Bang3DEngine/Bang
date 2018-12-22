@@ -4,11 +4,11 @@
 #include <functional>
 
 #include "Bang/Array.h"
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Quaternion.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 #include "Bang/Transformation.h"
 #include "Bang/Vector3.h"
@@ -25,9 +25,9 @@ enum class AnimationWrapMode
     PING_PONG
 };
 
-class Animation : public Asset
+class Animation : public Resource
 {
-    ASSET(Animation);
+    RESOURCE(Animation);
 
 public:
     template <class T>

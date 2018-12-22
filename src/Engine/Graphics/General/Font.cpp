@@ -96,12 +96,12 @@ void Font::Import(const Path &ttfFilepath)
 
 void Font::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 }
 
 void Font::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 }
 
 float Font::GetScaleProportion(int fontSize)

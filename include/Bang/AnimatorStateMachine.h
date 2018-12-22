@@ -16,7 +16,6 @@
 namespace Bang
 {
 class AnimatorStateMachine : public Resource,
-                             public EventEmitterIEventsDestroyWithCheck,
                              public EventEmitter<IEventsAnimatorStateMachine>,
                              public EventListener<IEventsAnimatorStateMachine>
 {
@@ -24,7 +23,7 @@ class AnimatorStateMachine : public Resource,
 
 public:
     AnimatorStateMachine();
-    virtual ~AnimatorStateMachine();
+    virtual ~AnimatorStateMachine() override;
 
     AnimatorStateMachineLayer *CreateNewLayer();
     void MoveLayer(uint oldIndex, uint newIndex);

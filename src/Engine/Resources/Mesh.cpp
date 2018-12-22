@@ -1213,10 +1213,10 @@ void Mesh::Import(const Path &meshFilepath)
 
 void Mesh::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 }
 
 void Mesh::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 }

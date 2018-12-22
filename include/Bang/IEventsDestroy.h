@@ -24,7 +24,7 @@ class EventEmitterIEventsDestroyWithCheck : public EventEmitter<IEventsDestroy>
 public:
     EventEmitterIEventsDestroyWithCheck()
     {
-        m_destroyChecker.p_destroyEmitter = this;
+        m_destroyChecker.p_objectBeingChecked = this;
         RegisterListener(&m_destroyChecker);
     }
 
@@ -37,12 +37,12 @@ private:
     class DestroyChecker : public EventListener<IEventsDestroy>
     {
     public:
-        EventEmitterIEventsDestroyWithCheck *p_destroyEmitter = nullptr;
-        void OnDestroyed(EventEmitter<IEventsDestroy> *object)
+        EventEmitterIEventsDestroyWithCheck *p_objectBeingChecked = nullptr;
+        void OnDestroyed(EventEmitter<IEventsDestroy> *object) override
         {
-            ASSERT(p_destroyEmitter);
-            ASSERT(object == p_destroyEmitter);
-            p_destroyEmitter->m_destroyedCalled = true;
+            ASSERT(p_objectBeingChecked);
+            ASSERT(object == p_objectBeingChecked);
+            p_objectBeingChecked->m_destroyedCalled = true;
         }
     };
 

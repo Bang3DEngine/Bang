@@ -7,7 +7,7 @@ namespace Bang
 {
 class Texture3D : public Texture
 {
-    ASSET(Texture3D)
+    RESOURCE(Texture3D)
 
 public:
     Texture3D();

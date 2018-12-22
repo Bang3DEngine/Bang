@@ -1,10 +1,10 @@
 #ifndef PHYSICSMATERIAL_H
 #define PHYSICSMATERIAL_H
 
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 #include "PxMaterial.h"
 
@@ -12,9 +12,9 @@ namespace Bang
 {
 class Path;
 
-class PhysicsMaterial : public Asset
+class PhysicsMaterial : public Resource
 {
-    ASSET(PhysicsMaterial)
+    RESOURCE(PhysicsMaterial)
 
 public:
     enum class CombineMode

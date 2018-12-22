@@ -455,7 +455,7 @@ void Material::Import(const Path &materialFilepath)
 
 void Material::ImportMeta(const MetaNode &meta)
 {
-    Asset::ImportMeta(meta);
+    Resource::ImportMeta(meta);
 
     if (meta.Contains("NeededUniforms"))
     {
@@ -578,7 +578,7 @@ void Material::ImportMeta(const MetaNode &meta)
 
 void Material::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     metaNode->Set("NeededUniforms", GetNeededUniforms());
     metaNode->Set("RenderPass", GetRenderPass());

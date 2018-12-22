@@ -13,17 +13,6 @@ namespace Bang
 {
 class Path;
 
-#define SERIALIZABLE(CLASS)                      \
-public:                                          \
-    virtual String GetClassName() const override \
-    {                                            \
-        return #CLASS;                           \
-    }                                            \
-    static String GetClassNameStatic()           \
-    {                                            \
-        return #CLASS;                           \
-    }
-
 class Serializable : public IGUIDable, public ICloneable, public IReflectable
 {
 public:
@@ -58,6 +47,17 @@ private:
 
     friend class Resources;
 };
-}  // namespace Bang
+
+#define SERIALIZABLE(CLASS)                      \
+public:                                          \
+    virtual String GetClassName() const override \
+    {                                            \
+        return #CLASS;                           \
+    }                                            \
+    static String GetClassNameStatic()           \
+    {                                            \
+        return #CLASS;                           \
+    }
+}
 
 #endif  // SERIALIZABLE_H

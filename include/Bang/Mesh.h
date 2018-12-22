@@ -6,7 +6,6 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ICloneable.h"
 #include "Bang/Map.h"
@@ -14,6 +13,7 @@
 #include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/Ray.h"
+#include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/Sphere.h"
 #include "Bang/String.h"
@@ -30,9 +30,9 @@ class Path;
 class VAO;
 class VBO;
 
-class Mesh : public Asset
+class Mesh : public Resource
 {
-    ASSET(Mesh)
+    RESOURCE(Mesh)
 
 public:
     using TriangleId = uint;

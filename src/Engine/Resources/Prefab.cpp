@@ -76,7 +76,7 @@ void Prefab::Import(const Path &prefabFilepath)
 
 void Prefab::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 
     String newMetaInfo = metaNode.ToString();
     if (newMetaInfo != GetMetaContent())
@@ -87,7 +87,7 @@ void Prefab::ImportMeta(const MetaNode &metaNode)
 
 void Prefab::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     MetaNode prefabMetaNode;
     prefabMetaNode.Import(GetMetaContent());

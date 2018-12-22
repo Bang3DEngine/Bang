@@ -232,7 +232,7 @@ void Animation::Import(const Path &animationFilepath)
 
 void Animation::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 
     if (metaNode.Contains("WrapMode"))
     {
@@ -247,7 +247,7 @@ void Animation::ImportMeta(const MetaNode &metaNode)
 
 void Animation::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     metaNode->Set("Speed", SCAST<float>(GetSpeed()));
     metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));

@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.tcc"
@@ -15,6 +14,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/RenderPass.h"
+#include "Bang/Resource.h"
 #include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
@@ -26,9 +26,9 @@ class Resource;
 class ShaderProgram;
 class Texture2D;
 
-class Material : public Asset, public EventListener<IEventsResource>
+class Material : public Resource, public EventListener<IEventsResource>
 {
-    ASSET(Material)
+    RESOURCE(Material)
 
 public:
     enum class UniformFlags

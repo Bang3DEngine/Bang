@@ -1,9 +1,9 @@
 #ifndef BANGFAB_H
 #define BANGFAB_H
 
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -11,9 +11,9 @@ namespace Bang
 class GameObject;
 class Path;
 
-class Prefab : public Asset
+class Prefab : public Resource
 {
-    ASSET(Prefab)
+    RESOURCE(Prefab)
 
 public:
     GameObject *Instantiate() const;

@@ -148,7 +148,7 @@ void TextureCubeMap::Import(const Image &topImage,
 
 void TextureCubeMap::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 
     if (metaNode.Contains("TopImage"))
     {
@@ -190,7 +190,7 @@ void TextureCubeMap::ImportMeta(const MetaNode &metaNode)
 
 void TextureCubeMap::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 
     if (GetSideTexture(GL::CubeMapDir::TOP))
     {

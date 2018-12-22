@@ -13,7 +13,6 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/AspectRatioMode.h"
-#include "Bang/Asset.h"
 #include "Bang/AudioClip.h"
 #include "Bang/AudioListener.h"
 #include "Bang/AudioManager.h"

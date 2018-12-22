@@ -25,6 +25,7 @@ class Image : public Resource
 public:
     Image();
     Image(int width, int height);
+    ~Image() override = default;
 
     void Create(int width, int height);
     void Create(int width, int height, const Color &backgroundColor);

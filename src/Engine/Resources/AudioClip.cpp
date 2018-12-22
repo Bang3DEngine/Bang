@@ -165,10 +165,10 @@ void AudioClip::FreeBuffer()
 
 void AudioClip::ImportMeta(const MetaNode &metaNode)
 {
-    Asset::ImportMeta(metaNode);
+    Resource::ImportMeta(metaNode);
 }
 
 void AudioClip::ExportMeta(MetaNode *metaNode) const
 {
-    Asset::ExportMeta(metaNode);
+    Resource::ExportMeta(metaNode);
 }

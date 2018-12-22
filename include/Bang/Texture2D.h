@@ -1,12 +1,12 @@
 #ifndef TEXTURE2D_H
 #define TEXTURE2D_H
 
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/MetaNode.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 
@@ -17,7 +17,7 @@ class Path;
 
 class Texture2D : public Texture
 {
-    ASSET(Texture2D)
+    RESOURCE(Texture2D)
 
 public:
     Texture2D(const Texture2D &tex) = delete;

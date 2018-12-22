@@ -1,19 +1,19 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/Image.h"
+#include "Bang/Resource.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class Texture : public GLObject, public Asset
+class Texture : public GLObject, public Resource
 {
-    ASSET_ABSTRACT(Texture)
+    RESOURCE_ABSTRACT(Texture)
 
 public:
     Texture();
@@ -52,9 +52,8 @@ private:
     GL::TextureTarget m_target = Undef<GL::TextureTarget>();
 
     GL::FilterMode m_filterMode = Undef<GL::FilterMode>();
-    std::array<GL::WrapMode, 3> m_wrapMode = {{Undef<GL::WrapMode>(),
-                                               Undef<GL::WrapMode>(),
-                                               Undef<GL::WrapMode>()}};
+    std::array<GL::WrapMode, 3> m_wrapMode = {
+        {Undef<GL::WrapMode>(), Undef<GL::WrapMode>(), Undef<GL::WrapMode>()}};
 };
 }  // namespace Bang
 

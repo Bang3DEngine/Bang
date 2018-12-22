@@ -136,6 +136,6 @@ ReflectVariable *IReflectable::ReflectVarMemberEnum(const String &varName,
     return ReflectVarMember<TClass, T, int>(
         varName, setter, getter, instance, hintsString);
 }
-}  // namespace Bang
+}
 
 #endif  // IREFLECTABLE_H

@@ -274,6 +274,10 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
                 {
                     boneMatricesArray[boneIdx] = boneMatrix;
                 }
+                else
+                {
+                    boneMatricesArray[boneIdx] = Matrix4::Identity();
+                }
             }
         }
         SetSkinnedMeshRendererCurrentBoneMatrices(boneMatricesArray);
@@ -319,10 +323,9 @@ void SkinnedMeshRenderer::
             {
                 const String &boneName = it.first;
                 const Mesh::Bone &bone = it.second;
-                Matrix4 boneSpaceToRootSpace =
-                    bone.rootNodeSpaceToBoneBindSpace.Inversed();
                 m_boneSpaceToRootSpaceTransformations.Add(
-                    boneName, Transformation(boneSpaceToRootSpace));
+                    boneName,
+                    bone.rootSpaceToBoneBindSpaceTransformation.Inversed());
             }
         }
     }

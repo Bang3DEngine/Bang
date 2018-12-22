@@ -327,13 +327,13 @@ void ModelIO::ImportMeshRaw(aiMesh *aMesh,
             String boneName = AiStringToString(aBone->mName);
 
             // Set weights
-            for (int j = 0; j < aBone->mNumWeights; ++j)
+            for (uint j = 0; j < aBone->mNumWeights; ++j)
             {
                 const aiVertexWeight &aVertWeight = aBone->mWeights[j];
                 bone.weights.Add(aVertWeight.mVertexId, aVertWeight.mWeight);
             }
-            bone.rootNodeSpaceToBoneBindSpace =
-                AiMatrix4ToMatrix4(aBone->mOffsetMatrix);
+            bone.rootSpaceToBoneBindSpaceTransformation =
+                Transformation(AiMatrix4ToMatrix4(aBone->mOffsetMatrix));
 
             bonesIndices->Add(boneName, boneIdx);
             bones->Add(boneName, bone);
@@ -704,13 +704,10 @@ const aiScene *ModelIO::ImportScene(Assimp::Importer *importer,
         return nullptr;
     }
 
-    const aiScene *scene =
-        importer->ReadFile(modelFilepath.GetAbsolute().ToCString(),
-                           aiProcess_Triangulate |
-                           aiProcess_GenSmoothNormals |
-                           aiProcess_CalcTangentSpace |
-                           aiProcess_JoinIdenticalVertices
-                           );
+    const aiScene *scene = importer->ReadFile(
+        modelFilepath.GetAbsolute().ToCString(),
+        aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+            aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
     String errorStr = importer->GetErrorString();
     if (!errorStr.IsEmpty())

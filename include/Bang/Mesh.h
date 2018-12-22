@@ -18,6 +18,7 @@
 #include "Bang/Sphere.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
+#include "Bang/Transformation.h"
 #include "Bang/Triangle.h"
 #include "Bang/UMap.h"
 
@@ -40,7 +41,7 @@ public:
     struct Bone
     {
         Map<Mesh::VertexId, float> weights;
-        Matrix4 rootNodeSpaceToBoneBindSpace;
+        Transformation rootSpaceToBoneBindSpaceTransformation;
     };
 
     static constexpr uint DefaultPositionsVBOLocation = 0;

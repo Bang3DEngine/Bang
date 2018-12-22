@@ -1014,7 +1014,7 @@ void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
 void GEngine::Render(Renderer *rend)
 {
     // If we have a replacement shader currently, change the renderer sp
-    RH<Material> previousRendSharedMat, previousRendCopiedMat;
+    AH<Material> previousRendSharedMat, previousRendCopiedMat;
     previousRendSharedMat.Set(rend->GetSharedMaterial());
     previousRendCopiedMat.Set(rend->GetCopiedMaterial());
     if (GetReplacementMaterial())

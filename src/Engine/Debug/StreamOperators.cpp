@@ -78,7 +78,7 @@ std::ostream &operator<<(std::ostream &log, const IToString &v)
 std::ostream &operator<<(std::ostream &log, const GUID &guid)
 {
     log << guid.GetTimeGUID() << " " << guid.GetRandGUID() << " "
-        << guid.GetEmbeddedResourceGUID();
+        << guid.GetEmbeddedAssetGUID();
     return log;
 }
 

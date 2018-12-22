@@ -10,7 +10,7 @@
 #include "Bang/Mesh.h"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/Scene.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
@@ -21,13 +21,13 @@ using namespace Bang;
 
 Cloth::Cloth()
 {
-    m_mesh = Resources::Create<Mesh>();
+    m_mesh = Assets::Create<Mesh>();
 
     GetMaterial()->SetCullFace(GL::CullFaceExt::NONE);
     GetMaterial()->SetRenderWireframe(false);
 
-    m_debugPointsMesh = Resources::Create<Mesh>();
-    m_debugPointsMaterial = Resources::Create<Material>();
+    m_debugPointsMesh = Assets::Create<Mesh>();
+    m_debugPointsMaterial = Assets::Create<Material>();
 
     m_debugPointsMaterial.Get()->SetAlbedoColor(Color::Red());
     m_debugPointsMaterial.Get()->SetReceivesLighting(false);

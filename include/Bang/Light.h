@@ -7,7 +7,7 @@
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Vector2.h"
 
@@ -72,8 +72,8 @@ private:
     float m_shadowExponentConstant = 80.0f;
     Vector2i m_shadowMapSize = Vector2i(256);
 
-    RH<Material> p_shadowMapMaterial;
-    RH<ShaderProgram> p_lightScreenPassShaderProgram;
+    AH<Material> p_shadowMapMaterial;
+    AH<ShaderProgram> p_lightScreenPassShaderProgram;
 
     void SetShadowLightCommonUniforms(ShaderProgram *sp) const;
     void ApplyLight(Camera *camera, const AARect &renderRect) const;

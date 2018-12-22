@@ -7,7 +7,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector2.h"
@@ -17,12 +17,12 @@ using TTF_Font = _TTF_Font;
 namespace Bang
 {
 template <class>
-class ResourceHandle;
+class AssetHandle;
 class Texture2D;
 
-class Font : public Resource
+class Font : public Asset
 {
-    RESOURCE(Font)
+    ASSET(Font)
 
 public:
     /**
@@ -49,7 +49,7 @@ public:
     Vector2 GetCharMinUv(int fontSize, char c) const;
     Vector2 GetCharMaxUv(int fontSize, char c) const;
 
-    // Resource
+    // Asset
     void Import(const Path &ttfFilepath) override;
 
     // Serializable
@@ -69,7 +69,7 @@ private:
     // For each font style
     FontDataCache m_referenceFontDataCache;
     mutable UMap<int, TTF_Font *> m_openFonts;
-    mutable UMap<int, RH<Texture2D>> m_cachedAtlas;
+    mutable UMap<int, AH<Texture2D>> m_cachedAtlas;
     mutable UMap<int, UMap<char, AARecti>> m_cachedAtlasCharRects;
     mutable UMap<int, String> m_cachedAtlasChars;
 

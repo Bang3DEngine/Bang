@@ -8,7 +8,7 @@
 #include "Bang/Map.h"
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 
 namespace Bang
 {
@@ -44,7 +44,7 @@ public:
     static Path GetEngineShadersDir();
 
 private:
-    Map<std::tuple<Path, Path, Path>, RH<ShaderProgram>> m_cache;
+    Map<std::tuple<Path, Path, Path>, AH<ShaderProgram>> m_cache;
 
     ShaderProgramFactory() = default;
 
@@ -54,7 +54,7 @@ private:
                               bool useGeometryShader);
     static ShaderProgramFactory *GetActive();
 
-    friend class Resources;
+    friend class Assets;
 };
 }
 

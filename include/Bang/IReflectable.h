@@ -11,7 +11,7 @@
 namespace Bang
 {
 class ReflectStruct;
-class Resource;
+class Asset;
 class GUID;
 
 class IReflectable
@@ -61,7 +61,7 @@ private:
     mutable bool m_alreadyReflected = false;
     mutable ReflectStruct m_reflectStruct;
 
-    static Resource *LoadResourceFromGUID(const GUID &guid);
+    static Asset *LoadAssetFromGUID(const GUID &guid);
 };
 
 template <class T>

@@ -6,14 +6,14 @@
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class AudioClip : public Resource
+class AudioClip : public Asset
 {
-    RESOURCE(AudioClip)
+    ASSET(AudioClip)
 
 public:
     int GetChannels() const;
@@ -24,7 +24,7 @@ public:
     bool IsLoaded() const;
     const Path &GetSoundFilepath() const;
 
-    // Resource
+    // Asset
     void Import(const Path &soundFilepath) override;
 
     // Serializable

@@ -12,8 +12,8 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 
 using namespace Bang;
 
@@ -192,7 +192,7 @@ void AnimatorStateMachineNode::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("Animation"))
     {
         SetAnimation(
-            Resources::Load<Animation>(metaNode.Get<GUID>("Animation")).Get());
+            Assets::Load<Animation>(metaNode.Get<GUID>("Animation")).Get());
     }
 
     if (metaNode.Contains("Speed"))

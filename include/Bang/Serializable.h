@@ -45,7 +45,7 @@ protected:
 private:
     HideFlags m_hideFlags;
 
-    friend class Resources;
+    friend class Assets;
 };
 
 #define SERIALIZABLE(CLASS)                      \

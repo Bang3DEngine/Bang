@@ -21,7 +21,7 @@ protected:
 private:
     GUID m_GUID;
 
-    friend class Resources;
+    friend class Assets;
 };
 }
 

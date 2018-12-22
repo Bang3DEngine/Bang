@@ -207,15 +207,15 @@ Array<String> AnimatorStateMachine::GetVariablesNames() const
     return varNames;
 }
 
-void AnimatorStateMachine::Import(const Path &resourceFilepath)
+void AnimatorStateMachine::Import(const Path &assetFilepath)
 {
-    BANG_UNUSED(resourceFilepath);
+    BANG_UNUSED(assetFilepath);
     Clear();
 }
 
 void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 
     const auto &layersMetaNodes = metaNode.GetChildren("Layers");
     for (const MetaNode &layerMetaNode : layersMetaNodes)
@@ -234,7 +234,7 @@ void AnimatorStateMachine::ImportMeta(const MetaNode &metaNode)
 
 void AnimatorStateMachine::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     metaNode->CreateChildrenContainer("Layers");
     for (const AnimatorStateMachineLayer *layer : GetLayers())

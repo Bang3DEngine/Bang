@@ -12,7 +12,7 @@
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"

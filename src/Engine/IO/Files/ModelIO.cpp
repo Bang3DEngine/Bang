@@ -38,8 +38,8 @@
 #include "Bang/Model.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
@@ -174,13 +174,13 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
     for (int i = 0; i < SCAST<int>(aScene->mNumMaterials); ++i)
     {
         String materialName;
-        RH<Material> materialRH;
+        AH<Material> materialAH;
         ModelIO::ImportEmbeddedMaterial(aScene->mMaterials[i],
                                         modelFilepath.GetDirectory(),
                                         model,
-                                        &materialRH,
+                                        &materialAH,
                                         &materialName);
-        modelScene->materials.PushBack(materialRH);
+        modelScene->materials.PushBack(materialAH);
         modelScene->materialsNames.PushBack(materialName);
     }
 
@@ -188,15 +188,15 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
     Map<String, Mesh::Bone> allBones;
     for (int i = 0; i < SCAST<int>(aScene->mNumMeshes); ++i)
     {
-        RH<Mesh> meshRH;
+        AH<Mesh> meshAH;
         String meshName;
         ModelIO::ImportEmbeddedMesh(
-            aScene->mMeshes[i], model, &meshRH, &meshName);
-        modelScene->meshes.PushBack(meshRH);
+            aScene->mMeshes[i], model, &meshAH, &meshName);
+        modelScene->meshes.PushBack(meshAH);
         modelScene->meshesNames.PushBack(meshName);
 
         // Update global bones
-        for (const auto &it : meshRH.Get()->GetBonesPool())
+        for (const auto &it : meshAH.Get()->GetBonesPool())
         {
             allBones.Add(it.first, it.second);
         }
@@ -214,9 +214,9 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
         animationName.Append("." + Extensions::GetAnimationExtension());
         animationName = Path::GetDuplicateStringWithExtension(
             animationName, model->GetAnimationsNames());
-        RH<Animation> animationRH =
-            Resources::CreateEmbeddedResource<Animation>(model, animationName);
-        Animation *animation = animationRH.Get();
+        AH<Animation> animationAH =
+            Assets::CreateEmbeddedAsset<Animation>(model, animationName);
+        Animation *animation = animationAH.Get();
         double animDuration = aAnimation->mDuration;
         animation->SetDurationInFrames(animDuration);
         animation->SetFramesPerSecond(aAnimation->mTicksPerSecond);
@@ -254,7 +254,7 @@ bool ModelIO::ImportModel(const Path &modelFilepath,
                 animation->AddScaleKeyFrame(boneName, keyFrame);
             }
         }
-        modelScene->animations.PushBack(animationRH);
+        modelScene->animations.PushBack(animationAH);
         modelScene->animationsNames.PushBack(animationName);
     }
 
@@ -589,7 +589,7 @@ aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
 void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                      const Path &modelDirectory,
                                      Model *model,
-                                     RH<Material> *outMaterial,
+                                     AH<Material> *outMaterial,
                                      String *outMaterialName)
 {
     aiString aMatName;
@@ -605,7 +605,7 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
 
     *outMaterialName = materialName;
     *outMaterial =
-        Resources::CreateEmbeddedResource<Material>(model, materialName);
+        Assets::CreateEmbeddedAsset<Material>(model, materialName);
 
     aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
     aiColor3D aDiffuseColor = aiColor3D(1.0f, 1.0f, 1.0f);
@@ -618,10 +618,10 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
     Path albedoTexturePath(String(aAlbedoTexturePath.C_Str()));
     albedoTexturePath = modelDirectory.Append(albedoTexturePath);
-    RH<Texture2D> matAlbedoTexture;
+    AH<Texture2D> matAlbedoTexture;
     if (albedoTexturePath.IsFile())
     {
-        matAlbedoTexture = Resources::Load<Texture2D>(albedoTexturePath);
+        matAlbedoTexture = Assets::Load<Texture2D>(albedoTexturePath);
     }
     if (albedoTexturePath.HasExtension("dds"))
     {
@@ -632,10 +632,10 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
     Path normalsTexturePath(String(aNormalsTexturePath.C_Str()));
     normalsTexturePath = modelDirectory.Append(normalsTexturePath);
-    RH<Texture2D> matNormalTexture;
+    AH<Texture2D> matNormalTexture;
     if (normalsTexturePath.IsFile())
     {
-        matNormalTexture = Resources::Load<Texture2D>(normalsTexturePath);
+        matNormalTexture = Assets::Load<Texture2D>(normalsTexturePath);
     }
     if (normalsTexturePath.HasExtension("dds"))
     {
@@ -652,7 +652,7 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
 
 void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
                                  Model *model,
-                                 RH<Mesh> *outMeshRH,
+                                 AH<Mesh> *outMeshAH,
                                  String *outMeshName)
 {
     aiString aMeshName = aMesh->mName;
@@ -665,7 +665,7 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
     meshName = Path::GetDuplicateStringWithExtension(meshName,
                                                      model->GetMeshesNames());
 
-    *outMeshRH = Resources::CreateEmbeddedResource<Mesh>(model, meshName);
+    *outMeshAH = Assets::CreateEmbeddedAsset<Mesh>(model, meshName);
     *outMeshName = meshName;
 
     Array<Mesh::VertexId> vertexIndices;
@@ -685,7 +685,7 @@ void ModelIO::ImportEmbeddedMesh(aiMesh *aMesh,
                            &bonesPool,
                            &bonesIndices);
 
-    Mesh *outMesh = outMeshRH->Get();
+    Mesh *outMesh = outMeshAH->Get();
     outMesh->SetPositionsPool(vertexPositionsPool);
     outMesh->SetNormalsPool(vertexNormalsPool);
     outMesh->SetUvsPool(vertexUvsPool);

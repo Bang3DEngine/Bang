@@ -19,9 +19,9 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/List.tcc"
 #include "Bang/MutexLocker.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/UMap.tcc"
 
 using namespace Bang;
@@ -192,7 +192,7 @@ ALAudioSource *AudioManager::Play(const Path &audioClipFilepath,
                                   const AudioParams &params,
                                   float delay)
 {
-    RH<AudioClip> audioClip = Resources::Load<AudioClip>(audioClipFilepath);
+    AH<AudioClip> audioClip = Assets::Load<AudioClip>(audioClipFilepath);
     return AudioManager::Play(audioClip.Get(), params, delay);
 }
 

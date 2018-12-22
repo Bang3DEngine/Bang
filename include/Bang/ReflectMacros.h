@@ -27,11 +27,11 @@
         [this]() { return SCAST<FlagsPrimitiveType>(Getter()); }, \
         BANG_REFLECT_HINT_ENUM_FLAGS(true));
 
-#define BANG_REFLECT_VAR_MEMBER_RESOURCE(                                    \
-    Class, Name, Setter, Getter, ResourceClass, Hints)                       \
+#define BANG_REFLECT_VAR_MEMBER_ASSET(                                    \
+    Class, Name, Setter, Getter, AssetClass, Hints)                       \
     ReflectVar<GUID>(                                                        \
         Name,                                                                \
-        [this](GUID v) { Setter(Resources::Load<ResourceClass>(v).Get()); }, \
+        [this](GUID v) { Setter(Assets::Load<AssetClass>(v).Get()); }, \
         [this]() -> GUID {                                                   \
             return Getter() ? Getter()->GetGUID() : GUID::Empty();           \
         },                                                                   \

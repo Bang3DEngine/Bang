@@ -7,7 +7,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/String.h"
@@ -54,8 +54,8 @@ protected:
     bool MustBeRendered(RenderPass renderPass) const;
 
 private:
-    RH<ShaderProgram> p_shaderProgram;
-    RH<Shader> p_postProcessShader;
+    AH<ShaderProgram> p_shaderProgram;
+    AH<Shader> p_postProcessShader;
     Type m_type = Type::AFTER_SCENE;
     int m_priority = 0;
 };

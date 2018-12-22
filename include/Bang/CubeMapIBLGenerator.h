@@ -2,7 +2,7 @@
 #define CUBEMAPIBLGENERATOR_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 
 namespace Bang
 {
@@ -13,11 +13,11 @@ class TextureCubeMap;
 class CubeMapIBLGenerator
 {
 public:
-    static RH<TextureCubeMap> GenerateDiffuseIBLCubeMap(
+    static AH<TextureCubeMap> GenerateDiffuseIBLCubeMap(
         TextureCubeMap *textureCubeMap,
         uint IBLCubeMapSize = 32,
         uint sampleCount = 20);
-    static RH<TextureCubeMap> GenerateSpecularIBLCubeMap(
+    static AH<TextureCubeMap> GenerateSpecularIBLCubeMap(
         TextureCubeMap *textureCubeMap,
         uint IBLCubeMapSize = 128,
         uint sampleCount = 256);
@@ -35,7 +35,7 @@ private:
     Framebuffer *m_iblFramebuffer = nullptr;
     ShaderProgram *m_iblShaderProgram = nullptr;
 
-    static RH<TextureCubeMap> GenerateIBLCubeMap(TextureCubeMap *textureCubeMap,
+    static AH<TextureCubeMap> GenerateIBLCubeMap(TextureCubeMap *textureCubeMap,
                                                  IBLType iblType,
                                                  uint IBLCubeMapSize,
                                                  uint sampleCount);

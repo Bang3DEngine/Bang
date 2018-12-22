@@ -7,14 +7,14 @@
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector2.h"
 
 namespace Bang
 {
 template <class>
-class ResourceHandle;
+class AssetHandle;
 class Path;
 class Texture2D;
 class Texture;
@@ -79,7 +79,7 @@ public:
 protected:
     Vector2i m_size = Vector2i::Zero();
     Array<GL::Attachment> m_attachments;
-    UMap<GL::Attachment, RH<Texture>, EnumClassHash> m_attachments_To_Texture;
+    UMap<GL::Attachment, AH<Texture>, EnumClassHash> m_attachments_To_Texture;
 
 private:
     mutable Array<GL::Attachment> m_currentDrawAttachments;

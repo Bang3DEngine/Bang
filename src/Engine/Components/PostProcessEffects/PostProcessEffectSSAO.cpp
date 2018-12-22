@@ -5,6 +5,8 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
@@ -19,8 +21,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Paths.h"
 #include "Bang/Random.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -43,11 +43,11 @@ PostProcessEffectSSAO::PostProcessEffectSSAO()
     m_ssaoFB->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_blurAuxiliarTexture = Resources::Create<Texture2D>();
+    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGB10_A2);
     m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_blurredSSAOTexture = Resources::Create<Texture2D>();
+    m_blurredSSAOTexture = Assets::Create<Texture2D>();
     m_blurredSSAOTexture.Get()->SetFormat(GL::ColorFormat::RGB10_A2);
     m_blurredSSAOTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
@@ -342,7 +342,7 @@ void PostProcessEffectSSAO::GenerateRandomAxesTexture(int numAxes)
     }
 
     // Now create the texture from the image!
-    m_randomAxesTexture = Resources::Create<Texture2D>();
+    m_randomAxesTexture = Assets::Create<Texture2D>();
     m_randomAxesTexture.Get()->Resize(imgSize, imgSize);
     m_randomAxesTexture.Get()->Import(randomsImg);
     m_randomAxesTexture.Get()->SetWrapMode(GL::WrapMode::REPEAT);

@@ -3,7 +3,7 @@
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -14,17 +14,17 @@ PostProcessEffectBloom::PostProcessEffectBloom()
 {
     SET_INSTANCE_CLASS_ID(PostProcessEffectBloom);
 
-    m_brightnessTexture = Resources::Create<Texture2D>();
+    m_brightnessTexture = Assets::Create<Texture2D>();
     m_brightnessTexture.Get()->CreateEmpty(1, 1);
     m_brightnessTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_brightnessTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_blurAuxiliarTexture = Resources::Create<Texture2D>();
+    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->CreateEmpty(1, 1);
     m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_blurredBloomTexture = Resources::Create<Texture2D>();
+    m_blurredBloomTexture = Assets::Create<Texture2D>();
     m_blurredBloomTexture.Get()->CreateEmpty(1, 1);
     m_blurredBloomTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredBloomTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);

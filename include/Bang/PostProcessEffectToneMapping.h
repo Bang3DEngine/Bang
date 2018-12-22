@@ -24,7 +24,7 @@ public:
     void Reflect() override;
 
 private:
-    RH<ShaderProgram> m_toneMappingShaderProgram;
+    AH<ShaderProgram> m_toneMappingShaderProgram;
 
     float m_exposure = 1.0f;
 };

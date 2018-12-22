@@ -436,9 +436,9 @@ bool Path::BeginsWith(const String &path) const
     return GetAbsolute().BeginsWith(path);
 }
 
-Path Path::Append(const Path &pathRHS) const
+Path Path::Append(const Path &pathAHS) const
 {
-    String str = pathRHS.GetAbsolute();
+    String str = pathAHS.GetAbsolute();
     if (str.BeginsWith("." + String(Separator)))
     {
         str.Remove(0, 1);

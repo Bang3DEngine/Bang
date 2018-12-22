@@ -2,7 +2,7 @@
 #define VOLUMERENDERER_H
 
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 
 namespace Bang
 {
@@ -57,13 +57,13 @@ protected:
     virtual void Reflect() override;
 
 private:
-    RH<Mesh> p_cubeMesh;
-    RH<Texture2D> p_transferFunctionTexture;
-    RH<Texture3D> p_volumeTexture;
-    RH<ShaderProgram> p_forwardShaderProgram;
-    RH<ShaderProgram> p_deferredShaderProgram;
-    RH<Material> m_volumeRenderingMaterial;
-    RH<Material> m_volumePropertiesMaterial;
+    AH<Mesh> p_cubeMesh;
+    AH<Texture2D> p_transferFunctionTexture;
+    AH<Texture3D> p_volumeTexture;
+    AH<ShaderProgram> p_forwardShaderProgram;
+    AH<ShaderProgram> p_deferredShaderProgram;
+    AH<Material> m_volumeRenderingMaterial;
+    AH<Material> m_volumePropertiesMaterial;
 
     float m_alphaMultiply = 1.0f;
     bool m_useTransferFunction = false;

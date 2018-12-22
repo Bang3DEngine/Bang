@@ -26,8 +26,8 @@
 #include "Bang/PxSceneContainer.h"
 #include "Bang/Quaternion.h"
 #include "Bang/Random.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Time.h"
@@ -780,7 +780,7 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("Mesh"))
     {
         GUID meshGUID = metaNode.Get<GUID>("Mesh");
-        RH<Mesh> mesh = Resources::Load<Mesh>(meshGUID);
+        AH<Mesh> mesh = Assets::Load<Mesh>(meshGUID);
         SetMesh(mesh.Get());
     }
 
@@ -801,8 +801,8 @@ void ParticleSystem::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("Texture"))
     {
-        RH<Texture2D> tex =
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("Texture"));
+        AH<Texture2D> tex =
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("Texture"));
         SetTexture(tex.Get());
     }
 

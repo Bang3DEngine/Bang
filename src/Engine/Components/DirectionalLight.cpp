@@ -23,7 +23,7 @@
 #include "Bang/Quad.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -43,12 +43,12 @@ DirectionalLight::DirectionalLight()
 {
     SET_INSTANCE_CLASS_ID(DirectionalLight)
 
-    m_blurAuxiliarTexture = Resources::Create<Texture2D>();
+    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
     m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_blurredShadowMapTexture = Resources::Create<Texture2D>();
+    m_blurredShadowMapTexture = Assets::Create<Texture2D>();
     m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurredShadowMapTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);

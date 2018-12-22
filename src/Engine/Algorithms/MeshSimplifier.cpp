@@ -17,9 +17,9 @@
 #include "Bang/Octree.h"
 #include "Bang/Octree.tcc"
 #include "Bang/Plane.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Set.h"
 #include "Bang/Set.tcc"
 #include "Bang/Triangle.h"
@@ -90,13 +90,13 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
     mesh->UpdateVAOs();
 }
 
-Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(
+Array<AH<Mesh>> MeshSimplifier::GetAllMeshLODs(
     const Mesh *mesh,
     SimplificationMethod simplificationMethod)
 {
     if (!mesh)
     {
-        return Array<RH<Mesh>>();
+        return Array<AH<Mesh>>();
     }
 
     Array<OctreeData> octreeData;  // Retrieve all the octree data
@@ -169,7 +169,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(
     }
 
     // For each level of detail
-    Array<RH<Mesh>> simplifiedMeshesArray;
+    Array<AH<Mesh>> simplifiedMeshesArray;
     for (int level : levelsToGenerate)
     {
         // Get the octree nodes at that level (and leaves pruned before)
@@ -274,7 +274,7 @@ Array<RH<Mesh>> MeshSimplifier::GetAllMeshLODs(
         Array<Vector3> normalsLOD;
         Array<Vector2> uvsLOD;
         Array<Vector3> tangentsLOD;
-        RH<Mesh> simplifiedMesh = Resources::Create<Mesh>();
+        AH<Mesh> simplifiedMesh = Assets::Create<Mesh>();
         for (const VertexCluster &vertexCluster : vertexClusters)
         {
             ASSERT(!vertexCluster.IsEmpty());

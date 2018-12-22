@@ -18,7 +18,7 @@
 #include "Bang/MeshRenderer.h"
 #include "Bang/Physics.h"
 #include "Bang/RectTransform.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Scene.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/TextureFactory.h"
@@ -800,7 +800,7 @@ GameObject *GameObjectFactory::CreateGameObjectWithMesh(Mesh *m,
 
 GameObject *GameObjectFactory::CreatePlaneGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetPlane();
+    AH<Mesh> mesh = MeshFactory::GetPlane();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Plane");
     go->AddComponent<BoxCollider>();
     return go;
@@ -808,7 +808,7 @@ GameObject *GameObjectFactory::CreatePlaneGameObject()
 
 GameObject *GameObjectFactory::CreateCubeGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetCube();
+    AH<Mesh> mesh = MeshFactory::GetCube();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cube");
     go->AddComponent<BoxCollider>();
     return go;
@@ -816,7 +816,7 @@ GameObject *GameObjectFactory::CreateCubeGameObject()
 
 GameObject *GameObjectFactory::CreateCapsuleGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetCapsule();
+    AH<Mesh> mesh = MeshFactory::GetCapsule();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Capsule");
     go->AddComponent<CapsuleCollider>();
     return go;
@@ -824,7 +824,7 @@ GameObject *GameObjectFactory::CreateCapsuleGameObject()
 
 GameObject *GameObjectFactory::CreateCylinderGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetCylinder();
+    AH<Mesh> mesh = MeshFactory::GetCylinder();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cylinder");
     BoxCollider *col = go->AddComponent<BoxCollider>();
     col->SetExtents(Vector3::One());
@@ -833,7 +833,7 @@ GameObject *GameObjectFactory::CreateCylinderGameObject()
 
 GameObject *GameObjectFactory::CreateSphereGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetSphere();
+    AH<Mesh> mesh = MeshFactory::GetSphere();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Sphere");
     go->AddComponent<SphereCollider>();
     return go;
@@ -841,7 +841,7 @@ GameObject *GameObjectFactory::CreateSphereGameObject()
 
 GameObject *GameObjectFactory::CreateConeGameObject()
 {
-    RH<Mesh> mesh = MeshFactory::GetCone();
+    AH<Mesh> mesh = MeshFactory::GetCone();
     GameObject *go = CreateGameObjectWithMesh(mesh.Get(), "Cone");
     go->AddComponent<BoxCollider>();
     return go;

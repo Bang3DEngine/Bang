@@ -38,7 +38,7 @@ void Texture::SetFormat(GL::ColorFormat glFormat)
     {
         m_glFormat = glFormat;
         OnFormatChanged();
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -47,7 +47,7 @@ void Texture::SetTarget(GL::TextureTarget target)
     if (target != GetTextureTarget())
     {
         m_target = target;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -79,7 +79,7 @@ void Texture::SetFilterMode(GL::FilterMode filterMode)
 
         GL::Pop(GetGLBindTarget());
 
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -134,7 +134,7 @@ void Texture::SetWrapMode(GL::WrapMode wrapMode, GL::WrapCoord wrapCoord)
 
         GL::Pop(GetGLBindTarget());
 
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 

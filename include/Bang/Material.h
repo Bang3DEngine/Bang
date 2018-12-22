@@ -4,31 +4,31 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
 #include "Bang/ICloneable.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/MetaNode.h"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/RenderPass.h"
-#include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class IEventsResource;
+class IEventsAsset;
 class Path;
-class Resource;
+class Asset;
 class ShaderProgram;
 class Texture2D;
 
-class Material : public Resource, public EventListener<IEventsResource>
+class Material : public Asset, public EventListener<IEventsAsset>
 {
-    RESOURCE(Material)
+    ASSET(Material)
 
 public:
     enum class UniformFlags
@@ -85,10 +85,10 @@ public:
     // ICloneable
     virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
-    // IEventsResource
-    void OnResourceChanged(Resource *changedResource) override;
+    // IEventsAsset
+    void OnAssetChanged(Asset *changedAsset) override;
 
-    // Resource
+    // Asset
     void Import(const Path &materialFilepath) override;
 
     // Serializable
@@ -96,11 +96,11 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
-    RH<Texture2D> p_albedoTexture;
-    RH<Texture2D> p_roughnessTexture;
-    RH<Texture2D> p_metalnessTexture;
-    RH<Texture2D> p_normalMapTexture;
-    RH<ShaderProgram> p_shaderProgram;
+    AH<Texture2D> p_albedoTexture;
+    AH<Texture2D> p_roughnessTexture;
+    AH<Texture2D> p_metalnessTexture;
+    AH<Texture2D> p_normalMapTexture;
+    AH<ShaderProgram> p_shaderProgram;
 
     float m_lineWidth = 1.0f;
     float m_normalMapMultiplyFactor = 1.0f;

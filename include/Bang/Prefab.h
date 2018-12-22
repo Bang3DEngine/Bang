@@ -3,7 +3,7 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -11,9 +11,9 @@ namespace Bang
 class GameObject;
 class Path;
 
-class Prefab : public Resource
+class Prefab : public Asset
 {
-    RESOURCE(Prefab)
+    ASSET(Prefab)
 
 public:
     GameObject *Instantiate() const;
@@ -23,7 +23,7 @@ public:
 
     const String &GetMetaContent() const;
 
-    // Resource
+    // Asset
     void Import(const Path &prefabFilepath) override;
 
     // Serializable

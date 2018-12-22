@@ -8,7 +8,7 @@
 #include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 #include "Bang/Transformation.h"
@@ -69,7 +69,7 @@ private:
     Time m_animationTime;
     Time m_prevFrameTime;
 
-    RH<AnimatorStateMachine> m_stateMachine;
+    AH<AnimatorStateMachine> m_stateMachine;
     Map<String, Variant> m_variableNameToValue;
     Array<AnimatorStateMachinePlayer *> m_animatorStateMachinePlayers;
 

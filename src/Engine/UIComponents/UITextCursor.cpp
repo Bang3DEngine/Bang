@@ -7,7 +7,7 @@
 #include "Bang/GL.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Time.h"
 
 using namespace Bang;

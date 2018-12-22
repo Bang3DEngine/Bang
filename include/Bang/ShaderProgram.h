@@ -11,11 +11,11 @@
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix4.h"
-#include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Texture3D.h"
 #include "Bang/UMap.h"
@@ -27,7 +27,7 @@ class EventEmitter;
 class Color;
 class Texture3D;
 class IEventsDestroy;
-class IEventsResource;
+class IEventsAsset;
 class Path;
 class Shader;
 class Texture2D;
@@ -35,11 +35,11 @@ class Texture;
 class TextureCubeMap;
 
 class ShaderProgram : public GLObject,
-                      public Resource,
-                      public EventListener<IEventsResource>,
+                      public Asset,
+                      public EventListener<IEventsAsset>,
                       public EventListener<IEventsDestroy>
 {
-    RESOURCE(ShaderProgram)
+    ASSET(ShaderProgram)
 
 public:
     bool Load(const Path &vShaderPath, const Path &fShaderPath);
@@ -121,13 +121,13 @@ public:
 
     GLint GetUniformLocation(const String &name) const;
 
-    // Resource
-    void Import(const Path &resourceFilepath) override;
+    // Asset
+    void Import(const Path &assetFilepath) override;
 
 private:
-    RH<Shader> p_vShader;
-    RH<Shader> p_gShader;
-    RH<Shader> p_fShader;
+    AH<Shader> p_vShader;
+    AH<Shader> p_gShader;
+    AH<Shader> p_fShader;
     bool m_isLinked = false;
 
     UMap<String, int> m_uniformCacheInt;
@@ -166,8 +166,8 @@ private:
     void BindTextureToFreeUnit(const String &textureName, Texture *texture);
     void UnBindAllTexturesFromUnits() const;
 
-    // IResourceListener
-    void OnImported(Resource *res) override;
+    // IAssetListener
+    void OnImported(Asset *res) override;
 
     // IEventsDestroy
     void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;

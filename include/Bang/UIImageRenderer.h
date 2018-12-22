@@ -5,7 +5,7 @@
 #include "Bang/Color.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/UIRenderer.h"
 
@@ -61,9 +61,9 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    RH<Mesh> p_quadMesh;
+    AH<Mesh> p_quadMesh;
     Color m_tint = Color::White();
-    RH<Texture2D> p_imageTexture;
+    AH<Texture2D> p_imageTexture;
     Mode m_mode = Undef<Mode>();
     Vector2i m_slice9BorderStrokePx = Vector2i(8);
 };

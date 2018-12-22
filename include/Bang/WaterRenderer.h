@@ -4,7 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -28,7 +28,7 @@ public:
     void Reflect() override;
 
 private:
-    RH<Mesh> p_planeMesh;
+    AH<Mesh> p_planeMesh;
 };
 }
 

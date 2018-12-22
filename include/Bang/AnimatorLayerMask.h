@@ -2,16 +2,16 @@
 #define ANIMATORLAYERMASK_H
 
 #include "Bang/Bang.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
 class Animator;
-class AnimatorLayerMask : public Resource
+class AnimatorLayerMask : public Asset
 {
-    RESOURCE(AnimatorLayerMask)
+    ASSET(AnimatorLayerMask)
 
 public:
     struct BoneEntry
@@ -42,8 +42,8 @@ public:
     const Array<AnimatorLayerMask::BoneEntry> &GetBoneEntries() const;
     Set<String> GetBoneMaskNamesSet(Animator *animator) const;
 
-    // Resource
-    virtual void Import(const Path &resourceFilepath) override;
+    // Asset
+    virtual void Import(const Path &assetFilepath) override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

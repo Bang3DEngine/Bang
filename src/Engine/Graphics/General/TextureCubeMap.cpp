@@ -4,18 +4,18 @@
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GUID.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/Image.h"
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Texture2D.h"
 
 namespace Bang
 {
-class Resource;
+class Asset;
 }
 
 using namespace Bang;
@@ -72,7 +72,7 @@ void TextureCubeMap::Fill(GL::CubeMapDir cubeMapDir,
 
     GL::Pop(GetGLBindTarget());
 
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 uint TextureCubeMap::GetSize() const
@@ -88,7 +88,7 @@ void TextureCubeMap::SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
         {
             GetSideTexture(cubeMapDir)
                 .Get()
-                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
+                ->EventEmitter<IEventsAsset>::UnRegisterListener(this);
         }
 
         FillCubeMapDir(cubeMapDir, tex ? &tex->GetImage() : nullptr);
@@ -98,10 +98,10 @@ void TextureCubeMap::SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex)
         {
             GetSideTexture(cubeMapDir)
                 .Get()
-                ->EventEmitter<IEventsResource>::RegisterListener(this);
+                ->EventEmitter<IEventsAsset>::RegisterListener(this);
         }
 
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -114,7 +114,7 @@ void TextureCubeMap::FillCubeMapDir(GL::CubeMapDir dir, const Image *img)
          GL::DataType::UNSIGNED_BYTE);
 }
 
-RH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
+AH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
 {
     return m_sideTextures[TextureCubeMap::GetDirIndex(cubeMapDir)];
 }
@@ -148,49 +148,49 @@ void TextureCubeMap::Import(const Image &topImage,
 
 void TextureCubeMap::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 
     if (metaNode.Contains("TopImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::TOP,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("TopImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("TopImage")).Get());
     }
     if (metaNode.Contains("BotImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::BOT,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("BotImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("BotImage")).Get());
     }
     if (metaNode.Contains("LeftImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::LEFT,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("LeftImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("LeftImage")).Get());
     }
     if (metaNode.Contains("RightImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::RIGHT,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("RightImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("RightImage")).Get());
     }
     if (metaNode.Contains("FrontImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::FRONT,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("FrontImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("FrontImage")).Get());
     }
     if (metaNode.Contains("BackImage"))
     {
         SetSideTexture(
             GL::CubeMapDir::BACK,
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("BackImage")).Get());
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("BackImage")).Get());
     }
 }
 
 void TextureCubeMap::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     if (GetSideTexture(GL::CubeMapDir::TOP))
     {
@@ -234,7 +234,7 @@ GL::BindTarget TextureCubeMap::GetGLBindTarget() const
     return GL::BindTarget::TEXTURE_CUBE_MAP;
 }
 
-void TextureCubeMap::OnImported(Resource *res)
+void TextureCubeMap::OnImported(Asset *res)
 {
     for (GL::CubeMapDir cubeMapDir : GL::GetAllCubeMapDirs())
     {

@@ -6,7 +6,7 @@
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -44,7 +44,7 @@ protected:
     virtual void OnUpdate() override;
 
 private:
-    RH<AudioClip> p_audioClip;
+    AH<AudioClip> p_audioClip;
     bool m_playOnStart = true;
     uint m_currentAudioClipALBufferId = 0;
 

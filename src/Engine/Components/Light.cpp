@@ -15,7 +15,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
@@ -35,7 +35,7 @@ Light::Light()
 {
     SET_INSTANCE_CLASS_ID(Light)
 
-    p_shadowMapMaterial = Resources::Create<Material>();
+    p_shadowMapMaterial = Assets::Create<Material>();
 }
 
 Light::~Light()

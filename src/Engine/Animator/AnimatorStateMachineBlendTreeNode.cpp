@@ -2,7 +2,7 @@
 
 #include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 
 using namespace Bang;
 
@@ -105,7 +105,7 @@ void AnimatorStateMachineBlendTreeNode::ImportMeta(const MetaNode &metaNode)
     if (metaNode.Contains("SecondAnimation"))
     {
         SetSecondAnimation(
-            Resources::Load<Animation>(metaNode.Get<GUID>("SecondAnimation"))
+            Assets::Load<Animation>(metaNode.Get<GUID>("SecondAnimation"))
                 .Get());
     }
 

@@ -11,7 +11,7 @@
 #include "Bang/MetaFilesManager.h"
 #include "Bang/Paths.h"
 #include "Bang/Physics.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/Settings.h"
 #include "Bang/SystemUtils.h"
 #include "Bang/Texture2D.h"
@@ -77,13 +77,13 @@ void Application::InitAfterPathsInit_()
     MetaFilesManager::CreateMissingMetaFiles(Paths::GetEngineAssetsDir());
     MetaFilesManager::LoadMetaFilepathGUIDs(Paths::GetEngineAssetsDir());
 
-    m_resources = CreateResources();
-    m_resources->Init();
+    m_assets = CreateAssets();
+    m_assets->Init();
 
     m_gEngine = new GEngine();
     m_gEngine->Init();
 
-    m_resources->InitAfterGL();
+    m_assets->InitAfterGL();
 }
 
 Application::~Application()
@@ -97,9 +97,9 @@ Application::~Application()
     delete m_physics;
     m_physics = nullptr;
 
-    m_resources->Destroy();
-    delete m_resources;
-    m_resources = nullptr;
+    m_assets->Destroy();
+    delete m_assets;
+    m_assets = nullptr;
 
     delete m_settings;
     delete m_audioManager;
@@ -115,7 +115,7 @@ Application::~Application()
 void Application::InitBeforeLoop()
 {
     GetWindowManager()->GetTopWindow()->SetIcon(
-        TextureFactory::GetBangB512Icon()->GetResourceFilepath());
+        TextureFactory::GetBangB512Icon()->GetAssetFilepath());
 
 #ifdef GPROF
     Path profileOutFile =
@@ -201,9 +201,9 @@ Settings *Application::GetSettings() const
     return m_settings;
 }
 
-Resources *Application::GetResources() const
+Assets *Application::GetAssets() const
 {
-    return m_resources;
+    return m_assets;
 }
 
 SystemUtils *Application::GetSystemUtils() const
@@ -271,7 +271,7 @@ Settings *Application::CreateSettings() const
     return new Settings();
 }
 
-Resources *Application::CreateResources() const
+Assets *Application::CreateAssets() const
 {
-    return new Resources();
+    return new Assets();
 }

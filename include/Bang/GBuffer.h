@@ -6,7 +6,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GL.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -71,16 +71,16 @@ public:
 private:
     bool m_hdr = false;
 
-    RH<Texture2D> m_colorTexture0;
-    RH<Texture2D> m_colorTexture1;
+    AH<Texture2D> m_colorTexture0;
+    AH<Texture2D> m_colorTexture1;
     Texture2D *p_drawColorTexture = nullptr;
     Texture2D *p_readColorTexture = nullptr;
 
-    RH<Texture2D> m_sceneDepthStencilTexture;
-    RH<Texture2D> m_canvasDepthStencilTexture;
-    RH<Texture2D> m_overlayDepthStencilTexture;
-    RH<Texture2D> p_currentDepthStencilTexture;
-    std::stack<RH<Texture2D>> m_depthStencilTexturesStack;
+    AH<Texture2D> m_sceneDepthStencilTexture;
+    AH<Texture2D> m_canvasDepthStencilTexture;
+    AH<Texture2D> m_overlayDepthStencilTexture;
+    AH<Texture2D> p_currentDepthStencilTexture;
+    std::stack<AH<Texture2D>> m_depthStencilTexturesStack;
 
     void RenderViewportPlane();
     void PingPongColorBuffers();

@@ -19,8 +19,8 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Sphere.h"
@@ -39,13 +39,13 @@ PointLight::PointLight() : Light()
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
         GL::Attachment::DEPTH, GL::ColorFormat::DEPTH16);
 
-    m_blurredShadowMapTexCM = Resources::Create<TextureCubeMap>();
+    m_blurredShadowMapTexCM = Assets::Create<TextureCubeMap>();
     m_blurredShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurredShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
     m_blurredShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredShadowMapTexCM.Get()->CreateEmpty(1);
 
-    m_blurAuxiliarShadowMapTexCM = Resources::Create<TextureCubeMap>();
+    m_blurAuxiliarShadowMapTexCM = Assets::Create<TextureCubeMap>();
     m_blurAuxiliarShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
     m_blurAuxiliarShadowMapTexCM.Get()->SetWrapMode(
         GL::WrapMode::CLAMP_TO_EDGE);

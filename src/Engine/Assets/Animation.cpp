@@ -42,7 +42,7 @@ void Animation::AddPositionKeyFrame(
         m_boneNameToPositionKeyFrames.Add(boneName, {{}});
     }
     m_boneNameToPositionKeyFrames.Get(boneName).PushBack(keyFrame);
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 void Animation::AddRotationKeyFrame(
@@ -54,7 +54,7 @@ void Animation::AddRotationKeyFrame(
         m_boneNameToRotationKeyFrames.Add(boneName, {{}});
     }
     m_boneNameToRotationKeyFrames.Get(boneName).PushBack(keyFrame);
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 void Animation::AddScaleKeyFrame(const String &boneName,
@@ -65,7 +65,7 @@ void Animation::AddScaleKeyFrame(const String &boneName,
         m_boneNameToScaleKeyFrames.Add(boneName, {{}});
     }
     m_boneNameToScaleKeyFrames.Get(boneName).PushBack(keyFrame);
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 void Animation::SetDurationInFrames(float durationInFrames)
@@ -73,7 +73,7 @@ void Animation::SetDurationInFrames(float durationInFrames)
     if (durationInFrames != GetDurationInFrames())
     {
         m_durationInFrames = durationInFrames;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -82,7 +82,7 @@ void Animation::SetFramesPerSecond(float framesPerSecond)
     if (framesPerSecond != GetFramesPerSecond())
     {
         m_framesPerSecond = framesPerSecond;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -91,7 +91,7 @@ void Animation::SetWrapMode(AnimationWrapMode wrapMode)
     if (wrapMode != GetWrapMode())
     {
         m_wrapMode = wrapMode;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -100,7 +100,7 @@ void Animation::SetSpeed(float speed)
     if (speed != GetSpeed())
     {
         m_speed = speed;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -232,7 +232,7 @@ void Animation::Import(const Path &animationFilepath)
 
 void Animation::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 
     if (metaNode.Contains("WrapMode"))
     {
@@ -247,7 +247,7 @@ void Animation::ImportMeta(const MetaNode &metaNode)
 
 void Animation::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     metaNode->Set("Speed", SCAST<float>(GetSpeed()));
     metaNode->Set("WrapMode", SCAST<int>(GetWrapMode()));

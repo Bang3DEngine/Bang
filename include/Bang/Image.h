@@ -3,9 +3,9 @@
 
 #include "Bang/Array.h"
 #include "Bang/AspectRatioMode.h"
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
-#include "Bang/Resource.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -18,9 +18,9 @@ enum class ImageResizeMode
     LINEAR
 };
 
-class Image : public Resource
+class Image : public Asset
 {
-    RESOURCE(Image)
+    ASSET(Image)
 
 public:
     Image();
@@ -90,7 +90,7 @@ public:
                               int height,
                               const Array<Byte> &rgbaByteData);
 
-    // Resource
+    // Asset
     void Import(const Path &imageFilepath) override;
 
 private:

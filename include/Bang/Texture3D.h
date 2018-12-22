@@ -7,7 +7,7 @@ namespace Bang
 {
 class Texture3D : public Texture
 {
-    RESOURCE(Texture3D)
+    ASSET(Texture3D)
 
 public:
     Texture3D();
@@ -35,7 +35,7 @@ public:
     // IReflectable
     void Reflect() override;
 
-    // Resource
+    // Asset
     virtual void Import(const Path &volumeTextureFilepath) override;
 
 private:

@@ -25,9 +25,9 @@ bool GUID::IsEmpty() const
     return *this == Empty();
 }
 
-void GUID::SetEmbeddedResourceGUID(const GUIDType &guid)
+void GUID::SetEmbeddedAssetGUID(const GUIDType &guid)
 {
-    m_embeddedResourceGUID = guid;
+    m_embeddedAssetGUID = guid;
 }
 
 GUID GUID::GetRandomGUID()
@@ -35,7 +35,7 @@ GUID GUID::GetRandomGUID()
     GUID guid;
     guid.m_timeGUID = Time::GetNow().GetNanos();
     guid.m_randGUID = Random::GetRange<GUIDType>(1, Math::Max<GUIDType>());
-    guid.m_embeddedResourceGUID = GUID::EmptyGUID();
+    guid.m_embeddedAssetGUID = GUID::EmptyGUID();
     return guid;
 }
 
@@ -47,22 +47,22 @@ const GUID::GUIDType &GUID::GetRandGUID() const
 {
     return m_randGUID;
 }
-const GUID::GUIDType &GUID::GetEmbeddedResourceGUID() const
+const GUID::GUIDType &GUID::GetEmbeddedAssetGUID() const
 {
-    return m_embeddedResourceGUID;
+    return m_embeddedAssetGUID;
 }
 
-GUID GUID::WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const
+GUID GUID::WithEmbeddedAssetGUID(GUID::GUIDType embeddedFileGUID) const
 {
     GUID guid = *this;
-    guid.SetEmbeddedResourceGUID(embeddedFileGUID);
+    guid.SetEmbeddedAssetGUID(embeddedFileGUID);
     return guid;
 }
 
-GUID GUID::WithoutEmbeddedResourceGUID() const
+GUID GUID::WithoutEmbeddedAssetGUID() const
 {
     GUID guid = *this;
-    guid.SetEmbeddedResourceGUID(GUID::EmptyGUID());
+    guid.SetEmbeddedAssetGUID(GUID::EmptyGUID());
     return guid;
 }
 
@@ -80,7 +80,7 @@ std::istream &GUID::operator>>(std::istream &is)
     is >> std::ws;
     if (is.peek() != EOF && std::isdigit(is.peek()))
     {
-        is >> m_embeddedResourceGUID;
+        is >> m_embeddedAssetGUID;
     }
     return is;
 }
@@ -89,7 +89,7 @@ bool GUID::operator==(const GUID &rhs) const
 {
     return GetTimeGUID() == rhs.GetTimeGUID() &&
            GetRandGUID() == rhs.GetRandGUID() &&
-           GetEmbeddedResourceGUID() == rhs.GetEmbeddedResourceGUID();
+           GetEmbeddedAssetGUID() == rhs.GetEmbeddedAssetGUID();
 }
 
 bool GUID::operator!=(const GUID &rhs) const
@@ -119,7 +119,7 @@ bool GUID::operator<(const GUID &rhs) const
         }
         else
         {
-            return (GetEmbeddedResourceGUID() < rhs.GetEmbeddedResourceGUID());
+            return (GetEmbeddedAssetGUID() < rhs.GetEmbeddedAssetGUID());
         }
     }
 }

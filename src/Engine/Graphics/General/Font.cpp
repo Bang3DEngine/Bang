@@ -12,15 +12,15 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Debug.h"
 #include "Bang/FontSheetCreator.h"
 #include "Bang/GL.h"
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Vector2.h"
@@ -96,12 +96,12 @@ void Font::Import(const Path &ttfFilepath)
 
 void Font::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 }
 
 void Font::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 }
 
 float Font::GetScaleProportion(int fontSize)
@@ -142,7 +142,7 @@ Texture2D *Font::GetFontAtlas(int fontSize) const
     {
         // Create atlas
         Array<AARecti> charRects;
-        RH<Texture2D> atlasTex = Resources::Create<Texture2D>();
+        AH<Texture2D> atlasTex = Assets::Create<Texture2D>();
         String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                        "0123456789.,-;:_?!+*#<>[]{}@$%&=/\\()|\"'";
 

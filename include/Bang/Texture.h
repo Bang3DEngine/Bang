@@ -6,14 +6,14 @@
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/Image.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class Texture : public GLObject, public Resource
+class Texture : public GLObject, public Asset
 {
-    RESOURCE_ABSTRACT(Texture)
+    ASSET_ABSTRACT(Texture)
 
 public:
     Texture();

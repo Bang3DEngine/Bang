@@ -9,25 +9,25 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/ImageIO.h"
-#include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 
 namespace Bang
 {
 class Image;
-class IEventsResource;
+class IEventsAsset;
 class MetaNode;
 class Path;
-class Resource;
+class Asset;
 class Texture2D;
 
-class TextureCubeMap : public Texture, public EventListener<IEventsResource>
+class TextureCubeMap : public Texture, public EventListener<IEventsAsset>
 {
-    RESOURCE(TextureCubeMap)
+    ASSET(TextureCubeMap)
 
 public:
     TextureCubeMap();
@@ -43,13 +43,13 @@ public:
     void SetSideTexture(GL::CubeMapDir cubeMapDir, Texture2D *tex);
 
     uint GetSize() const;
-    RH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
+    AH<Texture2D> GetSideTexture(GL::CubeMapDir cubeMapDir) const;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-    // Resource
+    // Asset
     virtual void Import(const Path &textureCubeMapFilepath) override;
     void Import(const Image &topImage,
                 const Image &botImage,
@@ -61,11 +61,11 @@ public:
     // GLObject
     GL::BindTarget GetGLBindTarget() const override;
 
-    // IResourceListener
-    void OnImported(Resource *res) override;
+    // IAssetListener
+    void OnImported(Asset *res) override;
 
 private:
-    std::array<RH<Texture2D>, 6> m_sideTextures;
+    std::array<AH<Texture2D>, 6> m_sideTextures;
     uint m_size = 0;
 
     void FillCubeMapDir(GL::CubeMapDir dir, const Image *img);

@@ -22,8 +22,8 @@
 #include "Bang/Rect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -595,7 +595,7 @@ void RenderFactory::RenderPoint(const Vector3 &point,
 {
     if (RenderFactory *rf = RenderFactory::GetInstance())
     {
-        RH<Mesh> rhm = Resources::Create<Mesh>();
+        AH<Mesh> rhm = Assets::Create<Mesh>();
         Mesh *m = rhm.Get();
         m->SetPositionsPool({point});
         m->UpdateVAOs();
@@ -617,7 +617,7 @@ void RenderFactory::RenderPointNDC(const Vector2 &pointNDC,
         GL::Push(GL::Pushable::VIEWPROJ_MODE);
 
         Vector2i pointVP(GL::FromViewportPointNDCToViewportPoint(pointNDC));
-        RH<Mesh> rhm = Resources::Create<Mesh>();
+        AH<Mesh> rhm = Assets::Create<Mesh>();
         Mesh *m = rhm.Get();
         m->SetPositionsPool({Vector3(pointVP, 0)});
         m->UpdateVAOs();

@@ -7,7 +7,7 @@
 #include "Bang/Material.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -208,7 +208,7 @@ void DecalRenderer::Reflect()
         ->GetHintsPtr()
         ->SetIsShown(false);
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         DecalRenderer,
         "Texture",
         SetDecalTexture,

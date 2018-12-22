@@ -13,8 +13,8 @@
 #include "Bang/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/Ray.h"
-#include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Sphere.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
@@ -30,9 +30,9 @@ class Path;
 class VAO;
 class VBO;
 
-class Mesh : public Resource
+class Mesh : public Asset
 {
-    RESOURCE(Mesh)
+    ASSET(Mesh)
 
 public:
     using TriangleId = uint;
@@ -67,8 +67,8 @@ public:
 
     void CalculateLODs();
     int GetNumLODs() const;
-    RH<Mesh> GetLODMesh(int lod) const;
-    const Array<RH<Mesh>> GetLODMeshes() const;
+    AH<Mesh> GetLODMesh(int lod) const;
+    const Array<AH<Mesh>> GetLODMeshes() const;
     String GetBoneName(uint boneId) const;
     uint GetBoneId(const String &boneName) const;
 
@@ -165,7 +165,7 @@ public:
     // ICloneable
     virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
-    // Resource
+    // Asset
     void Import(const Path &meshFilepath) override;
 
     // Serializable
@@ -174,14 +174,14 @@ public:
 
 private:
     bool m_areLodsValid = false;
-    Array<RH<Mesh>> m_lodMeshes;
+    Array<AH<Mesh>> m_lodMeshes;
     Array<Vector3> m_positionsPool;
     Array<Vector3> m_normalsPool;
     Array<Vector2> m_uvsPool;
     Array<Vector3> m_tangentsPool;
     Array<VertexId> m_triangleVertexIds;
 
-    RH<Animation> m_animations;
+    AH<Animation> m_animations;
     Map<String, Bone> m_bonesPool;
     Map<uint, String> m_idToBone;
     Map<String, uint> m_bonesIds;

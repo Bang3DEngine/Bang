@@ -3,8 +3,8 @@
 #include "Bang/GL.h"
 #include "Bang/Map.tcc"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Texture2D.h"
 #include "Bang/Texture3D.h"
 #include "Bang/TextureCubeMap.h"
@@ -129,7 +129,7 @@ Texture3D *TextureFactory::GetWhiteTexture3D()
     TextureFactory *tf = TextureFactory::GetInstance();
     if (!tf->m_whiteTexture3D)
     {
-        tf->m_whiteTexture3D = Resources::Create<Texture3D>();
+        tf->m_whiteTexture3D = Assets::Create<Texture3D>();
         tf->m_whiteTexture3D.Get()->CreateEmpty(Vector3i(1));
     }
     return tf->m_whiteTexture3D.Get();
@@ -193,22 +193,22 @@ Texture2D *TextureFactory::GetTexture2D(const Path &path)
     }
     else
     {
-        bool initialized = (Resources::GetCached<Texture2D>(path) != nullptr);
-        RH<Texture2D> texRH = Resources::Load<Texture2D>(path);
-        if (texRH && !initialized)
+        bool initialized = (Assets::GetCached<Texture2D>(path) != nullptr);
+        AH<Texture2D> texAH = Assets::Load<Texture2D>(path);
+        if (texAH && !initialized)
         {
             GL::Push(GL::BindTarget::TEXTURE_2D);
 
-            texRH.Get()->Bind();
-            texRH.Get()->GenerateMipMaps();
-            texRH.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
-            texRH.Get()->SetWrapMode(GL::WrapMode::REPEAT);
+            texAH.Get()->Bind();
+            texAH.Get()->GenerateMipMaps();
+            texAH.Get()->SetFilterMode(GL::FilterMode::TRILINEAR_LL);
+            texAH.Get()->SetWrapMode(GL::WrapMode::REPEAT);
 
             GL::Pop(GL::BindTarget::TEXTURE_2D);
         }
 
-        tex = texRH.Get();
-        tf->m_texture2DCache.Add(path, texRH);
+        tex = texAH.Get();
+        tf->m_texture2DCache.Add(path, texAH);
     }
 
     return tex;
@@ -237,9 +237,9 @@ TextureCubeMap *TextureFactory::GetTextureCubeMap(const Path &path)
         }
         else
         {
-            RH<TextureCubeMap> texCMRH = Resources::Load<TextureCubeMap>(path);
-            texCM = texCMRH.Get();
-            tf->m_textureCubeMapsCache.Add(path, texCMRH);
+            AH<TextureCubeMap> texCMAH = Assets::Load<TextureCubeMap>(path);
+            texCM = texCMAH.Get();
+            tf->m_textureCubeMapsCache.Add(path, texCMAH);
         }
     }
     return texCM;
@@ -247,5 +247,5 @@ TextureCubeMap *TextureFactory::GetTextureCubeMap(const Path &path)
 
 TextureFactory *TextureFactory::GetInstance()
 {
-    return Resources::GetInstance()->GetTextureFactory();
+    return Assets::GetInstance()->GetTextureFactory();
 }

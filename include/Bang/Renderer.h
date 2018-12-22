@@ -14,10 +14,10 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
 #include "Bang/IEventsRendererChanged.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -25,11 +25,11 @@ namespace Bang
 class Camera;
 class ICloneable;
 class Material;
-class Resource;
+class Asset;
 class ShaderProgram;
 
 class Renderer : public Component,
-                 public EventListener<IEventsResource>,
+                 public EventListener<IEventsAsset>,
                  public EventEmitter<IEventsRendererChanged>
 {
     COMPONENT(Renderer)
@@ -65,8 +65,8 @@ public:
     GL::Primitive GetRenderPrimitive() const;
     bool GetUseReflectionProbes() const;
 
-    // IEventsResourceChanged
-    void OnResourceChanged(Resource *changedResource) override;
+    // IEventsAssetChanged
+    void OnAssetChanged(Asset *changedAsset) override;
 
     // Renderer
     virtual AABox GetAABBox() const;
@@ -93,8 +93,8 @@ private:
     GL::Primitive m_renderPrimitive = GL::Primitive::TRIANGLES;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::WORLD;
 
-    mutable RH<Material> p_material;
-    RH<Material> p_sharedMaterial;
+    mutable AH<Material> p_material;
+    AH<Material> p_sharedMaterial;
 
     friend class GEngine;
 };

@@ -10,7 +10,7 @@
 #include "Bang/Map.tcc"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Mesh.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 struct aiMaterial;
@@ -44,13 +44,13 @@ struct ModelIONode
 
 struct ModelIOScene
 {
-    Array<RH<Mesh>> meshes;
+    Array<AH<Mesh>> meshes;
     Array<String> meshesNames;
 
-    Array<RH<Material>> materials;
+    Array<AH<Material>> materials;
     Array<String> materialsNames;
 
-    Array<RH<Animation>> animations;
+    Array<AH<Animation>> animations;
     Array<String> animationsNames;
 
     Map<String, Mesh::Bone> allBones;
@@ -94,12 +94,12 @@ private:
 
     static void ImportEmbeddedMesh(aiMesh *aMesh,
                                    Model *model,
-                                   RH<Mesh> *outMesh,
+                                   AH<Mesh> *outMesh,
                                    String *outMeshName);
     static void ImportEmbeddedMaterial(aiMaterial *aMaterial,
                                        const Path &modelDirectory,
                                        Model *model,
-                                       RH<Material> *outMaterial,
+                                       AH<Material> *outMaterial,
                                        String *outMaterialName);
 };
 }  // namespace Bang

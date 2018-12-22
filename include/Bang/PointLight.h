@@ -6,7 +6,7 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
 
@@ -41,8 +41,8 @@ protected:
     float m_range = 1.0f;
     float m_shadowNearPlane = 0.1f;
     Framebuffer *m_shadowMapFramebuffer = nullptr;
-    RH<TextureCubeMap> m_blurAuxiliarShadowMapTexCM;
-    RH<TextureCubeMap> m_blurredShadowMapTexCM;
+    AH<TextureCubeMap> m_blurAuxiliarShadowMapTexCM;
+    AH<TextureCubeMap> m_blurredShadowMapTexCM;
 
     PointLight();
     virtual ~PointLight() override;

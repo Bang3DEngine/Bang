@@ -25,7 +25,6 @@ public:
     static const Path &GetEngineDir();
     static const Path &GetEngineAssetsDir();
     static Path GetEngineBuildDir();
-    static Path GetEngineResourcesDir();
     static Path GetEngineLibrariesDir();
     static const String &GetBuildType();
     static bool IsEnginePath(const Path &path);

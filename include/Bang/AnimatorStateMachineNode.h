@@ -15,7 +15,7 @@
 #include "Bang/IEventsAnimatorStateMachineNode.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 
@@ -73,7 +73,7 @@ public:
 private:
     String m_name = "Node";
     float m_speed = 1.0f;
-    RH<Animation> p_animation;
+    AH<Animation> p_animation;
     AnimatorStateMachineLayer *p_layer = nullptr;
     Array<AnimatorStateMachineTransition *> m_transitions;
 

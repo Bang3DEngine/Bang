@@ -6,7 +6,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Path.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -63,16 +63,16 @@ protected:
     static TextureFactory *GetInstance();
 
 private:
-    RH<Texture3D> m_whiteTexture3D;
-    Map<Path, RH<Texture2D>> m_texture2DCache;
-    Map<Path, RH<TextureCubeMap>> m_textureCubeMapsCache;
+    AH<Texture3D> m_whiteTexture3D;
+    Map<Path, AH<Texture2D>> m_texture2DCache;
+    Map<Path, AH<TextureCubeMap>> m_textureCubeMapsCache;
 
     // Cache most used paths
     Path m_whiteTexturePath = Path::Empty();
     Path m_whiteTextureCMPath = Path::Empty();
     Path m_brdfLutTexturePath = Path::Empty();
 
-    friend class Resources;
+    friend class Assets;
 };
 }  // namespace Bang
 

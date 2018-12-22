@@ -12,8 +12,8 @@
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 #include "PxRigidStatic.h"
 #include "PxShape.h"
@@ -64,7 +64,7 @@ Mesh *MeshCollider::GetMesh() const
 
 void MeshCollider::Reflect()
 {
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         MeshCollider,
         "Mesh",
         SetMesh,

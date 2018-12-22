@@ -4,16 +4,16 @@
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
 class Path;
 
-class Shader : public GLObject, public Resource
+class Shader : public GLObject, public Asset
 {
-    RESOURCE(Shader)
+    ASSET(Shader)
 
 public:
     Shader();
@@ -27,7 +27,7 @@ public:
     GL::ShaderType GetType() const;
     GL::BindTarget GetGLBindTarget() const override;
 
-    // Resource
+    // Asset
     virtual void Import(const Path &shaderFilepath) override;
 
 private:

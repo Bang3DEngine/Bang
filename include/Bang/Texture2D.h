@@ -6,7 +6,7 @@
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 
@@ -17,7 +17,7 @@ class Path;
 
 class Texture2D : public Texture
 {
-    RESOURCE(Texture2D)
+    ASSET(Texture2D)
 
 public:
     Texture2D(const Texture2D &tex) = delete;
@@ -52,7 +52,7 @@ public:
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
-    // Resource
+    // Asset
     virtual void Import(const Path &imageFilepath) override;
 
 protected:

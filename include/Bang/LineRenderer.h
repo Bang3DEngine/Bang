@@ -6,7 +6,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -44,7 +44,7 @@ protected:
     virtual void OnRender() override;
 
 private:
-    RH<Mesh> p_mesh;
+    AH<Mesh> p_mesh;
     Array<Vector3> m_points;
 };
 }

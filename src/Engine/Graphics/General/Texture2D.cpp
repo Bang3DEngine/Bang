@@ -33,10 +33,10 @@ void Texture2D::OnFormatChanged()
 
     if (GetWidth() >= 1 && GetHeight() >= 1)
     {
-        if (GetResourceFilepath().IsFile())
+        if (GetAssetFilepath().IsFile())
         {
             Image img;
-            ImageIO::Import(GetResourceFilepath(), &img);
+            ImageIO::Import(GetAssetFilepath(), &img);
             Import(img);
         }
     }
@@ -94,7 +94,7 @@ void Texture2D::Fill(const Byte *newData,
 
     GL::Pop(GetGLBindTarget());
 
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 void Texture2D::SetAlphaCutoff(float alphaCutoff)
@@ -102,7 +102,7 @@ void Texture2D::SetAlphaCutoff(float alphaCutoff)
     if (alphaCutoff != GetAlphaCutoff())
     {
         m_alphaCutoff = alphaCutoff;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -146,7 +146,7 @@ void Texture2D::SetWidth(int width)
     if (width != GetWidth())
     {
         m_size.x = width;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -155,7 +155,7 @@ void Texture2D::SetHeight(int height)
     if (height != GetHeight())
     {
         m_size.y = height;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -197,7 +197,7 @@ Image Texture2D::ToImage() const
 
 void Texture2D::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 
     if (metaNode.Contains("Format"))
     {
@@ -233,7 +233,7 @@ void Texture2D::ImportMeta(const MetaNode &metaNode)
 
 void Texture2D::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     metaNode->Set("Format", GetFormat());
     metaNode->Set("FilterMode", GetFilterMode());

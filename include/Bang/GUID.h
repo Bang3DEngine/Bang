@@ -25,10 +25,10 @@ public:
 
     const GUIDType &GetTimeGUID() const;
     const GUIDType &GetRandGUID() const;
-    const GUIDType &GetEmbeddedResourceGUID() const;
+    const GUIDType &GetEmbeddedAssetGUID() const;
 
-    GUID WithEmbeddedResourceGUID(GUID::GUIDType embeddedFileGUID) const;
-    GUID WithoutEmbeddedResourceGUID() const;
+    GUID WithEmbeddedAssetGUID(GUID::GUIDType embeddedFileGUID) const;
+    GUID WithoutEmbeddedAssetGUID() const;
 
     std::istream &operator>>(std::istream &is);
     bool operator==(const GUID &rhs) const;
@@ -38,9 +38,9 @@ public:
 private:
     GUIDType m_timeGUID = GUID::EmptyGUID();
     GUIDType m_randGUID = GUID::EmptyGUID();
-    GUIDType m_embeddedResourceGUID = GUID::EmptyGUID();
+    GUIDType m_embeddedAssetGUID = GUID::EmptyGUID();
 
-    void SetEmbeddedResourceGUID(const GUIDType &guid);
+    void SetEmbeddedAssetGUID(const GUIDType &guid);
 
     friend class GUIDManager;
 };
@@ -57,7 +57,7 @@ struct hash<Bang::GUID>
         return std::hash<Bang::GUID::GUIDType>()(guid.GetTimeGUID()) ^
                std::hash<Bang::GUID::GUIDType>()(guid.GetRandGUID()) ^
                std::hash<Bang::GUID::GUIDType>()(
-                   guid.GetEmbeddedResourceGUID());
+                   guid.GetEmbeddedAssetGUID());
     }
 };
 }

@@ -12,8 +12,8 @@
 #include "Bang/Quad.h"
 #include "Bang/Rect.h"
 #include "Bang/RenderFactory.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Triangle.h"
@@ -23,7 +23,7 @@ using namespace Bang;
 
 DebugRenderer::DebugRenderer()
 {
-    m_mesh = Resources::Create<Mesh>();
+    m_mesh = Assets::Create<Mesh>();
 }
 
 DebugRenderer::~DebugRenderer()

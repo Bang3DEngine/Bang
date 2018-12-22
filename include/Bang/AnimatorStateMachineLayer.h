@@ -10,7 +10,7 @@
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 
@@ -64,9 +64,9 @@ public:
 private:
     bool m_enabled = true;
     String m_layerName = "";
-    RH<AnimatorStateMachine> p_stateMachine;
+    AH<AnimatorStateMachine> p_stateMachine;
     uint m_entryNodeIdx = SCAST<uint>(-1);
-    RH<AnimatorLayerMask> m_layerMask;
+    AH<AnimatorLayerMask> m_layerMask;
     Array<AnimatorStateMachineNode *> m_nodes;
 
     void SetStateMachine(AnimatorStateMachine *animatorSM);

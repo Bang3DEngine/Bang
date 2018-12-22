@@ -14,7 +14,7 @@
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/RectTransform.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Transform.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UILayoutElement.h"

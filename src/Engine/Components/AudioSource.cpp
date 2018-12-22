@@ -14,8 +14,8 @@
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 
 using namespace Bang;
@@ -143,7 +143,7 @@ void AudioSource::Reflect()
         },
         BANG_REFLECT_HINT_BLOCKED((GetAudioClip() == nullptr)));
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         AudioSource,
         "AudioClip",
         SetAudioClip,

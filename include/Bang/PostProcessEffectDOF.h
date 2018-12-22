@@ -29,9 +29,9 @@ public:
     void Reflect() override;
 
 private:
-    RH<ShaderProgram> m_dofSP;
-    RH<Texture2D> m_foregroundTexture;
-    RH<Texture2D> m_auxiliarTexture;
+    AH<ShaderProgram> m_dofSP;
+    AH<Texture2D> m_foregroundTexture;
+    AH<Texture2D> m_auxiliarTexture;
 
     float m_fadeRange = 0.125f;
     float m_foregroundThreshold = 0.75f;

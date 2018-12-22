@@ -29,7 +29,7 @@
 namespace Bang
 {
 class ICloneable;
-class Resource;
+class Asset;
 }  // namespace Bang
 
 using namespace Bang;
@@ -205,7 +205,7 @@ Model *SkinnedMeshRenderer::GetActiveModel() const
 {
     if (Mesh *mesh = GetActiveMesh())
     {
-        if (Resource *parentRes = mesh->GetParentResource())
+        if (Asset *parentRes = mesh->GetParentAsset())
         {
             return DCAST<Model *>(parentRes);
         }

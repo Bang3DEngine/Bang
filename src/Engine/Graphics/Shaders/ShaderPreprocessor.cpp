@@ -5,7 +5,7 @@
 #include "Bang/CodePreprocessor.h"
 #include "Bang/Path.h"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/String.h"
 
 using namespace Bang;
@@ -19,9 +19,9 @@ void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
     Array<Path> includeDirs;
     includeDirs.PushBack(engShadersDir);
     includeDirs.PushBack(engShadersDir.Append("Include"));
-    if (Resources::GetInstance())
+    if (Assets::GetInstance())
     {
-        Array<Path> lookUpPaths = Resources::GetInstance()->GetLookUpPaths();
+        Array<Path> lookUpPaths = Assets::GetInstance()->GetLookUpPaths();
         for (const Path &p : lookUpPaths)
         {
             includeDirs.PushBack(p);

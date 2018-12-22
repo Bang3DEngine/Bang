@@ -11,7 +11,7 @@
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
@@ -38,7 +38,7 @@ VolumeRenderer::VolumeRenderer()
         Paths::GetEngineAssetsDir().Append("Shaders").Append(
             "VolumeRendererDeferred.frag")));
 
-    m_volumeRenderingMaterial = Resources::Create<Material>();
+    m_volumeRenderingMaterial = Assets::Create<Material>();
     m_volumeRenderingMaterial.Get()->GetNeededUniforms().SetOn(
         NeededUniformFlag::ALL);
     GetVolumeRenderMaterial()->SetShaderProgram(p_deferredShaderProgram.Get());
@@ -74,7 +74,7 @@ void VolumeRenderer::SetModelPath(const Path &modelPath)
     if (modelPath != GetModelPath())
     {
         m_modelPath = modelPath;
-        RH<Texture3D> tex3D = Resources::Load<Texture3D>(modelPath);
+        AH<Texture3D> tex3D = Assets::Load<Texture3D>(modelPath);
         SetVolumeTexture(tex3D.Get());
     }
 }
@@ -309,7 +309,7 @@ void VolumeRenderer::Reflect()
         ->GetHintsPtr()
         ->Update(BANG_REFLECT_HINT_SHOWN(false));
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         VolumeRenderer,
         "Volume Material",
         SetVolumePropertiesMaterial,
@@ -360,7 +360,7 @@ void VolumeRenderer::Reflect()
         BANG_REFLECT_HINT_MINMAX_VALUE(0.01f, 0.99f) +
             BANG_REFLECT_HINT_STEP_VALUE(0.01f));
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         VolumeRenderer,
         "Transfer function",
         SetTransferFunctionTexture,

@@ -3,6 +3,8 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Font.h"
@@ -19,8 +21,6 @@
 #include "Bang/Paths.h"
 #include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/TextFormatter.h"
 #include "Bang/Vector2.h"
 
@@ -36,10 +36,10 @@ UITextRenderer::UITextRenderer() : UIRenderer()
 {
     SET_INSTANCE_CLASS_ID(UITextRenderer)
 
-    p_mesh = Resources::Create<Mesh>();
+    p_mesh = Assets::Create<Mesh>();
     SetMaterial(MaterialFactory::GetUIText().Get());
 
-    RH<Font> font = Resources::Load<Font>(
+    AH<Font> font = Assets::Load<Font>(
         Paths::GetEngineAssetsDir().Append("Fonts").Append("Ubuntu.ttf"));
     SetFont(font.Get());
     SetContent("");
@@ -401,7 +401,7 @@ void UITextRenderer::ImportMeta(const MetaNode &meta)
 
     if (meta.Contains("Font"))
     {
-        SetFont(Resources::Load<Font>(meta.Get<GUID>("Font")).Get());
+        SetFont(Assets::Load<Font>(meta.Get<GUID>("Font")).Get());
     }
 
     if (meta.Contains("Content"))

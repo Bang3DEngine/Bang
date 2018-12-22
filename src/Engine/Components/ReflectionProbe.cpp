@@ -20,8 +20,8 @@
 #include "Bang/RenderFlags.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"
@@ -411,7 +411,7 @@ void ReflectionProbe::Reflect()
                             "Clear color",
                             SetCamerasClearColor,
                             GetCamerasClearColor);
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         ReflectionProbe,
         "Skybox texture",
         SetCamerasSkyBoxTexture,
@@ -506,7 +506,7 @@ void ReflectionProbe::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("CamerasSkyBoxTexture"))
     {
-        SetCamerasSkyBoxTexture(Resources::Load<TextureCubeMap>(
+        SetCamerasSkyBoxTexture(Assets::Load<TextureCubeMap>(
                                     metaNode.Get<GUID>("CamerasSkyBoxTexture"))
                                     .Get());
     }

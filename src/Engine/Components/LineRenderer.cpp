@@ -10,8 +10,8 @@
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 
 using namespace Bang;
@@ -20,7 +20,7 @@ LineRenderer::LineRenderer()
 {
     SET_INSTANCE_CLASS_ID(LineRenderer);
 
-    p_mesh = Resources::Create<Mesh>();
+    p_mesh = Assets::Create<Mesh>();
 
     SetCastsShadows(false);
     SetReceivesShadows(false);

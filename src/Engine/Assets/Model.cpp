@@ -18,9 +18,9 @@
 #include "Bang/Mesh.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/ModelIO.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/SkinnedMeshRenderer.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
@@ -89,8 +89,8 @@ GameObject *CreateGameObjectFromModelNodeTree(
 
     if (addAnimator && modelScene.animations.Size() >= 1)
     {
-        RH<AnimatorStateMachine> animatorSM =
-            Resources::Create<AnimatorStateMachine>();
+        AH<AnimatorStateMachine> animatorSM =
+            Assets::Create<AnimatorStateMachine>();
 
         Animator *animator = gameObject->AddComponent<Animator>(1);
         animator->SetStateMachine(animatorSM.Get());
@@ -127,17 +127,17 @@ const String &Model::GetRootGameObjectName() const
     return m_modelScene.rootGameObjectName;
 }
 
-const Array<RH<Mesh>> &Model::GetMeshes() const
+const Array<AH<Mesh>> &Model::GetMeshes() const
 {
     return m_modelScene.meshes;
 }
 
-const Array<RH<Material>> &Model::GetMaterials() const
+const Array<AH<Material>> &Model::GetMaterials() const
 {
     return m_modelScene.materials;
 }
 
-const Array<RH<Animation>> &Model::GetAnimations() const
+const Array<AH<Animation>> &Model::GetAnimations() const
 {
     return m_modelScene.animations;
 }
@@ -165,7 +165,7 @@ const Map<String, Mesh::Bone> &Model::GetAllBones() const
 void Model::Import(const Path &modelFilepath)
 {
     m_modelScene.Clear();
-    ClearEmbeddedResources();
+    ClearEmbeddedAssets();
     if (!ModelIO::ImportModel(modelFilepath, this, &m_modelScene))
     {
         Debug_Error("Can not load model " << modelFilepath << ". "
@@ -175,10 +175,10 @@ void Model::Import(const Path &modelFilepath)
 
 void Model::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 }
 
 void Model::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 }

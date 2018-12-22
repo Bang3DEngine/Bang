@@ -3,12 +3,12 @@
 #include "Bang/Material.h"
 #include "Bang/Paths.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 
 using namespace Bang;
 
-RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
+AH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
 {
     switch (renderPass)
     {
@@ -23,47 +23,47 @@ RH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     return MaterialFactory::GetDefault(RenderPass::SCENE_OPAQUE);
 }
 
-RH<Material> MaterialFactory::GetDefaultUnLighted()
+AH<Material> MaterialFactory::GetDefaultUnLighted()
 {
     return MaterialFactory::LoadMaterial("DefaultUnLighted.bmat");
 }
-RH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
+AH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
     return MaterialFactory::LoadMaterial("GizmosUnLightedOverlay.bmat");
 }
 
-RH<Material> MaterialFactory::GetParticlesAdditive()
+AH<Material> MaterialFactory::GetParticlesAdditive()
 {
     return MaterialFactory::LoadMaterial("ParticlesAdditive.bmat");
 }
-RH<Material> MaterialFactory::GetParticlesMesh()
+AH<Material> MaterialFactory::GetParticlesMesh()
 {
     return MaterialFactory::LoadMaterial("ParticlesMesh.bmat");
 }
-RH<Bang::Material> Bang::MaterialFactory::GetWater()
+AH<Bang::Material> Bang::MaterialFactory::GetWater()
 {
     return MaterialFactory::LoadMaterial("Water.bmat");
 }
 
-RH<PhysicsMaterial> MaterialFactory::GetDefaultPhysicsMaterial()
+AH<PhysicsMaterial> MaterialFactory::GetDefaultPhysicsMaterial()
 {
     return MaterialFactory::LoadPhysicsMaterial("Default.bphmat");
 }
-RH<Material> MaterialFactory::GetMissing()
+AH<Material> MaterialFactory::GetMissing()
 {
     return MaterialFactory::LoadMaterial("Missing.bmat");
 }
 
-RH<Material> MaterialFactory::GetUIText()
+AH<Material> MaterialFactory::GetUIText()
 {
     return MaterialFactory::LoadMaterial("UITextRenderer.bmat");
 }
-RH<Material> MaterialFactory::GetUIImage()
+AH<Material> MaterialFactory::GetUIImage()
 {
     return MaterialFactory::LoadMaterial("UIImageRenderer.bmat");
 }
 
-RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePathStr)
+AH<Material> MaterialFactory::LoadMaterial(const String &matEnginePathStr)
 {
     Path matEnginePath = Paths::GetEngineAssetsDir()
                              .Append("Materials")
@@ -72,12 +72,12 @@ RH<Material> MaterialFactory::LoadMaterial(const String &matEnginePathStr)
     if (!mf->m_cacheMaterials.ContainsKey(matEnginePath))
     {
         mf->m_cacheMaterials.Add(matEnginePath,
-                                 Resources::Load<Material>(matEnginePath));
+                                 Assets::Load<Material>(matEnginePath));
     }
     return mf->m_cacheMaterials.Get(matEnginePath);
 }
 
-RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
+AH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
     const String &phMatEnginePathStr)
 {
     Path phMatEnginePath = Paths::GetEngineAssetsDir()
@@ -87,12 +87,12 @@ RH<PhysicsMaterial> MaterialFactory::LoadPhysicsMaterial(
     if (!mf->m_cachePhysicsMaterials.ContainsKey(phMatEnginePath))
     {
         mf->m_cachePhysicsMaterials.Add(
-            phMatEnginePath, Resources::Load<PhysicsMaterial>(phMatEnginePath));
+            phMatEnginePath, Assets::Load<PhysicsMaterial>(phMatEnginePath));
     }
     return mf->m_cachePhysicsMaterials.Get(phMatEnginePath);
 }
 
 MaterialFactory *MaterialFactory::GetActive()
 {
-    return Resources::GetInstance()->GetMaterialFactory();
+    return Assets::GetInstance()->GetMaterialFactory();
 }

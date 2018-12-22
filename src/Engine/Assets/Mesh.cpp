@@ -536,18 +536,18 @@ int Mesh::GetNumLODs() const
     return GetLODMeshes().Size();
 }
 
-RH<Mesh> Mesh::GetLODMesh(int lod) const
+AH<Mesh> Mesh::GetLODMesh(int lod) const
 {
     if (GetLODMeshes().IsEmpty())
     {
-        return RH<Mesh>(const_cast<Mesh *>(this));
+        return AH<Mesh>(const_cast<Mesh *>(this));
     }
 
     const int clampedLODLevel = Math::Clamp(lod, 0, GetNumLODs() - 1);
     return GetLODMeshes()[clampedLODLevel];
 }
 
-const Array<RH<Mesh>> Mesh::GetLODMeshes() const
+const Array<AH<Mesh>> Mesh::GetLODMeshes() const
 {
     return m_lodMeshes;
 }
@@ -1213,10 +1213,10 @@ void Mesh::Import(const Path &meshFilepath)
 
 void Mesh::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 }
 
 void Mesh::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 }

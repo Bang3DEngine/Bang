@@ -6,7 +6,7 @@
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/Quaternion.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Texture2D.h"
 
 namespace Bang
@@ -24,7 +24,7 @@ class RenderFactory
 public:
     struct Parameters
     {
-        RH<Texture2D> texture;
+        AH<Texture2D> texture;
         bool wireframe = false;
         float thickness = 1.0f;
         bool depthMask = true;
@@ -113,11 +113,11 @@ public:
 private:
     GameObject *m_renderGo = nullptr;
 
-    RH<Mesh> m_boxMesh;
-    RH<Mesh> m_planeMesh;
-    RH<Mesh> m_sphereMesh;
-    RH<Texture2D> m_depthOutlineTexture;
-    RH<ShaderProgram> m_outlineShaderProgram;
+    AH<Mesh> m_boxMesh;
+    AH<Mesh> m_planeMesh;
+    AH<Mesh> m_sphereMesh;
+    AH<Texture2D> m_depthOutlineTexture;
+    AH<ShaderProgram> m_outlineShaderProgram;
 
     LineRenderer *m_lineRenderer = nullptr;
     MeshRenderer *m_meshRenderer = nullptr;

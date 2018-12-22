@@ -13,8 +13,8 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 
@@ -63,7 +63,7 @@ void UIImageRenderer::SetImageTexture(const Path &imagePath)
 {
     if (imagePath.IsFile())
     {
-        RH<Texture2D> tex = Resources::Load<Texture2D>(imagePath);
+        AH<Texture2D> tex = Assets::Load<Texture2D>(imagePath);
         SetImageTexture(tex.Get());
     }
     else
@@ -165,8 +165,8 @@ void UIImageRenderer::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("Image"))
     {
-        RH<Texture2D> tex =
-            Resources::Load<Texture2D>(metaNode.Get<GUID>("Image"));
+        AH<Texture2D> tex =
+            Assets::Load<Texture2D>(metaNode.Get<GUID>("Image"));
         SetImageTexture(tex.Get());
     }
 

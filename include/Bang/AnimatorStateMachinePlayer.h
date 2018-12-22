@@ -13,7 +13,7 @@
 #include "Bang/EventListener.h"
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsAnimatorStateMachineNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Time.h"
 
 namespace Bang

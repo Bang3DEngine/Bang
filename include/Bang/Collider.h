@@ -6,7 +6,7 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/PhysicsObject.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 
@@ -76,8 +76,8 @@ private:
     bool m_useInNavMesh = true;
     Vector3 m_center = Vector3::Zero();
 
-    mutable RH<PhysicsMaterial> p_physicsMaterial;
-    RH<PhysicsMaterial> p_sharedPhysicsMaterial;
+    mutable AH<PhysicsMaterial> p_physicsMaterial;
+    AH<PhysicsMaterial> p_sharedPhysicsMaterial;
 
     physx::PxShape *p_pxShape = nullptr;
 

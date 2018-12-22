@@ -18,8 +18,8 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
 #include "Bang/Vector3.h"
@@ -40,7 +40,7 @@ Rope::Rope()
     GetMaterial()->SetLineWidth(3.0f);
     SetCastsShadows(true);
 
-    m_ropeDebugPointsMesh = Resources::Create<Mesh>();
+    m_ropeDebugPointsMesh = Assets::Create<Mesh>();
 
     m_particleParams.physicsStepMode = Particle::PhysicsStepMode::VERLET;
     m_particleParams.gravityMultiplier = 1.0f;

@@ -12,19 +12,19 @@
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
 #include "Bang/IEventsRendererChanged.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 
 namespace Bang
 {
-class Resource;
+class Asset;
 }
 
 using namespace Bang;
@@ -116,11 +116,11 @@ void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
         if (GetSharedMaterial())
         {
             GetSharedMaterial()
-                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
+                ->EventEmitter<IEventsAsset>::UnRegisterListener(this);
         }
         if (p_material.Get())
         {
-            p_material.Get()->EventEmitter<IEventsResource>::UnRegisterListener(
+            p_material.Get()->EventEmitter<IEventsAsset>::UnRegisterListener(
                 this);
         }
 
@@ -130,11 +130,11 @@ void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
         if (GetSharedMaterial())
         {
             GetSharedMaterial()
-                ->EventEmitter<IEventsResource>::RegisterListener(this);
+                ->EventEmitter<IEventsAsset>::RegisterListener(this);
         }
         if (p_material.Get())
         {
-            p_material.Get()->EventEmitter<IEventsResource>::RegisterListener(
+            p_material.Get()->EventEmitter<IEventsAsset>::RegisterListener(
                 this);
         }
 
@@ -207,7 +207,7 @@ Material *Renderer::GetSharedMaterial() const
     return p_sharedMaterial.Get();
 }
 
-void Renderer::OnResourceChanged(Resource *)
+void Renderer::OnAssetChanged(Asset *)
 {
     PropagateRendererChanged();
 }
@@ -247,9 +247,9 @@ Material *Renderer::GetMaterial() const
     {
         if (GetSharedMaterial())
         {
-            p_material = Resources::Clone<Material>(GetSharedMaterial());
+            p_material = Assets::Clone<Material>(GetSharedMaterial());
             GetCopiedMaterial()
-                ->EventEmitter<IEventsResource>::RegisterListener(
+                ->EventEmitter<IEventsAsset>::RegisterListener(
                     const_cast<Renderer *>(this));
         }
     }
@@ -280,7 +280,7 @@ void Renderer::Reflect()
 {
     BANG_REFLECT_VAR_MEMBER(Renderer, "Visible", SetVisible, IsVisible);
     BANG_REFLECT_VAR_MEMBER(Renderer, "Depth Mask", SetDepthMask, GetDepthMask);
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         Renderer,
         "Material",
         SetMaterial,

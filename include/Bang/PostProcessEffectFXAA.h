@@ -20,7 +20,7 @@ public:
     void Reflect() override;
 
 private:
-    RH<ShaderProgram> m_fxaaShaderProgram;
+    AH<ShaderProgram> m_fxaaShaderProgram;
 };
 }
 

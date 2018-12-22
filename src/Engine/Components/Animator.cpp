@@ -20,8 +20,8 @@
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/SkinnedMeshRenderer.h"
 #include "Bang/Transform.h"
 
@@ -369,7 +369,7 @@ void Animator::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("StateMachine"))
     {
-        SetStateMachine(Resources::Load<AnimatorStateMachine>(
+        SetStateMachine(Assets::Load<AnimatorStateMachine>(
                             metaNode.Get<GUID>("StateMachine"))
                             .Get());
     }

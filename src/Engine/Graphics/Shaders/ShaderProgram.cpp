@@ -5,6 +5,8 @@
 #include <utility>
 
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.h"
@@ -12,15 +14,13 @@
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GLUniforms.tcc"
+#include "Bang/IEventsAsset.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/IEventsResource.h"
 #include "Bang/Matrix3.h"
 #include "Bang/Matrix3.tcc"
 #include "Bang/Matrix4.h"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Path.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/Shader.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture.h"
@@ -69,8 +69,8 @@ ShaderProgram::~ShaderProgram()
 
 bool ShaderProgram::Load(const Path &vShaderPath, const Path &fShaderPath)
 {
-    RH<Shader> vShader = Resources::Load<Shader>(vShaderPath);
-    RH<Shader> fShader = Resources::Load<Shader>(fShaderPath);
+    AH<Shader> vShader = Assets::Load<Shader>(vShaderPath);
+    AH<Shader> fShader = Assets::Load<Shader>(fShaderPath);
     return Load(vShader.Get(), fShader.Get());
 }
 
@@ -78,9 +78,9 @@ bool ShaderProgram::Load(const Path &vShaderPath,
                          const Path &gShaderPath,
                          const Path &fShaderPath)
 {
-    RH<Shader> vShader = Resources::Load<Shader>(vShaderPath);
-    RH<Shader> gShader = Resources::Load<Shader>(gShaderPath);
-    RH<Shader> fShader = Resources::Load<Shader>(fShaderPath);
+    AH<Shader> vShader = Assets::Load<Shader>(vShaderPath);
+    AH<Shader> gShader = Assets::Load<Shader>(gShaderPath);
+    AH<Shader> fShader = Assets::Load<Shader>(fShaderPath);
     return Load(vShader.Get(), gShader.Get(), fShader.Get());
 }
 
@@ -149,14 +149,13 @@ bool ShaderProgram::Link()
 
     if (!GL::LinkProgram(m_idGL))
     {
-        Path vsPath =
-            (GetVertexShader() ? GetVertexShader()->GetResourceFilepath()
-                               : Path::Empty());
+        Path vsPath = (GetVertexShader() ? GetVertexShader()->GetAssetFilepath()
+                                         : Path::Empty());
         Path gsPath =
-            (GetGeometryShader() ? GetGeometryShader()->GetResourceFilepath()
+            (GetGeometryShader() ? GetGeometryShader()->GetAssetFilepath()
                                  : Path::Empty());
         Path fsPath =
-            (GetFragmentShader() ? GetFragmentShader()->GetResourceFilepath()
+            (GetFragmentShader() ? GetFragmentShader()->GetAssetFilepath()
                                  : Path::Empty());
         Debug_Error("The shader program " << this << "( " << vsPath << ", "
                                           << gsPath
@@ -514,8 +513,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
     if (GetShader(type))
     {
-        GetShader(type)->EventEmitter<IEventsResource>::UnRegisterListener(
-            this);
+        GetShader(type)->EventEmitter<IEventsAsset>::UnRegisterListener(this);
     }
 
     switch (type)
@@ -527,7 +525,7 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
     if (GetShader(type))
     {
-        GetShader(type)->EventEmitter<IEventsResource>::RegisterListener(this);
+        GetShader(type)->EventEmitter<IEventsAsset>::RegisterListener(this);
     }
 
     return true;
@@ -761,7 +759,7 @@ void ShaderProgram::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     }
 }
 
-void ShaderProgram::OnImported(Resource *res)
+void ShaderProgram::OnImported(Asset *res)
 {
     // When used shader is imported, link shaderProgram
     ASSERT(res == GetVertexShader() || res == GetGeometryShader() ||

@@ -25,8 +25,8 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Quad.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/TextureCubeMap.h"
@@ -266,11 +266,11 @@ void Camera::SetSkyBoxTexture(TextureCubeMap *skyBoxTextureCM,
         if (createFilteredCubeMapsForIBL)
         {
             // If new, generate the IBL specular and diffuse textures!
-            RH<TextureCubeMap> diffuseIBLCubeMap =
+            AH<TextureCubeMap> diffuseIBLCubeMap =
                 CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(skyBoxTextureCM);
             p_skyboxDiffuseTextureCM.Set(diffuseIBLCubeMap.Get());
 
-            RH<TextureCubeMap> specularIBLCubeMap =
+            AH<TextureCubeMap> specularIBLCubeMap =
                 CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
                     skyBoxTextureCM);
             p_skyboxSpecularTextureCM.Set(specularIBLCubeMap.Get());
@@ -544,8 +544,8 @@ void Camera::ImportMeta(const MetaNode &meta)
 
     if (meta.Contains("SkyBoxTexture"))
     {
-        RH<TextureCubeMap> skyCM =
-            Resources::Load<TextureCubeMap>(meta.Get<GUID>("SkyBoxTexture"));
+        AH<TextureCubeMap> skyCM =
+            Assets::Load<TextureCubeMap>(meta.Get<GUID>("SkyBoxTexture"));
         SetSkyBoxTexture(skyCM.Get());
     }
 }

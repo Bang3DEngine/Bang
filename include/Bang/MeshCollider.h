@@ -4,7 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "PxShape.h"
 
@@ -33,7 +33,7 @@ public:
     void Reflect() override;
 
 private:
-    RH<Mesh> p_mesh;
+    AH<Mesh> p_mesh;
 
     // Collider
     virtual bool CanComputeInertia() const override;

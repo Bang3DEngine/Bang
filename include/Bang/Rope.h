@@ -8,7 +8,7 @@
 #include "Bang/LineRenderer.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Particle.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -75,7 +75,7 @@ private:
     Array<Particle::Data> m_particlesData;
 
     bool m_seeDebugPoints = false;
-    RH<Mesh> m_ropeDebugPointsMesh;
+    AH<Mesh> m_ropeDebugPointsMesh;
 
     bool m_validLineRendererPoints = false;
 

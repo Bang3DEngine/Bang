@@ -10,16 +10,16 @@
 #include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang
 {
-class AnimatorStateMachine : public Resource,
+class AnimatorStateMachine : public Asset,
                              public EventEmitter<IEventsAnimatorStateMachine>,
                              public EventListener<IEventsAnimatorStateMachine>
 {
-    RESOURCE(AnimatorStateMachine)
+    ASSET(AnimatorStateMachine)
 
 public:
     AnimatorStateMachine();
@@ -46,8 +46,8 @@ public:
 
     void Clear();
 
-    // Resource
-    virtual void Import(const Path &resourceFilepath) override;
+    // Asset
+    virtual void Import(const Path &assetFilepath) override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

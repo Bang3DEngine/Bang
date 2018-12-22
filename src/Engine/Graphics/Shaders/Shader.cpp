@@ -60,7 +60,7 @@ GL::BindTarget Shader::GetGLBindTarget() const
 
 bool Shader::Compile()
 {
-    Path shaderFilepath = GetResourceFilepath();
+    Path shaderFilepath = GetAssetFilepath();
     if (shaderFilepath.IsFile())
     {
         RetrieveType(shaderFilepath);
@@ -76,7 +76,7 @@ bool Shader::Compile()
     if (!GL::CompileShader(m_idGL))
     {
         Debug_Error(
-            "Failed to compile shader: '" << GetResourceFilepath() << "': "
+            "Failed to compile shader: '" << GetAssetFilepath() << "': "
                                           << std::endl
                                           << GL::GetShaderErrorMsg(m_idGL));
         GL::DeleteShader(m_idGL);

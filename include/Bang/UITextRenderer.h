@@ -9,7 +9,7 @@
 #include "Bang/IInvalidatable.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/UIRenderer.h"
 
@@ -74,7 +74,7 @@ public:
     virtual void ExportMeta(MetaNode *metaNode) const override;
 
 private:
-    RH<Font> p_font;
+    AH<Font> p_font;
     String m_content = "";
     int m_textSize = 64;
     Vector2 m_spacingMultiplier = Vector2::One();
@@ -85,7 +85,7 @@ private:
     HorizontalAlignment m_horizontalAlignment = HorizontalAlignment::CENTER;
     VerticalAlignment m_verticalAlignment = VerticalAlignment::CENTER;
 
-    RH<Mesh> p_mesh;
+    AH<Mesh> p_mesh;
     mutable uint m_numberOfLines = 0;
     mutable Array<AARect> m_charRectsLocalNDC;
 

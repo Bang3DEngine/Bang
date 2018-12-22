@@ -6,7 +6,7 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -52,8 +52,8 @@ public:
     virtual void Reflect() override;
 
 protected:
-    mutable RH<Mesh> p_mesh;
-    RH<Mesh> p_sharedMesh;
+    mutable AH<Mesh> p_mesh;
+    AH<Mesh> p_sharedMesh;
 
     bool m_autoLOD = false;
     int m_currentLOD = 0;

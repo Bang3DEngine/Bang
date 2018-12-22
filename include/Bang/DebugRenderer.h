@@ -7,7 +7,7 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
@@ -115,7 +115,7 @@ private:
         bool renderedOnce;
     };
 
-    RH<Mesh> m_mesh;
+    AH<Mesh> m_mesh;
     List<DebugRenderPrimitive> m_primitivesToRender;
 
     virtual ~DebugRenderer() override;

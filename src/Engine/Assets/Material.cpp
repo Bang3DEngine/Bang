@@ -1,15 +1,15 @@
 #include "Bang/Material.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/Flags.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GUID.h"
-#include "Bang/IEventsResource.h"
+#include "Bang/IEventsAsset.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
@@ -19,7 +19,7 @@
 namespace Bang
 {
 class Path;
-class Resource;
+class Asset;
 }  // namespace Bang
 
 using namespace Bang;
@@ -38,7 +38,7 @@ void Material::SetLineWidth(float w)
     if (w != GetLineWidth())
     {
         m_lineWidth = w;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -57,7 +57,7 @@ void Material::SetRenderWireframe(bool renderWireframe)
     if (renderWireframe != GetRenderWireframe())
     {
         m_renderWireframe = renderWireframe;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -66,7 +66,7 @@ void Material::SetCullFace(GL::CullFaceExt cullFace)
     if (cullFace != GetCullFace())
     {
         m_cullFace = cullFace;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -75,7 +75,7 @@ void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
     if (albedoUvOffset != GetAlbedoUvOffset())
     {
         m_albedoUvOffset = albedoUvOffset;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -84,7 +84,7 @@ void Material::SetAlbedoUvMultiply(const Vector2 &albedoUvMultiply)
     if (albedoUvMultiply != GetAlbedoUvMultiply())
     {
         m_albedoUvMultiply = albedoUvMultiply;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -93,7 +93,7 @@ void Material::SetNormalMapUvOffset(const Vector2 &normalMapUvOffset)
     if (normalMapUvOffset != GetNormalMapUvOffset())
     {
         m_normalMapUvOffset = normalMapUvOffset;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -102,7 +102,7 @@ void Material::SetNormalMapUvMultiply(const Vector2 &normalMapUvMultiply)
     if (normalMapUvMultiply != GetNormalMapUvMultiply())
     {
         m_normalMapUvMultiply = normalMapUvMultiply;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -111,7 +111,7 @@ void Material::SetNormalMapMultiplyFactor(float normalMapMultiplyFactor)
     if (normalMapMultiplyFactor != GetNormalMapMultiplyFactor())
     {
         m_normalMapMultiplyFactor = normalMapMultiplyFactor;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -120,7 +120,7 @@ void Material::SetShaderProgram(ShaderProgram *program)
     if (p_shaderProgram.Get() != program)
     {
         p_shaderProgram.Set(program);
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -129,7 +129,7 @@ void Material::SetReceivesLighting(bool receivesLighting)
     if (receivesLighting != GetReceivesLighting())
     {
         m_receivesLighting = receivesLighting;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -138,7 +138,7 @@ void Material::SetRoughness(float roughness)
     if (roughness != GetRoughness())
     {
         m_roughness = roughness;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -147,7 +147,7 @@ void Material::SetMetalness(float metalness)
     if (metalness != GetMetalness())
     {
         m_metalness = metalness;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -156,7 +156,7 @@ void Material::SetAlbedoColor(const Color &albedoColor)
     if (albedoColor != GetAlbedoColor())
     {
         m_albedoColor = albedoColor;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -176,8 +176,8 @@ void Material::SetAlbedoTexture(Texture2D *texture)
     {
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()
-                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
+            GetAlbedoTexture()->EventEmitter<IEventsAsset>::UnRegisterListener(
+                this);
         }
 
         p_albedoTexture.Set(texture);
@@ -190,11 +190,11 @@ void Material::SetAlbedoTexture(Texture2D *texture)
 
         if (GetAlbedoTexture())
         {
-            GetAlbedoTexture()->EventEmitter<IEventsResource>::RegisterListener(
+            GetAlbedoTexture()->EventEmitter<IEventsAsset>::RegisterListener(
                 this);
         }
 
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -205,7 +205,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
         if (GetNormalMapTexture())
         {
             GetNormalMapTexture()
-                ->EventEmitter<IEventsResource>::UnRegisterListener(this);
+                ->EventEmitter<IEventsAsset>::UnRegisterListener(this);
         }
 
         p_normalMapTexture.Set(texture);
@@ -218,11 +218,11 @@ void Material::SetNormalMapTexture(Texture2D *texture)
 
         if (GetNormalMapTexture())
         {
-            GetNormalMapTexture()
-                ->EventEmitter<IEventsResource>::RegisterListener(this);
+            GetNormalMapTexture()->EventEmitter<IEventsAsset>::RegisterListener(
+                this);
         }
 
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -231,7 +231,7 @@ void Material::SetRenderPass(RenderPass renderPass)
     if (renderPass != GetRenderPass())
     {
         m_renderPass = renderPass;
-        PropagateResourceChanged();
+        PropagateAssetChanged();
     }
 }
 
@@ -443,9 +443,9 @@ void Material::CloneInto(ICloneable *clone, bool cloneGUID) const
     matClone->SetCullFace(GetCullFace());
 }
 
-void Material::OnResourceChanged(Resource *res)
+void Material::OnAssetChanged(Asset *)
 {
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 void Material::Import(const Path &materialFilepath)
@@ -455,7 +455,7 @@ void Material::Import(const Path &materialFilepath)
 
 void Material::ImportMeta(const MetaNode &meta)
 {
-    Resource::ImportMeta(meta);
+    Asset::ImportMeta(meta);
 
     if (meta.Contains("NeededUniforms"))
     {
@@ -491,7 +491,7 @@ void Material::ImportMeta(const MetaNode &meta)
     if (meta.Contains("AlbedoTexture"))
     {
         SetAlbedoTexture(
-            Resources::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
+            Assets::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
     }
 
     if (meta.Contains("AlbedoUvOffset"))
@@ -507,22 +507,19 @@ void Material::ImportMeta(const MetaNode &meta)
     if (meta.Contains("RoughnessTexture"))
     {
         SetRoughnessTexture(
-            Resources::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture"))
-                .Get());
+            Assets::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture")).Get());
     }
 
     if (meta.Contains("MetalnessTexture"))
     {
         SetMetalnessTexture(
-            Resources::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture"))
-                .Get());
+            Assets::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture")).Get());
     }
 
     if (meta.Contains("NormalMapTexture"))
     {
         SetNormalMapTexture(
-            Resources::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture"))
-                .Get());
+            Assets::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture")).Get());
     }
 
     if (meta.Contains("NormalMapUvOffset"))
@@ -540,16 +537,16 @@ void Material::ImportMeta(const MetaNode &meta)
         SetNormalMapMultiplyFactor(meta.Get<float>("NormalMapMultiplyFactor"));
     }
 
-    RH<Shader> vShader;
+    AH<Shader> vShader;
     if (meta.Contains("VertexShader"))
     {
-        vShader = Resources::Load<Shader>(meta.Get<GUID>("VertexShader"));
+        vShader = Assets::Load<Shader>(meta.Get<GUID>("VertexShader"));
     }
 
-    RH<Shader> fShader;
+    AH<Shader> fShader;
     if (meta.Contains("FragmentShader"))
     {
-        fShader = Resources::Load<Shader>(meta.Get<GUID>("FragmentShader"));
+        fShader = Assets::Load<Shader>(meta.Get<GUID>("FragmentShader"));
     }
 
     if (meta.Contains("LineWidth"))
@@ -570,15 +567,15 @@ void Material::ImportMeta(const MetaNode &meta)
     if (vShader && fShader)
     {
         ShaderProgram *newSp =
-            ShaderProgramFactory::Get(vShader.Get()->GetResourceFilepath(),
-                                      fShader.Get()->GetResourceFilepath());
+            ShaderProgramFactory::Get(vShader.Get()->GetAssetFilepath(),
+                                      fShader.Get()->GetAssetFilepath());
         SetShaderProgram(newSp);
     }
 }
 
 void Material::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     metaNode->Set("NeededUniforms", GetNeededUniforms());
     metaNode->Set("RenderPass", GetRenderPass());

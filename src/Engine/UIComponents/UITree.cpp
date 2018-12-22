@@ -23,7 +23,7 @@
 #include "Bang/List.tcc"
 #include "Bang/Math.h"
 #include "Bang/RectTransform.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Scene.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
@@ -160,7 +160,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
     GetMousePositionInTree(&childItemOver, &markPosition);
 
-    RH<Texture2D> markImgRH;
+    AH<Texture2D> markImgAH;
     constexpr int MarkStroke = 2;
     Vector2 dragMarkerPos, dragMarkerSize;
     UIImageRenderer::Mode markImgMode = UIImageRenderer::Mode::TEXTURE_INV_UVY;
@@ -188,7 +188,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
             case MouseItemRelativePosition::OVER:
                 dragMarkerPos = childItemContRect.GetMinXMinY();
                 dragMarkerSize = childItemContRect.GetMax() - dragMarkerPos;
-                markImgRH.Set(
+                markImgAH.Set(
                     TextureFactory::Get9SliceRoundRectBorderTexture());
                 markImgMode = UIImageRenderer::Mode::SLICE_9;
                 break;
@@ -231,7 +231,7 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     RectTransform *dragMarkerRT = p_dragMarker->GetRectTransform();
     dragMarkerRT->SetMarginLeftBot(Vector2i(dragMarkerPos));
     dragMarkerRT->SetMarginRightTop(Vector2i(-dragMarkerPos + -dragMarkerSize));
-    p_dragMarkerImg->SetImageTexture(markImgRH.Get());
+    p_dragMarkerImg->SetImageTexture(markImgAH.Get());
     p_dragMarkerImg->SetMode(markImgMode);
 
     bool isValidDrag =

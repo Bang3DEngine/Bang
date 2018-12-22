@@ -16,8 +16,8 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Plane.h"
 #include "Bang/ReflectionProbe.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 #include "Bang/Triangle.h"
@@ -51,7 +51,7 @@ Mesh *MeshRenderer::GetMesh() const
     {
         if (GetSharedMesh())
         {
-            p_mesh = Resources::Clone<Mesh>(GetSharedMesh());
+            p_mesh = Assets::Clone<Mesh>(GetSharedMesh());
         }
     }
     return p_mesh.Get();
@@ -276,7 +276,7 @@ void MeshRenderer::Reflect()
 {
     Renderer::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         MeshRenderer,
         "Mesh",
         SetMesh,

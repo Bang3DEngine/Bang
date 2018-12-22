@@ -11,7 +11,7 @@
 namespace Bang
 {
 template <class>
-class ResourceHandle;
+class AssetHandle;
 
 class MeshSimplifier
 {
@@ -34,7 +34,7 @@ public:
                                      float smoothFactor,
                                      uint steps = 2);
 
-    static Array<RH<Mesh>> GetAllMeshLODs(
+    static Array<AH<Mesh>> GetAllMeshLODs(
                                     const Mesh *mesh,
                                     SimplificationMethod simplificationMethod);
 

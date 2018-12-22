@@ -10,7 +10,7 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/GL.h"
 #include "Bang/MetaNode.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 
@@ -83,14 +83,14 @@ private:
     float m_camerasZFar = -1.0f;
     Color m_camerasClearColor = -Color::One();
     CameraClearMode m_camerasClearMode = Undef<CameraClearMode>();
-    RH<TextureCubeMap> m_camerasSkyBoxTexture;
+    AH<TextureCubeMap> m_camerasSkyBoxTexture;
 
     Time m_lastRenderTime;
     std::array<Camera *, 6> m_cameras;
     Framebuffer *m_textureCubeMapFB = nullptr;
-    RH<TextureCubeMap> p_textureCubeMapWithoutFiltering;
-    RH<TextureCubeMap> p_textureCubeMapDiffuse;
-    RH<TextureCubeMap> p_textureCubeMapSpecular;
+    AH<TextureCubeMap> p_textureCubeMapWithoutFiltering;
+    AH<TextureCubeMap> p_textureCubeMapDiffuse;
+    AH<TextureCubeMap> p_textureCubeMapSpecular;
 
     static ReflectionProbe *GetClosestReflectionProbe(Renderer *renderer);
 };

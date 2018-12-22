@@ -8,7 +8,7 @@
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/Transformation.h"
 #include "Bang/Vector3.h"
@@ -25,9 +25,9 @@ enum class AnimationWrapMode
     PING_PONG
 };
 
-class Animation : public Resource
+class Animation : public Asset
 {
-    RESOURCE(Animation);
+    ASSET(Animation);
 
 public:
     template <class T>
@@ -76,7 +76,7 @@ public:
                           float totalDuration,
                           AnimationWrapMode animationWrapMode);
 
-    // Resource
+    // Asset
     void Import(const Path &animationFilepath) override;
 
     // Serializable

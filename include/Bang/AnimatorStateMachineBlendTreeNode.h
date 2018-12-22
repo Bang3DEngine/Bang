@@ -34,7 +34,7 @@ public:
 
 private:
     float m_secondAnimationSpeed = 1.0f;
-    RH<Animation> p_secondAnimation;
+    AH<Animation> p_secondAnimation;
     String m_blendVariableName = "";
 };
 }

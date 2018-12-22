@@ -11,9 +11,9 @@
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/Math.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
@@ -70,7 +70,7 @@ void CreateAttachment(Framebuffer *fb,
 
     fb->Bind();
 
-    RH<TextureClass> tex = Resources::Create<TextureClass>();
+    AH<TextureClass> tex = Assets::Create<TextureClass>();
     tex.Get()->Bind();
     tex.Get()->SetFormat(texFormat);
     CreateEmptyTexture<TextureClass>(
@@ -145,9 +145,9 @@ void Framebuffer::AfterSetAttTex(Texture *tex, GL::Attachment attachment)
 {
     ASSERT(GL::CheckFramebufferError());
 
-    RH<Texture> texRH(tex);
+    AH<Texture> texAH(tex);
     m_attachments.PushBack(attachment);
-    m_attachments_To_Texture.Add(attachment, texRH);
+    m_attachments_To_Texture.Add(attachment, texAH);
 }
 
 void Framebuffer::SetAttachmentTexture(Texture *tex,

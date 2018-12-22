@@ -4,7 +4,7 @@
 #include "Bang/Bang.h"
 #include "Bang/Particle.h"
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 
 namespace Bang
 {
@@ -63,7 +63,7 @@ public:
     void Reflect() override;
 
 private:
-    RH<Mesh> m_mesh;
+    AH<Mesh> m_mesh;
     bool m_validMeshPoints = false;
     Array<Vector3> m_points;
     Array<Particle::Data> m_particlesData;
@@ -77,8 +77,8 @@ private:
     float m_springsForce = 50.0f;
     float m_springsDamping = 1.0f;
 
-    RH<Mesh> m_debugPointsMesh;
-    RH<Material> m_debugPointsMaterial;
+    AH<Mesh> m_debugPointsMesh;
+    AH<Material> m_debugPointsMaterial;
     bool m_seeDebugPoints = false;
 
     void InitParticle(uint i, const Particle::Parameters &params);

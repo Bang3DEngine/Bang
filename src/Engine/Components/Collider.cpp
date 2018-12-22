@@ -10,8 +10,8 @@
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PxSceneContainer.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
@@ -122,7 +122,7 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
         if (GetSharedPhysicsMaterial())
         {
             p_physicsMaterial =
-                Resources::Clone<PhysicsMaterial>(GetSharedPhysicsMaterial());
+                Assets::Clone<PhysicsMaterial>(GetSharedPhysicsMaterial());
         }
     }
     return p_physicsMaterial.Get();
@@ -239,7 +239,7 @@ void Collider::Reflect()
         Collider, "Use in NavMesh", SetUseInNavMesh, GetUseInNavMesh);
     BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         Collider,
         "Physics Material",
         SetPhysicsMaterial,

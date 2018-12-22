@@ -11,7 +11,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Particle.h"
 #include "Bang/Renderer.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 
@@ -133,7 +133,7 @@ private:
     Array<Particle::Data> m_particlesData;
     Array<ParticleVBOData> m_particlesVBOData;
 
-    RH<Mesh> m_particleMesh;
+    AH<Mesh> m_particleMesh;
     uint m_numParticles = 0;
 
     Particle::Parameters m_particlesParameters;
@@ -145,7 +145,7 @@ private:
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 
-    RH<Texture2D> p_texture;
+    AH<Texture2D> p_texture;
     bool m_billboard = true;
 
     Color m_startColor = Color::White();

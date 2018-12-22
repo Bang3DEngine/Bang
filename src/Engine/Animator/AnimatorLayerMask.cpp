@@ -98,14 +98,14 @@ Set<String> AnimatorLayerMask::GetBoneMaskNamesSet(Animator *animator) const
     return boneMaskSet;
 }
 
-void AnimatorLayerMask::Import(const Path &resourceFilepath)
+void AnimatorLayerMask::Import(const Path &assetFilepath)
 {
-    BANG_UNUSED(resourceFilepath);
+    BANG_UNUSED(assetFilepath);
 }
 
 void AnimatorLayerMask::ImportMeta(const MetaNode &metaNode)
 {
-    Resource::ImportMeta(metaNode);
+    Asset::ImportMeta(metaNode);
 
     m_boneEntries.Clear();
     Array<String> boneNames = metaNode.GetArray<String>("BoneNames");
@@ -125,7 +125,7 @@ void AnimatorLayerMask::ImportMeta(const MetaNode &metaNode)
 
 void AnimatorLayerMask::ExportMeta(MetaNode *metaNode) const
 {
-    Resource::ExportMeta(metaNode);
+    Asset::ExportMeta(metaNode);
 
     Array<String> boneNames;
     Array<bool> boneAddDescendants;

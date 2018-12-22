@@ -47,34 +47,34 @@ private:
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 };
 
-template <class LHST, class RHST>
-inline bool operator==(const LHST *lhs, const DPtr<RHST> &rhs)
+template <class LHST, class AHST>
+inline bool operator==(const LHST *lhs, const DPtr<AHST> &rhs)
 {
-    return (SCAST<RHST>(lhs) == rhs.Get());
+    return (SCAST<AHST>(lhs) == rhs.Get());
 }
-template <class LHST, class RHST>
-inline bool operator==(const DPtr<LHST> &lhs, const RHST *rhs)
+template <class LHST, class AHST>
+inline bool operator==(const DPtr<LHST> &lhs, const AHST *rhs)
 {
     return (lhs.Get() == SCAST<LHST>(rhs));
 }
-template <class LHST, class RHST>
-inline bool operator==(const DPtr<LHST> &lhs, const DPtr<RHST> &rhs)
+template <class LHST, class AHST>
+inline bool operator==(const DPtr<LHST> &lhs, const DPtr<AHST> &rhs)
 {
     return (lhs.Get() == rhs.Get());
 }
 
-template <class LHST, class RHST>
-inline bool operator!=(const LHST *lhs, const DPtr<RHST> &rhs)
+template <class LHST, class AHST>
+inline bool operator!=(const LHST *lhs, const DPtr<AHST> &rhs)
 {
-    return (SCAST<RHST>(lhs) != rhs.Get());
+    return (SCAST<AHST>(lhs) != rhs.Get());
 }
-template <class LHST, class RHST>
-inline bool operator!=(const DPtr<LHST> &lhs, const RHST *rhs)
+template <class LHST, class AHST>
+inline bool operator!=(const DPtr<LHST> &lhs, const AHST *rhs)
 {
     return (lhs.Get() != SCAST<LHST>(rhs));
 }
-template <class LHST, class RHST>
-inline bool operator!=(const DPtr<LHST> &lhs, const DPtr<RHST> &rhs)
+template <class LHST, class AHST>
+inline bool operator!=(const DPtr<LHST> &lhs, const DPtr<AHST> &rhs)
 {
     return (lhs.Get() != rhs.Get());
 }

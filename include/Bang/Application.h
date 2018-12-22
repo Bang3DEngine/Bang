@@ -14,7 +14,7 @@ class GEngine;
 class MetaFilesManager;
 class Paths;
 class Physics;
-class Resources;
+class Assets;
 class Settings;
 class SystemUtils;
 class TimeSingleton;
@@ -40,7 +40,7 @@ public:
     GEngine *GetGEngine() const;
     Physics *GetPhysics() const;
     Settings *GetSettings() const;
-    Resources *GetResources() const;
+    Assets *GetAssets() const;
     SystemUtils *GetSystemUtils() const;
     AudioManager *GetAudioManager() const;
     WindowManager *GetWindowManager() const;
@@ -61,7 +61,7 @@ protected:
     Physics *m_physics = nullptr;
     GEngine *m_gEngine = nullptr;
     Settings *m_settings = nullptr;
-    Resources *m_resources = nullptr;
+    Assets *m_assets = nullptr;
     SystemUtils *m_systemUtils = nullptr;
     AudioManager *m_audioManager = nullptr;
     WindowManager *m_windowManager = nullptr;
@@ -82,7 +82,7 @@ private:
     virtual Debug *CreateDebug() const;
     virtual Paths *CreatePaths() const;
     virtual Settings *CreateSettings() const;
-    virtual Resources *CreateResources() const;
+    virtual Assets *CreateAssets() const;
 
     friend class Window;
 };

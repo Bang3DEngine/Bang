@@ -5,8 +5,8 @@
 #include "Bang/GL.h"
 #include "Bang/Math.h"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/TextureCubeMap.h"
@@ -29,7 +29,7 @@ CubeMapIBLGenerator::~CubeMapIBLGenerator()
     delete m_iblFramebuffer;
 }
 
-RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
+AH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
     TextureCubeMap *textureCubeMap,
     uint IBLCubeMapSize,
     uint sampleCount)
@@ -38,7 +38,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateDiffuseIBLCubeMap(
         textureCubeMap, IBLType::DIFFUSE, IBLCubeMapSize, sampleCount);
 }
 
-RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
+AH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
     TextureCubeMap *textureCubeMap,
     uint IBLCubeMapSize,
     uint sampleCount)
@@ -47,7 +47,7 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateSpecularIBLCubeMap(
         textureCubeMap, IBLType::SPECULAR, IBLCubeMapSize, sampleCount);
 }
 
-RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
+AH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     TextureCubeMap *textureCubeMap,
     IBLType iblType,
     uint IBLCubeMapSize,
@@ -69,8 +69,8 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     GL::Enable(GL::Enablable::TEXTURE_CUBE_MAP_SEAMLESS);
 
     // Create cube map
-    RH<TextureCubeMap> iblCubeMapRH = Resources::Create<TextureCubeMap>();
-    TextureCubeMap *iblCubeMap = iblCubeMapRH.Get();
+    AH<TextureCubeMap> iblCubeMapAH = Assets::Create<TextureCubeMap>();
+    TextureCubeMap *iblCubeMap = iblCubeMapAH.Get();
     iblCubeMap->SetFormat(GL::ColorFormat::RGBA16F);
     iblCubeMap->Bind();
     iblCubeMap->Resize(IBLCubeMapSize);
@@ -142,10 +142,10 @@ RH<TextureCubeMap> CubeMapIBLGenerator::GenerateIBLCubeMap(
     GL::Pop(GL::BindTarget::TEXTURE_CUBE_MAP);
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
-    return iblCubeMapRH;
+    return iblCubeMapAH;
 }
 
 CubeMapIBLGenerator *CubeMapIBLGenerator::GetInstance()
 {
-    return Resources::GetInstance()->GetCubeMapIBLGenerator();
+    return Assets::GetInstance()->GetCubeMapIBLGenerator();
 }

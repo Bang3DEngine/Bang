@@ -18,7 +18,7 @@
 #include "Bang/ObjectGatherer.tcc"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/USet.h"
 
@@ -126,9 +126,9 @@ private:
     StackAndValue<Camera *> p_renderingCameras;
     USet<Camera *> m_stackedCamerasThatHaveBeenDestroyed;
 
-    RH<ShaderProgram> m_renderSkySP;
-    RH<Material> m_replacementMaterial;
-    RH<ShaderProgram> m_fillCubeMapFromTexturesSP;
+    AH<ShaderProgram> m_renderSkySP;
+    AH<Material> m_replacementMaterial;
+    AH<ShaderProgram> m_fillCubeMapFromTexturesSP;
     Framebuffer *m_fillCubeMapFromTexturesFB = nullptr;
 
     // Forward rendering arrays
@@ -142,13 +142,13 @@ private:
 
     Framebuffer *m_auxiliarFramebuffer = nullptr;
     Framebuffer *m_auxiliarFramebufferCM = nullptr;
-    RH<ShaderProgram> p_kawaseBlurSP;
-    RH<ShaderProgram> p_separableGaussianBlurSP;
-    RH<ShaderProgram> p_separableGaussianBlurCubeMapSP;
+    AH<ShaderProgram> p_kawaseBlurSP;
+    AH<ShaderProgram> p_separableGaussianBlurSP;
+    AH<ShaderProgram> p_separableGaussianBlurCubeMapSP;
 
-    RH<Mesh> p_windowPlaneMesh;
-    RH<ShaderProgram> p_renderTextureToViewportSP;
-    RH<ShaderProgram> p_renderTextureToViewportGammaSP;
+    AH<Mesh> p_windowPlaneMesh;
+    AH<ShaderProgram> p_renderTextureToViewportSP;
+    AH<ShaderProgram> p_renderTextureToViewportGammaSP;
 
     void Render(Renderer *rend);
     void RenderShadowMaps(GameObject *go);

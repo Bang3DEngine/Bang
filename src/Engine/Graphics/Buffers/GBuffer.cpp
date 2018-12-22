@@ -6,8 +6,8 @@
 #include "Bang/Assert.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 
@@ -23,9 +23,9 @@ const GL::Attachment GBuffer::AttDepthStencil = GL::Attachment::DEPTH_STENCIL;
 GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
 {
     // Create depth textures
-    m_sceneDepthStencilTexture = Resources::Create<Texture2D>();
-    m_canvasDepthStencilTexture = Resources::Create<Texture2D>();
-    m_overlayDepthStencilTexture = Resources::Create<Texture2D>();
+    m_sceneDepthStencilTexture = Assets::Create<Texture2D>();
+    m_canvasDepthStencilTexture = Assets::Create<Texture2D>();
+    m_overlayDepthStencilTexture = Assets::Create<Texture2D>();
     auto depthStencilTexs = {m_sceneDepthStencilTexture.Get(),
                              m_canvasDepthStencilTexture.Get(),
                              m_overlayDepthStencilTexture.Get()};
@@ -37,8 +37,8 @@ GBuffer::GBuffer(int width, int height) : Framebuffer(width, height)
     }
 
     // Create color textures
-    m_colorTexture0 = Resources::Create<Texture2D>();
-    m_colorTexture1 = Resources::Create<Texture2D>();
+    m_colorTexture0 = Assets::Create<Texture2D>();
+    m_colorTexture1 = Assets::Create<Texture2D>();
     p_drawColorTexture = GetColorTexture0();
     p_readColorTexture = GetColorTexture1();
 
@@ -227,7 +227,7 @@ void GBuffer::SetOverlayDepthStencil()
 }
 void GBuffer::PushDepthStencilTexture()
 {
-    m_depthStencilTexturesStack.push(RH<Texture2D>(GetDepthStencilTexture()));
+    m_depthStencilTexturesStack.push(AH<Texture2D>(GetDepthStencilTexture()));
 }
 void GBuffer::PopDepthStencilTexture()
 {

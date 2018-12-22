@@ -5,14 +5,14 @@
 #include "Bang/Application.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/File.h"
 #include "Bang/Map.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resource.h"
-#include "Bang/ResourceHandle.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
 
@@ -171,7 +171,7 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
     }
     else
     {
-        if (!Resources::IsEmbeddedResource(filepath))
+        if (!Assets::IsEmbeddedAsset(filepath))
         {
             if (!filepath.IsFile())
             {
@@ -196,11 +196,11 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
                 return GUID::Empty();
             }
 
-            Resource *parentRes = Resources::GetCached(parentResPath);
+            Asset *parentRes = Assets::GetCached(parentResPath);
             if (parentRes)
             {
-                if (Resource *embeddedRes =
-                        parentRes->GetEmbeddedResource(filepath.GetNameExt()))
+                if (Asset *embeddedRes =
+                        parentRes->GetEmbeddedAsset(filepath.GetNameExt()))
                 {
                     return embeddedRes->GetGUID();
                 }
@@ -220,17 +220,17 @@ Path MetaFilesManager::GetFilepath(const GUID &guid)
     }
     else
     {
-        if (Resources::IsEmbeddedResource(guid))
+        if (Assets::IsEmbeddedAsset(guid))
         {
-            Path parentPath = MetaFilesManager::GetFilepath(
-                guid.WithoutEmbeddedResourceGUID());
+            Path parentPath =
+                MetaFilesManager::GetFilepath(guid.WithoutEmbeddedAssetGUID());
             if (parentPath.IsFile())
             {
-                RH<Resource> resRH = Resources::LoadFromExtension(parentPath);
-                if (resRH)
+                AH<Asset> assetAH = Assets::LoadFromExtension(parentPath);
+                if (assetAH)
                 {
-                    String name = resRH.Get()->GetEmbeddedResourceName(
-                        guid.GetEmbeddedResourceGUID());
+                    String name = assetAH.Get()->GetEmbeddedAssetName(
+                        guid.GetEmbeddedAssetGUID());
                     Path path = parentPath.Append(name);
                     mfm->m_GUIDToFilepath.Add(guid, path);
                     return path;

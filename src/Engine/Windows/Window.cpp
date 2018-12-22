@@ -8,7 +8,7 @@
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/Input.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Texture2D.h"
@@ -220,7 +220,7 @@ void SDL_PutPixel32(SDL_Surface *surface, int x, int y, Uint32 color)
 void Window::SetIcon(const Path &iconPath)
 {
     constexpr Uint32 RM = 0xff, GM = 0xff00, BM = 0xff0000, AM = 0xff000000;
-    RH<Texture2D> tex = Resources::Load<Texture2D>(iconPath);
+    AH<Texture2D> tex = Assets::Load<Texture2D>(iconPath);
     Image img = tex.Get()->ToImage();
     SDL_Surface *icon = SDL_CreateRGBSurface(
         SDL_SWSURFACE, img.GetWidth(), img.GetHeight(), 32, RM, GM, BM, AM);

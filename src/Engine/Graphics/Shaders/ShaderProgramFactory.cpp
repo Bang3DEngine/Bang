@@ -2,8 +2,8 @@
 
 #include "Bang/Map.tcc"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 
 using namespace Bang;
@@ -170,16 +170,16 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
 
     if (!spf->m_cache.ContainsKey(shaderPathsTuple))
     {
-        RH<ShaderProgram> shaderProgram;
+        AH<ShaderProgram> shaderProgram;
         if (useGeometryShader)
         {
-            shaderProgram = Resources::Create<ShaderProgram>(
+            shaderProgram = Assets::Create<ShaderProgram>(
                 vShaderPath, gShaderPath, fShaderPath);
         }
         else
         {
             shaderProgram =
-                Resources::Create<ShaderProgram>(vShaderPath, fShaderPath);
+                Assets::Create<ShaderProgram>(vShaderPath, fShaderPath);
         }
         spf->m_cache.Add(shaderPathsTuple, shaderProgram);
     }
@@ -189,6 +189,6 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
 
 ShaderProgramFactory *ShaderProgramFactory::GetActive()
 {
-    Resources *rs = Resources::GetInstance();
+    Assets *rs = Assets::GetInstance();
     return rs ? rs->GetShaderProgramFactory() : nullptr;
 }

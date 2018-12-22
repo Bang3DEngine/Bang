@@ -41,7 +41,7 @@ public:
     virtual void Reflect() override;
 
 private:
-    RH<Mesh> m_cubeMesh;
+    AH<Mesh> m_cubeMesh;
     bool m_perspective = false;
 
     float m_zNear = 0.05f;

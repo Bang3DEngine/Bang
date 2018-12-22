@@ -6,7 +6,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -17,33 +17,33 @@ class PhysicsMaterial;
 class MaterialFactory
 {
 public:
-    static RH<Material> GetDefault(
+    static AH<Material> GetDefault(
         RenderPass renderPass = RenderPass::SCENE_OPAQUE);
-    static RH<Material> GetDefaultUnLighted();
-    static RH<Material> GetGizmosUnLightedOverlay();
-    static RH<Material> GetParticlesAdditive();
-    static RH<Material> GetParticlesMesh();
-    static RH<Material> GetWater();
+    static AH<Material> GetDefaultUnLighted();
+    static AH<Material> GetGizmosUnLightedOverlay();
+    static AH<Material> GetParticlesAdditive();
+    static AH<Material> GetParticlesMesh();
+    static AH<Material> GetWater();
 
-    static RH<PhysicsMaterial> GetDefaultPhysicsMaterial();
+    static AH<PhysicsMaterial> GetDefaultPhysicsMaterial();
 
-    static RH<Material> GetMissing();
+    static AH<Material> GetMissing();
 
-    static RH<Material> GetUIText();
-    static RH<Material> GetUIImage();
+    static AH<Material> GetUIText();
+    static AH<Material> GetUIImage();
 
 private:
-    UMap<Path, RH<Material>> m_cacheMaterials;
-    UMap<Path, RH<PhysicsMaterial>> m_cachePhysicsMaterials;
+    UMap<Path, AH<Material>> m_cacheMaterials;
+    UMap<Path, AH<PhysicsMaterial>> m_cachePhysicsMaterials;
 
     MaterialFactory() = default;
-    static RH<Material> LoadMaterial(const String &matEnginePath);
-    static RH<PhysicsMaterial> LoadPhysicsMaterial(
+    static AH<Material> LoadMaterial(const String &matEnginePath);
+    static AH<PhysicsMaterial> LoadPhysicsMaterial(
         const String &phMatEnginePath);
 
     static MaterialFactory *GetActive();
 
-    friend class Resources;
+    friend class Assets;
 };
 }  // namespace Bang
 

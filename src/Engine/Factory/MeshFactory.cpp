@@ -8,8 +8,8 @@
 #include "Bang/MetaFilesManager.h"
 #include "Bang/Model.h"
 #include "Bang/Paths.h"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Set.tcc"
 
 namespace Bang
@@ -19,81 +19,81 @@ class Path;
 
 using namespace Bang;
 
-RH<Mesh> MeshFactory::GetPlane()
+AH<Mesh> MeshFactory::GetPlane()
 {
     return MeshFactory::GetMesh("Plane.obj");
 }
-RH<Mesh> MeshFactory::GetUIPlane()
+AH<Mesh> MeshFactory::GetUIPlane()
 {
     return MeshFactory::GetMesh("UIPlane.obj");
 }
-RH<Mesh> MeshFactory::GetUIPlaneInvUVY()
+AH<Mesh> MeshFactory::GetUIPlaneInvUVY()
 {
     return MeshFactory::GetMesh("UIPlaneInvUVY.obj");
 }
-RH<Mesh> MeshFactory::GetUIPlane3x3()
+AH<Mesh> MeshFactory::GetUIPlane3x3()
 {
     return MeshFactory::GetMesh("UIPlane3x3.obj");
 }
-RH<Bang::Mesh> Bang::MeshFactory::GetUIPlane3x3InvUVY()
+AH<Bang::Mesh> Bang::MeshFactory::GetUIPlane3x3InvUVY()
 {
     return MeshFactory::GetMesh("UIPlane3x3InvUVY.obj");
 }
-RH<Mesh> MeshFactory::GetCube()
+AH<Mesh> MeshFactory::GetCube()
 {
     return MeshFactory::GetMesh("Cube.obj");
 }
 
-RH<Mesh> MeshFactory::GetCylinder()
+AH<Mesh> MeshFactory::GetCylinder()
 {
     return MeshFactory::GetMesh("Cylinder.obj");
 }
 
-RH<Mesh> MeshFactory::GetCapsule()
+AH<Mesh> MeshFactory::GetCapsule()
 {
     return MeshFactory::GetMesh("Capsule.obj");
 }
-RH<Mesh> MeshFactory::GetSphere()
+AH<Mesh> MeshFactory::GetSphere()
 {
     return MeshFactory::GetMesh("Sphere.obj");
 }
-RH<Mesh> MeshFactory::GetCone()
+AH<Mesh> MeshFactory::GetCone()
 {
     return MeshFactory::GetMesh("Cone.obj");
 }
-RH<Mesh> MeshFactory::GetCamera()
+AH<Mesh> MeshFactory::GetCamera()
 {
     return MeshFactory::GetMesh("Camera.obj");
 }
 
-RH<Mesh> MeshFactory::GetMesh(const String &enginePathStr)
+AH<Mesh> MeshFactory::GetMesh(const String &enginePathStr)
 {
     return MeshFactory::GetMesh(
         Paths::GetEngineAssetsDir().Append("Meshes").Append(enginePathStr));
 }
 
-RH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
+AH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
 {
-    RH<Mesh> meshRH;
-    RH<Model> modelRH = Resources::Load<Model>(fullPath);
-    Model *model = modelRH.Get();
+    AH<Mesh> meshAH;
+    AH<Model> modelAH = Assets::Load<Model>(fullPath);
+    Model *model = modelAH.Get();
 
     if (model)
     {
         MeshFactory *mf = MeshFactory::GetActive();
-        mf->m_modelCache.Add(modelRH);
+        mf->m_modelCache.Add(modelAH);
 
         if (model->GetMeshes().Size() >= 1)
         {
             Mesh *firstMesh = model->GetMeshes()[0].Get();
-            meshRH.Set(firstMesh);
+            meshAH.Set(firstMesh);
         }
     }
 
-    return meshRH;
+    return meshAH;
 }
 
 MeshFactory *MeshFactory::GetActive()
 {
-    return Resources::GetInstance()->GetMeshFactory();
+    return Assets::GetInstance()->GetMeshFactory();
 }

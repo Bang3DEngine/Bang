@@ -91,7 +91,7 @@ void Texture3D::Fill(const Byte *newData,
 
     GL::Pop(GetGLBindTarget());
 
-    PropagateResourceChanged();
+    PropagateAssetChanged();
 }
 
 uint Texture3D::GetWidth() const

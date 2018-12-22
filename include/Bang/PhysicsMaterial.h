@@ -4,7 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Resource.h"
+#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "PxMaterial.h"
 
@@ -12,9 +12,9 @@ namespace Bang
 {
 class Path;
 
-class PhysicsMaterial : public Resource
+class PhysicsMaterial : public Asset
 {
-    RESOURCE(PhysicsMaterial)
+    ASSET(PhysicsMaterial)
 
 public:
     enum class CombineMode
@@ -43,7 +43,7 @@ public:
     // ICloneable
     virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
-    // Resource
+    // Asset
     void Import(const Path &physicsMaterialFilepath) override;
 
     // Serializable

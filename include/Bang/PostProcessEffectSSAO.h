@@ -7,7 +7,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/PostProcessEffect.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -57,13 +57,13 @@ private:
     Vector2 m_fbSize = Vector2::One();
 
     Array<Vector3> m_randomHemisphereOffsets;
-    RH<Texture2D> m_randomAxesTexture;
+    AH<Texture2D> m_randomAxesTexture;
 
     Framebuffer *m_ssaoFB = nullptr;
-    RH<Texture2D> m_blurAuxiliarTexture;
-    RH<Texture2D> m_blurredSSAOTexture;
-    RH<ShaderProgram> p_ssaoShaderProgram;
-    RH<ShaderProgram> p_applySSAOShaderProgram;
+    AH<Texture2D> m_blurAuxiliarTexture;
+    AH<Texture2D> m_blurredSSAOTexture;
+    AH<ShaderProgram> p_ssaoShaderProgram;
+    AH<ShaderProgram> p_applySSAOShaderProgram;
 
     void GenerateRandomAxesTexture(int numAxes);
 

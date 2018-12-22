@@ -2,7 +2,7 @@
 
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
@@ -13,12 +13,12 @@ PostProcessEffectDOF::PostProcessEffectDOF()
 {
     SET_INSTANCE_CLASS_ID(PostProcessEffectDOF);
 
-    m_foregroundTexture = Resources::Create<Texture2D>();
+    m_foregroundTexture = Assets::Create<Texture2D>();
     m_foregroundTexture.Get()->CreateEmpty(1, 1);
     m_foregroundTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_foregroundTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_auxiliarTexture = Resources::Create<Texture2D>();
+    m_auxiliarTexture = Assets::Create<Texture2D>();
     m_auxiliarTexture.Get()->CreateEmpty(1, 1);
     m_auxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_auxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);

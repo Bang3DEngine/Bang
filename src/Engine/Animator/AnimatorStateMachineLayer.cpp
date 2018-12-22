@@ -18,7 +18,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
-#include "Bang/Resources.h"
+#include "Bang/Assets.h"
 
 using namespace Bang;
 
@@ -217,8 +217,8 @@ void AnimatorStateMachineLayer::ImportMeta(const MetaNode &metaNode)
 
     if (metaNode.Contains("LayerMask"))
     {
-        RH<AnimatorLayerMask> layerMask =
-            Resources::Load<AnimatorLayerMask>(metaNode.Get<GUID>("LayerMask"));
+        AH<AnimatorLayerMask> layerMask =
+            Assets::Load<AnimatorLayerMask>(metaNode.Get<GUID>("LayerMask"));
         SetLayerMask(layerMask.Get());
     }
 

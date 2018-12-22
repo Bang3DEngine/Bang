@@ -14,8 +14,8 @@
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Resources.h"
-#include "Bang/Resources.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
@@ -84,10 +84,10 @@ void PostProcessEffect::SetPostProcessShader(Shader *postProcessShader)
         return;
     }
 
-    p_postProcessShader = Resources::Create<Shader>();
+    p_postProcessShader = Assets::Create<Shader>();
     p_postProcessShader.Set(postProcessShader);
 
-    p_shaderProgram = Resources::Create<ShaderProgram>();
+    p_shaderProgram = Assets::Create<ShaderProgram>();
     p_shaderProgram.Get()->SetVertexShader(
         ShaderProgramFactory::GetDefaultPostProcess()->GetVertexShader());
     p_shaderProgram.Get()->SetFragmentShader(GetPostProcessShader());
@@ -113,7 +113,7 @@ Shader *PostProcessEffect::GetPostProcessShader() const
 Path PostProcessEffect::GetPostProcessShaderFilepath() const
 {
     return p_postProcessShader
-               ? p_postProcessShader.Get()->GetResourceFilepath()
+               ? p_postProcessShader.Get()->GetAssetFilepath()
                : Path();
 }
 
@@ -121,7 +121,7 @@ void PostProcessEffect::Reflect()
 {
     Component::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_RESOURCE(
+    BANG_REFLECT_VAR_MEMBER_ASSET(
         PostProcessEffect,
         "PostProcess Shader",
         SetPostProcessShader,

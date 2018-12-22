@@ -15,7 +15,7 @@
 #include "Bang/Ray.h"
 #include "Bang/RenderFlags.h"
 #include "Bang/RenderPass.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/USet.h"
 
@@ -128,9 +128,9 @@ private:
 
     RenderFlags m_renderFlags = RenderFlag::DEFAULT;
     USet<RenderPass, EnumClassHash> m_renderPassMask;
-    RH<TextureCubeMap> p_skyboxTextureCM;
-    RH<TextureCubeMap> p_skyboxSpecularTextureCM;
-    RH<TextureCubeMap> p_skyboxDiffuseTextureCM;
+    AH<TextureCubeMap> p_skyboxTextureCM;
+    AH<TextureCubeMap> p_skyboxSpecularTextureCM;
+    AH<TextureCubeMap> p_skyboxDiffuseTextureCM;
 
     CameraProjectionMode m_projMode = CameraProjectionMode::PERSPECTIVE;
     CameraClearMode m_clearMode = CameraClearMode::COLOR;

@@ -25,7 +25,7 @@
 #include "Bang/PhysicsObject.h"
 #include "Bang/PxSceneContainer.h"
 #include "Bang/RayCastInfo.h"
-#include "Bang/ResourceHandle.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/RigidBody.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"

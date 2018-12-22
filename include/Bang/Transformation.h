@@ -36,6 +36,8 @@ public:
     void Rotate(const Quaternion &rotation);
     void Scale(const Vector3 &scale);
 
+    static Transformation Composed(const Transformation &lhs,
+                                   const Transformation &rhs);
     Vector3 TransformedPoint(const Vector3 &point);
     Vector3 TransformedVector(const Vector3 &vector);
 
@@ -70,10 +72,22 @@ private:
     void CalculateWorldToLocalMatrixIfNeeded() const;
 };
 
+inline bool operator==(const Transformation &lhs, const Transformation &rhs)
+{
+    return (lhs.GetPosition() == rhs.GetPosition()) &&
+           (lhs.GetRotation() == rhs.GetRotation()) &&
+           (lhs.GetScale() == rhs.GetScale());
+}
+
+inline bool operator!=(const Transformation &lhs, const Transformation &rhs)
+{
+    return !(lhs == rhs);
+}
+
 inline Transformation operator*(const Transformation &lhs,
                                 const Transformation &rhs)
 {
-    return Transformation(lhs.GetMatrix() * rhs.GetMatrix());
+    return Transformation::Composed(lhs, rhs);
 }
 
 template <class T>

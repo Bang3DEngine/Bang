@@ -114,6 +114,24 @@ void Transformation::Scale(const Vector3 &scale)
     SetScale(scale * GetScale());
 }
 
+Transformation Transformation::Composed(const Transformation &lhs,
+                                        const Transformation &rhs)
+{
+    const Vector3 &lp = lhs.GetPosition();
+    const Quaternion &lr = lhs.GetRotation();
+    const Vector3 &ls = lhs.GetScale();
+    const Vector3 &rp = rhs.GetPosition();
+    const Quaternion &rr = rhs.GetRotation();
+    const Vector3 &rs = rhs.GetScale();
+
+    Transformation newTransformation;
+    newTransformation.SetPosition(lp + (lr * (ls * rp)));
+    newTransformation.SetRotation(lr * rr);
+    newTransformation.SetScale(ls * rs);
+
+    return newTransformation;
+}
+
 Vector3 Transformation::TransformedPoint(const Vector3 &point)
 {
     return ((*this) * Vector4(point, 1)).xyz();

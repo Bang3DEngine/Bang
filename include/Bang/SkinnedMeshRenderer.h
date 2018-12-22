@@ -54,7 +54,8 @@ public:
     GameObject *GetRootBoneGameObject() const;
     const String &GetRootBoneGameObjectName() const;
     GameObject *GetBoneGameObject(const String &boneName) const;
-    Matrix4 GetBoneSpaceToRootSpaceMatrix(const String &boneName) const;
+    Transformation GetBoneSpaceToRootSpaceTransformation(
+        const String &boneName) const;
     Matrix4 GetBoneTransformMatrixFor(
         GameObject *boneGameObject,
         const Matrix4 &transform,
@@ -85,8 +86,8 @@ public:
     void Reflect() override;
 
 private:
-    Map<String, Transformation> m_initialTransforms;
-    Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
+    Map<String, Transformation> m_initialTransformations;
+    Map<String, Transformation> m_boneSpaceToRootSpaceTransformations;
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 
     ObjectGatherer<GameObject, true> *m_gameObjectGatherer = nullptr;

@@ -71,11 +71,13 @@ void Mesh::SetTrianglesVertexIds(const Array<Mesh::VertexId> &trisVerticesIds)
     }
 
     m_vertexIdsIBO = new IBO();
-    m_vertexIdsIBO->Fill((void *)(&m_triangleVertexIds[0]),
-                         m_triangleVertexIds.Size() * sizeof(Mesh::VertexId));
-
+    if (trisVerticesIds.Size() >= 1)
+    {
+        m_vertexIdsIBO->Fill(
+            (void *)(&m_triangleVertexIds[0]),
+            m_triangleVertexIds.Size() * sizeof(Mesh::VertexId));
+    }
     m_vao->SetIBO(m_vertexIdsIBO);  // Bind to VAO
-
     m_areLodsValid = false;
 }
 

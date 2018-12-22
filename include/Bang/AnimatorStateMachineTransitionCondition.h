@@ -3,6 +3,7 @@
 
 #include "Bang/AnimatorStateMachineVariable.h"
 #include "Bang/BangDefines.h"
+#include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
@@ -14,7 +15,9 @@ class AnimatorStateMachine;
 class AnimatorStateMachineLayer;
 class AnimatorStateMachineTransition;
 
-class AnimatorStateMachineTransitionCondition : public Serializable
+class AnimatorStateMachineTransitionCondition
+    : public Serializable,
+      public EventEmitterIEventsDestroyWithCheck
 {
     SERIALIZABLE(AnimatorStateMachineConnectionTransitionCondition)
 

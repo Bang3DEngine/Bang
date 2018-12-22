@@ -14,6 +14,8 @@ using namespace Bang;
 AnimatorStateMachineTransitionCondition::
     AnimatorStateMachineTransitionCondition()
 {
+    EventEmitter<IEventsDestroy>::PropagateToListeners(
+        &IEventsDestroy::OnDestroyed, this);
 }
 
 AnimatorStateMachineTransitionCondition::

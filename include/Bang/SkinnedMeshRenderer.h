@@ -56,10 +56,11 @@ public:
     GameObject *GetBoneGameObject(const String &boneName) const;
     Transformation GetBoneSpaceToRootSpaceTransformation(
         const String &boneName) const;
-    Matrix4 GetBoneTransformMatrixFor(
+    Transformation GetBoneTransformationFor(
         GameObject *boneGameObject,
-        const Matrix4 &transform,
-        UMap<GameObject *, Matrix4> *boneTransformInRootSpaceCache) const;
+        const Transformation &transform,
+        UMap<GameObject *, Transformation> *boneTransformInRootSpaceCache)
+        const;
     const Transformation &GetInitialTransformationFor(
         const String &boneName) const;
     const Map<String, Transformation> &GetInitialTransformations() const;

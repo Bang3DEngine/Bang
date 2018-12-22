@@ -47,10 +47,10 @@ SkinnedMeshRenderer::~SkinnedMeshRenderer()
     delete m_gameObjectGatherer;
 }
 
-Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
+Transformation SkinnedMeshRenderer::GetBoneTransformationFor(
     GameObject *boneGameObject,
-    const Matrix4 &transformInBoneSpace,
-    UMap<GameObject *, Matrix4> *boneTransformInRootSpaceCache) const
+    const Transformation &transformInBoneSpace,
+    UMap<GameObject *, Transformation> *boneTransformInRootSpaceCache) const
 {
     ASSERT(boneTransformInRootSpaceCache);
     {
@@ -63,7 +63,7 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
 
     if (!boneGameObject || boneGameObject == GetRootBoneGameObject())
     {
-        return Matrix4::Identity();
+        return Transformation::Identity();
     }
 
     const String &boneName = boneGameObject->GetName();
@@ -71,35 +71,34 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
     {
         if (Transform *tr = boneGameObject->GetTransform())
         {
-            return tr->GetLocalToParentMatrix();
+            return Transformation(tr->GetLocalToParentMatrix());
         }
-        return Matrix4::Identity();
+        return Transformation::Identity();
     }
 
     GameObject *parentBoneGo = boneGameObject->GetParent();
     String parentBoneGoName = parentBoneGo ? parentBoneGo->GetName() : nullptr;
 
-    Matrix4 boneSpaceToRootSpace = Matrix4::Identity();
+    Transformation boneSpaceToRootSpace = Transformation::Identity();
     if (GetBoneGameObject(boneName))
     {
-        boneSpaceToRootSpace =
-            GetBoneSpaceToRootSpaceTransformation(boneName).GetMatrix();
+        boneSpaceToRootSpace = GetBoneSpaceToRootSpaceTransformation(boneName);
     }
-    Matrix4 rootSpaceToBoneSpace = boneSpaceToRootSpace.Inversed();
+    Transformation rootSpaceToBoneSpace = boneSpaceToRootSpace.Inversed();
 
-    Matrix4 parentBoneSpaceToRootSpace = Matrix4::Identity();
+    Transformation parentBoneSpaceToRootSpace = Transformation::Identity();
     if (GetBoneGameObject(parentBoneGoName))
     {
         parentBoneSpaceToRootSpace =
-            GetBoneSpaceToRootSpaceTransformation(parentBoneGoName).GetMatrix();
+            GetBoneSpaceToRootSpaceTransformation(parentBoneGoName);
     }
 
-    Matrix4 parentBoneTransformInRootSpace = GetBoneTransformMatrixFor(
+    Transformation parentBoneTransformInRootSpace = GetBoneTransformationFor(
         parentBoneGo,
-        parentBoneGo->GetTransform()->GetLocalToParentMatrix(),
+        parentBoneGo->GetTransform()->GetLocalTransformation(),
         boneTransformInRootSpaceCache);
 
-    Matrix4 boneTransformInRootSpace =
+    Transformation boneTransformInRootSpace =
         parentBoneTransformInRootSpace * parentBoneSpaceToRootSpace *
         transformInBoneSpace * rootSpaceToBoneSpace;
 
@@ -138,18 +137,19 @@ void SkinnedMeshRenderer::UpdateBonesMatricesFromTransformMatrices()
     if (GameObject *rootBoneGo = GetRootBoneGameObject())
     {
         Map<String, Matrix4> bonesMatrices;
-        UMap<GameObject *, Matrix4> bonesTransformsCache;
+        UMap<GameObject *, Transformation> bonesTransformsCache;
         Array<GameObject *> childrenRecursive =
             rootBoneGo->GetChildrenRecursively();
         for (GameObject *child : childrenRecursive)
         {
             const String &boneName = child->GetName();
             GameObject *boneGameObject = child;
-            Matrix4 localToParent =
-                boneGameObject->GetTransform()->GetLocalToParentMatrix();
-            Matrix4 boneTransformMatrix = GetBoneTransformMatrixFor(
+            const Transformation &localToParent =
+                boneGameObject->GetTransform()->GetLocalTransformation();
+            Transformation boneTransformMatrix = GetBoneTransformationFor(
                 boneGameObject, localToParent, &bonesTransformsCache);
-            bonesMatrices.Add(boneName, boneTransformMatrix);
+
+            bonesMatrices.Add(boneName, boneTransformMatrix.GetMatrix());
         }
         SetSkinnedMeshRendererCurrentBoneMatrices(bonesMatrices);
     }

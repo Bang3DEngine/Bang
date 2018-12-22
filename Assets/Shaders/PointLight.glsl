@@ -65,7 +65,11 @@ vec3 GetPointLightColorApportation(const vec3 lightPosWorld,
         lightness = GetPointLightFragmentLightness(pixelDistSq,
                                                    pixelPosWorld,
                                                    pixelNormalWorld);
-        lightness = min(1, lightness + (1-B_LightShadowStrength));
+        float lightShadowStrength = 1.0f;
+        #ifdef BANG_DEFERRED_RENDERING
+        lightShadowStrength = B_LightShadowStrength;
+        #endif
+        lightness = min(1, lightness + (1-lightShadowStrength));
     }
 
     vec3 N = pixelNormalWorld;

@@ -31,8 +31,9 @@ layout(location = 0) out vec4 B_GIn_Color;
 
 layout(location = 0) out vec4 B_GIn_Color;
 layout(location = 1) out vec4 B_GIn_Albedo;
-layout(location = 2) out vec4 B_GIn_Normal;
-layout(location = 3) out vec4 B_GIn_Misc;
+layout(location = 2) out vec4 B_GIn_Light;
+layout(location = 3) out vec4 B_GIn_Normal;
+layout(location = 4) out vec4 B_GIn_Misc;
 
 #endif
 
@@ -222,6 +223,7 @@ void main()
 
         B_GIn_Color = color;
         B_GIn_Albedo = albedoColor;
+        B_GIn_Light = vec4(0);
         B_GIn_Normal = vec4(normal * 0.5f + 0.5f, 0);
         B_GIn_Misc = vec4(receivesLighting,
                           pixelRoughness,

@@ -39,7 +39,7 @@ public:
     bool AreTransitionConditionsFulfilled(Animator *animator) const;
 
     void SetTransitionDuration(Time transitionDuration);
-    void SetImmediateTransition(bool immediateTransition);
+    void SetWaitForAnimationToFinish(bool waitForAnimationToFinish);
     AnimatorStateMachineTransitionCondition *CreateAndAddTransitionCondition();
     void RemoveTransitionCondition(
         AnimatorStateMachineTransitionCondition *transitionCond);
@@ -47,7 +47,7 @@ public:
 
     AnimatorStateMachineNode *GetNodeTo() const;
     AnimatorStateMachineNode *GetNodeFrom() const;
-    bool GetImmediateTransition() const;
+    bool GetWaitForAnimationToFinish() const;
     Time GetTransitionDuration() const;
 
     const Array<AnimatorStateMachineTransitionCondition *>
@@ -67,7 +67,7 @@ private:
     DPtr<AnimatorStateMachineNode> p_nodeTo;
     DPtr<AnimatorStateMachineNode> p_nodeFrom;
     Time m_transitionDuration = Time::Seconds(0.5);
-    bool m_immediateTransition = false;
+    bool m_waitForAnimationToFinish = false;
     Array<AnimatorStateMachineTransitionCondition *> m_transitionConditions;
 };
 }  // namespace Bang

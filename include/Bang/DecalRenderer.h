@@ -19,7 +19,7 @@ public:
     virtual void OnRender() override;
     virtual Matrix4 GetModelMatrixUniform() const override;
 
-    void SetIsProjective(bool isProjective);
+    void SetIsPerspective(bool isPerspective);
     void SetFieldOfViewDegrees(float fieldOfViewDegrees);
     void SetAspectRatio(float aspectRatio);
     void SetZNear(float zNear);
@@ -32,7 +32,7 @@ public:
     float GetFieldOfViewDegrees() const;
     const Vector3 &GetBoxSize() const;
     float GetAspectRatio() const;
-    bool GetIsProjective() const;
+    bool GetIsPerspective() const;
     Texture2D *GetDecalTexture() const;
     Matrix4 GetViewMatrix() const;
     Matrix4 GetProjectionMatrix() const;
@@ -42,7 +42,7 @@ public:
 
 private:
     RH<Mesh> m_cubeMesh;
-    bool m_projective = false;
+    bool m_perspective = false;
 
     float m_zNear = 0.05f;
     float m_zFar = 100.0f;

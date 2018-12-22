@@ -51,10 +51,10 @@ void AnimatorStateMachineTransition::SetTransitionDuration(
     m_transitionDuration = transitionDuration;
 }
 
-void AnimatorStateMachineTransition::SetImmediateTransition(
-    bool immediateTransition)
+void AnimatorStateMachineTransition::SetWaitForAnimationToFinish(
+    bool waitForAnimationToFinish)
 {
-    m_immediateTransition = immediateTransition;
+    m_waitForAnimationToFinish = waitForAnimationToFinish;
 }
 
 AnimatorStateMachineTransitionCondition *
@@ -94,9 +94,9 @@ AnimatorStateMachineNode *AnimatorStateMachineTransition::GetNodeFrom() const
     return p_nodeFrom;
 }
 
-bool AnimatorStateMachineTransition::GetImmediateTransition() const
+bool AnimatorStateMachineTransition::GetWaitForAnimationToFinish() const
 {
-    return m_immediateTransition;
+    return m_waitForAnimationToFinish;
 }
 
 Time AnimatorStateMachineTransition::GetTransitionDuration() const
@@ -130,7 +130,7 @@ void AnimatorStateMachineTransition::CloneInto(ICloneable *clone,
     cloneTransition->SetNodeFrom(GetNodeFrom());
     cloneTransition->SetNodeTo(GetNodeTo());
     cloneTransition->SetTransitionDuration(GetTransitionDuration());
-    cloneTransition->SetImmediateTransition(GetImmediateTransition());
+    cloneTransition->SetWaitForAnimationToFinish(GetWaitForAnimationToFinish());
 }
 
 void AnimatorStateMachineTransition::ImportMeta(const MetaNode &metaNode)
@@ -157,9 +157,10 @@ void AnimatorStateMachineTransition::ImportMeta(const MetaNode &metaNode)
         SetTransitionDuration(metaNode.Get<Time>("TransitionDuration"));
     }
 
-    if (metaNode.Contains("ImmediateTransition"))
+    if (metaNode.Contains("WaitForAnimationToFinish"))
     {
-        SetImmediateTransition(metaNode.Get<bool>("ImmediateTransition"));
+        SetWaitForAnimationToFinish(
+            metaNode.Get<bool>("WaitForAnimationToFinish"));
     }
 
     const auto &transitionCondMetas =
@@ -184,7 +185,7 @@ void AnimatorStateMachineTransition::ExportMeta(MetaNode *metaNode) const
                       GetLayer()->GetNodes().IndexOf(GetNodeFrom()));
     }
 
-    metaNode->Set("ImmediateTransition", GetImmediateTransition());
+    metaNode->Set("WaitForAnimationToFinish", GetWaitForAnimationToFinish());
     metaNode->Set("TransitionDuration", GetTransitionDuration());
 
     metaNode->CreateChildrenContainer("TransitionConditions");

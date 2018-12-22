@@ -61,7 +61,7 @@ void DecalRenderer::OnRender()
 Matrix4 DecalRenderer::GetModelMatrixUniform() const
 {
     Matrix4 transformMatrix = Renderer::GetModelMatrixUniform();
-    if (GetIsProjective())
+    if (GetIsPerspective())
     {
         // Set new scale to cover all the frustum
         Vector3 newScale;
@@ -78,9 +78,9 @@ Matrix4 DecalRenderer::GetModelMatrixUniform() const
     return transformMatrix;
 }
 
-void DecalRenderer::SetIsProjective(bool isProjective)
+void DecalRenderer::SetIsPerspective(bool isPerspective)
 {
-    m_projective = isProjective;
+    m_perspective = isPerspective;
 }
 
 void DecalRenderer::SetFieldOfViewDegrees(float fieldOfViewDegrees)
@@ -138,9 +138,9 @@ float DecalRenderer::GetAspectRatio() const
     return m_aspectRatio;
 }
 
-bool DecalRenderer::GetIsProjective() const
+bool DecalRenderer::GetIsPerspective() const
 {
-    return m_projective;
+    return m_perspective;
 }
 
 Texture2D *DecalRenderer::GetDecalTexture() const
@@ -151,7 +151,7 @@ Texture2D *DecalRenderer::GetDecalTexture() const
 Matrix4 DecalRenderer::GetViewMatrix() const
 {
     Matrix4 viewMatrix;
-    if (GetIsProjective())
+    if (GetIsPerspective())
     {
         Transform *tr = GetGameObject()->GetTransform();
         viewMatrix = Matrix4::TranslateMatrix(tr->GetPosition()) *
@@ -172,7 +172,7 @@ Matrix4 DecalRenderer::GetViewMatrix() const
 Matrix4 DecalRenderer::GetProjectionMatrix() const
 {
     Matrix4 projMatrix;
-    if (GetIsProjective())
+    if (GetIsPerspective())
     {
         projMatrix =
             Matrix4::Perspective(Math::DegToRad(GetFieldOfViewDegrees()),
@@ -217,7 +217,7 @@ void DecalRenderer::Reflect()
         BANG_REFLECT_HINT_EXTENSIONS(Extensions::GetImageExtensions()));
 
     BANG_REFLECT_VAR_MEMBER(
-        DecalRenderer, "Projective", SetIsProjective, GetIsProjective);
+        DecalRenderer, "Perspective", SetIsPerspective, GetIsPerspective);
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
@@ -225,7 +225,7 @@ void DecalRenderer::Reflect()
         SetBoxSize,
         GetBoxSize,
         BANG_REFLECT_HINT_MIN_VALUE(Vector3(0)) +
-            BANG_REFLECT_HINT_SHOWN(!GetIsProjective()));
+            BANG_REFLECT_HINT_SHOWN(!GetIsPerspective()));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
@@ -233,13 +233,13 @@ void DecalRenderer::Reflect()
         SetFieldOfViewDegrees,
         GetFieldOfViewDegrees,
         BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 179.0f) +
-            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+            BANG_REFLECT_HINT_SHOWN(GetIsPerspective()));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(DecalRenderer,
                                    "Aspect Ratio",
                                    SetAspectRatio,
                                    GetAspectRatio,
-                                   BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+                                   BANG_REFLECT_HINT_SHOWN(GetIsPerspective()));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
@@ -247,7 +247,7 @@ void DecalRenderer::Reflect()
         SetZNear,
         GetZNear,
         BANG_REFLECT_HINT_MINMAX_VALUE(0.05f, GetZFar()) +
-            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+            BANG_REFLECT_HINT_SHOWN(GetIsPerspective()));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         DecalRenderer,
@@ -255,5 +255,5 @@ void DecalRenderer::Reflect()
         SetZFar,
         GetZFar,
         BANG_REFLECT_HINT_MIN_VALUE(GetZNear()) +
-            BANG_REFLECT_HINT_SHOWN(GetIsProjective()));
+            BANG_REFLECT_HINT_SHOWN(GetIsPerspective()));
 }

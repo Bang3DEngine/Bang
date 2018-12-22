@@ -99,7 +99,8 @@ void AnimatorStateMachinePlayer::Step(Animator *animator, Time deltaTime)
                 for (AnimatorStateMachineTransition *conn :
                      GetCurrentNode()->GetTransitions())
                 {
-                    if (hasFinishedAnimation || conn->GetImmediateTransition())
+                    if (hasFinishedAnimation ||
+                        !conn->GetWaitForAnimationToFinish())
                     {
                         if (conn->AreTransitionConditionsFulfilled(animator))
                         {

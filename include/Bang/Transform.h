@@ -136,8 +136,6 @@ protected:
     Transform();
     virtual ~Transform() override;
 
-    Transformation &GetLocalTransformation();
-
     // IInvalidatable
     void OnInvalidatedWorld() override;
     void OnInvalidatedLocal() override;

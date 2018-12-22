@@ -108,17 +108,18 @@ Matrix4 SkinnedMeshRenderer::GetBoneTransformMatrixFor(
     return boneTransformInRootSpace;
 }
 
-const Matrix4 &SkinnedMeshRenderer::GetInitialTransformMatrixFor(
+const Transformation &SkinnedMeshRenderer::GetInitialTransformationFor(
     const String &boneName) const
 {
     if (m_initialTransforms.ContainsKey(boneName))
     {
         return m_initialTransforms.Get(boneName);
     }
-    return Matrix4::Identity();
+    return Transformation::Identity();
 }
 
-const Map<String, Matrix4> &SkinnedMeshRenderer::GetInitialTransforms() const
+const Map<String, Transformation>
+    &SkinnedMeshRenderer::GetInitialTransformations() const
 {
     return m_initialTransforms;
 }
@@ -164,7 +165,7 @@ void SkinnedMeshRenderer::UpdateTransformMatricesFromInitialBonePosition()
             const String &boneName = child->GetName();
             GameObject *boneGameObject = child;
             boneGameObject->GetTransform()->FillFromMatrix(
-                GetInitialTransformMatrixFor(boneName));
+                GetInitialTransformationFor(boneName).GetMatrix());
         }
     }
 }
@@ -284,7 +285,8 @@ void SkinnedMeshRenderer::SetSkinnedMeshRendererCurrentBoneMatrices(
     m_bonesTransformsMatricesArrayUniform = boneMatrices;
 }
 
-void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
+void SkinnedMeshRenderer::
+    RetrieveBonesInitialTransformationFromCurrentHierarchy()
 {
     if (Model *model = GetActiveModel())
     {
@@ -306,7 +308,7 @@ void SkinnedMeshRenderer::RetrieveBonesBindPoseFromCurrentHierarchy()
                 {
                     m_initialTransforms.Add(
                         boneName,
-                        boneGo->GetTransform()->GetLocalToParentMatrix());
+                        boneGo->GetTransform()->GetLocalTransformation());
                 }
             }
 
@@ -329,7 +331,7 @@ void SkinnedMeshRenderer::OnObjectGathered(GameObject *go)
 {
     p_rootBoneGameObject = nullptr;
     m_boneNameToBoneGameObject.Clear();
-    RetrieveBonesBindPoseFromCurrentHierarchy();
+    RetrieveBonesInitialTransformationFromCurrentHierarchy();
 }
 
 void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
@@ -337,7 +339,7 @@ void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *previousGameObject,
 {
     p_rootBoneGameObject = nullptr;
     m_boneNameToBoneGameObject.Clear();
-    RetrieveBonesBindPoseFromCurrentHierarchy();
+    RetrieveBonesInitialTransformationFromCurrentHierarchy();
 }
 
 void SkinnedMeshRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const

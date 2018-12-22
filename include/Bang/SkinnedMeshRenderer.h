@@ -18,6 +18,7 @@
 #include "Bang/ObjectGatherer.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
+#include "Bang/Transformation.h"
 #include "Bang/UMap.h"
 
 namespace Bang
@@ -58,8 +59,9 @@ public:
         GameObject *boneGameObject,
         const Matrix4 &transform,
         UMap<GameObject *, Matrix4> *boneTransformInRootSpaceCache) const;
-    const Matrix4 &GetInitialTransformMatrixFor(const String &boneName) const;
-    const Map<String, Matrix4> &GetInitialTransforms() const;
+    const Transformation &GetInitialTransformationFor(
+        const String &boneName) const;
+    const Map<String, Transformation> &GetInitialTransformations() const;
 
     void SetBoneUniforms(ShaderProgram *sp);
     void UpdateBonesMatricesFromTransformMatrices();
@@ -69,7 +71,7 @@ public:
     void SetSkinnedMeshRendererCurrentBoneMatrices(
         const Array<Matrix4> &boneMatrices);
 
-    void RetrieveBonesBindPoseFromCurrentHierarchy();
+    void RetrieveBonesInitialTransformationFromCurrentHierarchy();
 
     // ObjectGatherer
     virtual void OnObjectGathered(GameObject *go) override;
@@ -83,7 +85,7 @@ public:
     void Reflect() override;
 
 private:
-    Map<String, Matrix4> m_initialTransforms;
+    Map<String, Transformation> m_initialTransforms;
     Map<String, Matrix4> m_boneSpaceToRootSpaceMatrices;
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 

@@ -32,7 +32,7 @@ void Transform::SetLocalPosition(const Vector3 &p)
 {
     if (GetLocalPosition() != p)
     {
-        GetLocalTransformation().SetPosition(p);
+        m_localTransformation.SetPosition(p);
         OnTransformChanged();
     }
 }
@@ -61,7 +61,7 @@ void Transform::SetLocalRotation(const Quaternion &q)
 {
     if (GetLocalRotation() != q)
     {
-        GetLocalTransformation().SetRotation(q.Normalized());
+        m_localTransformation.SetRotation(q.Normalized());
         m_localEulerAnglesDegreesHint =
             GetLocalRotation().GetEulerAnglesDegrees();
         OnTransformChanged();
@@ -147,7 +147,7 @@ void Transform::SetLocalScale(const Vector3 &localScale)
 {
     if (GetLocalScale() != localScale)
     {
-        GetLocalTransformation().SetScale(localScale);
+        m_localTransformation.SetScale(localScale);
         OnTransformChanged();
     }
 }
@@ -248,7 +248,7 @@ const Matrix4 &Transform::GetWorldToLocalMatrix() const
 
 void Transform::LookAt(const Vector3 &target, const Vector3 &up)
 {
-    GetLocalTransformation().LookAt(target, up);
+    m_localTransformation.LookAt(target, up);
 }
 
 void Transform::LookAt(Transform *targetTransform, const Vector3 &up)
@@ -263,12 +263,12 @@ void Transform::LookAt(GameObject *target, const Vector3 &up)
 
 void Transform::LookInDirection(const Vector3 &dir, const Vector3 &up)
 {
-    GetLocalTransformation().LookAt(dir, up);
+    m_localTransformation.LookAt(dir, up);
 }
 
 void Transform::FillFromMatrix(const Matrix4 &transformMatrix)
 {
-    GetLocalTransformation().FillFromMatrix(transformMatrix);
+    m_localTransformation.FillFromMatrix(transformMatrix);
     OnTransformChanged();
 }
 
@@ -327,11 +327,6 @@ Vector3 Transform::GetScale() const
     Transform *parentTr = (parent ? parent->GetTransform() : nullptr);
     Vector3 parentScale = parentTr ? parentTr->GetScale() : Vector3::One();
     return parentScale * GetLocalScale();
-}
-
-Transformation &Transform::GetLocalTransformation()
-{
-    return m_localTransformation;
 }
 
 const Transformation &Transform::GetLocalTransformation() const

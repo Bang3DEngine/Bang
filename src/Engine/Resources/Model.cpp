@@ -117,7 +117,7 @@ GameObject *Model::CreateGameObjectFromModel() const
         modelGo->GetComponentsInDescendantsAndThis<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
-        smr->RetrieveBonesBindPoseFromCurrentHierarchy();
+        smr->RetrieveBonesInitialTransformationFromCurrentHierarchy();
     }
     return modelGo;
 }

@@ -1,6 +1,7 @@
 #include "Bang/UIDirLayoutMovableSeparator.h"
 
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Cursor.h"
@@ -14,7 +15,6 @@
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/RectTransform.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Transform.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UILayoutElement.h"

@@ -1,10 +1,10 @@
 #ifndef PHYSICSMATERIAL_H
 #define PHYSICSMATERIAL_H
 
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "PxMaterial.h"
 

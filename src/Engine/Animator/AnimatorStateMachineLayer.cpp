@@ -10,6 +10,7 @@
 #include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/AnimatorStateMachineTransitionCondition.h"
 #include "Bang/AnimatorStateMachineVariable.h"
+#include "Bang/Assets.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/GameObject.h"
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
@@ -18,7 +19,6 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
-#include "Bang/Assets.h"
 
 using namespace Bang;
 

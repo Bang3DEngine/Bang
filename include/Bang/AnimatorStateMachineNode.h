@@ -6,6 +6,7 @@
 #include "Bang/Animation.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.h"
@@ -15,7 +16,6 @@
 #include "Bang/IEventsAnimatorStateMachineNode.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Serializable.h"
 #include "Bang/String.h"
 

@@ -1,9 +1,9 @@
 #include "Bang/ShaderProgramFactory.h"
 
-#include "Bang/Map.tcc"
-#include "Bang/Paths.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
+#include "Bang/Map.tcc"
+#include "Bang/Paths.h"
 #include "Bang/ShaderProgram.h"
 
 using namespace Bang;

@@ -2,6 +2,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/AudioListener.h"
 #include "Bang/Axis.h"
 #include "Bang/BoxCollider.h"
@@ -18,7 +19,6 @@
 #include "Bang/MeshRenderer.h"
 #include "Bang/Physics.h"
 #include "Bang/RectTransform.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Scene.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/TextureFactory.h"

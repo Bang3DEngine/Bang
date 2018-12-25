@@ -1,5 +1,6 @@
 #include "Bang/DecalRenderer.h"
 
+#include "Bang/Assets.h"
 #include "Bang/Extensions.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -7,7 +8,6 @@
 #include "Bang/Material.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
-#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"

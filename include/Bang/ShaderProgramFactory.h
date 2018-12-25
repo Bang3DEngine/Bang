@@ -4,11 +4,11 @@
 #include <functional>
 #include <tuple>
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 
 namespace Bang
 {

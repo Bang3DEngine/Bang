@@ -3,12 +3,12 @@
 #include <SDL.h>
 
 #include "Bang/Application.h"
+#include "Bang/Assets.h"
 #include "Bang/Debug.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/Input.h"
-#include "Bang/Assets.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Texture2D.h"

@@ -2,11 +2,11 @@
 #define RENDERFACTORY_H
 
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/Quaternion.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Texture2D.h"
 
 namespace Bang

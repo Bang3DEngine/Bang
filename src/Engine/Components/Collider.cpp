@@ -1,5 +1,7 @@
 #include "Bang/Collider.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Extensions.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
@@ -10,8 +12,6 @@
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PxSceneContainer.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"

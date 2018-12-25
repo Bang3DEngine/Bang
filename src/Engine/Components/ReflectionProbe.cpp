@@ -3,6 +3,8 @@
 #include <istream>
 
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/CubeMapIBLGenerator.h"
@@ -20,8 +22,6 @@
 #include "Bang/RenderFlags.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/TextureCubeMap.h"

@@ -2,6 +2,8 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Camera.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
@@ -22,8 +24,6 @@
 #include "Bang/Rect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"

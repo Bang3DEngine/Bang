@@ -3,10 +3,10 @@
 
 #include <AL/al.h>
 
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang

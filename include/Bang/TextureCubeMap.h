@@ -5,14 +5,14 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Asset.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
 #include "Bang/IEventsAsset.h"
 #include "Bang/ImageIO.h"
-#include "Bang/Asset.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 

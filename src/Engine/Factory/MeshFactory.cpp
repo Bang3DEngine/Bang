@@ -4,12 +4,12 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/Model.h"
 #include "Bang/Paths.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Set.tcc"
 
 namespace Bang

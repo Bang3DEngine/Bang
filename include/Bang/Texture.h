@@ -1,12 +1,12 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/Image.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang

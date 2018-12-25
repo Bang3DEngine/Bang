@@ -1,5 +1,7 @@
 #include "Bang/MeshCollider.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/Extensions.h"
 #include "Bang/GUID.h"
@@ -12,8 +14,6 @@
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 #include "PxRigidStatic.h"
 #include "PxShape.h"

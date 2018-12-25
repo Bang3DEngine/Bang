@@ -5,6 +5,8 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Component.h"
@@ -26,8 +28,6 @@
 #include "Bang/PxSceneContainer.h"
 #include "Bang/Quaternion.h"
 #include "Bang/Random.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Time.h"

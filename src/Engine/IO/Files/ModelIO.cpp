@@ -26,6 +26,8 @@
 
 #include "Bang/Animation.h"
 #include "Bang/Array.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Extensions.h"
@@ -38,8 +40,6 @@
 #include "Bang/Model.h"
 #include "Bang/Path.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
@@ -604,8 +604,7 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
         materialName, model->GetMaterialsNames());
 
     *outMaterialName = materialName;
-    *outMaterial =
-        Assets::CreateEmbeddedAsset<Material>(model, materialName);
+    *outMaterial = Assets::CreateEmbeddedAsset<Material>(model, materialName);
 
     aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
     aiColor3D aDiffuseColor = aiColor3D(1.0f, 1.0f, 1.0f);

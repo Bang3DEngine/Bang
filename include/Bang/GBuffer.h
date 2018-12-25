@@ -3,10 +3,10 @@
 
 #include <stack>
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GL.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang

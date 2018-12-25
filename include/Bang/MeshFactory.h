@@ -3,8 +3,8 @@
 
 #include <functional>
 
-#include "Bang/BangDefines.h"
 #include "Bang/AssetHandle.h"
+#include "Bang/BangDefines.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 

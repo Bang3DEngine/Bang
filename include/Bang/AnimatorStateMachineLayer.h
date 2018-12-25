@@ -3,6 +3,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.h"
@@ -10,7 +11,6 @@
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Asset.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 

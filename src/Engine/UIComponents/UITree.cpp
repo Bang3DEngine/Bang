@@ -9,6 +9,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Color.h"
 #include "Bang/Debug.h"
@@ -23,7 +24,6 @@
 #include "Bang/List.tcc"
 #include "Bang/Math.h"
 #include "Bang/RectTransform.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Scene.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"

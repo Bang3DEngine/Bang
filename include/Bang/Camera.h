@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/Component.h"
@@ -15,7 +16,6 @@
 #include "Bang/Ray.h"
 #include "Bang/RenderFlags.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/USet.h"
 

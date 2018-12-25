@@ -1,10 +1,10 @@
 #include "Bang/TextureFactory.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/GL.h"
 #include "Bang/Map.tcc"
 #include "Bang/Paths.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Texture2D.h"
 #include "Bang/Texture3D.h"
 #include "Bang/TextureCubeMap.h"

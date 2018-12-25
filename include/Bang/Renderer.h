@@ -5,6 +5,7 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
@@ -13,11 +14,10 @@
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GL.h"
-#include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsAsset.h"
+#include "Bang/IEventsRendererChanged.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang

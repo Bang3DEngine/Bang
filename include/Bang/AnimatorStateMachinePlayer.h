@@ -7,13 +7,13 @@
 #include "Bang/AnimatorStateMachineNode.h"
 #include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsAnimatorStateMachineLayer.h"
 #include "Bang/IEventsAnimatorStateMachineNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Time.h"
 
 namespace Bang

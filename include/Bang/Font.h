@@ -4,10 +4,10 @@
 #include <SDL_ttf.h>
 
 #include "Bang/AARect.h"
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector2.h"

@@ -4,6 +4,7 @@
 
 #include "SDL_timer.h"
 
+#include "Bang/Assets.h"
 #include "Bang/AudioManager.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Debug.h"
@@ -11,7 +12,6 @@
 #include "Bang/MetaFilesManager.h"
 #include "Bang/Paths.h"
 #include "Bang/Physics.h"
-#include "Bang/Assets.h"
 #include "Bang/Settings.h"
 #include "Bang/SystemUtils.h"
 #include "Bang/Texture2D.h"

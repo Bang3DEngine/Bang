@@ -4,6 +4,8 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Extensions.h"
@@ -14,8 +16,6 @@
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
@@ -112,9 +112,8 @@ Shader *PostProcessEffect::GetPostProcessShader() const
 }
 Path PostProcessEffect::GetPostProcessShaderFilepath() const
 {
-    return p_postProcessShader
-               ? p_postProcessShader.Get()->GetAssetFilepath()
-               : Path();
+    return p_postProcessShader ? p_postProcessShader.Get()->GetAssetFilepath()
+                               : Path();
 }
 
 void PostProcessEffect::Reflect()

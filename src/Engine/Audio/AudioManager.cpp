@@ -11,6 +11,9 @@
 #include "Bang/Application.h"
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
+#include "Bang/AssetHandle.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/AudioClip.h"
 #include "Bang/AudioPlayerRunnable.h"
 #include "Bang/Debug.h"
@@ -19,9 +22,6 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/List.tcc"
 #include "Bang/MutexLocker.h"
-#include "Bang/AssetHandle.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/UMap.tcc"
 
 using namespace Bang;

@@ -2,13 +2,13 @@
 #define ANIMATOR_H
 
 #include "Bang/AnimatorStateMachineVariable.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/IEventsAnimatorStateMachine.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 #include "Bang/Transformation.h"

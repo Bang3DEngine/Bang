@@ -2,11 +2,11 @@
 #define POINTLIGHT_H
 
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/TextureCubeMap.h"
 

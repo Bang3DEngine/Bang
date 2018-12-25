@@ -1,8 +1,8 @@
 #ifndef VOLUMERENDERER_H
 #define VOLUMERENDERER_H
 
-#include "Bang/Renderer.h"
 #include "Bang/AssetHandle.h"
+#include "Bang/Renderer.h"
 
 namespace Bang
 {

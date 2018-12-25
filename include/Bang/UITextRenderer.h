@@ -3,13 +3,13 @@
 
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/UIRenderer.h"
 

@@ -1,8 +1,8 @@
 #include "Bang/PostProcessEffectDOF.h"
 
+#include "Bang/Assets.h"
 #include "Bang/GBuffer.h"
 #include "Bang/GEngine.h"
-#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"

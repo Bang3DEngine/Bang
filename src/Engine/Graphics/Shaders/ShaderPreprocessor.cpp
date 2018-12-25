@@ -2,10 +2,10 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
 #include "Bang/CodePreprocessor.h"
 #include "Bang/Path.h"
 #include "Bang/Paths.h"
-#include "Bang/Assets.h"
 #include "Bang/String.h"
 
 using namespace Bang;

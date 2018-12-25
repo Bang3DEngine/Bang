@@ -6,14 +6,14 @@
 #include "Bang/AnimatorStateMachineLayer.h"
 #include "Bang/AnimatorStateMachineTransition.h"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/DPtr.tcc"
 #include "Bang/GUID.h"
 #include "Bang/IEventsAnimatorStateMachineNode.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 
 using namespace Bang;
 

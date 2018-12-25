@@ -1,10 +1,10 @@
 #ifndef CLOTH_H
 #define CLOTH_H
 
+#include "Bang/AssetHandle.h"
 #include "Bang/Bang.h"
 #include "Bang/Particle.h"
 #include "Bang/Renderer.h"
-#include "Bang/AssetHandle.h"
 
 namespace Bang
 {

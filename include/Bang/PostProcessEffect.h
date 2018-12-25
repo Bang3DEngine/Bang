@@ -1,13 +1,13 @@
 #ifndef POSTPROCESSEFFECT_H
 #define POSTPROCESSEFFECT_H
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/String.h"

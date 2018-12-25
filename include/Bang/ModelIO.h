@@ -5,12 +5,12 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
 #include "Bang/Matrix4.tcc"
 #include "Bang/Mesh.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 struct aiMaterial;

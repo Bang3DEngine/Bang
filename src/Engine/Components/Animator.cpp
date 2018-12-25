@@ -12,6 +12,8 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -20,8 +22,6 @@
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/SkinnedMeshRenderer.h"
 #include "Bang/Transform.h"
 

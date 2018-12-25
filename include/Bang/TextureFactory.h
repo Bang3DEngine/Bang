@@ -3,10 +3,10 @@
 
 #include <functional>
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Path.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang

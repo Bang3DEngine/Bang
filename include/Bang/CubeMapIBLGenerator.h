@@ -1,8 +1,8 @@
 #ifndef CUBEMAPIBLGENERATOR_H
 #define CUBEMAPIBLGENERATOR_H
 
-#include "Bang/BangDefines.h"
 #include "Bang/AssetHandle.h"
+#include "Bang/BangDefines.h"
 
 namespace Bang
 {

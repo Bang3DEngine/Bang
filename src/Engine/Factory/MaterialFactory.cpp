@@ -1,10 +1,10 @@
 #include "Bang/MaterialFactory.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Material.h"
 #include "Bang/Paths.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 
 using namespace Bang;
 

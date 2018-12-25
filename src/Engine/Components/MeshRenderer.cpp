@@ -1,5 +1,7 @@
 #include "Bang/MeshRenderer.h"
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/Extensions.h"
 #include "Bang/GL.h"
@@ -16,8 +18,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Plane.h"
 #include "Bang/ReflectionProbe.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 #include "Bang/Triangle.h"

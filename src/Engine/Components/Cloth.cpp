@@ -1,6 +1,7 @@
 #include "Bang/Cloth.h"
 
 #include "Bang/Array.h"
+#include "Bang/Assets.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
@@ -10,7 +11,6 @@
 #include "Bang/Mesh.h"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Assets.h"
 #include "Bang/Scene.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"

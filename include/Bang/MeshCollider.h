@@ -1,10 +1,10 @@
 #ifndef MESHCOLLIDER_H
 #define MESHCOLLIDER_H
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "PxShape.h"
 

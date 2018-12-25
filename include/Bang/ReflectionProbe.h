@@ -3,6 +3,7 @@
 
 #include <array>
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Camera.h"
 #include "Bang/Color.h"
@@ -10,7 +11,6 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/GL.h"
 #include "Bang/MetaNode.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 

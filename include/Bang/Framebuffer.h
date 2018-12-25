@@ -3,11 +3,11 @@
 
 #include "Bang/AARect.h"
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/UMap.h"
 #include "Bang/Vector2.h"
 

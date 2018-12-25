@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/AudioClip.h"
 #include "Bang/AudioManager.h"
 #include "Bang/ClassDB.h"
@@ -14,8 +16,6 @@
 #include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Transform.h"
 
 using namespace Bang;

@@ -1,6 +1,8 @@
 #include "Bang/TextureCubeMap.h"
 
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GUID.h"
@@ -9,8 +11,6 @@
 #include "Bang/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Texture2D.h"
 
 namespace Bang

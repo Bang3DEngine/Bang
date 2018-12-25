@@ -35,8 +35,8 @@ public:
                                      uint steps = 2);
 
     static Array<AH<Mesh>> GetAllMeshLODs(
-                                    const Mesh *mesh,
-                                    SimplificationMethod simplificationMethod);
+        const Mesh *mesh,
+        SimplificationMethod simplificationMethod);
 
     MeshSimplifier() = delete;
 
@@ -53,7 +53,8 @@ private:
     static VertexData GetVertexRepresentativeForCluster(
         const Mesh &mesh,
         const VertexCluster &vertexCluster,
-        const UMap<Mesh::VertexId, Array<Mesh::TriangleId>> &vertexIdxsToTriIdxs,
+        const UMap<Mesh::VertexId, Array<Mesh::TriangleId>>
+            &vertexIdxsToTriIdxs,
         SimplificationMethod simplificationMethod);
 };
 }

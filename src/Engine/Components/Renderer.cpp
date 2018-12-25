@@ -2,6 +2,8 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Extensions.h"
@@ -11,14 +13,12 @@
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/ICloneable.h"
-#include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsAsset.h"
+#include "Bang/IEventsRendererChanged.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 
@@ -115,8 +115,8 @@ void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
     {
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()
-                ->EventEmitter<IEventsAsset>::UnRegisterListener(this);
+            GetSharedMaterial()->EventEmitter<IEventsAsset>::UnRegisterListener(
+                this);
         }
         if (p_material.Get())
         {
@@ -129,8 +129,8 @@ void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
 
         if (GetSharedMaterial())
         {
-            GetSharedMaterial()
-                ->EventEmitter<IEventsAsset>::RegisterListener(this);
+            GetSharedMaterial()->EventEmitter<IEventsAsset>::RegisterListener(
+                this);
         }
         if (p_material.Get())
         {
@@ -248,9 +248,8 @@ Material *Renderer::GetMaterial() const
         if (GetSharedMaterial())
         {
             p_material = Assets::Clone<Material>(GetSharedMaterial());
-            GetCopiedMaterial()
-                ->EventEmitter<IEventsAsset>::RegisterListener(
-                    const_cast<Renderer *>(this));
+            GetCopiedMaterial()->EventEmitter<IEventsAsset>::RegisterListener(
+                const_cast<Renderer *>(this));
         }
     }
     return p_material.Get();

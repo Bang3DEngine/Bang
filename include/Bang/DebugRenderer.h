@@ -2,12 +2,12 @@
 #define DEBUGRENDERER_H
 
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
 

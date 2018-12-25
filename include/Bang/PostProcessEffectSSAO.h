@@ -2,12 +2,12 @@
 #define POSTPROCESSEFFECTSSAO_H
 
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/PostProcessEffect.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang

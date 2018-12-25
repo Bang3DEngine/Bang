@@ -4,10 +4,10 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
-#include "Bang/GEngine.h"
-#include "Bang/GL.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
+#include "Bang/GEngine.h"
+#include "Bang/GL.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 

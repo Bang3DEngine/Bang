@@ -4,11 +4,11 @@
 #include <functional>
 
 #include "Bang/Array.h"
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Quaternion.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/Transformation.h"
 #include "Bang/Vector3.h"

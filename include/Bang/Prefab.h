@@ -1,9 +1,9 @@
 #ifndef BANGFAB_H
 #define BANGFAB_H
 
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 
 namespace Bang

@@ -2,6 +2,7 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/GBuffer.h"
@@ -15,7 +16,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
-#include "Bang/Assets.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"

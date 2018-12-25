@@ -6,6 +6,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/EventEmitter.tcc"
@@ -18,7 +19,6 @@
 #include "Bang/ObjectGatherer.tcc"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/RenderPass.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/StackAndValue.h"
 #include "Bang/USet.h"
 

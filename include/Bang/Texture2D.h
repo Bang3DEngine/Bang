@@ -1,12 +1,12 @@
 #ifndef TEXTURE2D_H
 #define TEXTURE2D_H
 
+#include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Asset.h"
 #include "Bang/String.h"
 #include "Bang/Texture.h"
 

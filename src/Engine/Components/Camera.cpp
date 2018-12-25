@@ -5,6 +5,8 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/CubeMapIBLGenerator.h"
 #include "Bang/EventListener.tcc"
@@ -25,8 +27,6 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Quad.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/TextureCubeMap.h"

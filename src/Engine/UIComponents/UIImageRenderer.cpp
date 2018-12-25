@@ -2,6 +2,8 @@
 
 #include <istream>
 
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
@@ -13,8 +15,6 @@
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 

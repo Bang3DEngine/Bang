@@ -1,6 +1,7 @@
 #include "Bang/BoxCollider.h"
 
 #include "Bang/Assert.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
@@ -9,7 +10,6 @@
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/PhysicsObject.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
 #include "Bang/Vector3.h"

@@ -3,6 +3,7 @@
 
 #include "Bang/AABox.h"
 #include "Bang/Array.h"
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Color.h"
 #include "Bang/ComplexRandom.h"
@@ -11,7 +12,6 @@
 #include "Bang/MetaNode.h"
 #include "Bang/Particle.h"
 #include "Bang/Renderer.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 

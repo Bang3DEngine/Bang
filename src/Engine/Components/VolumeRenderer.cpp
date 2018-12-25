@@ -1,5 +1,6 @@
 #include "Bang/VolumeRenderer.h"
 
+#include "Bang/Assets.h"
 #include "Bang/Extensions.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
@@ -11,7 +12,6 @@
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/Paths.h"
-#include "Bang/Assets.h"
 #include "Bang/Shader.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"

@@ -3,6 +3,8 @@
 #include "Bang/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/ICloneable.h"
@@ -10,8 +12,6 @@
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/ShaderProgram.h"
 
 using namespace Bang;

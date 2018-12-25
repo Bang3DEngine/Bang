@@ -1,10 +1,10 @@
 #ifndef WATERRENDERER_H
 #define WATERRENDERER_H
 
+#include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Renderer.h"
-#include "Bang/AssetHandle.h"
 #include "Bang/String.h"
 
 namespace Bang

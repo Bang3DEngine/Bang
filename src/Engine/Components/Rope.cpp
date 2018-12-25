@@ -5,6 +5,8 @@
 
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "Bang/Assets.h"
+#include "Bang/Assets.tcc"
 #include "Bang/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
@@ -18,8 +20,6 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Assets.h"
-#include "Bang/Assets.tcc"
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
 #include "Bang/Vector3.h"

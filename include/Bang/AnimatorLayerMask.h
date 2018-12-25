@@ -1,8 +1,8 @@
 #ifndef ANIMATORLAYERMASK_H
 #define ANIMATORLAYERMASK_H
 
-#include "Bang/Bang.h"
 #include "Bang/Asset.h"
+#include "Bang/Bang.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
 

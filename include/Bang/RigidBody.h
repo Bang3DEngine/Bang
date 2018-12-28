@@ -6,7 +6,7 @@
 #include "Bang/ComponentMacros.h"
 #include "Bang/Flags.h"
 #include "Bang/MetaNode.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/String.h"
 #include "PxForceMode.h"
 #include "PxRigidDynamic.h"
@@ -40,7 +40,7 @@ namespace Bang
 {
 class ICloneable;
 
-class RigidBody : public Component, public PhysicsObject
+class RigidBody : public PhysicsComponent
 {
     COMPONENT(RigidBody)
 
@@ -101,7 +101,8 @@ private:
 
     void UpdatePxRigidActorValues();
 
-    // PhysicsObject
+    // PhysicsComponent
+    void SetPxEnabled(bool pxEnabled) override;
     void OnPxRigidActorChanged(physx::PxRigidActor *prevPxRigidActor,
                                physx::PxRigidActor *newPxRigidActor) override;
 

@@ -219,6 +219,11 @@ void Animator::SetSkinnedMeshRendererBoneTransformations(
     for (SkinnedMeshRenderer *smr : smrs)
     {
         GameObject *rootBoneGo = smr->GetRootBoneGameObject();
+        if (!rootBoneGo)
+        {
+            continue;
+        }
+
         Array<GameObject *> allBoneGos = rootBoneGo->GetChildrenRecursively();
         for (GameObject *boneGo : allBoneGos)
         {

@@ -24,7 +24,7 @@ using namespace physx;
 RigidBody::RigidBody()
 {
     SET_INSTANCE_CLASS_ID(RigidBody)
-    SetPhysicsObjectType(PhysicsObject::Type::RIGIDBODY);
+    SetPhysicsComponentType(PhysicsComponent::Type::RIGIDBODY);
 
     // Create pxActor
     if (Physics *ph = Physics::GetInstance())
@@ -321,6 +321,12 @@ void RigidBody::UpdatePxRigidActorValues()
         GetPxRigidDynamic()->setLinearDamping(GetDrag());
         GetPxRigidDynamic()->setAngularDamping(GetAngularDrag());
     }
+}
+
+void RigidBody::SetPxEnabled(bool pxEnabled)
+{
+    GetPxRigidActor()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION,
+                                    !pxEnabled);
 }
 
 void RigidBody::OnPxRigidActorChanged(PxRigidActor *prevPxRigidActor,

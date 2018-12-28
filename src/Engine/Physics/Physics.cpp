@@ -22,8 +22,8 @@
 #include "Bang/Mesh.h"
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/PhysicsObject.h"
 #include "Bang/PxSceneContainer.h"
 #include "Bang/RayCastInfo.h"
 #include "Bang/RigidBody.h"
@@ -128,21 +128,17 @@ void Physics::UpdatePxSceneFromTransforms(Scene *scene)
     {
         const auto &allPhObjs =
             pxSceneContainer->m_physicsObjectGatherer->GetGatheredObjects();
-        for (PhysicsObject *phObj : allPhObjs)
+        for (PhysicsComponent *phComp : allPhObjs)
         {
-            if (Component *comp = DCAST<Component *>(phObj))
+            if (GameObject *phCompGo = phComp->GetGameObject())
             {
-                if (GameObject *phObjGo = comp->GetGameObject())
+                if (PxActor *pxActor =
+                        pxSceneContainer->GetPxActorFromGameObject(phCompGo))
                 {
-                    if (PxActor *pxActor =
-                            pxSceneContainer->GetPxActorFromGameObject(phObjGo))
+                    if (Transform *tr = phCompGo->GetTransform())
                     {
-                        if (Transform *tr = phObjGo->GetTransform())
-                        {
-                            PxRigidActor *pxRA = SCAST<PxRigidActor *>(pxActor);
-                            pxRA->setGlobalPose(
-                                GetPxTransformFromTransform(tr));
-                        }
+                        PxRigidActor *pxRA = SCAST<PxRigidActor *>(pxActor);
+                        pxRA->setGlobalPose(GetPxTransformFromTransform(tr));
                     }
                 }
             }
@@ -196,15 +192,15 @@ void Physics::Step(Scene *scene, Time simulationTime)
             continue;
         }
 
-        Array<PhysicsObject *> physicsObjects =
-            go->GetComponents<PhysicsObject>();
-        for (PhysicsObject *phObj : physicsObjects)
+        Array<PhysicsComponent *> physicsObjects =
+            go->GetComponents<PhysicsComponent>();
+        for (PhysicsComponent *phComp : physicsObjects)
         {
-            switch (phObj->GetPhysicsObjectType())
+            switch (phComp->GetPhysicsComponentType())
             {
-                case PhysicsObject::Type::RIGIDBODY:
+                case PhysicsComponent::Type::RIGIDBODY:
                 {
-                    RigidBody *rb = SCAST<RigidBody *>(phObj);
+                    RigidBody *rb = SCAST<RigidBody *>(phComp);
                     if (rb->IsActiveRecursively())
                     {
                         PxRigidActor *pxRA = SCAST<PxRigidActor *>(pxActor);
@@ -449,11 +445,11 @@ void Physics::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
     }
 }
 
-Scene *Physics::GetSceneFromPhysicsObject(PhysicsObject *phObj) const
+Scene *Physics::GetSceneFromPhysicsComponent(PhysicsComponent *phComp) const
 {
-    if (GameObject *phObjGo = Physics::GetGameObjectFromPhysicsObject(phObj))
+    if (GameObject *phCompGo = phComp->GetGameObject())
     {
-        return phObjGo->GetScene();
+        return phCompGo->GetScene();
     }
     return nullptr;
 }
@@ -588,9 +584,4 @@ const PxSceneContainer *Physics::GetPxSceneContainerFromScene(
     Scene *scene) const
 {
     return const_cast<Physics *>(this)->GetPxSceneContainerFromScene(scene);
-}
-
-GameObject *Physics::GetGameObjectFromPhysicsObject(PhysicsObject *phObj)
-{
-    return DCAST<Component *>(phObj)->GetGameObject();
 }

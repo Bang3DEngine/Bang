@@ -45,7 +45,7 @@ Collider::~Collider()
 
 void Collider::OnUpdate()
 {
-    Component::OnUpdate();
+    PhysicsComponent::OnUpdate();
     UpdatePxShape();
 }
 
@@ -128,29 +128,6 @@ PhysicsMaterial *Collider::GetPhysicsMaterial() const
     return p_physicsMaterial.Get();
 }
 
-void Collider::OnEnabled(Object *)
-{
-    if (GetPxShape())
-    {
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
-                              CanBeSimulationShape() && !GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
-                              CanBeTriggerShape() && GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
-                              !GetIsTrigger());
-    }
-}
-
-void Collider::OnDisabled(Object *)
-{
-    if (GetPxShape())
-    {
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
-    }
-}
-
 bool Collider::CanComputeInertia() const
 {
     return true;
@@ -189,6 +166,14 @@ physx::PxShape *Collider::GetPxShape() const
     return p_pxShape;
 }
 
+void Collider::SetPxEnabled(bool pxEnabled)
+{
+    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
+                          pxEnabled && GetIsTrigger());
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, pxEnabled);
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, pxEnabled);
+}
+
 Quaternion Collider::GetInternalRotation() const
 {
     return Quaternion::Identity();
@@ -210,10 +195,14 @@ void Collider::UpdatePxShape()
             GetWorldPxTransformWithRespectToPxActor();
         GetPxShape()->setLocalPose(pxLocalTransform);
 
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
+                              IsEnabledRecursively());
         GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
-                              CanBeSimulationShape() && !GetIsTrigger());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
-                              CanBeTriggerShape() && GetIsTrigger());
+                              IsEnabledRecursively() &&
+                                  CanBeSimulationShape() && !GetIsTrigger());
+        GetPxShape()->setFlag(
+            physx::PxShapeFlag::eTRIGGER_SHAPE,
+            IsEnabledRecursively() && CanBeTriggerShape() && GetIsTrigger());
 
         if (GetActivePhysicsMaterial())
         {

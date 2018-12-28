@@ -42,7 +42,7 @@ class Collider;
 class IEventsDestroy;
 class Mesh;
 class PhysicsMaterial;
-class PhysicsObject;
+class PhysicsComponent;
 class PxSceneContainer;
 class Scene;
 class Transform;
@@ -125,14 +125,12 @@ private:
 
     Map<Scene *, PxSceneContainer *> m_sceneToPxSceneContainer;
 
-    Scene *GetSceneFromPhysicsObject(PhysicsObject *phObj) const;
+    Scene *GetSceneFromPhysicsComponent(PhysicsComponent *phComp) const;
 
     physx::PxFoundation *GetPxFoundation() const;
     physx::PxPhysics *GetPxPhysics() const;
 
     physx::PxMaterial *CreateNewMaterial();
-
-    static GameObject *GetGameObjectFromPhysicsObject(PhysicsObject *phObj);
 
     static void FillTransformFromPxTransform(
         Transform *transform,

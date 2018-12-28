@@ -6,7 +6,7 @@
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/String.h"
 #include "Bang/Vector3.h"
 
@@ -28,7 +28,7 @@ class PhysicsMaterial;
     friend class Physics;   \
     friend class PxSceneContainer;
 
-class Collider : public Component, public PhysicsObject
+class Collider : public PhysicsComponent
 {
     COMPONENT_ABSTRACT(Collider)
 
@@ -67,9 +67,8 @@ protected:
 
     physx::PxShape *GetPxShape() const;
 
-    // Object
-    void OnEnabled(Object *object) override;
-    void OnDisabled(Object *object) override;
+    // PhysicsComponent
+    void SetPxEnabled(bool pxEnabled) override;
 
 private:
     bool m_isTrigger = false;
@@ -81,7 +80,7 @@ private:
 
     physx::PxShape *p_pxShape = nullptr;
 
-    // PhysicsObject
+    // PhysicsComponent
     virtual bool CanComputeInertia() const;
     virtual bool CanBeSimulationShape() const;
     virtual bool CanBeTriggerShape() const;

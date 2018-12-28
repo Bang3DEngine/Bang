@@ -362,7 +362,10 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
 
         case UIEvent::Type::FOCUS_LOST:
             GameObjectFactory::MakeBorderNotFocused(p_border);
-            HideList();
+            if (!GetMultiCheck())
+            {
+                HideList();
+            }
             break;
 
         case UIEvent::Type::MOUSE_CLICK_UP:

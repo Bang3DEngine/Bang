@@ -13,7 +13,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/Transform.h"
 #include "PxRigidStatic.h"
 #include "PxShape.h"
@@ -40,7 +40,7 @@ using namespace physx;
 MeshCollider::MeshCollider()
 {
     SET_INSTANCE_CLASS_ID(MeshCollider)
-    SetPhysicsObjectType(PhysicsObject::Type::MESH_COLLIDER);
+    SetPhysicsComponentType(PhysicsComponent::Type::MESH_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }
 

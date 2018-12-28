@@ -346,7 +346,6 @@ const Transformation &Transform::GetLocalTransformation() const
 Vector3 Transform::GetForward() const
 {
     Vector3 forward = FromLocalToWorldDirection(Vector3::Forward());
-    ASSERT(Math::Equals(forward.SqLength(), 1.0f, 0.001f));
     return forward;
 }
 
@@ -358,7 +357,6 @@ Vector3 Transform::GetBack() const
 Vector3 Transform::GetRight() const
 {
     Vector3 right = FromLocalToWorldDirection(Vector3::Right());
-    ASSERT(Math::Equals(right.SqLength(), 1.0f, 0.001f));
     return right;
 }
 
@@ -370,7 +368,6 @@ Vector3 Transform::GetLeft() const
 Vector3 Transform::GetUp() const
 {
     Vector3 up = FromLocalToWorldDirection(Vector3::Up());
-    ASSERT(Math::Equals(up.SqLength(), 1.0f, 0.001f));
     return up;
 }
 

@@ -34,7 +34,7 @@ class IEventsObjectGatherer;
 class Collider;
 class GameObject;
 class IEventsDestroy;
-class PhysicsObject;
+class PhysicsComponent;
 class Scene;
 struct RayCastHitInfo;
 struct RayCastInfo;
@@ -42,7 +42,7 @@ template <class ObjectType, bool RECURSIVE>
 class ObjectGatherer;
 
 class PxSceneContainer
-    : public EventListener<IEventsObjectGatherer<PhysicsObject>>,
+    : public EventListener<IEventsObjectGatherer<PhysicsComponent>>,
       public EventListener<IEventsDestroy>,
       public physx::PxSimulationEventCallback
 {
@@ -53,7 +53,7 @@ public:
     void ResetStepTimeReference();
 
     static void ChangePxRigidActor(PxSceneContainer *pxSceneContainer,
-                                   PhysicsObject *phObj,
+                                   PhysicsComponent *phComp,
                                    physx::PxRigidActor *newPxRigidActor);
 
     Scene *GetScene() const;
@@ -73,7 +73,7 @@ private:
     Scene *p_scene = nullptr;
     int m_numFramesLeftToIgnore = 0;
     physx::PxScene *p_pxScene = nullptr;
-    ObjectGatherer<PhysicsObject, true> *m_physicsObjectGatherer = nullptr;
+    ObjectGatherer<PhysicsComponent, true> *m_physicsObjectGatherer = nullptr;
     Map<physx::PxShape *, Collider *> m_pxShapeToCollider;
     mutable Map<GameObject *, physx::PxActor *> m_gameObjectToPxActor;
     mutable Map<physx::PxActor *, GameObject *> m_pxActorToGameObject;
@@ -92,9 +92,9 @@ private:
                    const physx::PxU32 count) override;
 
     // IEventsObjectGatherer
-    virtual void OnObjectGathered(PhysicsObject *phObj) override;
+    virtual void OnObjectGathered(PhysicsComponent *phComp) override;
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
-                                    PhysicsObject *phObj) override;
+                                    PhysicsComponent *phComp) override;
 
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;

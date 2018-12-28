@@ -1,7 +1,8 @@
-#ifndef PHYSICSOBJECT_H
-#define PHYSICSOBJECT_H
+#ifndef PHYSICSCOMPONENT_H
+#define PHYSICSCOMPONENT_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/Component.h"
 
 namespace physx
 {
@@ -13,8 +14,10 @@ class PxRigidDynamic;
 
 namespace Bang
 {
-class PhysicsObject
+class PhysicsComponent : public Component
 {
+    COMPONENT_ABSTRACT(PhysicsComponent)
+
 public:
     enum class Type
     {
@@ -26,8 +29,12 @@ public:
         MESH_COLLIDER
     };
 
-    PhysicsObject();
-    virtual ~PhysicsObject();
+    PhysicsComponent();
+    virtual ~PhysicsComponent() override;
+
+    // Component
+    virtual void OnStart() override;
+    virtual void OnUpdate() override;
 
     void SetStatic(bool isStatic);
 
@@ -35,22 +42,25 @@ public:
     physx::PxRigidActor *GetPxRigidActor() const;
     physx::PxRigidStatic *GetPxRigidStatic() const;
     physx::PxRigidDynamic *GetPxRigidDynamic() const;
-    PhysicsObject::Type GetPhysicsObjectType() const;
+    PhysicsComponent::Type GetPhysicsComponentType() const;
 
 protected:
+    virtual void SetPxEnabled(bool pxEnabled) = 0;
     void SetPxRigidActor(physx::PxRigidActor *pxRigidActor);
-    void SetPhysicsObjectType(PhysicsObject::Type physicsObjectType);
+    void SetPhysicsComponentType(PhysicsComponent::Type physicsObjectType);
 
     virtual void OnPxRigidActorChanged(physx::PxRigidActor *prevPxRigidActor,
                                        physx::PxRigidActor *newPxRigidActor);
 
 private:
     bool m_static = false;
+    bool m_previousEnabled = true;
+
     physx::PxRigidActor *p_pxRigidActor = nullptr;
-    PhysicsObject::Type m_physicsObjectType = PhysicsObject::Type::NONE;
+    PhysicsComponent::Type m_physicsObjectType = PhysicsComponent::Type::NONE;
 
     friend class PxSceneContainer;
 };
 }
 
-#endif  // PHYSICSOBJECT_H
+#endif  // PHYSICSCOMPONENT_H

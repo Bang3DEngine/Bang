@@ -9,7 +9,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
 #include "Bang/Vector3.h"
@@ -29,7 +29,7 @@ using namespace Bang;
 BoxCollider::BoxCollider()
 {
     SET_INSTANCE_CLASS_ID(BoxCollider)
-    SetPhysicsObjectType(PhysicsObject::Type::BOX_COLLIDER);
+    SetPhysicsComponentType(PhysicsComponent::Type::BOX_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }
 

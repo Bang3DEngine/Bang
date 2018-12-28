@@ -8,7 +8,7 @@
 #include "Bang/Mesh.h"
 #include "Bang/MeshCollider.h"
 #include "Bang/Physics.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/Plane.h"
 #include "Bang/Ray.h"
 #include "Bang/Segment.h"
@@ -245,9 +245,9 @@ bool Particle::CollideParticle(Collider *collider,
     bool collided = false;
     Vector3 collisionPoint;
     Vector3 collisionNormal;
-    switch (collider->GetPhysicsObjectType())
+    switch (collider->GetPhysicsComponentType())
     {
-        case PhysicsObject::Type::SPHERE_COLLIDER:
+        case PhysicsComponent::Type::SPHERE_COLLIDER:
         {
             SphereCollider *spCol = SCAST<SphereCollider *>(collider);
             Sphere sphere = spCol->GetSphereWorld();
@@ -269,7 +269,7 @@ bool Particle::CollideParticle(Collider *collider,
         }
         break;
 
-        case PhysicsObject::Type::BOX_COLLIDER:
+        case PhysicsComponent::Type::BOX_COLLIDER:
         {
             BoxCollider *boxCol = SCAST<BoxCollider *>(collider);
             Box box = boxCol->GetBoxWorld();
@@ -279,7 +279,7 @@ bool Particle::CollideParticle(Collider *collider,
         }
         break;
 
-        case PhysicsObject::Type::MESH_COLLIDER:
+        case PhysicsComponent::Type::MESH_COLLIDER:
         {
             MeshCollider *meshCol = SCAST<MeshCollider *>(collider);
             if (Mesh *mesh = meshCol->GetMesh())

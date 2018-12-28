@@ -12,7 +12,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PhysicsMaterial.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/Transform.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
@@ -29,7 +29,7 @@ using namespace Bang;
 CapsuleCollider::CapsuleCollider()
 {
     SET_INSTANCE_CLASS_ID(CapsuleCollider)
-    SetPhysicsObjectType(PhysicsObject::Type::CAPSULE_COLLIDER);
+    SetPhysicsComponentType(PhysicsComponent::Type::CAPSULE_COLLIDER);
     SetPhysicsMaterial(MaterialFactory::GetDefaultPhysicsMaterial().Get());
 }
 

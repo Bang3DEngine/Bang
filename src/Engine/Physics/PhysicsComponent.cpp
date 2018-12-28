@@ -1,4 +1,4 @@
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 
 #include "Bang/Component.h"
 #include "Bang/GameObject.h"
@@ -10,20 +10,40 @@
 
 using namespace Bang;
 
-PhysicsObject::PhysicsObject()
+PhysicsComponent::PhysicsComponent()
 {
 }
 
-PhysicsObject::~PhysicsObject()
+PhysicsComponent::~PhysicsComponent()
 {
 }
 
-void PhysicsObject::SetPhysicsObjectType(PhysicsObject::Type physicsObjectType)
+void PhysicsComponent::OnStart()
+{
+    Component::OnStart();
+    SetPxEnabled(IsEnabledRecursively());
+}
+
+void PhysicsComponent::OnUpdate()
+{
+    Component::OnUpdate();
+
+    // Enable/disable actor and shapes if needed
+    bool enabled = IsEnabledRecursively();
+    if (m_previousEnabled != enabled)
+    {
+        SetPxEnabled(enabled);
+        m_previousEnabled = enabled;
+    }
+}
+
+void PhysicsComponent::SetPhysicsComponentType(
+    PhysicsComponent::Type physicsObjectType)
 {
     m_physicsObjectType = physicsObjectType;
 }
 
-void PhysicsObject::SetPxRigidActor(physx::PxRigidActor *pxRigidActor)
+void PhysicsComponent::SetPxRigidActor(physx::PxRigidActor *pxRigidActor)
 {
     if (pxRigidActor != GetPxRigidActor())
     {
@@ -35,7 +55,7 @@ void PhysicsObject::SetPxRigidActor(physx::PxRigidActor *pxRigidActor)
     }
 }
 
-void PhysicsObject::SetStatic(bool isStatic)
+void PhysicsComponent::SetStatic(bool isStatic)
 {
     if (isStatic != GetStatic())
     {
@@ -53,35 +73,35 @@ void PhysicsObject::SetStatic(bool isStatic)
     }
 }
 
-bool PhysicsObject::GetStatic() const
+bool PhysicsComponent::GetStatic() const
 {
     return m_static;
 }
 
-physx::PxRigidActor *PhysicsObject::GetPxRigidActor() const
+physx::PxRigidActor *PhysicsComponent::GetPxRigidActor() const
 {
     return p_pxRigidActor;
 }
 
-physx::PxRigidStatic *PhysicsObject::GetPxRigidStatic() const
+physx::PxRigidStatic *PhysicsComponent::GetPxRigidStatic() const
 {
     return GetPxRigidActor() ? DCAST<physx::PxRigidStatic *>(GetPxRigidActor())
                              : nullptr;
 }
 
-physx::PxRigidDynamic *PhysicsObject::GetPxRigidDynamic() const
+physx::PxRigidDynamic *PhysicsComponent::GetPxRigidDynamic() const
 {
     return GetPxRigidActor() ? DCAST<physx::PxRigidDynamic *>(GetPxRigidActor())
                              : nullptr;
 }
 
-PhysicsObject::Type PhysicsObject::GetPhysicsObjectType() const
+PhysicsComponent::Type PhysicsComponent::GetPhysicsComponentType() const
 {
     return m_physicsObjectType;
 }
 
-void PhysicsObject::OnPxRigidActorChanged(physx::PxRigidActor *prevPxDynamic,
-                                          physx::PxRigidActor *newPxDynamic)
+void PhysicsComponent::OnPxRigidActorChanged(physx::PxRigidActor *prevPxDynamic,
+                                             physx::PxRigidActor *newPxDynamic)
 {
     BANG_UNUSED_2(prevPxDynamic, newPxDynamic);
 }

@@ -19,7 +19,7 @@
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"
 #include "Bang/Physics.h"
-#include "Bang/PhysicsObject.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/RayCastHitInfo.h"
 #include "Bang/RayCastInfo.h"
 #include "Bang/Scene.h"
@@ -100,7 +100,7 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
     pxScene->setFlag(PxSceneFlag::eENABLE_ACTIVE_ACTORS, true);
     pxScene->setSimulationEventCallback(this);
 
-    m_physicsObjectGatherer = new ObjectGatherer<PhysicsObject, true>();
+    m_physicsObjectGatherer = new ObjectGatherer<PhysicsComponent, true>();
 
     p_scene = scene;
     p_pxScene = pxScene;
@@ -137,17 +137,16 @@ void PxSceneContainer::ResetStepTimeReference()
 }
 
 void PxSceneContainer::ChangePxRigidActor(PxSceneContainer *psc,
-                                          PhysicsObject *phObj,
+                                          PhysicsComponent *phComp,
                                           PxRigidActor *newPxRigidActor)
 {
-    physx::PxActor *oldPxActor = phObj->GetPxRigidActor();
+    physx::PxActor *oldPxActor = phComp->GetPxRigidActor();
 
-    Component *phComp = DCAST<Component *>(phObj);
     GameObject *phGo = phComp->GetGameObject();
-    const Array<PhysicsObject *> descPhObjs =
-        phGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
+    const Array<PhysicsComponent *> descPhObjs =
+        phGo->GetComponentsInDescendantsAndThis<PhysicsComponent>();
 
-    for (PhysicsObject *descPhObj : descPhObjs)
+    for (PhysicsComponent *descPhObj : descPhObjs)
     {
         Component *descPhComp = DCAST<Component *>(descPhObj);
         GameObject *descPhGo = descPhComp->GetGameObject();
@@ -196,11 +195,11 @@ PxScene *PxSceneContainer::GetPxScene() const
 Array<Collider *> PxSceneContainer::GetColliders() const
 {
     Array<Collider *> colliders;
-    const Array<PhysicsObject *> &phObjs =
+    const Array<PhysicsComponent *> &phComps =
         m_physicsObjectGatherer->GetGatheredObjects();
-    for (PhysicsObject *phObj : phObjs)
+    for (PhysicsComponent *phComp : phComps)
     {
-        if (Collider *coll = DCAST<Collider *>(phObj))
+        if (Collider *coll = DCAST<Collider *>(phComp))
         {
             colliders.PushBack(coll);
         }
@@ -291,10 +290,11 @@ PxActor *PxSceneContainer::GetPxActorFromGameObject(GameObject *go) const
 {
     if (!m_gameObjectToPxActor.ContainsKey(go))
     {
-        Array<PhysicsObject *> phObjs = go->GetComponents<PhysicsObject>();
-        for (PhysicsObject *phObj : phObjs)
+        Array<PhysicsComponent *> phComps =
+            go->GetComponents<PhysicsComponent>();
+        for (PhysicsComponent *phComp : phComps)
         {
-            if (PxRigidActor *pxRA = phObj->GetPxRigidActor())
+            if (PxRigidActor *pxRA = phComp->GetPxRigidActor())
             {
                 m_gameObjectToPxActor.Add(go, pxRA);
                 return pxRA;
@@ -439,114 +439,115 @@ void PxSceneContainer::onAdvance(const PxRigidBody *const *bodyBuffer,
     BANG_UNUSED_3(bodyBuffer, poseBuffer, count);
 }
 
-void PxSceneContainer::OnObjectGathered(PhysicsObject *phObj)
+void PxSceneContainer::OnObjectGathered(PhysicsComponent *phComp)
 {
     Physics *ph = Physics::GetInstance();
     ASSERT(ph);
 
-    GameObject *phObjGo = Physics::GetGameObjectFromPhysicsObject(phObj);
-    ASSERT(phObjGo);
+    GameObject *phCompGo = phComp->GetGameObject();
+    ASSERT(phCompGo);
 
-    Array<PhysicsObject *> phObjsInDescendants =
-        phObjGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
+    Array<PhysicsComponent *> phCompsInDescendants =
+        phCompGo->GetComponentsInDescendantsAndThis<PhysicsComponent>();
 
     // Does this gameObject need a pxActor for him to be created?
-    // You need to create a pxActor when you hold a PhysicsObject component,
+    // You need to create a pxActor when you hold a PhysicsComponent component,
     // but neither do you or your ancestors
-    ASSERT(phObjGo->HasComponent<PhysicsObject>());
+    ASSERT(phCompGo->HasComponent<PhysicsComponent>());
 
     PxRigidActor *pxRA =
-        SCAST<PxRigidActor *>(GetAncestorOrThisPxActor(phObjGo));
+        SCAST<PxRigidActor *>(GetAncestorOrThisPxActor(phCompGo));
     if (!pxRA)
     {
-        ASSERT(!GetPxActorFromGameObject(phObjGo));
-        pxRA = ph->CreateNewPxRigidActor(phObj->GetStatic(),
-                                         phObjGo->GetTransform());
-        phObj->SetPxRigidActor(pxRA);
+        ASSERT(!GetPxActorFromGameObject(phCompGo));
+        pxRA = ph->CreateNewPxRigidActor(phComp->GetStatic(),
+                                         phCompGo->GetTransform());
+        phComp->SetPxRigidActor(pxRA);
     }
     ASSERT(pxRA);
 
-    if (!m_gameObjectToPxActor.ContainsKey(phObjGo))
+    if (!m_gameObjectToPxActor.ContainsKey(phCompGo))
     {
-        m_gameObjectToPxActor.Add(phObjGo, pxRA);
+        m_gameObjectToPxActor.Add(phCompGo, pxRA);
     }
 
     if (!m_pxActorToGameObject.ContainsKey(pxRA))
     {
-        m_pxActorToGameObject.Add(pxRA, phObjGo);
+        m_pxActorToGameObject.Add(pxRA, phCompGo);
         GetPxScene()->addActor(*pxRA);
     }
-    ASSERT(GetPxActorFromGameObject(phObjGo));
+    ASSERT(GetPxActorFromGameObject(phCompGo));
     ASSERT(m_pxActorToGameObject.ContainsKey(pxRA));
 
     // For each physics object in descendants, update its pxActor
-    for (PhysicsObject *phObj : phObjsInDescendants)
+    for (PhysicsComponent *phComp : phCompsInDescendants)
     {
         bool forceKinematic = false;
-        if (phObj->GetPhysicsObjectType() != PhysicsObject::Type::RIGIDBODY)
+        if (phComp->GetPhysicsComponentType() !=
+            PhysicsComponent::Type::RIGIDBODY)
         {
             // Collider
-            Collider *collider = SCAST<Collider *>(phObj);
+            Collider *collider = SCAST<Collider *>(phComp);
             if (collider->GetPxShape())
             {
                 m_pxShapeToCollider.Add(collider->GetPxShape(), collider);
             }
 
-            forceKinematic = (phObj->GetPhysicsObjectType() ==
-                              PhysicsObject::Type::MESH_COLLIDER);
+            forceKinematic = (phComp->GetPhysicsComponentType() ==
+                              PhysicsComponent::Type::MESH_COLLIDER);
         }
 
         if (forceKinematic)
         {
-            if (PxRigidDynamic *pxRD = phObj->GetPxRigidDynamic())
+            if (PxRigidDynamic *pxRD = phComp->GetPxRigidDynamic())
             {
                 pxRD->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
             }
         }
-        phObj->SetPxRigidActor(pxRA);
+        phComp->SetPxRigidActor(pxRA);
 
-        Component *comp = DCAST<Component *>(phObj);
+        Component *comp = DCAST<Component *>(phComp);
         comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
     }
 
     // Does this gameObject need to release the pxActor if it had one?
-    if (PxActor *pxActor = GetPxActorFromGameObject(phObjGo))
+    if (PxActor *pxActor = GetPxActorFromGameObject(phCompGo))
     {
-        Array<PhysicsObject *> phObjs =
-            phObjGo->GetComponentsInDescendantsAndThis<PhysicsObject>();
-        if (phObjs.Size() == 0)
+        Array<PhysicsComponent *> phComps =
+            phCompGo->GetComponentsInDescendantsAndThis<PhysicsComponent>();
+        if (phComps.Size() == 0)
         {
             pxActor->release();
-            m_gameObjectToPxActor.Remove(phObjGo);
+            m_gameObjectToPxActor.Remove(phCompGo);
             m_pxActorToGameObject.Remove(pxActor);
         }
     }
 }
 
 void PxSceneContainer::OnObjectUnGathered(GameObject *prevGo,
-                                          PhysicsObject *phObj)
+                                          PhysicsComponent *phComp)
 {
     BANG_UNUSED(prevGo);
-    phObj->SetPxRigidActor(nullptr);
+    phComp->SetPxRigidActor(nullptr);
 }
 
 void PxSceneContainer::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
 {
-    if (PhysicsObject *phObj = DCAST<PhysicsObject *>(ee))
+    if (PhysicsComponent *phComp = DCAST<PhysicsComponent *>(ee))
     {
-        switch (phObj->GetPhysicsObjectType())
+        switch (phComp->GetPhysicsComponentType())
         {
-            case PhysicsObject::Type::RIGIDBODY:
+            case PhysicsComponent::Type::RIGIDBODY:
             {
-                // RigidBody *rb = SCAST<RigidBody*>(phObj);
+                // RigidBody *rb = SCAST<RigidBody*>(phComp);
             }
             break;
 
-            case PhysicsObject::Type::BOX_COLLIDER:
-            case PhysicsObject::Type::SPHERE_COLLIDER:
-            case PhysicsObject::Type::CAPSULE_COLLIDER:
+            case PhysicsComponent::Type::BOX_COLLIDER:
+            case PhysicsComponent::Type::SPHERE_COLLIDER:
+            case PhysicsComponent::Type::CAPSULE_COLLIDER:
             {
-                // Collider *coll = SCAST<Collider*>(phObj);
+                // Collider *coll = SCAST<Collider*>(phComp);
                 // if (coll->GetPxShape()->isReleasable())
                 // {
                 //     coll->GetPxShape()->release();

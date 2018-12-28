@@ -22,6 +22,7 @@
 #include "Bang/NavigationMesh.h"
 #include "Bang/Object.h"
 #include "Bang/ParticleSystem.h"
+#include "Bang/PhysicsComponent.h"
 #include "Bang/PointLight.h"
 #include "Bang/PostProcessEffect.h"
 #include "Bang/PostProcessEffectBloom.h"
@@ -144,6 +145,7 @@ void ClassDB::RegisterClasses()
     REGISTER_CLASS(UITextRenderer);
     REGISTER_CLASS(WaterRenderer);
     REGISTER_CLASS(ParticleSystem);
+    REGISTER_ABSTRACT_CLASS(PhysicsComponent);
     REGISTER_CLASS(Animator);
     REGISTER_CLASS(AudioListener);
     REGISTER_CLASS(AudioSource);

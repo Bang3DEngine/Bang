@@ -30,11 +30,6 @@ using ClassIdType = uint;
     CREATE_STATIC_CLASS_ID(AudioSource, 301, 400);                   \
     CREATE_STATIC_CLASS_ID(BehaviourContainer, 401, 500);            \
     CREATE_STATIC_CLASS_ID(Behaviour, 501, 600);                     \
-    CREATE_STATIC_CLASS_ID(Collider, 601, 700);                      \
-    CREATE_STATIC_CLASS_ID(BoxCollider, 602, 610);                   \
-    CREATE_STATIC_CLASS_ID(SphereCollider, 611, 620);                \
-    CREATE_STATIC_CLASS_ID(CapsuleCollider, 621, 630);               \
-    CREATE_STATIC_CLASS_ID(MeshCollider, 631, 641);                  \
     CREATE_STATIC_CLASS_ID(Light, 701, 800);                         \
     CREATE_STATIC_CLASS_ID(DirectionalLight, 702, 710);              \
     CREATE_STATIC_CLASS_ID(PointLight, 711, 720);                    \
@@ -46,7 +41,6 @@ using ClassIdType = uint;
     CREATE_STATIC_CLASS_ID(PostProcessEffectToneMapping, 810, 811);  \
     CREATE_STATIC_CLASS_ID(Transform, 901, 1000);                    \
     CREATE_STATIC_CLASS_ID(RectTransform, 910, 920);                 \
-    CREATE_STATIC_CLASS_ID(RigidBody, 1001, 1100);                   \
     CREATE_STATIC_CLASS_ID(ReflectionProbe, 1101, 1200);             \
     CREATE_STATIC_CLASS_ID(UIAspectRatioFitter, 1201, 1300);         \
     CREATE_STATIC_CLASS_ID(UIAutoFocuser, 1301, 1400);               \
@@ -83,6 +77,13 @@ using ClassIdType = uint;
     CREATE_STATIC_CLASS_ID(UITree, 4301, 4400);                      \
     CREATE_STATIC_CLASS_ID(Camera, 4501, 4600);                      \
     CREATE_STATIC_CLASS_ID(NavigationMesh, 4601, 4700);              \
+    CREATE_STATIC_CLASS_ID(PhysicsComponent, 5000, 6000);            \
+    CREATE_STATIC_CLASS_ID(RigidBody, 5001, 5100);                   \
+    CREATE_STATIC_CLASS_ID(Collider, 5101, 5200);                    \
+    CREATE_STATIC_CLASS_ID(BoxCollider, 5102, 5110);                 \
+    CREATE_STATIC_CLASS_ID(SphereCollider, 5111, 5120);              \
+    CREATE_STATIC_CLASS_ID(CapsuleCollider, 5121, 5130);             \
+    CREATE_STATIC_CLASS_ID(MeshCollider, 5131, 5141);                \
     CREATE_STATIC_CLASS_ID(GameObject, 100000, 200000);
 
 #define SET_CLASS_ID(CLASS)                               \

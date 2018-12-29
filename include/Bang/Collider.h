@@ -42,11 +42,13 @@ public:
     virtual void UpdatePxShape();
     void SetIsTrigger(bool isTrigger);
     void SetCenter(const Vector3 &center);
+    void SetUseForQueries(bool useForQueries);
     void SetPhysicsMaterial(PhysicsMaterial *physicsMaterial);
     void SetUseInNavMesh(bool useInNavMesh);
 
     bool GetIsTrigger() const;
     bool GetUseInNavMesh() const;
+    bool GetUseForQueries() const;
     const Vector3 &GetCenter() const;
     PhysicsMaterial *GetSharedPhysicsMaterial() const;
     PhysicsMaterial *GetActivePhysicsMaterial() const;
@@ -73,6 +75,7 @@ protected:
 private:
     bool m_isTrigger = false;
     bool m_useInNavMesh = true;
+    bool m_useForQueries = true;
     Vector3 m_center = Vector3::Zero();
 
     mutable AH<PhysicsMaterial> p_physicsMaterial;

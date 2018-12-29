@@ -158,6 +158,7 @@
 #include "Bang/ShaderPreprocessor.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
+#include "Bang/SkinnedMeshRenderer.h"
 #include "Bang/Sphere.h"
 #include "Bang/SphereCollider.h"
 #include "Bang/StreamOperators.h"

@@ -67,6 +67,11 @@ void Collider::SetCenter(const Vector3 &center)
     }
 }
 
+void Collider::SetUseForQueries(bool useForQueries)
+{
+    m_useForQueries = useForQueries;
+}
+
 void Collider::SetPhysicsMaterial(PhysicsMaterial *physicsMaterial)
 {
     if (physicsMaterial != GetSharedPhysicsMaterial())
@@ -94,6 +99,11 @@ bool Collider::GetIsTrigger() const
 bool Collider::GetUseInNavMesh() const
 {
     return m_useInNavMesh;
+}
+
+bool Collider::GetUseForQueries() const
+{
+    return m_useForQueries;
 }
 
 const Vector3 &Collider::GetCenter() const
@@ -168,10 +178,15 @@ physx::PxShape *Collider::GetPxShape() const
 
 void Collider::SetPxEnabled(bool pxEnabled)
 {
+    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
+                          pxEnabled && GetUseForQueries());
+
+    GetPxShape()->setFlag(
+        physx::PxShapeFlag::eSIMULATION_SHAPE,
+        pxEnabled && CanBeSimulationShape() && !GetIsTrigger());
+
     GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
-                          pxEnabled && GetIsTrigger());
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, pxEnabled);
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, pxEnabled);
+                          pxEnabled && CanBeTriggerShape() && GetIsTrigger());
 }
 
 Quaternion Collider::GetInternalRotation() const
@@ -195,14 +210,7 @@ void Collider::UpdatePxShape()
             GetWorldPxTransformWithRespectToPxActor();
         GetPxShape()->setLocalPose(pxLocalTransform);
 
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
-                              IsEnabledRecursively());
-        GetPxShape()->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,
-                              IsEnabledRecursively() &&
-                                  CanBeSimulationShape() && !GetIsTrigger());
-        GetPxShape()->setFlag(
-            physx::PxShapeFlag::eTRIGGER_SHAPE,
-            IsEnabledRecursively() && CanBeTriggerShape() && GetIsTrigger());
+        SetPxEnabled(IsEnabledRecursively());
 
         if (GetActivePhysicsMaterial())
         {
@@ -224,6 +232,8 @@ void Collider::Reflect()
     Component::Reflect();
 
     BANG_REFLECT_VAR_MEMBER(Collider, "Is Trigger", SetIsTrigger, GetIsTrigger);
+    BANG_REFLECT_VAR_MEMBER(
+        Collider, "Use for queries", SetUseForQueries, GetUseForQueries);
     BANG_REFLECT_VAR_MEMBER(
         Collider, "Use in NavMesh", SetUseInNavMesh, GetUseInNavMesh);
     BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);

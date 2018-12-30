@@ -1008,9 +1008,11 @@ GameObject *GameObject::Instantiate()
 
 void GameObject::AddComponentToDestroyDelayed(Component *comp)
 {
-    ASSERT(!comp->IsWaitingToBeDestroyed());
-    ASSERT(!m_componentsToDestroyDelayed.Contains(comp));
-    m_componentsToDestroyDelayed.PushBack(comp);
+    if (!comp->IsWaitingToBeDestroyed())
+    {
+        ASSERT(!m_componentsToDestroyDelayed.Contains(comp));
+        m_componentsToDestroyDelayed.PushBack(comp);
+    }
 }
 
 void GameObject::DestroyDelayedGameObjects()

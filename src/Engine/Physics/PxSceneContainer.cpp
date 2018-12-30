@@ -111,12 +111,6 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
 
 PxSceneContainer::~PxSceneContainer()
 {
-    for (auto &it : m_gameObjectToPxActor)
-    {
-        PxActor *pxActor = it.second;
-        pxActor->release();
-    }
-
     if (GetPxScene())
     {
         if (PxDefaultCpuDispatcher *cpuDisp = DCAST<PxDefaultCpuDispatcher *>(
@@ -126,7 +120,6 @@ PxSceneContainer::~PxSceneContainer()
         }
         GetPxScene()->release();
     }
-
     delete m_physicsObjectGatherer;
 }
 

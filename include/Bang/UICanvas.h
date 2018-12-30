@@ -11,6 +11,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
+#include "Bang/DPtr.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEvents.h"
@@ -19,6 +20,8 @@
 #include "Bang/RenderPass.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
+#include "Bang/UIDragDroppable.h"
+#include "Bang/UIFocusable.h"
 
 namespace Bang
 {
@@ -30,8 +33,6 @@ class IEventsDestroy;
 class IEventsDragDrop;
 struct InputEvent;
 class Object;
-class UIFocusable;
-class UIDragDroppable;
 class UILayoutManager;
 
 class UICanvas : public Component, public EventListener<IEventsDestroy>
@@ -87,9 +88,9 @@ private:
     UILayoutManager *m_uiLayoutManager = nullptr;
     uint m_framesSinceCreated = 0;
 
-    UIFocusable *p_focus = nullptr;
-    UIDragDroppable *p_ddBeingDragged = nullptr;
-    UIFocusable *p_focusableUnderMouseTopMost = nullptr;
+    DPtr<UIFocusable> p_focus = nullptr;
+    DPtr<UIDragDroppable> p_ddBeingDragged = nullptr;
+    DPtr<UIFocusable> p_focusableUnderMouseTopMost = nullptr;
 
     // IObjectEvents
     void OnDisabled(Object *object) override;

@@ -578,10 +578,11 @@ void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)
             p_focusableUnderMouseTopMost = nullptr;
         }
 
+        UnRegisterForEvents(destroyedFocusable);
         RegisterFocusableNotBeingPressedAnymore(destroyedFocusable);
     }
 
-    if (object == p_ddBeingDragged)
+    if (object == p_ddBeingDragged.Get())
     {
         p_ddBeingDragged = nullptr;
     }
@@ -761,7 +762,7 @@ void UICanvas::OnDisabled(Object *object)
 {
     Component::OnDisabled(object);
 
-    if (object == p_ddBeingDragged)
+    if (object == p_ddBeingDragged.Get())
     {
         p_ddBeingDragged = nullptr;
     }
@@ -856,7 +857,7 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
 
     if (UIDragDroppable *dd = DCAST<UIDragDroppable *>(focusable))
     {
-        if (dd == p_ddBeingDragged)
+        if (dd == p_ddBeingDragged.Get())
         {
             ++numReferencesTrackingThisFocusable;
         }
@@ -865,9 +866,8 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
     if (numReferencesTrackingThisFocusable <= 1)
     {
         focusable->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
+        focusable->EventEmitter<IEventsObject>::UnRegisterListener(this);
     }
-
-    focusable->EventEmitter<IEventsObject>::UnRegisterListener(this);
 }
 
 void UICanvas::RegisterFocusableBeingPressed(UIFocusable *focusable)

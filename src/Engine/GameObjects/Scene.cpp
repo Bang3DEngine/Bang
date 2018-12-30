@@ -35,6 +35,7 @@ Scene::Scene() : GameObject("Scene")
 
 Scene::~Scene()
 {
+    Physics::GetInstance()->UnRegisterScene(this);
     GameObject::DestroyImmediate(GetDebugRenderer());
 }
 
@@ -132,8 +133,6 @@ void Scene::CloneInto(ICloneable *clone, bool cloneGUID) const
 
 void Scene::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    GameObject::OnDestroyed(object);
-
     if (object == GetCamera())
     {
         SetCamera(nullptr);

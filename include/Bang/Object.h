@@ -59,14 +59,17 @@ protected:
 
     static void PropagateObjectDestruction(Object *object);
 
+protected:
+    bool GetDestroyEventHasBeenPropagated() const;
+
 private:
     ObjectId m_objectId;
     bool m_enabled = true;
     bool m_started = false;
 
     bool m_beingDestroyed = false;
-    bool m_destroyPropagated = false;
     bool m_waitingToBeDestroyed = false;
+    bool m_destroyEventPropagated = false;
 
     mutable bool m_enabledRecursivelyValid = false;
     mutable bool m_enabledRecursively = false;

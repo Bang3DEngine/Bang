@@ -101,34 +101,33 @@ PxSceneContainer::PxSceneContainer(Scene *scene)
     pxScene->setSimulationEventCallback(this);
 
     m_physicsObjectGatherer = new ObjectGatherer<PhysicsComponent, true>();
-
-    p_scene = scene;
-    p_pxScene = pxScene;
     m_physicsObjectGatherer->SetRoot(scene);
     m_physicsObjectGatherer
         ->EventEmitter<IEventsObjectGatherer>::RegisterListener(this);
+
+    p_scene = scene;
+    p_pxScene = pxScene;
 }
 
 PxSceneContainer::~PxSceneContainer()
 {
-    GetPxScene()->release();
+    for (auto &it : m_gameObjectToPxActor)
+    {
+        PxActor *pxActor = it.second;
+        pxActor->release();
+    }
+
+    if (GetPxScene())
+    {
+        if (PxDefaultCpuDispatcher *cpuDisp = DCAST<PxDefaultCpuDispatcher *>(
+                GetPxScene()->getCpuDispatcher()))
+        {
+            cpuDisp->release();
+        }
+        GetPxScene()->release();
+    }
 
     delete m_physicsObjectGatherer;
-
-    // for (auto &it : m_gameObjectToPxActor)
-    // {
-    //     PxActor *pxActor = it.second;
-    //     pxActor->release();
-    // }
-    m_gameObjectToPxActor.Clear();
-    m_pxActorToGameObject.Clear();
-
-    // for (auto &it : m_pxShapeToCollider)
-    // {
-    //     PxShape *pxShape = it.first;
-    //     pxShape->release();
-    // }
-    m_pxShapeToCollider.Clear();
 }
 
 void PxSceneContainer::ResetStepTimeReference()

@@ -24,13 +24,13 @@ namespace Bang
 {
 class ICloneable;
 class Object;
-}  // namespace Bang
+}
 
 namespace physx
 {
 class PxActor;
 class PxMaterial;
-}  // namespace physx
+}
 
 using namespace Bang;
 
@@ -41,6 +41,10 @@ Collider::Collider()
 
 Collider::~Collider()
 {
+    if (GetPxShape())
+    {
+        GetPxShape()->release();
+    }
 }
 
 void Collider::OnUpdate()

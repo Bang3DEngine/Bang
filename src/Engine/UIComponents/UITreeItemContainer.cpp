@@ -32,6 +32,7 @@ UITreeItemContainer::UITreeItemContainer()
     hLayout->SetChildrenVerticalStretch(Stretch::FULL);
 
     p_userItemContainer = GameObjectFactory::CreateUIGameObject();
+    p_userItemContainer->SetName("UserItemContainer");
 
     UIHorizontalLayout *containerHLayout =
         p_userItemContainer->AddComponent<UIHorizontalLayout>();

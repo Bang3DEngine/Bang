@@ -17,7 +17,7 @@ class DebugRenderer;
 class ICloneable;
 class IEventsDestroy;
 
-class Scene : public GameObject
+class Scene : public GameObject, public EventListener<IEventsDestroy>
 {
     GAMEOBJECT(Scene);
 

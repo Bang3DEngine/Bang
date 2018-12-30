@@ -49,7 +49,6 @@ public:                                 \
 class GameObject : public Object,
                    public IToString,
                    public EventListener<IEventsChildren>,
-                   public EventListener<IEventsDestroy>,
                    public EventEmitter<IEventsName>,
                    public EventEmitter<IEventsChildren>,
                    public EventEmitter<IEventsComponent>,
@@ -258,9 +257,6 @@ protected:
     virtual void OnEnabled(Object *object) override;
     virtual void OnDisabled(Object *object) override;
 
-    // IEventsDestroy
-    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
-
 private:
     Array<GameObject *> m_children;
     Array<Component *> m_components;
@@ -298,9 +294,9 @@ private:
     void TryToClearDeletedChildren();
     void TryToClearDeletedComponents();
 
-    void AddGameObjectToDestroyDelayed(GameObject *go);
     void AddComponentToDestroyDelayed(Component *comp);
-    void DestroyDelayedObjects();
+    void DestroyDelayedGameObjects();
+    void DestroyDelayedComponents();
 
     void AddChild(GameObject *child, int index, bool keepWorldTransform);
     void AddChild_(GameObject *child, int index, bool keepWorldTransform);

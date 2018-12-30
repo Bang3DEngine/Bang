@@ -49,11 +49,11 @@ class Transform;
 struct RayCastHitInfo;
 struct RayCastInfo;
 
-class Physics : public EventListener<IEventsDestroy>
+class Physics
 {
 public:
     Physics();
-    virtual ~Physics() override;
+    virtual ~Physics();
 
     void Init();
 
@@ -108,9 +108,6 @@ public:
     static physx::PxTransform GetPxTransformFromMatrix(const Matrix4 &m);
     static physx::PxTransform GetPxTransformFromTransform(Transform *tr);
     static Physics *GetInstance();
-
-    // IEventsDestroy
-    virtual void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override;
 
 private:
     physx::PxDefaultAllocator m_pxAllocator;

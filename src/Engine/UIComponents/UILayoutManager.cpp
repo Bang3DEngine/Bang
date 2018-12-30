@@ -286,8 +286,23 @@ void UILayoutManager::ApplyLayout(GameObject *gameObject, Axis axis)
 
 void UILayoutManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    m_iLayoutElementsPerGameObject.Remove(DCAST<GameObject *>(object));
-    m_iLayoutControllersPerGameObject.Remove(DCAST<GameObject *>(object));
+    ASSERT(DCAST<GameObject *>(object));
+    if (GameObject *go = SCAST<GameObject *>(object))
+    {
+        {
+            auto it = m_iLayoutElementsPerGameObject.Find(go);
+            ASSERT(it != m_iLayoutElementsPerGameObject.End());
+            m_iLayoutElementsPerGameObject.Remove(it);
+            delete it->second;
+        }
+
+        {
+            auto it = m_iLayoutControllersPerGameObject.Find(go);
+            ASSERT(it != m_iLayoutControllersPerGameObject.End());
+            m_iLayoutControllersPerGameObject.Remove(it);
+            delete it->second;
+        }
+    }
 }
 
 UILayoutManager *UILayoutManager::GetActive(GameObject *go)

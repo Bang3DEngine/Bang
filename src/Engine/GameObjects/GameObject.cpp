@@ -52,8 +52,9 @@ GameObject::~GameObject()
     ASSERT(GetChildren().IsEmpty());
     ASSERT(GetComponents().IsEmpty());
     ASSERT(IsWaitingToBeDestroyed());
-    SetParent(nullptr);
+    ASSERT(IsBeingDestroyed());
     ASSERT(GetParent() == nullptr);
+    ASSERT(GetDestroyEventHasBeenPropagated());
 }
 
 void GameObject::PreStart()
@@ -284,22 +285,6 @@ Component *GameObject::AddComponent_(Component *component, int index_)
     return component;
 }
 
-void GameObject::OnDestroyed(EventEmitter<IEventsDestroy> *object)
-{
-    if (object)
-    {
-        if (GameObject *go = DCAST<GameObject *>(object))
-        {
-            m_gameObjectsToDestroyDelayed.Remove(go);
-        }
-
-        if (Component *comp = DCAST<Component *>(object))
-        {
-            m_componentsToDestroyDelayed.Remove(comp);
-        }
-    }
-}
-
 bool GameObject::CalculateEnabledRecursively() const
 {
     return IsEnabled() &&
@@ -439,17 +424,23 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
 
     if (!gameObject->IsBeingDestroyed())
     {
-        gameObject->SetBeingDestroyed();
         gameObject->SetWaitingToBeDestroyed();
+        gameObject->SetBeingDestroyed();
         Object::PropagateObjectDestruction(gameObject);
+
+        gameObject->DestroyDelayedGameObjects();
+        gameObject->DestroyDelayedComponents();
 
         while (!gameObject->GetChildren().IsEmpty())
         {
-            if (GameObject *go = gameObject->GetChildren().Back())
+            if (GameObject *child = gameObject->GetChildren().Back())
             {
-                GameObject::DestroyImmediate(go);
+                GameObject::DestroyImmediate(child);
             }
-            gameObject->TryToClearDeletedChildren();
+            else
+            {
+                gameObject->m_children.PopBack();
+            }
         }
 
         while (!gameObject->GetComponents().IsEmpty())
@@ -458,9 +449,13 @@ void GameObject::DestroyImmediate(GameObject *gameObject)
             {
                 Component::DestroyImmediate(comp);
             }
-            gameObject->TryToClearDeletedComponents();
+            else
+            {
+                gameObject->m_components.PopBack();
+            }
         }
 
+        gameObject->SetParent(nullptr);
         delete gameObject;
     }
 }
@@ -471,10 +466,13 @@ void GameObject::Destroy(GameObject *gameObject)
     {
         gameObject->SetWaitingToBeDestroyed();
         Object::PropagateObjectDestruction(gameObject);
-
         if (GameObject *parent = gameObject->GetParent())
         {
-            parent->AddGameObjectToDestroyDelayed(gameObject);
+            // Add this gameObject to parent for destroying delayed
+            ASSERT(!parent->m_gameObjectsToDestroyDelayed.Contains(gameObject))
+            parent->m_gameObjectsToDestroyDelayed.PushBack(gameObject);
+
+            // Remove from parent
             gameObject->SetParent(nullptr);
         }
         else
@@ -976,7 +974,7 @@ void GameObject::PropagateToChildren(std::function<void(GameObject *)> func)
     {
         TryToAddQueuedChildren();
         TryToClearDeletedChildren();
-        DestroyDelayedObjects();
+        DestroyDelayedGameObjects();
     }
 }
 
@@ -997,7 +995,7 @@ void GameObject::PropagateToComponents(std::function<void(Component *)> func)
     {
         TryToAddQueuedComponents();
         TryToClearDeletedComponents();
-        DestroyDelayedObjects();
+        DestroyDelayedComponents();
     }
 }
 
@@ -1008,38 +1006,30 @@ GameObject *GameObject::Instantiate()
     return go;
 }
 
-void GameObject::AddGameObjectToDestroyDelayed(GameObject *go)
-{
-    if (!go->IsWaitingToBeDestroyed() &&
-        !m_gameObjectsToDestroyDelayed.Contains(go))
-    {
-        m_gameObjectsToDestroyDelayed.PushBack(go);
-        go->EventEmitter<IEventsDestroy>::RegisterListener(this);
-    }
-}
-
 void GameObject::AddComponentToDestroyDelayed(Component *comp)
 {
-    if (!comp->IsWaitingToBeDestroyed() &&
-        !m_componentsToDestroyDelayed.Contains(comp))
+    ASSERT(!comp->IsWaitingToBeDestroyed());
+    ASSERT(!m_componentsToDestroyDelayed.Contains(comp));
+    m_componentsToDestroyDelayed.PushBack(comp);
+}
+
+void GameObject::DestroyDelayedGameObjects()
+{
+    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
     {
-        m_componentsToDestroyDelayed.PushBack(comp);
-        comp->EventEmitter<IEventsDestroy>::RegisterListener(this);
+        GameObject *go = m_gameObjectsToDestroyDelayed.Back();
+        GameObject::DestroyImmediate(go);
+        m_gameObjectsToDestroyDelayed.PopBack();
     }
 }
 
-void GameObject::DestroyDelayedObjects()
+void GameObject::DestroyDelayedComponents()
 {
     while (!m_componentsToDestroyDelayed.IsEmpty())
     {
         Component *comp = m_componentsToDestroyDelayed.Back();
         Component::DestroyImmediate(comp);
-    }
-
-    while (!m_gameObjectsToDestroyDelayed.IsEmpty())
-    {
-        GameObject *go = m_gameObjectsToDestroyDelayed.Back();
-        GameObject::DestroyImmediate(go);
+        m_componentsToDestroyDelayed.PopBack();
     }
 }
 

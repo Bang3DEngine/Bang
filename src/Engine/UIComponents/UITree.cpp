@@ -49,6 +49,7 @@ UITree::UITree()
 
 UITree::~UITree()
 {
+    GameObject::Destroy(p_dragMarker);
 }
 
 void UITree::OnUpdate()
@@ -493,6 +494,8 @@ GOItem *UITree::AddItem_(GOItem *newItem,
                 parentItem,
                 indexInsideParent);
         }
+        /*
+        */
     }
     else
     {
@@ -524,8 +527,7 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
 {
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
 
-    Tree<GOItem *> *itemTree = GetItemTree(item);
-    if (itemTree)
+    if (Tree<GOItem *> *itemTree = GetItemTree(item))
     {
         // Get some info before deleting
         GOItem *parentItem = GetParentItem(item);
@@ -542,11 +544,11 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
             UITreeItemContainer *itemCont = GetTreeItemContainer(itemToRemove);
             itemsContToRemove.PushBack(itemCont);
             itemsToRemove.PushBack(itemToRemove);
-            itemToRemove->SetParent(nullptr);
         }
+        // Delete the item tree (which recursively deletes its children)
+        delete itemTree;
 
-        // Remove needed stuff from list, remove from map, and delete the item
-        // tree (which recursively deletes its children)
+        // Remove needed stuff from list, remove from map
         for (uint i = 0; i < itemsToRemove.Size(); ++i)
         {
             GOItem *itemToRemove = itemsToRemove[i];
@@ -554,7 +556,6 @@ void UITree::RemoveItem_(GOItem *item, bool moving)
             m_itemToTree.Remove(itemToRemove);
             GetUIList()->RemoveItem(itemContToRemove);
         }
-        delete itemTree;
 
         if (!moving)
         {
@@ -584,10 +585,6 @@ GOItem *UITree::GetSelectedItem() const
 
 void UITree::Clear()
 {
-    while (!m_rootTree.GetChildren().IsEmpty())
-    {
-        RemoveItem(m_rootTree.GetChildren().Front()->GetData());
-    }
     GetUIList()->Clear();
     m_rootTree.Clear();
     m_itemToTree.Clear();

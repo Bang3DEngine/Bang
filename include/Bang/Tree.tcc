@@ -90,11 +90,10 @@ void Tree<T>::Clear()
 {
     while (!m_subTrees.IsEmpty())
     {
-        Tree<T> *child = m_subTrees.Front();
-        m_subTrees.PopFront();
+        Tree<T> *child = m_subTrees.Back();
+        m_subTrees.PopBack();
         delete child;
     }
-    m_subTrees.Clear();
 }
 
 template <class T>

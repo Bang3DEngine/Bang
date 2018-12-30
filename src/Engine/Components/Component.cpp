@@ -20,18 +20,19 @@ Component::Component()
 
 Component::~Component()
 {
+    ASSERT(IsBeingDestroyed());
     ASSERT(IsWaitingToBeDestroyed());
     ASSERT(GetGameObject() == nullptr);
+    ASSERT(GetDestroyEventHasBeenPropagated());
 }
 
 void Component::DestroyImmediate(Component *component)
 {
     if (!component->IsBeingDestroyed())
     {
-        component->SetBeingDestroyed();
         component->SetWaitingToBeDestroyed();
+        component->SetBeingDestroyed();
         Object::PropagateObjectDestruction(component);
-
         component->SetGameObjectForced(nullptr);
         delete component;
     }

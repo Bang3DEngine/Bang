@@ -72,7 +72,8 @@ void SceneManager::OnNewFrame(Scene *scene)
         Physics::GetInstance()->StepIfNeeded(scene);
         scene->PostUpdate();
 
-        scene->DestroyDelayedObjects();
+        scene->DestroyDelayedGameObjects();
+        scene->DestroyDelayedComponents();
     }
 }
 

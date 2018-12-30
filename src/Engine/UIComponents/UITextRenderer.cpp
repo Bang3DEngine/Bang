@@ -377,7 +377,7 @@ AARect UITextRenderer::GetBoundingRect(Camera *camera) const
 
 const Color &UITextRenderer::GetTextColor() const
 {
-    return GetMaterial()->GetAlbedoColor();
+    return GetActiveMaterial()->GetAlbedoColor();
 }
 
 void UITextRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const

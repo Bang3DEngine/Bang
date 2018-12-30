@@ -134,17 +134,13 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     // Destroy the element
     if (!moving)
     {
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+            &IEventsUIList::OnItemRemoved, item);
         GameObject::Destroy(item);
     }
     else
     {
         item->SetParent(nullptr);
-    }
-
-    if (!moving)
-    {
-        EventEmitter<IEventsUIList>::PropagateToListeners(
-            &IEventsUIList::OnItemRemoved, item);
     }
 }
 
@@ -261,7 +257,7 @@ void UIList::Clear()
 {
     while (!p_items.IsEmpty())
     {
-        RemoveItem(p_items.Front());
+        RemoveItem(p_items.Back());
     }
 
     if (GetScrollPanel())

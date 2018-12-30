@@ -88,14 +88,19 @@ void Object::InvalidateEnabledRecursively()
 
 void Object::PropagateObjectDestruction(Object *object)
 {
-    if (!object->m_destroyPropagated)
+    if (!object->GetDestroyEventHasBeenPropagated())
     {
-        object->m_destroyPropagated = true;
+        object->m_destroyEventPropagated = true;
 
         object->OnDestroy();
         object->EventEmitter<IEventsDestroy>::PropagateToListeners(
             &IEventsDestroy::OnDestroyed, object);
     }
+}
+
+bool Object::GetDestroyEventHasBeenPropagated() const
+{
+    return m_destroyEventPropagated;
 }
 
 void Object::OnEnabledRecursivelyInvalidated()

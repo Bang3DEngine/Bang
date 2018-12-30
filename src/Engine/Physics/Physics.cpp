@@ -265,8 +265,11 @@ void Physics::SetGravity(const Vector3 &gravity)
         for (const auto &pair : m_sceneToPxSceneContainer)
         {
             PxSceneContainer *pxSceneCont = pair.second;
-            PxScene *pxScene = pxSceneCont->GetPxScene();
-            pxScene->setGravity(Physics::GetPxVec3FromVector3(GetGravity()));
+            if (PxScene *pxScene = pxSceneCont->GetPxScene())
+            {
+                pxScene->setGravity(
+                    Physics::GetPxVec3FromVector3(GetGravity()));
+            }
         }
     }
 }
@@ -277,7 +280,6 @@ void Physics::RegisterScene(Scene *scene)
 
     PxSceneContainer *pxSceneContainer = new PxSceneContainer(scene);
     m_sceneToPxSceneContainer.Add(scene, pxSceneContainer);
-    scene->EventEmitter<IEventsDestroy>::RegisterListener(this);
 }
 
 void Physics::UnRegisterScene(Scene *scene)
@@ -431,18 +433,6 @@ bool Physics::Overlap(const Collider *collider0, const Collider *collider1)
 Physics *Physics::GetInstance()
 {
     return Application::GetInstance()->GetPhysics();
-}
-
-void Physics::OnDestroyed(EventEmitter<IEventsDestroy> *ee)
-{
-    if (Scene *scene = DCAST<Scene *>(ee))
-    {
-        if (PxSceneContainer *pxSceneCont = GetPxSceneContainerFromScene(scene))
-        {
-            delete pxSceneCont;
-            m_sceneToPxSceneContainer.Remove(scene);
-        }
-    }
 }
 
 Scene *Physics::GetSceneFromPhysicsComponent(PhysicsComponent *phComp) const

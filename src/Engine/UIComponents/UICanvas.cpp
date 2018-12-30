@@ -28,6 +28,7 @@
 #include "Bang/UIFocusable.h"
 #include "Bang/UILayoutManager.h"
 #include "Bang/UIRectMask.h"
+#include "Bang/USet.h"
 
 namespace Bang
 {
@@ -63,21 +64,18 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
     Array<UIFocusable *> focusablesInGo =
         focusableGo->GetComponents<UIFocusable>();
 
-    class DestroyTracker : public GameObject
+    class DestroyTracker : public EventListener<IEventsDestroy>
     {
     public:
-        Array<UIFocusable *> *focusables = nullptr;
+        USet<UIFocusable *> destroyedFocusables;
         void OnDestroyed(EventEmitter<IEventsDestroy> *ee) override
         {
-            GameObject::OnDestroyed(ee);
-
-            ASSERT(focusables);
-            focusables->Remove(SCAST<UIFocusable *>(ee));
+            ASSERT(ee);
+            destroyedFocusables.Add(SCAST<UIFocusable *>(ee));
         }
     };
 
     DestroyTracker *destroyTracker = new DestroyTracker();
-    destroyTracker->focusables = &focusablesInGo;
 
     for (UIFocusable *focusableInGo : focusablesInGo)
     {
@@ -87,7 +85,8 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
 
     for (UIFocusable *focusableInGo : focusablesInGo)
     {
-        if (focusableInGo->IsEnabledRecursively())
+        if (!destroyTracker->destroyedFocusables.Contains(focusableInGo) &&
+            focusableInGo->IsEnabledRecursively())
         {
             UIEventResult propagationResult =
                 focusableInGo->ProcessEvent(event);
@@ -106,7 +105,7 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
         }
     }
 
-    GameObject::DestroyImmediate(destroyTracker);
+    delete destroyTracker;
 }
 
 void PropagateUIEvent(UIFocusable *focusable, const UIEvent &event)
@@ -312,13 +311,14 @@ void UICanvas::OnUpdate()
                         {
                             UIFocusable *focusable =
                                 *(p_focusablesBeingPressed.Begin());
+                            ASSERT(!focusable->IsBeingDestroyed());
+
                             PropagateFocusableUIEvent(
                                 focusable,
                                 UIEvent::Type::FINISHED_BEING_PRESSED,
                                 inputEvent);
                             p_focusablesBeingPressed.Remove(focusable);
                         }
-                        p_focusablesBeingPressed.Clear();
                     }
 
                     if (p_ddBeingDragged &&
@@ -578,7 +578,7 @@ void UICanvas::OnDestroyed(EventEmitter<IEventsDestroy> *object)
             p_focusableUnderMouseTopMost = nullptr;
         }
 
-        p_focusablesBeingPressed.Remove(destroyedFocusable);
+        RegisterFocusableNotBeingPressedAnymore(destroyedFocusable);
     }
 
     if (object == p_ddBeingDragged)
@@ -873,11 +873,13 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
 void UICanvas::RegisterFocusableBeingPressed(UIFocusable *focusable)
 {
     p_focusablesBeingPressed.Add(focusable);
+    focusable->EventEmitter<IEventsDestroy>::RegisterListener(this);
 }
 
 void UICanvas::RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable)
 {
     p_focusablesBeingPressed.Remove(focusable);
+    focusable->EventEmitter<IEventsDestroy>::UnRegisterListener(this);
 }
 
 struct GameObjectZComparer

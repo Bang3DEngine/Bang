@@ -13,15 +13,15 @@ PostProcessEffectDOF::PostProcessEffectDOF()
 {
     SET_INSTANCE_CLASS_ID(PostProcessEffectDOF);
 
-    m_foregroundTexture = Assets::Create<Texture2D>();
-    m_foregroundTexture.Get()->CreateEmpty(1, 1);
-    m_foregroundTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_foregroundTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+    m_blurredTexture = Assets::Create<Texture2D>();
+    m_blurredTexture.Get()->CreateEmpty(1, 1);
+    m_blurredTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurredTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
-    m_auxiliarTexture = Assets::Create<Texture2D>();
-    m_auxiliarTexture.Get()->CreateEmpty(1, 1);
-    m_auxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_auxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
+    m_blurAuxiliarTexture.Get()->CreateEmpty(1, 1);
+    m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_dofSP.Set(ShaderProgramFactory::Get(
         ShaderProgramFactory::GetScreenPassVertexShaderPath(),
@@ -57,8 +57,8 @@ void PostProcessEffectDOF::OnRender(RenderPass renderPass)
         Texture2D *sceneColorTexture =
             ge->GetActiveGBuffer()->GetDrawColorTexture();
         ge->BlurTexture(sceneColorTexture,
-                        m_auxiliarTexture.Get(),
-                        m_foregroundTexture.Get(),
+                        m_blurAuxiliarTexture.Get(),
+                        m_blurredTexture.Get(),
                         GetBlurRadius(),
                         BlurType::KAWASE);
 
@@ -70,12 +70,16 @@ void PostProcessEffectDOF::OnRender(RenderPass renderPass)
 
         ShaderProgram *sp = m_dofSP.Get();
         sp->Bind();
-        sp->SetFloat("B_FadeRange", GetFadeRange());
-        sp->SetFloat("B_ForegroundThreshold", GetForegroundThreshold());
+        Camera *cam = Camera::GetActive();
+        sp->SetMatrix4("B_ViewInv", cam->GetViewMatrix().Inversed());
+        sp->SetMatrix4("B_ProjectionInv",
+                       cam->GetProjectionMatrix().Inversed());
+        sp->SetFloat("B_FocusRange", GetFocusRange());
+        sp->SetFloat("B_FocusDistanceWorld", GetFocusDistanceWorld());
+        sp->SetFloat("B_Fading", GetFading());
         sp->SetTexture2D("B_SceneDepthTexture", sceneDepthTexture);
-        sp->SetTexture2D("B_SceneBackgroundColorTexture", sceneColorTexture);
-        sp->SetTexture2D("B_SceneForegroundColorTexture",
-                         m_foregroundTexture.Get());
+        sp->SetTexture2D("B_SceneColorTexture", sceneColorTexture);
+        sp->SetTexture2D("B_BlurredSceneColorTexture", m_blurredTexture.Get());
 
         ge->GetActiveGBuffer()->ApplyPass(sp, true);
 
@@ -84,19 +88,29 @@ void PostProcessEffectDOF::OnRender(RenderPass renderPass)
     }
 }
 
+void PostProcessEffectDOF::SetFading(float fading)
+{
+    m_fading = fading;
+}
+
 void PostProcessEffectDOF::SetBlurRadius(uint blurRadius)
 {
     m_blurRadius = blurRadius;
 }
 
-void PostProcessEffectDOF::SetFadeRange(float fadeRange)
+void PostProcessEffectDOF::SetFocusRange(float focusRange)
 {
-    m_fadeRange = fadeRange;
+    m_focusRange = focusRange;
 }
 
-void PostProcessEffectDOF::SetForegroundThreshold(float foregroundThreshold)
+void PostProcessEffectDOF::SetFocusDistanceWorld(float focusDistanceWorld)
 {
-    m_foregroundThreshold = foregroundThreshold;
+    m_focusDistanceWorld = focusDistanceWorld;
+}
+
+float PostProcessEffectDOF::GetFading() const
+{
+    return m_fading;
 }
 
 uint PostProcessEffectDOF::GetBlurRadius() const
@@ -104,14 +118,14 @@ uint PostProcessEffectDOF::GetBlurRadius() const
     return m_blurRadius;
 }
 
-float PostProcessEffectDOF::GetFadeRange() const
+float PostProcessEffectDOF::GetFocusRange() const
 {
-    return m_fadeRange;
+    return m_focusRange;
 }
 
-float PostProcessEffectDOF::GetForegroundThreshold() const
+float PostProcessEffectDOF::GetFocusDistanceWorld() const
 {
-    return m_foregroundThreshold;
+    return m_focusDistanceWorld;
 }
 
 void PostProcessEffectDOF::Reflect()
@@ -124,19 +138,26 @@ void PostProcessEffectDOF::Reflect()
     GetReflectStructPtr()->GetReflectVariablePtr("Type")->SetHints(
         BANG_REFLECT_HINT_SHOWN(false));
 
-    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectDOF,
-                                   "Foreground threshold",
-                                   SetForegroundThreshold,
-                                   GetForegroundThreshold,
-                                   BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f) +
-                                       BANG_REFLECT_HINT_STEP_VALUE(0.025f));
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        PostProcessEffectDOF,
+        "Focus distance",
+        SetFocusDistanceWorld,
+        GetFocusDistanceWorld,
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        PostProcessEffectDOF,
+        "Focus range",
+        SetFocusRange,
+        GetFocusRange,
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectDOF,
-                                   "Fade range",
-                                   SetFadeRange,
-                                   GetFadeRange,
+                                   "Fading",
+                                   SetFading,
+                                   GetFading,
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f) +
-                                       BANG_REFLECT_HINT_STEP_VALUE(0.01f));
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectDOF,
                                    "Blur radius",

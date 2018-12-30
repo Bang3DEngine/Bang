@@ -16,25 +16,28 @@ public:
     // Component
     virtual void OnRender(RenderPass renderPass) override;
 
+    void SetFading(float fading);
     void SetBlurRadius(uint blurRadius);
-    void SetFadeRange(float fadeRange);
+    void SetFocusRange(float focusRange);
     void SetDownscale(uint downscale);
-    void SetForegroundThreshold(float foregroundThreshold);
+    void SetFocusDistanceWorld(float focusDistanceWorld);
 
+    float GetFading() const;
     uint GetBlurRadius() const;
-    float GetFadeRange() const;
-    float GetForegroundThreshold() const;
+    float GetFocusRange() const;
+    float GetFocusDistanceWorld() const;
 
     // IReflectable
     void Reflect() override;
 
 private:
     AH<ShaderProgram> m_dofSP;
-    AH<Texture2D> m_foregroundTexture;
-    AH<Texture2D> m_auxiliarTexture;
+    AH<Texture2D> m_blurredTexture;
+    AH<Texture2D> m_blurAuxiliarTexture;
 
-    float m_fadeRange = 0.125f;
-    float m_foregroundThreshold = 0.75f;
+    float m_fading = 0.1f;
+    float m_focusRange = 3.0f;
+    float m_focusDistanceWorld = 5.0f;
     uint m_blurRadius = 6;
 };
 }

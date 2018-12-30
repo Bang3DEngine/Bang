@@ -256,6 +256,18 @@ float Luma(vec3 color)
     return dot(color, vec3(0.299, 0.587, 0.114));
 }
 
+float B_GetDepthWorld(float depth01)
+{
+    float projectedDepth =  ((depth01) * 2 - 1);
+    vec4 unprojectedDepth = B_ProjectionInv *
+                            vec4(0, 0, projectedDepth, 1);
+    unprojectedDepth.z /= unprojectedDepth.w;
+    float unprojectedDepthZ = unprojectedDepth.z;
+    vec3 worldPos = B_ComputeWorldPosition(depth01, vec2(0));
+    vec3 viewPos = (B_View * vec4(worldPos, 1)).xyz;
+    return -viewPos.z;
+}
+
 vec3 B_ComputeWorldPosition()
 {
     return B_ComputeWorldPosition( B_SampleDepth() );

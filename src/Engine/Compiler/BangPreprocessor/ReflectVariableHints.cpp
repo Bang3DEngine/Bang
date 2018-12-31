@@ -106,7 +106,7 @@ void ReflectVariableHints::Update(const String &hintsString)
                 }
 
                 Array<String> extensions = valueStrMod.Split<Array>(',', true);
-                AddExtensions(extensions);
+                SetExtensions(extensions);
             }
             else if (keyStr == ReflectVariableHints::KeyIsZoomablePreview)
             {

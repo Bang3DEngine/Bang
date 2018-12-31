@@ -582,7 +582,9 @@ void Material::Reflect()
                            },
                            [this]() { return p_vertexShader.Get(); },
                            Shader,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
+                               BANG_REFLECT_HINT_EXTENSIONS(
+                                   Extensions::GetVertexShaderExtensions()));
 
     BANG_REFLECT_VAR_ASSET("Fragment Shader",
                            [this](Shader *fShader) {
@@ -591,5 +593,7 @@ void Material::Reflect()
                            },
                            [this]() { return p_fragmentShader.Get(); },
                            Shader,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
+                               BANG_REFLECT_HINT_EXTENSIONS(
+                                   Extensions::GetFragmentShaderExtensions()));
 }

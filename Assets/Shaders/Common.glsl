@@ -57,6 +57,7 @@ uniform float     B_AlphaCutoff;
 uniform vec2      B_AlbedoUvOffset;
 uniform vec2      B_AlbedoUvMultiply;
 uniform bool      B_HasAlbedoTexture;
+uniform bool      B_MaterialReceivesLighting;
 // ///////////////////////////////////////
 
 // Renderer related //////////////////////

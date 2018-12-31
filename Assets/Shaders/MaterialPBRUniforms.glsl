@@ -12,7 +12,6 @@ uniform float     B_MaterialMetalness;
 uniform vec2      B_NormalMapUvMultiply;
 uniform bool      B_HasNormalMapTexture;
 uniform float     B_NormalMapMultiplyFactor;
-uniform bool      B_MaterialReceivesLighting;
 #endif
 
 #endif

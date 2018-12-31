@@ -91,7 +91,6 @@ public:
 
     // Serializable
     virtual void Reflect() override;
-    virtual void ImportMeta(const MetaNode &metaNode) override;
 
 protected:
     AH<Texture2D> p_albedoTexture;
@@ -119,6 +118,9 @@ protected:
 
     Material();
     virtual ~Material() override;
+
+private:
+    void UpdateShaderProgram();
 };
 }
 

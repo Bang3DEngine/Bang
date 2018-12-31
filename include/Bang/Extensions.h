@@ -10,6 +10,8 @@ namespace Bang
 class Extensions
 {
 public:
+    static Array<String> GetExtension(const String &className);
+
     static String GetObjExtension();
     static String GetStaticLibExtension();
     static String GetDynamicLibExtension();
@@ -26,7 +28,7 @@ public:
     static String GetAnimatorLayerMaskExtension();
     static String GetAnimatorStateMachineExtension();
 
-    static Array<String> GetTTFExtensions();
+    static Array<String> GetFontExtensions();
     static Array<String> GetImageExtensions();
     static Array<String> GetModelExtensions();
     static Array<String> GetShaderExtensions();

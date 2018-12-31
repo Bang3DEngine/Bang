@@ -27,14 +27,16 @@
         [this]() { return SCAST<FlagsPrimitiveType>(Getter()); }, \
         BANG_REFLECT_HINT_ENUM_FLAGS(true));
 
-#define BANG_REFLECT_VAR_ASSET(Name, Setter, Getter, AssetClass, Hints) \
-    ReflectVar<GUID>(                                                   \
-        Name,                                                           \
-        [this](GUID v) { Setter(Assets::Load<AssetClass>(v).Get()); },  \
-        [this]() -> GUID {                                              \
-            return Getter() ? Getter()->GetGUID() : GUID::Empty();      \
-        },                                                              \
-        Hints);
+#define BANG_REFLECT_VAR_ASSET(Name, Setter, Getter, AssetClass, Hints)   \
+    ReflectVar<GUID>(                                                     \
+        Name,                                                             \
+        [this](GUID v) { Setter(Assets::Load<AssetClass>(v).Get()); },    \
+        [this]() -> GUID {                                                \
+            return Getter() ? Getter()->GetGUID() : GUID::Empty();        \
+        },                                                                \
+        BANG_REFLECT_HINT_EXTENSIONS(                                     \
+            Extensions::GetExtension(AssetClass::GetClassNameStatic())) + \
+            Hints);
 
 #define BANG_REFLECT_BUTTON_HINTED(Class, Name, ActionFunction, Hints)         \
     ReflectVar<bool>(                                                          \

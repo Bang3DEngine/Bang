@@ -3,7 +3,6 @@
 void main()
 {
     vec4 color = B_MaterialAlbedoColor;
-
     if (B_HasAlbedoTexture)
     {
         color *= texture(B_AlbedoTexture, B_FIn_AlbedoUv);

@@ -1,11 +1,96 @@
 #include "Bang/Extensions.h"
 
+#include "Bang/Animation.h"
+#include "Bang/AnimatorLayerMask.h"
+#include "Bang/AnimatorStateMachine.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/AudioClip.h"
+#include "Bang/Behaviour.h"
+#include "Bang/Font.h"
+#include "Bang/Material.h"
+#include "Bang/Model.h"
+#include "Bang/PhysicsMaterial.h"
+#include "Bang/Prefab.h"
+#include "Bang/Scene.h"
+#include "Bang/Shader.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/String.h"
+#include "Bang/Texture2D.h"
+#include "Bang/Texture3D.h"
+#include "Bang/TextureCubeMap.h"
 
 namespace Bang
 {
+Array<String> Extensions::GetExtension(const String &className)
+{
+    if (className == Model::GetClassNameStatic())
+    {
+        return GetModelExtensions();
+    }
+    else if (className == Mesh::GetClassNameStatic())
+    {
+        return {GetMeshExtension()};
+    }
+    else if (className == Animation::GetClassNameStatic())
+    {
+        return {GetAnimationExtension()};
+    }
+    else if (className == Shader::GetClassNameStatic())
+    {
+        return {GetShaderExtensions()};
+    }
+    else if (className == ShaderProgram::GetClassNameStatic())
+    {
+        return {GetShaderProgramExtension()};
+    }
+    else if (className == Texture2D::GetClassNameStatic())
+    {
+        return {GetImageExtensions()};
+    }
+    else if (className == TextureCubeMap::GetClassNameStatic())
+    {
+        return {GetTextureCubeMapExtension()};
+    }
+    else if (className == PhysicsMaterial::GetClassNameStatic())
+    {
+        return {GetPhysicsMaterialExtension()};
+    }
+    else if (className == Material::GetClassNameStatic())
+    {
+        return {GetMaterialExtension()};
+    }
+    else if (className == AudioClip::GetClassNameStatic())
+    {
+        return {GetTextureCubeMapExtension()};
+    }
+    else if (className == Font::GetClassNameStatic())
+    {
+        return {GetFontExtensions()};
+    }
+    else if (className == Prefab::GetClassNameStatic())
+    {
+        return {GetPrefabExtension()};
+    }
+    else if (className == Scene::GetClassNameStatic())
+    {
+        return {GetSceneExtension()};
+    }
+    else if (className == AnimatorLayerMask::GetClassNameStatic())
+    {
+        return {GetAnimatorLayerMaskExtension()};
+    }
+    else if (className == AnimatorStateMachine::GetClassNameStatic())
+    {
+        return {GetAnimatorStateMachineExtension()};
+    }
+    else if (className == Behaviour::GetClassNameStatic())
+    {
+        return {GetBehaviourExtensions()};
+    }
+    return {};
+}
+
 String Extensions::GetObjExtension()
 {
 #ifdef __linux__
@@ -79,7 +164,7 @@ String Extensions::GetShaderProgramExtension()
     return "bshaderprogram";
 }
 
-Array<String> Extensions::GetTTFExtensions()
+Array<String> Extensions::GetFontExtensions()
 {
     return {"ttf"};
 }

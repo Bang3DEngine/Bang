@@ -34,6 +34,18 @@ Material::~Material()
 {
 }
 
+void Material::UpdateShaderProgram()
+{
+    Shader *vShader = p_vertexShader.Get();
+    Shader *fShader = p_fragmentShader.Get();
+    if (vShader && fShader)
+    {
+        ShaderProgram *newSp = ShaderProgramFactory::Get(
+            vShader->GetAssetFilepath(), fShader->GetAssetFilepath());
+        SetShaderProgram(newSp);
+    }
+}
+
 void Material::SetLineWidth(float w)
 {
     if (w != GetLineWidth())
@@ -126,6 +138,13 @@ void Material::SetShaderProgram(ShaderProgram *program)
     if (p_shaderProgram.Get() != program)
     {
         p_shaderProgram.Set(program);
+
+        if (GetShaderProgram())
+        {
+            p_vertexShader.Set(GetShaderProgram()->GetVertexShader());
+            p_fragmentShader.Set(GetShaderProgram()->GetFragmentShader());
+        }
+
         PropagateAssetChanged();
     }
 }
@@ -556,38 +575,21 @@ void Material::Reflect()
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Needed Uniforms", "Time", NeededUniformFlag::TIME);
 
-    BANG_REFLECT_VAR_ASSET(
-        "Vertex Shader",
-        [this](Shader *vShader) { p_vertexShader.Set(vShader); },
-        [this]() { return p_vertexShader.Get(); },
-        Shader,
-        BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+    BANG_REFLECT_VAR_ASSET("Vertex Shader",
+                           [this](Shader *vShader) {
+                               p_vertexShader.Set(vShader);
+                               UpdateShaderProgram();
+                           },
+                           [this]() { return p_vertexShader.Get(); },
+                           Shader,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
 
-    BANG_REFLECT_VAR_ASSET(
-        "Fragment Shader",
-        [this](Shader *fShader) { p_fragmentShader.Set(fShader); },
-        [this]() { return p_fragmentShader.Get(); },
-        Shader,
-        BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
-
-    BANG_REFLECT_VAR_ASSET("Shader Program",
-                           SetShaderProgram,
-                           GetShaderProgram,
-                           ShaderProgram,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
-                               BANG_REFLECT_HINT_SHOWN(false));
-}
-
-void Material::ImportMeta(const MetaNode &meta)
-{
-    Asset::ImportMeta(meta);
-
-    Shader *vShader = p_vertexShader.Get();
-    Shader *fShader = p_fragmentShader.Get();
-    if (vShader && fShader)
-    {
-        ShaderProgram *newSp = ShaderProgramFactory::Get(
-            vShader->GetAssetFilepath(), fShader->GetAssetFilepath());
-        SetShaderProgram(newSp);
-    }
+    BANG_REFLECT_VAR_ASSET("Fragment Shader",
+                           [this](Shader *fShader) {
+                               p_fragmentShader.Set(fShader);
+                               UpdateShaderProgram();
+                           },
+                           [this]() { return p_fragmentShader.Get(); },
+                           Shader,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
 }

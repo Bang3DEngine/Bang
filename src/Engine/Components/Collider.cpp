@@ -242,14 +242,12 @@ void Collider::Reflect()
         Collider, "Use in NavMesh", SetUseInNavMesh, GetUseInNavMesh);
     BANG_REFLECT_VAR_MEMBER(Collider, "Center", SetCenter, GetCenter);
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        Collider,
-        "Physics Material",
-        SetPhysicsMaterial,
-        GetSharedPhysicsMaterial,
-        PhysicsMaterial,
-        BANG_REFLECT_HINT_EXTENSIONS(
-            Extensions::GetPhysicsMaterialExtension()));
+    BANG_REFLECT_VAR_ASSET("Physics Material",
+                           SetPhysicsMaterial,
+                           GetSharedPhysicsMaterial,
+                           PhysicsMaterial,
+                           BANG_REFLECT_HINT_EXTENSIONS(
+                               Extensions::GetPhysicsMaterialExtension()));
 }
 
 physx::PxTransform Collider::GetWorldPxTransform() const

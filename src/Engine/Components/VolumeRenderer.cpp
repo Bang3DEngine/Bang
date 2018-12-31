@@ -309,8 +309,7 @@ void VolumeRenderer::Reflect()
         ->GetHintsPtr()
         ->Update(BANG_REFLECT_HINT_SHOWN(false));
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        VolumeRenderer,
+    BANG_REFLECT_VAR_ASSET(
         "Volume Material",
         SetVolumePropertiesMaterial,
         GetVolumePropertiesMaterial,
@@ -360,8 +359,7 @@ void VolumeRenderer::Reflect()
         BANG_REFLECT_HINT_MINMAX_VALUE(0.01f, 0.99f) +
             BANG_REFLECT_HINT_STEP_VALUE(0.01f));
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        VolumeRenderer,
+    BANG_REFLECT_VAR_ASSET(
         "Transfer function",
         SetTransferFunctionTexture,
         GetTransferFunctionTexture,

@@ -55,6 +55,7 @@ public:
     void SetRenderPass(RenderPass renderPass);
     void SetCullFace(GL::CullFaceExt cullFace);
     void SetRenderWireframe(bool renderWireframe);
+    void SetNeededUniforms(NeededUniformFlags neededUniformFlags);
     void SetLineWidth(float w);
     void BindMaterialUniforms(ShaderProgram *sp) const;
 
@@ -82,9 +83,6 @@ public:
     virtual void Bind() const;
     virtual void UnBind() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
-
     // IEventsAsset
     void OnAssetChanged(Asset *changedAsset) override;
 
@@ -92,14 +90,16 @@ public:
     void Import(const Path &materialFilepath) override;
 
     // Serializable
+    virtual void Reflect() override;
     virtual void ImportMeta(const MetaNode &metaNode) override;
-    virtual void ExportMeta(MetaNode *metaNode) const override;
 
 protected:
     AH<Texture2D> p_albedoTexture;
     AH<Texture2D> p_roughnessTexture;
     AH<Texture2D> p_metalnessTexture;
     AH<Texture2D> p_normalMapTexture;
+    AH<Shader> p_vertexShader;
+    AH<Shader> p_fragmentShader;
     AH<ShaderProgram> p_shaderProgram;
 
     float m_lineWidth = 1.0f;

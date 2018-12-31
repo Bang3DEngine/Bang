@@ -143,8 +143,7 @@ void AudioSource::Reflect()
         },
         BANG_REFLECT_HINT_BLOCKED((GetAudioClip() == nullptr)));
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        AudioSource,
+    BANG_REFLECT_VAR_ASSET(
         "AudioClip",
         SetAudioClip,
         GetAudioClip,

@@ -411,8 +411,7 @@ void ReflectionProbe::Reflect()
                             "Clear color",
                             SetCamerasClearColor,
                             GetCamerasClearColor);
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        ReflectionProbe,
+    BANG_REFLECT_VAR_ASSET(
         "Skybox texture",
         SetCamerasSkyBoxTexture,
         GetCamerasSkyBoxTexture,

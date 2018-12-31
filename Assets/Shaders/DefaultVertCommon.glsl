@@ -1,4 +1,6 @@
 #define BANG_VERTEX
+#define BANG_NORMAL_MAPPING
+#define BANG_UNIFORMS_MATERIAL_PBR
 #include "Common.glsl"
 #include "MaterialPBRUniforms.glsl"
 

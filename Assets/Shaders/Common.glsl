@@ -33,11 +33,13 @@ layout (std140) uniform B_CameraUniformBuffer
 
 
 // Camera related ///////////////////////////
+#ifdef BANG_UNIFORMS_SKYBOXES
 uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
+#endif
 
-#ifndef BANG_NO_REFLECTION_PROBES
+#ifdef BANG_UNIFORMS_REFLECTION_PROBES
 uniform bool        B_UseReflectionProbe;
 uniform samplerCube B_ReflectionProbeDiffuse;
 uniform samplerCube B_ReflectionProbeSpecular;
@@ -62,12 +64,14 @@ uniform bool B_ReceivesShadows;
 //////////////////////////////////////////
 
 // GBuffer textures //////////////////////
+#ifdef BANG_UNIFORMS_GBUFFER_TEXTURES
 uniform sampler2D B_GTex_Color;
 uniform sampler2D B_GTex_AlbedoColor;
 uniform sampler2D B_GTex_Light;
 uniform sampler2D B_GTex_Normal;
 uniform sampler2D B_GTex_Misc;
 uniform sampler2D B_GTex_DepthStencil;
+#endif
 // ///////////////////////////////////////
 
 // Util functions /////////////////
@@ -112,9 +116,7 @@ vec3 B_ComputeWorldPosition(float depth)
 //
 
 // GBuffer Samplers //////////////////////
-#if defined(BANG_FRAGMENT)
-
-// #if defined(BANG_DEFERRED_RENDERING)
+#ifdef BANG_UNIFORMS_GBUFFER_TEXTURES
 vec4  B_SampleColor(vec2 uv)
 {
     return texture(B_GTex_Color, uv);
@@ -159,7 +161,6 @@ float B_SampleFlags(vec2 uv)
 {
     return texture(B_GTex_Misc, uv).z;
 }
-
 vec4 B_SampleColor()
 {
     return B_SampleColor(B_GetViewportUv());
@@ -200,7 +201,6 @@ float B_SampleFlags()
 {
     return B_SampleFlags(B_GetViewportUv());
 }
-
 vec4 B_SampleColorOffset(vec2 pixOffset)
 {
     return B_SampleColor(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
@@ -241,12 +241,16 @@ float B_SampleFlagsOffset(vec2 pixOffset)
 {
     return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
 }
+vec3 B_ComputeWorldPosition()
+{
+    return B_ComputeWorldPosition( B_SampleDepth() );
+}
+#endif
 
 float Map01(float x, float minX, float maxX)
 {
     return (x-minX) / (maxX-minX);
 }
-
 float Brightness(vec3 color)
 {
     return dot(color, vec3(0.2126, 0.7152, 0.0722));
@@ -267,15 +271,6 @@ float B_GetDepthWorld(float depth01)
     vec3 viewPos = (B_View * vec4(worldPos, 1)).xyz;
     return -viewPos.z;
 }
-
-vec3 B_ComputeWorldPosition()
-{
-    return B_ComputeWorldPosition( B_SampleDepth() );
-}
-// #endif
-
-#endif
-// ///////////////////////////////////////
 
 #endif
 

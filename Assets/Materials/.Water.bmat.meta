@@ -1,23 +1,23 @@
 Material:
-  AlbedoColor: (1, 1, 1, 1)
-  AlbedoTexture: 0 0 0
-  AlbedoUvMultiply: (1, 1)
-  AlbedoUvOffset: (0, 0)
-  CullFace: 1029
-  FragmentShader: 1533908131217565652 1568571122205589505 0
+  Albedo Color: (1, 1, 1, 1)
+  Albedo Texture: 0 0 0
+  Albedo Uv Multiply: (1, 1)
+  Albedo Uv Offset: (0, 0)
+  Cull Face: 1029
+  Fragment Shader: 1533908131217565652 1568571122205589505 0
   GUID: 1533907750636188473 6606588238817656833 0
-  LineWidth: 1
+  Line Width: 1
   Metalness: 0.5
-  MetalnessTexture: 0 0 0
-  NormalMapMultiplyFactor: 1
-  NormalMapTexture: 0 0 0
-  NormalMapUvMultiply: (1, 1)
-  NormalMapUvOffset: (0, 0)
-  ReceivesLighting: True
-  RenderPass: 6
-  RenderWireframe: False
+  Metalness Texture: 0 0 0
+  Normal Map Multiply Factor: 1
+  Normal Map Texture: 0 0 0
+  Normal Map Uv Multiply: (1, 1)
+  Normal Map Uv Offset: (0, 0)
+  Receives Lighting: True
+  Render Pass: 6
+  Render Wireframe: False
   Roughness: 0.5
-  RoughnessTexture: 0 0 0
-  VertexShader: 1528296273745760063 3999184374477094913 0
+  Roughness Texture: 0 0 0
+  Vertex Shader: 1528296273745760063 3999184374477094913 0
   Children:
     {}

@@ -64,8 +64,7 @@ Mesh *MeshCollider::GetMesh() const
 
 void MeshCollider::Reflect()
 {
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        MeshCollider,
+    BANG_REFLECT_VAR_ASSET(
         "Mesh",
         SetMesh,
         GetMesh,

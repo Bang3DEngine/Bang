@@ -120,8 +120,7 @@ void PostProcessEffect::Reflect()
 {
     Component::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        PostProcessEffect,
+    BANG_REFLECT_VAR_ASSET(
         "PostProcess Shader",
         SetPostProcessShader,
         GetPostProcessShader,

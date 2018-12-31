@@ -1,6 +1,8 @@
 #define BANG_FRAGMENT
+#define BANG_UNIFORMS_SKYBOXES
 #define BANG_DEFERRED_RENDERING
-
+#define BANG_UNIFORMS_GBUFFER_TEXTURES
+#define BANG_UNIFORMS_REFLECTION_PROBES
 #include "DirectionalLight.glsl"
 
 in vec3 B_FIn_Position;

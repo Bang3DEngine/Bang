@@ -279,8 +279,7 @@ void Renderer::Reflect()
 {
     BANG_REFLECT_VAR_MEMBER(Renderer, "Visible", SetVisible, IsVisible);
     BANG_REFLECT_VAR_MEMBER(Renderer, "Depth Mask", SetDepthMask, GetDepthMask);
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        Renderer,
+    BANG_REFLECT_VAR_ASSET(
         "Material",
         SetMaterial,
         GetSharedMaterial,

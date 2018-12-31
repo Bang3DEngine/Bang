@@ -1,7 +1,4 @@
 #define BANG_FRAGMENT
-
-#define BANG_NO_REFLECTION_PROBES
-
 #include "Common.glsl"
 #include "LightCommon.glsl"
 

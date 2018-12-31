@@ -276,8 +276,7 @@ void MeshRenderer::Reflect()
 {
     Renderer::Reflect();
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        MeshRenderer,
+    BANG_REFLECT_VAR_ASSET(
         "Mesh",
         SetMesh,
         GetSharedMesh,

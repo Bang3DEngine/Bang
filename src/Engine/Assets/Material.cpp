@@ -4,6 +4,7 @@
 #include "Bang/Assets.tcc"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/Extensions.h"
 #include "Bang/Flags.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GUID.h"
@@ -59,6 +60,11 @@ void Material::SetRenderWireframe(bool renderWireframe)
         m_renderWireframe = renderWireframe;
         PropagateAssetChanged();
     }
+}
+
+void Material::SetNeededUniforms(NeededUniformFlags neededUniformFlags)
+{
+    m_neededUniforms = neededUniformFlags;
 }
 
 void Material::SetCullFace(GL::CullFaceExt cullFace)
@@ -416,33 +422,6 @@ void Material::UnBind() const
     }
 }
 
-void Material::CloneInto(ICloneable *clone, bool cloneGUID) const
-{
-    Serializable::CloneInto(clone, cloneGUID);
-
-    Material *matClone = SCAST<Material *>(clone);
-
-    matClone->GetNeededUniforms().SetOn(GetNeededUniforms().GetValue());
-    matClone->SetShaderProgram(GetShaderProgram());
-    matClone->SetAlbedoColor(GetAlbedoColor());
-    matClone->SetReceivesLighting(GetReceivesLighting());
-    matClone->SetRoughness(GetRoughness());
-    matClone->SetMetalness(GetMetalness());
-    matClone->SetAlbedoTexture(GetAlbedoTexture());
-    matClone->SetAlbedoUvOffset(GetAlbedoUvOffset());
-    matClone->SetAlbedoUvMultiply(GetAlbedoUvMultiply());
-    matClone->SetNormalMapTexture(GetNormalMapTexture());
-    matClone->SetNormalMapUvOffset(GetNormalMapUvOffset());
-    matClone->SetNormalMapUvMultiply(GetNormalMapUvMultiply());
-    matClone->SetNormalMapMultiplyFactor(GetNormalMapMultiplyFactor());
-    matClone->SetRenderPass(GetRenderPass());
-    matClone->SetLineWidth(GetLineWidth());
-    matClone->SetRoughnessTexture(GetRoughnessTexture());
-    matClone->SetMetalnessTexture(GetMetalnessTexture());
-    matClone->SetRenderWireframe(GetRenderWireframe());
-    matClone->SetCullFace(GetCullFace());
-}
-
 void Material::OnAssetChanged(Asset *)
 {
     PropagateAssetChanged();
@@ -453,161 +432,162 @@ void Material::Import(const Path &materialFilepath)
     ImportMetaFromFile(materialFilepath);
 }
 
+void Material::Reflect()
+{
+    Asset::Reflect();
+
+    BANG_REFLECT_VAR_MEMBER(
+        Material, "Albedo Color", SetAlbedoColor, GetAlbedoColor);
+    BANG_REFLECT_VAR_ASSET("Albedo Texture",
+                           SetAlbedoTexture,
+                           GetAlbedoTexture,
+                           Texture2D,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
+    BANG_REFLECT_VAR_MEMBER(
+        Material, "Albedo Uv Offset", SetAlbedoUvOffset, GetAlbedoUvOffset);
+    BANG_REFLECT_VAR_MEMBER(Material,
+                            "Albedo Uv Multiply",
+                            SetAlbedoUvMultiply,
+                            GetAlbedoUvMultiply);
+
+    BANG_REFLECT_VAR_MEMBER(Material,
+                            "Normal Map Factor",
+                            SetNormalMapMultiplyFactor,
+                            GetNormalMapMultiplyFactor);
+    BANG_REFLECT_VAR_ASSET("Normal Texture",
+                           SetNormalMapTexture,
+                           GetNormalMapTexture,
+                           Texture2D,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
+    BANG_REFLECT_VAR_MEMBER(Material,
+                            "Normal Map Uv Offset",
+                            SetNormalMapUvOffset,
+                            GetNormalMapUvOffset);
+    BANG_REFLECT_VAR_MEMBER(Material,
+                            "Normal Map Uv Multiply",
+                            SetNormalMapUvMultiply,
+                            GetNormalMapUvMultiply);
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(Material,
+                                   "Roughness",
+                                   SetRoughness,
+                                   GetRoughness,
+                                   BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
+    BANG_REFLECT_VAR_ASSET("Roughness Texture",
+                           SetRoughnessTexture,
+                           GetRoughnessTexture,
+                           Texture2D,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(Material,
+                                   "Metalness",
+                                   SetMetalness,
+                                   GetMetalness,
+                                   BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f));
+    BANG_REFLECT_VAR_ASSET("Metalness Texture",
+                           SetMetalnessTexture,
+                           GetMetalnessTexture,
+                           Texture2D,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(true));
+
+    BANG_REFLECT_VAR_MEMBER(Material,
+                            "Receives Lighting",
+                            SetReceivesLighting,
+                            GetReceivesLighting);
+
+    BANG_REFLECT_VAR_MEMBER(Material, "Line Width", SetLineWidth, GetLineWidth);
+
+    BANG_REFLECT_VAR_MEMBER(
+        Material, "Render Wireframe", SetRenderWireframe, GetRenderWireframe);
+
+    BANG_REFLECT_VAR_ENUM(
+        "Cull Face", SetCullFace, GetCullFace, GL::CullFaceExt);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Cull Face", "None", GL::CullFaceExt::NONE);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Cull Face", "Front", GL::CullFaceExt::FRONT);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Cull Face", "Back", GL::CullFaceExt::BACK);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Cull Face", "Front And Back", GL::CullFaceExt::FRONT_AND_BACK);
+
+    BANG_REFLECT_VAR_ENUM(
+        "Render Pass", SetRenderPass, GetRenderPass, RenderPass);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Scene Opaque", RenderPass::SCENE_OPAQUE);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Scene Decals", RenderPass::SCENE_DECALS);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Scene Transparent", RenderPass::SCENE_TRANSPARENT);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Render Pass",
+                                       "Scene Before Lights",
+                                       RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Render Pass",
+                                       "Scene After Lights",
+                                       RenderPass::SCENE_AFTER_ADDING_LIGHTS);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Canvas", RenderPass::CANVAS);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Canvas Postprocess", RenderPass::CANVAS_POSTPROCESS);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Overlay", RenderPass::OVERLAY);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Render Pass", "Overlay Postprocess", RenderPass::OVERLAY_POSTPROCESS);
+
+    BANG_REFLECT_VAR_ENUM_FLAGS(
+        "Needed Uniforms", SetNeededUniforms, GetNeededUniforms);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Model", NeededUniformFlag::MODEL);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Model Inv", NeededUniformFlag::MODEL_INV);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Normal", NeededUniformFlag::NORMAL);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "PVM", NeededUniformFlag::PVM);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "PVM Inv", NeededUniformFlag::PVM_INV);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Skyboxes", NeededUniformFlag::SKYBOXES);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Needed Uniforms",
+                                       "Material Albedo",
+                                       NeededUniformFlag::MATERIAL_ALBEDO);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Material PBR", NeededUniformFlag::MATERIAL_PBR);
+    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
+        "Needed Uniforms", "Time", NeededUniformFlag::TIME);
+
+    BANG_REFLECT_VAR_ASSET(
+        "Vertex Shader",
+        [this](Shader *vShader) { p_vertexShader.Set(vShader); },
+        [this]() { return p_vertexShader.Get(); },
+        Shader,
+        BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+
+    BANG_REFLECT_VAR_ASSET(
+        "Fragment Shader",
+        [this](Shader *fShader) { p_fragmentShader.Set(fShader); },
+        [this]() { return p_fragmentShader.Get(); },
+        Shader,
+        BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+
+    BANG_REFLECT_VAR_ASSET("Shader Program",
+                           SetShaderProgram,
+                           GetShaderProgram,
+                           ShaderProgram,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
+                               BANG_REFLECT_HINT_SHOWN(false));
+}
+
 void Material::ImportMeta(const MetaNode &meta)
 {
     Asset::ImportMeta(meta);
 
-    if (meta.Contains("NeededUniforms"))
-    {
-        GetNeededUniforms().SetTo(
-            meta.Get<FlagsPrimitiveType>("NeededUniforms"));
-    }
-
-    if (meta.Contains("RenderPass"))
-    {
-        SetRenderPass(meta.Get<RenderPass>("RenderPass"));
-    }
-
-    if (meta.Contains("AlbedoColor"))
-    {
-        SetAlbedoColor(meta.Get<Color>("AlbedoColor"));
-    }
-
-    if (meta.Contains("Roughness"))
-    {
-        SetRoughness(meta.Get<float>("Roughness"));
-    }
-
-    if (meta.Contains("Metalness"))
-    {
-        SetMetalness(meta.Get<float>("Metalness"));
-    }
-
-    if (meta.Contains("ReceivesLighting"))
-    {
-        SetReceivesLighting(meta.Get<bool>("ReceivesLighting"));
-    }
-
-    if (meta.Contains("AlbedoTexture"))
-    {
-        SetAlbedoTexture(
-            Assets::Load<Texture2D>(meta.Get<GUID>("AlbedoTexture")).Get());
-    }
-
-    if (meta.Contains("AlbedoUvOffset"))
-    {
-        SetAlbedoUvOffset(meta.Get<Vector2>("AlbedoUvOffset"));
-    }
-
-    if (meta.Contains("AlbedoUvMultiply"))
-    {
-        SetAlbedoUvMultiply(meta.Get<Vector2>("AlbedoUvMultiply"));
-    }
-
-    if (meta.Contains("RoughnessTexture"))
-    {
-        SetRoughnessTexture(
-            Assets::Load<Texture2D>(meta.Get<GUID>("RoughnessTexture")).Get());
-    }
-
-    if (meta.Contains("MetalnessTexture"))
-    {
-        SetMetalnessTexture(
-            Assets::Load<Texture2D>(meta.Get<GUID>("MetalnessTexture")).Get());
-    }
-
-    if (meta.Contains("NormalMapTexture"))
-    {
-        SetNormalMapTexture(
-            Assets::Load<Texture2D>(meta.Get<GUID>("NormalMapTexture")).Get());
-    }
-
-    if (meta.Contains("NormalMapUvOffset"))
-    {
-        SetNormalMapUvOffset(meta.Get<Vector2>("NormalMapUvOffset"));
-    }
-
-    if (meta.Contains("NormalMapUvMultiply"))
-    {
-        SetNormalMapUvMultiply(meta.Get<Vector2>("NormalMapUvMultiply"));
-    }
-
-    if (meta.Contains("NormalMapMultiplyFactor"))
-    {
-        SetNormalMapMultiplyFactor(meta.Get<float>("NormalMapMultiplyFactor"));
-    }
-
-    AH<Shader> vShader;
-    if (meta.Contains("VertexShader"))
-    {
-        vShader = Assets::Load<Shader>(meta.Get<GUID>("VertexShader"));
-    }
-
-    AH<Shader> fShader;
-    if (meta.Contains("FragmentShader"))
-    {
-        fShader = Assets::Load<Shader>(meta.Get<GUID>("FragmentShader"));
-    }
-
-    if (meta.Contains("LineWidth"))
-    {
-        SetLineWidth(meta.Get<float>("LineWidth"));
-    }
-
-    if (meta.Contains("RenderWireframe"))
-    {
-        SetRenderWireframe(meta.Get<bool>("RenderWireframe"));
-    }
-
-    if (meta.Contains("CullFace"))
-    {
-        SetCullFace(meta.Get<GL::CullFaceExt>("CullFace"));
-    }
-
+    Shader *vShader = p_vertexShader.Get();
+    Shader *fShader = p_fragmentShader.Get();
     if (vShader && fShader)
     {
-        ShaderProgram *newSp =
-            ShaderProgramFactory::Get(vShader.Get()->GetAssetFilepath(),
-                                      fShader.Get()->GetAssetFilepath());
+        ShaderProgram *newSp = ShaderProgramFactory::Get(
+            vShader->GetAssetFilepath(), fShader->GetAssetFilepath());
         SetShaderProgram(newSp);
     }
-}
-
-void Material::ExportMeta(MetaNode *metaNode) const
-{
-    Asset::ExportMeta(metaNode);
-
-    metaNode->Set("NeededUniforms", GetNeededUniforms());
-    metaNode->Set("RenderPass", GetRenderPass());
-    metaNode->Set("AlbedoColor", GetAlbedoColor());
-    metaNode->Set("Roughness", GetRoughness());
-    metaNode->Set("Metalness", GetMetalness());
-    metaNode->Set("ReceivesLighting", GetReceivesLighting());
-    metaNode->Set("AlbedoUvMultiply", GetAlbedoUvMultiply());
-    metaNode->Set("AlbedoUvOffset", GetAlbedoUvOffset());
-    metaNode->Set("NormalMapUvMultiply", GetNormalMapUvMultiply());
-    metaNode->Set("NormalMapUvOffset", GetNormalMapUvOffset());
-    metaNode->Set("NormalMapMultiplyFactor", GetNormalMapMultiplyFactor());
-    metaNode->Set("LineWidth", GetLineWidth());
-    metaNode->Set("RenderWireframe", GetRenderWireframe());
-    metaNode->Set("CullFace", GetCullFace());
-
-    Texture2D *albedoTex = GetAlbedoTexture();
-    metaNode->Set("AlbedoTexture",
-                  albedoTex ? albedoTex->GetGUID() : GUID::Empty());
-    Texture2D *roughnessTex = GetRoughnessTexture();
-    metaNode->Set("RoughnessTexture",
-                  roughnessTex ? roughnessTex->GetGUID() : GUID::Empty());
-    Texture2D *metalnessTex = GetMetalnessTexture();
-    metaNode->Set("MetalnessTexture",
-                  metalnessTex ? metalnessTex->GetGUID() : GUID::Empty());
-    Texture2D *normalTex = GetNormalMapTexture();
-    metaNode->Set("NormalMapTexture",
-                  normalTex ? normalTex->GetGUID() : GUID::Empty());
-
-    ShaderProgram *sp = GetShaderProgram();
-    Shader *vShader = (sp ? sp->GetVertexShader() : nullptr);
-    Shader *fShader = (sp ? sp->GetFragmentShader() : nullptr);
-    metaNode->Set("VertexShader", vShader->GetGUID());
-    metaNode->Set("FragmentShader", fShader->GetGUID());
 }

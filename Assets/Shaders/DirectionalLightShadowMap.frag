@@ -1,5 +1,7 @@
 #define BANG_FRAGMENT
 #define BANG_DEFERRED_RENDERING
+#define BANG_UNIFORMS_SKYBOXES
+#define BANG_UNIFORMS_REFLECTION_PROBES
 #include "Common.glsl"
 #include "LightCommon.glsl"
 

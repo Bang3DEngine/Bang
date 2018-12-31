@@ -208,8 +208,7 @@ void DecalRenderer::Reflect()
         ->GetHintsPtr()
         ->SetIsShown(false);
 
-    BANG_REFLECT_VAR_MEMBER_ASSET(
-        DecalRenderer,
+    BANG_REFLECT_VAR_ASSET(
         "Texture",
         SetDecalTexture,
         GetDecalTexture,

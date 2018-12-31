@@ -128,7 +128,7 @@ vec4 GetIBLAmbientColor(const bool receivesLighting,
         vec3 R = reflect(-V, N);
 
         bool useReflectionProbeAsCubeMap = false;
-        #ifndef BANG_NO_REFLECTION_PROBES
+        #ifdef BANG_UNIFORMS_REFLECTION_PROBES
         bool isBoxed = (B_ReflectionProbeSize.x > 0);
         if (B_UseReflectionProbe)
         {
@@ -196,7 +196,7 @@ vec4 GetIBLAmbientColor(const bool receivesLighting,
 
         vec3 diffuseCubeMapSample;
         vec3 specularCubeMapSample;
-        #ifndef BANG_NO_REFLECTION_PROBES
+        #ifdef BANG_UNIFORMS_REFLECTION_PROBES
         if (useReflectionProbeAsCubeMap)
         {
             diffuseCubeMapSample = GetCameraSkyBoxSample(B_ReflectionProbeDiffuse, N).rgb;

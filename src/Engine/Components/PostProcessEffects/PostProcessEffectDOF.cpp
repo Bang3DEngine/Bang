@@ -74,9 +74,12 @@ void PostProcessEffectDOF::OnRender(RenderPass renderPass)
         sp->SetMatrix4("B_ViewInv", cam->GetViewMatrix().Inversed());
         sp->SetMatrix4("B_ProjectionInv",
                        cam->GetProjectionMatrix().Inversed());
-        sp->SetFloat("B_FocusRange", GetFocusRange());
-        sp->SetFloat("B_FocusDistanceWorld", GetFocusDistanceWorld());
-        sp->SetFloat("B_Fading", GetFading());
+        sp->SetFloat("B_NearFadingSlope", GetNearFadingSlope());
+        sp->SetFloat("B_NearFadingSize", GetNearFadingSize());
+        sp->SetFloat("B_NearDistance", GetNearDistance());
+        sp->SetFloat("B_FarFadingSlope", GetFarFadingSlope());
+        sp->SetFloat("B_FarFadingSize", GetFarFadingSize());
+        sp->SetFloat("B_FarDistance", GetFarDistance());
         sp->SetTexture2D("B_SceneDepthTexture", sceneDepthTexture);
         sp->SetTexture2D("B_SceneColorTexture", sceneColorTexture);
         sp->SetTexture2D("B_BlurredSceneColorTexture", m_blurredTexture.Get());
@@ -88,9 +91,34 @@ void PostProcessEffectDOF::OnRender(RenderPass renderPass)
     }
 }
 
-void PostProcessEffectDOF::SetFading(float fading)
+void PostProcessEffectDOF::SetNearFadingSlope(float nearFadingSlope)
 {
-    m_fading = fading;
+    m_nearFadingSlope = nearFadingSlope;
+}
+
+void PostProcessEffectDOF::SetNearDistance(float nearDistance)
+{
+    m_nearDistance = nearDistance;
+}
+
+void PostProcessEffectDOF::SetNearFadingSize(float nearFadingSize)
+{
+    m_nearFadingSize = nearFadingSize;
+}
+
+void PostProcessEffectDOF::SetFarFadingSlope(float farFadingSlope)
+{
+    m_farFadingSlope = farFadingSlope;
+}
+
+void PostProcessEffectDOF::SetFarDistance(float farDistance)
+{
+    m_farDistance = farDistance;
+}
+
+void PostProcessEffectDOF::SetFarFadingSize(float farFadingSize)
+{
+    m_farFadingSize = farFadingSize;
 }
 
 void PostProcessEffectDOF::SetBlurRadius(uint blurRadius)
@@ -98,34 +126,39 @@ void PostProcessEffectDOF::SetBlurRadius(uint blurRadius)
     m_blurRadius = blurRadius;
 }
 
-void PostProcessEffectDOF::SetFocusRange(float focusRange)
+float PostProcessEffectDOF::GetNearFadingSlope() const
 {
-    m_focusRange = focusRange;
+    return m_nearFadingSlope;
 }
 
-void PostProcessEffectDOF::SetFocusDistanceWorld(float focusDistanceWorld)
+float PostProcessEffectDOF::GetNearDistance() const
 {
-    m_focusDistanceWorld = focusDistanceWorld;
+    return m_nearDistance;
 }
 
-float PostProcessEffectDOF::GetFading() const
+float PostProcessEffectDOF::GetNearFadingSize() const
 {
-    return m_fading;
+    return m_nearFadingSize;
+}
+
+float PostProcessEffectDOF::GetFarFadingSlope() const
+{
+    return m_farFadingSlope;
+}
+
+float PostProcessEffectDOF::GetFarDistance() const
+{
+    return m_farDistance;
+}
+
+float PostProcessEffectDOF::GetFarFadingSize() const
+{
+    return m_farFadingSize;
 }
 
 uint PostProcessEffectDOF::GetBlurRadius() const
 {
     return m_blurRadius;
-}
-
-float PostProcessEffectDOF::GetFocusRange() const
-{
-    return m_focusRange;
-}
-
-float PostProcessEffectDOF::GetFocusDistanceWorld() const
-{
-    return m_focusDistanceWorld;
 }
 
 void PostProcessEffectDOF::Reflect()
@@ -140,22 +173,43 @@ void PostProcessEffectDOF::Reflect()
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         PostProcessEffectDOF,
-        "Focus distance",
-        SetFocusDistanceWorld,
-        GetFocusDistanceWorld,
+        "Near fading size",
+        SetNearFadingSize,
+        GetNearFadingSize,
         BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(
         PostProcessEffectDOF,
-        "Focus range",
-        SetFocusRange,
-        GetFocusRange,
+        "Near distance",
+        SetNearDistance,
+        GetNearDistance,
         BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
 
     BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectDOF,
-                                   "Fading",
-                                   SetFading,
-                                   GetFading,
+                                   "Near fading slope",
+                                   SetNearFadingSlope,
+                                   GetNearFadingSlope,
+                                   BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f) +
+                                       BANG_REFLECT_HINT_STEP_VALUE(0.05f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        PostProcessEffectDOF,
+        "Far fading size",
+        SetFarFadingSize,
+        GetFarFadingSize,
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        PostProcessEffectDOF,
+        "Far distance",
+        SetFarDistance,
+        GetFarDistance,
+        BANG_REFLECT_HINT_MIN_VALUE(0.0f) + BANG_REFLECT_HINT_STEP_VALUE(0.5f));
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(PostProcessEffectDOF,
+                                   "Far fading slope",
+                                   SetFarFadingSlope,
+                                   GetFarFadingSlope,
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 1.0f) +
                                        BANG_REFLECT_HINT_STEP_VALUE(0.05f));
 

@@ -1,8 +1,11 @@
 #include "ScreenPass.frag"
 
-uniform float B_FocusRange;
-uniform float B_FocusDistanceWorld;
-uniform float B_Fading;
+uniform float B_NearDistance;
+uniform float B_NearFadingSize;
+uniform float B_NearFadingSlope;
+uniform float B_FarDistance;
+uniform float B_FarFadingSize;
+uniform float B_FarFadingSlope;
 uniform sampler2D B_SceneDepthTexture;
 uniform sampler2D B_SceneColorTexture;
 uniform sampler2D B_BlurredSceneColorTexture;
@@ -16,14 +19,19 @@ void main()
 
     float depth = texture(B_SceneDepthTexture, uv).r;
     float depthWorld = B_GetDepthWorld(depth);
-    float distToFocus = distance(B_FocusDistanceWorld, depthWorld);
-    // float distToFocusNorm = (distToFocus - B_FocusRange);
-    float t = distToFocus;
-    float FR = B_FocusRange;
-    t = smoothstep((1 - B_Fading) * FR, (1 + B_Fading) * FR, t);
-    t = (1.0f - t);
 
-    B_GIn_Color = vec4(mix(blurredSceneColor, sceneColor, t), 1);
+    float t = 0.0f;
+    // t = smoothstep((1 - B_Fading) * FR, (1 + B_Fading) * FR, t);
+    t += (1 - smoothstep(B_NearDistance + B_NearFadingSize * (1-B_NearFadingSlope),
+                         B_NearDistance + B_NearFadingSize,
+                         depthWorld));
+
+    t += (smoothstep(B_FarDistance + B_FarFadingSize * (1-B_FarFadingSlope),
+                     B_FarDistance + B_FarFadingSize,
+                     depthWorld));
+    t = clamp(t, 0, 1);
+
+    B_GIn_Color = vec4(mix(sceneColor, blurredSceneColor, t), 1);
     // B_GIn_Color = vec4(vec3(t), 1);
     // B_GIn_Color = vec4(vec3(depthWorld), 1);
 }

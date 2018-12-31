@@ -16,16 +16,21 @@ public:
     // Component
     virtual void OnRender(RenderPass renderPass) override;
 
-    void SetFading(float fading);
+    void SetNearFadingSlope(float nearFadingSlope);
+    void SetNearDistance(float nearDistance);
+    void SetNearFadingSize(float nearFadingSize);
+    void SetFarFadingSlope(float farFadingSlope);
+    void SetFarDistance(float farDistance);
+    void SetFarFadingSize(float farFadingSize);
     void SetBlurRadius(uint blurRadius);
-    void SetFocusRange(float focusRange);
-    void SetDownscale(uint downscale);
-    void SetFocusDistanceWorld(float focusDistanceWorld);
 
-    float GetFading() const;
+    float GetNearFadingSlope() const;
+    float GetNearDistance() const;
+    float GetNearFadingSize() const;
+    float GetFarFadingSlope() const;
+    float GetFarDistance() const;
+    float GetFarFadingSize() const;
     uint GetBlurRadius() const;
-    float GetFocusRange() const;
-    float GetFocusDistanceWorld() const;
 
     // IReflectable
     void Reflect() override;
@@ -35,10 +40,13 @@ private:
     AH<Texture2D> m_blurredTexture;
     AH<Texture2D> m_blurAuxiliarTexture;
 
-    float m_fading = 0.1f;
-    float m_focusRange = 3.0f;
-    float m_focusDistanceWorld = 5.0f;
-    uint m_blurRadius = 6;
+    float m_nearFadingSlope = 1.0f;
+    float m_nearFadingSize = 1.0f;
+    float m_nearDistance = 0.5f;
+    float m_farFadingSlope = 1.0f;
+    float m_farFadingSize = 5.0f;
+    float m_farDistance = 10.0f;
+    uint m_blurRadius = 3;
 };
 }
 

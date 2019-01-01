@@ -23,6 +23,7 @@ public:
     static String GetMaterialExtension();
     static String GetAnimationExtension();
     static String GetShaderProgramExtension();
+    static String GetUnifiedShaderExtension();
     static String GetTextureCubeMapExtension();
     static String GetPhysicsMaterialExtension();
     static String GetAnimatorLayerMaskExtension();
@@ -37,6 +38,7 @@ public:
     static Array<String> GetBehaviourExtensions();
     static Array<String> GetSourceFileExtensions();
     static Array<String> GetVertexShaderExtensions();
+    static Array<String> GetGeometryShaderExtensions();
     static Array<String> GetFragmentShaderExtensions();
     static Array<String> GetSharedLibraryFileExtensions();
 

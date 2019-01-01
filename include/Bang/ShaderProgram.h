@@ -42,7 +42,7 @@ class ShaderProgram : public GLObject,
     ASSET(ShaderProgram)
 
 public:
-    bool Load(const Path &shaderPath);
+    bool Load(const Path &unifiedShaderPath);
     bool Load(const Path &vShaderPath, const Path &fShaderPath);
     bool Load(const Path &vShaderPath,
               const Path &gShaderPath,

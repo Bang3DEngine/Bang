@@ -11,6 +11,7 @@
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/Extensions.h"
 #include "Bang/File.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
@@ -41,6 +42,11 @@ ShaderProgram::ShaderProgram()
     m_idGL = GL::CreateProgram();
 }
 
+ShaderProgram::~ShaderProgram()
+{
+    GL::DeleteProgram(m_idGL);
+}
+
 ShaderProgram::ShaderProgram(Shader *vShader, Shader *fShader) : ShaderProgram()
 {
     Load(vShader, fShader);
@@ -64,17 +70,12 @@ ShaderProgram::ShaderProgram(const Path &vShaderPath,
     Load(vShaderPath, gShaderPath, fShaderPath);
 }
 
-ShaderProgram::~ShaderProgram()
+bool ShaderProgram::Load(const Path &unifiedShaderPath)
 {
-    GL::DeleteProgram(m_idGL);
-}
-
-bool ShaderProgram::Load(const Path &shaderPath)
-{
-    if (shaderPath.IsFile())
+    if (unifiedShaderPath.IsFile())
     {
-        m_shaderPath = shaderPath;
-        String shaderSourceCode = File::GetContents(shaderPath);
+        m_shaderPath = unifiedShaderPath;
+        String shaderSourceCode = File::GetContents(unifiedShaderPath);
 
         Array<GL::ShaderType> shaderTypes = {GL::ShaderType::VERTEX,
                                              GL::ShaderType::GEOMETRY,
@@ -629,9 +630,15 @@ GLint ShaderProgram::GetUniformLocation(const String &name) const
     return location;
 }
 
-void ShaderProgram::Import(const Path &shaderPath)
+void ShaderProgram::Import(const Path &path)
 {
-    Load(shaderPath);
+    if (path.HasExtension(Extensions::GetUnifiedShaderExtension()))
+    {
+        Load(path);
+    }
+    else
+    {
+    }
 }
 
 void ShaderProgram::Bind() const

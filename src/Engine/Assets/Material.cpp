@@ -557,9 +557,14 @@ void Material::Reflect()
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Needed Uniforms", "Time", NeededUniformFlag::TIME);
 
+    Array<String> extensions;
+    extensions.PushBack(Extensions::GetShaderProgramExtension());
+    extensions.PushBack(Extensions::GetUnifiedShaderExtension());
+
     BANG_REFLECT_VAR_ASSET("Shader Program",
                            SetShaderProgram,
                            GetShaderProgram,
                            ShaderProgram,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
+                               BANG_REFLECT_HINT_EXTENSIONS(extensions));
 }

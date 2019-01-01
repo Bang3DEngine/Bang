@@ -155,13 +155,20 @@ String Extensions::GetAnimationExtension()
 {
     return "banim";
 }
+
+String Extensions::GetShaderProgramExtension()
+{
+    return "bshaderprogram";
+}
+
+String Extensions::GetUnifiedShaderExtension()
+{
+    return "bushader";
+}
+
 String Extensions::GetTextureCubeMapExtension()
 {
     return "texcm";
-}
-String Extensions::GetShaderProgramExtension()
-{
-    return "bshader";
 }
 
 Array<String> Extensions::GetFontExtensions()
@@ -186,11 +193,22 @@ Array<String> Extensions::GetModelExtensions()
 
 Array<String> Extensions::GetShaderExtensions()
 {
-    return {"vert", "geom", "frag", "glsl"};
+    Array<String> extensions;
+    extensions.PushBack(GetVertexShaderExtensions());
+    extensions.PushBack(GetGeometryShaderExtensions());
+    extensions.PushBack(GetFragmentShaderExtensions());
+    extensions.PushBack(GetUnifiedShaderExtension());
+    extensions.PushBack("glsl");
+    return extensions;
 }
 Array<String> Extensions::GetVertexShaderExtensions()
 {
     return {"vert"};
+}
+
+Array<String> Extensions::GetGeometryShaderExtensions()
+{
+    return {"geom"};
 }
 Array<String> Extensions::GetFragmentShaderExtensions()
 {

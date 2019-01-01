@@ -40,10 +40,12 @@ public:
     static ShaderProgram *Get(const Path &vShaderPath,
                               const Path &gShaderPath,
                               const Path &fShaderPath);
+    static ShaderProgram *Get(const Path &shaderPath);
 
     static Path GetEngineShadersDir();
 
 private:
+    Map<Path, AH<ShaderProgram>> m_shaderCache;
     Map<std::tuple<Path, Path, Path>, AH<ShaderProgram>> m_cache;
 
     ShaderProgramFactory() = default;

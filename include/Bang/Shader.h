@@ -20,6 +20,8 @@ public:
     Shader(GL::ShaderType t);
     virtual ~Shader() override;
 
+    void SetSourceCode(const String &sourceCode);
+    void SetType(GL::ShaderType type);
     bool Compile();
 
     const String &GetSourceCode() const;
@@ -31,9 +33,9 @@ public:
     virtual void Import(const Path &shaderFilepath) override;
 
 private:
-    GL::ShaderType m_type;
     String m_sourceCode = "";
     String m_processedSourceCode = "";
+    GL::ShaderType m_type = Undef<GL::ShaderType>();
 
     void RetrieveType(const Path &shaderPath);
 };

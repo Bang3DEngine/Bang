@@ -42,6 +42,7 @@ class ShaderProgram : public GLObject,
     ASSET(ShaderProgram)
 
 public:
+    bool Load(const Path &shaderPath);
     bool Load(const Path &vShaderPath, const Path &fShaderPath);
     bool Load(const Path &vShaderPath,
               const Path &gShaderPath,
@@ -118,6 +119,7 @@ public:
     Shader *GetVertexShader() const;
     Shader *GetGeometryShader() const;
     Shader *GetFragmentShader() const;
+    const Path &GetShaderPath() const;
 
     GLint GetUniformLocation(const String &name) const;
 
@@ -128,6 +130,7 @@ private:
     AH<Shader> p_vShader;
     AH<Shader> p_gShader;
     AH<Shader> p_fShader;
+    Path m_shaderPath = Path::Empty();
     bool m_isLinked = false;
 
     UMap<String, int> m_uniformCacheInt;

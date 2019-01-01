@@ -153,6 +153,19 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &vShaderPath,
     return Get(vShaderPath, gShaderPath, fShaderPath, true);
 }
 
+ShaderProgram *ShaderProgramFactory::Get(const Path &shaderPath)
+{
+    ShaderProgramFactory *spf = ShaderProgramFactory::GetActive();
+    if (!spf->m_shaderCache.ContainsKey(shaderPath))
+    {
+        AH<ShaderProgram> shaderProgram;
+        shaderProgram = Assets::Create<ShaderProgram>();
+        shaderProgram.Get()->Load(shaderPath);
+        spf->m_shaderCache.Add(shaderPath, shaderProgram);
+    }
+    return spf->m_shaderCache.Get(shaderPath).Get();
+}
+
 Path ShaderProgramFactory::GetEngineShadersDir()
 {
     return EPATH("Shaders");

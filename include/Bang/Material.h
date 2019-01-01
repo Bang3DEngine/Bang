@@ -57,6 +57,7 @@ public:
     void SetRenderWireframe(bool renderWireframe);
     void SetNeededUniforms(NeededUniformFlags neededUniformFlags);
     void SetLineWidth(float w);
+    void SetShaderPath(const Path &shaderPath);
     void BindMaterialUniforms(ShaderProgram *sp) const;
 
     NeededUniformFlags &GetNeededUniforms();
@@ -79,6 +80,7 @@ public:
     bool GetRenderWireframe() const;
     GL::CullFaceExt GetCullFace() const;
     float GetLineWidth() const;
+    const Path &GetShaderPath() const;
 
     virtual void Bind() const;
     virtual void UnBind() const;

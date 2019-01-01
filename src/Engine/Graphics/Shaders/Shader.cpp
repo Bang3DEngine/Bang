@@ -11,16 +11,27 @@
 
 using namespace Bang;
 
-Shader::Shader(GL::ShaderType t) : m_type(t)
+Shader::Shader(GL::ShaderType t)
 {
+    SetType(t);
 }
 
 Shader::~Shader()
 {
-    if (m_idGL > 0)
+    if (GetGLId() > 0)
     {
-        GL::DeleteShader(m_idGL);
+        GL::DeleteShader(GetGLId());
     }
+}
+
+void Shader::SetSourceCode(const String &sourceCode)
+{
+    m_sourceCode = sourceCode;
+}
+
+void Shader::SetType(GL::ShaderType type)
+{
+    m_type = type;
 }
 
 Shader::Shader() : Shader(GL::ShaderType::VERTEX)
@@ -41,15 +52,15 @@ void Shader::RetrieveType(const Path &shaderPath)
 {
     if (shaderPath.GetExtension().Contains("vert"))
     {
-        m_type = GL::ShaderType::VERTEX;
+        SetType(GL::ShaderType::VERTEX);
     }
     else if (shaderPath.GetExtension().Contains("geom"))
     {
-        m_type = GL::ShaderType::GEOMETRY;
+        SetType(GL::ShaderType::GEOMETRY);
     }
     else
     {
-        m_type = GL::ShaderType::FRAGMENT;
+        SetType(GL::ShaderType::FRAGMENT);
     }
 }
 
@@ -64,22 +75,22 @@ bool Shader::Compile()
     if (shaderFilepath.IsFile())
     {
         RetrieveType(shaderFilepath);
-        m_sourceCode = File::GetContents(shaderFilepath);
+        SetSourceCode(File::GetContents(shaderFilepath));
     }
 
-    m_idGL = GL::CreateShader(m_type);
+    m_idGL = GL::CreateShader(GetType());
 
-    m_processedSourceCode = m_sourceCode;
+    m_processedSourceCode = GetSourceCode();
     ShaderPreprocessor::PreprocessCode(&m_processedSourceCode);
 
-    GL::ShaderSource(m_idGL, m_processedSourceCode);
-    if (!GL::CompileShader(m_idGL))
+    GL::ShaderSource(GetGLId(), GetProcessedSourceCode());
+    if (!GL::CompileShader(GetGLId()))
     {
         Debug_Error(
             "Failed to compile shader: '" << GetAssetFilepath() << "': "
                                           << std::endl
-                                          << GL::GetShaderErrorMsg(m_idGL));
-        GL::DeleteShader(m_idGL);
+                                          << GL::GetShaderErrorMsg(GetGLId()));
+        GL::DeleteShader(GetGLId());
         return false;
     }
     return true;

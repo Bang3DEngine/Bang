@@ -55,6 +55,11 @@ void Material::SetLineWidth(float w)
     }
 }
 
+void Material::SetShaderPath(const Path &shaderPath)
+{
+    p_shaderProgram.Set(ShaderProgramFactory::Get(shaderPath));
+}
+
 NeededUniformFlags &Material::GetNeededUniforms()
 {
     return m_neededUniforms;
@@ -325,6 +330,13 @@ float Material::GetLineWidth() const
 {
     return m_lineWidth;
 }
+
+const Path &Material::GetShaderPath() const
+{
+    return GetShaderProgram() ? GetShaderProgram()->GetShaderPath()
+                              : Path::Empty();
+}
+
 bool Material::GetRenderWireframe() const
 {
     return m_renderWireframe;
@@ -574,6 +586,13 @@ void Material::Reflect()
         "Needed Uniforms", "Material PBR", NeededUniformFlag::MATERIAL_PBR);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Needed Uniforms", "Time", NeededUniformFlag::TIME);
+
+    BANG_REFLECT_VAR_MEMBER_HINTED(
+        Material,
+        "Shader Path",
+        SetShaderPath,
+        GetShaderPath,
+        BANG_REFLECT_HINT_EXTENSIONS(Array<String>({"bshader"})));
 
     BANG_REFLECT_VAR_ASSET("Vertex Shader",
                            [this](Shader *vShader) {

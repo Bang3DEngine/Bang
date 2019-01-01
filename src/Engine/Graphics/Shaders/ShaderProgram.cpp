@@ -11,6 +11,7 @@
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
+#include "Bang/File.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GLUniforms.tcc"
@@ -22,6 +23,7 @@
 #include "Bang/Matrix4.tcc"
 #include "Bang/Path.h"
 #include "Bang/Shader.h"
+#include "Bang/ShaderPreprocessor.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
@@ -65,6 +67,34 @@ ShaderProgram::ShaderProgram(const Path &vShaderPath,
 ShaderProgram::~ShaderProgram()
 {
     GL::DeleteProgram(m_idGL);
+}
+
+bool ShaderProgram::Load(const Path &shaderPath)
+{
+    if (shaderPath.IsFile())
+    {
+        m_shaderPath = shaderPath;
+        String shaderSourceCode = File::GetContents(shaderPath);
+
+        AH<Shader> vShader = Assets::Create<Shader>();
+        String vShaderSourceCode = ShaderPreprocessor::GetSourceCodeSection(
+            shaderSourceCode, GL::ShaderType::VERTEX);
+        vShader.Get()->SetSourceCode(vShaderSourceCode);
+        vShader.Get()->SetType(GL::ShaderType::VERTEX);
+        vShader.Get()->Compile();
+        SetShader(vShader.Get(), GL::ShaderType::VERTEX);
+
+        AH<Shader> fShader = Assets::Create<Shader>();
+        String fShaderSourceCode = ShaderPreprocessor::GetSourceCodeSection(
+            shaderSourceCode, GL::ShaderType::FRAGMENT);
+        fShader.Get()->SetSourceCode(fShaderSourceCode);
+        fShader.Get()->SetType(GL::ShaderType::FRAGMENT);
+        fShader.Get()->Compile();
+        SetShader(fShader.Get(), GL::ShaderType::FRAGMENT);
+
+        return Link();
+    }
+    return false;
 }
 
 bool ShaderProgram::Load(const Path &vShaderPath, const Path &fShaderPath)
@@ -569,6 +599,11 @@ Shader *ShaderProgram::GetGeometryShader() const
 Shader *ShaderProgram::GetFragmentShader() const
 {
     return p_fShader.Get();
+}
+
+const Path &ShaderProgram::GetShaderPath() const
+{
+    return m_shaderPath;
 }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const

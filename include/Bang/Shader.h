@@ -22,8 +22,11 @@ public:
 
     void SetSourceCode(const String &sourceCode);
     void SetType(GL::ShaderType type);
+    bool CompileIfNeeded();
     bool Compile();
 
+    void DeleteShader();
+    bool IsCompiled() const;
     const String &GetSourceCode() const;
     const String &GetProcessedSourceCode() const;
     GL::ShaderType GetType() const;
@@ -33,11 +36,12 @@ public:
     virtual void Import(const Path &shaderFilepath) override;
 
 private:
+    bool m_compiled = false;
     String m_sourceCode = "";
     String m_processedSourceCode = "";
     GL::ShaderType m_type = Undef<GL::ShaderType>();
 
-    void RetrieveType(const Path &shaderPath);
+    void CommitShaderSourceCode();
 };
 }
 

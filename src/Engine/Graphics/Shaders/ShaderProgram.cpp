@@ -76,21 +76,22 @@ bool ShaderProgram::Load(const Path &shaderPath)
         m_shaderPath = shaderPath;
         String shaderSourceCode = File::GetContents(shaderPath);
 
-        AH<Shader> vShader = Assets::Create<Shader>();
-        String vShaderSourceCode = ShaderPreprocessor::GetSourceCodeSection(
-            shaderSourceCode, GL::ShaderType::VERTEX);
-        vShader.Get()->SetSourceCode(vShaderSourceCode);
-        vShader.Get()->SetType(GL::ShaderType::VERTEX);
-        vShader.Get()->Compile();
-        AddShader(vShader.Get());
-
-        AH<Shader> fShader = Assets::Create<Shader>();
-        String fShaderSourceCode = ShaderPreprocessor::GetSourceCodeSection(
-            shaderSourceCode, GL::ShaderType::FRAGMENT);
-        fShader.Get()->SetSourceCode(fShaderSourceCode);
-        fShader.Get()->SetType(GL::ShaderType::FRAGMENT);
-        fShader.Get()->Compile();
-        AddShader(fShader.Get());
+        Array<GL::ShaderType> shaderTypes = {GL::ShaderType::VERTEX,
+                                             GL::ShaderType::GEOMETRY,
+                                             GL::ShaderType::FRAGMENT};
+        for (GL::ShaderType shaderType : shaderTypes)
+        {
+            String shaderSectionSourceCode =
+                ShaderPreprocessor::GetSourceCodeSection(shaderSourceCode,
+                                                         shaderType);
+            if (!shaderSectionSourceCode.IsEmpty())
+            {
+                AH<Shader> shader = Assets::Create<Shader>(shaderType);
+                shader.Get()->SetSourceCode(shaderSectionSourceCode);
+                shader.Get()->CompileIfNeeded();
+                AddShader(shader.Get());
+            }
+        }
 
         return Link();
     }
@@ -99,9 +100,7 @@ bool ShaderProgram::Load(const Path &shaderPath)
 
 bool ShaderProgram::Load(const Path &vShaderPath, const Path &fShaderPath)
 {
-    AH<Shader> vShader = Assets::Load<Shader>(vShaderPath);
-    AH<Shader> fShader = Assets::Load<Shader>(fShaderPath);
-    return Load(vShader.Get(), fShader.Get());
+    return Load(vShaderPath, Path::Empty(), fShaderPath);
 }
 
 bool ShaderProgram::Load(const Path &vShaderPath,
@@ -109,43 +108,51 @@ bool ShaderProgram::Load(const Path &vShaderPath,
                          const Path &fShaderPath)
 {
     AH<Shader> vShader = Assets::Load<Shader>(vShaderPath);
+    if (vShader.Get())
+    {
+        vShader.Get()->SetType(GL::ShaderType::VERTEX);
+    }
+
     AH<Shader> gShader = Assets::Load<Shader>(gShaderPath);
+    if (gShader.Get())
+    {
+        gShader.Get()->SetType(GL::ShaderType::GEOMETRY);
+    }
+
     AH<Shader> fShader = Assets::Load<Shader>(fShaderPath);
+    if (fShader.Get())
+    {
+        fShader.Get()->SetType(GL::ShaderType::FRAGMENT);
+    }
+
     return Load(vShader.Get(), gShader.Get(), fShader.Get());
 }
 
 bool ShaderProgram::Load(Shader *vShader, Shader *fShader)
 {
-    if (!vShader || !fShader)
-    {
-        return false;
-    }
-    if (vShader == GetVertexShader() && fShader == GetFragmentShader())
-    {
-        return true;
-    }
-
-    SetVertexShader(vShader);
-    SetFragmentShader(fShader);
-    return Link();
+    return Load(vShader, nullptr, fShader);
 }
 
 bool ShaderProgram::Load(Shader *vShader, Shader *gShader, Shader *fShader)
 {
-    if (!vShader || !gShader || !fShader)
+    if (vShader && fShader)
     {
-        return false;
-    }
-    if (vShader == GetVertexShader() && gShader == GetGeometryShader() &&
-        fShader == GetFragmentShader())
-    {
+        if (vShader != GetVertexShader() || gShader != GetGeometryShader() ||
+            fShader != GetFragmentShader())
+        {
+            SetVertexShader(vShader);
+            if (gShader)
+            {
+                SetGeometryShader(gShader);
+            }
+            SetFragmentShader(fShader);
+            return Link();
+        }
         return true;
     }
-
-    SetVertexShader(vShader);
-    SetGeometryShader(gShader);
-    SetFragmentShader(fShader);
-    return Link();
+    Debug_Error("Can not load shader. There must be at least a vertex and a "
+                "fragment shader.");
+    return false;
 }
 
 bool ShaderProgram::Link()
@@ -162,22 +169,35 @@ bool ShaderProgram::Link()
         return false;
     }
 
-    if (m_idGL > 0)
+    ASSERT(GetVertexShader()->GetType() == GL::ShaderType::VERTEX);
+    GetVertexShader()->CompileIfNeeded();
+
+    if (GetGeometryShader())
     {
-        GL::DeleteProgram(m_idGL);
+        ASSERT(GetGeometryShader()->GetType() == GL::ShaderType::GEOMETRY);
+        GetGeometryShader()->CompileIfNeeded();
+    }
+
+    ASSERT(GetFragmentShader()->GetType() == GL::ShaderType::FRAGMENT);
+    GetFragmentShader()->CompileIfNeeded();
+
+    if (GetGLId() > 0)
+    {
+        GL::DeleteProgram(GetGLId());
     }
     m_isLinked = false;
 
     m_idGL = GL::CreateProgram();
 
-    GL::AttachShader(m_idGL, GetVertexShader()->GetGLId());
+    GL::AttachShader(GetGLId(), GetVertexShader()->GetGLId());
     if (GetGeometryShader())
     {
-        GL::AttachShader(m_idGL, GetGeometryShader()->GetGLId());
+        GL::AttachShader(GetGLId(), GetGeometryShader()->GetGLId());
     }
-    GL::AttachShader(m_idGL, GetFragmentShader()->GetGLId());
+    GL::AttachShader(GetGLId(), GetFragmentShader()->GetGLId());
 
-    if (!GL::LinkProgram(m_idGL))
+    m_isLinked = GL::LinkProgram(GetGLId());
+    if (!IsLinked())
     {
         Path vsPath = (GetVertexShader() ? GetVertexShader()->GetAssetFilepath()
                                          : Path::Empty());
@@ -193,12 +213,9 @@ bool ShaderProgram::Link()
                                           << fsPath
                                           << ") did not link: "
                                           << GL::GetProgramErrorMsg(m_idGL));
-        GL::DeleteProgram(m_idGL);
+        GL::DeleteProgram(GetGLId());
         m_idGL = 0;
-        return false;
     }
-
-    m_isLinked = true;
 
     // Invalidate caches
     m_nameToLocationCache.Clear();
@@ -550,18 +567,21 @@ bool ShaderProgram::AddShader(Shader *shader)
 
 bool ShaderProgram::SetVertexShader(Shader *vertexShader)
 {
+    ASSERT(vertexShader);
     vertexShader->SetType(GL::ShaderType::VERTEX);
     return AddShader(vertexShader);
 }
 
 bool ShaderProgram::SetGeometryShader(Shader *geometryShader)
 {
+    ASSERT(geometryShader);
     geometryShader->SetType(GL::ShaderType::GEOMETRY);
     return AddShader(geometryShader);
 }
 
 bool ShaderProgram::SetFragmentShader(Shader *fragmentShader)
 {
+    ASSERT(fragmentShader);
     fragmentShader->SetType(GL::ShaderType::FRAGMENT);
     return AddShader(fragmentShader);
 }

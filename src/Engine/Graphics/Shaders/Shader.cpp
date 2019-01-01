@@ -11,6 +11,10 @@
 
 using namespace Bang;
 
+Shader::Shader() : Shader(GL::ShaderType::VERTEX)
+{
+}
+
 Shader::Shader(GL::ShaderType t)
 {
     SetType(t);
@@ -18,49 +22,61 @@ Shader::Shader(GL::ShaderType t)
 
 Shader::~Shader()
 {
-    if (GetGLId() > 0)
-    {
-        GL::DeleteShader(GetGLId());
-    }
+    DeleteShader();
 }
 
 void Shader::SetSourceCode(const String &sourceCode)
 {
-    m_sourceCode = sourceCode;
+    if (sourceCode != GetSourceCode())
+    {
+        m_compiled = false;
+        m_sourceCode = sourceCode;
+
+        m_processedSourceCode = GetSourceCode();
+        ShaderPreprocessor::PreprocessCode(&m_processedSourceCode);
+
+        CommitShaderSourceCode();
+    }
 }
 
 void Shader::SetType(GL::ShaderType type)
 {
-    m_type = type;
+    if (type != GetType())
+    {
+        m_type = type;
+
+        DeleteShader();
+        m_idGL = GL::CreateShader(GetType());
+        CommitShaderSourceCode();
+    }
 }
 
-Shader::Shader() : Shader(GL::ShaderType::VERTEX)
+bool Shader::CompileIfNeeded()
 {
+    if (!IsCompiled())
+    {
+        return Compile();
+    }
+    return true;
 }
 
 void Shader::Import(const Path &shaderFilepath)
 {
-    if (!shaderFilepath.IsFile())
+    if (shaderFilepath.IsFile())
     {
-        Debug_Error("Shader file '" << shaderFilepath << "' does not exist.");
-        return;
-    }
-    Compile();
-}
-
-void Shader::RetrieveType(const Path &shaderPath)
-{
-    if (shaderPath.GetExtension().Contains("vert"))
-    {
-        SetType(GL::ShaderType::VERTEX);
-    }
-    else if (shaderPath.GetExtension().Contains("geom"))
-    {
-        SetType(GL::ShaderType::GEOMETRY);
+        SetSourceCode(File::GetContents(shaderFilepath));
     }
     else
     {
-        SetType(GL::ShaderType::FRAGMENT);
+        Debug_Error("Shader file '" << shaderFilepath << "' does not exist.");
+    }
+}
+
+void Shader::CommitShaderSourceCode()
+{
+    if (GetGLId() > 0)
+    {
+        GL::ShaderSource(GetGLId(), GetProcessedSourceCode());
     }
 }
 
@@ -71,29 +87,29 @@ GL::BindTarget Shader::GetGLBindTarget() const
 
 bool Shader::Compile()
 {
-    Path shaderFilepath = GetAssetFilepath();
-    if (shaderFilepath.IsFile())
-    {
-        RetrieveType(shaderFilepath);
-        SetSourceCode(File::GetContents(shaderFilepath));
-    }
-
-    m_idGL = GL::CreateShader(GetType());
-
-    m_processedSourceCode = GetSourceCode();
-    ShaderPreprocessor::PreprocessCode(&m_processedSourceCode);
-
-    GL::ShaderSource(GetGLId(), GetProcessedSourceCode());
-    if (!GL::CompileShader(GetGLId()))
+    m_compiled = GL::CompileShader(GetGLId());
+    if (!IsCompiled())
     {
         Debug_Error(
             "Failed to compile shader: '" << GetAssetFilepath() << "': "
                                           << std::endl
                                           << GL::GetShaderErrorMsg(GetGLId()));
-        GL::DeleteShader(GetGLId());
-        return false;
     }
-    return true;
+    return IsCompiled();
+}
+
+void Shader::DeleteShader()
+{
+    if (GetGLId() > 0)
+    {
+        GL::DeleteShader(GetGLId());
+    }
+    m_compiled = false;
+}
+
+bool Shader::IsCompiled() const
+{
+    return m_compiled;
 }
 
 const String &Shader::GetSourceCode() const

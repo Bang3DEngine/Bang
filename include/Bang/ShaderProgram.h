@@ -110,7 +110,7 @@ public:
                            const Array<Texture2D *> &v,
                            bool warn = false);
 
-    bool SetShader(Shader *shader, GL::ShaderType type);
+    bool AddShader(Shader *shader);
     bool SetVertexShader(Shader *vertexShader);
     bool SetGeometryShader(Shader *geometryShader);
     bool SetFragmentShader(Shader *fragmentShader);

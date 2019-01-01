@@ -82,7 +82,7 @@ bool ShaderProgram::Load(const Path &shaderPath)
         vShader.Get()->SetSourceCode(vShaderSourceCode);
         vShader.Get()->SetType(GL::ShaderType::VERTEX);
         vShader.Get()->Compile();
-        SetShader(vShader.Get(), GL::ShaderType::VERTEX);
+        AddShader(vShader.Get());
 
         AH<Shader> fShader = Assets::Create<Shader>();
         String fShaderSourceCode = ShaderPreprocessor::GetSourceCodeSection(
@@ -90,7 +90,7 @@ bool ShaderProgram::Load(const Path &shaderPath)
         fShader.Get()->SetSourceCode(fShaderSourceCode);
         fShader.Get()->SetType(GL::ShaderType::FRAGMENT);
         fShader.Get()->Compile();
-        SetShader(fShader.Get(), GL::ShaderType::FRAGMENT);
+        AddShader(fShader.Get());
 
         return Link();
     }
@@ -525,22 +525,9 @@ bool ShaderProgram::SetDefaultTextureCubeMap(const String &name, bool warn)
         name, SCAST<Texture *>(TextureFactory::GetWhiteTextureCubeMap()), warn);
 }
 
-bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
+bool ShaderProgram::AddShader(Shader *shader)
 {
-    if (shader && shader->GetType() != type)
-    {
-        String typeName =
-            (type == GL::ShaderType::VERTEX
-                 ? "Vertex"
-                 : (type == GL::ShaderType::GEOMETRY ? "Geometry"
-                                                     : "Fragment"));
-        Debug_Error("You are trying to set as " << typeName << " shader a "
-                                                               "non-"
-                                                << typeName
-                                                << " shader.");
-        return false;
-    }
-
+    GL::ShaderType type = shader->GetType();
     if (GetShader(type))
     {
         GetShader(type)->EventEmitter<IEventsAsset>::UnRegisterListener(this);
@@ -563,17 +550,20 @@ bool ShaderProgram::SetShader(Shader *shader, GL::ShaderType type)
 
 bool ShaderProgram::SetVertexShader(Shader *vertexShader)
 {
-    return SetShader(vertexShader, GL::ShaderType::VERTEX);
+    vertexShader->SetType(GL::ShaderType::VERTEX);
+    return AddShader(vertexShader);
 }
 
 bool ShaderProgram::SetGeometryShader(Shader *geometryShader)
 {
-    return SetShader(geometryShader, GL::ShaderType::GEOMETRY);
+    geometryShader->SetType(GL::ShaderType::GEOMETRY);
+    return AddShader(geometryShader);
 }
 
 bool ShaderProgram::SetFragmentShader(Shader *fragmentShader)
 {
-    return SetShader(fragmentShader, GL::ShaderType::FRAGMENT);
+    fragmentShader->SetType(GL::ShaderType::FRAGMENT);
+    return AddShader(fragmentShader);
 }
 
 Shader *ShaderProgram::GetShader(GL::ShaderType type) const

@@ -55,7 +55,6 @@ public:
     bool IsLinked() const;
 
     void Bind() override;
-    void BindRaw();
     void UnBind() override;
     GL::BindTarget GetGLBindTarget() const override;
 
@@ -116,10 +115,8 @@ public:
     bool SetVertexShader(Shader *vertexShader);
     bool SetGeometryShader(Shader *geometryShader);
     bool SetFragmentShader(Shader *fragmentShader);
-    void SetProperties(const ShaderProgramProperties &properties);
 
-    ShaderProgramProperties &GetProperties();
-    const ShaderProgramProperties &GetProperties() const;
+    const ShaderProgramProperties &GetLoadedProperties() const;
     Shader *GetShader(GL::ShaderType type) const;
     Shader *GetVertexShader() const;
     Shader *GetGeometryShader() const;
@@ -139,7 +136,7 @@ private:
     AH<Shader> p_gShader;
     AH<Shader> p_fShader;
     Path m_unifiedShaderPath = Path::Empty();
-    ShaderProgramProperties m_properties;
+    ShaderProgramProperties m_loadedProperties;
     bool m_isLinked = false;
 
     UMap<String, int> m_uniformCacheInt;
@@ -165,7 +162,6 @@ private:
                   const Path &fShaderPath);
     virtual ~ShaderProgram() override;
 
-    void Bind(bool bindProperties);
     void Bind() const override;
     void UnBind() const override;
 

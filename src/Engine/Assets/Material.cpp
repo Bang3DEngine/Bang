@@ -34,15 +34,6 @@ Material::~Material()
 {
 }
 
-void Material::SetLineWidth(float w)
-{
-    if (w != GetLineWidth())
-    {
-        m_lineWidth = w;
-        PropagateAssetChanged();
-    }
-}
-
 NeededUniformFlags &Material::GetNeededUniforms()
 {
     return m_neededUniforms;
@@ -53,27 +44,9 @@ const NeededUniformFlags &Material::GetNeededUniforms() const
     return m_neededUniforms;
 }
 
-void Material::SetRenderWireframe(bool renderWireframe)
-{
-    if (renderWireframe != GetRenderWireframe())
-    {
-        m_renderWireframe = renderWireframe;
-        PropagateAssetChanged();
-    }
-}
-
 void Material::SetNeededUniforms(const NeededUniformFlags &neededUniformFlags)
 {
     m_neededUniforms = neededUniformFlags;
-}
-
-void Material::SetCullFace(GL::CullFaceExt cullFace)
-{
-    if (cullFace != GetCullFace())
-    {
-        m_cullFace = cullFace;
-        PropagateAssetChanged();
-    }
 }
 
 void Material::SetAlbedoUvOffset(const Vector2 &albedoUvOffset)
@@ -125,7 +98,21 @@ void Material::SetShaderProgram(ShaderProgram *program)
 {
     if (p_shaderProgram.Get() != program)
     {
+        if (GetShaderProgram())
+        {
+            GetShaderProgram()->EventEmitter<IEventsAsset>::UnRegisterListener(
+                this);
+        }
+
         p_shaderProgram.Set(program);
+
+        if (GetShaderProgram())
+        {
+            SetShaderProgramProperties(GetShaderProgramProperties());
+            GetShaderProgram()->EventEmitter<IEventsAsset>::RegisterListener(
+                this);
+        }
+
         PropagateAssetChanged();
     }
 }
@@ -187,8 +174,7 @@ void Material::SetAlbedoTexture(Texture2D *texture)
         }
 
         p_albedoTexture.Set(texture);
-        ShaderProgram *sp = GetShaderProgram();
-        if (sp)
+        if (ShaderProgram *sp = GetShaderProgram())
         {
             sp->SetTexture2D(GLUniforms::UniformName_AlbedoTexture,
                              GetAlbedoTexture());
@@ -215,8 +201,7 @@ void Material::SetNormalMapTexture(Texture2D *texture)
         }
 
         p_normalMapTexture.Set(texture);
-        ShaderProgram *sp = GetShaderProgram();
-        if (sp)
+        if (ShaderProgram *sp = GetShaderProgram())
         {
             sp->SetTexture2D(GLUniforms::UniformName_NormalMapTexture,
                              GetNormalMapTexture());
@@ -239,6 +224,12 @@ void Material::SetRenderPass(RenderPass renderPass)
         m_renderPass = renderPass;
         PropagateAssetChanged();
     }
+}
+
+void Material::SetShaderProgramProperties(
+    const ShaderProgramProperties &spProps)
+{
+    m_shaderProgramProperties = spProps;
 }
 
 const Vector2 &Material::GetAlbedoUvOffset() const
@@ -302,18 +293,15 @@ RenderPass Material::GetRenderPass() const
 {
     return m_renderPass;
 }
-float Material::GetLineWidth() const
+
+ShaderProgramProperties &Material::GetShaderProgramProperties()
 {
-    return m_lineWidth;
+    return m_shaderProgramProperties;
 }
 
-bool Material::GetRenderWireframe() const
+const ShaderProgramProperties &Material::GetShaderProgramProperties() const
 {
-    return m_renderWireframe;
-}
-GL::CullFaceExt Material::GetCullFace() const
-{
-    return m_cullFace;
+    return m_shaderProgramProperties;
 }
 
 void Material::Bind() const
@@ -323,9 +311,21 @@ void Material::Bind() const
     {
         sp->Bind();
 
-        GL::SetWireframe(GetRenderWireframe());
-        GL::LineWidth(GetLineWidth());
-        GL::PointSize(GetLineWidth());
+        const GL::CullFaceExt &cullFace =
+            GetShaderProgramProperties().GetCullFace();
+        if (cullFace != GL::CullFaceExt::NONE)
+        {
+            GL::Enable(GL::Enablable::CULL_FACE);
+            GL::SetCullFace(SCAST<GL::Face>(cullFace));
+        }
+        else
+        {
+            GL::Disable(GL::Enablable::CULL_FACE);
+        }
+
+        GL::SetWireframe(GetShaderProgramProperties().GetWireframe());
+        GL::LineWidth(GetShaderProgramProperties().GetLineWidth());
+        GL::PointSize(GetShaderProgramProperties().GetLineWidth());
 
         BindMaterialUniforms(sp);
     }
@@ -486,13 +486,6 @@ void Material::Reflect()
                             SetReceivesLighting,
                             GetReceivesLighting);
 
-    BANG_REFLECT_VAR_MEMBER(Material, "Line Width", SetLineWidth, GetLineWidth);
-
-    BANG_REFLECT_VAR_MEMBER(
-        Material, "Render Wireframe", SetRenderWireframe, GetRenderWireframe);
-
-    BANG_REFLECT_VAR_ENUM(
-        "Cull Face", SetCullFace, GetCullFace, GL::CullFaceExt);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Cull Face", "None", GL::CullFaceExt::NONE);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(

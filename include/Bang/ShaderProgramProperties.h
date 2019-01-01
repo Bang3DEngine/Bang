@@ -13,10 +13,16 @@ public:
     virtual ~ShaderProgramProperties();
 
     void SetCullFace(GL::CullFaceExt cullFace);
+    void SetWireframe(bool wireframe);
+    void SetLineWidth(float lineWidth);
 
+    bool GetWireframe() const;
+    float GetLineWidth() const;
     GL::CullFaceExt GetCullFace() const;
 
 private:
+    bool m_wireframe = false;
+    float m_lineWidth = 1.0f;
     GL::CullFaceExt m_cullFace = GL::CullFaceExt::NONE;
 };
 }

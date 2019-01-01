@@ -1,5 +1,6 @@
 #properties
 #cull_face back
+#wireframe false
 
 #vertex
 #include "Default.vert"

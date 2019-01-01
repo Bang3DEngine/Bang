@@ -159,6 +159,14 @@ ShaderProgramProperties ShaderPreprocessor::GetShaderProperties(
                         }
                     }
                 }
+                else if (keyStr == "wireframe")
+                {
+                    spProps.SetWireframe((valueStr == "true"));
+                }
+                else if (keyStr == "line-width")
+                {
+                    spProps.SetLineWidth(String::ToFloat(valueStr));
+                }
             }
         }
     }

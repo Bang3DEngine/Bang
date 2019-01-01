@@ -8,6 +8,7 @@
 #include "Bang/GL.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/Time.h"
 
 using namespace Bang;
@@ -51,7 +52,7 @@ void UITextCursor::ResetTickTime()
 
 void UITextCursor::SetStroke(float cursorWidth)
 {
-    GetMaterial()->SetLineWidth(cursorWidth);
+    GetMaterial()->GetShaderProgramProperties().SetLineWidth(cursorWidth);
 }
 
 void UITextCursor::SetTickTime(Time cursorTickTime)
@@ -61,7 +62,10 @@ void UITextCursor::SetTickTime(Time cursorTickTime)
 
 float UITextCursor::GetStroke() const
 {
-    return GetActiveMaterial()->GetLineWidth();
+    return GetActiveMaterial()
+        ->GetShaderProgram()
+        ->GetLoadedProperties()
+        .GetLineWidth();
 }
 
 Time UITextCursor::GetTickTime() const

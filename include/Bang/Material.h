@@ -16,6 +16,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/RenderPass.h"
+#include "Bang/ShaderProgramProperties.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -53,10 +54,8 @@ public:
     void SetMetalnessTexture(Texture2D *metalnessTexture);
     void SetNormalMapTexture(Texture2D *normalMapTexture);
     void SetRenderPass(RenderPass renderPass);
-    void SetCullFace(GL::CullFaceExt cullFace);
-    void SetRenderWireframe(bool renderWireframe);
+    void SetShaderProgramProperties(const ShaderProgramProperties &spProps);
     void SetNeededUniforms(const NeededUniformFlags &neededUniformFlags);
-    void SetLineWidth(float w);
     void BindMaterialUniforms(ShaderProgram *sp) const;
 
     NeededUniformFlags &GetNeededUniforms();
@@ -76,9 +75,8 @@ public:
     Texture2D *GetMetalnessTexture() const;
     Texture2D *GetNormalMapTexture() const;
     RenderPass GetRenderPass() const;
-    bool GetRenderWireframe() const;
-    GL::CullFaceExt GetCullFace() const;
-    float GetLineWidth() const;
+    ShaderProgramProperties &GetShaderProgramProperties();
+    const ShaderProgramProperties &GetShaderProgramProperties() const;
 
     virtual void Bind() const;
     virtual void UnBind() const;
@@ -98,8 +96,8 @@ protected:
     AH<Texture2D> p_metalnessTexture;
     AH<Texture2D> p_normalMapTexture;
     AH<ShaderProgram> p_shaderProgram;
+    ShaderProgramProperties m_shaderProgramProperties;
 
-    float m_lineWidth = 1.0f;
     float m_normalMapMultiplyFactor = 1.0f;
     RenderPass m_renderPass = RenderPass::SCENE_OPAQUE;
     Color m_albedoColor = Color::White();
@@ -107,12 +105,10 @@ protected:
     Vector2 m_albedoUvMultiply = Vector2::One();
     Vector2 m_normalMapUvOffset = Vector2::Zero();
     Vector2 m_normalMapUvMultiply = Vector2::One();
-    GL::CullFaceExt m_cullFace = GL::CullFaceExt::BACK;
     float m_roughness = 1.0f;
     float m_metalness = 0.5f;
     NeededUniformFlags m_neededUniforms = NeededUniformFlag::ALL;
     bool m_receivesLighting = true;
-    bool m_renderWireframe = false;
 
     Material();
     virtual ~Material() override;

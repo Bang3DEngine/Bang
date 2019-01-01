@@ -80,7 +80,7 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
 
         ShaderProgramProperties spProps;
         spProps = ShaderPreprocessor::GetShaderProperties(shaderSourceCode);
-        SetProperties(spProps);
+        m_loadedProperties = spProps;
 
         Array<GL::ShaderType> shaderTypes = {GL::ShaderType::VERTEX,
                                              GL::ShaderType::GEOMETRY,
@@ -102,7 +102,10 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
             }
         }
 
-        return Link();
+        const bool linked = Link();
+        PropagateAssetChanged();
+
+        return linked;
     }
     return false;
 }
@@ -155,7 +158,10 @@ bool ShaderProgram::Load(Shader *vShader, Shader *gShader, Shader *fShader)
                 SetGeometryShader(gShader);
             }
             SetFragmentShader(fShader);
-            return Link();
+
+            const bool linked = Link();
+            PropagateAssetChanged();
+            return linked;
         }
         return true;
     }
@@ -251,12 +257,16 @@ bool ShaderProgram::IsLinked() const
 
 void ShaderProgram::Bind()
 {
-    Bind(true);
-}
+    if (IsLinked())
+    {
+        if (!GL::IsBound(this))
+        {
+            GL::Bind(this);
+        }
 
-void ShaderProgram::BindRaw()
-{
-    Bind(false);
+        GLUniforms::SetAllUniformsToShaderProgram(this);
+        BindAllTexturesToUnits();
+    }
 }
 
 GL::BindTarget ShaderProgram::GetGLBindTarget() const
@@ -605,19 +615,9 @@ bool ShaderProgram::SetFragmentShader(Shader *fragmentShader)
     return AddShader(fragmentShader);
 }
 
-void ShaderProgram::SetProperties(const ShaderProgramProperties &properties)
+const ShaderProgramProperties &ShaderProgram::GetLoadedProperties() const
 {
-    m_properties = properties;
-}
-
-ShaderProgramProperties &ShaderProgram::GetProperties()
-{
-    return m_properties;
-}
-
-const ShaderProgramProperties &ShaderProgram::GetProperties() const
-{
-    return m_properties;
+    return m_loadedProperties;
 }
 
 Shader *ShaderProgram::GetShader(GL::ShaderType type) const
@@ -695,34 +695,6 @@ void ShaderProgram::Bind() const
 void ShaderProgram::UnBind() const
 {
     ASSERT(false);
-}
-
-void ShaderProgram::Bind(bool bindProperties)
-{
-    if (IsLinked())
-    {
-        if (!GL::IsBound(this))
-        {
-            GL::Bind(this);
-        }
-
-        if (bindProperties)
-        {
-            const GL::CullFaceExt &cullFace = GetProperties().GetCullFace();
-            if (cullFace != GL::CullFaceExt::NONE)
-            {
-                GL::Enable(GL::Enablable::CULL_FACE);
-                GL::SetCullFace(SCAST<GL::Face>(cullFace));
-            }
-            else
-            {
-                GL::Disable(GL::Enablable::CULL_FACE);
-            }
-        }
-
-        GLUniforms::SetAllUniformsToShaderProgram(this);
-        BindAllTexturesToUnits();
-    }
 }
 
 void ShaderProgram::UnBind()

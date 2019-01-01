@@ -23,8 +23,9 @@ Cloth::Cloth()
 {
     m_mesh = Assets::Create<Mesh>();
 
-    GetMaterial()->SetCullFace(GL::CullFaceExt::NONE);
-    GetMaterial()->SetRenderWireframe(false);
+    GetMaterial()->GetShaderProgramProperties().SetCullFace(
+        GL::CullFaceExt::NONE);
+    GetMaterial()->GetShaderProgramProperties().SetWireframe(false);
 
     m_debugPointsMesh = Assets::Create<Mesh>();
     m_debugPointsMaterial = Assets::Create<Material>();
@@ -367,8 +368,12 @@ void Cloth::Reflect()
 
     ReflectVar<bool>(
         "Wireframe",
-        [this](bool w) { GetMaterial()->SetRenderWireframe(w); },
-        [this]() -> bool { return GetMaterial()->GetRenderWireframe(); });
+        [this](bool w) {
+            GetMaterial()->GetShaderProgramProperties().SetWireframe(w);
+        },
+        [this]() -> bool {
+            return GetMaterial()->GetShaderProgramProperties().GetWireframe();
+        });
 
     BANG_REFLECT_VAR_MEMBER_HINTED(Cloth,
                                    "Size",

@@ -20,6 +20,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
 #include "Bang/Vector3.h"
@@ -37,7 +38,7 @@ Rope::Rope()
     SetRenderPrimitive(GL::Primitive::LINE_STRIP);
     SetNumPoints(10);
     SetFixedPoint(0, true);
-    GetMaterial()->SetLineWidth(3.0f);
+    GetMaterial()->GetShaderProgramProperties().SetLineWidth(3.0f);
     SetCastsShadows(true);
 
     m_ropeDebugPointsMesh = Assets::Create<Mesh>();

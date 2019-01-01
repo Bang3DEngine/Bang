@@ -22,7 +22,8 @@ DecalRenderer::DecalRenderer()
     SET_INSTANCE_CLASS_ID(DecalRenderer);
 
     m_cubeMesh = MeshFactory::GetCube();
-    GetMaterial()->SetCullFace(GL::CullFaceExt::NONE);
+    GetMaterial()->GetShaderProgramProperties().SetCullFace(
+        GL::CullFaceExt::NONE);
     GetMaterial()->SetShaderProgram(ShaderProgramFactory::GetDecal());
     GetMaterial()->SetRenderPass(RenderPass::SCENE_DECALS);
     SetDepthMask(false);

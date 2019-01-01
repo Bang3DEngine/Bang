@@ -15,6 +15,7 @@
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/RectTransform.h"
+#include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UILayoutElement.h"
@@ -300,12 +301,16 @@ UIEventResult UIDirLayoutMovableSeparator::OnUIEvent(UIFocusable *,
 {
     if (event.type == UIEvent::Type::MOUSE_ENTER)
     {
-        p_lineRenderer->GetMaterial()->SetLineWidth(3.0f);
+        p_lineRenderer->GetMaterial()
+            ->GetShaderProgramProperties()
+            .SetLineWidth(3.0f);
         return UIEventResult::INTERCEPT;
     }
     else if (event.type == UIEvent::Type::MOUSE_EXIT)
     {
-        p_lineRenderer->GetMaterial()->SetLineWidth(1.0f);
+        p_lineRenderer->GetMaterial()
+            ->GetShaderProgramProperties()
+            .SetLineWidth(1.0f);
         return UIEventResult::INTERCEPT;
     }
     return UIEventResult::IGNORE;

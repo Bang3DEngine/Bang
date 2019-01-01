@@ -85,6 +85,7 @@ void RenderFactory::RenderWireframeBox(const AABox &b,
     RenderFactory::Parameters paramsCpy = params;
     paramsCpy.rotation = Quaternion::Identity();
     paramsCpy.scale = Vector3(1.0f);
+    paramsCpy.wireframe = true;
 
     RenderLine(r * Vector3(bMin.x, bMin.y, bMin.z),
                r * Vector3(bMax.x, bMin.y, bMin.z),
@@ -684,9 +685,9 @@ void RenderFactory::ApplyRenderParameters(
         Material *mat = rend->GetMaterial();
         mat->SetAlbedoColor(params.color);
         mat->SetReceivesLighting(params.receivesLighting);
-        mat->SetRenderWireframe(params.wireframe);
-        mat->SetCullFace(params.cullFace);
-        mat->SetLineWidth(params.thickness);
+        mat->GetShaderProgramProperties().SetWireframe(params.wireframe);
+        mat->GetShaderProgramProperties().SetCullFace(params.cullFace);
+        mat->GetShaderProgramProperties().SetLineWidth(params.thickness);
         mat->SetAlbedoTexture(params.texture.Get());
 
         rend->SetDepthMask(params.depthMask);

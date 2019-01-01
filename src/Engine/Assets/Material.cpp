@@ -597,7 +597,10 @@ void Material::Reflect()
     BANG_REFLECT_VAR_ASSET("Vertex Shader",
                            [this](Shader *vShader) {
                                p_vertexShader.Set(vShader);
-                               UpdateShaderProgram();
+                               if (GetShaderPath().IsEmpty())
+                               {
+                                   UpdateShaderProgram();
+                               }
                            },
                            [this]() { return p_vertexShader.Get(); },
                            Shader,
@@ -608,7 +611,10 @@ void Material::Reflect()
     BANG_REFLECT_VAR_ASSET("Fragment Shader",
                            [this](Shader *fShader) {
                                p_fragmentShader.Set(fShader);
-                               UpdateShaderProgram();
+                               if (GetShaderPath().IsEmpty())
+                               {
+                                   UpdateShaderProgram();
+                               }
                            },
                            [this]() { return p_fragmentShader.Get(); },
                            Shader,

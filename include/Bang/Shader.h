@@ -28,7 +28,7 @@ public:
     void DeleteShader();
     bool IsCompiled() const;
     const String &GetSourceCode() const;
-    const String &GetProcessedSourceCode() const;
+    const String &GetPreprocessedSourceCode() const;
     GL::ShaderType GetType() const;
     GL::BindTarget GetGLBindTarget() const override;
 
@@ -38,7 +38,7 @@ public:
 private:
     bool m_compiled = false;
     String m_sourceCode = "";
-    String m_processedSourceCode = "";
+    String m_preprocessedSourceCode = "";
     GL::ShaderType m_type = Undef<GL::ShaderType>();
 
     void CommitShaderSourceCode();

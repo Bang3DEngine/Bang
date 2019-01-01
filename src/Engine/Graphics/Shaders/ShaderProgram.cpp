@@ -75,15 +75,23 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
     if (unifiedShaderPath.IsFile())
     {
         m_unifiedShaderPath = unifiedShaderPath;
+
         String shaderSourceCode = File::GetContents(unifiedShaderPath);
+
+        ShaderProgramProperties spProps;
+        spProps = ShaderPreprocessor::GetShaderProperties(shaderSourceCode);
+        SetProperties(spProps);
 
         Array<GL::ShaderType> shaderTypes = {GL::ShaderType::VERTEX,
                                              GL::ShaderType::GEOMETRY,
                                              GL::ShaderType::FRAGMENT};
         for (GL::ShaderType shaderType : shaderTypes)
         {
+            String preprocessedShaderSourceCode = shaderSourceCode;
+            ShaderPreprocessor::PreprocessCode(&preprocessedShaderSourceCode);
+
             String shaderSectionSourceCode =
-                ShaderPreprocessor::GetSourceCodeSection(shaderSourceCode,
+                ShaderPreprocessor::GetSectionSourceCode(shaderSourceCode,
                                                          shaderType);
             if (!shaderSectionSourceCode.IsEmpty())
             {
@@ -239,6 +247,16 @@ bool ShaderProgram::Link()
 bool ShaderProgram::IsLinked() const
 {
     return m_isLinked;
+}
+
+void ShaderProgram::Bind()
+{
+    Bind(true);
+}
+
+void ShaderProgram::BindRaw()
+{
+    Bind(false);
 }
 
 GL::BindTarget ShaderProgram::GetGLBindTarget() const
@@ -587,6 +605,21 @@ bool ShaderProgram::SetFragmentShader(Shader *fragmentShader)
     return AddShader(fragmentShader);
 }
 
+void ShaderProgram::SetProperties(const ShaderProgramProperties &properties)
+{
+    m_properties = properties;
+}
+
+ShaderProgramProperties &ShaderProgram::GetProperties()
+{
+    return m_properties;
+}
+
+const ShaderProgramProperties &ShaderProgram::GetProperties() const
+{
+    return m_properties;
+}
+
 Shader *ShaderProgram::GetShader(GL::ShaderType type) const
 {
     switch (type)
@@ -664,13 +697,27 @@ void ShaderProgram::UnBind() const
     ASSERT(false);
 }
 
-void ShaderProgram::Bind()
+void ShaderProgram::Bind(bool bindProperties)
 {
     if (IsLinked())
     {
         if (!GL::IsBound(this))
         {
             GL::Bind(this);
+        }
+
+        if (bindProperties)
+        {
+            const GL::CullFaceExt &cullFace = GetProperties().GetCullFace();
+            if (cullFace != GL::CullFaceExt::NONE)
+            {
+                GL::Enable(GL::Enablable::CULL_FACE);
+                GL::SetCullFace(SCAST<GL::Face>(cullFace));
+            }
+            else
+            {
+                GL::Disable(GL::Enablable::CULL_FACE);
+            }
         }
 
         GLUniforms::SetAllUniformsToShaderProgram(this);

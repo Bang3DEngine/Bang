@@ -1,3 +1,6 @@
+#properties
+#cull_face back
+
 #vertex
 #include "Default.vert"
 

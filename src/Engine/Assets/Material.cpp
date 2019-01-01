@@ -327,16 +327,6 @@ void Material::Bind() const
         GL::LineWidth(GetLineWidth());
         GL::PointSize(GetLineWidth());
 
-        if (GetCullFace() != GL::CullFaceExt::NONE)
-        {
-            GL::Enable(GL::Enablable::CULL_FACE);  // Culling states
-            GL::SetCullFace(SCAST<GL::Face>(GetCullFace()));
-        }
-        else
-        {
-            GL::Disable(GL::Enablable::CULL_FACE);
-        }
-
         BindMaterialUniforms(sp);
     }
 }

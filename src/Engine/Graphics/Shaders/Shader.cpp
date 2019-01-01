@@ -32,8 +32,9 @@ void Shader::SetSourceCode(const String &sourceCode)
         m_compiled = false;
         m_sourceCode = sourceCode;
 
-        m_processedSourceCode = GetSourceCode();
-        ShaderPreprocessor::PreprocessCode(&m_processedSourceCode);
+        String preprocessedSourceCode = sourceCode;
+        ShaderPreprocessor::PreprocessCode(&preprocessedSourceCode);
+        m_preprocessedSourceCode = preprocessedSourceCode;
 
         CommitShaderSourceCode();
     }
@@ -76,7 +77,7 @@ void Shader::CommitShaderSourceCode()
 {
     if (GetGLId() > 0)
     {
-        GL::ShaderSource(GetGLId(), GetProcessedSourceCode());
+        GL::ShaderSource(GetGLId(), GetPreprocessedSourceCode());
     }
 }
 
@@ -117,9 +118,9 @@ const String &Shader::GetSourceCode() const
     return m_sourceCode;
 }
 
-const String &Shader::GetProcessedSourceCode() const
+const String &Shader::GetPreprocessedSourceCode() const
 {
-    return m_processedSourceCode;
+    return m_preprocessedSourceCode;
 }
 
 GL::ShaderType Shader::GetType() const

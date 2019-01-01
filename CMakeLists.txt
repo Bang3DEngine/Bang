@@ -58,6 +58,7 @@ if (ADD_MISC_FILES)
     file(GLOB_RECURSE OTHER_FILES "${BANG_ENGINE_ASSETS_DIR}/[^.]*.frag"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.geom"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
+                                  "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bushader"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.svg"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"

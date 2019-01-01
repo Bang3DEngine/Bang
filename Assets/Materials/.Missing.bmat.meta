@@ -3,7 +3,7 @@ Material:
   Albedo Texture: 0 0 0
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
-  Fragment Shader: 1510299163478634161 0 0
+  Shader Path: /home/sephirot47/Projects/BangEditor/Bang/Assets/Shaders/Default.bshader
   GUID: 5352719472153067521 0 0
   Metalness: 0.5
   Normal Map Texture: 0 0 0
@@ -12,6 +12,5 @@ Material:
   Receives Lighting: False
   Render Pass: 0
   Roughness: 1
-  Vertex Shader: 1510299163478730097 0 0
   Children:
     {}

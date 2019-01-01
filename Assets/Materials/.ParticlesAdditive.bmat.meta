@@ -4,7 +4,6 @@ Material:
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
   Cull Face: 0
-  Fragment Shader: 1538208002572152995 17619966305203388417 0
   GUID: 1538208021142531015 10742174727301758977 0
   Line Width: 1
   Metalness: 0.5
@@ -19,6 +18,5 @@ Material:
   Render Wireframe: False
   Roughness: 0.5
   Roughness Texture: 0 0 0
-  Vertex Shader: 1537963740041265157 4115801876253900801 0
   Children:
     {}

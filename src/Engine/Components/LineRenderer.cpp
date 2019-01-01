@@ -24,7 +24,8 @@ LineRenderer::LineRenderer()
 
     SetCastsShadows(false);
     SetReceivesShadows(false);
-    SetMaterial(MaterialFactory::GetDefaultUnLighted().Get());
+    SetMaterial(MaterialFactory::GetDefault().Get());
+    GetMaterial()->SetReceivesLighting(false);
     SetRenderPrimitive(GL::Primitive::LINES);
 }
 

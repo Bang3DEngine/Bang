@@ -19,7 +19,6 @@ class MaterialFactory
 public:
     static AH<Material> GetDefault(
         RenderPass renderPass = RenderPass::SCENE_OPAQUE);
-    static AH<Material> GetDefaultUnLighted();
     static AH<Material> GetGizmosUnLightedOverlay();
     static AH<Material> GetParticlesAdditive();
     static AH<Material> GetParticlesMesh();

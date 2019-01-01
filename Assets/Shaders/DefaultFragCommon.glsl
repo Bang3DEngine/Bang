@@ -76,6 +76,7 @@ void DefaultFragCommonMain(vec4 albedoColor)
         }
 
         B_GIn_Albedo = vec4(finalAlbedo.rgb, 1);
+        B_GIn_Light = vec4(0,0,0,0);
         B_GIn_Normal = vec4(finalNormal * 0.5f + 0.5f, 0);
         B_GIn_Misc   = vec4(receivesLighting,
                             pixelRoughness,
@@ -83,7 +84,6 @@ void DefaultFragCommonMain(vec4 albedoColor)
                             0);
     #endif
 
-    B_GIn_Light = vec4(0,0,0,0);
     B_GIn_Color = finalColor;
 }
 

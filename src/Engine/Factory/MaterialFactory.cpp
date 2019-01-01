@@ -23,10 +23,6 @@ AH<Material> MaterialFactory::GetDefault(RenderPass renderPass)
     return MaterialFactory::GetDefault(RenderPass::SCENE_OPAQUE);
 }
 
-AH<Material> MaterialFactory::GetDefaultUnLighted()
-{
-    return MaterialFactory::LoadMaterial("DefaultUnLighted.bmat");
-}
 AH<Material> MaterialFactory::GetGizmosUnLightedOverlay()
 {
     return MaterialFactory::LoadMaterial("GizmosUnLightedOverlay.bmat");

@@ -8,14 +8,16 @@ Material:
   GUID: 1528296294972639787 96139853623721985 0
   Line Width: 1
   Metalness: 0.5
-  Normal Map Multiply Factor: 1
-  Normal Map Texture: 0 0 0
+  Metalness Texture: 0 0 0
+  Needed Uniforms: 511
+  Normal Map Factor: 1
   Normal Map Uv Multiply: (1, 1)
   Normal Map Uv Offset: (0, 0)
-  Receives Lighting: True
+  Normal Texture: 0 0 0
+  Receives Lighting: 1
   Render Pass: 6
-  Render Wireframe: False
+  Render Wireframe: 0
   Roughness: 0.5
+  Roughness Texture: 0 0 0
+  Shader Path: /home/sephirot47/Projects/BangEditor/Bang/Assets/Shaders/DefaultTransparent.bshader
   Vertex Shader: 1528296273745760063 3999184374477094913 0
-  Children:
-    {}

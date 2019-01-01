@@ -161,7 +161,7 @@ String Extensions::GetTextureCubeMapExtension()
 }
 String Extensions::GetShaderProgramExtension()
 {
-    return "bshaderprogram";
+    return "bshader";
 }
 
 Array<String> Extensions::GetFontExtensions()

@@ -57,7 +57,6 @@ public:
     void SetRenderWireframe(bool renderWireframe);
     void SetNeededUniforms(const NeededUniformFlags &neededUniformFlags);
     void SetLineWidth(float w);
-    void SetShaderPath(const Path &shaderPath);
     void BindMaterialUniforms(ShaderProgram *sp) const;
 
     NeededUniformFlags &GetNeededUniforms();
@@ -80,7 +79,6 @@ public:
     bool GetRenderWireframe() const;
     GL::CullFaceExt GetCullFace() const;
     float GetLineWidth() const;
-    const Path &GetShaderPath() const;
 
     virtual void Bind() const;
     virtual void UnBind() const;
@@ -99,8 +97,6 @@ protected:
     AH<Texture2D> p_roughnessTexture;
     AH<Texture2D> p_metalnessTexture;
     AH<Texture2D> p_normalMapTexture;
-    AH<Shader> p_vertexShader;
-    AH<Shader> p_fragmentShader;
     AH<ShaderProgram> p_shaderProgram;
 
     float m_lineWidth = 1.0f;
@@ -122,7 +118,6 @@ protected:
     virtual ~Material() override;
 
 private:
-    void UpdateShaderProgram();
 };
 }
 

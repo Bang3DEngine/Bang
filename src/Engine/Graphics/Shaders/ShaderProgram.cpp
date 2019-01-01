@@ -621,10 +621,7 @@ GLint ShaderProgram::GetUniformLocation(const String &name) const
 
 void ShaderProgram::Import(const Path &shaderPath)
 {
-    if (shaderPath.GetExtension() == "bshader")
-    {
-        Load(shaderPath);
-    }
+    Load(shaderPath);
 }
 
 void ShaderProgram::Bind() const

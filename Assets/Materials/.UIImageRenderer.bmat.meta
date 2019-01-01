@@ -4,7 +4,6 @@ Material:
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
   Cull Face: 1029
-  Fragment Shader: 1510301744096732801 0 0
   GUID: 1524132296017479158 7693228433723097089 0
   Line Width: 1
   Metalness: 0.5
@@ -19,5 +18,4 @@ Material:
   Render Wireframe: 0
   Roughness: 1
   Roughness Texture: 0 0 0
-  Shader Path: /home/sephirot47/Projects/BangEditor/Bang/Assets/Shaders/UIImageRenderer.bshader
-  Vertex Shader: 1522697072736624898 4115801876253900801 0
+  Shader Program: 1546334389286014178 3999184374477094913 0

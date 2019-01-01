@@ -34,18 +34,6 @@ Material::~Material()
 {
 }
 
-void Material::UpdateShaderProgram()
-{
-    Shader *vShader = p_vertexShader.Get();
-    Shader *fShader = p_fragmentShader.Get();
-    if (vShader && fShader)
-    {
-        ShaderProgram *newSp = ShaderProgramFactory::Get(
-            vShader->GetAssetFilepath(), fShader->GetAssetFilepath());
-        SetShaderProgram(newSp);
-    }
-}
-
 void Material::SetLineWidth(float w)
 {
     if (w != GetLineWidth())
@@ -53,11 +41,6 @@ void Material::SetLineWidth(float w)
         m_lineWidth = w;
         PropagateAssetChanged();
     }
-}
-
-void Material::SetShaderPath(const Path &shaderPath)
-{
-    p_shaderProgram.Set(ShaderProgramFactory::Get(shaderPath));
 }
 
 NeededUniformFlags &Material::GetNeededUniforms()
@@ -143,13 +126,6 @@ void Material::SetShaderProgram(ShaderProgram *program)
     if (p_shaderProgram.Get() != program)
     {
         p_shaderProgram.Set(program);
-
-        if (GetShaderProgram())
-        {
-            p_vertexShader.Set(GetShaderProgram()->GetVertexShader());
-            p_fragmentShader.Set(GetShaderProgram()->GetFragmentShader());
-        }
-
         PropagateAssetChanged();
     }
 }
@@ -329,12 +305,6 @@ RenderPass Material::GetRenderPass() const
 float Material::GetLineWidth() const
 {
     return m_lineWidth;
-}
-
-const Path &Material::GetShaderPath() const
-{
-    return GetShaderProgram() ? GetShaderProgram()->GetShaderPath()
-                              : Path::Empty();
 }
 
 bool Material::GetRenderWireframe() const
@@ -587,38 +557,9 @@ void Material::Reflect()
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
         "Needed Uniforms", "Time", NeededUniformFlag::TIME);
 
-    BANG_REFLECT_VAR_MEMBER_HINTED(
-        Material,
-        "Shader Path",
-        SetShaderPath,
-        GetShaderPath,
-        BANG_REFLECT_HINT_EXTENSIONS(Array<String>({"bshader"})));
-
-    BANG_REFLECT_VAR_ASSET("Vertex Shader",
-                           [this](Shader *vShader) {
-                               p_vertexShader.Set(vShader);
-                               if (GetShaderPath().IsEmpty())
-                               {
-                                   UpdateShaderProgram();
-                               }
-                           },
-                           [this]() { return p_vertexShader.Get(); },
-                           Shader,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
-                               BANG_REFLECT_HINT_EXTENSIONS(
-                                   Extensions::GetVertexShaderExtensions()));
-
-    BANG_REFLECT_VAR_ASSET("Fragment Shader",
-                           [this](Shader *fShader) {
-                               p_fragmentShader.Set(fShader);
-                               if (GetShaderPath().IsEmpty())
-                               {
-                                   UpdateShaderProgram();
-                               }
-                           },
-                           [this]() { return p_fragmentShader.Get(); },
-                           Shader,
-                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
-                               BANG_REFLECT_HINT_EXTENSIONS(
-                                   Extensions::GetFragmentShaderExtensions()));
+    BANG_REFLECT_VAR_ASSET("Shader Program",
+                           SetShaderProgram,
+                           GetShaderProgram,
+                           ShaderProgram,
+                           BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false));
 }

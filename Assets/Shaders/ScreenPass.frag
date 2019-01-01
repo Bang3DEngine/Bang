@@ -2,7 +2,6 @@
 #define SCREEN_PASS_FRAG
 
 #define BANG_FRAGMENT
-#define BANG_UNIFORMS_GBUFFER_TEXTURES
 #include "Common.glsl"
 
 in vec3 B_FIn_Position;

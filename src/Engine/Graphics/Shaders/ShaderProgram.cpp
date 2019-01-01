@@ -74,7 +74,7 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
 {
     if (unifiedShaderPath.IsFile())
     {
-        m_shaderPath = unifiedShaderPath;
+        m_unifiedShaderPath = unifiedShaderPath;
         String shaderSourceCode = File::GetContents(unifiedShaderPath);
 
         Array<GL::ShaderType> shaderTypes = {GL::ShaderType::VERTEX,
@@ -612,9 +612,9 @@ Shader *ShaderProgram::GetFragmentShader() const
     return p_fShader.Get();
 }
 
-const Path &ShaderProgram::GetShaderPath() const
+const Path &ShaderProgram::GetUnifiedShaderPath() const
 {
-    return m_shaderPath;
+    return m_unifiedShaderPath;
 }
 
 GLint ShaderProgram::GetUniformLocation(const String &name) const
@@ -628,6 +628,19 @@ GLint ShaderProgram::GetUniformLocation(const String &name) const
     const int location = GL::GetUniformLocation(GetGLId(), name);
     m_nameToLocationCache[name] = location;
     return location;
+}
+
+void ShaderProgram::Reflect()
+{
+    Asset::Reflect();
+
+    ReflectVar<Path>(
+        "Unified shader",
+        [this](const Path &unifiedShaderPath) { Load(unifiedShaderPath); },
+        [this]() { return GetUnifiedShaderPath(); },
+        BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
+            BANG_REFLECT_HINT_EXTENSIONS(
+                Extensions::GetUnifiedShaderExtension()));
 }
 
 void ShaderProgram::Import(const Path &path)

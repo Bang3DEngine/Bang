@@ -1,4 +1,3 @@
-#define BANG_UNIFORMS_SKYBOXES
 #include "ScreenPass.frag"
 
 void main()

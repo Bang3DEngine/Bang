@@ -119,9 +119,12 @@ public:
     Shader *GetVertexShader() const;
     Shader *GetGeometryShader() const;
     Shader *GetFragmentShader() const;
-    const Path &GetShaderPath() const;
+    const Path &GetUnifiedShaderPath() const;
 
     GLint GetUniformLocation(const String &name) const;
+
+    // Serializable
+    void Reflect() override;
 
     // Asset
     void Import(const Path &assetFilepath) override;
@@ -130,7 +133,7 @@ private:
     AH<Shader> p_vShader;
     AH<Shader> p_gShader;
     AH<Shader> p_fShader;
-    Path m_shaderPath = Path::Empty();
+    Path m_unifiedShaderPath = Path::Empty();
     bool m_isLinked = false;
 
     UMap<String, int> m_uniformCacheInt;

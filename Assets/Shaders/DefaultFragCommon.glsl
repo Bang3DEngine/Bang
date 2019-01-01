@@ -1,8 +1,5 @@
 #define BANG_FRAGMENT
-#define BANG_UNIFORMS_SKYBOXES
-#define BANG_UNIFORMS_REFLECTION_PROBES
-#define BANG_UNIFORMS_MATERIAL_PBR
-#define BANG_UNIFORMS_MATERIAL_ALBEDO
+#define BANG_USE_REFLECTION_PROBES
 
 #include "Common.glsl"
 #include "LightCommon.glsl"

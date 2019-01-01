@@ -33,19 +33,15 @@ layout (std140) uniform B_CameraUniformBuffer
 
 
 // Camera related ///////////////////////////
-#ifdef BANG_UNIFORMS_SKYBOXES
 uniform samplerCube B_SkyBox;
 uniform samplerCube B_SkyBoxDiffuse;
 uniform samplerCube B_SkyBoxSpecular;
-#endif
 
-#ifdef BANG_UNIFORMS_REFLECTION_PROBES
 uniform bool        B_UseReflectionProbe;
 uniform samplerCube B_ReflectionProbeDiffuse;
 uniform samplerCube B_ReflectionProbeSpecular;
 uniform vec3        B_ReflectionProbeCenter; // If boxed.
 uniform vec3        B_ReflectionProbeSize;   // If boxed.
-#endif
 /////////////////////////////////////////////
 
 uniform float B_TimeSeconds;
@@ -65,14 +61,12 @@ uniform bool B_ReceivesShadows;
 //////////////////////////////////////////
 
 // GBuffer textures //////////////////////
-#ifdef BANG_UNIFORMS_GBUFFER_TEXTURES
 uniform sampler2D B_GTex_Color;
 uniform sampler2D B_GTex_AlbedoColor;
 uniform sampler2D B_GTex_Light;
 uniform sampler2D B_GTex_Normal;
 uniform sampler2D B_GTex_Misc;
 uniform sampler2D B_GTex_DepthStencil;
-#endif
 // ///////////////////////////////////////
 
 // Util functions /////////////////
@@ -99,7 +93,7 @@ vec2 B_GetViewportStep()
     return 1.0 / B_Viewport_Size;
 }
 
-#if defined(BANG_FRAGMENT)
+#ifdef BANG_FRAGMENT
 vec2 B_GetViewportPos()
 {
     return gl_FragCoord.xy - B_Viewport_MinPos;
@@ -112,12 +106,8 @@ vec3 B_ComputeWorldPosition(float depth)
 {
     return B_ComputeWorldPosition(depth, B_GetViewportUv());
 }
-#endif
-
-//
 
 // GBuffer Samplers //////////////////////
-#ifdef BANG_UNIFORMS_GBUFFER_TEXTURES
 vec4  B_SampleColor(vec2 uv)
 {
     return texture(B_GTex_Color, uv);

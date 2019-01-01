@@ -55,7 +55,7 @@ public:
     void SetRenderPass(RenderPass renderPass);
     void SetCullFace(GL::CullFaceExt cullFace);
     void SetRenderWireframe(bool renderWireframe);
-    void SetNeededUniforms(NeededUniformFlags neededUniformFlags);
+    void SetNeededUniforms(const NeededUniformFlags &neededUniformFlags);
     void SetLineWidth(float w);
     void SetShaderPath(const Path &shaderPath);
     void BindMaterialUniforms(ShaderProgram *sp) const;

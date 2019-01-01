@@ -19,4 +19,5 @@ Material:
   Render Wireframe: 0
   Roughness: 1
   Roughness Texture: 0 0 0
+  Shader Path: /home/sephirot47/Projects/BangEditor/Bang/Assets/Shaders/UIImageRenderer.bshader
   Vertex Shader: 1522697072736624898 4115801876253900801 0

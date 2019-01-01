@@ -1,0 +1,5 @@
+#vertex
+#include "UITextRenderer.vert"
+
+#fragment
+#include "UITextRenderer.frag"

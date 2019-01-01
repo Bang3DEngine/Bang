@@ -79,7 +79,7 @@ void Material::SetRenderWireframe(bool renderWireframe)
     }
 }
 
-void Material::SetNeededUniforms(NeededUniformFlags neededUniformFlags)
+void Material::SetNeededUniforms(const NeededUniformFlags &neededUniformFlags)
 {
     m_neededUniforms = neededUniformFlags;
 }

@@ -1,0 +1,6 @@
+#vertex
+#include "UIImageRenderer.vert"
+
+#fragment
+#include "UIImageRenderer.frag"
+

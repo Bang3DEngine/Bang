@@ -1,0 +1,5 @@
+#vertex
+#include "DefaultTransparent.vert"
+
+#fragment
+#include "DefaultTransparent.frag"

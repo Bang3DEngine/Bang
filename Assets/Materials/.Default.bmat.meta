@@ -4,19 +4,18 @@ Material:
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
   Cull Face: 1029
-  Fragment Shader: 1510299163478634161 0 0
   GUID: 12542352338901270529 0 0
   Line Width: 1
   Metalness: 0.5
   Metalness Texture: 0 0 0
   Needed Uniforms: 511
-  Normal Map Multiply Factor: 1
-  Normal Map Texture: 0 0 0
+  Normal Map Factor: 1
   Normal Map Uv Multiply: (1, 1)
   Normal Map Uv Offset: (0, 0)
-  Receives Lighting: True
+  Normal Texture: 0 0 0
+  Receives Lighting: 1
   Render Pass: 0
-  Render Wireframe: False
+  Render Wireframe: 0
   Roughness: 0.5
   Roughness Texture: 0 0 0
-  Vertex Shader: 1510299163478730097 0 0
+  Shader Path: /home/sephirot47/Projects/BangEditor/Bang/Assets/Shaders/Default.bshader

@@ -160,7 +160,7 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &shaderPath)
     {
         AH<ShaderProgram> shaderProgram;
         shaderProgram = Assets::Create<ShaderProgram>();
-        shaderProgram.Get()->Load(shaderPath);
+        shaderProgram.Get()->Import(shaderPath);
         spf->m_shaderCache.Add(shaderPath, shaderProgram);
     }
     return spf->m_shaderCache.Get(shaderPath).Get();

@@ -216,7 +216,7 @@ void UIComboBox::SetSelectionForFlag(int flagValue)
 {
     for (int i = 0; i < GetNumItems(); ++i)
     {
-        if (flagValue & (1 << i))
+        if (flagValue & (GetValues()[i]))
         {
             SetSelectionByIndex(i);
         }

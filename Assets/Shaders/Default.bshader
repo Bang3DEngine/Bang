@@ -1,0 +1,5 @@
+#vertex
+#include "Default.vert"
+
+#fragment
+#include "Default.frag"

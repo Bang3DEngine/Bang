@@ -900,7 +900,9 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
             if (rend && rend->IsEnabledRecursively() &&
                 rend->GetActiveMaterial())
             {
-                RenderPass rp = rend->GetActiveMaterial()->GetRenderPass();
+                RenderPass rp = rend->GetActiveMaterial()
+                                    ->GetShaderProgramProperties()
+                                    .GetRenderPass();
                 if (rp == RenderPass::SCENE_OPAQUE ||
                     rp == RenderPass::SCENE_TRANSPARENT)
                 {

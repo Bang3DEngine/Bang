@@ -199,9 +199,9 @@ void VolumeRenderer::OnBeforeRender()
 
     if (GetActiveMaterial())
     {
-        GetMaterial()->SetRenderPass(GetUseTransferFunction()
-                                         ? RenderPass::SCENE_TRANSPARENT
-                                         : RenderPass::SCENE_OPAQUE);
+        GetMaterial()->GetShaderProgramProperties().SetRenderPass(
+            GetUseTransferFunction() ? RenderPass::SCENE_TRANSPARENT
+                                     : RenderPass::SCENE_OPAQUE);
     }
 
     GetVolumeRenderMaterial()->SetShaderProgram(

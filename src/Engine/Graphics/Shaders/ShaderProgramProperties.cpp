@@ -25,6 +25,11 @@ void ShaderProgramProperties::SetLineWidth(float lineWidth)
     m_lineWidth = lineWidth;
 }
 
+void ShaderProgramProperties::SetRenderPass(RenderPass renderPass)
+{
+    m_renderPass = renderPass;
+}
+
 bool ShaderProgramProperties::GetWireframe() const
 {
     return m_wireframe;
@@ -33,6 +38,11 @@ bool ShaderProgramProperties::GetWireframe() const
 float ShaderProgramProperties::GetLineWidth() const
 {
     return m_lineWidth;
+}
+
+RenderPass ShaderProgramProperties::GetRenderPass() const
+{
+    return m_renderPass;
 }
 
 GL::CullFaceExt ShaderProgramProperties::GetCullFace() const

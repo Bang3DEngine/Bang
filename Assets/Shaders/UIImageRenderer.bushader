@@ -1,6 +1,8 @@
+#properties
+#render_pass canvas
+
 #vertex
 #include "UIImageRenderer.vert"
 
 #fragment
 #include "UIImageRenderer.frag"
-

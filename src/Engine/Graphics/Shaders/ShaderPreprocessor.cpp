@@ -156,6 +156,7 @@ ShaderProgramProperties ShaderPreprocessor::GetShaderProperties(
                         if (valueStr == keywordsStr[i])
                         {
                             spProps.SetCullFace(keywordValues[i]);
+                            break;
                         }
                     }
                 }
@@ -163,9 +164,41 @@ ShaderProgramProperties ShaderPreprocessor::GetShaderProperties(
                 {
                     spProps.SetWireframe((valueStr == "true"));
                 }
-                else if (keyStr == "line-width")
+                else if (keyStr == "line_width")
                 {
                     spProps.SetLineWidth(String::ToFloat(valueStr));
+                }
+                else if (keyStr == "render_pass")
+                {
+                    const Array<String> keywordsStr = {
+                        "scene_opaque",
+                        "scene_decals",
+                        "scene_transparent",
+                        "scene_before_adding_lights",
+                        "scene_after_adding_lights",
+                        "canvas",
+                        "canvas_postprocess",
+                        "overlay",
+                        "overlay_postprocess"};
+                    const Array<RenderPass> keywordValues = {
+                        RenderPass::SCENE_OPAQUE,
+                        RenderPass::SCENE_DECALS,
+                        RenderPass::SCENE_TRANSPARENT,
+                        RenderPass::SCENE_BEFORE_ADDING_LIGHTS,
+                        RenderPass::SCENE_AFTER_ADDING_LIGHTS,
+                        RenderPass::CANVAS,
+                        RenderPass::CANVAS_POSTPROCESS,
+                        RenderPass::OVERLAY,
+                        RenderPass::OVERLAY_POSTPROCESS};
+
+                    for (uint i = 0; i < keywordsStr.Size(); ++i)
+                    {
+                        if (valueStr == keywordsStr[i])
+                        {
+                            spProps.SetRenderPass(keywordValues[i]);
+                            break;
+                        }
+                    }
                 }
             }
         }

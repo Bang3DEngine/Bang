@@ -50,7 +50,7 @@ Material *Renderer::GetActiveMaterial() const
 
 Material *Renderer::GetCopiedMaterial() const
 {
-    return p_material.Get();
+    return p_copiedMaterial.Get();
 }
 
 void Renderer::OnRender(RenderPass renderPass)
@@ -118,23 +118,23 @@ void Renderer::SetMaterial(Material *sharedMaterial, Material *materialCopy)
             GetSharedMaterial()->EventEmitter<IEventsAsset>::UnRegisterListener(
                 this);
         }
-        if (p_material.Get())
+        if (GetCopiedMaterial())
         {
-            p_material.Get()->EventEmitter<IEventsAsset>::UnRegisterListener(
+            GetCopiedMaterial()->EventEmitter<IEventsAsset>::UnRegisterListener(
                 this);
         }
 
         p_sharedMaterial.Set(sharedMaterial);
-        p_material.Set(materialCopy);
+        p_copiedMaterial.Set(materialCopy);
 
         if (GetSharedMaterial())
         {
             GetSharedMaterial()->EventEmitter<IEventsAsset>::RegisterListener(
                 this);
         }
-        if (p_material.Get())
+        if (GetCopiedMaterial())
         {
-            p_material.Get()->EventEmitter<IEventsAsset>::RegisterListener(
+            GetCopiedMaterial()->EventEmitter<IEventsAsset>::RegisterListener(
                 this);
         }
 
@@ -247,12 +247,12 @@ Material *Renderer::GetMaterial() const
     {
         if (GetSharedMaterial())
         {
-            p_material = Assets::Clone<Material>(GetSharedMaterial());
+            p_copiedMaterial = Assets::Clone<Material>(GetSharedMaterial());
             GetCopiedMaterial()->EventEmitter<IEventsAsset>::RegisterListener(
                 const_cast<Renderer *>(this));
         }
     }
-    return p_material.Get();
+    return GetCopiedMaterial();
 }
 
 AARect Renderer::GetBoundingRect(Camera *camera) const

@@ -25,7 +25,8 @@ DecalRenderer::DecalRenderer()
     GetMaterial()->GetShaderProgramProperties().SetCullFace(
         GL::CullFaceExt::NONE);
     GetMaterial()->SetShaderProgram(ShaderProgramFactory::GetDecal());
-    GetMaterial()->SetRenderPass(RenderPass::SCENE_DECALS);
+    GetMaterial()->GetShaderProgramProperties().SetRenderPass(
+        RenderPass::SCENE_DECALS);
     SetDepthMask(false);
 
     SetDecalTexture(TextureFactory::GetBang2048Icon());
@@ -39,7 +40,7 @@ void DecalRenderer::OnRender()
 {
     Renderer::OnRender();
 
-    ShaderProgram *sp = GetMaterial()->GetShaderProgram();
+    ShaderProgram *sp = GetActiveMaterial()->GetShaderProgram();
 
     GBuffer *gbuffer = GEngine::GetActiveGBuffer();
     gbuffer->BindAttachmentsForReading(sp);
@@ -146,7 +147,7 @@ bool DecalRenderer::GetIsPerspective() const
 
 Texture2D *DecalRenderer::GetDecalTexture() const
 {
-    return GetMaterial()->GetAlbedoTexture();
+    return GetActiveMaterial()->GetAlbedoTexture();
 }
 
 Matrix4 DecalRenderer::GetViewMatrix() const

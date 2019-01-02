@@ -93,7 +93,7 @@ private:
     GL::Primitive m_renderPrimitive = GL::Primitive::TRIANGLES;
     GL::ViewProjMode m_viewProjMode = GL::ViewProjMode::WORLD;
 
-    mutable AH<Material> p_material;
+    mutable AH<Material> p_copiedMaterial;
     AH<Material> p_sharedMaterial;
 
     friend class GEngine;

@@ -53,7 +53,6 @@ public:
     void SetRoughnessTexture(Texture2D *roughnessTexture);
     void SetMetalnessTexture(Texture2D *metalnessTexture);
     void SetNormalMapTexture(Texture2D *normalMapTexture);
-    void SetRenderPass(RenderPass renderPass);
     void SetShaderProgramProperties(const ShaderProgramProperties &spProps);
     void SetNeededUniforms(const NeededUniformFlags &neededUniformFlags);
     void BindMaterialUniforms(ShaderProgram *sp) const;
@@ -74,7 +73,6 @@ public:
     Texture2D *GetRoughnessTexture() const;
     Texture2D *GetMetalnessTexture() const;
     Texture2D *GetNormalMapTexture() const;
-    RenderPass GetRenderPass() const;
     ShaderProgramProperties &GetShaderProgramProperties();
     const ShaderProgramProperties &GetShaderProgramProperties() const;
 
@@ -99,7 +97,6 @@ protected:
     ShaderProgramProperties m_shaderProgramProperties;
 
     float m_normalMapMultiplyFactor = 1.0f;
-    RenderPass m_renderPass = RenderPass::SCENE_OPAQUE;
     Color m_albedoColor = Color::White();
     Vector2 m_albedoUvOffset = Vector2::Zero();
     Vector2 m_albedoUvMultiply = Vector2::One();
@@ -112,6 +109,9 @@ protected:
 
     Material();
     virtual ~Material() override;
+
+    // ICloneable
+    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
 
 private:
 };

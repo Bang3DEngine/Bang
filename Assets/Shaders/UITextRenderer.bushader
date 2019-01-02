@@ -1,3 +1,6 @@
+#properties
+#render_pass canvas
+
 #vertex
 #include "UITextRenderer.vert"
 

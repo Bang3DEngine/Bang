@@ -664,7 +664,9 @@ void RenderFactory::Render(Renderer *rend,
                            const RenderFactory::Parameters &params)
 {
     ApplyRenderParameters(rend, params);
-    rend->OnRender(rend->GetMaterial()->GetRenderPass());
+    rend->OnRender(rend->GetActiveMaterial()
+                       ->GetShaderProgramProperties()
+                       .GetRenderPass());
 }
 
 RenderFactory *RenderFactory::GetInstance()

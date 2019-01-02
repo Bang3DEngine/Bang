@@ -96,7 +96,7 @@ void Material::SetNormalMapMultiplyFactor(float normalMapMultiplyFactor)
 
 void Material::SetShaderProgram(ShaderProgram *program)
 {
-    if (p_shaderProgram.Get() != program)
+    if (program != GetShaderProgram())
     {
         if (GetShaderProgram())
         {
@@ -108,7 +108,8 @@ void Material::SetShaderProgram(ShaderProgram *program)
 
         if (GetShaderProgram())
         {
-            SetShaderProgramProperties(GetShaderProgramProperties());
+            SetShaderProgramProperties(
+                GetShaderProgram()->GetLoadedProperties());
             GetShaderProgram()->EventEmitter<IEventsAsset>::RegisterListener(
                 this);
         }
@@ -217,15 +218,6 @@ void Material::SetNormalMapTexture(Texture2D *texture)
     }
 }
 
-void Material::SetRenderPass(RenderPass renderPass)
-{
-    if (renderPass != GetRenderPass())
-    {
-        m_renderPass = renderPass;
-        PropagateAssetChanged();
-    }
-}
-
 void Material::SetShaderProgramProperties(
     const ShaderProgramProperties &spProps)
 {
@@ -288,10 +280,6 @@ Texture2D *Material::GetMetalnessTexture() const
 Texture2D *Material::GetNormalMapTexture() const
 {
     return p_normalMapTexture.Get();
-}
-RenderPass Material::GetRenderPass() const
-{
-    return m_renderPass;
 }
 
 ShaderProgramProperties &Material::GetShaderProgramProperties()
@@ -486,38 +474,6 @@ void Material::Reflect()
                             SetReceivesLighting,
                             GetReceivesLighting);
 
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Cull Face", "None", GL::CullFaceExt::NONE);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Cull Face", "Front", GL::CullFaceExt::FRONT);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Cull Face", "Back", GL::CullFaceExt::BACK);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Cull Face", "Front And Back", GL::CullFaceExt::FRONT_AND_BACK);
-
-    BANG_REFLECT_VAR_ENUM(
-        "Render Pass", SetRenderPass, GetRenderPass, RenderPass);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Scene Opaque", RenderPass::SCENE_OPAQUE);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Scene Decals", RenderPass::SCENE_DECALS);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Scene Transparent", RenderPass::SCENE_TRANSPARENT);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Render Pass",
-                                       "Scene Before Lights",
-                                       RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE("Render Pass",
-                                       "Scene After Lights",
-                                       RenderPass::SCENE_AFTER_ADDING_LIGHTS);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Canvas", RenderPass::CANVAS);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Canvas Postprocess", RenderPass::CANVAS_POSTPROCESS);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Overlay", RenderPass::OVERLAY);
-    BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
-        "Render Pass", "Overlay Postprocess", RenderPass::OVERLAY_POSTPROCESS);
-
     BANG_REFLECT_VAR_ENUM_FLAGS(
         "Needed Uniforms", SetNeededUniforms, GetNeededUniforms);
     BANG_REFLECT_HINT_ENUM_FIELD_VALUE(
@@ -550,4 +506,12 @@ void Material::Reflect()
                            ShaderProgram,
                            BANG_REFLECT_HINT_ZOOMABLE_PREVIEW(false) +
                                BANG_REFLECT_HINT_EXTENSIONS(extensions));
+}
+
+void Material::CloneInto(ICloneable *clone, bool cloneGUID) const
+{
+    Asset::CloneInto(clone, cloneGUID);
+
+    Material *matClone = SCAST<Material *>(clone);
+    matClone->SetShaderProgramProperties(GetShaderProgramProperties());
 }

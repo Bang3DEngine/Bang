@@ -753,7 +753,8 @@ bool GEngine::CanRenderNow(Renderer *rend, RenderPass renderPass) const
     {
         Material *mat = GetReplacementMaterial() ? GetReplacementMaterial()
                                                  : rend->GetActiveMaterial();
-        return (mat && (mat->GetRenderPass() == renderPass));
+        return (mat && (mat->GetShaderProgramProperties().GetRenderPass() ==
+                        renderPass));
     }
     return false;
 }

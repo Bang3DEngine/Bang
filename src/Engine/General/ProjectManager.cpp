@@ -30,7 +30,6 @@ Project *ProjectManager::OpenProject(const Path &projectFilepath)
     {
         m_currentProject = CreateNewProject();
         Project *currentProject = GetCurrentProject();
-        currentProject->ImportMetaFromFile(projectFilepath);
         currentProject->SetProjectFilepath(projectFilepath);
 
         Paths::SetProjectRoot(currentProject->GetProjectDirectory());
@@ -39,6 +38,7 @@ Project *ProjectManager::OpenProject(const Path &projectFilepath)
         MetaFilesManager::CreateMissingMetaFiles(assetsDir);
         MetaFilesManager::LoadMetaFilepathGUIDs(assetsDir);
 
+        currentProject->ImportMetaFromFile(projectFilepath);
         currentProject->OpenInitialScene();
 
         EventEmitter<IEventsProjectManager>::PropagateToListeners(

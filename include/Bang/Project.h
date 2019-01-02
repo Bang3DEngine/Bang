@@ -27,11 +27,13 @@ public:
     void SetProjectFilepath(const Path &projectFilepath);
 
     virtual bool OpenInitialScene() const;
-    Path GetFirstFoundScenePath() const;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;
     virtual void ExportMeta(MetaNode *metaNode) const override;
+
+protected:
+    Path GetInitialScenePath() const;
 
 private:
     Path m_projectFilepath;

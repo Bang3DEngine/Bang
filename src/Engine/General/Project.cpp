@@ -49,12 +49,12 @@ void Project::SetProjectFilepath(const Path &projectFilepath)
 
 bool Project::OpenInitialScene() const
 {
-    Path scenePath = GetFirstFoundScenePath();
+    Path scenePath = GetInitialScenePath();
     SceneManager::LoadSceneInstantly(scenePath, false);
     return scenePath.IsFile();
 }
 
-Path Project::GetFirstFoundScenePath() const
+Path Project::GetInitialScenePath() const
 {
     Array<Path> sceneFilepaths = GetProjectAssetsFilepath().GetFiles(
         FindFlag::RECURSIVE, {Extensions::GetSceneExtension()});

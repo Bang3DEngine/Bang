@@ -38,6 +38,7 @@ Project *ProjectManager::OpenProject(const Path &projectFilepath)
         MetaFilesManager::CreateMissingMetaFiles(assetsDir);
         MetaFilesManager::LoadMetaFilepathGUIDs(assetsDir);
 
+        currentProject->Init();
         currentProject->ImportMetaFromFile(projectFilepath);
         currentProject->OpenInitialScene();
 

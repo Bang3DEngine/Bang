@@ -5,6 +5,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Extensions.h"
+#include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Paths.h"
@@ -20,6 +21,18 @@ Project::Project()
 
 Project::~Project()
 {
+}
+
+void Project::Init()
+{
+    Array<Path> sceneFilepaths = GetProjectAssetsFilepath().GetFiles(
+        FindFlag::RECURSIVE, {Extensions::GetSceneExtension()});
+    Paths::SortPathsByName(&sceneFilepaths);
+
+    if (sceneFilepaths.Size() >= 1)
+    {
+        SetInitialScenePath(sceneFilepaths.Front());
+    }
 }
 
 Path Project::GetProjectDirectory() const
@@ -47,6 +60,16 @@ void Project::SetProjectFilepath(const Path &projectFilepath)
     m_projectFilepath = projectFilepath;
 }
 
+void Project::SetInitialSceneGUID(const GUID &initialSceneGUID)
+{
+    m_initialScenePathGUID = initialSceneGUID;
+}
+
+void Project::SetInitialScenePath(const Path &initialScenePath)
+{
+    SetInitialSceneGUID(MetaFilesManager::GetGUID(initialScenePath));
+}
+
 bool Project::OpenInitialScene() const
 {
     Path scenePath = GetInitialScenePath();
@@ -54,16 +77,29 @@ bool Project::OpenInitialScene() const
     return scenePath.IsFile();
 }
 
+void Project::ExportToProjectFile()
+{
+    ExportMetaToFile(GetProjectFilepath());
+}
+
 Path Project::GetInitialScenePath() const
 {
-    Array<Path> sceneFilepaths = GetProjectAssetsFilepath().GetFiles(
-        FindFlag::RECURSIVE, {Extensions::GetSceneExtension()});
-    Paths::SortPathsByName(&sceneFilepaths);
-    return !sceneFilepaths.IsEmpty() ? sceneFilepaths.Back() : Path::Empty();
+    return MetaFilesManager::GetFilepath(GetInitialScenePathGUID());
+}
+
+GUID Project::GetInitialScenePathGUID() const
+{
+    return m_initialScenePathGUID;
 }
 
 void Project::ImportMeta(const MetaNode &metaNode)
 {
+    if (metaNode.Contains("InitialSceneGUID"))
+    {
+        GUID initialSceneGUID = metaNode.Get<GUID>("InitialSceneGUID");
+        SetInitialSceneGUID(initialSceneGUID);
+    }
+
     if (metaNode.Contains("Physics_StepSleepTime"))
     {
         Physics::GetInstance()->SetStepSleepTime(
@@ -86,6 +122,9 @@ void Project::ImportMeta(const MetaNode &metaNode)
 void Project::ExportMeta(MetaNode *metaNode) const
 {
     metaNode->SetName("Project");
+
+    metaNode->Set("InitialSceneGUID", GetInitialScenePathGUID());
+
     metaNode->Set("Physics_StepSleepTime",
                   Physics::GetInstance()->GetStepSleepTime().GetSeconds());
     metaNode->Set("Physics_MaxSubSteps",

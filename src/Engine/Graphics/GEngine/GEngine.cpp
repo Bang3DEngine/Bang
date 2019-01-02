@@ -1014,6 +1014,13 @@ void GEngine::FillCubeMapFromTextures(TextureCubeMap *texCMToFill,
 
 void GEngine::Render(Renderer *rend)
 {
+    if (!rend || !rend->GetActiveMaterial() ||
+        !rend->GetActiveMaterial()->GetShaderProgram() ||
+        !rend->GetActiveMaterial()->GetShaderProgram()->IsLinked())
+    {
+        return;
+    }
+
     // If we have a replacement shader currently, change the renderer sp
     AH<Material> previousRendSharedMat, previousRendCopiedMat;
     previousRendSharedMat.Set(rend->GetSharedMaterial());

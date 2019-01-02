@@ -3,22 +3,15 @@ Material:
   Albedo Texture: 0 0 0
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
-  Cull Face: 0
-  Fragment Shader: 1537963745311928072 4664026620200222721 0
   GUID: 1537967037061785862 10663516764962291713 0
-  Line Width: 1
   Metalness: 0.5
   Metalness Texture: 0 0 0
   Needed Uniforms: 511
-  Normal Map Multiply Factor: 1
-  Normal Map Texture: 0 0 0
+  Normal Map Factor: 1
   Normal Map Uv Multiply: (1, 1)
   Normal Map Uv Offset: (0, 0)
-  ReceivesLighting: True
-  Render Pass: 0
-  Render Wireframe: False
+  Normal Texture: 0 0 0
+  Receives Lighting: 1
   Roughness: 0.5
   Roughness Texture: 0 0 0
-  Vertex Shader: 1537963740041265157 4115801876253900801 0
-  Children:
-    {}
+  Shader Program: 1546407267884531445 3968665779980730369 0

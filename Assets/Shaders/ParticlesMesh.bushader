@@ -1,3 +1,11 @@
+#properties
+#cull_face back
+#render_pass scene_opaque
+
+#vertex
+#include "Particles.vert"
+
+#fragment
 #define BANG_FRAGMENT
 #define BANG_DEFERRED_RENDERING
 

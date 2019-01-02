@@ -3,9 +3,7 @@ Material:
   Albedo Texture: 0 0 0
   Albedo Uv Multiply: (1, 1)
   Albedo Uv Offset: (0, 0)
-  Cull Face: 0
   GUID: 1538208021142531015 10742174727301758977 0
-  Line Width: 1
   Metalness: 0.5
   Metalness Texture: 0 0 0
   Needed Uniforms: 65
@@ -14,9 +12,8 @@ Material:
   Normal Map Uv Multiply: (1, 1)
   Normal Map Uv Offset: (0, 0)
   Receives Lighting: True
-  Render Pass: 6
-  Render Wireframe: False
   Roughness: 0.5
   Roughness Texture: 0 0 0
+  Shader Program: 1546407267888779002 4882660109336969217 0
   Children:
     {}

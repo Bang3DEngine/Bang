@@ -60,6 +60,7 @@ if (ADD_MISC_FILES)
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.vert"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bushader"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.png"
+                                  "${BANG_ENGINE_ASSETS_DIR}/*.meta"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.svg"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.bmat"
                                   "${BANG_ENGINE_ASSETS_DIR}/[^.]*.glsl"

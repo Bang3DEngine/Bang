@@ -1,5 +1,13 @@
+#properties
+#cull_face none
+#render_pass scene_transparent
+
+#vertex
+#include "Particles.vert"
+
+#fragment
 #define BANG_FRAGMENT
-#define BANG_DEFERRED_RENDERING
+#define BANG_FORWARD_RENDERING
 
 #include "Common.glsl"
 

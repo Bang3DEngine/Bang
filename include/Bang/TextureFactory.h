@@ -8,6 +8,8 @@
 #include "Bang/Map.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
+#include "Bang/Vector2.h"
+#include "Bang/Vector3.h"
 
 namespace Bang
 {
@@ -44,6 +46,23 @@ public:
     static Texture2D *Get9SliceBorder();
     static Texture2D *Get9SliceRoundRectTexture();
     static Texture2D *Get9SliceRoundRectBorderTexture();
+
+    static AH<Texture2D> GetSimplexNoiseTexture2D(
+        const Vector2i &size,
+        uint numOctaves = 8,
+        float frequency = 1.0f,
+        float amplitude = 1.0f,
+        float lacunarity = 2.0f,
+        float persistence = 0.5f,
+        const Vector2 &offset = Vector2::Zero());
+    static AH<Texture3D> GetSimplexNoiseTexture3D(
+        const Vector3i &size,
+        uint numOctaves = 8,
+        float frequency = 1.0f,
+        float amplitude = 1.0f,
+        float lacunarity = 2.0f,
+        float persistence = 0.5f,
+        const Vector3 &offset = Vector3::Zero());
 
     static TextureCubeMap *GetWhiteTextureCubeMap();
     static TextureCubeMap *GetDefaultSkybox();

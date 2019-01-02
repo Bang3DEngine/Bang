@@ -5,6 +5,7 @@
 #include "Bang/GL.h"
 #include "Bang/Map.tcc"
 #include "Bang/Paths.h"
+#include "Bang/SimplexNoise.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Texture3D.h"
 #include "Bang/TextureCubeMap.h"
@@ -158,6 +159,79 @@ Texture2D *TextureFactory::Get9SliceRoundRectTexture()
 Texture2D *TextureFactory::Get9SliceRoundRectBorderTexture()
 {
     return TextureFactory::GetTexture2D("RRectBorder_9s.png");
+}
+
+AH<Texture2D> TextureFactory::GetSimplexNoiseTexture2D(const Vector2i &size,
+                                                       uint numOctaves,
+                                                       float frequency,
+                                                       float amplitude,
+                                                       float lacunarity,
+                                                       float persistence,
+                                                       const Vector2 &offset)
+{
+    Array<float> values;
+    values.Reserve(size.x * size.y);
+
+    const Vector2 sizeV(size);
+    SimplexNoise simplexNoise(frequency, amplitude, lacunarity, persistence);
+    for (uint y = 0; y < size.y; ++y)
+    {
+        for (uint x = 0; x < size.x; ++x)
+        {
+            Vector2 coord = (Vector2(x, y) / sizeV) + offset;
+            float v = (simplexNoise.Fractal(numOctaves, coord.x, coord.y));
+            v = (v * 0.5f + 0.5f);
+            values.PushBack(v);
+        }
+    }
+
+    AH<Texture2D> tex = Assets::Create<Texture2D>();
+    tex.Get()->SetFormat(GL::ColorFormat::R8);
+    tex.Get()->Fill(RCAST<Byte *>(values.Data()),
+                    size.x,
+                    size.y,
+                    GL::ColorComp::RED,
+                    GL::DataType::FLOAT);
+    return tex;
+}
+
+AH<Texture3D> TextureFactory::GetSimplexNoiseTexture3D(const Vector3i &size,
+                                                       uint numOctaves,
+                                                       float frequency,
+                                                       float amplitude,
+                                                       float lacunarity,
+                                                       float persistence,
+                                                       const Vector3 &offset)
+{
+    Array<float> values;
+    values.Reserve(size.x * size.y * size.z);
+
+    const Vector3 sizeV(size);
+    SimplexNoise simplexNoise(frequency, amplitude, lacunarity, persistence);
+    for (uint z = 0; z < size.z; ++z)
+    {
+        for (uint y = 0; y < size.y; ++y)
+        {
+            for (uint x = 0; x < size.x; ++x)
+            {
+                Vector3 coord = (Vector3(x, y, z) / sizeV) + offset;
+                float v = (simplexNoise.Fractal(
+                    numOctaves, coord.x, coord.y, coord.z));
+                v = (v * 0.5f + 0.5f);
+                values.PushBack(Byte(v * 255));
+            }
+        }
+    }
+
+    AH<Texture3D> tex;
+    tex.Get()->CreateEmpty(size);
+    tex.Get()->SetFormat(GL::ColorFormat::R8);
+    tex.Get()->Fill(RCAST<Byte *>(values.Data()),
+                    size,
+                    GL::ColorComp::RED,
+                    GL::DataType::FLOAT);
+
+    return tex;
 }
 
 TextureCubeMap *TextureFactory::GetWhiteTextureCubeMap()

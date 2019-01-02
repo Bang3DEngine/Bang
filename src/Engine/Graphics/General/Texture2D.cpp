@@ -168,6 +168,8 @@ Image Texture2D::ToImage() const
 {
     const int width = GetWidth();
     const int height = GetHeight();
+    Image img(width, height);
+
     const int numComps = GL::GetNumComponents(GL::ColorComp::RGBA);
     Byte *pixels = new Byte[width * height * numComps];
 
@@ -179,13 +181,16 @@ Image Texture2D::ToImage() const
                     pixels);
     GL::Pop(GL::BindTarget::TEXTURE_2D);
 
-    Image img(width, height);
     for (int y = 0; y < height; ++y)
     {
         for (int x = 0; x < width; ++x)
         {
-            const int coords = (y * width + x) * numComps;
-            Color pixelColor = GetColorFromByteArray(pixels, coords);
+            const int i = (y * width + x) * numComps;
+            Color pixelColor = GetColorFromByteArray(pixels, i);
+            if (GetColorComp() == GL::ColorComp::RED)
+            {
+                pixelColor = Color(pixelColor.r, pixelColor.r, pixelColor.r, 1);
+            }
             img.SetPixel(x, y, pixelColor);
         }
     }

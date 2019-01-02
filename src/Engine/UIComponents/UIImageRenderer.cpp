@@ -25,12 +25,22 @@ class Camera;
 
 using namespace Bang;
 
+#include "Bang/TextureFactory.h"
 UIImageRenderer::UIImageRenderer()
 {
     SET_INSTANCE_CLASS_ID(UIImageRenderer)
 
     SetMaterial(MaterialFactory::GetUIImage().Get());
     SetMode(Mode::TEXTURE_INV_UVY);
+
+    static int a = 0;
+    if (++a == 1)
+    {
+        AH<Texture2D> simplexNoiseTexture2D =
+            TextureFactory::GetSimplexNoiseTexture2D(Vector2i(512));
+        simplexNoiseTexture2D.Get()->ToImage().Export(Path("test.png"));
+        exit(0);
+    }
 }
 
 UIImageRenderer::~UIImageRenderer()

@@ -62,6 +62,8 @@ void Application::InitAfterPathsInit_()
 
     m_paths->InitPathsAfterInitingSettings();
 
+    m_projectManager = CreateProjectManager();
+
     m_physics = new Physics();
     m_physics->Init();
 
@@ -93,6 +95,7 @@ Application::~Application()
     delete m_debug;
     delete m_paths;
     delete m_systemUtils;
+    delete m_projectManager;
 
     delete m_physics;
     m_physics = nullptr;
@@ -221,6 +224,11 @@ WindowManager *Application::GetWindowManager() const
     return m_windowManager;
 }
 
+ProjectManager *Application::GetProjectManager() const
+{
+    return m_projectManager;
+}
+
 MetaFilesManager *Application::GetMetaFilesManager() const
 {
     return m_metaFilesManager;
@@ -274,4 +282,9 @@ Settings *Application::CreateSettings() const
 Assets *Application::CreateAssets() const
 {
     return new Assets();
+}
+
+ProjectManager *Application::CreateProjectManager() const
+{
+    return new ProjectManager();
 }

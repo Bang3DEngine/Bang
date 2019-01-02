@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/IReflectable.h"
 #include "Bang/Path.h"
 
 namespace Bang

@@ -209,7 +209,7 @@ int Process::get_exit_status() noexcept
     if (data.id <= 0)
         return -1;
 
-    int exit_status;
+    int exit_status = -1;
     waitpid(data.id, &exit_status, 0);
     {
         std::lock_guard<std::mutex> lock(close_mutex);

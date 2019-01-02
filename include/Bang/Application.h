@@ -3,6 +3,7 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/Path.h"
+#include "Bang/ProjectManager.h"
 #include "Bang/String.h"
 
 namespace Bang
@@ -44,6 +45,7 @@ public:
     SystemUtils *GetSystemUtils() const;
     AudioManager *GetAudioManager() const;
     WindowManager *GetWindowManager() const;
+    ProjectManager *GetProjectManager() const;
     MetaFilesManager *GetMetaFilesManager() const;
 
     static String GetMainThreadId();
@@ -65,6 +67,7 @@ protected:
     SystemUtils *m_systemUtils = nullptr;
     AudioManager *m_audioManager = nullptr;
     WindowManager *m_windowManager = nullptr;
+    ProjectManager *m_projectManager = nullptr;
     MetaFilesManager *m_metaFilesManager = nullptr;
 
     String m_mainThreadId = "";
@@ -83,6 +86,7 @@ private:
     virtual Paths *CreatePaths() const;
     virtual Settings *CreateSettings() const;
     virtual Assets *CreateAssets() const;
+    virtual ProjectManager *CreateProjectManager() const;
 
     friend class Window;
 };

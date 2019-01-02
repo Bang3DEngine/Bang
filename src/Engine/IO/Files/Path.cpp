@@ -88,8 +88,11 @@ bool Path::IsFile() const
 
 #ifdef __linux__
     struct stat path_stat;
-    stat(GetAbsolute().ToCString(), &path_stat);
-    return S_ISREG(path_stat.st_mode);
+    if (stat(GetAbsolute().ToCString(), &path_stat) == 0)
+    {
+        return S_ISREG(path_stat.st_mode);
+    }
+    return false;
 #elif _WIN32
     return PathFileExists(GetAbsolute().ToCString()) &&
            !PathIsDirectory(GetAbsolute().ToCString());
@@ -104,7 +107,7 @@ bool Path::Exists() const
     }
 
 #ifdef __linux__
-    return access(GetAbsolute().ToCString(), F_OK) != -1;
+    return (access(GetAbsolute().ToCString(), F_OK) == 0);
 #elif _WIN32
     return PathFileExists(GetAbsolute().ToCString());
 #endif

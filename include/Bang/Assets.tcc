@@ -19,20 +19,14 @@ AH<AssetClass> Assets::Load(const Path &filepath)
     AH<AssetClass> resultAH;
     {
         AH<Asset> assetAH = assets->Load_(creator, filepath);
-        if (assetAH)
+        resultAH.Set(SCAST<AssetClass *>(assetAH.Get()));
+        if (resultAH && !Assets::IsEmbeddedAsset(filepath))
         {
-            if (AssetClass *asset = DCAST<AssetClass *>(assetAH.Get()))
-            {
-                resultAH = AH<AssetClass>(asset);
-            }
-            else if (!Assets::IsEmbeddedAsset(filepath))
-            {
-                ASSERT_MSG(asset,
-                           "Asset " << filepath
-                                    << " being loaded "
-                                       "as two different types of assets. "
-                                       "This is forbidden");
-            }
+            ASSERT_MSG(DCAST<AssetClass *>(resultAH.Get()),
+                       "Asset " << filepath
+                                << " being loaded "
+                                   "as two different types of assets. "
+                                   "This is forbidden");
         }
     }
     return resultAH;
@@ -41,14 +35,14 @@ AH<AssetClass> Assets::Load(const Path &filepath)
 template <class AssetClass>
 AH<AssetClass> Assets::Load(const GUID &guid)
 {
-    Assets *rss = Assets::GetInstance();
+    Assets *assets = Assets::GetInstance();
     auto creator = []() -> Asset * {
         return SCAST<Asset *>(Assets::Create_<AssetClass>());
     };
 
     AH<AssetClass> resultAH;
     {
-        AH<Asset> assetAH = rss->Load_(creator, guid);
+        AH<Asset> assetAH = assets->Load_(creator, guid);
         if (assetAH)
         {
             if (AssetClass *asset = DCAST<AssetClass *>(assetAH.Get()))

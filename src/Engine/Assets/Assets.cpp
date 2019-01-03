@@ -69,8 +69,8 @@ void Assets::Import(Asset *asset)
 Array<Asset *> Assets::GetAllAssets()
 {
     Array<Asset *> result;
-    Assets *rs = Assets::GetInstance();
-    for (const auto &it : rs->m_assetsCache)
+    Assets *assets = Assets::GetInstance();
+    for (const auto &it : assets->m_assetsCache)
     {
         result.PushBack(it.second.asset);
     }
@@ -81,9 +81,9 @@ void Assets::CreateAssetMetaAndImportFile(const Asset *asset,
                                           const Path &exportFilepath)
 {
     File::Write(exportFilepath, "");
-    Path importFilePath = MetaFilesManager::GetMetaFilepath(exportFilepath);
-    asset->ExportMetaToFile(importFilePath);
-    MetaFilesManager::RegisterMetaFilepath(importFilePath);  // Once created
+    Path metaFilePath = MetaFilesManager::GetMetaFilepath(exportFilepath);
+    asset->ExportMetaToFile(metaFilePath);
+    MetaFilesManager::RegisterMetaFilepath(metaFilePath);  // Once created
 }
 
 AH<Asset> Assets::Load_(std::function<Asset *()> creator, const Path &filepath)
@@ -103,16 +103,26 @@ AH<Asset> Assets::Load_(std::function<Asset *()> creator, const Path &filepath)
     if (!Assets::IsEmbeddedAsset(filepath))
     {
         Asset *asset = GetCached_(filepath);
-        assetAH.Set(asset);  // Register as soon as possible
+        assetAH.Set(asset);
         if (!asset)
         {
+            // Create the asset
             asset = creator();
 
-            Path importFilepath = MetaFilesManager::GetMetaFilepath(filepath);
-            asset->ImportMetaFromFile(importFilepath);  // Get asset GUID
-            assetAH.Set(asset);  // Register as soon as possible
+            GUID assetGUID = MetaFilesManager::GetGUID(filepath);
+            if (!assetGUID.IsEmpty())
+            {
+                asset->SetGUID(assetGUID);
+            }
+            ASSERT(assetGUID != GUID::Empty());
 
-            Assets::Import(asset);  // Actually import all
+            MetaFilesManager::RegisterFilepathGUID(filepath, assetGUID);
+        }
+
+        if (asset)
+        {
+            assetAH.Set(asset);
+            Assets::Import(asset);  // Actually import the asset
         }
     }
     else
@@ -141,7 +151,7 @@ AH<Asset> Assets::Load_(std::function<Asset *()> creator, const GUID &guid)
     {
         if (!Assets::IsEmbeddedAsset(guid))
         {
-            Path assetPath = MetaFilesManager::GetMetaFilepath(guid);
+            const Path assetPath = MetaFilesManager::GetFilepath(guid);
             if (assetPath.IsFile())
             {
                 assetAH.Set(Load_(creator, assetPath).Get());
@@ -149,8 +159,8 @@ AH<Asset> Assets::Load_(std::function<Asset *()> creator, const GUID &guid)
         }
         else
         {
-            GUID parentGUID = guid.WithoutEmbeddedAssetGUID();
-            Path parentPath = MetaFilesManager::GetFilepath(parentGUID);
+            const GUID parentGUID = guid.WithoutEmbeddedAssetGUID();
+            const Path parentPath = MetaFilesManager::GetFilepath(parentGUID);
             if (parentPath.IsFile())
             {
                 if (AH<Asset> parentAssetAH =
@@ -203,14 +213,14 @@ void Assets::Add(Asset *asset)
     ASSERT(asset != nullptr);
     ASSERT(!guid.IsEmpty());
 
-    Assets *rs = Assets::GetInstance();
-    ASSERT(rs);
-    ASSERT(!rs->GetCached_(guid));
+    Assets *assets = Assets::GetInstance();
+    ASSERT(assets);
+    ASSERT(!assets->GetCached_(guid));
 
     AssetEntry assetEntry;
     assetEntry.asset = asset;
     assetEntry.usageCount = 0;
-    rs->m_assetsCache.Add(guid, assetEntry);
+    assets->m_assetsCache.Add(guid, assetEntry);
 }
 
 bool Assets::IsEmbeddedAsset(const GUID &guid)
@@ -225,11 +235,11 @@ bool Assets::IsEmbeddedAsset(const Path &assetPath)
 
 void Assets::Remove(const GUID &guid)
 {
-    Assets *rss = Assets::GetInstance();
-    ASSERT(rss);
+    Assets *assets = Assets::GetInstance();
+    ASSERT(assets);
 
-    auto it = rss->m_assetsCache.Find(guid);
-    ASSERT(it != rss->m_assetsCache.End());
+    auto it = assets->m_assetsCache.Find(guid);
+    ASSERT(it != assets->m_assetsCache.End());
 
     const AssetEntry &assetEntry = it->second;
     ASSERT(assetEntry.asset != nullptr);
@@ -246,11 +256,7 @@ void Assets::Remove(const GUID &guid)
         }
     }
 
-    do
-    {
-        rss->m_assetsCache.Remove(it);
-        it = rss->m_assetsCache.Find(guid);
-    } while (it != rss->m_assetsCache.End());
+    assets->m_assetsCache.Remove(it);
 
     if (asset)
     {
@@ -268,23 +274,23 @@ void Assets::RegisterAssetUsage(Asset *asset)
     const GUID &guid = asset->GetGUID();
     ASSERT(!guid.IsEmpty());
 
-    Assets *rs = Assets::GetInstance();
-    if (!rs->GetCached_(guid))
+    Assets *assets = Assets::GetInstance();
+    if (!assets->GetCached_(guid))
     {
         Assets::Add(asset);
     }
-    ++rs->m_assetsCache.Get(guid).usageCount;
+    ++assets->m_assetsCache.Get(guid).usageCount;
 }
 
 void Assets::UnRegisterAssetUsage(Asset *asset)
 {
-    if (Assets *rs = Assets::GetInstance())
+    if (Assets *assets = Assets::GetInstance())
     {
         const GUID &guid = asset->GetGUID();
         ASSERT(!guid.IsEmpty());
 
-        ASSERT(rs->GetCached_(guid));
-        uint *assetsUsage = &(rs->m_assetsCache.Get(guid).usageCount);
+        ASSERT(assets->GetCached_(guid));
+        uint *assetsUsage = &(assets->m_assetsCache.Get(guid).usageCount);
         ASSERT(*assetsUsage >= 1);
         --(*assetsUsage);
 

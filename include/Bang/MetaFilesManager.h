@@ -19,7 +19,6 @@ public:
     static void CreateMissingMetaFiles(const Path &directory);
     static void LoadMetaFilepathGUIDs(const Path &directory);
 
-    static void OnPathAdded(const Path &filepath);
     static std::pair<Path, GUID> CreateMetaFileIfMissing(const Path &filepath);
     static bool HasMetaFile(const Path &filepath);
     static bool IsMetaFile(const Path &filepath);
@@ -28,6 +27,8 @@ public:
     static GUIDManager *GetGUIDManager();
     static void RegisterMetaFilepath(const Path &metaFilepath);
     static void UnRegisterMetaFilepath(const Path &metaFilepath);
+    static void RegisterFilepathGUID(const Path &filepath, const GUID &guid);
+    static GUID RegisterFilepath(const Path &filepath);
 
     static Path GetFilepath(const GUID &guid);
     static Path GetFilepath(const Path &importFilepath);
@@ -46,6 +47,7 @@ private:
     MetaFilesManager();
     ~MetaFilesManager();
 
+    static GUID GetGUIDReadingMetaFilepath(const Path &metaFilepath);
     static String GetMetaExtension();
     static MetaFilesManager *GetInstance();
 

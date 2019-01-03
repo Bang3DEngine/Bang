@@ -503,10 +503,9 @@ Path Path::WithExtension(const String &extension) const
     return Path(GetDirectory().Append(GetName()).AppendExtension(extension));
 }
 
-bool Path::HasExtension(const String &extensions) const
+bool Path::HasExtension(const String &extension) const
 {
-    Array<String> extensionsArray = extensions.Split<Array>(' ', true);
-    return HasExtension(extensionsArray);
+    return HasExtension(Array<String>({extension}));
 }
 
 bool Path::HasExtension(const Array<String> &extensions) const

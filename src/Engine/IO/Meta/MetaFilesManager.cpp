@@ -13,6 +13,7 @@
 #include "Bang/Map.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
+#include "Bang/Paths.h"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
 
@@ -32,17 +33,10 @@ void MetaFilesManager::CreateMissingMetaFiles(const Path &directory)
     // with duplicated GUIDs.
     MetaFilesManager::LoadMetaFilepathGUIDs(directory);
 
-    Array<Path> assetFiles = directory.GetFiles(FindFlag::RECURSIVE);
-
-    USet<Path> files;
-    files.Add(assetFiles.Begin(), assetFiles.End());
-
+    Array<Path> files = directory.GetFiles(FindFlag::RECURSIVE);
     for (const Path &filepath : files)
     {
-        if (!IsMetaFile(filepath) && !HasMetaFile(filepath))
-        {
-            MetaFilesManager::CreateMetaFileIfMissing(filepath);
-        }
+        MetaFilesManager::CreateMetaFileIfMissing(filepath);
     }
 }
 
@@ -65,15 +59,6 @@ void MetaFilesManager::LoadMetaFilepathGUIDs(const Path &directory)
     for (const Path &metaFilepath : metaFilepaths)
     {
         RegisterMetaFilepath(metaFilepath);
-    }
-}
-
-void MetaFilesManager::OnPathAdded(const Path &filepath)
-{
-    if (!MetaFilesManager::IsMetaFile(filepath))
-    {
-        std::pair<Path, GUID> pathToGUID = CreateMetaFileIfMissing(filepath);
-        RegisterMetaFilepath(MetaFilesManager::GetMetaFilepath(filepath));
     }
 }
 
@@ -104,7 +89,18 @@ bool MetaFilesManager::HasMetaFile(const Path &filepath)
 
 bool MetaFilesManager::IsMetaFile(const Path &filepath)
 {
-    return filepath.IsHiddenFile() && filepath.HasExtension(GetMetaExtension());
+    if (filepath.IsHiddenFile())
+    {
+        const Array<String> extensions = filepath.GetExtensions();
+        for (const String &extension : extensions)
+        {
+            if (extension.BeginsWith(GetMetaExtension()))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void MetaFilesManager::DuplicateMetaFile(const Path &filepath,
@@ -130,26 +126,21 @@ GUIDManager *MetaFilesManager::GetGUIDManager()
 
 void MetaFilesManager::RegisterMetaFilepath(const Path &metaFilepath)
 {
-    if (IsMetaFile(metaFilepath))
+    if (MetaFilesManager::IsMetaFile(metaFilepath))
     {
         MetaNode metaNode;
         metaNode.Import(metaFilepath);
 
         Path filepath = GetFilepath(metaFilepath);
-        GUID guid = metaNode.Get<GUID>("GUID");
-        if (!guid.IsEmpty())
+        if (!filepath.IsFile())
         {
-            MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-            // if (mfm->m_GUIDToFilepath.ContainsKey(guid) &&
-            //     mfm->m_GUIDToFilepath.Get(guid) != filepath)
-            // {
-            //     Debug_Error("Found conflicting GUID: " << guid <<
-            //                 "(Files '" << filepath << "' and '" <<
-            //                 mfm->m_GUIDToFilepath.Get(guid) << "'");
-            // }
+            filepath = filepath.WithHidden(true);
+        }
 
-            mfm->m_GUIDToFilepath.Add(guid, filepath);
-            mfm->m_filepathToGUID.Add(filepath, guid);
+        if (filepath.IsFile())
+        {
+            GUID guid = metaNode.Get<GUID>("GUID");
+            RegisterFilepathGUID(filepath, guid);
         }
     }
 }
@@ -162,12 +153,80 @@ void MetaFilesManager::UnRegisterMetaFilepath(const Path &metaFilepath)
     mfm->m_filepathToGUID.Remove(filepath);
 }
 
+void MetaFilesManager::RegisterFilepathGUID(const Path &filepath,
+                                            const GUID &guid)
+{
+    MetaFilesManager *mfm = MetaFilesManager::GetInstance();
+
+    auto it = mfm->m_GUIDToFilepath.Find(guid);
+    if (it != mfm->m_GUIDToFilepath.End())
+    {
+        const Path &foundFilepath = it->second;
+        if (foundFilepath != filepath)
+        {
+            Debug_Error(
+                "Found conflicting GUID: " << guid << "(Files '" << filepath
+                                           << "' and '"
+                                           << mfm->m_GUIDToFilepath.Get(guid)
+                                           << "'");
+        }
+    }
+    else
+    {
+        if (!guid.IsEmpty() && !filepath.IsEmpty() &&
+            !MetaFilesManager::IsMetaFile(filepath))
+        {
+            mfm->m_GUIDToFilepath.Add(guid, filepath);
+            mfm->m_filepathToGUID.Add(filepath, guid);
+        }
+    }
+}
+
+GUID MetaFilesManager::RegisterFilepath(const Path &filepath)
+{
+    GUID guid = GUID::Empty();
+    if (!MetaFilesManager::IsMetaFile(filepath))
+    {
+        const bool notRegisteredYet =
+            (MetaFilesManager::GetGUID(filepath) == GUID::Empty());
+
+        if (notRegisteredYet)
+        {
+            if (!Assets::IsEmbeddedAsset(filepath))
+            {
+                if (filepath.BeginsWith(Paths::GetProjectAssetsDir()))
+                {
+                    auto pathGUID =
+                        MetaFilesManager::CreateMetaFileIfMissing(filepath);
+                    guid = pathGUID.second;
+                }
+                else
+                {
+                    const Path metaFilepath =
+                        MetaFilesManager::GetMetaFilepath(filepath);
+                    guid = GetGUIDReadingMetaFilepath(metaFilepath);
+                }
+
+                if (guid == GUID::Empty())
+                {
+                    guid = GUIDManager::GetNewGUID();
+                }
+
+                RegisterFilepathGUID(filepath, guid);
+            }
+        }
+    }
+    return guid;
+}
+
 GUID MetaFilesManager::GetGUID(const Path &filepath)
 {
     MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-    if (mfm->m_filepathToGUID.ContainsKey(filepath))
+    auto it = mfm->m_filepathToGUID.Find(filepath);
+    if (it != mfm->m_filepathToGUID.End())
     {
-        return mfm->m_filepathToGUID.Get(filepath);
+        const GUID &guid = it->second;
+        return guid;
     }
     else
     {
@@ -179,11 +238,9 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
             }
 
             Path metaFilepath = GetMetaFilepath(filepath);
-            if (metaFilepath.IsFile())
+            GUID guid = GetGUIDReadingMetaFilepath(metaFilepath);
+            if (!guid.IsEmpty())
             {
-                MetaNode metaNode;
-                metaNode.Import(metaFilepath);
-                GUID guid = metaNode.Get<GUID>("GUID");
                 mfm->m_filepathToGUID.Add(filepath, guid);
                 return guid;
             }
@@ -213,10 +270,11 @@ GUID MetaFilesManager::GetGUID(const Path &filepath)
 Path MetaFilesManager::GetFilepath(const GUID &guid)
 {
     MetaFilesManager *mfm = MetaFilesManager::GetInstance();
-    if (mfm->m_GUIDToFilepath.ContainsKey(guid))
+    auto it = mfm->m_GUIDToFilepath.Find(guid);
+    if (it != mfm->m_GUIDToFilepath.End())
     {
-        const Path &path = mfm->m_GUIDToFilepath.Get(guid);
-        return path;
+        const Path &filepath = it->second;
+        return filepath;
     }
     else
     {
@@ -258,6 +316,18 @@ Path MetaFilesManager::GetFilepath(const Path &metaFilepath)
     }
 
     return Path(strPath);
+}
+
+GUID MetaFilesManager::GetGUIDReadingMetaFilepath(const Path &metaFilepath)
+{
+    GUID guid = GUID::Empty();
+    if (metaFilepath.IsFile() && MetaFilesManager::IsMetaFile(metaFilepath))
+    {
+        MetaNode metaNode;
+        metaNode.Import(metaFilepath);
+        guid = metaNode.Get<GUID>("GUID");
+    }
+    return guid;
 }
 
 Path MetaFilesManager::GetMetaFilepath(const Path &filepath)

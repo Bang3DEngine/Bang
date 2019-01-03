@@ -74,11 +74,10 @@ AH<Mesh> MeshFactory::GetMesh(const String &enginePathStr)
 
 AH<Mesh> MeshFactory::GetMesh(const Path &fullPath)
 {
-    AH<Mesh> meshAH;
     AH<Model> modelAH = Assets::Load<Model>(fullPath);
-    Model *model = modelAH.Get();
 
-    if (model)
+    AH<Mesh> meshAH;
+    if (Model *model = modelAH.Get())
     {
         MeshFactory *mf = MeshFactory::GetActive();
         mf->m_modelCache.Add(modelAH);

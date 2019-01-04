@@ -87,6 +87,11 @@ public:
     bool HasExtension(const String &extension) const;
     bool HasExtension(const Array<String> &extensions) const;
 
+    static std::size_t RFindSeparator(const Path &path);
+    static bool IsSeparator(char c);
+    static String GetSeparatorString();
+    static char GetSeparator();
+
     explicit operator String() const;
     bool operator!=(const Path &rhs) const;
     bool operator==(const Path &rhs) const;

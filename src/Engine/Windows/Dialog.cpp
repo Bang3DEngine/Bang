@@ -194,10 +194,10 @@ void Dialog::CreateSaveFilePathSceneInto(Scene *scene,
 
     UIButton *saveButton = botLeftButton;
     saveButton->GetText()->SetContent("Save");
-    saveButton->AddClickedCallback([fileList, botInputText]() {
+    saveButton->AddClickedCallback([fileList, botInputText, extension]() {
         Path path = fileList->GetCurrentPath()
                         .Append(botInputText->GetText()->GetContent())
-                        .AppendExtension(Extensions::GetSceneExtension());
+                        .AppendExtension(extension);
         AcceptDialogPath(path);
     });
 

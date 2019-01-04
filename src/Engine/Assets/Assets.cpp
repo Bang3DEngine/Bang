@@ -110,11 +110,12 @@ AH<Asset> Assets::Load_(std::function<Asset *()> creator, const Path &filepath)
             asset = creator();
 
             GUID assetGUID = MetaFilesManager::GetGUID(filepath);
-            if (!assetGUID.IsEmpty())
+            if (assetGUID.IsEmpty())
             {
-                asset->SetGUID(assetGUID);
+                assetGUID = GUIDManager::GetNewGUID();
             }
             ASSERT(assetGUID != GUID::Empty());
+            asset->SetGUID(assetGUID);
 
             MetaFilesManager::RegisterFilepathGUID(filepath, assetGUID);
         }

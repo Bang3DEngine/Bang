@@ -9,14 +9,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-constexpr char Separator[] = "/";
-constexpr char SeparatorC = '/';
 #elif _WIN32
 #include <windows.h>
 #include "Bang/WinUndef.h"
 #include "Shlwapi.h"
-constexpr char Separator[] = "\\";
-constexpr char SeparatorC = '\\';
 #endif
 
 #include "Bang/Array.h"
@@ -48,13 +44,12 @@ void Path::SetPath(const String &path)
 {
     m_absolutePath = path;
     if (!m_absolutePath.IsEmpty() &&
-        m_absolutePath.At(SCAST<int>(m_absolutePath.Size()) - 1) == SeparatorC)
+        Path::IsSeparator(GetAbsolute().At(GetAbsolute().Size() - 1)))
     {
-        m_absolutePath.Remove(SCAST<int>(m_absolutePath.Size()) - 1,
-                              SCAST<int>(m_absolutePath.Size()));
+        m_absolutePath.Remove(GetAbsolute().Size() - 1, GetAbsolute().Size());
     }
 
-    if (m_absolutePath.BeginsWith("./"))
+    if (GetAbsolute().BeginsWith("./"))
     {
         m_absolutePath.Remove(0, 1);
     }
@@ -292,7 +287,7 @@ bool Path::IsAbsolute() const
 {
 #ifdef __linux__
 
-    return GetAbsolute().BeginsWith(Separator);
+    return (GetAbsolute().Size() >= 1) && Path::IsSeparator(GetAbsolute()[0]);
 
 #elif _WIN32
 
@@ -312,7 +307,7 @@ String Path::GetNameExt() const
     }
 
     String filename = GetAbsolute();
-    const size_t lastSlash = GetAbsolute().RFind(SeparatorC);
+    const size_t lastSlash = Path::RFindSeparator(*this);
     if (lastSlash != String::npos)
     {
         filename = GetAbsolute().SubString(lastSlash + 1);
@@ -391,7 +386,7 @@ Path Path::GetDirectory() const
         return Path::Empty();
     }
 
-    const size_t lastSlash = GetAbsolute().RFind(SeparatorC);
+    const size_t lastSlash = Path::RFindSeparator(*this);
     if (lastSlash != String::npos)
     {
         return Path(GetAbsolute().SubString(0, lastSlash - 1));
@@ -439,18 +434,19 @@ bool Path::BeginsWith(const String &path) const
     return GetAbsolute().BeginsWith(path);
 }
 
-Path Path::Append(const Path &pathAHS) const
+Path Path::Append(const Path &pathRHS) const
 {
-    String str = pathAHS.GetAbsolute();
-    if (str.BeginsWith("." + String(Separator)))
+    String pathStrRHS = pathRHS.GetAbsolute();
+    if (pathStrRHS.BeginsWith("." + GetSeparatorString()))
     {
-        str.Remove(0, 1);
+        pathStrRHS.Remove(0, 1);
     }
-    while (str.BeginsWith(Separator))
+
+    while (pathStrRHS.Size() >= 1 && Path::IsSeparator(pathStrRHS[0]))
     {
-        str.Remove(0, 1);
+        pathStrRHS.Remove(0, 1);
     }
-    return this->AppendRaw(Separator + str);
+    return this->AppendRaw(GetSeparatorString() + pathStrRHS);
 }
 
 Path Path::Append(const String &str) const
@@ -511,6 +507,44 @@ bool Path::HasExtension(const String &extension) const
 bool Path::HasExtension(const Array<String> &extensions) const
 {
     return Extensions::Equals(GetExtension(), extensions);
+}
+
+std::size_t Path::RFindSeparator(const Path &path)
+{
+    size_t lastSlash = String::npos;
+    for (size_t i = path.GetAbsolute().Size() - 1; true; --i)
+    {
+        if (Path::IsSeparator(path.GetAbsolute()[i]))
+        {
+            lastSlash = i;
+            break;
+        }
+
+        if (i == 0)
+        {
+            break;
+        }
+    }
+    return lastSlash;
+}
+
+bool Path::IsSeparator(char c)
+{
+    return (c == '/') || (c == '\\');
+}
+
+String Path::GetSeparatorString()
+{
+    return String(GetSeparator());
+}
+
+char Path::GetSeparator()
+{
+#ifdef __linux__
+    return '/';
+#elif _WIN32
+    return '\\';
+#endif
 }
 
 Path::operator String() const

@@ -68,6 +68,9 @@ public:
 
     static Color FromVector3(const Vector3 &v);
     static Color FromVector4(const Vector4 &v);
+
+    float &operator[](std::size_t i);
+    const float &operator[](std::size_t i) const;
 };
 
 Color operator+(float m, const Color &v);

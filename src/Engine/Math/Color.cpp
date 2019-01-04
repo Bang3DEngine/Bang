@@ -237,6 +237,16 @@ Color Color::FromVector4(const Vector4 &v)
     return Color(v.x, v.y, v.z, v.w);
 }
 
+float &Color::operator[](std::size_t i)
+{
+    return (RCAST<float *>(this))[i];
+}
+
+const float &Color::operator[](std::size_t i) const
+{
+    return (RCAST<const float *>(this))[i];
+}
+
 Color operator+(const Color &c1, const Color &c2)
 {
     return Color(c1.r + c2.r, c1.g + c2.g, c1.b + c2.b, c1.a * c2.a);

@@ -39,6 +39,7 @@
 #include "Bang/MeshRenderer.h"
 #include "Bang/Model.h"
 #include "Bang/Path.h"
+#include "Bang/Paths.h"
 #include "Bang/Quaternion.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
@@ -373,14 +374,15 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
                     sceneMaterials.Add(material);
                     meshRendererToMaterial.Add(mr, material);
 
-                    if (material->GetAlbedoTexture())
-                    {
-                        sceneTextures.Add(material->GetAlbedoTexture());
-                    }
+                    sceneTextures.Add(material->GetAlbedoTexture());
+                    sceneTextures.Add(material->GetNormalMapTexture());
+                    sceneTextures.Add(material->GetRoughnessTexture());
+                    sceneTextures.Add(material->GetMetalnessTexture());
                 }
             }
         }
     }
+    sceneTextures.Remove(nullptr);
 
     if (sceneMeshes.IsEmpty())
     {
@@ -398,6 +400,7 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
     }
 
     // Create materials
+    Array<aiTexture *> sceneAiTexturesArray;
     scene.mNumMaterials = sceneMaterialsArray.Size();
     if (scene.mNumMaterials > 0)
     {
@@ -405,9 +408,20 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
         for (uint i = 0; i < scene.mNumMaterials; ++i)
         {
             Material *material = sceneMaterialsArray[i];
-            aiMaterial *aMaterial = MaterialToAiMaterial(material);
+            aiMaterial *aMaterial;
+            Array<Path> outTexturesPaths;
+            MaterialToAiMaterial(material, &aMaterial, &outTexturesPaths);
+
             scene.mMaterials[i] = aMaterial;
         }
+    }
+
+    // Create textures
+    scene.mNumTextures = sceneAiTexturesArray.Size();
+    scene.mTextures = new aiTexture *[scene.mNumTextures];
+    for (uint i = 0; i < scene.mNumTextures; ++i)
+    {
+        scene.mTextures[i] = sceneAiTexturesArray[i];
     }
 
     // Create meshes
@@ -428,9 +442,6 @@ void ModelIO::ExportModel(const GameObject *rootGameObject,
             scene.mMeshes[i] = aMesh;
         }
     }
-
-    // scene.mNumTextures = sceneTexturesArray.Size();
-    // scene.mTextures = new aiTexture*[scene.mNumTextures];
 
     scene.mRootNode = GameObjectToAiNode(rootGameObject, sceneMeshesArray);
 
@@ -463,7 +474,7 @@ String ModelIO::GetExtensionIdFromExtension(const String &extension)
     }
     Debug_Error("Can't export mesh to extension '" << extension << "'");
 #endif
-    return 0;
+    return "";
 }
 
 aiNode *ModelIO::GameObjectToAiNode(const GameObject *gameObject,
@@ -567,23 +578,107 @@ aiMesh *ModelIO::MeshToAiMesh(const Mesh *mesh)
     return aMesh;
 }
 
-aiMaterial *ModelIO::MaterialToAiMaterial(const Material *material)
+aiTexture *ModelIO::TextureToAiTexture(const Texture2D *tex)
+{
+    aiTexture *aiTex = new aiTexture();
+    aiTex = new aiTexture();
+    aiTex->mWidth = tex->GetWidth();
+    aiTex->mHeight = tex->GetHeight();
+
+    Image texImg = tex->ToImage();
+    aiTexel *pixelData = new aiTexel[tex->GetWidth() * tex->GetHeight()];
+    for (uint y = 0; y < tex->GetHeight(); ++y)
+    {
+        for (uint x = 0; x < tex->GetWidth(); ++x)
+        {
+            aiTexel texel;
+            texel.r = 0;  // texImg.GetPixel(x, y).r * 255;
+            texel.g = texImg.GetPixel(x, y).g * 255;
+            texel.b = 0;    // texImg.GetPixel(x, y).b * 255;
+            texel.a = 255;  // texImg.GetPixel(x, y).a * 255;
+            pixelData[y * tex->GetWidth() * 4 + x * 4] = texel;
+        }
+    }
+    aiTex->pcData = pixelData;
+
+    return aiTex;
+}
+
+void ModelIO::MaterialToAiMaterial(const Material *material,
+                                   aiMaterial **outMaterial,
+                                   Array<Path> *outTexturePaths)
 {
 #ifndef FROM_TRAVIS
-    aiMaterial *aMaterial = new aiMaterial();
-    // aMaterial->mNumProperties = 1;
-    // aMaterial->mProperties = new
-    // aiMaterialProperty*[aMaterial->mNumProperties];
+    ASSERT(outMaterial);
+    ASSERT(outTexturePaths);
+    ASSERT(material);
 
-    aiColor3D diffColor = ColorToAiColor3(Color::Red());
-    aMaterial->AddProperty(&diffColor, 1, AI_MATKEY_COLOR_DIFFUSE); /*
-     aMaterial->mProperties[0] = new aiMaterialProperty();
-     aMaterial->mProperties[0]->mKey = AI_MATKEY_COLOR_DIFFUSE;
-     aMaterial->mProperties[0]->*/
-    return aMaterial;
-#else
-    return nullptr;
+    *outMaterial = new aiMaterial();
+    aiMaterial *aMaterial = *outMaterial;
+
+    // Assign material options
+    aiColor4D diffColor = ColorToAiColor4(material->GetAlbedoColor());
+    aMaterial->AddProperty(&diffColor, 1, AI_MATKEY_COLOR_DIFFUSE);
+
+    // Create textures
+    Array<String> texNames = {"albedo", "normal", "roughness", "metalness"};
+    Array<std::function<Texture2D *()>> texFuncs = {
+        [material] { return material->GetAlbedoTexture(); },
+        [material] { return material->GetNormalMapTexture(); },
+        [material] { return material->GetRoughnessTexture(); },
+        [material] { return material->GetMetalnessTexture(); }};
+    Array<aiTextureType> texAiTypes = {
+        aiTextureType_DIFFUSE,
+        aiTextureType_NORMALS,
+        aiTextureType_SHININESS,
+        aiTextureType_EMISSIVE,
+    };
+
+    for (uint i = 0; i < texNames.Size(); ++i)
+    {
+        if (Texture2D *tex = (texFuncs[i])())
+        {
+            Image texImg = tex->ToImage();
+            Path imgPath =
+                Path("_" + texNames[i] + "Texture_" +
+                     String(material->GetGUID()).Replace(" ", "") + ".png");
+            texImg.Export(imgPath);
+
+            aiString imgPathAiString = StringToAiString(imgPath.GetAbsolute());
+            aMaterial->AddProperty(&imgPathAiString,
+                                   AI_MATKEY_TEXTURE(texAiTypes[i], 0));
+        }
+    }
 #endif
+}
+
+Path BestEffortTextureFind(const Path &modelDirectory, const Path &texturePath)
+{
+    if (!texturePath.IsEmpty())
+    {
+        if (texturePath.IsFile())
+        {
+            return texturePath;
+        }
+
+        const Path findPath = modelDirectory.Append(texturePath);
+        if (findPath.IsFile())
+        {
+            return findPath;
+        }
+
+        const String texturePathNameExt = texturePath.GetNameExt();
+        const Array<Path> searchPaths =
+            modelDirectory.GetFiles(FindFlag::RECURSIVE);
+        for (const Path &searchPath : searchPaths)
+        {
+            if (searchPath.GetNameExt() == texturePathNameExt)
+            {
+                return searchPath;
+            }
+        }
+    }
+    return Path::Empty();
 }
 
 void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
@@ -606,35 +701,35 @@ void ModelIO::ImportEmbeddedMaterial(aiMaterial *aMaterial,
     *outMaterialName = materialName;
     *outMaterial = Assets::CreateEmbeddedAsset<Material>(model, materialName);
 
-    aiColor3D aAmbientColor = aiColor3D(0.0f, 0.0f, 0.0f);
     aiColor3D aDiffuseColor = aiColor3D(1.0f, 1.0f, 1.0f);
-    aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aAmbientColor);
     aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aDiffuseColor);
-
     Color albedoColor = AiColor3ToColor(aDiffuseColor);
 
     aiString aAlbedoTexturePath;
     aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aAlbedoTexturePath);
     Path albedoTexturePath(String(aAlbedoTexturePath.C_Str()));
-    albedoTexturePath = modelDirectory.Append(albedoTexturePath);
+    albedoTexturePath =
+        BestEffortTextureFind(modelDirectory, albedoTexturePath);
     AH<Texture2D> matAlbedoTexture;
     if (albedoTexturePath.IsFile())
     {
         matAlbedoTexture = Assets::Load<Texture2D>(albedoTexturePath);
     }
-    if (albedoTexturePath.HasExtension("dds"))
-    {
-        outMaterial->Get()->SetAlbedoUvMultiply(Vector2(1, -1));
-    }
 
     aiString aNormalsTexturePath;
     aMaterial->GetTexture(aiTextureType_NORMALS, 0, &aNormalsTexturePath);
     Path normalsTexturePath(String(aNormalsTexturePath.C_Str()));
-    normalsTexturePath = modelDirectory.Append(normalsTexturePath);
+    normalsTexturePath =
+        BestEffortTextureFind(modelDirectory, normalsTexturePath);
     AH<Texture2D> matNormalTexture;
     if (normalsTexturePath.IsFile())
     {
         matNormalTexture = Assets::Load<Texture2D>(normalsTexturePath);
+    }
+
+    if (albedoTexturePath.HasExtension("dds"))
+    {
+        outMaterial->Get()->SetAlbedoUvMultiply(Vector2(1, -1));
     }
     if (normalsTexturePath.HasExtension("dds"))
     {

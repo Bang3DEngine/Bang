@@ -17,6 +17,7 @@ struct aiMaterial;
 struct aiMesh;
 struct aiNode;
 struct aiScene;
+struct aiTexture;
 
 namespace Assimp
 {
@@ -88,7 +89,10 @@ private:
     static aiNode *GameObjectToAiNode(const GameObject *gameObject,
                                       const Array<Mesh *> &sceneMeshes);
     static aiMesh *MeshToAiMesh(const Mesh *mesh);
-    static aiMaterial *MaterialToAiMaterial(const Material *material);
+    static aiTexture *TextureToAiTexture(const Texture2D *texture);
+    static void MaterialToAiMaterial(const Material *material,
+                                     aiMaterial **outMaterial,
+                                     Array<Path> *outTexturePaths);
     static const aiScene *ImportScene(Assimp::Importer *importer,
                                       const Path &modelFilepath);
 

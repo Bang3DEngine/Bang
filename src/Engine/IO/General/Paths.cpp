@@ -7,16 +7,11 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
-constexpr char Separator[] = "/";
-constexpr char SeparatorC = '/';
 #elif _WIN32
-#include <Windows.h>
-
 #include <ShlObj.h>
+#include <Windows.h>
 #include <stdlib.h>
 #include "Bang/WinUndef.h"
-constexpr char Separator[] = "\\";
-constexpr char SeparatorC = '\\';
 #endif
 
 #include "Bang/Application.h"
@@ -409,7 +404,8 @@ Array<Path> Paths::GetEngineIncludeDirs()
 
 bool Paths::IsEnginePath(const Path &path)
 {
-    return path.BeginsWith(String(Paths::GetEngineDir()) + String(Separator));
+    return path.BeginsWith(String(Paths::GetEngineDir()) +
+                           String(Path::GetSeparator()));
 }
 
 void Paths::SetEngineRoot(const Path &engineRootDir)
@@ -425,7 +421,8 @@ Path Paths::GetResolvedPath(const Path &path_)
         path = Paths::GetExecutableDir().Append(path);
     }
 
-    Array<String> pathParts = path.GetAbsolute().Split<Array>(SeparatorC);
+    Array<String> pathParts =
+        path.GetAbsolute().Split<Array>(Path::GetSeparator());
     pathParts.RemoveAll(".");
 
     int skipNext = 0;
@@ -449,7 +446,8 @@ Path Paths::GetResolvedPath(const Path &path_)
             }
         }
     }
-    Path resolvedPath = Path(String::Join(resolvedPathParts, Separator));
+    Path resolvedPath =
+        Path(String::Join(resolvedPathParts, Path::GetSeparatorString()));
     return resolvedPath;
 }
 

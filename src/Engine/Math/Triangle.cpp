@@ -5,6 +5,7 @@
 #include "Bang/Matrix4.tcc"
 #include "Bang/Plane.h"
 #include "Bang/Polygon.h"
+#include "Bang/Triangle2D.h"
 #include "Bang/Vector3.h"
 
 using namespace Bang;

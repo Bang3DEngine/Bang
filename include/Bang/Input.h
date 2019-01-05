@@ -93,6 +93,7 @@ public:
     static bool GetMouseButtonDoubleClick(MouseButton mb);
 
     static bool IsMouseInsideWindow();
+    static bool IsMouseInsideContext();
 
     static float GetMouseAxisX();
     static float GetMouseAxisY();

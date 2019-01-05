@@ -677,6 +677,9 @@ Path BestEffortTextureFind(const Path &modelDirectory, const Path &texturePath)
                 return searchPath;
             }
         }
+
+        Debug_Error("Did not find texture " << texturePath << " when loading "
+                                            << modelDirectory);
     }
     return Path::Empty();
 }

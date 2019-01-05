@@ -501,6 +501,11 @@ bool Input::IsMouseInsideWindow()
     return inp->m_isMouseInside;
 }
 
+bool Input::IsMouseInsideContext()
+{
+    return Input::GetContext().rect.Contains(Input::GetMousePosition());
+}
+
 float Input::GetMouseAxisX()
 {
     AARecti contextRect = Input::GetContextRect();

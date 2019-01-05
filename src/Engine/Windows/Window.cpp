@@ -120,7 +120,7 @@ bool Window::HandleEvent(const SDL_Event &sdlEvent)
         case SDL_WINDOWEVENT:
             if (sdlEvent.window.windowID == GetSDLWindowID())
             {
-                if (!IsBlockedByChildren())
+                if (!IsBlockedByChildren() && GetCloseable())
                 {
                     switch (sdlEvent.window.event)
                     {
@@ -241,6 +241,11 @@ void Window::SetIcon(const Path &iconPath)
     SDL_FreeSurface(icon);
 }
 
+void Window::SetCloseable(bool closeable)
+{
+    m_closeable = closeable;
+}
+
 void Window::SetBordered(bool bordered)
 {
     SDL_SetWindowBordered(GetSDLWindow(), SCAST<SDL_bool>(bordered));
@@ -323,6 +328,11 @@ int Window::GetHeight() const
 bool Window::HasFocus() const
 {
     return HasFlags(SDL_WINDOW_INPUT_FOCUS);
+}
+
+bool Window::GetCloseable() const
+{
+    return m_closeable;
 }
 
 bool Window::HasFocusRecursive() const

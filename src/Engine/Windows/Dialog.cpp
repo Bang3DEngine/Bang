@@ -23,6 +23,7 @@
 #include "Bang/Key.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/Paths.h"
+#include "Bang/RectTransform.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/Stretch.h"
@@ -113,6 +114,21 @@ Path Dialog::SaveFilePath(const String &title,
     CreateSaveFilePathSceneInto(scene, extension, initDirPath, initFileName);
     Dialog::EndDialogCreation(scene);
     return Dialog::s_okPressed ? Dialog::s_resultPath : Path::Empty();
+}
+
+bool Dialog::LoadBar(const String &title,
+                     ProgressFunction progressFunction,
+                     bool canAbort)
+{
+    DialogWindow *dw = Dialog::BeginDialogCreation(
+        title, 400, (canAbort ? 150 : 80), false, true);
+    dw->SetCloseable(canAbort);
+
+    bool finished = false;
+    Scene *scene = CreateLoadBarScene(progressFunction, canAbort, &finished);
+
+    Dialog::EndDialogCreation(scene);
+    return finished;
 }
 
 DialogWindow *Dialog::BeginDialogCreation(const String &title,
@@ -443,6 +459,107 @@ void Dialog::CreateFilePathBaseSceneInto(Scene *scene,
     }
 }
 
+Scene *Dialog::CreateLoadBarScene(ProgressFunction progressFunction,
+                                  bool canAbort,
+                                  bool *finished)
+{
+    Scene *scene = GameObjectFactory::CreateUIScene();
+
+    UIVerticalLayout *vl = scene->AddComponent<UIVerticalLayout>();
+    vl->SetPaddings(10);
+
+    UILabel *msgLabel = GameObjectFactory::CreateUILabel();
+    msgLabel->GetText()->SetHorizontalAlign(HorizontalAlignment::LEFT);
+    msgLabel->GetGameObject()->SetParent(scene);
+
+    GameObject *loadBarGo = GameObjectFactory::CreateUIGameObject();
+    UILayoutElement *loadBarLE = loadBarGo->AddComponent<UILayoutElement>();
+    loadBarLE->SetFlexibleWidth(1.0f);
+    loadBarLE->SetMinHeight(30);
+    UIImageRenderer *loadBarBg = loadBarGo->AddComponent<UIImageRenderer>();
+    loadBarBg->SetTint(Color::White());
+    loadBarGo->SetParent(scene);
+
+    GameObjectFactory::AddOuterBorder(loadBarGo);
+
+    GameObject *loadBarFgGo = GameObjectFactory::CreateUIGameObject();
+    UIImageRenderer *loadBarFg = loadBarFgGo->AddComponent<UIImageRenderer>();
+    loadBarFg->SetTint(UITheme::GetSelectedColor());
+    loadBarFgGo->SetParent(loadBarGo);
+
+    UILabel *percentLabel = GameObjectFactory::CreateUILabel();
+    percentLabel->GetText()->SetTextColor(Color::Black());
+    percentLabel->GetGameObject()->SetParent(loadBarGo);
+
+    class LoadBarController : public GameObject
+    {
+    public:
+        Scene *scene = nullptr;
+        bool *finished = nullptr;
+        UILabel *msgLabel = nullptr;
+        UILabel *percentLabel = nullptr;
+        GameObject *loadBarFgGo = nullptr;
+        LoadBarInformation loadBarInfo;
+        ProgressFunction progressFunction;
+
+        void Update() override
+        {
+            GameObject::Update();
+
+            progressFunction(&loadBarInfo);
+            msgLabel->GetText()->SetContent(loadBarInfo.GetMessage());
+
+            float anchorMaxX = (loadBarInfo.GetPercent() * 2.0f - 1.0f);
+            loadBarFgGo->GetRectTransform()->SetAnchorMaxX(anchorMaxX);
+
+            float percent100 =
+                Math::Clamp(loadBarInfo.GetPercent() * 100, 0, 100);
+            percentLabel->GetText()->SetContent(
+                String::ToString(percent100, 1) + "%");
+
+            bool hasFinished =
+                (loadBarInfo.GetPercent() >= 1.0f || loadBarInfo.GetFinish());
+            if (hasFinished)
+            {
+                *finished = true;
+                Dialog::OnNeedToEndDialog();
+            }
+        }
+
+        void Abort()
+        {
+            Dialog::OnNeedToEndDialog();
+        }
+    };
+
+    LoadBarController *lbc = new LoadBarController();
+    lbc->progressFunction = progressFunction;
+    lbc->percentLabel = percentLabel;
+    lbc->loadBarFgGo = loadBarFgGo;
+    lbc->finished = finished;
+    lbc->msgLabel = msgLabel;
+    lbc->scene = scene;
+    lbc->SetParent(scene);
+
+    if (canAbort)
+    {
+        GameObject *buttonsRow = GameObjectFactory::CreateUIGameObject();
+        UIHorizontalLayout *hl = buttonsRow->AddComponent<UIHorizontalLayout>();
+        hl->SetPaddingTop(15);
+        hl->SetPaddingBot(10);
+
+        GameObjectFactory::CreateUIHSpacer(LayoutSizeType::FLEXIBLE, 9999.9f)
+            ->SetParent(buttonsRow);
+        UIButton *abortButton = GameObjectFactory::CreateUIButton("Abort");
+        abortButton->AddClickedCallback([lbc]() { lbc->Abort(); });
+        abortButton->GetGameObject()->SetParent(buttonsRow);
+
+        buttonsRow->SetParent(scene);
+    }
+
+    return scene;
+}
+
 Scene *Dialog::CreateGetStringScene(const String &msg, const String &hint)
 {
     Scene *scene = GameObjectFactory::CreateUIScene();
@@ -700,4 +817,34 @@ void Dialog::OnCancelClicked()
 void Dialog::OnNeedToEndDialog()
 {
     EndCurrentDialog();
+}
+
+void LoadBarInformation::SetPercent(float percent)
+{
+    m_percent = percent;
+}
+
+void LoadBarInformation::SetMessage(const String &msg)
+{
+    m_msg = msg;
+}
+
+void LoadBarInformation::Finish()
+{
+    m_finish = true;
+}
+
+float LoadBarInformation::GetPercent() const
+{
+    return m_percent;
+}
+
+const String &LoadBarInformation::GetMessage() const
+{
+    return m_msg;
+}
+
+bool LoadBarInformation::GetFinish() const
+{
+    return m_finish;
 }

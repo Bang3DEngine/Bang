@@ -65,6 +65,7 @@ public:
     void Minimize();
     void MoveToFront();
     void SetIcon(const Path &iconPath);
+    void SetCloseable(bool closeable);
     void SetBordered(bool bordered);
     void SetMinSize(int minSizeX, int minSizeY);
     void SetMaxSize(int maxSizeX, int maxSizeY);
@@ -78,6 +79,7 @@ public:
     int GetWidth() const;
     int GetHeight() const;
     bool HasFocus() const;
+    bool GetCloseable() const;
     bool HasFocusRecursive() const;
     bool IsBordered() const;
     String GetTitle() const;
@@ -127,7 +129,9 @@ private:
     Vector2i m_maxSize = Vector2i(4096);
     Vector2i m_prevSize = Vector2i::Zero();
     Vector2i m_newSize = Vector2i::Zero();
-    bool m_isResizable = true, m_resizableChanged = false;
+    bool m_isResizable = true;
+    bool m_closeable = true;
+    bool m_resizableChanged = false;
 
     static Window *s_activeWindow;
 

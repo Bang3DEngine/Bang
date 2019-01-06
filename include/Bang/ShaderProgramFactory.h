@@ -29,7 +29,10 @@ public:
     static ShaderProgram *GetPointLightShadowMap();
     static ShaderProgram *GetPointLightDeferredScreenPass();
     static ShaderProgram *GetDecal();
-    static ShaderProgram *GetKawaseBlur();
+    static ShaderProgram *GetKawaseBlurVec4();
+    static ShaderProgram *GetKawaseBlurVec3();
+    static ShaderProgram *GetKawaseBlurVec2();
+    static ShaderProgram *GetKawaseBlurFloat();
     static ShaderProgram *GetSeparableBlur();
     static ShaderProgram *GetSeparableBlurCubeMap();
     static ShaderProgram *GetRenderTextureToViewport();

@@ -142,7 +142,10 @@ private:
 
     Framebuffer *m_auxiliarFramebuffer = nullptr;
     Framebuffer *m_auxiliarFramebufferCM = nullptr;
-    AH<ShaderProgram> p_kawaseBlurSP;
+    AH<ShaderProgram> p_kawaseBlurVec4SP;
+    AH<ShaderProgram> p_kawaseBlurVec3SP;
+    AH<ShaderProgram> p_kawaseBlurVec2SP;
+    AH<ShaderProgram> p_kawaseBlurFloatSP;
     AH<ShaderProgram> p_separableGaussianBlurSP;
     AH<ShaderProgram> p_separableGaussianBlurCubeMapSP;
 

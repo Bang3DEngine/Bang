@@ -42,25 +42,25 @@ DirectionalLight::DirectionalLight()
 {
     SET_INSTANCE_CLASS_ID(DirectionalLight)
 
-    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
-    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
-    m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-
-    m_blurredShadowMapTexture = Assets::Create<Texture2D>();
-    m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::RGBA32F);
-    m_blurredShadowMapTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
-    m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
-
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
-                                                  GL::ColorFormat::RGBA32F);
+                                                  GL::ColorFormat::R32F);
     m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetWrapMode(GL::WrapMode::REPEAT);
     m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetFilterMode(GL::FilterMode::BILINEAR);
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::DEPTH,
                                                   GL::ColorFormat::DEPTH16);
+
+    m_blurAuxiliarTexture = Assets::Create<Texture2D>();
+    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::R32F);
+    m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
+
+    m_blurredShadowMapTexture = Assets::Create<Texture2D>();
+    m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::R32F);
+    m_blurredShadowMapTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
+    m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     SetShadowMapShaderProgram(
         ShaderProgramFactory::GetDirectionalLightShadowMap());

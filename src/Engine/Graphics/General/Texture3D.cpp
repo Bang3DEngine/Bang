@@ -173,7 +173,7 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
 
             Fill(data.Data(),
                  Vector3i(width, height, depth),
-                 GL::ColorComp::RED,
+                 GL::ColorComp::R,
                  GL::DataType::UNSIGNED_BYTE,
                  255);
         }
@@ -220,7 +220,7 @@ void Texture3D::Import(const Path &volumeTextureFilepath)
 
         Fill(dataDS.Data(),
              Vector3i(widthDS, heightDS, depthDS),
-             GL::ColorComp::RED,
+             GL::ColorComp::R,
              GL::DataType::UNSIGNED_BYTE,
              255);
     }

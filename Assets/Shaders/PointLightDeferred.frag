@@ -10,13 +10,14 @@ layout(location = 0) out vec4 B_GIn_Light;
 
 void main()
 {
-    if (B_SampleReceivesLight())
+    vec2 uv = B_FIn_AlbedoUv;
+    if (B_SampleReceivesLight(uv))
     {
-        vec3  pixelPosWorld    = B_ComputeWorldPosition();
-        vec3  pixelNormalWorld = B_SampleNormal();
-        vec3  pixelAlbedo      = B_SampleAlbedoColor().rgb;
-        float pixelRoughness   = B_SampleRoughness();
-        float pixelMetalness   = B_SampleMetalness();
+        vec3  pixelPosWorld    = B_ComputeWorldPosition(uv);
+        vec3  pixelNormalWorld = B_SampleNormal(uv);
+        vec3  pixelAlbedo      = B_SampleAlbedoColor(uv).rgb;
+        float pixelRoughness   = B_SampleRoughness(uv);
+        float pixelMetalness   = B_SampleMetalness(uv);
         vec3 lightApport =
                 GetPointLightColorApportation(B_LightPositionWorld,
                                               B_LightRange,
@@ -26,7 +27,7 @@ void main()
                                               pixelPosWorld,
                                               pixelNormalWorld,
                                               pixelAlbedo,
-                                              B_SampleReceivesShadows(),
+                                              B_SampleReceivesShadows(uv),
                                               pixelRoughness,
                                               pixelMetalness);
         B_GIn_Light = vec4(lightApport, 1);

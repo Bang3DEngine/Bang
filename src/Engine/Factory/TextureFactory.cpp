@@ -190,7 +190,7 @@ AH<Texture2D> TextureFactory::GetSimplexNoiseTexture2D(const Vector2i &size,
     tex.Get()->Fill(RCAST<Byte *>(values.Data()),
                     size.x,
                     size.y,
-                    GL::ColorComp::RED,
+                    GL::ColorComp::R,
                     GL::DataType::FLOAT);
     return tex;
 }
@@ -228,7 +228,7 @@ AH<Texture3D> TextureFactory::GetSimplexNoiseTexture3D(const Vector3i &size,
     tex.Get()->SetFormat(GL::ColorFormat::R8);
     tex.Get()->Fill(RCAST<Byte *>(values.Data()),
                     size,
-                    GL::ColorComp::RED,
+                    GL::ColorComp::R,
                     GL::DataType::FLOAT);
 
     return tex;

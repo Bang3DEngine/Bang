@@ -34,19 +34,19 @@ PointLight::PointLight() : Light()
     SET_INSTANCE_CLASS_ID(PointLight)
 
     m_shadowMapFramebuffer = new Framebuffer();
-    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
-        GL::Attachment::COLOR0, GL::ColorFormat::RGBA32F);
+    m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(GL::Attachment::COLOR0,
+                                                       GL::ColorFormat::R32F);
     m_shadowMapFramebuffer->CreateAttachmentTexCubeMap(
         GL::Attachment::DEPTH, GL::ColorFormat::DEPTH16);
 
     m_blurredShadowMapTexCM = Assets::Create<TextureCubeMap>();
-    m_blurredShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurredShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::R32F);
     m_blurredShadowMapTexCM.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
     m_blurredShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredShadowMapTexCM.Get()->CreateEmpty(1);
 
     m_blurAuxiliarShadowMapTexCM = Assets::Create<TextureCubeMap>();
-    m_blurAuxiliarShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::RGBA32F);
+    m_blurAuxiliarShadowMapTexCM.Get()->SetFormat(GL::ColorFormat::R32F);
     m_blurAuxiliarShadowMapTexCM.Get()->SetWrapMode(
         GL::WrapMode::CLAMP_TO_EDGE);
     m_blurAuxiliarShadowMapTexCM.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
@@ -185,11 +185,9 @@ void PointLight::RenderShadowMaps_(GameObject *go)
     // Blur shadow map
     if (GetShadowSoftness() > 0)
     {
-        TextureCubeMap *shadowMapTexCM =
-            m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
-                GL::Attachment::COLOR0);
         GEngine::GetInstance()->BlurTextureCM(
-            shadowMapTexCM,
+            m_shadowMapFramebuffer->GetAttachmentTexCubeMap(
+                GL::Attachment::COLOR0),
             m_blurAuxiliarShadowMapTexCM.Get(),
             m_blurredShadowMapTexCM.Get(),
             GetShadowSoftness());

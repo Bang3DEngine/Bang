@@ -98,7 +98,10 @@ void GEngine::Init()
     m_auxiliarFramebuffer = new Framebuffer();
     m_auxiliarFramebufferCM = new Framebuffer();
 
-    p_kawaseBlurSP.Set(ShaderProgramFactory::GetKawaseBlur());
+    p_kawaseBlurVec4SP.Set(ShaderProgramFactory::GetKawaseBlurVec4());
+    p_kawaseBlurVec3SP.Set(ShaderProgramFactory::GetKawaseBlurVec3());
+    p_kawaseBlurVec2SP.Set(ShaderProgramFactory::GetKawaseBlurVec2());
+    p_kawaseBlurFloatSP.Set(ShaderProgramFactory::GetKawaseBlurFloat());
     p_separableGaussianBlurSP.Set(ShaderProgramFactory::GetSeparableBlur());
     p_separableGaussianBlurCubeMapSP.Set(
         ShaderProgramFactory::GetSeparableBlurCubeMap());
@@ -584,9 +587,21 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
     auxiliarTexture->Resize(inputTexture->GetSize());
     blurredOutputTexture->Resize(inputTexture->GetSize());
 
-    ShaderProgram *blurSP =
-        (blurType == BlurType::GAUSSIAN ? p_separableGaussianBlurSP.Get()
-                                        : p_kawaseBlurSP.Get());
+    ShaderProgram *blurSP = nullptr;
+    if (blurType == BlurType::GAUSSIAN)
+    {
+        blurSP = p_separableGaussianBlurSP.Get();
+    }
+    else if (blurType == BlurType::KAWASE)
+    {
+        Array<ShaderProgram *> sps = {p_kawaseBlurFloatSP.Get(),
+                                      p_kawaseBlurVec2SP.Get(),
+                                      p_kawaseBlurVec3SP.Get(),
+                                      p_kawaseBlurVec4SP.Get()};
+        uint numComps = inputTexture->GetNumComponents();
+        blurSP = sps[numComps - 1];
+    }
+
     blurSP->Bind();
     blurSP->SetVector2("B_InputTextureSize", Vector2(inputTexture->GetSize()));
 

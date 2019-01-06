@@ -187,7 +187,7 @@ Image Texture2D::ToImage() const
         {
             const int i = (y * width + x) * numComps;
             Color pixelColor = GetColorFromByteArray(pixels, i);
-            if (GetColorComp() == GL::ColorComp::RED)
+            if (GetColorComp() == GL::ColorComp::R)
             {
                 pixelColor = Color(pixelColor.r, pixelColor.r, pixelColor.r, 1);
             }

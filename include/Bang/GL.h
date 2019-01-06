@@ -206,7 +206,8 @@ public:
 
     enum class ColorComp
     {
-        RED = GL_RED,
+        R = GL_RED,
+        RG = GL_RG,
         RGB = GL_RGB,
         RGBA = GL_RGBA,
         DEPTH = GL_DEPTH_COMPONENT,
@@ -218,7 +219,11 @@ public:
     {
         SRGB = GL_SRGB,
         SRGBA = GL_SRGB_ALPHA,
+        R16F = GL_R16F,
+        R32F = GL_R32F,
         RGBA8 = GL_RGBA8,
+        RG16F = GL_RG16F,
+        RG32F = GL_RG32F,
         RGBA16F = GL_RGBA16F,
         RGB10_A2 = GL_RGB10_A2,
         RGBA32F = GL_RGBA32F,

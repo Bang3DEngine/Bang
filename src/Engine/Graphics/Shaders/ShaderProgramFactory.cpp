@@ -90,11 +90,32 @@ ShaderProgram *ShaderProgramFactory::GetDecal()
         ShaderProgramFactory::GetEngineShadersDir().Append("Decal.frag"));
 }
 
-ShaderProgram *ShaderProgramFactory::GetKawaseBlur()
+ShaderProgram *ShaderProgramFactory::GetKawaseBlurVec4()
 {
-    return Get(
-        ShaderProgramFactory::GetScreenPassVertexShaderPath(),
-        ShaderProgramFactory::GetEngineShadersDir().Append("KawaseBlur.frag"));
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "KawaseBlurVec4.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetKawaseBlurVec3()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "KawaseBlurVec3.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetKawaseBlurVec2()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "KawaseBlurVec2.frag"));
+}
+
+ShaderProgram *ShaderProgramFactory::GetKawaseBlurFloat()
+{
+    return Get(ShaderProgramFactory::GetScreenPassVertexShaderPath(),
+               ShaderProgramFactory::GetEngineShadersDir().Append(
+                   "KawaseBlurFloat.frag"));
 }
 
 ShaderProgram *ShaderProgramFactory::GetSeparableBlur()

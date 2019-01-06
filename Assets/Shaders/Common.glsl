@@ -232,9 +232,13 @@ float B_SampleFlagsOffset(vec2 pixOffset)
 {
     return B_SampleFlags(B_GetViewportUv() + B_GetViewportStep() * pixOffset);
 }
+vec3 B_ComputeWorldPosition(vec2 uv)
+{
+    return B_ComputeWorldPosition( B_SampleDepth(uv) );
+}
 vec3 B_ComputeWorldPosition()
 {
-    return B_ComputeWorldPosition( B_SampleDepth() );
+    return B_ComputeWorldPosition( B_GetViewportUv() );
 }
 #endif
 

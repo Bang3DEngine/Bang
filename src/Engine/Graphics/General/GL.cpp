@@ -2252,6 +2252,8 @@ uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
     switch (texFormat)
     {
         case GL::ColorFormat::R8: return 1;
+        case GL::ColorFormat::R16F: return 2;
+        case GL::ColorFormat::R32F: return 4;
         case GL::ColorFormat::SRGB: return 3;
         case GL::ColorFormat::SRGBA: return 4;
         case GL::ColorFormat::RGBA8: return 4;
@@ -2262,6 +2264,8 @@ uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
         case GL::ColorFormat::DEPTH32: return 4;
         case GL::ColorFormat::DEPTH32F: return 16;
         case GL::ColorFormat::DEPTH24_STENCIL8: return 4;
+        case GL::ColorFormat::RG16F: return 4;
+        case GL::ColorFormat::RG32F: return 8;
         case GL::ColorFormat::RGB10_A2: return 4;
         case GL::ColorFormat::RGBA32F: return 16;
     }
@@ -2300,9 +2304,11 @@ uint GL::GetNumComponents(GL::ColorComp colorComp)
 {
     switch (colorComp)
     {
-        case GL::ColorComp::RED:
+        case GL::ColorComp::R:
         case GL::ColorComp::DEPTH:
         case GL::ColorComp::DEPTH_STENCIL: return 1;
+
+        case GL::ColorComp::RG: return 2;
 
         case GL::ColorComp::RGB: return 3;
         case GL::ColorComp::RGBA: return 4;
@@ -2328,6 +2334,10 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
         case GL::ColorFormat::RGBA8:
         case GL::ColorFormat::RGB10_A2: return GL::DataType::UNSIGNED_BYTE;
 
+        case GL::ColorFormat::R16F:
+        case GL::ColorFormat::R32F:
+        case GL::ColorFormat::RG16F:
+        case GL::ColorFormat::RG32F:
         case GL::ColorFormat::RGBA16F:
         case GL::ColorFormat::RGBA32F:
         case GL::ColorFormat::DEPTH24_STENCIL8:
@@ -2347,7 +2357,12 @@ GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
 {
     switch (format)
     {
-        case GL::ColorFormat::R8: return GL::ColorComp::RED;
+        case GL::ColorFormat::R8:
+        case GL::ColorFormat::R16F:
+        case GL::ColorFormat::R32F: return GL::ColorComp::R;
+
+        case GL::ColorFormat::RG16F:
+        case GL::ColorFormat::RG32F: return GL::ColorComp::RG;
 
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:

@@ -39,6 +39,10 @@ void Texture2D::OnFormatChanged()
             ImageIO::Import(GetAssetFilepath(), &img);
             Import(img);
         }
+        else
+        {
+            CreateEmpty(GetSize());
+        }
     }
 }
 

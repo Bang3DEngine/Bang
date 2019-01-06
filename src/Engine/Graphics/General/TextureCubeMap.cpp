@@ -247,6 +247,24 @@ void TextureCubeMap::OnImported(Asset *res)
     }
 }
 
+void TextureCubeMap::OnFormatChanged()
+{
+    for (GL::CubeMapDir cubeMapDir : GL::GetAllCubeMapDirs())
+    {
+        Texture2D *sideTex = GetSideTexture(cubeMapDir).Get();
+        Image img;
+        if (sideTex)
+        {
+            img = sideTex->ToImage();
+        }
+        else
+        {
+            img.Create(GetSize(), GetSize());
+        }
+        FillCubeMapDir(cubeMapDir, &img);
+    }
+}
+
 unsigned int TextureCubeMap::GetDirIndex(GL::CubeMapDir dir)
 {
     switch (dir)

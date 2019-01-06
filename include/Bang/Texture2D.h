@@ -64,6 +64,7 @@ protected:
 
     Image ToImage(GL::TextureTarget texTarget) const;
 
+    // Texture
     void OnFormatChanged() override;
 
 private:

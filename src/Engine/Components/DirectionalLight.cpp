@@ -44,7 +44,7 @@ DirectionalLight::DirectionalLight()
 
     m_shadowMapFramebuffer = new Framebuffer();
     m_shadowMapFramebuffer->CreateAttachmentTex2D(GL::Attachment::COLOR0,
-                                                  GL::ColorFormat::R32F);
+                                                  GL::ColorFormat::R16F);
     m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
         ->SetWrapMode(GL::WrapMode::REPEAT);
     m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
@@ -53,12 +53,12 @@ DirectionalLight::DirectionalLight()
                                                   GL::ColorFormat::DEPTH16);
 
     m_blurAuxiliarTexture = Assets::Create<Texture2D>();
-    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::R32F);
+    m_blurAuxiliarTexture.Get()->SetFormat(GL::ColorFormat::R16F);
     m_blurAuxiliarTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurAuxiliarTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
     m_blurredShadowMapTexture = Assets::Create<Texture2D>();
-    m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::R32F);
+    m_blurredShadowMapTexture.Get()->SetFormat(GL::ColorFormat::R16F);
     m_blurredShadowMapTexture.Get()->SetFilterMode(GL::FilterMode::BILINEAR);
     m_blurredShadowMapTexture.Get()->SetWrapMode(GL::WrapMode::CLAMP_TO_EDGE);
 
@@ -93,6 +93,16 @@ AABox DirectionalLight::GetShadowCastersAABox(
     AABox sceneAABox;
     sceneAABox.CreateFromPositions(casterPoints);
     return sceneAABox;
+}
+
+void DirectionalLight::OnShadowHighBitDepthChanged()
+{
+    GL::ColorFormat shadowFormat =
+        GetShadowHighBitDepth() ? GL::ColorFormat::R32F : GL::ColorFormat::R16F;
+    m_shadowMapFramebuffer->GetAttachmentTex2D(GL::Attachment::COLOR0)
+        ->SetFormat(shadowFormat);
+    m_blurAuxiliarTexture.Get()->SetFormat(shadowFormat);
+    m_blurredShadowMapTexture.Get()->SetFormat(shadowFormat);
 }
 
 void DirectionalLight::RenderShadowMaps_(GameObject *go)

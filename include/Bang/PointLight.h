@@ -50,6 +50,7 @@ protected:
     float GetLightZFar() const;
 
     // Light
+    void OnShadowHighBitDepthChanged() override;
     void RenderShadowMaps_(GameObject *go) override;
     Array<Matrix4> GetWorldToShadowMapMatrices() const;
     virtual void SetUniformsBeforeApplyingLight(

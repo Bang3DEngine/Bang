@@ -32,6 +32,7 @@ public:
     void SetIntensity(float intensity);
     void SetShadowBias(float shadowBias);
     void SetShadowStrength(float shadowStrength);
+    void SetShadowHighBitDepth(bool highBitDepth);
     void SetShadowMapSize(const Vector2i &shadowMapSize);
 
     const Color &GetColor() const;
@@ -40,6 +41,7 @@ public:
     bool GetCastShadows() const;
     uint GetShadowSoftness() const;
     float GetShadowStrength() const;
+    bool GetShadowHighBitDepth() const;
     float GetShadowExponentConstant() const;
     ShaderProgram *GetShadowMapShaderProgram() const;
     virtual float GetShadowMapNearDistance() const;
@@ -60,6 +62,7 @@ protected:
     void SetLightScreenPassShaderProgram(ShaderProgram *sp);
     Array<Renderer *> GetShadowCastersIn(GameObject *go) const;
     virtual void SetUniformsBeforeApplyingLight(ShaderProgram *sp) const;
+    virtual void OnShadowHighBitDepthChanged();
 
 private:
     float m_intensity = 1.0f;
@@ -69,7 +72,8 @@ private:
     bool m_castShadows = false;
     float m_shadowBias = 0.003f;
     float m_shadowStrength = 1.0f;
-    float m_shadowExponentConstant = 80.0f;
+    bool m_shadowHighBitDepth = false;
+    float m_shadowExponentConstant = 10.0f;
     Vector2i m_shadowMapSize = Vector2i(256);
 
     AH<Material> p_shadowMapMaterial;

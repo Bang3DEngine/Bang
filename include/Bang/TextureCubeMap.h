@@ -68,6 +68,9 @@ private:
     std::array<AH<Texture2D>, 6> m_sideTextures;
     uint m_size = 0;
 
+    // Texture
+    void OnFormatChanged() override;
+
     void FillCubeMapDir(GL::CubeMapDir dir, const Image *img);
     static uint GetDirIndex(GL::CubeMapDir dir);
 };

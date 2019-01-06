@@ -79,6 +79,15 @@ void Light::SetShadowStrength(float shadowStrength)
 {
     m_shadowStrength = shadowStrength;
 }
+
+void Light::SetShadowHighBitDepth(bool highBitDepth)
+{
+    if (highBitDepth != GetShadowHighBitDepth())
+    {
+        m_shadowHighBitDepth = highBitDepth;
+        OnShadowHighBitDepthChanged();
+    }
+}
 void Light::SetShadowMapSize(const Vector2i &shadowMapSize)
 {
     m_shadowMapSize = shadowMapSize;
@@ -110,6 +119,11 @@ uint Light::GetShadowSoftness() const
 float Light::GetShadowStrength() const
 {
     return m_shadowStrength;
+}
+
+bool Light::GetShadowHighBitDepth() const
+{
+    return m_shadowHighBitDepth;
 }
 
 float Light::GetShadowExponentConstant() const
@@ -191,6 +205,10 @@ void Light::SetUniformsBeforeApplyingLight(ShaderProgram *sp) const
 {
     ASSERT(GL::IsBound(sp))
     SetShadowLightCommonUniforms(sp);
+}
+
+void Light::OnShadowHighBitDepthChanged()
+{
 }
 
 void Light::SetShadowLightCommonUniforms(ShaderProgram *sp) const
@@ -281,6 +299,9 @@ void Light::Reflect()
                                    GetShadowSoftness,
                                    BANG_REFLECT_HINT_MINMAX_VALUE(0.0f, 64.0f));
 
+    BANG_REFLECT_VAR_MEMBER(
+        Light, "Cast shadows", SetCastShadows, GetCastShadows);
+
     BANG_REFLECT_VAR_MEMBER_HINTED(Light,
                                    "Shadow strength",
                                    SetShadowStrength,
@@ -293,8 +314,10 @@ void Light::Reflect()
                                    GetShadowBias,
                                    BANG_REFLECT_HINT_SLIDER(0.0f, 0.1f) +
                                        BANG_REFLECT_HINT_STEP_VALUE(0.001f));
-    BANG_REFLECT_VAR_MEMBER(
-        Light, "Cast shadows", SetCastShadows, GetCastShadows);
+    BANG_REFLECT_VAR_MEMBER(Light,
+                            "Shadow high bit depth",
+                            SetShadowHighBitDepth,
+                            GetShadowHighBitDepth);
 
     ReflectVar<uint>("Shadow Map Size",
                      [this](uint size) { SetShadowMapSize(Vector2i(size)); },

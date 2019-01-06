@@ -52,6 +52,7 @@ protected:
         const Array<Renderer *> &shadowCastersRenderers) const;
 
     // Light
+    void OnShadowHighBitDepthChanged() override;
     void RenderShadowMaps_(GameObject *go) override;
 
     void GetWorldToShadowMapMatrices(

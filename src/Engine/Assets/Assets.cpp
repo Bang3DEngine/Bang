@@ -88,22 +88,27 @@ void Assets::CreateAssetMetaAndImportFile(const Asset *asset,
 
 AH<Asset> Assets::Load_(std::function<Asset *()> creator, const Path &filepath)
 {
+    AH<Asset> assetAH;
+    if (Asset *asset = GetCached_(filepath))
+    {
+        assetAH.Set(asset);
+        return assetAH;
+    }
+
     if (m_beingDestroyed || filepath.IsEmpty())
     {
-        return AH<Asset>(nullptr);
+        return assetAH;
     }
 
     if (!Assets::IsEmbeddedAsset(filepath) && !filepath.IsFile())
     {
         Debug_Warn("Filepath '" << filepath.GetAbsolute() << "' not found");
-        return AH<Asset>(nullptr);
+        return assetAH;
     }
 
-    AH<Asset> assetAH;
     if (!Assets::IsEmbeddedAsset(filepath))
     {
         Asset *asset = GetCached_(filepath);
-        assetAH.Set(asset);
         if (!asset)
         {
             // Create the asset
@@ -118,13 +123,9 @@ AH<Asset> Assets::Load_(std::function<Asset *()> creator, const Path &filepath)
             asset->SetGUID(assetGUID);
 
             MetaFilesManager::RegisterFilepathGUID(filepath, assetGUID);
-        }
-
-        if (asset)
-        {
-            assetAH.Set(asset);
             Assets::Import(asset);  // Actually import the asset
         }
+        assetAH.Set(asset);
     }
     else
     {

@@ -202,8 +202,6 @@ void ImageIO::ImportBMP(const Path &filepath, Image *img, bool *ok)
     int h = SCAST<int>(bmpInfo->biHeight);
 
     int i = 0;
-    Debug_Peek(w);
-    Debug_Peek(h);
     img->Create(w, h);
     for (int y = 0; y < h; ++y)
     {

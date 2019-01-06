@@ -80,6 +80,7 @@ bool File::DuplicateFile(const Path &srcFilepath,
     }
 
     dst << src.rdbuf();
+    src.close();
     return true;
 }
 
@@ -271,14 +272,13 @@ String File::GetContents(const Path &filepath)
             contents += line;
             contents += "\n";
         }
-
-        ifs.close();
     }
     else
     {
         Debug_Error(
             "Can't open file '" << filepath << "': " << std::strerror(errno));
     }
+    ifs.close();
     return contents;
 }
 

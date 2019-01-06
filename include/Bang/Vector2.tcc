@@ -307,6 +307,18 @@ Vector2G<T> Vector2G<T>::Clamp2(const Vector2G<T> &v,
 }
 
 template <class T>
+T Vector2G<T>::GetMin() const
+{
+    return Math::Min(x, y);
+}
+
+template <class T>
+T Vector2G<T>::GetMax() const
+{
+    return Math::Max(x, y);
+}
+
+template <class T>
 Axis Vector2G<T>::GetAxis() const
 {
     return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL;

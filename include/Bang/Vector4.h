@@ -104,6 +104,8 @@ public:
                             const Vector4G<T> &v2,
                             Real t);
 
+    T GetMin() const;
+    T GetMax() const;
     Axis GetAxis() const;
     const T &GetAxis(Axis axis) const;
     static Vector4G<T> FromAxis(Axis axis);

@@ -80,6 +80,8 @@ public:
                             const Vector2G<T> &v2,
                             Real t);
 
+    T GetMin() const;
+    T GetMax() const;
     Axis GetAxis() const;
     const T &GetAxis(Axis axis) const;
     static Vector2G<T> FromAxis(Axis axis);

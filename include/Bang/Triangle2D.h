@@ -21,6 +21,7 @@ public:
     float GetArea() const;
     bool Contains(const Vector2 &point) const;
     Vector3 GetBarycentricCoordinates(const Vector2 &point) const;
+    Vector2 GetPoint(const Vector3 &barycentricCoordinates) const;
     const Vector2 &GetPoint(int i) const;
     const std::array<Vector2, 3> &GetPoints() const;
 

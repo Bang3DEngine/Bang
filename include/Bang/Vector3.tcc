@@ -285,6 +285,18 @@ Vector3G<T> Vector3G<T>::Clamp2(const Vector3G<T> &v,
 }
 
 template <class T>
+T Vector3G<T>::GetMin() const
+{
+    return Math::Min(x, Math::Min(y, z));
+}
+
+template <class T>
+T Vector3G<T>::GetMax() const
+{
+    return Math::Max(x, Math::Max(y, z));
+}
+
+template <class T>
 Axis Vector3G<T>::GetAxis() const
 {
     return x == 1 ? Axis::HORIZONTAL : Axis::VERTICAL;

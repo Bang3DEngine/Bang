@@ -86,6 +86,8 @@ public:
                             const Vector3G<T> &v2,
                             Real t);
 
+    T GetMax() const;
+    T GetMin() const;
     Axis GetAxis() const;
     const T &GetAxis(Axis axis) const;
     static Vector3G<T> FromAxis(Axis axis);

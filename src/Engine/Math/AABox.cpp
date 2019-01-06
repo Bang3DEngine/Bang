@@ -324,19 +324,14 @@ std::array<Quad, 6> AABox::GetQuads() const
 AABox operator*(const Matrix4 &m, const AABox &b)
 {
     Array<Vector3> points = b.GetPoints();
-    Array<Vector3> newTransformedBoxPoints = {
-        (m * Vector4(points[0], 1)).xyz(),
-        (m * Vector4(points[1], 1)).xyz(),
-        (m * Vector4(points[2], 1)).xyz(),
-        (m * Vector4(points[3], 1)).xyz(),
-        (m * Vector4(points[4], 1)).xyz(),
-        (m * Vector4(points[5], 1)).xyz(),
-        (m * Vector4(points[6], 1)).xyz(),
-        (m * Vector4(points[7], 1)).xyz()};
+    for (uint i = 0; i < 8; ++i)
+    {
+        points[i] = m.TransformedPoint(points[i]);
+    }
 
-    AABox br(newTransformedBoxPoints.Front());
-    br.CreateFromPositions(newTransformedBoxPoints);
-    return br;
+    AABox bbox;
+    bbox.CreateFromPositions(points);
+    return bbox;
 }
 
 bool operator==(const AABox &b1, const AABox &b2)

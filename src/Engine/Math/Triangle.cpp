@@ -26,12 +26,13 @@ void Triangle::SetPoint(int i, const Vector3 &point)
 
 float Triangle::GetArea() const
 {
-    float a = Vector3::Distance(GetPoint(0), GetPoint(1));
-    float b = Vector3::Distance(GetPoint(1), GetPoint(2));
-    float c = Vector3::Distance(GetPoint(2), GetPoint(0));
-    float s = (a + b + c) / 2;
-    float area = Math::Sqrt(s * (s - a) * (s - b) * (s - c));
-    return area;
+    const Vector3 &p0 = GetPoint(0);
+    const Vector3 &p1 = GetPoint(1);
+    const Vector3 &p2 = GetPoint(2);
+    const Vector3 p01 = (p1 - p0);
+    const Vector3 p02 = (p2 - p0);
+    const Vector3 cross = Vector3::Cross(p01, p02);
+    return cross.Length() / 2.0f;
 }
 
 Plane Triangle::GetPlane() const
@@ -52,8 +53,19 @@ Vector3 Triangle::GetBarycentricCoordinates(const Vector3 &point) const
     Triangle tri1(projPoint, GetPoint(0), GetPoint(2));
     Triangle tri2(projPoint, GetPoint(0), GetPoint(1));
     float area = GetArea();
-    return Vector3(
-        tri0.GetArea() / area, tri1.GetArea() / area, tri2.GetArea() / area);
+
+    Vector3 baryCoords =
+        Vector3(tri0.GetArea() / area, tri1.GetArea() / area, 0.0f);
+    baryCoords.z = (1.0f - baryCoords.x - baryCoords.y);
+    return baryCoords;
+}
+
+Vector3 Triangle::GetPoint(const Vector3 &barycentricCoordinates) const
+{
+    Vector3 point = GetPoint(0) * barycentricCoordinates[0] +
+                    GetPoint(1) * barycentricCoordinates[1] +
+                    GetPoint(2) * barycentricCoordinates[2];
+    return point;
 }
 
 const Vector3 &Triangle::GetPoint(int i) const

@@ -889,9 +889,9 @@ AARect GameObject::GetBoundingViewportRect(Camera *cam,
     return cam->GetViewportBoundingAARectNDC(bbox);
 }
 
-AABox GameObject::GetLocalAABBox(bool includeChildren) const
+AABox GameObject::GetAABBoxWorld(bool includeChildren) const
 {
-    AABox aabBox = AABox::Empty();
+    AABox worldAABBox = AABox::Empty();
     if (IsEnabledRecursively() && IsVisibleRecursively())
     {
         Array<Renderer *> rends = GetComponents<Renderer>();
@@ -906,8 +906,10 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
                 if (rp == RenderPass::SCENE_OPAQUE ||
                     rp == RenderPass::SCENE_TRANSPARENT)
                 {
-                    const AABox rendAABox = rend->GetAABBox();
-                    aabBox = AABox::Union(aabBox, rendAABox);
+                    const AABox rendAABBox = rend->GetAABBox();
+                    AABox rendWorldAABox =
+                        (GetTransform()->GetLocalToWorldMatrix() * rendAABBox);
+                    worldAABBox = AABox::Union(worldAABBox, rendWorldAABox);
                 }
             }
         }
@@ -916,47 +918,26 @@ AABox GameObject::GetLocalAABBox(bool includeChildren) const
         {
             for (GameObject *child : GetChildren())
             {
-                AABox aabBoxChild = child->GetLocalAABBox(true);
-                if (aabBoxChild != AABox::Empty())
+                AABox worldAABBoxChild = child->GetAABBoxWorld(true);
+                if (worldAABBoxChild != AABox::Empty())
                 {
-                    Matrix4 mat;
-                    const Transform *childT = child->GetTransform();
-                    if (childT)
-                    {
-                        mat = childT->GetLocalToParentMatrix();
-                    }
-                    aabBoxChild = mat * aabBoxChild;
-                    aabBox = AABox::Union(aabBox, aabBoxChild);
+                    worldAABBox = AABox::Union(worldAABBox, worldAABBoxChild);
                 }
             }
         }
     }
-    return aabBox;
+    return worldAABBox;
 }
 
-AABox GameObject::GetAABBoxWorld(bool includeChildren) const
+Sphere GameObject::GetBoundingSphereWorld(bool includeChildren) const
 {
-    AABox b = GetLocalAABBox(includeChildren);
-    if (b != AABox::Empty())
+    AABox aaBBoxWorld = GetAABBoxWorld(includeChildren);
+    Sphere bSphereWorld;
+    if (aaBBoxWorld != AABox::Empty())
     {
-        Matrix4 mat = Matrix4::Identity();
-        if (GetTransform())
-        {
-            mat = GetTransform()->GetLocalToWorldMatrix();
-        }
-        b = mat * b;
+        bSphereWorld = Sphere::FromBox(aaBBoxWorld);
     }
-    return b;
-}
-
-Sphere GameObject::GetLocalBoundingSphere(bool includeChildren) const
-{
-    return Sphere::FromBox(GetLocalAABBox(includeChildren));
-}
-
-Sphere GameObject::GetBoundingSphere(bool includeChildren) const
-{
-    return Sphere::FromBox(GetAABBoxWorld(includeChildren));
+    return bSphereWorld;
 }
 
 void GameObject::PropagateToChildren(std::function<void(GameObject *)> func)

@@ -183,10 +183,8 @@ public:
     bool IsDontDestroyOnLoad() const;
     AARect GetBoundingViewportRect(Camera *cam,
                                    bool includeChildren = true) const;
-    AABox GetLocalAABBox(bool includeChildren = true) const;
     AABox GetAABBoxWorld(bool includeChildren = true) const;
-    Sphere GetLocalBoundingSphere(bool includeChildren = true) const;
-    Sphere GetBoundingSphere(bool includeChildren = true) const;
+    Sphere GetBoundingSphereWorld(bool includeChildren = true) const;
 
     // Helper propagate functions
     template <class TListener,

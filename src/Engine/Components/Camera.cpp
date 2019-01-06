@@ -159,7 +159,6 @@ void Camera::SetRenderSize(const Vector2i &renderSize)
         GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
         GetGBuffer()->Bind();
         GetGBuffer()->SetAllDrawBuffers();
-        GL::ClearColorStencilDepthBuffers();
         GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
     }
 }

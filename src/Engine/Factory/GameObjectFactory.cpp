@@ -664,6 +664,16 @@ Camera *GameObjectFactory::CreateUICameraInto(GameObject *go)
     Camera *cam = go->AddComponent<Camera>();
     cam->SetGammaCorrection(1.0f);
     cam->SetClearColor(Color::LightGray());
+    cam->SetHDR(false);
+    cam->RemoveRenderPass(RenderPass::SCENE_OPAQUE);
+    cam->RemoveRenderPass(RenderPass::SCENE_DECALS);
+    cam->RemoveRenderPass(RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
+    cam->RemoveRenderPass(RenderPass::SCENE_AFTER_ADDING_LIGHTS);
+    cam->RemoveRenderPass(RenderPass::SCENE_TRANSPARENT);
+    cam->RemoveRenderPass(RenderPass::OVERLAY);
+    cam->RemoveRenderPass(RenderPass::OVERLAY_POSTPROCESS);
+    cam->SetRenderFlags(RenderFlag::CLEAR_COLOR |
+                        RenderFlag::CLEAR_DEPTH_STENCIL);
     return cam;
 }
 

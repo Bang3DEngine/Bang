@@ -17,10 +17,10 @@ enum class RenderFlag : uint64_t
     RENDER_SHADOW_MAPS = (1 << 6),
     RENDER_REFLECTION_PROBES = (1 << 7),
     DEFAULT = SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_COLOR) |
-              SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_NORMALS) |
-              SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_ALBEDO) |
+              // SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_NORMALS) |
+              // SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_ALBEDO) |
               SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_LIGHT) |
-              SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_MISC) |
+              // SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_MISC) |
               SCAST<FlagsPrimitiveType>(RenderFlag::CLEAR_DEPTH_STENCIL) |
               SCAST<FlagsPrimitiveType>(RenderFlag::RENDER_SHADOW_MAPS) |
               SCAST<FlagsPrimitiveType>(RenderFlag::RENDER_REFLECTION_PROBES)

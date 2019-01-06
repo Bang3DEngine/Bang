@@ -38,7 +38,6 @@ class ICloneable;
 
 using namespace Bang;
 
-#include "Bang/Input.h"
 DirectionalLight::DirectionalLight()
 {
     SET_INSTANCE_CLASS_ID(DirectionalLight)

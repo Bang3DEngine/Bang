@@ -324,32 +324,35 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
 {
     auto ClearNeededBuffersForTheFirstTime = [this](GBuffer *gbuffer,
                                                     Camera *camera) {
-        RenderFlags renderFlags = camera->GetRenderFlags();
-        SetDrawBuffersToClearFromFlags(gbuffer, renderFlags);
-        Array<GL::Attachment> currentDrawAttachments =
-            gbuffer->GetCurrentDrawAttachments();
-        currentDrawAttachments.Remove(GBuffer::AttColor);
 
-        if (currentDrawAttachments.Size() > 0)
+        // Clear all except color
+        RenderFlags renderFlags = camera->GetRenderFlags();
         {
-            gbuffer->SetDrawBuffers(currentDrawAttachments);
-            GL::ClearColorBuffer(Color::Zero());  // Clear all except color
+            SetDrawBuffersToClearFromFlags(gbuffer, renderFlags);
+            Array<GL::Attachment> currentDrawAttachments =
+                gbuffer->GetCurrentDrawAttachments();
+            currentDrawAttachments.Remove(GBuffer::AttColor);
+            if (currentDrawAttachments.Size() > 0)
+            {
+                gbuffer->SetDrawBuffers(currentDrawAttachments);
+                GL::ClearColorBuffer(Color::Zero());
+            }
         }
 
+        // Clear color (with skybox, or with clear color)
         if (camera->GetClearMode() == CameraClearMode::SKY_BOX)
         {
             GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
             GL::Push(GL::BindTarget::SHADER_PROGRAM);
 
             gbuffer->SetColorDrawBuffer();
-            GL::ClearColorBuffer();
             m_renderSkySP.Get()->Bind();
             gbuffer->ApplyPass(m_renderSkySP.Get(), false);
 
             GL::Pop(GL::BindTarget::SHADER_PROGRAM);
             GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
         }
-        else  // COLOR
+        else
         {
             if (renderFlags.IsOn(RenderFlag::CLEAR_COLOR))
             {
@@ -398,13 +401,14 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
         GL::SetDepthMask(true);
         GL::SetDepthFunc(GL::Function::LEQUAL);
 
-        // Render scene pass
+        // Render scene opaque pass, and mark stencil to apply lights
         if (camera->MustRenderPass(RenderPass::SCENE_OPAQUE))
         {
             gbuffer->SetAllDrawBuffers();
             RenderWithPassAndMarkStencilForLights(go, RenderPass::SCENE_OPAQUE);
         }
 
+        // Render the scene decals
         if (camera->MustRenderPass(RenderPass::SCENE_DECALS))
         {
             GL::Push(GL::Pushable::STENCIL_STATES);
@@ -423,6 +427,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             GL::Pop(GL::Pushable::STENCIL_STATES);
         }
 
+        // Apply deferred lights
         if (camera->MustRenderPass(RenderPass::SCENE_OPAQUE))
         {
             gbuffer->SetAllDrawBuffers();
@@ -444,6 +449,7 @@ void GEngine::RenderToGBuffer(GameObject *go, Camera *camera)
             RenderWithPass(go, RenderPass::SCENE_BEFORE_ADDING_LIGHTS);
         }
 
+        // Add lights
         gbuffer->SetColorDrawBuffer();
         GL::Enable(GL::Enablable::BLEND);
         GL::BlendFunc(GL::BlendFactor::ONE, GL::BlendFactor::ONE);

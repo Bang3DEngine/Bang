@@ -72,13 +72,13 @@ private:
     friend class Assets;
 };
 
-#define ASSET_ABSTRACT(CLASSNAME) \
-    SERIALIZABLE(CLASSNAME)       \
+#define ASSET_ABSTRACT(CLASSNAME)    \
+    SERIALIZABLE_ABSTRACT(CLASSNAME) \
     friend class Assets;
 
-#define ASSET(CLASSNAME)      \
-    ASSET_ABSTRACT(CLASSNAME) \
-    ICLONEABLE(CLASSNAME)
+#define ASSET(CLASSNAME)    \
+    SERIALIZABLE(CLASSNAME) \
+    friend class Assets;
 }
 
 #endif  // ASSET_H

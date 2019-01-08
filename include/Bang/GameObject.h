@@ -39,7 +39,6 @@ class Transform;
 
 #define GAMEOBJECT_NO_FRIEND(ClassName) \
 public:                                 \
-    ICLONEABLE(ClassName)               \
     SERIALIZABLE(ClassName)
 
 #define GAMEOBJECT(ClassName)       \

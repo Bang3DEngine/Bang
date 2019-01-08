@@ -5,8 +5,8 @@
 
 namespace Bang
 {
-#define OBJECT(CLASS) SET_CLASS_ID(CLASS) OBJECT_WITHOUT_CLASS_ID(CLASS)
-#define OBJECT_WITHOUT_CLASS_ID(CLASS) friend class Bang::ClassDB;
+#define OBJECT(CLASS) SET_CLASS_ID(CLASS) OBJECT_ABSTRACT(CLASS)
+#define OBJECT_ABSTRACT(CLASS) friend class Bang::ClassDB;
 }
 
 #endif  // OBJECTMACROS_H

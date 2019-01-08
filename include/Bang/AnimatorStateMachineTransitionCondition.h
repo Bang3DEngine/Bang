@@ -19,7 +19,7 @@ class AnimatorStateMachineTransitionCondition
     : public Serializable,
       public EventEmitterIEventsDestroyWithCheck
 {
-    SERIALIZABLE(AnimatorStateMachineConnectionTransitionCondition)
+    SERIALIZABLE(AnimatorStateMachineTransitionCondition)
 
 public:
     enum class Comparator

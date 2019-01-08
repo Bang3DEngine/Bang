@@ -28,7 +28,7 @@ class AnimatorStateMachineTransition
     : public Serializable,
       public EventEmitterIEventsDestroyWithCheck
 {
-    SERIALIZABLE(AnimatorStateMachineConnection)
+    SERIALIZABLE(AnimatorStateMachineTransition)
 
 public:
     AnimatorStateMachineTransition();

@@ -28,7 +28,6 @@ class Component : public Object,
 {
     OBJECT(Component)
     SERIALIZABLE(Component)
-    ICLONEABLE(Component)
 
 public:
     static void Destroy(Component *component);

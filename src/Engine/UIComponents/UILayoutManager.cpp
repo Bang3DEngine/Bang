@@ -292,15 +292,15 @@ void UILayoutManager::OnDestroyed(EventEmitter<IEventsDestroy> *object)
         {
             auto it = m_iLayoutElementsPerGameObject.Find(go);
             ASSERT(it != m_iLayoutElementsPerGameObject.End());
-            m_iLayoutElementsPerGameObject.Remove(it);
             delete it->second;
+            m_iLayoutElementsPerGameObject.Remove(it);
         }
 
         {
             auto it = m_iLayoutControllersPerGameObject.Find(go);
             ASSERT(it != m_iLayoutControllersPerGameObject.End());
-            m_iLayoutControllersPerGameObject.Remove(it);
             delete it->second;
+            m_iLayoutControllersPerGameObject.Remove(it);
         }
     }
 }

@@ -11,7 +11,6 @@
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"
@@ -380,7 +379,7 @@ const Color &UITextRenderer::GetTextColor() const
     return GetActiveMaterial()->GetAlbedoColor();
 }
 
-void UITextRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
+void UITextRenderer::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     UIRenderer::CloneInto(clone, cloneGUID);
 

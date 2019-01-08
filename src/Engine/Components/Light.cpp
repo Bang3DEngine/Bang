@@ -10,7 +10,6 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

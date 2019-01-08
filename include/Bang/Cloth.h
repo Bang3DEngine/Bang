@@ -56,8 +56,8 @@ public:
     void SetUniformsOnBind(ShaderProgram *sp) override;
     AABox GetAABBox() const override;
 
-    // ICloneable
-    void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     void Reflect() override;

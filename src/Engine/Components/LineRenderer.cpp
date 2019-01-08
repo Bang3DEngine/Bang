@@ -7,7 +7,6 @@
 #include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/GL.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
@@ -110,7 +109,7 @@ void LineRenderer::Bind()
     }
 }
 
-void LineRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
+void LineRenderer::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Renderer::CloneInto(clone, cloneGUID);
     LineRenderer *lr = SCAST<LineRenderer *>(clone);

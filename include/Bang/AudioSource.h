@@ -12,7 +12,7 @@
 namespace Bang
 {
 class AudioClip;
-class ICloneable;
+class Serializable;
 
 class AudioSource : public Component, public ALAudioSource
 {

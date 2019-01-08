@@ -72,7 +72,6 @@
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Geometry.h"
 #include "Bang/HideFlags.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsComponent.h"
 #include "Bang/IEventsDestroy.h"

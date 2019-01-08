@@ -9,7 +9,6 @@
 #include "Bang/Asset.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
 #include "Bang/Matrix4.tcc"
@@ -162,8 +161,8 @@ public:
     UMap<Mesh::VertexId, Array<Mesh::TriangleId>> GetVertexIdsToTriangleIds()
         const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Asset
     void Import(const Path &meshFilepath) override;

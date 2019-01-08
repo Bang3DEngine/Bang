@@ -25,8 +25,8 @@ public:
     const String &GetBlendVariableName() const;
     float GetSecondAnimationSpeed() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

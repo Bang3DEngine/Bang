@@ -14,7 +14,7 @@ template <class>
 class EventEmitter;
 class Camera;
 class DebugRenderer;
-class ICloneable;
+class Serializable;
 class IEventsDestroy;
 
 class Scene : public GameObject, public EventListener<IEventsDestroy>
@@ -36,8 +36,8 @@ public:
 
     void InvalidateCanvas();
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

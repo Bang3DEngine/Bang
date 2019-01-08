@@ -5,7 +5,6 @@
 #include "Bang/BehaviourManager.h"
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/MetaFilesManager.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
@@ -156,7 +155,7 @@ void BehaviourContainer::ResetInitializationModificationsMetaNode()
     SetInitializationModificationsMeta(MetaNode());
 }
 
-void BehaviourContainer::CloneInto(ICloneable *clone, bool cloneGUID) const
+void BehaviourContainer::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Component::CloneInto(clone, cloneGUID);
     BehaviourContainer *bc = SCAST<BehaviourContainer *>(clone);

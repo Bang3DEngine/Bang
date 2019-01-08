@@ -39,7 +39,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 template <class>
 class EventEmitter;
 }  // namespace Bang
@@ -488,7 +488,7 @@ bool Camera::IsPointInsideFrustum(const Vector3 &worldPoint) const
            projPoint.y < 1.0f && projPoint.z > -1.0f && projPoint.z < 1.0f;
 }
 
-void Camera::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Camera::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Component::CloneInto(clone, cloneGUID);
     Camera *cam = SCAST<Camera *>(clone);

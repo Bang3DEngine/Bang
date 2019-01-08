@@ -37,7 +37,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 }
 
 using namespace Bang;
@@ -745,7 +745,7 @@ void ParticleSystem::UpdateDataVBO()
         0);
 }
 
-void ParticleSystem::CloneInto(ICloneable *clone, bool cloneGUID) const
+void ParticleSystem::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Renderer::CloneInto(clone, cloneGUID);
 

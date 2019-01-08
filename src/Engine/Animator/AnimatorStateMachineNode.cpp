@@ -168,7 +168,7 @@ AnimatorStateMachineLayer *AnimatorStateMachineNode::GetLayer() const
     return p_layer;
 }
 
-void AnimatorStateMachineNode::CloneInto(ICloneable *clone,
+void AnimatorStateMachineNode::CloneInto(Serializable *clone,
                                          bool cloneGUID) const
 {
     Serializable::CloneInto(clone, cloneGUID);

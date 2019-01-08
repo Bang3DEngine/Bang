@@ -508,7 +508,7 @@ void Material::Reflect()
                                BANG_REFLECT_HINT_EXTENSIONS(extensions));
 }
 
-void Material::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Material::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Asset::CloneInto(clone, cloneGUID);
 

@@ -23,7 +23,7 @@
 namespace Bang
 {
 class Camera;
-class ICloneable;
+class Serializable;
 class Material;
 class Asset;
 class ShaderProgram;

@@ -57,7 +57,7 @@ class MetaNode;
 class Material;
 class Transform;
 class GameObject;
-class ICloneable;
+class Serializable;
 
 template <class, class, class>
 class Map;

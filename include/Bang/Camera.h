@@ -25,7 +25,7 @@ template <class>
 class EventEmitter;
 class AABox;
 class GBuffer;
-class ICloneable;
+class Serializable;
 class IEventsDestroy;
 class Quad;
 class TextureCubeMap;
@@ -108,8 +108,8 @@ public:
 
     static Camera *GetActive();
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

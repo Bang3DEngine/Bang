@@ -9,7 +9,6 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/IEventsObject.h"
 #include "Bang/ObjectId.h"
@@ -38,8 +37,8 @@ public:
     bool IsBeingDestroyed() const;
     bool IsWaitingToBeDestroyed() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
 protected:
     Object();

@@ -12,7 +12,7 @@
 namespace Bang
 {
 class Behaviour;
-class ICloneable;
+class Serializable;
 class Library;
 
 class BehaviourContainer : public Component
@@ -50,8 +50,8 @@ private:
     // Component
     void OnPreStart() override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

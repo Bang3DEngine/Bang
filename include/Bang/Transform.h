@@ -21,7 +21,7 @@
 namespace Bang
 {
 class GameObject;
-class ICloneable;
+class Serializable;
 
 class IInvalidatableTransformWorld
     : public IInvalidatable<IInvalidatableTransformWorld>

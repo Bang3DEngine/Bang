@@ -19,7 +19,7 @@
 namespace Bang
 {
 class GameObject;
-class ICloneable;
+class Serializable;
 class IEventsComponentChangeGameObject;
 
 class Component : public Object,
@@ -36,8 +36,8 @@ public:
 
     GameObject *GetGameObject() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // IToString
     virtual String ToString() const override;

@@ -3,7 +3,6 @@
 
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 #include "PxMaterial.h"
@@ -40,8 +39,8 @@ public:
     CombineMode GetFrictionCombineMode() const;
     CombineMode GetRestitutionCombineMode() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Asset
     void Import(const Path &physicsMaterialFilepath) override;

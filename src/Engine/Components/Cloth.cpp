@@ -347,7 +347,7 @@ AABox Cloth::GetAABBox() const
     return aaBox;
 }
 
-void Cloth::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Cloth::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Renderer::CloneInto(clone, cloneGUID);
 

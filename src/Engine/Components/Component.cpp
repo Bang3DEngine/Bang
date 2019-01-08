@@ -6,7 +6,6 @@
 #include "Bang/Debug.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsComponentChangeGameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
@@ -202,7 +201,7 @@ bool Component::CalculateEnabledRecursively() const
            (GetGameObject() ? GetGameObject()->IsEnabledRecursively() : true);
 }
 
-void Component::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Component::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Object::CloneInto(clone, cloneGUID);
     Component *c = SCAST<Component *>(clone);

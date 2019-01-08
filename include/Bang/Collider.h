@@ -19,7 +19,7 @@ class PxShape;
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Object;
 class PhysicsMaterial;
 

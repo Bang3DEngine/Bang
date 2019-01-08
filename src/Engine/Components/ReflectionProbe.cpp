@@ -31,7 +31,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 template <class>
 class Array;
 }  // namespace Bang
@@ -436,7 +436,7 @@ TextureCubeMap *ReflectionProbe::GetTextureCubeMapWithoutFiltering() const
     return p_textureCubeMapWithoutFiltering.Get();
 }
 
-void ReflectionProbe::CloneInto(ICloneable *clone, bool cloneGUID) const
+void ReflectionProbe::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Component::CloneInto(clone, cloneGUID);
 

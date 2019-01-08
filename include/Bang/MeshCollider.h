@@ -14,7 +14,7 @@ namespace physx
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Mesh;
 
 class MeshCollider : public Collider

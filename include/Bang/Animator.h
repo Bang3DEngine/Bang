@@ -18,7 +18,6 @@ namespace Bang
 class Animation;
 class AnimatorStateMachine;
 class AnimatorStateMachinePlayer;
-class ICloneable;
 
 class Animator : public Component,
                  public EventListener<IEventsAnimatorStateMachine>
@@ -58,8 +57,8 @@ public:
     AnimatorStateMachine *GetStateMachine() const;
     const Array<AnimatorStateMachinePlayer *> &GetPlayers() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

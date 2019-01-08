@@ -170,7 +170,7 @@ bool Object::IsWaitingToBeDestroyed() const
     return m_waitingToBeDestroyed;
 }
 
-void Object::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Object::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Serializable::CloneInto(clone, cloneGUID);
 

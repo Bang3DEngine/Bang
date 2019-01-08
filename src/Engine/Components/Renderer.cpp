@@ -12,7 +12,6 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsAsset.h"
 #include "Bang/IEventsRendererChanged.h"
 #include "Bang/Material.h"

@@ -5,7 +5,6 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/Matrix4.h"

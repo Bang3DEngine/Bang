@@ -4,7 +4,6 @@
 #include "Bang/BangDefines.h"
 #include "Bang/GUID.h"
 #include "Bang/HideFlags.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IReflectable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
@@ -13,7 +12,7 @@ namespace Bang
 {
 class Path;
 
-class Serializable : public ICloneable, public IReflectable
+class Serializable : public IReflectable
 {
 public:
     virtual ~Serializable() override;
@@ -38,9 +37,9 @@ public:
     const GUID &GetGUID() const;
     GUID &GetGUID();
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *cloneable,
-                           bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *cloneable, bool cloneGUID) const;
+    virtual Serializable *Clone(bool cloneGUID) const = 0;
 
 protected:
     Serializable();
@@ -66,12 +65,17 @@ public:                                          \
     }
 
 #define SERIALIZABLE_ABSTRACT(CLASS) \
-    ICLONEABLE_ABSTRACT(CLASS)       \
-    SERIALIZABLE_COMMON(CLASS)
+    SERIALIZABLE_COMMON(CLASS)       \
+    virtual CLASS *Clone(bool cloneGUID) const override = 0;
 
-#define SERIALIZABLE(CLASS) \
-    ICLONEABLE(CLASS)       \
-    SERIALIZABLE_COMMON(CLASS)
+#define SERIALIZABLE(CLASS)                             \
+    SERIALIZABLE_COMMON(CLASS)                          \
+    virtual CLASS *Clone(bool cloneGUID) const override \
+    {                                                   \
+        CLASS *c = new CLASS();                         \
+        CloneInto(c, cloneGUID);                        \
+        return c;                                       \
+    }
 }
 
 #endif  // SERIALIZABLE_H

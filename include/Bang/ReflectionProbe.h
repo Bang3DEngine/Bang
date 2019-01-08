@@ -17,7 +17,7 @@
 namespace Bang
 {
 class Framebuffer;
-class ICloneable;
+class Serializable;
 class Renderer;
 class ShaderProgram;
 class TextureCubeMap;
@@ -65,8 +65,8 @@ public:
     // IReflectable
     virtual void Reflect() override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

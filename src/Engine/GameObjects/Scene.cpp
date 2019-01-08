@@ -21,7 +21,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class IEventsDestroy;
 }  // namespace Bang
 
@@ -108,7 +108,7 @@ void Scene::InvalidateCanvas()
     }
 }
 
-void Scene::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Scene::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     GameObject::CloneInto(clone, cloneGUID);
 

@@ -8,7 +8,6 @@
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
 #include "Bang/Geometry.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Math.h"

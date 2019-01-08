@@ -28,7 +28,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Asset;
 }  // namespace Bang
 
@@ -341,7 +341,7 @@ void SkinnedMeshRenderer::OnObjectUnGathered(GameObject *, GameObject *)
     RetrieveBonesInitialTransformationFromCurrentHierarchy();
 }
 
-void SkinnedMeshRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
+void SkinnedMeshRenderer::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     MeshRenderer::CloneInto(clone, cloneGUID);
 

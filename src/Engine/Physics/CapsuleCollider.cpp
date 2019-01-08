@@ -21,7 +21,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 }
 
 using namespace Bang;

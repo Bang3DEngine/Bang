@@ -27,7 +27,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 }
 
 using namespace Bang;
@@ -354,7 +354,7 @@ const Array<AnimatorStateMachinePlayer *> &Animator::GetPlayers() const
     return m_animatorStateMachinePlayers;
 }
 
-void Animator::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Animator::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Component::CloneInto(clone, cloneGUID);
 

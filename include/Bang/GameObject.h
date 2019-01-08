@@ -32,7 +32,7 @@ namespace Bang
 class Camera;
 class Component;
 class GUID;
-class ICloneable;
+class Serializable;
 class RectTransform;
 class Scene;
 class Transform;
@@ -236,8 +236,8 @@ public:
 
     static GameObject *Instantiate();
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // IToString
     void Print(const String &indent = "") const;

@@ -17,7 +17,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Mesh;
 class ShaderProgram;
 class Texture2D;
@@ -116,8 +116,8 @@ public:
     virtual void SetUniformsOnBind(ShaderProgram *sp) override;
     AABox GetAABBox() const override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

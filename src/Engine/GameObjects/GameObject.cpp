@@ -36,7 +36,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 }
 
 using namespace Bang;
@@ -1030,7 +1030,7 @@ bool CanEventBePropagatedToComponent(const Component *comp)
     return comp->IsEnabledRecursively() && comp->T::IsReceivingEvents();
 }
 
-void GameObject::CloneInto(ICloneable *clone, bool cloneGUID) const
+void GameObject::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Object::CloneInto(clone, cloneGUID);
 

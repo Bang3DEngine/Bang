@@ -56,8 +56,8 @@ public:
     AnimatorStateMachine *GetStateMachine() const;
     AnimatorStateMachineLayer *GetLayer() const;
 
-    // ICloneable
-    void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

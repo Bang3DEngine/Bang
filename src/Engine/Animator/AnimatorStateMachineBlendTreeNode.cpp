@@ -81,7 +81,7 @@ Animation *AnimatorStateMachineBlendTreeNode::GetSecondAnimation() const
     return p_secondAnimation.Get();
 }
 
-void AnimatorStateMachineBlendTreeNode::CloneInto(ICloneable *clone,
+void AnimatorStateMachineBlendTreeNode::CloneInto(Serializable *clone,
                                                   bool cloneGUID) const
 {
     AnimatorStateMachineNode::CloneInto(clone, cloneGUID);

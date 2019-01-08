@@ -13,7 +13,6 @@
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/Math.h"
 #include "Bang/Matrix4.tcc"

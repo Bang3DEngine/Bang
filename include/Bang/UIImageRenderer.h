@@ -12,7 +12,7 @@
 namespace Bang
 {
 class Camera;
-class ICloneable;
+class Serializable;
 class Mesh;
 class Path;
 class Texture2D;
@@ -53,8 +53,8 @@ public:
     // Renderer
     virtual AARect GetBoundingRect(Camera *camera = nullptr) const override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

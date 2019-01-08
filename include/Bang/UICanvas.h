@@ -28,7 +28,7 @@ namespace Bang
 template <class>
 class EventEmitter;
 class GameObject;
-class ICloneable;
+class Serializable;
 class IEventsDestroy;
 class IEventsDragDrop;
 struct InputEvent;
@@ -68,8 +68,8 @@ public:
 
     Array<EventListener<IEventsDragDrop> *> GetDragDropListeners() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // ISerializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

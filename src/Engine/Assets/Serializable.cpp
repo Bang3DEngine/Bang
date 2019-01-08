@@ -201,7 +201,7 @@ GUID &Serializable::GetGUID()
     return m_GUID;
 }
 
-void Serializable::CloneInto(ICloneable *cloneable, bool cloneGUID) const
+void Serializable::CloneInto(Serializable *cloneable, bool cloneGUID) const
 {
     Serializable *clone = SCAST<Serializable *>(cloneable);
 

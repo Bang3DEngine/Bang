@@ -11,7 +11,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Mesh;
 class Ray;
 class ShaderProgram;

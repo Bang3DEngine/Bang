@@ -91,7 +91,7 @@ PhysicsMaterial::CombineMode PhysicsMaterial::GetRestitutionCombineMode() const
     return m_restitutionCombineMode;
 }
 
-void PhysicsMaterial::CloneInto(ICloneable *clone, bool cloneGUID) const
+void PhysicsMaterial::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Serializable::CloneInto(clone, cloneGUID);
 

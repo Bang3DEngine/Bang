@@ -13,7 +13,6 @@
 #include "Bang/GEngine.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/ICloneable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Scene.h"

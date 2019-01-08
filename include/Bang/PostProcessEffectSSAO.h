@@ -13,7 +13,7 @@
 namespace Bang
 {
 class Framebuffer;
-class ICloneable;
+class Serializable;
 class ShaderProgram;
 class Texture2D;
 

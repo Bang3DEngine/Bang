@@ -26,7 +26,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 }
 
 namespace physx

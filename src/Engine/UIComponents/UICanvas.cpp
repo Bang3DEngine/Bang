@@ -32,7 +32,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class IEventsObject;
 class Object;
 }  // namespace Bang
@@ -549,7 +549,7 @@ void UICanvas::OnBeforeChildrenRender(RenderPass rp)
     }
 }
 
-void UICanvas::CloneInto(ICloneable *clone, bool cloneGUID) const
+void UICanvas::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Component::CloneInto(clone, cloneGUID);
 }

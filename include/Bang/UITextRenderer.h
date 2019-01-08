@@ -18,7 +18,7 @@ namespace Bang
 class Camera;
 class Color;
 class Font;
-class ICloneable;
+class Serializable;
 class Mesh;
 
 class UITextRenderer : public UIRenderer,
@@ -66,8 +66,8 @@ public:
     // IEventsTransform
     virtual void OnTransformChanged() override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void ImportMeta(const MetaNode &metaNode) override;

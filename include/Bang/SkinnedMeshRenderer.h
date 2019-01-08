@@ -26,7 +26,7 @@ namespace Bang
 template <class>
 class IEventsObjectGatherer;
 class GameObject;
-class ICloneable;
+class Serializable;
 class Model;
 class ShaderProgram;
 template <class ObjectType, bool RECURSIVE>
@@ -80,8 +80,8 @@ public:
     virtual void OnObjectUnGathered(GameObject *previousGameObject,
                                     GameObject *go) override;
 
-    // ICloneable
-    void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     void Reflect() override;

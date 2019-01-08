@@ -38,7 +38,7 @@ enum class ForceMode
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 
 class RigidBody : public PhysicsComponent
 {

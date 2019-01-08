@@ -27,7 +27,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class ShaderProgram;
 }  // namespace Bang
 
@@ -372,7 +372,7 @@ void Rope::UpdateLineRendererPoints()
     LineRenderer::SetPoints(pointsToRender);
 }
 
-void Rope::CloneInto(ICloneable *clone, bool cloneGUID) const
+void Rope::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     Rope *ropeClone = SCAST<Rope *>(clone);
 

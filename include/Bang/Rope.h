@@ -13,7 +13,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class Mesh;
 class ShaderProgram;
 
@@ -58,8 +58,8 @@ public:
     bool GetSeeDebugPoints() const;
     float GetSpringsDamping() const;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
     // Serializable
     virtual void Reflect() override;

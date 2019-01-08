@@ -15,7 +15,7 @@ namespace Bang
 {
 class Framebuffer;
 class GameObject;
-class ICloneable;
+class Serializable;
 class Renderer;
 class ShaderProgram;
 

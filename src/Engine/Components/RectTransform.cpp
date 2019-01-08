@@ -10,7 +10,6 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
-#include "Bang/ICloneable.h"
 #include "Bang/Input.h"
 #include "Bang/Matrix4.h"
 #include "Bang/Matrix4.tcc"

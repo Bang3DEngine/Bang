@@ -15,7 +15,7 @@ namespace Bang
 class Camera;
 class Framebuffer;
 class GameObject;
-class ICloneable;
+class Serializable;
 class Material;
 class ShaderProgram;
 

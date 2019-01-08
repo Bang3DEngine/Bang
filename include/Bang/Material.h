@@ -11,7 +11,6 @@
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/GL.h"
-#include "Bang/ICloneable.h"
 #include "Bang/IEventsAsset.h"
 #include "Bang/MetaNode.h"
 #include "Bang/NeededUniformFlags.h"
@@ -110,8 +109,8 @@ protected:
     Material();
     virtual ~Material() override;
 
-    // ICloneable
-    virtual void CloneInto(ICloneable *clone, bool cloneGUID) const override;
+    // Serializable
+    virtual void CloneInto(Serializable *clone, bool cloneGUID) const override;
 
 private:
 };

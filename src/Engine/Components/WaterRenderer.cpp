@@ -9,7 +9,7 @@
 
 namespace Bang
 {
-class ICloneable;
+class Serializable;
 class MetaNode;
 }
 

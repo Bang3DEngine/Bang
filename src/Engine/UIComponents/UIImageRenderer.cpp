@@ -7,7 +7,6 @@
 #include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
-#include "Bang/ICloneable.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "Bang/Mesh.h"
@@ -151,7 +150,7 @@ AARect UIImageRenderer::GetBoundingRect(Camera *camera) const
     return AARect(boundingRect.GetCenter(), boundingRect.GetCenter());
 }
 
-void UIImageRenderer::CloneInto(ICloneable *clone, bool cloneGUID) const
+void UIImageRenderer::CloneInto(Serializable *clone, bool cloneGUID) const
 {
     UIRenderer::CloneInto(clone, cloneGUID);
     UIImageRenderer *img = SCAST<UIImageRenderer *>(clone);

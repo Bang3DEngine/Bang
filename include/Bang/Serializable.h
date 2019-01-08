@@ -2,9 +2,9 @@
 #define SERIALIZABLE_H
 
 #include "Bang/BangDefines.h"
+#include "Bang/GUID.h"
 #include "Bang/HideFlags.h"
 #include "Bang/ICloneable.h"
-#include "Bang/IGUIDable.h"
 #include "Bang/IReflectable.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
@@ -13,7 +13,7 @@ namespace Bang
 {
 class Path;
 
-class Serializable : public IGUIDable, public ICloneable, public IReflectable
+class Serializable : public ICloneable, public IReflectable
 {
 public:
     virtual ~Serializable() override;
@@ -35,6 +35,9 @@ public:
     HideFlags &GetHideFlags();
     const HideFlags &GetHideFlags() const;
 
+    const GUID &GetGUID() const;
+    GUID &GetGUID();
+
     // ICloneable
     virtual void CloneInto(ICloneable *cloneable,
                            bool cloneGUID) const override;
@@ -42,7 +45,10 @@ public:
 protected:
     Serializable();
 
+    void SetGUID(const GUID &guid);
+
 private:
+    GUID m_GUID;
     HideFlags m_hideFlags;
 
     friend class Assets;

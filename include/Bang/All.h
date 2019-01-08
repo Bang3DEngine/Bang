@@ -83,7 +83,6 @@
 #include "Bang/IEventsRendererChanged.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/IEventsValueChanged.h"
-#include "Bang/IGUIDable.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/ILayoutController.h"
 #include "Bang/ILayoutElement.h"

@@ -185,6 +185,22 @@ const HideFlags &Serializable::GetHideFlags() const
     return m_hideFlags;
 }
 
+void Serializable::SetGUID(const GUID &guid)
+{
+    m_GUID = guid;
+    GUIDManager::RemoveGUID(GetGUID());
+}
+
+const GUID &Serializable::GetGUID() const
+{
+    return m_GUID;
+}
+
+GUID &Serializable::GetGUID()
+{
+    return m_GUID;
+}
+
 void Serializable::CloneInto(ICloneable *cloneable, bool cloneGUID) const
 {
     Serializable *clone = SCAST<Serializable *>(cloneable);

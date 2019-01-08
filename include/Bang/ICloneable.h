@@ -6,6 +6,10 @@
 
 namespace Bang
 {
+#define ICLONEABLE_ABSTRACT(CLASS) \
+public:                            \
+    virtual CLASS *Clone(bool cloneGUID) const override = 0;
+
 #define ICLONEABLE(CLASS)                               \
 public:                                                 \
     virtual CLASS *Clone(bool cloneGUID) const override \

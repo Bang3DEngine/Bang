@@ -48,7 +48,7 @@ private:
     friend class Assets;
 };
 
-#define SERIALIZABLE_ABSTRACT(CLASS)             \
+#define SERIALIZABLE_COMMON(CLASS)               \
 public:                                          \
     virtual String GetClassName() const override \
     {                                            \
@@ -59,9 +59,13 @@ public:                                          \
         return #CLASS;                           \
     }
 
+#define SERIALIZABLE_ABSTRACT(CLASS) \
+    ICLONEABLE_ABSTRACT(CLASS)       \
+    SERIALIZABLE_COMMON(CLASS)
+
 #define SERIALIZABLE(CLASS) \
     ICLONEABLE(CLASS)       \
-    SERIALIZABLE_ABSTRACT(CLASS)
+    SERIALIZABLE_COMMON(CLASS)
 }
 
 #endif  // SERIALIZABLE_H

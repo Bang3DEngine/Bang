@@ -134,7 +134,7 @@ void ClassDB::RegisterClasses()
         #CLASSNAME, []() { return SCAST<void *>(new CLASSNAME()); });
 
     REGISTER_ABSTRACT_CLASS(Object);
-    REGISTER_CLASS(Component);
+    REGISTER_ABSTRACT_CLASS(Component);
     REGISTER_CLASS(Renderer);
     REGISTER_CLASS(MeshRenderer);
     REGISTER_CLASS(SkinnedMeshRenderer);

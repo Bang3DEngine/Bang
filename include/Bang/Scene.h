@@ -19,7 +19,7 @@ class IEventsDestroy;
 
 class Scene : public GameObject, public EventListener<IEventsDestroy>
 {
-    GAMEOBJECT(Scene);
+    GAMEOBJECT_WITHOUT_CLASS_ID(Scene);
 
 public:
     Scene();

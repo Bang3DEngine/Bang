@@ -26,8 +26,7 @@ class Component : public Object,
                   public IToString,
                   public EventEmitter<IEventsComponentChangeGameObject>
 {
-    OBJECT(Component)
-    SERIALIZABLE(Component)
+    COMPONENT_NO_FRIEND(Component)
 
 public:
     static void Destroy(Component *component);

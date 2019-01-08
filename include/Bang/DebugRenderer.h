@@ -20,7 +20,7 @@ class Triangle;
 
 class DebugRenderer : public GameObject
 {
-    GAMEOBJECT(DebugRenderer);
+    GAMEOBJECT_WITHOUT_CLASS_ID(DebugRenderer);
 
 public:
     DebugRenderer();

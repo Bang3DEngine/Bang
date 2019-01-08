@@ -37,12 +37,22 @@ class RectTransform;
 class Scene;
 class Transform;
 
-#define GAMEOBJECT_NO_FRIEND(ClassName) \
-public:                                 \
-    SERIALIZABLE(ClassName)
+#define GAMEOBJECT_(ClassName) OBJECT(ClassName)
 
-#define GAMEOBJECT(ClassName)       \
-    GAMEOBJECT_NO_FRIEND(ClassName) \
+#define GAMEOBJECT_ABSTRACT_WITHOUT_CLASS_ID(ClassName) \
+    OBJECT_ABSTRACT_WITHOUT_CLASS_ID(ClassName)         \
+    friend class GameObject
+
+#define GAMEOBJECT_WITHOUT_CLASS_ID(ClassName) \
+    OBJECT_WITHOUT_CLASS_ID(ClassName)         \
+    friend class GameObject
+
+#define GAMEOBJECT_ABSTRACT(ClassName) \
+    OBJECT_ABSTRACT(ClassName)         \
+    friend class GameObject
+
+#define GAMEOBJECT(ClassName) \
+    OBJECT(ClassName)         \
     friend class GameObject
 
 class GameObject : public Object,
@@ -53,8 +63,7 @@ class GameObject : public Object,
                    public EventEmitter<IEventsComponent>,
                    public EventEmitter<IEventsGameObjectVisibilityChanged>
 {
-    OBJECT(GameObject)
-    GAMEOBJECT_NO_FRIEND(GameObject)
+    GAMEOBJECT_(GameObject)
 
 public:
     GameObject(const String &name = "GameObject");

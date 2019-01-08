@@ -24,6 +24,7 @@ class Object : public Serializable,
                public EventEmitter<IEventsObject>
 {
     SET_CLASS_ID_AS_ROOT(Object)
+    OBJECT_ABSTRACT(Object)
 
 public:
     const ObjectId &GetObjectId() const;

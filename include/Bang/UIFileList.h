@@ -19,7 +19,7 @@ class UITextRenderer;
 
 class UIFileList : public Component
 {
-    COMPONENT(UIFileList)
+    COMPONENT_WITHOUT_CLASS_ID(UIFileList)
 
 public:
     UIFileList();
@@ -54,7 +54,7 @@ private:
 
 class UIFileListItem : public GameObject
 {
-    GAMEOBJECT(UIFileListItem);
+    GAMEOBJECT_WITHOUT_CLASS_ID(UIFileListItem);
 
 public:
     UIFileListItem();

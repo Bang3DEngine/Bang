@@ -40,6 +40,7 @@ void MeshRenderer::SetMesh(Mesh *m)
     if (GetSharedMesh() != m)
     {
         p_sharedMesh.Set(m);
+        OnMeshLoaded(m);
         p_mesh.Set(nullptr);
     }
 }
@@ -241,6 +242,10 @@ void MeshRenderer::IntersectRay_(const Ray &ray,
     {
         *outIntersected = intersectedATri;
     }
+}
+
+void MeshRenderer::OnMeshLoaded(Mesh *mesh)
+{
 }
 
 AABox MeshRenderer::GetAABBox() const

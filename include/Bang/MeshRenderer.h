@@ -63,6 +63,7 @@ protected:
                        bool *outIntersected = nullptr,
                        Vector3 *outIntersectionPoint = nullptr,
                        uint *outTriId = nullptr) const;
+    virtual void OnMeshLoaded(Mesh *mesh);
 
     MeshRenderer();
     virtual ~MeshRenderer() override;

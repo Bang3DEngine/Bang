@@ -37,7 +37,6 @@ public:
     const GUID &GetGUID() const;
     GUID &GetGUID();
 
-    // Serializable
     virtual void CloneInto(Serializable *cloneable, bool cloneGUID) const;
     virtual Serializable *Clone(bool cloneGUID) const = 0;
 

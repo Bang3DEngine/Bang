@@ -218,13 +218,7 @@ void Animator::SetSkinnedMeshRendererBoneTransformations(
         GetGameObject()->GetComponents<SkinnedMeshRenderer>();
     for (SkinnedMeshRenderer *smr : smrs)
     {
-        GameObject *rootBoneGo = smr->GetRootBoneGameObject();
-        if (!rootBoneGo)
-        {
-            continue;
-        }
-
-        Array<GameObject *> allBoneGos = rootBoneGo->GetChildrenRecursively();
+        Array<GameObject *> allBoneGos = smr->GetAllBoneGameObjects();
         for (GameObject *boneGo : allBoneGos)
         {
             const String &boneName = boneGo->GetName();
@@ -240,8 +234,7 @@ void Animator::SetSkinnedMeshRendererBoneTransformations(
             }
             else
             {
-                boneGo->GetTransform()->FillFromTransformation(
-                    smr->GetInitialTransformationFor(boneName));
+                smr->ResetBoneTransformation(boneGo);
             }
         }
         smr->UpdateBonesMatricesFromTransformMatrices();

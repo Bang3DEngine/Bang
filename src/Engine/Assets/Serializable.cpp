@@ -86,8 +86,11 @@ void Serializable::ImportMeta(const MetaNode &metaNode)
                             Variant::FromUint(metaNode.Get<uint>(varName)));
                         break;
                     case Variant::Type::BOOL:
-                        reflVarSetter(
-                            Variant::FromBool(metaNode.Get<bool>(varName)));
+                        if (!reflVar.GetHints().GetIsButton())
+                        {
+                            reflVarSetter(
+                                Variant::FromBool(metaNode.Get<bool>(varName)));
+                        }
                         break;
                     case Variant::Type::PATH:
                         reflVarSetter(

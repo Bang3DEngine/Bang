@@ -9,6 +9,7 @@
 #include "Bang/Animation.h"
 #include "Bang/Animator.h"
 #include "Bang/AnimatorStateMachine.h"
+#include "Bang/AnimatorStateMachinePlayer.h"
 #include "Bang/Application.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"

@@ -43,6 +43,7 @@ public:
     virtual ~SkinnedMeshRenderer() override;
 
     // MeshRenderer
+    void OnUpdate() override;
     void OnRender() override;
     virtual void Bind() override;
     virtual void SetUniformsOnBind(ShaderProgram *sp) override;
@@ -51,29 +52,27 @@ public:
     void SetRootBoneGameObjectName(const String &rootBoneGameObjectName);
 
     Model *GetActiveModel() const;
+    Array<GameObject *> GetAllBoneGameObjects() const;
     GameObject *GetRootBoneGameObject() const;
     const String &GetRootBoneGameObjectName() const;
     GameObject *GetBoneGameObject(const String &boneName) const;
-    Transformation GetBoneSpaceToRootSpaceTransformation(
+    Transformation GetRootSpaceToBoneSpaceTransformation(
         const String &boneName) const;
     Transformation GetBoneTransformationFor(
         GameObject *boneGameObject,
         const Transformation &transform,
         UMap<GameObject *, Transformation> *boneTransformInRootSpaceCache)
         const;
-    const Transformation &GetInitialTransformationFor(
-        const String &boneName) const;
-    const Map<String, Transformation> &GetInitialTransformations() const;
 
     void SetBoneUniforms(ShaderProgram *sp);
     void UpdateBonesMatricesFromTransformMatrices();
-    void UpdateTransformMatricesFromInitialBonePosition();
     void SetSkinnedMeshRendererCurrentBoneMatrices(
         const Map<String, Matrix4> &boneMatrices);
     void SetSkinnedMeshRendererCurrentBoneMatrices(
         const Array<Matrix4> &boneMatrices);
 
-    void RetrieveBonesInitialTransformationFromCurrentHierarchy();
+    void ResetBoneTransformation(GameObject *boneGo);
+    void ResetBoneTransformations();
 
     // ObjectGatherer
     virtual void OnObjectGathered(GameObject *go) override;
@@ -81,19 +80,18 @@ public:
                                     GameObject *go) override;
 
     // Serializable
-    void CloneInto(Serializable *clone, bool cloneGUID) const override;
-
-    // Serializable
     void Reflect() override;
 
+protected:
+    void OnMeshLoaded(Mesh *mesh) override;
+
 private:
-    Map<String, Transformation> m_initialTransformations;
-    Map<String, Transformation> m_boneSpaceToRootSpaceTransformations;
     Array<Matrix4> m_bonesTransformsMatricesArrayUniform;
 
     ObjectGatherer<GameObject, true> *m_gameObjectGatherer = nullptr;
 
     String m_rootBoneGameObjectName = "";
+    mutable USet<String> m_boneNames;
     mutable DPtr<GameObject> p_rootBoneGameObject = nullptr;
     mutable Map<String, GameObject *> m_boneNameToBoneGameObject;
 };

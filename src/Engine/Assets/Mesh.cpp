@@ -973,8 +973,8 @@ void Mesh::GetNeighborCotangentWeights(
     edgesCotangentsVector->Clear();
     triAreas->Clear();
 
-    uint numProcessedTris = 0;
-    USet<CornerId> processedCornerIds;
+    // USet<CornerId> processedCornerIds;
+    // USet<CornerId> processedVertexIds;
     Mesh::VertexId centralVUniqueId = GetVertexIdUnique(centralVId);
     Vector3 centralVertexPos = GetPositionsPool()[centralVUniqueId];
     Array<CornerId> vertexCornerIds =
@@ -983,48 +983,54 @@ void Mesh::GetNeighborCotangentWeights(
     {
         ASSERT(centralVUniqueId == GetVertexIdUniqueFromCornerId(centralCId));
 
-        CornerId firstCId = GetPreviousCornerId(centralCId);
-        ASSERT(GetTriangleIdFromCornerId(centralCId) ==
-               GetTriangleIdFromCornerId(firstCId));
-
-        if (!processedCornerIds.Contains(centralCId))
+        Array<CornerId> sameTriOtherCIds = {GetPreviousCornerId(centralCId),
+                                            GetNextCornerId(centralCId)};
+        for (uint i = 0; i <= 1; ++i)
         {
-            CornerId oppositeCId = GetOppositeCornerId(firstCId);
-            if (oppositeCId != SCAST<uint>(-1))
+            float edgeCotScalar = 0.0f;
+
+            // CornerId onEdgeCentralCId = centralCId;
+            CornerId onEdgeOppositeCId = sameTriOtherCIds[i];
+            CornerId perpToEdgeSameTriCId = sameTriOtherCIds[1 - i];
+            ASSERT(onEdgeOppositeCId != centralCId);
+            ASSERT(GetTriangleIdFromCornerId(centralCId) ==
+                   GetTriangleIdFromCornerId(onEdgeOppositeCId));
+
+            VertexId onEdgeOppVId =
+                GetVertexIdUniqueFromCornerId(onEdgeOppositeCId);
+            ASSERT(onEdgeOppVId != GetVertexIdUniqueFromCornerId(centralCId));
+            ASSERT(onEdgeOppVId !=
+                   GetVertexIdUniqueFromCornerId(perpToEdgeSameTriCId));
+
+            float sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
+            float sameTriTanInv = (1.0f / Math::Tan(sameTriCAngle));
+            edgeCotScalar += sameTriTanInv;
+
+            CornerId perpToEdgeOppTriCId =
+                GetOppositeCornerId(perpToEdgeSameTriCId);
+            if (perpToEdgeOppTriCId != SCAST<uint>(-1))
             {
                 ASSERT(GetTriangleIdFromCornerId(centralCId) !=
-                       GetTriangleIdFromCornerId(oppositeCId));
-
-                ++numProcessedTris;
-
-                float firstCAngle = GetCornerAngleRads(firstCId);
-                float oppCAngle = GetCornerAngleRads(oppositeCId);
-
-                TriangleId triId = GetTriangleIdFromCornerId(firstCId);
-                VertexId otherVIdOnEdge = GetRemainingVertexIdUnique(
-                    triId, centralVId, GetVertexIdFromCornerId(firstCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(oppositeCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(centralCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(firstCId));
-
-                Vector3 otherVertexOnEdgePos =
-                    GetPositionsPool()[otherVIdOnEdge];
-                float edgeCotScalar = (1.0f / Math::Tan(firstCAngle) +
-                                       1.0f / Math::Tan(oppCAngle)) *
-                                      0.5f;
-                Vector3 edgeCotVector =
-                    edgeCotScalar * (centralVertexPos - otherVertexOnEdgePos);
-
-                edgesCotangentsScalar->Add(otherVIdOnEdge, edgeCotScalar);
-                edgesCotangentsVector->Add(otherVIdOnEdge, edgeCotVector);
-                triAreas->Add(otherVIdOnEdge, GetTriangle(triId).GetArea());
-
-                processedCornerIds.Add(centralCId);
-                processedCornerIds.Add(oppositeCId);
+                       GetTriangleIdFromCornerId(perpToEdgeOppTriCId));
+                ASSERT(onEdgeOppVId !=
+                       GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
+                float oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
+                float oppTanInv = (1.0f / Math::Tan(oppCAngle));
+                edgeCotScalar += oppTanInv;
             }
+
+            edgeCotScalar *= 0.5f;
+            edgeCotScalar = Math::Abs(edgeCotScalar);
+
+            Vector3 otherVertexOnEdgePos = GetPositionsPool()[onEdgeOppVId];
+            Vector3 edgeCotVector =
+                edgeCotScalar * (centralVertexPos - otherVertexOnEdgePos);
+
+            edgesCotangentsScalar->Add(onEdgeOppVId, edgeCotScalar);
+            edgesCotangentsVector->Add(onEdgeOppVId, edgeCotVector);
+            Triangle tri =
+                GetTriangle(GetTriangleIdFromCornerId(onEdgeOppositeCId));
+            triAreas->Add(onEdgeOppVId, tri.GetArea());
         }
     }
 }

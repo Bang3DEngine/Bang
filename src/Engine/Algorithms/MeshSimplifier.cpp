@@ -44,6 +44,7 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
                                           float smoothFactor,
                                           uint steps)
 {
+    smoothFactor *= 0.95f;
     mesh->UpdateCornerTablesIfNeeded();
 
     float nextSmoothFactor = smoothFactor;
@@ -87,6 +88,7 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
         }
     }
 
+    mesh->UpdateVertexNormals();
     mesh->UpdateVAOs();
 }
 

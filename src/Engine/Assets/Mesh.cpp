@@ -973,8 +973,6 @@ void Mesh::GetNeighborCotangentWeights(
     edgesCotangentsVector->Clear();
     triAreas->Clear();
 
-    // USet<CornerId> processedCornerIds;
-    // USet<CornerId> processedVertexIds;
     Mesh::VertexId centralVUniqueId = GetVertexIdUnique(centralVId);
     Vector3 centralVertexPos = GetPositionsPool()[centralVUniqueId];
     Array<CornerId> vertexCornerIds =
@@ -1004,7 +1002,7 @@ void Mesh::GetNeighborCotangentWeights(
 
             float sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
             float sameTriTanInv = (1.0f / Math::Tan(sameTriCAngle));
-            edgeCotScalar += sameTriTanInv;
+            edgeCotScalar += Math::Abs(sameTriTanInv);
 
             CornerId perpToEdgeOppTriCId =
                 GetOppositeCornerId(perpToEdgeSameTriCId);
@@ -1016,11 +1014,9 @@ void Mesh::GetNeighborCotangentWeights(
                        GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
                 float oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
                 float oppTanInv = (1.0f / Math::Tan(oppCAngle));
-                edgeCotScalar += oppTanInv;
+                edgeCotScalar += Math::Abs(oppTanInv);
+                edgeCotScalar *= 0.5f;
             }
-
-            edgeCotScalar *= 0.5f;
-            edgeCotScalar = Math::Abs(edgeCotScalar);
 
             Vector3 otherVertexOnEdgePos = GetPositionsPool()[onEdgeOppVId];
             Vector3 edgeCotVector =

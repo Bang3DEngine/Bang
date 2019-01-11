@@ -1011,7 +1011,7 @@ void Mesh::GetNeighborCotangentWeights(
             double sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
             double sameTriTanInv =
                 LimitCotangent(1.0 / Math::Tan(sameTriCAngle));
-            edgeCotScalar += Math::Abs(sameTriTanInv);
+            edgeCotScalar += (sameTriTanInv);
 
             CornerId perpToEdgeOppTriCId =
                 GetOppositeCornerId(perpToEdgeSameTriCId);
@@ -1023,9 +1023,11 @@ void Mesh::GetNeighborCotangentWeights(
                        GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
                 double oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
                 double oppTanInv = LimitCotangent(1.0 / Math::Tan(oppCAngle));
-                edgeCotScalar += Math::Abs(oppTanInv);
+                edgeCotScalar += (oppTanInv);
                 edgeCotScalar *= 0.5;
             }
+
+            edgeCotScalar = Math::Abs(edgeCotScalar);
 
             Vector3 otherVertexOnEdgePos = GetPositionsPool()[onEdgeOppVId];
             Vector3 edgeCotVector(float(edgeCotScalar) *

@@ -18,7 +18,8 @@ class MeshSimplifier
 public:
     enum class SmoothMethod
     {
-        LAPLACE,
+        LAPLACE_UNIFORM,
+        LAPLACE_COTANGENT,
         TAUBIN,
         BILAPLACE
     };

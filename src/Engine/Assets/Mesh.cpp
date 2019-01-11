@@ -963,6 +963,13 @@ float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
     return gaussianCurvature;
 }
 
+float LimitCotangent(float cotangent)
+{
+    const float eps = 1e-6f;
+    const float cotanLimit = (1.0f / Math::Tan(eps));
+    return Math::Clamp(cotangent, -cotanLimit, cotanLimit);
+}
+
 void Mesh::GetNeighborCotangentWeights(
     Mesh::VertexId centralVId,
     Map<Mesh::VertexId, float> *edgesCotangentsScalar,
@@ -1001,7 +1008,8 @@ void Mesh::GetNeighborCotangentWeights(
                    GetVertexIdUniqueFromCornerId(perpToEdgeSameTriCId));
 
             float sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
-            float sameTriTanInv = (1.0f / Math::Tan(sameTriCAngle));
+            float sameTriTanInv =
+                LimitCotangent(1.0f / Math::Tan(sameTriCAngle));
             edgeCotScalar += Math::Abs(sameTriTanInv);
 
             CornerId perpToEdgeOppTriCId =
@@ -1013,7 +1021,7 @@ void Mesh::GetNeighborCotangentWeights(
                 ASSERT(onEdgeOppVId !=
                        GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
                 float oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
-                float oppTanInv = (1.0f / Math::Tan(oppCAngle));
+                float oppTanInv = LimitCotangent(1.0f / Math::Tan(oppCAngle));
                 edgeCotScalar += Math::Abs(oppTanInv);
                 edgeCotScalar *= 0.5f;
             }

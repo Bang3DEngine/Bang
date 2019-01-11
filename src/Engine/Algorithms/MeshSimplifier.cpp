@@ -61,9 +61,9 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
 
             if (smoothMethod == MeshSimplifier::SmoothMethod::LAPLACE_COTANGENT)
             {
-                Map<Mesh::VertexId, float> edgesCotangentsScalar;
+                Map<Mesh::VertexId, double> edgesCotangentsScalar;
                 Map<Mesh::VertexId, Vector3> edgesCotangentsVector;
-                Map<Mesh::VertexId, float> triAreas;
+                Map<Mesh::VertexId, double> triAreas;
                 mesh->GetNeighborCotangentWeights(vId,
                                                   &edgesCotangentsScalar,
                                                   &edgesCotangentsVector,

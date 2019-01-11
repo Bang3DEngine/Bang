@@ -124,7 +124,7 @@ public:
     Mesh::CornerId GetNextCornerId(Mesh::CornerId cId) const;
     Mesh::CornerId GetPreviousCornerId(Mesh::CornerId cId) const;
     Mesh::CornerId GetOppositeCornerId(Mesh::CornerId cId) const;
-    float GetCornerAngleRads(Mesh::CornerId cId) const;
+    double GetCornerAngleRads(Mesh::CornerId cId) const;
     const Array<Mesh::CornerId> &GetCornerIdsFromVertexId(
         Mesh::VertexId vId) const;
     Array<Mesh::CornerId> GetNeighborCornerIds(Mesh::CornerId cId) const;
@@ -134,13 +134,13 @@ public:
         Mesh::TriangleId triId) const;
     Array<Mesh::TriangleId> GetNeighborTriangleIdsFromVertexId(
         Mesh::VertexId vId) const;
-    float GetVertexGaussianCurvature(Mesh::VertexId centralVId) const;
-    float GetVertexMeanCurvature(Mesh::VertexId centralVId) const;
+    double GetVertexGaussianCurvature(Mesh::VertexId centralVId) const;
+    double GetVertexMeanCurvature(Mesh::VertexId centralVId) const;
     void GetNeighborCotangentWeights(
         Mesh::VertexId centralVId,
-        Map<Mesh::VertexId, float> *edgesCotangentsScalar,
+        Map<Mesh::VertexId, double> *edgesCotangentsScalar,
         Map<Mesh::VertexId, Vector3> *edgesCotangentsVector,
-        Map<Mesh::VertexId, float> *triAreas) const;
+        Map<Mesh::VertexId, double> *triAreas) const;
     bool IsBoundaryVertex(Mesh::VertexId vId) const;
     bool IsBoundaryEdge(Mesh::VertexId vId0, Mesh::VertexId vId1) const;
     Mesh::TriangleId GetCommonTriangle(Mesh::VertexId vId0,

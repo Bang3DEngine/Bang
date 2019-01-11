@@ -836,7 +836,7 @@ Mesh::CornerId Mesh::GetOppositeCornerId(Mesh::CornerId cId) const
     return m_cornerIdToOppositeCornerId[cId];
 }
 
-float Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
+double Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
 {
     ASSERT(cId < GetNumCorners());
     const CornerId prevCId = GetPreviousCornerId(cId);
@@ -853,8 +853,8 @@ float Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
     const Vector3 prevVector = (prevVPos - vPos).NormalizedSafe();
     const Vector3 nextVector = (nextVPos - vPos).NormalizedSafe();
 
-    const float dot = Vector3::Dot(prevVector, nextVector);
-    const float angleRads = Math::ACos(dot);
+    const double dot = Vector3::Dot(prevVector, nextVector);
+    const double angleRads = Math::ACos(dot);
 
     return angleRads;
 }
@@ -944,7 +944,7 @@ Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
     return neighborTriangleIds;
 }
 
-float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
+double Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
 {
     float trisAreasSum = 0.0f;
     float cornerAnglesSum = 0.0f;
@@ -959,22 +959,23 @@ float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
     }
 
     trisAreasSum /= 3;
-    float gaussianCurvature = ((2 * Math::Pi) - cornerAnglesSum) / trisAreasSum;
+    double gaussianCurvature =
+        ((2 * Math::Pi) - cornerAnglesSum) / trisAreasSum;
     return gaussianCurvature;
 }
 
-float LimitCotangent(float cotangent)
+double LimitCotangent(double cotangent)
 {
-    const float eps = 1e-6f;
-    const float cotanLimit = (1.0f / Math::Tan(eps));
+    const double eps = 1e-6;
+    const double cotanLimit = (1.0 / Math::Tan(eps));
     return Math::Clamp(cotangent, -cotanLimit, cotanLimit);
 }
 
 void Mesh::GetNeighborCotangentWeights(
     Mesh::VertexId centralVId,
-    Map<Mesh::VertexId, float> *edgesCotangentsScalar,
+    Map<Mesh::VertexId, double> *edgesCotangentsScalar,
     Map<Mesh::VertexId, Vector3> *edgesCotangentsVector,
-    Map<Mesh::VertexId, float> *triAreas) const
+    Map<Mesh::VertexId, double> *triAreas) const
 {
     edgesCotangentsScalar->Clear();
     edgesCotangentsVector->Clear();
@@ -992,7 +993,7 @@ void Mesh::GetNeighborCotangentWeights(
                                             GetNextCornerId(centralCId)};
         for (uint i = 0; i <= 1; ++i)
         {
-            float edgeCotScalar = 0.0f;
+            double edgeCotScalar = 0.0;
 
             // CornerId onEdgeCentralCId = centralCId;
             CornerId onEdgeOppositeCId = sameTriOtherCIds[i];
@@ -1007,9 +1008,9 @@ void Mesh::GetNeighborCotangentWeights(
             ASSERT(onEdgeOppVId !=
                    GetVertexIdUniqueFromCornerId(perpToEdgeSameTriCId));
 
-            float sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
-            float sameTriTanInv =
-                LimitCotangent(1.0f / Math::Tan(sameTriCAngle));
+            double sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
+            double sameTriTanInv =
+                LimitCotangent(1.0 / Math::Tan(sameTriCAngle));
             edgeCotScalar += Math::Abs(sameTriTanInv);
 
             CornerId perpToEdgeOppTriCId =
@@ -1020,15 +1021,15 @@ void Mesh::GetNeighborCotangentWeights(
                        GetTriangleIdFromCornerId(perpToEdgeOppTriCId));
                 ASSERT(onEdgeOppVId !=
                        GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
-                float oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
-                float oppTanInv = LimitCotangent(1.0f / Math::Tan(oppCAngle));
+                double oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
+                double oppTanInv = LimitCotangent(1.0 / Math::Tan(oppCAngle));
                 edgeCotScalar += Math::Abs(oppTanInv);
-                edgeCotScalar *= 0.5f;
+                edgeCotScalar *= 0.5;
             }
 
             Vector3 otherVertexOnEdgePos = GetPositionsPool()[onEdgeOppVId];
-            Vector3 edgeCotVector =
-                edgeCotScalar * (centralVertexPos - otherVertexOnEdgePos);
+            Vector3 edgeCotVector(float(edgeCotScalar) *
+                                  (centralVertexPos - otherVertexOnEdgePos));
 
             edgesCotangentsScalar->Add(onEdgeOppVId, edgeCotScalar);
             edgesCotangentsVector->Add(onEdgeOppVId, edgeCotVector);
@@ -1039,14 +1040,14 @@ void Mesh::GetNeighborCotangentWeights(
     }
 }
 
-float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
+double Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
 {
     float trisAreasSum = 0.0f;
     Vector3 edgesCotangentsVectorSum = Vector3::Zero();
 
     Map<VertexId, Vector3> edgesCotangentsVector;
-    Map<VertexId, float> edgesCotangentsScalar;
-    Map<VertexId, float> triAreas;
+    Map<VertexId, double> edgesCotangentsScalar;
+    Map<VertexId, double> triAreas;
     GetNeighborCotangentWeights(
         centralVId, &edgesCotangentsScalar, &edgesCotangentsVector, &triAreas);
 
@@ -1062,7 +1063,7 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
 
     Vector3 laplaceBeltrami =
         (1.0f / (trisAreasSum)) * edgesCotangentsVectorSum;
-    float meanCurvature = 0.5f * laplaceBeltrami.Length();
+    double meanCurvature = 0.5f * laplaceBeltrami.Length();
     return meanCurvature;
 }
 

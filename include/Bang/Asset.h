@@ -32,6 +32,7 @@ public:
     void RemoveEmbeddedAsset(const String &embeddedAssetName);
     void PropagateAssetChanged();
 
+    void ReImport();
     Path GetAssetFilepath() const;
     Asset *GetParentAsset() const;
     const Array<AH<Asset>> &GetEmbeddedAssets() const;

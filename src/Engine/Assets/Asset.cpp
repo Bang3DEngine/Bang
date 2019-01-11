@@ -102,6 +102,11 @@ void Asset::PropagateAssetChanged()
     }
 }
 
+void Asset::ReImport()
+{
+    Import(GetAssetFilepath());
+}
+
 // Asset
 Path Asset::GetAssetFilepath() const
 {
@@ -190,8 +195,8 @@ void Asset::Import(const Path &assetFilepath)
 void Asset::Import_(const Path &assetFilepath)
 {
     Import(assetFilepath);
-    Path importFilepath = MetaFilesManager::GetMetaFilepath(assetFilepath);
-    ImportMetaFromFile(importFilepath);  // Import Meta then
+    Path metaFilepath = MetaFilesManager::GetMetaFilepath(assetFilepath);
+    ImportMetaFromFile(metaFilepath);  // Import Meta then
 
     EventEmitter<IEventsAsset>::PropagateToListeners(&IEventsAsset::OnImported,
                                                      this);

@@ -180,8 +180,7 @@ ShaderProgram *ShaderProgramFactory::Get(const Path &shaderPath)
     if (!spf->m_shaderCache.ContainsKey(shaderPath))
     {
         AH<ShaderProgram> shaderProgram;
-        shaderProgram = Assets::Create<ShaderProgram>();
-        shaderProgram.Get()->Load(shaderPath);
+        shaderProgram = Assets::Load<ShaderProgram>(shaderPath);
         spf->m_shaderCache.Add(shaderPath, shaderProgram);
     }
     return spf->m_shaderCache.Get(shaderPath).Get();

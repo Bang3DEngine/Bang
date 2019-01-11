@@ -678,6 +678,8 @@ void ShaderProgram::Reflect()
 
 void ShaderProgram::Import(const Path &path)
 {
+    Asset::Import(path);
+
     if (path.HasExtension(Extensions::GetUnifiedShaderExtension()))
     {
         Load(path);
@@ -737,7 +739,6 @@ void ShaderProgram::CheckTextureBindingsValidity() const
         GLUniforms::GLSLVar<int> uniformVar =
             GLUniforms::GetUniformAt<int>(GetGLId(), i);
 
-        // Debug_Log(uniformVar.name << ": " << uniformVar.value);
         const int texUnit = uniformVar.value;
         const GL::UniformType samplerType = uniformType;
         switch (samplerType)

@@ -48,6 +48,7 @@ public:
     void SetVerticalScrollEnabled(bool enabled);
     void SetHorizontalScrollEnabled(bool enabled);
     void SetScrolling(const Vector2i &scrolling);
+    void SetTakeChildrenSizeIntoAccount(bool takeChildrenSizeIntoAccount);
     void SetScrollingPercent(const Vector2 &scrollingPercent);
 
     Vector2i GetScrolling() const;
@@ -66,6 +67,7 @@ public:
     Vector2 GetContentSize() const;
     Vector2 GetContainerSize() const;
     Vector2 GetMaxScrollLength() const;
+    bool GetTakeChildrenSizeIntoAccount() const;
 
     // IEventsFocus
     virtual UIEventResult OnUIEvent(UIFocusable *focusable,
@@ -74,6 +76,7 @@ public:
 private:
     const static float WheelScrollSpeedPx;
 
+    bool m_takeChildrenSizeIntoAccount = true;
     bool m_forceVerticalFit = false;
     bool m_forceHorizontalFit = false;
 

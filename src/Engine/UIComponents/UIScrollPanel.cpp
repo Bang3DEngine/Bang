@@ -208,6 +208,12 @@ void UIScrollPanel::SetScrolling(const Vector2i &scrolling)
     SetScrollingPercent(scrollPerc);
 }
 
+void UIScrollPanel::SetTakeChildrenSizeIntoAccount(
+    bool takeChildrenSizeIntoAccount)
+{
+    m_takeChildrenSizeIntoAccount = takeChildrenSizeIntoAccount;
+}
+
 void UIScrollPanel::SetScrollingPercent(const Vector2 &scrollPerc)
 {
     Vector2 scrollPercClamped =
@@ -275,20 +281,45 @@ bool UIScrollPanel::IsHorizontalScrollEnabled() const
 
 Vector2 UIScrollPanel::GetContentSize() const
 {
-    GameObject *containedGo = GetScrollArea()->GetContainedGameObject();
-    return containedGo
-               ? containedGo->GetRectTransform()->GetViewportRect().GetSize()
-               : Vector2::Zero();
+    Vector2 contentSize = Vector2::Zero();
+    if (GameObject *containedGo = GetScrollArea()->GetContainedGameObject())
+    {
+        if (GetTakeChildrenSizeIntoAccount())
+        {
+            AARect boundingRect =
+                containedGo->GetRectTransform()->GetViewportAARect();
+            const Array<GameObject *> &children = containedGo->GetChildren();
+            for (GameObject *child : children)
+            {
+                AARect childAARect =
+                    child->GetRectTransform()->GetViewportAARect();
+                boundingRect.AddPoint(childAARect.GetMin());
+                boundingRect.AddPoint(childAARect.GetMax());
+            }
+            contentSize = boundingRect.GetSize();
+        }
+        else
+        {
+            contentSize =
+                containedGo->GetRectTransform()->GetViewportAARect().GetSize();
+        }
+    }
+    return contentSize;
 }
 
 Vector2 UIScrollPanel::GetContainerSize() const
 {
-    return GetGameObject()->GetRectTransform()->GetViewportRect().GetSize();
+    return GetGameObject()->GetRectTransform()->GetViewportAARect().GetSize();
 }
 
 Vector2 UIScrollPanel::GetMaxScrollLength() const
 {
     return Vector2::Max(GetContentSize() - GetContainerSize(), Vector2::Zero());
+}
+
+bool UIScrollPanel::GetTakeChildrenSizeIntoAccount() const
+{
+    return m_takeChildrenSizeIntoAccount;
 }
 
 UIEventResult UIScrollPanel::OnUIEvent(UIFocusable *focusable,

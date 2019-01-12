@@ -50,29 +50,50 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
     for (uint i = 0; i < steps; ++i)
     {
         const Array<Vector3> prevPositions = mesh->GetPositionsPool();
-        Array<Vector3> newPositions = Array<Vector3>(prevPositions.Size());
         for (Mesh::VertexId vId = 0; vId < mesh->GetPositionsPool().Size();
              ++vId)
         {
             Vector3 vertexPos = prevPositions[vId];
-            Vector3 vDisplacement = Vector3::Zero();
 
             const Array<Mesh::VertexId> neighborVIds =
                 mesh->GetNeighborVertexIds(vId);
             const uint numNeighbors = neighborVIds.Size();
 
-            for (Mesh::VertexId nVId : neighborVIds)
+            if (smoothMethod == MeshSimplifier::SmoothMethod::LAPLACE_COTANGENT)
             {
-                Vector3 neighborVertexPos = prevPositions[nVId];
-                vDisplacement += (neighborVertexPos - vertexPos);
+                Map<Mesh::VertexId, double> edgesCotangentsScalar;
+                Map<Mesh::VertexId, Vector3> edgesCotangentsVector;
+                Map<Mesh::VertexId, double> triAreas;
+                mesh->GetNeighborCotangentWeights(vId,
+                                                  &edgesCotangentsScalar,
+                                                  &edgesCotangentsVector,
+                                                  &triAreas);
+
+                float totalWeight = 0.0f;
+                Vector3 vDisplacement = Vector3::Zero();
+                for (Mesh::VertexId nVId : neighborVIds)
+                {
+                    float nWeight = edgesCotangentsScalar[nVId];
+                    Vector3 neighborVertexPos = prevPositions[nVId];
+                    vDisplacement += nWeight * (neighborVertexPos - vertexPos);
+                    totalWeight += nWeight;
+                }
+                vertexPos += (vDisplacement / totalWeight) * nextSmoothFactor;
             }
-            vDisplacement /= SCAST<float>(numNeighbors);
+            else
+            {
+                Vector3 vDisplacement = Vector3::Zero();
+                for (Mesh::VertexId nVId : neighborVIds)
+                {
+                    Vector3 neighborVertexPos = prevPositions[nVId];
+                    vDisplacement += (neighborVertexPos - vertexPos);
+                }
+                vDisplacement /= SCAST<float>(numNeighbors);
+                vertexPos += vDisplacement * nextSmoothFactor;
+            }
 
-            vertexPos += vDisplacement * nextSmoothFactor;
-            newPositions[vId] = vertexPos;
+            mesh->SetPosition(vId, vertexPos);
         }
-
-        mesh->SetPositionsPool(newPositions);
 
         if (smoothMethod == SmoothMethod::TAUBIN)
         {
@@ -87,6 +108,7 @@ void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
         }
     }
 
+    mesh->UpdateVertexNormals();
     mesh->UpdateVAOs();
 }
 

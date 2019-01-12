@@ -836,7 +836,7 @@ Mesh::CornerId Mesh::GetOppositeCornerId(Mesh::CornerId cId) const
     return m_cornerIdToOppositeCornerId[cId];
 }
 
-float Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
+double Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
 {
     ASSERT(cId < GetNumCorners());
     const CornerId prevCId = GetPreviousCornerId(cId);
@@ -853,8 +853,8 @@ float Mesh::GetCornerAngleRads(Mesh::CornerId cId) const
     const Vector3 prevVector = (prevVPos - vPos).NormalizedSafe();
     const Vector3 nextVector = (nextVPos - vPos).NormalizedSafe();
 
-    const float dot = Vector3::Dot(prevVector, nextVector);
-    const float angleRads = Math::ACos(dot);
+    const double dot = Vector3::Dot(prevVector, nextVector);
+    const double angleRads = Math::ACos(dot);
 
     return angleRads;
 }
@@ -944,7 +944,7 @@ Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
     return neighborTriangleIds;
 }
 
-float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
+double Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
 {
     float trisAreasSum = 0.0f;
     float cornerAnglesSum = 0.0f;
@@ -959,22 +959,28 @@ float Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
     }
 
     trisAreasSum /= 3;
-    float gaussianCurvature = ((2 * Math::Pi) - cornerAnglesSum) / trisAreasSum;
+    double gaussianCurvature =
+        ((2 * Math::Pi) - cornerAnglesSum) / trisAreasSum;
     return gaussianCurvature;
+}
+
+double LimitCotangent(double cotangent)
+{
+    const double eps = 1e-6;
+    const double cotanLimit = (1.0 / Math::Tan(eps));
+    return Math::Clamp(cotangent, -cotanLimit, cotanLimit);
 }
 
 void Mesh::GetNeighborCotangentWeights(
     Mesh::VertexId centralVId,
-    Map<Mesh::VertexId, float> *edgesCotangentsScalar,
+    Map<Mesh::VertexId, double> *edgesCotangentsScalar,
     Map<Mesh::VertexId, Vector3> *edgesCotangentsVector,
-    Map<Mesh::VertexId, float> *triAreas) const
+    Map<Mesh::VertexId, double> *triAreas) const
 {
     edgesCotangentsScalar->Clear();
     edgesCotangentsVector->Clear();
     triAreas->Clear();
 
-    uint numProcessedTris = 0;
-    USet<CornerId> processedCornerIds;
     Mesh::VertexId centralVUniqueId = GetVertexIdUnique(centralVId);
     Vector3 centralVertexPos = GetPositionsPool()[centralVUniqueId];
     Array<CornerId> vertexCornerIds =
@@ -983,60 +989,67 @@ void Mesh::GetNeighborCotangentWeights(
     {
         ASSERT(centralVUniqueId == GetVertexIdUniqueFromCornerId(centralCId));
 
-        CornerId firstCId = GetPreviousCornerId(centralCId);
-        ASSERT(GetTriangleIdFromCornerId(centralCId) ==
-               GetTriangleIdFromCornerId(firstCId));
-
-        if (!processedCornerIds.Contains(centralCId))
+        Array<CornerId> sameTriOtherCIds = {GetPreviousCornerId(centralCId),
+                                            GetNextCornerId(centralCId)};
+        for (uint i = 0; i <= 1; ++i)
         {
-            CornerId oppositeCId = GetOppositeCornerId(firstCId);
-            if (oppositeCId != SCAST<uint>(-1))
+            double edgeCotScalar = 0.0;
+
+            // CornerId onEdgeCentralCId = centralCId;
+            CornerId onEdgeOppositeCId = sameTriOtherCIds[i];
+            CornerId perpToEdgeSameTriCId = sameTriOtherCIds[1 - i];
+            ASSERT(onEdgeOppositeCId != centralCId);
+            ASSERT(GetTriangleIdFromCornerId(centralCId) ==
+                   GetTriangleIdFromCornerId(onEdgeOppositeCId));
+
+            VertexId onEdgeOppVId =
+                GetVertexIdUniqueFromCornerId(onEdgeOppositeCId);
+            ASSERT(onEdgeOppVId != GetVertexIdUniqueFromCornerId(centralCId));
+            ASSERT(onEdgeOppVId !=
+                   GetVertexIdUniqueFromCornerId(perpToEdgeSameTriCId));
+
+            double sameTriCAngle = GetCornerAngleRads(perpToEdgeSameTriCId);
+            double sameTriTanInv =
+                LimitCotangent(1.0 / Math::Tan(sameTriCAngle));
+            edgeCotScalar += (sameTriTanInv);
+
+            CornerId perpToEdgeOppTriCId =
+                GetOppositeCornerId(perpToEdgeSameTriCId);
+            if (perpToEdgeOppTriCId != SCAST<uint>(-1))
             {
                 ASSERT(GetTriangleIdFromCornerId(centralCId) !=
-                       GetTriangleIdFromCornerId(oppositeCId));
-
-                ++numProcessedTris;
-
-                float firstCAngle = GetCornerAngleRads(firstCId);
-                float oppCAngle = GetCornerAngleRads(oppositeCId);
-
-                TriangleId triId = GetTriangleIdFromCornerId(firstCId);
-                VertexId otherVIdOnEdge = GetRemainingVertexIdUnique(
-                    triId, centralVId, GetVertexIdFromCornerId(firstCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(oppositeCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(centralCId));
-                ASSERT(otherVIdOnEdge !=
-                       GetVertexIdUniqueFromCornerId(firstCId));
-
-                Vector3 otherVertexOnEdgePos =
-                    GetPositionsPool()[otherVIdOnEdge];
-                float edgeCotScalar = (1.0f / Math::Tan(firstCAngle) +
-                                       1.0f / Math::Tan(oppCAngle)) *
-                                      0.5f;
-                Vector3 edgeCotVector =
-                    edgeCotScalar * (centralVertexPos - otherVertexOnEdgePos);
-
-                edgesCotangentsScalar->Add(otherVIdOnEdge, edgeCotScalar);
-                edgesCotangentsVector->Add(otherVIdOnEdge, edgeCotVector);
-                triAreas->Add(otherVIdOnEdge, GetTriangle(triId).GetArea());
-
-                processedCornerIds.Add(centralCId);
-                processedCornerIds.Add(oppositeCId);
+                       GetTriangleIdFromCornerId(perpToEdgeOppTriCId));
+                ASSERT(onEdgeOppVId !=
+                       GetVertexIdUniqueFromCornerId(perpToEdgeOppTriCId));
+                double oppCAngle = GetCornerAngleRads(perpToEdgeOppTriCId);
+                double oppTanInv = LimitCotangent(1.0 / Math::Tan(oppCAngle));
+                edgeCotScalar += (oppTanInv);
+                edgeCotScalar *= 0.5;
             }
+
+            edgeCotScalar = Math::Abs(edgeCotScalar);
+
+            Vector3 otherVertexOnEdgePos = GetPositionsPool()[onEdgeOppVId];
+            Vector3 edgeCotVector(float(edgeCotScalar) *
+                                  (centralVertexPos - otherVertexOnEdgePos));
+
+            edgesCotangentsScalar->Add(onEdgeOppVId, edgeCotScalar);
+            edgesCotangentsVector->Add(onEdgeOppVId, edgeCotVector);
+            Triangle tri =
+                GetTriangle(GetTriangleIdFromCornerId(onEdgeOppositeCId));
+            triAreas->Add(onEdgeOppVId, tri.GetArea());
         }
     }
 }
 
-float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
+double Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
 {
     float trisAreasSum = 0.0f;
     Vector3 edgesCotangentsVectorSum = Vector3::Zero();
 
     Map<VertexId, Vector3> edgesCotangentsVector;
-    Map<VertexId, float> edgesCotangentsScalar;
-    Map<VertexId, float> triAreas;
+    Map<VertexId, double> edgesCotangentsScalar;
+    Map<VertexId, double> triAreas;
     GetNeighborCotangentWeights(
         centralVId, &edgesCotangentsScalar, &edgesCotangentsVector, &triAreas);
 
@@ -1052,7 +1065,7 @@ float Mesh::GetVertexMeanCurvature(Mesh::VertexId centralVId) const
 
     Vector3 laplaceBeltrami =
         (1.0f / (trisAreasSum)) * edgesCotangentsVectorSum;
-    float meanCurvature = 0.5f * laplaceBeltrami.Length();
+    double meanCurvature = 0.5f * laplaceBeltrami.Length();
     return meanCurvature;
 }
 

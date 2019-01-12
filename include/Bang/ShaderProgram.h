@@ -107,9 +107,6 @@ public:
     bool SetMatrix4Array(const String &name,
                          const Array<Matrix4> &v,
                          bool warn = false);
-    bool SetTexture2DArray(const String &name,
-                           const Array<Texture2D *> &v,
-                           bool warn = false);
 
     bool AddShader(Shader *shader);
     bool SetVertexShader(Shader *vertexShader);

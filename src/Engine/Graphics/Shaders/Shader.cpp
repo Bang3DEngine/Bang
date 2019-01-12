@@ -25,7 +25,7 @@ Shader::~Shader()
     DeleteShader();
 }
 
-void Shader::SetSourceCode(const String &sourceCode)
+void Shader::SetSourceCode(const String &sourceCode, const Path &sourceCodePath)
 {
     if (sourceCode != GetSourceCode())
     {
@@ -33,7 +33,8 @@ void Shader::SetSourceCode(const String &sourceCode)
         m_sourceCode = sourceCode;
 
         String preprocessedSourceCode = sourceCode;
-        ShaderPreprocessor::PreprocessCode(&preprocessedSourceCode);
+        ShaderPreprocessor::PreprocessCode(&preprocessedSourceCode,
+                                           sourceCodePath);
         m_preprocessedSourceCode = preprocessedSourceCode;
 
         CommitShaderSourceCode();

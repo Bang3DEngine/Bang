@@ -20,7 +20,8 @@ public:
     Shader(GL::ShaderType t);
     virtual ~Shader() override;
 
-    void SetSourceCode(const String &sourceCode);
+    void SetSourceCode(const String &sourceCode,
+                       const Path &sourceCodePath = Path::Empty());
     void SetType(GL::ShaderType type);
     bool CompileIfNeeded();
     bool Compile();

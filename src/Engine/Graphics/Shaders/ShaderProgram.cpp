@@ -88,7 +88,8 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
         for (GL::ShaderType shaderType : shaderTypes)
         {
             String preprocessedShaderSourceCode = shaderSourceCode;
-            ShaderPreprocessor::PreprocessCode(&preprocessedShaderSourceCode);
+            ShaderPreprocessor::PreprocessCode(&preprocessedShaderSourceCode,
+                                               unifiedShaderPath);
 
             String shaderSectionSourceCode =
                 ShaderPreprocessor::GetSectionSourceCode(shaderSourceCode,
@@ -96,7 +97,8 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
             if (!shaderSectionSourceCode.IsEmpty())
             {
                 AH<Shader> shader = Assets::Create<Shader>(shaderType);
-                shader.Get()->SetSourceCode(shaderSectionSourceCode);
+                shader.Get()->SetSourceCode(shaderSectionSourceCode,
+                                            unifiedShaderPath);
                 shader.Get()->CompileIfNeeded();
                 AddShader(shader.Get());
             }

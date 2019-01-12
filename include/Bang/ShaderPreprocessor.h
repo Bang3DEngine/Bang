@@ -3,6 +3,7 @@
 
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
+#include "Bang/Path.h"
 #include "Bang/ShaderProgramProperties.h"
 
 namespace Bang
@@ -22,7 +23,8 @@ class ShaderPreprocessor
 public:
     ShaderPreprocessor() = delete;
 
-    static void PreprocessCode(String *shaderSourceCode);
+    static void PreprocessCode(String *shaderSourceCode,
+                               const Path &shaderSourcePath = Path::Empty());
     static String GetSectionSourceCode(const String &sourceCode,
                                        GL::ShaderType shaderType);
     static String GetSectionSourceCode(const String &sourceCode,

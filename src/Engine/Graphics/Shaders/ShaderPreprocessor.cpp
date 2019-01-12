@@ -13,7 +13,8 @@ using namespace Bang;
 
 const String ShaderPreprocessor::GLSLVersionString = "#version 330 core";
 
-void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
+void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode,
+                                        const Path &shaderSourcePath)
 {
     const Path engShadersDir = Paths::GetEngineAssetsDir().Append("Shaders");
 
@@ -27,6 +28,11 @@ void ShaderPreprocessor::PreprocessCode(String *shaderSourceCode)
         {
             includeDirs.PushBack(p);
         }
+    }
+
+    if (shaderSourcePath.GetDirectory().IsDir())
+    {
+        includeDirs.PushBack(shaderSourcePath.GetDirectory());
     }
 
     bool addVersion = !shaderSourceCode->BeginsWith("#version");

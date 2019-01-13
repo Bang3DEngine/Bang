@@ -744,6 +744,7 @@ void GEngine::FillTexture(Texture2D *texture, const Color &color)
     m_auxiliarFramebuffer->Bind();
     m_auxiliarFramebuffer->SetAttachmentTexture(texture,
                                                 GL::Attachment::COLOR0);
+    m_auxiliarFramebuffer->SetAllDrawBuffers();
     GL::ClearColorBuffer(color);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
@@ -755,13 +756,12 @@ void GEngine::CopyTexture(Texture2D *source, Texture2D *destiny)
     GL::Push(GL::Pushable::BLEND_STATES);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
-    destiny->Resize(source->GetSize());
-
     GL::Disable(GL::Enablable::BLEND);
 
     m_auxiliarFramebuffer->Bind();
     m_auxiliarFramebuffer->SetAttachmentTexture(destiny,
                                                 GL::Attachment::COLOR0);
+    m_auxiliarFramebuffer->SetAllDrawBuffers();
     GEngine::RenderTexture(source);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);

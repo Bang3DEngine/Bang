@@ -26,6 +26,7 @@ public:
     bool Resize(const Vector2i &size);
     void CreateEmpty(int width, int height);
     bool Resize(int width, int height);
+    bool ResizeConservingData(int width, int height);
     void Fill(const Color &fillColor, int width, int height);
     void Fill(const Byte *newData,
               int width,

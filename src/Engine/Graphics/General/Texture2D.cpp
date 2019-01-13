@@ -2,7 +2,9 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "Bang/Assets.h"
 #include "Bang/Color.h"
+#include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
@@ -11,6 +13,7 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/Path.h"
 #include "Bang/StreamOperators.h"
+#include "Bang/Texture2D.h"
 
 using namespace Bang;
 
@@ -128,6 +131,24 @@ void Texture2D::CreateEmpty(int width, int height)
 bool Texture2D::Resize(int width, int height)
 {
     return Resize(Vector2i(width, height));
+}
+
+bool Texture2D::ResizeConservingData(int width, int height)
+{
+    if (width != GetWidth() || height != GetHeight())
+    {
+        GEngine *ge = GEngine::GetInstance();
+        ASSERT(ge);
+
+        AH<Texture2D> auxiliarTexture = Assets::Create<Texture2D>();
+        auxiliarTexture.Get()->Import(ToImage());
+
+        CreateEmpty(width, height);
+        ge->CopyTexture(auxiliarTexture.Get(), this);
+
+        return true;
+    }
+    return false;
 }
 
 int Texture2D::GetWidth() const

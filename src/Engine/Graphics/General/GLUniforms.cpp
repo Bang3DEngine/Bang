@@ -238,8 +238,8 @@ void GLUniforms::UpdatePVMMatrix()
         case GL::ViewProjMode::CANVAS:
         {
             Matrix4 canvasProj = GLUniforms::GetCanvasProjectionMatrix();
-            glu->m_cameraUniforms.projView =
-                canvasProj * glu->m_cameraUniforms.view;
+            glu->m_cameraUniforms.projView = canvasProj;
+            // * glu->m_cameraUniforms.view;
             matrices->pvm = canvasProj * matrices->model;
         }
         break;

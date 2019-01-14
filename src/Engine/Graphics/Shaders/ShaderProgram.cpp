@@ -309,7 +309,12 @@ bool SetShaderUniform(ShaderProgram *sp,
                       const T &v,
                       bool warn)
 {
-    ASSERT(GL::IsBound(sp));
+    bool wasBound = GL::IsBound(sp);
+    if (!wasBound)
+    {
+        GL::Push(GL::Pushable::SHADER_PROGRAM);
+        sp->Bind();
+    }
 
     bool update = true;
     if (cache)
@@ -321,6 +326,7 @@ bool SetShaderUniform(ShaderProgram *sp,
         }
     }
 
+    int location = -1;
     if (update)
     {
         if (cache)
@@ -328,7 +334,7 @@ bool SetShaderUniform(ShaderProgram *sp,
             (*cache)[name] = v;
         }
 
-        int location = sp->GetUniformLocation(name);
+        location = sp->GetUniformLocation(name);
         if (location >= 0)
         {
             GL::Uniform(location, v);
@@ -337,9 +343,14 @@ bool SetShaderUniform(ShaderProgram *sp,
         {
             Debug_Warn("Uniform '" << name << "' not found");
         }
-        return (location >= 0);
     }
-    return true;
+
+    if (!wasBound)
+    {
+        GL::Pop(GL::Pushable::SHADER_PROGRAM);
+    }
+
+    return (location >= 0);
 }
 
 bool ShaderProgram::SetInt(const String &name, int v, bool warn)

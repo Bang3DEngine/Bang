@@ -737,9 +737,11 @@ void GEngine::BlurTextureCM(TextureCubeMap *inputTextureCM,
 void GEngine::FillTexture(Texture2D *texture, const Color &color)
 {
     GL::Push(GL::Pushable::BLEND_STATES);
+    GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     GL::Disable(GL::Enablable::BLEND);
+    GL::SetViewport(0, 0, texture->GetWidth(), texture->GetHeight());
 
     m_auxiliarFramebuffer->Bind();
     m_auxiliarFramebuffer->SetAttachmentTexture(texture,
@@ -748,15 +750,18 @@ void GEngine::FillTexture(Texture2D *texture, const Color &color)
     GL::ClearColorBuffer(color);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::VIEWPORT);
     GL::Pop(GL::Pushable::BLEND_STATES);
 }
 
 void GEngine::CopyTexture(Texture2D *source, Texture2D *destiny)
 {
     GL::Push(GL::Pushable::BLEND_STATES);
+    GL::Push(GL::Pushable::VIEWPORT);
     GL::Push(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
 
     GL::Disable(GL::Enablable::BLEND);
+    GL::SetViewport(0, 0, destiny->GetWidth(), destiny->GetHeight());
 
     m_auxiliarFramebuffer->Bind();
     m_auxiliarFramebuffer->SetAttachmentTexture(destiny,
@@ -765,6 +770,7 @@ void GEngine::CopyTexture(Texture2D *source, Texture2D *destiny)
     GEngine::RenderTexture(source);
 
     GL::Pop(GL::Pushable::FRAMEBUFFER_AND_READ_DRAW_ATTACHMENTS);
+    GL::Pop(GL::Pushable::VIEWPORT);
     GL::Pop(GL::Pushable::BLEND_STATES);
 }
 

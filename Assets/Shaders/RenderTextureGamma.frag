@@ -10,9 +10,9 @@ layout(location = 0) out vec4 B_GIn_Color;
 void main()
 {
     vec2 uv = B_FIn_AlbedoUv;
-    vec3 color = texture(B_RenderTexture_Texture, uv).rgb;
+    vec4 color = texture(B_RenderTexture_Texture, uv);
 
     float gammaCorrection = B_GammaCorrection;
     vec3 gammaCorrectedColor = pow(color.rgb, vec3(gammaCorrection));
-    B_GIn_Color = vec4(gammaCorrectedColor, 1);
+    B_GIn_Color = vec4(gammaCorrectedColor, color.a);
 }

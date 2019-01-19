@@ -112,9 +112,13 @@ vec4  B_SampleColor(vec2 uv)
 {
     return texture(B_GTex_Color, uv);
 }
+vec3  B_SampleNormal(sampler2D normalTexture, vec2 uv)
+{
+    return normalize( texture(normalTexture, uv).xyz * 2.0f - 1.0f );
+}
 vec3  B_SampleNormal(vec2 uv)
 {
-    return normalize( texture(B_GTex_Normal, uv).xyz * 2.0f - 1.0f );
+    return B_SampleNormal(B_GTex_Normal, uv);
 }
 vec4  B_SampleAlbedoColor(vec2 uv)
 {

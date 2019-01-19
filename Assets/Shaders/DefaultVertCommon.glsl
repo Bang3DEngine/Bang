@@ -27,12 +27,11 @@ layout(location = 5) in vec4 B_VIn_VertexBonesWeights;
 vec4 GetWorldVertexNormal()
 {
     vec4 modelNormal = vec4(B_VIn_Normal, 0);
-
-    ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
-    vec4 boneWeights = B_VIn_VertexBonesWeights;
-
     if (B_HasBoneAnimations)
     {
+        ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
+        vec4 boneWeights = B_VIn_VertexBonesWeights;
+
         vec4 bonedNormal = vec4(0);
         bonedNormal += (B_BoneAnimationMatrices[boneIds[0]] * modelNormal) * boneWeights[0];
         bonedNormal += (B_BoneAnimationMatrices[boneIds[1]] * modelNormal) * boneWeights[1];
@@ -40,19 +39,16 @@ vec4 GetWorldVertexNormal()
         bonedNormal += (B_BoneAnimationMatrices[boneIds[3]] * modelNormal) * boneWeights[3];
         modelNormal = vec4(bonedNormal.xyz, 0);
     }
-
     return B_Normal * modelNormal;
 }
 
 vec4 GetModelVertexPosition()
 {
     vec4 modelPosition = vec4(B_VIn_Position, 1);
-
-    ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
-    vec4 boneWeights = B_VIn_VertexBonesWeights;
-
     if (B_HasBoneAnimations)
     {
+        ivec4 boneIds = ivec4(B_VIn_VertexBonesIds);
+        vec4 boneWeights = B_VIn_VertexBonesWeights;
         vec4 bonedPosition = vec4(0);
         bonedPosition += (B_BoneAnimationMatrices[boneIds[0]] * modelPosition) * boneWeights[0];
         bonedPosition += (B_BoneAnimationMatrices[boneIds[1]] * modelPosition) * boneWeights[1];
@@ -60,7 +56,6 @@ vec4 GetModelVertexPosition()
         bonedPosition += (B_BoneAnimationMatrices[boneIds[3]] * modelPosition) * boneWeights[3];
         modelPosition = vec4(bonedPosition.xyz, 1);
     }
-
     return modelPosition;
 }
 vec4 GetWorldVertexPosition(vec4 vertexModelPosition)
@@ -91,7 +86,7 @@ void main()
         // Calculate TBN for normal mapping
         if (B_HasNormalMapTexture)
         {
-            vec3 tangent = normalize(B_Normal * vec4(B_VIn_Tangent, 0)).xyz;
+            vec3 tangent = (B_Normal * vec4(B_VIn_Tangent, 0)).xyz;
             vec3 T = (tangent);
             vec3 N = (B_FIn_Normal);
             vec3 B = cross(N, T);

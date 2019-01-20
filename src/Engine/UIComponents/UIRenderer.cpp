@@ -47,16 +47,37 @@ void UIRenderer::OnRender(RenderPass renderPass)
                           AARect::Zero());
         }
 
+        if (!GetCanBeRectMasked())
+        {
+            GL::Push(GL::Enablable::SCISSOR_TEST);
+            GL::Disable(GL::Enablable::SCISSOR_TEST);
+        }
+
         if (render)
         {
             Renderer::OnRender(renderPass);
         }
+
+        if (!GetCanBeRectMasked())
+        {
+            GL::Pop(GL::Enablable::SCISSOR_TEST);
+        }
     }
+}
+
+void UIRenderer::SetCanBeRectMasked(bool canBeRectMasked)
+{
+    m_canBeRectMasked = canBeRectMasked;
 }
 
 void UIRenderer::SetCullByRectTransform(bool cullByRectTransform)
 {
     m_cullByRectTransform = cullByRectTransform;
+}
+
+bool UIRenderer::GetCanBeRectMasked() const
+{
+    return m_canBeRectMasked;
 }
 
 bool UIRenderer::GetCullByRectTransform() const

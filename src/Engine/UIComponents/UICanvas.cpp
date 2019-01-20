@@ -925,8 +925,9 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
         GameObject *child = *it;
         if (child->IsActiveRecursively() && child->IsVisibleRecursively())
         {
+            const AARecti &parentRectMask = maskRectStack->top();
             UIRectMask *rectMask = child->GetComponent<UIRectMask>();
-            AARecti maskedRectVP = maskRectStack->top();
+            AARecti maskedRectVP = parentRectMask;
             if (rectMask && rectMask->IsActiveRecursively() &&
                 rectMask->IsMasking())
             {
@@ -941,8 +942,10 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
 
             if (UIFocusable *focusable = child->GetComponent<UIFocusable>())
             {
-                sortedCandidates->PushBack(
-                    std::make_pair(focusable, maskedRectVP));
+                sortedCandidates->PushBack(std::make_pair(
+                    focusable,
+                    focusable->GetCanBeRectMasked() ? maskedRectVP
+                                                    : GL::GetViewportRect()));
             }
             maskRectStack->pop();
         }

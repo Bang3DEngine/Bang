@@ -35,7 +35,10 @@ public:
     virtual void OnRender() override;
     virtual void OnRender(RenderPass renderPass) override;
 
+    void SetCanBeRectMasked(bool canBeRectMasked);
     void SetCullByRectTransform(bool cullByRectTransform);
+
+    bool GetCanBeRectMasked() const;
     bool GetCullByRectTransform() const;
 
     // IEventsObject
@@ -58,6 +61,7 @@ protected:
     virtual ~UIRenderer() override;
 
 private:
+    bool m_canBeRectMasked = true;
     bool m_cullByRectTransform = true;
 };
 }

@@ -121,6 +121,23 @@ void UIComboBox::AddItem(const String &label, int value)
     m_indexToLabel.PushBack(label);
     m_checkImgs.PushBack(checkIcon);
 
+    // Set list so that it can not be rect masked
+    {
+        GameObject *listGo = GetList()->GetGameObject();
+        Array<UIFocusable *> uiFocusables =
+            listGo->GetComponentsInDescendantsAndThis<UIFocusable>();
+        Array<UIRenderer *> uiRends =
+            listGo->GetComponentsInDescendantsAndThis<UIRenderer>();
+        for (UIFocusable *uiFocusable : uiFocusables)
+        {
+            uiFocusable->SetCanBeRectMasked(false);
+        }
+        for (UIRenderer *uiRend : uiRends)
+        {
+            uiRend->SetCanBeRectMasked(false);
+        }
+    }
+
     if (m_selectedIndices.IsEmpty() && !GetMultiCheck())
     {
         SetSelectionByIndex(0);
@@ -367,6 +384,10 @@ UIEventResult UIComboBox::OnUIEvent(UIFocusable *, const UIEvent &event)
                 HideList();
             }
             break;
+
+        case UIEvent::Type::MOUSE_CLICK_FULL:
+        case UIEvent::Type::MOUSE_EXIT:
+        case UIEvent::Type::MOUSE_ENTER: return UIEventResult::INTERCEPT; break;
 
         case UIEvent::Type::MOUSE_CLICK_UP:
         {

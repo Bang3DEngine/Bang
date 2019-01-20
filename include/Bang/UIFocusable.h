@@ -28,6 +28,7 @@ public:
     UIEventResult ProcessEvent(const UIEvent &event);
 
     void SetCursorType(Cursor::Type cursorType);
+    void SetCanBeRectMasked(bool canBeRectMasked);
     void SetConsiderForTabbing(bool considerForTabbing);
     void AddEventCallback(UIFocusable::EventCallback eventCallback);
     void ClearEventCallbacks();
@@ -36,6 +37,7 @@ public:
     bool HasJustFocusChanged() const;
     bool IsBeingPressed() const;
     bool IsMouseOver() const;
+    bool GetCanBeRectMasked() const;
     Cursor::Type GetCursorType() const;
     bool GetConsiderForTabbing() const;
 
@@ -43,6 +45,7 @@ private:
     bool m_hasFocus = false;
     bool m_isMouseOver = false;
     bool m_beingPressed = false;
+    bool m_canBeRectMasked = false;
     bool m_considerForTabbing = false;
     Cursor::Type m_cursorType = Cursor::Type::ARROW;
 

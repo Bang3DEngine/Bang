@@ -96,9 +96,19 @@ bool UIFocusable::IsMouseOver() const
     return m_isMouseOver;
 }
 
+bool UIFocusable::GetCanBeRectMasked() const
+{
+    return m_canBeRectMasked;
+}
+
 void UIFocusable::SetCursorType(Cursor::Type cursorType)
 {
     m_cursorType = cursorType;
+}
+
+void UIFocusable::SetCanBeRectMasked(bool canBeRectMasked)
+{
+    m_canBeRectMasked = canBeRectMasked;
 }
 
 void UIFocusable::SetConsiderForTabbing(bool considerForTabbing)

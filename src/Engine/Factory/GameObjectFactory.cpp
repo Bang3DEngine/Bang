@@ -247,15 +247,26 @@ UIComboBox *GameObjectFactory::CreateUIBoolComboBox()
         GameObjectFactory::CreateUIGameObjectNamed("BoolComboBox"));
 }
 
-UISlider *GameObjectFactory::CreateUISliderInto(GameObject *go)
+UISlider *GameObjectFactory::CreateUISliderInto(GameObject *go,
+                                                float minValue,
+                                                float maxValue,
+                                                float step)
 {
-    return UISlider::CreateInto(go);
+    UISlider *slider = UISlider::CreateInto(go);
+    slider->SetMinMaxValues(minValue, maxValue);
+    slider->GetInputNumber()->SetStep(step);
+    return slider;
 }
 
-UISlider *GameObjectFactory::CreateUISlider()
+UISlider *GameObjectFactory::CreateUISlider(float minValue,
+                                            float maxValue,
+                                            float step)
 {
     return GameObjectFactory::CreateUISliderInto(
-        GameObjectFactory::CreateUIGameObjectNamed("Slider"));
+        GameObjectFactory::CreateUIGameObjectNamed("Slider"),
+        minValue,
+        maxValue,
+        step);
 }
 
 UIInputNumber *GameObjectFactory::CreateUIInputNumberInto(GameObject *go)

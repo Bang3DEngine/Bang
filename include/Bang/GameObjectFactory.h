@@ -74,8 +74,13 @@ public:
     static UIComboBox *CreateUIComboBox();
     static UIComboBox *CreateUIBoolComboBoxInto(GameObject *go);
     static UIComboBox *CreateUIBoolComboBox();
-    static UISlider *CreateUISliderInto(GameObject *go);
-    static UISlider *CreateUISlider();
+    static UISlider *CreateUISliderInto(GameObject *go,
+                                        float minValue = 0.0f,
+                                        float maxValue = 1.0f,
+                                        float step = 0.1f);
+    static UISlider *CreateUISlider(float minValue = 0.0f,
+                                    float maxValue = 1.0f,
+                                    float step = 0.1f);
     static UIInputNumber *CreateUIInputNumberInto(GameObject *go);
     static UIInputNumber *CreateUIInputNumber();
     static UIRendererCacher *CreateUIRendererCacherInto(GameObject *go);

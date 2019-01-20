@@ -96,6 +96,8 @@ public:
                                        bool broadSearch) const;
     template <class T>
     T *FindObjectInDescendants() const;
+    template <class T>
+    Array<T *> FindObjectsInDescendants() const;
     Object *FindObjectInDescendants(ClassIdType classIdBegin,
                                     ClassIdType classIdEnd) const;
 

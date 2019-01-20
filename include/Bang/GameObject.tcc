@@ -304,6 +304,30 @@ T *GameObject::FindObjectInDescendants() const
 }
 
 template <class T>
+Array<T *> GameObject::FindObjectsInDescendants() const
+{
+    Array<T *> foundObjects;
+    if (T *obj = DCAST<T *>(const_cast<GameObject *>(this)))
+    {
+        foundObjects.PushBack(obj);
+    }
+
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (child)
+        {
+            foundObjects.PushBack(child->FindObjectsInDescendants<T>());
+        }
+    }
+
+    Array<T *> foundCompsObjs = GetComponents<T>();
+    foundObjects.PushBack(foundCompsObjs);
+
+    return foundObjects;
+}
+
+template <class T>
 bool CanEventBePropagated(const T &x)
 {
     if (!x)

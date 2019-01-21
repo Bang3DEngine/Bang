@@ -15,11 +15,15 @@
 #include "Bang/MouseButton.h"
 #include "Bang/Rect.h"
 #include "Bang/RectTransform.h"
+#include "Bang/Scene.h"
 #include "Bang/Stretch.h"
+#include "Bang/Texture2D.h"
+#include "Bang/TextureFactory.h"
 #include "Bang/UICanvas.h"
 #include "Bang/UIContentSizeFitter.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
+#include "Bang/UIListItemContainer.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/UIScrollPanel.h"
 #include "Bang/UIVerticalLayout.h"
@@ -35,6 +39,7 @@ UIList::UIList()
 
 UIList::~UIList()
 {
+    GameObject::Destroy(p_dragMarker);
 }
 
 void UIList::AddItem(GOItem *newItem)
@@ -79,6 +84,9 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
     Array<UIFocusable *> newItemFocusables =
         newItem->GetComponentsInDescendantsAndThis<UIFocusable>();
 
+    UIListItemContainer *newItemCont = new UIListItemContainer();
+    newItemCont->SetContainedGameObject(newItem);
+
     UIImageRenderer *itemBg = newItem->AddComponent<UIImageRenderer>(0);
     itemBg->SetTint(GetIdleColor());
 
@@ -88,7 +96,7 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
     }
 
     newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
-    newItem->SetParent(GetContainer(), index);
+    newItemCont->SetParent(GetContainer(), index);
 
     p_itemsBackground.Add(newItem, itemBg);
     p_items.Insert(newItem, index);
@@ -519,6 +527,234 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
     return UIEventResult::IGNORE;
 }
 
+void UIList::GetMousePositionInList(
+    GOItem **itemOverOut,
+    UIList::MouseItemRelativePosition *itemRelPosOut) const
+{
+    if (GetGameObject()->GetRectTransform()->IsMouseOver())
+    {
+        if (!GetItems().IsEmpty())
+        {
+            bool foundItemOver = false;
+            const Vector2i mousePos = Input::GetMousePosition();
+            for (int i = 0; i < GetNumItems(); ++i)
+            {
+                GameObject *itChildItemCont = GetItems()[i];
+                GameObject *childItemCont = itChildItemCont;
+                if (!childItemCont->IsActiveRecursively())
+                {
+                    continue;
+                }
+
+                RectTransform *childItemContRT =
+                    childItemCont->GetRectTransform();
+                AARect childItemContRect = childItemContRT->GetViewportAARect();
+                if (childItemContRect.Contains(Vector2(mousePos)))
+                {
+                    constexpr int BoundaryEps = 4;
+                    if (mousePos.y >=
+                        childItemContRect.GetMax().y - BoundaryEps)
+                    {
+                        *itemRelPosOut = MouseItemRelativePosition::ABOVE;
+                    }
+                    else if (mousePos.y <=
+                             childItemContRect.GetMin().y + BoundaryEps)
+                    {
+                        *itemRelPosOut = MouseItemRelativePosition::BELOW;
+                    }
+                    else
+                    {
+                        *itemRelPosOut = MouseItemRelativePosition::OVER;
+                    }
+
+                    GameObject *childItemGo = itChildItemCont;
+                    *itemOverOut = childItemGo;
+                    foundItemOver = true;
+                    break;
+                }
+            }
+
+            if (!foundItemOver && !GetItems().IsEmpty())
+            {
+                GameObject *firstItemGo = GetItems().Front();
+                RectTransform *firstItemContRT =
+                    firstItemGo->GetRectTransform();
+                if (mousePos.y >=
+                    firstItemContRT->GetViewportAARect().GetMax().y)
+                {
+                    *itemOverOut = firstItemGo;  // Above all items
+                    *itemRelPosOut = MouseItemRelativePosition::ABOVE;
+                }
+                else  // Below all items
+                {
+                    *itemOverOut = nullptr;
+                    *itemRelPosOut = MouseItemRelativePosition::BELOW_ALL;
+                }
+            }
+        }
+        else
+        {
+            *itemOverOut = nullptr;
+        }
+    }
+    else
+    {
+        *itemOverOut = nullptr;
+    }
+}
+
+void UIList::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
+{
+    IEventsDragDrop::OnDragStarted(dd_);
+
+    UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
+    if (GOItem *draggedItem = dd->GetGameObject())
+    {
+        p_itemBeingDragged = draggedItem;
+    }
+    else
+    {
+        p_itemBeingDragged = nullptr;
+    }
+
+    p_dragMarker->SetParent(GetGameObject()->GetScene());
+}
+
+void UIList::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
+{
+    IEventsDragDrop::OnDragUpdate(dd_);
+
+    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
+
+    GOItem *childItemOver = nullptr;
+    MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
+    GetMousePositionInList(&childItemOver, &markPosition);
+
+    AH<Texture2D> markImgAH;
+    constexpr int MarkStroke = 2;
+    Vector2 dragMarkerPos, dragMarkerSize;
+    UIImageRenderer::Mode markImgMode = UIImageRenderer::Mode::TEXTURE_INV_UVY;
+    if (childItemOver)
+    {
+        GOItem *childItem = childItemOver;
+        RectTransform *childItemRT = childItem->GetRectTransform();
+        AARect childItemRect = childItemRT->GetViewportAARect();
+        switch (markPosition)
+        {
+            case MouseItemRelativePosition::ABOVE:
+                dragMarkerPos.x = childItemRect.GetMax().x;
+                dragMarkerPos.y = childItemRect.GetMax().y;
+                dragMarkerSize = childItemRect.GetMaxXMaxY() - dragMarkerPos;
+                dragMarkerSize.y += MarkStroke;
+                break;
+
+            case MouseItemRelativePosition::OVER:
+                dragMarkerPos = childItemRect.GetMinXMinY();
+                dragMarkerSize = childItemRect.GetMax() - dragMarkerPos;
+                markImgAH.Set(
+                    TextureFactory::Get9SliceRoundRectBorderTexture());
+                markImgMode = UIImageRenderer::Mode::SLICE_9;
+                break;
+
+            case MouseItemRelativePosition::BELOW:
+                dragMarkerPos.x = childItemRect.GetMax().x;
+                dragMarkerPos.y = childItemRect.GetMin().y;
+                dragMarkerSize = childItemRect.GetMaxXMinY() - dragMarkerPos;
+                dragMarkerSize.y += MarkStroke;
+                break;
+
+            default: break;
+        }
+    }
+    else
+    {
+        if (markPosition == MouseItemRelativePosition::BELOW_ALL)
+        {
+            GOItem *lastItem = nullptr;
+            for (GameObject *item : GetItems())
+            {
+                if (item->IsActiveRecursively())
+                {
+                    lastItem = item;
+                }
+            }
+
+            if (lastItem)
+            {
+                AARect lastItemRect =
+                    lastItem->GetRectTransform()->GetViewportAARect();
+                dragMarkerPos = lastItemRect.GetMinXMinY();
+                dragMarkerSize = lastItemRect.GetMaxXMinY() - dragMarkerPos;
+                dragMarkerSize.y += MarkStroke;
+            }
+        }
+    }
+
+    RectTransform *dragMarkerRT = p_dragMarker->GetRectTransform();
+    dragMarkerRT->SetMarginLeftBot(Vector2i(dragMarkerPos));
+    dragMarkerRT->SetMarginRightTop(Vector2i(-dragMarkerPos + -dragMarkerSize));
+    p_dragMarkerImg->SetImageTexture(markImgAH.Get());
+    p_dragMarkerImg->SetMode(markImgMode);
+
+    p_dragMarkerImg->SetTint(Color::Blue());
+}
+
+void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
+{
+    IEventsDragDrop::OnDrop(dd_);
+
+    UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
+
+    GOItem *draggedItem = dragDroppable->GetGameObject();
+    if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
+    {
+        GOItem *itemOver = nullptr;
+        MouseItemRelativePosition relPos;
+        GetMousePositionInList(&itemOver, &relPos);
+
+        int newIndex = 0;
+        switch (relPos)
+        {
+            case MouseItemRelativePosition::ABOVE:
+                newIndex = GetItems().IndexOf(itemOver) - 1;
+                break;
+
+            case MouseItemRelativePosition::OVER:
+            case MouseItemRelativePosition::BELOW:
+                newIndex = GetItems().IndexOf(itemOver) + 1;
+                break;
+
+            case MouseItemRelativePosition::BELOW_ALL:
+                newIndex = GetItems().Size();
+                break;
+        }
+
+        if (draggedItem)
+        {
+            if (GetItems().Contains(draggedItem))
+            {
+                MoveItem(p_itemBeingDragged, newIndex);
+            }
+        }
+        else
+        {
+            EventEmitter<IEventsUIList>::PropagateToListeners(
+                &IEventsUIList::OnDropFromOutside,
+                dragDroppable,
+                draggedItem,
+                newIndex);
+        }
+    }
+    else
+    {
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+            &IEventsUIList::OnDropOutside, dragDroppable);
+    }
+
+    p_itemBeingDragged = nullptr;
+    p_dragMarker->SetParent(nullptr);
+}
+
 void UIList::SetSelection(GOItem *item)
 {
     SetSelection(p_items.IndexOf(item));
@@ -595,7 +831,7 @@ UIList *UIList::CreateInto(GameObject *go, bool withScrollPanel)
 {
     REQUIRE_COMPONENT(go, RectTransform);
 
-    UIList *list = go->AddComponent<UIList>();
+    UIList *uiList = go->AddComponent<UIList>();
     go->SetName("UIList");
 
     GameObject *container =
@@ -605,10 +841,10 @@ UIList *UIList::CreateInto(GameObject *go, bool withScrollPanel)
     UIVerticalLayout *containerVL = container->AddComponent<UIVerticalLayout>();
     containerVL->SetChildrenVerticalStretch(Stretch::NONE);
     containerVL->SetChildrenHorizontalStretch(Stretch::FULL);
-    list->p_dirLayout = containerVL;
+    uiList->p_dirLayout = containerVL;
 
-    list->p_focusable = container->AddComponent<UIFocusable>();
-    list->p_focusable->EventEmitter<IEventsFocus>::RegisterListener(list);
+    uiList->p_focusable = container->AddComponent<UIFocusable>();
+    uiList->p_focusable->EventEmitter<IEventsFocus>::RegisterListener(uiList);
 
     if (withScrollPanel)
     {
@@ -623,16 +859,25 @@ UIList *UIList::CreateInto(GameObject *go, bool withScrollPanel)
 
         scrollPanel->GetScrollArea()->SetContainedGameObject(container);
 
-        list->p_scrollPanel = scrollPanel;
+        uiList->p_scrollPanel = scrollPanel;
     }
     else
     {
-        list->p_scrollPanel = nullptr;
+        uiList->p_scrollPanel = nullptr;
     }
 
-    list->p_container = container;
+    GameObject *dragMarker = GameObjectFactory::CreateUIGameObject();
+    UIImageRenderer *dragMarkerImg =
+        dragMarker->AddComponent<UIImageRenderer>();
+    dragMarker->GetRectTransform()->TranslateLocal(Vector3(0.0f, 0.0f, -0.4f));
+    dragMarker->GetRectTransform()->SetAnchors(-Vector2::One());
 
-    return list;
+    uiList->p_dragMarker = dragMarker;
+    uiList->p_dragMarkerImg = dragMarkerImg;
+
+    uiList->p_container = container;
+
+    return uiList;
 }
 
 void UIList::CallSelectionCallback(GOItem *item, Action action)

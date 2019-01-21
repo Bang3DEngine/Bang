@@ -40,7 +40,9 @@ void LineRenderer::OnRender()
     {
         GL::Render(p_mesh.Get()->GetVAO(),
                    GetRenderPrimitive(),
-                   p_mesh.Get()->GetNumVertices());
+                   p_mesh.Get()->GetNumVertices(),
+                   0,
+                   false);
     }
 }
 

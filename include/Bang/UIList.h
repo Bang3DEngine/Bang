@@ -17,6 +17,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsDestroy.h"
+#include "Bang/IEventsDragDrop.h"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsUIList.h"
 #include "Bang/String.h"
@@ -27,19 +28,30 @@ namespace Bang
 {
 class UIDirLayout;
 class UIFocusable;
+class UIDragDroppable;
 class UIImageRenderer;
 class UIScrollPanel;
+class UIListItemContainer;
 
 using GOItem = GameObject;
 
 class UIList : public Component,
                public EventListener<IEventsFocus>,
                public EventListener<IEventsDestroy>,
+               public EventListener<IEventsDragDrop>,
                public EventEmitter<IEventsUIList>
 {
     COMPONENT(UIList)
 
 public:
+    enum class MouseItemRelativePosition
+    {
+        ABOVE,
+        OVER,
+        BELOW,
+        BELOW_ALL
+    };
+
     enum class Action
     {
         SELECTION_IN,
@@ -109,6 +121,17 @@ protected:
                               bool callCallbacks = true);
     UIImageRenderer *GetItemBg(GOItem *item) const;
 
+    void GetMousePositionInList(
+        GOItem **itemOverOut,
+        UIList::MouseItemRelativePosition *itemRelPosOut) const;
+
+    // IEventsDragDrop
+    virtual void OnDragStarted(
+        EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDragUpdate(
+        EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+
 private:
     Array<GOItem *> p_items;
     UIDirLayout *p_dirLayout = nullptr;
@@ -117,7 +140,11 @@ private:
 
     int m_selectionIndex = -1;
     GOItem *p_itemUnderMouse = nullptr;
+    GOItem *p_itemBeingDragged = nullptr;
     SelectionCallback m_selectionCallback;
+
+    GameObject *p_dragMarker = nullptr;
+    UIImageRenderer *p_dragMarkerImg = nullptr;
 
     GameObject *p_container = nullptr;
     UIScrollPanel *p_scrollPanel = nullptr;
@@ -141,6 +168,6 @@ private:
 
     friend class GameObjectFactory;
 };
-}  // namespace Bang
+}
 
 #endif  // UILIST_H

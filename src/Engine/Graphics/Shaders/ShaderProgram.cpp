@@ -99,6 +99,7 @@ bool ShaderProgram::Load(const Path &unifiedShaderPath)
                 AH<Shader> shader = Assets::Create<Shader>(shaderType);
                 shader.Get()->SetSourceCode(shaderSectionSourceCode,
                                             unifiedShaderPath);
+                shader.Get()->m_unifiedShaderPath = unifiedShaderPath;
                 shader.Get()->CompileIfNeeded();
                 AddShader(shader.Get());
             }

@@ -41,8 +41,11 @@ private:
     String m_sourceCode = "";
     String m_preprocessedSourceCode = "";
     GL::ShaderType m_type = Undef<GL::ShaderType>();
+    Path m_unifiedShaderPath = Path::Empty();
 
     void CommitShaderSourceCode();
+
+    friend class ShaderProgram;
 };
 }
 

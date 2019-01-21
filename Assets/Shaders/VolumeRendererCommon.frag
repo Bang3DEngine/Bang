@@ -1,5 +1,8 @@
 #define BANG_FRAGMENT
 
+#define BANG_UNIFORMS_SKYBOXES
+#define BANG_UNIFORMS_MATERIAL_PBR
+
 #include "Common.glsl"
 #include "LightCommon.glsl"
 #include "MaterialPBRUniforms.glsl"

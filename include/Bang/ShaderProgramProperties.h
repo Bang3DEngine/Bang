@@ -27,7 +27,7 @@ private:
     bool m_wireframe = false;
     float m_lineWidth = 1.0f;
     RenderPass m_renderPass = RenderPass::SCENE_OPAQUE;
-    GL::CullFaceExt m_cullFace = GL::CullFaceExt::NONE;
+    GL::CullFaceExt m_cullFace = GL::CullFaceExt::BACK;
 };
 }
 

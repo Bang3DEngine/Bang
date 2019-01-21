@@ -92,9 +92,10 @@ bool Shader::Compile()
     m_compiled = GL::CompileShader(GetGLId());
     if (!IsCompiled())
     {
+        Path shaderPath = (GetAssetFilepath().IsFile() ? GetAssetFilepath()
+                                                       : m_unifiedShaderPath);
         Debug_Error(
-            "Failed to compile shader: '" << GetAssetFilepath() << "': "
-                                          << std::endl
+            "Failed to compile shader: '" << shaderPath << "': " << std::endl
                                           << GL::GetShaderErrorMsg(GetGLId()));
     }
     return IsCompiled();

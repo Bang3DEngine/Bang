@@ -27,7 +27,7 @@ Shader::~Shader()
 
 void Shader::SetSourceCode(const String &sourceCode, const Path &sourceCodePath)
 {
-    if (sourceCode != GetSourceCode())
+    // if (sourceCode != GetSourceCode())
     {
         m_compiled = false;
         m_sourceCode = sourceCode;

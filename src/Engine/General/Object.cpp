@@ -79,7 +79,7 @@ void Object::SetWaitingToBeDestroyed()
 
 void Object::InvalidateEnabledRecursively()
 {
-    // if (m_enabledRecursivelyValid)
+    if (m_enabledRecursivelyValid)
     {
         m_enabledRecursivelyValid = false;
         OnEnabledRecursivelyInvalidated();
@@ -143,7 +143,7 @@ bool Object::IsStarted() const
 
 bool Object::IsActiveRecursively() const
 {
-    return IsActive() && IsEnabledRecursively();
+    return IsEnabledRecursively() && !IsWaitingToBeDestroyed();
 }
 
 bool Object::IsEnabledRecursively() const

@@ -186,6 +186,14 @@ public:
     template <class T>
     Array<T *> GetObjectsInChildrenAndThis() const;
     template <class T>
+    T *GetObjectInParent() const;
+    template <class T>
+    T *GetObjectInParentAndThis() const;
+    template <class T>
+    Array<T *> GetObjectsInParent() const;
+    template <class T>
+    Array<T *> GetObjectsInParentAndThis() const;
+    template <class T>
     T *GetObjectInDescendants() const;
     template <class T>
     T *GetObjectInDescendantsAndThis() const;

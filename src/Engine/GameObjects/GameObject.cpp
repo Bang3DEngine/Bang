@@ -181,14 +181,13 @@ void GameObject::AddChild_(GameObject *childToAdd,
         m_children.Insert(childToAdd, index);
 
         EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
-            GetObjectsInDescendantsAndThis<EventListener<IEventsChildren>>(),
+            GetObjects<EventListener<IEventsChildren>>(),
             &IEventsChildren::OnChildAdded,
             childToAdd,
             this);
 
         EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
-            childToAdd->GetObjectsInDescendantsAndThis<
-                EventListener<IEventsChildren>>(),
+            childToAdd->GetObjects<EventListener<IEventsChildren>>(),
             &EventListener<IEventsChildren>::OnParentChanged,
             oldParent,
             this);
@@ -207,7 +206,7 @@ void GameObject::AddChild_(GameObject *childToAdd,
             m_children.Insert(childToAdd, newIndex);
 
             EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
-                GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
+                GetObjects<EventListener<IEventsChildren>>(),
                 &IEventsChildren::OnChildMoved,
                 this,
                 childToAdd,
@@ -226,7 +225,7 @@ void GameObject::RemoveChild(GameObject *childToRemove)
         TryToClearDeletedChildren();
 
         EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
-            GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
+            GetObjects<EventListener<IEventsChildren>>(),
             &IEventsChildren::OnChildRemoved,
             childToRemove,
             this);

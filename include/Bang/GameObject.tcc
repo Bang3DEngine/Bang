@@ -342,6 +342,44 @@ Array<T *> GameObject::GetObjectsInChildrenAndThis() const
     objs.PushBack(GetObjectsInChildren<T>());
     return objs;
 }
+template <class T>
+T *GameObject::GetObjectInParent() const
+{
+    if (GameObject *parent = GetParent())
+    {
+        return GetParent()->GetObject<T>();
+    }
+    return nullptr;
+}
+
+template <class T>
+T *GameObject::GetObjectInParentAndThis() const
+{
+    if (T *obj = GetObject<T>())
+    {
+        return obj;
+    }
+    return GetObjectInParent<T>();
+}
+
+template <class T>
+Array<T *> GameObject::GetObjectsInParent() const
+{
+    if (GameObject *parent = GetParent())
+    {
+        return GetParent()->GetObjects<T>();
+    }
+    return Array<T *>::Empty();
+}
+
+template <class T>
+Array<T *> GameObject::GetObjectsInParentAndThis() const
+{
+    Array<T *> objs;
+    objs.PushBack(GetObjects<T>());
+    objs.PushBack(GetObjectsInParent<T>());
+    return objs;
+}
 
 template <class T>
 T *GameObject::GetObjectInDescendants() const
@@ -440,36 +478,17 @@ Array<T *> GameObject::GetObjectsInAscendantsAndThis() const
     return objs;
 }
 
-inline bool CanEventBePropagated(const Object *obj)
-{
-    return obj && obj->IsActiveRecursively();
-}
-
 template <class TListener, class TReturn, class... Args>
 void GameObject::PropagateToChildren(TReturn TListener::*func,
                                      const Args &... args)
 {
-    const Array<GameObject *> &children = GetChildren();
-    for (GameObject *child : children)
-    {
-        if (CanEventBePropagated(child))
-        {
-            (child->*func)(args...);
-        }
-    }
+    PropagateToChildren([&](GameObject *child) { (child->*func)(args...); });
 }
 
 template <class TListener, class TReturn, class... Args>
 void GameObject::PropagateToComponents(TReturn TListener::*func,
                                        const Args &... args)
 {
-    const Array<Component *> &components = GetComponents();
-    for (Component *comp : components)
-    {
-        if (CanEventBePropagated(comp))
-        {
-            (comp->*func)(args...);
-        }
-    }
+    PropagateToComponents([&](Component *comp) { (comp->*func)(args...); });
 }
 }

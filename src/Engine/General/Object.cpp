@@ -79,7 +79,7 @@ void Object::SetWaitingToBeDestroyed()
 
 void Object::InvalidateEnabledRecursively()
 {
-    if (m_enabledRecursivelyValid)
+    // if (m_enabledRecursivelyValid)
     {
         m_enabledRecursivelyValid = false;
         OnEnabledRecursivelyInvalidated();
@@ -123,14 +123,10 @@ void Object::SetEnabled(bool enabled)
         if (IsEnabled())
         {
             OnEnabled(this);
-            EventEmitter<IEventsObject>::PropagateToListeners(
-                &IEventsObject::OnEnabled, this);
         }
         else
         {
             OnDisabled(this);
-            EventEmitter<IEventsObject>::PropagateToListeners(
-                &IEventsObject::OnDisabled, this);
         }
     }
 }

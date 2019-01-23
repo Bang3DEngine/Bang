@@ -97,6 +97,17 @@ void EventEmitter<T>::PropagateToListeners(const TFunction &func,
 }
 
 template <class T>
+template <class TFunction, class... Args>
+void EventEmitter<T>::PropagateToListenersAndArray(
+    const Array<EventListener<T> *> &array,
+    const TFunction &func,
+    const Args &... args) const
+{
+    PropagateToListeners(func, args...);
+    PropagateToArray(array, func, args...);
+}
+
+template <class T>
 void EventEmitter<T>::PropagateToArrayFunctor(
     const Array<EventListener<T> *> &array,
     std::function<void(EventListener<T> *)> listenerCall) const

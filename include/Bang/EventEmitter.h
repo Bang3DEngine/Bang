@@ -36,6 +36,11 @@ public:
     void PropagateToListeners(const TFunction &func,
                               const Args &... args) const;
 
+    template <class TFunction, class... Args>
+    void PropagateToListenersAndArray(const Array<EventListener<T> *> &array,
+                                      const TFunction &func,
+                                      const Args &... args) const;
+
     template <class TResult, class TFunction, class... Args>
     Array<TResult> PropagateToListenersAndGatherResult(
         const TFunction &func,

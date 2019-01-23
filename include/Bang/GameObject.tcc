@@ -282,13 +282,7 @@ T *GameObject::GetObject() const
     {
         return obj;
     }
-
-    if (T *obj = GetComponent<T>())
-    {
-        return obj;
-    }
-
-    return nullptr;
+    return GetComponent<T>();
 }
 template <class T>
 Array<T *> GameObject::GetObjects() const
@@ -446,16 +440,9 @@ Array<T *> GameObject::GetObjectsInAscendantsAndThis() const
     return objs;
 }
 
-template <class T>
-bool CanEventBePropagated(const T &x)
+inline bool CanEventBePropagated(const Object *obj)
 {
-    if (!x)
-    {
-        return false;
-    }
-
-    const Object *object = DCAST<const Object *>(x);
-    return !object || !object->IsWaitingToBeDestroyed();
+    return obj && obj->IsActiveRecursively();
 }
 
 template <class TListener, class TReturn, class... Args>
@@ -465,7 +452,7 @@ void GameObject::PropagateToChildren(TReturn TListener::*func,
     const Array<GameObject *> &children = GetChildren();
     for (GameObject *child : children)
     {
-        if (child)
+        if (CanEventBePropagated(child))
         {
             (child->*func)(args...);
         }
@@ -479,7 +466,7 @@ void GameObject::PropagateToComponents(TReturn TListener::*func,
     const Array<Component *> &components = GetComponents();
     for (Component *comp : components)
     {
-        if (comp)
+        if (CanEventBePropagated(comp))
         {
             (comp->*func)(args...);
         }

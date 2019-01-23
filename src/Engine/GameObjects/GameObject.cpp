@@ -180,13 +180,13 @@ void GameObject::AddChild_(GameObject *childToAdd,
         index = Math::Clamp(index, 0, m_children.Size());
         m_children.Insert(childToAdd, index);
 
-        EventEmitter<IEventsChildren>::PropagateToArray(
-            GetObjects<EventListener<IEventsChildren>>(),
+        EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
+            GetObjectsInDescendantsAndThis<EventListener<IEventsChildren>>(),
             &IEventsChildren::OnChildAdded,
             childToAdd,
             this);
 
-        EventEmitter<IEventsChildren>::PropagateToArray(
+        EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
             childToAdd->GetObjectsInDescendantsAndThis<
                 EventListener<IEventsChildren>>(),
             &EventListener<IEventsChildren>::OnParentChanged,
@@ -206,7 +206,7 @@ void GameObject::AddChild_(GameObject *childToAdd,
             newIndex = Math::Clamp(newIndex, 0, m_children.Size());
             m_children.Insert(childToAdd, newIndex);
 
-            EventEmitter<IEventsChildren>::PropagateToArray(
+            EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
                 GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
                 &IEventsChildren::OnChildMoved,
                 this,
@@ -225,7 +225,7 @@ void GameObject::RemoveChild(GameObject *childToRemove)
         m_children[i] = nullptr;
         TryToClearDeletedChildren();
 
-        EventEmitter<IEventsChildren>::PropagateToArray(
+        EventEmitter<IEventsChildren>::PropagateToListenersAndArray(
             GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
             &IEventsChildren::OnChildRemoved,
             childToRemove,
@@ -289,7 +289,8 @@ bool GameObject::CalculateVisibleRecursively() const
 
 void GameObject::OnEnabledRecursivelyInvalidated()
 {
-    for (GameObject *child : GetChildren())
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
     {
         if (child)
         {
@@ -297,7 +298,8 @@ void GameObject::OnEnabledRecursivelyInvalidated()
         }
     }
 
-    for (Component *comp : GetComponents())
+    const Array<Component *> &components = GetComponents();
+    for (Component *comp : components)
     {
         if (comp)
         {
@@ -308,9 +310,13 @@ void GameObject::OnEnabledRecursivelyInvalidated()
 
 void GameObject::OnVisibleRecursivelyInvalidated()
 {
-    for (GameObject *child : GetChildren())
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
     {
-        child->InvalidateVisibleRecursively();
+        if (child)
+        {
+            child->InvalidateVisibleRecursively();
+        }
     }
 }
 
@@ -340,7 +346,7 @@ void GameObject::OnEnabled(Object *object)
 {
     Object::OnEnabled(object);
     EventEmitter<IEventsObject>::PropagateToArray(
-        GetObjectsInDescendants<EventListener<IEventsObject>>(),
+        GetObjectsInChildren<EventListener<IEventsObject>>(),
         &EventListener<IEventsObject>::OnEnabled,
         object);
 }
@@ -1019,18 +1025,6 @@ void GameObject::DestroyDelayedComponents()
         Component::DestroyImmediate(comp);
         m_componentsToDestroyDelayed.PopBack();
     }
-}
-
-template <class T>
-bool CanEventBePropagatedToGameObject(const GameObject *go)
-{
-    return go->IsEnabledRecursively() && go->T::IsReceivingEvents();
-}
-
-template <class T>
-bool CanEventBePropagatedToComponent(const Component *comp)
-{
-    return comp->IsEnabledRecursively() && comp->T::IsReceivingEvents();
 }
 
 void GameObject::CloneInto(Serializable *clone, bool cloneGUID) const

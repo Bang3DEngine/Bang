@@ -74,8 +74,9 @@ void ObjectGatherer<ObjectType, RECURSIVE>::RegisterEventsAndGather(
 
     if (RECURSIVE)
     {
-        go->EventEmitter<IEventsChildren>::RegisterListener(this);
-        for (GameObject *child : go->GetChildren())
+        // go->EventEmitter<IEventsChildren>::RegisterListener(this);
+        const Array<GameObject *> &children = go->GetChildren();
+        for (GameObject *child : children)
         {
             RegisterEventsAndGather(child);
         }
@@ -110,8 +111,9 @@ void ObjectGatherer<ObjectType, RECURSIVE>::UnRegisterEventsAndRemoveObjects(
 
     if (RECURSIVE)
     {
-        go->EventEmitter<IEventsChildren>::UnRegisterListener(this);
-        for (GameObject *child : go->GetChildren())
+        // go->EventEmitter<IEventsChildren>::UnRegisterListener(this);
+        const Array<GameObject *> &children = go->GetChildren();
+        for (GameObject *child : children)
         {
             UnRegisterEventsAndRemoveObjects(child);
         }

@@ -140,7 +140,7 @@ private:
 
     int m_selectionIndex = -1;
     GOItem *p_itemUnderMouse = nullptr;
-    GOItem *p_itemBeingDragged = nullptr;
+    UIListItemContainer *p_itemGoBeingDragged = nullptr;
     SelectionCallback m_selectionCallback;
 
     GameObject *p_dragMarker = nullptr;

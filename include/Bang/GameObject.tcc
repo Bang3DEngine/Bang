@@ -276,23 +276,11 @@ bool GameObject::HasComponent() const
 }
 
 template <class T>
-T *GameObject::FindObjectInDescendants() const
+T *GameObject::GetObject() const
 {
     if (T *obj = DCAST<T *>(const_cast<GameObject *>(this)))
     {
         return obj;
-    }
-
-    const Array<GameObject *> &children = GetChildren();
-    for (GameObject *child : children)
-    {
-        if (child)
-        {
-            if (T *obj = child->FindObjectInDescendants<T>())
-            {
-                return obj;
-            }
-        }
     }
 
     if (T *obj = GetComponent<T>())
@@ -302,29 +290,160 @@ T *GameObject::FindObjectInDescendants() const
 
     return nullptr;
 }
-
 template <class T>
-Array<T *> GameObject::FindObjectsInDescendants() const
+Array<T *> GameObject::GetObjects() const
 {
-    Array<T *> foundObjects;
+    Array<T *> objs;
     if (T *obj = DCAST<T *>(const_cast<GameObject *>(this)))
     {
-        foundObjects.PushBack(obj);
+        objs.PushBack(obj);
     }
+    objs.PushBack(GetComponents<T>());
+    return objs;
+}
 
+template <class T>
+T *GameObject::GetObjectInChildren() const
+{
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (T *obj = child->GetObject<T>())
+        {
+            return obj;
+        }
+    }
+    return nullptr;
+}
+
+template <class T>
+T *GameObject::GetObjectInChildrenAndThis() const
+{
+    if (T *obj = GetObject<T>())
+    {
+        return obj;
+    }
+    return GetObjectInChildren<T>();
+}
+
+template <class T>
+Array<T *> GameObject::GetObjectsInChildren() const
+{
+    Array<T *> objs;
     const Array<GameObject *> &children = GetChildren();
     for (GameObject *child : children)
     {
         if (child)
         {
-            foundObjects.PushBack(child->FindObjectsInDescendants<T>());
+            objs.PushBack(child->GetObjects<T>());
         }
     }
+    return objs;
+}
+template <class T>
+Array<T *> GameObject::GetObjectsInChildrenAndThis() const
+{
+    Array<T *> objs;
+    objs.PushBack(GetObjects<T>());
+    objs.PushBack(GetObjectsInChildren<T>());
+    return objs;
+}
 
-    Array<T *> foundCompsObjs = GetComponents<T>();
-    foundObjects.PushBack(foundCompsObjs);
+template <class T>
+T *GameObject::GetObjectInDescendants() const
+{
+    const Array<GameObject *> descendants = GetDescendants();
+    for (GameObject *descendant : descendants)
+    {
+        if (T *obj = descendant->GetObject<T>())
+        {
+            return obj;
+        }
+    }
+    return nullptr;
+}
 
-    return foundObjects;
+template <class T>
+T *GameObject::GetObjectInDescendantsAndThis() const
+{
+    if (T *obj = GetObject<T>())
+    {
+        return obj;
+    }
+    return GetObjectInDescendants<T>();
+}
+
+template <class T>
+Array<T *> GameObject::GetObjectsInDescendants() const
+{
+    Array<T *> objs;
+    const Array<GameObject *> descendants = GetDescendants();
+    for (GameObject *descendant : descendants)
+    {
+        if (descendant)
+        {
+            objs.PushBack(descendant->GetObjects<T>());
+        }
+    }
+    return objs;
+}
+template <class T>
+Array<T *> GameObject::GetObjectsInDescendantsAndThis() const
+{
+    Array<T *> objs;
+    objs.PushBack(GetObjects<T>());
+    objs.PushBack(GetObjectsInDescendants<T>());
+    return objs;
+}
+
+template <class T>
+T *GameObject::GetObjectInAscendants() const
+{
+    const Array<GameObject *> ascendants = GetAscendants();
+    for (GameObject *ascendant : ascendants)
+    {
+        if (ascendant)
+        {
+            if (T *obj = ascendant->GetObject<T>())
+            {
+                return obj;
+            }
+        }
+    }
+    return nullptr;
+}
+
+template <class T>
+T *GameObject::GetObjectInAscendantsAndThis() const
+{
+    if (T *obj = GetObject<T>())
+    {
+        return obj;
+    }
+    return GetObjectInAscendants<T>();
+}
+
+template <class T>
+Array<T *> GameObject::GetObjectsInAscendants() const
+{
+    Array<T *> objs;
+    const Array<GameObject *> ascendants = GetAscendants();
+    for (GameObject *ascendant : ascendants)
+    {
+        if (ascendant)
+        {
+            objs.PushBack(ascendant->GetObjects<T>());
+        }
+    }
+    return objs;
+}
+template <class T>
+Array<T *> GameObject::GetObjectsInAscendantsAndThis() const
+{
+    Array<T *> objs;
+    objs.PushBack(GetObjects<T>());
+    objs.PushBack(GetObjectsInAscendants<T>());
+    return objs;
 }
 
 template <class T>
@@ -339,31 +458,31 @@ bool CanEventBePropagated(const T &x)
     return !object || !object->IsWaitingToBeDestroyed();
 }
 
-template <class TListener, class TListenerInnerT, class TReturn, class... Args>
-void GameObject::PropagateToArray(TReturn TListenerInnerT::*func,
-                                  const Array<TListener *> &list,
-                                  const Args &... args)
-{
-    for (TListener *listener : list)
-    {
-        if (CanEventBePropagated(listener) && listener->IsReceivingEvents())
-        {
-            (listener->*func)(args...);
-        }
-    }
-}
-
 template <class TListener, class TReturn, class... Args>
 void GameObject::PropagateToChildren(TReturn TListener::*func,
                                      const Args &... args)
 {
-    PropagateToChildren([&](GameObject *child) { (child->*func)(args...); });
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
+    {
+        if (child)
+        {
+            (child->*func)(args...);
+        }
+    }
 }
 
 template <class TListener, class TReturn, class... Args>
 void GameObject::PropagateToComponents(TReturn TListener::*func,
                                        const Args &... args)
 {
-    PropagateToComponents([&](Component *comp) { (comp->*func)(args...); });
+    const Array<Component *> &components = GetComponents();
+    for (Component *comp : components)
+    {
+        if (comp)
+        {
+            (comp->*func)(args...);
+        }
+    }
 }
 }

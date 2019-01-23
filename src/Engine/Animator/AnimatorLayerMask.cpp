@@ -68,7 +68,7 @@ Set<String> AnimatorLayerMask::GetBoneMaskNamesSet(Animator *animator) const
                     if (maskBoneEntry.addDescendants)
                     {
                         Array<GameObject *> descendants =
-                            boneGo->GetChildrenRecursively();
+                            boneGo->GetDescendants();
                         for (GameObject *descendant : descendants)
                         {
                             boneMaskSet.Add(descendant->GetName());

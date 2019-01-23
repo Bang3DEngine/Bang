@@ -187,7 +187,7 @@ Array<GameObject *> SkinnedMeshRenderer::GetAllBoneGameObjects() const
     if (GetRootBoneGameObject())
     {
         Array<GameObject *> allRootGoChildren =
-            GetRootBoneGameObject()->GetChildrenRecursively();
+            GetRootBoneGameObject()->GetDescendants();
         for (GameObject *rootBoneChild : allRootGoChildren)
         {
             if (m_boneNames.Contains(rootBoneChild->GetName()))

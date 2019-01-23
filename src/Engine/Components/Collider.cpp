@@ -182,15 +182,19 @@ physx::PxShape *Collider::GetPxShape() const
 
 void Collider::SetPxEnabled(bool pxEnabled)
 {
-    GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
-                          pxEnabled && GetUseForQueries());
+    if (GetPxShape())
+    {
+        GetPxShape()->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE,
+                              pxEnabled && GetUseForQueries());
 
-    GetPxShape()->setFlag(
-        physx::PxShapeFlag::eSIMULATION_SHAPE,
-        pxEnabled && CanBeSimulationShape() && !GetIsTrigger());
+        GetPxShape()->setFlag(
+            physx::PxShapeFlag::eSIMULATION_SHAPE,
+            pxEnabled && CanBeSimulationShape() && !GetIsTrigger());
 
-    GetPxShape()->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE,
-                          pxEnabled && CanBeTriggerShape() && GetIsTrigger());
+        GetPxShape()->setFlag(
+            physx::PxShapeFlag::eTRIGGER_SHAPE,
+            pxEnabled && CanBeTriggerShape() && GetIsTrigger());
+    }
 }
 
 Quaternion Collider::GetInternalRotation() const

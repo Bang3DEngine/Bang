@@ -31,6 +31,10 @@ public:
 
     // IEventsChildren
     void OnChildAdded(GameObject *addedChild, GameObject *parent) override;
+    void OnChildMoved(GameObject *parent,
+                      GameObject *movedChild,
+                      int oldIndex,
+                      int newIndex) override;
     void OnChildRemoved(GameObject *removedChild, GameObject *parent) override;
     void OnParentChanged(GameObject *oldParent, GameObject *newParent) override;
 

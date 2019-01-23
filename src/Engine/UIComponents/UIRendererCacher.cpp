@@ -172,7 +172,7 @@ void UIRendererCacher::OnComponentRemoved(Component *removedComponent,
 
 void UIRendererCacher::OnChildAdded(GameObject *, GameObject *)
 {
-    Array<GameObject *> children = GetContainer()->GetChildrenRecursively();
+    Array<GameObject *> children = GetContainer()->GetDescendants();
     for (GameObject *child : children)
     {
         Array<Renderer *> renderers = child->GetComponents<Renderer>();
@@ -199,7 +199,7 @@ void UIRendererCacher::OnChildAdded(GameObject *, GameObject *)
 
 void UIRendererCacher::OnChildRemoved(GameObject *removedChild, GameObject *)
 {
-    Array<GameObject *> children = removedChild->GetChildrenRecursively();
+    Array<GameObject *> children = removedChild->GetDescendants();
     children.PushBack(removedChild);
     for (GameObject *child : children)
     {

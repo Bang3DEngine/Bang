@@ -862,7 +862,7 @@ void GEngine::RenderTransparentPass(GameObject *go)
     const Vector3 camPos = cam->GetGameObject()->GetTransform()->GetPosition();
 
     // Sort back to front
-    Array<GameObject *> goChildren = go->GetChildrenRecursively();
+    Array<GameObject *> goChildren = go->GetDescendants();
     goChildren.Sort(
         [camPos](const GameObject *lhs, const GameObject *rhs) -> bool {
             const Transform *lhsTrans = lhs->GetTransform();

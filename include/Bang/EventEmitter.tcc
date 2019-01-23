@@ -101,7 +101,7 @@ void EventEmitter<T>::PropagateToArrayFunctor(
     const Array<EventListener<T> *> &array,
     std::function<void(EventListener<T> *)> listenerCall) const
 {
-    bool propagatingToListeners = (&array == &m_listeners);
+    const bool propagatingToListeners = (&array == &m_listeners);
     const std::size_t arraySize = array.Size();
     if (arraySize > 0 && IsEmittingEvents())
     {

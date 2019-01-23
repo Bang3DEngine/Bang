@@ -28,13 +28,6 @@ public:
         BANG_UNUSED(item);
     }
 
-    virtual void OnDropFromOutside(UIDragDroppable *dd,
-                                   GameObject *item,
-                                   int dropIndex)
-    {
-        BANG_UNUSED_3(dd, item, dropIndex);
-    }
-
     virtual void OnDropOutside(UIDragDroppable *dd)
     {
         BANG_UNUSED(dd);

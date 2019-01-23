@@ -17,6 +17,14 @@ public:
         BANG_UNUSED_2(addedChild, parent);
     }
 
+    virtual void OnChildMoved(GameObject *parent,
+                              GameObject *movedChild,
+                              int oldIndex,
+                              int newIndex)
+    {
+        BANG_UNUSED_4(parent, movedChild, oldIndex, newIndex);
+    }
+
     virtual void OnChildRemoved(GameObject *removedChild, GameObject *parent)
     {
         BANG_UNUSED_2(removedChild, parent);

@@ -48,17 +48,21 @@ void ILayoutController::_ApplyLayout(Axis axis)
     }
 }
 
-void ILayoutController::OnChildAdded(GameObject *addedChild, GameObject *parent)
+void ILayoutController::OnChildAdded(GameObject *addedChild, GameObject *)
 {
     Invalidate();
-    addedChild->EventEmitter<IEventsChildren>::RegisterListener(this);
+    // addedChild->EventEmitter<IEventsChildren>::RegisterListener(this);
 }
 
-void ILayoutController::OnChildRemoved(GameObject *removedChild,
-                                       GameObject *parent)
+void ILayoutController::OnChildMoved(GameObject *, GameObject *, int, int)
 {
     Invalidate();
-    removedChild->EventEmitter<IEventsChildren>::UnRegisterListener(this);
+}
+
+void ILayoutController::OnChildRemoved(GameObject *removedChild, GameObject *)
+{
+    Invalidate();
+    // removedChild->EventEmitter<IEventsChildren>::UnRegisterListener(this);
 }
 
 void ILayoutController::OnParentChanged(GameObject *, GameObject *)

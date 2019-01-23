@@ -73,18 +73,21 @@ public:
     virtual void Update();
     virtual void Render(RenderPass renderPass, bool renderChildren = true);
 
-    static void Destroy(GameObject *gameObject);
-    static void DestroyImmediate(GameObject *gameObject);
-
     void SetName(const String &m_name);
-    const String &GetName() const;
 
     template <class T>
     T *AddComponent(int index = -1);
     Component *AddComponent(Component *c, int index = -1);
 
+    template <class T>
+    bool HasComponent() const;
+    void RemoveComponent(Component *component);
+
+    static void Destroy(GameObject *gameObject);
+    static void DestroyImmediate(GameObject *gameObject);
+
     static GameObject *Find(const String &name);
-    Object *FindObjectInDescendants(const GUID &guid) const;
+    Object *GetObjectInDescendantsAndThis(const GUID &guid) const;
     GameObject *FindInChildren(const GUID &guid, bool recursive = true) const;
     GameObject *FindInChildren(const String &name, bool recursive = true) const;
     GameObject *FindInChildrenAndThis(const GUID &guid,
@@ -94,12 +97,6 @@ public:
     GameObject *FindInAncestors(const String &name, bool broadSearch) const;
     GameObject *FindInAncestorsAndThis(const String &name,
                                        bool broadSearch) const;
-    template <class T>
-    T *FindObjectInDescendants() const;
-    template <class T>
-    Array<T *> FindObjectsInDescendants() const;
-    Object *FindObjectInDescendants(ClassIdType classIdBegin,
-                                    ClassIdType classIdEnd) const;
 
     void SetVisible(bool visible);
     void SetParent(GameObject *newParent,
@@ -107,18 +104,19 @@ public:
                    bool keepWorldTransform = false);
     void SetDontDestroyOnLoad(bool dontDestroyOnLoad);
 
+    // GetGameObject functions
     int GetIndexInsideParent() const;
     GameObject *GetChild(uint index) const;
     GameObject *GetChild(const GUID &guid) const;
     GameObject *GetChild(const String &name) const;
     const Array<GameObject *> &GetChildren() const;
-    Array<GameObject *> GetChildrenRecursively() const;
-    void GetChildrenRecursively(Array<GameObject *> *children) const;
+    Array<GameObject *> GetAscendants() const;
+    Array<GameObject *> GetDescendants() const;
+    void GetDescendants(Array<GameObject *> *descendants) const;
 
+    // GetComponent functions
     Component *GetComponentByGUID(const GUID &guid) const;
-
     const Array<Component *> &GetComponents() const;
-
     template <class T>
     T *GetComponent() const;
     template <class T>
@@ -129,7 +127,6 @@ public:
     T *GetComponentInAncestors() const;
     template <class T>
     T *GetComponentInAncestorsAndThis() const;
-
     template <class T>
     T *GetComponentInChildren() const;
     template <class T>
@@ -138,12 +135,10 @@ public:
     T *GetComponentInDescendants() const;
     template <class T>
     T *GetComponentInDescendantsAndThis() const;
-
     template <class T>
     Array<T *> GetComponents() const;
     template <class T>
     void GetComponents(Array<T *> *componentsOut) const;
-
     template <class T>
     Array<T *> GetComponentsInParent() const;
     template <class T>
@@ -160,7 +155,6 @@ public:
     Array<T *> GetComponentsInAncestorsAndThis() const;
     template <class T>
     void GetComponentsInAncestorsAndThis(Array<T *> *componentsOut) const;
-
     template <class T>
     Array<T *> GetComponentsInChildren() const;
     template <class T>
@@ -178,11 +172,40 @@ public:
     template <class T>
     void GetComponentsInDescendantsAndThis(Array<T *> *componentsOut) const;
 
+    // GetObject functions
     template <class T>
-    bool HasComponent() const;
+    T *GetObject() const;
+    template <class T>
+    Array<T *> GetObjects() const;
+    template <class T>
+    T *GetObjectInChildren() const;
+    template <class T>
+    T *GetObjectInChildrenAndThis() const;
+    template <class T>
+    Array<T *> GetObjectsInChildren() const;
+    template <class T>
+    Array<T *> GetObjectsInChildrenAndThis() const;
+    template <class T>
+    T *GetObjectInDescendants() const;
+    template <class T>
+    T *GetObjectInDescendantsAndThis() const;
+    template <class T>
+    Array<T *> GetObjectsInDescendants() const;
+    template <class T>
+    Array<T *> GetObjectsInDescendantsAndThis() const;
+    template <class T>
+    T *GetObjectInAscendants() const;
+    template <class T>
+    T *GetObjectInAscendantsAndThis() const;
+    template <class T>
+    Array<T *> GetObjectsInAscendants() const;
+    template <class T>
+    Array<T *> GetObjectsInAscendantsAndThis() const;
+    Object *GetObjectInDescendantsAndThis(ClassIdType classIdBegin,
+                                          ClassIdType classIdEnd) const;
 
-    void RemoveComponent(Component *component);
     Scene *GetScene() const;
+    const String &GetName() const;
     Transform *GetTransform() const;
     RectTransform *GetRectTransform() const;
     GameObject *GetParent() const;
@@ -197,22 +220,6 @@ public:
     Sphere GetBoundingSphereWorld(bool includeChildren = true) const;
 
     // Helper propagate functions
-    template <class TListener,
-              class TListenerInnerT,
-              class TReturn,
-              class... Args>
-    void PropagateSingle(TReturn TListenerInnerT::*func,
-                         TListener *receiver,
-                         const Args &... args);
-
-    template <class TListener,
-              class TListenerInnerT,
-              class TReturn,
-              class... Args>
-    void PropagateToArray(TReturn TListenerInnerT::*func,
-                          const Array<TListener *> &list,
-                          const Args &... args);
-
     void PropagateToChildren(std::function<void(GameObject *)> func);
     void PropagateToComponents(std::function<void(Component *)> func);
 
@@ -221,20 +228,6 @@ public:
 
     template <class T, class TReturn, class... Args>
     void PropagateToComponents(TReturn T::*func, const Args &... args);
-
-    template <class TListener,
-              class TListenerInnerT,
-              class TReturn,
-              class... Args>
-    void PropagateToChildrenListeners(TReturn TListener::*func,
-                                      const Args &... args);
-
-    template <class TListener,
-              class TListenerInnerT,
-              class TReturn,
-              class... Args>
-    void PropagateToComponentListeners(TReturn TListenerInnerT::*func,
-                                       const Args &... args);
 
     static GameObject *Instantiate();
 
@@ -257,9 +250,6 @@ protected:
     virtual void PostUpdate();
     virtual void BeforeRender();
     virtual void BeforeChildrenRender(RenderPass renderPass);
-    virtual void AfterChildrenRender(RenderPass renderPass);
-    virtual void ChildAdded(GameObject *addedChild, GameObject *parent);
-    virtual void ChildRemoved(GameObject *removedChild, GameObject *parent);
 
     // IEventsObject
     virtual void OnEnabled(Object *object) override;

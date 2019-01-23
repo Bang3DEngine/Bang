@@ -116,7 +116,8 @@ void GameObject::Render(RenderPass renderPass, bool renderChildren)
         {
             BeforeChildrenRender(renderPass);
             PropagateToChildren(&GameObject::Render, renderPass, true);
-            AfterChildrenRender(renderPass);
+            PropagateToComponents(&Component::OnAfterChildrenRender,
+                                  renderPass);
         }
     }
 }
@@ -127,34 +128,6 @@ void GameObject::BeforeChildrenRender(RenderPass renderPass)
     {
         PropagateToComponents(&Component::OnBeforeChildrenRender, renderPass);
     }
-}
-
-void GameObject::AfterChildrenRender(RenderPass renderPass)
-{
-    if (IsActiveRecursively())
-    {
-        PropagateToComponents(&Component::OnAfterChildrenRender, renderPass);
-    }
-}
-
-void GameObject::ChildAdded(GameObject *addedChild, GameObject *parent)
-{
-    EventEmitter<IEventsChildren>::PropagateToListeners(
-        &IEventsChildren::OnChildAdded, addedChild, parent);
-    PropagateToArray(&IEventsChildren::OnChildAdded,
-                     GetComponents<EventListener<IEventsChildren>>(),
-                     addedChild,
-                     parent);
-}
-
-void GameObject::ChildRemoved(GameObject *removedChild, GameObject *parent)
-{
-    EventEmitter<IEventsChildren>::PropagateToListeners(
-        &IEventsChildren::OnChildRemoved, removedChild, parent);
-    PropagateToArray(&IEventsChildren::OnChildRemoved,
-                     GetComponents<EventListener<IEventsChildren>>(),
-                     removedChild,
-                     parent);
 }
 
 Component *GameObject::AddComponent(Component *component, int index)
@@ -174,72 +147,89 @@ void GameObject::AddChild(GameObject *child, int index, bool keepWorldTransform)
     TryToAddQueuedChildren();
 }
 
-void GameObject::AddChild_(GameObject *child,
+void GameObject::AddChild_(GameObject *childToAdd,
                            int index_,
                            bool keepWorldTransform)
 {
-    ASSERT(child);
-    ASSERT(child != this);
+    ASSERT(childToAdd);
+    ASSERT(childToAdd != this);
 
     int index = (index_ != -1 ? index_ : GetChildren().Size());
     ASSERT(index >= 0 && index <= GetChildren().Size());
-    if (child->GetParent() != this)  // Parent change
+    if (childToAdd->GetParent() != this)  // Parent change
     {
         Matrix4 prevWorldTransform = Matrix4::Identity();
-        if (keepWorldTransform && child->GetTransform())
+        if (keepWorldTransform && childToAdd->GetTransform())
         {
-            prevWorldTransform = child->GetTransform()->GetLocalToWorldMatrix();
+            prevWorldTransform =
+                childToAdd->GetTransform()->GetLocalToWorldMatrix();
         }
 
-        GameObject *oldParent = child->GetParent();
+        GameObject *oldParent = childToAdd->GetParent();
 
-        child->p_parent = this;
-        child->InvalidateEnabledRecursively();
-        child->InvalidateVisibleRecursively();
+        childToAdd->p_parent = this;
+        childToAdd->InvalidateEnabledRecursively();
+        childToAdd->InvalidateVisibleRecursively();
 
-        if (keepWorldTransform && GetTransform() && child->GetTransform())
+        if (keepWorldTransform && GetTransform() && childToAdd->GetTransform())
         {
-            child->GetTransform()->FillFromMatrix(
+            childToAdd->GetTransform()->FillFromMatrix(
                 GetTransform()->GetWorldToLocalMatrix() * prevWorldTransform);
         }
 
         index = Math::Clamp(index, 0, m_children.Size());
-        m_children.Insert(child, index);
-        ChildAdded(child, this);
+        m_children.Insert(childToAdd, index);
 
-        EventEmitter<IEventsChildren>::PropagateToListeners(
-            &IEventsChildren::OnParentChanged, oldParent, this);
-        PropagateToArray(&EventListener<IEventsChildren>::OnParentChanged,
-                         child->GetComponents<EventListener<IEventsChildren>>(),
-                         oldParent,
-                         this);
+        EventEmitter<IEventsChildren>::PropagateToArray(
+            GetObjects<EventListener<IEventsChildren>>(),
+            &IEventsChildren::OnChildAdded,
+            childToAdd,
+            this);
+
+        EventEmitter<IEventsChildren>::PropagateToArray(
+            childToAdd->GetObjectsInDescendantsAndThis<
+                EventListener<IEventsChildren>>(),
+            &EventListener<IEventsChildren>::OnParentChanged,
+            oldParent,
+            this);
     }
     else  // Its a movement
     {
-        int oldIndex = GetChildren().IndexOf(this);
+        int oldIndex = GetChildren().IndexOf(childToAdd);
         if (oldIndex != index)
         {
-            if (oldIndex >= 0)
-            {
-                index = (oldIndex < index) ? (index - 1) : index;
-            }
+            ASSERT(oldIndex >= 0);
+            int newIndex = (oldIndex < index) ? (index - 1) : index;
 
-            m_children.Remove(child);
+            m_children.Remove(childToAdd);
 
-            index = Math::Clamp(index, 0, m_children.Size());
-            m_children.Insert(child, index);
+            newIndex = Math::Clamp(newIndex, 0, m_children.Size());
+            m_children.Insert(childToAdd, newIndex);
+
+            EventEmitter<IEventsChildren>::PropagateToArray(
+                GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
+                &IEventsChildren::OnChildMoved,
+                this,
+                childToAdd,
+                oldIndex,
+                newIndex);
         }
     }
 }
 
-void GameObject::RemoveChild(GameObject *child)
+void GameObject::RemoveChild(GameObject *childToRemove)
 {
-    int i = m_children.IndexOf(child);
+    int i = m_children.IndexOf(childToRemove);
     if (i >= 0)
     {
         m_children[i] = nullptr;
         TryToClearDeletedChildren();
-        ChildRemoved(child, this);
+
+        EventEmitter<IEventsChildren>::PropagateToArray(
+            GetObjectsInAscendantsAndThis<EventListener<IEventsChildren>>(),
+            &IEventsChildren::OnChildRemoved,
+            childToRemove,
+            this);
     }
 }
 
@@ -349,18 +339,18 @@ void GameObject::RemoveComponent(Component *component)
 void GameObject::OnEnabled(Object *object)
 {
     Object::OnEnabled(object);
-    PropagateToArray(&EventListener<IEventsObject>::OnEnabled,
-                     GetComponents<EventListener<IEventsObject>>(),
-                     object);
-    PropagateToChildren(&EventListener<IEventsObject>::OnEnabled, object);
+    EventEmitter<IEventsObject>::PropagateToArray(
+        GetObjectsInDescendants<EventListener<IEventsObject>>(),
+        &EventListener<IEventsObject>::OnEnabled,
+        object);
 }
 void GameObject::OnDisabled(Object *object)
 {
     Object::OnDisabled(object);
-    PropagateToArray(&EventListener<IEventsObject>::OnDisabled,
-                     GetComponents<EventListener<IEventsObject>>(),
-                     object);
-    PropagateToChildren(&EventListener<IEventsObject>::OnDisabled, object);
+    EventEmitter<IEventsObject>::PropagateToArray(
+        GetObjectsInChildren<EventListener<IEventsObject>>(),
+        &EventListener<IEventsObject>::OnDisabled,
+        object);
 }
 
 void GameObject::TryToAddQueuedChildren()
@@ -541,7 +531,7 @@ GameObject *GameObject::Find(const String &name)
     return scene ? scene->FindInChildren(name) : nullptr;
 }
 
-Object *GameObject::FindObjectInDescendants(const GUID &guid) const
+Object *GameObject::GetObjectInDescendantsAndThis(const GUID &guid) const
 {
     if (guid == GUID::Empty())
     {
@@ -567,7 +557,7 @@ Object *GameObject::FindObjectInDescendants(const GUID &guid) const
     {
         if (child)
         {
-            if (Object *obj = child->FindObjectInDescendants(guid))
+            if (Object *obj = child->GetObjectInDescendantsAndThis(guid))
             {
                 return obj;
             }
@@ -697,8 +687,8 @@ GameObject *GameObject::FindInAncestorsAndThis(const String &name,
                        : nullptr;
 }
 
-Object *GameObject::FindObjectInDescendants(ClassIdType classIdBegin,
-                                            ClassIdType classIdEnd) const
+Object *GameObject::GetObjectInDescendantsAndThis(ClassIdType classIdBegin,
+                                                  ClassIdType classIdEnd) const
 {
     if (ClassDB::IsSubClass(classIdBegin, classIdEnd, this))
     {
@@ -719,8 +709,8 @@ Object *GameObject::FindObjectInDescendants(ClassIdType classIdBegin,
     {
         if (child)
         {
-            if (Object *obj =
-                    child->FindObjectInDescendants(classIdBegin, classIdEnd))
+            if (Object *obj = child->GetObjectInDescendantsAndThis(classIdBegin,
+                                                                   classIdEnd))
             {
                 return obj;
             }
@@ -771,6 +761,18 @@ const Array<GameObject *> &GameObject::GetChildren() const
     return m_children;
 }
 
+Array<GameObject *> GameObject::GetAscendants() const
+{
+    Array<GameObject *> ascendants;
+    GameObject *currentAscendant = GetParent();
+    while (currentAscendant)
+    {
+        ascendants.PushBack(currentAscendant);
+        currentAscendant = currentAscendant->GetParent();
+    }
+    return ascendants;
+}
+
 GameObject *GameObject::GetChild(uint index) const
 {
     if (index >= GetChildren().Size())
@@ -780,23 +782,24 @@ GameObject *GameObject::GetChild(uint index) const
     return GetChildren()[index];
 }
 
-void GameObject::GetChildrenRecursively(Array<GameObject *> *children) const
+void GameObject::GetDescendants(Array<GameObject *> *descendants) const
 {
-    for (GameObject *child : GetChildren())
+    const Array<GameObject *> &children = GetChildren();
+    for (GameObject *child : children)
     {
         if (child)
         {
-            children->PushBack(child);
-            child->GetChildrenRecursively(children);
+            descendants->PushBack(child);
+            child->GetDescendants(descendants);
         }
     }
 }
 
-Array<GameObject *> GameObject::GetChildrenRecursively() const
+Array<GameObject *> GameObject::GetDescendants() const
 {
-    Array<GameObject *> children;
-    GetChildrenRecursively(&children);
-    return children;
+    Array<GameObject *> descendants;
+    GetDescendants(&descendants);
+    return descendants;
 }
 
 bool GameObject::IsChildOf(const GameObject *parent, bool recursive) const

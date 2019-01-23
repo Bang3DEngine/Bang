@@ -6,6 +6,8 @@
 
 namespace Bang
 {
+class UIFocusable;
+class UIDragDroppable;
 class UIListItemContainer : public GameObject
 {
 public:
@@ -14,8 +16,12 @@ public:
 
     void SetContainedGameObject(GameObject *go);
 
+    GameObject *GetContainedGameObject() const;
+
 private:
     GameObject *p_containedGameObject = nullptr;
+    UIFocusable *p_defaultFocusable = nullptr;
+    UIDragDroppable *p_dragDroppable = nullptr;
 };
 }
 

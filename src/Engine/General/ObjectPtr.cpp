@@ -43,7 +43,7 @@ Object *ObjectPtr::GetObjectIn(GameObject *go) const
     if (go)
     {
         GUID objectGUID = GetObjectGUID();
-        Object *foundObject = go->FindObjectInDescendants(objectGUID);
+        Object *foundObject = go->GetObjectInDescendantsAndThis(objectGUID);
         return foundObject;
     }
     return nullptr;

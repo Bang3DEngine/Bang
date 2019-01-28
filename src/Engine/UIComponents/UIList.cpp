@@ -784,6 +784,11 @@ UIFocusable *UIList::GetFocusable() const
 
 UIListItemContainer *UIList::GetItemContainer(GameObject *itemGo)
 {
+    if (UIListItemContainer *itemCont = DCAST<UIListItemContainer *>(itemGo))
+    {
+        return itemCont;
+    }
+
     if (GameObject *parent = itemGo->GetParent())
     {
         return DCAST<UIListItemContainer *>(parent);

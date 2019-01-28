@@ -4,7 +4,9 @@
 #include "Bang/UIDragDroppable.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIHorizontalLayout.h"
+#include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutElement.h"
+#include "Bang/UITheme.h"
 
 using namespace Bang;
 
@@ -19,6 +21,9 @@ UIListItemContainer::UIListItemContainer()
 
     UILayoutElement *le = AddComponent<UILayoutElement>();
     le->SetFlexibleWidth(99999.0f);
+
+    p_bg = AddComponent<UIImageRenderer>();
+    p_bg->SetTint(Color::White());
 
     p_focusable = AddComponent<UIFocusable>();
     GetFocusable()->SetCursorType(Cursor::Type::HAND);
@@ -41,6 +46,11 @@ void UIListItemContainer::SetContainedGameObject(GameObject *go)
 UIFocusable *UIListItemContainer::GetFocusable() const
 {
     return p_focusable;
+}
+
+UIImageRenderer *UIListItemContainer::GetBackground() const
+{
+    return p_bg;
 }
 
 UIDragDroppable *UIListItemContainer::GetDragDroppable() const

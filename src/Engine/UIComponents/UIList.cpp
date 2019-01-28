@@ -61,17 +61,25 @@ void UIList::MoveItem(GOItem *item, int index)
 
     if (oldIndexOfItem != index)
     {
-        int newIndex = (oldIndexOfItem < index) ? (index - 1) : index;
+        int newIndexAfterRemove =
+            (oldIndexOfItem < index) ? (index - 1) : index;
 
         p_items.RemoveByIndex(oldIndexOfItem);
-        p_items.Insert(item, newIndex);
+        p_items.Insert(item, newIndexAfterRemove);
 
-        UIListItemContainer *itemCont =
-            SCAST<UIListItemContainer *>(item->GetParent());
+        UIListItemContainer *itemCont = GetItemContainer(item);
         itemCont->SetParent(GetContainer(), index);
 
+        if (GetSelectedIndex() == oldIndexOfItem)
+        {
+            m_selectionIndex = newIndexAfterRemove;
+        }
+
         EventEmitter<IEventsUIList>::PropagateToListeners(
-            &IEventsUIList::OnItemMoved, item, oldIndexOfItem, newIndex);
+            &IEventsUIList::OnItemMoved,
+            item,
+            oldIndexOfItem,
+            newIndexAfterRemove);
     }
 }
 
@@ -87,9 +95,6 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
     UIListItemContainer *newItemCont = new UIListItemContainer();
     newItemCont->SetContainedGameObject(newItem);
 
-    UIImageRenderer *itemBg = newItem->AddComponent<UIImageRenderer>(0);
-    itemBg->SetTint(GetIdleColor());
-
     newItemCont->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(
         this);
     newItemCont->GetDragDroppable()->SetEnabled(GetDragDropEnabled());
@@ -98,7 +103,8 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 
     newItemCont->SetParent(GetContainer(), index);
 
-    p_itemsBackground.Add(newItem, itemBg);
+    GetItemBg(newItem)->SetTint(GetIdleColor());
+
     p_items.Insert(newItem, index);
 
     if (!moving)
@@ -137,7 +143,6 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     }
 
     p_items.Remove(item);
-    p_itemsBackground.Remove(item);
 
     // Destroy the element
     if (!moving)
@@ -166,31 +171,31 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate, bool callCallbacks)
         const Vector2 mousePos = Input::GetMousePositionNDC();
         const AARect listRTNDCRect(
             GetGameObject()->GetRectTransform()->GetViewportAARectNDC());
-        for (GOItem *childItem : p_items)
+        for (GOItem *item : p_items)
         {
-            if (!childItem || !childItem->IsActiveRecursively())
+            if (!item || !item->IsActiveRecursively())
             {
                 continue;
             }
 
-            bool overChildItem;
+            bool overItem;
             if (m_wideSelectionMode)
             {
                 AARect itemRTRect(
-                    childItem->GetRectTransform()->GetViewportAARectNDC());
-                overChildItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
-                                 mousePos.x <= listRTNDCRect.GetMax().x &&
-                                 mousePos.y >= itemRTRect.GetMin().y &&
-                                 mousePos.y <= itemRTRect.GetMax().y);
+                    item->GetRectTransform()->GetViewportAARectNDC());
+                overItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
+                            mousePos.x <= listRTNDCRect.GetMax().x &&
+                            mousePos.y >= itemRTRect.GetMin().y &&
+                            mousePos.y <= itemRTRect.GetMax().y);
             }
             else
             {
-                overChildItem = canvas->IsMouseOver(childItem, false);
+                overItem = canvas->IsMouseOver(item, false);
             }
 
-            if (overChildItem)
+            if (overItem)
             {
-                itemUnderMouse = childItem;
+                itemUnderMouse = item;
                 break;
             }
         }
@@ -202,15 +207,6 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate, bool callCallbacks)
         return UIEventResult::INTERCEPT;
     }
     return UIEventResult::IGNORE;
-}
-
-UIImageRenderer *UIList::GetItemBg(GOItem *item) const
-{
-    if (!item || !p_itemsBackground.ContainsKey(item))
-    {
-        return nullptr;
-    }
-    return p_itemsBackground.Get(item);
 }
 
 void UIList::SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks)
@@ -254,6 +250,18 @@ void UIList::SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks)
             }
         }
     }
+}
+
+UIImageRenderer *UIList::GetItemBg(GameObject *item) const
+{
+    if (item)
+    {
+        if (UIListItemContainer *itemCont = GetItemContainer(item))
+        {
+            return itemCont->GetBackground();
+        }
+    }
+    return nullptr;
 }
 
 void UIList::ClearSelection()
@@ -377,27 +385,26 @@ void UIList::SetSelection(int index)
 {
     if (GetSelectedIndex() != index)
     {
-        GOItem *prevSelectedItem = GetSelectedItem();
-        if (prevSelectedItem)
+        if (GOItem *prevSelectedItem = GetSelectedItem())
         {
-            GetItemBg(prevSelectedItem)->SetTint(GetIdleColor());
+            if (UIImageRenderer *itemBg = GetItemBg(prevSelectedItem))
+            {
+                itemBg->SetTint(GetIdleColor());
+            }
             CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT);
         }
 
+        m_selectionIndex = index;
         if (index >= 0 && index < GetNumItems())
         {
-            m_selectionIndex = index;
-            GOItem *selectedItem = GetSelectedItem();
-            if (selectedItem)
+            if (GOItem *selectedItem = GetSelectedItem())
             {
-                ScrollTo(selectedItem);
-                GetItemBg(selectedItem)->SetTint(GetSelectedColor());
+                if (UIImageRenderer *itemBg = GetItemBg(selectedItem))
+                {
+                    itemBg->SetTint(GetSelectedColor());
+                }
                 CallSelectionCallback(selectedItem, Action::SELECTION_IN);
             }
-        }
-        else if (index == -1)
-        {
-            m_selectionIndex = -1;
         }
 
         OnMouseMove(true, false);
@@ -735,6 +742,7 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
             {
                 MoveItem(p_itemGoBeingDragged->GetContainedGameObject(),
                          newIndex);
+                OnMouseMove(true, false);
             }
         }
     }
@@ -782,16 +790,20 @@ UIFocusable *UIList::GetFocusable() const
     return p_focusable;
 }
 
-UIListItemContainer *UIList::GetItemContainer(GameObject *itemGo)
+UIListItemContainer *UIList::GetItemContainer(GameObject *itemGo) const
 {
-    if (UIListItemContainer *itemCont = DCAST<UIListItemContainer *>(itemGo))
+    if (itemGo)
     {
-        return itemCont;
-    }
+        if (UIListItemContainer *itemCont =
+                DCAST<UIListItemContainer *>(itemGo))
+        {
+            return itemCont;
+        }
 
-    if (GameObject *parent = itemGo->GetParent())
-    {
-        return DCAST<UIListItemContainer *>(parent);
+        if (GameObject *parent = itemGo->GetParent())
+        {
+            return DCAST<UIListItemContainer *>(parent);
+        }
     }
     return nullptr;
 }
@@ -825,9 +837,9 @@ void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == p_itemUnderMouse)
     {
-        if (UIImageRenderer *bg = GetItemBg(p_itemUnderMouse))
+        if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
         {
-            bg->SetTint(GetIdleColor());
+            itemBg->SetTint(GetIdleColor());
         }
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;

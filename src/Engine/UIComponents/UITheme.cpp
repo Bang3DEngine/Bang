@@ -12,6 +12,11 @@ Color UITheme::GetSelectedColor()
     return UITheme::GetBaseColor().WithSaturation(0.85f);
 }
 
+Color UITheme::GetDraggedItemColor()
+{
+    return Color::Blue().WithValue(1.5f);
+}
+
 Color UITheme::GetFocusedBorderColor()
 {
     return UITheme::GetBaseColor();

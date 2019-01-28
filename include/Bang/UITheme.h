@@ -11,6 +11,7 @@ class UITheme
 public:
     static Color GetOverColor();
     static Color GetSelectedColor();
+    static Color GetDraggedItemColor();
     static Color GetFocusedBorderColor();
     static Color GetNotFocusedBorderColor();
 

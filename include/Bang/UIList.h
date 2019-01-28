@@ -100,7 +100,7 @@ public:
     int GetSelectedIndex() const;
     GOItem *GetSelectedItem() const;
     UIFocusable *GetFocusable() const;
-    UIListItemContainer *GetItemContainer(GameObject *itemGo);
+    UIListItemContainer *GetItemContainer(GameObject *itemGo) const;
     bool GetDragDropEnabled() const;
 
     void SetWideSelectionMode(bool wideSelectionMode);
@@ -122,7 +122,6 @@ protected:
 
     UIEventResult OnMouseMove(bool forceColorsUpdate = false,
                               bool callCallbacks = true);
-    UIImageRenderer *GetItemBg(GOItem *item) const;
 
     void GetMousePositionInList(
         GOItem **itemOverOut,
@@ -139,7 +138,6 @@ private:
     Array<GOItem *> p_items;
     UIDirLayout *p_dirLayout = nullptr;
     UIFocusable *p_focusable = nullptr;
-    UMap<GOItem *, UIImageRenderer *> p_itemsBackground;
 
     int m_selectionIndex = -1;
     GOItem *p_itemUnderMouse = nullptr;
@@ -161,6 +159,7 @@ private:
     bool m_notifySelectionOnFullClick = false;
 
     void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);
+    UIImageRenderer *GetItemBg(GameObject *item) const;
 
     // IEventsFocus
     UIEventResult OnUIEvent(UIFocusable *focusable,

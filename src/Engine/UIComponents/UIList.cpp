@@ -84,21 +84,18 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
 {
     ASSERT(index >= 0 && index <= GetNumItems());
 
-    Array<UIFocusable *> newItemFocusables =
-        newItem->GetComponentsInDescendantsAndThis<UIFocusable>();
-
     UIListItemContainer *newItemCont = new UIListItemContainer();
     newItemCont->SetContainedGameObject(newItem);
 
     UIImageRenderer *itemBg = newItem->AddComponent<UIImageRenderer>(0);
     itemBg->SetTint(GetIdleColor());
 
-    for (UIFocusable *newItemFocusable : newItemFocusables)
-    {
-        newItemFocusable->EventEmitter<IEventsFocus>::RegisterListener(this);
-    }
+    newItemCont->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(
+        this);
+    newItemCont->GetDragDroppable()->SetEnabled(GetDragDropEnabled());
 
     newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
+
     newItemCont->SetParent(GetContainer(), index);
 
     p_itemsBackground.Add(newItem, itemBg);
@@ -414,9 +411,7 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
         case UIEvent::Type::MOUSE_EXIT: SetItemUnderMouse(nullptr, true); break;
 
         case UIEvent::Type::MOUSE_ENTER:
-        case UIEvent::Type::MOUSE_MOVE: { return OnMouseMove();
-        }
-        break;
+        case UIEvent::Type::MOUSE_MOVE: return OnMouseMove(); break;
 
         case UIEvent::Type::MOUSE_CLICK_DOWN:
             if (p_itemUnderMouse)
@@ -429,7 +424,7 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
                     }
                     CallSelectionCallback(p_itemUnderMouse,
                                           Action::MOUSE_LEFT_DOWN);
-                    return UIEventResult::INTERCEPT;
+                    return UIEventResult::IGNORE;
                 }
                 else if (event.mouse.button == MouseButton::RIGHT)
                 {
@@ -603,9 +598,14 @@ void UIList::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDragStarted(dd_);
 
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
+
     UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
     if (UIListItemContainer *draggedItemCont =
-            DCAST<UIListItemContainer *>(dd->GetGameObject()))
+            GetItemContainer(dd->GetGameObject()))
     {
         p_itemGoBeingDragged = draggedItemCont;
     }
@@ -620,6 +620,11 @@ void UIList::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
 void UIList::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDragUpdate(dd_);
+
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
 
@@ -694,6 +699,11 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDrop(dd_);
 
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
+
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
     if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
     {
@@ -719,7 +729,7 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
         }
 
         if (UIListItemContainer *draggedItemCont =
-                DCAST<UIListItemContainer *>(dragDroppable->GetGameObject()))
+                GetItemContainer(dragDroppable->GetGameObject()))
         {
             if (GetItems().Contains(draggedItemCont->GetContainedGameObject()))
             {
@@ -772,6 +782,20 @@ UIFocusable *UIList::GetFocusable() const
     return p_focusable;
 }
 
+UIListItemContainer *UIList::GetItemContainer(GameObject *itemGo)
+{
+    if (GameObject *parent = itemGo->GetParent())
+    {
+        return DCAST<UIListItemContainer *>(parent);
+    }
+    return nullptr;
+}
+
+bool UIList::GetDragDropEnabled() const
+{
+    return m_dragDropEnabled;
+}
+
 void UIList::SetWideSelectionMode(bool wideSelectionMode)
 {
     m_wideSelectionMode = wideSelectionMode;
@@ -785,6 +809,11 @@ void UIList::SetOverColor(const Color &overColor)
 void UIList::SetSelectedColor(const Color &selectedColor)
 {
     m_selectedColor = selectedColor;
+}
+
+void UIList::SetDragDropEnabled(bool dragDropEnabled)
+{
+    m_dragDropEnabled = dragDropEnabled;
 }
 
 void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)

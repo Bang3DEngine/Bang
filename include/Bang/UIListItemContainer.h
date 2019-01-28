@@ -16,11 +16,13 @@ public:
 
     void SetContainedGameObject(GameObject *go);
 
+    UIFocusable *GetFocusable() const;
+    UIDragDroppable *GetDragDroppable() const;
     GameObject *GetContainedGameObject() const;
 
 private:
     GameObject *p_containedGameObject = nullptr;
-    UIFocusable *p_defaultFocusable = nullptr;
+    UIFocusable *p_focusable = nullptr;
     UIDragDroppable *p_dragDroppable = nullptr;
 };
 }

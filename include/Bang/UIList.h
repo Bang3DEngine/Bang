@@ -75,6 +75,7 @@ public:
     void SetIdleColor(const Color &idleColor);
     void SetOverColor(const Color &overColor);
     void SetSelectedColor(const Color &selectedColor);
+    void SetDragDropEnabled(bool dragDropEnabled);
 
     const Array<GOItem *> &GetItems() const;
     GOItem *GetItem(int i) const;
@@ -99,6 +100,8 @@ public:
     int GetSelectedIndex() const;
     GOItem *GetSelectedItem() const;
     UIFocusable *GetFocusable() const;
+    UIListItemContainer *GetItemContainer(GameObject *itemGo);
+    bool GetDragDropEnabled() const;
 
     void SetWideSelectionMode(bool wideSelectionMode);
 
@@ -153,6 +156,7 @@ private:
     Color m_overColor = UITheme::GetOverColor();
     Color m_selectedColor = UITheme::GetSelectedColor();
 
+    bool m_dragDropEnabled = false;
     bool m_wideSelectionMode = true;
     bool m_notifySelectionOnFullClick = false;
 

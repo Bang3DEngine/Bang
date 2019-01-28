@@ -4,6 +4,7 @@
 #include "Bang/IEvents.h"
 #include "Bang/Key.h"
 #include "Bang/MouseButton.h"
+#include "Bang/Time.h"
 #include "Bang/Vector2.h"
 
 namespace Bang
@@ -44,6 +45,7 @@ struct UIEvent
 
     Type type;
     Vector2i mousePosWindow;
+    Time timestamp;
     struct
     {
         MouseButton button;

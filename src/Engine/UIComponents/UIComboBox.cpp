@@ -27,6 +27,7 @@
 #include "Bang/UILayoutElement.h"
 #include "Bang/UILayoutIgnorer.h"
 #include "Bang/UIList.h"
+#include "Bang/UIListItemContainer.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
 
@@ -117,6 +118,7 @@ void UIComboBox::AddItem(const String &label, int value)
     textGo->SetParent(itemGo);
 
     GetList()->AddItem(itemGo);
+    GetList()->GetItemContainer(itemGo)->GetFocusable()->SetEnabled(false);
     m_indexToValue.PushBack(value);
     m_indexToLabel.PushBack(label);
     m_checkImgs.PushBack(checkIcon);
@@ -565,6 +567,7 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
     list->GetDirLayout()->SetPaddings(3);
     list->GetDirLayout()->SetPaddingLeft(20);
     list->GetDirLayout()->SetPaddingRight(2);
+    listGo->SetName("UIComboBoxUIList");
     list->SetSelectionCallback(
         [comboBox](GameObject *item, UIList::Action action) {
             comboBox->OnListSelectionCallback(item, action);
@@ -622,6 +625,7 @@ void UIComboBox::OnListSelectionCallback(GameObject *item,
             }
             break;
 
+        case UIList::Action::MOUSE_LEFT_DOWN:
         case UIList::Action::SELECTION_IN:
             if (GetMultiCheck())
             {

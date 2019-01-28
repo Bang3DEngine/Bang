@@ -34,6 +34,7 @@ public:
     void Insert(const T &x, int index);
 
     void PushBack(const T &x);
+    void PushBack(T &&x);
     void PushFront(const T &x);
 
     template <class IteratorClass>

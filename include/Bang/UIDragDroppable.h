@@ -49,7 +49,7 @@ private:
 
     UIFocusable *p_focusable = nullptr;
 
-    Time m_pressTime;
+    Time m_pressTime = Time::Infinity();
     bool m_beingDragged = false;
     bool m_showDragDropGameObject = true;
     Vector2i m_dragGrabOffset = Vector2i::Zero();

@@ -103,14 +103,14 @@ private:
     void RegisterFocusableBeingPressed(UIFocusable *focusable);
     void RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable);
 
-    void GetSortedFocusCandidatesByOcclusionOrder(
-        const GameObject *go,
-        Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates) const;
-
     void GetSortedFocusCandidatesByPaintOrder(
         const GameObject *go,
         Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates,
         std::stack<AARecti> *maskRectStack) const;
+
+    void GetSortedFocusCandidatesByOcclusionOrder(
+        const GameObject *go,
+        Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates) const;
 
     friend class UIFocusable;
 };

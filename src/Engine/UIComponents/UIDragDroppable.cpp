@@ -43,34 +43,8 @@ void UIDragDroppable::OnUpdate()
 
     if (GetFocusable())
     {
-        const Array<InputEvent> &events = Input::GetEnqueuedEvents();
-        for (const InputEvent &inputEvent : events)
-        {
-            if (GetFocusable()->IsMouseOver())
-            {
-                if (inputEvent.type == InputEvent::Type::MOUSE_DOWN &&
-                    inputEvent.mouseButton == MouseButton::LEFT)
-                {
-                    m_pressTime = Time::GetNow();
-                    // Cant use event timestamp because sometimes its not
-                    // correct and causes a bug in which all clicks are drags
-                    // m_pressTime = inputEvent.timestamp;
-
-                    RectTransform *thisRT = GetGameObject()->GetRectTransform();
-                    const AARecti thisRect(thisRT->GetViewportAARect());
-                    m_dragGrabOffset =
-                        (inputEvent.mousePosWindow - thisRect.GetMin());
-                }
-            }
-
-            if (inputEvent.type == InputEvent::Type::MOUSE_UP &&
-                inputEvent.mouseButton == MouseButton::LEFT)
-            {
-                m_pressTime.SetInfinity();
-            }
-        }
-
-        if (!IsBeingDragged() && GetFocusable()->IsBeingPressed())
+        if (!IsBeingDragged() && GetFocusable()->IsBeingPressed() &&
+            Input::GetMouseButton(MouseButton::LEFT))
         {
             Time passedPressedTime = Time::GetPassedTimeSince(m_pressTime);
             if (passedPressedTime >= UIDragDroppable::DragInitTime)
@@ -198,11 +172,29 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
 {
     ASSERT(GetFocusable() && focusable == GetFocusable());
 
-    // if (event.type == UIEvent::Type::MOUSE_CLICK_DOWN)
-    // {
-    //     OnDragStarted();
-    //     return UIEventResult::INTERCEPT;
-    // }
+    switch (event.type)
+    {
+        case UIEvent::Type::MOUSE_CLICK_DOWN:
+            if (event.mouse.button == MouseButton::LEFT)
+            {
+                // m_pressTime = Time::GetNow();
+                m_pressTime = event.timestamp;
+
+                RectTransform *thisRT = GetGameObject()->GetRectTransform();
+                const AARecti thisRect(thisRT->GetViewportAARect());
+                m_dragGrabOffset = (event.mousePosWindow - thisRect.GetMin());
+            }
+            break;
+
+        case UIEvent::Type::MOUSE_CLICK_UP:
+            if (event.mouse.button == MouseButton::LEFT)
+            {
+                m_pressTime.SetInfinity();
+                return UIEventResult::INTERCEPT;
+            }
+
+        default: break;
+    }
     return UIEventResult::IGNORE;
 }
 

@@ -58,7 +58,7 @@ Time Time::Zero()
 
 Time Time::Infinity()
 {
-    return Time(SCAST<uint64_t>(SCAST<uint>(-1)));
+    return Time(SCAST<uint64_t>(-1));
 }
 
 Time Time::Seconds(double seconds)
@@ -111,7 +111,7 @@ Time Time::GetPassedTimeSince(Time refTime)
     Time now = Time::GetNow();
     if (now <= refTime)
     {
-        return Time(0);
+        return Time::Zero();
     }
     return (now - refTime);
 }

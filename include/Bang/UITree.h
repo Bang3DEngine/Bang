@@ -59,6 +59,7 @@ public:
     void SetSelection(GOItem *item);
     void SetItemCollapsed(GOItem *item, bool collapsed);
     void SetSelectionCallback(UIList::SelectionCallback callback);
+    void SetDragDropEnabled(bool dragDropEnabled);
 
     GOItem *GetParentItem(GOItem *item) const;
     bool IsItemCollapsed(GOItem *item) const;
@@ -67,6 +68,7 @@ public:
     List<GOItem *> GetChildrenItems(GOItem *item) const;
     bool ItemIsChildOfRecursive(GOItem *item, GOItem *parent) const;
     UIList *GetUIList() const;
+    bool GetDragDropEnabled() const;
 
     void GetMousePositionInTree(
         GOItem **itemOverOut,
@@ -104,6 +106,7 @@ private:
     GOItem *p_itemBeingDragged = nullptr;
     UMap<GOItem *, Tree<GOItem *> *> m_itemToTree;
     UIList::SelectionCallback m_selectionCallback;
+    bool m_dragDropEnabled = false;
 
     GameObject *p_dragMarker = nullptr;
     UIImageRenderer *p_dragMarkerImg = nullptr;

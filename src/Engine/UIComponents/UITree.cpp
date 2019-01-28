@@ -136,6 +136,11 @@ void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDragStarted(dd_);
 
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
+
     UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
     if (UITreeItemContainer *draggedTreeItemCont =
             DCAST<UITreeItemContainer *>(dd->GetGameObject()))
@@ -154,6 +159,11 @@ void UITree::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
 void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDragUpdate(dd_);
+
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
 
@@ -243,6 +253,11 @@ void UITree::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
 void UITree::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
 {
     IEventsDragDrop::OnDrop(dd_);
+
+    if (!GetDragDropEnabled())
+    {
+        return;
+    }
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
 
@@ -648,6 +663,11 @@ void UITree::SetSelectionCallback(UIList::SelectionCallback callback)
     m_selectionCallback = callback;
 }
 
+void UITree::SetDragDropEnabled(bool dragDropEnabled)
+{
+    m_dragDropEnabled = dragDropEnabled;
+}
+
 bool UITree::IsItemCollapsed(GOItem *item) const
 {
     ASSERT(!item || !DCAST<UITreeItemContainer *>(item));
@@ -657,6 +677,11 @@ bool UITree::IsItemCollapsed(GOItem *item) const
 UIList *UITree::GetUIList() const
 {
     return p_uiList;
+}
+
+bool UITree::GetDragDropEnabled() const
+{
+    return m_dragDropEnabled;
 }
 
 void UITree::GetMousePositionInTree(

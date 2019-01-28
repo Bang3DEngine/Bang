@@ -1,6 +1,5 @@
 #include "Bang/UICanvas.h"
 
-#include <map>
 #include <queue>
 
 #include "Bang/Assert.h"
@@ -76,7 +75,6 @@ void PropagateUIEvent(GameObject *focusableGo, const UIEvent &event)
     };
 
     DestroyTracker *destroyTracker = new DestroyTracker();
-
     for (UIFocusable *focusableInGo : focusablesInGo)
     {
         focusableInGo->EventEmitter<IEventsDestroy>::RegisterListener(
@@ -125,6 +123,7 @@ void PropagateFocusableUIEvent(UIFocusable *focusable,
     {
         UIEvent event;
         event.type = type;
+        event.timestamp = inputEvent.timestamp;
         event.mouse.button = inputEvent.mouseButton;
         event.mousePosWindow = inputEvent.GetMousePosWindow();
         event.key.key = inputEvent.key;
@@ -178,20 +177,15 @@ void UICanvas::OnUpdate()
         {
             UIFocusable *focusable = pair.first;
             const AARecti &aaRectMaskVP = pair.second;
-            if (focusable)
+            GameObject *focusableGo = focusable->GetGameObject();
+            if (RectTransform *rt = focusableGo->GetRectTransform())
             {
-                if (GameObject *focusableGo = focusable->GetGameObject())
+                if (aaRectMaskVP.Contains(currentMousePosVP) &&
+                    rt->IsMouseOver(currentMouseWindow, false) &&
+                    focusable->IsEnabledRecursively())
                 {
-                    if (RectTransform *rt = focusableGo->GetRectTransform())
-                    {
-                        if (aaRectMaskVP.Contains(currentMousePosVP) &&
-                            rt->IsMouseOver(currentMouseWindow, false) &&
-                            focusable->IsEnabledRecursively())
-                        {
-                            focusableUnderMouseTopMost = focusable;
-                            break;
-                        }
-                    }
+                    focusableUnderMouseTopMost = focusable;
+                    break;
                 }
             }
         }
@@ -887,32 +881,10 @@ struct GameObjectZComparer
     inline bool operator()(const std::pair<UIFocusable *, AARecti> &lhs,
                            const std::pair<UIFocusable *, AARecti> &rhs)
     {
-        if (Transform *lt = lhs.first->GetGameObject()->GetTransform())
-        {
-            if (Transform *rt = rhs.first->GetGameObject()->GetTransform())
-            {
-                return lt->GetPosition().z < rt->GetPosition().z;
-            }
-            return true;
-        }
-        return false;
+        return lhs.first->GetGameObject()->GetTransform()->GetPosition().z <
+               rhs.first->GetGameObject()->GetTransform()->GetPosition().z;
     }
 };
-
-void UICanvas::GetSortedFocusCandidatesByOcclusionOrder(
-    const GameObject *go,
-    Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates) const
-{
-    std::stack<AARecti> auxMaskRectStack;
-    auxMaskRectStack.push(GL::GetViewportRect());
-
-    GetSortedFocusCandidatesByPaintOrder(
-        go, sortedCandidates, &auxMaskRectStack);
-
-    Containers::StableSort(sortedCandidates->Begin(),
-                           sortedCandidates->End(),
-                           GameObjectZComparer());
-}
 
 void UICanvas::GetSortedFocusCandidatesByPaintOrder(
     const GameObject *go,
@@ -923,7 +895,8 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
     for (auto it = children.RBegin(); it != children.REnd(); ++it)
     {
         GameObject *child = *it;
-        if (child->IsActiveRecursively() && child->IsVisibleRecursively())
+        if (child && child->IsActiveRecursively() &&
+            child->IsVisibleRecursively())
         {
             const AARecti &parentRectMask = maskRectStack->top();
             UIRectMask *rectMask = child->GetComponent<UIRectMask>();
@@ -950,29 +923,18 @@ void UICanvas::GetSortedFocusCandidatesByPaintOrder(
             maskRectStack->pop();
         }
     }
+}
 
-    /*
+void UICanvas::GetSortedFocusCandidatesByOcclusionOrder(
+    const GameObject *go,
+    Array<std::pair<UIFocusable *, AARecti>> *sortedCandidates) const
+{
+    std::stack<AARecti> auxMaskRectStack;
+    auxMaskRectStack.push(GL::GetViewportRect());
+
+    GetSortedFocusCandidatesByPaintOrder(
+        go, sortedCandidates, &auxMaskRectStack);
     Containers::StableSort(sortedCandidates->Begin(),
                            sortedCandidates->End(),
-    [](const std::pair<UIFocusable*, AARect> &pl,
-       const std::pair<UIFocusable*, AARect> &pr)
-    {
-        Component *compL = DCAST<Component*>(pl.first);
-        GameObject *goL = compL ? compL->GetGameObject() :
-                                  DCAST<GameObject*>(pl.first);
-        ASSERT(goL);
-
-        Component *compR = DCAST<Component*>(pr.first);
-        GameObject *goR = compR ? compR->GetGameObject() :
-                                  DCAST<GameObject*>(pr.first);
-        ASSERT(goR);
-
-        Transform *trL = goL->GetTransform();
-        Transform *trR = goR->GetTransform();
-        if (!trL) { return true;  }
-        if (!trR) { return false; }
-
-        return trL->GetPosition().z > trR->GetPosition().z;
-    });
-    */
+                           GameObjectZComparer());
 }

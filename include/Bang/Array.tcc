@@ -65,6 +65,12 @@ void Array<T>::PushBack(const T &x)
 }
 
 template <class T>
+void Array<T>::PushBack(T &&x)
+{
+    m_vector.push_back(x);
+}
+
+template <class T>
 void Array<T>::PushFront(const T &x)
 {
     Insert(x, 0);

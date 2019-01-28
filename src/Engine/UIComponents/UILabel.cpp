@@ -291,7 +291,6 @@ UIEventResult UILabel::OnUIEvent(UIFocusable *, const UIEvent &event)
                     ResetSelection();
                 }
                 UpdateSelectionQuadRenderer();
-
                 return UIEventResult::INTERCEPT;
             }
             break;
@@ -301,7 +300,6 @@ UIEventResult UILabel::OnUIEvent(UIFocusable *, const UIEvent &event)
             ResetSelection();
             m_selectingWithMouse = false;
             UpdateSelectionQuadRenderer();
-
             return UIEventResult::INTERCEPT;
         }
         break;
@@ -315,14 +313,15 @@ UIEventResult UILabel::OnUIEvent(UIFocusable *, const UIEvent &event)
                 {
                     HandleMouseSelection();
                     m_selectingWithMouse = true;
+                    UpdateSelectionQuadRenderer();
+                    return UIEventResult::INTERCEPT;
                 }
                 else
                 {
                     ResetSelection();
+                    UpdateSelectionQuadRenderer();
                 }
-                UpdateSelectionQuadRenderer();
-
-                return UIEventResult::INTERCEPT;
+                return UIEventResult::IGNORE;
             }
         }
         break;
@@ -331,7 +330,6 @@ UIEventResult UILabel::OnUIEvent(UIFocusable *, const UIEvent &event)
         {
             m_selectingWithMouse = false;
             UpdateSelectionQuadRenderer();
-
             return UIEventResult::INTERCEPT;
         }
         break;

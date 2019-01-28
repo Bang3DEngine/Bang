@@ -103,8 +103,6 @@ public:
     UIListItemContainer *GetItemContainer(GameObject *itemGo) const;
     bool GetDragDropEnabled() const;
 
-    void SetWideSelectionMode(bool wideSelectionMode);
-
     // IEventsDestroy
     virtual void OnDestroyed(EventEmitter<IEventsDestroy> *object) override;
 
@@ -155,7 +153,6 @@ private:
     Color m_selectedColor = UITheme::GetSelectedColor();
 
     bool m_dragDropEnabled = false;
-    bool m_wideSelectionMode = true;
     bool m_notifySelectionOnFullClick = false;
 
     void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);

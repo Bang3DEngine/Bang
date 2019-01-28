@@ -118,7 +118,6 @@ void UIComboBox::AddItem(const String &label, int value)
     textGo->SetParent(itemGo);
 
     GetList()->AddItem(itemGo);
-    GetList()->GetItemContainer(itemGo)->GetFocusable()->SetEnabled(false);
     m_indexToValue.PushBack(value);
     m_indexToLabel.PushBack(label);
     m_checkImgs.PushBack(checkIcon);
@@ -563,7 +562,6 @@ void UIComboBox::CreateIntoWithoutAddingComponent(UIComboBox *comboBox,
 
     UIList *list = GameObjectFactory::CreateUIList(false);
     GameObject *listGo = list->GetGameObject();
-    list->SetWideSelectionMode(true);
     list->GetDirLayout()->SetPaddings(3);
     list->GetDirLayout()->SetPaddingLeft(20);
     list->GetDirLayout()->SetPaddingRight(2);

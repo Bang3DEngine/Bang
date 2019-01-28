@@ -178,22 +178,8 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate, bool callCallbacks)
                 continue;
             }
 
-            bool overItem;
-            if (m_wideSelectionMode)
-            {
-                AARect itemRTRect(
-                    item->GetRectTransform()->GetViewportAARectNDC());
-                overItem = (mousePos.x >= listRTNDCRect.GetMin().x &&
-                            mousePos.x <= listRTNDCRect.GetMax().x &&
-                            mousePos.y >= itemRTRect.GetMin().y &&
-                            mousePos.y <= itemRTRect.GetMax().y);
-            }
-            else
-            {
-                overItem = canvas->IsMouseOver(item, false);
-            }
-
-            if (overItem)
+            UIListItemContainer *itemCont = GetItemContainer(item);
+            if (itemCont->GetFocusable()->IsMouseOver())
             {
                 itemUnderMouse = item;
                 break;
@@ -811,11 +797,6 @@ UIListItemContainer *UIList::GetItemContainer(GameObject *itemGo) const
 bool UIList::GetDragDropEnabled() const
 {
     return m_dragDropEnabled;
-}
-
-void UIList::SetWideSelectionMode(bool wideSelectionMode)
-{
-    m_wideSelectionMode = wideSelectionMode;
 }
 
 void UIList::SetOverColor(const Color &overColor)

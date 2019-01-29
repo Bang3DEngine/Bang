@@ -409,21 +409,19 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
         case UIEvent::Type::MOUSE_CLICK_DOWN:
             if (p_itemUnderMouse)
             {
-                if (event.mouse.button == MouseButton::LEFT)
+                if (event.mouse.button == MouseButton::LEFT ||
+                    event.mouse.button == MouseButton::RIGHT)
                 {
                     if (!m_notifySelectionOnFullClick)
                     {
                         SetSelection(p_itemUnderMouse);
                     }
-                    CallSelectionCallback(p_itemUnderMouse,
-                                          Action::MOUSE_LEFT_DOWN);
+                    CallSelectionCallback(
+                        p_itemUnderMouse,
+                        event.mouse.button == MouseButton::LEFT
+                            ? Action::MOUSE_LEFT_DOWN
+                            : Action::MOUSE_RIGHT_DOWN);
                     return UIEventResult::IGNORE;
-                }
-                else if (event.mouse.button == MouseButton::RIGHT)
-                {
-                    CallSelectionCallback(p_itemUnderMouse,
-                                          Action::MOUSE_RIGHT_DOWN);
-                    return UIEventResult::INTERCEPT;
                 }
             }
             break;
@@ -452,7 +450,8 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
         case UIEvent::Type::MOUSE_CLICK_FULL:
             if (p_itemUnderMouse && m_notifySelectionOnFullClick)
             {
-                if (event.mouse.button == MouseButton::LEFT)
+                if (event.mouse.button == MouseButton::LEFT ||
+                    event.mouse.button == MouseButton::RIGHT)
                 {
                     SetSelection(p_itemUnderMouse);
                     return UIEventResult::INTERCEPT;
@@ -728,7 +727,13 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
             {
                 MoveItem(p_itemGoBeingDragged->GetContainedGameObject(),
                          newIndex);
-                OnMouseMove(true, false);
+                for (GameObject *item : GetItems())
+                {
+                    if (item != GetSelectedItem())
+                    {
+                        GetItemBg(item)->SetTint(GetIdleColor());
+                    }
+                }
             }
         }
     }
@@ -856,7 +861,6 @@ UIList *UIList::CreateInto(GameObject *go, bool withScrollPanel)
     uiList->p_dirLayout = containerVL;
 
     uiList->p_focusable = container->AddComponent<UIFocusable>();
-    uiList->p_focusable->EventEmitter<IEventsFocus>::RegisterListener(uiList);
 
     if (withScrollPanel)
     {

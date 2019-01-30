@@ -88,7 +88,6 @@ public:
     static Array<Vector3> IntersectPolygonPolygon(const Polygon &poly0,
                                                   const Polygon &poly1);
 
-    // Computes the intersection between a ray and a triangle
     static void IntersectRayTriangle(
         const Ray &ray,
         const Triangle &triangle,
@@ -99,13 +98,14 @@ public:
                                      bool *intersected,
                                      Vector3 *intersectionPoint);
 
-    // Computes the intersection between a segment and a triangle
+    static bool IntersectAABoxTriangle(const AABox &aaBox,
+                                       const Triangle &triangle);
+
     static void IntersectSegmentTriangle(const Segment &segment,
                                          const Triangle &triangle,
                                          bool *intersected,
                                          Vector3 *intersectionPoint);
 
-    // Computes the intersection between two triangles
     static Array<Vector3> IntersectTriangleTriangle(const Triangle &triangle0,
                                                     const Triangle &triangle1);
 

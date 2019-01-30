@@ -9,8 +9,8 @@
 
 using namespace Bang;
 
-template <class T, class ClassifyFunctor>
-Octree<T, ClassifyFunctor>::Octree()
+template <class T>
+Octree<T>::Octree()
 {
     for (int i = 0; i < 8; ++i)
     {
@@ -18,8 +18,8 @@ Octree<T, ClassifyFunctor>::Octree()
     }
 }
 
-template <class T, class ClassifyFunctor>
-Octree<T, ClassifyFunctor>::~Octree()
+template <class T>
+Octree<T>::~Octree()
 {
     for (int i = 0; i < 8; ++i)
     {
@@ -31,29 +31,28 @@ Octree<T, ClassifyFunctor>::~Octree()
     }
 }
 
-template <class T, class ClassifyFunctor>
-void Octree<T, ClassifyFunctor>::SetAABox(const AABox &aabox)
+template <class T>
+void Octree<T>::SetAABox(const AABox &aabox)
 {
     m_aaBox = aabox;
     m_leafElements.Clear();
 }
 
 #include "DebugRenderer.h"
-template <class T, class ClassifyFunctor>
-uint Octree<T, ClassifyFunctor>::Fill(const Array<T> &elements, uint maxDepth)
+template <class T>
+uint Octree<T>::Fill(const Array<T> &elements, uint maxDepth)
 {
     // Returns the number of contained elements after filling
-    if (maxDepth < 0)
+    if (!m_classifyFunction || maxDepth < 0)
     {
         return -1;
     }
 
     // Get elements inside me
     Array<T> containedElements;
-    ClassifyFunctor classifyFunctor;
     for (const T &element : elements)
     {
-        if (classifyFunctor(GetAABox(), element))
+        if (m_classifyFunction(GetAABox(), element))
         {
             // Debug_Peek(element);
             containedElements.PushBack(element);
@@ -83,7 +82,7 @@ uint Octree<T, ClassifyFunctor>::Fill(const Array<T> &elements, uint maxDepth)
             {
                 const Vector3 &sizeDir = sizeDirs[i];
 
-                Octree *childOctree = new Octree<T, ClassifyFunctor>();
+                Octree *childOctree = new Octree<T>();
                 childOctree->SetAABox(
                     AABox::FromPointAndSize(mp + hs * sizeDir, hs));
                 int childContainedElements =
@@ -116,8 +115,14 @@ uint Octree<T, ClassifyFunctor>::Fill(const Array<T> &elements, uint maxDepth)
     return containedElements.Size();
 }
 
-template <class T, class ClassifyFunctor>
-int Octree<T, ClassifyFunctor>::GetDepth() const
+template <class T>
+void Octree<T>::SetClassifyFunction(ClassifyFunction classifyFunction)
+{
+    m_classifyFunction = classifyFunction;
+}
+
+template <class T>
+int Octree<T>::GetDepth() const
 {
     int childrenMaxDepth = 0;
     for (Octree *oct : GetChildren())
@@ -129,14 +134,14 @@ int Octree<T, ClassifyFunctor>::GetDepth() const
     }
     return childrenMaxDepth + 1;
 }
-template <class T, class ClassifyFunctor>
-const AABox Octree<T, ClassifyFunctor>::GetAABox() const
+template <class T>
+const AABox Octree<T>::GetAABox() const
 {
     return m_aaBox;
 }
 
-template <class T, class ClassifyFunctor>
-Array<T> Octree<T, ClassifyFunctor>::GetElementsRecursive() const
+template <class T>
+Array<T> Octree<T>::GetElementsRecursive() const
 {
     Array<T> elements = GetElements();
     for (const Octree *child : GetChildren())
@@ -149,22 +154,20 @@ Array<T> Octree<T, ClassifyFunctor>::GetElementsRecursive() const
     return elements;
 }
 
-template <class T, class ClassifyFunctor>
-const Array<T> &Octree<T, ClassifyFunctor>::GetElements() const
+template <class T>
+const Array<T> &Octree<T>::GetElements() const
 {
     return m_leafElements;
 }
 
-template <class T, class ClassifyFunctor>
-const std::array<Octree<T, ClassifyFunctor> *, 8>
-    &Octree<T, ClassifyFunctor>::GetChildren() const
+template <class T>
+const std::array<Octree<T> *, 8> &Octree<T>::GetChildren() const
 {
     return m_children;
 }
 
-template <class T, class ClassifyFunctor>
-Array<const Octree<T, ClassifyFunctor> *>
-Octree<T, ClassifyFunctor>::GetChildrenAtLevel(
+template <class T>
+Array<const Octree<T> *> Octree<T>::GetChildrenAtLevel(
     uint level,
     bool includeEarlyPrunedInPreviousLevels) const
 {

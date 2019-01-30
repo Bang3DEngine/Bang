@@ -527,6 +527,89 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
     *intersectionPoint = *intersected ? ray.GetPoint(t) : ray.GetOrigin();
 }
 
+template <uint N>
+void FindProjectionIntervals(const std::array<Vector3, N> &points,
+                             const Vector3 &axis,
+                             float &outMinProjection,
+                             float &outMaxProjection)
+{
+    outMinProjection = Math::Infinity<float>();
+    outMaxProjection = Math::NegativeInfinity<float>();
+    for (const Vector3 &point : points)
+    {
+        float projection = point.ProjectedOnAxisAsPoint(axis);
+
+        if (projection > outMaxProjection)
+        {
+            outMaxProjection = projection;
+        }
+
+        if (projection < outMinProjection)
+        {
+            outMinProjection = projection;
+        }
+    }
+}
+
+bool Geometry::IntersectAABoxTriangle(const AABox &aaBox,
+                                      const Triangle &triangle)
+{
+    // Retrieve triangle and boxes information
+    std::array<Vector3, 3> trianglePoints = {
+        {triangle[0], triangle[1], triangle[2]}};
+    const Vector3 &triP0 = trianglePoints[0];
+    const Vector3 &triP1 = trianglePoints[1];
+    const Vector3 &triP2 = trianglePoints[2];
+    const Vector3 triNormal = triangle.GetNormal();
+    std::array<Vector3, 8> boxPoints = aaBox.GetPointsC();
+    const Vector3 triEdge01 = (triP1 - triP0).NormalizedSafe();
+    const Vector3 triEdge12 = (triP2 - triP1).NormalizedSafe();
+    const Vector3 triEdge20 = (triP0 - triP2).NormalizedSafe();
+
+    // Create axes
+    std::array<Vector3, 13> separatingAxes;
+    separatingAxes[0] = Vector3(1, 0, 0);
+    separatingAxes[1] = Vector3(0, 1, 0);
+    separatingAxes[2] = Vector3(0, 0, 1);
+    separatingAxes[3] = triNormal;
+    separatingAxes[4] = Vector3::Cross(triEdge01, Vector3(1, 0, 0));
+    separatingAxes[5] = Vector3::Cross(triEdge12, Vector3(1, 0, 0));
+    separatingAxes[6] = Vector3::Cross(triEdge20, Vector3(1, 0, 0));
+    separatingAxes[7] = Vector3::Cross(triEdge01, Vector3(0, 1, 0));
+    separatingAxes[8] = Vector3::Cross(triEdge12, Vector3(0, 1, 0));
+    separatingAxes[9] = Vector3::Cross(triEdge20, Vector3(0, 1, 0));
+    separatingAxes[10] = Vector3::Cross(triEdge01, Vector3(0, 0, 1));
+    separatingAxes[11] = Vector3::Cross(triEdge12, Vector3(0, 0, 1));
+    separatingAxes[12] = Vector3::Cross(triEdge20, Vector3(0, 0, 1));
+
+    // Check for overlap in each of the axes
+    for (const Vector3 &separatingAxis : separatingAxes)
+    {
+        // Find projected interval for triangle points
+        float triangleProjectedMin, triangleProjectedMax;
+        FindProjectionIntervals<3>(trianglePoints,
+                                   separatingAxis,
+                                   triangleProjectedMin,
+                                   triangleProjectedMax);
+
+        // Find projected interval for box points
+        float boxProjectedMin, boxProjectedMax;
+        FindProjectionIntervals<8>(
+            boxPoints, separatingAxis, boxProjectedMin, boxProjectedMax);
+
+        const bool projectionsOverlap =
+            (triangleProjectedMin <= boxProjectedMax &&
+             triangleProjectedMax >= boxProjectedMin);
+        if (!projectionsOverlap)
+        {
+            // We have found a separating plane normal to this separating axis
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void Geometry::IntersectSegmentTriangle(const Segment &segment,
                                         const Triangle &triangle,
                                         bool *intersected,

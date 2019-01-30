@@ -30,15 +30,6 @@ using namespace Bang;
 
 using OctreeData = std::pair<Mesh::VertexId, Vector3>;
 
-struct ClassifyPoints
-{
-    bool operator()(const AABox &aaBox, const OctreeData &data)
-    {
-        const Vector3 &pos = data.second;
-        return pos > aaBox.GetMin() && pos <= aaBox.GetMax();
-    }
-};
-
 void MeshSimplifier::ApplySmoothIteration(Mesh *mesh,
                                           SmoothMethod smoothMethod,
                                           float smoothFactor,
@@ -133,11 +124,15 @@ Array<AH<Mesh>> MeshSimplifier::GetAllMeshLODs(
         }
     }
 
-    using SimplOctree = Octree<OctreeData, ClassifyPoints>;
+    using SimplOctree = Octree<OctreeData>;
 
     constexpr int MaxOctreeDepth = 12;
     constexpr float PaddingPercent = 0.1f;
     SimplOctree octree;
+    octree.SetClassifyFunction([](const AABox &aaBox, const OctreeData &data) {
+        const Vector3 &pos = data.second;
+        return pos > aaBox.GetMin() && pos <= aaBox.GetMax();
+    });
     AABox meshAABox = mesh->GetAABBox();
     octree.SetAABox(
         AABox(meshAABox.GetMin() - meshAABox.GetSize() * PaddingPercent,

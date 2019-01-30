@@ -48,6 +48,7 @@ public:
     float GetVolume() const;
     Vector3 GetExtents() const;
     Vector3 GetClosestPointInAABB(const Vector3 &point) const;
+    std::array<Vector3, 8> GetPointsC() const;
     Array<Vector3> GetPoints() const;
 
     Quad GetQuad(Axis3D axis, bool sign) const;

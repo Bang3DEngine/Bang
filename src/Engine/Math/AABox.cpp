@@ -213,7 +213,7 @@ AABox AABox::FromSphere(const Sphere &sphere)
     return b;
 }
 
-Array<Vector3> AABox::GetPoints() const
+std::array<Vector3, 8> AABox::GetPointsC() const
 {
     const Vector3 center = GetCenter();
     const Vector3 extents = GetExtents();
@@ -226,6 +226,17 @@ Array<Vector3> AABox::GetPoints() const
     const Vector3 p7 = center + extents * Vector3(1, 1, -1);
     const Vector3 p8 = center + extents * Vector3(1, 1, 1);
     return {p1, p2, p3, p4, p5, p6, p7, p8};
+}
+
+Array<Vector3> AABox::GetPoints() const
+{
+    Array<Vector3> pointsArray;
+    const auto points = GetPointsC();
+    for (const Vector3 &point : points)
+    {
+        pointsArray.PushBack(point);
+    }
+    return pointsArray;
 }
 
 Quad AABox::GetQuad(Axis3D axis, bool sign) const

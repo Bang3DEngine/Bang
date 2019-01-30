@@ -99,6 +99,7 @@ public:
                                  const Vector3G<T> &planePoint) const;
     Vector3G<T> ProjectedOnVector(const Vector3G<T> &vector) const;
     Vector2G<T> ProjectedOnAxis(Axis3D axis) const;
+    T ProjectedOnAxisAsPoint(const Vector3 &axis) const;
 
     template <class OtherT1, class OtherT2>
     static Vector3G<T> Cross(const Vector3G<OtherT1> &v1,

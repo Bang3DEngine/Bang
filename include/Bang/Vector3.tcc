@@ -350,6 +350,12 @@ Vector2G<T> Vector3G<T>::ProjectedOnAxis(Axis3D axis) const
 }
 
 template <class T>
+T Vector3G<T>::ProjectedOnAxisAsPoint(const Vector3 &axis) const
+{
+    return Vector3::Dot(*this, axis);
+}
+
+template <class T>
 template <class OtherT1, class OtherT2>
 Vector3G<T> Vector3G<T>::Cross(const Vector3G<OtherT1> &v1,
                                const Vector3G<OtherT2> &v2)

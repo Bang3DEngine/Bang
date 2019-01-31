@@ -813,6 +813,7 @@ void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
     {
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
+        UpdateItemColors();
     }
 }
 

@@ -145,13 +145,23 @@ void UICanvas::OnUpdate()
         return;
     }
 
+    // Clean disabled stuff
+    if (GetFocus() && !GetFocus()->IsActiveRecursively())
+    {
+        SetFocus(nullptr);
+    }
+    if (GetFocusableUnderMouseTopMost() &&
+        !GetFocusableUnderMouseTopMost()->IsActiveRecursively())
+    {
+        SetFocusableUnderMouseTopMost(nullptr, InputEvent());
+    }
+
     Array<std::pair<UIFocusable *, AARecti>> focusablesAndRectsVP;
     GetSortedFocusCandidatesByOcclusionOrder(GetGameObject(),
                                              &focusablesAndRectsVP);
 
     // Process all enqueued InputEvents, transform them to UIEvents and
     // propagate them as we need.
-
     Array<DPtr<UIFocusable>> focusables;
     for (const auto &focusableAndRectVP : focusablesAndRectsVP)
     {
@@ -813,6 +823,7 @@ void UICanvas::SetFocusableUnderMouseTopMost(UIFocusable *focusable,
             PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
                                       UIEvent::Type::MOUSE_EXIT,
                                       inputEvent);
+            GetFocusableUnderMouseTopMost()->SetIsMouseOver(false);
             UnRegisterForEvents(GetFocusableUnderMouseTopMost());
         }
 
@@ -822,6 +833,7 @@ void UICanvas::SetFocusableUnderMouseTopMost(UIFocusable *focusable,
             PropagateFocusableUIEvent(GetFocusableUnderMouseTopMost(),
                                       UIEvent::Type::MOUSE_ENTER,
                                       inputEvent);
+            GetFocusableUnderMouseTopMost()->SetIsMouseOver(true);
 
             // We can lose the focusable when propagating event, so recheck
             if (GetFocusableUnderMouseTopMost())

@@ -76,6 +76,7 @@ public:
     void SetOverColor(const Color &overColor);
     void SetSelectedColor(const Color &selectedColor);
     void SetDragDropEnabled(bool dragDropEnabled);
+    void UpdateItemColors();
 
     const Array<GOItem *> &GetItems() const;
     GOItem *GetItem(int i) const;
@@ -118,8 +119,7 @@ protected:
     void AddItem_(GOItem *newItem, int index, bool moving);
     void RemoveItem_(GOItem *item, bool moving);
 
-    UIEventResult OnMouseMove(bool forceColorsUpdate = false,
-                              bool callCallbacks = true);
+    UIEventResult OnMouseMove();
 
     void GetMousePositionInList(
         GOItem **itemOverOut,
@@ -155,7 +155,7 @@ private:
     bool m_dragDropEnabled = false;
     bool m_notifySelectionOnFullClick = false;
 
-    void SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks);
+    void SetItemUnderMouse(GOItem *itemUnderMouse);
     UIImageRenderer *GetItemBg(GameObject *item) const;
 
     // IEventsFocus

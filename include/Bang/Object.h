@@ -56,6 +56,7 @@ protected:
     void SetBeingDestroyed();
     void SetWaitingToBeDestroyed();
     void InvalidateEnabledRecursively();
+    virtual void OnEnabledRecursivelyInvalidated();
 
     static void PropagateObjectDestruction(Object *object);
 
@@ -75,7 +76,6 @@ private:
     mutable bool m_enabledRecursively = false;
 
     virtual bool CalculateEnabledRecursively() const = 0;
-    virtual void OnEnabledRecursivelyInvalidated();
 };
 }  // namespace Bang
 

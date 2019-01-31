@@ -51,16 +51,12 @@ void Object::OnStart()
 {
 }
 
-void Object::OnEnabled(Object *object)
+void Object::OnEnabled(Object *)
 {
-    EventEmitter<IEventsObject>::PropagateToListeners(&IEventsObject::OnEnabled,
-                                                      object);
 }
 
-void Object::OnDisabled(Object *object)
+void Object::OnDisabled(Object *)
 {
-    EventEmitter<IEventsObject>::PropagateToListeners(
-        &IEventsObject::OnDisabled, object);
 }
 
 void Object::OnDestroy()
@@ -123,10 +119,14 @@ void Object::SetEnabled(bool enabled)
         if (IsEnabled())
         {
             OnEnabled(this);
+            EventEmitter<IEventsObject>::PropagateToListeners(
+                &IEventsObject::OnEnabled, this);
         }
         else
         {
             OnDisabled(this);
+            EventEmitter<IEventsObject>::PropagateToListeners(
+                &IEventsObject::OnDisabled, this);
         }
     }
 }

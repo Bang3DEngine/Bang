@@ -162,11 +162,14 @@ bool AABox::CheckCollision(const AABox &aabox) const
 
 bool AABox::Contains(const Vector3 &point) const
 {
-    // return point.x >= GetMin().x && point.x <= GetMax().x &&
-    //        point.y >= GetMin().y && point.y <= GetMax().y &&
-    //        point.z >= GetMin().z && point.z <= GetMax().z;
-
     return point >= GetMin() && point <= GetMax();
+}
+
+bool AABox::Overlap(const AABox &aaBox) const
+{
+    return (GetMin().x <= aaBox.GetMax().x && GetMax().x >= GetMin().x &&
+            GetMin().y <= aaBox.GetMax().y && GetMax().y >= GetMin().y &&
+            GetMin().z <= aaBox.GetMax().z && GetMax().z >= GetMin().z);
 }
 
 void AABox::AddPoint(const Vector3 &point)

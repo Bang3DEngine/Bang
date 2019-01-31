@@ -56,6 +56,7 @@ public:
 
     UIFocusable *GetFocus();
     UIFocusable *GetFocusableUnderMouseTopMost() const;
+    UIDragDroppable *GetCurrentDragDroppable() const;
     bool HasFocusFocusable(const UIFocusable *focusable);
     bool HasFocus(const Component *comp, bool recursive = false);
     bool HasFocus(const GameObject *go, bool recursive = false);

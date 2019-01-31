@@ -606,7 +606,7 @@ bool RectTransform::IsMouseOver(const Vector2i &mousePosVP,
         if (recursive)
         {
             Array<RectTransform *> childrenRTs =
-                GetGameObject()->GetComponentsInDescendants<RectTransform>();
+                GetGameObject()->GetComponentsInChildren<RectTransform>();
             for (RectTransform *childRT : childrenRTs)
             {
                 if (childRT->IsMouseOver(mousePosVP, recursive))

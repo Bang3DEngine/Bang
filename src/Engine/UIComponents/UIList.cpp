@@ -157,7 +157,7 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
     }
 }
 
-UIEventResult UIList::OnMouseMove(bool forceColorsUpdate, bool callCallbacks)
+UIEventResult UIList::OnMouseMove()
 {
     UICanvas *canvas = UICanvas::GetActive(this);
     if (!canvas)
@@ -166,75 +166,44 @@ UIEventResult UIList::OnMouseMove(bool forceColorsUpdate, bool callCallbacks)
     }
 
     GOItem *itemUnderMouse = nullptr;
-    if (canvas->IsMouseOver(GetContainer(), true))
+    for (GOItem *item : p_items)
     {
-        const Vector2 mousePos = Input::GetMousePositionNDC();
-        const AARect listRTNDCRect(
-            GetGameObject()->GetRectTransform()->GetViewportAARectNDC());
-        for (GOItem *item : p_items)
+        UIListItemContainer *itemCont = GetItemContainer(item);
+        if (itemCont->GetFocusable()->IsMouseOver())
         {
-            if (!item || !item->IsActiveRecursively())
-            {
-                continue;
-            }
-
-            UIListItemContainer *itemCont = GetItemContainer(item);
-            if (itemCont->GetFocusable()->IsMouseOver())
-            {
-                itemUnderMouse = item;
-                break;
-            }
+            itemUnderMouse = item;
+            break;
         }
     }
 
-    if ((p_itemUnderMouse != itemUnderMouse) || forceColorsUpdate)
+    UpdateItemColors();
+    if (p_itemUnderMouse != itemUnderMouse)
     {
-        SetItemUnderMouse(itemUnderMouse, callCallbacks);
+        SetItemUnderMouse(itemUnderMouse);
         return UIEventResult::INTERCEPT;
     }
     return UIEventResult::IGNORE;
 }
 
-void UIList::SetItemUnderMouse(GOItem *itemUnderMouse, bool callCallbacks)
+void UIList::SetItemUnderMouse(GOItem *itemUnderMouse)
 {
     if (itemUnderMouse != p_itemUnderMouse)
     {
         if (p_itemUnderMouse)
         {
-            if (GetSelectedItem() != p_itemUnderMouse)
-            {
-                if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
-                {
-                    itemBg->SetTint(GetIdleColor());
-                }
-            }
-
             p_itemUnderMouse->EventEmitter<IEventsDestroy>::UnRegisterListener(
                 this);
-            if (callCallbacks)
-            {
-                CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
-            }
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
         }
 
         p_itemUnderMouse = itemUnderMouse;
         if (p_itemUnderMouse)
         {
-            if (GetSelectedItem() != p_itemUnderMouse)
-            {
-                if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
-                {
-                    itemBg->SetTint(GetOverColor());
-                }
-            }
-
             p_itemUnderMouse->EventEmitter<IEventsDestroy>::RegisterListener(
                 this);
-            if (callCallbacks)
-            {
-                CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
-            }
+            CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
         }
+        UpdateItemColors();
     }
 }
 
@@ -273,6 +242,7 @@ void UIList::Clear()
 void UIList::SetIdleColor(const Color &idleColor)
 {
     m_idleColor = idleColor;
+    UpdateItemColors();
 }
 
 const Array<GOItem *> &UIList::GetItems() const
@@ -373,10 +343,6 @@ void UIList::SetSelection(int index)
     {
         if (GOItem *prevSelectedItem = GetSelectedItem())
         {
-            if (UIImageRenderer *itemBg = GetItemBg(prevSelectedItem))
-            {
-                itemBg->SetTint(GetIdleColor());
-            }
             CallSelectionCallback(prevSelectedItem, Action::SELECTION_OUT);
         }
 
@@ -385,15 +351,11 @@ void UIList::SetSelection(int index)
         {
             if (GOItem *selectedItem = GetSelectedItem())
             {
-                if (UIImageRenderer *itemBg = GetItemBg(selectedItem))
-                {
-                    itemBg->SetTint(GetSelectedColor());
-                }
                 CallSelectionCallback(selectedItem, Action::SELECTION_IN);
             }
         }
 
-        OnMouseMove(true, false);
+        UpdateItemColors();
     }
 }
 
@@ -401,7 +363,10 @@ UIEventResult UIList::OnUIEvent(UIFocusable *, const UIEvent &event)
 {
     switch (event.type)
     {
-        case UIEvent::Type::MOUSE_EXIT: SetItemUnderMouse(nullptr, true); break;
+        case UIEvent::Type::MOUSE_EXIT:
+            SetItemUnderMouse(nullptr);
+            UpdateItemColors();
+            break;
 
         case UIEvent::Type::MOUSE_ENTER:
         case UIEvent::Type::MOUSE_MOVE: return OnMouseMove(); break;
@@ -727,13 +692,7 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
             {
                 MoveItem(p_itemGoBeingDragged->GetContainedGameObject(),
                          newIndex);
-                for (GameObject *item : GetItems())
-                {
-                    if (item != GetSelectedItem())
-                    {
-                        GetItemBg(item)->SetTint(GetIdleColor());
-                    }
-                }
+                UpdateItemColors();
             }
         }
     }
@@ -807,11 +766,13 @@ bool UIList::GetDragDropEnabled() const
 void UIList::SetOverColor(const Color &overColor)
 {
     m_overColor = overColor;
+    UpdateItemColors();
 }
 
 void UIList::SetSelectedColor(const Color &selectedColor)
 {
     m_selectedColor = selectedColor;
+    UpdateItemColors();
 }
 
 void UIList::SetDragDropEnabled(bool dragDropEnabled)
@@ -819,14 +780,37 @@ void UIList::SetDragDropEnabled(bool dragDropEnabled)
     m_dragDropEnabled = dragDropEnabled;
 }
 
+void UIList::UpdateItemColors()
+{
+    for (GameObject *item : GetItems())
+    {
+        if (UIListItemContainer *itemCont = GetItemContainer(item))
+        {
+            Color tint;
+            if (GetSelectedItem() == item)
+            {
+                tint = GetSelectedColor();
+            }
+            else
+            {
+                if (itemCont->GetFocusable()->IsMouseOver())
+                {
+                    tint = UITheme::GetOverColor();
+                }
+                else
+                {
+                    tint = GetIdleColor();
+                }
+            }
+            itemCont->GetBackground()->SetTint(tint);
+        }
+    }
+}
+
 void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (object == p_itemUnderMouse)
     {
-        if (UIImageRenderer *itemBg = GetItemBg(p_itemUnderMouse))
-        {
-            itemBg->SetTint(GetIdleColor());
-        }
         CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
         p_itemUnderMouse = nullptr;
     }

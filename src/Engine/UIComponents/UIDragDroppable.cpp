@@ -43,6 +43,11 @@ void UIDragDroppable::OnUpdate()
 
     if (GetFocusable())
     {
+        if (!Input::GetMouseButton(MouseButton::LEFT))
+        {
+            m_pressTime.SetInfinity();
+        }
+
         if (!IsBeingDragged() && GetFocusable()->IsBeingPressed() &&
             Input::GetMouseButton(MouseButton::LEFT))
         {
@@ -183,6 +188,7 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
                 RectTransform *thisRT = GetGameObject()->GetRectTransform();
                 const AARecti thisRect(thisRT->GetViewportAARect());
                 m_dragGrabOffset = (event.mousePosWindow - thisRect.GetMin());
+                return UIEventResult::IGNORE;
             }
             break;
 

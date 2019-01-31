@@ -26,7 +26,6 @@ UIListItemContainer::UIListItemContainer()
     p_bg->SetTint(Color::White());
 
     p_focusable = AddComponent<UIFocusable>();
-    GetFocusable()->SetCursorType(Cursor::Type::HAND);
 
     p_dragDroppable = AddComponent<UIDragDroppable>();
     p_dragDroppable->SetShowDragDropGameObject(false);

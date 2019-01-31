@@ -737,6 +737,11 @@ UIFocusable *UICanvas::GetFocusableUnderMouseTopMost() const
     return p_focusableUnderMouseTopMost;
 }
 
+UIDragDroppable *UICanvas::GetCurrentDragDroppable() const
+{
+    return p_ddBeingDragged;
+}
+
 UILayoutManager *UICanvas::GetLayoutManager() const
 {
     return m_uiLayoutManager;

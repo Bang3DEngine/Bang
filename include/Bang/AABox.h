@@ -65,6 +65,7 @@ public:
                         Vector3 *normal = nullptr) const;
     bool CheckCollision(const AABox &aabox) const;
     bool Contains(const Vector3 &point) const;
+    bool Overlap(const AABox &aaBox) const;
 
     void AddPoint(const Vector3 &point);
     static AABox Union(const AABox &b1, const AABox &b2);

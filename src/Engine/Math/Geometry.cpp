@@ -468,15 +468,15 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
     float &t = *distanceFromRayOriginToIntersection;
     const Vector3 &rayOrig = ray.GetOrigin();
     const Vector3d rayDir(ray.GetDirection());
-    const Vector3 &v0 = triangle.GetPoint(0);
-    const Vector3 &v1 = triangle.GetPoint(1);
-    const Vector3 &v2 = triangle.GetPoint(2);
+    const Vector3 &triP0 = triangle.GetPoint(0);
+    const Vector3 &triP1 = triangle.GetPoint(1);
+    const Vector3 &triP2 = triangle.GetPoint(2);
 
-    Vector3d v1v0(v1 - v0);
-    Vector3d v2v0(v2 - v0);
+    Vector3d v10(triP1 - triP0);
+    Vector3d v20(triP2 - triP0);
 
-    Vector3d h(Vector3::Cross(rayDir, v2v0));
-    double a = Vector3d::Dot(v1v0, h);
+    Vector3d h(Vector3::Cross(rayDir, v20));
+    double a = Vector3d::Dot(v10, h);
 
     constexpr double Epsilon = 1e-8;
     if (a > -Epsilon && a < Epsilon)
@@ -486,7 +486,7 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
     }
 
     double f = 1.0 / a;
-    Vector3d s(rayOrig - v0);
+    Vector3d s(rayOrig - triP0);
     double u = f * Vector3d::Dot(s, h);
 
     if (u < 0.0 || u > 1.0)
@@ -495,7 +495,7 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
         return;
     }
 
-    Vector3d q = Vector3d::Cross(s, v1v0);
+    Vector3d q = Vector3d::Cross(s, v10);
     double v = f * Vector3d::Dot(rayDir, q);
 
     if (v < 0.0 || u + v > 1.0)
@@ -506,7 +506,7 @@ void Geometry::IntersectRayTriangle(const Ray &ray,
 
     // At this stage we can compute t to find out where
     // the intersection point is on the line
-    t = (f * Vector3d::Dot(v2v0, q));
+    t = (f * Vector3d::Dot(v20, q));
     if (t < Epsilon)
     {
         *intersected = false;
@@ -554,17 +554,50 @@ void FindProjectionIntervals(const std::array<Vector3, N> &points,
 bool Geometry::IntersectAABoxTriangle(const AABox &aaBox,
                                       const Triangle &triangle)
 {
-    // Retrieve triangle and boxes information
+    const Vector3 &triP0 = triangle[0];
+    const Vector3 &triP1 = triangle[1];
+    const Vector3 &triP2 = triangle[2];
+    std::array<Vector3, 8> boxPoints = aaBox.GetPointsC();
     std::array<Vector3, 3> trianglePoints = {
         {triangle[0], triangle[1], triangle[2]}};
-    const Vector3 &triP0 = trianglePoints[0];
-    const Vector3 &triP1 = trianglePoints[1];
-    const Vector3 &triP2 = trianglePoints[2];
     const Vector3 triNormal = triangle.GetNormal();
-    std::array<Vector3, 8> boxPoints = aaBox.GetPointsC();
-    const Vector3 triEdge01 = (triP1 - triP0).NormalizedSafe();
-    const Vector3 triEdge12 = (triP2 - triP1).NormalizedSafe();
-    const Vector3 triEdge20 = (triP0 - triP2).NormalizedSafe();
+    const Vector3 triEdge01 = (triP1 - triP0).Normalized();
+    const Vector3 triEdge12 = (triP2 - triP1).Normalized();
+    const Vector3 triEdge20 = (triP0 - triP2).Normalized();
+
+    /*
+    // Discard if box is fully on one side of the triangle plane
+    {
+        bool allHaveSameSign = true;
+        const Plane triPlane = triangle.GetPlane();
+        float firstSign = Math::Sign(triPlane.GetDistanceTo(boxPoints[0]));
+        for (uint i = 1; i < 8; ++i)
+        {
+            if (Math::Sign(triPlane.GetDistanceTo(boxPoints[i]) != firstSign))
+            {
+                allHaveSameSign = false;
+                break;
+            }
+        }
+
+        if (allHaveSameSign)
+        {
+            return false;
+        }
+    }
+
+    // Discard if bounding boxes do not intersect
+    {
+        AABox triAABox;
+        triAABox.AddPoint(triP0);
+        triAABox.AddPoint(triP1);
+        triAABox.AddPoint(triP2);
+        if (!aaBox.Overlap(triAABox))
+        {
+            return false;
+        }
+    }
+    */
 
     // Create axes
     std::array<Vector3, 13> separatingAxes;

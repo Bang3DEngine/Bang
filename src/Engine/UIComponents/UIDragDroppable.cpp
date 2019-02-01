@@ -188,7 +188,7 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
                 RectTransform *thisRT = GetGameObject()->GetRectTransform();
                 const AARecti thisRect(thisRT->GetViewportAARect());
                 m_dragGrabOffset = (event.mousePosWindow - thisRect.GetMin());
-                return UIEventResult::IGNORE;
+                return UIEventResult::INTERCEPT;
             }
             break;
 

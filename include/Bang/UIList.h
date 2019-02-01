@@ -99,6 +99,7 @@ public:
 
     bool SomeChildHasFocus() const;
     int GetSelectedIndex() const;
+    bool GetBeingDragged() const;
     GOItem *GetSelectedItem() const;
     UIFocusable *GetFocusable() const;
     UIListItemContainer *GetItemContainer(GameObject *itemGo) const;
@@ -131,6 +132,7 @@ protected:
     virtual void OnDragUpdate(
         EventEmitter<IEventsDragDrop> *dragDroppable) override;
     virtual void OnDrop(EventEmitter<IEventsDragDrop> *dragDroppable) override;
+    bool GetDragDroppableIsFromThisList(UIDragDroppable *dd) const;
 
 private:
     Array<GOItem *> p_items;

@@ -561,6 +561,11 @@ void UIList::OnDragStarted(EventEmitter<IEventsDragDrop> *dd_)
     }
 
     UIDragDroppable *dd = DCAST<UIDragDroppable *>(dd_);
+    if (!GetDragDroppableIsFromThisList(dd))
+    {
+        return;
+    }
+
     if (UIListItemContainer *draggedItemCont =
             GetItemContainer(dd->GetGameObject()))
     {
@@ -584,6 +589,10 @@ void UIList::OnDragUpdate(EventEmitter<IEventsDragDrop> *dd_)
     }
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
+    if (!GetDragDroppableIsFromThisList(dragDroppable))
+    {
+        return;
+    }
 
     GOItem *childItemOver = nullptr;
     MouseItemRelativePosition markPosition = MouseItemRelativePosition::ABOVE;
@@ -662,6 +671,11 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
     }
 
     UIDragDroppable *dragDroppable = DCAST<UIDragDroppable *>(dd_);
+    if (!GetDragDroppableIsFromThisList(dragDroppable))
+    {
+        return;
+    }
+
     if (GetGameObject()->GetRectTransform()->IsMouseOver(false))
     {
         GOItem *itemOver = nullptr;
@@ -706,6 +720,18 @@ void UIList::OnDrop(EventEmitter<IEventsDragDrop> *dd_)
     p_dragMarker->SetParent(nullptr);
 }
 
+bool UIList::GetDragDroppableIsFromThisList(UIDragDroppable *dd) const
+{
+    if (dd)
+    {
+        if (auto itemCont = DCAST<UIListItemContainer *>(dd->GetGameObject()))
+        {
+            return GetItems().Contains(itemCont->GetContainedGameObject());
+        }
+    }
+    return false;
+}
+
 void UIList::SetSelection(GOItem *item)
 {
     SetSelection(p_items.IndexOf(item));
@@ -719,6 +745,11 @@ GameObject *UIList::GetContainer() const
 int UIList::GetSelectedIndex() const
 {
     return m_selectionIndex;
+}
+
+bool UIList::GetBeingDragged() const
+{
+    return p_dragMarker->GetParent() != nullptr;
 }
 
 bool UIList::SomeChildHasFocus() const

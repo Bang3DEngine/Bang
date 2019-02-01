@@ -22,15 +22,18 @@ class UIFocusable : public Component, public EventEmitter<IEventsFocus>
     COMPONENT(UIFocusable)
 
 public:
-    using EventCallback =
-        std::function<UIEventResult(UIFocusable *, const UIEvent &)>;
-
     UIEventResult ProcessEvent(const UIEvent &event);
 
     void SetCursorType(Cursor::Type cursorType);
     void SetCanBeRectMasked(bool canBeRectMasked);
     void SetConsiderForTabbing(bool considerForTabbing);
-    void AddEventCallback(UIFocusable::EventCallback eventCallback);
+
+    using EventCallback =
+        std::function<UIEventResult(UIFocusable *, const UIEvent &)>;
+    void AddEventCallback(
+        std::function<UIEventResult(UIFocusable *, const UIEvent &)>
+            eventCallback);
+
     void ClearEventCallbacks();
 
     bool HasFocus() const;

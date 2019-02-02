@@ -315,7 +315,6 @@ void UICanvas::OnUpdate()
                         {
                             UIFocusable *focusable =
                                 *(p_focusablesBeingPressed.Begin());
-                            ASSERT(!focusable->IsBeingDestroyed());
 
                             PropagateFocusableUIEvent(
                                 focusable,
@@ -883,8 +882,11 @@ void UICanvas::UnRegisterForEvents(UIFocusable *focusable)
 
 void UICanvas::RegisterFocusableBeingPressed(UIFocusable *focusable)
 {
-    p_focusablesBeingPressed.Add(focusable);
-    focusable->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    if (focusable->IsActive())
+    {
+        p_focusablesBeingPressed.Add(focusable);
+        focusable->EventEmitter<IEventsDestroy>::RegisterListener(this);
+    }
 }
 
 void UICanvas::RegisterFocusableNotBeingPressedAnymore(UIFocusable *focusable)

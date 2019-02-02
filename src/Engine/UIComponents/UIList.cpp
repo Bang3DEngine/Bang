@@ -840,11 +840,15 @@ void UIList::UpdateItemColors()
 
 void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
-    if (object == p_itemUnderMouse)
+    if (GameObject *go = DCAST<GameObject *>(object))
     {
-        CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
-        p_itemUnderMouse = nullptr;
-        UpdateItemColors();
+        if (object == p_itemUnderMouse)
+        {
+            CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
+            p_itemUnderMouse = nullptr;
+            RemoveItem(go);
+            UpdateItemColors();
+        }
     }
 }
 

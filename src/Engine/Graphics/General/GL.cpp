@@ -2254,20 +2254,24 @@ uint GL::GetPixelBytesSize(GL::ColorFormat texFormat)
         case GL::ColorFormat::R8: return 1;
         case GL::ColorFormat::R16F: return 2;
         case GL::ColorFormat::R32F: return 4;
+        case GL::ColorFormat::RG8: return 2;
+        case GL::ColorFormat::RG16F: return 4;
+        case GL::ColorFormat::RG32F: return 8;
+        case GL::ColorFormat::RGB8: return 3;
+        case GL::ColorFormat::RGB16F: return 6;
+        case GL::ColorFormat::RGB32F: return 12;
         case GL::ColorFormat::SRGB: return 3;
         case GL::ColorFormat::SRGBA: return 4;
         case GL::ColorFormat::RGBA8: return 4;
         case GL::ColorFormat::RGBA16F: return 8;
+        case GL::ColorFormat::RGBA32F: return 16;
+        case GL::ColorFormat::RGB10_A2: return 4;
         case GL::ColorFormat::DEPTH: return 4;
         case GL::ColorFormat::DEPTH16: return 2;
         case GL::ColorFormat::DEPTH24: return 3;
         case GL::ColorFormat::DEPTH32: return 4;
         case GL::ColorFormat::DEPTH32F: return 16;
         case GL::ColorFormat::DEPTH24_STENCIL8: return 4;
-        case GL::ColorFormat::RG16F: return 4;
-        case GL::ColorFormat::RG32F: return 8;
-        case GL::ColorFormat::RGB10_A2: return 4;
-        case GL::ColorFormat::RGBA32F: return 16;
     }
     return 0;
 }
@@ -2329,6 +2333,8 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
     switch (format)
     {
         case GL::ColorFormat::R8:
+        case GL::ColorFormat::RG8:
+        case GL::ColorFormat::RGB8:
         case GL::ColorFormat::SRGB:
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:
@@ -2338,6 +2344,8 @@ GL::DataType GL::GetDataTypeFrom(GL::ColorFormat format)
         case GL::ColorFormat::R32F:
         case GL::ColorFormat::RG16F:
         case GL::ColorFormat::RG32F:
+        case GL::ColorFormat::RGB16F:
+        case GL::ColorFormat::RGB32F:
         case GL::ColorFormat::RGBA16F:
         case GL::ColorFormat::RGBA32F:
         case GL::ColorFormat::DEPTH24_STENCIL8:
@@ -2361,8 +2369,13 @@ GL::ColorComp GL::GetColorCompFrom(GL::ColorFormat format)
         case GL::ColorFormat::R16F:
         case GL::ColorFormat::R32F: return GL::ColorComp::R;
 
+        case GL::ColorFormat::RG8:
         case GL::ColorFormat::RG16F:
         case GL::ColorFormat::RG32F: return GL::ColorComp::RG;
+
+        case GL::ColorFormat::RGB8:
+        case GL::ColorFormat::RGB16F:
+        case GL::ColorFormat::RGB32F: return GL::ColorComp::RGB;
 
         case GL::ColorFormat::SRGBA:
         case GL::ColorFormat::RGBA8:

@@ -48,15 +48,21 @@ Vector3 Triangle::GetNormal() const
 
 Vector3 Triangle::GetBarycentricCoordinates(const Vector3 &point) const
 {
-    Vector3 projPoint = GetPlane().GetProjectedPoint(point);
-    Triangle tri0(projPoint, GetPoint(1), GetPoint(2));
-    Triangle tri1(projPoint, GetPoint(0), GetPoint(2));
-    Triangle tri2(projPoint, GetPoint(0), GetPoint(1));
-    float area = GetArea();
+    Vector3 v0 = GetPoint(1) - GetPoint(0);
+    Vector3 v1 = GetPoint(2) - GetPoint(0);
 
-    Vector3 baryCoords =
-        Vector3(tri0.GetArea() / area, tri1.GetArea() / area, 0.0f);
-    baryCoords.z = (1.0f - baryCoords.x - baryCoords.y);
+    Vector3 v2 = point - GetPoint(0);
+    float d00 = Vector3::Dot(v0, v0);
+    float d01 = Vector3::Dot(v0, v1);
+    float d11 = Vector3::Dot(v1, v1);
+    float d20 = Vector3::Dot(v2, v0);
+    float d21 = Vector3::Dot(v2, v1);
+    float denom = d00 * d11 - d01 * d01;
+
+    Vector3 baryCoords;
+    baryCoords.y = (d11 * d20 - d01 * d21) / denom;
+    baryCoords.z = (d00 * d21 - d01 * d20) / denom;
+    baryCoords.x = 1.0f - baryCoords.y - baryCoords.z;
     return baryCoords;
 }
 

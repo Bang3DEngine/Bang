@@ -48,13 +48,21 @@ bool Triangle2D::Contains(const Vector2 &point) const
 
 Vector3 Triangle2D::GetBarycentricCoordinates(const Vector2 &point) const
 {
-    Triangle2D tri0(point, GetPoint(1), GetPoint(2));
-    Triangle2D tri1(point, GetPoint(0), GetPoint(2));
-    Triangle2D tri2(point, GetPoint(0), GetPoint(1));
-    float area = GetArea();
-    Vector3 baryCoords =
-        Vector3(tri0.GetArea() / area, tri1.GetArea() / area, 0.0f);
-    baryCoords.z = (1.0f - baryCoords.x - baryCoords.y);
+    Vector2 v0 = GetPoint(1) - GetPoint(0);
+    Vector2 v1 = GetPoint(2) - GetPoint(0);
+
+    Vector2 v2 = point - GetPoint(0);
+    float d00 = Vector2::Dot(v0, v0);
+    float d01 = Vector2::Dot(v0, v1);
+    float d11 = Vector2::Dot(v1, v1);
+    float d20 = Vector2::Dot(v2, v0);
+    float d21 = Vector2::Dot(v2, v1);
+    float denom = d00 * d11 - d01 * d01;
+
+    Vector3 baryCoords;
+    baryCoords.y = (d11 * d20 - d01 * d21) / denom;
+    baryCoords.z = (d00 * d21 - d01 * d20) / denom;
+    baryCoords.x = 1.0f - baryCoords.y - baryCoords.z;
     return baryCoords;
 }
 

@@ -130,10 +130,14 @@ public:
     Array<Mesh::CornerId> GetNeighborCornerIds(Mesh::CornerId cId) const;
     Array<Mesh::VertexId> GetNeighborVertexIds(Mesh::VertexId vId) const;
     Array<Mesh::VertexId> GetNeighborUniqueVertexIds(Mesh::VertexId vId) const;
-    Array<Mesh::TriangleId> GetAdjacentTriangleIds(
+    Array<Mesh::TriangleId> GetAdjacentTriangleIdsFromTriangleId(
         Mesh::TriangleId triId) const;
+    Array<Mesh::TriangleId> GetNeighborTriangleIdsFromTriangleId(
+        Mesh::TriangleId triId,
+        int neighborhoodRadius = 1) const;
     Array<Mesh::TriangleId> GetNeighborTriangleIdsFromVertexId(
-        Mesh::VertexId vId) const;
+        Mesh::VertexId vId,
+        int neighborhoodRadius = 1) const;
     double GetVertexGaussianCurvature(Mesh::VertexId centralVId) const;
     double GetVertexMeanCurvature(Mesh::VertexId centralVId) const;
     void GetNeighborCotangentWeights(

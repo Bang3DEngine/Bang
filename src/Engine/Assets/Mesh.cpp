@@ -913,7 +913,7 @@ Array<Mesh::VertexId> Mesh::GetNeighborUniqueVertexIds(Mesh::VertexId vId) const
     return neighborUniqueVertexIds.GetKeys();
 }
 
-Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIds(
+Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIdsFromTriangleId(
     Mesh::TriangleId triId) const
 {
     Array<TriangleId> neighborTriangleIds;
@@ -932,16 +932,74 @@ Array<Mesh::TriangleId> Mesh::GetAdjacentTriangleIds(
     return neighborTriangleIds;
 }
 
-Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
-    VertexId vId) const
+Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromTriangleId(
+    Mesh::TriangleId triId,
+    int neighborhoodRadius) const
 {
-    Array<TriangleId> neighborTriangleIds;
-    Array<CornerId> cIds = GetCornerIdsFromVertexId(vId);
-    for (CornerId cId : cIds)
+    USet<TriangleId> neighborTriIds;
+
+    std::array<Mesh::VertexId, 3> vIds = GetVertexIdsFromTriangle(triId);
+    for (uint i = 0; i < 3; ++i)
     {
-        neighborTriangleIds.PushBack(GetTriangleIdFromCornerId(cId));
+        Array<Mesh::TriangleId> vNeighbors =
+            GetNeighborTriangleIdsFromVertexId(vIds[i], neighborhoodRadius);
+        for (Mesh::TriangleId neighborTriId : vNeighbors)
+        {
+            neighborTriIds.Add(neighborTriId);
+        }
     }
-    return neighborTriangleIds;
+    neighborTriIds.Remove(triId);
+
+    return neighborTriIds.GetKeys();
+}
+
+Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
+    Mesh::VertexId vId,
+    int neighborhoodRadius) const
+{
+    USet<TriangleId> allNeighborTriangleIds;
+    USet<VertexId> allNeighborVerticesIds;
+    allNeighborVerticesIds.Add(vId);
+
+    USet<VertexId> previousRingNeighborVerticesIds;
+    previousRingNeighborVerticesIds.Add(vId);
+
+    for (int k = neighborhoodRadius - 1; k >= 0; --k)
+    {
+        if (k == 0)
+        {
+            for (VertexId nVId : allNeighborVerticesIds)
+            {
+                Array<CornerId> cIds = GetCornerIdsFromVertexId(nVId);
+                for (CornerId cId : cIds)
+                {
+                    allNeighborTriangleIds.Add(GetTriangleIdFromCornerId(cId));
+                }
+            }
+        }
+        else
+        {
+            Array<VertexId> neighborVIds;
+            USet<VertexId> currentRingNeighborVerticesIds;
+            for (VertexId nVId : previousRingNeighborVerticesIds)
+            {
+                allNeighborVerticesIds.Add(nVId);
+                Array<VertexId> nnVIds = GetNeighborVertexIds(nVId);
+                for (VertexId nnVId : nnVIds)
+                {
+                    if (!previousRingNeighborVerticesIds.Contains(nnVId))
+                    {
+                        currentRingNeighborVerticesIds.Add(nnVId);
+                        allNeighborVerticesIds.Add(nnVId);
+                    }
+                }
+            }
+            std::swap(currentRingNeighborVerticesIds,
+                      previousRingNeighborVerticesIds);
+        }
+    }
+
+    return allNeighborTriangleIds.GetKeys();
 }
 
 double Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const

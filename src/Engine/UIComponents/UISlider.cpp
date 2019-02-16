@@ -89,6 +89,7 @@ void UISlider::SetValue(float value)
 void UISlider::SetMinMaxValues(float minValue, float maxValue)
 {
     GetInputNumber()->SetMinMaxValues(minValue, maxValue);
+    UpdateSliderHandlerFromInputNumberValue();
 }
 
 void UISlider::SetValuePercent(float percent)

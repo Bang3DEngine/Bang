@@ -182,8 +182,8 @@ UIEventResult UIDragDroppable::OnUIEvent(UIFocusable *focusable,
         case UIEvent::Type::MOUSE_CLICK_DOWN:
             if (event.mouse.button == MouseButton::LEFT)
             {
-                // m_pressTime = Time::GetNow();
-                m_pressTime = event.timestamp;
+                m_pressTime = Time::GetNow();
+                // m_pressTime = event.timestamp;
 
                 RectTransform *thisRT = GetGameObject()->GetRectTransform();
                 const AARecti thisRect(thisRT->GetViewportAARect());

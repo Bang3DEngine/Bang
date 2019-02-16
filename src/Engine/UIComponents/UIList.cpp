@@ -98,14 +98,12 @@ void UIList::AddItem_(GOItem *newItem, int index, bool moving)
     newItemCont->GetFocusable()->EventEmitter<IEventsFocus>::RegisterListener(
         this);
     newItemCont->GetDragDroppable()->SetEnabled(GetDragDropEnabled());
-
-    newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
-
     newItemCont->SetParent(GetContainer(), index);
 
-    GetItemBg(newItem)->SetTint(GetIdleColor());
-
     p_items.Insert(newItem, index);
+    newItem->EventEmitter<IEventsDestroy>::RegisterListener(this);
+
+    GetItemBg(newItem)->SetTint(GetIdleColor());
 
     if (!moving)
     {
@@ -129,7 +127,7 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
 
     if (p_itemUnderMouse == item)
     {
-        p_itemUnderMouse = nullptr;
+        SetItemUnderMouse(nullptr);
     }
 
     if (indexOfItem < GetSelectedIndex())
@@ -142,18 +140,19 @@ void UIList::RemoveItem_(GOItem *item, bool moving)
         ClearSelection();
     }
 
+    EventEmitter<IEventsDestroy>::UnRegisterListener(this);
     p_items.Remove(item);
 
-    // Destroy the element
-    if (!moving)
+    if (moving)
     {
-        EventEmitter<IEventsUIList>::PropagateToListeners(
-            &IEventsUIList::OnItemRemoved, item);
-        GameObject::Destroy(item->GetParent());
+        item->SetParent(nullptr);
     }
     else
     {
-        item->SetParent(nullptr);
+        // Destroy the item
+        GameObject::Destroy(GetItemContainer(item));
+        EventEmitter<IEventsUIList>::PropagateToListeners(
+            &IEventsUIList::OnItemRemoved, item);
     }
 }
 
@@ -191,16 +190,12 @@ void UIList::SetItemUnderMouse(GOItem *itemUnderMouse)
     {
         if (p_itemUnderMouse)
         {
-            p_itemUnderMouse->EventEmitter<IEventsDestroy>::UnRegisterListener(
-                this);
             CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OUT);
         }
 
         p_itemUnderMouse = itemUnderMouse;
         if (p_itemUnderMouse)
         {
-            p_itemUnderMouse->EventEmitter<IEventsDestroy>::RegisterListener(
-                this);
             CallSelectionCallback(p_itemUnderMouse, Action::MOUSE_OVER);
         }
         UpdateItemColors();
@@ -842,13 +837,8 @@ void UIList::OnDestroyed(EventEmitter<IEventsDestroy> *object)
 {
     if (GameObject *go = DCAST<GameObject *>(object))
     {
-        if (object == p_itemUnderMouse)
-        {
-            CallSelectionCallback(p_itemUnderMouse, Action::SELECTION_OUT);
-            p_itemUnderMouse = nullptr;
-            RemoveItem(go);
-            UpdateItemColors();
-        }
+        RemoveItem(go);
+        UpdateItemColors();
     }
 }
 

@@ -1728,10 +1728,11 @@ void GL::DrawElements(const VAO *vao,
                       int startElementIndex)
 {
     vao->Bind();
-    GL_CALL(glDrawElements(GLCAST(primitivesMode),
-                           elementsCount,
-                           GLCAST(GL::DataType::UNSIGNED_INT),
-                           RCAST<const void *>(startElementIndex)));
+    GL_CALL(glDrawElements(
+        GLCAST(primitivesMode),
+        elementsCount,
+        GLCAST(GL::DataType::UNSIGNED_INT),
+        RCAST<const void *>(startElementIndex * sizeof(unsigned int))));
     vao->UnBind();
 }
 

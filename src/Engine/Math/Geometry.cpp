@@ -558,8 +558,7 @@ bool Geometry::IntersectAABoxTriangle(const AABox &aaBox,
     const Vector3 &triP1 = triangle[1];
     const Vector3 &triP2 = triangle[2];
     std::array<Vector3, 8> boxPoints = aaBox.GetPointsC();
-    std::array<Vector3, 3> trianglePoints = {
-        {triangle[0], triangle[1], triangle[2]}};
+    std::array<Vector3, 3> trianglePoints = {{triP0, triP1, triP2}};
     const Vector3 triNormal = triangle.GetNormal();
     const Vector3 triEdge01 = (triP1 - triP0).Normalized();
     const Vector3 triEdge12 = (triP2 - triP1).Normalized();

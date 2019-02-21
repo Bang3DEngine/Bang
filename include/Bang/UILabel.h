@@ -14,6 +14,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/IEvents.h"
 #include "Bang/IEventsFocus.h"
+#include "Bang/IEventsUILabel.h"
 #include "Bang/String.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UILayoutElement.h"
@@ -22,9 +23,12 @@
 
 namespace Bang
 {
+class UIInputText;
 class RectTransform;
 
-class UILabel : public Component, public EventListener<IEventsFocus>
+class UILabel : public Component,
+                public EventListener<IEventsFocus>,
+                public EventEmitter<IEventsUILabel>
 {
     COMPONENT(UILabel)
 
@@ -37,6 +41,10 @@ public:
     void SetSelectionIndex(int index);
     void SetSelectable(bool selectable);
     void SetSelection(int cursorIndex, int selectionIndex);
+    void SetFloatingInputEnabled(bool floatingInputEnabled);
+    void ShowFloatingInputText();
+    void CommitFloatingInputTextContent();
+    void HideFloatingInputText();
 
     void SelectAll();
     void ResetSelection();
@@ -47,6 +55,8 @@ public:
     int GetSelectionIndex() const;
     int GetSelectionBeginIndex() const;
     int GetSelectionEndIndex() const;
+    bool GetIsBeingSelected() const;
+    bool GetFloatingInputEnabled() const;
 
     float GetCursorXViewportNDC(int cursorIndex) const;
     float GetCursorXLocalNDC(int cursorIndex) const;
@@ -57,6 +67,7 @@ public:
     String GetSelectedText() const;
     UITextRenderer *GetText() const;
     UIFocusable *GetFocusable() const;
+    UIInputText *GetFloatingInputText() const;
     bool GetSelectAllOnFocus() const;
 
     // IEventsFocus
@@ -68,6 +79,7 @@ private:
     int m_selectionIndex = 0;
     bool m_selectingWithMouse = false;
     bool m_selectable = Undef<bool>();
+    bool m_floatingInputEnabled = false;
     bool m_selectAllOnFocusTaken = false;
 
     DPtr<UIRectMask> p_mask;
@@ -75,6 +87,9 @@ private:
     DPtr<UIFocusable> p_focusable;
     DPtr<GameObject> p_selectionQuad;
     DPtr<UILayoutElement> p_layoutElement;
+
+    UIInputText *p_floatingInputText = nullptr;
+    GameObject *p_floatingInputTextGo = nullptr;
 
     UILabel();
 

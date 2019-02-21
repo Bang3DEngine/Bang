@@ -979,7 +979,6 @@ Array<Mesh::TriangleId> Mesh::GetNeighborTriangleIdsFromVertexId(
         }
         else
         {
-            Array<VertexId> neighborVIds;
             USet<VertexId> currentRingNeighborVerticesIds;
             for (VertexId nVId : previousRingNeighborVerticesIds)
             {

@@ -17,9 +17,11 @@
 #include "Bang/RectTransform.h"
 #include "Bang/Stretch.h"
 #include "Bang/SystemClipboard.h"
+#include "Bang/UICanvas.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIHorizontalLayout.h"
 #include "Bang/UIImageRenderer.h"
+#include "Bang/UIInputText.h"
 #include "Bang/UILayoutElement.h"
 #include "Bang/UIRectMask.h"
 #include "Bang/UITextRenderer.h"
@@ -39,11 +41,17 @@ UILabel::UILabel()
 
 UILabel::~UILabel()
 {
+    HideFloatingInputText();
 }
 
 void UILabel::OnUpdate()
 {
     Component::OnUpdate();
+
+    if (GetIsBeingSelected())
+    {
+        UpdateSelectionQuadRenderer();
+    }
 
     if (p_layoutElement && GetText())
     {
@@ -56,6 +64,25 @@ void UILabel::OnUpdate()
         if (m_selectingWithMouse)
         {
             HandleMouseSelection();
+        }
+    }
+
+    if (GetFloatingInputEnabled())
+    {
+        if (GetFocusable()->IsMouseOver())
+        {
+            if (Input::GetMouseButtonDoubleClick(MouseButton::LEFT))
+            {
+                ShowFloatingInputText();
+            }
+        }
+    }
+
+    if (GetFloatingInputText())
+    {
+        if (Input::GetKey(Key::ENTER))
+        {
+            CommitFloatingInputTextContent();
         }
     }
 }
@@ -95,6 +122,61 @@ void UILabel::SetSelection(int cursorIndex, int selectionIndex)
 {
     SetCursorIndex(cursorIndex);
     SetSelectionIndex(selectionIndex);
+}
+
+void UILabel::SetFloatingInputEnabled(bool floatingInputEnabled)
+{
+    m_floatingInputEnabled = floatingInputEnabled;
+}
+
+void UILabel::ShowFloatingInputText()
+{
+    if (!p_floatingInputTextGo)
+    {
+        p_floatingInputText = GameObjectFactory::CreateUIInputText();
+        p_floatingInputTextGo = p_floatingInputText->GetGameObject();
+
+        GetText()->GetGameObject()->SetEnabled(false);
+        GetFloatingInputText()->GetText()->SetContent(GetText()->GetContent());
+
+        p_floatingInputTextGo->SetParent(
+            GetText()->GetGameObject()->GetParent());
+
+        UICanvas::GetActive(this)->SetFocus(
+            GetFloatingInputText()->GetFocusable());
+
+        GetFloatingInputText()
+            ->GetFocusable()
+            ->EventEmitter<IEventsFocus>::RegisterListener(this);
+    }
+}
+
+void UILabel::CommitFloatingInputTextContent()
+{
+    if (GetFloatingInputText())
+    {
+        String floatingInputTextContent =
+            GetFloatingInputText()->GetText()->GetContent();
+        GetText()->SetContent(floatingInputTextContent);
+
+        EventEmitter<IEventsUILabel>::PropagateToListeners(
+            &IEventsUILabel::OnFloatingInputTextCommited,
+            floatingInputTextContent);
+
+        HideFloatingInputText();
+    }
+}
+
+void UILabel::HideFloatingInputText()
+{
+    if (p_floatingInputTextGo)
+    {
+        GameObject::Destroy(p_floatingInputTextGo);
+        p_floatingInputTextGo = nullptr;
+        p_floatingInputText = nullptr;
+
+        GetText()->GetGameObject()->SetEnabled(true);
+    }
 }
 
 String UILabel::GetSelectedText() const
@@ -137,6 +219,17 @@ int UILabel::GetSelectionBeginIndex() const
 int UILabel::GetSelectionEndIndex() const
 {
     return Math::Max(GetCursorIndex(), GetSelectionIndex());
+}
+
+bool UILabel::GetIsBeingSelected() const
+{
+    return (GetCursorIndex() != GetSelectionIndex()) &&
+           (GetCursorIndex() >= 0) && (GetSelectionIndex() >= 0);
+}
+
+bool UILabel::GetFloatingInputEnabled() const
+{
+    return m_floatingInputEnabled;
 }
 
 float UILabel::GetCursorXViewportNDC(int cursorIndex) const
@@ -262,79 +355,99 @@ UIFocusable *UILabel::GetFocusable() const
     return p_focusable;
 }
 
-UIEventResult UILabel::OnUIEvent(UIFocusable *, const UIEvent &event)
+UIInputText *UILabel::GetFloatingInputText() const
 {
-    switch (event.type)
+    return p_floatingInputText;
+}
+
+UIEventResult UILabel::OnUIEvent(UIFocusable *focusable, const UIEvent &event)
+{
+    if (focusable == GetFocusable())
     {
-        case UIEvent::Type::KEY_DOWN:
-            if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
-            {
-                if (event.key.key == Key::C)
+        switch (event.type)
+        {
+            case UIEvent::Type::KEY_DOWN:
+                if (event.key.modifiers.IsOn(KeyModifier::LCTRL))
                 {
-                    String selectedText = GetSelectedText();
-                    SystemClipboard::Set(selectedText);
+                    if (event.key.key == Key::C)
+                    {
+                        String selectedText = GetSelectedText();
+                        SystemClipboard::Set(selectedText);
+                        return UIEventResult::INTERCEPT;
+                    }
+                }
+                break;
+
+            case UIEvent::Type::FOCUS_TAKEN:
+            case UIEvent::Type::MOUSE_CLICK_DOUBLE:
+                if (GetFocusable() && GetFocusable()->IsEnabledRecursively())
+                {
+                    if (GetSelectAllOnFocus() && IsSelectable())
+                    {
+                        SelectAll();
+                    }
+                    else
+                    {
+                        ResetSelection();
+                    }
+                    UpdateSelectionQuadRenderer();
                     return UIEventResult::INTERCEPT;
                 }
-            }
-            break;
+                break;
 
-        case UIEvent::Type::FOCUS_TAKEN:
-        case UIEvent::Type::MOUSE_CLICK_DOUBLE:
-            if (GetFocusable() && GetFocusable()->IsEnabledRecursively())
+            case UIEvent::Type::FOCUS_LOST:
             {
-                if (GetSelectAllOnFocus() && IsSelectable())
-                {
-                    SelectAll();
-                }
-                else
-                {
-                    ResetSelection();
-                }
+                ResetSelection();
+                m_selectingWithMouse = false;
                 UpdateSelectionQuadRenderer();
                 return UIEventResult::INTERCEPT;
             }
             break;
 
-        case UIEvent::Type::FOCUS_LOST:
-        {
-            ResetSelection();
-            m_selectingWithMouse = false;
-            UpdateSelectionQuadRenderer();
-            return UIEventResult::INTERCEPT;
-        }
-        break;
-
-        case UIEvent::Type::MOUSE_CLICK_DOWN:
-        {
-            if (GetFocusable() && GetFocusable()->HasFocus() &&
-                GetFocusable()->IsEnabledRecursively())
+            case UIEvent::Type::MOUSE_CLICK_DOWN:
             {
-                if (IsSelectable())
+                if (GetFocusable() && GetFocusable()->HasFocus() &&
+                    GetFocusable()->IsEnabledRecursively())
                 {
-                    HandleMouseSelection();
-                    m_selectingWithMouse = true;
-                    UpdateSelectionQuadRenderer();
-                    return UIEventResult::INTERCEPT;
+                    if (IsSelectable())
+                    {
+                        HandleMouseSelection();
+                        m_selectingWithMouse = true;
+                        UpdateSelectionQuadRenderer();
+                        return UIEventResult::INTERCEPT;
+                    }
+                    else
+                    {
+                        ResetSelection();
+                        UpdateSelectionQuadRenderer();
+                    }
+                    return UIEventResult::IGNORE;
                 }
-                else
-                {
-                    ResetSelection();
-                    UpdateSelectionQuadRenderer();
-                }
-                return UIEventResult::IGNORE;
             }
-        }
-        break;
+            break;
 
-        case UIEvent::Type::MOUSE_CLICK_UP:
+            case UIEvent::Type::MOUSE_CLICK_UP:
+            {
+                m_selectingWithMouse = false;
+                UpdateSelectionQuadRenderer();
+                return UIEventResult::INTERCEPT;
+            }
+            break;
+
+            default: break;
+        }
+    }
+    else if (GetFloatingInputText() &&
+             focusable == GetFloatingInputText()->GetFocusable())
+    {
+        switch (event.type)
         {
-            m_selectingWithMouse = false;
-            UpdateSelectionQuadRenderer();
-            return UIEventResult::INTERCEPT;
-        }
-        break;
+            case UIEvent::Type::FOCUS_LOST:
+                CommitFloatingInputTextContent();
+                break;
 
-        default: break;
+            default: break;
+        }
     }
 
     return UIEventResult::IGNORE;

@@ -51,10 +51,10 @@ public:
 
     // Asset
     virtual void Import(const Path &textureCubeMapFilepath) override;
-    void Import(const Image &topImage,
-                const Image &botImage,
+    void Import(const Image &rightImage,
                 const Image &leftImage,
-                const Image &rightImage,
+                const Image &topImage,
+                const Image &botImage,
                 const Image &frontImage,
                 const Image &backImage);
 

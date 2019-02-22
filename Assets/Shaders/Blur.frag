@@ -13,6 +13,7 @@ void main()
         }
     }
 
-    meanColor /= pow(B_BlurRadius * 2 + 1, 2);
+    int kernelSize = (B_BlurRadius * 2 + 1);
+    meanColor /= (kernelSize * kernelSize);
     B_GIn_Color = meanColor;
 }

@@ -119,17 +119,17 @@ AH<Texture2D> TextureCubeMap::GetSideTexture(GL::CubeMapDir cubeMapDir) const
     return m_sideTextures[TextureCubeMap::GetDirIndex(cubeMapDir)];
 }
 
-void TextureCubeMap::Import(const Image &topImage,
-                            const Image &botImage,
+void TextureCubeMap::Import(const Image &rightImage,
                             const Image &leftImage,
-                            const Image &rightImage,
+                            const Image &topImage,
+                            const Image &botImage,
                             const Image &frontImage,
                             const Image &backImage)
 {
     SetFormat(GL::ColorFormat::RGBA8);
 
     std::array<Image, 6> imgs = {
-        {topImage, botImage, leftImage, rightImage, frontImage, backImage}};
+        {rightImage, leftImage, topImage, botImage, backImage, frontImage}};
     for (uint i = 0; i < GL::GetAllCubeMapDirs().size(); ++i)
     {
         const Image &img = imgs[i];

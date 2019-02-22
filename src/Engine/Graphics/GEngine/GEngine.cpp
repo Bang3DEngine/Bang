@@ -609,11 +609,6 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
 
     if (blurType == BlurType::GAUSSIAN)
     {
-        m_auxiliarFramebuffer->SetAttachmentTexture(blurredOutputTexture,
-                                                    GL::Attachment::COLOR0);
-        m_auxiliarFramebuffer->SetAttachmentTexture(auxiliarTexture,
-                                                    GL::Attachment::COLOR1);
-
         const Array<float> blurKernel = GetGaussianBlurKernel(blurRadius);
         blurSP->SetInt("B_BlurRadius", blurRadius);
         blurSP->SetFloatArray("B_BlurKernel", blurKernel);
@@ -621,12 +616,16 @@ void GEngine::BlurTexture(Texture2D *inputTexture,
         // Render blur X
         blurSP->SetBool("B_BlurInX", true);
         blurSP->SetTexture2D("B_InputTexture", inputTexture);
-        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR1});
+        m_auxiliarFramebuffer->SetAttachmentTexture(auxiliarTexture,
+                                                    GL::Attachment::COLOR0);
+        m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
 
         // Render blur Y
         blurSP->SetBool("B_BlurInX", false);
         blurSP->SetTexture2D("B_InputTexture", auxiliarTexture);
+        m_auxiliarFramebuffer->SetAttachmentTexture(blurredOutputTexture,
+                                                    GL::Attachment::COLOR0);
         m_auxiliarFramebuffer->SetDrawBuffers({GL::Attachment::COLOR0});
         GEngine::GetInstance()->RenderViewportPlane();
     }

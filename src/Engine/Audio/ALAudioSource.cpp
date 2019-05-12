@@ -3,7 +3,7 @@
 #include "Bang/AudioManager.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 
 using namespace Bang;
 

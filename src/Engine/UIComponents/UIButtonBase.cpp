@@ -1,7 +1,7 @@
 #include "Bang/UIButtonBase.h"
 
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Cursor.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/EventEmitter.h"

@@ -9,7 +9,7 @@
 #include "Bang/GameObjectFactory.h"
 #include "Bang/IEventsValueChanged.h"
 #include "Bang/Input.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/RectTransform.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/UIFocusable.h"

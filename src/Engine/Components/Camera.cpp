@@ -3,9 +3,10 @@
 #include <list>
 #include <unordered_map>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/Assets.h"
+#include "BangMath/Segment.h"
 #include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
 #include "Bang/CubeMapIBLGenerator.h"
@@ -17,25 +18,26 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/Geometry.h"
+#include "BangMath/Polygon2D.h"
+#include "BangMath/Geometry.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/List.h"
 #include "Bang/List.tcc"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Quad.h"
+#include "BangMath/Quad.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/Transform.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 namespace Bang
 {
@@ -181,18 +183,22 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
     }
 
     Array<Vector3> intPoints;
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumTopQuad(), aaBBoxWorld));
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumBotQuad(), aaBBoxWorld));
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumLeftQuad(), aaBBoxWorld));
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumRightQuad(), aaBBoxWorld));
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumNearQuad(), aaBBoxWorld));
-    intPoints.PushBack(
-        Geometry::IntersectQuadAABox(GetFrustumFarQuad(), aaBBoxWorld));
+    const std::array<std::function<Quad()>, 6> funcs =
+               {{std::bind(&Camera::GetFrustumTopQuad, this),
+                 std::bind(&Camera::GetFrustumBotQuad, this),
+                 std::bind(&Camera::GetFrustumLeftQuad, this),
+                 std::bind(&Camera::GetFrustumRightQuad, this),
+                 std::bind(&Camera::GetFrustumNearQuad, this),
+                 std::bind(&Camera::GetFrustumFarQuad, this)}};
+
+    for (const auto &func : funcs)
+    {
+        const auto quad = func();
+        const auto intersectionPoints =
+                Geometry::IntersectQuadAABox(quad, aaBBoxWorld);
+        intPoints.PushBack(intersectionPoints.begin(),
+                           intersectionPoints.end());
+    }
 
     Array<Vector3> boxPoints = aaBBoxWorld.GetPoints();
     for (const Vector3 &bp : boxPoints)

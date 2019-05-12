@@ -5,7 +5,7 @@
 #include "Bang/Key.h"
 #include "Bang/MouseButton.h"
 #include "Bang/Time.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

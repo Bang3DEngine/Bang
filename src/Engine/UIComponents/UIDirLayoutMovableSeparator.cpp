@@ -3,7 +3,7 @@
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
@@ -22,7 +22,7 @@
 #include "Bang/UILayoutManager.h"
 #include "Bang/UMap.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

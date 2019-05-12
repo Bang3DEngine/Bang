@@ -4,32 +4,34 @@
 #include <array>
 #include <vector>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
+#include "BangMath/Segment.h"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Framebuffer.h"
+#include "BangMath/Polygon2D.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
-#include "Bang/Geometry.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Geometry.h"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Quad.h"
+#include "BangMath/Quad.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 namespace Bang
 {
@@ -76,7 +78,7 @@ DirectionalLight::~DirectionalLight()
 AABox DirectionalLight::GetShadowCastersAABox(
     const Array<Renderer *> &shadowCastersRenderers) const
 {
-    Array<Vector3> casterPoints;
+    std::vector<Vector3> casterPoints;
     for (Renderer *shadowCasterRend : shadowCastersRenderers)
     {
         Matrix4 localToWorld = shadowCasterRend->GetGameObject()
@@ -86,7 +88,10 @@ AABox DirectionalLight::GetShadowCastersAABox(
         if (rendAABox != AABox::Empty())
         {
             AABox rendAABoxWorld = localToWorld * rendAABox;
-            casterPoints.PushBack(rendAABoxWorld.GetPoints());
+            for (const auto &point : rendAABoxWorld.GetPoints())
+            {
+                casterPoints.push_back(point);
+            }
         }
     }
 
@@ -305,7 +310,8 @@ AABox DirectionalLight::GetShadowMapOrthoBox(
 
     // Get scene AABBox and intersect with all extended quads!
     Array<Vector3> extCamAABoxSceneBoxIntersectionsWS =
-        Geometry::IntersectBoxBox({{extCamAABoxTopQuadWS,
+        Geometry::IntersectBoxBox<float>(
+                                  {{extCamAABoxTopQuadWS,
                                     extCamAABoxBotQuadWS,
                                     extCamAABoxLeftQuadWS,
                                     extCamAABoxRightQuadWS,

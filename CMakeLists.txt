@@ -89,6 +89,7 @@ file(GLOB_RECURSE ENGINE_SRC_FILES "${BANG_ENGINE_SRC_DIR}/*.cpp")
 #=================================================================
 # Dependencies ===================================================
 #=================================================================
+include_directories("${CMAKE_CURRENT_LIST_DIR}/BangMath/include")
 include("${CMAKE_CURRENT_LIST_DIR}/Compile/CompileDependencies/CMakeLists.txt")
 
 if (${BUILD_SHARED_LIBS})

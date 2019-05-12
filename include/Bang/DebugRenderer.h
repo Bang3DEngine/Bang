@@ -4,7 +4,7 @@
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
@@ -13,10 +13,13 @@
 
 namespace Bang
 {
-class AABox;
+template<typename>
+class AABoxG;
 class Mesh;
-class Quad;
-class Triangle;
+template<typename>
+class QuadG;
+template<typename>
+class TriangleG;
 
 class DebugRenderer : public GameObject
 {

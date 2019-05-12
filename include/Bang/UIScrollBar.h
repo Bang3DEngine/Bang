@@ -3,9 +3,10 @@
 
 #include <vector>
 
+#include "BangMath/AARect.h"
 #include "Bang/Alignment.h"
 #include "Bang/Array.tcc"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"

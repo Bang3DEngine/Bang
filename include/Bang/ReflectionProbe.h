@@ -6,7 +6,7 @@
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Camera.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/GL.h"

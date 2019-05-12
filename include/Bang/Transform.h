@@ -13,10 +13,10 @@
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "Bang/IInvalidatable.h"
-#include "Bang/Matrix4.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
-#include "Bang/Transformation.h"
+#include "BangMath/Transformation.h"
 
 namespace Bang
 {

@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <cctype>
 
-#include "Bang/Math.h"
-#include "Bang/Random.h"
+#include "BangMath/Math.h"
+#include "BangMath/Random.h"
 #include "Bang/Time.h"
 
 using namespace Bang;

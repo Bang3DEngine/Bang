@@ -7,14 +7,14 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/StreamOperators.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 using namespace Bang;
 

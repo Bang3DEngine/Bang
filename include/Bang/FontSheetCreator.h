@@ -3,7 +3,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Font.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"

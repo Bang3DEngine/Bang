@@ -103,6 +103,8 @@ public:
     Const_Iterator begin() const;
     Const_Iterator end() const;
 
+    const std::vector<T>& GetVector() const;
+
 private:
     std::vector<T> m_vector;
 };

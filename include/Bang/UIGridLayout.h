@@ -1,7 +1,7 @@
 #ifndef UIGRIDLAYOUT_H
 #define UIGRIDLAYOUT_H
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"

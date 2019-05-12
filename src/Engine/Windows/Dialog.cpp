@@ -5,7 +5,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Application.h"
 #include "Bang/Assert.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Component.h"
 #include "Bang/DialogWindow.h"
 #include "Bang/EventEmitter.h"

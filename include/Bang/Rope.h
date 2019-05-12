@@ -1,7 +1,7 @@
 #ifndef ROPE_H
 #define ROPE_H
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"

@@ -6,7 +6,7 @@
 #include "Bang/Debug.h"
 #include "Bang/File.h"
 #include "Bang/Paths.h"
-#include "Bang/Random.h"
+#include "BangMath/Random.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/SystemUtils.h"
 

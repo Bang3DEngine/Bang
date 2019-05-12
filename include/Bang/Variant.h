@@ -2,15 +2,15 @@
 #define VARIANT_H
 
 #include "Bang/Bang.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GUID.h"
 #include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 namespace Bang
 {

@@ -1,8 +1,8 @@
 #include "Bang/ImageEffects.h"
 
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Image.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 
 using namespace Bang;
 

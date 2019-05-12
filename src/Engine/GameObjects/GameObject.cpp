@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
@@ -20,15 +20,15 @@
 #include "Bang/IEventsName.h"
 #include "Bang/IEventsObject.h"
 #include "Bang/Material.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
 #include "Bang/Renderer.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
-#include "Bang/Sphere.h"
+#include "BangMath/Sphere.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
 #include "Bang/USet.h"

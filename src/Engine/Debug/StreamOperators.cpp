@@ -1,22 +1,22 @@
 #include "Bang/StreamOperators.h"
 
-#include "Bang/AABox.h"
-#include "Bang/Color.h"
+#include "BangMath/AABox.h"
+#include "BangMath/Color.h"
 #include "Bang/ComplexRandom.h"
 #include "Bang/GUID.h"
 #include "Bang/IToString.h"
 #include "Bang/Object.h"
 #include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
-#include "Bang/Quad.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quad.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Triangle.h"
+#include "BangMath/Triangle.h"
 #include "Bang/Variant.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 namespace Bang
 {
@@ -29,30 +29,6 @@ std::ostream &operator<<(std::ostream &log, const Time &t)
 std::ostream &operator<<(std::ostream &log, const Path &p)
 {
     log << p.GetAbsolute();
-    return log;
-}
-
-std::ostream &operator<<(std::ostream &log, const Color &c)
-{
-    log << "(" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")";
-    return log;
-}
-
-std::ostream &operator<<(std::ostream &log, const Quad &q)
-{
-    log << "(" << q[0] << ", " << q[1] << ", " << q[2] << ", " << q[3] << ")";
-    return log;
-}
-
-std::ostream &operator<<(std::ostream &log, const Triangle &t)
-{
-    log << "(" << t[0] << ", " << t[1] << ", " << t[2] << ")";
-    return log;
-}
-
-std::ostream &operator<<(std::ostream &log, const AABox &b)
-{
-    log << "(" << b.GetMin() << ", " << b.GetMax() << ")";
     return log;
 }
 
@@ -129,48 +105,6 @@ std::istream &operator>>(std::istream &is, Time &t)
     uint64_t timeNanos;
     is >> timeNanos;
     t.SetNanos(timeNanos);
-    return is;
-}
-
-std::istream &operator>>(std::istream &is, Color &c)
-{
-    ConsumeLetters_(is);
-
-    char _;
-    if (is.peek() == ':')
-    {
-        is >> _ >> _;
-        String colorName;
-        is >> colorName;
-
-#define READ_COLOR_NAME(ColorName)       \
-    if (colorName == "" #ColorName "()") \
-    {                                    \
-        c = Color::ColorName();          \
-        return is;                       \
-    }
-
-        READ_COLOR_NAME(Red);
-        READ_COLOR_NAME(Orange);
-        READ_COLOR_NAME(Yellow);
-        READ_COLOR_NAME(Green);
-        READ_COLOR_NAME(Turquoise);
-        READ_COLOR_NAME(VeryLightBlue);
-        READ_COLOR_NAME(LightBlue);
-        READ_COLOR_NAME(Blue);
-        READ_COLOR_NAME(DarkBlue);
-        READ_COLOR_NAME(Purple);
-        READ_COLOR_NAME(Pink);
-        READ_COLOR_NAME(Black);
-        READ_COLOR_NAME(Gray);
-        READ_COLOR_NAME(LightGray);
-        READ_COLOR_NAME(DarkGray);
-        READ_COLOR_NAME(White);
-        READ_COLOR_NAME(Zero);
-        READ_COLOR_NAME(One);
-    }
-
-    is >> _ >> c.r >> _ >> c.g >> _ >> c.b >> _ >> c.a >> _;
     return is;
 }
 

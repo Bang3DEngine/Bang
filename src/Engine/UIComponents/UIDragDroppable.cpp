@@ -2,7 +2,7 @@
 
 #include "Bang/Assert.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
@@ -15,7 +15,7 @@
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UILayoutIgnorer.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

@@ -2,7 +2,7 @@
 #define UITHEME_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 
 namespace Bang
 {

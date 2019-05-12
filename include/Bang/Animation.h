@@ -4,14 +4,15 @@
 #include <functional>
 
 #include "Bang/Array.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/String.h"
-#include "Bang/Transformation.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Transformation.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

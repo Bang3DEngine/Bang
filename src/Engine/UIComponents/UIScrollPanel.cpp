@@ -1,22 +1,22 @@
 #include "Bang/UIScrollPanel.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Key.h"
-#include "Bang/Math.h"
-#include "Bang/Rect.h"
+#include "BangMath/Math.h"
+#include "BangMath/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIScrollArea.h"
 #include "Bang/UIScrollBar.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

@@ -1,13 +1,13 @@
 #ifndef UILAYOUTELEMENT_H
 #define UILAYOUTELEMENT_H
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/ILayoutElement.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

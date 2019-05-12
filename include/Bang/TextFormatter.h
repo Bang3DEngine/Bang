@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"

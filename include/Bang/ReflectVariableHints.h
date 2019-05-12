@@ -3,9 +3,9 @@
 
 #include "Bang/Bang.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/String.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector4.h"
 
 namespace Bang
 {

@@ -1,7 +1,7 @@
 #ifndef LINERENDERER_H
 #define LINERENDERER_H
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"

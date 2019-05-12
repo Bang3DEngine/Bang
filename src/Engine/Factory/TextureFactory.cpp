@@ -5,7 +5,7 @@
 #include "Bang/GL.h"
 #include "Bang/Map.tcc"
 #include "Bang/Paths.h"
-#include "Bang/SimplexNoise.h"
+#include "BangMath/SimplexNoise.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Texture3D.h"
 #include "Bang/TextureCubeMap.h"

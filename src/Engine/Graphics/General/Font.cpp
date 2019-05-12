@@ -8,7 +8,7 @@
 #include <SDL_error.h>
 #include <SDL_ttf.h>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
@@ -18,12 +18,12 @@
 #include "Bang/Debug.h"
 #include "Bang/FontSheetCreator.h"
 #include "Bang/GL.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

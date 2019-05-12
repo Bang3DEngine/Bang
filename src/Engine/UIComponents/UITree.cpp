@@ -11,7 +11,7 @@
 #include "Bang/Assert.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
@@ -22,7 +22,7 @@
 #include "Bang/Input.h"
 #include "Bang/Key.h"
 #include "Bang/List.tcc"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Scene.h"
 #include "Bang/StreamOperators.h"
@@ -35,7 +35,7 @@
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UITreeItemContainer.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

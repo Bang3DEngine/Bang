@@ -28,7 +28,7 @@
 #include "Bang/Array.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Extensions.h"
 #include "Bang/GameObject.h"
@@ -40,7 +40,7 @@
 #include "Bang/Model.h"
 #include "Bang/Path.h"
 #include "Bang/Paths.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
@@ -50,9 +50,9 @@
 #include "Bang/UMap.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 using namespace Bang;
 

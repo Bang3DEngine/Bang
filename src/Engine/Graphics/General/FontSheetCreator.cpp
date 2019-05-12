@@ -11,9 +11,9 @@
 #include "Bang/AspectRatioMode.h"
 #include "Bang/GL.h"
 #include "Bang/Image.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

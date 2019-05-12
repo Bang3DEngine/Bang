@@ -8,6 +8,7 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
+#include "BangMath/AARect.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"

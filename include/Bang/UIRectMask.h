@@ -1,7 +1,7 @@
 #ifndef UIRECTMASK_H
 #define UIRECTMASK_H
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"

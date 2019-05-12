@@ -1,19 +1,19 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/ComplexRandom.h"
 #include "Bang/ComponentMacros.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Particle.h"
 #include "Bang/Renderer.h"
 #include "Bang/String.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {
@@ -141,7 +141,7 @@ private:
 
     ParticleGenerationShape m_generationShape = ParticleGenerationShape::BOX;
     Vector3 m_generationShapeBoxSize = Vector3::One();
-    float m_generationShapeConeFOVRads = SCAST<float>(Math::Pi / 4);
+    float m_generationShapeConeFOVRads = SCAST<float>(Math::Pi<float>() / 4);
 
     ParticleRenderMode m_particleRenderMode = Undef<ParticleRenderMode>();
 

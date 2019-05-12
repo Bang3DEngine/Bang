@@ -7,14 +7,14 @@
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLUniforms.h"
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
@@ -23,7 +23,7 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/Time.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {
@@ -149,7 +149,7 @@ void Rope::OnRender()
 AABox Rope::GetAABBox() const
 {
     AABox aaBox;
-    aaBox.CreateFromPositions(m_points);
+    aaBox.CreateFromPositions(m_points.GetVector());
     return aaBox;
 }
 

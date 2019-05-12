@@ -7,7 +7,7 @@
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"
@@ -129,11 +129,11 @@ Quaternion CapsuleCollider::GetInternalRotation() const
         case Axis3D::X: return Quaternion::Identity(); break;
 
         case Axis3D::Y:
-            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Forward());
+            return Quaternion::AngleAxis(Math::Pi<float>() * 0.5f, Vector3::Forward());
             break;
 
         case Axis3D::Z:
-            return Quaternion::AngleAxis(Math::Pi * 0.5f, Vector3::Up());
+            return Quaternion::AngleAxis(Math::Pi<float>() * 0.5f, Vector3::Up());
             break;
     }
     return Quaternion::Identity();

@@ -1,6 +1,6 @@
 #include "Bang/UILabel.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/ClassDB.h"
@@ -12,7 +12,7 @@
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Input.h"
 #include "Bang/Key.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MouseButton.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Stretch.h"
@@ -26,7 +26,7 @@
 #include "Bang/UIRectMask.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

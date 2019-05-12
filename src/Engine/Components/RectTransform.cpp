@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/ClassDB.h"
@@ -11,14 +11,14 @@
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/Input.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Rect.h"
+#include "BangMath/Rect.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector4.h"
 #include "Bang/Window.h"
 
 namespace Bang

@@ -2,7 +2,7 @@
 #define COLLISIONCONTACT_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

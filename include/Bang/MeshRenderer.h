@@ -1,7 +1,8 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
+#include "BangMath/Ray.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
@@ -13,7 +14,6 @@ namespace Bang
 {
 class Serializable;
 class Mesh;
-class Ray;
 class ShaderProgram;
 class Texture2D;
 

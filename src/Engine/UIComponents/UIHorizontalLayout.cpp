@@ -1,6 +1,6 @@
 #include "Bang/UIHorizontalLayout.h"
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Stretch.h"
 

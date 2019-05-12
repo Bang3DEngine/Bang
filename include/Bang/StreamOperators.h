@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "Bang/BangDefines.h"
+#include "Bang/String.h"
 
 namespace Bang
 {
@@ -43,33 +44,32 @@ template <class>
 class Vector3G;
 template <class>
 class Vector4G;
-class AABox;
-class Color;
+template <class>
+class AABoxG;
+template <class>
+class ColorG;
 class ComplexRandom;
 class GUID;
 class IToString;
 class ObjectId;
 class Path;
-class Quad;
+template <class>
+class QuadG;
 class Time;
-class Triangle;
+template <class>
+class TriangleG;
 class Variant;
 
 std::istream &operator>>(std::istream &is, GUID &guid);
 std::istream &operator>>(std::istream &is, Path &p);
-std::istream &operator>>(std::istream &is, Color &c);
 std::istream &operator>>(std::istream &is, Time &t);
 std::istream &operator>>(std::istream &is, Variant &variant);
 std::istream &operator>>(std::istream &is, ComplexRandom &cr);
 std::ostream &operator<<(std::ostream &log, const ObjectId &objectId);
 std::ostream &operator<<(std::ostream &log, const Variant &variant);
 std::ostream &operator<<(std::ostream &log, const Path &p);
-std::ostream &operator<<(std::ostream &log, const Color &v);
-std::ostream &operator<<(std::ostream &log, const AABox &v);
 std::ostream &operator<<(std::ostream &log, const Time &t);
-std::ostream &operator<<(std::ostream &log, const Quad &v);
 std::ostream &operator<<(std::ostream &log, const GUID &guid);
-std::ostream &operator<<(std::ostream &log, const Triangle &v);
 std::ostream &operator<<(std::ostream &log, const IToString &v);
 std::ostream &operator<<(std::ostream &log, const IToString *s);
 std::ostream &operator<<(std::ostream &log, const ComplexRandom &cr);
@@ -110,6 +110,21 @@ std::ostream &operator<<(std::ostream &log, const Vector4G<T> &v)
     log << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
     return log;
 }
+
+template <class T>
+std::ostream &operator<<(std::ostream &log, const ColorG<T> &c)
+{
+    log << "(" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")";
+    return log;
+}
+
+template <class T>
+std::ostream &operator<<(std::ostream &log, const AABoxG<T> &b)
+{
+    log << "(" << b.GetMin() << ", " << b.GetMax() << ")";
+    return log;
+}
+
 
 template <class T>
 std::ostream &operator<<(std::ostream &log, const QuaternionG<T> &q)
@@ -157,6 +172,20 @@ std::ostream &operator<<(std::ostream &log, const Matrix4G<T> &m)
         << m.c3[2] << "," << std::endl;
     log << " " << m.c0[3] << ", " << m.c1[3] << ", " << m.c2[3] << ", "
         << m.c3[3] << ")" << std::endl;
+    return log;
+}
+
+template <class T>
+std::ostream &operator<<(std::ostream &log, const QuadG<T> &q)
+{
+    log << "(" << q[0] << ", " << q[1] << ", " << q[2] << ", " << q[3] << ")";
+    return log;
+}
+
+template <class T>
+std::ostream &operator<<(std::ostream &log, const TriangleG<T> &t)
+{
+    log << "(" << t[0] << ", " << t[1] << ", " << t[2] << ")";
     return log;
 }
 
@@ -393,7 +422,50 @@ std::istream &operator>>(std::istream &is, QuaternionG<T> &q)
 {
     Vector4G<T> v4;
     is >> v4;
-    q = Quaternion(v4.x, v4.y, v4.z, v4.w);
+    q = QuaternionG<T>(v4.x, v4.y, v4.z, v4.w);
+    return is;
+}
+
+template <class T>
+std::istream &operator>>(std::istream &is, ColorG<T> &c)
+{
+    ConsumeLetters_(is);
+
+    char _;
+    if (is.peek() == ':')
+    {
+        is >> _ >> _;
+        String colorName;
+        is >> colorName;
+
+#define READ_COLOR_NAME(ColorName)       \
+    if (colorName == "" #ColorName "()") \
+    {                                    \
+        c = ColorG<T>::ColorName();          \
+        return is;                       \
+    }
+
+        READ_COLOR_NAME(Red);
+        READ_COLOR_NAME(Orange);
+        READ_COLOR_NAME(Yellow);
+        READ_COLOR_NAME(Green);
+        READ_COLOR_NAME(Turquoise);
+        READ_COLOR_NAME(VeryLightBlue);
+        READ_COLOR_NAME(LightBlue);
+        READ_COLOR_NAME(Blue);
+        READ_COLOR_NAME(DarkBlue);
+        READ_COLOR_NAME(Purple);
+        READ_COLOR_NAME(Pink);
+        READ_COLOR_NAME(Black);
+        READ_COLOR_NAME(Gray);
+        READ_COLOR_NAME(LightGray);
+        READ_COLOR_NAME(DarkGray);
+        READ_COLOR_NAME(White);
+        READ_COLOR_NAME(Zero);
+        READ_COLOR_NAME(One);
+    }
+
+    is >> _ >> c.r >> _ >> c.g >> _ >> c.b >> _ >> c.a >> _;
     return is;
 }
 

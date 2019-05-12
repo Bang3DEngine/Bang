@@ -3,7 +3,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Assert.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/GameObject.h"

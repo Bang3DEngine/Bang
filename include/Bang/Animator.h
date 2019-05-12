@@ -11,7 +11,7 @@
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Transformation.h"
+#include "BangMath/Transformation.h"
 
 namespace Bang
 {

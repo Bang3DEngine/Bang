@@ -1,6 +1,6 @@
 #include "Bang/AspectRatioMode.h"
 
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 
 using namespace Bang;
 

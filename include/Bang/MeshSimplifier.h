@@ -5,8 +5,8 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Mesh.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

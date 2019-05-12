@@ -3,14 +3,14 @@
 
 #include <SDL_ttf.h>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using TTF_Font = _TTF_Font;
 

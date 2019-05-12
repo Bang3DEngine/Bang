@@ -4,7 +4,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/IInvalidatable.h"
@@ -16,7 +16,8 @@
 namespace Bang
 {
 class Camera;
-class Color;
+template <class>
+class ColorG;
 class Font;
 class Serializable;
 class Mesh;

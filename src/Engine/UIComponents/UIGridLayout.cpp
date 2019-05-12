@@ -5,11 +5,11 @@
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/ILayoutController.h"
-#include "Bang/Math.h"
-#include "Bang/Rect.h"
+#include "BangMath/Math.h"
+#include "BangMath/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

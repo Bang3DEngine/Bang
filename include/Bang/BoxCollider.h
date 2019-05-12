@@ -2,7 +2,7 @@
 #define BOXCOLLIDER_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Box.h"
+#include "BangMath/Box.h"
 #include "Bang/Collider.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"

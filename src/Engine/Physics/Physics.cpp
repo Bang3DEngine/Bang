@@ -18,7 +18,7 @@
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Map.tcc"
 #include "Bang/MaterialFactory.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Mesh.h"
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"

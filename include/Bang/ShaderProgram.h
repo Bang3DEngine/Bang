@@ -14,8 +14,8 @@
 #include "Bang/GLObject.h"
 #include "Bang/IEventsAsset.h"
 #include "Bang/IEventsDestroy.h"
-#include "Bang/Matrix3.h"
-#include "Bang/Matrix4.h"
+#include "BangMath/Matrix3.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/ShaderProgramProperties.h"
 #include "Bang/String.h"
 #include "Bang/Texture3D.h"
@@ -25,7 +25,8 @@ namespace Bang
 {
 template <class>
 class EventEmitter;
-class Color;
+template <class>
+class ColorG;
 class Texture3D;
 class IEventsDestroy;
 class IEventsAsset;

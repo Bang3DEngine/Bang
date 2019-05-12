@@ -12,7 +12,9 @@
 
 namespace Bang
 {
-class Color;
+template<class>
+class ColorG;
+
 class Path;
 
 class Texture2D : public Texture

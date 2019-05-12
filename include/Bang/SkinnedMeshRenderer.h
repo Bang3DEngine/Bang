@@ -18,7 +18,7 @@
 #include "Bang/ObjectGatherer.h"
 #include "Bang/Set.h"
 #include "Bang/String.h"
-#include "Bang/Transformation.h"
+#include "BangMath/Transformation.h"
 #include "Bang/UMap.h"
 
 namespace Bang

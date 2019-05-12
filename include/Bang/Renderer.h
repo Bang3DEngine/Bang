@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"

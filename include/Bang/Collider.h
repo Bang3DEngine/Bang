@@ -8,7 +8,8 @@
 #include "Bang/MetaNode.h"
 #include "Bang/PhysicsComponent.h"
 #include "Bang/String.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Matrix4.h"
 
 namespace physx
 {

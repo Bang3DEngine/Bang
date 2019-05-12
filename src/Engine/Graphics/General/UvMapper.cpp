@@ -1,6 +1,6 @@
 #include "Bang/UvMapper.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Mesh.h"
 
 using namespace Bang;
@@ -30,7 +30,7 @@ Array<Vector2> UvMapper::CubicProjection(const Mesh *mesh)
         for (uint i = 0; i < 2; ++i)
         {
             uv[i] = Math::Map(
-                uv[i], uvsRect.GetMin()[i], uvsRect.GetMax()[i], 0, 1);
+                uv[i], uvsRect.GetMin()[i], uvsRect.GetMax()[i], 0.0f, 1.0f);
         }
     }
     return uvs;

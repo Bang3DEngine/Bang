@@ -4,7 +4,7 @@
 #include <array>
 #include <functional>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/Bang.h"
 

@@ -1,15 +1,15 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

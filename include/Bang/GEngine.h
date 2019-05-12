@@ -8,7 +8,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"

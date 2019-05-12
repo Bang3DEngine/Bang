@@ -556,7 +556,7 @@ Array<float> GetGaussianBlurKernel(int blurRadius)
         for (int i = -blurRadius; i <= blurRadius; i++)
         {
             const float r = sqrt(i * i + i * i);
-            const float value = Math::Exp(-(r * r) / s) / (Math::Pi * s);
+            const float value = Math::Exp(-(r * r) / s) / (Math::Pi<float>() * s);
             blurKernel.PushBack(value);
             sum += value;
         }

@@ -1,6 +1,6 @@
 #include "Bang/Renderer.h"
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"

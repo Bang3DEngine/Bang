@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
@@ -14,15 +14,15 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
-#include "Bang/Sphere.h"
+#include "BangMath/Sphere.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
 

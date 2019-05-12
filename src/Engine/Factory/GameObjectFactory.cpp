@@ -4,7 +4,7 @@
 #include "Bang/Assert.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/AudioListener.h"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BoxCollider.h"
 #include "Bang/Camera.h"
 #include "Bang/CapsuleCollider.h"

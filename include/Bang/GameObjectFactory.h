@@ -2,10 +2,10 @@
 #define GAMEOBJECTFACTORY_H
 
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

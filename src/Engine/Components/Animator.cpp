@@ -18,7 +18,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/Map.tcc"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

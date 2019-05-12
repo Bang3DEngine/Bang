@@ -2,7 +2,7 @@
 #define UIDIRLAYOUT_H
 
 #include "Bang/Array.h"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/String.h"

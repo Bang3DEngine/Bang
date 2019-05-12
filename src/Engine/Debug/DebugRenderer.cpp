@@ -2,7 +2,7 @@
 
 #include <list>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
@@ -11,13 +11,13 @@
 #include "Bang/GL.h"
 #include "Bang/List.tcc"
 #include "Bang/Mesh.h"
-#include "Bang/Quad.h"
-#include "Bang/Rect.h"
+#include "BangMath/Quad.h"
+#include "BangMath/Rect.h"
 #include "Bang/RenderFactory.h"
 #include "Bang/Scene.h"
 #include "Bang/SceneManager.h"
-#include "Bang/Triangle.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Triangle.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

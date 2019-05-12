@@ -9,25 +9,26 @@
 #include "Bang/Animation.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
+#include "BangMath/Sphere.h"
 #include "Bang/Containers.h"
 #include "Bang/GL.h"
-#include "Bang/Geometry.h"
+#include "BangMath/Geometry.h"
 #include "Bang/IBO.h"
 #include "Bang/IToString.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MeshSimplifier.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Ray.h"
+#include "BangMath/Ray.h"
 #include "Bang/Set.h"
 #include "Bang/Set.tcc"
-#include "Bang/Triangle.h"
+#include "BangMath/Triangle.h"
 #include "Bang/UMap.tcc"
 #include "Bang/USet.h"
 #include "Bang/USet.tcc"
 #include "Bang/VAO.h"
 #include "Bang/VBO.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {
@@ -327,8 +328,8 @@ void Mesh::SetPositionsPool(const Array<Vector3> &positions)
     }
 
     m_positionsPool = positions;
-    m_bBox.CreateFromPositions(m_positionsPool);
-    m_bSphere.FromBox(m_bBox);
+    m_bBox.CreateFromPositions(m_positionsPool.GetVector());
+    m_bSphere.FillFromBox(m_bBox);
     m_areLodsValid = false;
 }
 
@@ -1017,7 +1018,7 @@ double Mesh::GetVertexGaussianCurvature(Mesh::VertexId centralVId) const
 
     trisAreasSum /= 3;
     double gaussianCurvature =
-        ((2 * Math::Pi) - cornerAnglesSum) / trisAreasSum;
+        ((2 * Math::Pi<double>()) - cornerAnglesSum) / trisAreasSum;
     return gaussianCurvature;
 }
 

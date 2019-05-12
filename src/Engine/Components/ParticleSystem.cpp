@@ -17,8 +17,8 @@
 #include "Bang/GameObject.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MetaNode.h"
@@ -26,8 +26,8 @@
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Quaternion.h"
-#include "Bang/Random.h"
+#include "BangMath/Quaternion.h"
+#include "BangMath/Random.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Time.h"
@@ -113,7 +113,7 @@ void ParticleSystem::OnUpdate()
             {
                 particlePositions.PushBack(m_particlesData[i].position);
             }
-            m_aabox.CreateFromPositions(particlePositions);
+            m_aabox.CreateFromPositions(particlePositions.GetVector());
         }
 
         UpdateDataVBO();

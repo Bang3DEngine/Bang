@@ -6,11 +6,11 @@
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/LayoutSizeType.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Stretch.h"
 #include "Bang/UILayoutManager.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

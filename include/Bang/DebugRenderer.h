@@ -9,6 +9,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
 #include "Bang/String.h"
+#include "BangMath/Triangle.h"
 #include "Bang/Time.h"
 
 namespace Bang

@@ -2,6 +2,8 @@
 #define DIRECTIONALLIGHT_H
 
 #include "BangMath/AABox.h"
+#include "BangMath/Plane.h"
+#include "BangMath/Polygon.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"

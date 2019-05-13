@@ -26,6 +26,13 @@ std::ostream &operator<<(std::ostream &log, const Time &t)
     return log;
 }
 
+std::ostream &operator<<(std::ostream &log, const Quad &q)
+{
+    log << "(" << q[0] << ", " << q[1] << ", " << q[2] << ", " << q[3] << ")";
+    return log;
+}
+
+
 std::ostream &operator<<(std::ostream &log, const Path &p)
 {
     log << p.GetAbsolute();

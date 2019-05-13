@@ -133,7 +133,7 @@
 #include "Bang/PostProcessEffect.h"
 #include "Bang/PostProcessEffectSSAO.h"
 #include "Bang/Prefab.h"
-#include "Bang/Quad.h"
+#include "BangMath/Quad.h"
 #include "BangMath/Quaternion.h"
 #include "Bang/Random.h"
 #include "BangMath/Ray.h"

@@ -6,6 +6,7 @@
 #include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/Assets.h"
+#include "BangMath/Polygon.h"
 #include "BangMath/Segment.h"
 #include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"

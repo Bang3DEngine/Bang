@@ -7,7 +7,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 using namespace Bang;
 

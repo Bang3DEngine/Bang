@@ -1,6 +1,6 @@
 #include "Bang/Serializable.h"
 
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/File.h"
 #include "Bang/GUID.h"
 #include "Bang/GUIDManager.h"
@@ -8,11 +8,11 @@
 #include "Bang/MetaNode.tcc"
 #include "Bang/ObjectPtr.h"
 #include "Bang/Path.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 using namespace Bang;
 

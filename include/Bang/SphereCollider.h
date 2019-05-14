@@ -4,7 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Sphere.h"
+#include "BangMath/Sphere.h"
 #include "Bang/String.h"
 #include "PxShape.h"
 

@@ -8,7 +8,7 @@
 #include "Bang/GUID.h"
 #include "Bang/IEventsAsset.h"
 #include "Bang/Image.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Texture2D.h"

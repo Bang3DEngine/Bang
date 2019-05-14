@@ -3,7 +3,7 @@
 
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GLObject.h"
 #include "Bang/Image.h"

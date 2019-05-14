@@ -1,6 +1,6 @@
 #include "Bang/Image.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Debug.h"
 #include "Bang/ImageIO.h"
 
@@ -214,7 +214,7 @@ void Image::Resize(int _newWidth,
 
                 int pixels = (oriBotRight.x - oriTopLeft.x) *
                              (oriBotRight.y - oriTopLeft.y);
-                newColor /= Math::Max(pixels, 1);
+                newColor /= static_cast<float>(Math::Max(pixels, 1));
             }
             SetPixel(x, y, newColor);
         }

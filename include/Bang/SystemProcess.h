@@ -4,7 +4,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/List.h"
 #include "Bang/List.tcc"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/String.h"
 
 namespace TinyProcessLib

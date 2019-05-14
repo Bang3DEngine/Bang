@@ -3,12 +3,12 @@
 #include "Bang/ClassDB.h"
 #include "Bang/GameObject.h"
 #include "Bang/IInvalidatable.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"
 #include "Bang/StreamOperators.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

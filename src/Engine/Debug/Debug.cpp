@@ -7,17 +7,16 @@
 #include "Bang/GLUniforms.h"
 #include "Bang/GLUniforms.tcc"
 #include "Bang/IEventsDebug.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix3.h"
-#include "Bang/Matrix3.tcc"
-#include "Bang/Matrix4.h"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix3.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/Mutex.h"
 #include "Bang/MutexLocker.h"
 #include "Bang/Shader.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
+#include "BangMath/Vector4.h"
 
 using namespace Bang;
 

@@ -1,7 +1,7 @@
 #ifndef UICONTENTSIZEFITTER_H
 #define UICONTENTSIZEFITTER_H
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"

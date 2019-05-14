@@ -14,7 +14,7 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIODDS.h"

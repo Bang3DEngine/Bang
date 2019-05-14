@@ -2,7 +2,7 @@
 
 #include "Bang/Assert.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Cursor.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
@@ -10,14 +10,14 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
 #include "Bang/Input.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MouseButton.h"
-#include "Bang/Rect.h"
+#include "BangMath/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/UIFocusable.h"
 #include "Bang/UIImageRenderer.h"
 #include "Bang/UIScrollArea.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "Bang/Animation.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/AnimatorLayerMask.h"
 #include "Bang/AnimatorStateMachine.h"
 #include "Bang/AnimatorStateMachineLayer.h"
@@ -18,7 +19,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/Map.tcc"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/Mesh.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"

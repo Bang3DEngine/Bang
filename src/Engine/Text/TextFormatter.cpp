@@ -3,13 +3,13 @@
 #include <memory>
 #include <vector>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Font.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

@@ -4,19 +4,19 @@
 #include "Bang/Array.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
+#include "BangMath/Quad.h"
+#include "BangMath/AABox.h"
 #include "Bang/String.h"
+#include "BangMath/Triangle.h"
 #include "Bang/Time.h"
 
 namespace Bang
 {
-class AABox;
 class Mesh;
-class Quad;
-class Triangle;
 
 class DebugRenderer : public GameObject
 {

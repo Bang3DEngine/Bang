@@ -3,7 +3,7 @@
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/Font.h"
 #include "Bang/GL.h"
@@ -13,7 +13,7 @@
 #include "Bang/IEventsValueChanged.h"
 #include "Bang/Input.h"
 #include "Bang/Key.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/RectTransform.h"
 #include "Bang/SystemClipboard.h"
 #include "Bang/UIFocusable.h"
@@ -25,7 +25,7 @@
 #include "Bang/UITextCursor.h"
 #include "Bang/UITextRenderer.h"
 #include "Bang/UITheme.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

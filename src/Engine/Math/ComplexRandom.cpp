@@ -1,6 +1,6 @@
 #include "Bang/ComplexRandom.h"
 
-#include "Bang/Random.h"
+#include "BangMath/Random.h"
 
 using namespace Bang;
 

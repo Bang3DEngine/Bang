@@ -4,7 +4,8 @@
 
 namespace Bang
 {
-class Color;
+template <typename>
+class ColorG;
 }
 
 using namespace Bang;

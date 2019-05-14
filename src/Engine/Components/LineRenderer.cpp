@@ -1,6 +1,6 @@
 #include "Bang/LineRenderer.h"
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"

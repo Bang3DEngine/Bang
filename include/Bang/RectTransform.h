@@ -1,15 +1,16 @@
 ﻿#ifndef RECTTRANSFORM_H
 #define RECTTRANSFORM_H
 
-#include "Bang/AARect.h"
-#include "Bang/Axis.h"
+#include "BangMath/AARect.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
+#include "BangMath/Rect.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/MetaNode.h"
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

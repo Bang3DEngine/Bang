@@ -1,11 +1,11 @@
 #include "Bang/NavigationMesh.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Collider.h"
 #include "Bang/GameObject.h"
 #include "Bang/Physics.h"
 #include "Bang/PxSceneContainer.h"
-#include "Bang/Random.h"
+#include "BangMath/Random.h"
 #include "Bang/Transform.h"
 #include "PxPhysicsAPI.h"
 

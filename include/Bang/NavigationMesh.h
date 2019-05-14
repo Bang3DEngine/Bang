@@ -1,6 +1,7 @@
 #ifndef NAVIGATIONMESH_H
 #define NAVIGATIONMESH_H
 
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Bang.h"
 #include "Bang/Component.h"

@@ -1,7 +1,7 @@
 #ifndef AUDIOPARAMS_H
 #define AUDIOPARAMS_H
 
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

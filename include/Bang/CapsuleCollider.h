@@ -1,7 +1,7 @@
 #ifndef CAPSULECOLLIDER_H
 #define CAPSULECOLLIDER_H
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Collider.h"
 #include "Bang/MetaNode.h"

@@ -6,25 +6,24 @@
 #include <ostream>
 #include <utility>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
 #include "Bang/Debug.h"
-#include "Bang/Math.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Math.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/Mesh.h"
 #include "Bang/Octree.h"
 #include "Bang/Octree.tcc"
-#include "Bang/Plane.h"
+#include "BangMath/Plane.h"
 #include "Bang/Set.h"
 #include "Bang/Set.tcc"
-#include "Bang/Triangle.h"
+#include "BangMath/Triangle.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector4.h"
 
 using namespace Bang;
 

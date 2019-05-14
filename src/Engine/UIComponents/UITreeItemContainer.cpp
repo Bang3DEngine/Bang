@@ -1,6 +1,6 @@
 #include "Bang/UITreeItemContainer.h"
 
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/DPtr.tcc"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"

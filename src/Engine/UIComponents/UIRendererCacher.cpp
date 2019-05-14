@@ -3,7 +3,7 @@
 #include "Bang/Array.h"
 #include "Bang/Camera.h"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/Framebuffer.h"
@@ -24,7 +24,7 @@
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
 #include "Bang/UIImageRenderer.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

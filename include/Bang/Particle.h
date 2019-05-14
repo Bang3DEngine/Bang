@@ -6,10 +6,10 @@
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
-#include "Bang/Math.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Color.h"
+#include "BangMath/Math.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

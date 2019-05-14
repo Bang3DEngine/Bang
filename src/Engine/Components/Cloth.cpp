@@ -15,7 +15,8 @@
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
 #include "Bang/VAO.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 using namespace Bang;
 
@@ -343,7 +344,7 @@ void Cloth::SetUniformsOnBind(ShaderProgram *sp)
 AABox Cloth::GetAABBox() const
 {
     AABox aaBox;
-    aaBox.CreateFromPositions(m_points);
+    aaBox.CreateFromPositions(m_points.GetVector());
     return aaBox;
 }
 

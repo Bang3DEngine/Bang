@@ -13,7 +13,7 @@
 #include "Bang/EventListener.tcc"
 #include "Bang/IEventsFocus.h"
 #include "Bang/IEventsValueChanged.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/String.h"
 
 namespace Bang

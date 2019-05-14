@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Bang/Array.tcc"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Component.h"
 #include "Bang/ComponentMacros.h"

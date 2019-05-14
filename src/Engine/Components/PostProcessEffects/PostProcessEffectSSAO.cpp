@@ -8,7 +8,7 @@
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
 #include "Bang/ClassDB.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Component.h"
 #include "Bang/Framebuffer.h"
 #include "Bang/GBuffer.h"
@@ -16,15 +16,15 @@
 #include "Bang/GL.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Paths.h"
-#include "Bang/Random.h"
+#include "BangMath/Random.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

@@ -1,9 +1,11 @@
 #ifndef AXISFUNCTIONS_H
 #define AXISFUNCTIONS_H
 
-#include "Bang/Axis.h"
-#include "Bang/Color.h"
-#include "Bang/Vector3.h"
+#include <cassert>
+
+#include "BangMath/Axis.h"
+#include "BangMath/Color.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {
@@ -15,7 +17,7 @@ inline int GetAxisIndex(Axis3D axis)
         case Axis3D::Y: return 1;
         case Axis3D::Z: return 2;
     }
-    ASSERT(false);
+    assert(false);
     return -1;
 }
 inline int GetAxisIndex(Axis3DExt axis)
@@ -24,13 +26,13 @@ inline int GetAxisIndex(Axis3DExt axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:
-        case Axis3DExt::Z: return GetAxisIndex(SCAST<Axis3D>(axis));
+        case Axis3DExt::Z: return GetAxisIndex(static_cast<Axis3D>(axis));
         case Axis3DExt::XY: return 3;
         case Axis3DExt::XZ: return 4;
         case Axis3DExt::YZ: return 5;
         case Axis3DExt::XYZ: return 6;
     }
-    ASSERT(false);
+    assert(false);
     return -1;
 }
 
@@ -57,13 +59,13 @@ inline Color GetAxisColor(Axis3DExt axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:
-        case Axis3DExt::Z: return GetAxisColor(SCAST<Axis3D>(axis));
+        case Axis3DExt::Z: return GetAxisColor(static_cast<Axis3D>(axis));
         case Axis3DExt::XY: return Color(1, 1, 0, 1);
         case Axis3DExt::XZ: return Color(1, 0, 1, 1);
         case Axis3DExt::YZ: return Color(0, 1, 1, 1);
         case Axis3DExt::XYZ: return Color(1, 1, 1, 1);
     }
-    ASSERT(false);
+    assert(false);
     return Color::White();
 }
 
@@ -75,7 +77,7 @@ inline Vector3 GetAxisVector(Axis3D axis)
         case Axis3D::Y: return Vector3::Up();
         case Axis3D::Z: return Vector3::Forward();
     }
-    ASSERT(false);
+    assert(false);
     return Vector3::Zero();
 }
 inline Vector3 GetAxisVector(Axis3DExt axis)
@@ -84,13 +86,13 @@ inline Vector3 GetAxisVector(Axis3DExt axis)
     {
         case Axis3DExt::X:
         case Axis3DExt::Y:
-        case Axis3DExt::Z: return GetAxisVector(SCAST<Axis3D>(axis));
+        case Axis3DExt::Z: return GetAxisVector(static_cast<Axis3D>(axis));
         case Axis3DExt::XY: return Vector3(1, 1, 0);
         case Axis3DExt::XZ: return Vector3(1, 0, 1);
         case Axis3DExt::YZ: return Vector3(0, 1, 1);
         case Axis3DExt::XYZ: return Vector3(1, 1, 1);
     }
-    ASSERT(false);
+    assert(false);
     return Vector3::Zero();
 }
 }

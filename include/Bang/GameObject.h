@@ -5,7 +5,8 @@
 #include <utility>
 #include <vector>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
@@ -24,7 +25,7 @@
 #include "Bang/Object.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Serializable.h"
-#include "Bang/Sphere.h"
+#include "BangMath/Sphere.h"
 #include "Bang/String.h"
 
 namespace Bang

@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
 #include "Bang/ClassDB.h"
@@ -11,14 +11,13 @@
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/Input.h"
-#include "Bang/Matrix4.h"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Rect.h"
+#include "BangMath/Rect.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector4.h"
+#include "BangMath/Vector4.h"
 #include "Bang/Window.h"
 
 namespace Bang
@@ -425,7 +424,7 @@ const Vector2 &RectTransform::GetAnchorMax() const
 
 Rect RectTransform::GetViewportRect() const
 {
-    return GetLocalToWorldMatrix() * Rect::NDCRect;
+    return GetLocalToWorldMatrix() * Rect::NDCRect();
 }
 RectPoints RectTransform::GetViewportRectPointsNDC() const
 {
@@ -443,7 +442,7 @@ RectPoints RectTransform::GetParentViewportRectPointsNDC() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return Rect::NDCRect.GetPoints();
+        return Rect::NDCRect().GetPoints();
     }
     return parent->GetRectTransform()->GetViewportRectPointsNDC();
 }

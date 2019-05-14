@@ -4,21 +4,21 @@
 #include <array>
 #include <functional>
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.h"
 #include "Bang/Asset.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
-#include "Bang/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Ray.h"
-#include "Bang/Sphere.h"
+#include "BangMath/Ray.h"
+#include "BangMath/Sphere.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"
-#include "Bang/Transformation.h"
-#include "Bang/Triangle.h"
+#include "BangMath/Transformation.h"
+#include "BangMath/Triangle.h"
 #include "Bang/UMap.h"
 
 namespace Bang

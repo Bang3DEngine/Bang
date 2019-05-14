@@ -1,12 +1,12 @@
 #include "Bang/UIRectMask.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/ClassDB.h"
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Rect.h"
+#include "BangMath/Rect.h"
 #include "Bang/RectTransform.h"
 
 using namespace Bang;

@@ -6,7 +6,7 @@
 #include <SDL_events.h>
 #include <iostream>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/DPtr.h"
 #include "Bang/IToString.h"
@@ -15,7 +15,7 @@
 #include "Bang/String.h"
 #include "Bang/Time.h"
 #include "Bang/UMap.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

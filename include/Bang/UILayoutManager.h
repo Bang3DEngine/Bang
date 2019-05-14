@@ -5,8 +5,9 @@
 
 #include "Bang/Array.h"
 #include "Bang/Array.tcc"
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
+#include "BangMath/Vector2.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/EventListener.tcc"

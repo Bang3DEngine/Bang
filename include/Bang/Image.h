@@ -1,11 +1,12 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include "BangMath/AARect.h"
 #include "Bang/Array.h"
 #include "Bang/AspectRatioMode.h"
 #include "Bang/Asset.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/String.h"
 
 namespace Bang

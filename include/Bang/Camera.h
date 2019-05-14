@@ -3,17 +3,21 @@
 
 #include <vector>
 
+#include "BangMath/AABox.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.tcc"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Component.h"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Quad.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"
 #include "Bang/IEvents.h"
 #include "Bang/MetaNode.h"
-#include "Bang/Ray.h"
+#include "BangMath/Ray.h"
 #include "Bang/RenderFlags.h"
 #include "Bang/RenderPass.h"
 #include "Bang/String.h"
@@ -23,11 +27,13 @@ namespace Bang
 {
 template <class>
 class EventEmitter;
-class AABox;
+template <class>
+class AABoxG;
 class GBuffer;
 class Serializable;
 class IEventsDestroy;
-class Quad;
+template <class>
+class QuadG;
 class TextureCubeMap;
 
 enum class CameraProjectionMode

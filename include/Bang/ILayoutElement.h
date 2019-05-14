@@ -1,11 +1,11 @@
 #ifndef ILAYOUTELEMENT_H
 #define ILAYOUTELEMENT_H
 
-#include "Bang/Axis.h"
+#include "BangMath/Axis.h"
 #include "Bang/BangDefines.h"
 #include "Bang/IInvalidatable.h"
 #include "Bang/LayoutSizeType.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

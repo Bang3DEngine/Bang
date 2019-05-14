@@ -2,8 +2,8 @@
 #define RAYCASTHITINFO_H
 
 #include "Bang/Bang.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

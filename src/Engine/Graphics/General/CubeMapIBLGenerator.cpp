@@ -5,7 +5,7 @@
 #include "Bang/Framebuffer.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Paths.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"

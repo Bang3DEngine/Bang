@@ -11,7 +11,7 @@
 #include "Bang/IEvents.h"
 #include "Bang/String.h"
 #include "Bang/Time.h"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 struct SDL_Window;
 union SDL_Event;

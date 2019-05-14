@@ -8,8 +8,8 @@
 #include "Bang/Map.h"
 #include "Bang/Path.h"
 #include "Bang/String.h"
-#include "Bang/Vector2.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector2.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

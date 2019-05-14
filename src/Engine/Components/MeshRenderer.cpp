@@ -7,19 +7,19 @@
 #include "Bang/GL.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "Bang/Geometry.h"
+#include "BangMath/Geometry.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
-#include "Bang/Plane.h"
+#include "BangMath/Plane.h"
 #include "Bang/ReflectionProbe.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Transform.h"
-#include "Bang/Triangle.h"
+#include "BangMath/Triangle.h"
 
 using namespace Bang;
 

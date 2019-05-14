@@ -16,7 +16,7 @@
 #include "Bang/GameObject.h"
 #include "Bang/GameObject.tcc"
 #include "Bang/GameObjectFactory.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RenderFlags.h"
@@ -27,7 +27,7 @@
 #include "Bang/TextureCubeMap.h"
 #include "Bang/TextureFactory.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 namespace Bang
 {

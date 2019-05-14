@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assert.h"
 #include "Bang/AssetHandle.h"
@@ -13,12 +13,12 @@
 #include "Bang/GL.h"
 #include "Bang/Image.h"
 #include "Bang/ImageIO.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Texture.h"
 #include "Bang/Texture2D.h"
 #include "Bang/TextureCubeMap.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 namespace Bang
 {

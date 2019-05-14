@@ -6,7 +6,7 @@
 #include "Bang/Debug.h"
 #include "Bang/File.h"
 #include "Bang/Paths.h"
-#include "Bang/Random.h"
+#include "BangMath/Random.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/SystemUtils.h"
 
@@ -135,7 +135,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         {
             tmpCommandPath = Paths::GetProjectLibrariesDir()
                                  .Append(String::ToString(Time::GetNow()) +
-                                         String::ToString(Random::GetValue()))
+                                         String::ToString(Random::GetValueLong()))
                                  .WithExtension("bat");
         } while (tmpCommandPath.Exists());
 

@@ -1,6 +1,6 @@
 #include "Bang/RenderFactory.h"
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
 #include "Bang/Array.tcc"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
@@ -15,20 +15,20 @@
 #include "Bang/LineRenderer.h"
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MeshRenderer.h"
 #include "Bang/Paths.h"
-#include "Bang/Quaternion.h"
-#include "Bang/Rect.h"
+#include "BangMath/Quaternion.h"
+#include "BangMath/Rect.h"
 #include "Bang/RenderPass.h"
 #include "Bang/Renderer.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/ShaderProgramFactory.h"
 #include "Bang/Texture2D.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 
 using namespace Bang;
 
@@ -286,7 +286,7 @@ void RenderFactory::RenderWireframeCircle(
 {
     if (RenderFactory *rf = RenderFactory::GetInstance())
     {
-        float wholeAngle = SCAST<float>(Math::Pi * (hemicircle ? 1 : 2));
+        float wholeAngle = (Math::Pi<float>() * (hemicircle ? 1 : 2));
         Array<Vector3> circlePoints;
         for (int i = 0; i < numSegments; ++i)
         {
@@ -381,7 +381,7 @@ void RenderFactory::RenderWireframeCapsule(
         radius, false, paramsCpy, 1, 1, 16, true);
     paramsCpy.rotation =
         params.rotation *
-        Quaternion::AngleAxis(SCAST<float>(Math::Pi), Vector3::Forward());
+        Quaternion::AngleAxis(Math::Pi<float>(), Vector3::Forward());
 
     paramsCpy.position =
         capsuleCenter + paramsCpy.rotation * Vector3(0, hHeight, 0);
@@ -405,8 +405,8 @@ void RenderFactory::RenderWireframeSphere(
 
         if (numLoopsVertical > 0)
         {
-            const float angleAdv = SCAST<float>((Math::Pi / numLoopsVertical) /
-                                                (hemisphere ? 2 : 1));
+            const float angleAdv = ((Math::Pi<float>() / numLoopsVertical) /
+                                    (hemisphere ? 2 : 1));
             for (int i = 0; i < numLoopsVertical; ++i)
             {
                 paramsCpy.rotation =
@@ -419,12 +419,12 @@ void RenderFactory::RenderWireframeSphere(
 
         if (numLoopsHorizontal > 0)
         {
-            const float angleAdv = SCAST<float>(Math::Pi / numLoopsHorizontal);
+            const float angleAdv = (Math::Pi<float>() / numLoopsHorizontal);
             for (int i = 0; i < numLoopsHorizontal; ++i)
             {
                 paramsCpy.rotation =
                     params.rotation *
-                    Quaternion::AngleAxis(SCAST<float>(Math::Pi / 2),
+                    Quaternion::AngleAxis((Math::Pi<float>() / 2),
                                           Vector3::Up()) *
                     Quaternion::AngleAxis(angleAdv * i, Vector3::Forward());
                 RenderFactory::RenderWireframeCircle(
@@ -437,7 +437,7 @@ void RenderFactory::RenderWireframeSphere(
             // Render base
             paramsCpy.rotation =
                 params.rotation *
-                Quaternion::AngleAxis(SCAST<float>(Math::Pi * 0.5f),
+                Quaternion::AngleAxis((Math::Pi<float>() * 0.5f),
                                       Vector3::Right());
             RenderFactory::RenderWireframeCircle(
                 radius, paramsCpy, numCircleSegments, false);

@@ -2,8 +2,8 @@
 
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
-#include "Bang/Color.h"
-#include "Bang/Matrix4.h"
+#include "BangMath/Color.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/ShaderProgram.h"
 #include "Bang/Time.h"
 

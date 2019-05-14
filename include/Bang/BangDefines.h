@@ -49,10 +49,9 @@ namespace Bang
 {
 class Mesh;
 class Path;
-class Color;
-class AABox;
 class String;
-class Sphere;
+template <typename>
+class SphereG;
 class MetaNode;
 class Material;
 class Transform;
@@ -97,45 +96,6 @@ using Byte = unsigned char;
 using GLId = uint;
 using BoolByte = Byte;
 using EpochTime = long long;
-
-using Vector2i = Vector2G<int>;
-using Vector2f = Vector2G<float>;
-using Vector2d = Vector2G<double>;
-using Vector2 = Vector2f;
-
-using Vector3i = Vector3G<int>;
-using Vector3f = Vector3G<float>;
-using Vector3d = Vector3G<double>;
-using Vector3 = Vector3f;
-
-using Vector4i = Vector4G<int>;
-using Vector4f = Vector4G<float>;
-using Vector4d = Vector4G<double>;
-using Vector4 = Vector4f;
-
-using Quaternionf = QuaternionG<float>;
-using Quaterniond = QuaternionG<double>;
-using Quaternion = Quaternionf;
-
-using Matrix4f = Matrix4G<float>;
-using Matrix4d = Matrix4G<double>;
-using Matrix4 = Matrix4f;
-
-using Matrix3f = Matrix3G<float>;
-using Matrix3d = Matrix3G<double>;
-using Matrix3 = Matrix3f;
-
-using AARectf = AARectG<float>;
-using AARectd = AARectG<double>;
-using AARecti = AARectG<int>;
-using AARect = AARectf;
-
-using Rectf = RectG<float>;
-using Rectd = RectG<double>;
-using Recti = RectG<int>;
-using Rect = Rectf;
-using RectPoints = std::array<Vector2, 4>;
-
 }  // namespace Bang
 
 using SDL_GLContext = void *;

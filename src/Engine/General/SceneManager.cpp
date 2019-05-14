@@ -6,7 +6,7 @@
 #include "Bang/AudioManager.h"
 #include "Bang/BehaviourManager.h"
 #include "Bang/Camera.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/Debug.h"
 #include "Bang/Extensions.h"
 #include "Bang/GBuffer.h"

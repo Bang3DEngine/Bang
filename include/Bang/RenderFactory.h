@@ -2,16 +2,16 @@
 #define RENDERFACTORY_H
 
 #include "Bang/Array.h"
+#include "BangMath/AABox.h"
 #include "Bang/AssetHandle.h"
 #include "Bang/BangDefines.h"
-#include "Bang/Color.h"
+#include "BangMath/Color.h"
 #include "Bang/GL.h"
-#include "Bang/Quaternion.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/Texture2D.h"
 
 namespace Bang
 {
-class AABox;
 class GameObject;
 class LineRenderer;
 class Mesh;

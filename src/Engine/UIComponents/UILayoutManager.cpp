@@ -16,7 +16,7 @@
 #include "Bang/ILayoutElement.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/ObjectGatherer.h"
 #include "Bang/ObjectGatherer.tcc"
 #include "Bang/UICanvas.h"

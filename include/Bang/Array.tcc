@@ -425,6 +425,12 @@ typename Array<T>::Const_Iterator Array<T>::end() const
 }
 
 template <class T>
+const std::vector<T>& Array<T>::GetVector() const
+{
+    return m_vector;
+}
+
+template <class T>
 template <class IteratorClass>
 void Array<T>::PushBack(IteratorClass itBegin, IteratorClass itEnd)
 {

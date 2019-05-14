@@ -1,12 +1,14 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
-#include "Bang/AABox.h"
+#include "BangMath/AABox.h"
+#include "BangMath/Plane.h"
+#include "BangMath/Polygon.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/Light.h"
-#include "Bang/Matrix4.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/String.h"
 #include "Bang/Texture2D.h"

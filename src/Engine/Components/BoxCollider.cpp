@@ -12,7 +12,7 @@
 #include "Bang/PhysicsMaterial.h"
 #include "Bang/StreamOperators.h"
 #include "Bang/Transform.h"
-#include "Bang/Vector3.h"
+#include "BangMath/Vector3.h"
 #include "PxRigidDynamic.h"
 #include "PxShape.h"
 #include "extensions/PxRigidBodyExt.h"

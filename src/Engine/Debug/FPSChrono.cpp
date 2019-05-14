@@ -1,7 +1,7 @@
 #include "Bang/FPSChrono.h"
 
 #include "Bang/List.tcc"
-#include "Bang/Math.h"
+#include "BangMath/Math.h"
 #include "Bang/Time.h"
 
 using namespace Bang;

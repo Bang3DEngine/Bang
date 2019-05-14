@@ -1,6 +1,6 @@
 #include "Bang/UIRenderer.h"
 
-#include "Bang/AARect.h"
+#include "BangMath/AARect.h"
 #include "Bang/ClassDB.h"
 #include "Bang/EventListener.tcc"
 #include "Bang/GL.h"

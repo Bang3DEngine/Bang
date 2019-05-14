@@ -11,9 +11,10 @@
 #include "Bang/IEventsUIList.h"
 #include "Bang/Input.h"
 #include "Bang/Key.h"
+#include "BangMath/AARect.h"
 #include "Bang/LayoutSizeType.h"
 #include "Bang/MouseButton.h"
-#include "Bang/Rect.h"
+#include "BangMath/Rect.h"
 #include "Bang/RectTransform.h"
 #include "Bang/Scene.h"
 #include "Bang/Stretch.h"
@@ -28,7 +29,7 @@
 #include "Bang/UIScrollPanel.h"
 #include "Bang/UIVerticalLayout.h"
 #include "Bang/UMap.tcc"
-#include "Bang/Vector2.h"
+#include "BangMath/Vector2.h"
 
 using namespace Bang;
 

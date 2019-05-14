@@ -6,6 +6,7 @@
 #include "Bang/Assert.h"
 #include "Bang/Assets.h"
 #include "Bang/Assets.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/GEngine.h"
 #include "Bang/GL.h"
 #include "Bang/ShaderProgram.h"

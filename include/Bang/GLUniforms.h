@@ -6,7 +6,7 @@
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"
 #include "Bang/GL.h"
-#include "BangMath/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/NeededUniformFlags.h"
 #include "Bang/String.h"
 #include "Bang/UniformBuffer.h"

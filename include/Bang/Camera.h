@@ -10,6 +10,8 @@
 #include "Bang/BangDefines.h"
 #include "BangMath/Color.h"
 #include "Bang/Component.h"
+#include "BangMath/Matrix4.h"
+#include "BangMath/Quad.h"
 #include "Bang/ComponentMacros.h"
 #include "Bang/EventEmitter.tcc"
 #include "Bang/EventListener.h"

@@ -9,7 +9,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
-#include "BangMath/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/Mesh.h"
 #include "Bang/String.h"
 

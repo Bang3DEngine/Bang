@@ -11,7 +11,7 @@
 #include "Bang/BangDefines.h"
 #include "Bang/Map.h"
 #include "Bang/Map.tcc"
-#include "BangMath/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "BangMath/Ray.h"
 #include "BangMath/Sphere.h"

@@ -135,7 +135,7 @@ Compiler::Result Compiler::Compile(const Compiler::Job &job)
         {
             tmpCommandPath = Paths::GetProjectLibrariesDir()
                                  .Append(String::ToString(Time::GetNow()) +
-                                         String::ToString(Random::GetValue()))
+                                         String::ToString(Random::GetValueLong()))
                                  .WithExtension("bat");
         } while (tmpCommandPath.Exists());
 

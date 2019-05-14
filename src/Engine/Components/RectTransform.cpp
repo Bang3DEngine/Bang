@@ -12,7 +12,6 @@
 #include "Bang/GameObject.tcc"
 #include "Bang/Input.h"
 #include "BangMath/Matrix4.h"
-#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "BangMath/Rect.h"
@@ -425,7 +424,7 @@ const Vector2 &RectTransform::GetAnchorMax() const
 
 Rect RectTransform::GetViewportRect() const
 {
-    return GetLocalToWorldMatrix() * Rect::NDCRect;
+    return GetLocalToWorldMatrix() * Rect::NDCRect();
 }
 RectPoints RectTransform::GetViewportRectPointsNDC() const
 {
@@ -443,7 +442,7 @@ RectPoints RectTransform::GetParentViewportRectPointsNDC() const
     GameObject *parent = GetGameObject()->GetParent();
     if (!parent || !parent->GetRectTransform())
     {
-        return Rect::NDCRect.GetPoints();
+        return Rect::NDCRect().GetPoints();
     }
     return parent->GetRectTransform()->GetViewportRectPointsNDC();
 }

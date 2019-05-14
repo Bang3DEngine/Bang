@@ -18,7 +18,6 @@
 #include "Bang/Material.h"
 #include "Bang/MaterialFactory.h"
 #include "BangMath/Matrix4.h"
-#include "BangMath/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/MeshFactory.h"
 #include "Bang/MetaNode.h"

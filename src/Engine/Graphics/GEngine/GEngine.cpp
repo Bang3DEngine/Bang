@@ -5,6 +5,7 @@
 #include "Bang/Application.h"
 #include "Bang/Assert.h"
 #include "Bang/Camera.h"
+#include "BangMath/Matrix4.h"
 #include "Bang/DebugRenderer.h"
 #include "Bang/EventEmitter.h"
 #include "Bang/Framebuffer.h"

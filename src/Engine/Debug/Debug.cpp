@@ -9,7 +9,6 @@
 #include "Bang/IEventsDebug.h"
 #include "BangMath/Math.h"
 #include "BangMath/Matrix3.h"
-#include "BangMath/Matrix3.tcc"
 #include "BangMath/Matrix4.h"
 #include "Bang/Mutex.h"
 #include "Bang/MutexLocker.h"

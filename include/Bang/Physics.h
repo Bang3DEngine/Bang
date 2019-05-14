@@ -7,6 +7,7 @@
 #include "Bang/Array.tcc"
 #include "Bang/BangDefines.h"
 #include "Bang/EventEmitter.tcc"
+#include "BangMath/Quaternion.h"
 #include "Bang/EventListener.h"
 #include "Bang/IEventsDestroy.h"
 #include "Bang/Map.h"

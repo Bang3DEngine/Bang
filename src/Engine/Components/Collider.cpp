@@ -5,7 +5,7 @@
 #include "Bang/Extensions.h"
 #include "Bang/GUID.h"
 #include "Bang/GameObject.h"
-#include "BangMath/Matrix4.tcc"
+#include "BangMath/Matrix4.h"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/Physics.h"

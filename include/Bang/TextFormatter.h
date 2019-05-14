@@ -4,6 +4,7 @@
 #include <ostream>
 
 #include "BangMath/AARect.h"
+#include "BangMath/Vector2.h"
 #include "Bang/Alignment.h"
 #include "Bang/Array.h"
 #include "Bang/BangDefines.h"

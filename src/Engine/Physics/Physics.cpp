@@ -7,6 +7,7 @@
 #include "Bang/Array.h"
 #include "Bang/Assert.h"
 #include "Bang/AssetHandle.h"
+#include "BangMath/Quaternion.h"
 #include "Bang/ClassDB.h"
 #include "Bang/Collider.h"
 #include "Bang/Component.h"

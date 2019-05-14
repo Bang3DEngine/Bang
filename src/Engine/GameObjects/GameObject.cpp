@@ -21,7 +21,6 @@
 #include "Bang/IEventsObject.h"
 #include "Bang/Material.h"
 #include "BangMath/Math.h"
-#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "Bang/RectTransform.h"

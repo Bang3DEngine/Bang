@@ -15,7 +15,6 @@
 #include "Bang/Debug.h"
 #include "BangMath/Math.h"
 #include "BangMath/Matrix4.h"
-#include "BangMath/Matrix4.tcc"
 #include "Bang/Mesh.h"
 #include "Bang/Octree.h"
 #include "Bang/Octree.tcc"

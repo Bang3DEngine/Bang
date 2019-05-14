@@ -8,7 +8,6 @@
 #include "Bang/IEventsChildren.h"
 #include "Bang/IEventsTransform.h"
 #include "BangMath/Matrix4.h"
-#include "BangMath/Matrix4.tcc"
 #include "Bang/MetaNode.h"
 #include "Bang/MetaNode.tcc"
 #include "BangMath/Quaternion.h"

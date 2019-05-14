@@ -8,19 +8,15 @@
 #include "Bang/GL.h"
 #include "Bang/GameObject.h"
 #include "Bang/List.h"
+#include "BangMath/Quad.h"
+#include "BangMath/AABox.h"
 #include "Bang/String.h"
 #include "BangMath/Triangle.h"
 #include "Bang/Time.h"
 
 namespace Bang
 {
-template<typename>
-class AABoxG;
 class Mesh;
-template<typename>
-class QuadG;
-template<typename>
-class TriangleG;
 
 class DebugRenderer : public GameObject
 {

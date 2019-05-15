@@ -200,8 +200,8 @@ AARect Camera::GetViewportBoundingAARectNDC(const AABox &aaBBoxWorld) const
         const auto quad = func();
         const auto intersectionPoints =
                 Geometry::IntersectQuadAABox(quad, aaBBoxWorld);
-        intPoints.PushBack(intersectionPoints.begin(),
-                           intersectionPoints.end());
+        intPoints.PushBack(intersectionPoints.cbegin(),
+                           intersectionPoints.cend());
     }
 
     Array<Vector3> boxPoints = aaBBoxWorld.GetPoints();
